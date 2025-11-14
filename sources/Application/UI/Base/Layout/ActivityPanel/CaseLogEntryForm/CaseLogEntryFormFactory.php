@@ -7,7 +7,6 @@
 
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm;
 
-
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
@@ -86,8 +85,11 @@ class CaseLogEntryFormFactory
 			$oSetToCheckRights = DBObjectSet::FromObject($oObject);
 			$aStimuli = Metamodel::EnumStimuli($sObjClass);
 			foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
-				$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sObjClass,
-					$sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
+				$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed(
+					$sObjClass,
+					$sStimulusCode,
+					$oSetToCheckRights
+				) : UR_ALLOWED_NO;
 				switch ($iActionAllowed) {
 					case UR_ALLOWED_YES:
 						$oMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(

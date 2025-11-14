@@ -8,5 +8,5 @@
  */
 interface iRestInputSanitizer
 {
-    public function SanitizeJsonInput(string $sJsonInput): string;
+	public function SanitizeJsonInput(string $sJsonInput): string;
 }

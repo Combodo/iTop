@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:ChangeManagement' => 'Řízení změn',
 	'Menu:Change:Overview' => 'Přehled',
 	'Menu:Change:Overview+' => '',
@@ -35,7 +36,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Změny v posledních 7 dnech podle stavu',
 	'Tickets:Related:OpenChanges' => 'Otevřené změny',
 	'Tickets:Related:RecentChanges' => 'Nedávné změny (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -47,12 +48,11 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Change' => 'Změna',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Stav',
@@ -127,4 +127,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Ano',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
-));
+]);

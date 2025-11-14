@@ -40,14 +40,14 @@ class EventListener implements iEventServiceSetup
 			[$this, 'OnAttachmentDownloadActivateTriggers'],
 			'Attachment'
 		);
-        EventService::RegisterListener(
-        \EVENT_ADD_ATTACHMENT_TO_OBJECT,
-            [$this, 'OnAttachmentAddedActivateTriggers']
-        );
-        EventService::RegisterListener(
-            \EVENT_REMOVE_ATTACHMENT_FROM_OBJECT,
-            [$this, 'OnAttachmentRemovedActivateTriggers']
-        );
+		EventService::RegisterListener(
+			\EVENT_ADD_ATTACHMENT_TO_OBJECT,
+			[$this, 'OnAttachmentAddedActivateTriggers']
+		);
+		EventService::RegisterListener(
+			\EVENT_REMOVE_ATTACHMENT_FROM_OBJECT,
+			[$this, 'OnAttachmentRemovedActivateTriggers']
+		);
 	}
 
 	/**
@@ -70,77 +70,77 @@ class EventListener implements iEventServiceSetup
 		/** @var \ormDocument $oDocument */
 		$oDocument = $oEventData->Get('document');
 
-        $this->OnAttachmentActivateTriggers(
-            $oHostObj,
-            $oAttachment,
-            $oDocument,
-            TriggerOnAttachmentDownload::class
-        );
-    }
+		$this->OnAttachmentActivateTriggers(
+			$oHostObj,
+			$oAttachment,
+			$oDocument,
+			TriggerOnAttachmentDownload::class
+		);
+	}
 
-    /**
-     * Callback when an Attachment is added: Activate corresponding triggers
-     *
-     * @param \Combodo\iTop\Service\Events\EventData $oEventData
-     *
-     * @return void
-     * @throws \CoreException
-     */
-    public function OnAttachmentAddedActivateTriggers(EventData $oEventData): void
-    {
-        /** @var DBObject $oAttachment */
-        $oAttachment = $oEventData->Get('attachment');
-        /** @var DBObject $oHostObj */
-        $oHostObj = $oEventData->Get('object');
-        /** @var ormDocument $oDocument */
-        $oDocument = $oAttachment->Get('contents');
+	/**
+	 * Callback when an Attachment is added: Activate corresponding triggers
+	 *
+	 * @param \Combodo\iTop\Service\Events\EventData $oEventData
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
+	public function OnAttachmentAddedActivateTriggers(EventData $oEventData): void
+	{
+		/** @var DBObject $oAttachment */
+		$oAttachment = $oEventData->Get('attachment');
+		/** @var DBObject $oHostObj */
+		$oHostObj = $oEventData->Get('object');
+		/** @var ormDocument $oDocument */
+		$oDocument = $oAttachment->Get('contents');
 
-        $this->OnAttachmentActivateTriggers(
-            $oHostObj,
-            $oAttachment,
-            $oDocument,
-            \TriggerOnAttachmentCreate::class
-        );
-    }
+		$this->OnAttachmentActivateTriggers(
+			$oHostObj,
+			$oAttachment,
+			$oDocument,
+			\TriggerOnAttachmentCreate::class
+		);
+	}
 
-    /**
-     * Callback when an Attachment is removed: Activate corresponding triggers
-     *
-     * @param \Combodo\iTop\Service\Events\EventData $oEventData
-     *
-     * @return void
-     * @throws \CoreException
-     */
-    public function OnAttachmentRemovedActivateTriggers(EventData $oEventData): void
-    {
-        /** @var DBObject $oAttachment */
-        $oAttachment = $oEventData->Get('attachment');
-        /** @var DBObject $oHostObj */
-        $oHostObj = $oEventData->Get('object');
-        /** @var ormDocument $oDocument */
-        $oDocument = $oAttachment->Get('contents');
+	/**
+	 * Callback when an Attachment is removed: Activate corresponding triggers
+	 *
+	 * @param \Combodo\iTop\Service\Events\EventData $oEventData
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
+	public function OnAttachmentRemovedActivateTriggers(EventData $oEventData): void
+	{
+		/** @var DBObject $oAttachment */
+		$oAttachment = $oEventData->Get('attachment');
+		/** @var DBObject $oHostObj */
+		$oHostObj = $oEventData->Get('object');
+		/** @var ormDocument $oDocument */
+		$oDocument = $oAttachment->Get('contents');
 
-        $this->OnAttachmentActivateTriggers(
-            $oHostObj,
-            $oAttachment,
-            $oDocument,
-            \TriggerOnAttachmentDelete::class
-        );
-    }
+		$this->OnAttachmentActivateTriggers(
+			$oHostObj,
+			$oAttachment,
+			$oDocument,
+			\TriggerOnAttachmentDelete::class
+		);
+	}
 
-    /**
-     * Callback when an Attachment downloaded, added or removed: Activate corresponding triggers
-     *
-     * @param DBObject $oHostObj
-     * @param DBObject $oAttachment
-     * @param ormDocument $oDocument
-     * @param string $sTriggerClass
-     *
-     * @return void
-     * @throws \CoreException
-     */
-    protected function OnAttachmentActivateTriggers(DBObject $oHostObj, DBObject $oAttachment, ormDocument $oDocument, string $sTriggerClass): void
-    {
+	/**
+	 * Callback when an Attachment downloaded, added or removed: Activate corresponding triggers
+	 *
+	 * @param DBObject $oHostObj
+	 * @param DBObject $oAttachment
+	 * @param ormDocument $oDocument
+	 * @param string $sTriggerClass
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
+	protected function OnAttachmentActivateTriggers(DBObject $oHostObj, DBObject $oAttachment, ormDocument $oDocument, string $sTriggerClass): void
+	{
 		$aTriggerContextArgs = [
 			'this->object()' => $oHostObj,
 			'attachment->object()' => $oAttachment,
@@ -150,7 +150,7 @@ class EventListener implements iEventServiceSetup
 			'attachment->data' => $oDocument->GetData(),
 			'attachment->data_as_base64' => base64_encode($oDocument->GetData()),
 		];
-		$aTriggerParams = array('class_list' => MetaModel::EnumParentClasses($oAttachment->Get('item_class'), ENUM_PARENT_CLASSES_ALL));
+		$aTriggerParams = ['class_list' => MetaModel::EnumParentClasses($oAttachment->Get('item_class'), ENUM_PARENT_CLASSES_ALL)];
 		$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT $sTriggerClass AS t WHERE t.target_class IN (:class_list)"), [], $aTriggerParams);
 
 		/** @var \Trigger $oTrigger */

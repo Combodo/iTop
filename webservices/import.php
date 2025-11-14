@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -33,85 +34,84 @@ use Combodo\iTop\Application\WebPage\CSVPage;
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
-
 require_once(APPROOT.'/application/startup.inc.php');
 
 class BulkLoadException extends Exception
 {
 }
 
-$aPageParams = array
-(
-	'auth_user' => array
-	(
+$aPageParams =
+[
+	'auth_user' =>
+	[
 		'mandatory' => true,
 		'modes' => 'cli',
 		'default' => null,
 		'description' => 'login (must have enough rights to create objects of the given class)',
-	),
-	'auth_pwd' => array
-	(
+	],
+	'auth_pwd' =>
+	[
 		'mandatory' => true,
 		'modes' => 'cli',
 		'default' => null,
 		'description' => 'password',
-	),
-	'class' => array
-	(
+	],
+	'class' =>
+	[
 		'mandatory' => true,
 		'modes' => 'http,cli',
 		'default' => null,
 		'description' => 'class of loaded objects',
-	),
-	'csvdata' => array
-	(
+	],
+	'csvdata' =>
+	[
 		'mandatory' => true,
 		'modes' => 'http',
 		'default' => null,
 		'description' => 'data',
-	),
-	'csvfile' => array
-	(
+	],
+	'csvfile' =>
+	[
 		'mandatory' => true,
 		'modes' => 'cli',
 		'default' => '',
 		'description' => 'local data file, replaces csvdata if specified',
-	),
-	'charset' => array
-	(
+	],
+	'charset' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '',
 		'description' => 'Character set encoding of the CSV data: UTF-8, ISO-8859-1, WINDOWS-1251, WINDOWS-1252, ISO-8859-15, If blank, then the charset is set to config(csv_file_default_charset)',
-	),
-	'date_format' => array
-	(
+	],
+	'date_format' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '',
 		'description' => 'Input date format (used both for dates and datetimes) - Examples: Y-m-d H:i:s, d/m/Y H:i:s (Europe) - no transformation is applied if the argument is omitted. (note: old format specification using %Y %m %d is also supported for backward compatibility)',
-	),
-	'separator' => array
-	(
+	],
+	'separator' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => ',',
 		'description' => 'column separator in CSV data (1 char, or \'tab\')',
-	),
-	'qualifier' => array
-	(
+	],
+	'qualifier' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '"',
 		'description' => 'test qualifier in CSV data',
-	),
-	'output' => array
-	(
+	],
+	'output' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => 'summary',
 		'description' => '[retcode] to return the count of lines in error, [summary] to return a concise report, [details] to get a detailed report (each line listed)',
-	),
+	],
 /*
 	'reportlevel' => array
 	(
@@ -121,35 +121,35 @@ $aPageParams = array
 		'description' => 'combination of flags to limit the detailed output',
 	),
 */
-	'reconciliationkeys' => array
-	(
+	'reconciliationkeys' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '',
 		'description' => 'name of the columns used to identify existing objects and update them, or create a new one',
-	),
-	'simulate' => array
-	(
+	],
+	'simulate' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '0',
 		'description' => 'If set to 1, then the load will not be executed, but the expected report will be produced',
-	),
-	'comment' => array
-	(
+	],
+	'comment' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '',
 		'description' => 'Comment to be added into the change log',
-	),
-	'no_localize' => array
-	(
+	],
+	'no_localize' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '0',
 		'description' => 'If set to 0, then header and values are supposed to be localized in the language of the logged in user. Set to 1 to use internal attribute codes and values (enums)',
-	),
-);
+	],
+];
 
 function UsageAndExit($oP)
 {
@@ -157,21 +157,15 @@ function UsageAndExit($oP)
 	$bModeCLI = utils::IsModeCLI();
 
 	$oP->p("USAGE:\n");
-	foreach($aPageParams as $sParam => $aParamData)
-	{
+	foreach ($aPageParams as $sParam => $aParamData) {
 		$aModes = explode(',', $aParamData['modes']);
-		if ($bModeCLI)
-		{
-			if (in_array('cli', $aModes))
-			{
+		if ($bModeCLI) {
+			if (in_array('cli', $aModes)) {
 				$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
 				$oP->p("$sParam = $sDesc");
 			}
-		}
-		else
-		{
-			if (in_array('http', $aModes))
-			{
+		} else {
+			if (in_array('http', $aModes)) {
 				$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
 				$oP->p("$sParam = $sDesc");
 			}
@@ -180,7 +174,6 @@ function UsageAndExit($oP)
 	$oP->output();
 	exit;
 }
-
 
 function ReadParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 {
@@ -198,8 +191,7 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 	assert($aPageParams[$sParam]['mandatory']);
 
 	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */, $sSanitizationFilter);
-	if (is_null($sValue))
-	{
+	if (is_null($sValue)) {
 		$oP->p("ERROR: Missing argument '$sParam'\n");
 		UsageAndExit($oP);
 	}
@@ -213,96 +205,81 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
  * @since 3.1.0 N°6047
  */
 $oCtx = new ContextTag(ContextTag::TAG_IMPORT);
-if (utils::IsModeCLI())
-{
+if (utils::IsModeCLI()) {
 	$oP = new CLIPage("iTop - Bulk import");
 	SetupUtils::CheckPhpAndExtensionsForCli($oP, -2);
-}
-else
-{
+} else {
 	$oP = new CSVPage("iTop - Bulk import");
 }
 
-try
-{
+try {
 	utils::UseParamFile();
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
 	$oP->p("Error: ".$e->GetMessage());
 	$oP->output();
 	exit(-2);
 }
 
-if (utils::IsModeCLI())
-{
+if (utils::IsModeCLI()) {
 	// Next steps:
 	//   specific arguments: 'csvfile'
 	//
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
 	$sCsvFile = ReadMandatoryParam($oP, 'csvfile', 'raw_data');
-	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-	{
+	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
 		UserRights::Login($sAuthUser); // Login & set the user's language
-	}
-	else
-	{
+	} else {
 		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
 		$oP->output();
 		exit(-1);
 	}
 
-	if (!is_readable($sCsvFile))
-	{
+	if (!is_readable($sCsvFile)) {
 		$oP->p("Input file could not be found or could not be read: '$sCsvFile'");
 		$oP->output();
 		exit(-1);
 	}
 	$sCSVData = file_get_contents($sCsvFile);
 
-}
-else
-{
+} else {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-    LoginWebPage::ResetSession(true);
+	LoginWebPage::ResetSession(true);
 	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
-    if ($iRet !== LoginWebPage::EXIT_CODE_OK) {
-        switch ($iRet) {
-            case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
-                $oP->p("Missing parameter 'auth_user'");
-                break;
+	if ($iRet !== LoginWebPage::EXIT_CODE_OK) {
+		switch ($iRet) {
+			case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
+				$oP->p("Missing parameter 'auth_user'");
+				break;
 
-            case LoginWebPage::EXIT_CODE_MISSINGPASSWORD:
-                $oP->p("Missing parameter 'auth_pwd'");
-                break;
+			case LoginWebPage::EXIT_CODE_MISSINGPASSWORD:
+				$oP->p("Missing parameter 'auth_pwd'");
+				break;
 
-            case LoginWebPage::EXIT_CODE_WRONGCREDENTIALS:
-                $oP->p('Invalid login');
-                break;
+			case LoginWebPage::EXIT_CODE_WRONGCREDENTIALS:
+				$oP->p('Invalid login');
+				break;
 
-            case LoginWebPage::EXIT_CODE_PORTALUSERNOTAUTHORIZED:
-                $oP->p('Portal user is not allowed');
-                break;
+			case LoginWebPage::EXIT_CODE_PORTALUSERNOTAUTHORIZED:
+				$oP->p('Portal user is not allowed');
+				break;
 
-            case LoginWebPage::EXIT_CODE_NOTAUTHORIZED:
-                $oP->p('This user is not authorized to use the web services. (The profile REST Services User is required to access the REST web services)');
-                break;
+			case LoginWebPage::EXIT_CODE_NOTAUTHORIZED:
+				$oP->p('This user is not authorized to use the web services. (The profile REST Services User is required to access the REST web services)');
+				break;
 
-            default:
-                $oP->p("Unknown authentication error (retCode=$iRet)");
-        }
-        $oP->output();
-        exit -1;
-    }
+			default:
+				$oP->p("Unknown authentication error (retCode=$iRet)");
+		}
+		$oP->output();
+		exit -1;
+	}
 
 	$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 }
 
-
-try
-{
-	$aWarnings = array();
+try {
+	$aWarnings = [];
 
 	//////////////////////////////////////////////////
 	//
@@ -313,8 +290,7 @@ try
 	$sQualifier = ReadParam($oP, 'qualifier', 'raw_data');
 	$sCharSet = ReadParam($oP, 'charset', 'raw_data');
 	$sDateFormat = ReadParam($oP, 'date_format', 'raw_data');
-	if (strpos($sDateFormat, '%') !== false)
-	{
+	if (strpos($sDateFormat, '%') !== false) {
 		$sDateFormat = utils::DateTimeFormatToPHP($sDateFormat);
 	}
 	$sOutput = ReadParam($oP, 'output', 'string');
@@ -323,8 +299,7 @@ try
 	$sComment = ReadParam($oP, 'comment', 'raw_data');
 	$bLocalize = (ReadParam($oP, 'no_localize') != 1);
 
-	if (strtolower(trim($sSep)) == 'tab')
-	{
+	if (strtolower(trim($sSep)) == 'tab') {
 		$sSep = "\t";
 	}
 
@@ -332,77 +307,62 @@ try
 	//
 	// Check parameters format/consistency
 	//
-	if (strlen($sCSVData) == 0)
-	{
+	if (strlen($sCSVData) == 0) {
 		throw new BulkLoadException("Missing data - at least one line is expected");
 	}
 
-	if (!MetaModel::IsValidClass($sClass))
-	{
+	if (!MetaModel::IsValidClass($sClass)) {
 		throw new BulkLoadException("Unknown class: '$sClass'");
 	}
 
-	if (strlen($sSep) > 1)
-	{
+	if (strlen($sSep) > 1) {
 		throw new BulkLoadException("Separator is limited to one character, found '$sSep'");
 	}
 
-	if (strlen($sQualifier) > 1)
-	{
+	if (strlen($sQualifier) > 1) {
 		throw new BulkLoadException("Text qualifier is limited to one character, found '$sQualifier'");
 	}
 
-	if (!in_array($sOutput, array('retcode', 'summary', 'details')))
-	{
+	if (!in_array($sOutput, ['retcode', 'summary', 'details'])) {
 		throw new BulkLoadException("Unknown output format: '$sOutput'");
 	}
 
-	if (strlen($sDateFormat) == 0)
-	{
+	if (strlen($sDateFormat) == 0) {
 		$sDateFormat = null;
 	}
 
-	if ($sCharSet == '')
-	{
+	if ($sCharSet == '') {
 		$sCharSet = MetaModel::GetConfig()->Get('csv_file_default_charset');
 	}
 
-	if ($sSimulate == '1')
-	{
+	if ($sSimulate == '1') {
 		$bSimulate = true;
-	}
-	else
-	{
+	} else {
 		$bSimulate = false;
 	}
 
-	if (($sOutput == "summary") || ($sOutput == 'details'))
-	{
+	if (($sOutput == "summary") || ($sOutput == 'details')) {
 		$oP->add_comment("Output format: ".$sOutput);
 		$oP->add_comment("Class: ".$sClass);
 		$oP->add_comment("Separator: ".$sSep);
 		$oP->add_comment("Qualifier: ".$sQualifier);
 		$oP->add_comment("Charset Encoding:".$sCharSet);
-		if (($sDateFormat !== null) && (strlen($sDateFormat) > 0))
-		{
+		if (($sDateFormat !== null) && (strlen($sDateFormat) > 0)) {
 			$oP->add_comment("Date and time format: '$sDateFormat'");
 			$oDateTimeFormat = new DateTimeFormat($sDateFormat);
 			$sDateOnlyFormat = $oDateTimeFormat->ToDateFormat();
 			$oP->add_comment("Date format: '$sDateOnlyFormat'");
-		}
-		else
-		{
+		} else {
 			$oP->add_comment("Date format: <none>");
 		}
-		$oP->add_comment("Localize: ".($bLocalize?'yes':'no'));
+		$oP->add_comment("Localize: ".($bLocalize ? 'yes' : 'no'));
 		$oP->add_comment("Data Size: ".strlen($sCSVData));
 	}
 	//////////////////////////////////////////////////
 	//
 	// Security
 	//
-	if (!UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY))
-	{
+	if (!UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY)) {
 		throw new SecurityException(Dict::Format('UI:Error:BulkModifyNotAllowedOn_Class', $sClass));
 	}
 
@@ -419,42 +379,31 @@ try
 	// Note: it may happen that an external field has the same label as the external key
 	//       in that case, we consider that the external key has precedence
 	//
-	$aKnownColumnNames = ['id'=>['id']];
-	foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-	{
-		if ($bLocalize)
-		{
-	  		$sColName = strtolower(MetaModel::GetLabel($sClass, $sAttCode));
-	  	}
-	  	else
-	  	{
-	  		$sColName = strtolower($sAttCode);
-	  	}
-	  	if (!$oAttDef->IsExternalField() || !array_key_exists($sColName, $aKnownColumnNames))
-	  	{
-		  	$aKnownColumnNames[$sColName][] = $sAttCode;
+	$aKnownColumnNames = ['id' => ['id']];
+	foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+		if ($bLocalize) {
+			$sColName = strtolower(MetaModel::GetLabel($sClass, $sAttCode));
+		} else {
+			$sColName = strtolower($sAttCode);
 		}
-	  	if ($oAttDef->IsExternalKey(EXTKEY_RELATIVE))
-	  	{
-	  		$sRemoteClass = $oAttDef->GetTargetClass();
-			foreach(MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef)
-		  	{
-	  			$sAttCodeEx = $sAttCode.'->'.$sRemoteAttCode;
-				if ($bLocalize)
-				{
-		  			$sColName = strtolower(MetaModel::GetLabel($sClass, $sAttCodeEx));
-			  	}
-			  	else
-			  	{
-			  		$sColName = strtolower($sAttCodeEx);
-			  	}
-		  		if (!array_key_exists($sColName, $aKnownColumnNames))
-		  		{
-		  			$aKnownColumnNames[$sColName][] = $sAttCodeEx;
-		  		}
-		  	}
+		if (!$oAttDef->IsExternalField() || !array_key_exists($sColName, $aKnownColumnNames)) {
+			$aKnownColumnNames[$sColName][] = $sAttCode;
 		}
-   }
+		if ($oAttDef->IsExternalKey(EXTKEY_RELATIVE)) {
+			$sRemoteClass = $oAttDef->GetTargetClass();
+			foreach (MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef) {
+				$sAttCodeEx = $sAttCode.'->'.$sRemoteAttCode;
+				if ($bLocalize) {
+					$sColName = strtolower(MetaModel::GetLabel($sClass, $sAttCodeEx));
+				} else {
+					$sColName = strtolower($sAttCodeEx);
+				}
+				if (!array_key_exists($sColName, $aKnownColumnNames)) {
+					$aKnownColumnNames[$sColName][] = $sAttCodeEx;
+				}
+			}
+		}
+	}
 
 	//print_r($aKnownColumnNames);
 	//print_r(array_keys($aKnownColumnNames));
@@ -464,19 +413,15 @@ try
 	//
 	// Parse first line, check attributes, analyse the request
 	//
-	if ($sCharSet == 'UTF-8')
-	{
+	if ($sCharSet == 'UTF-8') {
 		// Remove the BOM if any
-		if (substr($sCSVData, 0, 3) == UTF8_BOM)
-		{
+		if (substr($sCSVData, 0, 3) == UTF8_BOM) {
 			$sCSVData = substr($sCSVData, 3);
 		}
 		// Clean the input
 		// Todo: warn the user if some characters are lost/substituted
 		$sUTF8Data = iconv('UTF-8', 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
-	}
-	else
-	{
+	} else {
 		$sUTF8Data = iconv($sCharSet, 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
 	}
 	$oCSVParser = new CSVParser($sUTF8Data, $sSep, $sQualifier);
@@ -487,101 +432,77 @@ try
 
 	// Translate into internal names
 	$aFieldList = [];
-	foreach($aRawFieldList as $iFieldId => $sFieldName)
-	{
+	foreach ($aRawFieldList as $iFieldId => $sFieldName) {
 		$sFieldName = trim($sFieldName);
-		$aMatches = array();
-		if (preg_match('/^(.+)\*$/', $sFieldName, $aMatches))
-		{
+		$aMatches = [];
+		if (preg_match('/^(.+)\*$/', $sFieldName, $aMatches)) {
 			// Ignore any trailing "star" (*) that simply indicates a mandatory field
 			$sFieldName = $aMatches[1];
-		}
-		else if (preg_match('/^(.+)\*->(.+)$/', $sFieldName, $aMatches))
-		{
+		} elseif (preg_match('/^(.+)\*->(.+)$/', $sFieldName, $aMatches)) {
 			// Remove any trailing "star" character before the arrow (->)
 			// A star character at the end can be used to indicate a mandatory field
 			$sFieldName = $aMatches[1].'->'.$aMatches[2];
 		}
-		if (array_key_exists(strtolower($sFieldName), $aKnownColumnNames))
-		{
+		if (array_key_exists(strtolower($sFieldName), $aKnownColumnNames)) {
 			$aColumns = $aKnownColumnNames[strtolower($sFieldName)];
-			if (count($aColumns) > 1)
-			{
-				$aCompetitors = array();
-				foreach ($aColumns as $sAttCodeEx)
-				{
+			if (count($aColumns) > 1) {
+				$aCompetitors = [];
+				foreach ($aColumns as $sAttCodeEx) {
 					$aCompetitors[] = $sAttCodeEx;
 				}
-				$aWarnings[] = "Input column '$sFieldName' is ambiguous. Could be related to ".implode (' or ', $aCompetitors).". The first one will be used: ".$aColumns[0];
+				$aWarnings[] = "Input column '$sFieldName' is ambiguous. Could be related to ".implode(' or ', $aCompetitors).". The first one will be used: ".$aColumns[0];
 			}
 			$aFieldList[$iFieldId] = $aColumns[0];
-		}
-		else
-		{
+		} else {
 			// Protect against XSS injection
-			$sSafeName = str_replace(array('"', '<', '>'), '', $sFieldName);
+			$sSafeName = str_replace(['"', '<', '>'], '', $sFieldName);
 			throw new BulkLoadException("Unknown column: '$sSafeName'. Possible columns: ".implode(', ', array_keys($aKnownColumnNames)));
 		}
 	}
 	// Note: at this stage the list of fields is supposed to be made of attcodes (and the symbol '->')
 
-	$aAttList = array();
-	$aExtKeys = array();
-	foreach($aFieldList as $iFieldId => $sFieldName)
-	{
-		$aMatches = array();
-		if (preg_match('/^(.+)->(.+)$/', trim($sFieldName), $aMatches))
-		{
+	$aAttList = [];
+	$aExtKeys = [];
+	foreach ($aFieldList as $iFieldId => $sFieldName) {
+		$aMatches = [];
+		if (preg_match('/^(.+)->(.+)$/', trim($sFieldName), $aMatches)) {
 			// The column has been specified as "extkey->attcode"
 			//
 			$sExtKeyAttCode = $aMatches[1];
 			$sRemoteAttCode = $aMatches[2];
-			if (!MetaModel::IsValidAttCode($sClass, $sExtKeyAttCode))
-			{
+			if (!MetaModel::IsValidAttCode($sClass, $sExtKeyAttCode)) {
 				// Safety net - should not happen now that column names are checked against known names
 				throw new BulkLoadException("Unknown attribute '$sExtKeyAttCode' (class: '$sClass')");
 			}
 			$oAtt = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode);
-			if (!$oAtt->IsExternalKey())
-			{
+			if (!$oAtt->IsExternalKey()) {
 				// Safety net - should not happen now that column names are checked against known names
 				throw new BulkLoadException("Not an external key '$sExtKeyAttCode' (class: '$sClass')");
 			}
 			$sTargetClass = $oAtt->GetTargetClass();
-			if (!MetaModel::IsValidAttCode($sTargetClass, $sRemoteAttCode))
-			{
+			if (!MetaModel::IsValidAttCode($sTargetClass, $sRemoteAttCode)) {
 				// Safety net - should not happen now that column names are checked against known names
 				throw new BulkLoadException("Unknown attribute '$sRemoteAttCode' (key: '$sExtKeyAttCode', class: '$sTargetClass')");
 			}
 			$aExtKeys[$sExtKeyAttCode][$sRemoteAttCode] = $iFieldId;
-		}
-		elseif ($sFieldName == 'id')
-		{
+		} elseif ($sFieldName == 'id') {
 			$aAttList[$sFieldName] = $iFieldId;
-		}
-		else
-		{
+		} else {
 			// The column has been specified as "attcode"
 			//
-			if (!MetaModel::IsValidAttCode($sClass, $sFieldName))
-			{
+			if (!MetaModel::IsValidAttCode($sClass, $sFieldName)) {
 				// Safety net - should not happen now that column names are checked against known names
 				throw new BulkLoadException("Unknown attribute '$sFieldName' (class: '$sClass')");
 			}
 			$oAtt = MetaModel::GetAttributeDef($sClass, $sFieldName);
-			if ($oAtt->IsExternalKey())
-			{
+			if ($oAtt->IsExternalKey()) {
 				$aExtKeys[$sFieldName]['id'] = $iFieldId;
 				$aAttList[$sFieldName] = $iFieldId;
-			}
-			elseif ($oAtt->IsExternalField())
-			{
+			} elseif ($oAtt->IsExternalField()) {
 				$sExtKeyAttCode = $oAtt->GetKeyAttCode();
 				$sRemoteAttCode = $oAtt->GetExtAttCode();
 				$aExtKeys[$sExtKeyAttCode][$sRemoteAttCode] = $iFieldId;
-			}
-			else
-			{
+			} else {
 				$aAttList[$sFieldName] = $iFieldId;
 			}
 		}
@@ -589,27 +510,20 @@ try
 
 	// Make sure there are some reconciliation keys
 	//
-	if (empty($sReconcKeys))
-	{
-		$aReconcSpec = array();
+	if (empty($sReconcKeys)) {
+		$aReconcSpec = [];
 		// Base reconciliation scheme on the default one
 		// The reconciliation attributes not present in the data will be ignored
-		foreach(MetaModel::GetReconcKeys($sClass) as $sReconcKeyAttCode)
-		{
-			if (in_array($sReconcKeyAttCode, $aFieldList))
-			{
-				if ($bLocalize)
-				{
+		foreach (MetaModel::GetReconcKeys($sClass) as $sReconcKeyAttCode) {
+			if (in_array($sReconcKeyAttCode, $aFieldList)) {
+				if ($bLocalize) {
 					$aReconcSpec[] = MetaModel::GetLabel($sClass, $sReconcKeyAttCode);
-				}
-				else
-				{
+				} else {
 					$aReconcSpec[] = $sReconcKeyAttCode;
 				}
 			}
 		}
-		if (count($aReconcSpec) == 0)
-		{
+		if (count($aReconcSpec) == 0) {
 			throw new BulkLoadException("No reconciliation scheme could be defined, please add a column corresponding to one defined reconciliation key (class: '$sClass', reconciliation:".implode(',', MetaModel::GetReconcKeys($sClass)).")");
 		}
 		$sReconcKeys = implode(',', $aReconcSpec);
@@ -617,48 +531,41 @@ try
 
 	// Interpret the list of reconciliation keys
 	//
-	$aFinalReconcilKeys = array();
-	$aReconcilKeysReport = array();
-	foreach (explode(',', $sReconcKeys) as $sReconcKey)
-	{
+	$aFinalReconcilKeys = [];
+	$aReconcilKeysReport = [];
+	foreach (explode(',', $sReconcKeys) as $sReconcKey) {
 		$sReconcKey = trim($sReconcKey);
-		if (empty($sReconcKey)) continue; // skip empty spec
+		if (empty($sReconcKey)) {
+			continue;
+		} // skip empty spec
 
-		if (array_key_exists(strtolower($sReconcKey), $aKnownColumnNames))
-		{
+		if (array_key_exists(strtolower($sReconcKey), $aKnownColumnNames)) {
 			// Translate from a translated name to codes
 			$aColumns = $aKnownColumnNames[strtolower($sReconcKey)];
-			if (count($aColumns) > 1)
-			{
-				$aCompetitors = array();
-				foreach ($aColumns as $sAttCodeEx)
-				{
+			if (count($aColumns) > 1) {
+				$aCompetitors = [];
+				foreach ($aColumns as $sAttCodeEx) {
 					$aCompetitors[] = $sAttCodeEx;
 				}
-				$aWarnings[] = "Reconciliation key '$sReconcKey' is ambiguous. Could be related to ".implode (' or ', $aCompetitors).". The first one will be used: ".$aColumns[0];
+				$aWarnings[] = "Reconciliation key '$sReconcKey' is ambiguous. Could be related to ".implode(' or ', $aCompetitors).". The first one will be used: ".$aColumns[0];
 			}
 			$sReconcKey = $aColumns[0];
-		}
-		else
-		{
+		} else {
 			// Protect against XSS injection
-			$sSafeName = str_replace(array('"', '<', '>'), '', $sReconcKey);
+			$sSafeName = str_replace(['"', '<', '>'], '', $sReconcKey);
 			throw new BulkLoadException("Unknown reconciliation key: '$sSafeName'");
 		}
 
 		// Check that the reconciliation key is either a given column, or an external key
-		if (!in_array($sReconcKey, $aFieldList))
-		{
-			if (!array_key_exists($sReconcKey, $aExtKeys))
-			{
+		if (!in_array($sReconcKey, $aFieldList)) {
+			if (!array_key_exists($sReconcKey, $aExtKeys)) {
 				// Protect against XSS injection
-				$sSafeName = str_replace(array('"', '<', '>'), '', $sReconcKey);
+				$sSafeName = str_replace(['"', '<', '>'], '', $sReconcKey);
 				throw new BulkLoadException("Reconciliation key not found in the input columns: '$sSafeName'");
 			}
 		}
 
-		if (preg_match('/^(.+)->(.+)$/', trim($sReconcKey), $aMatches))
-		{
+		if (preg_match('/^(.+)->(.+)$/', trim($sReconcKey), $aMatches)) {
 			// The column has been specified as "extkey->attcode"
 			//
 			$sExtKeyAttCode = $aMatches[1];
@@ -666,17 +573,14 @@ try
 
 			$aFinalReconcilKeys[] = $sExtKeyAttCode;
 			$aReconcilKeysReport[$sExtKeyAttCode][] = $sRemoteAttCode;
-		}
-		else
-		{
-			if (!MetaModel::IsValidAttCode($sClass, $sReconcKey) && $sReconcKey != 'id')
-			{
+		} else {
+			if (!MetaModel::IsValidAttCode($sClass, $sReconcKey) && $sReconcKey != 'id') {
 				// Safety net - should not happen now that column names are checked against known names
 				throw new BulkLoadException("Unknown reconciliation attribute '$sReconcKey' (class: '$sClass')");
 			}
 			if ($sReconcKey == 'id') {
 				$aFinalReconcilKeys[] = $sReconcKey;
-				$aReconcilKeysReport[$sReconcKey] = array();
+				$aReconcilKeysReport[$sReconcKey] = [];
 			} else {
 				$oAtt = MetaModel::GetAttributeDef($sClass, $sReconcKey);
 				if ($oAtt->IsExternalKey()) {
@@ -690,7 +594,7 @@ try
 					$aReconcilKeysReport[$sReconcAttCode][] = $sReconcKeyReport;
 				} else {
 					$aFinalReconcilKeys[] = $sReconcKey;
-					$aReconcilKeysReport[$sReconcKey] = array();
+					$aReconcilKeysReport[$sReconcKey] = [];
 				}
 			}
 		}
@@ -704,28 +608,22 @@ try
 	$aData = $oCSVParser->ToArray();
 	$iLineCount = count($aData);
 
-	if (($sOutput == "summary") || ($sOutput == 'details'))
-	{
+	if (($sOutput == "summary") || ($sOutput == 'details')) {
 		$oP->add_comment("Data Lines: ".$iLineCount);
 		$oP->add_comment("Simulate: ".($bSimulate ? '1' : '0'));
 		$oP->add_comment("Columns: ".implode(', ', $aFieldList));
 
-		$aReconciliationReport = array();
-		foreach($aReconcilKeysReport as $sKey => $aKeyDetails)
-		{
-			if (count($aKeyDetails) > 0)
-			{
+		$aReconciliationReport = [];
+		foreach ($aReconcilKeysReport as $sKey => $aKeyDetails) {
+			if (count($aKeyDetails) > 0) {
 				$aReconciliationReport[] = $sKey.' ('.implode(',', $aKeyDetails).')';
-			}
-			else
-			{
+			} else {
 				$aReconciliationReport[] = $sKey;
 			}
 		}
 		$oP->add_comment("Reconciliation Keys: ".implode(', ', $aReconciliationReport));
 
-		foreach ($aWarnings as $sWarning)
-		{
+		foreach ($aWarnings as $sWarning) {
 			$oP->add_comment("Warning: ".$sWarning);
 		}
 	}
@@ -743,12 +641,9 @@ try
 		count($aFieldList)
 	);
 
-	if ($bSimulate)
-	{
+	if ($bSimulate) {
 		$oMyChange = null;
-	}
-	else
-	{
+	} else {
 		if (strlen($sComment) > 0) {
 			$sMoreInfo = CMDBChange::GetCurrentUserName().', Web Service (CSV) - '.$sComment;
 		} else {
@@ -769,38 +664,35 @@ try
 	$iCountCreations = 0;
 	$iCountUpdates = 0;
 	$iCountUnchanged = 0;
-	foreach($aRes as $iRow => $aRowData)
-	{
+	foreach ($aRes as $iRow => $aRowData) {
 		$bWritten = false;
 
 		$oStatus = $aRowData["__STATUS__"];
-		switch(get_class($oStatus))
-		{
-		case 'RowStatus_NoChange':
-			$iCountUnchanged++;
-			break;
-		case 'RowStatus_Modify':
-			$iCountUpdates++;
-			$bWritten = true;
-			break;
-		case 'RowStatus_NewObj':
-			$iCountCreations++;
-			$bWritten = true;
-			break;
-		case 'RowStatus_Issue':
-			$iCountErrors++;
-			break;
+		switch (get_class($oStatus)) {
+			case 'RowStatus_NoChange':
+				$iCountUnchanged++;
+				break;
+			case 'RowStatus_Modify':
+				$iCountUpdates++;
+				$bWritten = true;
+				break;
+			case 'RowStatus_NewObj':
+				$iCountCreations++;
+				$bWritten = true;
+				break;
+			case 'RowStatus_Issue':
+				$iCountErrors++;
+				break;
 		}
 
-		if ($bWritten)
-		{
+		if ($bWritten) {
 			// Something has been done, still there may be some issues to report
-			foreach($aRowData as $key => $value)
-			{
-				if (!is_object($value)) continue;
+			foreach ($aRowData as $key => $value) {
+				if (!is_object($value)) {
+					continue;
+				}
 
-				switch (get_class($value))
-				{
+				switch (get_class($value)) {
 					case 'CellStatus_Void':
 					case 'CellStatus_Modify':
 						break;
@@ -819,13 +711,11 @@ try
 	//
 	// Summary of settings and results
 	//
-	if ($sOutput == 'retcode')
-	{
+	if ($sOutput == 'retcode') {
 		$oP->add($iCountErrors);
 	}
 
-	if (($sOutput == "summary") || ($sOutput == 'details'))
-	{
+	if (($sOutput == "summary") || ($sOutput == 'details')) {
 		$oP->add_comment("Change tracking comment: ".$sComment);
 		$oP->add_comment("Issues: ".$iCountErrors);
 		$oP->add_comment("Warnings: ".$iCountWarnings);
@@ -834,80 +724,69 @@ try
 		$oP->add_comment("Unchanged: ".$iCountUnchanged);
 	}
 
-
-	if ($sOutput == 'details')
-	{
+	if ($sOutput == 'details') {
 		// Setup result presentation
 		//
-		$aDisplayConfig = array();
-		$aDisplayConfig["__LINE__"] = array("label"=>"Line", "description"=>"");
-		$aDisplayConfig["__STATUS__"] = array("label"=>"Status", "description"=>"");
-		$aDisplayConfig["__OBJECT_CLASS__"] = array("label"=>"Object Class", "description"=>"");
-		$aDisplayConfig["__OBJECT_ID__"] = array("label"=>"Object Id", "description"=>"");
-		foreach($aExtKeys as $sExtKeyAttCode => $aRemoteAtt)
-		{
+		$aDisplayConfig = [];
+		$aDisplayConfig["__LINE__"] = ["label" => "Line", "description" => ""];
+		$aDisplayConfig["__STATUS__"] = ["label" => "Status", "description" => ""];
+		$aDisplayConfig["__OBJECT_CLASS__"] = ["label" => "Object Class", "description" => ""];
+		$aDisplayConfig["__OBJECT_ID__"] = ["label" => "Object Id", "description" => ""];
+		foreach ($aExtKeys as $sExtKeyAttCode => $aRemoteAtt) {
 			$sLabel = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode)->GetLabel();
-			$aDisplayConfig["$sExtKeyAttCode"] = array("label"=>$sExtKeyAttCode, "description"=>$sLabel." - ext key");
+			$aDisplayConfig["$sExtKeyAttCode"] = ["label" => $sExtKeyAttCode, "description" => $sLabel." - ext key"];
 		}
-		foreach($aFinalReconcilKeys as $iCol => $sAttCode)
-		{
-	//		$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
-	//		$aDisplayConfig["$iCol"] = array("label"=>"$sLabel", "description"=>"");
+		foreach ($aFinalReconcilKeys as $iCol => $sAttCode) {
+			//		$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
+			//		$aDisplayConfig["$iCol"] = array("label"=>"$sLabel", "description"=>"");
 		}
-		foreach ($aAttList as $sAttCode => $iCol)
-		{
-			if ($sAttCode == 'id')
-			{
+		foreach ($aAttList as $sAttCode => $iCol) {
+			if ($sAttCode == 'id') {
 				$sLabel = Dict::S('UI:CSVImport:idField');
 
-				$aDisplayConfig["$iCol"] = array("label"=>$sAttCode, "description"=>$sLabel);
-			}
-			else
-			{
+				$aDisplayConfig["$iCol"] = ["label" => $sAttCode, "description" => $sLabel];
+			} else {
 				$sLabel = MetaModel::GetAttributeDef($sClass, $sAttCode)->GetLabel();
-				$aDisplayConfig["$iCol"] = array("label"=>$sAttCode, "description"=>$sLabel);
+				$aDisplayConfig["$iCol"] = ["label" => $sAttCode, "description" => $sLabel];
 			}
 		}
 
-		$aResultDisp = array(); // to be displayed
-		foreach($aRes as $iRow => $aRowData)
-		{
-			$aRowDisp = array();
+		$aResultDisp = []; // to be displayed
+		foreach ($aRes as $iRow => $aRowData) {
+			$aRowDisp = [];
 			$aRowDisp["__LINE__"] = $iRow;
-			if (is_object($aRowData["__STATUS__"]))
-			{
+			if (is_object($aRowData["__STATUS__"])) {
 				$aRowDisp["__STATUS__"] = $aRowData["__STATUS__"]->GetDescription();
-			}
-			else
-			{
+			} else {
 				$aRowDisp["__STATUS__"] = "*No status available*";
 			}
-			if (isset($aRowData["finalclass"]) && isset($aRowData["id"]))
-			{
+			if (isset($aRowData["finalclass"]) && isset($aRowData["id"])) {
 				$aRowDisp["__OBJECT_CLASS__"] = $aRowData["finalclass"];
 				$aRowDisp["__OBJECT_ID__"] = $aRowData["id"]->GetCLIValue();
-			}
-			else
-			{
+			} else {
 				$aRowDisp["__OBJECT_CLASS__"] = "n/a";
 				$aRowDisp["__OBJECT_ID__"] = "n/a";
 			}
-			foreach($aRowData as $key => $value)
-			{
+			foreach ($aRowData as $key => $value) {
 				$sKey = (string) $key;
 
-				if ($sKey == '__STATUS__') continue;
-				//__ERRORS__ used by tests only
-				if ($sKey == '__ERRORS__') continue;
-				if ($sKey == 'finalclass') continue;
-				if ($sKey == 'id') continue;
-
-				if (is_object($value))
-				{
-					$aRowDisp["$sKey"] = $value->GetCLIValueAndDescription();
+				if ($sKey == '__STATUS__') {
+					continue;
 				}
-				else
-				{
+				//__ERRORS__ used by tests only
+				if ($sKey == '__ERRORS__') {
+					continue;
+				}
+				if ($sKey == 'finalclass') {
+					continue;
+				}
+				if ($sKey == 'id') {
+					continue;
+				}
+
+				if (is_object($value)) {
+					$aRowDisp["$sKey"] = $value->GetCLIValueAndDescription();
+				} else {
 					$aRowDisp["$sKey"] = $value;
 				}
 			}
@@ -915,19 +794,12 @@ try
 		}
 		$oP->table($aDisplayConfig, $aResultDisp);
 	}
-}
-catch(BulkLoadException $e)
-{
+} catch (BulkLoadException $e) {
 	$oP->add_comment($e->getMessage());
-}
-catch(SecurityException $e)
-{
+} catch (SecurityException $e) {
 	$oP->add_comment($e->getMessage());
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
 	$oP->add_comment((string)$e);
 }
 
 $oP->output();
-?>

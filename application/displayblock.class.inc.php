@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -104,7 +105,7 @@ class DisplayBlock
 	 */
 	public const ENUM_STYLE_CHART_AJAX = 'chart_ajax';
 
-	const TAG_BLOCK = 'itopblock';
+	public const TAG_BLOCK = 'itopblock';
 	/** @var \DBSearch */
 	protected $m_oFilter;
 	protected $m_aConditions; // Conditions added to the filter -> avoid duplicate conditions
@@ -137,20 +138,18 @@ class DisplayBlock
 	 *
 	 * @throws \ApplicationException
 	 */
-	public function __construct(DBSearch $oFilter, $sStyle = self::ENUM_STYLE_LIST, $bAsynchronous = false, $aParams = array(), $oSet = null)
+	public function __construct(DBSearch $oFilter, $sStyle = self::ENUM_STYLE_LIST, $bAsynchronous = false, $aParams = [], $oSet = null)
 	{
 		$this->m_oFilter = $oFilter->DeepClone();
-		$this->m_aConditions = array();
+		$this->m_aConditions = [];
 		$this->m_sStyle = $sStyle;
 		$this->m_bAsynchronous = $bAsynchronous;
 		$this->m_aParams = $aParams;
 		$this->m_oSet = $oSet;
-		if (array_key_exists('show_obsolete_data', $aParams))
-		{
+		if (array_key_exists('show_obsolete_data', $aParams)) {
 			$this->m_bShowObsoleteData = $aParams['show_obsolete_data'];
 		}
-		if ($this->m_bShowObsoleteData === null)
-		{
+		if ($this->m_bShowObsoleteData === null) {
 			// User defined
 			$this->m_bShowObsoleteData = utils::ShowObsoleteData();
 		}
@@ -412,22 +411,18 @@ class DisplayBlock
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public static function FromObjectSet(DBObjectSet $oSet, $sStyle, $aParams = array())
+	public static function FromObjectSet(DBObjectSet $oSet, $sStyle, $aParams = [])
 	{
 		$oDummyFilter = new DBObjectSearch($oSet->GetClass());
-		$aKeys = array();
-		$oSet->OptimizeColumnLoad(array($oSet->GetClassAlias() => array())); // No need to load all the columns just to get the id
-		while($oObject = $oSet->Fetch())
-		{
+		$aKeys = [];
+		$oSet->OptimizeColumnLoad([$oSet->GetClassAlias() => []]); // No need to load all the columns just to get the id
+		while ($oObject = $oSet->Fetch()) {
 			$aKeys[] = $oObject->GetKey();
 		}
 		$oSet->Rewind();
-		if (count($aKeys) > 0)
-		{
+		if (count($aKeys) > 0) {
 			$oDummyFilter->AddCondition('id', $aKeys, 'IN');
-		}
-		else
-		{
+		} else {
 			$oDummyFilter->AddCondition('id', 0, '=');
 		}
 		$oBlock = new DisplayBlock($oDummyFilter, $sStyle, false, $aParams); // DisplayBlocks built this way are synchronous
@@ -448,7 +443,7 @@ class DisplayBlock
 		$iStartPos = stripos($sTemplate, '<'.self::TAG_BLOCK.' ', 0);
 		$iEndPos = stripos($sTemplate, '</'.self::TAG_BLOCK.'>', $iStartPos);
 		$iEndTag = stripos($sTemplate, '>', $iStartPos);
-		$aParams = array();
+		$aParams = [];
 
 		if (($iStartPos === false) || ($iEndPos === false)) {
 			return null;
@@ -456,7 +451,7 @@ class DisplayBlock
 		$sITopData = substr($sTemplate, 1 + $iEndTag, $iEndPos - $iEndTag - 1);
 		$sITopTag = substr($sTemplate, $iStartPos + strlen('<'.self::TAG_BLOCK), $iEndTag - $iStartPos - strlen('<'.self::TAG_BLOCK));
 
-		$aMatches = array();
+		$aMatches = [];
 		$sBlockClass = "DisplayBlock";
 		$bAsynchronous = false;
 		$sBlockType = 'list';
@@ -522,25 +517,28 @@ class DisplayBlock
 		return new $sBlockClass($oFilter, $sBlockType, $bAsynchronous, $aParams);
 	}
 
-	public function DisplayIntoContentBlock(UIContentBlock $oContentBlock, WebPage $oPage, $sId, $aExtraParams = array())
+	public function DisplayIntoContentBlock(UIContentBlock $oContentBlock, WebPage $oPage, $sId, $aExtraParams = [])
 	{
 		$oContentBlock->AddSubBlock($this->GetDisplay($oPage, $sId, $aExtraParams));
 	}
 
-	public function Display(WebPage $oPage, $sId, $aExtraParams = array())
+	public function Display(WebPage $oPage, $sId, $aExtraParams = [])
 	{
 		$oPage->AddUiBlock($this->GetDisplay($oPage, $sId, $aExtraParams));
 	}
 
-	public function GetDisplay(WebPage $oPage, $sId, $aExtraParams = array()): UIContentBlock
+	public function GetDisplay(WebPage $oPage, $sId, $aExtraParams = []): UIContentBlock
 	{
 		$oHtml = new UIContentBlock($sId);
 
 		$oHtml->AddCSSClass("display_block");
 		$aExtraParams = array_merge($aExtraParams, $this->m_aParams);
 		$aExtraParams['currentId'] = $sId;
-		$sExtraParams = addslashes(str_replace('"', "'",
-			json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
+		$sExtraParams = addslashes(str_replace(
+			'"',
+			"'",
+			json_encode($aExtraParams)
+		)); // JSON encode, change the style of the quotes and escape them
 
 		if (isset($aExtraParams['query_params'])) {
 			$aQueryParams = $aExtraParams['query_params'];
@@ -549,9 +547,9 @@ class DisplayBlock
 				$sClass = $aExtraParams['this->class'];
 				$iKey = $aExtraParams['this->id'];
 				$oObj = MetaModel::GetObject($sClass, $iKey);
-				$aQueryParams = array('this->object()' => $oObj);
+				$aQueryParams = ['this->object()' => $oObj];
 			} else {
-				$aQueryParams = array();
+				$aQueryParams = [];
 			}
 		}
 
@@ -587,8 +585,7 @@ class DisplayBlock
 			 ');
 		}
 
-		if ($this->m_sStyle == static::ENUM_STYLE_LIST) // Search form need to extract result list extra data, the simplest way is to expose this configuration
-		{
+		if ($this->m_sStyle == static::ENUM_STYLE_LIST) { // Search form need to extract result list extra data, the simplest way is to expose this configuration
 			$listJsonExtraParams = json_encode(json_encode($aExtraParams));
 			$oPage->add_ready_script("
             $('#$sId').data('sExtraParams', ".$listJsonExtraParams.");
@@ -608,7 +605,7 @@ class DisplayBlock
 	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 */
-	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	public function RenderContent(WebPage $oPage, $aExtraParams = [])
 	{
 		if (!isset($aExtraParams['currentId'])) {
 			$sId = utils::GetUniqueId(); // Works only if the page is not an Ajax one !
@@ -640,7 +637,7 @@ class DisplayBlock
 		$this->CheckParams($this->m_sStyle, $aExtraParams);
 		// Add the extra params into the filter if they make sense for such a filter
 		$bDoSearch = utils::ReadParam('dosearch', false);
-		$aQueryParams = array();
+		$aQueryParams = [];
 		if (isset($aExtraParams['query_params'])) {
 			$aQueryParams = $aExtraParams['query_params'];
 		} else {
@@ -648,7 +645,7 @@ class DisplayBlock
 				$sClass = $aExtraParams['this->class'];
 				$iKey = $aExtraParams['this->id'];
 				$oObj = MetaModel::GetObject($sClass, $iKey);
-				$aQueryParams = array('this->object()' => $oObj);
+				$aQueryParams = ['this->object()' => $oObj];
 			}
 		}
 		if ($this->m_oSet == null) {
@@ -658,7 +655,7 @@ class DisplayBlock
 				$oAppContext = new ApplicationContext();
 				$sClass = $this->m_oFilter->GetClass();
 				$aFilterCodes = MetaModel::GetFiltersList($sClass);
-				$aCallSpec = array($sClass, 'MapContextParam');
+				$aCallSpec = [$sClass, 'MapContextParam'];
 				if (is_callable($aCallSpec)) {
 					foreach ($oAppContext->GetNames() as $sContextParam) {
 						$sParamCode = call_user_func($aCallSpec, $sContextParam); //Map context parameter to the value/filter code depending on the class
@@ -693,11 +690,9 @@ class DisplayBlock
 						}
 					}
 
-					if (!is_null($condition))
-					{
+					if (!is_null($condition)) {
 						$sOpCode = null; // default operator
-						if (is_array($condition))
-						{
+						if (is_array($condition)) {
 							// Multiple values, add them as AND X IN (v1, v2, v3...)
 							$sOpCode = 'IN';
 						}
@@ -705,26 +700,22 @@ class DisplayBlock
 						$this->AddCondition($sFilterCode, $condition, $sOpCode, $bParseSearchString);
 					}
 				}
-				if ($bDoSearch)
-				{
+				if ($bDoSearch) {
 					// Keep the table_id identifying this table if we're performing a search
 					$sTableId = utils::ReadParam('_table_id_', null, false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
-					if ($sTableId != null)
-					{
+					if ($sTableId != null) {
 						$aExtraParams['table_id'] = $sTableId;
 					}
 				}
 			}
-			$aOrderBy = array();
-			if (isset($aExtraParams['order_by']))
-			{
+			$aOrderBy = [];
+			if (isset($aExtraParams['order_by'])) {
 				// Convert the string describing the order_by parameter into an array
 				// The syntax is +attCode1,-attCode2
 				// attCode1 => ascending, attCode2 => descending
 				$aTemp = explode(',', $aExtraParams['order_by']);
-				foreach($aTemp as $sTemp)
-				{
-					$aMatches = array();
+				foreach ($aTemp as $sTemp) {
+					$aMatches = [];
 					if (preg_match('/^([+-])?(.+)$/', $sTemp, $aMatches)) {
 						$bAscending = true;
 						if ($aMatches[1] == '-') {
@@ -740,7 +731,7 @@ class DisplayBlock
 		}
 		$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
 
-		switch($this->m_sStyle) {
+		switch ($this->m_sStyle) {
 			case static::ENUM_STYLE_LIST_SEARCH:
 			case static::ENUM_STYLE_LIST:
 				break;
@@ -770,7 +761,7 @@ class DisplayBlock
 			case static::ENUM_STYLE_LIST:
 			case static::ENUM_STYLE_LIST_IN_OBJECT:
 				$oBlock = $this->RenderList($aExtraParams, $oPage);
-			break;
+				break;
 
 			case static::ENUM_STYLE_ACTIONS:
 				$oBlock = $this->RenderActions($aExtraParams);
@@ -797,47 +788,39 @@ class DisplayBlock
 				break;
 
 			default:
-			// Unsupported style, do nothing.
-			$sHtml .= Dict::format('UI:Error:UnsupportedStyleOfBlock', $this->m_sStyle);
+				// Unsupported style, do nothing.
+				$sHtml .= Dict::format('UI:Error:UnsupportedStyleOfBlock', $this->m_sStyle);
 		}
 
-
 		$bAutoReload = false;
-		if (isset($aExtraParams['auto_reload']))
-		{
-			if ($aExtraParams['auto_reload'] === true)
-			{
+		if (isset($aExtraParams['auto_reload'])) {
+			if ($aExtraParams['auto_reload'] === true) {
 				// Note: does not work in the switch (case true) because a positive number evaluates to true!!!
 				$aExtraParams['auto_reload'] = 'standard';
 			}
-			switch($aExtraParams['auto_reload'])
-			{
+			switch ($aExtraParams['auto_reload']) {
 				case 'fast':
 					$bAutoReload = true;
-					$iReloadInterval = MetaModel::GetConfig()->GetFastReloadInterval()*1000;
+					$iReloadInterval = MetaModel::GetConfig()->GetFastReloadInterval() * 1000;
 					break;
 
 				case 'standard':
 				case 'true':
 					$bAutoReload = true;
-					$iReloadInterval = MetaModel::GetConfig()->GetStandardReloadInterval()*1000;
+					$iReloadInterval = MetaModel::GetConfig()->GetStandardReloadInterval() * 1000;
 					break;
 
 				default:
-					if (is_numeric($aExtraParams['auto_reload']) && ($aExtraParams['auto_reload'] > 0))
-					{
+					if (is_numeric($aExtraParams['auto_reload']) && ($aExtraParams['auto_reload'] > 0)) {
 						$bAutoReload = true;
-						$iReloadInterval = max(MetaModel::GetConfig()->Get('min_reload_interval'), $aExtraParams['auto_reload'])*1000;
-					}
-					else
-					{
+						$iReloadInterval = max(MetaModel::GetConfig()->Get('min_reload_interval'), $aExtraParams['auto_reload']) * 1000;
+					} else {
 						// incorrect config, ignore it
 						$bAutoReload = false;
 					}
 			}
 		}
-		if (($bAutoReload) && ($this->m_sStyle != static::ENUM_STYLE_SEARCH)) // Search form do NOT auto-reload
-		{
+		if (($bAutoReload) && ($this->m_sStyle != static::ENUM_STYLE_SEARCH)) { // Search form do NOT auto-reload
 			// Used either for asynchronous or auto_reload
 			// does a json_encode twice to get a string usable as function parameter
 			$sFilterBefore = $this->m_oFilter->serialize();
@@ -884,8 +867,7 @@ JS
 	{
 		// Workaround to an issue revealed whenever a condition on org_id is applied twice (with a hierarchy of organizations)
 		// Moreover, it keeps the query as simple as possible
-		if (isset($this->m_aConditions[$sFilterCode]) && $condition == $this->m_aConditions[$sFilterCode])
-		{
+		if (isset($this->m_aConditions[$sFilterCode]) && $condition == $this->m_aConditions[$sFilterCode]) {
 			// Skip
 			return;
 		}
@@ -895,53 +877,42 @@ JS
 		$bConditionAdded = false;
 
 		// If the condition is an external key with a class having a hierarchy, use a "below" criteria
-		if (MetaModel::IsValidAttCode($sClass, $sFilterCode))
-		{
+		if (MetaModel::IsValidAttCode($sClass, $sFilterCode)) {
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sFilterCode);
 
-			if ($oAttDef->IsExternalKey())
-			{
+			if ($oAttDef->IsExternalKey()) {
 				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass());
 
-				if ($sHierarchicalKeyCode !== false)
-				{
+				if ($sHierarchicalKeyCode !== false) {
 					$oFilter = new DBObjectSearch($oAttDef->GetTargetClass());
-					if (($sOpCode == 'IN') && is_array($condition))
-					{
+					if (($sOpCode == 'IN') && is_array($condition)) {
 						$oFilter->AddConditionExpression(self::GetConditionIN($oFilter, 'id', $condition));
-					}
-					else
-					{
+					} else {
 						$oFilter->AddCondition('id', $condition);
 					}
 					$oHKFilter = new DBObjectSearch($oAttDef->GetTargetClass());
 					$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW); // Use the 'below' operator by default
 					$this->m_oFilter->AddCondition_PointingTo($oHKFilter, $sFilterCode);
 					$bConditionAdded = true;
-				}
-				else if (($sOpCode == 'IN') && is_array($condition))
-				{
+				} elseif (($sOpCode == 'IN') && is_array($condition)) {
 					$this->m_oFilter->AddConditionExpression(self::GetConditionIN($this->m_oFilter, $sFilterCode, $condition));
 					$bConditionAdded = true;
 				}
-			}
-			else if (($sOpCode == 'IN') && is_array($condition))
-			{
+			} elseif (($sOpCode == 'IN') && is_array($condition)) {
 				$this->m_oFilter->AddConditionExpression(self::GetConditionIN($this->m_oFilter, $sFilterCode, $condition));
 				$bConditionAdded = true;
 			}
 		}
 
 		// In all other cases, just add the condition directly
-		if (!$bConditionAdded)
-		{
+		if (!$bConditionAdded) {
 			$this->m_oFilter->AddCondition($sFilterCode, $condition, null); // Use the default 'loose' operator
 		}
 	}
 
-	static protected function GetConditionIN($oFilter, $sFilterCode, $condition)
+	protected static function GetConditionIN($oFilter, $sFilterCode, $condition)
 	{
-		$oField = new FieldExpression($sFilterCode,  $oFilter->GetClassAlias());
+		$oField = new FieldExpression($sFilterCode, $oFilter->GetClassAlias());
 		$sListExpr = '('.implode(', ', CMDBSource::Quote($condition)).')';
 		$sOQLCondition = $oField->RenderExpression()." IN $sListExpr";
 		$oNewCondition = Expression::FromOQL($sOQLCondition);
@@ -972,13 +943,10 @@ JS
 	protected function MakeGroupByQuery(&$aExtraParams, &$oGroupByExp, &$sGroupByLabel, &$aGroupBy, &$sAggregationFunction, &$sFctVar, &$sAggregationAttr, &$sSql)
 	{
 		$sAlias = $this->m_oFilter->GetClassAlias();
-		if (isset($aExtraParams['group_by_label']))
-		{
+		if (isset($aExtraParams['group_by_label'])) {
 			$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
 			$sGroupByLabel = $aExtraParams['group_by_label'];
-		}
-		else
-		{
+		} else {
 			// Backward compatibility: group_by is simply a field id
 			$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
 			$sGroupByLabel = MetaModel::GetLabel($this->m_oFilter->GetClass(), $aExtraParams['group_by']);
@@ -986,61 +954,52 @@ JS
 
 		// Security filtering
 		$aFields = $oGroupByExp->ListRequiredFields();
-		foreach($aFields as $sFieldAlias)
-		{
-			$aMatches = array();
-			if (preg_match('/^([^.]+)\\.([^.]+)$/', $sFieldAlias, $aMatches))
-			{
+		foreach ($aFields as $sFieldAlias) {
+			$aMatches = [];
+			if (preg_match('/^([^.]+)\\.([^.]+)$/', $sFieldAlias, $aMatches)) {
 				$sFieldClass = $this->m_oFilter->GetClassName($aMatches[1]);
 				$oAttDef = MetaModel::GetAttributeDef($sFieldClass, $aMatches[2]);
-				if ($oAttDef instanceof AttributeOneWayPassword)
-				{
+				if ($oAttDef instanceof AttributeOneWayPassword) {
 					throw new Exception('Grouping on password fields is not supported.');
 				}
 			}
 		}
 
-		$aGroupBy = array();
+		$aGroupBy = [];
 		$aGroupBy['grouped_by_1'] = $oGroupByExp;
-		$aQueryParams = array();
-		if (isset($aExtraParams['query_params']))
-		{
+		$aQueryParams = [];
+		if (isset($aExtraParams['query_params'])) {
 			$aQueryParams = $aExtraParams['query_params'];
 		}
-		$aFunctions = array();
+		$aFunctions = [];
 		$sAggregationFunction = 'count';
 		$sFctVar = '_itop_count_';
 		$sAggregationAttr = '';
-		if (isset($aExtraParams['aggregation_function']) && !empty($aExtraParams['aggregation_attribute']))
-		{
+		if (isset($aExtraParams['aggregation_function']) && !empty($aExtraParams['aggregation_attribute'])) {
 			$sAggregationFunction = $aExtraParams['aggregation_function'];
 			$sAggregationAttr = $aExtraParams['aggregation_attribute'];
 			$oAttrExpr = Expression::FromOQL('`'.$sAlias.'`.`'.$sAggregationAttr.'`');
-			$oFctExpr = new FunctionExpression(strtoupper($sAggregationFunction), array($oAttrExpr));
+			$oFctExpr = new FunctionExpression(strtoupper($sAggregationFunction), [$oAttrExpr]);
 			$sFctVar = '_itop_'.$sAggregationFunction.'_';
-			$aFunctions = array($sFctVar => $oFctExpr);
+			$aFunctions = [$sFctVar => $oFctExpr];
 		}
 
-		if (!empty($sAggregationAttr))
-		{
+		if (!empty($sAggregationAttr)) {
 			$sClass = $this->m_oFilter->GetClass();
 			$sAggregationAttr = MetaModel::GetLabel($sClass, $sAggregationAttr);
 		}
 		$iLimit = 0;
-		if (isset($aExtraParams['limit']))
-		{
+		if (isset($aExtraParams['limit'])) {
 			$iLimit = intval($aExtraParams['limit']);
 		}
-		$aOrderBy = array();
-		if (isset($aExtraParams['order_direction']) && isset($aExtraParams['order_by']))
-		{
-			switch ($aExtraParams['order_by'])
-			{
+		$aOrderBy = [];
+		if (isset($aExtraParams['order_direction']) && isset($aExtraParams['order_by'])) {
+			switch ($aExtraParams['order_by']) {
 				case 'attribute':
-					$aOrderBy = array('grouped_by_1' => ($aExtraParams['order_direction'] === 'asc'));
+					$aOrderBy = ['grouped_by_1' => ($aExtraParams['order_direction'] === 'asc')];
 					break;
 				case 'function':
-					$aOrderBy = array($sFctVar => ($aExtraParams['order_direction'] === 'asc'));
+					$aOrderBy = [$sFctVar => ($aExtraParams['order_direction'] === 'asc')];
 					break;
 			}
 		}
@@ -1076,31 +1035,31 @@ JS
 					$this->AddCondition($sFilterCode, $sContextParamValue);
 				}
 			}
-			$aQueryParams = array();
+			$aQueryParams = [];
 			if (isset($aExtraParams['query_params'])) {
 				$aQueryParams = $aExtraParams['query_params'];
 			}
-			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
+			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, [], $aQueryParams);
 			$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
 		}
 
 		// Summary details
-		$aCounts = array();
-		$aStateLabels = array();
+		$aCounts = [];
+		$aStateLabels = [];
 		if (!empty($sStateAttrCode) && !empty($sStatesList)) {
 			$aStates = explode(',', $sStatesList);
 
 			// Generate one count + group by query [#1330]
 			$sClassAlias = $this->m_oFilter->GetClassAlias();
 			$oGroupByExpr = Expression::FromOQL($sClassAlias.'.'.$sStateAttrCode);
-			$aGroupBy = array('group1' => $oGroupByExpr);
+			$aGroupBy = ['group1' => $oGroupByExpr];
 			$oGroupBySearch = $this->m_oFilter->DeepClone();
 			if (isset($this->m_bShowObsoleteData)) {
 				$oGroupBySearch->SetShowObsoleteData($this->m_bShowObsoleteData);
 			}
 			$sCountGroupByQuery = $oGroupBySearch->MakeGroupByQuery($aQueryParams, $aGroupBy, false);
 			$aCountGroupByResults = CMDBSource::QueryToArray($sCountGroupByQuery);
-			$aCountsQueryResults = array();
+			$aCountsQueryResults = [];
 			foreach ($aCountGroupByResults as $aCountGroupBySingleResult) {
 				$aCountsQueryResults[$aCountGroupBySingleResult[0]] = $aCountGroupBySingleResult[1];
 			}
@@ -1114,7 +1073,8 @@ JS
 					: 0;
 
 				if ($aCounts[$sStateValue] == 0) {
-					$aCounts[$sStateValue] = ['link' => '-', 'label' => $aCounts[$sStateValue]];;
+					$aCounts[$sStateValue] = ['link' => '-', 'label' => $aCounts[$sStateValue]];
+					;
 				} else {
 					$oSingleGroupByValueFilter = $this->m_oFilter->DeepClone();
 					$oSingleGroupByValueFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
@@ -1164,7 +1124,7 @@ JS
 			$oBlock->AddSubBlock($oPill);
 		}
 		$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
-		if(isset($aExtraParams['query_params']['this->object()'])){
+		if (isset($aExtraParams['query_params']['this->object()'])) {
 			$aExtraParams['query_params']['this->class'] = get_class($aExtraParams['query_params']['this->object()']);
 			$aExtraParams['query_params']['this->id'] = 	$aExtraParams['query_params']['this->object()']->GetKey();
 			unset($aExtraParams['query_params']['this->object()']);
@@ -1178,7 +1138,8 @@ JS
 					 $('#".$oBlock->GetId()."').html(data);
 					 $('#".$oBlock->GetId()."').unblock();
 					});
-				$('#".$oBlock->GetId()."').unblock();");
+				$('#".$oBlock->GetId()."').unblock();"
+		);
 
 		return $oBlock;
 	}
@@ -1188,7 +1149,7 @@ JS
 	 *
 	 * @return string[]
 	 */
-	protected function  GetAllowedActionsParams(array $aExtraParams)
+	protected function GetAllowedActionsParams(array $aExtraParams)
 	{
 		return [
 			'context_filter', /** int if != 0 filter with user context */
@@ -1220,11 +1181,11 @@ JS
 					$this->AddCondition($sFilterCode, $sContextParamValue);
 				}
 			}
-			$aQueryParams = array();
+			$aQueryParams = [];
 			if (isset($aExtraParams['query_params'])) {
 				$aQueryParams = $aExtraParams['query_params'];
 			}
-			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, array(), $aQueryParams);
+			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, [], $aQueryParams);
 			$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
 		}
 		$iCount = $this->m_oSet->Count();
@@ -1241,8 +1202,15 @@ JS
 		if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY)) {
 			$sCreateActionUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=new&class='.$sClass.$oAppContext->GetForLink(true);
 			$sCreateActionLabel = Dict::Format('UI:Button:Create');
-			$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, $sCreateActionUrl,
-				$sCreateActionLabel, $aRefreshParams);
+			$oBlock = DashletFactory::MakeForDashletBadge(
+				$sClassIconUrl,
+				$sHyperlink,
+				$iCount,
+				$sClassLabel,
+				$sCreateActionUrl,
+				$sCreateActionLabel,
+				$aRefreshParams
+			);
 		} else {
 			$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, null, null, $aRefreshParams);
 		}
@@ -1272,9 +1240,9 @@ JS
 
 			$aRes = CMDBSource::QueryToArray($sSql);
 
-			$aGroupBy = array();
-			$aLabels = array();
-			$aValues = array();
+			$aGroupBy = [];
+			$aLabels = [];
+			$aValues = [];
 			$iTotalCount = 0;
 			foreach ($aRes as $iRow => $aRow) {
 				$sValue = $aRow['grouped_by_1'];
@@ -1285,7 +1253,7 @@ JS
 				$iTotalCount += $aRow['_itop_count_'];
 			}
 
-			$aData = array();
+			$aData = [];
 			$oAppContext = new ApplicationContext();
 			$sParams = $oAppContext->GetForLink(true);
 			foreach ($aGroupBy as $iRow => $iCount) {
@@ -1296,22 +1264,22 @@ JS
 				if (isset($aExtraParams['query_params'])) {
 					$aQueryParams = $aExtraParams['query_params'];
 				} else {
-					$aQueryParams = array();
+					$aQueryParams = [];
 				}
 				$sFilter = rawurlencode($oSubsetSearch->serialize(false, $aQueryParams));
 
-				$aData[] = array(
+				$aData[] = [
 					'group' => $aLabels[$iRow],
-					'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1$sParams&filter=$sFilter\">$iCount</a>"
-				); // TO DO: add the context information
+					'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1$sParams&filter=$sFilter\">$iCount</a>",
+				]; // TO DO: add the context information
 			}
-			$aAttribs = array(
-				'group' => array('label' => $sGroupByLabel, 'description' => ''),
-				'value' => array(
+			$aAttribs = [
+				'group' => ['label' => $sGroupByLabel, 'description' => ''],
+				'value' => [
 					'label' => Dict::S('UI:GroupBy:'.$sAggregationFunction),
 					'description' => Dict::Format('UI:GroupBy:'.$sAggregationFunction.'+', $sAggregationAttr),
-				),
-			);
+				],
+			];
 			$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
 
 			$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
@@ -1322,7 +1290,7 @@ JS
 				$oBlock = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
 				$oBlock->AddSubTitleBlock(new Html($sTitle));
 				$oBlock->AddCSSClass('ibo-datatable-panel');
-				if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+				if (isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0) {
 					$oBlock->SetIcon($aExtraParams["panel_icon"]);
 				}
 				$oDataTable = DataTableUIBlockFactory::MakeForStaticData("", $aAttribs, $aData, null, $aExtraParams, $this->m_oFilter->ToOQL(), $aOption);
@@ -1341,7 +1309,7 @@ JS
 			}
 			if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
 				$oBlock = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
-				if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+				if (isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0) {
 					$oBlock->SetIcon($aExtraParams["panel_icon"]);
 				}
 				$oBlock->AddSubBlock(new Html('<p>'.Dict::Format($sFormat, $iCount).'</p>'));
@@ -1351,7 +1319,7 @@ JS
 		}
 
 		return $oBlock;
-}
+	}
 
 	/**
 	 * @param WebPage $oPage
@@ -1409,7 +1377,6 @@ JS
 		$oBlock->aExtraParams = $aExtraParams;
 		$oBlock->sFilter = $this->m_oFilter->ToOQL();
 
-
 		// Check the classes that can be read (i.e authorized) by this user...
 		foreach ($aClasses as $sAlias => $sClassName) {
 			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $this->m_oSet) != UR_ALLOWED_NO) {
@@ -1431,7 +1398,7 @@ JS
 			$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
 			// Limit the size of the URL (N°1585 - request uri too long)
 			if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH) {
-				$oBlock->sEventAttachedData = json_encode(array(
+				$oBlock->sEventAttachedData = json_encode([
 					'filter' => $sSearchFilter,
 					'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
 					'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
@@ -1439,7 +1406,7 @@ JS
 					'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
 					'breadcrumb_icon' => 'fas fa-search',
 					'breadcrumb_icon_type' => iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES,
-				));
+				]);
 			}
 		}
 
@@ -1472,25 +1439,25 @@ JS
 		$oContentBlock = new UIContentBlock();
 		$oHtml = new Html();
 		$oContentBlock->AddSubBlock($oHtml);
-		$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']) : array();
+		$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']) : [];
 		if (!isset($aExtraParams['group_by'])) {
 			$oHtml->AddHtml('<p>'.Dict::S('UI:Error:MandatoryTemplateParameter_group_by').'</p>');
 		} else {
-			$aGroupByFields = array();
+			$aGroupByFields = [];
 			$aGroupBy = explode(',', $aExtraParams['group_by']);
 			foreach ($aGroupBy as $sGroupBy) {
-				$aMatches = array();
+				$aMatches = [];
 				if (preg_match('/^(.+)\.(.+)$/', $sGroupBy, $aMatches) > 0) {
-					$aGroupByFields[] = array('alias' => $aMatches[1], 'att_code' => $aMatches[2]);
+					$aGroupByFields[] = ['alias' => $aMatches[1], 'att_code' => $aMatches[2]];
 				}
 			}
 			if (count($aGroupByFields) == 0) {
 				$oHtml->AddHtml('<p>'.Dict::Format('UI:Error:InvalidGroupByFields', $aExtraParams['group_by']).'</p>');
 			} else {
-				$aResults = array();
-				$aCriteria = array();
+				$aResults = [];
+				$aCriteria = [];
 				while ($aObjects = $this->m_oSet->FetchAssoc()) {
-					$aKeys = array();
+					$aKeys = [];
 					foreach ($aGroupByFields as $aField) {
 						$sAlias = $aField['alias'];
 						if (is_null($aObjects[$sAlias])) {
@@ -1507,7 +1474,7 @@ JS
 				$oHtml->AddHtml("<table>\n");
 				// Construct a new (parametric) query that will return the content of this block
 				$oBlockFilter = $this->m_oFilter->DeepClone();
-				$aExpressions = array();
+				$aExpressions = [];
 				$index = 0;
 				foreach ($aGroupByFields as $aField) {
 					$aExpressions[] = '`'.$aField['alias'].'`.`'.$aField['att_code'].'` = :param'.$index++;
@@ -1519,7 +1486,7 @@ JS
 				foreach ($aResults as $sCategory => $aObjects) {
 					$oHtml->AddHtml("<tr><td><h1>$sCategory</h1></td></tr>\n");
 					if (count($aDisplayAliases) == 1) {
-						$aSimpleArray = array();
+						$aSimpleArray = [];
 						foreach ($aObjects as $aRow) {
 							$oObj = $aRow[$aDisplayAliases[0]];
 							if (!is_null($oObj)) {
@@ -1535,12 +1502,12 @@ JS
 						$oHtml->AddHtml("</td></tr>\n");
 					} else {
 						$index = 0;
-						$aArgs = array();
+						$aArgs = [];
 						foreach ($aGroupByFields as $aField) {
 							$aArgs['param'.$index] = $aCriteria[$sCategory][$aField['alias'].'.'.$aField['att_code']];
 							$index++;
 						}
-						$oSet = new CMDBObjectSet($oBlockFilter, array(), $aArgs);
+						$oSet = new CMDBObjectSet($oBlockFilter, [], $aArgs);
 						if (empty($aExtraParams['currentId'])) {
 							$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
 						} else {
@@ -1603,7 +1570,7 @@ JS
 
 		if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
 			$oPanel = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
-			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+			if (isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0) {
 				$oPanel->SetIcon($aExtraParams["panel_icon"]);
 			}
 			$oPanel->AddSubBlock($oBlock);
@@ -1627,7 +1594,7 @@ JS
 	{
 		$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
 		$sId = utils::ReadParam('id', '');
-		$aValues = array();
+		$aValues = [];
 		$oBlock = null;
 		$sJSURLs = '';
 
@@ -1638,21 +1605,18 @@ JS
 			$this->MakeGroupByQuery($aExtraParams, $oGroupByExp, $sGroupByLabel, $aGroupBy, $sAggregationFunction, $sFctVar, $sAggregationAttr, $sSql);
 			$aRes = CMDBSource::QueryToArray($sSql);
 
-
-
 			$iTotalCount = 0;
-			$aURLs = array();
+			$aURLs = [];
 
 			foreach ($aRes as $iRow => $aRow) {
 				$sValue = $aRow['grouped_by_1'];
 				$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
 				$iTotalCount += $aRow['_itop_count_'];
-				$aValues[] = array(
+				$aValues[] = [
 					'label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'),
 					'label_html' => $sHtmlValue,
 					'value' => (float)$aRow[$sFctVar],
-				);
-
+				];
 
 				// Build the search for this subset
 				$oSubsetSearch = $this->m_oFilter->DeepClone();
@@ -1691,7 +1655,7 @@ JS
 				$aColumns = [];
 				$aNames = [];
 				foreach ($aValues as $idx => $aValue) {
-					$aColumns[] = array('series_'.$idx, (float)$aValue['value']);
+					$aColumns[] = ['series_'.$idx, (float)$aValue['value']];
 					$aNames['series_'.$idx] = $aValue['label'];
 				}
 
@@ -1713,7 +1677,7 @@ JS
 		}
 		if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
 			$oPanel = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
-			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+			if (isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0) {
 				$oPanel->SetIcon($aExtraParams["panel_icon"]);
 			}
 			$oPanel->AddSubBlock($oBlock);
@@ -1740,12 +1704,12 @@ JS
 		$oBlock->sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($oBlock->sCsvFile);
 		$oBlock->sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search'.$oAppContext->GetForLink(true).'&filter='.rawurlencode($this->m_oFilter->serialize()).'&format=csv';
 		// Pass the parameters via POST, since expression may be very long
-		$aParamsToPost = array(
+		$aParamsToPost = [
 			'expression' => $this->m_oFilter->ToOQL(true),
 			'format' => 'csv',
 			'filename' => $oBlock->sCsvFile,
 			'charset' => 'UTF-8',
-		);
+		];
 		if ($oBlock->bAdvancedMode) {
 			$oBlock->sDownloadLink .= '&fields_advanced=1';
 			$aParamsToPost['fields_advanced'] = 1;
@@ -1804,8 +1768,7 @@ class MenuBlock extends DisplayBlock
 		$oRouter = Router::GetInstance();
 		$oRenderBlock = new UIContentBlock();
 
-		if ($this->m_sStyle == 'popup') // popup is a synonym of 'list' for backward compatibility
-		{
+		if ($this->m_sStyle == 'popup') { // popup is a synonym of 'list' for backward compatibility
 			$this->m_sStyle = static::ENUM_STYLE_LIST;
 		}
 
@@ -1813,7 +1776,7 @@ class MenuBlock extends DisplayBlock
 		$aSelectedClasses = $this->GetFilter()->GetSelectedClasses();
 		$bIsForLinkset = isset($aExtraParams['target_attr']);
 		$oSet = new CMDBObjectSet($this->GetFilter());
-		if(isset($aExtraParams['object_count'])){
+		if (isset($aExtraParams['object_count'])) {
 			$iSetCount = $aExtraParams['object_count'];
 		} else {
 			$iSetCount = $oSet->Count();
@@ -1843,7 +1806,6 @@ class MenuBlock extends DisplayBlock
 		) {
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink(true);
-
 
 			$sFilter = $this->GetFilter()->serialize();
 			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($sClass);
@@ -1902,7 +1864,7 @@ class MenuBlock extends DisplayBlock
 			$iLimit = MetaModel::GetConfig()->Get('complex_actions_limit');
 			if (
 				($iSetCount > 0) && (false === $bLocked) && MetaModel::HasLifecycle($sClass) &&
-				( ($iLimit == 0) || ($iSetCount < $iLimit) )
+				(($iLimit == 0) || ($iSetCount < $iLimit))
 			) {
 				$aTransitions = [];
 				// Processing (optimizations) and endpoints are not exactly the same depending on if there is only 1 object or a set
@@ -1922,8 +1884,8 @@ class MenuBlock extends DisplayBlock
 					// Life cycle actions may be available... if all objects are in the same state
 					// Group by <state>
 					$oGroupByExp = new FieldExpression(MetaModel::GetStateAttributeCode($sClass), $this->m_oFilter->GetClassAlias());
-					$aGroupBy = array('__state__' => $oGroupByExp);
-					$aQueryParams = array();
+					$aGroupBy = ['__state__' => $oGroupByExp];
+					$aQueryParams = [];
 					if (isset($aExtraParams['query_params'])) {
 						$aQueryParams = $aExtraParams['query_params'];
 					}
@@ -1955,10 +1917,10 @@ class MenuBlock extends DisplayBlock
 						switch ($iActionAllowed) {
 							case UR_ALLOWED_YES:
 							case UR_ALLOWED_DEPENDS:
-								$aTransitionActions[$sStimulusCode] = array(
+								$aTransitionActions[$sStimulusCode] = [
 										'label' => $aStimuli[$sStimulusCode]->GetLabel(),
 										'url' => "{$sRootUrl}pages/UI.php?stimulus=$sStimulusCode&class=$sLifecycleClass&{$sUrlQueryString}",
-									) + $aActionParams;
+									] + $aActionParams;
 								break;
 
 							default:
@@ -2020,16 +1982,16 @@ class MenuBlock extends DisplayBlock
 							// Just one object in the set, possible actions are "new / clone / modify and delete"
 							if (!isset($aExtraParams['link_attr'])) {
 								if ($bIsModifyAllowed) {
-									$aRegularActions['UI:Menu:Modify'] = array(
+									$aRegularActions['UI:Menu:Modify'] = [
 											'label' => Dict::S('UI:Menu:Modify'),
-											'url'   => $oRouter->GenerateUrl('object.modify', ['class' => $sClass, 'id' => $id]) . "{$sContext}#",
-										) + $aActionParams;
+											'url'   => $oRouter->GenerateUrl('object.modify', ['class' => $sClass, 'id' => $id])."{$sContext}#",
+										] + $aActionParams;
 								}
 								if ($bIsDeleteAllowed) {
-									$aRegularActions['UI:Menu:Delete'] = array(
+									$aRegularActions['UI:Menu:Delete'] = [
 											'label' => Dict::S('UI:Menu:Delete'),
 											'url' => "{$sRootUrl}pages/$sUIPage?operation=delete&class=$sClass&id=$id{$sContext}",
-										) + $aActionParams;
+										] + $aActionParams;
 								}
 
 								// Relations...
@@ -2038,16 +2000,16 @@ class MenuBlock extends DisplayBlock
 									$this->AddMenuSeparator($aRegularActions);
 									foreach ($aRelations as $sRelationCode => $aRelationInfo) {
 										if (array_key_exists('down', $aRelationInfo)) {
-											$aRegularActions[$sRelationCode.'_down'] = array(
+											$aRegularActions[$sRelationCode.'_down'] = [
 													'label' => $aRelationInfo['down'],
 													'url' => "{$sRootUrl}pages/$sUIPage?operation=view_relations&relation=$sRelationCode&direction=down&class=$sClass&id=$id{$sContext}",
-												) + $aActionParams;
+												] + $aActionParams;
 										}
 										if (array_key_exists('up', $aRelationInfo)) {
-											$aRegularActions[$sRelationCode.'_up'] = array(
+											$aRegularActions[$sRelationCode.'_up'] = [
 													'label' => $aRelationInfo['up'],
 													'url' => "{$sRootUrl}pages/$sUIPage?operation=view_relations&relation=$sRelationCode&direction=up&class=$sClass&id=$id{$sContext}",
-												) + $aActionParams;
+												] + $aActionParams;
 										}
 									}
 								}
@@ -2059,7 +2021,7 @@ class MenuBlock extends DisplayBlock
 									$bCanKill = false;
 
 									$oUser = UserRights::GetUserObject();
-									$aUserProfiles = array();
+									$aUserProfiles = [];
 									if (!is_null($oUser)) {
 										$oProfileSet = $oUser->Get('profile_list');
 										while ($oProfile = $oProfileSet->Fetch()) {
@@ -2081,10 +2043,10 @@ class MenuBlock extends DisplayBlock
 
 									if ($bCanKill) {
 										$this->AddMenuSeparator($aRegularActions);
-										$aRegularActions['concurrent_lock_unlock'] = array(
+										$aRegularActions['concurrent_lock_unlock'] = [
 											'label' => Dict::S('UI:Menu:KillConcurrentLock'),
 											'url' => "{$sRootUrl}pages/$sUIPage?operation=kill_lock&class=$sClass&id=$id{$sContext}",
-										);
+										];
 									}
 								}
 							}
@@ -2092,7 +2054,7 @@ class MenuBlock extends DisplayBlock
 							$this->AddMenuSeparator($aRegularActions);
 
 							$this->GetEnumAllowedActions($oSet, function ($sLabel, $data) use (&$aRegularActions, $aActionParams) {
-								$aRegularActions[$sLabel] = array('label' => $sLabel, 'url' => $data) + $aActionParams;
+								$aRegularActions[$sLabel] = ['label' => $sLabel, 'url' => $data] + $aActionParams;
 							});
 						}
 						break;
@@ -2299,7 +2261,7 @@ class MenuBlock extends DisplayBlock
 
 				$sTarget = isset($aAction['target']) ? $aAction['target'] : '';
 				if (!empty($aAction['onclick'])) {
-					$oActionButton = ButtonUIBlockFactory::MakeIconAction($sIconClass, $aAction['label'], $aAction['label'], $sLabel,false); //utils::Sanitize($sActionId.md5($aAction['onclick']), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER))
+					$oActionButton = ButtonUIBlockFactory::MakeIconAction($sIconClass, $aAction['label'], $aAction['label'], $sLabel, false); //utils::Sanitize($sActionId.md5($aAction['onclick']), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER))
 					$oActionButton->SetOnClickJsCode($aAction['onclick']);
 				} else {
 					$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, utils::Sanitize($sActionId, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER));
@@ -2458,13 +2420,11 @@ class MenuBlock extends DisplayBlock
 	protected function AddMenuSeparator(&$aActions)
 	{
 		$sSeparator = '<hr class="menu-separator"/>';
-		if (count($aActions) > 0) // Make sure that the separator is not the first item in the menu
-		{
+		if (count($aActions) > 0) { // Make sure that the separator is not the first item in the menu
 			$aKeys = array_keys($aActions);
 			$sLastKey = array_pop($aKeys);
-			if ($aActions[$sLastKey]['label'] != $sSeparator) // Make sure there are no 2 consecutive separators
-			{
-				$aActions['sep_'.(count($aActions)-1)] = array('label' => $sSeparator, 'url' => '');
+			if ($aActions[$sLastKey]['label'] != $sSeparator) { // Make sure there are no 2 consecutive separators
+				$aActions['sep_'.(count($aActions) - 1)] = ['label' => $sSeparator, 'url' => ''];
 			}
 		}
 	}
@@ -2524,10 +2484,10 @@ class MenuBlock extends DisplayBlock
 	 */
 	protected function AddBulkDeleteObjectsMenuAction(array &$aActions, string $sClass, string $sFilter, string $sActionIdentifier = 'UI:Menu:BulkDelete', $sActionLabel = 'UI:Menu:BulkDelete')
 	{
-		$aActions[$sActionIdentifier] = array(
+		$aActions[$sActionIdentifier] = [
 			'label' => Dict::S($sActionLabel),
 			'url' => $this->PrepareUrlForStandardMenuAction($sClass, "operation=select_for_deletion&filter=".urlencode($sFilter)),
-		) + $this->GetDefaultParamsForMenuAction();
+		] + $this->GetDefaultParamsForMenuAction();
 	}
 
 	/**
@@ -2564,6 +2524,6 @@ class MenuBlock extends DisplayBlock
 		$oAppContext = new ApplicationContext();
 		$sContext = $oAppContext->GetForLink(true);
 
-		return $sUrl . $sContext;
+		return $sUrl.$sContext;
 	}
 }

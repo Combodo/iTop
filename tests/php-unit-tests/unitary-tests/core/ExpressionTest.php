@@ -7,7 +7,7 @@ use Expression;
 
 class ExpressionTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = false;
+	public const USE_TRANSACTION = false;
 
 	/**
 	 * @dataProvider ListParametersProvider
@@ -20,9 +20,8 @@ class ExpressionTest extends ItopDataTestCase
 	{
 		$oExpression = Expression::FromOQL($sOQL);
 		$aParameters = $oExpression->ListParameters();
-		$aResult = array();
-		foreach ($aParameters as $oVarExpr)
-		{
+		$aResult = [];
+		foreach ($aParameters as $oVarExpr) {
 			/** var \VariableExpression $oVarExpr */
 			$aResult[] = $oVarExpr->RenderExpression();
 		}
@@ -42,7 +41,7 @@ class ExpressionTest extends ItopDataTestCase
 			["name REGEXP :regexp", [':regexp']],
 			[" t.agent_id = :current_contact_id", [':current_contact_id']],
 			["INET_ATON(dev.managementip) > INET_ATON('10.22.32.224') AND INET_ATON(:ip) < INET_ATON('10.22.32.255')", [':ip']],
-			["((`UserRequest`.`status` IN ('closed','rejected','resolved')))", []]
+			["((`UserRequest`.`status` IN ('closed','rejected','resolved')))", []],
 		];
 	}
 }

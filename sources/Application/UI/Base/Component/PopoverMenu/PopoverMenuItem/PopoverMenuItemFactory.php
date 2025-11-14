@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,8 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem;
-
-
 
 use ApplicationPopupMenuItem;
 use JSPopupMenuItem;
@@ -46,14 +45,13 @@ class PopoverMenuItemFactory
 	public static function MakeFromApplicationPopupMenuItem(ApplicationPopupMenuItem $oItem)
 	{
 		$sNamespace = 'Combodo\\iTop\\Application\\UI\\Base\\Component\\PopoverMenu\\PopoverMenuItem\\';
-		switch(true)
-		{
+		switch (true) {
 			case $oItem instanceof URLPopupMenuItem:
 				$sTargetClass = 'UrlPopoverMenuItem';
 				break;
 			case $oItem instanceof JSPopupMenuItem:
 				$sTargetClass = 'JsPopoverMenuItem';
-				break;			
+				break;
 			case $oItem instanceof SeparatorPopupMenuItem:
 				$sTargetClass = 'SeparatorPopoverMenuItem';
 				break;
@@ -99,7 +97,8 @@ class PopoverMenuItemFactory
 				new JSPopupMenuItem(
 					$aRefactoredItem['uid'],
 					$aRefactoredItem['label'],
-					$aRefactoredItem['on_click'])
+					$aRefactoredItem['on_click']
+				)
 			);
 		} elseif (!empty($aRefactoredItem['url'])) {
 			// URL
@@ -108,7 +107,8 @@ class PopoverMenuItemFactory
 					$aRefactoredItem['uid'],
 					$aRefactoredItem['label'],
 					$aRefactoredItem['url'],
-					$aRefactoredItem['target'])
+					$aRefactoredItem['target']
+				)
 			);
 		} else {
 			// Separator

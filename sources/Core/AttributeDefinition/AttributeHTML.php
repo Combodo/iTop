@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -32,7 +33,7 @@ class AttributeHTML extends AttributeLongText
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->Get('sql')] = $this->GetSQLCol();
 		if ($this->GetOptional('format', null) != null) {
 			// Add the extra column only if the property 'format' is specified for the attribute

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -20,7 +21,7 @@ use Combodo\iTop\Application\UI\Base\Component\Dialog\DialogUIBlockFactory;
 trait tTableRowActions
 {
 	/** @var bool static dialog initialized flag to avoid multiple html markups */
-	static public bool $bDialogInitialized = false;
+	public static bool $bDialogInitialized = false;
 
 	/**
 	 * @var $aRowActions array array of row actions

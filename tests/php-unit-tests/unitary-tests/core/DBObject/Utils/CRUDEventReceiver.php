@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -9,7 +10,6 @@ namespace DBObject\Utils;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
-
 
 /**
  * Test support class used to count events received
@@ -50,7 +50,6 @@ class CRUDEventReceiver
 		$this->aCallbacks = [];
 		$this->bDBUpdateCalledSuccessfullyDuringEvent = false;
 	}
-
 
 	/**
 	 * Event callbacks => this function counts the received events by event name and source class

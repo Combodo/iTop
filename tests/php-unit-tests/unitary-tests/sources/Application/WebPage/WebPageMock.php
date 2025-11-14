@@ -5,9 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Test\UnitTest\Application\WebPage;
-
 
 use Combodo\iTop\Application\WebPage\WebPage;
 

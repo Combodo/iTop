@@ -35,21 +35,21 @@ use DOMFormatException;
 class FilterBrick extends PortalBrick
 {
 	// Overloaded constants
-	const DEFAULT_VISIBLE_NAVIGATION_MENU = false;
-    /**
-     * @deprecated 3.2.1
-     */
-    const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/filter/tile.html.twig';
-    const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-search';
-    const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-search fa-2x';
-    /** @var string DEFAULT_TARGET_BRICK_CLASS */
-	const DEFAULT_TARGET_BRICK_CLASS = 'Combodo\\iTop\\Portal\\Brick\\BrowseBrick';
+	public const DEFAULT_VISIBLE_NAVIGATION_MENU = false;
+	/**
+	 * @deprecated 3.2.1
+	 */
+	public const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/filter/tile.html.twig';
+	public const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-search';
+	public const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-search fa-2x';
+	/** @var string DEFAULT_TARGET_BRICK_CLASS */
+	public const DEFAULT_TARGET_BRICK_CLASS = 'Combodo\\iTop\\Portal\\Brick\\BrowseBrick';
 	/** @var string DEFAULT_SEARCH_PLACEHOLDER_VALUE */
-	const DEFAULT_SEARCH_PLACEHOLDER_VALUE = 'Brick:Portal:Filter:SearchInput:Placeholder';
+	public const DEFAULT_SEARCH_PLACEHOLDER_VALUE = 'Brick:Portal:Filter:SearchInput:Placeholder';
 	/** @var string DEFAULT_SEARCH_SUBMIT_LABEL */
-	const DEFAULT_SEARCH_SUBMIT_LABEL = 'Brick:Portal:Filter:SearchInput:Submit';
+	public const DEFAULT_SEARCH_SUBMIT_LABEL = 'Brick:Portal:Filter:SearchInput:Submit';
 	/** @var string DEFAULT_SEARCH_SUBMIT_CLASS */
-	const DEFAULT_SEARCH_SUBMIT_CLASS = '';
+	public const DEFAULT_SEARCH_SUBMIT_CLASS = '';
 
 	/** @var string $sTargetBrickId */
 	protected $sTargetBrickId;
@@ -68,8 +68,9 @@ class FilterBrick extends PortalBrick
 	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
 		parent::RegisterTemplates($oTemplatesRegister);
-		$oTemplatesRegister->RegisterTemplates(self::class,
-			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH . 'filter/tile.html.twig')
+		$oTemplatesRegister->RegisterTemplates(
+			self::class,
+			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH.'filter/tile.html.twig')
 		);
 	}
 
@@ -98,9 +99,9 @@ class FilterBrick extends PortalBrick
 	 * @return string
 	 */
 	public function GetTargetBrickClass()
-    {
-        return $this->sTargetBrickClass;
-    }
+	{
+		return $this->sTargetBrickClass;
+	}
 
 	/**
 	 * @return string
@@ -149,9 +150,9 @@ class FilterBrick extends PortalBrick
 	 * @param string $sTargetBrickClass
 	 */
 	public function SetTargetBrickClass($sTargetBrickClass)
-    {
-        $this->sTargetBrickClass = $sTargetBrickClass;
-    }
+	{
+		$this->sTargetBrickClass = $sTargetBrickClass;
+	}
 
 	/**
 	 * @param string $sTargetBrickTab
@@ -197,38 +198,34 @@ class FilterBrick extends PortalBrick
 		return $this;
 	}
 
-    /**
-     * Load the brick's data from the xml passed as a ModuleDesignElement.
-     * This is used to set all the brick attributes at once.
-     *
-     * @param \Combodo\iTop\DesignElement $oMDElement
-     *
-     * @return \Combodo\iTop\Portal\Brick\FilterBrick
-     *
-     * @throws \DOMFormatException
-     */
+	/**
+	 * Load the brick's data from the xml passed as a ModuleDesignElement.
+	 * This is used to set all the brick attributes at once.
+	 *
+	 * @param \Combodo\iTop\DesignElement $oMDElement
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\FilterBrick
+	 *
+	 * @throws \DOMFormatException
+	 */
 	public function LoadFromXml(DesignElement $oMDElement)
 	{
 		parent::LoadFromXml($oMDElement);
 
 		// Checking specific elements
 		/** @var \Combodo\iTop\DesignElement $oBrickSubNode */
-		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
-		{
-			switch ($oBrickSubNode->nodeName)
-			{
+		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode) {
+			switch ($oBrickSubNode->nodeName) {
 				case 'target_brick':
 					/** @var \Combodo\iTop\DesignElement $oTargetBrickNode */
-					foreach ($oBrickSubNode->GetNodes('*') as $oTargetBrickNode)
-					{
-						switch ($oTargetBrickNode->nodeName)
-						{
-                            case 'id':
-                                $this->SetTargetBrickId($oTargetBrickNode->GetText());
-                                break;
-                            case 'type':
-                                $this->SetTargetBrickClass($oTargetBrickNode->GetText());
-                                break;
+					foreach ($oBrickSubNode->GetNodes('*') as $oTargetBrickNode) {
+						switch ($oTargetBrickNode->nodeName) {
+							case 'id':
+								$this->SetTargetBrickId($oTargetBrickNode->GetText());
+								break;
+							case 'type':
+								$this->SetTargetBrickClass($oTargetBrickNode->GetText());
+								break;
 							case 'tab':
 								$this->SetTargetBrickTab($oTargetBrickNode->GetText());
 								break;
@@ -236,12 +233,12 @@ class FilterBrick extends PortalBrick
 					}
 					break;
 				case 'search_placeholder_value':
-				    // Note: We don't put the default value constant if the node is empty because we might actually want this to be empty
+					// Note: We don't put the default value constant if the node is empty because we might actually want this to be empty
 					$this->SetSearchPlaceholderValue($oBrickSubNode->GetText(''));
 					break;
 				case 'search_submit_label':
-                    // Note: We don't put the default value constant if the node is empty because we might actually want this to be empty
-                    $this->SetSearchSubmitLabel($oBrickSubNode->GetText(''));
+					// Note: We don't put the default value constant if the node is empty because we might actually want this to be empty
+					$this->SetSearchSubmitLabel($oBrickSubNode->GetText(''));
 					break;
 				case 'search_submit_class':
 					$this->SetSearchSubmitClass($oBrickSubNode->GetText(static::DEFAULT_SEARCH_SUBMIT_CLASS));
@@ -250,8 +247,7 @@ class FilterBrick extends PortalBrick
 		}
 
 		// Checking that the brick has at least a target brick id
-		if (($this->GetTargetBrickId() === null) || ($this->GetTargetBrickId() === ''))
-		{
+		if (($this->GetTargetBrickId() === null) || ($this->GetTargetBrickId() === '')) {
 			throw new DOMFormatException('FilterBrick : Must have a target brick id', 0, null, $oMDElement);
 		}
 

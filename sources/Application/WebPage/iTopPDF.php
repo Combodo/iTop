@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -11,7 +12,6 @@ use Dict;
 use TCPDF;
 use TCPDF_IMAGES;
 use utils;
-
 
 /**
  * Custom class derived from TCPDF for providing custom headers and footers
@@ -65,11 +65,14 @@ class iTopPDF extends TCPDF
 		}*/
 		$imgtype = TCPDF_IMAGES::getImageFileType($sImagePath);
 		if (($imgtype == 'eps') or ($imgtype == 'ai')) {
-			$this->ImageEps($sImagePath, $x, $y, $w, $h);;
+			$this->ImageEps($sImagePath, $x, $y, $w, $h);
+			;
 		} elseif ($imgtype == 'svg') {
-			$this->ImageSVG($sImagePath, $x, $y, $w, $h);;
+			$this->ImageSVG($sImagePath, $x, $y, $w, $h);
+			;
 		} else {
-			$this->Image($sImagePath, $x, $y, $w, $h);;
+			$this->Image($sImagePath, $x, $y, $w, $h);
+			;
 		}
 	}
 
@@ -89,14 +92,44 @@ class iTopPDF extends TCPDF
 
 		// Display the title (centered)
 		$this->SetXY($aMargins['left'] + $iPageNumberWidth, 0);
-		$this->MultiCell($this->getPageWidth() - $aMargins['left'] - $aMargins['right'] - 2 * $iPageNumberWidth, 15, $this->sDocumentTitle,
-			0, 'C', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
+		$this->MultiCell(
+			$this->getPageWidth() - $aMargins['left'] - $aMargins['right'] - 2 * $iPageNumberWidth,
+			15,
+			$this->sDocumentTitle,
+			0,
+			'C',
+			false,
+			0 /* $ln */,
+			'',
+			'',
+			true,
+			0,
+			false,
+			true,
+			15,
+			'M' /* $valign */
+		);
 		$this->SetFontParams('', 10);
 
 		// Display the page number (right aligned)
 		// Warning: the 'R'ight alignment does not work when using placeholders like $this->getAliasNumPage() or $this->getAliasNbPages()
-		$this->MultiCell($iPageNumberWidth, 15, Dict::Format('Core:BulkExport:PDF:PageNumber', $this->page), 0, 'R', false, 0 /* $ln */, '',
-			'', true, 0, false, true, 15, 'M' /* $valign */);
+		$this->MultiCell(
+			$iPageNumberWidth,
+			15,
+			Dict::Format('Core:BulkExport:PDF:PageNumber', $this->page),
+			0,
+			'R',
+			false,
+			0 /* $ln */,
+			'',
+			'',
+			true,
+			0,
+			false,
+			true,
+			15,
+			'M' /* $valign */
+		);
 
 		// Branding logo
 		$sBrandingIcon = Branding::GetLogoRelativePath(Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL);

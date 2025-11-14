@@ -46,6 +46,7 @@ $ibo-vendors-ckeditor--ck-mentions--item--padding-y: $ibo-spacing-200 !default;
 .ck-editor {
   width: 100% !important; /* Force editor to always take its container full width (not less, not more) */
   display: inline-grid; /* Force editor to always take its container full width (not less, not more) */
+  z-index: 1;
 
   .ck-editor__main {
     overflow: auto;

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ServiceManagement' => 'Hizmet yönetimi',
 	'Menu:ServiceManagement+' => 'Hizmet yönetimi',
 	'Menu:Service:Overview' => 'Özet',
@@ -38,7 +39,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
-));
+]);
 
 /*
 	'UI:ServiceManagementMenu' => 'Gestion des Services',
@@ -53,30 +54,27 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 // Class: Organization
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Teslimat Modeli',
 	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Teslimat Modeli Adı',
 	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
-));
-
-
+]);
 
 //
 // Class: ContractType
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ContractType' => 'Contract Type~~',
 	'Class:ContractType+' => '~~',
-));
-
+]);
 
 //
 // Class: Contract
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Contract' => 'Sözleşme',
 	'Class:Contract+' => '~~',
 	'Class:Contract/Attribute:name' => 'Adı',
@@ -125,13 +123,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Contract/Attribute:status/Value:production+' => 'production~~',
 	'Class:Contract/Attribute:finalclass' => 'Tip',
 	'Class:Contract/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: CustomerContract
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:CustomerContract' => 'Müşteri Sözleşmesi',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Services~~',
@@ -140,13 +138,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract~~',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Provider contracts~~',
 	'Class:CustomerContract/Attribute:providercontracts_list+' => 'All the provider contracts to deliver the services for this contract (underpinning contract)~~',
-));
+]);
 
 //
 // Class: ProviderContract
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ProviderContract' => 'Tedarikçi Sözleşmesi',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs~~',
@@ -155,13 +153,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement~~',
 	'Class:ProviderContract/Attribute:coverage' => 'Service hours~~',
 	'Class:ProviderContract/Attribute:coverage+' => '~~',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToContract' => 'Link Contact / Contract~~',
 	'Class:lnkContactToContract+' => '~~',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
@@ -173,13 +171,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkContactToContract/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Contact Name~~',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContractToDocument' => 'Link Contract / Document~~',
 	'Class:lnkContractToDocument+' => '~~',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
@@ -191,13 +189,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Document Name~~',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToProviderContract
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Link FunctionalCI / ProviderContract~~',
 	'Class:lnkFunctionalCIToProviderContract+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
@@ -209,13 +207,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI Name~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
-));
+]);
 
 //
 // Class: ServiceFamily
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ServiceFamily' => 'Service Family~~',
 	'Class:ServiceFamily+' => '~~',
 	'Class:ServiceFamily/Attribute:name' => 'Name~~',
@@ -224,13 +222,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ServiceFamily/Attribute:icon+' => '~~',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services~~',
 	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category~~',
-));
+]);
 
 //
 // Class: Service
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Service' => 'Hizmet',
 	'Class:Service+' => '',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
@@ -264,13 +262,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Service/Attribute:customercontracts_list+' => 'All the customer contracts that have purchased this service~~',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Service sub categories~~',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service~~',
-));
+]);
 
 //
 // Class: lnkDocumentToService
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToService' => 'Link Document / Service~~',
 	'Class:lnkDocumentToService+' => '~~',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
@@ -282,13 +280,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkDocumentToService/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Document Name~~',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkContactToService
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToService' => 'Link Contact / Service~~',
 	'Class:lnkContactToService+' => '~~',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
@@ -300,13 +298,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkContactToService/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Contact Name~~',
 	'Class:lnkContactToService/Attribute:contact_name+' => '~~',
-));
+]);
 
 //
 // Class: ServiceSubcategory
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ServiceSubcategory' => 'Hizmet alt kategorisi',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
@@ -334,13 +332,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'service request~~',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider Name~~',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider~~',
-));
+]);
 
 //
 // Class: SLA
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:SLA' => 'SLA',
 	'Class:SLA+' => 'Hizmet Seviyesi Anlaşması',
 	'Class:SLA/Attribute:name' => 'Adı',
@@ -356,13 +354,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:SLA/Attribute:customercontracts_list' => 'Customer contracts~~',
 	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA~~',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
-));
+]);
 
 //
 // Class: SLT
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:SLT' => 'SLT',
 	'Class:SLT+' => 'Hizmet Seviyesi Taahütler',
 	'Class:SLT/Attribute:name' => 'Adı',
@@ -397,13 +395,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => 'hours~~',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minutes~~',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes~~',
-));
+]);
 
 //
 // Class: lnkSLAToSLT
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkSLAToSLT' => 'Link SLA / SLT~~',
 	'Class:lnkSLAToSLT+' => '~~',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
@@ -425,13 +423,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'SLT value unit~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkCustomerContractToService' => 'Link Customer Contract / Service~~',
 	'Class:lnkCustomerContractToService+' => '~~',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
@@ -447,13 +445,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA Name~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToProviderContract
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkCustomerContractToProviderContract' => 'Müşteri ve Tedarikçi Sözleşmesi ilişkilendirmesi',
 	'Class:lnkCustomerContractToProviderContract+' => '',
 	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s~~',
@@ -465,13 +463,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Provider contract Name~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToFunctionalCI
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkCustomerContractToFunctionalCI' => 'Link Customer Contract / FunctionalCI~~',
 	'Class:lnkCustomerContractToFunctionalCI+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -483,13 +481,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => 'CI Name~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '~~',
-));
+]);
 
 //
 // Class: DeliveryModel
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DeliveryModel' => 'Delivery Model~~',
 	'Class:DeliveryModel+' => '~~',
 	'Class:DeliveryModel/Attribute:name' => 'Name~~',
@@ -504,13 +502,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Persons) for this delivery model~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Customers~~',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
-));
+]);
 
 //
 // Class: lnkDeliveryModelToContact
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDeliveryModelToContact' => 'Link DeliveryModel / Contact~~',
 	'Class:lnkDeliveryModelToContact+' => '~~',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
@@ -526,35 +524,35 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Role name~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-));
+]);

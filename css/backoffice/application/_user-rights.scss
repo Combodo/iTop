@@ -1,0 +1,33 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-user-rights--padding-x: $ibo-spacing-400 !default;
+$ibo-user-rights--padding-y: $ibo-spacing-200 !default;
+$ibo-user-rights--border-radius: $ibo-border-radius-400 !default;
+
+$ibo-user-rights--is-success--background-color: $ibo-color-success-100 !default;
+$ibo-user-rights--is-success--color: $ibo-color-success-950 !default;
+$ibo-user-rights--is-success--border-color: $ibo-color-success-500 !default;
+$ibo-user-rights--is-success--border: 1px solid $ibo-user-rights--is-success--border-color !default;
+
+$ibo-user-rights--is-failure--background-color: $ibo-color-danger-100 !default;
+$ibo-user-rights--is-failure--color: $ibo-color-danger-950 !default;
+$ibo-user-rights--is-failure--border-color: $ibo-color-danger-500 !default;
+$ibo-user-rights--is-failure--border: 1px solid $ibo-user-rights--is-failure--border-color !default;
+
+.ibo-user-rights {
+  padding: $ibo-user-rights--padding-y $ibo-user-rights--padding-x;
+  border-radius: $ibo-user-rights--border-radius;
+  &.ibo-is-success {
+    background-color: $ibo-user-rights--is-success--background-color;
+    color: $ibo-user-rights--is-success--color;
+    border: $ibo-user-rights--is-success--border;
+  }
+  &.ibo-is-failure {
+    background-color: $ibo-user-rights--is-failure--background-color;
+    color: $ibo-user-rights--is-failure--color;
+    border: $ibo-user-rights--is-failure--border;
+  }
+}

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -38,39 +39,35 @@ class UILinksWidgetDirect
 		$this->sAttCode = $sAttCode;
 		$this->sInputid = $sInputId;
 		$this->sNameSuffix = $sNameSuffix;
-		$this->aZlist = array();
+		$this->aZlist = [];
 		$this->sLinkedClass = '';
-		
+
 		// Compute the list of attributes visible from the given objet:
 		// All the attributes from the "list" Zlist of the Link class except
 		// the ExternalKey that points to the current object and its related external fields
 		$oLinksetDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$this->sLinkedClass = $oLinksetDef->GetLinkedClass();
 		$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
-		switch($oLinksetDef->GetEditMode())
-		{
+		switch ($oLinksetDef->GetEditMode()) {
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
-			$aZList = MetaModel::FlattenZList(MetaModel::GetZListItems($this->sLinkedClass, 'details'));
-			break;
-			
+				$aZList = MetaModel::FlattenZList(MetaModel::GetZListItems($this->sLinkedClass, 'details'));
+				break;
+
 			default:
-			$aZList = MetaModel::FlattenZList(MetaModel::GetZListItems($this->sLinkedClass, 'list'));
-			array_unshift($aZList, 'friendlyname');
+				$aZList = MetaModel::FlattenZList(MetaModel::GetZListItems($this->sLinkedClass, 'list'));
+				array_unshift($aZList, 'friendlyname');
 		}
-		foreach($aZList as $sLinkedAttCode)
-		{
-			if ($sLinkedAttCode != $sExtKeyToMe)
-			{
+		foreach ($aZList as $sLinkedAttCode) {
+			if ($sLinkedAttCode != $sExtKeyToMe) {
 				$oAttDef = MetaModel::GetAttributeDef($this->sLinkedClass, $sLinkedAttCode);
-				
+
 				if ((!$oAttDef->IsExternalField() || ($oAttDef->GetKeyAttCode() != $sExtKeyToMe)) &&
-					(!$oAttDef->IsLinkSet()) )
-				{
+					(!$oAttDef->IsLinkSet())) {
 					$this->aZlist[] = $sLinkedAttCode;
 				}
 			}
 		}
-		
+
 	}
 
 	/**
@@ -101,21 +98,17 @@ class UILinksWidgetDirect
 		$sRealClass = '';
 		//$oPage->add('<div class="wizContainer" style="vertical-align:top;"><div>');
 		$aSubClasses = MetaModel::EnumChildClasses($this->sLinkedClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
-		$aPossibleClasses = array();
-		foreach($aSubClasses as $sCandidateClass)
-		{
-			if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
-			{
-				if ($sCandidateClass == $sProposedRealClass)
-				{
+		$aPossibleClasses = [];
+		foreach ($aSubClasses as $sCandidateClass) {
+			if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
+				if ($sCandidateClass == $sProposedRealClass) {
 					$sRealClass = $sProposedRealClass;
 				}
 				$aPossibleClasses[$sCandidateClass] = MetaModel::GetName($sCandidateClass);
 			}
 		}
 		// Only one of the subclasses can be instantiated...
-		if (count($aPossibleClasses) == 1)
-		{
+		if (count($aPossibleClasses) == 1) {
 			$aKeys = array_keys($aPossibleClasses);
 			$sRealClass = $aKeys[0];
 		}
@@ -123,11 +116,11 @@ class UILinksWidgetDirect
 		if ($sRealClass != '') {
 			$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 			$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
-			$aFieldsFlags = array($sExtKeyToMe => OPT_ATT_HIDDEN);
+			$aFieldsFlags = [$sExtKeyToMe => OPT_ATT_HIDDEN];
 			$oObj = DBObject::MakeDefaultInstance($sRealClass);
-			$aPrefillParam = array('source_obj' => $oSourceObj);
+			$aPrefillParam = ['source_obj' => $oSourceObj];
 			$oObj->PrefillForm('creation_from_editinplace', $aPrefillParam);
-			$aFormExtraParams = array(
+			$aFormExtraParams = [
 				'formPrefix'  => $this->sInputid,
 				'noRelations' => true,
 				'fieldsFlags' => $aFieldsFlags,
@@ -140,25 +133,22 @@ class UILinksWidgetDirect
 JS
 					,
 				],
-			);
+			];
 
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
 			FormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
-			
-			if(FormHelper::HasMandatoryAttributeBlobInputs($oObj)){
+
+			if (FormHelper::HasMandatoryAttributeBlobInputs($oObj)) {
 				$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal(FormHelper::ENUM_MANDATORY_BLOB_MODE_CREATE));
 			}
 
-			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aFormExtraParams);
-		}
-		else
-		{
+			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, [], $aFormExtraParams);
+		} else {
 			$sClassLabel = MetaModel::GetName($this->sLinkedClass);
 			$oPage->add('<p>'.Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel));
 			$oPage->add('<nobr><select name="class">');
 			asort($aPossibleClasses);
-			foreach($aPossibleClasses as $sClassName => $sClassLabel)
-			{
+			foreach ($aPossibleClasses as $sClassName => $sClassLabel) {
 				$oPage->add("<option value=\"$sClassName\">$sClassLabel</option>");
 			}
 			$oPage->add('</select>');
@@ -178,7 +168,7 @@ JS
 	 * @throws \MissingQueryArgument
 	 * @throws \OQLException
 	 */
-	public function GetObjectsSelectionDlg($oPage, $oCurrentObj, $aAlreadyLinked, $aPrefillFormParam = array())
+	public function GetObjectsSelectionDlg($oPage, $oCurrentObj, $aAlreadyLinked, $aPrefillFormParam = [])
 	{
 		//$oPage->add("<div class=\"wizContainer\" style=\"vertical-align:top;\">\n");
 
@@ -199,8 +189,7 @@ JS
 
 		$oLinkSetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		$valuesDef = $oLinkSetDef->GetValuesDef();
-		if ($valuesDef === null)
-		{
+		if ($valuesDef === null) {
 			$oFilter = new DBObjectSearch($this->sLinkedClass);
 		} else {
 			if (!$valuesDef instanceof ValueSetObjects) {
@@ -218,8 +207,10 @@ JS
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
-		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->sInputid}",
-			array(
+		$oPage->AddUiBlock($oBlock->GetDisplay(
+			$oPage,
+			"SearchFormToAdd_{$this->sInputid}",
+			[
 				'result_list_outer_selector' => "SearchResultsToAdd_{$this->sInputid}",
 				'table_id' => "add_{$this->sInputid}",
 				'table_inner_id' => "ResultsToAdd_{$this->sInputid}",
@@ -227,13 +218,14 @@ JS
 				'cssCount' => "#count_{$this->sInputid}",
 				'query_params' => $oFilter->GetInternalParams(),
 				'hidden_criteria' => $sHiddenCriteria,
-			)
+			]
 		));
 		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sCancel = Dict::S('UI:Button:Cancel');
 		$sAdd = Dict::S('UI:Button:Add');
 
-		$oPage->add(<<<HTML
+		$oPage->add(
+			<<<HTML
 <form id="ObjectsAddForm_{$this->sInputid}">
     <div id="SearchResultsToAdd_{$this->sInputid}">
         <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
@@ -256,52 +248,43 @@ HTML
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public function SearchObjectsToAdd(WebPage $oP, $sRemoteClass = '', $aAlreadyLinked = array(), $oCurrentObj = null, $aPrefillFormParam = array())
+	public function SearchObjectsToAdd(WebPage $oP, $sRemoteClass = '', $aAlreadyLinked = [], $oCurrentObj = null, $aPrefillFormParam = [])
 	{
-		if ($sRemoteClass == '')
-		{
+		if ($sRemoteClass == '') {
 			$sRemoteClass = $this->sLinkedClass;
 		}
 		$oLinkSetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		$valuesDef = $oLinkSetDef->GetValuesDef();
-		if ($valuesDef === null)
-		{
+		if ($valuesDef === null) {
 			$oFilter = new DBObjectSearch($sRemoteClass);
-		}
-		else
-		{
-			if (!$valuesDef instanceof ValueSetObjects)
-			{
+		} else {
+			if (!$valuesDef instanceof ValueSetObjects) {
 				throw new Exception('Error: only ValueSetObjects are supported for "allowed_values" in AttributeLinkedSet ('.$this->sClass.'/'.$this->sAttCode.').');
 			}
 			$oFilter = DBObjectSearch::FromOQL($valuesDef->GetFilterExpression());
 		}
-		
-		if (($oCurrentObj != null) && MetaModel::IsSameFamilyBranch($sRemoteClass, $this->sClass))
-		{
+
+		if (($oCurrentObj != null) && MetaModel::IsSameFamilyBranch($sRemoteClass, $this->sClass)) {
 			// Prevent linking to self if the linked object is of the same family
 			// and already present in the database
-			if (!$oCurrentObj->IsNew())
-			{
+			if (!$oCurrentObj->IsNew()) {
 				$oFilter->AddCondition('id', $oCurrentObj->GetKey(), '!=');
 			}
 		}
-		if ($oCurrentObj != null)
-		{
+		if ($oCurrentObj != null) {
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 
 			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
 			$oFilter->SetInternalParams($aArgs);
-			
+
 			$aPrefillFormParam['filter'] = $oFilter;
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
-		if (count($aAlreadyLinked) > 0)
-		{
+		if (count($aAlreadyLinked) > 0) {
 			$oFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
 		}
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oBlock->Display($oP, "ResultsToAdd_{$this->sInputid}", array('menu' => false, 'cssCount'=> '#count_'.$this->sInputid , 'selection_mode' => true, 'table_id' => 'add_'.$this->sInputid)); // Don't display the 'Actions' menu on the results
+		$oBlock->Display($oP, "ResultsToAdd_{$this->sInputid}", ['menu' => false, 'cssCount' => '#count_'.$this->sInputid , 'selection_mode' => true, 'table_id' => 'add_'.$this->sInputid]); // Don't display the 'Actions' menu on the results
 	}
 
 	/**
@@ -311,29 +294,28 @@ HTML
 	public function DoAddObjects(WebPage $oP, $oFullSetFilter)
 	{
 		$aLinkedObjectIds = utils::ReadMultipleSelection($oFullSetFilter);
-		foreach($aLinkedObjectIds as $iObjectId)
-		{
+		foreach ($aLinkedObjectIds as $iObjectId) {
 			$oLinkObj = MetaModel::GetObject($this->sLinkedClass, $iObjectId);
 			$oP->add($this->GetObjectRow($oP, $oLinkObj, $oLinkObj->GetKey()));
 		}
 	}
-	
+
 	public function GetObjectModificationDlg()
 	{
-		
+
 	}
 
 	public function GetTableConfig()
 	{
-		$aAttribs = array();
-		$aAttribs['form::select'] = array(
+		$aAttribs = [];
+		$aAttribs['form::select'] = [
 			'label'       => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList{$this->sInputid}:not(:disabled)', this.checked);oWidget".$this->sInputid.".directlinks('instance')._onSelectChange();\" class=\"checkAll\"></input>",
 			'description' => Dict::S('UI:SelectAllToggle+'),
-		);
+		];
 
 		foreach ($this->aZlist as $sLinkedAttCode) {
 			$oAttDef = MetaModel::GetAttributeDef($this->sLinkedClass, $sLinkedAttCode);
-			$aAttribs[$sLinkedAttCode] = array('label' => MetaModel::GetLabel($this->sLinkedClass, $sLinkedAttCode), 'description' => $oAttDef->GetOrderByHint());
+			$aAttribs[$sLinkedAttCode] = ['label' => MetaModel::GetLabel($this->sLinkedClass, $sLinkedAttCode), 'description' => $oAttDef->GetOrderByHint()];
 		}
 
 		return $aAttribs;
@@ -348,13 +330,12 @@ HTML
 	 */
 	public function GetRow($oPage, $sRealClass, $aValues, $iTempId)
 	{
-		if ($sRealClass == '')
-		{
+		if ($sRealClass == '') {
 			$sRealClass = $this->sLinkedClass;
 		}
 		$oLinkObj = new $sRealClass();
 		$oLinkObj->UpdateObjectFromPostedForm($this->sInputid);
-		
+
 		return $this->GetObjectRow($oPage, $oLinkObj, $iTempId);
 	}
 
@@ -367,13 +348,12 @@ HTML
 	protected function GetObjectRow($oPage, $oLinkObj, $iTempId)
 	{
 		$aAttribs = $this->GetTableConfig();
-		$aRow = array();
+		$aRow = [];
 		$aRow['form::select'] = '<input type="checkbox" class="selectList'.$this->sInputid.'" value="'.($iTempId).'"/>';
-		foreach($this->aZlist as $sLinkedAttCode)
-		{
+		foreach ($this->aZlist as $sLinkedAttCode) {
 			$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
 		}
-		return $oPage->GetTableRow($aRow, $aAttribs);		
+		return $oPage->GetTableRow($aRow, $aAttribs);
 	}
 
 	/**
@@ -386,23 +366,21 @@ HTML
 	 */
 	public function GetFormRow($oPage, $sRealClass, $aValues, $iTempId)
 	{
-		if ($sRealClass == '')
-		{
+		if ($sRealClass == '') {
 			$sRealClass = $this->sLinkedClass;
 		}
 		$oLinkObj = new $sRealClass();
 		$oLinkObj->UpdateObjectFromPostedForm($this->sInputid);
 
 		$aAttribs = $this->GetTableConfig();
-		$aRow = array();
+		$aRow = [];
 		$aRow[] = '<input type="checkbox" class="selectList'.$this->sInputid.'" value="'.($iTempId).'"/>';
-		foreach($this->aZlist as $sLinkedAttCode)
-		{
+		foreach ($this->aZlist as $sLinkedAttCode) {
 			$aRow[] = $oLinkObj->GetAsHTML($sLinkedAttCode);
 		}
 		return $aRow;
 	}
-	
+
 	/**
 	 * Initializes the default search parameters based on 1) a 'current' object and 2) the silos defined by the context
 	 * @param DBObject $oSourceObj
@@ -413,27 +391,23 @@ HTML
 		$oAppContext = new ApplicationContext();
 		$sSrcClass = get_class($oSourceObj);
 		$sDestClass = $oSearch->GetClass();
-		foreach($oAppContext->GetNames() as $key)
-		{
+		foreach ($oAppContext->GetNames() as $key) {
 			// Find the value of the object corresponding to each 'context' parameter
-			$aCallSpec = array($sSrcClass, 'MapContextParam');
+			$aCallSpec = [$sSrcClass, 'MapContextParam'];
 			$sAttCode = '';
-			if (is_callable($aCallSpec))
-			{
-				$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter					
+			if (is_callable($aCallSpec)) {
+				$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter
 			}
 
-			if (MetaModel::IsValidAttCode($sSrcClass, $sAttCode))
-			{
+			if (MetaModel::IsValidAttCode($sSrcClass, $sAttCode)) {
 				$defaultValue = $oSourceObj->Get($sAttCode);
 
 				// Find the attcode for the same 'context' parameter in the destination class
 				// and sets its value as the default value for the search condition
-				$aCallSpec = array($sDestClass, 'MapContextParam');
+				$aCallSpec = [$sDestClass, 'MapContextParam'];
 				$sAttCode = '';
-				if (is_callable($aCallSpec))
-				{
-					$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter					
+				if (is_callable($aCallSpec)) {
+					$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter
 				}
 
 				if (MetaModel::IsValidAttCode($sDestClass, $sAttCode) && !empty($defaultValue)) {
@@ -442,7 +416,6 @@ HTML
 			}
 		}
 	}
-
 
 	public function GetClass(): string
 	{

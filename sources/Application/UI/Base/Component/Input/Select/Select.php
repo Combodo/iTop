@@ -1,12 +1,11 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Application\UI\Base\Component\Input\Select;
-
 
 use Combodo\iTop\Application\UI\Base\Component\Input\tInputLabel;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
@@ -25,7 +24,6 @@ class Select extends UIContentBlock
 	protected $bSubmitOnChange = false;
 	/** @var bool Allow multiple selection */
 	protected $bIsMultiple = false;
-
 
 	public function __construct(?string $sId = null)
 	{

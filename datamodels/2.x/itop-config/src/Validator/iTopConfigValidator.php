@@ -5,18 +5,19 @@ namespace Combodo\iTop\Config\Validator;
 use AsyncTask;
 use ReflectionClass;
 
-class iTopConfigValidator {
-	const CONFIG_ERROR = 0;
-	const CONFIG_WARNING = 1;
-	const CONFIG_INFO = 2;
-	const CONFIG_SUCCESS = 3;
+class iTopConfigValidator
+{
+	public const CONFIG_ERROR = 0;
+	public const CONFIG_WARNING = 1;
+	public const CONFIG_INFO = 2;
+	public const CONFIG_SUCCESS = 3;
 
 	/**
 	 * @param $sRawConfig
 	 *
 	 * @throws \Exception
 	 */
-	public function Validate($sRawConfig):void
+	public function Validate($sRawConfig): void
 	{
 		$oiTopConfigValidator = new iTopConfigAstValidator();
 		$oiTopConfigValidator->Validate($sRawConfig);
@@ -26,7 +27,7 @@ class iTopConfigValidator {
 		$oiTopConfigValidator->Validate($sRawConfig);
 	}
 
-	function DBPasswordIsOk($sPassword):bool
+	public function DBPasswordIsOk($sPassword): bool
 	{
 		$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
 
@@ -36,7 +37,6 @@ class iTopConfigValidator {
 
 		return true;
 	}
-
 
 	public function CheckAsyncTasksRetryConfig(\Config $oTempConfig): array
 	{

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -29,23 +30,23 @@ class DBObjectSearch extends DBSearch
 	private $m_aPointingTo;
 	private $m_aReferencedBy;
 
-    /**
-     * @var bool whether or not some information should be hidden to the current user. Default to false == hide information.
-     * @see AllowAllData()
-     */
+	/**
+	 * @var bool whether or not some information should be hidden to the current user. Default to false == hide information.
+	 * @see AllowAllData()
+	 */
 	protected $m_bAllowAllData = false;
 	protected $m_bDataFiltered = false;
 
-    /**
-     * DBObjectSearch constructor.
-     *
-     * @api
-     *
-     * @param string      $sClass
-     * @param string|null $sClassAlias
-     *
-     * @throws Exception
-     */
+	/**
+	 * DBObjectSearch constructor.
+	 *
+	 * @api
+	 *
+	 * @param string      $sClass
+	 * @param string|null $sClassAlias
+	 *
+	 * @throws Exception
+	 */
 	public function __construct($sClass, $sClassAlias = null)
 	{
 		parent::__construct();
@@ -60,15 +61,16 @@ class DBObjectSearch extends DBSearch
 			throw new Exception('DBObjectSearch::__construct called for an invalid class: "'.$sClass.'"');
 		}
 
-		$this->m_aSelectedClasses = array($sClassAlias => $sClass);
-		$this->m_aClasses = array($sClassAlias => $sClass);
-		$this->m_oSearchCondition = new TrueExpression;
-		$this->m_aParams = array();
-		$this->m_aPointingTo = array();
-		$this->m_aReferencedBy = array();
+		$this->m_aSelectedClasses = [$sClassAlias => $sClass];
+		$this->m_aClasses = [$sClassAlias => $sClass];
+		$this->m_oSearchCondition = new TrueExpression();
+		$this->m_aParams = [];
+		$this->m_aPointingTo = [];
+		$this->m_aReferencedBy = [];
 	}
 
-	public function AllowAllData($bAllowAllData = true) {
+	public function AllowAllData($bAllowAllData = true)
+	{
 		$this->m_bAllowAllData = $bAllowAllData;
 
 		$this->m_oSearchCondition->Browse(function ($oThisExpression) use ($bAllowAllData) {
@@ -76,32 +78,37 @@ class DBObjectSearch extends DBSearch
 		});
 	}
 
-	public function IsAllDataAllowed() {
+	public function IsAllDataAllowed()
+	{
 		return $this->m_bAllowAllData;
 	}
 
-	protected function IsDataFiltered() {
+	protected function IsDataFiltered()
+	{
 		return $this->m_bDataFiltered;
 	}
 
-	protected function SetDataFiltered() {
+	protected function SetDataFiltered()
+	{
 		$this->m_bDataFiltered = true;
 	}
 
 	// Create a search definition that leads to 0 result, still a valid search object
-	public static function FromEmptySet($sClass) {
+	public static function FromEmptySet($sClass)
+	{
 		$oResultFilter = new DBObjectSearch($sClass);
-		$oResultFilter->m_oSearchCondition = new FalseExpression;
+		$oResultFilter->m_oSearchCondition = new FalseExpression();
 
 		return $oResultFilter;
 	}
 
-
-	public function GetJoinedClasses() {
+	public function GetJoinedClasses()
+	{
 		return $this->m_aClasses;
 	}
 
-	public function GetClassName($sAlias) {
+	public function GetClassName($sAlias)
+	{
 		if (array_key_exists($sAlias, $this->m_aSelectedClasses)) {
 			return $this->m_aSelectedClasses[$sAlias];
 		} else {
@@ -140,26 +147,20 @@ class DBObjectSearch extends DBSearch
 	 */
 	public function ChangeClass($sNewClass, $sAlias = null)
 	{
-		if (is_null($sAlias))
-		{
+		if (is_null($sAlias)) {
 			$sAlias = $this->GetClassAlias();
-		}
-		else
-		{
-			if (!array_key_exists($sAlias, $this->m_aSelectedClasses))
-			{
+		} else {
+			if (!array_key_exists($sAlias, $this->m_aSelectedClasses)) {
 				// discard silently - necessary when recursing on the related nodes (see code below)
 				return;
 			}
 		}
 		$sCurrClass = $this->GetClassName($sAlias);
-		if ($sNewClass == $sCurrClass)
-		{
+		if ($sNewClass == $sCurrClass) {
 			// Skip silently
 			return;
 		}
-		if (!MetaModel::IsParentClass($sCurrClass, $sNewClass))
-		{
+		if (!MetaModel::IsParentClass($sCurrClass, $sNewClass)) {
 			throw new Exception("Could not change the search class from '$sCurrClass' to '$sNewClass'. Only child classes are permitted.");
 		}
 
@@ -170,24 +171,17 @@ class DBObjectSearch extends DBSearch
 
 		// Change for all the related node (yes, this was necessary with some queries - strange effects otherwise)
 		//
-		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
-		{
-			foreach($aPointingTo as $iOperatorCode => $aFilter)
-			{
-				foreach($aFilter as $oExtFilter)
-				{
+		foreach ($this->m_aPointingTo as $sExtKeyAttCode => $aPointingTo) {
+			foreach ($aPointingTo as $iOperatorCode => $aFilter) {
+				foreach ($aFilter as $oExtFilter) {
 					$oExtFilter->ChangeClass($sNewClass, $sAlias);
 				}
 			}
 		}
-		foreach($this->m_aReferencedBy as $sForeignClass => $aReferences)
-		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-			{
-				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-				{
-					foreach ($aFilters as $oForeignFilter)
-					{
+		foreach ($this->m_aReferencedBy as $sForeignClass => $aReferences) {
+			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
+					foreach ($aFilters as $oForeignFilter) {
 						$oForeignFilter->ChangeClass($sNewClass, $sAlias);
 					}
 				}
@@ -206,11 +200,9 @@ class DBObjectSearch extends DBSearch
 	 */
 	public function SetSelectedClasses($aSelectedClasses)
 	{
-		$this->m_aSelectedClasses = array();
-		foreach ($aSelectedClasses as $sAlias)
-		{
-			if (!array_key_exists($sAlias, $this->m_aClasses))
-			{
+		$this->m_aSelectedClasses = [];
+		foreach ($aSelectedClasses as $sAlias) {
+			if (!array_key_exists($sAlias, $this->m_aClasses)) {
 				throw new CoreException("SetSelectedClasses: Invalid class alias $sAlias");
 			}
 			$this->m_aSelectedClasses[$sAlias] = $this->m_aClasses[$sAlias];
@@ -229,38 +221,28 @@ class DBObjectSearch extends DBSearch
 	public function RenameAlias($sOldName, $sNewName)
 	{
 		$bFound = false;
-		if (!array_key_exists($sOldName, $this->m_aClasses))
-		{
+		if (!array_key_exists($sOldName, $this->m_aClasses)) {
 			return false;
 		}
-		if (array_key_exists($sNewName, $this->m_aClasses))
-		{
+		if (array_key_exists($sNewName, $this->m_aClasses)) {
 			throw new Exception("RenameAlias: alias '$sNewName' already used");
 		}
 
-		$aClasses = array();
-		foreach ($this->m_aClasses as $sAlias => $sClass)
-		{
-			if ($sAlias === $sOldName)
-			{
+		$aClasses = [];
+		foreach ($this->m_aClasses as $sAlias => $sClass) {
+			if ($sAlias === $sOldName) {
 				$aClasses[$sNewName] = $sClass;
-			}
-			else
-			{
+			} else {
 				$aClasses[$sAlias] = $sClass;
 			}
 		}
 		$this->m_aClasses = $aClasses;
 
-		$aSelectedClasses = array();
-		foreach ($this->m_aSelectedClasses as $sAlias => $sClass)
-		{
-			if ($sAlias === $sOldName)
-			{
+		$aSelectedClasses = [];
+		foreach ($this->m_aSelectedClasses as $sAlias => $sClass) {
+			if ($sAlias === $sOldName) {
 				$aSelectedClasses[$sNewName] = $sClass;
-			}
-			else
-			{
+			} else {
 				$aSelectedClasses[$sAlias] = $sClass;
 			}
 		}
@@ -268,24 +250,17 @@ class DBObjectSearch extends DBSearch
 
 		$this->m_oSearchCondition->RenameAlias($sOldName, $sNewName);
 
-		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
-		{
-			foreach($aPointingTo as $iOperatorCode => $aFilter)
-			{
-				foreach($aFilter as $oExtFilter)
-				{
+		foreach ($this->m_aPointingTo as $sExtKeyAttCode => $aPointingTo) {
+			foreach ($aPointingTo as $iOperatorCode => $aFilter) {
+				foreach ($aFilter as $oExtFilter) {
 					$bFound = $oExtFilter->RenameAlias($sOldName, $sNewName) || $bFound;
 				}
 			}
 		}
-		foreach($this->m_aReferencedBy as $sForeignClass => $aReferences)
-		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-			{
-				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-				{
-					foreach ($aFilters as $oForeignFilter)
-					{
+		foreach ($this->m_aReferencedBy as $sForeignClass => $aReferences) {
+			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
+					foreach ($aFilters as $oForeignFilter) {
 						$bFound = $oForeignFilter->RenameAlias($sOldName, $sNewName) || $bFound;
 					}
 				}
@@ -301,21 +276,24 @@ class DBObjectSearch extends DBSearch
 
 	public function GetModifierProperties($sPluginClass)
 	{
-		if (array_key_exists($sPluginClass, $this->m_aModifierProperties))
-		{
+		if (array_key_exists($sPluginClass, $this->m_aModifierProperties)) {
 			return $this->m_aModifierProperties[$sPluginClass];
-		}
-		else
-		{
-			return array();
+		} else {
+			return [];
 		}
 	}
 
 	public function IsAny()
 	{
-		if (!$this->m_oSearchCondition->IsTrue()) return false;
-		if (count($this->m_aPointingTo) > 0) return false;
-		if (count($this->m_aReferencedBy) > 0) return false;
+		if (!$this->m_oSearchCondition->IsTrue()) {
+			return false;
+		}
+		if (count($this->m_aPointingTo) > 0) {
+			return false;
+		}
+		if (count($this->m_aReferencedBy) > 0) {
+			return false;
+		}
 		return true;
 	}
 
@@ -327,14 +305,11 @@ class DBObjectSearch extends DBSearch
 	protected function TransferConditionExpression($oFilter, $aTranslation)
 	{
 		// Prevent collisions in the parameter names by renaming them if needed
-		foreach($this->m_aParams as $sParam => $value)
-		{
-			if (array_key_exists($sParam, $oFilter->m_aParams) && ($value != $oFilter->m_aParams[$sParam]))
-			{
+		foreach ($this->m_aParams as $sParam => $value) {
+			if (array_key_exists($sParam, $oFilter->m_aParams) && ($value != $oFilter->m_aParams[$sParam])) {
 				// Generate a new and unique name for the collinding parameter
 				$index = 1;
-				while(array_key_exists($sParam.$index, $oFilter->m_aParams))
-				{
+				while (array_key_exists($sParam.$index, $oFilter->m_aParams)) {
 					$index++;
 				}
 				$secondValue = $oFilter->m_aParams[$sParam];
@@ -352,19 +327,15 @@ class DBObjectSearch extends DBSearch
 	public function RenameParam($sOldName, $sNewName)
 	{
 		$this->m_oSearchCondition->RenameParam($sOldName, $sNewName);
-		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
-		{
-			foreach($aPointingTo as $iOperatorCode => $aFilter)
-			{
-				foreach($aFilter as $oExtFilter)
-				{
+		foreach ($this->m_aPointingTo as $sExtKeyAttCode => $aPointingTo) {
+			foreach ($aPointingTo as $iOperatorCode => $aFilter) {
+				foreach ($aFilter as $oExtFilter) {
 					$oExtFilter->RenameParam($sOldName, $sNewName);
 				}
 			}
 		}
-		foreach($this->m_aReferencedBy as $sForeignClass => $aReferences)
-		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+		foreach ($this->m_aReferencedBy as $sForeignClass => $aReferences) {
+			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
 				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
 					foreach ($aFilters as $oForeignFilter) {
 						$oForeignFilter->RenameParam($sOldName, $sNewName);
@@ -374,16 +345,19 @@ class DBObjectSearch extends DBSearch
 		}
 	}
 
-	public function ResetCondition() {
+	public function ResetCondition()
+	{
 		$this->m_oSearchCondition = new TrueExpression();
 		// ? is that usefull/enough, do I need to rebuild the list after the subqueries ?
 	}
 
-	public function MergeConditionExpression($oExpression) {
+	public function MergeConditionExpression($oExpression)
+	{
 		$this->m_oSearchCondition = $this->m_oSearchCondition->LogOr($oExpression);
 	}
 
-	public function AddConditionExpression($oExpression) {
+	public function AddConditionExpression($oExpression)
+	{
 		$this->m_oSearchCondition = $this->m_oSearchCondition->LogAnd($oExpression);
 
 		$bRootSearchAllowAllData = $this->IsAllDataAllowed();
@@ -392,7 +366,8 @@ class DBObjectSearch extends DBSearch
 		});
 	}
 
-	public function AddNameCondition($sName) {
+	public function AddNameCondition($sName)
+	{
 		$oValueExpr = new ScalarExpression($sName);
 		$oNameExpr = new FieldExpression('friendlyname', $this->GetClassAlias());
 		$oNewCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
@@ -417,15 +392,15 @@ class DBObjectSearch extends DBSearch
 	 */
 	public function AddCondition($sFilterCode, $value, $sOpCode = null, $bParseSearchString = false)
 	{
-		if (MetaModel::IsValidFilterCode($this->GetClass(),$sFilterCode) == false){
-		/*	$sArrayDesc = if (count($aData) == 0)
-			{
-				$sArrayDesc = "{}";
-			}
-			else
-			{
-				$sArrayDesc = "{".implode(", ", $aData)."}";
-			}*/
+		if (MetaModel::IsValidFilterCode($this->GetClass(), $sFilterCode) == false) {
+			/*	$sArrayDesc = if (count($aData) == 0)
+				{
+					$sArrayDesc = "{}";
+				}
+				else
+				{
+					$sArrayDesc = "{".implode(", ", $aData)."}";
+				}*/
 			throw new CoreException("Wrong value for '".$this->GetClass()."', found '$sFilterCode'");// while expecting a value in $sArrayDesc");
 		}
 		$oField = new FieldExpression($sFilterCode, $this->GetClassAlias());
@@ -440,81 +415,82 @@ class DBObjectSearch extends DBSearch
 			}
 		}
 		// Parse search strings if needed and if the filter code corresponds to a valid attcode
-		if($bParseSearchString && MetaModel::IsValidAttCode($this->GetClass(), $sFilterCode))
-		{
+		if ($bParseSearchString && MetaModel::IsValidAttCode($this->GetClass(), $sFilterCode)) {
 			$oAttDef = MetaModel::GetAttributeDef($this->GetClass(), $sFilterCode);
 			$value = $oAttDef->ParseSearchString($value);
 		}
 
 		// Preserve backward compatibility - quick n'dirty way to change that API semantic
 		//
-		switch($sOpCode)
-		{
-		case 'SameDay':
-		case 'SameMonth':
-		case 'SameYear':
-		case 'Today':
-		case '>|':
-		case '<|':
-		case '=|':
-			throw new CoreException('Deprecated operator, please consider using OQL (SQL) expressions like "(TO_DAYS(NOW()) - TO_DAYS(x)) AS AgeDays"', array('operator' => $sOpCode));
+		switch ($sOpCode) {
+			case 'SameDay':
+			case 'SameMonth':
+			case 'SameYear':
+			case 'Today':
+			case '>|':
+			case '<|':
+			case '=|':
+				throw new CoreException('Deprecated operator, please consider using OQL (SQL) expressions like "(TO_DAYS(NOW()) - TO_DAYS(x)) AS AgeDays"', ['operator' => $sOpCode]);
 
-		case 'IN':
-			if (!is_array($value)) $value = array($value);
-			if (count($value) === 0) throw new Exception('AddCondition '.$sOpCode.': Value cannot be an empty array.');
-			$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
-			$sOQLCondition = $oField->RenderExpression()." IN $sListExpr";
-			break;
-
-		case 'NOTIN':
-			if (!is_array($value)) $value = array($value);
-            if (count($value) === 0) throw new Exception('AddCondition '.$sOpCode.': Value cannot be an empty array.');
-			$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
-			$sOQLCondition = $oField->RenderExpression()." NOT IN $sListExpr";
-			break;
-
-		case 'Contains':
-			$this->m_aParams[$sFilterCode] = "%$value%";
-			$sOperator = 'LIKE';
-			break;
-
-		case 'Begins with':
-			$this->m_aParams[$sFilterCode] = "$value%";
-			$sOperator = 'LIKE';
-			break;
-
-		case 'Finishes with':
-			$this->m_aParams[$sFilterCode] = "%$value";
-			$sOperator = 'LIKE';
-			break;
-
-		default:
-			if ($value === null)
-			{
-				switch ($sOpCode)
-				{
-					case '=':
-						$sOpCode = '*Expression*';
-						$oExpression = new FunctionExpression('ISNULL', array($oField));
-						break;
-					case '!=':
-						$sOpCode = '*Expression*';
-						$oExpression = new FunctionExpression('ISNULL', array($oField));
-						$oExpression = new BinaryExpression($oExpression, '=', new ScalarExpression(0));
-						break;
-					default:
-						throw new Exception("AddCondition on null value: unsupported operator '$sOpCode''");
+			case 'IN':
+				if (!is_array($value)) {
+					$value = [$value];
 				}
-			}
-			else
-			{
-				$this->m_aParams[$sFilterCode] = $value;
-				$sOperator = $sOpCode;
-			}
+				if (count($value) === 0) {
+					throw new Exception('AddCondition '.$sOpCode.': Value cannot be an empty array.');
+				}
+				$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
+				$sOQLCondition = $oField->RenderExpression()." IN $sListExpr";
+				break;
+
+			case 'NOTIN':
+				if (!is_array($value)) {
+					$value = [$value];
+				}
+				if (count($value) === 0) {
+					throw new Exception('AddCondition '.$sOpCode.': Value cannot be an empty array.');
+				}
+				$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
+				$sOQLCondition = $oField->RenderExpression()." NOT IN $sListExpr";
+				break;
+
+			case 'Contains':
+				$this->m_aParams[$sFilterCode] = "%$value%";
+				$sOperator = 'LIKE';
+				break;
+
+			case 'Begins with':
+				$this->m_aParams[$sFilterCode] = "$value%";
+				$sOperator = 'LIKE';
+				break;
+
+			case 'Finishes with':
+				$this->m_aParams[$sFilterCode] = "%$value";
+				$sOperator = 'LIKE';
+				break;
+
+			default:
+				if ($value === null) {
+					switch ($sOpCode) {
+						case '=':
+							$sOpCode = '*Expression*';
+							$oExpression = new FunctionExpression('ISNULL', [$oField]);
+							break;
+						case '!=':
+							$sOpCode = '*Expression*';
+							$oExpression = new FunctionExpression('ISNULL', [$oField]);
+							$oExpression = new BinaryExpression($oExpression, '=', new ScalarExpression(0));
+							break;
+						default:
+							throw new Exception("AddCondition on null value: unsupported operator '$sOpCode''");
+					}
+				} else {
+					$this->m_aParams[$sFilterCode] = $value;
+					$sOperator = $sOpCode;
+				}
 		}
 
-		switch($sOpCode)
-		{
+		switch ($sOpCode) {
 			case '*Expression*':
 				$oNewCondition = $oExpression;
 				break;
@@ -562,7 +538,7 @@ class DBObjectSearch extends DBSearch
 		$oParamExpression = new VariableExpression($sInParamName);
 		$this->GetInternalParamsByRef()[$sInParamName] = $aValues;
 
-		$oListExpression = new ListExpression(array($oParamExpression));
+		$oListExpression = new ListExpression([$oParamExpression]);
 
 		$oInCondition = new BinaryExpression($oFieldExpression, $sOperator, $oListExpression);
 		$this->AddConditionExpression($oInCondition);
@@ -582,19 +558,16 @@ class DBObjectSearch extends DBSearch
 		$sClass = $this->GetClass();
 
 		$iPos = strpos($sAttSpec, '->');
-		if ($iPos !== false)
-		{
+		if ($iPos !== false) {
 			$sAttCode = substr($sAttSpec, 0, $iPos);
 			$sSubSpec = substr($sAttSpec, $iPos + 2);
 
-			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
+			if (!MetaModel::IsValidAttCode($sClass, $sAttCode)) {
 				throw new Exception("Invalid attribute code '$sClass/$sAttCode' in condition specification '$sAttSpec'");
 			}
 
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if ($oAttDef->IsLinkSet())
-			{
+			if ($oAttDef->IsLinkSet()) {
 				$sTargetClass = $oAttDef->GetLinkedClass();
 				$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
 
@@ -602,35 +575,26 @@ class DBObjectSearch extends DBSearch
 				$oNewFilter->AddConditionAdvanced($sSubSpec, $value);
 
 				$this->AddCondition_ReferencedBy($oNewFilter, $sExtKeyToMe);
-			}
-			elseif ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
-			{
+			} elseif ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE)) {
 				$sTargetClass = $oAttDef->GetTargetClass(EXTKEY_ABSOLUTE);
 
 				$oNewFilter = new DBObjectSearch($sTargetClass);
 				$oNewFilter->AddConditionAdvanced($sSubSpec, $value);
 
 				$this->AddCondition_PointingTo($oNewFilter, $sAttCode);
-			}
-			else
-			{
+			} else {
 				throw new Exception("Attribute specification '$sAttSpec', '$sAttCode' should be either a link set or an external key");
 			}
-		}
-		else
-		{
+		} else {
 			// $sAttSpec is an attribute code
 			//
-			if (is_array($value))
-			{
+			if (is_array($value)) {
 				$oField = new FieldExpression($sAttSpec, $this->GetClass());
 				$oListExpr = ListExpression::FromScalars($value);
 				$oInValues = new BinaryExpression($oField, 'IN', $oListExpr);
 
 				$this->AddConditionExpression($oInValues);
-			}
-			else
-			{
+			} else {
 				$this->AddCondition($sAttSpec, $value);
 			}
 		}
@@ -641,9 +605,15 @@ class DBObjectSearch extends DBSearch
 		// Transform the full text condition into additional condition expression
 		$aAttCodes = [];
 		foreach (MetaModel::ListAttributeDefs($this->GetClass()) as $sAttCode => $oAttDef) {
-			if (!$oAttDef->IsScalar()) continue;
-			if ($oAttDef->IsExternalKey()) continue;
-			if (!$oAttDef->IsSearchable()) continue;
+			if (!$oAttDef->IsScalar()) {
+				continue;
+			}
+			if ($oAttDef->IsExternalKey()) {
+				continue;
+			}
+			if (!$oAttDef->IsSearchable()) {
+				continue;
+			}
 			$aAttCodes[] = $sAttCode;
 		}
 		$this->AddCondition_FullTextOnAttributes($aAttCodes, $sNeedle);
@@ -665,7 +635,7 @@ class DBObjectSearch extends DBSearch
 		$oTextFields = new CharConcatWSExpression(' ', $aFullTextFields);
 
 		$sQueryParam = str_replace('.', '', uniqid('needle_', true));
-		$oFlexNeedle = new CharConcatExpression(array(new ScalarExpression('%'), new VariableExpression($sQueryParam), new ScalarExpression('%')));
+		$oFlexNeedle = new CharConcatExpression([new ScalarExpression('%'), new VariableExpression($sQueryParam), new ScalarExpression('%')]);
 
 		$oNewCond = new BinaryExpression($oTextFields, 'LIKE', $oFlexNeedle);
 		$this->AddConditionExpression($oNewCond);
@@ -677,14 +647,11 @@ class DBObjectSearch extends DBSearch
 
 	protected function AddToNameSpace(&$aClassAliases, &$aAliasTranslation, $bTranslateMainAlias = true)
 	{
-		if ($bTranslateMainAlias)
-		{
+		if ($bTranslateMainAlias) {
 			$sOrigAlias = $this->GetFirstJoinedClassAlias();
-			if (array_key_exists($sOrigAlias, $aClassAliases))
-			{
+			if (array_key_exists($sOrigAlias, $aClassAliases)) {
 				$sNewAlias = MetaModel::GenerateUniqueAlias($aClassAliases, $sOrigAlias, $this->GetFirstJoinedClass());
-				if (isset($this->m_aSelectedClasses[$sOrigAlias]))
-				{
+				if (isset($this->m_aSelectedClasses[$sOrigAlias])) {
 					$this->m_aSelectedClasses[$sNewAlias] = $this->GetFirstJoinedClass();
 					unset($this->m_aSelectedClasses[$sOrigAlias]);
 				}
@@ -692,46 +659,35 @@ class DBObjectSearch extends DBSearch
 				// TEMPORARY ALGORITHM (m_aClasses is not correctly updated, it is not possible to add a subtree onto a subnode)
 				// Replace the element at the same position (unset + set is not enough because the hash array is ordered)
 				$aPrevList = $this->m_aClasses;
-				$this->m_aClasses = array();
-				foreach ($aPrevList as $sSomeAlias => $sSomeClass)
-				{
-					if ($sSomeAlias == $sOrigAlias)
-					{
+				$this->m_aClasses = [];
+				foreach ($aPrevList as $sSomeAlias => $sSomeClass) {
+					if ($sSomeAlias == $sOrigAlias) {
 						$this->m_aClasses[$sNewAlias] = $sSomeClass; // note: GetFirstJoinedClass now returns '' !!!
-					}
-					else
-					{
+					} else {
 						$this->m_aClasses[$sSomeAlias] = $sSomeClass;
 					}
 				}
-	
+
 				// Translate the condition expression with the new alias
 				$aAliasTranslation[$sOrigAlias]['*'] = $sNewAlias;
 			}
-	
+
 			// add the alias into the filter aliases list
 			$aClassAliases[$this->GetFirstJoinedClassAlias()] = $this->GetFirstJoinedClass();
 		}
-		
-		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
-		{
-			foreach($aPointingTo as $iOperatorCode => $aFilter)
-			{
-				foreach($aFilter as $oFilter)
-				{
+
+		foreach ($this->m_aPointingTo as $sExtKeyAttCode => $aPointingTo) {
+			foreach ($aPointingTo as $iOperatorCode => $aFilter) {
+				foreach ($aFilter as $oFilter) {
 					$oFilter->AddToNameSpace($aClassAliases, $aAliasTranslation);
 				}
 			}
 		}
 
-		foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
-		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-			{
-				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-				{
-					foreach ($aFilters as $oForeignFilter)
-					{
+		foreach ($this->m_aReferencedBy as $sForeignClass => $aReferences) {
+			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
+					foreach ($aFilters as $oForeignFilter) {
 						$oForeignFilter->AddToNameSpace($aClassAliases, $aAliasTranslation);
 					}
 				}
@@ -745,18 +701,17 @@ class DBObjectSearch extends DBSearch
 	 * @param array $aClassAliases array of alias => class for the main query
 	 * @param array $aAliasTranslation translation table of main query to apply to nested queries
 	 */
-	public function RenameNestedQueriesAliasesInNameSpace($aClassAliases, $aAliasTranslation = array())
+	public function RenameNestedQueriesAliasesInNameSpace($aClassAliases, $aAliasTranslation = [])
 	{
 		$this->GetCriteria()->Browse(function ($oNode) use ($aClassAliases, $aAliasTranslation) {
-			if ($oNode instanceof NestedQueryExpression)
-			{
+			if ($oNode instanceof NestedQueryExpression) {
 				$oNestedQuery = $oNode->GetNestedQuery();
 				$oNestedQuery->RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation);
 			}
 		});
 	}
 
-	public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array())
+	public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = [])
 	{
 		// Recurse in nested queries
 		$this->RenameNestedQueriesAliasesInNameSpace($aClassAliases, $aAliasTranslation);
@@ -775,37 +730,25 @@ class DBObjectSearch extends DBSearch
 	//
 	protected function GetNode($sAlias)
 	{
-		if ($this->GetFirstJoinedClassAlias() == $sAlias)
-		{
+		if ($this->GetFirstJoinedClassAlias() == $sAlias) {
 			return $this;
-		}
-		else
-		{
-			foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
-			{
-				foreach($aPointingTo as $iOperatorCode => $aFilter)
-				{
-					foreach($aFilter as $oFilter)
-					{
+		} else {
+			foreach ($this->m_aPointingTo as $sExtKeyAttCode => $aPointingTo) {
+				foreach ($aPointingTo as $iOperatorCode => $aFilter) {
+					foreach ($aFilter as $oFilter) {
 						$ret = $oFilter->GetNode($sAlias);
-						if (is_object($ret))
-						{
+						if (is_object($ret)) {
 							return $ret;
 						}
 					}
 				}
 			}
-			foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
-			{
-				foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-				{
-					foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-					{
-						foreach ($aFilters as $oForeignFilter)
-						{
+			foreach ($this->m_aReferencedBy as $sForeignClass => $aReferences) {
+				foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+					foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
+						foreach ($aFilters as $oForeignFilter) {
 							$ret = $oForeignFilter->GetNode($sAlias);
-							if (is_object($ret))
-							{
+							if (is_object($ret)) {
 								return $ret;
 							}
 						}
@@ -829,36 +772,27 @@ class DBObjectSearch extends DBSearch
 	 */
 	protected function UpdateRealiasingMap(&$aRealiasingMap, $aAliasTranslation)
 	{
-		if ($aRealiasingMap !== null)
-		{
-			foreach ($aAliasTranslation as $sPrevAlias => $aRules)
-			{
-				if (!isset($aRules['*']))
-				{
+		if ($aRealiasingMap !== null) {
+			foreach ($aAliasTranslation as $sPrevAlias => $aRules) {
+				if (!isset($aRules['*'])) {
 					continue;
 				}
 
 				$sNewAlias = $aRules['*'];
 				$bOriginalFound = false;
 				$iIndex = 0;
-				foreach ($aRealiasingMap as $sOriginalAlias => $aAliases)
-				{
+				foreach ($aRealiasingMap as $sOriginalAlias => $aAliases) {
 					$iIndex = array_search($sPrevAlias, $aAliases);
-					if ($iIndex !== false)
-					{
+					if ($iIndex !== false) {
 						$bOriginalFound = true;
 						break;
 					}
 
 				}
-				if ($bOriginalFound)
-				{
+				if ($bOriginalFound) {
 					$aRealiasingMap[$sOriginalAlias][$iIndex] = $sNewAlias;
-				}
-				else
-				{
-					if (!isset($aRealiasingMap[$sPrevAlias]) || !in_array($sNewAlias, $aRealiasingMap[$sPrevAlias]))
-					{
+				} else {
+					if (!isset($aRealiasingMap[$sPrevAlias]) || !in_array($sNewAlias, $aRealiasingMap[$sPrevAlias])) {
 						$aRealiasingMap[$sPrevAlias][] = $sNewAlias;
 					}
 				}
@@ -878,25 +812,18 @@ class DBObjectSearch extends DBSearch
 		$aClasses[$this->GetFirstJoinedClassAlias()] = $this->GetFirstJoinedClass();
 
 		// Recurse in the query tree
-		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
-		{
-			foreach($aPointingTo as $iOperatorCode => $aFilter)
-			{
-				foreach($aFilter as $oFilter)
-				{
+		foreach ($this->m_aPointingTo as $sExtKeyAttCode => $aPointingTo) {
+			foreach ($aPointingTo as $iOperatorCode => $aFilter) {
+				foreach ($aFilter as $oFilter) {
 					$oFilter->RecomputeClassList($aClasses);
 				}
 			}
 		}
 
-		foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
-		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-			{
-				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-				{
-					foreach ($aFilters as $oForeignFilter)
-					{
+		foreach ($this->m_aReferencedBy as $sForeignClass => $aReferences) {
+			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
+					foreach ($aFilters as $oForeignFilter) {
 						$oForeignFilter->RecomputeClassList($aClasses);
 					}
 				}
@@ -918,40 +845,33 @@ class DBObjectSearch extends DBSearch
 	 */
 	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
-		if (!MetaModel::IsValidKeyAttCode($this->GetClass(), $sExtKeyAttCode))
-		{
+		if (!MetaModel::IsValidKeyAttCode($this->GetClass(), $sExtKeyAttCode)) {
 			throw new CoreWarning("The attribute code '$sExtKeyAttCode' is not an external key of the class '{$this->GetClass()}'");
 		}
 		$oAttExtKey = MetaModel::GetAttributeDef($this->GetClass(), $sExtKeyAttCode);
-		if(!MetaModel::IsSameFamilyBranch($oFilter->GetClass(), $oAttExtKey->GetTargetClass()))
-		{
+		if (!MetaModel::IsSameFamilyBranch($oFilter->GetClass(), $oAttExtKey->GetTargetClass())) {
 			throw new CoreException("The specified filter (pointing to {$oFilter->GetClass()}) is not compatible with the key '{$this->GetClass()}::$sExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
 		}
-		if(($iOperatorCode != TREE_OPERATOR_EQUALS) && !($oAttExtKey instanceof AttributeHierarchicalKey))
-		{
+		if (($iOperatorCode != TREE_OPERATOR_EQUALS) && !($oAttExtKey instanceof AttributeHierarchicalKey)) {
 			throw new CoreException("The specified tree operator $iOperatorCode is not applicable to the key '{$this->GetClass()}::$sExtKeyAttCode', which is not a HierarchicalKey");
 		}
 		// Note: though it seems to be a good practice to clone the given source filter
 		//       (as it was done and fixed an issue in Intersect())
 		//       this was not implemented here because it was causing a regression (login as admin, select an org, click on any badge)
-		//       root cause: FromOQL relies on the fact that the passed filter can be modified later 
+		//       root cause: FromOQL relies on the fact that the passed filter can be modified later
 		// NO: $oFilter = $oFilter->DeepClone();
 		// See also: Trac #639, and self::AddCondition_ReferencedBy()
-		$aAliasTranslation = array();
+		$aAliasTranslation = [];
 		$res = $this->AddCondition_PointingTo_InNameSpace($oFilter, $sExtKeyAttCode, $this->m_aClasses, $aAliasTranslation, $iOperatorCode);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
 		$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
 
-		if (ENABLE_OPT && ($oFilter->GetClass() == $oFilter->GetFirstJoinedClass()))
-		{
-			if (isset($oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode]))
-			{
-				foreach ($oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode] as $oRemoteFilter)
-				{
-					if ($this->GetClass() == $oRemoteFilter->GetClass())
-					{
+		if (ENABLE_OPT && ($oFilter->GetClass() == $oFilter->GetFirstJoinedClass())) {
+			if (isset($oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode])) {
+				foreach ($oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode] as $oRemoteFilter) {
+					if ($this->GetClass() == $oRemoteFilter->GetClass()) {
 						// Optimization - fold sibling query
-						$aAliasTranslation = array();
+						$aAliasTranslation = [];
 						$this->MergeWith_InNamespace($oRemoteFilter, $this->m_aClasses, $aAliasTranslation);
 						unset($oFilter->m_aReferencedBy[$this->GetClass()][$sExtKeyAttCode][$iOperatorCode]);
 						$this->m_oSearchCondition = $this->m_oSearchCondition->Translate($aAliasTranslation, false, false);
@@ -980,21 +900,17 @@ class DBObjectSearch extends DBSearch
 		$oReceivingFilter = $this->GetNode($this->GetClassAlias());
 
 		$bMerged = false;
-		if (ENABLE_OPT && isset($oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode]))
-		{
-			foreach ($oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode] as $oExisting)
-			{
+		if (ENABLE_OPT && isset($oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode])) {
+			foreach ($oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode] as $oExisting) {
 				/** @var DBObjectSearch $oExisting */
-				if ($oExisting->GetClass() == $oFilter->GetClass())
-				{
+				if ($oExisting->GetClass() == $oFilter->GetClass()) {
 					$oExisting->MergeWith_InNamespace($oFilter, $aClassAliases, $aAliasTranslation);
 					$bMerged = true;
 					break;
 				}
 			}
 		}
-		if (!$bMerged)
-		{
+		if (!$bMerged) {
 			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
 			$oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode][] = $oFilter;
 		}
@@ -1011,13 +927,11 @@ class DBObjectSearch extends DBSearch
 	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		$sForeignClass = $oFilter->GetClass();
-		if (!MetaModel::IsValidKeyAttCode($sForeignClass, $sForeignExtKeyAttCode))
-		{
+		if (!MetaModel::IsValidKeyAttCode($sForeignClass, $sForeignExtKeyAttCode)) {
 			throw new CoreException("The attribute code '$sForeignExtKeyAttCode' is not an external key of the class '{$sForeignClass}'");
 		}
 		$oAttExtKey = MetaModel::GetAttributeDef($sForeignClass, $sForeignExtKeyAttCode);
-		if(!MetaModel::IsSameFamilyBranch($this->GetClass(), $oAttExtKey->GetTargetClass()))
-		{
+		if (!MetaModel::IsSameFamilyBranch($this->GetClass(), $oAttExtKey->GetTargetClass())) {
 			// à refaire en spécifique dans FromOQL
 			throw new CoreException("The specified filter (objects referencing an object of class {$this->GetClass()}) is not compatible with the key '{$sForeignClass}::$sForeignExtKeyAttCode', which is pointing to {$oAttExtKey->GetTargetClass()}");
 		}
@@ -1025,24 +939,20 @@ class DBObjectSearch extends DBSearch
 		// Note: though it seems to be a good practice to clone the given source filter
 		//       (as it was done and fixed an issue in Intersect())
 		//       this was not implemented here because it was causing a regression (login as admin, select an org, click on any badge)
-		//       root cause: FromOQL relies on the fact that the passed filter can be modified later 
+		//       root cause: FromOQL relies on the fact that the passed filter can be modified later
 		// NO: $oFilter = $oFilter->DeepClone();
 		// See also: Trac #639, and self::AddCondition_PointingTo()
-		$aAliasTranslation = array();
+		$aAliasTranslation = [];
 		$this->AddCondition_ReferencedBy_InNameSpace($oFilter, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation, $iOperatorCode);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
 		$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
 
-		if (ENABLE_OPT && ($oFilter->GetClass() == $oFilter->GetFirstJoinedClass()))
-		{
-			if (isset($oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode]))
-			{
-				foreach ($oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode] as $oRemoteFilter)
-				{
-					if ($this->GetClass() == $oRemoteFilter->GetClass())
-					{
+		if (ENABLE_OPT && ($oFilter->GetClass() == $oFilter->GetFirstJoinedClass())) {
+			if (isset($oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode])) {
+				foreach ($oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode] as $oRemoteFilter) {
+					if ($this->GetClass() == $oRemoteFilter->GetClass()) {
 						// Optimization - fold sibling query
-						$aAliasTranslation = array();
+						$aAliasTranslation = [];
 						$this->MergeWith_InNamespace($oRemoteFilter, $this->m_aClasses, $aAliasTranslation);
 						unset($oFilter->m_aPointingTo[$sForeignExtKeyAttCode][$iOperatorCode]);
 						$this->m_oSearchCondition  = $this->m_oSearchCondition->Translate($aAliasTranslation, false, false);
@@ -1063,20 +973,16 @@ class DBObjectSearch extends DBSearch
 		$oReceivingFilter = $this->GetNode($this->GetClassAlias());
 
 		$bMerged = false;
-		if (ENABLE_OPT && isset($oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode]))
-		{
-			foreach ($oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode] as $oExisting)
-			{
-				if ($oExisting->GetClass() == $oFilter->GetClass())
-				{
+		if (ENABLE_OPT && isset($oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode])) {
+			foreach ($oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode] as $oExisting) {
+				if ($oExisting->GetClass() == $oFilter->GetClass()) {
 					$oExisting->MergeWith_InNamespace($oFilter, $aClassAliases, $aAliasTranslation);
 					$bMerged = true;
 					break;
 				}
 			}
 		}
-		if (!$bMerged)
-		{
+		if (!$bMerged) {
 			$oFilter->AddToNamespace($aClassAliases, $aAliasTranslation);
 			$oReceivingFilter->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode][] = $oFilter;
 		}
@@ -1144,23 +1050,18 @@ class DBObjectSearch extends DBSearch
 	 */
 	private static function FilterSubClass(DBObjectSearch &$oSearch, $sClassAlias, DBSearch $oFilter, $aRootClasses)
 	{
-		if (($oSearch->GetFirstJoinedClassAlias() == $sClassAlias))
-		{
+		if (($oSearch->GetFirstJoinedClassAlias() == $sClassAlias)) {
 			$oSearch = $oSearch->IntersectSubClass($oFilter, $aRootClasses);
 			return $oSearch->GetCriteria();
 		}
 
 		/** @var Expression $oFilterExpression */
 		// Search in the filter tree where is the correct DBSearch
-		foreach ($oSearch->m_aPointingTo as $sExtKey => $aPointingTo)
-		{
-			foreach ($aPointingTo as $iOperatorCode => $aFilters)
-			{
-				foreach ($aFilters as $index => $oExtFilter)
-				{
+		foreach ($oSearch->m_aPointingTo as $sExtKey => $aPointingTo) {
+			foreach ($aPointingTo as $iOperatorCode => $aFilters) {
+				foreach ($aFilters as $index => $oExtFilter) {
 					$oFilterExpression = self::FilterSubClass($oExtFilter, $sClassAlias, $oFilter, $aRootClasses);
-					if ($oFilterExpression !== false)
-					{
+					if ($oFilterExpression !== false) {
 						$oSearch->m_aPointingTo[$sExtKey][$iOperatorCode][$index] = $oExtFilter;
 						return $oFilterExpression;
 					}
@@ -1168,17 +1069,12 @@ class DBObjectSearch extends DBSearch
 			}
 		}
 
-		foreach($oSearch->m_aReferencedBy as $sForeignClass => $aReferences)
-		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-			{
-				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-				{
-					foreach ($aFilters as $index => $oForeignFilter)
-					{
+		foreach ($oSearch->m_aReferencedBy as $sForeignClass => $aReferences) {
+			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
+					foreach ($aFilters as $index => $oForeignFilter) {
 						$oFilterExpression = self::FilterSubClass($oForeignFilter, $sClassAlias, $oFilter, $aRootClasses);
-						if ($oFilterExpression !== false)
-						{
+						if ($oFilterExpression !== false) {
 							$oSearch->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode][$index] = $oForeignFilter;
 							return $oFilterExpression;
 						}
@@ -1196,24 +1092,19 @@ class DBObjectSearch extends DBSearch
 	 */
 	public function Intersect(DBSearch $oFilter)
 	{
-		if ($oFilter instanceof DBUnionSearch)
-		{
+		if ($oFilter instanceof DBUnionSearch) {
 			// Develop!
 			$aFilters = $oFilter->GetSearches();
-		}
-		else
-		{
-			$aFilters = array($oFilter);
+		} else {
+			$aFilters = [$oFilter];
 		}
 
-		$aSearches = array();
-		foreach ($aFilters as $oRightFilter)
-		{
+		$aSearches = [];
+		foreach ($aFilters as $oRightFilter) {
 			$aSearches[] = $this->IntersectSubClass($oRightFilter, $this->m_aClasses);
 		}
 
-		if (count($aSearches) == 1)
-		{
+		if (count($aSearches) == 1) {
 			// return a DBObjectSearch
 			return $aSearches[0];
 		}
@@ -1257,7 +1148,7 @@ class DBObjectSearch extends DBSearch
 			}
 		}
 
-		$aAliasTranslation = array();
+		$aAliasTranslation = [];
 		$oLeftFilter->RenameNestedQueriesAliasesInNameSpace($aRootClasses, $aAliasTranslation);
 		$oLeftFilter->MergeWith_InNamespace($oRightFilter, $aRootClasses, $aAliasTranslation);
 		$oRightFilter->RenameNestedQueriesAliasesInNameSpace($aRootClasses, $aAliasTranslation);
@@ -1275,32 +1166,24 @@ class DBObjectSearch extends DBSearch
 	 */
 	protected function MergeWith_InNamespace($oFilter, &$aClassAliases, &$aAliasTranslation)
 	{
-		if ($this->GetFirstJoinedClass() != $oFilter->GetClass())
-		{
+		if ($this->GetFirstJoinedClass() != $oFilter->GetClass()) {
 			throw new CoreException("Attempting to merge a filter of class '{$this->GetFirstJoinedClass()}' with a filter of class '{$oFilter->GetClass()}'");
 		}
 
 		// Translate search condition into our aliasing scheme
 		$aAliasTranslation[$oFilter->GetClassAlias()]['*'] = $this->GetFirstJoinedClassAlias();
 
-		foreach($oFilter->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
-		{
-			foreach($aPointingTo as $iOperatorCode => $aFilter)
-			{
-				foreach($aFilter as $oExtFilter)
-				{
+		foreach ($oFilter->m_aPointingTo as $sExtKeyAttCode => $aPointingTo) {
+			foreach ($aPointingTo as $iOperatorCode => $aFilter) {
+				foreach ($aFilter as $oExtFilter) {
 					$this->AddCondition_PointingTo_InNamespace($oExtFilter, $sExtKeyAttCode, $aClassAliases, $aAliasTranslation, $iOperatorCode);
 				}
 			}
 		}
-		foreach($oFilter->m_aReferencedBy as $sForeignClass => $aReferences)
-		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-			{
-				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-				{
-					foreach ($aFilters as $oForeignFilter)
-					{
+		foreach ($oFilter->m_aReferencedBy as $sForeignClass => $aReferences) {
+			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
+					foreach ($aFilters as $oForeignFilter) {
 						$this->AddCondition_ReferencedBy_InNamespace($oForeignFilter, $sForeignExtKeyAttCode, $aClassAliases, $aAliasTranslation, $iOperatorCode);
 					}
 				}
@@ -1308,15 +1191,22 @@ class DBObjectSearch extends DBSearch
 		}
 	}
 
-	public function GetCriteria() {return $this->m_oSearchCondition;}
-	public function GetCriteria_FullText() {throw new Exception("Removed GetCriteria_FullText");}
+	public function GetCriteria()
+	{
+		return $this->m_oSearchCondition;
+	}
+	public function GetCriteria_FullText()
+	{
+		throw new Exception("Removed GetCriteria_FullText");
+	}
 	public function GetCriteria_PointingTo($sKeyAttCode = "")
 	{
-		if (empty($sKeyAttCode))
-		{
+		if (empty($sKeyAttCode)) {
 			return $this->m_aPointingTo;
 		}
-		if (!array_key_exists($sKeyAttCode, $this->m_aPointingTo)) return array();
+		if (!array_key_exists($sKeyAttCode, $this->m_aPointingTo)) {
+			return [];
+		}
 		return $this->m_aPointingTo[$sKeyAttCode];
 	}
 
@@ -1362,10 +1252,8 @@ class DBObjectSearch extends DBSearch
 	 */
 	public function AddInternalParam($sKey, $value, $bDoNotOverride = false)
 	{
-		if ($bDoNotOverride)
-		{
-			if (array_key_exists($sKey, $this->m_aParams))
-			{
+		if ($bDoNotOverride) {
+			if (array_key_exists($sKey, $this->m_aParams)) {
 				throw new CoreUnexpectedValue("The key $sKey already exists with value : ".$this->m_aParams[$sKey]);
 			}
 		}
@@ -1375,38 +1263,29 @@ class DBObjectSearch extends DBSearch
 
 	public function GetQueryParams()
 	{
-		$aParams = array();
+		$aParams = [];
 		$this->m_oSearchCondition->RenderExpression(false, $aParams, true);
 
-		$aRet = array();
+		$aRet = [];
 
 		// Make the list of acceptable arguments... could be factorized with run_query, into oSearch->GetQueryParams()
-		$aNakedMagicArguments = array();
-		foreach (MetaModel::PrepareQueryArguments(array(),array(), $this->GetExpectedArguments()) as $sArgName => $value)
-		{
+		$aNakedMagicArguments = [];
+		foreach (MetaModel::PrepareQueryArguments([], [], $this->GetExpectedArguments()) as $sArgName => $value) {
 			$iPos = strpos($sArgName, '->object()');
-			if ($iPos === false)
-			{
+			if ($iPos === false) {
 				$aNakedMagicArguments[$sArgName] = $value;
-			}
-			else
-			{
+			} else {
 				$aNakedMagicArguments[substr($sArgName, 0, $iPos)] = true;
 			}
 		}
-		foreach ($aParams as $sParam => $foo)
-		{
+		foreach ($aParams as $sParam => $foo) {
 			$iPos = strpos($sParam, '->');
-			if ($iPos === false)
-			{
+			if ($iPos === false) {
 				$sRefName = $sParam;
-			}
-			else
-			{
+			} else {
 				$sRefName = substr($sParam, 0, $iPos);
 			}
-			if (!array_key_exists($sRefName, $aNakedMagicArguments))
-			{
+			if (!array_key_exists($sRefName, $aNakedMagicArguments)) {
 				$aRet[$sParam] = $foo;
 			}
 		}
@@ -1428,44 +1307,36 @@ class DBObjectSearch extends DBSearch
 	{
 		$this->m_oSearchCondition->ApplyParameters(array_merge($this->m_aParams, $aArgs));
 	}
-	
+
 	public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false)
 	{
 		// Currently unused, but could be useful later
 		$bRetrofitParams = false;
 
-		if ($bDevelopParams)
-		{
-			if (is_null($aContextParams))
-			{
+		if ($bDevelopParams) {
+			if (is_null($aContextParams)) {
 				$aParams = array_merge($this->m_aParams);
-			}
-			else
-			{
+			} else {
 				$aParams = array_merge($aContextParams, $this->m_aParams);
 			}
-			$aParams = MetaModel::PrepareQueryArguments($aParams,array(), $this->GetExpectedArguments());
-		}
-		else
-		{
+			$aParams = MetaModel::PrepareQueryArguments($aParams, [], $this->GetExpectedArguments());
+		} else {
 			// Leave it as is, the rendering will be made with parameters in clear
 			$aParams = null;
 		}
 
-		$aSelectedAliases = array();
-		foreach ($this->m_aSelectedClasses as $sAlias => $sClass)
-		{
-			$aSelectedAliases[] = '`' . $sAlias . '`';
+		$aSelectedAliases = [];
+		foreach ($this->m_aSelectedClasses as $sAlias => $sClass) {
+			$aSelectedAliases[] = '`'.$sAlias.'`';
 		}
 		$sSelectedClasses = implode(', ', $aSelectedAliases);
 		$sRes = 'SELECT '.$sSelectedClasses.' FROM';
 
-		$sRes .= ' ' . $this->GetFirstJoinedClass() . ' AS `' . $this->GetFirstJoinedClassAlias() . '`';
+		$sRes .= ' '.$this->GetFirstJoinedClass().' AS `'.$this->GetFirstJoinedClassAlias().'`';
 		$sRes .= $this->ToOQL_Joins();
 		$sRes .= " WHERE ".$this->m_oSearchCondition->RenderExpression(false, $aParams, $bRetrofitParams);
 
-		if ($bWithAllowAllFlag && $this->m_bAllowAllData)
-		{
+		if ($bWithAllowAllFlag && $this->m_bAllowAllData) {
 			$sRes .= " ALLOW ALL DATA";
 		}
 		return $sRes;
@@ -1473,8 +1344,7 @@ class DBObjectSearch extends DBSearch
 
 	protected function OperatorCodeToOQL($iOperatorCode)
 	{
-		switch($iOperatorCode)
-		{
+		switch ($iOperatorCode) {
 			case TREE_OPERATOR_EQUALS:
 				$sOperator = ' = ';
 				break;
@@ -1518,28 +1388,21 @@ class DBObjectSearch extends DBSearch
 	protected function ToOQL_Joins()
 	{
 		$sRes = '';
-		foreach($this->m_aPointingTo as $sExtKey => $aPointingTo)
-		{
-			foreach($aPointingTo as $iOperatorCode => $aFilter)
-			{
+		foreach ($this->m_aPointingTo as $sExtKey => $aPointingTo) {
+			foreach ($aPointingTo as $iOperatorCode => $aFilter) {
 				$sOperator = $this->OperatorCodeToOQL($iOperatorCode);
-				foreach($aFilter as $oFilter)
-				{
-					$sRes .= ' JOIN ' . $oFilter->GetFirstJoinedClass() . ' AS `' . $oFilter->GetFirstJoinedClassAlias() . '` ON `' . $this->GetFirstJoinedClassAlias() . '`.' . $sExtKey . $sOperator . '`' . $oFilter->GetFirstJoinedClassAlias() . '`.id';
-					$sRes .= $oFilter->ToOQL_Joins();				
+				foreach ($aFilter as $oFilter) {
+					$sRes .= ' JOIN '.$oFilter->GetFirstJoinedClass().' AS `'.$oFilter->GetFirstJoinedClassAlias().'` ON `'.$this->GetFirstJoinedClassAlias().'`.'.$sExtKey.$sOperator.'`'.$oFilter->GetFirstJoinedClassAlias().'`.id';
+					$sRes .= $oFilter->ToOQL_Joins();
 				}
 			}
 		}
-		foreach($this->m_aReferencedBy as $sForeignClass=>$aReferences)
-		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-			{
-				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-				{
+		foreach ($this->m_aReferencedBy as $sForeignClass => $aReferences) {
+			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
 					$sOperator = $this->OperatorCodeToOQL($iOperatorCode);
-					foreach ($aFilters as $oForeignFilter)
-					{
-						$sRes .= ' JOIN ' . $oForeignFilter->GetFirstJoinedClass() . ' AS `' . $oForeignFilter->GetFirstJoinedClassAlias() . '` ON `' . $oForeignFilter->GetFirstJoinedClassAlias() . '`.' . $sForeignExtKeyAttCode . $sOperator . '`' . $this->GetFirstJoinedClassAlias() . '`.id';
+					foreach ($aFilters as $oForeignFilter) {
+						$sRes .= ' JOIN '.$oForeignFilter->GetFirstJoinedClass().' AS `'.$oForeignFilter->GetFirstJoinedClassAlias().'` ON `'.$oForeignFilter->GetFirstJoinedClassAlias().'`.'.$sForeignExtKeyAttCode.$sOperator.'`'.$this->GetFirstJoinedClassAlias().'`.id';
 						$sRes .= $oForeignFilter->ToOQL_Joins();
 					}
 				}
@@ -1550,81 +1413,55 @@ class DBObjectSearch extends DBSearch
 
 	protected function OQLExpressionToCondition($sQuery, $oExpression, $aClassAliases)
 	{
-		if ($oExpression instanceof BinaryOqlExpression)
-		{
+		if ($oExpression instanceof BinaryOqlExpression) {
 			$sOperator = $oExpression->GetOperator();
 			$oLeft = $this->OQLExpressionToCondition($sQuery, $oExpression->GetLeftExpr(), $aClassAliases);
 			$oRight = $this->OQLExpressionToCondition($sQuery, $oExpression->GetRightExpr(), $aClassAliases);
 			return new BinaryExpression($oLeft, $sOperator, $oRight);
-		}
-		elseif ($oExpression instanceof MatchOqlExpression)
-		{
+		} elseif ($oExpression instanceof MatchOqlExpression) {
 			$oLeft = $this->OQLExpressionToCondition($sQuery, $oExpression->GetLeftExpr(), $aClassAliases);
 			$oRight = $this->OQLExpressionToCondition($sQuery, $oExpression->GetRightExpr(), $aClassAliases);
 
 			return new MatchExpression($oLeft, $oRight);
-		}
-		elseif ($oExpression instanceof FieldOqlExpression)
-		{
+		} elseif ($oExpression instanceof FieldOqlExpression) {
 			$sClassAlias = $oExpression->GetParent();
 			$sFltCode = $oExpression->GetName();
-			if (empty($sClassAlias))
-			{
+			if (empty($sClassAlias)) {
 				// Need to find the right alias
 				// Build an array of field => array of aliases
-				$aFieldClasses = array();
-				foreach($aClassAliases as $sAlias => $sReal)
-				{
-					foreach(MetaModel::GetFiltersList($sReal) as $sAnFltCode)
-					{
+				$aFieldClasses = [];
+				foreach ($aClassAliases as $sAlias => $sReal) {
+					foreach (MetaModel::GetFiltersList($sReal) as $sAnFltCode) {
 						$aFieldClasses[$sAnFltCode][] = $sAlias;
 					}
 				}
 				$sClassAlias = $aFieldClasses[$sFltCode][0];
 			}
 			return new FieldExpression($sFltCode, $sClassAlias);
-		}
-		elseif ($oExpression instanceof VariableOqlExpression)
-		{
+		} elseif ($oExpression instanceof VariableOqlExpression) {
 			return new VariableExpression($oExpression->GetName());
-		}
-		elseif ($oExpression instanceof TrueOqlExpression)
-		{
-			return new TrueExpression;
-		}
-		elseif ($oExpression instanceof ScalarOqlExpression)
-		{
+		} elseif ($oExpression instanceof TrueOqlExpression) {
+			return new TrueExpression();
+		} elseif ($oExpression instanceof ScalarOqlExpression) {
 			return new ScalarExpression($oExpression->GetValue());
-		}
-		elseif ($oExpression instanceof ListOqlExpression)
-		{
-			$aItems = array();
-			foreach ($oExpression->GetItems() as $oItemExpression)
-			{
+		} elseif ($oExpression instanceof ListOqlExpression) {
+			$aItems = [];
+			foreach ($oExpression->GetItems() as $oItemExpression) {
 				$aItems[] = $this->OQLExpressionToCondition($sQuery, $oItemExpression, $aClassAliases);
 			}
 			return new ListExpression($aItems);
-		}
-		elseif ($oExpression instanceof FunctionOqlExpression)
-		{
-			$aArgs = array();
-			foreach ($oExpression->GetArgs() as $oArgExpression)
-			{
+		} elseif ($oExpression instanceof FunctionOqlExpression) {
+			$aArgs = [];
+			foreach ($oExpression->GetArgs() as $oArgExpression) {
 				$aArgs[] = $this->OQLExpressionToCondition($sQuery, $oArgExpression, $aClassAliases);
 			}
 			return new FunctionExpression($oExpression->GetVerb(), $aArgs);
-		}
-		elseif ($oExpression instanceof IntervalOqlExpression)
-		{
+		} elseif ($oExpression instanceof IntervalOqlExpression) {
 			return new IntervalExpression($oExpression->GetValue(), $oExpression->GetUnit());
-		}
-		elseif ($oExpression instanceof NestedQueryOqlExpression)
-		{
+		} elseif ($oExpression instanceof NestedQueryOqlExpression) {
 			return NestedQueryExpression::FromOQLObjectQuery($oExpression->GetOQLObjectQuery());
-		}
-		else
-		{
-			throw new CoreException('Unknown expression type', array('class'=>get_class($oExpression), 'query'=>$sQuery));
+		} else {
+			throw new CoreException('Unknown expression type', ['class' => get_class($oExpression), 'query' => $sQuery]);
 		}
 	}
 
@@ -1634,14 +1471,13 @@ class DBObjectSearch extends DBSearch
 	 */
 	public function ToJSON()
 	{
-		$aRet = array('selects' => array(), 'joins' => array(), 'where' => array());
+		$aRet = ['selects' => [], 'joins' => [], 'where' => []];
 
 		$aParams = array_merge($this->m_aParams);
-		$aParams = MetaModel::PrepareQueryArguments($aParams, array(), $this->GetExpectedArguments());
+		$aParams = MetaModel::PrepareQueryArguments($aParams, [], $this->GetExpectedArguments());
 
-		foreach ($this->m_aSelectedClasses as $sAlias => $sClass)
-		{
-			$aRet['selects'][] = array('class' => $sClass, 'alias' => $sAlias);
+		foreach ($this->m_aSelectedClasses as $sAlias => $sClass) {
+			$aRet['selects'][] = ['class' => $sClass, 'alias' => $sAlias];
 		}
 		$this->JoinsToJSON($aRet);
 
@@ -1659,42 +1495,35 @@ class DBObjectSearch extends DBSearch
 	 */
 	protected function JoinsToJSON(&$aRet)
 	{
-		foreach($this->m_aPointingTo as $sExtKey => $aPointingTo)
-		{
-			foreach($aPointingTo as $iOperatorCode => $aFilter)
-			{
+		foreach ($this->m_aPointingTo as $sExtKey => $aPointingTo) {
+			foreach ($aPointingTo as $iOperatorCode => $aFilter) {
 				$sOperator = $this->OperatorCodeToOQL($iOperatorCode);
-				foreach($aFilter as $oFilter)
-				{
-					$aRet['joins'][] = array(
+				foreach ($aFilter as $oFilter) {
+					$aRet['joins'][] = [
 						'src' => $this->GetFirstJoinedClass(),
 						'src_alias' => $this->GetFirstJoinedClassAlias(),
 						'target' => $oFilter->GetFirstJoinedClass(),
 						'target_alias' => $oFilter->GetFirstJoinedClassAlias(),
 						'foreign_key' => $sExtKey,
 						'operator' => $sOperator,
-					);
+					];
 					$oFilter->JoinsToJSON($aRet);
 				}
 			}
 		}
-		foreach($this->m_aReferencedBy as $aReferences)
-		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-			{
-				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-				{
+		foreach ($this->m_aReferencedBy as $aReferences) {
+			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
 					$sOperator = $this->OperatorCodeToOQL($iOperatorCode);
-					foreach ($aFilters as $oForeignFilter)
-					{
-						$aRet['joins'][] = array(
+					foreach ($aFilters as $oForeignFilter) {
+						$aRet['joins'][] = [
 							'src' => $oForeignFilter->GetFirstJoinedClass(),
 							'src_alias' => $oForeignFilter->GetFirstJoinedClassAlias(),
 							'target' => $this->GetFirstJoinedClass(),
 							'target_alias' => $this->GetFirstJoinedClassAlias(),
 							'foreign_key' => $sForeignExtKeyAttCode,
 							'operator' => $sOperator,
-						);
+						];
 						$oForeignFilter->JoinsToJSON($aRet);
 					}
 				}
@@ -1715,18 +1544,15 @@ class DBObjectSearch extends DBSearch
 		$sClass = $oOqlQuery->GetClass($oModelReflection);
 		$sClassAlias = $oOqlQuery->GetClassAlias();
 
-		$aAliases = array($sClassAlias => $sClass);
+		$aAliases = [$sClassAlias => $sClass];
 
 		// Note: the condition must be built here, it may be altered later on when optimizing some joins
 		$oConditionTree = $oOqlQuery->GetCondition();
-		if ($oConditionTree instanceof Expression)
-		{
-			$aRawAliases = array($sClassAlias => $sClass);
+		if ($oConditionTree instanceof Expression) {
+			$aRawAliases = [$sClassAlias => $sClass];
 			$aJoinSpecs = $oOqlQuery->GetJoins();
-			if (is_array($aJoinSpecs))
-			{
-				foreach ($aJoinSpecs as $oJoinSpec)
-				{
+			if (is_array($aJoinSpecs)) {
+				foreach ($aJoinSpecs as $oJoinSpec) {
 					$aRawAliases[$oJoinSpec->GetClassAlias()] = $oJoinSpec->GetClass();
 				}
 			}
@@ -1736,18 +1562,15 @@ class DBObjectSearch extends DBSearch
 		// Maintain an array of filters, because the flat list is in fact referring to a tree
 		// And this will be an easy way to dispatch the conditions
 		// $this will be referenced by the other filters, or the other way around...
-		$aJoinItems = array($sClassAlias => $this);
+		$aJoinItems = [$sClassAlias => $this];
 
 		$aJoinSpecs = $oOqlQuery->GetJoins();
-		if (is_array($aJoinSpecs))
-		{
-			$aAliasTranslation = array();
-			foreach ($aJoinSpecs as $oJoinSpec)
-			{
+		if (is_array($aJoinSpecs)) {
+			$aAliasTranslation = [];
+			foreach ($aJoinSpecs as $oJoinSpec) {
 				$sJoinClass = $oJoinSpec->GetClass();
 				$sJoinClassAlias = $oJoinSpec->GetClassAlias();
-				if (isset($aAliasTranslation[$sJoinClassAlias]['*']))
-				{
+				if (isset($aAliasTranslation[$sJoinClassAlias]['*'])) {
 					$sJoinClassAlias = $aAliasTranslation[$sJoinClassAlias]['*'];
 				}
 
@@ -1755,16 +1578,14 @@ class DBObjectSearch extends DBSearch
 				// normalization should take care of this
 				$oLeftField = $oJoinSpec->GetLeftField();
 				$sFromClass = $oLeftField->GetParent();
-				if (isset($aAliasTranslation[$sFromClass]['*']))
-				{
+				if (isset($aAliasTranslation[$sFromClass]['*'])) {
 					$sFromClass = $aAliasTranslation[$sFromClass]['*'];
 				}
 				$sExtKeyAttCode = $oLeftField->GetName();
 
 				$oRightField = $oJoinSpec->GetRightField();
 				$sToClass = $oRightField->GetParent();
-				if (isset($aAliasTranslation[$sToClass]['*']))
-				{
+				if (isset($aAliasTranslation[$sToClass]['*'])) {
 					$sToClass = $aAliasTranslation[$sToClass]['*'];
 				}
 
@@ -1772,8 +1593,7 @@ class DBObjectSearch extends DBSearch
 				$aJoinItems[$sJoinClassAlias] = new DBObjectSearch($sJoinClass, $sJoinClassAlias);
 
 				$sOperator = $oJoinSpec->GetOperator();
-				switch($sOperator)
-				{
+				switch ($sOperator) {
 					case '=':
 					default:
 						$iOperatorCode = TREE_OPERATOR_EQUALS;
@@ -1804,14 +1624,11 @@ class DBObjectSearch extends DBSearch
 						break;
 				}
 
-				if ($sFromClass == $sJoinClassAlias)
-				{
+				if ($sFromClass == $sJoinClassAlias) {
 					$oReceiver = $aJoinItems[$sToClass];
 					$oNewComer = $aJoinItems[$sFromClass];
 					$oReceiver->AddCondition_ReferencedBy_InNameSpace($oNewComer, $sExtKeyAttCode, $oReceiver->m_aClasses, $aAliasTranslation, $iOperatorCode);
-				}
-				else
-				{
+				} else {
 					$oReceiver = $aJoinItems[$sFromClass];
 					$oNewComer = $aJoinItems[$sToClass];
 					$oReceiver->AddCondition_PointingTo_InNameSpace($oNewComer, $sExtKeyAttCode, $oReceiver->m_aClasses, $aAliasTranslation, $iOperatorCode);
@@ -1821,12 +1638,10 @@ class DBObjectSearch extends DBSearch
 		}
 
 		// Check and prepare the select information
-		$this->m_aSelectedClasses = array();
-		foreach ($oOqlQuery->GetSelectedClasses() as $oClassDetails)
-		{
+		$this->m_aSelectedClasses = [];
+		foreach ($oOqlQuery->GetSelectedClasses() as $oClassDetails) {
 			$sClassToSelect = $oClassDetails->GetValue();
-			if (!array_key_exists($sClassToSelect, $aAliases))
-			{
+			if (!array_key_exists($sClassToSelect, $aAliases)) {
 				throw new CoreException("$sClassToSelect is not a valid alias");
 			}
 			$this->m_aSelectedClasses[$sClassToSelect] = $aAliases[$sClassToSelect];
@@ -1840,7 +1655,7 @@ class DBObjectSearch extends DBSearch
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	public function MakeDeleteQuery($aArgs = array())
+	public function MakeDeleteQuery($aArgs = [])
 	{
 		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
 		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectDeleteQuery();
@@ -1856,7 +1671,7 @@ class DBObjectSearch extends DBSearch
 	 * @return string
 	 * @throws \CoreException
 	 */
-	public function MakeUpdateQuery($aValues, $aArgs = array())
+	public function MakeUpdateQuery($aValues, $aArgs = [])
 	{
 		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
 		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectUpdateQuery($aValues);
@@ -1875,7 +1690,7 @@ class DBObjectSearch extends DBSearch
 	 * @return string
 	 * @throws \CoreException
 	 */
-	public function MakeInsertQuery($aValues, $aArgs = array())
+	public function MakeInsertQuery($aValues, $aArgs = [])
 	{
 		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
 		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectUpdateQuery($aValues);
@@ -1920,14 +1735,12 @@ class DBObjectSearch extends DBSearch
 
 		// Create a unique cache id
 		//
-		$aContextData = array();
+		$aContextData = [];
 		$bCanCache = true;
-		if (self::$m_bQueryCacheEnabled || self::$m_bTraceQueries)
-		{
-			if (isset($_SERVER['REQUEST_URI']))
-			{
+		if (self::$m_bQueryCacheEnabled || self::$m_bTraceQueries) {
+			if (isset($_SERVER['REQUEST_URI'])) {
 				$aContextData['sRequestUri'] = $_SERVER['REQUEST_URI'];
-			} else if (isset($_SERVER['SCRIPT_NAME'])) {
+			} elseif (isset($_SERVER['SCRIPT_NAME'])) {
 				$aContextData['sRequestUri'] = $_SERVER['SCRIPT_NAME'];
 			} else {
 				$aContextData['sRequestUri'] = '';
@@ -1980,19 +1793,15 @@ class DBObjectSearch extends DBSearch
 			$aContextData['bIsArchiveMode'] = $bIsArchiveMode;
 			$aContextData['bShowObsoleteData'] = $bShowObsoleteData;
 			$sOqlId = md5($sRawId);
-		}
-		else
-		{
+		} else {
 			$sOqlQuery = "SELECTING... ".$oSearch->GetClass();
 			$sOqlId = "query id ? n/a";
 		}
 
-
 		// Query caching
 		//
 		$sOqlAPCCacheId = null;
-		if (self::$m_bQueryCacheEnabled && $bCanCache)
-		{
+		if (self::$m_bQueryCacheEnabled && $bCanCache) {
 			// Warning: using directly the query string as the key to the hash array can FAIL if the string
 			// is long and the differences are only near the end... so it's safer (but not bullet proof?)
 			// to use a hash (like md5) of the string as the key !
@@ -2003,15 +1812,12 @@ class DBObjectSearch extends DBSearch
 			// SELECT SLT JOIN lnkSLTToSLA AS L1 ON L1.slt_id=SLT.id JOIN SLA ON L1.sla_id = SLA.id JOIN lnkContractToSLA AS L2 ON L2.sla_id = SLA.id JOIN CustomerContract ON L2.contract_id = CustomerContract.id WHERE SLT.ticket_priority = 1 AND SLA.service_id = 3 AND SLT.metric = 'TTR' AND CustomerContract.customer_id = 2
 			// the only difference is R instead or O at position 285 (TTR instead of TTO)...
 			//
-			if (array_key_exists($sOqlId, self::$m_aQueryStructCache))
-			{
+			if (array_key_exists($sOqlId, self::$m_aQueryStructCache)) {
 				// hit!
 
 				$oSQLQuery = unserialize(serialize(self::$m_aQueryStructCache[$sOqlId]));
 				// Note: cloning is not enough because the subtree is made of objects
-			}
-			elseif (self::$m_bUseAPCCache)
-			{
+			} elseif (self::$m_bUseAPCCache) {
 				// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
 				//
 				$sOqlAPCCacheId = 'itop-'.MetaModel::GetEnvironmentId().'-query-cache-'.$sOqlId;
@@ -2019,25 +1825,21 @@ class DBObjectSearch extends DBSearch
 				$result = apc_fetch($sOqlAPCCacheId);
 				$oKPI->ComputeStats('Query APC (fetch)', $sOqlQuery);
 
-				if (is_object($result))
-				{
+				if (is_object($result)) {
 					$oSQLQuery = $result;
 					self::$m_aQueryStructCache[$sOqlId] = $oSQLQuery;
 				}
 			}
 		}
 
-		if (!isset($oSQLQuery))
-		{
+		if (!isset($oSQLQuery)) {
 			$oKPI = new ExecutionKPI();
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oSearch);
 			$oSQLQuery = $oSQLObjectQueryBuilder->BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr, $aSelectedClasses, $aSelectExpr);
 			$oKPI->ComputeStats('BuildSQLQueryStruct', $sOqlQuery);
 
-			if (self::$m_bQueryCacheEnabled)
-			{
-				if ($bCanCache && self::$m_bUseAPCCache)
-				{
+			if (self::$m_bQueryCacheEnabled) {
+				if ($bCanCache && self::$m_bUseAPCCache) {
 					$oSQLQuery->m_aContextData = $aContextData;
 					$oKPI = new ExecutionKPI();
 					apc_store($sOqlAPCCacheId, $oSQLQuery, self::$m_iQueryCacheTTL);
@@ -2058,28 +1860,28 @@ class DBObjectSearch extends DBSearch
 	 * @return \FunctionExpression|mixed|null
 	 * @throws \CoreException
 	*/
-	static public function GetPolymorphicExpression($sClass, $sAttCode)
+	public static function GetPolymorphicExpression($sClass, $sAttCode)
 	{
 		$oExpression = ExpressionCache::GetCachedExpression($sClass, $sAttCode);
-		if (!empty($oExpression))
-		{
+		if (!empty($oExpression)) {
 			return $oExpression;
 		}
 
 		// 1st step - get all of the required expressions (instantiable classes)
 		//            and group them using their OQL representation
 		//
-		$aExpressions = array(); // signature => array('expression' => oExp, 'classes' => array of classes)
-		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sSubClass)
-		{
-			if (($sSubClass != $sClass) && MetaModel::IsAbstract($sSubClass)) continue;
+		$aExpressions = []; // signature => array('expression' => oExp, 'classes' => array of classes)
+		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sSubClass) {
+			if (($sSubClass != $sClass) && MetaModel::IsAbstract($sSubClass)) {
+				continue;
+			}
 
 			$oAttDef = MetaModel::GetAttributeDef($sSubClass, $sAttCode);
 			$oSubClassExp = $oAttDef->GetOQLExpression($sSubClass);
 
 			// 3rd step - position the attributes in the hierarchy of classes
 			//
-			$oSubClassExp->Browse(function($oNode) use ($sSubClass) {
+			$oSubClassExp->Browse(function ($oNode) use ($sSubClass) {
 				if ($oNode instanceof FieldExpression) {
 					$sAttCode = $oNode->GetName();
 					$oAttDef = MetaModel::GetAttributeDef($sSubClass, $sAttCode);
@@ -2096,44 +1898,37 @@ class DBObjectSearch extends DBSearch
 
 			$sSignature = $oSubClassExp->RenderExpression();
 			if (!array_key_exists($sSignature, $aExpressions)) {
-				$aExpressions[$sSignature] = array(
+				$aExpressions[$sSignature] = [
 					'expression' => $oSubClassExp,
-					'classes'    => array(),
-				);
+					'classes'    => [],
+				];
 			}
 			$aExpressions[$sSignature]['classes'][] = $sSubClass;
 		}
 
 		// 2nd step - build the final name expression depending on the finalclass
 		//
-		if (count($aExpressions) == 1)
-		{
+		if (count($aExpressions) == 1) {
 			$aExpData = reset($aExpressions);
 			$oExpression = $aExpData['expression'];
-		}
-		else
-		{
+		} else {
 			$oExpression = null;
-			foreach ($aExpressions as $sSignature => $aExpData)
-			{
+			foreach ($aExpressions as $sSignature => $aExpData) {
 				$oClassListExpr = ListExpression::FromScalars($aExpData['classes']);
 				$oClassExpr = new FieldExpression('finalclass', $sClass);
 				$oClassInList = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
 
-				if (is_null($oExpression))
-				{
+				if (is_null($oExpression)) {
 					$oExpression = $aExpData['expression'];
-				}
-				else
-				{
-					$oExpression = new FunctionExpression('IF', array($oClassInList, $aExpData['expression'], $oExpression));
+				} else {
+					$oExpression = new FunctionExpression('IF', [$oClassInList, $aExpData['expression'], $oExpression]);
 				}
 			}
 		}
 		return $oExpression;
 	}
 
-	function GetExpectedArguments(): array
+	public function GetExpectedArguments(): array
 	{
 		return $this->GetCriteria()->ListParameters();
 	}

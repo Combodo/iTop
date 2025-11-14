@@ -1,6 +1,6 @@
 <?php
-namespace  Combodo\iTop\Service\Notification\Event;
 
+namespace Combodo\iTop\Service\Notification\Event;
 
 use Action;
 use Combodo\iTop\Application\Branding;
@@ -17,7 +17,8 @@ use utils;
  * @since 3.2.0
  * @api
 */
-class EventNotificationNewsroomService {
+class EventNotificationNewsroomService
+{
 	/**
 	 * @param \Action $oAction
 	 * @param int $iContactId
@@ -36,7 +37,7 @@ class EventNotificationNewsroomService {
 	 */
 	public static function MakeEventFromAction(Action $oAction, int $iContactId, int $iTriggerId, string $sMessage, string $sTitle, string $sUrl, int $iObjectId, ?string $sObjectClass, string|null $sDate = null): EventNotificationNewsroom
 	{
-		
+
 		$oEvent = new EventNotificationNewsroom();
 		$oEvent->Set('title', $sTitle);
 		$oEvent->Set('message', $sMessage);
@@ -60,14 +61,14 @@ class EventNotificationNewsroomService {
 		$oEvent->Set('trigger_id', $iTriggerId);
 		$oEvent->Set('action_id', $oAction->GetKey());
 		$oEvent->Set('object_id', $iObjectId);
-        $oEvent->Set('object_class', $sObjectClass);
+		$oEvent->Set('object_class', $sObjectClass);
 		$oEvent->Set('url', $sUrl);
 		if ($sDate !== null) {
 			$oEvent->Set('date', $sDate);
 		} else {
 			$oEvent->SetCurrentDate('date');
 		}
-		
+
 		return $oEvent;
 	}
 }

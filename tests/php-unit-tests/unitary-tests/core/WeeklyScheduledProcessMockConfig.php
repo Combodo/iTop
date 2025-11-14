@@ -9,7 +9,7 @@
  */
 class WeeklyScheduledProcessMockConfig extends AbstractWeeklyScheduledProcess
 {
-	const MODULE_NAME = 'itop-zabu-gomeu';
+	public const MODULE_NAME = 'itop-zabu-gomeu';
 
 	public function __construct($bEnabledValue, $sTimeValue, $sWeekDays)
 	{

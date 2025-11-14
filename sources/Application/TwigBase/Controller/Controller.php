@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -156,7 +157,7 @@ abstract class Controller extends AbstractController
 				if (!in_array($path, $aAdditionalPaths)) {
 					$aAdditionalPaths[] = $path;
 				}
-			} else if (is_array($path)) {
+			} elseif (is_array($path)) {
 				foreach ($path as $sPath) {
 					if (!in_array($sPath, $aAdditionalPaths)) {
 						$aAdditionalPaths[] = $sPath;
@@ -169,8 +170,7 @@ abstract class Controller extends AbstractController
 			if ($sModuleName != 'core') {
 				try {
 					$this->aDefaultParams = ['sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					IssueLog::Error($e->getMessage());
 				}
 			}
@@ -197,9 +197,8 @@ abstract class Controller extends AbstractController
 		$this->SetModuleName(basename($sModulePath));
 		$this->SetViewPath($sModulePath.'/view');
 		try {
-			$this->aDefaultParams = array('sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php'));
-		}
-		catch (Exception $e) {
+			$this->aDefaultParams = ['sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
+		} catch (Exception $e) {
 			IssueLog::Error($e->getMessage());
 		}
 	}
@@ -302,7 +301,7 @@ abstract class Controller extends AbstractController
 		}
 		catch (Exception $e) {
 			http_response_code(500);
-			$aResponse = array('sError' => $e->getMessage());
+			$aResponse = ['sError' => $e->getMessage()];
 			echo json_encode($aResponse);
 		}
 	}
@@ -364,7 +363,9 @@ abstract class Controller extends AbstractController
 			$sDecodedPassedToken = urldecode($sPassedToken);
 			if ($sDecodedPassedToken !== $sConfiguredAccessTokenValue) {
 				$sMsg = "Invalid token passed under '$this->sAccessTokenConfigParamId' http param to reach '$sExecModule' page.";
-				IssueLog::Error($sMsg, null,
+				IssueLog::Error(
+					$sMsg,
+					null,
 					[
 						'sHtmlDecodedToken' => $sDecodedPassedToken,
 						'conf param ID'     => $this->sAccessTokenConfigParamId,
@@ -464,7 +465,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @throws \Exception
 	 */
-	public function DisplayAjaxPage($aParams = array(), $sTemplateName = null): void
+	public function DisplayAjaxPage($aParams = [], $sTemplateName = null): void
 	{
 		$this->DisplayPage($aParams, $sTemplateName, 'ajax');
 	}
@@ -623,7 +624,7 @@ abstract class Controller extends AbstractController
 		file_put_contents($sHTMLReport, ob_get_contents());
 		ob_end_clean();
 
-		$this->ZipDownloadRemoveFile(array($sHTMLReport), $sZIPReportFile, true);
+		$this->ZipDownloadRemoveFile([$sHTMLReport], $sZIPReportFile, true);
 	}
 
 	/**
@@ -735,7 +736,7 @@ abstract class Controller extends AbstractController
 		if (is_null($sLabel)) {
 			$sLabel = Dict::S($sCode);
 		}
-		$this->aAjaxTabs[$sCode] = array('label' => $sLabel, 'url' => $sURL, 'cache' => $bCache);
+		$this->aAjaxTabs[$sCode] = ['label' => $sLabel, 'url' => $sURL, 'cache' => $bCache];
 	}
 
 	/**
@@ -838,8 +839,7 @@ abstract class Controller extends AbstractController
 		}
 		try {
 			return $this->oTwig->render($sTemplateFile, $aParams);
-		}
-		catch (SyntaxError $e) {
+		} catch (SyntaxError $e) {
 			IssueLog::Error($e->getMessage().' - file: '.$e->getFile().'('.$e->getLine().')');
 			$aErrors[self::TWIG_ERROR][] = $e->getMessage();
 

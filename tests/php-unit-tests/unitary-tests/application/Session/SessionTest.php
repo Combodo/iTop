@@ -85,7 +85,6 @@ class SessionTest extends ItopTestCase
 		$this->assertEquals('OK', Session::Get('test'));
 	}
 
-
 	public function testIsSet()
 	{
 		$this->assertFalse(Session::IsSet('test'));

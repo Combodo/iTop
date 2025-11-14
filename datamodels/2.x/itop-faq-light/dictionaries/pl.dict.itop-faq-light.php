@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:FAQ' => 'Pytania FAQ',
 	'Class:FAQ+' => 'Często Zadawane Pytania',
 	'Class:FAQ/Attribute:title' => 'Tytuł',
@@ -27,21 +28,21 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:FAQ/Attribute:key_words' => 'Słowa kluczowe',
 	'Class:FAQ/Attribute:key_words+' => '',
 	'Class:FAQ/Attribute:domains' => 'Domeny',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:FAQCategory' => 'Kategoria FAQ',
 	'Class:FAQCategory+' => 'Kategoria FAQ',
 	'Class:FAQCategory/Attribute:name' => 'Nazwa',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'Pytania FAQ',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Wszystkie najczęściej zadawane pytania związane z tą kategorią',
-));
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+]);
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:ProblemManagement' => 'Zarządzanie problemami',
 	'Menu:ProblemManagement+' => 'Zarządzanie problemami',
 	'Menu:Problem:Shortcuts' => 'Skróty',
@@ -52,4 +53,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Brick:Portal:FAQ:Menu' => 'Pytania FAQ',
 	'Brick:Portal:FAQ:Title' => 'Często Zadawane Pytania',
 	'Brick:Portal:FAQ:Title+' => '<p>W pośpiechu?</p><p>Sprawdź listę najczęściej zadawanych pytań i (być może) od razu znajdź oczekiwaną odpowiedź.</p>',
-));
+]);

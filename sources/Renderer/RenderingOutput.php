@@ -40,12 +40,12 @@ class RenderingOutput
 	public function __construct()
 	{
 		$this->sHtml = '';
-		$this->aMetadata = array();
+		$this->aMetadata = [];
 		$this->sJsInline = '';
-		$this->aJsFiles = array();
+		$this->aJsFiles = [];
 		$this->sCssInline = '';
-		$this->aCssFiles = array();
-		$this->aCssClasses = array();
+		$this->aCssFiles = [];
+		$this->aCssClasses = [];
 	}
 
 	/**
@@ -102,14 +102,14 @@ class RenderingOutput
 		return $this->aCssFiles;
 	}
 
-    /**
-     *
-     * @return array
-     */
+	/**
+	 *
+	 * @return array
+	 */
 	public function GetCssClasses()
-    {
-	    return $this->aCssClasses;
-    }
+	{
+		return $this->aCssClasses;
+	}
 
 	/**
 	 *
@@ -123,7 +123,7 @@ class RenderingOutput
 		if (!is_null($sHtml)) {
 			$this->sHtml .= ($bEscapeHtmlEntities) ? utils::Escapehtml($sHtml) : $sHtml;
 		}
-		
+
 		return $this;
 	}
 
@@ -153,8 +153,7 @@ class RenderingOutput
 	 */
 	public function RemoveMetadata(string $sName)
 	{
-		if (in_array($sName, $this->aMetadata))
-		{
+		if (in_array($sName, $this->aMetadata)) {
 			unset($this->aJsFiles[$sName]);
 		}
 
@@ -197,8 +196,7 @@ class RenderingOutput
 	 */
 	public function AddJsFile(string $sFile)
 	{
-		if (!in_array($sFile, $this->aJsFiles))
-		{
+		if (!in_array($sFile, $this->aJsFiles)) {
 			$this->aJsFiles[] = $sFile;
 		}
 
@@ -213,8 +211,7 @@ class RenderingOutput
 	 */
 	public function RemoveJsFile(string $sFile)
 	{
-		if (in_array($sFile, $this->aJsFiles))
-		{
+		if (in_array($sFile, $this->aJsFiles)) {
 			unset($this->aJsFiles[$sFile]);
 		}
 
@@ -257,57 +254,53 @@ class RenderingOutput
 	 */
 	public function AddCssFile(string $sFile)
 	{
-		if (!in_array($sFile, $this->aCssFiles))
-		{
+		if (!in_array($sFile, $this->aCssFiles)) {
 			$this->aCssFiles[] = $sFile;
 		}
 
 		return $this;
-    }
+	}
 
-    /**
-     *
-     * @param string $sFile
-     * @return \Combodo\iTop\Renderer\RenderingOutput
-     */
+	/**
+	 *
+	 * @param string $sFile
+	 * @return \Combodo\iTop\Renderer\RenderingOutput
+	 */
 	public function RemoveCssFile(string $sFile)
 	{
-		if (in_array($sFile, $this->aCssFiles))
-		{
+		if (in_array($sFile, $this->aCssFiles)) {
 			unset($this->aCssFiles[$sFile]);
 		}
 
 		return $this;
-    }
+	}
 
-    /**
-     *
-     * @param string $sClass
-     * @return \Combodo\iTop\Renderer\RenderingOutput
-     */
+	/**
+	 *
+	 * @param string $sClass
+	 * @return \Combodo\iTop\Renderer\RenderingOutput
+	 */
 	public function AddCssClass(string $sClass)
 	{
-		if (!in_array($sClass, $this->aCssClasses))
-		{
+		if (!in_array($sClass, $this->aCssClasses)) {
 			$this->aCssClasses[] = $sClass;
 		}
 
 		return $this;
-    }
+	}
 
-    /**
-     *
-     * @param string $sClass
-     * @return \Combodo\iTop\Renderer\RenderingOutput
-     */
+	/**
+	 *
+	 * @param string $sClass
+	 * @return \Combodo\iTop\Renderer\RenderingOutput
+	 */
 	public function RemoveCssClass(string $sClass)
 	{
-		if (in_array($sClass, $this->aCssClasses))
-		{
+		if (in_array($sClass, $this->aCssClasses)) {
 			unset($this->aCssClasses[$sClass]);
 		}
 
 		return $this;
-    }
+	}
 
 }

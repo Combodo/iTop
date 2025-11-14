@@ -142,7 +142,7 @@ class NotificationsRepository
 	{
 		$oSearch = DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk WHERE lnk.contact_id = :contact_id");
 		$oSearch->SetInternalParams([
-			"contact_id" => $iContactId
+			"contact_id" => $iContactId,
 		]);
 
 		return new DBObjectSet($oSearch);
@@ -232,7 +232,8 @@ class NotificationsRepository
 	public function SearchSubscriptionsByTriggerContactAndSubscription(int $iTriggerId, int $iContactId, string $sSubscription): DBObjectSet
 	{
 		$oSearch = DBObjectSearch::FromOQL("SELECT lnkActionNotificationToContact AS lnk WHERE lnk.contact_id = :contact_id AND lnk.trigger_id = :trigger_id AND lnk.subscribed = :subscription");
-		$oSearch->SetInternalParams([
+		$oSearch->SetInternalParams(
+			[
 			"trigger_id" => $iTriggerId,
 			"contact_id" => $iContactId,
 			"subscription" => $sSubscription]
@@ -240,7 +241,6 @@ class NotificationsRepository
 
 		return new DBObjectSet($oSearch);
 	}
-
 
 	/**
 	 * Search for subscriptions based on trigger, contact, subscription type, and final class.
@@ -259,7 +259,7 @@ class NotificationsRepository
 			"trigger_id" => $iTriggerId,
 			"contact_id" => $iContactId,
 			"subscription" => $sSubscription,
-			"finalclass" => $sFinalclass
+			"finalclass" => $sFinalclass,
 		]);
 
 		return new DBObjectSet($oSearch);

@@ -9,59 +9,59 @@
  */
 abstract class AbstractPortalUIExtension implements iPortalUIExtension
 {
-    /**
-     * @inheritDoc
-     */
-    public function GetCSSFiles(\Symfony\Component\DependencyInjection\Container $oContainer)
-    {
-        return array();
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function GetCSSFiles(\Symfony\Component\DependencyInjection\Container $oContainer)
+	{
+		return [];
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function GetCSSInline(\Symfony\Component\DependencyInjection\Container $oContainer)
-    {
-        return null;
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function GetCSSInline(\Symfony\Component\DependencyInjection\Container $oContainer)
+	{
+		return null;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function GetJSFiles(\Symfony\Component\DependencyInjection\Container $oContainer)
-    {
-        return array();
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function GetJSFiles(\Symfony\Component\DependencyInjection\Container $oContainer)
+	{
+		return [];
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function GetJSInline(\Symfony\Component\DependencyInjection\Container $oContainer)
-    {
-        return null;
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function GetJSInline(\Symfony\Component\DependencyInjection\Container $oContainer)
+	{
+		return null;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function GetBodyHTML(\Symfony\Component\DependencyInjection\Container $oContainer)
-    {
-        return null;
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function GetBodyHTML(\Symfony\Component\DependencyInjection\Container $oContainer)
+	{
+		return null;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function GetMainContentHTML(\Symfony\Component\DependencyInjection\Container $oContainer)
-    {
-        return null;
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function GetMainContentHTML(\Symfony\Component\DependencyInjection\Container $oContainer)
+	{
+		return null;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function GetNavigationMenuHTML(\Symfony\Component\DependencyInjection\Container $oContainer)
-    {
-        return null;
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function GetNavigationMenuHTML(\Symfony\Component\DependencyInjection\Container $oContainer)
+	{
+		return null;
+	}
 }

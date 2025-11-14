@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -13,7 +14,6 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core\Log;
 
-
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class LogAPITest extends ItopDataTestCase
@@ -21,14 +21,13 @@ class LogAPITest extends ItopDataTestCase
 	private $mockFileLog;
 	private $oMetaModelConfig;
 
-	protected function setUp():void
+	protected function setUp(): void
 	{
 		parent::setUp();
 
 		$this->mockFileLog = $this->createMock('FileLog');
 		$this->oMetaModelConfig = $this->createMock('Config');
 	}
-
 
 	/**
 	 * @dataProvider LogApiProvider
@@ -58,7 +57,7 @@ class LogAPITest extends ItopDataTestCase
 	 * @dataProvider LogWarningWithASpecificChannelProvider
 	 * @test
 	 */
-	public function TestLogWarningWithASpecificChannel($expectedCallNb, $sExpectedLevel, $ConfigReturnedObject, $bExceptionRaised=false)
+	public function TestLogWarningWithASpecificChannel($expectedCallNb, $sExpectedLevel, $ConfigReturnedObject, $bExceptionRaised = false)
 	{
 		$this->oMetaModelConfig
 			->method("Get")
@@ -73,13 +72,12 @@ class LogAPITest extends ItopDataTestCase
 			->method($sExpectedLevel)
 			->with("log msg", "GaBuZoMeuChannel");
 
-		try{
+		try {
 			\IssueLog::Warning("log msg", "GaBuZoMeuChannel");
 			if ($bExceptionRaised) {
 				$this->fail("raised should have been raised");
 			}
-		}
-		catch(\Exception $e) {
+		} catch (\Exception $e) {
 			if (!$bExceptionRaised) {
 				$this->fail("raised should NOT have been raised");
 			}
@@ -93,7 +91,7 @@ class LogAPITest extends ItopDataTestCase
 			"Default Unknown Level"                    => [ 0, "Ok", 'TotoLevel', true],
 			"Info as Default Level"                    => [ 1 , "Warning", 'Info'],
 			"Error as Default Level"                   => [ 0, "Warning", 'Error'],
-			"Empty array"                              => [ 0, "Ok", array()],
+			"Empty array"                              => [ 0, "Ok", []],
 			"Channel configured on an undefined level" => [ 0, "Ok", ["GaBuZoMeuChannel" => "TotoLevel"], true],
 			"Channel defined with Error"               => [ 0, "Warning", ["GaBuZoMeuChannel" => "Error"]],
 			"Channel defined with Info"                => [ 1, "Warning", ["GaBuZoMeuChannel" => "Info"]],
@@ -104,7 +102,7 @@ class LogAPITest extends ItopDataTestCase
 	 * @dataProvider LogOkWithASpecificChannel
 	 * @test
 	 */
-	public function TestLogOkWithASpecificChannel($expectedCallNb, $sExpectedLevel, $ConfigReturnedObject, $bExceptionRaised=false)
+	public function TestLogOkWithASpecificChannel($expectedCallNb, $sExpectedLevel, $ConfigReturnedObject, $bExceptionRaised = false)
 	{
 		$this->oMetaModelConfig
 			->method("Get")
@@ -124,8 +122,7 @@ class LogAPITest extends ItopDataTestCase
 			if ($bExceptionRaised) {
 				$this->fail("raised should have been raised");
 			}
-		}
-		catch (\Exception $e) {
+		} catch (\Exception $e) {
 			if (!$bExceptionRaised) {
 				$this->fail("raised should NOT have been raised");
 			}
@@ -136,7 +133,7 @@ class LogAPITest extends ItopDataTestCase
 	{
 		return [
 			"empty config" => [1, "Ok", ''],
-			"Empty array"  => [1, "Ok", array()],
+			"Empty array"  => [1, "Ok", []],
 		];
 	}
 
@@ -168,7 +165,6 @@ class LogAPITest extends ItopDataTestCase
 			$this->assertNotEmpty($oEventIssue->Get($sAttCode), "In the EventIssue instance returned by LogAPI the '$sAttCode' mandatory attr is empty :(");
 		}
 	}
-
 
 	public function testGetLevelDefault()
 	{

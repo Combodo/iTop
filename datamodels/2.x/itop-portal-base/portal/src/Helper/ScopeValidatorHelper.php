@@ -41,18 +41,18 @@ use utils;
 class ScopeValidatorHelper
 {
 	/** @var string ENUM_MODE_READ */
-	const ENUM_MODE_READ = 'r';
+	public const ENUM_MODE_READ = 'r';
 	/** @var string ENUM_MODE_WRITE */
-	const ENUM_MODE_WRITE = 'w';
+	public const ENUM_MODE_WRITE = 'w';
 	/** @var string ENUM_TYPE_ALLOW */
-	const ENUM_TYPE_ALLOW = 'allow';
+	public const ENUM_TYPE_ALLOW = 'allow';
 	/** @var string ENUM_TYPE_RESTRICT */
-	const ENUM_TYPE_RESTRICT = 'restrict';
+	public const ENUM_TYPE_RESTRICT = 'restrict';
 
 	/** @var string DEFAULT_GENERATED_CLASS */
-	const DEFAULT_GENERATED_CLASS = '\\PortalScopesValues';
+	public const DEFAULT_GENERATED_CLASS = '\\PortalScopesValues';
 	/** @var bool DEFAULT_IGNORE_SILOS */
-	const DEFAULT_IGNORE_SILOS = false;
+	public const DEFAULT_IGNORE_SILOS = false;
 
 	/** @var string|null $sCachePath */
 	protected $sCachePath;
@@ -80,7 +80,7 @@ class ScopeValidatorHelper
 		$this->sCachePath = $sPortalCachePath;
 		$this->sInstancePrefix = "{$sPortalId}-";
 		$this->sGeneratedClass = static::DEFAULT_GENERATED_CLASS;
-		$this->aProfilesMatrix = array();
+		$this->aProfilesMatrix = [];
 
 		$this->Init($moduleDesign->GetNodes('/module_design/classes/class'));
 	}
@@ -96,8 +96,7 @@ class ScopeValidatorHelper
 	public function Init(DOMNodeList $oNodes)
 	{
 		// Checking cache path
-		if ($this->sCachePath === null)
-		{
+		if ($this->sCachePath === null) {
 			$this->sCachePath = utils::GetCachePath();
 		}
 		// Building full pathname for file
@@ -105,20 +104,18 @@ class ScopeValidatorHelper
 
 		// Creating file if not existing
 		// Note : This is a temporary cache system, it should soon evolve to a cache provider (fs, apc, memcache, ...)
-		if (!file_exists($sFilePath))
-		{
+		if (!file_exists($sFilePath)) {
 			$this->InitGenerateAndWriteCache($oNodes, $sFilePath);
 		}
 
-		if (!class_exists($this->sGeneratedClass))
-		{
+		if (!class_exists($this->sGeneratedClass)) {
 			require_once $this->sCachePath.$this->sFilename;
 		}
 	}
 
 	public static function EnumTypeValues()
 	{
-		return array(static::ENUM_TYPE_ALLOW, static::ENUM_TYPE_RESTRICT);
+		return [static::ENUM_TYPE_ALLOW, static::ENUM_TYPE_RESTRICT];
 	}
 
 	/**
@@ -197,7 +194,7 @@ class ScopeValidatorHelper
 	 */
 	public function GetScopeFilterForProfile($sProfile, $sClass, $iAction = null)
 	{
-		return $this->GetScopeFilterForProfiles(array($sProfile), $sClass, $iAction);
+		return $this->GetScopeFilterForProfiles([$sProfile], $sClass, $iAction);
 	}
 
 	/**
@@ -217,19 +214,17 @@ class ScopeValidatorHelper
 	public function GetScopeFilterForProfiles($aProfiles, $sClass, $iAction = null)
 	{
 		$oSearch = null;
-		$aAllowSearches = array();
-		$aRestrictSearches = array();
+		$aAllowSearches = [];
+		$aRestrictSearches = [];
 		$bIgnoreSilos = static::DEFAULT_IGNORE_SILOS;
 
 		// Checking the default mode
-		if ($iAction === null)
-		{
+		if ($iAction === null) {
 			$iAction = UR_ACTION_READ;
 		}
 
 		// Iterating on profiles to retrieving the different OQLs parts
-		foreach ($aProfiles as $sProfile)
-		{
+		foreach ($aProfiles as $sProfile) {
 			// Retrieving matrix information
 			$iProfileId = $this->GetProfileIdFromProfileName($sProfile);
 			$sMode = ($iAction === UR_ACTION_READ) ? static::ENUM_MODE_READ : static::ENUM_MODE_WRITE;
@@ -237,39 +232,31 @@ class ScopeValidatorHelper
 			// Retrieving profile OQLs
 			$sScopeValuesClass = $this->sGeneratedClass;
 			$aProfileMatrix = $sScopeValuesClass::GetProfileScope($iProfileId, $sClass, $sMode);
-			if ($aProfileMatrix !== null)
-			{
-				if (isset($aProfileMatrix['allow']) && $aProfileMatrix['allow'] !== null)
-				{
+			if ($aProfileMatrix !== null) {
+				if (isset($aProfileMatrix['allow']) && $aProfileMatrix['allow'] !== null) {
 					$aAllowSearches[] = DBSearch::FromOQL($aProfileMatrix['allow']);
 				}
-				if (isset($aProfileMatrix['restrict']) && $aProfileMatrix['restrict'] !== null)
-				{
+				if (isset($aProfileMatrix['restrict']) && $aProfileMatrix['restrict'] !== null) {
 					$aRestrictSearches[] = DBSearch::FromOQL($aProfileMatrix['restrict']);
 				}
 				// If a profile should ignore allowed org, we set it for all its queries no matter the profile
-				if (isset($aProfileMatrix['ignore_silos']) && $aProfileMatrix['ignore_silos'] === true)
-				{
+				if (isset($aProfileMatrix['ignore_silos']) && $aProfileMatrix['ignore_silos'] === true) {
 					$bIgnoreSilos = true;
 				}
 			}
 		}
 
 		// Building the real OQL from all the parts from the different profiles
-		for ($i = 0; $i < count($aAllowSearches); $i++)
-		{
-			foreach ($aRestrictSearches as $oRestrictSearch)
-			{
+		for ($i = 0; $i < count($aAllowSearches); $i++) {
+			foreach ($aRestrictSearches as $oRestrictSearch) {
 				$aAllowSearches[$i] = $aAllowSearches[$i]->Intersect($oRestrictSearch);
 			}
 		}
-		if (count($aAllowSearches) > 0)
-		{
+		if (count($aAllowSearches) > 0) {
 			$oSearch = new DBUnionSearch($aAllowSearches);
 			$oSearch = $oSearch->RemoveDuplicateQueries();
 		}
-		if ($bIgnoreSilos === true)
-		{
+		if ($bIgnoreSilos === true) {
 			$oSearch->AllowAllData();
 		}
 
@@ -291,12 +278,10 @@ class ScopeValidatorHelper
 	public function AddScopeToQuery(DBSearch &$oQuery, $sClass, $sAction = UR_ACTION_READ)
 	{
 		$oScopeQuery = $this->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sClass, $sAction);
-		if ($oScopeQuery !== null)
-		{
+		if ($oScopeQuery !== null) {
 			$oQuery = $oQuery->Intersect($oScopeQuery);
 			// - Allowing all data if necessary
-			if ($oScopeQuery->IsAllDataAllowed())
-			{
+			if ($oScopeQuery->IsAllDataAllowed()) {
 				$oQuery->AllowAllData();
 			}
 
@@ -321,19 +306,16 @@ class ScopeValidatorHelper
 		$bIgnoreSilos = false;
 
 		// Iterating on profiles to retrieving the different OQLs parts
-		foreach ($aProfiles as $sProfile)
-		{
+		foreach ($aProfiles as $sProfile) {
 			// Retrieving matrix information
 			$iProfileId = $this->GetProfileIdFromProfileName($sProfile);
 
 			// Retrieving profile OQLs
 			$sScopeValuesClass = $this->sGeneratedClass;
 			$aProfileMatrix = $sScopeValuesClass::GetProfileScope($iProfileId, $sClass, static::ENUM_MODE_READ);
-			if ($aProfileMatrix !== null)
-			{
+			if ($aProfileMatrix !== null) {
 				// If a profile should ignore allowed org, we set it for all its queries no matter the profile
-				if (isset($aProfileMatrix['ignore_silos']) && $aProfileMatrix['ignore_silos'] === true)
-				{
+				if (isset($aProfileMatrix['ignore_silos']) && $aProfileMatrix['ignore_silos'] === true) {
 					$bIgnoreSilos = true;
 				}
 			}
@@ -357,18 +339,12 @@ class ScopeValidatorHelper
 
 		// We try to find the profile from its name in order to retrieve it's id
 		// - If the regular UserRights add-on is installed we check the profiles array
-		if (class_exists('ProfilesConfig'))
-		{
-			if (defined($sProfile) && in_array($sProfile, ProfilesConfig::GetProfilesValues()))
-			{
+		if (class_exists('ProfilesConfig')) {
+			if (defined($sProfile) && in_array($sProfile, ProfilesConfig::GetProfilesValues())) {
 				$iProfileId = constant($sProfile);
-			}
-			else
-			{
-				foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue)
-				{
-					if ($aValue['name'] === $sProfile)
-					{
+			} else {
+				foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue) {
+					if ($aValue['name'] === $sProfile) {
 						$iProfileId = $iKey;
 						break;
 					}
@@ -376,14 +352,12 @@ class ScopeValidatorHelper
 			}
 		}
 		// - Else, we can't find the id from the name as we don't know the used UserRights add-on. It has to be a constant
-		else
-		{
+		else {
 			throw new Exception('Scope validator : Unknown UserRights addon, scope\'s profile must be a constant');
 		}
 
 		// If profile was not found from its name or from a constant, we throw an exception
-		if ($iProfileId === null)
-		{
+		if ($iProfileId === null) {
 			throw new Exception('Scope validator : Could not find "'.$sProfile.'" in the profiles list');
 		}
 
@@ -397,7 +371,7 @@ class ScopeValidatorHelper
 	 *
 	 * @return string
 	 */
-	protected function BuildPHPClass($aProfiles = array())
+	protected function BuildPHPClass($aProfiles = [])
 	{
 		$sProfiles = var_export($aProfiles, true);
 		$sClassName = ltrim($this->sGeneratedClass, '\\');
@@ -450,31 +424,26 @@ EOF;
 	protected function InitGenerateAndWriteCache(DOMNodeList $oNodes, $sFilePath)
 	{
 		// - Build php array from xml
-		$aProfiles = array();
+		$aProfiles = [];
 		// This will be used to know which classes have been set, so we can set the missing ones.
-		$aProfileClasses = array();
+		$aProfileClasses = [];
 		// Iterating over the class nodes
 		/** @var \Combodo\iTop\DesignElement $oClassNode */
-		foreach ($oNodes as $oClassNode)
-		{
+		foreach ($oNodes as $oClassNode) {
 			// retrieving mandatory class id attribute
 			$sClass = $oClassNode->getAttribute('id');
-			if ($sClass === '')
-			{
+			if ($sClass === '') {
 				throw new DOMFormatException('Class tag must have an id attribute.', null, null, $oClassNode);
 			}
 
 			// Iterating over scope nodes of the class
 			$oScopesNode = $oClassNode->GetOptionalElement('scopes');
-			if ($oScopesNode !== null)
-			{
+			if ($oScopesNode !== null) {
 				/** @var \Combodo\iTop\DesignElement $oScopeNode */
-				foreach ($oScopesNode->GetNodes('./scope') as $oScopeNode)
-				{
+				foreach ($oScopesNode->GetNodes('./scope') as $oScopeNode) {
 					// Retrieving mandatory scope id attribute
 					$sScopeId = $oScopeNode->getAttribute('id');
-					if ($sScopeId === '')
-					{
+					if ($sScopeId === '') {
 						throw new DOMFormatException('Scope tag must have an id attribute.', null, null, $oScopeNode);
 					}
 
@@ -486,8 +455,7 @@ EOF;
 					// Retrieving the view query
 					$oOqlViewNode = $oScopeNode->GetUniqueElement('oql_view');
 					$sOqlView = $oOqlViewNode->GetText();
-					if ($sOqlView === null)
-					{
+					if ($sOqlView === null) {
 						throw new DOMFormatException(
 							'Scope tag in class must have a not empty oql_view tag',
 							0,
@@ -504,24 +472,18 @@ EOF;
 
 					// Retrieving profiles for the scope
 					$oProfilesNode = $oScopeNode->GetOptionalElement('allowed_profiles');
-					$aProfilesNames = array();
+					$aProfilesNames = [];
 					// If no profile is specified, we consider that it's for ALL the profiles
-					if (($oProfilesNode === null) || ($oProfilesNode->GetNodes('./allowed_profile')->length === 0))
-					{
-						foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue)
-						{
+					if (($oProfilesNode === null) || ($oProfilesNode->GetNodes('./allowed_profile')->length === 0)) {
+						foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue) {
 							$aProfilesNames[] = $aValue['name'];
 						}
-					}
-					else
-					{
+					} else {
 						/** @var \Combodo\iTop\DesignElement $oProfileNode */
-						foreach ($oProfilesNode->GetNodes('./allowed_profile') as $oProfileNode)
-						{
+						foreach ($oProfilesNode->GetNodes('./allowed_profile') as $oProfileNode) {
 							// Retrieving mandatory profile id attribute
 							$sProfileId = $oProfileNode->getAttribute('id');
-							if ($sProfileId === '')
-							{
+							if ($sProfileId === '') {
 								throw new DOMFormatException(
 									'Scope tag must have an id attribute.',
 									null,
@@ -534,8 +496,7 @@ EOF;
 					}
 
 					//
-					foreach ($aProfilesNames as $sProfileName)
-					{
+					foreach ($aProfilesNames as $sProfileName) {
 						// Scope profile id
 						$iProfileId = $this->GetProfileIdFromProfileName($sProfileName);
 
@@ -545,48 +506,37 @@ EOF;
 						$oViewFilter = DBSearch::FromOQL($sOqlView);
 						// ... We have to union the query if this profile has another scope for that class
 						if (array_key_exists($sMatrixPrefix.static::ENUM_MODE_READ, $aProfiles) && array_key_exists(
-								$sOqlViewType,
-								$aProfiles[$sMatrixPrefix.static::ENUM_MODE_READ]
-							))
-						{
+							$sOqlViewType,
+							$aProfiles[$sMatrixPrefix.static::ENUM_MODE_READ]
+						)) {
 							$oExistingFilter = DBSearch::FromOQL(
 								$aProfiles[$sMatrixPrefix.static::ENUM_MODE_READ][$sOqlViewType]
 							);
-							$aFilters = array($oExistingFilter, $oViewFilter);
+							$aFilters = [$oExistingFilter, $oViewFilter];
 							$oResFilter = new DBUnionSearch($aFilters);
 
 							// Applying ignore_silos flag on result filter if necessary (As the union will remove it if it is not on all sub-queries)
-							if ($aProfiles[$sMatrixPrefix.static::ENUM_MODE_READ]['ignore_silos'] === true)
-							{
+							if ($aProfiles[$sMatrixPrefix.static::ENUM_MODE_READ]['ignore_silos'] === true) {
 								$bIgnoreSilos = true;
 							}
-						}
-						else
-						{
+						} else {
 							$oResFilter = $oViewFilter;
 						}
-						$aProfiles[$sMatrixPrefix.static::ENUM_MODE_READ] = array(
+						$aProfiles[$sMatrixPrefix.static::ENUM_MODE_READ] = [
 							$sOqlViewType => $oResFilter->ToOQL(),
 							'ignore_silos' => $bIgnoreSilos,
-						);
+						];
 						// - Edit query
-						if ($sOqlEdit !== null)
-						{
+						if ($sOqlEdit !== null) {
 							$oEditFilter = DBSearch::FromOQL($sOqlEdit);
 							// - If the queries are the same, we don't make an intersect, we just reuse the view query
-							if ($sOqlEdit === $sOqlView)
-							{
+							if ($sOqlEdit === $sOqlView) {
 								// Do not intersect, edit query is identical to view query
-							}
-							else
-							{
-								if (($oEditFilter->GetClass() === $oViewFilter->GetClass()) && $oEditFilter->IsAny())
-								{
+							} else {
+								if (($oEditFilter->GetClass() === $oViewFilter->GetClass()) && $oEditFilter->IsAny()) {
 									$oEditFilter = $oViewFilter;
 									// Do not intersect, edit query is identical to view query
-								}
-								else
-								{
+								} else {
 									// Intersect
 									$oEditFilter = $oViewFilter->Intersect($oEditFilter);
 								}
@@ -594,27 +544,24 @@ EOF;
 
 							// ... We have to union the query if this profile has another scope for that class
 							if (array_key_exists(
-									$sMatrixPrefix.static::ENUM_MODE_WRITE,
-									$aProfiles
-								) && array_key_exists(
-									$sOqlViewType,
-									$aProfiles[$sMatrixPrefix.static::ENUM_MODE_WRITE]
-								))
-							{
+								$sMatrixPrefix.static::ENUM_MODE_WRITE,
+								$aProfiles
+							) && array_key_exists(
+								$sOqlViewType,
+								$aProfiles[$sMatrixPrefix.static::ENUM_MODE_WRITE]
+							)) {
 								$oExistingFilter = DBSearch::FromOQL(
 									$aProfiles[$sMatrixPrefix.static::ENUM_MODE_WRITE][$sOqlViewType]
 								);
-								$aFilters = array($oExistingFilter, $oEditFilter);
+								$aFilters = [$oExistingFilter, $oEditFilter];
 								$oResFilter = new DBUnionSearch($aFilters);
-							}
-							else
-							{
+							} else {
 								$oResFilter = $oEditFilter;
 							}
-							$aProfiles[$sMatrixPrefix.static::ENUM_MODE_WRITE] = array(
+							$aProfiles[$sMatrixPrefix.static::ENUM_MODE_WRITE] = [
 								$sOqlViewType => $oResFilter->ToOQL(),
 								'ignore_silos' => $bIgnoreSilos,
-							);
+							];
 						}
 					}
 				}
@@ -626,27 +573,19 @@ EOF;
 		// Filling the array with missing classes from MetaModel, so we can have an inheritance principle on the scope
 		// For each class explicitly given in the scopes, we check if its child classes were also in the scope :
 		// If not, we add them with the same OQL
-		foreach ($aProfileClasses as $sProfileClass)
-		{
-			foreach (MetaModel::EnumChildClasses($sProfileClass) as $sChildClass)
-			{
+		foreach ($aProfileClasses as $sProfileClass) {
+			foreach (MetaModel::EnumChildClasses($sProfileClass) as $sChildClass) {
 				// If the child class is not in the scope, we are going to try to add it
-				if (!in_array($sChildClass, $aProfileClasses))
-				{
-					foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue)
-					{
+				if (!in_array($sChildClass, $aProfileClasses)) {
+					foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue) {
 						$iProfileId = $iKey;
-						foreach (array(static::ENUM_MODE_READ, static::ENUM_MODE_WRITE) as $sAction)
-						{
+						foreach ([static::ENUM_MODE_READ, static::ENUM_MODE_WRITE] as $sAction) {
 							// If the current profile has scope for that class in that mode, we duplicate it
-							if (isset($aProfiles[$iProfileId.'_'.$sProfileClass.'_'.$sAction]))
-							{
+							if (isset($aProfiles[$iProfileId.'_'.$sProfileClass.'_'.$sAction])) {
 								$aTmpProfile = $aProfiles[$iProfileId.'_'.$sProfileClass.'_'.$sAction];
-								foreach ($aTmpProfile as $sType => $sOql)
-								{
+								foreach ($aTmpProfile as $sType => $sOql) {
 									// IF condition is just to skip the 'ignore_silos' flag
-									if (in_array($sType, array(static::ENUM_TYPE_ALLOW, static::ENUM_TYPE_RESTRICT)))
-									{
+									if (in_array($sType, [static::ENUM_TYPE_ALLOW, static::ENUM_TYPE_RESTRICT])) {
 										$oTmpFilter = DBSearch::FromOQL($sOql);
 										$oTmpFilter->ChangeClass($sChildClass);
 
@@ -667,14 +606,12 @@ EOF;
 
 		// - Write file on disk
 		//   - Creating dir if necessary
-		if (!is_dir($this->sCachePath))
-		{
+		if (!is_dir($this->sCachePath)) {
 			mkdir($this->sCachePath, 0777, true);
 		}
 		//   -- Then creating the file
 		$ret = file_put_contents($sFilePath, $sPHP);
-		if ($ret === false)
-		{
+		if ($ret === false) {
 			$iLen = strlen($sPHP);
 			$fFree = @disk_free_space(dirname($sFilePath));
 			$aErr = error_get_last();
@@ -685,4 +622,3 @@ EOF;
 	}
 
 }
-

@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2015-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -25,7 +26,6 @@
 
 require_once(APPROOT.'application/utils.inc.php');
 require_once(APPROOT.'core/designdocument.class.inc.php');
-
 
 /**
  * Class ModuleDesign
@@ -65,8 +65,7 @@ class ModuleDesign extends \Combodo\iTop\DesignDocument
 	{
 		parent::__construct();
 
-		if (!is_null($sDesignSourceId))
-		{
+		if (!is_null($sDesignSourceId)) {
 			$this->LoadFromCompiledDesigns($sDesignSourceId);
 		}
 	}
@@ -80,18 +79,13 @@ class ModuleDesign extends \Combodo\iTop\DesignDocument
 	{
 		$sDesignDir = APPROOT.'env-'.utils::GetCurrentEnvironment().'/core/module_designs/';
 		$sFile = $sDesignDir.$sDesignSourceId.'.xml';
-		if (!file_exists($sFile))
-		{
+		if (!file_exists($sFile)) {
 			$aFiles = glob($sDesignDir.'/*.xml');
-			if (count($aFiles) == 0)
-			{
+			if (count($aFiles) == 0) {
 				$sAvailable = 'none!';
-			}
-			else
-			{
-			    $aAvailable = array();
-				foreach ($aFiles as $sFile)
-				{
+			} else {
+				$aAvailable = [];
+				foreach ($aFiles as $sFile) {
 					$aAvailable[] = "'".basename($sFile, '.xml')."'";
 				}
 				$sAvailable = implode(', ', $aAvailable);
@@ -105,11 +99,9 @@ class ModuleDesign extends \Combodo\iTop\DesignDocument
 		$this->load($sFile);
 		//$bValidated = $oDocument->schemaValidate(APPROOT.'setup/itop_design.xsd');
 		$aErrors = libxml_get_errors();
-		if (count($aErrors) > 0)
-		{
-			$aDisplayErrors = array();
-			foreach($aErrors as $oXmlError)
-			{
+		if (count($aErrors) > 0) {
+			$aDisplayErrors = [];
+			foreach ($aErrors as $oXmlError) {
 				$aDisplayErrors[] = 'Line '.$oXmlError->line.': '.$oXmlError->message;
 			}
 

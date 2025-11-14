@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -30,9 +31,11 @@ ApplicationMenu::CheckMenuIdEnabled('DataModelMenu');
  */
 function MakeClassHLink($sClass, $sContext)
 {
-	return "<a href=\"schema.php?operation=details_class&class=$sClass{$sContext}\" title=\"".html_entity_decode(MetaModel::GetClassDescription($sClass),
-			ENT_QUOTES,
-			'UTF-8')."\">".MetaModel::GetName($sClass)." (".$sClass.")</a>";
+	return "<a href=\"schema.php?operation=details_class&class=$sClass{$sContext}\" title=\"".html_entity_decode(
+		MetaModel::GetClassDescription($sClass),
+		ENT_QUOTES,
+		'UTF-8'
+	)."\">".MetaModel::GetName($sClass)." (".$sClass.")</a>";
 }
 
 /**
@@ -41,25 +44,20 @@ function MakeClassHLink($sClass, $sContext)
 function DisplaySubclasses($oPage, $sClass, $sContext)
 {
 	$aChildClasses = MetaModel::EnumChildClasses($sClass);
-	if (count($aChildClasses) != 0)
-	{
+	if (count($aChildClasses) != 0) {
 		$oPage->add("<ul>\n");
-		$aOrderedClasses = array();
-		foreach ($aChildClasses as $sClassName)
-		{
+		$aOrderedClasses = [];
+		foreach ($aChildClasses as $sClassName) {
 			// Skip indirect childs, they will be handled somewhere else
-			if (MetaModel::GetParentPersistentClass($sClassName) == $sClass)
-			{
+			if (MetaModel::GetParentPersistentClass($sClassName) == $sClass) {
 				$aOrderedClasses[$sClassName] = MetaModel::GetName($sClassName);
 			}
 		}
 		// Sort on the display name
 		asort($aOrderedClasses);
-		foreach ($aOrderedClasses as $sClassName => $sDisplayName)
-		{
+		foreach ($aOrderedClasses as $sClassName => $sDisplayName) {
 			// Skip indirect childs, they will be handled somewhere else
-			if (MetaModel::GetParentPersistentClass($sClassName) == $sClass)
-			{
+			if (MetaModel::GetParentPersistentClass($sClassName) == $sClass) {
 				$oPage->add("<li class=\"open\">".MakeClassHLink($sClassName, $sContext)."\n");
 				DisplaySubclasses($oPage, $sClassName, $sContext);
 				$oPage->add("</li>\n");
@@ -73,40 +71,33 @@ function DisplaySubclasses($oPage, $sClass, $sContext)
  */
 function GetSubclasses($sClass, $sContext)
 {
-	
-	$sHtml = '';
-	try{
-	$aChildClasses = MetaModel::EnumChildClasses($sClass);
-	if (count($aChildClasses) != 0)
-	{
 
-		$sHtml .= "<ul>";
-		$aOrderedClasses = array();
-		foreach ($aChildClasses as $sClassName)
-		{
-			// Skip indirect childs, they will be handled somewhere else
-			if (MetaModel::GetParentPersistentClass($sClassName) == $sClass)
-			{
-				$aOrderedClasses[$sClassName] = MetaModel::GetName($sClassName);
+	$sHtml = '';
+	try {
+		$aChildClasses = MetaModel::EnumChildClasses($sClass);
+		if (count($aChildClasses) != 0) {
+
+			$sHtml .= "<ul>";
+			$aOrderedClasses = [];
+			foreach ($aChildClasses as $sClassName) {
+				// Skip indirect childs, they will be handled somewhere else
+				if (MetaModel::GetParentPersistentClass($sClassName) == $sClass) {
+					$aOrderedClasses[$sClassName] = MetaModel::GetName($sClassName);
+				}
 			}
-		}
-		// Sort on the display name
-		asort($aOrderedClasses);
-		foreach ($aOrderedClasses as $sClassName => $sDisplayName)
-		{
-			// Skip indirect childs, they will be handled somewhere else
-			if (MetaModel::GetParentPersistentClass($sClassName) == $sClass)
-			{
-				$sHtml .="<li class=\"open\">".MakeClassHLink($sClassName, $sContext);
-				$sHtml .= GetSubclasses($sClassName, $sContext);
-				$sHtml .= "</li>";
+			// Sort on the display name
+			asort($aOrderedClasses);
+			foreach ($aOrderedClasses as $sClassName => $sDisplayName) {
+				// Skip indirect childs, they will be handled somewhere else
+				if (MetaModel::GetParentPersistentClass($sClassName) == $sClass) {
+					$sHtml .= "<li class=\"open\">".MakeClassHLink($sClassName, $sContext);
+					$sHtml .= GetSubclasses($sClassName, $sContext);
+					$sHtml .= "</li>";
+				}
 			}
+			$sHtml .= "</ul>";
 		}
-		$sHtml .= "</ul>";
-		}
-	}
-  
-	catch(Exception $e){
+	} catch (Exception $e) {
 	}
 	return $sHtml;
 }
@@ -116,12 +107,9 @@ function GetSubclasses($sClass, $sContext)
  */
 function DisplayLifecycle($oPage, $sClass)
 {
-	if (!MetaModel::HasLifecycle($sClass))
-	{
+	if (!MetaModel::HasLifecycle($sClass)) {
 		$oPage->p(Dict::S('UI:Schema:NoLifeCyle'));
-	}
-	else
-	{
+	} else {
 		$aStates = MetaModel::EnumStates($sClass);
 		$aStimuli = MetaModel::EnumStimuli($sClass);
 		$oPage->add("<img id=\"img-lifecycle\" class=\"ibo-datamodel-viewer--lifecycle-image\" attr=\"$sClass lifecycle graph\" src=\"".utils::GetAbsoluteUrlAppRoot()."pages/graphviz.php?class=$sClass\">\n");
@@ -130,7 +118,6 @@ function DisplayLifecycle($oPage, $sClass)
 			$("#img-lifecycle").attr('href',$("#img-lifecycle").attr('src'));
 			$("#img-lifecycle").magnificPopup({type: 'image', closeOnContentClick: true});
 EOF
-
 		);
 		$oOpenAllButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Open All', '', '', false, 'lifecycleOpenAll');
 		$oOpenAllButton->SetOnClickJsCode(
@@ -138,7 +125,6 @@ EOF
 				$('#LifeCycleList').find('.expandable-hitarea').trigger('click');
 				$('#LifeCycleAttrOptList').find('.expandable-hitarea').trigger('click');
 JS
-
 		);
 		$oCloseAllButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Close All', '', '', false, 'lifecycleCloseAll');
 		$oCloseAllButton->SetOnClickJsCode(
@@ -146,46 +132,35 @@ JS
 				$('#LifeCycleList').find('.collapsable-hitarea').trigger('click');
 				$('#LifeCycleAttrOptList').find('.collapsable-hitarea').trigger('click');
 JS
-
 		);
 		$oPage->AddUiBlock($oOpenAllButton);
 		$oPage->AddUiBlock($oCloseAllButton);
 		$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Schema:LifeCycleTransitions'), 3));
 		$oPage->add("<ul id=\"LifeCycleList\" >\n");
-		foreach ($aStates as $sStateCode => $aStateDef)
-		{
+		foreach ($aStates as $sStateCode => $aStateDef) {
 			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
 			$oPage->add("<li class=\"closed\">$sStateLabel <span class=\"ibo-datamodel-viewer--lifecycle--code\"> ($sStateCode) $sStateDescription</span>\n");
 			$oPage->add("<ul class=\"closed\">\n");
-			foreach (MetaModel::EnumTransitions($sClass, $sStateCode) as $sStimulusCode => $aTransitionDef)
-			{
+			foreach (MetaModel::EnumTransitions($sClass, $sStateCode) as $sStimulusCode => $aTransitionDef) {
 				$sStimulusLabel = $aStimuli[$sStimulusCode]->GetLabel();
 				$sTargetState = $aTransitionDef['target_state'];
 				$sTargetStateLabel = MetaModel::GetStateLabel($sClass, $sTargetState);
-				if (count($aTransitionDef['actions']) > 0)
-				{
-					$aActionsDesc = array();
-					foreach ($aTransitionDef['actions'] as $actionHandler)
-					{
-						if (is_string($actionHandler))
-						{
+				if (count($aTransitionDef['actions']) > 0) {
+					$aActionsDesc = [];
+					foreach ($aTransitionDef['actions'] as $actionHandler) {
+						if (is_string($actionHandler)) {
 							$aActionsDesc[] = $actionHandler;
-						}
-						else
-						{
-							$aParamsDesc = array();
-							foreach ($actionHandler['params'] as $aParamData)
-							{
+						} else {
+							$aParamsDesc = [];
+							foreach ($actionHandler['params'] as $aParamData) {
 								$aParamsDesc[] = $aParamData['type'].':'.$aParamData['value'];
 							}
 							$aActionsDesc[] = $actionHandler['verb'].'('.implode(', ', $aParamsDesc).')';
 						}
 					}
 					$sActions = " <em>(".implode(', ', $aActionsDesc).")</em>";
-				}
-				else
-				{
+				} else {
 					$sActions = "";
 				}
 
@@ -199,55 +174,42 @@ JS
 		$oPage->add("</ul>\n");
 		$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Schema:LifeCyleAttributeOptions'), 3));
 		$oPage->add("<ul id=\"LifeCycleAttrOptList\">\n");
-		foreach ($aStates as $sStateCode => $aStateDef)
-		{
+		foreach ($aStates as $sStateCode => $aStateDef) {
 			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
 			$oPage->add("<li class=\"closed\">$sStateLabel<span class=\"ibo-datamodel-viewer--lifecycle--code\"> ($sStateCode) $sStateDescription</span>\n");
-			if (count($aStates[$sStateCode]['attribute_list']) > 0)
-			{
+			if (count($aStates[$sStateCode]['attribute_list']) > 0) {
 				$oPage->add("<ul>\n");
-				foreach ($aStates[$sStateCode]['attribute_list'] as $sAttCode => $iOptions)
-				{
+				foreach ($aStates[$sStateCode]['attribute_list'] as $sAttCode => $iOptions) {
 					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					$sAttLabel = $oAttDef->GetLabel();
 
-					$aOptions = array();
-					if ($iOptions & OPT_ATT_HIDDEN)
-					{
+					$aOptions = [];
+					if ($iOptions & OPT_ATT_HIDDEN) {
 						$aOptions[] = Dict::S('UI:Schema:LifeCycleHiddenAttribute');
 					}
-					if ($iOptions & OPT_ATT_READONLY)
-					{
+					if ($iOptions & OPT_ATT_READONLY) {
 						$aOptions[] = Dict::S('UI:Schema:LifeCycleReadOnlyAttribute');
 					}
-					if ($iOptions & OPT_ATT_MANDATORY)
-					{
+					if ($iOptions & OPT_ATT_MANDATORY) {
 						$aOptions[] = Dict::S('UI:Schema:LifeCycleMandatoryAttribute');
 					}
-					if ($iOptions & OPT_ATT_MUSTCHANGE)
-					{
+					if ($iOptions & OPT_ATT_MUSTCHANGE) {
 						$aOptions[] = Dict::S('UI:Schema:LifeCycleAttributeMustChange');
 					}
-					if ($iOptions & OPT_ATT_MUSTPROMPT)
-					{
+					if ($iOptions & OPT_ATT_MUSTPROMPT) {
 						$aOptions[] = Dict::S('UI:Schema:LifeCycleAttributeMustPrompt');
 					}
-					if (count($aOptions))
-					{
+					if (count($aOptions)) {
 						$sOptions = implode(', ', $aOptions);
-					}
-					else
-					{
+					} else {
 						$sOptions = "";
 					}
 
 					$oPage->add("<li class=\"closed\"><span class=\"ibo-datamodel-viewer--lifecycle--attribute-option\">$sAttLabel</span> $sOptions</li>\n");
 				}
 				$oPage->add("</ul></li>\n");
-			}
-			else
-			{
+			} else {
 				$oPage->p("<em>".Dict::S('UI:Schema:LifeCycleEmptyList')."</em>");
 			}
 		}
@@ -257,7 +219,6 @@ JS
 	}
 }
 
-
 /**
  * Helper for the trigger
  */
@@ -265,7 +226,7 @@ function DisplayTriggers($oPage, $sClass)
 {
 	$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
 	$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObject WHERE target_class IN ('$sClassList')"));
-	cmdbAbstractObject::DisplaySet($oPage, $oSet, array('block_id' => 'triggers'));
+	cmdbAbstractObject::DisplaySet($oPage, $oSet, ['block_id' => 'triggers']);
 }
 
 function DisplayEvents(WebPage $oPage, $sClass)
@@ -301,7 +262,7 @@ function DisplayEvents(WebPage $oPage, $sClass)
 	} else {
 		$oObject = MetaModel::NewObject($sClass);
 		foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
-				$aSources[] = $sParentClass;
+			$aSources[] = $sParentClass;
 		}
 	}
 	$aListeners = [];
@@ -345,7 +306,7 @@ function DisplayEvents(WebPage $oPage, $sClass)
 				}
 			}
 			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
-		} else if (is_array($aListener['callback'])) {
+		} elseif (is_array($aListener['callback'])) {
 			$sListener = $aListener['callback'][0].'::'.$aListener['callback'][1];
 		} else {
 			$sListener = $aListener['callback'].'(\Combodo\iTop\Service\Events\EventData $oEventData)';
@@ -368,28 +329,24 @@ function DisplayEvents(WebPage $oPage, $sClass)
 function DisplayClassesList($oPage, $oLayout, $sContext)
 {
 	$sSelectedClass = utils::ReadParam('class', '', false, 'class');
-	
+
 	$oLayout->AddSideHtml("<label for='search-model'>".Dict::S('UI:Schema:ClassFilter')."</label><br>");
-	
+
 	$oListSearch = new Select("ibo-datamodel-viewer--class-search");
 	$oListSearch->SetName('aa');
 	// Get all the "root" classes for display
-	$aRootClasses = array();
+	$aRootClasses = [];
 	$aClassLabelAndCodeAsJSON = [];
-	$aClassLabelAsJSON = array();
-	$aClassCodeAsJSON = array();
+	$aClassLabelAsJSON = [];
+	$aClassCodeAsJSON = [];
 
 	$oOptionSearch = SelectOptionUIBlockFactory::MakeForSelectOption('', "select option", true);
 	$oListSearch->AddOption($oOptionSearch->SetDisabled(true));
 
-	foreach (MetaModel::GetClasses() as $sClassName)
-	{
-		if (MetaModel::IsRootClass($sClassName))
-		{
+	foreach (MetaModel::GetClasses() as $sClassName) {
+		if (MetaModel::IsRootClass($sClassName)) {
 			$aRootClasses[$sClassName] = MetaModel::GetName($sClassName);
-		}
-		elseif (MetaModel::IsStandaloneClass($sClassName))
-		{
+		} elseif (MetaModel::IsStandaloneClass($sClassName)) {
 			$aRootClasses[$sClassName] = MetaModel::GetName($sClassName);
 		}
 		$sLabelClassName = MetaModel::GetName($sClassName);
@@ -398,9 +355,9 @@ function DisplayClassesList($oPage, $oLayout, $sContext)
 		$oListSearch->AddOption($oOptionSearch);
 		//Fetch classes names for autocomplete purpose
 		// - Encode as JSON to escape quotes and other characters
-		array_push ($aClassLabelAndCodeAsJSON, ["value"=>$sClassName,"label"=>"$sLabelClassName ($sClassName)"]);
-		array_push ($aClassLabelAsJSON, ["value"=>$sClassName,"label"=>"$sLabelClassName"]);
-		array_push ($aClassCodeAsJSON, ["value"=>$sClassName,"label"=>"$sClassName"]);
+		array_push($aClassLabelAndCodeAsJSON, ["value" => $sClassName,"label" => "$sLabelClassName ($sClassName)"]);
+		array_push($aClassLabelAsJSON, ["value" => $sClassName,"label" => "$sLabelClassName"]);
+		array_push($aClassCodeAsJSON, ["value" => $sClassName,"label" => "$sClassName"]);
 	}
 	usort($aClassLabelAndCodeAsJSON, "Label_sort");
 	$oLayout->AddSideBlock($oListSearch);
@@ -457,22 +414,17 @@ JS
     }
 
 JS
-
 	);
 
 	// Sort them alphabetically on their display name
 	asort($aClassLabelAndCodeAsJSON);
 	//usort($aRootClasses,"Label_sort");
-	foreach ($aRootClasses as $sClassName => $sDisplayName)
-	{
-		if (MetaModel::IsRootClass($sClassName))
-		{
+	foreach ($aRootClasses as $sClassName => $sDisplayName) {
+		if (MetaModel::IsRootClass($sClassName)) {
 			$oLayout->AddSideHtml("<li class=\"open\">".MakeClassHLink($sClassName, $sContext)."\n");
 			$oLayout->AddSideHtml(GetSubclasses($sClassName, $sContext));
 			$oLayout->AddSideHtml("</li>\n");
-		}
-		elseif (MetaModel::IsStandaloneClass($sClassName))
-		{
+		} elseif (MetaModel::IsStandaloneClass($sClassName)) {
 			$oLayout->AddSideHtml("<li>".MakeClassHLink($sClassName, $sContext)."</li>\n");
 		}
 	}
@@ -480,8 +432,9 @@ JS
 	$oPage->add_ready_script('$("#ibo-datamodel-viewer--classes-list--list").treeview();');
 }
 
-function Label_sort($building_a, $building_b) {
-	return strnatcmp ($building_a["label"], $building_b["label"]);
+function Label_sort($building_a, $building_b)
+{
+	return strnatcmp($building_a["label"], $building_b["label"]);
 }
 
 /**
@@ -489,29 +442,23 @@ function Label_sort($building_a, $building_b) {
  */
 function DisplayRelatedClassesGraph($oPage, $sClass)
 {
-	try
-	{
+	try {
 		$bOnTheLeft = true;
 		$bSkipLinkingClasses = false;
 		// 1) Fetching referencing classes data
 		//
-		$aData = array();
-		$aOrigins = array('_' => true);
+		$aData = [];
+		$aOrigins = ['_' => true];
 		$aRefs = MetaModel::EnumReferencingClasses($sClass, $bSkipLinkingClasses);
 		$sSelfReference = "false";
-		if (count($aRefs) != 0)
-		{
-			foreach ($aRefs as $sRemoteClass => $aRemoteKeys)
-			{
-				foreach ($aRemoteKeys as $sExtKeyAttCode => $oExtKeyAttDef)
-				{
-					if ($sRemoteClass != $sClass)
-					{
+		if (count($aRefs) != 0) {
+			foreach ($aRefs as $sRemoteClass => $aRemoteKeys) {
+				foreach ($aRemoteKeys as $sExtKeyAttCode => $oExtKeyAttDef) {
+					if ($sRemoteClass != $sClass) {
 						// ref_prefix to avoid collision between attributes labels that refer to this class and local attributes label that references other classes
-						$aAttribute = array('label' => 'ref_'.$sExtKeyAttCode);
+						$aAttribute = ['label' => 'ref_'.$sExtKeyAttCode];
 						// Test if a distant attribut exists and if it uses a link class
-						if (!($oExtKeyAttDef->GetMirrorLinkAttribute() == null ? false : $oExtKeyAttDef->GetMirrorLinkAttribute() instanceof AttributeLinkedSetIndirect))
-						{
+						if (!($oExtKeyAttDef->GetMirrorLinkAttribute() == null ? false : $oExtKeyAttDef->GetMirrorLinkAttribute() instanceof AttributeLinkedSetIndirect)) {
 							$aAttribute['related'] = $sRemoteClass;
 							$aAttribute['related_icon'] = MetaModel::GetClassIcon($aAttribute['related'], false);
 							$aAttribute['related_position'] = $bOnTheLeft ? -1 : 1;
@@ -529,24 +476,21 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
 
 		// 2) Fetching referenced classes data
 		//
-		$aDataRef = array(
-			array(
+		$aDataRef = [
+			[
 				'label' => $sClass,
 				'icon' => MetaModel::GetClassIcon($sClass, false),
 				'origin_index' => 0,
 				'alphabetical_index' => 0,
 				'origin' => '_',
-			),
-		);
+			],
+		];
 		$bOnTheLeft = true;
-		$aOriginsRef = array('_' => true);
-		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-		{
-			$aAttribute = array('label' => $sAttCode);
-			if ($oAttDef->IsLinkSet())
-			{
-				if ($oAttDef->IsIndirect())
-				{
+		$aOriginsRef = ['_' => true];
+		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+			$aAttribute = ['label' => $sAttCode];
+			if ($oAttDef->IsLinkSet()) {
+				if ($oAttDef->IsIndirect()) {
 					$sRemoteAttDef = $oAttDef->GetExtKeyToRemote();
 					$aAttribute['related'] = MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $sRemoteAttDef)->GetTargetClass();
 					$aAttribute['related_icon'] = MetaModel::GetClassIcon($aAttribute['related'], false);
@@ -557,9 +501,7 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
 					$aAttribute['tooltip_data']['to_me'] = $oAttDef->GetExtKeyToMe();
 
 					$bOnTheLeft = !$bOnTheLeft; // Toggle the side
-				}
-				else
-				{
+				} else {
 					$aAttribute['related'] = $oAttDef->GetLinkedClass();
 					$aAttribute['related_icon'] = MetaModel::GetClassIcon($aAttribute['related'], false);
 					$aAttribute['related_position'] = $bOnTheLeft ? 1 : -1;
@@ -567,22 +509,16 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
 					$bOnTheLeft = !$bOnTheLeft; // Toggle the side
 				}
 
-			}
-			else
-			{
-				if ($oAttDef->IsHierarchicalKey())
-				{
+			} else {
+				if ($oAttDef->IsHierarchicalKey()) {
 					$aAttribute['related'] = $sClass;
 					$aAttribute['related_icon'] = MetaModel::GetClassIcon($aAttribute['related'], false);
 					$aAttribute['related_position'] = $bOnTheLeft ? 1 : -1;
 					$aAttribute['relation_type'] = 2;
 					$bOnTheLeft = !$bOnTheLeft; // Toggle the side
 					$sSelfReference = "true";
-				}
-				else
-				{
-					if ($oAttDef->IsExternalKey())
-					{
+				} else {
+					if ($oAttDef->IsExternalKey()) {
 						$aAttribute['related'] = $oAttDef->GetTargetClass();
 						$aAttribute['related_icon'] = MetaModel::GetClassIcon($aAttribute['related'], false);
 						$aAttribute['related_position'] = $bOnTheLeft ? 1 : -1;
@@ -592,8 +528,7 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
 					}
 				}
 			}
-			if ($oAttDef->IsLinkSet() || $oAttDef->IsHierarchicalKey() || $oAttDef->IsExternalKey())
-			{
+			if ($oAttDef->IsLinkSet() || $oAttDef->IsHierarchicalKey() || $oAttDef->IsExternalKey()) {
 				$sOrigin = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
 
 				$aAttribute['origin'] = $sOrigin;
@@ -604,39 +539,31 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
 
 		}
 
-
 		//sort referencing data
 
 		$aOrigins = array_keys($aOrigins);
 		$idx = 0;
 
 		$bOnTheLeft = true;
-		foreach ($aData as $sAttCode => $aAttribute)
-		{
+		foreach ($aData as $sAttCode => $aAttribute) {
 			$is_also_referenced = false;
-			foreach ($aDataRef as $sAttCodeRef => $aAttributeRef)
-			{
-				if (!empty($aDataRef[$sAttCodeRef]['related']) && ($aData[$sAttCode]['related'] == $aDataRef[$sAttCodeRef]['related']))
-				{
+			foreach ($aDataRef as $sAttCodeRef => $aAttributeRef) {
+				if (!empty($aDataRef[$sAttCodeRef]['related']) && ($aData[$sAttCode]['related'] == $aDataRef[$sAttCodeRef]['related'])) {
 					$is_also_referenced = true;
 				}
 			}
-			if (!$is_also_referenced)
-			{
+			if (!$is_also_referenced) {
 				$aData[$sAttCode]['related_position'] = ($bOnTheLeft) ? -1 : 1;
 				$bOnTheLeft = !$bOnTheLeft;
 				$aData[$sAttCode]['origin_index'] = ($aData[$sAttCode]['related_position'] == -1) ? ++$idx : $idx;
-			}
-			else
-			{
+			} else {
 				unset($aData[$sAttCode]);
 			}
 		}
 		ksort($aData);
 		$idx = 0;
-		$aFinalDataReferencing = array();
-		foreach ($aData as $sAttCode => $aAttribute)
-		{
+		$aFinalDataReferencing = [];
+		foreach ($aData as $sAttCode => $aAttribute) {
 			$aData[$sAttCode]['alphabetical_index'] = $aAttribute['related_position'] == 1 ? ++$idx : $idx;
 			$aFinalDataReferencing[] = $aData[$sAttCode];
 		}
@@ -646,15 +573,13 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
 		//sort referenced data
 
 		$idx = 1;
-		foreach ($aDataRef as $sAttCode => $aAttribute)
-		{
+		foreach ($aDataRef as $sAttCode => $aAttribute) {
 			$aDataRef[$sAttCode]['origin_index'] = $idx++;
 		}
 
 		$idx = 1;
-		$aFinalData = array();
-		foreach ($aDataRef as $sAttCode => $aAttribute)
-		{
+		$aFinalData = [];
+		foreach ($aDataRef as $sAttCode => $aAttribute) {
 			$aDataRef[$sAttCode]['alphabetical_index'] = $idx++;
 			$aFinalData[] = $aDataRef[$sAttCode];
 		}
@@ -960,9 +885,7 @@ if(window.IntersectionObserver) {
 }
 JS
 		);
-	}
-	catch (Exception $e)
-	{
+	} catch (Exception $e) {
 		$oPage->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getMessage()).'</b>');
 	}
 }
@@ -978,9 +901,8 @@ JS
  */
 function DisplayClassDetails($oPage, $sClass, $sContext)
 {
-	$aParentClasses = array();
-	foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass)
-	{
+	$aParentClasses = [];
+	foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
 		$aParentClasses[] = MakeClassHLink($sParentClass, $sContext);
 	}
 	if (count($aParentClasses) > 0) {
@@ -1004,9 +926,9 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 	$oPage->SetCurrentTabContainer('details');
 	// List the attributes of the object
 	$aForwardChangeTracking = MetaModel::GetTrackForwardExternalKeys($sClass);
-	$aDetails = array();
+	$aDetails = [];
 
-	$aOrigins = array();
+	$aOrigins = [];
 	foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 		if ($oAttDef->IsExternalKey()) {
 			$sValue = Dict::Format('UI:Schema:ExternalKey_To', MakeClassHLink($oAttDef->GetTargetClass(), $sContext));
@@ -1017,9 +939,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 			}
 		} elseif ($oAttDef->IsLinkSet()) {
 			$sValue = MakeClassHLink($oAttDef->GetLinkedClass(), $sContext);
-		}
-		else
-		{
+		} else {
 			$sValue = $oAttDef->GetDescription();
 		}
 		$sType = get_class($oAttDef);
@@ -1031,30 +951,25 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		$sAllowedValues = "";
 		$sMoreInfo = "";
 		$sDefaultNullValue = '';
-		if (call_user_func(array(get_class($oAttDef), 'IsBasedOnDBColumns')))
-		{
+		if (call_user_func([get_class($oAttDef), 'IsBasedOnDBColumns'])) {
 
-			$aMoreInfo = array();
-			if ($oAttDef->IsNullAllowed())
-			{
+			$aMoreInfo = [];
+			if ($oAttDef->IsNullAllowed()) {
 				$aMoreInfo[] = Dict::S('UI:Schema:NullAllowed');
 				$sDefaultNullValue = (!is_null($oAttDef->GetNullValue()) ? $oAttDef->GetNullValue() : null);
-				if (!is_null($sDefaultNullValue) && !is_string($sDefaultNullValue))
-				{
+				if (!is_null($sDefaultNullValue) && !is_string($sDefaultNullValue)) {
 					$sDefaultNullValue = json_encode($sDefaultNullValue);
 				}
-				$sDefaultNullValue = (!is_null($sDefaultNullValue) ? Dict::Format('UI:Schema:DefaultNullValue',
-					$sDefaultNullValue) : '');
-			}
-			else
-			{
+				$sDefaultNullValue = (!is_null($sDefaultNullValue) ? Dict::Format(
+					'UI:Schema:DefaultNullValue',
+					$sDefaultNullValue
+				) : '');
+			} else {
 				$aMoreInfo[] = Dict::S('UI:Schema:NullNotAllowed');
 			}
-			if ($oAttDef->GetDefaultValue())
-			{
+			if ($oAttDef->GetDefaultValue()) {
 				$sDefaultValue = $oAttDef->GetDefaultValue();
-				if (!is_string($sDefaultValue))
-				{
+				if (!is_string($sDefaultValue)) {
 					$sDefaultValue = json_encode($sDefaultValue);
 				}
 				$aMoreInfo[] = Dict::Format("UI:Schema:Default_Description", $sDefaultValue);
@@ -1064,28 +979,22 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		$sAttrCode = $oAttDef->GetCode();
 		$sIsEnumValues = 'false';
 		$sAllowedValuesEscpd = '""';
-		if ($oAttDef instanceof AttributeEnum)
-		{
+		if ($oAttDef instanceof AttributeEnum) {
 			// Display localized values for the enum (which depend on the localization provided by the class)
-			$aLocalizedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, array());
-			$aDescription = array();
-			foreach ($aLocalizedValues as $val => $sDisplay)
-			{
+			$aLocalizedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, []);
+			$aDescription = [];
+			foreach ($aLocalizedValues as $val => $sDisplay) {
 				$aDescription[] = $sDisplay." (".$val.")";
 			}
 			$sAllowedValues = implode(', ', $aDescription);
 			$sIsEnumValues = 'true';
-		}
-		elseif (is_object($oAllowedValuesDef = $oAttDef->GetValuesDef()))
-		{
+		} elseif (is_object($oAllowedValuesDef = $oAttDef->GetValuesDef())) {
 			$sAllowedValues = str_replace("Filter: ", "", $oAllowedValuesDef->GetValuesDescription());
 			$sAllowedValuesEscpd = utils::HtmlEntities($sAllowedValues);
 
 			$sFilterURL = urlencode($sAllowedValues);
 			$sAllowedValues = '<span id="values'.$sAttrCode.'" data-tooltip-content="'.$sAllowedValuesEscpd.'"><a href="run_query.php?expression='.$sFilterURL.'" class="fas fa-search"></a> '.Dict::S('UI:Schema:Attribute/Filter')."</span>";
-		}
-		else
-		{
+		} else {
 			$sAllowedValues = '';
 		}
 		$sAttrValueEscpd = utils::HtmlEntities($sValue);
@@ -1093,29 +1002,29 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		$sAttrOriginEscpd = utils::HtmlEntities($sOrigin);
 		$sDefaultNullValueEscpd = utils::HtmlEntities($sDefaultNullValue);
 
-		$aDetails[] = array(
+		$aDetails[] = [
 			'code' => '<span id="attr'.$sAttrCode.'" data-tooltip-content="'.$sAttrValueEscpd.'" data-tooltip-html-enabled="true">'.$oAttDef->GetLabel().' ('.$oAttDef->GetCode().')</span>',
 			'type' => '<span id="type'.$sAttrCode.'" data-tooltip-content="'.$sAttrTypeDescEscpd.'">'.$sTypeDict.' ('.$sType.')</span>',
 			'origincolor' => '<div class="originColor'.$sOrigin.'" data-tooltip-content="'.$sAttrOriginEscpd.'"></div>',
 			'origin' => "<span id=\"origin".$sAttrCode."\">$sOrigin</span>",
 			'values' => $sAllowedValues,
 			'moreinfo' => '<span id="moreinfo'.$sAttrCode.'" data-tooltip-content="'.$sDefaultNullValueEscpd.'">'.$sMoreInfo.'</span>',
-		);
+		];
 
 	}
 	$oPage->SetCurrentTab('UI:Schema:Attributes');
-	$aConfig = array(
-		'origincolor' => array('label' => "", 'description' => ""),
-		'code' => array('label' => Dict::S('UI:Schema:AttributeCode'), 'description' => Dict::S('UI:Schema:AttributeCode+')),
-		'type' => array('label' => Dict::S('UI:Schema:Type'), 'description' => Dict::S('UI:Schema:Type+')),
-		'values' => array('label' => Dict::S('UI:Schema:AllowedValues'), 'description' => Dict::S('UI:Schema:AllowedValues+')),
-		'moreinfo' => array('label' => Dict::S('UI:Schema:MoreInfo'), 'description' => Dict::S('UI:Schema:MoreInfo+')),
-		'origin' => array('label' => Dict::S('UI:Schema:Origin'), 'description' => Dict::S('UI:Schema:Origin+')),
-	);
+	$aConfig = [
+		'origincolor' => ['label' => "", 'description' => ""],
+		'code' => ['label' => Dict::S('UI:Schema:AttributeCode'), 'description' => Dict::S('UI:Schema:AttributeCode+')],
+		'type' => ['label' => Dict::S('UI:Schema:Type'), 'description' => Dict::S('UI:Schema:Type+')],
+		'values' => ['label' => Dict::S('UI:Schema:AllowedValues'), 'description' => Dict::S('UI:Schema:AllowedValues+')],
+		'moreinfo' => ['label' => Dict::S('UI:Schema:MoreInfo'), 'description' => Dict::S('UI:Schema:MoreInfo+')],
+		'origin' => ['label' => Dict::S('UI:Schema:Origin'), 'description' => Dict::S('UI:Schema:Origin+')],
+	];
 	$oTablePanel = PanelUIBlockFactory::MakeForClass($sClass, '');
 	$oTablePanel->AddCSSClass('ibo-datatable-panel');
 
-	$oAttributesTable = DataTableUIBlockFactory::MakeForStaticData('', $aConfig, $aDetails, 'ibo-datamodel-viewer--attributes-table', [], "", array('pageLength' => -1));
+	$oAttributesTable = DataTableUIBlockFactory::MakeForStaticData('', $aConfig, $aDetails, 'ibo-datamodel-viewer--attributes-table', [], "", ['pageLength' => -1]);
 	$oTablePanel->AddSubBlock($oAttributesTable);
 	$oPage->AddUiBlock($oTablePanel);
 	$sOrigins = json_encode(array_keys($aOrigins));
@@ -1140,9 +1049,8 @@ EOF
 
 	$oPage->SetCurrentTab('UI:Schema:RelatedClasses');
 	DisplayRelatedClassesGraph($oPage, $sClass);
-	
-	if (MetaModel::HasChildrenClasses($sClass))
-	{
+
+	if (MetaModel::HasChildrenClasses($sClass)) {
 		$oPage->SetCurrentTab('UI:Schema:ChildClasses');
 		$oPage->add("<ul id=\"ClassHierarchy\">");
 		$oPage->add("<li class=\"closed\">".$sClass."\n");
@@ -1151,7 +1059,7 @@ EOF
 		$oPage->add("</ul>\n");
 		$oPage->add_ready_script('$("#ClassHierarchy").treeview({collapsed: false,});');
 	}
-	
+
 	$oPage->SetCurrentTab('UI:Schema:LifeCycle');
 	DisplayLifecycle($oPage, $sClass);
 
@@ -1165,13 +1073,11 @@ EOF
 	$oPage->SetCurrentTabContainer();
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                             MAIN BLOCK                                                             //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Display the menu on the left
-
 
 $oAppContext = new ApplicationContext();
 $sContext = $oAppContext->GetForLink(true);
@@ -1184,8 +1090,14 @@ $oPage->SetContentLayout($oLayout);
 
 $oPage->no_cache();
 
-$oPage->SetBreadCrumbEntry('ui-tool-datamodel', Dict::S('Menu:DataModelMenu'), Dict::S('Menu:DataModelMenu+'), '',
-	'fas fa-book', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+$oPage->SetBreadCrumbEntry(
+	'ui-tool-datamodel',
+	Dict::S('Menu:DataModelMenu'),
+	Dict::S('Menu:DataModelMenu+'),
+	'',
+	'fas fa-book',
+	iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES
+);
 
 $oTitle = TitleUIBlockFactory::MakeForPage(Dict::S('UI:Schema:Title'));
 $oPage->AddUiBlock($oTitle);
@@ -1195,17 +1107,16 @@ $oLayout->AddSideHtml("</div>");
 $oPage->add("<div id='ibo-datamodel-viewer'>");
 $oPage->add("<div class='ibo-datamodel-viewer--details'>");
 
-switch ($operation)
-{
+switch ($operation) {
 	case 'details_class':
 		$sClass = utils::ReadParam('class', '', false, 'class');
 		//if we want to see class details & class is given then display it, otherwise act default (just show the class list)
-		if ($sClass != '')
-		{
+		if ($sClass != '') {
 			$oPage->set_title(Dict::Format('UI:Schema:TitleForClass', $sClass));
 			DisplayClassDetails($oPage, $sClass, $sContext);
 			break;
 		}
+		// no break
 	default:
 }
 $oPage->add("</div>");

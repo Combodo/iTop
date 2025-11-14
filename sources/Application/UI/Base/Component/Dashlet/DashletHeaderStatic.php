@@ -1,12 +1,11 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Application\UI\Base\Component\Dashlet;
-
 
 /**
  * Class DashletHeaderStatic
@@ -41,7 +40,6 @@ class DashletHeaderStatic extends DashletContainer
 		$this->sTitle = $sTitle;
 		$this->sIconUrl = $sIconUrl;
 	}
-
 
 	/**
 	 * @return string

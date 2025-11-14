@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -35,7 +36,7 @@
 // Class: UserLocal
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:UserLocal' => ITOP_APPLICATION_SHORT.' user',
 	'Class:UserLocal+' => 'User authentified by '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Password',
@@ -57,4 +58,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.',
 	'UserLocal:password:expiration' => 'The fields below require an extension',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User',
-));
+]);

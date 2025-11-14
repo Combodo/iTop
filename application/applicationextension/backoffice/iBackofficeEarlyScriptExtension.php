@@ -11,10 +11,10 @@
  */
 interface iBackofficeEarlyScriptExtension
 {
-    /**
-     * @return string
-     * @see \iTopWebPage::$a_early_scripts
-     * @api
-     */
-    public function GetEarlyScript(): string;
+	/**
+	 * @return string
+	 * @see \iTopWebPage::$a_early_scripts
+	 * @api
+	 */
+	public function GetEarlyScript(): string;
 }

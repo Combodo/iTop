@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -89,7 +90,7 @@ final class EventService
 
 		$aEventCallbacks = self::$aEventListeners[$sEvent] ?? [];
 		$sId = 'event_'.self::$iEventIdCounter++;
-		$aEventCallbacks[] = array(
+		$aEventCallbacks[] = [
 			'id'       => $sId,
 			'event'    => $sEvent,
 			'callback' => $callback,
@@ -99,7 +100,7 @@ final class EventService
 			'context'  => $context,
 			'priority' => $fPriority,
 			'module'   => $sModuleId,
-		);
+		];
 		usort($aEventCallbacks, function ($a, $b) {
 			$fPriorityA = $a['priority'];
 			$fPriorityB = $b['priority'];
@@ -169,12 +170,10 @@ final class EventService
 					$sSignature = ModuleService::GetInstance()->GetModuleMethodSignature($aEventCallback['callback'][0], $aEventCallback['callback'][1]);
 					$oKPI->ComputeStats('FireEvent', "$sEvent callback: $sSignature");
 				}
-			}
-			catch (EventException $e) {
+			} catch (EventException $e) {
 				EventServiceLog::Error("Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with blocking error: ".$e->getMessage());
 				throw $e;
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$sLastExceptionMessage = "Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with non-blocking error: ".$e->getMessage();
 				EventServiceLog::Error($sLastExceptionMessage);
 				$oLastException = $e;
@@ -216,7 +215,7 @@ final class EventService
 			return true;
 		}
 		if (is_string($registeredContext)) {
-			$aContexts = array($registeredContext);
+			$aContexts = [$registeredContext];
 		} elseif (is_array($registeredContext)) {
 			$aContexts = $registeredContext;
 		} else {
@@ -256,7 +255,7 @@ final class EventService
 		$bRemoved = self::Browse(function ($sEvent, $idx, $aEventCallback) use ($sId) {
 			if ($aEventCallback['id'] == $sId) {
 				$sName = self::$aEventListeners[$sEvent][$idx]['name'];
-				unset (self::$aEventListeners[$sEvent][$idx]);
+				unset(self::$aEventListeners[$sEvent][$idx]);
 				EventServiceLog::Trace("Unregistered callback '$sName' id $sId' on event '$sEvent'");
 
 				return false;

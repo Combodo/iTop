@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -22,8 +23,8 @@
  * @author Olivier DAIN <olivier.dain@combodo.com>
  * @since 3.0.0 N°3588
  */
-class FindStylesheetObject{
-
+class FindStylesheetObject
+{
 	//file URIs
 	private $aStylesheetFileURIs;
 
@@ -64,7 +65,7 @@ class FindStylesheetObject{
 		return $this->aStylesheetFileURIs;
 	}
 
-	public function GetLastModified() : int
+	public function GetLastModified(): int
 	{
 		return $this->iLastModified;
 	}
@@ -92,7 +93,8 @@ class FindStylesheetObject{
 		$this->sLastStyleSheetPath = $sStylesheetFilePath;
 	}
 
-	public function AlreadyFetched(string $sStylesheetFilePath) : bool {
+	public function AlreadyFetched(string $sStylesheetFilePath): bool
+	{
 		return in_array($sStylesheetFilePath, $this->aAllStylesheetFilePaths);
 	}
 

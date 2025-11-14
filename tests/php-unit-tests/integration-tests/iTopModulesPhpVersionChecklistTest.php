@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  * This file is part of iTop.
@@ -19,18 +20,19 @@ use ApplicationException;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use utils;
 
-
 /**
  * @package Combodo\iTop\Test\UnitTest\Setup
  * @group beforeSetup
  */
-class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
+class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
+{
 	/**
 	 * @param string $sPhpFile iTop module file
 	 *
 	 * @return string module version
 	 */
-	private function GetItopModuleVersion(string $sPhpFile): ?string {
+	private function GetItopModuleVersion(string $sPhpFile): ?string
+	{
 		$sModulePath = realpath($sPhpFile);
 		$sModuleFileName = basename($sModulePath);
 		$sModuleName = preg_replace('/[^.]+\.([^.]+)\.php/', '$1', $sModuleFileName);
@@ -60,7 +62,8 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 	 * @since 2.7.7 3.0.1 3.1.0 N°4714 uses new {@link ITOP_CORE_VERSION} constant
 	 * @since 3.0.3 3.1.0 move itop-community group in this method
 	 */
-	public function testITopModulesPhpVersion(): void {
+	public function testITopModulesPhpVersion(): void
+	{
 		if (is_dir(APPROOT.'datamodels/2.x')) {
 			$DatamodelsPath = APPROOT.'datamodels/2.x';
 		} elseif (is_dir(APPROOT.'datamodels/1.x')) {
@@ -79,8 +82,11 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 		foreach ($aPhpFiles as $sPhpFile) {
 			$sActualVersion = $this->GetItopModuleVersion($sPhpFile);
 
-			$this->assertSame($sExpectedVersion, $sActualVersion,
-				'Module desc file does not contain the same version as the core: '.$sPhpFile);
+			$this->assertSame(
+				$sExpectedVersion,
+				$sActualVersion,
+				'Module desc file does not contain the same version as the core: '.$sPhpFile
+			);
 		}
 
 		self::assertEquals([], $aModuleWithError, 'Some modules have wrong versions ! They should match '.$sExpectedVersion);
@@ -90,11 +96,11 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 	 * @dataProvider ItopWikiVersionProvider
 	 * @since 2.7.7 3.0.1 3.1.1 N°4714 new ITOP_CORE_VERSION constant
 	 */
-	public function testItopWikiVersion($sItopVersion, $sExpectedWikiVersion) {
+	public function testItopWikiVersion($sItopVersion, $sExpectedWikiVersion)
+	{
 		try {
 			$sActualWikiVersion = utils::GetItopVersionWikiSyntax($sItopVersion);
-		}
-		catch (ApplicationException $e) {
+		} catch (ApplicationException $e) {
 			self::fail('Cannot get wiki version : '.$e->getMessage());
 		}
 		self::assertSame($sExpectedWikiVersion, $sActualWikiVersion, 'Computed wiki version is wrong !');

@@ -10,10 +10,10 @@
  */
 interface iBackofficeDictEntriesExtension
 {
-    /**
-     * @return array
-     * @see \iTopWebPage::a_dict_entries
-     * @api
-     */
-    public function GetDictEntries(): array;
+	/**
+	 * @return array
+	 * @see \iTopWebPage::a_dict_entries
+	 * @api
+	 */
+	public function GetDictEntries(): array;
 }

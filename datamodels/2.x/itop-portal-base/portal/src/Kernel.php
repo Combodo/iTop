@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -37,8 +38,8 @@ class Kernel extends BaseKernel
 {
 	use MicroKernelTrait;
 
-    /** @var string CONFIG_EXTS */
-    const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+	/** @var string CONFIG_EXTS */
+	public const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
 	/**
 	 * @return string
@@ -55,23 +56,23 @@ class Kernel extends BaseKernel
 	 */
 	public function getLogDir(): string
 	{
-	    $logDir = $_ENV['PORTAL_ID'] . '-' . $this->environment;
+		$logDir = $_ENV['PORTAL_ID'].'-'.$this->environment;
 
-	    return utils::GetLogPath() . "/portals/$logDir";
-    }
+		return utils::GetLogPath()."/portals/$logDir";
+	}
 
 	/**
 	 * @return \Generator|iterable|\Symfony\Component\HttpKernel\Bundle\BundleInterface[]
 	 */
 	public function registerBundles(): iterable
 	{
-        $contents = require $this->getProjectDir().'/config/bundles.php';
-        foreach ($contents as $class => $envs) {
-            if (isset($envs[$this->environment]) || isset($envs['all'])) {
-	            yield new $class();
-            }
-        }
-    }
+		$contents = require $this->getProjectDir().'/config/bundles.php';
+		foreach ($contents as $class => $envs) {
+			if (isset($envs[$this->environment]) || isset($envs['all'])) {
+				yield new $class();
+			}
+		}
+	}
 
 	/**
 	 * @param \Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator $container

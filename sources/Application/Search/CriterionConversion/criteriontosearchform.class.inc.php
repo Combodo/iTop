@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -25,7 +26,6 @@
 
 namespace Combodo\iTop\Application\Search\CriterionConversion;
 
-
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
@@ -38,7 +38,6 @@ use MetaModel;
 
 class CriterionToSearchForm extends CriterionConversionAbstract
 {
-
 	/**
 	 * @param array $aAndCriterionRaw
 	 * @param array $aFieldsByCategory
@@ -51,22 +50,19 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	 */
 	public static function Convert($aAndCriterionRaw, $aFieldsByCategory, $aClasses, $bIsRemovable = true)
 	{
-		$aAllFields = array();
-		foreach($aFieldsByCategory as $aFields)
-		{
-			if (!is_array($aFields))
-			{
+		$aAllFields = [];
+		foreach ($aFieldsByCategory as $aFields) {
+			if (!is_array($aFields)) {
 				continue;
 			}
-			foreach($aFields as $aField)
-			{
+			foreach ($aFields as $aField) {
 				$sAlias = $aField['class_alias'];
 				$sCode = $aField['code'];
 				$aAllFields["$sAlias.$sCode"] = $aField;
 			}
 		}
-		$aAndCriterion = array();
-		$aMappingOperatorToFunction = array(
+		$aAndCriterion = [];
+		$aMappingOperatorToFunction = [
 			AttributeDefinition::SEARCH_WIDGET_TYPE_STRING => 'TextToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD => 'ExternalFieldToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE => 'DateTimeToSearchForm',
@@ -77,112 +73,87 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'EnumToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_SET => 'SetToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET => 'TagSetToSearchForm',
-		);
+		];
 
-		foreach($aAndCriterionRaw as $aCriteria)
-		{
-			if (isset($aCriteria['label']))
-			{
+		foreach ($aAndCriterionRaw as $aCriteria) {
+			if (isset($aCriteria['label'])) {
 				$aCriteria['label'] = preg_replace("@\)$@", '', $aCriteria['label']);
 				$aCriteria['label'] = preg_replace("@^\(@", '', $aCriteria['label']);
 			}
 			$aCriteria['is_removable'] = $bIsRemovable;
 
 			$sClass = '';
-			if (isset($aCriteria['ref']))
-			{
+			if (isset($aCriteria['ref'])) {
 				$aRef = explode('.', $aCriteria['ref']);
-				if (isset($aClasses[$aRef[0]]))
-				{
+				if (isset($aClasses[$aRef[0]])) {
 					$sClass = $aClasses[$aRef[0]];
 					$aCriteria['class'] = $sClass;
 				}
 			}
 
 			// Check criteria validity
-			if (!isset($aCriteria['ref']) || !isset($aAllFields[$aCriteria['ref']]))
-			{
+			if (!isset($aCriteria['ref']) || !isset($aAllFields[$aCriteria['ref']])) {
 				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
 				$aCriteria['label'] = Dict::S('UI:Search:Criteria:Raw:Filtered');
-				if (isset($aCriteria['ref']))
-				{
-					try
-					{
+				if (isset($aCriteria['ref'])) {
+					try {
 						$aCriteria['label'] = Dict::Format('UI:Search:Criteria:Raw:FilteredOn', MetaModel::GetName($sClass));
-					}
-					catch (Exception $e)
-					{
+					} catch (Exception $e) {
 					}
 				}
 			}
-			if (array_key_exists('widget', $aCriteria))
-			{
-				if (array_key_exists($aCriteria['widget'], $aMappingOperatorToFunction))
-				{
+			if (array_key_exists('widget', $aCriteria)) {
+				if (array_key_exists($aCriteria['widget'], $aMappingOperatorToFunction)) {
 					$sFct = $aMappingOperatorToFunction[$aCriteria['widget']];
 					$aAndCriterion = array_merge($aAndCriterion, self::$sFct($aCriteria, $aAllFields));
-				}
-				else
-				{
+				} else {
 					$aAndCriterion[] = $aCriteria;
 				}
 			}
 		}
 
 		// Regroup criterion by variable name (no ref first)
-		usort($aAndCriterion, function ($a, $b)
-		{
-			if (array_key_exists('ref', $a) || array_key_exists('ref', $b))
-			{
-				if (array_key_exists('ref', $a) && array_key_exists('ref', $b))
-				{
+		usort($aAndCriterion, function ($a, $b) {
+			if (array_key_exists('ref', $a) || array_key_exists('ref', $b)) {
+				if (array_key_exists('ref', $a) && array_key_exists('ref', $b)) {
 					$iRefCmp = strcmp($a['ref'], $b['ref']);
-					if ($iRefCmp != 0)
-					{
+					if ($iRefCmp != 0) {
 						return $iRefCmp;
 					}
 
 					return strcmp($a['operator'], $b['operator']);
 				}
-				if (array_key_exists('ref', $a))
-				{
+				if (array_key_exists('ref', $a)) {
 					return 1;
 				}
 
 				return -1;
 			}
-			if (array_key_exists('oql', $a) && array_key_exists('oql', $b))
-			{
+			if (array_key_exists('oql', $a) && array_key_exists('oql', $b)) {
 				return strcmp($a['oql'], $b['oql']);
 			}
 
 			return 0;
 		});
 
-		$aMergeFctByWidget = array(
+		$aMergeFctByWidget = [
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE => 'MergeDate',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME => 'MergeDateTime',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC => 'MergeNumeric',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'MergeEnumExtKeys',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_KEY => 'MergeEnumExtKeys',
-		);
+		];
 
 		$aPrevCriterion = null;
-		$aMergedCriterion = array();
-		foreach($aAndCriterion as $aCurrCriterion)
-		{
-			if (!is_null($aPrevCriterion))
-			{
-				if (array_key_exists('ref', $aPrevCriterion) && array_key_exists('widget', $aPrevCriterion))
-				{
+		$aMergedCriterion = [];
+		foreach ($aAndCriterion as $aCurrCriterion) {
+			if (!is_null($aPrevCriterion)) {
+				if (array_key_exists('ref', $aPrevCriterion) && array_key_exists('widget', $aPrevCriterion)) {
 					// If previous has ref, the current has ref as the array is sorted with all without ref first
-					if (($aPrevCriterion['ref'] == $aCurrCriterion['ref']) && ($aPrevCriterion['widget'] == $aCurrCriterion['widget']))
-					{
+					if (($aPrevCriterion['ref'] == $aCurrCriterion['ref']) && ($aPrevCriterion['widget'] == $aCurrCriterion['widget'])) {
 						// Same attribute, try to merge
-						if (array_key_exists('widget', $aCurrCriterion))
-						{
-							if (array_key_exists($aCurrCriterion['widget'], $aMergeFctByWidget))
-							{
+						if (array_key_exists('widget', $aCurrCriterion)) {
+							if (array_key_exists($aCurrCriterion['widget'], $aMergeFctByWidget)) {
 								$sFct = $aMergeFctByWidget[$aCurrCriterion['widget']];
 								$aPrevCriterion = self::$sFct($aPrevCriterion, $aCurrCriterion, $aMergedCriterion);
 								continue;
@@ -195,44 +166,35 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 			$aPrevCriterion = $aCurrCriterion;
 		}
-		if (!is_null($aPrevCriterion))
-		{
+		if (!is_null($aPrevCriterion)) {
 			$aMergedCriterion[] = $aPrevCriterion;
 		}
 
 		// Sort by label criterion by variable name (no ref first)
-		usort($aMergedCriterion, function ($a, $b)
-		{
+		usort($aMergedCriterion, function ($a, $b) {
 			if (($a['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW) ||
-				($b['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
-			{
+				($b['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)) {
 				if (($a['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW) &&
-					($b['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
-				{
-					if (!isset($a['label']))
-					{
+					($b['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)) {
+					if (!isset($a['label'])) {
 						return -1;
 					}
-					if (!isset($b['label']))
-					{
+					if (!isset($b['label'])) {
 						return 1;
 					}
 					return strcmp($a['label'], $b['label']);
 				}
-				if ($a['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
-				{
+				if ($a['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW) {
 					return -1;
 				}
 
 				return 1;
 			}
 
-			if (!isset($a['label']))
-			{
+			if (!isset($a['label'])) {
 				return -1;
 			}
-			if (!isset($b['label']))
-			{
+			if (!isset($b['label'])) {
 				return 1;
 			}
 			return strcmp($a['label'], $b['label']);
@@ -253,8 +215,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	{
 		$sPrevOperator = $aPrevCriterion['operator'];
 		$sCurrOperator = $aCurrCriterion['operator'];
-		if (($sPrevOperator != '<=') || ($sCurrOperator != '>='))
-		{
+		if (($sPrevOperator != '<=') || ($sCurrOperator != '>=')) {
 			$aMergedCriterion[] = $aPrevCriterion;
 
 			return $aCurrCriterion;
@@ -274,9 +235,9 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$sFirstDateValue = $oDate->format(AttributeDate::GetSQLFormat());
 		$sFirstDateLabel = $oFormat->format($oDate);
 
-		$aCurrCriterion['values'] = array();
-		$aCurrCriterion['values'][] = array('value' => $sFirstDateValue, 'label' => $sFirstDateLabel);
-		$aCurrCriterion['values'][] = array('value' => $sLastDateValue, 'label' => $sLastDateLabel);
+		$aCurrCriterion['values'] = [];
+		$aCurrCriterion['values'][] = ['value' => $sFirstDateValue, 'label' => $sFirstDateLabel];
+		$aCurrCriterion['values'][] = ['value' => $sLastDateValue, 'label' => $sLastDateLabel];
 
 		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
 		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND', 'AND').' '.$aCurrCriterion['label'];
@@ -298,8 +259,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	{
 		$sPrevOperator = $aPrevCriterion['operator'];
 		$sCurrOperator = $aCurrCriterion['operator'];
-		if (($sPrevOperator != '<=') || ($sCurrOperator != '>='))
-		{
+		if (($sPrevOperator != '<=') || ($sCurrOperator != '>=')) {
 			$aMergedCriterion[] = $aPrevCriterion;
 
 			return $aCurrCriterion;
@@ -318,13 +278,15 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$sFirstDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
 		$sFirstDateLabel = AttributeDateTime::GetFormat()->Format($sFirstDateValue);
 
-		$aCurrCriterion['values'] = array();
-		$aCurrCriterion['values'][] = array('value' => $sFirstDateValue, 'label' => $sFirstDateLabel);
-		$aCurrCriterion['values'][] = array('value' => $sLastDateValue, 'label' => $sLastDateLabel);
+		$aCurrCriterion['values'] = [];
+		$aCurrCriterion['values'][] = ['value' => $sFirstDateValue, 'label' => $sFirstDateLabel];
+		$aCurrCriterion['values'][] = ['value' => $sLastDateValue, 'label' => $sLastDateLabel];
 
 		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
-		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND',
-				'AND').' '.$aCurrCriterion['label'];
+		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S(
+			'Expression:Operator:AND',
+			'AND'
+		).' '.$aCurrCriterion['label'];
 
 		$aMergedCriterion[] = $aCurrCriterion;
 
@@ -343,8 +305,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	{
 		$sPrevOperator = $aPrevCriterion['operator'];
 		$sCurrOperator = $aCurrCriterion['operator'];
-		if (($sPrevOperator != '<=') || ($sCurrOperator != '>='))
-		{
+		if (($sPrevOperator != '<=') || ($sCurrOperator != '>=')) {
 			$aMergedCriterion[] = $aPrevCriterion;
 
 			return $aCurrCriterion;
@@ -353,9 +314,9 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		// Merge into 'between' operation.
 		$sLastNum = $aPrevCriterion['values'][0]['value'];
 		$sFirstNum = $aCurrCriterion['values'][0]['value'];
-		$aCurrCriterion['values'] = array();
-		$aCurrCriterion['values'][] = array('value' => $sFirstNum, 'label' => "$sFirstNum");
-		$aCurrCriterion['values'][] = array('value' => $sLastNum, 'label' => "$sLastNum");
+		$aCurrCriterion['values'] = [];
+		$aCurrCriterion['values'][] = ['value' => $sFirstNum, 'label' => "$sFirstNum"];
+		$aCurrCriterion['values'][] = ['value' => $sLastNum, 'label' => "$sLastNum"];
 
 		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
 		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND', 'AND').' '.$aCurrCriterion['label'];
@@ -368,9 +329,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 	private static function SerializeValues($aValues)
 	{
-		$aSerializedValues = array();
-		foreach($aValues as $aValue)
-		{
+		$aSerializedValues = [];
+		foreach ($aValues as $aValue) {
 			$aSerializedValues[] = serialize($aValue);
 		}
 
@@ -397,8 +357,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$bStartWithPercent = substr($sValue, 0, 1) == '%' ? true : false;
 		$bEndWithPercent = substr($sValue, -1) == '%' ? true : false;
 
-		switch (true)
-		{
+		switch (true) {
 			case ('' == $sValue and ($sOperator == '=' or $sOperator == 'LIKE')):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
 				break;
@@ -425,7 +384,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				break;
 		}
 
-		return array($aCriteria);
+		return [$aCriteria];
 	}
 
 	protected static function ExternalFieldToSearchForm($aCriteria, $aFields)
@@ -436,8 +395,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$bStartWithPercent = substr($sValue, 0, 1) == '%' ? true : false;
 		$bEndWithPercent = substr($sValue, -1) == '%' ? true : false;
 
-		switch (true)
-		{
+		switch (true) {
 			case ($sOperator == 'ISNULL'):
 			case ('' == $sValue and ($sOperator == 'LIKE')):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
@@ -465,59 +423,44 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				break;
 		}
 
-		return array($aCriteria);
+		return [$aCriteria];
 	}
 
 	protected static function DateTimeToSearchForm($aCriterion, $aFields)
 	{
 		if ((!array_key_exists('is_relative', $aCriterion) || !$aCriterion['is_relative'])
-			&& (!isset($aCriterion['unit']) || ($aCriterion['unit'] == 'DAY')))
-		{
+			&& (!isset($aCriterion['unit']) || ($aCriterion['unit'] == 'DAY'))) {
 			// Convert '=' in 'between'
-			if (isset($aCriterion['operator']))
-			{
-				switch ($aCriterion['operator'])
-				{
+			if (isset($aCriterion['operator'])) {
+				switch ($aCriterion['operator']) {
 					case '=':
-						if (isset($aCriterion['has_undefined']) && (isset($aCriterion['values'][0]['value']) && ($aCriterion['values'][0]['value'] == 0)))
-						{
+						if (isset($aCriterion['has_undefined']) && (isset($aCriterion['values'][0]['value']) && ($aCriterion['values'][0]['value'] == 0))) {
 							// Special case for NOT EMPTY
 							$aCriterion['operator'] = CriterionConversionAbstract::OP_NOT_EMPTY;
-						}
-						else
-						{
+						} else {
 							$aCriterion['operator'] = CriterionConversionAbstract::OP_BETWEEN_DATES;
 							$sWidget = $aCriterion['widget'];
-							if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
-							{
+							if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE) {
 								$aCriterion['values'][1] = $aCriterion['values'][0];
-							}
-							else
-							{
+							} else {
 								$sDate = $aCriterion['values'][0]['value'];
 								$oDate = new DateTime($sDate);
 
 								$sFirstDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
-								try
-								{
+								try {
 									$sFirstDateLabel = AttributeDateTime::GetFormat()->Format($sFirstDateValue);
-									$aCriterion['values'][0] = array('value' => $sFirstDateValue, 'label' => "$sFirstDateLabel");
-								}
-								catch (Exception $e)
-								{
+									$aCriterion['values'][0] = ['value' => $sFirstDateValue, 'label' => "$sFirstDateLabel"];
+								} catch (Exception $e) {
 								}
 
 								$oDate->add(DateInterval::createFromDateString('1 day'));
 								$oDate->sub(DateInterval::createFromDateString('1 second'));
 
 								$sLastDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
-								try
-								{
+								try {
 									$sLastDateLabel = AttributeDateTime::GetFormat()->Format($sLastDateValue);
-									$aCriterion['values'][1] = array('value' => $sLastDateValue, 'label' => "$sLastDateLabel");
-								}
-								catch (Exception $e)
-								{
+									$aCriterion['values'][1] = ['value' => $sLastDateValue, 'label' => "$sLastDateLabel"];
+								} catch (Exception $e) {
 								}
 							}
 						}
@@ -530,13 +473,10 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 					case '>':
 						$aCriterion['operator'] = '>=';
 						$sWidget = $aCriterion['widget'];
-						if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
-						{
+						if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE) {
 							$sDelta = '1 day';
 							$sAttributeClass = AttributeDate::class;
-						}
-						else
-						{
+						} else {
 							$sDelta = '1 second';
 							$sAttributeClass = AttributeDateTime::class;
 						}
@@ -547,23 +487,20 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 						$oDate = new DateTime($sFirstDate);
 						$oDate->add(DateInterval::createFromDateString($sDelta));
 						$sFirstDateValue = $oDate->format($sAttributeClass::GetSQLFormat());
-						try
-						{
+						try {
 							$sFirstDateLabel = $oFormat->format($oDate);
-							$aCriterion['values'][0] = array('value' => $sFirstDateValue, 'label' => $sFirstDateLabel);
-						} catch (Exception $e) {}
+							$aCriterion['values'][0] = ['value' => $sFirstDateValue, 'label' => $sFirstDateLabel];
+						} catch (Exception $e) {
+						}
 						break;
 
 					case '<':
 						$aCriterion['operator'] = '<=';
 						$sWidget = $aCriterion['widget'];
-						if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
-						{
+						if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE) {
 							$sDelta = '1 day';
 							$sAttributeClass = AttributeDate::class;
-						}
-						else
-						{
+						} else {
 							$sDelta = '1 second';
 							$sAttributeClass = AttributeDateTime::class;
 						}
@@ -574,26 +511,23 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 						$oDate = new DateTime($sFirstDate);
 						$oDate->sub(DateInterval::createFromDateString($sDelta));
 						$sFirstDateValue = $oDate->format($sAttributeClass::GetSQLFormat());
-						try
-						{
+						try {
 							$sFirstDateLabel = $oFormat->format($oDate);
-							$aCriterion['values'][0] = array('value' => $sFirstDateValue, 'label' => $sFirstDateLabel);
-						} catch (Exception $e) {}
+							$aCriterion['values'][0] = ['value' => $sFirstDateValue, 'label' => $sFirstDateLabel];
+						} catch (Exception $e) {
+						}
 						break;
 
 				}
 			}
 
-			return array($aCriterion);
+			return [$aCriterion];
 		}
 
-		if (isset($aCriterion['values'][0]['value']))
-		{
+		if (isset($aCriterion['values'][0]['value'])) {
 			$sLabel = $aCriterion['values'][0]['value'];
-			if (isset($aCriterion['verb']))
-			{
-				switch ($aCriterion['verb'])
-				{
+			if (isset($aCriterion['verb'])) {
+				switch ($aCriterion['verb']) {
 					case 'DATE_SUB':
 						$sLabel = '-'.$sLabel;
 						break;
@@ -602,8 +536,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 						break;
 				}
 			}
-			if (isset($aCriterion['unit']))
-			{
+			if (isset($aCriterion['unit'])) {
 				$sLabel .= Dict::S('Expression:Unit:Short:'.$aCriterion['unit'], $aCriterion['unit']);
 			}
 			$aCriterion['values'][0]['label'] = "$sLabel";
@@ -612,34 +545,31 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		// Temporary until the JS widget support relative dates
 		$aCriterion['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
 
-		return array($aCriterion);
+		return [$aCriterion];
 	}
 
 	protected static function NumericToSearchForm($aCriteria, $aFields)
 	{
-		switch ($aCriteria['operator'])
-		{
-			case  'ISNULL':
+		switch ($aCriteria['operator']) {
+			case 'ISNULL':
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
 				break;
 
 			case '=':
-				if (isset($aCriteria['has_undefined']) && (isset($aCriteria['values'][0]['value']) && ($aCriteria['values'][0]['value'] == 0)))
-				{
+				if (isset($aCriteria['has_undefined']) && (isset($aCriteria['values'][0]['value']) && ($aCriteria['values'][0]['value'] == 0))) {
 					// Special case for NOT EMPTY
 					$aCriteria['operator'] = CriterionConversionAbstract::OP_NOT_EMPTY;
 				}
 				break;
 		}
 
-		return array($aCriteria);
+		return [$aCriteria];
 	}
 
 	protected static function EnumToSearchForm($aCriteria, $aFields)
 	{
 		$sOperator = $aCriteria['operator'];
-		switch ($sOperator)
-		{
+		switch ($sOperator) {
 			case '=':
 				// Same as IN
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
@@ -657,14 +587,12 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			case 'ISNULL':
 				// Special case when undefined and/or other values are selected
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
-				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
-				{
-					if (!isset($aCriteria['values']))
-					{
-						$aCriteria['values'] = array();
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined']) {
+					if (!isset($aCriteria['values'])) {
+						$aCriteria['values'] = [];
 					}
 					// Convention for 'undefined' enums
-					$aCriteria['values'][] = array('value' => 'null', 'label' => Dict::S('Enum:Undefined'));
+					$aCriteria['values'][] = ['value' => 'null', 'label' => Dict::S('Enum:Undefined')];
 				}
 				break;
 			default:
@@ -673,58 +601,49 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				break;
 		}
 
-		return array($aCriteria);
+		return [$aCriteria];
 	}
 
 	protected static function TagSetToSearchForm($aCriteria, $aFields)
 	{
-		$aCriterion = array($aCriteria);
+		$aCriterion = [$aCriteria];
 		$sOperator = $aCriteria['operator'];
-		switch ($sOperator)
-		{
+		switch ($sOperator) {
 			case 'MATCHES':
 				// Nothing special to do
-				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
-				{
-					if (!isset($aCriteria['values']))
-					{
-						$aCriteria['values'] = array();
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined']) {
+					if (!isset($aCriteria['values'])) {
+						$aCriteria['values'] = [];
 					}
 					// Convention for 'undefined' tag set
-					$aCriteria['values'][] = array('value' => '', 'label' => Dict::S('Enum:Undefined'));
+					$aCriteria['values'][] = ['value' => '', 'label' => Dict::S('Enum:Undefined')];
 				}
 				break;
 
 			case 'OR':
 			case 'ISNULL':
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_EQUALS;
-				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
-				{
-					if (!isset($aCriteria['values']))
-					{
-						$aCriteria['values'] = array();
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined']) {
+					if (!isset($aCriteria['values'])) {
+						$aCriteria['values'] = [];
 					}
 					// Convention for 'undefined' tag set
-					$aCriteria['values'][] = array('value' => '', 'label' => Dict::S('Enum:Undefined'));
+					$aCriteria['values'][] = ['value' => '', 'label' => Dict::S('Enum:Undefined')];
 				}
 				break;
 
 			case '=':
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_MATCHES;
-				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
-				{
-					$aCriteria['values'] = array();
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined']) {
+					$aCriteria['values'] = [];
 					// Convention for 'undefined' tag set
-					$aCriteria['values'][] = array('value' => '', 'label' => Dict::S('Enum:Undefined'));
-				}
-				else
-				{
+					$aCriteria['values'][] = ['value' => '', 'label' => Dict::S('Enum:Undefined')];
+				} else {
 					// Split values into a list of Matches
-					$aCriterion = array();
+					$aCriterion = [];
 					$aValues = $aCriteria['values'];
-					foreach($aValues as $aValue)
-					{
-						$aCriteria['values'] = array($aValue);
+					foreach ($aValues as $aValue) {
+						$aCriteria['values'] = [$aValue];
 						$aCriterion[] = $aCriteria;
 					}
 				}
@@ -741,14 +660,13 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	protected static function SetToSearchForm($aCriteria, $aFields)
 	{
 		$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
-		return array($aCriteria);
+		return [$aCriteria];
 	}
 
 	protected static function ExternalKeyToSearchForm($aCriteria, $aFields)
 	{
 		$sOperator = $aCriteria['operator'];
-		switch ($sOperator)
-		{
+		switch ($sOperator) {
 			case '=':
 				// Same as IN
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
@@ -763,7 +681,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				break;
 		}
 
-		return array($aCriteria);
+		return [$aCriteria];
 	}
 
 	/**
@@ -776,32 +694,25 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	{
 		$sRef = $aCriteria['ref'];
 		$aValues = $aCriteria['values'];
-		if (array_key_exists($sRef, $aFields))
-		{
+		if (array_key_exists($sRef, $aFields)) {
 			$aField = $aFields[$sRef];
-			if (array_key_exists('allowed_values', $aField) && array_key_exists('values', $aField['allowed_values']))
-			{
+			if (array_key_exists('allowed_values', $aField) && array_key_exists('values', $aField['allowed_values'])) {
 				$aAllowedValues = $aField['allowed_values']['values'];
-			}
-			else
-			{
+			} else {
 				// Can't obtain the list of allowed values, just set as unknown
 				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
 			}
 		}
 
-		if (isset($aAllowedValues))
-		{
-			foreach($aValues as $aValue)
-			{
+		if (isset($aAllowedValues)) {
+			foreach ($aValues as $aValue) {
 				$sValue = $aValue['value'];
 				unset($aAllowedValues[$sValue]);
 			}
-			$aCriteria['values'] = array();
+			$aCriteria['values'] = [];
 
-			foreach($aAllowedValues as $sValue => $sLabel)
-			{
-				$aValue = array('value' => $sValue, 'label' => "$sLabel");
+			foreach ($aAllowedValues as $sValue => $sLabel) {
+				$aValue = ['value' => $sValue, 'label' => "$sLabel"];
 				$aCriteria['values'][] = $aValue;
 			}
 			$aCriteria['operator'] = 'IN';

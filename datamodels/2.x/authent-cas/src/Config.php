@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     https://www.combodo.com/documentation/combodo-software-license.html
@@ -23,12 +24,10 @@ class Config
 	public static function Get($sName, $sDefaultValue = '')
 	{
 		$sValue = MetaModel::GetModuleSetting('authent-cas', $sName, '');
-		if (empty($sValue))
-		{
+		if (empty($sValue)) {
 			$sValue = MetaModel::GetConfig()->Get($sName);
 		}
-		if (empty($sValue))
-		{
+		if (empty($sValue)) {
 			return $sDefaultValue;
 		}
 

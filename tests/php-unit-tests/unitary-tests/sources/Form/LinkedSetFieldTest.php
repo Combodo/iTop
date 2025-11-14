@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -11,8 +12,10 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ormLinkSet;
 use Person;
 
-class LinkedSetFieldTest extends ItopDataTestCase {
-	public function testValidate(): void {
+class LinkedSetFieldTest extends ItopDataTestCase
+{
+	public function testValidate(): void
+	{
 		$sLinkedClass = Ticket::class;
 		$oLinkedSetField = new LinkedSetField('test');
 		$oLinkedSetField->SetIndirect(false);

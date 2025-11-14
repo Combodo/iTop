@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI:Links:Object:New:Modal:Title' => 'Tworzy obiekt',
 	'UI:Links:Create:Button' => 'Utwórz',
 	'UI:Links:Create:Button+' => 'Tworzy %4$s',
@@ -41,4 +42,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Links:Bulk:LinkExistForOneObject' => 'Jeden obiekt jest połączony',
 	'UI:Links:Bulk:LinkExistForXObjects' => '{count} obiekty są połączone',
 	'UI:Links:NewItem' => 'Nowy obiekt',
-));
+]);

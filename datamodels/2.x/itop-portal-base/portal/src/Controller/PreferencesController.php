@@ -34,7 +34,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PreferencesController extends SymfonyAbstractController
 {
-
 	/**
 	 * Set a preference for the current user.
 	 *
@@ -51,10 +50,9 @@ class PreferencesController extends SymfonyAbstractController
 		$sValue = $oRequest->request->get('value');
 
 		// set user preference
-		try{
+		try {
 			appUserPreferences::SetPref($sKey, $sValue);
-		}
-		catch(Exception){
+		} catch (Exception) {
 			$sStatus = 'error';
 		}
 

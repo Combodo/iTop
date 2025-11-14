@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -31,7 +32,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 	/** @inheritdoc * */
 	public function GetExtraParam(): array
 	{
-		$aExtraParams = array(
+		$aExtraParams = [
 			'target_attr' => $this->oAttDef->GetExtKeyToMe(),
 			'object_id'   => $this->oDbObject->GetKey(),
 			'menu'        => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
@@ -41,7 +42,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 			'currentId'   => $this->GetTableId(),
 			'panel_title' => $this->oAttDef->GetLabel(),
 			'panel_icon'  => MetaModel::GetClassIcon($this->GetTargetClass(), false),
-		);
+		];
 
 		// Description
 		if ($this->oAttDef->HasDescription()) {
@@ -65,7 +66,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 	/** @inheritdoc * */
 	public function GetRowActions(): array
 	{
-		$aRowActions = array();
+		$aRowActions = [];
 
 		// until a full link set refactoring (continue using edit_mode property)
 		switch ($this->oAttDef->GetEditMode()) {
@@ -74,7 +75,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 
 			case LINKSET_EDITMODE_ADDONLY: // The only possible action is to open (in a new window) the form to create a new object
 				if ($this->bIsAllowModify) {
-					$aRowActions[] = array(
+					$aRowActions[] = [
 						'label'         => 'UI:Links:ModifyObject:Button',
 						'name'          => 'ModifyButton',
 						'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON_TOOLTIP),
@@ -83,47 +84,14 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 						'metadata'      => [
 							'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
 						],
-					);
+					];
 				}
 				break;
 
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
 			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
-			if ($this->bIsAllowModify) {
-				$aRowActions[] = array(
-					'label'         => 'UI:Links:ModifyObject:Button',
-					'name'          => 'ModifyButton',
-					'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON_TOOLTIP),
-					'icon_classes'  => 'fas fa-pen',
-					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement, aRowData['{$this->sTargetClass}/friendlyname']);",
-					'metadata'      => [
-						'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
-					],
-				);
-				}
-
-			if ($this->bIsAllowDelete) {
-				$aRowActions[] = array(
-					'label'         => 'UI:Links:Delete:Button',
-					'name'          => 'DeleteButton',
-					'tooltip'       => $this->GetDictionaryEntry(static::DICT_DELETE_BUTTON_TOOLTIP),
-					'icon_classes'  => 'fas fa-trash',
-					'color'         => Button::ENUM_COLOR_SCHEME_DESTRUCTIVE,
-					'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement);",
-					'confirmation'  => [
-						'title'                      => $this->GetDictionaryEntry(static::DICT_DELETE_MODAL_TITLE),
-						'message'                    => $this->GetDictionaryEntry(static::DICT_DELETE_MODAL_MESSAGE),
-						'confirm_button_class'       => 'ibo-is-danger',
-						'row_data'                   => "{$this->sTargetClass}/hyperlink",
-						'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
-					],
-				);
-				}
-				break;
-
-			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
 				if ($this->bIsAllowModify) {
-					$aRowActions[] = array(
+					$aRowActions[] = [
 						'label'         => 'UI:Links:ModifyObject:Button',
 						'name'          => 'ModifyButton',
 						'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON_TOOLTIP),
@@ -132,11 +100,44 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 						'metadata'      => [
 							'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
 						],
-					);
+					];
+				}
+
+				if ($this->bIsAllowDelete) {
+					$aRowActions[] = [
+						'label'         => 'UI:Links:Delete:Button',
+						'name'          => 'DeleteButton',
+						'tooltip'       => $this->GetDictionaryEntry(static::DICT_DELETE_BUTTON_TOOLTIP),
+						'icon_classes'  => 'fas fa-trash',
+						'color'         => Button::ENUM_COLOR_SCHEME_DESTRUCTIVE,
+						'js_row_action' => "{$this->GetWidgetName()}.links_view_table('DeleteLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement);",
+						'confirmation'  => [
+							'title'                      => $this->GetDictionaryEntry(static::DICT_DELETE_MODAL_TITLE),
+							'message'                    => $this->GetDictionaryEntry(static::DICT_DELETE_MODAL_MESSAGE),
+							'confirm_button_class'       => 'ibo-is-danger',
+							'row_data'                   => "{$this->sTargetClass}/hyperlink",
+							'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
+						],
+					];
+				}
+				break;
+
+			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
+				if ($this->bIsAllowModify) {
+					$aRowActions[] = [
+						'label'         => 'UI:Links:ModifyObject:Button',
+						'name'          => 'ModifyButton',
+						'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_BUTTON_TOOLTIP),
+						'icon_classes'  => 'fas fa-pen',
+						'js_row_action' => "{$this->GetWidgetName()}.links_view_table('ModifyLinkedObject', aRowData['{$this->oAttDef->GetLinkedClass()}/_key_/raw'], oTrElement, aRowData['{$this->sTargetClass}/friendlyname']);",
+						'metadata'      => [
+							'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_OBJECT_MODAL_TITLE),
+						],
+					];
 				}
 
 				if ($this->bIsAllowModify) {
-					$aRowActions[] = array(
+					$aRowActions[] = [
 						'label'         => 'UI:Links:Remove:Button',
 						'name'          => 'RemoveButton',
 						'tooltip'       => $this->GetDictionaryEntry(static::DICT_REMOVE_BUTTON_TOOLTIP),
@@ -148,7 +149,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 							'row_data'                   => "{$this->sTargetClass}/hyperlink",
 							'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 						],
-					);
+					];
 				}
 				break;
 
@@ -169,7 +170,7 @@ class BlockDirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 	 */
 	private function GetDefault(): array
 	{
-		$aDefaults = array($this->oAttDef->GetExtKeyToMe() => $this->oDbObject->GetKey());
+		$aDefaults = [$this->oAttDef->GetExtKeyToMe() => $this->oDbObject->GetKey()];
 		$oAppContext = new \ApplicationContext();
 		foreach ($oAppContext->GetNames() as $sKey) {
 			if (MetaModel::IsValidAttCode($this->sObjectClass, $sKey)) {

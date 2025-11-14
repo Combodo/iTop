@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:ChangeManagement' => 'Manažment zmien',
 	'Menu:Change:Overview' => 'Prehľad',
 	'Menu:Change:Overview+' => '~~',
@@ -33,7 +34,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Zmeny podľa stavu za posledných 7 dní',
 	'Tickets:Related:OpenChanges' => 'Open changes~~',
 	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -45,12 +46,11 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Change' => 'Zmena',
 	'Class:Change+' => '~~',
 	'Class:Change/Attribute:status' => 'Stav',
@@ -125,4 +125,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Change/Attribute:outage/Value:no+' => '~~',
 	'Class:Change/Attribute:outage/Value:yes' => 'Yes~~',
 	'Class:Change/Attribute:outage/Value:yes+' => '~~',
-));
+]);

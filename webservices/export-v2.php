@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -35,15 +36,12 @@ const EXIT_CODE_FATAL = -2;
 
 function ReportErrorAndExit($sErrorMessage)
 {
-	if (utils::IsModeCLI())
-	{
+	if (utils::IsModeCLI()) {
 		$oP = new CLIPage("iTop - Export");
 		$oP->p('ERROR: '.utils::HtmlEntities($sErrorMessage));
 		$oP->output();
 		exit(EXIT_CODE_ERROR);
-	}
-	else
-	{
+	} else {
 		$oP = new WebPage("iTop - Export");
 		$oP->add_http_headers();
 		$oP->p('ERROR: '.utils::HtmlEntities($sErrorMessage));
@@ -54,15 +52,13 @@ function ReportErrorAndExit($sErrorMessage)
 
 function ReportErrorAndUsage($sErrorMessage)
 {
-	if (utils::IsModeCLI())
-	{
+	if (utils::IsModeCLI()) {
 		$oP = new CLIPage("iTop - Export");
 		$oP->p('ERROR: '.$sErrorMessage);
 		Usage($oP);
 		$oP->output();
 		exit(EXIT_CODE_ERROR);
-	}
-	else {
+	} else {
 		$oP = new WebPage("iTop - Export");
 		$oP->add_http_headers();
 		$oP->p('ERROR: '.$sErrorMessage);
@@ -74,42 +70,32 @@ function ReportErrorAndUsage($sErrorMessage)
 
 function Usage(Page $oP)
 {
-	if (Utils::IsModeCLI())
-	{
+	if (Utils::IsModeCLI()) {
 		$oP->p('Usage: php '.basename(__FILE__).' --auth_user=<user> --auth_pwd=<password> --expression=<OQL Query> --query=<phrasebook_id> [--arg_xxx=<query_arguments>] [--no_localize=0|1] [--format=<format>] [--format-options...]');
 		$oP->p("Parameters:");
 		$oP->p(" * auth_user: the iTop user account for authentication");
 		$oP->p(" * auth_pwd: the password of the iTop user account");
-	}
-	else
-	{
+	} else {
 		$oP->p("Parameters:");
 	}
 	$oP->p(" * expression: an OQL expression (e.g. SELECT Contact WHERE name LIKE 'm%')");
 	$oP->p(" * query: (alternative to 'expression') the id of an entry from the query phrasebook");
-	if (Utils::IsModeCLI())
-	{
+	if (Utils::IsModeCLI()) {
 		$oP->p(" * with_archive: (optional, defaults to 0) if set to 1 then the result set will include archived objects");
-	}
-	else
-	{
+	} else {
 		$oP->p(" * with_archive: (optional, defaults to the current mode) if set to 1 then the result set will include archived objects");
 	}
 	$oP->p(" * arg_xxx: (needed if the query has parameters) the value of the parameter 'xxx'");
 	$aSupportedFormats = BulkExport::FindSupportedFormats();
 	$oP->p(" * format: (optional, default is html) the desired output format. Can be one of '".implode("', '", array_keys($aSupportedFormats))."'");
-	foreach($aSupportedFormats as $sFormatCode => $sLabel)
-	{
+	foreach ($aSupportedFormats as $sFormatCode => $sLabel) {
 		$oExporter = BulkExport::FindExporter($sFormatCode);
-		if ($oExporter !== null)
-		{
-			if (!Utils::IsModeCLI())
-			{
+		if ($oExporter !== null) {
+			if (!Utils::IsModeCLI()) {
 				$oP->add('<hr/>');
 			}
 			$oExporter->DisplayUsage($oP);
-			if (!Utils::IsModeCLI())
-			{
+			if (!Utils::IsModeCLI()) {
 				$oP->add('</div>');
 			}
 		}
@@ -248,19 +234,18 @@ EOF
 	$sExpressionError = '';
 	if (($sExpression === null) && ($sQueryId === null)) {
 		$bExpressionIsValid = false;
-	} else if ($sExpression !== '') {
+	} elseif ($sExpression !== '') {
 		try {
 			$oExportSearch = DBObjectSearch::FromOQL($sExpression);
 			$oExportSearch->UpdateContextFromUser();
-		}
-		catch (OQLException $e) {
+		} catch (OQLException $e) {
 			$bExpressionIsValid = false;
 			$sExpressionError = $e->getMessage();
 		}
 	}
 
 	if (!$bExpressionIsValid) {
-		DisplayExpressionForm($oP, $sAction, $sExpression, $sExpressionError,$oForm);
+		DisplayExpressionForm($oP, $sAction, $sExpression, $sExpressionError, $oForm);
 
 		return;
 	}
@@ -275,12 +260,11 @@ EOF
 		$oExportSearch->UpdateContextFromUser();
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("query", $sQueryId));
 	}
-	$aFormPartsByFormat = array();
-	$aAllFormParts = array();
+	$aFormPartsByFormat = [];
+	$aAllFormParts = [];
 	if ($sFormat == null) {
 		// No specific format chosen
 		$sDefaultFormat = utils::ReadParam('format', 'xlsx');
-
 
 		$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel("format", Dict::S('Core:BulkExport:ExportFormatPrompt'), "format_selector");
 		$oSelect->SetIsLabelBefore(true);
@@ -390,7 +374,7 @@ EOF
 	if ($sExpression === null) {
 		// No expression supplied, let's check if phrasebook entry is given
 		if ($sQueryId !== null) {
-			$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
+			$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', ['query_id' => $sQueryId]);
 			$oSearch->UpdateContextFromUser();
 			$oQueries = new DBObjectSet($oSearch);
 			if ($oQueries->Count() > 0) {
@@ -411,7 +395,6 @@ EOF
 			}
 		}
 	}
-
 
 	if ($sFormat !== null) {
 		$oExporter = BulkExport::FindExporter($sFormat);
@@ -452,7 +435,7 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 
 	// Either $sExpression or $sQueryId must be specified
 	if ($sExpression === null) {
-		$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
+		$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', ['query_id' => $sQueryId]);
 		$oSearch->UpdateContextFromUser();
 		$oQueries = new DBObjectSet($oSearch);
 		if ($oQueries->Count() > 0) {
@@ -470,7 +453,7 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 	try {
 		$oSearch = DBObjectSearch::FromOQL($sExpression);
 		$oSearch->UpdateContextFromUser();
-		$aArgs = array();
+		$aArgs = [];
 		foreach ($oSearch->GetQueryParams() as $sParam => $foo) {
 			$value = utils::ReadParam('arg_'.$sParam, null, true, 'raw_data');
 			if (!is_null($value)) {
@@ -483,30 +466,23 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 
 		$sFormat = utils::ReadParam('format', 'html', true /* Allow CLI */, 'raw_data');
 		$oExporter = BulkExport::FindExporter($sFormat, $oSearch);
-		if ($oExporter == null)
-		{
+		if ($oExporter == null) {
 			$aSupportedFormats = BulkExport::FindSupportedFormats();
 			ReportErrorAndExit("Invalid output format: '$sFormat'. The supported formats are: ".implode(', ', array_keys($aSupportedFormats)));
 		}
-	}
-	catch(MissingQueryArgument $e)
-	{
+	} catch (MissingQueryArgument $e) {
 		$oSearch = null;
 		ReportErrorAndUsage("Invalid OQL query: '".utils::HtmlEntities($sExpression)."'.\n".utils::HtmlEntities($e->getMessage()));
-	}
-	catch(OQLException $e)
-	{
+	} catch (OQLException $e) {
 		$oSearch = null;
 		ReportErrorAndExit("Invalid OQL query: '".utils::HtmlEntities($sExpression)."'.\n".utils::HtmlEntities($e->getMessage()));
-	}
-	catch(Exception $e)
-	{
+	} catch (Exception $e) {
 		$oSearch = null;
 		ReportErrorAndExit(utils::HtmlEntities($e->getMessage()));
 	}
 
 	// update last export information if check parameters ok
-	if($oQuery != null){
+	if ($oQuery != null) {
 		$oQuery->UpdateLastExportInformation();
 	}
 
@@ -522,24 +498,18 @@ function DoExport(WebPage $oP, BulkExport $oExporter, $bInteractive = false)
 {
 	$oExporter->SetHttpHeaders($oP);
 	$exportResult = $oExporter->GetHeader();
-	$aStatus = array();
-	do
-	{
+	$aStatus = [];
+	do {
 		$exportResult .= $oExporter->GetNextChunk($aStatus);
-	}
-	while (($aStatus['code'] != 'done') && ($aStatus['code'] != 'error'));
+	} while (($aStatus['code'] != 'done') && ($aStatus['code'] != 'error'));
 
-	if ($aStatus['code'] == 'error')
-	{
+	if ($aStatus['code'] == 'error') {
 		$oExporter->Cleanup();
 		ReportErrorAndExit("Export failed: '{$aStatus['message']}'");
-	}
-	else
-	{
+	} else {
 		$exportResult .= $oExporter->GetFooter();
 		$sMimeType = $oExporter->GetMimeType();
-		if (substr($sMimeType, 0, 5) == 'text/')
-		{
+		if (substr($sMimeType, 0, 5) == 'text/') {
 			$sMimeType .= ';charset='.strtolower($oExporter->GetCharacterSet());
 		}
 		$oP->SetContentType($sMimeType);
@@ -548,7 +518,6 @@ function DoExport(WebPage $oP, BulkExport $oExporter, $bInteractive = false)
 		$oExporter->Cleanup();
 	}
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -567,8 +536,7 @@ if (utils::IsModeCLI()) {
 	try {
 		// Do this before loging, in order to allow setting user credentials from within the file
 		utils::UseParamFile();
-	}
-	catch (Exception $e) {
+	} catch (Exception $e) {
 		echo "Error: ".utils::HtmlEntities($e->getMessage())."<br/>\n";
 		exit(EXIT_CODE_FATAL);
 	}
@@ -600,7 +568,7 @@ if (utils::IsModeCLI()) {
 	}
 
 	if ($sExpression === null) {
-		$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
+		$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', ['query_id' => $sQueryId]);
 		$oSearch->UpdateContextFromUser();
 		$oQueries = new DBObjectSet($oSearch);
 		if ($oQueries->Count() > 0) {
@@ -613,7 +581,7 @@ if (utils::IsModeCLI()) {
 	try {
 		$oSearch = DBObjectSearch::FromOQL($sExpression);
 		$oSearch->UpdateContextFromUser();
-		$aArgs = array();
+		$aArgs = [];
 		foreach ($oSearch->GetQueryParams() as $sParam => $foo) {
 			$value = utils::ReadParam('arg_'.$sParam, null, true, 'raw_data');
 			if (!is_null($value)) {
@@ -626,8 +594,7 @@ if (utils::IsModeCLI()) {
 
 		$sFormat = utils::ReadParam('format', 'html', true /* Allow CLI */, 'raw_data');
 		$oExporter = BulkExport::FindExporter($sFormat);
-		if ($oExporter == null)
-		{
+		if ($oExporter == null) {
 			$aSupportedFormats = BulkExport::FindSupportedFormats();
 			ReportErrorAndExit("Invalid output format: '$sFormat'. The supported formats are: ".implode(', ', array_keys($aSupportedFormats)));
 		}
@@ -638,36 +605,25 @@ if (utils::IsModeCLI()) {
 		$oExporter->ReadParameters();
 
 		$exportResult = $oExporter->GetHeader();
-		$aStatus = array();
+		$aStatus = [];
 
-		do
-		{
+		do {
 			$exportResult .= $oExporter->GetNextChunk($aStatus);
-		}
-		while (($aStatus['code'] != 'done') && ($aStatus['code'] != 'error'));
+		} while (($aStatus['code'] != 'done') && ($aStatus['code'] != 'error'));
 
-		if ($aStatus['code'] == 'error')
-		{
+		if ($aStatus['code'] == 'error') {
 			ReportErrorAndExit("Export failed: '{$aStatus['message']}'");
-		}
-		else
-		{
+		} else {
 			$exportResult .= $oExporter->GetFooter();
 			echo $exportResult;
 		}
 		$oExporter->Cleanup();
 
-	}
-	catch(MissingQueryArgument $e)
-	{
+	} catch (MissingQueryArgument $e) {
 		ReportErrorAndUsage("Invalid OQL query: '$sExpression'.\n".utils::HtmlEntities($e->getMessage()));
-	}
-	catch(OQLException $e)
-	{
+	} catch (OQLException $e) {
 		ReportErrorAndExit("Invalid OQL query: '$sExpression'.\n".utils::HtmlEntities($e->getMessage()));
-	}
-	catch(Exception $e)
-	{
+	} catch (Exception $e) {
 		ReportErrorAndExit(utils::HtmlEntities($e->getMessage()));
 	}
 
@@ -680,8 +636,7 @@ if (utils::IsModeCLI()) {
 //
 /////////////////////////////////////////////////////////////////////////////
 
-try
-{
+try {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 
 	// Main parameters
@@ -722,14 +677,12 @@ try
 		DoExport($oP, $oExporter, false);
 		$oP->output();
 	}
-}
-catch (BulkExportMissingParameterException $e) {
+} catch (BulkExportMissingParameterException $e) {
 	$oP = new AjaxPage('iTop Export');
 	$oP->add(utils::HtmlEntities($e->getMessage()));
 	Usage($oP);
 	$oP->output();
-}
-catch (Exception $e) {
+} catch (Exception $e) {
 	$oP = new WebPage('iTop Export');
 	$oP->add_http_headers();
 	$oP->add('Error: '.utils::HtmlEntities($e->getMessage()));

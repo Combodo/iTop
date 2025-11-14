@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -22,7 +23,7 @@ use SimpleCrypt;
  */
 class AttributeEncryptedString extends AttributeString implements iAttributeNoGroupBy
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	protected function GetSQLCol($bFullSpec = false)
 	{
@@ -73,7 +74,7 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 		$oSimpleCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
 		$encryptedValue = $oSimpleCrypt->Encrypt(MetaModel::GetConfig()->GetEncryptionKey(), $value);
 
-		$aValues = array();
+		$aValues = [];
 		$aValues[$this->Get("sql")] = $encryptedValue;
 
 		return $aValues;
@@ -91,6 +92,5 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 	{
 		return CMDBChangeOpSetAttributeEncrypted::class;
 	}
-
 
 }

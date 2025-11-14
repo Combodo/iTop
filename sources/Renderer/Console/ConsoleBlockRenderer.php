@@ -1,9 +1,9 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 namespace Combodo\iTop\Renderer\Console;
 
@@ -13,7 +13,6 @@ use Combodo\iTop\Renderer\BlockRenderer;
 
 class ConsoleBlockRenderer extends BlockRenderer
 {
-
 	/**
 	 * Add blocks to the page using twig template
 	 * @param WebPage $oPage
@@ -65,7 +64,7 @@ class ConsoleBlockRenderer extends BlockRenderer
 			$oPage->AddDeferredBlock($oDeferredBlock);
 		}
 		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
-			static::AddDeferredBlocksToPage( $oPage, $oSubBlock);
+			static::AddDeferredBlocksToPage($oPage, $oSubBlock);
 		}
 	}
 

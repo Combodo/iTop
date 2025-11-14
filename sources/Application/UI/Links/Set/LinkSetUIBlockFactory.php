@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -39,7 +40,6 @@ use iDBObjectSetIterator;
  */
 class LinkSetUIBlockFactory extends SetUIBlockFactory
 {
-
 	/**
 	 * Make a link set block.
 	 *

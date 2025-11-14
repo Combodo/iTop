@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:ChangeManagement' => 'Manažment zmien',
 	'Menu:Change:Overview' => 'Prehľad',
 	'Menu:Change:Overview+' => '~~',
@@ -33,7 +34,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Zmeny podľa stavu za posledných 7 dní',
 	'Tickets:Related:OpenChanges' => 'Open changes~~',
 	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -45,12 +46,11 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Change' => 'Zmena',
 	'Class:Change+' => '~~',
 	'Class:Change/Attribute:status' => 'Stav',
@@ -147,13 +147,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Change/Stimulus:ev_monitor+' => '~~',
 	'Class:Change/Stimulus:ev_finish' => 'Zatvoriť',
 	'Class:Change/Stimulus:ev_finish+' => '~~',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:RoutineChange' => 'Routine Change~~',
 	'Class:RoutineChange+' => '~~',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Validate~~',
@@ -178,13 +178,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '~~',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Finish~~',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '~~',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ApprovedChange' => 'Approved Changes~~',
 	'Class:ApprovedChange+' => '~~',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Approval Date~~',
@@ -213,13 +213,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '~~',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Finish~~',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '~~',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:NormalChange' => 'Normal Change~~',
 	'Class:NormalChange+' => '~~',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Acceptance date~~',
@@ -248,13 +248,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '~~',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Finish~~',
 	'Class:NormalChange/Stimulus:ev_finish+' => '~~',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:EmergencyChange' => 'Emergency Change~~',
 	'Class:EmergencyChange+' => '~~',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Validate~~',
@@ -279,4 +279,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '~~',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Finish~~',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '~~',
-));
+]);

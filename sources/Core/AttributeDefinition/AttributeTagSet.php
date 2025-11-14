@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -27,7 +28,7 @@ use utils;
  */
 class AttributeTagSet extends AttributeSet
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
 
 	public function __construct($sCode, array $aParams)
 	{
@@ -42,7 +43,7 @@ class AttributeTagSet extends AttributeSet
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('tag_code_max_len'));
+		return array_merge(parent::ListExpectedParams(), ['tag_code_max_len']);
 	}
 
 	/**
@@ -52,13 +53,13 @@ class AttributeTagSet extends AttributeSet
 	 *
 	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
 	 */
-	public function GetJsonForWidget($oValue, $aArgs = array())
+	public function GetJsonForWidget($oValue, $aArgs = [])
 	{
-		$aJson = array();
+		$aJson = [];
 
 		// possible_values
 		$aTagSetObjectData = $this->GetAllowedValues($aArgs);
-		$aTagSetKeyValData = array();
+		$aTagSetKeyValData = [];
 		foreach ($aTagSetObjectData as $sTagCode => $sTagLabel) {
 			$aTagSetKeyValData[] = [
 				'code'  => $sTagCode,
@@ -68,10 +69,10 @@ class AttributeTagSet extends AttributeSet
 		$aJson['possible_values'] = $aTagSetKeyValData;
 
 		if (is_null($oValue)) {
-			$aJson['partial_values'] = array();
-			$aJson['orig_value'] = array();
-			$aJson['added'] = array();
-			$aJson['removed'] = array();
+			$aJson['partial_values'] = [];
+			$aJson['orig_value'] = [];
+			$aJson['added'] = [];
+			$aJson['removed'] = [];
 		} else {
 			$aJson['orig_value'] = array_merge($oValue->GetValues(), $oValue->GetModified());
 			$aJson['added'] = $oValue->GetAdded();
@@ -82,10 +83,9 @@ class AttributeTagSet extends AttributeSet
 				$aJson['partial_values'] = $oValue->GetModified();
 			} else {
 				// For simple updates
-				$aJson['partial_values'] = array();
+				$aJson['partial_values'] = [];
 			}
 		}
-
 
 		$iMaxTags = $this->GetMaxItems();
 		$aJson['max_items_allowed'] = $iMaxTags;
@@ -95,7 +95,7 @@ class AttributeTagSet extends AttributeSet
 
 	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
 	{
-		$aValues = array();
+		$aValues = [];
 		if (!empty($proposedValue)) {
 			foreach (explode(' ', $proposedValue) as $sCode) {
 				$sValue = trim($sCode);
@@ -126,7 +126,7 @@ class AttributeTagSet extends AttributeSet
 		} else {
 			$oTagSet = new ormTagSet($sClass, $sAttCode, $this->GetMaxItems());
 		}
-		$aGoodTags = array();
+		$aGoodTags = [];
 		foreach ($aTagCodes as $sTagCode) {
 			if ($sTagCode === '') {
 				continue;
@@ -177,12 +177,12 @@ class AttributeTagSet extends AttributeSet
 		return ($val1 == $val2);
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$sAttCode = $this->GetCode();
 		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
 		$aAllowedTags = TagSetFieldData::GetAllowedValues($sClass, $sAttCode);
-		$aAllowedValues = array();
+		$aAllowedValues = [];
 		foreach ($aAllowedTags as $oAllowedTag) {
 			$aAllowedValues[$oAllowedTag->Get('code')] = $oAllowedTag->Get('label');
 		}
@@ -253,10 +253,13 @@ class AttributeTagSet extends AttributeSet
 			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 		}
 		if (!empty($sProposedValue)) {
-			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
-				$this->GetCode(), $this->GetMaxItems());
+			$oTagSet = new ormTagSet(
+				MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
+				$this->GetCode(),
+				$this->GetMaxItems()
+			);
 			$aLabels = explode($sSepItem, $sProposedValue);
-			$aCodes = array();
+			$aCodes = [];
 			foreach ($aLabels as $sTagLabel) {
 				if (!empty($sTagLabel)) {
 					$aCodes[] = ($bLocalizedValue) ? $oTagSet->GetTagFromLabel($sTagLabel) : $sTagLabel;
@@ -313,12 +316,12 @@ class AttributeTagSet extends AttributeSet
 
 			return implode(', ', $aValues);
 		}
-		throw new CoreWarning('Expected the attribute value to be a TagSet', array(
+		throw new CoreWarning('Expected the attribute value to be a TagSet', [
 			'found_type' => gettype($sValue),
 			'value'      => $sValue,
 			'class'      => $this->GetHostClass(),
 			'attribute'  => $this->GetCode(),
-		));
+		]);
 	}
 
 	/**
@@ -337,12 +340,12 @@ class AttributeTagSet extends AttributeSet
 
 			return implode(' ', $aValues);
 		}
-		throw new CoreWarning('Expected the attribute value to be a TagSet', array(
+		throw new CoreWarning('Expected the attribute value to be a TagSet', [
 			'found_type' => gettype($value),
 			'value'      => $value,
 			'class'      => $this->GetHostClass(),
 			'attribute'  => $this->GetCode(),
-		));
+		]);
 	}
 
 	/**
@@ -374,19 +377,20 @@ class AttributeTagSet extends AttributeSet
 				$oValue = $this->MakeRealValue($value, $oHostObject);
 
 				return $this->GetAsHTML($oValue, $oHostObject, $bLocalize);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				// unknown tags are present display the code instead
 			}
 			$aTagCodes = $this->FromStringToArray($value);
-			$aValues = array();
-			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
-				$this->GetCode(), $this->GetMaxItems());
+			$aValues = [];
+			$oTagSet = new ormTagSet(
+				MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
+				$this->GetCode(),
+				$this->GetMaxItems()
+			);
 			foreach ($aTagCodes as $sTagCode) {
 				try {
 					$oTagSet->Add($sTagCode);
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					$aValues[] = $sTagCode;
 				}
 			}
@@ -419,7 +423,7 @@ class AttributeTagSet extends AttributeSet
 		$aAllowedTags = TagSetFieldData::GetAllowedValues(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
 
 		if (!empty($aDelta['removed'])) {
-			$aRemoved = array();
+			$aRemoved = [];
 			foreach ($aDelta['removed'] as $idx => $sTagCode) {
 				if (empty($sTagCode)) {
 					continue;
@@ -444,7 +448,7 @@ class AttributeTagSet extends AttributeSet
 				$sResult .= ', ';
 			}
 
-			$aAdded = array();
+			$aAdded = [];
 			foreach ($aDelta['added'] as $idx => $sTagCode) {
 				if (empty($sTagCode)) {
 					continue;
@@ -562,10 +566,10 @@ HTML;
 	 */
 	public function EnumTemplateVerbs()
 	{
-		return array(
+		return [
 			''     => 'Plain text representation',
 			'html' => 'HTML representation (unordered list)',
-		);
+		];
 	}
 
 	/**
@@ -613,7 +617,7 @@ HTML;
 	 */
 	public function GetForJSON($value)
 	{
-		$aRet = array();
+		$aRet = [];
 		if (is_object($value) && ($value instanceof ormTagSet)) {
 			$aRet = $value->GetValues();
 		}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -20,43 +21,43 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	// Dictionary entries go here
-));
+]);
 
 //
 // Class: NASFileSystem
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:NASFileSystem/Attribute:org_id' => 'Org id~~',
 	'Class:NASFileSystem/Attribute:org_id+' => '~~',
 	'Class:NASFileSystem/Attribute:location_id' => 'Location id~~',
 	'Class:NASFileSystem/Attribute:location_id+' => '~~',
 	'Class:NASFileSystem/Attribute:location_name' => 'Location name~~',
 	'Class:NASFileSystem/Attribute:location_name+' => '~~',
-));
+]);
 
 //
 // Class: FiberChannelInterface
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:FiberChannelInterface/Attribute:org_id' => 'Org id~~',
 	'Class:FiberChannelInterface/Attribute:org_id+' => '~~',
 	'Class:FiberChannelInterface/Attribute:location_id' => 'Location id~~',
 	'Class:FiberChannelInterface/Attribute:location_id+' => '~~',
-));
+]);
 
 //
 // Class: LogicalVolume
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:LogicalVolume/Attribute:org_id' => 'Org id~~',
 	'Class:LogicalVolume/Attribute:org_id+' => '~~',
 	'Class:LogicalVolume/Attribute:location_id' => 'Location id~~',
 	'Class:LogicalVolume/Attribute:location_id+' => '~~',
 	'Class:LogicalVolume/Attribute:location_name' => 'Location name~~',
 	'Class:LogicalVolume/Attribute:location_name+' => '~~',
-));
+]);

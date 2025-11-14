@@ -9,20 +9,20 @@
  */
 abstract class AbstractPreferencesExtension implements iPreferencesExtension
 {
-    /**
-     * @inheritDoc
-     */
-    public function DisplayPreferences(\Combodo\iTop\Application\WebPage\WebPage $oPage)
-    {
-        // Do nothing
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function DisplayPreferences(\Combodo\iTop\Application\WebPage\WebPage $oPage)
+	{
+		// Do nothing
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function ApplyPreferences(\Combodo\iTop\Application\WebPage\WebPage $oPage, $sOperation)
-    {
-        // Do nothing
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function ApplyPreferences(\Combodo\iTop\Application\WebPage\WebPage $oPage, $sOperation)
+	{
+		// Do nothing
+	}
 
 }

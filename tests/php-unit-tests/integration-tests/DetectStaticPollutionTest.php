@@ -35,7 +35,7 @@ class detectStaticPollutionTest extends TestCase
 	 *
 	 * @return void
 	 */
-	function testDetectPolluters($sPattern, $sFix)
+	public function testDetectPolluters($sPattern, $sFix)
 	{
 		$sScannedDir = dirname(__FILE__).'/../unitary-tests';
 
@@ -44,7 +44,7 @@ class detectStaticPollutionTest extends TestCase
 		$Iterator = new RecursiveIteratorIterator($oDirectory);
 		foreach (new RegexIterator($Iterator, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH) as $aMatch) {
 			$sFile = $aMatch[0];
-			if(is_file($sFile)) {
+			if (is_file($sFile)) {
 				$sFileContents = file_get_contents($sFile);
 				if (preg_match_all($sPattern, $sFileContents, $keys, PREG_PATTERN_ORDER)) {
 					$aPolluters = array_merge($aPolluters, $this->FindMatches($sFile, $sFileContents, $sPattern));

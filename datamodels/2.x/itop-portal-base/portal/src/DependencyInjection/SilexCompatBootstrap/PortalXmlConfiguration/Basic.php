@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -44,8 +45,7 @@ class Basic extends AbstractConfiguration
 	 */
 	public function Process(Container $oContainer)
 	{
-		try
-		{
+		try {
 			// Parsing file
 			// - Default values
 			$aPortalConf = $this->GetInitialPortalConf();
@@ -55,9 +55,7 @@ class Basic extends AbstractConfiguration
 			$aPortalConf = $this->AppendLogoUri($aPortalConf);
 			// - Rectifying portal favicon url
 			$aPortalConf = $this->AppendFavIconUri($aPortalConf);
-		}
-		catch (Exception $oException)
-		{
+		} catch (Exception $oException) {
 			throw new Exception('Error while parsing portal configuration file : '.$oException->getMessage());
 		}
 
@@ -72,8 +70,8 @@ class Basic extends AbstractConfiguration
 	 */
 	private function GetInitialPortalConf()
 	{
-		$aPortalConf = array(
-			'properties' => array(
+		$aPortalConf = [
+			'properties' => [
 				'id'              => $_ENV['PORTAL_ID'],
 				'ui_version' => 'v3',
 				'ui_settings' => [
@@ -82,29 +80,29 @@ class Basic extends AbstractConfiguration
 				'name'            => 'Page:DefaultTitle',
 				'logo'            => Branding::GetPortalLogoAbsoluteUrl(),
 				'favicon'         => Branding::GetPortalFavIconAbsoluteUrl(),
-				'themes'          => array(
+				'themes'          => [
 					'bootstrap' => 'itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss',
 					'portal' => 'itop-portal-base/portal/public/css/portal.scss',
 					'main' => 'itop-portal-base/portal/public/css/main.scss',
-					'others' => array(),
-				),
-				'templates' => array(
+					'others' => [],
+				],
+				'templates' => [
 					'layout' => 'itop-portal-base/portal/templates/layout.html.twig',
 					'home' => 'itop-portal-base/portal/templates/home/layout.html.twig',
-				),
+				],
 				'urlmaker_class' => null,
 				'triggers_query' => null,
-				'attachments' => array(
+				'attachments' => [
 					'allow_delete' => true,
-				),
-				'allowed_portals' => array(
+				],
+				'allowed_portals' => [
 					'opening_mode' => null,
-				),
-			),
-			'forms' => array(),
-			'bricks' => array(),
+				],
+			],
+			'forms' => [],
+			'bricks' => [],
 			'bricks_total_width' => 0,
-		);
+		];
 
 		return $aPortalConf;
 	}
@@ -118,10 +116,8 @@ class Basic extends AbstractConfiguration
 	private function ParseGlobalProperties(array $aPortalConf)
 	{
 		/** @var \MFElement $oPropertyNode */
-		foreach ($this->GetModuleDesign()->GetNodes('/module_design/properties/*') as $oPropertyNode)
-		{
-			switch ($oPropertyNode->nodeName)
-			{
+		foreach ($this->GetModuleDesign()->GetNodes('/module_design/properties/*') as $oPropertyNode) {
+			switch ($oPropertyNode->nodeName) {
 				case 'ui_version':
 				case 'name':
 				case 'urlmaker_class':
@@ -131,7 +127,7 @@ class Basic extends AbstractConfiguration
 					$aPortalConf['properties'][$oPropertyNode->nodeName] = $oPropertyNode->GetText(
 						$aPortalConf['properties'][$oPropertyNode->nodeName]
 					);
-				break;
+					break;
 				case 'ui_settings':
 					foreach ($oPropertyNode->GetNodes('*') as $oSubNode) {
 						$aPortalConf['properties'][$oPropertyNode->nodeName][$oSubNode->nodeName] = $oSubNode->GetText();
@@ -163,22 +159,20 @@ class Basic extends AbstractConfiguration
 	private function ParseTemplateAndTheme(array $aPortalConf, DesignElement $oPropertyNode)
 	{
 		/** @var \MFElement $oSubNode */
-		foreach ($oPropertyNode->GetNodes('template|theme') as $oSubNode)
-		{
-			if (!$oSubNode->hasAttribute('id') || $oSubNode->GetText(null) === null)
-			{
+		foreach ($oPropertyNode->GetNodes('template|theme') as $oSubNode) {
+			if (!$oSubNode->hasAttribute('id') || $oSubNode->GetText(null) === null) {
 				throw new DOMFormatException(
 					'Tag '.$oSubNode->nodeName.' must have a "id" attribute as well as a value',
-					null, null, $oSubNode
+					null,
+					null,
+					$oSubNode
 				);
 			}
 
 			$sNodeId = $oSubNode->getAttribute('id');
-			switch ($oSubNode->nodeName)
-			{
+			switch ($oSubNode->nodeName) {
 				case 'theme':
-					switch ($sNodeId)
-					{
+					switch ($sNodeId) {
 						case 'bootstrap':
 						case 'portal':
 						case 'custom':
@@ -190,8 +184,7 @@ class Basic extends AbstractConfiguration
 					}
 					break;
 				case 'template':
-					switch ($sNodeId)
-					{
+					switch ($sNodeId) {
 						case 'layout':
 						case 'home':
 							$aPortalConf['properties']['templates'][$sNodeId] = $oSubNode->GetText(null);
@@ -199,19 +192,21 @@ class Basic extends AbstractConfiguration
 						default:
 							$aMatches = [];
 							// allowed format is: <class implementing TemplatesProviderInterface>:<template_id>
-							if(preg_match('#([\w\\\d_]+):(\w+)#', $sNodeId, $aMatches)){
-								try{
+							if (preg_match('#([\w\\\d_]+):(\w+)#', $sNodeId, $aMatches)) {
+								try {
 									$oClass = new ReflectionClass($aMatches[1]);
-									if($oClass->implementsInterface(TemplatesProviderInterface::class)){
+									if ($oClass->implementsInterface(TemplatesProviderInterface::class)) {
 										$aPortalConf['properties']['templates'][$aMatches[1]][$aMatches[2]] = $oSubNode->GetText(null);
 										break;
 									}
+								} catch (Exception) {
 								}
-								catch(Exception){}
 							}
 							throw new DOMFormatException(
 								'Template ID "'.$sNodeId.'" is not handled in module design templates property',
-								null, null, $oSubNode
+								null,
+								null,
+								$oSubNode
 							);
 					}
 					break;
@@ -230,16 +225,13 @@ class Basic extends AbstractConfiguration
 	private function ParseAttachments(array $aPortalConf, DesignElement $oPropertyNode)
 	{
 		/** @var \MFElement $oSubNode */
-		foreach ($oPropertyNode->GetNodes('*') as $oSubNode)
-		{
-			switch ($oSubNode->nodeName)
-			{
+		foreach ($oPropertyNode->GetNodes('*') as $oSubNode) {
+			switch ($oSubNode->nodeName) {
 				case 'allow_delete':
 					$sValue = $oSubNode->GetText();
 					// If the text is null, we keep the default value
 					// Else we set it
-					if ($sValue !== null)
-					{
+					if ($sValue !== null) {
 						$aPortalConf['properties']['attachments'][$oSubNode->nodeName] = ($sValue === 'true') ? true : false;
 					}
 					break;
@@ -258,16 +250,13 @@ class Basic extends AbstractConfiguration
 	private function ParseAllowedPortalsOptions(array $aPortalConf, DesignElement $oPropertyNode)
 	{
 		/** @var \MFElement $oSubNode */
-		foreach ($oPropertyNode->GetNodes('*') as $oSubNode)
-		{
-			switch ($oSubNode->nodeName)
-			{
+		foreach ($oPropertyNode->GetNodes('*') as $oSubNode) {
+			switch ($oSubNode->nodeName) {
 				case 'opening_mode':
 					$sValue = $oSubNode->GetText();
 					// If the text is null, we keep the default value
 					// Else we set it
-					if ($sValue !== null)
-					{
+					if ($sValue !== null) {
 						$aPortalConf['properties']['allowed_portals'][$oSubNode->nodeName] = ($sValue === 'self') ? 'self' : 'tab';
 					}
 					break;

@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Spojení (Funkční konfigurační položka / Smlouva s poskytovatelem)',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
@@ -22,13 +23,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Název konfigurační položky',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToService
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkFunctionalCIToService' => 'Spojení (Funkční konfigurační položka / Služba)',
 	'Class:lnkFunctionalCIToService+' => '',
 	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s~~',
@@ -40,26 +41,26 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'Název konfigurační položky',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Smlouvy s poskytovateli',
 	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
 	'Class:FunctionalCI/Attribute:services_list' => 'Služby',
 	'Class:FunctionalCI/Attribute:services_list+' => '',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Document/Attribute:contracts_list' => 'Smlouvy',
 	'Class:Document/Attribute:contracts_list+' => 'Všechny smlouvy spojené s tímto dokumentem',
 	'Class:Document/Attribute:services_list' => 'Služby',
 	'Class:Document/Attribute:services_list+' => 'Všechny služby spojené s tímto dokumentem',
-));
+]);

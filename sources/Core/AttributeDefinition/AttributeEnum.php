@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -22,7 +23,7 @@ use ormStyle;
  */
 class AttributeEnum extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -93,9 +94,9 @@ class AttributeEnum extends AttributeString
 	{
 		$oValDef = $this->GetValuesDef();
 		if ($oValDef) {
-			$aValues = CMDBSource::Quote(array_keys($oValDef->GetValues(array(), "")), true);
+			$aValues = CMDBSource::Quote(array_keys($oValDef->GetValues([], "")), true);
 		} else {
-			$aValues = array();
+			$aValues = [];
 		}
 
 		// Preserve the values already present in the database to ease migrations
@@ -134,7 +135,7 @@ class AttributeEnum extends AttributeString
 		// Right now the function is not passed the "target" SQL table, but if we improve this in the future
 		// we may call $this->GetSQLColHelper(true, true, $sDBTable); to take into account the actual 'enum' values
 		// in this table
-		return array($this->GetCode() => $this->GetSQLColHelper(false, false));
+		return [$this->GetCode() => $this->GetSQLColHelper(false, false)];
 	}
 
 	/**
@@ -145,7 +146,7 @@ class AttributeEnum extends AttributeString
 	 */
 	protected function GetActualValuesInDB(string $sDBTable)
 	{
-		$aValues = array();
+		$aValues = [];
 		try {
 			$sSQL = "SELECT DISTINCT `".$this->GetSQLExpr()."` AS value FROM `$sDBTable`;";
 			$aValuesInDB = CMDBSource::QueryToArray($sSQL);
@@ -154,8 +155,7 @@ class AttributeEnum extends AttributeString
 					$aValues[] = $aRow['value'];
 				}
 			}
-		}
-		catch (MySQLException $e) {
+		} catch (MySQLException $e) {
 			// Never mind, maybe the table does not exist yet (new installation from scratch)
 			// It seems more efficient to try and ignore errors than to test if the table & column really exists
 		}
@@ -214,8 +214,10 @@ class AttributeEnum extends AttributeString
 	{
 		if (is_null($sValue)) {
 			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
-			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
-				Dict::S('Enum:Undefined'));
+			$sLabel = Dict::S(
+				'Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
+				Dict::S('Enum:Undefined')
+			);
 		} else {
 			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, null, true /*user lang*/);
 			if (is_null($sLabel)) {
@@ -232,11 +234,16 @@ class AttributeEnum extends AttributeString
 	{
 		if (is_null($sValue)) {
 			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
-			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
-				Dict::S('Enum:Undefined'));
+			$sDescription = Dict::S(
+				'Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
+				Dict::S('Enum:Undefined')
+			);
 		} else {
-			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
-				'', true /* user language only */);
+			$sDescription = Dict::S(
+				'Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
+				'',
+				true /* user language only */
+			);
 			if (strlen($sDescription) == 0) {
 				$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
 				if ($sParentClass) {
@@ -284,10 +291,13 @@ class AttributeEnum extends AttributeString
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		if (is_null($sValue)) {
 			$sFinalValue = '';
 		} elseif ($bLocalize) {
@@ -333,13 +343,13 @@ class AttributeEnum extends AttributeString
 		return $value;
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$aRawValues = parent::GetAllowedValues($aArgs, $sContains);
 		if (is_null($aRawValues)) {
 			return null;
 		}
-		$aLocalizedValues = array();
+		$aLocalizedValues = [];
 		foreach ($aRawValues as $sKey => $sValue) {
 			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 		}
@@ -364,10 +374,13 @@ class AttributeEnum extends AttributeString
 	 * An enum can be localized
 	 */
 	public function MakeValueFromString(
-		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
+		$sProposedValue,
+		$bLocalizedValue = false,
+		$sSepItem = null,
+		$sSepAttribute = null,
+		$sSepValue = null,
 		$sAttributeQualifier = null
-	)
-	{
+	) {
 		if ($bLocalizedValue) {
 			// Lookup for the value matching the input
 			//
@@ -388,8 +401,14 @@ class AttributeEnum extends AttributeString
 
 			return $this->MakeRealValue($sFoundValue, null);
 		} else {
-			return parent::MakeValueFromString($sProposedValue, $bLocalizedValue, $sSepItem, $sSepAttribute, $sSepValue,
-				$sAttributeQualifier);
+			return parent::MakeValueFromString(
+				$sProposedValue,
+				$bLocalizedValue,
+				$sSepItem,
+				$sSepAttribute,
+				$sSepValue,
+				$sAttributeQualifier
+			);
 		}
 	}
 

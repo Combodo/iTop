@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,14 +17,12 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Declarations required for the WSDL
  *
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 // Note: the attributes must have the same names (case sensitive) as in the WSDL specification
 //
@@ -40,7 +39,6 @@ class SOAPSearchCondition
 	}
 }
 
-
 class SOAPExternalKeySearch
 {
 	public $conditions; // array of SOAPSearchCondition
@@ -52,11 +50,14 @@ class SOAPExternalKeySearch
 
 	public function IsVoid()
 	{
-		if (is_null($this->conditions)) return true;
-		if (count($this->conditions) == 0) return true;
+		if (is_null($this->conditions)) {
+			return true;
+		}
+		if (count($this->conditions) == 0) {
+			return true;
+		}
 	}
 }
-
 
 class SOAPAttributeValue
 {
@@ -69,7 +70,6 @@ class SOAPAttributeValue
 		$this->value = $value;
 	}
 }
-
 
 class SOAPLinkCreationSpec
 {
@@ -85,7 +85,6 @@ class SOAPLinkCreationSpec
 	}
 }
 
-
 class SOAPLogMessage
 {
 	public $text; // string
@@ -96,7 +95,6 @@ class SOAPLogMessage
 	}
 }
 
-
 class SOAPResultLog
 {
 	public $messages; // array of SOAPLogMessage
@@ -106,7 +104,6 @@ class SOAPResultLog
 		$this->messages = $aMessages;
 	}
 }
-
 
 class SOAPKeyValue
 {
@@ -131,7 +128,6 @@ class SOAPResultMessage
 		$this->values = $aValues;
 	}
 }
-
 
 class SOAPResult
 {
@@ -163,12 +159,11 @@ class SOAPSimpleResult
 	}
 }
 
-
 class SOAPMapping
 {
-	static function GetMapping()
+	public static function GetMapping()
 	{
-		$aSOAPMapping = array(
+		$aSOAPMapping = [
 			'SearchCondition' => 'SOAPSearchCondition',
 			'ExternalKeySearch' => 'SOAPExternalKeySearch',
 			'AttributeValue' => 'SOAPAttributeValue',
@@ -180,9 +175,7 @@ class SOAPMapping
 			'ResultMessage' => 'SOAPResultMessage',
 			'Result' => 'SOAPResult',
 			'SimpleResult' => 'SOAPSimpleResult',
-		);
+		];
 		return $aSOAPMapping;
 	}
 }
-
-?>

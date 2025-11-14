@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -18,7 +19,7 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 	 */
 	public function ListSupportedLoginModes()
 	{
-		return array('before');
+		return ['before'];
 	}
 
 	protected function OnStart(&$iErrorCode)
@@ -31,13 +32,10 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
 		$sProposedLoginMode = utils::ReadParam('login_mode', '');
 		$index = array_search($sProposedLoginMode, $aAllowedLoginTypes);
-		if ($index !== false)
-		{
+		if ($index !== false) {
 			// Force login mode
 			Session::Set('login_mode', $sProposedLoginMode);
-		}
-		else
-		{
+		} else {
 			Session::Unset('login_mode');
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
@@ -49,8 +47,7 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
 		$sProposedLoginMode = utils::ReadParam('login_mode', '');
 		$index = array_search($sProposedLoginMode, $aAllowedLoginTypes);
-		if ($index !== false)
-		{
+		if ($index !== false) {
 			// Force login mode
 			LoginWebPage::SetLoginModeAndReload($sProposedLoginMode);
 		} else {
@@ -69,8 +66,6 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
  */
 class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExtension
 {
-
-
 	/**
 	 * Must be executed after the other login plugins
 	 *
@@ -78,19 +73,16 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	 */
 	public function ListSupportedLoginModes()
 	{
-		return array('after');
+		return ['after'];
 	}
 
 	protected function OnError(&$iErrorCode)
 	{
 		self::ResetLoginSession();
 		$iOnExit = LoginWebPage::getIOnExit();
-		if ($iOnExit === LoginWebPage::EXIT_RETURN)
-		{
+		if ($iOnExit === LoginWebPage::EXIT_RETURN) {
 			return LoginWebPage::LOGIN_FSM_RETURN; // Error, exit FSM
-		}
-		elseif ($iOnExit == LoginWebPage::EXIT_HTTP_401)
-		{
+		} elseif ($iOnExit == LoginWebPage::EXIT_HTTP_401) {
 			LoginWebPage::HTTP401Error(); // Error, exit
 		}
 		// LoginWebPage::EXIT_PROMPT
@@ -99,13 +91,12 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnCredentialsOk(&$iErrorCode)
 	{
-		if (!Session::IsSet('login_mode'))
-		{
-            // N°6358 - if EXIT_RETURN was asked, send an error
-            if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
-                $iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
-                return LoginWebPage::LOGIN_FSM_ERROR;
-            }
+		if (!Session::IsSet('login_mode')) {
+			// N°6358 - if EXIT_RETURN was asked, send an error
+			if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
+				return LoginWebPage::LOGIN_FSM_ERROR;
+			}
 
 			// If no plugin validated the user, exit
 			self::ResetLoginSession();
@@ -125,7 +116,7 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	protected function OnConnected(&$iErrorCode)
 	{
 		Session::Unset('login_temp_auth_user');
-		if (is_null(UserRights::GetUserObject())){
+		if (is_null(UserRights::GetUserObject())) {
 			//N°7085 avoid infinite loop
 			IssueLog::Error("No user logged in. exit");
 			exit(-1);
@@ -137,10 +128,8 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	private static function ResetLoginSession()
 	{
 		LoginWebPage::ResetSession();
-		foreach (Session::ListVariables() as $sKey)
-		{
-			if (utils::StartsWith($sKey, 'login_'))
-			{
+		foreach (Session::ListVariables() as $sKey) {
+			if (utils::StartsWith($sKey, 'login_')) {
 				Session::Unset($sKey);
 			}
 		}

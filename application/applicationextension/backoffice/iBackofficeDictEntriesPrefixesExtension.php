@@ -10,10 +10,10 @@
  */
 interface iBackofficeDictEntriesPrefixesExtension
 {
-    /**
-     * @return array
-     * @see \iTopWebPage::a_dict_entries_prefixes
-     * @api
-     */
-    public function GetDictEntriesPrefixes(): array;
+	/**
+	 * @return array
+	 * @see \iTopWebPage::a_dict_entries_prefixes
+	 * @api
+	 */
+	public function GetDictEntriesPrefixes(): array;
 }

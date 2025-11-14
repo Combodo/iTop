@@ -1,6 +1,7 @@
 <?php
 
 namespace Combodo\iTop\Application\Helper;
+
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Dict;
 use utils;

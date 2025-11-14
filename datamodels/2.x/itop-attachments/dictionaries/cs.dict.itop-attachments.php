@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Attachments:TabTitle_Count' => 'Přílohy (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Přílohy',
 	'Attachments:FieldsetTitle' => 'Přílohy',
@@ -32,13 +33,13 @@ nebe se zeptejte'.ITOP_APPLICATION_SHORT.' správce '.ITOP_APPLICATION_SHORT.' z
 	'Attachments:Render:Icons' => 'Zobrazit jako ikony',
 	'Attachments:Render:Table' => 'Zobrazit jako seznam',
 	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Attachment' => 'Příloha',
 	'Class:Attachment+' => '~~',
 	'Class:Attachment/Attribute:expire' => 'Exspirace',
@@ -53,10 +54,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Obsah',
 	'Class:Attachment/Attribute:contents+' => '~~',
-));
+]);
 
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Attachments:File:Thumbnail' => 'Ikona',
 	'Attachments:File:Name' => 'Jméno souboru',
 	'Attachments:File:Date' => 'Datum nahrání',
@@ -64,25 +64,25 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Attachments:File:Size' => 'Velikost',
 	'Attachments:File:MimeType' => 'Typ',
 	'Attachments:File:DownloadsCount' => 'Staženo',
-));
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Attachment/Attribute:creation_date' => 'Datum vytvoření',
 	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => 'Jméno uživatele',
 	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'Kontakt',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
 	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
@@ -91,5 +91,5 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
-    'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
-));
+	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
+]);

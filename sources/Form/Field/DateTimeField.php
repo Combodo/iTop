@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -88,13 +88,13 @@ class DateTimeField extends StringField
 		return $this;
 	}
 
-    /**
-     * Set the DateOnly flag
-     *
-     * @param boolean $bDateOnly
-     *
-     * @return \Combodo\iTop\Form\Field\DateTimeField
-     */
+	/**
+	 * Set the DateOnly flag
+	 *
+	 * @param boolean $bDateOnly
+	 *
+	 * @return \Combodo\iTop\Form\Field\DateTimeField
+	 */
 	public function SetDateOnly(bool $bDateOnly)
 	{
 		$this->bDateOnly = $bDateOnly;
@@ -108,7 +108,6 @@ class DateTimeField extends StringField
 	{
 		return $this->bDateOnly;
 	}
-
 
 	/**
 	 * Allow date time picker widget popup to be positioned relative to a specific dom element.

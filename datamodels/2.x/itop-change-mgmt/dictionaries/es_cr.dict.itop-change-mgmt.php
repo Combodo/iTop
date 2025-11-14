@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Spanish Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ChangeManagement' => 'Administración de Cambios',
 	'Menu:Change:Overview' => 'Resumen de Cambios',
 	'Menu:Change:Overview+' => 'Resumen de Cambios',
@@ -31,7 +32,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Cambios por Estatus de los Últimos 7 días',
 	'Tickets:Related:OpenChanges' => 'Cambios Abiertos',
 	'Tickets:Related:RecentChanges' => 'Cambios Recientes (72 hrs)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -43,12 +44,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Change' => 'Cambio',
 	'Class:Change+' => 'Cambio',
 	'Class:Change/Attribute:status' => 'Estatus',
@@ -123,4 +123,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Change/Attribute:outage/Value:no+' => 'No',
 	'Class:Change/Attribute:outage/Value:yes' => 'Si',
 	'Class:Change/Attribute:outage/Value:yes+' => 'Si',
-));
+]);

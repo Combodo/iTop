@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-
 /**
  * Checks PHP version
  *
@@ -38,7 +37,6 @@ if (PHP_MAJOR_VERSION >= 7) {
 	echo 'Your PHP version ('.PHP_VERSION.') isn\'t supported.';
 	exit(-1);
 }
-
 
 define('ITOP_DEFAULT_ENV', 'production');
 define('MAINTENANCE_MODE_FILE', APPROOT.'data/.maintenance');
@@ -60,8 +58,7 @@ if (!isset($bBypassMaintenance)) {
 	$bBypassMaintenance = isset($_REQUEST['maintenance']) ? boolval($_REQUEST['maintenance']) : false;
 }
 
-if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance)
-{
+if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance) {
 	$sTitle = 'Maintenance';
 	$sMessage = 'This application is currently under maintenance.';
 
@@ -70,8 +67,7 @@ if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance)
 	include(APPROOT.'application/maintenancemsg.php');
 	$sSAPIName = strtoupper(trim(PHP_SAPI));
 
-	switch (true)
-	{
+	switch (true) {
 		case isset($_SERVER['REQUEST_URI']) && EndsWith($_SERVER['REQUEST_URI'], '/pages/ajax.searchform.php'):
 			_MaintenanceHtmlMessage($sMessage);
 			break;
@@ -102,6 +98,7 @@ if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance)
  *
  * @return bool
  */
-function EndsWith($haystack, $needle) {
+function EndsWith($haystack, $needle)
+{
 	return substr_compare($haystack, $needle, -strlen($needle)) === 0;
 }

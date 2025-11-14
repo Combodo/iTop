@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ChangeManagement' => 'Değişiklik yönetimi',
 	'Menu:Change:Overview' => 'Özet',
 	'Menu:Change:Overview+' => '~~',
@@ -33,7 +34,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Son 7 gün için duruma göre değişiklikler',
 	'Tickets:Related:OpenChanges' => 'Açık değişiklikler',
 	'Tickets:Related:RecentChanges' => 'Son değişiklikler (72H)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -45,12 +46,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Change' => 'Değişiklik',
 	'Class:Change+' => '~~',
 	'Class:Change/Attribute:status' => 'Durumu',
@@ -125,4 +125,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Change/Attribute:outage/Value:no+' => '~~',
 	'Class:Change/Attribute:outage/Value:yes' => 'Evet',
 	'Class:Change/Attribute:outage/Value:yes+' => '~~',
-));
+]);

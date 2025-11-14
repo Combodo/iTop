@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SARL
  *
@@ -17,9 +18,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'UI:Newsroom:iTopNotification:Label' => ITOP_APPLICATION_SHORT,
-	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Your ' . ITOP_APPLICATION_SHORT.' news',
+	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Your '.ITOP_APPLICATION_SHORT.' news',
 	'UI:Newsroom:iTopNotification:ViewAllPage:SubTitle' => 'Manage your news, flag them as read or unread, delete them, etc.',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Read:Label' => 'Read',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Unread:Label' => 'Unread',
@@ -30,7 +31,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Success:Message' => 'All %1$s news have been deleted',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Confirmation:Title' => 'Delete all news',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteAll:Confirmation:Message' => 'Are you sure you want to delete all news?',
-	
+
 	'UI:Newsroom:iTopNotification:ViewAllPage:Empty:Title' => 'No news, you are up to date!',
 
 	// Actions
@@ -60,4 +61,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message' => 'No news to delete',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message' => 'The news has been deleted',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteMultiple:Success:Message' => '%1$s news have been deleted',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -57,7 +58,7 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 	if (!empty($sClassSelection)) {
 		$aClassSelection = explode(",", $sClassSelection);
 	} else {
-		$aClassSelection = array();
+		$aClassSelection = [];
 	}
 
 	$oP->SetCurrentTab('DBTools:Inconsistencies');
@@ -119,7 +120,6 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 	$oInput = InputUIBlockFactory::MakeForHidden('exec_page', 'dbtools.php');
 	$oForm->AddSubBlock($oInput);
 	$oForm->AddSubBlock($oAppContext->GetForFormBlock());
-
 
 	if (!empty($sClassSelection)) {
 		$oForm = FormUIBlockFactory::MakeStandard();
@@ -236,7 +236,7 @@ function DisplayErrorDetails($aResults, $bVerbose)
 			if ($iCount === DatabaseAnalyzer::LIMIT) {
 				$iCount = "$iCount(+)";
 			}
-			$sErrorTitle = Dict::Format('DBTools:DetailedErrorTitle', MetaModel::GetName($sClass).' ('.$sClass.')',	$iCount, $sErrorLabel);
+			$sErrorTitle = Dict::Format('DBTools:DetailedErrorTitle', MetaModel::GetName($sClass).' ('.$sClass.')', $iCount, $sErrorLabel);
 			$oCollapsible = CollapsibleSectionUIBlockFactory::MakeStandard($sErrorTitle);
 			$oBlock->AddSubBlock($oCollapsible);
 
@@ -304,14 +304,14 @@ function DisplayLostAttachments(iTopWebPage &$oP, ApplicationContext &$oAppConte
 {
 	// Retrieve parameters
 	$sStepName = utils::ReadParam('step_name');
-	$aRecordsToClean = utils::ReadParam('dbt-cbx', array(), false, 'raw_data');
+	$aRecordsToClean = utils::ReadParam('dbt-cbx', [], false, 'raw_data');
 
 	$iRestoredItemsCount = 0;
 	$iRecordsToCleanCount = count($aRecordsToClean);
-	$aErrorsReport = array();
+	$aErrorsReport = [];
 
-	$bDoAnalyze = in_array($sStepName, array('analyze', 'restore'));
-	$bDoRestore = in_array($sStepName, array('restore'));
+	$bDoAnalyze = in_array($sStepName, ['analyze', 'restore']);
+	$bDoRestore = in_array($sStepName, ['restore']);
 
 	// Build HTML
 	$oP->SetCurrentTab('DBTools:LostAttachments');
@@ -383,8 +383,7 @@ function DisplayLostAttachments(iTopWebPage &$oP, ApplicationContext &$oAppConte
 					$oOriginObject->DBDelete();
 
 					$iRestoredItemsCount++;
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					$aErrorsReport[] = 'Could not restore attachment from '.$sRecordToClean.', cause: '.$e->getMessage();
 				}
 				utils::PopArchiveMode();
@@ -395,7 +394,6 @@ function DisplayLostAttachments(iTopWebPage &$oP, ApplicationContext &$oAppConte
 		$sInlineImageDBTable = MetaModel::DBGetTable('InlineImage');
 		$sSelWrongRecs = 'SELECT id, secret, "InlineImage" AS current_class, id AS current_id, item_class AS target_class, item_id AS target_id, contents_filename AS filename FROM '.$sInlineImageDBTable.' WHERE contents_mimetype NOT LIKE "image/%"';
 		$aWrongRecords = CMDBSource::QueryToArray($sSelWrongRecs);
-
 
 		if (empty($aWrongRecords)) {
 			$oAlert = AlertUIBlockFactory::MakeForSuccess(Dict::S('DBTools:LostAttachments:Step:AnalyzeResults:None'));
@@ -448,7 +446,6 @@ function DisplayLostAttachments(iTopWebPage &$oP, ApplicationContext &$oAppConte
 			$oButton->AddCSSClasses(['mt-5', 'ml-5']);
 			$oButton->SetIsDisabled(true);
 			$oPanel->AddSubBlock($oButton);
-
 
 			// JS to handle checkboxes and button
 			$oP->add_ready_script(
@@ -533,7 +530,6 @@ try {
 
 	$oAppContext = new ApplicationContext();
 
-
 	$sPageTitle = Dict::S('DBTools:Title');
 	$sPageId = 'db-tools';
 
@@ -551,8 +547,7 @@ try {
 
 	// Lost attachments
 	$oP = DisplayLostAttachments($oP, $oAppContext);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
 	$oP->p('<b>'.$e->getMessage().'</b>');
 }
 

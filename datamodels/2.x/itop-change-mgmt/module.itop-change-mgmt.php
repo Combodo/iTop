@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-change-mgmt/3.3.0',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Change Management',
@@ -12,25 +11,25 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
+		'dependencies' => [
 			'itop-config-mgmt/2.2.0',
 			'itop-tickets/2.0.0',
-		),
+		],
 		'mandatory' => false,
 		'visible' => true,
 		'installer' => 'ChangeManagementInstaller',
 
 		// Components
 		//
-		'datamodel' => array(
-		),
-		'data.struct' => array(
+		'datamodel' => [
+		],
+		'data.struct' => [
 			//'data.struct.itop-change-mgmt.xml',
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			//'data.sample.itop-change-mgmt.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
@@ -38,9 +37,9 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
-		),
-	)
+		'settings' => [
+		],
+	]
 );
 
 // Module installation handler
@@ -63,7 +62,7 @@ class ChangeManagementInstaller extends ModuleInstallerAPI
 	{
 		// If you want to migrate data from one format to another, do it here
 	}
-	
+
 	/**
 	 * Handler called after the creation/update of the database schema
 	 * @param $oConfiguration Config The new configuration of the application
@@ -82,8 +81,7 @@ class ChangeManagementInstaller extends ModuleInstallerAPI
 
 		$sField = 'start_date';
 
-		if (CMDBSource::IsField($sSourceTable, $sField) && CMDBSource::IsField($sTargetTable, $sField) && CMDBSource::IsField($sSourceTable, $sSourceKeyField) && CMDBSource::IsField($sTargetTable, $sTargetKeyField))
-		{
+		if (CMDBSource::IsField($sSourceTable, $sField) && CMDBSource::IsField($sTargetTable, $sField) && CMDBSource::IsField($sSourceTable, $sSourceKeyField) && CMDBSource::IsField($sTargetTable, $sTargetKeyField)) {
 			SetupLog::Info("Issue #464 - Copying change/start_date into ticket/start_date");
 			$sRepair = "UPDATE `$sTargetTable`, `$sSourceTable` SET `$sTargetTable`.`$sField` = `$sSourceTable`.`$sField` WHERE `$sTargetTable`.`$sField` IS NULL AND`$sTargetTable`.`$sTargetKeyField` = `$sSourceTable`.`$sSourceKeyField`";
 			CMDBSource::Query($sRepair);

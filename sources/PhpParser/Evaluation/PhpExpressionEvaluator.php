@@ -2,26 +2,28 @@
 
 namespace Combodo\iTop\PhpParser\Evaluation;
 
-use \Combodo\iTop\Setup\ModuleDiscovery\ModuleFileParser;
-use \Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileParser;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 use PhpParser\ConstExprEvaluator;
 use PhpParser\Node\Expr;
 use PhpParser\ParserFactory;
+
 /**
  * Used at runtime/setup time
  */
-class PhpExpressionEvaluator {
-
+class PhpExpressionEvaluator
+{
 	/** @var ConstExprEvaluator $oConstExprEvaluator */
 	private $oConstExprEvaluator;
 
-	public function __construct(array $functionsWhiteList=[], array $staticCallsWhitelist=[]) {
+	public function __construct(array $functionsWhiteList = [], array $staticCallsWhitelist = [])
+	{
 		$this->oConstExprEvaluator = new ConstExprEvaluator();
 		$this->oConstExprEvaluator->setStaticcallsWhitelist($staticCallsWhitelist);
 		$this->oConstExprEvaluator->setFunctionsWhitelist($functionsWhiteList);
 	}
 
-	public function EvaluateExpression(Expr $oExpression) : mixed
+	public function EvaluateExpression(Expr $oExpression): mixed
 	{
 		return $this->oConstExprEvaluator->evaluateDirectly($oExpression);
 	}
@@ -32,18 +34,18 @@ class PhpExpressionEvaluator {
 	 * @return bool
 	 * @throws ModuleFileReaderException
 	 */
-	public function ParseAndEvaluateBooleanExpression(string $sBooleanExpr) : bool
+	public function ParseAndEvaluateBooleanExpression(string $sBooleanExpr): bool
 	{
 		return $this->ParseAndEvaluateExpression($sBooleanExpr);
 	}
 
-	public function ParseAndEvaluateExpression(string $sExpr) : mixed
+	public function ParseAndEvaluateExpression(string $sExpr): mixed
 	{
 		$sPhpContent = <<<PHP
 <?php
 $sExpr;
 PHP;
-		try{
+		try {
 			$oParser = (new ParserFactory())->createForNewestSupportedVersion();
 			$aNodes = $oParser->parse($sPhpContent);
 			$oExpr = $aNodes[0];

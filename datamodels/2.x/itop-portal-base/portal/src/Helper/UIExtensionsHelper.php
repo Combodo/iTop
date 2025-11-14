@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-
 namespace Combodo\iTop\Portal\Helper;
-
 
 use InvalidParameterException;
 use iPortalUIExtension;
@@ -66,13 +64,11 @@ class UIExtensionsHelper
 	 */
 	public function __get($sPropName)
 	{
-		if ($this->aUIExtensions === null)
-		{
+		if ($this->aUIExtensions === null) {
 			$this->InitUIExtensions();
 		}
 
-		if (array_key_exists($sPropName, $this->aUIExtensions))
-		{
+		if (array_key_exists($sPropName, $this->aUIExtensions)) {
 			return $this->aUIExtensions[$sPropName];
 		}
 
@@ -87,8 +83,7 @@ class UIExtensionsHelper
 	 */
 	public function __isset($sPropName)
 	{
-		if ($this->aUIExtensions === null)
-		{
+		if ($this->aUIExtensions === null) {
 			$this->InitUIExtensions();
 		}
 
@@ -110,67 +105,63 @@ class UIExtensionsHelper
 	 */
 	protected function InitUIExtensions()
 	{
-		$aUIExtensions = array(
-			'css_files' => array(),
+		$aUIExtensions = [
+			'css_files' => [],
 			'css_inline' => null,
-			'js_files' => array(),
+			'js_files' => [],
 			'js_inline' => null,
-			'html' => array(),
-		);
+			'html' => [],
+		];
 
-		$aUIExtensionHooks = array(
+		$aUIExtensionHooks = [
 			iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY,
 			iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU,
 			iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT,
-		);
+		];
 
 		/** @var iPortalUIExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPortalUIExtension') as $oExtensionInstance)
-		{
+		foreach (MetaModel::EnumPlugins('iPortalUIExtension') as $oExtensionInstance) {
 			// Adding CSS files
-			$aImportPaths = array($_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/');
-			foreach ($oExtensionInstance->GetCSSFiles($this->oContainer) as $sCSSFile)
-			{
+			$aImportPaths = [$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/'];
+			foreach ($oExtensionInstance->GetCSSFiles($this->oContainer) as $sCSSFile) {
 				// Removing app root url as we need to pass a path on the file system (relative to app root)
 				$sCSSFilePath = str_replace(utils::GetAbsoluteUrlAppRoot(), '', $sCSSFile);
 				// Compiling SCSS file
-				$sCSSFileCompiled = utils::GetAbsoluteUrlAppRoot().utils::GetCSSFromSASS($sCSSFilePath,
-						$aImportPaths);
+				$sCSSFileCompiled = utils::GetAbsoluteUrlAppRoot().utils::GetCSSFromSASS(
+					$sCSSFilePath,
+					$aImportPaths
+				);
 
-				if (!in_array($sCSSFileCompiled, $aUIExtensions['css_files']))
-				{
+				if (!in_array($sCSSFileCompiled, $aUIExtensions['css_files'])) {
 					$aUIExtensions['css_files'][] = $sCSSFileCompiled;
 				}
 			}
 
 			// Adding CSS inline
 			$sCSSInline = $oExtensionInstance->GetCSSInline($this->oContainer);
-			if ($sCSSInline !== null)
-			{
+			if ($sCSSInline !== null) {
 				$aUIExtensions['css_inline'] .= "\n\n".$sCSSInline;
 			}
 
 			// Adding JS files
-			$aUIExtensions['js_files'] = array_merge($aUIExtensions['js_files'],
-				$oExtensionInstance->GetJSFiles($this->oContainer));
+			$aUIExtensions['js_files'] = array_merge(
+				$aUIExtensions['js_files'],
+				$oExtensionInstance->GetJSFiles($this->oContainer)
+			);
 
 			// Adding JS inline
 			$sJSInline = $oExtensionInstance->GetJSInline($this->oContainer);
-			if ($sJSInline !== null)
-			{
+			if ($sJSInline !== null) {
 				// Note: Semi-colon is to prevent previous script that would have omitted it.
 				$aUIExtensions['js_inline'] .= "\n\n;\n".$sJSInline;
 			}
 
 			// Adding HTML for each hook
-			foreach ($aUIExtensionHooks as $sUIExtensionHook)
-			{
+			foreach ($aUIExtensionHooks as $sUIExtensionHook) {
 				$sFunctionName = 'Get'.$sUIExtensionHook.'HTML';
 				$sHTML = $oExtensionInstance->$sFunctionName($this->oContainer);
-				if ($sHTML !== null)
-				{
-					if (!array_key_exists($sUIExtensionHook, $aUIExtensions['html']))
-					{
+				if ($sHTML !== null) {
+					if (!array_key_exists($sUIExtensionHook, $aUIExtensions['html'])) {
 						$aUIExtensions['html'][$sUIExtensionHook] = '';
 					}
 					$aUIExtensions['html'][$sUIExtensionHook] .= "\n\n".$sHTML;

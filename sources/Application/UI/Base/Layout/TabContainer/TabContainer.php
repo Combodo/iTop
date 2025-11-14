@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\TabContainer;
-
 
 use appUserPreferences;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
@@ -45,7 +45,7 @@ class TabContainer extends UIContentBlock
 		'node_modules/scrollmagic/scrollmagic/minified/ScrollMagic.min.js',
 		'js/layouts/tab-container/tab-container.js',
 		'js/layouts/tab-container/regular-tabs.js',
-		'js/layouts/tab-container/scrollable-tabs.js'
+		'js/layouts/tab-container/scrollable-tabs.js',
 	];
 
 	// Specific constants
@@ -57,7 +57,6 @@ class TabContainer extends UIContentBlock
 	public const DEFAULT_LAYOUT = self::ENUM_LAYOUT_HORIZONTAL;
 	/** @var bool */
 	public const DEFAULT_SCROLLABLE = false;
-
 
 	/** @var string $sName */
 	private $sName;
@@ -125,7 +124,7 @@ class TabContainer extends UIContentBlock
 	 */
 	public function AddAjaxTab(string $sTabCode, string $sTitle, ?string $sPlaceholder = null, ?string $sDescription = null): Tab
 	{
-		if($sPlaceholder === null){
+		if ($sPlaceholder === null) {
 			$sPlaceholder = AjaxTab::DEFAULT_TAB_PLACEHOLDER;
 		}
 		$oTab = new AjaxTab($sTabCode, $sTitle, $sPlaceholder);
@@ -184,7 +183,7 @@ class TabContainer extends UIContentBlock
 
 		return [
 			'sBlockId' => $this->GetId(),
-			'aTabs' => $aTabs
+			'aTabs' => $aTabs,
 		];
 	}
 
@@ -193,7 +192,8 @@ class TabContainer extends UIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function SetLayout($sLayout) {
+	public function SetLayout($sLayout)
+	{
 		$this->sLayout = $sLayout;
 
 		return $this;
@@ -202,7 +202,8 @@ class TabContainer extends UIContentBlock
 	/**
 	 * @return string
 	 */
-	public function GetLayout(): string {
+	public function GetLayout(): string
+	{
 		return $this->sLayout;
 	}
 
@@ -210,7 +211,8 @@ class TabContainer extends UIContentBlock
 	 * @param bool $bIsScrollable
 	 * @return $this
 	 */
-	public function SetIsScrollable($bIsScrollable) {
+	public function SetIsScrollable($bIsScrollable)
+	{
 		$this->bIsScrollable = $bIsScrollable;
 
 		return $this;
@@ -219,7 +221,8 @@ class TabContainer extends UIContentBlock
 	/**
 	 * @return bool
 	 */
-	public function GetIsScrollable(): bool {
+	public function GetIsScrollable(): bool
+	{
 		return $this->bIsScrollable;
 	}
 }

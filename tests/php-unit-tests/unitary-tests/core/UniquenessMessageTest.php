@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
@@ -16,7 +15,6 @@ use Team;
  */
 class UniquenessMessageTest extends ItopDataTestCase
 {
-
 	/** @inheritdoc */
 	protected function setUp(): void
 	{
@@ -34,10 +32,10 @@ class UniquenessMessageTest extends ItopDataTestCase
 	protected function CreateTeam($iNum)
 	{
 		/** @var Team $oTeam */
-		$oTeam = $this->createObject('Team', array(
+		$oTeam = $this->createObject('Team', [
 			'name'   => 'Name_'.$iNum,
 			'org_id' => $this->getTestOrgId(),
-		));
+		]);
 		$this->debug("Created Team {$oTeam->GetName()} ({$oTeam->GetKey()})");
 
 		return $oTeam;

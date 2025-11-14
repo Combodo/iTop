@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -53,7 +54,6 @@ class Set extends AbstractInput
 	/** @var int|null $iMinItems Minimum number of items selectable */
 
 	private ?int $iMinItems;
-
 
 	/** @var int|null $iMaxItem Maximum number of displayed options */
 	private ?int $iMaxOptions;

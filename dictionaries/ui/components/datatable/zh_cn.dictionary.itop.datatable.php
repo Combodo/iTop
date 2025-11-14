@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -17,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Display DataTable
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Datatables:Language:Processing' => '请稍候...',
 	'UI:Datatables:Language:LengthMenu' => '每页 _MENU_ 项',
 	'UI:Datatables:Language:ZeroRecords' => '未找到相关结果',
@@ -32,4 +33,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Datatables:Column:RowActions:Description' => '备注',
 	'UI:Datatables:RowActions:ConfirmationDialog' => '操作确认',
 	'UI:Datatables:RowActions:ConfirmationMessage' => '确认操作?',
-));
+]);

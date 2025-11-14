@@ -12,35 +12,42 @@ use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\If_;
 use PhpParser\ParserFactory;
 use PhpParser\Node\Expr\Assign;
-use \PhpParser\Node\Stmt\ElseIf_;
+use PhpParser\Node\Stmt\ElseIf_;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Arg;
 
-require_once __DIR__ . '/ModuleFileReaderException.php';
-require_once APPROOT . 'sources/PhpParser/Evaluation/PhpExpressionEvaluator.php';
+require_once __DIR__.'/ModuleFileReaderException.php';
+require_once APPROOT.'sources/PhpParser/Evaluation/PhpExpressionEvaluator.php';
 
-class ModuleFileReader {
+class ModuleFileReader
+{
 	private static ModuleFileReader $oInstance;
-	private	static int $iDummyClassIndex = 0;
+	private static int $iDummyClassIndex = 0;
 
-	private	PhpExpressionEvaluator $oPhpExpressionEvaluator;
+	private PhpExpressionEvaluator $oPhpExpressionEvaluator;
 
-	const FUNC_CALL_WHITELIST=[
+	public const FUNC_CALL_WHITELIST = [
 		"function_exists",
 		"class_exists",
-		"method_exists"
+		"method_exists",
 	];
 
-	const STATIC_CALLWHITELIST=[
-		"utils::GetItopVersionWikiSyntax"
+	public const MODULE_INFO_PATH = 0;
+	public const MODULE_INFO_ID = 1;
+	public const MODULE_INFO_CONFIG = 2;
+
+	public const STATIC_CALLWHITELIST = [
+		"utils::GetItopVersionWikiSyntax",
 	];
 
-	protected function __construct() {
+	protected function __construct()
+	{
 		$this->oPhpExpressionEvaluator = new PhpExpressionEvaluator(static::FUNC_CALL_WHITELIST, static::STATIC_CALLWHITELIST);
 	}
 
-	final public static function GetInstance(): ModuleFileReader {
+	final public static function GetInstance(): ModuleFileReader
+	{
 		if (!isset(static::$oInstance)) {
 			static::$oInstance = new static();
 		}
@@ -48,7 +55,8 @@ class ModuleFileReader {
 		return static::$oInstance;
 	}
 
-	final public static function SetInstance(?ModuleFileReader $oInstance): void {
+	final public static function SetInstance(?ModuleFileReader $oInstance): void
+	{
 		static::$oInstance = $oInstance;
 	}
 
@@ -58,14 +66,12 @@ class ModuleFileReader {
 	 * @return array
 	 * @throws ModuleFileReaderException
 	 */
-	public function ReadModuleFileInformation(string $sModuleFilePath) : array
+	public function ReadModuleFileInformation(string $sModuleFilePath): array
 	{
-		try
-		{
+		try {
 			$oParser = (new ParserFactory())->createForNewestSupportedVersion();
 			$aNodes = $oParser->parse(file_get_contents($sModuleFilePath));
-		}
-		catch (Error $e) {
+		} catch (Error $e) {
 			throw new ModuleFileReaderException($e->getMessage(), 0, $e, $sModuleFilePath);
 		}
 
@@ -73,7 +79,7 @@ class ModuleFileReader {
 			foreach ($aNodes as $sKey => $oNode) {
 				if ($oNode instanceof Expression) {
 					$aModuleInfo = $this->GetModuleInformationFromAddModuleCall($sModuleFilePath, $oNode);
-					if (! is_null($aModuleInfo)){
+					if (! is_null($aModuleInfo)) {
 						$this->CompleteModuleInfoWithFilePath($aModuleInfo);
 						return $aModuleInfo;
 					}
@@ -81,16 +87,16 @@ class ModuleFileReader {
 
 				if ($oNode instanceof If_) {
 					$aModuleInfo = $this->GetModuleInformationFromIf($sModuleFilePath, $oNode);
-					if (! is_null($aModuleInfo)){
+					if (! is_null($aModuleInfo)) {
 						$this->CompleteModuleInfoWithFilePath($aModuleInfo);
 						return $aModuleInfo;
 					}
 				}
 			}
-		} catch(ModuleFileReaderException $e) {
+		} catch (ModuleFileReaderException $e) {
 			// Continue...
 			throw $e;
-		} catch(Exception $e) {
+		} catch (Exception $e) {
 			// Continue...
 			throw new ModuleFileReaderException("Eval of $sModuleFilePath caused an exception: ".$e->getMessage(), 0, $e, $sModuleFilePath);
 		}
@@ -106,11 +112,10 @@ class ModuleFileReader {
 	 * @return array
 	 * @throws ModuleFileReaderException
 	 */
-	public function ReadModuleFileInformationUnsafe(string $sModuleFilePath) : array
+	public function ReadModuleFileInformationUnsafe(string $sModuleFilePath): array
 	{
 		$aModuleInfo = []; // will be filled by the "eval" line below...
-		try
-		{
+		try {
 			$aMatches = [];
 			$sModuleFileContents = file_get_contents($sModuleFilePath);
 			$sModuleFileContents = str_replace(['<?php', '?>'], '', $sModuleFileContents);
@@ -118,10 +123,8 @@ class ModuleFileReader {
 			preg_match_all('/class ([A-Za-z0-9_]+) extends ([A-Za-z0-9_]+)/', $sModuleFileContents, $aMatches);
 			//print_r($aMatches);
 			$idx = 0;
-			foreach($aMatches[1] as $sClassName)
-			{
-				if (class_exists($sClassName))
-				{
+			foreach ($aMatches[1] as $sClassName) {
+				if (class_exists($sClassName)) {
 					// rename any class declaration inside the code to prevent a "duplicate class" declaration
 					// and change its parent class as well so that nobody will find it and try to execute it
 					// Note: don't use the same naming scheme as ModuleDiscovery otherwise you 'll have the duplicate class error again !!
@@ -133,25 +136,18 @@ class ModuleFileReader {
 			$sModuleFileContents = str_replace(['SetupWebPage::AddModule', 'ModuleDiscovery::AddModule'], '$aModuleInfo = array', $sModuleFileContents);
 			eval($sModuleFileContents); // Assigns $aModuleInfo
 
-			if (count($aModuleInfo) === 0)
-			{
+			if (count($aModuleInfo) === 0) {
 				throw new ModuleFileReaderException("Eval of $sModuleFilePath did  not return the expected information...");
 			}
 
 			$this->CompleteModuleInfoWithFilePath($aModuleInfo);
-		}
-		catch(ModuleFileReaderException $e)
-		{
+		} catch (ModuleFileReaderException $e) {
 			// Continue...
 			throw $e;
-		}
-		catch(ParseError $e)
-		{
+		} catch (ParseError $e) {
 			// Continue...
 			throw new ModuleFileReaderException("Eval of $sModuleFilePath caused a parse error: ".$e->getMessage()." at line ".$e->getLine());
-		}
-		catch(Exception $e)
-		{
+		} catch (Exception $e) {
 			// Continue...
 			throw new ModuleFileReaderException("Eval of $sModuleFilePath caused an exception: ".$e->getMessage(), 0, $e);
 		}
@@ -167,14 +163,14 @@ class ModuleFileReader {
 	 */
 	private function CompleteModuleInfoWithFilePath(array &$aModuleInfo)
 	{
-		if (count($aModuleInfo)==3) {
-			$aModuleInfo[2]['module_file_path'] = $aModuleInfo[0];
+		if (count($aModuleInfo) == 3) {
+			$aModuleInfo[static::MODULE_INFO_CONFIG]['module_file_path'] = $aModuleInfo[static::MODULE_INFO_PATH];
 		}
 	}
 
-	public function GetAndCheckModuleInstallerClass($aModuleInfo) : ?string
+	public function GetAndCheckModuleInstallerClass($aModuleInfo): ?string
 	{
-		if (! isset($aModuleInfo['installer'])){
+		if (! isset($aModuleInfo['installer'])) {
 			return null;
 		}
 
@@ -184,12 +180,10 @@ class ModuleFileReader {
 			$this->ReadModuleFileInformationUnsafe($sModuleFilePath);
 		}
 
-		if (!class_exists($sModuleInstallerClass))
-		{
+		if (!class_exists($sModuleInstallerClass)) {
 			throw new CoreException("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
 		}
-		if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI'))
-		{
+		if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI')) {
 			throw new CoreException("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
 		}
 
@@ -203,7 +197,7 @@ class ModuleFileReader {
 	 * @return array|null
 	 * @throws ModuleFileReaderException
 	 */
-	private function GetModuleInformationFromAddModuleCall(string $sModuleFilePath, \PhpParser\Node\Stmt\Expression $oExpression) : ?array
+	private function GetModuleInformationFromAddModuleCall(string $sModuleFilePath, \PhpParser\Node\Stmt\Expression $oExpression): ?array
 	{
 		/** @var Assign $oAssignation */
 		$oAssignation = $oExpression->expr;
@@ -228,36 +222,36 @@ class ModuleFileReader {
 
 		$oModuleId = $aArgs[1];
 		if (false === ($oModuleId instanceof Arg)) {
-			throw new ModuleFileReaderException("2nd parameter to SetupWebPage::AddModule call issue: " . get_class($oModuleId), 0, null, $sModuleFilePath);
+			throw new ModuleFileReaderException("2nd parameter to SetupWebPage::AddModule call issue: ".get_class($oModuleId), 0, null, $sModuleFilePath);
 		}
 
 		/** @var Arg $oModuleId */
 		if (false === ($oModuleId->value instanceof String_)) {
-			throw new ModuleFileReaderException("2nd parameter to SetupWebPage::AddModule not a string: " . get_class($oModuleId->value), 0, null, $sModuleFilePath);
+			throw new ModuleFileReaderException("2nd parameter to SetupWebPage::AddModule not a string: ".get_class($oModuleId->value), 0, null, $sModuleFilePath);
 		}
 
 		$sModuleId = $this->oPhpExpressionEvaluator->EvaluateExpression($oModuleId->value);
 
 		$oModuleConfigInfo = $aArgs[2];
 		if (false === ($oModuleConfigInfo instanceof Arg)) {
-			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule call issue: " . get_class($oModuleConfigInfo), 0, null, $sModuleFilePath);
+			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule call issue: ".get_class($oModuleConfigInfo), 0, null, $sModuleFilePath);
 		}
 
 		/** @var Arg $oModuleConfigInfo */
 		if (false === ($oModuleConfigInfo->value instanceof Array_)) {
-			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
+			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule not an array: ".get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
 		}
 
 		$aModuleConfig = $this->oPhpExpressionEvaluator->EvaluateExpression($oModuleConfigInfo->value);
 
-		if (! is_array($aModuleConfig)){
-			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule not an array: " . get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
+		if (! is_array($aModuleConfig)) {
+			throw new ModuleFileReaderException("3rd parameter to SetupWebPage::AddModule not an array: ".get_class($oModuleConfigInfo->value), 0, null, $sModuleFilePath);
 		}
 
 		return [
-			$sModuleFilePath,
-			$sModuleId,
-			$aModuleConfig,
+			static::MODULE_INFO_PATH => $sModuleFilePath,
+			static::MODULE_INFO_ID => $sModuleId,
+			static::MODULE_INFO_CONFIG => $aModuleConfig,
 		];
 	}
 
@@ -268,7 +262,7 @@ class ModuleFileReader {
 	 * @return array|null
 	 * @throws ModuleFileReaderException
 	 */
-	private function GetModuleInformationFromIf(string $sModuleFilePath, \PhpParser\Node\Stmt\If_ $oNode) : ?array
+	private function GetModuleInformationFromIf(string $sModuleFilePath, \PhpParser\Node\Stmt\If_ $oNode): ?array
 	{
 		$bCondition = $this->oPhpExpressionEvaluator->EvaluateExpression($oNode->cond);
 		if ($bCondition) {
@@ -301,7 +295,7 @@ class ModuleFileReader {
 		return null;
 	}
 
-	private function GetModuleConfigurationFromStatement(string $sModuleFilePath, array $aStmts) : ?array
+	private function GetModuleConfigurationFromStatement(string $sModuleFilePath, array $aStmts): ?array
 	{
 		foreach ($aStmts as $oSubNode) {
 			if ($oSubNode instanceof Expression) {

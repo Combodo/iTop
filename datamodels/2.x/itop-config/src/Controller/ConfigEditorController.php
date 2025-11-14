@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -17,25 +18,26 @@ use utils;
 
 class ConfigEditorController extends Controller
 {
-    public const ROUTE_NAMESPACE = 'config_editor';
-    public const MODULE_NAME = "itop-config";
+	public const ROUTE_NAMESPACE = 'config_editor';
+	public const MODULE_NAME = "itop-config";
 	protected array $aWarnings = [];
 	protected array $aInfo = [];
 	protected array $aErrors = [];
 	protected array $aSuccesses = [];
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct(MODULESROOT.static::MODULE_NAME.'/templates', static::MODULE_NAME);
 		$this->SetDebugAllowed(false);
 	}
 
-	public function OperationEdit() : void
-    {
+	public function OperationEdit(): void
+	{
 		$bShowEditor = true;
 		$sConfigChecksum = '';
 		$sCurrentConfig = '';
 
-	    try {
+		try {
 			$sOperation = utils::ReadParam('edit_operation');
 			if (MetaModel::GetConfig()->Get('demo_mode')) {
 				throw new Exception(Dict::S('config-not-allowed-in-demo'), iTopConfigValidator::CONFIG_INFO);
@@ -53,8 +55,7 @@ class ConfigEditorController extends Controller
 			try {
 				if ($sOperation == 'revert') {
 					$this->AddAlert(Dict::S('config-reverted'), iTopConfigValidator::CONFIG_WARNING);
-				}
-				else if ($sOperation == 'save') {
+				} elseif ($sOperation == 'save') {
 					$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 					if (!utils::IsTransactionValid($sTransactionId)) {
 						throw new Exception(Dict::S('config-error-transaction'), iTopConfigValidator::CONFIG_ERROR);
@@ -100,24 +101,21 @@ class ConfigEditorController extends Controller
 
 					$this->AddAlert($oValidator->CheckAsyncTasksRetryConfig($oTempConfig), iTopConfigValidator::CONFIG_WARNING);
 
-
 					// Read the config from disk after save
 					$sCurrentConfig = file_get_contents($sConfigFile);
 					$sConfigChecksum = md5($sCurrentConfig);
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$this->AddAlertFromException($e);
 			}
 
 			$this->AddAceScripts();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$bShowEditor = false;
 			$this->AddAlertFromException($e);
 		}
 
-	    // display page
+		// display page
 		$this->DisplayPage([
 			'aErrors' => $this->aErrors,
 			'aWarnings' => $this->aWarnings,
@@ -128,7 +126,7 @@ class ConfigEditorController extends Controller
 			'sChecksum' => $sConfigChecksum,
 			'sPrevConfig' => $sCurrentConfig,
 			'sNewConfig' => $sCurrentConfig,
-        ]);
+		]);
 	}
 
 	/**
@@ -144,7 +142,6 @@ class ConfigEditorController extends Controller
 		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().$sAceDir.'ext-searchbox.js');
 	}
 
-
 	public function AddAlertFromException(Exception $e): void
 	{
 		$this->AddAlert($e->getMessage(), $e->getCode());
@@ -159,16 +156,16 @@ class ConfigEditorController extends Controller
 			return;
 		}
 		switch ($iLevel) {
-			case iTopConfigValidator::CONFIG_SUCCESS :
+			case iTopConfigValidator::CONFIG_SUCCESS:
 				$this->aSuccesses[] = $sMessage;
 				break;
-			case iTopConfigValidator::CONFIG_WARNING :
+			case iTopConfigValidator::CONFIG_WARNING:
 				$this->aWarnings[] = $sMessage;
 				break;
-			case iTopConfigValidator::CONFIG_INFO :
+			case iTopConfigValidator::CONFIG_INFO:
 				$this->aInfo[] = $sMessage;
 				break;
-			default :
+			default:
 				$this->aErrors[] = $sMessage;
 		}
 	}

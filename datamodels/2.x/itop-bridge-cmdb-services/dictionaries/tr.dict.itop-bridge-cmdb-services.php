@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkFunctionalCIToProviderContract' => 'İşlevsel CI / Sağlayıcı Sözleşmesi bağla',
 	'Class:lnkFunctionalCIToProviderContract+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
@@ -22,13 +23,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI Adı',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToService
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkFunctionalCIToService' => 'İşlevsel CI / servis bağla',
 	'Class:lnkFunctionalCIToService+' => '~~',
 	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s~~',
@@ -40,26 +41,26 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'CI Adı',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '~~',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Tedarikçi Sözleşmeleri',
 	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Bu yapılandırma öğesi için tüm tedarikçi sözleşmeleri',
 	'Class:FunctionalCI/Attribute:services_list' => 'Hizmetler',
 	'Class:FunctionalCI/Attribute:services_list+' => 'Bu yapılandırma öğesinden etkilenen tüm hizmetler',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Document/Attribute:contracts_list' => 'Contracts~~',
 	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
 	'Class:Document/Attribute:services_list' => 'Services~~',
 	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
-));
+]);

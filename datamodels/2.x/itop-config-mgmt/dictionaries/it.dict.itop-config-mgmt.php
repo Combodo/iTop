@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Relation:impacts/Description' => 'Elementi impattati da...',
 	'Relation:impacts/DownStream' => 'Impatto...',
 	'Relation:impacts/DownStream+' => 'Elementi impattati da...',
@@ -21,8 +22,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Relation:impacts/LoadData' => 'Carica dati',
 	'Relation:impacts/NoFilteredData' => 'seleziona oggetti e carica dati',
 	'Relation:impacts/FilteredData' => 'Dati filtrati',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -65,7 +65,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 // Class: lnkContactToFunctionalCI
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContactToFunctionalCI' => 'Link Contact / FunctionalCI',
 	'Class:lnkContactToFunctionalCI+' => '~~',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s',
@@ -77,13 +77,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Nome Contatto',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '~~',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:FunctionalCI' => 'CI Funzionale',
 	'Class:FunctionalCI+' => '',
 	'Class:FunctionalCI/Attribute:name' => 'Nome',
@@ -116,13 +116,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Ticket attivi',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Ticket attivi che stanno influenzando questa CI funzionale',
-));
+]);
 
 //
 // Class: PhysicalDevice
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PhysicalDevice' => 'Dispositivo Fisico',
 	'Class:PhysicalDevice+' => '~~',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s',
@@ -156,13 +156,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:PhysicalDevice/Attribute:purchase_date+' => '~~',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Scadenza garanzia',
 	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '~~',
-));
+]);
 
 //
 // Class: Rack
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Rack' => 'Rack',
 	'Class:Rack+' => '~~',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s',
@@ -172,64 +172,64 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Rack/Attribute:device_list+' => 'Tutti i dispositivi fisici installati in questo rack',
 	'Class:Rack/Attribute:enclosure_list' => 'Contenitori',
 	'Class:Rack/Attribute:enclosure_list+' => 'Tutti i contenitori in questo rack',
-));
+]);
 
 //
 // Class: TelephonyCI
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TelephonyCI' => 'CI Telefoni',
 	'Class:TelephonyCI+' => '~~',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Numero di telefono',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '~~',
-));
+]);
 
 //
 // Class: Phone
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Phone' => 'Telefono fisso',
 	'Class:Phone+' => '~~',
-));
+]);
 
 //
 // Class: MobilePhone
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:MobilePhone' => 'Cellulari',
 	'Class:MobilePhone+' => '',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
 	'Class:MobilePhone/Attribute:imei+' => '',
 	'Class:MobilePhone/Attribute:hw_pin' => 'Hardware PIN',
 	'Class:MobilePhone/Attribute:hw_pin+' => '',
-));
+]);
 
 //
 // Class: IPPhone
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:IPPhone' => 'Telefoni IP / VoIP',
 	'Class:IPPhone+' => '~~',
-));
+]);
 
 //
 // Class: Tablet
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Tablet' => 'Tablet',
 	'Class:Tablet+' => '~~',
-));
+]);
 
 //
 // Class: ConnectableCI
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ConnectableCI' => 'CI collegabile',
 	'Class:ConnectableCI+' => 'CI fisico',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s',
@@ -237,13 +237,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Tutti i dispositivi di rete collegati a questo dispositivo',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Interfacce di rete',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Tutte le interfacce di rete fisiche',
-));
+]);
 
 //
 // Class: DatacenterDevice
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DatacenterDevice' => 'Datacenter Device',
 	'Class:DatacenterDevice+' => '~~',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s',
@@ -275,13 +275,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'Il dispositivo è operativo se almeno una connessione elettrica (A o B) è attiva',
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'Il dispositivo è operativo se tutte le sue connessioni elettriche sono attive',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'Il dispositivo è operativo se almeno il %1$s %% delle sue connessioni elettriche sono attive',
-));
+]);
 
 //
 // Class: NetworkDevice
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NetworkDevice' => 'Dispositivi di rete',
 	'Class:NetworkDevice+' => '',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s',
@@ -297,13 +297,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:NetworkDevice/Attribute:iosversion_name+' => '~~',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
 	'Class:NetworkDevice/Attribute:ram+' => '',
-));
+]);
 
 //
 // Class: Server
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Server' => 'Server',
 	'Class:Server+' => '',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s',
@@ -325,61 +325,61 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Server/Attribute:ram+' => '',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Volumi Logici',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'Tutti i volumi logici collegati a questo server',
-));
+]);
 
 //
 // Class: StorageSystem
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:StorageSystem' => 'Sistema di Archiviazione',
 	'Class:StorageSystem+' => '~~',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Volumi Logici',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Tutti i volumi logici in questo sistema di archiviazione',
-));
+]);
 
 //
 // Class: SANSwitch
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SANSwitch' => 'SAN Switch',
 	'Class:SANSwitch+' => '~~',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Dispositivi',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Tutti i dispositivi collegati a questo switch SAN',
-));
+]);
 
 //
 // Class: TapeLibrary
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TapeLibrary' => 'Libreria di nastri',
 	'Class:TapeLibrary+' => '~~',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Nastri',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Tutti i nastri nella libreria di nastri',
-));
+]);
 
 //
 // Class: NAS
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '~~',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'File system',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Tutti i file system in questo NAS',
-));
+]);
 
 //
 // Class: PC
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PC' => 'PC',
 	'Class:PC+' => '',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s',
@@ -401,45 +401,45 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:PC/Attribute:type/Value:desktop+' => 'desktop~~',
 	'Class:PC/Attribute:type/Value:laptop' => 'laptop~~',
 	'Class:PC/Attribute:type/Value:laptop+' => 'laptop~~',
-));
+]);
 
 //
 // Class: Printer
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Printer' => 'Stampante',
 	'Class:Printer+' => '',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s',
-));
+]);
 
 //
 // Class: PowerConnection
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PowerConnection' => 'Connessione di Alimentazione',
 	'Class:PowerConnection+' => '~~',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s',
-));
+]);
 
 //
 // Class: PowerSource
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PowerSource' => 'Sorgente di Alimentazione',
 	'Class:PowerSource+' => '~~',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDU',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Tutte le PDU che utilizzano questa sorgente di alimentazione',
-));
+]);
 
 //
 // Class: PDU
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => '~~',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s',
@@ -451,23 +451,23 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:PDU/Attribute:powerstart_id+' => '~~',
 	'Class:PDU/Attribute:powerstart_name' => 'Nome Avvio Alimentazione',
 	'Class:PDU/Attribute:powerstart_name+' => '~~',
-));
+]);
 
 //
 // Class: Peripheral
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Peripheral' => 'Periferica',
 	'Class:Peripheral+' => '~~',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s',
-));
+]);
 
 //
 // Class: Enclosure
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Enclosure' => 'Contenitore',
 	'Class:Enclosure+' => '~~',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
@@ -479,13 +479,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Enclosure/Attribute:nb_u+' => '~~',
 	'Class:Enclosure/Attribute:device_list' => 'Dispositivi',
 	'Class:Enclosure/Attribute:device_list+' => 'Tutti i dispositivi in questo contenitore',
-));
+]);
 
 //
 // Class: ApplicationSolution
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ApplicationSolution' => 'Soluzione Applicativa',
 	'Class:ApplicationSolution+' => '',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
@@ -502,13 +502,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'La soluzione è attiva se tutti gli elementi di configurazione sono attivi',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'La soluzione è attiva se almeno %1$s elemento(i) di configurazione sono attivi',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'La soluzione è attiva se almeno il %1$s %% degli elementi di configurazione sono attivi',
-));
+]);
 
 //
 // Class: BusinessProcess
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:BusinessProcess' => 'Processi aziendali',
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Soluzioni applicative',
@@ -519,13 +519,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:BusinessProcess/Attribute:status/Value:active+' => 'attivo',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'inattivo',
 	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'inattivo',
-));
+]);
 
 //
 // Class: SoftwareInstance
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SoftwareInstance' => 'Istanza Software',
 	'Class:SoftwareInstance+' => '',
 	'Class:SoftwareInstance/Attribute:system_id' => 'Sistema',
@@ -548,64 +548,64 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'attivo',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'inattivo',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'inattivo',
-));
+]);
 
 //
 // Class: Middleware
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Middleware' => 'Middleware',
 	'Class:Middleware+' => '~~',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Istanze Middleware',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Tutte le istanze del middleware fornite da questo middleware',
-));
+]);
 
 //
 // Class: DBServer
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DBServer' => 'Database',
 	'Class:DBServer+' => 'Database server SW',
 	'Class:DBServer/Attribute:dbschema_list' => 'Schema Database',
 	'Class:DBServer/Attribute:dbschema_list+' => 'Tutti gli schemi del database per questo server di database',
-));
+]);
 
 //
 // Class: WebServer
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:WebServer' => 'Web server',
 	'Class:WebServer+' => '~~',
 	'Class:WebServer/Attribute:webapp_list' => 'Applicazioni web',
 	'Class:WebServer/Attribute:webapp_list+' => 'Tutte le applicazioni web disponibili su questo server web',
-));
+]);
 
 //
 // Class: PCSoftware
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PCSoftware' => 'Software PC',
 	'Class:PCSoftware+' => '~~',
-));
+]);
 
 //
 // Class: OtherSoftware
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OtherSoftware' => 'Altro Software',
 	'Class:OtherSoftware+' => '~~',
-));
+]);
 
 //
 // Class: MiddlewareInstance
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:MiddlewareInstance' => 'Istanza Middleware',
 	'Class:MiddlewareInstance+' => '~~',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
@@ -613,13 +613,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nome Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
-));
+]);
 
 //
 // Class: DatabaseSchema
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DatabaseSchema' => 'Schema del Database',
 	'Class:DatabaseSchema+' => '~~',
 	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
@@ -627,13 +627,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Nome Server del Database',
 	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
-));
+]);
 
 //
 // Class: WebApplication
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:WebApplication' => 'Web Application',
 	'Class:WebApplication+' => '~~',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
@@ -643,14 +643,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:WebApplication/Attribute:webserver_name+' => '~~',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '~~',
-));
-
+]);
 
 //
 // Class: VirtualDevice
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:VirtualDevice' => 'Dispositivo virtuale',
 	'Class:VirtualDevice+' => '~~',
 	'Class:VirtualDevice/Attribute:status' => 'Stato',
@@ -665,24 +664,24 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'In Stock',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Volumi Logici',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Tutti i volumi logici utilizzati da questo dispositivo',
-));
+]);
 
 //
 // Class: VirtualHost
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:VirtualHost' => 'Host Virtuale',
 	'Class:VirtualHost+' => '~~',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Macchine virtuali',
 	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Tutte le macchine virtuali ospitate da questo host',
-));
+]);
 
 //
 // Class: Hypervisor
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Hypervisor' => 'Hypervisor',
 	'Class:Hypervisor+' => '~~',
 	'Class:Hypervisor/Attribute:farm_id' => 'Farm',
@@ -693,13 +692,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Hypervisor/Attribute:server_id+' => '~~',
 	'Class:Hypervisor/Attribute:server_name' => 'Nome Server',
 	'Class:Hypervisor/Attribute:server_name+' => '~~',
-));
+]);
 
 //
 // Class: Farm
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Farm' => 'Farm',
 	'Class:Farm+' => '~~',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisor',
@@ -708,13 +707,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Farm/Attribute:redundancy/disabled' => 'La farm è attiva se tutti gli hypervisor sono attivi',
 	'Class:Farm/Attribute:redundancy/count' => 'La farm è attiva se almeno %1$s hypervisor è(sono) attivo(i)',
 	'Class:Farm/Attribute:redundancy/percent' => 'La farm è attiva se almeno %1$s %% degli hypervisor è attivo',
-));
+]);
 
 //
 // Class: VirtualMachine
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:VirtualMachine' => 'Macchina virtuale',
 	'Class:VirtualMachine+' => '~~',
 	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
@@ -742,13 +741,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:VirtualMachine/Attribute:managementip+' => '~~',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Interfacce di rete logiche',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Tutte le interfacce di rete logiche',
-));
+]);
 
 //
 // Class: LogicalVolume
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:LogicalVolume' => 'Volume Logico',
 	'Class:LogicalVolume+' => '~~',
 	'Class:LogicalVolume/Attribute:name' => 'Nome',
@@ -769,13 +768,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:LogicalVolume/Attribute:servers_list+' => 'Tutti i server che utilizzano questo volume',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Dispositivi Virtuali',
 	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Tutti i dispositivi virtuali che utilizzano questo volume',
-));
+]);
 
 //
 // Class: lnkServerToVolume
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkServerToVolume' => 'Collegamento Server / Volume',
 	'Class:lnkServerToVolume+' => '~~',
 	'Class:lnkServerToVolume/Name' => '%1$s / %2$s',
@@ -789,13 +788,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
 	'Class:lnkServerToVolume/Attribute:size_used' => 'Dimensione utilizzata',
 	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
-));
+]);
 
 //
 // Class: lnkVirtualDeviceToVolume
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkVirtualDeviceToVolume' => 'Collegamento dispositivo virtuale / volume',
 	'Class:lnkVirtualDeviceToVolume+' => '~~',
 	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
@@ -809,13 +808,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Dimensione utilizzata',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
-));
+]);
 
 //
 // Class: lnkSanToDatacenterDevice
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkSanToDatacenterDevice' => 'Collegamento SAN / Dispositivo Datacenter',
 	'Class:lnkSanToDatacenterDevice+' => '~~',
 	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
@@ -831,13 +830,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Porta dispositivo FC',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
-));
+]);
 
 //
 // Class: Tape
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Tape' => 'Nastro',
 	'Class:Tape+' => '~~',
 	'Class:Tape/Attribute:name' => 'Nome',
@@ -850,13 +849,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
 	'Class:Tape/Attribute:tapelibrary_name' => 'Nome della libreria di nastri',
 	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
-));
+]);
 
 //
 // Class: NASFileSystem
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NASFileSystem' => 'File System NAS',
 	'Class:NASFileSystem+' => '~~',
 	'Class:NASFileSystem/Attribute:name' => 'Nome',
@@ -871,13 +870,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
 	'Class:NASFileSystem/Attribute:nas_name' => 'Nome del NAS',
 	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
-));
+]);
 
 //
 // Class: Software
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Software' => 'Software',
 	'Class:Software+' => '',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s',
@@ -907,13 +906,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Software/Attribute:softwarepatch_list+' => 'Tutte le patch per questo software',
 	'Class:Software/Attribute:softwarelicence_list' => 'Licenze Software',
 	'Class:Software/Attribute:softwarelicence_list+' => 'Tutte le licenze per questo software',
-));
+]);
 
 //
 // Class: Patch
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Patch' => 'Patch',
 	'Class:Patch+' => '',
 	'Class:Patch/Attribute:name' => 'Nome',
@@ -924,13 +923,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:finalclass' => 'Tipo',
 	'Class:Patch/Attribute:finalclass+' => 'Nome della classe finale',
-));
+]);
 
 //
 // Class: OSPatch
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OSPatch' => 'Patch del Sistema Operativo',
 	'Class:OSPatch+' => '~~',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Dispositivi',
@@ -939,13 +938,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:OSPatch/Attribute:osversion_id+' => '~~',
 	'Class:OSPatch/Attribute:osversion_name' => 'Nome della Versione del Sistema Operativo',
 	'Class:OSPatch/Attribute:osversion_name+' => '~~',
-));
+]);
 
 //
 // Class: SoftwarePatch
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SoftwarePatch' => 'Patch del Software',
 	'Class:SoftwarePatch+' => '~~',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Software',
@@ -954,13 +953,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SoftwarePatch/Attribute:software_name+' => '~~',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Istanze del Software',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Tutti i sistemi in cui questa patch del software è installata',
-));
+]);
 
 //
 // Class: Licence
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Licence' => 'Licenza',
 	'Class:Licence+' => '',
 	'Class:Licence/Attribute:name' => 'Nome',
@@ -989,13 +988,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'sì',
 	'Class:Licence/Attribute:finalclass' => 'Tipo',
 	'Class:Licence/Attribute:finalclass+' => 'Nome della classe finale',
-));
+]);
 
 //
 // Class: OSLicence
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OSLicence' => 'Licenza OS',
 	'Class:OSLicence+' => '~~',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
@@ -1007,13 +1006,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Tutte le macchine virtuali in cui questa licenza è utilizzata',
 	'Class:OSLicence/Attribute:servers_list' => 'Server',
 	'Class:OSLicence/Attribute:servers_list+' => 'Tutti i server in cui questa licenza è utilizzata',
-));
+]);
 
 //
 // Class: SoftwareLicence
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SoftwareLicence' => 'Licenza software',
 	'Class:SoftwareLicence+' => '~~',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s',
@@ -1023,13 +1022,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SoftwareLicence/Attribute:software_name+' => '~~',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Istanze software',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Tutti i sistemi in cui questa licenza è utilizzata',
-));
+]);
 
 //
 // Class: lnkDocumentToLicence
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToLicence' => 'Link Documento/Licenza',
 	'Class:lnkDocumentToLicence+' => '~~',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s',
@@ -1041,48 +1040,48 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Nome documento',
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Class: OSVersion
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OSVersion' => 'Versione del Sistema Operativo',
 	'Class:OSVersion+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_id' => 'Famiglia del Sistema Operativo',
 	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nome della Famiglia del Sistema Operativo',
 	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
-));
+]);
 
 //
 // Class: OSFamily
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OSFamily' => 'Famiglia del Sistema Operativo',
 	'Class:OSFamily+' => '~~',
-));
+]);
 
 //
 // Class: Brand
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Brand' => 'Marca',
 	'Class:Brand+' => '~~',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Dispositivi fisici',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Tutti i dispositivi fisici corrispondenti a questa marca',
 	'Class:Brand/UniquenessRule:name+' => 'Il nome deve essere univoco',
 	'Class:Brand/UniquenessRule:name' => 'Questa marca esiste già',
-));
+]);
 
 //
 // Class: Model
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Model' => 'Modello',
 	'Class:Model+' => '~~',
 	'Class:Model/Attribute/type/Value:NAS+' => 'NAS',
@@ -1157,37 +1156,37 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Model/Attribute:physicaldevices_list+' => 'Tutti i dispositivi fisici corrispondenti a questo modello',
 	'Class:Model/UniquenessRule:name_brand+' => 'Il nome deve essere univoco nella marca',
 	'Class:Model/UniquenessRule:name_brand' => 'Questo modello esiste già per questa marca',
-));
+]);
 
 //
 // Class: NetworkDeviceType
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NetworkDeviceType' => 'Tipo di Dispositivo di Rete',
 	'Class:NetworkDeviceType+' => '~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Dispositivi di Rete',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Tutti i dispositivi di rete corrispondenti a questo tipo',
-));
+]);
 
 //
 // Class: IOSVersion
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:IOSVersion' => 'Versione IOS',
 	'Class:IOSVersion+' => '~~',
 	'Class:IOSVersion/Attribute:brand_id' => 'Marca',
 	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nome della marca',
 	'Class:IOSVersion/Attribute:brand_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkDocumentToPatch
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToPatch' => 'Collegamento documento / patch',
 	'Class:lnkDocumentToPatch+' => '~~',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s',
@@ -1199,13 +1198,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkDocumentToPatch/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Nome del documento',
 	'Class:lnkDocumentToPatch/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkSoftwareInstanceToSoftwarePatch
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Collegamento istanza software / patch software',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s',
@@ -1217,13 +1216,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Nome dell\'istanza software',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToOSPatch
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkFunctionalCIToOSPatch' => 'Collegamento CI funzionale / patch OS',
 	'Class:lnkFunctionalCIToOSPatch+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s',
@@ -1235,13 +1234,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'Nome del CI funzionale',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkDocumentToSoftware
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToSoftware' => 'Collegamento documento / software',
 	'Class:lnkDocumentToSoftware+' => '~~',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s',
@@ -1253,13 +1252,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Nome del documento',
 	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Class: Subnet
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Subnet' => 'Subnet',
 	'Class:Subnet+' => '',
 	'Class:Subnet/Name' => '%1$s/%2$s',
@@ -1278,13 +1277,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Subnet/Attribute:ip_mask+' => '',
 	'Class:Subnet/Attribute:vlans_list' => 'VLANs',
 	'Class:Subnet/Attribute:vlans_list+' => '~~',
-));
+]);
 
 //
 // Class: VLAN
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:VLAN' => 'VLAN',
 	'Class:VLAN+' => '~~',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag',
@@ -1299,13 +1298,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:VLAN/Attribute:subnets_list+' => '~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Interfacce di rete fisiche',
 	'Class:VLAN/Attribute:physicalinterfaces_list+' => '~~',
-));
+]);
 
 //
 // Class: lnkSubnetToVLAN
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkSubnetToVLAN' => 'Link Subnet / VLAN',
 	'Class:lnkSubnetToVLAN+' => '~~',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s',
@@ -1319,26 +1318,26 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN tag',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '~~',
-));
+]);
 
 //
 // Class: NetworkInterface
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NetworkInterface' => 'Interfaccia di Rete',
 	'Class:NetworkInterface+' => '',
 	'Class:NetworkInterface/Attribute:name' => 'Nome',
 	'Class:NetworkInterface/Attribute:name+' => '~~',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Tipo',
 	'Class:NetworkInterface/Attribute:finalclass+' => 'Nome della classe finale',
-));
+]);
 
 //
 // Class: IPInterface
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:IPInterface' => 'Interfaccia IP',
 	'Class:IPInterface+' => '~~',
 	'Class:IPInterface/Attribute:ipaddress' => 'Indirizzo IP',
@@ -1353,13 +1352,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPInterface/Attribute:ipmask+' => '~~',
 	'Class:IPInterface/Attribute:speed' => 'Velocità',
 	'Class:IPInterface/Attribute:speed+' => '~~',
-));
+]);
 
 //
 // Class: PhysicalInterface
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:PhysicalInterface' => 'Interfaccia fisica',
 	'Class:PhysicalInterface+' => '~~',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s',
@@ -1369,13 +1368,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '~~',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLAN',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '~~',
-));
+]);
 
 //
 // Class: lnkPhysicalInterfaceToVLAN
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Collegamento interfaccia fisica / VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s',
@@ -1391,27 +1390,26 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'Tag VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '~~',
-));
-
+]);
 
 //
 // Class: LogicalInterface
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:LogicalInterface' => 'Interfaccia logica',
 	'Class:LogicalInterface+' => '~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Macchina Virtuale',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Nome Macchina Virtuale',
 	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '~~',
-));
+]);
 
 //
 // Class: FiberChannelInterface
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:FiberChannelInterface' => 'Interfaccia Fibre Channel',
 	'Class:FiberChannelInterface+' => '~~',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Velocità',
@@ -1424,13 +1422,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Nome Dispositivo',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkConnectableCIToNetworkDevice
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkConnectableCIToNetworkDevice' => 'Collega CI collegabile / Dispositivo di rete',
 	'Class:lnkConnectableCIToNetworkDevice+' => '~~',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s',
@@ -1452,13 +1450,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'Collegamento verso il basso',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'Collegamento verso l\'alto',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'Collegamento verso l\'alto',
-));
+]);
 
 //
 // Class: lnkApplicationSolutionToFunctionalCI
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Collega soluzione applicativa / CI funzionale',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s',
@@ -1470,13 +1468,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Nome CI funzionale',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkApplicationSolutionToBusinessProcess
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Collega Soluzione Applicativa / Processo Aziendale',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s',
@@ -1488,13 +1486,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Nome Soluzione Applicativa',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '~~',
-));
+]);
 
 //
 // Class: Group
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Group' => 'Gruppo',
 	'Class:Group+' => '',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s',
@@ -1524,13 +1522,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Group/Attribute:ci_list+' => 'Tutti gli elementi di configurazione collegati a questo gruppo',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Nome del gruppo padre',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
-));
+]);
 
 //
 // Class: lnkGroupToCI
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkGroupToCI' => 'Gruppo / CI',
 	'Class:lnkGroupToCI+' => '',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s',
@@ -1544,11 +1542,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Motivo',
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Server:baseinfo' => 'Informazioni generali',
 	'Server:Date' => 'Date',
 	'Server:moreinfo' => 'Ulteriori informazioni',
@@ -1561,14 +1559,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'IP liberi: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Ecco un estratto di 10 indirizzi IP liberi',
 	'Class:Document:PreviewTab' => 'Anteprima',
-));
-
+]);
 
 //
 // Class: lnkDocumentToFunctionalCI
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToFunctionalCI' => 'Collegamento Documento / FunctionalCI',
 	'Class:lnkDocumentToFunctionalCI+' => '~~',
 	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s',
@@ -1580,13 +1577,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nome documento',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:Application' => 'Applicazioni',
 	'Menu:Application+' => 'Tutte le applicazioni',
 	'Menu:DBServer' => 'Server di Database',
@@ -1631,5 +1628,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:OSVersion+' => '~~',
 	'Menu:Software' => 'Catalogo software',
 	'Menu:Software+' => 'Catalogo software',
-));
-
+]);

@@ -10,10 +10,10 @@
  */
 interface iBackofficeSassExtension
 {
-    /**
-     * @return string
-     * @see \iTopWebPage::$a_styles
-     * @api
-     */
-    public function GetSass(): string;
+	/**
+	 * @return string
+	 * @see \iTopWebPage::$a_styles
+	 * @api
+	 */
+	public function GetSass(): string;
 }

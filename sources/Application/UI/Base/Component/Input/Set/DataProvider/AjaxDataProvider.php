@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -28,7 +29,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Input\Set\DataProvider;
 class AjaxDataProvider extends SimpleDataProvider
 {
 	/** @var int DEFAULT_MAX_RESULTS maximum results fetched */
-	const DEFAULT_MAX_RESULTS = 25;
+	public const DEFAULT_MAX_RESULTS = 25;
 
 	/**
 	 * @see \Combodo\iTop\Service\Router\Router
@@ -44,7 +45,6 @@ class AjaxDataProvider extends SimpleDataProvider
 
 	/** @var int $iMaxResults Maximum entries */
 	private int $iMaxResults = AjaxDataProvider::DEFAULT_MAX_RESULTS;
-
 
 	/**
 	 * Constructor.

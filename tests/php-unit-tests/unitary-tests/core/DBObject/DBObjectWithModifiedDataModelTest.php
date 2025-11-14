@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -11,6 +12,7 @@ use IssueLog;
 use LogChannels;
 use MetaModel;
 use utils;
+
 use const EVENT_DB_LINKS_CHANGED;
 
 class DBObjectWithModifiedDataModelTest extends ItopCustomDatamodelTestCase
@@ -20,9 +22,8 @@ class DBObjectWithModifiedDataModelTest extends ItopCustomDatamodelTestCase
 		return __DIR__.'/Delta/dbobjecttest.xml';
 	}
 
-	const USE_TRANSACTION = true;
-	const CREATE_TEST_ORG = false;
-
+	public const USE_TRANSACTION = true;
+	public const CREATE_TEST_ORG = false;
 
 	private static string $sLogFile = 'log/test_error_CRUDEventTest.log';
 
@@ -81,4 +82,3 @@ class DBObjectWithModifiedDataModelTest extends ItopCustomDatamodelTestCase
 		$this->assertEquals('resolved', $oParent->Get('status'), 'The status should have been modified to resolved (the final state after a nested stimulus)');
 	}
 }
-

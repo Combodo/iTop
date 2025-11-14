@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-service-mgmt-provider/3.3.0',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Service Management for Service Providers',
@@ -12,21 +11,21 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
-		        'itop-tickets/2.0.0',
-		),
+		'dependencies' => [
+				'itop-tickets/2.0.0',
+		],
 		'mandatory' => false,
 		'visible' => true,
 		'installer' => 'ServiceMgmtProviderInstaller',
 
 		// Components
 		//
-		'datamodel' => array(
-		),
-		'data.struct' => array(
+		'datamodel' => [
+		],
+		'data.struct' => [
 			//'data.struct.itop-service-mgmt.xml',
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			'data.sample.organizations.xml',
 			'data.sample.contracts.xml',
 			'data.sample.servicefamilies.xml',
@@ -39,8 +38,8 @@ SetupWebPage::AddModule(
 			'data.sample.contractservice.xml',
 	//		'data.sample.deliverymodel.xml',
 			'data.sample.deliverymodelcontact.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
@@ -48,13 +47,12 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
-		),
-	)
+		'settings' => [
+		],
+	]
 );
 
-if (!class_exists('ServiceMgmtProviderInstaller'))
-{
+if (!class_exists('ServiceMgmtProviderInstaller')) {
 	// Module installation handler
 	//
 	class ServiceMgmtProviderInstaller extends ModuleInstallerAPI
@@ -73,15 +71,14 @@ if (!class_exists('ServiceMgmtProviderInstaller'))
 		 */
 		public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			if (strlen($sPreviousVersion) > 0)
-			{
+			if (strlen($sPreviousVersion) > 0) {
 				// If you want to migrate data from one format to another, do it here
 				self::RenameClassInDB('ServiceFamilly', 'ServiceFamily');
 
 				self::RenameEnumValueInDB('SLT', 'request_type', 'servicerequest', 'service_request');
 			}
 		}
-	
+
 		/**
 		 * Handler called after the creation/update of the database schema
 		 * @param $oConfiguration Config The new configuration of the application

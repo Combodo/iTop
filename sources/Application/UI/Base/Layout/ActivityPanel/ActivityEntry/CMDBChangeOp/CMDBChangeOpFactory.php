@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\CMDBChangeOp;
-
 
 use AttributeDateTime;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntry;
@@ -82,11 +82,9 @@ class CMDBChangeOpFactory
 		// - Set login in the friendlyname as a fallback
 		$sAuthorLogin = $oChangeOp->Get('userinfo');
 		// - Try to find user login from its ID if present (since iTop 3.0.0)
-		if(empty($iAuthorId) === false)
-		{
+		if (empty($iAuthorId) === false) {
 			$oAuthor = MetaModel::GetObject('User', $iAuthorId, false, true);
-			if(empty($oAuthor) === false)
-			{
+			if (empty($oAuthor) === false) {
 				$sAuthorLogin = $oAuthor->Get('login');
 			}
 		}

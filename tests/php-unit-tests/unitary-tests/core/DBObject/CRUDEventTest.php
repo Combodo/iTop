@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -23,6 +24,7 @@ use Server;
 use Team;
 use UserRequest;
 use utils;
+
 use const EVENT_DB_ABOUT_TO_DELETE;
 use const EVENT_DB_AFTER_DELETE;
 use const EVENT_DB_AFTER_WRITE;
@@ -35,11 +37,10 @@ use const EVENT_ENUM_TRANSITIONS;
 
 class CRUDEventTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = true;
-	const CREATE_TEST_ORG = true;
-
 	use DBObject\Utils\EventTest;
 	use DBObject\Utils\ClassesWithDebug;
+	public const USE_TRANSACTION = true;
+	public const CREATE_TEST_ORG = true;
 
 	private static string $sLogFile = 'log/test_error_CRUDEventTest.log';
 
@@ -447,10 +448,10 @@ class CRUDEventTest extends ItopDataTestCase
 		$oUserRequest->DBInsert();
 
 		// 1 insert for UserRequest, 3 insert for lnkFunctionalCIToTicket
-		$this->AssertEventCountEquals(4,EVENT_DB_COMPUTE_VALUES);
-		$this->AssertEventCountEquals(4,EVENT_DB_CHECK_TO_WRITE);
-		$this->AssertEventCountEquals(4,EVENT_DB_BEFORE_WRITE);
-		$this->AssertEventCountEquals(4,EVENT_DB_AFTER_WRITE);
+		$this->AssertEventCountEquals(4, EVENT_DB_COMPUTE_VALUES);
+		$this->AssertEventCountEquals(4, EVENT_DB_CHECK_TO_WRITE);
+		$this->AssertEventCountEquals(4, EVENT_DB_BEFORE_WRITE);
+		$this->AssertEventCountEquals(4, EVENT_DB_AFTER_WRITE);
 		$this->AssertEventNotReceived(EVENT_DB_LINKS_CHANGED, 'Event must not be fired if host object is created with links');
 		$this->AssertTotalEventCountEquals(16);
 

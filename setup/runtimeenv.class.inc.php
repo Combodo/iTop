@@ -756,6 +756,7 @@ class RunTimeEnvironment
 			$aModuleData = $aAvailableModules[$sModuleId];
 			$sName = $sModuleId;
 			$sVersion = $aModuleData['version_code'];
+			$sUninstallable = $aModuleData['uninstallable'] ?? 'yes';
 			$aComments = array();
 			$aComments[] = $sShortComment;
 			if ($aModuleData['mandatory']) {
@@ -783,6 +784,7 @@ class RunTimeEnvironment
 			$oInstallRec->Set('comment', $sComment);
 			$oInstallRec->Set('parent_id', $iMainItopRecord);
 			$oInstallRec->Set('installed', $iInstallationTime);
+			$oInstallRec->Set('uninstallable', $sUninstallable);
 			$oInstallRec->DBInsertNoReload();
 		}
 
@@ -805,6 +807,7 @@ class RunTimeEnvironment
 				$oInstallRec->Set('label', $oExtension->sLabel);
 				$oInstallRec->Set('version', $oExtension->sVersion);
 				$oInstallRec->Set('source',  $oExtension->sSource);
+				$oInstallRec->Set('uninstallable', $oExtension->CanBeUninstalled() ? 'yes' : 'no');
 				$oInstallRec->Set('installed', $iInstallationTime);
 				$oInstallRec->DBInsertNoReload();
 			}

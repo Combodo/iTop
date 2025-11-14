@@ -7,11 +7,11 @@
  */
 interface iLoginExtension
 {
-    /**
-     * Return the list of supported login modes for this plugin
-     *
-     * @return array of supported login modes
-     * @api
-     */
-    public function ListSupportedLoginModes();
+	/**
+	 * Return the list of supported login modes for this plugin
+	 *
+	 * @return array of supported login modes
+	 * @api
+	 */
+	public function ListSupportedLoginModes();
 }

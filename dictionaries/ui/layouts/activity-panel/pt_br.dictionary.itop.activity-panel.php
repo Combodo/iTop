@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expandir',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Recolher',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Fechar',
@@ -35,4 +36,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Está calmo aqui, nenhuma atividade ainda',
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Painel de Atividades',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Clique para abrir o Painel de Atividades',
-));
+]);

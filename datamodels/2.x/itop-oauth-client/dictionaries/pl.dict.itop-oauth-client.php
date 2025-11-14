@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -99,14 +100,14 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:OAuthClient/Attribute:redirect_url+' => 'Ten adres URL należy skopiować w konfiguracji OAuth2 dostawcy
 Usuń pole, aby ponownie obliczyć wartość domyślną',
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Skrzynki pocztowe',
-	'Class:OAuthClient/Attribute:mailbox_list+' => ''
+	'Class:OAuthClient/Attribute:mailbox_list+' => '',
 ]);
 
 //
 // Class: OAuthClientAzure
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Zakres',
@@ -176,14 +177,14 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:yes' => 'Tak',
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'Nie',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Dzierżawa',
-	'Class:OAuthClientAzure/Attribute:tenant+' => 'Identyfikator dzierżawy skonfigurowanej aplikacji. W przypadku aplikacji z wieloma dzierżawcami użyj „wspólnego”.'
-));
+	'Class:OAuthClientAzure/Attribute:tenant+' => 'Identyfikator dzierżawy skonfigurowanej aplikacji. W przypadku aplikacji z wieloma dzierżawcami użyj „wspólnego”.',
+]);
 
 //
 // Class: OAuthClientGoogle
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Zakres',
@@ -251,5 +252,5 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
               yes
             +' => '',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => 'Tak',
-	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => 'Nie'
-));
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => 'Nie',
+]);

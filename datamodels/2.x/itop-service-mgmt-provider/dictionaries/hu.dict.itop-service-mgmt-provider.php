@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:ServiceManagement' => 'Szolgáltatáskezelés',
 	'Menu:ServiceManagement+' => 'Service Management Overview~~',
 	'Menu:Service:Overview' => 'Áttekintő',
@@ -38,7 +39,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
-));
+]);
 
 /*
 	'UI:ServiceManagementMenu' => 'Gestion des Services',
@@ -53,30 +54,27 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 // Class: Organization
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Teljesítési modell',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'Ki kinek szolgáltat',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Teljesítési modell név',
 	'Class:Organization/Attribute:deliverymodel_name+' => '~~',
-));
-
-
+]);
 
 //
 // Class: ContractType
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ContractType' => 'Szerződés típus',
 	'Class:ContractType+' => '~~',
-));
-
+]);
 
 //
 // Class: Contract
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Contract' => 'Szerződés',
 	'Class:Contract+' => '~~',
 	'Class:Contract/Attribute:name' => 'Szerződés név',
@@ -125,13 +123,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Contract/Attribute:status/Value:production+' => 'production~~',
 	'Class:Contract/Attribute:finalclass' => 'Szerződés típus',
 	'Class:Contract/Attribute:finalclass+' => 'Name of the final class~~',
-));
+]);
 
 //
 // Class: CustomerContract
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:CustomerContract' => 'Ügyfélszerződés',
 	'Class:CustomerContract+' => '~~',
 	'Class:CustomerContract/Attribute:services_list' => 'Szolgáltatások',
@@ -140,13 +138,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'Konfigurációs elemek amelyeket lefed ez a szerződés',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Szolgáltatói szerződések',
 	'Class:CustomerContract/Attribute:providercontracts_list+' => 'Az összes szolgáltatói szerződés az e szerződéshez kapcsolódó szolgáltatások nyújtására (alapszerződés).',
-));
+]);
 
 //
 // Class: ProviderContract
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ProviderContract' => 'Szolgáltatói szerződés',
 	'Class:ProviderContract+' => '~~',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CI-k',
@@ -155,13 +153,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ProviderContract/Attribute:sla+' => 'Szolgáltatásszint megállapodás',
 	'Class:ProviderContract/Attribute:coverage' => 'Szolgáltatás lefedettség',
 	'Class:ProviderContract/Attribute:coverage+' => '~~',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkContactToContract' => 'Kapcsolattartó / Szerződés',
 	'Class:lnkContactToContract+' => '~~',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
@@ -173,13 +171,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkContactToContract/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Kapcsolattartó név',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkContractToDocument' => 'Szerződés / Dokumentum',
 	'Class:lnkContractToDocument+' => '~~',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
@@ -191,13 +189,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Dokumentum név',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToProviderContract
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Funkcionális CI / Szolgáltatói szerződés',
 	'Class:lnkFunctionalCIToProviderContract+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
@@ -209,13 +207,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => 'Konfigurációs elem, eszköz',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI név',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
-));
+]);
 
 //
 // Class: ServiceFamily
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ServiceFamily' => 'Szolgáltatáscsalád',
 	'Class:ServiceFamily+' => '~~',
 	'Class:ServiceFamily/Attribute:name' => 'Név',
@@ -224,13 +222,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ServiceFamily/Attribute:icon+' => '~~',
 	'Class:ServiceFamily/Attribute:services_list' => 'Szolgáltatások',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Szolgáltatások ebben a kategóriában',
-));
+]);
 
 //
 // Class: Service
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Service' => 'Szolgáltatás',
 	'Class:Service+' => '~~',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
@@ -264,13 +262,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Service/Attribute:customercontracts_list+' => 'Ügyfélszerződések amelyeknek beszerezték ezt a szolgáltatást',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Szolgáltatás alkategóriák',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'A szolgáltatás alkategóriái',
-));
+]);
 
 //
 // Class: lnkDocumentToService
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToService' => 'Dokumentum / Szolgáltatás',
 	'Class:lnkDocumentToService+' => '~~',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
@@ -282,13 +280,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkDocumentToService/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Dokumentum név',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkContactToService
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkContactToService' => 'Kapcsolattartó / Szolgáltatás',
 	'Class:lnkContactToService+' => '~~',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
@@ -300,13 +298,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkContactToService/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Kapcsolattartó név',
 	'Class:lnkContactToService/Attribute:contact_name+' => '~~',
-));
+]);
 
 //
 // Class: ServiceSubcategory
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ServiceSubcategory' => 'Szolgáltatás alkategória',
 	'Class:ServiceSubcategory+' => '~~',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
@@ -334,13 +332,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => '',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Szolgáltató név',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Szolgáltató',
-));
+]);
 
 //
 // Class: SLA
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:SLA' => 'SLA',
 	'Class:SLA+' => '',
 	'Class:SLA/Attribute:name' => 'SLA név',
@@ -356,13 +354,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:SLA/Attribute:customercontracts_list' => 'Ügyfélszerződések',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Ügyfélszerződések amelyek ezt az SLA-t használják',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Nem sikerült elmenteni a linket az Ügyfél szerződés %1$s és szolgáltatás %2$s : SLA már létezik',
-));
+]);
 
 //
 // Class: SLT
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:SLT' => 'SLT',
 	'Class:SLT+' => '',
 	'Class:SLT/Attribute:name' => 'SLT név',
@@ -397,13 +395,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => '',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'perc',
 	'Class:SLT/Attribute:unit/Value:minutes+' => '',
-));
+]);
 
 //
 // Class: lnkSLAToSLT
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkSLAToSLT' => 'SLA / SLT',
 	'Class:lnkSLAToSLT+' => '~~',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
@@ -425,13 +423,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'SLT érték egység',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkCustomerContractToService' => 'Ügyfélszerződés / Szolgáltatás',
 	'Class:lnkCustomerContractToService+' => '~~',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
@@ -447,13 +445,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA név',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToProviderContract
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkCustomerContractToProviderContract' => 'Ügyfélszerződés / Szolgáltatói szerződés',
 	'Class:lnkCustomerContractToProviderContract+' => '',
 	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s~~',
@@ -465,13 +463,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Szolgáltatói	szerződés név',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '',
-));
+]);
 
 //
 // Class: lnkCustomerContractToFunctionalCI
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkCustomerContractToFunctionalCI' => 'Ügyfélszerződés / Funkcionális CI',
 	'Class:lnkCustomerContractToFunctionalCI+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -483,13 +481,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => 'Konfigurációs elem',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => 'CI név',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '~~',
-));
+]);
 
 //
 // Class: DeliveryModel
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DeliveryModel' => 'Teljesítési modell',
 	'Class:DeliveryModel+' => '~~',
 	'Class:DeliveryModel/Attribute:name' => 'Teljesítési modell név',
@@ -504,13 +502,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'A teljesítési modell kapcsolattartói (személy, csapat)',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Ügyfelek',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Ügyfelek, akik ezt a teljesítési modellt használják',
-));
+]);
 
 //
 // Class: lnkDeliveryModelToContact
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDeliveryModelToContact' => 'Teljesítési modell / Kapcsolattartó',
 	'Class:lnkDeliveryModelToContact+' => '~~',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
@@ -526,35 +524,35 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Szerepkör név',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-));
+]);

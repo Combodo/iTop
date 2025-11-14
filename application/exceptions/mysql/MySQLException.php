@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -20,7 +21,7 @@ class MySQLException extends CoreException
 			$aContext['mysql_errno'] = $oException->getCode();
 			$this->code = $oException->getCode();
 			$aContext['mysql_error'] = $oException->getMessage();
-		} else if ($oMysqli != null) {
+		} elseif ($oMysqli != null) {
 			$aContext['mysql_errno'] = $oMysqli->errno;
 			$this->code = $oMysqli->errno;
 			$aContext['mysql_error'] = $oMysqli->error;

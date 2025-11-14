@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -22,7 +23,6 @@
  */
 class SimpleGraphException extends Exception
 {
-	
 }
 
 /**
@@ -32,7 +32,7 @@ class GraphElement
 {
 	protected $sId;
 	protected $aProperties;
-	
+
 	/**
 	 * Constructor
 	 * @param string $sId The identifier of the object in the graph
@@ -40,9 +40,9 @@ class GraphElement
 	public function __construct($sId)
 	{
 		$this->sId = $sId;
-		$this->aProperties = array();
+		$this->aProperties = [];
 	}
-	
+
 	/**
 	 * Get the identifier of the object in the graph
 	 * @return string
@@ -51,7 +51,7 @@ class GraphElement
 	{
 		return $this->sId;
 	}
-	
+
 	/**
 	 * Get the value of the given named property for the object
 	 * @param string $sPropName The name of the property to get
@@ -73,7 +73,7 @@ class GraphElement
 	{
 		$this->aProperties[$sPropName] = $value;
 	}
-	
+
 	/**
 	 * Get all the known properties of the object
 	 * @return Ambigous <multitype:, mixed>
@@ -91,7 +91,7 @@ class GraphNode extends GraphElement
 {
 	protected $aIncomingEdges;
 	protected $aOutgoingEdges;
-	
+
 	/**
 	 * Create a new node inside a graph
 	 * @param SimpleGraph $oGraph
@@ -100,16 +100,15 @@ class GraphNode extends GraphElement
 	public function __construct(SimpleGraph $oGraph, $sId)
 	{
 		parent::__construct($sId);
-		$this->aIncomingEdges = array();
-		$this->aOutgoingEdges = array();
+		$this->aIncomingEdges = [];
+		$this->aOutgoingEdges = [];
 		$oGraph->_AddNode($this);
 	}
-	
+
 	public function GetDotAttributes($bNoLabel = false)
 	{
 		$sDot = '';
-		if (!$bNoLabel)
-		{
+		if (!$bNoLabel) {
 			$sLabel = addslashes($this->GetProperty('label', $this->GetId()));
 			$sDot = 'label="'.$sLabel.'"';
 		}
@@ -133,7 +132,7 @@ class GraphNode extends GraphElement
 	{
 		$this->aOutgoingEdges[$oEdge->GetId()] = $oEdge;
 	}
-	
+
 	/**
 	 * INTERNAL USE ONLY
 	 * @param GraphEdge $oEdge
@@ -151,7 +150,7 @@ class GraphNode extends GraphElement
 	{
 		unset($this->aOutgoingEdges[$oEdge->GetId()]);
 	}
-	
+
 	/**
 	 * Get the list of  all incoming edges on the current node
 	 * @return Ambigous <multitype:, GraphEdge>
@@ -160,7 +159,7 @@ class GraphNode extends GraphElement
 	{
 		return $this->aIncomingEdges;
 	}
-	
+
 	/**
 	 * Get the list of  all outgoing edges from the current node
 	 * @return Ambigous <multitype:, GraphEdge>
@@ -169,7 +168,7 @@ class GraphNode extends GraphElement
 	{
 		return $this->aOutgoingEdges;
 	}
-	
+
 	/**
 	 * Flood fill the chart with the given value for the specified property
 	 * @param string $sPropName The name of the property to set
@@ -179,29 +178,24 @@ class GraphNode extends GraphElement
 	 */
 	public function FloodProperty($sPropName, $value, $bFloodDown, $bFloodUp)
 	{
-		if ($this->GetProperty($sPropName, null) == null)
-		{
+		if ($this->GetProperty($sPropName, null) == null) {
 			// Property not already set, let's do it
 			$this->SetProperty($sPropName, $value);
-			if ($bFloodDown)
-			{
-				foreach($this->GetOutgoingEdges() as $oEdge)
-				{
+			if ($bFloodDown) {
+				foreach ($this->GetOutgoingEdges() as $oEdge) {
 					$oEdge->SetProperty($sPropName, $value);
 					$oEdge->GetSinkNode()->FloodProperty($sPropName, $value, $bFloodDown, $bFloodUp);
 				}
 			}
-			if ($bFloodUp)
-			{
-				foreach($this->GetIncomingEdges() as $oEdge)
-				{
+			if ($bFloodUp) {
+				foreach ($this->GetIncomingEdges() as $oEdge) {
 					$oEdge->SetProperty($sPropName, $value);
 					$oEdge->GetSourceNode()->FloodProperty($sPropName, $value, $bFloodDown, $bFloodUp);
 				}
 			}
 		}
 	}
-	
+
 }
 
 /**
@@ -237,7 +231,7 @@ class GraphEdge extends GraphElement
 	{
 		return $this->oSourceNode;
 	}
-	
+
 	/**
 	 * Get the "sink" node for this edge
 	 * @return GraphNode
@@ -250,8 +244,7 @@ class GraphEdge extends GraphElement
 	public function GetDotAttributes($bNoLabel = false)
 	{
 		$sDot = '';
-		if (!$bNoLabel)
-		{
+		if (!$bNoLabel) {
 			$sLabel = addslashes($this->GetProperty('label', ''));
 			$sDot = 'label="'.$sLabel.'"';
 		}
@@ -266,16 +259,16 @@ class SimpleGraph
 {
 	protected $aNodes;
 	protected $aEdges;
-	
+
 	/**
 	 * Creates a new empty graph
 	 */
 	public function __construct()
 	{
-		$this->aNodes = array();
-		$this->aEdges = array();
+		$this->aNodes = [];
+		$this->aEdges = [];
 	}
-	
+
 	/**
 	 * INTERNAL USE ONLY
 	 * @return Ambigous <multitype:, GraphNode>
@@ -284,7 +277,7 @@ class SimpleGraph
 	{
 		return $this->aNodes;
 	}
-	
+
 	/**
 	 * INTERNAL USE ONLY
 	 * @return Ambigous <multitype:, GraphNode>
@@ -293,32 +286,34 @@ class SimpleGraph
 	{
 		return $this->aEdges;
 	}
-	
+
 	/**
 	 * INTERNAL USE ONLY
 	 * @return Ambigous <multitype:, GraphNode>
 	 */
 	public function _AddNode(GraphNode $oNode)
 	{
-		if (array_key_exists($oNode->GetId(), $this->aNodes)) throw new SimpleGraphException('Cannot add node (id='.$oNode->GetId().') to the graph. A node with the same id already exists in the graph.');
-		
+		if (array_key_exists($oNode->GetId(), $this->aNodes)) {
+			throw new SimpleGraphException('Cannot add node (id='.$oNode->GetId().') to the graph. A node with the same id already exists in the graph.');
+		}
+
 		$this->aNodes[$oNode->GetId()] = $oNode;
 	}
-	
+
 	/**
 	 * INTERNAL USE ONLY
 	 * @return Ambigous <multitype:, GraphNode>
 	 */
 	public function _RemoveNode(GraphNode $oNode)
 	{
-		if (!array_key_exists($oNode->GetId(), $this->aNodes)) throw new SimpleGraphException('Cannot remove the node (id='.$oNode->GetId().') from the graph. The node was not found in the graph.');
-		
-		foreach($oNode->GetOutgoingEdges() as $oEdge)
-		{
+		if (!array_key_exists($oNode->GetId(), $this->aNodes)) {
+			throw new SimpleGraphException('Cannot remove the node (id='.$oNode->GetId().') from the graph. The node was not found in the graph.');
+		}
+
+		foreach ($oNode->GetOutgoingEdges() as $oEdge) {
 			$this->_RemoveEdge($oEdge);
 		}
-		foreach($oNode->GetIncomingEdges() as $oEdge)
-		{
+		foreach ($oNode->GetIncomingEdges() as $oEdge) {
 			$this->_RemoveEdge($oEdge);
 		}
 		unset($this->aNodes[$oNode->GetId()]);
@@ -333,42 +328,37 @@ class SimpleGraph
 	 */
 	public function FilterNode(GraphNode $oNode, $bAllowLoopingEdge = false)
 	{
-		if (!array_key_exists($oNode->GetId(), $this->aNodes)) throw new SimpleGraphException('Cannot filter the node (id='.$oNode->GetId().') from the graph. The node was not found in the graph.');
-		
-		$aSourceNodes = array();
-		$aSinkNodes = array();
-		foreach($oNode->GetOutgoingEdges() as $oEdge)
-		{
+		if (!array_key_exists($oNode->GetId(), $this->aNodes)) {
+			throw new SimpleGraphException('Cannot filter the node (id='.$oNode->GetId().') from the graph. The node was not found in the graph.');
+		}
+
+		$aSourceNodes = [];
+		$aSinkNodes = [];
+		foreach ($oNode->GetOutgoingEdges() as $oEdge) {
 			$sSinkId =  $oEdge->GetSinkNode()->GetId();
-			if ($sSinkId != $oNode->GetId())
-			{
+			if ($sSinkId != $oNode->GetId()) {
 				$aSinkNodes[$sSinkId] = $oEdge->GetSinkNode();
 			}
 			$this->_RemoveEdge($oEdge);
 		}
-		foreach($oNode->GetIncomingEdges() as $oEdge)
-		{
+		foreach ($oNode->GetIncomingEdges() as $oEdge) {
 			$sSourceId =  $oEdge->GetSourceNode()->GetId();
-			if ($sSourceId != $oNode->GetId())
-			{
+			if ($sSourceId != $oNode->GetId()) {
 				$aSourceNodes[$sSourceId] = $oEdge->GetSourceNode();
 			}
 			$this->_RemoveEdge($oEdge);
 		}
 		unset($this->aNodes[$oNode->GetId()]);
 
-		foreach($aSourceNodes as $sSourceId => $oSourceNode)
-		{
-			foreach($aSinkNodes as $sSinkId => $oSinkNode)
-			{
-				if ($bAllowLoopingEdge || ($oSourceNode->GetId() != $oSinkNode->GetId()))
-				{
+		foreach ($aSourceNodes as $sSourceId => $oSourceNode) {
+			foreach ($aSinkNodes as $sSinkId => $oSinkNode) {
+				if ($bAllowLoopingEdge || ($oSourceNode->GetId() != $oSinkNode->GetId())) {
 					$oEdge = new RelationEdge($this, $oSourceNode, $oSinkNode);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Get the node identified by $sId or null if not found
 	 * @param string $sId
@@ -376,7 +366,7 @@ class SimpleGraph
 	 */
 	public function GetNode($sId)
 	{
-		return array_key_exists($sId, $this->aNodes) ? $this->aNodes[$sId] : null; 
+		return array_key_exists($sId, $this->aNodes) ? $this->aNodes[$sId] : null;
 	}
 
 	/**
@@ -386,7 +376,7 @@ class SimpleGraph
 	 */
 	public function HasNode($sId)
 	{
-		return array_key_exists($sId, $this->aNodes); 
+		return array_key_exists($sId, $this->aNodes);
 	}
 
 	/**
@@ -397,23 +387,19 @@ class SimpleGraph
 	 */
 	public function _AddEdge(GraphEdge $oEdge, $bMustBeUnique = false)
 	{
-		if (array_key_exists($oEdge->GetId(), $this->aEdges))
-		{
-			if ($bMustBeUnique)
-			{
-				throw new SimpleGraphException('Cannot add edge (id=' . $oEdge->GetId() . ') to the graph. An edge with the same id already exists in the graph.');
-			}
-			else
-			{
+		if (array_key_exists($oEdge->GetId(), $this->aEdges)) {
+			if ($bMustBeUnique) {
+				throw new SimpleGraphException('Cannot add edge (id='.$oEdge->GetId().') to the graph. An edge with the same id already exists in the graph.');
+			} else {
 				return;
 			}
 		}
-		
+
 		$this->aEdges[$oEdge->GetId()] = $oEdge;
 		$oEdge->GetSourceNode()->_AddOutgoingEdge($oEdge);
 		$oEdge->GetSinkNode()->_AddIncomingEdge($oEdge);
 	}
-	
+
 	/**
 	 * INTERNAL USE ONLY
 	 * @param GraphEdge $oEdge
@@ -421,14 +407,16 @@ class SimpleGraph
 	 */
 	public function _RemoveEdge(GraphEdge $oEdge)
 	{
-		if (!array_key_exists($oEdge->GetId(), $this->aEdges)) throw new SimpleGraphException('Cannot remove edge (id='.$oEdge->GetId().') from the graph. The edge was not found.');
-		
+		if (!array_key_exists($oEdge->GetId(), $this->aEdges)) {
+			throw new SimpleGraphException('Cannot remove edge (id='.$oEdge->GetId().') from the graph. The edge was not found.');
+		}
+
 		$oEdge->GetSourceNode()->_RemoveOutgoingEdge($oEdge);
 		$oEdge->GetSinkNode()->_RemoveIncomingEdge($oEdge);
-		
+
 		unset($this->aEdges[$oEdge->GetId()]);
 	}
-	
+
 	/**
 	 * Get the edge indentified by $sId or null if not found
 	 * @param string $sId
@@ -438,7 +426,7 @@ class SimpleGraph
 	{
 		return array_key_exists($sId, $this->aEdges) ? $this->aEdges[$sId] : null;
 	}
-	
+
 	/**
 	 * Determine if the id already exists in amongst the existing edges
 	 * @param string $sId
@@ -446,7 +434,7 @@ class SimpleGraph
 	 */
 	public function HasEdge($sId)
 	{
-		return array_key_exists($sId, $this->aEdges); 
+		return array_key_exists($sId, $this->aEdges);
 	}
 
 	/**
@@ -470,23 +458,20 @@ EOF
 		;
 
 		$oIterator = new RelationTypeIterator($this, 'Node');
-		
-		foreach($oIterator as $key => $oNode)
-		{
+
+		foreach ($oIterator as $key => $oNode) {
 			$sDot .= "\t\"".$oNode->GetId()."\" [ ".$oNode->GetDotAttributes($bNoLabel)." ];\n";
-			if (count($oNode->GetOutgoingEdges()) > 0)
-			{
-				foreach($oNode->GetOutgoingEdges() as $oEdge)
-				{
+			if (count($oNode->GetOutgoingEdges()) > 0) {
+				foreach ($oNode->GetOutgoingEdges() as $oEdge) {
 					$sDot .= "\t\"".$oNode->GetId()."\" -> \"".$oEdge->GetSinkNode()->GetId()."\" [ ".$oEdge->GetDotAttributes($bNoLabel)." ];\n";
 				}
 			}
 		}
-		
+
 		$sDot .= "}\n";
-		return $sDot;		
+		return $sDot;
 	}
-	
+
 	/**
 	 * Get the description of the graph as an embedded PNG image (using a data: url) as
 	 * generated by graphviz (requires graphviz to be installed on the machine and the path to
@@ -497,51 +482,43 @@ EOF
 	public function DumpAsHtmlImage()
 	{
 		$sDotExecutable = MetaModel::GetConfig()->Get('graphviz_path');
-		if (file_exists($sDotExecutable))
-		{
+		if (file_exists($sDotExecutable)) {
 			// create the file with Graphviz
-			if (!is_dir(utils::GetDataPath()))
-			{
+			if (!is_dir(utils::GetDataPath())) {
 				@mkdir(utils::GetDataPath());
 			}
-			if (!is_dir(utils::GetDataPath()."tmp"))
-			{
+			if (!is_dir(utils::GetDataPath()."tmp")) {
 				@mkdir(utils::GetDataPath()."tmp");
 			}
 			$sImageFilePath = tempnam(utils::GetDataPath()."tmp", 'png-');
 			$sDotDescription = $this->GetDotDescription();
 			$sDotFilePath = tempnam(utils::GetDataPath()."tmp", 'dot-');
-		
+
 			$rFile = @fopen($sDotFilePath, "w");
 			@fwrite($rFile, $sDotDescription);
 			@fclose($rFile);
-			$aOutput = array();
+			$aOutput = [];
 			$CommandLine = "\"$sDotExecutable\" -v -Tpng < \"$sDotFilePath\" -o\"$sImageFilePath\" 2>&1";
-		
+
 			exec($CommandLine, $aOutput, $iRetCode);
-			if ($iRetCode != 0)
-			{
+			if ($iRetCode != 0) {
 				$sHtml = '';
 				$sHtml .= "<p><b>Error:</b></p>";
 				$sHtml .= "<p>The command: <pre>$CommandLine</pre> returned $iRetCode</p>";
 				$sHtml .= "<p>The output of the command is:<pre>\n".implode("\n", $aOutput)."</pre></p>";
 				$sHtml .= "<hr>";
 				$sHtml .= "<p>Content of the '".basename($sDotFilePath)."' file:<pre>\n$sDotDescription</pre>";
-			}
-			else
-			{
+			} else {
 				$sHtml = '<img src="data:image/png;base64,'.base64_encode(file_get_contents($sImageFilePath)).'">';
 				@unlink($sImageFilePath);
 			}
 			@unlink($sDotFilePath);
-		}
-		else
-		{
-            throw new Exception('graphviz not found');
+		} else {
+			throw new Exception('graphviz not found');
 		}
 		return $sHtml;
 	}
-	
+
 	/**
 	 * Get the description of the graph as text string in the XDot format
 	 * including the positions of the nodes and egdes (requires graphviz
@@ -553,51 +530,42 @@ EOF
 	public function DumpAsXDot()
 	{
 		$sDotExecutable = MetaModel::GetConfig()->Get('graphviz_path');
-		if (file_exists($sDotExecutable))
-		{
+		if (file_exists($sDotExecutable)) {
 			// create the file with Graphviz
-			if (!is_dir(utils::GetDataPath()))
-			{
+			if (!is_dir(utils::GetDataPath())) {
 				@mkdir(utils::GetDataPath());
 			}
-			if (!is_dir(utils::GetDataPath()."tmp"))
-			{
+			if (!is_dir(utils::GetDataPath()."tmp")) {
 				@mkdir(utils::GetDataPath()."tmp");
 			}
 			$sXdotFilePath = tempnam(utils::GetDataPath()."tmp", 'xdot-');
 			$sDotDescription = $this->GetDotDescription(true); // true => don't put (localized) labels in the file, since it makes it harder to parse
 			$sDotFilePath = tempnam(utils::GetDataPath()."tmp", 'dot-');
-	
+
 			$rFile = @fopen($sDotFilePath, "w");
 			@fwrite($rFile, $sDotDescription);
 			@fclose($rFile);
-			$aOutput = array();
+			$aOutput = [];
 			$CommandLine = "\"$sDotExecutable\" -v -Tdot < \"$sDotFilePath\" -o\"$sXdotFilePath\" 2>&1";
-	
+
 			exec($CommandLine, $aOutput, $iRetCode);
-			if ($iRetCode != 0)
-			{
+			if ($iRetCode != 0) {
 				$sHtml = '';
 				$sHtml .= "<p><b>Error:</b></p>";
 				$sHtml .= "<p>The command: <pre>$CommandLine</pre> returned $iRetCode</p>";
 				$sHtml .= "<p>The output of the command is:<pre>\n".implode("\n", $aOutput)."</pre></p>";
 				IssueLog::Error($sHtml);
-			}
-			else
-			{
+			} else {
 				$sHtml = '<pre>'.file_get_contents($sXdotFilePath).'</pre>';
 				@unlink($sXdotFilePath);
 			}
 			@unlink($sDotFilePath);
-		}
-		else
-		{
-            throw new Exception('graphviz not found');
+		} else {
+			throw new Exception('graphviz not found');
 		}
 		return $sHtml;
 	}
-	
-	
+
 	/**
 	 * Get the description of the graph as some HTML text
 	 * @return string
@@ -606,42 +574,36 @@ EOF
 	{
 		$sHtml = '';
 		$oIterator = new RelationTypeIterator($this);
-		
-		foreach($oIterator as $key => $oElement)
-		{
+
+		foreach ($oIterator as $key => $oElement) {
 			$sHtml .= "<p>$key: ".get_class($oElement)."::".$oElement->GetId()."</p>";
-		
-			switch(get_class($oElement))
-			{
+
+			switch (get_class($oElement)) {
 				case 'GraphNode':
-					if (count($oElement->GetIncomingEdges()) > 0)
-					{
+					if (count($oElement->GetIncomingEdges()) > 0) {
 						$sHtml .= "<ul>Incoming edges:\n";
-						foreach($oElement->GetIncomingEdges() as $oEdge)
-						{
+						foreach ($oElement->GetIncomingEdges() as $oEdge) {
 							$sHtml .= "<li>From: ".$oEdge->GetSourceNode()->GetId()."</li>\n";
 						}
 						$sHtml .= "</ul>\n";
 					}
-					if (count($oElement->GetOutgoingEdges()) > 0)
-					{
+					if (count($oElement->GetOutgoingEdges()) > 0) {
 						$sHtml .= "<ul>Outgoing edges:\n";
-						foreach($oElement->GetOutgoingEdges() as $oEdge)
-						{
+						foreach ($oElement->GetOutgoingEdges() as $oEdge) {
 							$sHtml .= "<li>To: ".$oEdge->GetSinkNode()->GetId()."</li>\n";
 						}
 						$sHtml .= "</ul>\n";
 					}
 					break;
-		
+
 				case 'GraphEdge':
 					$sHtml .= "<p>From: ".$oElement->GetSourceNode()->GetId().", to:".$oElement->GetSinkNode()->GetId()."</p>\n";
 					break;
 			}
 		}
-		return $sHtml;		
+		return $sHtml;
 	}
-	
+
 	/**
 	 * Split the graph in a array of non connected subgraphs
 	 * @return multitype:SimpleGraph unknown
@@ -649,48 +611,40 @@ EOF
 	public function GetSubgraphs()
 	{
 		$iNbColors = 0;
-		$aResult = array();
+		$aResult = [];
 		$oIterator = new RelationTypeIterator($this, 'Node');
-		foreach($oIterator as $oNode)
-		{
+		foreach ($oIterator as $oNode) {
 			$iPrevColor = $oNode->GetProperty('color', null);
-			
-			if ($iPrevColor == null)
-			{
+
+			if ($iPrevColor == null) {
 				$iNbColors++; // Start a new color
 				$oNode->FloodProperty('color', $iNbColors, true, true);
 			}
 		}
-		if ($iNbColors == 1)
-		{
+		if ($iNbColors == 1) {
 			// Everything is connected together, only one subgraph
 			$aResult[] = $this;
-		}
-		else
-		{
+		} else {
 			// Let's reconstruct each separate graph
 			$sClass = get_class($this);
-			for($i = 1; $i <= $iNbColors; $i++)
-			{
+			for ($i = 1; $i <= $iNbColors; $i++) {
 				$aResult[$i] = new $sClass();
 			}
-			
-			foreach($oIterator as $oNode)
-			{
+
+			foreach ($oIterator as $oNode) {
 				$iNodeColor = $oNode->GetProperty('color');
 				$aResult[$iNodeColor]->_AddNode($oNode);
 			}
-			
+
 			$oIter2 = new RelationTypeIterator($this, 'Edge');
-			foreach($oIter2 as $oEdge)
-			{
+			foreach ($oIter2 as $oEdge) {
 				$iEdgeColor = $oEdge->GetProperty('color');
 				$aResult[$iEdgeColor]->_AddEdge($oEdge);
 			}
 		}
-		return $aResult;	
+		return $aResult;
 	}
-	
+
 	/**
 	 * Merge back two subgraphs into one
 	 * @param SimpleGraph $oGraph
@@ -698,13 +652,11 @@ EOF
 	public function Merge(SimpleGraph $oGraph)
 	{
 		$oIter1 = new RelationTypeIterator($oGraph, 'Node');
-		foreach($oIter1 as $oNode)
-		{
+		foreach ($oIter1 as $oNode) {
 			$this->_AddNode($oNode);
 		}
 		$oIter2 = new RelationTypeIterator($oGraph, 'Edge');
-		foreach($oIter2 as $oEdge)
-		{
+		foreach ($oIter2 as $oEdge) {
 			$this->_AddEdge($oEdge);
 		}
 	}
@@ -718,7 +670,7 @@ class RelationTypeIterator implements Iterator
 {
 	protected $iCurrentIdx;
 	protected $aList;
-	
+
 	/**
 	 * Constructor
 	 * @param SimpleGraph $oGraph The graph to browse
@@ -727,46 +679,53 @@ class RelationTypeIterator implements Iterator
 	public function __construct(SimpleGraph $oGraph, $sType = null)
 	{
 		$this->iCurrentIdx = -1;
-		$this->aList = array();
-		
-		switch($sType)
-		{
+		$this->aList = [];
+
+		switch ($sType) {
 			case 'Node':
-			foreach($oGraph->_GetNodes() as $oNode) $this->aList[] = $oNode;
-			break;
-			
+				foreach ($oGraph->_GetNodes() as $oNode) {
+					$this->aList[] = $oNode;
+				}
+				break;
+
 			case 'Edge':
-			foreach($oGraph->_GetEdges() as $oEdge) $this->aList[] = $oEdge;
-			break;
-			
+				foreach ($oGraph->_GetEdges() as $oEdge) {
+					$this->aList[] = $oEdge;
+				}
+				break;
+
 			default:
-			foreach($oGraph->_GetNodes() as $oNode) $this->aList[] = $oNode;
-			foreach($oGraph->_GetEdges() as $oEdge) $this->aList[] = $oEdge;				
+				foreach ($oGraph->_GetNodes() as $oNode) {
+					$this->aList[] = $oNode;
+				}
+				foreach ($oGraph->_GetEdges() as $oEdge) {
+					$this->aList[] = $oEdge;
+				}
 		}
 	}
-	
+
 	public function rewind(): void
 	{
 		$this->iCurrentIdx = 0;
 	}
-	
+
 	public function valid(): bool
 	{
 		return array_key_exists($this->iCurrentIdx, $this->aList);
 	}
-	
+
 	public function next(): void
 	{
 		$this->iCurrentIdx++;
 	}
-	
+
 	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
 	#[\ReturnTypeWillChange]
 	public function current()
 	{
 		return $this->aList[$this->iCurrentIdx];
 	}
-	
+
 	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
 	#[\ReturnTypeWillChange]
 	public function key()

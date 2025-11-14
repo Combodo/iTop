@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Send an email (abstraction for synchronous/asynchronous modes)
  *
@@ -38,9 +39,9 @@ use Symfony\Component\Mime\Part\TextPart;
 class EMailSymfony extends Email
 {
 	// Serialization formats
-	const ORIGINAL_FORMAT = 1; // Original format, consisting in serializing the whole object, inculding the Swift Mailer's object.
+	public const ORIGINAL_FORMAT = 1; // Original format, consisting in serializing the whole object, inculding the Swift Mailer's object.
 	// Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
-	const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
+	public const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
 
 	protected $m_aData; // For storing data to serialize
 
@@ -52,7 +53,7 @@ class EMailSymfony extends Email
 	 */
 	public function __construct()
 	{
-		$this->m_aData = array();
+		$this->m_aData = [];
 		$this->m_oMessage = new SymfonyEmail();
 
 		$this->InitRecipientFrom();
@@ -129,12 +130,11 @@ class EMailSymfony extends Email
 	{
 		try {
 			AsyncSendEmail::AddToQueue($this, $oLog);
-		}
-		catch (Exception $e) {
-			$aIssues = array($e->GetMessage());
+		} catch (Exception $e) {
+			$aIssues = [$e->GetMessage()];
 			return EMAIL_SEND_ERROR;
 		}
-		$aIssues = array();
+		$aIssues = [];
 		return EMAIL_SEND_PENDING;
 	}
 
@@ -165,11 +165,10 @@ class EMailSymfony extends Email
 				$sPassword = self::$m_oConfig->Get('email_transport_smtp.password');
 				$bVerifyPeer = static::$m_oConfig->Get('email_transport_smtp.verify_peer');
 
-
 				// Build the DSN string
 				$sDsnUser = $sUserName !== null ? rawurlencode($sUserName) : '';
-				$sDsnPassword = ($sPassword !== null && $sPassword !== '') ? ':' . rawurlencode($sPassword) : '';
-				$sDsnPort = $sHost . (strlen($sPort) ? ':' . $sPort : '');
+				$sDsnPassword = ($sPassword !== null && $sPassword !== '') ? ':'.rawurlencode($sPassword) : '';
+				$sDsnPort = $sHost.(strlen($sPort) ? ':'.$sPort : '');
 				$sDsn = null;
 
 				if (strtolower($sEncryption) === 'ssl') {
@@ -188,7 +187,7 @@ class EMailSymfony extends Email
 
 				// Handle peer verification
 				$oStream = $oTransport->getStream();
-				$aOptions= $oStream->getStreamOptions();
+				$aOptions = $oStream->getStreamOptions();
 				if (!$bVerifyPeer && array_key_exists('ssl', $aOptions)) {
 					// Disable verification
 					$aOptions['ssl']['verify_peer'] = false;
@@ -226,7 +225,7 @@ class EMailSymfony extends Email
 			case 'LogFile':
 				// Use a custom transport that writes to a log file
 				// Note: the log file is not rotated, so this should be used for debugging
-				$oTransport = new SymfonyFileTransport(APPROOT . 'log/', 'mail.log');
+				$oTransport = new SymfonyFileTransport(APPROOT.'log/', 'mail.log');
 				$oMailer = new Mailer($oTransport);
 				break;
 
@@ -245,19 +244,17 @@ class EMailSymfony extends Email
 			}
 
 			$oMailer->send($this->m_oMessage);
-			$aIssues = array();
+			$aIssues = [];
 			$oKPI->ComputeStats('Email Sent', 'Succeded');
 
 			return EMAIL_SEND_OK;
-		}
-		catch (TransportExceptionInterface $e) {
+		} catch (TransportExceptionInterface $e) {
 			IssueLog::Warning('Email sending failed: '.$e->getMessage());
-			$aIssues = array($e->getMessage());
+			$aIssues = [$e->getMessage()];
 			$oKPI->ComputeStats('Email Sent', 'Error received');
 
 			return EMAIL_SEND_ERROR;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$oKPI->ComputeStats('Email Sent', 'Error received');
 			throw $e;
 		}
@@ -325,10 +322,10 @@ class EMailSymfony extends Email
 			$this->SetRecipientFrom($this->m_aData['to']);
 		}
 
-		if($iSyncAsync === true) {
+		if ($iSyncAsync === true) {
 			return $this->SendSynchronous($aIssues, $oLog);
 		} else {
-			switch($iSyncAsync) {
+			switch ($iSyncAsync) {
 				case Email::ENUM_SEND_FORCE_SYNCHRONOUS:
 					return $this->SendSynchronous($aIssues, $oLog);
 				case Email::ENUM_SEND_FORCE_ASYNCHRONOUS:
@@ -337,7 +334,7 @@ class EMailSymfony extends Email
 				default:
 					$oConfig = $this->LoadConfig();
 					$bConfigASYNC = $oConfig->Get('email_asynchronous');
-					if($bConfigASYNC) {
+					if ($bConfigASYNC) {
 						return $this->SendAsynchronous($aIssues, $oLog);
 					} else {
 						return $this->SendSynchronous($aIssues, $oLog);
@@ -352,7 +349,7 @@ class EMailSymfony extends Email
 	public function AddToHeader($sKey, $sValue)
 	{
 		if (!array_key_exists('headers', $this->m_aData)) {
-			$this->m_aData['headers'] = array();
+			$this->m_aData['headers'] = [];
 		}
 		$this->m_aData['headers'][$sKey] = $sValue;
 
@@ -367,7 +364,7 @@ class EMailSymfony extends Email
 
 		// Note: The email library will add the angle brackets for you
 		// so let's remove the angle brackets if present, for historical reasons
-		$sId = str_replace(array('<', '>'), '', $sId);
+		$sId = str_replace(['<', '>'], '', $sId);
 
 		$this->m_oMessage->getHeaders()->addIdHeader('Message-ID', $sId);
 	}
@@ -381,10 +378,10 @@ class EMailSymfony extends Email
 	{
 		// Note: Symfony will add the angle brackets
 		// let's remove the angle brackets if present, for historical reasons
-		$sId = str_replace(array('<', '>'), '', $sMessageId);
-		$this->m_aData['in_reply_to'] = '<' . $sId . '>';
+		$sId = str_replace(['<', '>'], '', $sMessageId);
+		$this->m_aData['in_reply_to'] = '<'.$sId.'>';
 
-		$this->m_oMessage->getHeaders()->addTextHeader('In-Reply-To', '<' . $sId . '>');
+		$this->m_oMessage->getHeaders()->addTextHeader('In-Reply-To', '<'.$sId.'>');
 	}
 
 	/**
@@ -397,7 +394,7 @@ class EMailSymfony extends Email
 			$sBody = static::InlineCssIntoBodyContent($sBody, $sCustomStyles);
 		}
 
-		$this->m_aData['body'] = array('body' => $sBody, 'mimeType' => $sMimeType);
+		$this->m_aData['body'] = ['body' => $sBody, 'mimeType' => $sMimeType];
 
 		$oTextPart = new TextPart(strip_tags($sBody), 'utf-8', 'plain', 'base64');
 
@@ -409,12 +406,11 @@ class EMailSymfony extends Email
 			// Default root part is the HTML body
 			$oRootPart = $oAlternativePart;
 
-			if(count($aAdditionalParts) > 0) {
+			if (count($aAdditionalParts) > 0) {
 				$aRelatedParts = array_merge([$oAlternativePart], $aAdditionalParts);
 				$oRootPart = new RelatedPart(...$aRelatedParts);
 			}
-		}
-		else {
+		} else {
 			// Default root part is the text body
 			$oRootPart = $oTextPart;
 		}
@@ -442,9 +438,9 @@ class EMailSymfony extends Email
 		$sMimeSubtype = $this->GetMimeSubtype($sMimeType);
 
 		if (!array_key_exists('parts', $this->m_aData)) {
-			$this->m_aData['parts'] = array();
+			$this->m_aData['parts'] = [];
 		}
-		$this->m_aData['parts'][] = array('text' => $sText, 'mimeType' => $sMimeType);
+		$this->m_aData['parts'][] = ['text' => $sText, 'mimeType' => $sMimeType];
 
 		$oNewPart = new TextPart($sText, $sMimeType, $sMimeSubtype, 'base64');
 		$this->m_oMessage->addPart($oNewPart);
@@ -453,20 +449,19 @@ class EMailSymfony extends Email
 	public function AddAttachment($data, $sFileName, $sMimeType)
 	{
 		if (!array_key_exists('attachments', $this->m_aData)) {
-			$this->m_aData['attachments'] = array();
+			$this->m_aData['attachments'] = [];
 		}
-		$this->m_aData['attachments'][] = array('data' => base64_encode($data), 'filename' => $sFileName, 'mimeType' => $sMimeType);
+		$this->m_aData['attachments'][] = ['data' => base64_encode($data), 'filename' => $sFileName, 'mimeType' => $sMimeType];
 
 		$oBody = $this->m_oMessage->getBody();
 
 		$oRootPart = $oBody;
 		$aAttachmentPart = new DataPart($data, $sFileName, $sMimeType, 'base64');
-		if( $oBody instanceof MixedPart) {
+		if ($oBody instanceof MixedPart) {
 			$aCurrentParts = $oBody->getParts();
 			$aCurrentParts[] = $aAttachmentPart;
 			$oRootPart = new MixedPart(...$aCurrentParts);
-		}
-		else {
+		} else {
 			$oRootPart = new MixedPart($oBody, $aAttachmentPart);
 		}
 
@@ -489,7 +484,7 @@ class EMailSymfony extends Email
 	 */
 	protected function AddressStringToArray($sAddressCSVList)
 	{
-		$aAddresses = array();
+		$aAddresses = [];
 		foreach (explode(',', $sAddressCSVList) as $sAddress) {
 			$sAddress = trim($sAddress);
 			if (strlen($sAddress) > 0) {
@@ -513,14 +508,14 @@ class EMailSymfony extends Email
 		$aRes = $this->m_oMessage->getTo();
 
 		if ($bAsString) {
-			$aStrings = array();
+			$aStrings = [];
 			foreach ($aRes as $oEmail) {
 				$sName = $oEmail->getName();
 				$sEmail = $oEmail->getAddress();
 				if (empty($sName)) {
 					$aStrings[] = $sEmail;
 				} else {
-					$sName = str_replace(array('<', '>'), '', $sName);
+					$sName = str_replace(['<', '>'], '', $sName);
 					$aStrings[] = "$sName <$sEmail>";
 				}
 			}
@@ -550,20 +545,20 @@ class EMailSymfony extends Email
 
 	public function SetRecipientFrom($sAddress, $sLabel = '')
 	{
-		$this->m_aData['from'] = array('address' => $sAddress, 'label' => $sLabel);
+		$this->m_aData['from'] = ['address' => $sAddress, 'label' => $sLabel];
 		if ($sLabel != '') {
 			$this->m_oMessage->from(sprintf('%s <%s>', $sLabel, $sAddress));
-		} else if (!empty($sAddress)) {
+		} elseif (!empty($sAddress)) {
 			$this->m_oMessage->from($sAddress);
 		}
 	}
 
 	public function SetRecipientReplyTo($sAddress, $sLabel = '')
 	{
-		$this->m_aData['reply_to'] = array('address' => $sAddress, 'label' => $sLabel);
+		$this->m_aData['reply_to'] = ['address' => $sAddress, 'label' => $sLabel];
 		if ($sLabel != '') {
 			$this->m_oMessage->replyTo(sprintf('%s <%s>', $sLabel, $sAddress));
-		} else if (!empty($sAddress)) {
+		} elseif (!empty($sAddress)) {
 			$this->m_oMessage->replyTo($sAddress);
 		}
 	}

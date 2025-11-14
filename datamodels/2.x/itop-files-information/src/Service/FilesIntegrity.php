@@ -1,12 +1,11 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\FilesInformation\Service;
-
 
 use Dict;
 use DOMDocument;
@@ -16,7 +15,6 @@ use DOMXPath;
 
 class FilesIntegrity
 {
-
 	/**
 	 * Get the files defined in the manifest.xml
 	 *
@@ -27,11 +25,10 @@ class FilesIntegrity
 	 */
 	public static function GetInstalledFiles($sManifest)
 	{
-		$aFiles = array();
+		$aFiles = [];
 
 		$aManifestStats = @stat($sManifest);
-		if ($aManifestStats === false)
-		{
+		if ($aManifestStats === false) {
 			// No manifest
 			return false;
 		}
@@ -40,28 +37,20 @@ class FilesIntegrity
 		@$oManifestDocument->load($sManifest);
 		$oXPath = new DOMXPath($oManifestDocument);
 		$oNodeList = $oXPath->query('/files');
-		if ($oNodeList->length == 0)
-		{
+		if ($oNodeList->length == 0) {
 			// no files
 			return false;
 		}
-		foreach ($oNodeList as $oItems)
-		{
-			foreach ($oItems->childNodes as $oFileNode)
-			{
-				if (($oFileNode instanceof DOMNode))
-				{
-					if ($oFileNode->hasChildNodes())
-					{
-						$aFileInfo = array();
+		foreach ($oNodeList as $oItems) {
+			foreach ($oItems->childNodes as $oFileNode) {
+				if (($oFileNode instanceof DOMNode)) {
+					if ($oFileNode->hasChildNodes()) {
+						$aFileInfo = [];
 						$sFilePath = uniqid(); // just in case no path...
-						foreach ($oFileNode->childNodes as $oFileInfo)
-						{
-							if ($oFileInfo instanceof DOMElement)
-							{
+						foreach ($oFileNode->childNodes as $oFileInfo) {
+							if ($oFileInfo instanceof DOMElement) {
 								$aFileInfo[$oFileInfo->tagName] = $oFileInfo->textContent;
-								if ($oFileInfo->tagName == 'path')
-								{
+								if ($oFileInfo->tagName == 'path') {
 									$sFilePath = $oFileInfo->textContent;
 								}
 							}
@@ -88,51 +77,44 @@ class FilesIntegrity
 	{
 		$aFilesInfo = FilesIntegrity::GetInstalledFiles($sRootPath.'manifest.xml');
 
-		if ($aFilesInfo === false)
-		{
+		if ($aFilesInfo === false) {
 			throw new FileIntegrityException(Dict::Format('FilesInformation:Error:MissingFile', 'manifest.xml'));
 		}
 
 		$bHasErrors = false;
-		$sErrorFiles ="";
+		$sErrorFiles = "";
 
 		@clearstatcache();
-		foreach ($aFilesInfo as $aFileInfo)
-		{
+		foreach ($aFilesInfo as $aFileInfo) {
 			$sFile = $sRootPath.$aFileInfo['path'];
-			if (is_file($sFile))
-			{
+			if (is_file($sFile)) {
 				$aStats = @stat($sFile);
 				$iSize = $aStats['size'];
 				$sContent = file_get_contents($sFile);
 				$sChecksum = md5($sContent);
-				if (($iSize != $aFileInfo['size']) || ($sChecksum != $aFileInfo['md5']))
-				{
-					if($bExitAtFirstError) {
+				if (($iSize != $aFileInfo['size']) || ($sChecksum != $aFileInfo['md5'])) {
+					if ($bExitAtFirstError) {
 						throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CorruptedFile', $sFile));
 					} else {
 						$bHasErrors = true;
-						$sErrorFiles .='<li> '.$aFileInfo['path'].'</li>';
+						$sErrorFiles .= '<li> '.$aFileInfo['path'].'</li>';
 					}
 				}
 			}
 			// Packed with missing files...
 		}
-		if($bHasErrors){
-			throw new FileIntegrityException(Dict::Format('FilesInformation:Error:ListCorruptedFile','<ul> '.$sErrorFiles.'</ul>'));
+		if ($bHasErrors) {
+			throw new FileIntegrityException(Dict::Format('FilesInformation:Error:ListCorruptedFile', '<ul> '.$sErrorFiles.'</ul>'));
 		}
 	}
 
 	public static function IsInstallationConform($sRootPath, &$sErrorMsg)
 	{
 		$sErrorMsg = '';
-		try
-		{
+		try {
 			self::CheckInstallationIntegrity($sRootPath);
 			return true;
-		}
-		catch (FileIntegrityException $e)
-		{
+		} catch (FileIntegrityException $e) {
 			$sErrorMsg = $e->getMessage();
 		}
 		return false;

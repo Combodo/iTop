@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -18,14 +19,14 @@ namespace Combodo\iTop\Service\TemporaryObjects;
 class TemporaryObjectHelper
 {
 	// Global configuration
-	const CONFIG_FORCE             = 'temporary_object.force_creation';
-	const CONFIG_TEMP_LIFETIME     = 'temporary_object.lifetime';
-	const CONFIG_WATCHDOG_INTERVAL = 'temporary_object.watchdog_interval';
-	const CONFIG_GARBAGE_INTERVAL  = 'temporary_object.garbage_interval';
+	public const CONFIG_FORCE             = 'temporary_object.force_creation';
+	public const CONFIG_TEMP_LIFETIME     = 'temporary_object.lifetime';
+	public const CONFIG_WATCHDOG_INTERVAL = 'temporary_object.watchdog_interval';
+	public const CONFIG_GARBAGE_INTERVAL  = 'temporary_object.garbage_interval';
 
 	// Temporary descriptor operation
-	const OPERATION_CREATE = 'create';
-	const OPERATION_DELETE = 'delete';
+	public const OPERATION_CREATE = 'create';
+	public const OPERATION_DELETE = 'delete';
 
 	/**
 	 * GetWatchDogJS.
@@ -34,7 +35,7 @@ class TemporaryObjectHelper
 	 *
 	 * @return string
 	 */
-	static public function GetWatchDogJS(string $sTempId): string
+	public static function GetWatchDogJS(string $sTempId): string
 	{
 		$iWatchdogInterval = TemporaryObjectConfig::GetInstance()->GetWatchdogInterval();
 

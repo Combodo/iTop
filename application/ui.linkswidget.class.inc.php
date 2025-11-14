@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -54,7 +55,7 @@ class UILinksWidget
 		$this->m_sNameSuffix = $sNameSuffix;
 		$this->m_bDuplicatesAllowed = $bDuplicatesAllowed;
 
-		$this->m_aEditableFields = array();
+		$this->m_aEditableFields = [];
 
 		/** @var AttributeLinkedSetIndirect $oAttDef */
 		$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $this->m_sAttCode);
@@ -67,34 +68,33 @@ class UILinksWidget
 		$oLinkingAttDef = MetaModel::GetAttributeDef($this->m_sLinkedClass, $this->m_sExtKeyToRemote);
 		$this->m_sRemoteClass = $oLinkingAttDef->GetTargetClass();
 
-		$this->m_aEditableFields = array();
-		$this->m_aTableConfig = array();
-		$this->m_aTableConfig['form::checkbox'] = array(
+		$this->m_aEditableFields = [];
+		$this->m_aTableConfig = [];
+		$this->m_aTableConfig['form::checkbox'] = [
 			'label'       => "<input class=\"select_all\" type=\"checkbox\" value=\"1\" onClick=\"CheckAll('#linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix} .selection', this.checked); oWidget".$this->m_sInputId.".OnSelectChange();\">",
 			'description' => Dict::S('UI:SelectAllToggle+'),
-		);
+		];
 
 		$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($sClass, $sAttCode);
-		foreach ($aLnkAttDefsToDisplay as $oLnkAttDef)
-		{
+		foreach ($aLnkAttDefsToDisplay as $oLnkAttDef) {
 			$sLnkAttCode = $oLnkAttDef->GetCode();
 			$this->m_aEditableFields[] = $sLnkAttCode;
-			$this->m_aTableConfig[$sLnkAttCode] = array('label' => $oLnkAttDef->GetLabel(), 'description' => $oLnkAttDef->GetDescription());
+			$this->m_aTableConfig[$sLnkAttCode] = ['label' => $oLnkAttDef->GetLabel(), 'description' => $oLnkAttDef->GetDescription()];
 		}
 
-		$this->m_aTableConfig['static::key'] = array(
+		$this->m_aTableConfig['static::key'] = [
 			'label' => MetaModel::GetName($this->m_sRemoteClass),
 			'description' => MetaModel::GetClassDescription($this->m_sRemoteClass),
-		);
+		];
 		$this->m_aEditableFields[] = $this->m_sExtKeyToRemote;
 
 		$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($this->m_sRemoteClass);
 		foreach ($aRemoteAttDefsToDisplay as $oRemoteAttDef) {
 			$sRemoteAttCode = $oRemoteAttDef->GetCode();
-			$this->m_aTableConfig['static::'.$sRemoteAttCode] = array(
+			$this->m_aTableConfig['static::'.$sRemoteAttCode] = [
 				'label' => $oRemoteAttDef->GetLabel(),
 				'description' => $oRemoteAttDef->GetDescription(),
-			);
+			];
 		}
 	}
 
@@ -104,7 +104,6 @@ class UILinksWidget
 
 		return ($bSafe) ? utils::GetSafeId($sFieldId) : $sFieldId;
 	}
-
 
 	/**
 	 * Display the table with the form for editing all the links at once
@@ -118,7 +117,6 @@ class UILinksWidget
 	{
 		return DataTableUIBlockFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig, $aData);
 	}
-
 
 	/**
 	 * Get the HTML fragment corresponding to the linkset editing widget
@@ -157,7 +155,7 @@ class UILinksWidget
 	 * @throws DictExceptionMissingString
 	 * @throws Exception
 	 */
-	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson, $aAlreadyLinkedIds = array(), $aPrefillFormParam = array())
+	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson, $aAlreadyLinkedIds = [], $aPrefillFormParam = [])
 	{
 		$oAlreadyLinkedFilter = new DBObjectSearch($this->m_sRemoteClass);
 		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0) {
@@ -183,7 +181,9 @@ class UILinksWidget
 		$sLinkedSetId = $oBlock->oUILinksWidget->GetLinkedSetId();
 
 		$oDisplayBlock = new DisplayBlock($oFilter, 'search', false);
-		$oBlock->AddSubBlock($oDisplayBlock->GetDisplay($oPage, "SearchFormToAdd_{$sLinkedSetId}",
+		$oBlock->AddSubBlock($oDisplayBlock->GetDisplay(
+			$oPage,
+			"SearchFormToAdd_{$sLinkedSetId}",
 			[
 				'menu'                       => false,
 				'result_list_outer_selector' => "SearchResultsToAdd_{$sLinkedSetId}",
@@ -195,7 +195,8 @@ class UILinksWidget
 				'query_params'               => $oFilter->GetInternalParams(),
 				'hidden_criteria'            => $sAlreadyLinkedExpression,
 				'submit_on_load'             => false,
-			]));
+			]
+		));
 
 		$oBlock->AddForm();
 	}
@@ -212,25 +213,21 @@ class UILinksWidget
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public function SearchObjectsToAdd(WebPage $oP, $sRemoteClass = '', $aAlreadyLinkedIds = array(), $oCurrentObj = null)
+	public function SearchObjectsToAdd(WebPage $oP, $sRemoteClass = '', $aAlreadyLinkedIds = [], $oCurrentObj = null)
 	{
-		if ($sRemoteClass != '')
-		{
+		if ($sRemoteClass != '') {
 			// assert(MetaModel::IsParentClass($this->m_sRemoteClass, $sRemoteClass));
 			$oFilter = new DBObjectSearch($sRemoteClass);
-		}
-		else
-		{
+		} else {
 			// No remote class specified use the one defined in the linkedset
-			$oFilter = new DBObjectSearch($this->m_sRemoteClass);		
+			$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 		}
-		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0)
-		{
+		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0) {
 			$oFilter->AddCondition('id', $aAlreadyLinkedIds, 'NOTIN');
 		}
 		$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oBlock->Display($oP, "ResultsToAdd_{$this->m_sAttCode}", array('menu' => false, 'cssCount'=> '#count_'.$this->m_sAttCode.$this->m_sNameSuffix , 'selection_mode' => true, 'table_id' => 'add_'.$this->m_sAttCode)); // Don't display the 'Actions' menu on the results
+		$oBlock->Display($oP, "ResultsToAdd_{$this->m_sAttCode}", ['menu' => false, 'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix , 'selection_mode' => true, 'table_id' => 'add_'.$this->m_sAttCode]); // Don't display the 'Actions' menu on the results
 	}
 
 	/**
@@ -251,7 +248,7 @@ class UILinksWidget
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
 			if (is_object($oLinkedObj)) {
 				$oBlock = new BlockIndirectLinkSetEditTable($this);
-				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
+				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, [], $oCurrentObj, $iAdditionId); // Not yet created link get negative Ids
 				$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aRow, -$iAdditionId);
 				$oP->AddUiBlock($oRow);
 				$iAdditionId++;
@@ -280,7 +277,7 @@ class UILinksWidget
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $iObjectId, false);
 			if (is_object($oLinkedObj)) {
 				$oBlock = new BlockIndirectLinkSetEditTable($this);
-				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, array(), $oCurrentObj, $iAdditionId, false /* Default value */, $bAllowRemoteExtKeyEdit); // Not yet created link get negative Ids
+				$aRow = $oBlock->GetFormRow($oP, $oLinkedObj, $iObjectId, [], $oCurrentObj, $iAdditionId, false /* Default value */, $bAllowRemoteExtKeyEdit); // Not yet created link get negative Ids
 				$aData = [];
 				foreach ($aRow as $item) {
 					$aData[] = $item;
@@ -307,37 +304,30 @@ class UILinksWidget
 		$oAppContext = new ApplicationContext();
 		$sSrcClass = get_class($oSourceObj);
 		$sDestClass = $oSearch->GetClass();
-		foreach($oAppContext->GetNames() as $key)
-		{
+		foreach ($oAppContext->GetNames() as $key) {
 			// Find the value of the object corresponding to each 'context' parameter
-			$aCallSpec = array($sSrcClass, 'MapContextParam');
+			$aCallSpec = [$sSrcClass, 'MapContextParam'];
 			$sAttCode = '';
-			if (is_callable($aCallSpec))
-			{
-				$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter					
+			if (is_callable($aCallSpec)) {
+				$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter
 			}
 
-			if (MetaModel::IsValidAttCode($sSrcClass, $sAttCode))
-			{
+			if (MetaModel::IsValidAttCode($sSrcClass, $sAttCode)) {
 				$defaultValue = $oSourceObj->Get($sAttCode);
 
 				// Find the attcode for the same 'context' parameter in the destination class
 				// and sets its value as the default value for the search condition
-				$aCallSpec = array($sDestClass, 'MapContextParam');
+				$aCallSpec = [$sDestClass, 'MapContextParam'];
 				$sAttCode = '';
-				if (is_callable($aCallSpec))
-				{
-					$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter					
+				if (is_callable($aCallSpec)) {
+					$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter
 				}
-	
-				if (MetaModel::IsValidAttCode($sDestClass, $sAttCode) && !empty($defaultValue))
-				{
+
+				if (MetaModel::IsValidAttCode($sDestClass, $sAttCode) && !empty($defaultValue)) {
 					// Add Hierarchical condition if hierarchical key
 					$oAttDef = MetaModel::GetAttributeDef($sDestClass, $sAttCode);
-					if (isset($oAttDef) && ($oAttDef->IsExternalKey()))
-					{
-						try
-						{
+					if (isset($oAttDef) && ($oAttDef->IsExternalKey())) {
+						try {
 							/** @var AttributeExternalKey $oAttDef */
 							$sTargetClass = $oAttDef->GetTargetClass();
 							$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
@@ -348,8 +338,7 @@ class UILinksWidget
 								$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
 								$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
 							}
-						}
-						catch (Exception $e) {
+						} catch (Exception $e) {
 						}
 					} else {
 						$oSearch->AddCondition($sAttCode, $defaultValue);

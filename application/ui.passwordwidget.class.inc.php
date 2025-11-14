@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -28,13 +29,13 @@ use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 
-class UIPasswordWidget 
+class UIPasswordWidget
 {
 	protected static $iWidgetIndex = 0;
 	protected $sAttCode;
 	protected $sNameSuffix;
 	protected $iId;
-	
+
 	public function __construct($sAttCode, $iInputId, $sNameSuffix = '')
 	{
 		self::$iWidgetIndex++;
@@ -42,14 +43,14 @@ class UIPasswordWidget
 		$this->sNameSuffix = $sNameSuffix;
 		$this->iId = $iInputId;
 	}
-	
+
 	/**
 	 * Get the HTML fragment corresponding to the linkset editing widget
 	 * @param WebPage $oP The web page used for all the output
 	 * @param Hash $aArgs Extra context arguments
 	 * @return string The HTML fragment to be inserted into the page
 	 */
-	public function Display(WebPage $oPage, $aArgs = array())
+	public function Display(WebPage $oPage, $aArgs = [])
 	{
 		$oPage->add_dict_entry('UI:Component:Input:Password:DoesNotMatch');
 
@@ -94,4 +95,3 @@ class UIPasswordWidget
 		return $sHtmlValue;
 	}
 }
-?>

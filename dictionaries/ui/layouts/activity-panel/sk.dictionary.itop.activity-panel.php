@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand~~',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce~~',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close~~',
@@ -35,4 +36,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet~~',
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activity panel~~',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Click to open the activity panel~~',
-));
+]);

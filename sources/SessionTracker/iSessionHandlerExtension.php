@@ -2,14 +2,15 @@
 
 namespace Combodo\iTop\SessionTracker;
 
-	/**
-	 * @experimental for internal use only, subject to change without notice.
-	 *
-	 * Do not use this interface in your code.
-	 *
-	 * @since 3.2.2
-	 */
-interface iSessionHandlerExtension {
+/**
+ * @experimental for internal use only, subject to change without notice.
+ *
+ * Do not use this interface in your code.
+ *
+ * @since 3.2.2
+ */
+interface iSessionHandlerExtension
+{
 	public function __construct();
 
 	/**
@@ -19,5 +20,5 @@ interface iSessionHandlerExtension {
 	 *
 	 * @return void
 	 */
-	public function CompleteSessionData(array $aJson, array &$aData) : void;
+	public function CompleteSessionData(array $aJson, array &$aData): void;
 }

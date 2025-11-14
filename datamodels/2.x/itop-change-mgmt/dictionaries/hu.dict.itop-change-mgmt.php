@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:ChangeManagement' => 'Változáskezelés',
 	'Menu:Change:Overview' => 'Áttekintő',
 	'Menu:Change:Overview+' => 'Áttekintő oldal',
@@ -33,7 +34,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Változások állapotuk szerint az elmúlt 7 napban',
 	'Tickets:Related:OpenChanges' => 'Nyitott változások',
 	'Tickets:Related:RecentChanges' => 'Legutóbbi változások (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -45,12 +46,11 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Change' => 'Változás',
 	'Class:Change+' => '~~',
 	'Class:Change/Attribute:status' => 'Állapot',
@@ -125,4 +125,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Change/Attribute:outage/Value:no+' => '~~',
 	'Class:Change/Attribute:outage/Value:yes' => 'Igen',
 	'Class:Change/Attribute:outage/Value:yes+' => '~~',
-));
+]);

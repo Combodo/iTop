@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -19,7 +20,6 @@
 
 namespace Combodo\iTop\Application\UI\Base\Layout\PageContent;
 
-
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
@@ -34,7 +34,8 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
  * @internal
  * @since   3.0.0
  */
-class PageContent extends UIBlock implements iUIContentBlock {
+class PageContent extends UIBlock implements iUIContentBlock
+{
 	use tUIContentAreas;
 
 	// Overloaded constants
@@ -52,7 +53,8 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	 *
 	 * @param string|null $sId
 	 */
-	public function __construct(?string $sId = null) {
+	public function __construct(?string $sId = null)
+	{
 		parent::__construct($sId);
 
 		$this->SetMainBlocks([]);
@@ -69,7 +71,8 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	 *
 	 * @return $this
 	 */
-	public function SetMainBlocks(array $aBlocks) {
+	public function SetMainBlocks(array $aBlocks)
+	{
 		$this->SetContentAreaBlocks(static::ENUM_CONTENT_AREA_MAIN, $aBlocks);
 
 		return $this;
@@ -81,7 +84,8 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[]
 	 * @throws \Exception
 	 */
-	public function GetMainBlocks() {
+	public function GetMainBlocks()
+	{
 		return $this->GetContentAreaBlocks(static::ENUM_CONTENT_AREA_MAIN);
 	}
 
@@ -137,7 +141,8 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	 *
 	 * @return $this
 	 */
-	public function SetExtraHtmlContent(string $sExtraHtmlContent) {
+	public function SetExtraHtmlContent(string $sExtraHtmlContent)
+	{
 		$this->sExtraHtmlContent = $sExtraHtmlContent;
 
 		return $this;
@@ -148,7 +153,8 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	 *
 	 * @return string
 	 */
-	public function GetExtraHtmlContent() {
+	public function GetExtraHtmlContent()
+	{
 		return $this->sExtraHtmlContent;
 	}
 
@@ -159,7 +165,8 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	/**
 	 * @inheritDoc
 	 */
-	public function AddHtml(string $sHtml) {
+	public function AddHtml(string $sHtml)
+	{
 		$oBlock = new Html($sHtml);
 		$this->AddMainBlock($oBlock);
 
@@ -171,7 +178,8 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	 *
 	 * @inheritDoc
 	 */
-	public function AddSubBlock(?iUIBlock $oSubBlock) {
+	public function AddSubBlock(?iUIBlock $oSubBlock)
+	{
 		if ($oSubBlock) {
 			$this->AddMainBlock($oSubBlock);
 		}
@@ -185,7 +193,8 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	 *
 	 * @return $this
 	 */
-	public function RemoveSubBlock(string $sId) {
+	public function RemoveSubBlock(string $sId)
+	{
 		foreach ($this->GetContentAreas() as $oContentArea) {
 			$oContentArea->RemoveSubBlock($sId);
 		}
@@ -200,7 +209,8 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	 *
 	 * @return bool
 	 */
-	public function HasSubBlock(string $sId): bool {
+	public function HasSubBlock(string $sId): bool
+	{
 		foreach ($this->GetContentAreas() as $oContentArea) {
 			if ($oContentArea->HasSubBlock($sId)) {
 				return true;
@@ -215,7 +225,8 @@ class PageContent extends UIBlock implements iUIContentBlock {
 	 *
 	 * @inheritDoc
 	 */
-	public function GetSubBlock(string $sId): ?iUIBlock {
+	public function GetSubBlock(string $sId): ?iUIBlock
+	{
 		foreach ($this->GetContentAreas() as $oContentArea) {
 			$oSubBlock = $oContentArea->GetSubBlock($sId);
 			if (!is_null($oSubBlock)) {

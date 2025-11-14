@@ -1,11 +1,11 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\MedallionIcon;
-
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
@@ -38,7 +38,7 @@ class MedallionIcon extends UIBlock
 	{
 		parent::__construct($sId);
 		$this->sImageUrl = $sImageUrl;
-		$this->sIconClass= $sIconClass;
+		$this->sIconClass = $sIconClass;
 	}
 
 	/**
@@ -78,7 +78,7 @@ class MedallionIcon extends UIBlock
 		$this->sIconClass = $sIconClass;
 		return $this;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -97,5 +97,5 @@ class MedallionIcon extends UIBlock
 		$this->sDescription = $sDescription;
 		return $this;
 	}
-	
+
 }

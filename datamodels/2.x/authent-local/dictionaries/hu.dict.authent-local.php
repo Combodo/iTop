@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserLocal' => ITOP_APPLICATION_SHORT.' felhasználó',
 	'Class:UserLocal+' => 'Rendszeren belül létrehozott felhasználó',
 	'Class:UserLocal/Attribute:password' => 'Jelszó',
@@ -29,4 +30,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'A jelszónak legalább 8 karakterből kell állnia, és tartalmaznia kell nagybetűket, kisbetűket, numerikus és speciális karaktereket.',
 	'UserLocal:password:expiration' => 'Az alábbi mezőkhöz egy bővítmény szükséges',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'A jelszó lejárati idejének beállítása "Egyszeri jelszóra" nem engedélyezett a saját Felhasználó számára.',
-));
+]);

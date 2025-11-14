@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Bruno DA SILVA, working for Combodo
  * Date: 02/01/2020
@@ -32,8 +33,7 @@ class iTopConfigParserTest extends ItopTestCase
 		$this->tmpSavePath = tempnam(sys_get_temp_dir(), 'config-itop');
 
 		$this->conf_exists = is_file($this->sConfigPath);
-		if ($this->conf_exists)
-		{
+		if ($this->conf_exists) {
 			copy($this->sConfigPath, $this->tmpSavePath);
 		}
 		clearstatcache();
@@ -66,48 +66,47 @@ class iTopConfigParserTest extends ItopTestCase
 	public function ParserProvider()
 	{
 
-		return array(
-			"test MySettings" => array(
+		return [
+			"test MySettings" => [
 				'sInitialConfig' => '<?php
 					$a=1;
 					$MySettings = array(
 						"b" => $a
 					);',
-				'aExpectedVarsMap' => array(
-					'MySettings' => array('b' => '$a'),
-					'MyModuleSettings' => array(),
-					'MyModules' => array(),
-				)
-			),
+				'aExpectedVarsMap' => [
+					'MySettings' => ['b' => '$a'],
+					'MyModuleSettings' => [],
+					'MyModules' => [],
+				],
+			],
 
-			"test MyModuleSettings" => array(
+			"test MyModuleSettings" => [
 				'sInitialConfig' => '<?php
 					$a=1;
 					$MyModuleSettings = array(
 						"b" => $a
 					);',
-				'aExpectedVarsMap' => array(
-					'MySettings' => array(),
-					'MyModuleSettings' => array('b' => '$a'),
-					'MyModules' => array(),
-				)
-			),
+				'aExpectedVarsMap' => [
+					'MySettings' => [],
+					'MyModuleSettings' => ['b' => '$a'],
+					'MyModules' => [],
+				],
+			],
 
-
-			"test MyModules" => array(
+			"test MyModules" => [
 				'sInitialConfig' => '<?php
 					$a=1;
 					$MyModules = array(
 						"b" => $a
 					);',
-				'aExpectedVarsMap' => array(
-					'MySettings' =>array(),
-					'MyModuleSettings' => array(),
-					'MyModules' => array('b' => '$a'),
-				)
-			),
+				'aExpectedVarsMap' => [
+					'MySettings' => [],
+					'MyModuleSettings' => [],
+					'MyModules' => ['b' => '$a'],
+				],
+			],
 
-			"test MyModules + MyModuleSettings " => array(
+			"test MyModules + MyModuleSettings " => [
 				'sInitialConfig' => '<?php
 					$MyModules = array(
 						"b" => $a
@@ -115,26 +114,26 @@ class iTopConfigParserTest extends ItopTestCase
 					$MyModuleSettings = array(
 						"e" => $d
 					);',
-				'aExpectedVarsMap' => array(
-					'MySettings' =>array(),
-					'MyModuleSettings' => array('e' => '$d'),
-					'MyModules' => array('b' => '$a'),
-				)
-			),
+				'aExpectedVarsMap' => [
+					'MySettings' => [],
+					'MyModuleSettings' => ['e' => '$d'],
+					'MyModules' => ['b' => '$a'],
+				],
+			],
 
-			"test preserve gloabl + concatenation" => array(
+			"test preserve gloabl + concatenation" => [
 				'sInitialConfig' => '<?php
 					$a=1;
 					$MyModules = array(
 						"b" =>  $_SERVER["REQUEST_URI"] . "/toto"
 					);',
-				'aExpectedVarsMap' => array(
-					'MySettings' =>array(),
-					'MyModuleSettings' => array(),
-					'MyModules' => array('b' => '$_SERVER["REQUEST_URI"] . "/toto"'),
-				)
-			),
-			"test MyModules array of arrays" => array(
+				'aExpectedVarsMap' => [
+					'MySettings' => [],
+					'MyModuleSettings' => [],
+					'MyModules' => ['b' => '$_SERVER["REQUEST_URI"] . "/toto"'],
+				],
+			],
+			"test MyModules array of arrays" => [
 				'sInitialConfig' => '<?php 
 					$a=1;
 					$MyModules = array(
@@ -147,15 +146,15 @@ class iTopConfigParserTest extends ItopTestCase
 						  ),
 						),
 					);',
-				'aExpectedVarsMap' => array(
-					'MySettings' =>array(),
-					'MyModuleSettings' => array(),
-					'MyModules' => array(
-						'date_and_time_format' => 'array("default" => array("date" => "Y-m-d", "time" => "H:i:s", "date_time" => "{$date} {$time}"))'
-					),
-				)
-			),
-		);
+				'aExpectedVarsMap' => [
+					'MySettings' => [],
+					'MyModuleSettings' => [],
+					'MyModules' => [
+						'date_and_time_format' => 'array("default" => array("date" => "Y-m-d", "time" => "H:i:s", "date_time" => "{$date} {$time}"))',
+					],
+				],
+			],
+		];
 	}
 
 	/**

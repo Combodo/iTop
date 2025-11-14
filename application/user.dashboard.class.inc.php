@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -31,40 +32,39 @@ class UserDashboard extends DBObject
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "gui",
 			"key_type" => "autoincrement",
-			"name_attcode" => array('user_id', 'menu_code'),
+			"name_attcode" => ['user_id', 'menu_code'],
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_app_dashboards",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-		);
-		
-		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", array("targetclass"=>"User", "allowed_values"=>null, "sql"=>"user_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("menu_code", array("allowed_values"=>null, "sql"=>"menu_code", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("contents", array("allowed_values"=>null, "sql"=>"contents", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		];
 
-		MetaModel::Init_SetZListItems('default_search', array (
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", ["targetclass" => "User", "allowed_values" => null, "sql" => "user_id", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("menu_code", ["allowed_values" => null, "sql" => "menu_code", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("contents", ["allowed_values" => null, "sql" => "contents", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
+
+		MetaModel::Init_SetZListItems('default_search', [
 			0 => 'user_id',
 			1 => 'menu_code',
-		));
-		MetaModel::Init_SetZListItems('list', array (
+		]);
+		MetaModel::Init_SetZListItems('list', [
 			0 => 'user_id',
 			1 => 'menu_code',
-		));
+		]);
 	}
 
 	/**
 	* Overloading this function here to secure a fix done right before the release
-	* The real fix should be to implement this verb in DBObject	
+	* The real fix should be to implement this verb in DBObject
 	*/
 	public function DBDeleteTracked(CMDBChange $oChange, $bSkipStrongSecurity = null, &$oDeletionPlan = null)
 	{
 		$this->DBDelete($oDeletionPlan);
 	}
 }
-?>

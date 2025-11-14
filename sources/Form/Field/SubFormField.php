@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -29,14 +29,14 @@ use Combodo\iTop\Form\Form;
  */
 class SubFormField extends Field
 {
-    protected $oForm;
+	protected $oForm;
 
-    /**
-     * @inheritDoc
-     */
+	/**
+	 * @inheritDoc
+	 */
 	public function __construct(string $sId, Closure $onFinalizeCallback = null)
 	{
-		$this->oForm = new Form('subform_' . $sId);
+		$this->oForm = new Form('subform_'.$sId);
 		parent::__construct($sId, $onFinalizeCallback);
 	}
 
@@ -52,7 +52,7 @@ class SubFormField extends Field
 	/**
 	 *
 	 * @param \Combodo\iTop\Form\Form $oForm
-     *
+	 *
 	 * @return \Combodo\iTop\Form\Field\SubFormField
 	 */
 	public function SetForm(Form $oForm)
@@ -61,12 +61,12 @@ class SubFormField extends Field
 		return $this;
 	}
 
-    /**
-     * Checks the validators to see if the field's current value is valid.
-     * Then sets $bValid and $aErrorMessages.
-     *
-     * @inheritDoc
-     */
+	/**
+	 * Checks the validators to see if the field's current value is valid.
+	 * Then sets $bValid and $aErrorMessages.
+	 *
+	 * @inheritDoc
+	 */
 	public function Validate()
 	{
 		return $this->oForm->Validate();
@@ -87,9 +87,8 @@ class SubFormField extends Field
 	 */
 	public function GetErrorMessages()
 	{
-		$aRet = array();
-		foreach ($this->oForm->GetErrorMessages() as $sSubFieldId => $aSubFieldMessages)
-		{
+		$aRet = [];
+		foreach ($this->oForm->GetErrorMessages() as $sSubFieldId => $aSubFieldMessages) {
 			$aRet[] = $sSubFieldId.': '.implode(', ', $aSubFieldMessages);
 		}
 		return $aRet;
@@ -104,14 +103,14 @@ class SubFormField extends Field
 		return $this->oForm->GetCurrentValues();
 	}
 
-    /**
-     *
-     * @param array $value
-     *
-     * @return \Combodo\iTop\Form\Field\SubFormField
-     *
-     * @throws \Exception
-     */
+	/**
+	 *
+	 * @param array $value
+	 *
+	 * @return \Combodo\iTop\Form\Field\SubFormField
+	 *
+	 * @throws \Exception
+	 */
 	public function SetCurrentValue($value)
 	{
 		$this->oForm->SetCurrentValues($value);
@@ -124,13 +123,13 @@ class SubFormField extends Field
 	 * @param boolean $bMandatory
 	 */
 	public function SetMandatory(bool $bMandatory)
-    {
-        foreach ($this->oForm->GetFields() as $oField) {
-            $oField->SetMandatory($bMandatory);
-        }
+	{
+		foreach ($this->oForm->GetFields() as $oField) {
+			$oField->SetMandatory($bMandatory);
+		}
 
-        return parent::SetMandatory($bMandatory);
-    }
+		return parent::SetMandatory($bMandatory);
+	}
 
 	/**
 	 * Sets the read-only flag on all the fields on the form
@@ -139,12 +138,11 @@ class SubFormField extends Field
 	 */
 	public function SetReadOnly(bool $bReadOnly)
 	{
-		foreach ($this->oForm->GetFields() as $oField)
-		{
+		foreach ($this->oForm->GetFields() as $oField) {
 			$oField->SetReadOnly($bReadOnly);
 			$oField->SetMandatory(false);
 		}
-        return parent::SetReadOnly($bReadOnly);
+		return parent::SetReadOnly($bReadOnly);
 	}
 
 	/**
@@ -154,11 +152,10 @@ class SubFormField extends Field
 	 */
 	public function SetHidden(bool $bHidden)
 	{
-		foreach ($this->oForm->GetFields() as $oField)
-		{
+		foreach ($this->oForm->GetFields() as $oField) {
 			$oField->SetHidden($bHidden);
 		}
-        return parent::SetHidden($bHidden);
+		return parent::SetHidden($bHidden);
 	}
 
 	/**
@@ -170,15 +167,14 @@ class SubFormField extends Field
 		return $this->oForm->FindSubForm($sFormPath);
 	}
 
-    /**
-     * @throws \Exception
-     */
-    public function OnFinalize()
+	/**
+	 * @throws \Exception
+	 */
+	public function OnFinalize()
 	{
-		$sFormId = 'subform_' . $this->sId;
-		if ($this->sFormPath !== null)
-		{
-			$sFormId = $this->sFormPath . '-' . $sFormId;
+		$sFormId = 'subform_'.$this->sId;
+		if ($this->sFormPath !== null) {
+			$sFormId = $this->sFormPath.'-'.$sFormId;
 		}
 		$this->oForm->SetId($sFormId);
 

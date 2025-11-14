@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Spanish Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Links:Object:New:Modal:Title' => 'Crear un objeto',
 	'UI:Links:Create:Button' => 'Crear',
 	'UI:Links:Create:Button+' => 'Crear un %4$s',
@@ -39,4 +40,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Links:Bulk:LinkExistForOneObject' => 'Un objeto está vinculado',
 	'UI:Links:Bulk:LinkExistForXObjects' => '{count} objetos están vinculados',
 	'UI:Links:NewItem' => 'Nuevo elemento',
-));
+]);

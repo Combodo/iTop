@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -13,13 +14,13 @@
 abstract class DBSearch
 {
 	/** @internal */
-	const JOIN_POINTING_TO = 0;
+	public const JOIN_POINTING_TO = 0;
 	/** @internal */
-	const JOIN_REFERENCED_BY = 1;
+	public const JOIN_REFERENCED_BY = 1;
 
 	protected $m_bNoContextParameters = false;
 	/** @var array For {@see iQueryModifier} impl */
-	protected $m_aModifierProperties = array();
+	protected $m_aModifierProperties = [];
 	protected $m_bArchiveMode = false;
 	protected $m_bShowObsoleteData = true;
 
@@ -34,10 +35,10 @@ abstract class DBSearch
 		$this->Init();
 	}
 
-    /**
-     * called by the constructor
-     * @internal Set the obsolete and archive modes to the default ones
-     */
+	/**
+	 * called by the constructor
+	 * @internal Set the obsolete and archive modes to the default ones
+	 */
 	protected function Init()
 	{
 		$this->m_bArchiveMode = utils::IsArchiveMode();
@@ -86,104 +87,104 @@ abstract class DBSearch
 		$this->m_bArchiveMode = $bEnable;
 	}
 
-    /**
-     * @internal
-     * @return bool
-     */
+	/**
+	 * @internal
+	 * @return bool
+	 */
 	public function GetArchiveMode()
 	{
 		return $this->m_bArchiveMode;
 	}
 
-    /**
-     * Should the obsolete data be fetched
-     *
-     * @internal
-     * @param $bShow
-     */
+	/**
+	 * Should the obsolete data be fetched
+	 *
+	 * @internal
+	 * @param $bShow
+	 */
 	public function SetShowObsoleteData($bShow)
 	{
 		$this->m_bShowObsoleteData = $bShow;
 	}
 
-    /**
-     * @internal
-     * @return bool
-     */
+	/**
+	 * @internal
+	 * @return bool
+	 */
 	public function GetShowObsoleteData()
 	{
-		if ($this->m_bArchiveMode || $this->IsAllDataAllowed())
-		{
+		if ($this->m_bArchiveMode || $this->IsAllDataAllowed()) {
 			// Enable obsolete data too!
 			$bRet = true;
-		}
-		else
-		{
+		} else {
 			$bRet = $this->m_bShowObsoleteData;
 		}
 		return $bRet;
 	}
 
-    /**
-     * @internal
-     */
-	public function NoContextParameters() {$this->m_bNoContextParameters = true;}
+	/**
+	 * @internal
+	 */
+	public function NoContextParameters()
+	{
+		$this->m_bNoContextParameters = true;
+	}
 
-    /**
-     * @internal
-     * @return bool
-     */
-	public function HasContextParameters() {return $this->m_bNoContextParameters;}
+	/**
+	 * @internal
+	 * @return bool
+	 */
+	public function HasContextParameters()
+	{
+		return $this->m_bNoContextParameters;
+	}
 
-    /**
-     * @internal
-     *
-     * @param $sPluginClass
-     * @param $sProperty
-     * @param $value
-     */
+	/**
+	 * @internal
+	 *
+	 * @param $sPluginClass
+	 * @param $sProperty
+	 * @param $value
+	 */
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
 	{
 		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
 	}
 
-    /**
-     * @internal
-     *
-     * @param $sPluginClass
-     *
-     * @return array|mixed
-     */
+	/**
+	 * @internal
+	 *
+	 * @param $sPluginClass
+	 *
+	 * @return array|mixed
+	 */
 	public function GetModifierProperties($sPluginClass)
 	{
-		if (array_key_exists($sPluginClass, $this->m_aModifierProperties))
-		{
+		if (array_key_exists($sPluginClass, $this->m_aModifierProperties)) {
 			return $this->m_aModifierProperties[$sPluginClass];
-		}
-		else
-		{
-			return array();
+		} else {
+			return [];
 		}
 	}
 
-    /**
-     * @internal
-     * @param $sAlias
-     *
-     * @return mixed
-     */
+	/**
+	 * @internal
+	 * @param $sAlias
+	 *
+	 * @return mixed
+	 */
 	abstract public function GetClassName($sAlias);
 
-    /**
-     * @internal
-     * @return mixed
-     */
+	/**
+	 * @internal
+	 * @return mixed
+	 */
 	abstract public function GetClass();
 
-    /**
-     * @internal
-     * @return mixed
-     */
+	/**
+	 * @internal
+	 * @return mixed
+	 */
 	abstract public function GetClassAlias();
 
 	/**
@@ -193,23 +194,23 @@ abstract class DBSearch
 	abstract public function GetFirstJoinedClass();
 
 	/**
-     * Change the class
-     *
-     * Defaults to the first selected class (most of the time it is also the first joined class
-     * only subclasses are supported as of now, because the conditions must fit the new class
-     *
-     * @internal
-     */
+	 * Change the class
+	 *
+	 * Defaults to the first selected class (most of the time it is also the first joined class
+	 * only subclasses are supported as of now, because the conditions must fit the new class
+	 *
+	 * @internal
+	 */
 	abstract public function ChangeClass($sNewClass, $sAlias = null);
 
-    /**
-     * @internal
-     * @return mixed
-     */
+	/**
+	 * @internal
+	 * @return mixed
+	 */
 	abstract public function GetSelectedClasses();
 
 	/**
-     * @internal
+	 * @internal
 	 * @param array $aSelectedClasses array of aliases
 	 * @throws CoreException
 	 */
@@ -218,15 +219,15 @@ abstract class DBSearch
 	/**
 	 * Change any alias of the query tree
 	 *
-     * @internal
-     *
+	 * @internal
+	 *
 	 * @param $sOldName
 	 * @param $sNewName
 	 * @return bool True if the alias has been found and changed
 	 */
 	abstract public function RenameAlias($sOldName, $sNewName);
 
-	abstract public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array());
+	abstract public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = []);
 
 	abstract public function TranslateConditions($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true);
 
@@ -249,56 +250,56 @@ abstract class DBSearch
 	 * @see DBSearch::AddConditionExpression()
 	 *
 	 * @param Expression $oExpression
-     *
-     * @return mixed
-     */
+	 *
+	 * @return mixed
+	 */
 	abstract public function MergeConditionExpression($oExpression);
 
-    /**
-     * add $oExpression as a AND
-     *
-     * @api
-     * @see DBSearch::MergeConditionExpression()
-     *
-     * @param Expression $oExpression
-     *
-     * @return mixed
-     */
+	/**
+	 * add $oExpression as a AND
+	 *
+	 * @api
+	 * @see DBSearch::MergeConditionExpression()
+	 *
+	 * @param Expression $oExpression
+	 *
+	 * @return mixed
+	 */
 	abstract public function AddConditionExpression($oExpression);
 
-    /**
-     * Condition on the friendlyname
-     *
-     * Restrict the query to only the corresponding selected class' friendlyname
-     *
-     * @internal
-     *
-     * @param string $sName the desired friendlyname
-     *
-     * @return mixed
-     */
-  	abstract public function AddNameCondition($sName);
+	/**
+	 * Condition on the friendlyname
+	 *
+	 * Restrict the query to only the corresponding selected class' friendlyname
+	 *
+	 * @internal
+	 *
+	 * @param string $sName the desired friendlyname
+	 *
+	 * @return mixed
+	 */
+	abstract public function AddNameCondition($sName);
 
-    /**
-     * Add a condition
-     *
-     * This is the simplest way to express a AND condition. For complex use cases, use MergeConditionExpression or AddConditionExpression instead
-     *
-     * @api
-     *
-     * @param string $sFilterCode
-     * @param mixed  $value
-     * @param string $sOpCode operator to use : '=' (default), '!=', 'IN', 'NOT IN'
-     *
-     * @throws \CoreException
-     *
-     */
+	/**
+	 * Add a condition
+	 *
+	 * This is the simplest way to express a AND condition. For complex use cases, use MergeConditionExpression or AddConditionExpression instead
+	 *
+	 * @api
+	 *
+	 * @param string $sFilterCode
+	 * @param mixed  $value
+	 * @param string $sOpCode operator to use : '=' (default), '!=', 'IN', 'NOT IN'
+	 *
+	 * @throws \CoreException
+	 *
+	 */
 	abstract public function AddCondition($sFilterCode, $value, $sOpCode = null);
 	/**
 	 * Specify a condition on external keys or link sets
-     *
-     * @internal
-     *
+	 *
+	 * @internal
+	 *
 	 * @param string $sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
 	 *                 Example: infra_list->ci_id->location_id->country
 	 * @param mixed $value The value to match (can be an array => IN(val1, val2...)
@@ -306,50 +307,50 @@ abstract class DBSearch
 	 */
 	abstract public function AddConditionAdvanced($sAttSpec, $value);
 
-    /**
-     * @internal
-     *
-     * @param string $sFullText
-     *
-     * @return mixed
-     */
+	/**
+	 * @internal
+	 *
+	 * @param string $sFullText
+	 *
+	 * @return mixed
+	 */
 	abstract public function AddCondition_FullText($sFullText);
 
 	abstract public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle);
 
-		/**
-     * Perform a join, the remote class being matched by the mean of its primary key
-     *
-     * The join is performed
-     *   * from the searched class, based on the $sExtKeyAttCode attribute
-     *   * against the oFilter searched class, based on its primary key
-     * Note : if several classes have already being joined (SELECT a join b ON...), the first joined class (a in the example) is considered as being the searched class.
-     *
-     * @api
-     * @see AddCondition_ReferencedBy()
-     *
+	/**
+	 * Perform a join, the remote class being matched by the mean of its primary key
+	 *
+	 * The join is performed
+	 *   * from the searched class, based on the $sExtKeyAttCode attribute
+	 *   * against the oFilter searched class, based on its primary key
+	 * Note : if several classes have already being joined (SELECT a join b ON...), the first joined class (a in the example) is considered as being the searched class.
+	 *
+	 * @api
+	 * @see AddCondition_ReferencedBy()
+	 *
 	 * @param DBObjectSearch $oFilter
 	 * @param string $sExtKeyAttCode
 	 * @param int $iOperatorCode the comparison operator to use. For the list of all possible values, see the constant defined in core/oql/oqlquery.class.inc.php
 	 * @param array|null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed in the newly attached oFilter (in case of collisions between the two filters)
-     *
+	 *
 	 * @throws CoreException
 	 * @throws CoreWarning
 	 */
 	abstract public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null);
 
 	/**
-     * Inverse operation of AddCondition_PointingTo
-     *
-     * The join is performed
-     *   * from the olFilter searched class, based on the $sExtKeyAttCode attribute
-     *   * against the searched class, based on its primary key
-     * Note : if several classes have already being joined (SELECT a join b ON...), the first joined class (a in the example) is considered as being the searched class.
-     *
-     *
-     * @api
-     * @see AddCondition_PointingTo()
-     *
+	 * Inverse operation of AddCondition_PointingTo
+	 *
+	 * The join is performed
+	 *   * from the olFilter searched class, based on the $sExtKeyAttCode attribute
+	 *   * against the searched class, based on its primary key
+	 * Note : if several classes have already being joined (SELECT a join b ON...), the first joined class (a in the example) is considered as being the searched class.
+	 *
+	 *
+	 * @api
+	 * @see AddCondition_PointingTo()
+	 *
 	 * @param DBObjectSearch $oFilter
 	 * @param $sForeignExtKeyAttCode
 	 * @param int $iOperatorCode
@@ -373,62 +374,54 @@ abstract class DBSearch
 	abstract public function Filter($sClassAlias, DBSearch $oFilter);
 
 	/**
-     * Filter the result
-     *
-     * The filter is performed by returning only the values in common with the given $oFilter
-     * The impact on the resulting query performance/viability can be significant.
-     * Only the first joined class can be filtered.
-     *
-     * @internal
-     *
-     * @param DBSearch $oFilter
-     *
-     * @return mixed
-     */
+	 * Filter the result
+	 *
+	 * The filter is performed by returning only the values in common with the given $oFilter
+	 * The impact on the resulting query performance/viability can be significant.
+	 * Only the first joined class can be filtered.
+	 *
+	 * @internal
+	 *
+	 * @param DBSearch $oFilter
+	 *
+	 * @return mixed
+	 */
 	abstract public function Intersect(DBSearch $oFilter);
 
-    /**
-     * Perform a join
-     *
-     * The join is performed against $oFilter selected class using $sExtKeyAttCode of the current selected class
-     *
-     * @internal
-     *
-     * @param DBSearch   $oFilter        The join is performed against $oFilter selected class
-     * @param integer    $iDirection     can be either DBSearch::JOIN_POINTING_TO or DBSearch::JOIN_REFERENCED_BY
-     * @param string     $sExtKeyAttCode The join is performed against $sExtKeyAttCode whether it is compared against the current DBSearch or $oFilter depend of $iDirection
-     * @param integer    $iOperatorCode  See DBSearch::AddCondition_PointingTo()
-     * @param array|null $aRealiasingMap Map of aliases from the attached query, that could have been renamed by the optimization process
-     *
-     * @return DBSearch
-     * @throws CoreException
-     * @throws CoreWarning
-     */
+	/**
+	 * Perform a join
+	 *
+	 * The join is performed against $oFilter selected class using $sExtKeyAttCode of the current selected class
+	 *
+	 * @internal
+	 *
+	 * @param DBSearch   $oFilter        The join is performed against $oFilter selected class
+	 * @param integer    $iDirection     can be either DBSearch::JOIN_POINTING_TO or DBSearch::JOIN_REFERENCED_BY
+	 * @param string     $sExtKeyAttCode The join is performed against $sExtKeyAttCode whether it is compared against the current DBSearch or $oFilter depend of $iDirection
+	 * @param integer    $iOperatorCode  See DBSearch::AddCondition_PointingTo()
+	 * @param array|null $aRealiasingMap Map of aliases from the attached query, that could have been renamed by the optimization process
+	 *
+	 * @return DBSearch
+	 * @throws CoreException
+	 * @throws CoreWarning
+	 */
 	public function Join(DBSearch $oFilter, $iDirection, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		$oSourceFilter = $this->DeepClone();
 		$oRet = null;
 
-		if ($oFilter instanceof DBUnionSearch)
-		{
-			$aSearches = array();
-			foreach ($oFilter->GetSearches() as $oSearch)
-			{
+		if ($oFilter instanceof DBUnionSearch) {
+			$aSearches = [];
+			foreach ($oFilter->GetSearches() as $oSearch) {
 				$aSearches[] = $oSourceFilter->Join($oSearch, $iDirection, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 			}
 			$oRet = new DBUnionSearch($aSearches);
-		}
-		else
-		{
+		} else {
 			/** @var \DBObjectSearch $oFilter */
-			if ($iDirection === static::JOIN_POINTING_TO)
-			{
+			if ($iDirection === static::JOIN_POINTING_TO) {
 				$oSourceFilter->AddCondition_PointingTo($oFilter, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
-			}
-			else
-			{
-				if ($iOperatorCode !== TREE_OPERATOR_EQUALS)
-				{
+			} else {
+				if ($iOperatorCode !== TREE_OPERATOR_EQUALS) {
 					throw new Exception('Only TREE_OPERATOR_EQUALS  operator code is supported yet for AddCondition_ReferencedBy.');
 				}
 				$oSourceFilter->AddCondition_ReferencedBy($oFilter, $sExtKeyAttCode, TREE_OPERATOR_EQUALS, $aRealiasingMap);
@@ -439,99 +432,88 @@ abstract class DBSearch
 		return $oRet;
 	}
 
-    /**
-     * Set the internal params.
-     *
-     * If any params pre-existed, they are lost.
-     *
-     * @internal
-     *
-     * @param mixed[string] $aParams array of mixed params index by string name
-     *
-     * @return mixed
-     */
+	/**
+	 * Set the internal params.
+	 *
+	 * If any params pre-existed, they are lost.
+	 *
+	 * @internal
+	 *
+	 * @param mixed[string] $aParams array of mixed params index by string name
+	 *
+	 * @return mixed
+	 */
 	abstract public function SetInternalParams($aParams);
 
-    /**
-     * @internal
-     * @return mixed
-     */
+	/**
+	 * @internal
+	 * @return mixed
+	 */
 	abstract public function GetInternalParams();
 
-    /**
-     * @internal
-     *
-     * @return mixed
-     */
+	/**
+	 * @internal
+	 *
+	 * @return mixed
+	 */
 	abstract public function GetQueryParams();
 
-    /**
-     * @internal
-     * @return mixed
-     */
+	/**
+	 * @internal
+	 * @return mixed
+	 */
 	abstract public function ListConstantFields();
 
 	/**
-     * Turn the parameters (:xxx) into scalar values
-     *
-     * The goal is to easily serialize a search
+	 * Turn the parameters (:xxx) into scalar values
 	 *
-     * @internal
-     *
+	 * The goal is to easily serialize a search
+	 *
+	 * @internal
+	 *
 	 * @param array $aArgs
 	 *
 	 * @return string
 	 */
 	abstract public function ApplyParameters($aArgs);
 
-    /**
-     * Convert a query to a string representation
-     *
-     * This operation can be revert back to a DBSearch using DBSearch::unserialize()
-     *
-     * @api
-     * @see DBSearch::unserialize()
-     *
-     * @param bool  $bDevelopParams
-     * @param array $aContextParams
-     *
-     * @return false|string
-     * @throws ArchivedObjectException
-     * @throws CoreException
-     */
-    public function serialize($bDevelopParams = false, $aContextParams = array())
+	/**
+	 * Convert a query to a string representation
+	 *
+	 * This operation can be revert back to a DBSearch using DBSearch::unserialize()
+	 *
+	 * @api
+	 * @see DBSearch::unserialize()
+	 *
+	 * @param bool  $bDevelopParams
+	 * @param array $aContextParams
+	 *
+	 * @return false|string
+	 * @throws ArchivedObjectException
+	 * @throws CoreException
+	 */
+	public function serialize($bDevelopParams = false, $aContextParams = [])
 	{
 		$aQueryParams = $this->GetQueryParams();
 
 		$aContextParams = array_merge($this->GetInternalParams(), $aContextParams);
 
-		foreach($aQueryParams as $sParam => $sValue)
-		{
-			if (isset($aContextParams[$sParam]))
-			{
+		foreach ($aQueryParams as $sParam => $sValue) {
+			if (isset($aContextParams[$sParam])) {
 				$aQueryParams[$sParam] = $aContextParams[$sParam];
-			}
-			elseif (($iPos = strpos($sParam, '->')) !== false)
-			{
+			} elseif (($iPos = strpos($sParam, '->')) !== false) {
 				$sParamName = substr($sParam, 0, $iPos);
-				if (isset($aContextParams[$sParamName.'->object()']) || isset($aContextParams[$sParamName]))
-				{
+				if (isset($aContextParams[$sParamName.'->object()']) || isset($aContextParams[$sParamName])) {
 					$sAttCode = substr($sParam, $iPos + 2);
 					/** @var \DBObject $oObj */
 					$oObj = isset($aContextParams[$sParamName.'->object()']) ? $aContextParams[$sParamName.'->object()'] : $aContextParams[$sParamName];
-					if ($oObj->IsModified())
-					{
-						if ($sAttCode == 'id')
-						{
+					if ($oObj->IsModified()) {
+						if ($sAttCode == 'id') {
 							$aQueryParams[$sParam] = $oObj->GetKey();
-						}
-						else
-						{
+						} else {
 							$aQueryParams[$sParam] = $oObj->Get($sAttCode);
 						}
-					}
-					else
-					{
+					} else {
 						unset($aQueryParams[$sParam]);
 						// For database objects, serialize only class, key
 						$aQueryParams[$sParamName.'->id'] = $oObj->GetKey();
@@ -542,14 +524,14 @@ abstract class DBSearch
 		}
 
 		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
-		return urlencode(json_encode(array($sOql, $aQueryParams, $this->m_aModifierProperties)));
+		return urlencode(json_encode([$sOql, $aQueryParams, $this->m_aModifierProperties]));
 	}
 
 	/**
-     * Convert a serialized query back to an instance of DBSearch
-     *
-     * @api
-     *
+	 * Convert a serialized query back to an instance of DBSearch
+	 *
+	 * @api
+	 *
 	 * @param string $sValue Serialized OQL query
 	 *
 	 * @return \DBSearch
@@ -557,23 +539,19 @@ abstract class DBSearch
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	static public function unserialize($sValue)
+	public static function unserialize($sValue)
 	{
 		$aData = json_decode(urldecode($sValue), true);
-		if (is_null($aData))
-		{
+		if (is_null($aData)) {
 			throw new CoreException("Invalid filter parameter");
 		}
 		$sOql = $aData[0];
 		$aParams = $aData[1];
-		$aExtraParams = array();
-		foreach($aParams as $sParam => $sValue)
-		{
-			if (($iPos = strpos($sParam, '->class')) !== false)
-			{
+		$aExtraParams = [];
+		foreach ($aParams as $sParam => $sValue) {
+			if (($iPos = strpos($sParam, '->class')) !== false) {
 				$sParamName = substr($sParam, 0, $iPos);
-				if (isset($aParams[$sParamName.'->id']))
-				{
+				if (isset($aParams[$sParamName.'->id'])) {
 					$sClass = $aParams[$sParamName.'->class'];
 					$iKey = $aParams[$sParamName.'->id'];
 					$oObj = MetaModel::GetObject($sClass, $iKey);
@@ -590,65 +568,65 @@ abstract class DBSearch
 		return $oRetFilter;
 	}
 
-    /**
-     * Create a new DBObjectSearch from $oSearch with a new alias $sAlias
-     *
-     * @internal Note : This has not be tested with UNION queries.
-     *
-     * @param DBSearch $oSearch
-     * @param string   $sAlias
-     *
-     * @return DBObjectSearch
-     * @throws CoreException
-     */
-    static public function CloneWithAlias(DBSearch $oSearch, $sAlias)
-    {
-        $oSearchWithAlias = new DBObjectSearch($oSearch->GetClass(), $sAlias);
-        $oSearchWithAlias = $oSearchWithAlias->Intersect($oSearch);
-        return $oSearchWithAlias;
-    }
+	/**
+	 * Create a new DBObjectSearch from $oSearch with a new alias $sAlias
+	 *
+	 * @internal Note : This has not be tested with UNION queries.
+	 *
+	 * @param DBSearch $oSearch
+	 * @param string   $sAlias
+	 *
+	 * @return DBObjectSearch
+	 * @throws CoreException
+	 */
+	public static function CloneWithAlias(DBSearch $oSearch, $sAlias)
+	{
+		$oSearchWithAlias = new DBObjectSearch($oSearch->GetClass(), $sAlias);
+		$oSearchWithAlias = $oSearchWithAlias->Intersect($oSearch);
+		return $oSearchWithAlias;
+	}
 
-    /**
-     * Convert the DBSearch to an OQL representation
-     *
-     * @api
-     * @see DBSearch::FromOQL()
-     *
-     * @param bool $bDevelopParams
-     * @param null $aContextParams
-     * @param bool $bWithAllowAllFlag
-     *
-     * @return mixed
-     */
-    abstract public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false);
+	/**
+	 * Convert the DBSearch to an OQL representation
+	 *
+	 * @api
+	 * @see DBSearch::FromOQL()
+	 *
+	 * @param bool $bDevelopParams
+	 * @param null $aContextParams
+	 * @param bool $bWithAllowAllFlag
+	 *
+	 * @return mixed
+	 */
+	abstract public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false);
 
-    /**
-     * Export the DBSearch as a structure (array of arrays...) suitable for a conversion to JSON
-     *
-     * @internal
-     *
-     * @return mixed[string]
-     */
-    abstract public function ToJSON();
+	/**
+	 * Export the DBSearch as a structure (array of arrays...) suitable for a conversion to JSON
+	 *
+	 * @internal
+	 *
+	 * @return mixed[string]
+	 */
+	abstract public function ToJSON();
 
-	static protected $m_aOQLQueries = array();
+	protected static $m_aOQLQueries = [];
 
-    /**
-     * FromOQL with AllowAllData enabled
-     *
-     * The goal is to  not filter out depending on user rights.
-     * In particular when we are currently in the process of evaluating the user rights...
-     *
-     * @internal
-     * @see DBSearch::FromOQL()
-     *
-     * @param string $sQuery
-     * @param null   $aParams
-     *
-     * @return DBSearch
-     * @throws OQLException
-     */
-	static public function FromOQL_AllData($sQuery, $aParams = null)
+	/**
+	 * FromOQL with AllowAllData enabled
+	 *
+	 * The goal is to  not filter out depending on user rights.
+	 * In particular when we are currently in the process of evaluating the user rights...
+	 *
+	 * @internal
+	 * @see DBSearch::FromOQL()
+	 *
+	 * @param string $sQuery
+	 * @param null   $aParams
+	 *
+	 * @return DBSearch
+	 * @throws OQLException
+	 */
+	public static function FromOQL_AllData($sQuery, $aParams = null)
 	{
 		$oRes = self::FromOQL($sQuery, $aParams);
 		$oRes->AllowAllData();
@@ -656,41 +634,36 @@ abstract class DBSearch
 	}
 
 	/**
-     * Create a new DBSearch from the given OQL.
-     *
-     * This is the simplest way to create a DBSearch.
-     * For almost every cases, this is the easiest way.
-     *
-     * @api
-     * @see DBSearch::ToOQL()
-     *
+	 * Create a new DBSearch from the given OQL.
+	 *
+	 * This is the simplest way to create a DBSearch.
+	 * For almost every cases, this is the easiest way.
+	 *
+	 * @api
+	 * @see DBSearch::ToOQL()
+	 *
 	 * @param string $sQuery The OQL to convert to a DBSearch
 	 * @param array $aParams array of <mixed> params index by <string> name
 	 * @param ModelReflection|null $oMetaModel The MetaModel to use when checking the consistency of the OQL
-     *
+	 *
 	 * @return DBObjectSearch|DBUnionSearch
-     *
+	 *
 	 * @throws OQLException
 	 */
-	public static function FromOQL($sQuery, $aParams = null, ModelReflection $oMetaModel=null)
+	public static function FromOQL($sQuery, $aParams = null, ModelReflection $oMetaModel = null)
 	{
-		if (empty($sQuery))
-		{
+		if (empty($sQuery)) {
 			return null;
 		}
 
 		// Query caching
 		$sQueryId = md5($sQuery);
 		$bOQLCacheEnabled = true;
-		if ($bOQLCacheEnabled)
-		{
-			if (array_key_exists($sQueryId, self::$m_aOQLQueries))
-			{
+		if ($bOQLCacheEnabled) {
+			if (array_key_exists($sQueryId, self::$m_aOQLQueries)) {
 				// hit!
 				$oResultFilter = self::$m_aOQLQueries[$sQueryId]->DeepClone();
-			}
-			elseif (self::$m_bUseAPCCache)
-			{
+			} elseif (self::$m_bUseAPCCache) {
 				// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
 				//
 				$sAPCCacheId = 'itop-'.MetaModel::GetEnvironmentId().'-dbsearch-cache-'.$sQueryId;
@@ -698,8 +671,7 @@ abstract class DBSearch
 				$result = apc_fetch($sAPCCacheId);
 				$oKPI->ComputeStats('Search APC (fetch)', $sQuery);
 
-				if (is_object($result))
-				{
+				if (is_object($result)) {
 					$oResultFilter = $result;
 					self::$m_aOQLQueries[$sQueryId] = $oResultFilter->DeepClone();
 				}
@@ -707,15 +679,13 @@ abstract class DBSearch
 		}
 
 		/** @var DBObjectSearch | null $oResultFilter */
-		if (!isset($oResultFilter))
-		{
+		if (!isset($oResultFilter)) {
 			$oKPI = new ExecutionKPI();
 
 			$oOql = new OqlInterpreter($sQuery);
 			$oOqlQuery = $oOql->ParseQuery();
 
-			if ($oMetaModel === null)
-			{
+			if ($oMetaModel === null) {
 				$oMetaModel = new ModelReflectionRuntime();
 			}
 			$oOqlQuery->Check($oMetaModel, $sQuery); // Exceptions thrown in case of issue
@@ -724,12 +694,10 @@ abstract class DBSearch
 
 			$oKPI->ComputeStats('Parse OQL', $sQuery);
 
-			if ($bOQLCacheEnabled)
-			{
+			if ($bOQLCacheEnabled) {
 				self::$m_aOQLQueries[$sQueryId] = $oResultFilter->DeepClone();
 
-				if (self::$m_bUseAPCCache)
-				{
+				if (self::$m_bUseAPCCache) {
 					$oKPI = new ExecutionKPI();
 					apc_store($sAPCCacheId, $oResultFilter, self::$m_iQueryCacheTTL);
 					$oKPI->ComputeStats('Search APC (store)', $sQueryId);
@@ -737,8 +705,7 @@ abstract class DBSearch
 			}
 		}
 
-		if (!is_null($aParams))
-		{
+		if (!is_null($aParams)) {
 			$oResultFilter->SetInternalParams($aParams);
 		}
 
@@ -749,60 +716,54 @@ abstract class DBSearch
 	}
 
 	/**
-     * Fetch the result has an array structure.
-     *
+	 * Fetch the result has an array structure.
+	 *
 	 * Alternative to object mapping: the data are transfered directly into an array
 	 * This is 10 times faster than creating a set of objects, and makes sense when optimization is required
-     * But this speed comes at the cost of not obtaining the easy to manipulates DBObject instances but simple array structure.
-     *
-     * @internal
+	 * But this speed comes at the cost of not obtaining the easy to manipulates DBObject instances but simple array structure.
+	 *
+	 * @internal
 	 *
 	 * @param array $aColumns The columns you'd like to fetch.
 	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
 	 * @param array $aArgs
 	 *
 	 * @return array|void
-     *
+	 *
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public function ToDataArray($aColumns = array(), $aOrderBy = array(), $aArgs = array())
+	public function ToDataArray($aColumns = [], $aOrderBy = [], $aArgs = [])
 	{
 		$sSQL = $this->MakeSelectQuery($aOrderBy, $aArgs);
 		$resQuery = CMDBSource::Query($sSQL);
-		if (!$resQuery)
-		{
+		if (!$resQuery) {
 			return;
 		}
 
-        if (count($aColumns) == 0)
-        {
-            $aColumns = array_keys(MetaModel::ListAttributeDefs($this->GetClass()));
-            // Add the standard id (as first column)
-            array_unshift($aColumns, 'id');
+		if (count($aColumns) == 0) {
+			$aColumns = array_keys(MetaModel::ListAttributeDefs($this->GetClass()));
+			// Add the standard id (as first column)
+			array_unshift($aColumns, 'id');
 		}
 
 		$aQueryCols = CMDBSource::GetColumns($resQuery, $sSQL);
 
 		$sClassAlias = $this->GetClassAlias();
-		$aColMap = array();
-		foreach ($aColumns as $sAttCode)
-		{
+		$aColMap = [];
+		foreach ($aColumns as $sAttCode) {
 			$sColName = $sClassAlias.$sAttCode;
-			if (in_array($sColName, $aQueryCols))
-			{
+			if (in_array($sColName, $aQueryCols)) {
 				$aColMap[$sAttCode] = $sColName;
 			}
 		}
 
-		$aRes = array();
-		while ($aRow = CMDBSource::FetchArray($resQuery))
-		{
-			$aMappedRow = array();
-			foreach ($aColMap as $sAttCode => $sColName)
-			{
+		$aRes = [];
+		while ($aRow = CMDBSource::FetchArray($resQuery)) {
+			$aMappedRow = [];
+			foreach ($aColMap as $sAttCode => $sColName) {
 				$aMappedRow[$sAttCode] = $aRow[$sColName];
 			}
 			$aRes[] = $aMappedRow;
@@ -811,68 +772,65 @@ abstract class DBSearch
 		return $aRes;
 	}
 
-    /**
-     * Selects a column ($sAttCode) from the specified class ($sClassAlias - default main class) of the DBsearch object and gives the result as an array
-     * @param string $sAttCode
-     * @param string|null $sClassAlias
-     *
-     * @return array
-     * @throws ConfigException
-     * @throws CoreException
-     * @throws MissingQueryArgument
-     * @throws MySQLException
-     * @throws MySQLHasGoneAwayException
-     */
-    public function SelectAttributeToArray(string $sAttCode, ?string $sClassAlias = null):array
-    {
-       if(is_null($sClassAlias)) {
-           $sClassAlias = $this->GetClassAlias();
-       }
+	/**
+	 * Selects a column ($sAttCode) from the specified class ($sClassAlias - default main class) of the DBsearch object and gives the result as an array
+	 * @param string $sAttCode
+	 * @param string|null $sClassAlias
+	 *
+	 * @return array
+	 * @throws ConfigException
+	 * @throws CoreException
+	 * @throws MissingQueryArgument
+	 * @throws MySQLException
+	 * @throws MySQLHasGoneAwayException
+	 */
+	public function SelectAttributeToArray(string $sAttCode, ?string $sClassAlias = null): array
+	{
+		if (is_null($sClassAlias)) {
+			$sClassAlias = $this->GetClassAlias();
+		}
 
-       $sClass = $this->GetClass();
-       if($sAttCode === 'id'){
-           $aAttToLoad[$sClassAlias]=[];
-       } else {
-           $aAttToLoad[$sClassAlias][$sAttCode] = MetaModel::GetAttributeDef($sClass, $sAttCode);
-       }
+		$sClass = $this->GetClass();
+		if ($sAttCode === 'id') {
+			$aAttToLoad[$sClassAlias] = [];
+		} else {
+			$aAttToLoad[$sClassAlias][$sAttCode] = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		}
 
-        $sSQL = $this->MakeSelectQuery([], [], $aAttToLoad);
-        $resQuery = CMDBSource::Query($sSQL);
-        if (!$resQuery)
-        {
-            return [];
-        }
+		$sSQL = $this->MakeSelectQuery([], [], $aAttToLoad);
+		$resQuery = CMDBSource::Query($sSQL);
+		if (!$resQuery) {
+			return [];
+		}
 
-        $sColName = $sClassAlias.$sAttCode;
+		$sColName = $sClassAlias.$sAttCode;
 
-        $aRes = [];
-        while ($aRow = CMDBSource::FetchArray($resQuery))
-        {
-            $aMappedRow = array();
-            if($sAttCode === 'id') {
-                $aMappedRow[$sAttCode] = $aRow[$sColName];
-            } else {
-                $aMappedRow[$sAttCode] = $aAttToLoad[$sClassAlias][$sAttCode]->FromSQLToValue($aRow, $sColName);
-            }
-            $aRes[] = $aMappedRow;
-        }
-        CMDBSource::FreeResult($resQuery);
-        return $aRes;
-    }
+		$aRes = [];
+		while ($aRow = CMDBSource::FetchArray($resQuery)) {
+			$aMappedRow = [];
+			if ($sAttCode === 'id') {
+				$aMappedRow[$sAttCode] = $aRow[$sColName];
+			} else {
+				$aMappedRow[$sAttCode] = $aAttToLoad[$sClassAlias][$sAttCode]->FromSQLToValue($aRow, $sColName);
+			}
+			$aRes[] = $aMappedRow;
+		}
+		CMDBSource::FreeResult($resQuery);
+		return $aRes;
+	}
 
 	////////////////////////////////////////////////////////////////////////////
 	//
 	// Construction of the SQL queries
 	//
 	////////////////////////////////////////////////////////////////////////////
-	protected static $m_aQueryStructCache = array();
+	protected static $m_aQueryStructCache = [];
 
-
-    /**
-     * Generate a Group By SQL query from the current search
-     *
-     * @internal
-     *
+	/**
+	 * Generate a Group By SQL query from the current search
+	 *
+	 * @internal
+	 *
 	 * @param array $aArgs
 	 * @param array $aGroupByExpr array('alias' => Expression)
 	 * @param bool $bExcludeNullValues
@@ -880,76 +838,62 @@ abstract class DBSearch
 	 * @param array $aOrderBy array('alias' => bool) true = ASC false = DESC
 	 * @param int $iLimitCount
 	 * @param int $iLimitStart
-     *
+	 *
 	 * @return string SQL query generated
-     *
+	 *
 	 * @throws Exception
 	 */
-	public function MakeGroupByQuery($aArgs, $aGroupByExpr, $bExcludeNullValues = false, $aSelectExpr = array(), $aOrderBy = array(), $iLimitCount = 0, $iLimitStart = 0)
+	public function MakeGroupByQuery($aArgs, $aGroupByExpr, $bExcludeNullValues = false, $aSelectExpr = [], $aOrderBy = [], $iLimitCount = 0, $iLimitStart = 0)
 	{
 		// Sanity check
-		foreach($aGroupByExpr as $sAlias => $oExpr)
-		{
-			if (!($oExpr instanceof Expression))
-			{
+		foreach ($aGroupByExpr as $sAlias => $oExpr) {
+			if (!($oExpr instanceof Expression)) {
 				throw new CoreException("Wrong parameter for 'Group By' for [$sAlias] (an array('alias' => Expression) is awaited)");
 			}
 		}
-		foreach($aSelectExpr as $sAlias => $oExpr)
-		{
-			if (array_key_exists($sAlias, $aGroupByExpr))
-			{
+		foreach ($aSelectExpr as $sAlias => $oExpr) {
+			if (array_key_exists($sAlias, $aGroupByExpr)) {
 				throw new CoreException("Alias collision between 'Group By' and 'Select Expressions' [$sAlias]");
 			}
-			if (!($oExpr instanceof Expression))
-			{
+			if (!($oExpr instanceof Expression)) {
 				throw new CoreException("Wrong parameter for 'Select Expressions' for [$sAlias] (an array('alias' => Expression) is awaited)");
 			}
 		}
-		foreach($aOrderBy as $sAlias => $bAscending)
-		{
-			if (!array_key_exists($sAlias, $aGroupByExpr) && !array_key_exists($sAlias, $aSelectExpr) && ($sAlias != '_itop_count_'))
-			{
+		foreach ($aOrderBy as $sAlias => $bAscending) {
+			if (!array_key_exists($sAlias, $aGroupByExpr) && !array_key_exists($sAlias, $aSelectExpr) && ($sAlias != '_itop_count_')) {
 				$aAllowedAliases = array_keys($aSelectExpr);
-				$aAllowedAliases = array_merge($aAllowedAliases,  array_keys($aGroupByExpr));
+				$aAllowedAliases = array_merge($aAllowedAliases, array_keys($aGroupByExpr));
 				$aAllowedAliases[] = '_itop_count_';
 				throw new CoreException("Wrong alias [$sAlias] for 'Order By'. Allowed values are: ", null, implode(", ", $aAllowedAliases));
 			}
-			if (!is_bool($bAscending))
-			{
+			if (!is_bool($bAscending)) {
 				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value for '$sAlias''");
 			}
 		}
 
-		if ($bExcludeNullValues)
-		{
+		if ($bExcludeNullValues) {
 			// Null values are not handled (though external keys set to 0 are allowed)
 			$oQueryFilter = $this->DeepClone();
-			foreach ($aGroupByExpr as $oGroupByExp)
-			{
-				$oNull = new FunctionExpression('ISNULL', array($oGroupByExp));
+			foreach ($aGroupByExpr as $oGroupByExp) {
+				$oNull = new FunctionExpression('ISNULL', [$oGroupByExp]);
 				$oNotNull = new BinaryExpression($oNull, '!=', new TrueExpression());
 				$oQueryFilter->AddConditionExpression($oNotNull);
 			}
-		}
-		else
-		{
+		} else {
 			$oQueryFilter = $this;
 		}
 
-		$aAttToLoad = array();
-		$oSQLQuery = $oQueryFilter->GetSQLQuery(array(), $aArgs, $aAttToLoad, null, 0, 0, false, $aGroupByExpr, $aSelectExpr);
+		$aAttToLoad = [];
+		$oSQLQuery = $oQueryFilter->GetSQLQuery([], $aArgs, $aAttToLoad, null, 0, 0, false, $aGroupByExpr, $aSelectExpr);
 
 		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
-		try
-		{
+		try {
 			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
 			$sRes = $oSQLQuery->RenderGroupBy($aScalarArgs, $bBeautifulSQL, $aOrderBy, $iLimitCount, $iLimitStart);
 		}
 		// Catch CoreException to add info before throwing again
 		// Other exceptions will be thrown directly
-		catch (CoreException $e)
-		{
+		catch (CoreException $e) {
 			// Add some information...
 			$e->addInfo('OQL', $this->ToOQL());
 			throw $e;
@@ -977,79 +921,62 @@ abstract class DBSearch
 	 * @internal
 	 *
 	 */
-	public function MakeSelectQuery($aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulSQL = true)
+	public function MakeSelectQuery($aOrderBy = [], $aArgs = [], $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulSQL = true)
 	{
 		// Check the order by specification, and prefix with the class alias
 		// and make sure that the ordering columns are going to be selected
 		//
 		$sClass = $this->GetClass();
 		$sClassAlias = $this->GetClassAlias();
-		$aOrderSpec = array();
-		foreach ($aOrderBy as $sFieldAlias => $bAscending)
-		{
-			if (!is_bool($bAscending))
-			{
+		$aOrderSpec = [];
+		foreach ($aOrderBy as $sFieldAlias => $bAscending) {
+			if (!is_bool($bAscending)) {
 				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value");
 			}
 
 			$iDotPos = strpos($sFieldAlias, '.');
-			if ($iDotPos === false)
-			{
+			if ($iDotPos === false) {
 				$sAttClass = $sClass;
 				$sAttClassAlias = $sClassAlias;
 				$sAttCode = $sFieldAlias;
-			}
-			else
-			{
+			} else {
 				$sAttClassAlias = substr($sFieldAlias, 0, $iDotPos);
 				$sAttClass = $this->GetClassName($sAttClassAlias);
 				$sAttCode = substr($sFieldAlias, $iDotPos + 1);
 			}
 
-			if ($sAttCode != 'id')
-			{
+			if ($sAttCode != 'id') {
 				MyHelpers::CheckValueInArray('field name in ORDER BY spec', $sAttCode, MetaModel::GetAttributesList($sAttClass));
 
 				$oAttDef = MetaModel::GetAttributeDef($sAttClass, $sAttCode);
-				foreach($oAttDef->GetOrderBySQLExpressions($sAttClassAlias) as $sSQLExpression)
-				{
+				foreach ($oAttDef->GetOrderBySQLExpressions($sAttClassAlias) as $sSQLExpression) {
 					$aOrderSpec[$sSQLExpression] = $bAscending;
 				}
 
-			// Make sure that the columns used for sorting are present in the loaded columns
-			if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sAttClassAlias][$sAttCode]))
-			{
-				$aAttToLoad[$sAttClassAlias][$sAttCode] = MetaModel::GetAttributeDef($sAttClass, $sAttCode);
-			}
-		}
-			else
-			{
+				// Make sure that the columns used for sorting are present in the loaded columns
+				if (!is_null($aAttToLoad) && !isset($aAttToLoad[$sAttClassAlias][$sAttCode])) {
+					$aAttToLoad[$sAttClassAlias][$sAttCode] = MetaModel::GetAttributeDef($sAttClass, $sAttCode);
+				}
+			} else {
 				$aOrderSpec['`'.$sAttClassAlias.$sAttCode.'`'] = $bAscending;
 			}
 		}
 
 		$oSQLQuery = $this->GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount);
 
-		if ($this->m_bNoContextParameters)
-		{
+		if ($this->m_bNoContextParameters) {
 			// Only internal parameters
 			$aScalarArgs = $this->GetInternalParams();
-		}
-		else
-		{
+		} else {
 			// The complete list of arguments will include magic arguments (e.g. current_user->attcode)
 			$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams(), $this->GetExpectedArguments());
 		}
-		try
-		{
+		try {
 			$sRes = $oSQLQuery->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, $bBeautifulSQL);
-			if ($sClassAlias == '_itop_')
-			{
+			if ($sClassAlias == '_itop_') {
 				IssueLog::Info('SQL Query (_itop_): '.$sRes);
 			}
-		}
-		catch (MissingQueryArgument $e)
-		{
+		} catch (MissingQueryArgument $e) {
 			// Add some information...
 			$e->addInfo('OQL', $this->ToOQL());
 			throw $e;
@@ -1071,39 +998,37 @@ abstract class DBSearch
 	 *
 	 * @since 2.7.0 N°2555
 	 */
-	public function GetFirstResult($bMustHaveOneResultMax = true, $aOrderBy = array(), $aSearchParams = array())
+	public function GetFirstResult($bMustHaveOneResultMax = true, $aOrderBy = [], $aSearchParams = [])
 	{
-		$oSet = new DBObjectSet($this, array(), $aSearchParams, null, 2);
+		$oSet = new DBObjectSet($this, [], $aSearchParams, null, 2);
 		$oFirstResult = $oSet->Fetch();
-		if ($oFirstResult === null) // useless but here for readability ;)
-		{
+		if ($oFirstResult === null) { // useless but here for readability ;)
 			return null;
 		}
 
-		if ($bMustHaveOneResultMax)
-		{
+		if ($bMustHaveOneResultMax) {
 			$oSecondResult = $oSet->Fetch();
-			if ($oSecondResult !== null)
-			{
+			if ($oSecondResult !== null) {
 				throw new CoreOqlMultipleResultsForbiddenException(
-					'Search returned multiple results, this is forbidden. Query was: '.$this->ToOQL());
+					'Search returned multiple results, this is forbidden. Query was: '.$this->ToOQL()
+				);
 			}
 		}
 
 		return $oFirstResult;
 	}
 
-    /**
-     * @internal
-     * @return mixed
-     */
-	protected abstract function IsDataFiltered();
+	/**
+	 * @internal
+	 * @return mixed
+	 */
+	abstract protected function IsDataFiltered();
 
-    /**
-     * @internal
-     * @return mixed
-     */
-	protected abstract function SetDataFiltered();
+	/**
+	 * @internal
+	 * @return mixed
+	 */
+	abstract protected function SetDataFiltered();
 
 	/**
 	 * @param      $aOrderBy
@@ -1124,18 +1049,14 @@ abstract class DBSearch
 	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null)
 	{
 		$oSearch = $this;
-		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered())
-		{
-			foreach ($this->GetSelectedClasses() as $sClassAlias => $sClass)
-			{
+		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered()) {
+			foreach ($this->GetSelectedClasses() as $sClassAlias => $sClass) {
 				$oVisibleObjects = UserRights::GetSelectFilter($sClass, $this->GetModifierProperties('UserRightsGetSelectFilter'));
-				if ($oVisibleObjects === false)
-				{
+				if ($oVisibleObjects === false) {
 					// Make sure this is a valid search object, saying NO for all
 					$oVisibleObjects = DBObjectSearch::FromEmptySet($sClass);
 				}
-				if (is_object($oVisibleObjects))
-				{
+				if (is_object($oVisibleObjects)) {
 					$oVisibleObjects->AllowAllData();
 					$oSearch = $oSearch->Filter($sClassAlias, $oVisibleObjects);
 					$oSearch->SetDataFiltered();
@@ -1143,22 +1064,17 @@ abstract class DBSearch
 			}
 		}
 
-		if (is_array($aGroupByExpr))
-		{
-			foreach($aGroupByExpr as $sAlias => $oGroupByExp)
-			{
+		if (is_array($aGroupByExpr)) {
+			foreach ($aGroupByExpr as $sAlias => $oGroupByExp) {
 				/** @var \Expression $oGroupByExp */
 
 				$aFields = $oGroupByExp->ListRequiredFields();
-				foreach($aFields as $sFieldAlias)
-				{
-					$aMatches = array();
-					if (preg_match('/^([^.]+)\\.([^.]+)$/', $sFieldAlias, $aMatches))
-					{
+				foreach ($aFields as $sFieldAlias) {
+					$aMatches = [];
+					if (preg_match('/^([^.]+)\\.([^.]+)$/', $sFieldAlias, $aMatches)) {
 						$sFieldClass = $this->GetClassName($aMatches[1]);
 						$oAttDef = MetaModel::GetAttributeDef($sFieldClass, $aMatches[2]);
-						if ( $oAttDef instanceof iAttributeNoGroupBy)
-						{
+						if ($oAttDef instanceof iAttributeNoGroupBy) {
 							throw new Exception("Grouping on '$sFieldClass' fields is not supported.");
 						}
 					}
@@ -1171,12 +1087,10 @@ abstract class DBSearch
 
 		// Join to an additional table, if required...
 		//
-		if ($aExtendedDataSpec != null)
-		{
+		if ($aExtendedDataSpec != null) {
 			$sTableAlias = '_extended_data_';
-			$aExtendedFields = array();
-			foreach($aExtendedDataSpec['fields'] as $sColumn)
-			{
+			$aExtendedFields = [];
+			foreach ($aExtendedDataSpec['fields'] as $sColumn) {
 				$sColRef = $this->GetClassAlias().'_extdata_'.$sColumn;
 				$aExtendedFields[$sColRef] = new FieldExpressionResolved($sColumn, $sTableAlias);
 			}
@@ -1187,40 +1101,45 @@ abstract class DBSearch
 		return $oSQLQuery;
 	}
 
-    /**
-     * @internal
-     *
-     * @param      $aAttToLoad
-     * @param      $bGetCount
-     * @param null $aGroupByExpr
-     * @param null $aSelectedClasses
-     * @param null $aSelectExpr
-     *
-     * @return mixed
-     */
-	public abstract function GetSQLQueryStructure(
-		$aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null
+	/**
+	 * @internal
+	 *
+	 * @param      $aAttToLoad
+	 * @param      $bGetCount
+	 * @param null $aGroupByExpr
+	 * @param null $aSelectedClasses
+	 * @param null $aSelectExpr
+	 *
+	 * @return mixed
+	 */
+	abstract public function GetSQLQueryStructure(
+		$aAttToLoad,
+		$bGetCount,
+		$aGroupByExpr = null,
+		$aSelectedClasses = null,
+		$aSelectExpr = null
 	);
 
-    /**
-     * Shortcut to add efficient IN condition
-     *
-     * @internal
-     *
-     * @param      $sFilterCode
-     * @param      $aValues
-     * @param bool $bPositiveMatch if true a `IN` is performed, if false, a `NOT IN` is performed
-     *
-     * @return mixed
-     */
-	public abstract function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true);
+	/**
+	 * Shortcut to add efficient IN condition
+	 *
+	 * @internal
+	 *
+	 * @param      $sFilterCode
+	 * @param      $aValues
+	 * @param bool $bPositiveMatch if true a `IN` is performed, if false, a `NOT IN` is performed
+	 *
+	 * @return mixed
+	 */
+	abstract public function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true);
 
 	/**
-     * @internal
+	 * @internal
 	 * @return string a unique param name
 	 */
-	protected function GenerateUniqueParamName() {
-		return str_replace('.', '', 'param_'.microtime(true).rand(0,100));
+	protected function GenerateUniqueParamName()
+	{
+		return str_replace('.', '', 'param_'.microtime(true).rand(0, 100));
 	}
 
 	////////////////////////////////////////////////////////////////////////////
@@ -1229,7 +1148,7 @@ abstract class DBSearch
 	//
 	////////////////////////////////////////////////////////////////////////////
 	protected static $m_bDebugQuery = false;
-	protected static $m_aQueriesLog = array();
+	protected static $m_aQueriesLog = [];
 	protected static $m_bQueryCacheEnabled = false;
 	protected static $m_bUseAPCCache = false;
 	protected static $m_iQueryCacheTTL = 3600;
@@ -1237,30 +1156,30 @@ abstract class DBSearch
 	protected static $m_bIndentQueries = false;
 	protected static $m_bOptimizeQueries = false;
 
-    /**
-     * @internal
-     */
+	/**
+	 * @internal
+	 */
 	public static function StartDebugQuery()
 	{
 		$aBacktrace = debug_backtrace();
 		self::$m_bDebugQuery = true;
 	}
 
-    /**
-     * @internal
-     */
+	/**
+	 * @internal
+	 */
 	public static function StopDebugQuery()
 	{
 		self::$m_bDebugQuery = false;
 	}
 
-    /**
-     * @internal
-     *
-     * @param bool $bEnabled
-     * @param bool $bUseAPC
-     * @param int  $iTimeToLive
-     */
+	/**
+	 * @internal
+	 *
+	 * @param bool $bEnabled
+	 * @param bool $bUseAPC
+	 * @param int  $iTimeToLive
+	 */
 	public static function EnableQueryCache($bEnabled, $bUseAPC, $iTimeToLive = 3600)
 	{
 		self::$m_bQueryCacheEnabled = $bEnabled;
@@ -1268,28 +1187,28 @@ abstract class DBSearch
 		self::$m_iQueryCacheTTL = $iTimeToLive;
 	}
 
-    /**
-     * @internal
-     * @param $bEnabled
-     */
+	/**
+	 * @internal
+	 * @param $bEnabled
+	 */
 	public static function EnableQueryTrace($bEnabled)
 	{
 		self::$m_bTraceQueries = $bEnabled;
 	}
 
-    /**
-     * @internal
-     * @param $bEnabled
-     */
+	/**
+	 * @internal
+	 * @param $bEnabled
+	 */
 	public static function EnableQueryIndentation($bEnabled)
 	{
 		self::$m_bIndentQueries = $bEnabled;
 	}
 
-    /**
-     * @internal
-     * @param $bEnabled
-     */
+	/**
+	 * @internal
+	 * @param $bEnabled
+	 */
 	public static function EnableOptimizeQuery($bEnabled)
 	{
 		self::$m_bOptimizeQueries = $bEnabled;
@@ -1313,46 +1232,39 @@ abstract class DBSearch
 	 */
 	protected function AddQueryTraceSelect($sOql, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sSql)
 	{
-		if (self::$m_bTraceQueries)
-		{
-			$aQueryData = array(
+		if (self::$m_bTraceQueries) {
+			$aQueryData = [
 				'type' => 'select',
 				'order_by' => $aOrderBy,
 				'att_to_load' => $aAttToLoad,
 				'limit_count' => $iLimitCount,
 				'limit_start' => $iLimitStart,
-				'is_count' => $bGetCount
-			);
+				'is_count' => $bGetCount,
+			];
 
 			DBSearch::EnableQueryTrace(false);
 			$aQueryData['oql'] = $this->ToOQL(true, $aArgs);
 			DBSearch::EnableQueryTrace(true);
 
-			if (!empty($aAttToLoad))
-			{
-				$aAttToLoadNames = array();
-				foreach ($aAttToLoad as $sClass => $aAttributes)
-				{
-					$aAttToLoadNames[$sClass] = array();
-					foreach ($aAttributes as $sAttCode => $oAttDef)
-					{
+			if (!empty($aAttToLoad)) {
+				$aAttToLoadNames = [];
+				foreach ($aAttToLoad as $sClass => $aAttributes) {
+					$aAttToLoadNames[$sClass] = [];
+					foreach ($aAttributes as $sAttCode => $oAttDef) {
 						$aAttToLoadNames[$sClass][] = $sAttCode;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$aAttToLoadNames = null;
 			}
 			$aQueryData['att_to_load'] = $aAttToLoadNames;
 
 			$hLogFile = @fopen(APPROOT.'log/oql_records.txt', 'a');
-			if ($hLogFile !== false)
-			{
-				flock($hLogFile,LOCK_EX);
-				fwrite($hLogFile,serialize($aQueryData)."\n");
+			if ($hLogFile !== false) {
+				flock($hLogFile, LOCK_EX);
+				fwrite($hLogFile, serialize($aQueryData)."\n");
 				fflush($hLogFile);
-				flock($hLogFile,LOCK_UN);
+				flock($hLogFile, LOCK_UN);
 				fclose($hLogFile);
 			}
 		}
@@ -1376,9 +1288,8 @@ abstract class DBSearch
 	 */
 	protected function AddQueryTraceGroupBy($aArgs, $aGroupByExpr, $bExcludeNullValues, $aSelectExpr, $aOrderBy, $iLimitCount, $iLimitStart, $sSql)
 	{
-		if (self::$m_bTraceQueries)
-		{
-			$aQueryData = array(
+		if (self::$m_bTraceQueries) {
+			$aQueryData = [
 				'type' => 'group_by',
 				'order_by' => $aOrderBy,
 				'group_by_expr' => $aGroupByExpr,
@@ -1386,89 +1297,77 @@ abstract class DBSearch
 				'select_expr' => $aSelectExpr,
 				'limit_count' => $iLimitCount,
 				'limit_start' => $iLimitStart,
-			);
+			];
 
 			$aQueryData['oql'] = $this->ToOQL(true, $aArgs);
 			$aQueryData['group_by_expr'] = Expression::ConvertArrayToOQL($aQueryData['group_by_expr'], $aArgs);
 			$aQueryData['select_expr'] = Expression::ConvertArrayToOQL($aQueryData['select_expr'], $aArgs);
 
 			$hLogFile = @fopen(APPROOT.'log/oql_group_by_records.txt', 'a');
-			if ($hLogFile !== false)
-			{
-				flock($hLogFile,LOCK_EX);
-				fwrite($hLogFile,serialize($aQueryData)."\n");
+			if ($hLogFile !== false) {
+				flock($hLogFile, LOCK_EX);
+				fwrite($hLogFile, serialize($aQueryData)."\n");
 				fflush($hLogFile);
-				flock($hLogFile,LOCK_UN);
+				flock($hLogFile, LOCK_UN);
 				fclose($hLogFile);
 			}
 		}
 	}
 
-    /**
-     * @internal
-     *
-     * @param $aQueryData
-     * @param $sOql
-     * @param $sSql
-     *
-     * @throws MySQLException
-     */
+	/**
+	 * @internal
+	 *
+	 * @param $aQueryData
+	 * @param $sOql
+	 * @param $sSql
+	 *
+	 * @throws MySQLException
+	 */
 	protected static function AddQueryTrace($aQueryData, $sOql, $sSql)
 	{
-		if (self::$m_bTraceQueries)
-		{
+		if (self::$m_bTraceQueries) {
 			$sQueryId = md5(serialize($aQueryData));
 			$sMySQLQueryId = md5($sSql);
-			if(!isset(self::$m_aQueriesLog[$sQueryId]))
-			{
+			if (!isset(self::$m_aQueriesLog[$sQueryId])) {
 				self::$m_aQueriesLog[$sQueryId]['data'] = serialize($aQueryData);
 				self::$m_aQueriesLog[$sQueryId]['oql'] = $sOql;
 				self::$m_aQueriesLog[$sQueryId]['hits'] = 1;
-			}
-			else
-			{
+			} else {
 				self::$m_aQueriesLog[$sQueryId]['hits']++;
 			}
-			if(!isset(self::$m_aQueriesLog[$sQueryId]['queries'][$sMySQLQueryId]))
-			{
+			if (!isset(self::$m_aQueriesLog[$sQueryId]['queries'][$sMySQLQueryId])) {
 				self::$m_aQueriesLog[$sQueryId]['queries'][$sMySQLQueryId]['sql'] = $sSql;
 				self::$m_aQueriesLog[$sQueryId]['queries'][$sMySQLQueryId]['count'] = 1;
 				$iTableCount = count(CMDBSource::ExplainQuery($sSql));
 				self::$m_aQueriesLog[$sQueryId]['queries'][$sMySQLQueryId]['table_count'] = $iTableCount;
-			}
-			else
-			{
+			} else {
 				self::$m_aQueriesLog[$sQueryId]['queries'][$sMySQLQueryId]['count']++;
 			}
 		}
 	}
 
-    /**
-     * @internal
-     */
+	/**
+	 * @internal
+	 */
 	public static function RecordQueryTrace()
 	{
-		if (!self::$m_bTraceQueries)
-		{
+		if (!self::$m_bTraceQueries) {
 			return;
 		}
 
 		$iOqlCount = count(self::$m_aQueriesLog);
 		$iSqlCount = 0;
-		foreach (self::$m_aQueriesLog as $sQueryId => $aOqlData)
-		{
+		foreach (self::$m_aQueriesLog as $sQueryId => $aOqlData) {
 			$iSqlCount += $aOqlData['hits'];
 		}
 		$sHtml = "<h2>Stats on SELECT queries: OQL=$iOqlCount, SQL=$iSqlCount</h2>\n";
-		foreach (self::$m_aQueriesLog as $sQueryId => $aOqlData)
-		{
+		foreach (self::$m_aQueriesLog as $sQueryId => $aOqlData) {
 			$sOql = $aOqlData['oql'];
 			$sHits = $aOqlData['hits'];
 
 			$sHtml .= "<p><b>$sHits</b> hits for OQL query: $sOql</p>\n";
 			$sHtml .= "<ul id=\"ClassesRelationships\" class=\"treeview\">\n";
-			foreach($aOqlData['queries'] as $aSqlData)
-			{
+			foreach ($aOqlData['queries'] as $aSqlData) {
 				$sQuery = $aSqlData['sql'];
 				$sSqlHits = $aSqlData['count'];
 				$iTableCount = $aSqlData['table_count'];
@@ -1485,60 +1384,49 @@ abstract class DBSearch
 
 		// Cumulate the queries
 		$sAllQueries = utils::GetDataPath().'queries.log';
-		if (file_exists($sAllQueries))
-		{
+		if (file_exists($sAllQueries)) {
 			// Merge the new queries into the existing log
 			include($sAllQueries);
-			$aQueriesLog = array();
-			foreach (self::$m_aQueriesLog as $sQueryId => $aOqlData)
-			{
-				if (!array_key_exists($sQueryId, $aQueriesLog))
-				{
+			$aQueriesLog = [];
+			foreach (self::$m_aQueriesLog as $sQueryId => $aOqlData) {
+				if (!array_key_exists($sQueryId, $aQueriesLog)) {
 					$aQueriesLog[$sQueryId] = $aOqlData;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$aQueriesLog = self::$m_aQueriesLog;
 		}
 		$sLog = "<?php\n\$aQueriesLog = ".var_export($aQueriesLog, true).";";
 		file_put_contents($sAllQueries, $sLog);
 	}
 
-    /**
-     * @internal
-     * @param $value
-     */
+	/**
+	 * @internal
+	 * @param $value
+	 */
 	protected static function DbgTrace($value)
 	{
-		if (!self::$m_bDebugQuery)
-		{
+		if (!self::$m_bDebugQuery) {
 			return;
 		}
 		$aBacktrace = debug_backtrace();
 		$iCallStackPos = count($aBacktrace) - self::$m_bDebugQuery;
 		$sIndent = "";
-		for ($i = 0 ; $i < $iCallStackPos ; $i++)
-		{
+		for ($i = 0 ; $i < $iCallStackPos ; $i++) {
 			$sIndent .= " .-=^=-. ";
 		}
-		$aCallers = array();
-		foreach($aBacktrace as $aStackInfo)
-		{
+		$aCallers = [];
+		foreach ($aBacktrace as $aStackInfo) {
 			$aCallers[] = $aStackInfo["function"];
 		}
 		$sCallers = "Callstack: ".implode(', ', $aCallers);
 		$sFunction = "<b title=\"$sCallers\">".$aBacktrace[1]["function"]."</b>";
 
-		if (is_object($value))
-		{
+		if (is_object($value)) {
 			echo "$sIndent$sFunction:\n<pre>\n";
 			print_r($value);
 			echo "</pre>\n";
-		}
-		else
-		{
+		} else {
 			echo "$sIndent$sFunction: $value<br/>\n";
 		}
 	}
@@ -1556,63 +1444,49 @@ abstract class DBSearch
 	public function DBBulkWriteArchiveFlag($bArchive)
 	{
 		$sClass = $this->GetClass();
-		if (!MetaModel::IsArchivable($sClass))
-		{
+		if (!MetaModel::IsArchivable($sClass)) {
 			throw new Exception($sClass.' is not an archivable class');
 		}
 
 		$iFlag = $bArchive ? 1 : 0;
 
 		$oSet = new DBObjectSet($this);
-		if (MetaModel::IsStandaloneClass($sClass))
-		{
-			$oSet->OptimizeColumnLoad(array($this->GetClassAlias() => array()));
-			$aIds = array($sClass => $oSet->GetColumnAsArray('id'));
-		}
-		else
-		{
-			$oSet->OptimizeColumnLoad(array($this->GetClassAlias() => array('finalclass')));
+		if (MetaModel::IsStandaloneClass($sClass)) {
+			$oSet->OptimizeColumnLoad([$this->GetClassAlias() => []]);
+			$aIds = [$sClass => $oSet->GetColumnAsArray('id')];
+		} else {
+			$oSet->OptimizeColumnLoad([$this->GetClassAlias() => ['finalclass']]);
 			$aTemp = $oSet->GetColumnAsArray('finalclass');
-			$aIds = array();
-			foreach ($aTemp as $iObjectId => $sObjectClass)
-			{
+			$aIds = [];
+			foreach ($aTemp as $iObjectId => $sObjectClass) {
 				$aIds[$sObjectClass][$iObjectId] = $iObjectId;
 			}
 		}
-		foreach ($aIds as $sFinalClass => $aObjectIds)
-		{
+		foreach ($aIds as $sFinalClass => $aObjectIds) {
 			$sIds = implode(', ', $aObjectIds);
 
 			$sArchiveRoot = MetaModel::GetAttributeOrigin($sFinalClass, 'archive_flag');
 			$sRootTable = MetaModel::DBGetTable($sArchiveRoot);
 			$sRootKey = MetaModel::DBGetKey($sArchiveRoot);
-			$aJoins = array("`$sRootTable`");
-			$aUpdates = array();
-			foreach (MetaModel::EnumParentClasses($sFinalClass, ENUM_PARENT_CLASSES_ALL) as $sParentClass)
-			{
-				if (!MetaModel::IsValidAttCode($sParentClass, 'archive_flag'))
-				{
+			$aJoins = ["`$sRootTable`"];
+			$aUpdates = [];
+			foreach (MetaModel::EnumParentClasses($sFinalClass, ENUM_PARENT_CLASSES_ALL) as $sParentClass) {
+				if (!MetaModel::IsValidAttCode($sParentClass, 'archive_flag')) {
 					continue;
 				}
 
 				$sTable = MetaModel::DBGetTable($sParentClass);
 				$aUpdates[] = "`$sTable`.`archive_flag` = $iFlag";
-				if ($sParentClass == $sArchiveRoot)
-				{
-					if ($bArchive)
-					{
+				if ($sParentClass == $sArchiveRoot) {
+					if ($bArchive) {
 						// Set the date (do not change it)
 						$sDate = '"'.date(AttributeDate::GetSQLFormat()).'"';
 						$aUpdates[] = "`$sTable`.`archive_date` = coalesce(`$sTable`.`archive_date`, $sDate)";
-					}
-					else
-					{
+					} else {
 						// Reset the date
 						$aUpdates[] = "`$sTable`.`archive_date` = null";
 					}
-				}
-				else
-				{
+				} else {
 					$sKey = MetaModel::DBGetKey($sParentClass);
 					$aJoins[] = "`$sTable` ON `$sTable`.`$sKey` = `$sRootTable`.`$sRootKey`";
 				}
@@ -1624,9 +1498,9 @@ abstract class DBSearch
 		}
 	}
 
-    /**
-     * @internal
-     */
+	/**
+	 * @internal
+	 */
 	public function UpdateContextFromUser()
 	{
 		$this->SetShowObsoleteData(utils::ShowObsoleteData());
@@ -1649,5 +1523,5 @@ abstract class DBSearch
 	 *
 	 * @return array{\VariableExpression}
 	 */
-	abstract function GetExpectedArguments(): array;
+	abstract public function GetExpectedArguments(): array;
 }

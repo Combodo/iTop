@@ -15,6 +15,10 @@ $ibo-toast--icon--font-size: 2rem !default;
 $ibo-toast--icon--top: calc(50% - #{$ibo-toast--icon--font-size} / 2) !default;
 $ibo-toast--icon--left: $ibo-spacing-400 !default;
 
+$ibo-user-rights--icon--margin-right: $ibo-spacing-200 !default;
+$ibo-user-rights--is-success--icon: '\f00c' !default;
+$ibo-user-rights--is-failure--icon: '\f00d' !default;
+
 
 @each $sName, $sIcon in $ibo-alert--icons {
   %ibo-alert-#{$sName}, .ibo-alert.ibo-is-#{$sName} {
@@ -68,6 +72,19 @@ $ibo-toast--icon--left: $ibo-spacing-400 !default;
     content: "\f129";
     @extend %fa-solid-base;
     color: $ibo-color-information-700;
+  }
+}
+
+.ibo-user-rights {
+  &.ibo-is-success::before {
+    content: $ibo-user-rights--is-success--icon;
+    @extend %fa-solid-base;
+    margin-right: $ibo-user-rights--icon--margin-right;
+  }
+  &.ibo-is-failure::before {
+    content: $ibo-user-rights--is-failure--icon;
+    @extend %fa-solid-base;
+    margin-right: $ibo-user-rights--icon--margin-right;
   }
 }
 

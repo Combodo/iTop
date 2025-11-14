@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -13,7 +14,7 @@ use Str;
 
 class AttributeTable extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -49,7 +50,7 @@ class AttributeTable extends AttributeDBField
 
 	public function GetNullValue()
 	{
-		return array();
+		return [];
 	}
 
 	public function IsNull($proposedValue)
@@ -65,7 +66,6 @@ class AttributeTable extends AttributeDBField
 		return count($proposedValue) > 0;
 	}
 
-
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
 		return '';
@@ -75,10 +75,10 @@ class AttributeTable extends AttributeDBField
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue)) {
-			return array();
+			return [];
 		} else {
 			if (!is_array($proposedValue)) {
-				return array(0 => array(0 => $proposedValue));
+				return [0 => [0 => $proposedValue]];
 			}
 		}
 
@@ -98,8 +98,7 @@ class AttributeTable extends AttributeDBField
 			if ($value === false) {
 				$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
 		}
 
@@ -108,11 +107,10 @@ class AttributeTable extends AttributeDBField
 
 	public function GetSQLValues($value)
 	{
-		$aValues = array();
+		$aValues = [];
 		try {
 			$sSerializedValue = serialize($value);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$sSerializedValue = json_encode($value);
 		}
 		$aValues[$this->Get("sql")] = $sSerializedValue;
@@ -123,7 +121,7 @@ class AttributeTable extends AttributeDBField
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if (!is_array($value)) {
-			throw new CoreException('Expecting an array', array('found' => get_class($value)));
+			throw new CoreException('Expecting an array', ['found' => get_class($value)]);
 		}
 		if (count($value) == 0) {
 			return "";
@@ -148,10 +146,13 @@ class AttributeTable extends AttributeDBField
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		// Not implemented
 		return '';
 	}

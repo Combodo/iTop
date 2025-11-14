@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -19,10 +20,10 @@ class MySQLHasGoneAwayException extends MySQLException
 	 */
 	public static function getErrorCodes()
 	{
-		return array(
+		return [
 			2006,
 			2013,
-		);
+		];
 	}
 
 	public function __construct($sIssue, $aContext)

@@ -1,11 +1,12 @@
 <?php
+
 /**
  * @copyright Copyright (C) 2024 Combodo SAS
  * @license https://opensource.org/licenses/AGPL-3.0
  */
 
 // Activity panel
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close',
@@ -43,4 +44,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	// Closed cover
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activity panel',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Click to open the activity panel',
-));
+]);

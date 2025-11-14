@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Dennis Lassiter
  *
@@ -41,7 +42,6 @@ class utilsTest extends ItopTestCase
 		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', null);
 		parent::tearDown();
 	}
-
 
 	public function testEndsWith()
 	{
@@ -87,8 +87,7 @@ class utilsTest extends ItopTestCase
 		$sSep = DIRECTORY_SEPARATOR;
 		$sItopRootRealPath = realpath($sAppRoot).$sSep;
 		$sLicenseFileName = 'license.txt';
-		if (!is_file($sAppRoot.$sLicenseFileName))
-		{
+		if (!is_file($sAppRoot.$sLicenseFileName)) {
 			$sLicenseFileName = 'LICENSE';
 		}
 
@@ -96,7 +95,7 @@ class utilsTest extends ItopTestCase
 			$sLicenseFileName => [$sAppRoot.$sLicenseFileName, $sAppRoot, $sItopRootRealPath.$sLicenseFileName],
 			'unexisting file' => [$sAppRoot.'license_DOES_NOT_EXIST.txt', $sAppRoot, false],
 			'/'.$sLicenseFileName => [$sAppRoot.$sSep.$sLicenseFileName, $sAppRoot, $sItopRootRealPath.$sLicenseFileName],
-			'%2f'.$sLicenseFileName => [$sAppRoot.'%2f'. $sLicenseFileName, $sAppRoot, false],
+			'%2f'.$sLicenseFileName => [$sAppRoot.'%2f'.$sLicenseFileName, $sAppRoot, false],
 			'../'.$sLicenseFileName => [$sAppRoot.'..'.$sSep.$sLicenseFileName, $sAppRoot, false],
 			'%2e%2e%2f'.$sLicenseFileName => [$sAppRoot.'%2e%2e%2f'.$sLicenseFileName, $sAppRoot, false],
 			'application/utils.inc.php with basepath=APPROOT' => [
@@ -132,32 +131,32 @@ class utilsTest extends ItopTestCase
 	public function LocalPathProvider()
 	{
 		$sAppRoot = static::GetAppRoot();
-		return array(
-			'index.php' => array(
+		return [
+			'index.php' => [
 				'sAbsolutePath' => $sAppRoot.'index.php',
 				'expected' => 'index.php',
-			),
-			'non existing' => array(
+			],
+			'non existing' => [
 				'sAbsolutePath' => $sAppRoot.'nonexisting/nonexisting',
 				'expected' => false,
-			),
-			'outside' => array(
+			],
+			'outside' => [
 				'sAbsolutePath' => '/tmp',
 				'expected' => false,
-			),
-			'application/cmdbabstract.class.inc.php' => array(
+			],
+			'application/cmdbabstract.class.inc.php' => [
 				'sAbsolutePath' => $sAppRoot.'application/cmdbabstract.class.inc.php',
 				'expected' => 'application/cmdbabstract.class.inc.php',
-			),
-			'dir' => array(
+			],
+			'dir' => [
 				'sAbsolutePath' => $sAppRoot.'application/.',
 				'expected' => 'application',
-			),
-			'root' => array(
+			],
+			'root' => [
 				'sAbsolutePath' => $sAppRoot.'.',
 				'expected' => '',
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -171,14 +170,15 @@ class utilsTest extends ItopTestCase
 
 	public function appRootUrlProvider()
 	{
-		return array(
-			'Setup index (windows antislash)' => array('http://localhost/', 'C:\Dev\wamp64\www\itop-dev\setup\index.php', 'C:\Dev\wamp64\www\itop-dev', 'http://localhost/setup/'),
-			'Setup index (windows slash)' => array('http://127.0.0.1/', 'C:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'),
-			'Setup index (windows slash, drive letter case difference)' => array('http://127.0.0.1/', 'c:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'),
-		);
+		return [
+			'Setup index (windows antislash)' => ['http://localhost/', 'C:\Dev\wamp64\www\itop-dev\setup\index.php', 'C:\Dev\wamp64\www\itop-dev', 'http://localhost/setup/'],
+			'Setup index (windows slash)' => ['http://127.0.0.1/', 'C:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'],
+			'Setup index (windows slash, drive letter case difference)' => ['http://127.0.0.1/', 'c:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'],
+		];
 	}
 
-	public function GetAbsoluteUrlAppRootPersistency() {
+	public function GetAbsoluteUrlAppRootPersistency()
+	{
 		$this->setUp();
 
 		return [
@@ -260,7 +260,7 @@ class utilsTest extends ItopTestCase
 	/**
 	 * @dataProvider GetAbsoluteUrlAppRootPersistency
 	 */
-	public function testGetAbsoluteUrlAppRootPersistency($bBehindReverseProxy,$bForceTrustProxy1 ,$sExpectedAppRootUrl1,$bForceTrustProxy2 , $sExpectedAppRootUrl2,$bForceTrustProxy3 , $sExpectedAppRootUrl3)
+	public function testGetAbsoluteUrlAppRootPersistency($bBehindReverseProxy, $bForceTrustProxy1, $sExpectedAppRootUrl1, $bForceTrustProxy2, $sExpectedAppRootUrl2, $bForceTrustProxy3, $sExpectedAppRootUrl3)
 	{
 		// resetting static property for each test pass
 		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', null);
@@ -290,7 +290,6 @@ class utilsTest extends ItopTestCase
 
 		$this->assertEquals($sExpectedAppRootUrl3, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy3));
 	}
-
 
 	/**
 	 * @dataProvider GetDefaultUrlAppRootProvider
@@ -863,78 +862,78 @@ class utilsTest extends ItopTestCase
 			'Basic positional with enough args' => [
 				'Format: %1$s, %2$d, %3$s',
 				['Hello', 42, 'World'],
-				'Format: Hello, 42, World'
+				'Format: Hello, 42, World',
 			],
 			'Basic positional with args in different order' => [
 				'Format: %2$s, %1$d, %3$s',
 				[42, 'Hello', 'World'],
-				'Format: Hello, 42, World'
+				'Format: Hello, 42, World',
 			],
 			'Positional with reused specifiers' => [
 				'Format: %1$s, %2$d, %1$s again',
 				['Hello', 42],
-				'Format: Hello, 42, Hello again'
+				'Format: Hello, 42, Hello again',
 			],
 
 			// Missing arguments tests
 			'Missing one positional arg' => [
 				'Format: %1$s, %2$d, %3$s',
 				['Hello', 42],
-				'Format: Hello, 42, %3$s'
+				'Format: Hello, 42, %3$s',
 			],
 			'Missing multiple positional args' => [
 				'Format: %1$s, %2$s, %3$s, %4$s',
 				['Hello'],
-				'Format: Hello, %2$s, %3$s, %4$s'
+				'Format: Hello, %2$s, %3$s, %4$s',
 			],
 			'Missing first positional arg' => [
 				'Format: %1$s, %2$s, %3$s',
 				[],
-				'Format: %1$s, %2$s, %3$s'
+				'Format: %1$s, %2$s, %3$s',
 			],
-			
+
 			// Edge cases
 			'Positional with larger numbers' => [
 				'Format: %2$s, %1$d, %3$s, %2$s again',
 				[123456, 'Hello', 'World'],
-				'Format: Hello, 123456, World, Hello again'
+				'Format: Hello, 123456, World, Hello again',
 			],
 			'Positional specifiers with non-sequential indexes' => [
 				'Format: %3$s then %1$s and %5$d',
 				['first', 'second', 'third', 'fourth', 42],
-				'Format: third then first and 42'
+				'Format: third then first and 42',
 			],
 
 			// More complex format specifiers
 			'Positional with format modifiers' => [
 				'Format: %1$\'*10s, %2$04d',
 				['Hello', 42],
-				'Format: *****Hello, 0042'
+				'Format: *****Hello, 0042',
 			],
 			'Positional with various types' => [
 				'Format: String: %1$s, Integer: %2$d, Char: %3$c',
 				['Hello', 42, 65],
-				'Format: String: Hello, Integer: 42, Char: A'
+				'Format: String: Hello, Integer: 42, Char: A',
 			],
 
 			// Testing with non-Latin characters
 			'Positional with UTF-8 characters' => [
 				'Format: %1$s %2$s %3$s',
 				['こんにちは', 'Здравствуйте', '你好'],
-				'Format: こんにちは Здравствуйте 你好'
+				'Format: こんにちは Здравствуйте 你好',
 			],
 
 			// Mixed formats
 			'Mixed positional with complex specifiers' => [
 				'Format: %1$-10s | %2$+d',
 				['Hello', 42],
-				'Format: Hello      | +42'
+				'Format: Hello      | +42',
 			],
 			'Reused positional indexes with some missing' => [
 				'Format: %1$s %2$d %1$s %3$s %2$d',
 				['Hello', 42],
-				'Format: Hello 42 Hello %3$s 42'
-			]
+				'Format: Hello 42 Hello %3$s 42',
+			],
 		];
 	}
 }

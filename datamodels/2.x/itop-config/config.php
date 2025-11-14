@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -16,8 +17,6 @@ require_once(APPROOT.'application/startup.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('ConfigEditor');
 
-
 $oConfigEditorController = new ConfigEditorController();
 $oConfigEditorController->SetDefaultOperation('Edit');
 $oConfigEditorController->HandleOperation();
-

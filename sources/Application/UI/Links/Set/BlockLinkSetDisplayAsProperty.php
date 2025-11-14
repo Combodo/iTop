@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -49,7 +50,6 @@ class BlockLinkSetDisplayAsProperty extends UIContentBlock
 
 	/** @var string $sUIPage UI page */
 	private string $sUIPage;
-
 
 	/**
 	 * Constructor.
@@ -133,7 +133,7 @@ class BlockLinkSetDisplayAsProperty extends UIContentBlock
 
 			// Friendly name
 			$sFriendlyNameForHtml = utils::HtmlEntities($aItem['friendlyname']);
-			
+
 			// Full description
 			$sFullDescriptionForHtml = utils::HtmlEntities($aItem['full_description']);
 

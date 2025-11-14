@@ -2,7 +2,6 @@
 
 namespace Combodo\iTop\Test\UnitTest\Application\Helper;
 
-
 use DOMSanitizer;
 
 class TestDOMSanitizer extends DOMSanitizer
@@ -38,27 +37,27 @@ class TestDOMSanitizer extends DOMSanitizer
 	{
 		return static::$aStylesWhiteList;
 	}
-	
+
 	public function SetTagsWhiteList(array $aTagsWhiteList)
 	{
 		static::$aTagsWhiteList = $aTagsWhiteList;
 	}
-	
+
 	public function SetAttrsWhiteList(array $aAttrsWhiteList)
 	{
 		static::$aAttrsWhiteList = $aAttrsWhiteList;
 	}
-	
+
 	public function SetStylesWhiteList(array $aStylesWhiteList)
 	{
 		static::$aStylesWhiteList = $aStylesWhiteList;
 	}
-	
+
 	public function SetTagsBlackList(array $aTagsBlackList)
 	{
 		static::$aTagsBlackList = $aTagsBlackList;
 	}
-	
+
 	public function SetAttrsBlackList(array $aAttrsBlackList)
 	{
 		static::$aAttrsBlackList = $aAttrsBlackList;

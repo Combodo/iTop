@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Kiterjesztés',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Összecsukás',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Bezárás',
@@ -35,4 +36,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Itt nyugalom van, még nincs aktivitás.',
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Tevékenység panel',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Kattintson a gombra a tevékenység panel megnyitásához',
-));
+]);

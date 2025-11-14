@@ -1,4 +1,5 @@
 <?php
+
 /*!
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -14,23 +15,66 @@ use SodiumException;
  */
 class SympleCryptTest extends ItopDataTestCase
 {
-	public function testDecryptWithNullValue()
+	public function DecryptClassProvider()
 	{
-		$oSimpleCrypt = new \SimpleCrypt("Sodium");
+		$aClassProvider =  ['SimpleCrypt' => ['SimpleCrypt'],
+			'SimpleCryptSimpleEngine' => ['SimpleCryptSimpleEngine']];
+		if (function_exists('sodium_crypto_secretbox_open')) {
+			$aClassProvider['SimpleCryptSodiumEngine'] = ['SimpleCryptSodiumEngine'] ;
+		}
+		if (function_exists('openssl_decrypt')) {
+			$aClassProvider['SimpleCryptOpenSSLEngine'] = ['SimpleCryptOpenSSLEngine'];
+			$aClassProvider['SimpleCryptOpenSSLMcryptCompatibilityEngine'] = ['SimpleCryptOpenSSLMcryptCompatibilityEngine'];
+		}
+		return$aClassProvider;
+	}
+	/**
+	 * @param $sClass
+	 * @dataProvider DecryptClassProvider
+	 **/
+	public function testDecryptWithNullValue($sClass)
+	{
+		$oSimpleCrypt = new $sClass();
 		$this->assertEquals(null, $oSimpleCrypt->Decrypt("dd", null));
 	}
 
-	public function testDecryptWithEmptyValue()
+	/**
+	 * @param $sClass
+	 * @dataProvider DecryptClassProvider
+	 **/
+	public function testDecryptWithEmptyValue($sClass)
 	{
-		$oSimpleCrypt = new \SimpleCrypt("Sodium");
+		$oSimpleCrypt = new $sClass();
 		$this->assertEquals('', $oSimpleCrypt->Decrypt("dd", ""));
 	}
 
-	public function testDecrypNonDecryptableValue()
+	public function DecryptClassWithNonDecryptableValueProvider()
 	{
-		$this->expectException(SodiumException::class);
-		$oSimpleCrypt = new \SimpleCrypt("Sodium");
-		$this->assertEquals('', $oSimpleCrypt->Decrypt("dd", "gabuzomeu"));
+		$aClassProvider =  ['SimpleCrypt' => ['SimpleCrypt', '** decryption error **'],
+		//    'SimpleCryptSimpleEngine'=>['SimpleCryptSimpleEngine', '   ']
+		];
+		if (function_exists('sodium_crypto_secretbox_open')) {
+			$aClassProvider['SimpleCryptSodiumEngine'] = ['SimpleCryptSodiumEngine', '', 'SodiumException'] ;
+		}
+		if (function_exists('openssl_decrypt')) {
+			$aClassProvider['SimpleCryptOpenSSLEngine'] = ['SimpleCryptOpenSSLEngine', '** decryption error **'];
+			$aClassProvider['SimpleCryptOpenSSLMcryptCompatibilityEngine'] = ['SimpleCryptOpenSSLMcryptCompatibilityEngine', '** decryption error **'];
+		}
+		return$aClassProvider;
+	}
+	/**
+	 * @param $sClass
+	 * @param $sExpectedValue
+	 * @dataProvider DecryptClassWithNonDecryptableValueProvider
+	 **/
+	public function testDecrypWithNonDecryptableValue($sClass, $sExpectedValue = '', $sExpectedException = null)
+	{
+		if ($sExpectedException !== null) {
+			$this->expectException($sExpectedException);
+		}
+		$oSimpleCrypt = new $sClass();
+		$result = $oSimpleCrypt->Decrypt("dd", "gabuzomeuuofteod");
+		$this->assertEquals($sExpectedValue, $result, '');
 	}
 
 }

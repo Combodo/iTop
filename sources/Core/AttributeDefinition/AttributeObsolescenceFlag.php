@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -14,13 +15,13 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 {
 	public function __construct($sCode)
 	{
-		parent::__construct($sCode, array(
+		parent::__construct($sCode, [
 			"allowed_values"  => null,
 			"sql"             => $sCode,
 			"default_value"   => "",
 			"is_null_allowed" => false,
-			"depends_on"      => array(),
-		));
+			"depends_on"      => [],
+		]);
 	}
 
 	public function IsWritable()
@@ -56,17 +57,17 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		return array();
+		return [];
 	}
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		return array();
+		return [];
 	} // returns column/spec pairs (1 in most of the cases), for STRUCTURING (DB creation)
 
 	public function GetSQLValues($value)
 	{
-		return array();
+		return [];
 	} // returns column/value pairs (1 in most of the cases), for WRITING (Insert, Update)
 
 	public function GetEditClass()
@@ -82,7 +83,7 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
 		// Code duplicated with AttributeFriendlyName
-		$aAttributes = $this->GetOptional("depends_on", array());
+		$aAttributes = $this->GetOptional("depends_on", []);
 		$oExpression = $this->GetOQLExpression();
 		foreach ($oExpression->ListRequiredFields() as $sClass => $sAttCode) {
 			if (!in_array($sAttCode, $aAttributes)) {

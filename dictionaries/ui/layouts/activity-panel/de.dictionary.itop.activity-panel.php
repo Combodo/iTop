@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Erweitern',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduzieren',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Schließen',
@@ -35,4 +36,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Hier ist\'s ruhig. Bisher keine Aktivitäten.',
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Aktivitäten',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Hier klicken, um die Aktivitätenleiste anzuzeigen',
-));
+]);

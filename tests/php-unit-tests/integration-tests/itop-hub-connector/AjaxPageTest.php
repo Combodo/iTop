@@ -1,14 +1,16 @@
 <?php
+
 namespace Combodo\iTop\Test\UnitTest\HubConnector;
 
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use PHPUnit\Framework\SkippedTestCase;
 
-class AjaxPageTest extends ItopDataTestCase {
-	const USE_TRANSACTION      = false;
-	const AUTHENTICATION_TOKEN = '14b5da9d092f84044187421419a0347e7317bc8cd2b486fdda631be06b959269';
-	const AUTHENTICATION_PASSWORD    = "tagada-Secret,007";
+class AjaxPageTest extends ItopDataTestCase
+{
+	public const USE_TRANSACTION      = false;
+	public const AUTHENTICATION_TOKEN = '14b5da9d092f84044187421419a0347e7317bc8cd2b486fdda631be06b959269';
+	public const AUTHENTICATION_PASSWORD    = "tagada-Secret,007";
 
 	protected function setUp(): void
 	{
@@ -38,12 +40,12 @@ class AjaxPageTest extends ItopDataTestCase {
 
 		// Then
 		$aRes = json_decode($sOutput, true);
-		$this->assertNotNull($aRes, "Response should be a valid json, found instead:" . PHP_EOL . $sOutput);
+		$this->assertNotNull($aRes, "Response should be a valid json, found instead:".PHP_EOL.$sOutput);
 		$this->assertEquals(
 			[
 				'code' => 0,
-			    'message' => 'Ok',
-			    'fields' => []
+				'message' => 'Ok',
+				'fields' => [],
 			],
 			$aRes
 		);

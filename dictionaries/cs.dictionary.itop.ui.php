@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:AuditCategory' => 'Kategorie auditu',
 	'Class:AuditCategory+' => 'Část celkového auditu',
 	'Class:AuditCategory/Attribute:name' => 'Název kategorie',
@@ -26,13 +27,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Hranice špatných objektů, při kterých je výsledek označen chybou (červená), v procentech',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domény',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domény obsahující tyto kategorie',
-));
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:AuditRule' => 'Pravidlo Auditu',
 	'Class:AuditRule+' => 'Pravidlo pro kontrolu v dané kategorii auditu',
 	'Class:AuditRule/Attribute:name' => 'Název pravidla',
@@ -51,13 +52,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:AuditRule/Attribute:category_id+' => 'Kategorie pro toto pravidlo',
 	'Class:AuditRule/Attribute:category_name' => 'Kategorie',
 	'Class:AuditRule/Attribute:category_name+' => 'Název kategorie pro toto pravidlo',
-));
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:AuditDomain' => 'Domény Auditu',
 	'Class:AuditDomain+' => 'Domény Auditu umožňují slučovat audity podle kategorií.
 Domény nejčastěji odpovídají skupinám řešitelů, které následně opravují chyby nalezené auditem',
@@ -69,13 +70,13 @@ Domény nejčastěji odpovídají skupinám řešitelů, které následně oprav
 	'Class:AuditDomain/Attribute:icon+' => '',
 	'Class:AuditDomain/Attribute:categories_list' => 'Kategorie',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Související kategorie auditu. Při spuštění auditu v doméně se kontrolují všechny související kategorie auditu a pouze ty.',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Okdaz na Kategorii Auditu / Doménu Auditu',
 	'Class:lnkAuditCategoryToAuditDomain+' => '',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Kategorie',
@@ -86,13 +87,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Doména Auditu',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Jméno domény',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Jméno domény Auditu',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Query' => 'Dotaz',
 	'Class:Query+' => '',
 	'Class:Query/Attribute:name' => 'Název',
@@ -119,7 +120,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:QueryOQL+' => '',
 	'Class:QueryOQL/Attribute:oql' => 'Výraz',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL výraz',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -130,7 +131,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 // Class: User
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:User' => 'Uživatel',
 	'Class:User+' => 'Uživatelské jméno',
 	'Class:User/Attribute:finalclass' => 'Typ účtu',
@@ -176,13 +177,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:User/Warning:NoContactHasImpact' => 'Upozornění: tento uživatel nemá definovanou žádnou osobu, což znemožňuje přístup k portálu, novým upozorněním a má další vedlejší důsledky v Back-Office',
 	'Class:UserInternal' => 'Interní uživatel',
 	'Class:UserInternal+' => 'Uživatel definovaný v '.ITOP_APPLICATION_SHORT,
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:URP_Profiles' => 'Profil (role)',
 	'Class:URP_Profiles+' => 'Uživatelský profil (role)',
 	'Class:URP_Profiles/Attribute:name' => 'Název',
@@ -191,13 +192,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:URP_Profiles/Attribute:description+' => 'Krátký popis',
 	'Class:URP_Profiles/Attribute:user_list' => 'Uživatelé',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Uživatelé mající tento profil (roli)',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:URP_Dimensions' => 'Rozměry',
 	'Class:URP_Dimensions+' => 'Rozměry aplikace (defining silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Jméno',
@@ -206,13 +207,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:URP_Dimensions/Attribute:description+' => '',
 	'Class:URP_Dimensions/Attribute:type' => 'Typ',
 	'Class:URP_Dimensions/Attribute:type+' => 'Název třídy nebo typu dat (projekční jednotka)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:URP_UserProfile' => 'Uživatel/Profil',
 	'Class:URP_UserProfile+' => '',
 	'Class:URP_UserProfile/Name' => 'Spojení mezi uživatelem %1$s a profilem %2$s',
@@ -226,14 +227,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:URP_UserProfile/Attribute:profile+' => '',
 	'Class:URP_UserProfile/Attribute:reason' => 'Důvod',
 	'Class:URP_UserProfile/Attribute:reason+' => 'proč má uživatel tento profil',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:URP_UserOrg' => 'Přístupné organizace',
 	'Class:URP_UserOrg+' => '',
 	'Class:URP_UserOrg/Name' => 'Spojení mezi uživatelem %1$s a organizací %2$s',
@@ -247,13 +247,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Přístupná organizace',
 	'Class:URP_UserOrg/Attribute:reason' => 'Důvod',
 	'Class:URP_UserOrg/Attribute:reason+' => 'proč má uživatel oprávnění přistupovat k údajům této organizace',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => 'profile projections',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Rozměr ID',
@@ -268,13 +268,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL výraz (pomocí $user) | konstanta |  | +kód atributu',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Atribut',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Kód atributu cíle (nepovinné)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'class projections',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Rozměr ID',
@@ -287,13 +287,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL výraz (pomocí $this) | konstanta |  | +kód atributu',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Atribut',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Kód atributu cíle (nepovinné)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:URP_ActionGrant' => 'Oprávnění k akci',
 	'Class:URP_ActionGrant+' => 'Oprávnění pro třídy',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profil',
@@ -310,13 +310,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'ne',
 	'Class:URP_ActionGrant/Attribute:action' => 'Akce',
 	'Class:URP_ActionGrant/Attribute:action+' => 'operace, které se mají v dané třídě provést',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:URP_StimulusGrant' => 'Oprávnění',
 	'Class:URP_StimulusGrant+' => 'oprávnění k podnětu v životním cyklu objektu',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profil',
@@ -333,25 +333,25 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'ne',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Pondět',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Kód podnětu',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:URP_AttributeGrant' => 'Oprávnění k akci',
 	'Class:URP_AttributeGrant+' => 'Oprávnění na úrovni atributů',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Action grant',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => '',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Atribut',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'kód atributu',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:UserDashboard' => 'Nástěnka uživatele',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'Uživatel',
@@ -360,12 +360,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Obsah',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:WelcomeMenu' => 'Vítejte',
 	'Menu:WelcomeMenu+' => 'Vítejte v '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Vítejte',
 	'Menu:WelcomeMenuPage+' => 'Vítejte v '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Administrace',
@@ -382,14 +382,14 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:MyShortcuts' => 'Mé odkazy',
 	'Menu:Notifications:Title' => 'Konfigurace Auditu',
 	'Menu:DataAdministration' => 'Správa dat',
-	'Menu:DataAdministration+' => 'Správa dat'
-));
+	'Menu:DataAdministration+' => 'Správa dat',
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'BooleanLabel:yes' => 'ano',
 	'BooleanLabel:no' => 'ne',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
@@ -1533,13 +1533,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Včetně děděných objektů',
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtrováno',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtrováno na %1$s',
-	'UI:StateChanged' => 'Stav změněn'
-));
+	'UI:StateChanged' => 'Stav změněn',
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Expression:Operator:AND' => ' A ',
 	'Expression:Operator:OR' => ' NEBO ',
 	'Expression:Operator:=' => ': ',
@@ -1552,12 +1552,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Expression:Unit:Long:MINUTE' => 'minut(y)',
 	'Expression:Verb:NOW' => 'nyní',
 	'Expression:Verb:ISNULL' => ': nedefinováno',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI:Newsroom:NoNewMessage' => 'Žádné nové zprávy',
 	'UI:Newsroom:XNewMessage' => '%1$s nových zpráv',
 	'UI:Newsroom:MarkAllAsRead' => 'Označ všechny zprávy jako přečtené',
@@ -1572,10 +1572,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgentní',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Důležitá',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normalní',
-));
+]);
 
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:DataSources' => 'Zdroje dat pro synchronizaci',
 	'Menu:DataSources+' => 'Všechny zdroje dat pro synchronizaci',
 	'Menu:AuditCategories' => 'Konfigurace Auditu',
@@ -1603,4 +1602,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:Integrations' => 'Integrace',
 	'Menu:Integrations+' => '~~',
 
-));
+]);

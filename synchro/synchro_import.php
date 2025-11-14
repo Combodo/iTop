@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -33,92 +34,92 @@ class ExchangeException extends Exception
 {
 }
 
-$aPageParams = array
-(
-	'auth_user' => array
-	(
+$aPageParams =
+[
+	'auth_user' =>
+	[
 		'mandatory' => true,
 		'modes' => 'cli',
 		'default' => null,
 		'description' => 'login (must have enough rights to create objects of the given class)',
-	),
-	'auth_pwd' => array
-	(
+	],
+	'auth_pwd' =>
+	[
 		'mandatory' => true,
 		'modes' => 'cli',
 		'default' => null,
 		'description' => 'password',
-	),
-	'data_source_id' => array
-	(
+	],
+	'data_source_id' =>
+	[
 		'mandatory' => true,
 		'modes' => 'http,cli',
 		'default' => null,
 		'description' => 'Synchro data source id',
-	),
-	'csvdata' => array
-	(
+	],
+	'csvdata' =>
+	[
 		'mandatory' => true,
 		'modes' => 'http',
 		'default' => null,
 		'description' => 'data',
-	),
-	'csvfile' => array
-	(
+	],
+	'csvfile' =>
+	[
 		'mandatory' => true,
 		'modes' => 'cli',
 		'default' => '',
 		'description' => 'local data file, replaces csvdata if specified',
-	),
-	'synchronize' => array
-	(
+	],
+	'synchronize' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '1',
 		'description' => 'If set to 1, then the synchronization will be executed right after the data load',
-	),
-	'charset' => array
-	(
+	],
+	'charset' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => 'UTF-8',
 		'description' => 'Character set encoding of the CSV data: UTF-8, ISO-8859-1, WINDOWS-1251, WINDOWS-1252, ISO-8859-15',
-	),
-	'date_format' => array
-	(
+	],
+	'date_format' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => 'Y-m-d H:i:s',
 		'description' => 'Input date format (used both for dates and datetimes) - Examples: Y-m-d, d/m/Y (Europe) - no transformation is applied if the argument is omitted. (note: old format specification using %Y %m %d is also supported for backward compatibility)',
-	),
-	'separator' => array
-	(
+	],
+	'separator' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => ';',
 		'description' => 'column separator in CSV data (1 char, or \'tab\')',
-	),
-	'qualifier' => array
-	(
+	],
+	'qualifier' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '"',
 		'description' => 'test qualifier in CSV data',
-	),
-	'output' => array
-	(
+	],
+	'output' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => 'summary',
 		'description' => '[retcode] to return the count of lines in error, [summary] to return a concise report, [details] to get a detailed report (each line listed)',
-	),
-	'max_chunk_size' => array
-	(
+	],
+	'max_chunk_size' =>
+	[
 		'mandatory' => false,
 		'modes' => 'cli',
 		'default' => '0',
 		'description' => 'Limit on the count of records that can be loaded at once while performing the synchronization',
-	),
+	],
 	/*
 		'reportlevel' => array
 		(
@@ -128,28 +129,28 @@ $aPageParams = array
 			'description' => 'combination of flags to limit the detailed output',
 		),
 	*/
-	'simulate' => array
-	(
+	'simulate' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '0',
 		'description' => 'If set to 1, then the load will not be executed, but the expected report will be produced',
-	),
-	'comment' => array
-	(
+	],
+	'comment' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '',
 		'description' => 'Comment to be added into the change log',
-	),
-	'no_stop_on_import_error' => array
-	(
+	],
+	'no_stop_on_import_error' =>
+	[
 		'mandatory' => false,
 		'modes' => 'http,cli',
 		'default' => '0',
 		'description' => 'Don\'t stop the import in case of SQL import error. By default the import will stop at the first error (and rollback all changes). If this flag is set to 1 the import will continue anyway',
-	),
-);
+	],
+];
 
 function UsageAndExit($oP)
 {
@@ -157,11 +158,9 @@ function UsageAndExit($oP)
 	$sMode = utils::IsModeCLI() ? 'cli' : 'http';
 
 	$oP->p("USAGE:\n");
-	foreach ($aPageParams as $sParam => $aParamData)
-	{
+	foreach ($aPageParams as $sParam => $aParamData) {
 		$aModes = explode(',', $aParamData['modes']);
-		if (in_array($sMode, $aModes, false))
-		{
+		if (in_array($sMode, $aModes, false)) {
 			$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
 			$oP->p("$sParam = $sDesc");
 		}
@@ -169,7 +168,6 @@ function UsageAndExit($oP)
 	$oP->output();
 	exit;
 }
-
 
 function ReadParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 {
@@ -188,8 +186,7 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 	assert($aPageParams[$sParam]['mandatory']);
 
 	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */, $sSanitizationFilter);
-	if ($sValue === null)
-	{
+	if ($sValue === null) {
 		$oP->p("ERROR: Missing argument '$sParam'\n");
 		UsageAndExit($oP);
 	}
@@ -199,22 +196,19 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 
 function ChangeDateFormat($sProposedDate, $sFormat, $bDateOnly)
 {
-	if ($sProposedDate === '')
-	{
+	if ($sProposedDate === '') {
 		// An empty string means 'reset'
 		return '';
 	}
 	// Convert to a valid MySQL datetime
 	$oFormat = new DateTimeFormat($sFormat);
 	$sRegExpr = $oFormat->ToRegExpr('/');
-	if (!preg_match($sRegExpr, $sProposedDate))
-	{
+	if (!preg_match($sRegExpr, $sProposedDate)) {
 		return false;
 	}
 
 	$oDate = $oFormat->Parse($sProposedDate);
-	if ($oDate !== null)
-	{
+	if ($oDate !== null) {
 		$oTargetFormat = $bDateOnly ? AttributeDate::GetInternalFormat() : AttributeDateTime::GetInternalFormat();
 		$sDate = $oDate->format($oTargetFormat);
 
@@ -224,101 +218,85 @@ function ChangeDateFormat($sProposedDate, $sFormat, $bDateOnly)
 	return false;
 }
 
-
 /////////////////////////////////
 // Main program
 
-if (utils::IsModeCLI())
-{
+if (utils::IsModeCLI()) {
 	$oP = new CLIPage(Dict::S('TitleSynchroExecution'));
 	SetupUtils::CheckPhpAndExtensionsForCli($oP, -2);
-}
-else
-{
+} else {
 	$oP = new CLILikeWebPage(Dict::S('TitleSynchroExecution'));
 }
 
-try
-{
+try {
 	utils::UseParamFile();
-}
-catch (Exception $e)
-{
+} catch (Exception $e) {
 	$oP->p("Error: ".$e->GetMessage());
 	$oP->output();
 	exit -2;
 }
 
-if (utils::IsModeCLI())
-{
+if (utils::IsModeCLI()) {
 	// Next steps:
 	//   specific arguments: 'csvfile'
 	//
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
 	$sCsvFile = ReadMandatoryParam($oP, 'csvfile', 'raw_data');
-	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-	{
+	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
 		UserRights::Login($sAuthUser); // Login & set the user's language
-	}
-	else
-	{
+	} else {
 		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
 		$oP->output();
 		exit -1;
 	}
 
-	if (!is_readable($sCsvFile))
-	{
+	if (!is_readable($sCsvFile)) {
 		$oP->p("Input file could not be found or could not be read: '$sCsvFile'");
 		$oP->output();
 		exit -1;
 	}
 	$sCSVData = file_get_contents($sCsvFile);
 
-}
-else
-{
+} else {
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
 	//N°6022 - Make synchro scripts work by http via token authentication with SYNCHRO scopes
 	$oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
 	LoginWebPage::ResetSession(true);
-    $iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
-    if ($iRet !== LoginWebPage::EXIT_CODE_OK) {
-        switch ($iRet) {
-            case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
-                $oP->p("Missing parameter 'auth_user'");
-                break;
+	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
+	if ($iRet !== LoginWebPage::EXIT_CODE_OK) {
+		switch ($iRet) {
+			case LoginWebPage::EXIT_CODE_MISSINGLOGIN:
+				$oP->p("Missing parameter 'auth_user'");
+				break;
 
-            case LoginWebPage::EXIT_CODE_MISSINGPASSWORD:
-                $oP->p("Missing parameter 'auth_pwd'");
-                break;
+			case LoginWebPage::EXIT_CODE_MISSINGPASSWORD:
+				$oP->p("Missing parameter 'auth_pwd'");
+				break;
 
-            case LoginWebPage::EXIT_CODE_WRONGCREDENTIALS:
-                $oP->p('Invalid login');
-                break;
+			case LoginWebPage::EXIT_CODE_WRONGCREDENTIALS:
+				$oP->p('Invalid login');
+				break;
 
-            case LoginWebPage::EXIT_CODE_PORTALUSERNOTAUTHORIZED:
-                $oP->p('Portal user is not allowed');
-                break;
+			case LoginWebPage::EXIT_CODE_PORTALUSERNOTAUTHORIZED:
+				$oP->p('Portal user is not allowed');
+				break;
 
-            case LoginWebPage::EXIT_CODE_NOTAUTHORIZED:
-                $oP->p('This user is not authorized to use the web services. (The profile REST Services User is required to access the REST web services)');
-                break;
+			case LoginWebPage::EXIT_CODE_NOTAUTHORIZED:
+				$oP->p('This user is not authorized to use the web services. (The profile REST Services User is required to access the REST web services)');
+				break;
 
-            default:
-                $oP->p("Unknown authentication error (retCode=$iRet)");
-        }
-        $oP->output();
-        exit -1;
-    }
+			default:
+				$oP->p("Unknown authentication error (retCode=$iRet)");
+		}
+		$oP->output();
+		exit -1;
+	}
 
 	$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 }
 
-
-try
-{
+try {
 	//////////////////////////////////////////////////
 	//
 	// Read parameters
@@ -329,24 +307,21 @@ try
 	$sQualifier = ReadParam($oP, 'qualifier', 'raw_data');
 	$sCharSet = ReadParam($oP, 'charset', 'raw_data');
 	$sDateTimeFormat = ReadParam($oP, 'date_format', 'raw_data');
-	if ($sDateTimeFormat === '')
-	{
+	if ($sDateTimeFormat === '') {
 		$sDateTimeFormat = 'Y-m-d H:i:s'; // By default use the SQL date & time format
 	}
-	if (strpos($sDateTimeFormat, '%') !== false)
-	{
+	if (strpos($sDateTimeFormat, '%') !== false) {
 		$sDateTimeFormat = utils::DateTimeFormatToPHP($sDateTimeFormat);
 	}
 	$oDateTimeFormat = new DateTimeFormat($sDateTimeFormat);
 	$sDateFormat = $oDateTimeFormat->ToDateFormat(); // Keep only the date part
 	$sOutput = ReadParam($oP, 'output');
-//	$sReportLevel = ReadParam($oP, 'reportlevel');
+	//	$sReportLevel = ReadParam($oP, 'reportlevel');
 	$sSimulate = ReadParam($oP, 'simulate');
 	$sComment = ReadParam($oP, 'comment', 'raw_data');
 	$sNoStopOnImportError = ReadParam($oP, 'no_stop_on_import_error');
 
-	if (strtolower(trim($sSep)) === 'tab')
-	{
+	if (strtolower(trim($sSep)) === 'tab') {
 		$sSep = "\t";
 	}
 
@@ -358,7 +333,6 @@ try
 	// SET SESSION date_format = '%d/%m/%Y';
 	// SET SESSION datetime_format = '%d/%m/%Y %H:%i:%s';
 	// Therefore, we have to allow users to transform the format according to a given specification: date_format
-
 
 	//////////////////////////////////////////////////
 	//
@@ -372,31 +346,26 @@ try
 	//
 	// Check parameters format/consistency
 	//
-	if (strlen($sCSVData) === 0)
-	{
+	if (strlen($sCSVData) === 0) {
 		throw new ExchangeException('Missing data - at least one line is expected');
 	}
 
 	/** @var \SynchroDataSource $oDataSource */
 	$oDataSource = MetaModel::GetObject('SynchroDataSource', $iDataSourceId, false);
-	if ($oDataSource === null)
-	{
+	if ($oDataSource === null) {
 		throw new ExchangeException("Unknown data source id: '$iDataSourceId'");
 	}
 	$sClass = $oDataSource->GetTargetClass();
 
-	if (strlen($sSep) > 1)
-	{
+	if (strlen($sSep) > 1) {
 		throw new ExchangeException("Separator is limited to one character, found '$sSep'");
 	}
 
-	if (strlen($sQualifier) > 1)
-	{
+	if (strlen($sQualifier) > 1) {
 		throw new ExchangeException("Text qualifier is limited to one character, found '$sQualifier'");
 	}
 
-	if (!in_array($sOutput, array('retcode', 'summary', 'details')))
-	{
+	if (!in_array($sOutput, ['retcode', 'summary', 'details'])) {
 		throw new ExchangeException("Unknown output format: '$sOutput'");
 	}
 
@@ -411,21 +380,15 @@ try
 		}
 	*/
 
-	if ($sSimulate === '1')
-	{
+	if ($sSimulate === '1') {
 		$bSimulate = true;
-	}
-	else
-	{
+	} else {
 		$bSimulate = false;
 	}
 
-	if ($sSynchronize === '1')
-	{
+	if ($sSynchronize === '1') {
 		$bSynchronize = true;
-	}
-	else
-	{
+	} else {
 		$bSynchronize = false;
 	}
 
@@ -433,12 +396,9 @@ try
 	//
 	// Parse first line, check attributes, analyse the request
 	//
-	if ($sCharSet === 'UTF-8')
-	{
+	if ($sCharSet === 'UTF-8') {
 		$sUTF8Data = $sCSVData;
-	}
-	else
-	{
+	} else {
 		$sUTF8Data = iconv($sCharSet, 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
 	}
 	$oCSVParser = new CSVParser($sUTF8Data, $sSep, $sQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop'));
@@ -449,51 +409,40 @@ try
 	// Check columns
 	$aColumns = $oDataSource->GetSQLColumns();
 
-	$aDateColumns = array();
-	foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-	{
-		if ($oAttDef instanceof AttributeDate)
-		{
+	$aDateColumns = [];
+	foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+		if ($oAttDef instanceof AttributeDate) {
 			$aDateColumns[$sAttCode] = 'DATE';
-		}
-		elseif ($oAttDef instanceof AttributeDateTime)
-		{
+		} elseif ($oAttDef instanceof AttributeDateTime) {
 			$aDateColumns[$sAttCode] = 'DATETIME';
 		}
 	}
 
-	$aIsDateToTransform = array();
-	$aDateToTransformReport = array();
-	$aIsBinaryToTransform = array();
-	foreach ($aInputColumns as $iFieldId => $sInputColumn)
-	{
+	$aIsDateToTransform = [];
+	$aDateToTransformReport = [];
+	$aIsBinaryToTransform = [];
+	foreach ($aInputColumns as $iFieldId => $sInputColumn) {
 		$aIsBinaryToTransform[$iFieldId] = false;
 
-		if (array_key_exists($sInputColumn, $aDateColumns))
-		{
+		if (array_key_exists($sInputColumn, $aDateColumns)) {
 			$aIsDateToTransform[$iFieldId] = $aDateColumns[$sInputColumn]; // either DATE or DATETIME
 			$aDateToTransformReport[] = $sInputColumn;
-		}
-		else
-		{
+		} else {
 			$aIsDateToTransform[$iFieldId] = false;
 		}
 
-		if ($sInputColumn === 'primary_key')
-		{
+		if ($sInputColumn === 'primary_key') {
 			$iPrimaryKeyCol = $iFieldId;
 			$aIsBinaryToTransform[$iFieldId] = false;
 			continue;
 		}
-		if (!array_key_exists($sInputColumn, $aColumns))
-		{
+		if (!array_key_exists($sInputColumn, $aColumns)) {
 			throw new ExchangeException("Unknown column '$sInputColumn' (class: '$sClass')");
 		}
 
 		$aIsBinaryToTransform[$iFieldId] = ($aColumns[$sInputColumn] === 'LONGBLOB');
 	}
-	if (!isset($iPrimaryKeyCol))
-	{
+	if (!isset($iPrimaryKeyCol)) {
 		throw new ExchangeException("Missing reconciliation column 'primary_key'");
 	}
 
@@ -501,17 +450,14 @@ try
 	//
 	// Go for parsing and interpretation
 	//
-	try
-	{
-		if ($sOutput === 'details')
-		{
+	try {
+		if ($sOutput === 'details') {
 			$oP->add_comment('------------------------------------------------------------');
 			$oP->add_comment(' Import phase');
 			$oP->add_comment('------------------------------------------------------------');
 		}
 
-		if ($bSimulate)
-		{
+		if ($bSimulate) {
 			CMDBSource::Query('START TRANSACTION');
 		}
 		$aData = $oCSVParser->ToArray();
@@ -526,8 +472,7 @@ try
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		$oMutex = new iTopMutex('synchro_import_'.$oDataSource->GetKey());
 		$oMutex->Lock();
-		foreach ($aData as $iRow => $aRow)
-		{
+		foreach ($aData as $iRow => $aRow) {
 			/** @noinspection DisconnectedForeachInstructionInspection */
 			set_time_limit($iLoopTimeLimit);
 			$sReconciliationCondition = '`primary_key` = '.CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
@@ -539,136 +484,95 @@ try
 				// No record... create it
 				//
 				$iCountCreations++;
-				if ($sOutput === 'details')
-				{
+				if ($sOutput === 'details') {
 					$oP->add("$iRow: New entry, reconciliation: '$sReconciliationCondition'\n");
 				}
 
-				$aValues = array(); // Used to build the insert query
-				foreach ($aRow as $iCol => $value)
-				{
-					if ($aIsDateToTransform[$iCol] !== false)
-					{
+				$aValues = []; // Used to build the insert query
+				foreach ($aRow as $iCol => $value) {
+					if ($aIsDateToTransform[$iCol] !== false) {
 						$bDateOnly = false;
 						$sFormat = $sDateTimeFormat;
-						if ($aIsDateToTransform[$iCol] === 'DATE')
-						{
+						if ($aIsDateToTransform[$iCol] === 'DATE') {
 							$bDateOnly = true;
 							$sFormat = $sDateFormat;
 						}
 						$sDate = ChangeDateFormat($value, $sFormat, $bDateOnly);
-						if ($sDate === false)
-						{
+						if ($sDate === false) {
 							$aValues[] = '';
-							if ($sOutput === 'details')
-							{
+							if ($sOutput === 'details') {
 								$oP->add("$iRow: Wrong format for {$aIsDateToTransform[$iCol]} column $iCol: '$value' does not match the expected format: '$sFormat' (column skipped)\n");
 							}
-						}
-						else
-						{
+						} else {
 							$aValues[] = $sDate;
 						}
-					}
-					elseif ($aIsBinaryToTransform[$iCol])
-					{
+					} elseif ($aIsBinaryToTransform[$iCol]) {
 						$aValues[] = base64_decode($value);
-					}
-					else
-					{
+					} else {
 						$aValues[] = $value;
 					}
 				}
 				$sValues = implode(', ', CMDBSource::Quote($aValues));
 				$sInsert = "INSERT INTO `$sTable` ($sInsertColumns) VALUES ($sValues)";
-				try
-				{
+				try {
 					CMDBSource::Query($sInsert);
-				}
-				catch (Exception $e)
-				{
-					if ($sNoStopOnImportError === '1')
-					{
+				} catch (Exception $e) {
+					if ($sNoStopOnImportError === '1') {
 						$iCountErrors++;
 						$oP->add("$iRow: Import error '".$e->getMessage()."' (continuing)...\n");
-					}
-					else // Fatal error
-					{
+					} else { // Fatal error
 						throw $e;
 					}
 				}
-			}
-			elseif ($iCount === 1)
-			{
+			} elseif ($iCount === 1) {
 				// Found a match... update it
 				//
 				$iCountUpdates++;
-				if ($sOutput === 'details')
-				{
+				if ($sOutput === 'details') {
 					$oP->add("$iRow: Update entry, reconciliation: '$sReconciliationCondition'\n");
 				}
-				$aValuePairs = array(); // Used to build the update query
-				foreach ($aRow as $iCol => $value)
-				{
+				$aValuePairs = []; // Used to build the update query
+				foreach ($aRow as $iCol => $value) {
 					// Skip reconciliation column
-					if ($iCol === $iPrimaryKeyCol)
-					{
+					if ($iCol === $iPrimaryKeyCol) {
 						continue;
 					}
 
 					$sCol = $aInputColumns[$iCol];
-					if ($aIsDateToTransform[$iCol] !== false)
-					{
+					if ($aIsDateToTransform[$iCol] !== false) {
 						$bDateOnly = false;
 						$sFormat = $sDateTimeFormat;
-						if ($aIsDateToTransform[$iCol] === 'DATE')
-						{
+						if ($aIsDateToTransform[$iCol] === 'DATE') {
 							$bDateOnly = true;
 							$sFormat = $sDateFormat;
 						}
 						$sDate = ChangeDateFormat($value, $sFormat, $bDateOnly);
-						if ($sDate === false)
-						{
-							if ($sOutput === 'details')
-							{
+						if ($sDate === false) {
+							if ($sOutput === 'details') {
 								$oP->add("$iRow: Wrong format for {$aIsDateToTransform[$iCol]} column $iCol: '$value' does not match the expected format: '$sFormat' (column skipped)\n");
 							}
-						}
-						else
-						{
+						} else {
 							$aValuePairs[] = "`$sCol` = ".CMDBSource::Quote($sDate);
 						}
-					}
-					elseif ($aIsBinaryToTransform[$iCol])
-					{
+					} elseif ($aIsBinaryToTransform[$iCol]) {
 						$aValuePairs[] = "`$sCol` = FROM_BASE64(".CMDBSource::Quote($aRow[$iCol], true).")";
-					}
-					else
-					{
+					} else {
 						$aValuePairs[] = "`$sCol` = ".CMDBSource::Quote($aRow[$iCol]);
 					}
 				}
 				$sValuePairs = implode(', ', $aValuePairs);
 				$sUpdateQuery = "UPDATE `$sTable` SET $sValuePairs WHERE $sReconciliationCondition";
-				try
-				{
+				try {
 					CMDBSource::Query($sUpdateQuery);
-				}
-				catch (Exception $e)
-				{
-					if ($sNoStopOnImportError === '1')
-					{
+				} catch (Exception $e) {
+					if ($sNoStopOnImportError === '1') {
 						$iCountErrors++;
 						$oP->add("$iRow: Import error '".$e->getMessage()."' (continuing)...\n");
-					}
-					else // Fatal error
-					{
+					} else { // Fatal error
 						throw $e;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				// Too many records... ambiguity
 				//
 				$iCountErrors++;
@@ -678,8 +582,7 @@ try
 		$oMutex->Unlock();
 		set_time_limit(intval($iPreviousTimeLimit));
 
-		if (($sOutput === 'summary') || ($sOutput === 'details'))
-		{
+		if (($sOutput === 'summary') || ($sOutput === 'details')) {
 			$oP->add_comment('------------------------------------------------------------');
 			$oP->add_comment(' Import phase summary');
 			$oP->add_comment('------------------------------------------------------------');
@@ -690,33 +593,27 @@ try
 			$oP->add_comment('Qualifier: '.$sQualifier);
 			$oP->add_comment('Charset Encoding:'.$sCharSet);
 
-			if (strlen($sDateTimeFormat) > 0)
-			{
-				$aDateTimeColumns = array();
-				$aDateColumns = array();
-				foreach ($aIsDateToTransform as $iCol => $sType)
-				{
-					if ($sType !== false)
-					{
+			if (strlen($sDateTimeFormat) > 0) {
+				$aDateTimeColumns = [];
+				$aDateColumns = [];
+				foreach ($aIsDateToTransform as $iCol => $sType) {
+					if ($sType !== false) {
 						$sCol = $aInputColumns[$iCol];
-						if ($sType === 'DATE')
-						{
+						if ($sType === 'DATE') {
 							$aDateColumns[] = $sCol;
-						}
-						else
-						{
+						} else {
 							$aDateTimeColumns[] = $sCol;
 						}
 					}
 				}
-				$sFormatedDateTimeColumns = (count($aDateTimeColumns) > 0) ? ', applied to columns ['.implode(', ',
-						$aDateTimeColumns).']' : '';
+				$sFormatedDateTimeColumns = (count($aDateTimeColumns) > 0) ? ', applied to columns ['.implode(
+					', ',
+					$aDateTimeColumns
+				).']' : '';
 				$sFormatedDateColumns = (count($aDateColumns) > 0) ? ', applied to columns ['.implode(', ', $aDateColumns).']' : '';
 				$oP->add_comment("Date and time format: '$sDateTimeFormat' $sFormatedDateTimeColumns");
 				$oP->add_comment("Date only format: '$sDateFormat' $sFormatedDateColumns");
-			}
-			else
-			{
+			} else {
 				// shall never get there
 				$oP->add_comment('Date format: <none>');
 			}
@@ -737,28 +634,23 @@ try
 		//
 		// Synchronize
 		//
-		if ($bSynchronize)
-		{
+		if ($bSynchronize) {
 			$oSynchroExec = new SynchroExecution($oDataSource, $oLoadStartDate);
 			$oStatLog = $oSynchroExec->Process();
-			if ($sOutput === 'details')
-			{
+			if ($sOutput === 'details') {
 				$oP->add_comment('------------------------------------------------------------');
 				$oP->add_comment(' Synchronization phase');
 				$oP->add_comment('------------------------------------------------------------');
 				$iCount = 0;
-				foreach ($oStatLog->GetTraces() as $sMessage)
-				{
+				foreach ($oStatLog->GetTraces() as $sMessage) {
 					$iCount++;
 					$oP->add_comment($sMessage);
 				}
-				if ($iCount === 0)
-				{
+				if ($iCount === 0) {
 					$oP->add_comment(' No traces. (To activate the traces set "synchro_trace" => true in the configuration file)');
 				}
 			}
-			if ($oStatLog->Get('status') === 'error')
-			{
+			if ($oStatLog->Get('status') === 'error') {
 				$oP->p('ERROR: '.$oStatLog->Get('last_error'));
 			}
 			$oP->add_comment('------------------------------------------------------------');
@@ -779,17 +671,13 @@ try
 			$oP->add_comment('Objects reconciliation errors: '.$oStatLog->Get('stats_nb_replica_reconciled_errors'));
 			$oP->add_comment('Replica disappeared, no action taken: '.$oStatLog->Get('stats_nb_replica_disappeared_no_action'));
 		}
-	}
-	catch (Exception $e)
-	{
-		if ($bSimulate)
-		{
+	} catch (Exception $e) {
+		if ($bSimulate) {
 			CMDBSource::Query('ROLLBACK');
 		}
 		throw $e;
 	}
-	if ($bSimulate)
-	{
+	if ($bSimulate) {
 		CMDBSource::Query('ROLLBACK');
 	}
 
@@ -797,17 +685,12 @@ try
 	//
 	// Summary of settings and results
 	//
-	if ($sOutput === 'retcode')
-	{
+	if ($sOutput === 'retcode') {
 		$oP->add($iCountErrors);
 	}
-}
-catch (ExchangeException $e)
-{
+} catch (ExchangeException $e) {
 	$oP->add_comment($e->getMessage());
-}
-catch (Exception $e)
-{
+} catch (Exception $e) {
 	$oP->add_comment((string)$e);
 }
 

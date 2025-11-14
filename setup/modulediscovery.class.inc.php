@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2010-2024 Combodo SAS
  *
@@ -72,7 +73,7 @@ HTML;
 
 class ModuleDiscovery
 {
-	static $m_aModuleArgs = array(
+	public static $m_aModuleArgs = [
 		'label' => 'One line description shown during the interactive setup',
 		'dependencies' => 'array of module ids',
 		'mandatory' => 'boolean',
@@ -83,17 +84,15 @@ class ModuleDiscovery
 		'data.sample' => 'array of sample data files',
 		'doc.manual_setup' => 'url',
 		'doc.more_information' => 'url',
-	);
-
+	];
 
 	// Cache the results and the source directories
 	protected static $m_aSearchDirs = null;
-	protected static $m_aModules = array();
-	protected static $m_aModuleVersionByName = array();
+	protected static $m_aModules = [];
+	protected static $m_aModuleVersionByName = [];
 
 	// All the entries below are list of file paths relative to the module directory
-	protected static $m_aFilesList = array('datamodel', 'webservice', 'dictionary', 'data.struct', 'data.sample');
-
+	protected static $m_aFilesList = ['datamodel', 'webservice', 'dictionary', 'data.struct', 'data.sample'];
 
 	// ModulePath is used by AddModule to get the path of the module being included (in ListModuleFiles)
 	protected static $m_sModulePath = null;
@@ -114,18 +113,15 @@ class ModuleDiscovery
 	 */
 	public static function AddModule($sFilePath, $sId, $aArgs)
 	{
-		if (is_null($aArgs)||! is_array($aArgs)){
+		if (is_null($aArgs) || ! is_array($aArgs)) {
 			throw new ModuleFileReaderException("Error parsing module file args", 0, null, $sFilePath);
 		}
-		if (!array_key_exists('itop_version', $aArgs))
-		{
+		if (!array_key_exists('itop_version', $aArgs)) {
 			// Assume 1.0.2
 			$aArgs['itop_version'] = '1.0.2';
 		}
-		foreach (array_keys(self::$m_aModuleArgs) as $sArgName)
-		{
-			if (!array_key_exists($sArgName, $aArgs))
-			{
+		foreach (array_keys(self::$m_aModuleArgs) as $sArgName) {
+			if (!array_key_exists($sArgName, $aArgs)) {
 				throw new Exception("Module '$sId': missing argument '$sArgName'");
 			}
 		}
@@ -134,30 +130,20 @@ class ModuleDiscovery
 		$aArgs['module_file'] = $sFilePath;
 
 		list($sModuleName, $sModuleVersion) = static::GetModuleName($sId);
-		if ($sModuleVersion == '')
-		{
-			$sModuleVersion = '1.0.0';
-		}
 
-		if (array_key_exists($sModuleName, self::$m_aModuleVersionByName))
-		{
-			if (version_compare($sModuleVersion, self::$m_aModuleVersionByName[$sModuleName]['version'], '>'))
-			{
+		if (array_key_exists($sModuleName, self::$m_aModuleVersionByName)) {
+			if (version_compare($sModuleVersion, self::$m_aModuleVersionByName[$sModuleName]['version'], '>')) {
 				// Newer version, let's upgrade
 				$sIdToRemove = self::$m_aModuleVersionByName[$sModuleName]['id'];
 				unset(self::$m_aModules[$sIdToRemove]);
 
 				self::$m_aModuleVersionByName[$sModuleName]['version'] = $sModuleVersion;
 				self::$m_aModuleVersionByName[$sModuleName]['id'] = $sId;
-			}
-			else
-			{
+			} else {
 				// Older (or equal) version, let's ignore it
 				return;
 			}
-		}
-		else
-		{
+		} else {
 			// First version to be loaded for this module, remember it
 			self::$m_aModuleVersionByName[$sModuleName]['version'] = $sModuleVersion;
 			self::$m_aModuleVersionByName[$sModuleName]['id'] = $sId;
@@ -181,24 +167,19 @@ class ModuleDiscovery
 		}
 		*/
 		// Populate automatically the list of dictionary files
-		$aMatches = array();
-		if(preg_match('|^([^/]+)|', $sId, $aMatches)) // ModuleName = everything before the first forward slash
-		{
+		$aMatches = [];
+		if (preg_match('|^([^/]+)|', $sId, $aMatches)) { // ModuleName = everything before the first forward slash
 			$sModuleName = $aMatches[1];
 			$sDir = dirname($sFilePath);
 			$aDirs = [
 				$sDir => self::$m_sModulePath,
-				$sDir.'/dictionaries' => self::$m_sModulePath.'/dictionaries'
+				$sDir.'/dictionaries' => self::$m_sModulePath.'/dictionaries',
 			];
-			foreach ($aDirs as $sRootDir => $sPath)
-			{
-				if ($hDir = @opendir($sRootDir))
-				{
-					while (($sFile = readdir($hDir)) !== false)
-					{
-						$aMatches = array();
-						if (preg_match("/^[^\\.]+.dict.$sModuleName.php$/i", $sFile, $aMatches)) // Dictionary files named like <Lang>.dict.<ModuleName>.php are loaded automatically
-						{
+			foreach ($aDirs as $sRootDir => $sPath) {
+				if ($hDir = @opendir($sRootDir)) {
+					while (($sFile = readdir($hDir)) !== false) {
+						$aMatches = [];
+						if (preg_match("/^[^\\.]+.dict.$sModuleName.php$/i", $sFile, $aMatches)) { // Dictionary files named like <Lang>.dict.<ModuleName>.php are loaded automatically
 							self::$m_aModules[$sId]['dictionary'][] = $sPath.'/'.$sFile;
 						}
 					}
@@ -236,58 +217,46 @@ class ModuleDiscovery
 		// Order the modules to take into account their inter-dependencies
 		$aDependencies = [];
 		$aSelectedModules = [];
-		foreach($aModules as $sId => $aModule)
-		{
+		foreach ($aModules as $sId => $aModule) {
 			list($sModuleName, ) = self::GetModuleName($sId);
-			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad))
-			{
+			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad)) {
 				$aDependencies[$sId] = $aModule['dependencies'];
 				$aSelectedModules[$sModuleName] = true;
 			}
 		}
 		ksort($aDependencies);
 		$aOrderedModules = [];
-		$iLoopCount = 1;
-		while(($iLoopCount < count($aModules)) && (count($aDependencies) > 0) )
-		{
-			foreach($aDependencies as $sId => $aRemainingDeps)
-			{
+		$iLoopCount = 0;
+		while (($iLoopCount < count($aModules)) && (count($aDependencies) > 0)) {
+			foreach ($aDependencies as $sId => $aRemainingDeps) {
 				$bDependenciesSolved = true;
-				foreach($aRemainingDeps as $sDepId)
-				{
-					if (!self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules))
-					{
+				foreach ($aRemainingDeps as $sDepId) {
+					if (!self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules)) {
 						$bDependenciesSolved = false;
 					}
 				}
-				if ($bDependenciesSolved)
-				{
+				if ($bDependenciesSolved) {
 					$aOrderedModules[] = $sId;
 					unset($aDependencies[$sId]);
 				}
 			}
 			$iLoopCount++;
 		}
-		if ($bAbortOnMissingDependency && count($aDependencies) > 0)
-		{
+		if ($bAbortOnMissingDependency && count($aDependencies) > 0) {
 			$aModulesInfo = [];
 			$aModuleDeps = [];
-			foreach($aDependencies as $sId => $aDeps)
-			{
+			foreach ($aDependencies as $sId => $aDeps) {
 				$aModule = $aModules[$sId];
 				$aDepsWithIcons = [];
-				foreach($aDeps as $sIndex => $sDepId)
-				{
-					if (self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules))
-					{
-						$aDepsWithIcons[$sIndex] = '✅ ' . $sDepId;
-					} else
-					{
-						$aDepsWithIcons[$sIndex] = '❌ ' .  $sDepId;
+				foreach ($aDeps as $sIndex => $sDepId) {
+					if (self::DependencyIsResolved($sDepId, $aOrderedModules, $aSelectedModules)) {
+						$aDepsWithIcons[$sIndex] = '✅ '.$sDepId;
+					} else {
+						$aDepsWithIcons[$sIndex] = '❌ '.$sDepId;
 					}
 				}
 				$aModuleDeps[] = "{$aModule['label']} (id: $sId) depends on: ".implode(' + ', $aDepsWithIcons);
-				$aModulesInfo[$sId] = array('module' => $aModule, 'dependencies' => $aDepsWithIcons);
+				$aModulesInfo[$sId] = ['module' => $aModule, 'dependencies' => $aDepsWithIcons];
 			}
 			$sMessage = "The following modules have unmet dependencies:\n".implode(",\n", $aModuleDeps);
 			$oException = new MissingDependencyException($sMessage);
@@ -295,9 +264,8 @@ class ModuleDiscovery
 			throw $oException;
 		}
 		// Return the ordered list, so that the dependencies are met...
-		$aResult = array();
-		foreach($aOrderedModules as $sId)
-		{
+		$aResult = [];
+		foreach ($aOrderedModules as $sId) {
 			$aResult[$sId] = $aModules[$sId];
 		}
 		return $aResult;
@@ -327,59 +295,39 @@ class ModuleDiscovery
 	protected static function DependencyIsResolved($sDepString, $aOrderedModules, $aSelectedModules)
 	{
 		$bResult = false;
-		$aModuleVersions = array();
+		$aModuleVersions = [];
 		// Separate the module names from their version for an easier comparison later
-		foreach($aOrderedModules as $sModuleId)
-		{
-			$aMatches = array();
-			if (preg_match('|^([^/]+)/(.*)$|', $sModuleId, $aMatches))
-			{
-				$aModuleVersions[$aMatches[1]] = $aMatches[2];
-			}
-			else
-			{
-				// No version number found, assume 1.0.0
-				$aModuleVersions[$sModuleId] = '1.0.0';
-			}
+		foreach ($aOrderedModules as $sModuleId) {
+			list($sModuleName, $sVersion) = self::GetModuleName($sModuleId);
+			$aModuleVersions[$sModuleName] = $sVersion;
 		}
-		if (preg_match_all('/([^\(\)&| ]+)/', $sDepString, $aMatches))
-		{
-			$aReplacements = array();
-			$aPotentialPrerequisites = array();
-			foreach($aMatches as $aMatch)
-			{
-				foreach($aMatch as $sModuleId)
-				{
+		if (preg_match_all('/([^\(\)&| ]+)/', $sDepString, $aMatches)) {
+			$aReplacements = [];
+			$aPotentialPrerequisites = [];
+			foreach ($aMatches as $aMatch) {
+				foreach ($aMatch as $sModuleId) {
 					// $sModuleId in the dependency string is made of a <name>/<optional_operator><version>
 					// where the operator is < <= = > >= (by default >=)
-					$aModuleMatches = array();
-					if(preg_match('|^([^/]+)/(<?>?=?)([^><=]+)$|', $sModuleId, $aModuleMatches))
-					{
+					$aModuleMatches = [];
+					if (preg_match('|^([^/]+)/(<?>?=?)([^><=]+)$|', $sModuleId, $aModuleMatches)) {
 						$sModuleName = $aModuleMatches[1];
 						$aPotentialPrerequisites[$sModuleName] = true;
 						$sOperator = $aModuleMatches[2];
-						if ($sOperator == '')
-						{
+						if ($sOperator == '') {
 							$sOperator = '>=';
 						}
 						$sExpectedVersion = $aModuleMatches[3];
-						if (array_key_exists($sModuleName, $aModuleVersions))
-						{
+						if (array_key_exists($sModuleName, $aModuleVersions)) {
 							// module is present, check the version
 							$sCurrentVersion = $aModuleVersions[$sModuleName];
-							if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator))
-							{
+							if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator)) {
 								$aReplacements[$sModuleId] = '(true)'; // Add parentheses to protect against invalid condition causing
 								// a function call that results in a runtime fatal error
-							}
-							else
-							{
+							} else {
 								$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
 								// a function call that results in a runtime fatal error
 							}
-						}
-						else
-						{
+						} else {
 							// module is not present
 							$aReplacements[$sModuleId] = '(false)'; // Add parentheses to protect against invalid condition causing
 							// a function call that results in a runtime fatal error
@@ -388,27 +336,21 @@ class ModuleDiscovery
 				}
 			}
 			$bMissingPrerequisite = false;
-			foreach (array_keys($aPotentialPrerequisites) as $sModuleName)
-			{
-				if (array_key_exists($sModuleName, $aSelectedModules))
-				{
+			foreach (array_keys($aPotentialPrerequisites) as $sModuleName) {
+				if (array_key_exists($sModuleName, $aSelectedModules)) {
 					// This module is actually a prerequisite
-					if (!array_key_exists($sModuleName, $aModuleVersions))
-					{
+					if (!array_key_exists($sModuleName, $aModuleVersions)) {
 						$bMissingPrerequisite = true;
 					}
 				}
 			}
-			if ($bMissingPrerequisite)
-			{
+			if ($bMissingPrerequisite) {
 				$bResult = false;
-			}
-			else
-			{
+			} else {
 				$sBooleanExpr = str_replace(array_keys($aReplacements), array_values($aReplacements), $sDepString);
-				try{
+				try {
 					$bResult = self::GetPhpExpressionEvaluator()->ParseAndEvaluateBooleanExpression($sBooleanExpr);
-				} catch(ModuleFileReaderException $e){
+				} catch (ModuleFileReaderException $e) {
 					//logged already
 					echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
 				}
@@ -430,21 +372,17 @@ class ModuleDiscovery
 	 */
 	public static function GetAvailableModules($aSearchDirs, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
-		if (self::$m_aSearchDirs != $aSearchDirs)
-		{
+		if (self::$m_aSearchDirs != $aSearchDirs) {
 			self::ResetCache();
 		}
 
-		if (is_null(self::$m_aSearchDirs))
-		{
+		if (is_null(self::$m_aSearchDirs)) {
 			self::$m_aSearchDirs = $aSearchDirs;
 
 			// Not in cache, let's scan the disk
-			foreach($aSearchDirs as $sSearchDir)
-			{
+			foreach ($aSearchDirs as $sSearchDir) {
 				$sLookupDir = realpath($sSearchDir);
-				if ($sLookupDir == '')
-				{
+				if ($sLookupDir == '') {
 					throw new Exception("Invalid directory '$sSearchDir'");
 				}
 
@@ -452,9 +390,7 @@ class ModuleDiscovery
 				self::ListModuleFiles(basename($sSearchDir), dirname($sSearchDir));
 			}
 			return self::GetModules($bAbortOnMissingDependency, $aModulesToLoad);
-		}
-		else
-		{
+		} else {
 			// Reuse the previous results
 			return self::GetModules($bAbortOnMissingDependency, $aModulesToLoad);
 		}
@@ -463,8 +399,8 @@ class ModuleDiscovery
 	public static function ResetCache()
 	{
 		self::$m_aSearchDirs = null;
-		self::$m_aModules = array();
-		self::$m_aModuleVersionByName = array();
+		self::$m_aModules = [];
+		self::$m_aModuleVersionByName = [];
 	}
 
 	/**
@@ -474,18 +410,19 @@ class ModuleDiscovery
 	 */
 	public static function GetModuleName($sModuleId)
 	{
-		$aMatches = array();
-		if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches))
-		{
+		$aMatches = [];
+		if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches)) {
 			$sName = $aMatches[1];
 			$sVersion = $aMatches[2];
-		}
-		else
-		{
+			if ($sVersion === "") {
+				$sVersion = "1.0.0";
+			}
+		} else {
 			$sName = $sModuleId;
-			$sVersion = "";
+			$sVersion = "1.0.0";
 		}
-		return array($sName, $sVersion);
+
+		return [$sName, $sVersion];
 	}
 
 	/**
@@ -501,40 +438,31 @@ class ModuleDiscovery
 		static $iDummyClassIndex = 0;
 		$sDirectory = $sRootDir.'/'.$sRelDir;
 
-		if ($hDir = opendir($sDirectory))
-		{
+		if ($hDir = opendir($sDirectory)) {
 			// This is the correct way to loop over the directory. (according to the documentation)
-			while (($sFile = readdir($hDir)) !== false)
-			{
-				$aMatches = array();
-				if (is_dir($sDirectory.'/'.$sFile))
-				{
-					if (($sFile != '.') && ($sFile != '..') && ($sFile != '.svn') && ($sFile != 'vendor'))
-					{
+			while (($sFile = readdir($hDir)) !== false) {
+				$aMatches = [];
+				if (is_dir($sDirectory.'/'.$sFile)) {
+					if (($sFile != '.') && ($sFile != '..') && ($sFile != '.svn') && ($sFile != 'vendor')) {
 						self::ListModuleFiles($sRelDir.'/'.$sFile, $sRootDir);
 					}
-				}
-				else if (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches))
-				{
+				} elseif (preg_match('/^module\.(.*).php$/i', $sFile, $aMatches)) {
 					self::SetModulePath($sRelDir);
 					$sModuleFilePath = $sDirectory.'/'.$sFile;
 					try {
 						$aModuleInfo = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sDirectory.'/'.$sFile);
-						SetupWebPage::AddModule($sModuleFilePath, $aModuleInfo[1], $aModuleInfo[2]);
-					} catch(ModuleFileReaderException $e){
+						SetupWebPage::AddModule($sModuleFilePath, $aModuleInfo[ModuleFileReader::MODULE_INFO_ID], $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]);
+					} catch (ModuleFileReaderException $e) {
 						continue;
 					}
 				}
 			}
 			closedir($hDir);
-		}
-		else
-		{
+		} else {
 			throw new Exception("Data directory (".$sDirectory.") not found or not readable.");
 		}
 	}
 } // End of class
-
 
 /** Alias for backward compatibility with old module files in which
  *  the declaration of a module invokes SetupWebPage::AddModule()
@@ -576,6 +504,6 @@ class SetupWebPage extends ModuleDiscovery
  * the class (in case some piece of code enumerate the classes derived from a well known class)
  * Note that this will not work if someone enumerates the classes that implement a given interface
  */
-class DummyHandler {
+class DummyHandler
+{
 }
-

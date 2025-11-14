@@ -37,7 +37,6 @@ use UserRights;
 use utils;
 use appUserPreferences;
 
-
 /**
  *  Class iTopNewsroomController
  *
@@ -51,7 +50,6 @@ class iTopNewsroomController extends Controller
 	public const DEFAULT_NEWSROOM_DISPLAY_SIZE = 7;
 	public const DEFAULT_NEWSROOM_MIN_DISPLAY_SIZE = 1;
 	public const DEFAULT_NEWSROOM_MAX_DISPLAY_SIZE = 20;
-
 
 	/**
 	 * @return iTopWebPage
@@ -68,7 +66,7 @@ class iTopNewsroomController extends Controller
 		$oBulkActionsBlock = PanelUIBlockFactory::MakeForInformation(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Title'));
 		$oBulkActionsBlock->AddSubTitleBlock(new Html(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:SubTitle')));
 		$sPictureUrl = UserRights::GetUserPictureAbsUrl();
-		$oBulkActionsBlock->SetIcon($sPictureUrl,Panel::ENUM_ICON_COVER_METHOD_CONTAIN, true);
+		$oBulkActionsBlock->SetIcon($sPictureUrl, Panel::ENUM_ICON_COVER_METHOD_CONTAIN, true);
 
 		$oNotificationsCenterButton = ButtonUIBlockFactory::MakeIconLink(
 			'fas fa-cogs',
@@ -94,7 +92,7 @@ class iTopNewsroomController extends Controller
 		$oMarkAllAsReadButton->SetIconClass('far fa-envelope-open')
 			->AddCSSClass('ibo-notifications--view-all--read-action')
 			->SetOnClickJsCode(
-			<<<JS
+				<<<JS
 let oSelf = this;
 let oNotificationToMarkAsRead = $('.ibo-notifications--view-all--container [data-role="ibo-object-summary"].ibo-notifications--view-all--item--unread');
 let aNotificationIds = [];
@@ -123,8 +121,8 @@ $.ajax({
 	}
 });
 JS
-		);
-		
+			);
+
 		// Make button to mark all as unread
 		$oMarkAllAsUnreadButton = ButtonUIBlockFactory::MakeForSecondaryAction(
 			Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAllAsUnread:Label'),
@@ -134,7 +132,7 @@ JS
 		$oMarkAllAsUnreadButton->SetIconClass('far fa-envelope')
 			->AddCSSClass('ibo-notifications--view-all--unread-action')
 			->SetOnClickJsCode(
-			<<<JS
+				<<<JS
 let oSelf = this;
 let oNotificationToMarkAsUnread = $('.ibo-notifications--view-all--container [data-role="ibo-object-summary"].ibo-notifications--view-all--item--read');
 let aNotificationIds = [];
@@ -164,7 +162,7 @@ $.ajax({
 	}
 });
 JS
-		);
+			);
 
 		// Make button to delete all
 		$oDeleteAllButton = ButtonUIBlockFactory::MakeForDestructiveAction(
@@ -178,7 +176,7 @@ JS
 		$oDeleteAllButton->SetIconClass('fas fa-trash-alt')
 			->AddCSSClass('ibo-notifications--view-all--delete-action')
 			->SetOnClickJsCode(
-			<<<JS
+				<<<JS
 let oSelf = this;
 let oNotificationToDelete = $('.ibo-notifications--view-all--container [data-role="ibo-object-summary"]');
 let aNotificationIds = [];
@@ -217,13 +215,13 @@ CombodoModal.OpenConfirmationModal({
 }, []);
 
 JS
-		);
+			);
 		// Add "all" buttons to their container
 		$oAllModeButtonsContainer->AddSubBlock($oMarkAllAsReadButton);
 		$oAllModeButtonsContainer->AddSubBlock($oMarkAllAsUnreadButton);
 		$oAllModeButtonsContainer->AddSubBlock($oDeleteAllButton);
 		$oToolbar->AddSubBlock($oAllModeButtonsContainer);
-		
+
 		$oSelectedModelButtonsContainer = new UIContentBlock('ibo-notifications--view-all--selected-mode-buttons', ['ibo-is-hidden', 'ibo-notifications--view-all--bulk-buttons', 'ibo-notifications--view-all--selected-mode-buttons']);
 		// Make button mark all selected as read
 		$oMarkSelectedAsReadButton = ButtonUIBlockFactory::MakeForSecondaryAction(
@@ -234,7 +232,7 @@ JS
 		$oMarkSelectedAsReadButton->SetIconClass('far fa-envelope-open')
 			->AddCSSClass('ibo-notifications--view-all--read-action')
 			->SetOnClickJsCode(
-			<<<JS
+				<<<JS
 let oSelf = this;
 let oNotificationToMarkAsRead = $('.ibo-notifications--view-all--container [data-role="ibo-object-summary"].ibo-notifications--view-all--item--unread.ibo-is-selected');
 let aNotificationIds = [];
@@ -259,7 +257,7 @@ $.ajax({
 	}
 });
 JS
-		);
+			);
 
 		// Make button mark all selected as unread
 		$oMarkSelectedAsUnreadButton = ButtonUIBlockFactory::MakeForSecondaryAction(
@@ -270,7 +268,7 @@ JS
 		$oMarkSelectedAsUnreadButton->SetIconClass('far fa-envelope')
 			->AddCSSClass('ibo-notifications--view-all--unread-action')
 			->SetOnClickJsCode(
-			<<<JS
+				<<<JS
 let oSelf = this;
 let oNotificationToMarkAsUnread = $('.ibo-notifications--view-all--container [data-role="ibo-object-summary"].ibo-notifications--view-all--item--read.ibo-is-selected');
 let aNotificationIds = [];
@@ -295,7 +293,7 @@ $.ajax({
 	}
 });
 JS
-		);
+			);
 
 		// Make button delete all selected
 		$oDeleteSelectedButton = ButtonUIBlockFactory::MakeForDestructiveAction(
@@ -309,7 +307,7 @@ JS
 		$oDeleteSelectedButton->SetIconClass('fas fa-trash-alt')
 			->AddCSSClass('ibo-notifications--view-all--delete-action')
 			->SetOnClickJsCode(
-			<<<JS
+				<<<JS
 let oSelf = this;
 let oNotificationToDelete = $('.ibo-notifications--view-all--container [data-role="ibo-object-summary"].ibo-is-selected');
 let aNotificationIds = [];
@@ -347,34 +345,34 @@ CombodoModal.OpenConfirmationModal({
 	do_not_show_again_pref_key: 'notifications-center.delete-all-confirmation-modal.do-not-show-again',
 }, []);
 JS
-);
+			);
 
 		// Add "selected" buttons to their container
 		$oSelectedModelButtonsContainer->AddSubBlock($oMarkSelectedAsReadButton);
 		$oSelectedModelButtonsContainer->AddSubBlock($oMarkSelectedAsUnreadButton);
 		$oSelectedModelButtonsContainer->AddSubBlock($oDeleteSelectedButton);
-		
+
 		$oToolbar->AddSubBlock($oSelectedModelButtonsContainer);
-		
+
 		// Make toggler to switch between "all" and "selected" mode
 		$oTogglerContentBlock = new UIContentBlock('ibo-notifications--view-all--toggler', ['ibo-notifications--view-all--toggler']);
 		$oToggler = new Toggler();
 		$oInputWithLabel = InputUIBlockFactory::MakeInputWithLabel('slider', Dict::S('UI:Newsroom:iTopNotification:SelectMode:Label'), $oToggler);
 		$oTogglerContentBlock->AddSubBlock($oInputWithLabel);
 		$oToolbar->AddSubBlock($oTogglerContentBlock);
-		
+
 		$oBulkActionsBlock->AddSubBlock($oToolbar);
 		$oPage->AddUiBlock($oBulkActionsBlock);
-		
+
 		// Search for all notifications for the current user
 		$oSearch = DBObjectSearch::FromOQL('SELECT EventNotificationNewsroom');
 		$oSearch->AddCondition('contact_id', UserRights::GetContactId(), '=');
-		$oSet = new DBObjectSet($oSearch, array('read' => true, 'date' => false), array());
-		
+		$oSet = new DBObjectSet($oSearch, ['read' => true, 'date' => false], []);
+
 		// Add main content block
 		$oMainContentBlock = new UIContentBlock(null, ['ibo-notifications--view-all--container']);
 		$oPage->AddUiBlock($oMainContentBlock);
-		
+
 		while ($oEvent = $oSet->Fetch()) {
 			$iEventId = $oEvent->GetKey();
 			// Prepare object summary block
@@ -387,10 +385,9 @@ JS
 			$oImage = $oEvent->Get('icon');
 			if (!$oImage->IsEmpty()) {
 				$sIconUrl = $oImage->GetDisplayURL(get_class($oEvent), $iEventId, 'icon');
-				$oEventBlock->SetIcon($sIconUrl, Panel::ENUM_ICON_COVER_METHOD_COVER,true);
+				$oEventBlock->SetIcon($sIconUrl, Panel::ENUM_ICON_COVER_METHOD_COVER, true);
 			}
-			
-			
+
 			// Common actions
 			$sDeleteUrl = Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.delete_event', ['notification_id' => $oEvent->GetKey(), 'token' => $sCSRFToken]);
 			$oDeleteButton = ButtonUIBlockFactory::MakeForAlternativeDestructiveAction(
@@ -421,12 +418,13 @@ JS
 				->SetIconClass('fas fa-trash-alt')
 				->SetTooltip(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Label'));
 
-			$oViewButton = ButtonUIBlockFactory::MakeIconLink('fas fa-external-link-alt',
+			$oViewButton = ButtonUIBlockFactory::MakeIconLink(
+				'fas fa-external-link-alt',
 				Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Action:ViewObject:Label'),
 				Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.view_event', ['event_id' => $iEventId]),
 				'_blank'
 			);
-			
+
 			// Mark as read action
 			$oMarkAsReadButton = ButtonUIBlockFactory::MakeForAlternativeSecondaryAction(
 				'',
@@ -458,7 +456,7 @@ JS
 				});
 JS
 			);
-			
+
 			$oMarkAsUnreadButton = ButtonUIBlockFactory::MakeForAlternativeSecondaryAction(
 				'',
 				'UI:Newsroom:iTopNotification:ViewAllPage:Action:MarkAsUnread:Label',
@@ -487,7 +485,7 @@ JS
 				});
 JS
 			);
-			
+
 			// Add actions to the object summary block and remove old button
 			$oOldButtonId = $oEventBlock->GetActions()->GetId();
 			$oEventBlock->RemoveSubBlock($oOldButtonId);
@@ -498,25 +496,23 @@ JS
 			$oActionsBlock->AddSubBlock($oViewButton);
 			$oActionsBlock->AddSubBlock($oDeleteButton);
 			$oEventBlock->SetActions($oActionsBlock);
-			
-			
+
 			$oMainContentBlock->AddSubBlock($oEventBlock);
 		}
-		
+
 		// Add empty content block
 		$oEmptyContentBlock = new UIContentBlock('ibo-notifications--view-all--empty', ['ibo-notifications--view-all--empty', 'ibo-svg-illustration--container']);
 		$oEmptyContentBlock->AddSubBlock(new Html(file_get_contents(APPROOT.'/images/illustrations/undraw_social_serenity.svg')));
 		$oEmptyContentBlock->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Empty:Title')));
 		$oPage->AddUiBlock($oEmptyContentBlock);
-		
+
 		// Hide empty content block if there are notifications
-		if($oSet->Count() === 0){
+		if ($oSet->Count() === 0) {
 			$oMainContentBlock->AddCSSClass('ibo-is-hidden');
-		}
-		else {
+		} else {
 			$oEmptyContentBlock->AddCSSClass('ibo-is-hidden');
 		}
-		
+
 		return $oPage;
 	}
 
@@ -538,7 +534,7 @@ JS
 
 		if (utils::IsNotNullOrEmptyString($iContactId)) {
 			$oSearch = DBObjectSearch::FromOQL('SELECT EventNotificationNewsroom WHERE contact_id = :contact_id AND read = "no"');
-			$oSet = new DBObjectSet($oSearch, array(), array('contact_id' => $iContactId));
+			$oSet = new DBObjectSet($oSearch, [], ['contact_id' => $iContactId]);
 
 			while ($oMessage = $oSet->Fetch()) {
 				$sTitle = $oMessage->Get('title');
@@ -553,7 +549,7 @@ HTML;
 				$sIcon = $oMessage->Get('icon') !== null ?
 					$oMessage->Get('icon')->GetDisplayURL('EventNotificationNewsroom', $oMessage->GetKey(), 'icon') :
 					Branding::GetCompactMainLogoAbsoluteUrl();
-				$aMessages[] = array(
+				$aMessages[] = [
 					'id'         => $oMessage->GetKey(),
 					'text'       => $sText,
 					'url'        => Router::GetInstance()->GenerateUrl(self::ROUTE_NAMESPACE.'.view_event', ['event_id' => $oMessage->GetKey()]),
@@ -561,7 +557,7 @@ HTML;
 					'start_date' => $oMessage->Get('date'),
 					'priority'   => $oMessage->Get('priority'),
 					'image'      => $sIcon,
-				);
+				];
 			}
 
 		}
@@ -586,10 +582,9 @@ HTML;
 		$iCount = 0;
 		$iContactId = UserRights::GetContactId();
 
-
 		if (utils::IsNotNullOrEmptyString($iContactId)) {
 			$oSearch = DBObjectSearch::FromOQL('SELECT EventNotificationNewsroom WHERE contact_id = :contact_id AND read = "no"');
-			$oSet = new DBObjectSet($oSearch, array(), array('contact_id' => $iContactId));
+			$oSet = new DBObjectSet($oSearch, [], ['contact_id' => $iContactId]);
 
 			while ($oEvent = $oSet->Fetch()) {
 				$oEvent->Set('read', 'yes');
@@ -626,8 +621,7 @@ HTML;
 					$sUrl = $oEvent->Get('url');
 					header("Location: $sUrl");
 				}
-			}
-			catch (ArchivedObjectException|CoreException $e) {
+			} catch (ArchivedObjectException|CoreException $e) {
 				$this->DisplayPageNotFound();
 			}
 		}
@@ -733,14 +727,14 @@ HTML;
 	protected function PerformAction(string $sAction, array $aNotificationIds): array
 	{
 		$sCSRFToken = utils::ReadParam('token', '', false, 'raw_data');
-		if(utils::IsTransactionValid($sCSRFToken, false) === false){
+		if (utils::IsTransactionValid($sCSRFToken, false) === false) {
 			throw new SecurityException('Invalid CSRF token');
 		}
 
 		$sActionAsCamelCase = utils::ToCamelCase($sAction);
 		$aReturnData = [
 			'status' => 'error',
-			'message' => 'Invalid notification(s)'
+			'message' => 'Invalid notification(s)',
 		];
 
 		// Check action type
@@ -761,7 +755,7 @@ HTML;
 
 			// No notification found
 			$iCount = $oSet->Count();
-			if($iCount === 0) {
+			if ($iCount === 0) {
 				$aReturnData['message'] = Dict::S("UI:Newsroom:iTopNotification:ViewAllPage:Action:$sActionAsCamelCase:NoEvent:Message");
 				return $aReturnData;
 			}

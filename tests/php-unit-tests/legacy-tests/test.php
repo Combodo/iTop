@@ -33,8 +33,7 @@ line-height:100%;
 function ReadMandatoryParam($sName)
 {
 	$value = utils::ReadParam($sName, null);
-	if (is_null($value))
-	{
+	if (is_null($value)) {
 		echo "<p>Missing mandatory argument <b>$sName</b></p>";
 		exit;
 	}
@@ -45,12 +44,16 @@ function IsAValidTestClass($sClassName)
 {
 	// Must be a child of TestHandler
 	//
-	if (!is_subclass_of($sClassName, 'TestHandler')) return false;
+	if (!is_subclass_of($sClassName, 'TestHandler')) {
+		return false;
+	}
 
 	// Must not be abstract
 	//
 	$oReflectionClass = new ReflectionClass($sClassName);
-	if (!$oReflectionClass->isInstantiable()) return false;
+	if (!$oReflectionClass->isInstantiable()) {
+		return false;
+	}
 
 	return true;
 }
@@ -64,17 +67,13 @@ function GetTestClassLine($sClassName)
 function DisplayEvents($aEvents, $sTitle)
 {
 	echo "<h4>$sTitle</h4>\n";
-	if (count($aEvents) > 0)
-	{
+	if (count($aEvents) > 0) {
 		echo "<ul>\n";
-		foreach ($aEvents as $sEvent)
-		{
+		foreach ($aEvents as $sEvent) {
 			echo "<li>$sEvent</li>\n";
 		}
 		echo "</ul>\n";
-	}
-	else
-	{
+	} else {
 		echo "<p>none</p>\n";
 	}
 }
@@ -92,36 +91,30 @@ require_once('./testlist.inc.php');
 
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
 
-
 $sTodo = utils::ReadParam("todo", "");
-if ($sTodo == '')
-{
+if ($sTodo == '') {
 	// Show the list of tests
 	//
 	echo "<h3>Existing tests</h3>\n";
 	echo "<ul>\n";
-	foreach (get_declared_classes() as $sClassName)
-	{
-		if (!IsAValidTestClass($sClassName)) continue;
-		
-		$sName = call_user_func(array($sClassName, 'GetName'));
-		$sDescription = call_user_func(array($sClassName, 'GetDescription'));
+	foreach (get_declared_classes() as $sClassName) {
+		if (!IsAValidTestClass($sClassName)) {
+			continue;
+		}
+
+		$sName = call_user_func([$sClassName, 'GetName']);
+		$sDescription = call_user_func([$sClassName, 'GetDescription']);
 		echo "<li><a href=\"?todo=exec&testid=$sClassName\">$sName</a> ($sDescription)</li>\n";
 	}
 	echo "</ul>\n";
-}
-else if ($sTodo == 'exec')
-{
+} elseif ($sTodo == 'exec') {
 	// Execute a test
 	//
 	$sTestClass = ReadMandatoryParam("testid");
 
-	if (!IsAValidTestClass($sTestClass))
-	{
+	if (!IsAValidTestClass($sTestClass)) {
 		echo "<p>Wrong value for testid, expecting a valid class name</p>\n";
-	}
-	else
-	{
+	} else {
 		$oTest  = new $sTestClass();
 		$iStartLine = GetTestClassLine($sTestClass);
 		echo "<h3>Testing: ".$oTest->GetName()."</h3>\n";
@@ -129,19 +122,16 @@ else if ($sTodo == 'exec')
 		$bRes = $oTest->Execute();
 	}
 
-/*
-MyHelpers::var_dump_html($oTest->GetResults());
-MyHelpers::var_dump_html($oTest->GetWarnings());
-MyHelpers::var_dump_html($oTest->GetErrors());
-*/
+	/*
+	MyHelpers::var_dump_html($oTest->GetResults());
+	MyHelpers::var_dump_html($oTest->GetWarnings());
+	MyHelpers::var_dump_html($oTest->GetErrors());
+	*/
 
-	if ($bRes)
-	{
+	if ($bRes) {
 		echo "<p>Success :-)</p>\n";
 		DisplayEvents($oTest->GetResults(), 'Results');
-	}
-	else
-	{
+	} else {
 		echo "<p>Failure :-(</p>\n";
 	}
 	DisplayEvents($oTest->GetErrors(), 'Errors');
@@ -153,10 +143,7 @@ MyHelpers::var_dump_html($oTest->GetErrors());
 	echo "<div style=\"border: dashed; background-color:light-grey;\">\n";
 	echo $oTest->GetOutput();
 	echo "</div>\n";
+} else {
 }
-else
-{
-}
-
 
 ?>

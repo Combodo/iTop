@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2010-2024 Combodo SAS
  *
@@ -46,10 +47,8 @@ use utils;
  */
 class DesignDocument extends DOMDocument
 {
-
 	/** To fix DOMNode::getLineNo() ref https://www.php.net/manual/en/domnode.getlineno.php */
 	public const XML_PARSE_BIG_LINES = 4194304;
-
 
 	/**
 	 * @throws \Exception
@@ -69,6 +68,17 @@ class DesignDocument extends DOMDocument
 
 		$this->formatOutput = true; // indent (must be loaded with option LIBXML_NOBLANKS)
 		$this->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
+	}
+
+	/**
+	 * @param string $source
+	 * @param int $options
+	 *
+	 * @return bool|\DOMDocument
+	 */
+	public function loadXML(string $source, int $options = 0): bool|DOMDocument
+	{
+		return parent::loadXML($source, $options | LIBXML_BIGLINES);
 	}
 
 	/**
@@ -135,13 +145,10 @@ class DesignDocument extends DOMDocument
 	 */
 	public static function XPathQuote($sValue)
 	{
-		if (strpos($sValue, '"') !== false)
-		{
+		if (strpos($sValue, '"') !== false) {
 			$aParts = explode('"', $sValue);
 			$sRet = 'concat("'.implode('", \'"\', "', $aParts).'")';
-		}
-		else
-		{
+		} else {
 			$sRet = '"'.$sValue.'"';
 		}
 		return $sRet;
@@ -156,12 +163,9 @@ class DesignDocument extends DOMDocument
 	public function GetNodes($sXPath, $oContextNode = null)
 	{
 		$oXPath = new \DOMXPath($this);
-		if (is_null($oContextNode))
-		{
+		if (is_null($oContextNode)) {
 			$oResult = $oXPath->query($sXPath);
-		}
-		else
-		{
+		} else {
 			$oResult = $oXPath->query($sXPath, $oContextNode);
 		}
 		return $oResult;
@@ -174,8 +178,12 @@ class DesignDocument extends DOMDocument
 	 */
 	public static function GetItopNodePath($oNode)
 	{
-		if ($oNode instanceof \DOMDocument) return '';
-		if (is_null($oNode)) return '';
+		if ($oNode instanceof \DOMDocument) {
+			return '';
+		}
+		if (is_null($oNode)) {
+			return '';
+		}
 
 		$sId = $oNode->getAttribute('id');
 		$sNodeDesc = ($sId != '') ? $oNode->nodeName.'['.$sId.']' : $oNode->nodeName;
@@ -303,16 +311,13 @@ class DesignElement extends \DOMElement
 	public function GetUniqueElement($sTagName, $bMustExist = true)
 	{
 		$oNode = null;
-		foreach($this->childNodes as $oChildNode)
-		{
-			if ($oChildNode->nodeName == $sTagName)
-			{
+		foreach ($this->childNodes as $oChildNode) {
+			if ($oChildNode->nodeName == $sTagName) {
 				$oNode = $oChildNode;
 				break;
 			}
 		}
-		if ($bMustExist && is_null($oNode))
-		{
+		if ($bMustExist && is_null($oNode)) {
 			throw new DOMFormatException('Missing unique tag: '.$sTagName);
 		}
 		return $oNode;
@@ -337,20 +342,17 @@ class DesignElement extends \DOMElement
 	public function GetText($sDefault = null)
 	{
 		$sText = null;
-		foreach($this->childNodes as $oChildNode)
-		{
-			if ($oChildNode instanceof \DOMText)
-			{
-				if (is_null($sText)) $sText = '';
+		foreach ($this->childNodes as $oChildNode) {
+			if ($oChildNode instanceof \DOMText) {
+				if (is_null($sText)) {
+					$sText = '';
+				}
 				$sText .= $oChildNode->wholeText;
 			}
 		}
-		if (is_null($sText))
-		{
+		if (is_null($sText)) {
 			return $sDefault;
-		}
-		else
-		{
+		} else {
 			return $sText;
 		}
 	}
@@ -367,8 +369,7 @@ class DesignElement extends \DOMElement
 	public function GetChildText($sTagName, $sDefault = null)
 	{
 		$sRet = $sDefault;
-		if ($oChild = $this->GetOptionalElement($sTagName))
-		{
+		if ($oChild = $this->GetOptionalElement($sTagName)) {
 			$sRet = $oChild->GetText($sDefault);
 		}
 		return $sRet;
@@ -427,7 +428,6 @@ class DesignElement extends \DOMElement
 		return self::_FindNode($this, $oRefNode, $sSearchId);
 	}
 
-
 	/**
 	 * Find the child node matching the given node.
 	 * UNSAFE: may return nodes marked as _alteration="removed"
@@ -482,32 +482,25 @@ class DesignElement extends \DOMElement
 	 */
 	public static function _FindNodes(DOMNode $oParent, DesignElement $oRefNode, string $sSearchId = null)
 	{
-		if ($oParent instanceof DOMDocument)
-		{
+		if ($oParent instanceof DOMDocument) {
 			$oDoc = $oParent->firstChild->ownerDocument;
 			$oRoot = $oParent;
-		}
-		else
-		{
+		} else {
 			$oDoc = $oParent->ownerDocument;
 			$oRoot = $oParent;
 		}
 
 		$oXPath = new DOMXPath($oDoc);
-		if ($oRefNode->hasAttribute('id'))
-		{
+		if ($oRefNode->hasAttribute('id')) {
 			// Find the elements having the same tag name and id
-			if (!$sSearchId)
-			{
+			if (!$sSearchId) {
 				$sSearchId = $oRefNode->getAttribute('id');
 			}
 			$sQuotedId = DesignDocument::XPathQuote($sSearchId);
 			$sXPath = './'.$oRefNode->tagName."[@id=$sQuotedId]";
 
 			$oRes = $oXPath->query($sXPath, $oRoot);
-		}
-		else
-		{
+		} else {
 			// Get the elements having the same tag name
 			$sXPath = './'.$oRefNode->tagName;
 

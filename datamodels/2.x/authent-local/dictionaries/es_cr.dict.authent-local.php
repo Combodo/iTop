@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Spanish Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:UserLocal' => 'Usuario de '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal+' => 'Usuario Autenticado vía '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Contraseña',
@@ -27,4 +28,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'La contraseña debe ser de al menos 8 caracteres e incluír mayúsculas, minúsculas, números y caracteres especiales.',
 	'UserLocal:password:expiration' => 'El siguiente campo requiere una extensión',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Configurar expiración de contraseña para "ontraseña de un solo uso" no está permitido para su propio Usuario',
-));
+]);

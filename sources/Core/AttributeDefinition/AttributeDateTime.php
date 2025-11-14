@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -30,7 +31,7 @@ use VariableExpression;
  */
 class AttributeDateTime extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE_TIME;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE_TIME;
 
 	public static $oFormat = null;
 
@@ -75,7 +76,7 @@ class AttributeDateTime extends AttributeDBField
 		$sTimeFormat = isset($aFormats[$sLang]['time']) ? $aFormats[$sLang]['time'] : (isset($aFormats['default']['time']) ? $aFormats['default']['time'] : 'H:i:s');
 		$sDateAndTimeFormat = isset($aFormats[$sLang]['date_time']) ? $aFormats[$sLang]['date_time'] : (isset($aFormats['default']['date_time']) ? $aFormats['default']['date_time'] : '$date $time');
 
-		$sFullFormat = str_replace(array('$date', '$time'), array($sDateFormat, $sTimeFormat), $sDateAndTimeFormat);
+		$sFullFormat = str_replace(['$date', '$time'], [$sDateFormat, $sTimeFormat], $sDateAndTimeFormat);
 
 		self::SetFormat(new DateTimeFormat($sFullFormat));
 		AttributeDate::SetFormat(new DateTimeFormat($sDateFormat));
@@ -123,8 +124,7 @@ class AttributeDateTime extends AttributeDBField
 		try {
 			$oDateTime = $this->GetFormat()->Parse($sSearchString);
 			$sSearchString = $oDateTime->format($this->GetInternalFormat());
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$sFormatString = '!'.(string)AttributeDate::GetFormat(); // BEWARE: ! is needed to set non-parsed fields to zero !!!
 			$oDateTime = DateTime::createFromFormat($sFormatString, $sSearchString);
 			if ($oDateTime !== false) {
@@ -164,7 +164,6 @@ class AttributeDateTime extends AttributeDBField
 		}
 		$oFormField->SetCurrentValue($this->GetFormat()->Format($oValue));
 
-
 		return $oFormField;
 	}
 
@@ -173,10 +172,10 @@ class AttributeDateTime extends AttributeDBField
 	 */
 	public function EnumTemplateVerbs()
 	{
-		return array(
+		return [
 			''    => 'Formatted representation',
 			'raw' => 'Not formatted representation',
-		);
+		];
 	}
 
 	/**
@@ -213,7 +212,6 @@ class AttributeDateTime extends AttributeDBField
 		return "DateTime";
 	}
 
-
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
 		return (string)static::GetFormat()->format($sValue);
@@ -232,7 +230,7 @@ class AttributeDateTime extends AttributeDBField
 	public function GetImportColumns()
 	{
 		// Allow an empty string to be a valid value (synonym for "reset")
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode()] = 'VARCHAR(19)'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
@@ -252,12 +250,10 @@ class AttributeDateTime extends AttributeDBField
 		if (utils::IsNotNullOrEmptyString($sDefaultValue)) {
 			try {
 				$sDefaultDate = Expression::FromOQL($sDefaultValue)->Evaluate([]);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				try {
 					$sDefaultDate = Expression::FromOQL('"'.$sDefaultValue.'"')->Evaluate([]);
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					IssueLog::Error("Invalid default value '$sDefaultValue' for field '{$this->GetCode()}' on class '{$this->GetHostClass()}', defaulting to null");
 
 					return $this->GetNullValue();
@@ -265,8 +261,7 @@ class AttributeDateTime extends AttributeDBField
 			}
 			try {
 				$oDate = new DateTimeImmutable($sDefaultDate);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				IssueLog::Error("Invalid default value '$sDefaultValue' for field '{$this->GetCode()}' on class '{$this->GetHostClass()}', defaulting to null");
 
 				return $this->GetNullValue();
@@ -285,7 +280,7 @@ class AttributeDateTime extends AttributeDBField
 
 	public function GetBasicFilterOperators()
 	{
-		return array(
+		return [
 			"="         => "equals",
 			"!="        => "differs from",
 			"<"         => "before",
@@ -299,7 +294,7 @@ class AttributeDateTime extends AttributeDBField
 			">|"        => "after today + N days",
 			"<|"        => "before today + N days",
 			"=|"        => "equals today + N days",
-		);
+		];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -370,8 +365,7 @@ class AttributeDateTime extends AttributeDBField
 			try {
 				$oFormat = new DateTimeFormat(static::GetInternalFormat());
 				$oFormat->Parse($proposedValue);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				throw new CoreUnexpectedValue('Wrong format for date attribute '.$this->GetCode().', expecting "'.$this->GetInternalFormat().'" and got "'.$proposedValue.'"');
 			}
 
@@ -401,10 +395,13 @@ class AttributeDateTime extends AttributeDBField
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		if (empty($sValue) || ($sValue === '0000-00-00 00:00:00') || ($sValue === '0000-00-00')) {
 			return '';
 		} else {
@@ -416,8 +413,8 @@ class AttributeDateTime extends AttributeDBField
 				}
 			}
 		}
-		$sFrom = array("\r\n", $sTextQualifier);
-		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sFrom = ["\r\n", $sTextQualifier];
+		$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 
 		return $sTextQualifier.$sEscaped.$sTextQualifier;
@@ -437,20 +434,22 @@ class AttributeDateTime extends AttributeDBField
 	 * @throws CoreException
 	 */
 	public function GetSmartConditionExpression(
-		$sSearchText, FieldExpression $oField, &$aParams, $bParseSearchString = false
-	)
-	{
+		$sSearchText,
+		FieldExpression $oField,
+		&$aParams,
+		$bParseSearchString = false
+	) {
 		// Possible smart patterns
-		$aPatterns = array(
-			'between'               => array('pattern' => '/^\[(.*),(.*)\]$/', 'operator' => 'n/a'),
-			'greater than or equal' => array('pattern' => '/^>=(.*)$/', 'operator' => '>='),
-			'greater than'          => array('pattern' => '/^>(.*)$/', 'operator' => '>'),
-			'less than or equal'    => array('pattern' => '/^<=(.*)$/', 'operator' => '<='),
-			'less than'             => array('pattern' => '/^<(.*)$/', 'operator' => '<'),
-		);
+		$aPatterns = [
+			'between'               => ['pattern' => '/^\[(.*),(.*)\]$/', 'operator' => 'n/a'],
+			'greater than or equal' => ['pattern' => '/^>=(.*)$/', 'operator' => '>='],
+			'greater than'          => ['pattern' => '/^>(.*)$/', 'operator' => '>'],
+			'less than or equal'    => ['pattern' => '/^<=(.*)$/', 'operator' => '<='],
+			'less than'             => ['pattern' => '/^<(.*)$/', 'operator' => '<'],
+		];
 
 		$sPatternFound = '';
-		$aMatches = array();
+		$aMatches = [];
 		foreach ($aPatterns as $sPatName => $sPattern) {
 			if (preg_match($sPattern['pattern'], $sSearchText, $aMatches)) {
 				$sPatternFound = $sPatName;
@@ -506,7 +505,6 @@ class AttributeDateTime extends AttributeDBField
 		return $oNewCondition;
 	}
 
-
 	public function GetHelpOnSmartSearch()
 	{
 		$sDict = parent::GetHelpOnSmartSearch();
@@ -514,6 +512,6 @@ class AttributeDateTime extends AttributeDBField
 		$oFormat = static::GetFormat();
 		$sExample = $oFormat->Format(new DateTime('2015-07-19 18:40:00'));
 
-		return vsprintf($sDict, array($oFormat->ToPlaceholder(), $sExample));
+		return vsprintf($sDict, [$oFormat->ToPlaceholder(), $sExample]);
 	}
 }

@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'bkp-backup-running' => 'Backup wird durchgeführt. Bitte warten ...',
 	'bkp-restore-running' => 'Wiederherstellung läuft. Bitte warten ...',
 	'Menu:BackupStatus' => 'Geplante Backups',
@@ -45,4 +46,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'bkp-wait-backup' => 'Bitte warten, bis das Backup abgeschlossen ist ...',
 	'bkp-wait-restore' => 'Bitte warten, bis die Wiederherstellung abgeschlossen ist ...',
 	'bkp-success-restore' => 'Wiederherstellung erfolgreich.',
-));
+]);

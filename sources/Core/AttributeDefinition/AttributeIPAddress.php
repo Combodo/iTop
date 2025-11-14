@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -40,6 +41,6 @@ class AttributeIPAddress extends AttributeString
 	public function GetOrderBySQLExpressions($sClassAlias)
 	{
 		// Note: This is the responsibility of this function to place backticks around column aliases
-		return array('INET_ATON(`'.$sClassAlias.$this->GetCode().'`)');
+		return ['INET_ATON(`'.$sClassAlias.$this->GetCode().'`)'];
 	}
 }

@@ -548,6 +548,7 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 		if (sMessage)
 		{
 			$('#'+sFieldId).attr('data-tooltip-content', sMessage);
+			$('#'+sFieldId).attr('data-tooltip-theme', 'error');
 			CombodoTooltip.InitTooltipFromMarkup($('#'+sFieldId), true);
 			$('#'+sFieldId)[0]._tippy.show();
 		}

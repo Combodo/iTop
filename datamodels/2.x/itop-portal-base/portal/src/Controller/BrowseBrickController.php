@@ -51,7 +51,6 @@ use VariableExpression;
  */
 class BrowseBrickController extends BrickController
 {
-
 	/**
 	 * Constructor.
 	 *
@@ -67,11 +66,9 @@ class BrowseBrickController extends BrickController
 		protected RequestManipulatorHelper $oRequestManipulatorHelper,
 		protected BrickControllerHelper $oBrickControllerHelper,
 		protected BrickCollection $oBrickCollection
-	)
-	{
+	) {
 
 	}
-
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
@@ -103,85 +100,92 @@ class BrowseBrickController extends BrickController
 		// Getting current browse mode (First from router parameter, then default brick value)
 		$sBrowseMode = (!empty($sBrowseMode)) ? $sBrowseMode : $oBrick->GetDefaultBrowseMode();
 		// Getting current dataloading mode (First from router parameter, then query parameter, then default brick value)
-		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : $this->oRequestManipulatorHelper->ReadParam('sDataLoading',
-			$oBrick->GetDataLoading());
+		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : $this->oRequestManipulatorHelper->ReadParam(
+			'sDataLoading',
+			$oBrick->GetDataLoading()
+		);
 		// Getting search value
 		$sRawSearchValue = $this->oRequestManipulatorHelper->ReadParam('sSearchValue', '');
 		$sSearchValue = html_entity_decode($sRawSearchValue);
-		if (strlen($sSearchValue) > 0)
-		{
+		if (strlen($sSearchValue) > 0) {
 			$sDataLoading = AbstractBrick::ENUM_DATA_LOADING_LAZY;
 		}
 
-		$aData = array();
-		$aLevelsProperties = array();
-		$aLevelsClasses = array();
+		$aData = [];
+		$aLevelsProperties = [];
+		$aLevelsClasses = [];
 		$this->oBrowseBrickHelper->TreeToFlatLevelsProperties($oBrick->GetLevels(), $aLevelsProperties);
 
 		// Consistency checks
-		if (!in_array($sBrowseMode, array_keys($aBrowseModes)))
-		{
-			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
-				'Browse brick "'.$sBrickId.'" : Unknown browse mode "'.$sBrowseMode.'", availables are '.implode(' / ',
-					array_keys($aBrowseModes)));
+		if (!in_array($sBrowseMode, array_keys($aBrowseModes))) {
+			throw new HttpException(
+				Response::HTTP_INTERNAL_SERVER_ERROR,
+				'Browse brick "'.$sBrickId.'" : Unknown browse mode "'.$sBrowseMode.'", availables are '.implode(
+					' / ',
+					array_keys($aBrowseModes)
+				)
+			);
 		}
-		if (empty($aLevelsProperties))
-		{
+		if (empty($aLevelsProperties)) {
 			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Browse brick "'.$sBrickId.'" : No levels to display.');
 		}
 
 		// Building DBObjectSearch
 		$oQuery = null;
 		// ... In this case only we have to build a specific query for the current level only
-		if (in_array($sBrowseMode, array(
+		if (in_array($sBrowseMode, [
 				BrowseBrick::ENUM_BROWSE_MODE_TREE,
 				BrowseBrick::ENUM_BROWSE_MODE_MOSAIC,
-			)) && ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY))
-		{
+			]) && ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY)) {
 			// Will be handled later in the pagination part
 		}
 		// .. Otherwise
-		else
-		{
+		else {
 			// We iterate (in reverse mode /!\) over the levels to build the whole query, starting from the bottom
 			$aLevelsPropertiesKeys = array_keys($aLevelsProperties);
 			$iLoopMax = count($aLevelsPropertiesKeys) - 1;
 			$oFullBinExpr = null;
-			for ($i = $iLoopMax; $i >= 0; $i--)
-			{
+			for ($i = $iLoopMax; $i >= 0; $i--) {
 				// Retrieving class alias for all depth
 				array_unshift($aLevelsClasses, $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->GetClassAlias());
 
 				// Joining queries from bottom-up
-				if ($i < $iLoopMax)
-				{
-					$aRealiasingMap = array();
+				if ($i < $iLoopMax) {
+					$aRealiasingMap = [];
 					$oParentAtt = MetaModel::GetAttributeDef($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search']->GetClass(), $aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['parent_att']);
 					// If we work on a n:n link
-					if($oParentAtt instanceof AttributeLinkedSetIndirect)
-					{
+					if ($oParentAtt instanceof AttributeLinkedSetIndirect) {
 						// Create a DBSearch from Link class
 						$oSubSearch = new DBObjectSearch($oParentAtt->GetLinkedClass());
 						// Join it to the bottom query
-						$oSubSearch = $oSubSearch->Join($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'],
-							DBSearch::JOIN_POINTING_TO, $oParentAtt->GetExtKeyToMe(), TREE_OPERATOR_EQUALS, $aRealiasingMap);
+						$oSubSearch = $oSubSearch->Join(
+							$aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'],
+							DBSearch::JOIN_POINTING_TO,
+							$oParentAtt->GetExtKeyToMe(),
+							TREE_OPERATOR_EQUALS,
+							$aRealiasingMap
+						);
 						// Join our Link class + bottom query to the up query
-						$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] ->Join($oSubSearch, DBSearch::JOIN_REFERENCED_BY,
-							$oParentAtt->GetExtKeyToRemote(), TREE_OPERATOR_EQUALS, $aRealiasingMap);
+						$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] ->Join(
+							$oSubSearch,
+							DBSearch::JOIN_REFERENCED_BY,
+							$oParentAtt->GetExtKeyToRemote(),
+							TREE_OPERATOR_EQUALS,
+							$aRealiasingMap
+						);
+					} else {
+						$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->Join(
+							$aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'],
+							DBSearch::JOIN_REFERENCED_BY,
+							$aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['parent_att'],
+							TREE_OPERATOR_EQUALS,
+							$aRealiasingMap
+						);
 					}
-					else
-					{
-						$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->Join($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'],
-							DBSearch::JOIN_REFERENCED_BY, $aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['parent_att'],
-							TREE_OPERATOR_EQUALS, $aRealiasingMap);
-					}
-					foreach ($aLevelsPropertiesKeys as $sLevelAlias)
-					{
-						if (array_key_exists($sLevelAlias, $aRealiasingMap))
-						{
+					foreach ($aLevelsPropertiesKeys as $sLevelAlias) {
+						if (array_key_exists($sLevelAlias, $aRealiasingMap)) {
 							/** @since 2.7.2 */
-							foreach ($aRealiasingMap[$sLevelAlias] as $sAliasToChange)
-							{
+							foreach ($aRealiasingMap[$sLevelAlias] as $sAliasToChange) {
 								$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->RenameAlias($sAliasToChange, $sLevelAlias);
 							}
 						}
@@ -190,8 +194,7 @@ class BrowseBrickController extends BrickController
 
 				// Adding search clause
 				// Note : For know the search is naive and looks only for the exact match. It doesn't search for words separately
-				if (strlen($sSearchValue) > 0)
-				{
+				if (strlen($sSearchValue) > 0) {
 					// - Cleaning the search value by exploding and trimming spaces
 					$aExplodedSearchValues = explode(' ', $sSearchValue);
 					$aSearchValues = [];
@@ -202,25 +205,21 @@ class BrowseBrickController extends BrickController
 					}
 
 					// - Retrieving fields to search
-					$aSearchFields = array($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['name_att']);
-					if (!empty($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['fields']))
-					{
+					$aSearchFields = [$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['name_att']];
+					if (!empty($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['fields'])) {
 						$sTmpFieldClass = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->GetClass();
-						foreach ($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['fields'] as $aTmpField)
-						{
+						foreach ($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['fields'] as $aTmpField) {
 							$sTmpFieldAttCode = $aTmpField['code'];
 
 							// Skip invalid attcodes
-							if(!MetaModel::IsValidAttCode($sTmpFieldClass, $sTmpFieldAttCode))
-							{
+							if (!MetaModel::IsValidAttCode($sTmpFieldClass, $sTmpFieldAttCode)) {
 								continue;
 							}
 
 							// For external key, force search on the friendlyname instead of the ID.
 							// This should be addressed more globally with the bigger issue, see N°1970
 							$oTmpFieldAttDef = MetaModel::GetAttributeDef($sTmpFieldClass, $sTmpFieldAttCode);
-							if($oTmpFieldAttDef instanceof AttributeExternalKey)
-							{
+							if ($oTmpFieldAttDef instanceof AttributeExternalKey) {
 								$sTmpFieldAttCode .= '_friendlyname';
 							}
 
@@ -231,60 +230,49 @@ class BrowseBrickController extends BrickController
 					$oLevelBinExpr = null;
 					$iFieldLoopMax = count($aSearchFields) - 1;
 					$iSearchLoopMax = count($aSearchValues) - 1;
-					for ($j = 0; $j <= $iFieldLoopMax; $j++)
-					{
+					for ($j = 0; $j <= $iFieldLoopMax; $j++) {
 						$sTmpFieldAttCode = $aSearchFields[$j];
 						$oFieldBinExpr = null;
 						//$oFieldBinExpr = new BinaryExpression(new FieldExpression($aSearchFields[$j], $aLevelsPropertiesKeys[$i]), )
 
-						for ($k = 0; $k <= $iSearchLoopMax; $k++)
-						{
-							$oSearchBinExpr = new BinaryExpression(new FieldExpression($sTmpFieldAttCode, $aLevelsPropertiesKeys[$i]),
-								'LIKE', new VariableExpression('search_value_'.$k));
-							if ($k === 0)
-							{
+						for ($k = 0; $k <= $iSearchLoopMax; $k++) {
+							$oSearchBinExpr = new BinaryExpression(
+								new FieldExpression($sTmpFieldAttCode, $aLevelsPropertiesKeys[$i]),
+								'LIKE',
+								new VariableExpression('search_value_'.$k)
+							);
+							if ($k === 0) {
 								$oFieldBinExpr = $oSearchBinExpr;
-							}
-							else
-							{
+							} else {
 								$oFieldBinExpr = new BinaryExpression($oFieldBinExpr, 'AND', $oSearchBinExpr);
 							}
 						}
 
-						if ($j === 0)
-						{
+						if ($j === 0) {
 							$oLevelBinExpr = $oFieldBinExpr;
-						}
-						else
-						{
+						} else {
 							$oLevelBinExpr = new BinaryExpression($oLevelBinExpr, 'OR', $oFieldBinExpr);
 						}
 					}
 
 					// - Building query for the level
-					if ($i === $iLoopMax)
-					{
+					if ($i === $iLoopMax) {
 						$oFullBinExpr = $oLevelBinExpr;
-					}
-					else
-					{
+					} else {
 						$oFullBinExpr = new BinaryExpression($oFullBinExpr, 'OR', $oLevelBinExpr);
 					}
 
 					// - Adding it to the query when complete
-					if ($i === 0)
-					{
+					if ($i === 0) {
 						$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->AddConditionExpression($oFullBinExpr);
 					}
 				}
 
 				// Setting selected classes and binding parameters
-				if ($i === 0)
-				{
+				if ($i === 0) {
 					$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->SetSelectedClasses($aLevelsClasses);
 
-					if (strlen($sSearchValue) > 0)
-					{
+					if (strlen($sSearchValue) > 0) {
 						// Note : This could be way more simpler if we had a SetInternalParam($sParam, $value) verb
 						$aQueryParams = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->GetInternalParams();
 						// Note : $iSearchloopMax was initialized on the previous loop
@@ -302,23 +290,26 @@ class BrowseBrickController extends BrickController
 				// - Check how many records there is.
 				// - Update $sDataLoading with its new value regarding the number of record and the threshold
 				$oCountSet = new DBObjectSet($oQuery);
-				$fThreshold = (float)MetaModel::GetModuleSetting($sPortalId,
-					'lazy_loading_threshold');
+				$fThreshold = (float)MetaModel::GetModuleSetting(
+					$sPortalId,
+					'lazy_loading_threshold'
+				);
 				$sDataLoading = ($oCountSet->Count() > $fThreshold) ? AbstractBrick::ENUM_DATA_LOADING_LAZY : AbstractBrick::ENUM_DATA_LOADING_FULL;
 				unset($oCountSet);
 			}
 		}
 
 		// Setting query pagination if needed
-		if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY)
-		{
-			switch ($sBrowseMode)
-			{
+		if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY) {
+			switch ($sBrowseMode) {
 				case BrowseBrick::ENUM_BROWSE_MODE_LIST:
 					// Retrieving parameters
 					$iPageNumber = (int)$this->oRequestManipulatorHelper->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
-					$iListLength = (int)$this->oRequestManipulatorHelper->ReadParam('iListLength', BrowseBrick::DEFAULT_LIST_LENGTH,
-						FILTER_SANITIZE_NUMBER_INT);
+					$iListLength = (int)$this->oRequestManipulatorHelper->ReadParam(
+						'iListLength',
+						BrowseBrick::DEFAULT_LIST_LENGTH,
+						FILTER_SANITIZE_NUMBER_INT
+					);
 
 					// Getting total records number
 					$oCountSet = new DBObjectSet($oQuery);
@@ -337,36 +328,26 @@ class BrowseBrickController extends BrickController
 					$sNodeId = $this->oRequestManipulatorHelper->ReadParam('sNodeId', '');
 
 					// If no values for those parameters, we might be loading page in lazy mode for the first time, therefore the URL doesn't have those information.
-					if (empty($sLevelAlias))
-					{
+					if (empty($sLevelAlias)) {
 						reset($aLevelsProperties);
 						$oQuery = $aLevelsProperties[key($aLevelsProperties)]['search'];
-						if (!empty($sNodeId))
-						{
+						if (!empty($sNodeId)) {
 							$oQuery->AddCondition('id', $sNodeId);
 						}
 					}
 					// Else we need to find the OQL for that particular level
-					else
-					{
+					else {
 						$bFoundLevel = false;
-						foreach ($aLevelsProperties as $aLevelProperties)
-						{
-							if ($aLevelProperties['alias'] === $sLevelAlias)
-							{
-								if (isset($aLevelProperties['levels']) && !empty($aLevelProperties['levels']) && isset($aLevelsProperties[$aLevelProperties['levels'][0]]))
-								{
+						foreach ($aLevelsProperties as $aLevelProperties) {
+							if ($aLevelProperties['alias'] === $sLevelAlias) {
+								if (isset($aLevelProperties['levels']) && !empty($aLevelProperties['levels']) && isset($aLevelsProperties[$aLevelProperties['levels'][0]])) {
 									$oQuery = $aLevelsProperties[$aLevelProperties['levels'][0]]['search'];
-									if (!empty($sNodeId))
-									{
+									if (!empty($sNodeId)) {
 										$sParentAttCode = $aLevelsProperties[$aLevelProperties['levels'][0]]['parent_att'];
 										$oParentAtt = MetaModel::GetAttributeDef($oQuery->GetClass(), $sParentAttCode);
-										if($oParentAtt instanceof AttributeLinkedSetIndirect)
-										{
+										if ($oParentAtt instanceof AttributeLinkedSetIndirect) {
 											$oQuery->AddConditionAdvanced($sParentAttCode.'->'.$oParentAtt->GetExtKeyToRemote(), $sNodeId);
-										}
-										else
-										{
+										} else {
 											$oQuery->AddCondition($sParentAttCode, $sNodeId);
 										}
 									}
@@ -376,10 +357,11 @@ class BrowseBrickController extends BrickController
 							}
 						}
 
-						if (!$bFoundLevel)
-						{
-							throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
-								'Browse brick "'.$sBrickId.'" : Level alias "'.$sLevelAlias.'" is not defined for that brick.');
+						if (!$bFoundLevel) {
+							throw new HttpException(
+								Response::HTTP_INTERNAL_SERVER_ERROR,
+								'Browse brick "'.$sBrickId.'" : Level alias "'.$sLevelAlias.'" is not defined for that brick.'
+							);
 						}
 					}
 
@@ -394,34 +376,26 @@ class BrowseBrickController extends BrickController
 					$oSet = new DBObjectSet($oQuery);
 					break;
 			}
-		}
-		else
-		{
+		} else {
 			$oSet = new DBObjectSet($oQuery);
 		}
 
 		// Optimizing the ObjectSet to retrieve only necessary columns
-		$aColumnAttrs = array();
-		foreach ($oSet->GetFilter()->GetSelectedClasses() as $sTmpClassAlias => $sTmpClassName)
-		{
-			if (isset($aLevelsProperties[$sTmpClassAlias]))
-			{
+		$aColumnAttrs = [];
+		foreach ($oSet->GetFilter()->GetSelectedClasses() as $sTmpClassAlias => $sTmpClassName) {
+			if (isset($aLevelsProperties[$sTmpClassAlias])) {
 				$aTmpLevelProperties = $aLevelsProperties[$sTmpClassAlias];
 				// Mandatory main attribute
-				$aTmpColumnAttrs = array($aTmpLevelProperties['name_att']);
+				$aTmpColumnAttrs = [$aTmpLevelProperties['name_att']];
 				// Optional attributes, only if in list mode
-				if ($sBrowseMode === BrowseBrick::ENUM_BROWSE_MODE_LIST)
-				{
-					foreach ($aTmpLevelProperties['fields'] as $aTmpField)
-					{
+				if ($sBrowseMode === BrowseBrick::ENUM_BROWSE_MODE_LIST) {
+					foreach ($aTmpLevelProperties['fields'] as $aTmpField) {
 						$aTmpColumnAttrs[] = $aTmpField['code'];
 					}
 				}
 				// Optional attributes
-				foreach (BrowseBrickHelper::OPTIONAL_ATTRIBUTES as $sOptionalAttribute)
-				{
-					if ($aTmpLevelProperties[$sOptionalAttribute] !== null)
-					{
+				foreach (BrowseBrickHelper::OPTIONAL_ATTRIBUTES as $sOptionalAttribute) {
+					if ($aTmpLevelProperties[$sOptionalAttribute] !== null) {
 						$aTmpColumnAttrs[] = $aTmpLevelProperties[$sOptionalAttribute];
 					}
 				}
@@ -434,20 +408,15 @@ class BrowseBrickController extends BrickController
 
 		// Setting specified column sort, setting default datamodel one otherwise
 		$aSortedParams = $this->oBrickControllerHelper->ExtractSortParams();
-		if (!empty($aSortedParams))
-		{
+		if (!empty($aSortedParams)) {
 			$oSet->SetOrderBy($aSortedParams);
-		}
-		else
-		{
+		} else {
 			$oSet->SetOrderByClasses();
 		}
 		// Retrieving results and organizing them for templating
-		$aItems = array();
-		while ($aCurrentRow = $oSet->FetchAssoc())
-		{
-			switch ($sBrowseMode)
-			{
+		$aItems = [];
+		while ($aCurrentRow = $oSet->FetchAssoc()) {
+			switch ($sBrowseMode) {
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:
 				case BrowseBrick::ENUM_BROWSE_MODE_MOSAIC:
 					$this->oBrowseBrickHelper->AddToTreeItems($aItems, $aCurrentRow, $aLevelsProperties, null);
@@ -460,22 +429,21 @@ class BrowseBrickController extends BrickController
 			}
 		}
 
-		IssueLog::Debug('Portal BrowseBrick query', LogChannels::PORTAL, array(
+		IssueLog::Debug('Portal BrowseBrick query', LogChannels::PORTAL, [
 			'sPortalId' => $sPortalId,
 			'sBrickId' => $sBrickId,
 			'oql' => $oSet->GetFilter()->ToOQL(),
-		));
-
+		]);
 
 		// Preparing response
 		if ($oRequest->isXmlHttpRequest()) {
-			$aData = $aData + array(
+			$aData = $aData + [
 					'data' => $aItems,
 					'levelsProperties' => $aLevelsProperties,
-				);
+				];
 			$oResponse = new JsonResponse($aData);
 		} else {
-			$aData = $aData + array(
+			$aData = $aData + [
 					'oBrick' => $oBrick,
 					'sBrickId' => $sBrickId,
 					'sBrowseMode' => $sBrowseMode,
@@ -486,7 +454,7 @@ class BrowseBrickController extends BrickController
 					'iItemsCount' => count($aItems),
 					'aLevelsProperties' => json_encode($aLevelsProperties),
 					'iDefaultLengthList' => $oBrick->GetDefaultListLength(),
-				);
+				];
 
 			// Note : To extend this brick's template, depending on what you want to do :
 			// a) Modify the whole template :
@@ -495,13 +463,10 @@ class BrowseBrickController extends BrickController
 			//	 - Create a template for that browse mode,
 			//	 - Add the mode to those available in the brick configuration,
 			//	 - Create a router and add a route for the new browse mode
-			if ($oBrick->HasInstanceOverriddenTemplate('page'))
-			{
+			if ($oBrick->HasInstanceOverriddenTemplate('page')) {
 				$sTemplatePath = $oBrick->GetTemplatePath('page');
-			}
-			else
-			{
-				$sTemplatePath = $oBrick->GetTemplatePath('page_' .$sBrowseMode);
+			} else {
+				$sTemplatePath = $oBrick->GetTemplatePath('page_'.$sBrowseMode);
 			}
 			$oResponse = $this->render($sTemplatePath, $aData);
 		}

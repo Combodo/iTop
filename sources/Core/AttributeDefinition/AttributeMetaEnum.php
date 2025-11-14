@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -37,7 +38,7 @@ class AttributeMetaEnum extends AttributeEnum
 
 	public static function ListExpectedParams()
 	{
-		return array('allowed_values', 'sql', 'default_value', 'mapping');
+		return ['allowed_values', 'sql', 'default_value', 'mapping'];
 	}
 
 	public function IsNullAllowed()
@@ -62,9 +63,9 @@ class AttributeMetaEnum extends AttributeEnum
 		}
 		$aMappingData = $this->GetMapRule($sClass);
 		if ($aMappingData == null) {
-			$aRet = array();
+			$aRet = [];
 		} else {
-			$aRet = array($aMappingData['attcode']);
+			$aRet = [$aMappingData['attcode']];
 		}
 
 		return $aRet;
@@ -78,7 +79,7 @@ class AttributeMetaEnum extends AttributeEnum
 	 *
 	 * @return array|null
 	 */
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$oValSetDef = $this->GetValuesDef();
 		if (!$oValSetDef) {
@@ -89,7 +90,7 @@ class AttributeMetaEnum extends AttributeEnum
 		if (is_null($aRawValues)) {
 			return null;
 		}
-		$aLocalizedValues = array();
+		$aLocalizedValues = [];
 		foreach ($aRawValues as $sKey => $sValue) {
 			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 		}
@@ -119,8 +120,10 @@ class AttributeMetaEnum extends AttributeEnum
 			} elseif ($this->GetDefaultValue() != '') {
 				$sRet = $this->GetDefaultValue();
 			} else {
-				throw new Exception('AttributeMetaEnum::MapValue(): mapping not found for value "'.$value.'" in '.get_class($oObject).', on attribute '.MetaModel::GetAttributeOrigin($this->GetHostClass(),
-						$this->GetCode()).'::'.$this->GetCode());
+				throw new Exception('AttributeMetaEnum::MapValue(): mapping not found for value "'.$value.'" in '.get_class($oObject).', on attribute '.MetaModel::GetAttributeOrigin(
+					$this->GetHostClass(),
+					$this->GetCode()
+				).'::'.$this->GetCode());
 			}
 		}
 

@@ -44,50 +44,50 @@ use utils;
 class NavigationRuleHelper
 {
 	// Available point of origin for the navigation
-	const ENUM_ORIGIN_PAGE = 'default';
-	const ENUM_ORIGIN_MODAL = 'modal';
+	public const ENUM_ORIGIN_PAGE = 'default';
+	public const ENUM_ORIGIN_MODAL = 'modal';
 
 	// Available rule categories (of rule types)
 	/** @var string ENUM_RULE_CAT_CLOSE (eg. close modal/window) */
-	const ENUM_RULE_CAT_CLOSE = 'close';
+	public const ENUM_RULE_CAT_CLOSE = 'close';
 	/** @var string ENUM_RULE_CAT_REDIRECT (eg. go-to-homepage, go-to-object, go-to-brick, ...) */
-	const ENUM_RULE_CAT_REDIRECT = 'redirect';
+	public const ENUM_RULE_CAT_REDIRECT = 'redirect';
 
 	// Available rule types
 	/** @var string ENUM_RULE_CLOSE */
-	const ENUM_RULE_CLOSE = 'close';
+	public const ENUM_RULE_CLOSE = 'close';
 	/** @var string ENUM_RULE_GO_TO_HOMEPAGE */
-	const ENUM_RULE_GO_TO_HOMEPAGE = 'go-to-homepage';
+	public const ENUM_RULE_GO_TO_HOMEPAGE = 'go-to-homepage';
 	/** @var string ENUM_RULE_GO_TO_OBJECT */
-	const ENUM_RULE_GO_TO_OBJECT = 'go-to-object';
+	public const ENUM_RULE_GO_TO_OBJECT = 'go-to-object';
 	/** @var string ENUM_RULE_GO_TO_BRICK */
-	const ENUM_RULE_GO_TO_BRICK = 'go-to-brick';
+	public const ENUM_RULE_GO_TO_BRICK = 'go-to-brick';
 	/** @var string ENUM_RULE_GO_TO_MANAGE_BRICK */
-	const ENUM_RULE_GO_TO_MANAGE_BRICK = 'go-to-manage-brick';
+	public const ENUM_RULE_GO_TO_MANAGE_BRICK = 'go-to-manage-brick';
 	/** @var string ENUM_RULE_GO_TO_BROWSE_BRICK */
-	const ENUM_RULE_GO_TO_BROWSE_BRICK = 'go-to-browse-brick';
+	public const ENUM_RULE_GO_TO_BROWSE_BRICK = 'go-to-browse-brick';
 	// - Defaults
 	/** @var string DEFAULT_RULE_SUBMIT_PAGE */
-	const DEFAULT_RULE_SUBMIT_PAGE = self::ENUM_RULE_GO_TO_OBJECT;
+	public const DEFAULT_RULE_SUBMIT_PAGE = self::ENUM_RULE_GO_TO_OBJECT;
 	/** @var string DEFAULT_RULE_SUBMIT_MODAL */
-	const DEFAULT_RULE_SUBMIT_MODAL = self::ENUM_RULE_CLOSE;
+	public const DEFAULT_RULE_SUBMIT_MODAL = self::ENUM_RULE_CLOSE;
 	/** @var string DEFAULT_RULE_CANCEL_PAGE */
-	const DEFAULT_RULE_CANCEL_PAGE = self::ENUM_RULE_CLOSE;
+	public const DEFAULT_RULE_CANCEL_PAGE = self::ENUM_RULE_CLOSE;
 	/** @var string DEFAULT_RULE_CANCEL_MODAL */
-	const DEFAULT_RULE_CANCEL_MODAL = self::ENUM_RULE_CLOSE;
+	public const DEFAULT_RULE_CANCEL_MODAL = self::ENUM_RULE_CLOSE;
 
 	// Rule go-to-object properties
 	/** @var string DEFAULT_RULE_GO_TO_OBJECT_PROP_MODE */
-	const DEFAULT_RULE_GO_TO_OBJECT_PROP_MODE = ObjectFormHandlerHelper::ENUM_MODE_VIEW;
+	public const DEFAULT_RULE_GO_TO_OBJECT_PROP_MODE = ObjectFormHandlerHelper::ENUM_MODE_VIEW;
 
 	/** @var string ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_MODAL */
-	const ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_MODAL = 'modal';
+	public const ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_MODAL = 'modal';
 	/** @var string ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_PAGE */
-	const ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_PAGE = 'page';
+	public const ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_PAGE = 'page';
 	/** @var string ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_CURRENT */
-	const ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_CURRENT = 'current';
+	public const ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_CURRENT = 'current';
 	/** @var string DEFAULT_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET */
-	const DEFAULT_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET = self::ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_MODAL;
+	public const DEFAULT_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET = self::ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_MODAL;
 
 	// Rule go-to-brick properties
 	// TODO
@@ -112,9 +112,12 @@ class NavigationRuleHelper
 	 * @throws \DOMFormatException
 	 */
 	public function __construct(
-		ModuleDesign $oModuleDesign, RouterInterface $oRouter, BrickCollection $oBrickCollection, ScopeValidatorHelper $oScopeValidator
+		ModuleDesign $oModuleDesign,
+		RouterInterface $oRouter,
+		BrickCollection $oBrickCollection,
+		ScopeValidatorHelper $oScopeValidator
 	) {
-		$this->aRules = array();
+		$this->aRules = [];
 		$this->oRouter = $oRouter;
 		$this->oBrickCollection = $oBrickCollection;
 
@@ -132,31 +135,29 @@ class NavigationRuleHelper
 	 */
 	public function Init(DOMNodeList $oNodes)
 	{
-		$this->aRules = array();
+		$this->aRules = [];
 
 		// Iterating over the navigation_rule nodes
 		/** @var \Combodo\iTop\DesignElement $oRuleNode */
-		foreach ($oNodes as $oRuleNode)
-		{
+		foreach ($oNodes as $oRuleNode) {
 			// Checking node name
-			if ($oRuleNode->nodeName !== 'navigation_rule')
-			{
+			if ($oRuleNode->nodeName !== 'navigation_rule') {
 				continue;
 			}
 
 			// Retrieving mandatory attributes
 			// - ID
 			$sRuleId = $oRuleNode->getAttribute('id');
-			if ($sRuleId === '')
-			{
+			if ($sRuleId === '') {
 				throw new DOMFormatException('Rule tag must have an id attribute.', null, null, $oRuleNode);
 			}
 			// - Type
 			$sRuleType = $oRuleNode->getAttribute('xsi:type');
-			if (($sRuleType === '') || !in_array($sRuleType, static::GetAllowedTypes()))
-			{
-				throw new DOMFormatException('Navigation rule tag must have a valid xsi:type, "'.$sRuleType.'" given, expected '.implode('|',
-						static::GetAllowedTypes()), null, null, $oRuleNode);
+			if (($sRuleType === '') || !in_array($sRuleType, static::GetAllowedTypes())) {
+				throw new DOMFormatException('Navigation rule tag must have a valid xsi:type, "'.$sRuleType.'" given, expected '.implode(
+					'|',
+					static::GetAllowedTypes()
+				), null, null, $oRuleNode);
 			}
 
 			// Load rule from XML
@@ -176,10 +177,10 @@ class NavigationRuleHelper
 	 */
 	public static function GetAllowedOrigins()
 	{
-		return array(
+		return [
 			static::ENUM_ORIGIN_PAGE,
 			static::ENUM_ORIGIN_MODAL,
-		);
+		];
 	}
 
 	/**
@@ -189,14 +190,14 @@ class NavigationRuleHelper
 	 */
 	public static function GetAllowedTypes()
 	{
-		return array(
+		return [
 			static::ENUM_RULE_CLOSE,
 			static::ENUM_RULE_GO_TO_HOMEPAGE,
 			static::ENUM_RULE_GO_TO_OBJECT,
 			static::ENUM_RULE_GO_TO_BRICK,
 			static::ENUM_RULE_GO_TO_BROWSE_BRICK,
 			static::ENUM_RULE_GO_TO_MANAGE_BRICK,
-		);
+		];
 	}
 
 	/**
@@ -209,8 +210,7 @@ class NavigationRuleHelper
 	 */
 	public function GetRuleDefinition($sId)
 	{
-		if (!array_key_exists($sId, $this->aRules))
-		{
+		if (!array_key_exists($sId, $this->aRules)) {
 			throw new Exception('NavigationRuleHelper: Could not find "'.$sId.'" in the rules list');
 		}
 
@@ -251,10 +251,10 @@ class NavigationRuleHelper
 	 */
 	public function GetDefaultCloseRuleDefinition()
 	{
-		return array(
+		return [
 			'category' => static::ENUM_RULE_CAT_CLOSE,
 			'type' => static::ENUM_RULE_CLOSE,
-		);
+		];
 	}
 
 	/**
@@ -264,10 +264,10 @@ class NavigationRuleHelper
 	 */
 	public function GetDefaultGoToHomepageRuleDefinition()
 	{
-		return array(
+		return [
 			'category' => static::ENUM_RULE_CAT_REDIRECT,
 			'type' => static::ENUM_RULE_GO_TO_HOMEPAGE,
-		);
+		];
 	}
 
 	/**
@@ -277,15 +277,15 @@ class NavigationRuleHelper
 	 */
 	public function GetDefaultGoToObjectRuleDefinition()
 	{
-		return array(
+		return [
 			'category' => static::ENUM_RULE_CAT_REDIRECT,
 			'type' => static::ENUM_RULE_GO_TO_OBJECT,
-			'properties' => array(
+			'properties' => [
 				'mode' => static::DEFAULT_RULE_GO_TO_OBJECT_PROP_MODE,
 				'opening_target' => static::DEFAULT_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET,
 				'oql' => null,
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -295,16 +295,16 @@ class NavigationRuleHelper
 	 */
 	public function GetDefaultGoToBrickRuleDefinition()
 	{
-		return array(
+		return [
 			'category' => static::ENUM_RULE_CAT_REDIRECT,
 			'type' => static::ENUM_RULE_GO_TO_BRICK,
-			'properties' => array(
-				'route' => array(
+			'properties' => [
+				'route' => [
 					'id' => null,
-					'params' => array(),
-				),
-			),
-		);
+					'params' => [],
+				],
+			],
+		];
 	}
 
 	//----------------------------
@@ -351,21 +351,18 @@ class NavigationRuleHelper
 		// Default values
 		$aRule = $this->GetDefaultGoToObjectRuleDefinition();
 
-		$aAllowedOpeningTarget = array(
+		$aAllowedOpeningTarget = [
 			static::ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_CURRENT,
 			static::ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_MODAL,
 			static::ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_PAGE,
-		);
+		];
 
 		/** @var \Combodo\iTop\DesignElement $oPropNode */
-		foreach($oRuleNode->GetNodes('*') as $oPropNode)
-		{
-			switch($oPropNode->nodeName)
-			{
+		foreach ($oRuleNode->GetNodes('*') as $oPropNode) {
+			switch ($oPropNode->nodeName) {
 				case 'mode':
 					$sMode = $oPropNode->GetText();
-					if(!in_array($sMode, ObjectFormHandlerHelper::GetAllowedModes()))
-					{
+					if (!in_array($sMode, ObjectFormHandlerHelper::GetAllowedModes())) {
 						throw new DOMFormatException('mode tag of navigation_rule "'.$sRuleId.'" must be valid. Expected '.implode('|', ObjectFormHandlerHelper::GetAllowedModes()).', "'.$sMode.'" given.', null, null, $oRuleNode);
 					}
 					$aRule['properties']['mode'] = $sMode;
@@ -373,8 +370,7 @@ class NavigationRuleHelper
 
 				case 'opening_target':
 					$sOpeningTarget = $oPropNode->GetText();
-					if(!in_array($sOpeningTarget, $aAllowedOpeningTarget))
-					{
+					if (!in_array($sOpeningTarget, $aAllowedOpeningTarget)) {
 						throw new DOMFormatException('opening_target tag of navigation_rule "'.$sRuleId.'" must be valid. Expected '.implode('|', $aAllowedOpeningTarget).', "'.$sOpeningTarget.'" given.', null, null, $oRuleNode);
 					}
 					$aRule['properties']['opening_target'] = $sOpeningTarget;
@@ -382,8 +378,7 @@ class NavigationRuleHelper
 
 				case 'oql':
 					$sOQL = $oPropNode->GetText();
-					if(empty($sOQL))
-					{
+					if (empty($sOQL)) {
 						throw new DOMFormatException('oql tag of navigation_rule "'.$sRuleId.'" can not be empty.');
 					}
 					$aRule['properties']['oql'] = $sOQL;
@@ -409,30 +404,24 @@ class NavigationRuleHelper
 		$aRule = $this->GetDefaultGoToBrickRuleDefinition();
 
 		/** @var \Combodo\iTop\DesignElement $oPropNode */
-		foreach($oRuleNode->GetNodes('*') as $oPropNode)
-		{
-			switch($oPropNode->nodeName)
-			{
+		foreach ($oRuleNode->GetNodes('*') as $oPropNode) {
+			switch ($oPropNode->nodeName) {
 				case 'route':
 					/** @var array $aRouteProperties Route ID and parameters */
-					$aRouteProperties = array();
+					$aRouteProperties = [];
 					/** @var DesignElement $oRoutePropNode */
-					foreach($oPropNode->GetNodes('*') as $oRoutePropNode)
-					{
-						switch($oRoutePropNode->nodeName)
-						{
+					foreach ($oPropNode->GetNodes('*') as $oRoutePropNode) {
+						switch ($oRoutePropNode->nodeName) {
 							case 'id':
 								$aRouteProperties['id'] = $oRoutePropNode->GetText();
 								break;
 
 							case 'params':
 								/** @var DesignElement $oRouteParamNode */
-								foreach($oRoutePropNode->GetNodes('*') as $oRouteParamNode)
-								{
+								foreach ($oRoutePropNode->GetNodes('*') as $oRouteParamNode) {
 									$sRouteParamId = $oRouteParamNode->getAttribute('id');
 									$sRouteParamValue = $oRouteParamNode->GetText();
-									if(empty($sRouteParamId) || empty($sRouteParamValue))
-									{
+									if (empty($sRouteParamId) || empty($sRouteParamValue)) {
 										throw new DOMFormatException('param tag of navigation_rule "'.$sRuleId.'" must have a valid ID and value.', null, null, $oRuleNode);
 									}
 
@@ -443,8 +432,7 @@ class NavigationRuleHelper
 					}
 
 					// Consistency check
-					if(empty($aRouteProperties['id']))
-					{
+					if (empty($aRouteProperties['id'])) {
 						throw new DOMFormatException('navigation_rule "'.$sRuleId.'" must have a valid ID', null, null, $oRuleNode);
 					}
 
@@ -474,16 +462,15 @@ class NavigationRuleHelper
 		$aRule['properties']['route']['params']['sDisplayMode'] = ManageBrick::DEFAULT_DISPLAY_MODE;
 
 		// Rule parameters to automatically map to the route parameters
-		$aParamsMapping = array(
+		$aParamsMapping = [
 			'id' => 'sBrickId',
 			'display_mode' => 'sDisplayMode',
 			'grouping_tab' => 'sGroupingTab',
 			'filter' => 'sSearchValue',
-		);
+		];
 
 		/** @var \Combodo\iTop\DesignElement $oPropNode */
-		foreach($oRuleNode->GetNodes('*') as $oPropNode)
-		{
+		foreach ($oRuleNode->GetNodes('*') as $oPropNode) {
 			$sRouteParamId = (array_key_exists($oPropNode->nodeName, $aParamsMapping)) ? $aParamsMapping[$oPropNode->nodeName] : $oPropNode->nodeName;
 			$aRule['properties']['route']['params'][$sRouteParamId] = $oPropNode->GetText();
 		}
@@ -509,15 +496,14 @@ class NavigationRuleHelper
 		$aRule['properties']['route']['params']['sBrowseMode'] = BrowseBrick::DEFAULT_BROWSE_MODE;
 
 		// Rule parameters to automatically map to the route parameters
-		$aParamsMapping = array(
+		$aParamsMapping = [
 			'id' => 'sBrickId',
 			'browse_mode' => 'sBrowseMode',
 			'filter' => 'sSearchValue',
-		);
+		];
 
 		/** @var \Combodo\iTop\DesignElement $oPropNode */
-		foreach($oRuleNode->GetNodes('*') as $oPropNode)
-		{
+		foreach ($oRuleNode->GetNodes('*') as $oPropNode) {
 			$sRouteParamId = (array_key_exists($oPropNode->nodeName, $aParamsMapping)) ? $aParamsMapping[$oPropNode->nodeName] : $oPropNode->nodeName;
 			$aRule['properties']['route']['params'][$sRouteParamId] = $oPropNode->GetText();
 		}
@@ -555,33 +541,30 @@ class NavigationRuleHelper
 	public function PrepareRulesForForm(array $aFormProperties, DBObject $oCurrentObject, $bIsCurrentFormInModal = false)
 	{
 		// Default values
-		$aResults = array(
-			'submit' => array(
+		$aResults = [
+			'submit' => [
 				'category' => static::ENUM_RULE_CAT_REDIRECT,
 				'url' => null,
 				'modal' => false,
-			),
-			'cancel' => array(
+			],
+			'cancel' => [
 				'category' => static::ENUM_RULE_CAT_CLOSE,
 				'url' => null,
 				'modal' => false,
-			),
-		);
+			],
+		];
 
 		// Get form's navigation rules
-		$aFormNavRules = (isset($aFormProperties['properties']['navigation_rules'])) ? $aFormProperties['properties']['navigation_rules'] : array('submit' => null, 'cancel' => null);
+		$aFormNavRules = (isset($aFormProperties['properties']['navigation_rules'])) ? $aFormProperties['properties']['navigation_rules'] : ['submit' => null, 'cancel' => null];
 
 		// Check from which origin the rule will be called
 		$sRuleCallOrigin = ($bIsCurrentFormInModal) ? 'modal' : 'default';
 
-		foreach(array_keys($aResults) as $sButtonCode)
-		{
+		foreach (array_keys($aResults) as $sButtonCode) {
 			// Retrieve rule definition
 			// - Default behavior when no rule specified
-			if(empty($aFormNavRules[$sButtonCode][$sRuleCallOrigin]))
-			{
-				switch($sButtonCode)
-				{
+			if (empty($aFormNavRules[$sButtonCode][$sRuleCallOrigin])) {
+				switch ($sButtonCode) {
 					case 'submit':
 						$sDefaultRuleType = ($bIsCurrentFormInModal) ? static::DEFAULT_RULE_SUBMIT_MODAL : static::DEFAULT_RULE_SUBMIT_PAGE;
 						break;
@@ -593,8 +576,7 @@ class NavigationRuleHelper
 				$aRuleDef = $this->GetDefaultRuleDefinitionFromType($sDefaultRuleType);
 			}
 			// - Specified rule
-			else
-			{
+			else {
 				$sRuleId = $aFormNavRules[$sButtonCode][$sRuleCallOrigin];
 				$aRuleDef = $this->GetRuleDefinition($sRuleId);
 			}
@@ -603,36 +585,31 @@ class NavigationRuleHelper
 			$aResults[$sButtonCode]['category'] = $aRuleDef['category'];
 
 			// Set properties regarding the type
-			switch($aRuleDef['type'])
-			{
+			switch ($aRuleDef['type']) {
 				case static::ENUM_RULE_GO_TO_HOMEPAGE:
 					$aResults[$sButtonCode]['url'] = $this->oRouter->generate('p_home');
 					break;
 
 				case static::ENUM_RULE_GO_TO_OBJECT:
 					// Target opening mode to modal if specified or should be as current form
-					if( ($aRuleDef['properties']['opening_target'] === static::ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_MODAL)
+					if (($aRuleDef['properties']['opening_target'] === static::ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_MODAL)
 						||	(($aRuleDef['properties']['opening_target'] === static::ENUM_RULE_GO_TO_OBJECT_PROP_OPENING_TARGET_CURRENT) && ($bIsCurrentFormInModal === true))
-					)
-					{
+					) {
 						$aResults[$sButtonCode]['modal'] = true;
 					}
 
 					// Target URL
 					// - Find object
-					if(empty($aRuleDef['properties']['oql']))
-					{
+					if (empty($aRuleDef['properties']['oql'])) {
 						$oTargetObject = $oCurrentObject;
-					}
-					else
-					{
+					} else {
 						$oSearch = DBSearch::FromOQL($aRuleDef['properties']['oql']);
-						$oSet = new DBObjectSet($oSearch, array(), array('this' => $oCurrentObject));
-						$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
+						$oSet = new DBObjectSet($oSearch, [], ['this' => $oCurrentObject]);
+						$oSet->OptimizeColumnLoad([$oSearch->GetClassAlias() => []]);
 						$oTargetObject = $oSet->Fetch();
 					}
 					// - Build URL
-					$aResults[$sButtonCode]['url'] = $this->oRouter->generate('p_object_'.$aRuleDef['properties']['mode'], array('sObjectClass' => get_class($oTargetObject), 'sObjectId' => $oTargetObject->GetKey()));
+					$aResults[$sButtonCode]['url'] = $this->oRouter->generate('p_object_'.$aRuleDef['properties']['mode'], ['sObjectClass' => get_class($oTargetObject), 'sObjectId' => $oTargetObject->GetKey()]);
 					break;
 
 				case static::ENUM_RULE_GO_TO_BRICK:

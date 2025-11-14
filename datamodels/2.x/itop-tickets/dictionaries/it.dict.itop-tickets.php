@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '~~',
 	'Class:Ticket/Attribute:ref' => 'Rif',
@@ -61,14 +62,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Chiuso',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Analisi dell\'impatto',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContactToTicket' => 'Link Contact / Ticket',
 	'Class:lnkContactToTicket+' => '~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
@@ -88,13 +88,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Aggiunto manualmente',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Calcolato',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Non notificare',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:WorkOrder' => 'Work Order~~',
 	'Class:WorkOrder+' => '~~',
 	'Class:WorkOrder/Attribute:name' => 'Nome',
@@ -127,11 +127,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Chiudi',
 	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Ticket:baseinfo' => 'Infomazioni Generali',
 	'Ticket:date' => 'Data',
 	'Ticket:contact' => 'Contatti',
@@ -221,14 +220,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Tempo Per Risolvere',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
-));
-
+]);
 
 //
 // Class: Ticket
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
-));
+]);

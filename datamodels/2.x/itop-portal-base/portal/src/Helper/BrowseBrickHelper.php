@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-
 namespace Combodo\iTop\Portal\Helper;
-
 
 use AttributeImage;
 use AttributeSet;
@@ -44,9 +42,9 @@ use utils;
 class BrowseBrickHelper
 {
 	/** @var string LEVEL_SEPARATOR */
-	const LEVEL_SEPARATOR = '-';
+	public const LEVEL_SEPARATOR = '-';
 	/** @var array OPTIONAL_ATTRIBUTES */
-	const OPTIONAL_ATTRIBUTES = array('tooltip_att', 'description_att', 'image_att');
+	public const OPTIONAL_ATTRIBUTES = ['tooltip_att', 'description_att', 'image_att'];
 
 	/** @var \Combodo\iTop\Portal\Helper\SecurityHelper */
 	private $oSecurityHelper;
@@ -62,7 +60,10 @@ class BrowseBrickHelper
 	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper           $oScopeValidator
 	 * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $oUrlGenerator
 	 */
-	public function __construct(SecurityHelper $oSecurityHelper, ScopeValidatorHelper $oScopeValidator, UrlGeneratorInterface $oUrlGenerator
+	public function __construct(
+		SecurityHelper $oSecurityHelper,
+		ScopeValidatorHelper $oScopeValidator,
+		UrlGeneratorInterface $oUrlGenerator
 	) {
 		$this->oSecurityHelper = $oSecurityHelper;
 		$this->oScopeValidator = $oScopeValidator;
@@ -89,24 +90,24 @@ class BrowseBrickHelper
 	 */
 	public function TreeToFlatLevelsProperties(array $aLevels, array &$aLevelsProperties, $sLevelAliasPrefix = 'L')
 	{
-		foreach ($aLevels as $aLevel)
-		{
+		foreach ($aLevels as $aLevel) {
 			$sCurrentLevelAlias = $sLevelAliasPrefix.static::LEVEL_SEPARATOR.$aLevel['id'];
 			$oSearch = DBSearch::CloneWithAlias(DBSearch::FromOQL($aLevel['oql']), $sCurrentLevelAlias);
 
 			// Restricting to the allowed scope
-			$oScopeSearch = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oSearch->GetClass(),
-				UR_ACTION_READ);
+			$oScopeSearch = $this->oScopeValidator->GetScopeFilterForProfiles(
+				UserRights::ListProfiles(),
+				$oSearch->GetClass(),
+				UR_ACTION_READ
+			);
 			$oSearch = ($oScopeSearch !== null) ? $oSearch->Intersect($oScopeSearch) : null;
 			// - Allowing all data if necessary
-			if ($oScopeSearch !== null && $oScopeSearch->IsAllDataAllowed())
-			{
+			if ($oScopeSearch !== null && $oScopeSearch->IsAllDataAllowed()) {
 				$oSearch->AllowAllData();
 			}
 
-			if ($oSearch !== null)
-			{
-				$aLevelsProperties[$sCurrentLevelAlias] = array(
+			if ($oSearch !== null) {
+				$aLevelsProperties[$sCurrentLevelAlias] = [
 					'alias' => $sCurrentLevelAlias,
 					'title' => ($aLevel['title'] !== null) ? Dict::S($aLevel['title']) : MetaModel::GetName($oSearch->GetClass()),
 					'parent_att' => $aLevel['parent_att'],
@@ -115,42 +116,35 @@ class BrowseBrickHelper
 					'description_att' => $aLevel['description_att'],
 					'image_att' => $aLevel['image_att'],
 					'search' => $oSearch,
-					'fields' => array(),
-					'actions' => array(),
-				);
+					'fields' => [],
+					'actions' => [],
+				];
 
 				// Adding current level's fields
-				if (isset($aLevel['fields']))
-				{
-					$aLevelsProperties[$sCurrentLevelAlias]['fields'] = array();
+				if (isset($aLevel['fields'])) {
+					$aLevelsProperties[$sCurrentLevelAlias]['fields'] = [];
 
-					foreach ($aLevel['fields'] as $sFieldAttCode => $aFieldProperties)
-					{
-						$aLevelsProperties[$sCurrentLevelAlias]['fields'][] = array(
+					foreach ($aLevel['fields'] as $sFieldAttCode => $aFieldProperties) {
+						$aLevelsProperties[$sCurrentLevelAlias]['fields'][] = [
 							'code' => $sFieldAttCode,
 							'label' => MetaModel::GetAttributeDef($oSearch->GetClass(), $sFieldAttCode)->GetLabel(),
 							'hidden' => $aFieldProperties['hidden'],
-						);
+						];
 					}
 				}
 
 				// Flattening and adding sub levels
-				if (isset($aLevel['levels']))
-				{
-					foreach ($aLevel['levels'] as $aChildLevel)
-					{
+				if (isset($aLevel['levels'])) {
+					foreach ($aLevel['levels'] as $aChildLevel) {
 						// Checking if the sub level if allowed
 						$oChildSearch = DBSearch::FromOQL($aChildLevel['oql']);
-						if ($this->oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $oChildSearch->GetClass()))
-						{
+						if ($this->oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $oChildSearch->GetClass())) {
 							// Adding the sub level to this one
 							$aLevelsProperties[$sCurrentLevelAlias]['levels'][] = $sCurrentLevelAlias.static::LEVEL_SEPARATOR.$aChildLevel['id'];
 
 							// Adding drill down action if necessary
-							foreach ($aLevel['actions'] as $sId => $aAction)
-							{
-								if ($aAction['type'] === BrowseBrick::ENUM_ACTION_DRILLDOWN)
-								{
+							foreach ($aLevel['actions'] as $sId => $aAction) {
+								if ($aAction['type'] === BrowseBrick::ENUM_ACTION_DRILLDOWN) {
 									$aLevelsProperties[$sCurrentLevelAlias]['actions'][$sId] = $aAction;
 									break;
 								}
@@ -162,49 +156,43 @@ class BrowseBrickHelper
 				}
 
 				// Adding actions to the level
-				foreach ($aLevel['actions'] as $sId => $aAction)
-				{
+				foreach ($aLevel['actions'] as $sId => $aAction) {
 					// ... Only if it's not already there (eg. the drilldown added with the sublevels)
-					if (!array_key_exists($sId, $aLevelsProperties[$sCurrentLevelAlias]['actions']))
-					{
+					if (!array_key_exists($sId, $aLevelsProperties[$sCurrentLevelAlias]['actions'])) {
 						// Adding action only if allowed
-						if (($aAction['type'] === BrowseBrick::ENUM_ACTION_VIEW) && !$this->oSecurityHelper->IsActionAllowed(UR_ACTION_READ,
-								$oSearch->GetClass()))
-						{
+						if (($aAction['type'] === BrowseBrick::ENUM_ACTION_VIEW) && !$this->oSecurityHelper->IsActionAllowed(
+							UR_ACTION_READ,
+							$oSearch->GetClass()
+						)) {
 							continue;
-						}
-						elseif (($aAction['type'] === BrowseBrick::ENUM_ACTION_EDIT) && !$this->oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY,
-								$oSearch->GetClass()))
-						{
+						} elseif (($aAction['type'] === BrowseBrick::ENUM_ACTION_EDIT) && !$this->oSecurityHelper->IsActionAllowed(
+							UR_ACTION_MODIFY,
+							$oSearch->GetClass()
+						)) {
 							continue;
-						}
-						elseif ($aAction['type'] === BrowseBrick::ENUM_ACTION_DRILLDOWN)
-						{
+						} elseif ($aAction['type'] === BrowseBrick::ENUM_ACTION_DRILLDOWN) {
 							continue;
 						}
 
 						// Setting action title
-						if (isset($aAction['title']))
-						{
+						if (isset($aAction['title'])) {
 							// Note : There could be an enhancement here, by checking if the string code has the '%1' needle and use Dict::S or Dict::Format accordingly.
 							// But it would require to benchmark a potential performance drop as it will be done for all items
 							$aAction['title'] = Dict::S($aAction['title']);
-						}
-						else
-						{
-							switch ($aAction['type'])
-							{
+						} else {
+							switch ($aAction['type']) {
 								case BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS:
 									// We can only make translate a dictionary entry with a class placeholder when the action has a class tag. if it has a factory method, we don't know yet what class is going to be created
-									if ($aAction['factory']['type'] === BrowseBrick::ENUM_FACTORY_TYPE_CLASS)
-									{
-										$aAction['title'] = Dict::Format('Brick:Portal:Browse:Action:CreateObjectFromThis',
-											MetaModel::GetName($aAction['factory']['value']));
-										$aAction['url'] = $this->oUrlGenerator->generate('p_object_create',
-											array('sObjectClass' => $aAction['factory']['value']));
-									}
-									else
-									{
+									if ($aAction['factory']['type'] === BrowseBrick::ENUM_FACTORY_TYPE_CLASS) {
+										$aAction['title'] = Dict::Format(
+											'Brick:Portal:Browse:Action:CreateObjectFromThis',
+											MetaModel::GetName($aAction['factory']['value'])
+										);
+										$aAction['url'] = $this->oUrlGenerator->generate(
+											'p_object_create',
+											['sObjectClass' => $aAction['factory']['value']]
+										);
+									} else {
 										$aAction['title'] = Dict::S('Brick:Portal:Browse:Action:Create');
 									}
 									break;
@@ -221,10 +209,8 @@ class BrowseBrickHelper
 						}
 
 						// Setting action icon class
-						if (!isset($aAction['icon_class']))
-						{
-							switch ($aAction['type'])
-							{
+						if (!isset($aAction['icon_class'])) {
+							switch ($aAction['type']) {
 								case BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS:
 									$aAction['icon_class'] = BrowseBrick::ENUM_ACTION_ICON_CLASS_CREATE_FROM_THIS;
 									break;
@@ -241,21 +227,19 @@ class BrowseBrickHelper
 						}
 
 						// Setting action url
-						switch ($aAction['type'])
-						{
+						switch ($aAction['type']) {
 							case BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS:
-								if ($aAction['factory']['type'] === BrowseBrick::ENUM_FACTORY_TYPE_CLASS)
-								{
-									$aAction['url'] = $this->oUrlGenerator->generate('p_object_create',
-										array('sObjectClass' => $aAction['factory']['value']));
-								}
-								else
-								{
-									$aAction['url'] = $this->oUrlGenerator->generate('p_object_create_from_factory', array(
+								if ($aAction['factory']['type'] === BrowseBrick::ENUM_FACTORY_TYPE_CLASS) {
+									$aAction['url'] = $this->oUrlGenerator->generate(
+										'p_object_create',
+										['sObjectClass' => $aAction['factory']['value']]
+									);
+								} else {
+									$aAction['url'] = $this->oUrlGenerator->generate('p_object_create_from_factory', [
 										'sEncodedMethodName' => base64_encode($aAction['factory']['value']),
 										'sObjectClass' => '-objectClass-',
 										'sObjectId' => '-objectId-',
-									));
+									]);
 								}
 								break;
 						}
@@ -278,10 +262,9 @@ class BrowseBrickHelper
 	 */
 	public function PrepareActionRulesForItems(array $aItems, $sLevelsAlias, array &$aLevelsProperties)
 	{
-		$aActionRules = array();
+		$aActionRules = [];
 
-		foreach ($aLevelsProperties[$sLevelsAlias]['actions'] as $sId => $aAction)
-		{
+		foreach ($aLevelsProperties[$sLevelsAlias]['actions'] as $sId => $aAction) {
 			$aActionRules[$sId] = ContextManipulatorHelper::PrepareAndEncodeRulesToken($aAction['rules'], $aItems);
 		}
 
@@ -317,11 +300,10 @@ class BrowseBrickHelper
 	 */
 	public function AddToFlatItems(array $aCurrentRow, array &$aLevelsProperties)
 	{
-		$aRow = array();
+		$aRow = [];
 
 		/** @var \DBObject $value */
-		foreach ($aCurrentRow as $key => $value)
-		{
+		foreach ($aCurrentRow as $key => $value) {
 			// Retrieving objects from all levels
 			$aItems = array_values($aCurrentRow);
 
@@ -332,36 +314,31 @@ class BrowseBrickHelper
 			$sNameAttDef = MetaModel::GetAttributeDef($sCurrentObjectClass, $sNameAttCode);
 			$sNameAttDefClass = get_class($sNameAttDef);
 
-			$aRow[$key] = array(
+			$aRow[$key] = [
 				'level_alias' => $key,
 				'id' => $sCurrentObjectId,
 				'name' => utils::EscapeHtml($value->Get($sNameAttCode)),
 				'class' => $sCurrentObjectClass,
 				'action_rules_token' => $this->PrepareActionRulesForItems($aItems, $key, $aLevelsProperties),
-				'metadata' => array(
+				'metadata' => [
 					'object_class' => $sCurrentObjectClass,
 					'object_id' => $sCurrentObjectId,
 					'attribute_code' => $sNameAttCode,
 					'attribute_type' => $sNameAttDefClass,
 					'value_raw' => $value->Get($sNameAttCode),
-				),
-			);
+				],
+			];
 
 			// Adding optional attributes if necessary
-			foreach (static::OPTIONAL_ATTRIBUTES as $sOptionalAttribute)
-			{
-				if ($aLevelsProperties[$key][$sOptionalAttribute] !== null)
-				{
+			foreach (static::OPTIONAL_ATTRIBUTES as $sOptionalAttribute) {
+				if ($aLevelsProperties[$key][$sOptionalAttribute] !== null) {
 					$sPropertyName = substr($sOptionalAttribute, 0, -4);
 					$oAttDef = MetaModel::GetAttributeDef($sCurrentObjectClass, $aLevelsProperties[$key][$sOptionalAttribute]);
 
-					if ($oAttDef instanceof AttributeImage)
-					{
+					if ($oAttDef instanceof AttributeImage) {
 						$tmpAttValue = $value->Get($aLevelsProperties[$key][$sOptionalAttribute]);
-						if ($sOptionalAttribute === 'image_att')
-						{
-							if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
-							{
+						if ($sOptionalAttribute === 'image_att') {
+							if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty()) {
 								$oOrmDoc = $tmpAttValue;
 								$tmpAttValue = $this->oUrlGenerator->generate('p_object_document_display', [
 									'sObjectClass' => $sCurrentObjectClass,
@@ -370,15 +347,11 @@ class BrowseBrickHelper
 									'cache' => 86400,
 									's' => $oOrmDoc->GetSignature(),
 								]);
-							}
-							else
-							{
+							} else {
 								$tmpAttValue = $oAttDef->Get('default_image');
 							}
 						}
-					}
-					else
-					{
+					} else {
 						$tmpAttValue = $value->GetAsHTML($aLevelsProperties[$key][$sOptionalAttribute]);
 					}
 
@@ -386,16 +359,13 @@ class BrowseBrickHelper
 				}
 			}
 			// Adding fields attributes if necessary
-			if (!empty($aLevelsProperties[$key]['fields']))
-			{
-				$aRow[$key]['fields'] = array();
-				foreach ($aLevelsProperties[$key]['fields'] as $aField)
-				{
+			if (!empty($aLevelsProperties[$key]['fields'])) {
+				$aRow[$key]['fields'] = [];
+				foreach ($aLevelsProperties[$key]['fields'] as $aField) {
 					$oAttDef = MetaModel::GetAttributeDef($sCurrentObjectClass, $aField['code']);
 					$sAttDefClass = get_class($oAttDef);
 
-					switch (true)
-					{
+					switch (true) {
 						case $oAttDef instanceof AttributeTagSet:
 							/** @var \ormTagSet $oSetValues */
 							$oSetValues = $value->Get($aField['code']);
@@ -412,8 +382,7 @@ class BrowseBrickHelper
 						case $oAttDef instanceof AttributeImage:
 							// Todo: This should be refactored, it has been seen multiple times in the portal
 							$oOrmDoc = $value->Get($aField['code']);
-							if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
-							{
+							if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty()) {
 								$sUrl = $this->oUrlGenerator->generate('p_object_document_display', [
 									'sObjectClass' => $sCurrentObjectClass,
 									'sObjectId' => $sCurrentObjectId,
@@ -421,9 +390,7 @@ class BrowseBrickHelper
 									'cache' => 86400,
 									's' => $oOrmDoc->GetSignature(),
 								]);
-							}
-							else
-							{
+							} else {
 								$sUrl = $oAttDef->Get('default_image');
 							}
 							$sHtmlForFieldValue = '<img src="'.$sUrl.'" />';
@@ -436,24 +403,22 @@ class BrowseBrickHelper
 
 					// For simple fields, we get the raw (stored) value as well
 					$bExcludeRawValue = false;
-					foreach (ApplicationHelper::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
-					{
-						if (is_a($sAttDefClass, $sAttDefClassToExclude, true))
-						{
+					foreach (ApplicationHelper::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude) {
+						if (is_a($sAttDefClass, $sAttDefClassToExclude, true)) {
 							$bExcludeRawValue = true;
 							break;
 						}
 					}
 					$attValueRaw = ($bExcludeRawValue === false) ? $value->Get($aField['code']) : null;
 
-					$aRow[$key]['fields'][$aField['code']] = array(
+					$aRow[$key]['fields'][$aField['code']] = [
 						'object_class' => $sCurrentObjectClass,
 						'object_id' => $sCurrentObjectId,
 						'attribute_code' => $aField['code'],
 						'attribute_type' => $sAttDefClass,
 						'value_raw' => $attValueRaw,
 						'value_html' => $sHtmlForFieldValue,
-					);
+					];
 				}
 			}
 		}
@@ -503,39 +468,34 @@ class BrowseBrickHelper
 
 		// We make sure to keep all row objects through levels by copying them when processing the first level.
 		// Otherwise they will be sliced through levels, one by one.
-		if ($aCurrentRowObjects === null)
-		{
+		if ($aCurrentRowObjects === null) {
 			$aCurrentRowObjects = $aCurrentRowValues;
 		}
 
-		if (!isset($aItems[$sCurrentIndex]))
-		{
-			$aItems[$sCurrentIndex] = array(
+		if (!isset($aItems[$sCurrentIndex])) {
+			$aItems[$sCurrentIndex] = [
 				'level_alias' => $aCurrentRowKeys[0],
 				'id' => $aCurrentRowValues[0]->GetKey(),
 				'name' => utils::EscapeHtml($aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]]['name_att'])),
 				'class' => get_class($aCurrentRowValues[0]),
-				'subitems' => array(),
+				'subitems' => [],
 				'filter_data' => $this->GetFilterData($aLevelsProperties[$aCurrentRowKeys[0]], $aCurrentRowKeys[0], $aCurrentRowValues[0]),
 				'action_rules_token' => $this->PrepareActionRulesForItems($aCurrentRowObjects, $aCurrentRowKeys[0], $aLevelsProperties),
-			);
+			];
 
 			// Adding optional attributes if necessary
-			foreach (static::OPTIONAL_ATTRIBUTES as $sOptionalAttribute)
-			{
-				if ($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute] !== null)
-				{
+			foreach (static::OPTIONAL_ATTRIBUTES as $sOptionalAttribute) {
+				if ($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute] !== null) {
 					$sPropertyName = substr($sOptionalAttribute, 0, -4);
-					$oAttDef = MetaModel::GetAttributeDef(get_class($aCurrentRowValues[0]),
-						$aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
+					$oAttDef = MetaModel::GetAttributeDef(
+						get_class($aCurrentRowValues[0]),
+						$aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]
+					);
 
-					if ($oAttDef instanceof AttributeImage)
-					{
+					if ($oAttDef instanceof AttributeImage) {
 						$tmpAttValue = $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
-						if ($sOptionalAttribute === 'image_att')
-						{
-							if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
-							{
+						if ($sOptionalAttribute === 'image_att') {
+							if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty()) {
 								$oOrmDoc = $tmpAttValue;
 								$tmpAttValue = $this->oUrlGenerator->generate('p_object_document_display', [
 									'sObjectClass' => get_class($aCurrentRowValues[0]),
@@ -544,15 +504,11 @@ class BrowseBrickHelper
 									'cache' => 86400,
 									's' => $oOrmDoc->GetSignature(),
 								]);
-							}
-							else
-							{
+							} else {
 								$tmpAttValue = $oAttDef->Get('default_image');
 							}
 						}
-					}
-					else
-					{
+					} else {
 						$tmpAttValue = $aCurrentRowValues[0]->GetAsHTML($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
 					}
 
@@ -562,8 +518,7 @@ class BrowseBrickHelper
 		}
 
 		$aCurrentRowSliced = array_slice($aCurrentRow, 1);
-		if (!empty($aCurrentRowSliced))
-		{
+		if (!empty($aCurrentRowSliced)) {
 			$this->AddToTreeItems($aItems[$sCurrentIndex]['subitems'], $aCurrentRowSliced, $aLevelsProperties, $aCurrentRowObjects);
 		}
 	}
@@ -580,7 +535,7 @@ class BrowseBrickHelper
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	private function GetFilterData(array $aLevelProperties, string $sRowKey, DBObject $oRowValue) : array
+	private function GetFilterData(array $aLevelProperties, string $sRowKey, DBObject $oRowValue): array
 	{
 		// result
 		$sValues = "";
@@ -599,17 +554,17 @@ class BrowseBrickHelper
 			$sValue = $oAttDef->GetAsHTML($oRowValue->Get($aField['code']));
 
 			// do not print empty fields
-			if(!utils::IsNullOrEmptyString($sValue)){
+			if (!utils::IsNullOrEmptyString($sValue)) {
 
 				// append to result
 				$sValues .= $sValue;
-				$sValuesAndCodes .= '<span><span class="tree-item-filter-data-label">' . $aField['label'] . ':</span> ' . $sValue . '</span>';
+				$sValuesAndCodes .= '<span><span class="tree-item-filter-data-label">'.$aField['label'].':</span> '.$sValue.'</span>';
 			}
 		}
 
 		return [
 			'values' => $sValues,
-			'values_and_codes' => $sValuesAndCodes
+			'values_and_codes' => $sValuesAndCodes,
 		];
 	}
 }

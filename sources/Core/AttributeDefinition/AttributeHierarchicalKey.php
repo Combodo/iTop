@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -13,7 +14,7 @@ use DBObjectSearch;
  */
 class AttributeHierarchicalKey extends AttributeExternalKey
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY;
 
 	protected $m_sTargetClass;
 
@@ -98,7 +99,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode()] = 'INT(11)'.($bFullSpec ? ' DEFAULT 0' : '');
 		$aColumns[$this->GetSQLLeft()] = 'INT(11)'.($bFullSpec ? ' DEFAULT 0' : '');
 		$aColumns[$this->GetSQLRight()] = 'INT(11)'.($bFullSpec ? ' DEFAULT 0' : '');
@@ -121,7 +122,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		if (!is_array($value)) {
 			$aValues[$this->GetCode()] = $value;
 		} else {
-			$aValues = array();
+			$aValues = [];
 			$aValues[$this->GetCode()] = $value[$this->GetCode()];
 			$aValues[$this->GetSQLRight()] = $value[$this->GetSQLRight()];
 			$aValues[$this->GetSQLLeft()] = $value[$this->GetSQLLeft()];
@@ -130,7 +131,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		return $aValues;
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$oFilter = $this->GetHierachicalFilter($aArgs, $sContains);
 		if ($oFilter) {
@@ -143,7 +144,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		}
 	}
 
-	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	public function GetAllowedValuesAsObjectSet($aArgs = [], $sContains = '', $iAdditionalValue = null)
 	{
 		$oValSetDef = $this->GetValuesDef();
 		$oFilter = $this->GetHierachicalFilter($aArgs, $sContains, $iAdditionalValue);
@@ -155,7 +156,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		return $oSet;
 	}
 
-	public function GetAllowedValuesAsFilter($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	public function GetAllowedValuesAsFilter($aArgs = [], $sContains = '', $iAdditionalValue = null)
 	{
 		$oFilter = $this->GetHierachicalFilter($aArgs, $sContains, $iAdditionalValue);
 		if ($oFilter) {
@@ -165,14 +166,13 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		return parent::GetAllowedValuesAsFilter($aArgs, $sContains, $iAdditionalValue);
 	}
 
-	private function GetHierachicalFilter($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	private function GetHierachicalFilter($aArgs = [], $sContains = '', $iAdditionalValue = null)
 	{
 		if (array_key_exists('this', $aArgs)) {
 			// Hierarchical keys have one more constraint: the "parent value" cannot be
 			// "under" themselves
 			$iRootId = $aArgs['this']->GetKey();
-			if ($iRootId > 0) // ignore objects that do no exist in the database...
-			{
+			if ($iRootId > 0) { // ignore objects that do no exist in the database...
 				$sClass = $this->m_sTargetClass;
 
 				return DBObjectSearch::FromOQL("SELECT $sClass AS node JOIN $sClass AS root ON node.".$this->GetCode()." NOT BELOW root.id WHERE root.id = $iRootId");

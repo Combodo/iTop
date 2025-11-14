@@ -85,6 +85,7 @@
           <is_user_editable>true</is_user_editable>
           <definition>
             <layout>DashboardLayoutTwoCols</layout>
+            <title>Organization:Overview</title>
             <auto_reload>
               <enabled>false</enabled>
               <interval>300</interval>
@@ -1019,6 +1020,119 @@
         </reconciliation>
       </properties>
       <fields>
+        <field id="overview" xsi:type="AttributeDashboard">
+          <is_user_editable>true</is_user_editable>
+          <definition>
+            <layout>DashboardLayoutTwoCols</layout>
+            <title>Team:Overview</title>
+            <auto_reload>
+              <enabled>false</enabled>
+              <interval>300</interval>
+            </auto_reload>
+            <cells>
+              <cell id="0">
+                <rank>0</rank>
+                <dashlets>
+                  <dashlet id="ActiveTickets-OnTeam-ByFinalClass" xsi:type="DashletGroupByTable">
+                    <rank>0</rank>
+                    <title>Team:Overview:ActiveTickets</title>
+                    <query>SELECT Ticket WHERE team_id=:this-&gt;id AND operational_status = 'ongoing'</query>
+                    <group_by>finalclass</group_by>
+                    <style>table</style>
+                    <aggregation_function>count</aggregation_function>
+                    <aggregation_attribute></aggregation_attribute>
+                    <limit></limit>
+                    <order_by>attribute</order_by>
+                    <order_direction>asc</order_direction>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="1">
+                <rank>1</rank>
+                <dashlets>
+                  <dashlet id="UserRequest-OnTeam-ByStatus" xsi:type="DashletHeaderDynamic">
+                    <rank>0</rank>
+                    <title>Class:UserRequest</title>
+                    <icon>itop-structure/../../images/icons/icons8-customer.svg</icon>
+                    <subtitle>Team:Overview:UserRequest-ByStatus</subtitle>
+                    <query>SELECT UserRequest
+                      WHERE team_id=:this-&gt;id</query>
+                    <group_by>status</group_by>
+                    <values>new,assigned,pending,resolved,closed</values>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="2">
+                <rank>2</rank>
+                <dashlets>
+                  <dashlet id="OpenUserRequest-OnTeam-ByAgent" xsi:type="DashletGroupByTable">
+                    <rank>0</rank>
+                    <title>UI-RequestManagementOverview-OpenRequestByAgent</title>
+                    <query>SELECT UserRequest WHERE team_id=:this-&gt;id AND status!='closed'</query>
+                    <group_by>agent_id</group_by>
+                    <style>table</style>
+                    <aggregation_function>count</aggregation_function>
+                    <aggregation_attribute></aggregation_attribute>
+                    <limit></limit>
+                    <order_by>attribute</order_by>
+                    <order_direction>desc</order_direction>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="3">
+                <rank>3</rank>
+                <dashlets>
+                  <dashlet id="FunctionalCIs-OnTeam" xsi:type="DashletGroupByTable">
+                    <rank>0</rank>
+                    <title>Team:Overview:FunctionalCIs-ByType</title>
+                    <query>SELECT FunctionalCI AS fci JOIN lnkContactToFunctionalCI AS lnk ON lnk.functionalci_id = fci.id WHERE lnk.contact_id=:this-&gt;id</query>
+                    <group_by>finalclass</group_by>
+                    <style>table</style>
+                    <aggregation_function>count</aggregation_function>
+                    <aggregation_attribute></aggregation_attribute>
+                    <limit></limit>
+                    <order_by>attribute</order_by>
+                    <order_direction>asc</order_direction>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="4">
+                <rank>4</rank>
+                <dashlets>
+                  <dashlet id="ClosedUserRequest-OnTeam-ByMonth" xsi:type="DashletGroupByBars">
+                    <rank>0</rank>
+                    <title>Team:Overview:UserRequest-ClosedByMonth</title>
+                    <query>SELECT UserRequest WHERE team_id=:this-&gt;id AND close_date &gt; DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 12 MONTH),'%Y-%m-01 00:00:00') AND status='closed'</query>
+                    <group_by>close_date:month</group_by>
+                    <style>bars</style>
+                    <aggregation_function>count</aggregation_function>
+                    <aggregation_attribute></aggregation_attribute>
+                    <limit></limit>
+                    <order_by>attribute</order_by>
+                    <order_direction>asc</order_direction>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="5">
+                <rank>5</rank>
+                <dashlets>
+                  <dashlet id="ClosedUserRequest-OnTeam-ByAgent" xsi:type="DashletGroupByPie">
+                    <rank>0</rank>
+                    <title>Team:Overview:UserRequest-ClosedByAgent</title>
+                    <query>SELECT UserRequest WHERE team_id=:this-&gt;id AND close_date &gt; DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 12 MONTH),'%Y-%m-01 00:00:00') AND status='closed'</query>
+                    <group_by>agent_id</group_by>
+                    <style>pie</style>
+                    <aggregation_function>count</aggregation_function>
+                    <aggregation_attribute></aggregation_attribute>
+                    <limit></limit>
+                    <order_by>attribute</order_by>
+                    <order_direction>desc</order_direction>
+                  </dashlet>
+                </dashlets>
+              </cell>
+            </cells>
+          </definition>
+        </field>
         <field id="persons_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkPersonToTeam</linked_class>
           <ext_key_to_me>team_id</ext_key_to_me>
@@ -1069,8 +1183,11 @@
             <item id="function">
               <rank>70</rank>
             </item>
-            <item id="persons_list">
+            <item id="overview">
               <rank>80</rank>
+            </item>
+            <item id="persons_list">
+              <rank>90</rank>
             </item>
           </items>
         </details>

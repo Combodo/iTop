@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,11 +17,10 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-profiles-itil/3.3.0',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Create standard ITIL profiles',
@@ -28,25 +28,25 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
-		),
+		'dependencies' => [
+		],
 		'mandatory' => true,
 		'visible' => false,
 
 		// Components
 		//
-		'datamodel' => array(
-		),
-		'webservice' => array(
+		'datamodel' => [
+		],
+		'webservice' => [
 			//'webservices.itop-profiles-itil.php',
-		),
-		'data.struct' => array(
+		],
+		'data.struct' => [
 			//'data.struct.itop-profiles-itil.xml',
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			//'data.sample.itop-profiles-itil.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
@@ -54,8 +54,8 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
+		'settings' => [
 			//'some_setting' => 'some value',
-		),
-	)
+		],
+	]
 );

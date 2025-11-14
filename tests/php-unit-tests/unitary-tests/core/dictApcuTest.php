@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -28,7 +29,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Dict;
-
 
 class dictApcuTest extends ItopTestCase
 {
@@ -64,7 +64,7 @@ class dictApcuTest extends ItopTestCase
 	private function InitDictionnaries()
 	{
 		clearstatcache();
-		$this->sDictionaryFolder = APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries";
+		$this->sDictionaryFolder = APPROOT."env-$this->sEnvName".DIRECTORY_SEPARATOR."dictionaries";
 		@mkdir($this->sDictionaryFolder, 0777, true);
 
 		$sLabels = <<<STR
@@ -98,7 +98,7 @@ Dict::SetEntries('$sLanguageCode', array(
         $sLabels
 ));
 PHP;
-		file_put_contents($sDictionaryFolder . DIRECTORY_SEPARATOR . "$sLanguageCodeInFilename.dict.php", $sContent);
+		file_put_contents($sDictionaryFolder.DIRECTORY_SEPARATOR."$sLanguageCodeInFilename.dict.php", $sContent);
 	}
 
 	private function InitBrokenDictionnary($sDictionaryFolder, $sLanguageCode, $sLanguageCodeInFilename)
@@ -110,7 +110,7 @@ PHP;
 //
 Dict::SetEntries('$sLanguageCode', 'stringinsteadofanarray');
 PHP;
-		file_put_contents($sDictionaryFolder . DIRECTORY_SEPARATOR . "$sLanguageCodeInFilename.dict.php", $sContent);
+		file_put_contents($sDictionaryFolder.DIRECTORY_SEPARATOR."$sLanguageCodeInFilename.dict.php", $sContent);
 	}
 
 	protected function tearDown(): void
@@ -197,8 +197,8 @@ STR;
 		$this->assertEquals('label1', Dict::S('label1'));
 	}
 
-	 public function testInitLangIfNeeded_Apc_BrokenUserDictionnary()
-	 {
+	public function testInitLangIfNeeded_Apc_BrokenUserDictionnary()
+	{
 		$this->InitBrokenDictionnary($this->sDictionaryFolder, 'DE DE', 'de-de');
 
 		$this->oApcService->expects($this->any())
@@ -300,7 +300,8 @@ STR;
 
 	//corrupted data not fixed
 	//we will return label from another dictionary (defaut one => russian here)
-	public function testInitLangIfNeeded_Apc_CorruptedCache_PropertyInUserDictionnary(){
+	public function testInitLangIfNeeded_Apc_CorruptedCache_PropertyInUserDictionnary()
+	{
 		$this->oApcService->expects($this->any())
 			->method('function_exists')
 			->willReturn(true);
@@ -318,7 +319,8 @@ STR;
 		$this->assertEquals('ru1', Dict::S('label1'));
 	}
 
-	public function testInitLangIfNeeded_Apc_PropertyInDefaultLanguageDictionnary(){
+	public function testInitLangIfNeeded_Apc_PropertyInDefaultLanguageDictionnary()
+	{
 		$this->oApcService->expects($this->any())
 			->method('function_exists')
 			->willReturn(true);
@@ -330,7 +332,8 @@ STR;
 
 		$this->oApcService->expects($this->exactly(1))
 			->method('apc_store')
-			->withConsecutive(['toto-dict-RU RU', ['label1' => 'ru1', 'label2' => 'ru2']]
+			->withConsecutive(
+				['toto-dict-RU RU', ['label1' => 'ru1', 'label2' => 'ru2']]
 			);
 
 		Dict::SetDefaultLanguage('RU RU');
@@ -340,7 +343,8 @@ STR;
 
 	//corrupted data not fixed
 	//we will return label from default language dictionary (EN here)
-	public function testInitLangIfNeeded_ApcCorrupted_PropertyInDefaultLanguageDictionnary(){
+	public function testInitLangIfNeeded_ApcCorrupted_PropertyInDefaultLanguageDictionnary()
+	{
 		$this->oApcService->expects($this->any())
 			->method('function_exists')
 			->willReturn(true);

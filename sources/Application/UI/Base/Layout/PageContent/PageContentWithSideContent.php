@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -19,7 +20,6 @@
 
 namespace Combodo\iTop\Application\UI\Base\Layout\PageContent;
 
-
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 
@@ -31,7 +31,8 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
  * @internal
  * @since   3.0.0
  */
-class PageContentWithSideContent extends PageContent {
+class PageContentWithSideContent extends PageContent
+{
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-page-content-with-side-content';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/page-content/with-side-content';
@@ -45,7 +46,8 @@ class PageContentWithSideContent extends PageContent {
 	 *
 	 * @param string|null $sId
 	 */
-	public function __construct(?string $sId = null) {
+	public function __construct(?string $sId = null)
+	{
 		parent::__construct($sId);
 
 		$this->SetSideBlocks([]);
@@ -58,7 +60,8 @@ class PageContentWithSideContent extends PageContent {
 	 *
 	 * @return $this
 	 */
-	public function SetSideBlocks(array $aBlocks) {
+	public function SetSideBlocks(array $aBlocks)
+	{
 		$this->SetContentAreaBlocks(static::ENUM_CONTENT_AREA_SIDE, $aBlocks);
 
 		return $this;
@@ -70,7 +73,8 @@ class PageContentWithSideContent extends PageContent {
 	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[]
 	 * @throws \Exception
 	 */
-	public function GetSideBlocks(): array {
+	public function GetSideBlocks(): array
+	{
 		return $this->GetContentAreaBlocks(static::ENUM_CONTENT_AREA_SIDE);
 	}
 
@@ -82,7 +86,8 @@ class PageContentWithSideContent extends PageContent {
 	 *
 	 * @return $this
 	 */
-	public function AddSideBlock(iUIBlock $oBlock) {
+	public function AddSideBlock(iUIBlock $oBlock)
+	{
 		$this->AddBlockToContentArea(static::ENUM_CONTENT_AREA_SIDE, $oBlock);
 
 		return $this;
@@ -95,7 +100,8 @@ class PageContentWithSideContent extends PageContent {
 	 *
 	 * @return $this
 	 */
-	public function AddSideHtml(string $sHtml) {
+	public function AddSideHtml(string $sHtml)
+	{
 		$this->AddBlockToContentArea(static::ENUM_CONTENT_AREA_SIDE, new Html($sHtml));
 
 		return $this;

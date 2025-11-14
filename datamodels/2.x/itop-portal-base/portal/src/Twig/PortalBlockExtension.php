@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -34,7 +35,7 @@ class PortalBlockExtension
 	 *
 	 * @since iTop 3.2.1
 	 */
-	function __construct(string $sTwig, array $aData = [])
+	public function __construct(string $sTwig, array $aData = [])
 	{
 		$this->sTwig = $sTwig;
 		$this->aData = $aData;

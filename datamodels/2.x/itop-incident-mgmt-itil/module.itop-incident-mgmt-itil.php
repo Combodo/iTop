@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-incident-mgmt-itil/3.3.0',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Incident Management ITIL',
@@ -12,25 +11,25 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
+		'dependencies' => [
 			'itop-config-mgmt/2.4.0',
 			'itop-tickets/2.4.0',
 			'itop-profiles-itil/2.3.0',
-		),
+		],
 		'mandatory' => false,
 		'visible' => true,
 
 		// Components
 		//
-		'datamodel' => array(
-		),
-		'data.struct' => array(
+		'datamodel' => [
+		],
+		'data.struct' => [
 
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			//'data.sample.itop-request-mgmt.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
@@ -38,7 +37,7 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
-		),
-	)
+		'settings' => [
+		],
+	]
 );

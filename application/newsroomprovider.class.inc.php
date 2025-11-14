@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -34,44 +35,44 @@ interface iNewsroomProvider
 	 * return bool
 	 */
 	public function IsApplicable(User $oUser = null);
-	
+
 	/**
 	 * The human readable (localized) label for this provider
 	 * @return string
 	 */
 	public function GetLabel();
-	
+
 	/**
 	 * The URL to query (from the browser, using jsonp) to fetch all unread messages
 	 * @return string
 	 */
 	public function GetFetchURL();
-	
+
 	/**
 	 * The URL to navigate to in order to display all messages
 	 * @return string
 	 */
 	public function GetViewAllURL();
-	
+
 	/**
 	 * The URL to query(from the browser, using jsonp) to mark all unread messages as read
 	 * @return string
 	 */
 	public function GetMarkAllAsReadURL();
-	
+
 	/**
 	 * Return the URL to configure the preferences for this provider or null is there is nothing to configure
 	 * @return string|null
 	 */
 	public function GetPreferencesUrl();
-	
+
 	/**
 	 * Return an array key => value to be replaced in URL of the messages
 	 * Example: '%itop_root%' => utils::GetAbsoluteUrlAppRoot();
 	 * @return string[]
 	 */
 	public function GetPlaceholders();
-	
+
 	/**
 	 * The duration between to refreshes of the cache (in seconds)
 	 * @return int
@@ -90,19 +91,19 @@ abstract class NewsroomProviderBase implements iNewsroomProvider
 	 * @var Config
 	 */
 	protected $oConfig;
-	
+
 	public function __construct()
 	{
 		$this->oConfig = null;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * @see iNewsroomProvider::SetConfig()
 	 */
 	public function SetConfig(Config $oConfig)
 	{
-		$this->oConfig = $oConfig;		
+		$this->oConfig = $oConfig;
 	}
 
 	/**
@@ -118,42 +119,42 @@ abstract class NewsroomProviderBase implements iNewsroomProvider
 	 * {@inheritDoc}
 	 * @see iNewsroomProvider::GetLabel()
 	 */
-	public abstract function GetLabel();
-	
+	abstract public function GetLabel();
+
 	/**
 	 * {@inheritDoc}
 	 * @see iNewsroomProvider::GetFetchURL()
 	 */
-	public abstract function GetFetchURL();
+	abstract public function GetFetchURL();
 
 	/**
 	 * {@inheritDoc}
 	 * @see iNewsroomProvider::GetMarkAllURL()
 	 */
-	public abstract function GetMarkAllAsReadURL();
+	abstract public function GetMarkAllAsReadURL();
 
 	/**
 	 * {@inheritDoc}
 	 * @see iNewsroomProvider::GetViewAllURL()
 	 */
-	public abstract function GetViewAllURL();
+	abstract public function GetViewAllURL();
 
 	public function IsApplicable(User $oUser = null)
 	{
 		return false;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * @see iNewsroomProvider::GetPlaceholders()
 	 */
 	public function GetPlaceholders()
 	{
-		return array(); // By default, empty set of placeholders
+		return []; // By default, empty set of placeholders
 	}
-	
+
 	public function GetTTL()
 	{
-		return 10*60; // Refresh every 10 minutes
+		return 10 * 60; // Refresh every 10 minutes
 	}
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-
 /**
  * Any extension to compute things like a stop watch deadline or working hours
  *
@@ -29,7 +29,7 @@
 /**
  * Metric computing for stop watches.
  * Can be used for AttributeStopWatch goal (iTop XML node xpath: /itop_design/classes/class/fields/field/goal)
- */ 
+ */
 interface iMetricComputer
 {
 	public static function GetDescription();
@@ -44,7 +44,7 @@ interface iMetricComputer
 
 /**
  * Working time computing for stop watches
- */ 
+ */
 interface iWorkingTimeComputer
 {
 	public static function GetDescription();
@@ -58,7 +58,7 @@ interface iWorkingTimeComputer
 	 *      considering only the valid (open) hours for a specified object
 	 */
 	public function GetDeadline($oObject, $iDuration, DateTime $oStartDate);
-	
+
 	/**
 	 * @param DBObject $oObject The object for which to compute the duration
 	 * @param DateTime $oStartDate The starting point for the computation (default = now)
@@ -87,7 +87,7 @@ class DefaultMetricComputer implements iMetricComputer
 
 /**
  * Default implementation of working time computing
- */ 
+ */
 class DefaultWorkingTimeComputer implements iWorkingTimeComputer
 {
 	public static function GetDescription()
@@ -100,8 +100,7 @@ class DefaultWorkingTimeComputer implements iWorkingTimeComputer
 	 */
 	public function GetDeadline($oObject, $iDuration, DateTime $oStartDate)
 	{
-		if (class_exists('WorkingTimeRecorder'))
-		{
+		if (class_exists('WorkingTimeRecorder')) {
 			WorkingTimeRecorder::Trace(WorkingTimeRecorder::TRACE_DEBUG, __class__.'::'.__function__);
 		}
 		//echo "GetDeadline - default: ".$oStartDate->format('Y-m-d H:i:s')." + $iDuration<br/>\n";
@@ -109,26 +108,23 @@ class DefaultWorkingTimeComputer implements iWorkingTimeComputer
 		// the specified duration to the given date/time
 		$oResult = clone $oStartDate;
 		$oResult->modify($iDuration.' seconds');
-		if (class_exists('WorkingTimeRecorder'))
-		{
+		if (class_exists('WorkingTimeRecorder')) {
 			WorkingTimeRecorder::SetValues($oStartDate->format('U'), $oResult->format('U'), $iDuration, WorkingTimeRecorder::COMPUTED_END);
 		}
 		return $oResult;
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public function GetOpenDuration($oObject, DateTime $oStartDate, DateTime $oEndDate)
 	{
-		if (class_exists('WorkingTimeRecorder'))
-		{
+		if (class_exists('WorkingTimeRecorder')) {
 			WorkingTimeRecorder::Trace(WorkingTimeRecorder::TRACE_DEBUG, __class__.'::'.__function__);
 		}
 		//echo "GetOpenDuration - default: ".$oStartDate->format('Y-m-d H:i:s')." to ".$oEndDate->format('Y-m-d H:i:s')."<br/>\n";
 		$iDuration = abs($oEndDate->format('U') - $oStartDate->format('U'));
-		if (class_exists('WorkingTimeRecorder'))
-		{
+		if (class_exists('WorkingTimeRecorder')) {
 			WorkingTimeRecorder::SetValues($oStartDate->format('U'), $oEndDate->format('U'), $iDuration, WorkingTimeRecorder::COMPUTED_DURATION);
 		}
 		return $iDuration;

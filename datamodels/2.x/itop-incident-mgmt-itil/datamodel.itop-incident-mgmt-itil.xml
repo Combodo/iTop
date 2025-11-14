@@ -142,15 +142,35 @@
           <values>
             <value id="1">
               <code>1</code>
+              <style>
+                <main_color>$ibo-color-danger-700</main_color>
+                <complementary_color>$ibo-color-white-100</complementary_color>
+                <decoration_classes>fas fa-fire</decoration_classes>
+              </style>
             </value>
             <value id="2">
               <code>2</code>
+              <style>
+                <main_color>$ibo-color-warning-700</main_color>
+                <complementary_color>$ibo-color-white-100</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="3">
               <code>3</code>
+              <style>
+                <main_color>$ibo-color-information-700</main_color>
+                <complementary_color>$ibo-color-white-100</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="4">
               <code>4</code>
+              <style>
+                <main_color>$ibo-color-grey-700</main_color>
+                <complementary_color>$ibo-color-white-100</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
           </values>
           <dependencies>
@@ -363,6 +383,10 @@
           <target_attcode>tto</target_attcode>
           <item_code>100_overrun</item_code>
         </field>
+        <field id="tto_time_spent" xsi:type="AttributeSubItem">
+          <target_attcode>tto</target_attcode>
+          <item_code>timespent</item_code>
+        </field>
         <field id="ttr_escalation_deadline" xsi:type="AttributeSubItem">
           <target_attcode>ttr</target_attcode>
           <item_code>100_deadline</item_code>
@@ -374,6 +398,10 @@
         <field id="sla_ttr_over" xsi:type="AttributeSubItem">
           <target_attcode>ttr</target_attcode>
           <item_code>100_overrun</item_code>
+        </field>
+        <field id="ttr_time_spent" xsi:type="AttributeSubItem">
+          <target_attcode>ttr</target_attcode>
+          <item_code>timespent</item_code>
         </field>
         <field id="time_spent" xsi:type="AttributeDuration">
           <sql>time_spent</sql>

@@ -39,8 +39,9 @@ class DefaultController extends AbstractController
 	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
 		parent::RegisterTemplates($oTemplatesRegister);
-		$oTemplatesRegister->RegisterTemplates(self::class,
-			TemplateDefinitionDto::Create('home', static::TEMPLATES_BASE_PATH . 'home/layout.html.twig'),
+		$oTemplatesRegister->RegisterTemplates(
+			self::class,
+			TemplateDefinitionDto::Create('home', static::TEMPLATES_BASE_PATH.'home/layout.html.twig'),
 		);
 	}
 
@@ -53,26 +54,24 @@ class DefaultController extends AbstractController
 	 */
 	public function HomeAction(Request $oRequest, BrickCollection $oBricksCollection)
 	{
-		$aData = array();
+		$aData = [];
 
 		// Rendering tiles
-		$aData['aTilesRendering'] = array();
-		foreach ($oBricksCollection->GetBricks() as $oBrick)
-		{
+		$aData['aTilesRendering'] = [];
+		foreach ($oBricksCollection->GetBricks() as $oBrick) {
 			// Doing it only for tile visible on home page to avoid unnecessary rendering
-			if (($oBrick->GetVisibleHome() === true) && ($oBrick->GetTileControllerAction() !== null))
-			{
+			if (($oBrick->GetVisibleHome() === true) && ($oBrick->GetTileControllerAction() !== null)) {
 				$aControllerActionParts = explode('::', $oBrick->GetTileControllerAction());
-				if (count($aControllerActionParts) !== 2)
-				{
-					return new Response('Tile controller action must be of form "\Namespace\ControllerClass::FunctionName" for brick "'.$oBrick->GetId().'"',
-						500);
+				if (count($aControllerActionParts) !== 2) {
+					return new Response(
+						'Tile controller action must be of form "\Namespace\ControllerClass::FunctionName" for brick "'.$oBrick->GetId().'"',
+						500
+					);
 				}
 
-				$aRouteParams = array();
+				$aRouteParams = [];
 				// Add sBrickId in the route params as it is necessary for each brick actions
-				if (is_a($aControllerActionParts[0], BrickController::class, true))
-				{
+				if (is_a($aControllerActionParts[0], BrickController::class, true)) {
 					$aRouteParams['sBrickId'] = $oBrick->GetId();
 				}
 

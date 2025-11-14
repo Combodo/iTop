@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -14,8 +15,7 @@ require_once('../approot.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
-try
-{
+try {
 	$oKPI = new ExecutionKPI();
 	$oKPI->ComputeAndReport('Data model loaded');
 	$oKPI = new ExecutionKPI();
@@ -23,8 +23,7 @@ try
 	LoginWebPage::DoLogin();
 
 	$sParams = utils::ReadParam('params', '', false, 'raw_data');
-	if (!$sParams)
-	{
+	if (!$sParams) {
 		throw new AjaxSearchException("Invalid query (empty filter)", 400);
 	}
 
@@ -36,61 +35,47 @@ try
 	$aListParams = (array)json_decode($sListParams, true);
 
 	$aParams = json_decode($sParams, true);
-	if (array_key_exists('hidden_criteria', $aListParams))
-	{
+	if (array_key_exists('hidden_criteria', $aListParams)) {
 		$sHiddenCriteria = $aListParams['hidden_criteria'];
-	}
-	else
-	{
+	} else {
 		$sHiddenCriteria = '';
 	}
 	$oFilter = CriterionParser::Parse($aParams['base_oql'], $aParams['criterion'], $sHiddenCriteria);
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list_search', false);
 
-	foreach($aListParams as $key => $value)
-    {
-	    $aExtraParams[$key] = $value;
-    }
+	foreach ($aListParams as $key => $value) {
+		$aExtraParams[$key] = $value;
+	}
 
-    if (array_key_exists('table_inner_id', $aListParams))
-    {
-        $sListId = utils::Sanitize($aListParams['table_inner_id'], '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
-    }
+	if (array_key_exists('table_inner_id', $aListParams)) {
+		$sListId = utils::Sanitize($aListParams['table_inner_id'], '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
+	}
 
-	if (array_key_exists('json', $aListParams))
-	{
+	if (array_key_exists('json', $aListParams)) {
 		$aJson = $aListParams['json'];
 		$sJson = json_encode($aJson);
 		$oWizardHelper = WizardHelper::FromJSON($sJson);
 		$oObj = $oWizardHelper->GetTargetObject();
-		if (array_key_exists('query_params', $aExtraParams))
-		{
+		if (array_key_exists('query_params', $aExtraParams)) {
 			$aExtraParams['query_params']['this->object()'] = $oObj;
-		}
-		else
-		{
-			$aExtraParams['query_params'] = array('this->object()' => $oObj);
+		} else {
+			$aExtraParams['query_params'] = ['this->object()' => $oObj];
 		}
 	}
 
-	if (!isset($aExtraParams['update_history']))
-	{
+	if (!isset($aExtraParams['update_history'])) {
 		$aExtraParams['update_history'] = true;
 	}
 
 	$aExtraParams['display_limit'] = true;
 
-	if (isset($sListId))
-	{
+	if (isset($sListId)) {
 		$oPage->AddUiBlock($oDisplayBlock->GetDisplay($oPage, $sListId, $aExtraParams));
-	}
-	else
-	{
+	} else {
 		$oDisplayBlock->RenderContent($oPage, $aExtraParams);
 	}
 
-	if (isset($aListParams['debug']) || UserRights::IsAdministrator())
-	{
+	if (isset($aListParams['debug']) || UserRights::IsAdministrator()) {
 		$oCollapsible = CollapsibleSectionUIBlockFactory::MakeStandard(Dict::S('UI:RunQuery:MoreInfo'));
 		$oPage->AddSubBlock($oCollapsible);
 

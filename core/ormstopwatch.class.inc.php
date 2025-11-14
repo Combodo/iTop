@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -20,16 +21,15 @@ require_once('backgroundprocess.inc.php');
 
 /**
  * ormStopWatch
- * encapsulate the behavior of a stop watch that will be stored as an attribute of class AttributeStopWatch 
+ * encapsulate the behavior of a stop watch that will be stored as an attribute of class AttributeStopWatch
  *
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 /**
  * ormStopWatch
- * encapsulate the behavior of a stop watch that will be stored as an attribute of class AttributeStopWatch 
+ * encapsulate the behavior of a stop watch that will be stored as an attribute of class AttributeStopWatch
  *
  * @package     itopORM
  */
@@ -40,7 +40,7 @@ class ormStopWatch
 	protected $iLastStart; // unix time (seconds)
 	protected $iStopped; // unix time (seconds)
 	protected $aThresholds;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -51,12 +51,12 @@ class ormStopWatch
 		$this->iLastStart = $iLastStart;
 		$this->iStopped = $iStopped;
 
-		$this->aThresholds = array();
+		$this->aThresholds = [];
 	}
 
 	/**
 	 * Necessary for the triggers
-	 */	 	
+	 */
 	public function __toString()
 	{
 		return (string) $this->iTimeSpent;
@@ -64,12 +64,12 @@ class ormStopWatch
 
 	public function DefineThreshold($iPercent, $tDeadline = null, $bPassed = false, $bTriggered = false, $iOverrun = null, $aHighlightDef = null)
 	{
-		$this->aThresholds[$iPercent] = array(
+		$this->aThresholds[$iPercent] = [
 			'deadline' => $tDeadline, // unix time (seconds)
 			'triggered' => $bTriggered,
 			'overrun' => $iOverrun,
 			'highlight' => $aHighlightDef, // array('code' => string, 'persistent' => boolean)
-		);
+		];
 	}
 
 	public function MarkThresholdAsTriggered($iPercent)
@@ -94,17 +94,13 @@ class ormStopWatch
 	 */
 	public function GetElapsedTime($oAttDef, $oObject)
 	{
-		if (is_null($this->iLastStart))
-		{
+		if (is_null($this->iLastStart)) {
 			return $this->GetTimeSpent();
-		}
-		else
-		{
+		} else {
 			$iElapsed = $this->ComputeDuration($oObject, $oAttDef, $this->iLastStart, time());
 			return $this->iTimeSpent + $iElapsed;
 		}
 	}
-
 
 	public function GetStartDate()
 	{
@@ -123,39 +119,30 @@ class ormStopWatch
 
 	public function GetThresholdDate($iPercent)
 	{
-		if (array_key_exists($iPercent, $this->aThresholds))
-		{
+		if (array_key_exists($iPercent, $this->aThresholds)) {
 			return $this->aThresholds[$iPercent]['deadline'];
-		}
-		else
-		{
+		} else {
 			return null;
 		}
 	}
 
 	public function GetOverrun($iPercent)
 	{
-		if (array_key_exists($iPercent, $this->aThresholds))
-		{
+		if (array_key_exists($iPercent, $this->aThresholds)) {
 			return $this->aThresholds[$iPercent]['overrun'];
-		}
-		else
-		{
+		} else {
 			return null;
 		}
 	}
 	public function IsThresholdPassed($iPercent)
 	{
 		$bRet = false;
-		if (array_key_exists($iPercent, $this->aThresholds))
-		{
+		if (array_key_exists($iPercent, $this->aThresholds)) {
 			$aThresholdData = $this->aThresholds[$iPercent];
-			if (!is_null($aThresholdData['deadline']) && ($aThresholdData['deadline'] <= time()))
-			{
+			if (!is_null($aThresholdData['deadline']) && ($aThresholdData['deadline'] <= time())) {
 				$bRet = true;
 			}
-			if (isset($aThresholdData['overrun']) && ($aThresholdData['overrun'] > 0))
-			{
+			if (isset($aThresholdData['overrun']) && ($aThresholdData['overrun'] > 0)) {
 				$bRet = true;
 			}
 		}
@@ -163,34 +150,27 @@ class ormStopWatch
 	}
 	public function IsThresholdTriggered($iPercent)
 	{
-		if (array_key_exists($iPercent, $this->aThresholds))
-		{
+		if (array_key_exists($iPercent, $this->aThresholds)) {
 			return $this->aThresholds[$iPercent]['triggered'];
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
-	
+
 	public function GetHighlightCode()
 	{
 		$sCode = '';
 		// Process the thresholds in ascending order
-		$aPercents = array();
-		foreach($this->aThresholds as $iPercent => $aDefs)
-		{
+		$aPercents = [];
+		foreach ($this->aThresholds as $iPercent => $aDefs) {
 			$aPercents[] = $iPercent;
 		}
 		sort($aPercents, SORT_NUMERIC);
-		foreach($aPercents as $iPercent)
-		{
+		foreach ($aPercents as $iPercent) {
 			$aDefs = $this->aThresholds[$iPercent];
-			if (array_key_exists('highlight', $aDefs) && is_array($aDefs['highlight']) && $this->IsThresholdPassed($iPercent))
-			{
+			if (array_key_exists('highlight', $aDefs) && is_array($aDefs['highlight']) && $this->IsThresholdPassed($iPercent)) {
 				// If persistant or SW running...
-				if (($aDefs['highlight']['persistent'] == true) || (($aDefs['highlight']['persistent'] == false) && !is_null($this->iLastStart)))
-				{
+				if (($aDefs['highlight']['persistent'] == true) || (($aDefs['highlight']['persistent'] == false) && !is_null($this->iLastStart))) {
 					$sCode = $aDefs['highlight']['code'];
 				}
 			}
@@ -200,47 +180,37 @@ class ormStopWatch
 
 	public function GetAsHTML($oAttDef, $oHostObject = null)
 	{
-		$aProperties = array();
+		$aProperties = [];
 
 		$aProperties['States'] = implode(', ', $oAttDef->GetStates());
 
-		if (is_null($this->iLastStart))
-		{
-			if (is_null($this->iStarted))
-			{
+		if (is_null($this->iLastStart)) {
+			if (is_null($this->iStarted)) {
 				$aProperties['Elapsed'] = 'never started';
-			}
-			else
-			{
+			} else {
 				$aProperties['Elapsed'] = $this->iTimeSpent.' s';
 			}
-		}
-		else
-		{
-			$aProperties['Elapsed'] = 'running <img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/indicator.gif">';
+		} else {
+			$aProperties['Elapsed'] = 'running <img src="'.utils::GetAbsoluteUrlAppRoot().'images/indicator.gif">';
 		}
 
 		$aProperties['Started'] = $oAttDef->SecondsToDate($this->iStarted);
 		$aProperties['LastStart'] = $oAttDef->SecondsToDate($this->iLastStart);
 		$aProperties['Stopped'] = $oAttDef->SecondsToDate($this->iStopped);
 
-		foreach ($this->aThresholds as $iPercent => $aThresholdData)
-		{
+		foreach ($this->aThresholds as $iPercent => $aThresholdData) {
 			$sThresholdDesc = $oAttDef->SecondsToDate($aThresholdData['deadline']);
-			if ($aThresholdData['triggered'])
-			{
+			if ($aThresholdData['triggered']) {
 				$sThresholdDesc .= " <b>TRIGGERED</b>";
 			}
-			if ($aThresholdData['overrun'])
-			{
+			if ($aThresholdData['overrun']) {
 				$sThresholdDesc .= " Overrun:".(int) $aThresholdData['overrun']." sec.";
 			}
 			$aProperties[$iPercent.'%'] = $sThresholdDesc;
 		}
 		$sRes = "<TABLE>";
 		$sRes .= "<TBODY>";
-		foreach ($aProperties as $sProperty => $sValue)
-		{
+		foreach ($aProperties as $sProperty => $sValue) {
 			$sRes .= "<TR>";
 			$sCell = str_replace("\n", "<br>\n", $sValue ?? '');
 			$sRes .= "<TD class=\"label\">$sProperty</TD><TD>$sCell</TD>";
@@ -265,9 +235,8 @@ class ormStopWatch
 		/** @var \iMetricComputer $oComputer */
 		$oComputer = new $sMetricComputer();
 
-		$aCallSpec = array($oComputer, 'ComputeMetric');
-		if (!is_callable($aCallSpec))
-		{
+		$aCallSpec = [$oComputer, 'ComputeMetric'];
+		if (!is_callable($aCallSpec)) {
 			throw new CoreException("Unknown class/verb '$sMetricComputer/ComputeMetric'");
 		}
 
@@ -287,14 +256,12 @@ class ormStopWatch
 	protected function ComputeDeadline($oObject, $oAttDef, $iPercent, $iStartTime, $iDurationSec)
 	{
 		$sWorkingTimeComputer = $oAttDef->Get('working_time_computing');
-		if ($sWorkingTimeComputer == '')
-		{
+		if ($sWorkingTimeComputer == '') {
 			$sWorkingTimeComputer = MetaModel::GetWorkingTime(get_class($oObject));
 		}
 		$oComputer = new $sWorkingTimeComputer();
-		$aCallSpec = array($oComputer, 'GetDeadline');
-		if (!is_callable($aCallSpec))
-		{
+		$aCallSpec = [$oComputer, 'GetDeadline'];
+		if (!is_callable($aCallSpec)) {
 			throw new CoreException("Unknown class/verb '$sWorkingTimeComputer/GetDeadline'");
 		}
 		// GetDeadline($oObject, $iDuration, DateTime $oStartDate)
@@ -316,14 +283,12 @@ class ormStopWatch
 	protected function ComputeDuration($oObject, $oAttDef, $iStartTime, $iEndTime)
 	{
 		$sWorkingTimeComputer = $oAttDef->Get('working_time_computing');
-		if ($sWorkingTimeComputer == '')
-		{
+		if ($sWorkingTimeComputer == '') {
 			$sWorkingTimeComputer = MetaModel::GetWorkingTime(get_class($oObject));
 		}
 		$oComputer = new $sWorkingTimeComputer();
-		$aCallSpec = array($oComputer, 'GetOpenDuration');
-		if (!is_callable($aCallSpec))
-		{
+		$aCallSpec = [$oComputer, 'GetOpenDuration'];
+		if (!is_callable($aCallSpec)) {
 			throw new CoreException("Unknown class/verb '$sWorkingTimeComputer/GetOpenDuration'");
 		}
 		// GetOpenDuration($oObject, DateTime $oStartDate, DateTime $oEndDate)
@@ -339,14 +304,12 @@ class ormStopWatch
 		$this->iStopped = null;
 		$this->iStarted = null;
 
-		foreach ($this->aThresholds as $iPercent => &$aThresholdData)
-		{
+		foreach ($this->aThresholds as $iPercent => &$aThresholdData) {
 			$aThresholdData['triggered'] = false;
 			$aThresholdData['overrun'] = null;
 		}
 
-		if (!is_null($this->iLastStart))
-		{
+		if (!is_null($this->iLastStart)) {
 			// Currently running... starting again from now!
 			$this->iStarted = time();
 			$this->iLastStart = time();
@@ -357,23 +320,20 @@ class ormStopWatch
 	/**
 	 * Start or continue
 	 * It is the responsibility of the caller to compute the deadlines
-	 * (to avoid computing twice for the same result) 	 
-	 */	 	 	
+	 * (to avoid computing twice for the same result)
+	 */
 	public function Start($oObject, $oAttDef, $iNow = null)
 	{
-		if (!is_null($this->iLastStart))
-		{
+		if (!is_null($this->iLastStart)) {
 			// Already started
 			return false;
 		}
 
-		if (is_null($iNow))
-		{
+		if (is_null($iNow)) {
 			$iNow = time();
 		}
 
-		if (is_null($this->iStarted))
-		{
+		if (is_null($this->iStarted)) {
 			$this->iStarted = $iNow;
 		}
 		$this->iLastStart = $iNow;
@@ -384,39 +344,31 @@ class ormStopWatch
 
 	/**
 	 * Compute or recompute the goal and threshold deadlines
-	 */	 	 	
+	 */
 	public function ComputeDeadlines($oObject, $oAttDef)
 	{
-		if (is_null($this->iLastStart))
-		{
+		if (is_null($this->iLastStart)) {
 			// Currently stopped - do nothing
 			return false;
 		}
 
 		$iDurationGoal = $this->ComputeGoal($oObject, $oAttDef);
 		$iComputationRefTime = time();
-		foreach ($this->aThresholds as $iPercent => &$aThresholdData)
-		{
-			if (is_null($iDurationGoal))
-			{
+		foreach ($this->aThresholds as $iPercent => &$aThresholdData) {
+			if (is_null($iDurationGoal)) {
 				// No limit: leave null thresholds
 				$aThresholdData['deadline'] = null;
-			}
-			else
-			{
+			} else {
 				$iThresholdDuration = round($iPercent * $iDurationGoal / 100);
 
-				if (class_exists('WorkingTimeRecorder'))
-				{
+				if (class_exists('WorkingTimeRecorder')) {
 					$sClass = get_class($oObject);
 					$sAttCode = $oAttDef->GetCode();
-					WorkingTimeRecorder::Start($oObject, $iComputationRefTime, "ormStopWatch-Deadline-$iPercent-$sAttCode", 'Core:ExplainWTC:StopWatch-Deadline', array("Class:$sClass/Attribute:$sAttCode", $iPercent));
+					WorkingTimeRecorder::Start($oObject, $iComputationRefTime, "ormStopWatch-Deadline-$iPercent-$sAttCode", 'Core:ExplainWTC:StopWatch-Deadline', ["Class:$sClass/Attribute:$sAttCode", $iPercent]);
 				}
 				$iRemaining = $iThresholdDuration - $this->iTimeSpent;
-				if ($iRemaining < 0)
-				{
-					if (class_exists('WorkingTimeRecorder'))
-					{
+				if ($iRemaining < 0) {
+					if (class_exists('WorkingTimeRecorder')) {
 						$sClass = get_class($oObject);
 						$sKey = $oObject->GetKey();
 						$sAttCode = $oAttDef->GetCode();
@@ -428,13 +380,11 @@ class ormStopWatch
 				$aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $iPercent, $this->iLastStart, $iRemaining);
 				// OR $aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $iPercent, $this->iStarted, $iThresholdDuration);
 
-				if (class_exists('WorkingTimeRecorder'))
-				{
+				if (class_exists('WorkingTimeRecorder')) {
 					WorkingTimeRecorder::End();
 				}
 			}
-			if (is_null($aThresholdData['deadline']) || ($aThresholdData['deadline'] > time()))
-			{
+			if (is_null($aThresholdData['deadline']) || ($aThresholdData['deadline'] > time())) {
 				// The threshold is in the future, reset
 				$aThresholdData['triggered'] = false;
 				$aThresholdData['overrun'] = null;
@@ -452,51 +402,41 @@ class ormStopWatch
 
 	/**
 	 * Stop counting if not already done
-	 */	 	 	
+	 */
 	public function Stop($oObject, $oAttDef, $iNow = null)
 	{
-		if (is_null($this->iLastStart))
-		{
+		if (is_null($this->iLastStart)) {
 			// Already stopped
 			return false;
 		}
 
-		if (is_null($iNow))
-		{
+		if (is_null($iNow)) {
 			$iNow = time();
 		}
 
-		if (class_exists('WorkingTimeRecorder'))
-		{
+		if (class_exists('WorkingTimeRecorder')) {
 			$sClass = get_class($oObject);
 			$sAttCode = $oAttDef->GetCode();
-			WorkingTimeRecorder::Start($oObject, $iNow, "ormStopWatch-TimeSpent-$sAttCode", 'Core:ExplainWTC:StopWatch-TimeSpent', array("Class:$sClass/Attribute:$sAttCode"), true /*cumulative*/);
+			WorkingTimeRecorder::Start($oObject, $iNow, "ormStopWatch-TimeSpent-$sAttCode", 'Core:ExplainWTC:StopWatch-TimeSpent', ["Class:$sClass/Attribute:$sAttCode"], true /*cumulative*/);
 		}
 		$iElapsed = $this->ComputeDuration($oObject, $oAttDef, $this->iLastStart, $iNow);
 		$this->iTimeSpent = $this->iTimeSpent + $iElapsed;
-		if (class_exists('WorkingTimeRecorder'))
-		{
+		if (class_exists('WorkingTimeRecorder')) {
 			WorkingTimeRecorder::End();
 		}
 
-		foreach ($this->aThresholds as $iPercent => &$aThresholdData)
-		{
-			if (!is_null($aThresholdData['deadline']) && ($iNow > $aThresholdData['deadline']))
-			{
-				if ($aThresholdData['overrun'] > 0)
-				{
+		foreach ($this->aThresholds as $iPercent => &$aThresholdData) {
+			if (!is_null($aThresholdData['deadline']) && ($iNow > $aThresholdData['deadline'])) {
+				if ($aThresholdData['overrun'] > 0) {
 					// Accumulate from last start
 					$aThresholdData['overrun'] += $iElapsed;
-				}
-				else
-				{
+				} else {
 					// First stop after the deadline has been passed
 					$iOverrun = $this->ComputeDuration($oObject, $oAttDef, $aThresholdData['deadline'], $iNow);
 					$aThresholdData['overrun'] = $iOverrun;
 				}
 			}
-			if ($aThresholdData['overrun'] == 0)
-			{
+			if ($aThresholdData['overrun'] == 0) {
 				$aThresholdData['deadline'] = null;
 			}
 		}
@@ -510,76 +450,65 @@ class ormStopWatch
 
 /**
  * CheckStopWatchThresholds
- * Implements the automatic actions 
+ * Implements the automatic actions
  *
  * @package     itopORM
  */
 class CheckStopWatchThresholds implements iBackgroundProcess
 {
 	public function GetPeriodicity()
-	{	
+	{
 		return 10; // seconds
 	}
 
 	public function Process($iTimeLimit)
 	{
-		$aList = array();
-		foreach (MetaModel::GetClasses() as $sClass)
-		{
-			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				if ($oAttDef instanceof AttributeStopWatch)
-				{
-					foreach ($oAttDef->ListThresholds() as $iThreshold => $aThresholdData)
-					{
+		$aList = [];
+		foreach (MetaModel::GetClasses() as $sClass) {
+			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+				if ($oAttDef instanceof AttributeStopWatch) {
+					foreach ($oAttDef->ListThresholds() as $iThreshold => $aThresholdData) {
 						$iPercent = $aThresholdData['percent']; // could be different than the index !
-		
+
 						$sNow = date(AttributeDateTime::GetSQLFormat());
 						$sExpression = "SELECT $sClass WHERE {$sAttCode}_laststart AND {$sAttCode}_{$iThreshold}_triggered = 0 AND {$sAttCode}_{$iThreshold}_deadline < :now";
 						$oFilter = DBObjectSearch::FromOQL($sExpression);
-						$oSet = new DBObjectSet($oFilter, array(), array('now' => $sNow));
-						$oSet->OptimizeColumnLoad(array($sClass => array($sAttCode)));
-						while ((time() < $iTimeLimit) && ($oObj = $oSet->Fetch()))
-						{
+						$oSet = new DBObjectSet($oFilter, [], ['now' => $sNow]);
+						$oSet->OptimizeColumnLoad([$sClass => [$sAttCode]]);
+						while ((time() < $iTimeLimit) && ($oObj = $oSet->Fetch())) {
 							$sClass = get_class($oObj);
 
 							$aList[] = $sClass.'::'.$oObj->GetKey().' '.$sAttCode.' '.$iThreshold;
 
 							// Execute planned actions
 							//
-							foreach ($aThresholdData['actions'] as $aActionData)
-							{
+							foreach ($aThresholdData['actions'] as $aActionData) {
 								$sVerb = $aActionData['verb'];
 								$aParams = $aActionData['params'];
-								$aValues = array();
-								foreach($aParams as $def)
-								{
-									if (is_string($def))
-									{
+								$aValues = [];
+								foreach ($aParams as $def) {
+									if (is_string($def)) {
 										// Old method (pre-2.1.0) non typed parameters
 										$aValues[] = $def;
-									}
-									else // if(is_array($def))
-									{
+									} else { // if(is_array($def))
 										$sParamType = array_key_exists('type', $def) ? $def['type'] : 'string';
-										switch($sParamType)
-										{
+										switch ($sParamType) {
 											case 'int':
 												$value = (int)$def['value'];
 												break;
-										
+
 											case 'float':
 												$value = (float)$def['value'];
 												break;
-										
+
 											case 'bool':
 												$value = (bool)$def['value'];
 												break;
-										
+
 											case 'reference':
 												$value = ${$def['value']};
 												break;
-										
+
 											case 'string':
 											default:
 												$value = (string)$def['value'];
@@ -587,7 +516,7 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 										$aValues[] = $value;
 									}
 								}
-								$aCallSpec = array($oObj, $sVerb);
+								$aCallSpec = [$oObj, $sVerb];
 								call_user_func_array($aCallSpec, $aValues);
 							}
 
@@ -604,22 +533,18 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 							}
 
 							// Activate any existing trigger
-							// 
+							//
 							$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
 
 							$oTriggerSet = new DBObjectSet(
 								DBObjectSearch::FromOQL("SELECT TriggerOnThresholdReached AS t WHERE t.target_class IN ('$sClassList') AND stop_watch_code MATCHES :stop_watch_code AND threshold_index = :threshold_index"),
-								array(), // order by
-								array('stop_watch_code' => $sAttCode, 'threshold_index' => $iThreshold)
+								[], // order by
+								['stop_watch_code' => $sAttCode, 'threshold_index' => $iThreshold]
 							);
-							while ($oTrigger = $oTriggerSet->Fetch())
-							{
-								try
-								{
+							while ($oTrigger = $oTriggerSet->Fetch()) {
+								try {
 									$oTrigger->DoActivate($oObj->ToArgs('this'));
-								}
-								catch(Exception $e)
-								{
+								} catch (Exception $e) {
 									utils::EnrichRaisedException($oTrigger, $e);
 								}
 							}

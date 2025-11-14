@@ -43,34 +43,34 @@ use ModuleDesign;
 abstract class AbstractBrick implements TemplatesProviderInterface
 {
 	/** @var string ENUM_DATA_LOADING_LAZY */
-	const ENUM_DATA_LOADING_LAZY = 'lazy';
+	public const ENUM_DATA_LOADING_LAZY = 'lazy';
 	/** @var string ENUM_DATA_LOADING_FULL */
-	const ENUM_DATA_LOADING_FULL = 'full';
+	public const ENUM_DATA_LOADING_FULL = 'full';
 	/** @var string ENUM_DATA_LOADING_AUTO */
-	const ENUM_DATA_LOADING_AUTO = 'auto';
+	public const ENUM_DATA_LOADING_AUTO = 'auto';
 
 	/** @var bool DEFAULT_MANDATORY */
-	const DEFAULT_MANDATORY = true;
+	public const DEFAULT_MANDATORY = true;
 	/** @var bool DEFAULT_ACTIVE */
-	const DEFAULT_ACTIVE = true;
+	public const DEFAULT_ACTIVE = true;
 	/** @var bool DEFAULT_VISIBLE */
-	const DEFAULT_VISIBLE = true;
+	public const DEFAULT_VISIBLE = true;
 	/** @var float DEFAULT_RANK */
-	const DEFAULT_RANK = 1.0;
+	public const DEFAULT_RANK = 1.0;
 	/** @var string|null DEFAULT_PAGE_TEMPLATE_PATH @deprecated since 3.2.1 */
-	const DEFAULT_PAGE_TEMPLATE_PATH = null;
+	public const DEFAULT_PAGE_TEMPLATE_PATH = null;
 	/** @var string DEFAULT_TITLE */
-	const DEFAULT_TITLE = '';
+	public const DEFAULT_TITLE = '';
 	/** @var string|null DEFAULT_DESCRIPTION */
-	const DEFAULT_DESCRIPTION = null;
+	public const DEFAULT_DESCRIPTION = null;
 	/** @var string DEFAULT_DATA_LOADING */
-	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_AUTO;
+	public const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_AUTO;
 	/** @var string DEFAULT_ALLOWED_PROFILES_OQL */
-	const DEFAULT_ALLOWED_PROFILES_OQL = '';
+	public const DEFAULT_ALLOWED_PROFILES_OQL = '';
 	/** @var string DEFAULT_DENIED_PROFILES_OQL */
-	const DEFAULT_DENIED_PROFILES_OQL = '';
+	public const DEFAULT_DENIED_PROFILES_OQL = '';
 	/** @var string TEMPLATES_BASE_PATH */
-	const TEMPLATES_BASE_PATH = 'itop-portal-base/portal/templates/bricks/';
+	public const TEMPLATES_BASE_PATH = 'itop-portal-base/portal/templates/bricks/';
 
 	/** @var string $sId */
 	protected $sId;
@@ -105,8 +105,9 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	/** @inheritdoc  */
 	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		$oTemplatesRegister->RegisterTemplates(self::class,
-			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig'),
+		$oTemplatesRegister->RegisterTemplates(
+			self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH.'layout.html.twig'),
 		);
 	}
 
@@ -135,9 +136,9 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 *
 	 * @return array
 	 */
-	static function GetEnumDataLoadingValues()
+	public static function GetEnumDataLoadingValues()
 	{
-		return array(self::ENUM_DATA_LOADING_LAZY, self::ENUM_DATA_LOADING_FULL, self::ENUM_DATA_LOADING_AUTO);
+		return [self::ENUM_DATA_LOADING_LAZY, self::ENUM_DATA_LOADING_FULL, self::ENUM_DATA_LOADING_AUTO];
 	}
 
 	/**
@@ -155,8 +156,8 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 		$this->sTitle = static::DEFAULT_TITLE;
 		$this->sDescription = static::DEFAULT_DESCRIPTION;
 		$this->sDataLoading = static::DEFAULT_DATA_LOADING;
-		$this->aAllowedProfiles = array();
-		$this->aDeniedProfiles = array();
+		$this->aAllowedProfiles = [];
+		$this->aDeniedProfiles = [];
 		$this->sAllowedProfilesOql = static::DEFAULT_ALLOWED_PROFILES_OQL;
 		$this->sDeniedProfilesOql = static::DEFAULT_DENIED_PROFILES_OQL;
 	}
@@ -297,8 +298,8 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 * Sets the brick id
 	 *
 	 * @param string $sId
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetId($sId)
 	{
@@ -310,8 +311,8 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 * Sets if the brick is mandatory
 	 *
 	 * @param boolean $bMandatory
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetMandatory($bMandatory)
 	{
@@ -336,8 +337,8 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 * Sets if the brick is active
 	 *
 	 * @param boolean $bActive
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetActive($bActive)
 	{
@@ -349,8 +350,8 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 * Sets the rank of the brick
 	 *
 	 * @param float $fRank
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetRank($fRank)
 	{
@@ -362,15 +363,15 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 * Sets the page template path of the brick
 	 *
 	 * @param string $sPageTemplatePath
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 *
 	 * @deprecated since 3.2.1 use SetTemplatePath('page') instead
 	 */
 	public function SetPageTemplatePath($sPageTemplatePath)
 	{
 		$this->sPageTemplatePath = $sPageTemplatePath;
-		$this->SetTemplatePath( 'page', $sPageTemplatePath);
+		$this->SetTemplatePath('page', $sPageTemplatePath);
 		return $this;
 	}
 
@@ -378,8 +379,8 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 * Sets the title of the brick
 	 *
 	 * @param string $sTitle
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetTitle($sTitle)
 	{
@@ -391,8 +392,8 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 * Sets the description of the brick
 	 *
 	 * @param string $sDescription
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetDescription($sDescription)
 	{
@@ -404,8 +405,8 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 * Sets the data loading mode of the brick
 	 *
 	 * @param string $sDataLoading
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetDataLoading($sDataLoading)
 	{
@@ -444,8 +445,8 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 * Sets the allowed profiles oql query for the brick
 	 *
 	 * @param string $sAllowedProfilesOql
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetAllowedProfilesOql($sAllowedProfilesOql)
 	{
@@ -457,8 +458,8 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 * Sets the denied profiles oql query for the brick
 	 *
 	 * @param string $sDeniedProfilesOql
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetDeniedProfilesOql($sDeniedProfilesOql)
 	{
@@ -489,8 +490,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 */
 	public function RemoveAllowedProfile($sProfile)
 	{
-		if (isset($this->aAllowedProfiles[$sProfile]))
-		{
+		if (isset($this->aAllowedProfiles[$sProfile])) {
 			unset($this->aAllowedProfiles[$sProfile]);
 		}
 
@@ -530,8 +530,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 */
 	public function RemoveDeniedProfile($sProfile)
 	{
-		if (isset($this->aDeniedProfiles[$sProfile]))
-		{
+		if (isset($this->aDeniedProfiles[$sProfile])) {
 			unset($this->aDeniedProfiles[$sProfile]);
 		}
 
@@ -560,7 +559,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	 */
 	public function IsGrantedForProfile($sProfile)
 	{
-		return $this->IsGrantedForProfiles(array($sProfile));
+		return $this->IsGrantedForProfiles([$sProfile]);
 	}
 
 	/**
@@ -577,27 +576,21 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	{
 		$bGranted = true;
 
-		if ($this->HasAllowedProfiles())
-		{
+		if ($this->HasAllowedProfiles()) {
 			// We set $bGranted to false as the user must explicitly have an allowed profile to be granted
 			$bGranted = false;
 
-			foreach ($aProfiles as $sProfile)
-			{
-				if (in_array($sProfile, $this->aAllowedProfiles))
-				{
+			foreach ($aProfiles as $sProfile) {
+				if (in_array($sProfile, $this->aAllowedProfiles)) {
 					$bGranted = true;
 					break;
 				}
 			}
 		}
 
-		if ($this->HasDeniedProfiles())
-		{
-			foreach ($aProfiles as $sProfile)
-			{
-				if (in_array($sProfile, $this->aDeniedProfiles))
-				{
+		if ($this->HasDeniedProfiles()) {
+			foreach ($aProfiles as $sProfile) {
+				if (in_array($sProfile, $this->aDeniedProfiles)) {
 					$bGranted = false;
 					break;
 				}
@@ -629,18 +622,15 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 	public function LoadFromXml(DesignElement $oMDElement)
 	{
 		// Checking mandatory elements
-		if (!$oMDElement->hasAttribute('id'))
-		{
+		if (!$oMDElement->hasAttribute('id')) {
 			throw new DOMFormatException('Brick node must have both id and xsi:type attributes defined', 0, null, $oMDElement);
 		}
 		$this->SetId($oMDElement->getAttribute('id'));
 
 		// Checking others elements
 		/** @var \Combodo\iTop\DesignElement $oBrickSubNode */
-		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
-		{
-			switch ($oBrickSubNode->nodeName)
-			{
+		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode) {
+			switch ($oBrickSubNode->nodeName) {
 				case 'mandatory':
 					$this->SetMandatory(($oBrickSubNode->GetText() === 'no') ? false : true);
 					break;
@@ -649,15 +639,13 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 					break;
 				case 'rank':
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$this->SetRank((float)$oOptionalNode->GetText(static::DEFAULT_RANK));
 					}
 					break;
 				case 'templates':
 					$oTemplateNodeList = $oBrickSubNode->GetNodes('template[@id='.ModuleDesign::XPathQuote('page').']');
-					if ($oTemplateNodeList->length > 0)
-					{
+					if ($oTemplateNodeList->length > 0) {
 						/** @var \Combodo\iTop\DesignElement $oTemplateNode */
 						$oTemplateNode = $oTemplateNodeList->item(0);
 						$this->SetTemplatePath('page', $oTemplateNode->GetText(static::DEFAULT_PAGE_TEMPLATE_PATH));
@@ -665,8 +653,7 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 					break;
 				case 'title':
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$this->SetTitle($oOptionalNode->GetText(static::DEFAULT_TITLE));
 					}
 					break;
@@ -678,16 +665,17 @@ abstract class AbstractBrick implements TemplatesProviderInterface
 					break;
 				case 'security':
 					/** @var \Combodo\iTop\DesignElement $oSecurityNode */
-					foreach ($oBrickSubNode->GetNodes('*') as $oSecurityNode)
-					{
-						if ($oSecurityNode->nodeType === XML_TEXT_NODE && $oSecurityNode->GetText() === '')
-						{
-							throw new DOMFormatException('Brick security node "'.$oSecurityNode->nodeName.'" must contain an OQL query, it cannot be empty',
-								null, null, $oMDElement);
+					foreach ($oBrickSubNode->GetNodes('*') as $oSecurityNode) {
+						if ($oSecurityNode->nodeType === XML_TEXT_NODE && $oSecurityNode->GetText() === '') {
+							throw new DOMFormatException(
+								'Brick security node "'.$oSecurityNode->nodeName.'" must contain an OQL query, it cannot be empty',
+								null,
+								null,
+								$oMDElement
+							);
 						}
 
-						switch ($oSecurityNode->nodeName)
-						{
+						switch ($oSecurityNode->nodeName) {
 							case 'denied_profiles':
 								$this->SetDeniedProfilesOql($oSecurityNode->GetText());
 								break;

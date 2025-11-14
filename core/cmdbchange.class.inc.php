@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Persistent class (internal) cmdbChange
  *
@@ -9,7 +10,7 @@
 use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 
 /**
- * A change as requested/validated at once by user, may groups many atomic changes 
+ * A change as requested/validated at once by user, may groups many atomic changes
  *
  * @package     iTopORM
  */
@@ -17,26 +18,26 @@ class CMDBChange extends DBObject
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "autoincrement",
 			"name_attcode"        => "date",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_change",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-			'indexes'             => array(
-				array('origin'),
-			),
-		);
+			'indexes'             => [
+				['origin'],
+			],
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeDateTime("date", array("allowed_values"=>null, "sql"=>"date", "default_value"=>"NOW()", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", array("allowed_values"=>null, "sql"=>"user_id", "targetclass"=>"User", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("origin", array("allowed_values"=>new ValueSetEnum(implode(',', [CMDBChangeOrigin::INTERACTIVE, CMDBChangeOrigin::CSV_INTERACTIVE, CMDBChangeOrigin::CSV_IMPORT, CMDBChangeOrigin::WEBSERVICE_SOAP, CMDBChangeOrigin::WEBSERVICE_REST, CMDBChangeOrigin::SYNCHRO_DATA_SOURCE, CMDBChangeOrigin::EMAIL_PROCESSING, CMDBChangeOrigin::CUSTOM_EXTENSION])), "sql"=>"origin", "default_value"=>CMDBChangeOrigin::INTERACTIVE, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("date", ["allowed_values" => null, "sql" => "date", "default_value" => "NOW()", "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("userinfo", ["allowed_values" => null, "sql" => "userinfo", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", ["allowed_values" => null, "sql" => "user_id", "targetclass" => "User", "is_null_allowed" => true, "on_target_delete" => DEL_MANUAL, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeEnum("origin", ["allowed_values" => new ValueSetEnum(implode(',', [CMDBChangeOrigin::INTERACTIVE, CMDBChangeOrigin::CSV_INTERACTIVE, CMDBChangeOrigin::CSV_IMPORT, CMDBChangeOrigin::WEBSERVICE_SOAP, CMDBChangeOrigin::WEBSERVICE_REST, CMDBChangeOrigin::SYNCHRO_DATA_SOURCE, CMDBChangeOrigin::EMAIL_PROCESSING, CMDBChangeOrigin::CUSTOM_EXTENSION])), "sql" => "origin", "default_value" => CMDBChangeOrigin::INTERACTIVE, "is_null_allowed" => true, "depends_on" => []]));
 	}
 
 	/**
@@ -48,12 +49,9 @@ class CMDBChange extends DBObject
 	 */
 	public static function GetCurrentUserName()
 	{
-		if (UserRights::IsImpersonated())
-		{
+		if (UserRights::IsImpersonated()) {
 			$sUserString = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUserFriendlyName(), UserRights::GetUserFriendlyName());
-		}
-		else
-		{
+		} else {
 			$sUserString = UserRights::GetUserFriendlyName();
 		}
 		return $sUserString;
@@ -74,12 +72,9 @@ class CMDBChange extends DBObject
 
 	public function GetUserName()
 	{
-		if (preg_match('/^(.*)\\(CSV\\)$/i', $this->Get('userinfo'), $aMatches))
-		{
+		if (preg_match('/^(.*)\\(CSV\\)$/i', $this->Get('userinfo'), $aMatches)) {
 			$sUser = $aMatches[1];
-		}
-		else
-		{
+		} else {
 			$sUser = $this->Get('userinfo');
 		}
 		return $sUser;

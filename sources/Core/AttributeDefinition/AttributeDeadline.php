@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -54,13 +55,13 @@ class AttributeDeadline extends AttributeDateTime
 				$sDifference = Dict::Format('UI:DeadlineMissedBy_duration', self::FormatDuration(-$difference));
 			}
 			$sFormat = MetaModel::GetConfig()->Get('deadline_format');
-			$sResult = str_replace(array('$date$', '$difference$'), array($sDate, $sDifference), $sFormat);
+			$sResult = str_replace(['$date$', '$difference$'], [$sDate, $sDifference], $sFormat);
 		}
 
 		return $sResult;
 	}
 
-	static function FormatDuration($duration)
+	public static function FormatDuration($duration)
 	{
 		$days = floor($duration / 86400);
 		$hours = floor(($duration - (86400 * $days)) / 3600);

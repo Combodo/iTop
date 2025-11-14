@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -27,6 +28,4 @@ namespace Combodo\iTop\Controller;
  */
 class AbstractAppController extends \Symfony\Bundle\FrameworkBundle\Controller\AbstractController
 {
-
-
 }

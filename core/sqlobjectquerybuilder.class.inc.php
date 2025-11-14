@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Class SQLObjectQueryBuilder
  *
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 class SQLObjectQueryBuilder
 {
@@ -35,18 +35,16 @@ class SQLObjectQueryBuilder
 	 */
 	public function BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
 	{
-		if ($bGetCount || !is_null($aGroupByExpr))
-		{
+		if ($bGetCount || !is_null($aGroupByExpr)) {
 			// Avoid adding all the fields for counts or "group by" requests
-			$aAttToLoad = array();
-			foreach ($this->oDBObjetSearch->GetSelectedClasses() as $sClassAlias => $sClass)
-			{
-				$aAttToLoad[$sClassAlias] = array();
+			$aAttToLoad = [];
+			foreach ($this->oDBObjetSearch->GetSelectedClasses() as $sClassAlias => $sClass) {
+				$aAttToLoad[$sClassAlias] = [];
 			}
 		}
 
 		$oBuild = new QueryBuilderContext($this->oDBObjetSearch, $aModifierProperties, $aGroupByExpr, $aSelectedClasses, $aSelectExpr, $aAttToLoad);
-		$oSQLQuery = $this->MakeSQLObjectQueryRoot($oBuild, array(), $aGroupByExpr, $aSelectExpr);
+		$oSQLQuery = $this->MakeSQLObjectQueryRoot($oBuild, [], $aGroupByExpr, $aSelectExpr);
 
 		return $oSQLQuery;
 	}
@@ -58,9 +56,9 @@ class SQLObjectQueryBuilder
 	public function MakeSQLObjectDeleteQuery()
 	{
 		$aModifierProperties = MetaModel::MakeModifierProperties($this->oDBObjetSearch);
-		$aAttToLoad = array($this->oDBObjetSearch->GetClassAlias() => array());
+		$aAttToLoad = [$this->oDBObjetSearch->GetClassAlias() => []];
 		$oBuild = new QueryBuilderContext($this->oDBObjetSearch, $aModifierProperties, null, null, null, $aAttToLoad);
-		$oSQLQuery = $this->MakeSQLObjectQueryRoot($oBuild, array());
+		$oSQLQuery = $this->MakeSQLObjectQueryRoot($oBuild, []);
 		return $oSQLQuery;
 	}
 
@@ -73,12 +71,11 @@ class SQLObjectQueryBuilder
 	public function MakeSQLObjectUpdateQuery($aValues)
 	{
 		$aModifierProperties = MetaModel::MakeModifierProperties($this->oDBObjetSearch);
-		$aRequested = array(); // Requested attributes are the updated attributes
-		foreach ($aValues as $sAttCode => $value)
-		{
+		$aRequested = []; // Requested attributes are the updated attributes
+		foreach ($aValues as $sAttCode => $value) {
 			$aRequested[$sAttCode] = MetaModel::GetAttributeDef($this->oDBObjetSearch->GetClass(), $sAttCode);
 		}
-		$aAttToLoad = array($this->oDBObjetSearch->GetClassAlias() => $aRequested);
+		$aAttToLoad = [$this->oDBObjetSearch->GetClassAlias() => $aRequested];
 		$oBuild = new QueryBuilderContext($this->oDBObjetSearch, $aModifierProperties, null, null, null, $aAttToLoad);
 		$oSQLQuery = $this->MakeSQLObjectQueryRoot($oBuild, $aValues);
 		return $oSQLQuery;
@@ -107,7 +104,6 @@ class SQLObjectQueryBuilder
 		return $this->GetOQLClassTree($oBuild)->RenderDebug();
 	}
 
-
 	/**
 	 * @param \QueryBuilderContext $oBuild
 	 * @param array $aValues
@@ -117,7 +113,7 @@ class SQLObjectQueryBuilder
 	 * @return null|SQLObjectQuery
 	 * @throws \CoreException
 	 */
-	private function MakeSQLObjectQueryRoot($oBuild, $aValues = array(), $aGroupByExpr = null, $aSelectExpr = null)
+	private function MakeSQLObjectQueryRoot($oBuild, $aValues = [], $aGroupByExpr = null, $aSelectExpr = null)
 	{
 		$oOQLClassNode = $this->GetOQLClassTree($oBuild);
 
@@ -128,38 +124,29 @@ class SQLObjectQueryBuilder
 		 */
 		$oSQLQuery->SetCondition($oBuild->m_oQBExpressions->GetCondition());
 
-		if (is_array($aGroupByExpr))
-		{
+		if (is_array($aGroupByExpr)) {
 			$aCols = $oBuild->m_oQBExpressions->GetGroupBy();
 			$oSQLQuery->SetGroupBy($aCols);
 			$oSQLQuery->SetSelect($aCols);
 
-			if (!empty($aSelectExpr))
-			{
+			if (!empty($aSelectExpr)) {
 				// Get the fields corresponding to the select expressions
-				foreach($oBuild->m_oQBExpressions->GetSelect() as $sAlias => $oExpr)
-				{
-					if (key_exists($sAlias, $aSelectExpr))
-					{
+				foreach ($oBuild->m_oQBExpressions->GetSelect() as $sAlias => $oExpr) {
+					if (key_exists($sAlias, $aSelectExpr)) {
 						$oSQLQuery->AddSelect($sAlias, $oExpr);
 					}
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$oSQLQuery->SetSelect($oBuild->m_oQBExpressions->GetSelect());
 		}
 
 		// Filter for archive flag
 		// Filter tables as late as possible: do not interfere with the optimization process
 		$aMandatoryTables = $oBuild->m_oQBExpressions->GetMandatoryTables();
-		foreach ($oBuild->GetFilteredTables() as $sTableAlias => $aConditions)
-		{
-			if ($aMandatoryTables && array_key_exists($sTableAlias, $aMandatoryTables))
-			{
-				foreach ($aConditions as $oCondition)
-				{
+		foreach ($oBuild->GetFilteredTables() as $sTableAlias => $aConditions) {
+			if ($aMandatoryTables && array_key_exists($sTableAlias, $aMandatoryTables)) {
+				foreach ($aConditions as $oCondition) {
 					$oSQLQuery->AddCondition($oCondition);
 				}
 			}
@@ -167,7 +154,6 @@ class SQLObjectQueryBuilder
 
 		return $oSQLQuery;
 	}
-
 
 	/**
 	 * @param \QueryBuilderContext $oBuild
@@ -183,7 +169,6 @@ class SQLObjectQueryBuilder
 
 		return $oSQLQuery;
 	}
-
 
 	/**
 	 * @param \QueryBuilderContext $oBuild
@@ -203,39 +188,32 @@ class SQLObjectQueryBuilder
 		$aExpectedAttributes = $oBuild->m_oQBExpressions->GetUnresolvedFields($sClassAlias);
 		$oSelectedIdField = null;
 
-		$aTranslation = array();
-		$aUpdateValues = array();
+		$aTranslation = [];
+		$aUpdateValues = [];
 		$oIdField = new FieldExpressionResolved(MetaModel::DBGetKey($sClass), $sClassAlias);
 		$aTranslation[$sClassAlias]['id'] = $oIdField;
-		if ($bIsOnQueriedClass)
-		{
+		if ($bIsOnQueriedClass) {
 			// Add this field to the list of queried fields (required for the COUNT to work fine)
 			$oSelectedIdField = $oIdField;
-			foreach ($aExpectedAttributes as $sAttCode => $oExpression)
-			{
-				if (!array_key_exists($sAttCode, $aValues))
-				{
+			foreach ($aExpectedAttributes as $sAttCode => $oExpression) {
+				if (!array_key_exists($sAttCode, $aValues)) {
 					continue;
 				}
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 				// Skip this attribute if not made of SQL columns nor in current table
-				if (count($oAttDef->GetSQLExpressions()) == 0 || $oAttDef->IsExternalField())
-				{
+				if (count($oAttDef->GetSQLExpressions()) == 0 || $oAttDef->IsExternalField()) {
 					continue;
 				}
-				foreach ($oAttDef->GetSQLValues($aValues[$sAttCode]) as $sColumn => $sValue)
-				{
+				foreach ($oAttDef->GetSQLValues($aValues[$sAttCode]) as $sColumn => $sValue) {
 					$aUpdateValues[$sColumn] = $sValue;
 				}
 			}
 		}
 
-		$oBaseSQLQuery = new SQLObjectQuery($sTable, $sClassAlias, array(), $bIsOnQueriedClass, $aUpdateValues, $oSelectedIdField);
+		$oBaseSQLQuery = new SQLObjectQuery($sTable, $sClassAlias, [], $bIsOnQueriedClass, $aUpdateValues, $oSelectedIdField);
 
-		foreach ($aExpectedAttributes as $sAttCode => $oExpression)
-		{
-			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
+		foreach ($aExpectedAttributes as $sAttCode => $oExpression) {
+			if (!MetaModel::IsValidAttCode($sClass, $sAttCode)) {
 				continue;
 			}
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
@@ -244,8 +222,7 @@ class SQLObjectQueryBuilder
 			 * @var string $sPluginClass
 			 * @var iQueryModifier $oQueryModifier
 			 */
-			foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
-			{
+			foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier) {
 				$oFieldSQLExp = $oQueryModifier->GetFieldExpression($oBuild, $sClass, $sAttCode, '', $oFieldSQLExp, $oBaseSQLQuery);
 			}
 			$aTranslation[$sClassAlias][$sAttCode] = $oFieldSQLExp;
@@ -257,10 +234,8 @@ class SQLObjectQueryBuilder
 
 		// Filter out archived records
 		//
-		if (MetaModel::IsArchivable($sClass))
-		{
-			if (!$oBuild->GetRootFilter()->GetArchiveMode())
-			{
+		if (MetaModel::IsArchivable($sClass)) {
+			if (!$oBuild->GetRootFilter()->GetArchiveMode()) {
 				$oNotArchived = new BinaryExpression(new FieldExpressionResolved('archive_flag', $sClassAlias), '=', new ScalarExpression(0));
 				$oBuild->AddFilteredTable($sClassAlias, $oNotArchived);
 			}
@@ -268,10 +243,8 @@ class SQLObjectQueryBuilder
 
 		// Add Joins
 		$aJoins = $oOQLClassNode->GetJoins();
-		foreach ($aJoins as $aJoin)
-		{
-			foreach ($aJoin as $oOQLJoin)
-			{
+		foreach ($aJoins as $aJoin) {
+			foreach ($aJoin as $oOQLJoin) {
 				$oJoinedClassNode = $oOQLJoin->GetOOQLClassNode();
 				$oJoinedSQLQuery = $this->MakeSQLObjectQueryNode($oBuild, $oJoinedClassNode, $aValues);
 				$oOQLJoin->AddToSQLObjectQuery($oBuild, $oBaseSQLQuery, $oJoinedSQLQuery);

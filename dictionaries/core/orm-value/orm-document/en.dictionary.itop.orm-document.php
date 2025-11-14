@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *

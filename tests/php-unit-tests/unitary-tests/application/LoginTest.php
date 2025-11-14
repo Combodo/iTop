@@ -1,15 +1,18 @@
 <?php
+
 namespace Combodo\iTop\Test\UnitTest\Application;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
-class LoginTest extends ItopDataTestCase {
+class LoginTest extends ItopDataTestCase
+{
 	protected $sConfigTmpBackupFile;
 	protected $sConfigPath;
 	protected $sLoginMode;
 
-	protected function setUp(): void {
+	protected function setUp(): void
+	{
 		parent::setUp();
 
 		clearstatcache();
@@ -29,8 +32,9 @@ class LoginTest extends ItopDataTestCase {
 		@chmod($this->sConfigPath, 0444);
 	}
 
-	protected function tearDown(): void {
-		if (! is_null($this->sConfigTmpBackupFile) && is_file($this->sConfigTmpBackupFile)){
+	protected function tearDown(): void
+	{
+		if (! is_null($this->sConfigTmpBackupFile) && is_file($this->sConfigTmpBackupFile)) {
 			//put config back
 			@chmod($this->sConfigPath, 0770);
 			file_put_contents($this->sConfigPath, file_get_contents($this->sConfigTmpBackupFile));
@@ -40,18 +44,19 @@ class LoginTest extends ItopDataTestCase {
 		parent::tearDown();
 	}
 
-	protected function CallItopUrlByCurl($sUri, ?array $aPostFields=[]){
+	protected function CallItopUrlByCurl($sUri, ?array $aPostFields = [])
+	{
 		$ch = curl_init();
 
-		$sUrl = MetaModel::GetConfig()->Get('app_root_url') . "/$sUri";
+		$sUrl = MetaModel::GetConfig()->Get('app_root_url')."/$sUri";
 		curl_setopt($ch, CURLOPT_URL, $sUrl);
-		if (0 !== sizeof($aPostFields)){
+		if (0 !== sizeof($aPostFields)) {
 			curl_setopt($ch, CURLOPT_POST, 1);// set post data to true
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
 		}
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$sOutput = curl_exec($ch);
-		curl_close ($ch);
+		curl_close($ch);
 
 		return $sOutput;
 	}

@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Spanish Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expandir',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reducir',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Cerrar',
@@ -33,4 +34,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Está tranquilo aquí, aún no hay actividad.',
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Panel de actividad',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Dar click para abrir el panel de actividades.',
-));
+]);

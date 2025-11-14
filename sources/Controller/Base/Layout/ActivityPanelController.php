@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -122,8 +123,7 @@ class ActivityPanelController extends AbstractController
 
 		// Invoke extensions after the update of the object from the activity form
 		/** @var \iApplicationUIExtension $oExtensionInstance */
-		foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
-		{
+		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
 			$oExtensionInstance->OnFormSubmit($oObject);
 		}
 

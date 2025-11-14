@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -25,7 +26,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 */
 	protected $m_oTabs;
 
-	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/ajaxpage/layout';
+	public const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/ajaxpage/layout';
 	/** @var string  */
 	private $sPromiseId;
 
@@ -41,7 +42,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 * @param string $s_title Not used
 	 * @param bool $bOutputExtraResources if true will output also JS & CSS resources
 	 */
-	function __construct($s_title)
+	public function __construct($s_title)
 	{
 		$oKpi = new ExecutionKPI();
 		$sPrintable = utils::ReadParam('printable', '0');
@@ -288,7 +289,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 
 		if (!empty($sCurrentTabContainer) && !empty($sCurrentTab)) {
 			$iOffset = $this->m_oTabs->GetCurrentTabLength();
-			return array('tc' => $sCurrentTabContainer, 'tab' => $sCurrentTab, 'offset' => $iOffset);
+			return ['tc' => $sCurrentTabContainer, 'tab' => $sCurrentTab, 'offset' => $iOffset];
 		} else {
 			return parent::start_capture();
 		}
@@ -335,6 +336,6 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 */
 	public static function FilterXSS($sHTML)
 	{
-		return str_ireplace(array('<script', '</script>'), array('<!-- <removed-script', '</removed-script> -->'), $sHTML);
+		return str_ireplace(['<script', '</script>'], ['<!-- <removed-script', '</removed-script> -->'], $sHTML);
 	}
 }

@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Často kladené dotazy',
 	'Class:FAQ/Attribute:title' => 'Název',
@@ -29,21 +30,21 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:FAQ/Attribute:key_words' => 'Klíčová slova',
 	'Class:FAQ/Attribute:key_words+' => '',
 	'Class:FAQ/Attribute:domains' => 'Domény',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:FAQCategory' => 'Kategorie FAQ',
 	'Class:FAQCategory+' => 'Kategorie pro FAQ',
 	'Class:FAQCategory/Attribute:name' => 'Název',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Všechny často kladené dotazy v této kategorii',
-));
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+]);
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:ProblemManagement' => 'Správa problémů',
 	'Menu:ProblemManagement+' => 'Správa problémů',
 	'Menu:Problem:Shortcuts' => 'Odkazy',
@@ -54,4 +55,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Často kladené dotazy (FAQ)',
 	'Brick:Portal:FAQ:Title+' => '<p>Spěcháte?</p><p>Podívejte se na seznam nejčastějších otázek a (možná) najdete hledanou odpověď ihned.</p>',
-));
+]);

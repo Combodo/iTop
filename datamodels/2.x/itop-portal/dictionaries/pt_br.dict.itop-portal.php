@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'portal:itop-portal' => 'Portal do Usuário',
 	'Page:DefaultTitle' => ITOP_APPLICATION_SHORT.' - Portal do Usuário',
 	'Brick:Portal:UserProfile:Title' => 'Meu perfil',
@@ -26,4 +27,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:ListAllRequests:Tab' => 'On-going and closed~~',
 	'Brick:Portal:SearchInAllRequests:Title' => 'Search in all requests~~',
 	'Brick:Portal:SearchInAllRequests:Title+' => '<p>Regardless of their status.</p>~~',
-));
+]);

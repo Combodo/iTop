@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:DBToolsMenu' => 'Strumenti DB',
 	'DBTools:Class' => 'Classe',
 	'DBTools:Title' => 'Strumenti di Manutenzione del Database',
@@ -43,17 +44,17 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'DBAnalyzer-Fetch-Count-Error' => 'Errore di conteggio di recupero in `%1$s`, %2$d voci recuperate / %3$d conteggiate',
 	'DBAnalyzer-Integrity-FinalClass' => 'Il campo `%2$s`.`%1$s` deve avere lo stesso valore di `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Il campo `%2$s`.`%1$s` deve contenere una classe valida',
-));
+]);
 
 // Database Info
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'DBTools:DatabaseInfo' => 'Informazioni Database',
 	'DBTools:Base' => 'Base~~',
 	'DBTools:Size' => 'Size~~',
-));
+]);
 
 // Lost attachments
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'DBTools:LostAttachments' => 'Allegati Persi',
 	'DBTools:LostAttachments:Disclaimer' => 'Qui puoi cercare nel tuo database gli allegati persi o mal posizionati. Questo NON è uno strumento di recupero dati, non recupera dati cancellati.',
 	'DBTools:LostAttachments:Button:Analyze' => 'Analizza',
@@ -70,5 +71,5 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Risultati del ripristino:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d allegati sono stati ripristinati.',
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Salvato come immagine in linea',
-	'DBTools:LostAttachments:History' => 'Allegato "%1$s" ripristinato con gli strumenti DB'
-));
+	'DBTools:LostAttachments:History' => 'Allegato "%1$s" ripristinato con gli strumenti DB',
+]);

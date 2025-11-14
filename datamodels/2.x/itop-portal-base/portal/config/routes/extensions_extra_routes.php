@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -24,8 +25,7 @@ use Symfony\Component\Routing\Route;
 $oRouteCollection = new RouteCollection();
 
 $aRoutes = ItopExtensionsExtraRoutes::GetRoutes();
-foreach ($aRoutes as $aRoute)
-{
+foreach ($aRoutes as $aRoute) {
 	$aRoute['values'] = (isset($aRoute['values'])) ? $aRoute['values'] : [];
 	$aRoute['asserts'] = (isset($aRoute['asserts'])) ? $aRoute['asserts'] : [];
 

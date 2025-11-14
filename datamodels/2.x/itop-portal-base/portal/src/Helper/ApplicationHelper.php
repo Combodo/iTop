@@ -41,13 +41,13 @@ use utils;
 class ApplicationHelper
 {
 	/** @var string FORM_ENUM_DISPLAY_MODE_COSY */
-	const FORM_ENUM_DISPLAY_MODE_COSY = 'cosy';
+	public const FORM_ENUM_DISPLAY_MODE_COSY = 'cosy';
 	/** @var string FORM_ENUM_DISPLAY_MODE_COMPACT */
-	const FORM_ENUM_DISPLAY_MODE_COMPACT = 'compact';
+	public const FORM_ENUM_DISPLAY_MODE_COMPACT = 'compact';
 	/** @var string FORM_DEFAULT_DISPLAY_MODE */
-	const FORM_DEFAULT_DISPLAY_MODE = self::FORM_ENUM_DISPLAY_MODE_COSY;
+	public const FORM_DEFAULT_DISPLAY_MODE = self::FORM_ENUM_DISPLAY_MODE_COSY;
 	/** @var bool FORM_DEFAULT_ALWAYS_SHOW_SUBMIT */
-	const FORM_DEFAULT_ALWAYS_SHOW_SUBMIT = false;
+	public const FORM_DEFAULT_ALWAYS_SHOW_SUBMIT = false;
 
 	/**
 	 * Loads the brick's security from the OQL queries to profiles arrays
@@ -58,32 +58,25 @@ class ApplicationHelper
 	 */
 	public static function LoadBrickSecurity(AbstractBrick $oBrick)
 	{
-		try
-		{
+		try {
 			// Allowed profiles
-			if (utils::IsNotNullOrEmptyString($oBrick->GetAllowedProfilesOql()))
-			{
+			if (utils::IsNotNullOrEmptyString($oBrick->GetAllowedProfilesOql())) {
 				$oSearch = DBObjectSearch::FromOQL_AllData($oBrick->GetAllowedProfilesOql());
 				$oSet = new DBObjectSet($oSearch);
-				while ($oProfile = $oSet->Fetch())
-				{
+				while ($oProfile = $oSet->Fetch()) {
 					$oBrick->AddAllowedProfile($oProfile->Get('name'));
 				}
 			}
 
 			// Denied profiles
-			if (utils::IsNotNullOrEmptyString($oBrick->GetDeniedProfilesOql()))
-			{
+			if (utils::IsNotNullOrEmptyString($oBrick->GetDeniedProfilesOql())) {
 				$oSearch = DBObjectSearch::FromOQL_AllData($oBrick->GetDeniedProfilesOql());
 				$oSet = new DBObjectSet($oSearch);
-				while ($oProfile = $oSet->Fetch())
-				{
+				while ($oProfile = $oSet->Fetch()) {
 					$oBrick->AddDeniedProfile($oProfile->Get('name'));
 				}
 			}
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			throw new Exception('Error while loading security from '.$oBrick->GetId().' brick');
 		}
 	}
@@ -108,18 +101,14 @@ class ApplicationHelper
 		$aForm = null;
 
 		// We try to find the form for that class
-		if (isset($aForms[$sClass]) && isset($aForms[$sClass][$sMode]))
-		{
+		if (isset($aForms[$sClass]) && isset($aForms[$sClass][$sMode])) {
 			$aForm = $aForms[$sClass][$sMode];
 		}
 		// If not found, we try find one from the closest parent class
-		else
-		{
+		else {
 			$bFound = false;
-			foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_EXCLUDELEAF, false) as $sParentClass)
-			{
-				if (isset($aForms[$sParentClass]) && isset($aForms[$sParentClass][$sMode]))
-				{
+			foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_EXCLUDELEAF, false) as $sParentClass) {
+				if (isset($aForms[$sParentClass]) && isset($aForms[$sParentClass][$sMode])) {
 					$aForm = $aForms[$sParentClass][$sMode];
 					$bFound = true;
 					break;
@@ -127,8 +116,7 @@ class ApplicationHelper
 			}
 
 			// If we have still not found one, we return a default form
-			if (!$bFound)
-			{
+			if (!$bFound) {
 				$aForm = static::GenerateDefaultFormForClass($sClass);
 			}
 		}
@@ -153,32 +141,26 @@ class ApplicationHelper
 	public static function GetLoadedListFromClass($aLists, $sClass, $sList = 'default')
 	{
 		$aFoundList = null;
-		$aAttCodes = array();
+		$aAttCodes = [];
 
 		// We try to find the list for that class
-		if (isset($aLists[$sClass]) && isset($aLists[$sClass][$sList]))
-		{
+		if (isset($aLists[$sClass]) && isset($aLists[$sClass][$sList])) {
 			$aFoundList = $aLists[$sClass][$sList];
 		}
 		// Else we try to found the default list for that class
-		elseif (isset($aLists[$sClass]) && isset($aLists[$sClass]['default']))
-		{
+		elseif (isset($aLists[$sClass]) && isset($aLists[$sClass]['default'])) {
 			$aFoundList = $aLists[$sClass]['default'];
 		}
 		// If not found, we try find one from the closest parent class
-		else
-		{
-			foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass)
-			{
+		else {
+			foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
 				// Trying to find the right list
-				if (isset($aLists[$sParentClass]) && isset($aLists[$sParentClass][$sList]))
-				{
+				if (isset($aLists[$sParentClass]) && isset($aLists[$sParentClass][$sList])) {
 					$aFoundList = $aLists[$sParentClass][$sList];
 					break;
 				}
 				// Or the default list
-				elseif (isset($aLists[$sParentClass]) && isset($aLists[$sParentClass]['default']))
-				{
+				elseif (isset($aLists[$sParentClass]) && isset($aLists[$sParentClass]['default'])) {
 					$aFoundList = $aLists[$sParentClass]['default'];
 					break;
 				}
@@ -186,15 +168,11 @@ class ApplicationHelper
 		}
 
 		// If found, we flatten the list to keep only the attribute codes (not the rank)
-		if ($aFoundList !== null)
-		{
-			foreach ($aFoundList as $aItem)
-			{
+		if ($aFoundList !== null) {
+			foreach ($aFoundList as $aItem) {
 				$aAttCodes[] = $aItem['att_code'];
 			}
-		}
-		else
-		{
+		} else {
 			$aAttCodes = MetaModel::FlattenZList(MetaModel::GetZListItems($sClass, 'list'));
 		}
 
@@ -213,32 +191,31 @@ class ApplicationHelper
 	 */
 	protected static function GenerateDefaultFormForClass($sClass, $bAddLinksets = false)
 	{
-		$aForm = array(
+		$aForm = [
 			'id' => strtolower($sClass)."-default-".uniqid(),
 			'type' => 'custom_list',
-			'properties' => array(
+			'properties' => [
 				'display_mode' => static::FORM_DEFAULT_DISPLAY_MODE,
 				'always_show_submit' => static::FORM_DEFAULT_ALWAYS_SHOW_SUBMIT,
-				'navigation_rules' => array(
+				'navigation_rules' => [
 					'submit' => null,
 					'cancel' => null,
-				),
-			),
-			'fields' => array(),
-			'layout' => array(
+				],
+			],
+			'fields' => [],
+			'layout' => [
 				'type' => 'xhtml',
 				'content' => '',
-			),
-		);
+			],
+		];
 
 		// Generate layout
 		$sContent = "";
 
 		// - Retrieve zlist details
 		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
-		$aDetailsStruct = cmdbAbstractObject::ProcessZlist($aDetailsList, array(), 'UI:PropertiesTab', 'col1', '');
-		if(!isset($aDetailsStruct['UI:PropertiesTab']))
-		{
+		$aDetailsStruct = cmdbAbstractObject::ProcessZlist($aDetailsList, [], 'UI:PropertiesTab', 'col1', '');
+		if (!isset($aDetailsStruct['UI:PropertiesTab'])) {
 			// For the iTop administrator
 			IssueLog::Error('Could not generate default form for "'.$sClass.'" class. Is the "details" zlist empty?');
 			// For the end-user
@@ -248,14 +225,10 @@ class ApplicationHelper
 
 		// Count cols (not linksets)
 		$iColCount = 0;
-		foreach ($aPropertiesStruct as $sColId => $aColFieldsets)
-		{
-			if (substr($sColId, 0, 1) !== '_')
-			{
-				foreach ($aColFieldsets as $sFieldsetName => $aAttCodes)
-				{
-					if (substr($sFieldsetName, 0, 1) !== '_')
-					{
+		foreach ($aPropertiesStruct as $sColId => $aColFieldsets) {
+			if (substr($sColId, 0, 1) !== '_') {
+				foreach ($aColFieldsets as $sFieldsetName => $aAttCodes) {
+					if (substr($sFieldsetName, 0, 1) !== '_') {
 						$iColCount++;
 						break;
 					}
@@ -263,28 +236,24 @@ class ApplicationHelper
 			}
 		}
 		// If no cols, return a default form with all fields one after another
-		if ($iColCount === 0)
-		{
-			return array(
+		if ($iColCount === 0) {
+			return [
 				'id' => 'default',
 				'type' => 'zlist',
 				'fields' => 'details',
 				'layout' => null,
-			);
+			];
 		}
 		// Warning, this might not be great when 12 modulo $iColCount is greater than 0.
 		$sColCSSClass = 'col-sm-'.floor(12 / $iColCount);
 
 		$sLinksetsHTML = "";
 		$sRowHTML = "<div class=\"row\">\n";
-		foreach ($aPropertiesStruct as $sColId => $aColFieldsets)
-		{
+		foreach ($aPropertiesStruct as $sColId => $aColFieldsets) {
 			$sColsHTML = "\t<div class=\"".$sColCSSClass."\">\n";
-			foreach ($aColFieldsets as $sFieldsetName => $aAttCodes)
-			{
+			foreach ($aColFieldsets as $sFieldsetName => $aAttCodes) {
 				// Add fieldset, not linkset
-				if (substr($sFieldsetName, 0, 1) !== '_')
-				{
+				if (substr($sFieldsetName, 0, 1) !== '_') {
 					$sFieldsetHTML = "\t\t<fieldset>\n";
 					$sFieldsetHTML .= "\t\t\t<legend>".utils::EscapeHtml(Dict::S($sFieldsetName))."</legend>\n";
 
@@ -296,11 +265,8 @@ class ApplicationHelper
 
 					// Add to col
 					$sColsHTML .= $sFieldsetHTML;
-				}
-				elseif ($bAddLinksets)
-				{
-					foreach ($aAttCodes as $sAttCode)
-					{
+				} elseif ($bAddLinksets) {
+					foreach ($aAttCodes as $sAttCode) {
 						$sLinksetsHTML .= "<div class=\"form_field\" data-field-id=\"".$sAttCode."\"></div>\n";
 					}
 				}
@@ -329,8 +295,9 @@ class ApplicationHelper
 	 * @return array
 	 * @since 2.7.0
 	 */
-	public static function GetAttDefClassesToExcludeFromMarkupMetadataRawValue(){
-		return array(
+	public static function GetAttDefClassesToExcludeFromMarkupMetadataRawValue()
+	{
+		return [
 			'AttributeBlob',
 			'AttributeCustomFields',
 			'AttributeDashboard',
@@ -338,7 +305,7 @@ class ApplicationHelper
 			'AttributeStopWatch',
 			'AttributeSubItem',
 			'AttributeTable',
-			'AttributeText'
-		);
+			'AttributeText',
+		];
 	}
 }

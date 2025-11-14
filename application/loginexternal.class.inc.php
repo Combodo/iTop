@@ -11,7 +11,6 @@ use Combodo\iTop\Application\Helper\Session;
 
 class LoginExternal extends AbstractLoginFSMExtension
 {
-
 	/**
 	 * Return the list of supported login modes for this plugin
 	 *
@@ -19,16 +18,14 @@ class LoginExternal extends AbstractLoginFSMExtension
 	 */
 	public function ListSupportedLoginModes()
 	{
-		return array('external');
+		return ['external'];
 	}
 
 	protected function OnModeDetection(&$iErrorCode)
 	{
-		if (!Session::IsSet('login_mode'))
-		{
+		if (!Session::IsSet('login_mode')) {
 			$sAuthUser = $this->GetAuthUser();
-			if ($sAuthUser && (strlen($sAuthUser) > 0))
-			{
+			if ($sAuthUser && (strlen($sAuthUser) > 0)) {
 				Session::Set('login_mode', 'external');
 			}
 		}
@@ -37,11 +34,9 @@ class LoginExternal extends AbstractLoginFSMExtension
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'external')
-		{
+		if (Session::Get('login_mode') == 'external') {
 			$sAuthUser = $this->GetAuthUser();
-			if (!UserRights::CheckCredentials($sAuthUser, '', Session::Get('login_mode'), 'external'))
-			{
+			if (!UserRights::CheckCredentials($sAuthUser, '', Session::Get('login_mode'), 'external')) {
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
@@ -52,8 +47,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'external')
-		{
+		if (Session::Get('login_mode') == 'external') {
 			LoginWebPage::OnLoginSuccess(Session::Get('auth_user'), 'external', Session::Get('login_mode'));
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
@@ -61,8 +55,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 
 	protected function OnConnected(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'external')
-		{
+		if (Session::Get('login_mode') == 'external') {
 			Session::Set('can_logoff', false);
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
@@ -71,13 +64,11 @@ class LoginExternal extends AbstractLoginFSMExtension
 
 	protected function OnError(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'external')
-		{
-            $iOnExit = LoginWebPage::getIOnExit();
-            if ($iOnExit === LoginWebPage::EXIT_RETURN)
-            {
-                return LoginWebPage::LOGIN_FSM_RETURN; // Error, exit FSM
-            }
+		if (Session::Get('login_mode') == 'external') {
+			$iOnExit = LoginWebPage::getIOnExit();
+			if ($iOnExit === LoginWebPage::EXIT_RETURN) {
+				return LoginWebPage::LOGIN_FSM_RETURN; // Error, exit FSM
+			}
 			LoginWebPage::HTTP401Error();
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;

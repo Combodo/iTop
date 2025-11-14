@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Bruno DA SILVA, working for Combodo
  * Date: 31/12/2019
@@ -15,7 +16,6 @@ use PhpParser\PrettyPrinter\Standard;
 
 class iTopConfigSyntaxValidatorTest extends ItopTestCase
 {
-
 	public function setUp(): void
 	{
 		parent::setUp();
@@ -23,7 +23,6 @@ class iTopConfigSyntaxValidatorTest extends ItopTestCase
 		$this->RequireOnceItopFile('env-production/itop-config/src/Validator/ConfigNodesVisitor.php');
 		$this->RequireOnceItopFile('env-production/itop-config/src/Validator/iTopConfigSyntaxValidator.php');
 	}
-
 
 	/**
 	 * @throws \Exception
@@ -40,7 +39,7 @@ class iTopConfigSyntaxValidatorTest extends ItopTestCase
 		$oiTopConfigValidator = new iTopConfigSyntaxValidator();
 
 		$this->expectException(\Exception::class);
-		try{
+		try {
 			$oiTopConfigValidator->Validate("<?php \n zef;zefzef \n zdadz = azdazd \n zerfgzaezerfgzef>");
 		} catch (\Exception $e) {
 			if (version_compare(phpversion(), '8.0.0', '<')) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -19,25 +20,20 @@
 
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 
-require_once ('../../../approot.inc.php');
+require_once('../../../approot.inc.php');
 require_once(APPROOT.'application/application.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 require_once(APPROOT.'application/loginwebpage.class.inc.php');
-
 
 /////////////////////////////////////////////////////////////////////
 // Main program
 //
 LoginWebPage::DoLogin(true); // Check user rights and prompt if needed
 
-
 $sSubmit = utils::ReadParam('submit', '', false, 'raw_data');
-if ($sSubmit != 'Reset')
-{
+if ($sSubmit != 'Reset') {
 	$sOQL = utils::ReadParam('OQL_Request', '', false, 'raw_data');
-}
-else
-{
+} else {
 	$sOQL = '';
 }
 $bError = false;
@@ -46,20 +42,15 @@ $oP->set_base(utils::GetAbsoluteUrlAppRoot().'tests/');
 $oP->set_title('Grouping with functions');
 $oP->add('<div style="padding: 15px;"><h2>Grouping with functions</h2>');
 $oP->add('<div style="padding: 15px; background: #ddd;">');
-try
-{
-	if (!empty($sOQL))
-	{
+try {
+	if (!empty($sOQL)) {
 		// Getting class attributes
 		$oSearch = DBSearch::FromOQL($sOQL);
 		$aSearches = $oSearch->GetSearches();
-		if ($oSearch instanceof DBUnionSearch)
-		{
+		if ($oSearch instanceof DBUnionSearch) {
 			$sClass = $aSearches[0]->GetClassAlias();
 			$sRealClass = $aSearches[0]->GetClass();
-		}
-		else
-		{
+		} else {
 			$sClass = $oSearch->GetClassAlias();
 			$sRealClass = $oSearch->GetClass();
 		}
@@ -74,22 +65,17 @@ try
 		$sAttributesOptions3 = '';
 		$sAttributesOptions4 = '';
 
-		foreach(array('_itop_sum_', '_itop_avg_', '_itop_min_', '_itop_max_', '_itop_count_', 'group1', 'group2') as $sAttCode)
-		{
+		foreach (['_itop_sum_', '_itop_avg_', '_itop_min_', '_itop_max_', '_itop_count_', 'group1', 'group2'] as $sAttCode) {
 			$sAttributesOptions3 .= '<option value="'.$sAttCode.'" '.($sOrderBy1 == $sAttCode ? 'selected' : '').'>'.$sAttCode.'</option>';
 			$sAttributesOptions4 .= '<option value="'.$sAttCode.'" '.($sOrderBy2 == $sAttCode ? 'selected' : '').'>'.$sAttCode.'</option>';
 		}
 
-		foreach(MetaModel::ListAttributeDefs($sRealClass) as $sAttCode => $oAttDef)
-		{
+		foreach (MetaModel::ListAttributeDefs($sRealClass) as $sAttCode => $oAttDef) {
 			// Skip this attribute if not defined in this table
-			if ($oSearch instanceof DBUnionSearch)
-			{
-				foreach($aSearches as $oSubQuery)
-				{
+			if ($oSearch instanceof DBUnionSearch) {
+				foreach ($aSearches as $oSubQuery) {
 					$sSubClass = $oSubQuery->GetClass();
-					if (!MetaModel::IsValidAttCode($sSubClass, $sAttCode))
-					{
+					if (!MetaModel::IsValidAttCode($sSubClass, $sAttCode)) {
 						continue 2;
 					}
 				}
@@ -109,22 +95,17 @@ try
 		$sFuncField = utils::ReadParam('funcfield', '');
 
 		$sFuncFieldOption = '';
-		foreach(MetaModel::ListAttributeDefs($sRealClass) as $sAttCode => $oAttDef)
-		{
+		foreach (MetaModel::ListAttributeDefs($sRealClass) as $sAttCode => $oAttDef) {
 			// Skip this attribute if not defined in this table
-			if ($oSearch instanceof DBUnionSearch)
-			{
-				foreach($aSearches as $oSubQuery)
-				{
+			if ($oSearch instanceof DBUnionSearch) {
+				foreach ($aSearches as $oSubQuery) {
 					$sSubClass = $oSubQuery->GetClass();
-					if (!MetaModel::IsValidAttCode($sSubClass, $sAttCode))
-					{
+					if (!MetaModel::IsValidAttCode($sSubClass, $sAttCode)) {
 						continue 2;
 					}
 				}
 			}
-			switch (get_class($oAttDef))
-			{
+			switch (get_class($oAttDef)) {
 				case 'Integer':
 				case 'AttributeDecimal':
 				case 'AttributeDuration':
@@ -135,9 +116,7 @@ try
 			}
 		}
 	}
-}
-catch (Exception $e)
-{
+} catch (Exception $e) {
 	$oP->p('<div class="header_message message_error">'.$e->getMessage().'</div>');
 	$bError = true;
 }
@@ -158,8 +137,7 @@ $oP->add(
 EOF
 );
 
-if (!empty($sOQL) && !$bError)
-{
+if (!empty($sOQL) && !$bError) {
 	$oP->add(
 		<<<EOF
 	<div>
@@ -210,55 +188,46 @@ $oP->add("</form>");
 
 $sSQL = '';
 
-
-if (empty($sOQL) || empty($sGroupBy1))
-{
+if (empty($sOQL) || empty($sGroupBy1)) {
 	$oP->output();
 	return;
 }
-try
-{
+try {
 	$iLimitStart = 0;
-	$aOrderBy = array();
-	if (!empty($sOrderBy1))
-	{
+	$aOrderBy = [];
+	if (!empty($sOrderBy1)) {
 		$aOrderBy[$sOrderBy1] = ($sInvOrder1 != 'on');
 	}
-	if (!empty($sOrderBy2))
-	{
+	if (!empty($sOrderBy2)) {
 		$aOrderBy[$sOrderBy2] = ($sInvOrder2 != 'on');
 	}
 
-	$aGroupBy = array();
+	$aGroupBy = [];
 	$oExpr1 = Expression::FromOQL($sClass.'.'.$sGroupBy1);
 	$aGroupBy["group1"] = $oExpr1;
 
-	if (!empty($sGroupBy2))
-	{
+	if (!empty($sGroupBy2)) {
 		$oExpr2 = Expression::FromOQL($sClass.'.'.$sGroupBy2);
 		$aGroupBy["group2"] = $oExpr2;
 	}
 
-	$aArgs = array();
+	$aArgs = [];
 
-	if (empty($sFuncField))
-	{
-		$aFunctions = array();
-	}
-	else
-	{
+	if (empty($sFuncField)) {
+		$aFunctions = [];
+	} else {
 		$oTimeExpr = Expression::FromOQL($sClass.'.'.$sFuncField);
-		$oSumExpr = new FunctionExpression('SUM', array($oTimeExpr));
-		$oAvgExpr = new FunctionExpression('AVG', array($oTimeExpr));
-		$oMinExpr = new FunctionExpression('MIN', array($oTimeExpr));
-		$oMaxExpr = new FunctionExpression('MAX', array($oTimeExpr));
+		$oSumExpr = new FunctionExpression('SUM', [$oTimeExpr]);
+		$oAvgExpr = new FunctionExpression('AVG', [$oTimeExpr]);
+		$oMinExpr = new FunctionExpression('MIN', [$oTimeExpr]);
+		$oMaxExpr = new FunctionExpression('MAX', [$oTimeExpr]);
 		// Alias => Expression
-		$aFunctions = array(
+		$aFunctions = [
 			'_itop_sum_' => $oSumExpr,
 			'_itop_avg_' => $oAvgExpr,
 			'_itop_min_' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
-		);
+		];
 	}
 
 	$sSQL = $oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy, $iLimit, $iLimitStart);
@@ -266,28 +235,23 @@ try
 	$aRes = CMDBSource::QueryToArray($sSQL);
 
 	// Display results
-	if (!empty($aRes))
-	{
+	if (!empty($aRes)) {
 		$oP->add('<div>');
 		$oP->add('<table class="listResults">');
 		$aLine = $aRes[0];
-		$aCols = array();
+		$aCols = [];
 		$oP->add('<tr>');
-		foreach(array_keys($aLine) as $item)
-		{
-			if (!is_numeric($item))
-			{
+		foreach (array_keys($aLine) as $item) {
+			if (!is_numeric($item)) {
 				$aCols[] = $item;
 				$oP->add("<th>$item</th>");
 			}
 		}
 		$oP->add('</tr>');
 
-		foreach($aRes as $aLine)
-		{
+		foreach ($aRes as $aLine) {
 			$oP->add('<tr>');
-			foreach($aCols as $sCol)
-			{
+			foreach ($aCols as $sCol) {
 				$oP->add("<td>".$aLine[$sCol]."</td>");
 			}
 			$oP->add('</tr>');
@@ -295,14 +259,10 @@ try
 
 		$oP->add('</table>');
 		$oP->add('</div>');
-	}
-	else
-	{
+	} else {
 		$oP->add("<p>No Result</p>\n");
 	}
-}
-catch (Exception $e)
-{
+} catch (Exception $e) {
 	$oP->p('<div class="header_message message_error">'.$e->getMessage().'</div>');
 	$bError = true;
 }

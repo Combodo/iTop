@@ -1,12 +1,11 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\DBTools\Service;
-
 
 use CMDBSource;
 use DBObjectSearch;
@@ -30,40 +29,39 @@ class DBToolsUtils
 		self::$bAnalyzed = true;
 	}
 
-    /**
-     * @return int
-     * @throws \CoreException
-     * @throws \MySQLException
-     * @throws \MySQLHasGoneAwayException
-     */
-    public final static function GetDatabaseSize()
-    {
-		self::AnalyzeTables();
-        $sSchema = CMDBSource::DBName();
-
-        $sReq = <<<EOF
-SELECT sum(data_length+index_length) AS sz
-FROM information_schema.tables 
-WHERE table_schema = '$sSchema';
-EOF;
-
-        $oResult = CMDBSource::Query($sReq);
-        if ($oResult !== false)
-        {
-            $aRow = $oResult->fetch_assoc();
-            $sSize = $aRow['sz'];
-            return (int)$sSize;
-        }
-
-        return 0;
-    }
 	/**
 	 * @return int
 	 * @throws \CoreException
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public final static function GetDBDataSize()
+	final public static function GetDatabaseSize()
+	{
+		self::AnalyzeTables();
+		$sSchema = CMDBSource::DBName();
+
+		$sReq = <<<EOF
+SELECT sum(data_length+index_length) AS sz
+FROM information_schema.tables 
+WHERE table_schema = '$sSchema';
+EOF;
+
+		$oResult = CMDBSource::Query($sReq);
+		if ($oResult !== false) {
+			$aRow = $oResult->fetch_assoc();
+			$sSize = $aRow['sz'];
+			return (int)$sSize;
+		}
+
+		return 0;
+	}
+	/**
+	 * @return int
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	final public static function GetDBDataSize()
 	{
 		self::AnalyzeTables();
 		$sSchema = CMDBSource::DBName();
@@ -75,8 +73,7 @@ WHERE table_schema = '$sSchema';
 EOF;
 
 		$oResult = CMDBSource::Query($sReq);
-		if ($oResult !== false)
-		{
+		if ($oResult !== false) {
 			$aRow = $oResult->fetch_assoc();
 			$sSize = $aRow['sz'];
 			return (int)$sSize;
@@ -90,7 +87,7 @@ EOF;
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public final static function GetDBIndexSize()
+	final public static function GetDBIndexSize()
 	{
 		self::AnalyzeTables();
 		$sSchema = CMDBSource::DBName();
@@ -102,8 +99,7 @@ WHERE table_schema = '$sSchema';
 EOF;
 
 		$oResult = CMDBSource::Query($sReq);
-		if ($oResult !== false)
-		{
+		if ($oResult !== false) {
 			$aRow = $oResult->fetch_assoc();
 			$sSize = $aRow['sz'];
 			return (int)$sSize;
@@ -112,10 +108,10 @@ EOF;
 		return 0;
 	}
 
-	public final static function GetDatamodelVersion()
+	final public static function GetDatamodelVersion()
 	{
 		$oFilter = DBObjectSearch::FromOQL('SELECT ModuleInstallation AS mi WHERE mi.name="datamodel"');
-		$oSet = new DBObjectSet($oFilter, array('installed' => false)); // Most recent first
+		$oSet = new DBObjectSet($oFilter, ['installed' => false]); // Most recent first
 		$oSet->SetLimit(1);
 		/** @var \DBObject $oModuleInstallation */
 		$oModuleInstallation = $oSet->Fetch();
@@ -125,15 +121,13 @@ EOF;
 	public static function GetPreviousInstallations($iLimitCount = 10)
 	{
 		$oFilter = DBObjectSearch::FromOQL('SELECT ModuleInstallation AS mi WHERE mi.parent_id=0 AND mi.name!="datamodel"');
-		$oSet = new DBObjectSet($oFilter, array('installed' => false)); // Most recent first
+		$oSet = new DBObjectSet($oFilter, ['installed' => false]); // Most recent first
 		$oSet->SetLimit($iLimitCount);
 		$aRawValues = $oSet->ToArrayOfValues();
-		$aValues = array();
-		foreach ($aRawValues as $aRawValue)
-		{
-			$aValue = array();
-			foreach ($aRawValue as $sAliasAttCode => $sValue)
-			{
+		$aValues = [];
+		foreach ($aRawValues as $aRawValue) {
+			$aValue = [];
+			foreach ($aRawValue as $sAliasAttCode => $sValue) {
 				// remove 'mi.' from AttCode
 				$sAttCode = substr($sAliasAttCode, 3);
 				$aValue[$sAttCode] = $sValue;
@@ -161,33 +155,30 @@ AND table_type = 'BASE TABLE';
 EOF;
 
 		$oResult = CMDBSource::Query($sReq);
-		if ($oResult !== false)
-		{
+		if ($oResult !== false) {
 			return $oResult->fetch_all(MYSQLI_ASSOC);
 		}
 
-		return array();
+		return [];
 	}
 
 	public static function GetDBVariables()
 	{
 		$sReq = 'SHOW variables';
 		$oResult = CMDBSource::Query($sReq);
-		if ($oResult !== false)
-		{
+		if ($oResult !== false) {
 			return $oResult->fetch_all(MYSQLI_ASSOC);
 		}
-		return array();
+		return [];
 	}
 
 	public static function GetDBStatus()
 	{
 		$sReq = 'SHOW status';
 		$oResult = CMDBSource::Query($sReq);
-		if ($oResult !== false)
-		{
+		if ($oResult !== false) {
 			return $oResult->fetch_all(MYSQLI_ASSOC);
 		}
-		return array();
+		return [];
 	}
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -19,7 +20,6 @@
  *
  */
 
-
 namespace Combodo\iTop\Test\UnitTest\Application\Search;
 
 use Combodo\iTop\Application\Search\SearchForm;
@@ -32,7 +32,7 @@ use Exception;
  */
 class SearchFormTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = false;
+	public const CREATE_TEST_ORG = false;
 
 	/**
 	 * @dataProvider GetFieldsProvider
@@ -52,16 +52,15 @@ class SearchFormTest extends ItopDataTestCase
 
 	public function GetFieldsProvider()
 	{
-		return array(
-			array("SELECT Contact"),
-			array("SELECT Contact AS C WHERE C.status = 'active'"),
-			array("SELECT Person"),
-			array(
+		return [
+			["SELECT Contact"],
+			["SELECT Contact AS C WHERE C.status = 'active'"],
+			["SELECT Person"],
+			[
 				"SELECT Person AS p JOIN UserRequest AS u ON u.agent_id = p.id WHERE u.status != 'closed'",
-			),
-		);
+			],
+		];
 	}
-
 
 	/**
 	 * @dataProvider GetCriterionProvider
@@ -75,19 +74,17 @@ class SearchFormTest extends ItopDataTestCase
 	public function testGetCriterion($sOQL, $iOrCount)
 	{
 		$oSearchForm = new SearchForm();
-		try
-		{
+		try {
 			$oSearch = \DBSearch::FromOQL($sOQL);
 			$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
 			/** @var DBObjectSearch $oSearch */
 			$aCriterion = $oSearchForm->GetCriterion($oSearch, $aFields);
-		} catch (\OQLException $e)
-		{
+		} catch (\OQLException $e) {
 			$this->assertTrue(false);
 
 			return;
 		}
-		$aRes = array('base_oql' => $sOQL, 'criterion' => $aCriterion);
+		$aRes = ['base_oql' => $sOQL, 'criterion' => $aCriterion];
 		$this->debug(json_encode($aRes));
 		$this->debug($sOQL);
 		$this->debug(json_encode($aCriterion, JSON_PRETTY_PRINT));
@@ -96,27 +93,27 @@ class SearchFormTest extends ItopDataTestCase
 
 	public function GetCriterionProvider()
 	{
-		return array(
-			array('OQL' => "SELECT Contact", 1),
-			array('OQL' => "SELECT Contact WHERE status = 'active'", 1),
-			array('OQL' => "SELECT Contact AS C WHERE C.status = 'active'", 1),
-			array('OQL' => "SELECT Contact WHERE status = 'active' AND name LIKE 'toto%'", 1),
-			array('OQL' => "SELECT Contact WHERE status = 'active' AND org_id = 3", 1),
-			array('OQL' => "SELECT Contact WHERE status IN ('active', 'inactive')", 1),
-			array('OQL' => "SELECT Contact WHERE status NOT IN ('active')", 1),
-			array('OQL' => "SELECT Contact WHERE status NOT IN ('active', 'inactive')", 1),
-			array('OQL' => "SELECT Contact WHERE status = 'active' OR name LIKE 'toto%'", 2),
-			array('OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date", 1),
-			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND '2018-01-01 00:00:00' >= start_date", 1),
-			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date", 1),
-			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date", 1),
-			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date", 1),
-			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date", 1),
-			array(
+		return [
+			['OQL' => "SELECT Contact", 1],
+			['OQL' => "SELECT Contact WHERE status = 'active'", 1],
+			['OQL' => "SELECT Contact AS C WHERE C.status = 'active'", 1],
+			['OQL' => "SELECT Contact WHERE status = 'active' AND name LIKE 'toto%'", 1],
+			['OQL' => "SELECT Contact WHERE status = 'active' AND org_id = 3", 1],
+			['OQL' => "SELECT Contact WHERE status IN ('active', 'inactive')", 1],
+			['OQL' => "SELECT Contact WHERE status NOT IN ('active')", 1],
+			['OQL' => "SELECT Contact WHERE status NOT IN ('active', 'inactive')", 1],
+			['OQL' => "SELECT Contact WHERE status = 'active' OR name LIKE 'toto%'", 2],
+			['OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date", 1],
+			['OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND '2018-01-01 00:00:00' >= start_date", 1],
+			['OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date", 1],
+			['OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date", 1],
+			['OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date", 1],
+			['OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date", 1],
+			[
 				'OQL' => "SELECT FunctionalCI WHERE ((business_criticity IN ('high', 'medium')) OR ISNULL(business_criticity)) AND 1",
-				1
-			),
+				1,
+			],
 
-		);
+		];
 	}
 }

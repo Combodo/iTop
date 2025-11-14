@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Bruno DA SILVA, working for Combodo
  * Date: 31/12/2019
@@ -13,7 +14,6 @@ use PhpParser\PrettyPrinter\Standard;
 
 class iTopConfigParser
 {
-
 	/** @var \PhpParser\Node[] */
 	private $aInitialNodes;
 
@@ -39,14 +39,13 @@ class iTopConfigParser
 	{
 		$oParser = (new ParserFactory())->createForNewestSupportedVersion();
 
-		$this->aVarsMap = array(
-			'MySettings' => array(),
-			'MyModuleSettings' => array(),
-			'MyModules' => array(),
-		);
+		$this->aVarsMap = [
+			'MySettings' => [],
+			'MyModuleSettings' => [],
+			'MyModules' => [],
+		];
 
-		if ($sConfig !== null)
-		{
+		if ($sConfig !== null) {
 			$this->BrowseFile($oParser, $sConfig);
 		}
 	}
@@ -67,15 +66,15 @@ class iTopConfigParser
 	 */
 	public function GetVarValue($arrayName, $key)
 	{
-		if (!array_key_exists($arrayName, $this->aVarsMap)){
-			return array('found' => false);
+		if (!array_key_exists($arrayName, $this->aVarsMap)) {
+			return ['found' => false];
 		}
 		$arrayValue = $this->aVarsMap[$arrayName];
-		if (!array_key_exists($key, $arrayValue)){
-			return array('found' => false);
+		if (!array_key_exists($key, $arrayValue)) {
+			return ['found' => false];
 		}
-		return array('found' => true,
-			'value' => $arrayValue[$key]);
+		return ['found' => true,
+			'value' => $arrayValue[$key]];
 	}
 
 	/**
@@ -90,8 +89,7 @@ class iTopConfigParser
 
 		try {
 			$aNodes = $oParser->parse($sConfig);
-		}
-		catch (\Error $e) {
+		} catch (\Error $e) {
 			$sMessage = Dict::Format('config-parse-error', $e->getMessage(), $e->getLine());
 			$this->oException = new \Exception($sMessage, 0, $e);
 		}
@@ -122,7 +120,7 @@ class iTopConfigParser
 			if (!array_key_exists($sCurrentRootVar, $this->aVarsMap)) {
 				continue;
 			}
-			$aCurrentRootVarMap =& $this->aVarsMap[$sCurrentRootVar];
+			$aCurrentRootVarMap = & $this->aVarsMap[$sCurrentRootVar];
 
 			foreach ($oAssignation->expr->items as $oItem) {
 				$sValue = $prettyPrinter->prettyPrintExpr($oItem->value);

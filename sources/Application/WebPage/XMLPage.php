@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -28,7 +29,6 @@ use ExecutionKPI;
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 /**
  * Simple web page with no includes or fancy formatting, useful to generateXML documents
  * The page adds the content-type text/XML and the encoding into the headers
@@ -38,10 +38,10 @@ class XMLPage extends WebPage
 	/**
 	 * For big XML files, it's better NOT to store everything in memory and output the XML piece by piece
 	 */
-	var $m_bPassThrough;
-	var $m_bHeaderSent;
-	
-	function __construct($s_title, $bPassThrough = false)
+	public $m_bPassThrough;
+	public $m_bHeaderSent;
+
+	public function __construct($s_title, $bPassThrough = false)
 	{
 		$oKpi = new ExecutionKPI();
 		parent::__construct($s_title);
@@ -65,8 +65,7 @@ class XMLPage extends WebPage
 	}
 	public function output()
 	{
-		if (!$this->m_bPassThrough)
-		{
+		if (!$this->m_bPassThrough) {
 			$oKpi = new ExecutionKPI();
 
 			// Get the unexpected output but do nothing with it
@@ -75,8 +74,7 @@ class XMLPage extends WebPage
 			$sCharset = self::PAGES_CHARSET;
 			$this->s_content = "<?xml version=\"1.0\" encoding=\"$sCharset\"?".">\n".trim($this->s_content);
 			$this->add_header("Content-Length: ".strlen($this->s_content));
-			foreach($this->a_headers as $s_header)
-			{
+			foreach ($this->a_headers as $s_header) {
 				header($s_header);
 			}
 			$oKpi->ComputeAndReport(get_class($this).' output');
@@ -96,12 +94,9 @@ class XMLPage extends WebPage
 		} else {
 			if ($this->m_bHeaderSent) {
 				echo $sText;
-			}
-			else
-			{
+			} else {
 				$s_captured_output = $this->ob_get_clean_safe();
-				foreach($this->a_headers as $s_header)
-				{
+				foreach ($this->a_headers as $s_header) {
 					header($s_header);
 				}
 				$sCharset = self::PAGES_CHARSET;
@@ -118,7 +113,7 @@ class XMLPage extends WebPage
 	{
 	}
 
-	public function table($aConfig, $aData, $aParams = array())
+	public function table($aConfig, $aData, $aParams = [])
 	{
 	}
 }

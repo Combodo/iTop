@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,7 +17,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Module itop-sla-computation: deprecated
  *
@@ -27,8 +27,8 @@
 /**
  * @deprecated 3.3.0 This is actually a breaking change. The class has been left to ease migration to 3.3.0 (see N°2683)
  */
-class SLAComputation {
-
+class SLAComputation
+{
 	/**
 	 * @deprecated 3.3.0 This is actually a breaking change. The function has been left to ease migration to 3.3.0 (see N°2683)
 	 */

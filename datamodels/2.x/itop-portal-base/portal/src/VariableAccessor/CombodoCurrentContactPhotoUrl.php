@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Portal\VariableAccessor;
-
 
 use Combodo\iTop\Portal\EventListener\UserProvider;
 use Exception;
@@ -85,8 +85,7 @@ class CombodoCurrentContactPhotoUrl
 		try {
 			/** @var \cmdbAbstractObject $oContact */
 			$oContact = UserRights::GetContactObject();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$oUser = $this->oUserProvider->getCurrentUser();
 			$oAllowedOrgSet = $oUser->Get('allowed_org_list');
 			if ($oAllowedOrgSet->Count() > 0) {

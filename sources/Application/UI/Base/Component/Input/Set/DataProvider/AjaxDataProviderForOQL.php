@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -27,7 +28,6 @@ namespace Combodo\iTop\Application\UI\Base\Component\Input\Set\DataProvider;
  */
 class AjaxDataProviderForOQL extends AjaxDataProvider
 {
-
 	/**
 	 * Constructor.
 	 *

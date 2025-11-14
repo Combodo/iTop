@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -63,14 +64,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:OAuthClient/Attribute:redirect_url+' => 'Diese URL muss in die oAuth2-Konfiguration des Providers kopiert werden.
 Löschen Sie das Feld, um den Standardwert neu zu berechnen.',
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Mailpostfächer',
-	'Class:OAuthClient/Attribute:mailbox_list+' => ''
+	'Class:OAuthClient/Attribute:mailbox_list+' => '',
 ]);
 
 //
 // Class: OAuthClientAzure
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:OAuthClientAzure' => 'Mailpostfach-OAuth-Client für Microsoft Azure',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Scope',
@@ -93,13 +94,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'Nein',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Tenant',
 	'Class:OAuthClientAzure/Attribute:tenant+' => 'Tenant-ID der konfigurierten Anwendung. Bei einer Multi-Tenant-Anwendung verwenden Sie "common".',
-));
+]);
 
 //
 // Class: OAuthClientGoogle
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:OAuthClientGoogle' => 'Mailpostfach-OAuth-Client für Google',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Scope',
@@ -120,4 +121,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => 'Mindestens ein oAuth-Client muss dieses Flag auf "Ja" gesetzt haben, um über diesen Weg Mails durch iTop senden zu lassen.',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => 'Ja',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => 'Nein',
-));
+]);

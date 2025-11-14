@@ -9,8 +9,8 @@
  */
 interface iModuleExtension
 {
-    /**
-     * @api
-     */
-    public function __construct();
+	/**
+	 * @api
+	 */
+	public function __construct();
 }

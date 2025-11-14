@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -10,10 +11,8 @@ use MockValueSetObjects;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use MetaModel;
 
-
 class ValueSetObjectsTest extends ItopTestCase
 {
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -27,16 +26,15 @@ class ValueSetObjectsTest extends ItopTestCase
 	 */
 	public function GetGetFilterProvider()
 	{
-		return array(
-			'Ticket contains bla'        => array("Ticket", "bla", "contains", "SELECT `Ticket` FROM Ticket AS `Ticket` WHERE (`Ticket`.`friendlyname` LIKE '%bla%')"),
-			'Ticket equals bla'          => array("Ticket", "bla", "equals", "SELECT `Ticket` FROM Ticket AS `Ticket` WHERE (`Ticket`.`ref` = 'bla')"),
-			'Ticket start_with bla'      => array("Ticket", "bla", "start_with", "SELECT `Ticket` FROM Ticket AS `Ticket` WHERE (`Ticket`.`ref` LIKE 'bla%')"),
-			'UserRequest contains bla'   => array("UserRequest", "bla", "contains", "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`friendlyname` LIKE '%bla%')"),
-			'UserRequest equals bla'     => array("UserRequest", "bla", "equals", "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`ref` = 'bla')"),
-			'UserRequest start_with bla' => array("UserRequest", "bla", "start_with", "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`ref` LIKE 'bla%')"),
-		);
+		return [
+			'Ticket contains bla'        => ["Ticket", "bla", "contains", "SELECT `Ticket` FROM Ticket AS `Ticket` WHERE (`Ticket`.`friendlyname` LIKE '%bla%')"],
+			'Ticket equals bla'          => ["Ticket", "bla", "equals", "SELECT `Ticket` FROM Ticket AS `Ticket` WHERE (`Ticket`.`ref` = 'bla')"],
+			'Ticket start_with bla'      => ["Ticket", "bla", "start_with", "SELECT `Ticket` FROM Ticket AS `Ticket` WHERE (`Ticket`.`ref` LIKE 'bla%')"],
+			'UserRequest contains bla'   => ["UserRequest", "bla", "contains", "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`friendlyname` LIKE '%bla%')"],
+			'UserRequest equals bla'     => ["UserRequest", "bla", "equals", "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`ref` = 'bla')"],
+			'UserRequest start_with bla' => ["UserRequest", "bla", "start_with", "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`ref` LIKE 'bla%')"],
+		];
 	}
-
 
 	/**
 	 * @param $Class

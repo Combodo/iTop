@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:ServiceManagement' => 'Správa služeb',
 	'Menu:ServiceManagement+' => 'Přehled správy služeb',
 	'Menu:Service:Overview' => 'Přehled',
@@ -40,7 +41,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Contract:baseinfo' => 'Obecné informace',
 	'Contract:moreinfo' => 'Smluvní informace',
 	'Contract:cost' => 'Informace o nákladech',
-));
+]);
 
 /*
 	'UI:ServiceManagementMenu' => 'Gestion des Services',
@@ -55,30 +56,27 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 // Class: Organization
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Model poskytování služeb',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Název modelu poskytování služeb',
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
-));
-
-
+]);
 
 //
 // Class: ContractType
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ContractType' => 'Typ smlouvy',
 	'Class:ContractType+' => '',
-));
-
+]);
 
 //
 // Class: Contract
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Contract' => 'Smlouva',
 	'Class:Contract+' => '',
 	'Class:Contract/Attribute:name' => 'Název',
@@ -127,13 +125,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Contract/Attribute:status/Value:production+' => '',
 	'Class:Contract/Attribute:finalclass' => 'Typ',
 	'Class:Contract/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: CustomerContract
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:CustomerContract' => 'Smlouva se zákazníkem',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Služby',
@@ -142,13 +140,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'Všechny konfigurační položky pokryté touto smlouvou',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Smlouvy s poskytovateli',
 	'Class:CustomerContract/Attribute:providercontracts_list+' => 'Všechny smlouvy s poskytovatelem na dodávky služeb pro tuto smlouvu (podpůrná smlouva - UC)',
-));
+]);
 
 //
 // Class: ProviderContract
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ProviderContract' => 'Smlouva s poskytovatelem',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'Konfigurační položky',
@@ -157,13 +155,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ProviderContract/Attribute:sla+' => 'Dohoda o úrovni služeb',
 	'Class:ProviderContract/Attribute:coverage' => 'Servisní hodiny',
 	'Class:ProviderContract/Attribute:coverage+' => '',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkContactToContract' => 'Spojení (Kontakt / Smlouva)',
 	'Class:lnkContactToContract+' => '',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
@@ -175,13 +173,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkContactToContract/Attribute:contact_id+' => '',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Název kontaktu',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkContractToDocument' => 'Spojení (Smlouva / Dokument)',
 	'Class:lnkContractToDocument+' => '',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
@@ -193,13 +191,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Název dokumentu',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToProviderContract
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Spojení (Funkční konfigurační položka / Smlouva s poskytovatelem)',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
@@ -211,13 +209,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Název konfigurační položky',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: ServiceFamily
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ServiceFamily' => 'Balíček služeb',
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Název',
@@ -226,13 +224,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Služby',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Všechny služby v této kategorii',
-));
+]);
 
 //
 // Class: Service
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Service' => 'Služba',
 	'Class:Service+' => '',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
@@ -266,13 +264,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Service/Attribute:customercontracts_list+' => 'Všechny smlouvy se zákazníky, kteří zakoupili tuto službu',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Podkategorie služeb',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Všechny podkategorie služeb pro tuto službu',
-));
+]);
 
 //
 // Class: lnkDocumentToService
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkDocumentToService' => 'Spojení (Dokument / Služba)',
 	'Class:lnkDocumentToService+' => '',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
@@ -284,13 +282,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkDocumentToService/Attribute:document_id+' => '',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Název dokumentu',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkContactToService
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkContactToService' => 'Spojení (Kontakt / Služba)',
 	'Class:lnkContactToService+' => '',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
@@ -302,13 +300,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkContactToService/Attribute:contact_id+' => '',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Název kontaktu',
 	'Class:lnkContactToService/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: ServiceSubcategory
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ServiceSubcategory' => 'Podkategorie služeb',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
@@ -336,13 +334,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => '',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Název poskytovatele',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Poskytovatel',
-));
+]);
 
 //
 // Class: SLA
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:SLA' => 'SLA',
 	'Class:SLA+' => 'Dohoda o úrovni služeb',
 	'Class:SLA/Attribute:name' => 'Název',
@@ -358,13 +356,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:SLA/Attribute:customercontracts_list' => 'Smlouvy se zákazníky',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Všechny smlouvy se zákazníky využívající tuto dohodu o úrovni služeb',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Nepodařilo se uložit spojení smlouvy se zákazníkem  %1$s a služby %2$s : SLA již existují',
-));
+]);
 
 //
 // Class: SLT
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:SLT' => 'SLT',
 	'Class:SLT+' => 'Cíl úrovně služeb',
 	'Class:SLT/Attribute:name' => 'Název',
@@ -399,13 +397,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => '',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minuty',
 	'Class:SLT/Attribute:unit/Value:minutes+' => '',
-));
+]);
 
 //
 // Class: lnkSLAToSLT
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkSLAToSLT' => 'Spojení (SLA / SLT)',
 	'Class:lnkSLAToSLT+' => '',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
@@ -427,13 +425,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Jednotka hodnoty SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkCustomerContractToService' => 'Spojení (Smlouva se zákazníkem / Služba)',
 	'Class:lnkCustomerContractToService+' => '',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
@@ -449,13 +447,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'Název SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
-));
+]);
 
 //
 // Class: lnkCustomerContractToProviderContract
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkCustomerContractToProviderContract' => 'Spojení (Smlouva se zákazníkem / Smlouva s poskytovatelem)',
 	'Class:lnkCustomerContractToProviderContract+' => '',
 	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s~~',
@@ -467,13 +465,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Název smlouvy s poskytovatelem',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '',
-));
+]);
 
 //
 // Class: lnkCustomerContractToFunctionalCI
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkCustomerContractToFunctionalCI' => 'Spojení (Smlouva se zákazníkem / Funkční konfigurační položka)',
 	'Class:lnkCustomerContractToFunctionalCI+' => '',
 	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -485,13 +483,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => 'Název konfigurační položky',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: DeliveryModel
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:DeliveryModel' => 'Model poskytování služeb',
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:name' => 'Název',
@@ -506,13 +504,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'Všechny kontakty (Týmy a Osoby) pro tento model poskytování služeb',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Zákazníci',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Všichni zákazníci využívající tento model poskytování služeb',
-));
+]);
 
 //
 // Class: lnkDeliveryModelToContact
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkDeliveryModelToContact' => 'Spojení (Model poskytování služeb / Kontakt)',
 	'Class:lnkDeliveryModelToContact+' => '',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
@@ -528,35 +526,35 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Název role',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-));
+]);

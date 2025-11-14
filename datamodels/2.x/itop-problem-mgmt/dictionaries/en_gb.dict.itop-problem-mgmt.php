@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -46,8 +47,7 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:ProblemManagement' => 'Problem management',
 	'Menu:ProblemManagement+' => 'Problem management',
 	'Menu:Problem:Overview' => 'Overview',
@@ -70,12 +70,12 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard for Problem Management',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard for Problem Management',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Problem' => 'Problem',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Status',
@@ -148,4 +148,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Close',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

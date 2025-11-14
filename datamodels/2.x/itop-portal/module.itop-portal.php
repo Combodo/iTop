@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -20,35 +21,36 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-portal/3.3.0', array(
+	'itop-portal/3.3.0',
+	[
 	// Identification
 	'label' => 'Enhanced Customer Portal',
 	'category' => 'Portal',
 	// Setup
-	'dependencies' => array(
-		'itop-portal-base/2.7.0'
-	),
+	'dependencies' => [
+		'itop-portal-base/2.7.0',
+	],
 	'mandatory' => false,
 	'visible' => true,
 	// Components
-	'datamodel' => array(
+	'datamodel' => [
 		'main.itop-portal.php',
-	),
-	'webservice' => array(
+	],
+	'webservice' => [
 	//'webservices.itop-portal.php',
-	),
+	],
 
-	'data.struct' => array(
+	'data.struct' => [
 	//'data.struct.itop-portal.xml',
-	),
-	'data.sample' => array(
+	],
+	'data.sample' => [
 	//'data.sample.itop-portal.xml',
-	),
+	],
 	// Documentation
 	'doc.manual_setup' => '',
 	'doc.more_information' => '',
 	// Default settings
-	'settings' => array(
-	),
-	)
+	'settings' => [
+	],
+	]
 );

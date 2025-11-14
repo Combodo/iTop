@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu;
-
 
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItem;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
@@ -336,8 +336,7 @@ class PopoverMenu extends UIBlock
 	 */
 	public function AddSection(string $sId)
 	{
-		if (false === $this->HasSection($sId))
-		{
+		if (false === $this->HasSection($sId)) {
 			$this->aSections[$sId] = [
 				'aItems' => [],
 			];
@@ -357,8 +356,7 @@ class PopoverMenu extends UIBlock
 	 */
 	public function RemoveSection(string $sId)
 	{
-		if (true === $this->HasSection($sId))
-		{
+		if (true === $this->HasSection($sId)) {
 			unset($this->aSections[$sId]);
 		}
 
@@ -387,8 +385,7 @@ class PopoverMenu extends UIBlock
 	 */
 	public function ClearSection(string $sId)
 	{
-		if (false === $this->HasSection($sId))
-		{
+		if (false === $this->HasSection($sId)) {
 			throw new Exception('Could not clear section "'.$sId.'" as it does not exist in the "'.$this->GetId().'" menu');
 		}
 
@@ -448,13 +445,11 @@ class PopoverMenu extends UIBlock
 	 */
 	public function RemoveItem(string $sSectionId, string $sItemId)
 	{
-		if (false === $this->HasSection($sSectionId))
-		{
+		if (false === $this->HasSection($sSectionId)) {
 			throw new Exception('Could not remove en item from the "'.$sSectionId.'" as it does not seem to exist in the "'.$this->GetId().'" menu.');
 		}
 
-		if (array_key_exists($sItemId, $this->aSections[$sSectionId]['aItems']))
-		{
+		if (array_key_exists($sItemId, $this->aSections[$sSectionId]['aItems'])) {
 			unset($this->aSections[$sSectionId]['aItems'][$sItemId]);
 		}
 
@@ -472,7 +467,7 @@ class PopoverMenu extends UIBlock
 	 */
 	public function AddItems(string $sSectionId, array $aItems)
 	{
-		foreach($aItems as $oItem){
+		foreach ($aItems as $oItem) {
 			$this->AddItem($sSectionId, $oItem);
 		}
 
@@ -525,8 +520,7 @@ class PopoverMenu extends UIBlock
 		$aSubBlocks = [];
 
 		foreach ($this->aSections as $sSectionId => $aSectionData) {
-			foreach($aSectionData['aItems'] as $sItemId => $oItem)
-			{
+			foreach ($aSectionData['aItems'] as $sItemId => $oItem) {
 				$aSubBlocks[$sItemId] = $oItem;
 			}
 		}

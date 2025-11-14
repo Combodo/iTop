@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -42,7 +43,7 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ProblemManagement' => '问题管理',
 	'Menu:ProblemManagement+' => '问题管理',
 	'Menu:Problem:Overview' => '概况',
@@ -65,12 +66,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ProblemMgmtMenuOverview:Title' => '问题管理仪表盘',
 	'UI:ProblemMgmtMenuOverview:Title+' => '问题管理仪表盘',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Problem' => '问题',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => '状态',
@@ -143,4 +144,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => '关闭',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

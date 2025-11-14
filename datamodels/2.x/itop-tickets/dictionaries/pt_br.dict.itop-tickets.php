@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Ticket' => 'Solicitação',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Ref.',
@@ -61,14 +62,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Fechado',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
 	'Ticket:ImpactAnalysis' => 'Análise de impacto',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkContactToTicket' => 'Relação entre Contato / Solicitação',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
@@ -88,13 +88,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Adicionado manualmente',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Computado',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Não notificar',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:WorkOrder' => 'Ordem de serviço',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => 'Nome',
@@ -127,11 +127,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Fechar',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Ticket:baseinfo' => 'Informações gerais',
 	'Ticket:date' => 'Datas',
 	'Ticket:contact' => 'Contatos',
@@ -221,14 +220,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Objetivo baseado em um SLT do tipo TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Objetivo baseado em um SLT do tipo TTR',
-));
-
+]);
 
 //
 // Class: Ticket
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
-));
+]);

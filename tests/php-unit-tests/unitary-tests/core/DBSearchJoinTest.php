@@ -12,9 +12,9 @@ use DBSearch;
  *
  * @package Combodo\iTop\Test\UnitTest\Core
  */
-class DBSearchJoinTest extends ItopDataTestCase {
-	
-	const USE_TRANSACTION = false;
+class DBSearchJoinTest extends ItopDataTestCase
+{
+	public const USE_TRANSACTION = false;
 
 	protected function setUp(): void
 	{
@@ -43,9 +43,13 @@ class DBSearchJoinTest extends ItopDataTestCase {
 
 		$aRealiasingMap = [];
 
-		$oResultSearch = $oLeftSearch->Join($oRightSearch,
-			DBSearch::JOIN_REFERENCED_BY, $sParentAtt,
-			TREE_OPERATOR_EQUALS, $aRealiasingMap);
+		$oResultSearch = $oLeftSearch->Join(
+			$oRightSearch,
+			DBSearch::JOIN_REFERENCED_BY,
+			$sParentAtt,
+			TREE_OPERATOR_EQUALS,
+			$aRealiasingMap
+		);
 
 		$this->debug("\nRealiasing Map");
 		$this->debug($aRealiasingMap);
@@ -57,12 +61,9 @@ class DBSearchJoinTest extends ItopDataTestCase {
 		$this->debug("\nBefore renaming");
 		$this->debug($oResultSearch->ToOQL());
 		$aLevelsPropertiesKeys = ['L-1', 'L-1-1', 'L-1-1-1'];
-		foreach ($aLevelsPropertiesKeys as $sLevelAlias)
-		{
-			if (array_key_exists($sLevelAlias, $aRealiasingMap))
-			{
-				foreach ($aRealiasingMap[$sLevelAlias] as $sAliasToRename)
-				{
+		foreach ($aLevelsPropertiesKeys as $sLevelAlias) {
+			if (array_key_exists($sLevelAlias, $aRealiasingMap)) {
+				foreach ($aRealiasingMap[$sLevelAlias] as $sAliasToRename) {
 					$oResultSearch->RenameAlias($sAliasToRename, $sLevelAlias);
 				}
 			}
@@ -137,11 +138,14 @@ class DBSearchJoinTest extends ItopDataTestCase {
 
 		$oFilter1 = DBSearch::FromOQL($sReq1);
 		$oFilter2 = DBSearch::FromOQL($sReq2);
-		$aRealiasingMap = array();
-		$oFilter1 = $oFilter1->Join($oFilter2,
+		$aRealiasingMap = [];
+		$oFilter1 = $oFilter1->Join(
+			$oFilter2,
 			DBSearch::JOIN_REFERENCED_BY,
 			'org_id',
-			TREE_OPERATOR_EQUALS, $aRealiasingMap);
+			TREE_OPERATOR_EQUALS,
+			$aRealiasingMap
+		);
 
 		$this->debug("\nRealiasing Map");
 		$this->debug($aRealiasingMap);
@@ -150,14 +154,10 @@ class DBSearchJoinTest extends ItopDataTestCase {
 		$this->debug("\nJoined");
 		$this->debug($sRes1);
 
-		foreach($oFilter1->GetCriteria_ReferencedBy() as $sForeignClass => $aReferences)
-		{
-			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-			{
-				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-				{
-					foreach ($aFilters as $index => $oForeignFilter)
-					{
+		foreach ($oFilter1->GetCriteria_ReferencedBy() as $sForeignClass => $aReferences) {
+			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
+					foreach ($aFilters as $index => $oForeignFilter) {
 						$this->debug("\nReferencedBy");
 						$this->debug($oForeignFilter->ToOQL());
 					}

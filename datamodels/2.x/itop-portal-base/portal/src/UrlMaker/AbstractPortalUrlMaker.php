@@ -37,10 +37,10 @@ use utils;
 abstract class AbstractPortalUrlMaker implements iDBObjectURLMaker
 {
 	/** @var string PORTAL_ID */
-	const PORTAL_ID = '';
+	public const PORTAL_ID = '';
 
 	/** @var \Combodo\iTop\Portal\Kernel[] $aKernels */
-	private static $aKernels = array();
+	private static $aKernels = [];
 
 	/**
 	 * Generate an (absolute) URL to an object, either in view or edit mode.
@@ -64,8 +64,7 @@ abstract class AbstractPortalUrlMaker implements iDBObjectURLMaker
 
 		$sUrl = self::DoPrepareObjectURL($sClass, $iId, $sMode);
 
-		if (!empty($sPreviousPortalId))
-		{
+		if (!empty($sPreviousPortalId)) {
 			$_ENV['PORTAL_ID'] = $sPreviousPortalId;
 		}
 
@@ -97,48 +96,39 @@ abstract class AbstractPortalUrlMaker implements iDBObjectURLMaker
 		//
 		// Note: Scopes only apply when URL check is triggered from the portal GUI.
 		$sObjectQueryString = null;
-		switch ($sMode)
-		{
+		switch ($sMode) {
 			case 'view':
-				if (!ContextTag::Check(ContextTag::TAG_PORTAL) || $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $iId))
-				{
-					$sObjectQueryString = $oUrlGenerator->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+				if (!ContextTag::Check(ContextTag::TAG_PORTAL) || $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $iId)) {
+					$sObjectQueryString = $oUrlGenerator->generate('p_object_view', ['sObjectClass' => $sClass, 'sObjectId' => $iId]);
 				}
 				break;
 
 			case 'edit':
 			default:
 				// Checking if user is allowed to edit object, if not we check if it can at least view it.
-				if (!ContextTag::Check(ContextTag::TAG_PORTAL) || $oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sClass, $iId))
-				{
-					$sObjectQueryString = $oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
-				}
-				elseif (!ContextTag::Check(ContextTag::TAG_PORTAL) || $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $iId))
-				{
-					$sObjectQueryString = $oUrlGenerator->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+				if (!ContextTag::Check(ContextTag::TAG_PORTAL) || $oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sClass, $iId)) {
+					$sObjectQueryString = $oUrlGenerator->generate('p_object_edit', ['sObjectClass' => $sClass, 'sObjectId' => $iId]);
+				} elseif (!ContextTag::Check(ContextTag::TAG_PORTAL) || $oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sClass, $iId)) {
+					$sObjectQueryString = $oUrlGenerator->generate('p_object_view', ['sObjectClass' => $sClass, 'sObjectId' => $iId]);
 				}
 				break;
 		}
 
-		$sPortalAbsoluteUrl = utils::GetAbsoluteUrlModulePage('itop-portal-base', 'index.php', array('portal_id' => $sPortalId));
-		if ($sObjectQueryString === null)
-		{
+		$sPortalAbsoluteUrl = utils::GetAbsoluteUrlModulePage('itop-portal-base', 'index.php', ['portal_id' => $sPortalId]);
+		if ($sObjectQueryString === null) {
 			$sUrl = null;
-		}
-		elseif (strpos($sPortalAbsoluteUrl, '?') !== false)
-		{
+		} elseif (strpos($sPortalAbsoluteUrl, '?') !== false) {
 			// Removing generated url query parameters so it can be replaced with those from the absolute url
 			// Mostly necessary when iTop instance has multiple portals
-			if (strpos($sObjectQueryString, '?') !== false)
-			{
+			if (strpos($sObjectQueryString, '?') !== false) {
 				$sObjectQueryString = substr($sObjectQueryString, 0, strpos($sObjectQueryString, '?'));
 			}
 
-			$sUrl = substr($sPortalAbsoluteUrl, 0, strpos($sPortalAbsoluteUrl, '?')).$sObjectQueryString.substr($sPortalAbsoluteUrl,
-					strpos($sPortalAbsoluteUrl, '?'));
-		}
-		else
-		{
+			$sUrl = substr($sPortalAbsoluteUrl, 0, strpos($sPortalAbsoluteUrl, '?')).$sObjectQueryString.substr(
+				$sPortalAbsoluteUrl,
+				strpos($sPortalAbsoluteUrl, '?')
+			);
+		} else {
 			$sUrl = $sPortalAbsoluteUrl.$sObjectQueryString;
 		}
 
@@ -153,8 +143,7 @@ abstract class AbstractPortalUrlMaker implements iDBObjectURLMaker
 	 */
 	private static function GetKernelInstance()
 	{
-		if (!array_key_exists(static::PORTAL_ID, self::$aKernels))
-		{
+		if (!array_key_exists(static::PORTAL_ID, self::$aKernels)) {
 			self::$aKernels[static::PORTAL_ID] = new Kernel($_SERVER['APP_ENV'], (bool)$_SERVER['APP_DEBUG']);
 			self::$aKernels[static::PORTAL_ID]->boot();
 		}
@@ -175,4 +164,3 @@ abstract class AbstractPortalUrlMaker implements iDBObjectURLMaker
 		return static::PrepareObjectURL($sClass, $iId, 'edit');
 	}
 }
-

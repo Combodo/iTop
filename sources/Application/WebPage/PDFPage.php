@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -22,7 +23,6 @@ namespace Combodo\iTop\Application\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 use ExecutionKPI;
 
-
 /**
  * Special class of WebPage for printing into a PDF document
  */
@@ -35,7 +35,7 @@ class PDFPage extends WebPage
 	{
 		$oKpi = new ExecutionKPI();
 		parent::__construct($s_title);
-		if (!defined('K_PATH_FONTS')){
+		if (!defined('K_PATH_FONTS')) {
 			define('K_PATH_FONTS', APPROOT.'lib/combodo/tcpdf/fonts/');
 		}
 		$this->oPdf = new iTopPDF($sPageOrientation, 'mm', $sPageFormat, true, self::PAGES_CHARSET, false);
@@ -152,12 +152,10 @@ EOF
 	public function output()
 	{
 		$this->add_header('Content-type: application/x-pdf');
-		if (!empty($this->sContentDisposition))
-		{
+		if (!empty($this->sContentDisposition)) {
 			$this->add_header('Content-Disposition: '.$this->sContentDisposition.'; filename="'.$this->sContentFileName.'"');
 		}
-		foreach ($this->a_headers as $s_header)
-		{
+		foreach ($this->a_headers as $s_header) {
 			header($s_header);
 		}
 		$this->flush();

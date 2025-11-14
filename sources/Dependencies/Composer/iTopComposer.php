@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -19,7 +20,7 @@
  *
  */
 
-namespace  Combodo\iTop\Dependencies\Composer;
+namespace Combodo\iTop\Dependencies\Composer;
 
 use Combodo\iTop\Dependencies\AbstractFolderAnalyzer;
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -38,12 +39,12 @@ class PreferencesController extends AbstractController
 		$sUserPicturesFolder = 'images/user-pictures/';
 		$sImageAbsPath = utils::RealPath(APPROOT.$sUserPicturesFolder.$sImageFilename, APPROOT.$sUserPicturesFolder);
 		$sImageAbsUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.$sImageFilename;
-		
+
 		// Check if we're still in the right folder
-		if($sImageAbsPath === false){
+		if ($sImageAbsPath === false) {
 			throw new CoreUnexpectedValue('Error while updating user image, invalid image path "'.$sUserPicturesFolder.$sImageFilename.'"');
 		}
-		
+
 		// Check file can be read
 		$sImageData = file_get_contents($sImageAbsPath);
 		if (false === $sImageData) {

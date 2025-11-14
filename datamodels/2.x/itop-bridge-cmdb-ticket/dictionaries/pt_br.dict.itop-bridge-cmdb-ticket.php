@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkFunctionalCIToTicket' => 'Relação entre IC / Solicitação',
 	'Class:lnkFunctionalCIToTicket+' => '',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
@@ -30,12 +31,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Adicionado manualmente',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Computado',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Não impactado',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Solicitações',
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Todas as Solicitações associadas à este Item de Configuração (IC)',
-));
+]);

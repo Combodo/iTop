@@ -1,6 +1,6 @@
-<?php 
-namespace Combodo\iTop\Application\UI\Base\Layout\Object;
+<?php
 
+namespace Combodo\iTop\Application\UI\Base\Layout\Object;
 
 use ApplicationContext;
 use cmdbAbstractObject;
@@ -29,7 +29,6 @@ class ObjectSummary extends ObjectDetails
 {
 	use tUIContentAreas;
 
-
 	// Overloaded constants
 	/**
 	 * @inheritDoc
@@ -44,7 +43,7 @@ class ObjectSummary extends ObjectDetails
 	 */
 	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
 	/** @var \DBObject Object that will be displayed as summary */
-	protected  $oObject;
+	protected $oObject;
 
 	/** @var array Map of fields that will be displayed for the current object */
 	protected $aObjectDisplayValues;
@@ -53,9 +52,9 @@ class ObjectSummary extends ObjectDetails
 
 	public function __construct(DBObject $oObject, ?string $sId = null)
 	{
-		parent::__construct($oObject,cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW, $sId);
+		parent::__construct($oObject, cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW, $sId);
 		$this->oObject = $oObject;
-		
+
 		$this->ComputeDetails();
 		$this->SetToolBlocks([]);
 		$this->ComputeActions();
@@ -63,25 +62,26 @@ class ObjectSummary extends ObjectDetails
 
 	/**
 	 * Compute object zlists and build the Field map that will be displayed
-	 * 
+	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function ComputeDetails(){
+	public function ComputeDetails()
+	{
 		$sClass = $this->sClassName;
-		
+
 		$aDetailsList = MetaModel::GetZListItems($sClass, 'summary');
-		
-		if(empty($aDetailsList)){
+
+		if (empty($aDetailsList)) {
 			$aComplementAttributeSpec = MetaModel::GetNameSpec($sClass, FriendlyNameType::COMPLEMENTARY);
 			$aAdditionalField = $aComplementAttributeSpec[1];
 			if (!empty($aAdditionalField)) {
 				$aDetailsList = $aAdditionalField;
 			}
 		}
-		
+
 		$aFieldsMap = [];
 		foreach ($aDetailsList as $sAttCode) {
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
@@ -91,10 +91,9 @@ class ObjectSummary extends ObjectDetails
 		$this->aObjectDisplayValues = $aFieldsMap;
 	}
 
-
 	/**
 	 * Build the Actions that will be displayed in the summary header
-	 * 
+	 *
 	 * @return void
 	 * @throws \Exception
 	 */
@@ -103,27 +102,26 @@ class ObjectSummary extends ObjectDetails
 		$oRouter = Router::GetInstance();
 		$oDetailsButton = null;
 		// We can pass a DBObject to the UIBlock, so we check for the DisplayModifyForm method
-		if(method_exists($this->oObject, 'DisplayModifyForm') && UserRights::IsActionAllowed($this->sClassName, UR_ACTION_MODIFY)) {
+		if (method_exists($this->oObject, 'DisplayModifyForm') && UserRights::IsActionAllowed($this->sClassName, UR_ACTION_MODIFY)) {
 			$oPopoverMenu = new PopoverMenu();
-			
+
 			$oDetailsAction = new URLPopupMenuItem(
 				'UI:Menu:View',
 				Dict::S('UI:Menu:View'),
 				ApplicationContext::MakeObjectUrl($this->sClassName, $this->sObjectId),
 				'_blank'
-			); 
+			);
 			$oModifyButton = ButtonUIBlockFactory::MakeLinkNeutral(
 				$oRouter->GenerateUrl('object.modify', ['class' => $this->sClassName, 'id' => $this->sObjectId]),
 				Dict::S('UI:Menu:Modify'),
 				'fas fa-external-link-alt',
 				'_blank',
 			);
-			
+
 			$oPopoverMenu->AddItem('more-actions', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem($oDetailsAction))->SetContainer(PopoverMenu::ENUM_CONTAINER_PARENT);
-			
+
 			$oDetailsButton = ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu($oModifyButton, $oPopoverMenu);
-		}
-		else {
+		} else {
 			$oDetailsButton = ButtonUIBlockFactory::MakeLinkNeutral(
 				ApplicationContext::MakeObjectUrl($this->sClassName, $this->sObjectId),
 				Dict::S('UI:Menu:View'),
@@ -131,7 +129,7 @@ class ObjectSummary extends ObjectDetails
 				'_blank',
 			);
 		}
-		
+
 		$this->oActions = $oDetailsButton;
 		$this->AddToolbarBlock($oDetailsButton);
 	}
@@ -158,7 +156,8 @@ class ObjectSummary extends ObjectDetails
 	/**
 	 * @return array
 	 */
-	public function GetDisplayValues() {
+	public function GetDisplayValues()
+	{
 		return $this->aObjectDisplayValues;
 	}
 

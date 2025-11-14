@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'bkp-backup-running' => 'Probíhá záloha. Vyčkejte prosím...',
 	'bkp-restore-running' => 'Probíhá obnova ze zálohy. Vyčkejte prosím...',
 	'Menu:BackupStatus' => 'Plánované zálohování',
@@ -46,4 +47,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'bkp-wait-backup' => 'Vyčkejte prosím na dokončení zálohy...',
 	'bkp-wait-restore' => 'Vyčkejte prosím na dokončení obnovy',
 	'bkp-success-restore' => 'Obnova úspěšně dokončena.',
-));
+]);

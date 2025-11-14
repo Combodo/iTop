@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:UserLocal' => 'Пользователь '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal+' => 'Пользователь, аутентифицируемый через '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Пароль',
@@ -30,4 +31,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Пароль должен содержать не менее 8 символов и включать прописные, строчные, числовые и специальные символы.',
 	'UserLocal:password:expiration' => 'Поля требуют наличия доп. расширения',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
-));
+]);

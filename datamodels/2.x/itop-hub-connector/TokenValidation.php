@@ -6,7 +6,7 @@ class TokenValidation
 	public function __construct()
 	{
 	}
-	public function isSetupTokenValid($sParamToken) : bool
+	public function isSetupTokenValid($sParamToken): bool
 	{
 		if (!file_exists(APPROOT.'data/.setup')) {
 			return false;

@@ -18,9 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-
 namespace Combodo\iTop\Portal\EventListener;
-
 
 use Dict;
 use ExceptionLog;
@@ -40,7 +38,6 @@ use Twig\Environment;
  */
 class ExceptionListener
 {
-
 	/**
 	 * Constructor.
 	 *
@@ -48,8 +45,7 @@ class ExceptionListener
 	 */
 	public function __construct(
 		protected Environment $oTwig
-	)
-	{
+	) {
 	}
 
 	/**
@@ -59,7 +55,7 @@ class ExceptionListener
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public function onKernelException(ExceptionEvent $oEvent) : void
+	public function onKernelException(ExceptionEvent $oEvent): void
 	{
 		// Get the exception object from the received event
 		$oException = $oEvent->getThrowable();
@@ -87,13 +83,11 @@ class ExceptionListener
 		// Prepare flatten exception
 		$oFlattenException = ($_SERVER['APP_DEBUG'] == 1) ? FlattenException::createFromThrowable($oException) : null;
 		// Remove APPROOT from file paths if in production (SF context)
-		if (!is_null($oFlattenException) && ($_SERVER['APP_ENV'] === 'prod'))
-		{
+		if (!is_null($oFlattenException) && ($_SERVER['APP_ENV'] === 'prod')) {
 			$oFlattenException->setFile($this->removeAppRootFromPath($oFlattenException->getFile()));
 
 			$aTrace = $oFlattenException->getTrace();
-			foreach ($aTrace as $iIdx => $aEntry)
-			{
+			foreach ($aTrace as $iIdx => $aEntry) {
 				$aTrace[$iIdx]['file'] = $this->removeAppRootFromPath($aEntry['file']);
 			}
 			$oFlattenException->setTrace($aTrace, $oFlattenException->getFile(), $oFlattenException->getLine());
@@ -105,20 +99,17 @@ class ExceptionListener
 		]);
 
 		// Prepare data for template
-		$aData = array(
+		$aData = [
 			'exception'     => $oFlattenException,
 			'code'          => $iStatusCode,
 			'error_title'   => $sErrorTitle,
 			'error_message' => $sErrorMessage,
-		);
+		];
 
 		// Generate the response
-		if ($oEvent->getRequest()->isXmlHttpRequest())
-		{
+		if ($oEvent->getRequest()->isXmlHttpRequest()) {
 			$oResponse = new JsonResponse($aData);
-		}
-		else
-		{
+		} else {
 			$oResponse = new Response();
 			$oResponse->setContent($this->oTwig->render('itop-portal-base/portal/templates/errors/layout.html.twig', $aData));
 		}
@@ -163,6 +154,5 @@ class ExceptionListener
 		$sNormalizedInputPath = $this->normalizePath($sInputPath);
 		return str_replace($sNormalizedAppRoot, '', $sNormalizedInputPath);
 	}
-
 
 }

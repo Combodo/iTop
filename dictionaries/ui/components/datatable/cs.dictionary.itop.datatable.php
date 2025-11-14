@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI:Datatables:Language:Processing' => 'Please wait...~~',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ per page~~',
 	'UI:Datatables:Language:ZeroRecords' => 'No result~~',
@@ -24,4 +25,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Datatables:Column:RowActions:Description' => '~~',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation~~',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action ?~~',
-));
+]);

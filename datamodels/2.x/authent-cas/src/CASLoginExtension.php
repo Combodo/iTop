@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     https://www.combodo.com/documentation/combodo-software-license.html
@@ -29,7 +30,7 @@ use utils;
  */
 class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExtension, iLoginUIExtension
 {
-	const LOGIN_MODE = 'cas';
+	public const LOGIN_MODE = 'cas';
 
 	/**
 	 * Return the list of supported login modes for this plugin
@@ -38,7 +39,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 	 */
 	public function ListSupportedLoginModes()
 	{
-		return array(static::LOGIN_MODE);
+		return [static::LOGIN_MODE];
 	}
 
 	protected function OnStart(&$iErrorCode)
@@ -54,23 +55,16 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 			return LoginWebPage::LOGIN_FSM_CONTINUE;
 		}
 
-		if (empty(Session::Get('login_mode')) || Session::Get('login_mode') == static::LOGIN_MODE)
-		{
+		if (empty(Session::Get('login_mode')) || Session::Get('login_mode') == static::LOGIN_MODE) {
 			static::InitCASClient();
-			if (phpCAS::isAuthenticated())
-			{
+			if (phpCAS::isAuthenticated()) {
 				Session::Set('login_mode', static::LOGIN_MODE);
 				Session::Set('auth_user', phpCAS::getUser());
 				Session::Unset('login_will_redirect');
-			}
-			else
-			{
-				if (!Session::IsSet('login_will_redirect'))
-				{
+			} else {
+				if (!Session::IsSet('login_will_redirect')) {
 					Session::Set('login_will_redirect', true);
-				}
-				else
-				{
+				} else {
 					Session::Unset('login_will_redirect');
 					$iErrorCode = LoginWebPage::EXIT_CODE_MISSINGLOGIN;
 					return LoginWebPage::LOGIN_FSM_ERROR;
@@ -84,15 +78,12 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == static::LOGIN_MODE)
-		{
-			if (!Session::IsSet('auth_user'))
-			{
+		if (Session::Get('login_mode') == static::LOGIN_MODE) {
+			if (!Session::IsSet('auth_user')) {
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
-			if (Config::Get('cas_user_synchro' ))
-			{
+			if (Config::Get('cas_user_synchro')) {
 				self::DoUserProvisioning(Session::Get('auth_user'));
 			}
 		}
@@ -101,11 +92,9 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == static::LOGIN_MODE)
-		{
+		if (Session::Get('login_mode') == static::LOGIN_MODE) {
 			$sAuthUser = Session::Get('auth_user');
-			if (!LoginWebPage::CheckUser($sAuthUser))
-			{
+			if (!LoginWebPage::CheckUser($sAuthUser)) {
 				$iErrorCode = LoginWebPage::EXIT_CODE_NOTAUTHORIZED;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
@@ -116,15 +105,13 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnError(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == static::LOGIN_MODE)
-		{
+		if (Session::Get('login_mode') == static::LOGIN_MODE) {
 			Session::Unset('phpCAS');
 			if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
 				// don't display the login page
 				return LoginWebPage::LOGIN_FSM_CONTINUE;
 			}
-			if ($iErrorCode != LoginWebPage::EXIT_CODE_MISSINGLOGIN)
-			{
+			if ($iErrorCode != LoginWebPage::EXIT_CODE_MISSINGLOGIN) {
 				$oLoginWebPage = new LoginWebPage();
 				$oLoginWebPage->DisplayLogoutPage(false, Dict::S('CAS:Error:UserNotAllowed'));
 				exit();
@@ -135,8 +122,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnConnected(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == static::LOGIN_MODE)
-		{
+		if (Session::Get('login_mode') == static::LOGIN_MODE) {
 			Session::Set('can_logoff', true);
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
@@ -149,8 +135,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 	public function LogoutAction()
 	{
 		$sCASLogoutUrl = Config::Get('cas_logout_redirect_service');
-		if (empty($sCASLogoutUrl))
-		{
+		if (empty($sCASLogoutUrl)) {
 			$sCASLogoutUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
 		}
 		static::InitCASClient();
@@ -193,8 +178,8 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 			// explode the host list separated by comma and use the first host
 			$hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
 			// see rfc7239#5.3 and rfc7230#2.7.1: port is in HTTP_X_FORWARDED_HOST if non default
-			return $protocol . $hosts[0];
-		} else if (!empty($_SERVER['HTTP_X_FORWARDED_SERVER'])) {
+			return $protocol.$hosts[0];
+		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_SERVER'])) {
 			$server_url = $_SERVER['HTTP_X_FORWARDED_SERVER'];
 		} else {
 			if (empty($_SERVER['SERVER_NAME'])) {
@@ -214,23 +199,20 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 			$server_url .= ':';
 			$server_url .= $server_port;
 		}
-		return $protocol . $server_url;
+		return $protocol.$server_url;
 	}
 
 	private function DoUserProvisioning($sLogin)
 	{
 		$bCASUserSynchro = Config::Get('cas_user_synchro');
-		if (!$bCASUserSynchro)
-		{
+		if (!$bCASUserSynchro) {
 			return;
 		}
 
 		CMDBObject::SetTrackInfo('CAS/LDAP Synchro');
 		$oUser = LoginWebPage::FindUser($sLogin, false);
-		if ($oUser)
-		{
-			if ($oUser->Get('status') == 'enabled')
-			{
+		if ($oUser) {
+			if ($oUser->Get('status') == 'enabled') {
 				CASUserProvisioning::UpdateUser($oUser);
 			}
 			return;
@@ -246,11 +228,11 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		$oLoginContext = new LoginTwigContext();
 		$oLoginContext->SetLoaderPath(APPROOT.'env-'.utils::GetCurrentEnvironment().'/authent-cas/view');
 
-		$aData = array(
+		$aData = [
 			'sLoginMode' => static::LOGIN_MODE,
 			'sLabel' => Dict::S('CAS:Login:SignIn'),
 			'sTooltip' => Dict::S('CAS:Login:SignInTooltip'),
-		);
+		];
 		$oLoginContext->AddBlockExtension('login_sso_buttons', new LoginBlockExtension('cas_sso_button.html.twig', $aData));
 
 		return $oLoginContext;
@@ -284,84 +266,66 @@ class CASUserProvisioning
 
 		$sCASMemberships = Config::Get('cas_memberof');
 		$bFound =  false;
-		if (!empty($sCASMemberships))
-		{
+		if (!empty($sCASMemberships)) {
 			$sCASMemberOfName = Config::Get('cas_memberof_attribute_name', 'memberOf');
-			if (phpCAS::hasAttribute($sCASMemberOfName))
-			{
+			if (phpCAS::hasAttribute($sCASMemberOfName)) {
 				// A list of groups is specified, the user must a be member of (at least) one of them to pass
-				$aCASMemberships = array();
+				$aCASMemberships = [];
 				$aTmp = explode(';', $sCASMemberships);
 				setlocale(LC_ALL, "en_US.utf8"); // !!! WARNING: this is needed to have  the iconv //TRANSLIT working fine below !!!
-				foreach($aTmp as $sGroupName)
-				{
+				foreach ($aTmp as $sGroupName) {
 					$aCASMemberships[] = trim(iconv('UTF-8', 'ASCII//TRANSLIT', $sGroupName)); // Just in case remove accents and spaces...
 				}
 
 				$aMemberOf = phpCAS::getAttribute($sCASMemberOfName);
-				if (!is_array($aMemberOf)) $aMemberOf = array($aMemberOf); // Just one entry, turn it into an array
-				$aFilteredGroupNames = array();
-				foreach($aMemberOf as $sGroupName)
-				{
+				if (!is_array($aMemberOf)) {
+					$aMemberOf = [$aMemberOf];
+				} // Just one entry, turn it into an array
+				$aFilteredGroupNames = [];
+				foreach ($aMemberOf as $sGroupName) {
 					phpCAS::log("Info: user if a member of the group: ".$sGroupName);
 					$sGroupName = trim(iconv('UTF-8', 'ASCII//TRANSLIT', $sGroupName)); // Remove accents and spaces as well
 					$aFilteredGroupNames[] = $sGroupName;
 					$bIsMember = false;
-					foreach($aCASMemberships as $sCASPattern)
-					{
-						if (self::IsPattern($sCASPattern))
-						{
-							if (preg_match($sCASPattern, $sGroupName))
-							{
+					foreach ($aCASMemberships as $sCASPattern) {
+						if (self::IsPattern($sCASPattern)) {
+							if (preg_match($sCASPattern, $sGroupName)) {
 								$bIsMember = true;
 								break;
 							}
-						}
-						else if ($sCASPattern == $sGroupName)
-						{
+						} elseif ($sCASPattern == $sGroupName) {
 							$bIsMember = true;
 							break;
 						}
 					}
-					if ($bIsMember)
-					{
+					if ($bIsMember) {
 						// If needed create a new user for this email/profile
 						$bOk = self::CreateCASUser(phpCAS::getUser(), $aMemberOf);
-						if($bOk)
-						{
+						if ($bOk) {
 							$bFound = true;
-						}
-						else
-						{
+						} else {
 							phpCAS::log("User ".phpCAS::getUser()." cannot be created in iTop. Logging off...");
 						}
 						break;
 					}
 				}
-				if($bOk && !$bFound)
-				{
+				if ($bOk && !$bFound) {
 					phpCAS::log("User ".phpCAS::getUser().", none of his/her groups (".implode('; ', $aFilteredGroupNames).") match any of the required groups: ".implode('; ', $aCASMemberships));
 				}
-			}
-			else
-			{
+			} else {
 				// Too bad, the user is not part of any of the group => not allowed
 				phpCAS::log("No '$sCASMemberOfName' attribute found for user ".phpCAS::getUser().". Are you using the SAML protocol (S1) ?");
 			}
-		}
-		else
-		{
+		} else {
 			// No membership: no way to create the user that should exist prior to authentication
 			phpCAS::log("User ".phpCAS::getUser().": missing user account in iTop (or iTop badly configured, Cf setting cas_memberof)");
 			$bFound = false;
 		}
 
-		if (!$bFound)
-		{
+		if (!$bFound) {
 			// The user is not part of the allowed groups, => log out
 			$sCASLogoutUrl = Config::Get('cas_logout_redirect_service');
-			if (empty($sCASLogoutUrl))
-			{
+			if (empty($sCASLogoutUrl)) {
 				$sCASLogoutUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
 			}
 			phpCAS::logoutWithRedirectService($sCASLogoutUrl); // Redirects to the CAS logout page
@@ -385,10 +349,11 @@ class CASUserProvisioning
 	{
 		$bCASUpdateProfiles = Config::Get('cas_update_profiles');
 		$sCASMemberOfName = Config::Get('cas_memberof_attribute_name', 'memberOf');
-		if ($bCASUpdateProfiles && (phpCAS::hasAttribute($sCASMemberOfName)))
-		{
+		if ($bCASUpdateProfiles && (phpCAS::hasAttribute($sCASMemberOfName))) {
 			$aMemberOf = phpCAS::getAttribute($sCASMemberOfName);
-			if (!is_array($aMemberOf)) $aMemberOf = array($aMemberOf); // Just one entry, turn it into an array
+			if (!is_array($aMemberOf)) {
+				$aMemberOf = [$aMemberOf];
+			} // Just one entry, turn it into an array
 
 			self::SetProfilesFromCAS($oUser, $aMemberOf);
 		}
@@ -410,30 +375,24 @@ class CASUserProvisioning
 	 */
 	protected static function CreateCASUser($sLogin, $aGroups)
 	{
-		if (!MetaModel::IsValidClass('URP_Profiles'))
-		{
+		if (!MetaModel::IsValidClass('URP_Profiles')) {
 			phpCAS::log("URP_Profiles is not a valid class. Automatic creation of Users is not supported in this context, sorry.");
 			return false;
 		}
 
 		$oUser = MetaModel::GetObjectByName('UserExternal', $sLogin, false);
-		if ($oUser == null)
-		{
+		if ($oUser == null) {
 			// Create the user, link it to a contact
-			if (phpCAS::hasAttribute('mail'))
-			{
+			if (phpCAS::hasAttribute('mail')) {
 				$sEmail = phpCAS::getAttribute('mail');
-			}
-			else
-			{
+			} else {
 				$sEmail = $sLogin;
 			}
 			phpCAS::log("Info: the user '$sLogin' does not exist. A new UserExternal will be created.");
 			$oSearch = new DBObjectSearch('Person');
 			$oSearch->AddCondition('email', $sEmail);
 			$oSet = new DBObjectSet($oSearch);
-			switch($oSet->Count())
-			{
+			switch ($oSet->Count()) {
 				case 0:
 					phpCAS::log("Error: found no contact with the email: '$sEmail'. Cannot create the user in iTop.");
 					return false;
@@ -453,9 +412,7 @@ class CASUserProvisioning
 			$oUser->Set('login', $sLogin);
 			$oUser->Set('contactid', $iContactId);
 			$oUser->Set('language', MetaModel::GetConfig()->GetDefaultLanguage());
-		}
-		else
-		{
+		} else {
 			phpCAS::log("Info: the user '$sLogin' already exists (id=".$oUser->GetKey().").");
 		}
 
@@ -474,8 +431,7 @@ class CASUserProvisioning
 	 */
 	protected static function SetProfilesFromCAS($oUser, $aGroups)
 	{
-		if (!MetaModel::IsValidClass('URP_Profiles'))
-		{
+		if (!MetaModel::IsValidClass('URP_Profiles')) {
 			phpCAS::log("URP_Profiles is not a valid class. Automatic creation of Users is not supported in this context, sorry.");
 			return false;
 		}
@@ -483,56 +439,42 @@ class CASUserProvisioning
 		// read all the existing profiles
 		$oProfilesSearch = new DBObjectSearch('URP_Profiles');
 		$oProfilesSet = new DBObjectSet($oProfilesSearch);
-		$aAllProfiles = array();
-		while($oProfile = $oProfilesSet->Fetch())
-		{
+		$aAllProfiles = [];
+		while ($oProfile = $oProfilesSet->Fetch()) {
 			$aAllProfiles[mb_strtolower($oProfile->GetName())] = $oProfile->GetKey();
 		}
 
 		// Translate the CAS/LDAP group names into iTop profile names
-		$aProfiles = array();
+		$aProfiles = [];
 		$sPattern = Config::Get('cas_profile_pattern');
-		foreach($aGroups as $sGroupName)
-		{
-			if (preg_match($sPattern, $sGroupName, $aMatches))
-			{
-				if (array_key_exists(mb_strtolower($aMatches[1]), $aAllProfiles))
-				{
+		foreach ($aGroups as $sGroupName) {
+			if (preg_match($sPattern, $sGroupName, $aMatches)) {
+				if (array_key_exists(mb_strtolower($aMatches[1]), $aAllProfiles)) {
 					$aProfiles[] = $aAllProfiles[mb_strtolower($aMatches[1])];
 					phpCAS::log("Info: Adding the profile '{$aMatches[1]}' from CAS.");
-				}
-				else
-				{
+				} else {
 					phpCAS::log("Warning: {$aMatches[1]} is not a valid iTop profile (extracted from group name: '$sGroupName'). Ignored.");
 				}
-			}
-			else
-			{
+			} else {
 				phpCAS::log("Info: The CAS group '$sGroupName' does not seem to match an iTop pattern. Ignored.");
 			}
 		}
-		if (count($aProfiles) == 0)
-		{
+		if (count($aProfiles) == 0) {
 			phpCAS::log("Info: The user '".$oUser->GetName()."' has no profiles retrieved from CAS. Default profile(s) will be used.");
 
 			// Second attempt: check if there is/are valid default profile(s)
 			$sCASDefaultProfiles = Config::Get('cas_default_profiles');
 			$aCASDefaultProfiles = explode(';', $sCASDefaultProfiles);
-			foreach($aCASDefaultProfiles as $sDefaultProfileName)
-			{
-				if (array_key_exists(mb_strtolower($sDefaultProfileName), $aAllProfiles))
-				{
+			foreach ($aCASDefaultProfiles as $sDefaultProfileName) {
+				if (array_key_exists(mb_strtolower($sDefaultProfileName), $aAllProfiles)) {
 					$aProfiles[] = $aAllProfiles[mb_strtolower($sDefaultProfileName)];
 					phpCAS::log("Info: Adding the default profile '".$aAllProfiles[mb_strtolower($sDefaultProfileName)]."' from CAS.");
-				}
-				else
-				{
+				} else {
 					phpCAS::log("Warning: the default profile {$sDefaultProfileName} is not a valid iTop profile. Ignored.");
 				}
 			}
 
-			if (count($aProfiles) == 0)
-			{
+			if (count($aProfiles) == 0) {
 				phpCAS::log("Error: The user '".$oUser->GetName()."' has no profiles in iTop, and therefore cannot be created.");
 				return false;
 			}
@@ -542,8 +484,7 @@ class CASUserProvisioning
 		LoginWebPage::SynchronizeProfiles($oUser, $aProfiles, 'CAS/LDAP Synchro');
 
 		phpCAS::log("Info: the user '".$oUser->GetName()."' (id=".$oUser->GetKey().") now has the following profiles: '".implode("', '", $aProfiles)."'.");
-		if ($oUser->IsModified())
-		{
+		if ($oUser->IsModified()) {
 			$oUser->DBWrite();
 		}
 
@@ -557,13 +498,10 @@ class CASUserProvisioning
 	 */
 	protected static function IsPattern($sCASPattern)
 	{
-		if ((substr($sCASPattern, 0, 1) == '/') && (substr($sCASPattern, -1) == '/'))
-		{
+		if ((substr($sCASPattern, 0, 1) == '/') && (substr($sCASPattern, -1) == '/')) {
 			// the string is enclosed by slashes, let's assume it's a pattern
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}

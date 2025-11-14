@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -93,11 +94,11 @@ class Router
 		$sUrl = $bAbsoluteUrl ? utils::GetAbsoluteUrlAppRoot() : '';
 
 		// Add route URL
-		$sUrl .=  'pages/UI.php?route=' . $sRoute;
+		$sUrl .=  'pages/UI.php?route='.$sRoute;
 
 		// Add parameters and url encode them
 		if (count($aParams) > 0) {
-			$sUrl .= '&' . http_build_query($aParams);
+			$sUrl .= '&'.http_build_query($aParams);
 		}
 
 		return $sUrl;
@@ -197,10 +198,10 @@ class Router
 					// eg. "do_something"
 					$sRouteOperation = utils::ToSnakeCase(substr($oReflectionMethod->name, $iPos + strlen($sPrefix)));
 
-					$aRoutes[$sRouteNamespace . '.' . $sRouteOperation] = [
+					$aRoutes[$sRouteNamespace.'.'.$sRouteOperation] = [
 						'namespace' => $sRouteNamespace,
 						'operation' => $sRouteOperation,
-						'controller' => $sControllerFQCN . '::' . $sMethodName,
+						'controller' => $sControllerFQCN.'::'.$sMethodName,
 						'description' => $oReflectionMethod->getDocComment(),
 					];
 				}
