@@ -9,10 +9,10 @@ namespace Combodo\iTop\Forms\Block\Base;
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
-use Combodo\iTop\Forms\FormType\Base\FormType;
-use Combodo\iTop\Forms\Register\OptionsRegister;
 use Combodo\iTop\Forms\FormBuilder\DependencyMap;
 use Combodo\iTop\Forms\FormsException;
+use Combodo\iTop\Forms\FormType\Base\FormType;
+use Combodo\iTop\Forms\Register\OptionsRegister;
 use Exception;
 use ReflectionClass;
 use ReflectionException;
@@ -43,8 +43,8 @@ class FormBlock extends AbstractTypeFormBlock
 			// Build the form
 			$this->BuildForm();
 		}
-		catch (Exception $ex) {
-			throw new FormsException('Unable to construct demonstrator form.', 0, $ex);
+		catch (Exception $e) {
+			throw new FormBlockException('Unable to construct form', 0, $e);
 		}
 	}
 
@@ -72,6 +72,7 @@ class FormBlock extends AbstractTypeFormBlock
 	 *
 	 * @return $this
 	 * @throws ReflectionException
+	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
 	 */
 	public function Add(string $sName, string $sType, array $aSymfonyOptions, array $aOptions = []): AbstractFormBlock
 	{

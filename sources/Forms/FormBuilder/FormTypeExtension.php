@@ -46,7 +46,6 @@ class FormTypeExtension extends AbstractTypeExtension
 			$builder->addEventListener(FormEvents::POST_SET_DATA, $options['builder_listener']);
 			$builder->addEventListener(FormEvents::POST_SUBMIT, $options['builder_listener']);
 		}
-
 	}
 
 	/** @inheritdoc */
@@ -58,7 +57,5 @@ class FormTypeExtension extends AbstractTypeExtension
 			$oFormBlock = $options['form_block'];
 			$view->vars['trigger_form_submit_on_modify'] = $oFormBlock->ImpactDependentsBlocks();
 		}
-
 	}
-
 }

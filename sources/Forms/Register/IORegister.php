@@ -43,7 +43,7 @@ class IORegister
 	 * @param string $sOutputBlockName
 	 * @param string $sOutputName
 	 *
-	 * @return AbstractFormBlock
+	 * @return $this
 	 * @throws FormBlockException
 	 */
 	public function AddInputDependsOn(string $sName, string $sOutputBlockName, string $sOutputName): self
@@ -171,7 +171,7 @@ class IORegister
 	public function GetOutput(string $sName): FormOutput
 	{
 		if (!array_key_exists($sName, $this->aOutputs)) {
-			throw new FormBlockException('Missing output '.$sName.' for '.$this->oFormBlock->GetName());
+			throw new FormBlockException('Missing output '.json_encode($sName).' for '.json_encode($this->oFormBlock->GetName()));
 		}
 
 		return $this->aOutputs[$sName];

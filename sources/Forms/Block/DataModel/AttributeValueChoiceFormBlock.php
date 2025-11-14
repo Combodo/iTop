@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Forms\Block\DataModel;
 
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
+use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\IO\Format\RawFormat;
@@ -47,7 +48,9 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		$oIORegister->AddOutput(self::OUTPUT_VALUE, RawFormat::class);
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc
+	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 */
 	public function UpdateOptions(OptionsRegister $oOptionsRegister): void
 	{
 		parent::UpdateOptions($oOptionsRegister);
@@ -55,13 +58,15 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		$oClassName = $this->GetInputValue(self::INPUT_CLASS_NAME);
 		$oAttribute = $this->GetInputValue(self::INPUT_ATTRIBUTE);
 
-		try{
+		try {
 			$oAttDef = MetaModel::GetAttributeDef(strval($oClassName), strval($oAttribute));
 			$aValues = $oAttDef->GetAllowedValues();
 
 			$oOptionsRegister->SetOption('choices', array_flip($aValues ?? []));
 		}
-		catch(Exception){}
+		catch (Exception $e) {
+			throw new FormBlockException('Update option failed for '.json_encode($this->GetName()), 0, $e);
+		}
 	}
 
 }

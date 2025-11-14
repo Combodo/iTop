@@ -7,15 +7,17 @@
 namespace Combodo\iTop\Forms\IO\Converter;
 
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\IO\FormBlockIOException;
 use MetaModel;
-use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * OQL expression to class converter.
  */
 class OqlToClassConverter extends AbstractConverter
 {
-	/** @inheritdoc */
+	/** @inheritdoc
+	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
+	 */
 	public function Convert(mixed $oData): ?ClassIOFormat
 	{
 		if ($oData === null) {
@@ -29,12 +31,12 @@ class OqlToClassConverter extends AbstractConverter
 		if (isset($aMatches[1])) {
 			$sSelectedClass = $aMatches[1];
 			if (!MetaModel::IsValidClass($sSelectedClass)) {
-				throw new IOException("Class `$sSelectedClass` not found");
+				throw new FormBlockIOException('Class '.json_encode($sSelectedClass).' not found');
 			}
 
 			return new ClassIOFormat($aMatches[1]);
 		} else {
-			throw new IOException('Incorrect OQL sentence');
+			throw new FormBlockIOException('Incorrect OQL sentence '.json_encode($oData));
 		}
 
 

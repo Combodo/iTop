@@ -40,7 +40,7 @@ class AbstractFormIO
 	 */
 	public function __construct(string $sName, string $sType, AbstractFormBlock $oOwnerBlock)
 	{
-		$this->sName = $sName;
+		$this->SetName($sName);
 		$this->sType = $sType;
 		$this->oOwnerBlock = $oOwnerBlock;
 	}
@@ -71,9 +71,26 @@ class AbstractFormIO
 	 * @param string $sName
 	 *
 	 * @return self
+	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
 	 */
 	public function SetName(string $sName): self
 	{
+		// Check name validity
+		if (preg_match('/(?<name>\w+)/', $sName, $aMatches)) {
+			$sParsedName = $aMatches['name'];
+			if ($sParsedName !== $sName) {
+				$sName = json_encode($sName);
+				$sParsedName = json_encode($sParsedName);
+				$sBlockName = json_encode($this->getName());
+				Throw new FormBlockIOException("Input $sName does not match $sParsedName for block $sBlockName.");
+			}
+		} else {
+			$sName = json_encode($sName);
+			$sBlockName = json_encode($this->getName());
+			Throw new FormBlockIOException("Input $sName is not valid for block $sBlockName.");
+		}
+
+		// Name is valid
 		$this->sName = $sName;
 
 		return $this;
@@ -210,7 +227,7 @@ class AbstractFormIO
 	 *
 	 * @return void
 	 */
-	public function Attach(FormBinding $oFormBinding)
+	public function Attach(FormBinding $oFormBinding): void
 	{
 		$this->oBinding = $oFormBinding;
 	}

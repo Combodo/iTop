@@ -72,10 +72,6 @@ class CollectionBlock extends AbstractTypeFormBlock
 		$sBlockEntryOptions = $this->GetOption('block_entry_options');
 		$this->oPrototypeBlock = new ($sBlockEntryType)('prototype', $sBlockEntryOptions);
 
-		//		$this->HandleBlockDependencies();
-//		$this->oBlock->SetParent($this->GetParent());
-//		$oBlock->DependsOn('company', 'company', AbstractFormBlock::OUTPUT_VALUE);
-
 		$oOptionsRegister->SetOption('entry_type', $this->oPrototypeBlock->GetFormType());
 		$oOptionsRegister->SetOption('entry_options', $this->oPrototypeBlock->GetOptions());
 	}

@@ -137,10 +137,10 @@ class DependencyHandler
 			$oFormBlock = $this->oFormBlock->Get($oForm->getName());
 
 			// Compute the block outputs with the data
-			try{
+			try {
 				$oFormBlock->ComputeOutputs($sEventType, $oForm->getData());
 			}
-			catch(Exception $e){
+			catch (Exception $e) {
 				$oForm->addError(new FormError($e->getMessage()));
 			}
 
@@ -150,19 +150,19 @@ class DependencyHandler
 
 	}
 
-
 	/**
 	 * @param FormInterface|FormBuilderInterface $oForm
 	 * @param string|null $sOutputBlock
 	 * @param string|null $sEventType
 	 *
 	 * @return void
+	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
 	 */
 	private function CheckDependencies(FormInterface|FormBuilderInterface $oForm, string $sOutputBlock = null, string $sEventType = null): void
 	{
 		$aImpactedBlocks = $this->aDependentBlocks;
-		if($sOutputBlock !== null){
-			$aImpactedBlocks = $this->oDependenciesMap->GetBlocksImpactedBy($sOutputBlock, function(AbstractFormBlock $oBlock) use ($sEventType) {
+		if ($sOutputBlock !== null) {
+			$aImpactedBlocks = $this->oDependenciesMap->GetBlocksImpactedBy($sOutputBlock, function (AbstractFormBlock $oBlock) use ($sEventType) {
 				return $oBlock instanceof AbstractTypeFormBlock;
 			});
 		}
@@ -213,9 +213,7 @@ class DependencyHandler
 				// Add event
 				$this->AddEvent('form.remove', $oDependentBlock->getName());
 			}
-
 		}
-
 	}
 
 	/**

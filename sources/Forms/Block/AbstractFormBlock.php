@@ -7,13 +7,14 @@
 namespace Combodo\iTop\Forms\Block;
 
 use Combodo\iTop\Forms\Block\Base\FormBlock;
+use Combodo\iTop\Forms\IFormBlock;
 use Combodo\iTop\Forms\IO\AbstractFormIO;
+use Combodo\iTop\Forms\IO\Converter\AbstractConverter;
 use Combodo\iTop\Forms\IO\Format\RawFormat;
 use Combodo\iTop\Forms\IO\FormInput;
 use Combodo\iTop\Forms\IO\FormOutput;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
-use Combodo\iTop\Forms\IFormBlock;
 
 /**
  * Abstract form block.
@@ -187,21 +188,6 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function AddInput(string $sName, string $sType): AbstractFormBlock
 	{
-		// Check name validity
-		if (preg_match('/(?<name>\w+)/', $sName, $aMatches)) {
-			$sParsedName = $aMatches['name'];
-			if ($sParsedName !== $sName) {
-				$sName = json_encode($sName);
-				$sParsedName = json_encode($sParsedName);
-				$sBlockName = json_encode($this->getName());
-				Throw new FormBlockException("Input $sName does not match $sParsedName for block $sBlockName.");
-			}
-		} else {
-			$sName = json_encode($sName);
-			$sBlockName = json_encode($this->getName());
-			Throw new FormBlockException("Input $sName is not valid for block $sBlockName.");
-		}
-		// Name is valid
 		$this->oIORegister->AddInput($sName, $sType);
 		return $this;
 	}
