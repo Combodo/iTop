@@ -2254,7 +2254,7 @@ class MenuBlock extends DisplayBlock
 					case 'UI:Menu:impacts_up':
 						$sIconClass = 'fas fa-sitemap fa-rotate-180';
 						$sLabel = '';
-						$aAction['tooltip'] = Dict::S('Relation:impacts/UpStream+');
+						$aAction['tooltip'] = Dict::S('Relation:impacts/UpStream'); // Tooltip not clear for PO, so we use the label here
 						break;
 					case 'UI:Menu:impacts_down':
 						$sIconClass = 'fas fa-sitemap';
