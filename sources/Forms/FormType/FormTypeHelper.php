@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Forms\Block\FormType;
+namespace Combodo\iTop\Forms\FormType;
 
 use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Symfony\Component\Form\FormInterface;

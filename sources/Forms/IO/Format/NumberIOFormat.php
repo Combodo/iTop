@@ -1,6 +1,6 @@
 <?php
 
-namespace Combodo\iTop\Forms\Block\IO\Format;
+namespace Combodo\iTop\Forms\IO\Format;
 
 class NumberIOFormat
 {

@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
+use Combodo\iTop\Forms\Register\OptionsRegister;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 /**
@@ -21,9 +22,10 @@ class DateTimeFormBlock extends AbstractTypeFormBlock
 		return DateTimeType::class;
 	}
 
-	public function InitBlockOptions(array &$aUserOptions): void
+	/** @inheritdoc */
+	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
-		parent::InitBlockOptions($aUserOptions);
-		$aUserOptions['widget'] = 'single_text';
+		parent::RegisterOptions($oOptionsRegister);
+		$oOptionsRegister->SetOption('widget', 'single_text');
 	}
 }

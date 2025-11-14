@@ -7,8 +7,10 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
-use Combodo\iTop\Forms\Block\IO\Converter\StringToBooleanConverter;
-use Combodo\iTop\Forms\Block\IO\Format\BooleanIOFormat;
+use Combodo\iTop\Forms\IO\Converter\StringToBooleanConverter;
+use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
+use Combodo\iTop\Forms\Register\IORegister;
+use Combodo\iTop\Forms\Register\OptionsRegister;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 /**
@@ -27,16 +29,16 @@ class CheckboxFormBlock extends AbstractTypeFormBlock
 	}
 
 	/** @inheritdoc */
-	function InitBlockOptions(array &$aUserOptions): void
+	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
-		parent::InitBlockOptions($aUserOptions);
-		$aUserOptions['required'] = false;
+		parent::RegisterOptions($oOptionsRegister);
+		$oOptionsRegister->SetOption('required', false);
 	}
 
 	/** @inheritdoc */
-	function InitOutputs(): void
+	protected function RegisterIO(IORegister $oIORegister): void
 	{
-		parent::InitOutputs();
-		$this->AddOutput(self::OUTPUT_CHECKED, BooleanIOFormat::class, new StringToBooleanConverter());
+		parent::RegisterIO($oIORegister);
+		$oIORegister->AddOutput(self::OUTPUT_CHECKED, BooleanIOFormat::class, new StringToBooleanConverter());
 	}
 }

@@ -6,12 +6,17 @@
 
 namespace Combodo\iTop\Forms\Block;
 
-use Combodo\iTop\Forms\Block\IO\Format\BooleanIOFormat;
+use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
+use Combodo\iTop\Forms\Register\IORegister;
 
 abstract class AbstractTypeFormBlock extends AbstractFormBlock
 {
 	// Inputs
 	public const INPUT_VISIBLE = 'visible';
+	public const INPUT_ENABLE = 'enable';
+
+	/** @var bool flag indicating the form insertion */
+	private bool $bIsAddedToForm = false;
 
 	/**
 	 * Return the form type.
@@ -20,15 +25,12 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 	 */
 	abstract public function GetFormType(): string;
 
-	/**
-	 * Initialize inputs.
-	 *
-	 * @return void
-	 */
-	public function InitInputs(): void
+	/** @inheritdoc */
+	protected function RegisterIO(IORegister $oIORegister): void
 	{
-		parent::InitInputs();
-		$this->AddInput(self::INPUT_VISIBLE, BooleanIOFormat::class);
+		parent::RegisterIO($oIORegister);
+		$oIORegister->AddInput(self::INPUT_VISIBLE, BooleanIOFormat::class);
+		$oIORegister->AddInput(self::INPUT_ENABLE, BooleanIOFormat::class);
 	}
 
 	/**
@@ -55,5 +57,27 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 	public function AllowAdd(string $sEventType = null): bool
 	{
 		return true;
+	}
+
+	/**
+	 * The block has been added to its parent.
+	 *
+	 * @return bool
+	 */
+	public function IsAdded(): bool
+	{
+		return $this->bIsAddedToForm;
+	}
+
+	/**
+	 * Indicate that the block has been added to its parent.
+	 *
+	 * @param bool $bIsAdded
+	 *
+	 * @return void
+	 */
+	public function SetAdded(bool $bIsAdded): void
+	{
+		$this->bIsAddedToForm = $bIsAdded;
 	}
 }

@@ -7,6 +7,7 @@
 namespace Forms;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\Base\CheckboxFormBlock;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
@@ -38,8 +39,10 @@ class Block extends ItopDataTestCase
 		$aFormBlocks = InterfaceDiscovery::GetInstance()->FindItopClasses(iFormBlock::class);
 		foreach ($aFormBlocks as $sFormBlock) {
 			$oChoiceBlock = new($sFormBlock)($sFormBlock);
-			$oClass = new \ReflectionClass($oChoiceBlock->GetFormType());
-			$this->assertTrue($oClass->isSubclassOf(AbstractType::class));
+			if($oChoiceBlock instanceof AbstractTypeFormBlock){
+				$oClass = new \ReflectionClass($oChoiceBlock->GetFormType());
+				$this->assertTrue($oClass->isSubclassOf(AbstractType::class));
+			}
 		}
 	}
 
@@ -63,7 +66,7 @@ class Block extends ItopDataTestCase
 		$aFormBlocks = InterfaceDiscovery::GetInstance()->FindItopClasses(iFormBlock::class);
 		foreach ($aFormBlocks as $sFormBlock) {
 			$oChoiceBlock = new($sFormBlock)($sFormBlock);
-			$this->assertTrue($oChoiceBlock->GetOptions()['form_block'] === $oChoiceBlock);
+			$this->assertTrue($oChoiceBlock->GetOption('form_block') === $oChoiceBlock);
 		}
 	}
 
@@ -79,7 +82,7 @@ class Block extends ItopDataTestCase
 		$oFormBlock = new FormBlock('formBlock');
 		$oFormBlock->Add('allow_age', CheckboxFormBlock::class, []);
 		$oBirthdateBlock = $oFormBlock->Add('birthdate', TextFormBlock::class, [])
-			->DependsOn(AbstractFormBlock::INPUT_VISIBLE, 'allow_age', CheckboxFormBlock::OUTPUT_CHECKED);
+			->DependsOn(AbstractTypeFormBlock::INPUT_VISIBLE, 'allow_age', CheckboxFormBlock::OUTPUT_CHECKED);
 
 		$this->assertTrue($oBirthdateBlock->HasDependenciesBlocks());
 	}
@@ -99,7 +102,7 @@ class Block extends ItopDataTestCase
 		$oFormBlock->Add('lastname', TextFormBlock::class, []);
 		$oFormBlock->Add('allow_age', CheckboxFormBlock::class, []);
 		$oFormBlock->Add('birthdate', TextFormBlock::class, [])
-			->DependsOn(AbstractFormBlock::INPUT_VISIBLE, 'allow_age', CheckboxFormBlock::OUTPUT_CHECKED);
+			->DependsOn(AbstractTypeFormBlock::INPUT_VISIBLE, 'allow_age', CheckboxFormBlock::OUTPUT_CHECKED);
 
 		// form builder
 		$oFormFactoryBuilder = Forms::createFormFactoryBuilder();

@@ -7,10 +7,11 @@
 namespace Combodo\iTop\Forms\Block\DataModel;
 
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
-use Combodo\iTop\Forms\Block\FormBlockException;
-use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
-use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
-use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
+use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
+use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\IO\Format\RawFormat;
+use Combodo\iTop\Forms\Register\IORegister;
+use Combodo\iTop\Forms\Register\OptionsRegister;
 use Exception;
 use MetaModel;
 
@@ -29,41 +30,36 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 	public const OUTPUT_VALUE = 'value';
 
 	/** @inheritdoc */
-	public function InitBlockOptions(array &$aUserOptions): void
+	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
-		parent::InitBlockOptions($aUserOptions);
-		$aUserOptions['multiple'] = true;
-		$aUserOptions['attr'] = [
-			'size'  => 5,
-			'style' => 'height: auto;',
-		];
+		parent::RegisterOptions($oOptionsRegister);
+		$oOptionsRegister->SetOption('multiple', true);
+		$oOptionsRegister->SetOptionArrayValue('attr', 'size', 5);
+		$oOptionsRegister->SetOptionArrayValue('attr', 'style', 'height: auto;');
 	}
 
 	/** @inheritdoc */
-	public function InitInputs(): void
+	protected function RegisterIO(IORegister $oIORegister): void
 	{
-		parent::InitInputs();
-		$this->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
-		$this->AddInput(self::INPUT_ATTRIBUTE, AttributeIOFormat::class);
-	}
-
-	/** @inheritdoc */
-	public function InitOutputs(): void
-	{
-		parent::InitOutputs();
-		$this->AddOutput(self::OUTPUT_VALUE, RawFormat::class);
+		parent::RegisterIO($oIORegister);
+		$oIORegister->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
+		$oIORegister->AddInput(self::INPUT_ATTRIBUTE, AttributeIOFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_VALUE, RawFormat::class);
 	}
 
 	/** @inheritdoc  */
-	public function UpdateDynamicOptions(string $sEventType = null): void
+	public function UpdateOptions(OptionsRegister $oOptionsRegister): void
 	{
-		$oClassName = $this->GetInput(self::INPUT_CLASS_NAME)->GetValue($sEventType);
-		$oAttribute = $this->GetInput(self::INPUT_ATTRIBUTE)->GetValue($sEventType);
+		parent::UpdateOptions($oOptionsRegister);
+
+		$oClassName = $this->GetInputValue(self::INPUT_CLASS_NAME);
+		$oAttribute = $this->GetInputValue(self::INPUT_ATTRIBUTE);
 
 		try{
 			$oAttDef = MetaModel::GetAttributeDef(strval($oClassName), strval($oAttribute));
 			$aValues = $oAttDef->GetAllowedValues();
-			$this->aDynamicOptions['choices'] = array_flip($aValues ?? []);
+
+			$oOptionsRegister->SetOption('choices', array_flip($aValues ?? []));
 		}
 		catch(Exception){}
 	}

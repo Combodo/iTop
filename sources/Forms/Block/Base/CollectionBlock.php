@@ -7,8 +7,10 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
-use Combodo\iTop\Forms\Block\FormType\CollectionFormType;
-use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\FormType\Base\CollectionFormType;
+use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\Register\IORegister;
+use Combodo\iTop\Forms\Register\OptionsRegister;
 
 /**
  * Collection form type.
@@ -19,16 +21,8 @@ class CollectionBlock extends AbstractTypeFormBlock
 	// Inputs
 	public const INPUT_CLASS_NAME = 'class_name';
 
-	/**
-	 * Constructor.
-	 *
-	 * @param string $sName
-	 * @param array $aOptions
-	 */
-	public function __construct(string $sName, array $aOptions = [])
-	{
-		parent::__construct($sName, $aOptions);
-	}
+	/** @var FormBlock block */
+	protected AbstractTypeFormBlock $oPrototypeBlock;
 
 	/** @inheritdoc */
 	public function GetFormType(): string
@@ -36,47 +30,54 @@ class CollectionBlock extends AbstractTypeFormBlock
 		return CollectionFormType::class;
 	}
 
-	/** @inheritdoc */
-	public function InitInputs(): void
+	/**
+	 * Get the prototype block.
+	 *
+	 * @return AbstractTypeFormBlock
+	 */
+	public function GetPrototypeBlock(): AbstractTypeFormBlock
 	{
-		parent::InitInputs();
-		$this->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
+		return $this->oPrototypeBlock;
 	}
 
-	protected $oBlock;
-
-	public function GetOptions(): array
+	/** @inheritdoc */
+	protected function RegisterIO(IORegister $oIORegister): void
 	{
-		$aOptions = parent::GetOptions();
+		parent::RegisterIO($oIORegister);
+		$oIORegister->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
+	}
 
-		// Convert block information in type information
-		if(isset($aOptions['block_entry_type'])) {
-			$aOptions['prototype'] = true;
-			$aOptions['allow_add'] = true;
-			$aOptions['prototype_options']  = [
-				'label' => false
-			];
-		}
+	/** @inheritdoc */
+	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
+	{
+		parent::RegisterOptions($oOptionsRegister);
 
-		$sBlockEntryType = $aOptions['block_entry_type'];
-		$sBlockEntryOptions = $aOptions['block_entry_options'];
-		$this->oBlock = new ($sBlockEntryType)('prototype', $sBlockEntryOptions);
+		$oOptionsRegister->SetOption('prototype', true);
+		$oOptionsRegister->SetOption('allow_add', true);
+		$oOptionsRegister->SetOption('prototype_options', [
+			'label' => false
+		]);
 
-//		$this->HandleBlockDependencies();
+		// not type options
+		$oOptionsRegister->SetOption('block_entry_type', FormBlock::class, false);
+		$oOptionsRegister->SetOption('block_entry_options', [], false);
+	}
+
+	/** @inheritdoc */
+	protected function AfterOptionsRegistered(OptionsRegister $oOptionsRegister): void
+	{
+		parent::AfterOptionsRegistered($oOptionsRegister);
+
+		$sBlockEntryType = $this->GetOption('block_entry_type');
+		$sBlockEntryOptions = $this->GetOption('block_entry_options');
+		$this->oPrototypeBlock = new ($sBlockEntryType)('prototype', $sBlockEntryOptions);
+
+		//		$this->HandleBlockDependencies();
 //		$this->oBlock->SetParent($this->GetParent());
 //		$oBlock->DependsOn('company', 'company', AbstractFormBlock::OUTPUT_VALUE);
 
-		unset($aOptions['block_entry_type']);
-		unset($aOptions['block_entry_options']);
-		$aOptions['entry_type'] = $this->oBlock->GetFormType();
-		$aOptions['entry_options'] = $this->oBlock->GetOptions();
-
-		return $aOptions;
-	}
-
-	public function HandleBlockDependencies(): void
-	{
-
+		$oOptionsRegister->SetOption('entry_type', $this->oPrototypeBlock->GetFormType());
+		$oOptionsRegister->SetOption('entry_options', $this->oPrototypeBlock->GetOptions());
 	}
 
 }

@@ -7,8 +7,9 @@
 namespace Combodo\iTop\Forms\Block\Expression;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
-use Combodo\iTop\Forms\Block\IO\Format\BooleanIOFormat;
-use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
+use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
+use Combodo\iTop\Forms\IO\Format\RawFormat;
+use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\FormsException;
 use IssueLog;
 use Symfony\Component\Form\FormEvents;
@@ -25,17 +26,17 @@ class ExpressionFormBlock extends AbstractFormBlock
 	const OUTPUT_RESULT_INVERT = "result_invert";
 
 	/** @inheritdoc */
-	public function InitOutputs(): void
+	protected function RegisterIO(IORegister $oIORegister): void
 	{
-		parent::InitOutputs();
-		$this->AddOutput(self::OUTPUT_RESULT, BooleanIOFormat::class);
-		$this->AddOutput(self::OUTPUT_RESULT_INVERT, BooleanIOFormat::class);
+		parent::RegisterIO($oIORegister);
+		$oIORegister->AddOutput(self::OUTPUT_RESULT, BooleanIOFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_RESULT_INVERT, BooleanIOFormat::class);
 	}
-
 
 	/** @inheritdoc */
 	public function AllInputsReadyEvent(): void
 	{
+		parent::AllInputsReadyEvent();
 		$this->ComputeExpression(FormEvents::POST_SET_DATA);
 		$this->ComputeExpression(FormEvents::POST_SUBMIT);
 	}
@@ -50,7 +51,7 @@ class ExpressionFormBlock extends AbstractFormBlock
 	public function ComputeExpression(string $sEventType): void
 	{
 		try{
-			$sExpression = $this->GetOptions()['expression'];
+			$sExpression = $this->GetOption('expression');
 
 			$sValue = preg_replace_callback(
 				self::EXPRESSION_PATTERN,

@@ -29,7 +29,6 @@ class DependencyHandler
 
 	/** @var array events */
 	private array $aEvents = [];
-	private readonly string $sName;
 	private readonly FormBuilder $oFormBuilder;
 	private readonly FormBlock $oFormBlock;
 	private readonly array $aDependentBlocks;
@@ -43,7 +42,6 @@ class DependencyHandler
 	 */
 	public function __construct(FormBuilder $oFormBuilder, FormBlock $oFormBlock, array $aDependentBlocks)
 	{
-		$this->sName = $oFormBuilder->getName();
 		$this->aDependentBlocks = $aDependentBlocks;
 		$this->oFormBuilder = $oFormBuilder;
 		$this->oFormBlock = $oFormBlock;
@@ -59,6 +57,36 @@ class DependencyHandler
 
 		// Store the dependency handler (debug purpose)
 		self::$aDependencyHandlers[] = $this;
+	}
+
+	/**
+	 * Get the form name.
+	 *
+	 * @return string
+	 */
+	public function GetName(): string
+	{
+		return $this->oFormBuilder->getName();
+	}
+
+	/**
+	 * Get the debug data.
+	 *
+	 * @return array
+	 */
+	public function GetDebugData(): array
+	{
+		return $this->aEvents;
+	}
+
+	/**
+	 * Get the dependencies map.
+	 *
+	 * @return DependencyMap
+	 */
+	public function GetMap(): DependencyMap
+	{
+		return $this->oDependenciesMap;
 	}
 
 	/**
@@ -148,9 +176,8 @@ class DependencyHandler
 			// When dependencies met, add the dependent field if not already done or options changed
 			if ($oDependentBlock->IsVisible($sEventType) && $oDependentBlock->IsInputsDataReady($sEventType)) {
 
-				// Get the dependent field options
-				$oDependentBlock->UpdateDynamicOptions($sEventType);
-				$aOptions = $oDependentBlock->GetOptionsMergedWithDynamic($sEventType);
+				// Get the Symfony options
+				$aOptions = $oDependentBlock->GetOptions();
 
 				// Add the listener callback to the dependent field if it is also a dependency for another field
 				if ($this->oDependenciesMap->HasBlocksImpactedBy($oDependentBlock->getName())) {
@@ -192,29 +219,16 @@ class DependencyHandler
 	}
 
 	/**
-	 * Get the debug data.
+	 * Add a debug event.
 	 *
-	 * @return array
+	 * @param string $sEvent
+	 * @param string $sForm
+	 * @param mixed $oValue
+	 *
+	 * @return void
 	 */
-	public function GetDebugData(): array
-	{
-		return $this->aEvents;
-	}
-
-	public function GetMap(): DependencyMap
-	{
-		return $this->oDependenciesMap;
-	}
-
-
-	public function GetName(): string
-	{
-		return $this->sName;
-	}
-
 	private function AddEvent(string $sEvent, string $sForm, mixed $oValue = 'NA'): void
 	{
-
 		$this->aEvents[] = [
 			'builder' => $this->oFormBuilder->getName(),
 			'event'   => $sEvent,

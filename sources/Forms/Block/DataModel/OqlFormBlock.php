@@ -7,9 +7,11 @@
 namespace Combodo\iTop\Forms\Block\DataModel;
 
 use Combodo\iTop\Forms\Block\Base\TextAreaFormBlock;
-use Combodo\iTop\Forms\Block\FormType\OqlFormType;
-use Combodo\iTop\Forms\Block\IO\Converter\OqlToClassConverter;
-use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\FormType\DataModel\OqlFormType;
+use Combodo\iTop\Forms\IO\Converter\OqlToClassConverter;
+use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\Register\IORegister;
+use Combodo\iTop\Forms\Register\OptionsRegister;
 
 /**
  * Form block for oql expression.
@@ -28,16 +30,18 @@ class OqlFormBlock extends TextAreaFormBlock
 	}
 
 	/** @inheritdoc */
-	public function InitOutputs(): void
+	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
-		parent::InitOutputs();
-		$this->AddOutput(self::OUTPUT_SELECTED_CLASS, ClassIOFormat::class, new OqlToClassConverter());
+		parent::RegisterOptions($oOptionsRegister);
+		$oOptionsRegister->SetOption('with_ai_button', true);
 	}
 
 	/** @inheritdoc */
-	public function InitBlockOptions(array &$aUserOptions): void
+	protected function RegisterIO(IORegister $oIORegister): void
 	{
-		parent::InitBlockOptions($aUserOptions);
-		$aUserOptions['with_ai_button'] = true;
+		parent::RegisterIO($oIORegister);
+		$oIORegister->AddOutput(self::OUTPUT_SELECTED_CLASS, ClassIOFormat::class, new OqlToClassConverter());
 	}
+
+
 }

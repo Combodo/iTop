@@ -7,13 +7,13 @@
 namespace Combodo\iTop\Forms\Block;
 
 use Combodo\iTop\Forms\Block\Base\FormBlock;
-use Combodo\iTop\Forms\Block\IO\AbstractFormIO;
-use Combodo\iTop\Forms\Block\IO\Converter\AbstractConverter;
-use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
-use Combodo\iTop\Forms\Block\IO\FormInput;
-use Combodo\iTop\Forms\Block\IO\FormOutput;
+use Combodo\iTop\Forms\IO\AbstractFormIO;
+use Combodo\iTop\Forms\IO\Format\RawFormat;
+use Combodo\iTop\Forms\IO\FormInput;
+use Combodo\iTop\Forms\IO\FormOutput;
+use Combodo\iTop\Forms\Register\IORegister;
+use Combodo\iTop\Forms\Register\OptionsRegister;
 use Combodo\iTop\Forms\IFormBlock;
-use Forms\BlockIO;
 
 /**
  * Abstract form block.
@@ -30,49 +30,38 @@ abstract class AbstractFormBlock implements IFormBlock
 	/** @var null|FormBlock */
 	private ?FormBlock $oParent = null;
 
-	/** @var array form options */
-	private array $aOptions = [];
+	/** @var OptionsRegister */
+	private OptionsRegister $oOptionsRegister;
 
-	/** @var array form dynamic options */
-	protected array $aDynamicOptions = [];
-
-	/** @var array form block inputs */
-	private array $aFormInputs = [];
-
-	/** @var array form block outputs */
-	private array $aFormOutputs = [];
-
-	/** @var bool flag indicating the form insertion */
-	private bool $bIsAddedToForm = false;
+	/** @var IORegister */
+	private IORegister $oIORegister;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param string $sName
-	 * @param array $aUserOptions
+	 * @param array $aOptions
 	 */
-	public function __construct(private readonly string $sName, protected array $aUserOptions = [])
+	public function __construct(private readonly string $sName, array $aOptions = [])
 	{
-		// Compute options
-		$this->aOptions = $aUserOptions;
-		$this->InitBlockOptions($this->aOptions);
+		// Register options
+		$this->RegisterOptions($this->oOptionsRegister = new OptionsRegister());
+		$this->SetOptions($aOptions);
+		$this->AfterOptionsRegistered($this->oOptionsRegister);
 
-		// Initialize block inputs
-		$this->InitInputs();
-
-		// Initialize block outputs
-		$this->InitOutputs();
+		// Register IO
+		$this->RegisterIO($this->oIORegister = new IORegister($this));
+		$this->AfterIORegistered($this->oIORegister);
 	}
 
 	/**
-	 * Initialize options.
+	 * Return the form block name.
 	 *
-	 * @param array $aUserOptions
-	 *
+	 * @return string
 	 */
-	public function InitBlockOptions(array &$aUserOptions): void
+	public function GetName(): string
 	{
-		$aUserOptions['form_block'] = $this;
+		return $this->sName;
 	}
 
 	/**
@@ -108,13 +97,36 @@ abstract class AbstractFormBlock implements IFormBlock
 	}
 
 	/**
-	 * Return the form block name.
+	 * Register options.
 	 *
-	 * @return string
+	 * @param OptionsRegister $oOptionsRegister
+	 *
 	 */
-	public function GetName(): string
+	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
-		return $this->sName;
+		$oOptionsRegister->SetOption('form_block', $this);
+	}
+
+	/**
+	 * @param array $aOptions
+	 *
+	 * @return void
+	 */
+	private function SetOptions(array $aOptions): void
+	{
+		foreach ($aOptions as $sOptionName => $mOptionValue) {
+			$this->oOptionsRegister->SetOption($sOptionName, $mOptionValue);
+		}
+	}
+
+	/**
+	 * @param OptionsRegister $oOptionsRegister
+	 *
+	 * @return void
+	 */
+	protected function AfterOptionsRegistered(OptionsRegister $oOptionsRegister): void
+	{
+
 	}
 
 	/**
@@ -125,27 +137,43 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function GetOptions(): array
 	{
-		return $this->aOptions;
-	}
-
-	public function GetOptionsMergedWithDynamic(string $sEventType = null): array
-	{
-		return array_merge($this->GetDynamicOptions(), $this->GetOptions());
-	}
-
-	public function GetDynamicOptions(string $sEventType = null): array
-	{
-		return $this->aDynamicOptions;
+		return $this->oOptionsRegister->GetOptions();
 	}
 
 	/**
-	 * @param string|null $sEventType
+	 * @param string $sOption
+	 *
+	 * @return mixed
+	 */
+	public function GetOption(string $sOption): mixed
+	{
+		return $this->oOptionsRegister->GetOption($sOption);
+	}
+
+	/**
+	 * @param OptionsRegister $oOptionsRegister
 	 *
 	 * @return void
 	 */
-	public function UpdateDynamicOptions(string $sEventType = null): void
+	public function UpdateOptions(OptionsRegister $oOptionsRegister): void
 	{
-		$this->aDynamicOptions = [];
+
+	}
+
+	/**
+	 * @return array
+	 */
+	public function GetBoundInputsBindings(): array
+	{
+		return $this->oIORegister->GetBoundInputsBindings();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function GetBoundOutputBindings(): array
+	{
+		return $this->oIORegister->GetBoundOutputBindings();
 	}
 
 	/**
@@ -158,9 +186,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function AddInput(string $sName, string $sType): AbstractFormBlock
 	{
-		$oFormInput = new FormInput($sName, $sType, $this);
-		$this->aFormInputs[$oFormInput->GetName()] = $oFormInput;
-
+		$this->oIORegister->AddInput($sName, $sType);
 		return $this;
 	}
 
@@ -176,12 +202,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function AddInputDependsOn(string $sName, string $sOutputBlockName, string $sOutputName): AbstractFormBlock
 	{
-		$oOutputBlock = $this->GetParent()->Get($sOutputBlockName);
-		$oBlockOutput = $oOutputBlock->GetOutput($sOutputName);
-
-		$this->AddInput($sName, $oBlockOutput->GetDataType());
-		$this->DependsOn($sName, $sOutputBlockName, $sOutputName);
-
+		$this->oIORegister->AddInputDependsOn($sName, $sOutputBlockName, $sOutputName);
 		return $this;
 	}
 
@@ -195,11 +216,20 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function GetInput(string $sName): FormInput
 	{
-		if (!array_key_exists($sName, $this->aFormInputs)) {
-			throw new FormBlockException('Missing input '.$sName.' for '.$this->sName);
-		}
+		return $this->oIORegister->GetInput($sName);
+	}
 
-		return $this->aFormInputs[$sName];
+	/**
+	 * Get an input value.
+	 *
+	 * @param string $sName
+	 *
+	 * @return mixed
+	 * @throws FormBlockException
+	 */
+	public function GetInputValue(string $sName): mixed
+	{
+		return $this->oIORegister->GetInput($sName)->GetValue();
 	}
 
 	/**
@@ -213,9 +243,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function AddOutput(string $sName, string $sType, AbstractConverter $oConverter = null): AbstractFormBlock
 	{
-		$oFormOutput = new FormOutput($sName, $sType, $this, $oConverter);
-		$this->aFormOutputs[$oFormOutput->GetName()] = $oFormOutput;
-
+		$this->oIORegister->AddOutput($sName, $sType, $oConverter);
 		return $this;
 	}
 
@@ -229,11 +257,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function GetOutput(string $sName): FormOutput
 	{
-		if (!array_key_exists($sName, $this->aFormOutputs)) {
-			throw new FormBlockException('Missing output '.$sName.' for '.$this->sName);
-		}
-
-		return $this->aFormOutputs[$sName];
+		return $this->oIORegister->GetOutput($sName);
 	}
 
 	/**
@@ -243,7 +267,17 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function GetInputs(): array
 	{
-		return $this->aFormInputs;
+		return $this->oIORegister->GetInputs();
+	}
+
+	public function GetBoundInputs(): array
+	{
+		return $this->oIORegister->GetBoundInputs();
+	}
+
+	public function GetBoundOutputs(): array
+	{
+		return $this->oIORegister->GetBoundOutputs();
 	}
 
 	/**
@@ -253,7 +287,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function GetOutputs(): array
 	{
-		return $this->aFormOutputs;
+		return $this->oIORegister->GetOutputs();
 	}
 
 	/**
@@ -268,12 +302,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function DependsOn(string $sInputName, string $sOutputBlockName, string $sOutputName): AbstractFormBlock
 	{
-
-		$oOutputBlock = $this->GetParent()->Get($sOutputBlockName);
-		$oFormInput = $this->GetInput($sInputName);
-		$oFormOutput = $oOutputBlock->GetOutput($sOutputName);
-		$oFormOutput->BindToInput($oFormInput);
-
+		$this->oIORegister->DependsOn($sInputName, $sOutputBlockName, $sOutputName);
 		return $this;
 	}
 
@@ -288,10 +317,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function DependsOnParent(string $sInputName, string $sParentInputName): AbstractFormBlock
 	{
-		$oFormInput = $this->GetInput($sInputName);
-		$oParentFormInput = $this->GetParent()->GetInput($sParentInputName);
-		$oParentFormInput->BindToInput($oFormInput);
-
+		$this->oIORegister->DependsOnParent($sInputName, $sParentInputName);
 		return $this;
 	}
 
@@ -306,10 +332,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function ImpactParent(string $sOutputName, string $sParentOutputName): AbstractFormBlock
 	{
-		$oFormOutput = $this->GetOutput($sOutputName);
-		$oParentFormOutput = $this->GetParent()->GetOutput($sParentOutputName);
-		$oFormOutput->BindToOutput($oParentFormOutput);
-
+		$this->oIORegister->ImpactParent($sOutputName, $sParentOutputName);
 		return $this;
 	}
 
@@ -320,13 +343,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function HasDependenciesBlocks(): bool
 	{
-		foreach ($this->aFormInputs as $oFormInput) {
-			if ($oFormInput->IsBound()) {
-				return true;
-			}
-		}
-
-		return false;
+		return $this->oIORegister->HasDependenciesBlocks();
 	}
 
 	/**
@@ -336,74 +353,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function ImpactDependentsBlocks(): bool
 	{
-		/** @var FormOutput $oFormOutput */
-		foreach ($this->aFormOutputs as $oFormOutput) {
-			if (count($oFormOutput->GetBindings()) > 0) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Get bound inputs bindings.
-	 *
-	 * @return array
-	 */
-	public function GetBoundInputsBindings(): array
-	{
-		$aBindings = [];
-
-		/** @var FormInput $oFormInput */
-		foreach ($this->aFormInputs as $oFormInput) {
-			if ($oFormInput->IsBound()) {
-				$aBindings[$oFormInput->GetName()] = $oFormInput->GetBinding();
-			}
-		}
-
-		return $aBindings;
-	}
-
-	/**
-	 * Get bound outputs bindings.
-	 *
-	 * @return array
-	 */
-	public function GetBoundOutputBindings(): array
-	{
-		$aBindings = [];
-
-		/** @var FormInput $oFormInput */
-		foreach ($this->aFormOutputs as $oFormOutput) {
-			if ($oFormOutput->IsBound()) {
-				$aBindings[$oFormOutput->GetName()] = $oFormOutput->GetBinding();
-			}
-		}
-
-		return $aBindings;
-	}
-
-	/**
-	 * The block has been added to its parent.
-	 *
-	 * @return bool
-	 */
-	public function IsAdded(): bool
-	{
-		return $this->bIsAddedToForm;
-	}
-
-	/**
-	 * Indicate that the block has been added to its parent.
-	 *
-	 * @param bool $bIsAdded
-	 *
-	 * @return void
-	 */
-	public function SetAdded(bool $bIsAdded): void
-	{
-		$this->bIsAddedToForm = $bIsAdded;
+		return $this->oIORegister->ImpactDependentsBlocks();
 	}
 
 	/**
@@ -415,15 +365,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function IsInputsDataReady(string $sType = null): bool
 	{
-		foreach ($this->aFormInputs as $oFormInput) {
-			if ($oFormInput->IsBound()) {
-				if (!$oFormInput->IsEventDataReady($sType)) {
-					return false;
-				}
-			}
-		}
-
-		return true;
+		return $this->oIORegister->IsInputsDataReady($sType);
 	}
 
 	/**
@@ -436,34 +378,24 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function ComputeOutputs(string $sEventType, mixed $oData): void
 	{
-		/** Iterate throw output @var FormOutput $oFormOutput */
-		foreach ($this->aFormOutputs as $oFormOutput) {
-
-			// Compute the output value
-			$oFormOutput->ComputeValue($sEventType, $oData);
-
-		}
-
-	}
-
-
-	/**
-	 * Initialize inputs.
-	 *
-	 * @return void
-	 */
-	public function InitInputs(): void
-	{
+		$this->oIORegister->ComputeOutputs($sEventType, $oData);
 	}
 
 	/**
-	 * Initialize outputs.
+	 * Register IO.
+	 *
+	 * @param IORegister $oIORegister
 	 *
 	 * @return void
 	 */
-	public function InitOutputs(): void
+	protected function RegisterIO(IORegister $oIORegister): void
 	{
-		$this->AddOutput(self::OUTPUT_VALUE, RawFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_VALUE, RawFormat::class);
+	}
+
+	protected function AfterIORegistered(IORegister $oIORegister): void
+	{
+
 	}
 
 	/**
@@ -476,6 +408,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	public function BindingReceivedEvent(AbstractFormIO $oBlockIO): void
 	{
 		if ($this->IsInputsDataReady()) {
+			$this->UpdateOptions($this->oOptionsRegister);
 			$this->AllInputsReadyEvent();
 		}
 	}

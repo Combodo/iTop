@@ -4,10 +4,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Forms\Block\IO\Converter;
+namespace Combodo\iTop\Forms\IO\Converter;
 
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
-use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
+use Combodo\iTop\Forms\IO\Format\RawFormat;
 
 /**
  *
@@ -28,7 +28,7 @@ class ChoiceValueToLabelConverter extends AbstractConverter
 			return null;
 		}
 
-		$aOptions = array_flip($this->oChoiceBlock->GetOptionsMergedWithDynamic()['choices']);
+		$aOptions = array_flip($this->oChoiceBlock->GetOption('choices'));
 
 		return new RawFormat($aOptions[$oData]);
 	}

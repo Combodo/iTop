@@ -9,9 +9,9 @@ namespace Combodo\iTop\Forms\FormBuilder;
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\Expression\ExpressionFormBlock;
 use Combodo\iTop\Forms\Block\FormBlock;
-use Combodo\iTop\Forms\Block\IO\FormBinding;
-use Combodo\iTop\Forms\Block\IO\FormInput;
-use Combodo\iTop\Forms\Block\IO\FormOutput;
+use Combodo\iTop\Forms\IO\FormBinding;
+use Combodo\iTop\Forms\IO\FormInput;
+use Combodo\iTop\Forms\IO\FormOutput;
 
 /**
  * Dependencies handler.

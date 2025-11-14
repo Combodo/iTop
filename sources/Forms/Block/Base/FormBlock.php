@@ -9,11 +9,13 @@ namespace Combodo\iTop\Forms\Block\Base;
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
-use Combodo\iTop\Forms\Block\FormType\FormType;
+use Combodo\iTop\Forms\FormType\Base\FormType;
+use Combodo\iTop\Forms\Register\OptionsRegister;
 use Combodo\iTop\Forms\FormBuilder\DependencyMap;
 use Combodo\iTop\Forms\FormsException;
 use Exception;
 use ReflectionClass;
+use ReflectionException;
 
 /**
  * Complex form type.
@@ -53,15 +55,11 @@ class FormBlock extends AbstractTypeFormBlock
 	}
 
 	/** @inheritdoc */
-	public function InitBlockOptions(array &$aUserOptions): void
+	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
-		parent::InitBlockOptions($aUserOptions);
-
-		$aUserOptions['compound'] = true;
-		$aUserOptions['attr'] = [
-			'class' => 'form',
-		];
-
+		parent::RegisterOptions($oOptionsRegister);
+		$oOptionsRegister->SetOption('compound', true);
+		$oOptionsRegister->SetOptionArrayValue('attr', 'class', 'form');
 	}
 
 	/**
@@ -69,12 +67,13 @@ class FormBlock extends AbstractTypeFormBlock
 	 *
 	 * @param string $sName block name
 	 * @param string $sType block class name
+	 * @param array $aSymfonyOptions options
 	 * @param array $aOptions options
 	 *
 	 * @return $this
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 */
-	public function Add(string $sName, string $sType, array $aOptions): AbstractFormBlock
+	public function Add(string $sName, string $sType, array $aSymfonyOptions, array $aOptions = []): AbstractFormBlock
 	{
 		$oRef = new ReflectionClass($sType);
 		if($oRef->isSubclassOf(AbstractFormBlock::class) === false){
@@ -82,7 +81,7 @@ class FormBlock extends AbstractTypeFormBlock
 		}
 
 		$aOptions['priority'] = -count($this->aChildrenBlocks);
-		$oSubFormBlock = new ($sType)($sName, $aOptions);
+		$oSubFormBlock = new ($sType)($sName, $aSymfonyOptions, $aOptions);
 		$this->aChildrenBlocks[$sName] = $oSubFormBlock;
 		$oSubFormBlock->SetParent($this);
 

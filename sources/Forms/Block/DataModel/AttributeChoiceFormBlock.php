@@ -7,12 +7,11 @@
 namespace Combodo\iTop\Forms\Block\DataModel;
 
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
-use Combodo\iTop\Forms\Block\FormBlockException;
-use Combodo\iTop\Forms\Block\IO\Converter\StringToAttributeConverter;
-use Combodo\iTop\Forms\Block\IO\Format\AttributeIOFormat;
-use Combodo\iTop\Forms\Block\IO\Format\ClassIOFormat;
-use Combodo\iTop\Forms\Block\IO\Format\RawFormat;
-use CoreException;
+use Combodo\iTop\Forms\IO\Converter\StringToAttributeConverter;
+use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
+use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\Register\IORegister;
+use Combodo\iTop\Forms\Register\OptionsRegister;
 use MetaModel;
 
 /**
@@ -29,31 +28,31 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	public const OUTPUT_ATTRIBUTE = 'attribute';
 
 	/** @inheritdoc */
-	public function InitBlockOptions(array &$aUserOptions): void
+	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
-		parent::InitBlockOptions($aUserOptions);
-
-		$aUserOptions['placeholder'] = 'Select an attribute...';
+		parent::RegisterOptions($oOptionsRegister);
+		$oOptionsRegister->SetOption('placeholder', 'Select an attribute...');
 	}
 
 	/** @inheritdoc */
-	public function InitInputs(): void
+	protected function RegisterIO(IORegister $oIORegister): void
 	{
-		parent::InitInputs();
-		$this->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
-	}
-
-	/** @inheritdoc */
-	public function InitOutputs(): void
-	{
-		parent::InitOutputs();
-		$this->AddOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class, new StringToAttributeConverter());
+		parent::RegisterIO($oIORegister);
+		$oIORegister->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class, new StringToAttributeConverter());
 	}
 
 	/** @inheritdoc  */
-	public function UpdateDynamicOptions(string $sEventType = null): void
+	public function UpdateOptions(OptionsRegister $oOptionsRegister): void
 	{
-		$oClass = $this->GetInput(self::INPUT_CLASS_NAME)->GetValue($sEventType);
+		parent::UpdateOptions($oOptionsRegister);
+
+		$oClass = $this->GetInputValue(self::INPUT_CLASS_NAME);
+
+		if($oClass === null){
+			$oOptionsRegister->SetOption('choices', []);
+			return;
+		}
 
 		$aAttributeCodes = MetaModel::GetAttributesList($oClass);
 
@@ -63,7 +62,7 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 			$aAttributes[$oAttribute->GetLabel()] = $sAttributeCode;
 		}
 
-		$this->aDynamicOptions['choices'] = $aAttributes;
+		$oOptionsRegister->SetOption('choices', $aAttributes);
 	}
 
 }

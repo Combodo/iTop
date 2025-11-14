@@ -4,10 +4,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Forms\Block\IO;
+namespace Combodo\iTop\Forms\IO;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
-use Combodo\iTop\Forms\Block\IO\Converter\AbstractConverter;
+use Combodo\iTop\Forms\IO\Converter\AbstractConverter;
 
 /**
  *

@@ -4,10 +4,11 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Forms\Block\FormType;
+namespace Combodo\iTop\Forms\FormType\Base;
 
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
+use Combodo\iTop\Forms\FormType\FormTypeHelper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
