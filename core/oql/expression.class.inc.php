@@ -2103,13 +2103,16 @@ class VariableExpression extends UnaryExpression
 
 	/**
 	 * Evaluate the value of the expression
+	 *
 	 * @param array $aArgs
-	 * @throws \Exception if terms cannot be evaluated as scalars
-*/
+	 *
+	 * @return mixed
+	 * @throws \MissingQueryArgument
+	 */
 	public function Evaluate(array $aArgs)
 	{
 		if (!isset($aArgs[$this->m_sName])) {
-			throw new MissingQueryArgument('Missing query argument', array('expecting'=>$this->m_sName));
+			throw new MissingQueryArgument('Missing variable expression argument', array('expecting'=>$this->m_sName));
 		}
 		return $aArgs[$this->m_sName];
 	}
