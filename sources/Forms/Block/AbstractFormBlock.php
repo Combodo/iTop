@@ -183,9 +183,25 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param string $sType the type of the input
 	 *
 	 * @return AbstractFormBlock
+	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
 	 */
 	public function AddInput(string $sName, string $sType): AbstractFormBlock
 	{
+		// Check name validity
+		if (preg_match('/(?<name>\w+)/', $sName, $aMatches)) {
+			$sParsedName = $aMatches['name'];
+			if ($sParsedName !== $sName) {
+				$sName = json_encode($sName);
+				$sParsedName = json_encode($sParsedName);
+				$sBlockName = json_encode($this->getName());
+				Throw new FormBlockException("Input $sName does not match $sParsedName for block $sBlockName.");
+			}
+		} else {
+			$sName = json_encode($sName);
+			$sBlockName = json_encode($this->getName());
+			Throw new FormBlockException("Input $sName is not valid for block $sBlockName.");
+		}
+		// Name is valid
 		$this->oIORegister->AddInput($sName, $sType);
 		return $this;
 	}
