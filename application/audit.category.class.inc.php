@@ -48,10 +48,11 @@ class AuditCategory extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("name", ["description" => "Short name for this category", "allowed_values" => null, "sql" => "name", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
 		MetaModel::Init_AddAttribute(new AttributeString("description", ["allowed_values" => null, "sql" => "description", "default_value" => "", "is_null_allowed" => true, "depends_on" => []]));
 		MetaModel::Init_AddAttribute(new AttributeOQL("definition_set", ["allowed_values" => null, "sql" => "definition_set", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSet("rules_list", ["linked_class" => "AuditRule", "ext_key_to_me" => "category_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => [], "edit_mode" => LINKSET_EDITMODE_INPLACE, "edit_when"=>LINKSET_EDITWHEN_ALWAYS, "tracking_level" => LINKSET_TRACKING_ALL]));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSet("rules_list", ["linked_class" => "AuditRule", "ext_key_to_me" => "category_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => [], "edit_mode" => LINKSET_EDITMODE_INPLACE, "edit_when" => LINKSET_EDITWHEN_ALWAYS, "tracking_level" => LINKSET_TRACKING_ALL]));
 		MetaModel::Init_AddAttribute(new AttributeInteger("ok_error_tolerance", ["allowed_values" => null, "sql" => "ok_error_tolerance", "default_value" => 5, "is_null_allowed" => true, "depends_on" => []]));
 		MetaModel::Init_AddAttribute(new AttributeInteger("warning_error_tolerance", ["allowed_values" => null, "sql" => "warning_error_tolerance", "default_value" => 25, "is_null_allowed" => true, "depends_on" => []]));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("domains_list",
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect(
+			"domains_list",
 			["linked_class" => "lnkAuditCategoryToAuditDomain", "ext_key_to_me" => "category_id", "ext_key_to_remote" => "domain_id", "allowed_values" => null, "count_min" => 0, "count_max" => 0, "depends_on" => [], "display_style" => 'property']
 		));
 
