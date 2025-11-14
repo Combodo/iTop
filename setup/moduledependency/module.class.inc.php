@@ -14,17 +14,13 @@ class Module
 	private string $sModuleName;
 	private string $sVersion;
 
-	public array $aInitialDependencies;
+	public array $aInitialDependencyExpressions;
 	public array $aRemainingDependenciesToResolve;
 
 	public function __construct(string $sModuleId)
 	{
 		$this->sModuleId = $sModuleId;
 		list($this->sModuleName, $this->sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-		if (strlen($this->sVersion) == 0) {
-			// No version number found, assume 1.0.0
-			$this->sVersion = '1.0.0';
-		}
 	}
 
 	/**
@@ -52,16 +48,16 @@ class Module
 	}
 
 	/**
-	 * @param array $aAllDependencies: list of dependencies (string)
+	 * @param array $aAllDependencyExpressions: list of dependencies (string)
 	 *
 	 * @return void
 	 */
-	public function SetDependencies(array $aAllDependencies): void
+	public function SetDependencies(array $aAllDependencyExpressions): void
 	{
-		$this->aInitialDependencies = $aAllDependencies;
+		$this->aInitialDependencyExpressions = $aAllDependencyExpressions;
 		$this->aRemainingDependenciesToResolve = [];
 
-		foreach ($aAllDependencies as $sDependencyExpression) {
+		foreach ($aAllDependencyExpressions as $sDependencyExpression) {
 			$this->aRemainingDependenciesToResolve[$sDependencyExpression] = new ModuleDependency($sDependencyExpression);
 		}
 	}
@@ -73,14 +69,14 @@ class Module
 	 *
 	 * @return bool
 	 */
-	public function IsModuleResolved(array $aModuleVersions, array $aSelectedModules): bool
+	public function UpdateModuleResolutionState(array $aModuleVersions, array $aSelectedModules): bool
 	{
 		$aNextDependencies = [];
 		$bDependenciesSolved = true;
-		foreach ($this->aRemainingDependenciesToResolve as $sDepId => $oModuleDependency) {
+		foreach ($this->aRemainingDependenciesToResolve as $sDependencyExpression => $oModuleDependency) {
 			/** @var ModuleDependency $oModuleDependency*/
-			if (!$oModuleDependency->IsResolved($aModuleVersions, $aSelectedModules)) {
-				$aNextDependencies[$sDepId] = $oModuleDependency;
+			if (!$oModuleDependency->UpdateModuleResolutionState($aModuleVersions, $aSelectedModules)) {
+				$aNextDependencies[$sDependencyExpression] = $oModuleDependency;
 				$bDependenciesSolved = false;
 			}
 		}
@@ -96,7 +92,7 @@ class Module
 	public function GetUnresolvedDependencyModuleNames(): array
 	{
 		$aRes = [];
-		foreach ($this->aRemainingDependenciesToResolve as $sDepId => $oModuleDependency) {
+		foreach ($this->aRemainingDependenciesToResolve as $sDependencyExpression => $oModuleDependency) {
 			/** @var ModuleDependency $oModuleDependency */
 			$aRes = array_merge($aRes, $oModuleDependency->GetRemainingModuleNamesToResolve());
 		}

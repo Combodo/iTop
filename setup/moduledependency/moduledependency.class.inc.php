@@ -74,7 +74,7 @@ class ModuleDependency
 	 *
 	 * @return bool
 	 */
-	public function IsResolved(array $aModuleVersions, array $aSelectedModules): bool
+	public function UpdateModuleResolutionState(array $aModuleVersions, array $aSelectedModules): bool
 	{
 		if (!$this->bValid) {
 			return false;

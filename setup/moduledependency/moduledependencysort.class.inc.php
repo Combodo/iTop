@@ -134,7 +134,7 @@ class ModuleDependencySort
 	 */
 	public function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
-		// Order the modules to take into account their inter-dependencies
+		// Filter modules to compute
 		$aUnresolvedDependencyModules = [];
 		$aSelectedModules = [];
 		foreach ($aModules as $sModuleId => $aModule) {
@@ -147,14 +147,17 @@ class ModuleDependencySort
 			}
 		}
 
+		// Make sure order is deterministic (alphabtical order)
 		ksort($aUnresolvedDependencyModules);
+
+		//Attempt to resolve module dependencies
 		$aOrderedModules = [];
 		$aModuleVersions = [];
-		$iLoopCount = 1;
-		while (($iLoopCount < count($aModules) + 1) && (count($aUnresolvedDependencyModules) > 0)) {
+		$iLoopCount = 0;
+		while (($iLoopCount < count($aModules)) && (count($aUnresolvedDependencyModules) > 0)) {
 			foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
 				/** @var Module $oModule */
-				if ($oModule->IsModuleResolved($aModuleVersions, $aSelectedModules)) {
+				if ($oModule->UpdateModuleResolutionState($aModuleVersions, $aSelectedModules)) {
 					$aOrderedModules[] = $sModuleId;
 					$aModuleVersions[$oModule->GetModuleName()] = $oModule->GetVersion();
 					unset($aUnresolvedDependencyModules[$sModuleId]);
@@ -164,6 +167,7 @@ class ModuleDependencySort
 			$iLoopCount++;
 		}
 
+		// Report unresolve dependencies
 		if ($bAbortOnMissingDependency && count($aUnresolvedDependencyModules) > 0) {
 			$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 
@@ -172,11 +176,11 @@ class ModuleDependencySort
 			foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
 				$aModule = $aModules[$sModuleId];
 				$aDepsWithIcons = [];
-				foreach ($oModule->aInitialDependencies as $sIndex => $sDepId) {
-					if (array_key_exists($sDepId, $oModule->aRemainingDependenciesToResolve)) {
-						$aDepsWithIcons[$sIndex] = '❌ '.$sDepId;
+				foreach ($oModule->aInitialDependencyExpressions as $sIndex => $sDependencyExpression) {
+					if (array_key_exists($sDependencyExpression, $oModule->aRemainingDependenciesToResolve)) {
+						$aDepsWithIcons[$sIndex] = '❌ '.$sDependencyExpression;
 					} else {
-						$aDepsWithIcons[$sIndex] = '✅ '.$sDepId;
+						$aDepsWithIcons[$sIndex] = '✅ '.$sDependencyExpression;
 					}
 				}
 				$aModuleDeps[] = "{$aModule['label']} (id: $sModuleId) depends on: ".implode(' + ', $aDepsWithIcons);
