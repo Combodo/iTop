@@ -10,10 +10,9 @@ use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
 use Combodo\iTop\Forms\IO\Format\RawFormat;
 use Combodo\iTop\Forms\Register\IORegister;
-use Combodo\iTop\Forms\FormsException;
+use Expression;
 use IssueLog;
 use Symfony\Component\Form\FormEvents;
-use Throwable;
 
 /**
  *
@@ -54,27 +53,14 @@ class ExpressionFormBlock extends AbstractFormBlock
 		try{
 			$sExpression = $this->GetOption('expression');
 
-			$sValue = preg_replace_callback(
-				self::EXPRESSION_PATTERN,
-				function(array $aMatches) use ($sEventType): ?string {
-					$oInput = $this->GetInput($aMatches['input']);
-					if(!$oInput->HasEventValue($sEventType)){
-						throw new FormsException('Unable to compute expression: input '.$aMatches['input'].' has no value for event '.$sEventType.'.');
-					}
-					$value = $oInput->GetValue($sEventType);
-					if (is_string($value)) {
-						$value = "'$value'";
-					}
-					return $value;
-				},
-				$sExpression);
-
-			$result  = '';
-			try {
-				eval('$result = '.$sValue.';');
-			} catch (Throwable $e) {
-				IssueLog::Exception(__METHOD__.' expression '.json_encode($sValue).' failed with exception: '.$e->getMessage(), $e);
+			$oExpression = Expression::FromOQL($sExpression);
+			$aParamsToResolve = $oExpression->GetParameters();
+			$aResolvedParams = [];
+			foreach ($aParamsToResolve as $sParamToResolve) {
+				$aResolvedParams[$sParamToResolve] = $this->GetInputValue($sParamToResolve);
 			}
+			$result = $oExpression->Evaluate($aResolvedParams);
+
 			$this->GetOutput(self::OUTPUT_RESULT)->SetValue($sEventType, new BooleanIOFormat(boolval($result)));
 			$this->GetOutput(self::OUTPUT_RESULT_INVERT)->SetValue($sEventType, new BooleanIOFormat(!boolval($result)));
 			$this->GetOutput(self::OUTPUT_VALUE)->SetValue($sEventType, new RawFormat($result));

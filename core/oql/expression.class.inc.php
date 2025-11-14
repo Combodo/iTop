@@ -2108,7 +2108,10 @@ class VariableExpression extends UnaryExpression
 */
 	public function Evaluate(array $aArgs)
 	{
-		throw new Exception('not implemented yet');
+		if (!isset($aArgs[$this->m_sName])) {
+			throw new MissingQueryArgument('Missing query argument', array('expecting'=>$this->m_sName));
+		}
+		return $aArgs[$this->m_sName];
 	}
 
 	/**
