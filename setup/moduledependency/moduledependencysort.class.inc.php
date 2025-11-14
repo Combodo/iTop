@@ -175,14 +175,8 @@ class ModuleDependencySort
 			$aModuleDeps = [];
 			foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
 				$aModule = $aModules[$sModuleId];
-				$aDepsWithIcons = [];
-				foreach ($oModule->aInitialDependencyExpressions as $sIndex => $sDependencyExpression) {
-					if (array_key_exists($sDependencyExpression, $oModule->aRemainingDependenciesToResolve)) {
-						$aDepsWithIcons[$sIndex] = '❌ '.$sDependencyExpression;
-					} else {
-						$aDepsWithIcons[$sIndex] = '✅ '.$sDependencyExpression;
-					}
-				}
+				$aDepsWithIcons = $oModule->GetDependencyResolutionFeedback();
+
 				$aModuleDeps[] = "{$aModule['label']} (id: $sModuleId) depends on: ".implode(' + ', $aDepsWithIcons);
 				$aModulesInfo[$sModuleId] = ['module' => $aModule, 'dependencies' => $aDepsWithIcons];
 			}

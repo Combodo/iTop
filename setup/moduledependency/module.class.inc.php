@@ -14,7 +14,7 @@ class Module
 	private string $sModuleName;
 	private string $sVersion;
 
-	public array $aInitialDependencyExpressions;
+	private array $aInitialDependencyExpressions;
 	public array $aRemainingDependenciesToResolve;
 
 	public function __construct(string $sModuleId)
@@ -22,6 +22,25 @@ class Module
 		$this->sModuleId = $sModuleId;
 		list($this->sModuleName, $this->sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
 	}
+
+	public function IsDependencyExpressionResolved(string $sDependencyExpression) : bool
+	{
+	    return ! array_key_exists($sDependencyExpression, $this->aRemainingDependenciesToResolve);
+	}
+
+	public function GetDependencyResolutionFeedback() : array
+    {
+        $aDepsWithIcons = [];
+
+        foreach ($this->aInitialDependencyExpressions as $sIndex => $sDependencyExpression) {
+            if ($this->IsDependencyExpressionResolved($sDependencyExpression)) {
+                $aDepsWithIcons[$sIndex] = '✅ '.$sDependencyExpression;
+            } else {
+                $aDepsWithIcons[$sIndex] = '❌ '.$sDependencyExpression;
+            }
+        }
+		return $aDepsWithIcons;
+    }
 
 	/**
 	 * @return string
