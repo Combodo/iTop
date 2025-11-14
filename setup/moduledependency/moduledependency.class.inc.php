@@ -13,15 +13,15 @@ class ModuleDependency {
 	private static PhpExpressionEvaluator $oPhpExpressionEvaluator;
 
 	private string $sDependencyExpression;
-	private bool $bInvalidDependencyRegexp=false;
-	private array $aDepencyModuleNames;
+	private bool $bValid=true;
+	private array $aRemainingModuleNamesToResolve;
 	private array $aParamsPerModuleId;
 
 	public function __construct(string $sDependencyExpression)
 	{
 		$this->sDependencyExpression = $sDependencyExpression;
 		$this->aParamsPerModuleId = [];
-		$this->aDepencyModuleNames = [];
+		$this->aRemainingModuleNamesToResolve = [];
 
 		if (preg_match_all('/([^\(\)&| ]+)/', $sDependencyExpression, $aMatches))
 		{
@@ -35,7 +35,7 @@ class ModuleDependency {
 						$aModuleMatches = array();
 						if (preg_match('|^([^/]+)/(<?>?=?)([^><=]+)$|', $sModuleId, $aModuleMatches)) {
 							$sModuleName = $aModuleMatches[1];
-							$this->aDepencyModuleNames[$sModuleName] = true;
+							$this->aRemainingModuleNamesToResolve[$sModuleName] = true;
 							$sOperator = $aModuleMatches[2];
 							if ($sOperator == '') {
 								$sOperator = '>=';
@@ -47,7 +47,7 @@ class ModuleDependency {
 				}
 			}
 		} else {
-			$this->bInvalidDependencyRegexp=true;
+			$this->bValid=false;
 		}
 	}
 
@@ -64,9 +64,9 @@ class ModuleDependency {
 	 * Return module names potentially required by current dependency
 	 * @return array
 	 */
-	public function GetPotentialPrerequisiteModuleNames() : array
+	public function GetRemainingModuleNamesToResolve() : array
 	{
-		return array_keys($this->aDepencyModuleNames);
+		return array_keys($this->aRemainingModuleNamesToResolve);
 	}
 
 	/**
@@ -76,9 +76,9 @@ class ModuleDependency {
 	 *
 	 * @return bool
 	 */
-	public function IsDependencyResolved(array $aModuleVersions, array $aSelectedModules) : bool
+	public function IsResolved(array $aModuleVersions, array $aSelectedModules) : bool
 	{
-		if ($this->bInvalidDependencyRegexp){
+		if (!$this->bValid){
 			return false;
 		}
 
@@ -90,8 +90,8 @@ class ModuleDependency {
 				$sCurrentVersion = $aModuleVersions[$sModuleName];
 				if (version_compare($sCurrentVersion, $sExpectedVersion, $sOperator))
 				{
-					if (array_key_exists($sModuleName, $this->aDepencyModuleNames)) {
-						unset($this->aDepencyModuleNames[$sModuleName]);
+					if (array_key_exists($sModuleName, $this->aRemainingModuleNamesToResolve)) {
+						unset($this->aRemainingModuleNamesToResolve[$sModuleName]);
 					}
 					$aReplacements[$sModuleId] = '(true)'; // Add parentheses to protect against invalid condition causing
 					// a function call that results in a runtime fatal error
@@ -110,7 +110,7 @@ class ModuleDependency {
 			}
 		}
 
-		foreach ($this->aDepencyModuleNames as $sModuleName => $c)
+		foreach ($this->aRemainingModuleNamesToResolve as $sModuleName => $c)
 		{
 			if (array_key_exists($sModuleName, $aSelectedModules))
 			{
@@ -133,9 +133,9 @@ class ModuleDependency {
 		return $bResult;
 	}
 
-	public function IsDependencyRegexpInvalid(): bool
+	public function IsValid(): bool
 	{
-		return $this->bInvalidDependencyRegexp;
+		return $this->bValid;
 	}
 
 

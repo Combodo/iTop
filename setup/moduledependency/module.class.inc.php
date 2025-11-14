@@ -79,7 +79,7 @@ class Module {
 		foreach($this->aRemainingDependenciesToResolve as $sDepId => $oModuleDependency)
 		{
 			/** @var ModuleDependency $oModuleDependency*/
-			if (!$oModuleDependency->IsDependencyResolved($aModuleVersions, $aSelectedModules))
+			if (!$oModuleDependency->IsResolved($aModuleVersions, $aSelectedModules))
 			{
 				$aNextDependencies[$sDepId]=$oModuleDependency;
 				$bDependenciesSolved = false;
@@ -99,7 +99,7 @@ class Module {
 		$aRes=[];
 		foreach($this->aRemainingDependenciesToResolve as $sDepId => $oModuleDependency) {
 			/** @var ModuleDependency $oModuleDependency */
-			$aRes = array_merge($aRes, $oModuleDependency->GetPotentialPrerequisiteModuleNames());
+			$aRes = array_merge($aRes, $oModuleDependency->GetRemainingModuleNamesToResolve());
 		}
 
 		return array_unique($aRes);
