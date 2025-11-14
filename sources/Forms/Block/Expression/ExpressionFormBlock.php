@@ -7,11 +7,11 @@
 namespace Combodo\iTop\Forms\Block\Expression;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
 use Combodo\iTop\Forms\IO\Format\RawFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Expression;
-use IssueLog;
 use Symfony\Component\Form\FormEvents;
 
 /**
@@ -47,6 +47,7 @@ class ExpressionFormBlock extends AbstractFormBlock
 	 * @param string $sEventType
 	 *
 	 * @return void
+	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
 	 */
 	public function ComputeExpression(string $sEventType): void
 	{
@@ -61,12 +62,13 @@ class ExpressionFormBlock extends AbstractFormBlock
 			}
 			$result = $oExpression->Evaluate($aResolvedParams);
 
-			$this->GetOutput(self::OUTPUT_RESULT)->SetValue($sEventType, new BooleanIOFormat(boolval($result)));
-			$this->GetOutput(self::OUTPUT_RESULT_INVERT)->SetValue($sEventType, new BooleanIOFormat(!boolval($result)));
+			$bResult = boolval($result);
+			$this->GetOutput(self::OUTPUT_RESULT)->SetValue($sEventType, new BooleanIOFormat($bResult));
+			$this->GetOutput(self::OUTPUT_RESULT_INVERT)->SetValue($sEventType, new BooleanIOFormat(!$bResult));
 			$this->GetOutput(self::OUTPUT_VALUE)->SetValue($sEventType, new RawFormat($result));
 		}
 		catch(\Exception $e){
-			IssueLog::Exception('Compute expression block issue', $e);
+			throw new FormBlockException('Compute expression block issue', 0, $e);
 		}
 	}
 
