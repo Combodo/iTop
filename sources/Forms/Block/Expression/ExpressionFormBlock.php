@@ -33,7 +33,9 @@ class ExpressionFormBlock extends AbstractFormBlock
 		$oIORegister->AddOutput(self::OUTPUT_RESULT_INVERT, BooleanIOFormat::class);
 	}
 
-	/** @inheritdoc */
+	/** @inheritdoc
+	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 */
 	public function AllInputsReadyEvent(): void
 	{
 		parent::AllInputsReadyEvent();
@@ -51,6 +53,7 @@ class ExpressionFormBlock extends AbstractFormBlock
 	 */
 	public function ComputeExpression(string $sEventType): void
 	{
+		$sExpression = '';
 		try{
 			$sExpression = $this->GetOption('expression');
 
@@ -68,7 +71,7 @@ class ExpressionFormBlock extends AbstractFormBlock
 			$this->GetOutput(self::OUTPUT_VALUE)->SetValue($sEventType, new RawFormat($result));
 		}
 		catch(\Exception $e){
-			throw new FormBlockException('Compute expression block issue', 0, $e);
+			throw new FormBlockException('Compute expression '.json_encode($sExpression).' block issue', 0, $e);
 		}
 	}
 
