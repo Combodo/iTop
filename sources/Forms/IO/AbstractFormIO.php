@@ -37,6 +37,8 @@ class AbstractFormIO
 	 *
 	 * @param string $sName name of the IO
 	 * @param string $sType type of the IO
+	 *
+	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
 	 */
 	public function __construct(string $sName, string $sType, AbstractFormBlock $oOwnerBlock)
 	{
@@ -82,12 +84,12 @@ class AbstractFormIO
 				$sName = json_encode($sName);
 				$sParsedName = json_encode($sParsedName);
 				$sBlockName = json_encode($this->getName());
-				Throw new FormBlockIOException("Input $sName does not match $sParsedName for block $sBlockName.");
+				throw new FormBlockIOException("Input $sName does not match $sParsedName for block $sBlockName.");
 			}
 		} else {
 			$sName = json_encode($sName);
 			$sBlockName = json_encode($this->getName());
-			Throw new FormBlockIOException("Input $sName is not valid for block $sBlockName.");
+			throw new FormBlockIOException("Input $sName is not valid for block $sBlockName.");
 		}
 
 		// Name is valid
@@ -130,9 +132,10 @@ class AbstractFormIO
 	 */
 	public function GetValue(string $sEventType = null): mixed
 	{
-		if($sEventType === null) {
+		if ($sEventType === null) {
 			return $this->Value();
 		}
+
 		return $this->aValues[$sEventType] ?? null;
 	}
 
@@ -155,9 +158,10 @@ class AbstractFormIO
 	 */
 	public function HasEventValue(string $sEventType = null): bool
 	{
-		if($sEventType === null){
+		if ($sEventType === null) {
 			return $this->HasValue();
 		}
+
 		return array_key_exists($sEventType, $this->aValues) && $this->aValues[$sEventType] !== null;
 	}
 
@@ -208,14 +212,12 @@ class AbstractFormIO
 	 * @param FormInput $oDestinationIO
 	 *
 	 * @return FormBinding
+	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
 	 */
 	public function BindToInput(FormInput $oDestinationIO): FormBinding
 	{
 		$oBinding = new FormBinding($this, $oDestinationIO);
-
 		$this->aBindingsToInputs[] = $oBinding;
-
-		$oDestinationIO->Attach($oBinding);
 
 		return $oBinding;
 	}
@@ -226,9 +228,13 @@ class AbstractFormIO
 	 * @param FormBinding $oFormBinding
 	 *
 	 * @return void
+	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException when already bound
 	 */
 	public function Attach(FormBinding $oFormBinding): void
 	{
+		if ($this->IsBound()) {
+			throw new FormBlockIOException("Can't attach ".json_encode($oFormBinding->oSourceIO->GetName())." to ".json_encode($this->GetName()).", already bound to ".json_encode($this->oBinding->oSourceIO->GetName()));
+		}
 		$this->oBinding = $oFormBinding;
 	}
 

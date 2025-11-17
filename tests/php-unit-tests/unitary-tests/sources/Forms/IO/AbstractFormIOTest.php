@@ -1,0 +1,47 @@
+<?php
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+namespace Combodo\iTop\Test\UnitTest\sources\Forms\IO;
+
+use Combodo\iTop\Test\UnitTest\sources\Forms\AbstractFormsTest;
+use Symfony\Component\Form\FormEvents;
+
+class AbstractFormIOTest extends AbstractFormsTest
+{
+
+	public function testFormIoHasNoDataAtCreation()
+	{
+
+		$oInput = $this->GivenRawInput('test');
+
+		$this->assertFalse($oInput->IsDataReady(), 'Created Input must no have data ready at creation');
+		$this->assertFalse($oInput->HasValue(), 'Created Input must no have value at creation');
+		$this->assertFalse($oInput->HasBindingOut());
+
+		$oOutput = $this->GivenRawOutput('test');
+
+		$this->assertFalse($oOutput->IsDataReady(), 'Created output must no have data ready at creation');
+		$this->assertFalse($oOutput->HasValue(), 'Created output must no have value at creation');
+		$this->assertFalse($oOutput->HasBindingOut());
+	}
+
+	public function testFormIoHasDataAfterSetValue()
+	{
+
+		$oInput = $this->GivenRawInput('test');
+		$oInput->SetValue(FormEvents::POST_SET_DATA, 'test');
+
+		$this->assertTrue($oInput->IsDataReady(), 'Input must have data ready when set');
+		$this->assertTrue($oInput->HasValue(), 'Input must have value when set');
+
+		$oOutput = $this->GivenRawOutput('test');
+		$oOutput->SetValue(FormEvents::POST_SET_DATA, 'test');
+
+		$this->assertTrue($oOutput->IsDataReady(), 'Output must have data ready when set');
+		$this->assertTrue($oOutput->HasValue(), 'Output must have value when set');
+	}
+
+}

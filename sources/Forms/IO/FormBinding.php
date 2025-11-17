@@ -17,11 +17,14 @@ class FormBinding
 	/**
 	 * @param AbstractFormIO $oSourceIO
 	 * @param AbstractFormIO $oDestinationIO
+	 *
+	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
 	 */
 	public function __construct(AbstractFormIO $oSourceIO, AbstractFormIO $oDestinationIO)
 	{
 		$this->oDestinationIO = $oDestinationIO;
 		$this->oSourceIO = $oSourceIO;
+		$oDestinationIO->Attach($this);
 	}
 
 	/**

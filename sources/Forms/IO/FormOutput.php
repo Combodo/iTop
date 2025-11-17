@@ -87,18 +87,32 @@ class FormOutput extends AbstractFormIO
 	 * @param FormOutput $oDestinationIO
 	 *
 	 * @return FormBinding
+	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
 	 */
 	public function BindToOutput(FormOutput $oDestinationIO): FormBinding
 	{
 		$oBinding = new FormBinding($this, $oDestinationIO);
-
 		$this->aBindingsToOutputs[] = $oBinding;
-
-		$oDestinationIO->Attach($oBinding);
 
 		return $oBinding;
 	}
 
+	/**
+	 * @return array
+	 */
+	public function GetBindingsToOutputs(): array
+	{
+		return $this->aBindingsToOutputs;
+	}
+
+	public function HasBindingOut(): bool
+	{
+		if (parent::HasBindingOut()) {
+			return true; // has bindings to inputs
+		}
+
+		return count($this->aBindingsToOutputs) > 0;
+	}
 
 	/**
 	 * Get the bindings.
