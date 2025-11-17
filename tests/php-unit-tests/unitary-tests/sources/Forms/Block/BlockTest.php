@@ -4,12 +4,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Forms;
+namespace Forms\Block;
 
-use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\Base\CheckboxFormBlock;
-use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\Block\Base\TextFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
@@ -26,7 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  * Test forms block.
  *
  */
-class Block extends ItopDataTestCase
+class BlockTest extends ItopDataTestCase
 {
 
 	/**
@@ -34,7 +32,7 @@ class Block extends ItopDataTestCase
 	 *
 	 * @throws ReflectionException
 	 */
-	public function testFormBlockProvideSymfonyFormType(): void
+	public function testGetFormTypeReturnSymfonyType(): void
 	{
 		$aFormBlocks = InterfaceDiscovery::GetInstance()->FindItopClasses(iFormBlock::class);
 		foreach ($aFormBlocks as $sFormBlock) {
@@ -51,7 +49,7 @@ class Block extends ItopDataTestCase
 	 *
 	 * @throws ReflectionException
 	 */
-	public function testAddBlockFromSymfonyType(): void
+	public function testAddChildBlockClass(): void
 	{
 		$oFormBlock = new FormBlock('formBlock');
 		$this->expectException(FormBlockException::class);

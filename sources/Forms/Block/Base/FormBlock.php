@@ -66,27 +66,52 @@ class FormBlock extends AbstractTypeFormBlock
 	 * Add a child form.
 	 *
 	 * @param string $sName block name
-	 * @param string $sType block class name
-	 * @param array $aSymfonyOptions options
+	 * @param string $sBlockClass block class name
 	 * @param array $aOptions options
 	 *
 	 * @return $this
 	 * @throws ReflectionException
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 * @throws FormBlockException
 	 */
-	public function Add(string $sName, string $sType, array $aSymfonyOptions, array $aOptions = []): AbstractFormBlock
+	public function Add(string $sName, string $sBlockClass,array $aOptions = []): AbstractFormBlock
 	{
-		$oRef = new ReflectionClass($sType);
-		if($oRef->isSubclassOf(AbstractFormBlock::class) === false){
-			throw new FormBlockException("The block type '$sType' is not a subclass of AbstractFormBlock.");
-		}
+		$this->VerifyBlockName($sName);
+		$this->VerifyBlockClassName($sBlockClass);
 
 		$aOptions['priority'] = -count($this->aChildrenBlocks);
-		$oSubFormBlock = new ($sType)($sName, $aSymfonyOptions, $aOptions);
+		$oSubFormBlock = new ($sBlockClass)($sName, $aOptions);
 		$this->aChildrenBlocks[$sName] = $oSubFormBlock;
 		$oSubFormBlock->SetParent($this);
 
 		return $oSubFormBlock;
+	}
+
+	/**
+	 * @param string $sBlockName
+	 *
+	 * @return void
+	 * @throws FormBlockException
+	 */
+	private function VerifyBlockName(string $sBlockName): void
+	{
+		if(!ctype_alnum(str_replace(array('-', '_'), '', $sBlockName))) {
+			throw new FormBlockException("Block name '$sBlockName' is not valid. Only alphanumeric characters, hyphens and underscores are allowed.");
+		}
+	}
+
+	/**
+	 * @param string $sBlockClass
+	 *
+	 * @return void
+	 * @throws FormBlockException
+	 * @throws ReflectionException
+	 */
+	private function VerifyBlockClassName(string $sBlockClass): void
+	{
+		$oRef = new ReflectionClass($sBlockClass);
+		if($oRef->isSubclassOf(AbstractFormBlock::class) === false){
+			throw new FormBlockException("The block type '$sBlockClass' is not a subclass of AbstractFormBlock.");
+		}
 	}
 
 	/**

@@ -8,6 +8,7 @@ namespace Combodo\iTop\Forms\Block;
 
 use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
+use Combodo\iTop\Forms\Register\OptionsRegister;
 
 abstract class AbstractTypeFormBlock extends AbstractFormBlock
 {
@@ -79,5 +80,15 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 	public function SetAdded(bool $bIsAdded): void
 	{
 		$this->bIsAddedToForm = $bIsAdded;
+	}
+
+	/** @inheritdoc */
+	public function UpdateOptions(OptionsRegister $oOptionsRegister): void
+	{
+		parent::UpdateOptions($oOptionsRegister);
+
+		if($this->GetInput(self::INPUT_ENABLE)->IsBound()){
+			$oOptionsRegister->SetOption('disabled', !$this->GetInputValue(self::INPUT_ENABLE));
+		}
 	}
 }

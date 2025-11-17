@@ -9,6 +9,7 @@ namespace Combodo\iTop\Forms\FormBuilder;
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
+use Combodo\iTop\Forms\Block\FormBlockException;
 use Exception;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormError;
@@ -156,7 +157,7 @@ class DependencyHandler
 	 * @param string|null $sEventType
 	 *
 	 * @return void
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 * @throws FormBlockException
 	 */
 	private function CheckDependencies(FormInterface|FormBuilderInterface $oForm, string $sOutputBlock = null, string $sEventType = null): void
 	{

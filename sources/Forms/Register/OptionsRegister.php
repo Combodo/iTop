@@ -22,14 +22,30 @@ class OptionsRegister
 	 * @param bool $bTypeOption
 	 *
 	 * @return void
+	 * @throws RegisterException
 	 */
 	public function SetOption(string $sOptionName, mixed $mDefaultValue = null, bool $bTypeOption = true): void
 	{
+		$this->VerifyOptionName($sOptionName);
+
 		if(isset($this->aOptions[$sOptionName])){
 			$this->aOptions[$sOptionName]->oValue = $mDefaultValue;
 		}
 		else{
 			$this->aOptions[$sOptionName] = new Option($sOptionName, $mDefaultValue, $bTypeOption);
+		}
+	}
+
+	/**
+	 * @param string $sOptionName
+	 *
+	 * @return void
+	 * @throws RegisterException
+	 */
+	private function VerifyOptionName(string $sOptionName): void
+	{
+		if(!ctype_alnum(str_replace(array('-', '_'), '', $sOptionName))) {
+			throw new RegisterException("Option name '$sOptionName' is not valid. Only alphanumeric characters, hyphens and underscores are allowed.");
 		}
 	}
 
