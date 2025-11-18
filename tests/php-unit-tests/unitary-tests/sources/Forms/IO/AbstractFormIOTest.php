@@ -6,6 +6,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\sources\Forms\IO;
 
+use Combodo\iTop\Forms\IO\FormBlockIOException;
 use Combodo\iTop\Test\UnitTest\sources\Forms\AbstractFormsTest;
 use Symfony\Component\Form\FormEvents;
 
@@ -44,4 +45,28 @@ class AbstractFormIOTest extends AbstractFormsTest
 		$this->assertTrue($oOutput->HasValue(), 'Output must have value when set');
 	}
 
+	public function testIOValueReflectsTheValuePostedOrTheValueSet()
+	{
+		$oInput = $this->GivenRawInput('test');
+
+		// When
+		$oInput->SetValue(FormEvents::POST_SET_DATA, 'The value set');
+
+		// Then
+		$this->assertEquals('The value set', $oInput->GetValue());
+
+		// When
+		$oInput->SetValue(FormEvents::POST_SUBMIT, 'The value posted');
+
+		// Then
+		$this->assertEquals('The value posted', $oInput->GetValue());
+	}
+
+	public function testNameDoesNotAcceptBlank()
+	{
+		$oInput = $this->GivenRawInput('test');
+
+		$this->expectException(FormBlockIOException::class);
+		$oInput->SetName('The test name');
+	}
 }
