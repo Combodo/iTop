@@ -17,28 +17,7 @@ class ModuleDependencySortTest extends ItopTestCase
 		$this->RequireOnceItopFile('setup/moduledependency/moduledependencysort.class.inc.php');
 	}
 
-	private function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules){
-		$this->InvokeNonPublicMethod(ModuleDependencySort::class, 'SortModulesByCountOfDepencenciesDescending', ModuleDependencySort::GetInstance(), [&$aUnresolvedDependencyModules]);
-	}
-
-	public function testSortModulesByCountOfDepencenciesDescending_RealExample()
-	{
-		$aUnresolvedDependencyModules = [];
-		$aDependencies = json_decode(file_get_contents(__DIR__.'/ressources/module_deps.json'), true);
-		foreach ($aDependencies as $sModuleId => $aModuleData) {
-			$this->AddModule($aUnresolvedDependencyModules, $sModuleId, $aModuleData['dependencies']);
-		}
-
-		$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
-
-		$aExpected = json_decode(file_get_contents(__DIR__.'/ressources/expected_ordered_module_ids2.json'), true);
-		$this->assertEquals(
-			$aExpected,
-			array_keys($aUnresolvedDependencyModules)
-		);
-	}
-
-	public function testOrderModulesByDependencies_CheckMissingDependenciesAreCorrectlyOrderedInTheException()
+	public function testOrderModulesByDependencies_CheckExceptionWhenAllModuleUnresolved()
 	{
 		$aModules = [
 			"id1/123" => [
@@ -62,7 +41,7 @@ MSG;
 		ModuleDependencySort::GetInstance()->OrderModulesByDependencies($aModules, true, null);
 	}
 
-	public function testOrderModulesByDependencies_ValidateExceptionWithSomeDependenciesResolved()
+	public function testOrderModulesByDependencies_CheckExceptionWhenSomeModuleUnresolved()
 	{
 		$aModules = [
 			"id1/123" => [
@@ -90,33 +69,7 @@ MSG;
 		ModuleDependencySort::GetInstance()->OrderModulesByDependencies($aModules, true, null);
 	}
 
-	public function testOrderModulesByDependencies_KeepGoingEvenWithFailure_WithSomeDependenciesResolved()
-	{
-		$aModules = [
-			"id1/123" => [
-				'dependencies' => [ 'id2/456', 'id4/666', 'id3/789'],
-				'label' => 'label1',
-			],
-			"id2/456" => [
-				'dependencies' => [],
-				'label' => 'label2',
-			],
-			"id3/789" => [
-				'dependencies' => [ 'id2/456', 'id4/666'],
-				'label' => 'label3',
-			],
-		];
-
-		$aResult = ModuleDependencySort::GetInstance()->OrderModulesByDependencies($aModules, false, null);
-
-		$aExpected = [
-			'id2/456',
-		];
-
-		$this->assertEquals($aExpected, array_keys($aResult));
-	}
-
-	public function testOrderModulesByDependencies_UnResolveWithCircularDependency()
+	public function testOrderModulesByDependencies_CheckExceptionWhenCircularDependencies()
 	{
 		$aModules = [
 			"id1/1" => [
@@ -150,7 +103,72 @@ MSG;
 		ModuleDependencySort::GetInstance()->OrderModulesByDependencies($aModules, true, null);
 	}
 
-	public function testOrderModulesByDependencies_ResolveOk()
+	public function testOrderModulesByDependencies_KeepGoingEvenWithFailure()
+	{
+		$aModules = [
+			"id1/123" => [
+				'dependencies' => [ 'id2/456', 'id4/666', 'id3/789'],
+				'label' => 'label1',
+			],
+			"id2/456" => [
+				'dependencies' => [],
+				'label' => 'label2',
+			],
+			"id3/789" => [
+				'dependencies' => [ 'id2/456', 'id4/666'],
+				'label' => 'label3',
+			],
+		];
+
+		$aResult = ModuleDependencySort::GetInstance()->OrderModulesByDependencies($aModules, false, null);
+
+		$aExpected = [
+			'id2/456',
+		];
+
+		$this->assertEquals($aExpected, array_keys($aResult));
+	}
+
+	public function testOrderModulesByDependencies_Nominalcase()
+	{
+		$aModules = [
+			"id0/1" => [
+				'dependencies' => [ 'id2/2'],
+				'label' => 'label1',
+			],
+			"id1/1" => [
+				'dependencies' => [ 'id2/2'],
+				'label' => 'label1',
+			],
+			"id2/2" => [
+				'dependencies' => ['id3/3'],
+				'label' => 'label2',
+			],
+			"id3/3" => [
+				'dependencies' => ['id4/4'],
+				'label' => 'label3',
+			],
+			"id4/4" => [
+				'dependencies' => [],
+				'label' => 'label4',
+			],
+		];
+
+		$aExpected = [
+			"id4/4",
+			"id3/3",
+			"id2/2",
+			"id0/1",
+			"id1/1",
+		];
+
+		$aResult = ModuleDependencySort::GetInstance()->OrderModulesByDependencies($aModules, true, null);
+
+		$this->assertEquals($aExpected, array_keys($aResult));
+	}
+
+	//warning : tricky usecase
+	public function testOrderModulesByDependencies_AllTermsOfOrExpressionWillImpactTheOrder()
 	{
 		$aModules = [
 			"id0/1" => [
@@ -162,22 +180,12 @@ MSG;
 				'label' => 'label1',
 			],
 			"id2/2" => [
-				'dependencies' => ['id3/3'],
-				'label' => 'label2',
-			],
-			"id3/3" => [
-				'dependencies' => ['id4/4'],
-				'label' => 'label3',
-			],
-			"id4/4" => [
 				'dependencies' => [],
-				'label' => 'label4',
+				'label' => 'label2',
 			],
 		];
 
 		$aExpected = [
-			"id4/4",
-			"id3/3",
 			"id2/2",
 			"id1/1",
 			"id0/1",
@@ -188,44 +196,7 @@ MSG;
 		$this->assertEquals($aExpected, array_keys($aResult));
 	}
 
-	public function testOrderModulesByDependencies_ResolveOk2()
-	{
-		$aModules = [
-			"id0/1" => [
-				'dependencies' => [ 'id2/2'],
-				'label' => 'label1',
-			],
-			"id1/1" => [
-				'dependencies' => [ 'id2/2'],
-				'label' => 'label1',
-			],
-			"id2/2" => [
-				'dependencies' => ['id3/3'],
-				'label' => 'label2',
-			],
-			"id3/3" => [
-				'dependencies' => ['id4/4'],
-				'label' => 'label3',
-			],
-			"id4/4" => [
-				'dependencies' => [],
-				'label' => 'label4',
-			],
-		];
-
-		$aExpected = [
-			"id4/4",
-			"id3/3",
-			"id2/2",
-			"id0/1",
-			"id1/1",
-		];
-
-		$aResult = ModuleDependencySort::GetInstance()->OrderModulesByDependencies($aModules, true, null);
-
-		$this->assertEquals($aExpected, array_keys($aResult));
-	}
-
+	//WARNING: alphabetical order make setup are determinititic
 	public function testOrderModulesByDependencies_ResolveNoDependendenciesOrderByAlphabeticalOrder()
 	{
 		$aModules = [
@@ -234,7 +205,7 @@ MSG;
 				'label' => 'label2',
 			],
 			"id1/1" => [
-				'dependencies' => [ ],
+				'dependencies' => [],
 				'label' => 'label1',
 			],
 			"id3/3" => [
@@ -264,7 +235,85 @@ MSG;
 		$this->assertEquals($aExpected, array_keys($aResult));
 	}
 
-	public function testOrderModulesByDependencies_ResolveOk_ModulesToLoadProvided()
+	public function testOrderModulesByDependencies_AlphabeticalOrderWithDependencies()
+	{
+		$aModules = [
+			"id2/2" => [
+				'dependencies' => ["id1/1"],
+				'label' => 'label2',
+			],
+			"id1/1" => [
+				'dependencies' => [],
+				'label' => 'label1',
+			],
+			"id3/3" => [
+				'dependencies' => ["id1/1"],
+				'label' => 'label3',
+			],
+		];
+
+		$aExpected = [
+			"id1/1",
+			"id2/2",
+			"id3/3",
+		];
+
+		$aResult = ModuleDependencySort::GetInstance()->OrderModulesByDependencies($aModules, true, null);
+
+		$this->assertEquals($aExpected, array_keys($aResult));
+	}
+
+	public function testOrderModulesByDependencies_AlphabeticalOrderWithDependencies2()
+	{
+		$aModules = [
+			"z_id2/2" => [ //difference here
+				'dependencies' => ["id1/1"],
+				'label' => 'label2',
+			],
+			"id1/1" => [
+				'dependencies' => [],
+				'label' => 'label1',
+			],
+			"id3/3" => [
+				'dependencies' => ["id1/1"],
+				'label' => 'label3',
+			],
+		];
+
+		$aExpected = [
+			"id1/1",
+			"id3/3",
+			"z_id2/2",
+		];
+
+		$aResult = ModuleDependencySort::GetInstance()->OrderModulesByDependencies($aModules, true, null);
+
+		$this->assertEquals($aExpected, array_keys($aResult));
+	}
+
+	public static function FilterModulesBasedOnChoicesProvider() {
+		return [
+			'itil choice' => [ 'choices' => ['id1', 'id2', "id3-itil"],
+						'expected' => [
+							"id3-itil/3",
+							"id2/2",
+							"id1/1",
+						]
+			],
+			'choice' => [ 'choices' => ['id1', 'id2', "id3"],
+			              'expected' => [
+				              "id3/3",
+				              "id2/2",
+				              "id1/1",
+			              ]
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider FilterModulesBasedOnChoicesProvider
+	 */
+	public function testOrderModulesByDependencies_FilterModulesBasedOnChoices($aChoices, $aExpected)
 	{
 		$aModules = [
 			"id1/1" => [
@@ -285,19 +334,10 @@ MSG;
 			],
 		];
 
-		foreach (["id3", "id3-itil"] as $sLastModuleNameToLoad) {
-			$aExpected = [
-				"$sLastModuleNameToLoad/3",
-				"id2/2",
-				"id1/1",
-			];
+		$aResult = ModuleDependencySort::GetInstance()->OrderModulesByDependencies($aModules, true, $aChoices);
 
-			$aResult = ModuleDependencySort::GetInstance()->OrderModulesByDependencies($aModules, true, ['id1', 'id2', $sLastModuleNameToLoad]);
-
-			$this->assertEquals($aExpected, array_keys($aResult));
-		}
+		$this->assertEquals($aExpected, array_keys($aResult));
 	}
-
 
 	public function testSortModulesByCountOfDepencenciesDescending_NoDependencies()
 	{
@@ -367,10 +407,31 @@ MSG;
 		);
 	}
 
+	public function testSortModulesByCountOfDepencenciesDescending_RealExample()
+	{
+		$aUnresolvedDependencyModules = [];
+		$aDependencies = json_decode(file_get_contents(__DIR__.'/ressources/module_deps.json'), true);
+		foreach ($aDependencies as $sModuleId => $aModuleData) {
+			$this->AddModule($aUnresolvedDependencyModules, $sModuleId, $aModuleData['dependencies']);
+		}
+
+		$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+
+		$aExpected = json_decode(file_get_contents(__DIR__.'/ressources/expected_ordered_module_ids2.json'), true);
+		$this->assertEquals(
+			$aExpected,
+			array_keys($aUnresolvedDependencyModules)
+		);
+	}
+
 	private function AddModule(array &$aUnresolvedDependencyModules, string $sModuleId, array $aDeps)
 	{
 		$oModule = new Module($sModuleId);
 		$oModule->SetDependencies($aDeps);
 		$aUnresolvedDependencyModules[$sModuleId] = $oModule;
+	}
+
+	private function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules){
+		$this->InvokeNonPublicMethod(ModuleDependencySort::class, 'SortModulesByCountOfDepencenciesDescending', ModuleDependencySort::GetInstance(), [&$aUnresolvedDependencyModules]);
 	}
 }
