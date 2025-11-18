@@ -2,12 +2,14 @@
 
 namespace Combodo\iTop\Setup\ModuleDependency;
 
+require_once(APPROOT.'/setup/runtimeenv.class.inc.php');
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use ModuleFileReaderException;
 use RunTimeEnvironment;
 
 /**
  * Class that handles a module dependency
+ * Dependency expression example : (moduleA/123 || moduleB>456)
  */
 class ModuleDependency
 {

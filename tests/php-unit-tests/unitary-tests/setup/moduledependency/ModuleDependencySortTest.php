@@ -13,7 +13,12 @@ class ModuleDependencySortTest extends ItopTestCase
 	{
 		parent::setUp();
 
+		$this->RequireOnceItopFile('setup/modulediscovery.class.inc.php');
 		$this->RequireOnceItopFile('setup/moduledependency/moduledependencysort.class.inc.php');
+	}
+
+	private function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules){
+		$this->InvokeNonPublicMethod(ModuleDependencySort::class, 'SortModulesByCountOfDepencenciesDescending', ModuleDependencySort::GetInstance(), [&$aUnresolvedDependencyModules]);
 	}
 
 	public function testSortModulesByCountOfDepencenciesDescending_RealExample()
@@ -24,7 +29,7 @@ class ModuleDependencySortTest extends ItopTestCase
 			$this->AddModule($aUnresolvedDependencyModules, $sModuleId, $aModuleData['dependencies']);
 		}
 
-		ModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+		$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 
 		$aExpected = json_decode(file_get_contents(__DIR__.'/ressources/expected_ordered_module_ids2.json'), true);
 		$this->assertEquals(
@@ -300,7 +305,7 @@ MSG;
 		foreach (['c', 'b', 'a'] as $sModuleId) {
 			$this->AddModule($aUnresolvedDependencyModules, $sModuleId, []);
 		}
-		ModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+		$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		$this->assertEquals(['a', 'b', 'c'], array_keys($aUnresolvedDependencyModules));
 	}
 
@@ -312,7 +317,7 @@ MSG;
 		$this->AddModule($aUnresolvedDependencyModules, 'itop-config-mgmt/123', ['itop-structure/2.7.1']);
 		$this->AddModule($aUnresolvedDependencyModules, 'itop-structure/2.7.1', []);
 
-		ModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+		$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		$this->assertEquals(
 			[
 				'itop-structure/2.7.1',
@@ -331,7 +336,7 @@ MSG;
 		$this->AddModule($aUnresolvedDependencyModules, 'itop-tickets/2.0.0', ['itop-structure/2.7.1']);
 		$this->AddModule($aUnresolvedDependencyModules, 'itop-config-mgmt/123', ['itop-structure/2.7.1']);
 
-		ModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+		$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		$this->assertEquals(
 			[
 				'itop-config-mgmt/123',
@@ -350,7 +355,7 @@ MSG;
 		$this->AddModule($aUnresolvedDependencyModules, 'moduleB/1', ['moduleA/1']);
 		$this->AddModule($aUnresolvedDependencyModules, 'moduleC/1', []);
 
-		ModuleDependencySort::GetInstance()->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+		$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		$this->assertEquals(
 			[
 				'moduleA/1',

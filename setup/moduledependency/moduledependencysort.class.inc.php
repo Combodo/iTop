@@ -32,7 +32,7 @@ class ModuleDependencySort
 	}
 
 	/**
-	 * Arrange an list of modules, based on their (inter) dependencies
+	 * Sort a list of modules, based on their (inter) dependencies
 	 * @param array $aModules The list of modules to process: 'id' => $aModuleInfo
 	 * @param bool $bAbortOnMissingDependency ...
 	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
@@ -100,7 +100,7 @@ class ModuleDependencySort
 		}
 		return $aResult;
 	}
-	
+
 	/**
 	 * This method is key as it sorts modules by their dependencies (topological sort).
 	 * Modules with less dependencies are first.
@@ -113,7 +113,7 @@ class ModuleDependencySort
 	 *
 	 * @return void
 	 */
-	public function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules): void
+	protected function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules): void
 	{
 		$aCountDepsByModuleId = [];
 		$aDependsOnModuleName = [];
