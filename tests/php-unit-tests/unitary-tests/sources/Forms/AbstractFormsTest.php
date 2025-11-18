@@ -1,8 +1,10 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 namespace Combodo\iTop\Test\UnitTest\sources\Forms;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
@@ -42,7 +44,7 @@ abstract class AbstractFormsTest extends ItopDataTestCase
 				$oBlock->AddInput($aIO['name'], $aIO['data_type']);
 			} else {
 				if (isset($aIO['converter_class'])) {
-					$oBlock->AddOutput($aIO['name'], $aIO['data_type'], new $aIO['converter_class']);
+					$oBlock->AddOutput($aIO['name'], $aIO['data_type'], new $aIO['converter_class']());
 				} else {
 					$oBlock->AddOutput($aIO['name'], $aIO['data_type']);
 				}

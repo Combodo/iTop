@@ -1,6 +1,7 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2025 Combodo SARL
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -10,5 +11,4 @@ use Combodo\iTop\Forms\FormsException;
 
 class FormBuilderException extends FormsException
 {
-
 }

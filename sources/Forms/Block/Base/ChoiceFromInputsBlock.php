@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -23,7 +24,7 @@ class ChoiceFromInputsBlock extends ChoiceFormBlock
 		$aChoices = [];
 		/** @var FormInput $oInput */
 		foreach ($this->GetInputs() as $oInput) {
-			if($oInput->HasValue()){
+			if ($oInput->HasValue()) {
 				$aChoices[strval($oInput->GetValue())] = $oInput->GetName();
 			}
 		}

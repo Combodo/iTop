@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -140,8 +141,7 @@ class DependencyHandler
 			// Compute the block outputs with the data
 			try {
 				$oFormBlock->ComputeOutputs($sEventType, $oForm->getData());
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$oForm->addError(new FormError($e->getMessage()));
 			}
 

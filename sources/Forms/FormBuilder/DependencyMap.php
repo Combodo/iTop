@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -59,15 +60,15 @@ class DependencyMap
 			foreach ($oDependentBlock->GetBoundInputsBindings() as $oBinding) {
 
 				// OUT > IN
-				if($oBinding->oSourceIO instanceof FormOutput
-				&& $oBinding->oDestinationIO instanceof FormInput){
+				if ($oBinding->oSourceIO instanceof FormOutput
+				&& $oBinding->oDestinationIO instanceof FormInput) {
 					$this->AddBindingToMap($this->aBindingsOutputToInput, $oBinding);
 					$this->AddToBlockImpactedBy($oBinding->oSourceIO->GetOwnerBlock()->GetName(), $oDependentBlock);
 				}
 
 				// IN > IN
-				if($oBinding->oSourceIO instanceof FormInput
-				&& $oBinding->oDestinationIO instanceof FormInput){
+				if ($oBinding->oSourceIO instanceof FormInput
+				&& $oBinding->oDestinationIO instanceof FormInput) {
 					$this->AddBindingToMap($this->aBindingsInputToInput, $oBinding);
 				}
 
@@ -77,8 +78,8 @@ class DependencyMap
 			foreach ($oDependentBlock->GetBoundOutputBindings() as $oBinding) {
 
 				// OUT > OUT
-				if($oBinding->oSourceIO instanceof FormOutput
-					&& $oBinding->oDestinationIO instanceof FormOutput){
+				if ($oBinding->oSourceIO instanceof FormOutput
+					&& $oBinding->oDestinationIO instanceof FormOutput) {
 					$this->AddBindingToMap($this->aBindingsOutputToOutputs, $oBinding);
 				}
 
@@ -123,7 +124,7 @@ class DependencyMap
 	private function AddToBlockImpactedBy(string $sDependsOnName, AbstractFormBlock $oImpactedBlock): void
 	{
 		// Initialize array for this dependence
-		if(!array_key_exists($sDependsOnName, $this->aBlocksImpactedBy)){
+		if (!array_key_exists($sDependsOnName, $this->aBlocksImpactedBy)) {
 			$this->aBlocksImpactedBy[$sDependsOnName] = [];
 		}
 
@@ -131,9 +132,9 @@ class DependencyMap
 		$this->aBlocksImpactedBy[$sDependsOnName][$oImpactedBlock->GetName()] = $oImpactedBlock;
 
 		// TODO
-		if($oImpactedBlock instanceof ExpressionFormBlock){
-			foreach($oImpactedBlock->GetOutputs() as $oOutput){
-				foreach($oOutput->GetBindings() as $oBinding){
+		if ($oImpactedBlock instanceof ExpressionFormBlock) {
+			foreach ($oImpactedBlock->GetOutputs() as $oOutput) {
+				foreach ($oOutput->GetBindings() as $oBinding) {
 					$this->AddToBlockImpactedBy($sDependsOnName, $oBinding->oDestinationIO->GetOwnerBlock());
 				}
 			}
@@ -148,10 +149,10 @@ class DependencyMap
 		$aResult = [];
 
 		// Iterate throw binding OUT > IN
-		foreach(array_keys($this->aBindingsOutputToInput) as $sOutputBlockName) {
+		foreach (array_keys($this->aBindingsOutputToInput) as $sOutputBlockName) {
 
 			// Exclude block containing dependencies
-			if(!array_key_exists($sOutputBlockName, $this->aBlocksWithDependencies)){
+			if (!array_key_exists($sOutputBlockName, $this->aBlocksWithDependencies)) {
 				$aResult[] = $sOutputBlockName;
 			}
 		}
@@ -170,13 +171,13 @@ class DependencyMap
 	 */
 	public function GetBlocksImpactedBy(string $sBlockName, callable $oFilter = null): ?array
 	{
-		if(!array_key_exists($sBlockName, $this->aBlocksImpactedBy)){
+		if (!array_key_exists($sBlockName, $this->aBlocksImpactedBy)) {
 			return null;
 		}
 		$aBlocks = $this->aBlocksImpactedBy[$sBlockName];
 
 		// Filtering
-		if($oFilter !== null){
+		if ($oFilter !== null) {
 			$aBlocks = array_filter($aBlocks, $oFilter);
 		}
 

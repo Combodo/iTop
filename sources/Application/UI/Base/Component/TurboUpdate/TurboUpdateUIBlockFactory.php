@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -15,7 +16,7 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * @since 3.3.0
  * @package UIBlockAPI
  */
-class TurboUpdateUIBlockFactory  extends AbstractUIBlockFactory
+class TurboUpdateUIBlockFactory extends AbstractUIBlockFactory
 {
 	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UITurboUpdate';

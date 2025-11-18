@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -14,7 +15,6 @@ use Symfony\Component\Form\FormInterface;
  */
 class FormTypeHelper
 {
-
 	/**
 	 * @param FormInterface $oForm
 	 *
@@ -61,10 +61,9 @@ class FormTypeHelper
 		$aImpacted = $oMap->GetBlocksImpactedBy($oBlockTurboTrigger->GetName());
 		foreach ($aImpacted as $oImpactedBlock) {
 			$sName = $sParentName.'_'.$oImpactedBlock->GetName();
-			if($oParent->has($oImpactedBlock->GetName())){
+			if ($oParent->has($oImpactedBlock->GetName())) {
 				$aBlocksToRedraw[$sName] = $oParent->get($oImpactedBlock->GetName())->createView();
-			}
-			else{
+			} else {
 				$aBlocksToRedraw[$sName] = null;
 			}
 
@@ -89,6 +88,5 @@ class FormTypeHelper
 
 		return $oForm;
 	}
-
 
 }

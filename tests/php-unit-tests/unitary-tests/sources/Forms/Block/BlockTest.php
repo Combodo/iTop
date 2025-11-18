@@ -1,6 +1,7 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -26,7 +27,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 class BlockTest extends ItopDataTestCase
 {
-
 	/**
 	 * Block get form type must return a class derived from Symfony form AbstractType.
 	 *
@@ -36,8 +36,8 @@ class BlockTest extends ItopDataTestCase
 	{
 		$aFormBlocks = InterfaceDiscovery::GetInstance()->FindItopClasses(iFormBlock::class);
 		foreach ($aFormBlocks as $sFormBlock) {
-			$oChoiceBlock = new($sFormBlock)($sFormBlock);
-			if($oChoiceBlock instanceof AbstractTypeFormBlock){
+			$oChoiceBlock = new ($sFormBlock)($sFormBlock);
+			if ($oChoiceBlock instanceof AbstractTypeFormBlock) {
 				$oClass = new \ReflectionClass($oChoiceBlock->GetFormType());
 				$this->assertTrue($oClass->isSubclassOf(AbstractType::class));
 			}
@@ -63,7 +63,7 @@ class BlockTest extends ItopDataTestCase
 	{
 		$aFormBlocks = InterfaceDiscovery::GetInstance()->FindItopClasses(iFormBlock::class);
 		foreach ($aFormBlocks as $sFormBlock) {
-			$oChoiceBlock = new($sFormBlock)($sFormBlock);
+			$oChoiceBlock = new ($sFormBlock)($sFormBlock);
 			$this->assertTrue($oChoiceBlock->GetOption('form_block') === $oChoiceBlock);
 		}
 	}

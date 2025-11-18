@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -49,7 +50,7 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 
 		$oClass = $this->GetInputValue(self::INPUT_CLASS_NAME);
 
-		if($oClass === null){
+		if ($oClass === null) {
 			$oOptionsRegister->SetOption('choices', []);
 			return;
 		}
@@ -57,7 +58,7 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 		$aAttributeCodes = MetaModel::GetAttributesList($oClass);
 
 		$aAttributes = [];
-		foreach ($aAttributeCodes as $sAttributeCode){
+		foreach ($aAttributeCodes as $sAttributeCode) {
 			$oAttribute = MetaModel::GetAttributeDef(strval($oClass), $sAttributeCode);
 			$aAttributes[$oAttribute->GetLabel()] = $sAttributeCode;
 		}

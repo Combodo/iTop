@@ -143,17 +143,13 @@ class ModelReflectionRuntime extends ModelReflection
 				$aScope[] = trim($sScopeClass);
 			}
 		}
-		$aAttributes = array();
-		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-		{
+		$aAttributes = [];
+		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 			$oReflection = new ReflectionClass($oAttDef);
 			$sAttributeClass = $oReflection->getShortName();
-			if ($aScope != null)
-			{
-				foreach ($aScope as $sScopeClass)
-				{
-					if (($sAttributeClass == $sScopeClass) || is_subclass_of($sAttributeClass, $sScopeClass))
-					{
+			if ($aScope != null) {
+				foreach ($aScope as $sScopeClass) {
+					if (($sAttributeClass == $sScopeClass) || is_subclass_of($sAttributeClass, $sScopeClass)) {
 						$aAttributes[$sAttCode] = $sAttributeClass;
 						break;
 					}

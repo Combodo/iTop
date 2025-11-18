@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -42,8 +43,7 @@ class FormBlock extends AbstractTypeFormBlock
 		try {
 			// Build the form
 			$this->BuildForm();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			throw new FormBlockException('Unable to construct form', 0, $e);
 		}
 	}
@@ -73,7 +73,7 @@ class FormBlock extends AbstractTypeFormBlock
 	 * @throws ReflectionException
 	 * @throws FormBlockException
 	 */
-	public function Add(string $sName, string $sBlockClass,array $aOptions = []): AbstractFormBlock
+	public function Add(string $sName, string $sBlockClass, array $aOptions = []): AbstractFormBlock
 	{
 		$this->VerifyBlockName($sName);
 		$this->VerifyBlockClassName($sBlockClass);
@@ -94,7 +94,7 @@ class FormBlock extends AbstractTypeFormBlock
 	 */
 	private function VerifyBlockName(string $sBlockName): void
 	{
-		if(!ctype_alnum(str_replace(array('-', '_'), '', $sBlockName))) {
+		if (!ctype_alnum(str_replace(['-', '_'], '', $sBlockName))) {
 			throw new FormBlockException("Block name '$sBlockName' is not valid. Only alphanumeric characters, hyphens and underscores are allowed.");
 		}
 	}
@@ -109,7 +109,7 @@ class FormBlock extends AbstractTypeFormBlock
 	private function VerifyBlockClassName(string $sBlockClass): void
 	{
 		$oRef = new ReflectionClass($sBlockClass);
-		if($oRef->isSubclassOf(AbstractFormBlock::class) === false){
+		if ($oRef->isSubclassOf(AbstractFormBlock::class) === false) {
 			throw new FormBlockException("The block type '$sBlockClass' is not a subclass of AbstractFormBlock.");
 		}
 	}

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -29,7 +30,7 @@ class OqlFormType extends AbstractType
 			'placeholder' => 'SELECT Contact',
 		]);
 
-		$resolver->setDefault('outputs', array(
+		$resolver->setDefault('outputs', [
 			'selected_class' => function ($oData) {
 				if ($oData === null) {
 					return null;
@@ -39,7 +40,7 @@ class OqlFormType extends AbstractType
 
 				return $aMatches[1] ?? null;
 			},
-		));
+		]);
 
 		$resolver->setDefined('with_ai_button');
 	}

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -43,7 +44,7 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 	public function IsVisible(string $sEventType = null): bool
 	{
 		$oInput = $this->GetInput(self::INPUT_VISIBLE);
-		if(!$oInput->IsBound()){
+		if (!$oInput->IsBound()) {
 			return true;
 		}
 
@@ -87,7 +88,7 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 	{
 		parent::UpdateOptions($oOptionsRegister);
 
-		if($this->GetInput(self::INPUT_ENABLE)->IsBound()){
+		if ($this->GetInput(self::INPUT_ENABLE)->IsBound()) {
 			$oOptionsRegister->SetOption('disabled', !$this->GetInputValue(self::INPUT_ENABLE));
 		}
 	}

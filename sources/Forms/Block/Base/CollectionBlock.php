@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -55,7 +56,7 @@ class CollectionBlock extends AbstractTypeFormBlock
 		$oOptionsRegister->SetOption('prototype', true);
 		$oOptionsRegister->SetOption('allow_add', true);
 		$oOptionsRegister->SetOption('prototype_options', [
-			'label' => false
+			'label' => false,
 		]);
 
 		// not type options

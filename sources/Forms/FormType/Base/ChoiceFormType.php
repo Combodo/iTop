@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -55,7 +56,7 @@ class ChoiceFormType extends AbstractType
 		});
 
 		// on pre submit (prior)
-		$builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $oEvent) use ($options){
+		$builder->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $oEvent) use ($options) {
 
 			// reset value if not in available choices
 			if (!empty($oEvent->getData()) && !$this->CheckValue($oEvent->getData(), $options)) {
@@ -118,6 +119,5 @@ class ChoiceFormType extends AbstractType
 
 		return true;
 	}
-
 
 }

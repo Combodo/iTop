@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -16,7 +17,7 @@ use Symfony\Component\Form\FormView;
  * @since 3.3.0
  * @package UIBlockAPI
  */
-class TurboFormUIBlockFactory  extends AbstractUIBlockFactory
+class TurboFormUIBlockFactory extends AbstractUIBlockFactory
 {
 	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UITurboForm';

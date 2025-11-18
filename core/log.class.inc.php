@@ -698,7 +698,7 @@ abstract class LogAPI
 		static::Error($sMessage, $sChannel, $aContext);
 	}
 
-	public static function Error($sMessage, $sChannel = null, $aContext = array())
+	public static function Error($sMessage, $sChannel = null, $aContext = [])
 	{
 		static::Log(self::LEVEL_ERROR, $sMessage, $sChannel, $aContext);
 	}

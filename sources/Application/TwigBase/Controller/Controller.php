@@ -55,14 +55,14 @@ use ZipArchive;
 
 abstract class Controller extends AbstractController
 {
-	const ENUM_PAGE_TYPE_HTML            = 'html';
-	const ENUM_PAGE_TYPE_BASIC_HTML      = 'basic_html';
-	const ENUM_PAGE_TYPE_AJAX            = 'ajax';
-	const ENUM_PAGE_TYPE_TURBO_FORM_AJAX = 'turbo_ajax';
-	const ENUM_PAGE_TYPE_SETUP           = 'setup';
+	public const ENUM_PAGE_TYPE_HTML            = 'html';
+	public const ENUM_PAGE_TYPE_BASIC_HTML      = 'basic_html';
+	public const ENUM_PAGE_TYPE_AJAX            = 'ajax';
+	public const ENUM_PAGE_TYPE_TURBO_FORM_AJAX = 'turbo_ajax';
+	public const ENUM_PAGE_TYPE_SETUP           = 'setup';
 
-	const TWIG_ERROR   = 'error';
-	const TWIG_WARNING = 'warning';
+	public const TWIG_ERROR   = 'error';
+	public const TWIG_WARNING = 'warning';
 
 	/** @var \Twig\Environment */
 	private $oTwig;
@@ -265,8 +265,7 @@ abstract class Controller extends AbstractController
 			}
 
 			$this->DisplayBadRequest();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			http_response_code(500);
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
@@ -298,8 +297,7 @@ abstract class Controller extends AbstractController
 			}
 
 			$this->DisplayPageNotFound();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			http_response_code(500);
 			$aResponse = ['sError' => $e->getMessage()];
 			echo json_encode($aResponse);
@@ -653,7 +651,7 @@ abstract class Controller extends AbstractController
 		$this->SendFileContent($sArchiveFileFullPath, $sDownloadArchiveName.'.zip', true, true);
 	}
 
-	final protected function SendFileContent($sFilePath, $sDownloadArchiveName = null, $bFileTransfer = true, $bRemoveFile = false, $aHeaders = array()): void
+	final protected function SendFileContent($sFilePath, $sDownloadArchiveName = null, $bFileTransfer = true, $bRemoveFile = false, $aHeaders = []): void
 	{
 		$sFileMimeType = utils::GetFileMimeType($sFilePath);
 		header('Content-Type: '.$sFileMimeType);
@@ -844,8 +842,7 @@ abstract class Controller extends AbstractController
 			$aErrors[self::TWIG_ERROR][] = $e->getMessage();
 
 			return '';
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$sExceptionMessage = $e->getMessage();
 			if (str_contains($sExceptionMessage, 'at line')) {
 				IssueLog::Error($sExceptionMessage);

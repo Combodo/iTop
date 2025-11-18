@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -28,10 +29,9 @@ class OptionsRegister
 	{
 		$this->VerifyOptionName($sOptionName);
 
-		if(isset($this->aOptions[$sOptionName])){
+		if (isset($this->aOptions[$sOptionName])) {
 			$this->aOptions[$sOptionName]->oValue = $mDefaultValue;
-		}
-		else{
+		} else {
 			$this->aOptions[$sOptionName] = new Option($sOptionName, $mDefaultValue, $bTypeOption);
 		}
 	}
@@ -44,7 +44,7 @@ class OptionsRegister
 	 */
 	private function VerifyOptionName(string $sOptionName): void
 	{
-		if(!ctype_alnum(str_replace(array('-', '_'), '', $sOptionName))) {
+		if (!ctype_alnum(str_replace(['-', '_'], '', $sOptionName))) {
 			throw new RegisterException("Option name '$sOptionName' is not valid. Only alphanumeric characters, hyphens and underscores are allowed.");
 		}
 	}
@@ -61,7 +61,7 @@ class OptionsRegister
 	public function SetOptionArrayValue(string $sOptionName, string $sArrayKey, mixed $mDefaultValue = null): void
 	{
 		// Initialization of the option as an array if not set
-		if(!isset($this->aOptions[$sOptionName])){
+		if (!isset($this->aOptions[$sOptionName])) {
 			$this->SetOption($sOptionName, []);
 		}
 
@@ -76,7 +76,7 @@ class OptionsRegister
 	public function GetOptions(): array
 	{
 		$aOptions = array_filter($this->aOptions, fn ($oElement) => $oElement->bIsTypeOption);
-		return array_map( fn ($oElement) => $oElement->oValue, $aOptions);
+		return array_map(fn ($oElement) => $oElement->oValue, $aOptions);
 	}
 
 	/**

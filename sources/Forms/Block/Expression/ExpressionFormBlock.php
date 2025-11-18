@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -22,8 +23,8 @@ class ExpressionFormBlock extends AbstractFormBlock
 	public const EXPRESSION_PATTERN = "/:(?<input>\w+)/";
 
 	// Outputs
-	const OUTPUT_RESULT = "result";
-	const OUTPUT_RESULT_INVERT = "result_invert";
+	public const OUTPUT_RESULT = "result";
+	public const OUTPUT_RESULT_INVERT = "result_invert";
 
 	/** @inheritdoc */
 	protected function RegisterIO(IORegister $oIORegister): void
@@ -54,7 +55,7 @@ class ExpressionFormBlock extends AbstractFormBlock
 	public function ComputeExpression(string $sEventType): void
 	{
 		$sExpression = '';
-		try{
+		try {
 			$sExpression = $this->GetOption('expression');
 
 			$oExpression = Expression::FromOQL($sExpression);
@@ -69,8 +70,7 @@ class ExpressionFormBlock extends AbstractFormBlock
 			$this->GetOutput(self::OUTPUT_RESULT)->SetValue($sEventType, new BooleanIOFormat($bResult));
 			$this->GetOutput(self::OUTPUT_RESULT_INVERT)->SetValue($sEventType, new BooleanIOFormat(!$bResult));
 			$this->GetOutput(self::OUTPUT_VALUE)->SetValue($sEventType, new RawFormat($result));
-		}
-		catch(\Exception $e){
+		} catch (\Exception $e) {
 			throw new FormBlockException('Compute expression '.json_encode($sExpression).' block issue', 0, $e);
 		}
 	}

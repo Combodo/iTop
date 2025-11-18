@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -16,7 +17,7 @@ use Symfony\Component\Form\FormView;
 /**
  *
  */
-class FormType  extends AbstractType
+class FormType extends AbstractType
 {
 	/** @inheritdoc */
 	public function getParent(): string
@@ -33,23 +34,22 @@ class FormType  extends AbstractType
 		$oBlock = $options['form_block'];
 
 		$aData = [];
-		foreach($oBlock->GetChildren() as $oChild) {
+		foreach ($oBlock->GetChildren() as $oChild) {
 			if (!$oChild instanceof AbstractTypeFormBlock) {
 				continue;
 			}
 
-			if($oChild->IsAdded()){
+			if ($oChild->IsAdded()) {
 				$aData[] = [
 					'name' => $oChild->GetName(),
 					'added' => $oChild->IsAdded(),
-					'id' => FormTypeHelper::GetFormId($form) . '_' . $oChild->GetName()
+					'id' => FormTypeHelper::GetFormId($form).'_'.$oChild->GetName(),
 				];
-			}
-			else{
+			} else {
 				$aData[] = [
 					'name' => $oChild->GetName(),
 					'added' => $oChild->IsAdded(),
-					'id' => FormTypeHelper::GetFormId($form) . '_' . $oChild->GetName()
+					'id' => FormTypeHelper::GetFormId($form).'_'.$oChild->GetName(),
 				];
 			}
 

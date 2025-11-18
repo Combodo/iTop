@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -63,8 +64,7 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 			$aValues = $oAttDef->GetAllowedValues();
 
 			$oOptionsRegister->SetOption('choices', array_flip($aValues ?? []));
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			throw new FormBlockException('Update option failed for '.json_encode($this->GetName()), 0, $e);
 		}
 	}
