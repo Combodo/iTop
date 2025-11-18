@@ -8,7 +8,6 @@ namespace Combodo\iTop\Test\UnitTest\sources\Forms;
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\IO\Format\RawFormat;
-use Combodo\iTop\Forms\IO\FormBinding;
 use Combodo\iTop\Forms\IO\FormInput;
 use Combodo\iTop\Forms\IO\FormOutput;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
@@ -20,11 +19,6 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class AbstractFormsTest extends ItopDataTestCase
 {
-	public function GivenRawFormBinding($sName): FormBinding
-	{
-		return new FormBinding($this->GivenRawOutput($sName), $this->GivenRawInput($sName));
-	}
-
 	public function GivenRawInput(string $sName): FormInput
 	{
 		$oBlock = $this->GivenFormBlock($sName.'_block');
