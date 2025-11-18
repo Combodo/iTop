@@ -62,11 +62,37 @@ class AbstractFormIOTest extends AbstractFormsTest
 		$this->assertEquals('The value posted', $oInput->GetValue());
 	}
 
-	public function testNameDoesNotAcceptBlank()
+	/**
+	 * @dataProvider NameFormatSupportsOnlyLettersUnderscoreAndNumbersProvider
+	 * @return void
+	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
+	 */
+	public function testNameFormatSupportsOnlyLettersUnderscoreAndNumbers(string $sName, bool $bGenerateException = true)
 	{
-		$oInput = $this->GivenRawInput('test');
 
-		$this->expectException(FormBlockIOException::class);
-		$oInput->SetName('The test name');
+		if ($bGenerateException) {
+			$this->expectException(FormBlockIOException::class);
+		}
+		$oInput = $this->GivenRawInput($sName);
+		if (!$bGenerateException) {
+			$this->assertEquals($sName.'_input', $oInput->GetName());
+		}
 	}
+
+	public function NameFormatSupportsOnlyLettersUnderscoreAndNumbersProvider()
+	{
+		return  [
+			'Spaces not supported' => ['The test name'],
+			'Minus not supported' => ['The-test-name'],
+			'Percent not supported' => ['name%'],
+			'Accent not supported' => ['namé'],
+
+			// Corrects
+			'Numbers OK' => ['name123', false],
+			'Underscore OK' => ['The_test_name', false],
+			'Camel OK' => ['TheTestName', false],
+		];
+	}
+
+
 }

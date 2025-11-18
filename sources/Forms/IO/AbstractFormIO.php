@@ -43,9 +43,9 @@ class AbstractFormIO
 	 */
 	public function __construct(string $sName, string $sType, AbstractFormBlock $oOwnerBlock)
 	{
-		$this->SetName($sName);
 		$this->sType = $sType;
 		$this->oOwnerBlock = $oOwnerBlock;
+		$this->SetName($sName);
 	}
 
 	/**
@@ -84,12 +84,12 @@ class AbstractFormIO
 			if ($sParsedName !== $sName) {
 				$sName = json_encode($sName);
 				$sParsedName = json_encode($sParsedName);
-				$sBlockName = json_encode($this->getName());
+				$sBlockName = json_encode($this->GetOwnerBlock()->GetName());
 				throw new FormBlockIOException("Input $sName does not match $sParsedName for block $sBlockName.");
 			}
 		} else {
 			$sName = json_encode($sName);
-			$sBlockName = json_encode($this->getName());
+			$sBlockName = json_encode($this->GetOwnerBlock()->GetName());
 			throw new FormBlockIOException("Input $sName is not valid for block $sBlockName.");
 		}
 
