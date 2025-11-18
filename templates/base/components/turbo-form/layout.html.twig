@@ -2,9 +2,9 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 <script type="module">
-import {session} from "https://cdn.jsdelivr.net/npm/@hotwired/turbo@latest/dist/turbo.es2017-esm.min.js";
+    import {session} from "/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js";
 
-session.drive = false;
+    session.drive = false;
 </script>
 
 <turbo-frame id="{{ oUIBlock.GetId() }}">
