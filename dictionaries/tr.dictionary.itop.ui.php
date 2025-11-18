@@ -40,6 +40,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AuditRule/Attribute:name+' => 'Kural Adı',
 	'Class:AuditRule/Attribute:description' => 'Kural tanımlaması',
 	'Class:AuditRule/Attribute:description+' => 'Kural tanımlaması',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Çalıştırılacak Sorgu',
 	'Class:AuditRule/Attribute:query+' => 'Çalıştırılcak OQL ifadesi',
 	'Class:AuditRule/Attribute:valid_flag' => 'Geçerli nesneler?',
@@ -52,6 +54,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AuditRule/Attribute:category_id+' => 'Kuralın kategorisi',
 	'Class:AuditRule/Attribute:category_name' => 'Kategori',
 	'Class:AuditRule/Attribute:category_name+' => 'Kural için kategori adı',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //
@@ -164,10 +168,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled~~',
 	'Class:User/Error:LoginMustBeUnique' => 'Kullanıcı adı tekil olmalı - "%1s" mevcut bir kullanıcıya ait.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'En az bir profil kullanıcıya atanmalı',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'You cannot remove your own rights to edit Users~~',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',

@@ -71,12 +71,9 @@ class DesignDocument extends DOMDocument
 	}
 
 	/**
-	 * @param string $source
-	 * @param int $options
-	 *
-	 * @return bool|\DOMDocument
+	 * @inheritDoc
 	 */
-	public function loadXML(string $source, int $options = 0): bool|DOMDocument
+	public function loadXML(string $source, int $options = 0): bool
 	{
 		return parent::loadXML($source, $options | LIBXML_BIGLINES);
 	}

@@ -40,6 +40,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AuditRule/Attribute:name+' => 'ルールの短縮名',
 	'Class:AuditRule/Attribute:description' => '監査ルール説明',
 	'Class:AuditRule/Attribute:description+' => 'この監査ルールの長い説明',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => '実行するクエリ',
 	'Class:AuditRule/Attribute:query+' => '実行するOQL式',
 	'Class:AuditRule/Attribute:valid_flag' => '有効なオブジェクト',
@@ -52,6 +54,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AuditRule/Attribute:category_id+' => 'このルールのカテゴリ',
 	'Class:AuditRule/Attribute:category_name' => 'カテゴリ',
 	'Class:AuditRule/Attribute:category_name+' => 'このルールのカテゴリ名',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //
@@ -164,10 +168,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled~~',
 	'Class:User/Error:LoginMustBeUnique' => 'ログイン名は一意でないといけません。- "%1s" はすでに使われています。',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => '少なくとも1件のプロフィールがこのユーザに指定されなければなりません。',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'You cannot remove your own rights to edit Users~~',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',

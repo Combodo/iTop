@@ -40,6 +40,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:AuditRule/Attribute:name+' => 'Nome curto para esta regra',
 	'Class:AuditRule/Attribute:description' => 'Descrição',
 	'Class:AuditRule/Attribute:description+' => 'Descrição longa para essa regra',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Executar consulta',
 	'Class:AuditRule/Attribute:query+' => 'Executar a expressão OQL',
 	'Class:AuditRule/Attribute:valid_flag' => 'Objetos válidos?',
@@ -52,6 +54,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:AuditRule/Attribute:category_id+' => 'A categoria para esta regra',
 	'Class:AuditRule/Attribute:category_name' => 'Categoria',
 	'Class:AuditRule/Attribute:category_name+' => 'Nome da categoria para essa regra',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //
@@ -164,9 +168,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:User/Attribute:status/Value:disabled' => 'Inativa',
 	'Class:User/Error:LoginMustBeUnique' => 'Login deve ser único - "%1s" já existe',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Pelo menos um perfil deve ser atribuído a esse usuário',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'O perfil "%1$s" não pôde ser adicionado, ele negará o acesso ao backoffice',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Alterar o status da conta não é permitido para o seu próprio usuário',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'As organizações permitidas devem conter apenas usuários pertencentes a organização',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'A lista atual de perfis não fornece permissões de acesso suficientes (os usuários não são mais modificáveis)',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Pelo menos uma organização deve ser atribuída a esse usuário',

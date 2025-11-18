@@ -42,6 +42,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AuditRule/Attribute:name+' => '规则名称',
 	'Class:AuditRule/Attribute:description' => '描述',
 	'Class:AuditRule/Attribute:description+' => '检查什么? 如何修复? 谁去做? ...',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => '要运行的查询',
 	'Class:AuditRule/Attribute:query+' => '要运行的OQL表达式',
 	'Class:AuditRule/Attribute:valid_flag' => '是否有效?',
@@ -54,6 +56,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AuditRule/Attribute:category_id+' => '该规则对应的类别',
 	'Class:AuditRule/Attribute:category_name' => '类别',
 	'Class:AuditRule/Attribute:category_name+' => '该规则对应的类名称',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
 ]);
 
 //
@@ -166,9 +170,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:User/Attribute:status/Value:disabled' => '停用',
 	'Class:User/Error:LoginMustBeUnique' => '登录名必须唯一 - "%1s" 已经被使用.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => '必须指定至少一个角色给此用户.',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => '无法添加角色 "%1$s" 因为这将导致禁止访问后台',
 	'Class:User/Error:StatusChangeIsNotAllowed' => '不允许更改您自己用户的状态',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => '允许访问组织必须包含用户组织',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => '当前指定的角色列表没有提供足够的访问权限 (用户将无法被修改)',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => '必须为此用户指定一个组织.',

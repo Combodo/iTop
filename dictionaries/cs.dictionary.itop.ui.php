@@ -40,6 +40,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:AuditRule/Attribute:name+' => 'Krátký název pro toto pravidlo',
 	'Class:AuditRule/Attribute:description' => 'Popis pravidla',
 	'Class:AuditRule/Attribute:description+' => 'Dlouhý popis tohoto pravidla auditu',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Dotaz ke spuštění',
 	'Class:AuditRule/Attribute:query+' => 'OQL výraz ke spuštění',
 	'Class:AuditRule/Attribute:valid_flag' => 'Interpretace',
@@ -52,7 +54,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:AuditRule/Attribute:category_id+' => 'Kategorie pro toto pravidlo',
 	'Class:AuditRule/Attribute:category_name' => 'Kategorie',
 	'Class:AuditRule/Attribute:category_name+' => 'Název kategorie pro toto pravidlo',
-]);
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+	]);
 
 //
 // Class: AuditDomain
@@ -164,9 +168,11 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:User/Attribute:status/Value:disabled' => 'Neaktivní',
 	'Class:User/Error:LoginMustBeUnique' => 'Uživatelské jméno musí být jedinečné - "%1s" je již použito.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Uživateli musí být přidělen alespoň jeden profil.',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'Profil "%1$s" nemůže být přidán, byl by mu odepřen přístup do backoffice',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Změna není povolena pro vašeho vlastního uživatele',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Přístupné organizace musí obsahovat organizaci uživatele.',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'Aktuální seznam profilů neposkytuje dostatečná přístupová práva (uživatele již nelze upravovat)',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'Profil Portal power user neposkytuje dostatečná přístupová práva (je třeba přidat jiný profil)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Uživatel musí být přiřazen minimálně do jedné organizace.',

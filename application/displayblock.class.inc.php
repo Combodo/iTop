@@ -2000,13 +2000,13 @@ class MenuBlock extends DisplayBlock
 									$this->AddMenuSeparator($aRegularActions);
 									foreach ($aRelations as $sRelationCode => $aRelationInfo) {
 										if (array_key_exists('down', $aRelationInfo)) {
-											$aRegularActions[$sRelationCode.'_down'] = [
+											$aRegularActions['UI:Menu:'.$sRelationCode.'_down'] = [
 													'label' => $aRelationInfo['down'],
 													'url' => "{$sRootUrl}pages/$sUIPage?operation=view_relations&relation=$sRelationCode&direction=down&class=$sClass&id=$id{$sContext}",
 												] + $aActionParams;
 										}
 										if (array_key_exists('up', $aRelationInfo)) {
-											$aRegularActions[$sRelationCode.'_up'] = [
+											$aRegularActions['UI:Menu:'.$sRelationCode.'_up'] = [
 													'label' => $aRelationInfo['up'],
 													'url' => "{$sRootUrl}pages/$sUIPage?operation=view_relations&relation=$sRelationCode&direction=up&class=$sClass&id=$id{$sContext}",
 												] + $aActionParams;
@@ -2250,6 +2250,16 @@ class MenuBlock extends DisplayBlock
 					case 'UI:Menu:ExportPDF':
 						$sIconClass = 'fas fa-file-pdf fa-lg';
 						$sLabel = '';
+						break;
+					case 'UI:Menu:impacts_up':
+						$sIconClass = 'fas fa-sitemap fa-rotate-180';
+						$sLabel = '';
+						$aAction['tooltip'] = Dict::S('Relation:impacts/UpStream');
+						break;
+					case 'UI:Menu:impacts_down':
+						$sIconClass = 'fas fa-sitemap';
+						$sLabel = '';
+						$aAction['tooltip'] = Dict::S('Relation:impacts/DownStream');
 						break;
 
 					default:

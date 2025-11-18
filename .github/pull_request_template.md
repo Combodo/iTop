@@ -9,7 +9,7 @@ Any PRs not following the guidelines or with missing information will not be con
 ## Base information
 | Question                                                      | Answer 
 |---------------------------------------------------------------|--------
-| Related to a SourceForge thead / Another PR / Combodo ticket? | <!-- Put the URL -->
+| Related to a SourceForge thread / Another PR / Combodo ticket? | <!-- Put the URL -->
 | Type of change?                                               | Bug fix / Enhancement / Translations
 
 

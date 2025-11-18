@@ -404,14 +404,14 @@ abstract class User extends cmdbAbstractObject
 				}
 
 				if (!in_array(ADMIN_PROFILE_NAME, $aProfiles)) {
-					// Check if the user is yet allowed to modify Users
+					// Prevent a User to lose the right to modify Users
 					if (method_exists($oAddon, 'ResetCache')) {
 						$aCurrentProfiles = Session::Get('profile_list');
 						// Set the current profiles into a session variable (not yet in the database)
 						Session::Set('profile_list', $aProfiles);
 
 						$oAddon->ResetCache();
-						if (!$oAddon->IsActionAllowed($this, 'User', UR_ACTION_MODIFY, null)) {
+						if (!$oAddon->IsActionAllowed($this, get_class($this), UR_ACTION_MODIFY, null)) {
 							$this->m_aCheckIssues[] = Dict::S('Class:User/Error:CurrentProfilesHaveInsufficientRights');
 						}
 						$oAddon->ResetCache();
@@ -421,6 +421,19 @@ abstract class User extends cmdbAbstractObject
 						} else {
 							Session::Set('profile_list', $aCurrentProfiles);
 						}
+					}
+					// Prevent an administrator to remove their own admin profile
+					if (UserRights::IsAdministrator($this)) {
+						$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AdminProfileCannotBeRemovedBySelf');
+					}
+				}
+			} elseif ($this->IsPrivilegedUser()) {
+				// Prevent Privileged User to be saved with profiles denying the access to the backoffice
+				$oSet->Rewind();
+				while ($oUserProfile = $oSet->Fetch()) {
+					$sProfile = $oUserProfile->Get('profile');
+					if (in_array($sProfile, $aForbiddenProfiles)) {
+						$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice', $sProfile);
 					}
 				}
 			}
@@ -634,6 +647,21 @@ abstract class User extends cmdbAbstractObject
 			return false;
 		}
 		return UserRights::GetUserId() == $this->GetKey();
+	}
+
+	private function IsPrivilegedUser(): bool
+	{
+		$aPrivilegedProfiles = ['Administrator' => '1', 'REST Services User' => '1024', 'SuperUser' => '117'];
+
+		$oSet = $this->Get('profile_list');
+		$oSet->Rewind();
+		while ($oUserProfile = $oSet->Fetch()) {
+			$iProfile = $oUserProfile->Get('profileid');
+			if (in_array($iProfile, $aPrivilegedProfiles)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
 
