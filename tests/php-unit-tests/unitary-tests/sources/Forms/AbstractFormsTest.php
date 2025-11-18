@@ -17,7 +17,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class AbstractFormsTest extends ItopDataTestCase
+abstract class AbstractFormsTest extends ItopDataTestCase
 {
 	public function GivenRawInput(string $sName): FormInput
 	{

@@ -9,6 +9,7 @@ namespace Combodo\iTop\Test\UnitTest\Forms\IO;
 use Combodo\iTop\Forms\IO\FormBinding;
 use Combodo\iTop\Forms\IO\FormBlockIOException;
 use Combodo\iTop\Test\UnitTest\sources\Forms\AbstractFormsTest;
+use Symfony\Component\Form\FormEvents;
 
 /**
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
@@ -132,5 +133,20 @@ class FormBindingTest extends AbstractFormsTest
 
 		// Then
 		$this->assertEquals([$oBindingO1ToO2, $oBindingO1ToO3], $oOutputIO1->GetBindingsToOutputs(), 'Must have bindings after BindToOutput');
+	}
+
+	public function testSourceValueIsPropagatedToDestIO()
+	{
+		$oOutputIO1 = $this->GivenRawOutput('test1');
+		$oInputIO1 = $this->GivenRawInput('test1');
+		$oBinding = $oOutputIO1->BindToInput($oInputIO1);
+		$oOutputIO1->SetValue(FormEvents::PRE_SET_DATA, 'The Value');
+
+		// When
+		$oBinding->PropagateValues();
+
+		// Then
+		$this->assertEquals('The Value', $oOutputIO1->GetValue(FormEvents::PRE_SET_DATA));
+
 	}
 }
