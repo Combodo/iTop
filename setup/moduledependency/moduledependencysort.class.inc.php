@@ -32,6 +32,76 @@ class ModuleDependencySort
 	}
 
 	/**
+	 * Arrange an list of modules, based on their (inter) dependencies
+	 * @param array $aModules The list of modules to process: 'id' => $aModuleInfo
+	 * @param bool $bAbortOnMissingDependency ...
+	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
+	 * @return array
+	 * @throws \MissingDependencyException
+	 */
+	public function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
+	{
+		// Filter modules to compute
+		$aUnresolvedDependencyModules = [];
+		$aSelectedModules = [];
+		foreach ($aModules as $sModuleId => $aModule) {
+			$oModule = new Module($sModuleId);
+			$sModuleName = $oModule->GetModuleName();
+			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad)) {
+				$oModule->SetDependencies($aModule['dependencies']);
+				$aUnresolvedDependencyModules[$sModuleId] = $oModule;
+				$aSelectedModules[$sModuleName] = true;
+			}
+		}
+
+		// Make sure order is deterministic (alphabtical order)
+		ksort($aUnresolvedDependencyModules);
+
+		//Attempt to resolve module dependencies
+		$aOrderedModules = [];
+		$aModuleVersions = [];
+		$iLoopCount = 0;
+		while (($iLoopCount < count($aModules)) && (count($aUnresolvedDependencyModules) > 0)) {
+			foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
+				/** @var Module $oModule */
+				if ($oModule->UpdateModuleResolutionState($aModuleVersions, $aSelectedModules)) {
+					$aOrderedModules[] = $sModuleId;
+					$aModuleVersions[$oModule->GetModuleName()] = $oModule->GetVersion();
+					unset($aUnresolvedDependencyModules[$sModuleId]);
+				}
+			}
+
+			$iLoopCount++;
+		}
+
+		// Report unresolve dependencies
+		if ($bAbortOnMissingDependency && count($aUnresolvedDependencyModules) > 0) {
+			$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
+
+			$aUnresolvedModulesInfo = [];
+			$aModuleDeps = [];
+			foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
+				$aModule = $aModules[$sModuleId];
+				$aDepsWithIcons = $oModule->GetDependencyResolutionFeedback();
+
+				$aModuleDeps[] = "{$aModule['label']} (id: $sModuleId) depends on: ".implode(' + ', $aDepsWithIcons);
+				$aUnresolvedModulesInfo[$sModuleId] = ['module' => $aModule, 'dependencies' => $aDepsWithIcons];
+			}
+			$sMessage = "The following modules have unmet dependencies:\n".implode(",\n", $aModuleDeps);
+			$oException = new MissingDependencyException($sMessage);
+			$oException->aModulesInfo = $aUnresolvedModulesInfo;
+			throw $oException;
+		}
+
+		// Return the ordered list, so that the dependencies are met...
+		$aResult = [];
+		foreach ($aOrderedModules as $sId) {
+			$aResult[$sId] = $aModules[$sId];
+		}
+		return $aResult;
+	}
+	
+	/**
 	 * This method is key as it sorts modules by their dependencies (topological sort).
 	 * Modules with less dependencies are first.
 	 * When module A depends from module B with same amount of dependencies, moduleB is first.
@@ -122,75 +192,5 @@ class ModuleDependencySort
 		}
 
 		$aUnresolvedDependencyModules = $aRes;
-	}
-
-	/**
-	 * Arrange an list of modules, based on their (inter) dependencies
-	 * @param array $aModules The list of modules to process: 'id' => $aModuleInfo
-	 * @param bool $bAbortOnMissingDependency ...
-	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
-	 * @return array
-	 * @throws \MissingDependencyException
-	 */
-	public function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
-	{
-		// Filter modules to compute
-		$aUnresolvedDependencyModules = [];
-		$aSelectedModules = [];
-		foreach ($aModules as $sModuleId => $aModule) {
-			$oModule = new Module($sModuleId);
-			$sModuleName = $oModule->GetModuleName();
-			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad)) {
-				$oModule->SetDependencies($aModule['dependencies']);
-				$aUnresolvedDependencyModules[$sModuleId] = $oModule;
-				$aSelectedModules[$sModuleName] = true;
-			}
-		}
-
-		// Make sure order is deterministic (alphabtical order)
-		ksort($aUnresolvedDependencyModules);
-
-		//Attempt to resolve module dependencies
-		$aOrderedModules = [];
-		$aModuleVersions = [];
-		$iLoopCount = 0;
-		while (($iLoopCount < count($aModules)) && (count($aUnresolvedDependencyModules) > 0)) {
-			foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
-				/** @var Module $oModule */
-				if ($oModule->UpdateModuleResolutionState($aModuleVersions, $aSelectedModules)) {
-					$aOrderedModules[] = $sModuleId;
-					$aModuleVersions[$oModule->GetModuleName()] = $oModule->GetVersion();
-					unset($aUnresolvedDependencyModules[$sModuleId]);
-				}
-			}
-
-			$iLoopCount++;
-		}
-
-		// Report unresolve dependencies
-		if ($bAbortOnMissingDependency && count($aUnresolvedDependencyModules) > 0) {
-			$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
-
-			$aModulesInfo = [];
-			$aModuleDeps = [];
-			foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
-				$aModule = $aModules[$sModuleId];
-				$aDepsWithIcons = $oModule->GetDependencyResolutionFeedback();
-
-				$aModuleDeps[] = "{$aModule['label']} (id: $sModuleId) depends on: ".implode(' + ', $aDepsWithIcons);
-				$aModulesInfo[$sModuleId] = ['module' => $aModule, 'dependencies' => $aDepsWithIcons];
-			}
-			$sMessage = "The following modules have unmet dependencies:\n".implode(",\n", $aModuleDeps);
-			$oException = new MissingDependencyException($sMessage);
-			$oException->aModulesInfo = $aModulesInfo;
-			throw $oException;
-		}
-
-		// Return the ordered list, so that the dependencies are met...
-		$aResult = [];
-		foreach ($aOrderedModules as $sId) {
-			$aResult[$sId] = $aModules[$sId];
-		}
-		return $aResult;
 	}
 }
