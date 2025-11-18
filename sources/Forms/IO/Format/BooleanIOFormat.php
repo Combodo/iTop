@@ -1,4 +1,8 @@
 <?php
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
 namespace Combodo\iTop\Forms\IO\Format;
 
@@ -6,9 +10,11 @@ use JsonSerializable;
 
 class BooleanIOFormat implements JsonSerializable
 {
-	public function __construct(public bool $bValue)
-	{
+	public bool $bValue;
 
+	public function __construct(bool $bValue)
+	{
+		$this->bValue = $bValue;
 	}
 
 	public function IsTrue(): bool

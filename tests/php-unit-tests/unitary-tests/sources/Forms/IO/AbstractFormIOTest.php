@@ -16,13 +16,13 @@ class AbstractFormIOTest extends AbstractFormsTest
 	public function testFormIoHasNoDataAtCreation()
 	{
 
-		$oInput = $this->GivenRawInput('test');
+		$oInput = $this->GivenInput('test');
 
 		$this->assertFalse($oInput->IsDataReady(), 'Created Input must no have data ready at creation');
 		$this->assertFalse($oInput->HasValue(), 'Created Input must no have value at creation');
 		$this->assertFalse($oInput->HasBindingOut());
 
-		$oOutput = $this->GivenRawOutput('test');
+		$oOutput = $this->GivenOutput('test');
 
 		$this->assertFalse($oOutput->IsDataReady(), 'Created output must no have data ready at creation');
 		$this->assertFalse($oOutput->HasValue(), 'Created output must no have value at creation');
@@ -32,13 +32,13 @@ class AbstractFormIOTest extends AbstractFormsTest
 	public function testFormIoHasDataAfterSetValue()
 	{
 
-		$oInput = $this->GivenRawInput('test');
+		$oInput = $this->GivenInput('test');
 		$oInput->SetValue(FormEvents::POST_SET_DATA, 'test');
 
 		$this->assertTrue($oInput->IsDataReady(), 'Input must have data ready when set');
 		$this->assertTrue($oInput->HasValue(), 'Input must have value when set');
 
-		$oOutput = $this->GivenRawOutput('test');
+		$oOutput = $this->GivenOutput('test');
 		$oOutput->SetValue(FormEvents::POST_SET_DATA, 'test');
 
 		$this->assertTrue($oOutput->IsDataReady(), 'Output must have data ready when set');
@@ -47,7 +47,7 @@ class AbstractFormIOTest extends AbstractFormsTest
 
 	public function testIOValueReflectsTheValuePostedOrTheValueSet()
 	{
-		$oInput = $this->GivenRawInput('test');
+		$oInput = $this->GivenInput('test');
 
 		// When
 		$oInput->SetValue(FormEvents::POST_SET_DATA, 'The value set');
@@ -73,7 +73,7 @@ class AbstractFormIOTest extends AbstractFormsTest
 		if ($bGenerateException) {
 			$this->expectException(FormBlockIOException::class);
 		}
-		$oInput = $this->GivenRawInput($sName);
+		$oInput = $this->GivenInput($sName);
 		if (!$bGenerateException) {
 			$this->assertEquals($sName.'_input', $oInput->GetName());
 		}

@@ -21,8 +21,8 @@ class FormBindingTest extends AbstractFormsTest
 {
 	public function testCreatingABinding()
 	{
-		$oInputIO = $this->GivenRawInput('test');
-		$oOutputIO = $this->GivenRawOutput('test');
+		$oInputIO = $this->GivenInput('test');
+		$oOutputIO = $this->GivenOutput('test');
 
 		// When Linking output to input
 		new FormBinding($oOutputIO, $oInputIO);
@@ -33,9 +33,9 @@ class FormBindingTest extends AbstractFormsTest
 
 	public function testBindingTwiceToTheSameInputIsNotPossible()
 	{
-		$oInputIO = $this->GivenRawInput('test');
-		$oOutputIO1 = $this->GivenRawOutput('test1');
-		$oOutputIO2 = $this->GivenRawOutput('test2');
+		$oInputIO = $this->GivenInput('test');
+		$oOutputIO1 = $this->GivenOutput('test1');
+		$oOutputIO2 = $this->GivenOutput('test2');
 
 		// When
 		new FormBinding($oOutputIO1, $oInputIO);
@@ -47,9 +47,9 @@ class FormBindingTest extends AbstractFormsTest
 
 	public function testBindingTwiceToTheSameOutputIsNotPossible()
 	{
-		$oOutputIO1 = $this->GivenRawOutput('test1');
-		$oOutputIO2 = $this->GivenRawOutput('test2');
-		$oOutputIO3 = $this->GivenRawOutput('test3');
+		$oOutputIO1 = $this->GivenOutput('test1');
+		$oOutputIO2 = $this->GivenOutput('test2');
+		$oOutputIO3 = $this->GivenOutput('test3');
 
 		// When
 		new FormBinding($oOutputIO1, $oOutputIO3);
@@ -62,8 +62,8 @@ class FormBindingTest extends AbstractFormsTest
 
 	public function testOutputCanBeBoundToInputAndInputIsBoundAfterThat()
 	{
-		$oInputIO = $this->GivenRawInput('test');
-		$oOutputIO = $this->GivenRawOutput('test1');
+		$oInputIO = $this->GivenInput('test');
+		$oOutputIO = $this->GivenOutput('test1');
 
 		// When
 		$oOutputIO->BindToInput($oInputIO);
@@ -74,8 +74,8 @@ class FormBindingTest extends AbstractFormsTest
 
 	public function testInputCanBeBoundToAnotherInputAndItIsBoundAfterThat()
 	{
-		$oInputIO1 = $this->GivenRawInput('test1');
-		$oInputIO2 = $this->GivenRawInput('test2');
+		$oInputIO1 = $this->GivenInput('test1');
+		$oInputIO2 = $this->GivenInput('test2');
 
 		// When
 		$oInputIO1->BindToInput($oInputIO2);
@@ -86,8 +86,8 @@ class FormBindingTest extends AbstractFormsTest
 
 	public function testOutputCanBeBoundToAnotherOutputAndItIsBoundAfterThat()
 	{
-		$oOutputIO1 = $this->GivenRawOutput('test1');
-		$oOutputIO2 = $this->GivenRawOutput('test2');
+		$oOutputIO1 = $this->GivenOutput('test1');
+		$oOutputIO2 = $this->GivenOutput('test2');
 
 		// When
 		$oOutputIO1->BindToOutput($oOutputIO2);
@@ -98,9 +98,9 @@ class FormBindingTest extends AbstractFormsTest
 
 	public function testOutBindingsAreStoredWhenBindToInput()
 	{
-		$oInputIO1 = $this->GivenRawInput('test1');
-		$oInputIO2 = $this->GivenRawInput('test2');
-		$oOutputIO1 = $this->GivenRawOutput('test1');
+		$oInputIO1 = $this->GivenInput('test1');
+		$oInputIO2 = $this->GivenInput('test2');
+		$oOutputIO1 = $this->GivenOutput('test1');
 
 		// When
 		$oBindingO2ToI1 = $oOutputIO1->BindToInput($oInputIO1);
@@ -118,9 +118,9 @@ class FormBindingTest extends AbstractFormsTest
 
 	public function testOutBindingsAreStoredWhenBindToOutput()
 	{
-		$oOutputIO1 = $this->GivenRawOutput('test1');
-		$oOutputIO2 = $this->GivenRawOutput('test2');
-		$oOutputIO3 = $this->GivenRawOutput('test3');
+		$oOutputIO1 = $this->GivenOutput('test1');
+		$oOutputIO2 = $this->GivenOutput('test2');
+		$oOutputIO3 = $this->GivenOutput('test3');
 
 		// When
 		$oBindingO1ToO2 = $oOutputIO1->BindToOutput($oOutputIO2);
@@ -138,8 +138,8 @@ class FormBindingTest extends AbstractFormsTest
 
 	public function testSourceValueIsPropagatedToDestIO()
 	{
-		$oOutputIO1 = $this->GivenRawOutput('test1');
-		$oInputIO1 = $this->GivenRawInput('test1');
+		$oOutputIO1 = $this->GivenOutput('test1');
+		$oInputIO1 = $this->GivenInput('test1');
 		$oBinding = $oOutputIO1->BindToInput($oInputIO1);
 		$oOutputIO1->SetValue(FormEvents::PRE_SET_DATA, 'The Value');
 

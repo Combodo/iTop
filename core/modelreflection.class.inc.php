@@ -148,7 +148,7 @@ class ModelReflectionRuntime extends ModelReflection
 			$sAttributeClass = get_class($oAttDef);
 			if ($aScope != null) {
 				foreach ($aScope as $sScopeClass) {
-					if (($sAttributeClass == $sScopeClass) || is_subclass_of($sAttributeClass, $sScopeClass)) {
+					if (is_a($sAttributeClass, $sScopeClass, true)) {
 						$aAttributes[$sAttCode] = $sAttributeClass;
 						break;
 					}

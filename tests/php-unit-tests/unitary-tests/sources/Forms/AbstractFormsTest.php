@@ -21,18 +21,18 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 abstract class AbstractFormsTest extends ItopDataTestCase
 {
-	public function GivenRawInput(string $sName): FormInput
+	public function GivenInput(string $sName, string $sType = RawFormat::class): FormInput
 	{
 		$oBlock = $this->GivenFormBlock($sName.'_block');
 
-		return new FormInput($sName.'_input', RawFormat::class, $oBlock);
+		return new FormInput($sName.'_input', $sType, $oBlock);
 	}
 
-	public function GivenRawOutput(string $sName): FormOutput
+	public function GivenOutput(string $sName, string $sType = RawFormat::class): FormOutput
 	{
 		$oBlock = $this->GivenFormBlock($sName.'_block');
 
-		return new FormOutput($sName.'_output', RawFormat::class, $oBlock);
+		return new FormOutput($sName.'_output', $sType, $oBlock);
 	}
 
 	public function GivenFormBlock(string $sName, array $aOptions = [], array $aIOs = []): AbstractFormBlock
