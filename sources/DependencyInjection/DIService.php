@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -36,7 +37,7 @@ class DIService
 	 */
 	final public function RegisterService(string $sName, mixed $oService): void
 	{
-		$aServices[$sName] = $oService;
+		$this->aServices[$sName] = $oService;
 	}
 
 	/**

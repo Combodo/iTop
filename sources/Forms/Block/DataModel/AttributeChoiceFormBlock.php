@@ -68,11 +68,10 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 
 		$aAttributes = [];
 		foreach ($aAttributeCodes as $sAttCode) {
-			$oAttribute =$oModelReflection->GetLabel($sClass, $sAttCode);
-			$aAttributes[$oAttribute->GetLabel()] = $sAttCode;
+			$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
+			$aAttributes[$sLabel] = $sAttCode;
 		}
 
 		$oOptionsRegister->SetOption('choices', $aAttributes);
 	}
-
 }
