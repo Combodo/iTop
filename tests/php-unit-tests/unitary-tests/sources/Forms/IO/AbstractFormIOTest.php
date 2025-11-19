@@ -94,5 +94,4 @@ class AbstractFormIOTest extends AbstractFormsTest
 		];
 	}
 
-
 }
