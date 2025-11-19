@@ -7,9 +7,9 @@
 
 namespace Combodo\iTop\Forms\IO\Converter;
 
+use Combodo\iTop\DependencyInjection\DIService;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\IO\FormBlockIOException;
-use MetaModel;
 
 /**
  * OQL expression to class converter.
@@ -18,6 +18,7 @@ class OqlToClassConverter extends AbstractConverter
 {
 	/** @inheritdoc
 	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
+	 * @throws \Combodo\iTop\DependencyInjection\DIException
 	 */
 	public function Convert(mixed $oData): ?ClassIOFormat
 	{
@@ -31,7 +32,9 @@ class OqlToClassConverter extends AbstractConverter
 		// Selected class
 		if (isset($aMatches[1])) {
 			$sSelectedClass = $aMatches[1];
-			if (!MetaModel::IsValidClass($sSelectedClass)) {
+			/** @var \ModelReflection $oModelReflection */
+			$oModelReflection = DIService::GetInstance()->GetService('ModelReflection');
+			if (!$oModelReflection->IsValidClass($sSelectedClass)) {
 				throw new FormBlockIOException('Class '.json_encode($sSelectedClass).' not found');
 			}
 

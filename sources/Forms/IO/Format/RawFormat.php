@@ -2,18 +2,27 @@
 
 namespace Combodo\iTop\Forms\IO\Format;
 
-class RawFormat
+class RawFormat extends AbstractIOFormat
 {
 	public string $sValue;
 
 	public function __construct(string $sValue)
 	{
 		$this->sValue = $sValue;
-		// validation du format sinon exception
 	}
 
 	public function __toString(): string
 	{
-		return strval($this->sValue);
+		return $this->sValue;
+	}
+
+	public function jsonSerialize(): mixed
+	{
+		return $this->sValue;
+	}
+
+	public static function IsCompatible(string $sOtherFormatClass): bool
+	{
+		return true;
 	}
 }

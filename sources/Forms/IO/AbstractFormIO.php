@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Forms\IO;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\IO\Format\AbstractIOFormat;
 use Symfony\Component\Form\FormEvents;
 
 /**
@@ -43,6 +44,9 @@ class AbstractFormIO
 	 */
 	public function __construct(string $sName, string $sType, AbstractFormBlock $oOwnerBlock)
 	{
+		if (!is_a($sType, AbstractIOFormat::class, true)) {
+			throw new FormBlockIOException('invalid form format type '.json_encode($sType).' given');
+		}
 		$this->sType = $sType;
 		$this->oOwnerBlock = $oOwnerBlock;
 		$this->SetName($sName);

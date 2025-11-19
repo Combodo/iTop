@@ -7,13 +7,14 @@
 
 namespace Combodo\iTop\Forms\Block\DataModel;
 
+use Combodo\iTop\DependencyInjection\DIService;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\IO\Converter\StringToAttributeConverter;
 use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
-use MetaModel;
+use utils;
 
 /**
  * Form block for choice of class attributes.
@@ -43,24 +44,32 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 		$oIORegister->AddOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class, new StringToAttributeConverter());
 	}
 
-	/** @inheritdoc  */
+	/**
+	 * @param \Combodo\iTop\Forms\Register\OptionsRegister $oOptionsRegister
+	 *
+	 * @throws \Combodo\iTop\DependencyInjection\DIException
+	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 */
 	public function UpdateOptions(OptionsRegister $oOptionsRegister): void
 	{
 		parent::UpdateOptions($oOptionsRegister);
 
-		$oClass = $this->GetInputValue(self::INPUT_CLASS_NAME);
+		$sClass = strval($this->GetInputValue(self::INPUT_CLASS_NAME));
 
-		if ($oClass === null) {
+		if (utils::IsNullOrEmptyString($sClass)) {
 			$oOptionsRegister->SetOption('choices', []);
 			return;
 		}
 
-		$aAttributeCodes = MetaModel::GetAttributesList($oClass);
+		/** @var \ModelReflection $oModelReflection */
+		$oModelReflection = DIService::GetInstance()->GetService('ModelReflection');
+		$aAttributeCodes = array_keys($oModelReflection->ListAttributes($sClass));
 
 		$aAttributes = [];
-		foreach ($aAttributeCodes as $sAttributeCode) {
-			$oAttribute = MetaModel::GetAttributeDef(strval($oClass), $sAttributeCode);
-			$aAttributes[$oAttribute->GetLabel()] = $sAttributeCode;
+		foreach ($aAttributeCodes as $sAttCode) {
+			$oAttribute =$oModelReflection->GetLabel($sClass, $sAttCode);
+			$aAttributes[$oAttribute->GetLabel()] = $sAttCode;
 		}
 
 		$oOptionsRegister->SetOption('choices', $aAttributes);

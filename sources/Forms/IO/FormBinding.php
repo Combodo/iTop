@@ -23,6 +23,12 @@ class FormBinding
 	 */
 	public function __construct(AbstractFormIO $oSourceIO, AbstractFormIO $oDestinationIO)
 	{
+		// Check IOFormat validity
+		$sSourceDataType = $oSourceIO->GetDataType();
+		$sDestinationDataType = $oDestinationIO->GetDataType();
+		if (!$sSourceDataType::IsCompatible($sDestinationDataType)) {
+			throw new FormBlockIOException('binding '.json_encode($sSourceDataType).' to '.json_encode($sDestinationDataType).' is not supported');
+		}
 		$this->oDestinationIO = $oDestinationIO;
 		$this->oSourceIO = $oSourceIO;
 		$oDestinationIO->Attach($this);

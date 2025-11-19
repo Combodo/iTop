@@ -82,6 +82,7 @@ class AbstractFormIOTest extends AbstractFormsTest
 	public function NameFormatSupportsOnlyLettersUnderscoreAndNumbersProvider()
 	{
 		return  [
+			// Incorrects
 			'Spaces not supported' => ['The test name'],
 			'Minus not supported' => ['The-test-name'],
 			'Percent not supported' => ['name%'],
@@ -94,4 +95,9 @@ class AbstractFormIOTest extends AbstractFormsTest
 		];
 	}
 
+	public function testCreatingIOWithUnknownFormatThrowsException()
+	{
+		$this->expectException(FormBlockIOException::class);
+		$oInput = $this->GivenInput('test', 'test_toto');
+	}
 }

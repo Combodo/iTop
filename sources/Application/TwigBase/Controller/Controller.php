@@ -169,10 +169,7 @@ abstract class Controller extends AbstractController
 			$this->SetViewPath($sViewPath, $aAdditionalPaths);
 			if ($sModuleName != 'core') {
 				try {
-					$this->aDefaultParams = [
-						'sIndexURL'   => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php'),
-						'sAPPROOTURL' => utils::GetAbsoluteUrlAppRoot(),
-					];
+					$this->aDefaultParams = ['sIndexURL'   => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
 				} catch (Exception $e) {
 					IssueLog::Error($e->getMessage());
 				}
@@ -200,10 +197,7 @@ abstract class Controller extends AbstractController
 		$this->SetModuleName(basename($sModulePath));
 		$this->SetViewPath($sModulePath.'/view');
 		try {
-			$this->aDefaultParams = [
-				'sIndexURL'   => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php'),
-				'sAPPROOTURL' => utils::GetAbsoluteUrlAppRoot(),
-			];
+			$this->aDefaultParams = ['sIndexURL'   => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
 		} catch (Exception $e) {
 			IssueLog::Error($e->getMessage());
 		}

@@ -7,9 +7,7 @@
 
 namespace Combodo\iTop\Forms\IO\Format;
 
-use JsonSerializable;
-
-class BooleanIOFormat implements JsonSerializable
+class BooleanIOFormat extends AbstractIOFormat
 {
 	public bool $bValue;
 
@@ -31,5 +29,10 @@ class BooleanIOFormat implements JsonSerializable
 	public function jsonSerialize(): mixed
 	{
 		return $this->bValue;
+	}
+
+	public static function IsCompatible(string $sOtherFormatClass): bool
+	{
+		return is_a($sOtherFormatClass, BooleanIOFormat::class, true) || is_a($sOtherFormatClass, RawFormat::class, true);
 	}
 }

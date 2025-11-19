@@ -7,6 +7,11 @@
 
 namespace Combodo\iTop\Test\UnitTest\Forms\IO;
 
+use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
+use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
+use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\IO\Format\NumberIOFormat;
+use Combodo\iTop\Forms\IO\Format\RawFormat;
 use Combodo\iTop\Forms\IO\FormBinding;
 use Combodo\iTop\Forms\IO\FormBlockIOException;
 use Combodo\iTop\Test\UnitTest\sources\Forms\AbstractFormsTest;
@@ -148,6 +153,84 @@ class FormBindingTest extends AbstractFormsTest
 
 		// Then
 		$this->assertEquals('The Value', $oOutputIO1->GetValue(FormEvents::PRE_SET_DATA));
-
 	}
+
+	/**
+	 * @dataProvider BindingIncompatibleFormatsProvider
+	 *
+	 * @param string $sSourceFormat
+	 * @param string $sDestinationFormat
+	 *
+	 * @return void
+	 */
+	public function testBindingIncompatibleFormatsThrowsException(string $sSourceFormat, string $sDestinationFormat)
+	{
+		$oOutputIO = $this->GivenOutput('test', $sSourceFormat);
+		$oInputIO = $this->GivenInput('test', $sDestinationFormat);
+
+		$this->expectException(FormBlockIOException::class);
+		$oOutputIO->BindToInput($oInputIO);
+	}
+
+	public function BindingIncompatibleFormatsProvider(): array
+	{
+		return  [
+			'Attribute -> Boolean' => [AttributeIOFormat::class, BooleanIOFormat::class],
+			'Attribute -> Class' => [AttributeIOFormat::class, ClassIOFormat::class],
+			'Attribute -> Number' => [AttributeIOFormat::class, NumberIOFormat::class],
+
+			'Boolean => Attribute' => [BooleanIOFormat::class, AttributeIOFormat::class],
+			'Boolean => Class' => [BooleanIOFormat::class, ClassIOFormat::class],
+			'Boolean => Number' => [BooleanIOFormat::class, NumberIOFormat::class],
+
+			'Class => Attribute' => [ClassIOFormat::class, AttributeIOFormat::class],
+			'Class => Boolean' => [ClassIOFormat::class, BooleanIOFormat::class],
+			'Class => Number' => [ClassIOFormat::class, NumberIOFormat::class],
+
+			'Number => Attribute' => [NumberIOFormat::class, AttributeIOFormat::class],
+			'Number => Class' => [NumberIOFormat::class, ClassIOFormat::class],
+			'Number => Boolean' => [NumberIOFormat::class, BooleanIOFormat::class],
+		];
+	}
+
+	/**
+	 * @dataProvider BindingCompatibleFormatsProvider
+	 *
+	 * @param string $sSourceFormat
+	 * @param string $sDestinationFormat
+	 *
+	 * @return void
+	 */
+	public function testBindingCompatibleFormatsWorks(string $sSourceFormat, string $sDestinationFormat)
+	{
+		$oOutputIO = $this->GivenOutput('test', $sSourceFormat);
+		$oInputIO = $this->GivenInput('test', $sDestinationFormat);
+
+		$oBinding = $oOutputIO->BindToInput($oInputIO);
+		$this->assertTrue(is_a($oBinding, FormBinding::class));
+	}
+
+	public function BindingCompatibleFormatsProvider(): array
+	{
+		return [
+			'Attribute -> Attribute' => [AttributeIOFormat::class, AttributeIOFormat::class],
+			'Attribute -> Raw' => [AttributeIOFormat::class, RawFormat::class],
+
+			'Boolean => Boolean' => [BooleanIOFormat::class, BooleanIOFormat::class],
+			'Boolean => Raw' => [BooleanIOFormat::class, RawFormat::class],
+
+			'Class => Class' => [ClassIOFormat::class, ClassIOFormat::class],
+			'Class => Raw' => [ClassIOFormat::class, RawFormat::class],
+
+			'Number => Number' => [NumberIOFormat::class, NumberIOFormat::class],
+			'Number => Raw' => [NumberIOFormat::class, RawFormat::class],
+
+			'Raw => Raw' => [RawFormat::class, RawFormat::class],
+			'Raw => Attribute' => [RawFormat::class, AttributeIOFormat::class],
+			'Raw => Boolean' => [RawFormat::class, BooleanIOFormat::class],
+			'Raw => Class' => [RawFormat::class, ClassIOFormat::class],
+			'Raw => Number' => [RawFormat::class, NumberIOFormat::class],
+		];
+	}
+
 }

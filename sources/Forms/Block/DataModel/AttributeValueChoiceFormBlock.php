@@ -7,6 +7,7 @@
 
 namespace Combodo\iTop\Forms\Block\DataModel;
 
+use Combodo\iTop\DependencyInjection\DIService;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
@@ -15,7 +16,6 @@ use Combodo\iTop\Forms\IO\Format\RawFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
 use Exception;
-use MetaModel;
 
 /**
  * Form block for choice of class attribute values.
@@ -56,12 +56,13 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 	{
 		parent::UpdateOptions($oOptionsRegister);
 
-		$oClassName = $this->GetInputValue(self::INPUT_CLASS_NAME);
-		$oAttribute = $this->GetInputValue(self::INPUT_ATTRIBUTE);
+		$sClass = strval($this->GetInputValue(self::INPUT_CLASS_NAME));
+		$sAttCode = strval($this->GetInputValue(self::INPUT_ATTRIBUTE));
 
 		try {
-			$oAttDef = MetaModel::GetAttributeDef(strval($oClassName), strval($oAttribute));
-			$aValues = $oAttDef->GetAllowedValues();
+			/** @var \ModelReflection $oModelReflection */
+			$oModelReflection = DIService::GetInstance()->GetService('ModelReflection');
+			$aValues = $oModelReflection->GetAllowedValues_att($sClass, $sAttCode);
 
 			$oOptionsRegister->SetOption('choices', array_flip($aValues ?? []));
 		} catch (Exception $e) {
