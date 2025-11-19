@@ -7,7 +7,7 @@
 
 namespace Combodo\iTop\Forms\IO\Converter;
 
-use Combodo\iTop\DependencyInjection\DIService;
+use Combodo\iTop\Service\DependencyInjection\DIService;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\IO\FormBlockIOException;
 
@@ -18,7 +18,7 @@ class OqlToClassConverter extends AbstractConverter
 {
 	/** @inheritdoc
 	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
-	 * @throws \Combodo\iTop\DependencyInjection\DIException
+	 * @throws \Combodo\iTop\Service\DependencyInjection\DIException
 	 */
 	public function Convert(mixed $oData): ?ClassIOFormat
 	{

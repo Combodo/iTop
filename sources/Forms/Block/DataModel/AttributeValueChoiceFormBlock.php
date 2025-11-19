@@ -7,7 +7,7 @@
 
 namespace Combodo\iTop\Forms\Block\DataModel;
 
-use Combodo\iTop\DependencyInjection\DIService;
+use Combodo\iTop\Service\DependencyInjection\DIService;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;

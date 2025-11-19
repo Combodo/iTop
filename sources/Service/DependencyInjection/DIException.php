@@ -5,7 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\DependencyInjection;
+namespace Combodo\iTop\Service\DependencyInjection;
 
 use IssueLog;
 use Throwable;

@@ -5,7 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\DependencyInjection;
+namespace Combodo\iTop\Service\DependencyInjection;
 
 class DIService
 {
@@ -48,7 +48,7 @@ class DIService
 	 * @param string $sName name of the service to get
 	 *
 	 * @return mixed
-	 * @throws \Combodo\iTop\DependencyInjection\DIException
+	 * @throws \Combodo\iTop\Service\DependencyInjection\DIException
 	 */
 	final public function GetService(string $sName): mixed
 	{

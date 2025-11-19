@@ -2,7 +2,7 @@
 
 namespace Combodo\iTop\Forms\IO\Format;
 
-use Combodo\iTop\DependencyInjection\DIService;
+use Combodo\iTop\Service\DependencyInjection\DIService;
 use Combodo\iTop\Forms\IO\FormBlockIOException;
 
 class ClassIOFormat extends AbstractIOFormat
@@ -10,7 +10,7 @@ class ClassIOFormat extends AbstractIOFormat
 	public string $sClassName;
 
 	/**
-	 * @throws \Combodo\iTop\DependencyInjection\DIException
+	 * @throws \Combodo\iTop\Service\DependencyInjection\DIException
 	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
 	 */
 	public function __construct(string $sClassName)

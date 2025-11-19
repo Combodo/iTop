@@ -7,7 +7,7 @@
 
 namespace Combodo\iTop\Forms\Block\DataModel;
 
-use Combodo\iTop\DependencyInjection\DIService;
+use Combodo\iTop\Service\DependencyInjection\DIService;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\IO\Converter\StringToAttributeConverter;
 use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
@@ -47,7 +47,7 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	/**
 	 * @param \Combodo\iTop\Forms\Register\OptionsRegister $oOptionsRegister
 	 *
-	 * @throws \Combodo\iTop\DependencyInjection\DIException
+	 * @throws \Combodo\iTop\Service\DependencyInjection\DIException
 	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
 	 * @throws \Combodo\iTop\Forms\Register\RegisterException
 	 */
