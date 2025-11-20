@@ -1,14 +1,16 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2025 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 namespace Combodo\iTop\Test\UnitTest\sources\Forms\IO\Converter;
 
 use Combodo\iTop\Forms\IO\Converter\StringToBooleanConverter;
 use Combodo\iTop\Test\UnitTest\sources\Forms\AbstractFormsTest;
 
-class TestStringToBooleanConverter  extends AbstractFormsTest
+class TestStringToBooleanConverter extends AbstractFormsTest
 {
 	public function testConvertingStringToBooleanIsOK()
 	{
