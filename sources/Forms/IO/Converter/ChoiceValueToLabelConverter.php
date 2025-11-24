@@ -31,7 +31,7 @@ class ChoiceValueToLabelConverter extends AbstractConverter
 		}
 
 		$aOptions = array_flip($this->oChoiceBlock->GetOption('choices'));
-		if (!array_key_exists($oData, $aOptions) || is_null($aOptions[$oData])  ) {
+		if (!array_key_exists($oData, $aOptions) || is_null($aOptions[$oData])) {
 			return null;
 		}
 
