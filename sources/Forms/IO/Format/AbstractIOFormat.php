@@ -12,6 +12,4 @@ use JsonSerializable;
 abstract class AbstractIOFormat implements JsonSerializable
 {
 	abstract public function jsonSerialize(): mixed;
-
-	abstract public static function IsCompatible(string $sOtherFormatClass): bool;
 }

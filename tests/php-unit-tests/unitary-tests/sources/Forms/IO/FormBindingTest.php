@@ -11,7 +11,7 @@ use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\IO\Format\NumberIOFormat;
-use Combodo\iTop\Forms\IO\Format\RawFormat;
+use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 use Combodo\iTop\Forms\IO\FormBinding;
 use Combodo\iTop\Forms\IO\FormBlockIOException;
 use Combodo\iTop\Test\UnitTest\sources\Forms\AbstractFormsTest;
@@ -178,18 +178,27 @@ class FormBindingTest extends AbstractFormsTest
 			'Attribute -> Boolean' => [AttributeIOFormat::class, BooleanIOFormat::class],
 			'Attribute -> Class' => [AttributeIOFormat::class, ClassIOFormat::class],
 			'Attribute -> Number' => [AttributeIOFormat::class, NumberIOFormat::class],
+			'Attribute -> String' => [AttributeIOFormat::class, StringIOFormat::class],
 
 			'Boolean => Attribute' => [BooleanIOFormat::class, AttributeIOFormat::class],
 			'Boolean => Class' => [BooleanIOFormat::class, ClassIOFormat::class],
 			'Boolean => Number' => [BooleanIOFormat::class, NumberIOFormat::class],
+			'Boolean -> String' => [BooleanIOFormat::class, StringIOFormat::class],
 
 			'Class => Attribute' => [ClassIOFormat::class, AttributeIOFormat::class],
 			'Class => Boolean' => [ClassIOFormat::class, BooleanIOFormat::class],
 			'Class => Number' => [ClassIOFormat::class, NumberIOFormat::class],
+			'Class -> String' => [ClassIOFormat::class, StringIOFormat::class],
 
 			'Number => Attribute' => [NumberIOFormat::class, AttributeIOFormat::class],
 			'Number => Class' => [NumberIOFormat::class, ClassIOFormat::class],
 			'Number => Boolean' => [NumberIOFormat::class, BooleanIOFormat::class],
+			'Number -> String' => [NumberIOFormat::class, StringIOFormat::class],
+
+			'String => Attribute' => [StringIOFormat::class, AttributeIOFormat::class],
+			'String => Class' => [StringIOFormat::class, ClassIOFormat::class],
+			'String => Boolean' => [StringIOFormat::class, BooleanIOFormat::class],
+			'String -> Number' => [StringIOFormat::class, NumberIOFormat::class],
 		];
 	}
 
@@ -214,22 +223,10 @@ class FormBindingTest extends AbstractFormsTest
 	{
 		return [
 			'Attribute -> Attribute' => [AttributeIOFormat::class, AttributeIOFormat::class],
-			'Attribute -> Raw' => [AttributeIOFormat::class, RawFormat::class],
-
 			'Boolean => Boolean' => [BooleanIOFormat::class, BooleanIOFormat::class],
-			'Boolean => Raw' => [BooleanIOFormat::class, RawFormat::class],
-
 			'Class => Class' => [ClassIOFormat::class, ClassIOFormat::class],
-			'Class => Raw' => [ClassIOFormat::class, RawFormat::class],
-
 			'Number => Number' => [NumberIOFormat::class, NumberIOFormat::class],
-			'Number => Raw' => [NumberIOFormat::class, RawFormat::class],
-
-			'Raw => Raw' => [RawFormat::class, RawFormat::class],
-			'Raw => Attribute' => [RawFormat::class, AttributeIOFormat::class],
-			'Raw => Boolean' => [RawFormat::class, BooleanIOFormat::class],
-			'Raw => Class' => [RawFormat::class, ClassIOFormat::class],
-			'Raw => Number' => [RawFormat::class, NumberIOFormat::class],
+			'String => String' => [StringIOFormat::class, StringIOFormat::class],
 		];
 	}
 

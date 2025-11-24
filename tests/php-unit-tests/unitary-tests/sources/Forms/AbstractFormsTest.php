@@ -9,7 +9,7 @@ namespace Combodo\iTop\Test\UnitTest\sources\Forms;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
-use Combodo\iTop\Forms\IO\Format\RawFormat;
+use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 use Combodo\iTop\Forms\IO\FormInput;
 use Combodo\iTop\Forms\IO\FormOutput;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
@@ -21,14 +21,14 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 abstract class AbstractFormsTest extends ItopDataTestCase
 {
-	public function GivenInput(string $sName, string $sType = RawFormat::class): FormInput
+	public function GivenInput(string $sName, string $sType = StringIOFormat::class): FormInput
 	{
 		$oBlock = $this->GivenFormBlock($sName.'_block');
 
 		return new FormInput($sName.'_input', $sType, $oBlock);
 	}
 
-	public function GivenOutput(string $sName, string $sType = RawFormat::class): FormOutput
+	public function GivenOutput(string $sName, string $sType = StringIOFormat::class): FormOutput
 	{
 		$oBlock = $this->GivenFormBlock($sName.'_block');
 

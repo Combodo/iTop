@@ -10,7 +10,6 @@ namespace Combodo\iTop\Forms\Block\Expression;
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
-use Combodo\iTop\Forms\IO\Format\RawFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Expression;
 use Symfony\Component\Form\FormEvents;
@@ -69,7 +68,6 @@ class ExpressionFormBlock extends AbstractFormBlock
 			$bResult = boolval($result);
 			$this->GetOutput(self::OUTPUT_RESULT)->SetValue($sEventType, new BooleanIOFormat($bResult));
 			$this->GetOutput(self::OUTPUT_RESULT_INVERT)->SetValue($sEventType, new BooleanIOFormat(!$bResult));
-			$this->GetOutput(self::OUTPUT_VALUE)->SetValue($sEventType, new RawFormat($result));
 		} catch (\Exception $e) {
 			throw new FormBlockException('Compute expression '.json_encode($sExpression).' block issue', 0, $e);
 		}

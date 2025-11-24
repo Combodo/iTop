@@ -12,7 +12,6 @@ use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
-use Combodo\iTop\Forms\IO\Format\RawFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
 use Exception;
@@ -46,7 +45,7 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		parent::RegisterIO($oIORegister);
 		$oIORegister->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
 		$oIORegister->AddInput(self::INPUT_ATTRIBUTE, AttributeIOFormat::class);
-		$oIORegister->AddOutput(self::OUTPUT_VALUE, RawFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_VALUE, AttributeIOFormat::class);
 	}
 
 	/** @inheritdoc

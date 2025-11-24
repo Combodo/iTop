@@ -8,7 +8,8 @@
 namespace Combodo\iTop\Forms\IO\Converter;
 
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
-use Combodo\iTop\Forms\IO\Format\RawFormat;
+use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
+use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 
 /**
  *
@@ -23,14 +24,17 @@ class ChoiceValueToLabelConverter extends AbstractConverter
 	}
 
 	/** @inheritdoc */
-	public function Convert(mixed $oData): ?RawFormat
+	public function Convert(mixed $oData): ?StringIOFormat
 	{
 		if (is_null($oData) || is_array($oData)) {
 			return null;
 		}
 
 		$aOptions = array_flip($this->oChoiceBlock->GetOption('choices'));
+		if (!array_key_exists($oData, $aOptions) || is_null($aOptions[$oData])  ) {
+			return null;
+		}
 
-		return new RawFormat($aOptions[$oData]);
+		return new StringIOFormat($aOptions[$oData]);
 	}
 }

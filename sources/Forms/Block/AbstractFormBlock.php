@@ -11,7 +11,6 @@ use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\IFormBlock;
 use Combodo\iTop\Forms\IO\AbstractFormIO;
 use Combodo\iTop\Forms\IO\Converter\AbstractConverter;
-use Combodo\iTop\Forms\IO\Format\RawFormat;
 use Combodo\iTop\Forms\IO\FormInput;
 use Combodo\iTop\Forms\IO\FormOutput;
 use Combodo\iTop\Forms\Register\IORegister;
@@ -27,7 +26,6 @@ use Combodo\iTop\Forms\Register\OptionsRegister;
 abstract class AbstractFormBlock implements IFormBlock
 {
 	// Outputs
-	public const OUTPUT_VALUE = 'value';
 
 	/** @var null|FormBlock */
 	private ?FormBlock $oParent = null;
@@ -393,7 +391,6 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
-		$oIORegister->AddOutput(self::OUTPUT_VALUE, RawFormat::class);
 	}
 
 	protected function AfterIORegistered(IORegister $oIORegister): void

@@ -21,9 +21,4 @@ class AttributeIOFormat extends AbstractIOFormat
 	{
 		return $this->sAttributeName;
 	}
-
-	public static function IsCompatible(string $sOtherFormatClass): bool
-	{
-		return is_a($sOtherFormatClass, AttributeIOFormat::class, true) || is_a($sOtherFormatClass, RawFormat::class, true);
-	}
 }

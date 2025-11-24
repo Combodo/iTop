@@ -33,9 +33,4 @@ class ClassIOFormat extends AbstractIOFormat
 	{
 		return $this->sClassName;
 	}
-
-	public static function IsCompatible(string $sOtherFormatClass): bool
-	{
-		return is_a($sOtherFormatClass, ClassIOFormat::class, true) || is_a($sOtherFormatClass, RawFormat::class, true);
-	}
 }

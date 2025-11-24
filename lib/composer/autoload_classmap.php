@@ -525,7 +525,7 @@ return array(
     'Combodo\\iTop\\Forms\\IO\\Format\\BooleanIOFormat' => $baseDir . '/sources/Forms/IO/Format/BooleanIOFormat.php',
     'Combodo\\iTop\\Forms\\IO\\Format\\ClassIOFormat' => $baseDir . '/sources/Forms/IO/Format/ClassIOFormat.php',
     'Combodo\\iTop\\Forms\\IO\\Format\\NumberIOFormat' => $baseDir . '/sources/Forms/IO/Format/NumberIOFormat.php',
-    'Combodo\\iTop\\Forms\\IO\\Format\\RawFormat' => $baseDir . '/sources/Forms/IO/Format/RawFormat.php',
+    'Combodo\\iTop\\Forms\\IO\\Format\\StringIOFormat' => $baseDir . '/sources/Forms/IO/Format/StringIOFormat.php',
     'Combodo\\iTop\\Forms\\Register\\IORegister' => $baseDir . '/sources/Forms/Register/IORegister.php',
     'Combodo\\iTop\\Forms\\Register\\Option' => $baseDir . '/sources/Forms/Register/Option.php',
     'Combodo\\iTop\\Forms\\Register\\OptionsRegister' => $baseDir . '/sources/Forms/Register/OptionsRegister.php',

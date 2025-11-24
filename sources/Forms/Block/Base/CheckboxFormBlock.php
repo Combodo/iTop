@@ -8,7 +8,6 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
-use Combodo\iTop\Forms\IO\Converter\StringToBooleanConverter;
 use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
@@ -40,6 +39,6 @@ class CheckboxFormBlock extends AbstractTypeFormBlock
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
 		parent::RegisterIO($oIORegister);
-		$oIORegister->AddOutput(self::OUTPUT_CHECKED, BooleanIOFormat::class, new StringToBooleanConverter());
+		$oIORegister->AddOutput(self::OUTPUT_CHECKED, BooleanIOFormat::class);
 	}
 }

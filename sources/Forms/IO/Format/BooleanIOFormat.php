@@ -30,9 +30,4 @@ class BooleanIOFormat extends AbstractIOFormat
 	{
 		return $this->bValue;
 	}
-
-	public static function IsCompatible(string $sOtherFormatClass): bool
-	{
-		return is_a($sOtherFormatClass, BooleanIOFormat::class, true) || is_a($sOtherFormatClass, RawFormat::class, true);
-	}
 }

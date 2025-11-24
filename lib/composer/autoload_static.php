@@ -906,7 +906,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Forms\\IO\\Format\\BooleanIOFormat' => __DIR__ . '/../..' . '/sources/Forms/IO/Format/BooleanIOFormat.php',
         'Combodo\\iTop\\Forms\\IO\\Format\\ClassIOFormat' => __DIR__ . '/../..' . '/sources/Forms/IO/Format/ClassIOFormat.php',
         'Combodo\\iTop\\Forms\\IO\\Format\\NumberIOFormat' => __DIR__ . '/../..' . '/sources/Forms/IO/Format/NumberIOFormat.php',
-        'Combodo\\iTop\\Forms\\IO\\Format\\RawFormat' => __DIR__ . '/../..' . '/sources/Forms/IO/Format/RawFormat.php',
+        'Combodo\\iTop\\Forms\\IO\\Format\\StringIOFormat' => __DIR__ . '/../..' . '/sources/Forms/IO/Format/StringIOFormat.php',
         'Combodo\\iTop\\Forms\\Register\\IORegister' => __DIR__ . '/../..' . '/sources/Forms/Register/IORegister.php',
         'Combodo\\iTop\\Forms\\Register\\Option' => __DIR__ . '/../..' . '/sources/Forms/Register/Option.php',
         'Combodo\\iTop\\Forms\\Register\\OptionsRegister' => __DIR__ . '/../..' . '/sources/Forms/Register/OptionsRegister.php',

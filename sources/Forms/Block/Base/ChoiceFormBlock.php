@@ -10,7 +10,7 @@ namespace Combodo\iTop\Forms\Block\Base;
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\FormType\Base\ChoiceFormType;
 use Combodo\iTop\Forms\IO\Converter\ChoiceValueToLabelConverter;
-use Combodo\iTop\Forms\IO\Format\RawFormat;
+use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 
 /**
@@ -21,6 +21,7 @@ class ChoiceFormBlock extends AbstractTypeFormBlock
 {
 	// Outputs
 	public const OUTPUT_LABEL = 'label';
+	public const OUTPUT_CODE = 'code';
 
 	/** @inheritdoc */
 	public function GetFormType(): string
@@ -32,6 +33,7 @@ class ChoiceFormBlock extends AbstractTypeFormBlock
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
 		parent::RegisterIO($oIORegister);
-		$oIORegister->AddOutput(self::OUTPUT_LABEL, RawFormat::class, new ChoiceValueToLabelConverter($this));
+		$oIORegister->AddOutput(self::OUTPUT_LABEL, StringIOFormat::class, new ChoiceValueToLabelConverter($this));
+		$oIORegister->AddOutput(self::OUTPUT_CODE, StringIOFormat::class);
 	}
 }
