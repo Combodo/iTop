@@ -272,7 +272,7 @@ abstract class Controller extends AbstractController
 			$oP->add(get_class($e).' : '.utils::EscapeHtml($e->GetMessage()));
 			$oP->output();
 
-			IssueLog::Error($e->getMessage());
+			IssueLog::Exception('HandleOperation failed for '.json_encode($this->m_sOperation), $e);
 		}
 	}
 
