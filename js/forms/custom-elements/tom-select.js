@@ -1,8 +1,32 @@
 class TomSelectElement extends HTMLSelectElement {
+	plugins = [];
 	connectedCallback() {
-			new TomSelect(this, {
+		if (this.getAttribute('data-tom-select-multiple')) {
+			this.plugins.push('remove_button');
+		}
 
-			});
+		const options = {
+			plugins: this.plugins,
+			wrapperClass: 'ts-wrapper ibo-input-wrapper ibo-input-select-wrapper--with-buttons ibo-input-select-autocomplete-wrapper',
+			controlClass: 'ts-control ibo-input ibo-input-select ibo-input-select-autocomplete',
+			render: {
+				dropdown: function (data, escape) {
+					return `<div class="selectize-dropdown"></div>`;
+				}
+			}
+		};
+
+		if (this.getAttribute('data-tom-select-disable-control-input')) {
+			options.controlInput = null;
+		}
+		if (this.getAttribute('data-tom-select-max-items-selected')) {
+			options.maxItems = parseInt(this.getAttribute('data-tom-select-max-items-selected'));
+		}
+		if (this.getAttribute('data-tom-select-placehelder')) {
+			options.placeholder = this.getAttribute('data-tom-select-placehelder');
+		}
+
+		new TomSelect(this, options);
 	}
 }
 
