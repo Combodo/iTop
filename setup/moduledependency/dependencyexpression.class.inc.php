@@ -11,13 +11,21 @@ use RunTimeEnvironment;
  * Class that handles a module dependency
  * Dependency expression example : (moduleA/123 || moduleB>456)
  */
-class ModuleDependency
+class DependencyExpression
 {
 	private static PhpExpressionEvaluator $oPhpExpressionEvaluator;
 
 	private string $sDependencyExpression;
 	private bool $bValid = true;
+
+	/**
+	 * @var array<string, bool> $aRemainingModuleNamesToResolve
+	 */
 	private array $aRemainingModuleNamesToResolve;
+
+	/**
+	 * @var array<string, array> $aParamsPerModuleId
+	 */
 	private array $aParamsPerModuleId;
 
 	public function __construct(string $sDependencyExpression)

@@ -217,7 +217,7 @@ class ModuleDiscovery
 	*/
 	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
-		return ModuleDependencySort::GetInstance()->OrderModulesByDependencies($aModules, $bAbortOnMissingDependency, $aModulesToLoad);
+		return ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, $bAbortOnMissingDependency, $aModulesToLoad);
 	}
 
 	private static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator

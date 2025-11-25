@@ -2,7 +2,7 @@
 
 namespace Combodo\iTop\Setup\ModuleDependency;
 
-require_once(__DIR__.'/moduledependency.class.inc.php');
+require_once(__DIR__.'/dependencyexpression.class.inc.php');
 use ModuleDiscovery;
 
 /**
@@ -14,7 +14,14 @@ class Module
 	private string $sModuleName;
 	private string $sVersion;
 
+	/**
+	* @var array<string> $aInitialDependencyExpressions
+	 */
 	private array $aInitialDependencyExpressions;
+
+	/**
+    * @var array<string, DependencyExpression> $aRemainingDependenciesToResolve
+     */
 	public array $aRemainingDependenciesToResolve;
 
 	public function __construct(string $sModuleId)
@@ -77,7 +84,7 @@ class Module
 		$this->aRemainingDependenciesToResolve = [];
 
 		foreach ($aAllDependencyExpressions as $sDependencyExpression) {
-			$this->aRemainingDependenciesToResolve[$sDependencyExpression] = new ModuleDependency($sDependencyExpression);
+			$this->aRemainingDependenciesToResolve[$sDependencyExpression] = new DependencyExpression($sDependencyExpression);
 		}
 	}
 
@@ -93,7 +100,7 @@ class Module
 		$aNextDependencies = [];
 		$bDependenciesSolved = true;
 		foreach ($this->aRemainingDependenciesToResolve as $sDependencyExpression => $oModuleDependency) {
-			/** @var ModuleDependency $oModuleDependency*/
+			/** @var DependencyExpression $oModuleDependency*/
 			if (!$oModuleDependency->UpdateModuleResolutionState($aModuleVersions, $aSelectedModules)) {
 				$aNextDependencies[$sDependencyExpression] = $oModuleDependency;
 				$bDependenciesSolved = false;
@@ -112,7 +119,7 @@ class Module
 	{
 		$aRes = [];
 		foreach ($this->aRemainingDependenciesToResolve as $sDependencyExpression => $oModuleDependency) {
-			/** @var ModuleDependency $oModuleDependency */
+			/** @var DependencyExpression $oModuleDependency */
 			$aRes = array_merge($aRes, $oModuleDependency->GetRemainingModuleNamesToResolve());
 		}
 

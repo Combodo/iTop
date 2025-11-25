@@ -39,7 +39,7 @@ class ModuleDependencySort
 	 * @return array
 	 * @throws \MissingDependencyException
 	 */
-	public function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
+	public function GetModulesOrderedForInstallation($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		// Filter modules to compute
 		$aUnresolvedDependencyModules = [];
