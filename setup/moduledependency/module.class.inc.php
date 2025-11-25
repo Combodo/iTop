@@ -20,8 +20,8 @@ class Module
 	private array $aInitialDependencyExpressions;
 
 	/**
-    * @var array<string, DependencyExpression> $aRemainingDependenciesToResolve
-     */
+	* @var array<string, DependencyExpression> $aRemainingDependenciesToResolve
+	 */
 	public array $aRemainingDependenciesToResolve;
 
 	public function __construct(string $sModuleId)
@@ -30,24 +30,24 @@ class Module
 		list($this->sModuleName, $this->sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
 	}
 
-	public function IsDependencyExpressionResolved(string $sDependencyExpression) : bool
+	public function IsDependencyExpressionResolved(string $sDependencyExpression): bool
 	{
-	    return ! array_key_exists($sDependencyExpression, $this->aRemainingDependenciesToResolve);
+		return ! array_key_exists($sDependencyExpression, $this->aRemainingDependenciesToResolve);
 	}
 
-	public function GetDependencyResolutionFeedback() : array
-    {
-        $aDepsWithIcons = [];
+	public function GetDependencyResolutionFeedback(): array
+	{
+		$aDepsWithIcons = [];
 
-        foreach ($this->aInitialDependencyExpressions as $sIndex => $sDependencyExpression) {
-            if ($this->IsDependencyExpressionResolved($sDependencyExpression)) {
-                $aDepsWithIcons[$sIndex] = '✅ '.$sDependencyExpression;
-            } else {
-                $aDepsWithIcons[$sIndex] = '❌ '.$sDependencyExpression;
-            }
-        }
+		foreach ($this->aInitialDependencyExpressions as $sDependencyExpression) {
+			if ($this->IsDependencyExpressionResolved($sDependencyExpression)) {
+				$aDepsWithIcons[] = '✅ '.$sDependencyExpression;
+			} else {
+				$aDepsWithIcons[] = '❌ '.$sDependencyExpression;
+			}
+		}
 		return $aDepsWithIcons;
-    }
+	}
 
 	/**
 	 * @return string
@@ -88,28 +88,31 @@ class Module
 		}
 	}
 
+	public function IsResolved(): bool
+	{
+		return (0 === count($this->aRemainingDependenciesToResolve));
+	}
+
 	/**
 	 * Check if module dependencies are resolved with current list of module versions
 	 * @param array $aModuleVersions : versions by module names dict
 	 * @param array $aSelectedModules : modules names dict
 	 *
-	 * @return bool
+	 * @return void
 	 */
-	public function UpdateModuleResolutionState(array $aModuleVersions, array $aSelectedModules): bool
+	public function UpdateModuleResolutionState(array $aModuleVersions, array $aSelectedModules): void
 	{
 		$aNextDependencies = [];
-		$bDependenciesSolved = true;
+
 		foreach ($this->aRemainingDependenciesToResolve as $sDependencyExpression => $oModuleDependency) {
 			/** @var DependencyExpression $oModuleDependency*/
-			if (!$oModuleDependency->UpdateModuleResolutionState($aModuleVersions, $aSelectedModules)) {
+			$oModuleDependency->UpdateModuleResolutionState($aModuleVersions, $aSelectedModules);
+			if (!$oModuleDependency->IsResolved()) {
 				$aNextDependencies[$sDependencyExpression] = $oModuleDependency;
-				$bDependenciesSolved = false;
 			}
 		}
 
 		$this->aRemainingDependenciesToResolve = $aNextDependencies;
-
-		return $bDependenciesSolved;
 	}
 
 	/**

@@ -60,21 +60,26 @@ class ModuleDependencySort
 		//Attempt to resolve module dependencies
 		$aOrderedModules = [];
 		$aModuleVersions = [];
-		$iLoopCount = 0;
-		while (($iLoopCount < count($aModules)) && (count($aUnresolvedDependencyModules) > 0)) {
+		$iPreviousUnresolvedCount = -1;
+		//loop until no dependency is resolved
+		while ($iPreviousUnresolvedCount !== count($aUnresolvedDependencyModules)) {
+			$iPreviousUnresolvedCount = count($aUnresolvedDependencyModules);
+			if ($iPreviousUnresolvedCount === 0) {
+				break;
+			}
+
 			foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
 				/** @var Module $oModule */
-				if ($oModule->UpdateModuleResolutionState($aModuleVersions, $aSelectedModules)) {
+				$oModule->UpdateModuleResolutionState($aModuleVersions, $aSelectedModules);
+				if ($oModule->IsResolved()) {
 					$aOrderedModules[] = $sModuleId;
 					$aModuleVersions[$oModule->GetModuleName()] = $oModule->GetVersion();
 					unset($aUnresolvedDependencyModules[$sModuleId]);
 				}
 			}
-
-			$iLoopCount++;
 		}
 
-		// Report unresolve dependencies
+		// Report unresolved dependencies
 		if ($bAbortOnMissingDependency && count($aUnresolvedDependencyModules) > 0) {
 			$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 

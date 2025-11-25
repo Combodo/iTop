@@ -17,6 +17,7 @@ class DependencyExpression
 
 	private string $sDependencyExpression;
 	private bool $bValid = true;
+	private bool $bResolved = false;
 
 	/**
 	 * @var array<string, bool> $aRemainingModuleNamesToResolve
@@ -77,17 +78,22 @@ class DependencyExpression
 		return array_keys($this->aRemainingModuleNamesToResolve);
 	}
 
+	public function IsResolved(): bool
+	{
+		return $this->bResolved;
+	}
+
 	/**
 	 * Check if dependency is resolved with current list of module versions
 	 * @param array $aModuleVersions: versions by module names dict
 	 * @param array $aSelectedModules: modules names dict
 	 *
-	 * @return bool
+	 * @return void
 	 */
-	public function UpdateModuleResolutionState(array $aModuleVersions, array $aSelectedModules): bool
+	public function UpdateModuleResolutionState(array $aModuleVersions, array $aSelectedModules): void
 	{
 		if (!$this->bValid) {
-			return false;
+			return;
 		}
 
 		$aReplacements = [];
@@ -116,7 +122,7 @@ class DependencyExpression
 			if (array_key_exists($sModuleName, $aSelectedModules)) {
 				// This module is actually a prerequisite
 				if (!array_key_exists($sModuleName, $aModuleVersions)) {
-					return false;
+					return;
 				}
 			}
 		}
@@ -129,12 +135,12 @@ class DependencyExpression
 			//logged already
 			echo "Failed to parse the boolean Expression = '$sBooleanExpr'<br/>";
 		}
-		return $bResult;
+
+		$this->bResolved = $bResult;
 	}
 
 	public function IsValid(): bool
 	{
 		return $this->bValid;
 	}
-
 }

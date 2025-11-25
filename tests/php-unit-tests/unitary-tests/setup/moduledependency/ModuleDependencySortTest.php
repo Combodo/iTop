@@ -291,21 +291,22 @@ MSG;
 		$this->assertEquals($aExpected, array_keys($aResult));
 	}
 
-	public static function FilterModulesBasedOnChoicesProvider() {
+	public static function FilterModulesBasedOnChoicesProvider()
+	{
 		return [
 			'itil choice' => [ 'choices' => ['id1', 'id2', "id3-itil"],
 						'expected' => [
 							"id3-itil/3",
 							"id2/2",
 							"id1/1",
-						]
+						],
 			],
 			'choice' => [ 'choices' => ['id1', 'id2', "id3"],
-			              'expected' => [
-				              "id3/3",
-				              "id2/2",
-				              "id1/1",
-			              ]
+						  'expected' => [
+							  "id3/3",
+							  "id2/2",
+							  "id1/1",
+						  ],
 			],
 		];
 	}
@@ -431,7 +432,8 @@ MSG;
 		$aUnresolvedDependencyModules[$sModuleId] = $oModule;
 	}
 
-	private function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules){
+	private function SortModulesByCountOfDepencenciesDescending(array &$aUnresolvedDependencyModules)
+	{
 		$this->InvokeNonPublicMethod(ModuleDependencySort::class, 'SortModulesByCountOfDepencenciesDescending', ModuleDependencySort::GetInstance(), [&$aUnresolvedDependencyModules]);
 	}
 }
