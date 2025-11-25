@@ -17,15 +17,15 @@ use Combodo\iTop\Forms\Register\IORegister;
 class BooleanExpressionFormBlock extends AbstractExpressionFormBlock
 {
 	// Outputs
-	public const OUTPUT_CONDITION_MET = "condition_met";
-	public const OUTPUT_CONDITION_UNMET = "condition_unmet";
+	public const OUTPUT_RESULT = "result";
+	public const OUTPUT_NOT_RESULT = "not_result";
 
 	/** @inheritdoc */
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
 		parent::RegisterIO($oIORegister);
-		$oIORegister->AddOutput(self::OUTPUT_CONDITION_MET, BooleanIOFormat::class);
-		$oIORegister->AddOutput(self::OUTPUT_CONDITION_UNMET, BooleanIOFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_RESULT, BooleanIOFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_NOT_RESULT, BooleanIOFormat::class);
 	}
 
 	/**
@@ -42,8 +42,8 @@ class BooleanExpressionFormBlock extends AbstractExpressionFormBlock
 
 		// Update output
 		$bResult = boolval($oResult);
-		$this->GetOutput(self::OUTPUT_CONDITION_MET)->SetValue($sEventType, new BooleanIOFormat($bResult));
-		$this->GetOutput(self::OUTPUT_CONDITION_UNMET)->SetValue($sEventType, new BooleanIOFormat(!$bResult));
+		$this->GetOutput(self::OUTPUT_RESULT)->SetValue($sEventType, new BooleanIOFormat($bResult));
+		$this->GetOutput(self::OUTPUT_NOT_RESULT)->SetValue($sEventType, new BooleanIOFormat(!$bResult));
 
 		return $oResult;
 	}

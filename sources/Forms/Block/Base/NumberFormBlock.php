@@ -8,29 +8,29 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
-use Combodo\iTop\Forms\IO\Format\StringIOFormat;
+use Combodo\iTop\Forms\IO\Format\NumberIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 /**
  * Form block for string.
  *
  */
-class TextFormBlock extends AbstractTypeFormBlock
+class NumberFormBlock extends AbstractTypeFormBlock
 {
 	// Outputs
-	public const OUTPUT_TEXT = "text";
+	public const OUTPUT_NUMBER = "number";
 
 	/** @inheritdoc */
 	public function GetFormType(): string
 	{
-		return TextType::class;
+		return NumberType::class;
 	}
 
 	/** @inheritdoc */
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
 		parent::RegisterIO($oIORegister);
-		$oIORegister->AddOutput(self::OUTPUT_TEXT, StringIOFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_NUMBER, NumberIOFormat::class);
 	}
 }

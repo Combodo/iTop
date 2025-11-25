@@ -14,16 +14,16 @@ use Combodo\iTop\Forms\Register\IORegister;
 /**
  *
  */
-class IntegerExpressionFormBlock extends AbstractExpressionFormBlock
+class NumberExpressionFormBlock extends AbstractExpressionFormBlock
 {
 	// Outputs
-	public const OUTPUT_NUMBER = "number";
+	public const OUTPUT_RESULT = "result";
 
 	/** @inheritdoc */
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
 		parent::RegisterIO($oIORegister);
-		$oIORegister->AddOutput(self::OUTPUT_NUMBER, NumberIOFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_RESULT, NumberIOFormat::class);
 	}
 
 	/**
@@ -39,8 +39,7 @@ class IntegerExpressionFormBlock extends AbstractExpressionFormBlock
 		$oResult = parent::ComputeExpression($sEventType);
 
 		// Update output
-		$iVal = intval($oResult);
-		$this->GetOutput(self::OUTPUT_NUMBER)->SetValue($sEventType, new NumberIOFormat($iVal));
+		$this->GetOutput(self::OUTPUT_RESULT)->SetValue($sEventType, new NumberIOFormat($oResult));
 
 		return $oResult;
 	}
