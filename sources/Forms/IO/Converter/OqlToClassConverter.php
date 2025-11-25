@@ -12,6 +12,7 @@ use Combodo\iTop\Service\DependencyInjection\DIService;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\IO\FormBlockIOException;
 use Exception;
+use ModelReflection;
 
 /**
  * OQL expression to class converter.
@@ -28,6 +29,7 @@ class OqlToClassConverter extends AbstractConverter
 			return null;
 		}
 
+		/** @var ModelReflection $oModelReflection */
 		$oModelReflection = DIService::GetInstance()->GetService('ModelReflection');
 		try {
 			$oQuery = $oModelReflection->GetQuery($oData);
