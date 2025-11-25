@@ -8,7 +8,7 @@
 namespace Combodo\iTop\Forms\FormBuilder;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
-use Combodo\iTop\Forms\Block\Expression\ExpressionFormBlock;
+use Combodo\iTop\Forms\Block\Expression\AbstractExpressionFormBlock;
 use Combodo\iTop\Forms\Block\FormBlock;
 use Combodo\iTop\Forms\IO\FormBinding;
 use Combodo\iTop\Forms\IO\FormInput;
@@ -132,7 +132,7 @@ class DependencyMap
 		$this->aBlocksImpactedBy[$sDependsOnName][$oImpactedBlock->GetName()] = $oImpactedBlock;
 
 		// TODO
-		if ($oImpactedBlock instanceof ExpressionFormBlock) {
+		if ($oImpactedBlock instanceof AbstractExpressionFormBlock) {
 			foreach ($oImpactedBlock->GetOutputs() as $oOutput) {
 				foreach ($oOutput->GetBindings() as $oBinding) {
 					$this->AddToBlockImpactedBy($sDependsOnName, $oBinding->oDestinationIO->GetOwnerBlock());

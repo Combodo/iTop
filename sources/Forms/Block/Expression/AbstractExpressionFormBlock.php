@@ -17,24 +17,12 @@ use Symfony\Component\Form\FormEvents;
 /**
  *
  */
-class ExpressionFormBlock extends AbstractFormBlock
+abstract class AbstractExpressionFormBlock extends AbstractFormBlock
 {
 	public const EXPRESSION_PATTERN = "/:(?<input>\w+)/";
 
-	// Outputs
-	public const OUTPUT_RESULT = "result";
-	public const OUTPUT_RESULT_INVERT = "result_invert";
-
-	/** @inheritdoc */
-	protected function RegisterIO(IORegister $oIORegister): void
-	{
-		parent::RegisterIO($oIORegister);
-		$oIORegister->AddOutput(self::OUTPUT_RESULT, BooleanIOFormat::class);
-		$oIORegister->AddOutput(self::OUTPUT_RESULT_INVERT, BooleanIOFormat::class);
-	}
-
 	/** @inheritdoc
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 * @throws FormBlockException
 	 */
 	public function AllInputsReadyEvent(): void
 	{
@@ -48,26 +36,20 @@ class ExpressionFormBlock extends AbstractFormBlock
 	 *
 	 * @param string $sEventType
 	 *
-	 * @return void
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 * @return mixed
+	 * @throws FormBlockException
 	 */
-	public function ComputeExpression(string $sEventType): void
+	public function ComputeExpression(string $sEventType): mixed
 	{
-		$sExpression = '';
+		$sExpression = $this->GetOption('expression');
 		try {
-			$sExpression = $this->GetOption('expression');
-
 			$oExpression = Expression::FromOQL($sExpression);
 			$aParamsToResolve = $oExpression->GetParameters();
 			$aResolvedParams = [];
 			foreach ($aParamsToResolve as $sParamToResolve) {
 				$aResolvedParams[$sParamToResolve] = $this->GetInputValue($sParamToResolve);
 			}
-			$result = $oExpression->Evaluate($aResolvedParams);
-
-			$bResult = boolval($result);
-			$this->GetOutput(self::OUTPUT_RESULT)->SetValue($sEventType, new BooleanIOFormat($bResult));
-			$this->GetOutput(self::OUTPUT_RESULT_INVERT)->SetValue($sEventType, new BooleanIOFormat(!$bResult));
+			return $oExpression->Evaluate($aResolvedParams);
 		} catch (\Exception $e) {
 			throw new FormBlockException('Compute expression '.json_encode($sExpression).' block issue', 0, $e);
 		}
