@@ -9,7 +9,6 @@ namespace Combodo\iTop\Forms\Block\DataModel;
 
 use Combodo\iTop\Service\DependencyInjection\DIService;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
-use Combodo\iTop\Forms\IO\Converter\StringToAttributeConverter;
 use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
@@ -41,7 +40,7 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	{
 		parent::RegisterIO($oIORegister);
 		$oIORegister->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
-		$oIORegister->AddOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class, new StringToAttributeConverter());
+		$oIORegister->AddOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class);
 	}
 
 	/**

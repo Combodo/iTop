@@ -15,6 +15,7 @@ use Combodo\iTop\Forms\IO\FormInput;
 use Combodo\iTop\Forms\IO\FormOutput;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
+use Combodo\iTop\Forms\Register\RegisterException;
 
 /**
  * Abstract form block.
@@ -101,6 +102,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 *
 	 * @param OptionsRegister $oOptionsRegister
 	 *
+	 * @throws RegisterException
 	 */
 	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{

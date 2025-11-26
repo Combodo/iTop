@@ -1,7 +1,7 @@
 {# @copyright   Copyright (C) 2010-2025 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-<turbo-stream action="update" target="{{ oUIBlock.GetTarget() }}">
+<turbo-stream action="{{ oUIBlock.GetAction() }}" target="{{ oUIBlock.GetTarget() }}">
     <template>
         {%- block iboContentBlockContainer -%}
             {% for oSubBlock in oUIBlock.GetSubBlocks() %}

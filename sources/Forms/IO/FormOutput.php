@@ -44,7 +44,8 @@ class FormOutput extends AbstractFormIO
 	public function ConvertValue(mixed $oData): mixed
 	{
 		if (is_null($this->oConverter)) {
-			return $oData;
+			$sType = $this->GetDataType();
+			return new $sType($oData);
 		}
 
 		return $this->oConverter->Convert($oData);

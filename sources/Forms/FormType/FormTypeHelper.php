@@ -44,7 +44,6 @@ class FormTypeHelper
 
 		// Get the form corresponding to the turbo trigger
 		$oFormTurboTrigger = self::GetFormAt($oForm, $sBlockTurboTriggerName);
-		$sBlockTurboTriggerId = self::GetFormId($oFormTurboTrigger);
 
 		// Get the parent form
 		$oParent = $oFormTurboTrigger->getParent();
@@ -53,9 +52,6 @@ class FormTypeHelper
 		// Get the block corresponding to the turbo trigger form
 		$oBlockTurboTrigger = $oFormTurboTrigger->getConfig()->getOption('form_block');
 		$oMap = $oBlockTurboTrigger->GetParent()->GetDependenciesMap();
-
-		// Add itself
-		$aBlocksToRedraw[$sBlockTurboTriggerId] = $oFormTurboTrigger->createView();
 
 		// Add impacted blocks
 		$aImpacted = $oMap->GetBlocksImpactedBy($oBlockTurboTrigger->GetName());
@@ -69,7 +65,10 @@ class FormTypeHelper
 
 		}
 
-		return $aBlocksToRedraw;
+		return [
+			'blocks_to_redraw' => $aBlocksToRedraw,
+			'current_block'   => $oFormTurboTrigger->createView(),
+		];
 	}
 
 	/**

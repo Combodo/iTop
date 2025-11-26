@@ -2,11 +2,14 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 {% for sBlockIdentifier, oBlockToRedraw in blocks_to_redraw %}
-    {% UITurboUpdate Standard { sTarget: "turbo_" ~ sBlockIdentifier} %}
+    {% UITurboStream Update { sTarget: "turbo_" ~ sBlockIdentifier} %}
     {% if oBlockToRedraw is not null %}
         {{ form_row(oBlockToRedraw) }}
-{#        {% else %}#}
-{#            <div style="background-color: #ecd9eb;border-radius: 6px;padding: 2px 5px;">Reserved place for <b>{{ sBlockIdentifier }}</b></div>#}
     {% endif %}
-    {% EndUITurboUpdate %}
+    {% EndUITurboStream %}
 {% endfor %}
+{% if current_block %}
+    {% UITurboStream Replace { sTarget: "turbo_error_" ~ current_block.vars.id} %}
+        {{ form_errors(current_block) }}
+    {% EndUITurboStream %}
+{% endif %}

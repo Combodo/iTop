@@ -10,6 +10,7 @@ namespace Combodo\iTop\Forms\Block;
 use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
+use Combodo\iTop\Forms\Register\RegisterException;
 
 abstract class AbstractTypeFormBlock extends AbstractFormBlock
 {
@@ -47,10 +48,12 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 		if (!$oInput->IsBound()) {
 			return true;
 		}
-
-		$bVisible = $oInput->GetValue($sEventType);
-
-		return $bVisible !== null && $bVisible->IsTrue();
+		else if (!$oInput->HasEventValue($sEventType)) {
+			return false;
+		}
+		else{
+			return $oInput->GetValue($sEventType)->IsTrue();
+		}
 	}
 
 	/**
@@ -83,7 +86,10 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 		$this->bIsAddedToForm = $bIsAdded;
 	}
 
-	/** @inheritdoc */
+	/** @inheritdoc
+	 * @throws RegisterException
+	 * @throws FormBlockException
+	 */
 	public function UpdateOptions(OptionsRegister $oOptionsRegister): void
 	{
 		parent::UpdateOptions($oOptionsRegister);

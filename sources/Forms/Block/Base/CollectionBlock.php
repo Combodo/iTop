@@ -12,6 +12,7 @@ use Combodo\iTop\Forms\FormType\Base\CollectionFormType;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
+use Combodo\iTop\Forms\Register\RegisterException;
 
 /**
  * Collection form type.
@@ -73,8 +74,14 @@ class CollectionBlock extends AbstractTypeFormBlock
 		$sBlockEntryOptions = $this->GetOption('block_entry_options');
 		$this->oPrototypeBlock = new ($sBlockEntryType)('prototype', $sBlockEntryOptions);
 
-		$oOptionsRegister->SetOption('entry_type', $this->oPrototypeBlock->GetFormType());
-		$oOptionsRegister->SetOption('entry_options', $this->oPrototypeBlock->GetOptions());
+		try{
+			$oOptionsRegister->SetOption('entry_type', $this->oPrototypeBlock->GetFormType());
+			$oOptionsRegister->SetOption('entry_options', $this->oPrototypeBlock->GetOptions());
+		}
+		catch(RegisterException $e){
+
+		}
+
 	}
 
 }
