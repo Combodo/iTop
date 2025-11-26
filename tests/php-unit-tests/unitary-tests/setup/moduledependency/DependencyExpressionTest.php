@@ -25,23 +25,23 @@ class DependencyExpressionTest extends ItopTestCase
 		return [
 			"nominal case" => [
 				"dep" => "itop-config-mgmt/2.4.0",
-				'expected_operator' => '>='
+				'expected_operator' => '>=',
 			],
 			">" => [
 				"dep" => "itop-config-mgmt/>2.4.0",
-				'expected_operator' => '>'
+				'expected_operator' => '>',
 			],
 			">=" => [
 				"dep" => "itop-config-mgmt/>=2.4.0",
-				'expected_operator' => '>='
+				'expected_operator' => '>=',
 			],
 			"<" => [
 				"dep" => "itop-config-mgmt/<2.4.0",
-				'expected_operator' => '<'
+				'expected_operator' => '<',
 			],
 			"<=" => [
 				"dep" => "itop-config-mgmt/<=2.4.0",
-				'expected_operator' => '<='
+				'expected_operator' => '<=',
 			],
 		];
 	}
@@ -94,124 +94,96 @@ class DependencyExpressionTest extends ItopTestCase
 		$this->assertEquals(['itop-structure', 'itop-portal'], $oModuleDependency->GetRemainingModuleNamesToResolve());
 	}
 
-	public function testModuleIsDependencyResolved_SimpleCase_UnresolvedDueToMissingModule()
+	public static function SimpleDependencyExpressionIsResolvedProvider()
 	{
-		$oModuleDependency = new DependencyExpression('itop-config-mgmt/2.4.0');
-		$oModuleDependency->UpdateModuleResolutionState([], ['itop-config-mgmt' => true]);
-		$this->assertEquals(false, $oModuleDependency->IsResolved());
+		return [
+			'unresolved with major version' => [
+				'expr' => 'itop-config-mgmt/2.4.0',
+				'module_versions' => ['itop-config-mgmt' => '1.2.3'],
+				'expected_is_resolved' => false,
+			],
+			'unresolved with minor version' => [
+				'expr' => 'itop-config-mgmt/2.4.1',
+				'module_versions' => ['itop-config-mgmt' => '2.4.0-1'],
+				'expected_is_resolved' => false,
+			],
+			'resolution OK with major version' => [
+				'expr' => 'itop-config-mgmt/2.4.0',
+				'module_versions' => ['itop-config-mgmt' => '2.4.2'],
+				'expected_is_resolved' => true,
+			],
+			'resolution OK with minor version' => [
+				'expr' => 'itop-config-mgmt/2.4.0',
+				'module_versions' => ['itop-config-mgmt' => '2.4.0-1'],
+				'expected_is_resolved' => true,
+			],
+			'unproper use of api' => [
+				'expr' => 'itop-config-mgmt/2.4.0',
+				'module_versions' => [],
+				'expected_is_resolved' => false,
+			],
+		];
 	}
 
-	public function testModuleIsDependencyResolved_SimpleCase_UnresolvedDueToWrongModuleVersion()
+	/**
+	 * @dataProvider SimpleDependencyExpressionIsResolvedProvider
+	 */
+	public function testSimpleDependencyExpressionIsResolved($sExpression, $aModuleVersions, $bExpectedResolved)
 	{
-		$oModuleDependency = new DependencyExpression('itop-config-mgmt/2.4.0');
-		$oModuleDependency->UpdateModuleResolutionState(['itop-config-mgmt' => '1.2.3'], ['itop-config-mgmt' => true]);
-		$this->assertEquals(false, $oModuleDependency->IsResolved());
+		$oModuleDependency = new DependencyExpression($sExpression);
+		$oModuleDependency->UpdateModuleResolutionState($aModuleVersions, ['itop-config-mgmt' => true]);
+		$this->assertEquals($bExpectedResolved, $oModuleDependency->IsResolved());
+		if ($bExpectedResolved){
+			$this->assertEquals([], $oModuleDependency->GetRemainingModuleNamesToResolve());
+		}
 	}
 
-	public function testModuleIsDependencyResolved_SimpleCase_ResolvedDue_MinorVersion()
+	public static function ComplexDependencyExpressionIsResolvedProvider()
 	{
-		$oModuleDependency = new DependencyExpression('itop-config-mgmt/2.4.1');
-		$oModuleDependency->UpdateModuleResolutionState(['itop-config-mgmt' => '2.4.1-1'], ['itop-config-mgmt' => true]);
-		$this->assertEquals(true, $oModuleDependency->IsResolved());
+		return [
+			'and + unresolved due to missing itop-portal' => [
+				'expr' => 'itop-structure/3.0.0 && itop-portal/3.2.1',
+				'module_versions' => ['itop-structure' => '3.0.0'],
+				'expected_is_resolved' => false,
+				'remaining_module_names' => ['itop-portal']
+			],
+			'and + unresolved due to unsifficient itop-portal version' => [
+				'expr' => 'itop-structure/3.0.0 && itop-portal/3.2.1',
+				'module_versions' => ['itop-structure' => '3.0.0', 'itop-portal' => '1.0.0'],
+				'expected_is_resolved' => false,
+				'remaining_module_names' => ['itop-portal']
+			],
+			'and + resolved' => [
+				'expr' => 'itop-structure/3.0.0 && itop-portal/3.2.1',
+				'module_versions' => ['itop-structure' => '3.0.0', 'itop-portal' => '3.3.3'],
+				'expected_is_resolved' => true,
+				'remaining_module_names' => []
+			],
+			'or + resolved' => [
+				'expr' => 'itop-structure/3.0.0 || itop-portal/3.2.1',
+				'module_versions' => ['itop-structure' => '3.0.0'],
+				'expected_is_resolved' => false,
+				'remaining_module_names' => ['itop-portal']
+			],
+			'or + resolved with less prerequisites' => [
+				'expr' => 'itop-structure/3.0.0 || itop-portal/3.2.1',
+				'module_versions' => ['itop-structure' => '3.0.0'],
+				'expected_is_resolved' => true,
+				'remaining_module_names' => ['itop-portal'],
+				'prerequisites' => ['itop-structure' => true]
+			],
+		];
 	}
 
-	public function testModuleIsDependencyResolved_SimpleCase_ResolvedDue_MinorVersion2()
+	/**
+	 * @dataProvider ComplexDependencyExpressionIsResolvedProvider
+	 */
+	public function testComplexDependencyExpressionIsResolved($sExpression, $aModuleVersions, $bExpectedResolved, $aRemainingModuleNames, $aPrerequisites=['itop-structure' => true, 'itop-portal' => true])
 	{
-		$oModuleDependency = new DependencyExpression('itop-config-mgmt/2.4.1-1');
-		$oModuleDependency->UpdateModuleResolutionState(['itop-config-mgmt' => '2.4.1-2'], ['itop-config-mgmt' => true]);
-		$this->assertEquals(true, $oModuleDependency->IsResolved());
-	}
+		$oModuleDependency = new DependencyExpression($sExpression);
 
-	public function testModuleIsDependencyResolved_SimpleCase_ResolvedDue_MinorVersion3()
-	{
-		$oModuleDependency = new DependencyExpression('itop-config-mgmt/2.4.1-1');
-		$oModuleDependency->UpdateModuleResolutionState(['itop-config-mgmt' => '2.4.2'], ['itop-config-mgmt' => true]);
-		$this->assertEquals(true, $oModuleDependency->IsResolved());
-	}
-
-	public function testModuleIsDependencyResolved_SimpleCase_UnresolvedDueToWrongModuleVersion_MinorVersion()
-	{
-		$oModuleDependency = new DependencyExpression('itop-config-mgmt/2.4.1');
-		$oModuleDependency->UpdateModuleResolutionState(['itop-config-mgmt' => '2.4.0-1'], ['itop-config-mgmt' => true]);
-		$this->assertEquals(false, $oModuleDependency->IsResolved());
-	}
-
-	public function testModuleIsDependencyResolved_SimpleCase_UnresolvedDueToWrongModuleVersion_MinorVersion2()
-	{
-		$oModuleDependency = new DependencyExpression('itop-config-mgmt/2.4.1-1');
-		$oModuleDependency->UpdateModuleResolutionState(['itop-config-mgmt' => '2.4.1'], ['itop-config-mgmt' => true]);
-		$this->assertEquals(false, $oModuleDependency->IsResolved());
-	}
-
-	public function testModuleIsDependencyResolved_SimpleCase_UnresolvedDueToWrongModuleVersion_MinorVersion3()
-	{
-		$oModuleDependency = new DependencyExpression('itop-config-mgmt/2.4.1-1');
-		$oModuleDependency->UpdateModuleResolutionState(['itop-config-mgmt' => '2.4.1-0'], ['itop-config-mgmt' => true]);
-		$this->assertEquals(false, $oModuleDependency->IsResolved());
-	}
-
-	public function testModuleIsDependencyResolved_SimpleCase_Resolved()
-	{
-		$oModuleDependency = new DependencyExpression('itop-config-mgmt/2.4.0');
-		$this->assertEquals(['itop-config-mgmt'], $oModuleDependency->GetRemainingModuleNamesToResolve());
-		$oModuleDependency->UpdateModuleResolutionState(['itop-config-mgmt' => '2.4.1'], ['itop-config-mgmt' => true]);
-		$this->assertEquals(true, $oModuleDependency->IsResolved());
-		$this->assertEquals([], $oModuleDependency->GetRemainingModuleNamesToResolve());
-	}
-
-	public function testIsDependencyResolved_AndOperand_UnresolvedDueToMissingModule()
-	{
-		$sDepId = "itop-structure/3.0.0 && itop-portal/3.2.1";
-		$oModuleDependency = new DependencyExpression($sDepId);
-		$this->assertEquals(['itop-structure/3.0.0' => [ 'itop-structure',  ">=", '3.0.0'], 'itop-portal/3.2.1' => [ 'itop-portal',  ">=", '3.2.1']], $this->GetNonPublicProperty($oModuleDependency, 'aParamsPerModuleId'));
-		$this->assertTrue($oModuleDependency->IsValid());
-		;
-		$this->assertEquals(['itop-structure', 'itop-portal'], $oModuleDependency->GetRemainingModuleNamesToResolve());
-
-		$oModuleDependency->UpdateModuleResolutionState(['itop-structure' => '3.0.0'], ['itop-structure' => true, 'itop-portal' => true]);
-		$this->assertEquals(false, $oModuleDependency->IsResolved());
-		$this->assertEquals(['itop-portal'], $oModuleDependency->GetRemainingModuleNamesToResolve());
-	}
-
-	public function testIsDependencyResolved_AndOperand_UnresolvedDueToWrongModuleVersion()
-	{
-		$sDepId = "itop-structure/3.0.0 && itop-portal/3.2.1";
-		$oModuleDependency = new DependencyExpression($sDepId);
-		$this->assertEquals(['itop-structure/3.0.0' => [ 'itop-structure',  ">=", '3.0.0'], 'itop-portal/3.2.1' => [ 'itop-portal',  ">=", '3.2.1']], $this->GetNonPublicProperty($oModuleDependency, 'aParamsPerModuleId'));
-		$this->assertTrue($oModuleDependency->IsValid());
-		;
-		$this->assertEquals(['itop-structure', 'itop-portal'], $oModuleDependency->GetRemainingModuleNamesToResolve());
-
-		$oModuleDependency->UpdateModuleResolutionState(['itop-structure' => '3.0.0', 'itop-portal' => '1.0.0'], ['itop-structure' => true, 'itop-portal' => true]);
-		$this->assertEquals(false, $oModuleDependency->IsResolved());
-		$this->assertEquals(['itop-portal'], $oModuleDependency->GetRemainingModuleNamesToResolve());
-	}
-
-	public function testIsDependencyResolved_AndOperand_Resolved()
-	{
-		$sDepId = "itop-structure/3.0.0 && itop-portal/3.2.1";
-		$oModuleDependency = new DependencyExpression($sDepId);
-		$this->assertEquals(['itop-structure/3.0.0' => [ 'itop-structure',  ">=", '3.0.0'], 'itop-portal/3.2.1' => [ 'itop-portal',  ">=", '3.2.1']], $this->GetNonPublicProperty($oModuleDependency, 'aParamsPerModuleId'));
-		$this->assertTrue($oModuleDependency->IsValid());
-		;
-		$this->assertEquals(['itop-structure', 'itop-portal'], $oModuleDependency->GetRemainingModuleNamesToResolve());
-
-		$oModuleDependency->UpdateModuleResolutionState(['itop-structure' => '3.0.0'], ['itop-structure' => true]);
-		$this->assertEquals(false, $oModuleDependency->IsResolved());
-		$this->assertEquals(['itop-portal'], $oModuleDependency->GetRemainingModuleNamesToResolve());
-	}
-
-	public function testIsDependencyResolved_OrOperand_ResolvedDueToMissingModule()
-	{
-		$sDepId = "itop-structure/3.0.0 || itop-portal/3.2.1";
-		$oModuleDependency = new DependencyExpression($sDepId);
-		$this->assertEquals(['itop-structure/3.0.0' => [ 'itop-structure',  ">=", '3.0.0'], 'itop-portal/3.2.1' => [ 'itop-portal',  ">=", '3.2.1']], $this->GetNonPublicProperty($oModuleDependency, 'aParamsPerModuleId'));
-		$this->assertTrue($oModuleDependency->IsValid());
-		;
-		$this->assertEquals(['itop-structure', 'itop-portal'], $oModuleDependency->GetRemainingModuleNamesToResolve());
-
-		$oModuleDependency->UpdateModuleResolutionState(['itop-structure' => '3.0.0'], ['itop-structure' => true]);
-		$this->assertEquals(true, $oModuleDependency->IsResolved());
-		$this->assertEquals(['itop-portal'], $oModuleDependency->GetRemainingModuleNamesToResolve());
+		$oModuleDependency->UpdateModuleResolutionState($aModuleVersions, $aPrerequisites);
+		$this->assertEquals($aRemainingModuleNames, $oModuleDependency->GetRemainingModuleNamesToResolve());
+		$this->assertEquals($bExpectedResolved, $oModuleDependency->IsResolved());
 	}
 }
