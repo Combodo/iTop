@@ -719,6 +719,7 @@ class RunTimeEnvironment
 				$oInstallRec->Set('source', $oExtension->sSource);
 				$oInstallRec->Set('uninstallable', $oExtension->CanBeUninstalled() ? 'yes' : 'no');
 				$oInstallRec->Set('installed', $iInstallationTime);
+				$oInstallRec->Set('description', $oExtension->sDescription);
 				$oInstallRec->DBInsertNoReload();
 			}
 		}
