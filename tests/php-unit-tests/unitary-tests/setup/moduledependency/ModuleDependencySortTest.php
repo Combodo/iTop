@@ -60,8 +60,8 @@ MSG;
 
 		$sExpectedMessage = <<<MSG
 The following modules have unmet dependencies:
-label3 (id: id3/789) depends on: ✅ id2/456 + ❌ id4/666,
-label1 (id: id1/123) depends on: ✅ id2/456 + ❌ id4/666 + ❌ id3/789
+label3 (id: id3/789) depends on: ❌ id4/666,
+label1 (id: id1/123) depends on: ❌ id4/666 + ❌ id3/789
 MSG;
 		$this->expectException(MissingDependencyException::class);
 		$this->expectExceptionMessage($sExpectedMessage);
@@ -359,7 +359,7 @@ MSG;
 			array_keys($aUnresolvedDependencyModules)
 		);
 	}
-	
+
 	private function AddModule(array &$aUnresolvedDependencyModules, string $sModuleId, array $aDeps)
 	{
 		$oModule = new Module($sModuleId);

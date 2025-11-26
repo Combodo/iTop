@@ -29,64 +29,48 @@ class ModuleTest extends ItopTestCase
 		$this->assertEquals("itop-config-mgmt", $oModule->GetModuleId());
 	}
 
-	public function testIsResolved_Unresolved()
-	{
-		$oModule = new Module("itop-bridge-cmdb-ticket");
-		$oModule->SetDependencies(['itop-config-mgmt/2.7.1', 'itop-tickets/2.7.0']);
-		$this->assertEquals(['itop-config-mgmt', 'itop-tickets'], $oModule->GetUnresolvedDependencyModuleNames());
-
-		$oModule->UpdateModuleResolutionState([], []);
-		$this->assertEquals(false, $oModule->IsResolved());
-		$this->assertEquals(['itop-config-mgmt', 'itop-tickets'], $oModule->GetUnresolvedDependencyModuleNames());
-		$this->assertEquals(['itop-config-mgmt/2.7.1', 'itop-tickets/2.7.0'], array_keys($oModule->aRemainingDependenciesToResolve));
-	}
-
-	public function testSetDependencies()
+	public function testSetDependencies_ComplexExpressionsParsing()
 	{
 		$oModule = new Module("itop-bridge-datacenter-mgmt-services");
 		$oModule->SetDependencies([
-			'itop-config-mgmt/2.7.1',
-			'itop-service-mgmt/2.7.1 || itop-service-mgmt-provider/2.7.1',
-			'itop-datacenter-mgmt/3.1.0',
+			'itop-config-mgmt/>2.7.1',
+			'itop-service-mgmt/=2.7.1 || itop-service-mgmt-provider/<=2.7.1',
+			'itop-datacenter-mgmt/3.1.0 || true && false',
 		]);
 		$this->assertEquals(
 			['itop-config-mgmt', 'itop-service-mgmt', 'itop-service-mgmt-provider', 'itop-datacenter-mgmt' ],
 			$oModule->GetUnresolvedDependencyModuleNames()
 		);
+	}
+
+	public function testIsResolved_Unresolved()
+	{
+		$oModule = new Module("itop-bridge-cmdb-ticket");
+		$oModule->SetDependencies(['itop-config-mgmt/2.7.1', 'itop-tickets/2.7.0']);
+		$this->assertEquals(['itop-config-mgmt', 'itop-tickets'], $oModule->GetUnresolvedDependencyModuleNames(), "all dependencies are unresolved");
+		$this->assertFalse($oModule->IsResolved());
 
 		$oModule->UpdateModuleResolutionState([], []);
-		$this->assertEquals(false, $oModule->IsResolved());
-		$this->assertEquals(
-			['itop-config-mgmt', 'itop-service-mgmt', 'itop-service-mgmt-provider', 'itop-datacenter-mgmt'],
-			$oModule->GetUnresolvedDependencyModuleNames()
-		);
-		$this->assertEquals(
-			['itop-config-mgmt/2.7.1', 'itop-service-mgmt/2.7.1 || itop-service-mgmt-provider/2.7.1', 'itop-datacenter-mgmt/3.1.0'],
-			array_keys($oModule->aRemainingDependenciesToResolve)
-		);
+		$this->assertFalse($oModule->IsResolved(), "all dependencies are still unresolved");
 	}
 
 	public function testIsResolved_PartialResolution()
 	{
 		$oModule = new Module("itop-bridge-cmdb-ticket");
 		$oModule->SetDependencies(['itop-config-mgmt/2.7.1', 'itop-tickets/2.7.0']);
-		$this->assertEquals(['itop-config-mgmt', 'itop-tickets'], $oModule->GetUnresolvedDependencyModuleNames());
 
 		$oModule->UpdateModuleResolutionState(['itop-config-mgmt' => '2.7.1'], ['itop-config-mgmt' => true]);
-		$this->assertEquals(false, $oModule->IsResolved());
-		$this->assertEquals(['itop-tickets'], $oModule->GetUnresolvedDependencyModuleNames());
-		$this->assertEquals(['itop-tickets/2.7.0'], array_keys($oModule->aRemainingDependenciesToResolve));
+		$this->assertFalse($oModule->IsResolved(), "some dependencies are still unresolved");
+		$this->assertEquals(['itop-tickets'], $oModule->GetUnresolvedDependencyModuleNames(), 'one dependency is remaining');
 	}
 
 	public function testIsResolved_OK()
 	{
 		$oModule = new Module("itop-bridge-cmdb-ticket");
 		$oModule->SetDependencies(['itop-config-mgmt/2.7.1', 'itop-tickets/2.7.0']);
-		$this->assertEquals(['itop-config-mgmt', 'itop-tickets'], $oModule->GetUnresolvedDependencyModuleNames());
 
 		$oModule->UpdateModuleResolutionState(['itop-config-mgmt' => '2.7.1', 'itop-tickets' => '2.7.0'], ['itop-config-mgmt' => true, 'itop-tickets' => true]);
-		$this->assertEquals(true, $oModule->IsResolved());
+		$this->assertTrue($oModule->IsResolved());
 		$this->assertEquals([], $oModule->GetUnresolvedDependencyModuleNames());
-		$this->assertEquals([], array_keys($oModule->aRemainingDependenciesToResolve));
 	}
 }

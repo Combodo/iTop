@@ -40,9 +40,7 @@ class Module
 		$aDepsWithIcons = [];
 
 		foreach ($this->aInitialDependencyExpressions as $sDependencyExpression) {
-			if ($this->IsDependencyExpressionResolved($sDependencyExpression)) {
-				$aDepsWithIcons[] = '✅ '.$sDependencyExpression;
-			} else {
+			if (! $this->IsDependencyExpressionResolved($sDependencyExpression)) {
 				$aDepsWithIcons[] = '❌ '.$sDependencyExpression;
 			}
 		}

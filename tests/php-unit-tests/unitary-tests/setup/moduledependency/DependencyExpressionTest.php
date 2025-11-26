@@ -5,7 +5,7 @@ namespace Combodo\iTop\Test\UnitTest\Setup;
 use Combodo\iTop\Setup\ModuleDependency\DependencyExpression;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
-class ModuleDependencyTest extends ItopTestCase
+class DependencyExpressionTest extends ItopTestCase
 {
 	public function setUp(): void
 	{
@@ -17,58 +17,78 @@ class ModuleDependencyTest extends ItopTestCase
 	{
 		$oModuleDependency = new DependencyExpression('||');
 		$this->assertFalse($oModuleDependency->IsValid());
-		;
-	}
-
-	public function testModuleDependencyInit()
-	{
-		$oModuleDependency = new DependencyExpression('itop-config-mgmt/2.4.0');
-		$this->assertEquals(['itop-config-mgmt/2.4.0' => [ 'itop-config-mgmt',  '>=', '2.4.0']], $this->GetNonPublicProperty($oModuleDependency, 'aParamsPerModuleId'));
-		$this->assertTrue($oModuleDependency->IsValid());
-		;
-		$this->assertEquals(['itop-config-mgmt'], $oModuleDependency->GetRemainingModuleNamesToResolve());
+		$this->assertFalse($oModuleDependency->IsResolved());
 	}
 
 	public static function WithOperatorProvider()
 	{
-		$aUsecases = [];
-		foreach (['>', '>=', '<', '<='] as $sOperator) {
-			$aUsecases[$sOperator] = [$sOperator];
-		}
-		return $aUsecases;
+		return [
+			"nominal case" => [
+				"dep" => "itop-config-mgmt/2.4.0",
+				'expected_operator' => '>='
+			],
+			">" => [
+				"dep" => "itop-config-mgmt/>2.4.0",
+				'expected_operator' => '>'
+			],
+			">=" => [
+				"dep" => "itop-config-mgmt/>=2.4.0",
+				'expected_operator' => '>='
+			],
+			"<" => [
+				"dep" => "itop-config-mgmt/<2.4.0",
+				'expected_operator' => '<'
+			],
+			"<=" => [
+				"dep" => "itop-config-mgmt/<=2.4.0",
+				'expected_operator' => '<='
+			],
+		];
 	}
 
 	/**
 	 * @dataProvider WithOperatorProvider
 	 */
-	public function testModuleDependencyInit_WithOperator($sOperator)
+	public function testModuleDependencyInit_WithOperator($sDepId, $sExpectedOperator)
 	{
-		$sDepId = "itop-config-mgmt/{$sOperator}2.4.0";
 		$oModuleDependency = new DependencyExpression($sDepId);
-		$this->assertEquals([$sDepId => [ 'itop-config-mgmt',  $sOperator, '2.4.0']], $this->GetNonPublicProperty($oModuleDependency, 'aParamsPerModuleId'));
+		$this->assertEquals([$sDepId => ['itop-config-mgmt', $sExpectedOperator, '2.4.0']], $this->GetNonPublicProperty($oModuleDependency, 'aParamsPerModuleId'));
 		$this->assertTrue($oModuleDependency->IsValid());
+		$this->assertFalse($oModuleDependency->IsResolved());
 		;
 		$this->assertEquals(['itop-config-mgmt'], $oModuleDependency->GetRemainingModuleNamesToResolve());
 	}
 
-	public static function WithOperatorOperand()
+	public static function WithOperatorOperandProvider()
 	{
-		$aUsecases = [];
-		foreach (['&&', '||'] as $sOperand) {
-			$aUsecases[$sOperand] = [$sOperand, "itop-structure/3.0.0 $sOperand itop-portal/<3.2.1"];
-			$aUsecases["$sOperand + parenthesis"] = [$sOperand, "(itop-structure/3.0.0 $sOperand itop-portal/<3.2.1)"];
-		}
-		return $aUsecases;
+		$aInternalStructure= ['itop-structure/3.0.0' => [ 'itop-structure',  ">=", '3.0.0'], 'itop-portal/<3.2.1' => [ 'itop-portal',  "<", '3.2.1']];
+		return [
+			'&&' => [
+				'sDepId' => 'itop-structure/3.0.0 && itop-portal/<3.2.1',
+				'expected_structure' => $aInternalStructure,
+			],
+			'&& with parenthesis' => [
+				'sDepId' => '(itop-structure/3.0.0) && (itop-portal/<3.2.1)',
+				'expected_structure' => $aInternalStructure,
+			],
+			'||' => [
+				'sDepId' => 'itop-structure/3.0.0 || itop-portal/<3.2.1',
+				'expected_structure' => $aInternalStructure,
+			],
+			'|| with parenthesis' => [
+				'sDepId' => '(itop-structure/3.0.0) || (itop-portal/<3.2.1)',
+				'expected_structure' => $aInternalStructure,
+			],
+		];
 	}
 
 	/**
-	 * @dataProvider WithOperatorOperand
+	 * @dataProvider WithOperatorOperandProvider
 	 */
-	public function testModuleDependencyInit_WithOperand($sOperand, $sDepId)
+	public function testModuleDependencyInit_WithOperand($sDepId, $sExpected)
 	{
-		$sDepId = "itop-structure/3.0.0 $sOperand itop-portal/<3.2.1";
 		$oModuleDependency = new DependencyExpression($sDepId);
-		$this->assertEquals(['itop-structure/3.0.0' => [ 'itop-structure',  ">=", '3.0.0'], 'itop-portal/<3.2.1' => [ 'itop-portal',  "<", '3.2.1']], $this->GetNonPublicProperty($oModuleDependency, 'aParamsPerModuleId'));
+		$this->assertEquals($sExpected, $this->GetNonPublicProperty($oModuleDependency, 'aParamsPerModuleId'));
 		$this->assertTrue($oModuleDependency->IsValid());
 		;
 		$this->assertEquals(['itop-structure', 'itop-portal'], $oModuleDependency->GetRemainingModuleNamesToResolve());
