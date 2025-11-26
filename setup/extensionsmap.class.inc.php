@@ -404,8 +404,7 @@ class iTopExtensionsMap
 
 		try {
 			$aAllModules = ModuleDiscovery::GetAvailableModules($aSearchDirs, true);
-		}
-		catch (MissingDependencyException $e) {
+		} catch (MissingDependencyException $e) {
 			// Some modules have missing dependencies
 			// Let's check what is the impact at the "extensions" level
 			foreach ($this->aExtensions as $sKey => $oExtension) {
@@ -507,7 +506,7 @@ class iTopExtensionsMap
 
 		$aInstalledExtensions = $this->GetInstalledExtensionsFromDatabase($oConfig);
 
-		foreach($aInstalledExtensions as $aDBInfo) {
+		foreach ($aInstalledExtensions as $aDBInfo) {
 			$this->MarkAsChosen($aDBInfo['code']);
 			$this->SetInstalledVersion($aDBInfo['code'], $aDBInfo['version']);
 		}
@@ -527,7 +526,6 @@ class iTopExtensionsMap
 			return false;
 		}
 	}
-
 
 	/**
 	 * Tells if the given module name is "chosen" since it is part of a "chosen" extension (in the specified source dir)

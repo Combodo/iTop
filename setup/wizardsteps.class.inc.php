@@ -1310,7 +1310,7 @@ EOF
  */
 class WizStepModulesChoice extends WizardStep
 {
-	static protected string $SEP = '_';
+	protected static string $SEP = '_';
 	protected bool $bUpgrade = false;
 	protected bool $bCanMoveForward = true;
 	protected ?Config $oConfig = null;
@@ -1890,10 +1890,10 @@ EOF
 			}
 			//Listing previously installed extension missing from disk
 			if (!is_null($this->oConfig) && ($aPreviouslyInstalled = $this->oExtensionsMap->GetInstalledExtensionsFromDatabase($this->oConfig))) {
-				foreach($aPreviouslyInstalled as $aExtension) {
+				foreach ($aPreviouslyInstalled as $aExtension) {
 					if (!$this->oExtensionsMap->Get($aExtension['code'])) {
 						$bUninstallable = $aExtension['uninstallable'] === 'yes';
-						$aStepDefinition['options'][] = array(
+						$aStepDefinition['options'][] = [
 							'extension_code' => $aExtension['code'],
 							'title' => $aExtension['label'],
 							'description' => $aExtension['description'] ?? '',
@@ -1904,7 +1904,7 @@ EOF
 							'source_label' => $this->GetExtensionSourceLabel($aExtension['source']),
 							'uninstallable' => $bUninstallable,
 							'missing' => true,
-						);
+						];
 					} else {
 						$this->oExtensionsMap->Get($aExtension['code'])->bInstalled = true;
 					}
@@ -1986,7 +1986,8 @@ EOF
 			$oITopExtension = $this->oExtensionsMap->Get($aChoice['extension_code']);
 			$bCanBeUninstalled = isset($aChoice['uninstallable']) ? $aChoice['uninstallable'] : $oITopExtension->CanBeUninstalled();
 			$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId);
-			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $this->bUpgrade && $bIsDefault && !$bCanBeUninstalled && !$bDisableUninstallCheck;;
+			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $this->bUpgrade && $bIsDefault && !$bCanBeUninstalled && !$bDisableUninstallCheck;
+			;
 			$bMissingFromDisk = isset($aChoice['missing']) && $aChoice['missing'] === true;
 			$bInstalled = $bMissingFromDisk || $oITopExtension->bInstalled;
 			$bDisabled = $bMandatory || $bAllDisabled || $bMissingFromDisk;
@@ -2083,7 +2084,6 @@ EOF
 		$sSourceLabel = $aChoice['source_label'] ?? '';
 		$sId = utils::EscapeHtml($aChoice['extension_code']);
 
-
 		$oPage->add('<label class="setup--wizard-choice--label" for="'.$sId.'">'.$sSourceLabel.'<b>'.utils::EscapeHtml($aChoice['title']).'</b>'.'&nbsp;'.$sTooltip.'</label> '.$sMoreInfo.'');
 		$sDescription = isset($aChoice['description']) ? utils::EscapeHtml($aChoice['description']) : '';
 		$oPage->add('<div class="setup--wizard-choice--description description">'.$sDescription.'<span id="sub_choices'.$sId.'">');
@@ -2109,7 +2109,6 @@ EOF
 
 		return $this->bCanMoveForward ? 'return true;' : 'return false;';
 	}
-
 
 	public function GetNextButtonLabel()
 	{
