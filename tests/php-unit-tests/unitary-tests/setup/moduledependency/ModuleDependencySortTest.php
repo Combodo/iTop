@@ -38,7 +38,7 @@ MSG;
 		$this->expectException(MissingDependencyException::class);
 		$this->expectExceptionMessage($sExpectedMessage);
 
-		ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true, null);
+		ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true);
 	}
 
 	public function testOrderModulesByDependencies_CheckExceptionWhenSomeModuleUnresolved()
@@ -66,7 +66,7 @@ MSG;
 		$this->expectException(MissingDependencyException::class);
 		$this->expectExceptionMessage($sExpectedMessage);
 
-		ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true, null);
+		ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true);
 	}
 
 	public function testOrderModulesByDependencies_CheckExceptionWhenCircularDependencies()
@@ -100,7 +100,7 @@ MSG;
 		$this->expectException(MissingDependencyException::class);
 		$this->expectExceptionMessage($sExpectedMessage);
 
-		ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true, null);
+		ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true);
 	}
 
 	public function testOrderModulesByDependencies_KeepGoingEvenWithFailure()
@@ -120,7 +120,7 @@ MSG;
 			],
 		];
 
-		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, false, null);
+		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, false);
 
 		$aExpected = [
 			'id2/456',
@@ -162,7 +162,7 @@ MSG;
 			"id1/1",
 		];
 
-		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true, null);
+		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true);
 
 		$this->assertEquals($aExpected, array_keys($aResult));
 	}
@@ -191,7 +191,7 @@ MSG;
 			"id0/1",
 		];
 
-		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true, null);
+		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true);
 
 		$this->assertEquals($aExpected, array_keys($aResult));
 	}
@@ -230,7 +230,7 @@ MSG;
 			"id4/4",
 		];
 
-		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true, null);
+		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true);
 
 		$this->assertEquals($aExpected, array_keys($aResult));
 	}
@@ -258,7 +258,7 @@ MSG;
 			"id3/3",
 		];
 
-		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true, null);
+		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true);
 
 		$this->assertEquals($aExpected, array_keys($aResult));
 	}
@@ -286,66 +286,18 @@ MSG;
 			"z_id2/2",
 		];
 
-		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true, null);
+		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true);
 
 		$this->assertEquals($aExpected, array_keys($aResult));
 	}
-
-	public static function FilterModulesBasedOnChoicesProvider()
-	{
-		return [
-			'itil choice' => [ 'choices' => ['id1', 'id2', "id3-itil"],
-						'expected' => [
-							"id3-itil/3",
-							"id2/2",
-							"id1/1",
-						],
-			],
-			'choice' => [ 'choices' => ['id1', 'id2', "id3"],
-						  'expected' => [
-							  "id3/3",
-							  "id2/2",
-							  "id1/1",
-						  ],
-			],
-		];
-	}
-
-	/**
-	 * @dataProvider FilterModulesBasedOnChoicesProvider
-	 */
-	public function testOrderModulesByDependencies_FilterModulesBasedOnChoices($aChoices, $aExpected)
-	{
-		$aModules = [
-			"id1/1" => [
-				'dependencies' => [ 'id2/2'],
-				'label' => 'label1',
-			],
-			"id2/2" => [
-				'dependencies' => ['id3/3 || id3-itil/3'],
-				'label' => 'label2',
-			],
-			"id3/3" => [
-				'dependencies' => [],
-				'label' => 'label3',
-			],
-			"id3-itil/3" => [
-				'dependencies' => [],
-				'label' => 'label3-itil',
-			],
-		];
-
-		$aResult = ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, true, $aChoices);
-
-		$this->assertEquals($aExpected, array_keys($aResult));
-	}
-
+	
 	public function testSortModulesByCountOfDepencenciesDescending_NoDependencies()
 	{
 		$aUnresolvedDependencyModules = [];
-		foreach (['c', 'b', 'a'] as $sModuleId) {
-			$this->AddModule($aUnresolvedDependencyModules, $sModuleId, []);
-		}
+		$this->AddModule($aUnresolvedDependencyModules, 'c', []);
+		$this->AddModule($aUnresolvedDependencyModules, 'b', []);
+		$this->AddModule($aUnresolvedDependencyModules, 'a', []);
+
 		$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
 		$this->assertEquals(['a', 'b', 'c'], array_keys($aUnresolvedDependencyModules));
 	}

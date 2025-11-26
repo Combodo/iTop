@@ -35,23 +35,20 @@ class ModuleDependencySort
 	 * Sort a list of modules, based on their (inter) dependencies
 	 * @param array $aModules The list of modules to process: 'id' => $aModuleInfo
 	 * @param bool $bAbortOnMissingDependency ...
-	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
 	 * @return array
 	 * @throws \MissingDependencyException
 	 */
-	public function GetModulesOrderedForInstallation($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
+	public function GetModulesOrderedForInstallation($aModules, $bAbortOnMissingDependency = false)
 	{
 		// Filter modules to compute
 		$aUnresolvedDependencyModules = [];
-		$aSelectedModules = [];
+		$aModuleNames = [];
 		foreach ($aModules as $sModuleId => $aModule) {
 			$oModule = new Module($sModuleId);
 			$sModuleName = $oModule->GetModuleName();
-			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad)) {
-				$oModule->SetDependencies($aModule['dependencies']);
-				$aUnresolvedDependencyModules[$sModuleId] = $oModule;
-				$aSelectedModules[$sModuleName] = true;
-			}
+			$oModule->SetDependencies($aModule['dependencies']);
+			$aUnresolvedDependencyModules[$sModuleId] = $oModule;
+			$aModuleNames[$sModuleName] = true;
 		}
 
 		// Make sure order is deterministic (alphabtical order)
@@ -70,7 +67,7 @@ class ModuleDependencySort
 
 			foreach ($aUnresolvedDependencyModules as $sModuleId => $oModule) {
 				/** @var Module $oModule */
-				$oModule->UpdateModuleResolutionState($aModuleVersions, $aSelectedModules);
+				$oModule->UpdateModuleResolutionState($aModuleVersions, $aModuleNames);
 				if ($oModule->IsResolved()) {
 					$aOrderedModules[] = $sModuleId;
 					$aModuleVersions[$oModule->GetModuleName()] = $oModule->GetVersion();

@@ -21,6 +21,7 @@
  */
 
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
+use Combodo\iTop\Setup\ModuleDependency\Module;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
@@ -217,7 +218,20 @@ class ModuleDiscovery
 	*/
 	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
-		return ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aModules, $bAbortOnMissingDependency, $aModulesToLoad);
+		if (is_null($aModulesToLoad)) {
+			$aFilteredModules = $aModules;
+		} else {
+			$aFilteredModules = [];
+			foreach ($aModules as $sModuleId => $aModule) {
+				$oModule = new Module($sModuleId);
+				$sModuleName = $oModule->GetModuleName();
+				if (in_array($sModuleName, $aModulesToLoad)) {
+					$aFilteredModules[$sModuleId] = $aModule;
+				}
+			}
+		}
+
+		return ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aFilteredModules, $bAbortOnMissingDependency);
 	}
 
 	private static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
