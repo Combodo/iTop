@@ -33,6 +33,8 @@ class OqlToClassConverter extends AbstractConverter
 		$oModelReflection = DIService::GetInstance()->GetService('ModelReflection');
 		try {
 			$oQuery = $oModelReflection->GetQuery($oData);
+		} catch (\OQLParserException $e) {
+			throw new FormBlockIOException($e->GetIssue(), $e->getCode(), $e);
 		} catch (Exception $e) {
 			throw new FormBlockIOException($e->getMessage(), $e->getCode(), $e);
 		}
