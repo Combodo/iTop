@@ -47,11 +47,9 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 		$oInput = $this->GetInput(self::INPUT_VISIBLE);
 		if (!$oInput->IsBound()) {
 			return true;
-		}
-		else if (!$oInput->HasEventValue($sEventType)) {
+		} elseif (!$oInput->HasEventValue($sEventType)) {
 			return false;
-		}
-		else{
+		} else {
 			return $oInput->GetValue($sEventType)->IsTrue();
 		}
 	}

@@ -74,11 +74,10 @@ class CollectionBlock extends AbstractTypeFormBlock
 		$sBlockEntryOptions = $this->GetOption('block_entry_options');
 		$this->oPrototypeBlock = new ($sBlockEntryType)('prototype', $sBlockEntryOptions);
 
-		try{
+		try {
 			$oOptionsRegister->SetOption('entry_type', $this->oPrototypeBlock->GetFormType());
 			$oOptionsRegister->SetOption('entry_options', $this->oPrototypeBlock->GetOptions());
-		}
-		catch(RegisterException $e){
+		} catch (RegisterException $e) {
 
 		}
 
