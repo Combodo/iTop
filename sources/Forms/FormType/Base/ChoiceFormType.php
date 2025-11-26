@@ -36,6 +36,8 @@ class ChoiceFormType extends AbstractType
 
 		// options to control the inline display of choices
 		$resolver->setDefault('inline_display', true);
+		$resolver->setDefined('max_items_selected');
+		$resolver->setDefault('disable_auto_complete', true);
 	}
 
 	/** @inheritdoc */
@@ -45,6 +47,8 @@ class ChoiceFormType extends AbstractType
 
 		// pass options to the view
 		$view->vars['inline_display'] = $options['inline_display'];
+		$view->vars['max_items_selected'] = $options['max_items_selected'];
+		$view->vars['disable_auto_complete'] = $options['disable_auto_complete'];
 	}
 
 	/** @inheritdoc  */

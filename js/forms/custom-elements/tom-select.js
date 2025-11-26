@@ -1,7 +1,7 @@
 class TomSelectElement extends HTMLSelectElement {
 	plugins = [];
 	connectedCallback() {
-		if (this.getAttribute('data-tom-select-multiple')) {
+		if (this.getAttribute('multiple')) {
 			this.plugins.push('remove_button');
 		}
 
@@ -16,7 +16,7 @@ class TomSelectElement extends HTMLSelectElement {
 			}
 		};
 
-		if (this.getAttribute('data-tom-select-disable-control-input')) {
+		if (this.getAttribute('data-tom-select-disable-auto-complete')) {
 			options.controlInput = null;
 		}
 		if (this.getAttribute('data-tom-select-max-items-selected')) {
