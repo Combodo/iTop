@@ -14,8 +14,10 @@ use Combodo\iTop\Forms\Block\Base\TextFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\Forms;
 use Combodo\iTop\Forms\IFormBlock;
+use Combodo\iTop\Forms\IO\Format\StringIOFormat;
+use Combodo\iTop\Forms\Register\RegisterException;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
-use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Combodo\iTop\Test\UnitTest\sources\Forms\AbstractFormsTest;
 use OutOfBoundsException;
 use ReflectionException;
 use Symfony\Component\Form\AbstractType;
@@ -25,7 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  * Test forms block.
  *
  */
-class BlockTest extends ItopDataTestCase
+class BlockTest extends AbstractFormsTest
 {
 	/**
 	 * Block get form type must return a class derived from Symfony form AbstractType.
@@ -109,5 +111,58 @@ class BlockTest extends ItopDataTestCase
 		// try to get the dependent field
 		$this->expectException(OutOfBoundsException::class);
 		$oForm->get('birthdate');
+	}
+
+	public function testAddingTwiceTheSameInputThrowsException(): void
+	{
+		$oFormBlock = $this->GivenFormBlock('OneBlock')
+			->AddInput('test_input', StringIOFormat::class);
+
+		$this->expectException(RegisterException::class);
+		$oFormBlock->AddInput('test_input', StringIOFormat::class);
+	}
+
+	public function testAddingTwiceTheSameOutputThrowsException(): void
+	{
+		$oFormBlock = $this->GivenFormBlock('OneBlock')
+			->AddOutput('test_output', StringIOFormat::class);
+
+		$this->expectException(RegisterException::class);
+		$oFormBlock->AddOutput('test_output', StringIOFormat::class);
+	}
+
+	public function testDependingOnNonExistingInputThrowsException(): void
+	{
+		$oParentBlock = $this->GivenFormBlock('ParentBlock');
+
+		$oFormBlock = $this->GivenSubFormBlock($oParentBlock, 'OneBlock')
+			->AddInput('test_input', StringIOFormat::class);
+
+		$this->GivenSubFormBlock($oParentBlock, 'OtherBlock')
+			->AddOutput('test_output', StringIOFormat::class);
+
+		$this->expectException(RegisterException::class);
+		$oFormBlock->DependsOn('non_existing_input', 'OtherBlock', 'test_output');
+	}
+
+	public function testDependingOnNonExistingOutputThrowsException(): void
+	{
+		$oParentBlock = $this->GivenFormBlock('ParentBlock');
+		$oFormBlock = $this->GivenSubFormBlock($oParentBlock, 'OneBlock')
+			->AddInput('test_input', StringIOFormat::class);
+		$this->GivenSubFormBlock($oParentBlock, 'OtherBlock')
+			->AddOutput('test_output', StringIOFormat::class);
+
+		$this->expectException(RegisterException::class);
+		$oFormBlock->DependsOn('test_input', 'OtherBlock', 'non_existing_output');
+	}
+
+	public function testDependingOnNonExistingBlockThrowsException(): void
+	{
+		$oFormBlock = $this->GivenFormBlock('OneBlock')
+			->AddOutput('test_output', StringIOFormat::class);
+
+		$this->expectException(RegisterException::class);
+		$oFormBlock->DependsOn('test_input', 'UnknownBlock', 'test');
 	}
 }
