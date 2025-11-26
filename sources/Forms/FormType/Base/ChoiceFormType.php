@@ -36,7 +36,7 @@ class ChoiceFormType extends AbstractType
 
 		// options to control the inline display of choices
 		$resolver->setDefault('inline_display', true);
-		$resolver->setDefined('max_items_selected');
+		$resolver->setDefault('max_items_selected', '');
 		$resolver->setDefault('disable_auto_complete', true);
 	}
 
