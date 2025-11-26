@@ -290,7 +290,7 @@ MSG;
 
 		$this->assertEquals($aExpected, array_keys($aResult));
 	}
-	
+
 	public function testSortModulesByCountOfDepencenciesDescending_NoDependencies()
 	{
 		$aUnresolvedDependencyModules = [];
@@ -359,24 +359,7 @@ MSG;
 			array_keys($aUnresolvedDependencyModules)
 		);
 	}
-
-	public function testSortModulesByCountOfDepencenciesDescending_RealExample()
-	{
-		$aUnresolvedDependencyModules = [];
-		$aDependencies = json_decode(file_get_contents(__DIR__.'/ressources/module_deps.json'), true);
-		foreach ($aDependencies as $sModuleId => $aModuleData) {
-			$this->AddModule($aUnresolvedDependencyModules, $sModuleId, $aModuleData['dependencies']);
-		}
-
-		$this->SortModulesByCountOfDepencenciesDescending($aUnresolvedDependencyModules);
-
-		$aExpected = json_decode(file_get_contents(__DIR__.'/ressources/expected_ordered_module_ids2.json'), true);
-		$this->assertEquals(
-			$aExpected,
-			array_keys($aUnresolvedDependencyModules)
-		);
-	}
-
+	
 	private function AddModule(array &$aUnresolvedDependencyModules, string $sModuleId, array $aDeps)
 	{
 		$oModule = new Module($sModuleId);

@@ -15,13 +15,13 @@ class ModuleDiscoveryTest extends ItopTestCase
 		$this->RequireOnceItopFile('setup/modulediscovery.class.inc.php');
 	}
 
-	public function testOrderModulesByDependenciesNewComputation_RealExample()
+	public function testOrderModulesByDependencies_RealExample()
 	{
-		$aModules = json_decode(file_get_contents(__DIR__.'/ressources/module_deps.json'), true);
+		$aModules = json_decode(file_get_contents(__DIR__.'/ressources/reallife_discovered_modules.json'), true);
 
 		$aResult = ModuleDiscovery::OrderModulesByDependencies($aModules, true);
 
-		$aExpected = json_decode(file_get_contents(__DIR__.'/ressources/expected_ordered_module_ids.json'), true);
+		$aExpected = json_decode(file_get_contents(__DIR__.'/ressources/reallife_expected_ordered_modules.json'), true);
 		$this->assertEquals($aExpected, array_keys($aResult));
 	}
 
