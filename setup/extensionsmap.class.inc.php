@@ -522,8 +522,7 @@ class iTopExtensionsMap
 			}
 			$sLatestInstallationDate = CMDBSource::QueryToScalar("SELECT max(installed) FROM ".$oConfig->Get('db_subname')."priv_extension_install");
 			return CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_extension_install WHERE installed = '".$sLatestInstallationDate."'");
-		}
-		catch (MySQLException $e) {
+		} catch (MySQLException $e) {
 			// No database or erroneous information
 			return false;
 		}

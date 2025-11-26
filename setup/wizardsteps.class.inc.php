@@ -1446,8 +1446,7 @@ class WizStepModulesChoice extends WizardStep
 			if (substr($sBannerPath, 0, 1) == '/') {
 				// absolute path, means relative to APPROOT
 				$sBannerUrl = utils::GetDefaultUrlAppRoot(true).$sBannerPath;
-			}
-			else {
+			} else {
 				// relative path: i.e. relative to the directory containing the XML file
 				$sFullPath = dirname($this->GetSourceFilePath()).'/'.$sBannerPath;
 				$sRealPath = realpath($sFullPath);
@@ -1906,8 +1905,7 @@ EOF
 							'uninstallable' => $bUninstallable,
 							'missing' => true,
 						);
-					}
-					else {
+					} else {
 						$this->oExtensionsMap->Get($aExtension['code'])->bInstalled = true;
 					}
 				}
@@ -2002,8 +2000,7 @@ EOF
 			if ($bInstalled) {
 				$sTooltip .= '<span class="setup-extension-tag checked installed">installed</span>';
 				$sTooltip .= '<span class="setup-extension-tag unchecked tobeuninstalled">to be uninstalled</span>';
-			}
-			else {
+			} else {
 				$sTooltip .= '<span class="setup-extension-tag checked tobeinstalled">to be installed</span>';
 				$sTooltip .= '<span class="setup-extension-tag unchecked notinstalled">not installed</span>';
 			}
@@ -2118,7 +2115,7 @@ EOF
 	{
 		return $this->bCanMoveForward ? 'Next' : 'Non-uninstallatble extension missing';
 	}
-	
+
 }
 
 /**
