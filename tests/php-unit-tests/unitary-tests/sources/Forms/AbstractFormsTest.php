@@ -35,22 +35,15 @@ abstract class AbstractFormsTest extends ItopDataTestCase
 		return new FormOutput($sName.'_output', $sType, $oBlock);
 	}
 
-	public function GivenFormBlock(string $sName, array $aOptions = [], array $aIOs = []): AbstractFormBlock
+	public function GivenFormBlock(string $sName, string $sBlockClass = FormBlock::class): AbstractFormBlock
 	{
-		$oBlock = new FormBlock($sName, $aOptions);
+		return new $sBlockClass($sName, []);
+	}
 
-		foreach ($aIOs as $aIO) {
-			if ($aIO['io_type'] === FormInput::class) {
-				$oBlock->AddInput($aIO['name'], $aIO['data_type']);
-			} else {
-				if (isset($aIO['converter_class'])) {
-					$oBlock->AddOutput($aIO['name'], $aIO['data_type'], new $aIO['converter_class']());
-				} else {
-					$oBlock->AddOutput($aIO['name'], $aIO['data_type']);
-				}
-			}
-		}
+	public function GivenSubFormBlock(AbstractFormBlock $oParent, string $sName, string $ssBlockClass = FormBlock::class): AbstractFormBlock
+	{
+		$oParent->Add($sName, $ssBlockClass, []);
 
-		return $oBlock;
+		return $oParent->Get($sName);
 	}
 }

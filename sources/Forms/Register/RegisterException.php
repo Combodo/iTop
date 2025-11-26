@@ -7,13 +7,8 @@
 
 namespace Combodo\iTop\Forms\Register;
 
-use Exception;
-use Throwable;
+use Combodo\iTop\Forms\FormsException;
 
-class RegisterException extends Exception
+class RegisterException extends FormsException
 {
-	public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null, array $aContext = [])
-	{
-		parent::__construct($message, $code, $previous);
-	}
 }

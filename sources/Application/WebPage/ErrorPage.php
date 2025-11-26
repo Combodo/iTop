@@ -60,7 +60,7 @@ class ErrorPage extends NiceWebPage
 			$this->add('<div class="message message-valid">'.nl2br(Dict::S('UI:ErrorPage:KittyDisclaimer')).'</div>');
 		}
 		if (!is_null($oException)) {
-			$this->log_exception($sText, $oException);
+			$this->log_exception($oException->getMessage(), $oException);
 			return;
 		}
 		$this->log_error($sText);

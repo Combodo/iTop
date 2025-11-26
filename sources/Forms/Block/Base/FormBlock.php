@@ -110,9 +110,8 @@ class FormBlock extends AbstractTypeFormBlock
 	 */
 	private function VerifyBlockClassName(string $sBlockClass): void
 	{
-		$oRef = new ReflectionClass($sBlockClass);
-		if ($oRef->isSubclassOf(AbstractFormBlock::class) === false) {
-			throw new FormBlockException("The block type '$sBlockClass' is not a subclass of AbstractFormBlock.");
+		if (!is_a($sBlockClass, AbstractFormBlock::class, true)) {
+			throw new FormBlockException('The block type '.json_encode($sBlockClass).' is not a subclass of AbstractFormBlock.');
 		}
 	}
 
@@ -132,9 +131,13 @@ class FormBlock extends AbstractTypeFormBlock
 	 * @param string $sName name of the block
 	 *
 	 * @return AbstractFormBlock
+	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
 	 */
 	public function Get(string $sName): AbstractFormBlock
 	{
+		if (!array_key_exists($sName, $this->aChildrenBlocks)) {
+			throw new FormBlockException('Block does not exist '.json_encode($sName));
+		}
 		return $this->aChildrenBlocks[$sName];
 	}
 
