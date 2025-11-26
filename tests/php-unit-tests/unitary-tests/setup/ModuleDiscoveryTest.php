@@ -25,7 +25,6 @@ class ModuleDiscoveryTest extends ItopTestCase
 		$this->assertEquals($aExpected, array_keys($aResult));
 	}
 
-
 	public function testOrderModulesByDependencies_LoadOnlyChoosenModules()
 	{
 		$aChoices = ['id1', 'id2'];
