@@ -34,7 +34,7 @@ class OqlFormBlock extends TextAreaFormBlock
 	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
 		parent::RegisterOptions($oOptionsRegister);
-		$oOptionsRegister->SetOption('with_ai_button', true);
+		$oOptionsRegister->SetOption('with_ai_button', false);
 	}
 
 	/** @inheritdoc */

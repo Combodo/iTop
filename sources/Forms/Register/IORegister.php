@@ -121,6 +121,14 @@ class IORegister
 		return $this;
 	}
 
+	/**
+	 * @param string $sName
+	 * @param string $sType
+	 * @param AbstractConverter|null $oConverter
+	 *
+	 * @return void
+	 * @throws RegisterException
+	 */
 	public function AddOutput(string $sName, string $sType, AbstractConverter $oConverter = null): void
 	{
 		$oFormOutput = new FormOutput($sName, $sType, $this->oFormBlock, $oConverter);

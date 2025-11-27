@@ -49,7 +49,7 @@ abstract class AbstractFormsTest extends ItopDataTestCase
 		return $oParent->Get($sName);
 	}
 
-	public function GetIORegister(AbstractFormBlock $oFormBlock): IORegister
+	public function GivenIORegister(AbstractFormBlock $oFormBlock): IORegister
 	{
 		$reflection = new ReflectionClass(AbstractFormBlock::class);
 		$reflection_property = $reflection->getProperty('oIORegister');

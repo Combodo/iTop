@@ -110,14 +110,20 @@
 
 {%- block oql_form_widget -%}
     <textarea is="oql-element" {{ block('widget_attributes') }}>{{ value }}</textarea>
+{%- endblock oql_form_widget -%}
+
+{%- block oql_form_row -%}
+    {{- form_row(form) -}}
+    <div style="text-align: right">
     {% if with_ai_button is defined and with_ai_button %}
-    <button class="ibo-button ibo-button ibo-block  ibo-is-primary ibo-is-neutral " data-role="ibo-button" type="button" name="AI" value="" aria-label="AI">
-        <span class="ibo-button--icon fas fa-magic"></span>
-        Use AI assistant
-    </button>
+        <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" type="button" name="AI" value="" aria-label="AI">
+            <span class="ibo-button--icon fas fa-magic"></span>
+            Use AI assistant
+        </button>
     {% endif %}
-    <button class="ibo-button ibo-button ibo-block  ibo-is-primary ibo-is-neutral " data-role="ibo-button" type="button" name="Book" value="" aria-label="AI">
+        <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" type="button" name="Book" value="" aria-label="AI">
         <span class="ibo-button--icon fas fa-book"></span>
         Open query phrase book
     </button>
-{%- endblock oql_form_widget -%}
+    </div>
+{%- endblock oql_form_row -%}
