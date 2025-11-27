@@ -72,9 +72,6 @@
       <file>../../core/apc-emulation.php</file>
       <file>../../core/ormlinkset.class.inc.php</file>
       <file>../../datamodels/2.x/itop-tickets/main.itop-tickets.php</file>
-<!--      <file>../../sources/Forms/Block/AbstractTypeFormBlock.php</file>-->
-<!--      <file>../../sources/Forms/Block/AbstractFormBlock.php</file>-->
-<!--      <file>../../sources/Forms/Block/Base/FormBlock.php</file>-->
       <directory>../../sources/Forms/</directory>
     </whitelist>
   </filter>
