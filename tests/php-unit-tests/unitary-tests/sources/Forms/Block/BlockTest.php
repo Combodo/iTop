@@ -14,8 +14,6 @@ use Combodo\iTop\Forms\Block\Base\TextFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\Forms;
 use Combodo\iTop\Forms\IFormBlock;
-use Combodo\iTop\Forms\IO\Format\StringIOFormat;
-use Combodo\iTop\Forms\Register\RegisterException;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Test\UnitTest\sources\Forms\AbstractFormsTest;
 use OutOfBoundsException;

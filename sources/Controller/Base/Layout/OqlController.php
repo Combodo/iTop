@@ -17,7 +17,6 @@ class OqlController extends AbstractController
 {
 	public const ROUTE_NAMESPACE = 'oql';
 
-
 	public function OperationValidateQuery()
 	{
 		$oPage = new JsonPage();
@@ -26,12 +25,11 @@ class OqlController extends AbstractController
 		$data = json_decode(file_get_contents('php://input'), true);
 		$sOql = $data['query'];
 
-		try{
+		try {
 			/** @var ModelReflection $oModelReflection */
 			$oModelReflexion = new ModelReflectionRuntime();
 			$oModelReflexion->GetQuery($sOql);
-		}
-		catch(Exception $e){
+		} catch (Exception $e) {
 
 		}
 

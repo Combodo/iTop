@@ -873,6 +873,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Forms\\Block\\Base\\TextFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/TextFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\DataModel\\AttributeChoiceFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/DataModel/AttributeChoiceFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\DataModel\\AttributeValueChoiceFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/DataModel/AttributeValueChoiceFormBlock.php',
+        'Combodo\\iTop\\Forms\\Block\\DataModel\\LabelFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/DataModel/LabelFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\DataModel\\OqlFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/DataModel/OqlFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Expression\\AbstractExpressionFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Expression/AbstractExpressionFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Expression\\BooleanExpressionFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Expression/BooleanExpressionFormBlock.php',
@@ -4051,7 +4052,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'privUITransactionFile' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'privUITransactionSession' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'utils' => __DIR__ . '/../..' . '/application/utils.inc.php',
-        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

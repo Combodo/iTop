@@ -111,7 +111,7 @@ class FormBlock extends AbstractTypeFormBlock
 	private function VerifyBlockClassName(string $sBlockClass): void
 	{
 		if (!is_a($sBlockClass, AbstractFormBlock::class, true)) {
-			throw new FormBlockException('The block type '.json_encode($sBlockClass).' is not a subclass of AbstractFormBlock.');
+			throw new FormBlockException('The block type '.json_encode($sBlockClass).' is not a subclass of '.json_encode(AbstractFormBlock::class));
 		}
 	}
 

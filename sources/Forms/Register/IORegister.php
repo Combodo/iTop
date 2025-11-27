@@ -125,7 +125,7 @@ class IORegister
 	{
 		$oFormOutput = new FormOutput($sName, $sType, $this->oFormBlock, $oConverter);
 		if (array_key_exists($oFormOutput->GetName(), $this->aOutputs)) {
-			throw new RegisterException('Output already exists '.json_encode($oFormOutput->GetName()).' for '.json_encode($this->oFormBlock->GetName()) . ' in block ' . FormBlockHelper::GetFormId($this->oFormBlock) . ' of class ' . get_class($this->oFormBlock));
+			throw new RegisterException('Output already exists '.json_encode($oFormOutput->GetName()).' for '.json_encode($this->oFormBlock->GetName()).' in block '.FormBlockHelper::GetFormId($this->oFormBlock).' of class '.get_class($this->oFormBlock));
 		}
 		$this->aOutputs[$oFormOutput->GetName()] = $oFormOutput;
 	}

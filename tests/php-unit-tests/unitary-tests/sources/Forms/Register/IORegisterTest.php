@@ -18,7 +18,6 @@ use Combodo\iTop\Test\UnitTest\sources\Forms\AbstractFormsTest;
 
 class IORegisterTest extends AbstractFormsTest
 {
-
 	private FormBlock $oFormBlock;
 	private IORegister $oIORegister;
 

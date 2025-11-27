@@ -492,6 +492,7 @@ return array(
     'Combodo\\iTop\\Forms\\Block\\Base\\TextFormBlock' => $baseDir . '/sources/Forms/Block/Base/TextFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\DataModel\\AttributeChoiceFormBlock' => $baseDir . '/sources/Forms/Block/DataModel/AttributeChoiceFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\DataModel\\AttributeValueChoiceFormBlock' => $baseDir . '/sources/Forms/Block/DataModel/AttributeValueChoiceFormBlock.php',
+    'Combodo\\iTop\\Forms\\Block\\DataModel\\LabelFormBlock' => $baseDir . '/sources/Forms/Block/DataModel/LabelFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\DataModel\\OqlFormBlock' => $baseDir . '/sources/Forms/Block/DataModel/OqlFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Expression\\AbstractExpressionFormBlock' => $baseDir . '/sources/Forms/Block/Expression/AbstractExpressionFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Expression\\BooleanExpressionFormBlock' => $baseDir . '/sources/Forms/Block/Expression/BooleanExpressionFormBlock.php',
@@ -3670,5 +3671,5 @@ return array(
     'privUITransactionFile' => $baseDir . '/application/transaction.class.inc.php',
     'privUITransactionSession' => $baseDir . '/application/transaction.class.inc.php',
     'utils' => $baseDir . '/application/utils.inc.php',
-    'ï¿½' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
+    '©' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
 );
