@@ -51,6 +51,9 @@
     <testsuite name="Webservices">
       <directory>unitary-tests/webservices</directory>
     </testsuite>
+    <testsuite name="Forms">
+      <directory>unitary-tests/sources/Forms</directory>
+    </testsuite>
 
     <testsuite name="Extensions">
       <directory>../../env-production/*/test</directory>
