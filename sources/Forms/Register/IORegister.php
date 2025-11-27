@@ -8,8 +8,12 @@
 namespace Combodo\iTop\Forms\Register;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
+use Combodo\iTop\Forms\Block\FormBlockHelper;
+use Combodo\iTop\Forms\FormType\FormTypeHelper;
 use Combodo\iTop\Forms\IO\Converter\AbstractConverter;
+use Combodo\iTop\Forms\IO\FormBlockIOException;
 use Combodo\iTop\Forms\IO\FormInput;
 use Combodo\iTop\Forms\IO\FormOutput;
 
@@ -25,7 +29,7 @@ class IORegister
 	private array $aOutputs = [];
 
 	/**
-	 * @param \Combodo\iTop\Forms\Block\AbstractFormBlock $oFormBlock
+	 * @param AbstractFormBlock $oFormBlock
 	 */
 	public function __construct(private readonly AbstractFormBlock $oFormBlock)
 	{
@@ -35,16 +39,18 @@ class IORegister
 	 * @param string $sName
 	 * @param string $sType
 	 *
-	 * @return void
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
+	 * @return $this
+	 * @throws FormBlockIOException
 	 */
-	public function AddInput(string $sName, string $sType): void
+	public function AddInput(string $sName, string $sType): self
 	{
 		$oFormInput = new FormInput($sName, $sType, $this->oFormBlock);
 		if (array_key_exists($oFormInput->GetName(), $this->aInputs)) {
 			throw new RegisterException('Input already exists '.json_encode($oFormInput->GetName()).' for '.json_encode($this->oFormBlock->GetName()));
 		}
 		$this->aInputs[$oFormInput->GetName()] = $oFormInput;
+
+		return $this;
 	}
 
 	/**
@@ -55,9 +61,9 @@ class IORegister
 	 * @param string $sOutputName
 	 *
 	 * @return $this
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws FormBlockException
+	 * @throws FormBlockIOException
+	 * @throws RegisterException
 	 */
 	public function AddInputDependsOn(string $sName, string $sOutputBlockName, string $sOutputName): self
 	{
@@ -78,9 +84,9 @@ class IORegister
 	 * @param string $sOutputName the dependency output name
 	 *
 	 * @return $this
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws FormBlockException
+	 * @throws FormBlockIOException
+	 * @throws RegisterException
 	 */
 	public function DependsOn(string $sInputName, string $sOutputBlockName, string $sOutputName): self
 	{
@@ -102,9 +108,9 @@ class IORegister
 	 * @param string $sParentOutputName parent output name
 	 *
 	 * @return $this
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws FormBlockException
+	 * @throws FormBlockIOException
+	 * @throws RegisterException
 	 */
 	public function ImpactParent(string $sOutputName, string $sParentOutputName): self
 	{
@@ -119,7 +125,7 @@ class IORegister
 	{
 		$oFormOutput = new FormOutput($sName, $sType, $this->oFormBlock, $oConverter);
 		if (array_key_exists($oFormOutput->GetName(), $this->aOutputs)) {
-			throw new RegisterException('Output already exists '.json_encode($oFormOutput->GetName()).' for '.json_encode($this->oFormBlock->GetName()));
+			throw new RegisterException('Output already exists '.json_encode($oFormOutput->GetName()).' for '.json_encode($this->oFormBlock->GetName()) . ' in block ' . FormBlockHelper::GetFormId($this->oFormBlock) . ' of class ' . get_class($this->oFormBlock));
 		}
 		$this->aOutputs[$oFormOutput->GetName()] = $oFormOutput;
 	}
@@ -130,15 +136,27 @@ class IORegister
 	 * @param string $sName
 	 *
 	 * @return FormInput
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws RegisterException
 	 */
 	public function GetInput(string $sName): FormInput
 	{
-		if (!array_key_exists($sName, $this->aInputs)) {
+		if (!$this->HasInput($sName)) {
 			throw new RegisterException('Missing input '.json_encode($sName).' for '.json_encode($this->oFormBlock->GetName()));
 		}
 
 		return $this->aInputs[$sName];
+	}
+
+	/**
+	 * Test input existence.
+	 *
+	 * @param string $sName
+	 *
+	 * @return bool
+	 */
+	public function HasInput(string $sName): bool
+	{
+		return array_key_exists($sName, $this->aInputs);
 	}
 
 	/**
@@ -189,7 +207,7 @@ class IORegister
 	 * @param string $sName output name
 	 *
 	 * @return FormOutput
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws RegisterException
 	 */
 	public function GetOutput(string $sName): FormOutput
 	{
@@ -326,9 +344,9 @@ class IORegister
 	 * @param string $sParentInputName parent input name
 	 *
 	 * @return $this
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws FormBlockException
+	 * @throws FormBlockIOException
+	 * @throws RegisterException
 	 */
 	public function DependsOnParent(string $sInputName, string $sParentInputName): self
 	{

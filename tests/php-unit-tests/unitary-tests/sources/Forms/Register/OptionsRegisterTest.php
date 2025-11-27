@@ -30,6 +30,14 @@ class OptionsRegisterTest extends ItopDataTestCase
 		$this->oOptionsRegister->SetOption('not valid option name', 'value');
 	}
 
+	public function testSetOptionTwice(): void
+	{
+		$this->oOptionsRegister->SetOption('valid_option_name', 'value');
+		$this->oOptionsRegister->SetOption('valid_option_name', 'value2');
+
+		$this->assertEquals('value2', $this->oOptionsRegister->GetOption('valid_option_name'));
+	}
+
 	public function testSetNonTypeOption(): void
 	{
 		$this->oOptionsRegister->SetOption('not_a_type_option', 'value', false);

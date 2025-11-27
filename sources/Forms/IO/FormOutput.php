@@ -45,7 +45,7 @@ class FormOutput extends AbstractFormIO
 	{
 		if (is_null($this->oConverter)) {
 			$sType = $this->GetDataType();
-			return new $sType($oData);
+			return $oData !== null ? new $sType($oData) : null;
 		}
 
 		return $this->oConverter->Convert($oData);

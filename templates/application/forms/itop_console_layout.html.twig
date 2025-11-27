@@ -23,7 +23,7 @@
 
 {%- block choice_widget_collapsed -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input')|trim}) %}
-    <select is="tom-select-element" class="field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete ui-autocomplete-input"
+    <select is="choices-element" class="field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete ui-autocomplete-input" style="display: none"
         {{ block('widget_attributes') }}
         {% if multiple %} multiple="multiple" {% endif %}
             {% if max_items_selected is defined %} data-tom-select-max-items-selected="{{ max_items_selected }}" {% endif %}
@@ -72,9 +72,6 @@
         <div id="turbo_{{ block.id }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">
             {% if block.added == 1 %}
                 {{ form_row(form[block.name]) }}
-{#                {% else %}#}
-{#            {% else %}#}
-{#                <div style="background-color: #ecd9eb;border-radius: 6px;padding: 2px 5px;">Reserved place for <b>{{ block.name }}</b></div>#}
             {% endif %}
         </div>
     {% endfor %}
@@ -93,19 +90,11 @@
     {% endif %}
 {%- endblock collection_widget -%}
 
-
 {%- block form_label_content -%}
     {{- parent() -}}
-    {% if with_ai_button is defined and with_ai_button %}
-        <div style="float: right;display: flex;flex-direction: column;">
-            <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" type="button" name="AI" value="" data-tooltip-content="AI" aria-label="AI">
-                <span class="ibo-button--icon fas fa-magic"></span>
-            </button>
-            <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" type="button" name="Book" value="" data-tooltip-content="Query Book" aria-label="AI">
-                <span class="ibo-button--icon fas fa-book"></span>
-            </button>
-        </div>
-    {% endif %}
+    <div style="float: right;display: flex;flex-direction: column;align-items: center;row-gap: 3px;">
+        <span role="marquee" class="ibo-button--icon fas" style="padding:6px;"></span>
+    </div>
 {%-endblock form_label_content  -%}
 
 {%- block form_row -%}
@@ -118,3 +107,17 @@
         {{- parent() -}}
     </div>
 {%- endblock form_errors -%}
+
+{%- block oql_form_widget -%}
+    <textarea is="oql-element" {{ block('widget_attributes') }}>{{ value }}</textarea>
+    {% if with_ai_button is defined and with_ai_button %}
+    <button class="ibo-button ibo-button ibo-block  ibo-is-primary ibo-is-neutral " data-role="ibo-button" type="button" name="AI" value="" aria-label="AI">
+        <span class="ibo-button--icon fas fa-magic"></span>
+        Use AI assistant
+    </button>
+    {% endif %}
+    <button class="ibo-button ibo-button ibo-block  ibo-is-primary ibo-is-neutral " data-role="ibo-button" type="button" name="Book" value="" aria-label="AI">
+        <span class="ibo-button--icon fas fa-book"></span>
+        Open query phrase book
+    </button>
+{%- endblock oql_form_widget -%}

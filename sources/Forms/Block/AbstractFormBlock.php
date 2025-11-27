@@ -94,7 +94,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function IsRootBlock(): bool
 	{
-		return $this->oParent !== null;
+		return $this->oParent === null;
 	}
 
 	/**

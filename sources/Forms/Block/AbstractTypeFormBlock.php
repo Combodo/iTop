@@ -93,7 +93,8 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 		parent::UpdateOptions($oOptionsRegister);
 
 		if ($this->GetInput(self::INPUT_ENABLE)->IsBound()) {
-			$oOptionsRegister->SetOption('disabled', !$this->GetInputValue(self::INPUT_ENABLE));
+			$test = $this->GetInputValue(self::INPUT_ENABLE)->IsTrue();
+			$oOptionsRegister->SetOption('disabled', !$this->GetInputValue(self::INPUT_ENABLE)->IsTrue());
 		}
 	}
 }

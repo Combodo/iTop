@@ -113,56 +113,14 @@ class BlockTest extends AbstractFormsTest
 		$oForm->get('birthdate');
 	}
 
-	public function testAddingTwiceTheSameInputThrowsException(): void
+	public function testIsRootBlock(): void
 	{
-		$oFormBlock = $this->GivenFormBlock('OneBlock')
-			->AddInput('test_input', StringIOFormat::class);
+		/** @var FormBlock $oFormBlock */
+		$oFormBlock = $this->GivenFormBlock('OneBlock');
 
-		$this->expectException(RegisterException::class);
-		$oFormBlock->AddInput('test_input', StringIOFormat::class);
-	}
+		$oFormBlock->Add('subform', FormBlock::class);
 
-	public function testAddingTwiceTheSameOutputThrowsException(): void
-	{
-		$oFormBlock = $this->GivenFormBlock('OneBlock')
-			->AddOutput('test_output', StringIOFormat::class);
-
-		$this->expectException(RegisterException::class);
-		$oFormBlock->AddOutput('test_output', StringIOFormat::class);
-	}
-
-	public function testDependingOnNonExistingInputThrowsException(): void
-	{
-		$oParentBlock = $this->GivenFormBlock('ParentBlock');
-
-		$oFormBlock = $this->GivenSubFormBlock($oParentBlock, 'OneBlock')
-			->AddInput('test_input', StringIOFormat::class);
-
-		$this->GivenSubFormBlock($oParentBlock, 'OtherBlock')
-			->AddOutput('test_output', StringIOFormat::class);
-
-		$this->expectException(RegisterException::class);
-		$oFormBlock->DependsOn('non_existing_input', 'OtherBlock', 'test_output');
-	}
-
-	public function testDependingOnNonExistingOutputThrowsException(): void
-	{
-		$oParentBlock = $this->GivenFormBlock('ParentBlock');
-		$oFormBlock = $this->GivenSubFormBlock($oParentBlock, 'OneBlock')
-			->AddInput('test_input', StringIOFormat::class);
-		$this->GivenSubFormBlock($oParentBlock, 'OtherBlock')
-			->AddOutput('test_output', StringIOFormat::class);
-
-		$this->expectException(RegisterException::class);
-		$oFormBlock->DependsOn('test_input', 'OtherBlock', 'non_existing_output');
-	}
-
-	public function testDependingOnNonExistingBlockThrowsException(): void
-	{
-		$oFormBlock = $this->GivenFormBlock('OneBlock')
-			->AddOutput('test_output', StringIOFormat::class);
-
-		$this->expectException(RegisterException::class);
-		$oFormBlock->DependsOn('test_input', 'UnknownBlock', 'test');
+		$this->assertTrue($oFormBlock->IsRootBlock());
+		$this->assertFalse($oFormBlock->Get('subform')->IsRootBlock());
 	}
 }

@@ -12,7 +12,9 @@ use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 use Combodo\iTop\Forms\IO\FormInput;
 use Combodo\iTop\Forms\IO\FormOutput;
+use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use ReflectionClass;
 
 /**
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
@@ -35,15 +37,23 @@ abstract class AbstractFormsTest extends ItopDataTestCase
 		return new FormOutput($sName.'_output', $sType, $oBlock);
 	}
 
-	public function GivenFormBlock(string $sName, string $sBlockClass = FormBlock::class): AbstractFormBlock
+	public function GivenFormBlock(string $sName): FormBlock
 	{
-		return new $sBlockClass($sName, []);
+		return new FormBlock($sName, []);
 	}
 
-	public function GivenSubFormBlock(AbstractFormBlock $oParent, string $sName, string $ssBlockClass = FormBlock::class): AbstractFormBlock
+	public function GivenSubFormBlock(FormBlock $oParent, string $sName, string $ssBlockClass = FormBlock::class): AbstractFormBlock
 	{
 		$oParent->Add($sName, $ssBlockClass, []);
 
 		return $oParent->Get($sName);
+	}
+
+	public function GetIORegister(AbstractFormBlock $oFormBlock): IORegister
+	{
+		$reflection = new ReflectionClass(AbstractFormBlock::class);
+		$reflection_property = $reflection->getProperty('oIORegister');
+		$reflection_property->setAccessible(true);
+		return $reflection_property->getValue($oFormBlock);
 	}
 }

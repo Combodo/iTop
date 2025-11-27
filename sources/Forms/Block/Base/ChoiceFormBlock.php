@@ -21,7 +21,7 @@ class ChoiceFormBlock extends AbstractTypeFormBlock
 {
 	// Outputs
 	public const OUTPUT_LABEL = 'label';
-	public const OUTPUT_CODE = 'code';
+	public const OUTPUT_VALUE = 'value';
 
 	/** @inheritdoc */
 	public function GetFormType(): string
@@ -34,6 +34,6 @@ class ChoiceFormBlock extends AbstractTypeFormBlock
 	{
 		parent::RegisterIO($oIORegister);
 		$oIORegister->AddOutput(self::OUTPUT_LABEL, StringIOFormat::class, new ChoiceValueToLabelConverter($this));
-		$oIORegister->AddOutput(self::OUTPUT_CODE, StringIOFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_VALUE, StringIOFormat::class);
 	}
 }

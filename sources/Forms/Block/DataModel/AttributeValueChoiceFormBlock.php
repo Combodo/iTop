@@ -27,9 +27,6 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 	public const INPUT_CLASS_NAME = 'class_name';
 	public const INPUT_ATTRIBUTE  = 'attribute';
 
-	// Outputs
-	public const OUTPUT_VALUE = 'value';
-
 	/** @inheritdoc */
 	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
@@ -45,7 +42,6 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		parent::RegisterIO($oIORegister);
 		$oIORegister->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
 		$oIORegister->AddInput(self::INPUT_ATTRIBUTE, AttributeIOFormat::class);
-		$oIORegister->AddOutput(self::OUTPUT_VALUE, AttributeIOFormat::class);
 	}
 
 	/** @inheritdoc

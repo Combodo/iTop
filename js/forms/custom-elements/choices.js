@@ -1,6 +1,7 @@
-class TomSelectElement extends HTMLSelectElement {
+class ChoicesElement extends HTMLSelectElement {
 	plugins = [];
 	connectedCallback() {
+
 		if (this.getAttribute('multiple')) {
 			this.plugins.push('remove_button');
 		}
@@ -30,4 +31,4 @@ class TomSelectElement extends HTMLSelectElement {
 	}
 }
 
-customElements.define('tom-select-element', TomSelectElement, {extends: 'select'});
+customElements.define('choices-element', ChoicesElement, {extends: 'select'});

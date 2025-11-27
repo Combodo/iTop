@@ -47,7 +47,7 @@ abstract class AbstractExpressionFormBlock extends AbstractFormBlock
 			$aParamsToResolve = $oExpression->GetParameters();
 			$aResolvedParams = [];
 			foreach ($aParamsToResolve as $sParamToResolve) {
-				$aResolvedParams[$sParamToResolve] = $this->GetInputValue($sParamToResolve);
+				$aResolvedParams[$sParamToResolve] = strval($this->GetInputValue($sParamToResolve));
 			}
 			return $oExpression->Evaluate($aResolvedParams);
 		} catch (\Exception $e) {
