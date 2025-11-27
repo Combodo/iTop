@@ -52,6 +52,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 */
 	protected $bHasDelta = false;
 
+	protected $bAllowAllData = false;
+
 	/**
 	 * Object from the original set, minus the removed objects
 	 * @var DBObject[] array of iObjectId => DBObject
@@ -116,6 +118,11 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	public function GetFilter()
 	{
 		return clone $this->oOriginalSet->GetFilter();
+	}
+
+	public function AllowAllData(): void
+	{
+		$this->bAllowAllData = true;
 	}
 
 	/**
@@ -309,6 +316,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		return $ret;
 	}
 
+
 	/**
 	 * Return the current element
 	 *
@@ -329,7 +337,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$iPreservedCount = count($this->aPreserved);
 		if ($this->iCursor < $iPreservedCount) {
 			$sId = key($this->aPreserved);
-			$oRet = MetaModel::GetObject($this->sClass, $sId);
+			$oRet = MetaModel::GetObject($this->sClass, $sId, true, $this->bAllowAllData);
 		} else {
 			$iModifiedCount = count($this->aModified);
 			if ($this->iCursor < $iPreservedCount + $iModifiedCount) {

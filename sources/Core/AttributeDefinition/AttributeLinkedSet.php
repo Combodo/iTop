@@ -32,6 +32,7 @@ use ValueSetObjects;
  */
 class AttributeLinkedSet extends AttributeDefinition
 {
+	public $bAllowAllData = false;
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
 	 *
@@ -48,6 +49,11 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		parent::__construct($sCode, $aParams);
 		$this->aCSSClasses[] = 'attribute-set';
+	}
+
+	public function AllowAllData()
+	{
+		$this->bAllowAllData = true;
 	}
 
 	public static function ListExpectedParams()
@@ -89,7 +95,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		$oValSetDef = $this->Get("allowed_values");
 		if (!$oValSetDef) {
 			// Let's propose every existing value
-			$oValSetDef = new ValueSetObjects('SELECT '.LinkSetModel::GetTargetClass($this));
+			$oValSetDef = new ValueSetObjects('SELECT '.LinkSetModel::GetTargetClass($this), '', [], $this->bAllowAllData);
 		}
 
 		return $oValSetDef;
