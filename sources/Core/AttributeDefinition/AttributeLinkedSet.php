@@ -95,7 +95,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		$oValSetDef = $this->Get("allowed_values");
 		if (!$oValSetDef) {
 			// Let's propose every existing value
-			$oValSetDef = new ValueSetObjects('SELECT '.LinkSetModel::GetTargetClass($this), '', [], $this->bAllowAllData);
+			$oValSetDef = new ValueSetObjects('SELECT '.LinkSetModel::GetTargetClass($this));
 		}
 
 		return $oValSetDef;
@@ -149,6 +149,9 @@ class AttributeLinkedSet extends AttributeDefinition
 		}
 
 		$oLinkSearch = new DBObjectSearch($sLinkClass);
+		if ($this->bAllowAllData) {
+			$oLinkSearch->AllowAllData(true);
+		}
 		$oLinkSearch->AddCondition_PointingTo($oMyselfSearch, $sExtKeyToMe);
 		if ($this->IsIndirect()) {
 			// Join the remote class so that the archive flag will be taken into account
