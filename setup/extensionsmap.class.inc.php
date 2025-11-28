@@ -60,6 +60,7 @@ class iTopExtension
 	 * @var bool
 	 */
 	public $bMarkedAsChosen;
+	public ?bool $bUninstallable = null;
 
 	/**
 	 * @var bool
@@ -95,6 +96,10 @@ class iTopExtension
 	 * @var true
 	 */
 	public bool $bInstalled = false;
+	/**
+	 * @var true
+	 */
+	public bool $bRemovedFromDisk = false;
 
 	public function __construct()
 	{
@@ -119,8 +124,11 @@ class iTopExtension
 	 * @since 3.3.0
 	 * @return bool
 	 */
-	public function CanBeUninstalled()
+	public function CanBeUninstalled(): bool
 	{
+		if (!is_null($this->bUninstallable)) {
+			return $this->bUninstallable;
+		}
 		foreach ($this->aModuleInfo as $sModuleCode => $aModuleInfo) {
 			$bUninstallable = $aModuleInfo['uninstallable'] === 'yes';
 			if (!$bUninstallable) {
@@ -143,6 +151,7 @@ class iTopExtensionsMap
 	 * @return void
 	 */
 	protected $aExtensions;
+	protected ?array $aInstalledExtensions = null;
 
 	/**
 	 * The list of directories browsed using the ReadDir method when building the map
@@ -263,7 +272,7 @@ class iTopExtensionsMap
 	 *
 	 * @return \iTopExtension|null
 	 */
-	public function Get(string $sExtensionCode): ?iTopExtension
+	public function GetFromExtensionCode(string $sExtensionCode): ?iTopExtension
 	{
 		foreach ($this->aExtensions as $oExtension) {
 			if ($oExtension->sCode === $sExtensionCode) {
@@ -434,6 +443,11 @@ class iTopExtensionsMap
 		return $this->aExtensions;
 	}
 
+	public function GetAllExtensionsWithPreviouslyInstalled()
+	{
+		return array_merge($this->aExtensions, $this->aInstalledExtensions ?? []);
+	}
+
 	/**
 	 * Mark the given extension as chosen
 	 * @param string $sExtensionCode The code of the extension (code without version number)
@@ -503,24 +517,52 @@ class iTopExtensionsMap
 	 */
 	public function LoadChoicesFromDatabase(Config $oConfig)
 	{
-
-		$aInstalledExtensions = $this->GetInstalledExtensionsFromDatabase($oConfig);
-
-		foreach ($aInstalledExtensions as $aDBInfo) {
-			$this->MarkAsChosen($aDBInfo['code']);
-			$this->SetInstalledVersion($aDBInfo['code'], $aDBInfo['version']);
+		foreach ($this->LoadInstalledExtensionsFromDatabase($oConfig) as $oExtension) {
+			$this->MarkAsChosen($oExtension->sCode);
+			$this->SetInstalledVersion($oExtension->sCode, $oExtension->sVersion);
 		}
 		return true;
 	}
 
-	public function GetInstalledExtensionsFromDatabase(Config $oConfig): array|false
+	public function LoadInstalledExtensionsFromDatabase(Config $oConfig): array|false
 	{
+		if (is_array($this->aInstalledExtensions)) {
+			return $this->aInstalledExtensions;
+		}
 		try {
 			if (CMDBSource::DBName() === null) {
 				CMDBSource::InitFromConfig($oConfig);
 			}
 			$sLatestInstallationDate = CMDBSource::QueryToScalar("SELECT max(installed) FROM ".$oConfig->Get('db_subname')."priv_extension_install");
-			return CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_extension_install WHERE installed = '".$sLatestInstallationDate."'");
+			$aDBInfo = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_extension_install WHERE installed = '".$sLatestInstallationDate."'");
+
+			$this->aInstalledExtensions = [];
+			foreach ($aDBInfo as $aExtensionInfo) {
+				$oExtension = new iTopExtension();
+				$oExtension->sCode = $aExtensionInfo['code'];
+				$oExtension->sLabel = $aExtensionInfo['label'];
+				$oExtension->sDescription = $aExtensionInfo['description'] ?? '';
+				$oExtension->sVersion = $aExtensionInfo['version'];
+				$oExtension->sSource = $aExtensionInfo['source'];
+				$oExtension->bMandatory = false;
+				$oExtension->sMoreInfoUrl = '';
+				$oExtension->aModules = [];
+				$oExtension->aModuleVersion = [];
+				$oExtension->aModuleInfo = [];
+				$oExtension->sSourceDir = '';
+				$oExtension->bVisible = true;
+				$oExtension->bInstalled = true;
+				$oExtension->bUninstallable = !isset($aExtensionInfo['uninstallable']) || $aExtensionInfo['uninstallable'] === 'yes';
+				if ($oChoice = $this->GetFromExtensionCode($oExtension->sCode)) {
+					$oChoice->bInstalled = true;
+				} else {
+					$oExtension->bRemovedFromDisk = true;
+				}
+
+				$this->aInstalledExtensions[$oExtension->sCode.'/'.$oExtension->sVersion] = $oExtension;
+			}
+
+			return $this->aInstalledExtensions;
 		} catch (MySQLException $e) {
 			// No database or erroneous information
 			return false;

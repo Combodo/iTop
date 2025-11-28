@@ -1848,6 +1848,7 @@ EOF
 		}
 		return $index;
 	}
+
 	protected function GetStepInfo($idx = null)
 	{
 		$aStepInfo = null;
@@ -1873,7 +1874,7 @@ EOF
 				'options' => [],
 			];
 
-			foreach ($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
+			foreach ($this->oExtensionsMap->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
 				if (($oExtension->sSource !== iTopExtension::SOURCE_WIZARD) && ($oExtension->bVisible) && (count($oExtension->aMissingDependencies) == 0)) {
 					$aStepDefinition['options'][] = [
 						'extension_code' => $oExtension->sCode,
@@ -1885,31 +1886,11 @@ EOF
 						'mandatory' => $oExtension->bMandatory || ($oExtension->sSource === iTopExtension::SOURCE_REMOTE),
 						'source_label' => $this->GetExtensionSourceLabel($oExtension->sSource),
 						'uninstallable' => $oExtension->CanBeUninstalled(),
+						'missing' => $oExtension->bRemovedFromDisk,
 					];
 				}
 			}
-			//Listing previously installed extension missing from disk
-			if (!is_null($this->oConfig) && ($aPreviouslyInstalled = $this->oExtensionsMap->GetInstalledExtensionsFromDatabase($this->oConfig))) {
-				foreach ($aPreviouslyInstalled as $aExtension) {
-					if (!$this->oExtensionsMap->Get($aExtension['code'])) {
-						$bUninstallable = $aExtension['uninstallable'] === 'yes';
-						$aStepDefinition['options'][] = [
-							'extension_code' => $aExtension['code'],
-							'title' => $aExtension['label'],
-							'description' => $aExtension['description'] ?? '',
-							'more_info' => '',
-							'default' => true, // by default offer to install all modules
-							'modules' => [],
-							'mandatory' => false,
-							'source_label' => $this->GetExtensionSourceLabel($aExtension['source']),
-							'uninstallable' => $bUninstallable,
-							'missing' => true,
-						];
-					} else {
-						$this->oExtensionsMap->Get($aExtension['code'])->bInstalled = true;
-					}
-				}
-			}
+
 			// Display this step of the wizard only if there is something to display
 			if (count($aStepDefinition['options']) !== 0) {
 				$aSteps[] = $aStepDefinition;
@@ -1983,7 +1964,7 @@ EOF
 			$sId = utils::EscapeHtml($aChoice['extension_code']);
 			$bIsDefault = array_key_exists($sChoiceId, $aDefaults);
 
-			$oITopExtension = $this->oExtensionsMap->Get($aChoice['extension_code']);
+			$oITopExtension = $this->oExtensionsMap->GetFromExtensionCode($aChoice['extension_code']);
 			$bCanBeUninstalled = isset($aChoice['uninstallable']) ? $aChoice['uninstallable'] : $oITopExtension->CanBeUninstalled();
 			$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId);
 			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $this->bUpgrade && $bIsDefault && !$bCanBeUninstalled && !$bDisableUninstallCheck;
