@@ -19,8 +19,10 @@ use ReflectionClass;
 use ReflectionException;
 
 /**
- * Complex form type.
+ * A block to manage a form with children.
  *
+ * @package Combodo\iTop\Forms\Block\Base
+ * @since 3.3.0
  */
 class FormBlock extends AbstractTypeFormBlock
 {

@@ -12,7 +12,11 @@ use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 
 /**
+ * An abstract block to manage an expression.
+ * This block expose two boolean outputs: the result of the expression and its negation.
  *
+ * @package Combodo\iTop\Forms\Block\Expression
+ * @since 3.3.0
  */
 class BooleanExpressionFormBlock extends AbstractExpressionFormBlock
 {

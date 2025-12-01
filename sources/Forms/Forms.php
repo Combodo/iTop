@@ -10,12 +10,17 @@ namespace Combodo\iTop\Forms;
 use Combodo\iTop\Forms\FormBuilder\FormTypeExtension;
 use Combodo\iTop\Forms\FormBuilder\ResolvedFormTypeFactory;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\FormFactoryBuilder;
 use Symfony\Component\Form\FormFactoryBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Validator\Validation;
 
 /**
- * Plumbing for iTop custom form builder.
+ * Form.
+ *
+ * @package Combodo\iTop\Forms
+ * @since 3.3.0
  */
 final class Forms
 {
@@ -32,8 +37,11 @@ final class Forms
 	 */
 	public static function createFormFactoryBuilder(): FormFactoryBuilderInterface
 	{
+		// Set up the Validator component
+		$validator = Validation::createValidator();
 		return (new FormFactoryBuilder())
 			->addExtension(new HttpFoundationExtension())
+			->addExtension(new ValidatorExtension($validator))
 			->addTypeExtension(new FormTypeExtension())
 			->setResolvedTypeFactory(new ResolvedFormTypeFactory());
 	}

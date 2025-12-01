@@ -15,8 +15,11 @@ use Combodo\iTop\Forms\Register\OptionsRegister;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 /**
- * Form block for checkbox.
+ * A block to manage a checkbox.
+ * This block expose one output: whether the checkbox is checked or not.
  *
+ * @package Combodo\iTop\Forms\Block\Base
+ * @since 3.3.0
  */
 class CheckboxFormBlock extends AbstractTypeFormBlock
 {

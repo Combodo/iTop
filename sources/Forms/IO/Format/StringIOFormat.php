@@ -7,6 +7,12 @@
 
 namespace Combodo\iTop\Forms\IO\Format;
 
+/**
+ * String IO format.
+ *
+ * @package Combodo\iTop\Forms\IO\Format
+ * @since 3.3.0
+ */
 class StringIOFormat extends AbstractIOFormat
 {
 	public string $sValue;

@@ -8,7 +8,10 @@
 namespace Combodo\iTop\Forms\IO\Converter;
 
 /**
- * Output converter.
+ * Abstract converter.
+ *
+ * @package Combodo\iTop\Forms\IO\Converter
+ * @since 3.3.0
  */
 abstract class AbstractConverter
 {

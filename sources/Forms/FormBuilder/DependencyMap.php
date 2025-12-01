@@ -15,8 +15,10 @@ use Combodo\iTop\Forms\IO\FormInput;
 use Combodo\iTop\Forms\IO\FormOutput;
 
 /**
- * Dependencies handler.
+ * Map containing information of form block dependencies.
  *
+ * @package Combodo\iTop\Forms\FormBuilder
+ * @since 3.3.0
  */
 class DependencyMap
 {

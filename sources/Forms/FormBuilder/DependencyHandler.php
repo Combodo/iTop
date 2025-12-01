@@ -19,8 +19,10 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Dependencies handler.
+ * Handler responsible for form blocks dependencies.
  *
+ * @package Combodo\iTop\Forms\FormBuilder
+ * @since 3.3.0
  */
 class DependencyHandler
 {

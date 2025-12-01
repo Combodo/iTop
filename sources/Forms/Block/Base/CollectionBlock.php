@@ -15,8 +15,10 @@ use Combodo\iTop\Forms\Register\OptionsRegister;
 use Combodo\iTop\Forms\Register\RegisterException;
 
 /**
- * Collection form type.
+ * A block to manage collections of form blocks.
  *
+ * @package Combodo\iTop\Forms\Block\Base
+ * @since 3.3.0
  */
 class CollectionBlock extends AbstractTypeFormBlock
 {

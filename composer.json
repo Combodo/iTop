@@ -31,6 +31,7 @@
     "symfony/mailer": "^6.4",
     "symfony/security-csrf": "^6.4",
     "symfony/twig-bundle": "~6.4.0",
+    "symfony/validator" : "^6.4",
     "symfony/yaml": "~6.4.0",
     "tecnickcom/tcpdf": "^6.6.0",
     "thenetworg/oauth2-azure": "^2.0"

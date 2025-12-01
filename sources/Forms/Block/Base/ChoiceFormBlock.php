@@ -14,8 +14,11 @@ use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 
 /**
- * Form block for choices.
+ * A block to manage a list of choices.
+ * This block expose two outputs: the label and the value of the selected choice.
  *
+ * @package Combodo\iTop\Forms\Block\Base
+ * @since 3.3.0
  */
 class ChoiceFormBlock extends AbstractTypeFormBlock
 {

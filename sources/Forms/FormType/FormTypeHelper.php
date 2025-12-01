@@ -11,7 +11,10 @@ use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Symfony\Component\Form\FormInterface;
 
 /**
+ * Form type helper.
  *
+ * @package Combodo\iTop\Forms\FormType
+ * @since 3.3.0
  */
 class FormTypeHelper
 {

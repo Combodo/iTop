@@ -8,10 +8,17 @@
 namespace Combodo\iTop\Forms\Block;
 
 use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
+use Combodo\iTop\Forms\IO\FormBlockIOException;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
 use Combodo\iTop\Forms\Register\RegisterException;
 
+/**
+ * Abstract type form block.
+ *
+ * @package Combodo\iTop\Forms\Block
+ * @since 3.3.0
+ */
 abstract class AbstractTypeFormBlock extends AbstractFormBlock
 {
 	// Inputs
@@ -28,7 +35,11 @@ abstract class AbstractTypeFormBlock extends AbstractFormBlock
 	 */
 	abstract public function GetFormType(): string;
 
-	/** @inheritdoc */
+	/**
+	 * @inheritdoc
+	 *
+	 * @throws FormBlockIOException
+	 */
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
 		parent::RegisterIO($oIORegister);

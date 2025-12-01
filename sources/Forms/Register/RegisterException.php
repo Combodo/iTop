@@ -9,6 +9,12 @@ namespace Combodo\iTop\Forms\Register;
 
 use Combodo\iTop\Forms\FormsException;
 
+/**
+ * Register exception.
+ *
+ * @package Combodo\iTop\Forms\Register
+ * @since 3.3.0
+ */
 class RegisterException extends FormsException
 {
 }

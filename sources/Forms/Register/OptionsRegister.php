@@ -8,7 +8,10 @@
 namespace Combodo\iTop\Forms\Register;
 
 /**
+ * Option register.
  *
+ * @package Combodo\iTop\Forms\Register
+ * @since 3.3.0
  */
 class OptionsRegister
 {

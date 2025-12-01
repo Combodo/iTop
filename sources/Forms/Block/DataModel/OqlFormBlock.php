@@ -15,9 +15,11 @@ use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
 
 /**
- * Form block for oql expression.
+ * A block to manage OQL expression input.
+ * This block exposes an output providing the selected class from the OQL.
  *
- * @package DataModel
+ * @package Combodo\iTop\Forms\Block\DataModel
+ * @since 3.3.0
  */
 class OqlFormBlock extends TextAreaFormBlock
 {

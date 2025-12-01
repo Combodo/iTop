@@ -15,7 +15,10 @@ use Exception;
 use ModelReflection;
 
 /**
- * OQL expression to class converter.
+ * Extract the selected class from an OQL query.
+ *
+ * @package Combodo\iTop\Forms\IO\Converter
+ * @since 3.3.0
  */
 class OqlToClassConverter extends AbstractConverter
 {

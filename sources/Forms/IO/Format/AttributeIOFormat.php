@@ -2,6 +2,12 @@
 
 namespace Combodo\iTop\Forms\IO\Format;
 
+/**
+ * Attribute IO format.
+ *
+ * @package Combodo\iTop\Forms\IO\Format
+ * @since 3.3.0
+ */
 class AttributeIOFormat extends AbstractIOFormat
 {
 	public string $sAttributeName;

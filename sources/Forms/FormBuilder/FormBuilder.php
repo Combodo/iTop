@@ -25,6 +25,12 @@ use Symfony\Component\Form\ResolvedFormTypeInterface;
 use Symfony\Component\PropertyAccess\PropertyPathInterface;
 use Traversable;
 
+/**
+ * Specialization of the Symfony form builder to handle iTop form blocks and dependencies.
+ *
+ * @package Combodo\iTop\Forms\FormBuilder
+ * @since 3.3.0
+ */
 class FormBuilder implements FormBuilderInterface, IteratorAggregate
 {
 	/** @var DependencyHandler|null */

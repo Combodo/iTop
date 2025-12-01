@@ -2,6 +2,12 @@
 
 namespace Combodo\iTop\Forms\IO\Format;
 
+/**
+ * Number IO format.
+ *
+ * @package Combodo\iTop\Forms\IO\Format
+ * @since 3.3.0
+ */
 class NumberIOFormat extends AbstractIOFormat
 {
 	public mixed $oValue;

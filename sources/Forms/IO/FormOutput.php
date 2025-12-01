@@ -11,7 +11,10 @@ use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\IO\Converter\AbstractConverter;
 
 /**
+ * Form output IO.
  *
+ * @package Combodo\iTop\Forms\IO
+ * @since 3.3.0
  */
 class FormOutput extends AbstractFormIO
 {

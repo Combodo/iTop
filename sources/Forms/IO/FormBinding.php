@@ -8,7 +8,10 @@
 namespace Combodo\iTop\Forms\IO;
 
 /**
+ * Abstract form binding.
  *
+ * @package Combodo\iTop\Forms\IO
+ * @since 3.3.0
  */
 class FormBinding
 {

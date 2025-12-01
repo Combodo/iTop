@@ -12,8 +12,10 @@ use Combodo\iTop\Forms\Register\OptionsRegister;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 /**
- * Form block for date time.
+ * A block to manage a date and time field
  *
+ * @package Combodo\iTop\Forms\Block\Base
+ * @since 3.3.0
  */
 class DateTimeFormBlock extends AbstractTypeFormBlock
 {

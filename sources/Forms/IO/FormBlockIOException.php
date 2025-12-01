@@ -9,6 +9,12 @@ namespace Combodo\iTop\Forms\IO;
 
 use Combodo\iTop\Forms\FormsException;
 
+/**
+ * Form block IO exception.
+ *
+ * @package Combodo\iTop\Forms\IO
+ * @since 3.3.0
+ */
 class FormBlockIOException extends FormsException
 {
 }

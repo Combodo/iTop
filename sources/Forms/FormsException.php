@@ -11,6 +11,12 @@ use Exception;
 use IssueLog;
 use Throwable;
 
+/**
+ * Form exception.
+ *
+ * @package Combodo\iTop\Forms
+ * @since 3.3.0
+ */
 class FormsException extends Exception
 {
 }

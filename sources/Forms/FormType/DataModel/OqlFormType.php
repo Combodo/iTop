@@ -13,6 +13,12 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * OQL expression form type.
+ *
+ * @package Combodo\iTop\Forms\FormType\DataModel
+ * @since 3.3.0
+ */
 class OqlFormType extends AbstractType
 {
 	/** @inheritdoc  */

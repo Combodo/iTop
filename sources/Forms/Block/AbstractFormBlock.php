@@ -8,9 +8,9 @@
 namespace Combodo\iTop\Forms\Block;
 
 use Combodo\iTop\Forms\Block\Base\FormBlock;
-use Combodo\iTop\Forms\IFormBlock;
 use Combodo\iTop\Forms\IO\AbstractFormIO;
 use Combodo\iTop\Forms\IO\Converter\AbstractConverter;
+use Combodo\iTop\Forms\IO\FormBlockIOException;
 use Combodo\iTop\Forms\IO\FormInput;
 use Combodo\iTop\Forms\IO\FormOutput;
 use Combodo\iTop\Forms\Register\IORegister;
@@ -20,14 +20,11 @@ use Combodo\iTop\Forms\Register\RegisterException;
 /**
  * Abstract form block.
  *
- * Inputs / Outputs.
- * Options.
- *
+ * @package Combodo\iTop\Forms\Block
+ * @since 3.3.0
  */
 abstract class AbstractFormBlock implements IFormBlock
 {
-	// Outputs
-
 	/** @var null|FormBlock */
 	private ?FormBlock $oParent = null;
 
@@ -185,7 +182,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param string $sType the type of the input
 	 *
 	 * @return AbstractFormBlock
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 * @throws FormBlockIOException
 	 */
 	public function AddInput(string $sName, string $sType): AbstractFormBlock
 	{
@@ -273,11 +270,17 @@ abstract class AbstractFormBlock implements IFormBlock
 		return $this->oIORegister->GetInputs();
 	}
 
+	/**
+	 * @return array
+	 */
 	public function GetBoundInputs(): array
 	{
 		return $this->oIORegister->GetBoundInputs();
 	}
 
+	/**
+	 * @return array
+	 */
 	public function GetBoundOutputs(): array
 	{
 		return $this->oIORegister->GetBoundOutputs();
@@ -395,6 +398,11 @@ abstract class AbstractFormBlock implements IFormBlock
 	{
 	}
 
+	/**
+	 * @param IORegister $oIORegister
+	 *
+	 * @return void
+	 */
 	protected function AfterIORegistered(IORegister $oIORegister): void
 	{
 

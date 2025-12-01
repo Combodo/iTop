@@ -13,3 +13,8 @@
         {{ form_errors(current_block) }}
     {% EndUITurboStream %}
 {% endif %}
+{% if current_form %}
+    {% UITurboStream Replace { sTarget: current_form.vars.id} %}
+    {{ form_widget(current_form) }}
+    {% EndUITurboStream %}
+{% endif %}

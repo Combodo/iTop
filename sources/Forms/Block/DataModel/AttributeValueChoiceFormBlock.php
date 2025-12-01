@@ -17,9 +17,10 @@ use Combodo\iTop\Forms\Register\OptionsRegister;
 use Exception;
 
 /**
- * Form block for choice of class attribute values.
+ * A block to choose some values from attribute of a given class.
  *
- * @package DataModel
+ * @package Combodo\iTop\Forms\Block\DataModel
+ * @since 3.3.0
  */
 class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 {
@@ -44,8 +45,10 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 		$oIORegister->AddInput(self::INPUT_ATTRIBUTE, AttributeIOFormat::class);
 	}
 
-	/** @inheritdoc
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	/**
+	 * @inheritdoc
+	 *
+	 * @throws FormBlockException
 	 */
 	public function UpdateOptions(OptionsRegister $oOptionsRegister): void
 	{

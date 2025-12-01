@@ -11,7 +11,10 @@ use Combodo\iTop\Forms\IO\FormInput;
 use Combodo\iTop\Forms\Register\OptionsRegister;
 
 /**
+ * A block to manage a list of choices given by forms inputs current values.
  *
+ * @package Combodo\iTop\Forms\Block\Base
+ * @since 3.3.0
  */
 class ChoiceFromInputsBlock extends ChoiceFormBlock
 {

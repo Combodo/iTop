@@ -15,6 +15,7 @@ use Twig\TwigFilter;
  * Extension to provide compatibility with Symfony/Twig standard functions
  *
  * @package Combodo\iTop\Forms\Twig\Extension
+ * @since 3.3.0
  */
 class FormCompatibilityExtension extends AbstractExtension
 {

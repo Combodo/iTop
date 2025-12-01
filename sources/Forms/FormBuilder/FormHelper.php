@@ -8,6 +8,12 @@ use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
+/**
+ * Form helper.
+ *
+ * @package Combodo\iTop\Forms\FormBuilder
+ * @since 3.3.0
+ */
 class FormHelper
 {
 	/**

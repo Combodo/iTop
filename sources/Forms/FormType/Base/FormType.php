@@ -15,7 +15,10 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 
 /**
+ * Form type.
  *
+ * @package Combodo\iTop\Forms\FormType\Base
+ * @since 3.3.0
  */
 class FormType extends AbstractType
 {

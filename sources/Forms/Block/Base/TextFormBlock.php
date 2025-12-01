@@ -13,8 +13,11 @@ use Combodo\iTop\Forms\Register\IORegister;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
- * Form block for string.
+ * A block to manage a text input.
+ * This block exposes a single text output.
  *
+ * @package Combodo\iTop\Forms\Block\Base
+ * @since 3.3.0
  */
 class TextFormBlock extends AbstractTypeFormBlock
 {

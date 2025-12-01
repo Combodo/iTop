@@ -13,8 +13,11 @@ use Combodo\iTop\Forms\Register\IORegister;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 /**
- * Form block for string.
+ * A block to manage a number input.
+ * This block exposes a single output: the number value.
  *
+ * @package Combodo\iTop\Forms\Block\Base
+ * @since 3.3.0
  */
 class NumberFormBlock extends AbstractTypeFormBlock
 {

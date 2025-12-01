@@ -12,7 +12,10 @@ use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 
 /**
+ * Convert a choice value to its label.
  *
+ * @package Combodo\iTop\Forms\IO\Converter
+ * @since 3.3.0
  */
 class ChoiceValueToLabelConverter extends AbstractConverter
 {

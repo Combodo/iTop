@@ -18,7 +18,10 @@ use Combodo\iTop\Forms\IO\FormInput;
 use Combodo\iTop\Forms\IO\FormOutput;
 
 /**
+ * IO register.
  *
+ * @package Combodo\iTop\Forms\Register
+ * @since 3.3.0
  */
 class IORegister
 {

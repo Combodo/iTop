@@ -7,6 +7,12 @@
 
 namespace Combodo\iTop\Forms\IO\Format;
 
+/**
+ * Boolean IO format.
+ *
+ * @package Combodo\iTop\Forms\IO\Format
+ * @since 3.3.0
+ */
 class BooleanIOFormat extends AbstractIOFormat
 {
 	public bool $bValue;

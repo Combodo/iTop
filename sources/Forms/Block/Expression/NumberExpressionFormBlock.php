@@ -12,7 +12,11 @@ use Combodo\iTop\Forms\IO\Format\NumberIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 
 /**
+ * An abstract block to manage an expression.
+ * This block expose a number output: the result of the expression.
  *
+ * @package Combodo\iTop\Forms\Block\Expression
+ * @since 3.3.0
  */
 class NumberExpressionFormBlock extends AbstractExpressionFormBlock
 {

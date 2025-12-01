@@ -11,8 +11,10 @@ use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 /**
- * Form block for text area.
+ * A block to manage a textarea.
  *
+ * @package Combodo\iTop\Forms\Block\Base
+ * @since 3.3.0
  */
 class TextAreaFormBlock extends AbstractTypeFormBlock
 {

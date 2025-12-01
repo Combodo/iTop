@@ -7,6 +7,12 @@
 
 namespace Combodo\iTop\Forms\Block;
 
+/**
+ * Form block helper.
+ *
+ * @package Combodo\iTop\Forms\Block
+ * @since 3.3.0
+ */
 class FormBlockHelper
 {
 	/**

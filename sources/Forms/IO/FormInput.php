@@ -8,7 +8,10 @@
 namespace Combodo\iTop\Forms\IO;
 
 /**
+ * Form input IO.
  *
+ * @package Combodo\iTop\Forms\IO
+ * @since 3.3.0
  */
 class FormInput extends AbstractFormIO
 {

@@ -9,6 +9,12 @@ namespace Combodo\iTop\Forms\FormBuilder;
 
 use Combodo\iTop\Forms\FormsException;
 
+/**
+ * Form builder exception.
+ *
+ * @package Combodo\iTop\Forms\FormBuilder
+ * @since 3.3.0
+ */
 class FormBuilderException extends FormsException
 {
 }

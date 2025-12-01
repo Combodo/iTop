@@ -16,8 +16,10 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Extension for form types.
+ * Form type extension for common initialization.
  *
+ * @package Combodo\iTop\Forms\FormBuilder
+ * @since 3.3.0
  */
 class FormTypeExtension extends AbstractTypeExtension
 {

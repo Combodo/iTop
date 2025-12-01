@@ -12,7 +12,10 @@ use Combodo\iTop\Forms\IO\Format\AbstractIOFormat;
 use Symfony\Component\Form\FormEvents;
 
 /**
+ * Abstract form IO.
  *
+ * @package Combodo\iTop\Forms\IO
+ * @since 3.3.0
  */
 class AbstractFormIO
 {

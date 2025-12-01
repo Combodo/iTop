@@ -19,7 +19,10 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
+ * ChoiceType form type.
  *
+ * @package Combodo\iTop\Forms\FormType\Base
+ * @since 3.3.0
  */
 class ChoiceFormType extends AbstractType
 {

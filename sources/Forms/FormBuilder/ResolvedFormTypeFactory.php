@@ -12,7 +12,10 @@ use Symfony\Component\Form\ResolvedFormTypeFactoryInterface;
 use Symfony\Component\Form\ResolvedFormTypeInterface;
 
 /**
- * Plumbing for iTop custom form builder.
+ * Symfony ResolvedFormTypeFactory override to use our ResolvedFormType.
+ *
+ * @package Combodo\iTop\Forms\FormBuilder
+ * @since 3.3.0
  */
 class ResolvedFormTypeFactory implements ResolvedFormTypeFactoryInterface
 {
