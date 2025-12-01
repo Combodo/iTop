@@ -11,6 +11,7 @@ use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
+use Exception;
 use Expression;
 use Symfony\Component\Form\FormEvents;
 
@@ -52,9 +53,13 @@ abstract class AbstractExpressionFormBlock extends AbstractFormBlock
 			foreach ($aParamsToResolve as $sParamToResolve) {
 				$aResolvedParams[$sParamToResolve] = strval($this->GetInputValue($sParamToResolve));
 			}
+			$aFieldsToResolve = $oExpression->ListRequiredFields();
+			foreach ($aFieldsToResolve as $sFieldToResolve) {
+				$aResolvedParams[$sFieldToResolve] = strval($this->GetInputValue($sFieldToResolve));
+			}
 			return $oExpression->Evaluate($aResolvedParams);
-		} catch (\Exception $e) {
-			throw new FormBlockException('Compute expression '.json_encode($sExpression).' block issue', 0, $e);
+		} catch (Exception $e) {
+			throw new FormBlockException('Compute expression '.json_encode($sExpression).' block issue: '.$e->getMessage(), 0, $e);
 		}
 	}
 

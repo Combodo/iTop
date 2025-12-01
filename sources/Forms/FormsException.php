@@ -19,4 +19,10 @@ use Throwable;
  */
 class FormsException extends Exception
 {
+	public function __construct(string $sMessage = '', int $iCode = 0, ?Throwable $oPrevious = null, array $aContext = [])
+	{
+		parent::__construct($sMessage, $iCode, $oPrevious);
+		IssueLog::Exception(get_class($this).' occurs: '.$sMessage, $this, null, $aContext);
+	}
+
 }

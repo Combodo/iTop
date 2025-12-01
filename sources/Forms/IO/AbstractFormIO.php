@@ -86,7 +86,7 @@ class AbstractFormIO
 	public function SetName(string $sName): self
 	{
 		// Check name validity
-		if (preg_match('/(?<name>\w+)/', $sName, $aMatches)) {
+		if (preg_match('/^(?<name>((\w+\.\w+)|\w+))$/', $sName, $aMatches)) {
 			$sParsedName = $aMatches['name'];
 			if ($sParsedName !== $sName) {
 				$sName = json_encode($sName);
