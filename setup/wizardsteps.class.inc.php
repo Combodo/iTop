@@ -1350,7 +1350,8 @@ class WizStepModulesChoice extends WizardStep
 			$aParamValues = $oWizard->GetParamForConfigArray();
 			$this->oConfig->UpdateFromParams($aParamValues);
 
-			$this->bChoicesFromDatabase = $this->oExtensionsMap->LoadChoicesFromDatabase($this->oConfig);
+			$this->oExtensionsMap->LoadChoicesFromDatabase($this->oConfig);
+			$this->bChoicesFromDatabase = true;
 		}
 	}
 
@@ -1897,7 +1898,7 @@ EOF
 				$this->oWizard->SetParameter('additional_extensions_modules', json_encode($aStepDefinition['options']));
 			}
 		} else {
-			// No wizard configuration provided, build a standard one with just one big list
+			// No wizard configuration provided, build a standard one with just one big list. All items are mandatory, only works when there are no conflicted modules.
 			$aStepDefinition = [
 				'title' => 'Modules Selection',
 				'description' => '<h2>Select the modules to install. You can launch the installation again to install new modules, but you cannot remove already installed modules.</h2>',
@@ -2093,7 +2094,7 @@ EOF
 
 	public function GetNextButtonLabel()
 	{
-		return $this->bCanMoveForward ? 'Next' : 'Non-uninstallatble extension missing';
+		return $this->bCanMoveForward ? 'Next' : 'Non-uninstallable extension missing';
 	}
 
 }

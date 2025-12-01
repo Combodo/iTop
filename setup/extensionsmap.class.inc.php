@@ -60,6 +60,10 @@ class iTopExtension
 	 * @var bool
 	 */
 	public $bMarkedAsChosen;
+	/**
+	 * If null, check modules uninstallability
+	 * @var bool|null
+	 */
 	public ?bool $bUninstallable = null;
 
 	/**
@@ -93,11 +97,11 @@ class iTopExtension
 	 */
 	public $aMissingDependencies;
 	/**
-	 * @var true
+	 * @var bool
 	 */
 	public bool $bInstalled = false;
 	/**
-	 * @var true
+	 * @var bool
 	 */
 	public bool $bRemovedFromDisk = false;
 
@@ -151,6 +155,10 @@ class iTopExtensionsMap
 	 * @return void
 	 */
 	protected $aExtensions;
+	/**
+	 * The list of all currently installed extensions
+	 * @var array|null
+	 */
 	protected ?array $aInstalledExtensions = null;
 
 	/**
@@ -443,7 +451,7 @@ class iTopExtensionsMap
 		return $this->aExtensions;
 	}
 
-	public function GetAllExtensionsWithPreviouslyInstalled()
+	public function GetAllExtensionsWithPreviouslyInstalled(): array
 	{
 		return array_merge($this->aExtensions, $this->aInstalledExtensions ?? []);
 	}
@@ -526,9 +534,6 @@ class iTopExtensionsMap
 
 	public function LoadInstalledExtensionsFromDatabase(Config $oConfig): array|false
 	{
-		if (is_array($this->aInstalledExtensions)) {
-			return $this->aInstalledExtensions;
-		}
 		try {
 			if (CMDBSource::DBName() === null) {
 				CMDBSource::InitFromConfig($oConfig);
