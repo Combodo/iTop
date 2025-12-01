@@ -70,6 +70,8 @@ class FormBindingTest extends AbstractFormsTest
 		$oInputIO = $this->GivenInput('test');
 		$oOutputIO = $this->GivenOutput('test1');
 
+		$this->assertFalse($oInputIO->IsBound(), 'Input must not be Bound by default');
+
 		// When
 		$oOutputIO->BindToInput($oInputIO);
 
@@ -86,13 +88,15 @@ class FormBindingTest extends AbstractFormsTest
 		$oInputIO1->BindToInput($oInputIO2);
 
 		// Then
-		$this->assertTrue($oInputIO2->IsBound(), 'Input must be Bound when binding from an output');
+		$this->assertTrue($oInputIO2->IsBound(), 'Input must be Bound when binding from an input');
 	}
 
 	public function testOutputCanBeBoundToAnotherOutputAndItIsBoundAfterThat()
 	{
 		$oOutputIO1 = $this->GivenOutput('test1');
 		$oOutputIO2 = $this->GivenOutput('test2');
+
+		$this->assertFalse($oOutputIO2->IsBound(), 'Output must not be bound by default');
 
 		// When
 		$oOutputIO1->BindToOutput($oOutputIO2);

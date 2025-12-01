@@ -49,7 +49,7 @@ class BlockTest extends AbstractFormsTest
 	 *
 	 * @throws ReflectionException
 	 */
-	public function testAddChildBlockClass(): void
+	public function testAddChildBlockExpectFormBlockClass(): void
 	{
 		$oFormBlock = new FormBlock('formBlock');
 		$this->expectException(FormBlockException::class);
@@ -57,7 +57,7 @@ class BlockTest extends AbstractFormsTest
 	}
 
 	/**
-	 * All block may contain a reference to themselves in their options
+	 * All block must contain a reference to themselves in their options
 	 */
 	public function testBlockOptionsContainsBlockReference(): void
 	{

@@ -87,9 +87,11 @@ class AbstractFormIOTest extends AbstractFormsTest
 			'Minus not supported' => ['The-test-name'],
 			'Percent not supported' => ['name%'],
 			'Accent not supported' => ['namé'],
+			'emoji not supported' => ['🎄🎄🎄🎄🎄'],
 
 			// Corrects
 			'Numbers OK' => ['name123', false],
+			'Starting with number OK' => ['123name123', false],
 			'Underscore OK' => ['The_test_name', false],
 			'Camel OK' => ['TheTestName', false],
 		];
