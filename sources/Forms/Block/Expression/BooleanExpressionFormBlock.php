@@ -21,8 +21,8 @@ use Combodo\iTop\Forms\Register\IORegister;
 class BooleanExpressionFormBlock extends AbstractExpressionFormBlock
 {
 	// Outputs
-	public const OUTPUT_RESULT = "result";
-	public const OUTPUT_NOT_RESULT = "not_result";
+	public const OUTPUT_RESULT = "output_result";
+	public const OUTPUT_NOT_RESULT = "output_not_result";
 
 	/** @inheritdoc */
 	protected function RegisterIO(IORegister $oIORegister): void

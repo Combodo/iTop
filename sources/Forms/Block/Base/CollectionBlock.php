@@ -23,7 +23,7 @@ use Combodo\iTop\Forms\Register\RegisterException;
 class CollectionBlock extends AbstractTypeFormBlock
 {
 	// Inputs
-	public const INPUT_CLASS_NAME = 'class_name';
+	public const INPUT_CLASS_NAME = 'input_class_name';
 
 	/** @var FormBlock block */
 	protected AbstractTypeFormBlock $oPrototypeBlock;

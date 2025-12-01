@@ -22,8 +22,8 @@ use Combodo\iTop\Forms\Register\RegisterException;
 abstract class AbstractTypeFormBlock extends AbstractFormBlock
 {
 	// Inputs
-	public const INPUT_VISIBLE = 'visible';
-	public const INPUT_ENABLE = 'enable';
+	public const INPUT_VISIBLE = 'input_visible';
+	public const INPUT_ENABLE = 'input_enable';
 
 	/** @var bool flag indicating the form insertion */
 	private bool $bIsAddedToForm = false;

@@ -22,7 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 class NumberFormBlock extends AbstractTypeFormBlock
 {
 	// Outputs
-	public const OUTPUT_NUMBER = "number";
+	public const OUTPUT_NUMBER = "output_number";
 
 	/** @inheritdoc */
 	public function GetFormType(): string

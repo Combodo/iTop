@@ -22,7 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 class TextFormBlock extends AbstractTypeFormBlock
 {
 	// Outputs
-	public const OUTPUT_TEXT = "text";
+	public const OUTPUT_TEXT = "output_text";
 
 	/** @inheritdoc */
 	public function GetFormType(): string

@@ -24,7 +24,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 class CheckboxFormBlock extends AbstractTypeFormBlock
 {
 	// outputs
-	public const OUTPUT_CHECKED = 'checked';
+	public const OUTPUT_CHECKED = 'output_checked';
 
 	/** @inheritdoc */
 	public function GetFormType(): string

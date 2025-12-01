@@ -28,16 +28,17 @@ use utils;
 class AttributeChoiceFormBlock extends ChoiceFormBlock
 {
 	// inputs
-	public const INPUT_CLASS_NAME = 'class_name';
+	public const INPUT_CLASS_NAME = 'input_class_name';
 
 	// outputs
-	public const OUTPUT_ATTRIBUTE = 'attribute';
+	public const OUTPUT_ATTRIBUTE = 'output_attribute';
 
 	/** @inheritdoc */
 	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
 		parent::RegisterOptions($oOptionsRegister);
 		$oOptionsRegister->SetOption('placeholder', 'Select an attribute...');
+		$oOptionsRegister->SetOption('category', '', false);
 	}
 
 	/** @inheritdoc */
