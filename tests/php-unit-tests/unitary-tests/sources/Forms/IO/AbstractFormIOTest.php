@@ -67,7 +67,7 @@ class AbstractFormIOTest extends AbstractFormsTest
 	 * @return void
 	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
 	 */
-	public function testNameFormatSupportsOnlyLettersUnderscoreAndNumbers(string $sName, bool $bGenerateException = true)
+	public function testNameFormatSupportsOnlyLettersUnderscoreAndNumbersAndDot(string $sName, bool $bGenerateException = true)
 	{
 
 		if ($bGenerateException) {
@@ -75,7 +75,7 @@ class AbstractFormIOTest extends AbstractFormsTest
 		}
 		$oInput = $this->GivenInput($sName);
 		if (!$bGenerateException) {
-			$this->assertEquals($sName.'_input', $oInput->GetName());
+			$this->assertEquals($sName, $oInput->GetName());
 		}
 	}
 
@@ -88,12 +88,15 @@ class AbstractFormIOTest extends AbstractFormsTest
 			'Percent not supported' => ['name%'],
 			'Accent not supported' => ['namé'],
 			'emoji not supported' => ['🎄🎄🎄🎄🎄'],
+			'.name not supported' => ['.name'],
+			'name. not supported' => ['name.'],
 
 			// Corrects
 			'Numbers OK' => ['name123', false],
 			'Starting with number OK' => ['123name123', false],
 			'Underscore OK' => ['The_test_name', false],
 			'Camel OK' => ['TheTestName', false],
+			'name.subname OK' => ['name.subname', false],
 		];
 	}
 

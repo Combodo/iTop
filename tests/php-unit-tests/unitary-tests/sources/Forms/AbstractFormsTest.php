@@ -25,16 +25,16 @@ abstract class AbstractFormsTest extends ItopDataTestCase
 {
 	public function GivenInput(string $sName, string $sType = StringIOFormat::class): FormInput
 	{
-		$oBlock = $this->GivenFormBlock($sName.'_block');
+		$oBlock = $this->GivenFormBlock($sName);
 
-		return new FormInput($sName.'_input', $sType, $oBlock);
+		return new FormInput($sName, $sType, $oBlock);
 	}
 
 	public function GivenOutput(string $sName, string $sType = StringIOFormat::class): FormOutput
 	{
-		$oBlock = $this->GivenFormBlock($sName.'_block');
+		$oBlock = $this->GivenFormBlock($sName);
 
-		return new FormOutput($sName.'_output', $sType, $oBlock);
+		return new FormOutput($sName, $sType, $oBlock);
 	}
 
 	public function GivenFormBlock(string $sName): FormBlock
