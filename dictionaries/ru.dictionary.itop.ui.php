@@ -1,21 +1,17 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
 /**
- * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
- *
- * @author      Vladimir Kunin <v.b.kunin@gmail.com>
- * @link        http://community.itop-itsm.ru  iTop Russian Community
- * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-//
-// Class: AuditCategory
-//
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:AuditCategory' => 'Категория аудита',
 	'Class:AuditCategory+' => 'Раздел внутри общего аудита',
 	'Class:AuditCategory/Attribute:name' => 'Название категории',
@@ -31,23 +27,22 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error threshold~~',
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
-	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
-));
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:AuditRule' => 'Правило аудита',
 	'Class:AuditRule+' => 'Правило для проверки данной категории аудита',
 	'Class:AuditRule/Attribute:name' => 'Название правила',
 	'Class:AuditRule/Attribute:name+' => 'Краткое название этого правила',
 	'Class:AuditRule/Attribute:description' => 'Описание правила аудита',
 	'Class:AuditRule/Attribute:description+' => 'Полное описание этого правила аудита',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Класс тега',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Класс объекта',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Код поля',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Запрос для выполнения',
 	'Class:AuditRule/Attribute:query+' => 'OQL выражение, выполняющее проверку набора объектов категории аудита',
 	'Class:AuditRule/Attribute:valid_flag' => 'Валидные объекты?',
@@ -59,14 +54,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:AuditRule/Attribute:category_id' => 'Категория',
 	'Class:AuditRule/Attribute:category_id+' => 'Категория для этого правила',
 	'Class:AuditRule/Attribute:category_name' => 'Категория',
-	'Class:AuditRule/Attribute:category_name+' => 'Категория для этого правила'
-));
+	'Class:AuditRule/Attribute:category_name+' => 'Категория для этого правила',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -78,13 +75,13 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -95,13 +92,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Query' => 'Запрос',
 	'Class:Query+' => 'Запрос - это набор данных, определенных динамическим путем',
 	'Class:Query/Attribute:name' => 'Название',
@@ -128,7 +125,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:QueryOQL+' => 'Запрос, основанный на OQL (Object Query Language)',
 	'Class:QueryOQL/Attribute:oql' => 'Выражение',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL Выражение',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -139,7 +136,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Class: User
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:User' => 'Пользователь',
 	'Class:User+' => 'Пользователь',
 	'Class:User/Attribute:finalclass' => 'Тип аккаунта',
@@ -172,23 +169,28 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:User/Attribute:status/Value:disabled' => 'Отключен',
 	'Class:User/Error:LoginMustBeUnique' => 'Логин должен быть уникальным - "%1s" уже используется.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Как минимум один профиль должен быть назначен данному пользователю.',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'You cannot remove your own rights to edit Users~~',
+	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Этому пользователю должна быть назначена хотя бы одна организация.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Организация не разрешена.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'Учетная запись пользователя не принадлежит вашим разрешенным организациям.',
 	'Class:User/Error:PersonIsMandatory' => 'Необходимо выбрать персону.',
+	'Class:User/Warning:NoOrganizationMeansFullAccess' => 'No "Allowed Organizations" defined for this user, this means they have access to all organizations~~',
+	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'Внутренний пользователь',
 	'Class:UserInternal+' => 'Учетная запись создана внутри '.ITOP_APPLICATION_SHORT,
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_Profiles' => 'Профиль',
 	'Class:URP_Profiles+' => 'Пользовательский профиль',
 	'Class:URP_Profiles/Attribute:name' => 'Название',
@@ -197,13 +199,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_Profiles/Attribute:description+' => 'Описание',
 	'Class:URP_Profiles/Attribute:user_list' => 'Пользователи',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Пользователи, имеющие эту роль',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_Dimensions' => 'размерность',
 	'Class:URP_Dimensions+' => 'применение размерности (определение силосов)',
 	'Class:URP_Dimensions/Attribute:name' => 'Название',
@@ -212,13 +214,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'краткое описание',
 	'Class:URP_Dimensions/Attribute:type' => 'Тип',
 	'Class:URP_Dimensions/Attribute:type+' => 'имя класса или типа данных (проекционный блок)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_UserProfile' => 'Профиль пользователя',
 	'Class:URP_UserProfile+' => 'Профиль пользователя',
 	'Class:URP_UserProfile/Name' => 'Связь между %1$s и %2$s',
@@ -232,14 +234,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_UserProfile/Attribute:profile+' => 'Название профиля',
 	'Class:URP_UserProfile/Attribute:reason' => 'Причина',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Пояснение причины назначения этой роли',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_UserOrg' => 'Организации пользователя',
 	'Class:URP_UserOrg+' => 'Разрешённые организации',
 	'Class:URP_UserOrg/Name' => 'Связь между %1$s и %2$s',
@@ -253,13 +254,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Разрешённая организация',
 	'Class:URP_UserOrg/Attribute:reason' => 'Причина',
 	'Class:URP_UserOrg/Attribute:reason+' => 'Пояснение причины разрешения доступа к данным этой организации',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_ProfileProjection' => 'Проекция профиля',
 	'Class:URP_ProfileProjection+' => 'Проекция профиля',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Размерность',
@@ -274,13 +275,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL выражение (используя $user) | константа |  | +атрибут кода',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Атрибут',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Целевой атрибут кода (необязательный)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_ClassProjection' => 'Проекция классов',
 	'Class:URP_ClassProjection+' => 'Проекция классов',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Размерность',
@@ -293,13 +294,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL выражение (используя $this) | константа |  | +атрибут кода',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Атрибут',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Целевой атрибут кода (необязательный)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_ActionGrant' => 'действие разрешений',
 	'Class:URP_ActionGrant+' => 'разрешения на классы',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Профиль',
@@ -316,13 +317,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'нет',
 	'Class:URP_ActionGrant/Attribute:action' => 'Действие',
 	'Class:URP_ActionGrant/Attribute:action+' => 'действие выполняемое на данном классе',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_StimulusGrant' => 'разрешения стимулов',
 	'Class:URP_StimulusGrant+' => 'разрешения на стимулы в жизненном цикле объекта',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Профиль',
@@ -339,25 +340,25 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'нет',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Стимулы',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'код стимулов',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_AttributeGrant' => 'разрешения атрибутов',
 	'Class:URP_AttributeGrant+' => 'разрешения на уровне атрибутов',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Действие предоставления',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'действие предоставления',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Атрибут',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Код атрибута',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:UserDashboard' => 'Дашборд пользователя',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'Пользователь',
@@ -366,27 +367,15 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '',
 	'Class:UserDashboard/Attribute:contents' => 'Содержимое',
 	'Class:UserDashboard/Attribute:contents+' => '',
-));
-
-//
-// Expression to Natural language
-//
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'y',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:WelcomeMenu' => 'Добро пожаловать',
-	'Menu:WelcomeMenu+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenuPage' => 'Добро пожаловать',
-	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT,
-	'Menu:AdminTools' => 'Инструменты администратора',
+	'Menu:WelcomeMenu+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Добро пожаловать',
+	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Инструменты администратора',
 	'Menu:AdminTools+' => 'Инструменты администратора',
 	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей c правами администратора',
 	'Menu:CSVImportMenu' => 'Импорт CSV',
@@ -398,53 +387,19 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:NotificationsMenu' => 'Уведомления',
 	'Menu:NotificationsMenu+' => 'Настройка уведомлений',
 	'Menu:MyShortcuts' => 'Избранное',
+	'Menu:Notifications:Title' => 'Категории аудита',
 	'Menu:DataAdministration' => 'Администрирование данных',
 	'Menu:DataAdministration+' => 'Администрирование данных',
-));
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'BooleanLabel:yes' => 'да',
 	'BooleanLabel:no' => 'нет',
-	'UI:Login:Title' => 'Вход в '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:Title' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' является порталом оперативного централизованного управления IT инфраструктурой с открытым исходным кодом.</p>
-<ul>Он включает:
-<li>A complete CMDB (Configuration management database) to document and manage the IT inventory.</li>
-<li>Модуль управления инцидентами для отслеживания и общения по вопросам IT.</li>
-<li>Модуль управления изменениями для планирования и отслеживания изменений в IT.</li>
-<li>База данных известных ошибок для ускорения устранения инцидентов.</li>
-<li>Модуль простоев для документирования всех запланированных простоев и оповещения соответстсвующих контактов.</li>
-<li>Панели для быстрого обзора IT.</li>
-</ul>
-<p>Все модули могут быть настроены, шаг за шагом, независмо друг от друга.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' ориентирован на предоставления сервисов, он позволяет IT специалистам легко управляться с несколькими заказчиками или организациями.
-<ul>'.ITOP_APPLICATION_SHORT.' обеспечивает многофункциональный набор бизнес-процессов, которые:
-<li>Повышают эффективность управления IT</li>
-<li>Повышают производительность IT-операций</li>
-<li>Улучшают удовлетворенность клиентов и обеспечивают понимание бизнес-процессов.</li>
-</ul>
-</p>
-<p>'.ITOP_APPLICATION_SHORT.' полностью открыт для интеграции в рамках текущего управления ИТ-инфраструктурой.</p>
-<p>
-<ul>Внедрение ИТ-портала нового поколения поможет вам:
-<li>Лучше управлять более и более сложными ИТ-окружениями.</li>
-<li>Реализовывать процессы ITIL в вашем собственном темпе.</li>
-<li>Управлять наиболее важным активом ИТ: документацией.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Поздравляем, вы приземлились на '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>Эта версия имеет совершенно новый современный и отзывчивый дизайн бэк-офиса.</div>
-
-<div>Мы сохранили основные функции '.ITOP_APPLICATION.' и модернизировали их, чтобы вы полюбили их ещё больше.
-Мы надеемся, что вам понравится эта версия так же, как нам понравилось ее придумывать и создавать.</div>
-
-<div>Обновите свои персональные <a href="/pages/preferences.php">предпочтения</a> для более комфортной работы в '.ITOP_APPLICATION.'.</div>',
-	'UI:WelcomeMenu:AllOpenRequests' => 'Открытые запросы: %1$d',
+	'UI:Login:Title' => 'Вход в '.ITOP_APPLICATION_SHORT, 'UI:WelcomeMenu:Title' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT, 'UI:WelcomeMenu:AllOpenRequests' => 'Открытые запросы: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Мои запросы',
 	'UI:WelcomeMenu:OpenIncidents' => 'Открытые инциденты: %1$d',
 	'UI:WelcomeMenu:AllConfigItems' => 'Конфигурационные единицы: %1$d',
@@ -547,7 +502,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:History:LastModified_On_By' => 'Последнее изменение %1$s by %2$s.',
 	'UI:HistoryTab' => 'История',
 	'UI:NotificationsTab' => 'Оповещения',
-	'UI:History:BulkImports' => 'История~~',
+	'UI:History:BulkImports' => 'История',
 	'UI:History:BulkImports+' => 'List of CSV imports (latest import first)',
 	'UI:History:BulkImportDetails' => 'Changes resulting from the CSV import performed on %1$s (by %2$s)~~',
 	'UI:History:Date' => 'Дата',
@@ -556,11 +511,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:History:User+' => 'Пользователь сделавший изменение',
 	'UI:History:Changes' => 'Изменения',
 	'UI:History:Changes+' => 'Изменения, внесенные в объект',
-	'UI:History:StatsCreations' => 'Создан~~',
+	'UI:History:StatsCreations' => 'Создан',
 	'UI:History:StatsCreations+' => 'Count of objects created',
-	'UI:History:StatsModifs' => 'Изменен~~',
+	'UI:History:StatsModifs' => 'Изменен',
 	'UI:History:StatsModifs+' => 'Count of objects modified',
-	'UI:History:StatsDeletes' => 'Удален~~',
+	'UI:History:StatsDeletes' => 'Удален',
 	'UI:History:StatsDeletes+' => 'Count of objects deleted',
 	'UI:Loading' => 'Загрузка...',
 	'UI:Menu:Actions' => 'Действия',
@@ -573,6 +528,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Menu:Manage' => 'Управление...',
 	'UI:Menu:EMail' => 'Отправить ссылку по email',
 	'UI:Menu:CSVExport' => 'Экспорт в CSV...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Редактировать...',
 	'UI:Menu:Delete' => 'Удалить...',
 	'UI:Menu:BulkDelete' => 'Удалить...',
@@ -633,13 +589,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Login:RetypeNewPasswordPrompt' => 'Повторите новый пароль',
 	'UI:Login:IncorrectOldPassword' => 'Ошибка: старый пароль неверный',
 	'UI:LogOffMenu' => 'Выход',
-	'UI:LogOff:ThankYou' => 'Спасибо за использование '.ITOP_APPLICATION_SHORT,
-	'UI:LogOff:ClickHereToLoginAgain' => 'Нажмите здесь, чтобы снова войти...',
+	'UI:LogOff:ThankYou' => 'Спасибо за использование '.ITOP_APPLICATION_SHORT, 'UI:LogOff:ClickHereToLoginAgain' => 'Нажмите здесь, чтобы снова войти...',
 	'UI:ChangePwdMenu' => 'Изменить пароль...',
 	'UI:Login:PasswordChanged' => 'Пароль успешно изменён!',
 	'UI:Login:PasswordNotChanged' => 'Error: Password is the same!~~',
-	'UI:AccessRO-All' => 'Только чтение~~',
-	'UI:AccessRO-Users' => 'Только чтение для конечных пользователей~~',
+	'UI:AccessRO-All' => 'Только чтение',
+	'UI:AccessRO-Users' => 'Только чтение для конечных пользователей',
 	'UI:ApplicationEnvironment' => 'Application environment: %1$s~~',
 	'UI:Login:RetypePwdDoesNotMatch' => 'Пароли не совпадают',
 	'UI:Button:Login' => 'Войти',
@@ -667,6 +622,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d объект(ов) будут добавлены.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d объект(ов) будут содержать ошибки.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objects(s) remained unchanged.~~',
+	'UI:CSVImport:ObjectsReчmainedUnchanged' => '%1$d объект(ов) не изменились.',
 	'UI:CSVImport:ObjectsWereModified' => '%1$d объект(ов) изменены.',
 	'UI:CSVImport:ObjectsWereAdded' => '%1$d объект(ов) добавлены.',
 	'UI:CSVImport:ObjectsHadErrors' => '%1$d объект(ов) содержат ошибки.',
@@ -686,6 +642,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVImport:TreatFirstLineAsHeader' => 'Использовать первую строку как заголовок (названия столбцов)',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => 'Пропустить %1$s строк(у) от начала файла',
 	'UI:CSVImport:CSVDataPreview' => 'Предпросмотр данных CSV',
+	'UI:CSVImport:Column' => 'Column %1$s~~',
 	'UI:CSVImport:SelectFile' => 'Выбор файла для импорта:',
 	'UI:CSVImport:Tab:LoadFromFile' => 'Загрузить из файла',
 	'UI:CSVImport:Tab:CopyPaste' => 'Копировать и вставить данные',
@@ -706,11 +663,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVImport:AlertMultipleMapping' => 'Пожалуйста, убедитесь, что целевое поле сопоставляется только один раз.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Пожалуйста, выберите хотя бы один критерий поиска.',
 	'UI:CSVImport:Encoding' => 'Кодировка символов',
+	'UI:CSVImport:ViewAllPossibleValues' => 'View all possible values~~',
+	'UI:CSVImport:ViewAllAmbiguousValues' => 'View all ambiguous values~~',
 	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Универсальный поиск',
 	'UI:UniversalSearch:Error' => 'Ошибка: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Выбор класса для поиска: ',
 	'UI:CSVReport-Value-Modified' => 'Изменен',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
@@ -759,7 +718,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVExport:LostChars' => 'Проблема кодировки',
 	'UI:CSVExport:LostChars+' => 'The downloaded file will be encoded into %1$s. '.ITOP_APPLICATION_SHORT.' has detected some characters that are not compatible with this format. Those characters will either be replaced by a substitute (e.g. accentuated chars losing the accent), or they will be discarded. You can copy/paste the data from your web browser. Alternatively, you can contact your administrator to change the encoding (See parameter \'csv_file_default_charset\').',
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - Аудит CMDB',
-	'UI:Audit:InteractiveAudit' => 'Интерактивный аудит',
 	'UI:Audit:Interactive:All:Title' => 'Audit results~~',
 	'UI:Audit:Interactive:All:SubTitle' => 'Full audit: includes all rules, all categories, all domains~~',
 	'UI:Audit:Interactive:All:BreadCrumb' => 'Full audit~~',
@@ -773,6 +731,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Audit:Interactive:Domain:BreadCrumb' => '%1$s~~',
 	'UI:Audit:Interactive:Domain:BreadCrumb+' => 'Audit for Domain: %1$s~~',
 	'UI:Audit:Interactive:Selection:Title' => 'Selection of an audit~~',
+	'UI:Audit:InteractiveAudit' => 'Интерактивный аудит',
 	'UI:Audit:Interactive:Selection:SubTitle' => 'Select a domain to get the results limited to this domain or select "All categories" to get a full audit (can take time or even fail if too much data to audit)~~',
 	'UI:Audit:Interactive:Selection:BreadCrumb' => 'Selection~~',
 	'UI:Audit:Interactive:Selection:BreadCrumb+' => 'Selection of an Audit to run~~',
@@ -787,14 +746,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Audit:OqlError' => 'OQL Error~~',
 	'UI:Audit:Error:ValueNA' => 'n/a~~',
 	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
-	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL ошибка в правиле %1$s: %2$s.~~',
+	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL ошибка в правиле %1$s: %2$s.',
 	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
-	'UI:Audit:ErrorIn_Category_Reason' => 'OQL ошибка в категории %1$s: %2$s.~~',
+	'UI:Audit:ErrorIn_Category_Reason' => 'OQL ошибка в категории %1$s: %2$s.',
 	'UI:Audit:AuditErrors' => 'Audit Errors~~',
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
-	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%% of the object are valid~~',
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Оценка запросов OQL',
 	'UI:RunQuery:QueryExamples' => 'Примеры запросов',
 	'UI:RunQuery:QueryResults' => 'Результаты запроса',
@@ -916,7 +875,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Не удалось удалить этот объект, поскольку перед удалением необходимо выполнить некоторые операции вручную (в отношении зависимостей от объекта).',
 	'UI:Error:CannotDeleteBecauseManualOpNeeded' => 'Не удалось удалить этот объект, поскольку перед удалением необходимо выполнить некоторые операции вручную.',
 	'UI:Archive_User_OnBehalfOf_User' => '%1$s от имени %2$s',
-	'UI:Delete:Deleted' => 'удален~~',
+	'UI:Delete:Deleted' => 'удален',
 	'UI:Delete:AutomaticallyDeleted' => 'автоматически удалён',
 	'UI:Delete:AutomaticResetOf_Fields' => 'автоматически сброшено поле(я): %1$s',
 	'UI:Delete:CleaningUpRefencesTo_Object' => 'Удаление всех ссылок на %1$s...',
@@ -926,7 +885,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Delete:ConfirmDeletionOf_Name' => 'Удаление %1$s',
 	'UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class' => 'Удаление %1$d объектов класса %2$s',
 	'UI:Delete:CannotDeleteBecause' => 'Could not be deleted: %1$s~~',
-	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => 'Should be automaticaly deleted, but this is not feasible: %1$s~~',
+	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => 'Should be automatically deleted, but this is not feasible: %1$s~~',
 	'UI:Delete:MustBeDeletedManuallyButNotPossible' => 'Must be deleted manually, but this is not feasible: %1$s~~',
 	'UI:Delete:WillBeDeletedAutomatically' => 'Будет удалено автоматически',
 	'UI:Delete:MustBeDeletedManually' => 'Необходимо удалить вручную',
@@ -940,8 +899,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Delete:PleaseDoTheManualOperations' => 'Необходимо выполнить указанные операции в ручную до удаления этого объекта',
 	'UI:Delect:Confirm_Object' => 'Подтвердите удаление %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Подтвердите удаление %1$d объектов класса %2$s.',
-	'UI:WelcomeToITop' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT,
-	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s подробности',
+	'UI:WelcomeToITop' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s подробности',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Ошибка',
 	'UI:ObjectDoesNotExist' => 'Извините, этот объект не существует (или вы не можете его видеть).',
 	'UI:ObjectArchived' => 'Этот объект заархивирован. Включите режим просмотра архива или обратитесь к администратору.',
@@ -975,6 +933,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:BulkDeleteTitle' => 'Выбор объектов для удаления:',
 	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.' Объект создан.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s создан.',
+	'UI:Toggle:CustomDashboard' => 'Пользовательский',
+	'UI:Toggle:StandardDashboard' => 'Стандартный',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Применение %1$s на объект: %2$s в состоянии %3$s для целевого класса: %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'Объект не может быть записан: %1$s',
 	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Критическая ошибка',
@@ -1066,10 +1026,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 <ol>
 	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
 	Для тестирования и устранения неполадок в настройках почты доступна специальная страница: <a href="../setup/email.test.php" target="_blank">email.test.php</a>.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
 </ol>
 </p>
-<p>Для выполнения действия связываются с триггерами. При связывании с триггером каждому действию присваивается порядковый номер, который указывает на очерёдность выполнения действий при срабатывании триггера.</p>~~',
+<p>Для выполнения действия связываются с триггерами. При связывании с триггером каждому действию присваивается порядковый номер, который указывает на очерёдность выполнения действий при срабатывании триггера.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Триггеры',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Доступные триггеры',
 	'UI:NotificationsMenu:OnCreate' => 'При создании объекта',
@@ -1091,7 +1052,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:OpenDocumentInNewWindow_' => 'Открыть',
 	'UI:DownloadDocument_' => 'Скачать',
 	'UI:Document:NoPreview' => 'Предпросмотр документов данного типа недоступен',
-	'UI:Download-CSV' => 'Загрузка %1$s~~',
+	'UI:Download-CSV' => 'Загрузка %1$s',
 	'UI:DeadlineMissedBy_duration' => 'Пропущен %1$s',
 	'UI:Deadline_LessThan1Min' => '< 1 мин',
 	'UI:Deadline_Minutes' => '%1$d мин',
@@ -1133,8 +1094,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:RelationTooltip:Redundancy' => 'Избыточность',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => 'Кол-во затронутых элементов: %1$d / %2$d',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Критический порог: %1$d / %2$d',
-	'Portal:Title' => 'Пользовательский портал '.ITOP_APPLICATION_SHORT,
-	'Portal:NoRequestMgmt' => 'Уважаемый %1$s, вы были перенаправлены на портал, потому что ваш аккаунт содержит профиль \'Portal user\'. К сожалению, '.ITOP_APPLICATION_SHORT.' не содержит модуля \'Request Management\'. Пожалуйста, свяжитесь с вашим администратором.',
+	'Portal:Title' => 'Пользовательский портал '.ITOP_APPLICATION_SHORT, 'Portal:NoRequestMgmt' => 'Уважаемый %1$s, вы были перенаправлены на портал, потому что ваш аккаунт содержит профиль \'Portal user\'. К сожалению, '.ITOP_APPLICATION_SHORT.' не содержит модуля \'Request Management\'. Пожалуйста, свяжитесь с вашим администратором.',
 	'Portal:Refresh' => 'Обновить',
 	'Portal:Back' => 'Назад',
 	'Portal:WelcomeUserOrg' => 'Добро пожаловать, %1$s (%2$s)',
@@ -1165,7 +1125,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:Attachments' => 'Вложения',
 	'Portal:AddAttachment' => 'Добавить вложения',
 	'Portal:RemoveAttachment' => ' Удалить вложения',
-	'Portal:Attachment_No_To_Ticket_Name' => 'Вложение #%1$d to %2$s (%3$s)~~',
+	'Portal:Attachment_No_To_Ticket_Name' => 'Вложение #%1$d to %2$s (%3$s)',
 	'Portal:SelectRequestTemplate' => 'Select a template for %1$s~~',
 	'Enum:Undefined' => 'Не определён',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s д %2$s ч %3$s мин %4$s с',
@@ -1190,23 +1150,23 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:BulkModifyStatusSkipped' => 'Пропущен',
 	'UI:BulkModify_Count_DistinctValues' => '%1$d различных значения:',
 	'UI:BulkModify:Value_Exists_N_Times' => '%1$s, %2$d раз(а)',
-	'UI:BulkModify:N_MoreValues' => '%1$d дополнительных значения...~~',
+	'UI:BulkModify:N_MoreValues' => '%1$d дополнительных значения...',
 	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Attempting to set the read-only field: %1$s~~',
 	'UI:FailedToApplyStimuli' => 'Операция не может быть выполнена.',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: Modifying %2$d objects of class %3$s~~',
 	'UI:CaseLogTypeYourTextHere' => 'Введите свой текст:',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:~~',
 	'UI:CaseLog:InitialValue' => 'Initial value:~~',
-	'UI:AttemptingToSetASlaveAttribute_Name' => 'The field %1$s is not writable because it is mastered by the data synchronization. Value not set.~~',
+	'UI:AttemptingToSetASlaveAttribute_Name' => 'The field %1$s (%2$s) is not writable because it is mastered by the data synchronization. Value not set.~~',
 	'UI:ActionNotAllowed' => 'You are not allowed to perform this action on these objects.~~',
 	'UI:BulkAction:NoObjectSelected' => 'Please select at least one object to perform this operation~~',
 	'UI:AttemptingToChangeASlaveAttribute_Name' => 'The field %1$s is not writable because it is mastered by the data synchronization. Value remains unchanged.~~',
 	'UI:Pagination:HeaderSelection' => 'Всего: %1$s элементов (%2$s элементов выделено).',
 	'UI:Pagination:HeaderNoSelection' => 'Всего: %1$s элементов',
 	'UI:Pagination:PageSize' => '%1$s объектов на страницу',
-	'UI:Pagination:PagesLabel' => 'Страницы:~~',
+	'UI:Pagination:PagesLabel' => 'Страницы:',
 	'UI:Pagination:All' => 'Все',
-	'UI:HierarchyOf_Class' => 'Иерархия по: %1$s~~',
+	'UI:HierarchyOf_Class' => 'Иерархия по: %1$s',
 	'UI:Preferences' => 'Предпочтения',
 	'UI:ArchiveModeOn' => 'Activate archive mode~~',
 	'UI:ArchiveModeOff' => 'Deactivate archive mode~~',
@@ -1256,6 +1216,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Dashboard:EditCustom' => 'Редактировать пользовательскую версию...',
 	'UI:Dashboard:CreateCustom' => 'Создать пользовательскую версию...',
 	'UI:Dashboard:DeleteCustom' => 'Удалить пользовательскую версию...',
+	'UI:Dashboard:Edit' => 'Редактировать дашборд...',
 	'UI:Dashboard:RevertConfirm' => 'Будет возвращена стандартная версия дашборда. Все изменения будут утеряны. Хотите продолжить?',
 	'UI:ExportDashBoard' => 'Экспорт',
 	'UI:ImportDashBoard' => 'Импорт',
@@ -1263,6 +1224,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ImportDashboardText' => 'Выберите файл дашборда для импорта:',
 	'UI:Dashboard:Actions' => 'Действия дашборда',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
+	'UI:Dashboard:Revert' => 'Вернуть стандартную версию...',
 	'UI:DashletCreation:Title' => 'Создать новый дашлет',
 	'UI:DashletCreation:Dashboard' => 'Добавить на дашборд',
 	'UI:DashletCreation:DashletType' => 'Тип дашлета',
@@ -1318,7 +1280,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:DashletGroupByBars:Description' => 'Столбчатая диаграмма',
 	'UI:DashletGroupByTable:Label' => 'Группировка (таблица)',
 	'UI:DashletGroupByTable:Description' => 'Список (сгруппированный по полю)',
-    // New in 2.5
 	'UI:DashletGroupBy:Prop-Function' => 'Функция агрегирования',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Атрибут функции',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Направление',
@@ -1336,12 +1297,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:GroupBy:min+' => 'Minimum of %1$s',
 	'UI:GroupBy:max' => 'Максимум',
 	'UI:GroupBy:max+' => 'Maximum of %1$s',
-    // ---
 	'UI:DashletHeaderStatic:Label' => 'Заголовок',
-	'UI:DashletHeaderStatic:Description' => 'Displays an horizontal separator~~',
+	'UI:DashletHeaderStatic:Description' => 'Displays a horizontal separator~~',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Заголовок',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Контакты',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Иконка',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'Заголовок со статистикой',
 	'UI:DashletHeaderDynamic:Description' => 'Заголовок со статистикой (группировать по ...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Заголовок',
@@ -1374,7 +1335,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Month-10' => 'Октябрь',
 	'Month-11' => 'Ноябрь',
 	'Month-12' => 'Декабрь',
-    // Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Вс',
 	'DayOfWeek-Monday-Min' => 'Пн',
 	'DayOfWeek-Tuesday-Min' => 'Вт',
@@ -1395,12 +1355,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Month-11-Short' => 'Ноя.',
 	'Month-12-Short' => 'Дек.',
 	'Calendar-FirstDayOfWeek' => '1',
-    // 0 = Sunday, 1 = Monday, etc...
 	'UI:Menu:ShortcutList' => 'Добавить в избранное...',
 	'UI:Menu:FilterList' => 'Display list with search criteria~~',
 	'UI:ShortcutRenameDlg:Title' => 'Переименовать ссылку',
 	'UI:ShortcutListDlg:Title' => 'Добавить в избранное ссылку на список',
 	'UI:ShortcutDelete:Confirm' => 'Подтвердите удаление ссылки (ссылок).',
+	'UI:ObjectShortcutInsert' => 'Insert Object Shortcut~~',
 	'Class:Shortcut' => 'Ссылка',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => 'Название',
@@ -1409,6 +1369,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ShortcutOQL+' => '',
 	'Class:ShortcutOQL/Attribute:oql' => 'Запрос',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL defining the list of objects to search for',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Класс тега',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Код поля',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Класс объекта',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Обновлять автоматически',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Disabled',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate',
@@ -1447,8 +1410,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:AddAnExisting_Class' => 'Добавить объекты класса %1$s...',
 	'UI:SelectionOf_Class' => 'Выбор объектов класса %1$s',
 	'UI:AboutBox' => 'Об этом '.ITOP_APPLICATION_SHORT.'...',
-	'UI:About:Title' => 'Об этом '.ITOP_APPLICATION_SHORT,
-	'UI:About:DataModel' => 'Модель данных',
+	'UI:About:Title' => 'Об этом '.ITOP_APPLICATION_SHORT, 'UI:About:DataModel' => 'Модель данных',
 	'UI:About:Support' => 'Информация для технической поддержки',
 	'UI:About:Licenses' => 'Лицензии',
 	'UI:About:InstallationOptions' => 'Параметр установки',
@@ -1491,23 +1453,18 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:UploadImage' => 'Загрузить изображение с компьютера',
 	'UI:UploadNotSupportedInThisMode' => 'Изменение изображений и файлов не поддерживается в этом режиме.',
 	'UI:Button:RemoveDocument' => 'Удалить документ',
-    // Search form
 	'UI:Search:Toggle' => 'Развернуть / Свернуть',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Автоматический запуск поиска отключен для данного класса',
 	'UI:Search:Obsolescence:DisabledHint' => 'Устаревшие данные скрыты в соответствии с вашими предпочтениями',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Добавьте критерии поиска или нажмите кнопку поиска, чтобы просмотреть объекты.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Добавить критерий',
-    // - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Недавние',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Популярные',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Остальные',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Пока нет',
-    // - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Развернуть / Свернуть',
 	'UI:Search:Criteria:Remove' => 'Удалить',
 	'UI:Search:Criteria:Locked' => 'Заблокирован',
-    // - Criteria titles
-    //   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: все',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s пусто',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s не пусто',
@@ -1529,57 +1486,38 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: все',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s от %2$s',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s до %2$s',
-    //   - Numeric widget
-    //   None yet
-    //   - DateTime widget
 	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
-    //   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s и %3$s других',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: все',
-    //   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
-    //   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s определён',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s не определён',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s и %3$s других',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: все',
-    //   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s определён',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s не определён',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s и %3$s других',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: все',
-    // - Criteria operators
-    //   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Пусто',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Не пусто',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Равно',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Между',
-    //   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Содержит',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Начинается с',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Заканч. на',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Регуляр. выраж.',
-    //   - Numeric widget
 	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Равно',
-    // => '=',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Больше',
-    // => '>',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Больше / равно',
-    // > '>=',
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Меньше',
-    // => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Меньше / равно',
-    // > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Не равно',
-    // => '≠',
-    //   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Совпадает',
-    // - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Фильтр...',
 	'UI:Search:Value:Search:Placeholder' => 'Поиск...',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Начните печатать, чтобы увидеть возможные значения.',
@@ -1587,7 +1525,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Search:Value:Autocomplete:NoResult' => 'Нет результата.',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Отметить / снять все',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Отметить / снять все видимые',
-    // - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'С',
 	'UI:Search:Criteria:Numeric:Until' => 'По',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Любой',
@@ -1604,12 +1541,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Search:Criteria:Raw:Filtered' => 'Отфильтровано',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Отфильтровано по %1$s',
 	'UI:StateChanged' => 'State changed~~',
-));
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Expression:Operator:AND' => ' AND ',
 	'Expression:Operator:OR' => ' OR ',
 	'Expression:Operator:=' => ': ~~',
@@ -1622,12 +1559,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Expression:Unit:Long:MINUTE' => 'minute(s)',
 	'Expression:Verb:NOW' => 'now',
 	'Expression:Verb:ISNULL' => ': undefined~~',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Newsroom:NoNewMessage' => 'Нет новых сообщений',
 	'UI:Newsroom:XNewMessage' => 'Новые сообщения (%1$s)',
 	'UI:Newsroom:MarkAllAsRead' => 'Отметить все как прочитанные',
@@ -1635,17 +1572,20 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Newsroom:Preferences' => 'Центр новостей',
 	'UI:Newsroom:ConfigurationLink' => 'Конфигурация',
 	'UI:Newsroom:ResetCache' => 'Сбросить кеш',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Показать сообщения от %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Отобразите не более %1$s сообщений в меню %2$s.',
-));
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
+]);
 
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:DataSources' => 'Синхронизация данных',
 	'Menu:DataSources+' => 'Синхронизация данных',
 	'Menu:AuditCategories' => 'Категории аудита',
 	'Menu:AuditCategories+' => 'Категории аудита',
-	'Menu:Notifications:Title' => 'Категории аудита',
 	'Menu:AuditCategories:Title' => 'Audit configuration~~',
 	'Menu:RunQueriesMenu' => 'Выполнение запросов',
 	'Menu:RunQueriesMenu+' => 'Выполнение любых запросов',
@@ -1663,13 +1603,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:UserAccountsMenu:Title' => 'Учетные записи пользователей',
 	'Menu:UserManagement' => 'Управление пользователями',
 	'Menu:Queries' => 'Запросы OQL',
-	'Menu:ConfigurationTools' => 'Конфигурация'
-));
-// Additional language entries not present in English dict
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'UI:CSVImport:ObjectsReчmainedUnchanged' => '%1$d объект(ов) не изменились.',
-	'UI:Toggle:StandardDashboard' => 'Стандартный',
-	'UI:Toggle:CustomDashboard' => 'Пользовательский',
-	'UI:Dashboard:Edit' => 'Редактировать дашборд...',
-	'UI:Dashboard:Revert' => 'Вернуть стандартную версию...'
-));
+	'Menu:ConfigurationTools' => 'Конфигурация',
+	'Menu:ConfigEditor' => 'General configuration~~',
+	'Menu:ConfigEditor+' => 'Configuration File editor~~',
+	'Menu:Integrations' => 'Integrations~~',
+	'Menu:Integrations+' => '~~',
+
+]);

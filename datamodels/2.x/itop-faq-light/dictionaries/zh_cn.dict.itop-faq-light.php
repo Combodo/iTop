@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -45,9 +46,9 @@
 //
 // Class: FAQ
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:FAQ' => 'FAQ',
-	'Class:FAQ+' => 'FAQ',
+	'Class:FAQ+' => '常见问题',
 	'Class:FAQ/Attribute:title' => '标题',
 	'Class:FAQ/Attribute:title+' => '',
 	'Class:FAQ/Attribute:summary' => '概要',
@@ -63,29 +64,29 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FAQ/Attribute:key_words' => '关键字',
 	'Class:FAQ/Attribute:key_words+' => '',
 	'Class:FAQ/Attribute:domains' => '范围',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:FAQCategory' => 'FAQ类别',
-	'Class:FAQCategory+' => 'FAQ类别',
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:FAQCategory' => 'FAQ 类别',
+	'Class:FAQCategory+' => 'FAQ 类别',
 	'Class:FAQCategory/Attribute:name' => '名称',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
-	'Class:FAQCategory/Attribute:faq_list+' => '此类别FAQ 相关的所有常见问题',
-));
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:FAQCategory/Attribute:faq_list+' => '此类别 FAQ 相关的所有常见问题',
+]);
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ProblemManagement' => '问题管理',
 	'Menu:ProblemManagement+' => '问题管理',
 	'Menu:Problem:Shortcuts' => '快捷方式',
 	'Menu:FAQCategory' => 'FAQ 类别',
-	'Menu:FAQCategory+' => '所有FAQ类别',
+	'Menu:FAQCategory+' => '所有 FAQ 类别',
 	'Menu:FAQ' => 'FAQ',
-	'Menu:FAQ+' => '所有FAQ',
+	'Menu:FAQ+' => '所有 FAQ',
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
-	'Brick:Portal:FAQ:Title' => 'FAQ',
-	'Brick:Portal:FAQ:Title+' => '<p>需要帮助?</p><p>查阅列表中的常见问题,或许可以立即找到令您满意的答案.</p>',
-));
+	'Brick:Portal:FAQ:Title' => '常见问题',
+	'Brick:Portal:FAQ:Title+' => '<p>需要帮助?</p><p>查阅列表中的常见问题, 或许可以立即找到令您满意的答案.</p>',
+]);

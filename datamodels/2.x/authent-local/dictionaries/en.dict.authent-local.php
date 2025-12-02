@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -35,7 +36,7 @@
 // Class: UserLocal
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:UserLocal' => ITOP_APPLICATION_SHORT.' user',
 	'Class:UserLocal+' => 'User authentified by '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Password',
@@ -57,4 +58,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.',
 	'UserLocal:password:expiration' => 'The fields below require an extension',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User',
-));
+]);

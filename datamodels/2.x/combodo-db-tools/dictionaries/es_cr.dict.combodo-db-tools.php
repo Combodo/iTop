@@ -1,29 +1,14 @@
 <?php
+
 /**
- * Spanish localized data
+ * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-// Database inconsistencies
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	// Dictionary entries go here
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:DBToolsMenu' => 'Integridad de Base de Datos',
 	'DBTools:Class' => 'Clase',
 	'DBTools:Title' => 'Herramientas de Mantenimiento de Base de Datos',
@@ -47,7 +32,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'DBTools:ShowAll' => 'Mostrar todos los errores',
 	'DBTools:Inconsistencies' => 'Inconsistencias de Base de Datos',
 	'DBTools:DetailedErrorTitle' => '%2$s error(es) en clase %1$s: %3$s',
-	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
+	'DBTools:DetailedErrorLimit' => 'Lista limitada a %1$s errores',
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Registro huérfano en `%1$s`, debería tener su contraparte en la tabla `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Llave externa inválida %1$s (columna: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Llave externa perdida %1$s (columna: `%2$s.%3$s`)',
@@ -57,17 +42,17 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'DBAnalyzer-Fetch-Count-Error' => 'Obtener cuenta de errores en `%1$s`, %2$d entradas recuperadas / %3$d contadas',
 	'DBAnalyzer-Integrity-FinalClass' => 'Campo `%2$s`.`%1$s` debe tener los mismos valores que `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Campo `%2$s`.`%1$s` debe contener un caracter válido',
-));
+]);
 
 // Database Info
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'DBTools:DatabaseInfo' => 'Información de Base de Datos',
 	'DBTools:Base' => 'Base',
 	'DBTools:Size' => 'Tamaño',
-));
+]);
 
 // Lost attachments
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'DBTools:LostAttachments' => 'Adjuntos perdidos',
 	'DBTools:LostAttachments:Disclaimer' => 'Aquí usted puede buscar anexos perdidos o fuera de lugar. Esta NO es una herramienta de recuperación de datos, no obtiene datos borrados.',
 	'DBTools:LostAttachments:Button:Analyze' => 'Analizar',
@@ -84,5 +69,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Resultados de restauración:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d adjuntos fueron restaurados.',
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Almacenado como imagen en línea',
-	'DBTools:LostAttachments:History' => 'Adjunto "%1$s" restaurado con herramientas de base de datos'
-));
+	'DBTools:LostAttachments:History' => 'Adjunto "%1$s" restaurado con herramientas de base de datos',
+]);

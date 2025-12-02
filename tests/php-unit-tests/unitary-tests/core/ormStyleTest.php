@@ -1,6 +1,7 @@
 <?php
+
 /*!
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -15,7 +16,6 @@ use utils;
  */
 class ormStyleTest extends ItopTestCase
 {
-
 	/**
 	 * @param string $sSetterName
 	 * @param string $sGetterName
@@ -289,7 +289,7 @@ class ormStyleTest extends ItopTestCase
 				'#ABCDEF',
 				'#123456',
 				'fas fa-user',
-				'images/user-request.png',
+				'images/user-request.svg',
 			],
 			'Style with empty icon path' => [
 				'regular-class',

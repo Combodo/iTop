@@ -1,31 +1,21 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+/**
+ *
+ */
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'iTopUpdate:UI:PageTitle' => 'Application Upgrade~~',
 	'itop-core-update:UI:SelectUpdateFile' => 'Application Upgrade~~',
-	'itop-core-update:UI:ConfirmUpdate' => 'Application Upgrade~~',
-	'itop-core-update:UI:UpdateCoreFiles' => 'Application Upgrade~~',
-	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance, no user can access the application. You have to run a setup or restore the application archive to return in normal mode.~~',
+	'itop-core-update:UI:ConfirmUpdate' => 'Confirm Application Upgrade~~',
+	'itop-core-update:UI:UpdateCoreFiles' => 'Application Upgrading~~',
+	'iTopUpdate:UI:MaintenanceModeActive' => 'The application is currently under maintenance in read-only mode. You have to run a setup to return in normal mode.',
 	'itop-core-update:UI:UpdateDone' => 'Application Upgrade~~',
 	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Application Upgrade~~',
 	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Confirm Application Upgrade~~',
@@ -62,10 +52,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'iTopUpdate:UI:FileUploadMaxSize' => 'File upload max size~~',
 	'iTopUpdate:UI:PostMaxSize' => 'PHP ini value post_max_size: %1$s~~',
 	'iTopUpdate:UI:UploadMaxFileSize' => 'PHP ini value upload_max_filesize: %1$s~~',
-	'iTopUpdate:UI:CanCoreUpdate:Loading' => 'Checking filesystem~~',
-	'iTopUpdate:UI:CanCoreUpdate:Error' => 'Checking filesystem failed (%1$s)~~',
-	'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => 'Checking filesystem failed (File not exist %1$s)~~',
-	'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Checking filesystem failed~~',
+	'iTopUpdate:UI:CanCoreUpdate:Loading' => 'Checking files~~',
+	'iTopUpdate:UI:CanCoreUpdate:Error' => 'Checking files failed (%1$s)~~',
+	'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => 'Checking files failed (File not exist %1$s)~~',
+	'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Checking files failed~~',
 	'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Application can be updated~~',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Application cannot be updated: %1$s~~',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
@@ -73,20 +63,17 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check~~',
 	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup~~',
 	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?~~',
-
-	// Setup Messages
+	'iTopUpdate:UI:FastSetupLaunch' => 'Fast Setup~~',
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Ready to start~~',
 	'iTopUpdate:UI:SetupMessage:EnterMaintenance' => 'Entering maintenance mode~~',
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Database backup~~',
 	'iTopUpdate:UI:SetupMessage:FilesArchive' => 'Archive application files~~',
 	'iTopUpdate:UI:SetupMessage:CopyFiles' => 'Copy new version files~~',
 	'iTopUpdate:UI:SetupMessage:CheckCompile' => 'Check application upgrade~~',
-	'iTopUpdate:UI:SetupMessage:Compile' => 'Upgrade application and database~~',
+	'iTopUpdate:UI:SetupMessage:Compile' => 'Upgrade application~~',
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Upgrade database~~',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Exiting maintenance mode~~',
 	'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Upgrade completed~~',
-
-	// Errors
 	'iTopUpdate:Error:MissingFunction' => 'Impossible to start upgrade, missing function~~',
 	'iTopUpdate:Error:MissingFile' => 'Missing file: %1$s~~',
 	'iTopUpdate:Error:CorruptedFile' => 'File %1$s is corrupted~~',
@@ -104,12 +91,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'iTopUpdate:UI:UpdateDone' => 'Upgrade successful~~',
 	'Menu:iTopUpdate' => 'Application upgrade~~',
 	'Menu:iTopUpdate+' => 'Application upgrade~~',
-
-    // Missing itop entries
 	'Class:ModuleInstallation/Attribute:installed' => 'Installed on~~',
 	'Class:ModuleInstallation/Attribute:name' => 'Name~~',
 	'Class:ModuleInstallation/Attribute:version' => 'Version~~',
 	'Class:ModuleInstallation/Attribute:comment' => 'Comment~~',
-));
-
-
+]);

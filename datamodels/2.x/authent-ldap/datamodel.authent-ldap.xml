@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="UserLDAP" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -11,7 +11,7 @@
                     * LDAP Authentication
                     * User authentication Module, no password at all!
                     *
-                    * @copyright   Copyright (C) 2010-2023 Combodo SARL
+                    * @copyright   Copyright (C) 2010-2024 Combodo SAS
                     * @license     http://opensource.org/licenses/AGPL-3.0
                     */</comment>
         <category>addon/authentication,grant_by_profile,silo</category>
@@ -21,12 +21,10 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="login"/>
           </attributes>
         </naming>
-        <display_template/>
         <style>
           <icon/>
         </style>
@@ -68,8 +66,7 @@
 		$sServer = $this->Get('ldap_server');
 		if (empty($sServer))
 		{
-			$sLDAPHost = MetaModel::GetModuleSetting('authent-ldap', 'host', 'localhost');
-			$iLDAPPort = MetaModel::GetModuleSetting('authent-ldap', 'port', 389);
+			$sURI = MetaModel::GetModuleSetting('authent-ldap', 'uri', 'ldap://localhost');
 
 			$sDefaultLDAPUser = MetaModel::GetModuleSetting('authent-ldap', 'default_user', '');
 			$sDefaultLDAPPwd = MetaModel::GetModuleSetting('authent-ldap', 'default_pwd', '');
@@ -90,8 +87,7 @@
 				return false;
 			}
 			$aServerParams = $aServers[$sServer];
-			$sLDAPHost = isset($aServerParams['host']) ? $aServerParams['host'] : 'localhost';
-			$iLDAPPort = isset($aServerParams['port']) ? $aServerParams['port'] : 389;
+			$sURI = $aServerParams['uri'] ?? 'ldap://localhost';
 			$sDefaultLDAPUser = isset($aServerParams['default_user']) ? $aServerParams['default_user'] : '';
 			$sDefaultLDAPPwd = isset($aServerParams['default_pwd']) ? $aServerParams['default_pwd'] : '';
 			$bLDAPStartTLS = isset($aServerParams['start_tls']) ? $aServerParams['start_tls'] : false;
@@ -101,10 +97,10 @@
 			$bDebug = isset($aServerParams['debug']) ? $aServerParams['debug'] : false;
 		}
 
-		$hDS = @ldap_connect($sLDAPHost, $iLDAPPort);
+		$hDS = @ldap_connect($sURI);
 		if ($hDS === false)
 		{
-			$this->LogIssue($bDebug, "ldap_authentication: can not connect to the LDAP server '$sLDAPHost' (port: $iLDAPPort). Check the configuration file config-itop.php.");
+			$this->LogIssue($bDebug, "ldap_authentication: can not connect to the LDAP server '$sURI'. Check the configuration file config-itop.php.");
 			return false;
 		}
 		if (array_key_exists(LDAP_OPT_DEBUG_LEVEL, $aOptions))
@@ -186,7 +182,7 @@
 		else
 		{
 			// Trace: invalid default user for LDAP initial binding
-			$this->LogIssue($bDebug, "ldap_authentication: cannot bind to the LDAP server '$sLDAPHost' (port: $iLDAPPort), user='$sDefaultLDAPUser', pwd='****'. Error: '".ldap_error($hDS)."'. Check the configuration file config-itop.php.");
+			$this->LogIssue($bDebug, "ldap_authentication: cannot bind to the LDAP server '$sURI', user='$sDefaultLDAPUser', pwd='****'. Error: '".ldap_error($hDS)."'. Check the configuration file config-itop.php.");
 			return false;
 		}
 	}]]></code>
@@ -355,4 +351,26 @@
       </presentation>
     </class>
   </classes>
+  <meta>
+    <classes>
+      <class id="UserInternal" _delta="define_if_not_exists">
+        <fields>
+          <field id="contactid" xsi:type="AttributeExternalKey">
+            <target_class>Contact</target_class>
+          </field>
+          <field id="first_name" xsi:type="AttributeExternalField"/>
+          <field id="last_name" xsi:type="AttributeExternalField"/>
+          <field id="status" xsi:type="AttributeEnum"/>
+          <field id="org_id" xsi:type="AttributeExternalField"/>
+          <field id="email" xsi:type="AttributeExternalField"/>
+          <field id="login" xsi:type="AttributeString"/>
+          <field id="language" xsi:type="AttributeApplicationLanguage"/>
+          <field id="status" xsi:type="AttributeEnum"/>
+          <field id="allowed_org_list" xsi:type="AttributeLinkedSetIndirect"/>
+          <field id="profile_list" xsi:type="AttributeLinkedSetIndirect"/>
+          <field id="log" xsi:type="AttributeCaseLog"/>
+        </fields>
+      </class>
+    </classes>
+  </meta>
 </itop_design>

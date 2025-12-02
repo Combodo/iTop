@@ -1,0 +1,119 @@
+{# @copyright   Copyright (C) 2010-2024 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+<div id="user-profile-wrapper">
+    {% block pUserProfileWrapper %}
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="ipb-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'Brick:Portal:UserProfile:PersonalInformations:Title'|dict_s }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form id="{{ oContactForm.id }}" class="" method="POST" action="{{ oContactForm.renderer.GetEndpoint()|raw }}">
+                            <input type="hidden" name="transaction_id" value="{{ oContactForm.transaction_id }}" />
+                            <div class="form_alerts">
+                                <div class="ipb-alert alert alert-success" role="alert" style="display: none;"></div>
+                                <div class="ipb-alert alert alert-warning" role="alert" style="display: none;"></div>
+                                <div class="ipb-alert alert alert-error alert-danger" role="alert" style="display: none;"></div>
+                            </div>
+                            <div class="form_fields">
+                                {{ oContactForm.renderer.GetBaseLayout()|raw }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                {% if oBrick.GetShowPictureForm() %}
+                    {% block pUserProfilePictureFormContainer %}
+                        <div class="ipb-panel panel panel-default user_profile_picture">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{ 'Brick:Portal:UserProfile:Photo:Title'|dict_s }}</h3>
+                            </div>
+                            <div class="panel-body" style="position: relative;">
+                                <div class="form_alerts">
+                                    <div class="ipb-alert alert alert-success" role="alert" style="display: none;"></div>
+                                    <div class="ipb-alert alert alert-warning" role="alert" style="display: none;"></div>
+                                    <div class="ipb-alert alert alert-error alert-danger" role="alert" style="display: none;"></div>
+                                </div>
+                                <form id="picture-form" method="POST" action="{{ app['url_generator'].generate('p_user_profile_brick') }}">
+                                    <input type="hidden" name="current_values[form_type]" value="{{ constant('\\Combodo\\iTop\\Portal\\Controller\\UserProfileBrickController::ENUM_FORM_TYPE_PICTURE') }}" />
+                                    <input type="hidden" name="operation" value="submit" />
+                                    <div class="text-center">
+											<span class="preview">
+												<img src="{{ sUserPhotoUrl }}"/>
+											</span>
+                                        <span class="actions">
+												<span type="button" class="btn btn-default btn_edit">
+													<span class="fas fa-pencil-alt fa-fw"></span>
+													<input id="picture" type="file" name="picture" />
+												</span>
+											</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    {% endblock %}
+                {% endif %}
+
+                {% if oBrick.GetShowPreferencesForm() %}
+                    {% block pUserProfilePreferencesFormContainer %}
+                        <div class="ipb-panel panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{ 'Class:appUserPreferences/Attribute:preferences'|dict_s }}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <form id="{{ oPreferencesForm.id }}" class="" method="POST" action="{{ oPreferencesForm.renderer.GetEndpoint()|raw }}">
+                                    <div class="form_alerts">
+                                        <div class="ipb-alert alert alert-success" role="alert" style="display: none;"></div>
+                                        <div class="ipb-alert alert alert-warning" role="alert" style="display: none;"></div>
+                                        <div class="ipb-alert alert alert-error alert-danger" role="alert" style="display: none;"></div>
+                                    </div>
+                                    <div class="form_fields">
+                                        {{ oPreferencesForm.renderer.GetBaseLayout()|raw }}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    {% endblock %}
+                {% endif %}
+
+                {% if oBrick.GetShowPasswordForm() %}
+                    {% block pUserProfilePasswordFormContainer %}
+                        <div class="ipb-panel panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{ 'Brick:Portal:UserProfile:Password:Title'|dict_s }}</h3>
+                            </div>
+                            <div class="panel-body">
+                                {% if oPasswordForm is not null %}
+                                    <form id="{{ oPasswordForm.id }}" class="" method="POST" action="{{ oPasswordForm.renderer.GetEndpoint()|raw }}" autocomplete="off">
+                                        <div class="form_alerts">
+                                            <div class="ipb-alert alert alert-success" role="alert" style="display: none;"></div>
+                                            <div class="ipb-alert alert alert-warning" role="alert" style="display: none;"></div>
+                                            <div class="ipb-alert alert alert-error alert-danger" role="alert" style="display: none;"></div>
+                                        </div>
+                                        <div class="form_fields">
+                                            {{ oPasswordForm.renderer.GetBaseLayout()|raw }}
+                                        </div>
+                                    </form>
+                                {% else %}
+                                    {{ 'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator'|dict_format(constant('ITOP_APPLICATION_SHORT')) }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endblock %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="form_buttons">
+            {% block pUserProfileFormButtons %}
+                <div class="form_btn_regular">
+                    {% if sFormMode == constant('\\Combodo\\iTop\\Portal\\Helper\\ObjectFormHandlerHelper::ENUM_MODE_EDIT') %}
+                        <input class="btn btn-primary form_btn_submit" type="submit" value="{{ 'Portal:Button:Submit'|dict_s }}">
+                    {% endif %}
+                </div>
+            {% endblock %}
+        </div>
+    {% endblock %}
+</div>

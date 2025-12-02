@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -17,7 +18,7 @@ use utils;
 
 class PopupMenuExtension implements \iPopupMenuExtension
 {
-	const MODULE_CODE = 'itop-oauth-client';
+	public const MODULE_CODE = 'itop-oauth-client';
 
 	/**
 	 * @inheritDoc
@@ -50,7 +51,7 @@ class PopupMenuExtension implements \iPopupMenuExtension
 
 					if ($bHasToken) {
 						$aScopes = $oObj->Get('scope')->GetValues();
-						if (in_array('IMAP', $aScopes)) {
+						if (in_array('IMAP', $aScopes) && class_exists('MailInboxOAuth')) {
 							$aParams = $oAppContext->GetAsHash();
 							$sMenu = 'Menu:CreateMailbox';
 							$sObjClass = get_class($oObj);

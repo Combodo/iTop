@@ -1,6 +1,4 @@
-{# itop-portal-base/portal/templates/bricks/browse/mode_tree.html.twig #}
-{# Browse brick tree mode layout #}
-{% extends 'itop-portal-base/portal/templates/bricks/browse/layout.html.twig' %}
+{% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\BrowseBrick', oBrick) %}
 
 {#
 	Documentation :
@@ -17,14 +15,22 @@
 {% endblock %}
 
 {% block bBrowseMainContent %}
-	<div class="row" id="brick_content_toolbar">
-		<div class="col-xs-4 col-sm-2 col-lg-1">
-			<div class="btn-group btn-group-justified btn-group-sm">
-				<a href="#" class="btn btn-default" id="btn-collapse-all" title="{{ 'Brick:Portal:Browse:Tree:CollapseAll'|dict_s }}">-</a>
-				<a href="#" class="btn btn-default" id="btn-expand-all" title="{{ 'Brick:Portal:Browse:Tree:ExpandAll'|dict_s }}">+</a>
-			</div>
+	<div id="brick_content_toolbar">
+        <div class="ipb-button--group">
+            <a href="#" class="ipb-button ipb-is-default" id="btn-collapse-all" title="{{ 'Brick:Portal:Browse:Tree:CollapseAll'|dict_s }}">
+                    <span class="fa-layers">
+                        <i class="fas fa-angle-down" data-fa-transform="up-4"></i>
+                        <i class="fas fa-angle-up" data-fa-transform="down-4"></i>
+                    </span>
+            </a>
+            <a href="#" class="ipb-button ipb-is-default" id="btn-expand-all" title="{{ 'Brick:Portal:Browse:Tree:ExpandAll'|dict_s }}">
+                <span class="fa-layers">
+                        <i class="fas fa-angle-down" data-fa-transform="down-4"></i>
+                        <i class="fas fa-angle-up" data-fa-transform="up-4"></i>
+                    </span>
+            </a>
 		</div>
-		<div class="col-xs-8 col-sm-10 col-lg-11 text-right">
+		<div>
 			<label>{{ 'Portal:Datatables:Language:Search'|dict_s }}<input type="search" class="form-control input-sm" id="brick_search_field" placeholder="" aria-controls="brick_main_table" value="{{ sSearchValue }}"></label>
 		</div>
 	</div>
@@ -36,7 +42,7 @@
 	</div>
 	<div id="brick_tree_overlay">
 		<div class="overlay_content">
-            {% include 'itop-portal-base/portal/templates/helpers/loader.html.twig' %}
+            {% include template('loader') %}
 		</div>
 	</div>
 {% endblock %}
@@ -149,6 +155,9 @@
 				}
 			}
 
+            // hide/show tree items filter data when search input is empty/notEmpty
+            $('.tree-item-filter-data').toggle($('#brick_search_field').val() !== '');
+
 			expandAll();
 		};
 		// Load current node childnodes throught AJAX
@@ -197,9 +206,19 @@
 
                 var liElem = $('<li></li>').addClass('list-group-item');
                 var spanElem = $('<span></span>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
+                spanElem.attr('data-tree-additional-search', item['filter_data']['values']);
+                let iconElem = $('<div>').addClass('tree-item-image');
+                if( (item.image !== undefined) && (item.image !== '') && (item.image !== null) )
+                {
+                    iconElem.append( $('<img />').attr('src', item.image));
+                }
+                else if ((item.name !== undefined) && (item.name !== '')){
+                    iconElem.append('<span>'+item.name.charAt(0)+'</span>');
+                }
                 var nameElem = $('<a></a>').addClass('tree-item').text(item.name);
                 // Building node
                 $('ul[data-level-id="'+nodeId+'"]').append(liElem);
+                spanElem.append(iconElem);
                 spanElem.append(nameElem);
                 liElem.append(spanElem);
 
@@ -212,25 +231,14 @@
                     }
                 });
 
-                // Building tooltip for the node
-                // N°4662 - Surround tooltip with div to ensure text retrival
-                if ((item.tooltip !== undefined) && ($('<div>'+item.tooltip+'</div>').text() !== ''))
-                {
-                    nameElem.attr('data-tooltip-content', item.tooltip).attr('data-tooltip-html-enabled', true);
-                    CombodoTooltip.InitTooltipFromMarkup(nameElem);
-                }
-                // Building description for the node
-                if ((item.description !== undefined) && (item.description !== ''))
-                {
-                    spanElem.append($('<span class="list-group-item-description">'+item.description+'</span>'));
-                }
+
 
 				// Building actions for that node
 				switch(levelPrimaryAction.type)
 				{
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}':
                         spanElem.addClass('tree-toggle');
-                        nameElem.html('<span class="glyphicon '+sNodeCollapsedClass+'" aria-hidden="true"></span><span class="list-group-item-text">'+nameElem.text()+'</span>');
+                        nameElem.html('<span class="glyphicon '+sNodeCollapsedClass+'" aria-hidden="true"></span><span class="list-group-item-text">'+item.name+'</span>');
                         break;
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
 						url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
@@ -252,6 +260,26 @@
 						//console.log('Action "'+levelPrimaryAction.type+'" not implemented for primary action');
 						break;
 				}
+
+                // Add filter data if present
+                if(item['filter_data']['values'] !== '')
+                {
+                    nameElem.append('<div class="tree-item-filter-data">' + item['filter_data']['values_and_codes'] + '</div>');
+                }
+
+
+                // Building tooltip for the node
+                // N°4662 - Surround tooltip with div to ensure text retrival
+                if ((item.tooltip !== undefined) && ($('<div>'+item.tooltip+'</div>').text() !== ''))
+                {
+                    nameElem.attr('data-tooltip-content', item.tooltip).attr('data-tooltip-html-enabled', true);
+                    CombodoTooltip.InitTooltipFromMarkup(nameElem);
+                }
+                // Building description for the node
+                if ((item.description !== undefined) && (item.description !== ''))
+                {
+                    nameElem.append($('<span class="list-group-item-description">'+item.description+'</span>'));
+                }
 				
 				if(levelActionsKeys.length > 1)
 				{
@@ -266,10 +294,8 @@
 					var actionsElem = $('<div></div>').addClass('list-group-item-actions');
 					liElem.append(actionsElem);
 					// Checking if a menu is necessary
-					var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
-					var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
-					var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
-					actionsSSMenuElem.append(actionsSSMenuContainerElem);
+					var actionsSSTogglerElem = $('<a class="ipb-button ipb-is-alternative ipb-is-default fas fa-ellipsis-v" data-toggle="ipb-dropdown" data-target="#item-actions-menu-'+levelAltId+'"></a>');
+					var actionsSSMenuElem = $('<ipb-dropdown id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper" data-placement="left-bottom"></ipb-dropdown>');
 					actionsElem.append(actionsSSTogglerElem);
 					actionsElem.append(actionsSSMenuElem);
 
@@ -278,7 +304,7 @@
 					{
 						var action = actionsButtons[j];
 						var actionElem = $('<a></a>');
-						var actionIconElem = $('<span></span>').appendTo(actionElem);
+						var actionIconElem = $('<span></span>').addClass('ipb-dropdown--icon').appendTo(actionElem);
 
 						switch(action.type)
 						{
@@ -312,7 +338,7 @@
 						}
 
 						actionElem.append(action.title);
-						actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
+                        actionsSSMenuElem.append( $('<li></li>').append(actionElem) );
 					}
 				}
 

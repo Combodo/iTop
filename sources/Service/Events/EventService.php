@@ -1,6 +1,7 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,9 +9,11 @@ namespace Combodo\iTop\Service\Events;
 
 use Closure;
 use Combodo\iTop\Service\Events\Description\EventDescription;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Service\Module\ModuleService;
 use ContextTag;
 use CoreException;
+use DBObject;
 use Exception;
 use ExecutionKPI;
 use ReflectionClass;
@@ -42,9 +45,9 @@ final class EventService
 	 */
 	public static function InitService()
 	{
-		$aEventServiceSetup = utils::GetClassesForInterface(iEventServiceSetup::class, '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']);
+		$aEventServiceSetup = InterfaceDiscovery::GetInstance()->FindItopClasses(iEventServiceSetup::class);
 		foreach ($aEventServiceSetup as $sEventServiceSetupClass) {
-			/** @var \Combodo\iTop\Service\Events\iEventServiceSetup $oEventServiceSetup */
+			/** @var iEventServiceSetup $oEventServiceSetup */
 			$oEventServiceSetup = new $sEventServiceSetupClass();
 			$oEventServiceSetup->RegisterEventsAndListeners();
 		}
@@ -54,6 +57,12 @@ final class EventService
 	/**
 	 * Register a callback for a specific event
 	 *
+	 * **Warning** : be ultra careful on memory footprint ! each callback will be saved in {@see aEventListeners}, and a callback is
+	 * made of the whole object instance and the method name ({@link https://www.php.net/manual/en/language.types.callable.php}).
+	 * For example to register on DBObject instances, you should better use {@see DBObject::RegisterCRUDListener()}
+	 *
+	 * @uses aEventListeners
+	 *
 	 * @api
 	 * @param string $sEvent corresponding event
 	 * @param callable $callback The callback to call
@@ -62,8 +71,12 @@ final class EventService
 	 * @param array|string|null $context context filter
 	 * @param float $fPriority optional priority for callback order
 	 *
-	 * @return string Id of the registration
+	 * @return string registration identifier
 	 *
+	 * @see DBObject::RegisterCRUDListener() to register in DBObject instances instead, to reduce memory footprint (callback saving)
+	 *
+	 * @since 3.1.0 method creation
+	 * @since 3.1.0-3 3.1.1 3.2.0 N°6716 PHPDoc change to warn on memory footprint, and {@see DBObject::RegisterCRUDListener()} alternative
 	 */
 	public static function RegisterListener(string $sEvent, callable $callback, $sEventSource = null, array $aCallbackData = [], $context = null, float $fPriority = 0.0, $sModuleId = ''): string
 	{
@@ -77,7 +90,7 @@ final class EventService
 
 		$aEventCallbacks = self::$aEventListeners[$sEvent] ?? [];
 		$sId = 'event_'.self::$iEventIdCounter++;
-		$aEventCallbacks[] = array(
+		$aEventCallbacks[] = [
 			'id'       => $sId,
 			'event'    => $sEvent,
 			'callback' => $callback,
@@ -87,7 +100,7 @@ final class EventService
 			'context'  => $context,
 			'priority' => $fPriority,
 			'module'   => $sModuleId,
-		);
+		];
 		usort($aEventCallbacks, function ($a, $b) {
 			$fPriorityA = $a['priority'];
 			$fPriorityB = $b['priority'];
@@ -150,19 +163,17 @@ final class EventService
 			try {
 				$oEventData->SetCallbackData($aEventCallback['data']);
 				$oKPI = new ExecutionKPI();
+
 				call_user_func($aEventCallback['callback'], $oEventData);
-				$sArguments = "Event: $sEvent";
-				if (utils::IsNotNullOrEmptyString($aEventCallback['module'])) {
-					$sArguments .= ' ['.$aEventCallback['module'].']';
+
+				if (is_array($aEventCallback['callback']) && !$oKPI->ComputeStatsForExtension($aEventCallback['callback'][0], $aEventCallback['callback'][1], "Event: $sEvent")) {
+					$sSignature = ModuleService::GetInstance()->GetModuleMethodSignature($aEventCallback['callback'][0], $aEventCallback['callback'][1]);
+					$oKPI->ComputeStats('FireEvent', "$sEvent callback: $sSignature");
 				}
-				$sArguments .= ' '.$aEventCallback['name'].'()';
-				$oKPI->ComputeStats('Extension', $sArguments);
-			}
-			catch (EventException $e) {
+			} catch (EventException $e) {
 				EventServiceLog::Error("Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with blocking error: ".$e->getMessage());
 				throw $e;
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$sLastExceptionMessage = "Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with non-blocking error: ".$e->getMessage();
 				EventServiceLog::Error($sLastExceptionMessage);
 				$oLastException = $e;
@@ -204,7 +215,7 @@ final class EventService
 			return true;
 		}
 		if (is_string($registeredContext)) {
-			$aContexts = array($registeredContext);
+			$aContexts = [$registeredContext];
 		} elseif (is_array($registeredContext)) {
 			$aContexts = $registeredContext;
 		} else {
@@ -244,7 +255,7 @@ final class EventService
 		$bRemoved = self::Browse(function ($sEvent, $idx, $aEventCallback) use ($sId) {
 			if ($aEventCallback['id'] == $sId) {
 				$sName = self::$aEventListeners[$sEvent][$idx]['name'];
-				unset (self::$aEventListeners[$sEvent][$idx]);
+				unset(self::$aEventListeners[$sEvent][$idx]);
 				EventServiceLog::Trace("Unregistered callback '$sName' id $sId' on event '$sEvent'");
 
 				return false;

@@ -1,8 +1,11 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+namespace Combodo\iTop\Application\WebPage;
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
@@ -10,6 +13,9 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use DeprecatedCallsLog;
+use ExecutionKPI;
+use utils;
 
 class AjaxPage extends WebPage implements iTabbedPage
 {
@@ -19,9 +25,8 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 * @var array
 	 */
 	protected $m_oTabs;
-	private $m_sMenu; // If set, then the menu will be updated
 
-	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/ajaxpage/layout';
+	public const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/ajaxpage/layout';
 	/** @var string  */
 	private $sPromiseId;
 
@@ -37,7 +42,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 * @param string $s_title Not used
 	 * @param bool $bOutputExtraResources if true will output also JS & CSS resources
 	 */
-	function __construct($s_title)
+	public function __construct($s_title)
 	{
 		$oKpi = new ExecutionKPI();
 		$sPrintable = utils::ReadParam('printable', '0');
@@ -46,15 +51,24 @@ class AjaxPage extends WebPage implements iTabbedPage
 		parent::__construct($s_title, $bPrintable);
 		//$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->no_cache();
-		$this->add_xframe_options();
+		$this->add_http_headers();
 		$this->m_oTabs = new TabManager();
 		$this->sContentType = 'text/html';
 		$this->sContentDisposition = 'inline';
-		$this->m_sMenu = "";
 		$this->sPromiseId = utils::ReadParam('ajax_promise_id', uniqid('ajax_', true));
 
 		utils::InitArchiveMode();
 		$oKpi->ComputeStats(get_class($this).' creation', 'AjaxPage');
+	}
+
+	/**
+	 * Disabling sending the header so that resource won't be blocked by CORB. See parent method documentation.
+	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation
+	 */
+	public function add_xcontent_type_options()
+	{
+		// Nothing to do !
 	}
 
 	/**
@@ -159,17 +173,6 @@ class AjaxPage extends WebPage implements iTabbedPage
 	}
 
 	/**
-	 * @param string $sHtml
-	 *
-	 * @deprecated Will be removed in 3.0.0
-	 */
-	public function AddToMenu($sHtml)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		$this->m_sMenu .= $sHtml;
-	}
-
-	/**
 	 * @inheritDoc
 	 */
 	public function output()
@@ -195,8 +198,6 @@ class AjaxPage extends WebPage implements iTabbedPage
 			}
 
 			ConsoleBlockRenderer::AddCssJsToPage($this, $this->oContentLayout);
-
-			$this->outputCollapsibleSectionInit();
 		}
 
 		// Render the blocks
@@ -288,7 +289,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 
 		if (!empty($sCurrentTabContainer) && !empty($sCurrentTab)) {
 			$iOffset = $this->m_oTabs->GetCurrentTabLength();
-			return array('tc' => $sCurrentTabContainer, 'tab' => $sCurrentTab, 'offset' => $iOffset);
+			return ['tc' => $sCurrentTabContainer, 'tab' => $sCurrentTab, 'offset' => $iOffset];
 		} else {
 			return parent::start_capture();
 		}
@@ -329,12 +330,12 @@ class AjaxPage extends WebPage implements iTabbedPage
 	{
 		assert(false);
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */
 	public static function FilterXSS($sHTML)
 	{
-		return str_ireplace(array('<script', '</script>'), array('<!-- <removed-script', '</removed-script> -->'), $sHTML);
+		return str_ireplace(['<script', '</script>'], ['<!-- <removed-script', '</removed-script> -->'], $sHTML);
 	}
 }

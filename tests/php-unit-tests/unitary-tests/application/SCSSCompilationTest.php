@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -11,7 +12,6 @@ use utils;
 
 class SCSSCompilationTest extends ItopTestCase
 {
-
 	/**
 	 * @dataProvider CompileDefaultThemesProvider
 	 * @doesNotPerformAssertions
@@ -34,7 +34,7 @@ class SCSSCompilationTest extends ItopTestCase
 	{
 		return [
 			'console' => ['css/backoffice/main.scss', ['css/backoffice/']],
-			'portal' => ['env-production/itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss', ['env-production//itop-portal-base/portal/public/css/']],
+			'portal' => ['env-production/itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss', ['env-production//itop-portal-base/portal/public/css/', 'css/']],
 		];
 	}
 

@@ -1,23 +1,16 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
-// Portal
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+/**
+ *
+ */
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Page:DefaultTitle' => 'Portal do Usuário do '.ITOP_APPLICATION_SHORT,
 	'Page:PleaseWait' => 'Aguarde...',
 	'Page:Home' => 'Página inicial',
@@ -61,18 +54,19 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Abrir</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'pt-br', //work with moment.js locales
-));
+]);
 
 // Object form
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Fechar esta solicitação',
 	'Portal:Form:Close:Warning' => 'Você deseja abandonar esta página? Os dados digitados podem ser perdidos',
 	'Portal:Error:ObjectCannotBeCreated' => 'Erro: objeto não pode ser criado. Verifique os objetos e anexos associados antes de enviar novamente este formulário',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Erro: objeto não pode ser atualizado. Verifique os objetos e anexos associados antes de enviar novamente este formulário',
-));
+	'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
+]);
 
 // UserProfile brick
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Brick:Portal:UserProfile:Name' => 'Perfil de Usuário',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Meu Perfil',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Sair',
@@ -83,15 +77,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Não foi possível alterar sua senha, entre em contato com a T.I.',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Informações pessoais',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Imagem',
-));
+]);
 
 // AggregatePageBrick
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Painel do '.ITOP_APPLICATION_SHORT,
-));
+]);
 
 // BrowseBrick brick
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Brick:Portal:Browse:Name' => 'Navegar por itens',
 	'Brick:Portal:Browse:Mode:List' => 'Lista',
 	'Brick:Portal:Browse:Mode:Tree' => 'Cascata',
@@ -104,10 +98,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Expandir todos',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Recolher todos',
 	'Brick:Portal:Browse:Filter:NoData' => 'Sem dados',
-));
+	'Brick:Portal:Browse:Mosaic:Back' => 'Voltar',
+]);
 
 // ManageBrick brick
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Brick:Portal:Manage:Name' => 'Gerenciar itens',
 	'Brick:Portal:Manage:Table:NoData' => 'Sem dados',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Ações',
@@ -122,33 +117,33 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Manage:fct:avg' => 'Média',
 	'Brick:Portal:Manage:fct:min' => 'Min.',
 	'Brick:Portal:Manage:fct:max' => 'Máx.',
-));
+]);
 
 // ObjectBrick brick
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Brick:Portal:Object:Name' => 'Objeto',
 	'Brick:Portal:Object:Form:Create:Title' => 'Novo %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Alterar %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Alterar %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Por favor, preencha as seguintes informações:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Salvo',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s salvo',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Selecionar %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecinar %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Selecionar %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecionar %1$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copiar',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copiado'
-));
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copiado',
+]);
 
 // CreateBrick brick
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Brick:Portal:Create:Name' => 'Criação rápida',
 	'Brick:Portal:Create:ChooseType' => 'Por favor, escolha um tipo:',
-));
+]);
 
 // Filter brick
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Brick:Portal:Filter:Name' => 'Filtro ativado',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'ex. conectar ao WiFi',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Pesquisa',
-));
+]);

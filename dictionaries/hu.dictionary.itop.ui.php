@@ -1,9 +1,16 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+/**
+ *
+ */
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:AuditCategory' => 'Audit kategória',
 	'Class:AuditCategory+' => '',
 	'Class:AuditCategory/Attribute:name' => 'Kategórianév',
@@ -13,29 +20,28 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:AuditCategory/Attribute:definition_set' => 'Definíciókészlet',
 	'Class:AuditCategory/Attribute:definition_set+' => '',
 	'Class:AuditCategory/Attribute:rules_list' => 'Auditszabályok',
-	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules for this category~~',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules using the object scope of this category~~',
 	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',
 	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Percentage of invalid objects below which the result is a warning (orange)~~',
 	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error threshold~~',
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
-	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
-));
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:AuditRule' => 'Auditszabály',
 	'Class:AuditRule+' => '',
 	'Class:AuditRule/Attribute:name' => 'Szabály név',
 	'Class:AuditRule/Attribute:name+' => '',
 	'Class:AuditRule/Attribute:description' => 'Leírás',
 	'Class:AuditRule/Attribute:description+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Címkeosztály',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Objektumosztály',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Mezőkód',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Lekérdezés',
 	'Class:AuditRule/Attribute:query+' => '',
 	'Class:AuditRule/Attribute:valid_flag' => 'Érvényes objektum?',
@@ -47,14 +53,16 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:AuditRule/Attribute:category_id' => 'Kategória',
 	'Class:AuditRule/Attribute:category_id+' => '',
 	'Class:AuditRule/Attribute:category_name' => 'Kategórianév',
-	'Class:AuditRule/Attribute:category_name+' => ''
-));
+	'Class:AuditRule/Attribute:category_name+' => '',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -66,13 +74,13 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -83,13 +91,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Query' => 'Lekérdezés',
 	'Class:Query+' => 'A query is a data set defined in a dynamic way~~',
 	'Class:Query/Attribute:name' => 'Név',
@@ -116,7 +124,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:QueryOQL+' => 'A query based on the Object Query Language~~',
 	'Class:QueryOQL/Attribute:oql' => 'Kifejezés',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL kifejezés',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -127,7 +135,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 // Class: User
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:User' => 'Felhasználó',
 	'Class:User+' => '',
 	'Class:User/Attribute:finalclass' => 'Felhasználó típus',
@@ -151,32 +159,37 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:User/Attribute:language/Value:FR FR' => 'Francia',
 	'Class:User/Attribute:language/Value:FR FR+' => '',
 	'Class:User/Attribute:profile_list' => 'Profil',
-	'Class:User/Attribute:profile_list+' => 'Roles, granting rights for that person~~',
+	'Class:User/Attribute:profile_list+' => '',
 	'Class:User/Attribute:allowed_org_list' => 'Engedélyezett szervezeti egységek',
-	'Class:User/Attribute:allowed_org_list+' => 'The end user is allowed to see data belonging to the following organizations. If no organization is specified, there is no restriction.~~',
+	'Class:User/Attribute:allowed_org_list+' => '',
 	'Class:User/Attribute:status' => 'Állapot',
-	'Class:User/Attribute:status+' => 'Whether the user account is enabled or disabled.~~',
+	'Class:User/Attribute:status+' => '',
 	'Class:User/Attribute:status/Value:enabled' => 'Engedélyezett',
 	'Class:User/Attribute:status/Value:disabled' => 'Letiltott',
 	'Class:User/Error:LoginMustBeUnique' => 'A felhasználónévnek egyedinek kell lennie - "%1s" már létezik.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Legalább egy profilt a felhasználóhoz kell rendelni.',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'A "%1$s" profil nem adható hozzá, le lesz tiltva',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'A saját felhasználó státuszának cseréje nem engedélyezett',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Az engedélyezett szervezeteknek tartalmazniuk kell a felhasználói szervezetet',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'A profilok jelenlegi listája nem ad elegendő hozzáférési jogot (a felhasználók már nem módosíthatók)',
+	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'A felhasználóhoz legalább egy szervezeti egységet hozzá kell rendelni',
 	'Class:User/Error:OrganizationNotAllowed' => 'A szervezeti egység nem engedélyezett.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'A felhasználói fiók nem tartozik engedélyezett szervezeti egységhez.',
 	'Class:User/Error:PersonIsMandatory' => 'A kapcsolattartó megadása kötelező',
+	'Class:User/Warning:NoOrganizationMeansFullAccess' => 'No "Allowed Organizations" defined for this user, this means they have access to all organizations~~',
+	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'Belső felhasználó',
-	'Class:UserInternal+' => ''.ITOP_APPLICATION_SHORT.'-ban létrehozott felhasználó',
-));
+	'Class:UserInternal+' => ITOP_APPLICATION_SHORT.'-n belül létrehozott felhasználó',
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_Profiles' => 'Profil',
 	'Class:URP_Profiles+' => '',
 	'Class:URP_Profiles/Attribute:name' => 'Profilnév',
@@ -185,13 +198,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_Profiles/Attribute:description+' => '',
 	'Class:URP_Profiles/Attribute:user_list' => 'Felhasználók',
 	'Class:URP_Profiles/Attribute:user_list+' => '',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_Dimensions' => 'Dimenzió',
 	'Class:URP_Dimensions+' => '',
 	'Class:URP_Dimensions/Attribute:name' => 'Dimenziónév',
@@ -200,13 +213,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_Dimensions/Attribute:description+' => '',
 	'Class:URP_Dimensions/Attribute:type' => 'Típus',
 	'Class:URP_Dimensions/Attribute:type+' => '',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_UserProfile' => 'Profilhoz rendelt felhasználók',
 	'Class:URP_UserProfile+' => '',
 	'Class:URP_UserProfile/Name' => 'Kapcsolat %1$s és %2$s között',
@@ -220,14 +233,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_UserProfile/Attribute:profile+' => '',
 	'Class:URP_UserProfile/Attribute:reason' => 'Indoklás',
 	'Class:URP_UserProfile/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_UserOrg' => 'Felhasználó szervezeti tagsága',
 	'Class:URP_UserOrg+' => '',
 	'Class:URP_UserOrg/Name' => 'Kapcsolat %1$s és %2$s között',
@@ -241,13 +253,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
 	'Class:URP_UserOrg/Attribute:reason' => 'Indoklás',
 	'Class:URP_UserOrg/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => '',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimenzió',
@@ -262,39 +274,39 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => '',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribútum',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => '',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => '',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimenzió',
 	'Class:URP_ClassProjection/Attribute:dimensionid+' => '',
 	'Class:URP_ClassProjection/Attribute:dimension' => 'Dimenziónév',
 	'Class:URP_ClassProjection/Attribute:dimension+' => '',
-	'Class:URP_ClassProjection/Attribute:class' => 'Osztály',
+	'Class:URP_ClassProjection/Attribute:class' => 'Típus',
 	'Class:URP_ClassProjection/Attribute:class+' => '',
 	'Class:URP_ClassProjection/Attribute:value' => 'Érték',
 	'Class:URP_ClassProjection/Attribute:value+' => '',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribútum',
 	'Class:URP_ClassProjection/Attribute:attribute+' => '',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_ActionGrant' => 'action_permission',
 	'Class:URP_ActionGrant+' => '',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profil',
 	'Class:URP_ActionGrant/Attribute:profileid+' => '',
 	'Class:URP_ActionGrant/Attribute:profile' => 'Profilnév',
 	'Class:URP_ActionGrant/Attribute:profile+' => '',
-	'Class:URP_ActionGrant/Attribute:class' => 'Osztály',
+	'Class:URP_ActionGrant/Attribute:class' => 'Típus',
 	'Class:URP_ActionGrant/Attribute:class+' => '',
 	'Class:URP_ActionGrant/Attribute:permission' => 'Jogosultság',
 	'Class:URP_ActionGrant/Attribute:permission+' => '',
@@ -304,22 +316,22 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => '',
 	'Class:URP_ActionGrant/Attribute:action' => 'Művelet',
 	'Class:URP_ActionGrant/Attribute:action+' => '',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_StimulusGrant' => 'stimulus_permission',
 	'Class:URP_StimulusGrant+' => '',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profil',
 	'Class:URP_StimulusGrant/Attribute:profileid+' => '',
 	'Class:URP_StimulusGrant/Attribute:profile' => 'Profilnév',
 	'Class:URP_StimulusGrant/Attribute:profile+' => '',
-	'Class:URP_StimulusGrant/Attribute:class' => 'Osztály',
+	'Class:URP_StimulusGrant/Attribute:class' => 'Típus',
 	'Class:URP_StimulusGrant/Attribute:class+' => '',
-	'Class:URP_StimulusGrant/Attribute:permission' => 'Jogosultság',
+	'Class:URP_StimulusGrant/Attribute:permission' => 'Hozzáférés',
 	'Class:URP_StimulusGrant/Attribute:permission+' => '',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => 'Igen',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => '',
@@ -327,25 +339,25 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => '',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => '',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_AttributeGrant' => 'attribute_permission',
 	'Class:URP_AttributeGrant+' => '',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Művelet engedély',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => '',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribútum',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => '',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserDashboard' => 'Felhasználói műszerfal',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'Felhasználó',
@@ -354,22 +366,12 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Tartalom',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-));
-
-//
-// Expression to Natural language
-//
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Expression:Unit:Short:DAY' => 'n',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'h',
-	'Expression:Unit:Short:YEAR' => 'é',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:WelcomeMenu' => 'Kezdőoldal',
 	'Menu:WelcomeMenu+' => '',
 	'Menu:WelcomeMenuPage' => 'Áttekintő',
@@ -386,53 +388,20 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:NotificationsMenu' => 'Értesítések',
 	'Menu:NotificationsMenu+' => '',
 	'Menu:MyShortcuts' => 'Saját gyorsgombok',
+	'Menu:Notifications:Title' => 'Audit kategóriák',
 	'Menu:DataAdministration' => 'Adat adminisztráció',
 	'Menu:DataAdministration+' => '',
-));
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'BooleanLabel:yes' => 'Igen',
 	'BooleanLabel:no' => 'Nem',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' bejelentkezés',
-	'UI:WelcomeMenu:Title' => 'Üdvözli az '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' egy teljeskörű, OpenSource, IT üzemeltetés támogató portál.</p>
-<ul>A következőket tartalmazza:
-<li>Teljeskörű CMDB (Konfigurációkezelés adatbázis) az IT eszközök dokumentálására és verzió kezelésére.</li>
-<li>Incidenskezelés modul az összes IT-hez kapcsolódó kérelem életciklusának követésére.</li>
-<li>Változáskezelés modul az IT infrastruktúra változásainak nyomonkövetésére és tervezésére.</li>
-<li>Ismert hibák adatbázisa az incidens kezelés sebességének növelésére.</li>
-<li>Üzemszünet modul az összes tervezett leállás tervezésére és azzal kapcsolatos kommunikáció támogatására.</li>
-<li>Műszerfalak az IT infrastruktúra pillanatnyi állapotának gyors áttekintésére.</li>
-</ul>
-<p>Mindegyik modul önállóan telepíthető és használható.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' egy szolgáltatás-orientált megoldás, amely segít az IT szakembereknek több ügyfél és szervezet egyidejű menedzselését.
-<ul>az iTop az üzleti folyamatok javításához egy hatékony eszköz, mert:
-<li>javítja az IT menedzsment hatékonyságát</li> 
-<li>növeli IT üzemeltetés teljesítményét</li> 
-<li>növeli az ügyfél elégedettséget és a vezetők számára lehetőséget ad az üzleti teljesítmény növelésére</li>
-</ul>
-</p>
-<p>Az iTop teljesn nyílt ezért, egyszerűen integrálható a jelenlegi IT infrastruktúrába</p>
-<p>
-<ul>Az üzemeltetési portál bevezetésével:
-<li>jobban menedzselhető az egyre komplexebb IT infrastruktúra</li>
-<li>az ITIL folyamatok bevezetésre kerülnek</li>
-<li>hatékonyan tudja kezelni az egyik legfontosabb IT eszközt, a dokumentációt.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Gratulálunk, megérkezett a '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.' oldalára!</div>
-
-<div>Ez a verzió egy vadonatúj, modern és könnyen hozzáférhető backoffice dizájnnal rendelkezik..</div>
-
-<div>Megtartottuk az '.ITOP_APPLICATION.' alapvető funkcióit és modernizáltuk őket, hogy megszerettessük önnel.
-Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élveztük a megtervezését és létrehozását.</div>
-
-<div>Szabja testre az '.ITOP_APPLICATION.' beállításait a kényelmesebb használathoz.</div>',
-	'UI:WelcomeMenu:AllOpenRequests' => 'Nyitott kérelmek: %1$d',
+	'UI:WelcomeMenu:Title' => 'Üdvözli az '.ITOP_APPLICATION_SHORT, 'UI:WelcomeMenu:AllOpenRequests' => 'Nyitott kérelmek: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Saját kérelmek',
 	'UI:WelcomeMenu:OpenIncidents' => 'Nyitott incidensek: %1$d',
 	'UI:WelcomeMenu:AllConfigItems' => 'Konfigurációs elemek: %1$d',
@@ -473,7 +442,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:Button:RemoveFromList' => ' Eltávolítás >> ',
 	'UI:Button:FilterList' => ' Szűrés... ',
 	'UI:Button:Create' => ' Létrehozás',
-	'UI:Button:Delete' => ' Törlés',
+	'UI:Button:Delete' => ' Törlés !',
 	'UI:Button:Rename' => ' Átnevezés... ',
 	'UI:Button:ChangePassword' => ' Jelszó változtatás',
 	'UI:Button:ResetPassword' => ' Jelszó visszaállítás',
@@ -509,7 +478,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:Error:2ParametersMissing' => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s és %2$s.',
 	'UI:Error:3ParametersMissing' => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s, %2$s és %3$s.',
 	'UI:Error:4ParametersMissing' => 'Hiba: a következő paramétereket meg kell adni ennél a műveletnél: %1$s, %2$s, %3$s és %4$s.',
-	'UI:Error:IncorrectOQLQuery_Message' => 'Hiba: nem megfelelő OQL lekérdezés: %1$',
+	'UI:Error:IncorrectOQLQuery_Message' => 'Hiba: nem megfelelő OQL lekérdezés: %1$s',
 	'UI:Error:AnErrorOccuredWhileRunningTheQuery_Message' => 'Hiba történt a lekérdezés futtatása közben: %1$s',
 	'UI:Error:ObjectAlreadyUpdated' => 'Hiba: az objketum már korábban módosításra került.',
 	'UI:Error:ObjectCannotBeUpdated' => 'Hiba: az objektum nem frissíthető.',
@@ -561,6 +530,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:Menu:Manage' => 'Kezelés...',
 	'UI:Menu:EMail' => 'Email',
 	'UI:Menu:CSVExport' => 'CSV exportálás...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Módosítás...',
 	'UI:Menu:Delete' => 'Törlés...',
 	'UI:Menu:BulkDelete' => 'Törlés...',
@@ -674,6 +644,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:CSVImport:TreatFirstLineAsHeader' => 'Első sor fejléc információkat tartalmaz (oszlopok nevei)',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => '%1$s sor kihagyása a fájl elejéről',
 	'UI:CSVImport:CSVDataPreview' => 'CSV adat előnézet',
+	'UI:CSVImport:Column' => 'Column %1$s~~',
 	'UI:CSVImport:SelectFile' => 'Import fájl kiválasztása:',
 	'UI:CSVImport:Tab:LoadFromFile' => 'Betöltés fájlból',
 	'UI:CSVImport:Tab:CopyPaste' => 'Adat másolás és beillesztés',
@@ -694,6 +665,8 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:CSVImport:AlertMultipleMapping' => 'Győződjön meg arról, hogy egy célmező csak egyszer kerül hozzárendelésre.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Kérem adjon eg legalább egy keresési kritériumot',
 	'UI:CSVImport:Encoding' => 'Karakterkódolás',
+	'UI:CSVImport:ViewAllPossibleValues' => 'View all possible values~~',
+	'UI:CSVImport:ViewAllAmbiguousValues' => 'View all ambiguous values~~',
 	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Univerzális kereső',
 	'UI:UniversalSearch:Error' => 'Hiba: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Keresendő osztály kiválasztása:',
@@ -715,7 +688,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:CSVReport-Value-Issue-Null' => 'A nulla nem engedélyezett',
 	'UI:CSVReport-Value-Issue-NotFound' => 'Az objektum nincs meg',
 	'UI:CSVReport-Value-Issue-FoundMany' => '%1$d egyezés található',
-	'UI:CSVReport-Value-Issue-Readonly' => 'A \'%1$\'s attribútum csak olvasható (jelenlegi érték: %2$s, várható érték: %3$s)',
+	'UI:CSVReport-Value-Issue-Readonly' => 'A \'%1$s attribútum csak olvasható (jelenlegi érték: %2$s, várható érték: %3$s)',
 	'UI:CSVReport-Value-Issue-Format' => 'A bevitel feldolgozása sikertelen: %1$s',
 	'UI:CSVReport-Value-Issue-NoMatch' => 'A \'%1$s\' attribútum nem várt értéket kapott: nincs egyezés, ellenőrizze a beírást',
 	'UI:CSVReport-Value-Issue-AllowedValues' => 'Allowed \'%1$s\' value(s): %2$s~~',
@@ -747,7 +720,6 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:CSVExport:LostChars' => 'Kódolási probléma',
 	'UI:CSVExport:LostChars+' => 'A letöltött fájl %1$s kódolású lesz. '.ITOP_APPLICATION_SHORT.' olyan karaktereket észlelt, amelyek nem kompatibilisek ezzel a formátummal. Ezeket a karaktereket vagy helyettesítő karakterekkel helyettesítjük (pl. az ékezetes karakterek elveszítik az ékezetet), vagy elvetjük őket. Az adatokat a webböngészőből másolhatja/beillesztheti. Alternatívaként a rendszergazdához is fordulhat a kódolás megváltoztatásához (lásd a \'csv_file_default_charset\' paramétert).',
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB Audit',
-	'UI:Audit:InteractiveAudit' => 'Interaktív Audit',
 	'UI:Audit:Interactive:All:Title' => 'Audit results~~',
 	'UI:Audit:Interactive:All:SubTitle' => 'Full audit: includes all rules, all categories, all domains~~',
 	'UI:Audit:Interactive:All:BreadCrumb' => 'Full audit~~',
@@ -761,6 +733,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:Audit:Interactive:Domain:BreadCrumb' => '%1$s~~',
 	'UI:Audit:Interactive:Domain:BreadCrumb+' => 'Audit for Domain: %1$s~~',
 	'UI:Audit:Interactive:Selection:Title' => 'Selection of an audit~~',
+	'UI:Audit:InteractiveAudit' => 'Interaktív Audit',
 	'UI:Audit:Interactive:Selection:SubTitle' => 'Select a domain to get the results limited to this domain or select "All categories" to get a full audit (can take time or even fail if too much data to audit)~~',
 	'UI:Audit:Interactive:Selection:BreadCrumb' => 'Selection~~',
 	'UI:Audit:Interactive:Selection:BreadCrumb+' => 'Selection of an Audit to run~~',
@@ -861,7 +834,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Változtatni kell',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'Felhasználó kéri a változtatását',
 	'UI:Schema:LifeCycleEmptyList' => 'Üres lista',
-	'UI:Schema:ClassFilter' => 'Osztály:',
+	'UI:Schema:ClassFilter' => 'Típus:',
 	'UI:Schema:DisplayLabel' => 'Megjelenítés:',
 	'UI:Schema:DisplaySelector/LabelAndCode' => 'Felirat és kód',
 	'UI:Schema:DisplaySelector/Label' => 'Címke',
@@ -889,7 +862,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => '%1$s objektumok hozzáadása %2$s osztályhoz kapcsolással: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => '%1$s objektumok hozzáadása %2$s osztályhoz csatolással',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => '%2$s osztályhoz kapcsolt %1$s objektumok kezelése: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Hozzáadás %1$s osztályhoz',
+	'UI:AddLinkedObjectsOf_Class' => '%1$s hozzáadás',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Kiválasztott objektum eltávolítása',
 	'UI:Message:EmptyList:UseAdd' => 'A lista üres, használja a "Hozzáadás..." gombot az elemekre.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Használja a keresőmezőt a hozzáadandó objektumok kiválasztásához.',
@@ -928,8 +901,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:Delete:PleaseDoTheManualOperations' => 'Hajtsa végre a következő listában található műveleteket manuálisan az objektum törlésének kéréséhez',
 	'UI:Delect:Confirm_Object' => 'Hagyja jóvá a %1$s törlését!',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Hagyja jóvá a %2$s osztály %1$d objektumának törlését!',
-	'UI:WelcomeToITop' => 'Üdvözli az '.ITOP_APPLICATION_SHORT,
-	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s részletek',
+	'UI:WelcomeToITop' => 'Üdvözli az '.ITOP_APPLICATION_SHORT, 'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s részletek',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Hiba',
 	'UI:ObjectDoesNotExist' => 'Sajnáljuk, ez az objektum nem létezik (vagy a megtekintése nem engedélyezett a felhasználó számára).',
 	'UI:ObjectArchived' => 'Ez az objektum archiválva lett. Kérjük, engedélyezze az archív módot, vagy lépjen kapcsolatba a rendszergazdával.',
@@ -963,6 +935,8 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:BulkDeleteTitle' => 'Válassza ki a törölni kívánt objektumokat:',
 	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.' objektum létrehozva.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s létrehozva.',
+	'UI:Toggle:CustomDashboard' => 'Egyéni',
+	'UI:Toggle:StandardDashboard' => 'Standard',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Alkalmazva %1$s objektumon: %2$s. Kiinduló állapot: %3$s cél állapot: %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'Az objektum írása sikertelen: %1$s',
 	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Végzetes hiba',
@@ -970,7 +944,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:FatalErrorMessage' => 'Végzetes hiba, '.ITOP_APPLICATION_SHORT.' nem tudja a műveletet folytatni',
 	'UI:Error_Details' => 'Hiba: %1$s.',
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' Felhasználókezelés - Profiltervezés',
-	'UI:UserManagement:Class' => 'Osztály',
+	'UI:UserManagement:Class' => 'Típus',
 	'UI:UserManagement:Class+' => '',
 	'UI:UserManagement:ProjectedObject' => 'Objektum',
 	'UI:UserManagement:ProjectedObject+' => '',
@@ -1044,8 +1018,8 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 	'UI:NotificationsMenu:HelpContent' => '<p>Az '.ITOP_APPLICATION_SHORT.' alkalmazásban az értesítések teljesen testreszabhatók. Értesítések az objektumok két csoportjára épülnek: <i>eseményindítók és műveletek</i>.</p>
 <p><i><b>Az eseményindítók</b></i> meghatározzák, hogy mikor kerüljön végrehajtásra az értesítés. Az iTop magjának részei a különböző eseményindítók, de a bővítményekkel továbbiak is létrehozhatók:
 <ol>
-    <li>Egyes eseményindítók akkor hajtódnak végre, amikor a megadott osztály egy objektuma <b>létrehozódik</b>, <b>frissül</b> vagy <b>törlődik</b></li>
-    <li>Egyes eseményindítók akkor hajtódnak végre, amikor a megadott osztály egy objektuma <b>felvesz</b> vagy <b>elhagy</b> egy meghatározott </b>állapotot</b>.</li>
+    <li>Egyes eseményindítók akkor hajtódnak végre, amikor a megadott típus egy objektuma <b>létrehozódik</b>, <b>frissül</b> vagy <b>törlődik</b></li>
+    <li>Egyes eseményindítók akkor hajtódnak végre, amikor a megadott típus egy objektuma <b>felvesz</b> vagy <b>elhagy</b> egy meghatározott </b>állapotot</b>.</li>
     <li>Egyes eseményindítók akkor hajtódnak végre, amikor egy <b>TTO vagy TTR küszöbérték</b><b>el lett érve</b>.</li>
 </ol>
 </p>
@@ -1053,6 +1027,7 @@ Reméljük, hogy ezt a verziót ugyanúgy kedvelni fogja, mint ahogy mi élvezt�
 <i><b>A műveletek</b></i> meghatározzák a kiváltó programok végrehajtásakor végrehajtandó műveleteket. Egyelőre csak kétféle művelet létezik:
 <ol>
     <li>Email üzenet küldése: Az ilyen műveletek meghatározzák az email küldéséhez használandó sablont, valamint az üzenet egyéb paramétereit, mint például a címzettek, fontosság stb.<br />
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
     Egy speciális oldalon: <a href="../setup/email.test.php" target="_blank">email.test.php</a> oldalon keresztül a PHP mail konfiguráció tesztelhető.</li>
     <li>Kimenő webhook-ok: Lehetővé teszik a harmadik fél alkalmazásával való integrációt strukturált adatok küldésével egy meghatározott URL-címen keresztül.</li>
 </ol>
@@ -1090,6 +1065,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:PasswordConfirm' => 'Jóváhagyás',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => '%1$s objektumok hozzáadása előtt mentse ezt az objektumot',
 	'UI:DisplayThisMessageAtStartup' => 'Az üzenet megjelenítése indításkor',
+	'UI:Display_X_ItemsPerPage' => '%1$s elem megjelenítése oldalanként',
 	'UI:RelationshipGraph' => 'Grafikus nézet',
 	'UI:RelationshipList' => 'Lista',
 	'UI:RelationGroups' => 'Csoportok',
@@ -1245,6 +1221,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:Dashboard:EditCustom' => 'Egyéni verzió szerkesztése...',
 	'UI:Dashboard:CreateCustom' => 'Egyéni verzió létrehozása...',
 	'UI:Dashboard:DeleteCustom' => 'Egyéni verzió törlése...',
+	'UI:Dashboard:Edit' => 'Oldal szerkesztése...',
 	'UI:Dashboard:RevertConfirm' => 'Az eredeti változaton végrehajtott minden változtatás elveszik. Kérjük, erősítse meg, hogy ezt szeretné.',
 	'UI:ExportDashBoard' => 'Exportálás fájlba',
 	'UI:ImportDashBoard' => 'Importálás fájlból...',
@@ -1252,6 +1229,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:ImportDashboardText' => 'Importáláshoz válasszon ki egy műszerfal fájlt',
 	'UI:Dashboard:Actions' => 'Műszerfal műveletek',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'Ez a műszerfal olyan információkat jelenít meg, amelyek nem tartalmazzák a folyamatban lévő változásokat.',
+	'UI:Dashboard:Revert' => 'Visszaállítás az eredeti verzióra...',
 	'UI:DashletCreation:Title' => 'Új műszer létrehozása',
 	'UI:DashletCreation:Dashboard' => 'Műszerfal',
 	'UI:DashletCreation:DashletType' => 'Műszerfal típus',
@@ -1272,12 +1250,12 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:DashletUnknown:Label' => 'Ismeretlen',
 	'UI:DashletUnknown:Description' => 'Ismeretlen műszer (talán eltávolították)',
 	'UI:DashletUnknown:RenderText:View' => 'Nem lehet megjeleníteni ezt a műszert.',
-	'UI:DashletUnknown:RenderText:Edit' => 'Nem lehet megjeleníteni ezt a műszert ("%1$s" osztály). Ellenőriztesse a rendszergazdával, hogy elérhető-e.',
-	'UI:DashletUnknown:RenderNoDataText:Edit' => 'Nincs előnézet ehhez a műszerhez ("%1$s" osztály).',
+	'UI:DashletUnknown:RenderText:Edit' => 'Nem lehet megjeleníteni ezt a műszert (%1$s típus). Ellenőriztesse a rendszergazdával, hogy elérhető-e.',
+	'UI:DashletUnknown:RenderNoDataText:Edit' => 'Nincs előnézet ehhez a műszerhez (%1$s típus).',
 	'UI:DashletUnknown:Prop-XMLConfiguration' => 'Konfiguráció (nyers XML)',
 	'UI:DashletProxy:Label' => 'Proxy',
 	'UI:DashletProxy:Description' => 'Proxy műszer',
-	'UI:DashletProxy:RenderNoDataText:Edit' => 'Nincs előnézet ehhez a harmadik féltől származó műszerhez ("%1$s" osztály).',
+	'UI:DashletProxy:RenderNoDataText:Edit' => 'Nincs előnézet ehhez a harmadik féltől származó műszerhez (%1$s típus).',
 	'UI:DashletProxy:Prop-XMLConfiguration' => 'Konfiguráció (nyers XML)',
 	'UI:DashletPlainText:Label' => 'Szöveg',
 	'UI:DashletPlainText:Description' => 'Egyszerű szöveg (nincs formázás)',
@@ -1307,7 +1285,6 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:DashletGroupByBars:Description' => 'Oszlopdiagram',
 	'UI:DashletGroupByTable:Label' => 'Csoportosítás (táblánként)',
 	'UI:DashletGroupByTable:Description' => 'Lista (mezőnként csoportosítva)',
-    // New in 2.5
 	'UI:DashletGroupBy:Prop-Function' => 'Kigyűjtés funkció',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Funkció attribútum',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Irány',
@@ -1325,12 +1302,12 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:GroupBy:min+' => '%1$s minimuma',
 	'UI:GroupBy:max' => 'Maximum',
 	'UI:GroupBy:max+' => '%1$s maximuma',
-    // ---
 	'UI:DashletHeaderStatic:Label' => 'Fejléc',
 	'UI:DashletHeaderStatic:Description' => 'Megjelenít egy vízszintes elválasztót',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Cím',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kapcsolattartók',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Ikon',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'Fejléc statisztikákkal',
 	'UI:DashletHeaderDynamic:Description' => 'Fejléc statisztikákkal (csoportosítva...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Cím',
@@ -1343,7 +1320,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:DashletHeaderDynamic:Prop-Values' => 'Értékek',
 	'UI:DashletBadge:Label' => 'Jelvény',
 	'UI:DashletBadge:Description' => 'Objektum ikon új/keresés',
-	'UI:DashletBadge:Prop-Class' => 'Osztály',
+	'UI:DashletBadge:Prop-Class' => 'típus',
 	'DayOfWeek-Sunday' => 'Vasárnap',
 	'DayOfWeek-Monday' => 'Hétfő',
 	'DayOfWeek-Tuesday' => 'Kedd',
@@ -1363,7 +1340,6 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'Month-10' => 'Október',
 	'Month-11' => 'November',
 	'Month-12' => 'December',
-    // Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Va',
 	'DayOfWeek-Monday-Min' => 'Hé',
 	'DayOfWeek-Tuesday-Min' => 'Ke',
@@ -1384,12 +1360,12 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Dec',
 	'Calendar-FirstDayOfWeek' => '1',
-    // 0 = Vasárnap, 1 = Hétfő, stb...
 	'UI:Menu:ShortcutList' => 'Gyorsgomb létrehozása...',
 	'UI:Menu:FilterList' => 'Display list with search criteria~~',
 	'UI:ShortcutRenameDlg:Title' => 'Gyorsgomb átnevezése',
 	'UI:ShortcutListDlg:Title' => 'Gyorsgomb létrehozása a listához',
 	'UI:ShortcutDelete:Confirm' => 'Hagyja jóvá a gyorsgomb(ok) törlését.',
+	'UI:ObjectShortcutInsert' => 'Insert Object Shortcut~~',
 	'Class:Shortcut' => 'Gyorsgomb',
 	'Class:Shortcut+' => '~~',
 	'Class:Shortcut/Attribute:name' => 'Név',
@@ -1398,6 +1374,9 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'Class:ShortcutOQL+' => '',
 	'Class:ShortcutOQL/Attribute:oql' => 'Lekérdezés',
 	'Class:ShortcutOQL/Attribute:oql+' => 'A keresendő objektumok listáját meghatározó OQL',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Címketípus',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Mezőkód',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Objektumtípus',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatikus frissítés',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Letiltva',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Egyéni érték',
@@ -1433,10 +1412,10 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 <tr><td>s</td><td>seconds (2 számjegy, pl. 00..59)</td></tr>
 </table>',
 	'UI:Button:Remove' => 'Eltávolítás',
-	'UI:AddAnExisting_Class' => '%1$s típusú objektum hozzáadása...',
-	'UI:SelectionOf_Class' => '%1$s típusú objektum választéka',
-	'UI:AboutBox' => ''.ITOP_APPLICATION_SHORT.' névjegye ...',
-	'UI:About:Title' => ''.ITOP_APPLICATION_SHORT.' névjegye',
+	'UI:AddAnExisting_Class' => '%1$s hozzáadás...',
+	'UI:SelectionOf_Class' => '%1$s választéka',
+	'UI:AboutBox' => ITOP_APPLICATION_SHORT.' névjegye ...',
+	'UI:About:Title' => ITOP_APPLICATION_SHORT.' névjegye',
 	'UI:About:DataModel' => 'Adatmodell',
 	'UI:About:Support' => 'Támogatás',
 	'UI:About:Licenses' => 'Licencek',
@@ -1480,23 +1459,18 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:Button:UploadImage' => 'Kép feltöltése a merevlemezről',
 	'UI:UploadNotSupportedInThisMode' => 'A képek vagy fájlok módosítása ebben az üzemmódban nem támogatott.',
 	'UI:Button:RemoveDocument' => 'Dokumentum törlése',
-    // Search form
 	'UI:Search:Toggle' => 'Minimalizál / Kiterjeszt',
-	'UI:Search:AutoSubmit:DisabledHint' => 'Az automatikus beküldés le van tiltva ebben az osztályban',
+	'UI:Search:AutoSubmit:DisabledHint' => 'Az automatikus beküldés le van tiltva ebben az típusban',
 	'UI:Search:Obsolescence:DisabledHint' => 'Az Ön beállításai alapján az elavult adatok el vannak rejtve.',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Adjon meg néhány feltételt a keresőmezőben, vagy kattintson a keresés gombra az objektumok megtekintéséhez.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Adjon meg egy feltételt',
-    // - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Legutóbb használt',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Legnépszerűbb',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Egyebek',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Még egyik sem',
-    // - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimalizál / Kiterjeszt',
 	'UI:Search:Criteria:Remove' => 'Eltávolítás',
 	'UI:Search:Criteria:Locked' => 'Zárolva',
-    // - Criteria titles
-    //   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: bármely',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s üres',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s nem üres',
@@ -1518,57 +1492,38 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: bármely',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s a %2$s -ból',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s egészen %2$s -ig',
-    //   - Numeric widget
-    //   None yet
-    //   - DateTime widget
 	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
-    //   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s és %3$s másik',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: bármely',
-    //   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
-    //   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s meghatározva',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s nincs meghatározva',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s és %3$s másik',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: bármely',
-    //   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s meghatározva',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s nincs meghatározva',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s és %3$s másik',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: bármely',
-    // - Criteria operators
-    //   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Üres',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Nem üres',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Egyenlő',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Közötte',
-    //   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Tartalmaz',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Kezdődik',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Végződik',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regul. kifejezés',
-    //   - Numeric widget
 	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Egyenlő',
-    // => '=',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Nagyobb',
-    // => '>',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Nagyobb / egyenlő',
-    // > '>=',
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Kisebb',
-    // => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Kisebb / egyenlő',
-    // > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Különböző',
-    // => '≠',
-    //   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Egyezik',
-    // - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Szűrő...',
 	'UI:Search:Value:Search:Placeholder' => 'Keresés...',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Kezdje el beírni a lehetséges értékeket',
@@ -1576,7 +1531,6 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:Search:Value:Autocomplete:NoResult' => 'Nincs eredmény',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Mindet / egyiket sem ellenőrzi',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Mind / egyik sem látható',
-    // - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'Kezdés',
 	'UI:Search:Criteria:Numeric:Until' => 'Amíg',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Bármely',
@@ -1593,12 +1547,12 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:Search:Criteria:Raw:Filtered' => 'Szűrt',
 	'UI:Search:Criteria:Raw:FilteredOn' => '%1$s által szűrve',
 	'UI:StateChanged' => 'Megváltozott állapot',
-));
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Expression:Operator:AND' => ' ÉS ',
 	'Expression:Operator:OR' => ' VAGY ',
 	'Expression:Operator:=' => ': ',
@@ -1611,12 +1565,12 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Expression:Unit:Long:MINUTE' => 'perc',
 	'Expression:Verb:NOW' => 'most',
 	'Expression:Verb:ISNULL' => ': meghatározatlan',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI:Newsroom:NoNewMessage' => 'Nincs új üzenet',
 	'UI:Newsroom:XNewMessage' => '%1$s új üzenet',
 	'UI:Newsroom:MarkAllAsRead' => 'Üzenetek jelölése olvasottként',
@@ -1624,17 +1578,20 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Newsroom:Preferences' => 'Hírfolyam beállítások',
 	'UI:Newsroom:ConfigurationLink' => 'Konfiguráció',
 	'UI:Newsroom:ResetCache' => 'Gyorstár ürítése',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => '%1$s üzeneteinek megjelenítése',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Mutasson %1$s üzenetet a %2$s menüben.',
-));
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
+]);
 
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:DataSources' => 'Szinkronizációs adatforrások',
 	'Menu:DataSources+' => '',
 	'Menu:AuditCategories' => 'Audit kategóriák',
 	'Menu:AuditCategories+' => '',
-	'Menu:Notifications:Title' => 'Audit kategóriák',
 	'Menu:AuditCategories:Title' => 'Audit configuration~~',
 	'Menu:RunQueriesMenu' => 'Lekérdezés futtatás',
 	'Menu:RunQueriesMenu+' => '',
@@ -1652,13 +1609,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:UserAccountsMenu:Title' => 'Felhasználói fiókok',
 	'Menu:UserManagement' => 'Felhasználókezelés',
 	'Menu:Queries' => 'Lekérdezések',
-	'Menu:ConfigurationTools' => 'Konfiguráció'
-));
-// Additional language entries not present in English dict
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'UI:Toggle:StandardDashboard' => 'Standard',
-	'UI:Toggle:CustomDashboard' => 'Egyéni',
-	'UI:Display_X_ItemsPerPage' => '%1$s elem megjelenítése oldalanként',
-	'UI:Dashboard:Edit' => 'Oldal szerkesztése...',
-	'UI:Dashboard:Revert' => 'Visszaállítás az eredeti verzióra...'
-));
+	'Menu:ConfigurationTools' => 'Konfiguráció',
+	'Menu:ConfigEditor' => 'General configuration~~',
+	'Menu:ConfigEditor+' => 'Configuration File editor~~',
+	'Menu:Integrations' => 'Integrációk',
+	'Menu:Integrations+' => '~~',
+
+]);

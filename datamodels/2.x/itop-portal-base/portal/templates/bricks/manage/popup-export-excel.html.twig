@@ -7,17 +7,21 @@
 <div class="modal-body">
     <div id="export-text-result" style="display:none;">
         <p>{{ 'Core:BulkExport:ExportResult'|dict_s }}</p>
-        <p id="export-error" class="alert alert-danger" role="alert"></p>
+        <p id="export-error" class="ipb-alert alert alert-danger" role="alert"></p>
     </div>
 
-    <div id="export-feedback">
-        <p class="export-message" style="text-align:center;">{{ 'ExcelExport:PreparingExport'|dict_s }}</p>
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" style="width: 0%"
+    <div id="export-feedback" class="ipb-export--feedback">
+        <p id="export-excel-warning" class="ipb-alert alert alert-warning" role="alert">{{ 'UI:Bulk:Export:MaliciousInjection:Alert:Message'|dict_format(sWikiUrl)|raw }}</p>
+        <div class="ipb-export--illustration ipb-svg-illustration--container">
+            {{ source('illustrations/undraw_export-files.svg') }}
+        </div>
+        <div class="ipb-progress progress">
+            <div class="ipb-progress--bar progress-bar" role="progressbar" style="width: 0%"
                  aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                 <span class="progress-message">0%</span>
             </div>
         </div>
+        <p class="ipb-export-message export-message" style="text-align:center;">{{ 'ExcelExport:PreparingExport'|dict_s }}</p>
     </div>
 </div>
 <div class="modal-footer">

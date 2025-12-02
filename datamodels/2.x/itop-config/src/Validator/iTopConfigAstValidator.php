@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Bruno DA SILVA, working for Combodo
  * Date: 31/12/2019
@@ -6,7 +7,6 @@
  */
 
 namespace Combodo\iTop\Config\Validator;
-
 
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
@@ -23,18 +23,18 @@ class iTopConfigAstValidator
 	 */
 	public function Validate($sConfig)
 	{
-		$oParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+		$oParser = (new ParserFactory())->createForNewestSupportedVersion();
 
 		$oNodeVisitor = new ConfigNodesVisitor();
 
 		try {
 			$aInitialNodes = $oParser->parse($sConfig);
 		} catch (\Error $e) {
-			$sMessage = 'Invalid configuration: '. \Dict::Format('config-parse-error', $e->getMessage(), $e->getLine());
-			throw new \Exception($sMessage, 0, $e);
-		}catch (\Exception $e) {
-			$sMessage = 'Invalid configuration: '. \Dict::Format('config-parse-error', $e->getMessage(), $e->getLine());
-			throw new \Exception($sMessage, 0, $e);
+			$sMessage = 'Invalid configuration: '.\Dict::Format('config-parse-error', $e->getMessage(), $e->getLine());
+			throw new \Exception($sMessage, iTopConfigValidator::CONFIG_ERROR, $e);
+		} catch (\Exception $e) {
+			$sMessage = 'Invalid configuration: '.\Dict::Format('config-parse-error', $e->getMessage(), $e->getLine());
+			throw new \Exception($sMessage, iTopConfigValidator::CONFIG_ERROR, $e);
 		}
 
 		$oTraverser = new NodeTraverser();

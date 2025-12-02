@@ -1,41 +1,28 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-//
-// Class: Organization
-//
-Dict::Add('FR FR', 'French', 'Français', array(
+/**
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'Relation:impacts/Description' => 'Eléments impactés par',
 	'Relation:impacts/DownStream' => 'Impacte...',
 	'Relation:impacts/DownStream+' => 'Eléments impactés par',
 	'Relation:impacts/UpStream' => 'Dépend de...',
 	'Relation:impacts/UpStream+' => 'Eléments dont dépend',
-	// Legacy entries
 	'Relation:depends on/Description' => 'Eléments dont dépend',
 	'Relation:depends on/DownStream' => 'Dépend de...',
 	'Relation:depends on/UpStream' => 'Impacte...',
 	'Relation:impacts/LoadData' => 'Charger les données',
-	'Relation:impacts/NoFilteredData' => 'Veuillez sélectionner des objets dans l\'onglet Graph',
-));
-
+	'Relation:impacts/NoFilteredData' => 'Veuillez sélectionner des objets et lancer le chargement des données',
+	'Relation:impacts/FilteredData' => 'Données filtrées',
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -78,8 +65,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: lnkContactToFunctionalCI
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkContactToFunctionalCI' => 'Lien Contact / CI Fonctionel',
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:lnkContactToFunctionalCI' => 'Lien Contact / CI Fonctionnel',
 	'Class:lnkContactToFunctionalCI+' => '',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'CI',
@@ -90,14 +77,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Nom contact',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:FunctionalCI' => 'CI fonctionnel',
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:FunctionalCI' => 'CI Fonctionnel',
 	'Class:FunctionalCI+' => '',
 	'Class:FunctionalCI/Attribute:name' => 'Nom',
 	'Class:FunctionalCI/Attribute:name+' => '',
@@ -123,19 +110,29 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FunctionalCI/Attribute:documents_list+' => 'Tous les documents liés à cet élément de configuration',
 	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Solutions applicatives',
 	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'Toutes les solutions applicatives dépendantes de cet élément de configuration',
+	'Class:FunctionalCI/Attribute:applicationsolution_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
+	'Class:FunctionalCI/Attribute:applicationsolution_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:FunctionalCI/Attribute:applicationsolution_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:FunctionalCI/Attribute:applicationsolution_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
 	'Class:FunctionalCI/Attribute:softwares_list' => 'Logiciels',
 	'Class:FunctionalCI/Attribute:softwares_list+' => 'Tous les logiciels installés sur cet élément de configuration',
+	'Class:FunctionalCI/Attribute:softwares_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:FunctionalCI/Attribute:softwares_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:FunctionalCI/Attribute:softwares_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:FunctionalCI/Attribute:softwares_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:FunctionalCI/Attribute:softwares_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:FunctionalCI/Attribute:softwares_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Sous-classe de CI',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Tickets en cours',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Tickets ouverts impactant cet élément de configuration',
-));
+]);
 
 //
 // Class: PhysicalDevice
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PhysicalDevice' => 'Matériel physique',
 	'Class:PhysicalDevice+' => '',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s',
@@ -169,13 +166,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PhysicalDevice/Attribute:purchase_date+' => '',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Date de fin de garantie',
 	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '',
-));
+]);
 
 //
 // Class: Rack
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Rack' => 'Rack',
 	'Class:Rack+' => '',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s',
@@ -183,66 +180,78 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Rack/Attribute:nb_u+' => '',
 	'Class:Rack/Attribute:device_list' => 'Matériels',
 	'Class:Rack/Attribute:device_list+' => 'Tous les matériels rackés dans ce rack',
+	'Class:Rack/Attribute:device_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Rack/Attribute:device_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Rack/Attribute:device_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Rack/Attribute:device_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Rack/Attribute:device_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Rack/Attribute:device_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
 	'Class:Rack/Attribute:enclosure_list' => 'Chassis',
 	'Class:Rack/Attribute:enclosure_list+' => 'Tous les chassis dans ce rack',
-));
+	'Class:Rack/Attribute:enclosure_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Rack/Attribute:enclosure_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Rack/Attribute:enclosure_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Rack/Attribute:enclosure_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Rack/Attribute:enclosure_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Rack/Attribute:enclosure_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+]);
 
 //
 // Class: TelephonyCI
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TelephonyCI' => 'CI Téléphonie',
 	'Class:TelephonyCI+' => '',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Numéro',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '',
-));
+]);
 
 //
 // Class: Phone
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Phone' => 'Téléphone',
 	'Class:Phone+' => '',
-));
+]);
 
 //
 // Class: MobilePhone
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:MobilePhone' => 'Téléphone mobile',
 	'Class:MobilePhone+' => '',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
 	'Class:MobilePhone/Attribute:imei+' => '',
 	'Class:MobilePhone/Attribute:hw_pin' => 'PIN',
 	'Class:MobilePhone/Attribute:hw_pin+' => '',
-));
+]);
 
 //
 // Class: IPPhone
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:IPPhone' => 'Téléphone IP',
 	'Class:IPPhone+' => '',
-));
+]);
 
 //
 // Class: Tablet
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Tablet' => 'Tablette',
 	'Class:Tablet+' => '',
-));
+]);
 
 //
 // Class: ConnectableCI
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ConnectableCI' => 'CI connecté',
 	'Class:ConnectableCI+' => '',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s',
@@ -250,13 +259,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Tous les équipements réseaux connectés à ce matériel',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Interfaces réseaux',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Toutes les interfaces réseaux physiques',
-));
+	'Class:ConnectableCI/Attribute:physicalinterface_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:ConnectableCI/Attribute:physicalinterface_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:ConnectableCI/Attribute:physicalinterface_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:ConnectableCI/Attribute:physicalinterface_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:ConnectableCI/Attribute:physicalinterface_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:ConnectableCI/Attribute:physicalinterface_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+]);
 
 //
 // Class: DatacenterDevice
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DatacenterDevice' => 'Matériel Datacenter',
 	'Class:DatacenterDevice+' => '',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s',
@@ -282,20 +297,25 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC ports',
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Toutes les interfaces fibre optique de ce matériel',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
 	'Class:DatacenterDevice/Attribute:san_list+' => 'Tous les switchs SAN connectés à ce matériel',
 	'Class:DatacenterDevice/Attribute:redundancy' => 'Redondance',
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'Le %2$s est alimenté si au moins une source électrique (A ou B) est opérationnelle',
-	// Unused yet
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'Le %2$s est alimenté si toutes ses sources électriques sont opérationnelles',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'Le %2$s est alimenté si au moins %1$s %% de ses sources électriques sont opérationnelles',
-));
+]);
 
 //
 // Class: NetworkDevice
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:NetworkDevice' => 'Equipement réseau',
 	'Class:NetworkDevice+' => '',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s',
@@ -303,21 +323,21 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Nom Type',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '',
-	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Matériel connectés',
-	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'Tous les matériels connectés à cet appareil réseau',
+	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Matériel connecté',
+	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'Tous les équipements connectés à cet appareil réseau',
 	'Class:NetworkDevice/Attribute:iosversion_id' => 'Version IOS',
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '',
 	'Class:NetworkDevice/Attribute:iosversion_name' => 'Nom Version IOS',
 	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
 	'Class:NetworkDevice/Attribute:ram+' => '',
-));
+]);
 
 //
 // Class: Server
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Server' => 'Serveur',
 	'Class:Server+' => '',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s',
@@ -339,61 +359,79 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Server/Attribute:ram+' => '',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Volumes logiques',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'Tous les volumes logiques connectés à ce serveur',
-));
+]);
 
 //
 // Class: StorageSystem
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:StorageSystem' => 'Système de stockage',
 	'Class:StorageSystem+' => '',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Volumes logiques',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Tous les volumes logiques dans ce système de stockage',
-));
+	'Class:StorageSystem/Attribute:logicalvolume_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:StorageSystem/Attribute:logicalvolume_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:StorageSystem/Attribute:logicalvolume_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:StorageSystem/Attribute:logicalvolume_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:StorageSystem/Attribute:logicalvolume_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:StorageSystem/Attribute:logicalvolume_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+]);
 
 //
 // Class: SANSwitch
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SANSwitch' => 'Switch SAN',
 	'Class:SANSwitch+' => '',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Matériels connectés',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Tous les matériels connectés à ce switch SAN',
-));
+]);
 
 //
 // Class: TapeLibrary
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TapeLibrary' => 'Bandothèque',
 	'Class:TapeLibrary+' => '',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Bandes',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Toutes les bandes dans cette bandothèque',
-));
+	'Class:TapeLibrary/Attribute:tapes_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:TapeLibrary/Attribute:tapes_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:TapeLibrary/Attribute:tapes_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:TapeLibrary/Attribute:tapes_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:TapeLibrary/Attribute:tapes_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:TapeLibrary/Attribute:tapes_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
+]);
 
 //
 // Class: NAS
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Systèmes de fichier NAS',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Tous les systèmes de fichier dans ce NAS',
-));
+	'Class:NAS/Attribute:nasfilesystem_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:NAS/Attribute:nasfilesystem_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:NAS/Attribute:nasfilesystem_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:NAS/Attribute:nasfilesystem_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:NAS/Attribute:nasfilesystem_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:NAS/Attribute:nasfilesystem_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+]);
 
 //
 // Class: PC
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PC' => 'PC',
 	'Class:PC+' => '',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s',
@@ -415,45 +453,51 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PC/Attribute:type/Value:desktop+' => 'desktop',
 	'Class:PC/Attribute:type/Value:laptop' => 'laptop',
 	'Class:PC/Attribute:type/Value:laptop+' => 'laptop',
-));
+]);
 
 //
 // Class: Printer
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Printer' => 'Imprimante',
 	'Class:Printer+' => '',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s',
-));
+]);
 
 //
 // Class: PowerConnection
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PowerConnection' => 'Connexion électrique',
 	'Class:PowerConnection+' => '',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s',
-));
+]);
 
 //
 // Class: PowerSource
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PowerSource' => 'Arrivée électrique',
 	'Class:PowerSource+' => '',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Toutes les PDUs de cette arrivée électrique',
-));
+	'Class:PowerSource/Attribute:pdus_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:PowerSource/Attribute:pdus_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:PowerSource/Attribute:pdus_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:PowerSource/Attribute:pdus_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:PowerSource/Attribute:pdus_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:PowerSource/Attribute:pdus_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+]);
 
 //
 // Class: PDU
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => '',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s',
@@ -465,23 +509,23 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PDU/Attribute:powerstart_id+' => '',
 	'Class:PDU/Attribute:powerstart_name' => 'Nom Arrivée électrique',
 	'Class:PDU/Attribute:powerstart_name+' => '',
-));
+]);
 
 //
 // Class: Peripheral
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Peripheral' => 'Périphérique',
 	'Class:Peripheral+' => '',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s',
-));
+]);
 
 //
 // Class: Enclosure
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Enclosure' => 'Chassis',
 	'Class:Enclosure+' => '',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
@@ -493,13 +537,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => 'Devices',
 	'Class:Enclosure/Attribute:device_list+' => 'Tous les matériels dans ce chassis',
-));
+	'Class:Enclosure/Attribute:device_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Enclosure/Attribute:device_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Enclosure/Attribute:device_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Enclosure/Attribute:device_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Enclosure/Attribute:device_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Enclosure/Attribute:device_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+]);
 
 //
 // Class: ApplicationSolution
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ApplicationSolution' => 'Solution applicative',
 	'Class:ApplicationSolution+' => '',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
@@ -516,30 +566,34 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'La solution est opérationelle si tous les CIs qui la composent sont opérationnels',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'Nombre minimal de CIs pour que la solution soit opérationnelle : %1$s',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'Pourcentage minimal de CIs pour que la solution soit opérationnelle : %1$s %%',
-));
+]);
 
 //
 // Class: BusinessProcess
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:BusinessProcess' => 'Processus métier',
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Solutions applicatives',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Toutes les solutions applicatives qui impactent ce processus métier',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
 	'Class:BusinessProcess/Attribute:status' => 'Etat',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Actif',
 	'Class:BusinessProcess/Attribute:status/Value:active+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'Inactif',
 	'Class:BusinessProcess/Attribute:status/Value:inactive+' => '',
-));
+]);
 
 //
 // Class: SoftwareInstance
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SoftwareInstance' => 'Instance logiciel',
 	'Class:SoftwareInstance+' => '',
 	'Class:SoftwareInstance/Attribute:system_id' => 'Système',
@@ -562,64 +616,82 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SoftwareInstance/Attribute:status/Value:active+' => '',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inactif',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => '',
-));
+]);
 
 //
 // Class: Middleware
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Middleware' => 'Middleware',
 	'Class:Middleware+' => '',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Instance Middleware',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Toutes les instances de middleware fournies par ce middleware',
-));
+	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+]);
 
 //
 // Class: DBServer
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DBServer' => 'Serveur de base de données',
 	'Class:DBServer+' => '',
 	'Class:DBServer/Attribute:dbschema_list' => 'Instances de base de données',
 	'Class:DBServer/Attribute:dbschema_list+' => 'Toutes les instances de base de données pour ce serveur',
-));
+	'Class:DBServer/Attribute:dbschema_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:DBServer/Attribute:dbschema_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:DBServer/Attribute:dbschema_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:DBServer/Attribute:dbschema_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:DBServer/Attribute:dbschema_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:DBServer/Attribute:dbschema_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+]);
 
 //
 // Class: WebServer
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:WebServer' => 'Serveur Web',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Application Web',
 	'Class:WebServer/Attribute:webapp_list+' => 'Toutes les applications Web disponibles sur ce serveur',
-));
+	'Class:WebServer/Attribute:webapp_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:WebServer/Attribute:webapp_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:WebServer/Attribute:webapp_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:WebServer/Attribute:webapp_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:WebServer/Attribute:webapp_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:WebServer/Attribute:webapp_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+]);
 
 //
 // Class: PCSoftware
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PCSoftware' => 'Logiciel PC',
 	'Class:PCSoftware+' => 'Application logicielle sur PC',
-));
+]);
 
 //
 // Class: OtherSoftware
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OtherSoftware' => 'Autre logiciel',
 	'Class:OtherSoftware+' => '',
-));
+]);
 
 //
 // Class: MiddlewareInstance
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:MiddlewareInstance' => 'Instance Middleware',
 	'Class:MiddlewareInstance+' => '',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
@@ -627,13 +699,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nom Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_name+' => '',
-));
+]);
 
 //
 // Class: DatabaseSchema
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DatabaseSchema' => 'Instance de base de données',
 	'Class:DatabaseSchema+' => '',
 	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
@@ -641,13 +713,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Nom Serveur de base de données',
 	'Class:DatabaseSchema/Attribute:dbserver_name+' => '',
-));
+]);
 
 //
 // Class: WebApplication
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:WebApplication' => 'Application Web',
 	'Class:WebApplication+' => '',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
@@ -657,14 +729,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:WebApplication/Attribute:webserver_name+' => '',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '',
-));
-
+]);
 
 //
 // Class: VirtualDevice
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:VirtualDevice' => 'Equipement Virtuel',
 	'Class:VirtualDevice+' => '',
 	'Class:VirtualDevice/Attribute:status' => 'Etat',
@@ -679,24 +750,30 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VirtualDevice/Attribute:status/Value:stock+' => '',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Volumes logiques',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Tous les volumes logiques utilisés par ce matériel',
-));
+]);
 
 //
 // Class: VirtualHost
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:VirtualHost' => 'Hôte Virtuel',
 	'Class:VirtualHost+' => '',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Machines virtuelles',
 	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Toutes les machiens virtuelles hébergées par cet hôte',
-));
+	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+]);
 
 //
 // Class: Hypervisor
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Hypervisor' => 'Hyperviseur',
 	'Class:Hypervisor+' => '',
 	'Class:Hypervisor/Attribute:farm_id' => 'vCluster',
@@ -707,28 +784,34 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Hypervisor/Attribute:server_id+' => '',
 	'Class:Hypervisor/Attribute:server_name' => 'Nom serveur',
 	'Class:Hypervisor/Attribute:server_name+' => '',
-));
+]);
 
 //
 // Class: Farm
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Farm' => 'vCluster',
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hyperviseurs',
 	'Class:Farm/Attribute:hypervisor_list+' => 'Tous les hyperviseurs qui composent ce vCluster',
+	'Class:Farm/Attribute:hypervisor_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Farm/Attribute:hypervisor_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Farm/Attribute:hypervisor_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Farm/Attribute:hypervisor_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Farm/Attribute:hypervisor_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Farm/Attribute:hypervisor_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
 	'Class:Farm/Attribute:redundancy' => 'Haute disponibilité',
 	'Class:Farm/Attribute:redundancy/disabled' => 'Le vCluster est opérationnel si tous les hyperviseurs qui le composent sont opérationnels',
 	'Class:Farm/Attribute:redundancy/count' => 'Nombre minimal d\'hyperviseurs pour que le vCluster soit opérationnel : %1$s',
 	'Class:Farm/Attribute:redundancy/percent' => 'Pourcentage minimal d\'hyperviseurs pour que le vCluster soit opérationnel : %1$s %%',
-));
+]);
 
 //
 // Class: VirtualMachine
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:VirtualMachine' => 'Machine virtuelle',
 	'Class:VirtualMachine+' => '',
 	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
@@ -756,13 +839,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Interfaces réseaux',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Toutes les interfaces réseaux logiques',
-));
+	'Class:VirtualMachine/Attribute:logicalinterface_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:VirtualMachine/Attribute:logicalinterface_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:VirtualMachine/Attribute:logicalinterface_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:VirtualMachine/Attribute:logicalinterface_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:VirtualMachine/Attribute:logicalinterface_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:VirtualMachine/Attribute:logicalinterface_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+]);
 
 //
 // Class: LogicalVolume
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:LogicalVolume' => 'Volume logique',
 	'Class:LogicalVolume+' => '',
 	'Class:LogicalVolume/Attribute:name' => 'Nom',
@@ -783,13 +872,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:LogicalVolume/Attribute:servers_list+' => 'Tous les serveurs utilisant ce volume',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Machines virtuelles',
 	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Toutes les machines virtuelles utilisant ce volume',
-));
+]);
 
 //
 // Class: lnkServerToVolume
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkServerToVolume' => 'Lien Serveur / Volume',
 	'Class:lnkServerToVolume+' => '',
 	'Class:lnkServerToVolume/Name' => '%1$s / %2$s',
@@ -803,13 +892,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkServerToVolume/Attribute:server_name+' => '',
 	'Class:lnkServerToVolume/Attribute:size_used' => 'Taille utilisée',
 	'Class:lnkServerToVolume/Attribute:size_used+' => '',
-));
+]);
 
 //
 // Class: lnkVirtualDeviceToVolume
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkVirtualDeviceToVolume' => 'Lien Device virtuel / Volume',
 	'Class:lnkVirtualDeviceToVolume+' => '',
 	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
@@ -823,13 +912,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Taille utilisée',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '',
-));
+]);
 
 //
 // Class: lnkSanToDatacenterDevice
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkSanToDatacenterDevice' => 'Lien San / Device',
 	'Class:lnkSanToDatacenterDevice+' => '',
 	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
@@ -845,13 +934,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Device FC',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '',
-));
+]);
 
 //
 // Class: Tape
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Tape' => 'Bande',
 	'Class:Tape+' => '',
 	'Class:Tape/Attribute:name' => 'Nom',
@@ -864,13 +953,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Tape/Attribute:tapelibrary_id+' => '',
 	'Class:Tape/Attribute:tapelibrary_name' => 'Nom Bandothèque',
 	'Class:Tape/Attribute:tapelibrary_name+' => '',
-));
+]);
 
 //
 // Class: NASFileSystem
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:NASFileSystem' => 'Système de fichier NAS',
 	'Class:NASFileSystem+' => '',
 	'Class:NASFileSystem/Attribute:name' => 'Nom',
@@ -885,13 +974,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NASFileSystem/Attribute:nas_id+' => '',
 	'Class:NASFileSystem/Attribute:nas_name' => 'Nom NAS',
 	'Class:NASFileSystem/Attribute:nas_name+' => '',
-));
+]);
 
 //
 // Class: Software
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Software' => 'Logiciel',
 	'Class:Software+' => '',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s',
@@ -917,17 +1006,35 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Software/Attribute:type/Value:WebServer+' => 'Serveur Web',
 	'Class:Software/Attribute:softwareinstance_list' => 'Instances logiciels',
 	'Class:Software/Attribute:softwareinstance_list+' => 'Toutes les instances de ce logiciel',
+	'Class:Software/Attribute:softwareinstance_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Software/Attribute:softwareinstance_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Software/Attribute:softwareinstance_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Software/Attribute:softwareinstance_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Software/Attribute:softwareinstance_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Software/Attribute:softwareinstance_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 	'Class:Software/Attribute:softwarepatch_list' => 'Patchs logiciels',
 	'Class:Software/Attribute:softwarepatch_list+' => 'Tous les patchs de ce logiciel',
+	'Class:Software/Attribute:softwarepatch_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Software/Attribute:softwarepatch_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Software/Attribute:softwarepatch_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Software/Attribute:softwarepatch_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Software/Attribute:softwarepatch_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Software/Attribute:softwarepatch_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
 	'Class:Software/Attribute:softwarelicence_list' => 'Software licences',
 	'Class:Software/Attribute:softwarelicence_list+' => 'Toutes les licences de ce logiciel',
-));
+	'Class:Software/Attribute:softwarelicence_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Software/Attribute:softwarelicence_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Software/Attribute:softwarelicence_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Software/Attribute:softwarelicence_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Software/Attribute:softwarelicence_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Software/Attribute:softwarelicence_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+]);
 
 //
 // Class: Patch
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Patch' => 'Patch',
 	'Class:Patch+' => '',
 	'Class:Patch/Attribute:name' => 'Nom',
@@ -938,13 +1045,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:finalclass' => 'Sous-classe de Patch',
 	'Class:Patch/Attribute:finalclass+' => 'Nom de la classe instanciable',
-));
+]);
 
 //
 // Class: OSPatch
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSPatch' => 'Patch OS',
 	'Class:OSPatch+' => '',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Systèmes',
@@ -953,13 +1060,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OSPatch/Attribute:osversion_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'Nom Version OS',
 	'Class:OSPatch/Attribute:osversion_name+' => '',
-));
+]);
 
 //
 // Class: SoftwarePatch
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SoftwarePatch' => 'Patch Logiciel',
 	'Class:SoftwarePatch+' => '',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Logiciel',
@@ -968,13 +1075,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SoftwarePatch/Attribute:software_name+' => '',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Instances logiciels',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Tous les systèmes où ce logiciel est installé',
-));
+	'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
+]);
 
 //
 // Class: Licence
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Licence' => 'License',
 	'Class:Licence+' => '',
 	'Class:Licence/Attribute:name' => 'Nom',
@@ -987,6 +1098,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Licence/Attribute:organization_name+' => 'Common name',
 	'Class:Licence/Attribute:usage_limit' => 'Limite d\'utilisation',
 	'Class:Licence/Attribute:usage_limit+' => '',
+	'Class:Location/Attribute:physicaldevice_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Location/Attribute:physicaldevice_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Location/Attribute:physicaldevice_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Location/Attribute:physicaldevice_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Location/Attribute:physicaldevice_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Location/Attribute:physicaldevice_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
 	'Class:Licence/Attribute:description' => 'Description',
 	'Class:Licence/Attribute:description+' => '',
 	'Class:Licence/Attribute:start_date' => 'Date de début de validité',
@@ -1003,13 +1120,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'oui',
 	'Class:Licence/Attribute:finalclass' => 'Sous-classe de License',
 	'Class:Licence/Attribute:finalclass+' => 'Nom de la classe instanciable',
-));
+]);
 
 //
 // Class: OSLicence
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSLicence' => 'Licence OS',
 	'Class:OSLicence+' => '',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
@@ -1019,15 +1136,27 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Machines virtuelles',
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Toutes les machines virtuelles où cette licence est utilisée',
+	'Class:OSLicence/Attribute:virtualmachines_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:OSLicence/Attribute:virtualmachines_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:OSLicence/Attribute:virtualmachines_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:OSLicence/Attribute:virtualmachines_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:OSLicence/Attribute:virtualmachines_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:OSLicence/Attribute:virtualmachines_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
 	'Class:OSLicence/Attribute:servers_list' => 'Serveurs',
 	'Class:OSLicence/Attribute:servers_list+' => 'Tous les serveurs où cette licence est utilisée',
-));
+	'Class:OSLicence/Attribute:servers_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:OSLicence/Attribute:servers_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:OSLicence/Attribute:servers_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:OSLicence/Attribute:servers_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:OSLicence/Attribute:servers_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:OSLicence/Attribute:servers_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
+]);
 
 //
 // Class: SoftwareLicence
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SoftwareLicence' => 'Licence Logiciel',
 	'Class:SoftwareLicence+' => '',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s',
@@ -1037,13 +1166,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Instances logiciels',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Tous les systèmes où cette licence est utilisée',
-));
+	'Class:SoftwareLicence/Attribute:softwareinstance_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
+]);
 
 //
 // Class: lnkDocumentToLicence
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToLicence' => 'Lien Document / Licence',
 	'Class:lnkDocumentToLicence+' => '',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s',
@@ -1055,48 +1190,56 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Nom Document',
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: OSVersion
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSVersion' => 'Version OS',
 	'Class:OSVersion+' => '',
 	'Class:OSVersion/Attribute:osfamily_id' => 'Famille OS',
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nom Famille OS',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
-));
+]);
 
 //
 // Class: OSFamily
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSFamily' => 'Famille OS',
 	'Class:OSFamily+' => '',
-));
+]);
 
 //
 // Class: Brand
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Brand' => 'Marque',
 	'Class:Brand+' => '',
+	'Class:Brand/Attribute:logo' => 'Logo',
+	'Class:Brand/Attribute:logo+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Matériels',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Tous les matériels correspondant à cette marque',
+	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
 	'Class:Brand/UniquenessRule:name+' => 'Le nom doit être unique',
 	'Class:Brand/UniquenessRule:name' => 'cette marque existe déjà',
-));
+]);
 
 //
 // Class: Model
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Model' => 'Modèle',
 	'Class:Model+' => '',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s',
@@ -1104,6 +1247,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Model/Attribute:brand_id+' => '',
 	'Class:Model/Attribute:brand_name' => 'Nom marque',
 	'Class:Model/Attribute:brand_name+' => '',
+	'Class:Model/Attribute:picture' => 'Image',
+	'Class:Model/Attribute:picture+' => '',
 	'Class:Model/Attribute:type' => 'Type de matériel',
 	'Class:Model/Attribute:type+' => '',
 	'Class:Model/Attribute:type/Value:PowerSource' => 'Arrivée électrique',
@@ -1144,39 +1289,51 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Model/Attribute:type/Value:Phone+' => 'Téléphone',
 	'Class:Model/Attribute:physicaldevices_list' => 'Matériels',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Tous les matériels correspondant à ce modèle',
+	'Class:Model/Attribute:physicaldevices_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Model/Attribute:physicaldevices_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Model/Attribute:physicaldevices_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Model/Attribute:physicaldevices_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Model/Attribute:physicaldevices_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Model/Attribute:physicaldevices_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
 	'Class:Model/UniquenessRule:name_brand+' => 'Le nom doit être unique dans une marque',
 	'Class:Model/UniquenessRule:name_brand' => 'ce modèle existe déjà dans cette marque',
-));
+]);
 
 //
 // Class: NetworkDeviceType
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:NetworkDeviceType' => 'Type d\'équipement réseau',
 	'Class:NetworkDeviceType+' => '',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Equipements réseaux',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Tous les équipements réseaux correspondant à ce type',
-));
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+]);
 
 //
 // Class: IOSVersion
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:IOSVersion' => 'Version IOS',
 	'Class:IOSVersion+' => '',
 	'Class:IOSVersion/Attribute:brand_id' => 'Marque',
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nom Marque',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToPatch
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToPatch' => 'Lien Document / Patch',
 	'Class:lnkDocumentToPatch+' => '',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s',
@@ -1188,13 +1345,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Nom document',
 	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkSoftwareInstanceToSoftwarePatch
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Lien Instance logiciel / Patch logiciel',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s',
@@ -1206,14 +1363,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Nom instance logicielle',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToOSPatch
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkFunctionalCIToOSPatch' => 'Lien CI Fonctionel / Patch OS',
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:lnkFunctionalCIToOSPatch' => 'Lien CI Fonctionnel / Patch OS',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'Patch OS',
@@ -1224,13 +1381,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'Nom CI',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToSoftware
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToSoftware' => 'Lien Document / Logiciel',
 	'Class:lnkDocumentToSoftware+' => '',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s',
@@ -1242,13 +1399,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Nom document',
 	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: Subnet
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Subnet' => 'Subnet',
 	'Class:Subnet+' => '',
 	'Class:Subnet/Name' => '%1$s/%2$s',
@@ -1267,13 +1424,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Subnet/Attribute:ip_mask+' => '',
 	'Class:Subnet/Attribute:vlans_list' => 'VLANs',
 	'Class:Subnet/Attribute:vlans_list+' => '',
-));
+]);
 
 //
 // Class: VLAN
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:VLAN' => 'VLAN',
 	'Class:VLAN+' => '',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag',
@@ -1288,13 +1445,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VLAN/Attribute:subnets_list+' => '',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Interfaces réseaux physiques',
 	'Class:VLAN/Attribute:physicalinterfaces_list+' => '',
-));
+	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
+	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
+]);
 
 //
 // Class: lnkSubnetToVLAN
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkSubnetToVLAN' => 'Lien Subnet / VLAN',
 	'Class:lnkSubnetToVLAN+' => '',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s',
@@ -1308,26 +1469,26 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '',
-));
+]);
 
 //
 // Class: NetworkInterface
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:NetworkInterface' => 'Interface Réseau',
 	'Class:NetworkInterface+' => '',
 	'Class:NetworkInterface/Attribute:name' => 'Nom',
 	'Class:NetworkInterface/Attribute:name+' => '',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Sous-classe d\'Interface Réseau',
 	'Class:NetworkInterface/Attribute:finalclass+' => 'Nom de la classe instanciable',
-));
+]);
 
 //
 // Class: IPInterface
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:IPInterface' => 'Interface IP',
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'Adresse IP',
@@ -1342,13 +1503,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPInterface/Attribute:ipmask+' => '',
 	'Class:IPInterface/Attribute:speed' => 'Vitesse',
 	'Class:IPInterface/Attribute:speed+' => '',
-));
+]);
 
 //
 // Class: PhysicalInterface
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PhysicalInterface' => 'Interface physique',
 	'Class:PhysicalInterface+' => '',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s',
@@ -1358,13 +1519,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
-));
+]);
 
 //
 // Class: lnkPhysicalInterfaceToVLAN
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Lien Interface réseau / VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s',
@@ -1380,27 +1541,26 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
-));
-
+]);
 
 //
 // Class: LogicalInterface
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:LogicalInterface' => 'Interface logique',
 	'Class:LogicalInterface+' => '',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Machine virtuelle',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Nom Machine virtuelle',
 	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '',
-));
+]);
 
 //
 // Class: FiberChannelInterface
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:FiberChannelInterface' => 'Interface Fibre',
 	'Class:FiberChannelInterface+' => '',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Vitesse',
@@ -1413,13 +1573,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Nom Matériel',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '',
-));
+]);
 
 //
 // Class: lnkConnectableCIToNetworkDevice
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkConnectableCIToNetworkDevice' => 'Lien Device / Equipement réseau',
 	'Class:lnkConnectableCIToNetworkDevice+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s',
@@ -1435,20 +1595,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port' => 'Port matériel',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port+' => '',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type' => 'Type de connection',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type' => 'Type de connexion',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink' => 'lien descendant',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'lien descendant',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'lien montant',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'lien montant',
-));
+]);
 
 //
 // Class: lnkApplicationSolutionToFunctionalCI
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkApplicationSolutionToFunctionalCI' => 'Lien Solution Applicative / CI Fonctionel',
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:lnkApplicationSolutionToFunctionalCI' => 'Lien Solution Applicative / CI Fonctionnel',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Solution applicative',
@@ -1459,13 +1619,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Nom CI',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: lnkApplicationSolutionToBusinessProcess
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Lien Solution Applicative / Processus métier',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s',
@@ -1477,13 +1637,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Nom Solution applicative',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
-));
+]);
 
 //
 // Class: Group
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Group' => 'Groupe',
 	'Class:Group+' => '',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s',
@@ -1513,13 +1673,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Group/Attribute:ci_list+' => 'Tous les éléments de configuration liés à ce groupe',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Nom usuel du parent',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
-));
+]);
 
 //
 // Class: lnkGroupToCI
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkGroupToCI' => 'Lien Groupe / CI',
 	'Class:lnkGroupToCI+' => '',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s',
@@ -1533,11 +1693,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Raison',
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Server:baseinfo' => 'Informations générales',
 	'Server:Date' => 'Dates',
 	'Server:moreinfo' => 'Informations complémentaires',
@@ -1550,15 +1710,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
 	'Class:Document:PreviewTab' => 'Aperçu',
-));
-
+]);
 
 //
 // Class: lnkDocumentToFunctionalCI
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Lien Document / CI Fonctionel',
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:lnkDocumentToFunctionalCI' => 'Lien Document / CI Fonctionnel',
 	'Class:lnkDocumentToFunctionalCI+' => '',
 	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'CI',
@@ -1569,13 +1728,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nom Document',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:Application' => 'Logiciels',
 	'Menu:Application+' => 'Tous les logiciels',
 	'Menu:DBServer' => 'Serveur de base de données',
@@ -1620,185 +1779,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Catalogue des logiciels de références',
 	'Menu:Software+' => 'Catalogue des logiciels de références',
-));
+]);
+
 //
-// n:n relations custom labels : nom de class féminin
+// Class: PhysicalInterface
 //
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
-	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
-	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:FunctionalCI/Attribute:applicationsolution_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
-	'Class:FunctionalCI/Attribute:applicationsolution_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
-	'Class:FunctionalCI/Attribute:applicationsolution_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:FunctionalCI/Attribute:applicationsolution_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
-	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
-	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:VLAN/Attribute:physicalinterfaces_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s'
-));
-// 1:n relations custom labels for tooltip and pop-up title
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
-	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:ConnectableCI/Attribute:physicalinterface_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:ConnectableCI/Attribute:physicalinterface_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:ConnectableCI/Attribute:physicalinterface_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:ConnectableCI/Attribute:physicalinterface_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:ConnectableCI/Attribute:physicalinterface_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:ConnectableCI/Attribute:physicalinterface_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:DBServer/Attribute:dbschema_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:DBServer/Attribute:dbschema_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:DBServer/Attribute:dbschema_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:DBServer/Attribute:dbschema_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:DBServer/Attribute:dbschema_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:DBServer/Attribute:dbschema_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:Enclosure/Attribute:device_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Enclosure/Attribute:device_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Enclosure/Attribute:device_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Enclosure/Attribute:device_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:Enclosure/Attribute:device_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Enclosure/Attribute:device_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Farm/Attribute:hypervisor_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Farm/Attribute:hypervisor_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Farm/Attribute:hypervisor_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Farm/Attribute:hypervisor_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:Farm/Attribute:hypervisor_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Farm/Attribute:hypervisor_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:FunctionalCI/Attribute:softwares_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:FunctionalCI/Attribute:softwares_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:FunctionalCI/Attribute:softwares_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:FunctionalCI/Attribute:softwares_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:FunctionalCI/Attribute:softwares_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:FunctionalCI/Attribute:softwares_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:Location/Attribute:physicaldevice_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Location/Attribute:physicaldevice_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Location/Attribute:physicaldevice_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Location/Attribute:physicaldevice_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:Location/Attribute:physicaldevice_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Location/Attribute:physicaldevice_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Middleware/Attribute:middlewareinstance_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:Model/Attribute:physicaldevices_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Model/Attribute:physicaldevices_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Model/Attribute:physicaldevices_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Model/Attribute:physicaldevices_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:Model/Attribute:physicaldevices_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Model/Attribute:physicaldevices_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:NAS/Attribute:nasfilesystem_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:NAS/Attribute:nasfilesystem_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:NAS/Attribute:nasfilesystem_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:NAS/Attribute:nasfilesystem_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:NAS/Attribute:nasfilesystem_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:NAS/Attribute:nasfilesystem_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:OSLicence/Attribute:servers_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:OSLicence/Attribute:servers_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:OSLicence/Attribute:servers_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:OSLicence/Attribute:servers_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
-	'Class:OSLicence/Attribute:servers_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:OSLicence/Attribute:servers_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:OSLicence/Attribute:virtualmachines_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:OSLicence/Attribute:virtualmachines_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:OSLicence/Attribute:virtualmachines_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:OSLicence/Attribute:virtualmachines_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
-	'Class:OSLicence/Attribute:virtualmachines_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:OSLicence/Attribute:virtualmachines_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:PowerSource/Attribute:pdus_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:PowerSource/Attribute:pdus_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:PowerSource/Attribute:pdus_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:PowerSource/Attribute:pdus_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:PowerSource/Attribute:pdus_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:PowerSource/Attribute:pdus_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Rack/Attribute:device_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Rack/Attribute:device_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Rack/Attribute:device_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Rack/Attribute:device_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:Rack/Attribute:device_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Rack/Attribute:device_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Rack/Attribute:enclosure_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Rack/Attribute:enclosure_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Rack/Attribute:enclosure_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Rack/Attribute:enclosure_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:Rack/Attribute:enclosure_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Rack/Attribute:enclosure_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Software/Attribute:softwareinstance_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:Software/Attribute:softwareinstance_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Software/Attribute:softwareinstance_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Software/Attribute:softwareinstance_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:Software/Attribute:softwareinstance_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Software/Attribute:softwareinstance_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:Software/Attribute:softwarelicence_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:Software/Attribute:softwarelicence_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Software/Attribute:softwarelicence_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Software/Attribute:softwarelicence_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:Software/Attribute:softwarelicence_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Software/Attribute:softwarelicence_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:Software/Attribute:softwarepatch_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Software/Attribute:softwarepatch_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Software/Attribute:softwarepatch_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Software/Attribute:softwarepatch_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:Software/Attribute:softwarepatch_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Software/Attribute:softwarepatch_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:StorageSystem/Attribute:logicalvolume_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:StorageSystem/Attribute:logicalvolume_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:StorageSystem/Attribute:logicalvolume_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:StorageSystem/Attribute:logicalvolume_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:StorageSystem/Attribute:logicalvolume_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:StorageSystem/Attribute:logicalvolume_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:TapeLibrary/Attribute:tapes_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:TapeLibrary/Attribute:tapes_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:TapeLibrary/Attribute:tapes_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:TapeLibrary/Attribute:tapes_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
-	'Class:TapeLibrary/Attribute:tapes_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:TapeLibrary/Attribute:tapes_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:VirtualHost/Attribute:virtualmachine_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:VirtualMachine/Attribute:logicalinterface_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:VirtualMachine/Attribute:logicalinterface_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:VirtualMachine/Attribute:logicalinterface_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:VirtualMachine/Attribute:logicalinterface_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:VirtualMachine/Attribute:logicalinterface_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:VirtualMachine/Attribute:logicalinterface_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:WebServer/Attribute:webapp_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:WebServer/Attribute:webapp_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:WebServer/Attribute:webapp_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:WebServer/Attribute:webapp_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:WebServer/Attribute:webapp_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:WebServer/Attribute:webapp_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s'
-));
-?>
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Site',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
+]);

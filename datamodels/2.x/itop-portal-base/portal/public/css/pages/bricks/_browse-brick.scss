@@ -1,0 +1,321 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+@import "../node_modules/bulma-scss/utilities/mixins";
+
+$ipb-browse-brick-panel--row--margin: $common-spacing-0 !default;
+$ipb-browse-brick-panel--brick-content-toolbar--padding: $common-spacing-400 !default;
+
+$ipb-content-mosaic--padding: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-breadcrumb--padding: $common-spacing-200 !default;
+
+$ipb-browse-brick--mosaic--gap: $common-spacing-300 !default;
+$ipb-browse-brick--mosaic--small--grid-template-columns: 1fr !default;
+$ipb-browse-brick--mosaic--medium--grid-template-columns: repeat(2, 1fr) !default;
+$ipb-browse-brick--mosaic--large--grid-template-columns: repeat(3, 1fr) !default;
+
+
+$ipb-browse-brick--mosaic-group-item--min-height: $common-size-550 !default;
+$ipb-browse-brick--mosaic-group-item--height: auto !default;
+$ipb-browse-brick--mosaic-group-item--width: 100% !default;
+$ipb-browse-brick--mosaic-group-item--margin: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-group-item--border-radius: $common-border-radius-300 !default;
+$ipb-browse-brick--mosaic-group-item--animation--transform-x: -20px !default;
+
+$ipb-browse-brick--mosaic-group-item--actions--top: $common-spacing-500 !default;
+$ipb-browse-brick--mosaic-group-item--actions--right: $common-spacing-500 !default;
+$ipb-browse-brick--mosaic-item--height: 100% !default;
+$ipb-browse-brick--mosaic-item--padding: $common-spacing-600 !default;
+$ipb-browse-brick--mosaic-item--margin: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-item--border-radius: $ipb-browse-brick--mosaic-group-item--border-radius !default;
+
+
+$ipb-browse-brick--mosaic-item-image--height: 44px !default;
+$ipb-browse-brick--mosaic-item-image--width: 44px !default;
+$ipb-browse-brick--mosaic-item-image--border-radius: $common-border-radius-700 !default;
+$ipb-browse-brick--mosaic-item-image--padding: $common-spacing-0 !default;
+$ipb-browse-brick--mosaic-item-image--margin-bottom: $common-spacing-500 !default;
+
+
+$ipb-browse-brick--mosaic-item-image--img--height: $common-size-300 !default;
+
+$ipb-browse-brick--mosaic-item-description--margin-top: $common-spacing-300 !default;
+
+$ipb-browse-brick-panel--dataTables_wrapper--padding-x: $common-spacing-0 !default;
+$ipb-browse-brick-panel--dataTables_wrapper--padding-y: $common-size-200 !default;
+$ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-x: $common-size-200 !default;
+$ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-y: $common-size-0 !default;
+
+$ipb-browse-brick--tree-item-filter-data--margin-top: $common-spacing-300 !default;
+$ipb-browse-brick--tree-item-filter-data--item--margin-y: $common-spacing-0 !default;
+$ipb-browse-brick--tree-item-filter-data--item--margin-x: $common-spacing-300 !default;
+
+$ipb-browse-brick--tree-item--description--margin-top: $common-spacing-200 !default;
+$ipb-browse-brick--tree-item--wrapper--padding-top: $common-spacing-500 !default;
+
+$ipb-browse-brick--tree-item-image--height: $common-size-350 !default;
+$ipb-browse-brick--tree-item-image--width: $common-size-350 !default;
+$ipb-browse-brick--tree-item-image--padding: $common-spacing-0 !default;
+$ipb-browse-brick--tree-item-image--margin-bottom: $common-spacing-0 !default;
+$ipb-browse-brick--tree-item-image--margin-right: $common-spacing-400 !default;
+$ipb-browse-brick--tree-item-image--border-radius: $common-border-radius-500 !default;
+
+$ipb-browse-brick--tree-item-image--image--height: $common-size-300 !default;
+
+$ipb-browse-brick--tree-item-image--has-glyphicon--margin-right: $common-spacing-300 !default;
+
+$ipb-browse-brick--tree-item--has-glyphicon--description--margin-left: 19px !default;
+
+
+$ipb-browse-brick--list-group-item--padding: $common-spacing-0 !default;
+$ipb-browse-brick--list-group-item--padding-left: $common-spacing-500 !default;
+$ipb-browse-brick--list-group-item--margin-bottom: -1px !default;
+
+$ipb-browse-brick--list-group--margin-bottom: $common-spacing-0 !default;
+$ipb-browse-brick--list-group-item--tree-item-wrapper--padding-bottom: $common-spacing-500 !default;
+
+$ipb-browse-brick--list-group--tree--margin: $common-spacing-0 !default;
+
+$ipb-browse-brick--no-item--illustration--max-width: 100% !default;
+$ipb-browse-brick--no-item--illustration--padding-y: $common-spacing-600 !default;
+$ipb-browse-brick--no-item--illustration--padding-x: $common-spacing-500 !default;
+$ipb-browse-brick--no-item--illustration--svg--max-width: $common-size-700 !default;
+
+
+// Common
+.ipb-browse-brick-panel {
+  .row {
+    margin: $ipb-browse-brick-panel--row--margin;
+  }
+  
+  #brick_content_toolbar {
+   display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $ipb-browse-brick-panel--brick-content-toolbar--padding;
+  }
+}
+
+// List view
+
+#brick-content-table {
+  width: 100% !important;
+}
+
+// Mosaic view
+
+#brick_content_mosaic{
+  padding: $ipb-content-mosaic--padding;
+}
+#mosaic-breadcrumb {
+  padding: $ipb-browse-brick--mosaic-breadcrumb--padding;
+}
+
+.mosaic-group {
+  display: grid;
+  transition: all 1s;
+  animation-delay: 0.2s;
+  gap: $ipb-browse-brick--mosaic--gap;
+
+  @include touch {
+    grid-template-columns: $ipb-browse-brick--mosaic--small--grid-template-columns;
+  }
+  @include desktop {
+    grid-template-columns: $ipb-browse-brick--mosaic--medium--grid-template-columns;
+  }
+  @include fullhd {
+    grid-template-columns: $ipb-browse-brick--mosaic--large--grid-template-columns;
+  }
+  &:not(.ipb-is-visible) {
+    opacity: 0;
+    display: none !important;
+  }
+  &.ipb-is-visible {
+    opacity: 1;
+    display: grid !important;
+  }
+}
+
+.mosaic-group-item {
+  position: relative;
+  min-height: $ipb-browse-brick--mosaic-group-item--min-height;
+  height: $ipb-browse-brick--mosaic-group-item--height;
+  width: $ipb-browse-brick--mosaic-group-item--width;
+  margin: $ipb-browse-brick--mosaic-group-item--margin;
+  border-radius: $ipb-browse-brick--mosaic-group-item--border-radius;
+  
+  > .mosaic-group-item-actions {
+    position: absolute;
+    top: $ipb-browse-brick--mosaic-group-item--actions--top;
+    right: $ipb-browse-brick--mosaic-group-item--actions--right;
+  }
+}
+
+
+.mosaic-item {
+  display: flex;
+  flex-direction: column;
+  height: $ipb-browse-brick--mosaic-item--height;
+  padding: $ipb-browse-brick--mosaic-item--padding;
+  margin: $ipb-browse-brick--mosaic-item--margin;
+  border-radius: $ipb-browse-brick--mosaic-item--border-radius;
+  transition: background-color 0.3s linear;
+}
+
+
+.mosaic-item-text {
+  max-width: unset;
+  overflow: unset;
+  text-align: left;
+
+  .mosaic-item-name {
+    @extend %common-font-ral-bol-200;
+  }
+
+  .mosaic-item-description {
+    @extend %common-font-ral-nor-150;
+  }
+}
+
+.mosaic-item-image {
+  display: flex;
+  height: $ipb-browse-brick--mosaic-item-image--height;
+  width: $ipb-browse-brick--mosaic-item-image--width;
+  padding: $ipb-browse-brick--mosaic-item-image--padding;
+  margin-bottom: $ipb-browse-brick--mosaic-item-image--margin-bottom;
+  border-radius: $ipb-browse-brick--mosaic-item-image--border-radius;
+  align-items: center;
+  justify-content: center;
+  text-transform: capitalize;
+  
+  @extend %common-font-ral-bol-300;
+  img {
+    height: $ipb-browse-brick--mosaic-item-image--img--height;
+  }
+}
+
+.mosaic-item-name ~ .mosaic-item-description {
+  margin-top: $ipb-browse-brick--mosaic-item-description--margin-top;
+}
+
+// List view
+
+.ipb-browse-brick-panel .dataTables_wrapper {
+  padding: $ipb-browse-brick-panel--dataTables_wrapper--padding-y $ipb-browse-brick-panel--dataTables_wrapper--padding-x;
+  .row {
+    > div {
+      padding: $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-y $ipb-browse-brick-panel--dataTables_wrapper--row--div--padding-x;
+    }
+  }
+}
+
+// Tree view
+.tree-item {
+  align-self: center;
+}
+
+.list-group-item .list-group-item-text, .tree-item {
+  @extend %common-font-ral-bol-150;
+  
+  & a {
+    @extend %common-font-size-150;
+  }
+}
+
+.list-group.tree .list-group-item .list-group-item-description {
+  display: block;
+  margin-top: $ipb-browse-brick--tree-item--description--margin-top;
+
+  @extend %common-font-ral-nor-100;
+}
+
+.list-group-item .tree-item-wrapper .tree-item-filter-data {
+  margin-top: $ipb-browse-brick--tree-item-filter-data--margin-top;
+  @extend %common-font-ral-med-100;
+
+  > span:not(:last-child):after {
+    content: '●';
+    margin: $ipb-browse-brick--tree-item-filter-data--item--margin-y $ipb-browse-brick--tree-item-filter-data--item--margin-x;
+  }
+  a {
+    font-size: $common-font-size-100 !important;
+  }
+}
+
+#brick_content_tree .list-group-item>.tree-item-wrapper {
+  display: flex;
+  padding-top: $ipb-browse-brick--tree-item--wrapper--padding-top;
+  text-decoration: inherit;
+  cursor: pointer
+}
+
+#brick_content_tree  .list-group-item {
+  display: block;
+  position: relative;
+  padding: $ipb-browse-brick--list-group-item--padding $ipb-browse-brick--list-group-item--padding $ipb-browse-brick--list-group-item--padding $ipb-browse-brick--list-group-item--padding-left;
+  margin-bottom: $ipb-browse-brick--list-group-item--margin-bottom;
+}
+
+
+.tree-item-wrapper {
+  display: flex;
+  
+  .tree-item-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+
+    height: $ipb-browse-brick--tree-item-image--height;
+    width: $ipb-browse-brick--tree-item-image--width;
+    min-width: $ipb-browse-brick--tree-item-image--width;
+    padding: $ipb-browse-brick--tree-item-image--padding;
+    margin-right: $ipb-browse-brick--tree-item-image--margin-right;
+    margin-bottom: $ipb-browse-brick--tree-item-image--margin-bottom;
+    border-radius: $ipb-browse-brick--tree-item-image--border-radius;
+    text-transform: capitalize;
+    @extend %common-font-ral-bol-250;
+
+    img {
+      height: $ipb-browse-brick--tree-item-image--image--height;
+    }
+  }
+}
+
+.tree-item-image:has(~ .tree-item > .glyphicon) {
+  margin-right: $ipb-browse-brick--tree-item-image--has-glyphicon--margin-right;
+}
+
+.tree-item:has(.glyphicon) .list-group-item-description {
+  margin-left: $ipb-browse-brick--tree-item--has-glyphicon--description--margin-left;
+}
+
+.list-group{
+  margin-bottom: $ipb-browse-brick--list-group--margin-bottom;
+}
+#brick_content_tree .list-group-item > .tree-item-wrapper {
+  padding-bottom: $ipb-browse-brick--list-group-item--tree-item-wrapper--padding-bottom;
+}
+
+.list-group.tree {
+  margin: $ipb-browse-brick--list-group--tree--margin;
+}
+
+.ipb-browse-brick--no-item--illustration {
+  width: $ipb-browse-brick--no-item--illustration--max-width;
+  display: flex;
+  flex-direction: column;;
+  padding: $ipb-browse-brick--no-item--illustration--padding-y $ipb-browse-brick--no-item--illustration--padding-x;
+  > svg {
+    max-width: $ipb-browse-brick--no-item--illustration--svg--max-width;
+    height: inherit;
+    align-self: center;
+  }
+}
+
+.ipb-browse-brick--no-item--text {
+  @extend %common-font-ral-med-300;
+}

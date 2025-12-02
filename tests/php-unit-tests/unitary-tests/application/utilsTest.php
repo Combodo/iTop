@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Dennis Lassiter
  *
@@ -22,14 +23,26 @@
 namespace Combodo\iTop\Test\UnitTest\Application;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use ormDocument;
 use utils;
 
 /**
- * @runClassInSeparateProcess
  * @covers utils
  */
 class utilsTest extends ItopTestCase
 {
+	protected function setUp(): void
+	{
+		parent::setUp();
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', 'https://localhost/itop/');
+	}
+
+	protected function tearDown(): void
+	{
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', null);
+		parent::tearDown();
+	}
+
 	public function testEndsWith()
 	{
 		$this->assertFalse(utils::EndsWith('a', 'bbbb'));
@@ -74,8 +87,7 @@ class utilsTest extends ItopTestCase
 		$sSep = DIRECTORY_SEPARATOR;
 		$sItopRootRealPath = realpath($sAppRoot).$sSep;
 		$sLicenseFileName = 'license.txt';
-		if (!is_file($sAppRoot.$sLicenseFileName))
-		{
+		if (!is_file($sAppRoot.$sLicenseFileName)) {
 			$sLicenseFileName = 'LICENSE';
 		}
 
@@ -83,7 +95,7 @@ class utilsTest extends ItopTestCase
 			$sLicenseFileName => [$sAppRoot.$sLicenseFileName, $sAppRoot, $sItopRootRealPath.$sLicenseFileName],
 			'unexisting file' => [$sAppRoot.'license_DOES_NOT_EXIST.txt', $sAppRoot, false],
 			'/'.$sLicenseFileName => [$sAppRoot.$sSep.$sLicenseFileName, $sAppRoot, $sItopRootRealPath.$sLicenseFileName],
-			'%2f'.$sLicenseFileName => [$sAppRoot.'%2f'. $sLicenseFileName, $sAppRoot, false],
+			'%2f'.$sLicenseFileName => [$sAppRoot.'%2f'.$sLicenseFileName, $sAppRoot, false],
 			'../'.$sLicenseFileName => [$sAppRoot.'..'.$sSep.$sLicenseFileName, $sAppRoot, false],
 			'%2e%2e%2f'.$sLicenseFileName => [$sAppRoot.'%2e%2e%2f'.$sLicenseFileName, $sAppRoot, false],
 			'application/utils.inc.php with basepath=APPROOT' => [
@@ -119,32 +131,32 @@ class utilsTest extends ItopTestCase
 	public function LocalPathProvider()
 	{
 		$sAppRoot = static::GetAppRoot();
-		return array(
-			'index.php' => array(
+		return [
+			'index.php' => [
 				'sAbsolutePath' => $sAppRoot.'index.php',
 				'expected' => 'index.php',
-			),
-			'non existing' => array(
+			],
+			'non existing' => [
 				'sAbsolutePath' => $sAppRoot.'nonexisting/nonexisting',
 				'expected' => false,
-			),
-			'outside' => array(
+			],
+			'outside' => [
 				'sAbsolutePath' => '/tmp',
 				'expected' => false,
-			),
-			'application/cmdbabstract.class.inc.php' => array(
+			],
+			'application/cmdbabstract.class.inc.php' => [
 				'sAbsolutePath' => $sAppRoot.'application/cmdbabstract.class.inc.php',
 				'expected' => 'application/cmdbabstract.class.inc.php',
-			),
-			'dir' => array(
+			],
+			'dir' => [
 				'sAbsolutePath' => $sAppRoot.'application/.',
 				'expected' => 'application',
-			),
-			'root' => array(
+			],
+			'root' => [
 				'sAbsolutePath' => $sAppRoot.'.',
 				'expected' => '',
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -158,14 +170,15 @@ class utilsTest extends ItopTestCase
 
 	public function appRootUrlProvider()
 	{
-		return array(
-			'Setup index (windows antislash)' => array('http://localhost/', 'C:\Dev\wamp64\www\itop-dev\setup\index.php', 'C:\Dev\wamp64\www\itop-dev', 'http://localhost/setup/'),
-			'Setup index (windows slash)' => array('http://127.0.0.1/', 'C:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'),
-			'Setup index (windows slash, drive letter case difference)' => array('http://127.0.0.1/', 'c:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'),
-		);
+		return [
+			'Setup index (windows antislash)' => ['http://localhost/', 'C:\Dev\wamp64\www\itop-dev\setup\index.php', 'C:\Dev\wamp64\www\itop-dev', 'http://localhost/setup/'],
+			'Setup index (windows slash)' => ['http://127.0.0.1/', 'C:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'],
+			'Setup index (windows slash, drive letter case difference)' => ['http://127.0.0.1/', 'c:/web/setup/index.php', 'C:/web', 'http://127.0.0.1/setup/'],
+		];
 	}
 
-	public function GetAbsoluteUrlAppRootPersistency() {
+	public function GetAbsoluteUrlAppRootPersistency()
+	{
 		$this->setUp();
 
 		return [
@@ -245,11 +258,13 @@ class utilsTest extends ItopTestCase
 	}
 
 	/**
-	 * @runInSeparateProcess
 	 * @dataProvider GetAbsoluteUrlAppRootPersistency
 	 */
-	public function testGetAbsoluteUrlAppRootPersistency($bBehindReverseProxy,$bForceTrustProxy1 ,$sExpectedAppRootUrl1,$bForceTrustProxy2 , $sExpectedAppRootUrl2,$bForceTrustProxy3 , $sExpectedAppRootUrl3)
+	public function testGetAbsoluteUrlAppRootPersistency($bBehindReverseProxy, $bForceTrustProxy1, $sExpectedAppRootUrl1, $bForceTrustProxy2, $sExpectedAppRootUrl2, $bForceTrustProxy3, $sExpectedAppRootUrl3)
 	{
+		// resetting static property for each test pass
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', null);
+
 		utils::GetConfig()->Set('behind_reverse_proxy', $bBehindReverseProxy);
 		utils::GetConfig()->Set('app_root_url', '');
 
@@ -275,7 +290,6 @@ class utilsTest extends ItopTestCase
 
 		$this->assertEquals($sExpectedAppRootUrl3, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy3));
 	}
-
 
 	/**
 	 * @dataProvider GetDefaultUrlAppRootProvider
@@ -631,72 +645,6 @@ class utilsTest extends ItopTestCase
 	}
 
 	/**
-	 * @covers       utils::GetMentionedObjectsFromText
-	 *
-	 * @throws \Exception
-	 */
-	public function testGetMentionedObjectsFromText()
-	{
-		// Emulate the "Case provider mechanism" (reason: the data provider requires utils constants not available before the application startup)
-		foreach ($this->GetMentionedObjectsFromTextProvider() as $sCase => list($sInput, $sFormat, $aExceptedMentionedObjects)) {
-			$aTestedMentionedObjects = utils::GetMentionedObjectsFromText($sInput, $sFormat);
-
-			$sExpectedAsString = print_r($aExceptedMentionedObjects, true);
-			$sTestedAsString = print_r($aTestedMentionedObjects, true);
-
-			$this->assertEquals($sTestedAsString, $sExpectedAsString, "Case '$sCase': Found mentioned objects don't match. Got: $sTestedAsString, expected $sExpectedAsString");
-		}
-	}
-
-	/**
-	 * @since 3.0.0
-	 */
-	public function GetMentionedObjectsFromTextProvider(): array
-	{
-		$sAbsUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
-
-		return [
-			'No object' => [
-				"Begining
-				Second line
-				End",
-				utils::ENUM_TEXT_FORMAT_HTML,
-				[],
-			],
-			'1 UserRequest' => [
-				"Begining
-				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
-				End",
-				utils::ENUM_TEXT_FORMAT_HTML,
-				[
-					'UserRequest' => ['12345'],
-				],
-			],
-			'2 UserRequests' => [
-				"Begining
-				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
-				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=987654&foo=bar\">R-987654</a>
-				End",
-				utils::ENUM_TEXT_FORMAT_HTML,
-				[
-					'UserRequest' => ['12345', '987654'],
-				],
-			],
-			'1 UserRequest, 1 Person' => [
-				"Begining
-				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
-				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=Person&id=3&foo=bar\">Claude Monet</a>
-				End",
-				utils::ENUM_TEXT_FORMAT_HTML,
-				[
-					'UserRequest' => ['12345'],
-					'Person' => ['3'],
-				],
-			],
-		];
-	}
-
-	/**
 	 * @dataProvider FormatInitialsForMedallionProvider
 	 * @covers utils::FormatInitialsForMedallion
 	 *
@@ -825,9 +773,10 @@ class utilsTest extends ItopTestCase
 			'bad context_param'       => [utils::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM, '%dssD,25_=%:+-', null],
 			'good element_identifier' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, 'AD05nb', 'AD05nb'],
 			'bad element_identifier' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, 'AD05nb+', 'AD05nb'],
+			'array' => [utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER, ['AD05nb+','apply_modify'], ['AD05nb','apply_modify']],
 			'good url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://www.w3schools.com', 'https://www.w3schools.com'],
-			'bad url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://www.w3schoo��ls.co�m', null],
-			'url with injection' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://demo.combodo.com/simple/pages/UI.php?operation=full_text&text=<img zzz src=x onerror=alert(1) //>', null],
+			'bad url' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https//www.w3schools.com', null],
+			'url with injection' => [utils::ENUM_SANITIZATION_FILTER_URL, 'https://demo.combodo.com/simple/pages/UI.php?operation=full_text&text=<img zzz src=x onerror=alert(1) //>', 'https://demo.combodo.com/simple/pages/UI.php?operation=full_text&text=<imgzzzsrc=xonerror=alert(1)//>'],
 			'raw_data' => ['raw_data', '<Test>\s😃😃😃', '<Test>\s😃😃😃'],
 		];
 	}
@@ -861,12 +810,129 @@ class utilsTest extends ItopTestCase
 			'simple quotes' => ["'simple quotes'", '&apos;simple quotes&apos;'],
 			'no double encode' => [
 				'<root><title>Foo & Bar</title></root>',
-				'&lt;root&gt;&lt;title&gt;Foo &amp; Bar&lt;/title&gt;&lt;/root&gt;'
+				'&lt;root&gt;&lt;title&gt;Foo &amp; Bar&lt;/title&gt;&lt;/root&gt;',
 			],
 			'double encode forced (for XML mostly)' => [
 				'<root><title>Foo &amp; Bar</title></root>',
 				'&lt;root&gt;&lt;title&gt;Foo &amp;amp; Bar&lt;/title&gt;&lt;/root&gt;',
-				true
+				true,
+			],
+		];
+	}
+
+	public function testFileGetContentsAndMIMETypeOnEmptyPathReturnsEmptyDocument()
+	{
+		$oExpectedEmptyDocument = new ormDocument('', '', '');
+		$this->assertEquals($oExpectedEmptyDocument, utils::FileGetContentsAndMIMEType(''));
+		$this->assertEquals($oExpectedEmptyDocument, utils::FileGetContentsAndMIMEType(null));
+	}
+
+	public function testFileGetContentsAndMIMETypeOnLocalURL()
+	{
+		$sURL = utils::GetAbsoluteUrlAppRoot().'env-production/itop-request-mgmt/images/user-request.svg';
+		$sPath = APPROOT.'env-production/itop-request-mgmt/images/user-request.svg';
+		$oExpectedDocument = new ormDocument(file_get_contents($sPath), 'image/svg+xml; charset=us-ascii', 'user-request.svg');
+		$this->assertEquals($oExpectedDocument, utils::FileGetContentsAndMIMEType($sURL));
+		// Read local URL directly on disk
+		$this->assertEquals($oExpectedDocument, utils::GetDocumentFromSelfURL($sURL));
+	}
+
+	public function testFileGetContentsAndMIMETypeOnRemoteURL()
+	{
+		$sURL = 'https://www.itophub.io/bundles/combodosharedknpmenu/images/logos/logo-header.png';
+		$oExpectedDocument = new ormDocument(file_get_contents($sURL), 'image/png', 'logo-header.png');
+		$this->assertEquals($oExpectedDocument, utils::FileGetContentsAndMIMEType($sURL));
+		// only for local URLs
+		$this->assertFalse(utils::GetDocumentFromSelfURL($sURL));
+	}
+
+	/**
+	 * @dataProvider VSprintfProvider
+	 */
+	public function testVSprintf($sFormat, $aArgs, $sExpected)
+	{
+		$sTested = utils::VSprintf($sFormat, $aArgs, false);
+		$this->assertEquals($sExpected, $sTested);
+	}
+
+	public function VSprintfProvider()
+	{
+		return [
+			// Basic positional specifier tests
+			'Basic positional with enough args' => [
+				'Format: %1$s, %2$d, %3$s',
+				['Hello', 42, 'World'],
+				'Format: Hello, 42, World',
+			],
+			'Basic positional with args in different order' => [
+				'Format: %2$s, %1$d, %3$s',
+				[42, 'Hello', 'World'],
+				'Format: Hello, 42, World',
+			],
+			'Positional with reused specifiers' => [
+				'Format: %1$s, %2$d, %1$s again',
+				['Hello', 42],
+				'Format: Hello, 42, Hello again',
+			],
+
+			// Missing arguments tests
+			'Missing one positional arg' => [
+				'Format: %1$s, %2$d, %3$s',
+				['Hello', 42],
+				'Format: Hello, 42, %3$s',
+			],
+			'Missing multiple positional args' => [
+				'Format: %1$s, %2$s, %3$s, %4$s',
+				['Hello'],
+				'Format: Hello, %2$s, %3$s, %4$s',
+			],
+			'Missing first positional arg' => [
+				'Format: %1$s, %2$s, %3$s',
+				[],
+				'Format: %1$s, %2$s, %3$s',
+			],
+
+			// Edge cases
+			'Positional with larger numbers' => [
+				'Format: %2$s, %1$d, %3$s, %2$s again',
+				[123456, 'Hello', 'World'],
+				'Format: Hello, 123456, World, Hello again',
+			],
+			'Positional specifiers with non-sequential indexes' => [
+				'Format: %3$s then %1$s and %5$d',
+				['first', 'second', 'third', 'fourth', 42],
+				'Format: third then first and 42',
+			],
+
+			// More complex format specifiers
+			'Positional with format modifiers' => [
+				'Format: %1$\'*10s, %2$04d',
+				['Hello', 42],
+				'Format: *****Hello, 0042',
+			],
+			'Positional with various types' => [
+				'Format: String: %1$s, Integer: %2$d, Char: %3$c',
+				['Hello', 42, 65],
+				'Format: String: Hello, Integer: 42, Char: A',
+			],
+
+			// Testing with non-Latin characters
+			'Positional with UTF-8 characters' => [
+				'Format: %1$s %2$s %3$s',
+				['こんにちは', 'Здравствуйте', '你好'],
+				'Format: こんにちは Здравствуйте 你好',
+			],
+
+			// Mixed formats
+			'Mixed positional with complex specifiers' => [
+				'Format: %1$-10s | %2$+d',
+				['Hello', 42],
+				'Format: Hello      | +42',
+			],
+			'Reused positional indexes with some missing' => [
+				'Format: %1$s %2$d %1$s %3$s %2$d',
+				['Hello', 42],
+				'Format: Hello 42 Hello %3$s 42',
 			],
 		];
 	}

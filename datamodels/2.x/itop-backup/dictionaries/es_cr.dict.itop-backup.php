@@ -1,27 +1,14 @@
 <?php
+
 /**
- * Localized data
+ * Spanish Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'bkp-backup-running' => 'Un respaldo está en ejecuión.  Por favor espere...',
 	'bkp-restore-running' => 'Una restauración está en ejecución. Por favor espere...',
 	'Menu:BackupStatus' => 'Respaldos programados',
@@ -56,4 +43,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'bkp-wait-backup' => 'Por favor espera a que se complete el respaldo...',
 	'bkp-wait-restore' => 'Por favor espera a que se complete la restauración...',
 	'bkp-success-restore' => 'Restauración completada exitosamente.',
-));
+]);

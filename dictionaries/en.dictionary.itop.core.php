@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -21,7 +22,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Core:DeletedObjectLabel' => '%1s (deleted)',
 	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)',
 
@@ -49,6 +50,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeTagSet' => 'List of tags',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'click to add',
+	'Core:Placeholder:CannotBeResolved' => '(%1$s : cannot be resolved)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)',
@@ -125,7 +127,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeIPAddress+' => 'IP address',
 
 	'Core:AttributeOQL' => 'OQL',
-	'Core:AttributeOQL+' => 'Object Query Langage expression',
+	'Core:AttributeOQL+' => 'Object Query Language expression',
 
 	'Core:AttributeEnum' => 'Enum',
 	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings',
@@ -214,8 +216,7 @@ Operators:<br/>
 	'Core:Context=GUI:Console' => 'Console',
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
-));
-
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
@@ -226,7 +227,7 @@ Operators:<br/>
 // Class: CMDBChange
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:CMDBChange' => 'Change',
 	'Class:CMDBChange+' => 'Changes tracking',
 	'Class:CMDBChange/Attribute:date' => 'date',
@@ -241,13 +242,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension',
-));
+]);
 
 //
 // Class: CMDBChangeOp
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:CMDBChangeOp' => 'Change Operation',
 	'Class:CMDBChangeOp+' => 'Change made by one person, at a single time, on a single object',
 	'Class:CMDBChangeOp/Attribute:change' => 'change',
@@ -262,51 +263,51 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:CMDBChangeOp/Attribute:objkey+' => 'id of the object on which the change was made',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDBChangeOp sub-class',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => 'type of change which was performed',
-));
+]);
 
 //
 // Class: CMDBChangeOpCreate
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:CMDBChangeOpCreate' => 'object creation',
 	'Class:CMDBChangeOpCreate+' => 'Object creation tracking',
-));
+]);
 
 //
 // Class: CMDBChangeOpDelete
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:CMDBChangeOpDelete' => 'object deletion',
 	'Class:CMDBChangeOpDelete+' => 'Object deletion tracking',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttribute
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:CMDBChangeOpSetAttribute' => 'object change',
 	'Class:CMDBChangeOpSetAttribute+' => 'Object properties change tracking',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Attribute',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'code of the modified property',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeScalar
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'property change',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Object scalar properties change tracking',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Previous value',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'previous value of the attribute',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'New value',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'new value of the attribute',
-));
+]);
 // Used by CMDBChangeOp... & derived classes
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Change:ObjectCreated' => 'Object created',
 	'Change:ObjectDeleted' => 'Object deleted',
 	'Change:ObjectModified' => 'Object modified',
@@ -323,35 +324,35 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Change:LinkSet:Added' => 'added %1$s',
 	'Change:LinkSet:Removed' => 'removed %1$s',
 	'Change:LinkSet:Modified' => 'modified %1$s',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeBlob
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'data change',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'data change tracking',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Previous data',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'previous contents of the attribute',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeText
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:CMDBChangeOpSetAttributeText' => 'text change',
 	'Class:CMDBChangeOpSetAttributeText+' => 'text change tracking',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Previous data',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'previous contents of the attribute',
-));
+]);
 
 //
 // Class: Event
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Event' => 'Log Event',
 	'Class:Event+' => 'An application internal event',
 	'Class:Event/Attribute:message' => 'Message',
@@ -361,15 +362,15 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Event/Attribute:userinfo' => 'User info',
 	'Class:Event/Attribute:userinfo+' => 'identification of the user that was doing the action that triggered this event',
 	'Class:Event/Attribute:finalclass' => 'Event sub-class',
-	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occured',
-));
+	'Class:Event/Attribute:finalclass+' => 'Name of the final class: specifies the sort of event which occurred',
+]);
 
 //
 // Class: EventNotification
 //
 
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:EventNotification' => 'Notification event',
+Dict::Add('EN US', 'English', 'English', [
+	'Class:EventNotification' => 'Notification sent',
 	'Class:EventNotification+' => 'Trace of a notification that has been sent',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
 	'Class:EventNotification/Attribute:trigger_id+' => '',
@@ -377,14 +378,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventNotification/Attribute:action_id+' => '',
 	'Class:EventNotification/Attribute:object_id' => 'Object id',
 	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)',
-));
+	'Class:EventNotification/Attribute:object_class' => 'Object class',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)',
+]);
 
 //
 // Class: EventNotificationEmail
 //
 
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:EventNotificationEmail' => 'Email emission event',
+Dict::Add('EN US', 'English', 'English', [
+	'Class:EventNotificationEmail' => 'Email sent',
 	'Class:EventNotificationEmail+' => 'Trace of an email that has been sent',
 	'Class:EventNotificationEmail/Attribute:to' => 'TO',
 	'Class:EventNotificationEmail/Attribute:to+' => '',
@@ -400,13 +403,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-));
+]);
 
 //
 // Class: EventIssue
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:EventIssue' => 'Issue event',
 	'Class:EventIssue+' => 'Trace of an issue (warning, error, etc.)',
 	'Class:EventIssue/Attribute:issue' => 'Issue',
@@ -423,15 +426,15 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Data',
 	'Class:EventIssue/Attribute:data+' => 'More information',
-));
+]);
 
 //
 // Class: EventWebService
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:EventWebService' => 'Web service event',
-	'Class:EventWebService+' => 'Trace of an web service call',
+	'Class:EventWebService+' => 'Trace of a web service call',
 	'Class:EventWebService/Attribute:verb' => 'Verb',
 	'Class:EventWebService/Attribute:verb+' => 'Name of the operation',
 	'Class:EventWebService/Attribute:result' => 'Result',
@@ -444,9 +447,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventWebService/Attribute:log_error+' => 'Result error log',
 	'Class:EventWebService/Attribute:data' => 'Data',
 	'Class:EventWebService/Attribute:data+' => 'Result data',
-));
+]);
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:EventRestService' => 'REST/JSON call',
 	'Class:EventRestService+' => 'Trace of a REST/JSON service call',
 	'Class:EventRestService/Attribute:operation' => 'Operation',
@@ -461,13 +464,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)',
 	'Class:EventRestService/Attribute:provider' => 'Provider',
 	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation',
-));
+]);
 
 //
 // Class: EventLoginUsage
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:EventLoginUsage' => 'Login Usage',
 	'Class:EventLoginUsage+' => 'Connection to the application',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
@@ -476,20 +479,57 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'User Email',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Email Address of the User',
-));
+]);
+
+//
+// Class: EventNotificationNewsroom
+//
+
+Dict::Add('EN US', 'English', 'English', [
+	'Class:EventNotificationNewsroom' => 'News sent',
+	'Class:EventNotificationNewsroom+' => '',
+	'Class:EventNotificationNewsroom/Attribute:title' => 'Title',
+	'Class:EventNotificationNewsroom/Attribute:title+' => '',
+	'Class:EventNotificationNewsroom/Attribute:icon' => 'Icon',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority' => 'Priority',
+	'Class:EventNotificationNewsroom/Attribute:priority+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => 'Critical',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1+' => 'Critical',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2' => 'Urgent',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3' => 'Important',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3+' => 'Important',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4' => 'Standard',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4+' => 'Standard',
+	'Class:EventNotificationNewsroom/Attribute:url' => 'URL',
+	'Class:EventNotificationNewsroom/Attribute:url+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read' => 'Read',
+	'Class:EventNotificationNewsroom/Attribute:read+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no' => 'No',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no+' => 'No',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes' => 'Yes',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes+' => 'Yes',
+	'Class:EventNotificationNewsroom/Attribute:read_date' => 'Read date',
+	'Class:EventNotificationNewsroom/Attribute:read_date+' => '',
+	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact',
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification',
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:Action'                                  => 'Custom Action',
+Dict::Add('EN US', 'English', 'English', [
+	'Class:Action'                                  => 'Action',
 	'Class:Action+'                                 => 'User defined action',
 	'Class:Action/ComplementaryName'                => '%1$s: %2$s',
 	'Class:Action/Attribute:name'                   => 'Name',
-	'Class:Action/Attribute:name+'                  => '',
+	'Class:Action/Attribute:name+'                  => 'Any value that is meaningful to distinguish this action from the others',
 	'Class:Action/Attribute:description'            => 'Description',
-	'Class:Action/Attribute:description+'           => '',
+	'Class:Action/Attribute:description+'           => 'A longer explanation about the purpose of this action. For information only.',
 	'Class:Action/Attribute:status'                 => 'Status',
 	'Class:Action/Attribute:status+'                => 'This status drives the action behavior',
 	'Class:Action/Attribute:status/Value:test'      => 'Being tested',
@@ -500,26 +540,54 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Related Triggers',
 	'Class:Action/Attribute:trigger_list+' => 'Triggers linked to this action',
+	'Class:Action/Attribute:asynchronous' => 'Asynchronous',
+	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in the background or not',
+	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Use global setting',
+	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes',
+	'Class:Action/Attribute:asynchronous/Value:no' => 'No',
 	'Class:Action/Attribute:finalclass' => 'Action sub-class',
 	'Class:Action/Attribute:finalclass+' => 'Name of the final class',
 	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.',
-));
+	'Action:last_executions_tab' => 'Last executions',
+	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)',
+	'Action:last_executions_tab_limit_days' => 'past %1$s days',
+	'Action:last_executions_tab_limit_none' => 'no limit',
+]);
 
 //
 // Class: ActionNotification
 //
 
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:ActionNotification' => 'Notification',
-	'Class:ActionNotification+' => 'Notification (abstract)',
-));
+Dict::Add('EN US', 'English', 'English', [
+	'Class:ActionNotification' => 'Notification Action',
+	'Class:ActionNotification+' => 'Notification Action (abstract)',
+	'Class:ActionNotification/Attribute:language' => 'Language',
+	'Class:ActionNotification/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)',
+]);
+
+//
+// Class: lnkActionNotificationToContact
+//
+
+Dict::Add('EN US', 'English', 'English', [
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification',
+]);
 
 //
 // Class: ActionEmail
 //
 
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:ActionEmail'                                    => 'Email notification',
+Dict::Add('EN US', 'English', 'English', [
+	'Class:ActionEmail'                                    => 'Notification by Email',
 	'Class:ActionEmail+'                                   => '',
 	'Class:ActionEmail/Attribute:status+'                  => 'This status drives who will be notified: 
 - Being tested: just the Test recipient, 
@@ -543,10 +611,12 @@ If omitted the From (email) is used.',
 If omitted the From (label) is used.',
 	'Class:ActionEmail/Attribute:to'                       => 'To',
 	'Class:ActionEmail/Attribute:to+'                      => 'To: an OQL query returning objects having an email field.
-While editing, click on the magnifier to get pertinent examples',
+While editing, click on the magnifier to get pertinent examples.
+You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.',
 	'Class:ActionEmail/Attribute:cc'                       => 'Cc',
 	'Class:ActionEmail/Attribute:cc+'                      => 'Carbon Copy: an OQL query returning objects having an email field.
-While editing, click on the magnifier to get pertinent examples',
+While editing, click on the magnifier to get pertinent examples.
+You can use in the OQL :this->attribute_code with an attribute code of the object which triggered the Notification. Then test your OQL syntax using the play icon.',
 	'Class:ActionEmail/Attribute:bcc'                      => 'Bcc',
 	'Class:ActionEmail/Attribute:bcc+'                     => 'Blind Carbon Copy: an OQL query returning objects having an email field. 
 While editing, click on the magnifier to get pertinent examples',
@@ -556,7 +626,7 @@ While editing, click on the magnifier to get pertinent examples',
 	'Class:ActionEmail/Attribute:body+'                    => 'Contents of the email. Can contain placeholders like:
 - $this->attribute_code$ any attribute of the object triggering the notification,
 - $this->html(attribute_code)$ same as above but displayed in html format,
-- $this->hyperlink()$ hyperlink in the console to the object triggering the notification,
+- $this->hyperlink()$ hyperlink in the backoffice to the object triggering the notification,
 - $this->hyperlink(portal)$ hyperlink in the portal to the object triggering the notification,
 - $this->head_html(case_log_attribute)$ last reply in html format of a caselog attribute,
 - $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
@@ -585,18 +655,59 @@ While editing, click on the magnifier to get pertinent examples',
 	'ActionEmail:preview_warning'                          => 'The actual eMail may look different in the eMail client than this preview in your browser.',
 	'ActionEmail:preview_more_info'                        => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s',
 	'ActionEmail:content_placeholder_missing'              => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.',
-));
+]);
+
+//
+// Class: ActionNewsroom
+//
+
+Dict::Add('EN US', 'English', 'English', [
+	'ActionNewsroom:trigger' => 'Trigger',
+	'ActionNewsroom:content' => 'Message',
+	'ActionNewsroom:settings' => 'Settings',
+	'Class:ActionNewsroom' => 'Notification by Newsroom',
+	'Class:ActionNewsroom+' => '',
+	'Class:ActionNewsroom/Attribute:title' => 'Title',
+	'Class:ActionNewsroom/Attribute:title+' => 'Title of the news. Can contain placeholders like $this->attribute_code$',
+	'Class:ActionNewsroom/Attribute:message' => 'Message',
+	'Class:ActionNewsroom/Attribute:message+' => 'Contents of the news, in Markdown format not HTML. Can contain placeholders like:
+- $this->attribute_code$ any attribute of the object triggering the notification,
+- $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
+- $current_contact->attribute$ attribute of the Person who triggered the notification',
+	'Class:ActionNewsroom/Attribute:icon' => 'Icon',
+	'Class:ActionNewsroom/Attribute:icon+' => 'Icon to appear next to the news in the newsroom.
+- If filled, the custom icon will be used
+- Else the icon of the triggering object if there is one (e.g. picture of a Person),
+- Else the icon of the triggering object class,
+- Otherwise, the application compact logo will be used',
+	'Class:ActionNewsroom/Attribute:priority' => 'Priority',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by decreasing priority, when displayed in the Newsroom popup',
+	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critical',
+	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Critical',
+	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgent',
+	'Class:ActionNewsroom/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:ActionNewsroom/Attribute:priority/Value:3' => 'Important',
+	'Class:ActionNewsroom/Attribute:priority/Value:3+' => 'Important',
+	'Class:ActionNewsroom/Attribute:priority/Value:4' => 'Standard',
+	'Class:ActionNewsroom/Attribute:priority/Value:4+' => 'Standard',
+	'Class:ActionNewsroom/Attribute:test_recipient_id' => 'Test recipient',
+	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Person used instead of Recipients when notification is being tested',
+	'Class:ActionNewsroom/Attribute:recipients' => 'Recipients',
+	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects',
+	'Class:ActionNewsroom/Attribute:url' => 'URL',
+	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.',
+]);
 
 //
 // Class: Trigger
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Trigger'                        => 'Trigger',
 	'Class:Trigger+'                       => 'Custom event handler',
 	'Class:Trigger/ComplementaryName'      => '%1$s, %2$s',
 	'Class:Trigger/Attribute:description'  => 'Description',
-	'Class:Trigger/Attribute:description+' => 'one line description',
+	'Class:Trigger/Attribute:description+' => 'Be precise as your users will base their potential unsubscription on this information',
 	'Class:Trigger/Attribute:action_list'  => 'Triggered actions',
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
 	'Class:Trigger/Attribute:finalclass'   => 'Trigger sub-class',
@@ -604,14 +715,19 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Trigger/Attribute:context'      => 'Context',
 	'Class:Trigger/Attribute:context+'     => 'Context to allow the trigger to start',
 	'Class:Trigger/Attribute:complement'   => 'Additional information',
-	'Class:Trigger/Attribute:complement+'  => 'Further information as provided in english, by this trigger',
-));
+	'Class:Trigger/Attribute:complement+'  => 'Computed automatically in english for triggers derived from TriggerOnObject',
+	'Class:Trigger/Attribute:subscription_policy'       => 'Subscription policy',
+	'Class:Trigger/Attribute:subscription_policy+'      => 'Allows users to unsubscribe from the trigger',
+	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription',
+]);
 
 //
 // Class: TriggerOnObject
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnObject'                         => 'Trigger (class dependent)',
 	'Class:TriggerOnObject+'                        => 'Trigger on a given class of objects',
 	'Class:TriggerOnObject/Attribute:target_class'  => 'Target class',
@@ -620,115 +736,115 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:TriggerOnObject/Attribute:filter+'       => 'Limit the object list (of the target class) which will activate the trigger',
 	'TriggerOnObject:WrongFilterQuery'              => 'Wrong filter query: %1$s',
 	'TriggerOnObject:WrongFilterClass'              => 'The filter query must return objects of class "%1$s"',
-));
+]);
 
 //
 // Class: TriggerOnPortalUpdate
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnPortalUpdate' => 'Trigger (when updated from the portal)',
-	'Class:TriggerOnPortalUpdate+' => 'Trigger on a end-user\'s update from the portal',
-));
+	'Class:TriggerOnPortalUpdate+' => 'Trigger on an end-user\'s update from the portal',
+]);
 
 //
 // Class: TriggerOnStateChange
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnStateChange' => 'Trigger (on state change)',
 	'Class:TriggerOnStateChange+' => 'Trigger on object state change',
 	'Class:TriggerOnStateChange/Attribute:state' => 'State',
 	'Class:TriggerOnStateChange/Attribute:state+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateEnter
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnStateEnter' => 'Trigger (on entering a state)',
 	'Class:TriggerOnStateEnter+' => 'Trigger on object state change - entering',
-));
+]);
 
 //
 // Class: TriggerOnStateLeave
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnStateLeave' => 'Trigger (on leaving a state)',
 	'Class:TriggerOnStateLeave+' => 'Trigger on object state change - leaving',
-));
+]);
 
 //
 // Class: TriggerOnObjectCreate
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnObjectCreate' => 'Trigger (on object creation)',
 	'Class:TriggerOnObjectCreate+' => 'Trigger on object creation of [a child class of] the given class',
-));
+]);
 
 //
 // Class: TriggerOnObjectDelete
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)',
 	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class',
-));
+]);
 
 //
 // Class: TriggerOnObjectUpdate
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectMention
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)',
 	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.',
-));
+]);
 
 //
 // Class: TriggerOnAttributeBlobDownload
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnThresholdReached
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnThresholdReached' => 'Trigger (on threshold)',
 	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stop watch',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Threshold',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-));
+]);
 
 //
 // Class: lnkTriggerAction
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkTriggerAction' => 'Action/Trigger',
 	'Class:lnkTriggerAction+' => 'Link between a trigger and an action',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Action',
@@ -741,12 +857,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
 	'Class:lnkTriggerAction/Attribute:order' => 'Order',
 	'Class:lnkTriggerAction/Attribute:order+' => 'Actions execution order',
-));
+]);
 
 //
 // Synchro Data Source
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:SynchroDataSource'                                                       => 'Synchro Data Source',
 	'Class:SynchroDataSource/Attribute:name'                                        => 'Name',
 	'Class:SynchroDataSource/Attribute:name+'                                       => '',
@@ -919,7 +1035,7 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Class:SynchroAttLinkSet'                                                  => 'Synchro Attribute (Linkset)',
 	'Class:SynchroAttLinkSet/Attribute:row_separator'                          => 'Rows separator',
 	'Class:SynchroAttLinkSet/Attribute:attribute_separator'                    => 'Attributes separator',
-	'Class:SynchroLog'                                                         => 'Synchr Log',
+	'Class:SynchroLog'                                                         => 'Synchro Log',
 	'Class:SynchroLog/Attribute:sync_source_id'                                => 'Synchro Data Source',
 	'Class:SynchroLog/Attribute:start_date'                                    => 'Start Date',
 	'Class:SynchroLog/Attribute:end_date'                                      => 'End Date',
@@ -1046,12 +1162,12 @@ The hyperlink is displayed in the tooltip appearing on the “Lock” symbol of 
 	'Core:Validator:Mandatory' => 'Please, fill this field',
 	'Core:Validator:MustBeInteger' => 'Must be an integer',
 	'Core:Validator:MustSelectOne' => 'Please, select one',
-));
+]);
 
 //
 // Class: TagSetFieldData
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TagSetFieldData' => '%2$s for class %1$s',
 	'Class:TagSetFieldData+' => '',
 
@@ -1061,9 +1177,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label',
 	'Class:TagSetFieldData/Attribute:description' => 'Description',
 	'Class:TagSetFieldData/Attribute:description+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique',
@@ -1075,12 +1191,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag',
-));
+]);
 
 //
 // Class: DBProperty
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:DBProperty' => 'DB property',
 	'Class:DBProperty+' => '',
 	'Class:DBProperty/Attribute:name' => 'Name',
@@ -1093,12 +1209,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => 'Change comment',
 	'Class:DBProperty/Attribute:change_comment+' => '',
-));
+]);
 
 //
 // Class: BackgroundTask
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:BackgroundTask' => 'Background task',
 	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name',
@@ -1123,12 +1239,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => 'Status',
 	'Class:BackgroundTask/Attribute:status+' => '',
-));
+]);
 
 //
 // Class: AsyncTask
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:AsyncTask' => 'Async. task',
 	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Created',
@@ -1151,45 +1267,42 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s',
-));
+	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s',
+	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s',
+]);
 
 //
 // Class: AbstractResource
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:AbstractResource' => 'Abstract Resource',
 	'Class:AbstractResource+' => '',
-));
+]);
 
 //
 // Class: ResourceAdminMenu
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:ResourceAdminMenu' => 'Resource Admin Menu',
 	'Class:ResourceAdminMenu+' => '',
-));
+]);
 
 //
 // Class: ResourceRunQueriesMenu
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu',
 	'Class:ResourceRunQueriesMenu+' => '',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:ResourceSystemMenu' => 'Resource System Menu',
 	'Class:ResourceSystemMenu+' => '',
-));
-
-
-
+]);

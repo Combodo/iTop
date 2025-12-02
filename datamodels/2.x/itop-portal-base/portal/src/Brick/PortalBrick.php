@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,9 +20,11 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
+use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use DOMFormatException;
 use ModuleDesign;
-use Combodo\iTop\DesignElement;
 
 /**
  * Description of PortalBrick
@@ -36,40 +38,42 @@ use Combodo\iTop\DesignElement;
 abstract class PortalBrick extends AbstractBrick
 {
 	/** @var string ENUM_OPENING_TARGET_MODAL */
-	const ENUM_OPENING_TARGET_MODAL = 'modal';
+	public const ENUM_OPENING_TARGET_MODAL = 'modal';
 	/** @var string ENUM_OPENING_TARGET_SELF */
-	const ENUM_OPENING_TARGET_SELF = 'self';
+	public const ENUM_OPENING_TARGET_SELF = 'self';
 	/** @var string ENUM_OPENING_TARGET_NEW */
-	const ENUM_OPENING_TARGET_NEW = 'new';
+	public const ENUM_OPENING_TARGET_NEW = 'new';
 
 	/** @var int DEFAULT_WIDTH */
-	const DEFAULT_WIDTH = 6;
+	public const DEFAULT_WIDTH = 400;
 	/** @var int DEFAULT_HEIGHT */
-	const DEFAULT_HEIGHT = 1;
+	public const DEFAULT_HEIGHT = null;
 	/** @var bool DEFAULT_MODAL */
-	const DEFAULT_MODAL = false;
+	public const DEFAULT_MODAL = false;
 	/** @var bool DEFAULT_VISIBLE_HOME */
-	const DEFAULT_VISIBLE_HOME = true;
+	public const DEFAULT_VISIBLE_HOME = true;
 	/** @var bool DEFAULT_VISIBLE_NAVIGATION_MENU */
-	const DEFAULT_VISIBLE_NAVIGATION_MENU = true;
+	public const DEFAULT_VISIBLE_NAVIGATION_MENU = true;
 	/** @var string DEFAULT_DECORATION_CLASS_HOME */
-	const DEFAULT_DECORATION_CLASS_HOME = '';
+	public const DEFAULT_DECORATION_CLASS_HOME = '';
 	/** @var string DEFAULT_DECORATION_CLASS_NAVIGATION_MENU */
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = '';
+	public const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = '';
 	/** @var string DEFAULT_TILE_TEMPLATE_PATH */
-	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/tile.html.twig';
+	public const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/tile.html.twig';
 	/** @var string|null DEFAULT_TILE_CONTROLLER_ACTION */
-	const DEFAULT_TILE_CONTROLLER_ACTION = null;
+	public const DEFAULT_TILE_CONTROLLER_ACTION = null;
 	/** @var string DEFAULT_OPENING_TARGET */
-	const DEFAULT_OPENING_TARGET = self::ENUM_OPENING_TARGET_MODAL;
+	public const DEFAULT_OPENING_TARGET = self::ENUM_OPENING_TARGET_MODAL;
 
 	/** @var string|null $sRouteName */
-	static $sRouteName = null;
+	public static $sRouteName = null;
 	/** @var array $aOpeningTargets */
-	static $aOpeningTargets = array(self::ENUM_OPENING_TARGET_MODAL, self::ENUM_OPENING_TARGET_SELF, self::ENUM_OPENING_TARGET_NEW);
+	public static $aOpeningTargets = [self::ENUM_OPENING_TARGET_MODAL, self::ENUM_OPENING_TARGET_SELF, self::ENUM_OPENING_TARGET_NEW];
 
 	/** @var int $iWidth */
 	protected $iWidth;
+	/** @var bool width in pixel flag */
+	public bool $bIsWidthPixel = true;
 	/** @var int $iHeight */
 	protected $iHeight;
 	/** @var bool $bModal */
@@ -82,8 +86,6 @@ abstract class PortalBrick extends AbstractBrick
 	protected $sDecorationClassHome;
 	/** @var string $sDecorationClassNavigationMenu */
 	protected $sDecorationClassNavigationMenu;
-	/** @var string $sTileTemplatePath */
-	protected $sTileTemplatePath;
 	/** @var string|null $sTileControllerAction */
 	protected $sTileControllerAction;
 	/** @var string $sOpeningTarget */
@@ -98,6 +100,16 @@ abstract class PortalBrick extends AbstractBrick
 	protected $sTitleHome;
 	/** @var string $sTitleNavigationMenu */
 	protected $sTitleNavigationMenu;
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(
+			self::class,
+			TemplateDefinitionDto::Create('tile', static::TEMPLATES_BASE_PATH.'tile.html.twig'),
+		);
+	}
 
 	/**
 	 * @return string|null
@@ -121,7 +133,6 @@ abstract class PortalBrick extends AbstractBrick
 		$this->bVisibleNavigationMenu = static::DEFAULT_VISIBLE_NAVIGATION_MENU;
 		$this->sDecorationClassHome = static::DEFAULT_DECORATION_CLASS_HOME;
 		$this->sDecorationClassNavigationMenu = static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU;
-		$this->sTileTemplatePath = static::DEFAULT_TILE_TEMPLATE_PATH;
 		$this->sTileControllerAction = static::DEFAULT_TILE_CONTROLLER_ACTION;
 		$this->sOpeningTarget = static::DEFAULT_OPENING_TARGET;
 	}
@@ -244,16 +255,6 @@ abstract class PortalBrick extends AbstractBrick
 	public function GetTileControllerAction()
 	{
 		return $this->sTileControllerAction;
-	}
-
-	/**
-	 * Returns the brick tile template path
-	 *
-	 * @return string
-	 */
-	public function GetTileTemplatePath()
-	{
-		return $this->sTileTemplatePath;
 	}
 
 	/**
@@ -421,20 +422,6 @@ abstract class PortalBrick extends AbstractBrick
 	}
 
 	/**
-	 * Sets the brick tile template path
-	 *
-	 * @param string $sTileTemplatePath
-	 *
-	 * @return \Combodo\iTop\Portal\Brick\PortalBrick
-	 */
-	public function SetTileTemplatePath($sTileTemplatePath)
-	{
-		$this->sTileTemplatePath = $sTileTemplatePath;
-
-		return $this;
-	}
-
-	/**
 	 * Sets the brick tile controller action
 	 *
 	 * @param string $sTileControllerAction
@@ -478,12 +465,12 @@ abstract class PortalBrick extends AbstractBrick
 
 		// Checking specific elements
 		/** @var \Combodo\iTop\DesignElement $oBrickSubNode */
-		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
-		{
-			switch ($oBrickSubNode->nodeName)
-			{
+		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode) {
+			switch ($oBrickSubNode->nodeName) {
 				case 'width':
-					$this->SetWidth((int)$oBrickSubNode->GetText(static::DEFAULT_WIDTH));
+					$sWidth = $oBrickSubNode->GetText(static::DEFAULT_WIDTH);
+					$this->bIsWidthPixel = str_contains($sWidth, 'px');
+					$this->SetWidth((int)$sWidth);
 					break;
 
 				case 'height':
@@ -498,23 +485,20 @@ abstract class PortalBrick extends AbstractBrick
 				case 'visible':
 					// Default value
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$optionalNodeValue = ($oOptionalNode->GetText() === 'false') ? false : true;
 						$this->SetVisibleHome($optionalNodeValue);
 						$this->SetVisibleNavigationMenu($optionalNodeValue);
 					}
 					// Home value
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('home');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$optionalNodeValue = ($oOptionalNode->GetText() === 'false') ? false : true;
 						$this->SetVisibleHome($optionalNodeValue);
 					}
 					// Navigation menu value
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('navigation_menu');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$optionalNodeValue = ($oOptionalNode->GetText() === 'false') ? false : true;
 						$this->SetVisibleNavigationMenu($optionalNodeValue);
 					}
@@ -522,11 +506,10 @@ abstract class PortalBrick extends AbstractBrick
 
 				case 'templates':
 					$oTemplateNodeList = $oBrickSubNode->GetNodes('template[@id='.ModuleDesign::XPathQuote('tile').']');
-					if ($oTemplateNodeList->length > 0)
-					{
+					if ($oTemplateNodeList->length > 0) {
 						/** @var \Combodo\iTop\DesignElement $oTemplateNode */
 						$oTemplateNode = $oTemplateNodeList->item(0);
-						$this->SetTileTemplatePath($oTemplateNode->GetText(static::DEFAULT_TILE_TEMPLATE_PATH));
+						$this->SetTemplatePath('tile', $oTemplateNode->GetText(static::DEFAULT_TILE_TEMPLATE_PATH));
 					}
 					break;
 
@@ -536,23 +519,20 @@ abstract class PortalBrick extends AbstractBrick
 					$this->SetRankNavigationMenu($this->fRank);
 					// Default value
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_RANK);
 						$this->SetRankHome($optionalNodeValue);
 						$this->SetRankNavigationMenu($optionalNodeValue);
 					}
 					// Home value
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('home');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_RANK);
 						$this->SetRankHome($optionalNodeValue);
 					}
 					// Navigation menu value
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('navigation_menu');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_RANK);
 						$this->SetRankNavigationMenu($optionalNodeValue);
 					}
@@ -564,23 +544,20 @@ abstract class PortalBrick extends AbstractBrick
 					$this->SetTitleNavigationMenu($this->sTitle);
 					// Default value
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_TITLE);
 						$this->SetTitleHome($optionalNodeValue);
 						$this->SetTitleNavigationMenu($optionalNodeValue);
 					}
 					// Home value
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('home');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_TITLE);
 						$this->SetTitleHome($optionalNodeValue);
 					}
 					// Navigation menu value
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('navigation_menu');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_TITLE);
 						$this->SetTitleNavigationMenu($optionalNodeValue);
 						$this->SetTitle($optionalNodeValue);
@@ -593,23 +570,20 @@ abstract class PortalBrick extends AbstractBrick
 					$this->SetDecorationClassNavigationMenu(static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU);
 					// Default value
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU);
 						$this->SetDecorationClassHome($optionalNodeValue);
 						$this->SetDecorationClassNavigationMenu($optionalNodeValue);
 					}
 					// Home value
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('home');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_DECORATION_CLASS_HOME);
 						$this->SetDecorationClassHome($optionalNodeValue);
 					}
 					// Navigation menu value
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('navigation_menu');
-					if ($oOptionalNode !== null)
-					{
+					if ($oOptionalNode !== null) {
 						$optionalNodeValue = $oOptionalNode->GetText(static::DEFAULT_DECORATION_CLASS_NAVIGATION_MENU);
 						$this->SetDecorationClassNavigationMenu($optionalNodeValue);
 					}
@@ -621,11 +595,16 @@ abstract class PortalBrick extends AbstractBrick
 
 				case 'opening_target':
 					$sOpeningTarget = $oBrickSubNode->GetText(static::DEFAULT_OPENING_TARGET);
-					if (!in_array($sOpeningTarget,
-						array(static::ENUM_OPENING_TARGET_MODAL, static::ENUM_OPENING_TARGET_NEW, static::ENUM_OPENING_TARGET_SELF)))
-					{
-						throw new DOMFormatException('PortalBrick : opening_target tag value must be modal|new|self ("'.$sOpeningTarget.'" given)',
-							null, null, $oBrickSubNode);
+					if (!in_array(
+						$sOpeningTarget,
+						[static::ENUM_OPENING_TARGET_MODAL, static::ENUM_OPENING_TARGET_NEW, static::ENUM_OPENING_TARGET_SELF]
+					)) {
+						throw new DOMFormatException(
+							'PortalBrick : opening_target tag value must be modal|new|self ("'.$sOpeningTarget.'" given)',
+							null,
+							null,
+							$oBrickSubNode
+						);
 					}
 
 					$this->SetOpeningTarget($sOpeningTarget);

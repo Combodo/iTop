@@ -1,28 +1,17 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/*
-* @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2023 Combodo SARL
-* @licence	http://opensource.org/licenses/AGPL-3.0
-*
-*/
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
+ */
+/**
+ * @author ITOMIG GmbH <martin.raenker@itomig.de>
+ *
+ */
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Referenz',
@@ -74,14 +63,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Geschlossen',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => 'Geschlossen',
 	'Ticket:ImpactAnalysis' => 'Auswirkungsanalyse',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkContactToTicket' => 'Verknüpfung Kontakt/Ticket',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
@@ -101,13 +89,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Manuell hinzugefügt',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Berechnet',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Nicht ändern',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:WorkOrder' => 'Arbeitsauftrag',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => 'Name',
@@ -140,11 +128,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Schließen',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Ticket:baseinfo' => 'Allgemeine Informationen',
 	'Ticket:date' => 'Daten',
 	'Ticket:contact' => 'Kontakte',
@@ -234,5 +221,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Zielvorgabe (SLT) vom Typ TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve (Erstlösungszeit)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Zielvorgabe (SLT) vom Typ TTR',
-));
+]);
 
+//
+// Class: Ticket
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:Ticket/Attribute:team_email' => 'Team email~~',
+	'Class:Ticket/Attribute:team_email+' => '~~',
+]);

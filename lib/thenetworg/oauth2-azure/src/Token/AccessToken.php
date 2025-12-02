@@ -3,9 +3,8 @@
 namespace TheNetworg\OAuth2\Client\Token;
 
 use Firebase\JWT\JWT;
-use InvalidArgumentException;
-use League\OAuth2\Client\Tool\RequestFactory;
 use RuntimeException;
+use TheNetworg\OAuth2\Client\Provider\Azure;
 
 class AccessToken extends \League\OAuth2\Client\Token\AccessToken
 {
@@ -13,6 +12,9 @@ class AccessToken extends \League\OAuth2\Client\Token\AccessToken
 
     protected $idTokenClaims;
 
+    /**
+     * @param Azure $provider
+     */
     public function __construct(array $options, $provider)
     {
         parent::__construct($options);
@@ -27,7 +29,7 @@ class AccessToken extends \League\OAuth2\Client\Token\AccessToken
                 $tks = explode('.', $this->idToken);
                 // Check if the id_token contains signature
                 if (3 == count($tks) && !empty($tks[2])) {
-                    $idTokenClaims = (array)JWT::decode($this->idToken, $keys, ['RS256']);
+                    $idTokenClaims = (array)JWT::decode($this->idToken, $keys);
                 } else {
                     // The id_token is unsigned (coming from v1.0 endpoint) - https://msdn.microsoft.com/en-us/library/azure/dn645542.aspx
 

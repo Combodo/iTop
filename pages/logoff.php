@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -18,6 +19,7 @@
  */
 
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\AjaxPage;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -32,8 +34,7 @@ require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 $bPortal = utils::ReadParam('portal', false);
 $sUrl = utils::GetAbsoluteUrlAppRoot();
 
-if ($operation == 'do_logoff')
-{
+if ($operation == 'do_logoff') {
 	// Reload the same dummy page to let the "calling" page execute its 'onunload' method before performing the actual logoff.
 	// Note the redirection MUST NOT be made via an HTTP "header" since onunload is called only when the actual content of the DOM
 	// is replaced by some other content. So the "bouncing" page must provide some content (in our case a script making the redirection).
@@ -43,8 +44,7 @@ if ($operation == 'do_logoff')
 	exit;
 }
 
-if (Session::IsSet('auth_user'))
-{
+if (Session::IsSet('auth_user')) {
 	$sAuthUser = Session::Get('auth_user');
 	UserRights::Login($sAuthUser); // Set the user's language
 }
@@ -52,15 +52,11 @@ if (Session::IsSet('auth_user'))
 LoginWebPage::ResetSession();
 
 $bLoginDebug = MetaModel::GetConfig()->Get('login_debug');
-if ($bLoginDebug)
-{
+if ($bLoginDebug) {
 	IssueLog::Info("---------------------------------");
-	if (isset($sAuthUser))
-	{
+	if (isset($sAuthUser)) {
 		IssueLog::Info("--> Logout user: [$sAuthUser]");
-	}
-	else
-	{
+	} else {
 		IssueLog::Info("--> Logout");
 	}
 	$sSessionLog = session_id().' '.utils::GetSessionLog();
@@ -70,13 +66,10 @@ if ($bLoginDebug)
 $aPluginList = LoginWebPage::GetLoginPluginList('iLogoutExtension');
 
 /** @var iLogoutExtension $oLogoutExtension */
-foreach ($aPluginList as $oLogoutExtension)
-{
-	if ($bLoginDebug)
-	{
+foreach ($aPluginList as $oLogoutExtension) {
+	if ($bLoginDebug) {
 		$sCurrSessionLog = session_id().' '.utils::GetSessionLog();
-		if ($sCurrSessionLog != $sSessionLog)
-		{
+		if ($sCurrSessionLog != $sSessionLog) {
 			$sSessionLog = $sCurrSessionLog;
 			IssueLog::Info("SESSION: $sSessionLog");
 		}
@@ -86,11 +79,9 @@ foreach ($aPluginList as $oLogoutExtension)
 	$oLogoutExtension->LogoutAction();
 }
 
-if ($bLoginDebug)
-{
+if ($bLoginDebug) {
 	$sCurrSessionLog = session_id().' '.utils::GetSessionLog();
-	if ($sCurrSessionLog != $sSessionLog)
-	{
+	if ($sCurrSessionLog != $sSessionLog) {
 		$sSessionLog = $sCurrSessionLog;
 		IssueLog::Info("SESSION: $sSessionLog");
 	}
@@ -99,8 +90,8 @@ if ($bLoginDebug)
 
 LoginWebPage::ResetSession(true);
 if ($bLoginDebug) {
-    $sSessionLog = session_id().' '.utils::GetSessionLog();
-    IssueLog::Info("SESSION: $sSessionLog");
+	$sSessionLog = session_id().' '.utils::GetSessionLog();
+	IssueLog::Info("SESSION: $sSessionLog");
 }
 
 $oPage = LoginWebPage::NewLoginWebPage();

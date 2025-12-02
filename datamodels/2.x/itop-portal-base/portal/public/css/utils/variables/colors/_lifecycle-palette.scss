@@ -1,0 +1,60 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* Lifecycle palette */
+/* - For workflow */
+$ipb-lifecycle-new-state-primary-color: $common-lifecycle-new-state-primary-color !default;
+$ipb-lifecycle-new-state-secondary-color: $common-lifecycle-new-state-secondary-color !default;
+$ipb-lifecycle-neutral-state-primary-color: $common-lifecycle-neutral-state-primary-color !default;
+$ipb-lifecycle-neutral-state-secondary-color: $common-lifecycle-neutral-state-secondary-color !default;
+$ipb-lifecycle-waiting-state-primary-color: $common-lifecycle-waiting-state-primary-color !default;
+$ipb-lifecycle-waiting-state-secondary-color: $common-lifecycle-waiting-state-secondary-color !default;
+$ipb-lifecycle-success-state-primary-color: $common-lifecycle-success-state-primary-color !default;
+$ipb-lifecycle-success-state-secondary-color: $common-lifecycle-success-state-secondary-color !default;
+$ipb-lifecycle-failure-state-primary-color: $common-lifecycle-failure-state-primary-color !default;
+$ipb-lifecycle-failure-state-secondary-color: $common-lifecycle-failure-state-secondary-color !default;
+$ipb-lifecycle-frozen-state-primary-color: $common-lifecycle-frozen-state-primary-color !default;
+$ipb-lifecycle-frozen-state-secondary-color: $common-lifecycle-frozen-state-secondary-color !default;
+
+/* - For basic lifecycle */
+$ipb-lifecycle-active-state-primary-color: $common-lifecycle-active-state-primary-color !default;
+$ipb-lifecycle-active-state-secondary-color: $common-lifecycle-active-state-secondary-color !default;
+$ipb-lifecycle-inactive-state-primary-color: $common-lifecycle-inactive-state-primary-color !default;
+$ipb-lifecycle-inactive-state-secondary-color: $common-lifecycle-inactive-state-secondary-color !default;
+
+$ipb-lifecycle-states-colors: (
+        'new': (
+                'primary-color': $ipb-lifecycle-new-state-primary-color,
+                'secondary-color': $ipb-lifecycle-new-state-secondary-color,
+        ),
+        'neutral': (
+                'primary-color': $ipb-lifecycle-neutral-state-primary-color,
+                'secondary-color': $ipb-lifecycle-neutral-state-secondary-color,
+        ),
+        'waiting': (
+                'primary-color': $ipb-lifecycle-waiting-state-primary-color,
+                'secondary-color': $ipb-lifecycle-waiting-state-secondary-color,
+        ),
+        'success': (
+                'primary-color': $ipb-lifecycle-success-state-primary-color,
+                'secondary-color': $ipb-lifecycle-success-state-secondary-color,
+        ),
+        'failure': (
+                'primary-color': $ipb-lifecycle-failure-state-primary-color,
+                'secondary-color': $ipb-lifecycle-failure-state-secondary-color,
+        ),
+        'frozen': (
+                'primary-color': $ipb-lifecycle-frozen-state-primary-color,
+                'secondary-color': $ipb-lifecycle-frozen-state-secondary-color,
+        ),
+        'active': (
+                'primary-color': $ipb-lifecycle-active-state-primary-color,
+                'secondary-color': $ipb-lifecycle-active-state-secondary-color,
+        ),
+        'inactive': (
+                'primary-color': $ipb-lifecycle-inactive-state-primary-color,
+                'secondary-color': $ipb-lifecycle-inactive-state-secondary-color,
+        ),
+);

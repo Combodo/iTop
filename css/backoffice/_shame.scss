@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -39,6 +39,23 @@
 //
 // .site-nav a { color:#BADA55!important; }
 
+$ibo-shame--switch--width: 36px !default;
+$ibo-shame--switch--height: 20px !default;
+
+$ibo-shame--slider--background-color: $ibo-color-secondary-600 !default;
+
+$ibo-shame--slider--before--height: 15px !default;
+$ibo-shame--slider--before--width: 15px !default;
+$ibo-shame--slider--before--background-color: $ibo-color-secondary-300 !default;
+
+$ibo-shame--slider--is-checked--background-color: $ibo-color-primary-600 !default;
+
+$ibo-shame--slider--is-focus--box-shadow: 0 0 1px $ibo-color-primary-600 !default;
+
+$ibo-shame--slider--is-round--border-radius: 20px !default;
+$ibo-shame--slider--is-round--before--border-radius: 7px !default;
+
+
 // N°2847 - Recolor svg illustrations with iTop's primary color
 .ibo-svg-illustration--container > svg *[fill="#6c63ff"]{
 	fill: $ibo-svg-illustration--fill;
@@ -48,4 +65,64 @@
 // Fix found here: https://stackoverflow.com/questions/40895387/z-index-not-working-on-safari-fine-on-firefox-and-chrome
 .ibo-navigation-menu.ibo-is-active .ibo-navigation-menu--drawer{
     transform: translate3d(0,0,0);
+}
+
+// Toggler legacy CSS that has somehow been added to iTop 3.0 and that is now used by some extensions
+// Round Toggle
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: $ibo-shame--switch--width;
+  height: $ibo-shame--switch--height;
+  vertical-align: baseline;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  display: none;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $ibo-shame--slider--background-color;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: $ibo-shame--slider--before--height;
+  width: $ibo-shame--slider--before--width;
+  left: 3px;
+  bottom: 3px;
+  background-color: $ibo-shame--slider--before--background-color;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: $ibo-shame--slider--is-checked--background-color;
+}
+
+input:focus + .slider {
+  box-shadow: $ibo-shame--slider--is-focus--box-shadow;
+}
+
+input:checked + .slider:before {
+  transform: translateX(14.5px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: $ibo-shame--slider--is-round--border-radius;
+}
+
+.slider.round:before {
+  border-radius: $ibo-shame--slider--is-round--before--border-radius;
 }

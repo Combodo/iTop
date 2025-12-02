@@ -1,18 +1,17 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
 /**
- * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
- *
- * @author      Vladimir Kunin <v.b.kunin@gmail.com>
- * @link        http://community.itop-itsm.ru  iTop Russian Community
- * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:RequestManagement' => 'Управление запросами',
 	'Menu:RequestManagement+' => 'Управление запросами',
 	'Menu:RequestManagementProvider' => 'Поставщик техподдержки',
@@ -44,7 +43,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Открытые запросы по заказчику',
 	'Class:UserRequest:KnownErrorList' => 'Известные ошибки',
 	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -60,7 +59,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Class: UserRequest
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:UserRequest' => 'Запрос',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Статус',
@@ -163,6 +162,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserRequest/Attribute:tto+' => '',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',
 	'Class:UserRequest/Attribute:ttr+' => '',
+	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:UserRequest/Attribute:tto_time_spent+' => '~~',
+	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:UserRequest/Attribute:ttr_time_spent+' => '~~',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'Срок TTO',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => 'Крайний срок назаначения агента (принятия в работу) по текущему SLA',
 	'Class:UserRequest/Attribute:sla_tto_passed' => 'SLA TTO пропущено',
@@ -258,11 +261,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Невозможно назначить этот же запрос в качестве родительского',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Каскадное решение дочерних запросов (ev_autoresolve) с установкой следующих параметров: услуга, команда, агент, информация о решении.',
-));
+]);
 
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Organization:Overview:UserRequests' => 'Запросы пользователей этой организации',
 	'Organization:Overview:MyUserRequests' => 'Мои запросы пользователей этой организации',
 	'Organization:Overview:Tickets' => 'Тикеты этой организации',
-));
+]);

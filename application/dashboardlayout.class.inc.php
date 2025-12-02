@@ -1,9 +1,10 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -19,11 +20,12 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardRow;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Dashboard presentation
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 abstract class DashboardLayout
@@ -37,21 +39,21 @@ abstract class DashboardLayout
 	 * @since 2.7.0
 	 */
 	abstract public function GetDashletCoordinates($iCellIdx);
-	
+
 	public static function GetInfo()
 	{
-		return array(
+		return [
 			'label' => '',
 			'icon' => '',
 			'description' => '',
-		);
+		];
 	}
 }
 
 abstract class DashboardLayoutMultiCol extends DashboardLayout
 {
 	protected $iNbCols;
-	
+
 	public function __construct()
 	{
 		$this->iNbCols = 1;
@@ -62,56 +64,47 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		$aKeys = array_reverse(array_keys($aDashlets));
 		$idx = 0;
 		$bNoVisibleFound = true;
-		while($idx < count($aKeys) && $bNoVisibleFound)
-		{
+		while ($idx < count($aKeys) && $bNoVisibleFound) {
 			/** @var \Dashlet $oDashlet */
 			$oDashlet = $aDashlets[$aKeys[$idx]];
-			if ($oDashlet::IsVisible())
-			{
+			if ($oDashlet::IsVisible()) {
 				$bNoVisibleFound = false;
-			}
-			else
-			{
+			} else {
 				unset($aDashlets[$aKeys[$idx]]);
 			}
 			$idx++;
 		}
 		return $aDashlets;
 	}
-	
+
 	protected function TrimCellsArray($aCells)
 	{
-		foreach($aCells as $key => $aDashlets)
-		{
+		foreach ($aCells as $key => $aDashlets) {
 			$aCells[$key] = $this->TrimCell($aDashlets);
 		}
 		$aKeys = array_reverse(array_keys($aCells));
 		$idx = 0;
 		$bNoVisibleFound = true;
-		while($idx < count($aKeys) && $bNoVisibleFound)
-		{
+		while ($idx < count($aKeys) && $bNoVisibleFound) {
 			$aDashlets = $aCells[$aKeys[$idx]];
-			if (count($aDashlets) > 0)
-			{
+			if (count($aDashlets) > 0) {
 				$bNoVisibleFound = false;
-			}
-			else
-			{
+			} else {
 				unset($aCells[$aKeys[$idx]]);
 			}
 			$idx++;
 		}
-		return $aCells;		
-		
+		return $aCells;
+
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param $aCells
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 */
-	public function Render($oPage, $aCells, $bEditMode = false, $aExtraParams = array())
+	public function Render($oPage, $aCells, $bEditMode = false, $aExtraParams = [])
 	{
 		// Trim the list of cells to remove the invisible/empty ones at the end of the array
 		$aCells = $this->TrimCellsArray($aCells);
@@ -156,8 +149,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 
 		$oPage->add_script("function updateDashboard".$aExtraParams['dashboard_div_id']."(){".$sJSReload."}");
 
-		if ($bEditMode) // Add one row for extensibility
-		{
+		if ($bEditMode) { // Add one row for extensibility
 			$oDashboardRow = new DashboardRow();
 			$oDashboardLayout->AddDashboardRow($oDashboardRow);
 
@@ -179,7 +171,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		$iColNumber = (int) $iCellIdx % $this->iNbCols;
 		$iRowNumber = (int) floor($iCellIdx / $this->iNbCols);
 
-		return array($iColNumber, $iRowNumber);
+		return [$iColNumber, $iRowNumber];
 	}
 }
 
@@ -190,13 +182,13 @@ class DashboardLayoutOneCol extends DashboardLayoutMultiCol
 		parent::__construct();
 		$this->iNbCols = 1;
 	}
-	static public function GetInfo()
+	public static function GetInfo()
 	{
-		return array(
+		return [
 			'label' => 'One Column',
 			'icon' => 'images/layout_1col.png',
 			'description' => '',
-		);
+		];
 	}
 }
 
@@ -207,13 +199,13 @@ class DashboardLayoutTwoCols extends DashboardLayoutMultiCol
 		parent::__construct();
 		$this->iNbCols = 2;
 	}
-	static public function GetInfo()
+	public static function GetInfo()
 	{
-		return array(
+		return [
 			'label' => 'Two Columns',
 			'icon' =>  'images/layout_2col.png',
 			'description' => '',
-		);
+		];
 	}
 }
 
@@ -224,12 +216,12 @@ class DashboardLayoutThreeCols extends DashboardLayoutMultiCol
 		parent::__construct();
 		$this->iNbCols = 3;
 	}
-	static public function GetInfo()
+	public static function GetInfo()
 	{
-		return array(
+		return [
 			'label' => 'Two Columns',
 			'icon' =>  'images/layout_3col.png',
 			'description' => '',
-		);
+		];
 	}
 }

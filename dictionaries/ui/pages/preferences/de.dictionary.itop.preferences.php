@@ -1,23 +1,16 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
-// Navigation menu
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+/**
+ *
+ */
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Preferences:Title' => 'Einstellungen',
 	'UI:Preferences:UserInterface:Title' => 'Benutzerinterface',
 	'UI:Preferences:General:Title' => 'Generell',
@@ -45,6 +38,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Preferences:Tabs:Scrollable:Label' => 'Navigation',
 	'UI:Preferences:Tabs:Scrollable:Classic' => 'klassisch',
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'scrollbar',
+	'UI:Preferences:General:Toasts' => 'Position der Toast-Benachrichtigungen',
+	'UI:Preferences:General:Toasts:Bottom' => 'Unten',
+	'UI:Preferences:General:Toasts:Top' => 'Oben',
 	'UI:Preferences:ChooseAPlaceholder' => 'Platzhalterbild für Profilbild',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Nutzen Sie ein Platzhalterbild, das angezeigt wird, wenn der Kontakt, der mit dem User verlinkt ist, kein Profilbild gesetzt hat.',
-));
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Ihr Platzhalterbild wurde erfolgreich aktualisiert.',
+	'UI:Preferences:Notifications' => 'Benachrichtigungen',
+	'UI:Preferences:Notifications+' => 'Konfigurieren Sie die Benachrichtigungen, die Sie erhalten möchten. <a href="%1$s">auf dieser Seite</a>.',
+
+]);

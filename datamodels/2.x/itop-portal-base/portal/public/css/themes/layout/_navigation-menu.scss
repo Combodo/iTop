@@ -1,0 +1,124 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+@import "../node_modules/bulma-scss/utilities/mixins";
+
+$ipb-navigation-menu--background-color: $ipb-color-blue-grey-900 !default;
+
+$ipb-navigation-menu--menu-entry--active--icon--color: $ipb-color-primary-600 !default;
+$ipb-navigation-menu--menu-entry--active--color: $ipb-color-grey-800 !default;
+$ipb-navigation-menu--menu-entry--active--background-color: $ipb-color-white-100 !default;
+
+$ipb-navigation-menu--dropdown-menu--items-remainder--color: $ipb-color-white-200 !default;
+$ipb-navigation-menu--dropdown-menu--items-remainder--hover--color: $ipb-color-white-100 !default;
+$ipb-navigation-menu--dropdown-menu--items-remainder--hover--background-color: $ipb-color-blue-grey-700 !default;
+
+$ipb-navigation-menu--user-card--color: $ipb-color-white-100 !default;
+$ipb-navigation-menu--user-card--photo--background-color: $ipb-color-grey-700 !default;
+
+$ipb-navigation-menu--user-part--background-color: $ipb-color-grey-800 !default;
+
+$ipb-navigation-menu-overlay--opacity: 0.6 !default;
+$ipb-navigation-menu-overlay--background-color: $ipb-color-blue-grey-800 !default;
+$ipb-navigation-menu-overlay--backdrop-filter: blur(2px) !default;
+
+.ipb-navigation-menu {
+  background-color: $ipb-navigation-menu--background-color;
+
+  &.ipb-is-expanded {
+    .ipb-navigation-menu--top-part--toggle--expand-menu {
+      @include ipb-toggle-nav-animated-chevron-right;
+    }
+  }
+}
+
+.ipb-navigation-menu--top-part--toggle--expand-menu {
+  @include ipb-toggle-nav;
+}
+
+.ipb-navigation-menu--middle-part {
+  @include ipb-scrollbar;
+}
+
+// entry wrapper
+.ipb-navigation-menu--menu-entry--wrapper {
+  .ipb-navigation-menu--menu-entry--title {
+    @include ipb-text-overflow-ellipsis;
+  }
+  
+  &.active .ipb-navigation-menu--menu-entry {
+    background-color: $ipb-navigation-menu--menu-entry--active--background-color;
+    color: $ipb-navigation-menu--menu-entry--active--color;
+
+    .ipb-navigation-menu--menu-entry--icon {
+      color: $ipb-navigation-menu--menu-entry--active--icon--color;
+    }
+  }
+}
+
+// menu entry
+.ipb-navigation-menu--menu-entry,
+.ipb-dropdown-menu--items-remainder > li > a {
+  color: $ipb-navigation-menu--dropdown-menu--items-remainder--color;
+  @include ipb-transition(#{"background-color, color"});
+
+  &:hover, &:focus:not(.ipb-not-focusable) {
+    color: $ipb-navigation-menu--dropdown-menu--items-remainder--hover--color;
+    background-color: $ipb-navigation-menu--dropdown-menu--items-remainder--hover--background-color;
+  }
+}
+
+
+.ipb-dropdown-menu--items-remainder {
+  background-color: $ipb-navigation-menu--background-color;
+}
+
+.ipb-navigation-menu--user-part {
+  background-color: $ipb-navigation-menu--user-part--background-color;
+}
+
+.ipb-navigation-menu--user-card {
+  color: $ipb-navigation-menu--user-card--color !important;
+  .ipb-navigation-menu--user-card--photo {
+    background-color: $ipb-navigation-menu--user-card--photo--background-color;
+  }
+
+  .ipb-navigation-menu--user-card--infos {
+    // username
+    .ipb-navigation-menu--user-card--name {
+      > div {
+        @include ipb-text-overflow-ellipsis;
+      }
+    }
+  }
+}
+
+
+.ipb-navigation-menu-overlay {
+  background-color: common-adjust-alpha($ipb-navigation-menu-overlay--background-color, $ipb-navigation-menu-overlay--opacity);
+  backdrop-filter: $ipb-navigation-menu-overlay--backdrop-filter;
+}
+
+.ipb-navigation-menu--user-part--toggle--open-mobile-menu {
+  @include ipb-toggle-nav;
+}
+
+@include mobile {
+  .ipb-body {
+    .ipb-navigation-menu {
+      .ipb-navigation-menu--middle-part {
+        background-color: $ipb-navigation-menu--background-color;
+        @include ipb-transition(max-height, ease, 0.5s);
+      }
+      &.ipb-is-opened {
+        // toggle animation
+        .ipb-navigation-menu--user-part--toggle--open-mobile-menu {
+          @include ipb-toggle-nav-animated-cross;
+        }
+      }
+    }
+  }
+}

@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -35,8 +36,17 @@
 // Class: UserLDAP
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:UserLDAP' => 'LDAP user',
-	'Class:UserLDAP+' => 'User authentified by LDAP',
+	'Class:UserLDAP+' => 'User authenticated by LDAP',
 	'UserLDAP:server' => 'LDAP specifics',
-));
+]);
+
+//
+// Class: UserLDAP
+//
+
+Dict::Add('EN US', 'English', 'English', [
+	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server',
+	'Class:UserLDAP/Attribute:ldap_server+' => '',
+]);

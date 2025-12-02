@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -41,7 +41,7 @@ $(function()
 
 			// Keep URL's hash parameters when clicking on a link of the header
 			// Note: ":first" used to only target the header of the object, not what could be in the content of its body
-			this.element.on('click', '[data-role="ibo-panel--header-right"]:first a', function() {
+			this.element.find('[data-role="ibo-panel--header-right"]').first().on('click', 'a', function() {
 				aMatches = /#(.*)$/.exec(window.location.href);
 				if (aMatches != null) {
 					currentHash = aMatches[1];
@@ -68,7 +68,7 @@ $(function()
 			}
 
 			// Check if transitions available
-			const oHeaderElem = this.element.find('[data-role="ibo-panel--header"]:first');
+			const oHeaderElem = this.element.find('[data-role="ibo-panel--header"]').first();
 			const oButtonsToolbarElem = oHeaderElem.find('[data-role="ibo-panel--header-right"] [data-role="ibo-toolbar"]');
 			const oTransitionButtonsElems = oButtonsToolbarElem.find('[name="next_action"][data-role="ibo-button"]');
 			if (oHeaderElem.find('[name="next_action"][data-role="ibo-button"]').length === 0) {

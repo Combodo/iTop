@@ -23,11 +23,11 @@ namespace Symfony\Component\CssSelector\Node;
  */
 class AttributeNode extends AbstractNode
 {
-    private $selector;
-    private $namespace;
-    private $attribute;
-    private $operator;
-    private $value;
+    private NodeInterface $selector;
+    private ?string $namespace;
+    private string $attribute;
+    private string $operator;
+    private ?string $value;
 
     public function __construct(NodeInterface $selector, ?string $namespace, string $attribute, string $operator, ?string $value)
     {
@@ -63,9 +63,6 @@ class AttributeNode extends AbstractNode
         return $this->value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSpecificity(): Specificity
     {
         return $this->selector->getSpecificity()->plus(new Specificity(0, 1, 0));
@@ -76,7 +73,7 @@ class AttributeNode extends AbstractNode
         $attribute = $this->namespace ? $this->namespace.'|'.$this->attribute : $this->attribute;
 
         return 'exists' === $this->operator
-            ? sprintf('%s[%s[%s]]', $this->getNodeName(), $this->selector, $attribute)
-            : sprintf("%s[%s[%s %s '%s']]", $this->getNodeName(), $this->selector, $attribute, $this->operator, $this->value);
+            ? \sprintf('%s[%s[%s]]', $this->getNodeName(), $this->selector, $attribute)
+            : \sprintf("%s[%s[%s %s '%s']]", $this->getNodeName(), $this->selector, $attribute, $this->operator, $this->value);
     }
 }

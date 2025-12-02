@@ -6,6 +6,11 @@
  * Project Website: http://wiki.aiwsolutions.net/dOQKO
  **/
 
+/**
+ * Altered to allow filtering tree list with extra data.
+ * Add an attribute data-tree-additional-search to tree-item-wrapper element with extra data you want the search to include.
+ */
+
 jQuery.fn.treeListFilter = function(list, timeout, callback) {
     var list = jQuery(list);
     var input = this;
@@ -41,6 +46,7 @@ jQuery.fn.treeListFilter = function(list, timeout, callback) {
                     // Modified the search so it looks  for each parts of the search and not the entire sentance
                     // Modified the text to remove accents (latinise())
                     var text = liObject.find('.tree-item-wrapper').text();
+	                text+= liObject.find('.tree-item-wrapper').attr('data-tree-additional-search');
                     var textLC = text.toLowerCase().latinise();
                     var filterValues = filterValue.split(' ');
                     var display = true;

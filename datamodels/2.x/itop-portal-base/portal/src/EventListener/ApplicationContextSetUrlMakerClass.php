@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -31,16 +32,16 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class ApplicationContextSetUrlMakerClass
 {
-    /** @var array $aCombodoPortalInstanceConf */
-    private $aCombodoPortalInstanceConf;
+	/** @var array $aCombodoPortalInstanceConf */
+	private $aCombodoPortalInstanceConf;
 
-    /**
-     * @param array $aCombodoPortalInstanceConf
-     */
-    public function __construct($aCombodoPortalInstanceConf)
-    {
-        $this->aCombodoPortalInstanceConf = $aCombodoPortalInstanceConf;
-    }
+	/**
+	 * @param array $aCombodoPortalInstanceConf
+	 */
+	public function __construct($aCombodoPortalInstanceConf)
+	{
+		$this->aCombodoPortalInstanceConf = $aCombodoPortalInstanceConf;
+	}
 
 	/**
 	 * @param RequestEvent $oRequestEvent

@@ -15,9 +15,11 @@ use Psr\Container\ContainerInterface;
 use Symfony\Bridge\Twig\AppVariable;
 use Symfony\Bridge\Twig\DataCollector\TwigDataCollector;
 use Symfony\Bridge\Twig\ErrorRenderer\TwigErrorRenderer;
+use Symfony\Bridge\Twig\EventListener\TemplateAttributeListener;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\CodeExtension;
 use Symfony\Bridge\Twig\Extension\ExpressionExtension;
+use Symfony\Bridge\Twig\Extension\HtmlSanitizerExtension;
 use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
 use Symfony\Bridge\Twig\Extension\HttpKernelExtension;
 use Symfony\Bridge\Twig\Extension\HttpKernelRuntime;
@@ -36,6 +38,7 @@ use Symfony\Bundle\TwigBundle\DependencyInjection\Configurator\EnvironmentConfig
 use Symfony\Bundle\TwigBundle\TemplateIterator;
 use Twig\Cache\FilesystemCache;
 use Twig\Environment;
+use Twig\ExpressionParser\Infix\BinaryOperatorExpressionParser;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\DebugExtension;
 use Twig\Extension\EscaperExtension;
@@ -52,7 +55,6 @@ use Twig\TemplateWrapper;
 return static function (ContainerConfigurator $container) {
     $container->services()
         ->set('twig', Environment::class)
-            ->public()
             ->args([service('twig.loader'), abstract_arg('Twig options')])
             ->call('addGlobal', ['app', service('twig.app_variable')])
             ->call('addRuntimeLoader', [service('twig.runtime_loader')])
@@ -62,12 +64,13 @@ return static function (ContainerConfigurator $container) {
             ->tag('container.preload', ['class' => EscaperExtension::class])
             ->tag('container.preload', ['class' => OptimizerExtension::class])
             ->tag('container.preload', ['class' => StagingExtension::class])
+            ->tag('container.preload', ['class' => BinaryOperatorExpressionParser::class])
             ->tag('container.preload', ['class' => ExtensionSet::class])
             ->tag('container.preload', ['class' => Template::class])
             ->tag('container.preload', ['class' => TemplateWrapper::class])
-            ->tag('container.private', ['package' => 'symfony/twig-bundle', 'version' => '5.2'])
 
         ->alias('Twig_Environment', 'twig')
+            ->deprecate('symfony/twig-bundle', '6.3', 'The "%alias_id%" service alias is deprecated, use "'.Environment::class.'" or "twig" instead.')
         ->alias(Environment::class, 'twig')
 
         ->set('twig.app_variable', AppVariable::class)
@@ -75,9 +78,11 @@ return static function (ContainerConfigurator $container) {
             ->call('setDebug', [param('kernel.debug')])
             ->call('setTokenStorage', [service('security.token_storage')->ignoreOnInvalid()])
             ->call('setRequestStack', [service('request_stack')->ignoreOnInvalid()])
+            ->call('setLocaleSwitcher', [service('translation.locale_switcher')->ignoreOnInvalid()])
+            ->call('setEnabledLocales', [param('kernel.enabled_locales')])
 
         ->set('twig.template_iterator', TemplateIterator::class)
-            ->args([service('kernel'), abstract_arg('Twig paths'), param('twig.default_path')])
+            ->args([service('kernel'), abstract_arg('Twig paths'), param('twig.default_path'), abstract_arg('File name pattern')])
 
         ->set('twig.template_cache_warmer', TemplateCacheWarmer::class)
             ->args([service(ContainerInterface::class), service('twig.template_iterator')])
@@ -119,6 +124,9 @@ return static function (ContainerConfigurator $container) {
             ->args([service('debug.stopwatch')->ignoreOnInvalid(), param('kernel.debug')])
 
         ->set('twig.extension.expression', ExpressionExtension::class)
+
+        ->set('twig.extension.htmlsanitizer', HtmlSanitizerExtension::class)
+            ->args([tagged_locator('html_sanitizer', 'sanitizer')])
 
         ->set('twig.extension.httpkernel', HttpKernelExtension::class)
 
@@ -167,5 +175,9 @@ return static function (ContainerConfigurator $container) {
             ->args([service('serializer')])
 
         ->set('twig.extension.serializer', SerializerExtension::class)
+
+        ->set('controller.template_attribute_listener', TemplateAttributeListener::class)
+            ->args([service('twig')])
+            ->tag('kernel.event_subscriber')
     ;
 };

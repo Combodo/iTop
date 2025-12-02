@@ -1,5 +1,6 @@
 <?php
-// Copyright (C) 2016-2023 Combodo SARL
+
+// Copyright (C) 2016-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -15,6 +16,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Masterminds\HTML5;
+
 /**
  * Base class for all possible implementations of HTML Sanitization
  */
@@ -46,7 +49,7 @@ abstract class HTMLSanitizer
 		if (!class_exists($sSanitizerClass)) {
 			IssueLog::Warning('The configured "'.$sConfigKey.'" class "'.$sSanitizerClass.'" is not a valid class. Will use HTMLDOMSanitizer as the default sanitizer.');
 			$sSanitizerClass = 'HTMLDOMSanitizer';
-		} else if (!is_subclass_of($sSanitizerClass, 'HTMLSanitizer')) {
+		} elseif (!is_subclass_of($sSanitizerClass, 'HTMLSanitizer')) {
 			if ($sConfigKey === 'html_sanitizer') {
 				IssueLog::Warning('The configured "'.$sConfigKey.'" class "'.$sSanitizerClass.'" is not a subclass of '.HTMLSanitizer::class.'. Will use HTMLDOMSanitizer as the default sanitizer.');
 				$sSanitizerClass = 'HTMLDOMSanitizer';
@@ -60,17 +63,14 @@ abstract class HTMLSanitizer
 		try {
 			$oSanitizer = new $sSanitizerClass();
 			$sCleanHTML = $oSanitizer->DoSanitize($sHTML);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			if ($sSanitizerClass != 'HTMLDOMSanitizer') {
 				IssueLog::Warning('Failed to sanitize an HTML string with "'.$sSanitizerClass.'". The following exception occured: '.$e->getMessage());
 				IssueLog::Warning('Will try to sanitize with HTMLDOMSanitizer.');
 				// try again with the HTMLDOMSanitizer
 				$oSanitizer = new HTMLDOMSanitizer();
 				$sCleanHTML = $oSanitizer->DoSanitize($sHTML);
-			}
-			else
-			{
+			} else {
 				IssueLog::Error('Failed to sanitize an HTML string with "HTMLDOMSanitizer". The following exception occured: '.$e->getMessage());
 				IssueLog::Error('The HTML will NOT be sanitized.');
 				$sCleanHTML = $sHTML;
@@ -101,8 +101,6 @@ class HTMLNullSanitizer extends HTMLSanitizer
 		return $sHTML;
 	}
 }
-
-
 
 /**
  * Common implementation for sanitizer using DOM parsing
@@ -164,7 +162,7 @@ abstract class DOMSanitizer extends HTMLSanitizer
 
 	protected function CleanNode(DOMNode $oElement)
 	{
-		$aAttrToRemove = array();
+		$aAttrToRemove = [];
 		// Gather the attributes to remove
 		if ($oElement->hasAttributes()) {
 			foreach ($oElement->attributes as $oAttr) {
@@ -172,13 +170,13 @@ abstract class DOMSanitizer extends HTMLSanitizer
 				if ((false === empty($this->GetAttrsBlackList()))
 					&& (in_array($sAttr, $this->GetAttrsBlackList(), true))) {
 					$aAttrToRemove[] = $oAttr->name;
-				} else if ((false === empty($this->GetTagsWhiteList()))
+				} elseif ((false === empty($this->GetTagsWhiteList()))
 					&& (false === in_array($sAttr, $this->GetTagsWhiteList()[strtolower($oElement->tagName)]))) {
 					$aAttrToRemove[] = $oAttr->name;
-				} else if (!$this->IsValidAttributeContent($sAttr, $oAttr->value)) {
+				} elseif (!$this->IsValidAttributeContent($sAttr, $oAttr->value)) {
 					// Invalid content
 					$aAttrToRemove[] = $oAttr->name;
-				} else if ($sAttr == 'style') {
+				} elseif ($sAttr == 'style') {
 					// Special processing for style tags
 					$sCleanStyle = $this->CleanStyle($oAttr->value);
 					if ($sCleanStyle == '') {
@@ -190,17 +188,15 @@ abstract class DOMSanitizer extends HTMLSanitizer
 				}
 			}
 			// Now remove them
-			foreach($aAttrToRemove as $sName)
-			{
+			foreach ($aAttrToRemove as $sName) {
 				$oElement->removeAttribute($sName);
 			}
 		}
 
-		if ($oElement->hasChildNodes())
-		{
-			$aChildElementsToRemove = array();
+		if ($oElement->hasChildNodes()) {
+			$aChildElementsToRemove = [];
 			// Gather the child noes to remove
-			foreach($oElement->childNodes as $oNode) {
+			foreach ($oElement->childNodes as $oNode) {
 				if ($oNode instanceof DOMElement) {
 					$sNodeTagName = strtolower($oNode->tagName);
 				}
@@ -208,11 +204,11 @@ abstract class DOMSanitizer extends HTMLSanitizer
 					&& (false === empty($this->GetTagsBlackList()))
 					&& (in_array($sNodeTagName, $this->GetTagsBlackList(), true))) {
 					$aChildElementsToRemove[] = $oNode;
-				} else if (($oNode instanceof DOMElement)
+				} elseif (($oNode instanceof DOMElement)
 					&& (false === empty($this->GetTagsWhiteList()))
 					&& (false === array_key_exists($sNodeTagName, $this->GetTagsWhiteList()))) {
 					$aChildElementsToRemove[] = $oNode;
-				} else if ($oNode instanceof DOMComment) {
+				} elseif ($oNode instanceof DOMComment) {
 					$aChildElementsToRemove[] = $oNode;
 				} else {
 					// Recurse
@@ -223,8 +219,7 @@ abstract class DOMSanitizer extends HTMLSanitizer
 				}
 			}
 			// Now remove them
-			foreach($aChildElementsToRemove as $oDomElement)
-			{
+			foreach ($aChildElementsToRemove as $oDomElement) {
 				$oElement->removeChild($oDomElement);
 			}
 		}
@@ -250,7 +245,7 @@ abstract class DOMSanitizer extends HTMLSanitizer
 			return $sStyle;
 		}
 
-		$aAllowedStyles = array();
+		$aAllowedStyles = [];
 		$aItems = explode(';', $sStyle);
 		{
 			foreach ($aItems as $sItem) {
@@ -265,73 +260,77 @@ abstract class DOMSanitizer extends HTMLSanitizer
 	}
 }
 
-
-
 class HTMLDOMSanitizer extends DOMSanitizer
 {
 	/**
 	 * @var array
 	 * @see https://www.itophub.io/wiki/page?id=2_6_0%3Aadmin%3Arich_text_limitations
 	 */
-	protected static $aTagsWhiteList = array(
-		'html' => array(),
-		'body' => array(),
-		'a' => array('href', 'name', 'style', 'target', 'title', 'data-role', 'data-object-class', 'data-object-id'),
-		'p' => array('style'),
-		'blockquote' => array('style'),
-		'br' => array(),
-		'span' => array('style'),
-		'div' => array('style'),
-		'b' => array(),
-		'i' => array(),
-		'u' => array(),
-		'em' => array(),
-		'strong' => array(),
-		'img' => array('src', 'style', 'alt', 'title'),
-		'ul' => array('style'),
-		'ol' => array('reversed', 'start', 'style', 'type'),
-		'li' => array('style', 'value'),
-		'h1' => array('style'),
-		'h2' => array('style'),
-		'h3' => array('style'),
-		'h4' => array('style'),
-		'nav' => array('style'),
-		'section' => array('style'),
-		'code' => array('style', 'class'),
-		'table' => array('style', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing'),
-		'thead' => array('style'),
-		'tbody' => array('style'),
-		'tr' => array('style', 'colspan', 'rowspan'),
-		'td' => array('style', 'colspan', 'rowspan'),
-		'th' => array('style', 'colspan', 'rowspan'),
-		'fieldset' => array('style'),
-		'legend' => array('style'),
-		'font' => array('face', 'color', 'style', 'size'),
-		'big' => array(),
-		'small' => array(),
-		'tt' => array(),
-		'kbd' => array(),
-		'samp' => array(),
-		'var' => array(),
-		'del' => array(),
-		's' => array(), // strikethrough
-		'ins' => array(),
-		'cite' => array(),
-		'q' => array(),
-		'hr' => array('style'),
-		'pre' => array(),
-		'center' => array(),
-	);
+	protected static $aTagsWhiteList = [
+		'html' => [],
+		'body' => [],
+		'a' => ['href', 'name', 'style', 'class', 'target', 'title', 'data-role', 'data-object-class', 'data-object-id', 'data-object-key'],
+		'p' => ['style', 'class'],
+		'blockquote' => ['style', 'class'],
+		'br' => [],
+		'span' => ['style', 'class'],
+		'div' => ['style', 'class'],
+		'b' => ['class'],
+		'i' => ['class'],
+		'u' => ['class'],
+		'em' => ['class'],
+		'strong' => ['class'],
+		'img' => ['src', 'style', 'class', 'alt', 'title', 'width', 'height'],
+		'ul' => ['style', 'class'],
+		'ol' => ['reversed', 'start', 'style', 'class', 'type'],
+		'li' => ['style', 'class', 'value'],
+		'h1' => ['style', 'class'],
+		'h2' => ['style', 'class'],
+		'h3' => ['style', 'class'],
+		'h4' => ['style', 'class'],
+		'nav' => ['style', 'class'],
+		'section' => ['style', 'class'],
+		'code' => ['style', 'class'],
+		'table' => ['style', 'class', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing'],
+		'colgroup' => [],
+		'col' => ['style'],
+		'thead' => ['style', 'class'],
+		'tbody' => ['style', 'class'],
+		'tr' => ['style', 'class', 'colspan', 'rowspan'],
+		'td' => ['style', 'class', 'colspan', 'rowspan'],
+		'th' => ['style', 'class', 'colspan', 'rowspan'],
+		'fieldset' => ['style', 'class'],
+		'legend' => ['style', 'class'],
+		'font' => ['face', 'color', 'style', 'class', 'size'],
+		'big' => [],
+		'small' => [],
+		'tt' => [],
+		'kbd' => [],
+		'samp' => [],
+		'var' => [],
+		'del' => [],
+		's' => [], // strikethrough
+		'ins' => [],
+		'cite' => [],
+		'q' => [],
+		'hr' => ['style', 'class'],
+		'pre' => ['class'],
+		'center' => [],
+		'figure' => ['style', 'class'], // Ckeditor 5 puts images in figures
+		'figcaption' => ['class'],
+		'mark' => ['class'],
+	];
 
-	protected static $aAttrsWhiteList = array(
+	protected static $aAttrsWhiteList = [
 		'src' => '/^(http:|https:|data:)/i',
-	);
+	];
 
 	/**
 	 * @var array
 	 * @see https://www.itophub.io/wiki/page?id=2_6_0%3Aadmin%3Arich_text_limitations
 	 */
-	protected static $aStylesWhiteList = array(
+	protected static $aStylesWhiteList = [
+		'aspect-ratio',
 		'background-color',
 		'border',
 		'border-collapse',
@@ -346,12 +345,14 @@ class HTMLDOMSanitizer extends DOMSanitizer
 		'font-style',
 		'height',
 		'margin',
+		'margin-left',
+		'margin-right',
 		'padding',
 		'text-align',
 		'vertical-align',
 		'width',
 		'white-space',
-	);
+	];
 
 	public function __construct($sInlineImageClassName = InlineImage::class)
 	{
@@ -421,14 +422,12 @@ class HTMLDOMSanitizer extends DOMSanitizer
 			// Export only the content of the body tag
 			$sCleanHtml = $this->oDoc->saveHTML($oNodesList->item(0));
 			// remove the body tag itself
-			$sCleanHtml = str_replace(array('<body>', '</body>'), '', $sCleanHtml);
+			$sCleanHtml = str_replace(['<body>', '</body>'], '', $sCleanHtml);
 		}
 
 		return $sCleanHtml;
 	}
 }
-
-
 
 /**
  * @since 2.6.5 2.7.6 3.0.0 N°4360

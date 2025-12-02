@@ -1,36 +1,17 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-//
-// Class: Organization
-//
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+/**
+ * @author Benjamin Planque <benjamin.planque@combodo.com>
+ *
+ */
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Organization' => 'Organizzazione',
 	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => 'Cognome',
@@ -57,13 +38,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
-));
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Location' => 'Localizzazione',
 	'Class:Location+' => 'Qualsiasi tipo di localizzazione: Regione, Paese, Città, Sito, Edificio, Piano, Stanza, Rack,,...',
 	'Class:Location/Attribute:name' => 'Nome',
@@ -90,13 +71,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
 	'Class:Location/Attribute:person_list' => 'Contacts~~',
 	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
-));
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Contact' => 'Contatto',
 	'Class:Contact+' => '',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
@@ -117,7 +98,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Contact/Attribute:phone' => 'Telefono',
 	'Class:Contact/Attribute:phone+' => '',
 	'Class:Contact/Attribute:notify' => 'Notification~~',
-	'Class:Contact/Attribute:notify+' => '~~',
+	'Class:Contact/Attribute:notify+' => 'Flag which can be used by each notification~~',
 	'Class:Contact/Attribute:notify/Value:no' => 'no~~',
 	'Class:Contact/Attribute:notify/Value:no+' => 'no~~',
 	'Class:Contact/Attribute:notify/Value:yes' => 'yes~~',
@@ -128,13 +109,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
 	'Class:Contact/Attribute:finalclass' => 'Tipo',
 	'Class:Contact/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Person' => 'Persona',
 	'Class:Person+' => '',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
@@ -169,27 +150,34 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Team' => 'Squadra',
 	'Class:Team+' => '',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Members~~',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
+	'Class:Team/Attribute:overview' => 'Overview~~',
+	'Team:Overview' => 'Tickets and CIs managed by the team~~',
+	'Team:Overview:ActiveTickets' => 'Active tickets~~',
+	'Team:Overview:FunctionalCIs-ByType' => 'Functional CIs~~',
+	'Team:Overview:UserRequest-ByStatus' => 'User requests by status~~',
+	'Team:Overview:UserRequest-ClosedByMonth' => 'User requests closed in last 12 months~~',
+	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
 	'Class:Team/Attribute:tickets_list' => 'Tickets~~',
 	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Document' => 'Documento',
 	'Class:Document+' => '',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
@@ -217,102 +205,102 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'CIs~~',
 	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
-	'Class:Document/Attribute:finalclass' => 'Document Type~~',
+	'Class:Document/Attribute:finalclass' => 'Document sub-class~~',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DocumentFile' => 'Document File~~',
 	'Class:DocumentFile+' => '~~',
 	'Class:DocumentFile/Attribute:file' => 'File~~',
 	'Class:DocumentFile/Attribute:file+' => '~~',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DocumentNote' => 'Document Note~~',
 	'Class:DocumentNote+' => '~~',
 	'Class:DocumentNote/Attribute:text' => 'Text~~',
 	'Class:DocumentNote/Attribute:text+' => '~~',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DocumentWeb' => 'Document Web~~',
 	'Class:DocumentWeb+' => '~~',
 	'Class:DocumentWeb/Attribute:url' => 'URL~~',
 	'Class:DocumentWeb/Attribute:url+' => '~~',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Typology' => 'Typology~~',
 	'Class:Typology+' => '~~',
 	'Class:Typology/Attribute:name' => 'Name~~',
 	'Class:Typology/Attribute:name+' => '~~',
-	'Class:Typology/Attribute:finalclass' => 'Type~~',
+	'Class:Typology/Attribute:finalclass' => 'Typology sub-class~~',
 	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DocumentType' => 'Document Type~~',
 	'Class:DocumentType+' => '~~',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ContactType' => 'Contact Type~~',
 	'Class:ContactType+' => '~~',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkPersonToTeam' => 'Link Person / Team~~',
 	'Class:lnkPersonToTeam+' => '~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
 	'Class:lnkPersonToTeam/Name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Team~~',
-	'Class:lnkPersonToTeam/Attribute:team_id+' => '~~',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => 'A team to which the person belongs~~',
 	'Class:lnkPersonToTeam/Attribute:team_name' => 'Team name~~',
 	'Class:lnkPersonToTeam/Attribute:team_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:person_id' => 'Person~~',
-	'Class:lnkPersonToTeam/Attribute:person_id+' => '~~',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => 'A member of the team~~',
 	'Class:lnkPersonToTeam/Attribute:person_name' => 'Person name~~',
 	'Class:lnkPersonToTeam/Attribute:person_name+' => '~~',
 	'Class:lnkPersonToTeam/Attribute:role_id' => 'Role~~',
-	'Class:lnkPersonToTeam/Attribute:role_id+' => '~~',
+	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles~~',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Role name~~',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:DataAdministration' => 'Dati di amministrazione',
 	'Menu:DataAdministration+' => '',
 	'Menu:Catalogs' => 'Cataloghi',
@@ -350,20 +338,20 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:Typology+' => 'Typology configuration~~',
 	'UI_WelcomeMenu_AllConfigItems' => 'Summary~~',
 	'Menu:ConfigManagement:Typology' => 'Typology configuration~~',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Person:info' => 'General information~~',
 	'User:info' => 'General information~~',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Notification~~',
-));
+]);
 
 // Themes
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
-));
+]);

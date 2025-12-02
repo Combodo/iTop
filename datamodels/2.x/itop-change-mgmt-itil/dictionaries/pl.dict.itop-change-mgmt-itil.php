@@ -1,26 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+/**
+ *
+ */
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:ChangeManagement' => 'Zarządzanie zmianami',
 	'Menu:Change:Overview' => 'Przegląd',
 	'Menu:Change:Overview+' => '',
@@ -44,7 +34,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Zmiany według statusu z ostatnich 7 dni',
 	'Tickets:Related:OpenChanges' => 'Otwarte zmiany',
 	'Tickets:Related:RecentChanges' => 'Ostatnie zmiany (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -56,12 +46,11 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Change' => 'Zmiana',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Status',
@@ -158,13 +147,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Zakończona',
 	'Class:Change/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:RoutineChange' => 'Rutynowa zmiana',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Sprawdzona',
@@ -189,13 +178,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Zakończona',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ApprovedChange' => 'Zatwierdzone zmiany',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Data zatwierdzenia',
@@ -224,13 +213,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Zakończona',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:NormalChange' => 'Normalna zmiana',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Data akceptacji',
@@ -259,13 +248,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Zakończona',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:EmergencyChange' => 'Awaryjna zmiana',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Sprawdzona',
@@ -290,4 +279,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Zakończona',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-));
+]);

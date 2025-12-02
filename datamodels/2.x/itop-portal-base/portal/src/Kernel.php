@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -37,13 +38,13 @@ class Kernel extends BaseKernel
 {
 	use MicroKernelTrait;
 
-    /** @var string CONFIG_EXTS */
-    const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+	/** @var string CONFIG_EXTS */
+	public const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
 	/**
 	 * @return string
 	 */
-	public function getCacheDir()
+	public function getCacheDir(): string
 	{
 		$cacheDir = $_ENV['PORTAL_ID'].'-'.$this->environment;
 
@@ -53,25 +54,25 @@ class Kernel extends BaseKernel
 	/**
 	 * @return string
 	 */
-	public function getLogDir()
-    {
-	    $logDir = $_ENV['PORTAL_ID'] . '-' . $this->environment;
+	public function getLogDir(): string
+	{
+		$logDir = $_ENV['PORTAL_ID'].'-'.$this->environment;
 
-	    return utils::GetLogPath() . "/portals/$logDir";
-    }
+		return utils::GetLogPath()."/portals/$logDir";
+	}
 
 	/**
 	 * @return \Generator|iterable|\Symfony\Component\HttpKernel\Bundle\BundleInterface[]
 	 */
-	public function registerBundles()
-    {
-        $contents = require $this->getProjectDir().'/config/bundles.php';
-        foreach ($contents as $class => $envs) {
-            if (isset($envs[$this->environment]) || isset($envs['all'])) {
-	            yield new $class();
-            }
-        }
-    }
+	public function registerBundles(): iterable
+	{
+		$contents = require $this->getProjectDir().'/config/bundles.php';
+		foreach ($contents as $class => $envs) {
+			if (isset($envs[$this->environment]) || isset($envs['all'])) {
+				yield new $class();
+			}
+		}
+	}
 
 	/**
 	 * @param \Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator $container
@@ -103,23 +104,5 @@ class Kernel extends BaseKernel
 		$routes->import($confDir.'/{routes}/'.$this->environment.'/**/*'.self::CONFIG_EXTS);
 		$routes->import($confDir.'/{routes}/*'.self::CONFIG_EXTS);
 		$routes->import($confDir.'/{routes}'.self::CONFIG_EXTS);
-	}
-
-
-	/**
-	 * Checks if a given class name belongs to an active bundle.
-	 *
-	 * @param string $class A class name
-	 *
-	 * @return void true if the class belongs to an active bundle, false otherwise
-	 *
-	 * @api
-	 *
-	 * @deprecated Deprecated since version 2.6, to be removed in 3.0.
-	 */
-	public function isClassInActiveBundle($class)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		// TODO: Implement isClassInActiveBundle() method.
 	}
 }

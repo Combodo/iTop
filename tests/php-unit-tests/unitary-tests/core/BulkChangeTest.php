@@ -2,15 +2,13 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
-use CMDBSource;
+use BulkChange;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
-/**
- * @runClassInSeparateProcess
- */
-class BulkChangeTest extends ItopDataTestCase {
-	const CREATE_TEST_ORG = true;
+class BulkChangeTest extends ItopDataTestCase
+{
+	public const CREATE_TEST_ORG = true;
 
 	protected function setUp(): void
 	{
@@ -20,17 +18,18 @@ class BulkChangeTest extends ItopDataTestCase {
 	}
 
 	//bug 2888: csv import / data synchro issue with password validation
-	public function testPasswordBulkChangeIssue() {
+	public function testPasswordBulkChangeIssue()
+	{
 		/** @var Person $oPerson */
-		$oPerson = $this->createObject('Person', array(
+		$oPerson = $this->createObject('Person', [
 			'first_name' => 'isaac',
 			'name' => 'asimov',
 			'email' => 'isaac.asimov@fundation.org',
 			'org_id' => $this->getTestOrgId(),
-		));
+		]);
 
-		$aData = array(
-			array(
+		$aData = [
+			[
 				$oPerson->Get("first_name"),
 				$oPerson->Get("name"),
 				$oPerson->Get("email"),
@@ -38,53 +37,55 @@ class BulkChangeTest extends ItopDataTestCase {
 				"iasimov",
 				"harryseldon",
 				"profileid->name:Administrator",
-			),
-		);
-		$aAttributes = array("language" => 3, "login" => 4, "password" => 5, "profile_list" => 6);
-		$aExtKeys = array(
+			],
+		];
+		$aAttributes = ["language" => 3, "login" => 4, "password" => 5, "profile_list" => 6];
+		$aExtKeys = [
 			"contactid" =>
-				array("first_name" => 0, "name" => 1, "email" => 2),
-		);
-		$oBulk = new \BulkChange(
+				["first_name" => 0, "name" => 1, "email" => 2],
+		];
+		$oBulk = new BulkChange(
 			"UserLocal",
 			$aData,
 			$aAttributes,
 			$aExtKeys,
-			array("login"),
+			["login"],
 			null,
 			null,
 			"Y-m-d H:i:s", // date format
 			true // localize
 		);
 
-		$oChange = \CMDBObject::GetCurrentChange();
-		$aRes = $oBulk->Process($oChange);
+		$aRes = $oBulk->Process();
 		static::assertNotNull($aRes);
 
 		foreach ($aRes as $aRow) {
 			if (array_key_exists('__STATUS__', $aRow)) {
 				$sStatus = $aRow['__STATUS__'];
-				$this->assertFalse(strstr($sStatus->GetDescription(), "CoreCannotSaveObjectException"),
-					"CSVimport/Datasynchro: Password validation failed with: ".$sStatus->GetDescription());
+				$this->assertFalse(
+					strstr($sStatus->GetDescription(), "CoreCannotSaveObjectException"),
+					"CSVimport/Datasynchro: Password validation failed with: ".$sStatus->GetDescription()
+				);
 			}
 		}
 	}
 
-
 	/**
 	 * test $oBulk->Process with server 1 from demo datas
-	 * @dataProvider BulkChangeProvider
 	 *
-	 * @param $aData
+	 * @dataProvider bulkChangeWithoutInitDataProvider
+	 *
+	 * @param $aCSVData
 	 * @param $aAttributes
 	 * @param $aExtKeys
 	 * @param $aReconcilKeys
 	 */
-	public function testBulkChangeIssue($aData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult) {
+	public function testBulkChangeWithoutInitData($aCSVData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult, array $aResultHTML = null)
+	{
 		$this->debug("aReconcilKeys:".$aReconcilKeys[0]);
-		$oBulk = new \BulkChange(
+		$oBulk = new BulkChange(
 			"Server",
-			$aData,
+			$aCSVData,
 			$aAttributes,
 			$aExtKeys,
 			$aReconcilKeys,
@@ -94,8 +95,7 @@ class BulkChangeTest extends ItopDataTestCase {
 			true // localize
 		);
 
-		$oChange = \CMDBObject::GetCurrentChange();
-		$aRes = $oBulk->Process($oChange);
+		$aRes = $oBulk->Process();
 		static::assertNotNull($aRes);
 
 		foreach ($aRes as $aRow) {
@@ -104,69 +104,121 @@ class BulkChangeTest extends ItopDataTestCase {
 				//$this->debug("sStatus:".$sStatus->GetDescription());
 				$this->assertEquals($aResult["__STATUS__"], $sStatus->GetDescription());
 				foreach ($aRow as $i => $oCell) {
+					/** @var $oCell \CellChangeSpec  */
 					if ($i !== "finalclass" && $i !== "__STATUS__" && $i !== "__ERRORS__" && array_key_exists($i, $aResult)) {
 						$this->debug("i:".$i);
-						$this->debug('GetDisplayableValue:'.$oCell->GetDisplayableValue());
+						$this->debug('GetCLIValue:'.$oCell->GetCLIValue());
 						$this->debug("aResult:".$aResult[$i]);
-						$this->assertEquals($aResult[$i], $oCell->GetDisplayableValue());
+						$this->assertEquals($aResult[$i], $oCell->GetCLIValue(), "Unexpected CLI result for cell ".$i);
+						if (null !== $aResultHTML) {
+							$this->assertEquals($aResultHTML[$i], $oCell->GetHTMLValue(), "Unexpected HTML result for cell ".$i);
+						}
 					}
 				}
 			}
 		}
 	}
 
-	public function BulkChangeProvider() {
+	public function bulkChangeWithoutInitDataProvider()
+	{
 		return [
 			"Case 3, 5 et 8 : unchanged" => [
-				[["Demo", "Server1", "1", "production", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[0 => "Demo", "org_id" => "3", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "unchanged"],
+				"csvData" =>
+					[["Demo", "Server1", "1", "production", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconciliation Keys" =>
+					["id"],
+				"expectedResult" =>
+					[0 => "Demo", "org_id" => "3", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "unchanged"],
+				"expectedResultHTML" =>
+					[0 => "Demo", "org_id" => "3", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "unchanged"],
 			],
 			"Case 9 : wrong date format" => [
-				[["Demo", "Server1", "1", "production", "date"]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[ 0 => "Demo", "org_id" => "n/a", 1 => "Server1", 2 => "1", 3 => "production", 4 => "'date' is an invalid value", "id" => 1, "__STATUS__" => "Issue: wrong date format"],
-			],
+				"csvData" =>
+					[["Demo", "Server1", "1", "production", "<date"]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconciliation Keys" =>
+					["id"],
+				"expectedResult" =>
+					[ 0 => "Demo", "org_id" => "n/a", 1 => "Server1", 2 => "1", 3 => "production", 4 => "'<date' is an invalid value", "id" => 1, "__STATUS__" => "Issue: wrong date format"],
+				"expectedResultHTML" =>
+					[ 0 => "Demo", "org_id" => "n/a", 1 => "Server1", 2 => "1", 3 => "production", 4 => "'&lt;date' is an invalid value", "id" => 1, "__STATUS__" => "Issue: wrong date format"],
+				],
 			"Case 1 : no match" => [
-				[["Bad", "Server1", "1", "production", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[0 => 'Bad', "org_id" => "No match for value 'Bad'",1 => "Server1",2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)"],
+				"csvData" =>
+					[["<Bad", "Server1", "1", "production", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconciliation Keys" =>
+					["id"],
+				"expectedResult" =>
+					[0 => '<Bad', "org_id" => "No match for value '<Bad'",1 => "Server1",2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)"],
+				"expectedResultHTML" =>
+					[0 => '&lt;Bad', "org_id" => "No match for value &apos;&lt;Bad&apos;",1 => "Server1",2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)"],
 			],
 			"Case 10 : Missing mandatory value" => [
-				[["", "Server1", "1", "production", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[0 => null, "org_id" => "Invalid value for attribute", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)"],
-			],
+				"csvData" =>
+					[["", "Server1", "1", "production", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconciliation Keys" =>
+					["id"],
+				"expectedResult" =>
+					[0 => null, "org_id" => "Invalid value for attribute", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)"],
+				"expectedResultHTML" =>
+					[0 => null, "org_id" => "Invalid value for attribute", 1 => "Server1", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)"],
+				],
 			"Case 6 : Unexpected value" => [
-				[["Demo", "Server1", "1", "<svg onclick\"alert(1)\">", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[
-					0 => "Demo",
-					"org_id" => "3",
-					1 => "Server1",
-					2 => "1",
-					3 => "'&lt;svg onclick&quot;alert(1)&quot;&gt;' is an invalid value",
-					4 => "",
-					"id" => 1,
-					"__STATUS__" => "Issue: Unexpected attribute value(s)",
-					"__ERRORS__" => "Unexpected value for attribute 'status': no match found, check spelling"],
+				"csvData" =>
+					[["Demo", "Server1", "1", "<svg onclick\"alert(1)\">", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconciliation Keys" =>
+					["id"],
+			"expectedResult" =>
+					[
+						0 => "Demo",
+						"org_id" => "3",
+						1 => "Server1",
+						2 => "1",
+						3 => '\'<svg onclick"alert(1)">\' is an invalid value',
+						4 => "",
+						"id" => 1,
+						"__STATUS__" => "Issue: Unexpected attribute value(s)",
+						"__ERRORS__" => "Unexpected value for attribute 'status': no match found, check spelling",
+					],
+				"expectedResultHTML" =>
+					[
+						0 => "Demo",
+						"org_id" => "3",
+						1 => "Server1",
+						2 => "1",
+						3 => '\'&lt;svg onclick&quot;alert(1)&quot;&gt;\' is an invalid value',
+						4 => "",
+						"id" => 1,
+						"__STATUS__" => "Issue: Unexpected attribute value(s)",
+						"__ERRORS__" => "Unexpected value for attribute 'status': no match found, check spelling",
+					],
 			],
 		];
 	}
 
 	/**
 	 * test $oBulk->Process with new server datas
-	 * @dataProvider CSVImportProvider
+	 *
+	 * @dataProvider bulkChangeWithExistingDataProvider
 	 *
 	 * @param $aInitData
 	 * @param $aCsvData
@@ -174,28 +226,40 @@ class BulkChangeTest extends ItopDataTestCase {
 	 * @param $aExtKeys
 	 * @param $aReconcilKeys
 	 */
-	public function testCas1BulkChangeIssue($aInitData, $aCsvData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult) {
-		CMDBSource::Query('START TRANSACTION');
+	public function testBulkChangeWithExistingData($aInitData, $aCsvData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult, $aResultHTML = null)
+	{
 		//change value during the test
-		$db_core_transactions_enabled=MetaModel::GetConfig()->Get('db_core_transactions_enabled');
-		MetaModel::GetConfig()->Set('db_core_transactions_enabled',false);
+		$db_core_transactions_enabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
+		MetaModel::GetConfig()->Set('db_core_transactions_enabled', false);
 
 		if (is_array($aInitData) && sizeof($aInitData) != 0) {
 			/** @var Server $oServer */
-			$oServer = $this->createObject('Server', array(
-				'name' => $aInitData[1],
-				'status' => $aInitData[2],
-				'org_id' => $aInitData[0],
+			$oServer = $this->createObject('Server', [
+				'name'          => $aInitData[1],
+				'status'        => $aInitData[2],
+				'org_id'        => $aInitData[0],
 				'purchase_date' => $aInitData[3],
-			));
-			$aCsvData[0][2]=$oServer->GetKey();
-			$aResult[2]=$oServer->GetKey();
-			$aResult["id"]=$oServer->GetKey();
+			]);
+			if (array_key_exists('id', $aAttributes)) {
+				$iColumnForId = $aAttributes['id'];
+				$aCsvData[0][$iColumnForId] = $oServer->GetKey();
+				$aResult[$iColumnForId] = $oServer->GetKey();
+				if ($aResult["id"] === "{Id of the server created by the test}") {
+					$aResult["id"] = $oServer->GetKey();
+					if ($aResultHTML !== null) {
+						$aResultHTML[$iColumnForId] = $oServer->GetKey();
+						$aResultHTML["id"] = $oServer->GetKey();
+					}
+				}
+			}
 			$this->debug("oServer->GetKey():".$oServer->GetKey());
 		}
-		$this->debug("aCsvData:".json_encode($aCsvData[0]));
-		$this->debug("aReconcilKeys:".$aReconcilKeys[0]);
-		$oBulk = new \BulkChange(
+
+		$iNBFields = count($aAttributes);
+		foreach ($aExtKeys as $aListFields) {
+			$iNBFields += count($aListFields);
+		}
+		$oBulk = new BulkChange(
 			"Server",
 			$aCsvData,
 			$aAttributes,
@@ -204,15 +268,11 @@ class BulkChangeTest extends ItopDataTestCase {
 			null,
 			null,
 			"Y-m-d H:i:s", // date format
-			true // localize
+			true, // localize,
+			$iNBFields
 		);
-		$this->debug("BulkChange:");
-		$oChange = \CMDBObject::GetCurrentChange();
-		$this->debug("GetCurrentChange:");
-		$aRes = $oBulk->Process($oChange);
-		$this->debug("Process:");
+		$aRes = $oBulk->Process();
 		static::assertNotNull($aRes);
-		$this->debug("assertNotNull:");
 		foreach ($aRes as $aRow) {
 			if (array_key_exists('__STATUS__', $aRow)) {
 				$sStatus = $aRow['__STATUS__'];
@@ -221,155 +281,384 @@ class BulkChangeTest extends ItopDataTestCase {
 				foreach ($aRow as $i => $oCell) {
 					if ($i !== "finalclass" && $i !== "__STATUS__" && $i !== "__ERRORS__" && array_key_exists($i, $aResult)) {
 						$this->debug("i:".$i);
-						$this->debug('GetDisplayableValue:'.$oCell->GetDisplayableValue());
+						$this->debug('GetCLIValue:'.$oCell->GetCLIValue());
 						$this->debug("aResult:".$aResult[$i]);
-						$this->assertEquals( $aResult[$i], $oCell->GetDisplayableValue(), "failure on " . get_class($oCell) . ' cell type');
-					} else if ($i === "__ERRORS__") {
+						$this->assertEquals($aResult[$i], $oCell->GetCLIValue(), "failure on ".get_class($oCell).' cell type for cell number '.$i);
+						if (null !== $aResultHTML && array_key_exists($i, $aResultHTML)) {
+							$this->assertEquals($aResultHTML[$i], $oCell->GetHTMLValue(), "failure on ".get_class($oCell).' cell type for cell number '.$i);
+						}
+					} elseif ($i === "__ERRORS__") {
 						$sErrors = array_key_exists("__ERRORS__", $aResult) ? $aResult["__ERRORS__"] : "";
-						$this->assertEquals( $sErrors, $oCell->GetDescription());
+						$this->assertEquals($sErrors, $oCell->GetDescription());
 					}
 				}
-				$this->assertEquals( $aResult[0], $aRow[0]->GetDisplayableValue());
+				$this->assertEquals($aResult[0], $aRow[0]->GetCLIValue());
+				if (null !== $aResultHTML) {
+					$this->assertEquals($aResultHTML[0], $aRow[0]->GetHTMLValue());
+				}
 			}
 		}
-		CMDBSource::Query('ROLLBACK');
-		MetaModel::GetConfig()->Set('db_core_transactions_enabled',$db_core_transactions_enabled);
+		MetaModel::GetConfig()->Set('db_core_transactions_enabled', $db_core_transactions_enabled);
 	}
 
-	public function CSVImportProvider() {
+	public function bulkChangeWithExistingDataProvider()
+	{
 		return [
+			"Ambigous case on reconciliation" => [
+					"initData" =>
+						["1", "Server1", "production", ""],
+					"csvData" =>
+						[[">Demo", "Server1"]],
+					"attributes" =>
+						 ["name" => 1],
+					"extKeys" =>
+						 ["org_id" => ["name" => 0]],
+					"reconcilKeys" =>
+						 ["name"],
+					"expectedResult" =>
+						[
+							0 => ">Demo",
+							"org_id" => "n/a",
+							1 => "Server1",
+							"id" => "Invalid value for attribute",
+							"name" => "Invalid value for attribute",
+							"__STATUS__" => "Issue: ambiguous reconciliation",
+							"__ERRORS__" => "Object not found",
+						],
+					"expectedResultHTML" =>
+						[
+							0 => "&gt;Demo",
+							"org_id" => "n/a",
+							1 => "Server1",
+							"id" => "Invalid value for attribute",
+							"name" => "Invalid value for attribute",
+							"__STATUS__" => "Issue: ambiguous reconciliation",
+							"__ERRORS__" => "Object not found",
+						],
+			],
 			"Case 6 - 1 : Unexpected value (update)" => [
-				["1", "ServerTest", "production", ""],
-				[["Demo", "ServerTest", "key", "BadValue", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[
-					0 => "Demo",
-					"org_id" => "3",
-					1 => "ServerTest",
-					2 => "1",
-					3 => "'BadValue' is an invalid value",
-					4 => "",
-					"id" => 1,
-					"__STATUS__" => "Issue: Unexpected attribute value(s)",
-					"__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
-				],
+				"initData" =>
+					["1", ">ServerTest", "production", ""],
+				"csvData" =>
+					[["Demo", ">ServerTest", "key - will be automatically overwritten by test", ">BadValue", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[
+						"id" => "{Id of the server created by the test}",
+						0 => "Demo",
+						"org_id" => "3",
+						1 => ">ServerTest",
+						2 => "1",
+						3 => "'>BadValue' is an invalid value",
+						4 => "",
+						"__STATUS__" => "Issue: Unexpected attribute value(s)",
+						"__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
+					],
+				"expectedResultHTML" =>
+					[
+						"id" => "{Id of the server created by the test}",
+						0 => "Demo",
+						"org_id" => "3",
+						1 => "&gt;ServerTest",
+						2 => "1",
+						3 => "'&gt;BadValue' is an invalid value",
+						4 => "",
+						"__STATUS__" => "Issue: Unexpected attribute value(s)",
+						"__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
+					],
 			],
 			"Case 6 - 2 : Unexpected value (update)" => [
-				["1", "ServerTest", "production", ""],
-				[["Demo", "ServerTest", "key", "<svg onclick\"alert(1)\">", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[
-					0 => "Demo",
-					"org_id" => "3",
-					1 => "ServerTest",
-					2 => "1",
-					3 => "'&lt;svg onclick&quot;alert(1)&quot;&gt;' is an invalid value",
-					4 => "",
-					"id" => 1,
-					"__STATUS__" => "Issue: Unexpected attribute value(s)",
-					"__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
-				],
+				"initData" =>
+					["1", ">ServerTest", "production", ""],
+				"csvData" =>
+					[["Demo", ">ServerTest", "key", "<svg onclick\"alert(1)\">", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[
+						"id" => "{Id of the server created by the test}",
+						0 => "Demo",
+						"org_id" => "3",
+						1 => ">ServerTest",
+						2 => "1",
+						3 => '\'<svg onclick"alert(1)">\' is an invalid value',
+						4 => "",
+						"__STATUS__" => "Issue: Unexpected attribute value(s)",
+						"__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
+					],
+				"expectedResultHTML" =>
+					[
+						"id" => "{Id of the server created by the test}",
+						0 => "Demo",
+						"org_id" => "3",
+						1 => "&gt;ServerTest",
+						2 => "1",
+						3 => "'&lt;svg onclick&quot;alert(1)&quot;&gt;' is an invalid value",
+						4 => "",
+						"__STATUS__" => "Issue: Unexpected attribute value(s)",
+						"__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
+					],
 			],
 			"Case 6 - 3 : Unexpected value (creation)" => [
-				[],
-				[["Demo", "ServerTest", "<svg onclick\"alert(1)\">", ""]],
-				["name" => 1, "status" => 2, "purchase_date" => 3],
-				["org_id" => ["name" => 0]],
-				["name"],
-				[
-					0 => "Demo",
-					"org_id" => "3",
-					1 => "\"ServerTest\"",
-					2 => "'&lt;svg onclick&quot;alert(1)&quot;&gt;' is an invalid value",
-					3 => "",
-					"id" => 1,
-					"__STATUS__" => "Issue: Unexpected attribute value(s)",
-					"__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
-				],
+				"initData" =>
+					[],
+				"csvData" =>
+					[["Demo", ">ServerTest", "<svg onclick\"alert(1)\">", 1]],
+				"attributes" =>
+					["name" => 1, "status" => 2, 'id' => 3],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["name"],
+				"expectedResult" =>
+					[
+						"id" => "{Id of the server created by the test}",
+						0 => "Demo",
+						"org_id" => "3",
+						1 => "\">ServerTest\"",
+						2 => '\'<svg onclick"alert(1)">\' is an invalid value',
+						3 => "1",
+						"__STATUS__" => "Issue: Unexpected attribute value(s)",
+						"__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
+					],
+				"expectedResultHTML" =>
+					[
+						"id" => "{Id of the server created by the test}",
+						0 => "Demo",
+						"org_id" => "3",
+						1 => "&gt;ServerTest",
+						2 => "'&lt;svg onclick&quot;alert(1)&quot;&gt;' is an invalid value",
+						3 => "1",
+						"__STATUS__" => "Issue: Unexpected attribute value(s)",
+						"__ERRORS__" => "Allowed 'status' value(s): stock,implementation,production,obsolete",
+					],
 			],
 			"Case 8  : unchanged name" => [
-				["1", "<svg onclick\"alert(1)\">", "production", ""],
-				[["Demo", "<svg onclick\"alert(1)\">", "key", "production", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[0 => "Demo", "org_id" => "3", 1 => "&lt;svg onclick&quot;alert(1)&quot;&gt;", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "updated 1 cols"],
+				"initData" =>
+					["1", "<svg onclick\"alert(1)\">", "production", ""],
+				"csvData" =>
+					[["Demo", "<svg onclick\"alert(1)\">", "key", "production", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[						"id" => "{Id of the server created by the test}",
+											 0 => "Demo", "org_id" => "3", 1 => '<svg onclick"alert(1)">', 2 => "1", 3 => "production", 4 => "", "__STATUS__" => "updated 1 cols"],
+				"expectedResultHTML" =>
+					[						"id" => "{Id of the server created by the test}",
+											 0 => "Demo", "org_id" => "3", 1 => '&lt;svg onclick&quot;alert(1)&quot;&gt;', 2 => "1", 3 => "production", 4 => "", "__STATUS__" => "updated 1 cols"],
 			],
 			"Case 3, 5 et 8 : unchanged 2" => [
-				["1", "ServerTest", "production", ""],
-				[["Demo", "ServerTest", "1", "production", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[0 => "Demo", "org_id" => "3", 1 => "ServerTest", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "updated 1 cols"],
+				"initData" =>
+					["1", ">ServerTest", "production", ""],
+				"csvData" =>
+					[["Demo", ">ServerTest", "1", "production", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[						"id" => "{Id of the server created by the test}",
+											 0 => "Demo", "org_id" => "3", 1 => ">ServerTest", 2 => "1", 3 => "production", 4 => "", "__STATUS__" => "updated 1 cols"],
+				"expectedResultHTML" =>
+					[						"id" => "{Id of the server created by the test}",
+											 0 => "Demo", "org_id" => "3", 1 => "&gt;ServerTest", 2 => "1", 3 => "production", 4 => "", "__STATUS__" => "updated 1 cols"],
 			],
 			"Case 9 - 1: wrong date format" => [
-				["1", "ServerTest", "production", ""],
-				[["Demo", "ServerTest", "1", "production", "date"]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[ 0 => "Demo", "org_id" => "n/a", 1 => "ServerTest", 2 => "1", 3 => "production", 4 => "'date' is an invalid value", "id" => 1, "__STATUS__" => "Issue: wrong date format"],
-			],
+				"initData" =>
+					["1", ">ServerTest", "production", ""],
+				"csvData" =>
+					[["Demo", ">ServerTest", "1", "production", "date>"]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[						"id" => "{Id of the server created by the test}",
+											 0 => "Demo", "org_id" => "n/a", 1 => ">ServerTest", 2 => "1", 3 => "production", 4 => "'date>' is an invalid value", "__STATUS__" => "Issue: wrong date format"],
+				"expectedResultHTML" =>
+					[						"id" => "{Id of the server created by the test}",
+											 0 => "Demo", "org_id" => "n/a", 1 => "&gt;ServerTest", 2 => "1", 3 => "production", 4 => "'date&gt;' is an invalid value", "__STATUS__" => "Issue: wrong date format"],
+				],
 			"Case 9 - 2: wrong date format" => [
-				["1", "ServerTest", "production", ""],
-				[["Demo", "ServerTest", "1", "production", "<svg onclick\"alert(1)\">"]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[ 0 => "Demo", "org_id" => "n/a", 1 => "ServerTest", 2 => "1", 3 => "production", 4 => "'&lt;svg onclick&quot;alert(1)&quot;&gt;' is an invalid value", "id" => 1, "__STATUS__" => "Issue: wrong date format"],
+				"initData" =>
+					["1", ">ServerTest", "production", ""],
+				"csvData" =>
+					[["Demo", ">ServerTest", "1", "production", "<svg onclick\"alert(1)\">"]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[ 						"id" => "{Id of the server created by the test}",
+											 0 => "Demo", "org_id" => "n/a", 1 => ">ServerTest", 2 => "1", 3 => "production", 4 => '\'<svg onclick"alert(1)">\' is an invalid value',"__STATUS__" => "Issue: wrong date format"],
+				"expectedResultHTML" =>
+					[ 						"id" => "{Id of the server created by the test}",
+											 0 => "Demo", "org_id" => "n/a", 1 => "&gt;ServerTest", 2 => "1", 3 => "production", 4 => '\'&lt;svg onclick&quot;alert(1)&quot;&gt;\' is an invalid value',"__STATUS__" => "Issue: wrong date format"],
+
 			],
 			"Case 1 - 1 : no match" => [
-				["1", "ServerTest", "production", ""],
-				[["Bad", "ServerTest", "1", "production", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[ 0 => "Bad", "org_id" => "No match for value 'Bad'",1 => "ServerTest",2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)",
-					"__ERRORS__" => "Object not found",
-				],
+				"initData" =>
+					["1", ">ServerTest", "production", ""],
+				"csvData" =>
+					[[">Bad", ">ServerTest", "1", "production", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[ 						"id" => "{Id of the server created by the test}",
+											 0 => ">Bad", "org_id" => "No match for value '>Bad'",1 => ">ServerTest",2 => "1", 3 => "production", 4 => "", "__STATUS__" => "Issue: Unexpected attribute value(s)",
+											 "__ERRORS__" => "Object not found",
+					],
+				"expectedResultHTML" =>
+					[ 						"id" => "{Id of the server created by the test}",
+											 0 => "&gt;Bad", "org_id" => "No match for value &apos;&gt;Bad&apos;",1 => "&gt;ServerTest",2 => "1", 3 => "production", 4 => "", "__STATUS__" => "Issue: Unexpected attribute value(s)",
+											 "__ERRORS__" => "Object not found",
+					],
 			],
 			"Case 1 - 2 : no match" => [
-				["1", "ServerTest", "production", ""],
-				[["<svg fonclick\"alert(1)\">", "ServerTest", "1", "production", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[ 0 => "&lt;svg fonclick&quot;alert(1)&quot;&gt;", "org_id" => "No match for value '<svg fonclick\"alert(1)\">'",1 => "ServerTest",2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)",
-					"__ERRORS__" => "Object not found",
-				],
+				"initData" =>
+					["1", ">ServerTest", "production", ""],
+				"csvData" =>
+					[["<svg onclick\"alert(1)\">", ">ServerTest", "1", "production", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[						"id" => "{Id of the server created by the test}",
+											 0 => '<svg onclick"alert(1)">', "org_id" => "No match for value '<svg onclick\"alert(1)\">'",1 => ">ServerTest",2 => "1", 3 => "production", 4 => "", "__STATUS__" => "Issue: Unexpected attribute value(s)",
+											 "__ERRORS__" => "Object not found",
+					],
+				"expectedResultHTML" =>
+					[						"id" => "{Id of the server created by the test}",
+											 0 => '&lt;svg onclick&quot;alert(1)&quot;&gt;', "org_id" => "No match for value &apos;&lt;svg onclick&quot;alert(1)&quot;&gt;&apos;",1 => "&gt;ServerTest",2 => "1", 3 => "production", 4 => "", "__STATUS__" => "Issue: Unexpected attribute value(s)",
+											 "__ERRORS__" => "Object not found",
+					],
 			],
 			"Case 10 : Missing mandatory value" => [
-				["1", "ServerTest", "production", ""],
-				[["", "ServerTest", "1", "production", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[ 0 => "",  "org_id" => "Invalid value for attribute", 1 => "ServerTest", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "Issue: Unexpected attribute value(s)",
-					"__ERRORS__" => "Null not allowed",
-				],
+				"initData" =>
+					["1", ">ServerTest", "production", ""],
+				"csvData" =>
+					[["", ">ServerTest", "1", "production", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[ 						"id" => "{Id of the server created by the test}",
+											 0 => "",  "org_id" => "Invalid value for attribute", 1 => ">ServerTest", 2 => "1", 3 => "production", 4 => "", "__STATUS__" => "Issue: Unexpected attribute value(s)",
+											 "__ERRORS__" => "Null not allowed",
+					],
+				"expectedResultHTML" =>
+					[ 						"id" => "{Id of the server created by the test}",
+											 0 => "",  "org_id" => "Invalid value for attribute", 1 => "&gt;ServerTest", 2 => "1", 3 => "production", 4 => "", "__STATUS__" => "Issue: Unexpected attribute value(s)",
+											 "__ERRORS__" => "Null not allowed",
+					],
 			],
-
-			"Case 0 : Date format" => [
-				["1", "ServerTest", "production", "2020-02-01"],
-				[["Demo", "ServerTest", "1", "production", "2020-20-03"]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[ 0 => "Demo", "org_id" => "n/a", 1 => "ServerTest", 2 => "1", 3 => "production", 4 => "'2020-20-03' is an invalid value", "id" => 1, "__STATUS__" => "Issue: wrong date format"],
+			"Case 0 : Date format ok but incorrect date" => [
+				"initData" =>
+					["1", ">ServerTest", "production", "2020-02-01"],
+				"csvData" =>
+					[["Demo", ">ServerTest", "1", "production", "2020-20-03"]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[						"id" => "{Id of the server created by the test}",
+											 0 => "Demo", "org_id" => "n/a", 1 => ">ServerTest", 2 => "1", 3 => "production", 4 => "'2020-20-03' is an invalid value", "id" => 1, "__STATUS__" => "Issue: wrong date format"],
+			],
+			"Case 11 : Missing AttributeDateTime cell should issue an error" => [
+				"initData" =>
+					["1", "ServerTest", "production", "2020-02-01"],
+				"csvData" =>
+					[["1"]],
+				"attributes" =>
+					["id" => 0,"purchase_date" => 1],
+				"extKeys" =>
+					[],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[  1 => "'' is an invalid value", "id" => 1, "__STATUS__" => 'Issue: Not the expected number of columns (found: 1, expected: 2)'],
+			],
+			"Case 12 : Missing AttributeEnum cell should issue an error" => [
+				"initData" =>
+					["1", "ServerTest", "production", "2020-02-01"],
+				"csvData" =>
+					[[ "1"]], // missing status
+				"attributes" =>
+					[ "id" => 0, "status" => 1],
+				"extKeys" =>
+					[],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[  1 => "'' is an invalid value", "id" => 1, "__STATUS__" => 'Issue: Not the expected number of columns (found: 1, expected: 2)'],
+				],
+			"Case 13 : Missing AttributeExternalKey cell should issue an error" => [
+				"initData" =>
+					["1", "ServerTest", "production", "2020-02-01"],
+				"csvData" =>
+					[[ "1"]], // missing org_id
+				"attributes" =>
+					[ "id" => 0],
+				"extKeys" =>
+					["org_id" => ["name" => 1]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[  1 => "'' is an invalid value", "id" => 1, "__STATUS__" => 'Issue: Not the expected number of columns (found: 1, expected: 2)'],
+			],
+			"Case 14 : Missing 1 of 2 AttributeExternalKey need 2 cells for reconciliation cell should issue an error" => [
+				"initData" =>
+					["1", "ServerTest", "production", "2020-02-01"],
+				"csvData" =>
+					[[ "1", "Demo"]], // missing org_code
+				"attributes" =>
+					[ "id" => 0],
+				"extKeys" =>
+					["org_id" => ["name" => 1, "code" => 2]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[  1 => 'Demo', "id" => 1, "__STATUS__" => 'Issue: Not the expected number of columns (found: 2, expected: 3)'],
 			],
 		];
 	}
 
-
-
 	/**
 	 * test $oBulk->Process with new server and new organization datas
-	 * @dataProvider CSVImportProvider2
+	 *
+	 * @dataProvider bulkChangeWithExistingDataAndSpecificOrgProvider
 	 *
 	 * @param $aInitData
 	 * @param $aCsvData
@@ -377,28 +666,40 @@ class BulkChangeTest extends ItopDataTestCase {
 	 * @param $aExtKeys
 	 * @param $aReconcilKeys
 	 */
-	public function testCas2BulkChangeIssue($aInitData, $aCsvData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult) {
-		CMDBSource::Query('START TRANSACTION');
+	public function testBulkChangeWithExistingDataAndSpecificOrg($aInitData, $aCsvData, $aAttributes, $aExtKeys, $aReconcilKeys, $aResult, $aResultHTML = null)
+	{
 		//change value during the test
-		$db_core_transactions_enabled=MetaModel::GetConfig()->Get('db_core_transactions_enabled');
-		MetaModel::GetConfig()->Set('db_core_transactions_enabled',false);
+		$db_core_transactions_enabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
+		MetaModel::GetConfig()->Set('db_core_transactions_enabled', false);
 		if (is_array($aInitData) && sizeof($aInitData) != 0) {
 			/** @var Server $oServer */
-			$oOrganisation = $this->createObject('Organization', array(
-				'name' => $aInitData[0]
-			));
-			$aResult["org_id"] = $oOrganisation->GetKey();
-			$oServer = $this->createObject('Server', array(
-				'name' => $aInitData[1],
-				'status' => $aInitData[2],
+			$oOrganisation = $this->createObject('Organization', [
+				'name' => $aInitData["orgName"],
+			]);
+			if ($aResult["org_id"] === "{org id of the server created by the test}") {
+				$aResult["org_id"] = $oOrganisation->GetKey();
+				if ($aResultHTML !== null) {
+					$aResultHTML["org_id"] = $oOrganisation->GetKey();
+				}
+			}
+
+			$oServer = $this->createObject('Server', [
+				'name' => $aInitData["serverName"],
+				'status' => $aInitData["serverStatus"],
 				'org_id' => $oOrganisation->GetKey(),
-				'purchase_date' => $aInitData[3],
-			));
-			$aCsvData[0][2]=$oServer->GetKey();
-			$aResult[2]=$oServer->GetKey();
-			$aResult["id"]=$oServer->GetKey();
+				'purchase_date' => $aInitData["serverPurchaseDate"],
+			]);
+			$aCsvData[0][2] = $oServer->GetKey();
+			$aResult[2] = $oServer->GetKey();
+			if ($aResult["id"] === "{Id of the server created by the test}") {
+				$aResult["id"] = $oServer->GetKey();
+				if ($aResultHTML !== null) {
+					$aResultHTML[2] = $oServer->GetKey();
+					$aResultHTML["id"] = $oServer->GetKey();
+				}
+			}
 		}
-		$oBulk = new \BulkChange(
+		$oBulk = new BulkChange(
 			"Server",
 			$aCsvData,
 			$aAttributes,
@@ -409,55 +710,130 @@ class BulkChangeTest extends ItopDataTestCase {
 			"Y-m-d H:i:s", // date format
 			true // localize
 		);
-		$oChange = \CMDBObject::GetCurrentChange();
-		$aRes = $oBulk->Process($oChange);
+		$aRes = $oBulk->Process();
 		static::assertNotNull($aRes);
 		foreach ($aRes as $aRow) {
 			foreach ($aRow as $i => $oCell) {
 				if ($i !== "finalclass" && $i !== "__STATUS__" && $i !== "__ERRORS__" && array_key_exists($i, $aResult)) {
 					$this->debug("i:".$i);
-					$this->debug('GetDisplayableValue:'.$oCell->GetDisplayableValue());
+					$this->debug('GetCLIValue:'.$oCell->GetCLIValue());
 					$this->debug("aResult:".$aResult[$i]);
-					$this->assertEquals($aResult[$i], $oCell->GetDisplayableValue());
+					$this->assertEquals($aResult[$i], $oCell->GetCLIValue(), "$i cell is incorrect");
+					if (null !== $aResultHTML && array_key_exists($i, $aResultHTML)) {
+						$this->assertEquals($aResultHTML[$i], $oCell->GetHTMLValue());
+					}
 				} elseif ($i === "__STATUS__") {
 					$sStatus = $aRow['__STATUS__'];
 					$this->assertEquals($aResult["__STATUS__"], $sStatus->GetDescription());
-				} else if ($i === "__ERRORS__") {
+				} elseif ($i === "__ERRORS__") {
 					$sErrors = array_key_exists("__ERRORS__", $aResult) ? $aResult["__ERRORS__"] : "";
-					$this->assertEquals( $sErrors, $oCell->GetDescription());
+					$this->assertEquals($sErrors, $oCell->GetDescription());
 				}
 			}
-			$this->assertEquals($aResult[0], $aRow[0]->GetDisplayableValue());
+			$this->assertEquals($aResult[0], $aRow[0]->GetCLIValue());
+			if (null !== $aResultHTML) {
+				$this->assertEquals($aResultHTML[0], $aRow[0]->GetHTMLValue());
+			}
 		}
-		CMDBSource::Query('ROLLBACK');
-		MetaModel::GetConfig()->Set('db_core_transactions_enabled',$db_core_transactions_enabled);
+		MetaModel::GetConfig()->Set('db_core_transactions_enabled', $db_core_transactions_enabled);
 	}
 
-	public function CSVImportProvider2() {
+	public function bulkChangeWithExistingDataAndSpecificOrgProvider()
+	{
 		return [
+			"Ambigous case " => [
+				"initData" =>
+					["orgName" => "Demo", "serverName" => ">ServerYO", "serverStatus" => "production", "serverPurchaseDate" => ""],
+				"csvData" =>
+					[["Demo", ">Server1"]],
+				"attributes" =>
+					["name" => 1,"id" => 2],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["org_id"],
+				"expectedResult" =>
+					[
+						0 => "Demo",
+						"org_id" => "Invalid value for attribute",
+						1 => ">Server1",
+						"id" => "Invalid value for attribute",
+						"__STATUS__" => "Issue: failed to reconcile",
+						"__ERRORS__" => "Allowed 'status' value(s): stock,implemfentation,production,obsolete",
+					],
+				"expectedResultHTML" =>
+					[
+						0 => "Demo",
+						"org_id" => "Invalid value for attribute",
+						1 => "&gt;Server1",
+						"id" => "Invalid value for attribute",
+						"__STATUS__" => "Issue: failed to reconcile",
+						"__ERRORS__" => "Allowed 'status' value(s): stock,implemfentation,production,obsolete",
+					],
+			],
 			"Case 3 : unchanged name" => [
-				["dodo","ServerYO", "production", ""],
-				[["dodo", "ServerYO", "key", "production", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[0 => "dodo", "org_id" => "3", 1 => "ServerYO", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "unchanged"],
+				"initData" =>
+					["orgName" => ">dodo", "serverName" => ">ServerYO", "serverStatus" => "production", "serverPurchaseDate" => ""],
+				"csvData" =>
+					[[">dodo", ">ServerYO", "key will be set by the test", "production", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[0 => ">dodo", "org_id" => "{org id of the server created by the test}", 1 => ">ServerYO", 2 => "1", 3 => "production", 4 => "", "id" => "{Id of the server created by the test}", "__STATUS__" => "unchanged"],
+				"expectedResultHTML" =>
+					[0 => "&gt;dodo", "org_id" => "{org id of the server created by the test}", 1 => "&gt;ServerYO", 2 => "1", 3 => "production", 4 => "", "id" => "{Id of the server created by the test}", "__STATUS__" => "unchanged"],
 			],
 			"Case 3 bis : unchanged name" => [
-				["<svg >","ServerYO", "production", ""],
-				[["<svg >", "ServerYO", "key", "production", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[0 => "&lt;svg &gt;", "org_id" => "3", 1 => "ServerYO", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "unchanged"],
+				"initData" =>
+					["orgName" => "<svg >", "serverName" => ">ServerYO",  "serverStatus" => "production", "serverPurchaseDate" => ""],
+				"csvData" =>
+					[["<svg >", ">ServerYO", "key", "production", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[0 => "<svg >", "org_id" => "{org id of the server created by the test}", 1 => ">ServerYO", 2 => "1", 3 => "production", 4 => "", "id" => "{Id of the server created by the test}", "__STATUS__" => "unchanged"],
+				"expectedResultHTML" =>
+					[0 => "&lt;svg &gt;", "org_id" => "{org id of the server created by the test}", 1 => "&gt;ServerYO", 2 => "1", 3 => "production", 4 => "", "id" => "{Id of the server created by the test}", "__STATUS__" => "unchanged"],
 			],
 			"Case 3 ter : unchanged name" => [
-				["<svg onclick\"alert(1)\" >","ServerYO", "production", ""],
-				[["<svg onclick\"alert(1)\" >", "ServerYO", "key", "production", ""]],
-				["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
-				["org_id" => ["name" => 0]],
-				["id"],
-				[0 => "&lt;svg onclick&quot;alert(1)&quot; &gt;", "org_id" => "3", 1 => "ServerYO", 2 => "1", 3 => "production", 4 => "", "id" => 1, "__STATUS__" => "unchanged"],
+				"initData" =>
+					["orgName" => "<svg onclick\"alert(1)\" >", "serverName" => ">ServerYO", "serverStatus" => "production", "serverPurchaseDate" => ""],
+				"csvData" =>
+					[["<svg onclick\"alert(1)\" >", ">ServerYO", "key", "production", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["id"],
+				"expectedResult" =>
+					[0 => '<svg onclick"alert(1)" >', "org_id" => "{org id of the server created by the test}", 1 => ">ServerYO", 2 => "1", 3 => "production", 4 => "", "id" => "{Id of the server created by the test}", "__STATUS__" => "unchanged"],
+				"expectedResultHTML" =>
+					[0 => '&lt;svg onclick&quot;alert(1)&quot; &gt;', "org_id" => "{org id of the server created by the test}", 1 => "&gt;ServerYO", 2 => "1", 3 => "production", 4 => "", "id" => "{Id of the server created by the test}", "__STATUS__" => "unchanged"],
+			],
+			"Case reconciliation on external key" => [
+				"initData" =>
+					["orgName" => "<svg onclick\"alert(1)\" >", "serverName" => ">ServerYO", "serverStatus" => "production", "serverPurchaseDate" => ""],
+				"csvData" =>
+					[["<svg onclick\"alert(1)\" >", ">ServerYO", "key", "production", ""]],
+				"attributes" =>
+					["name" => 1, "id" => 2, "status" => 3, "purchase_date" => 4],
+				"extKeys" =>
+					["org_id" => ["name" => 0]],
+				"reconcilKeys" =>
+					["org_id", "name"],
+				"expectedResult" =>
+					[0 => '<svg onclick"alert(1)" >', "org_id" => "{org id of the server created by the test}", 1 => ">ServerYO", 2 => "1", 3 => "production", 4 => "", "id" => "{Id of the server created by the test}", "__STATUS__" => "unchanged"],
+				"expectedResultHTML" =>
+					[0 => '&lt;svg onclick&quot;alert(1)&quot; &gt;', "org_id" => "{org id of the server created by the test}", 1 => "&gt;ServerYO", 2 => "1", 3 => "production", 4 => "", "id" => "{Id of the server created by the test}", "__STATUS__" => "unchanged"],
 			],
 		];
 	}

@@ -1,5 +1,6 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -16,14 +17,12 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Class cmdbObject
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 /**
  * cmdbObjectClass
@@ -39,7 +38,6 @@ require_once('kpi.class.inc.php');
 require_once('dict.class.inc.php');
 
 require_once('attributedef.class.inc.php');
-require_once('filterdef.class.inc.php');
 require_once('stimulus.class.inc.php');
 require_once('valuesetdef.class.inc.php');
 require_once('MyHelpers.class.inc.php');
@@ -149,8 +147,7 @@ abstract class CMDBObject extends DBObject
 	 */
 	public static function GetCurrentChange($bAutoCreate = true)
 	{
-		if ($bAutoCreate && is_null(self::$m_oCurrChange))
-		{
+		if ($bAutoCreate && is_null(self::$m_oCurrChange)) {
 			self::CreateChange();
 		}
 		return self::$m_oCurrChange;
@@ -215,7 +212,7 @@ abstract class CMDBObject extends DBObject
 			return CMDBChange::GetCurrentUserName();
 		} else {
 			//N°5135 - add impersonation information in activity log/current cmdb change
-			if (UserRights::IsImpersonated()){
+			if (UserRights::IsImpersonated()) {
 				return sprintf("%s (%s)", CMDBChange::GetCurrentUserName(), self::$m_sInfo);
 			} else {
 				return self::$m_sInfo;
@@ -235,12 +232,9 @@ abstract class CMDBObject extends DBObject
 		if (is_null(self::$m_sUserId)
 			//N°5135 - indicate impersonation inside changelogs
 			&& (false === UserRights::IsImpersonated())
-		)
-		{
+		) {
 			return CMDBChange::GetCurrentUserId();
-		}
-		else
-		{
+		} else {
 			return self::$m_sUserId;
 		}
 	}
@@ -250,12 +244,9 @@ abstract class CMDBObject extends DBObject
 	 */
 	protected static function GetTrackOrigin()
 	{
-		if (is_null(self::$m_sOrigin))
-		{
+		if (is_null(self::$m_sOrigin)) {
 			return 'interactive';
-		}
-		else
-		{
+		} else {
 			return self::$m_sOrigin;
 		}
 	}
@@ -335,7 +326,7 @@ abstract class CMDBObject extends DBObject
 		$oMyChangeOp->Set("objclass", MetaModel::GetRootClass(get_class($this)));
 		$oMyChangeOp->Set("objkey", $objkey);
 		$oMyChangeOp->Set("fclass", get_class($this));
-		$oMyChangeOp->Set("fname", substr($this->GetRawName(), 0, 255)); // Protect against very long friendly names
+		$oMyChangeOp->SetTrim("fname", $this->GetRawName()); // Protect against very long friendly names
 		$iId = $oMyChangeOp->DBInsertNoReload();
 	}
 
@@ -383,70 +374,17 @@ abstract class CMDBObject extends DBObject
 
 		// $aValues is an array of $sAttCode => $value
 		//
-		foreach ($aValues as $sAttCode=> $value)
-		{
-			if (array_key_exists($sAttCode, $aOrigValues))
-			{
+		foreach ($aValues as $sAttCode => $value) {
+			if (array_key_exists($sAttCode, $aOrigValues)) {
 				$original = $aOrigValues[$sAttCode];
-			}
-			else
-			{
+			} else {
 				$original = null;
 			}
 			$this->RecordAttChange($sAttCode, $original, $value);
 		}
 	}
 
-	/**
-	 * Helper to ultimately check user rights before writing (Insert, Update or Delete)
-	 * The check should never fail, because the UI should prevent from such a usage
-	 * Anyhow, if the user has found a workaround... the security gets enforced here
-	 *
-	 * @deprecated 3.0.0 N°2591 will be removed in 3.1.0
-	 *
-	 * @param bool $bSkipStrongSecurity
-	 * @param int $iActionCode
-	 *
-	 * @throws \SecurityException
-	 */
-	protected function CheckUserRights($bSkipStrongSecurity, $iActionCode)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		if (is_null($bSkipStrongSecurity)) {
-			// This is temporary
-			// We have implemented this safety net right before releasing iTop 1.0
-			// and we decided that it was too risky to activate it
-			// Anyhow, users willing to have a very strong security could set
-			// skip_strong_security = 0, in the config file
-			$bSkipStrongSecurity = MetaModel::GetConfig()->Get('skip_strong_security');
-		}
-		if (!$bSkipStrongSecurity)
-		{
-			$sClass = get_class($this);
-			$oSet = DBObjectSet::FromObject($this);
-			if (!UserRights::IsActionAllowed($sClass, $iActionCode, $oSet))
-			{
-				// Intrusion detected
-				throw new SecurityException('You are not allowed to modify objects of class: '.$sClass);
-			}
-		}
-	}
-
 	public function DBClone($newKey = null)
-	{
-		return $this->DBCloneTracked_Internal();
-	}
-
-	/**
-	 * @deprecated 3.1.0 N°5232 not used
-	 */
-	public function DBCloneTracked(CMDBChange $oChange, $newKey = null)
-	{
-		self::SetCurrentChange($oChange);
-		$this->DBCloneTracked_Internal($newKey);
-	}
-
-	protected function DBCloneTracked_Internal($newKey = null)
 	{
 		$newKey = parent::DBClone($newKey);
 		$oClone = MetaModel::GetObject(get_class($this), $newKey);
@@ -470,29 +408,9 @@ abstract class CMDBObject extends DBObject
 	public function DBDelete(&$oDeletionPlan = null)
 	{
 		$this->LogCRUDEnter(__METHOD__);
-		$oDeletionPlan = $this->DBDeleteTracked_Internal($oDeletionPlan);
+		$oDeletionPlan = parent::DBDelete($oDeletionPlan);
 		$this->LogCRUDExit(__METHOD__);
 		return $oDeletionPlan;
-	}
-
-	/**
-	 * @param null $oDeletionPlan
-	 *
-	 * @return \DeletionPlan|null
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DeleteException
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 */
-	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
-	{
-		$ret = parent::DBDelete($oDeletionPlan);
-
-		return $ret;
 	}
 
 	public function DBArchive()
@@ -501,8 +419,7 @@ abstract class CMDBObject extends DBObject
 		$bOriginal = $this->Get('archive_flag');
 		parent::DBArchive();
 
-		if (!$bOriginal)
-		{
+		if (!$bOriginal) {
 			utils::PushArchiveMode(false);
 			$this->RecordAttChange('archive_flag', false, true);
 			utils::PopArchiveMode();
@@ -515,16 +432,13 @@ abstract class CMDBObject extends DBObject
 		$bOriginal = $this->Get('archive_flag');
 		parent::DBUnarchive();
 
-		if ($bOriginal)
-		{
+		if ($bOriginal) {
 			utils::PushArchiveMode(false);
 			$this->RecordAttChange('archive_flag', true, false);
 			utils::PopArchiveMode();
 		}
 	}
 }
-
-
 
 /**
  * TODO: investigate how to get rid of this class that was made to workaround some language limitation... or a poor design!
@@ -541,7 +455,7 @@ class CMDBObjectSet extends DBObjectSet
 	// just to get the right object class in return.
 	// I have to think again to those things: maybe it will work fine if a have a constructor define here (?)
 
-	static public function FromScratch($sClass)
+	public static function FromScratch($sClass)
 	{
 		$oFilter = new DBObjectSearch($sClass);
 		$oFilter->AddConditionExpression(new FalseExpression());
@@ -553,14 +467,14 @@ class CMDBObjectSet extends DBObjectSet
 
 	// create an object set ex nihilo
 	// input = array of objects
-	static public function FromArray($sClass, $aObjects)
+	public static function FromArray($sClass, $aObjects)
 	{
 		$oRetSet = self::FromScratch($sClass);
 		$oRetSet->AddObjectArray($aObjects, $sClass);
 		return $oRetSet;
 	}
 
-	static public function FromArrayAssoc($aClasses, $aObjects)
+	public static function FromArrayAssoc($aClasses, $aObjects)
 	{
 		// In a perfect world, we should create a complete tree of DBObjectSearch,
 		// but as we lack most of the information related to the objects,
@@ -572,8 +486,7 @@ class CMDBObjectSet extends DBObjectSet
 		$oRetSet = new CMDBObjectSet($oFilter);
 		$oRetSet->m_bLoaded = true; // no DB load
 
-		foreach($aObjects as $rowIndex => $aObjectsByClassAlias)
-		{
+		foreach ($aObjects as $rowIndex => $aObjectsByClassAlias) {
 			$oRetSet->AddObjectExtended($aObjectsByClassAlias);
 		}
 		return $oRetSet;

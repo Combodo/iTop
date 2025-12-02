@@ -2,6 +2,79 @@
 
 Please refer to [UPGRADING](UPGRADING.md) guide for upgrading to a major version.
 
+## 7.10.0 - 2025-08-23
+
+### Added
+
+- Support for PHP 8.5
+
+### Changed
+
+- Adjusted `guzzlehttp/promises` version constraint to `^2.3`
+- Adjusted `guzzlehttp/psr7` version constraint to `^2.8`
+
+
+## 7.9.3 - 2025-03-27
+
+### Changed
+
+- Remove explicit content-length header for GET requests
+- Improve compatibility with bad servers for boolean cookie values
+
+
+## 7.9.2 - 2024-07-24
+
+### Fixed
+
+- Adjusted handler selection to use cURL if its version is 7.21.2 or higher, rather than 7.34.0
+
+
+## 7.9.1 - 2024-07-19
+
+### Fixed
+
+- Fix TLS 1.3 check for HTTP/2 requests
+
+
+## 7.9.0 - 2024-07-18
+
+### Changed
+
+- Improve protocol version checks to provide feedback around unsupported protocols
+- Only select the cURL handler by default if 7.34.0 or higher is linked
+- Improved `CurlMultiHandler` to avoid busy wait if possible
+- Dropped support for EOL `guzzlehttp/psr7` v1
+- Improved URI user info redaction in errors
+
+## 7.8.2 - 2024-07-18
+
+### Added
+
+- Support for PHP 8.4
+
+
+## 7.8.1 - 2023-12-03
+
+### Changed
+
+- Updated links in docs to their canonical versions
+- Replaced `call_user_func*` with native calls
+
+
+## 7.8.0 - 2023-08-27
+
+### Added
+
+- Support for PHP 8.3
+- Added automatic closing of handles on `CurlFactory` object destruction
+
+
+## 7.7.1 - 2023-08-27
+
+### Changed
+
+- Remove the need for `AllowDynamicProperties` in `CurlMultiHandler`
+
 
 ## 7.7.0 - 2023-05-21
 
@@ -628,7 +701,8 @@ object).
   * Note: This has been changed in 5.0.3 to now encode query string values by
     default unless the `rawString` argument is provided when setting the query
     string on a URL: Now allowing many more characters to be present in the
-    query string without being percent encoded. See https://tools.ietf.org/html/rfc3986#appendix-A
+    query string without being percent encoded. See
+    https://datatracker.ietf.org/doc/html/rfc3986#appendix-A
 
 
 ## 5.0.1 - 2014-10-16
@@ -1167,7 +1241,7 @@ interfaces.
 
 ## 3.4.0 - 2013-04-11
 
-* Bug fix: URLs are now resolved correctly based on https://tools.ietf.org/html/rfc3986#section-5.2. #289
+* Bug fix: URLs are now resolved correctly based on https://datatracker.ietf.org/doc/html/rfc3986#section-5.2. #289
 * Bug fix: Absolute URLs with a path in a service description will now properly override the base URL. #289
 * Bug fix: Parsing a query string with a single PHP array value will now result in an array. #263
 * Bug fix: Better normalization of the User-Agent header to prevent duplicate headers. #264.

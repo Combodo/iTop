@@ -1,33 +1,22 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	// Dictionary entries go here
+/**
+ *
+ */
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Conectar ao iTop Hub',
 	'Menu:iTopHub:Register+' => 'Vá para o iTop Hub para atualizar sua instância '.ITOP_APPLICATION_SHORT,
 	'Menu:iTopHub:Register:Description' => '<p>Obtenha acesso à sua plataforma da comunidade iTop Hub!</br>Encontre todos os conteúdos e informações necessárias, gerencie suas instâncias '.ITOP_APPLICATION_SHORT.' por meio de ferramentas personalizadas & instale mais extensões.</br><br/>Ao conectar-se ao iTop hub a partir desta página, você enviará informações da sua instância '.ITOP_APPLICATION_SHORT.' ao iTop Hub.</p>',
-	'Menu:iTopHub:MyExtensions' => 'Extensões Implantadas',
-	'Menu:iTopHub:MyExtensions+' => 'Veja a lista de extensões implantadas nesta instância do '.ITOP_APPLICATION_SHORT,
+	'Menu:iTopHub:MyExtensions' => 'Extensões Instaladas',
+	'Menu:iTopHub:MyExtensions+' => 'Veja a lista de extensões instaladas nesta instância do '.ITOP_APPLICATION_SHORT,
 	'Menu:iTopHub:BrowseExtensions' => 'Obter Extensões do iTop Hub',
 	'Menu:iTopHub:BrowseExtensions+' => 'Navegue por mais extensões no iTop Hub',
 	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Visite a loja do iTop Hub, seu único lugar para encontrar extensões maravilhosas do '.ITOP_APPLICATION_SHORT.' !</br>Encontre as extensões que irão ajudá-lo a personalizar e adaptar o '.ITOP_APPLICATION_SHORT.' aos seus processos.</br><br/>Ao conectar-se ao iTop hub a partir desta página, você enviará informações da sua instância '.ITOP_APPLICATION_SHORT.' ao iTop Hub.</p>',
@@ -76,6 +65,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s versão: %2$s',
 	'iTopHub:InstallationStatus:Installed' => 'Instalado',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Versão %1$s <b>NÃO</b> instalada',
-));
-
-
+]);

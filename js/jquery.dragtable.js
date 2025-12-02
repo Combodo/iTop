@@ -159,7 +159,7 @@
 				restoreTextSelection();
 				// persist state if necessary
 				if (_this.options.persistState !== null) {
-					$.isFunction(_this.options.persistState) ? _this.options.persistState(_this.originalTable) : _this.persistState();
+					(typeof( _this.options.persistState) === 'function') ? _this.options.persistState(_this.originalTable) : _this.persistState();
 				}
 			};
 		},
@@ -330,7 +330,7 @@
 			}
 			// restore state if necessary
 			if (this.options.restoreState !== null) {
-				$.isFunction(this.options.restoreState) ? this.options.restoreState(this.originalTable) : this._restoreState(this.options.restoreState);
+				(typeof( _this.options.restoreState) === 'function') ? this.options.restoreState(this.originalTable) : this._restoreState(this.options.restoreState);
 			}
 			var _this = this;
 			this.bindTo.mousedown(function(evt) {
@@ -354,7 +354,7 @@
 			this._create();
 		},
 		destroy: function() {
-			this.bindTo.unbind('mousedown');
+			this.bindTo.off('mousedown');
 			$.Widget.prototype.destroy.apply(this, arguments); // default destroy
 			// now do other stuff particular to this widget
 		}

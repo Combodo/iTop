@@ -1,0 +1,38 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-dropdown--border-radius:  $common-border-radius-400 !default;
+
+$ipb-dropdown--a--padding-y:  $common-spacing-400 !default;
+$ipb-dropdown--a--padding-x:  $common-spacing-500 !default;
+$ipb-dropdown--a--border-radius:  $ipb-dropdown--border-radius !default;
+
+$ipb-dropdown--icon--margin-right: $common-spacing-300 !default;
+
+ipb-dropdown {
+  display: none;
+  position: absolute;
+  width: max-content;
+  border-radius: $ipb-dropdown--border-radius;
+  list-style: none;
+  li {
+    a {
+      display: inline-block;
+      width: 100%;
+      padding: $ipb-dropdown--a--padding-y $ipb-dropdown--a--padding-x;
+      border-radius: $ipb-dropdown--a--border-radius;
+      cursor: pointer;
+      text-decoration: none;
+    }
+  }
+}
+ipb-dropdown.show {
+  display: block;
+}
+
+.ipb-dropdown--icon{
+  margin-right: $ipb-dropdown--icon--margin-right;
+}

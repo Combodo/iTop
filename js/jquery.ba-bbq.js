@@ -537,7 +537,7 @@
           // Simple key, even simpler rules, since only scalars and shallow
           // arrays are allowed.
           
-          if ( $.isArray( obj[key] ) ) {
+          if ( Array.isArray( obj[key] ) ) {
             // val is already an array, so push on the next value.
             obj[key].push( val );
             
@@ -895,7 +895,7 @@
       
       // For each passed key, delete the corresponding property from the current
       // state.
-      $.each( $.isArray( arr ) ? arr : arguments, function(i,v){
+      $.each( Array.isArray( arr ) ? arr : arguments, function(i,v){
         delete state[ v ];
       });
     }
@@ -905,6 +905,7 @@
   };
   
   // Event: hashchange event (BBQ)
+
   // 
   // Usage in jQuery 1.4 and newer:
   // 
@@ -978,7 +979,7 @@
       
       // This may seem a little complicated, but it normalizes the special event
       // .add method between jQuery 1.4/1.4.1 and 1.4.2+
-      if ( $.isFunction( handleObj ) ) {
+      if ( typeof ( handleObj ) === 'function' ) {
         // 1.4, 1.4.1
         old_handler = handleObj;
         return new_handler;

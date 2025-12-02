@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -46,8 +47,7 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Menu:ProblemManagement' => 'Problem management',
 	'Menu:ProblemManagement+' => 'Problem management',
 	'Menu:Problem:Overview' => 'Overview',
@@ -70,12 +70,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard for Problem Management',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard for Problem Management',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Problem' => 'Problem',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Status',
@@ -148,4 +148,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Close',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

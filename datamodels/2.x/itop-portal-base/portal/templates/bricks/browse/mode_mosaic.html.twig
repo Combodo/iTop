@@ -1,14 +1,15 @@
-{# itop-portal-base/portal/templates/bricks/browse/mode_mosaic.html.twig #}
-{# Browse brick mosaic mode layout #}
-{% extends 'itop-portal-base/portal/templates/bricks/browse/layout.html.twig' %}
+{% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\BrowseBrick', oBrick) %}
+
+{% block bBrowseHeaderContent %}
+    <ol id="mosaic-breadcrumb" class="breadcrumb">
+        <li><a href="#" data-level-id="L"><span class="fas fa-home"></span></a></li>
+    </ol>
+{% endblock %}
 
 {% block bBrowseMainContent %}
 	<div id="brick_content_mosaic">
 		{% block bBrowseMosaicContent %}
-			<ol id="mosaic-breadcrumb" class="breadcrumb">
-				<li><a href="#" data-level-id="L"><span class="fas fa-home"></span></a></li>
-			</ol>
-			<div class="mosaic-group" data-level-id="L">
+			<div class="mosaic-group ipb-is-visible" data-level-id="L">
 			</div>
 		{% endblock %}
 	</div>
@@ -21,7 +22,7 @@
 	<div id="brick_mosaic_overlay">
 		{% block bBrowseMosaicOverlay %}
 			<div class="overlay_content">
-				{% include 'itop-portal-base/portal/templates/helpers/loader.html.twig' %}
+                {% include template('loader') %}
 			</div>
 		{% endblock %}
 	</div>
@@ -59,11 +60,7 @@
 		    var bLevelLoaded = (oLevelElem.length > 0);
 
 		    // Hiding current level
-            $('#brick_content_mosaic .mosaic-group:visible').hide(
-                sMosaicEffectName,
-				oMosaicEffectOptions,
-				iMosaicEffectDuration,
-				function(){
+            $('#brick_content_mosaic .mosaic-group.ipb-is-visible').removeClass('ipb-is-visible');
                     // Showing level
 					if(!bLevelLoaded)
 					{
@@ -72,10 +69,9 @@
 					}
 					else
 					{
-					    oLevelElem.show(sMosaicEffectName, oMosaicEffectOptions, iMosaicEffectDuration, function(){ buildBreadcrumb(); });
+                        oLevelElem.addClass('ipb-is-visible');
+					    buildBreadcrumb();
 					}
-				}
-			);
 		};
 		// Registers the toggle listeners on the tree nodes. Used after every AJAX calls.
 		var registerToggleListeners = function()
@@ -161,7 +157,7 @@
                 // Building back button
                 if( $('div[data-level-id="'+nodeId+'"] .mosaic-group-back').length === 0 ) {
                     var backElem = $('<div></div>').addClass('mosaic-group-item').addClass('mosaic-group-back');
-                    var aElem = $('<a></a>').addClass('mosaic-item').addClass('mosaic-rollup').attr('href', '#').attr('data-level-id', upperlevelId).html('<div class="mosaic-item-text"><span class="glyphicon glyphicon-arrow-left"></span></div>');
+                    var aElem = $('<a></a>').addClass('mosaic-item').addClass('mosaic-rollup').attr('href', '#').attr('data-level-id', upperlevelId).html('<div class="mosaic-item-image"><span class="glyphicon glyphicon-arrow-left"></span></div><div class="mosaic-item-text"><div class="mosaic-item-name">{{ 'Brick:Portal:Browse:Mosaic:Back'|dict_s }}</div></div>');
 
                     backElem.append(aElem);
                     $('div[data-level-id="' + nodeId + '"]').append(backElem);
@@ -171,8 +167,14 @@
 			{
                 $('div[data-level-id="'+nodeId+'"]').html('');
 			}
-			
-			$.each(data, function(i, item){
+            
+            // Used to calculate delay for each item for their animation
+            let index = 0;
+            let totalDuration = 500; 
+            let delayStep = totalDuration / Object.keys(data).length / 1000;
+            $('div[data-level-id="' + nodeId + '"]').css("--delay",`${delayStep}s`)
+            
+            $.each(data, function(i, item){
 				var levelId = item.level_alias+'::'+item.id;
 				var levelAltId = item.level_alias+'_'+item.id;
 				var levelActions = oLevelsProperties[item.level_alias].actions;
@@ -182,6 +184,7 @@
 
                 // Building node
                 var itemElem  = $('<div></div>').addClass('mosaic-group-item');
+                itemElem.css("--index", index++)
 				var aElem   = $('<a></a>').addClass('mosaic-item').attr('data-item-id', item.id).attr('href', '#').attr('data-level-alias', item.level_alias);
 				var iItemFlags = 0;
                 // - Adding stub div
@@ -194,6 +197,10 @@
                 {
                     iItemFlags += 4;
                     aElem.append( $('<div></div>').addClass('mosaic-item-image').append( $('<img />').attr('src', item.image) ) );
+                }
+                else if ((item.name !== undefined) && (item.name !== '')){
+                    iItemFlags += 4;
+                    aElem.append( $('<div></div>').addClass('mosaic-item-image').append( $('<span>'+item.name.charAt(0)+'</span>') ) );
                 }
                 // - Adding name
                 if( (item.name !== undefined) && (item.name !== '') )
@@ -262,10 +269,8 @@
 					var actionsElem = $('<div></div>').addClass('mosaic-group-item-actions');
 					itemElem.append(actionsElem);
 					// Preparing secondary actions menu
-					var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
-					var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
-					var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
-					actionsSSMenuElem.append(actionsSSMenuContainerElem);
+					var actionsSSTogglerElem = $('<a class="ipb-button ipb-is-alternative ipb-is-default fas fa-ellipsis-v" data-toggle="ipb-dropdown" data-target="#item-actions-menu-'+levelAltId+'"></a>');
+					var actionsSSMenuElem = $('<ipb-dropdown id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper" data-placement="left-bottom"></ipb-dropdown>');
 					actionsElem.append(actionsSSTogglerElem);
 					actionsElem.append(actionsSSMenuElem);
 
@@ -274,7 +279,7 @@
 					{
 						var action = actionsButtons[j];
 						var actionElem = $('<a></a>');
-						var actionIconElem = $('<span></span>').appendTo(actionElem);
+						var actionIconElem = $('<span></span>').addClass('ipb-dropdown--icon').appendTo(actionElem);
 						
 						switch(action.type)
 						{
@@ -308,7 +313,7 @@
 						}
 						
 						actionElem.append(action.title);
-						actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
+                        actionsSSMenuElem.append( $('<li></li>').append(actionElem) );
 					}
 				}
 				
@@ -347,7 +352,7 @@
 			    bLeafLevel = true;
 
                 // Retrieving current level id
-                var sCurrentLevelId = $('#brick_content_mosaic > .mosaic-group:visible').attr('data-level-id');
+                var sCurrentLevelId = $('#brick_content_mosaic > .mosaic-group.ipb-is-visible').attr('data-level-id');
                 aCurrentLevelParts = sCurrentLevelId.split('::');
 
                 // Emptying breadcrumb

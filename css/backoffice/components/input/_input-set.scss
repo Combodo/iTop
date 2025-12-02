@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -47,7 +47,7 @@ $ibo-input-set--item--box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb
 /* CSS rules from the old style, retrieved almost as is. Do not change the classes names in the markup without second thought as they are used by the portal as well */
 /* - Item style, always the same in read-only or edition */
 %ibo-input-set--item {
-  display: inline-block;
+  display: inline-flex;
   margin-top: $ibo-input-set--item--margin-y;
   margin-right: 0;
   margin-bottom: $ibo-input-set--item--margin-y;

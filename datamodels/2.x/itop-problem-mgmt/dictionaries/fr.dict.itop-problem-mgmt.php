@@ -1,28 +1,16 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-//
-// Class: Problem
-//
-Dict::Add('FR FR', 'French', 'Français', array(
+/**
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:ProblemManagement' => 'Gestion des problèmes',
 	'Menu:ProblemManagement+' => '',
 	'Menu:Problem:Overview' => 'Vue d\'ensemble',
@@ -45,12 +33,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Problèmes',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Tableau de bord de la Gestion des Problèmes',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Problem' => 'Problème',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Etat',
@@ -111,10 +99,28 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Erreurs connues',
 	'Class:Problem/Attribute:knownerrors_list+' => 'Toutes les erreurs connues liées à ce problème',
+	'Class:Problem/Attribute:knownerrors_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Problem/Attribute:knownerrors_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Problem/Attribute:knownerrors_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Problem/Attribute:knownerrors_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Problem/Attribute:knownerrors_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Problem/Attribute:knownerrors_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 	'Class:Problem/Attribute:related_request_list' => 'Requêtes liées',
 	'Class:Problem/Attribute:related_request_list+' => 'Toutes les requêtes liées à ce problème',
+	'Class:Problem/Attribute:related_request_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Problem/Attribute:related_request_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Problem/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Problem/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Problem/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Problem/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 	'Class:Problem/Attribute:related_incident_list' => 'Incidents liés',
 	'Class:Problem/Attribute:related_incident_list+' => 'Tous les incidents liés à ce problème',
+	'Class:Problem/Attribute:related_incident_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Problem/Attribute:related_incident_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Problem/Attribute:related_incident_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Problem/Attribute:related_incident_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Problem/Attribute:related_incident_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Problem/Attribute:related_incident_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
 	'Class:Problem/Stimulus:ev_assign' => 'Assigner',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => 'Réaassigner',
@@ -123,25 +129,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Fermer',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
-// 1:n relations custom labels for tooltip and pop-up title
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Problem/Attribute:knownerrors_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:Problem/Attribute:knownerrors_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Problem/Attribute:knownerrors_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Problem/Attribute:knownerrors_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:Problem/Attribute:knownerrors_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Problem/Attribute:knownerrors_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:Problem/Attribute:related_incident_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Problem/Attribute:related_incident_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Problem/Attribute:related_incident_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Problem/Attribute:related_incident_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:Problem/Attribute:related_incident_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Problem/Attribute:related_incident_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Problem/Attribute:related_request_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:Problem/Attribute:related_request_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Problem/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Problem/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:Problem/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Problem/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s'
-));
+]);

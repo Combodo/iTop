@@ -1,9 +1,10 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,7 +17,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Authent External
  * User authentication Module, for authentication outside of the iTop application
@@ -26,48 +26,48 @@
  * Similarly once inside iTop, there is no way for the users to change their password or
  * log off from the iTop application, this has to be handled outside of iTop.
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 class UserExternal extends User
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "addon/authentication,grant_by_profile,silo",
 			"key_type"            => "autoincrement",
 			"name_attcode"        => "login",
 			"state_attcode"       => "",
-			"reconc_keys"         => array('login'),
+			"reconc_keys"         => ['login'],
 			"db_table"            => "",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details',
-			array(
+		MetaModel::Init_SetZListItems(
+			'details',
+			[
 				'col:col1' =>
-					array(
-						'fieldset:User:info' => array('contactid', 'org_id', 'email', 'login', 'language', 'status'),
-					),
+					[
+						'fieldset:User:info' => ['contactid', 'org_id', 'email', 'login', 'language', 'status'],
+					],
 				'col:col2' =>
-					array(
-						'fieldset:User:profiles' => array('profile_list'),
-					),
+					[
+						'fieldset:User:profiles' => ['profile_list'],
+					],
 				'allowed_org_list',
 				'log',
-			)
+			]
 		); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login', 'status')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', ['first_name', 'last_name', 'login', 'status']); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', ['login', 'contactid', 'status', 'org_id']); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', ['login', 'contactid', 'status', 'org_id']); // Criteria of the advanced search form
 	}
 
 	/**
@@ -97,6 +97,3 @@ class UserExternal extends User
 		return false;
 	}
 }
-
-
-?>

@@ -1,8 +1,10 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm;
 
 use AttributeCaseLog;
@@ -24,10 +26,11 @@ class CaseLogEntryForm extends UIContentBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-caselog-entry-form';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/caselog-entry-form/layout';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/caselog-entry-form/layout';
+	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/caselog-entry-form/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/layouts/activity-panel/caselog-entry-form.js',
 	];
+	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
 
 	/** @var string Form is autonomous and can send data on its own */
 	public const ENUM_SUBMIT_MODE_AUTONOMOUS = 'autonomous';
@@ -159,7 +162,7 @@ class CaseLogEntryForm extends UIContentBlock
 	 */
 	public function SetSubmitModeFromHostObjectMode($sObjectMode)
 	{
-		switch ($sObjectMode){
+		switch ($sObjectMode) {
 			case cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE:
 			case cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT:
 				$sSubmitMode = static::ENUM_SUBMIT_MODE_BRIDGED;
@@ -216,12 +219,23 @@ class CaseLogEntryForm extends UIContentBlock
 		$this->oTextInput = new RichText();
 
 		// Add the "host_class" to the mention endpoints so it can filter objects regarding the triggers
+		// Mind that `&needle=` must be ending the endpoint URL in order for the JS plugin to append the needle string
 		$aConfig = $this->oTextInput->GetConfig();
-		if (isset($aConfig['mentions'])) {
-			foreach ($aConfig['mentions'] as $iIdx => $aData) {
-				$sFeed = $aConfig['mentions'][$iIdx]['feed'];
+		if (isset($aConfig['mention']['feeds'])) {
+			foreach ($aConfig['mention']['feeds'] as $iIdx => $aData) {
+				$sFeed = $aConfig['mention']['feeds'][$iIdx]['feed_ajax_options']['url'];
+
+				// Remove existing "needle" parameter
+				$sFeed = str_replace('&needle=', '', $sFeed);
+
+				// Add new parameters
 				$sFeed = utils::AddParameterToUrl($sFeed, 'host_class', $this->GetObjectClass());
-				$aConfig['mentions'][$iIdx]['feed'] = utils::AddParameterToUrl($sFeed, 'host_id', $this->GetObjectId());
+				$sFeed = utils::AddParameterToUrl($sFeed, 'host_id', $this->GetObjectId());
+
+				// Re-append "needle" parameter
+				$sFeed = utils::AddParameterToUrl($sFeed, 'needle', '');
+
+				$aConfig['mention']['feeds'][$iIdx]['feed_ajax_options']['url'] = $sFeed;
 			}
 		}
 		$this->oTextInput->SetConfig($aConfig);
@@ -312,5 +326,5 @@ class CaseLogEntryForm extends UIContentBlock
 
 		return $aSubBlocks;
 	}
-	
+
 }

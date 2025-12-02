@@ -1,60 +1,72 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+/**
+ *
+ */
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:AuditCategory' => 'Kategória auditu',
-	'Class:AuditCategory+' => '',
+	'Class:AuditCategory+' => 'Audit category defines a scope of objects which needs to be audited.
+It groups all audit rules applying to that object scope~~',
 	'Class:AuditCategory/Attribute:name' => 'Názov kategórie',
-	'Class:AuditCategory/Attribute:name+' => '',
+	'Class:AuditCategory/Attribute:name+' => 'Identify a scope of objects to audit~~',
 	'Class:AuditCategory/Attribute:description' => 'Popis kategórie auditu',
-	'Class:AuditCategory/Attribute:description+' => '',
+	'Class:AuditCategory/Attribute:description+' => 'Long description for this audit category~~',
 	'Class:AuditCategory/Attribute:definition_set' => 'Definícia nastavená',
-	'Class:AuditCategory/Attribute:definition_set+' => '',
+	'Class:AuditCategory/Attribute:definition_set+' => 'OQL query defining the set of objects to audit~~',
 	'Class:AuditCategory/Attribute:rules_list' => 'Pravidlá auditu',
-	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules for this category~~',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Audit rules using the object scope of this category~~',
 	'Class:AuditCategory/Attribute:ok_error_tolerance' => 'Warning threshold~~',
 	'Class:AuditCategory/Attribute:ok_error_tolerance+' => 'Percentage of invalid objects below which the result is a warning (orange)~~',
 	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error threshold~~',
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
-	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
-));
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:AuditRule' => 'Pravidlo auditu',
-	'Class:AuditRule+' => '',
+	'Class:AuditRule+' => 'An audit rule corresponds a single check within an audit category.
+It is applied on the scope of objects defined by the audit category~~',
 	'Class:AuditRule/Attribute:name' => 'Názov pravidla',
-	'Class:AuditRule/Attribute:name+' => '',
+	'Class:AuditRule/Attribute:name+' => 'Short name for this rule~~',
 	'Class:AuditRule/Attribute:description' => 'Popis pravidla auditu',
-	'Class:AuditRule/Attribute:description+' => '',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:AuditRule/Attribute:description+' => 'What is checked?~~',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Spustenie dopytu',
-	'Class:AuditRule/Attribute:query+' => '',
+	'Class:AuditRule/Attribute:query+' => 'The OQL expression to run. Returned classes must be aligned with those of the category\'s scope~~',
 	'Class:AuditRule/Attribute:valid_flag' => 'Platný objekt?',
-	'Class:AuditRule/Attribute:valid_flag+' => '',
+	'Class:AuditRule/Attribute:valid_flag+' => 'Does the query to run returns valid or invalid objects?
+"Valid objects": then objects in error are those part of the scope and not in the list of valid objects,
+"Invalid objects": then objects in error are the invalid objects which are part of the scope~~',
 	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'Správny',
-	'Class:AuditRule/Attribute:valid_flag/Value:true+' => '',
+	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'Then objects in error are those part of the scope and not in the list of valid objects~~',
 	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'Nesprávný',
-	'Class:AuditRule/Attribute:valid_flag/Value:false+' => '',
+	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'Then objects in error are the invalid objects which are part of the scope~~',
 	'Class:AuditRule/Attribute:category_id' => 'Kategória',
-	'Class:AuditRule/Attribute:category_id+' => '',
+	'Class:AuditRule/Attribute:category_id+' => 'The category of this rule~~',
 	'Class:AuditRule/Attribute:category_name' => 'Kategória',
-	'Class:AuditRule/Attribute:category_name+' => ''
-));
+	'Class:AuditRule/Attribute:category_name+' => 'Name of the category of this rule~~',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -66,13 +78,13 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -83,19 +95,19 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Query' => 'Dopyt',
-	'Class:Query+' => '',
+	'Class:Query+' => 'A query is a data set defined in a dynamic way~~',
 	'Class:Query/Attribute:name' => 'Názov',
-	'Class:Query/Attribute:name+' => '',
+	'Class:Query/Attribute:name+' => 'Identifies the query~~',
 	'Class:Query/Attribute:description' => 'Popis',
-	'Class:Query/Attribute:description+' => '',
+	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)~~',
 	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
 	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
 	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
@@ -113,10 +125,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:QueryOQL/Attribute:fields' => 'Polia',
 	'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export~~',
 	'Class:QueryOQL' => 'OQL Dopyt',
-	'Class:QueryOQL+' => '',
+	'Class:QueryOQL+' => 'A query based on the Object Query Language~~',
 	'Class:QueryOQL/Attribute:oql' => 'Výraz',
-	'Class:QueryOQL/Attribute:oql+' => '',
-));
+	'Class:QueryOQL/Attribute:oql+' => 'OQL Expression~~',
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -127,29 +139,29 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 // Class: User
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:User' => 'Užívateľ',
-	'Class:User+' => '',
+	'Class:User+' => 'User login~~',
 	'Class:User/Attribute:finalclass' => 'Typ účtu',
-	'Class:User/Attribute:finalclass+' => '',
+	'Class:User/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:User/Attribute:contactid' => 'Kontakt (osoba)',
-	'Class:User/Attribute:contactid+' => '',
+	'Class:User/Attribute:contactid+' => 'Mandatory for a User Portal and highly recommended for all but technical accounts~~',
 	'Class:User/Attribute:org_id' => 'Organizácia',
 	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Priezvisko',
-	'Class:User/Attribute:last_name+' => '',
+	'Class:User/Attribute:last_name+' => 'Name of the corresponding contact~~',
 	'Class:User/Attribute:first_name' => 'Krstné meno',
-	'Class:User/Attribute:first_name+' => '',
+	'Class:User/Attribute:first_name+' => 'First name of the corresponding contact~~',
 	'Class:User/Attribute:email' => 'Email',
-	'Class:User/Attribute:email+' => '',
+	'Class:User/Attribute:email+' => 'Email of the corresponding contact~~',
 	'Class:User/Attribute:login' => 'Prihlasovacie meno',
-	'Class:User/Attribute:login+' => '',
+	'Class:User/Attribute:login+' => 'Account identification string, must be unique within '.ITOP_APPLICATION_SHORT.'~~',
 	'Class:User/Attribute:language' => 'Jazyk',
-	'Class:User/Attribute:language+' => '',
+	'Class:User/Attribute:language+' => 'Default '.ITOP_APPLICATION_SHORT.' language for this user, to choose amoungst languages in which '.ITOP_APPLICATION_SHORT.' was localized . ~~',
 	'Class:User/Attribute:language/Value:EN US' => 'Angličtina',
-	'Class:User/Attribute:language/Value:EN US+' => '',
+	'Class:User/Attribute:language/Value:EN US+' => 'English (U.S.)~~',
 	'Class:User/Attribute:language/Value:FR FR' => 'Francúzština',
-	'Class:User/Attribute:language/Value:FR FR+' => '',
+	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)~~',
 	'Class:User/Attribute:profile_list' => 'Profily',
 	'Class:User/Attribute:profile_list+' => 'Roles, granting rights for that person~~',
 	'Class:User/Attribute:allowed_org_list' => 'Povolené organizácie',
@@ -160,192 +172,196 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled~~',
 	'Class:User/Error:LoginMustBeUnique' => 'Prihlasovacie meno musí byť jedinečné - "%1s" sa už používa.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Aspoň jeden profil musí byť priradený k profilu.',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'You cannot remove your own rights to edit Users~~',
+	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
 	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
+	'Class:User/Warning:NoOrganizationMeansFullAccess' => 'No "Allowed Organizations" defined for this user, this means they have access to all organizations~~',
+	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'User Internal~~',
 	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT.'~~',
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_Profiles' => 'Profily',
-	'Class:URP_Profiles+' => '',
+	'Class:URP_Profiles+' => 'User profile~~',
 	'Class:URP_Profiles/Attribute:name' => 'Názov',
-	'Class:URP_Profiles/Attribute:name+' => '',
+	'Class:URP_Profiles/Attribute:name+' => '~~',
 	'Class:URP_Profiles/Attribute:description' => 'Popis',
-	'Class:URP_Profiles/Attribute:description+' => '',
+	'Class:URP_Profiles/Attribute:description+' => 'one line description~~',
 	'Class:URP_Profiles/Attribute:user_list' => 'Užívatelia',
-	'Class:URP_Profiles/Attribute:user_list+' => '',
-));
+	'Class:URP_Profiles/Attribute:user_list+' => 'persons having this role~~',
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_Dimensions' => 'Rozmery',
-	'Class:URP_Dimensions+' => '',
+	'Class:URP_Dimensions+' => 'application dimension (defining silos)~~',
 	'Class:URP_Dimensions/Attribute:name' => 'Názov rozmeru',
-	'Class:URP_Dimensions/Attribute:name+' => '',
+	'Class:URP_Dimensions/Attribute:name+' => '~~',
 	'Class:URP_Dimensions/Attribute:description' => 'Popis rozmeru',
-	'Class:URP_Dimensions/Attribute:description+' => '',
+	'Class:URP_Dimensions/Attribute:description+' => 'one line description~~',
 	'Class:URP_Dimensions/Attribute:type' => 'Typ rozmeru',
-	'Class:URP_Dimensions/Attribute:type+' => '',
-));
+	'Class:URP_Dimensions/Attribute:type+' => 'class name or data type (projection unit)~~',
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_UserProfile' => 'Z užívateľa na profil',
-	'Class:URP_UserProfile+' => '',
+	'Class:URP_UserProfile+' => 'user profiles~~',
 	'Class:URP_UserProfile/Name' => 'Spojenie medzi %1$s a %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Užívateľ',
-	'Class:URP_UserProfile/Attribute:userid+' => '',
+	'Class:URP_UserProfile/Attribute:userid+' => 'user account~~',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Prihlasovacie meno',
-	'Class:URP_UserProfile/Attribute:userlogin+' => '',
+	'Class:URP_UserProfile/Attribute:userlogin+' => 'User\'s login~~',
 	'Class:URP_UserProfile/Attribute:profileid' => 'Profil',
-	'Class:URP_UserProfile/Attribute:profileid+' => '',
+	'Class:URP_UserProfile/Attribute:profileid+' => 'usage profile~~',
 	'Class:URP_UserProfile/Attribute:profile' => 'Profil',
-	'Class:URP_UserProfile/Attribute:profile+' => '',
+	'Class:URP_UserProfile/Attribute:profile+' => 'Profile name~~',
 	'Class:URP_UserProfile/Attribute:reason' => 'Dôvod',
-	'Class:URP_UserProfile/Attribute:reason+' => '',
-));
+	'Class:URP_UserProfile/Attribute:reason+' => 'explain why this person may have this role~~',
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_UserOrg' => 'Užívateľské organizácie',
-	'Class:URP_UserOrg+' => '',
+	'Class:URP_UserOrg+' => 'Allowed organizations~~',
 	'Class:URP_UserOrg/Name' => 'Spojenie medzi %1$s a %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Užívateľ',
-	'Class:URP_UserOrg/Attribute:userid+' => '',
+	'Class:URP_UserOrg/Attribute:userid+' => 'user account~~',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Prihlasovacie meno',
-	'Class:URP_UserOrg/Attribute:userlogin+' => '',
+	'Class:URP_UserOrg/Attribute:userlogin+' => 'User\'s login~~',
 	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organizácia',
-	'Class:URP_UserOrg/Attribute:allowed_org_id+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_id+' => 'Allowed organization~~',
 	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Názov povolenej organizácie',
-	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Allowed organization~~',
 	'Class:URP_UserOrg/Attribute:reason' => 'Dôvod',
-	'Class:URP_UserOrg/Attribute:reason+' => '',
-));
+	'Class:URP_UserOrg/Attribute:reason+' => 'explain why this person is allowed to see the data belonging to this organization~~',
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_ProfileProjection' => 'Projekcia profilu',
-	'Class:URP_ProfileProjection+' => '',
+	'Class:URP_ProfileProjection+' => 'profile projections~~',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'ID rozmeru',
-	'Class:URP_ProfileProjection/Attribute:dimensionid+' => '',
+	'Class:URP_ProfileProjection/Attribute:dimensionid+' => 'application dimension~~',
 	'Class:URP_ProfileProjection/Attribute:dimension' => 'Rozmer',
-	'Class:URP_ProfileProjection/Attribute:dimension+' => '',
+	'Class:URP_ProfileProjection/Attribute:dimension+' => 'application dimension~~',
 	'Class:URP_ProfileProjection/Attribute:profileid' => 'ID Profilu',
-	'Class:URP_ProfileProjection/Attribute:profileid+' => '',
+	'Class:URP_ProfileProjection/Attribute:profileid+' => 'usage profile~~',
 	'Class:URP_ProfileProjection/Attribute:profile' => 'Profil',
-	'Class:URP_ProfileProjection/Attribute:profile+' => '',
+	'Class:URP_ProfileProjection/Attribute:profile+' => 'Profile name~~',
 	'Class:URP_ProfileProjection/Attribute:value' => 'Hodnota',
-	'Class:URP_ProfileProjection/Attribute:value+' => '',
+	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL expression (using $user) | constant |  | +attribute code~~',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Atribút',
-	'Class:URP_ProfileProjection/Attribute:attribute+' => '',
-));
+	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Target attribute code (optional)~~',
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_ClassProjection' => 'Projekcia triedy',
-	'Class:URP_ClassProjection+' => '',
+	'Class:URP_ClassProjection+' => 'class projections~~',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'ID rozmeru',
-	'Class:URP_ClassProjection/Attribute:dimensionid+' => '',
+	'Class:URP_ClassProjection/Attribute:dimensionid+' => 'application dimension~~',
 	'Class:URP_ClassProjection/Attribute:dimension' => 'Rozmer',
-	'Class:URP_ClassProjection/Attribute:dimension+' => '',
+	'Class:URP_ClassProjection/Attribute:dimension+' => 'application dimension~~',
 	'Class:URP_ClassProjection/Attribute:class' => 'Trieda',
-	'Class:URP_ClassProjection/Attribute:class+' => '',
+	'Class:URP_ClassProjection/Attribute:class+' => 'Target class~~',
 	'Class:URP_ClassProjection/Attribute:value' => 'Hodnota',
-	'Class:URP_ClassProjection/Attribute:value+' => '',
+	'Class:URP_ClassProjection/Attribute:value+' => 'OQL expression (using $this) | constant |  | +attribute code~~',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Atribút',
-	'Class:URP_ClassProjection/Attribute:attribute+' => '',
-));
+	'Class:URP_ClassProjection/Attribute:attribute+' => 'Target attribute code (optional)~~',
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_ActionGrant' => 'Povolenia akcie',
-	'Class:URP_ActionGrant+' => '',
+	'Class:URP_ActionGrant+' => 'permissions on classes~~',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profil',
-	'Class:URP_ActionGrant/Attribute:profileid+' => '',
+	'Class:URP_ActionGrant/Attribute:profileid+' => 'usage profile~~',
 	'Class:URP_ActionGrant/Attribute:profile' => 'Profil',
-	'Class:URP_ActionGrant/Attribute:profile+' => '',
+	'Class:URP_ActionGrant/Attribute:profile+' => 'usage profile~~',
 	'Class:URP_ActionGrant/Attribute:class' => 'Trieda',
-	'Class:URP_ActionGrant/Attribute:class+' => '',
+	'Class:URP_ActionGrant/Attribute:class+' => 'Target class~~',
 	'Class:URP_ActionGrant/Attribute:permission' => 'Povolenie',
-	'Class:URP_ActionGrant/Attribute:permission+' => '',
+	'Class:URP_ActionGrant/Attribute:permission+' => 'allowed or not allowed?~~',
 	'Class:URP_ActionGrant/Attribute:permission/Value:yes' => 'Áno',
-	'Class:URP_ActionGrant/Attribute:permission/Value:yes+' => '',
+	'Class:URP_ActionGrant/Attribute:permission/Value:yes+' => 'yes~~',
 	'Class:URP_ActionGrant/Attribute:permission/Value:no' => 'Nie',
-	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => '',
+	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'no~~',
 	'Class:URP_ActionGrant/Attribute:action' => 'Akcia',
-	'Class:URP_ActionGrant/Attribute:action+' => '',
-));
+	'Class:URP_ActionGrant/Attribute:action+' => 'operations to perform on the given class~~',
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_StimulusGrant' => 'Povolenia stimulu',
-	'Class:URP_StimulusGrant+' => '',
+	'Class:URP_StimulusGrant+' => 'permissions on stimulus in the life cycle of the object~~',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'ID Profilu',
-	'Class:URP_StimulusGrant/Attribute:profileid+' => '',
+	'Class:URP_StimulusGrant/Attribute:profileid+' => 'usage profile~~',
 	'Class:URP_StimulusGrant/Attribute:profile' => 'Profil',
-	'Class:URP_StimulusGrant/Attribute:profile+' => '',
+	'Class:URP_StimulusGrant/Attribute:profile+' => 'usage profile~~',
 	'Class:URP_StimulusGrant/Attribute:class' => 'Trieda',
-	'Class:URP_StimulusGrant/Attribute:class+' => '',
+	'Class:URP_StimulusGrant/Attribute:class+' => 'Target class~~',
 	'Class:URP_StimulusGrant/Attribute:permission' => 'Povolenie',
-	'Class:URP_StimulusGrant/Attribute:permission+' => '',
+	'Class:URP_StimulusGrant/Attribute:permission+' => 'allowed or not allowed?~~',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => 'Áno',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => '',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => 'yes~~',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no' => 'Nie',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => '',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no~~',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Podnet',
-	'Class:URP_StimulusGrant/Attribute:stimulus+' => '',
-));
+	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'stimulus code~~',
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:URP_AttributeGrant' => 'Udelenie atribútu',
-	'Class:URP_AttributeGrant+' => '',
+	'Class:URP_AttributeGrant+' => 'permissions at the attributes level~~',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Udelenie akcie',
-	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => '',
+	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant~~',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Kód atribútu',
-	'Class:URP_AttributeGrant/Attribute:attcode+' => '',
-));
+	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code~~',
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:UserDashboard' => 'User dashboard~~',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'User~~',
@@ -354,85 +370,41 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-));
-
-//
-// Expression to Natural language
-//
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:WelcomeMenu' => 'Vitajte',
-	'Menu:WelcomeMenu+' => '',
+	'Menu:WelcomeMenu+' => 'Welcome to '.ITOP_APPLICATION_SHORT.'~~',
 	'Menu:WelcomeMenuPage' => 'Vitajte',
-	'Menu:WelcomeMenuPage+' => '',
+	'Menu:WelcomeMenuPage+' => 'Welcome to '.ITOP_APPLICATION_SHORT.'~~',
 	'Menu:AdminTools' => 'Administrátorské pomôcky',
-	'Menu:AdminTools+' => '',
+	'Menu:AdminTools+' => 'Administration tools~~',
 	'Menu:AdminTools?' => 'Pomôcky prístupné iba užívateľom majúcim administrátorský profil',
 	'Menu:CSVImportMenu' => 'CSV import',
-	'Menu:CSVImportMenu+' => '',
+	'Menu:CSVImportMenu+' => 'Bulk creation or update~~',
 	'Menu:DataModelMenu' => 'Dátový model',
-	'Menu:DataModelMenu+' => '',
+	'Menu:DataModelMenu+' => 'Overview of the data model~~',
 	'Menu:ExportMenu' => 'Export',
-	'Menu:ExportMenu+' => '',
+	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML~~',
 	'Menu:NotificationsMenu' => 'Upozornenia',
-	'Menu:NotificationsMenu+' => '',
+	'Menu:NotificationsMenu+' => 'Configuration of the Notifications~~',
 	'Menu:MyShortcuts' => 'Moje skratky',
 	'Menu:DataAdministration' => 'Dátová administrácia',
-	'Menu:DataAdministration+' => '',
-));
+	'Menu:DataAdministration+' => '~~',
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'BooleanLabel:yes' => 'yes~~',
 	'BooleanLabel:no' => 'no~~',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
 	'UI:WelcomeMenu:Title' => 'Vitajte v '.ITOP_APPLICATION_SHORT,
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' je kompletne voľne šíriteľný operačný IT program.</p>
-	
-<ul>Zahŕňa:
-<li>Kompletnú CMDB (Konfiguračná databáza manažmentu) pre zdokumentovanie a manažovanie IT inventáru.</li>
-<li>Modul manažmentu incidentov pre sledovanie a komunikovanie o všetkých problémoch vyskytujúcich sa v IT.</li>
-<li>Modul manažmentu zmien pre plánovanie a sledovanie zmien v IT prostredí.</li>
-<li>Databáza známych chýb pre urýchlenie riešenia incidentov.</li>
-<li>Modul výpadkov pre zdokumentovanie všetkých plánovaných výpadkov a oboznámenie vhodných kontaktov o výpadkoch.</li>
-<li>Dashboard panel pre rýchle získanie prehľadu o Vašom IT.</li>
-</ul>
-<p>Všetky moduly môžu byť nastavené, krok po kroku, nezávisle jeden od druhého.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' orientovaný na poskytovateľa služieb, dovoľuje IT technikom ľahko manažovať viacerých zákazníkov alebo organizácií.
-<ul>iTop, dodáva súbor biznis procesov bohatých na služby, ktoré:
-<li>Zdokonalujú efektivitu IT manažmentu</li> 
-<li>Poháňa výkon IT operácií</li> 
-<li>Zlepšuje spokojnosť zákazníka a poskytuje vedúcim osobám náhľad do výkonu biznisu.</li>
-</ul>
-</p>
-<p>iTop je kompletne otvorený myšlienke byť integrovaný vo Vašej súčasnej infraštruktúre IT manažmentu.</p>
-<p>
-<ul>Adoptovanie tejto novej generácie IT operačného portálu Vám pomôže:
-<li>Lepšie manažovať viac a viac zložitejšie IT prostredie.</li>
-<li>Implementovať ITIL procesy Vaším vlastným tempom.</li>
-<li>Manažovať najdôležitejšie aktíva Vášho IT: Dokumentáciu.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Otvoriť žiadosť: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Moje žiadosti',
 	'UI:WelcomeMenu:OpenIncidents' => 'Otvoriť incidenty: %1$d',
@@ -440,8 +412,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:WelcomeMenu:MyIncidents' => 'Mne priradené incidenty',
 	'UI:AllOrganizations' => ' Všetky organizácie ',
 	'UI:YourSearch' => 'Vaše vyhľadávanie',
-	'UI:LoggedAsMessage' => 'Prihlásený ako %1$s (%2$s)~~',
-	'UI:LoggedAsMessage+Admin' => 'Prihlásený ako %1$s (%2$s, Administrátor)~~',
+	'UI:LoggedAsMessage' => 'Prihlásený ako %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin' => 'Prihlásený ako %1$s (%2$s, Administrátor)',
 	'UI:Button:Logoff' => 'Odhlásenie',
 	'UI:Button:GlobalSearch' => 'Globálne Vyhľadávanie',
 	'UI:Button:Search' => ' Vyhľadávanie',
@@ -488,7 +460,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
 	'UI:InputFile:SelectFile' => 'Select a file~~',
 	'UI:SearchToggle' => 'Vyhľadávanie',
-	'UI:ClickToCreateNew' => 'Vytvoriť nové %1$s~~',
+	'UI:ClickToCreateNew' => 'Vytvoriť nové %1$s',
 	'UI:SearchFor_Class' => 'Vyhľadávanie pre %1$s objekty',
 	'UI:NoObjectToDisplay' => 'Žiadny objekt na zobrazenie.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
@@ -497,7 +469,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by je povinný. Skontrolujte definíciu šablóny zobrazenia.',
 	'UI:Error:InvalidGroupByFields' => 'Neplatný zoznam polí pre skupinu podľa: "%1$s".',
 	'UI:Error:UnsupportedStyleOfBlock' => 'Chyba: nepodporovaný štýl bloku: "%1$s".',
-	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Nesprávna definícia spojenia : trieda objektov na manažovanie : %l$s nebol nájdený ako externý kľúč v triede %2$s',
+	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Nesprávna definícia spojenia : trieda objektov na manažovanie : %1$s nebol nájdený ako externý kľúč v triede %2$s',
 	'UI:Error:Object_Class_Id_NotFound' => 'Objekt: %1$s:%2$d nebol nájdený.',
 	'UI:Error:WizardCircularReferenceInDependencies' => 'Chyba: Cyklický odkaz v závislostiach medzi poliami, skontrolujte dátový model.',
 	'UI:Error:UploadedFileTooBig' => 'Nahraný súbor je príliš veľký. (Max povolená veľkosť je %1$s). Ak chcete zmeniť tento limit, obráťte sa na správcu ITOP . (Skontrolujte, PHP konfiguráciu pre upload_max_filesize a post_max_size na serveri).',
@@ -529,7 +501,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 	'UI:GroupBy:Count' => 'Počet',
-	'UI:GroupBy:Count+' => '',
+	'UI:GroupBy:Count+' => 'Number of elements~~',
 	'UI:CountOfObjects' => '%1$d objekt/y/ov sa nezhoduje s kritériami.',
 	'UI_CountOfObjectsShort' => '%1$d objekt/y/ov.',
 	'UI:NoObject_Class_ToDisplay' => 'Žiadne %1$s na zobrazenie',
@@ -537,20 +509,20 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:HistoryTab' => 'História',
 	'UI:NotificationsTab' => 'Upozornenia',
 	'UI:History:BulkImports' => 'História',
-	'UI:History:BulkImports+' => '',
+	'UI:History:BulkImports+' => 'List of CSV imports (latest import first)~~',
 	'UI:History:BulkImportDetails' => 'Zmeny vyplývajúce z importu CSV vykonané %1$s (%2$s)',
 	'UI:History:Date' => 'Dátum',
-	'UI:History:Date+' => '',
+	'UI:History:Date+' => 'Date of the change~~',
 	'UI:History:User' => 'Užívateľ',
-	'UI:History:User+' => '',
+	'UI:History:User+' => 'User who made the change~~',
 	'UI:History:Changes' => 'Zmeny',
-	'UI:History:Changes+' => '',
+	'UI:History:Changes+' => 'Changes made to the object~~',
 	'UI:History:StatsCreations' => 'Vytvorený',
-	'UI:History:StatsCreations+' => '',
+	'UI:History:StatsCreations+' => 'Count of objects created~~',
 	'UI:History:StatsModifs' => 'Upravený',
-	'UI:History:StatsModifs+' => '',
+	'UI:History:StatsModifs+' => 'Count of objects modified~~',
 	'UI:History:StatsDeletes' => 'Vymazané',
-	'UI:History:StatsDeletes+' => '',
+	'UI:History:StatsDeletes+' => 'Count of objects deleted~~',
 	'UI:Loading' => 'Načitavam...',
 	'UI:Menu:Actions' => 'Akcie',
 	'UI:Menu:OtherActions' => 'Ostatné akcie',
@@ -562,6 +534,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:Manage' => 'Manažovať...',
 	'UI:Menu:EMail' => 'eMail',
 	'UI:Menu:CSVExport' => 'CSV Export',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Upraviť...',
 	'UI:Menu:Delete' => 'Vymazať...',
 	'UI:Menu:BulkDelete' => 'Vymazať...',
@@ -582,7 +555,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:OQLQueryBuilderTitle' => 'Stavba OQL dopytu',
 	'UI:OQLQueryTab' => 'OQL Dopyt',
 	'UI:SimpleSearchTab' => 'Jednoduché vyhľadávanie',
-	'UI:Details+' => '',
+	'UI:Details+' => 'Details~~',
 	'UI:SearchValue:Any' => '* Akýkoľvek *',
 	'UI:SearchValue:Mixed' => '* Kombinovaný *',
 	'UI:SearchValue:NbSelected' => '# vybraných',
@@ -647,7 +620,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:DataLine2' => 'Dátovy riadok 2',
 	'UI:CSVImport:idField' => 'ID (Primárny kľúč)',
 	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - hromadná importácia',
-	'UI:Title:BulkImport+' => '',
+	'UI:Title:BulkImport+' => 'CSV Import Wizard~~',
 	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronizácia %1$d objektov triedy %2$s',
 	'UI:CSVImport:ClassesSelectOne' => '-- vyberte jeden --',
 	'UI:CSVImport:ErrorExtendedAttCode' => 'Interná chyba: "%1$s" je nesprávny kód pretože "%2$s" nie je externý kľuč triedy "%3$s"',
@@ -664,17 +637,18 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Title:CSVImportStep4' => 'Krok 4 z 5: Simulácia importu',
 	'UI:Title:CSVImportStep5' => 'Krok 5 z 5: Importácia dokončený',
 	'UI:CSVImport:LinesNotImported' => 'Riadky , ktoré nemožno načítať:',
-	'UI:CSVImport:LinesNotImported+' => '',
-	'UI:CSVImport:SeparatorComma+' => '',
-	'UI:CSVImport:SeparatorSemicolon+' => '',
-	'UI:CSVImport:SeparatorTab+' => '',
+	'UI:CSVImport:LinesNotImported+' => 'The following lines have not been imported because they contain errors~~',
+	'UI:CSVImport:SeparatorComma+' => ', (comma)~~',
+	'UI:CSVImport:SeparatorSemicolon+' => '; (semicolon)~~',
+	'UI:CSVImport:SeparatorTab+' => 'tab~~',
 	'UI:CSVImport:SeparatorOther' => 'Ostatné:',
-	'UI:CSVImport:QualifierDoubleQuote+' => '',
-	'UI:CSVImport:QualifierSimpleQuote+' => '',
+	'UI:CSVImport:QualifierDoubleQuote+' => '" (double quote)~~',
+	'UI:CSVImport:QualifierSimpleQuote+' => '\' (simple quote)~~',
 	'UI:CSVImport:QualifierOther' => 'Ostatné:',
 	'UI:CSVImport:TreatFirstLineAsHeader' => 'Spracovať prvý riadok ako hlavičku (názvy stĺpcov)',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => 'Preskočiť %1$s riadkov na začiatku súboru',
 	'UI:CSVImport:CSVDataPreview' => 'Náhľad CSV dát',
+	'UI:CSVImport:Column' => 'Column %1$s~~',
 	'UI:CSVImport:SelectFile' => 'Vyberte súbor na importovanie:',
 	'UI:CSVImport:Tab:LoadFromFile' => 'Načítať zo suboru',
 	'UI:CSVImport:Tab:CopyPaste' => 'Kopírovanie a vkladanie dát',
@@ -686,7 +660,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:CommentsAndHeader' => 'Komentáre a hlavička',
 	'UI:CSVImport:SelectClass' => 'Vyberte triedu na importovanie:',
 	'UI:CSVImport:AdvancedMode' => 'Rozšírený režim',
-	'UI:CSVImport:AdvancedMode+' => '',
+	'UI:CSVImport:AdvancedMode+' => 'In advanced mode the "id" (primary key) of the objects can be used to update and rename objects.However the column "id" (if present) can only be used as a search criteria and can not be combined with any other search criteria.~~',
 	'UI:CSVImport:SelectAClassFirst' => 'Ak chcete nakonfigurovať mapovanie , vyberte najprv triedu.',
 	'UI:CSVImport:HeaderFields' => 'Polia',
 	'UI:CSVImport:HeaderMappings' => 'Mapovanie',
@@ -695,11 +669,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.~~',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Vyberte aspoň jedno alebo viac kritérií vyhladávania',
 	'UI:CSVImport:Encoding' => 'Kódovanie znakov',
+	'UI:CSVImport:ViewAllPossibleValues' => 'View all possible values~~',
+	'UI:CSVImport:ViewAllAmbiguousValues' => 'View all ambiguous values~~',
 	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Univerzálne vyhľadávanie',
 	'UI:UniversalSearch:Error' => 'Chyba: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Vyberte triedu na vyhľadávanie: ',
 	'UI:CSVReport-Value-Modified' => 'Upravený',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
@@ -744,11 +720,10 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Stats-Created' => '%1$.0f %% načitaných objektov bude vytvorených.',
 	'UI:CSVReport-Stats-Modified' => '%1$.0f %% načitaných objektov bude upravených.',
 	'UI:CSVExport:AdvancedMode' => 'Rozšírený režim',
-	'UI:CSVExport:AdvancedMode+' => '',
+	'UI:CSVExport:AdvancedMode+' => 'In advanced mode, several columns are added to the export: the id of the object, the id of external keys and their reconciliation attributes.~~',
 	'UI:CSVExport:LostChars' => 'Kódovanie problému',
-	'UI:CSVExport:LostChars+' => '',
+	'UI:CSVExport:LostChars+' => 'The downloaded file will be encoded into %1$s. '.ITOP_APPLICATION_SHORT.' has detected some characters that are not compatible with this format. Those characters will either be replaced by a substitute (e.g. accentuated chars losing the accent), or they will be discarded. You can copy/paste the data from your web browser. Alternatively, you can contact your administrator to change the encoding (See parameter \'csv_file_default_charset\').~~',
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB audit',
-	'UI:Audit:InteractiveAudit' => 'Interaktívny audit',
 	'UI:Audit:Interactive:All:Title' => 'Audit results~~',
 	'UI:Audit:Interactive:All:SubTitle' => 'Full audit: includes all rules, all categories, all domains~~',
 	'UI:Audit:Interactive:All:BreadCrumb' => 'Full audit~~',
@@ -783,14 +758,14 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
-	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%% of the object are valid~~',
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Určenie OQL Dopytu',
 	'UI:RunQuery:QueryExamples' => 'Príklad dopytu',
 	'UI:RunQuery:QueryResults' => 'Query Results~~',
 	'UI:RunQuery:HeaderPurpose' => 'Účel',
-	'UI:RunQuery:HeaderPurpose+' => '',
+	'UI:RunQuery:HeaderPurpose+' => 'Explanation about the query~~',
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL Výraz',
-	'UI:RunQuery:HeaderOQLExpression+' => '',
+	'UI:RunQuery:HeaderOQLExpression+' => 'The query in OQL syntax~~',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Výraz k určeniu: ',
 	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Viac informácií o dopyte: ',
@@ -818,26 +793,26 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:NullNotAllowed' => 'Prázdna hodnota nie je povolená',
 	'UI:Schema:Attributes' => 'Atribúty',
 	'UI:Schema:AttributeCode' => 'Kód atributu',
-	'UI:Schema:AttributeCode+' => '',
+	'UI:Schema:AttributeCode+' => 'Internal code of the attribute~~',
 	'UI:Schema:Label' => 'Označenie',
-	'UI:Schema:Label+' => '',
+	'UI:Schema:Label+' => 'Label of the attribute~~',
 	'UI:Schema:Type' => 'Typ',
-	'UI:Schema:Type+' => '',
+	'UI:Schema:Type+' => 'Data type of the attribute~~',
 	'UI:Schema:Origin' => 'Pôvod',
-	'UI:Schema:Origin+' => '',
+	'UI:Schema:Origin+' => 'The base class in which this attribute is defined~~',
 	'UI:Schema:Description' => 'Popis',
-	'UI:Schema:Description+' => '',
+	'UI:Schema:Description+' => 'Description of the attribute~~',
 	'UI:Schema:AllowedValues' => 'Povolené hodnoty',
-	'UI:Schema:AllowedValues+' => '',
+	'UI:Schema:AllowedValues+' => 'Restrictions on the possible values for this attribute~~',
 	'UI:Schema:MoreInfo' => 'Viac info',
-	'UI:Schema:MoreInfo+' => '',
+	'UI:Schema:MoreInfo+' => 'More information about the field defined in the database~~',
 	'UI:Schema:SearchCriteria' => 'Kritéria vyhľadávania',
 	'UI:Schema:FilterCode' => 'Kód filtru',
-	'UI:Schema:FilterCode+' => '',
+	'UI:Schema:FilterCode+' => 'Code of this search criteria~~',
 	'UI:Schema:FilterDescription' => 'Popis',
-	'UI:Schema:FilterDescription+' => '',
+	'UI:Schema:FilterDescription+' => 'Description of this search criteria~~',
 	'UI:Schema:AvailOperators' => 'Dostupní operátori',
-	'UI:Schema:AvailOperators+' => '',
+	'UI:Schema:AvailOperators+' => 'Possible operators for this search criteria~~',
 	'UI:Schema:ChildClasses' => 'Child triedy',
 	'UI:Schema:ReferencingClasses' => 'Odkazovanie na triedy',
 	'UI:Schema:RelatedClasses' => 'Príbuzná triedy',
@@ -862,13 +837,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Musí sa zmeniť',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'Užívateľ bude vyzvaný aby si zmenil danú hodnotu',
 	'UI:Schema:LifeCycleEmptyList' => 'Prázdny zoznam',
-	'UI:Schema:ClassFilter' => 'Class:~~~~',
-	'UI:Schema:DisplayLabel' => 'Display:~~~~',
-	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code~~~~',
-	'UI:Schema:DisplaySelector/Label' => 'Label~~~~',
-	'UI:Schema:DisplaySelector/Code' => 'Code~~~~',
-	'UI:Schema:Attribute/Filter' => 'Filter~~~~',
-	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~~~',
+	'UI:Schema:ClassFilter' => 'Class:~~',
+	'UI:Schema:DisplayLabel' => 'Display:~~',
+	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code~~',
+	'UI:Schema:DisplaySelector/Label' => 'Label~~',
+	'UI:Schema:DisplaySelector/Code' => 'Code~~',
+	'UI:Schema:Attribute/Filter' => 'Filter~~',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:Schema:Events' => 'Events~~',
 	'UI:Schema:Events:Defined' => 'Defined events~~',
 	'UI:Schema:Events:NoEvent' => 'No event defined~~',
@@ -879,14 +854,14 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:Events:Listener' => 'Listener~~',
 	'UI:Schema:Events:Rank' => 'Rank~~',
 	'UI:Schema:Events:Module' => 'Module~~',
-	'UI:LinksWidget:Autocomplete+' => '',
+	'UI:LinksWidget:Autocomplete+' => 'Type the first 3 characters...~~',
 	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Testovací dopyt',
 	'UI:Combo:SelectValue' => '--- výber hodnoty ---',
 	'UI:Label:SelectedObjects' => 'Zvolené objekty: ',
 	'UI:Label:AvailableObjects' => 'Dostupné objekty: ',
 	'UI:Link_Class_Attributes' => '%1$s atribút/y/ov',
-	'UI:SelectAllToggle+' => '',
+	'UI:SelectAllToggle+' => 'Select All / Deselect All~~',
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Pridať %1$s objektov prepojených s %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Pridať %1$s objektov na prepojenie s %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Manažovať %1$s objektov prpojených s %2$s: %3$s',
@@ -910,7 +885,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Delete:AutomaticResetOf_Fields' => 'Automatický reset pola/í: %1$s',
 	'UI:Delete:CleaningUpRefencesTo_Object' => 'Upratovanie všetkých odkazovaní sa na %1$s...',
 	'UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class' => 'Upratovanie všetkých odkazovaní sa na %1$d objektov triedy %2$s...',
-	'UI:Delete:Done+' => '',
+	'UI:Delete:Done+' => 'What was done...~~',
 	'UI:Delete:_Name_Class_Deleted' => '%1$s - %2$s vymazané.',
 	'UI:Delete:ConfirmDeletionOf_Name' => 'Vymazanie %1$s',
 	'UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class' => 'Vymazanie %1$d objektov triedy %2$s',
@@ -924,7 +899,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d objektov/spojení odkazujú na %2$s',
 	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objektov/spojení odkazujú na niektoré z objektov čo majú byť vymazané',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Pre zabezpečenie integrity databázy, akákoľvek súvislosť by mala byť eliminovaná',
-	'UI:Delete:Consequence+' => '',
+	'UI:Delete:Consequence+' => 'What will be done~~',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Prepáčte, nemáte povolenie vymazať tento objekt, pozrite si detailné vysvetlenie vyššie',
 	'UI:Delete:PleaseDoTheManualOperations' => 'Prosím vykonajte manuálne operácie vypísané vyššie predtým ako budete žiadať o odstraňovanie tohto objektu',
 	'UI:Delect:Confirm_Object' => 'Prosím potvrďte, že chcete vymazať %1$s.',
@@ -972,47 +947,47 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error_Details' => 'Chyba: %1$s.',
 	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' užívateľský manažment - projekcie profilov',
 	'UI:UserManagement:Class' => 'Trieda',
-	'UI:UserManagement:Class+' => '',
+	'UI:UserManagement:Class+' => 'Class of objects~~',
 	'UI:UserManagement:ProjectedObject' => 'Objekt',
-	'UI:UserManagement:ProjectedObject+' => '',
+	'UI:UserManagement:ProjectedObject+' => 'Projected object~~',
 	'UI:UserManagement:AnyObject' => '* Akýkoľvek *',
 	'UI:UserManagement:User' => 'Užívateľ',
-	'UI:UserManagement:User+' => '',
+	'UI:UserManagement:User+' => 'User involved in the projection~~',
 	'UI:UserManagement:Action:Read' => 'Čítať',
-	'UI:UserManagement:Action:Read+' => '',
+	'UI:UserManagement:Action:Read+' => 'Read/display objects~~',
 	'UI:UserManagement:Action:Modify' => 'Upravovať',
-	'UI:UserManagement:Action:Modify+' => '',
+	'UI:UserManagement:Action:Modify+' => 'Create and edit (modify) objects~~',
 	'UI:UserManagement:Action:Delete' => 'Vymazať',
-	'UI:UserManagement:Action:Delete+' => '',
+	'UI:UserManagement:Action:Delete+' => 'Delete objects~~',
 	'UI:UserManagement:Action:BulkRead' => 'Hromadné čítanie (Export)',
-	'UI:UserManagement:Action:BulkRead+' => '',
+	'UI:UserManagement:Action:BulkRead+' => 'List objects or export massively~~',
 	'UI:UserManagement:Action:BulkModify' => 'Hromadná úprava',
-	'UI:UserManagement:Action:BulkModify+' => '',
+	'UI:UserManagement:Action:BulkModify+' => 'Massively create/edit (CSV import)~~',
 	'UI:UserManagement:Action:BulkDelete' => 'Hromadné vymazanie',
-	'UI:UserManagement:Action:BulkDelete+' => '',
+	'UI:UserManagement:Action:BulkDelete+' => 'Massively delete objects~~',
 	'UI:UserManagement:Action:Stimuli' => 'Podnety',
-	'UI:UserManagement:Action:Stimuli+' => '',
+	'UI:UserManagement:Action:Stimuli+' => 'Allowed (compound) actions~~',
 	'UI:UserManagement:Action' => 'Akcia',
-	'UI:UserManagement:Action+' => '',
+	'UI:UserManagement:Action+' => 'Action performed by the user~~',
 	'UI:UserManagement:TitleActions' => 'Akcie',
 	'UI:UserManagement:Permission' => 'Povolenie',
-	'UI:UserManagement:Permission+' => '',
+	'UI:UserManagement:Permission+' => 'User\'s permissions~~',
 	'UI:UserManagement:Attributes' => 'Atribúty',
 	'UI:UserManagement:ActionAllowed:Yes' => 'Áno',
 	'UI:UserManagement:ActionAllowed:No' => 'Nie',
-	'UI:UserManagement:AdminProfile+' => '',
+	'UI:UserManagement:AdminProfile+' => 'Administrators have full read/write access to all objects in the database.~~',
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
-	'UI:UserManagement:NoLifeCycleApplicable+' => '',
+	'UI:UserManagement:NoLifeCycleApplicable+' => 'No lifecycle has been defined for this class~~',
 	'UI:UserManagement:GrantMatrix' => 'Udelovacia matica',
 	'Menu:SystemTools' => 'System~~',
 	'UI:ChangeManagementMenu' => 'Manažment zmien',
-	'UI:ChangeManagementMenu+' => '',
+	'UI:ChangeManagementMenu+' => 'Change Management~~',
 	'UI:ChangeManagementMenu:Title' => 'Prehľad zmien',
 	'UI-ChangeManagementMenu-ChangesByType' => 'Zmeny podľa typu',
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Zmeny podľa stavu',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Zmeny ešte nepriradené',
 	'UI:ConfigurationManagementMenu' => 'Konfiguračný manažment',
-	'UI:ConfigurationManagementMenu+' => '',
+	'UI:ConfigurationManagementMenu+' => 'Configuration Management~~',
 	'UI:ConfigurationManagementMenu:Title' => 'Prehľad infraštruktúry',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Infraštruktúra objektov podľa typu',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Infraštruktúra objektov podľa stavu',
@@ -1035,7 +1010,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Zákaznícke kontrakty na obnovenie v najbližších 30 dňoch',
 	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Poskytovateľské kontrakty na obnovenie v najbližších 30 dňoch',
 	'UI:ContactsMenu' => 'Kontakty',
-	'UI:ContactsMenu+' => '',
+	'UI:ContactsMenu+' => 'Contacts~~',
 	'UI:ContactsMenu:Title' => 'Prehľad kontaktov',
 	'UI-ContactsMenu-ContactsByLocation' => 'Kontakty podľa polohy',
 	'UI-ContactsMenu-ContactsByType' => 'Kontakty podľa typu',
@@ -1057,11 +1032,12 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 <ol>
 	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
 	Špeciálna stránka: <a href="../setup/email.test.php" target="_blank">email.test.php</a> je dostupná pre testovanie a odstraňovanie problémov Vašej PHP mailovej konfigurácie.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
 </ol>
 </p>
 <p>Na vykonanie, akcie musia byť priradené spúštačom.
-Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", špecifikujúce v akej postupnosti budú akcie vykonané.</p>~~',
+Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", špecifikujúce v akej postupnosti budú akcie vykonané.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Spúštače',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostupné spúštače',
 	'UI:NotificationsMenu:OnCreate' => 'Keď je objekt vytvorený',
@@ -1080,8 +1056,8 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:iTopVersion:Short' => ITOP_APPLICATION_SHORT.' verzia %1$s',
 	'UI:iTopVersion:Long' => ITOP_APPLICATION_SHORT.' verzia %1$s-%2$s postavená na %3$s',
 	'UI:PropertiesTab' => 'Vlastnosti',
-	'UI:OpenDocumentInNewWindow_' => 'Otvoriť~~',
-	'UI:DownloadDocument_' => 'Stiahnuť~~',
+	'UI:OpenDocumentInNewWindow_' => 'Otvoriť',
+	'UI:DownloadDocument_' => 'Stiahnuť',
 	'UI:Document:NoPreview' => 'Žiadny náhľad nie je dostupný pre tento typ dokumentu',
 	'UI:Download-CSV' => 'Stiahnuť %1$s',
 	'UI:DeadlineMissedBy_duration' => 'Prekročené o %1$s',
@@ -1173,9 +1149,9 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Button:PreviewModifications' => 'Náhľad úpravy >>',
 	'UI:ModifiedObject' => 'Objekt Upravený',
 	'UI:BulkModifyStatus' => 'Operácie',
-	'UI:BulkModifyStatus+' => '',
+	'UI:BulkModifyStatus+' => 'Status of the operation~~',
 	'UI:BulkModifyErrors' => 'Chyby (ak nejaké)',
-	'UI:BulkModifyErrors+' => '',
+	'UI:BulkModifyErrors+' => 'Errors preventing the modification~~',
 	'UI:BulkModifyStatusOk' => 'OK',
 	'UI:BulkModifyStatusError' => 'Chyba',
 	'UI:BulkModifyStatusModified' => 'Upravený',
@@ -1205,11 +1181,11 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:ArchiveMode:Banner' => 'Archive mode~~',
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Obľúbené organizácie',
-	'UI:FavoriteOrganizations+' => '',
-	'UI:FavoriteLanguage' => 'Jazyk užívateľského rozhrania~~',
+	'UI:FavoriteOrganizations+' => 'Check in the list below the organizations that you want to see in the drop-down menu for a quick access. Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting "All Organizations" in the drop-down list.~~',
+	'UI:FavoriteLanguage' => 'Jazyk užívateľského rozhrania',
 	'UI:Favorites:SelectYourLanguage' => 'Vyberte si svoj preferovaný jazyk',
 	'UI:FavoriteOtherSettings' => 'Iné nastavenia',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Štandardná dĺžka pre zoznamy:  %1$s položiek na stránku~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Štandardná dĺžka pre zoznamy:  %1$s položiek na stránku',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Akákoľvek úprava bude zahodená.',
@@ -1301,7 +1277,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => 'Deň v mesiaci pre %1$s',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (hodina)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (mesiac)',
-	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$ (deň v týžni)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (deň v týžni)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (deň v mesiaci)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Prosím zvoľte pole na ktorom objekty budú zoskupené spolu',
 	'UI:DashletGroupByPie:Label' => 'Koláčový graf',
@@ -1310,7 +1286,6 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:DashletGroupByBars:Description' => 'Tyčinkový graf',
 	'UI:DashletGroupByTable:Label' => 'Zoskupiť podľa tabuliek (table)',
 	'UI:DashletGroupByTable:Description' => 'Zoznam (zoskupené podľa polí)',
-    // New in 2.5
 	'UI:DashletGroupBy:Prop-Function' => 'Aggregation function~~',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute~~',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction~~',
@@ -1328,12 +1303,12 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:GroupBy:min+' => 'Minimum of %1$s~~',
 	'UI:GroupBy:max' => 'Maximum~~',
 	'UI:GroupBy:max+' => 'Maximum of %1$s~~',
-    // ---
 	'UI:DashletHeaderStatic:Label' => 'Hlavička',
 	'UI:DashletHeaderStatic:Description' => 'Zobrazuje an horizontálny oddelovač',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Nadpis',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kontakty',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Ikonka',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'Hlavička so štatistikami',
 	'UI:DashletHeaderDynamic:Description' => 'Hlavička s vlastnosťami (zoskupené podľa...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Nadpis',
@@ -1366,7 +1341,6 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'Month-10' => 'October~~',
 	'Month-11' => 'November~~',
 	'Month-12' => 'December~~',
-    // Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Su~~',
 	'DayOfWeek-Monday-Min' => 'Mo~~',
 	'DayOfWeek-Tuesday-Min' => 'Tu~~',
@@ -1387,20 +1361,20 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
 	'Calendar-FirstDayOfWeek' => '0~~',
-    // 0 = Sunday, 1 = Monday, etc...
 	'UI:Menu:ShortcutList' => 'Vytvorenie skratky...',
 	'UI:Menu:FilterList' => 'Display list with search criteria~~',
 	'UI:ShortcutRenameDlg:Title' => 'Premenovanie skratky',
 	'UI:ShortcutListDlg:Title' => 'Vytvoriť skratku pre zoznam',
 	'UI:ShortcutDelete:Confirm' => 'Prosím potvrďte, že si želáte vymazať skratku/y.',
+	'UI:ObjectShortcutInsert' => 'Insert Object Shortcut~~',
 	'Class:Shortcut' => 'Skratka',
-	'Class:Shortcut+' => '',
+	'Class:Shortcut+' => '~~',
 	'Class:Shortcut/Attribute:name' => 'Názov',
-	'Class:Shortcut/Attribute:name+' => '',
+	'Class:Shortcut/Attribute:name+' => 'Label used in the menu and page title~~',
 	'Class:ShortcutOQL' => 'Skratka výsledkov vyhľadávania',
-	'Class:ShortcutOQL+' => '',
+	'Class:ShortcutOQL+' => '~~',
 	'Class:ShortcutOQL/Attribute:oql' => 'Dopyt',
-	'Class:ShortcutOQL/Attribute:oql+' => '',
+	'Class:ShortcutOQL/Attribute:oql+' => 'OQL defining the list of objects to search for~~',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatic refresh~~',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Disabled~~',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate~~',
@@ -1483,23 +1457,18 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
-    // Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
 	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
-    // - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used~~',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular~~',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others~~',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.~~',
-    // - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:Criteria:Remove' => 'Remove~~',
 	'UI:Search:Criteria:Locked' => 'Locked~~',
-    // - Criteria titles
-    //   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty~~',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty~~',
@@ -1521,57 +1490,32 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s~~',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s up to %2$s~~',
-    //   - Numeric widget
-    //   None yet
-    //   - DateTime widget
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s~~',
-    //   - Enum widget
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s~~',
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any~~',
-    //   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-    //   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
-    //   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
-    // - Criteria operators
-    //   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty~~',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty~~',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals~~',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Between~~',
-    //   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains~~',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with~~',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
-    //   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',
-    // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',
-    // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',
-    // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',
-    // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',
-    // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',
-    // => '≠',
-    //   - Tag Set Widget
-	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
-    // - Other translations
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~','UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~','UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~','UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~','UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~','UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~','UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...~~',
 	'UI:Search:Value:Search:Placeholder' => 'Search...~~',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.~~',
@@ -1579,7 +1523,6 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Search:Value:Autocomplete:NoResult' => 'No result.~~',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none~~',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Check all / none visibles~~',
-    // - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'From~~',
 	'UI:Search:Criteria:Numeric:Until' => 'To~~',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Any~~',
@@ -1596,12 +1539,12 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
 	'UI:StateChanged' => 'State changed~~',
-));
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Expression:Operator:AND' => ' AND ~~',
 	'Expression:Operator:OR' => ' OR ~~',
 	'Expression:Operator:=' => ': ~~',
@@ -1614,12 +1557,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Expression:Unit:Long:MINUTE' => 'minute(s)~~',
 	'Expression:Verb:NOW' => 'now~~',
 	'Expression:Verb:ISNULL' => ': undefined~~',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
 	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
@@ -1627,40 +1570,41 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration~~',
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
-));
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
+]);
 
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:DataSources' => 'Synchronizované zdroje dát',
-	'Menu:DataSources+' => '',
+	'Menu:DataSources+' => 'Data synchro used for batch import of external data~~',
 	'Menu:AuditCategories' => 'Kategórie auditu',
-	'Menu:AuditCategories+' => '',
-	'Menu:Notifications:Title' => 'Kategórie auditu',
+	'Menu:AuditCategories+' => 'Define rules to audit the quality of '.ITOP_APPLICATION_SHORT.' data~~',
 	'Menu:AuditCategories:Title' => 'Audit configuration~~',
 	'Menu:RunQueriesMenu' => 'Spustiť dopyty',
-	'Menu:RunQueriesMenu+' => '',
+	'Menu:RunQueriesMenu+' => 'Write and execute any OQL query~~',
 	'Menu:QueryMenu' => 'Dopyt frázy',
-	'Menu:QueryMenu+' => '',
+	'Menu:QueryMenu+' => 'Reusable stored queries~~',
 	'Menu:UniversalSearchMenu' => 'Univerzálne vyhľadávanie',
-	'Menu:UniversalSearchMenu+' => '',
+	'Menu:UniversalSearchMenu+' => 'Search objects of any class including abstract~~',
 	'Menu:UserManagementMenu' => 'Užívateľský manažment',
-	'Menu:UserManagementMenu+' => '',
+	'Menu:UserManagementMenu+' => 'Who can connect to '.ITOP_APPLICATION_SHORT.' and what can they do?~~',
 	'Menu:ProfilesMenu' => 'Profily',
-	'Menu:ProfilesMenu+' => '',
+	'Menu:ProfilesMenu+' => 'View existing Profiles~~',
 	'Menu:ProfilesMenu:Title' => 'Profily',
 	'Menu:UserAccountsMenu' => 'Užívateľské účty',
-	'Menu:UserAccountsMenu+' => '',
+	'Menu:UserAccountsMenu+' => 'Handling '.ITOP_APPLICATION_SHORT.' users and their access rights~~',
 	'Menu:UserAccountsMenu:Title' => 'Užívateľské účty',
-	'Menu:UserManagement' => 'User Management~~',
+	'Menu:UserManagement' => 'User management~~',
 	'Menu:Queries' => 'Queries~~',
-	'Menu:ConfigurationTools' => 'Configuration~~'
-));
-// Additional language entries not present in English dict
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
-	'UI:Dashboard:Edit' => 'Upraviť túto stránku...',
-	'UI:Dashboard:Revert' => 'Vrátiť sa do originálnej verzie...'
-));
+	'Menu:ConfigurationTools' => 'Configuration~~',
+	'Menu:ConfigEditor' => 'General configuration~~',
+	'Menu:ConfigEditor+' => 'Configuration File editor~~',
+	'Menu:Integrations' => 'Integrations~~',
+	'Menu:Integrations+' => '~~',
+
+]);

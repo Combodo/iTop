@@ -1,0 +1,412 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+@import "../node_modules/bulma-scss/utilities/mixins";
+
+$ipb-navigation-menu--flex-column-gap: $common-spacing-300 !default;
+$ipb-navigation-menu--nav-vertical--width: 60px !default;
+$ipb-navigation-menu--nav-vertical--is-expanded--width: 280px !default;
+$ipb-navigation-menu--nav-horizontal--height: 56px !default;
+$ipb-navigation-menu--nav-horizontal--top-part--logo--hyperlink--height: 46px !default;
+$ipb-navigation-menu--border-radius: $common-border-radius-700 !default;
+$ipb-navigation-menu--is-expanded--top-part--logo--hyperlink--height: 70px !default;
+$ipb-navigation-menu--middle-part--is-vertical--padding: $common-spacing-300 !default;
+$ipb-navigation-menu--menu-entries--flex-gap: $common-spacing-300 !default;
+$ipb-navigation-menu--menu-entry--wrapper--flex-column-gap: $common-spacing-500 !default;
+$ipb-navigation-menu--menu-entry--size: 44px !default;
+$ipb-navigation-menu--menu-entry--border-radius: $common-border-radius-500 !default;
+$ipb-navigation-menu--menu-entry--padding: $common-spacing-300 !default;
+$ipb-navigation-menu--menu-entry--icon-size: 28px !default;
+$ipb-navigation-menu--menu-entry--font-size: 2rem !default;
+$ipb-navigation-menu--separator--width: $common-spacing-400 !default;
+$ipb-navigation-menu--user-part--flex-column-gap: $common-spacing-300 !default;
+$ipb-navigation-menu--user-card--flex-column-gap: $common-spacing-300;
+$ipb-navigation-menu--user-card--photo--size: 36px !default;
+$dropdown-menu--items-remainder--padding: $common-spacing-300 !default;
+$dropdown-menu--items-remainder--border-radius: $common-border-radius-700 !default;
+
+// NAV MENU ////////////////////////////////////////////
+
+.ipb-navigation-menu {
+  flex-shrink: 0;
+  width: $ipb-navigation-menu--nav-vertical--width;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 $ipb-navigation-menu--border-radius $ipb-navigation-menu--border-radius 0;
+  column-gap: $ipb-navigation-menu--flex-column-gap;
+
+  // in expanded state
+  &.ipb-is-expanded {
+    width: $ipb-navigation-menu--nav-vertical--is-expanded--width;
+
+    // make menu entry fill available space
+    .ipb-navigation-menu--menu-entry--brick-item {
+      width: 100%;
+    }
+
+    // show user infos
+    .ipb-navigation-menu--user-card--infos {
+      display: flex;
+    }
+
+  }
+
+}
+
+// TOP PART ////////////////////////////////////////////
+
+.ipb-navigation-menu--top-part {
+  flex-shrink: 0;
+  padding: $common-spacing-400 $common-spacing-300 0 $common-spacing-300;
+  display: flex;
+  flex-direction: column;
+}
+
+// logo
+.ipb-navigation-menu--top-part--logo {
+  height: $ipb-navigation-menu--is-expanded--top-part--logo--hyperlink--height;
+  text-align: center;
+
+  .ipb-navigation-menu--top-part--logo--image {
+    height: $ipb-navigation-menu--is-expanded--top-part--logo--hyperlink--height;
+    max-width: 100%;
+  }
+
+}
+
+// SEPARATOR ////////////////////////////////////////////
+
+.ipb-navigation-menu--separator {
+  min-height: $ipb-navigation-menu--separator--width;
+  min-width: $ipb-navigation-menu--separator--width;
+}
+
+// MIDDLE PART ////////////////////////////////////////////
+
+.ipb-navigation-menu--middle-part {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 $ipb-navigation-menu--middle-part--is-vertical--padding;
+}
+
+// menu entries
+.ipb-navigation-menu--menu-entries {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  row-gap: $ipb-navigation-menu--menu-entries--flex-gap;
+  column-gap: $ipb-navigation-menu--menu-entries--flex-gap;
+  list-style-type: none;
+}
+
+// entry wrapper
+.ipb-navigation-menu--menu-entry--wrapper {
+  // entry title
+  .ipb-navigation-menu--menu-entry--title {
+    @extend %common-font-ral-nor-200;
+  }
+}
+
+// menu entry
+.ipb-navigation-menu--menu-entry,
+  // prevent bootstrap styling
+.ipb-dropdown-menu--items-remainder > li > a {
+  flex-grow: 0;
+  width: $ipb-navigation-menu--menu-entry--size;
+  height: $ipb-navigation-menu--menu-entry--size;
+  overflow: hidden;
+  padding: $ipb-navigation-menu--menu-entry--padding;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: $ipb-navigation-menu--menu-entry--wrapper--flex-column-gap;
+  border-radius: $ipb-navigation-menu--menu-entry--border-radius;
+
+  // entry icon
+  .ipb-navigation-menu--menu-entry--icon {
+    flex-shrink: 0;
+    width: $ipb-navigation-menu--menu-entry--icon-size;
+    font-size: $ipb-navigation-menu--menu-entry--font-size;
+    text-align: center;
+  }
+}
+
+// drop down items remainder
+.ipb-dropdown--items-remainder {
+  align-self: center;
+}
+
+// drop down menu items remainder
+.ipb-dropdown-menu--items-remainder {
+  padding: $dropdown-menu--items-remainder--padding;
+  border-bottom-left-radius: $dropdown-menu--items-remainder--border-radius;
+  border-bottom-right-radius: $dropdown-menu--items-remainder--border-radius;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-top: none;
+  right: -9px;
+}
+
+// USER PART ////////////////////////////////////////////
+
+.ipb-navigation-menu--user-part {
+  flex-shrink: 0;
+  padding: $common-spacing-600 $common-spacing-400;
+  display: flex;
+  align-items: center;
+  column-gap: $ipb-navigation-menu--user-part--flex-column-gap;
+  border-radius: 0 0 $ipb-navigation-menu--border-radius 0;
+
+  // toggle mobile menu
+  .ipb-navigation-menu--user-part--toggle--open-mobile-menu {
+    display: none;
+  }
+}
+
+// user card
+.ipb-navigation-menu--user-card {
+  flex-grow: 1;
+  height: 45px;
+  display: flex;
+  column-gap: $ipb-navigation-menu--user-card--flex-column-gap;
+  align-items: center;
+  justify-content: center;
+  @extend %common-font-ral-nor-150;
+  text-decoration: none;
+  overflow-x: hidden;
+
+  // user photo
+  .ipb-navigation-menu--user-card--photo {
+    min-width: $ipb-navigation-menu--user-card--photo--size;
+    min-height: $ipb-navigation-menu--user-card--photo--size;
+    width: $ipb-navigation-menu--user-card--photo--size;
+    height: $ipb-navigation-menu--user-card--photo--size;
+    background-size: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    border-radius: 100%;
+  }
+
+  // user info
+  .ipb-navigation-menu--user-card--infos {
+    flex-grow: 1;
+    display: none;
+    flex-direction: row;
+    column-gap: 12px;
+    overflow-x: hidden;
+
+    // username
+    .ipb-navigation-menu--user-card--name {
+      flex-grow: 1;
+      overflow-x: hidden;
+    }
+  }
+}
+
+// MOBILE MENU ////////////////////////////////////////////
+
+// mobile menu overlay
+.ipb-navigation-menu-overlay {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: $ipb-navigation-menu--nav-horizontal--height;
+  right: 0;
+  bottom: 0;
+  z-index: 9998;
+}
+
+// NAV HORIZONTAL ////////////////////////////////////////////
+
+.ipb-nav-horizontal {
+
+  // body flex direction
+  flex-direction: column;
+
+  .ipb-navigation-menu {
+    flex-direction: row;
+    align-items: stretch;
+    width: unset;
+    height: $ipb-navigation-menu--nav-horizontal--height;
+    border-radius: 0 0 $ipb-navigation-menu--border-radius $ipb-navigation-menu--border-radius;
+
+    // TOP PART ////////////////////////////////////////////
+
+    .ipb-navigation-menu--top-part {
+      align-self: center;
+      padding: $common-spacing-200 $common-spacing-300 $common-spacing-200 $common-spacing-300;
+
+      .ipb-navigation-menu--top-part--logo {
+        height: $ipb-navigation-menu--nav-horizontal--top-part--logo--hyperlink--height;
+
+        .ipb-navigation-menu--top-part--logo--image {
+          height: $ipb-navigation-menu--nav-horizontal--top-part--logo--hyperlink--height;
+        }
+      }
+
+      .ipb-navigation-menu--top-part--toggle--expand-menu {
+        display: none;
+      }
+
+    }
+
+    // MIDDLE PART ////////////////////////////////////////////
+
+    .ipb-navigation-menu--middle-part {
+      padding: 0;
+      align-self: center;
+      overflow-y: visible;
+      overflow-x: hidden;
+
+      .ipb-navigation-menu--menu-entries {
+        flex-direction: row;
+      }
+    }
+
+    .ipb-navigation-menu--menu-entry--brick-item {
+      width: initial;
+    }
+
+    &:not(.ipb-is-expanded) {
+      .ipb-navigation-menu--menu-entry--brick-item {
+        .ipb-navigation-menu--menu-entry--icon {
+          display: none;
+        }
+      }
+    }
+
+    // USER PART ////////////////////////////////////////////
+
+    .ipb-navigation-menu--user-part {
+      padding: 0 8px;
+
+      .dropdown-menu {
+        top: 100%;
+        bottom: auto;
+        left: auto;
+        right: 0;
+      }
+    }
+
+  }
+
+}
+
+// MEDIA MOBILE ////////////////////////////////////////////
+
+@include mobile {
+
+  .ipb-body {
+
+    // body flex direction
+    flex-direction: column;
+
+    .ipb-navigation-menu {
+      flex-direction: row;
+      align-items: stretch;
+      width: unset;
+      height: $ipb-navigation-menu--nav-horizontal--height;
+      border-radius: 0 0 $ipb-navigation-menu--border-radius $ipb-navigation-menu--border-radius;
+
+      &.ipb-is-expanded {
+        width: unset;
+      }
+
+      // TOP PART ////////////////////////////////////////////
+
+      // adapt logo size
+      .ipb-navigation-menu--top-part {
+        padding: $common-spacing-200 $common-spacing-300 $common-spacing-200 $common-spacing-300;
+        align-self: center;
+
+        .ipb-navigation-menu--top-part--logo {
+          height: 46px;
+
+          .ipb-navigation-menu--top-part--logo--image {
+            height: 46px;
+          }
+        }
+
+        // no expand menu
+        .ipb-navigation-menu--top-part--toggle--expand-menu {
+          display: none;
+        }
+
+      }
+
+      // SEPARATOR ////////////////////////////////////////////
+
+      // make separator fill available space
+      .ipb-navigation-menu--separator {
+        flex-grow: 1;
+      }
+
+      // MIDDLE PART ////////////////////////////////////////////
+
+      .ipb-navigation-menu--middle-part {
+        position: fixed;
+        left: 0;
+        top: $ipb-navigation-menu--nav-horizontal--height;
+        width: 100%;
+        max-height: 0;
+        padding: 0 12px;
+        z-index: 9999;
+
+        .ipb-navigation-menu--menu-entries {
+          margin: 15px 0;
+          flex-direction: column;
+        }
+
+      }
+
+      .ipb-navigation-menu--menu-entry--wrapper.ipb-is-hidden {
+        display: initial !important; // ensure hidden elements by horizontal mode are displayed in mobile mode
+      }
+
+      .ipb-navigation-menu--menu-entry--brick-item {
+        width: initial;
+      }
+
+      .ipb-navigation-menu--menu-entry--more {
+        display: none;
+      }
+
+      // USER PART ////////////////////////////////////////////
+
+      .ipb-navigation-menu--user-part {
+        padding: 0 8px;
+
+        .dropdown-menu {
+          top: 100%;
+          bottom: auto;
+          left: auto;
+          right: 0;
+        }
+
+        .ipb-navigation-menu--user-part--toggle--open-mobile-menu {
+          display: flex;
+        }
+      }
+
+      // MOBILE MENU ////////////////////////////////////////////
+
+      .ipb-navigation-menu-overlay {
+        display: block;
+      }
+
+      &.ipb-is-opened {
+        border-radius: 0;
+
+        .ipb-navigation-menu--middle-part {
+          max-height: 100%;
+        }
+      }
+    }
+  }
+}

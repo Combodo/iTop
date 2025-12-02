@@ -7,7 +7,7 @@ use League\OAuth2\Client\Provider\Google;
 class OAuthClientProviderGoogle extends OAuthClientProviderAbstract
 {
 	/** @var string */
-	static protected $sVendorName = 'Google';
+	protected static $sVendorName = 'Google';
 
 	public function __construct($oOAuthClient, array $collaborators = [])
 	{

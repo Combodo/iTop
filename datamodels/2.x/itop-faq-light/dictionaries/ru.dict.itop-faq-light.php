@@ -1,17 +1,17 @@
 <?php
+
 /**
- * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
+ * Localized data
  *
- * @author      Vladimir Kunin <v.b.kunin@gmail.com>
- * @link        http://community.itop-itsm.ru  iTop Russian Community
- * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
  */
-//
-// Class: FAQ
-//
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+/**
+ * @author Vladimir Kunin <v.b.kunin@gmail.com>
+ *
+ */
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Часто задаваемые вопросы',
 	'Class:FAQ/Attribute:title' => 'Название',
@@ -29,21 +29,21 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:FAQ/Attribute:key_words' => 'Ключевые слова',
 	'Class:FAQ/Attribute:key_words+' => '',
 	'Class:FAQ/Attribute:domains' => 'Домены',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:FAQCategory' => 'Категории FAQ',
 	'Class:FAQCategory+' => 'Категории FAQ',
 	'Class:FAQCategory/Attribute:name' => 'Название',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Связанные FAQ',
-));
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+]);
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:ProblemManagement' => 'Управление проблемами',
 	'Menu:ProblemManagement+' => 'Управление проблемами',
 	'Menu:Problem:Shortcuts' => 'Ярлыки',
@@ -54,4 +54,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Часто задаваемые вопросы',
 	'Brick:Portal:FAQ:Title+' => '<p>Торопитесь?</p><p>Проверьте список часто задаваемых вопросов, возможно, ответ уже есть.</p>',
-));
+]);

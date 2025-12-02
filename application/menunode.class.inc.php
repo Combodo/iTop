@@ -1,15 +1,17 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\WebPage\ErrorPage;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/application/template.class.inc.php');
 require_once(APPROOT."/application/user.dashboard.class.inc.php");
-
 
 /**
  * This class manipulates, stores and displays the navigation menu used in the application
@@ -49,43 +51,40 @@ class ApplicationMenu
 	/**
 	 * @var bool
 	 */
-	static $bAdditionalMenusLoaded = false;
+	public static $bAdditionalMenusLoaded = false;
 	/**
 	 * @var array
 	 */
-	static $aRootMenus = array();
+	public static $aRootMenus = [];
 	/**
 	 * @var array
 	 */
-	static $aMenusIndex = array();
+	public static $aMenusIndex = [];
 	/**
 	 * @var array
 	 */
-	static $aMenusById = [];
+	public static $aMenusById = [];
 	/**
 	 * @var string
 	 */
-	static $sFavoriteSiloQuery = 'SELECT Organization';
+	public static $sFavoriteSiloQuery = 'SELECT Organization';
 
 	/**
 	 * @return void
 	 */
 	public static function LoadAdditionalMenus()
 	{
-		if (!self::$bAdditionalMenusLoaded)
-		{
+		if (!self::$bAdditionalMenusLoaded) {
 			// Build menus from module handlers
 			//
 			/** @var \ModuleHandlerApiInterface $oPHPClass */
-			foreach(MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass)
-            {
-                $oPHPClass::OnMenuCreation();
-            }
+			foreach (MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass) {
+				$oPHPClass::OnMenuCreation();
+			}
 
 			// Build menus from the menus themselves (e.g. the ShortcutContainerMenuNode will do that)
 			//
-			foreach(self::$aRootMenus as $aMenu)
-			{
+			foreach (self::$aRootMenus as $aMenu) {
 				$oMenuNode = self::GetMenuNode($aMenu['index']);
 				$oMenuNode->PopulateChildMenus();
 			}
@@ -103,7 +102,7 @@ class ApplicationMenu
 	{
 		self::$sFavoriteSiloQuery = $sOQL;
 	}
-	
+
 	/**
 	 * Get the query used to limit the list of displayed organizations in the drop-down menu
 	 * @return string The OQL query returning a list of Organization objects
@@ -122,10 +121,7 @@ class ApplicationMenu
 	 */
 	public static function CheckMenuIdEnabled($sMenuId)
 	{
-		self::LoadAdditionalMenus();
-		$oMenuNode = self::GetMenuNode(self::GetMenuIndexById($sMenuId));
-		if (is_null($oMenuNode) || !$oMenuNode->IsEnabled())
-		{
+		if (self::IsMenuIdEnabled($sMenuId) === false) {
 			require_once(APPROOT.'/setup/setuppage.class.inc.php');
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:Login:Error:AccessRestricted')."</h1>\n");
@@ -133,6 +129,19 @@ class ApplicationMenu
 			$oP->output();
 			exit;
 		}
+	}
+
+	/**
+	 * @param $sMenuId
+	 *
+	 * @return bool true if the menu exists and current user is allowed to see the menu
+	 * @since 3.2.0
+	 */
+	public static function IsMenuIdEnabled($sMenuId): bool
+	{
+		self::LoadAdditionalMenus();
+		$oMenuNode = self::GetMenuNode(self::GetMenuIndexById($sMenuId));
+		return is_null($oMenuNode) === false && $oMenuNode->IsEnabled();
 	}
 
 	/**
@@ -146,22 +155,18 @@ class ApplicationMenu
 	public static function InsertMenu(MenuNode $oMenuNode, $iParentIndex, $fRank)
 	{
 		$index = self::GetMenuIndexById($oMenuNode->GetMenuId());
-		if ($index == -1)
-		{
+		if ($index == -1) {
 			// The menu does not already exist, insert it
 			$index = count(self::$aMenusIndex);
 
-			if ($iParentIndex == -1)
-			{
+			if ($iParentIndex == -1) {
 				$sParentId = '';
-				self::$aRootMenus[] = array ('rank' => $fRank, 'index' => $index);
-			}
-			else
-			{
+				self::$aRootMenus[] =  ['rank' => $fRank, 'index' => $index];
+			} else {
 				/** @var \MenuNode $oNode */
 				$oNode = self::$aMenusIndex[$iParentIndex]['node'];
 				$sParentId = $oNode->GetMenuId();
-				self::$aMenusIndex[$iParentIndex]['children'][] = array ('rank' => $fRank, 'index' => $index);
+				self::$aMenusIndex[$iParentIndex]['children'][] =  ['rank' => $fRank, 'index' => $index];
 			}
 
 			// Note: At the time when 'parent', 'rank' and 'source_file' have been added for the reflection API,
@@ -169,11 +174,9 @@ class ApplicationMenu
 			//
 			$aBacktrace = debug_backtrace();
 			$sFile = isset($aBacktrace[2]["file"]) ? $aBacktrace[2]["file"] : $aBacktrace[1]["file"];
-			self::$aMenusIndex[$index] = array('node' => $oMenuNode, 'children' => array(), 'parent' => $sParentId, 'rank' => $fRank, 'source_file' => $sFile);
+			self::$aMenusIndex[$index] = ['node' => $oMenuNode, 'children' => [], 'parent' => $sParentId, 'rank' => $fRank, 'source_file' => $sFile];
 			self::$aMenusById[$oMenuNode->GetMenuId()] = $index;
-		}
-		else
-		{
+		} else {
 			// the menu already exists, let's combine the conditions that make it visible
 			/** @var \MenuNode $oNode */
 			$oNode = self::$aMenusIndex[$index]['node'];
@@ -203,7 +206,7 @@ class ApplicationMenu
 	 * @throws \DictExceptionMissingString
 	 * @since 3.0.0
 	 */
-	public static function GetMenusCount($aExtraParams = array())
+	public static function GetMenusCount($aExtraParams = [])
 	{
 		$aMenuGroups = static::GetMenuGroups($aExtraParams);
 
@@ -246,18 +249,16 @@ class ApplicationMenu
 	 * @throws \DictExceptionMissingString
 	 * @since 3.0.0
 	 */
-	public static function GetMenuGroups($aExtraParams = array())
+	public static function GetMenuGroups($aExtraParams = [])
 	{
 		self::LoadAdditionalMenus();
 
 		// Sort the root menu based on the rank
-		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
+		usort(self::$aRootMenus, ['ApplicationMenu', 'CompareOnRank']);
 
 		$aMenuGroups = [];
-		foreach(static::$aRootMenus as $aMenuGroup)
-		{
-			if(!static::CanDisplayMenu($aMenuGroup))
-			{
+		foreach (static::$aRootMenus as $aMenuGroup) {
+			if (!static::CanDisplayMenu($aMenuGroup)) {
 				continue;
 			}
 
@@ -266,9 +267,11 @@ class ApplicationMenu
 			$oMenuNode = static::GetMenuNode($sMenuGroupIdx);
 
 			if (!($oMenuNode instanceof MenuGroup)) {
-				IssueLog::Error('Menu node was not displayed as a menu group as it is actually not a menu group', LogChannels::CONSOLE, [
+				IssueLog::Error('Menu node without parent (root menu) must be of type menu group. Parent menu is missing or not visible to user.', LogChannels::CONSOLE, [
 					'menu_node_class' => get_class($oMenuNode),
+					'menu_node_id' => $oMenuNode->GetMenuID(),
 					'menu_node_label' => $oMenuNode->GetLabel(),
+					'current_user_id' => UserRights::GetUserId(),
 				]);
 				continue;
 			}
@@ -306,26 +309,23 @@ class ApplicationMenu
 	 * @throws \Exception
 	 * @since 3.0.0
 	 */
-	public static function GetSubMenuNodes($sMenuGroupIdx, $aExtraParams = array())
+	public static function GetSubMenuNodes($sMenuGroupIdx, $aExtraParams = [])
 	{
 		$aSubMenuItems = self::GetChildren($sMenuGroupIdx);
 
 		// Sort the children based on the rank
-		usort($aSubMenuItems, array('ApplicationMenu', 'CompareOnRank'));
+		usort($aSubMenuItems, ['ApplicationMenu', 'CompareOnRank']);
 
 		$aSubMenuNodes = [];
-		foreach($aSubMenuItems as $aSubMenuItem)
-		{
-			if(!static::CanDisplayMenu($aSubMenuItem))
-			{
+		foreach ($aSubMenuItems as $aSubMenuItem) {
+			if (!static::CanDisplayMenu($aSubMenuItem)) {
 				continue;
 			}
 
 			$sSubMenuItemIdx = $aSubMenuItem['index'];
 			$oSubMenuNode = static::GetMenuNode($sSubMenuItemIdx);
 
-			if(!$oSubMenuNode->IsEnabled())
-			{
+			if (!$oSubMenuNode->IsEnabled()) {
 				continue;
 			}
 
@@ -344,50 +344,6 @@ class ApplicationMenu
 	}
 
 	/**
-	 * Entry point to display the whole menu into the web page, used by iTopWebPage
-	 * @param \WebPage $oPage
-	 * @param array $aExtraParams
-	 * @throws DictExceptionMissingString
-	 *
-	 * @deprecated Will be removed in 3.0.0, use static::GetMenuGroups() instead
-	 */
-	public static function DisplayMenu($oPage, $aExtraParams)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use static::GetMenuGroups() instead');
-		self::LoadAdditionalMenus();
-		// Sort the root menu based on the rank
-		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
-		$iAccordion = 0;
-		$iActiveAccordion = $iAccordion;
-		$iActiveMenu = self::GetMenuIndexById(self::GetActiveNodeId());
-		foreach (self::$aRootMenus as $aMenu) {
-			if (!self::CanDisplayMenu($aMenu)) {
-				continue;
-			}
-			$oMenuNode = self::GetMenuNode($aMenu['index']);
-			$oPage->AddToMenu('<h3 id="'.utils::GetSafeId('AccordionMenu_'.$oMenuNode->GetMenuID()).'" class="navigation-menu-group" data-menu-id="'.$oMenuNode->GetMenuId().'">'.$oMenuNode->GetTitle().'</h3>');
-			$oPage->AddToMenu('<div>');
-			$oPage->AddToMenu('<ul>');
-			$aChildren = self::GetChildren($aMenu['index']);
-			$bActive = self::DisplaySubMenu($oPage, $aChildren, $aExtraParams, $iActiveMenu);
-			$oPage->AddToMenu('</ul>');
-			if ($bActive)
-			{
-				$iActiveAccordion = $iAccordion;
-			}
-			$oPage->AddToMenu('</div>');
-			$iAccordion++;
-		}
-
-		$oPage->add_ready_script(
-<<<EOF
-	// Accordion Menu
-	$("#accordion").css({display:'block'}).accordion({ header: "h3", heightStyle: "content", collapsible: true,  active: $iActiveAccordion, icons: false, animate: true }); // collapsible will be enabled once the item will be selected
-EOF
-		);
-	}
-
-	/**
 	 * Recursively check if the menu and at least one of his sub-menu is enabled
 	 * @param array $aMenu menu entry
 	 * @return bool true if at least one menu is enabled
@@ -395,92 +351,19 @@ EOF
 	private static function CanDisplayMenu($aMenu)
 	{
 		$oMenuNode = self::GetMenuNode($aMenu['index']);
-		if ($oMenuNode->IsEnabled())
-		{
+		if ($oMenuNode->IsEnabled()) {
 			$aChildren = self::GetChildren($aMenu['index']);
-			if (count($aChildren) > 0)
-			{
-				foreach($aChildren as $aSubMenu)
-				{
-					if (self::CanDisplayMenu($aSubMenu))
-					{
+			if (count($aChildren) > 0) {
+				foreach ($aChildren as $aSubMenu) {
+					if (self::CanDisplayMenu($aSubMenu)) {
 						return true;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				return true;
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Handles the display of the sub-menus (called recursively if necessary)
-	 *
-	 * @param \WebPage $oPage
-	 * @param array $aMenus
-	 * @param array $aExtraParams
-	 * @param int $iActiveMenu
-	 *
-	 * @return bool True if the currently selected menu is one of the submenus
-	 * @throws DictExceptionMissingString
-	 * @throws \Exception
-	 * @deprecated Will be removed in 3.0.0, use static::GetSubMenuNodes() instead
-	 */
-	protected static function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use static::GetSubMenuNodes() instead');
-		// Sort the menu based on the rank
-		$bActive = false;
-		usort($aMenus, array('ApplicationMenu', 'CompareOnRank'));
-		foreach ($aMenus as $aMenu) {
-			if (!self::CanDisplayMenu($aMenu)) {
-				continue;
-			}
-			$index = $aMenu['index'];
-			$oMenu = self::GetMenuNode($index);
-			if ($oMenu->IsEnabled())
-			{
-				$aChildren = self::GetChildren($index);
-				$aCSSClasses = array('navigation-menu-item');
-				if (count($aChildren) > 0)
-				{
-					$aCSSClasses[] = 'submenu';
-				}
-				$sHyperlink = $oMenu->GetHyperlink($aExtraParams);
-				$sItemHtml = '<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" class="'.implode(' ', $aCSSClasses).'" data-menu-id="'.$oMenu->GetMenuID().'">';
-				if ($sHyperlink != '')
-				{
-					$sLinkTarget = '';
-					if ($oMenu->IsHyperLinkInNewWindow())
-					{
-						$sLinkTarget .= ' target="_blank"';
-					}
-					$sURL = '"'.$oMenu->GetHyperlink($aExtraParams).'"'.$sLinkTarget;
-					$sTitle = utils::HtmlEntities($oMenu->GetTitle());
-					$sItemHtml .= "<a href={$sURL}>{$sTitle}</a>";
-				}
-				else
-				{
-					$sItemHtml .= $oMenu->GetTitle();
-				}
-				$sItemHtml .= '</li>';
-				$oPage->AddToMenu($sItemHtml);
-				if ($iActiveMenu == $index)
-				{
-					$bActive = true;
-				}
-				if (count($aChildren) > 0)
-				{
-					$oPage->AddToMenu('<ul>');
-					$bActive |= self::DisplaySubMenu($oPage, $aChildren, $aExtraParams, $iActiveMenu);
-					$oPage->AddToMenu('</ul>');
-				}
-			}
-		}
-		return $bActive;
 	}
 
 	/**
@@ -492,12 +375,10 @@ EOF
 	public static function CompareOnRank($a, $b)
 	{
 		$result = 1;
-		if ($a['rank'] == $b['rank'])
-		{
+		if ($a['rank'] == $b['rank']) {
 			$result = 0;
 		}
-		if ($a['rank'] < $b['rank'])
-		{
+		if ($a['rank'] < $b['rank']) {
 			$result = -1;
 		}
 		return $result;
@@ -536,7 +417,7 @@ EOF
 
 		return -1;
 	}
-	
+
 	/**
 	 * Retrieves the currently active menu (if any, otherwise the first menu is the default)
 	 * @return string The Id of the currently active menu
@@ -544,9 +425,8 @@ EOF
 	public static function GetActiveNodeId()
 	{
 		$oAppContext = new ApplicationContext();
-		$sMenuId = $oAppContext->GetCurrentValue('menu', null);		
-		if ($sMenuId  === null)
-		{
+		$sMenuId = $oAppContext->GetCurrentValue('menu', null);
+		if ($sMenuId  === null) {
 			$sMenuId = self::GetDefaultMenuId();
 		}
 		return $sMenuId;
@@ -558,13 +438,12 @@ EOF
 	public static function GetDefaultMenuId()
 	{
 		static $sDefaultMenuId = null;
-		if (is_null($sDefaultMenuId))
-		{
+		if (is_null($sDefaultMenuId)) {
 			// Make sure the root menu is sorted on 'rank'
-			usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
+			usort(self::$aRootMenus, ['ApplicationMenu', 'CompareOnRank']);
 			$oFirstGroup = self::GetMenuNode(self::$aRootMenus[0]['index']);
 			$aChildren = self::$aMenusIndex[$oFirstGroup->GetIndex()]['children'];
-			usort($aChildren, array('ApplicationMenu', 'CompareOnRank'));
+			usort($aChildren, ['ApplicationMenu', 'CompareOnRank']);
 			$oMenuNode = self::GetMenuNode($aChildren[0]['index']);
 			$sDefaultMenuId = $oMenuNode->GetMenuId();
 		}
@@ -578,13 +457,11 @@ EOF
 	public static function GetRootMenuId($sMenuId)
 	{
 		$iMenuIndex = self::GetMenuIndexById($sMenuId);
-		if ($iMenuIndex == -1)
-		{
+		if ($iMenuIndex == -1) {
 			return '';
 		}
 		$oMenu = ApplicationMenu::GetMenuNode($iMenuIndex);
-		while ($oMenu->GetParentIndex() != -1)
-		{
+		while ($oMenu->GetParentIndex() != -1) {
 			$oMenu = ApplicationMenu::GetMenuNode($oMenu->GetParentIndex());
 		}
 		return $oMenu->GetMenuId();
@@ -654,7 +531,7 @@ abstract class MenuNode
 
 	/**
 	 * Stimulus to check: if the user can 'apply' this stimulus, then she/he can see this menu
-	 */	
+	 */
 	protected $m_aEnableStimuli;
 
 	/**
@@ -671,17 +548,17 @@ abstract class MenuNode
 	{
 		$this->sMenuId = $sMenuId;
 		$this->iParentIndex = $iParentIndex;
-		$this->aReflectionProperties = array();
+		$this->aReflectionProperties = [];
 		if (utils::IsNotNullOrEmptyString($sEnableClass)) {
 			$this->aReflectionProperties['enable_class'] = $sEnableClass;
 			$this->aReflectionProperties['enable_action'] = $iActionCode;
 			$this->aReflectionProperties['enable_permission'] = $iAllowedResults;
 			$this->aReflectionProperties['enable_stimulus'] = $sEnableStimulus;
 		}
-		$this->m_aEnableClasses = array($sEnableClass);
-		$this->m_aEnableActions = array($iActionCode);
-		$this->m_aEnableActionResults = array($iAllowedResults);
-		$this->m_aEnableStimuli = array($sEnableStimulus);
+		$this->m_aEnableClasses = [$sEnableClass];
+		$this->m_aEnableActions = [$iActionCode];
+		$this->m_aEnableActionResults = [$iAllowedResults];
+		$this->m_aEnableStimuli = [$sEnableStimulus];
 		$this->index = ApplicationMenu::InsertMenu($this, $iParentIndex, $fRank);
 	}
 
@@ -735,7 +612,6 @@ abstract class MenuNode
 		$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
 		DBSearchHelper::AddContextFilter($oSearch);
 
-
 		$oSet = new DBObjectSet($oSearch);
 		$iCount = $oSet->CountWithLimit(99);
 		if ($iCount > 99) {
@@ -786,8 +662,7 @@ abstract class MenuNode
 	 */
 	public function PopulateChildMenus()
 	{
-		foreach (ApplicationMenu::GetChildren($this->GetIndex()) as $aMenu)
-		{
+		foreach (ApplicationMenu::GetChildren($this->GetIndex()) as $aMenu) {
 			$index = $aMenu['index'];
 			$oMenu = ApplicationMenu::GetMenuNode($index);
 			$oMenu->PopulateChildMenus();
@@ -814,7 +689,7 @@ abstract class MenuNode
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Add a limiting display condition for the same menu node. The conditions will be combined with a AND
 	 * @param $oMenuNode MenuNode Another definition of the same menu node, with potentially different access restriction
@@ -822,8 +697,7 @@ abstract class MenuNode
 	 */
 	public function AddCondition(MenuNode $oMenuNode)
 	{
-		foreach($oMenuNode->m_aEnableClasses as $index => $sClass )
-		{
+		foreach ($oMenuNode->m_aEnableClasses as $index => $sClass) {
 			$this->m_aEnableClasses[] = $sClass;
 			$this->m_aEnableActions[] = $oMenuNode->m_aEnableActions[$index];
 			$this->m_aEnableActionResults[] = $oMenuNode->m_aEnableActionResults[$index];
@@ -836,33 +710,24 @@ abstract class MenuNode
 	 */
 	public function IsEnabled()
 	{
-		foreach($this->m_aEnableClasses as $index => $sClass)
-		{
-			if ($sClass != null)
-			{
-				if (MetaModel::IsValidClass($sClass))
-				{
-					if ($this->m_aEnableStimuli[$index] != null)
-					{
-						if (!UserRights::IsStimulusAllowed($sClass, $this->m_aEnableStimuli[$index]))
-						{
+		foreach ($this->m_aEnableClasses as $index => $sClass) {
+			if ($sClass != null) {
+				if (MetaModel::IsValidClass($sClass)) {
+					if ($this->m_aEnableStimuli[$index] != null) {
+						if (!UserRights::IsStimulusAllowed($sClass, $this->m_aEnableStimuli[$index])) {
 							return false;
 						}
 					}
-					if ($this->m_aEnableActions[$index] != null)
-					{
+					if ($this->m_aEnableActions[$index] != null) {
 						// Menus access rights ignore the archive mode
 						utils::PushArchiveMode(false);
 						$iResult = UserRights::IsActionAllowed($sClass, $this->m_aEnableActions[$index]);
 						utils::PopArchiveMode();
-						if (!($iResult & $this->m_aEnableActionResults[$index]))
-						{
+						if (!($iResult & $this->m_aEnableActionResults[$index])) {
 							return false;
 						}
 					}
-				}
-				else
-				{
+				} else {
 					return false;
 				}
 			}
@@ -875,7 +740,7 @@ abstract class MenuNode
 	 * @param array $aExtraParams
 	 * @return mixed
 	 */
-	public abstract function RenderContent(WebPage $oPage, $aExtraParams = array());
+	abstract public function RenderContent(WebPage $oPage, $aExtraParams = []);
 
 	/**
 	 * @param string $sHyperlink
@@ -884,16 +749,13 @@ abstract class MenuNode
 	 */
 	protected function AddParams($sHyperlink, $aExtraParams)
 	{
-		if (count($aExtraParams) > 0)
-		{
-			$aQuery = array();
+		if (count($aExtraParams) > 0) {
+			$aQuery = [];
 			$sSeparator = '?';
-			if (strpos($sHyperlink, '?') !== false)
-			{
+			if (strpos($sHyperlink, '?') !== false) {
 				$sSeparator = '&';
 			}
-			foreach($aExtraParams as $sName => $sValue)
-			{
+			foreach ($aExtraParams as $sName => $sValue) {
 				$aQuery[] = urlencode($sName).'='.urlencode($sValue);
 			}
 			$sHyperlink .= $sSeparator.implode('&', $aQuery);
@@ -909,7 +771,7 @@ abstract class MenuNode
 class MenuGroup extends MenuNode
 {
 	/** @var string DEFAULT_DECORATION_CLASSES Set to null by default so it is replaced by initials when none is specified */
-	const DEFAULT_DECORATION_CLASSES = null;
+	public const DEFAULT_DECORATION_CLASSES = null;
 
 	/** @var string The CSS classes used to display the menu group's icon */
 	protected $sDecorationClasses = self::DEFAULT_DECORATION_CLASSES;
@@ -929,8 +791,7 @@ class MenuGroup extends MenuNode
 	{
 		parent::__construct($sMenuId, -1 /* no parent, groups are at root level */, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
 
-		if(!empty($sDecorationClasses))
-		{
+		if (!empty($sDecorationClasses)) {
 			$this->sDecorationClasses = $sDecorationClasses;
 		}
 	}
@@ -971,7 +832,7 @@ class MenuGroup extends MenuNode
 	/**
 	 * @inheritDoc
 	 */
-	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	public function RenderContent(WebPage $oPage, $aExtraParams = [])
 	{
 		assert(false); // Shall never be called, groups do not display any content
 	}
@@ -984,14 +845,9 @@ class MenuGroup extends MenuNode
 class TemplateMenuNode extends MenuNode
 {
 	/**
-	 * @var string
-	 */
-	protected $sTemplateFile;
-	
-	/**
 	 * Create a menu item based on a custom template and inserts it into the application's main menu
 	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
-	 * @param string $sTemplateFile Path (or URL) to the file that will be used as a template for displaying the page's content
+	 * @param string $sTemplateFile unused deprecated
 	 * @param integer $iParentIndex ID of the parent menu
 	 * @param float $fRank Number used to order the list, any number will do, but for a given level (i.e same parent) all menus are sorted based on this value
 	 * @param string $sEnableClass Name of class of object
@@ -1002,37 +858,21 @@ class TemplateMenuNode extends MenuNode
 	public function __construct($sMenuId, $sTemplateFile, $iParentIndex, $fRank = 0.0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
-		$this->sTemplateFile = $sTemplateFile;
-		$this->aReflectionProperties['template_file'] = $sTemplateFile;
 	}
-
 	/**
 	 * @inheritDoc
 	 */
 	public function GetHyperlink($aExtraParams)
 	{
-		if ($this->sTemplateFile == '') return '';
-		return parent::GetHyperlink($aExtraParams);
+		return '';
 	}
-
 	/**
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	public function RenderContent(WebPage $oPage, $aExtraParams = [])
 	{
-		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
-		$sTemplate = @file_get_contents($this->sTemplateFile);
-		if ($sTemplate !== false)
-		{
-			$aExtraParams['table_id'] = 'Menu_'.$this->GetMenuId();
-			$oTemplate = new DisplayTemplate($sTemplate);
-			$oTemplate->Render($oPage, $aExtraParams);
-		}
-		else
-		{
-			$oPage->p("Error: failed to load template file: '{$this->sTemplateFile}'"); // No need to translate ?
-		}
+		//DO NOTHING this type of menu is only used for title not clickable
 	}
 }
 
@@ -1058,12 +898,11 @@ class OQLMenuNode extends MenuNode
 	 * @var bool|null
 	 */
 	protected $bSearchFormOpen;
-	
+
 	/**
 	 * Extra parameters to be passed to the display block to fine tune its appearence
 	 */
 	protected $m_aParams;
-
 
 	/**
 	 * Create a menu item based on an OQL query and inserts it into the application's main menu
@@ -1085,13 +924,13 @@ class OQLMenuNode extends MenuNode
 		$this->sOQL = $sOQL;
 		$this->bSearch = $bSearch;
 		$this->bSearchFormOpen = $bSearchFormOpen;
-		$this->m_aParams = array();
+		$this->m_aParams = [];
 		$this->aReflectionProperties['oql'] = $sOQL;
 		$this->aReflectionProperties['do_search'] = $bSearch;
 		// Enhancement: we could set as the "enable" condition that the user has enough rights to "read" the objects
 		// of the class specified by the OQL...
 	}
-	
+
 	/**
 	 * Set some extra parameters to be passed to the display block to fine tune its appearence
 	 * @param array $aParams paramCode => value. See DisplayBlock::GetDisplay for the meaning of the parameters
@@ -1099,8 +938,7 @@ class OQLMenuNode extends MenuNode
 	public function SetParameters($aParams)
 	{
 		$this->m_aParams = $aParams;
-		foreach($aParams as $sKey => $value)
-		{
+		foreach ($aParams as $sKey => $value) {
 			$this->aReflectionProperties[$sKey] = $value;
 		}
 	}
@@ -1109,18 +947,17 @@ class OQLMenuNode extends MenuNode
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	public function RenderContent(WebPage $oPage, $aExtraParams = [])
 	{
-		ContextTag::AddContext(ContextTag::TAG_OBJECT_SEARCH);
+		$oTag = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
-		OQLMenuNode::RenderOQLSearch
-		(
+		OQLMenuNode::RenderOQLSearch(
 			$this->sOQL,
 			Dict::S($this->sPageTitle),
 			'Menu_'.$this->GetMenuId(),
 			$this->bSearch, // Search pane
 			$this->bSearchFormOpen, // Search open
-			$oPage, 
+			$oPage,
 			array_merge($this->m_aParams, $aExtraParams),
 			true
 		);
@@ -1139,26 +976,25 @@ class OQLMenuNode extends MenuNode
 	 * @throws DictExceptionMissingString
 	 * @throws OQLException
 	 */
-	public static function RenderOQLSearch($sOql, $sTitle, $sUsageId, $bSearchPane, $bSearchOpen, WebPage $oPage, $aExtraParams = array(), $bEnableBreadcrumb = false)
+	public static function RenderOQLSearch($sOql, $sTitle, $sUsageId, $bSearchPane, $bSearchOpen, WebPage $oPage, $aExtraParams = [], $bEnableBreadcrumb = false)
 	{
 		$sUsageId = utils::GetSafeId($sUsageId);
 		$oSearch = DBObjectSearch::FromOQL($sOql);
-		$sClass= 	$oSearch->GetClass();
+		$sClass = $oSearch->GetClass();
 		$sIcon = MetaModel::GetClassIcon($sClass, false);
 		if ($bSearchPane) {
 			$aParams = array_merge(['open' => $bSearchOpen, 'table_id' => $sUsageId, 'submit_on_load' => false], $aExtraParams);
-			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
+			$oBlock = new DisplayBlock($oSearch, DisplayBlock::ENUM_STYLE_SEARCH, false /* Asynchronous */, $aParams);
 			$oBlock->Display($oPage, 0);
 			$oPage->add("<div class='sf_results_area ibo-add-margin-top-250' data-target='search_results'>");
-		}
-		else {
+		} else {
 			$oPage->add("<div class='sf_results_area' data-target='search_results'>");
 		}
-		$aExtraParams['panel_class'] =$sClass;
+		$aExtraParams['panel_class'] = $sClass;
 		$aExtraParams['panel_title'] = $sTitle;
 		$aExtraParams['panel_icon'] = $sIcon;
 
-		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
+		$aParams = array_merge(['table_id' => $sUsageId], $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);
 		$oBlock->Display($oPage, $sUsageId);
 
@@ -1223,14 +1059,14 @@ class SearchMenuNode extends MenuNode
 	 * @throws \DictExceptionMissingString
 	 * @throws \Exception
 	 */
-	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	public function RenderContent(WebPage $oPage, $aExtraParams = [])
 	{
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
 		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 		$oSearch = new DBObjectSearch($this->sClass);
 		$sUsageId =  'Menu_'.utils::GetSafeId($this->GetMenuId());
-		$aParams = array_merge(array('table_id' =>$sUsageId), $aExtraParams);
+		$aParams = array_merge(['table_id' => $sUsageId], $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 		$oBlock->Display($oPage, 0);
 	}
@@ -1267,10 +1103,16 @@ class WebPageMenuNode extends MenuNode
 	 * @param bool $bIsLinkInNewWindow for the {@link WebPageMenuNode::IsHyperLinkInNewWindow} method
 	 */
 	public function __construct(
-		$sMenuId, $sHyperlink, $iParentIndex, $fRank = 0.0, $sEnableClass = null, $iActionCode = null,
-		$iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null, $bIsLinkInNewWindow = false
-	)
-	{
+		$sMenuId,
+		$sHyperlink,
+		$iParentIndex,
+		$fRank = 0.0,
+		$sEnableClass = null,
+		$iActionCode = null,
+		$iAllowedResults = UR_ALLOWED_YES,
+		$sEnableStimulus = null,
+		$bIsLinkInNewWindow = false
+	) {
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
 		$this->sHyperlink = $sHyperlink;
 		$this->aReflectionProperties['url'] = $sHyperlink;
@@ -1283,7 +1125,7 @@ class WebPageMenuNode extends MenuNode
 	public function GetHyperlink($aExtraParams)
 	{
 		$aExtraParams['c[menu]'] = $this->GetMenuId();
-		return $this->AddParams( $this->sHyperlink, $aExtraParams);
+		return $this->AddParams($this->sHyperlink, $aExtraParams);
 	}
 
 	/**
@@ -1297,7 +1139,7 @@ class WebPageMenuNode extends MenuNode
 	/**
 	 * @inheritDoc
 	 */
-	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	public function RenderContent(WebPage $oPage, $aExtraParams = [])
 	{
 		assert(false); // Shall never be called, the external web page will handle the display by itself
 	}
@@ -1354,25 +1196,23 @@ class NewObjectMenuNode extends MenuNode
 	{
 		// Enable this menu, only if the current user has enough rights to create such an object, or an object of
 		// any child class
-	
+
 		$aSubClasses = MetaModel::EnumChildClasses($this->sClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
 		$bActionIsAllowed = false;
-	
-		foreach($aSubClasses as $sCandidateClass)
-		{
-			if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
-			{
+
+		foreach ($aSubClasses as $sCandidateClass) {
+			if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
 				$bActionIsAllowed = true;
 				break; // Enough for now
 			}
 		}
-		return $bActionIsAllowed;		
+		return $bActionIsAllowed;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	public function RenderContent(WebPage $oPage, $aExtraParams = [])
 	{
 		assert(false); // Shall never be called, the external web page will handle the display by itself
 	}
@@ -1412,7 +1252,9 @@ class DashboardMenuNode extends MenuNode
 	 */
 	public function GetHyperlink($aExtraParams)
 	{
-		if ($this->sDashboardFile == '') return '';
+		if ($this->sDashboardFile == '') {
+			return '';
+		}
 		return parent::GetHyperlink($aExtraParams);
 	}
 
@@ -1430,12 +1272,11 @@ class DashboardMenuNode extends MenuNode
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	public function RenderContent(WebPage $oPage, $aExtraParams = [])
 	{
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
 		$oDashboard = $this->GetDashboard();
-		if ($oDashboard != null)
-		{
+		if ($oDashboard != null) {
 			WebResourcesHelper::EnableC3JSToWebPage($oPage);
 
 			$sDivId = utils::Sanitize($this->sMenuId, '', 'element_identifier');
@@ -1466,9 +1307,7 @@ class DashboardMenuNode extends MenuNode
 				}
 				$oPage->SetBreadCrumbEntry("ui-dashboard-".$this->sMenuId, $this->GetTitle(), $sDescription, '', $sIcon, iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 			}
-		}
-		else
-		{
+		} else {
 			$oPage->p("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
 		}
 	}
@@ -1481,12 +1320,9 @@ class DashboardMenuNode extends MenuNode
 	public function RenderEditor(WebPage $oPage)
 	{
 		$oDashboard = $this->GetDashboard();
-		if ($oDashboard != null)
-		{
+		if ($oDashboard != null) {
 			$oDashboard->RenderEditor($oPage);
-		}
-		else
-		{
+		} else {
 			$oPage->p("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
 		}
 	}
@@ -1498,17 +1334,14 @@ class DashboardMenuNode extends MenuNode
 	public function AddDashlet($oDashlet)
 	{
 		$oDashboard = $this->GetDashboard();
-		if ($oDashboard != null)
-		{
+		if ($oDashboard != null) {
 			$oDashboard->AddDashlet($oDashlet);
 			$oDashboard->Save();
-		}
-		else
-		{
+		} else {
 			throw new Exception("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
 		}
 	}
-	
+
 }
 
 /**
@@ -1527,7 +1360,7 @@ class ShortcutContainerMenuNode extends MenuNode
 	/**
 	 * @inheritDoc
 	 */
-	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	public function RenderContent(WebPage $oPage, $aExtraParams = [])
 	{
 	}
 
@@ -1542,20 +1375,18 @@ class ShortcutContainerMenuNode extends MenuNode
 		//
 		$oBMSearch = new DBObjectSearch('Shortcut');
 		$oBMSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
-		$oBMSet = new DBObjectSet($oBMSearch, array('friendlyname' => true)); // ascending on friendlyname
+		$oBMSet = new DBObjectSet($oBMSearch, ['friendlyname' => true]); // ascending on friendlyname
 		$fRank = 1;
-		while ($oShortcut = $oBMSet->Fetch())
-		{
+		while ($oShortcut = $oBMSet->Fetch()) {
 			$sName = $this->GetMenuId().'_'.$oShortcut->GetKey();
 			new ShortcutMenuNode($sName, $oShortcut, $this->GetIndex(), $fRank++);
 		}
-	
+
 		// Complete the tree
 		//
 		parent::PopulateChildMenus();
 	}
 }
-
 
 require_once(APPROOT.'application/shortcut.class.inc.php');
 /**
@@ -1593,12 +1424,10 @@ class ShortcutMenuNode extends MenuNode
 	{
 		$sContext = $this->oShortcut->Get('context');
 		$aContext = unserialize($sContext);
-		if (isset($aContext['menu']))
-		{
+		if (isset($aContext['menu'])) {
 			unset($aContext['menu']);
 		}
-		foreach ($aContext as $sArgName => $sArgValue)
-		{
+		foreach ($aContext as $sArgName => $sArgValue) {
 			$aExtraParams[$sArgName] = $sArgValue;
 		}
 		return parent::GetHyperlink($aExtraParams);
@@ -1608,7 +1437,7 @@ class ShortcutMenuNode extends MenuNode
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function RenderContent(WebPage $oPage, $aExtraParams = array())
+	public function RenderContent(WebPage $oPage, $aExtraParams = [])
 	{
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
 		$this->oShortcut->RenderContent($oPage, $aExtraParams);
@@ -1645,11 +1474,9 @@ class ShortcutMenuNode extends MenuNode
 		return true;
 	}
 
-
 	public function GetEntriesCount()
 	{
 		return $this->GetEntriesCountFromOQL($this->oShortcut->Get('oql'));
 	}
 
 }
-

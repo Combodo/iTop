@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,6 +22,9 @@
  * ModelFactory: in-memory manipulation of the XML MetaModel
  */
 
+use Combodo\iTop\DesignDocument;
+use Combodo\iTop\DesignElement;
+
 require_once(APPROOT.'setup/moduleinstaller.class.inc.php');
 require_once(APPROOT.'setup/itopdesignformat.class.inc.php');
 require_once(APPROOT.'setup/compat/domcompat.php');
@@ -36,6 +40,13 @@ class MFException extends Exception
 	 * @var integer
 	 */
 	protected $iSourceLineNumber;
+
+	/**
+	 * Used when editing partial xml delta
+	 * @var integer
+	 */
+	protected $iSourceLineOffset;
+
 	/**
 	 * @var string
 	 */
@@ -45,27 +56,51 @@ class MFException extends Exception
 	 */
 	protected $sExtraInfo;
 
-	const COULD_NOT_BE_ADDED = 1;
-	const COULD_NOT_BE_DELETED = 2;
-	const COULD_NOT_BE_MODIFIED_NOT_FOUND = 3;
-	const COULD_NOT_BE_MODIFIED_ALREADY_DELETED = 4;
-	const INVALID_DELTA = 5;
-	const ALREADY_DELETED = 6;
-	const NOT_FOUND = 7;
-	const PARENT_NOT_FOUND = 8;
-
+	public const COULD_NOT_BE_ADDED = 1;
+	public const COULD_NOT_BE_DELETED = 2;
+	public const COULD_NOT_BE_MODIFIED_NOT_FOUND = 3;
+	public const COULD_NOT_BE_MODIFIED_ALREADY_DELETED = 4;
+	public const INVALID_DELTA = 5;
+	public const ALREADY_DELETED = 6;
+	public const NOT_FOUND = 7;
+	public const PARENT_NOT_FOUND = 8;
+	public const AMBIGUOUS_LEAF = 9;
 
 	/**
 	 * MFException constructor.
 	 *
 	 * @inheritDoc
+	 *
+	 * @param string $message
+	 * @param int $code: error code
+	 * @param DesignElement $oNode: dom node
+	 * @param string|null $sXPath: XML xpath: if provided used in exception message. otherwise computed via $oNode
+	 * @param string $sExtraInfo: additional information stored in exception
+	 * @param DesignElement|null $oParentFallbackNode: fallback dom node (usually parent). in case $oNode XML line is wrong (set to 0), line number computed/displayed in error message comes from $oParentFallbackNode
 	 */
-	public function __construct($message = null, $code = null, $iSourceLineNumber = 0, $sXPath = '', $sExtraInfo = '', $previous = null)
+	public function __construct(string $message, int $code, DesignElement $oNode, ?string $sXPath = null, string $sExtraInfo = '', ?DesignElement $oParentFallbackNode = null)
 	{
-		parent::__construct($message, $code, $previous);
+		$iSourceLineNumber = ModelFactory::GetXMLLineNumber($oNode);
+		if ($iSourceLineNumber == 0 && ! is_null($oParentFallbackNode)) {
+			$iSourceLineNumber = ModelFactory::GetXMLLineNumber($oParentFallbackNode);
+		}
+
+		if (is_null($sXPath)) {
+			$sXPath = DesignDocument::GetItopNodePath($oNode);
+		}
+
 		$this->iSourceLineNumber = $iSourceLineNumber;
+		$this->iSourceLineOffset = 0;
 		$this->sXPath = $sXPath;
 		$this->sExtraInfo = $sExtraInfo;
+		parent::__construct("$sXPath at line $iSourceLineNumber: $message", $code);
+
+		$aContext = [
+			'error' => $code,
+			'stack' => $this->getTraceAsString(),
+			'extra_info' => $sExtraInfo,
+		];
+		\IssueLog::Error($this->getMessage(), null, $aContext);
 	}
 
 	/**
@@ -75,7 +110,7 @@ class MFException extends Exception
 	 */
 	public function GetSourceLineNumber()
 	{
-		return $this->iSourceLineNumber;
+		return intval($this->iSourceLineNumber) - $this->iSourceLineOffset;
 	}
 
 	/**
@@ -96,6 +131,11 @@ class MFException extends Exception
 	public function GetExtraInfo()
 	{
 		return $this->sExtraInfo;
+	}
+
+	public function SetSourceLineOffset(int $iSourceLineOffset): void
+	{
+		$this->iSourceLineOffset = $iSourceLineOffset;
 	}
 }
 
@@ -163,38 +203,37 @@ class MFModule
 	{
 		$this->sId = $sId;
 
-		list($this->sName, $this->sVersion) = ModuleDiscovery::GetModuleName($sId);
-		if (strlen($this->sVersion) == 0)
-		{
+		[$this->sName, $this->sVersion] = ModuleDiscovery::GetModuleName($sId);
+		if (strlen($this->sVersion) == 0) {
 			$this->sVersion = '1.0.0';
 		}
 
 		$this->sRootDir = $sRootDir;
 		$this->sLabel = $sLabel;
-		$this->aDataModels = array();
+		$this->aDataModels = [];
 		$this->bAutoSelect = $bAutoSelect;
 		$this->sAutoSelect = 'false';
-		$this->aFilesToInclude = array('addons' => array(), 'business' => array(), 'webservices' => array(),);
+		$this->aFilesToInclude = ['addons' => [], 'business' => [], 'webservices' => [],];
 
 		if (is_null($sRootDir)) {
 			return;
 		}
 
+		if (!is_dir($sRootDir)) {
+			$sRootDir = APPROOT.$sRootDir;
+		}
+
 		// Scan the module's root directory to find the datamodel(*).xml files
-		if ($hDir = opendir($sRootDir))
-		{
+		if ($hDir = opendir($sRootDir)) {
 			// This is the correct way to loop over the directory. (according to the documentation)
-			while (($sFile = readdir($hDir)) !== false)
-			{
-				if (preg_match('/^datamodel(.*)\.xml$/i', $sFile, $aMatches))
-				{
+			while (($sFile = readdir($hDir)) !== false) {
+				if (preg_match('/^datamodel(.*)\.xml$/i', $sFile, $aMatches)) {
 					$this->aDataModels[] = $this->sRootDir.'/'.$aMatches[0];
 				}
 			}
 			closedir($hDir);
 		}
 	}
-
 
 	/**
 	 * @return string
@@ -259,7 +298,7 @@ class MFModule
 	 */
 	public function ListClasses()
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -267,17 +306,16 @@ class MFModule
 	 */
 	public function GetDictionaryFiles()
 	{
-		$aDictionaries = array();
-		foreach (array($this->sRootDir, $this->sRootDir.'/dictionaries') as $sRootDir)
-		{
-			if ($hDir = @opendir($sRootDir))
-			{
-				while (($sFile = readdir($hDir)) !== false)
-				{
-					$aMatches = array();
-					if (preg_match("/^[^\\.]+.dict.".$this->sName.'.php$/i', $sFile,
-						$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
-					{
+		$aDictionaries = [];
+		foreach ([$this->sRootDir, $this->sRootDir.'/dictionaries'] as $sRootDir) {
+			if ($hDir = @opendir($sRootDir)) {
+				while (($sFile = readdir($hDir)) !== false) {
+					$aMatches = [];
+					if (preg_match(
+						"/^[^\\.]+.dict.".$this->sName.'.php$/i',
+						$sFile,
+						$aMatches
+					)) { // Dictionary files are named like <Lang>.dict.<ModuleName>.php
 						$aDictionaries[] = $sRootDir.'/'.$sFile;
 					}
 				}
@@ -359,8 +397,8 @@ class MFDeltaModule extends MFModule
 		parent::__construct('datamodel-delta', '', 'Additional Delta');
 		$this->sName = 'delta';
 		$this->sVersion = '1.0';
-		$this->aDataModels = array($sDeltaFile);
-		$this->aFilesToInclude = array('addons' => array(), 'business' => array(), 'webservices' => array(),);
+		$this->aDataModels = [$sDeltaFile];
+		$this->aFilesToInclude = ['addons' => [], 'business' => [], 'webservices' => [],];
 	}
 
 	/**
@@ -392,7 +430,7 @@ class MFDeltaModule extends MFModule
 	 */
 	public function GetDictionaryFiles()
 	{
-		return array();
+		return [];
 	}
 }
 
@@ -415,8 +453,8 @@ class MFCoreModule extends MFModule
 		parent::__construct($sName, '', $sLabel);
 		$this->sName = $sName;
 		$this->sVersion = '1.0';
-		$this->aDataModels = array($sDeltaFile);
-		$this->aFilesToInclude = array('addons' => array(), 'business' => array(), 'webservices' => array(),);
+		$this->aDataModels = [$sDeltaFile];
+		$this->aFilesToInclude = ['addons' => [], 'business' => [], 'webservices' => [],];
 	}
 
 	/**
@@ -440,7 +478,7 @@ class MFCoreModule extends MFModule
 	 */
 	public function GetDictionaryFiles()
 	{
-		return array();
+		return [];
 	}
 }
 
@@ -463,8 +501,8 @@ class MFDictModule extends MFModule
 		parent::__construct($sName, $sRootDir, $sLabel);
 		$this->sName = $sName;
 		$this->sVersion = '1.0';
-		$this->aDataModels = array();
-		$this->aFilesToInclude = array('addons' => array(), 'business' => array(), 'webservices' => array(),);
+		$this->aDataModels = [];
+		$this->aFilesToInclude = ['addons' => [], 'business' => [], 'webservices' => [],];
 	}
 
 	/**
@@ -490,22 +528,19 @@ class MFDictModule extends MFModule
 	 */
 	public function GetDictionaryFiles($sDir = null)
 	{
-		$aDictionaries = array();
+		$aDictionaries = [];
 		$sDictionaryFilePattern = '*dictionary.itop.*.php';
 
-		if($sDir === null)
-		{
+		if ($sDir === null) {
 			$sDir = $this->sRootDir;
 		}
 
-		if ($hDir = opendir($sDir))
-		{
+		if ($hDir = opendir($sDir)) {
 			// Matching files
 			$aDictionaries = glob($sDir.'/'.$sDictionaryFilePattern);
 
 			// Directories to scan
-			foreach(glob($sDir.'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $sSubDir)
-			{
+			foreach (glob($sDir.'/*', GLOB_ONLYDIR | GLOB_NOSORT) as $sSubDir) {
 				/** @noinspection SlowArrayOperationsInLoopInspection */
 				$aDictionaries = array_merge($aDictionaries, $this->GetDictionaryFiles($sSubDir));
 			}
@@ -514,7 +549,6 @@ class MFDictModule extends MFModule
 		return $aDictionaries;
 	}
 }
-
 
 /**
  * ModelFactory: the class that manages the in-memory representation of the XML MetaModel
@@ -534,21 +568,17 @@ class ModelFactory
 	 */
 	public const DELTA_FLAG_IN_DELETION_VALUES = ['delete', 'delete_if_exists'];
 
+	public const LOAD_DELTA_MODE_LAX = 'lax';
+	public const LOAD_DELTA_MODE_STRICT = 'strict';
+
 	protected $aRootDirs;
 	protected $oDOMDocument;
 	protected $oRoot;
-	protected $oModules;
-	protected $oClasses;
-	protected $oMenus;
-	protected $oMeta;
-	protected $oDictionaries;
-	static protected $aLoadedClasses;
-	static protected $aWellKnownParents = array('DBObject', 'CMDBObject', 'cmdbAbstractObject');
-	static protected $aLoadedModules;
-	static protected $aLoadErrors;
+	protected static $aWellKnownParents = ['DBObject', 'CMDBObject', 'cmdbAbstractObject'];
+	protected static $aLoadedModules;
+	protected static $aLoadErrors;
 	protected $aDict;
 	protected $aDictKeys;
-
 
 	/**
 	 * ModelFactory constructor.
@@ -558,42 +588,40 @@ class ModelFactory
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct($aRootDirs, $aRootNodeExtensions = array())
+	public function __construct($aRootDirs, $aRootNodeExtensions = [])
 	{
-		$this->aDict = array();
-		$this->aDictKeys = array();
+		$this->aDict = [];
+		$this->aDictKeys = [];
 		$this->aRootDirs = $aRootDirs;
 		$this->oDOMDocument = new MFDocument();
 		$this->oRoot = $this->oDOMDocument->CreateElement('itop_design');
 		$this->oRoot->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 		$this->oRoot->setAttribute('version', ITOP_DESIGN_LATEST_VERSION);
-		$this->oDOMDocument->AppendChild($this->oRoot);
-		$this->oModules = $this->oDOMDocument->CreateElement('loaded_modules');
-		$this->oRoot->AppendChild($this->oModules);
-		$this->oClasses = $this->oDOMDocument->CreateElement('classes');
-		$this->oRoot->AppendChild($this->oClasses);
-		$this->oDictionaries = $this->oDOMDocument->CreateElement('dictionaries');
-		$this->oRoot->AppendChild($this->oDictionaries);
+		$this->oDOMDocument->appendChild($this->oRoot);
+		$oModules = $this->oDOMDocument->CreateElement('loaded_modules');
+		$this->oRoot->appendChild($oModules);
+		$oClasses = $this->oDOMDocument->CreateElement('classes');
+		$this->oRoot->appendChild($oClasses);
+		$oDictionaries = $this->oDOMDocument->CreateElement('dictionaries');
+		$this->oRoot->appendChild($oDictionaries);
 
-		foreach (self::$aWellKnownParents as $sWellKnownParent)
-		{
-			$this->AddWellKnownParent($sWellKnownParent);
+		foreach (self::$aWellKnownParents as $sWellKnownParent) {
+			$this->AddWellKnownParent($oClasses, $sWellKnownParent);
 		}
-		$this->oMenus = $this->oDOMDocument->CreateElement('menus');
-		$this->oRoot->AppendChild($this->oMenus);
+		$oMenus = $this->oDOMDocument->CreateElement('menus');
+		$this->oRoot->appendChild($oMenus);
 
-		$this->oMeta = $this->oDOMDocument->CreateElement('meta');
-		$this->oRoot->AppendChild($this->oMeta);
-		$this->oMeta = $this->oDOMDocument->CreateElement('events');
-		$this->oRoot->AppendChild($this->oMeta);
+		$oMeta = $this->oDOMDocument->CreateElement('meta');
+		$this->oRoot->appendChild($oMeta);
+		$oEvents = $this->oDOMDocument->CreateElement('events');
+		$this->oRoot->appendChild($oEvents);
 
-		foreach ($aRootNodeExtensions as $sElementName)
-		{
+		foreach ($aRootNodeExtensions as $sElementName) {
 			$oElement = $this->oDOMDocument->CreateElement($sElementName);
-			$this->oRoot->AppendChild($oElement);
+			$this->oRoot->appendChild($oElement);
 		}
-		self::$aLoadedModules = array();
-		self::$aLoadErrors = array();
+		self::$aLoadedModules = [];
+		self::$aLoadErrors = [];
 
 		libxml_use_internal_errors(true);
 	}
@@ -607,8 +635,7 @@ class ModelFactory
 	 */
 	public function Dump($oNode = null, $bReturnRes = false)
 	{
-		if (is_null($oNode))
-		{
+		if (is_null($oNode)) {
 			$oNode = $this->oRoot;
 		}
 
@@ -623,10 +650,9 @@ class ModelFactory
 		$this->oDOMDocument->load($sCacheFile);
 		$this->oRoot = $this->oDOMDocument->firstChild;
 
-		$this->oModules = $this->oRoot->getElementsByTagName('loaded_modules')->item(0);
-		self::$aLoadedModules = array();
-		foreach ($this->oModules->getElementsByTagName('module') as $oModuleNode)
-		{
+		$oModules = $this->oRoot->getElementsByTagName('loaded_modules')->item(0);
+		self::$aLoadedModules = [];
+		foreach ($oModules->getElementsByTagName('module') as $oModuleNode) {
 			$sId = $oModuleNode->getAttribute('id');
 			$sRootDir = $oModuleNode->GetChildText('root_dir');
 			$sLabel = $oModuleNode->GetChildText('label');
@@ -645,173 +671,394 @@ class ModelFactory
 	/**
 	 * To progressively replace LoadModule
 	 *
-	 * @param \MFElement $oSourceNode
+	 * @param DesignElement $oSourceNode
 	 * @param \MFDocument|\MFElement $oTargetParentNode
 	 *
-	 * @throws \MFException
+	 * @throws MFException
 	 * @throws \DOMFormatException
 	 * @throws \Exception
 	 */
-	public function LoadDelta($oSourceNode, $oTargetParentNode)
+	public function LoadDelta($oSourceNode, $oTargetParentNode, string $sMode = self::LOAD_DELTA_MODE_LAX)
 	{
-		if (!$oSourceNode instanceof DOMElement)
-		{
+		if (!$oSourceNode instanceof DOMElement) {
 			return;
 		}
-		//echo "Load $oSourceNode->tagName::".$oSourceNode->getAttribute('id')." (".$oSourceNode->getAttribute('_delta').")<br/>\n";
-		$oTarget = $this->oDOMDocument;
+		if ($oTargetParentNode instanceof MFDocument) {
+			$oTargetDocument = $oTargetParentNode;
+		} else {
+			$oTargetDocument = $oTargetParentNode->ownerDocument;
+		}
 
-		$sDeltaSpec = $oSourceNode->getAttribute('_delta');
-		if (($oSourceNode->tagName == 'class') && ($oSourceNode->parentNode->tagName == 'classes') && ($oSourceNode->parentNode->parentNode->tagName == 'itop_design'))
-		{
-			$sParentId = $oSourceNode->GetChildText('parent');
-			if (($sDeltaSpec == 'define') || ($sDeltaSpec == 'force'))
-			{
-				// This tag is organized in hierarchy: determine the real parent node (as a subnode of the current node)
-				$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
-
-				if (!$oTargetParentNode)
-				{
-					// echo "Dumping target doc - looking for '$sParentId'<br/>\n";
-					// $this->oDOMDocument->firstChild->Dump();
-					$sPath = MFDocument::GetItopNodePath($oSourceNode);
-					$iLine = $oSourceNode->getLineNo();
-					throw new MFException($sPath.' at line '.$iLine.": parent class '$sParentId' could not be found",
-						MFException::PARENT_NOT_FOUND, $iLine, $sPath, $sParentId);
+		if ($oSourceNode->tagName === 'itop_design') {
+			// Get mode if present in the tag
+			if ($oSourceNode->hasAttribute('load')) {
+				switch ($oSourceNode->getAttribute('load')) {
+					case self::LOAD_DELTA_MODE_STRICT:
+						$sMode = self::LOAD_DELTA_MODE_STRICT;
+						break;
+					case self::LOAD_DELTA_MODE_LAX:
+						$sMode = self::LOAD_DELTA_MODE_LAX;
+						break;
 				}
 			}
-			else
-			{
-				$oTargetNode = $oTarget->GetNodeById('/itop_design/classes//class', $oSourceNode->getAttribute('id'))->item(0);
-				if (!$oTargetNode)
-				{
-					if ($sDeltaSpec === 'if_exists')
-					{
-						// Just ignore it
-					}
-					else
-					{
-						// echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
-						// $this->oDOMDocument->firstChild->Dump();
-						$sPath = MFDocument::GetItopNodePath($oSourceNode);
-						$iLine = $oSourceNode->getLineNo();
-						throw new MFException($sPath.' at line '.$iLine.": could not be found", MFException::NOT_FOUND, $iLine, $sPath);
+			$oSourceNode = $this->FlattenClassesInDelta($oSourceNode);
+		}
 
+		$this->LoadFlattenDelta($oSourceNode, $oTargetDocument, $oTargetParentNode, $sMode);
+	}
+
+	private function FlattenClassesInDelta(DesignElement $oRootNode): DesignElement
+	{
+		$oDOMDocument = $oRootNode->ownerDocument;
+		$oXPath = new DOMXPath($oDOMDocument);
+		foreach ($oRootNode->childNodes as $oFirstLevelChild) {
+			if ($oFirstLevelChild instanceof MFElement) {
+				if ($oFirstLevelChild->tagName === 'classes') {
+					$oClassCollectionNode = $oFirstLevelChild;
+					// Find all <class> nodes and copy them under the target <classes> node
+					$oSubClassNodes = $oXPath->query('.//class[parent::class or parent::classes]', $oClassCollectionNode);
+					foreach ($oSubClassNodes as $oSubClassNode) {
+						/** @var DesignElement $oSubClassNode */
+						$this->SpecifyDeltaSpecsOnSubClass($oSubClassNode);
+						// Move comment along with class node
+						$oComment = ModelFactory::GetPreviousComment($oSubClassNode);
+						// Move (Sub)Classes from parent tree to the end of <classes>
+						$sParentId = $oSubClassNode->parentNode->getAttribute('id');
+						$oClassCollectionNode->appendChild($oSubClassNode);
+						if (!is_null($oComment)) {
+							$oClassCollectionNode->insertBefore($oComment, $oSubClassNode);
+						}
+						if ($sParentId !== '') {
+							$sComment = " Automatically moved from class/$sParentId to classes ";
+							$oCommentNode = $oDOMDocument->importNode(new DOMComment($sComment));
+							$oClassCollectionNode->insertBefore($oCommentNode, $oSubClassNode);
+						}
 					}
 				}
-				else
-				{
-					$oTargetParentNode = $oTargetNode->parentNode;
-					if (($sDeltaSpec == 'redefine') && ($oTargetParentNode->getAttribute('id') != $sParentId))
-					{
-						// A class that has moved <=> deletion and creation elsewhere
-						$oTargetParentNode = $oTarget->GetNodeById('/itop_design/classes//class', $sParentId)->item(0);
-						$oTargetNode->Delete();
-						$oSourceNode->setAttribute('_delta', 'define');
-						$sDeltaSpec = 'define';
-					}
-				}
-
 			}
 		}
 
+		return $oRootNode;
+	}
+
+	/**
+	 * @param DesignElement $oSubClassNode
+	 *
+	 * @return void
+	 * @throws MFException
+	 */
+	public function SpecifyDeltaSpecsOnSubClass(DesignElement $oSubClassNode): void
+	{
+		$sParentDeltaSpec = $oSubClassNode->parentNode->getAttribute('_delta');
+		switch ($sParentDeltaSpec) {
+			case '':
+				break;
+			case 'define':
+			case 'force':
+			case 'redefine':
+				$oSubClassNode->setAttribute('_delta', 'force');
+				break;
+			case 'if_exists':
+			case 'define_if_not_exists':
+				/** @var \MFElement $oParentNode */
+				$oParentNode = $oSubClassNode->parentNode;
+				throw new MFException("_delta=\"$sParentDeltaSpec\" not supported for classes in hierarchy", MFException::NOT_FOUND, $oParentNode);
+		}
+	}
+
+	/**
+	 * @param DesignElement $oSourceNode Delta node
+	 * @param \MFDocument $oTargetDocument Datamodel
+	 * @param \MFDocument|\MFElement $oTargetParentNode location in the datamodel
+	 *
+	 * @return void
+	 * @throws \DOMFormatException
+	 * @throws MFException
+	 * @throws \Exception
+	 */
+	private function LoadFlattenDelta(DesignElement $oSourceNode, MFDocument $oTargetDocument, $oTargetParentNode, string $sMode)
+	{
+		$sDeltaSpec = $oSourceNode->getAttribute('_delta');
+
 		// IMPORTANT: In case of a new flag value, mind to update the iTopDesignFormat methods
+		$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
+
+		if ($oSourceNode->IsClassNode()) {
+			switch ($sDeltaSpec) {
+				case 'delete_if_exists':
+				case 'delete':
+					// Delete the nodes of all the subclasses
+					$this->DeleteSubClasses($oTargetParentNode->_FindChildNode($oSourceNode));
+					break;
+
+				case 'define_if_not_exists':
+				case 'define':
+					break;
+
+				default:
+					// In case the parent class has changed, be sure to move the class after its parent
+					/** @var MFElement $oTargetNode */
+					$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode, $sSearchId);
+					if (!$oTargetNode) {
+						// No need to move non-existing class
+						break;
+					}
+
+					// Check that the parent is defined before the class
+					$oSourceParentClassNode = $oSourceNode->GetOptionalElement("parent");
+					if ($oSourceParentClassNode) {
+						$sParentClassName = $oSourceParentClassNode->GetText();
+						$sClassName = $oSourceNode->getAttribute('id');
+						$oNodes = $oTargetDocument->GetNodes("/itop_design/classes/class[@id=\"$sParentClassName\"]/following-sibling::class[@id=\"$sClassName\"]");
+						if ($oNodes->length > 0) {
+							// The class is already after its parent, do not move
+							break;
+						}
+
+						// Move class after new parent class (before its next sibling)
+						$oNodeForTargetParent = $oTargetDocument->GetNodes("/itop_design/classes/class[@id=\"$sParentClassName\"]")->item(0);
+						if (is_null($oNodeForTargetParent)) {
+							throw new MFException("invalid parent class '$sParentClassName'", MFException::NOT_FOUND, $oSourceParentClassNode);
+						}
+						$oNextParentSibling = $oNodeForTargetParent->nextSibling;
+						if ($oNextParentSibling) {
+							$oTargetParentNode->insertBefore($oTargetNode, $oNextParentSibling);
+						} else {
+							// last node, append class at the end
+							$oTargetParentNode->appendChild($oTargetNode);
+						}
+					}
+					break;
+			}
+		}
+
 		switch ($sDeltaSpec) {
 			case 'if_exists':
 			case 'must_exist':
 			case 'merge':
 			case '':
-				$bMustExist = ($sDeltaSpec == 'must_exist');
-				$bIfExists = ($sDeltaSpec == 'if_exists');
-				$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
-				$oTargetNode = $oSourceNode->MergeInto($oTargetParentNode, $sSearchId, $bMustExist, $bIfExists);
+				$bMustExist = ($sDeltaSpec === 'must_exist');
+				$bIfExists = ($sDeltaSpec === 'if_exists');
+				$bSpecifiedMerge = $oSourceNode->IsInSpecifiedMerge();
+
+				/** @var MFElement $oTargetNode */
+				$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode, $sSearchId);
+				if (!$oTargetNode || $oTargetNode->IsRemoved()) {
+					// The node does not exist or is marked as removed
+					if ($bMustExist) {
+						throw new MFException("could not be found or marked as removed", MFException::NOT_FOUND, $oSourceNode);
+					}
+					if ($bIfExists) {
+						// Do not continue deeper
+						$oTargetNode = null;
+					} else {
+						if (!$bSpecifiedMerge && $sMode === self::LOAD_DELTA_MODE_STRICT && ($sSearchId !== '' || is_null($oSourceNode->GetFirstElementChild()))) {
+							throw new MFException("could not be found or marked as removed (strict mode)", MFException::NOT_FOUND, $oSourceNode, null, 'strict mode');
+						}
+
+						// Ignore renaming non-existant node
+						if ($oSourceNode->hasAttribute('_rename_from')) {
+							$oSourceNode->removeAttribute('_rename_from');
+						}
+
+						/** @var \MFElement $oTargetNode */
+						if (trim($oSourceNode->GetText('')) !== '') {
+							// node with text, let's presume that the user wants to add the complete node
+							$oTargetNode = $oTargetDocument->importNode($oSourceNode, true);
+							$oTargetParentNode->AddChildNode($oTargetNode);
+							// Do not continue deeper everything is already copied
+							$oTargetNode = null;
+						} else {
+							// copy the node with attributes (except _delta) and continue deeper
+							$oTargetNode = $oTargetDocument->importNode($oSourceNode, false);
+							foreach ($oSourceNode->attributes as $oAttributeNode) {
+								$oTargetNode->setAttribute($oAttributeNode->name, $oAttributeNode->value);
+							}
+							if ($oTargetNode->hasAttribute('_delta')) {
+								$oTargetNode->removeAttribute('_delta');
+							}
+							if ($sSearchId !== '' || $bSpecifiedMerge) {
+								// Add the node by default
+								$oTargetParentNode->AddChildNode($oTargetNode);
+							} else {
+								// Merge the node
+								$oTargetParentNode->appendChild($oTargetNode);
+							}
+							$oComment = $this->GetPreviousComment($oSourceNode);
+							if (!is_null($oComment)) {
+								$oCommentNode = $oTargetDocument->importNode(new DOMComment($oComment->textContent));
+								$oTargetParentNode->insertBefore($oCommentNode, $oTargetNode);
+							}
+							// Continue deeper
+							for ($oSourceChild = $oSourceNode->GetFirstElementChild(); !is_null($oSourceChild); $oSourceChild = $oSourceChild->GetNextElementSibling()) {
+								$this->LoadFlattenDelta($oSourceChild, $oTargetDocument, $oTargetNode, $sMode);
+							}
+							$oTargetNode = null;
+						}
+					}
+				}
+
 				if ($oTargetNode) {
-					foreach ($oSourceNode->childNodes as $oSourceChild) {
-						// Continue deeper
-						$this->LoadDelta($oSourceChild, $oTargetNode);
+					if (is_null($oSourceNode->GetFirstElementChild()) && $oTargetParentNode instanceof MFElement) {
+						// Leaf node
+						if ($sMode === self::LOAD_DELTA_MODE_STRICT && !$oSourceNode->hasAttribute('_rename_from') && trim($oSourceNode->GetText('')) !== '') {
+							throw new MFException("cannot be modified without _delta flag (strict mode)", MFException::AMBIGUOUS_LEAF, $oSourceNode, null, 'strict mode');
+						} else {
+							// Lax mode: same as redefine
+							// Replace the existing node by the given node - copy child nodes as well
+							/** @var \MFElement $oTargetNode */
+							if (trim($oSourceNode->GetText('')) !== '') {
+								$oTargetNode = $oTargetDocument->importNode($oSourceNode, true);
+								$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
+								$oTargetParentNode->RedefineChildNode($oTargetNode, $sSearchId, $oSourceNode);
+							}
+						}
+					} else {
+						for ($oSourceChild = $oSourceNode->GetFirstElementChild(); !is_null($oSourceChild); $oSourceChild = $oSourceChild->GetNextElementSibling()) {
+							// Continue deeper
+							$this->LoadFlattenDelta($oSourceChild, $oTargetDocument, $oTargetNode, $sMode);
+						}
 					}
 				}
 				break;
 
 			case 'define_if_not_exists':
-				$oExistingNode = $oTargetParentNode->_FindChildNode($oSourceNode);
-				if (($oExistingNode == null) || ($oExistingNode->getAttribute('_alteration') == 'removed'))
-				{
+				$oExistingNode = $oTargetParentNode->_FindChildNode($oSourceNode, $sSearchId);
+				if (($oExistingNode == null) || ($oExistingNode->IsRemoved())) {
 					// Same as 'define' below
-					$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
+					/** @var \MFElement $oTargetNode */
+					$oTargetNode = $oTargetDocument->importNode($oSourceNode, true);
 					$oTargetParentNode->AddChildNode($oTargetNode);
-				}
-				else
-				{
+					$oTargetNode->SetAlteration('needed');
+				} else {
 					$oTargetNode = $oExistingNode;
 				}
-				$oTargetNode->setAttribute('_alteration', 'needed');
 				break;
 
 			case 'define':
 				// New node - copy child nodes as well
-				$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
+				/** @var \MFElement $oTargetNode */
+				$oTargetNode = $oTargetDocument->importNode($oSourceNode, true);
 				$oTargetParentNode->AddChildNode($oTargetNode);
 				break;
 
 			case 'force':
 				// Force node - copy child nodes as well
-				$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
-				$oTargetParentNode->SetChildNode($oTargetNode, null, true);
+				/** @var \MFElement $oTargetNode */
+				$oTargetNode = $oTargetDocument->importNode($oSourceNode, true);
+				$oTargetParentNode->SetChildNode($oTargetNode, $sSearchId, true);
 				break;
 
 			case 'redefine':
+				// Warning: this code has been duplicated above
 				// Replace the existing node by the given node - copy child nodes as well
-				$oTargetNode = $oTarget->ImportNode($oSourceNode, true);
-				$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
-				$oTargetParentNode->RedefineChildNode($oTargetNode, $sSearchId);
+				/** @var \MFElement $oTargetNode */
+				$oTargetNode = $oTargetDocument->importNode($oSourceNode, true);
+				$oTargetParentNode->RedefineChildNode($oTargetNode, $sSearchId, $oSourceNode);
 				break;
 
 			case 'delete_if_exists':
-				$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode);
-				if (($oTargetNode !== null) && ($oTargetNode->getAttribute('_alteration') !== 'removed'))
-				{
+				/** @var \MFElement $oTargetNode */
+				$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode, $sSearchId);
+				if (is_null($oTargetNode)) {
+					$oTargetNode = $oTargetDocument->importNode($oSourceNode, false);
+					$oTargetParentNode->appendChild($oTargetNode);
+				}
+				if (!$oTargetNode->IsRemoved()) {
 					// Delete the node if it actually exists and is not already marked as deleted
-					$oTargetNode->Delete();
+					$oTargetNode->Delete(true);
 				}
 				// otherwise fail silently
 				break;
 
 			case 'delete':
-				$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode);
-				$sPath = MFDocument::GetItopNodePath($oSourceNode);
-				$iLine = $oSourceNode->getLineNo();
-				if ($oTargetNode == null)
-				{
-					throw new MFException($sPath.' at line '.$iLine.": could not be deleted (not found)", MFException::COULD_NOT_BE_DELETED,
-						$iLine, $sPath);
+				/** @var \MFElement $oTargetNode */
+				$oTargetNode = $oTargetParentNode->_FindChildNode($oSourceNode, $sSearchId);
+
+				if ($oTargetNode == null) {
+					throw new MFException("could not be deleted (not found)", MFException::COULD_NOT_BE_DELETED, $oSourceNode);
 				}
-				if ($oTargetNode->getAttribute('_alteration') == 'removed')
-				{
-					throw new MFException($sPath.' at line '.$iLine.": could not be deleted (already marked as deleted)",
-						MFException::ALREADY_DELETED, $iLine, $sPath);
+				if ($oTargetNode->IsRemoved()) {
+					throw new MFException("could not be deleted (already marked as deleted)", MFException::ALREADY_DELETED, $oSourceNode);
 				}
 				$oTargetNode->Delete();
 				break;
 
 			default:
-				$sPath = MFDocument::GetItopNodePath($oSourceNode);
-				$iLine = $oSourceNode->getLineNo();
-				throw new MFException($sPath.' at line '.$iLine.": unexpected value for attribute _delta: '".$sDeltaSpec."'",
-					MFException::INVALID_DELTA, $iLine, $sPath, $sDeltaSpec);
+				throw new MFException("unexpected value for attribute _delta: '".$sDeltaSpec."'", MFException::INVALID_DELTA, $oSourceNode, null, $sDeltaSpec);
 		}
 
-		if ($oTargetNode)
-		{
-			if ($oSourceNode->hasAttribute('_rename_from'))
-			{
+		if ($oTargetNode && $oTargetNode->parentNode) {
+			if ($oSourceNode->hasAttribute('_rename_from')) {
 				$oTargetNode->Rename($oSourceNode->getAttribute('id'));
 			}
-			if ($oTargetNode->hasAttribute('_delta'))
-			{
+			if ($oTargetNode->hasAttribute('_delta')) {
 				$oTargetNode->removeAttribute('_delta');
 			}
+			if ($oSourceNode->IsClassNode()) {
+				$oComment = $this->GetPreviousComment($oSourceNode);
+				if (!is_null($oComment)) {
+					$oCommentNode = $oTargetDocument->importNode(new DOMComment($oComment->textContent));
+					try {
+						$oTargetParentNode->insertBefore($oCommentNode, $oTargetNode);
+					} catch (Exception $e) {
+						$sComment = $oCommentNode->textContent;
+						throw new Exception("Error Not Found: delta: $sDeltaSpec - Comment: $sComment - ".MFDocument::GetItopNodePath($oSourceNode));
+					}
+				}
+			}
 		}
+	}
+
+	/**
+	 * Remove completely the subclasses node in the datamodel to comply with the previous behavior (hierarchical classes)
+	 * Only the root class is marked with _alteration="removed"
+	 *
+	 * @param $oClassNode
+	 * @param $bIsRoot
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function DeleteSubClasses($oClassNode, $bIsRoot = true)
+	{
+		if (!$oClassNode instanceof MFElement) {
+			return;
+		}
+
+		$oSubClassNodes = $this->GetChildClasses($oClassNode);
+		foreach ($oSubClassNodes as $oSubClassNode) {
+			// Put the subclass before the parent classes to delete in reverse order
+			$this->DeleteSubClasses($oSubClassNode, false);
+		}
+		if (!$bIsRoot) {
+			// Hard deletion is necessary
+			$oClassNode->parentNode->removeChild($oClassNode);
+		}
+	}
+
+	/**
+	 * Get the comment node preceding the given node
+	 *
+	 * @param DesignElement $oNode
+	 *
+	 * @return \DOMComment|null null when no comment found for that node
+	 */
+	public static function GetPreviousComment(DesignElement $oNode)
+	{
+		$oPreviousNode = $oNode->previousSibling;
+
+		while (!is_null($oPreviousNode)) {
+			if ($oPreviousNode instanceof DOMComment) {
+				return $oPreviousNode;
+			}
+			if ($oPreviousNode instanceof DesignElement) {
+				return null;
+			}
+			$oPreviousNode = $oPreviousNode->previousSibling;
+		}
+
+		return null;
 	}
 
 	/**
@@ -822,10 +1069,9 @@ class ModelFactory
 	 *
 	 * @throws \Exception
 	 */
-	public function LoadModule(MFModule $oModule, $aLanguages = array())
+	public function LoadModule(MFModule $oModule, $aLanguages = [])
 	{
-		try
-		{
+		try {
 			$aDataModels = $oModule->GetDataModelFiles();
 			$sModuleName = $oModule->GetName();
 			self::$aLoadedModules[] = $oModule;
@@ -833,76 +1079,62 @@ class ModelFactory
 			// For persistence in the cache
 			$oModuleNode = $this->oDOMDocument->CreateElement('module');
 			$oModuleNode->setAttribute('id', $oModule->GetId());
-			$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('root_dir', $oModule->GetRootDir()));
-			$oModuleNode->AppendChild($this->oDOMDocument->CreateElement('label', $oModule->GetLabel()));
+			$oModuleNode->appendChild($this->oDOMDocument->CreateElement('root_dir', $oModule->GetRootDir()));
+			$oModuleNode->appendChild($this->oDOMDocument->CreateElement('label', $oModule->GetLabel()));
 
-			$this->oModules->AppendChild($oModuleNode);
+			$oModules = $this->oRoot->getElementsByTagName('loaded_modules')->item(0);
+			$oModules->appendChild($oModuleNode);
 
-			foreach ($aDataModels as $sXmlFile)
-			{
+			foreach ($aDataModels as $sXmlFile) {
 				$oDocument = new MFDocument();
 				libxml_clear_errors();
 				$oDocument->load($sXmlFile);
 				$aErrors = libxml_get_errors();
-				if (count($aErrors) > 0)
-				{
+				if (count($aErrors) > 0) {
 					throw new Exception($this->GetXMLErrorMessage($aErrors));
 				}
 
 				$oXPath = new DOMXPath($oDocument);
 				$oNodeList = $oXPath->query('/itop_design/classes//class');
-				foreach ($oNodeList as $oNode)
-				{
-					if ($oNode->getAttribute('_created_in') == '')
-					{
+				foreach ($oNodeList as $oNode) {
+					if ($oNode->getAttribute('_created_in') == '') {
 						$oNode->SetAttribute('_created_in', $sModuleName);
 					}
 				}
 				$oNodeList = $oXPath->query('/itop_design/constants/constant');
-				foreach ($oNodeList as $oNode)
-				{
-					if ($oNode->getAttribute('_created_in') == '')
-					{
+				foreach ($oNodeList as $oNode) {
+					if ($oNode->getAttribute('_created_in') == '') {
 						$oNode->SetAttribute('_created_in', $sModuleName);
 					}
 				}
 				$oNodeList = $oXPath->query('/itop_design/events/event');
-				foreach ($oNodeList as $oNode)
-				{
-					if ($oNode->getAttribute('_created_in') == '')
-					{
+				foreach ($oNodeList as $oNode) {
+					if ($oNode->getAttribute('_created_in') == '') {
 						$oNode->SetAttribute('_created_in', $sModuleName);
 					}
 				}
 				$oNodeList = $oXPath->query('/itop_design/menus/menu');
-				foreach ($oNodeList as $oNode)
-				{
-					if ($oNode->getAttribute('_created_in') == '')
-					{
+				foreach ($oNodeList as $oNode) {
+					if ($oNode->getAttribute('_created_in') == '') {
 						$oNode->SetAttribute('_created_in', $sModuleName);
 					}
 				}
 				$oUserRightsNode = $oXPath->query('/itop_design/user_rights')->item(0);
-				if ($oUserRightsNode)
-				{
-					if ($oUserRightsNode->getAttribute('_created_in') == '')
-					{
+				if ($oUserRightsNode) {
+					if ($oUserRightsNode->getAttribute('_created_in') == '') {
 						$oUserRightsNode->SetAttribute('_created_in', $sModuleName);
 					}
 				}
 
 				$oAlteredNodes = $oXPath->query('/itop_design//*[@_delta]');
-				if ($oAlteredNodes->length > 0)
-				{
-					foreach ($oAlteredNodes as $oAlteredNode)
-					{
+				if ($oAlteredNodes->length > 0) {
+					foreach ($oAlteredNodes as $oAlteredNode) {
 						$oAlteredNode->SetAttribute('_altered_in', $sModuleName);
 					}
 				}
 
 				$oFormat = new iTopDesignFormat($oDocument);
-				if (!$oFormat->Convert())
-				{
+				if (!$oFormat->Convert()) {
 					$sError = implode(', ', $oFormat->GetErrors());
 					throw new Exception("Cannot load module $sModuleName, failed to upgrade to datamodel format of: $sXmlFile. Reason(s): $sError");
 				}
@@ -914,87 +1146,82 @@ class ModelFactory
 			$aDictionaries = $oModule->GetDictionaryFiles();
 
 			$sPHPFile = 'undefined';
-			try
-			{
+			try {
 				$this->ResetTempDictionary();
-				foreach ($aDictionaries as $sPHPFile)
-				{
+				foreach ($aDictionaries as $sPHPFile) {
 					$sDictFileContents = file_get_contents($sPHPFile);
-					$sDictFileContents = str_replace(array('<'.'?'.'php', '?'.'>'), '', $sDictFileContents);
+					$sDictFileContents = str_replace(['<'.'?'.'php', '?'.'>'], '', $sDictFileContents);
 					$sDictFileContents = str_replace('Dict::Add', '$this->AddToTempDictionary', $sDictFileContents);
 					eval($sDictFileContents);
 				}
-
-				foreach ($this->aDict as $sLanguageCode => $aDictDefinition)
-				{
-					if ((count($aLanguages) > 0) && !in_array($sLanguageCode, $aLanguages))
-					{
+				foreach ($this->aDict as $sLanguageCode => $aDictDefinition) {
+					if ((count($aLanguages) > 0) && !in_array($sLanguageCode, $aLanguages)) {
 						// skip some languages if the parameter says so
 						continue;
 					}
-
-					$oNodes = $this->GetNodeById('dictionary', $sLanguageCode, $this->oDictionaries);
-					if ($oNodes->length == 0)
-					{
-						$oXmlDict = $this->oDOMDocument->CreateElement('dictionary');
-						$oXmlDict->setAttribute('id', $sLanguageCode);
-						$this->oDictionaries->AddChildNode($oXmlDict);
-						$oXmlEntries = $this->oDOMDocument->CreateElement('english_description', $aDictDefinition['english_description']);
-						$oXmlDict->AppendChild($oXmlEntries);
-						$oXmlEntries = $this->oDOMDocument->CreateElement('localized_description',
-							$aDictDefinition['localized_description']);
-						$oXmlDict->AppendChild($oXmlEntries);
-						$oXmlEntries = $this->oDOMDocument->CreateElement('entries');
-						$oXmlDict->AppendChild($oXmlEntries);
-					}
-					else
-					{
-						$oXmlDict = $oNodes->item(0);
-						$oXmlEntries = $oXmlDict->GetUniqueElement('entries');
-					}
-
-					foreach ($aDictDefinition['entries'] as $sCode => $sLabel)
-					{
-
-						$oXmlEntry = $this->oDOMDocument->CreateElement('entry');
-						$oXmlEntry->setAttribute('id', $sCode);
-						$oXmlValue = $this->oDOMDocument->CreateCDATASection($sLabel);
-						$oXmlEntry->appendChild($oXmlValue);
-						if (array_key_exists($sLanguageCode, $this->aDictKeys) && array_key_exists($sCode,
-								$this->aDictKeys[$sLanguageCode]))
-						{
-							$oMe = $this->aDictKeys[$sLanguageCode][$sCode];
-							$sFlag = $oMe->getAttribute('_alteration');
-							$oMe->parentNode->replaceChild($oXmlEntry, $oMe);
-							$sNewFlag = $sFlag;
-							if ($sFlag == '')
-							{
-								$sNewFlag = 'replaced';
-							}
-							$oXmlEntry->setAttribute('_alteration', $sNewFlag);
-
-						}
-						else
-						{
-							$oXmlEntry->setAttribute('_alteration', 'added');
-							$oXmlEntries->appendChild($oXmlEntry);
-						}
-						$this->aDictKeys[$sLanguageCode][$sCode] = $oXmlEntry;
-					}
+					$this->IntegrateDictEntriesIntoXML($sLanguageCode, $aDictDefinition);
 				}
+			} catch (Exception|Error $e) { // Error can occurs on eval() calls
+				throw new DictException('Failed to load dictionary file "'.$sPHPFile.'"', [
+							'exception_class' => get_class($e),
+							'exception_msg' => $e->getMessage(),
+					]);
 			}
-			catch (Exception $e) {
-				throw new Exception('Failed to load dictionary file "'.$sPHPFile.'", reason: '.$e->getMessage());
-			}
-
-		}
-		catch (Exception $e) {
-			$aLoadedModuleNames = array();
+		} catch (Exception $e) {
+			$aLoadedModuleNames = [];
 			foreach (self::$aLoadedModules as $oLoadedModule) {
 				$aLoadedModuleNames[] = $oLoadedModule->GetName().':'.$oLoadedModule->GetVersion();
 			}
-			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(', ',
-					$aLoadedModuleNames));
+			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(
+				', ',
+				$aLoadedModuleNames
+			));
+		}
+	}
+
+	/**
+	 * @param string $sLanguageCode
+	 * @param array $aDictDefinition
+	 *
+	 * @return void
+	 * @throws MFException
+	 */
+	public function IntegrateDictEntriesIntoXML(string $sLanguageCode, array $aDictDefinition): void
+	{
+		$oDictionaries = $this->oRoot->getElementsByTagName('dictionaries')->item(0);
+		$oNodes = $this->GetNodeById('dictionary', $sLanguageCode, $oDictionaries);
+		if ($oNodes->length == 0) {
+			$oXmlDict = $this->oDOMDocument->CreateElement('dictionary');
+			$oXmlDict->setAttribute('id', $sLanguageCode);
+			$oDictionaries->AddChildNode($oXmlDict);
+			$oXmlEntries = $this->oDOMDocument->CreateElement('english_description', $aDictDefinition['english_description']);
+			$oXmlDict->appendChild($oXmlEntries);
+			$oXmlEntries = $this->oDOMDocument->CreateElement(
+				'localized_description',
+				$aDictDefinition['localized_description']
+			);
+			$oXmlDict->appendChild($oXmlEntries);
+			$oXmlEntries = $this->oDOMDocument->CreateElement('entries');
+			$oXmlDict->appendChild($oXmlEntries);
+		} else {
+			$oXmlDict = $oNodes->item(0);
+			$oXmlEntries = $oXmlDict->GetUniqueElement('entries');
+		}
+
+		foreach ($aDictDefinition['entries'] as $sCode => $sLabel) {
+
+			$oXmlEntry = $this->oDOMDocument->CreateElement('entry');
+			$oXmlEntry->setAttribute('id', $sCode);
+			$oXmlValue = $this->oDOMDocument->CreateCDATASection($sLabel);
+			$oXmlEntry->appendChild($oXmlValue);
+			if (array_key_exists($sLanguageCode, $this->aDictKeys) && array_key_exists($sCode, $this->aDictKeys[$sLanguageCode])) {
+				$oXmlEntries->RedefineChildNode($oXmlEntry);
+				$oXmlEntry->RemoveAlteration();
+			} else {
+				// To avoid memory peak during execution of ApplyChanges, just set the node without alteration flag
+				$oXmlEntries->appendChild($oXmlEntry);
+			}
+			$this->aDictKeys[$sLanguageCode][$sCode] = true;
 		}
 	}
 
@@ -1010,43 +1237,18 @@ class ModelFactory
 	{
 		$this->aDict[$sLanguageCode]['english_description'] = $sEnglishLanguageDesc;
 		$this->aDict[$sLanguageCode]['localized_description'] = $sLocalizedLanguageDesc;
-		if (!array_key_exists('entries', $this->aDict[$sLanguageCode]))
-		{
-			$this->aDict[$sLanguageCode]['entries'] = array();
+		if (!array_key_exists('entries', $this->aDict[$sLanguageCode])) {
+			$this->aDict[$sLanguageCode]['entries'] = [];
 		}
 
-		foreach ($aEntries as $sKey => $sValue)
-		{
+		foreach ($aEntries as $sKey => $sValue) {
 			$this->aDict[$sLanguageCode]['entries'][$sKey] = $sValue;
 		}
 	}
 
 	protected function ResetTempDictionary()
 	{
-		$this->aDict = array();
-	}
-
-	/**
-	 *    XML load errors (XML format and validation)
-	 *
-	 * @Deprecated Errors are now sent by Exception
-	 */
-	function HasLoadErrors()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Errors are now sent by Exception');
-
-		return (count(self::$aLoadErrors) > 0);
-	}
-
-	/**
-	 * @Deprecated Errors are now sent by Exception
-	 * @return array
-	 */
-	function GetLoadErrors()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Errors are now sent by Exception');
-
-		return self::$aLoadErrors;
+		$this->aDict = [];
 	}
 
 	/**
@@ -1057,8 +1259,7 @@ class ModelFactory
 	protected function GetXMLErrorMessage($aErrors)
 	{
 		$sMessage = "Data model source file ({$aErrors[0]->file}) could not be loaded : \n";
-		foreach ($aErrors as $oXmlError)
-		{
+		foreach ($aErrors as $oXmlError) {
 			// XML messages already ends with \n
 			$sMessage .= $oXmlError->message;
 		}
@@ -1071,39 +1272,31 @@ class ModelFactory
 	 *
 	 * @return MFModule[]
 	 */
-	function GetLoadedModules($bExcludeWorkspace = true)
+	public function GetLoadedModules($bExcludeWorkspace = true)
 	{
-		if ($bExcludeWorkspace)
-		{
-			$aModules = array();
-			foreach (self::$aLoadedModules as $oModule)
-			{
-				if (!$oModule instanceof MFWorkspace)
-				{
+		if ($bExcludeWorkspace) {
+			$aModules = [];
+			foreach (self::$aLoadedModules as $oModule) {
+				if (!$oModule instanceof MFWorkspace) {
 					$aModules[] = $oModule;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$aModules = self::$aLoadedModules;
 		}
 
 		return $aModules;
 	}
 
-
 	/**
 	 * @param $sModuleName
 	 *
 	 * @return mixed|null
 	 */
-	function GetModule($sModuleName)
+	public function GetModule($sModuleName)
 	{
-		foreach (self::$aLoadedModules as $oModule)
-		{
-			if ($oModule->GetName() == $sModuleName)
-			{
+		foreach (self::$aLoadedModules as $oModule) {
+			if ($oModule->GetName() == $sModuleName) {
 				return $oModule;
 			}
 		}
@@ -1136,29 +1329,6 @@ class ModelFactory
 	}
 
 	/**
-	 * Check if the class specified by the given node already exists in the loaded DOM
-	 *
-	 * @param DOMNode $oClassNode The node corresponding to the class to load
-	 *
-	 * @return bool True if the class exists, false otherwise
-	 * @throws Exception
-	 */
-	protected function ClassExists(DOMNode $oClassNode)
-	{
-		assert(false);
-		if ($oClassNode->hasAttribute('id'))
-		{
-			$sClassName = $oClassNode->GetAttribute('id');
-		}
-		else
-		{
-			throw new Exception('ModelFactory::AddClass: Cannot add a class with no name');
-		}
-
-		return (array_key_exists($sClassName, self::$aLoadedClasses));
-	}
-
-	/**
 	 * Check if the class specified by the given name already exists in the loaded DOM
 	 *
 	 * @param string $sClassName The node corresponding to the class to load
@@ -1183,40 +1353,27 @@ class ModelFactory
 	 */
 	public function AddClass(DOMNode $oClassNode, $sModuleName)
 	{
-		if ($oClassNode->hasAttribute('id'))
-		{
+		if ($oClassNode->hasAttribute('id')) {
 			$sClassName = $oClassNode->GetAttribute('id');
-		}
-		else
-		{
+		} else {
 			throw new Exception('ModelFactory::AddClass: Cannot add a class with no name');
 		}
-		if ($this->ClassNameExists($oClassNode->getAttribute('id')))
-		{
+		if ($this->ClassNameExists($oClassNode->getAttribute('id'))) {
 			throw new Exception("ModelFactory::AddClass: Cannot add the already existing class $sClassName");
 		}
-
 		$sParentClass = $oClassNode->GetChildText('parent', '');
-		$oParentNode = $this->GetClass($sParentClass);
-		if ($oParentNode == null)
-		{
+		if (false === $this->ClassNameExists($sParentClass)) {
 			throw new Exception("ModelFactory::AddClass: Cannot find the parent class of '$sClassName': '$sParentClass'");
 		}
-		else
-		{
-			if ($sModuleName != '')
-			{
-				$oClassNode->SetAttribute('_created_in', $sModuleName);
-			}
-			$oParentNode->AddChildNode($this->oDOMDocument->importNode($oClassNode, true));
 
-			if (substr($sParentClass, 0, 1) == '/') // Convention for well known parent classes
-			{
-				// Remove the leading slash character
-				$oParentNameNode = $oClassNode->GetOptionalElement('parent')->firstChild; // Get the DOMCharacterData node
-				$oParentNameNode->data = substr($sParentClass, 1);
-			}
+		if ($sModuleName != '') {
+			$oClassNode->SetAttribute('_created_in', $sModuleName);
 		}
+
+		/** @var \MFElement $oImportedNode */
+		$oClasses = $this->GetNodes("/itop_design/classes")->item(0);
+		$oImportedNode = $this->oDOMDocument->importNode($oClassNode, true);
+		$oClasses->AddChildNode($oImportedNode);
 	}
 
 	/**
@@ -1250,7 +1407,7 @@ $sHeader
 	</presentation>
 </class>
 EOF
-			;
+		;
 	}
 
 	/**
@@ -1289,7 +1446,7 @@ EOF
 	 */
 	public function ListClasses($sModuleName)
 	{
-		return $this->GetNodes("/itop_design/classes//class[@id][@_created_in='$sModuleName']");
+		return $this->GetNodes("/itop_design/classes/class[@id][@_created_in='$sModuleName']");
 	}
 
 	/**
@@ -1301,9 +1458,8 @@ EOF
 	 */
 	public function ListAllClasses($bIncludeMetas = false)
 	{
-		$sXPath = "/itop_design/classes//class[@id]";
-		if ($bIncludeMetas === true)
-		{
+		$sXPath = "/itop_design/classes/class[@id]";
+		if ($bIncludeMetas === true) {
 			$sXPath .= "|/itop_design/meta/classes/class[@id]";
 		}
 
@@ -1317,7 +1473,24 @@ EOF
 	 */
 	public function ListRootClasses()
 	{
-		return $this->GetNodes("/itop_design/classes/class/class[@id][class]");
+		$aClasses = $this->ListAllClasses();
+		$aRootClasses = [];
+		/** @var \MFElement $oClass */
+		foreach ($aClasses as $oClass) {
+			if (false === in_array($oClass->GetChildText('parent', ''), self::$aWellKnownParents)) {
+				continue;
+			}
+			$sClassName = $oClass->getAttribute('id');
+			$sClassName = DesignDocument::XPathQuote($sClassName);
+			if (count($this->GetNodes("/itop_design/classes/class/parent[text()=$sClassName]")) > 0) {
+				$aRootClasses[] = "@id=$sClassName";
+			}
+		}
+		if (count($aRootClasses) === 0) {
+			return $this->GetNodes('/itop_design/classes/class[not(@id)]');
+		}
+		$sIds = implode(' and ', $aRootClasses);
+		return $this->GetNodes("/itop_design/classes/class[$sIds]");
 	}
 
 	/**
@@ -1329,12 +1502,11 @@ EOF
 	public function GetClass($sClassName, $bIncludeMetas = false)
 	{
 		// Check if class among XML classes
-		/** @var \MFElemen|null $oClassNode */
-		$oClassNode = $this->GetNodes("/itop_design/classes//class[@id='$sClassName']")->item(0);
+		/** @var \MFElement|null $oClassNode */
+		$oClassNode = $this->GetNodes("/itop_design/classes/class[@id='$sClassName']")->item(0);
 
 		// If not, check if class among exposed meta classes (PHP classes)
-		if (is_null($oClassNode) && ($bIncludeMetas === true))
-		{
+		if (is_null($oClassNode) && ($bIncludeMetas === true)) {
 			/** @var \MFElement|null $oClassNode */
 			$oClassNode = $this->GetNodes("/itop_design/meta/classes/class[@id='$sClassName']")->item(0);
 		}
@@ -1348,25 +1520,26 @@ EOF
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public function AddWellKnownParent($sWellKnownParent)
+	public function AddWellKnownParent(MFElement $oClasses, $sWellKnownParent)
 	{
 		$oWKClass = $this->oDOMDocument->CreateElement('class');
 		$oWKClass->setAttribute('id', $sWellKnownParent);
-		$this->oClasses->AppendChild($oWKClass);
+		$oClasses->appendChild($oWKClass);
 
 		return $oWKClass;
 	}
 
 	/**
-	 * @param $oClassNode
+	 * Get the direct child classes
+	 * @param \MFElement $oClassNode
 	 *
 	 * @return \DOMNodeList
 	 */
 	public function GetChildClasses($oClassNode)
 	{
-		return $this->GetNodes("class", $oClassNode);
+		$sClassId = $oClassNode->getAttribute('id');
+		return $this->oDOMDocument->GetNodes("/itop_design/classes/class[parent/text()[. = '$sClassId']]");
 	}
-
 
 	/**
 	 * @param string $sClassName
@@ -1377,15 +1550,13 @@ EOF
 	 */
 	public function GetField($sClassName, $sAttCode)
 	{
-		if (!$this->ClassNameExists($sClassName))
-		{
+		if (!$this->ClassNameExists($sClassName)) {
 			return null;
 		}
 		$oClassNode = $this->GetClass($sClassName);
 		/** @var \MFElement|null $oFieldNode */
 		$oFieldNode = $this->GetNodes("fields/field[@id='$sAttCode']", $oClassNode)->item(0);
-		if (($oFieldNode == null) && ($sParentClass = $oClassNode->GetChildText('parent')))
-		{
+		if (($oFieldNode == null) && ($sParentClass = $oClassNode->GetChildText('parent'))) {
 			return $this->GetField($sParentClass, $sAttCode);
 		}
 
@@ -1393,7 +1564,7 @@ EOF
 	}
 
 	/**
-	 * List all classes from the DOM
+	 * List all fields of a class from the DOM
 	 *
 	 * @param \DOMNode $oClassNode
 	 *
@@ -1431,11 +1602,11 @@ EOF
 	}
 
 	/**
-	 * @return mixed
+	 * @return void
 	 */
 	public function ApplyChanges()
 	{
-		return $this->oRoot->ApplyChanges();
+		$this->oRoot->ApplyChanges();
 	}
 
 	/**
@@ -1446,18 +1617,17 @@ EOF
 		return $this->oRoot->ListChanges();
 	}
 
-
 	/**
 	 * Import the node into the delta
 	 *
-	 * @param $oNodeClone
+	 * @param DesignElement $oNodeClone
 	 *
 	 * @return mixed
 	 */
 	protected function SetDeltaFlags($oNodeClone)
 	{
-		$sAlteration = $oNodeClone->getAttribute('_alteration');
-		$oNodeClone->removeAttribute('_alteration');
+		$sAlteration = $oNodeClone->GetAlteration();
+		$oNodeClone->RemoveAlteration();
 		if ($oNodeClone->hasAttribute('_old_id')) {
 			$oNodeClone->setAttribute('_rename_from', $oNodeClone->getAttribute('_old_id'));
 			$oNodeClone->removeAttribute('_old_id');
@@ -1466,7 +1636,7 @@ EOF
 		switch ($sAlteration) {
 			case '':
 				if ($oNodeClone->hasAttribute('id')) {
-					$oNodeClone->setAttribute('_delta', 'must_exist');
+					//$oNodeClone->setAttribute('_delta', 'merge');
 				}
 				break;
 			case 'added':
@@ -1477,6 +1647,9 @@ EOF
 				break;
 			case 'removed':
 				$oNodeClone->setAttribute('_delta', 'delete');
+				break;
+			case 'remove_needed':
+				$oNodeClone->setAttribute('_delta', 'delete_if_exists');
 				break;
 			case 'needed':
 				$oNodeClone->setAttribute('_delta', 'define_if_not_exists');
@@ -1492,67 +1665,32 @@ EOF
 	/**
 	 * Create path for the delta
 	 *
-	 * @param array       aMovedClasses The classes that have been moved in the hierarchy (deleted + created elsewhere)
-	 * @param DOMDocument oTargetDoc  Where to attach the top of the hierarchy
-	 * @param MFElement   oNode       The node to import with its path
+	 * @param DOMDocument $oTargetDoc  Where to attach the top of the hierarchy
+	 * @param MFElement   $oNode       The node to import with its path
 	 *
 	 * @return \DOMElement|null
 	 */
-	protected function ImportNodeAndPathDelta($aMovedClasses, $oTargetDoc, $oNode)
+	protected function ImportNodeAndPathDelta($oTargetDoc, $oNode)
 	{
-		// Preliminary: skip the parent if this node is organized hierarchically into the DOM
-		// Only class nodes are organized this way
 		$oParent = $oNode->parentNode;
-		if ($oNode->IsClassNode())
-		{
-			while (($oParent instanceof DOMElement) && ($oParent->IsClassNode()))
-			{
-				$oParent = $oParent->parentNode;
-			}
-		}
+
 		// Recursively create the path for the parent
-		if ($oParent instanceof DOMElement)
-		{
-			$oParentClone = $this->ImportNodeAndPathDelta($aMovedClasses, $oTargetDoc, $oParent);
-		}
-		else
-		{
+		if ($oParent instanceof DOMElement) {
+			$oParentClone = $this->ImportNodeAndPathDelta($oTargetDoc, $oParent);
+		} else {
 			// We've reached the top let's add the node into the root recipient
 			$oParentClone = $oTargetDoc;
 		}
 
-		$sAlteration = $oNode->getAttribute('_alteration');
-		if ($oNode->IsClassNode() && ($sAlteration != ''))
-		{
+		$sAlteration = $oNode->GetAlteration();
+		if ($oNode->IsClassNode() && ($sAlteration != '')) {
 			// Handle the moved classes
 			//
 			// Import the whole root node
 			$oNodeClone = $oTargetDoc->importNode($oNode->cloneNode(true), true);
 			$oParentClone->appendChild($oNodeClone);
 			$this->SetDeltaFlags($oNodeClone);
-
-			// Handle the moved classes found under the root node (or the root node itself)
-			foreach ($oNodeClone->GetNodes("descendant-or-self::class[@id]", false) as $oClassNode)
-			{
-				if (array_key_exists($oClassNode->getAttribute('id'), $aMovedClasses))
-				{
-					if ($sAlteration == 'removed')
-					{
-						// Remove that node: this specification will be overridden by the 'replaced' spec (see below)
-						$oClassNode->parentNode->removeChild($oClassNode);
-					}
-					else
-					{
-						// Move the class at the root, with the flag 'modified'
-						$oParentClone->appendChild($oClassNode);
-						$oClassNode->setAttribute('_alteration', 'replaced');
-						$this->SetDeltaFlags($oClassNode);
-					}
-				}
-			}
-		}
-		else
-		{
+		} else {
 			// Look for the node into the parent node
 			// Note: this is an identified weakness of the algorithm,
 			//       because for each node modified, and each node of its path
@@ -1560,19 +1698,15 @@ EOF
 			//       Anyhow, this loop is quite quick to execute because in the delta
 			//       the number of nodes is limited
 			$oNodeClone = null;
-			foreach ($oParentClone->childNodes as $oChild)
-			{
-				if (($oChild instanceof DOMElement) && ($oChild->tagName == $oNode->tagName))
-				{
-					if (!$oNode->hasAttribute('id') || ($oNode->getAttribute('id') == $oChild->getAttribute('id')))
-					{
+			foreach ($oParentClone->childNodes as $oChild) {
+				if (($oChild instanceof DOMElement) && ($oChild->tagName == $oNode->tagName)) {
+					if (!$oNode->hasAttribute('id') || ($oNode->getAttribute('id') == $oChild->getAttribute('id'))) {
 						$oNodeClone = $oChild;
 						break;
 					}
 				}
 			}
-			if (!$oNodeClone)
-			{
+			if (!$oNodeClone) {
 				$bCopyContents = ($sAlteration == 'replaced') || ($sAlteration == 'added') || ($sAlteration == 'needed') || ($sAlteration == 'forced');
 				$oNodeClone = $oTargetDoc->importNode($oNode->cloneNode($bCopyContents), $bCopyContents);
 				$this->SetDeltaFlags($oNodeClone);
@@ -1595,8 +1729,7 @@ EOF
 	{
 		// Search into the deleted node as well!
 		$oNodeSet = $this->oDOMDocument->GetNodes("//*[@$sAttribute='$sPreviousValue']", null, false);
-		foreach ($oNodeSet as $oTouchedNode)
-		{
+		foreach ($oNodeSet as $oTouchedNode) {
 			$oTouchedNode->setAttribute($sAttribute, $sNewValue);
 		}
 	}
@@ -1610,55 +1743,31 @@ EOF
 	 * @return \MFDocument
 	 * @throws \Exception
 	 */
-	public function GetDeltaDocument($aNodesToIgnore = array(), $aAttributes = null)
+	public function GetDeltaDocument($aNodesToIgnore = [], $aAttributes = null)
 	{
 		$oDelta = new MFDocument();
 
-		// Handle classes moved from one parent to another
-		// This will be done in two steps:
-		// 1) Identify the moved classes (marked as deleted under the original parent, and created under the new parent)
-		// 2) When importing those "moved" classes into the delta (see ImportNodeAndPathDelta), extract them from the hierarchy (the alteration can be done at an upper level in the hierarchy) and mark them as "modified" 
-		$aMovedClasses = array();
-		foreach ($this->GetNodes("/itop_design/classes//class/class[@_alteration='removed']", null, false) as $oNode)
-		{
-			$sId = $oNode->getAttribute('id');
-			if ($this->GetNodes("/itop_design/classes//class/class[@id='$sId']/properties", null, false)->length > 0)
-			{
-				$aMovedClasses[$sId] = true;
-			}
+		foreach ($this->ListChanges() as $oAlteredNode) {
+			$this->ImportNodeAndPathDelta($oDelta, $oAlteredNode);
 		}
-
-		foreach ($this->ListChanges() as $oAlteredNode)
-		{
-			$this->ImportNodeAndPathDelta($aMovedClasses, $oDelta, $oAlteredNode);
-		}
-		foreach ($aNodesToIgnore as $sXPath)
-		{
+		foreach ($aNodesToIgnore as $sXPath) {
 			$oNodesToRemove = $oDelta->GetNodes($sXPath);
-			foreach ($oNodesToRemove as $oNode)
-			{
-				if ($oNode instanceof DOMAttr)
-				{
+			foreach ($oNodesToRemove as $oNode) {
+				if ($oNode instanceof DOMAttr) {
 					$oNode->ownerElement->removeAttributeNode($oNode);
-				}
-				else
-				{
+				} else {
 					$oNode->parentNode->removeChild($oNode);
 				}
 			}
 		}
 		$oNodesToClean = $oDelta->GetNodes('/itop_design//*[@_altered_in]');
-		foreach ($oNodesToClean as $oNode)
-		{
+		foreach ($oNodesToClean as $oNode) {
 			$oNode->removeAttribute('_altered_in');
 		}
 
-		if ($aAttributes != null)
-		{
-			foreach ($aAttributes as $sAttribute => $value)
-			{
-				if ($oDelta->documentElement) // yes, this may happen when still no change has been performed (and a module has been selected for installation)
-				{
+		if ($aAttributes != null) {
+			foreach ($aAttributes as $sAttribute => $value) {
+				if ($oDelta->documentElement) { // yes, this may happen when still no change has been performed (and a module has been selected for installation)
 					$oDelta->documentElement->setAttribute($sAttribute, $value);
 				}
 			}
@@ -1676,7 +1785,7 @@ EOF
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetDelta($aNodesToIgnore = array(), $aAttributes = null)
+	public function GetDelta($aNodesToIgnore = [], $aAttributes = null)
 	{
 		$oDelta = $this->GetDeltaDocument($aNodesToIgnore, $aAttributes);
 
@@ -1693,24 +1802,19 @@ EOF
 	public function FindModules()
 	{
 		$aAvailableModules = ModuleDiscovery::GetAvailableModules($this->aRootDirs);
-		$aResult = array();
-		foreach ($aAvailableModules as $sId => $aModule)
-		{
+		$aResult = [];
+		foreach ($aAvailableModules as $sId => $aModule) {
 			$oModule = new MFModule($sId, $aModule['root_dir'], $aModule['label'], isset($aModule['auto_select']));
-			if (isset($aModule['auto_select']))
-			{
+			if (isset($aModule['auto_select'])) {
 				$oModule->SetAutoSelect($aModule['auto_select']);
 			}
-			if (isset($aModule['datamodel']) && is_array($aModule['datamodel']))
-			{
+			if (isset($aModule['datamodel']) && is_array($aModule['datamodel'])) {
 				$oModule->SetFilesToInclude($aModule['datamodel'], 'business');
 			}
-			if (isset($aModule['webservice']) && is_array($aModule['webservice']))
-			{
+			if (isset($aModule['webservice']) && is_array($aModule['webservice'])) {
 				$oModule->SetFilesToInclude($aModule['webservice'], 'webservices');
 			}
-			if (isset($aModule['addons']) && is_array($aModule['addons']))
-			{
+			if (isset($aModule['addons']) && is_array($aModule['addons'])) {
 				$oModule->SetFilesToInclude($aModule['addons'], 'addons');
 			}
 			$aResult[] = $oModule;
@@ -1736,8 +1840,20 @@ EOF
 	/**
 	 * @return mixed
 	 */
-	public function GetRootDirs() {
+	public function GetRootDirs()
+	{
 		return $this->aRootDirs;
+	}
+
+	/**
+	 * @param \DOMElement $oNode
+	 *
+	 * @return mixed
+	 * @Since 3.1.1
+	 */
+	public static function GetXMLLineNumber($oNode)
+	{
+		return $oNode->getLineNo();
 	}
 }
 
@@ -1788,17 +1904,16 @@ class MFElement extends Combodo\iTop\DesignElement
 	public function GetUniqueElement($sTagName, $bMustExist = true)
 	{
 		$oNode = null;
-		foreach ($this->childNodes as $oChildNode)
-		{
-			if (($oChildNode->nodeName == $sTagName) && (($oChildNode->getAttribute('_alteration') != 'removed')))
-			{
+		foreach ($this->childNodes as $oChildNode) {
+			/** @var MFElement $oChildNode */
+			if (($oChildNode->nodeName == $sTagName) && !$oChildNode->IsRemoved()) {
 				$oNode = $oChildNode;
 				break;
 			}
 		}
-		if ($bMustExist && is_null($oNode))
-		{
-			throw new DOMFormatException('Missing unique tag: '.$sTagName);
+		if ($bMustExist && is_null($oNode)) {
+			$sXPath = DesignDocument::GetItopNodePath($this);
+			throw new DOMFormatException("Missing unique tag: $sTagName in: $sXPath");
 		}
 
 		return $oNode;
@@ -1821,44 +1936,33 @@ class MFElement extends Combodo\iTop\DesignElement
 	public function GetNodeAsArrayOfItems($sElementName = 'items')
 	{
 		$oItems = $this->GetOptionalElement($sElementName);
-		if ($oItems)
-		{
-			$res = array();
-			$aRanks = array();
-			foreach ($oItems->childNodes as $oItem)
-			{
-				if ($oItem instanceof DOMElement)
-				{
+		if ($oItems) {
+			$res = [];
+			$aRanks = [];
+			foreach ($oItems->childNodes as $oItem) {
+				if ($oItem instanceof DOMElement) {
 					// When an attribute is missing
-					if ($oItem->hasAttribute('id'))
-					{
+					if ($oItem->hasAttribute('id')) {
 						$key = $oItem->getAttribute('id');
-						if (array_key_exists($key, $res))
-						{
+						if (array_key_exists($key, $res)) {
 							// Houston!
-							throw new DOMFormatException("id '$key' already used", null, null, $oItem);
+							$sXPath = DesignDocument::GetItopNodePath($this);
+							throw new DOMFormatException("id '$key' already used in $sXPath", 0, null, $oItem);
 						}
 						$res[$key] = $oItem->GetNodeAsArrayOfItems();
-					}
-					else
-					{
+					} else {
 						$res[] = $oItem->GetNodeAsArrayOfItems();
 					}
 					$sRank = $oItem->GetChildText('rank');
-					if ($sRank != '')
-					{
+					if ($sRank != '') {
 						$aRanks[] = (float)$sRank;
-					}
-					else
-					{
+					} else {
 						$aRanks[] = count($aRanks) > 0 ? max($aRanks) + 1 : 0;
 					}
 					array_multisort($aRanks, $res);
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$res = $this->GetText();
 		}
 
@@ -1872,27 +1976,22 @@ class MFElement extends Combodo\iTop\DesignElement
 	 */
 	protected static function AddItemToNode($oXmlDoc, $oXMLNode, $itemValue)
 	{
-		if (is_array($itemValue))
-		{
+		if (is_array($itemValue)) {
 			$oXmlItems = $oXmlDoc->CreateElement('items');
-			$oXMLNode->AppendChild($oXmlItems);
+			$oXMLNode->appendChild($oXmlItems);
 
-			foreach ($itemValue as $key => $item)
-			{
+			foreach ($itemValue as $key => $item) {
 				$oXmlItem = $oXmlDoc->CreateElement('item');
-				$oXmlItems->AppendChild($oXmlItem);
+				$oXmlItems->appendChild($oXmlItem);
 
-				if (is_string($key))
-				{
+				if (is_string($key)) {
 					$oXmlItem->SetAttribute('key', $key);
 				}
 				self::AddItemToNode($oXmlDoc, $oXmlItem, $item);
 			}
-		}
-		else
-		{
+		} else {
 			$oXmlText = $oXmlDoc->CreateTextNode((string)$itemValue);
-			$oXMLNode->AppendChild($oXmlText);
+			$oXMLNode->appendChild($oXmlText);
 		}
 	}
 
@@ -1901,80 +2000,12 @@ class MFElement extends Combodo\iTop\DesignElement
 	 */
 	protected function DeleteChildren()
 	{
-		while (isset($this->firstChild))
-		{
-			if ($this->firstChild instanceof MFElement)
-			{
+		while (isset($this->firstChild)) {
+			if ($this->firstChild instanceof MFElement) {
 				$this->firstChild->DeleteChildren();
 			}
 			$this->removeChild($this->firstChild);
 		}
-	}
-
-	/**
-	 * Find the child node matching the given node.
-	 * UNSAFE: may return nodes marked as _alteration="removed"
-	 * A method with the same signature MUST exist in MFDocument for the recursion to work fine
-	 *
-	 * @param \MFElement $oRefNode The node to search for
-	 * @param string $sSearchId substitutes to the value of the 'id' attribute
-	 *
-	 * @return \MFElement|null
-	 * @throws \Exception
-	 */
-	public function _FindChildNode(MFElement $oRefNode, $sSearchId = null)
-	{
-		return self::_FindNode($this, $oRefNode, $sSearchId);
-	}
-
-	/**
-	 * Find the child node matching the given node under the specified parent.
-	 * UNSAFE: may return nodes marked as _alteration="removed"
-	 *
-	 * @param \DOMNode $oParent
-	 * @param \MFElement $oRefNode
-	 * @param string $sSearchId
-	 *
-	 * @return \MFElement|null
-	 * @throws Exception
-	 */
-	public static function _FindNode(DOMNode $oParent, MFElement $oRefNode, $sSearchId = null)
-	{
-		$oRes = null;
-		if ($oParent instanceof DOMDocument)
-		{
-			$oDoc = $oParent->firstChild->ownerDocument;
-			$oRoot = $oParent;
-		}
-		else
-		{
-			$oDoc = $oParent->ownerDocument;
-			$oRoot = $oParent;
-		}
-
-		$oXPath = new DOMXPath($oDoc);
-		if ($oRefNode->hasAttribute('id'))
-		{
-			// Find the first element having the same tag name and id
-			if (!$sSearchId)
-			{
-				$sSearchId = $oRefNode->getAttribute('id');
-			}
-			$sXPath = './'.$oRefNode->tagName."[@id='$sSearchId']";
-
-			/** @var \MFElement|null $oRes */
-			$oRes = $oXPath->query($sXPath, $oRoot)->item(0);
-		}
-		else
-		{
-			// Get the first one having the same tag name (ignore others)
-			$sXPath = './'.$oRefNode->tagName;
-
-			/** @var \MFElement|null $oRes */
-			$oRes = $oXPath->query($sXPath, $oRoot)->item(0);
-		}
-
-		return $oRes;
 	}
 
 	/**
@@ -1985,11 +2016,9 @@ class MFElement extends Combodo\iTop\DesignElement
 	 */
 	public function IsInDefinition()
 	{
-		// Iterate through the parents: reset the flag if any of them has a flag set 
-		for ($oParent = $this; $oParent instanceof MFElement; $oParent = $oParent->parentNode)
-		{
-			if ($oParent->getAttribute('_alteration') != '')
-			{
+		// Iterate through the parents: reset the flag if any of them has a flag set
+		for ($oParent = $this; $oParent instanceof MFElement; $oParent = $oParent->parentNode) {
+			if ($oParent->GetAlteration() != '') {
 				return true;
 			}
 		}
@@ -2007,10 +2036,8 @@ class MFElement extends Combodo\iTop\DesignElement
 	public function IsAlteredByModule($aModules)
 	{
 		// Iterate through the parents: reset the flag if any of them has a flag set
-		for ($oParent = $this; $oParent instanceof MFElement; $oParent = $oParent->parentNode)
-		{
-			if (in_array($oParent->getAttribute('_altered_in'), $aModules))
-			{
+		for ($oParent = $this; $oParent instanceof MFElement; $oParent = $oParent->parentNode) {
+			if (in_array($oParent->getAttribute('_altered_in'), $aModules)) {
 				return true;
 			}
 		}
@@ -2035,10 +2062,8 @@ class MFElement extends Combodo\iTop\DesignElement
 	 */
 	public function AddTrace()
 	{
-		if (!is_null(self::$aTraceAttributes))
-		{
-			foreach (self::$aTraceAttributes as $sAttribute => $value)
-			{
+		if (!is_null(self::$aTraceAttributes)) {
+			foreach (self::$aTraceAttributes as $sAttribute => $value) {
 				$this->setAttribute($sAttribute, $value);
 			}
 		}
@@ -2049,7 +2074,7 @@ class MFElement extends Combodo\iTop\DesignElement
 	 *
 	 * @param MFElement $oNode The node (including all subnodes) to add
 	 *
-	 * @throws \MFException
+	 * @throws MFException
 	 * @throws \Exception
 	 */
 	public function AddChildNode(MFElement $oNode)
@@ -2059,30 +2084,23 @@ class MFElement extends Combodo\iTop\DesignElement
 		$oNode->AddTrace();
 
 		$oExisting = $this->_FindChildNode($oNode);
-		if ($oExisting)
-		{
-			if ($oExisting->getAttribute('_alteration') != 'removed') {
-				$sPath = MFDocument::GetItopNodePath($oNode);
-				$iLine = $oNode->getLineNo();
-				$sExistingPath = MFDocument::GetItopNodePath($oExisting);
-				$iExistingLine = $oExisting->getLineNo();
-				
+		if ($oExisting) {
+			if (!$oExisting->IsRemoved()) {
+				$sExistingPath = MFDocument::GetItopNodePath($oExisting).' created_in: ['.$oExisting->getAttribute('_created_in').']';
+				$iExistingLine = ModelFactory::GetXMLLineNumber($oExisting);
 				$sExceptionMessage = <<<EOF
-`{$sPath}` at line {$iLine} could not be added : already exists in `{$sExistingPath}` at line {$iExistingLine}
+could not be added : already exists in `{$sExistingPath}` at line {$iExistingLine}
 EOF;
-				throw new MFException($sExceptionMessage, MFException::COULD_NOT_BE_ADDED, $iLine, $sPath);
+				throw new MFException($sExceptionMessage, MFException::COULD_NOT_BE_ADDED, $oNode);
 			}
 			$oExisting->ReplaceWithSingleNode($oNode);
 			$sFlag = 'replaced';
-		}
-		else
-		{
+		} else {
 			$this->appendChild($oNode);
 			$sFlag = 'added';
 		}
-		if (!$this->IsInDefinition())
-		{
-			$oNode->setAttribute('_alteration', $sFlag);
+		if (!$this->IsInDefinition()) {
+			$oNode->SetAlteration($sFlag);
 		}
 	}
 
@@ -2091,39 +2109,39 @@ EOF;
 	 *
 	 * @param MFElement $oNode The node (including all subnodes) to set
 	 * @param string|null $sSearchId
+	 * @param mixed $oParentFallbackNode: provided to print accurate line number in case $oNode line is 0
 	 *
 	 * @return void
 	 *
-	 * @throws \MFException
+	 * @throws MFException
 	 * @throws \Exception
 	 */
-	public function RedefineChildNode(MFElement $oNode, $sSearchId = null)
+	public function RedefineChildNode(MFElement $oNode, $sSearchId = null, $oParentFallbackNode = null)
 	{
 		// First: cleanup any flag behind the new node, and eventually add trace data
 		$oNode->ApplyChanges();
 		$oNode->AddTrace();
 
 		$oExisting = $this->_FindChildNode($oNode, $sSearchId);
-		if (!$oExisting)
-		{
+		if (!$oExisting) {
 			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
-			$iLine = $oNode->getLineNo();
-			throw new MFException($sPath." at line $iLine: could not be modified (not found)", MFException::COULD_NOT_BE_MODIFIED_NOT_FOUND,
-				$sPath, $iLine);
+			throw new MFException('could not be modified (not found)', MFException::COULD_NOT_BE_MODIFIED_NOT_FOUND, $oNode, $sPath, '', $oParentFallbackNode);
 		}
-		$sPrevFlag = $oExisting->getAttribute('_alteration');
-		if ($sPrevFlag == 'removed') {
+		$sPrevFlag = $oExisting->GetAlteration();
+		$sOldId = $oExisting->getAttribute('_old_id');
+		if ($oExisting->IsRemoved()) {
 			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
-			$iLine = $oNode->getLineNo();
-			throw new MFException($sPath." at line $iLine: could not be modified (marked as deleted)",
-				MFException::COULD_NOT_BE_MODIFIED_ALREADY_DELETED, $sPath, $iLine);
+			throw new MFException('could not be modified (marked as deleted)', MFException::COULD_NOT_BE_MODIFIED_ALREADY_DELETED, $oNode, $sPath, '', $oParentFallbackNode);
 		}
 		$oExisting->ReplaceWithSingleNode($oNode);
 		if (!$this->IsInDefinition()) {
 			if ($sPrevFlag == '') {
 				$sPrevFlag = 'replaced';
 			}
-			$oNode->setAttribute('_alteration', $sPrevFlag);
+			$oNode->SetAlteration($sPrevFlag);
+			if ($sOldId !== '') {
+				$oNode->setAttribute('_old_id', $sOldId);
+			}
 		}
 	}
 
@@ -2144,53 +2162,28 @@ EOF;
 		$oNode->AddTrace();
 
 		$oExisting = $this->_FindChildNode($oNode, $sSearchId);
-		if ($oExisting)
-		{
+		if ($oExisting) {
 			$sOldId = $oExisting->getAttribute('_old_id');
-			if (!empty($sOldId))
-			{
+			if (!empty($sOldId)) {
 				$oNode->setAttribute('_old_id', $sOldId);
 			}
 
-			$sPrevFlag = $oExisting->getAttribute('_alteration');
-			if ($sPrevFlag == 'removed') {
+			$sPrevFlag = $oExisting->GetAlteration();
+			if ($oExisting->IsRemoved()) {
 				$sFlag = $bForce ? 'forced' : 'replaced';
 			} else {
 				$sFlag = $sPrevFlag; // added, replaced or ''
 			}
 			$oExisting->ReplaceWithSingleNode($oNode);
-		}
-		else
-		{
+		} else {
 			$this->appendChild($oNode);
 			$sFlag = $bForce ? 'forced' : 'added';
 		}
-		if (!$this->IsInDefinition())
-		{
-			if ($sFlag == '')
-			{
+		if (!$this->IsInDefinition()) {
+			if ($sFlag == '') {
 				$sFlag = $bForce ? 'forced' : 'replaced';
 			}
-			$oNode->setAttribute('_alteration', $sFlag);
-		}
-	}
-
-	/**
-	 * Check that the current node is actually a class node, under classes
-	 */
-	public function IsClassNode()
-	{
-		if ($this->tagName == 'class')
-		{
-			if (($this->parentNode->tagName == 'classes') && ($this->parentNode->parentNode->tagName == 'itop_design')) // Beware: classes/class also exists in the group definition
-			{
-				return true;
-			}
-
-			return $this->parentNode->IsClassNode();
-		}
-		else {
-			return false;
+			$oNode->SetAlteration($sFlag);
 		}
 	}
 
@@ -2218,14 +2211,14 @@ EOF;
 	/**
 	 * Remove a node and set the flags that will be used to compute the delta
 	 *
+	 *
 	 * @throws \Exception
 	 */
-	public function Delete()
+	public function Delete(bool $bIsConditional = false)
 	{
-		switch ($this->getAttribute('_alteration'))
-		{
+		switch ($this->GetAlteration()) {
 			case 'replaced':
-				$sFlag = 'removed';
+				$sFlag = $bIsConditional ? 'remove_needed' : 'removed';
 				break;
 			case 'added':
 			case 'needed':
@@ -2235,74 +2228,28 @@ EOF;
 				throw new Exception("Attempting to remove a deleted node: $this->tagName (id: ".$this->getAttribute('id')."");
 
 			default:
-				$sFlag = 'removed';
-				if ($this->IsInDefinition())
-				{
+				$sFlag = $bIsConditional ? 'remove_needed' : 'removed';
+				if ($this->IsInDefinition()) {
 					$sFlag = null;
 					break;
 				}
 		}
-		if ($sFlag)
-		{
-			$this->setAttribute('_alteration', $sFlag);
+		if ($sFlag) {
+			// If class move the node AFTER all the removed classes to keep the delete order
+			// and remain compatible with GetDelta/LoadDelta class flattening
+			if ($this->IsClassNode()) {
+				$this->parentNode->appendChild($this);
+			}
+
+			$this->SetAlteration($sFlag);
 			$this->DeleteChildren();
 
 			// Add trace data
 			$this->AddTrace();
-		}
-		else
-		{
+		} else {
 			// Remove the node entirely
 			$this->parentNode->removeChild($this);
 		}
-	}
-
-	/**
-	 * Merge the current node into the given container
-	 *
-	 * @param \MFElement $oContainer An element or a document
-	 * @param string $sSearchId The id to consider (could be blank)
-	 * @param bool $bMustExist Throw an exception if the node must already be found (and not marked as deleted!)
-	 * @param bool $bIfExists Return null if the node does not exists (or is marked as deleted)
-	 *
-	 * @return \MFElement|null
-	 * @throws \Exception
-	 */
-	public function MergeInto($oContainer, $sSearchId, $bMustExist, $bIfExists = false)
-	{
-		$oTargetNode = $oContainer->_FindChildNode($this, $sSearchId);
-		if ($oTargetNode)
-		{
-			if ($oTargetNode->getAttribute('_alteration') == 'removed')
-			{
-				if ($bMustExist)
-				{
-					throw new Exception(MFDocument::GetItopNodePath($this).' at line '.$this->getLineNo().": could not be found (marked as deleted)");
-				}
-				// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
-				// So use this workaround to import a node and its attributes on *any* PHP version
-				$oTargetNode = $oContainer->ownerDocument->ImportNode($this->cloneNode(false), true);
-				$oContainer->appendChild($oTargetNode);
-			}
-		}
-		else
-		{
-			if ($bMustExist)
-			{
-				//echo "Dumping parent node<br/>\n";
-				//$oContainer->Dump();
-				throw new Exception(MFDocument::GetItopNodePath($this).' at line '.$this->getLineNo().": could not be found");
-			}
-			if (!$bIfExists)
-			{
-				// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
-				// So use this workaround to import a node and its attributes on *any* PHP version
-				$oTargetNode = $oContainer->ownerDocument->ImportNode($this->cloneNode(false), true);
-				$oContainer->appendChild($oTargetNode);
-			}
-		}
-
-		return $oTargetNode;
 	}
 
 	/**
@@ -2312,26 +2259,19 @@ EOF;
 	 */
 	public function Rename($sId)
 	{
-		if (($this->getAttribute('_alteration') == 'replaced') || !$this->IsInDefinition())
-		{
+		$sAlteration = $this->GetAlteration();
+		if (($sAlteration == 'replaced') || ($sAlteration == 'forced') || !$this->IsInDefinition()) {
 			$sOriginalId = $this->getAttribute('_old_id');
-			if ($sOriginalId == '')
-			{
+			if ($sOriginalId == '') {
 				$sRenameOrig = $this->getAttribute('_rename_from');
-				if (empty($sRenameOrig))
-				{
+				if (empty($sRenameOrig)) {
 					$this->setAttribute('_old_id', $this->getAttribute('id'));
-				}
-				else
-				{
+				} else {
 					$this->setAttribute('_old_id', $sRenameOrig);
 					$this->removeAttribute('_rename_from');
 				}
-			}
-			else
-			{
-				if ($sOriginalId == $sId)
-				{
+			} else {
+				if ($sOriginalId == $sId) {
 					$this->removeAttribute('_old_id');
 				}
 			}
@@ -2341,7 +2281,6 @@ EOF;
 		// Leave a trace of this change
 		$this->AddTrace();
 	}
-
 
 	/**
 	 * List changes below a given node (see also MFDocument::ListChanges)
@@ -2357,30 +2296,56 @@ EOF;
 	 */
 	public function ApplyChanges()
 	{
-		$oNodes = $this->ListChanges();
-		foreach ($oNodes as $oNode)
-		{
-			$sOperation = $oNode->GetAttribute('_alteration');
-			switch ($sOperation)
-			{
-				case 'added':
-				case 'replaced':
-				case 'needed':
-				case 'forced':
-					// marked as added or modified, just reset the flag
-					$oNode->removeAttribute('_alteration');
-					break;
-
-				case 'removed':
-					// marked as deleted, let's remove the node from the tree
-					$oNode->parentNode->removeChild($oNode);
-					break;
+		// Note: omitting the dot will make the query be global to the whole document!!!
+		$oNodes = $this->ownerDocument->GetNodes('.//*[@_alteration or @_old_id or @_delta]', $this, false);
+		/** @var DesignElement $oNode */
+		foreach ($oNodes as $oNode) {
+			// _delta must not exist after applying changes
+			if ($oNode->hasAttribute('_delta')) {
+				$oNode->removeAttribute('_delta');
 			}
-			if ($oNode->hasAttribute('_old_id'))
-			{
+			if ($oNode->hasAttribute('_old_id')) {
 				$oNode->removeAttribute('_old_id');
 			}
+			if ($oNode->HasAlteration()) {
+				if ($oNode->IsRemoved()) {
+					$oComment = ModelFactory::GetPreviousComment($oNode);
+					if (!is_null($oComment)) {
+						$oNode->parentNode->removeChild($oComment);
+					}
+					$oNode->parentNode->removeChild($oNode);
+				} else {
+					// marked as added or modified, just reset the flag
+					$oNode->RemoveAlteration();
+				}
+			}
 		}
+	}
+
+	public function IsRemoved(): bool
+	{
+		$sAlteration = $this->GetAlteration();
+		return $sAlteration === 'removed' || $sAlteration === 'remove_needed';
+	}
+
+	public function GetAlteration(): string
+	{
+		return $this->getAttribute('_alteration');
+	}
+
+	public function SetAlteration(string $sAlteration)
+	{
+		return $this->setAttribute('_alteration', $sAlteration);
+	}
+
+	public function RemoveAlteration()
+	{
+		$this->removeAttribute('_alteration');
+	}
+
+	public function HasAlteration(): bool
+	{
+		return $this->hasAttribute('_alteration');
 	}
 }
 
@@ -2414,8 +2379,7 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	public function saveXML(DOMNode $node = null, $options = 0)
 	{
 		$oRootNode = $this->firstChild;
-		if (!$oRootNode)
-		{
+		if (!$oRootNode) {
 			$oRootNode = $this->createElement('itop_design'); // make sure that the document is not empty
 			$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 			$oRootNode->setAttribute('version', ITOP_DESIGN_LATEST_VERSION);
@@ -2441,12 +2405,11 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 *
 	 * @since 3.1.0 N°4517 $namespaceURI parameter must be empty string by default so
 	 */
-	function createElement($sName, $value = null, $namespaceURI = '')
+	public function createElement($sName, $value = null, $namespaceURI = '')
 	{
 		/** @var \MFElement $oElement */
 		$oElement = $this->importNode(new MFElement($sName, null, $namespaceURI));
-		if (($value !== '') && ($value !== null))
-		{
+		if (($value !== '') && ($value !== null)) {
 			$oElement->appendChild(new DOMText($value));
 		}
 
@@ -2457,15 +2420,15 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 * Find the child node matching the given node
 	 * A method with the same signature MUST exist in MFElement for the recursion to work fine
 	 *
-	 * @param MFElement $oRefNode The node to search for
+	 * @param DesignElement $oRefNode The node to search for
 	 * @param string $sSearchId substitutes to the value of the 'id' attribute
 	 *
-	 * @return \DOMElement|null
+	 * @return DesignElement|null
 	 * @throws \Exception
 	 */
-	public function _FindChildNode(MFElement $oRefNode, $sSearchId = null)
+	public function _FindChildNode(DesignElement $oRefNode, $sSearchId = null)
 	{
-		return MFElement::_FindNode($this, $oRefNode, $sSearchId);
+		return DesignElement::_FindNode($this, $oRefNode, $sSearchId);
 	}
 
 	/**
@@ -2482,20 +2445,21 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 		$oXPath = new DOMXPath($this);
 		// For Designer audit
 		$oXPath->registerNamespace("php", "http://php.net/xpath");
+		$oXPath->registerNamespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance');
 		$oXPath->registerPhpFunctions();
 
-		if ($bSafe)
-		{
-			$sXPath .= "[not(@_alteration) or @_alteration!='removed']";
+		if ($bSafe) {
+			$sXPath = "($sXPath)[not(@_alteration) or (@_alteration!='removed' and @_alteration!='remove_needed')]";
 		}
 
-		if (is_null($oContextNode))
-		{
+		if (is_null($oContextNode)) {
 			$oResult = $oXPath->query($sXPath);
-		}
-		else
-		{
+		} else {
 			$oResult = $oXPath->query($sXPath, $oContextNode);
+		}
+
+		if ($oResult === false) {
+			throw new \Exception("Invalid XPath: $sXPath");
 		}
 
 		return $oResult;
@@ -2512,14 +2476,11 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	{
 		$oXPath = new DOMXPath($this);
 		$sQuotedId = self::XPathQuote($sId);
-		$sXPath .= "[@id=$sQuotedId and(not(@_alteration) or @_alteration!='removed')]";
+		$sXPath = "($sXPath)[@id=$sQuotedId and (not(@_alteration) or @_alteration!='removed' or @_alteration!='remove_needed')]";
 
-		if (is_null($oContextNode))
-		{
+		if (is_null($oContextNode)) {
 			return $oXPath->query($sXPath);
-		}
-		else
-		{
+		} else {
 			return $oXPath->query($sXPath, $oContextNode);
 		}
 	}
@@ -2543,7 +2504,7 @@ class MFParameters
 	 */
 	public function __construct(DOMNode $oNode)
 	{
-		$this->aData = array();
+		$this->aData = [];
 		$this->LoadFromDOM($oNode);
 	}
 
@@ -2555,8 +2516,7 @@ class MFParameters
 	 */
 	public function Get($sCode, $default = '')
 	{
-		if (array_key_exists($sCode, $this->aData))
-		{
+		if (array_key_exists($sCode, $this->aData)) {
 			return $this->aData[$sCode];
 		}
 
@@ -2578,11 +2538,9 @@ class MFParameters
 	 */
 	public function LoadFromDOM(DOMNode $oNode)
 	{
-		$this->aData = array();
-		foreach ($oNode->childNodes as $oChildNode)
-		{
-			if ($oChildNode instanceof DOMElement)
-			{
+		$this->aData = [];
+		foreach ($oNode->childNodes as $oChildNode) {
+			if ($oChildNode instanceof DOMElement) {
 				$this->aData[$oChildNode->nodeName] = $this->ReadElement($oChildNode);
 			}
 		}
@@ -2597,33 +2555,24 @@ class MFParameters
 	protected function ReadElement(DOMNode $oNode)
 	{
 		$value = null;
-		if ($oNode instanceof DOMElement)
-		{
+		if ($oNode instanceof DOMElement) {
 			$sDefaultNodeType = ($this->HasChildNodes($oNode)) ? 'hash' : 'string';
 			$sNodeType = $oNode->getAttribute('type');
-			if ($sNodeType == '')
-			{
+			if ($sNodeType == '') {
 				$sNodeType = $sDefaultNodeType;
 			}
 
-			switch ($sNodeType)
-			{
+			switch ($sNodeType) {
 				case 'array':
-					$value = array();
+					$value = [];
 					// Treat the current element as zero based array, child tag names are NOT meaningful
 					$sFirstTagName = null;
-					foreach ($oNode->childNodes as $oChildElement)
-					{
-						if ($oChildElement instanceof DOMElement)
-						{
-							if ($sFirstTagName == null)
-							{
+					foreach ($oNode->childNodes as $oChildElement) {
+						if ($oChildElement instanceof DOMElement) {
+							if ($sFirstTagName == null) {
 								$sFirstTagName = $oChildElement->nodeName;
-							}
-							else
-							{
-								if ($sFirstTagName != $oChildElement->nodeName)
-								{
+							} else {
+								if ($sFirstTagName != $oChildElement->nodeName) {
 									throw new Exception("Invalid Parameters: mixed tags ('$sFirstTagName' and '".$oChildElement->nodeName."') inside array '".$oNode->nodeName."'");
 								}
 							}
@@ -2636,14 +2585,11 @@ class MFParameters
 					break;
 
 				case 'hash':
-					$value = array();
+					$value = [];
 					// Treat the current element as a hash, child tag names are keys
-					foreach ($oNode->childNodes as $oChildElement)
-					{
-						if ($oChildElement instanceof DOMElement)
-						{
-							if (array_key_exists($oChildElement->nodeName, $value))
-							{
+					foreach ($oNode->childNodes as $oChildElement) {
+						if ($oChildElement instanceof DOMElement) {
+							if (array_key_exists($oChildElement->nodeName, $value)) {
 								throw new Exception("Invalid Parameters file: duplicate tags '".$oChildElement->nodeName."' inside hash '".$oNode->nodeName."'");
 							}
 							$val = $this->ReadElement($oChildElement);
@@ -2659,12 +2605,9 @@ class MFParameters
 
 				case 'bool':
 				case 'boolean':
-					if (($this->GetText($oNode) == 'true') || ($this->GetText($oNode) == 1))
-					{
+					if (($this->GetText($oNode) == 'true') || ($this->GetText($oNode) == 1)) {
 						$value = true;
-					}
-					else
-					{
+					} else {
 						$value = false;
 					}
 					break;
@@ -2673,11 +2616,8 @@ class MFParameters
 				default:
 					$value = str_replace('\n', "\n", (string)$this->GetText($oNode));
 			}
-		}
-		else
-		{
-			if ($oNode instanceof DOMText)
-			{
+		} else {
+			if ($oNode instanceof DOMText) {
 				$value = $oNode->wholeText;
 			}
 		}
@@ -2696,10 +2636,8 @@ class MFParameters
 	{
 		$sRet = $sDefaultValue;
 
-		foreach ($oNode->attributes as $oAttribute)
-		{
-			if ($oAttribute->nodeName == $sAttName)
-			{
+		foreach ($oNode->attributes as $oAttribute) {
+			if ($oAttribute->nodeName == $sAttName) {
 				$sRet = $oAttribute->nodeValue;
 				break;
 			}
@@ -2719,23 +2657,17 @@ class MFParameters
 	public function GetText($oNode, $sDefault = null)
 	{
 		$sText = null;
-		foreach ($oNode->childNodes as $oChildNode)
-		{
-			if ($oChildNode instanceof DOMText)
-			{
-				if (is_null($sText))
-				{
+		foreach ($oNode->childNodes as $oChildNode) {
+			if ($oChildNode instanceof DOMText) {
+				if (is_null($sText)) {
 					$sText = '';
 				}
 				$sText .= $oChildNode->wholeText;
 			}
 		}
-		if (is_null($sText))
-		{
+		if (is_null($sText)) {
 			return $sDefault;
-		}
-		else
-		{
+		} else {
 			return $sText;
 		}
 	}
@@ -2749,12 +2681,9 @@ class MFParameters
 	 */
 	public function HasChildNodes($oNode)
 	{
-		if ($oNode instanceof DOMElement)
-		{
-			foreach ($oNode->childNodes as $oChildNode)
-			{
-				if ($oChildNode instanceof DOMElement)
-				{
+		if ($oNode instanceof DOMElement) {
+			foreach ($oNode->childNodes as $oChildNode) {
+				if ($oChildNode instanceof DOMElement) {
 					return true;
 				}
 			}
@@ -2766,7 +2695,7 @@ class MFParameters
 	/**
 	 * @param \XMLParameters $oTask
 	 */
-	function Merge(XMLParameters $oTask)
+	public function Merge(XMLParameters $oTask)
 	{
 		//todo: clarify the usage of this function that CANNOT work
 		$this->aData = $this->array_merge_recursive_distinct($this->aData, $oTask->aData);
@@ -2802,14 +2731,10 @@ class MFParameters
 	{
 		$merged = $array1;
 
-		foreach ($array2 as $key => &$value)
-		{
-			if (is_array($value) && isset ($merged [$key]) && is_array($merged [$key]))
-			{
+		foreach ($array2 as $key => &$value) {
+			if (is_array($value) && isset($merged [$key]) && is_array($merged [$key])) {
 				$merged [$key] = $this->array_merge_recursive_distinct($merged [$key], $value);
-			}
-			else
-			{
+			} else {
 				$merged [$key] = $value;
 			}
 		}

@@ -1,25 +1,16 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+/**
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'Core:DeletedObjectLabel' => '%1s (effacé)',
 	'Core:DeletedObjectTip' => 'L\'objet a été effacé le %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'Classe: %1$s, Identifiant: %2$d',
@@ -39,6 +30,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeTagSet' => 'Liste d\'étiquettes',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'cliquer pour ajouter',
+	'Core:Placeholder:CannotBeResolved' => '(%1$s : non remplacé)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s de la classe %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s d\'une sous-classe)',
@@ -100,12 +92,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeEnum' => 'Enumération',
 	'Core:AttributeEnum+' => 'Valeur choisie parmi un liste de chaîne de caractères',
 	'Core:AttributeTemplateString' => 'Modèle de chaîne de caractères',
-	'Core:AttributeTemplateString+' => 'Chaîne de caractères d\'une ligne, contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT,
-	'Core:AttributeTemplateText' => 'Modèle de texte',
-	'Core:AttributeTemplateText+' => 'Texte contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT,
-	'Core:AttributeTemplateHTML' => 'Modèle HTML',
-	'Core:AttributeTemplateHTML+' => 'HTML contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT,
-	'Core:AttributeDateTime' => 'Date/heure',
+	'Core:AttributeTemplateString+' => 'Chaîne de caractères d\'une ligne, contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT, 'Core:AttributeTemplateText' => 'Modèle de texte',
+	'Core:AttributeTemplateText+' => 'Texte contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT, 'Core:AttributeTemplateHTML' => 'Modèle HTML',
+	'Core:AttributeTemplateHTML+' => 'HTML contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT, 'Core:AttributeDateTime' => 'Date/heure',
 	'Core:AttributeDateTime+' => 'Date et heure (année-mois-jour hh:mm:ss)',
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
@@ -161,13 +150,18 @@ Opérateurs :<br/>
 	'Core:AttributeTag' => 'Taxon',
 	'Core:AttributeTag+' => '',
 	'Core:Context=REST/JSON' => 'REST',
+	'Core:Context=REST/JSON+' => 'REST/JSON',
 	'Core:Context=Synchro' => 'Synchro',
+	'Core:Context=Synchro+' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
+	'Core:Context=Setup+' => 'Setup',
 	'Core:Context=GUI:Console' => 'Console',
+	'Core:Context=GUI:Console+' => 'GUI:Console',
 	'Core:Context=CRON' => 'cron',
+	'Core:Context=CRON+' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
-));
-
+	'Core:Context=GUI:Portal+' => 'GUI:Portal',
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
@@ -178,7 +172,7 @@ Opérateurs :<br/>
 // Class: CMDBChange
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:CMDBChange' => 'Modification',
 	'Class:CMDBChange+' => '',
 	'Class:CMDBChange/Attribute:date' => 'Date',
@@ -193,13 +187,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'Webservices REST/JSON',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'Webservices SOAP',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Par une extension',
-));
+]);
 
 //
 // Class: CMDBChangeOp
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:CMDBChangeOp' => 'Operation de changement',
 	'Class:CMDBChangeOp+' => '',
 	'Class:CMDBChangeOp/Attribute:change' => 'Modification',
@@ -214,51 +208,51 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Type',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Nom de la classe instanciable',
-));
+]);
 
 //
 // Class: CMDBChangeOpCreate
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:CMDBChangeOpCreate' => 'Création de l\'objet',
 	'Class:CMDBChangeOpCreate+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpDelete
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:CMDBChangeOpDelete' => 'Effacement de l\'objet',
 	'Class:CMDBChangeOpDelete+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttribute
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:CMDBChangeOpSetAttribute' => 'Modification de l\'objet',
 	'Class:CMDBChangeOpSetAttribute+' => '',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Champ',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeScalar
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'Modification de valeur',
 	'Class:CMDBChangeOpSetAttributeScalar+' => '',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Ancienne valeur',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Nouvelle valeur',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '',
-));
+]);
 // Used by CMDBChangeOp... & derived classes
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Change:ObjectCreated' => 'Elément créé',
 	'Change:ObjectDeleted' => 'Elément effacé',
 	'Change:ObjectModified' => 'Elément modifié',
@@ -271,39 +265,39 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modifié, ancienne valeur: %2$s',
 	'Change:AttName_Changed' => '%1$s modifié',
 	'Change:AttName_EntryAdded' => '%1$s champ modifié, une nouvelle entrée a été ajoutée: %2$s',
-	'Change:State_Changed_NewValue_OldValue' => 'Statut modifié de %2$s à %1$s',
+	'Change:State_Changed_NewValue_OldValue' => 'État modifié de %2$s à %1$s',
 	'Change:LinkSet:Added' => 'ajout de %1$s',
 	'Change:LinkSet:Removed' => 'suppression de %1$s',
 	'Change:LinkSet:Modified' => 'modification de %1$s',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeBlob
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'Modification de données',
 	'Class:CMDBChangeOpSetAttributeBlob+' => '',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Ancienne valeur',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeText
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:CMDBChangeOpSetAttributeText' => 'Modification de texte',
 	'Class:CMDBChangeOpSetAttributeText+' => '',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Ancienne valeur',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => '',
-));
+]);
 
 //
 // Class: Event
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Event' => 'Evènement',
 	'Class:Event+' => '',
 	'Class:Event/Attribute:message' => 'Message',
@@ -314,28 +308,28 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Event/Attribute:userinfo+' => '',
 	'Class:Event/Attribute:finalclass' => 'Sous-classe d\'évènement',
 	'Class:Event/Attribute:finalclass+' => 'Nom de la classe instanciable',
-));
+]);
 
 //
 // Class: EventNotification
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:EventNotification' => 'Notification',
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:EventNotification' => 'Notification envoyée',
 	'Class:EventNotification+' => '',
 	'Class:EventNotification/Attribute:trigger_id' => 'Déclencheur',
 	'Class:EventNotification/Attribute:trigger_id+' => '',
 	'Class:EventNotification/Attribute:action_id' => 'Action',
 	'Class:EventNotification/Attribute:action_id+' => '',
-	'Class:EventNotification/Attribute:object_id' => 'Objet',
+	'Class:EventNotification/Attribute:object_id' => 'Identifiant de l\'objet',
 	'Class:EventNotification/Attribute:object_id+' => '',
-));
+]);
 
 //
 // Class: EventNotificationEmail
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:EventNotificationEmail' => 'Envoi d\'Email',
 	'Class:EventNotificationEmail+' => '',
 	'Class:EventNotificationEmail/Attribute:to' => 'A',
@@ -352,13 +346,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Pièces jointes',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-));
+]);
 
 //
 // Class: EventIssue
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:EventIssue' => 'Erreur',
 	'Class:EventIssue+' => '',
 	'Class:EventIssue/Attribute:issue' => 'Erreur',
@@ -375,13 +369,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Données',
 	'Class:EventIssue/Attribute:data+' => '',
-));
+]);
 
 //
 // Class: EventWebService
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:EventWebService' => 'Appel de webservice',
 	'Class:EventWebService+' => '',
 	'Class:EventWebService/Attribute:verb' => 'Verbe',
@@ -396,9 +390,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EventWebService/Attribute:log_error+' => '',
 	'Class:EventWebService/Attribute:data' => 'Données',
 	'Class:EventWebService/Attribute:data+' => '',
-));
+]);
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:EventRestService' => 'Appel REST/JSON',
 	'Class:EventRestService+' => 'Trace de l\'appel au service REST/JSON (rest.php)',
 	'Class:EventRestService/Attribute:operation' => 'Opération',
@@ -413,13 +407,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EventRestService/Attribute:json_output+' => 'Réponse HTTP (structure json)',
 	'Class:EventRestService/Attribute:provider' => 'Fournisseur',
 	'Class:EventRestService/Attribute:provider+' => 'Classe PHP qui a pris en charge l\'opération demandée',
-));
+]);
 
 //
 // Class: EventLoginUsage
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:EventLoginUsage' => 'Utilisation de l\'application',
 	'Class:EventLoginUsage+' => '',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
@@ -428,20 +422,55 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'Email',
 	'Class:EventLoginUsage/Attribute:contact_email+' => '',
-));
+]);
+
+//
+// Class: EventNotificationNewsroom
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:EventNotificationNewsroom' => 'News envoyée',
+	'Class:EventNotificationNewsroom+' => '',
+	'Class:EventNotificationNewsroom/Attribute:title' => 'Titre',
+	'Class:EventNotificationNewsroom/Attribute:title+' => '',
+	'Class:EventNotificationNewsroom/Attribute:icon' => 'Icône',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority' => 'Priorité',
+	'Class:EventNotificationNewsroom/Attribute:priority+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => 'Critique',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1+' => 'Critique',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2' => 'Urgent',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2+' => 'Urgent',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3' => 'Important',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3+' => 'Important',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4' => 'Standard',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4+' => 'Standard',
+	'Class:EventNotificationNewsroom/Attribute:url' => 'URL',
+	'Class:EventNotificationNewsroom/Attribute:url+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read' => 'Lu',
+	'Class:EventNotificationNewsroom/Attribute:read+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no' => 'Non',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no+' => 'Non',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes' => 'Oui',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes+' => 'Oui',
+	'Class:EventNotificationNewsroom/Attribute:read_date' => 'Date de lecture',
+	'Class:EventNotificationNewsroom/Attribute:read_date+' => '',
+	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact',
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Action' => 'Action',
 	'Class:Action+' => 'Action spécifique',
-	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s',
 	'Class:Action/Attribute:name' => 'Nom',
-	'Class:Action/Attribute:name+' => 'Label',
+	'Class:Action/Attribute:name+' => 'N\'importe quel label permettant d\'identifier cette action au milieu des autres. ',
 	'Class:Action/Attribute:description' => 'Description',
-	'Class:Action/Attribute:description+' => '',
+	'Class:Action/Attribute:description+' => 'Une explication sur ce que fait cette action, à usage interne',
 	'Class:Action/Attribute:status' => 'Etat',
 	'Class:Action/Attribute:status+' => '',
 	'Class:Action/Attribute:status/Value:test' => 'En test',
@@ -452,25 +481,53 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Déclencheurs liés',
 	'Class:Action/Attribute:trigger_list+' => 'Déclencheurs à l\'origine de cette action',
+	'Class:Action/Attribute:asynchronous' => 'Asynchrone',
+	'Class:Action/Attribute:asynchronous+' => 'L\'action est-elle exécutée en arrière plan ?',
+	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Utiliser le paramétrage global',
+	'Class:Action/Attribute:asynchronous/Value:yes' => 'Oui',
+	'Class:Action/Attribute:asynchronous/Value:no' => 'Non',
 	'Class:Action/Attribute:finalclass' => 'Sous-classe d\'Action',
 	'Class:Action/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Action:WarningNoTriggerLinked' => 'Attention, aucun déclencheur n\'est associé à l\'action. Elle ne sera pas active tant qu\'elle n\'en aura pas au moins 1.',
-));
+	'Action:last_executions_tab' => 'Dernières exécutions',
+	'Action:last_executions_tab_panel_title' => 'Exécutions de cette action (%1$s)',
+	'Action:last_executions_tab_limit_days' => '%1$s derniers jours',
+	'Action:last_executions_tab_limit_none' => 'depuis sa création',
+]);
 
 //
 // Class: ActionNotification
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:ActionNotification' => 'notification',
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:ActionNotification' => 'Action de notification',
 	'Class:ActionNotification+' => '',
-));
+	'Class:ActionNotification/Attribute:language' => 'Langue',
+	'Class:ActionNotification/Attribute:language+' => 'Langue utilisée pour les placeholders ($xxx$) dans le message (statut, importance, priorité, etc)',
+]);
+
+//
+// Class: lnkActionNotificationToContact
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:lnkActionNotificationToContact' => 'Lien Action de Notification / Contact',
+	'Class:lnkActionNotificationToContact+' => 'Abonnement des contacts aux notifications',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact abonné à la notification',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'La notification à laquelle le contact est abonné',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Déclencheur',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'Le déclencheur à l\'origine de cette notification',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Abonné',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'Si le contact est abonné ou non à cette notification',
+]);
 
 //
 // Class: ActionEmail
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ActionEmail' => 'Notification par mél',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'Cet état définit qui va être notifié: 
@@ -497,11 +554,14 @@ Si ce champ n\'est pas rempli, la valeur de \'De (mél)\' sera utilisée',
 En cas de réponse, il sera inclus dans l\'entête du mél.
 Si ce champ n\'est pas rempli, la valeur de \'De (libellé)\' sera utilisée',
 	'Class:ActionEmail/Attribute:to' => 'A',
-	'Class:ActionEmail/Attribute:to+' => 'A : une requête OQL retournant des objets ayant un attribut mél.
-En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
+	'Class:ActionEmail/Attribute:to+' => 'Une requête OQL retournant des objets ayant un attribut mél.
+En édition, recherchez des exemples d\'OQL pertinents avec l\'icône loupe. 
+Les mots-clés sous la forme :this->attcode spécifiant un champ de l\'objet ayant déclenché l\'action sont utilisables. Puis testez votre requête OQL avec l\'icône de lecture.',
 	'Class:ActionEmail/Attribute:cc' => 'Copie',
 	'Class:ActionEmail/Attribute:cc+' => 'Copie : une requête OQL retournant des objets ayant un attribut mél.
-En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
+En édition, cliquez sur la loupe pour obtenir des exemples pertinents.
+Les mots-clés sous la forme :this->attcode spécifiant un champ de l\'objet ayant déclenché la notification sont acceptés.
+Vous pouvez testez votre OQL avec l\'icône de lecture.',
 	'Class:ActionEmail/Attribute:bcc' => 'Copie Cachée',
 	'Class:ActionEmail/Attribute:bcc+' => 'Copie Cachée : une requête OQL retournant des objets ayant un attribut mél.
 En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
@@ -525,7 +585,7 @@ En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Haute',
 	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
 	'Class:ActionEmail/Attribute:language' => 'Langue',
-	'Class:ActionEmail/Attribute:language+' => 'Langue utilisée pour les placeholders ($xxx$) dans le message (statut, importance, priorité, etc)',
+	'Class:ActionEmail/Attribute:language+' => 'Langue utilisée pour les placeholders ($xxx$) dans le message (état, importance, priorité, etc)',
 	'Class:ActionEmail/Attribute:html_template' => 'Modèle HTML',
 	'Class:ActionEmail/Attribute:html_template+' => 'Optionnel, modèle HTML encapsulant le contenu du champ \'Message\' ci-dessous, utile pour des mises en page sur mesure (dans le modèle, le contenu du champ \'Message\' remplacera le mot-clé $content$)',
 	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignorer la préférence \'Notification\'',
@@ -540,18 +600,59 @@ En édition, cliquez sur la loupe pour obtenir des exemples pertinents.',
 	'ActionEmail:preview_warning' => 'Le mèl peut s\'afficher différement dans les clients mèl par rapport à cet aperçu dans votre navigateur.',
 	'ActionEmail:preview_more_info' => 'Pour plus d\'informations sur les fonctionnalités CSS supportées par les différents client mèl, consultez %1$s.',
 	'ActionEmail:content_placeholder_missing' => 'The mot-clé "%1$s" ne figure pas dans le modèle HTML. Le contenu du champ "%2$s" ne sera pas intégré dans les mèls générés.',
-));
+]);
+
+//
+// Class: ActionNewsroom
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'ActionNewsroom:trigger' => 'Conditions de déclenchement',
+	'ActionNewsroom:content' => 'Message',
+	'ActionNewsroom:settings' => 'Paramètres',
+	'Class:ActionNewsroom' => 'Notification par news',
+	'Class:ActionNewsroom+' => '',
+	'Class:ActionNewsroom/Attribute:title' => 'Titre',
+	'Class:ActionNewsroom/Attribute:title+' => 'Titre de la news. Peut contenir des mots-clés comme $this->attribute_code$',
+	'Class:ActionNewsroom/Attribute:message' => 'Message',
+	'Class:ActionNewsroom/Attribute:message+' => 'Contenu de la news, au format Markdown et non HTML. Peut contenir des mots-clés comme :
+- $this->attribute_code$ n\'importe quel attribut de l\'objet déclenchant la notification,
+- $this->attribute_external_key->attribute$ syntaxe récursive pour n\'importe quel attribut distant,
+- $current_contact->attribute$ attribut de la Personne ayant déclenchée la notification',
+	'Class:ActionNewsroom/Attribute:icon' => 'Icône',
+	'Class:ActionNewsroom/Attribute:icon+' => 'Icône qui apparaitra à côté de la news dans la newsroom.
+- Si une icône spécifique est chargée, elle sera utilisée
+- Sinon, si l\'objet déclencheur a une icône (ex : la photo d\'un objet Personne), elle sera utilisée
+- Sinon, si l\'objet déclencheur a une icône de classe définie dans le datamodel, elle sera utilisée
+- Sinon, le logo compact de l\'application sera utilisé',
+	'Class:ActionNewsroom/Attribute:priority' => 'Priorité',
+	'Class:ActionNewsroom/Attribute:priority+' => 'Les news sont affichées par priorité décroissante.',
+	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critique',
+	'Class:ActionNewsroom/Attribute:priority/Value:1+' => '',
+	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgent',
+	'Class:ActionNewsroom/Attribute:priority/Value:2+' => '',
+	'Class:ActionNewsroom/Attribute:priority/Value:3' => 'Important',
+	'Class:ActionNewsroom/Attribute:priority/Value:3+' => '',
+	'Class:ActionNewsroom/Attribute:priority/Value:4' => 'Standard',
+	'Class:ActionNewsroom/Attribute:priority/Value:4+' => '',
+	'Class:ActionNewsroom/Attribute:test_recipient_id' => 'Destinataire de test',
+	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Personne utilisée en remplacement des Destinataires, lorsque la notification est \'En test\'',
+	'Class:ActionNewsroom/Attribute:recipients' => 'Destinataires',
+	'Class:ActionNewsroom/Attribute:recipients+' => 'Une requête OQL retournant les des objets de type Contact',
+	'Class:ActionNewsroom/Attribute:url' => 'URL',
+	'Class:ActionNewsroom/Attribute:url+' => 'Par défaut, l\'URL pointe vers l\'objet ayant déclenché la notification. Mais vous pouvez également spécifier une URL personnalisée.',
+]);
 
 //
 // Class: Trigger
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Trigger' => 'Déclencheur',
 	'Class:Trigger+' => '',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
 	'Class:Trigger/Attribute:description' => 'Description',
-	'Class:Trigger/Attribute:description+' => '',
+	'Class:Trigger/Attribute:description+' => 'Soyez explicite, afin que vos utilisateurs comprennent à quelles notifications précisement ils se désabonnent',
 	'Class:Trigger/Attribute:action_list' => 'Actions déclenchées',
 	'Class:Trigger/Attribute:action_list+' => 'Actions effectuées quand le déclencheur est activé',
 	'Class:Trigger/Attribute:finalclass' => 'Sous-classe de Déclencheur',
@@ -560,13 +661,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Trigger/Attribute:context+' => 'Contexte de déclenchement',
 	'Class:Trigger/Attribute:complement' => 'Information complémentaire',
 	'Class:Trigger/Attribute:complement+' => 'Détails en anglais, fourni par ce type de déclencheur',
-));
+	'Class:Trigger/Attribute:subscription_policy' => 'Politique d\'abonnement',
+	'Class:Trigger/Attribute:subscription_policy+' => 'Règle pilotant l\'abonnement/désabonnement aux canaux de notification liées à ce déclencheur',
+	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Autoriser la désinscription de tous les canaux',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Forcer la conservation d\'un canal (News ou Email)',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Interdire la désinscription',
+]);
 
 //
 // Class: TriggerOnObject
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnObject' => 'Déclencheur sur modification de données',
 	'Class:TriggerOnObject+' => '',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe cible',
@@ -575,115 +681,115 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnObject/Attribute:filter+' => 'Permet de limiter la liste des objets (de la classe cible) activant le déclencheur',
 	'TriggerOnObject:WrongFilterQuery' => 'Requête de filtrage incorrecte: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'La requête de filtrage doit retourner des objets de la classe "%1$s"',
-));
+]);
 
 //
 // Class: TriggerOnPortalUpdate
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnPortalUpdate' => 'Déclencheur sur mise à jour depuis le portail',
 	'Class:TriggerOnPortalUpdate+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateChange
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnStateChange' => 'Déclencheur sur changement d\'état',
 	'Class:TriggerOnStateChange+' => '',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Etat',
 	'Class:TriggerOnStateChange/Attribute:state+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateEnter
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnStateEnter' => 'Déclencheur sur un objet entrant dans un état',
 	'Class:TriggerOnStateEnter+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateLeave
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnStateLeave' => 'Déclencheur sur un objet quittant un état',
 	'Class:TriggerOnStateLeave+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectCreate
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnObjectCreate' => 'Déclencheur sur la création d\'un objet',
 	'Class:TriggerOnObjectCreate+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectDelete
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnObjectDelete' => 'Déclencheur sur la suppression d\'un objet',
 	'Class:TriggerOnObjectDelete+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectUpdate
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnObjectUpdate' => 'Déclencheur sur la modification d\'un objet',
 	'Class:TriggerOnObjectUpdate+' => '',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Attributs cible',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectMention
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnObjectMention' => 'Déclencheur sur mention d\'objet',
 	'Class:TriggerOnObjectMention+' => 'Déclencheur sur un objet mentionné (@xxx) de la classe choisie (ou de ses filles) dans un attribut de type journal',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Objets mentionnés',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Permet de limiter la liste des objets mentionnés pour lesquels le déclencheur s\'activera. Si vide, n\'importe quel objet mentionné (de n\'importe quelle classe) l\'activera.',
-));
+]);
 
 //
 // Class: TriggerOnAttributeBlobDownload
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Déclencheur sur le téléchargement d\'un document d\'un objet',
 	'Class:TriggerOnAttributeBlobDownload+' => '',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Attributs cible',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnThresholdReached
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnThresholdReached' => 'Déclencheur sur dépassement de seuil',
 	'Class:TriggerOnThresholdReached+' => 'Déclencheur sur franchissement de seuil d\'un chronomètre',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Chronomètre',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Seuil',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-));
+]);
 
 //
 // Class: lnkTriggerAction
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkTriggerAction' => 'Actions-Déclencheur',
 	'Class:lnkTriggerAction+' => '',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Action',
@@ -696,12 +802,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
 	'Class:lnkTriggerAction/Attribute:order' => 'Ordre',
 	'Class:lnkTriggerAction/Attribute:order+' => '',
-));
+]);
 
 //
 // Synchro Data Source
 //
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SynchroDataSource' => 'Source de données',
 	'Class:SynchroDataSource/Attribute:name' => 'Nom',
 	'Class:SynchroDataSource/Attribute:name+' => '',
@@ -919,19 +1025,13 @@ Plusieurs champs peuvent ainsi être modifiés lors d\'une "mise à jour" en app
 	'Class:appUserPreferences/Attribute:preferences' => 'Préférences',
 	'Core:ExecProcess:Code1' => 'Mauvaise commande ou commande se finissant avec des erreurs (e.g. mauvais nom de script)',
 	'Core:ExecProcess:Code255' => 'Erreur PHP (analyse de fichier, ou exécution)',
-
-	// Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sj %2$dh %3$dmin %4$ds',
-
-	// Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Temps écoulé (enregistré dans "%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Temps écoulé pour "%1$s"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Date/heure de butée pour "%1$s" à %2$d%%',
-
-	// Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Il manque le paramètre "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Valeur incorrecte pour le paramètre "query". Il n\'existe aucune entrée dans le livre des requêtes pour l\'identifiant: "%1$s"',
 	'Core:BulkExport:ExportFormatPrompt' => 'Format d\'export:',
@@ -983,30 +1083,30 @@ Plusieurs champs peuvent ainsi être modifiés lors d\'une "mise à jour" en app
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Format par défaut (%1$s), ex. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Format spécial: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s',
-	'Core:DateTime:Placeholder_d' => 'JJ', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'J', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'AAAA', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'AA', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h', // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm', // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
+	'Core:DateTime:Placeholder_d' => 'JJ',
+	'Core:DateTime:Placeholder_j' => 'J',
+	'Core:DateTime:Placeholder_m' => 'MM',
+	'Core:DateTime:Placeholder_n' => 'M',
+	'Core:DateTime:Placeholder_Y' => 'AAAA',
+	'Core:DateTime:Placeholder_y' => 'AA',
+	'Core:DateTime:Placeholder_H' => 'hh',
+	'Core:DateTime:Placeholder_h' => 'h',
+	'Core:DateTime:Placeholder_G' => 'hh',
+	'Core:DateTime:Placeholder_g' => 'h',
+	'Core:DateTime:Placeholder_a' => 'am/pm',
+	'Core:DateTime:Placeholder_A' => 'AM/PM',
+	'Core:DateTime:Placeholder_i' => 'mm',
+	'Core:DateTime:Placeholder_s' => 'ss',
 	'Core:Validator:Default' => 'Format incorrect',
 	'Core:Validator:Mandatory' => 'Veuillez remplir ce champ',
 	'Core:Validator:MustBeInteger' => 'Ce champ ne peut contenir qu\'un nombre entier',
 	'Core:Validator:MustSelectOne' => 'Veuillez choisir une valeur',
-));
+]);
 
 //
 // Class: TagSetFieldData
 //
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TagSetFieldData' => '%2$s pour la classe %1$s',
 	'Class:TagSetFieldData+' => '',
 	'Class:TagSetFieldData/Attribute:code' => 'Code',
@@ -1028,12 +1128,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'L\'attribut de l\'étiquette ne peut pas être changé',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Utilisation (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Pas d\'utilisation de cette étiquette',
-));
+]);
 
 //
 // Class: DBProperty
 //
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DBProperty' => 'Propriété de la base de données',
 	'Class:DBProperty+' => '',
 	'Class:DBProperty/Attribute:name' => 'Nom',
@@ -1046,12 +1146,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => 'Commentaire',
 	'Class:DBProperty/Attribute:change_comment+' => '',
-));
+]);
 
 //
 // Class: BackgroundTask
 //
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:BackgroundTask' => 'Tâche de fond',
 	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Nom de la classe',
@@ -1076,12 +1176,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => 'État',
 	'Class:BackgroundTask/Attribute:status+' => '',
-));
+]);
 
 //
 // Class: AsyncTask
 //
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:AsyncTask' => 'Tâche asynchrone',
 	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Date de création',
@@ -1094,7 +1194,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Sous-classe de tâche asynchrone',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
-	'Class:AsyncTask/Attribute:status' => 'Statut',
+	'Class:AsyncTask/Attribute:status' => 'État',
 	'Class:AsyncTask/Attribute:status+' => '',
 	'Class:AsyncTask/Attribute:remaining_retries' => 'Essais restants',
 	'Class:AsyncTask/Attribute:remaining_retries+' => '',
@@ -1106,52 +1206,44 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Format incorrect pour la configuration de "async_task_retries[%1$s]". La bonne syntaxe est un tableau avec comme clés: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Format incorrect pour la configuration de "async_task_retries[%1$s]": clé "%2$s" invalide. Les clés attendues sont: %3$s',
-));
+]);
 
 //
 // Class: AbstractResource
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:AbstractResource' => 'Ressource',
 	'Class:AbstractResource+' => '',
-));
+]);
 
 //
 // Class: ResourceAdminMenu
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ResourceAdminMenu' => 'Menu Administration',
 	'Class:ResourceAdminMenu+' => '',
-));
+]);
 
 //
 // Class: ResourceRunQueriesMenu
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ResourceRunQueriesMenu' => 'Menu Requête OQL',
 	'Class:ResourceRunQueriesMenu+' => '',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ResourceSystemMenu' => 'Menu System',
 	'Class:ResourceSystemMenu+' => '',
-));
-// Additional language entries not present in English dict
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Core:Context=REST/JSON+' => 'REST/JSON',
-	'Core:Context=Synchro+' => 'Synchro',
-	'Core:Context=Setup+' => 'Setup',
-	'Core:Context=GUI:Console+' => 'GUI:Console',
-	'Core:Context=CRON+' => 'cron',
-	'Core:Context=GUI:Portal+' => 'GUI:Portal'
-));
-
-
-
+	'Class:EventNotification/Attribute:object_class' => 'Classe de l\'objet',
+	'Class:EventNotification/Attribute:object_class+' => 'Classe de l\'objet (la même que celle du déclencheur)',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification non envoyée',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'Une erreur est survenue lors de l\'envoi de la notification',
+]);

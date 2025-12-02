@@ -1,26 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+/**
+ *
+ */
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'iTopUpdate:UI:PageTitle' => 'Aktualizacja aplikacji',
 	'itop-core-update:UI:SelectUpdateFile' => 'Aktualizacja aplikacji',
 	'itop-core-update:UI:ConfirmUpdate' => 'Potwierdź aktualizację aplikacji',
@@ -39,6 +29,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopUpdate:UI:NewVersion' => 'Nowo zainstalowana wersja',
 	'iTopUpdate:UI:Back' => 'Wstecz',
 	'iTopUpdate:UI:Cancel' => 'Anuluj',
+	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>Wykryto kilka nowych modułów</b>, nie można wykonać częściowej aktualizacji.</br>Postępuj zgodnie z <a target="_blank" href="%2$s"> procedurą</a> w celu ręcznej aktualizacji iTop. Musisz użyć <a href="%1$s">setup</a> aby zaktualizować aplikację.',
 	'iTopUpdate:UI:Continue' => 'Kontynuuj',
 	'iTopUpdate:UI:RunSetup' => 'Uruchom instalację',
 	'iTopUpdate:UI:WithDBBackup' => 'Kopia zapasowa bazy danych',
@@ -51,14 +42,12 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'Podczas aktualizacji aplikacja będzie tylko do odczytu.',
 	'iTopUpdate:UI:Status' => 'Status',
 	'iTopUpdate:UI:Action' => 'Aktualizacja',
-	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup~~',
-	'iTopUpdate:UI:History' => 'Historia wersji',
+	'iTopUpdate:UI:Setup' => 'Konfiguracja '.ITOP_APPLICATION_SHORT, 'iTopUpdate:UI:History' => 'Historia wersji',
 	'iTopUpdate:UI:Progress' => 'Progress of the upgrade',
 	'iTopUpdate:UI:DoBackup:Label' => 'Kopie zapasowe plików i bazy danych',
 	'iTopUpdate:UI:DoBackup:Warning' => 'Tworzenie kopii zapasowych nie jest zalecane ze względu na ograniczoną ilość wolnego miejsca na dysku',
 	'iTopUpdate:UI:DiskFreeSpace' => 'Wolne miejsce na dysku',
-	'iTopUpdate:UI:ItopDiskSpace' => 'Przestrzeń dyskowa  '.ITOP_APPLICATION_SHORT,
-	'iTopUpdate:UI:DBDiskSpace' => 'Przestrzeń dyskowa bazy danych',
+	'iTopUpdate:UI:ItopDiskSpace' => 'Przestrzeń dyskowa  '.ITOP_APPLICATION_SHORT, 'iTopUpdate:UI:DBDiskSpace' => 'Przestrzeń dyskowa bazy danych',
 	'iTopUpdate:UI:FileUploadMaxSize' => 'Maksymalny rozmiar przesyłanego pliku',
 	'iTopUpdate:UI:PostMaxSize' => 'Wartość PHP ini post_max_size: %1$s',
 	'iTopUpdate:UI:UploadMaxFileSize' => 'Wartość PHP ini upload_max_filesize: %1$s',
@@ -70,11 +59,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Nie można zaktualizować aplikacji: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Ostrzeżenie: aktualizacja aplikacji może się nie powieść: %1$s',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Wykryto kilka zmodyfikowanych plików</b>, nie można wykonać częściowej aktualizacji.</br>Postępuj zgodnie z <a target="_blank" href="%2$s"> procedurą</a> w celu ręcznej aktualizacji iTop. Musisz użyć <a href="%1$s">setup</a> aby zaktualizować aplikację.',
-	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>Wykryto kilka nowych modułów</b>, nie można wykonać częściowej aktualizacji.</br>Postępuj zgodnie z <a target="_blank" href="%2$s"> procedurą</a> w celu ręcznej aktualizacji iTop. Musisz użyć <a href="%1$s">setup</a> aby zaktualizować aplikację.',
 	'iTopUpdate:UI:CheckInProgress' => 'Proszę czekać trwa sprawdzanie integralności',
-	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup~~',
-	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?~~',
-    // Setup Messages
+	'iTopUpdate:UI:SetupLaunch' => 'Uruchom konfigurację '.ITOP_APPLICATION_SHORT, 'iTopUpdate:UI:SetupLaunchConfirm' => 'Zostanie uruchomiona '.ITOP_APPLICATION_SHORT.' konfiguracja, jesteś pewien?',
+	'iTopUpdate:UI:FastSetupLaunch' => 'Fast Setup~~',
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Gotowy do startu',
 	'iTopUpdate:UI:SetupMessage:EnterMaintenance' => 'Wejście w tryb konserwacji',
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Kopia zapasowa bazy danych',
@@ -85,7 +72,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Aktualizacja bazy danych',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Wyjście z trybu konserwacji',
 	'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Aktualizacja zakończona',
-    // Errors
 	'iTopUpdate:Error:MissingFunction' => 'Niemożliwe rozpoczęcie aktualizacji, brak funkcji',
 	'iTopUpdate:Error:MissingFile' => 'Brakujący plik: %1$s',
 	'iTopUpdate:Error:CorruptedFile' => 'Plik %1$s jest uszkodzony',
@@ -103,11 +89,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopUpdate:UI:UpdateDone' => 'Aktualizacja powiodła się',
 	'Menu:iTopUpdate' => 'Aktualizacja aplikacji',
 	'Menu:iTopUpdate+' => 'Aktualizacja aplikacji',
-    // Missing itop entries
 	'Class:ModuleInstallation/Attribute:installed' => 'Zainstalowano',
 	'Class:ModuleInstallation/Attribute:name' => 'Nazwa',
 	'Class:ModuleInstallation/Attribute:version' => 'Wersja',
 	'Class:ModuleInstallation/Attribute:comment' => 'Komentarz',
-));
-
-
+]);

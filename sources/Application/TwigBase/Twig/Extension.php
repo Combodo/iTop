@@ -1,12 +1,13 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\TwigBase\Twig;
 
-
+use ApplicationMenu;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeText;
@@ -15,6 +16,9 @@ use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
 use Exception;
 use Twig\Environment;
+use Twig\Extension\CoreExtension;
+use Twig\Loader\FilesystemLoader;
+use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use utils;
@@ -72,8 +76,7 @@ class Extension
 				if (preg_match('@^\d\d\d\d-\d\d-\d\d$@', trim($sDate))) {
 					return AttributeDate::GetFormat()->Format($sDate);
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 			}
 
 			return $sDate;
@@ -150,6 +153,12 @@ class Extension
 			return twig_array_filter($oTwigEnv, $array, $arrow);
 		}, ['needs_environment' => true]);
 
+		// @since 3.3.0 N°8579
+		// Filter to remove spaces between HTML tags, overwrite the deprecated core "spaceless" filter
+		$aFilters[] = new TwigFilter('spaceless', function (?string $content) {
+			return trim(preg_replace('/>\s+</', '><', $content ?? ''));
+		}, ['is_safe' => ['html']]);
+
 		return $aFilters;
 	}
 
@@ -182,16 +191,50 @@ class Extension
 			return utils::GetAbsoluteUrlModulesRoot();
 		});
 
+		// Function to check if current user can access to the given menu
+		// Usage in twig: {% if is_backoffice_menu_enabled('DataModelMenu') %}
+		/** @since 3.2.0 */
+		$aFunctions[] = new TwigFunction('is_backoffice_menu_enabled', function ($sMenuId) {
+			return ApplicationMenu::IsMenuIdEnabled($sMenuId);
+		});
+
 		// Function to render a UI block (HTML, inline CSS, inline JS) and its sub blocks directly in the TWIG
 		// Usage in twig: {{ render_block(oBlock) }}
 		/** @since 3.0.0 */
-		$aFunctions[] = new TwigFunction('render_block',
+		$aFunctions[] = new TwigFunction(
+			'render_block',
 			function (iUIBlock $oBlock, $aContextParams = []) {
 				$oRenderer = new BlockRenderer($oBlock, $aContextParams);
 
 				return $oRenderer->RenderHtml();
 			},
 			['is_safe' => ['html']]
+		);
+
+		/** @since 3.2.0 */
+		$aFunctions[] = new TwigFunction(
+			'source_abs',
+			function (Environment $oEnv, $sUrlAbsName) {
+				// Extract the source path from the absolute url and replace it with approot
+				$sAppRootAbsName = str_replace(utils::GetAbsoluteUrlAppRoot(), APPROOT, $sUrlAbsName);
+				$oLoader = $oEnv->getLoader();
+				// Check if the file is in any of the twig paths
+				if ($oLoader instanceof  FilesystemLoader) {
+					$aPaths = $oLoader->getPaths();
+					foreach ($aPaths as $sPath) {
+						$sTwigPathRelativeName = substr($sAppRootAbsName, strlen($sPath) + 1);
+						// If we find our path in the absolute url and the file actually exist, return it
+						if (str_contains($sAppRootAbsName, $sPath) && $oLoader->exists($sTwigPathRelativeName)) {
+							return $oLoader->getSourceContext($sTwigPathRelativeName)->getCode();
+						}
+					}
+				}
+				// Otherwise return empty content
+				$oEmptySource = new Source('', $sUrlAbsName, '');
+				return $oEmptySource->getCode();
+			},
+			['needs_environment' => true,
+		 'is_safe' => ['all']]
 		);
 
 		return $aFunctions;

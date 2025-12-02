@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <constants>
     <constant id="RESPONSE_TICKET_SLT_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT SLT AS slt JOIN lnkSLAToSLT AS l1 ON l1.slt_id=slt.id JOIN SLA AS sla ON l1.sla_id=sla.id JOIN lnkCustomerContractToService AS l2 ON l2.sla_id=sla.id JOIN CustomerContract AS sc ON l2.customercontract_id=sc.id WHERE slt.metric = :metric AND l2.service_id = :this->service_id AND sc.org_id = :this->org_id AND slt.request_type = :request_type AND slt.priority = :this->priority]]></constant>
   </constants>
@@ -13,7 +13,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,structure</category>
@@ -141,6 +141,10 @@
         </field>
         <field id="team_name" xsi:type="AttributeExternalField">
           <extkey_attcode>team_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="team_email" xsi:type="AttributeExternalField">
+          <extkey_attcode>team_id</extkey_attcode>
           <target_attcode>email</target_attcode>
         </field>
         <field id="agent_id" xsi:type="AttributeExternalKey">
@@ -202,14 +206,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>contact_id</ext_key_to_remote>
-          <duplicates/>
-        </field>
-        <field id="functionalcis_list" xsi:type="AttributeLinkedSetIndirect">
-          <linked_class>lnkFunctionalCIToTicket</linked_class>
-          <ext_key_to_me>ticket_id</ext_key_to_me>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-          <ext_key_to_remote>functionalci_id</ext_key_to_remote>
+          <with_php_computation>true</with_php_computation>
           <duplicates/>
         </field>
         <field id="workorders_list" xsi:type="AttributeLinkedSet">
@@ -222,11 +219,45 @@
       <event_listeners>
         <event_listener id="UpdateImpactAnalysis">
           <event>EVENT_DB_LINKS_CHANGED</event>
-          <callback>UpdateImpactedItems</callback>
+          <callback>OnLinksChangedTicket</callback>
+          <rank>0</rank>
+        </event_listener>
+        <event_listener id="UpdateImpactAnalysisLocal">
+          <event>EVENT_DB_BEFORE_WRITE</event>
+          <callback>OnBeforeWriteTicket</callback>
           <rank>0</rank>
         </event_listener>
       </event_listeners>
       <methods>
+        <method id="OnLinksChangedTicket">
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[
+    public function OnLinksChangedTicket(Combodo\iTop\Service\Events\EventData $oEventData)
+    {
+        $this->UpdateImpactedItems();
+    }
+        ]]></code>
+        </method>
+        <method id="OnBeforeWriteTicket">
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[
+    public function OnBeforeWriteTicket(Combodo\iTop\Service\Events\EventData $oEventData)
+    {
+        // do not update impacted items from portal
+        if(ContextTag::Check(ContextTag::TAG_PORTAL)){
+            return;
+        }
+        $aChanges = $this->ListChanges();
+        if ($this->IsNew() || array_key_exists('functionalcis_list', $aChanges) || array_key_exists('contacts_list', $aChanges)) {
+            $this->UpdateImpactedItems();
+        }
+    }
+        ]]></code>
+        </method>
         <method id="DBInsertNoReload">
           <static>false</static>
           <access>public</access>
@@ -264,7 +295,7 @@
         }
         ]]></code>
         </method>
-        <method id="AddCurrentUserToContacts" _revision_id="294" _delta="define">
+        <method id="AddCurrentUserToContacts" _revision_id="294">
           <comment>/**
             *
             * Add the current contact associated Person to the contacts_list of this Ticket
@@ -292,7 +323,7 @@
 	  }]]></code>
           <arguments/>
         </method>
-        <method id="RemoveCurrentUserFromContacts" _revision_id="296" _delta="define">
+        <method id="RemoveCurrentUserFromContacts" _revision_id="296">
           <comment>/**
             *
             * Remove the current user associated Person from the contacts_list of this Ticket
@@ -558,6 +589,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="ticket_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="role_code">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="ticket_id">
@@ -803,6 +847,25 @@
             </item>
           </items>
         </search>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="team_id">
+              <rank>20</rank>
+            </item>
+            <item id="agent_id">
+              <rank>30</rank>
+            </item>
+            <item id="start_date">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
         <list>
           <items>
             <item id="status">
@@ -857,15 +920,6 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <presentation>
-        <details>
-          <items>
-            <item id="tickets_list" _delta="define">
-              <rank>90</rank>
-            </item>
-          </items>
-        </details>
-      </presentation>
     </class>
   </classes>
   <meta>
@@ -887,7 +941,7 @@
       <bricks>
         <brick id="services" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick" _delta="define">
           <active>true</active>
-          <width>6</width>
+          <width>400px</width>
           <rank>
             <default>10</default>
           </rank>
@@ -953,7 +1007,6 @@
                           <rules>
                             <rule id="contact-to-userrequest"/>
                             <rule id="servicesubcategory-to-userrequest"/>
-                            <rule id="go-to-open-request-on-submit"/>
                           </rules>
                         </action>
                         <action id="view" xsi:type="view"/>
@@ -983,7 +1036,7 @@
           <rank>
             <default>20</default>
           </rank>
-          <width>6</width>
+          <width>400px</width>
           <title>
             <default>Brick:Portal:OngoingRequests:Title</default>
           </title>
@@ -1004,7 +1057,7 @@
           <decoration_class>
             <default>fc fc-ongoing-request fc-2x</default>
           </decoration_class>
-          <oql><![CDATA[SELECT Ticket]]></oql>
+          <oql><![CDATA[SELECT Ticket AS T WHERE T.finalclass IN ('UserRequest', 'Incident')]]></oql>
           <!-- Optional tag to define if the action should be done in a modal window ("modal"), a new window ("new") or the current window ("self") -->
           <!--<opening_target>modal</opening_target>-->
           <!-- Optional tag to define the how the objects should be opened. Values can be edit|view. Note that even if this is set to edit, objects not allowed in edition mode for the user (cf. scopes and security layers) will open in view mode -->
@@ -1062,7 +1115,7 @@
           <visible>
             <home>false</home>
           </visible>
-          <width>12</width>
+          <width>400px</width>
           <title>
             <default>Brick:Portal:ClosedRequests:Title</default>
           </title>
@@ -1070,7 +1123,7 @@
           <decoration_class>
             <default>fc fc-closed-request fc-2x</default>
           </decoration_class>
-          <oql><![CDATA[SELECT Ticket WHERE operational_status = 'closed']]></oql>
+          <oql><![CDATA[SELECT Ticket WHERE operational_status = 'closed' AND finalclass IN ('UserRequest', 'Incident')]]></oql>
           <!-- Can be either a class tag with the class name or an oql tag with the query -->
           <!-- <class>Ticket</class> -->
           <fields>
@@ -1100,6 +1153,92 @@
           <export>
             <export_default_fields>true</export_default_fields>
           </export>
+        </brick>
+        <brick id="manage-all-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick" _delta="define">
+          <active>true</active>
+          <rank>
+            <default>120</default>
+          </rank>
+          <visible>
+            <home>false</home>
+            <navigation_menu>false</navigation_menu>
+          </visible>
+          <width>400px</width>
+          <title>
+            <default>Brick:Portal:ListAllRequests:Title</default>
+          </title>
+          <!-- Optional tag to define which display modes can be used in the brick's page and the brick's tile -->
+          <!--<display_modes>-->
+          <!-- Optional tag that must contain at least 1 <mode> tag. -->
+          <!--<availables>-->
+          <!--<mode id="list"/>-->
+          <!--<mode id="pie-chart"/>-->
+          <!--<mode id="bar-chart"/>-->
+          <!--</availables>-->
+          <!-- Optional tag to define which display mode will be used by default when opening the brick -->
+          <!--<default>list</default>-->
+          <!-- Optional tag to define which display mode will be used to render the brick's tile -->
+          <!--<tile>text</tile>-->
+          <!--</display_modes>-->
+          <description>Brick:Portal:ListAllRequests:Title+</description>
+          <decoration_class>
+            <default>fc fc-ongoing-request fc-2x</default>
+          </decoration_class>
+          <oql><![CDATA[SELECT Ticket]]></oql>
+          <!-- Optional tag to define if the action should be done in a modal window ("modal"), a new window ("new") or the current window ("self") -->
+          <!--<opening_target>modal</opening_target>-->
+          <!-- Optional tag to define the how the objects should be opened. Values can be edit|view. Note that even if this is set to edit, objects not allowed in edition mode for the user (cf. scopes and security layers) will open in view mode -->
+          <!-- <opening_mode>edit</opening_mode> -->
+          <!-- Can be either a class tag with the class name or an oql tag with the query -->
+          <!-- <class>Ticket</class> -->
+          <fields>
+            <field id="title"/>
+            <field id="description"/>
+            <field id="status"/>
+          </fields>
+          <!-- Optional tag to add attributes to the table by their code -->
+          <grouping>
+            <!-- Mandatory -->
+            <tabs>
+              <!-- Optional. Show object count for each tabs. Available values are true|false. Default is false. -->
+              <show_tab_counts>true</show_tab_counts>
+              <!-- Mandatory. Grouping by tabs -->
+              <groups>
+                <group id="all">
+                  <rank>1</rank>
+                  <title>Brick:Portal:ListAllRequests:Tab</title>
+                  <condition><![CDATA[SELECT Ticket]]></condition>
+                </group>
+              </groups>
+            </tabs>
+            <!-- Implicit grouping on y axis by finalclass -->
+          </grouping>
+          <!-- Optional. Set the default number of item lists will display. -->
+          <!-- <default_list_length>20</default_list_length> -->
+          <data_loading>auto</data_loading>
+          <export>
+            <export_default_fields>true</export_default_fields>
+          </export>
+        </brick>
+        <brick id="search-within-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\FilterBrick" _delta="define">
+          <active>true</active>
+          <rank>
+            <default>30</default>
+          </rank>
+          <visible>
+            <home>true</home>
+            <navigation_menu>false</navigation_menu>
+          </visible>
+          <width>400px</width>
+          <title>
+            <default>Brick:Portal:SearchInAllRequests:Title</default>
+          </title>
+          <description>Brick:Portal:SearchInAllRequests:Title+</description>
+          <!-- <search_submit_class/> -->
+          <target_brick>
+            <id>manage-all-tickets-for-portal-user</id>
+            <type>Combodo\iTop\Portal\Brick\ManageBrick</type>
+          </target_brick>
         </brick>
       </bricks>
       <forms>
@@ -1267,6 +1406,7 @@
             </div>
             <div>
               <div class="form_field" data-field-id="contacts_list"/>
+              <div class="form_field" data-field-id="attachments_plugin" data-field-plugin="AttachmentPlugIn" data-field-opened="false"/>
               <div class="form_field" data-field-id="public_log"/>
             </div>
           </twig>
@@ -1419,12 +1559,6 @@
             <preset id="1">copy(id, servicesubcategory_id)</preset>
             <preset id="2">copy(service_id, service_id)</preset>
           </presets>
-        </action_rule>
-        <!-- Deprecated, will be removed in iTop 2.8 -->
-        <action_rule id="go-to-open-request-on-submit" _delta="define">
-          <submit xsi:type="goto">
-            <brick>ongoing-tickets-for-portal-user</brick>
-          </submit>
         </action_rule>
       </action_rules>
       <navigation_rules>

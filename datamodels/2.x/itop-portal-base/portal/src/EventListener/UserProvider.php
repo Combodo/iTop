@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -29,6 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
+use utils;
 
 /**
  * Class UserProvider
@@ -36,16 +38,16 @@ use UserRights;
  * @package Combodo\iTop\Portal\EventListener
  * @since 2.7.0
  */
-class UserProvider implements ContainerAwareInterface
+class UserProvider
 {
 	/** @var \ModuleDesign $oModuleDesign */
 	private $oModuleDesign;
 	/** @var string $sPortalId */
 	private $sPortalId;
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $container */
-	private $oContainer;
 	/** @var \User $oUser */
 	private $oUser;
+	/** @var bool $bUserCanLogOff Whether the current user can log off or not */
+	private $bUserCanLogOff;
 	/** @var array $aAllowedPortals */
 	private $aAllowedPortals;
 
@@ -77,7 +79,7 @@ class UserProvider implements ContainerAwareInterface
 		// - Checking user rights and prompt if needed (401 HTTP code returned if XHR request)
 		$iExitMethod = ($oRequestEvent->getRequest()->isXmlHttpRequest()) ? LoginWebPage::EXIT_RETURN : LoginWebPage::EXIT_PROMPT;
 		$iLogonRes = LoginWebPage::DoLoginEx($this->sPortalId, false, $iExitMethod);
-		if( ($iExitMethod === LoginWebPage::EXIT_RETURN) && ($iLogonRes != 0) ) {
+		if (($iExitMethod === LoginWebPage::EXIT_RETURN) && ($iLogonRes != 0)) {
 			die(Dict::S('Portal:ErrorUserLoggedOut'));
 		}
 		// - User must be associated with a Contact
@@ -90,6 +92,9 @@ class UserProvider implements ContainerAwareInterface
 		if ($this->oUser === null) {
 			throw new Exception('Could not load connected user.');
 		}
+
+		// User allowed to log off or not
+		$this->bUserCanLogOff = utils::CanLogOff();
 
 		// Allowed portals
 		$aAllowedPortals = UserRights::GetAllowedPortals();
@@ -122,6 +127,15 @@ class UserProvider implements ContainerAwareInterface
 	}
 
 	/**
+	 * @return bool {@see static::$bUserCanLogOff}
+	 * @since 3.1.2 3.2.0
+	 */
+	public function getCurrentUserCanLogOff(): bool
+	{
+		return $this->bUserCanLogOff;
+	}
+
+	/**
 	 * Get allowed portals.
 	 *
 	 * @return array allowed portals
@@ -133,11 +147,4 @@ class UserProvider implements ContainerAwareInterface
 		return $this->aAllowedPortals;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function setContainer(ContainerInterface $oContainer = null)
-	{
-		$this->oContainer = $oContainer;
-	}
 }

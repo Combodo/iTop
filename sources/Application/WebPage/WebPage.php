@@ -1,9 +1,13 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Application\WebPage;
+
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
@@ -17,7 +21,19 @@ use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use DBSearch;
+use DeprecatedCallsLog;
+use Dict;
+use ExecutionKPI;
+use IssueLog;
+use LogChannels;
+use MetaModel;
+use Symfony\Component\HttpFoundation\Response;
+use UserRights;
+use utils;
 
+use const APPROOT;
+use const MODULESROOT;
 
 /**
  * <p>Simple helper class to ease the production of HTML pages
@@ -32,13 +48,24 @@ use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
  *    $oPage->p("Hello World !");
  *    $oPage->output();
  * ```
+ * </p>
+ * <p>
+ * JS scripts can be added. They will be executed in sequence depending on the API used to inject them:
+ * <ol>
+ *    <li>add_early_script()</li>
+ *    <li>LinkScriptFromAppRoot(), LinkScriptFromURI(), LinkScriptFromModule()</li>
+ *    <li>add_script()</li>
+ *    <li>add_init_script() - DOMContentLoaded</li>
+ *    <li>add_ready_script() - DOMContentLoaded + 50 ms</li>
+ * </ol>
+ * </p>
  */
 class WebPage implements Page
 {
 	/**
 	 * @since 2.7.0 N°2529
 	 */
-	const PAGES_CHARSET = 'utf-8';
+	public const PAGES_CHARSET = 'utf-8';
 
 	/**
 	 * @var string
@@ -60,6 +87,17 @@ class WebPage implements Page
 	 * @since 3.0.0
 	 */
 	public const ENUM_SESSION_MESSAGE_SEVERITY_ERROR = 'error';
+
+	/**
+	 * @var string
+	 * @since 3.2.0
+	 */
+	protected const ENUM_RESOURCE_TYPE_JS = "js";
+	/**
+	 * @var string
+	 * @since 3.2.0
+	 */
+	protected const ENUM_RESOURCE_TYPE_CSS = "css";
 
 	/**
 	 * @var string
@@ -112,7 +150,7 @@ class WebPage implements Page
 	 * @var string Rel. path to the template to use for the rendering. File name must be without the extension.
 	 * @since 3.0.0
 	 */
-	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/webpage/layout';
+	public const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/webpage/layout';
 
 	protected $s_title;
 	protected $s_content;
@@ -173,7 +211,6 @@ class WebPage implements Page
 	protected $oContentLayout;
 	protected $sTemplateRelPath;
 
-
 	/**
 	 * @var bool|string|string[]
 	 */
@@ -196,11 +233,9 @@ class WebPage implements Page
 		$this->InitializeInitScripts();
 		$this->InitializeReadyScripts();
 		$this->InitializeLinkedScripts();
-		$this->InitializeCompatibilityLinkedScripts();
 		$this->InitializeDictEntries();
 		$this->InitializeStyles();
 		$this->InitializeLinkedStylesheets();
-		$this->InitializeCompatibilityLinkedStylesheets();
 		$this->aPreloadedFonts = WebResourcesHelper::GetPreloadedFonts();
 		$this->a_headers = [];
 		$this->a_base = ['href' => '', 'target' => ''];
@@ -306,7 +341,7 @@ class WebPage implements Page
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function add_twig_template($sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = 'html')
+	public function add_twig_template($sViewPath, $sTemplateName, $aParams = [], $sDefaultType = 'html')
 	{
 		TwigHelper::RenderIntoPage($this, $sViewPath, $sTemplateName, $aParams, $sDefaultType);
 	}
@@ -364,7 +399,7 @@ class WebPage implements Page
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function table($aConfig, $aData, $aParams = array())
+	public function table($aConfig, $aData, $aParams = [])
 	{
 		$oDataTable = $this->GetTableBlock($aConfig, $aData);
 		$oDataTable->AddOption("bFullscreen", true);
@@ -386,7 +421,7 @@ class WebPage implements Page
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetTable($aConfig, $aData, $aParams = array())
+	public function GetTable($aConfig, $aData, $aParams = [])
 	{
 		static $iNbTables = 0;
 		$iNbTables++;
@@ -394,15 +429,13 @@ class WebPage implements Page
 		$sHtml .= "<table class=\"listResults\">\n";
 		$sHtml .= "<thead>\n";
 		$sHtml .= "<tr>\n";
-		foreach ($aConfig as $sName => $aDef)
-		{
+		foreach ($aConfig as $sName => $aDef) {
 			$sHtml .= "<th title=\"".$aDef['description']."\">".$aDef['label']."</th>\n";
 		}
 		$sHtml .= "</tr>\n";
 		$sHtml .= "</thead>\n";
 		$sHtml .= "<tbody>\n";
-		foreach ($aData as $aRow)
-		{
+		foreach ($aData as $aRow) {
 			$sHtml .= $this->GetTableRow($aRow, $aConfig);
 		}
 		$sHtml .= "</tbody>\n";
@@ -420,25 +453,19 @@ class WebPage implements Page
 	public function GetTableRow($aRow, $aConfig)
 	{
 		$sHtml = '';
-		if (isset($aRow['@class'])) // Row specific class, for hilighting certain rows
-		{
+		if (isset($aRow['@class'])) { // Row specific class, for hilighting certain rows
 			$sHtml .= "<tr class=\"{$aRow['@class']}\">";
-		}
-		else
-		{
+		} else {
 			$sHtml .= "<tr>";
 		}
-		foreach ($aConfig as $sName => $aAttribs)
-		{
+		foreach ($aConfig as $sName => $aAttribs) {
 			$sClass = isset($aAttribs['class']) ? 'class="'.$aAttribs['class'].'"' : '';
 
 			// Prepare metadata
 			// - From table config.
 			$sMetadata = '';
-			if(isset($aAttribs['metadata']))
-			{
-				foreach($aAttribs['metadata'] as $sMetadataProp => $sMetadataValue)
-				{
+			if (isset($aAttribs['metadata'])) {
+				foreach ($aAttribs['metadata'] as $sMetadataProp => $sMetadataValue) {
 					$sMetadataPropSanitized = str_replace('_', '-', $sMetadataProp);
 					$sMetadataValueSanitized = utils::HtmlEntities($sMetadataValue);
 					$sMetadata .= 'data-'.$sMetadataPropSanitized.'="'.$sMetadataValueSanitized.'" ';
@@ -446,13 +473,10 @@ class WebPage implements Page
 			}
 
 			// Prepare value
-			if(is_array($aRow[$sName]))
-			{
+			if (is_array($aRow[$sName])) {
 				$sValueHtml = ($aRow[$sName]['value_html'] === '') ? '&nbsp;' : $aRow[$sName]['value_html'];
 				$sMetadata .= 'data-value-raw="'.utils::HtmlEntities($aRow[$sName]['value_raw']).'" ';
-			}
-			else
-			{
+			} else {
 				$sValueHtml = ($aRow[$sName] === '') ? '&nbsp;' : $aRow[$sName];
 			}
 
@@ -501,9 +525,118 @@ class WebPage implements Page
 	}
 
 	/**
+	 * Internal helper to link a resource from the iTop package (e.g. `<ITOP/`)
+	 *
+	 * @param string $sFileRelPath Rel. path from iTop app. root of the resource to link (e.g. `css/login.css`)
+	 * @param string $sResourceType {@see static::ENUM_RESOURCE_TYPE_JS}, {@see static::ENUM_RESOURCE_TYPE_CSS}
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @internal
+	 * @since 3.2.0 N°7315
+	 */
+	private function LinkResourceFromAppRoot(string $sFileRelPath, string $sResourceType): void
+	{
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sFileRelPath))) {
+			return;
+		}
+
+		// Ensure file is within the app folder
+		$sFileRelPathWithoutQueryParams = explode("?", $sFileRelPath)[0];
+		if (false === utils::RealPath(APPROOT.$sFileRelPathWithoutQueryParams, APPROOT)) {
+			IssueLog::Warning("Linked resource added to page with a path from outside app directory, it will be ignored.", LogChannels::CONSOLE, [
+				"linked_resource_uri" => $sFileRelPath,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+			return;
+		}
+
+		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
+
+		// Ensure app root url ends with a slash as it is not guaranteed by the API
+		if (strcmp(substr($sAppRootUrl, -1), '/') !== 0) {
+			$sAppRootUrl .= '/';
+		}
+
+		$this->LinkResourceFromURI($sAppRootUrl.$sFileRelPath, $sResourceType);
+	}
+
+	/**
+	 * Internal helper to link a resource from any module
+	 *
+	 * @param string $sFileRelPath Rel. path from current environment (e.g. `<ITOP>/env-production/`) of the resource to link (e.g. `some-module/asset/css/some-file.css`)
+	 * @param string $sResourceType {@see static::ENUM_RESOURCE_TYPE_JS}, {@see static::ENUM_RESOURCE_TYPE_CSS}
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @internal
+	 * @since 3.2.0 N°7315
+	 */
+	private function LinkResourceFromModule(string $sFileRelPath, string $sResourceType): void
+	{
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sFileRelPath))) {
+			return;
+		}
+
+		// Ensure file is within the app folder
+		$sFileRelPathWithoutQueryParams = explode("?", $sFileRelPath)[0];
+		$sFileAbsPath = MODULESROOT.$sFileRelPathWithoutQueryParams;
+		// For modules only, we don't check real path if symlink as the file would not be in under MODULESROOT
+		if (false === is_link($sFileAbsPath) && false === utils::RealPath($sFileAbsPath, MODULESROOT)) {
+			IssueLog::Warning("Linked resource added to page with a path from outside current env. directory, it will be ignored.", LogChannels::CONSOLE, [
+				"linked_resource_url" => $sFileRelPath,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+			return;
+		}
+
+		$this->LinkResourceFromURI(utils::GetAbsoluteUrlModulesRoot().$sFileRelPath, $sResourceType);
+	}
+
+	/**
+	 * Internal helper to link a resource from any URI, may it be on iTop server or an external one
+	 *
+	 * @param string $sFileAbsURI Abs. URI of the resource to link (e.g. `https://external.server.com/some-file.css`)
+	 * @param string $sResourceType {@see static::ENUM_RESOURCE_TYPE_JS}, {@see static::ENUM_RESOURCE_TYPE_CSS}
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @internal
+	 * @since 3.2.0 N°7315
+	 */
+	private function LinkResourceFromURI(string $sFileAbsURI, string $sResourceType): void
+	{
+		// Ensure there is actually a URI
+		if (utils::IsNullOrEmptyString(trim($sFileAbsURI))) {
+			return;
+		}
+
+		// Check if URI is absolute ("://" do allow any protocol), otherwise ignore the file
+		if (false === stripos($sFileAbsURI, "://")) {
+			IssueLog::Warning("Linked resource added to page with a non absolute URI, it will be ignored.", LogChannels::CONSOLE, [
+				"linked_resource_url" => $sFileAbsURI,
+				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
+			]);
+			return;
+		}
+
+		switch ($sResourceType) {
+			case static::ENUM_RESOURCE_TYPE_JS:
+				$this->a_linked_scripts[$sFileAbsURI] = $sFileAbsURI;
+				break;
+
+			case static::ENUM_RESOURCE_TYPE_CSS:
+				$this->a_linked_stylesheets[$sFileAbsURI] = ['link' => $sFileAbsURI, 'condition' => ''];
+				break;
+		}
+	}
+
+	/**
 	 * Empty all base JS in the page's header
 	 *
-	 * @uses \WebPage::$a_a_early_scripts
+	 * @uses WebPage::$a_a_early_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -515,7 +648,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base JS in the page's header
 	 *
-	 * @uses \WebPage::$a_scripts
+	 * @uses WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -525,12 +658,21 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add some Javascript to the header of the page, therefore executed first, BEFORE the DOM interpretation.
+	 * Add some Javascript to the header of the page
+	 *
+	 * The provided JS code will be executed at step 1 of the JS execution chain:
+	 * [early script] ==> linked script ==> script ==> init script ==> ready script
+	 *
 	 * /!\ Keep in mind that no external JS files (eg. jQuery) will be loaded yet.
 	 *
-	 * @uses \WebPage::$a_a_early_scripts
+	 * @api-advanced
+	 * @see static::add_script, static::add_init_script, static::add_ready_script
+	 * @see static::LinkScriptFromAppRoot, static::LinkScriptFromModule, static::LinkScriptFromURI
+	 *
 	 * @param string $s_script
+	 *
 	 * @since 3.0.0
+	 * @uses WebPage::$a_early_scripts
 	 */
 	public function add_early_script($s_script)
 	{
@@ -542,7 +684,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base JS
 	 *
-	 * @uses \WebPage::$a_scripts
+	 * @uses WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -554,7 +696,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base JS
 	 *
-	 * @uses \WebPage::$a_scripts
+	 * @uses WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -566,8 +708,16 @@ class WebPage implements Page
 	/**
 	 * Add some Javascript to be executed immediately without waiting for the DOM to be ready
 	 *
-	 * @uses \WebPage::$a_scripts
+	 * The provided JS code will be executed at step 3 of the JS execution chain:
+	 * early script ==> linked script ==> [script] ==> init script ==> ready script
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_init_script, static::add_ready_script
+	 * @see static::LinkScriptFromAppRoot, static::LinkScriptFromURI, static::LinkScriptFromModule
+	 *
 	 * @param string $s_script
+	 *
+	 * @uses WebPage::$a_scripts
 	 * @since 3.0.0 These scripts are put at the end of the <body> tag instead of the end of the <head> tag, {@see static::add_early_script} to add script there
 	 */
 	public function add_script($s_script)
@@ -580,7 +730,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base init. scripts for the page
 	 *
-	 * @uses \WebPage::$a_init_scripts
+	 * @uses WebPage::$a_init_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -592,7 +742,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base init. scripts for the page
 	 *
-	 * @uses \WebPage::$a_init_scripts
+	 * @uses WebPage::$a_init_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -602,12 +752,19 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
+	 * Add a script to be executed when the DOM is ready (typical JQuery use)
 	 *
-	 * @uses \WebPage::$a_init_scripts
+	 * The provided JS code will be executed at step 4 of the JS execution chain:
+	 * early script ==> linked script ==> script ==> [init script] ==> ready script
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_script, static::add_ready_script
+	 * @see static::LinkScriptFromAppRoot, static::LinkScriptFromURI, static::LinkScriptFromModule
+	 *
 	 * @param string $sScript
 	 *
 	 * @return void
+	 *@uses WebPage::$a_init_scripts
 	 */
 	public function add_init_script($sScript)
 	{
@@ -619,7 +776,7 @@ class WebPage implements Page
 	/**
 	 * Empty all base ready scripts for the page
 	 *
-	 * @uses \WebPage::$a_ready_scripts
+	 * @uses WebPage::$a_ready_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -631,7 +788,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base ready scripts for the page
 	 *
-	 * @uses \WebPage::$a_reset_init_scripts
+	 * @uses WebPage::$a_reset_init_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -641,10 +798,18 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add some Javascript to be executed once the DOM is ready, slightly after the "init scripts"
+	 * Add some Javascript to be executed once the DOM is ready, slightly (50 ms) after the "init scripts"
 	 *
-	 * @uses \WebPage::$a_ready_scripts
+	 * The provided JS code will be executed at step 5 of the JS execution chain:
+	 * early script ==> linked script ==> script ==> init script ==> [ready script]
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_script, static::add_init_script
+	 * @see static::LinkScriptFromAppRoot, static::LinkScriptFromURI, static::LinkScriptFromModule
+	 *
 	 * @param $sScript
+	 *
+	 * @uses WebPage::$a_ready_scripts
 	 */
 	public function add_ready_script($sScript)
 	{
@@ -699,7 +864,7 @@ class WebPage implements Page
 	 * Empty all base linked scripts for the page
 	 *
 	 * @return void
-	 * @uses \WebPage::$a_linked_scripts
+	 * @uses WebPage::$a_linked_scripts
 	 * @since 3.0.0
 	 */
 	protected function EmptyLinkedScripts(): void
@@ -710,7 +875,7 @@ class WebPage implements Page
 	/**
 	 * Initialize base linked scripts for the page
 	 *
-	 * @uses \WebPage::$a_linked_scripts
+	 * @uses WebPage::$a_linked_scripts
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -720,46 +885,74 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add a script (as an include, i.e. link) to the header of the page.<br>
-	 * Handles duplicates : calling twice with the same script will add the script only once
+	 * Use to include JS files from the iTop package (e.g. `<ITOP>/js/*`)
 	 *
-	 * @uses \WebPage::$a_linked_scripts
-	 * @param string $s_linked_script
+	 * The provided JS code will be executed at step 2 of the JS execution chain:
+	 * early script ==> [linked script] ==> script ==> init script ==> ready script
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_script, static::add_init_script, static::add_ready_script
+	 * @see static::LinkScriptFromURI, static::LinkScriptFromModule
+	 *
+	 * @param string $sFileRelPath Rel. path from iTop app. root of the JS file to link (e.g. `js/utils.js`)
+	 *
 	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
 	 */
-	public function add_linked_script($s_linked_script)
+	public function LinkScriptFromAppRoot(string $sFileRelPath): void
 	{
-		if (!empty(trim($s_linked_script))) {
-			$this->a_linked_scripts[$s_linked_script] = $s_linked_script;
-		}
+		$this->LinkResourceFromAppRoot($sFileRelPath, static::ENUM_RESOURCE_TYPE_JS);
 	}
 
 	/**
-	 * Initialize compatibility linked scripts for the page
+	 * Use to include JS files from any module
 	 *
-	 * @see static::COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 * @since 3.0.0
+	 * The provided JS code will be executed at step 2 of the JS execution chain:
+	 * early script ==> [linked script] ==> script ==> init script ==> ready script
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_script, static::add_init_script, static::add_ready_script
+	 * @see static::LinkScriptFromAppRoot, static::LinkScriptFromURI
+	 *
+	 * @param string $sFileRelPath Rel. path from current environment (e.g. `<ITOP>/env-production/`) of the JS file to link (e.g. `some-module/asset/js/some-file.js`)
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
 	 */
-	protected function InitializeCompatibilityLinkedScripts(): void
+	public function LinkScriptFromModule(string $sFileRelPath): void
 	{
-		$bIncludeDeprecatedFiles = utils::GetConfig()->Get('compatibility.include_deprecated_js_files');
-		if ($bIncludeDeprecatedFiles) {
-			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_JS, static::ENUM_COMPATIBILITY_MODE_DEPRECATED_FILES);
-		}
+		$this->LinkResourceFromModule($sFileRelPath, static::ENUM_RESOURCE_TYPE_JS);
+	}
 
-		$bIncludeMovedFiles = utils::GetConfig()->Get('compatibility.include_moved_js_files');
-		if ($bIncludeMovedFiles) {
-			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_JS, static::ENUM_COMPATIBILITY_MODE_MOVED_FILES);
-		}
+	/**
+	 * Use to include JS files from any URI, typically an external server
+	 *
+	 * The provided JS code will be executed at step 2 of the JS execution chain:
+	 * early script ==> [linked script] ==> script ==> init script ==> ready script
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_script, static::add_init_script, static::add_ready_script
+	 * @see static::LinkScriptFromAppRoot, static::LinkScriptFromModule
+	 *
+	 * @param string $sFileAbsURI Abs. URI of the JS file to link (e.g. `https://external.server.com/some-file.js`)
+	 *                            Note: Any non-absolute URI will be ignored.
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 */
+	public function LinkScriptFromURI(string $sFileAbsURI): void
+	{
+		$this->LinkResourceFromURI($sFileAbsURI, static::ENUM_RESOURCE_TYPE_JS);
 	}
 
 	/**
 	 * Empty both dict. entries and dict. entries prefixes for the page
 	 *
-	 * @uses \WebPage::$a_dict_entries
-	 * @uses \WebPage::$dict_a_dict_entries_prefixes
+	 * @uses WebPage::$a_dict_entries
+	 * @uses WebPage::$dict_a_dict_entries_prefixes
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -772,8 +965,8 @@ class WebPage implements Page
 	/**
 	 * Initialize both dict. entries and dict. entries prefixes for the page
 	 *
-	 * @uses \WebPage::$a_dict_entries
-	 * @uses \WebPage::$dict_a_dict_entries_prefixes
+	 * @uses WebPage::$a_dict_entries
+	 * @uses WebPage::$dict_a_dict_entries_prefixes
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -787,8 +980,8 @@ class WebPage implements Page
 	 *
 	 * @param string $s_entryId a translation label key
 	 *
-	 * @uses \WebPage::$a_dict_entries
-	 * @see \WebPage::add_dict_entries()
+	 * @uses WebPage::$a_dict_entries
+	 * @see WebPage::add_dict_entries()
 	 * @see utils.js
 	 */
 	public function add_dict_entry($s_entryId)
@@ -801,8 +994,8 @@ class WebPage implements Page
 	 *
 	 * @param string $s_entriesPrefix translation label prefix (eg 'UI:Button:' to add all keys beginning with this)
 	 *
-	 * @see \WebPage::::$dict_a_dict_entries_prefixes
-	 * @see \WebPage::add_dict_entry()
+	 * @see WebPage::::$dict_a_dict_entries_prefixes
+	 * @see WebPage::add_dict_entry()
 	 * @see utils.js
 	 */
 	public function add_dict_entries($s_entriesPrefix)
@@ -815,8 +1008,10 @@ class WebPage implements Page
 	 */
 	protected function get_dict_signature()
 	{
-		return str_replace('_', '', Dict::GetUserLanguage()).'-'.md5(implode(',',
-					$this->a_dict_entries).'|'.implode(',', $this->a_dict_entries_prefixes));
+		return str_replace('_', '', Dict::GetUserLanguage()).'-'.md5(implode(
+			',',
+			$this->a_dict_entries
+		).'|'.implode(',', $this->a_dict_entries_prefixes));
 	}
 
 	/**
@@ -824,13 +1019,11 @@ class WebPage implements Page
 	 */
 	protected function get_dict_file_content()
 	{
-		$aEntries = array();
-		foreach ($this->a_dict_entries as $sCode)
-		{
+		$aEntries = [];
+		foreach ($this->a_dict_entries as $sCode) {
 			$aEntries[$sCode] = Dict::S($sCode);
 		}
-		foreach ($this->a_dict_entries_prefixes as $sPrefix)
-		{
+		foreach ($this->a_dict_entries_prefixes as $sPrefix) {
 			$aEntries = array_merge($aEntries, Dict::ExportEntries($sPrefix));
 		}
 
@@ -852,7 +1045,7 @@ JS;
 	/**
 	 * Empty all inline styles for the page
 	 *
-	 * @uses \WebPage::$a_styles
+	 * @uses WebPage::$a_styles
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -864,7 +1057,7 @@ JS;
 	/**
 	 * Initialize inline styles for the page
 	 *
-	 * @uses \WebPage::$a_styles
+	 * @uses WebPage::$a_styles
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -888,7 +1081,7 @@ JS;
 	/**
 	 * Empty all linked stylesheets for the page
 	 *
-	 * @uses \WebPage::$a_linked_stylesheets
+	 * @uses WebPage::$a_linked_stylesheets
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -900,7 +1093,7 @@ JS;
 	/**
 	 * Initialize linked stylesheets for the page
 	 *
-	 * @uses \WebPage::$a_linked_stylesheets
+	 * @uses WebPage::$a_linked_stylesheets
 	 * @return void
 	 * @since 3.0.0
 	 */
@@ -910,68 +1103,49 @@ JS;
 	}
 
 	/**
-	 * Add a CSS stylesheet (as an include, i.e. link) to the header of the page
-	 * Handles duplicates since 3.0.0 : calling twig with the same stylesheet will add the stylesheet only once
+	 * Use to link CSS files from the iTop package (e.g. `<ITOP>/css/*`)
 	 *
-	 * @param string $s_linked_stylesheet
-	 * @param string $s_condition
+	 * @param string $sFileRelPath Rel. path from iTop app. root of the CSS file to link (e.g. `css/login.css`)
+	 *
 	 * @return void
-	 */
-	public function add_linked_stylesheet($s_linked_stylesheet, $s_condition = "")
-	{
-		$this->a_linked_stylesheets[$s_linked_stylesheet] = array('link' => $s_linked_stylesheet, 'condition' => $s_condition);
-	}
-
-	/**
-	 * Initialize compatibility linked stylesheets for the page
-	 *
-	 * @see static::COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH
-	 * @see static::COMPATIBILITY_DEPRECATED_LINKED_STYLESHEETS_REL_PATH
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 * @since 3.0.0
-	 */
-	protected function InitializeCompatibilityLinkedStylesheets(): void
-	{
-		$bIncludeDeprecatedFiles = utils::GetConfig()->Get('compatibility.include_deprecated_css_files');
-		if ($bIncludeDeprecatedFiles) {
-			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_CSS, static::ENUM_COMPATIBILITY_MODE_DEPRECATED_FILES);
-		}
-
-		$bIncludeMovedFiles = utils::GetConfig()->Get('compatibility.include_moved_css_files');
-		if ($bIncludeMovedFiles) {
-			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_CSS, static::ENUM_COMPATIBILITY_MODE_MOVED_FILES);
-		}
-	}
-
-	/**
-	 * Add compatibility files of $sFileType from $sMode (which are declared in {@see static::COMPATIBILITY_<MODE>_LINKED_<TYPE>_REL_PATH}) back to the page
-	 *
-	 * @param string $sFileType {@uses static::ENUM_COMPATIBILITY_FILE_TYPE_XXX}
-	 * @param string $sMode {@uses static::ENUM_COMPATIBILITY_MODE_XXX}
-	 *
-	 * @uses static::add_linked_script Depending on $sFileType
-	 * @uses static::add_linked_stylesheet Depending on $sFileType
-	 *
 	 * @throws \Exception
-	 * @since 3.0.0
+	 * @since 3.2.0 N°7315
+	 * @api
 	 */
-	protected function AddCompatibilityFiles(string $sFileType, string $sMode): void
+	public function LinkStylesheetFromAppRoot(string $sFileRelPath): void
 	{
-		$sConstantName = 'COMPATIBILITY_'.strtoupper($sMode).'_LINKED_'. ($sFileType === static::ENUM_COMPATIBILITY_FILE_TYPE_CSS ? 'STYLESHEETS' : 'SCRIPTS') .'_REL_PATH';
-		$sMethodName = 'add_linked_'.($sFileType === static::ENUM_COMPATIBILITY_FILE_TYPE_CSS ? 'stylesheet' : 'script');
+		$this->LinkResourceFromAppRoot($sFileRelPath, static::ENUM_RESOURCE_TYPE_CSS);
+	}
 
-		// Add ancestors files
-		foreach (array_reverse(class_parents(static::class)) as $sParentClass) {
-			foreach (constant($sParentClass.'::'.$sConstantName) as $sFile) {
-				$this->$sMethodName(utils::GetAbsoluteUrlAppRoot().$sFile);
-			}
-		}
+	/**
+	 * Use to link CSS files from any module
+	 *
+	 * @param string $sFileRelPath Rel. path from current environment (e.g. `<ITOP>/env-production/`) of the CSS file to link (e.g. `some-module/asset/css/some-file.css`)
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkStylesheetFromModule(string $sFileRelPath): void
+	{
+		$this->LinkResourceFromModule($sFileRelPath, static::ENUM_RESOURCE_TYPE_CSS);
+	}
 
-		// Add current class files
-		foreach (constant('static::'.$sConstantName) as $sFile) {
-			$this->$sMethodName(utils::GetAbsoluteUrlAppRoot().$sFile);
-		}
+	/**
+	 * Use to link CSS files from any URI, typically an external server
+	 *
+	 * @param string $sFileAbsURI Abs. URI of the CSS file to link (e.g. `https://external.server.com/some-file.css`)
+	 *                            Note: Any non-absolute URI will be ignored.
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 * @api
+	 */
+	public function LinkStylesheetFromURI(string $sFileAbsURI): void
+	{
+		$this->LinkResourceFromURI($sFileAbsURI, static::ENUM_RESOURCE_TYPE_CSS);
 	}
 
 	/**
@@ -983,13 +1157,12 @@ JS;
 	{
 		$sCssRelPath = utils::GetCSSFromSASS($sSaasRelPath);
 		$sRootUrl = utils::GetAbsoluteUrlAppRoot();
-		if ($sRootUrl === '')
-		{
+		if ($sRootUrl === '') {
 			// We're running the setup of the first install...
 			$sRootUrl = '../';
 		}
 		$sCSSUrl = $sRootUrl.$sCssRelPath;
-		$this->add_linked_stylesheet($sCSSUrl);
+		$this->LinkStylesheetFromURI($sCSSUrl);
 	}
 
 	/**
@@ -1003,12 +1176,24 @@ JS;
 	}
 
 	/**
-	 * @param string|null $sHeaderValue for example `SAMESITE`. If null will set the header using the config parameter value.
+	 * @param string|null $sXFrameOptionsHeaderValue passed to {@see add_xframe_options}
+	 *
+	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation, replace {@see add_xframe_options} consumers call
+	 */
+	public function add_http_headers($sXFrameOptionsHeaderValue = null)
+	{
+		$this->add_xframe_options($sXFrameOptionsHeaderValue);
+		$this->add_xcontent_type_options();
+	}
+
+	/**
+	 * @param string|null $sHeaderValue for example `SAMESITE`. If null will set the header using the `security_header_xframe` config parameter value.
 	 *
 	 * @since 2.7.3 3.0.0 N°3416
-	 * @uses security_header_xframe config parameter
 	 * @uses \utils::GetConfig()
-	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+	 *
+	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options HTTP header MDN documentation
 	 */
 	public function add_xframe_options($sHeaderValue = null)
 	{
@@ -1017,6 +1202,38 @@ JS;
 		}
 
 		$this->add_header('X-Frame-Options: '.$sHeaderValue);
+	}
+
+	/**
+	 * Warning : this header will trigger the Cross-Origin Read Blocking (CORB) protection for some mime types (HTML, XML except SVG, JSON, text/plain)
+	 * In consequence some children pages will override this method.
+	 *
+	 * Sending header can be disabled globally using the `security.enable_header_xcontent_type_options` optional config parameter.
+	 *
+	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation
+	 *
+	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options HTTP header MDN documentation
+	 * @link https://chromium.googlesource.com/chromium/src/+/master/services/network/cross_origin_read_blocking_explainer.md#determining-whether-a-response-is-corb_protected "Determining whether a response is CORB-protected"
+	 */
+	public function add_xcontent_type_options()
+	{
+		try {
+			$oConfig = utils::GetConfig();
+		} catch (ConfigException|CoreException $e) {
+			$oConfig = null;
+		}
+		if (is_null($oConfig)) {
+			$bSendXContentTypeOptionsHttpHeader = true;
+		} else {
+			$bSendXContentTypeOptionsHttpHeader = $oConfig->Get('security.enable_header_xcontent_type_options');
+		}
+
+		if ($bSendXContentTypeOptionsHttpHeader === false) {
+			return;
+		}
+
+		$this->add_header('X-Content-Type-Options: nosniff');
 	}
 
 	/**
@@ -1094,8 +1311,7 @@ JS;
 		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
 
 		$sHtml = "<div class=\"ibo-details\">\n";
-		foreach ($aFields as $aAttrib)
-		{
+		foreach ($aFields as $aAttrib) {
 			$sLayout = isset($aAttrib['layout']) ? $aAttrib['layout'] : 'small';
 
 			// Prepare metadata attributes
@@ -1106,13 +1322,10 @@ JS;
 			$sDataInputType = isset($aAttrib['inputtype']) ? 'data-input-type="'.utils::HtmlEntities($aAttrib['inputtype']).'"' : '';
 			// - Attribute flags
 			$sDataAttributeFlags = '';
-			if(isset($aAttrib['attflags']))
-			{
-				foreach($aPossibleAttFlags as $sFlagCode => $iFlagValue)
-				{
+			if (isset($aAttrib['attflags'])) {
+				foreach ($aPossibleAttFlags as $sFlagCode => $iFlagValue) {
 					// Note: Skip normal flag as we don't need it.
-					if($sFlagCode === 'normal')
-					{
+					if ($sFlagCode === 'normal') {
 						continue;
 					}
 					$sFormattedFlagCode = str_ireplace('_', '-', $sFlagCode);
@@ -1127,23 +1340,18 @@ JS;
 			$sHtml .= "<div class=\"ibo-field--label\">{$aAttrib['label']}</div>\n";
 
 			// By Rom, for csv import, proposed to show several values for column selection
-			if (is_array($aAttrib['value']))
-			{
+			if (is_array($aAttrib['value'])) {
 				$sHtml .= "<div class=\"ibo-field--value\">".implode("</div><div>", $aAttrib['value'])."</div>\n";
-			}
-			else
-			{
+			} else {
 				$sHtml .= "<div class=\"ibo-field--value\">".$aAttrib['value']."</div>\n";
 			}
 			// Checking if we should add comments & infos
 			$sComment = (isset($aAttrib['comments'])) ? $aAttrib['comments'] : '';
 			$sInfo = (isset($aAttrib['infos'])) ? $aAttrib['infos'] : '';
-			if ($sComment !== '')
-			{
+			if ($sComment !== '') {
 				$sHtml .= "<div class=\"ibo-field--comments\">$sComment</div>\n";
 			}
-			if ($sInfo !== '')
-			{
+			if ($sInfo !== '') {
 				$sHtml .= "<div class=\"ibo-field--infos\">$sInfo</div>\n";
 			}
 
@@ -1168,26 +1376,26 @@ JS;
 	 * @return string The HTML fragment corresponding to the radio buttons
 	 */
 	public function GetRadioButtons(
-		$aAllowedValues, $value, $iId, $sFieldName, $bMandatory, $bVertical, $sValidationField
+		$aAllowedValues,
+		$value,
+		$iId,
+		$sFieldName,
+		$bMandatory,
+		$bVertical,
+		$sValidationField
 	) {
 		$idx = 0;
 		$sHTMLValue = '';
-		foreach ($aAllowedValues as $key => $display_value)
-		{
-			if ((count($aAllowedValues) == 1) && ($bMandatory == 'true'))
-			{
+		foreach ($aAllowedValues as $key => $display_value) {
+			if ((count($aAllowedValues) == 1) && ($bMandatory == 'true')) {
 				// When there is only once choice, select it by default
 				$sSelected = 'checked';
-			}
-			else
-			{
+			} else {
 				$sSelected = ($value == $key) ? 'checked' : '';
 			}
 			$sHTMLValue .= "<input type=\"radio\" id=\"{$iId}_{$key}\" name=\"radio_$sFieldName\" onChange=\"$('#{$iId}').val(this.value).trigger('change');\" value=\"$key\" $sSelected><label class=\"radio\" for=\"{$iId}_{$key}\">&nbsp;$display_value</label>&nbsp;";
-			if ($bVertical)
-			{
-				if ($idx == 0)
-				{
+			if ($bVertical) {
+				if ($idx == 0) {
 					// Validation icon at the end of the first line
 					$sHTMLValue .= "&nbsp;{$sValidationField}\n";
 				}
@@ -1196,8 +1404,7 @@ JS;
 			$idx++;
 		}
 		$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"$sFieldName\" value=\"$value\"/>";
-		if (!$bVertical)
-		{
+		if (!$bVertical) {
 			// Validation icon at the end of the line
 			$sHTMLValue .= "&nbsp;{$sValidationField}\n";
 		}
@@ -1228,26 +1435,18 @@ JS;
 	protected function ob_get_clean_safe()
 	{
 		$sOutput = ob_get_contents();
-		if ($sOutput === false)
-		{
+		if ($sOutput === false) {
 			$sMsg = "Design/integration issue: No output buffer. Some piece of code has called ob_get_clean() or ob_end_clean() without calling ob_start()";
-			if ($this->bTrashUnexpectedOutput)
-			{
+			if ($this->bTrashUnexpectedOutput) {
 				IssueLog::Error($sMsg);
 				$sOutput = '';
-			}
-			else
-			{
+			} else {
 				$sOutput = $sMsg;
 			}
-		}
-		else
-		{
+		} else {
 			ob_end_clean(); // on some versions of PHP doing so when the output buffering is stopped can cause a notice
-			if ($this->bTrashUnexpectedOutput)
-			{
-				if (trim($sOutput) != '')
-				{
+			if ($this->bTrashUnexpectedOutput) {
+				if (trim($sOutput) != '') {
 					if (Utils::GetConfig() && Utils::GetConfig()->Get('debug_report_spurious_chars')) {
 						IssueLog::Error("Trashing unexpected output:'$sOutput'\n");
 					}
@@ -1273,15 +1472,69 @@ JS;
 	/**
 	 * @inheritDoc
 	 * @throws \Exception
+	 * @since 3.2.0 Prefer using {@see static::GenerateResponse()} in with a Symfony style controller and route
 	 */
 	public function output()
 	{
-		$oKpi = new ExecutionKPI();
 		// Send headers
 		foreach ($this->a_headers as $sHeader) {
 			header($sHeader);
 		}
 
+		// Render HTML content
+		$sHtml = $this->RenderContent();
+
+		// Echo global HTML
+		$oKpi = new ExecutionKPI();
+		echo $sHtml;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' KB)');
+
+		if (class_exists('DBSearch')) {
+			DBSearch::RecordQueryTrace();
+		}
+		ExecutionKPI::ReportStats();
+	}
+
+	/**
+	 * @return \Symfony\Component\HttpFoundation\Response Generate the Symfony Response object (content + code + headers) for the current page, this is equivalent (and new way) of \WebPage::output() for Symfony controllers
+	 * @since 3.2.0 N°6935
+	 */
+	public function GenerateResponse(): Response
+	{
+		// Render HTML content
+		$sHtml = $this->RenderContent();
+
+		// Prepare Symfony Response
+		$oKpi = new ExecutionKPI();
+
+		// Format headers as a key => value array to match Symfony Response format
+		$aHeadersAsAssocArray = [];
+		foreach ($this->a_headers as $sHeader) {
+			// Limit explode to only split at the first occurrence
+			list($sHeaderName, $sHeaderValue) = explode(': ', $sHeader, 2);
+			$aHeadersAsAssocArray[$sHeaderName] = $sHeaderValue;
+		}
+
+		$oResponse = new Response($sHtml, Response::HTTP_OK, $aHeadersAsAssocArray);
+		$oKpi->ComputeAndReport('Preparing response ('.round(strlen($sHtml) / 1024).' KB)');
+
+		if (class_exists('DBSearch')) {
+			DBSearch::RecordQueryTrace();
+		}
+		ExecutionKPI::ReportStats();
+
+		return $oResponse;
+	}
+
+	/**
+	 * @return string Complete HTML content of the \WebPage
+	 * @throws \CoreTemplateException
+	 * @throws \Twig\Error\LoaderError
+	 * @since 3.2.0 N°6935
+	 */
+	protected function RenderContent(): string
+	{
+		$oKpi = new ExecutionKPI();
 		$s_captured_output = $this->ob_get_clean_safe();
 
 		$aData = [];
@@ -1335,16 +1588,10 @@ JS;
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 		// Render final TWIG into global HTML
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
-		$oKpi->ComputeAndReport(get_class($this).'output');
 
-		// Echo global HTML
-		echo $sHtml;
-		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+		$oKpi->ComputeAndReport("Rendering content (".static::class.")");
 
-		if (class_exists('DBSearch')) {
-			DBSearch::RecordQueryTrace();
-		}
-		ExecutionKPI::ReportStats();
+		return $sHtml;
 	}
 
 	/**
@@ -1362,19 +1609,6 @@ JS;
 				$this->add("<input type=\"hidden\" name=\"".$sLabel."[$sKey]\" value=\"$sValue\">");
 			}
 		}
-	}
-
-	/**
-	 * Get an ID (for any kind of HTML tag) that is guaranteed unique in this page
-	 *
-	 * @return int The unique ID (in this page)
-	 * @deprecated 3.0.0 use utils::GetUniqueId() instead
-	 */
-	public function GetUniqueId()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use utils::GetUniqueId() instead');
-
-		return utils::GetUniqueId();
 	}
 
 	/**
@@ -1442,11 +1676,10 @@ JS;
 	 *
 	 * @return bool True if the format is Ok, false otherwise
 	 */
-	function IsOutputFormatAvailable($sOutputFormat)
+	public function IsOutputFormatAvailable($sOutputFormat)
 	{
 		$bResult = false;
-		switch ($sOutputFormat)
-		{
+		switch ($sOutputFormat) {
 			case 'html':
 				$bResult = true; // Always supported
 				break;
@@ -1479,8 +1712,7 @@ JS;
 	 */
 	public function GetOutputOption($sFormat, $sOptionName)
 	{
-		if (isset($this->a_OutputOptions[$sFormat][$sOptionName]))
-		{
+		if (isset($this->a_OutputOptions[$sFormat][$sOptionName])) {
 			return $this->a_OutputOptions[$sFormat][$sOptionName];
 		}
 
@@ -1496,12 +1728,9 @@ JS;
 	 */
 	public function SetOutputOption($sFormat, $sOptionName, $sValue)
 	{
-		if (!isset($this->a_OutputOptions[$sFormat]))
-		{
-			$this->a_OutputOptions[$sFormat] = array($sOptionName => $sValue);
-		}
-		else
-		{
+		if (!isset($this->a_OutputOptions[$sFormat])) {
+			$this->a_OutputOptions[$sFormat] = [$sOptionName => $sValue];
+		} else {
 			$this->a_OutputOptions[$sFormat][$sOptionName] = $sValue;
 		}
 	}
@@ -1512,7 +1741,7 @@ JS;
 	 *
 	 * @return string
 	 */
-	public function RenderPopupMenuItems($aActions, $aFavoriteActions = array())
+	public function RenderPopupMenuItems($aActions, $aFavoriteActions = [])
 	{
 		$sPrevUrl = '';
 		$sHtml = '';
@@ -1520,12 +1749,14 @@ JS;
 			foreach ($aActions as $sActionId => $aAction) {
 				$sDataActionId = 'data-action-id="'.$sActionId.'"';
 				$sClass = isset($aAction['css_classes']) ? 'class="'.implode(' ', $aAction['css_classes']).'"' : '';
-				$sOnClick = isset($aAction['onclick']) ? 'onclick="'.htmlspecialchars($aAction['onclick'], ENT_QUOTES,
-						"UTF-8").'"' : '';
+				$sOnClick = isset($aAction['onclick']) ? 'onclick="'.htmlspecialchars(
+					$aAction['onclick'],
+					ENT_QUOTES,
+					"UTF-8"
+				).'"' : '';
 				$sTarget = isset($aAction['target']) ? "target=\"{$aAction['target']}\"" : "";
 				if (empty($aAction['url'])) {
-					if ($sPrevUrl != '') // Don't output consecutively two separators...
-					{
+					if ($sPrevUrl != '') { // Don't output consecutively two separators...
 						$sHtml .= "<li $sDataActionId>{$aAction['label']}</li>";
 					}
 					$sPrevUrl = '';
@@ -1595,104 +1826,6 @@ JS;
 		}
 	}
 
-
-	/**
-	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
-	 *
-	 * Adds init scripts for the collapsible sections
-	 */
-	protected function outputCollapsibleSectionInit()
-	{
-		if (!$this->bHasCollapsibleSection) {
-			return;
-		}
-
-		$this->add_script(<<<'EOD'
-function initCollapsibleSection(iSectionId, bOpenedByDefault, sSectionStateStorageKey)
-{
-var bStoredSectionState = JSON.parse(localStorage.getItem(sSectionStateStorageKey));
-var bIsSectionOpenedInitially = (bStoredSectionState == null) ? bOpenedByDefault : bStoredSectionState;
-
-if (bIsSectionOpenedInitially) {
-	$("#LnkCollapse_"+iSectionId).toggleClass("open");
-	$("#Collapse_"+iSectionId).toggle();
-}
-
-$("#LnkCollapse_"+iSectionId).on('click', function(e) {
-	localStorage.setItem(sSectionStateStorageKey, !($("#Collapse_"+iSectionId).is(":visible")));
-	$("#LnkCollapse_"+iSectionId).toggleClass("open");
-	$("#Collapse_"+iSectionId).slideToggle("normal");
-	e.preventDefault(); // we don't want to do anything more (see #1030 : a non wanted tab switching was triggered)
-});
-}
-EOD
-		);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
-	 *
-	 * @param bool $bOpenedByDefault
-	 * @param string $sSectionStateStorageBusinessKey
-	 *
-	 * @param string $sSectionLabel
-	 *
-	 * @throws \Exception
-	 */
-	public function StartCollapsibleSection($sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = '')
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \\Combodo\\iTop\\Application\\UI\\Base\\Component\\CollapsibleSection\\CollapsibleSection');
-		$this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault, $sSectionStateStorageBusinessKey));
-	}
-
-	/**
-	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
-	 *
-	 * @param string $sSectionLabel
-	 * @param bool $bOpenedByDefault
-	 * @param string $sSectionStateStorageBusinessKey
-	 *
-	 * @return string
-	 *
-	 * @throws \Exception
-	 */
-	public function GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = '')
-	{
-		$this->bHasCollapsibleSection = true;
-		$sHtml = '';
-		static $iSectionId = 0;
-		$sHtml .= '<a id="LnkCollapse_'.$iSectionId.'" class="CollapsibleLabel" href="#">'.$sSectionLabel.'</a></br>'."\n";
-		$sHtml .= '<div id="Collapse_'.$iSectionId.'" style="display:none">'."\n";
-
-		$oConfig = MetaModel::GetConfig();
-		$sSectionStateStorageKey = $oConfig->GetItopInstanceid().'/'.$sSectionStateStorageBusinessKey.'/collapsible-'.$iSectionId;
-		$sSectionStateStorageKey = json_encode($sSectionStateStorageKey);
-		$sOpenedByDefault = ($bOpenedByDefault) ? 'true' : 'false';
-		$this->add_ready_script("initCollapsibleSection($iSectionId, $sOpenedByDefault, '$sSectionStateStorageKey');");
-
-		$iSectionId++;
-
-		return $sHtml;
-	}
-
-	/**
-	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
-	 */
-	public function EndCollapsibleSection()
-	{
-		$this->add($this->GetEndCollapsibleSection());
-	}
-
-	/**
-	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
-	 *
-	 * @return string
-	 */
-	public function GetEndCollapsibleSection()
-	{
-		return "</div>";
-	}
-
 	/**
 	 * Return the language for the page metadata based on the current user
 	 *
@@ -1707,17 +1840,13 @@ EOD
 	}
 
 	/**
-	 * Return the absolute URL for the favicon
-	 *
-	 * @return string
+	 * @return string Absolute URL for the favicon
 	 * @throws \Exception
 	 * @since 3.0.0
 	 */
 	protected function GetFaviconAbsoluteUrl()
 	{
-		// TODO 3.0.0: Make it a property so it can be changed programmatically
-		// TODO 3.0.0: How to set both dark/light mode favicons
-		return utils::GetAbsoluteUrlAppRoot().'images/favicon.ico';
+		return Branding::GetMainFavIconAbsoluteUrl();
 	}
 
 	/**
@@ -1780,5 +1909,28 @@ EOD
 	public function AddPreloadedFonts(array $aFonts)
 	{
 		$this->aPreloadedFonts = array_merge($this->aPreloadedFonts, $aFonts);
+	}
+
+	/**
+	 * @return bool
+	 *
+	 * @since 3.2.0
+	 */
+	public function GetAddJSDict(): bool
+	{
+		return $this->bAddJSDict;
+	}
+
+	/**
+	 * @param bool $bAddJSDict
+	 *
+	 * @return $this
+	 *
+	 * @since 3.2.0
+	 */
+	public function SetAddJSDict(bool $bAddJSDict)
+	{
+		$this->bAddJSDict = $bAddJSDict;
+		return $this;
 	}
 }

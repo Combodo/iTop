@@ -1,23 +1,26 @@
 <?php
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\CoreUpdate\Controller;
 
+require_once APPROOT.'setup/runtimeenv.class.inc.php';
 
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\CoreUpdate\Service\CoreUpdater;
 use Combodo\iTop\DBTools\Service\DBToolsUtils;
 use Combodo\iTop\FilesInformation\Service\FileNotExistException;
 use Combodo\iTop\FilesInformation\Service\FilesInformation;
+use Config;
 use ContextTag;
 use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
+use RunTimeEnvironment;
 use SecurityException;
 use SetupUtils;
 use utils;
@@ -39,8 +42,7 @@ class AjaxController extends Controller
 	 */
 	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
 	{
-		if (!defined('MODULESROOT'))
-		{
+		if (!defined('MODULESROOT')) {
 			define('MODULESROOT', APPROOT.'env-production/');
 		}
 
@@ -64,28 +66,22 @@ class AjaxController extends Controller
 	{
 		$aParams = [];
 
-		try
-		{
+		try {
 			$sCanUpdateCore = FilesInformation::CanUpdateCore($sMessage);
 			$bCanUpdateCore = ($sCanUpdateCore == 'Yes');
 			$aParams['bStatus'] = $bCanUpdateCore;
-			if ($bCanUpdateCore)
-			{
+			if ($bCanUpdateCore) {
 				$aParams['sMessage'] = Dict::S('iTopUpdate:UI:CanCoreUpdate:Yes');
-			}
-			else
-			{
+			} else {
 				$sLink = utils::GetAbsoluteUrlAppRoot().'setup/';
 				$sLinkManualUpdate = 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Ainstall%3Aupgrading_itop#manually';
 				$aParams['sMessage']  = Dict::Format('iTopUpdate:UI:CannotUpdateUseSetup', $sLink, $sLinkManualUpdate);
 				$aParams['sMessageDetails']  = $sMessage;
 			}
-		} catch (FileNotExistException $e)
-		{
+		} catch (FileNotExistException $e) {
 			$aParams['bStatus'] = false;
 			$aParams['sMessage'] = Dict::Format('iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist', $e->getMessage());
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$aParams['bStatus'] = false;
 			$aParams['sMessage'] = Dict::Format('iTopUpdate:UI:CanCoreUpdate:Error', $e->getMessage());
 		}
@@ -119,13 +115,11 @@ class AjaxController extends Controller
 	public function OperationEnterMaintenance()
 	{
 		$aParams = [];
-		try
-		{
+		try {
 			SetupUtils::CheckSetupToken();
 			SetupUtils::EnterReadOnlyMode(MetaModel::GetConfig());
 			$iResponseCode = 200;
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			IssueLog::Error("EnterMaintenance: ".$e->getMessage());
 			$aParams['sError'] = $e->getMessage();
 			$iResponseCode = 500;
@@ -136,13 +130,11 @@ class AjaxController extends Controller
 	public function OperationExitMaintenance()
 	{
 		$aParams = [];
-		try
-		{
+		try {
 			SetupUtils::CheckSetupToken(true);
 			SetupUtils::ExitReadOnlyMode();
 			$iResponseCode = 200;
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			IssueLog::Error("ExitMaintenance: ".$e->getMessage());
 			$aParams['sError'] = $e->getMessage();
 			$iResponseCode = 500;
@@ -153,13 +145,11 @@ class AjaxController extends Controller
 	public function OperationBackup()
 	{
 		$aParams = [];
-		try
-		{
+		try {
 			SetupUtils::CheckSetupToken();
 			CoreUpdater::Backup();
 			$iResponseCode = 200;
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			IssueLog::Error("Backup: ".$e->getMessage());
 			$aParams['sError'] = $e->getMessage();
 			$iResponseCode = 500;
@@ -170,13 +160,11 @@ class AjaxController extends Controller
 	public function OperationFilesArchive()
 	{
 		$aParams = [];
-		try
-		{
+		try {
 			SetupUtils::CheckSetupToken();
 			CoreUpdater::CreateItopArchive();
 			$iResponseCode = 200;
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			IssueLog::Error("FilesArchive: ".$e->getMessage());
 			$aParams['sError'] = $e->getMessage();
 			$iResponseCode = 500;
@@ -187,13 +175,11 @@ class AjaxController extends Controller
 	public function OperationCopyFiles()
 	{
 		$aParams = [];
-		try
-		{
+		try {
 			SetupUtils::CheckSetupToken();
 			CoreUpdater::CopyCoreFiles();
 			$iResponseCode = 200;
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			IssueLog::Error("CopyFiles: ".$e->getMessage());
 			$aParams['sError'] = $e->getMessage();
 			$iResponseCode = 500;
@@ -205,14 +191,11 @@ class AjaxController extends Controller
 	public function OperationCheckCompile()
 	{
 		$aParams = [];
-		try
-		{
+		try {
 			SetupUtils::CheckSetupToken();
 			CoreUpdater::CheckCompile();
 			$iResponseCode = 200;
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			IssueLog::Error("Compile: ".$e->getMessage());
 			$aParams['sError'] = $e->getMessage();
 			$iResponseCode = 500;
@@ -224,14 +207,11 @@ class AjaxController extends Controller
 	public function OperationCompile()
 	{
 		$aParams = [];
-		try
-		{
+		try {
 			SetupUtils::CheckSetupToken();
 			CoreUpdater::Compile();
 			$iResponseCode = 200;
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			IssueLog::Error("Compile: ".$e->getMessage());
 			$aParams['sError'] = $e->getMessage();
 			$iResponseCode = 500;
@@ -243,18 +223,39 @@ class AjaxController extends Controller
 	public function OperationUpdateDatabase()
 	{
 		$aParams = [];
-		try
-		{
+		try {
 			SetupUtils::CheckSetupToken();
 			CoreUpdater::UpdateDatabase();
 			$iResponseCode = 200;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			IssueLog::Error("Compile: ".$e->getMessage());
 			$aParams['sError'] = $e->getMessage();
 			$iResponseCode = 500;
 		}
 
+		$this->DisplayJSONPage($aParams, $iResponseCode);
+	}
+
+	public function OperationRebuildToolkitEnvironment()
+	{
+		$sTransactionId = utils::GetNewTransactionId();
+		$aParams = [];
+		$aParams['sTransactionId'] = $sTransactionId;
+		$aParams['bStatus'] = true;
+
+		$iResponseCode = 200;
+		try {
+			$aParams['sAjaxURL'] = utils::GetAbsoluteUrlAppRoot().'/pages/UI.php';
+			$oConfig = new Config(APPCONF.'production'.'/'.ITOP_CONFIG_FILE);
+			$oEnvironment = new RunTimeEnvironment('production');
+			$oEnvironment->WriteConfigFileSafe($oConfig);
+			$oEnvironment->CompileFrom('production');
+		} catch (Exception $e) {
+			IssueLog::Error('RebuildToolkitEnvironment: '.$e->getMessage());
+			$aParams['sError'] = $e->getMessage();
+			$iResponseCode = 500;
+			$aParams['bStatus'] = false;
+		}
 		$this->DisplayJSONPage($aParams, $iResponseCode);
 	}
 

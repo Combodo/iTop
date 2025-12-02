@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -34,7 +35,7 @@ require_once APPROOT.'/lib/autoload.php';
 class iTopPortalEditUrlMaker extends AbstractPortalUrlMaker
 {
 	/** @var string PORTAL_ID */
-	const PORTAL_ID = 'itop-portal';
+	public const PORTAL_ID = 'itop-portal';
 }
 
 /**
@@ -61,4 +62,3 @@ DBObject::RegisterURLMakerClass('portal', 'iTopPortalEditUrlMaker');
 DBObject::RegisterURLMakerClass('itop-portal', 'iTopPortalEditUrlMaker');
 DBObject::RegisterURLMakerClass('itop-portal-edit', 'iTopPortalEditUrlMaker');
 DBObject::RegisterURLMakerClass('itop-portal-view', 'iTopPortalViewUrlMaker');
-

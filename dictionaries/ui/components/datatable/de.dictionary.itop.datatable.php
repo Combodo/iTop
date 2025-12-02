@@ -1,23 +1,16 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
-// Display DataTable
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+/**
+ *
+ */
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Datatables:Language:Processing' => 'Bitte warten...',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ pro Seite',
 	'UI:Datatables:Language:ZeroRecords' => 'Kein Ergebnis',
@@ -32,4 +25,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Datatables:Column:RowActions:Description' => '',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Aktion bestätigen',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Möchten Sie diese Aktion ausführen?',
-));
+]);

@@ -36,22 +36,22 @@ class Google extends AbstractProvider
      */
     protected $scopes = [];
 
-    public function getBaseAuthorizationUrl()
+    public function getBaseAuthorizationUrl(): string
     {
         return 'https://accounts.google.com/o/oauth2/v2/auth';
     }
 
-    public function getBaseAccessTokenUrl(array $params)
+    public function getBaseAccessTokenUrl(array $params): string
     {
         return 'https://oauth2.googleapis.com/token';
     }
 
-    public function getResourceOwnerDetailsUrl(AccessToken $token)
+    public function getResourceOwnerDetailsUrl(AccessToken $token): string
     {
         return 'https://openidconnect.googleapis.com/v1/userinfo';
     }
 
-    protected function getAuthorizationParameters(array $options)
+    protected function getAuthorizationParameters(array $options): array
     {
         if (empty($options['hd']) && $this->hostedDomain) {
             $options['hd'] = $this->hostedDomain;
@@ -84,7 +84,7 @@ class Google extends AbstractProvider
         return $options;
     }
 
-    protected function getDefaultScopes()
+    protected function getDefaultScopes(): array
     {
         // "openid" MUST be the first scope in the list.
         return [
@@ -94,12 +94,12 @@ class Google extends AbstractProvider
         ];
     }
 
-    protected function getScopeSeparator()
+    protected function getScopeSeparator(): string
     {
         return ' ';
     }
 
-    protected function checkResponse(ResponseInterface $response, $data)
+    protected function checkResponse(ResponseInterface $response, $data): void
     {
         // @codeCoverageIgnoreStart
         if (empty($data['error'])) {
@@ -118,7 +118,7 @@ class Google extends AbstractProvider
         throw new IdentityProviderException($error, $code, $data);
     }
 
-    protected function createResourceOwner(array $response, AccessToken $token)
+    protected function createResourceOwner(array $response, AccessToken $token): GoogleUser
     {
         $user = new GoogleUser($response);
 
@@ -128,9 +128,11 @@ class Google extends AbstractProvider
     }
 
     /**
+     * @param string|null $hostedDomain
+     *
      * @throws HostedDomainException If the domain does not match the configured domain.
      */
-    protected function assertMatchingDomain($hostedDomain)
+    protected function assertMatchingDomain(?string $hostedDomain): void
     {
         if ($this->hostedDomain === null) {
             // No hosted domain configured.

@@ -1,9 +1,10 @@
 <?php
-// Copyright (C) 2014-2023 Combodo SARL
+
+// Copyright (C) 2014-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,7 +16,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 
 class DBRestore extends DBBackup
 {
@@ -53,20 +53,10 @@ class DBRestore extends DBBackup
 		$sUser = self::EscapeShellArg($this->sDBUser);
 		$sPwd = self::EscapeShellArg($this->sDBPwd);
 		$sDBName = self::EscapeShellArg($this->sDBName);
-		if (empty($this->sMySQLBinDir))
-		{
-			$sMySQLExe = 'mysql';
-		}
-		else
-		{
-			$sMySQLExe = '"'.$this->sMySQLBinDir.'/mysql"';
-		}
-		if (is_null($this->iDBPort))
-		{
+		$sMySQLExe = DBBackup::MakeSafeMySQLCommand($this->sMySQLBinDir, 'mysql');
+		if (is_null($this->iDBPort)) {
 			$sPortOption = '';
-		}
-		else
-		{
+		} else {
 			$sPortOption = '--port='.$this->iDBPort.' ';
 		}
 		$sTlsOptions = self::GetMysqlCliTlsOptions($this->oConfig);
@@ -77,42 +67,24 @@ class DBRestore extends DBBackup
 
 		// Now run the command for real
 		$this->LogInfo("Executing command: $sCommandDisplay");
-		$aOutput = array();
+		$aOutput = [];
 		$iRetCode = 0;
 		exec($sCommand, $aOutput, $iRetCode);
-		foreach($aOutput as $sLine)
-		{
+		foreach ($aOutput as $sLine) {
 			$this->LogInfo("mysql said: $sLine");
 		}
-		if ($iRetCode != 0)
-		{
+		if ($iRetCode != 0) {
 			$this->LogError("Failed to execute: $sCommandDisplay. The command returned:$iRetCode");
-			foreach($aOutput as $sLine)
-			{
+			foreach ($aOutput as $sLine) {
 				$this->LogError("mysql said: $sLine");
 			}
-			if (count($aOutput) == 1) 
-			{
+			if (count($aOutput) == 1) {
 				$sMoreInfo = trim($aOutput[0]);
-			}
-			else
-			{
+			} else {
 				$sMoreInfo = "Check the log file '".realpath(APPROOT.'/log/error.log')."' for more information.";
 			}
 			throw new BackupException("Failed to execute mysql: ".$sMoreInfo);
 		}
-	}
-
-	/**
-	 * @deprecated Use RestoreFromCompressedBackup instead
-	 *
-	 * @param $sZipFile
-	 * @param string $sEnvironment
-	 */
-	public function RestoreFromZip($sZipFile, $sEnvironment = 'production')
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Use RestoreFromCompressedBackup instead');
-		$this->RestoreFromCompressedBackup($sZipFile, $sEnvironment);
 	}
 
 	/**
@@ -139,7 +111,6 @@ class DBRestore extends DBBackup
 				//safe zone for db backup => cron is stopped/ itop in readonly
 				$this->LogInfo("Starting restore of ".basename($sFile));
 
-
 				$sNormalizedFile = strtolower(basename($sFile));
 				if (substr($sNormalizedFile, -4) == '.zip') {
 					$this->LogInfo('zip file detected');
@@ -154,7 +125,7 @@ class DBRestore extends DBBackup
 
 				// Load the database
 				//
-				$sDataDir = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
+				$sDataDir = utils::GetDataPath().'tmp-backup-'.rand(10000, getrandmax());
 
 				SetupUtils::builddir($sDataDir); // Here is the directory
 				$oArchive->extractTo($sDataDir);
@@ -164,7 +135,7 @@ class DBRestore extends DBBackup
 
 				// Update the code
 				//
-				$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
+				$sDeltaFile = utils::GetDataPath().$sEnvironment.'.delta.xml';
 
 				if (is_file($sDataDir.'/delta.xml')) {
 					// Extract and rename delta.xml => <env>.delta.xml;
@@ -172,24 +143,24 @@ class DBRestore extends DBBackup
 				} else {
 					@unlink($sDeltaFile);
 				}
-				if (is_dir(APPROOT.'data/production-modules/')) {
+				if (is_dir(utils::GetDataPath().'production-modules/')) {
 					try {
-						SetupUtils::rrmdir(APPROOT.'data/production-modules/');
+						SetupUtils::rrmdir(utils::GetDataPath().'production-modules/');
 					} catch (Exception $e) {
 						throw new BackupException("Can't remove production-modules dir", 0, $e);
 					}
 				}
 				if (is_dir($sDataDir.'/production-modules')) {
-					rename($sDataDir.'/production-modules', APPROOT.'data/production-modules/');
+					rename($sDataDir.'/production-modules', utils::GetDataPath().'production-modules/');
 				}
 
 				$sConfigFile = APPROOT.'conf/'.$sEnvironment.'/config-itop.php';
 				@chmod($sConfigFile, 0770); // Allow overwriting the file
 				rename($sDataDir.'/config-itop.php', $sConfigFile);
 				@chmod($sConfigFile, 0440); // Read-only
-				
+
 				$aExtraFiles = $this->ListExtraFiles($sDataDir);
-				foreach($aExtraFiles as $sSourceFilePath => $sDestinationFilePath) {
+				foreach ($aExtraFiles as $sSourceFilePath => $sDestinationFilePath) {
 					SetupUtils::builddir(dirname($sDestinationFilePath));
 					rename($sSourceFilePath, $sDestinationFilePath);
 				}
@@ -210,9 +181,7 @@ class DBRestore extends DBBackup
 					$this->LogInfo("Keep maintenance mode after restore");
 				}
 			}
-		}
-		finally
-		{
+		} finally {
 			IssueLog::Info('Backup Restore - LOCK released.');
 			$oRestoreMutex->Unlock();
 		}
@@ -228,10 +197,9 @@ class DBRestore extends DBBackup
 	{
 		$aExtraFiles = [];
 		$aStandardFiles = ['config-itop.php', 'itop-dump.sql', 'production-modules', 'delta.xml'];
-		$oDirectoryIterator = new RecursiveDirectoryIterator($sDataDir, FilesystemIterator::CURRENT_AS_FILEINFO|FilesystemIterator::SKIP_DOTS);
+		$oDirectoryIterator = new RecursiveDirectoryIterator($sDataDir, FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS);
 		$oIterator = new RecursiveIteratorIterator($oDirectoryIterator);
-		foreach ($oIterator as $oFileInfo)
-		{
+		foreach ($oIterator as $oFileInfo) {
 			if (in_array($oFileInfo->getFilename(), $aStandardFiles)) {
 				continue;
 			}

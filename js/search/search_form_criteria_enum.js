@@ -439,8 +439,6 @@ $(function()
 
 									return;
 								}
-
-								me._onACSearchContainsSuccess(oResponse);
 							})
 							.fail(function(oResponse, sStatus, oXHR){  me._onACSearchFail(oResponse, sStatus); })
 							.always(function(oResponse, sStatus, oXHR){

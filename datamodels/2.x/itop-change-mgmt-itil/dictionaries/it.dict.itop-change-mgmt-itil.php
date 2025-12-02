@@ -1,25 +1,16 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+/**
+ *
+ */
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ChangeManagement' => 'Gestione dei cambi',
 	'Menu:Change:Overview' => 'Panoramica',
 	'Menu:Change:Overview+' => '',
@@ -38,12 +29,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:MyChanges' => 'Modifiche assegnate a me',
 	'Menu:MyChanges+' => 'Modifiche assegnato a me (come Agent)',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Evoluzioni',
-	'UI-ChangeManagementOverview-Last-7-days' => 'Number of changes for the last 7 days~~',
-	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes by domain for the last 7 days~~',
-	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes by status for the last 7 days~~',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
-));
+	'UI-ChangeManagementOverview-Last-7-days' => 'Numero di cambiamenti negli ultimi 7 giorni',
+	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Cambiamenti per dominio negli ultimi 7 giorni',
+	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Cambiamenti per stato negli ultimi 7 giorni',
+	'Tickets:Related:OpenChanges' => 'Cambiamenti aperti',
+	'Tickets:Related:RecentChanges' => 'Cambiamenti recenti (72h)',
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -55,12 +46,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Change' => 'Cambio',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Stato',
@@ -119,21 +109,21 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Change/Attribute:outage/Value:yes+' => '',
 	'Class:Change/Attribute:fallback' => 'Piano alternativo',
 	'Class:Change/Attribute:fallback+' => '',
-	'Class:Change/Attribute:parent_id' => 'Parent change~~',
+	'Class:Change/Attribute:parent_id' => 'Cambiamento padre',
 	'Class:Change/Attribute:parent_id+' => '~~',
-	'Class:Change/Attribute:parent_name' => 'Parent change Ref~~',
+	'Class:Change/Attribute:parent_name' => 'Rif. cambiamento padre',
 	'Class:Change/Attribute:parent_name+' => '~~',
-	'Class:Change/Attribute:related_request_list' => 'Related requests~~',
-	'Class:Change/Attribute:related_request_list+' => 'All the user requests linked to this change~~',
-	'Class:Change/Attribute:related_problems_list' => 'Related problems~~',
-	'Class:Change/Attribute:related_problems_list+' => 'All the problems linked to this change~~',
-	'Class:Change/Attribute:related_incident_list' => 'Related incidents~~',
-	'Class:Change/Attribute:related_incident_list+' => 'All the incidents linked to this change~~',
-	'Class:Change/Attribute:child_changes_list' => 'Child changes~~',
-	'Class:Change/Attribute:child_changes_list+' => 'All the sub changes linked to this change~~',
-	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent friendly name~~',
+	'Class:Change/Attribute:related_request_list' => 'Richieste correlate',
+	'Class:Change/Attribute:related_request_list+' => 'Tutte le richieste utente collegate a questo cambiamento',
+	'Class:Change/Attribute:related_problems_list' => 'Problemi correlati',
+	'Class:Change/Attribute:related_problems_list+' => 'Tutti i problemi collegati a questo cambiamento',
+	'Class:Change/Attribute:related_incident_list' => 'Incidenti correlati',
+	'Class:Change/Attribute:related_incident_list+' => 'Tutti gli incidenti collegati a questo cambiamento',
+	'Class:Change/Attribute:child_changes_list' => 'Cambiamenti figli',
+	'Class:Change/Attribute:child_changes_list+' => 'Tutti i cambiamenti secondari collegati a questo cambiamento',
+	'Class:Change/Attribute:parent_id_friendlyname' => 'Nome amichevole del cambiamento padre',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '~~',
-	'Class:Change/Attribute:parent_id_finalclass_recall' => 'Change type~~',
+	'Class:Change/Attribute:parent_id_finalclass_recall' => 'Tipo di cambiamento',
 	'Class:Change/Attribute:parent_id_finalclass_recall+' => '~~',
 	'Class:Change/Stimulus:ev_validate' => 'Convalida',
 	'Class:Change/Stimulus:ev_validate+' => '',
@@ -157,13 +147,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Fine',
 	'Class:Change/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:RoutineChange' => 'Routine di cambi',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Convalida',
@@ -188,13 +178,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Fine',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ApprovedChange' => 'Cambi approvati',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Data di approvazione',
@@ -223,13 +213,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Fine',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NormalChange' => 'Cambi normali',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Data di approvazione',
@@ -258,13 +248,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Fine',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:EmergencyChange' => 'Cambi di emergenza',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Convalida',
@@ -289,4 +279,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Fine',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-));
+]);

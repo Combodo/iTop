@@ -1,11 +1,14 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Test\UnitTest\Application;
 
+use Combodo\iTop\Application\UI\Base\iUIBlockFactory;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use MetaModel;
 use utils;
@@ -16,14 +19,13 @@ use utils;
 class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 {
 	protected const ENUM_API_CALL_METHOD_ENUMPLUGINS = 'MetaModel::EnumPlugins';
-	protected const ENUM_API_CALL_METHOD_GETCLASSESFORINTERFACE = 'utils::GetClassesForInterface';
 
 	/**
 	 * @inheritDoc
 	 */
 	public function GetDatamodelDeltaAbsPath(): string
 	{
-		return __DIR__ . '/Delta/application-extension-usages-in-snippets.xml';
+		return __DIR__.'/Delta/application-extension-usages-in-snippets.xml';
 	}
 
 	/**
@@ -36,20 +38,18 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 	 * - Add the API to the provider
 	 * - Add a class extending / implementing the API in ./Delta/application-extension-usages-in-snippets.xml
 	 *
-	 * @param string $sAPIFQCN
-	 * @param string $sCallMethod
-	 *
 	 * @return void
-	 * @dataProvider ExtensionAPIRegisteredAndCalledProvider
 	 */
-	public function testExtensionAPIRegisteredAndCalled(string $sAPIFQCN, string $sCallMethod)
+	public function testExtensionAPIRegisteredAndCalled()
 	{
-		if ($sCallMethod === static::ENUM_API_CALL_METHOD_ENUMPLUGINS) {
-			$iExtendingClassesCount = count(MetaModel::EnumPlugins($sAPIFQCN));
-		} else {
-			$iExtendingClassesCount = count(utils::GetClassesForInterface($sAPIFQCN, '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]', '[\\\\/]tests[\\\\/]']));
+		foreach ($this->ExtensionAPIRegisteredAndCalledProvider() as list($sAPIFQCN, $sCallMethod)) {
+			if ($sCallMethod === static::ENUM_API_CALL_METHOD_ENUMPLUGINS) {
+				$iExtendingClassesCount = count(MetaModel::EnumPlugins($sAPIFQCN));
+			} else {
+				$iExtendingClassesCount = count(InterfaceDiscovery::GetInstance()->FindItopClasses($sAPIFQCN));
+			}
+			$this->assertGreaterThan(0, $iExtendingClassesCount, "Found no class extending the $sAPIFQCN API");
 		}
-		$this->assertGreaterThan(0, $iExtendingClassesCount, "Found no class extending the $sAPIFQCN API");
 	}
 
 	public function ExtensionAPIRegisteredAndCalledProvider(): array
@@ -79,16 +79,8 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 				\iApplicationUIExtension::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
 			],
-			\iApplicationObjectExtension::class => [
-				\iApplicationObjectExtension::class,
-				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
-			],
 			\iPopupMenuExtension::class => [
 				\iPopupMenuExtension::class,
-				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
-			],
-			\iPageUIExtension::class => [
-				\iPageUIExtension::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
 			],
 			\iPageUIBlockExtension::class => [
@@ -123,6 +115,10 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 				\iBackofficeStyleExtension::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
 			],
+			\iBackofficeSassExtension::class => [
+				\iBackofficeSassExtension::class,
+				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
+			],
 			\iBackofficeDictEntriesExtension::class => [
 				\iBackofficeDictEntriesExtension::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
@@ -143,10 +139,6 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 				\iOnClassInitialization::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
 			],
-			\iFieldRendererMappingsExtension::class => [
-				\iFieldRendererMappingsExtension::class,
-				static::ENUM_API_CALL_METHOD_GETCLASSESFORINTERFACE,
-			],
 			\iModuleExtension::class => [
 				\iModuleExtension::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
@@ -157,10 +149,6 @@ class ApplicationExtensionTest extends ItopCustomDatamodelTestCase
 			],
 			\ModuleHandlerApiInterface::class => [
 				\ModuleHandlerApiInterface::class,
-				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
-			],
-			\iNewsroomProvider::class => [
-				\iNewsroomProvider::class,
 				static::ENUM_API_CALL_METHOD_ENUMPLUGINS,
 			],
 		];

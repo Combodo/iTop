@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  * This file is part of iTop.
  * iTop is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +18,6 @@ namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
-
 /**
  * @package Combodo\iTop\Test\UnitTest\Setup
  * @group beforeSetup
@@ -31,7 +31,6 @@ class iTopXmlVersionIntegrationTest extends ItopTestCase
 		$this->RequireOnceItopFile('core/config.class.inc.php');
 		$this->RequireOnceItopFile('setup/itopdesignformat.class.inc.php');
 	}
-
 
 	/**
 	 * Verify if the latest version of the XML datamodel is aligned with the app. core version

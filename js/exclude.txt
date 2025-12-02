@@ -2,6 +2,5 @@
 # The following source files are not re-distributed with the "build" of the application
 # since they are used solely for debugging. The minified version is normally used instead.
 #
-jquery.layout.js
 jquery.ba-bbq.js
 README.md

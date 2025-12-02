@@ -1,26 +1,17 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Core:DeletedObjectLabel' => '%1s (削除されました)',
+/**
+ *
+ */
+Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Core:DeletedObjectLabel' => '%1$s (削除されました)',
 	'Core:DeletedObjectTip' => 'オブジェクトは削除されました %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'オブジェクトは見つかりません (クラス: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'オブジェクトは見つかりません。しばらく前に削除され、その後ログが削除されたかもしれません。',
@@ -39,6 +30,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:AttributeTagSet' => 'List of tags~~',
 	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
+	'Core:Placeholder:CannotBeResolved' => '(%1$s : cannot be resolved)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
@@ -159,15 +151,14 @@ Operators:<br/>
 	'Core:FriendlyName-Label' => 'Name',
 	'Core:FriendlyName-Description' => 'Friendly name',
 	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => 'Tags~~',
+	'Core:AttributeTag+' => '',
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
 	'Core:Context=Setup' => 'Setup~~',
 	'Core:Context=GUI:Console' => 'Console~~',
 	'Core:Context=CRON' => 'cron~~',
 	'Core:Context=GUI:Portal' => 'Portal~~',
-));
-
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
@@ -178,7 +169,7 @@ Operators:<br/>
 // Class: CMDBChange
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChange' => '変更',
 	'Class:CMDBChange+' => '変更履歴',
 	'Class:CMDBChange/Attribute:date' => '日付',
@@ -193,13 +184,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
-));
+]);
 
 //
 // Class: CMDBChangeOp
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOp' => '変更操作',
 	'Class:CMDBChangeOp+' => '変更操作履歴',
 	'Class:CMDBChangeOp/Attribute:change' => '変更',
@@ -214,51 +205,51 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:CMDBChangeOp/Attribute:objkey+' => 'オブジェクトID',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'タイプ',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpCreate
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOpCreate' => 'オブジェクト作成',
 	'Class:CMDBChangeOpCreate+' => 'オブジェクト作成履歴',
-));
+]);
 
 //
 // Class: CMDBChangeOpDelete
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOpDelete' => 'オブジェクト削除',
 	'Class:CMDBChangeOpDelete+' => 'オブジェクト削除履歴',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttribute
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOpSetAttribute' => 'オブジェクト更新',
 	'Class:CMDBChangeOpSetAttribute+' => 'オブジェクトプロパティの更新履歴',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => '属性',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => '更新プロパティのコード',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeScalar
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'プロパティ更新',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'オブジェクトのスカラープロパティの更新履歴',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => '変更前の値',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '属性の変更前の値',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => '新規の値',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '属性の新規の値',
-));
+]);
 // Used by CMDBChangeOp... & derived classes
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Change:ObjectCreated' => 'オブジェクトを生成しました',
 	'Change:ObjectDeleted' => 'オブジェクトを削除しました',
 	'Change:ObjectModified' => 'オブジェクトを修正しました',
@@ -275,35 +266,35 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Change:LinkSet:Added' => '追加されました %1$s',
 	'Change:LinkSet:Removed' => '削除されました %1$s',
 	'Change:LinkSet:Modified' => '修正されました %1$s',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeBlob
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'データ変更',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'データ変更履歴',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => '以前のデータ',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'この属性の以前の内容',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeText
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:CMDBChangeOpSetAttributeText' => 'テキストの変更',
 	'Class:CMDBChangeOpSetAttributeText+' => 'テキストの変更履歴',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => '以前の内容',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'この属性の以前の内容',
-));
+]);
 
 //
 // Class: Event
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Event' => 'ログイベント',
 	'Class:Event+' => 'アプリケーション内部イベント',
 	'Class:Event/Attribute:message' => 'メッセージ',
@@ -314,13 +305,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Event/Attribute:userinfo+' => 'このイベントをトリガーしたアクションを行ったユーザ',
 	'Class:Event/Attribute:finalclass' => 'タイプ',
 	'Class:Event/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: EventNotification
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventNotification' => '通知イベント',
 	'Class:EventNotification+' => '送信された通知のトレース',
 	'Class:EventNotification/Attribute:trigger_id' => 'トリガー',
@@ -329,13 +320,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:EventNotification/Attribute:action_id+' => 'ユーザアカウント',
 	'Class:EventNotification/Attribute:object_id' => 'オブジェクトID',
 	'Class:EventNotification/Attribute:object_id+' => 'オブジェクトID(トリガーでクラスが定義済み?)',
-));
+]);
 
 //
 // Class: EventNotificationEmail
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventNotificationEmail' => 'メール送出イベント',
 	'Class:EventNotificationEmail+' => '送出されたメールのトレース',
 	'Class:EventNotificationEmail/Attribute:to' => 'TO',
@@ -352,13 +343,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:EventNotificationEmail/Attribute:body+' => '本文',
 	'Class:EventNotificationEmail/Attribute:attachments' => '添付',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-));
+]);
 
 //
 // Class: EventIssue
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventIssue' => '課題',
 	'Class:EventIssue+' => '課題(警告、エラー、etc)のトレース',
 	'Class:EventIssue/Attribute:issue' => '課題',
@@ -375,13 +366,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:EventIssue/Attribute:callstack+' => 'スタックをコールする',
 	'Class:EventIssue/Attribute:data' => 'データ',
 	'Class:EventIssue/Attribute:data+' => '追加情報',
-));
+]);
 
 //
 // Class: EventWebService
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventWebService' => 'ウェブサービスイベント',
 	'Class:EventWebService+' => 'ウェブサービス呼出のトレース',
 	'Class:EventWebService/Attribute:verb' => '動作',
@@ -396,9 +387,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:EventWebService/Attribute:log_error+' => 'エラーログ結果',
 	'Class:EventWebService/Attribute:data' => 'データ',
 	'Class:EventWebService/Attribute:data+' => '結果データ',
-));
+]);
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventRestService' => 'REST/JSON call~~',
 	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
 	'Class:EventRestService/Attribute:operation' => 'Operation~~',
@@ -413,13 +404,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)~~',
 	'Class:EventRestService/Attribute:provider' => 'Provider~~',
 	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation~~',
-));
+]);
 
 //
 // Class: EventLoginUsage
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EventLoginUsage' => 'ログイン方法',
 	'Class:EventLoginUsage+' => 'アプリケーションへ接続します。',
 	'Class:EventLoginUsage/Attribute:user_id' => 'ログイン',
@@ -428,13 +419,48 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:EventLoginUsage/Attribute:contact_name+' => 'ユーザ名',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'ユーザのEmail',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'ユーザの電子メールアドレス',
-));
+]);
+
+//
+// Class: EventNotificationNewsroom
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', [
+	'Class:EventNotificationNewsroom' => 'News sent~~',
+	'Class:EventNotificationNewsroom+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:title' => 'Title~~',
+	'Class:EventNotificationNewsroom/Attribute:title+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:icon' => 'Icon~~',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:priority' => 'Priority~~',
+	'Class:EventNotificationNewsroom/Attribute:priority+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => 'Critical~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1+' => 'Critical~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2' => 'Urgent~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2+' => 'Urgent~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3' => 'Important~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3+' => 'Important~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4' => 'Standard~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4+' => 'Standard~~',
+	'Class:EventNotificationNewsroom/Attribute:url' => 'URL~~',
+	'Class:EventNotificationNewsroom/Attribute:url+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:read' => 'Read~~',
+	'Class:EventNotificationNewsroom/Attribute:read+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no' => 'No~~',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no+' => 'No~~',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes' => 'Yes~~',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes+' => 'Yes~~',
+	'Class:EventNotificationNewsroom/Attribute:read_date' => 'Read date~~',
+	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
+	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact~~',
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Action' => 'カスタムアクション',
 	'Class:Action+' => 'ユーザ定義アクション',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
@@ -452,41 +478,54 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Action/Attribute:status/Value:disabled+' => '非アクティブ',
 	'Class:Action/Attribute:trigger_list' => '関連トリガー',
 	'Class:Action/Attribute:trigger_list+' => 'このアクションにリンクされたトリガー',
+	'Class:Action/Attribute:asynchronous' => 'Asynchronous~~',
+	'Class:Action/Attribute:asynchronous+' => 'Whether this action should be executed in the background or not~~',
+	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Use global setting~~',
+	'Class:Action/Attribute:asynchronous/Value:yes' => 'Yes~~',
+	'Class:Action/Attribute:asynchronous/Value:no' => 'No~~',
 	'Class:Action/Attribute:finalclass' => 'タイプ',
 	'Class:Action/Attribute:finalclass+' => 'タイプ',
 	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
-));
+	'Action:last_executions_tab' => 'Last executions~~',
+	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)~~',
+	'Action:last_executions_tab_limit_days' => 'past %1$s days~~',
+	'Action:last_executions_tab_limit_none' => 'no limit~~',
+]);
 
 //
 // Class: ActionNotification
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ActionNotification' => '通知',
 	'Class:ActionNotification+' => '通知(要約)',
-));
+]);
 
 //
 // Class: ActionEmail
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ActionEmail' => 'メール通知',
 	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: 
+- Being tested: just the Test recipient, 
+- In production: all (To, cc and Bcc) 
+- Inactive: no-one~~',
 	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
 	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
 	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'テストレシピ',
 	'Class:ActionEmail/Attribute:test_recipient+' => '状態がテストの場合の宛先',
-	'Class:ActionEmail/Attribute:from' => 'From~~',
-	'Class:ActionEmail/Attribute:from+' => '電子メールのヘッダーに挿入されます~~',
+	'Class:ActionEmail/Attribute:from' => 'From (email)~~',
+	'Class:ActionEmail/Attribute:from+' => '電子メールのヘッダーに挿入されます',
 	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
-	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
-	'Class:ActionEmail/Attribute:reply_to' => 'Reply to~~',
-	'Class:ActionEmail/Attribute:reply_to+' => '電子メールのヘッダーに挿入されます~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Either a static label or a placeholder like $this->agent_id->friendlyname$~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Reply to (email)~~',
+	'Class:ActionEmail/Attribute:reply_to+' => '電子メールのヘッダーに挿入されます',
 	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
-	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Either a static label or a placeholder like $this->team_id->friendlyname$.
+If omitted the From (label) is used.~~',
 	'Class:ActionEmail/Attribute:to' => 'To',
 	'Class:ActionEmail/Attribute:to+' => 'メールの宛先',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
@@ -521,13 +560,54 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
 	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
 	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
-));
+]);
+
+//
+// Class: ActionNewsroom
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', [
+	'ActionNewsroom:trigger' => 'Trigger~~',
+	'ActionNewsroom:content' => 'Message~~',
+	'ActionNewsroom:settings' => 'Settings~~',
+	'Class:ActionNewsroom' => 'Notification by Newsroom~~',
+	'Class:ActionNewsroom+' => '~~',
+	'Class:ActionNewsroom/Attribute:title' => 'Title~~',
+	'Class:ActionNewsroom/Attribute:title+' => 'Title of the news. Can contain placeholders like $this->attribute_code$~~',
+	'Class:ActionNewsroom/Attribute:message' => 'Message~~',
+	'Class:ActionNewsroom/Attribute:message+' => 'Contents of the news, in Markdown format not HTML. Can contain placeholders like:
+- $this->attribute_code$ any attribute of the object triggering the notification,
+- $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
+- $current_contact->attribute$ attribute of the Person who triggered the notification~~',
+	'Class:ActionNewsroom/Attribute:icon' => 'Icon~~',
+	'Class:ActionNewsroom/Attribute:icon+' => 'Icon to appear next to the news in the newsroom.
+- If filled, the custom icon will be used
+- Else the icon of the triggering object if there is one (e.g. picture of a Person),
+- Else the icon of the triggering object class,
+- Otherwise, the application compact logo will be used~~',
+	'Class:ActionNewsroom/Attribute:priority' => 'Priority~~',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by decreasing priority, when displayed in the Newsroom popup~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critical~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Critical~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgent~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:2+' => 'Urgent~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:3' => 'Important~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:3+' => 'Important~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:4' => 'Standard~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:4+' => 'Standard~~',
+	'Class:ActionNewsroom/Attribute:test_recipient_id' => 'Test recipient~~',
+	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Person used instead of Recipients when notification is being tested~~',
+	'Class:ActionNewsroom/Attribute:recipients' => 'Recipients~~',
+	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects~~',
+	'Class:ActionNewsroom/Attribute:url' => 'URL~~',
+	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
+]);
 
 //
 // Class: Trigger
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Trigger' => 'トリガー',
 	'Class:Trigger+' => 'カスタムイベントハンドラー',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
@@ -540,14 +620,19 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Trigger/Attribute:context' => 'Context~~',
 	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 	'Class:Trigger/Attribute:complement' => 'Additional information~~',
-	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
-));
+	'Class:Trigger/Attribute:complement+' => 'Computed automatically in english for triggers derived from TriggerOnObject~~',
+	'Class:Trigger/Attribute:subscription_policy' => 'Subscription policy~~',
+	'Class:Trigger/Attribute:subscription_policy+' => 'Allows users to unsubscribe from the trigger~~',
+	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription~~',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)~~',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription~~',
+]);
 
 //
 // Class: TriggerOnObject
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnObject' => 'トリガー(クラス依存)',
 	'Class:TriggerOnObject+' => 'オブジェクトの指定されたクラスのトリガー',
 	'Class:TriggerOnObject/Attribute:target_class' => 'ターゲットクラス',
@@ -555,116 +640,116 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
 	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
-	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \\"%1$s\\"~~',
-));
+	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class "%1$s"~~',
+]);
 
 //
 // Class: TriggerOnPortalUpdate
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnPortalUpdate' => 'トリガー（ポータルから更新された時）',
 	'Class:TriggerOnPortalUpdate+' => 'エンドユーザがポータルから更新した場合のトリガー',
-));
+]);
 
 //
 // Class: TriggerOnStateChange
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnStateChange' => '(状態変化の)トリガー',
 	'Class:TriggerOnStateChange+' => 'オブジェクトの状態変化のトリガー',
 	'Class:TriggerOnStateChange/Attribute:state' => '状態',
 	'Class:TriggerOnStateChange/Attribute:state+' => '状態',
-));
+]);
 
 //
 // Class: TriggerOnStateEnter
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnStateEnter' => '入状態トリガー',
 	'Class:TriggerOnStateEnter+' => 'オブジェクトの状態へ入る変化（エンター,on entering a state）時のトリガー',
-));
+]);
 
 //
 // Class: TriggerOnStateLeave
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnStateLeave' => '出状態トリガー',
 	'Class:TriggerOnStateLeave+' => 'オブジェクトの状態から出る変化（リーブ,on leaving a state）時のトリガー',
-));
+]);
 
 //
 // Class: TriggerOnObjectCreate
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnObjectCreate' => 'オブジェクト作成トリガー',
 	'Class:TriggerOnObjectCreate+' => '指定されたクラスの(子クラスの)オブジェクト作成時のトリガ',
-));
+]);
 
 //
 // Class: TriggerOnObjectDelete
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
 	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
-));
+]);
 
 //
 // Class: TriggerOnObjectUpdate
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
-));
+]);
 
 //
 // Class: TriggerOnObjectMention
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
 	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
-));
+]);
 
 //
 // Class: TriggerOnAttributeBlobDownload
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
-));
+]);
 
 //
 // Class: TriggerOnThresholdReached
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TriggerOnThresholdReached' => 'トリガー (on threshold)',
 	'Class:TriggerOnThresholdReached+' => 'トリガー (on Stop-Watch threshold reached)',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'ストップウオッチ',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'しきい値',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-));
+]);
 
 //
 // Class: lnkTriggerAction
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkTriggerAction' => 'トリガ/アクション',
 	'Class:lnkTriggerAction+' => 'トリガとアクション間のリンク',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'アクション',
@@ -677,12 +762,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
 	'Class:lnkTriggerAction/Attribute:order' => '順序',
 	'Class:lnkTriggerAction/Attribute:order+' => 'アクション実行順序',
-));
+]);
 
 //
 // Synchro Data Source
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:SynchroDataSource' => '同期データソース',
 	'Class:SynchroDataSource/Attribute:name' => '名前',
 	'Class:SynchroDataSource/Attribute:name+' => '名前',
@@ -770,10 +855,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:Synchro:NeverRun' => 'この同期は実行されたことがありません。ログはありません。',
 	'Core:Synchro:SynchroEndedOn_Date' => '最後の同期は %1$s に終了しました。',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => '同期は %1$s に始まり、現在実行中です。',
-	'Menu:DataSources' => '同期データソース',
-    // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => '全ての同期データソース',
-    // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => '無視 (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => '消えた (%1$s)',
 	'Core:Synchro:label_repl_existing' => '存在 (%1$s)',
@@ -897,18 +978,15 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'プリファレンス',
 	'Core:ExecProcess:Code1' => '間違ったコマンドまたはエラーで終了したコマンド（例えば、間違ったスクリプト名）',
 	'Core:ExecProcess:Code255' => 'PHP エラー (parsing, or runtime)',
-    // Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$d分 %2$d秒',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$d時 %2$d分 %3$d秒',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s日 %2$d時 %3$d分 %4$d秒',
-    // Explain working time computing
-	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \\"%1$s\\")~~',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \\"%1$s\\"~~',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \\"%1$s\\" at %2$d%%~~',
-    // Bulk export
-	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \\"%1$s\\"~~',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \\"query\\". There is no Query Phrasebook corresponding to the id: \\"%1$s\\".~~',
+	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as "%1$s")~~',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"~~',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for "%1$s" at %2$d%%~~',
+	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter "%1$s"~~',
+	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter "query". There is no Query Phrasebook corresponding to the id: "%1$s".~~',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
 	'Core:BulkExportOf_Class' => '%1$s Export~~',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
@@ -959,43 +1037,31 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
 	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
 	'Core:DateTime:Placeholder_d' => 'DD~~',
-    // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D~~',
-    // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM~~',
-    // Month on 2 digits i.e. 01-12
 	'Core:DateTime:Placeholder_n' => 'M~~',
-    // Month on 1 or 2 digits 1-12
 	'Core:DateTime:Placeholder_Y' => 'YYYY~~',
-    // Year on 4 digits
 	'Core:DateTime:Placeholder_y' => 'YY~~',
-    // Year on 2 digits
 	'Core:DateTime:Placeholder_H' => 'hh~~',
-    // Hour 00..23
 	'Core:DateTime:Placeholder_h' => 'h~~',
-    // Hour 01..12
 	'Core:DateTime:Placeholder_G' => 'hh~~',
-    // Hour 0..23
 	'Core:DateTime:Placeholder_g' => 'h~~',
-    // Hour 1..12
 	'Core:DateTime:Placeholder_a' => 'am/pm~~',
-    // am/pm (lowercase)
 	'Core:DateTime:Placeholder_A' => 'AM/PM~~',
-    // AM/PM (uppercase)
 	'Core:DateTime:Placeholder_i' => 'mm~~',
-    // minutes, 2 digits: 00..59
 	'Core:DateTime:Placeholder_s' => 'ss~~',
-    // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Wrong format~~',
 	'Core:Validator:Mandatory' => 'Please, fill this field~~',
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
 	'Core:Validator:MustSelectOne' => 'Please, select one~~',
-));
+	'Menu:DataSources' => '同期データソース',
+	'Menu:DataSources+' => '全ての同期データソース',
+]);
 
 //
 // Class: TagSetFieldData
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
 	'Class:TagSetFieldData+' => '~~',
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
@@ -1003,13 +1069,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
 	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
 	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters, starting with a letter.~~',
 	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',
@@ -1017,12 +1083,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
 	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
-));
+]);
 
 //
 // Class: DBProperty
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:DBProperty' => 'DB property~~',
 	'Class:DBProperty+' => '~~',
 	'Class:DBProperty/Attribute:name' => 'Name~~',
@@ -1035,12 +1101,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:DBProperty/Attribute:change_date+' => '~~',
 	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
 	'Class:DBProperty/Attribute:change_comment+' => '~~',
-));
+]);
 
 //
 // Class: BackgroundTask
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:BackgroundTask' => 'Background task~~',
 	'Class:BackgroundTask+' => '~~',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
@@ -1065,12 +1131,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:BackgroundTask/Attribute:running+' => '~~',
 	'Class:BackgroundTask/Attribute:status' => 'Status~~',
 	'Class:BackgroundTask/Attribute:status+' => '~~',
-));
+]);
 
 //
 // Class: AsyncTask
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AsyncTask' => 'Async. task~~',
 	'Class:AsyncTask+' => '~~',
 	'Class:AsyncTask/Attribute:created' => 'Created~~',
@@ -1095,43 +1161,44 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
-));
+]);
 
 //
 // Class: AbstractResource
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AbstractResource' => 'Abstract Resource~~',
 	'Class:AbstractResource+' => '~~',
-));
+]);
 
 //
 // Class: ResourceAdminMenu
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
 	'Class:ResourceAdminMenu+' => '~~',
-));
+]);
 
 //
 // Class: ResourceRunQueriesMenu
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '~~',
-));
-
-
-
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
+]);

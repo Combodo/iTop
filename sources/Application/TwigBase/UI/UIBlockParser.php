@@ -1,12 +1,11 @@
 <?php
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Application\TwigBase\UI;
-
 
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
@@ -30,7 +29,6 @@ class UIBlockParser extends AbstractTokenParser
 	/** @var string */
 	protected $sBlockClassName;
 
-
 	/**
 	 * UIBlockParser constructor.
 	 *
@@ -44,7 +42,6 @@ class UIBlockParser extends AbstractTokenParser
 		$this->bHasSubBlocks = is_subclass_of($this->sBlockClassName, "Combodo\\iTop\\Application\\UI\\Base\\Layout\\UIContentBlock") || $this->sBlockClassName == "Combodo\\iTop\\Application\\UI\\Base\\Layout\\UIContentBlock";
 	}
 
-
 	/**
 	 * @inheritDoc
 	 */
@@ -55,7 +52,7 @@ class UIBlockParser extends AbstractTokenParser
 
 		$sType = $oStream->expect(Token::NAME_TYPE)->getValue();
 
-		$oParams = $this->parser->getExpressionParser()->parseExpression();
+		$oParams = $this->parser->parseExpression();
 
 		$oStream->expect(Token::BLOCK_END_TYPE);
 

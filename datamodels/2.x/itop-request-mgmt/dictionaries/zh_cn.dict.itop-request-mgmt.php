@@ -1,19 +1,20 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:RequestManagement' => '服务台',
-	'Menu:RequestManagement+' => '服务台',
+	'Menu:RequestManagement+' => '',
 	'Menu:RequestManagementProvider' => '服务台供应商',
-	'Menu:RequestManagementProvider+' => '服务台供应商',
-	'Menu:UserRequest:Provider' => '传递到供应商的打开的需求',
-	'Menu:UserRequest:Provider+' => '传递到供应商的打开的需求',
+	'Menu:RequestManagementProvider+' => '',
+	'Menu:UserRequest:Provider' => '转交给供应商的打开的需求',
+	'Menu:UserRequest:Provider+' => '',
 	'Menu:UserRequest:Overview' => '概况',
-	'Menu:UserRequest:Overview+' => '概况',
+	'Menu:UserRequest:Overview+' => '',
 	'Menu:NewUserRequest' => '新建用户需求',
-	'Menu:NewUserRequest+' => '新建用户需求',
+	'Menu:NewUserRequest+' => '新建用户需求工单',
 	'Menu:SearchUserRequests' => '搜索用户需求',
 	'Menu:SearchUserRequests+' => '搜索用户需求',
 	'Menu:UserRequest:Shortcuts' => '快捷方式',
@@ -21,25 +22,25 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:UserRequest:MyRequests' => '分配给我的需求',
 	'Menu:UserRequest:MyRequests+' => '分配给我的需求 (作为办理人)',
 	'Menu:UserRequest:MySupportRequests' => '我办理的需求',
-	'Menu:UserRequest:MySupportRequests+' => '我办理的需求',
+	'Menu:UserRequest:MySupportRequests+' => '',
 	'Menu:UserRequest:EscalatedRequests' => '已升级的需求',
-	'Menu:UserRequest:EscalatedRequests+' => '已升级的需求',
+	'Menu:UserRequest:EscalatedRequests+' => '',
 	'Menu:UserRequest:OpenRequests' => '所有打开的需求',
-	'Menu:UserRequest:OpenRequests+' => '所有打开的需求',
+	'Menu:UserRequest:OpenRequests+' => '',
 	'UI:WelcomeMenu:MyAssignedCalls' => '分配给我的需求',
-	'UI-RequestManagementOverview-RequestByType-last-14-days' => '最近两周的需求(按类型)',
-	'UI-RequestManagementOverview-Last-14-days' => '最近两周的需求(按数量)',
-	'UI-RequestManagementOverview-OpenRequestByStatus' => '打开的需求(按状态)',
-	'UI-RequestManagementOverview-OpenRequestByAgent' => '打开的需求(按办理人)',
-	'UI-RequestManagementOverview-OpenRequestByType' => '打开的需求(按类型)',
-	'UI-RequestManagementOverview-OpenRequestByCustomer' => '打开的需求(按客户)',
+	'UI-RequestManagementOverview-RequestByType-last-14-days' => '最近两周的需求 (按类型)',
+	'UI-RequestManagementOverview-Last-14-days' => '最近两周的需求 (按数量)',
+	'UI-RequestManagementOverview-OpenRequestByStatus' => '打开的需求 (按状态)',
+	'UI-RequestManagementOverview-OpenRequestByAgent' => '打开的需求 (按办理人)',
+	'UI-RequestManagementOverview-OpenRequestByType' => '打开的需求 (按类型)',
+	'UI-RequestManagementOverview-OpenRequestByCustomer' => '打开的需求 (按客户)',
 	'Class:UserRequest:KnownErrorList' => '已知错误',
-	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
+	'Class:UserRequest:KnownErrorList+' => '和当前工单关联的功能配置项相关的已知错误',
 	'Menu:UserRequest:MyWorkOrders' => '分配给我的工作任务',
 	'Menu:UserRequest:MyWorkOrders+' => '分配给我的所有工单',
 	'Class:Problem:KnownProblemList' => '已知问题',
 	'Tickets:Related:OpenIncidents' => '打开的事件',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -55,7 +56,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class: UserRequest
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest' => '用户需求',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => '状态',
@@ -115,19 +116,19 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:urgency/Value:4' => '低',
 	'Class:UserRequest/Attribute:urgency/Value:4+' => '低',
 	'Class:UserRequest/Attribute:origin' => '来源',
-	'Class:UserRequest/Attribute:origin+' => '',
-	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
-	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
-	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
-	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
+	'Class:UserRequest/Attribute:origin+' => '工单创建由什么触发',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => '当面',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => '创建于当面讨论后的需求',
+	'Class:UserRequest/Attribute:origin/Value:chat' => '聊天工具',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => '创建于聊天工具沟通后的需求',
 	'Class:UserRequest/Attribute:origin/Value:mail' => '邮件',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => '邮件',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => '监控',
 	'Class:UserRequest/Attribute:origin/Value:monitoring+' => '监控',
 	'Class:UserRequest/Attribute:origin/Value:phone' => '电话',
 	'Class:UserRequest/Attribute:origin/Value:phone+' => '电话',
-	'Class:UserRequest/Attribute:origin/Value:portal' => ITOP_APPLICATION_SHORT,
-	'Class:UserRequest/Attribute:origin/Value:portal+' => ITOP_APPLICATION_SHORT,
+	'Class:UserRequest/Attribute:origin/Value:portal' => '门户',
+	'Class:UserRequest/Attribute:origin/Value:portal+' => 'Request created on the user portal~~',
 	'Class:UserRequest/Attribute:approver_id' => '审核人',
 	'Class:UserRequest/Attribute:approver_id+' => '',
 	'Class:UserRequest/Attribute:approver_email' => '邮箱',
@@ -160,6 +161,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:tto+' => '响应时间',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',
 	'Class:UserRequest/Attribute:ttr+' => '解决时限',
+	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:UserRequest/Attribute:tto_time_spent+' => '~~',
+	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:UserRequest/Attribute:ttr_time_spent+' => '~~',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'TTO截止日期',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => '',
 	'Class:UserRequest/Attribute:sla_tto_passed' => 'SLA TTO 合格',
@@ -168,28 +173,28 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:sla_tto_over+' => '',
 	'Class:UserRequest/Attribute:ttr_escalation_deadline' => 'TTR截止日期',
 	'Class:UserRequest/Attribute:ttr_escalation_deadline+' => '',
-	'Class:UserRequest/Attribute:sla_ttr_passed' => 'SLA TTR 合格',
+	'Class:UserRequest/Attribute:sla_ttr_passed' => 'SLA TTR合格',
 	'Class:UserRequest/Attribute:sla_ttr_passed+' => '',
-	'Class:UserRequest/Attribute:sla_ttr_over' => 'SLA TTR 超时',
+	'Class:UserRequest/Attribute:sla_ttr_over' => 'SLA TTR超时',
 	'Class:UserRequest/Attribute:sla_ttr_over+' => '',
 	'Class:UserRequest/Attribute:time_spent' => '耗时',
 	'Class:UserRequest/Attribute:time_spent+' => '',
 	'Class:UserRequest/Attribute:resolution_code' => '解决方式',
 	'Class:UserRequest/Attribute:resolution_code+' => '',
 	'Class:UserRequest/Attribute:resolution_code/Value:assistance' => '外部支持',
-	'Class:UserRequest/Attribute:resolution_code/Value:assistance+' => '外部支持',
-	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed' => 'bug 修复',
-	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed+' => 'bug 修复',
+	'Class:UserRequest/Attribute:resolution_code/Value:assistance+' => '',
+	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed' => 'bug修复',
+	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed+' => '',
 	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair' => '硬件维修',
-	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair+' => '硬件维修',
+	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair+' => '',
 	'Class:UserRequest/Attribute:resolution_code/Value:other' => '其它',
-	'Class:UserRequest/Attribute:resolution_code/Value:other+' => '其它',
+	'Class:UserRequest/Attribute:resolution_code/Value:other+' => '',
 	'Class:UserRequest/Attribute:resolution_code/Value:software patch' => '软件补丁',
-	'Class:UserRequest/Attribute:resolution_code/Value:software patch+' => '软件补丁',
+	'Class:UserRequest/Attribute:resolution_code/Value:software patch+' => '',
 	'Class:UserRequest/Attribute:resolution_code/Value:system update' => '系统更新',
-	'Class:UserRequest/Attribute:resolution_code/Value:system update+' => '系统更新',
+	'Class:UserRequest/Attribute:resolution_code/Value:system update+' => '',
 	'Class:UserRequest/Attribute:resolution_code/Value:training' => '培训',
-	'Class:UserRequest/Attribute:resolution_code/Value:training+' => '培训',
+	'Class:UserRequest/Attribute:resolution_code/Value:training+' => '',
 	'Class:UserRequest/Attribute:solution' => '解决方案',
 	'Class:UserRequest/Attribute:solution+' => '',
 	'Class:UserRequest/Attribute:pending_reason' => '待定原因',
@@ -213,13 +218,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:user_satisfaction' => '用户满意度',
 	'Class:UserRequest/Attribute:user_satisfaction+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:1' => '非常满意',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:1+' => '非常满意',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:1+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:2' => '基本满意',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:2+' => '基本满意',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:2+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:3' => '不满意',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:3+' => '不满意',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:3+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4' => '非常不满意',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '非常不满意',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '',
 	'Class:UserRequest/Attribute:user_comment' => '用户留言',
 	'Class:UserRequest/Attribute:user_comment+' => '',
 	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'parent_request_id_friendlyname',
@@ -249,19 +254,18 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => '等待审核',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => '不能分配父级需求给自己',
-));
+]);
 
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Portal:TitleDetailsFor_Request' => '对于需求的详细信息',
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Portal:TitleDetailsFor_Request' => '需求详情',
 	'Portal:ButtonUpdate' => '更新',
 	'Portal:ButtonClose' => '关闭',
 	'Portal:ButtonReopen' => '重新打开',
 	'Portal:ShowServices' => '显示所有服务',
 	'Portal:SelectRequestType' => '选择一种类型的需求',
-	'Portal:SelectServiceElementFrom_Service' => '为%1$s选择服务元素',
+	'Portal:SelectServiceElementFrom_Service' => '为 %1$s 选择服务元素',
 	'Portal:ListServices' => '服务列表',
-	'Portal:TitleDetailsFor_Service' => '服务详细信息',
+	'Portal:TitleDetailsFor_Service' => '服务详情',
 	'Portal:Button:CreateRequestFromService' => '新建服务需求',
 	'Portal:ListOpenRequests' => '列出打开需求',
 	'Portal:UserRequest:MoreInfo' => '更多详细信息',
@@ -276,12 +280,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Portal:LanguageChangedTo_Lang' => '语言更改为',
 	'Portal:ChooseYourFavoriteLanguage' => '选择您喜欢的语言',
 	'Class:UserRequest/Method:ResolveChildTickets' => '解决子工单',
-	'Class:UserRequest/Method:ResolveChildTickets+' => '递归解决子工单(自动解决),并调整相关字段与父级工单保持一致: 服务,团队,办理人,解决方案',
-));
+	'Class:UserRequest/Method:ResolveChildTickets+' => '递归解决子工单 (自动解决), 并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案',
+]);
 
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Organization:Overview:UserRequests' => '来自此组织的用户需求',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
+	'Organization:Overview:MyUserRequests' => '我在此组织的用户需求',
 	'Organization:Overview:Tickets' => '来自此组织的工单',
-));
+]);

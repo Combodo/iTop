@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Wrapper to execute the parser, lexical analyzer and normalization of an OQL query
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -36,7 +36,13 @@ class UnknownClassOqlException extends OqlNormalizeException
 {
 	public function __construct($sInput, OqlName $oName, $aExpecting = null)
 	{
-		parent::__construct('Unknown class', $sInput, $oName, $aExpecting);
+		$aAllowedClasses = [];
+		foreach ($aExpecting as $sClass) {
+			if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ)) {
+				$aAllowedClasses[] = $sClass;
+			}
+		}
+		parent::__construct('Unknown class', $sInput, $oName, $aAllowedClasses);
 	}
 
 	public function GetUserFriendlyDescription()

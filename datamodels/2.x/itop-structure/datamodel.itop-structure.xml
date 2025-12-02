@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="Organization" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -7,7 +7,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,structure</category>
@@ -85,6 +85,7 @@
           <is_user_editable>true</is_user_editable>
           <definition>
             <layout>DashboardLayoutTwoCols</layout>
+            <title>Organization:Overview</title>
             <auto_reload>
               <enabled>false</enabled>
               <interval>300</interval>
@@ -564,6 +565,9 @@
             <item id="org_id">
               <rank>30</rank>
             </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
           </items>
         </default_search>
         <list>
@@ -713,6 +717,7 @@
           <linked_class>User</linked_class>
           <ext_key_to_me>contactid</ext_key_to_me>
           <edit_mode>add_only</edit_mode>
+          <edit_when>on_host_display</edit_when>
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
@@ -732,8 +737,8 @@
         $oSearch->AllowAllData();
         $oUserSet = new DBObjectSet($oSearch);
 
-        // The organization's person was changed and it has associated Users
-        if (array_key_exists('org_id', $aChanges) && ($oUserSet->Count() > 0)) {
+        // Change was not made by a DataSynchro and the organization's person was changed and there are associated Users
+        if (!ContextTag::Check(ContextTag::TAG_SYNCHRO) && array_key_exists('org_id', $aChanges) && ($oUserSet->Count() > 0)) {
             while($oUser = $oUserSet->Fetch())
             {
                 $oAddon = UserRights::GetModuleInstance();
@@ -1015,6 +1020,119 @@
         </reconciliation>
       </properties>
       <fields>
+        <field id="overview" xsi:type="AttributeDashboard">
+          <is_user_editable>true</is_user_editable>
+          <definition>
+            <layout>DashboardLayoutTwoCols</layout>
+            <title>Team:Overview</title>
+            <auto_reload>
+              <enabled>false</enabled>
+              <interval>300</interval>
+            </auto_reload>
+            <cells>
+              <cell id="0">
+                <rank>0</rank>
+                <dashlets>
+                  <dashlet id="ActiveTickets-OnTeam-ByFinalClass" xsi:type="DashletGroupByTable">
+                    <rank>0</rank>
+                    <title>Team:Overview:ActiveTickets</title>
+                    <query>SELECT Ticket WHERE team_id=:this-&gt;id AND operational_status = 'ongoing'</query>
+                    <group_by>finalclass</group_by>
+                    <style>table</style>
+                    <aggregation_function>count</aggregation_function>
+                    <aggregation_attribute></aggregation_attribute>
+                    <limit></limit>
+                    <order_by>attribute</order_by>
+                    <order_direction>asc</order_direction>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="1">
+                <rank>1</rank>
+                <dashlets>
+                  <dashlet id="UserRequest-OnTeam-ByStatus" xsi:type="DashletHeaderDynamic">
+                    <rank>0</rank>
+                    <title>Class:UserRequest</title>
+                    <icon>itop-structure/../../images/icons/icons8-customer.svg</icon>
+                    <subtitle>Team:Overview:UserRequest-ByStatus</subtitle>
+                    <query>SELECT UserRequest
+                      WHERE team_id=:this-&gt;id</query>
+                    <group_by>status</group_by>
+                    <values>new,assigned,pending,resolved,closed</values>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="2">
+                <rank>2</rank>
+                <dashlets>
+                  <dashlet id="OpenUserRequest-OnTeam-ByAgent" xsi:type="DashletGroupByTable">
+                    <rank>0</rank>
+                    <title>UI-RequestManagementOverview-OpenRequestByAgent</title>
+                    <query>SELECT UserRequest WHERE team_id=:this-&gt;id AND status!='closed'</query>
+                    <group_by>agent_id</group_by>
+                    <style>table</style>
+                    <aggregation_function>count</aggregation_function>
+                    <aggregation_attribute></aggregation_attribute>
+                    <limit></limit>
+                    <order_by>attribute</order_by>
+                    <order_direction>desc</order_direction>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="3">
+                <rank>3</rank>
+                <dashlets>
+                  <dashlet id="FunctionalCIs-OnTeam" xsi:type="DashletGroupByTable">
+                    <rank>0</rank>
+                    <title>Team:Overview:FunctionalCIs-ByType</title>
+                    <query>SELECT FunctionalCI AS fci JOIN lnkContactToFunctionalCI AS lnk ON lnk.functionalci_id = fci.id WHERE lnk.contact_id=:this-&gt;id</query>
+                    <group_by>finalclass</group_by>
+                    <style>table</style>
+                    <aggregation_function>count</aggregation_function>
+                    <aggregation_attribute></aggregation_attribute>
+                    <limit></limit>
+                    <order_by>attribute</order_by>
+                    <order_direction>asc</order_direction>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="4">
+                <rank>4</rank>
+                <dashlets>
+                  <dashlet id="ClosedUserRequest-OnTeam-ByMonth" xsi:type="DashletGroupByBars">
+                    <rank>0</rank>
+                    <title>Team:Overview:UserRequest-ClosedByMonth</title>
+                    <query>SELECT UserRequest WHERE team_id=:this-&gt;id AND close_date &gt; DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 12 MONTH),'%Y-%m-01 00:00:00') AND status='closed'</query>
+                    <group_by>close_date:month</group_by>
+                    <style>bars</style>
+                    <aggregation_function>count</aggregation_function>
+                    <aggregation_attribute></aggregation_attribute>
+                    <limit></limit>
+                    <order_by>attribute</order_by>
+                    <order_direction>asc</order_direction>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="5">
+                <rank>5</rank>
+                <dashlets>
+                  <dashlet id="ClosedUserRequest-OnTeam-ByAgent" xsi:type="DashletGroupByPie">
+                    <rank>0</rank>
+                    <title>Team:Overview:UserRequest-ClosedByAgent</title>
+                    <query>SELECT UserRequest WHERE team_id=:this-&gt;id AND close_date &gt; DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 12 MONTH),'%Y-%m-01 00:00:00') AND status='closed'</query>
+                    <group_by>agent_id</group_by>
+                    <style>pie</style>
+                    <aggregation_function>count</aggregation_function>
+                    <aggregation_attribute></aggregation_attribute>
+                    <limit></limit>
+                    <order_by>attribute</order_by>
+                    <order_direction>desc</order_direction>
+                  </dashlet>
+                </dashlets>
+              </cell>
+            </cells>
+          </definition>
+        </field>
         <field id="persons_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkPersonToTeam</linked_class>
           <ext_key_to_me>team_id</ext_key_to_me>
@@ -1065,8 +1183,11 @@
             <item id="function">
               <rank>70</rank>
             </item>
-            <item id="persons_list">
+            <item id="overview">
               <rank>80</rank>
+            </item>
+            <item id="persons_list">
+              <rank>90</rank>
             </item>
           </items>
         </details>
@@ -1481,16 +1602,21 @@
         </reconciliation>
       </properties>
       <fields>
-        <field id="file" xsi:type="AttributeBlob"/>
+        <field id="file" xsi:type="AttributeBlob">
+          <sql>file</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods>
-        <method id="DisplayBareRelations">
+        <method id="DisplayBareProperties">
           <static>false</static>
           <access>public</access>
           <type>Overload-cmdbAbstractObject</type>
           <comment><![CDATA[/**
 	 * Overload the display of the properties to add a tab (the first one)
 	 * with the preview of the document
+
+
 	 */
 	]]></comment>
           <code><![CDATA[public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
@@ -1883,7 +2009,6 @@
     <menu id="Catalogs" xsi:type="TemplateMenuNode" _delta="define">
       <rank>50</rank>
       <parent>DataAdministration</parent>
-      <template_file/>
     </menu>
     <menu id="Organization" xsi:type="OQLMenuNode" _delta="define">
       <rank>10</rank>
@@ -2020,11 +2145,11 @@
     </themes>
     <themes_common>
       <variables>
-        </variables>
+      </variables>
       <imports>
-        </imports>
+      </imports>
       <stylesheets>
-        </stylesheets>
+      </stylesheets>
     </themes_common>
   </branding>
   <user_rights>
@@ -2034,4 +2159,22 @@
     </profiles>
   </user_rights>
   <constants/>
+  <snippets>
+    <snippet id="GestionCssInfo" _delta="define">
+      <placement>module</placement>
+      <module>itop-structure</module>
+      <rank>-1</rank>
+      <content>
+        <![CDATA[
+        class GestionCssInfo implements iBackofficeStyleExtension
+          {
+            	public function GetStyle(): string
+            {
+               return '.ibo-field--label>.ibo-has-description::after, .ibo-input-with-label--label.ibo-has-description::after{content:"\1F6C8"; font-weight: 200;} ';
+            }
+          }
+        ]]>
+      </content>
+    </snippet>
+  </snippets>
 </itop_design>

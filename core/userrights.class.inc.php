@@ -1,6 +1,8 @@
 <?php
 
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Service\Events\EventData;
 
 define('UR_ALLOWED_NO', 0);
 define('UR_ALLOWED_YES', 1);
@@ -48,7 +50,7 @@ abstract class UserRightsAddOnAPI
 	 *
 	 * @return mixed
 	 */
-	abstract public function GetSelectFilter($sLogin, $sClass, $aSettings = array()); // returns a filter object
+	abstract public function GetSelectFilter($sLogin, $sClass, $aSettings = []); // returns a filter object
 
 	/**
 	 * @param \User $oUser
@@ -108,7 +110,7 @@ abstract class UserRightsAddOnAPI
 	 */
 	public function ListProfiles($oUser)
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -125,14 +127,12 @@ abstract class UserRightsAddOnAPI
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public function MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings = array(), $sAttCode = null)
+	public function MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings = [], $sAttCode = null)
 	{
-		if ($sAttCode == null)
-		{
+		if ($sAttCode == null) {
 			$sAttCode = $this->GetOwnerOrganizationAttCode($sClass);
 		}
-		if (empty($sAttCode))
-		{
+		if (empty($sAttCode)) {
 			return $oFilter  = new DBObjectSearch($sClass);
 		}
 
@@ -140,13 +140,13 @@ abstract class UserRightsAddOnAPI
 		$oFilter  = new DBObjectSearch($sClass);
 		$oListExpr = ListExpression::FromScalars($aAllowedOrgs);
 
-		$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
+		$oNullCondition = new FunctionExpression('ISNULL', [$oExpression]);
+		$oInCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
+		$oCondition = $oNullCondition->LogOr($oInCondition);
 		$oFilter->AddConditionExpression($oCondition);
 
-		if ($this->HasSharing())
-		{
-			if (($sAttCode == 'id') && isset($aSettings['bSearchMode']) && $aSettings['bSearchMode'])
-			{
+		if ($this->HasSharing()) {
+			if (($sAttCode == 'id') && isset($aSettings['bSearchMode']) && $aSettings['bSearchMode']) {
 				// Querying organizations (or derived)
 				// and the expected list of organizations will be used as a search criteria
 				// Therefore the query can also return organization having objects shared with the allowed organizations
@@ -160,22 +160,19 @@ abstract class UserRightsAddOnAPI
 				$oSearchSharers = new DBObjectSearch('Organization');
 				$oSearchSharers->AllowAllData();
 				$oSearchSharers->AddCondition_ReferencedBy($oShareSearch, 'sharing_org_id');
-				$aSharers = array();
-				foreach($oSearchSharers->ToDataArray(array('id')) as $aRow)
-				{
+				$aSharers = [];
+				foreach ($oSearchSharers->SelectAttributeToArray('id') as $aRow) {
 					$aSharers[] = $aRow['id'];
 				}
 				// 2) Enlarge the overall results: ... OR id IN(id1, id2, id3)
-				if (count($aSharers) > 0)
-				{
+				if (count($aSharers) > 0) {
 					$oSharersList = ListExpression::FromScalars($aSharers);
 					$oFilter->MergeConditionExpression(new BinaryExpression($oExpression, 'IN', $oSharersList));
 				}
 			}
 
 			$aShareProperties = SharedObject::GetSharedClassProperties($sClass);
-			if ($aShareProperties)
-			{
+			if ($aShareProperties) {
 				$sShareClass = $aShareProperties['share_class'];
 				$sShareAttCode = $aShareProperties['attcode'];
 
@@ -185,13 +182,11 @@ abstract class UserRightsAddOnAPI
 				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass('Organization');
 				$oOrgField = new FieldExpression('org_id', $sShareClass);
 				$oSearchShares->AddConditionExpression(new BinaryExpression($oOrgField, 'IN', $oListExpr));
-				$aShared = array();
-				foreach($oSearchShares->ToDataArray(array($sShareAttCode)) as $aRow)
-				{
+				$aShared = [];
+				foreach ($oSearchShares->SelectAttributeToArray($sShareAttCode) as $aRow) {
 					$aShared[] = $aRow[$sShareAttCode];
 				}
-				if (count($aShared) > 0)
-				{
+				if (count($aShared) > 0) {
 					$oObjId = new FieldExpression('id', $sClass);
 					$oSharedIdList = ListExpression::FromScalars($aShared);
 					$oFilter->MergeConditionExpression(new BinaryExpression($oObjId, 'IN', $oSharedIdList));
@@ -203,7 +198,6 @@ abstract class UserRightsAddOnAPI
 	}
 }
 
-
 require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
 abstract class User extends cmdbAbstractObject
 {
@@ -212,31 +206,31 @@ abstract class User extends cmdbAbstractObject
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core,grant_by_profile,silo",
 			"key_type"            => "autoincrement",
 			"name_attcode"        => "login",
 			"state_attcode"       => "status",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_user",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 			"style"               => new ormStyle("ibo-dm-class--User", "ibo-dm-class-alt--User", "var(--ibo-dm-class--User--main-color)", "var(--ibo-dm-class--User--complementary-color)", null, "itop-structure/../../images/icons/icons8-security-pass.svg"),
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("contactid", array("targetclass" => "Person", "allowed_values" => null, "sql" => "contactid", "is_null_allowed" => true, "on_target_delete" => DEL_MANUAL, "depends_on" => array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("last_name", array("allowed_values" => null, "extkey_attcode" => 'contactid', "target_attcode" => "name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("first_name", array("allowed_values" => null, "extkey_attcode" => 'contactid', "target_attcode" => "first_name")));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("email", array("allowed_values" => null, "extkey_attcode" => 'contactid', "target_attcode" => "email")));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("org_id", array("allowed_values" => null, "extkey_attcode" => 'contactid', "target_attcode" => "org_id")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("contactid", ["targetclass" => "Person", "allowed_values" => null, "sql" => "contactid", "is_null_allowed" => true, "on_target_delete" => DEL_MANUAL, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("last_name", ["allowed_values" => null, "extkey_attcode" => 'contactid', "target_attcode" => "name"]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("first_name", ["allowed_values" => null, "extkey_attcode" => 'contactid', "target_attcode" => "first_name"]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("email", ["allowed_values" => null, "extkey_attcode" => 'contactid', "target_attcode" => "email"]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("org_id", ["allowed_values" => null, "extkey_attcode" => 'contactid', "target_attcode" => "org_id"]));
 
-		MetaModel::Init_AddAttribute(new AttributeString("login", array("allowed_values" => null, "sql" => "login", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeString("login", ["allowed_values" => null, "sql" => "login", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
 
-		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql" => "language", "default_value" => "EN US", "is_null_allowed" => false, "depends_on" => array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("status", array(
+		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", ["sql" => "language", "default_value" => "EN US", "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeEnum("status", [
 			"allowed_values"  => new ValueSetEnum('enabled,disabled'),
 			"styled_values"   => [
 				'enabled'  => new ormStyle('ibo-dm-enum--User-status-enabled', 'ibo-dm-enum-alt--User-status-enabled', 'var(--ibo-dm-enum--User-status-enabled--main-color)', 'var(--ibo-dm-enum--User-status-enabled--complementary-color)', null, null),
@@ -245,25 +239,37 @@ abstract class User extends cmdbAbstractObject
 			"sql"             => "status",
 			"default_value"   => "enabled",
 			"is_null_allowed" => false,
-			"depends_on"      => array(),
-		)));
+			"depends_on"      => [],
+		]));
 
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list",array("linked_class" => "URP_UserProfile", "ext_key_to_me" => "userid", "ext_key_to_remote" => "profileid", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), "display_style" => 'property', "with_php_constraint" => true)));
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", array("linked_class" => "URP_UserOrg", "ext_key_to_me" => "userid", "ext_key_to_remote" => "allowed_org_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => array(), 'with_php_constraint' => true)));
-		MetaModel::Init_AddAttribute(new AttributeCaseLog("log", array("sql" => 'log', "is_null_allowed" => true, "default_value" => '', "allowed_values" => null, "depends_on" => array(), "always_load_in_tables" => false)));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list", ["linked_class" => "URP_UserProfile", "ext_key_to_me" => "userid", "ext_key_to_remote" => "profileid", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => [], "display_style" => 'property', "with_php_constraint" => true, "with_php_computation" => true]));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", ["linked_class" => "URP_UserOrg", "ext_key_to_me" => "userid", "ext_key_to_remote" => "allowed_org_id", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => [], 'with_php_constraint' => true]));
+		MetaModel::Init_AddAttribute(new AttributeCaseLog("log", ["sql" => 'log', "is_null_allowed" => true, "default_value" => '', "allowed_values" => null, "depends_on" => [], "always_load_in_tables" => false]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'language', 'status', 'profile_list', 'allowed_org_list', 'log')); // Unused as it's an abstract class !
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'status', 'org_id')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['contactid', 'org_id', 'email', 'login', 'language', 'status', 'profile_list', 'allowed_org_list', 'log']); // Unused as it's an abstract class !
+		MetaModel::Init_SetZListItems('list', ['finalclass', 'first_name', 'last_name', 'status', 'org_id']); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'email', 'language', 'status', 'org_id')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('default_search', array('login', 'contactid', 'status', 'org_id')); // Default criteria of the search banner
+		MetaModel::Init_SetZListItems('standard_search', ['login', 'contactid', 'email', 'language', 'status', 'org_id']); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('default_search', ['login', 'contactid', 'status', 'org_id']); // Default criteria of the search banner
+	}
+
+	protected function RegisterEventListeners()
+	{
+		if ($this->IsCurrentUser() && !UserRights::IsAdministrator()) {
+			$this->RegisterCRUDListener(EVENT_DB_SET_ATTRIBUTES_FLAGS, 'SetAllowedOrgListReadOnly');
+		}
 	}
 
 	abstract public function CheckCredentials($sPassword);
 	abstract public function TrustWebServerContext();
 	abstract public function CanChangePassword();
 	abstract public function ChangePassword($sOldPassword, $sNewPassword);
+
+	protected function SetAllowedOrgListReadOnly(EventData $oEventData)
+	{
+		$this->AddAttributeFlags('allowed_org_list', OPT_ATT_READONLY);
+	}
 
 	/*
 	* Compute a name in best effort mode
@@ -274,25 +280,18 @@ abstract class User extends cmdbAbstractObject
 	*/
 	public function GetFriendlyName()
 	{
-		if (!MetaModel::IsValidAttCode(get_class($this), 'contactid'))
-		{
+		if (!MetaModel::IsValidAttCode(get_class($this), 'contactid')) {
 			return $this->Get('login');
 		}
-		if ($this->Get('contactid') != 0)
-		{
+		if ($this->Get('contactid') != 0) {
 			$sFirstName = $this->Get('first_name');
 			$sLastName = $this->Get('last_name');
 			$sEmail = $this->Get('email');
-			if (strlen($sFirstName) > 0)
-			{
+			if (strlen($sFirstName) > 0) {
 				return "$sFirstName $sLastName";
-			}
-			elseif (strlen($sEmail) > 0)
-			{
+			} elseif (strlen($sEmail) > 0) {
 				return "$sLastName <$sEmail>";
-			}
-			else
-			{
+			} else {
 				return $sLastName;
 			}
 		}
@@ -329,10 +328,8 @@ abstract class User extends cmdbAbstractObject
 	 */
 	public function GetContactObject()
 	{
-		if (is_null($this->oContactObject))
-		{
-			if (MetaModel::IsValidAttCode(get_class($this), 'contactid') && ($this->Get('contactid') != 0))
-			{
+		if (is_null($this->oContactObject)) {
+			if (MetaModel::IsValidAttCode(get_class($this), 'contactid') && ($this->Get('contactid') != 0)) {
 				$this->oContactObject = null;
 				// The User Contact is generally a Person, so try it first
 				if (MetaModel::IsValidClass('Person')) {
@@ -359,13 +356,13 @@ abstract class User extends cmdbAbstractObject
 		$aChanges = $this->ListChanges();
 		if (array_key_exists('login', $aChanges)) {
 			// Check login uniqueness
-			if ( $this->GetOriginal('login') === null || strcasecmp($this->Get('login'), $this->GetOriginal('login')) !== 0) {
+			if ($this->GetOriginal('login') === null || strcasecmp($this->Get('login'), $this->GetOriginal('login')) !== 0) {
 				$sNewLogin = $aChanges['login'];
 				$oSearch = DBObjectSearch::FromOQL_AllData("SELECT User WHERE login = :newlogin");
 				if (!$this->IsNew()) {
 					$oSearch->AddCondition('id', $this->GetKey(), '!=');
 				}
-				$oSet = new DBObjectSet($oSearch, array(), array('newlogin' => $sNewLogin));
+				$oSet = new DBObjectSet($oSearch, [], ['newlogin' => $sNewLogin]);
 				if ($oSet->Count() > 0) {
 					$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:LoginMustBeUnique', $sNewLogin);
 				}
@@ -384,6 +381,12 @@ abstract class User extends cmdbAbstractObject
 			/** @var \DBObjectSet $oSet */
 			$oSet = $this->Get('profile_list');
 			if ($oSet->Count() == 0) {
+				if (ContextTag::Check(ContextTag::TAG_SETUP)) {
+					// During setup, if a profile is no more part of iTop, it will be deleted
+					// But if it is the only profile assigned to a user, we don't want this to stop the setup
+					SetupLog::Warning("The user with id: ".$this->GetKey()." is no more usable as its last profile was removed during setup");
+					return;
+				}
 				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AtLeastOneProfileIsNeeded');
 			}
 
@@ -401,14 +404,14 @@ abstract class User extends cmdbAbstractObject
 				}
 
 				if (!in_array(ADMIN_PROFILE_NAME, $aProfiles)) {
-					// Check if the user is yet allowed to modify Users
+					// Prevent a User to lose the right to modify Users
 					if (method_exists($oAddon, 'ResetCache')) {
 						$aCurrentProfiles = Session::Get('profile_list');
 						// Set the current profiles into a session variable (not yet in the database)
 						Session::Set('profile_list', $aProfiles);
 
 						$oAddon->ResetCache();
-						if (!$oAddon->IsActionAllowed($this, 'User', UR_ACTION_MODIFY, null)) {
+						if (!$oAddon->IsActionAllowed($this, get_class($this), UR_ACTION_MODIFY, null)) {
 							$this->m_aCheckIssues[] = Dict::S('Class:User/Error:CurrentProfilesHaveInsufficientRights');
 						}
 						$oAddon->ResetCache();
@@ -418,6 +421,19 @@ abstract class User extends cmdbAbstractObject
 						} else {
 							Session::Set('profile_list', $aCurrentProfiles);
 						}
+					}
+					// Prevent an administrator to remove their own admin profile
+					if (UserRights::IsAdministrator($this)) {
+						$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AdminProfileCannotBeRemovedBySelf');
+					}
+				}
+			} elseif ($this->IsPrivilegedUser()) {
+				// Prevent Privileged User to be saved with profiles denying the access to the backoffice
+				$oSet->Rewind();
+				while ($oUserProfile = $oSet->Fetch()) {
+					$sProfile = $oUserProfile->Get('profile');
+					if (in_array($sProfile, $aForbiddenProfiles)) {
+						$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice', $sProfile);
 					}
 				}
 			}
@@ -435,8 +451,12 @@ abstract class User extends cmdbAbstractObject
 			&& empty($this->Get('contactid'))) {
 			$this->m_aCheckIssues[] = Dict::S('Class:User/Error:PersonIsMandatory');
 		}
+		// Warning if the user has no associated contact
+		elseif (empty($this->Get('contactid'))) {
+			$this->AddCheckWarning(Dict::S('Class:User/Warning:NoContactHasImpact'));
+		}
 
-		// Allowed orgs must contains the user org (if any)
+		// Allowed orgs must contain the user org (if any)
 		if (!empty($this->Get('org_id')) && !UserRights::IsAdministrator($this)) {
 			// Get the user org and all its parent orgs
 			$aUserOrgs = [$this->Get('org_id')];
@@ -463,6 +483,11 @@ abstract class User extends cmdbAbstractObject
 					$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AllowedOrgsMustContainUserOrg');
 				}
 			}
+		}
+
+		// Modified User is not administrator and has no allowed orgs, warn about the consequences
+		if (!UserRights::IsAdministrator($this) && ($this->get('allowed_org_list')->Count() == 0)) {
+			$this->AddCheckWarning(Dict::S('Class:User/Warning:NoOrganizationMeansFullAccess'));
 		}
 
 		if (!UserRights::IsAdministrator()) {
@@ -508,19 +533,18 @@ abstract class User extends cmdbAbstractObject
 		}
 	}
 
-	function GetGrantAsHtml($sClass, $iAction)
+	public function GetGrantAsHtml($sClass, $iAction)
 	{
 		if (UserRights::IsActionAllowed($sClass, $iAction, null, $this)) {
-			return '<span style="background-color: #ddffdd;">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
+			return '<span class="ibo-user-rights ibo-is-success">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
 		} else {
-			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
+			return '<span class="ibo-user-rights ibo-is-failure">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
 		}
 	}
 
-	function DoShowGrantSumary($oPage, $sClassCategory)
+	public function DoShowGrantSumary($oPage, $sClassCategory)
 	{
-		if (UserRights::IsAdministrator($this))
-		{
+		if (UserRights::IsAdministrator($this)) {
 			// Looks dirty, but ok that's THE ONE
 			$oPage->p(Dict::S('UI:UserManagement:AdminProfile+'));
 			return;
@@ -528,28 +552,22 @@ abstract class User extends cmdbAbstractObject
 
 		$oKPI = new ExecutionKPI();
 
-		$aDisplayData = array();
-		foreach (MetaModel::GetClasses($sClassCategory) as $sClass)
-		{
+		$aDisplayData = [];
+		foreach (MetaModel::GetClasses($sClassCategory) as $sClass) {
 			$aClassStimuli = MetaModel::EnumStimuli($sClass);
-			if (count($aClassStimuli) > 0)
-			{
-				$aStimuli = array();
-				foreach ($aClassStimuli as $sStimulusCode => $oStimulus)
-				{
-					if (UserRights::IsStimulusAllowed($sClass, $sStimulusCode, null, $this))
-					{
+			if (count($aClassStimuli) > 0) {
+				$aStimuli = [];
+				foreach ($aClassStimuli as $sStimulusCode => $oStimulus) {
+					if (UserRights::IsStimulusAllowed($sClass, $sStimulusCode, null, $this)) {
 						$aStimuli[] = '<span title="'.$sStimulusCode.': '.utils::EscapeHtml($oStimulus->GetDescription()).'">'.utils::EscapeHtml($oStimulus->GetLabel()).'</span>';
 					}
 				}
 				$sStimuli = implode(', ', $aStimuli);
-			}
-			else
-			{
+			} else {
 				$sStimuli = '<em title="'.Dict::S('UI:UserManagement:NoLifeCycleApplicable+').'">'.Dict::S('UI:UserManagement:NoLifeCycleApplicable').'</em>';
 			}
 
-			$aDisplayData[] = array(
+			$aDisplayData[] = [
 				'class' => MetaModel::GetName($sClass),
 				'read' => $this->GetGrantAsHtml($sClass, UR_ACTION_READ),
 				'bulkread' => $this->GetGrantAsHtml($sClass, UR_ACTION_BULK_READ),
@@ -558,24 +576,24 @@ abstract class User extends cmdbAbstractObject
 				'delete' => $this->GetGrantAsHtml($sClass, UR_ACTION_DELETE),
 				'bulkdelete' => $this->GetGrantAsHtml($sClass, UR_ACTION_BULK_DELETE),
 				'stimuli' => $sStimuli,
-			);
+			];
 		}
 
 		$oKPI->ComputeAndReport('Computation of user rights');
 
-		$aDisplayConfig = array();
-		$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));
-		$aDisplayConfig['read'] = array('label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+'));
-		$aDisplayConfig['bulkread'] = array('label' => Dict::S('UI:UserManagement:Action:BulkRead'), 'description' => Dict::S('UI:UserManagement:Action:BulkRead+'));
-		$aDisplayConfig['write'] = array('label' => Dict::S('UI:UserManagement:Action:Modify'), 'description' => Dict::S('UI:UserManagement:Action:Modify+'));
-		$aDisplayConfig['bulkwrite'] = array('label' => Dict::S('UI:UserManagement:Action:BulkModify'), 'description' => Dict::S('UI:UserManagement:Action:BulkModify+'));
-		$aDisplayConfig['delete'] = array('label' => Dict::S('UI:UserManagement:Action:Delete'), 'description' => Dict::S('UI:UserManagement:Action:Delete+'));
-		$aDisplayConfig['bulkdelete'] = array('label' => Dict::S('UI:UserManagement:Action:BulkDelete'), 'description' => Dict::S('UI:UserManagement:Action:BulkDelete+'));
-		$aDisplayConfig['stimuli'] = array('label' => Dict::S('UI:UserManagement:Action:Stimuli'), 'description' => Dict::S('UI:UserManagement:Action:Stimuli+'));
+		$aDisplayConfig = [];
+		$aDisplayConfig['class'] = ['label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+')];
+		$aDisplayConfig['read'] = ['label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+')];
+		$aDisplayConfig['bulkread'] = ['label' => Dict::S('UI:UserManagement:Action:BulkRead'), 'description' => Dict::S('UI:UserManagement:Action:BulkRead+')];
+		$aDisplayConfig['write'] = ['label' => Dict::S('UI:UserManagement:Action:Modify'), 'description' => Dict::S('UI:UserManagement:Action:Modify+')];
+		$aDisplayConfig['bulkwrite'] = ['label' => Dict::S('UI:UserManagement:Action:BulkModify'), 'description' => Dict::S('UI:UserManagement:Action:BulkModify+')];
+		$aDisplayConfig['delete'] = ['label' => Dict::S('UI:UserManagement:Action:Delete'), 'description' => Dict::S('UI:UserManagement:Action:Delete+')];
+		$aDisplayConfig['bulkdelete'] = ['label' => Dict::S('UI:UserManagement:Action:BulkDelete'), 'description' => Dict::S('UI:UserManagement:Action:BulkDelete+')];
+		$aDisplayConfig['stimuli'] = ['label' => Dict::S('UI:UserManagement:Action:Stimuli'), 'description' => Dict::S('UI:UserManagement:Action:Stimuli+')];
 		$oPage->table($aDisplayConfig, $aDisplayData);
 	}
 
-	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
@@ -583,8 +601,7 @@ abstract class User extends cmdbAbstractObject
 		$this->DoShowGrantSumary($oPage, 'bizmodel,grant_by_profile');
 
 		// debug
-		if (false)
-		{
+		if (false) {
 			$oPage->SetCurrentTab('More on user rigths (dev only)');
 			$oPage->add("<h3>User rights</h3>\n");
 			$this->DoShowGrantSumary($oPage, 'addon/userrights');
@@ -598,23 +615,21 @@ abstract class User extends cmdbAbstractObject
 		}
 	}
 
-  	public function CheckToDelete(&$oDeletionPlan)
-  	{
-  		if (MetaModel::GetConfig()->Get('demo_mode'))
-		{
+	public function CheckToDelete(&$oDeletionPlan)
+	{
+		if (MetaModel::GetConfig()->Get('demo_mode')) {
 			// Users deletion is NOT allowed in demo mode
 			$oDeletionPlan->AddToDelete($this, null);
-			$oDeletionPlan->SetDeletionIssues($this, array('deletion not allowed in demo mode.'), true);
+			$oDeletionPlan->SetDeletionIssues($this, ['deletion not allowed in demo mode.'], true);
 			$oDeletionPlan->ComputeResults();
 			return false;
 		}
 		return parent::CheckToDelete($oDeletionPlan);
-  	}
+	}
 
 	protected function DBDeleteSingleObject()
 	{
-		if (MetaModel::GetConfig()->Get('demo_mode'))
-		{
+		if (MetaModel::GetConfig()->Get('demo_mode')) {
 			// Users deletion is NOT allowed in demo mode
 			return;
 		}
@@ -633,6 +648,21 @@ abstract class User extends cmdbAbstractObject
 		}
 		return UserRights::GetUserId() == $this->GetKey();
 	}
+
+	private function IsPrivilegedUser(): bool
+	{
+		$aPrivilegedProfiles = ['Administrator' => '1', 'REST Services User' => '1024', 'SuperUser' => '117'];
+
+		$oSet = $this->Get('profile_list');
+		$oSet->Rewind();
+		while ($oUserProfile = $oSet->Fetch()) {
+			$iProfile = $oUserProfile->Get('profileid');
+			if (in_array($iProfile, $aPrivilegedProfiles)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
 
 /**
@@ -648,28 +678,28 @@ abstract class UserInternal extends User
 	// Nothing special, just a base class to categorize this type of authenticated users
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core,grant_by_profile,silo",
 			"key_type"            => "autoincrement",
 			"name_attcode"        => "login",
 			"state_attcode"       => "",
-			"reconc_keys"         => array('login'),
+			"reconc_keys"         => ['login'],
 			"db_table"            => "priv_internaluser",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
 		// When set, this token allows for password reset
-		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("reset_pwd_token", array("allowed_values" => null, "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("reset_pwd_token", ["allowed_values" => null, "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'status', 'language', 'profile_list', 'allowed_org_list', 'log')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'status', 'org_id')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['contactid', 'org_id', 'email', 'login', 'status', 'language', 'profile_list', 'allowed_org_list', 'log']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['finalclass', 'first_name', 'last_name', 'status', 'org_id']); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('standard_search', ['login', 'contactid', 'status', 'org_id']); // Criteria of the std search form
 	}
 
 	/**
@@ -685,28 +715,23 @@ abstract class UserInternal extends User
 	 */
 	public function GetResetPasswordEmail()
 	{
-		if (!MetaModel::IsValidAttCode(get_class($this), 'contactid'))
-		{
+		if (!MetaModel::IsValidAttCode(get_class($this), 'contactid')) {
 			throw new Exception(Dict::S('UI:ResetPwd-Error-NoContact'));
 		}
 		$iContactId = $this->Get('contactid');
-		if ($iContactId == 0)
-		{
+		if ($iContactId == 0) {
 			throw new Exception(Dict::S('UI:ResetPwd-Error-NoContact'));
 		}
 		$oContact = MetaModel::GetObject('Contact', $iContactId);
 		// Determine the email attribute (the first one will be our choice)
-		foreach (MetaModel::ListAttributeDefs(get_class($oContact)) as $sAttCode => $oAttDef)
-		{
-			if ($oAttDef instanceof AttributeEmailAddress)
-			{
+		foreach (MetaModel::ListAttributeDefs(get_class($oContact)) as $sAttCode => $oAttDef) {
+			if ($oAttDef instanceof AttributeEmailAddress) {
 				$sEmailAttCode = $sAttCode;
 				// we've got one, exit the loop
 				break;
 			}
 		}
-		if (!isset($sEmailAttCode))
-		{
+		if (!isset($sEmailAttCode)) {
 			throw new Exception(Dict::S('UI:ResetPwd-Error-NoEmailAtt'));
 		}
 		$sRes = trim($oContact->Get($sEmailAttCode));
@@ -750,11 +775,11 @@ interface iSelfRegister
  */
 class UserRights
 {
-	const DEFAULT_USER_CONTACT_ID_ATTCODE = 'contactid';
-	const DEFAULT_CONTACT_ORG_ID_ATTCODE = 'org_id';
-	const DEFAULT_CONTACT_ORG_ID_FRIENDLYNAME_ATTCODE = self::DEFAULT_CONTACT_ORG_ID_ATTCODE.'_friendlyname';
-	const DEFAULT_CONTACT_FIRSTNAME_ATTCODE = 'first_name';
-	const DEFAULT_CONTACT_PICTURE_ATTCODE = 'picture';
+	public const DEFAULT_USER_CONTACT_ID_ATTCODE = 'contactid';
+	public const DEFAULT_CONTACT_ORG_ID_ATTCODE = 'org_id';
+	public const DEFAULT_CONTACT_ORG_ID_FRIENDLYNAME_ATTCODE = self::DEFAULT_CONTACT_ORG_ID_ATTCODE.'_friendlyname';
+	public const DEFAULT_CONTACT_FIRSTNAME_ATTCODE = 'first_name';
+	public const DEFAULT_CONTACT_PICTURE_ATTCODE = 'picture';
 
 	public static $m_aCacheUsers;
 	/** @var array Associative array of user's ID => user's picture URL */
@@ -764,8 +789,8 @@ class UserRights
 	protected static $m_oUser = null;
 	protected static $m_oRealUser = null;
 	protected static $m_sSelfRegisterAddOn = null;
-	protected static $m_aAdmins = array();
-	protected static $m_aPortalUsers = array();
+	protected static $m_aAdmins = [];
+	protected static $m_aPortalUsers = [];
 	/** @var array array('sName' => $sName, 'bSuccess' => $bSuccess); */
 	private static $m_sLastLoginStatus = null;
 
@@ -788,15 +813,13 @@ class UserRights
 	 */
 	public static function SelectModule($sModuleName)
 	{
-		if (!class_exists($sModuleName))
-		{
+		if (!class_exists($sModuleName)) {
 			throw new CoreException("Could not select this module, '$sModuleName' in not a valid class name");
 		}
-		if (!is_subclass_of($sModuleName, 'UserRightsAddOnAPI'))
-		{
+		if (!is_subclass_of($sModuleName, 'UserRightsAddOnAPI')) {
 			throw new CoreException("Could not select this module, the class '$sModuleName' is not derived from UserRightsAddOnAPI");
 		}
-		self::$m_oAddOn = new $sModuleName;
+		self::$m_oAddOn = new $sModuleName();
 		self::$m_oAddOn->Init();
 		self::ResetCurrentUserData();
 	}
@@ -809,8 +832,7 @@ class UserRights
 	 */
 	public static function SelectSelfRegister($sModuleName)
 	{
-		if (!class_exists($sModuleName))
-		{
+		if (!class_exists($sModuleName)) {
 			throw new CoreException("Could not select the class, '$sModuleName' for self register, is not a valid class name");
 		}
 		self::$m_sSelfRegisterAddOn = $sModuleName;
@@ -845,17 +867,16 @@ class UserRights
 	 */
 	public static function IsLoggedIn()
 	{
-		if (self::$m_oUser == null)
-		{
+		if (self::$m_oUser == null) {
 			return false;
-		}
-		else
-		{
+		} else {
 			return true;
 		}
 	}
 
 	/**
+	 * Set the current user (as part of the login process)
+	 *
 	 * @param string $sLogin Login of the concerned user
 	 * @param string $sAuthentication
 	 *
@@ -865,17 +886,15 @@ class UserRights
 	 */
 	public static function Login($sLogin, $sAuthentication = 'any')
 	{
-		static::Logoff();
+		self::ResetCurrentUserData();
 
 		$oUser = self::FindUser($sLogin, $sAuthentication);
-		if (is_null($oUser))
-		{
+		if (is_null($oUser)) {
 			return false;
 		}
 		self::$m_oUser = $oUser;
 
-		if (Session::IsSet('impersonate_user'))
-		{
+		if (Session::IsSet('impersonate_user')) {
 			self::$m_oRealUser = self::$m_oUser;
 			self::$m_oUser = self::FindUser(Session::Get('impersonate_user'));
 		}
@@ -885,6 +904,8 @@ class UserRights
 	}
 
 	/**
+	 * Reset current user and cleanup associated SESSION data
+	 *
 	 * @return void
 	 * @since 3.0.4 3.1.1 3.2.0
 	 */
@@ -907,31 +928,26 @@ class UserRights
 	public static function CheckCredentials($sLogin, $sPassword, $sLoginMode = 'form', $sAuthentication = 'any')
 	{
 		$oUser = self::FindUser($sLogin, $sAuthentication);
-		if (is_null($oUser))
-		{
+		if (is_null($oUser)) {
 			// Check if the user does not exist at all or if it is just disabled
-			if (self::FindUser($sLogin, $sAuthentication, true) == null)
-			{
+			if (self::FindUser($sLogin, $sAuthentication, true) == null) {
 				// User does not exist at all
 				$bCheckCredentialsAndCreateUser = self::CheckCredentialsAndCreateUser($sLogin, $sPassword, $sLoginMode, $sAuthentication);
-				self::$m_sLastLoginStatus = array('sName' => $sLogin, 'bSuccess' => $bCheckCredentialsAndCreateUser);
+				self::$m_sLastLoginStatus = ['sName' => $sLogin, 'bSuccess' => $bCheckCredentialsAndCreateUser];
 				return $bCheckCredentialsAndCreateUser;
-			}
-			else
-			{
+			} else {
 				// User is actually disabled
-				self::$m_sLastLoginStatus = array('sName' => $sLogin, 'bSuccess' => false);
+				self::$m_sLastLoginStatus = ['sName' => $sLogin, 'bSuccess' => false];
 				return  false;
 			}
 		}
 
-		if (!$oUser->CheckCredentials($sPassword))
-		{
-			self::$m_sLastLoginStatus = array('sName' => $sLogin, 'bSuccess' => false);
+		if (!$oUser->CheckCredentials($sPassword)) {
+			self::$m_sLastLoginStatus = ['sName' => $sLogin, 'bSuccess' => false];
 			return false;
 		}
 		self::UpdateUser($oUser, $sLoginMode, $sAuthentication);
-		self::$m_sLastLoginStatus = array('sName' => $sLogin, 'bSuccess' => true);
+		self::$m_sLastLoginStatus = ['sName' => $sLogin, 'bSuccess' => true];
 
 		return true;
 	}
@@ -946,9 +962,8 @@ class UserRights
 	 */
 	public static function CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication)
 	{
-		if (self::$m_sSelfRegisterAddOn != null)
-		{
-			return call_user_func(array(self::$m_sSelfRegisterAddOn, 'CheckCredentialsAndCreateUser'), $sName, $sPassword, $sLoginMode, $sAuthentication);
+		if (self::$m_sSelfRegisterAddOn != null) {
+			return call_user_func([self::$m_sSelfRegisterAddOn, 'CheckCredentialsAndCreateUser'], $sName, $sPassword, $sLoginMode, $sAuthentication);
 		}
 	}
 
@@ -959,9 +974,8 @@ class UserRights
 	 */
 	public static function UpdateUser($oUser, $sLoginMode, $sAuthentication)
 	{
-		if (self::$m_sSelfRegisterAddOn != null)
-		{
-			call_user_func(array(self::$m_sSelfRegisterAddOn, 'UpdateUser'), $oUser, $sLoginMode, $sAuthentication);
+		if (self::$m_sSelfRegisterAddOn != null) {
+			call_user_func([self::$m_sSelfRegisterAddOn, 'UpdateUser'], $oUser, $sLoginMode, $sAuthentication);
 		}
 	}
 
@@ -970,12 +984,9 @@ class UserRights
 	 */
 	public static function TrustWebServerContext()
 	{
-		if (!is_null(self::$m_oUser))
-		{
- 			return self::$m_oUser->TrustWebServerContext();
-		}
-		else
-		{
+		if (!is_null(self::$m_oUser)) {
+			return self::$m_oUser->TrustWebServerContext();
+		} else {
 			return false;
 		}
 	}
@@ -988,16 +999,11 @@ class UserRights
 	 */
 	public static function CanBrowseArchive()
 	{
-		if (is_null(self::$m_oUser))
-		{
+		if (is_null(self::$m_oUser)) {
 			$bRet = false;
-		}
-		elseif (Session::IsSet('archive_allowed'))
-		{
+		} elseif (Session::IsSet('archive_allowed')) {
 			$bRet = Session::Get('archive_allowed');
-		}
-		else
-		{
+		} else {
 			// As of now, anybody can switch to the archive mode as soon as there is an archivable class
 			$bRet = (count(MetaModel::EnumArchivableClasses()) > 0);
 			Session::Set('archive_allowed', $bRet);
@@ -1010,17 +1016,13 @@ class UserRights
 	 */
 	public static function CanChangePassword()
 	{
-		if (MetaModel::DBIsReadOnly())
-		{
+		if (MetaModel::DBIsReadOnly()) {
 			return false;
 		}
 
-		if (!is_null(self::$m_oUser))
-		{
- 			return self::$m_oUser->CanChangePassword();
-		}
-		else
-		{
+		if (!is_null(self::$m_oUser)) {
+			return self::$m_oUser->CanChangePassword();
+		} else {
 			return false;
 		}
 	}
@@ -1035,21 +1037,15 @@ class UserRights
 	 */
 	public static function ChangePassword($sOldPassword, $sNewPassword, $sLogin = '')
 	{
-		if (empty($sLogin))
-		{
+		if (empty($sLogin)) {
 			$oUser = self::$m_oUser;
-		}
-		else
-		{
+		} else {
 			// find the id out of the login string
 			$oUser = self::FindUser($sLogin);
 		}
-		if (is_null($oUser))
-		{
+		if (is_null($oUser)) {
 			return false;
-		}
-		else
-		{
+		} else {
 			$oUser->AllowWrite(true);
 			return $oUser->ChangePassword($sOldPassword, $sNewPassword);
 		}
@@ -1064,25 +1060,22 @@ class UserRights
 	 */
 	public static function Impersonate($sLogin)
 	{
-		if (!self::CheckLogin()) return false;
+		if (!self::CheckLogin()) {
+			return false;
+		}
 
 		$bRet = false;
 		$oUser = self::FindUser($sLogin);
-		if ($oUser)
-		{
+		if ($oUser) {
 			$bRet = true;
-			if (is_null(self::$m_oRealUser))
-			{
+			if (is_null(self::$m_oRealUser)) {
 				// First impersonation
 				self::$m_oRealUser = self::$m_oUser;
 			}
-			if (self::$m_oRealUser && (self::$m_oRealUser->GetKey() == $oUser->GetKey()))
-			{
+			if (self::$m_oRealUser && (self::$m_oRealUser->GetKey() == $oUser->GetKey())) {
 				// Equivalent to "Deimpersonate"
 				self::Deimpersonate();
-			}
-			else
-			{
+			} else {
 				// Do impersonate!
 				self::$m_oUser = $oUser;
 				Dict::SetUserLanguage(self::GetUserLanguage());
@@ -1103,8 +1096,7 @@ class UserRights
 	 */
 	public static function Deimpersonate()
 	{
-		if (!is_null(self::$m_oRealUser))
-		{
+		if (!is_null(self::$m_oRealUser)) {
 			self::$m_oUser = self::$m_oRealUser;
 			//N°5135 - fix IsImpersonated() after calling Deimpersonate()
 			self::$m_oRealUser = null;
@@ -1119,18 +1111,13 @@ class UserRights
 	}
 
 	/**
-	 * Return the current user login or an empty string if nobody connected.
-	 *
-	 * @return string
+	 * @return string connected {@see User} login field value, otherwise empty string
 	 */
 	public static function GetUser()
 	{
-		if (is_null(self::$m_oUser))
-		{
+		if (is_null(self::$m_oUser)) {
 			return '';
-		}
-		else
-		{
+		} else {
 			return self::$m_oUser->Get('login');
 		}
 	}
@@ -1140,12 +1127,9 @@ class UserRights
 	 */
 	public static function GetUserObject()
 	{
-		if (is_null(self::$m_oUser))
-		{
+		if (is_null(self::$m_oUser)) {
 			return null;
-		}
-		else
-		{
+		} else {
 			return self::$m_oUser;
 		}
 	}
@@ -1167,8 +1151,8 @@ class UserRights
 		$sUserSearch = 'SELECT User WHERE contactid = :id';
 		$oUserSearch = DBObjectSearch::FromOQL($sUserSearch);
 		$oUserSearch->AllowAllData();
-		$oUserSet = new DBObjectSet($oUserSearch, array(), array('id' => $oPerson->GetKey()));
-		if($oUserSet->Count() > 0 && !($oUserSet->Count() > 1 && $bMustBeUnique)){
+		$oUserSet = new DBObjectSet($oUserSearch, [], ['id' => $oPerson->GetKey()]);
+		if ($oUserSet->Count() > 0 && !($oUserSet->Count() > 1 && $bMustBeUnique)) {
 			return $oUserSet->Fetch();
 		}
 		return null;
@@ -1179,13 +1163,10 @@ class UserRights
 	 */
 	public static function GetUserLanguage()
 	{
-		if (is_null(self::$m_oUser))
-		{
+		if (is_null(self::$m_oUser)) {
 			return 'EN US';
 
-		}
-		else
-		{
+		} else {
 			return self::$m_oUser->Get('language');
 		}
 	}
@@ -1198,21 +1179,16 @@ class UserRights
 	 */
 	public static function GetUserId($sLogin = '')
 	{
-		if (empty($sLogin))
-		{
+		if (empty($sLogin)) {
 			// return current user id
-			if (is_null(self::$m_oUser))
-			{
+			if (is_null(self::$m_oUser)) {
 				return null;
 			}
 			return self::$m_oUser->GetKey();
-		}
-		else
-		{
+		} else {
 			// find the id out of the login string
 			$oUser = self::FindUser($sLogin);
-			if (is_null($oUser))
-			{
+			if (is_null($oUser)) {
 				return null;
 			}
 			return $oUser->GetKey();
@@ -1233,17 +1209,11 @@ class UserRights
 	{
 		$sUserPicturesFolder = 'images/user-pictures/';
 		$sUserPicturePlaceholderPrefKey = 'user_picture_placeholder';
+		$sPictureUrl = null;
 
 		// First, check cache
 		if (array_key_exists($sLogin, static::$m_aCacheContactPictureAbsUrl)) {
 			return static::$m_aCacheContactPictureAbsUrl[$sLogin];
-		}
-
-		// Then, the default picture
-		if ($bAllowDefaultPicture === true) {
-			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.'user-profile-default-256px.png';
-		} else {
-			$sPictureUrl = null;
 		}
 
 		// Then check if the user has a contact attached and if it has an picture defined
@@ -1292,6 +1262,11 @@ class UserRights
 		}
 		// Else, no contact and no login, then it's for an unknown origin (system, extension, ...)
 
+		// Then, the default picture
+		if (utils::IsNullOrEmptyString($sPictureUrl) && $bAllowDefaultPicture === true) {
+			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.'user-profile-default-256px.png';
+		}
+
 		// Update cache
 		static::$m_aCacheContactPictureAbsUrl[$sLogin] = $sPictureUrl;
 
@@ -1306,20 +1281,15 @@ class UserRights
 	 */
 	public static function GetContactId($sLogin = '')
 	{
-		if (empty($sLogin))
-		{
+		if (empty($sLogin)) {
 			$oUser = self::$m_oUser;
-		}
-		else
-		{
+		} else {
 			$oUser = self::FindUser($sLogin);
 		}
-		if (is_null($oUser))
-		{
+		if (is_null($oUser)) {
 			return '';
 		}
-		if (!MetaModel::IsValidAttCode(get_class($oUser), static::DEFAULT_USER_CONTACT_ID_ATTCODE))
-		{
+		if (!MetaModel::IsValidAttCode(get_class($oUser), static::DEFAULT_USER_CONTACT_ID_ATTCODE)) {
 			return '';
 		}
 		return $oUser->Get(static::DEFAULT_USER_CONTACT_ID_ATTCODE);
@@ -1338,8 +1308,7 @@ class UserRights
 		$sOrgFriendlyname = null;
 
 		$oContact = static::GetContactObject();
-		if(!is_null($oContact) && MetaModel::IsValidAttCode(get_class($oContact), static::DEFAULT_CONTACT_ORG_ID_FRIENDLYNAME_ATTCODE))
-		{
+		if (!is_null($oContact) && MetaModel::IsValidAttCode(get_class($oContact), static::DEFAULT_CONTACT_ORG_ID_FRIENDLYNAME_ATTCODE)) {
 			$sOrgFriendlyname = $oContact->Get(static::DEFAULT_CONTACT_ORG_ID_FRIENDLYNAME_ATTCODE);
 		}
 
@@ -1359,8 +1328,7 @@ class UserRights
 		$sFirstname = null;
 
 		$oContact = static::GetContactObject();
-		if(!is_null($oContact) && MetaModel::IsValidAttCode(get_class($oContact), static::DEFAULT_CONTACT_FIRSTNAME_ATTCODE))
-		{
+		if (!is_null($oContact) && MetaModel::IsValidAttCode(get_class($oContact), static::DEFAULT_CONTACT_FIRSTNAME_ATTCODE)) {
 			$sFirstname = $oContact->Get(static::DEFAULT_CONTACT_FIRSTNAME_ATTCODE);
 		}
 
@@ -1380,8 +1348,7 @@ class UserRights
 		$sFriendlyname = null;
 
 		$oContact = static::GetContactObject();
-		if(!is_null($oContact))
-		{
+		if (!is_null($oContact)) {
 			$sFriendlyname = $oContact->GetRawName();
 		}
 
@@ -1393,12 +1360,9 @@ class UserRights
 	 */
 	public static function GetContactObject()
 	{
-		if (is_null(self::$m_oUser))
-		{
+		if (is_null(self::$m_oUser)) {
 			return null;
-		}
-		else
-		{
+		} else {
 			return self::$m_oUser->GetContactObject();
 		}
 	}
@@ -1413,16 +1377,12 @@ class UserRights
 	 */
 	public static function GetUserFriendlyName($sLogin = '')
 	{
-		if (empty($sLogin))
-		{
+		if (empty($sLogin)) {
 			$oUser = self::$m_oUser;
-		}
-		else
-		{
+		} else {
 			$oUser = self::FindUser($sLogin);
 		}
-		if (is_null($oUser))
-		{
+		if (is_null($oUser)) {
 			return '';
 		}
 		return $oUser->GetFriendlyName();
@@ -1456,8 +1416,7 @@ class UserRights
 	 */
 	public static function IsImpersonated()
 	{
-		if (is_null(self::$m_oRealUser))
-		{
+		if (is_null(self::$m_oRealUser)) {
 			return false;
 		}
 		return true;
@@ -1468,8 +1427,7 @@ class UserRights
 	 */
 	public static function GetRealUser()
 	{
-		if (is_null(self::$m_oRealUser))
-		{
+		if (is_null(self::$m_oRealUser)) {
 			return '';
 		}
 		return self::$m_oRealUser->Get('login');
@@ -1487,7 +1445,8 @@ class UserRights
 	 * @return int|string ID of the connected user : if impersonate then use {@see m_oRealUser}, else {@see m_oUser}. If no user set then return ''
 	 * @since 2.6.5 2.7.6 3.0.0 N°4289 method creation
 	 */
-	public static function GetConnectedUserId() {
+	public static function GetConnectedUserId()
+	{
 		if (false === is_null(static::$m_oRealUser)) {
 			return static::$m_oRealUser->GetKey();
 		}
@@ -1503,8 +1462,7 @@ class UserRights
 	 */
 	public static function GetRealUserId()
 	{
-		if (is_null(self::$m_oRealUser))
-		{
+		if (is_null(self::$m_oRealUser)) {
 			return '';
 		}
 		return self::$m_oRealUser->GetKey();
@@ -1515,8 +1473,7 @@ class UserRights
 	 */
 	public static function GetRealUserFriendlyName()
 	{
-		if (is_null(self::$m_oRealUser))
-		{
+		if (is_null(self::$m_oRealUser)) {
 			return '';
 		}
 		return self::$m_oRealUser->GetFriendlyName();
@@ -1527,8 +1484,7 @@ class UserRights
 	 */
 	protected static function CheckLogin()
 	{
-		if (!self::IsLoggedIn())
-		{
+		if (!self::IsLoggedIn()) {
 			//throw new UserRightException('No user logged in', array());
 			return false;
 		}
@@ -1543,35 +1499,34 @@ class UserRights
 	 *
 	 * @return bool|\Expression
 	 */
-	public static function GetSelectFilter($sClass, $aSettings = array())
+	public static function GetSelectFilter($sClass, $aSettings = [])
 	{
 		// When initializing, we need to let everything pass trough
-		if (!self::CheckLogin()) {return true;}
+		if (!self::CheckLogin()) {
+			return true;
+		}
 
-		if (self::IsAdministrator()) {return true;}
+		if (self::IsAdministrator()) {
+			return true;
+		}
 
-		try
-		{
+		try {
 			// Check Bug 1436 for details
-			if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'silo') || MetaModel::HasCategory($sClass, 'filter'))
-			{
+			if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'silo') || MetaModel::HasCategory($sClass, 'filter')) {
 				return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
-			}
-			else
-			{
+			} else {
 				return true;
 			}
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			return false;
 		}
 	}
 
 	/**
 	 * @param string $sClass
-	 * @param int $iActionCode
-	 * @param \DBObjectSet $oInstanceSet
-	 * @param \User $oUser
+	 * @param int $iActionCode see UR_ACTION_* constants
+	 * @param DBObjectSet $oInstanceSet
+	 * @param User $oUser
 	 *
 	 * @return int (UR_ALLOWED_YES|UR_ALLOWED_NO|UR_ALLOWED_DEPENDS)
 	 * @throws \CoreException
@@ -1579,50 +1534,61 @@ class UserRights
 	public static function IsActionAllowed($sClass, $iActionCode, $oInstanceSet = null, $oUser = null)
 	{
 		// When initializing, we need to let everything pass trough
-		if (!self::CheckLogin()) return UR_ALLOWED_YES;
-
-		if (MetaModel::DBIsReadOnly())
-		{
-			if ($iActionCode == UR_ACTION_CREATE) return UR_ALLOWED_NO;
-			if ($iActionCode == UR_ACTION_MODIFY) return UR_ALLOWED_NO;
-			if ($iActionCode == UR_ACTION_BULK_MODIFY) return UR_ALLOWED_NO;
-			if ($iActionCode == UR_ACTION_DELETE) return UR_ALLOWED_NO;
-			if ($iActionCode == UR_ACTION_BULK_DELETE) return UR_ALLOWED_NO;
+		if (!self::CheckLogin()) {
+			return UR_ALLOWED_YES;
 		}
 
-		$aPredefinedObjects = call_user_func(array($sClass, 'GetPredefinedObjects'));
-		if ($aPredefinedObjects != null)
-		{
+		if (MetaModel::DBIsReadOnly()) {
+			if ($iActionCode == UR_ACTION_CREATE) {
+				return UR_ALLOWED_NO;
+			}
+			if ($iActionCode == UR_ACTION_MODIFY) {
+				return UR_ALLOWED_NO;
+			}
+			if ($iActionCode == UR_ACTION_BULK_MODIFY) {
+				return UR_ALLOWED_NO;
+			}
+			if ($iActionCode == UR_ACTION_DELETE) {
+				return UR_ALLOWED_NO;
+			}
+			if ($iActionCode == UR_ACTION_BULK_DELETE) {
+				return UR_ALLOWED_NO;
+			}
+		}
+
+		$aPredefinedObjects = call_user_func([$sClass, 'GetPredefinedObjects']);
+		if ($aPredefinedObjects != null) {
 			// As opposed to the read-only DB, modifying an object is allowed
 			// (the constant columns will be marked as read-only)
 			//
-			if ($iActionCode == UR_ACTION_CREATE) return UR_ALLOWED_NO;
-			if ($iActionCode == UR_ACTION_DELETE) return UR_ALLOWED_NO;
-			if ($iActionCode == UR_ACTION_BULK_DELETE) return UR_ALLOWED_NO;
+			if ($iActionCode == UR_ACTION_CREATE) {
+				return UR_ALLOWED_NO;
+			}
+			if ($iActionCode == UR_ACTION_DELETE) {
+				return UR_ALLOWED_NO;
+			}
+			if ($iActionCode == UR_ACTION_BULK_DELETE) {
+				return UR_ALLOWED_NO;
+			}
 		}
 
-		if (self::IsAdministrator($oUser)) return UR_ALLOWED_YES;
+		if (self::IsAdministrator($oUser)) {
+			return UR_ALLOWED_YES;
+		}
 
-		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile'))
-		{
-			if (is_null($oUser))
-			{
+		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile')) {
+			if (is_null($oUser)) {
 				$oUser = self::$m_oUser;
 			}
-			if ($iActionCode == UR_ACTION_CREATE)
-			{
+			if ($iActionCode == UR_ACTION_CREATE) {
 				// The addons currently DO NOT handle the case "CREATE"
 				// Therefore it is considered to be equivalent to "MODIFY"
 				$iActionCode = UR_ACTION_MODIFY;
 			}
 			return self::$m_oAddOn->IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet);
-		}
-		elseif(($iActionCode == UR_ACTION_READ) && MetaModel::HasCategory($sClass, 'view_in_gui'))
-		{
+		} elseif (($iActionCode == UR_ACTION_READ) && MetaModel::HasCategory($sClass, 'view_in_gui')) {
 			return UR_ALLOWED_YES;
-		}
-		else
-		{
+		} else {
 			// Other classes could be edited/listed by the administrators
 			return UR_ALLOWED_NO;
 		}
@@ -1640,25 +1606,24 @@ class UserRights
 	public static function IsStimulusAllowed($sClass, $sStimulusCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
 	{
 		// When initializing, we need to let everything pass trough
-		if (!self::CheckLogin()) return true;
+		if (!self::CheckLogin()) {
+			return true;
+		}
 
-		if (MetaModel::DBIsReadOnly())
-		{
+		if (MetaModel::DBIsReadOnly()) {
 			return false;
 		}
 
-		if (self::IsAdministrator($oUser)) return true;
+		if (self::IsAdministrator($oUser)) {
+			return true;
+		}
 
-		if (MetaModel::HasCategory($sClass, 'bizmodel'))
-		{
-			if (is_null($oUser))
-			{
+		if (MetaModel::HasCategory($sClass, 'bizmodel')) {
+			if (is_null($oUser)) {
 				$oUser = self::$m_oUser;
 			}
 			return self::$m_oAddOn->IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet);
-		}
-		else
-		{
+		} else {
 			// Other classes could be edited/listed by the administrators
 			return false;
 		}
@@ -1677,33 +1642,43 @@ class UserRights
 	public static function IsActionAllowedOnAttribute($sClass, $sAttCode, $iActionCode, /*dbObjectSet*/$oInstanceSet = null, $oUser = null)
 	{
 		// When initializing, we need to let everything pass trough
-		if (!self::CheckLogin()) return UR_ALLOWED_YES;
-
-		if (MetaModel::DBIsReadOnly())
-		{
-			if ($iActionCode == UR_ACTION_MODIFY) return UR_ALLOWED_NO;
-			if ($iActionCode == UR_ACTION_DELETE) return UR_ALLOWED_NO;
-			if ($iActionCode == UR_ACTION_BULK_MODIFY) return UR_ALLOWED_NO;
-			if ($iActionCode == UR_ACTION_BULK_DELETE) return UR_ALLOWED_NO;
+		if (!self::CheckLogin()) {
+			return UR_ALLOWED_YES;
 		}
 
-		if (self::IsAdministrator($oUser)) return UR_ALLOWED_YES;
+		if (MetaModel::DBIsReadOnly()) {
+			if ($iActionCode == UR_ACTION_MODIFY) {
+				return UR_ALLOWED_NO;
+			}
+			if ($iActionCode == UR_ACTION_DELETE) {
+				return UR_ALLOWED_NO;
+			}
+			if ($iActionCode == UR_ACTION_BULK_MODIFY) {
+				return UR_ALLOWED_NO;
+			}
+			if ($iActionCode == UR_ACTION_BULK_DELETE) {
+				return UR_ALLOWED_NO;
+			}
+		}
 
-		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile'))
-		{
-			if (is_null($oUser))
-			{
+		if (self::IsAdministrator($oUser)) {
+			return UR_ALLOWED_YES;
+		}
+
+		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile')) {
+			if (is_null($oUser)) {
 				$oUser = self::$m_oUser;
 			}
 			return self::$m_oAddOn->IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet);
 		}
 
 		// this module is forbidden for non admins
-		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return UR_ALLOWED_NO;
+		if (MetaModel::HasCategory($sClass, 'addon/userrights')) {
+			return UR_ALLOWED_NO;
+		}
 
 		// the rest is allowed
 		return UR_ALLOWED_YES;
-
 
 	}
 
@@ -1714,15 +1689,15 @@ class UserRights
 	 */
 	public static function IsAdministrator($oUser = null)
 	{
-		if (!self::CheckLogin()) return false;
+		if (!self::CheckLogin()) {
+			return false;
+		}
 
-		if (is_null($oUser))
-		{
+		if (is_null($oUser)) {
 			$oUser = self::$m_oUser;
 		}
 		$iUser = $oUser->GetKey();
-		if (!isset(self::$m_aAdmins[$iUser]))
-		{
+		if (!isset(self::$m_aAdmins[$iUser])) {
 			self::$m_aAdmins[$iUser] = self::$m_oAddOn->IsAdministrator($oUser);
 		}
 		return self::$m_aAdmins[$iUser];
@@ -1735,15 +1710,15 @@ class UserRights
 	 */
 	public static function IsPortalUser($oUser = null)
 	{
-		if (!self::CheckLogin()) return false;
+		if (!self::CheckLogin()) {
+			return false;
+		}
 
-		if (is_null($oUser))
-		{
+		if (is_null($oUser)) {
 			$oUser = self::$m_oUser;
 		}
 		$iUser = $oUser->GetKey();
-		if (!isset(self::$m_aPortalUsers[$iUser]))
-		{
+		if (!isset(self::$m_aPortalUsers[$iUser])) {
 			self::$m_aPortalUsers[$iUser] = self::$m_oAddOn->IsPortalUser($oUser);
 		}
 		return self::$m_aPortalUsers[$iUser];
@@ -1753,29 +1728,26 @@ class UserRights
 	 * @return array
 	 */
 	public static function GetAllowedPortals()
-    {
-        $aAllowedPortals = array();
-        $aPortalsConf = PortalDispatcherData::GetData();
-        $aDispatchers = array();
-        foreach ($aPortalsConf as $sPortalId => $aConf)
-        {
-            $sHandlerClass = $aConf['handler'];
-            $aDispatchers[$sPortalId] = new $sHandlerClass($sPortalId);
-        }
+	{
+		$aAllowedPortals = [];
+		$aPortalsConf = PortalDispatcherData::GetData();
+		$aDispatchers = [];
+		foreach ($aPortalsConf as $sPortalId => $aConf) {
+			$sHandlerClass = $aConf['handler'];
+			$aDispatchers[$sPortalId] = new $sHandlerClass($sPortalId);
+		}
 
-        foreach ($aDispatchers as $sPortalId => $oDispatcher)
-        {
-            if ($oDispatcher->IsUserAllowed())
-            {
-                $aAllowedPortals[] = array(
-                    'id' => $sPortalId,
-                    'label' => $oDispatcher->GetLabel(),
-                    'url' => $oDispatcher->GetUrl(),
-                );
-            }
-        }
-        return $aAllowedPortals;
-    }
+		foreach ($aDispatchers as $sPortalId => $oDispatcher) {
+			if ($oDispatcher->IsUserAllowed()) {
+				$aAllowedPortals[] = [
+					'id' => $sPortalId,
+					'label' => $oDispatcher->GetLabel(),
+					'url' => $oDispatcher->GetUrl(),
+				];
+			}
+		}
+		return $aAllowedPortals;
+	}
 
 	/**
 	 * @see UR_ACTION_READ, UR_ACTION_MODIFY, ...
@@ -1789,60 +1761,48 @@ class UserRights
 	 * @throws \DictExceptionMissingString
 	 * @throws \CoreException
 	 */
-    public static function GetAllowedClasses($iActionCode, $aCategories = array('bizmodel'), $bWithLabels = false, $oUser = null)
-    {
-    	$aAllowedClasses = [];
-    	foreach(MetaModel::GetClasses(implode(',', $aCategories)) as $sClass)
-	    {
-	    	if(static::IsActionAllowed($sClass, $iActionCode, null, $oUser) === UR_ALLOWED_YES)
-		    {
-		    	if($bWithLabels)
-			    {
-			    	$aAllowedClasses[$sClass] = MetaModel::GetName($sClass);
-			    }
-		    	else
-			    {
-		    	    $aAllowedClasses[] = $sClass;
-			    }
-		    }
-	    }
+	public static function GetAllowedClasses($iActionCode, $aCategories = ['bizmodel'], $bWithLabels = false, $oUser = null)
+	{
+		$aAllowedClasses = [];
+		foreach (MetaModel::GetClasses(implode(',', $aCategories)) as $sClass) {
+			if (static::IsActionAllowed($sClass, $iActionCode, null, $oUser) === UR_ALLOWED_YES) {
+				if ($bWithLabels) {
+					$aAllowedClasses[$sClass] = MetaModel::GetName($sClass);
+				} else {
+					$aAllowedClasses[] = $sClass;
+				}
+			}
+		}
 
-    	// Sort by label
-    	if($bWithLabels)
-	    {
-	    	asort($aAllowedClasses);
-	    }
+		// Sort by label
+		if ($bWithLabels) {
+			asort($aAllowedClasses);
+		}
 
-    	return $aAllowedClasses;
-    }
+		return $aAllowedClasses;
+	}
 
 	/**
 	 * @param \User|null $oUser
 	 *
 	 * @return array|mixed
 	 */
-    public static function ListProfiles($oUser = null)
+	public static function ListProfiles($oUser = null)
 	{
-		if (is_null($oUser))
-		{
+		if (is_null($oUser)) {
 			$oUser = self::$m_oUser;
 		}
-		if ($oUser === null)
-		{
+		if ($oUser === null) {
 			// Not logged in: no profile at all
-			$aProfiles = array();
-		}
-		elseif ((self::$m_oUser !== null) && ($oUser->GetKey() == self::$m_oUser->GetKey()))
-		{
+			$aProfiles = [];
+		} elseif ((self::$m_oUser !== null) && ($oUser->GetKey() == self::$m_oUser->GetKey())) {
 			// Data about the current user can be found into the session data
-			if (Session::IsSet('profile_list'))
-			{
+			if (Session::IsSet('profile_list')) {
 				$aProfiles = Session::Get('profile_list');
 			}
 		}
 
-		if (!isset($aProfiles))
-		{
+		if (!isset($aProfiles)) {
 			$aProfiles = self::$m_oAddOn->ListProfiles($oUser);
 		}
 		return $aProfiles;
@@ -1867,14 +1827,12 @@ class UserRights
 	 */
 	public static function FlushPrivileges($bResetAdminCache = false)
 	{
-		if ($bResetAdminCache)
-		{
-			self::$m_aAdmins = array();
-			self::$m_aPortalUsers = array();
+		if ($bResetAdminCache) {
+			self::$m_aAdmins = [];
+			self::$m_aPortalUsers = [];
 		}
 		self::_ResetSessionCache();
-		if (self::$m_oAddOn)
-		{
+		if (self::$m_oAddOn) {
 			self::$m_oAddOn->FlushPrivileges();
 		}
 	}
@@ -1891,50 +1849,54 @@ class UserRights
 	 */
 	protected static function FindUser($sLogin, $sAuthentication = 'any', $bAllowDisabledUsers = false)
 	{
-		if ($sAuthentication == 'any')
-		{
-			$oUser = self::FindUser($sLogin, 'internal');
-			if ($oUser == null)
-			{
-				$oUser = self::FindUser($sLogin, 'external');
-			}
-		}
-		else
-		{
-			if (!isset(self::$m_aCacheUsers))
-			{
-				self::$m_aCacheUsers = array('internal' => array(), 'external' => array());
+		if ($sAuthentication === 'any') {
+			$oUser = self::FindUser($sLogin, 'internal', $bAllowDisabledUsers);
+			if ($oUser !== null) {
+				return $oUser;
 			}
 
-			if (!isset(self::$m_aCacheUsers[$sAuthentication][$sLogin]))
-			{
-				switch($sAuthentication)
-				{
-					case 'external':
+			return self::FindUser($sLogin, 'external', $bAllowDisabledUsers);
+		}
+
+		if (!isset(self::$m_aCacheUsers)) {
+			self::$m_aCacheUsers = [ 'internal' => [], 'external' => [] ];
+		}
+
+		if (! isset(self::$m_aCacheUsers[$sAuthentication]) || ! array_key_exists($sLogin, self::$m_aCacheUsers[$sAuthentication])) {
+			switch ($sAuthentication) {
+				case 'external':
 					$sBaseClass = 'UserExternal';
 					break;
 
-					case 'internal':
+				case 'internal':
 					$sBaseClass = 'UserInternal';
 					break;
 
-					default:
+				default:
 					echo "<p>sAuthentication = $sAuthentication</p>\n";
 					assert(false); // should never happen
-				}
-				$oSearch = DBObjectSearch::FromOQL("SELECT $sBaseClass WHERE login = :login");
-				$oSearch->AllowAllData();
-				if (!$bAllowDisabledUsers)
-				{
-					$oSearch->AddCondition('status', 'enabled');
-				}
-				$oSet = new DBObjectSet($oSearch, array(), array('login' => $sLogin));
-				$oUser = $oSet->fetch();
-				self::$m_aCacheUsers[$sAuthentication][$sLogin] = $oUser;
 			}
-			$oUser = self::$m_aCacheUsers[$sAuthentication][$sLogin];
+			$oSearch = DBObjectSearch::FromOQL("SELECT $sBaseClass WHERE login = :login");
+			$oSearch->AllowAllData();
+			if (!$bAllowDisabledUsers) {
+				$oSearch->AddCondition('status', 'enabled');
+			}
+			$oSet = new DBObjectSet($oSearch, [], ['login' => $sLogin]);
+			$oUser = $oSet->fetch();
+
+			self::$m_aCacheUsers[$sAuthentication][$sLogin] = $oUser;
 		}
-		return $oUser;
+
+		return self::$m_aCacheUsers[$sAuthentication][$sLogin];
+	}
+
+	/**
+	 * Reset the cache of users
+	 * @return void
+	 */
+	public static function ResetCacheUsers()
+	{
+		self::$m_aCacheUsers = [ 'internal' => [], 'external' => [] ];
 	}
 
 	/**
@@ -1949,7 +1911,7 @@ class UserRights
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public static function MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings = array(), $sAttCode = null)
+	public static function MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings = [], $sAttCode = null)
 	{
 		return self::$m_oAddOn->MakeSelectFilter($sClass, $aAllowedOrgs, $aSettings, $sAttCode);
 	}
@@ -1961,15 +1923,14 @@ class UserRights
 
 		$oConfig = MetaModel::GetConfig();
 		$bSessionIdRegeneration = $oConfig->Get('regenerate_session_id_enabled');
-		if ($bSessionIdRegeneration)
-		{
+		if ($bSessionIdRegeneration) {
 			// Protection against session fixation/injection: generate a new session id.
 
 			// Alas a PHP bug (technically a bug in the memcache session handler, https://bugs.php.net/bug.php?id=71187)
 			// causes session_regenerate_id to fail with a catchable fatal error in PHP 7.0 if the session handler is memcache(d).
 			// The bug has been fixed in PHP 7.2, but in case session_regenerate_id()
 			// fails we just silently ignore the error and keep the same session id...
-			$old_error_handler = set_error_handler(array(__CLASS__, 'VoidErrorHandler'));
+			$old_error_handler = set_error_handler([__CLASS__, 'VoidErrorHandler']);
 			Session::RegenerateId(true);
 			if ($old_error_handler !== null) {
 				set_error_handler($old_error_handler);
@@ -2010,10 +1971,10 @@ class UserRights
  */
 class ActionChecker
 {
-	var $oFilter;
-	var $iActionCode;
-	var $iAllowedCount = null;
-	var $aAllowedIDs = null;
+	public $oFilter;
+	public $iActionCode;
+	public $iAllowedCount = null;
+	public $aAllowedIDs = null;
 
 	public function __construct(DBSearch $oFilter, $iActionCode)
 	{
@@ -2029,7 +1990,9 @@ class ActionChecker
 	 */
 	public function GetAllowedCount()
 	{
-		if ($this->iAllowedCount == null) $this->CheckObjects();
+		if ($this->iAllowedCount == null) {
+			$this->CheckObjects();
+		}
 		return $this->iAllowedCount;
 	}
 
@@ -2040,7 +2003,9 @@ class ActionChecker
 	 */
 	public function GetAllowedIDs()
 	{
-		if ($this->aAllowedIDs == null) $this->IsAllowed();
+		if ($this->aAllowedIDs == null) {
+			$this->IsAllowed();
+		}
 		return $this->aAllowedIDs;
 	}
 
@@ -2053,36 +2018,27 @@ class ActionChecker
 		$sClass = $this->oFilter->GetClass();
 		$oSet = new DBObjectSet($this->oFilter);
 		$iActionAllowed = UserRights::IsActionAllowed($sClass, $this->iActionCode, $oSet);
-		if ($iActionAllowed == UR_ALLOWED_DEPENDS)
-		{
+		if ($iActionAllowed == UR_ALLOWED_DEPENDS) {
 			// Check for each object if the action is allowed or not
-			$this->aAllowedIDs = array();
+			$this->aAllowedIDs = [];
 			$oSet->Rewind();
 			$this->iAllowedCount = 0;
-			while($oObj = $oSet->Fetch())
-			{
-				$oObjSet = DBObjectSet::FromArray($sClass, array($oObj));
-				if (UserRights::IsActionAllowed($sClass, $this->iActionCode, $oObjSet) == UR_ALLOWED_NO)
-				{
+			while ($oObj = $oSet->Fetch()) {
+				$oObjSet = DBObjectSet::FromArray($sClass, [$oObj]);
+				if (UserRights::IsActionAllowed($sClass, $this->iActionCode, $oObjSet) == UR_ALLOWED_NO) {
 					$this->aAllowedIDs[$oObj->GetKey()] = false;
-				}
-				else
-				{
+				} else {
 					// Assume UR_ALLOWED_YES, since there is just one object !
 					$this->aAllowedIDs[$oObj->GetKey()] = true;
 					$this->iAllowedCount++;
 				}
 			}
-		}
-		else if ($iActionAllowed == UR_ALLOWED_YES)
-		{
+		} elseif ($iActionAllowed == UR_ALLOWED_YES) {
 			$this->iAllowedCount = $oSet->Count();
-			$this->aAllowedIDs = array(); // Optimization: not filled when Ok for all objects
-		}
-		else // UR_ALLOWED_NO
-		{
+			$this->aAllowedIDs = []; // Optimization: not filled when Ok for all objects
+		} else { // UR_ALLOWED_NO
 			$this->iAllowedCount = 0;
-			$this->aAllowedIDs = array();
+			$this->aAllowedIDs = [];
 		}
 		return $iActionAllowed;
 	}
@@ -2093,7 +2049,9 @@ class ActionChecker
  */
 class StimulusChecker extends ActionChecker
 {
-	var $sState = null;
+	public $sState = null;
+
+	public mixed $iState = null;
 
 	public function __construct(DBSearch $oFilter, $sState, $iStimulusCode)
 	{
@@ -2108,59 +2066,49 @@ class StimulusChecker extends ActionChecker
 	public function IsAllowed()
 	{
 		$sClass = $this->oFilter->GetClass();
-		if (MetaModel::IsAbstract($sClass)) return UR_ALLOWED_NO; // Safeguard, not implemented if the base class of the set is abstract !
+		if (MetaModel::IsAbstract($sClass)) {
+			return UR_ALLOWED_NO;
+		} // Safeguard, not implemented if the base class of the set is abstract !
 
 		$oSet = new DBObjectSet($this->oFilter);
-		$iActionAllowed = UserRights::IsStimulusAllowed($sClass,  $this->iActionCode, $oSet);
-		if ($iActionAllowed == UR_ALLOWED_NO)
-		{
+		$iActionAllowed = UserRights::IsStimulusAllowed($sClass, $this->iActionCode, $oSet);
+		if ($iActionAllowed == UR_ALLOWED_NO) {
 			$this->iAllowedCount = 0;
-			$this->aAllowedIDs = array();
-		}
-		else // Even if UR_ALLOWED_YES, we need to check if each object is in the appropriate state
-		{
+			$this->aAllowedIDs = [];
+		} else { // Even if UR_ALLOWED_YES, we need to check if each object is in the appropriate state
 			// Hmmm, may not be needed right now because we limit the "multiple" action to object in
 			// the same state... may be useful later on if we want to extend this behavior...
 
 			// Check for each object if the action is allowed or not
-			$this->aAllowedIDs = array();
+			$this->aAllowedIDs = [];
 			$oSet->Rewind();
 			$iAllowedCount = 0;
 			$iActionAllowed = UR_ALLOWED_DEPENDS;
-			while($oObj = $oSet->Fetch())
-			{
+			while ($oObj = $oSet->Fetch()) {
 				$aTransitions = $oObj->EnumTransitions();
-				if (array_key_exists($this->iActionCode, $aTransitions))
-				{
+				if (array_key_exists($this->iActionCode, $aTransitions)) {
 					// Temporary optimization possible: since the current implementation
 					// of IsActionAllowed does not perform a 'per instance' check, we could
 					// skip this second validation phase and assume it would return UR_ALLOWED_YES
-					$oObjSet = DBObjectSet::FromArray($sClass, array($oObj));
-					if (!UserRights::IsStimulusAllowed($sClass, $this->iActionCode, $oObjSet))
-					{
+					$oObjSet = DBObjectSet::FromArray($sClass, [$oObj]);
+					if (!UserRights::IsStimulusAllowed($sClass, $this->iActionCode, $oObjSet)) {
 						$this->aAllowedIDs[$oObj->GetKey()] = false;
-					}
-					else
-					{
+					} else {
 						// Assume UR_ALLOWED_YES, since there is just one object !
 						$this->aAllowedIDs[$oObj->GetKey()] = true;
 						$this->iState = $oObj->GetState();
 						$this->iAllowedCount++;
 					}
-				}
-				else
-				{
+				} else {
 					$this->aAllowedIDs[$oObj->GetKey()] = false;
 				}
 			}
 		}
 
-		if ($this->iAllowedCount == $oSet->Count())
-		{
+		if ($this->iAllowedCount == $oSet->Count()) {
 			$iActionAllowed = UR_ALLOWED_YES;
 		}
-		if ($this->iAllowedCount == 0)
-		{
+		if ($this->iAllowedCount == 0) {
 			$iActionAllowed = UR_ALLOWED_NO;
 		}
 

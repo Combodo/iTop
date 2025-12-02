@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="KnownError" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -247,8 +247,10 @@
         <db_key_field>link_id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <attributes id="error_name"/>
-          <attributes id="functionalci_name"/>
+          <attributes>
+            <attribute id="error_name"/>
+            <attribute id="functionalci_name"/>
+          </attributes>
         </naming>
         <style>
           <icon/>
@@ -446,7 +448,6 @@
     <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
       <rank>5</rank>
       <parent>ProblemManagement</parent>
-      <template_file/>
     </menu>
     <menu id="NewError" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>3</rank>

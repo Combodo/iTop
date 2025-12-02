@@ -1,5 +1,6 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -23,5 +24,5 @@ use Combodo\iTop\Renderer\FormRenderer;
 
 class ConsoleFormRenderer extends FormRenderer
 {
-	const DEFAULT_RENDERER_NAMESPACE = 'Combodo\\iTop\\Renderer\\Console\\FieldRenderer\\';
+	public const DEFAULT_RENDERER_NAMESPACE = 'Combodo\\iTop\\Renderer\\Console\\FieldRenderer\\';
 }

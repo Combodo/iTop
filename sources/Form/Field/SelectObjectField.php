@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -38,9 +38,9 @@ use MetaModel;
 class SelectObjectField extends AbstractSimpleField
 {
 	/** @var int CONTROL_SELECT */
-	const CONTROL_SELECT = 1;
+	public const CONTROL_SELECT = 1;
 	/** @var int CONTROL_RADIO_VERTICAL */
-	const CONTROL_RADIO_VERTICAL = 2;
+	public const CONTROL_RADIO_VERTICAL = 2;
 
 	/** @var \DBSearch $oSearch */
 	protected $oSearch;
@@ -176,7 +176,8 @@ class SelectObjectField extends AbstractSimpleField
 	/**
 	 * @return \DBSearch
 	 */
-	public function GetSearch() {
+	public function GetSearch()
+	{
 		return $this->oSearch;
 	}
 
@@ -217,33 +218,17 @@ class SelectObjectField extends AbstractSimpleField
 	/**
 	 * @return int
 	 */
-	public function GetControlType() {
+	public function GetControlType()
+	{
 		return $this->iControlType;
 	}
 
 	/**
 	 * @return string|null
 	 */
-	public function GetSearchEndpoint() {
+	public function GetSearchEndpoint()
+	{
 		return $this->sSearchEndpoint;
-	}
-
-	/**
-	 * Resets current value if not among allowed ones.
-	 * By default, reset is done ONLY when the field is not read-only.
-	 *
-	 * Called conditionally from {@see \Combodo\iTop\Portal\Form\ObjectFormManager::Build}
-	 * This check isn't in the Validate method as we don't want to check for untouched and invalid values (value was set in the past, it is now invalid, but the user didn't change it)
-	 *
-	 * @param boolean $bAlways Set to true to verify even when the field is read-only.
-	 *
-	 * @throws \CoreException
-	 *
-	 * @deprecated 3.1.0 N°6414 use ResetCurrentValueIfNotAmongAllowedValues instead
-	 */
-	public function VerifyCurrentValue(bool $bAlways = false) {
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('3.1.0 N°6414 use ResetCurrentValueIfNotAmongAllowedValues instead');
-		$this->ResetCurrentValueIfNotAmongAllowedValues($bAlways);
 	}
 
 	/**
@@ -259,7 +244,8 @@ class SelectObjectField extends AbstractSimpleField
 	 *
 	 * @since 3.1.0 N°6414 replaces VerifyCurrentValue$
 	 */
-	public function ResetCurrentValueIfNotAmongAllowedValues(bool $bAlways = false) {
+	public function ResetCurrentValueIfNotAmongAllowedValues(bool $bAlways = false)
+	{
 		if (!$this->GetReadOnly() || $bAlways) {
 			$oValuesSet = FieldHelper::GetObjectsSetFromSearchAndCurrentValueId($this->oSearch, $this->currentValue);
 

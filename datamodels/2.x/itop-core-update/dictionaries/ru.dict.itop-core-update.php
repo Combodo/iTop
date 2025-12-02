@@ -1,14 +1,17 @@
 <?php
+
 /**
- * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
+ * Localized data
  *
- * @author      Vladimir Kunin <v.b.kunin@gmail.com>
- * @link        http://community.itop-itsm.ru  iTop Russian Community
- * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+/**
+ * @author Vladimir Kunin <v.b.kunin@gmail.com>
+ *
+ */
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'iTopUpdate:UI:PageTitle' => 'Обновление приложения',
 	'itop-core-update:UI:SelectUpdateFile' => 'Обновление',
 	'itop-core-update:UI:ConfirmUpdate' => 'Обновление',
@@ -61,8 +64,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check~~',
 	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup~~',
 	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?~~',
-
-	// Setup Messages
+	'iTopUpdate:UI:FastSetupLaunch' => 'Fast Setup~~',
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Всё готово к началу',
 	'iTopUpdate:UI:SetupMessage:EnterMaintenance' => 'Переход в режим технического обслуживания',
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Резервное копирование базы данных',
@@ -73,8 +75,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Обновление базы данных',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Выход из режима технического обслуживания',
 	'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Обновление завершено',
-
-	// Errors
 	'iTopUpdate:Error:MissingFunction' => 'Невозможно запустить обновление, функция отсутствует',
 	'iTopUpdate:Error:MissingFile' => 'Отсутствует файл: %1$s',
 	'iTopUpdate:Error:CorruptedFile' => 'Файл %1$s поврежден',
@@ -92,12 +92,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'iTopUpdate:UI:UpdateDone' => 'Обновление выполнено успешно',
 	'Menu:iTopUpdate' => 'Обновление приложения',
 	'Menu:iTopUpdate+' => 'Обновление приложения',
-
-    // Missing itop entries
 	'Class:ModuleInstallation/Attribute:installed' => 'Дата установки',
 	'Class:ModuleInstallation/Attribute:name' => 'Название',
 	'Class:ModuleInstallation/Attribute:version' => 'Версия',
 	'Class:ModuleInstallation/Attribute:comment' => 'Комментарий',
-));
-
-
+]);

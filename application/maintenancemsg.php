@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,11 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-
 //
 // Maintenance message display functions
 // Only included by approot.inc.php
 //
+use Combodo\iTop\Application\WebPage\ErrorPage;
 
 /**
  * Use a setup page to display the maintenance message
@@ -32,21 +33,17 @@ function _MaintenanceSetupPageMessage($sTitle, $sMessage)
 {
 	// Web Page
 	@include_once(APPROOT.'setup/setuppage.class.inc.php');
-	if (class_exists('SetupPage'))
-	{
+	if (class_exists('SetupPage')) {
 		$oP = new ErrorPage($sTitle);
 		$oP->p("<h2 class=\"center\">$sMessage</h2>");
 		$oP->add_ready_script(
-<<<JS
+			<<<JS
 // Reload in 30s to check if maintenance is over
 setTimeout(function(){ window.location.reload(); }, 30000);
 JS
-
 		);
 		$oP->output();
-	}
-	else
-	{
+	} else {
 		_MaintenanceTextMessage($sMessage);
 	}
 }
@@ -77,28 +74,18 @@ function _MaintenanceHtmlMessage($sMessage)
  */
 function _MaintenanceJsonMessage($sTitle, $sMessage)
 {
-	if (class_exists('JsonPage'))
-	{
+	if (class_exists('JsonPage')) {
 		$oP = new JsonPage($sTitle);
 		$oP->add_header('Access-Control-Allow-Origin: *');
 
 		$aMessage = [
 			'code' => 100,
-			'message' =>$sMessage
+			'message' => $sMessage,
 		];
 
 		$oP->AddData($aMessage);
 		$oP->Output();
 	} else {
-		@include_once(APPROOT."/application/ajaxwebpage.class.inc.php");
-		if (class_exists('ajax_page')) {
-			$oP = new ajax_page($sTitle);
-			$oP->add_header('Access-Control-Allow-Origin: *');
-			$oP->SetContentType('application/json');
-			$oP->add('{"code":100, "message":"'.$sMessage.'"}');
-			$oP->Output();
-		} else {
-			_MaintenanceTextMessage($sMessage);
-		}
+		_MaintenanceTextMessage($sMessage);
 	}
 }

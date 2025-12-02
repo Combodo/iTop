@@ -1,10 +1,14 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
+
+/**
+ * Spanish Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:RequestManagement' => 'Administración de Requerimientos',
 	'Menu:RequestManagement+' => 'Administración de Requerimientos',
 	'Menu:RequestManagementProvider' => 'Proveedor de Mesa de Ayuda',
@@ -35,8 +39,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Requerimientos Abiertos por Tipo',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requerimientos Abiertos por Cliente',
 	'Class:UserRequest:KnownErrorList' => 'Errores Conocidos',
-	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
-));
+	'Class:UserRequest:KnownErrorList+' => 'Errores conocidos relacionados con el EC funcional vinculado al ticket actual',
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -52,7 +56,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: UserRequest
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:UserRequest' => 'Requerimiento',
 	'Class:UserRequest+' => 'Requerimiento',
 	'Class:UserRequest/Attribute:status' => 'Estatus',
@@ -111,10 +115,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'Baja',
 	'Class:UserRequest/Attribute:origin' => 'Origen',
 	'Class:UserRequest/Attribute:origin+' => 'Origen',
-	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
-	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
-	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
-	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'En persona',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Requerimiento creado siguiendo una discusión cara a cara',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Requerimiento creado después de una discusión en chat',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'Correo-e',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'Correo-e',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoreo',
@@ -155,6 +159,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Attribute:tto+' => 'Tiempo de Asignación',
 	'Class:UserRequest/Attribute:ttr' => 'TDS - Tiempo de Solución',
 	'Class:UserRequest/Attribute:ttr+' => 'Tiempo de Solución',
+	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:UserRequest/Attribute:tto_time_spent+' => '~~',
+	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:UserRequest/Attribute:ttr_time_spent+' => '~~',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'Límite de Tiempo de Asignación',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => 'Límite de Tiempo de Asignación',
 	'Class:UserRequest/Attribute:sla_tto_passed' => 'SLA de Tiempo de Asignanción Cumplido',
@@ -204,7 +212,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Ref. Cambio',
 	'Class:UserRequest/Attribute:parent_change_ref+' => 'Ref. Cambio',
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Ref. Inciente Padre',
-	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => 'Ref. Inciente Padre',
 	'Class:UserRequest/Attribute:related_request_list' => 'Requerimientos Hijo',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Requerimientos Hijo',
 	'Class:UserRequest/Attribute:public_log' => 'Bitácora Pública',
@@ -250,11 +258,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'No puede asignarse el requerimiento Padre a si mismo',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Resolver tickets hijos',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
-));
+]);
 
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Organization:Overview:UserRequests' => 'Requerimientos para esta Organización',
 	'Organization:Overview:MyUserRequests' => 'Mis Requerimientos para esta Organización',
 	'Organization:Overview:Tickets' => 'Tickets para esta Organización',
-));
+]);

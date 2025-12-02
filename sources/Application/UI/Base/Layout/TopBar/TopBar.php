@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\TopBar;
-
 
 use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearch;
@@ -58,7 +58,10 @@ class TopBar extends UIBlock
 	 * @param \Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs|null $oBreadcrumbs
 	 */
 	public function __construct(
-		$sId = null, QuickCreate $oQuickCreate = null, GlobalSearch $oGlobalSearch = null, Breadcrumbs $oBreadcrumbs = null
+		$sId = null,
+		QuickCreate $oQuickCreate = null,
+		GlobalSearch $oGlobalSearch = null,
+		Breadcrumbs $oBreadcrumbs = null
 	) {
 		parent::__construct($sId);
 

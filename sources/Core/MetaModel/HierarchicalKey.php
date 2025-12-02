@@ -1,6 +1,7 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -17,8 +18,8 @@ use MetaModel;
  * @package Combodo\iTop\Core\MetaModel
  * @since 3.0.0 N°2527
  */
-class HierarchicalKey {
-
+class HierarchicalKey
+{
 	/**
 	 * Verify that an HK control information is correct
 	 * @param $sClass

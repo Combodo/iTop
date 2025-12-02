@@ -1,26 +1,17 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
 /**
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ *
  */
-// Portal
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Page:DefaultTitle' => '%1$s Gebruikersportaal',
 	'Page:PleaseWait' => 'Even geduld...',
 	'Page:Home' => 'Welkom',
@@ -64,18 +55,19 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'nl', //work with moment.js locales
-));
+]);
 
 // Object form
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Sluit dit item.',
 	'Portal:Form:Close:Warning' => 'Ben je zeker dat je dit venster wil sluiten? Ingevoerde gegevens kunnen verloren gaan.',
 	'Portal:Error:ObjectCannotBeCreated' => 'Fout: object kan niet worden aangemaakt. Kijk verwante objecten en bijlagen na vooraleer dit formulier opnieuw te versturen.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Fout: object kan niet worden aangepast. Kijk verwante objecten en bijlagen na vooraleer dit formulier opnieuw te versturen.',
-));
+	'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
+]);
 
 // UserProfile brick
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Brick:Portal:UserProfile:Name' => 'Gebruikersprofiel',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Mijn profiel',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Uitloggen',
@@ -86,15 +78,15 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Jouw wachtwoord kan niet gewijzigd worden. Neem contact op met de beheerder',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Persoonlijke informatie',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Foto',
-));
+]);
 
 // AggregatePageBrick
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard',
-));
+]);
 
 // BrowseBrick brick
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Brick:Portal:Browse:Name' => 'Bladeren',
 	'Brick:Portal:Browse:Mode:List' => 'Lijst',
 	'Brick:Portal:Browse:Mode:Tree' => 'Boomstructuur',
@@ -107,10 +99,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Toon alles',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Verberg alles',
 	'Brick:Portal:Browse:Filter:NoData' => 'Geen gegevens',
-));
+	'Brick:Portal:Browse:Mosaic:Back' => 'Terug',
+]);
 
 // ManageBrick brick
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Brick:Portal:Manage:Name' => 'Beheer items',
 	'Brick:Portal:Manage:Table:NoData' => 'Geen gegevens',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Acties',
@@ -125,33 +118,33 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Manage:fct:avg' => 'Gemiddelde',
 	'Brick:Portal:Manage:fct:min' => 'Min',
 	'Brick:Portal:Manage:fct:max' => 'Max',
-));
+]);
 
 // ObjectBrick brick
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Brick:Portal:Object:Name' => 'Object',
 	'Brick:Portal:Object:Form:Create:Title' => 'Nieuw %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Verwerken %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Verwerken %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Vul de volgende informatie in:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Opgeslagen',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s opgeslagen',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Geselecteerd %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecteer %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Geselecteerd %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecteer %1$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Kopieer link naar object',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Gekopieerd'
-));
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Gekopieerd',
+]);
 
 // CreateBrick brick
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Brick:Portal:Create:Name' => 'Snel aanmaken',
 	'Brick:Portal:Create:ChooseType' => 'Geef een type op.',
-));
+]);
 
 // Filter brick
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Brick:Portal:Filter:Name' => 'Voorfilteren van een bouwsteen',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'bv. wifi-verbinding',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Zoek',
-));
+]);

@@ -33,27 +33,20 @@ abstract class DataCollector implements DataCollectorInterface
      */
     protected $data = [];
 
-    /**
-     * @var ClonerInterface
-     */
-    private $cloner;
+    private ClonerInterface $cloner;
 
     /**
      * Converts the variable into a serializable Data instance.
      *
      * This array can be displayed in the template using
      * the VarDumper component.
-     *
-     * @param mixed $var
-     *
-     * @return Data
      */
-    protected function cloneVar($var)
+    protected function cloneVar(mixed $var): Data
     {
         if ($var instanceof Data) {
             return $var;
         }
-        if (null === $this->cloner) {
+        if (!isset($this->cloner)) {
             $this->cloner = new VarCloner();
             $this->cloner->setMaxItems(-1);
             $this->cloner->addCasters($this->getCasters());
@@ -70,9 +63,21 @@ abstract class DataCollector implements DataCollectorInterface
         $casters = [
             '*' => function ($v, array $a, Stub $s, $isNested) {
                 if (!$v instanceof Stub) {
+                    $b = $a;
                     foreach ($a as $k => $v) {
-                        if (\is_object($v) && !$v instanceof \DateTimeInterface && !$v instanceof Stub) {
-                            $a[$k] = new CutStub($v);
+                        if (!\is_object($v) || $v instanceof \DateTimeInterface || $v instanceof Stub) {
+                            continue;
+                        }
+
+                        try {
+                            $a[$k] = $s = new CutStub($v);
+
+                            if ($b[$k] === $s) {
+                                // we've hit a non-typed reference
+                                $a[$k] = $v;
+                            }
+                        } catch (\TypeError $e) {
+                            // we've hit a typed reference
                         }
                     }
                 }
@@ -84,14 +89,14 @@ abstract class DataCollector implements DataCollectorInterface
         return $casters;
     }
 
-    /**
-     * @return array
-     */
-    public function __sleep()
+    public function __sleep(): array
     {
         return ['data'];
     }
 
+    /**
+     * @return void
+     */
     public function __wakeup()
     {
     }
@@ -99,14 +104,22 @@ abstract class DataCollector implements DataCollectorInterface
     /**
      * @internal to prevent implementing \Serializable
      */
-    final protected function serialize()
+    final protected function serialize(): void
     {
     }
 
     /**
      * @internal to prevent implementing \Serializable
      */
-    final protected function unserialize($data)
+    final protected function unserialize(string $data): void
     {
+    }
+
+    /**
+     * @return void
+     */
+    public function reset()
+    {
+        $this->data = [];
     }
 }

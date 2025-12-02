@@ -1,26 +1,17 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @author	Erik Bøg <erik@boegmoeller.dk>
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+/**
+ * @author Erik Bøg <erik@boegmoeller.dk>
+ *
+ */
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:IncidentManagement' => 'Incident Management',
 	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Oversigt',
@@ -42,8 +33,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Åbne Incidents efter status',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Åbne Incidents efter tildelt til',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Åbne Incidents efter bruger',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -59,7 +49,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 // Class: Incident
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Status',
@@ -150,6 +140,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Incident/Attribute:tto+' => '',
 	'Class:Incident/Attribute:ttr' => 'TTR (Time To Resolve)',
 	'Class:Incident/Attribute:ttr+' => '',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'TTO-Deadline',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA TTO overskredet',
@@ -238,4 +232,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-));
+]);

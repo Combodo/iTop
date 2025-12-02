@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -68,7 +68,7 @@ $(function()
 				.after(this.inputToBeRemoved)
 				.after(this.indicator);
 
-			this.element.find('.selectList'+this.id).bind('change', function () {
+			this.element.find('.selectList'+this.id).on('change', function () {
 				me._updateButtons();
 			});
 
@@ -121,7 +121,7 @@ $(function()
 			/*
 			this.datatable.trigger("update").trigger("applyWidgets");
 			this.datatable.tableHover();*/
-			this.datatable.find('.selectList'+this.id).bind('change', function () {
+			this.datatable.find('.selectList'+this.id).on('change', function () {
 				me._updateButtons();
 			});
 
@@ -202,11 +202,11 @@ $(function()
 				me.oDlg = $('<div></div>');
 				$('body').append(me.oDlg);
 				me.oDlg.html(data);
-				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function () {
+				me.oDlg.find('form').removeAttr('onsubmit').on('submit', function () {
 					me._onSearchToAdd();
 					return false;
 				});
-				$('#SearchFormToAdd_'+me.id).resize(function () {
+				$('#SearchFormToAdd_'+me.id).on('resize', function () {
 					me._onSearchDlgUpdateSize();
 				});
 
@@ -249,7 +249,7 @@ $(function()
 				}
 				else
 				{
-					$('#count_'+me.id).change(function() {
+					$('#count_'+me.id).on('change', function() {
 						var c = this.value;
 						me._onUpdateDlgButtons(c);
 					});
@@ -298,7 +298,7 @@ $(function()
 			$.post(this.options.submit_to, oParams, function(data) {
 				
 				$('#SearchResultsToAdd_'+me.id).html(data);
-				$('#count_'+me.id).change(function() {
+				$('#count_'+me.id).on('change', function() {
 					var c = this.value;
 					me._onUpdateDlgButtons(c);
 				});
@@ -429,7 +429,7 @@ $(function()
 			me.oDlg.find('span.indicator').html('<img src="../images/indicator.gif">');
 			$.post(this.options.submit_to, oParams, function (data) {
 				me.oDlg.html(data);
-				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function () {
+				me.oDlg.find('form').removeAttr('onsubmit').on('submit', function () {
 					me._onCreateRow();
 					return false;
 				});

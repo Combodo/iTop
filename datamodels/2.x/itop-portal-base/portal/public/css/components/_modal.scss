@@ -1,0 +1,76 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-modal--max-height: 90vh !default;
+$ipb-modal--max-width: 90vw !default;
+$ipb-modal--border-radius: $common-border-radius-500 !default;
+
+$ipb-modal--header--padding: $common-spacing-500 !default;
+$ipb-modal--header--border-radius: $ipb-modal--border-radius $ipb-modal--border-radius 0 0 !default;
+
+$ipb-modal--footer-padding: $ipb-modal--header--padding !default;
+
+
+$ipb-modal--content--border-radius: $ipb-modal--border-radius !default;
+
+$ipb-modal--title--to-clipboard--margin: $common-spacing-200 !default;
+$ipb-modal--title--span--margin-left: 5px !default;
+$ipb-modal--title--span--separator--width: $common-size-100 !default;
+$ipb-modal--title--span--separator--height: $ipb-modal--title--span--separator--width !default;
+$ipb-modal--title--span--separator--margin-right: $common-spacing-200 !default;
+$ipb-modal--title--span--separator--margin-top: calc(-1 * #{$ipb-modal--title--span--separator--height} / 2) !default;
+$ipb-modal--title--span--separator--border-radius: $common-border-radius-full !default;
+
+
+
+.modal .modal-dialog{
+  display: flex;
+  flex-direction: column;
+  max-height: $ipb-modal--max-height !important;
+  max-width: $ipb-modal--max-width !important;
+  border-radius: $ipb-modal--border-radius;
+}
+
+
+.modal-content {
+  border-radius: $ipb-modal--content--border-radius !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+.modal-header {
+  padding: $ipb-modal--header--padding;
+  border-radius:$ipb-modal--header--border-radius !important;
+  .close {
+    @extend %common-font-size-400;
+  }
+}
+
+.modal-footer {
+  padding: $ipb-modal--footer-padding;
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+
+  span ~ span {
+    margin-left: $ipb-modal--title--span--margin-left;
+    &:before {
+      content: " ";
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: $ipb-modal--title--span--separator--margin-right;
+      margin-top: $ipb-modal--title--span--separator--margin-top;
+      width: $ipb-modal--title--span--separator--width;
+      height: $ipb-modal--title--span--separator--height;
+      border-radius: $ipb-modal--title--span--separator--border-radius;
+  }
+}
+  .url-to-clipboard.url-to-clipboard-icon {
+    margin-right: $ipb-modal--title--to-clipboard--margin;
+  }
+}

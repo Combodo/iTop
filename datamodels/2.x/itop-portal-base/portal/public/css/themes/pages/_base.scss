@@ -1,0 +1,13 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-body-text-color: $ipb-color-grey-900 !default;
+$ipb-body-background-color: $ipb-color-white-200 !default;
+
+body {
+  color: $ipb-body-text-color;
+  background-color: $ipb-body-background-color;
+}

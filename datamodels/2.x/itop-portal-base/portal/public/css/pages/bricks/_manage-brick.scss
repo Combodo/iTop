@@ -1,0 +1,87 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-manage-brick--panel--body--padding-y: $common-spacing-500 !default;
+$ipb-manage-brick--panel--body--padding-x: $common-spacing-0 !default;
+
+$ipb-manage-brick--panel--body--datatable--padding-y: $common-spacing-200 !default;
+$ipb-manage-brick--panel--body--datatable--padding-x: $common-spacing-0 !default;
+$ipb-manage-brick--panel--body--datatable--row--margin: $common-spacing-0 !default;
+$ipb-manage-brick--panel--body--datatable--row--padding-y: $common-spacing-0 !default;
+$ipb-manage-brick--panel--body--datatable--row--padding-x: $common-spacing-400 !default;
+
+
+$ipb-manage-brick--panel--body--table--margin-top: $common-spacing-500 !default;
+
+$ipb-manage-brick--no-result--illustration--width: 100% !default;
+$ipb-manage-brick--no-result--illustration--padding-y: $common-spacing-600 !default;
+$ipb-manage-brick--no-result--illustration--padding-x: $common-spacing-500 !default;
+$ipb-manage-brick--no-result--illustration--svg--max-width: $common-size-700 !default;
+
+
+.ipb-manage-brick--panel--body {
+  padding: $ipb-manage-brick--panel--body--padding-y $ipb-manage-brick--panel--body--padding-x 0 $ipb-manage-brick--panel--body--padding-x;
+  
+  > .dataTables_wrapper {
+    padding: $ipb-manage-brick--panel--body--datatable--padding-y $ipb-manage-brick--panel--body--datatable--padding-x;
+    > .row {
+      margin: $ipb-manage-brick--panel--body--datatable--row--margin;
+      > div {
+        padding: $ipb-manage-brick--panel--body--datatable--row--padding-y $ipb-manage-brick--panel--body--datatable--row--padding-x;
+      }
+    }
+  }
+
+
+}
+
+
+.ipb-manage-brick--panel--body--table  {
+  margin-top: $ipb-manage-brick--panel--body--table--margin-top !important;
+}
+
+
+
+.ipb-manage-brick--export-action--icon {
+  float: right;
+}
+
+.ipb-export--feedback {
+  display: flex;
+  flex-direction: column;
+}
+
+.ipb-export-message {
+  @extend %common-font-ral-med-150;
+  margin: $common-spacing-300 $common-spacing-0;
+}
+
+.ipb-export--illustration {
+  align-self: center;
+  margin: 24px 0;
+  max-width: $common-size-650;
+  max-height: $common-size-650;
+  > svg {
+    max-width: 100%;
+    height: 100%;
+  }
+}
+
+.ipb-manage-brick--no-result--illustration {
+  width: $ipb-manage-brick--no-result--illustration--width;
+  display: flex;
+  flex-direction: column;;
+  padding: $ipb-manage-brick--no-result--illustration--padding-y $ipb-manage-brick--no-result--illustration--padding-x;
+  > svg {
+    max-width: $ipb-manage-brick--no-result--illustration--svg--max-width;
+    height: inherit;
+    align-self: center;
+  }
+}
+
+.ipb-manage-brick--no-result--text {
+  @extend %common-font-ral-med-300;
+}

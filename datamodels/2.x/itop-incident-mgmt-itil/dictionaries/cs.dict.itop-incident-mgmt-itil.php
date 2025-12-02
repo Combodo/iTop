@@ -1,29 +1,18 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * Localized data.
+ * Localized data
  *
- * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
- * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+/**
+ * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
+ * @author Daniel Rokos <daniel.rokos@itopportal.cz>
+ *
+ */
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:IncidentManagement' => 'Správa incidentů',
 	'Menu:IncidentManagement+' => 'Správa incidentů',
 	'Menu:Incident:Overview' => 'Přehled',
@@ -45,8 +34,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Otevřené incidenty podle stavu',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Otevřené incidenty podle řešitele',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Otevřené incidenty podle zákazníka',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -62,7 +50,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 // Class: Incident
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Stav',
@@ -113,10 +101,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Incident/Attribute:urgency/Value:4+' => '',
 	'Class:Incident/Attribute:origin' => 'Původ',
 	'Class:Incident/Attribute:origin+' => '',
-	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
-	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
+	'Class:Incident/Attribute:origin/Value:in_person' => 'osobně',
+	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident vytvořený po osobní diskuzi',
 	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
-	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
+	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident vytvořený v návaznosti na chat',
 	'Class:Incident/Attribute:origin/Value:mail' => 'email',
 	'Class:Incident/Attribute:origin/Value:mail+' => '',
 	'Class:Incident/Attribute:origin/Value:monitoring' => 'monitoring',
@@ -153,6 +141,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Incident/Attribute:tto+' => '',
 	'Class:Incident/Attribute:ttr' => 'ttr',
 	'Class:Incident/Attribute:ttr+' => '',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'Požadovaný čas přidělení',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '',
 	'Class:Incident/Attribute:sla_tto_passed' => 'TTO vypršel',
@@ -239,6 +231,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Incident nemůže být nadřazený sám sobě',
 	'Class:Incident/Method:ResolveChildTickets' => 'Vyřešit podřízené tikety',
-	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Kaskádovat vyřešení do podřízeného tiketu (ev_autoresolve) a sjednotit následující vlastnosti: služba, tým, řešitel, informace o vyřešení',
 	'Tickets:Related:OpenIncidents' => 'Otevřené incidenty',
-));
+]);

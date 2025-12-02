@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="Change" _delta="define">
       <parent>Ticket</parent>
@@ -7,7 +7,7 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
         <category>bizmodel,searchable,changemgmt</category>
@@ -380,7 +380,6 @@
               </attribute>
               <attribute id="private_log">
                 <read_only/>
-                <read_only/>
               </attribute>
               <attribute id="caller_id">
                 <read_only/>
@@ -534,48 +533,6 @@
                 return 'C-%06d';
         }
         ]]></code>
-        </method>
-        <method id="SetApprovalDate">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetApprovalDate($sStimulusCode)
-	{
-		$this->Set('approval_date', time());
-		return true;
-	}]]></code>
-        </method>
-        <method id="ResetRejectReason">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function ResetRejectReason($sStimulusCode)
-	{
-		$this->Set('reject_reason', '');
-		return true;
-	}]]></code>
-        </method>
-        <method id="SetClosureDate">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetClosureDate($sStimulusCode)
-	{
-		$this->Set('close_date', time());
-		return true;
-	}]]></code>
         </method>
         <method id="OnInsert">
           <static>false</static>
@@ -876,7 +833,6 @@
     <menu id="Change:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
       <rank>3</rank>
       <parent>ChangeManagement</parent>
-      <template_file/>
     </menu>
     <menu id="MyChanges" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>
@@ -919,7 +875,7 @@
                                           AND (C.id != :this->id)
                                         ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt/images/change-ongoing.svg</icon>
                   <default>yes</default>
                 </item>
                 <item id="recent_changes" _delta="define">
@@ -935,7 +891,7 @@
                                           AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                                         ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
+                  <icon>itop-change-mgmt/images/change-done.svg</icon>
                   <default>no</default>
                 </item>
               </items>
@@ -958,7 +914,7 @@
                                           AND (C.id != :this->id)
                                         ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt/images/change-ongoing.svg</icon>
                   <default>yes</default>
                 </item>
                 <item id="recent_changes" _delta="define">
@@ -974,7 +930,7 @@
                                           AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                                         ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
+                  <icon>itop-change-mgmt/images/change-done.svg</icon>
                   <default>no</default>
                 </item>
               </items>
@@ -997,7 +953,7 @@
                                           AND (C.id != :this->id)
                                         ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt/images/change-ongoing.svg</icon>
                   <default>yes</default>
                 </item>
                 <item id="recent_changes" _delta="define">
@@ -1013,7 +969,7 @@
                                           AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                                         ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
+                  <icon>itop-change-mgmt/images/change-done.svg</icon>
                   <default>no</default>
                 </item>
               </items>
@@ -1039,7 +995,7 @@
                                           AND (L.impact_code != 'not_impacted')
                                         ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt/images/change-ongoing.svg</icon>
                   <default>yes</default>
                 </item>
                 <item id="recent_changes" _delta="define">
@@ -1054,7 +1010,7 @@
                                           AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                                         ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
+                  <icon>itop-change-mgmt/images/change-done.svg</icon>
                   <default>no</default>
                 </item>
               </items>
@@ -1072,7 +1028,7 @@
                                           AND (L.impact_code != 'not_impacted')
                                         ]]></oql>
                   <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                  <icon>itop-change-mgmt/images/change-ongoing.svg</icon>
                   <default>yes</default>
                 </item>
                 <item id="recent_changes" _delta="define">
@@ -1087,7 +1043,7 @@
                                           AND (C.end_date < NOW() AND C.end_date > DATE_SUB(NOW(), INTERVAL 3 DAY ))
                                         ]]></oql>
                   <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
+                  <icon>itop-change-mgmt/images/change-done.svg</icon>
                   <default>no</default>
                 </item>
               </items>

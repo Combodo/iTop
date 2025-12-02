@@ -1,11 +1,11 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\ButtonGroup;
-
 
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
@@ -38,14 +38,8 @@ class ButtonGroup extends UIBlock
 	/**
 	 * Button constructor.
 	 *
-	 * @param string $sLabel
+	 * @param array $aButtons
 	 * @param string|null $sId
-	 * @param string $sTooltip
-	 * @param string $sIconClass
-	 * @param string $sActionType
-	 * @param string $sColor
-	 * @param string $sJsCode
-	 * @param string $sOnClickJsCode
 	 */
 	public function __construct(array $aButtons = [], ?string $sId = null)
 	{

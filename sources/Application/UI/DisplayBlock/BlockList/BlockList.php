@@ -1,11 +1,11 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\DisplayBlock\BlockList;
-
 
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
@@ -53,7 +53,7 @@ class BlockList extends UIContentBlock
 	{
 		return '$("#'.$this->sId.'").block();
 			$.post("ajax.render.php?operation=refreshDashletList",
-			{ style: "list", filter: "'.$this->sFilter.'", extra_params: '.json_encode($this->aExtraParams).' },
+			{ style: "list", filter: '.json_encode($this->sFilter).', extra_params: '.json_encode($this->aExtraParams).' },
 			function(data){
 				$("#'.$this->sId.'")
 				.empty()

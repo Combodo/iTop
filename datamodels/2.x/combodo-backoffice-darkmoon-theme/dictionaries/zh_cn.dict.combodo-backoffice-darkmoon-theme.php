@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -20,6 +21,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'theme:darkmoon' => 'Dark moon~~',
-));
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'theme:darkmoon' => '暗月',
+]);

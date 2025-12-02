@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -32,7 +33,8 @@ class CompileCSSService
 	{
 	}
 
-	public function CompileCSSFromSASS($sSassContent, $aImportPaths =  [], $aVariables = []){
+	public function CompileCSSFromSASS($sSassContent, $aImportPaths =  [], $aVariables = [])
+	{
 		return utils::CompileCSSFromSASS($sSassContent, $aImportPaths, $aVariables);
 	}
 }

@@ -1,9 +1,10 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,13 +17,17 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+namespace Combodo\iTop\Application\WebPage;
+
+use DBSearch;
+use ExecutionKPI;
+
 /**
  * Class XMLPage
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 /**
  * Simple web page with no includes or fancy formatting, useful to generateXML documents
@@ -33,10 +38,10 @@ class XMLPage extends WebPage
 	/**
 	 * For big XML files, it's better NOT to store everything in memory and output the XML piece by piece
 	 */
-	var $m_bPassThrough;
-	var $m_bHeaderSent;
-	
-	function __construct($s_title, $bPassThrough = false)
+	public $m_bPassThrough;
+	public $m_bHeaderSent;
+
+	public function __construct($s_title, $bPassThrough = false)
 	{
 		$oKpi = new ExecutionKPI();
 		parent::__construct($s_title);
@@ -44,15 +49,23 @@ class XMLPage extends WebPage
 		$this->m_bHeaderSent = false;
 		$this->add_header("Content-type: text/xml; charset=".self::PAGES_CHARSET);
 		$this->no_cache();
-		$this->add_xframe_options();
+		$this->add_http_headers();
 		$this->add_header("Content-location: export.xml");
 		$oKpi->ComputeStats(get_class($this).' creation', 'XMLPage');
-	}	
+	}
 
+	/**
+	 * Disabling sending the header so that resource won't be blocked by CORB. See parent method documentation.
+	 * @return void
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 N°4368 method creation
+	 */
+	public function add_xcontent_type_options()
+	{
+		// Nothing to do !
+	}
 	public function output()
 	{
-		if (!$this->m_bPassThrough)
-		{
+		if (!$this->m_bPassThrough) {
 			$oKpi = new ExecutionKPI();
 
 			// Get the unexpected output but do nothing with it
@@ -61,8 +74,7 @@ class XMLPage extends WebPage
 			$sCharset = self::PAGES_CHARSET;
 			$this->s_content = "<?xml version=\"1.0\" encoding=\"$sCharset\"?".">\n".trim($this->s_content);
 			$this->add_header("Content-Length: ".strlen($this->s_content));
-			foreach($this->a_headers as $s_header)
-			{
+			foreach ($this->a_headers as $s_header) {
 				header($s_header);
 			}
 			$oKpi->ComputeAndReport(get_class($this).' output');
@@ -82,12 +94,9 @@ class XMLPage extends WebPage
 		} else {
 			if ($this->m_bHeaderSent) {
 				echo $sText;
-			}
-			else
-			{
+			} else {
 				$s_captured_output = $this->ob_get_clean_safe();
-				foreach($this->a_headers as $s_header)
-				{
+				foreach ($this->a_headers as $s_header) {
 					header($s_header);
 				}
 				$sCharset = self::PAGES_CHARSET;
@@ -104,7 +113,7 @@ class XMLPage extends WebPage
 	{
 	}
 
-	public function table($aConfig, $aData, $aParams = array())
+	public function table($aConfig, $aData, $aParams = [])
 	{
 	}
 }

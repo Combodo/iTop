@@ -1,12 +1,11 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Application\UI\Base\Component\Input;
-
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
@@ -78,10 +77,12 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\InputWithLabel
 	 */
 	public static function MakeForInputWithLabel(
-		string $sLabel, string $sInputName, ?string $sInputValue = null,
-		?string $sInputId = null, string $sInputType = 'type'
-	)
-	{
+		string $sLabel,
+		string $sInputName,
+		?string $sInputValue = null,
+		?string $sInputId = null,
+		string $sInputType = 'type'
+	) {
 		$oInput = new Input($sInputId);
 		$oInput->SetType($sInputType);
 		$oInput->SetValue($sInputValue);
@@ -95,10 +96,11 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sLabel
 	 * @param \Combodo\iTop\Application\UI\Base\Component\Input\Input $oInput
 	 * @param string|null $sId
+	 * @since 3.2.0 method is now public
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\InputWithLabel
 	 */
-	private static function MakeInputWithLabel(string $sName, string $sLabel, Input $oInput, ?string $sId = null)
+	public static function MakeInputWithLabel(string $sName, string $sLabel, Input $oInput, ?string $sId = null)
 	{
 		$oInput->SetName($sName);
 

@@ -1,11 +1,11 @@
-{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
 
 $('#dlg_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }}').dialog({
     width: $(window).width()*0.8,
     height: $(window).height()*0.8,
-    title:"{{ 'UI:AddObjectsOf_Class_LinkedWith_Class'|dict_format(oUIBlock.oUILinksWidget.GetLinkedClass(), oUIBlock.oUILinksWidget.GetClass()) }}" ,
+    title:"{{ 'UI:AddObjectsOf_Class_LinkedWith_Class'|dict_format(oUIBlock.oUILinksWidget.GetLinkedClassLabel(), oUIBlock.oUILinksWidget.GetClassLabel()) }}" ,
     autoOpen: false,
     modal: true,
     resizeStop: oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.UpdateSizes,
@@ -29,7 +29,7 @@ $('#dlg_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }}').dialog({
 
 });
 
-$('#SearchFormToAdd_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }} form').bind('submit.uilinksWizard', oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.SearchObjectsToAdd);
-$('#SearchFormToAdd_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }}').resize(oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.UpdateSizes);
+$('#SearchFormToAdd_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }} form').on('submit.uilinksWizard', oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.SearchObjectsToAdd);
+$('#SearchFormToAdd_{{ oUIBlock.oUILinksWidget.GetLinkedSetId() }}').on('resize', oWidget{{ oUIBlock.oUILinksWidget.GetInputId() }}.UpdateSizes);
 
 {% endapply %}

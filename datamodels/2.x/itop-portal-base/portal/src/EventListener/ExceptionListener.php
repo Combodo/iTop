@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -18,19 +18,16 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-
 namespace Combodo\iTop\Portal\EventListener;
-
 
 use Dict;
 use ExceptionLog;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Twig\Environment;
 
 /**
  * Class ExceptionListener
@@ -39,19 +36,26 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
  * @package Combodo\iTop\Portal\EventListener
  * @since 2.7.0
  */
-class ExceptionListener implements ContainerAwareInterface
+class ExceptionListener
 {
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $container */
-	private $oContainer;
+	/**
+	 * Constructor.
+	 *
+	 * @param \Twig\Environment $oTwig
+	 */
+	public function __construct(
+		protected Environment $oTwig
+	) {
+	}
 
 	/**
-	 * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $oEvent
+	 * @param ExceptionEvent $oEvent
 	 *
 	 * @throws \Twig\Error\LoaderError
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public function onKernelException(ExceptionEvent $oEvent)
+	public function onKernelException(ExceptionEvent $oEvent): void
 	{
 		// Get the exception object from the received event
 		$oException = $oEvent->getThrowable();
@@ -79,13 +83,11 @@ class ExceptionListener implements ContainerAwareInterface
 		// Prepare flatten exception
 		$oFlattenException = ($_SERVER['APP_DEBUG'] == 1) ? FlattenException::createFromThrowable($oException) : null;
 		// Remove APPROOT from file paths if in production (SF context)
-		if (!is_null($oFlattenException) && ($_SERVER['APP_ENV'] === 'prod'))
-		{
+		if (!is_null($oFlattenException) && ($_SERVER['APP_ENV'] === 'prod')) {
 			$oFlattenException->setFile($this->removeAppRootFromPath($oFlattenException->getFile()));
 
 			$aTrace = $oFlattenException->getTrace();
-			foreach ($aTrace as $iIdx => $aEntry)
-			{
+			foreach ($aTrace as $iIdx => $aEntry) {
 				$aTrace[$iIdx]['file'] = $this->removeAppRootFromPath($aEntry['file']);
 			}
 			$oFlattenException->setTrace($aTrace, $oFlattenException->getFile(), $oFlattenException->getLine());
@@ -97,22 +99,19 @@ class ExceptionListener implements ContainerAwareInterface
 		]);
 
 		// Prepare data for template
-		$aData = array(
+		$aData = [
 			'exception'     => $oFlattenException,
 			'code'          => $iStatusCode,
 			'error_title'   => $sErrorTitle,
 			'error_message' => $sErrorMessage,
-		);
+		];
 
 		// Generate the response
-		if ($oEvent->getRequest()->isXmlHttpRequest())
-		{
+		if ($oEvent->getRequest()->isXmlHttpRequest()) {
 			$oResponse = new JsonResponse($aData);
-		}
-		else
-		{
+		} else {
 			$oResponse = new Response();
-			$oResponse->setContent($this->oContainer->get('twig')->render('itop-portal-base/portal/templates/errors/layout.html.twig', $aData));
+			$oResponse->setContent($this->oTwig->render('itop-portal-base/portal/templates/errors/layout.html.twig', $aData));
 		}
 		$oResponse->setStatusCode($iStatusCode);
 
@@ -156,11 +155,4 @@ class ExceptionListener implements ContainerAwareInterface
 		return str_replace($sNormalizedAppRoot, '', $sNormalizedInputPath);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function setContainer(ContainerInterface $oContainer = null)
-	{
-		$this->oContainer = $oContainer;
-	}
 }

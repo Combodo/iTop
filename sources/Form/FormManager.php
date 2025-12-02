@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,6 +21,7 @@
 namespace Combodo\iTop\Form;
 
 use Combodo\iTop\Renderer\FormRenderer;
+use CoreException;
 
 /**
  * Description of formmanager
@@ -30,7 +31,7 @@ use Combodo\iTop\Renderer\FormRenderer;
  */
 abstract class FormManager
 {
-    /** @var \Combodo\iTop\Form\Form $oForm */
+	/** @var \Combodo\iTop\Form\Form $oForm */
 	protected $oForm;
 	/** @var \Combodo\iTop\Renderer\FormRenderer $oRenderer */
 	protected $oRenderer;
@@ -44,21 +45,23 @@ abstract class FormManager
 	 *
 	 * @return $this
 	 */
-	static function FromJSON($sJson)
+	public static function FromJSON($sJson)
 	{
 		// Overload in child class when needed
-		if (is_array($sJson))
-		{
+		if (is_array($sJson)) {
 			$aJson = $sJson;
-		}
-		else
-		{
+		} else {
 			$aJson = json_decode($sJson, true);
 		}
 
 		$oFormManager = new static();
 
 		$sFormRendererClass = $aJson['formrenderer_class'];
+		// N°7455 - Ensure form renderer class extends FormRenderer
+		if (false === is_a($sFormRendererClass, FormRenderer::class, true)) {
+			throw new CoreException('Form renderer class must extend '.FormRenderer::class);
+		}
+
 		/** @var \Combodo\iTop\Renderer\FormRenderer $oFormRenderer */
 		$oFormRenderer = new $sFormRendererClass();
 		$oFormRenderer->SetEndpoint($aJson['formrenderer_endpoint']);
@@ -140,13 +143,13 @@ abstract class FormManager
 	public function ToJSON()
 	{
 		// Overload in child class when needed
-		return array(
+		return [
 			'id' => $this->oForm->GetId(),
 			'transaction_id' => $this->oForm->GetTransactionId(),
 			'formmanager_class' => $this->GetClass(),
 			'formrenderer_class' => get_class($this->GetRenderer()),
-			'formrenderer_endpoint' => $this->GetRenderer()->GetEndpoint()
-		);
+			'formrenderer_endpoint' => $this->GetRenderer()->GetEndpoint(),
+		];
 	}
 
 	abstract public function Build();
@@ -167,14 +170,14 @@ abstract class FormManager
 	 */
 	public function OnSubmit($aArgs = null)
 	{
-		$aData = array(
+		$aData = [
 			'valid' => true,
-			'messages' => array(
-				'success' => array(),
-				'warnings' => array(), // Not used as of today, just to show that the structure is ready for change like this.
-				'error' => array(),
-			),
-		);
+			'messages' => [
+				'success' => [],
+				'warnings' => [], // Not used as of today, just to show that the structure is ready for change like this.
+				'error' => [],
+			],
+		];
 
 		$this->CheckTransaction($aData);
 
@@ -191,7 +194,7 @@ abstract class FormManager
 		$isTransactionValid = \utils::IsTransactionValid($this->oForm->GetTransactionId(), false); //The transaction token is kept in order to preserve BC with ajax forms (the second call would fail if the token is deleted). (The GC will take care of cleaning the token for us later on)
 		if (!$isTransactionValid) {
 			$aData['messages']['error'] += [
-				'_main' => [\Dict::S('UI:Error:InvalidToken')] //This message is generic, if you override this method you should use a more precise message. @see \Combodo\iTop\Portal\Form\ObjectFormManager::CheckTransaction
+				'_main' => [\Dict::S('UI:Error:InvalidToken')], //This message is generic, if you override this method you should use a more precise message. @see \Combodo\iTop\Portal\Form\ObjectFormManager::CheckTransaction
 			];
 			$aData['valid'] = false;
 		}

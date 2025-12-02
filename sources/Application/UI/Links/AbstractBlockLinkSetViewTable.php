@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -21,7 +22,7 @@ use MetaModel;
 use MySQLException;
 use UserRights;
 use Utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Class AbstractBlockLinkSetViewTable
@@ -70,6 +71,9 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	/** @var AttributeLinkedSet $oAttDef attribute link set */
 	protected AttributeLinkedSet $oAttDef;
 
+	/** @var bool $bIsAttEditable Is attribute editable */
+	protected bool $bIsAttEditable;
+
 	/** @var string $sTargetClass links target classname */
 	protected string $sTargetClass;
 
@@ -79,6 +83,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	protected bool $bIsAllowCreate;
 	protected bool $bIsAllowModify;
 	protected bool $bIsAllowDelete;
+	protected int $iCount;
 
 	/**
 	 * Constructor.
@@ -88,11 +93,11 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 * @param string $sObjectClass
 	 * @param string $sAttCode
 	 * @param AttributeLinkedSet $oAttDef
+	 * @param bool $bIsReadOnly
 	 *
-	 * @throws CoreException
-	 * @throws Exception
+	 * @throws \CoreException
 	 */
-	public function __construct(WebPage $oPage, DBObject $oDbObject, string $sObjectClass, string $sAttCode, AttributeLinkedSet $oAttDef)
+	public function __construct(WebPage $oPage, DBObject $oDbObject, string $sObjectClass, string $sAttCode, AttributeLinkedSet $oAttDef, bool $bIsReadOnly = false, ?int $iCount = null)
 	{
 		parent::__construct("links_view_table_$sAttCode", ["ibo-block-links-table"]);
 
@@ -102,6 +107,8 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 		$this->sObjectClass = $sObjectClass;
 		$this->oDbObject = $oDbObject;
 		$this->sTableId = 'rel_'.$this->sAttCode;
+		$this->bIsAttEditable = !$bIsReadOnly;
+		$this->iCount = $iCount;
 		$this->SetDataAttributes(['role' => 'ibo-block-links-table', 'link-attcode' => $sAttCode, 'link-class' => $this->oAttDef->GetLinkedClass()]);
 		// Initialization
 		$this->Init();
@@ -121,11 +128,10 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 		$this->sTargetClass = $this->GetTargetClass();
 
 		// User rights
-		$this->bIsAllowCreate = UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES;
-		$this->bIsAllowModify = UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES;
-		$this->bIsAllowDelete = UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES;
+		$this->bIsAllowCreate = $this->bIsAttEditable && UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES;
+		$this->bIsAllowModify = $this->bIsAttEditable && UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES;
+		$this->bIsAllowDelete = $this->bIsAttEditable && UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES;
 	}
-
 
 	/**
 	 * @param string $sKey
@@ -137,12 +143,16 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 */
 	public function GetDictionaryEntry(string $sKey, DBObject $oDBObject = null)
 	{
-		return $this->oAttDef->SearchSpecificLabel($sKey, '', true,
+		return $this->oAttDef->SearchSpecificLabel(
+			$sKey,
+			'',
+			true,
 			MetaModel::GetName($this->sObjectClass),
 			$this->oDbObject->Get('friendlyname'),
 			$this->oAttDef->GetLabel(),
 			MetaModel::GetName($this->sTargetClass),
-			$oDBObject !== null ? $oDBObject->Get('friendlyname') : '{item}');
+			$oDBObject !== null ? $oDBObject->Get('friendlyname') : '{item}'
+		);
 	}
 
 	/**
@@ -191,9 +201,13 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 		$oOrmLinkSet = $this->oDbObject->Get($this->sAttCode);
 		$oLinkSet = $oOrmLinkSet->ToDBObjectSet(utils::ShowObsoleteData());
 
+		$aExtraParams = $this->GetExtraParam();
+		if (is_null($this->iCount) === false) {
+			$aExtraParams['object_count' ] = $this->iCount;
+		}
 		// add list block
-		$oBlock = new DisplayBlock($oLinkSet->GetFilter(), 'listInObject', false);
-		$this->AddSubBlock($oBlock->GetRenderContent($oPage, $this->GetExtraParam(), $this->sTableId));
+		$oBlock = new DisplayBlock($oLinkSet->GetFilter(), DisplayBlock::ENUM_STYLE_LIST_IN_OBJECT, false);
+		$this->AddSubBlock($oBlock->GetRenderContent($oPage, $aExtraParams, $this->sTableId));
 	}
 
 	/**
@@ -227,7 +241,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 * @throws ArchivedObjectException
 	 * @throws CoreException
 	 */
-	abstract function GetExtraParam(): array;
+	abstract public function GetExtraParam(): array;
 
 	/**
 	 * Return row actions.
@@ -238,7 +252,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 *
 	 * @return string[][]
 	 */
-	abstract function GetRowActions(): array;
+	abstract public function GetRowActions(): array;
 
 	/**
 	 * GetTargetClass.
@@ -248,8 +262,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 * @return string
 	 * @throws Exception
 	 */
-	abstract function GetTargetClass(): string;
-
+	abstract public function GetTargetClass(): string;
 
 	/**
 	 * GetAttCode.

@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -186,6 +186,11 @@ $(function () {
 					var sSortDirection = 'asc';
 					var oColumns = $('#datatable_dlg_'+this.options.sListId).find(':itop-fieldsorter').fieldsorter('get_params');
 					var iPageSize = parseInt($('#datatable_dlg_'+this.options.sListId+' input[name="page_size"]').val(), 10);
+					// Fallback to default page size in case of invalid number
+					if (isNaN(iPageSize) || iPageSize <= 0) {
+						iPageSize = this.options.oDefaultSettings.iDefaultPageSize;
+						$('#datatable_dlg_'+this.options.sListId+' input[name="page_size"]').val(iPageSize);
+					}
 
 					oOptions = {oColumns: oColumns, iPageSize: iPageSize, iDefaultPageSize: iPageSize };
 				}

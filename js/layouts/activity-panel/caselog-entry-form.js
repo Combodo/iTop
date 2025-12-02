@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -57,6 +57,7 @@ $(function() {
 			
 			// the constructor
 			_create: function () {
+				const me = this;
 				const aMandatoryOptions = ['object_class', 'object_id', 'attribute_code'];
 				for (let sOption of aMandatoryOptions) {
 					if (null === this.options[sOption]) {
@@ -66,50 +67,50 @@ $(function() {
 					}
 				}
 
-				this._UpdateState();
-				if (this._IsSubmitAutonomous()) {
-					this._ShowMainActions();
-				} else {
-					this._AddBridgeInput();
-					this._HideMainActions();
-				}
-
-				this._bindEvents();
-
-				this.element.trigger('ready.caselog_entry_form.itop');
-			},
-			_bindEvents: function() {
-				let me = this;
-
-				// Handlers for the CKEditor itself
-				CKEDITOR.on('instanceReady', function (oEvent) {
-					// Handle only the current CKEditor instance
-					if (oEvent.editor.name !== me.options.text_input_id) {
-						return;
+				// Ensure the CKEditor instance is ready before proceding
+				this._GetCKEditorInstance(true).then((oCKEditorInstance) => {
+					me._UpdateState();
+					if (me._IsSubmitAutonomous()) {
+						me._ShowMainActions();
+					} else {
+						me._AddBridgeInput();
+						me._HideMainActions();
 					}
 
-					// Update depending elements on change
-					// Note: That when images are uploaded, the "change" event is triggered before the image upload is complete, meaning that we don't have the <img> tag yet.
-					me._GetCKEditorInstance().on('change', function () {
-						const bWasDraftBefore = me.is_draft;
-						const bIsDraftNow = !me._IsInputEmpty();
+					me._bindEvents();
 
-						if (bWasDraftBefore !== bIsDraftNow) {
-							me.is_draft = bIsDraftNow;
-							me._UpdateEditingVisualHint();
-							// Note: We must not call me._UpdateSubmitButtonState() as it will be updated by the disable_submission/enable_submission events
-						}
-					});
+					me.element.trigger('ready.caselog_entry_form.itop');
+				});
+			},
+			_bindEvents: function () {
+				let me = this;
+				let CKEditorInstance = this._GetCKEditorInstance();
+				// Handlers for the CKEditor itself
+				// Handle only the current CKEditor instance
+				// if (oEvent.editor.name !== me.options.text_input_id) {
+				// 	return;
+				// }
 
-					// Dispatch submission to the right pipeline on submit
-					$(me.element).on('submit', function (oSubmitEvent) {
-						oSubmitEvent.preventDefault();
-						if (me._IsSubmitAutonomous()) {
-							me._RequestSubmission();
-						} else {
-							me._GetGeneralFormElement().trigger('submit');
-						}
-					});
+				// Update depending elements on change
+				// Note: That when images are uploaded, the "change" event is triggered before the image upload is complete, meaning that we don't have the <img> tag yet.
+				CKEditorInstance.model.document.on('change:data', async function () {
+					const bWasDraftBefore = me.is_draft;
+					const bIsDraftNow = !(me._IsInputEmpty());
+					if (bWasDraftBefore !== bIsDraftNow) {
+						me.is_draft = bIsDraftNow;
+						me._UpdateEditingVisualHint();
+						// Note: We must not call me._UpdateSubmitButtonState() as it will be updated by the disable_submission/enable_submission events
+					}
+				});
+
+				// Dispatch submission to the right pipeline on submit
+				$(me.element).on('submit', function (oSubmitEvent) {
+					oSubmitEvent.preventDefault();
+					if (me._IsSubmitAutonomous()) {
+						me._RequestSubmission();
+					} else {
+						me._GetGeneralFormElement().trigger('submit');
+					}
 				});
 
 				if (false === this._IsSubmitAutonomous()) {
@@ -178,7 +179,7 @@ $(function() {
 				});
 				// Set focus in the input
 				this.element.on('set_focus.caselog_entry_form.itop', function () {
-					me._GetCKEditorInstance().focus();
+					CKEditorInstance.focus();
 				});
 			},
 
@@ -201,8 +202,8 @@ $(function() {
 				this.element.trigger('requested_submission.caselog_entry_form.itop', oData);
 			},
 			// - Form
-			_GetCKEditorInstance: function () {
-				return CKEDITOR.instances[this.options.text_input_id];
+			_GetCKEditorInstance: function (bAsync = false) {
+				return bAsync ? CombodoCKEditorHandler.GetInstance('#'+this.options.text_input_id) : CombodoCKEditorHandler.GetInstanceSynchronous('#'+this.options.text_input_id);
 			},
 			_ShowEntryForm: function () {
 				this.element.closest(this.js_selectors.activity_panel).find(this.js_selectors.form).removeClass(this.css_classes.is_closed);
@@ -219,12 +220,12 @@ $(function() {
 				this.element.find(this.js_selectors.save_button+', '+this.js_selectors.save_choices_picker).prop('disabled', false);
 			},
 			_EnterPendingSubmissionState: function () {
-				this._GetCKEditorInstance().setReadOnly(true);
+				this._GetCKEditorInstance().enableReadOnlyMode('hi');
 				this.element.find(this.js_selectors.cancel_button).prop('disabled', true);
 				this._DisableSubmission();
 			},
 			_LeavePendingSubmissionState: function () {
-				this._GetCKEditorInstance().setReadOnly(false);
+				this._GetCKEditorInstance().disableReadOnlyMode('hi');
 				this.element.find(this.js_selectors.cancel_button).prop('disabled', false);
 				this._EnableSubmission();
 			},
@@ -275,7 +276,7 @@ $(function() {
 			 * @returns {void}
 			 * @private
 			 */
-			_UpdateBridgeInput: function() {
+			_UpdateBridgeInput: function () {
 				const sCaseLogAttCode = this.element.closest(this.js_selectors.activity_panel_toolbar).attr('data-caselog-attribute-code');
 				let oBridgeInputElem = this._GetGeneralFormElement().find('input[name="attr_'+sCaseLogAttCode+'"]');
 
@@ -290,11 +291,13 @@ $(function() {
 			 * @returns {boolean} True if the input has no text
 			 * @private
 			 */
-			_IsInputEmpty: function() {
-				return this._GetInputData() === '';
+			_IsInputEmpty: function () {
+				let sCKEditorValue = this._GetInputData();
+				return sCKEditorValue === '';
 			},
-			_GetInputData: function() {
-				return (this._GetCKEditorInstance() === undefined) ? '' : this._GetCKEditorInstance().getData();
+			_GetInputData: function () {
+				let oCKEditorInstance = this._GetCKEditorInstance()
+				return (oCKEditorInstance === undefined) ? '' : oCKEditorInstance.getData();
 			},
 			_GetExtraInputs: function() {
 				let aExtraInputs = {};
@@ -335,9 +338,9 @@ $(function() {
 					this._EnableSubmission();
 				}
 			},
-			_UpdateEditingVisualHint: function() {
+			_UpdateEditingVisualHint: function () {
 				const sEvent = this._IsInputEmpty() ? 'emptied' : 'draft';
-				this.element.trigger(sEvent + '.caselog_entry_form.itop', {attribute_code: this.options.attribute_code});
+				this.element.trigger(sEvent+'.caselog_entry_form.itop', {attribute_code: this.options.attribute_code});
 			}
 		});
 });

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -24,7 +25,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-core-update/3.2.0',
+	'itop-core-update/3.3.0',
 	[
 		// Identification
 		//
@@ -34,8 +35,8 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => [
-            'itop-files-information/2.7.0',
-            'combodo-db-tools/2.7.0',
+			'itop-files-information/2.7.0',
+			'combodo-db-tools/2.7.0',
 		],
 		'mandatory' => false,
 		'visible' => true,

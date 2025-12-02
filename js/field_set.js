@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -53,16 +53,16 @@ $(function()
 			.addClass('field_set');
 			
 			this.element
-			.bind('field_change', function(oEvent, oData){
+			.on('field_change', function(oEvent, oData){
 				me._onFieldChange(oEvent, oData);
 			})
-			.bind('update_form', function(oEvent, oData){
+			.on('update_form', function(oEvent, oData){
 				me._onUpdateForm(oEvent, oData);
 			})
-			.bind('get_current_values', function(oEvent, oData){
+			.on('get_current_values', function(oEvent, oData){
 				return me._onGetCurrentValues(oEvent, oData);
 			})
-			.bind('validate', function(oEvent, oData){
+			.on('validate', function(oEvent, oData){
 				if (oData === undefined)
 				{
 					oData = {};

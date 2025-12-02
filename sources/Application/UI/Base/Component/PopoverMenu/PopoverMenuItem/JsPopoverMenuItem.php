@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,7 +20,6 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem;
 
-
 use JSPopupMenuItem;
 
 /**
@@ -27,7 +27,7 @@ use JSPopupMenuItem;
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem
- * @property \JSPopupMenuItem $oPopupMenuItem 
+ * @property \JSPopupMenuItem $oPopupMenuItem
  * @since 3.0.0
  */
 class JsPopoverMenuItem extends PopoverMenuItem

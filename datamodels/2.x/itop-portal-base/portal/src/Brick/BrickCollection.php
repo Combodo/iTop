@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,6 +20,7 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
 use DOMFormatException;
 use Exception;
 use UserRights;
@@ -52,17 +54,22 @@ class BrickCollection
 	 * BrickCollection constructor.
 	 *
 	 * @param \ModuleDesign $oModuleDesign
+	 * @param \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService $oTemplatesProviderService
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 3.2.1 Added $oTemplatesProviderService parameter
+	 * Important: The service is not directly used, but the injection ensure that the service is initialized.
+	 * Bricks may need to use the service to get the templates.
 	 */
-	public function __construct(ModuleDesign $oModuleDesign)
+	public function __construct(ModuleDesign $oModuleDesign, TemplatesProviderService $oTemplatesProviderService)
 	{
 		$this->oModuleDesign = $oModuleDesign;
 		$this->aAllowedBricks = null;
 		$this->iDisplayedInHome = 0;
 		$this->iDisplayedInNavigationMenu = 0;
-		$this->aHomeOrdering = array();
-		$this->aNavigationMenuOrdering = array();
+		$this->aHomeOrdering = [];
+		$this->aNavigationMenuOrdering = [];
 
 		$this->Load();
 	}
@@ -78,8 +85,7 @@ class BrickCollection
 	public function __call($method, $arguments)
 	{
 		// Made for cleaner/easier access from twig (eg. app['brick_collection'].bricks)
-		switch ($method)
-		{
+		switch ($method) {
 			case 'bricks':
 				return $this->GetBricks();
 				break;
@@ -122,10 +128,8 @@ class BrickCollection
 	 */
 	public function GetBrickById($sId)
 	{
-		foreach ($this->GetBricks() as $oBrick)
-		{
-			if ($oBrick->GetId() === $sId)
-			{
+		foreach ($this->GetBricks() as $oBrick) {
+			if ($oBrick->GetId() === $sId) {
 				return $oBrick;
 			}
 		}
@@ -140,19 +144,15 @@ class BrickCollection
 	{
 		$aRawBrickList = $this->GetRawBrickList();
 
-		foreach ($aRawBrickList as $oBrick)
-		{
+		foreach ($aRawBrickList as $oBrick) {
 			ApplicationHelper::LoadBrickSecurity($oBrick);
 
-			if ($oBrick->GetActive() && $oBrick->IsGrantedForProfiles(UserRights::ListProfiles()))
-			{
+			if ($oBrick->GetActive() && $oBrick->IsGrantedForProfiles(UserRights::ListProfiles())) {
 				$this->aAllowedBricks[] = $oBrick;
-				if ($oBrick->GetVisibleHome())
-				{
+				if ($oBrick->GetVisibleHome()) {
 					$this->iDisplayedInHome++;
 				}
-				if ($oBrick->GetVisibleNavigationMenu())
-				{
+				if ($oBrick->GetVisibleNavigationMenu()) {
 					$this->iDisplayedInNavigationMenu++;
 				}
 			}
@@ -185,33 +185,30 @@ class BrickCollection
 	 */
 	private function GetRawBrickList()
 	{
-		$aBricks = array();
+		$aBricks = [];
 		/** @var \Combodo\iTop\DesignElement $oBrickNode */
-		foreach ($this->oModuleDesign->GetNodes('/module_design/bricks/brick') as $oBrickNode)
-		{
+		foreach ($this->oModuleDesign->GetNodes('/module_design/bricks/brick') as $oBrickNode) {
 			$sBrickClass = $oBrickNode->getAttribute('xsi:type');
-			try
-			{
-				if (class_exists($sBrickClass))
-				{
+			try {
+				if (class_exists($sBrickClass)) {
 					/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oBrick */
 					$oBrick = new $sBrickClass();
+
+					// Load the brick specific properties from its XML definition
 					$oBrick->LoadFromXml($oBrickNode);
 
 					$aBricks[] = $oBrick;
+				} else {
+					throw new DOMFormatException(
+						'Unknown brick class "'.$sBrickClass.'" from xsi:type attribute',
+						null,
+						null,
+						$oBrickNode
+					);
 				}
-				else
-				{
-					throw new DOMFormatException('Unknown brick class "'.$sBrickClass.'" from xsi:type attribute', null,
-						null, $oBrickNode);
-				}
-			}
-			catch (DOMFormatException $e)
-			{
+			} catch (DOMFormatException $e) {
 				throw new Exception('Could not create brick ('.$sBrickClass.') from XML because of a DOM problem : '.$e->getMessage());
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				throw new Exception('Could not create brick ('.$sBrickClass.') from XML : '.$oBrickNode->Dump().' '.$e->getMessage());
 			}
 		}

@@ -1,28 +1,16 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-//
-// Class: Incident
-//
-Dict::Add('FR FR', 'French', 'Français', array(
+/**
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:IncidentManagement' => 'Gestion des incidents',
 	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Vue d\'ensemble',
@@ -44,8 +32,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidents ouverts par statut',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Incidents ouverts par agent',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Incidents ouverts par client',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -61,7 +48,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: Incident
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Etat',
@@ -152,6 +139,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Attribute:tto+' => 'Delai garanti d\'assignation',
 	'Class:Incident/Attribute:ttr' => 'TTR',
 	'Class:Incident/Attribute:ttr+' => 'Délai garanti de résolution',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO temps passé',
+	'Class:Incident/Attribute:tto_time_spent+' => '',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR temps passé',
+	'Class:Incident/Attribute:ttr_time_spent+' => '',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'Echéance TTO',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA TTO dépassé ?',
@@ -200,8 +191,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Attribute:parent_problem_ref+' => '',
 	'Class:Incident/Attribute:related_request_list' => 'Requêtes filles',
 	'Class:Incident/Attribute:related_request_list+' => '',
+	'Class:Incident/Attribute:related_request_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Incident/Attribute:related_request_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Incident/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Incident/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Incident/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Incident/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 	'Class:Incident/Attribute:child_incidents_list' => 'Incidents fils',
 	'Class:Incident/Attribute:child_incidents_list+' => 'Tous les incidents fils lié à celui-ci',
+	'Class:Incident/Attribute:child_incidents_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Incident/Attribute:child_incidents_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Incident/Attribute:child_incidents_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Incident/Attribute:child_incidents_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Incident/Attribute:child_incidents_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Incident/Attribute:child_incidents_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
 	'Class:Incident/Attribute:public_log' => 'Journal public',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'Satisfaction client',
@@ -240,19 +243,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution du ticket (ev_autoresolve) vers les requêtes et incidents fils, et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
 	'Tickets:Related:OpenIncidents' => 'Incidents ouverts',
-));
-// 1:n relations custom labels for tooltip and pop-up title
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Incident/Attribute:child_incidents_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Incident/Attribute:child_incidents_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Incident/Attribute:child_incidents_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Incident/Attribute:child_incidents_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:Incident/Attribute:child_incidents_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Incident/Attribute:child_incidents_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Incident/Attribute:related_request_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:Incident/Attribute:related_request_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Incident/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Incident/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:Incident/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Incident/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s'
-));
+]);

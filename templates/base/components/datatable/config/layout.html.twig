@@ -20,7 +20,7 @@
                         </ul>
                     </div>
                 </div>
-                <p> {{ 'UI:Display_X_ItemsPerPage_prefix'|dict_s }}<input class="ibo-datatableconfig--attributes-panel--per-page--input" type="text" size="4" name="page_size" value="{{ oUIBlock.GetOption("iPageSize") }}">{{ 'UI:Display_X_ItemsPerPage_suffix'|dict_s }}</p>
+                <p> {{ 'UI:Display_X_ItemsPerPage_prefix'|dict_s }}<input class="ibo-datatableconfig--attributes-panel--per-page--input" type="number" min="1" size="4" name="page_size" value="{{ oUIBlock.GetOption("iPageSize") }}">{{ 'UI:Display_X_ItemsPerPage_suffix'|dict_s }}</p>
             </div>
         </div>
         <div class="ibo-datatableconfig--settings-panel ibo-panel ibo-is-neutral ibo-is-opened" data-role="ibo-panel">

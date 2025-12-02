@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -20,13 +21,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:IncidentManagement' => '事件管理',
 	'Menu:IncidentManagement+' => '事件管理',
 	'Menu:Incident:Overview' => '概况',
 	'Menu:Incident:Overview+' => '概况',
 	'Menu:NewIncident' => '新建事件',
-	'Menu:NewIncident+' => '新建事件',
+	'Menu:NewIncident+' => '新建事件工单',
 	'Menu:SearchIncidents' => '搜索事件',
 	'Menu:SearchIncidents+' => '搜索事件',
 	'Menu:Incident:Shortcuts' => '快捷方式',
@@ -37,13 +38,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Incident:EscalatedIncidents+' => '已升级的事件',
 	'Menu:Incident:OpenIncidents' => '所有打开的事件',
 	'Menu:Incident:OpenIncidents+' => '所有打开的事件',
-	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => '最近两周的事件(按优先级)',
-	'UI-IncidentManagementOverview-Last-14-days' => '最近两周的事件(按数量)',
-	'UI-IncidentManagementOverview-OpenIncidentByStatus' => '打开的事件(按状态)',
-	'UI-IncidentManagementOverview-OpenIncidentByAgent' => '打开的事件(按办理人)',
-	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => '打开的事件(按客户)',
-));
-
+	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => '最近两周的事件 (按优先级)',
+	'UI-IncidentManagementOverview-Last-14-days' => '最近两周的事件 (按数量)',
+	'UI-IncidentManagementOverview-OpenIncidentByStatus' => '打开的事件 (按状态)',
+	'UI-IncidentManagementOverview-OpenIncidentByAgent' => '打开的事件 (按办理人)',
+	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => '打开的事件 (按客户)',
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -59,7 +59,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class: Incident
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident' => '事件',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => '状态',
@@ -81,7 +81,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Attribute:status/Value:closed' => '已关闭',
 	'Class:Incident/Attribute:status/Value:closed+' => '',
 	'Class:Incident/Attribute:impact' => '影响范围',
-	'Class:Incident/Attribute:impact+' => '',
+	'Class:Incident/Attribute:impact+' => '事件的影响范围，多少用户受影响',
 	'Class:Incident/Attribute:impact/Value:1' => '部门',
 	'Class:Incident/Attribute:impact/Value:1+' => '',
 	'Class:Incident/Attribute:impact/Value:2' => '服务',
@@ -89,7 +89,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Attribute:impact/Value:3' => '个体',
 	'Class:Incident/Attribute:impact/Value:3+' => '',
 	'Class:Incident/Attribute:priority' => '优先级',
-	'Class:Incident/Attribute:priority+' => '',
+	'Class:Incident/Attribute:priority+' => '哪个工单应该优先处理',
 	'Class:Incident/Attribute:priority/Value:1' => '紧急',
 	'Class:Incident/Attribute:priority/Value:1+' => '紧急',
 	'Class:Incident/Attribute:priority/Value:2' => '高',
@@ -99,7 +99,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Attribute:priority/Value:4' => '低',
 	'Class:Incident/Attribute:priority/Value:4+' => '低',
 	'Class:Incident/Attribute:urgency' => '紧急度',
-	'Class:Incident/Attribute:urgency+' => '',
+	'Class:Incident/Attribute:urgency+' => '问题应该多快解决',
 	'Class:Incident/Attribute:urgency/Value:1' => '紧急',
 	'Class:Incident/Attribute:urgency/Value:1+' => '紧急',
 	'Class:Incident/Attribute:urgency/Value:2' => '高',
@@ -109,11 +109,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Attribute:urgency/Value:4' => '低',
 	'Class:Incident/Attribute:urgency/Value:4+' => '低',
 	'Class:Incident/Attribute:origin' => '来源',
-	'Class:Incident/Attribute:origin+' => '',
-	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
-	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
-	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
-	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
+	'Class:Incident/Attribute:origin+' => '事件工单由谁发起或触发的',
+	'Class:Incident/Attribute:origin/Value:in_person' => '当面',
+	'Class:Incident/Attribute:origin/Value:in_person+' => '创建于当面沟通后的事件',
+	'Class:Incident/Attribute:origin/Value:chat' => '聊天工具',
+	'Class:Incident/Attribute:origin/Value:chat+' => '创建于聊天工具沟通后的事件',
 	'Class:Incident/Attribute:origin/Value:mail' => '邮件',
 	'Class:Incident/Attribute:origin/Value:mail+' => '邮件',
 	'Class:Incident/Attribute:origin/Value:monitoring' => '监控',
@@ -150,17 +150,21 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Attribute:tto+' => '响应时间',
 	'Class:Incident/Attribute:ttr' => 'TTR',
 	'Class:Incident/Attribute:ttr+' => '解决时限',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'TTO截止日期',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '',
-	'Class:Incident/Attribute:sla_tto_passed' => 'SLA TTO 合格',
+	'Class:Incident/Attribute:sla_tto_passed' => 'SLA TTO合格',
 	'Class:Incident/Attribute:sla_tto_passed+' => '',
-	'Class:Incident/Attribute:sla_tto_over' => 'SLA TTO 超时',
+	'Class:Incident/Attribute:sla_tto_over' => 'SLA TTO超时',
 	'Class:Incident/Attribute:sla_tto_over+' => '',
 	'Class:Incident/Attribute:ttr_escalation_deadline' => 'TTR截止日期',
 	'Class:Incident/Attribute:ttr_escalation_deadline+' => '',
-	'Class:Incident/Attribute:sla_ttr_passed' => 'SLA TTR 合格',
+	'Class:Incident/Attribute:sla_ttr_passed' => 'SLA TTR合格',
 	'Class:Incident/Attribute:sla_ttr_passed+' => '',
-	'Class:Incident/Attribute:sla_ttr_over' => 'SLA TTR 超时',
+	'Class:Incident/Attribute:sla_ttr_over' => 'SLA TTR超时',
 	'Class:Incident/Attribute:sla_ttr_over+' => '',
 	'Class:Incident/Attribute:time_spent' => '耗时',
 	'Class:Incident/Attribute:time_spent+' => '',
@@ -236,6 +240,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => '无法分配父级事件给自己',
 	'Class:Incident/Method:ResolveChildTickets' => '解决子工单',
-	'Class:Incident/Method:ResolveChildTickets+' => '递归解决子工单(自动解决),并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案',
+	'Class:Incident/Method:ResolveChildTickets+' => '递归解决子工单 (自动解决), 并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案',
 	'Tickets:Related:OpenIncidents' => '打开的事件',
-));
+]);

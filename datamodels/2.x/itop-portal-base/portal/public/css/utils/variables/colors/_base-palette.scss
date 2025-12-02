@@ -1,0 +1,124 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* Base color palettes */
+$ipb-color-white-100: $common-color-white-100 !default;
+$ipb-color-white-200: $common-color-white-200 !default;
+$ipb-color-transparent: $common-color-transparent !default;
+
+$ipb-color-grey-50: $common-color-grey-50 !default;
+$ipb-color-grey-100: $common-color-grey-100 !default;
+$ipb-color-grey-200: $common-color-grey-200 !default;
+$ipb-color-grey-300: $common-color-grey-300 !default;
+$ipb-color-grey-400: $common-color-grey-400 !default;
+$ipb-color-grey-500: $common-color-grey-500 !default;
+$ipb-color-grey-600: $common-color-grey-600 !default;
+$ipb-color-grey-700: $common-color-grey-700 !default;
+$ipb-color-grey-800: $common-color-grey-800 !default;
+$ipb-color-grey-900: $common-color-grey-900 !default;
+$ipb-color-grey-950: $common-color-grey-950 !default;
+
+$ipb-color-blue-grey-50: $common-color-blue-grey-50 !default;
+$ipb-color-blue-grey-100: $common-color-blue-grey-100 !default;
+$ipb-color-blue-grey-200: $common-color-blue-grey-200 !default;
+$ipb-color-blue-grey-300: $common-color-blue-grey-300 !default;
+$ipb-color-blue-grey-400: $common-color-blue-grey-400 !default;
+$ipb-color-blue-grey-500: $common-color-blue-grey-500 !default;
+$ipb-color-blue-grey-600: $common-color-blue-grey-600 !default;
+$ipb-color-blue-grey-700: $common-color-blue-grey-700 !default;
+$ipb-color-blue-grey-800: $common-color-blue-grey-800 !default;
+$ipb-color-blue-grey-900: $common-color-blue-grey-900 !default;
+$ipb-color-blue-grey-950: $common-color-blue-grey-950 !default;
+
+$ipb-color-blue-100: $common-color-blue-100 !default;
+$ipb-color-blue-200: $common-color-blue-200 !default;
+$ipb-color-blue-300: $common-color-blue-300 !default;
+$ipb-color-blue-400: $common-color-blue-400 !default;
+$ipb-color-blue-500: $common-color-blue-500 !default;
+$ipb-color-blue-600: $common-color-blue-600 !default;
+$ipb-color-blue-700: $common-color-blue-700 !default;
+$ipb-color-blue-800: $common-color-blue-800 !default;
+$ipb-color-blue-900: $common-color-blue-900 !default;
+$ipb-color-blue-950: $common-color-blue-950 !default;
+
+$ipb-color-cyan-100: $common-color-cyan-100 !default;
+$ipb-color-cyan-200: $common-color-cyan-200 !default;
+$ipb-color-cyan-300: $common-color-cyan-300 !default;
+$ipb-color-cyan-400: $common-color-cyan-400 !default;
+$ipb-color-cyan-500: $common-color-cyan-500 !default;
+$ipb-color-cyan-600: $common-color-cyan-600 !default;
+$ipb-color-cyan-700: $common-color-cyan-700 !default;
+$ipb-color-cyan-800: $common-color-cyan-800 !default;
+$ipb-color-cyan-900: $common-color-cyan-900 !default;
+$ipb-color-cyan-950: $common-color-cyan-950 !default;
+
+$ipb-color-green-100: $common-color-green-100 !default;
+$ipb-color-green-200: $common-color-green-200 !default;
+$ipb-color-green-300: $common-color-green-300 !default;
+$ipb-color-green-400: $common-color-green-400 !default;
+$ipb-color-green-500: $common-color-green-500 !default;
+$ipb-color-green-600: $common-color-green-600 !default;
+$ipb-color-green-700: $common-color-green-700 !default;
+$ipb-color-green-800: $common-color-green-800 !default;
+$ipb-color-green-900: $common-color-green-900 !default;
+$ipb-color-green-950: $common-color-green-950 !default;
+
+
+$ipb-color-orange-100: $common-color-orange-100 !default;
+$ipb-color-orange-200: $common-color-orange-200 !default;
+$ipb-color-orange-300: $common-color-orange-300 !default;
+$ipb-color-orange-400: $common-color-orange-400 !default;
+$ipb-color-orange-500: $common-color-orange-500 !default;
+$ipb-color-orange-600: $common-color-orange-600 !default;
+$ipb-color-orange-700: $common-color-orange-700 !default;
+$ipb-color-orange-800: $common-color-orange-800 !default;
+$ipb-color-orange-900: $common-color-orange-900 !default;
+$ipb-color-orange-950: $common-color-orange-950 !default;
+
+$ipb-color-red-100: $common-color-red-100 !default;
+$ipb-color-red-200: $common-color-red-200 !default;
+$ipb-color-red-300: $common-color-red-300 !default;
+$ipb-color-red-400: $common-color-red-400 !default;
+$ipb-color-red-500: $common-color-red-500 !default;
+$ipb-color-red-600: $common-color-red-600 !default;
+$ipb-color-red-700: $common-color-red-700 !default;
+$ipb-color-red-800: $common-color-red-800 !default;
+$ipb-color-red-900: $common-color-red-900 !default;
+$ipb-color-red-950: $common-color-red-950 !default;
+
+$ipb-color-pink-100: $common-color-pink-100 !default;
+$ipb-color-pink-200: $common-color-pink-200 !default;
+$ipb-color-pink-300: $common-color-pink-300 !default;
+$ipb-color-pink-400: $common-color-pink-400 !default;
+$ipb-color-pink-500: $common-color-pink-500 !default;
+$ipb-color-pink-600: $common-color-pink-600 !default;
+$ipb-color-pink-700: $common-color-pink-700 !default;
+$ipb-color-pink-800: $common-color-pink-800 !default;
+$ipb-color-pink-900: $common-color-pink-900 !default;
+$ipb-color-pink-950: $common-color-pink-950 !default;
+
+$ipb-color-yellow-100: $common-color-yellow-100 !default;
+$ipb-color-yellow-200: $common-color-yellow-200 !default;
+$ipb-color-yellow-300: $common-color-yellow-300 !default;
+$ipb-color-yellow-400: $common-color-yellow-400 !default;
+$ipb-color-yellow-500: $common-color-yellow-500 !default;
+$ipb-color-yellow-600: $common-color-yellow-600 !default;
+$ipb-color-yellow-700: $common-color-yellow-700 !default;
+$ipb-color-yellow-800: $common-color-yellow-800 !default;
+$ipb-color-yellow-900: $common-color-yellow-900 !default;
+$ipb-color-yellow-950: $common-color-yellow-950 !default;
+
+$ipb-color-purple-100: $common-color-purple-100 !default;
+$ipb-color-purple-200: $common-color-purple-200 !default;
+$ipb-color-purple-300: $common-color-purple-300 !default;
+$ipb-color-purple-400: $common-color-purple-400 !default;
+$ipb-color-purple-500: $common-color-purple-500 !default;
+$ipb-color-purple-600: $common-color-purple-600 !default;
+$ipb-color-purple-700: $common-color-purple-700 !default;
+$ipb-color-purple-800: $common-color-purple-800 !default;
+$ipb-color-purple-900: $common-color-purple-900 !default;
+$ipb-color-purple-950: $common-color-purple-950 !default;
+
+$ipb-colors: $common-colors;

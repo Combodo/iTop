@@ -1,10 +1,10 @@
 <?php
 
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -29,7 +29,12 @@ use Closure;
 class FileUploadField extends AbstractSimpleField
 {
 	/** @var bool DEFAULT_ALLOW_DELETE */
-	const DEFAULT_ALLOW_DELETE = true;
+	public const DEFAULT_ALLOW_DELETE = true;
+	/**
+	  * @var bool DEFAULT_DISPLAY_OPENED
+	  * @since 3.2.1 N°7534
+	  */
+	public const DEFAULT_DISPLAY_OPENED = false;
 
 	/** @var string|null $sTransactionId */
 	protected $sTransactionId;
@@ -39,8 +44,18 @@ class FileUploadField extends AbstractSimpleField
 	protected $sUploadEndpoint;
 	/** @var string|null $sDownloadEndpoint */
 	protected $sDownloadEndpoint;
+	/**
+	  * @var string|null $sViewEndpoint
+	  * @since 3.2.1 N°7534
+	  */
+	protected ?string $sDisplayEndpoint;
 	/** @var bool $bAllowDelete */
 	protected $bAllowDelete;
+	/**
+	  * @var bool $bDisplayOpened
+	  * @since 3.2.1 N°7534
+	  */
+	protected bool $bDisplayOpened;
 
 	/**
 	 * @inheritDoc
@@ -51,7 +66,9 @@ class FileUploadField extends AbstractSimpleField
 		$this->oObject = null;
 		$this->sUploadEndpoint = null;
 		$this->sDownloadEndpoint = null;
+		$this->sDisplayEndpoint = null;
 		$this->bAllowDelete = static::DEFAULT_ALLOW_DELETE;
+		$this->bDisplayOpened = static::DEFAULT_DISPLAY_OPENED;
 
 		parent::__construct($sId, $onFinalizeCallback);
 	}
@@ -135,6 +152,27 @@ class FileUploadField extends AbstractSimpleField
 	}
 
 	/**
+	 * @return string|null
+	 * @since 3.2.1 N°7534
+	 */
+	public function GetDisplayEndpoint(): ?string
+	{
+		return $this->sDisplayEndpoint;
+	}
+
+	/**
+	 * @param string $sDisplayEndpoint
+	 *
+	 * @return FileUploadField
+	 * @since 3.2.1 N°7534
+	 */
+	public function SetDisplayEndpoint(string $sDisplayEndpoint): FileUploadField
+	{
+		$this->sDisplayEndpoint = $sDisplayEndpoint;
+		return $this;
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function GetAllowDelete()
@@ -149,8 +187,33 @@ class FileUploadField extends AbstractSimpleField
 	 */
 	public function SetAllowDelete(bool $bAllowDelete)
 	{
-		$this->bAllowDelete = (boolean) $bAllowDelete;
+		$this->bAllowDelete = (bool) $bAllowDelete;
 		return $this;
 	}
 
+	/**
+	 * Sets if the field should be displayed opened on initialization
+	 *
+	 * @param bool $bDisplayOpened
+	 *
+	 * @return FileUploadField
+	 * @since 3.2.1 N°7534
+	 */
+	public function SetDisplayOpened(bool $bDisplayOpened): FileUploadField
+	{
+		$this->bDisplayOpened = $bDisplayOpened;
+
+		return $this;
+	}
+
+	/**
+	 * Returns if the field should be displayed opened on initialization
+	 *
+	 * @return boolean
+	 * @since 3.2.1 N°7534
+	 */
+	public function GetDisplayOpened(): bool
+	{
+		return $this->bDisplayOpened;
+	}
 }

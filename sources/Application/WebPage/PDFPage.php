@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,22 +18,26 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Renderer\BlockRenderer;
+namespace Combodo\iTop\Application\WebPage;
 
+use Combodo\iTop\Renderer\BlockRenderer;
+use ExecutionKPI;
 
 /**
  * Special class of WebPage for printing into a PDF document
  */
 class PDFPage extends WebPage
 {
-	/** @var \iTopPDF Instance of the TCPDF object for creating the PDF */
+	/** @var iTopPDF Instance of the TCPDF object for creating the PDF */
 	protected $oPdf;
 
 	public function __construct($s_title, $sPageFormat = 'A4', $sPageOrientation = 'L')
 	{
 		$oKpi = new ExecutionKPI();
 		parent::__construct($s_title);
-		define('K_PATH_FONTS', APPROOT.'lib/combodo/tcpdf/fonts/');
+		if (!defined('K_PATH_FONTS')) {
+			define('K_PATH_FONTS', APPROOT.'lib/combodo/tcpdf/fonts/');
+		}
 		$this->oPdf = new iTopPDF($sPageOrientation, 'mm', $sPageFormat, true, self::PAGES_CHARSET, false);
 
 		// set document information
@@ -101,7 +106,7 @@ EOF
 	/**
 	 * Get access to the underlying TCPDF object
 	 *
-	 * @return \iTopPDF
+	 * @return iTopPDF
 	 */
 	public function get_tcpdf()
 	{
@@ -147,12 +152,10 @@ EOF
 	public function output()
 	{
 		$this->add_header('Content-type: application/x-pdf');
-		if (!empty($this->sContentDisposition))
-		{
+		if (!empty($this->sContentDisposition)) {
 			$this->add_header('Content-Disposition: '.$this->sContentDisposition.'; filename="'.$this->sContentFileName.'"');
 		}
-		foreach ($this->a_headers as $s_header)
-		{
+		foreach ($this->a_headers as $s_header) {
 			header($s_header);
 		}
 		$this->flush();

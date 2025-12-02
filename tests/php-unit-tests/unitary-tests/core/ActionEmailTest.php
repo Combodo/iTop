@@ -4,10 +4,10 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use ActionEmail;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Dict;
 use Exception;
 use MetaModel;
 use utils;
-use Dict;
 
 /**
  * @covers \ActionEmail
@@ -17,25 +17,23 @@ class ActionEmailTest extends ItopDataTestCase
 	/**
 	 * @inheritDoc
 	 */
-	const CREATE_TEST_ORG = true;
+	public const CREATE_TEST_ORG = true;
 
 	/** @var \ActionEmail|null Temp ActionEmail created for tests */
 	protected static $oActionEmail = null;
-	
+
 	/** @var \ormDocument|null Temp ormDocument for tests */
 	protected static $oDocument = null;
 
 	/** @var \UserRequest|null Temp ormDocument for tests */
 	protected static $oUserRequest = null;
-	
-	/** @var string[] Dict formatted message, because the Dict class is not available in providers */ 
+
+	/** @var string[] Dict formatted message, because the Dict class is not available in providers */
 	protected static $aWarningMessages;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-
-		$this->RequireOnceItopFile('application/Html2Text.php');
 
 		static::$oActionEmail = MetaModel::NewObject('ActionEmail', [
 			'name' => 'Test action',
@@ -59,11 +57,11 @@ HTML
 		static::$oDocument = new \ormDocument($sHtml, 'text/html', 'sample.html');
 		static::$oUserRequest =  MetaModel::NewObject('UserRequest', [
 			'title' => 'Test UserRequest',
-			'description' => '<p>Multi-line<br/>description</p>'
+			'description' => '<p>Multi-line<br/>description</p>',
 		]);
 
 		static::$aWarningMessages = [
-			'warning-missing-content' => Dict::Format('ActionEmail:content_placeholder_missing', '$content$', Dict::S('Class:ActionEmail/Attribute:body')) 
+			'warning-missing-content' => Dict::Format('ActionEmail:content_placeholder_missing', '$content$', Dict::S('Class:ActionEmail/Attribute:body')),
 		];
 	}
 
@@ -131,7 +129,7 @@ HTML
 			'subject' => 'Test subject',
 			'body' => 'Test body',
 		]);
-		foreach($aActionFields as $sCode => $value) {
+		foreach ($aActionFields as $sCode => $value) {
 			if ($sCode === 'html_template') {
 				// special case since the data provider cannot create ormDocument objects
 				$oActionEmail->Set($sCode, static::$oDocument);
@@ -141,9 +139,9 @@ HTML
 
 		}
 		$oActionEmail->DBInsert();
-		
+
 		$oOrg = $this->CreateOrganization('testPrepareMessageContent');
-		
+
 		$oContact1 = MetaModel::NewObject('Person', [
 			'name' => 'Person 1',
 			'first_name' => 'PrepareMessageContent',
@@ -152,8 +150,7 @@ HTML
 			'notify' => 'yes',
 		]);
 		$oContact1->DBInsert();
-		
-		
+
 		$oContact2 = MetaModel::NewObject('Person', [
 			'name' => 'Person 2',
 			'first_name' => 'PrepareMessageContent',
@@ -162,19 +159,19 @@ HTML
 			'notify' => 'no',
 		]);
 		$oContact2->DBInsert();
-		
+
 		$oLog = null;
-		
+
 		$aEmailContent = $this->InvokeNonPublicMethod('\ActionEmail', 'PrepareMessageContent', $oActionEmail, [$aContext, &$oLog]);
 		// Normalize the content of the body to simplify the comparison, useful when status == test
 		$aEmailContent['body'] = preg_replace('/title="[^"]+"/', 'title="****"', $aEmailContent['body']);
 		$aEmailContent['body'] = preg_replace('/class="object-ref-link" href="[^"]+"/', 'class="object-ref-link" href="****"', $aEmailContent['body']);
 		$aEmailContent['body'] = preg_replace('/References: <[^>]+>/', 'References: ****', $aEmailContent['body']);
-		foreach($aFieldsToCheck as $sCode => $expectedValue) {
+		foreach ($aFieldsToCheck as $sCode => $expectedValue) {
 			$this->assertEquals($expectedValue, $aEmailContent[$sCode]);
 		}
 	}
-	
+
 	public function prepareMessageContentProvider()
 	{
 		return [
@@ -221,14 +218,18 @@ HTML
 			'simple-body-with-placeholder' => [
 				'EN US',
 				['body' => '<p>Ticket "$this->title$" created.</p>'],
-				['body' => '<p>Ticket "Test UserRequest" created.</p>'],
+				['body' => '<div class="email-is-html-content">
+	<p>Ticket "Test UserRequest" created.</p>
+</div>'],
 			],
 			'simple-body-with-placeholder-TEST-mode' => [
 				'EN US',
 				['body' => '<p>Ticket "$this->title$" created.</p>', 'status' => 'test'],
-				['body' => 
+				['body' =>
 <<<HTML
-<p>Ticket "Test UserRequest" created.</p><div style="border: dashed;">
+<div class="email-is-html-content">
+	<p>Ticket "Test UserRequest" created.</p>
+</div><div style="border: dashed;">
 <h1>Testing email notification <span class="object-ref "  title="****"><a class="object-ref-link" href="****">Test action</a></span></h1>
 <p>The email should be sent with the following properties
 <ul>
@@ -257,12 +258,14 @@ HTML
 			'simple-body-with-placeholder_and_template' => [
 				'EN US',
 				['body' => '<p>Ticket "$this->title$" created.</p>', 'html_template' => true],
-				['body' => 
+				['body' =>
 <<<HTML
 <body>
 	<table data-something-that-would-be-removed-by-the-sanitizer-through-ckeditor-but-that-will-stay-with-the-template="bar">
 		<tr><td>Formatted eMail</td></tr>
-		<tr><td><p>Ticket "Test UserRequest" created.</p></td></tr>
+		<tr><td><div class="email-is-html-content">
+	<p>Ticket "Test UserRequest" created.</p>
+</div></td></tr>
 </body>
 HTML
 				],
@@ -294,9 +297,9 @@ HTML
 			$this->assertEquals($aWarnings, $expectedWarnings);
 		} else {
 			// The warning messages are localized, but the provider functions does not
-			// have access to the Dict class, so let's replace the value given by the 
+			// have access to the Dict class, so let's replace the value given by the
 			// provider by a statically precomputed and localized message
-			foreach($expectedWarnings as $index => $sMessageKey) {
+			foreach ($expectedWarnings as $index => $sMessageKey) {
 				$expectedWarnings[$index] = static::$aWarningMessages[$sMessageKey];
 			}
 			$this->assertEquals($aWarnings, $expectedWarnings);
@@ -309,13 +312,73 @@ HTML
 			'no warnings' => [
 				'<p>Some text here</p>',
 				'<div>$content$</div>',
-				null
-			],			
+				null,
+			],
 			'$content$ missing' => [
 				'<p>Some text here</p>',
 				'<div>no placeholder</div>',
-				[ 'warning-missing-content' ]
+				[ 'warning-missing-content' ],
 			],
-		];	
+		];
+	}
+
+	/**
+	 * @dataProvider asynchronousValuesContentProvider
+	 */
+	public function testAsynchronousValues($sActionAsyncValue, $sConfigAsyncValue, $sExpectedValue)
+	{
+		$oConfig = utils::GetConfig();
+		$sCurrentEmailAsync = $oConfig->Get('email_asynchronous');
+
+		$oConfig->Set('email_asynchronous', $sConfigAsyncValue);
+
+		$oActionEmail = MetaModel::NewObject('ActionEmail', [
+			'name'    => 'Test action',
+			'status'  => 'disabled',
+			'from'    => 'unit-test@openitop.org',
+			'subject' => 'Test subject',
+			'body'    => 'Test body',
+			'asynchronous' => $sActionAsyncValue,
+		]);
+
+		self::assertEquals($sExpectedValue, $oActionEmail->IsAsynchronous());
+
+		$oConfig->Set('email_asynchronous', $sCurrentEmailAsync);
+	}
+
+	public function asynchronousValuesContentProvider()
+	{
+		return [
+			'ActionEmail is asynchronous' => [
+				'yes',
+				false,
+				true,
+			],
+			'ActionEmail is not asynchronous' => [
+				'no',
+				true,
+				false,
+			],
+			'ActionEmail is asynchronous and config is asynchronous' => [
+				'yes',
+				true,
+				true,
+			],
+			'ActionEmail is not asynchronous and config is not asynchronous' => [
+				'no',
+				false,
+				false,
+			],
+			'ActionEmail follows global settings, config is not asynchronous' => [
+				'use_global_setting',
+				false,
+				false,
+			],
+			'ActionEmail follows global settings, config is asynchronous' => [
+				'use_global_setting',
+				true,
+				true,
+			],
+		];
 	}
 }

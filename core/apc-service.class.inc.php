@@ -4,8 +4,10 @@
  * Class ApcService
  * @since 2.7.6 N°4125
  */
-class ApcService {
-	public function __construct() {
+class ApcService
+{
+	public function __construct()
+	{
 	}
 
 	/**
@@ -13,7 +15,8 @@ class ApcService {
 	 * @return bool
 	 * @see function_exists()
 	 */
-	public function function_exists($function_name) {
+	public function function_exists($function_name)
+	{
 		return function_exists($function_name);
 	}
 
@@ -22,7 +25,7 @@ class ApcService {
 	 * @return mixed
 	 * @see apc_fetch()
 	 */
-	function apc_fetch($key)
+	public function apc_fetch($key)
 	{
 		return apc_fetch($key);
 	}
@@ -34,9 +37,8 @@ class ApcService {
 	 * @return array|bool
 	 * @see apc_store()
 	 */
-	function apc_store($key, $var = NULL, $ttl = 0)
+	public function apc_store($key, $var = null, $ttl = 0)
 	{
 		return apc_store($key, $var, $ttl);
 	}
 }
-?>

@@ -1,28 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
- *
- * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+/**
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
+ */
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'iTopUpdate:UI:PageTitle' => 'Upgraden toepassing',
 	'itop-core-update:UI:SelectUpdateFile' => 'Upgrade',
 	'itop-core-update:UI:ConfirmUpdate' => 'Upgrade',
@@ -53,7 +42,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'Tijdens de upgrade zal de applicatie enkel toegankelijk zijn als "alleen lezen".',
 	'iTopUpdate:UI:Status' => 'Status',
 	'iTopUpdate:UI:Action' => 'Update',
-	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup~~',
+	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' setup',
 	'iTopUpdate:UI:History' => 'Versiegeschiedenis',
 	'iTopUpdate:UI:Progress' => 'Voortgang van de upgrade',
 	'iTopUpdate:UI:DoBackup:Label' => 'Maak een backup van de bestanden en database',
@@ -70,13 +59,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Controle van het bestandssysteem is mislukt',
 	'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Updaten van toepassing is mogelijk',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Updaten van de toepassing is niet mogelijk: %1$s',
-	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a target="_blank" href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Waarschuwing: updaten van de toepassing kan mislukken: %1$s',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Aangepaste bestanden gedetecteerd</b>, gedeeltelijke update kan niet uitgevoerd worden.</br>Volg de <a target="_blank" href="%2$s">procedure</a> om '.ITOP_APPLICATION_SHORT.' manueel te updaten. Je moet de <a href="%1$s">setup</a> gebruiken om de applicatie te updaten.',
 	'iTopUpdate:UI:CheckInProgress' => 'Even geduld terwijl de integriteitscontrole loopt',
-	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup~~',
-	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?~~',
-
-	// Setup Messages
+	'iTopUpdate:UI:SetupLaunch' => 'Start de '.ITOP_APPLICATION_SHORT.' setup',
+	'iTopUpdate:UI:SetupLaunchConfirm' => 'Dit zal de '.ITOP_APPLICATION_SHORT.' setup uitvoeren, ben je zeker?',
+	'iTopUpdate:UI:FastSetupLaunch' => 'Fast Setup~~',
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Klaar om verder te gaan',
 	'iTopUpdate:UI:SetupMessage:EnterMaintenance' => 'Activeren van onderhoudsmode',
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Maken van backup database',
@@ -87,8 +75,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Upgraden van database',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Deactiveren van onderhoudsmode',
 	'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Upgrade voltooid',
-
-	// Errors
 	'iTopUpdate:Error:MissingFunction' => 'Onmogelijk om de upgrade te starten, een functie ontbreekt',
 	'iTopUpdate:Error:MissingFile' => 'Bestand ontbreekt: %1$s',
 	'iTopUpdate:Error:CorruptedFile' => 'Bestand %1$s is corrupt',
@@ -106,12 +92,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopUpdate:UI:UpdateDone' => 'Upgrade geslaagd',
 	'Menu:iTopUpdate' => 'Upgrade toepassing',
 	'Menu:iTopUpdate+' => 'Upgrade toepassing',
-
-    // Missing itop entries
 	'Class:ModuleInstallation/Attribute:installed' => 'Geïnstalleerd op',
 	'Class:ModuleInstallation/Attribute:name' => 'Naam',
 	'Class:ModuleInstallation/Attribute:version' => 'Versie',
 	'Class:ModuleInstallation/Attribute:comment' => 'Opmerkingen',
-));
-
-
+]);

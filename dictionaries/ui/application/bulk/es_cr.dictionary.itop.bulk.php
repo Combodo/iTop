@@ -1,24 +1,15 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Spanish Localized data
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-
-	// Bulk modify
-	'UI:Bulk:modify:IncompatibleAttribute' => 'This attribute can\'t be edited in bulk context~~',
-
-));
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'UI:Bulk:modify:IncompatibleAttribute' => 'Este atributo no se puede editar en contexto masivo',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Advertencia de seguridad de Excel',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Abrir un archivo con datos que no son de confianza en Microsoft Excel puede provocar la inyección de fórmulas. Asegúrese de que la configuración de Excel esté configurada para manejar archivos de forma segura. <a href="%1$s">Obtenga más información en nuestra documentación.</a>',
+]);

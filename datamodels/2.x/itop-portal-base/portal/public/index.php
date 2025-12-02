@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -25,7 +26,6 @@ require_once MODULESROOT.'itop-portal-base/portal/config/bootstrap.php';
 // Stacking context tag so it knows we are in the portal
 $oContext = new ContextTag(ContextTag::TAG_PORTAL);
 $oContext2 = new ContextTag('Portal:'.$_ENV['PORTAL_ID']);
-
 
 $oKPI = new ExecutionKPI();
 
@@ -52,10 +52,8 @@ $oResponse = $oKernel->handle($oRequest);
 $oResponse->send();
 $oKPI->ComputeAndReport('Page execution and rendering');
 
-
 $oKPI = new ExecutionKPI();
 $oKernel->terminate($oRequest, $oResponse);
 $oKPI->ComputeAndReport('Symfony kernel termination');
-
 
 ExecutionKPI::ReportStats();

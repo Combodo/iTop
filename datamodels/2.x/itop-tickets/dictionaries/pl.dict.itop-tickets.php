@@ -1,38 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//
-// Class: Ticket
-//
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+/**
+ *
+ */
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Ticket' => 'Zgłoszenie',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Powiązanie',
@@ -84,25 +62,24 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Zamknięty',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
 	'Ticket:ImpactAnalysis' => 'Analiza wpływu',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkContactToTicket' => 'Połączenie Kontakt / Zgłoszenie',
 	'Class:lnkContactToTicket+' => '',
-	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
+	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Zgłoszenie',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Powiązanie',
 	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Kontakt',
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
-	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact name~~',
-	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
+	'Class:lnkContactToTicket/Attribute:contact_name' => 'Kontakt',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'E-mail kontaktu',
 	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
 	'Class:lnkContactToTicket/Attribute:role' => 'Rola (tekst)',
@@ -111,13 +88,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Dodane ręcznie',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Obliczone',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Nie powiadamiaj',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:WorkOrder' => 'Porządek pracy',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => 'Nazwa',
@@ -150,11 +127,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Zamknij',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Ticket:baseinfo' => 'Informacje ogólne',
 	'Ticket:date' => 'Daty',
 	'Ticket:contact' => 'Kontakty',
@@ -244,5 +220,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Cel oparty na SLT typu TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Czas na rozwiązanie TTR',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Cel oparty na SLT typu TTR',
-));
+]);
 
+//
+// Class: Ticket
+//
+
+Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:Ticket/Attribute:team_email' => 'Team email~~',
+	'Class:Ticket/Attribute:team_email+' => '~~',
+]);

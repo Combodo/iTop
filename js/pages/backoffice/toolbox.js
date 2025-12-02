@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -155,7 +155,7 @@ const CombodoBackofficeToolbox = {
 			} else {
 				oCodeElements.each(function (iIdx, oElem) {
 					hljs.highlightBlock(oElem);
-					$(oElem).parent().addClass('ibo-hljs-container');
+					$(oElem).parent().addClass('common-hljs-container');
 				});
 			}
 		}
@@ -168,7 +168,7 @@ const CombodoBackofficeToolbox = {
 			} else {
 				oCodeElements.each(function (iIdx, oElem) {
 					hljs.highlightBlock(oElem);
-					$(oElem).parent().addClass('ibo-hljs-container');
+					$(oElem).parent().addClass('common-hljs-container');
 				});
 			}
 		}
@@ -308,7 +308,9 @@ CombodoModal._BindEvents = function (oModalElem) {
 	// Center modal on resize
 	if(window.ResizeObserver) {
 		const oModalObs = new ResizeObserver(function(){
-			me._CenterModalInViewport(oModalElem);
+			if(oModalElem.width()>0) {
+				me._CenterModalInViewport(oModalElem);
+			}
 		});
 		oModalObs.observe(oModalElem[0]);
 	}
@@ -368,7 +370,7 @@ CombodoModal.OpenConfirmationModal = function(oOptions, aData) {
 	}
 	// Merge external options with confirmation modal default options
 	oOptions = $.extend(true, {
-		title: Dict.S('UI:Modal:DefaultConfirmationTitle'),
+		title: Dict.S('UI:Modal:Confirmation:DefaultTitle'),
 		content: '',
 		do_not_show_again_pref_key: null,
 		callback_on_confirm: null,
@@ -458,6 +460,27 @@ CombodoModal.OpenInformativeModal = function(sMessage, sSeverity, oOptions) {
 	// Open modal
 	CombodoModal.OpenModal(oOptions);
 }
+/**
+ * @override
+ * @inheritDoc
+ */
+CombodoToast.OpenToast = function(sMessage, sSeverity, aOptions) {
+	aOptions = $.extend({
+		text: sMessage,
+		className: "ibo-toast ibo-is-" + sSeverity,
+		duration: 6000,
+		close: true,
+		gravity: GetUserPreference('toasts_vertical_position', 'bottom'),
+		position: "right",
+		stopOnFocus: true,
+	}, aOptions);
+	
+	if(aOptions.duration !== -1){
+		aOptions.className += ' ibo-is-auto-closeable';
+	}
+	
+	Toastify(aOptions).showToast();
+};
 
 // Processing on each pages of the backoffice
 $(document).ready(function(){

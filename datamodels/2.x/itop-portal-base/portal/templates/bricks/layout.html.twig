@@ -1,6 +1,4 @@
-{# itop-portal-base/portal/templates/bricks/layout.html.twig #}
-{# Brick base layout #}
-{% extends app['combodo.portal.instance.conf'].properties.templates.layout %}
+{% extends template('page') %}
 
 {% block pPageTitle %}
 	{# Overloading the default template's title to show the brick's title #}
@@ -14,29 +12,25 @@
 {% block pPageBodyClass %}{{ parent() }} {% if oBrick is defined and oBrick is not null %}page_brick_of_id_{{ oBrick.GetId() }}{% endif %}{% endblock %}
 
 {% block pMainHeader %}
-	<div class="col-xs-12">
-		<div id="main-header-title">
-			<h2>
-				{% block pMainHeaderTitle %}{% endblock %}
-				{% block pMainHeaderSubtitle %}
-					{% if sBrickSubtitle is defined and sBrickSubtitle is not null %}
-						<small class="subtitle">{{ sBrickSubtitle }}</small>
-					{% endif %}
-				{% endblock %}
-			</h2>
-		</div>
-		<div id="main-header-actions">
-			{% block pMainHeaderActions %}
-			{% endblock %}
-		</div>
-	</div>
+    <div class="ipb-page--main-header--information">
+        <div class="ipb-page--main-header--information--title">
+            <span>{% block pMainHeaderTitle %}{% endblock %}</span><span>{% block pMainHeaderTitleAdditionalPart %}{% endblock %}</span>
+        </div>
+        {% block pMainHeaderSubtitle %}
+            {% if sBrickSubtitle is defined and sBrickSubtitle is not null %}
+                <div class="ipb-page--main-header--information--subtitle">{{ sBrickSubtitle }}</div>
+            {% endif %}
+        {% endblock %}
+    </div>
+    <div class="ipb-page--main-header--actions">
+        {% block pMainHeaderActions %}
+        {% endblock %}
+    </div>
 {% endblock %}
 
 {% block pMainContent %}
-<div class="col-xs-12">
 	{% block pMainContentHolder%}
 	{% endblock %}
-</div>
 {% endblock %}
 
 {% block pPageLiveScriptHelpers %}

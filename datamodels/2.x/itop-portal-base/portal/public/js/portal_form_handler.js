@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -67,8 +67,8 @@ $(function()
 		// revert other modifications here
 		_destroy: function()
 		{
-			this.element
-			.removeClass('portal_form_handler');
+			this._unregisterBlockers();
+			this.element.removeClass('portal_form_handler');
 		},
 		// _setOptions is called with a hash of all options that are changing
 		// always refresh when changing options
@@ -94,6 +94,10 @@ $(function()
 				}
 
 				me._onSubmitClick(oEvent);
+			});
+
+			this.element.on('get_attachment_ids', function(oEvent) {
+				return me.getAttachmentIds();
 			});
 		},
 
@@ -248,7 +252,8 @@ $(function()
 										}
 										else
 										{
-											oHelpBlock.append($('<p>' + sMessageContent + '</p>'));
+											// transform error message in pure text (to avoid XSS)
+											oHelpBlock.append($('<p>').text(sMessageContent));
 										}
 									}
 								}
@@ -435,7 +440,7 @@ $(function()
 				window.close();
 
 				// In some browser (eg. Firefox 70), window won't close if it has NOT been open by JS. In that case, we try to redirect to homepage as a fallback.
-				var sHomepageUrl = (this.options.base_url !== null) ? this.options.base_url : $('#sidebar .menu .brick_menu_item:first a').attr('href')
+				var sHomepageUrl = (this.options.base_url !== null) ? this.options.base_url : $('#sidebar .menu .brick_menu_item').first().find('a').attr('href')
 				window.location.href = sHomepageUrl;
 			}
 		},

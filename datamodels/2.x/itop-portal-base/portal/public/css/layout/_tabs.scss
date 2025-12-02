@@ -1,0 +1,42 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-tabs--tab--badge--border-radius: $common-border-radius-500 !default;
+$ipb-tabs--tab--badge--padding-y: 3px !default;
+$ipb-tabs--tab--badge--padding-x: 5px !default;
+$ipb-tabs--tab--badge--margin-left: $common-spacing-200 !default;
+
+
+$ipb-tabs--tab--active--indicator--width: $common-size-150 !default;
+$ipb-tabs--tab--active--indicator--height: $ipb-tabs--tab--active--indicator--width !default;
+$ipb-tabs--tab--active--indicator--margin-right: $common-spacing-300 !default;
+$ipb-tabs--tab--active--indicator--border-radius: $common-border-radius-full !default;
+
+.ipb-tabs.nav-pills > li{
+  > a {
+    display: flex;
+    align-items: center;
+
+    @extend %common-font-ral-med-150;
+
+    > .badge {
+      border-radius: $ipb-tabs--tab--badge--border-radius;
+      padding: $ipb-tabs--tab--badge--padding-y $ipb-tabs--tab--badge--padding-x;
+      margin-left: $ipb-tabs--tab--badge--margin-left;
+    }
+  }
+
+  &.active > a {
+    &:before {
+      content: " ";
+      display: inline-block;
+      width: $ipb-tabs--tab--active--indicator--width;
+      height: $ipb-tabs--tab--active--indicator--height;
+      margin-right: $ipb-tabs--tab--active--indicator--margin-right;
+      border-radius: $ipb-tabs--tab--active--indicator--border-radius;
+    }
+  }
+}

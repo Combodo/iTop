@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Dennis Lassiter
  *
@@ -25,6 +26,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 use Query;
 use QueryOQL;
+use utils;
 
 /**
  * This test creates call export on requests and check request usage counter.
@@ -37,17 +39,18 @@ use QueryOQL;
 class QueryTest extends ItopDataTestCase
 {
 	// disable transaction to avoid data inconsistency between test and call to export (outside test scope)
-	const USE_TRANSACTION = false;
+	public const USE_TRANSACTION = false;
 
 	// user for exportation process
-	const USER = 'dani2';
-	const PASSWORD = '1TopCombodo+';
+	public const USER = 'dani2';
+	public const PASSWORD = '1TopCombodo+';
 	private $oUser;
 
 	/** @inheritDoc */
 	public function setUp(): void
 	{
 		parent::setUp();
+		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', null);
 
 		// create export user
 		$this->CreateExportUser();
@@ -58,7 +61,7 @@ class QueryTest extends ItopDataTestCase
 	 */
 	private function CreateExportUser()
 	{
-		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
+		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'Administrator'], true);
 		$this->oUser = $this->CreateUser(self::USER, $oAdminProfile->GetKey(), self::PASSWORD);
 	}
 
@@ -70,49 +73,21 @@ class QueryTest extends ItopDataTestCase
 	 * @param string $sOql query oql phrase
 	 * @param string|null $sFields fields to export
 	 */
-	private function CreateQueryOQL(string $sName, string $sDescription, string $sOql, string $sFields = null) : QueryOQL
+	private function CreateQueryOQL(string $sName, string $sDescription, string $sOql, string $sFields = null): QueryOQL
 	{
 		$oQuery = new QueryOQL();
 		$oQuery->Set('name', $sName);
 		$oQuery->Set('description', $sDescription);
 		$oQuery->Set('oql', $sOql);
 
-		if($sFields != null){
+		if ($sFields != null) {
 			$oQuery->Set('fields', $sFields);
 		}
 
 		$oQuery->DBInsert();
+		$this->assertFalse($oQuery->IsNew());
 
 		return $oQuery;
-	}
-
-	/**
-	 * Test query export V1 usage.
-	 *
-	 * @param string $sDescription query description
-	 * @param string $sOql query oql phrase
-	 *
-	 * @dataProvider getQueryProvider
-	 */
-	public function testQueryExportV1Usage(string $sDescription, string $sOql)
-	{
-		// create query OQL
-		$oQuery = $this->CreateQueryOQL($this->dataName(), $sDescription, $sOql);
-
-		// call export service
-		$this->CallExportService($oQuery);
-
-		// reload to update counter (done by export process)
-		$oQuery->Reload();
-
-		// extract counter
-		$iResult = $oQuery->Get('export_count');
-
-		// delete the query
-		$oQuery->DBDelete();
-
-		// test
-		$this->assertEquals(1, $iResult);
 	}
 
 	/**
@@ -151,10 +126,10 @@ class QueryTest extends ItopDataTestCase
 	 */
 	public function getQueryProvider()
 	{
-		return array(
-			'Export #1' => array('query without params', 'SELECT Person'),
-			'Export #2' => array('query with params', "SELECT Person WHERE first_name LIKE 'B%'")
-		);
+		return [
+			'Export #1' => ['query without params', 'SELECT Person'],
+			'Export #2' => ['query with params', "SELECT Person WHERE first_name LIKE 'B%'"],
+		];
 	}
 
 	/**
@@ -174,13 +149,24 @@ class QueryTest extends ItopDataTestCase
 
 		// curl options
 		curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_setopt($curl, CURLOPT_USERPWD, self::USER . ':' . self::PASSWORD);
+		curl_setopt($curl, CURLOPT_USERPWD, self::USER.':'.self::PASSWORD);
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+		// Force disable of certificate check as most of dev / test env have a self-signed certificate
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
 
 		// execute curl
 		$result = curl_exec($curl);
-
+		if (curl_errno($curl)) {
+			$info = curl_getinfo($curl);
+			var_export($info);
+			var_dump([
+				'url' => $url,
+				'app_root_url:' => MetaModel::GetConfig()->Get('app_root_url'),
+				'GetAbsoluteUrlAppRoot:' => \utils::GetAbsoluteUrlAppRoot(),
+			]);
+		}
 		// close curl
 		curl_close($curl);
 
@@ -191,6 +177,8 @@ class QueryTest extends ItopDataTestCase
 	protected function tearDown(): void
 	{
 		$this->oUser->DBDelete();
+
+		parent::tearDown();
 	}
 
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <constants/>
   <classes>
     <class id="OAuthClient" _delta="define">
@@ -380,6 +380,11 @@ HTML
           <default_value>no</default_value>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="tenant" xsi:type="AttributeString">
+          <sql>tenant</sql>
+          <default_value>common</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
       </fields>
       <presentation>
         <details>
@@ -405,14 +410,17 @@ HTML
                     <item id="redirect_url">
                       <rank>50</rank>
                     </item>
-                    <item id="client_id">
+                    <item id="tenant">
                       <rank>60</rank>
                     </item>
-                    <item id="client_secret">
+                    <item id="client_id">
                       <rank>70</rank>
                     </item>
-                    <item id="mailbox_list">
+                    <item id="client_secret">
                       <rank>80</rank>
+                    </item>
+                    <item id="mailbox_list">
+                      <rank>90</rank>
                     </item>
                   </items>
                 </item>
@@ -928,7 +936,7 @@ HTML
   <menus>
     <menu id="OAuthClient" xsi:type="OQLMenuNode" _delta="define">
       <rank>100</rank>
-      <parent>ConfigurationTools</parent>
+      <parent>Integrations</parent>
       <oql><![CDATA[SELECT OAuthClient]]></oql>
       <do_search>1</do_search>
       <enable_admin_only>0</enable_admin_only>
@@ -944,5 +952,22 @@ HTML
         </classes>
       </group>
     </groups>
+    <profiles>
+      <profile id="117" _delta="if_exists">
+        <!-- SuperUser -->
+        <groups>
+          <group id="OauthConnection">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:bulk read">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:bulk delete">allow</action>
+            </actions>
+          </group>
+        </groups>
+      </profile>
+    </profiles>
   </user_rights>
 </itop_design>

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,7 +17,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 
 /**
  * Checks PHP version
@@ -39,7 +38,6 @@ if (PHP_MAJOR_VERSION >= 7) {
 	exit(-1);
 }
 
-
 define('ITOP_DEFAULT_ENV', 'production');
 define('MAINTENANCE_MODE_FILE', APPROOT.'data/.maintenance');
 define('READONLY_MODE_FILE', APPROOT.'data/.readonly');
@@ -60,18 +58,16 @@ if (!isset($bBypassMaintenance)) {
 	$bBypassMaintenance = isset($_REQUEST['maintenance']) ? boolval($_REQUEST['maintenance']) : false;
 }
 
-if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance)
-{
+if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance) {
 	$sTitle = 'Maintenance';
 	$sMessage = 'This application is currently under maintenance.';
 
 	http_response_code(503);
 	// Display message depending on the request
 	include(APPROOT.'application/maintenancemsg.php');
-	$sSAPIName = strtoupper(trim(php_sapi_name()));
+	$sSAPIName = strtoupper(trim(PHP_SAPI));
 
-	switch (true)
-	{
+	switch (true) {
 		case isset($_SERVER['REQUEST_URI']) && EndsWith($_SERVER['REQUEST_URI'], '/pages/ajax.searchform.php'):
 			_MaintenanceHtmlMessage($sMessage);
 			break;
@@ -102,6 +98,7 @@ if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance)
  *
  * @return bool
  */
-function EndsWith($haystack, $needle) {
+function EndsWith($haystack, $needle)
+{
 	return substr_compare($haystack, $needle, -strlen($needle)) === 0;
 }

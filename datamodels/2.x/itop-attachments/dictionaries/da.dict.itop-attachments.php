@@ -1,26 +1,17 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @author	Erik Bøg <erik@boegmoeller.dk>
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+/**
+ * @author Erik Bøg <erik@boegmoeller.dk>
+ *
+ */
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Attachments:TabTitle_Count' => 'Vedhæftninger (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Vedhæftninger',
 	'Attachments:FieldsetTitle' => 'Vedhæftninger',
@@ -41,13 +32,13 @@ or ask your '.ITOP_APPLICATION_SHORT.' administrator if the '.ITOP_APPLICATION_S
 	'Attachments:Render:Icons' => 'Display as icons~~',
 	'Attachments:Render:Table' => 'Display as list~~',
 	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Attachment' => 'Attachment~~',
 	'Class:Attachment+' => '~~',
 	'Class:Attachment/Attribute:expire' => 'Expire~~',
@@ -62,10 +53,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Contents~~',
 	'Class:Attachment/Attribute:contents+' => '~~',
-));
+]);
 
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Attachments:File:Thumbnail' => 'Icon~~',
 	'Attachments:File:Name' => 'File name~~',
 	'Attachments:File:Date' => 'Upload date~~',
@@ -73,25 +63,32 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Attachments:File:Size' => 'Size~~',
 	'Attachments:File:MimeType' => 'Type~~',
 	'Attachments:File:DownloadsCount' => 'Downloads~~',
-));
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Attachment/Attribute:creation_date' => 'Creation date~~',
 	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => 'User id~~',
 	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'Contact id~~',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
-));
+	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
+	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
+	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
+	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
+]);

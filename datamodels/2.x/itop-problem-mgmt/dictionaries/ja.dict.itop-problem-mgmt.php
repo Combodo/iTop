@@ -1,25 +1,16 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+/**
+ *
+ */
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ProblemManagement' => '問題管理',
 	'Menu:ProblemManagement+' => '問題管理',
 	'Menu:Problem:Overview' => '概要',
@@ -42,12 +33,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ProblemMgmtMenuOverview:Title' => '問題管理ダッシュボード',
 	'UI:ProblemMgmtMenuOverview:Title+' => '問題管理ダッシュボード',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Problem' => '問題',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => '状態',
@@ -120,4 +111,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'クローズ',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

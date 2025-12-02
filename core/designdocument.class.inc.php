@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (c) 2010-2023 Combodo SARL
+ * Copyright (c) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -28,8 +29,13 @@ namespace Combodo\iTop;
 
 use DOMDocument;
 use DOMFormatException;
+use DOMNode;
+use DOMNodeList;
+use DOMXPath;
+use Exception;
 use IssueLog;
 use LogAPI;
+use MFElement;
 use utils;
 
 /**
@@ -41,6 +47,9 @@ use utils;
  */
 class DesignDocument extends DOMDocument
 {
+	/** To fix DOMNode::getLineNo() ref https://www.php.net/manual/en/domnode.getlineno.php */
+	public const XML_PARSE_BIG_LINES = 4194304;
+
 	/**
 	 * @throws \Exception
 	 */
@@ -62,18 +71,32 @@ class DesignDocument extends DOMDocument
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function loadXML(string $source, int $options = 0): bool
+	{
+		return parent::loadXML($source, $options | LIBXML_BIGLINES);
+	}
+
+	/**
 	 * Overload of the standard API
 	 *
-	 * @param $filename
+	 * @param string $filename
 	 * @param int $options
+	 *
+	 * @return bool
 	 */
-	public function load($filename, $options = null)
+	public function load(string $filename, int $options = 0): bool
 	{
-		libxml_clear_errors();
-		if (parent::load($filename, LIBXML_NOBLANKS) === false) {
-			$aErrors = libxml_get_errors();
-			IssueLog::Error("Error loading $filename", LogAPI::CHANNEL_DEFAULT, $aErrors);
+		if (is_file($filename)) {
+			libxml_clear_errors();
+			if (parent::load($filename, LIBXML_NOBLANKS | LIBXML_BIGLINES | LIBXML_PARSEHUGE | self::XML_PARSE_BIG_LINES) === false) {
+				$aErrors = libxml_get_errors();
+				IssueLog::Error("Error loading $filename", LogAPI::CHANNEL_DEFAULT, $aErrors);
+			}
 		}
+
+		return true;
 	}
 
 	/**
@@ -119,13 +142,10 @@ class DesignDocument extends DOMDocument
 	 */
 	public static function XPathQuote($sValue)
 	{
-		if (strpos($sValue, '"') !== false)
-		{
+		if (strpos($sValue, '"') !== false) {
 			$aParts = explode('"', $sValue);
 			$sRet = 'concat("'.implode('", \'"\', "', $aParts).'")';
-		}
-		else
-		{
+		} else {
 			$sRet = '"'.$sValue.'"';
 		}
 		return $sRet;
@@ -140,12 +160,9 @@ class DesignDocument extends DOMDocument
 	public function GetNodes($sXPath, $oContextNode = null)
 	{
 		$oXPath = new \DOMXPath($this);
-		if (is_null($oContextNode))
-		{
+		if (is_null($oContextNode)) {
 			$oResult = $oXPath->query($sXPath);
-		}
-		else
-		{
+		} else {
 			$oResult = $oXPath->query($sXPath, $oContextNode);
 		}
 		return $oResult;
@@ -158,8 +175,12 @@ class DesignDocument extends DOMDocument
 	 */
 	public static function GetItopNodePath($oNode)
 	{
-		if ($oNode instanceof \DOMDocument) return '';
-		if (is_null($oNode)) return '';
+		if ($oNode instanceof \DOMDocument) {
+			return '';
+		}
+		if (is_null($oNode)) {
+			return '';
+		}
 
 		$sId = $oNode->getAttribute('id');
 		$sNodeDesc = ($sId != '') ? $oNode->nodeName.'['.$sId.']' : $oNode->nodeName;
@@ -227,6 +248,56 @@ class DesignElement extends \DOMElement
 
 		return '';
 	}
+
+	/**
+	 * Compatibility with PHP8.0
+	 *
+	 * @return \DOMElement|null
+	 *
+	 * @since 3.1.2
+	 */
+	public function GetFirstElementChild()
+	{
+		if (property_exists($this, 'firstElementChild')) {
+			return $this->firstElementChild;
+		}
+
+		$oChildNode = $this->firstChild;
+		while (!is_null($oChildNode)) {
+			if ($oChildNode instanceof \DOMElement) {
+				return $oChildNode;
+			}
+			$oChildNode = $oChildNode->nextSibling;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Compatibility with PHP8.0
+	 *
+	 * @return \DOMElement|null
+	 *
+	 * @since 3.1.2
+	 */
+	public function GetNextElementSibling()
+	{
+		if (property_exists($this, 'nextElementSibling')) {
+			return $this->nextElementSibling;
+		}
+
+		$oSibling = $this->nextSibling;
+		while (!is_null($oSibling)) {
+			if ($oSibling instanceof \DOMElement) {
+				return $oSibling;
+			}
+			$oSibling = $oSibling->nextSibling;
+		}
+
+		return null;
+
+	}
+
 	/**
 	 * Returns the node directly under the given node
 	 * @param $sTagName
@@ -237,16 +308,13 @@ class DesignElement extends \DOMElement
 	public function GetUniqueElement($sTagName, $bMustExist = true)
 	{
 		$oNode = null;
-		foreach($this->childNodes as $oChildNode)
-		{
-			if ($oChildNode->nodeName == $sTagName)
-			{
+		foreach ($this->childNodes as $oChildNode) {
+			if ($oChildNode->nodeName == $sTagName) {
 				$oNode = $oChildNode;
 				break;
 			}
 		}
-		if ($bMustExist && is_null($oNode))
-		{
+		if ($bMustExist && is_null($oNode)) {
 			throw new DOMFormatException('Missing unique tag: '.$sTagName);
 		}
 		return $oNode;
@@ -271,20 +339,17 @@ class DesignElement extends \DOMElement
 	public function GetText($sDefault = null)
 	{
 		$sText = null;
-		foreach($this->childNodes as $oChildNode)
-		{
-			if ($oChildNode instanceof \DOMText)
-			{
-				if (is_null($sText)) $sText = '';
+		foreach ($this->childNodes as $oChildNode) {
+			if ($oChildNode instanceof \DOMText) {
+				if (is_null($sText)) {
+					$sText = '';
+				}
 				$sText .= $oChildNode->wholeText;
 			}
 		}
-		if (is_null($sText))
-		{
+		if (is_null($sText)) {
 			return $sDefault;
-		}
-		else
-		{
+		} else {
 			return $sText;
 		}
 	}
@@ -301,10 +366,144 @@ class DesignElement extends \DOMElement
 	public function GetChildText($sTagName, $sDefault = null)
 	{
 		$sRet = $sDefault;
-		if ($oChild = $this->GetOptionalElement($sTagName))
-		{
+		if ($oChild = $this->GetOptionalElement($sTagName)) {
 			$sRet = $oChild->GetText($sDefault);
 		}
 		return $sRet;
+	}
+
+	/**
+	 * Check that the current node is actually a class node, under classes
+	 * @since 3.1.2 3.2.0 N°6974
+	 */
+	public function IsClassNode(): bool
+	{
+		if ($this->tagName == 'class') {
+			// Beware: classes/class also exists in the group definition
+			if (($this->parentNode->tagName == 'classes') && ($this->parentNode->parentNode->tagName == 'itop_design')) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * True if the node is contained in a _delta="merge" tree
+	 * @return bool
+	 */
+	public function IsInSpecifiedMerge(): bool
+	{
+		// Iterate through the parents: reset the flag if any of them has a flag set
+		for ($oParent = $this; $oParent instanceof MFElement; $oParent = $oParent->parentNode) {
+			$sDeltaSpec = $oParent->getAttribute('_delta');
+			if ($sDeltaSpec === 'merge') {
+				return true;
+			}
+			if (in_array($sDeltaSpec, ['define', 'define_if_not_exists', 'force', 'redefine'])) {
+				return false;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Find the child node matching the given node.
+	 * UNSAFE: may return nodes marked as _alteration="removed"
+	 * A method with the same signature MUST exist in MFDocument for the recursion to work fine
+	 *
+	 * @param DesignElement $oRefNode The node to search for
+	 * @param null|string $sSearchId substitutes to the value of the 'id' attribute
+	 *
+	 * @return DesignElement|null
+	 * @throws \Exception
+	 * @since 3.1.2 3.2.0 N°6974
+	 */
+	public function _FindChildNode(DesignElement $oRefNode, $sSearchId = null): ?DesignElement
+	{
+		return self::_FindNode($this, $oRefNode, $sSearchId);
+	}
+
+	/**
+	 * Find the child node matching the given node.
+	 * UNSAFE: may return nodes marked as _alteration="removed"
+	 * A method with the same signature MUST exist in MFDocument for the recursion to work fine
+	 *
+	 * @param DesignElement $oRefNode The node to search for
+	 *
+	 * @return DesignElement|null
+	 * @throws \Exception
+	 * @since 3.1.2 3.2.0 N°6974
+	 */
+	public function _FindChildNodes(DesignElement $oRefNode): ?DesignElement
+	{
+		return self::_FindNodes($this, $oRefNode);
+	}
+
+	/**
+	 * Find the child node matching the given node under the specified parent.
+	 * UNSAFE: may return nodes marked as _alteration="removed"
+	 *
+	 * @param \DOMNode $oParent
+	 * @param DesignElement $oRefNode
+	 * @param string|null $sSearchId
+	 *
+	 * @return DesignElement|null
+	 * @throws Exception
+	 * @since 3.1.2 3.2.0 N°6974
+	 */
+	public static function _FindNode(DOMNode $oParent, DesignElement $oRefNode, string $sSearchId = null): ?DesignElement
+	{
+		$oNodes = self::_FindNodes($oParent, $oRefNode, $sSearchId);
+		if ($oNodes instanceof DOMNodeList) {
+			/** @var DesignElement $oNode */
+			$oNode = $oNodes->item(0);
+
+			return $oNode;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Find the child node matching the given node under the specified parent.
+	 * UNSAFE: may return nodes marked as _alteration="removed"
+	 *
+	 * @param \DOMNode $oParent
+	 * @param DesignElement $oRefNode
+	 * @param string|null $sSearchId
+	 *
+	 * @return \DOMNodeList|false|mixed
+	 * @since 3.1.2 3.2.0 N°6974
+	 */
+	public static function _FindNodes(DOMNode $oParent, DesignElement $oRefNode, string $sSearchId = null)
+	{
+		if ($oParent instanceof DOMDocument) {
+			$oDoc = $oParent->firstChild->ownerDocument;
+			$oRoot = $oParent;
+		} else {
+			$oDoc = $oParent->ownerDocument;
+			$oRoot = $oParent;
+		}
+
+		$oXPath = new DOMXPath($oDoc);
+		if ($oRefNode->hasAttribute('id')) {
+			// Find the elements having the same tag name and id
+			if (!$sSearchId) {
+				$sSearchId = $oRefNode->getAttribute('id');
+			}
+			$sQuotedId = DesignDocument::XPathQuote($sSearchId);
+			$sXPath = './'.$oRefNode->tagName."[@id=$sQuotedId]";
+
+			$oRes = $oXPath->query($sXPath, $oRoot);
+		} else {
+			// Get the elements having the same tag name
+			$sXPath = './'.$oRefNode->tagName;
+
+			$oRes = $oXPath->query($sXPath, $oRoot);
+		}
+
+		return $oRes;
 	}
 }

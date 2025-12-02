@@ -1,28 +1,14 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
  * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Attachments:TabTitle_Count' => 'Anexos (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Anexos',
 	'Attachments:FieldsetTitle' => 'Anexos',
@@ -43,13 +29,13 @@ o pregunte al administador de iTop si el servidor que ha quedado sin espacio en 
 	'Attachments:Render:Icons' => 'Desplegar como icono',
 	'Attachments:Render:Table' => 'Desplegar como lista',
 	'UI:Attachments:DropYourFileHint' => 'Arrastre los archivos en cualquier lugar de esta área',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Attachment' => 'Anexo',
 	'Class:Attachment+' => 'Anexo',
 	'Class:Attachment/Attribute:expire' => 'Expira',
@@ -64,36 +50,42 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => 'Contenido',
 	'Class:Attachment/Attribute:contents+' => '',
-));
+]);
 
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Attachments:File:Thumbnail' => 'Ícono',
 	'Attachments:File:Name' => 'Nombre de Archivo',
 	'Attachments:File:Date' => 'Fecha de Carga',
 	'Attachments:File:Uploader' => 'Cargado por',
 	'Attachments:File:Size' => 'Tamaño',
 	'Attachments:File:MimeType' => 'Tipo',
-	'Attachments:File:DownloadsCount' => 'Downloads~~',
-));
+	'Attachments:File:DownloadsCount' => 'Descargas',
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Attachment/Attribute:creation_date' => 'Fecha de Creación',
 	'Class:Attachment/Attribute:creation_date+' => '',
 	'Class:Attachment/Attribute:user_id' => 'Id del Usuario',
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Id del Contacto',
 	'Class:Attachment/Attribute:contact_id+' => '',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
-	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
-));
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'Class:TriggerOnAttachmentDownload' => 'Disparador (al descargar el archivo adjunto del objeto)',
+	'Class:TriggerOnAttachmentDownload+' => 'Disparador al descargar el archivo adjunto del objeto de [una clase secundaria de] la clase dada',
+	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
+	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
+	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
+	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
+]);

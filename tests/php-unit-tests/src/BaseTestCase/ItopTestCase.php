@@ -1,25 +1,42 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
+use DateTime;
+use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
-use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use ReflectionMethod;
 use SetupUtils;
+use Symfony\Component\HttpKernel\KernelInterface;
+
+use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 /**
- * Helper class to extend for tests that DO NOT need to access the DataModel or the Database
+ * Class ItopTestCase
+ *
+ * Helper class to extend for tests that DO NOT need to access the DataModel or the Database,
+ * but still need to access the iTop core classes and optionally boot the Symfony kernel (to access the services container).
  *
  * @since 3.0.4 3.1.1 3.2.0 N°6658 move some setUp/tearDown code to the corresponding methods *BeforeClass to speed up tests process time.
  */
-abstract class ItopTestCase extends TestCase
+abstract class ItopTestCase extends KernelTestCase
 {
 	public const TEST_LOG_DIR = 'test';
+
+	/**
+	 * @var bool
+	 * @since 3.0.4 3.1.1 3.2.0 N°6976 Allow to enable/disable {@see DeprecatedCallsLog} error handler
+	 */
+	public const DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER = true;
 	public static $DEBUG_UNIT_TEST = false;
+	protected static $aBackupStaticProperties = [];
 
 	/**
 	 * @link https://docs.phpunit.de/en/9.6/annotations.html#preserveglobalstate PHPUnit `preserveGlobalState` annotation documentation
@@ -38,12 +55,29 @@ abstract class ItopTestCase extends TestCase
 
 		static::$DEBUG_UNIT_TEST = getenv('DEBUG_UNIT_TEST');
 
-		require_once static::GetAppRoot() . 'approot.inc.php';
+		require_once __DIR__.'/../../../../approot.inc.php';
 
-		if (false === defined('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME')) {
+		if ((static::DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER)
+			&& (false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))) {
 			// setUp might be called multiple times, so protecting the define() call !
-			define('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME', true);
+			define(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME, true);
 		}
+
+		// This is mostly for interactive usage, to warn the developer that the tests will be slow and point her to the php.ini file
+		static $bCheckedXDebug = false;
+		if (!$bCheckedXDebug) {
+			$bCheckedXDebug = true;
+			if (extension_loaded('xdebug') && ini_get('xdebug.mode') != '') {
+				echo "Xdebug is enabled (xdebug.mode='".ini_get('xdebug.mode')."'), this will slow down the tests.\n";
+				$sIniFile = php_ini_loaded_file();
+				if ($sIniFile) {
+					echo "This can be tuned in $sIniFile\n";
+				}
+			}
+		}
+
+		// Required to boot the portal symfony Kernel
+		$_ENV['PORTAL_ID'] = 'itop-portal';
 	}
 
 	/**
@@ -65,10 +99,59 @@ abstract class ItopTestCase extends TestCase
 		}
 	}
 
-	protected function setUp(): void {
+	/**
+	 * @param array $args
+	 * @param string $sExportFileName relative to log folder
+	 * @param array $aExcludedParams
+	 * Function that aims to export the values of the parameters of a function in a file
+	 * You can call the function anywhere like following :
+	 * ```
+	 * require __DIR__ . '/../../../tests/php-unit-tests/vendor/autoload.php'; // required to include phpunit autoload
+	 * ItopTestCase::ExportFunctionParameterValues(func_get_args(), "parameters.txt");
+	 * ```
+	 * Useful to generate realistic data for tests providers
+	 *
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public static function ExportFunctionParameterValues(array $args, string $sExportFileName, array $aExcludedParams = []): string
+	{
+		// get sclass et function dans la callstrack
+
+		// in the callstack get the call function name
+		$aCallStack = debug_backtrace();
+		$sCallFunction = $aCallStack[1]['function'];
+		// in the casll stack get the call class name
+		$sCallClass = $aCallStack[1]['class'];
+		$reflectionFunc = new ReflectionMethod($sCallClass, $sCallFunction);
+		$parameters = $reflectionFunc->getParameters();
+
+		$aParamValues = [];
+		foreach ($parameters as $index => $param) {
+			$aParamValues[$param->getName()] = $args[$index] ?? null;
+		}
+
+		$paramValues = $aParamValues;
+		foreach ($aExcludedParams as $sExcludedParam) {
+			unset($paramValues[$sExcludedParam]);
+		}
+
+		// extract oPage from the array in parameters and make a foreach on exlucded parameters
+		foreach ($aExcludedParams as $sExcludedParam) {
+			unset($paramValues[$sExcludedParam]);
+		}
+
+		$var_export = var_export($paramValues, true);
+		file_put_contents(APPROOT.'/log/'.$sExportFileName, $var_export);
+		return $var_export;
+	}
+
+	protected function setUp(): void
+	{
 		parent::setUp();
 
-		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
+		// Hack - Required the first time the Portal kernel is booted on a newly installed iTop
+		$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] = __DIR__.'/../../../../../env-production/itop-portal-base/portal/public/';
 
 		$this->LoadRequiredItopFiles();
 		$this->LoadRequiredTestFiles();
@@ -104,10 +187,18 @@ abstract class ItopTestCase extends TestCase
 		if (defined('APPROOT')) {
 			return APPROOT;
 		}
-		$sSearchPath = __DIR__;
+
+		$sAppRootPath = static::GetFirstDirUpContainingFile(__DIR__, 'approot.inc.php');
+
+		return $sAppRootPath.'/';
+	}
+
+	private static function GetFirstDirUpContainingFile(string $sSearchPath, string $sFileToFindGlobPattern): ?string
+	{
 		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
-			if (file_exists($sSearchPath.'/approot.inc.php')) {
-				break;
+			$aGlobFiles = glob($sSearchPath.'/'.$sFileToFindGlobPattern);
+			if (is_array($aGlobFiles) && (count($aGlobFiles) > 0)) {
+				return $sSearchPath.'/';
 			}
 			$iOffsetSep = strrpos($sSearchPath, '/');
 			if ($iOffsetSep === false) {
@@ -119,7 +210,7 @@ abstract class ItopTestCase extends TestCase
 			}
 			$sSearchPath = substr($sSearchPath, 0, $iOffsetSep);
 		}
-		return $sSearchPath.'/';
+		return null;
 	}
 
 	/**
@@ -130,7 +221,8 @@ abstract class ItopTestCase extends TestCase
 	 */
 	protected function LoadRequiredItopFiles(): void
 	{
-		// Empty until we actually need to require some files in the class
+		// At least make sure that the autoloader will be loaded, and that the APPROOT constant is defined
+		require_once __DIR__.'/../../../../approot.inc.php';
 	}
 
 	/**
@@ -155,7 +247,7 @@ abstract class ItopTestCase extends TestCase
 	 */
 	protected function RequireOnceItopFile(string $sFileRelPath): void
 	{
-		require_once $this->GetAppRoot() . $sFileRelPath;
+		require_once $this->GetAppRoot().$sFileRelPath;
 	}
 
 	/**
@@ -172,7 +264,7 @@ abstract class ItopTestCase extends TestCase
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 		$sCallerDirAbsPath = dirname($aStack[0]['file']);
 
-		require_once $sCallerDirAbsPath . DIRECTORY_SEPARATOR . $sFileRelPath;
+		require_once $sCallerDirAbsPath.DIRECTORY_SEPARATOR.$sFileRelPath;
 	}
 
 	protected function debug($sMsg)
@@ -181,11 +273,11 @@ abstract class ItopTestCase extends TestCase
 			if (is_string($sMsg)) {
 				echo "$sMsg\n";
 			} else {
-		        /** @noinspection ForgottenDebugOutputInspection */
-		        print_r($sMsg);
-	        }
-        }
-    }
+				/** @noinspection ForgottenDebugOutputInspection */
+				print_r($sMsg);
+			}
+		}
+	}
 
 	public function GetMicroTime()
 	{
@@ -196,8 +288,7 @@ abstract class ItopTestCase extends TestCase
 	public function WriteToCsvHeader($sFilename, $aHeader)
 	{
 		$sResultFile = APPROOT.'log/'.$sFilename;
-		if (is_file($sResultFile))
-		{
+		if (is_file($sResultFile)) {
 			@unlink($sResultFile);
 		}
 		SetupUtils::builddir(dirname($sResultFile));
@@ -249,9 +340,8 @@ abstract class ItopTestCase extends TestCase
 		return $method->invokeArgs($oObject, $aArgs);
 	}
 
-
 	/**
-	 * @since 3.1.0
+	 * @since 2.7.10 3.1.0
 	 */
 	public function GetNonPublicStaticProperty(string $sClass, string $sProperty)
 	{
@@ -278,17 +368,56 @@ abstract class ItopTestCase extends TestCase
 	}
 
 	/**
-	 * @since 3.1.0
+	 * Backup every static property of the class (even protected ones)
+	 * @param string $sClass
+	 *
+	 * @return void
+	 *
+	 * @since 3.2.0
+	 */
+	public static function BackupStaticProperties($sClass)
+	{
+		$class = new \ReflectionClass($sClass);
+		foreach ($class->getProperties() as $property) {
+			if (!$property->isStatic()) {
+				continue;
+			}
+			$property->setAccessible(true);
+			static::$aBackupStaticProperties[$sClass][$property->getName()] = $property->getValue();
+		}
+	}
+
+	/**
+	 * Restore every static property of the class (even protected ones)
+	 * @param string $sClass
+	 *
+	 * @return void
+	 *
+	 * @since 3.2.0
+	 */
+	public static function RestoreStaticProperties($sClass)
+	{
+		$class = new \ReflectionClass($sClass);
+		foreach ($class->getProperties() as $property) {
+			if (!$property->isStatic()) {
+				continue;
+			}
+			$property->setAccessible(true);
+			$property->setValue(null, static::$aBackupStaticProperties[$sClass][$property->getName()]);
+		}
+	}
+
+	/**
+	 * @since 2.7.10 3.1.0
 	 */
 	private function GetProperty(string $sClass, string $sProperty): \ReflectionProperty
 	{
-		$class = new \ReflectionClass($sClass);
-		$property = $class->getProperty($sProperty);
-		$property->setAccessible(true);
+		$oClass = new \ReflectionClass($sClass);
+		$oProperty = $oClass->getProperty($sProperty);
+		$oProperty->setAccessible(true);
 
-		return $property;
+		return $oProperty;
 	}
-
 
 	/**
 	 * @param object $oObject
@@ -297,29 +426,29 @@ abstract class ItopTestCase extends TestCase
 	 *
 	 * @since 2.7.8 3.0.3 3.1.0
 	 */
-	public function SetNonPublicProperty(object $oObject, string $sProperty, $value)
+	public function SetNonPublicProperty($oObject, string $sProperty, $value)
 	{
 		$oProperty = $this->GetProperty(get_class($oObject), $sProperty);
 		$oProperty->setValue($oObject, $value);
 	}
 
 	/**
-	 * @since 3.1.0
+	 * @since 2.7.10 3.1.0
 	 */
 	public function SetNonPublicStaticProperty(string $sClass, string $sProperty, $value)
 	{
 		$oProperty = $this->GetProperty($sClass, $sProperty);
-		$oProperty->setValue($value);
+		$oProperty->setValue(null, $value);
 	}
 
-	public function RecurseRmdir($dir)
+	public static function RecurseRmdir($dir)
 	{
 		if (is_dir($dir)) {
 			$objects = scandir($dir);
 			foreach ($objects as $object) {
 				if ($object != "." && $object != "..") {
 					if (is_dir($dir.DIRECTORY_SEPARATOR.$object)) {
-						$this->RecurseRmdir($dir.DIRECTORY_SEPARATOR.$object);
+						static::RecurseRmdir($dir.DIRECTORY_SEPARATOR.$object);
 					} else {
 						unlink($dir.DIRECTORY_SEPARATOR.$object);
 					}
@@ -329,38 +458,38 @@ abstract class ItopTestCase extends TestCase
 		}
 	}
 
-	public function CreateTmpdir() {
-		$sTmpDir=tempnam(sys_get_temp_dir(),'');
-		if (file_exists($sTmpDir))
-		{
+	public static function CreateTmpdir()
+	{
+		$sTmpDir = tempnam(sys_get_temp_dir(), '');
+		if (file_exists($sTmpDir)) {
 			unlink($sTmpDir);
 		}
 		mkdir($sTmpDir);
-		if (is_dir($sTmpDir))
-		{
+		if (is_dir($sTmpDir)) {
 			return $sTmpDir;
 		}
 
 		return sys_get_temp_dir();
 	}
 
-	public function RecurseMkdir($sDir){
-		if (strpos($sDir, DIRECTORY_SEPARATOR) === 0){
+	public static function RecurseMkdir($sDir)
+	{
+		if (strpos($sDir, DIRECTORY_SEPARATOR) === 0) {
 			$sPath = DIRECTORY_SEPARATOR;
 		} else {
 			$sPath = "";
 		}
 
-		foreach (explode(DIRECTORY_SEPARATOR, $sDir) as $sSubDir){
+		foreach (explode(DIRECTORY_SEPARATOR, $sDir) as $sSubDir) {
 			if (($sSubDir === '..')) {
 				break;
 			}
 
-			if (( trim($sSubDir) === '' ) || ( $sSubDir === '.' )) {
+			if ((trim($sSubDir) === '') || ($sSubDir === '.')) {
 				continue;
 			}
 
-			$sPath .= $sSubDir . DIRECTORY_SEPARATOR;
+			$sPath .= $sSubDir.DIRECTORY_SEPARATOR;
 			if (!is_dir($sPath)) {
 				var_dump($sPath);
 				@mkdir($sPath);
@@ -369,19 +498,137 @@ abstract class ItopTestCase extends TestCase
 
 	}
 
-	public function RecurseCopy($src,$dst) {
+	public static function RecurseCopy($src, $dst)
+	{
 		$dir = opendir($src);
 		@mkdir($dst);
-		while(false !== ( $file = readdir($dir)) ) {
-			if (( $file != '.' ) && ( $file != '..' )) {
-				if ( is_dir($src . '/' . $file) ) {
-					$this->RecurseCopy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
-				}
-				else {
-					copy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
+		while (false !== ($file = readdir($dir))) {
+			if (($file != '.') && ($file != '..')) {
+				if (is_dir($src.'/'.$file)) {
+					static::RecurseCopy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
+				} else {
+					copy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
 				}
 			}
 		}
 		closedir($dir);
+	}
+
+	/**
+	 * An alternative to assertEquals in case the order of the elements in the array is not important
+	 *
+	 * @since 3.2.0
+	 */
+	protected function AssertArraysHaveSameItems(array $aExpected, array $aActual, string $sMessage = ''): void
+	{
+		sort($aActual);
+		sort($aExpected);
+
+		$sExpected = var_export($aExpected, true);
+		$sActual = var_export($aActual, true);
+		if ($sExpected === $sActual) {
+			$this->assertTrue(true);
+			return;
+		}
+		$sMessage .= "\nExpected:\n$sExpected\nActual:\n$sActual";
+
+		$this->fail($sMessage);
+	}
+
+	/**
+	 * The order of the files is not important
+	 *
+	 * @since 3.2.1
+	 */
+	public function AssertDirectoryListingEquals(array $aExpected, string $sDir, string $sMessage = ''): void
+	{
+		$aFiles = [];
+
+		foreach (scandir($sDir) as $sFile) {
+			if ($sFile !== '.' && $sFile !== '..') {
+				$aFiles[] = basename($sFile);
+			}
+		}
+
+		$this->AssertArraysHaveSameItems($aExpected, $aFiles, $sMessage);
+	}
+
+	/**
+	 * @since 3.2.1
+	 */
+	protected static function AssertDateEqualsNow($sActualDate, $sMessage = ''): void
+	{
+		$oActualDate = \DateTime::createFromFormat(\AttributeDate::GetInternalFormat(), $sActualDate);
+		$oNow = new \DateTime();
+		$iTimeInterval = $oNow->diff($oActualDate)->s;
+		self::assertLessThan(2, $iTimeInterval, $sMessage);
+	}
+	/**
+	 * @since 3.2.1
+	 */
+	protected static function AssertDateTimeEqualsNow($sActualDate, $sMessage = ''): void
+	{
+		$oActualDateTime = \DateTime::createFromFormat(\AttributeDateTime::GetInternalFormat(), $sActualDate);
+		$oNow = new \DateTime();
+		$iTimeInterval = $oNow->diff($oActualDateTime)->s;
+		self::assertLessThan(2, $iTimeInterval, $sMessage);
+	}
+
+	/**
+	 * Control which Kernel will be loaded when invoking the bootKernel method
+	 *
+	 * @see static::bootKernel(), static::getContainer()
+	 * @see  \Combodo\iTop\Kernel, \Combodo\iTop\Portal\Kernel
+	 *
+	 * @param string $sKernelClass
+	 *
+	 * @since 3.2.1
+	 */
+	protected static function SetKernelClass(string $sKernelClass): void
+	{
+		$_SERVER['KERNEL_CLASS'] = $sKernelClass;
+	}
+
+	protected static function bootKernel(array $options = []): KernelInterface
+	{
+		if (!array_key_exists('KERNEL_CLASS', $_SERVER)) {
+			throw new \LogicException('static::SetKernelClass() must be called before booting the kernel.');
+		}
+		return parent::bootKernel($options);
+	}
+
+	/**
+	 * @author Ain Tohvri <https://mstdn.social/@tekkie>
+	 *
+	 * @since 3.2.1
+	 */
+	protected static function ReadTail($sFilename, $iLines = 1)
+	{
+		$handle = fopen($sFilename, "r");
+		$iLineCounter = $iLines;
+		$iPos = -2;
+		$bBeginning = false;
+		$aLines = [];
+		while ($iLineCounter > 0) {
+			$sChar = " ";
+			while ($sChar != "\n") {
+				if (fseek($handle, $iPos, SEEK_END) == -1) {
+					$bBeginning = true;
+					break;
+				}
+				$sChar = fgetc($handle);
+				$iPos--;
+			}
+			$iLineCounter--;
+			if ($bBeginning) {
+				rewind($handle);
+			}
+			$aLines[$iLines - $iLineCounter - 1] = fgets($handle);
+			if ($bBeginning) {
+				break;
+			}
+		}
+		fclose($handle);
+		return array_reverse($aLines);
 	}
 }

@@ -1,20 +1,16 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-//////////////////////////////////////////////////////////////////////
-// Classes in 'gui'
-//////////////////////////////////////////////////////////////////////
-//
-//////////////////////////////////////////////////////////////////////
-// Classes in 'application'
-//////////////////////////////////////////////////////////////////////
-//
-//
-// Class: AuditCategory
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+/**
+ *
+ */
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AuditCategory' => 'Denetleme Kategorisi',
 	'Class:AuditCategory+' => 'Denetlemedeki kategori',
 	'Class:AuditCategory/Attribute:name' => 'Kategori Adı',
@@ -30,23 +26,22 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error threshold~~',
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
-	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
-));
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AuditRule' => 'Denetleme Kuralı',
 	'Class:AuditRule+' => 'Denetleme Kategorisi kuralı',
 	'Class:AuditRule/Attribute:name' => 'Kural Adı',
 	'Class:AuditRule/Attribute:name+' => 'Kural Adı',
 	'Class:AuditRule/Attribute:description' => 'Kural tanımlaması',
 	'Class:AuditRule/Attribute:description+' => 'Kural tanımlaması',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Çalıştırılacak Sorgu',
 	'Class:AuditRule/Attribute:query+' => 'Çalıştırılcak OQL ifadesi',
 	'Class:AuditRule/Attribute:valid_flag' => 'Geçerli nesneler?',
@@ -58,14 +53,16 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:AuditRule/Attribute:category_id' => 'Kategori',
 	'Class:AuditRule/Attribute:category_id+' => 'Kuralın kategorisi',
 	'Class:AuditRule/Attribute:category_name' => 'Kategori',
-	'Class:AuditRule/Attribute:category_name+' => 'Kural için kategori adı'
-));
+	'Class:AuditRule/Attribute:category_name+' => 'Kural için kategori adı',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -77,13 +74,13 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -94,13 +91,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Query' => 'Sorgu',
 	'Class:Query+' => 'Bir sorgu, dinamik bir şekilde tanımlanan bir veri setidir',
 	'Class:Query/Attribute:name' => 'İsim',
@@ -127,7 +124,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:QueryOQL+' => 'Nesne sorgusu diline dayanan bir sorgu',
 	'Class:QueryOQL/Attribute:oql' => 'İfade',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL ifadesi',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -138,7 +135,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 // Class: User
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:User' => 'Kullanıcı',
 	'Class:User+' => 'Kullanıcı',
 	'Class:User/Attribute:finalclass' => 'Hesap tipi',
@@ -171,23 +168,28 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled~~',
 	'Class:User/Error:LoginMustBeUnique' => 'Kullanıcı adı tekil olmalı - "%1s" mevcut bir kullanıcıya ait.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'En az bir profil kullanıcıya atanmalı',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'You cannot remove your own rights to edit Users~~',
+	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
 	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
+	'Class:User/Warning:NoOrganizationMeansFullAccess' => 'No "Allowed Organizations" defined for this user, this means they have access to all organizations~~',
+	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'Dahili kullanıcı',
 	'Class:UserInternal+' => ITOP_APPLICATION_SHORT.'\'ta tanımlanan kullanıcı',
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_Profiles' => 'Profil',
 	'Class:URP_Profiles+' => 'Kullanıcı profili',
 	'Class:URP_Profiles/Attribute:name' => 'Adı',
@@ -196,13 +198,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:URP_Profiles/Attribute:description+' => 'Profil tanımlama',
 	'Class:URP_Profiles/Attribute:user_list' => 'Kullanıcılar',
 	'Class:URP_Profiles/Attribute:user_list+' => 'bu rolü kullanan kullanıcılar',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_Dimensions' => 'boyut',
 	'Class:URP_Dimensions+' => 'uygulama boyutları (silo kullanımları)',
 	'Class:URP_Dimensions/Attribute:name' => 'Adı',
@@ -211,13 +213,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'Tanımlama',
 	'Class:URP_Dimensions/Attribute:type' => 'Tip',
 	'Class:URP_Dimensions/Attribute:type+' => 'sınıf adı veya veri tipi (projection unit)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_UserProfile' => 'Kullanıcı Profili',
 	'Class:URP_UserProfile+' => 'Kullanıcı Profili',
 	'Class:URP_UserProfile/Name' => '%1$s ve %2$s arasındaki ilişki',
@@ -231,14 +233,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:URP_UserProfile/Attribute:profile+' => 'Profil adı',
 	'Class:URP_UserProfile/Attribute:reason' => 'Sebep',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Kullanıcının bu rolü alma sebebini açıklayınız',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_UserOrg' => 'Kullanıcı Kurumu',
 	'Class:URP_UserOrg+' => 'İzin verilen kurumlar',
 	'Class:URP_UserOrg/Name' => '%1$s ve %2$s arasındaki ilişki',
@@ -252,13 +253,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Erişim yetkisi verilen kurumlar',
 	'Class:URP_UserOrg/Attribute:reason' => 'Sebep',
 	'Class:URP_UserOrg/Attribute:reason+' => 'Kullanıcının bu rolü alma sebebini açıklayınız',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => 'profile projections',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Boyut',
@@ -273,13 +274,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL ifadesi (kullanıcı $user) | sabit |  | +özellik kodu',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Hedef özellik kodu (opsiyonel)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_ClassProjection' => 'sınıf projeksiyonu',
 	'Class:URP_ClassProjection+' => 'sınıf projeksiyonu',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Boyut',
@@ -292,13 +293,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL ifadesi (kullanıcı $user) | sabit |  | +özellik kodu',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Özellik',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Hedef özellik kodu (opsiyonel)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_ActionGrant' => 'işlem yetkileri',
 	'Class:URP_ActionGrant+' => 'sınıf üzerindeki yetkiler',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profil',
@@ -315,13 +316,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'hayır',
 	'Class:URP_ActionGrant/Attribute:action' => 'İşlem',
 	'Class:URP_ActionGrant/Attribute:action+' => 'verilen sınıf üzerinde uygulanacak işlemler',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_StimulusGrant' => 'uyarı yetkileri',
 	'Class:URP_StimulusGrant+' => 'nesnenin yaşam döngüsündeki uyarı yetkileri',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profil',
@@ -338,25 +339,25 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'hayır',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Uyarı',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'uyarı kodu',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:URP_AttributeGrant' => 'özellik yetkisi',
 	'Class:URP_AttributeGrant+' => 'özellik seviyesinde yetki',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'İzin verilen işlem',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'İşlem izni',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Özellik',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Özellik kodu',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:UserDashboard' => 'User dashboard~~',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'User~~',
@@ -365,22 +366,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-));
-
-//
-// Expression to Natural language
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:WelcomeMenu' => 'Hoşgeldiniz',
 	'Menu:WelcomeMenu+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
 	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',
@@ -397,52 +388,20 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:NotificationsMenu' => 'Uyarılar',
 	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması',
 	'Menu:MyShortcuts' => 'My Shortcuts~~',
+	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
 	'Menu:DataAdministration' => 'Veri Yönetimi',
 	'Menu:DataAdministration+' => 'Veri Yönetimi',
-));
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'BooleanLabel:yes' => 'evet',
 	'BooleanLabel:no' => 'hayır',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
 	'UI:WelcomeMenu:Title' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
-	'UI:WelcomeMenu:LeftBlock' => '<p>iTop açık kaynak Bilişim İşlem Potalıdır.</p>
-<ul>Kapsamı:
-<li>Bilişim altyapısının tanımlandığı ve dokümante edildiği Konfigürasyon Yönetimi CMDB (Configuration management database)modülü.</li>
-<li>Bilişim altyapısı ile ilgili tüm olayların takibi.</li>
-<li>Bilişim altyapısının değişim yönetimi.</li>
-<li>Bilinen hatalar bilgi kütüphanesi.</li>
-<li>Planlı kesintilerin kayıt altına alınması ve ilgililerin uyarılması.</li>
-<li>Özet gösterge ekranları</li>
-</ul>
-<p>Tüm modüller bağımsız olarak, adım adım kurulabilir.</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>iTop servis sağlayıcı maktığı ile hazırlanmış olup, birden fazla müşteri ve kuruma kolaylıkla hizmet vermeye imkan sağlar.
-<ul>iTop, zengin iş süreçleri tanımlama imkanıyla:
-<li>Bilişim yönetim etkinliğini</li>
-<li>Operasyon performansını</li>
-<li>Müşteri memnuniyetini ve yönetimin iş performansı hakkında bilgi sahibi olmasını sağlar.</li>
-</ul>
-</p>
-<p>iTop mevcut Bilşim altyapınızla entegre edilmeye açıktır.</p>
-<p>
-<ul>Yeni nesil operasyonel Bilişim portalı :
-<li>Bilişim ortamının daha iyi yönetilmesini.</li>
-<li>ITIL süreçlerinin kendi başınıza uygulanmaya.</li>
-<li>İşletmenin en önemli kaynağı olan dokümantasyonu yönetmesine imkan sağlar.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Açık istekler: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'İsteklerim',
 	'UI:WelcomeMenu:OpenIncidents' => 'Açık Arızalar: %1$d',
@@ -450,8 +409,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:WelcomeMenu:MyIncidents' => 'Bana atanan hatalar',
 	'UI:AllOrganizations' => ' Tüm Kurumlar ',
 	'UI:YourSearch' => 'Arama',
-	'UI:LoggedAsMessage' => '%1$s (%2$s) kullanıcısı ile bağlanıldı~~',
-	'UI:LoggedAsMessage+Admin' => '%1$s (%2$s, Administrator) kullanıcısı ile bağlanıldı~~',
+	'UI:LoggedAsMessage' => '%1$s (%2$s) kullanıcısı ile bağlanıldı',
+	'UI:LoggedAsMessage+Admin' => '%1$s (%2$s, Administrator) kullanıcısı ile bağlanıldı',
 	'UI:Button:Logoff' => 'Çıkış',
 	'UI:Button:GlobalSearch' => 'Arama',
 	'UI:Button:Search' => ' Arama ',
@@ -498,7 +457,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
 	'UI:InputFile:SelectFile' => 'Select a file~~',
 	'UI:SearchToggle' => 'Ara',
-	'UI:ClickToCreateNew' => 'Yeni %1$s yarat~~',
+	'UI:ClickToCreateNew' => 'Yeni %1$s yarat',
 	'UI:SearchFor_Class' => '%1$s Arama',
 	'UI:NoObjectToDisplay' => 'Görüntülenecek nesne bulunamadı.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
@@ -572,6 +531,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:Manage' => 'Yönet...',
 	'UI:Menu:EMail' => 'e-posta',
 	'UI:Menu:CSVExport' => 'CSV olarak dışarı ver...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => 'Düzenle...',
 	'UI:Menu:Delete' => 'Sil...',
 	'UI:Menu:BulkDelete' => 'Sil...',
@@ -625,7 +585,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ResetPwd-Error-EnterPassword' => '\'%1$s\' hesabı için yeni bir şifre girin.',
 	'UI:ResetPwd-Ready' => 'Şifre değiştirildi.',
 	'UI:ResetPwd-Login' => 'Giriş yapmak için buraya tıklayın...',
-	'UI:Login:About' => '~~',
+	'UI:Login:About' => ITOP_APPLICATION.' Powered by Combodo~~',
 	'UI:Login:ChangeYourPassword' => 'Şifre Değiştir',
 	'UI:Login:OldPasswordPrompt' => 'Mevcut şifre',
 	'UI:Login:NewPasswordPrompt' => 'Yeni şifre',
@@ -685,6 +645,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:TreatFirstLineAsHeader' => 'İlk satırı başlık olarak değerlendir(kolon isimleri)',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => 'Skip %1$s line(s) at the beginning of the file',
 	'UI:CSVImport:CSVDataPreview' => 'CSV Veri Görüntüleme',
+	'UI:CSVImport:Column' => 'Column %1$s~~',
 	'UI:CSVImport:SelectFile' => 'İçeri aktarılacak dosyayı seçiniz:',
 	'UI:CSVImport:Tab:LoadFromFile' => 'Dosyadan oku',
 	'UI:CSVImport:Tab:CopyPaste' => 'Veriyi kopyala yapıştır',
@@ -705,11 +666,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:AlertMultipleMapping' => 'Lütfen bir hedef alanın yalnızca bir kez eşlendiğinden emin olun.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Lütfen en az bir sorgu kriteri seçiniz.',
 	'UI:CSVImport:Encoding' => 'Karakter kodlaması',
+	'UI:CSVImport:ViewAllPossibleValues' => 'View all possible values~~',
+	'UI:CSVImport:ViewAllAmbiguousValues' => 'View all ambiguous values~~',
 	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Genel arama',
 	'UI:UniversalSearch:Error' => 'Hata: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Aranacak sınıfı seçiniz: ',
 	'UI:CSVReport-Value-Modified' => 'Değiştiridi',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
@@ -722,7 +685,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Row-Created' => 'Yaratıldı',
 	'UI:CSVReport-Row-Updated' => '%1$d sütunları güncellendi',
 	'UI:CSVReport-Row-Disappeared' => '%1$d sütunları ortadan kayboldu',
-	'UI:CSVReport-Row-Issue' => 'Sorun: %1$s~~',
+	'UI:CSVReport-Row-Issue' => 'Sorun: %1$s',
 	'UI:CSVReport-Value-Issue-Null' => 'Boş değere izin verilmez',
 	'UI:CSVReport-Value-Issue-NotFound' => 'Nesne bulunamadı',
 	'UI:CSVReport-Value-Issue-FoundMany' => '%1$d eşleşme bulundu',
@@ -749,7 +712,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Object-Created' => 'Nesne oluşturuldu',
 	'UI:CSVReport-Icon-Error' => 'Hata',
 	'UI:CSVReport-Object-Error' => 'HATA: %1$s',
-	'UI:CSVReport-Object-Ambiguous' => 'BELIRSIZ: %1$s~~',
+	'UI:CSVReport-Object-Ambiguous' => 'BELIRSIZ: %1$s',
 	'UI:CSVReport-Stats-Errors' => '%1$.0f yüklü nesnelerin %% hataları var ve göz ardı edilecek.',
 	'UI:CSVReport-Stats-Created' => 'Yüklenen nesnelerin %1$.0f %% oluşturulacaktır.',
 	'UI:CSVReport-Stats-Modified' => 'Yüklenen nesnelerin %1$.0f %% değiştirilecektir.',
@@ -758,7 +721,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVExport:LostChars' => 'Kodlama sorunu',
 	'UI:CSVExport:LostChars+' => 'İndirilen dosya %1$s\'ye kodlanır. '.ITOP_APPLICATION_SHORT.', bu formatla uyumlu olmayan bazı karakterleri tespit etti. Bu karakterler ya bir ikame ile değiştirilecektir (örneğin, vurgulanmış karakterleri aksanı kaybedilen) veya atılacaklardır. Verileri web tarayıcınızdan kopyalayabilir / yapıştırabilirsiniz. Alternatif olarak, kodlamayı değiştirmek için yöneticinize başvurabilirsiniz (bkz. Parametre \'csv_file_default_charset \').',
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB Denetleme',
-	'UI:Audit:InteractiveAudit' => 'Etkileşimli Denetleme',
 	'UI:Audit:Interactive:All:Title' => 'Audit results~~',
 	'UI:Audit:Interactive:All:SubTitle' => 'Full audit: includes all rules, all categories, all domains~~',
 	'UI:Audit:Interactive:All:BreadCrumb' => 'Full audit~~',
@@ -772,6 +734,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Interactive:Domain:BreadCrumb' => '%1$s~~',
 	'UI:Audit:Interactive:Domain:BreadCrumb+' => 'Audit for Domain: %1$s~~',
 	'UI:Audit:Interactive:Selection:Title' => 'Selection of an audit~~',
+	'UI:Audit:InteractiveAudit' => 'Etkileşimli Denetleme',
 	'UI:Audit:Interactive:Selection:SubTitle' => 'Select a domain to get the results limited to this domain or select "All categories" to get a full audit (can take time or even fail if too much data to audit)~~',
 	'UI:Audit:Interactive:Selection:BreadCrumb' => 'Selection~~',
 	'UI:Audit:Interactive:Selection:BreadCrumb+' => 'Selection of an Audit to run~~',
@@ -793,7 +756,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
-	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%% of the object are valid~~',
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQL Sorgu değerlendirme',
 	'UI:RunQuery:QueryExamples' => 'Sorgu örnekleri',
 	'UI:RunQuery:QueryResults' => 'Query Results~~',
@@ -974,6 +937,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:BulkDeleteTitle' => 'Silmek istediğiniz nesneleri seçiniz:',
 	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.' Nesne yaratıldı.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s yaratıldı.',
+	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:StandardDashboard' => 'Standard~~',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => '%1$s işlemi %2$s durumunda %3$s nesnesine uygulanır. Bir sonraki durum: %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'Nesne kaydedilemedi: %1$s',
 	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Kritik Hata',
@@ -1065,11 +1030,12 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 <ol>
 	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
 	Özel sayfa: <a href="../setup/email.test.php" target="_blank">email.test.php</a> PHP e-posta konfigürnunu test ediniz.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
 </ol>
 </p>
 <p>İşlemin gerçekleşmesi için bir tetikleme ile ilişkilendirilmesi gerekir.
-Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçekleştirilir.</p>~~',
+Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçekleştirilir.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Tetikleyiciler',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Kullanılabilir tetikleyiciler',
 	'UI:NotificationsMenu:OnCreate' => 'Nesne yaratıldığında',
@@ -1088,8 +1054,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:iTopVersion:Short' => '%1$s versiyonu %2$s',
 	'UI:iTopVersion:Long' => '%1$s  %4$s tarihli versiyonu %2$s-%3$s',
 	'UI:PropertiesTab' => 'Özellikler',
-	'UI:OpenDocumentInNewWindow_' => 'Açmak~~',
-	'UI:DownloadDocument_' => 'Indirmek~~',
+	'UI:OpenDocumentInNewWindow_' => 'Açmak',
+	'UI:DownloadDocument_' => 'Indirmek',
 	'UI:Document:NoPreview' => 'Bu tip doküman için öngösterim mevcut değil',
 	'UI:Download-CSV' => 'İndir %1$s',
 	'UI:DeadlineMissedBy_duration' => '%1$s ile kaçırıldı',
@@ -1101,6 +1067,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:PasswordConfirm' => 'Onay',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Yeni %1$s nesneleri eklemeden önce bu nesneyi kaydediniz.',
 	'UI:DisplayThisMessageAtStartup' => 'Bu mesajı başlangıçta göster',
+	'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
 	'UI:RelationshipGraph' => 'Grafiksel gösterim',
 	'UI:RelationshipList' => 'List~~',
 	'UI:RelationGroups' => 'Gruplar',
@@ -1191,7 +1158,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:BulkModify_Count_DistinctValues' => '%1$d belirgin değerler:',
 	'UI:BulkModify:Value_Exists_N_Times' => '%1$s, %2$d Zaman (lar)',
 	'UI:BulkModify:N_MoreValues' => '%1$d Diğer değerler...',
-	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Salt okunur alanını ayarlamaya çalışıyor: %1$s~~',
+	'UI:AttemptingToSetAReadOnlyAttribute_Name' => 'Salt okunur alanını ayarlamaya çalışıyor: %1$s',
 	'UI:FailedToApplyStimuli' => 'Eylem başarısız oldu',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: %2$d Nesnelerin %3$s',
 	'UI:CaseLogTypeYourTextHere' => 'Metninizi buraya yazın:',
@@ -1251,11 +1218,12 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',
 	'UI:Button:MoveUp' => 'Yukarıya taşı',
 	'UI:Button:MoveDown' => 'Aşağıya taşı',
-	'UI:OQL:UnknownClassAndFix' => 'Bilinmeyen sınıf \\"%1$s\\". Bunun yerine \\"%2$s\\" deneyebilirsiniz.',
-	'UI:OQL:UnknownClassNoFix' => 'Bilinmeyen sınıf \\"%1$s\\"~~',
+	'UI:OQL:UnknownClassAndFix' => 'Bilinmeyen sınıf "%1$s". Bunun yerine "%2$s" deneyebilirsiniz.',
+	'UI:OQL:UnknownClassNoFix' => 'Bilinmeyen sınıf "%1$s"',
 	'UI:Dashboard:EditCustom' => 'Bu sayfayı düzenleyin...',
 	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
 	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
+	'UI:Dashboard:Edit' => 'Edit This Page...~~',
 	'UI:Dashboard:RevertConfirm' => 'Orijinal versiyonda yapılan her değişiklik kaybolacaktır. Lütfen bunu yapmak istediğinizi onaylayın.',
 	'UI:ExportDashBoard' => 'Bir dosyaya çıkart',
 	'UI:ImportDashBoard' => 'Bir dosyadan aktar ...',
@@ -1263,6 +1231,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:ImportDashboardText' => 'İçe aktarılacak bir gösterge paneli dosyası seçin:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
+	'UI:Dashboard:Revert' => 'Revert To Original Version...~~',
 	'UI:DashletCreation:Title' => 'Yeni bir gösterge paneli öğesi oluşturun',
 	'UI:DashletCreation:Dashboard' => 'Gösterge paneli',
 	'UI:DashletCreation:DashletType' => 'Gösterge paneli öğesi tipi',
@@ -1309,8 +1278,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => '%1$s için haftanın günü,',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (saat)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (ay)',
-	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (hafta Günü)~~',
-	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (ayın günü)~~',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (hafta Günü)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (ayın günü)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Lütfen nesnelerin birlikte gruplandırılacağı alanı seçin',
 	'UI:DashletGroupByPie:Label' => 'Pasta grafiği',
 	'UI:DashletGroupByPie:Description' => 'Pasta grafiği',
@@ -1318,7 +1287,6 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:DashletGroupByBars:Description' => 'Çubuk grafiği',
 	'UI:DashletGroupByTable:Label' => 'Grup (tablo)',
 	'UI:DashletGroupByTable:Description' => 'Liste (bir alan tarafından gruplandırılmış)',
-    // New in 2.5
 	'UI:DashletGroupBy:Prop-Function' => 'Aggregation function~~',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute~~',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction~~',
@@ -1336,12 +1304,12 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:GroupBy:min+' => 'Minimum of %1$s~~',
 	'UI:GroupBy:max' => 'Maximum~~',
 	'UI:GroupBy:max+' => 'Maximum of %1$s~~',
-    // ---
 	'UI:DashletHeaderStatic:Label' => 'Başlık',
 	'UI:DashletHeaderStatic:Description' => 'Yatay bir ayıracı görüntüler',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Başlık',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kişiler',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Simge',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => 'İstatistikli Başlık',
 	'UI:DashletHeaderDynamic:Description' => 'İstatistiklerle başlık (Gruplandırılmış ...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Başlık',
@@ -1374,7 +1342,6 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Month-10' => 'Ekim',
 	'Month-11' => 'Kasım',
 	'Month-12' => 'Aralık',
-    // Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Paz',
 	'DayOfWeek-Monday-Min' => 'Pzt',
 	'DayOfWeek-Tuesday-Min' => 'Sal',
@@ -1395,12 +1362,12 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Month-11-Short' => 'Kas',
 	'Month-12-Short' => 'Ara',
 	'Calendar-FirstDayOfWeek' => '0',
-    // 0 = Sunday, 1 = Monday, etc...
 	'UI:Menu:ShortcutList' => 'Bir kısayol oluşturun...',
 	'UI:Menu:FilterList' => 'Display list with search criteria~~',
 	'UI:ShortcutRenameDlg:Title' => 'Kısayolu yeniden adlandırın',
 	'UI:ShortcutListDlg:Title' => 'Liste için bir kısayol oluşturun',
 	'UI:ShortcutDelete:Confirm' => 'Lütfen kısayolları silmek istediğinizi onaylayın.',
+	'UI:ObjectShortcutInsert' => 'Insert Object Shortcut~~',
 	'Class:Shortcut' => 'Kısayol',
 	'Class:Shortcut+' => '~~',
 	'Class:Shortcut/Attribute:name' => 'İsim',
@@ -1409,6 +1376,9 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Class:ShortcutOQL+' => '~~',
 	'Class:ShortcutOQL/Attribute:oql' => 'Sorgu',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL Aramak için nesnelerin listesini tanımlama',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Otomatik yenileme',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Devre dışı',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Özel Oran',
@@ -1447,8 +1417,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:AddAnExisting_Class' => '%1$s tipi nesneleri ekleyin...',
 	'UI:SelectionOf_Class' => '%1$s türünün nesnelerinin seçimi',
 	'UI:AboutBox' => 'About'.ITOP_APPLICATION_SHORT.'...',
-	'UI:About:Title' => 'About '.ITOP_APPLICATION_SHORT,
-	'UI:About:DataModel' => 'Veri modeli',
+	'UI:About:Title' => 'About '.ITOP_APPLICATION_SHORT, 'UI:About:DataModel' => 'Veri modeli',
 	'UI:About:Support' => 'Destek bilgisi',
 	'UI:About:Licenses' => 'Lisanslar',
 	'UI:About:InstallationOptions' => 'Yüklü modüller',
@@ -1491,23 +1460,18 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
-    // Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
 	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
-    // - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used~~',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular~~',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others~~',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.~~',
-    // - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:Criteria:Remove' => 'Remove~~',
 	'UI:Search:Criteria:Locked' => 'Locked~~',
-    // - Criteria titles
-    //   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty~~',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty~~',
@@ -1529,57 +1493,38 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s~~',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s up to %2$s~~',
-    //   - Numeric widget
-    //   None yet
-    //   - DateTime widget
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s~~',
-    //   - Enum widget
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s~~',
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any~~',
-    //   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-    //   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
-    //   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
-    // - Criteria operators
-    //   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty~~',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty~~',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals~~',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Between~~',
-    //   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains~~',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with~~',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
-    //   - Numeric widget
 	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',
-    // => '=',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',
-    // => '>',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',
-    // > '>=',
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',
-    // => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',
-    // > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',
-    // => '≠',
-    //   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
-    // - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...~~',
 	'UI:Search:Value:Search:Placeholder' => 'Search...~~',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.~~',
@@ -1587,7 +1532,6 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Search:Value:Autocomplete:NoResult' => 'No result.~~',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none~~',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Check all / none visibles~~',
-    // - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'From~~',
 	'UI:Search:Criteria:Numeric:Until' => 'To~~',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Any~~',
@@ -1604,12 +1548,12 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
 	'UI:StateChanged' => 'State changed~~',
-));
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Expression:Operator:AND' => ' AND ~~',
 	'Expression:Operator:OR' => ' OR ~~',
 	'Expression:Operator:=' => ': ~~',
@@ -1622,12 +1566,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Expression:Unit:Long:MINUTE' => 'minute(s)~~',
 	'Expression:Verb:NOW' => 'now~~',
 	'Expression:Verb:ISNULL' => ': undefined~~',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
 	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
@@ -1635,22 +1579,25 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration~~',
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
-));
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
+]);
 
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:DataSources' => 'Synchronization Data Sources~~',
-	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
+	'Menu:DataSources+' => 'Data synchro used for batch import of external data~~',
 	'Menu:AuditCategories' => 'Denetleme Kategorileri',
 	'Menu:AuditCategories+' => 'Denetleme Kategorileri',
-	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
 	'Menu:AuditCategories:Title' => 'Audit configuration~~',
 	'Menu:RunQueriesMenu' => 'Sorgu çalıştır',
 	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',
 	'Menu:QueryMenu' => 'Query phrasebook~~',
-	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Reusable stored queries~~',
 	'Menu:UniversalSearchMenu' => 'Genel sorgu',
 	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...',
 	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi',
@@ -1661,15 +1608,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
-	'Menu:UserManagement' => 'User Management~~',
+	'Menu:UserManagement' => 'User management~~',
 	'Menu:Queries' => 'Queries~~',
-	'Menu:ConfigurationTools' => 'Configuration~~'
-));
-// Additional language entries not present in English dict
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
-	'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
-	'UI:Dashboard:Edit' => 'Edit This Page...~~',
-	'UI:Dashboard:Revert' => 'Revert To Original Version...~~'
-));
+	'Menu:ConfigurationTools' => 'Configuration~~',
+	'Menu:ConfigEditor' => 'General configuration~~',
+	'Menu:ConfigEditor+' => 'Configuration File editor~~',
+	'Menu:Integrations' => 'Integrations~~',
+	'Menu:Integrations+' => '~~',
+
+]);

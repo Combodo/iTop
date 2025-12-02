@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -28,7 +29,6 @@ IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUE
 
 utils::InitTimeZone();
 
-
 /**
  * @param string $sPagePath full path (if symlink, it will be resolved)
  * @param array $aPossibleBasePaths list of possible base paths
@@ -38,17 +38,18 @@ utils::InitTimeZone();
  */
 function CheckPageExists(string $sPagePath, array $aPossibleBasePaths)
 {
-	$sTargetPage = false;
 	foreach ($aPossibleBasePaths as $sBasePath) {
 		$sTargetPage = utils::RealPath($sPagePath, $sBasePath);
-		if ($sTargetPage !== false) {
+		if (
+			($sTargetPage !== false)
+			&& (strtolower(pathinfo($sTargetPage, PATHINFO_EXTENSION)) === "php")
+		) {
 			return $sTargetPage;
 		}
 	}
 
-	return $sTargetPage;
+	return false;
 }
-
 
 $sModule = utils::ReadParam('exec_module', '');
 if ($sModule == '') {
@@ -68,7 +69,6 @@ $sEnvironment = utils::ReadParam('exec_env', utils::GetCurrentEnvironment());
 Session::WriteClose();
 $oKPI->ComputeAndReport("Session Start");
 
-
 $sEnvFullPath = APPROOT.'env-'.$sEnvironment;
 $sPageRelativePath = $sModule.'/'.$sPage;
 $sPageEnvFullPath = $sEnvFullPath.'/'.$sPageRelativePath;
@@ -79,8 +79,8 @@ if (is_link($sPageEnvFullPath)) {
 	$aPossibleBasePaths = [
 		APPROOT.$sSourceDir,
 		APPROOT.'extensions',
-		APPROOT.'data/'.$sEnvironment.'-modules',
-		APPROOT.'data/downloaded-extensions', // Hub connector
+		utils::GetDataPath().$sEnvironment.'-modules',
+		utils::GetDataPath().'downloaded-extensions', // Hub connector
 	];
 } else {
 	$aPossibleBasePaths = [$sEnvFullPath];

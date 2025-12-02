@@ -1,26 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+/**
+ *
+ */
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'iTopUpdate:UI:PageTitle' => 'Anwendungsupgrade',
 	'itop-core-update:UI:SelectUpdateFile' => 'Upgrade-Datei hochladen',
 	'itop-core-update:UI:ConfirmUpdate' => 'Upgrade bestätigen',
@@ -73,8 +63,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:CheckInProgress' => 'Bitte warten Sie während der Integritätsprüfung',
 	'iTopUpdate:UI:SetupLaunch' => 'Starte '.ITOP_APPLICATION_SHORT.' Setup',
 	'iTopUpdate:UI:SetupLaunchConfirm' => 'Hiermit wird der '.ITOP_APPLICATION_SHORT.' Setup, sind Sie sicher?',
-
-	// Setup Messages
+	'iTopUpdate:UI:FastSetupLaunch' => 'Schnelles Setup',
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Bereit zum Upgrade',
 	'iTopUpdate:UI:SetupMessage:EnterMaintenance' => 'Wartungsmodus aktiviert',
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Datenbankbackup',
@@ -85,8 +74,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Upgrade Datenbank',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Wartungsmodus deaktiviert',
 	'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Upgrade abgeschlossen',
-
-	// Errors
 	'iTopUpdate:Error:MissingFunction' => 'Start des Upgrades nicht möglich. Fehlende Funktion.',
 	'iTopUpdate:Error:MissingFile' => 'Fehlende Datei: %1$s',
 	'iTopUpdate:Error:CorruptedFile' => 'Datei %1$s ist beschädigt',
@@ -104,12 +91,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:UpdateDone' => 'Upgrade erfolgreich',
 	'Menu:iTopUpdate' => 'Anwendungsupgrade',
 	'Menu:iTopUpdate+' => 'Anwendungsupgrade',
-
-    // Missing itop entries
 	'Class:ModuleInstallation/Attribute:installed' => 'Installiert am',
 	'Class:ModuleInstallation/Attribute:name' => 'Name',
 	'Class:ModuleInstallation/Attribute:version' => 'Version',
 	'Class:ModuleInstallation/Attribute:comment' => 'Kommentar',
-));
-
-
+]);

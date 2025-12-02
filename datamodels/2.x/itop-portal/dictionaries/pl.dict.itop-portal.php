@@ -1,34 +1,18 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'portal:itop-portal' => 'Portal standardowy', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
+/**
+ * @author Benjamin Planque <benjamin.planque@combodo.com>
+ *
+ */
+Dict::Add('PL PL', 'Polish', 'Polski', [
+	'portal:itop-portal' => 'Portal standardowy',
 	'Page:DefaultTitle' => '%1$s portal użytkownika',
 	'Brick:Portal:UserProfile:Title' => 'Mój profil',
 	'Brick:Portal:NewRequest:Title' => 'Nowy wniosek',
@@ -38,4 +22,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Otwarte',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Rozwiązane',
 	'Brick:Portal:ClosedRequests:Title' => 'Zamknięte wnioski',
-));
+	'Brick:Portal:ListAllRequests:Title' => 'Wszystkie wnioski',
+	'Brick:Portal:ListAllRequests:Title+' => '<p>Wyświetl wszystkie wnioski niezależnie od ich statusu.</p>',
+	'Brick:Portal:ListAllRequests:Tab' => 'Otwarte i zamknięte',
+	'Brick:Portal:SearchInAllRequests:Title' => 'Szukaj we wszystkich wnioskach',
+	'Brick:Portal:SearchInAllRequests:Title+' => '<p>Niezależnie od ich statusu.</p>',
+]);

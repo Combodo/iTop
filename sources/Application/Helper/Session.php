@@ -1,12 +1,13 @@
 <?php
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Application\Helper;
 
+use Combodo\iTop\SessionTracker\SessionHandler;
 use utils;
 
 /**
@@ -34,6 +35,7 @@ class Session
 		}
 
 		if (!self::$bIsInitialized) {
+			SessionHandler::session_set_save_handler();
 			session_name('itop-'.md5(APPROOT));
 		}
 

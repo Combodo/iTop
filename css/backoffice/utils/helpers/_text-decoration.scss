@@ -1,16 +1,39 @@
-/*!
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
-$ibo-has-description--content: "?" !default;
-$ibo-has-description--padding-left: $ibo-spacing-200 !default;
-$ibo-has-description--color: $ibo-color-grey-600 !default;
-$ibo-has-description--font-size: 0.7em !default; /* Font size is em on purpose as we want it to be proportional to its context */
+$ibo-has-description--content: $common-has-description--content !default;
+$ibo-has-description--padding-left: $common-has-description--padding-left !default;
+$ibo-has-description--color: $common-has-description--color !default;
+$ibo-has-description--font-size: $common-has-description--font-size !default; /* Font size is em on purpose as we want it to be proportional to its context */
 
-$ibo-is-code--background-color: $ibo-color-white-200 !default;
-$ibo-is-code--padding: 1.25rem 1.5rem !default;
+$ibo-is-code--background-color: $common-is-code--background-color !default;
+$ibo-is-code--padding: $common-is-code--padding !default;
+
+$ibo-hyperlink-color: $common-hyperlink-color !default;
+$ibo-hyperlink-text-decoration: $common-hyperlink-text-decoration !default;
+$ibo-hyperlink-color--on-hover: $common-hyperlink-color--on-hover !default;
+$ibo-hyperlink-text-decoration--on-hover: $common-hyperlink-text-decoration--on-hover !default;
+$ibo-hyperlink-color--on-active: $common-hyperlink-color--on-active !default;
+$ibo-hyperlink-text-decoration--on-active: $common-hyperlink-text-decoration--on-active !default;
+
+$ibo-paragraph--spacing-top: 0.25em !default;
+$ibo-paragraph--spacing-bottom: 0.25em !default;
+
+$ibo-figure--spacing-x: $common-figure--spacing-x !default; /* Mind that this matches Bulma rule for figure */
+$ibo-figure--spacing-y: $common-figure--spacing-y !default;
+
+/* CSS variables */
+:root{
+  --ibo-hyperlink-color: #{$ibo-hyperlink-color};
+  --ibo-hyperlink-text-decoration: #{$ibo-hyperlink-text-decoration};
+  --ibo-hyperlink-color--on-hover: #{$ibo-hyperlink-color--on-hover};
+  --ibo-hyperlink-text-decoration--on-hover: #{$ibo-hyperlink-text-decoration--on-hover};
+  --ibo-hyperlink-color--on-active: #{$ibo-hyperlink-color--on-active};
+  --ibo-hyperlink-text-decoration--on-active: #{$ibo-hyperlink-text-decoration--on-active};
+}
 
 /* Rules */
 %ibo-text-truncated-with-ellipsis {
@@ -30,6 +53,20 @@ $ibo-is-code--padding: 1.25rem 1.5rem !default;
   &:hover,
   &:active {
     color: inherit;
+  }
+}
+/* Use this when you want the hyperlink to be of the color of its container's text instead of the global hyperlink color */
+%ibo-hyperlink-forced-colors {
+  color: $ibo-hyperlink-color;
+  text-decoration: $ibo-hyperlink-text-decoration;
+
+  &:hover {
+    color: $ibo-hyperlink-color--on-hover;
+    text-decoration: $ibo-hyperlink-text-decoration--on-hover;
+  }
+  &:active {
+    color: $ibo-hyperlink-color--on-active;
+    text-decoration: $ibo-hyperlink-text-decoration--on-active;
   }
 }
 
@@ -69,13 +106,8 @@ $ibo-is-code--padding: 1.25rem 1.5rem !default;
  * See https://bulma.io/documentation/elements/content/
  */
 .ibo-is-html-content {
-  @extend .content;
-
-  /* Force user-generated tables to fit within the container as they often have an hard-coded width */
-  table {
-    width: unset !important;
-    max-width: max-content;
-  }
+  @extend .content; /* Bulma styles */
+  @extend .ck-content; /* CKEditor styles */
 
   /* For table to render like in CKEditor, works with bulma lib. overload see:
    * - ../../vendors/_bulma-variables-overload.scss)
@@ -86,19 +118,27 @@ $ibo-is-code--padding: 1.25rem 1.5rem !default;
     border-spacing: 2px;
   }
 
-  /*
-   * N°5317 - Handle overlapping tables when table cells have fixed widths
-   * Force table cell NOT to have a fixed width and to wrap when necessary
-   */
-  td {
-    width: unset !important;
-    word-break: break-word !important;
-    white-space: unset !important;
-  }
-
   /* Preserve original text color in code blocks, except for the Highlight.js blocks which have their own colors */
   & > code,
   code:not(.hljs)  {
     color: inherit;
+  }
+
+  p {
+    margin-top: $ibo-paragraph--spacing-top;
+    margin-bottom: $ibo-paragraph--spacing-bottom;
+  }
+
+  figure {
+    display: inline-block; /* So the figure doesn't take all width and can be aligned on the left */
+    margin-left: $ibo-figure--spacing-x !important; /* !important to overload the CKE inline style */
+    margin-right: $ibo-figure--spacing-x !important; /* !important to overload the CKE inline style */
+
+    &:not(:last-child) {
+      margin-bottom: $ibo-figure--spacing-y !important; /* !important to overload the CKE inline style */
+    }
+    &:not(:first-child) {
+      margin-top: $ibo-figure--spacing-y !important; /* !important to overload the CKE inline style */
+    }
   }
 }

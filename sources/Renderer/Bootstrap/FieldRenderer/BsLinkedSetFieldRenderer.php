@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -24,6 +24,7 @@ use ApplicationContext;
 use AttributeFriendlyName;
 use Combodo\iTop\Form\Field\DateTimeField;
 use Combodo\iTop\Form\Field\Field;
+use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Renderer\Bootstrap\BsFieldRendererMappings;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
@@ -38,15 +39,15 @@ use utils;
  * Description of BsLinkedSetFieldRenderer
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * 
- * @property \Combodo\iTop\Form\Field\LinkedSetField $oField 
- * 
+ *
+ * @property \Combodo\iTop\Form\Field\LinkedSetField $oField
+ *
  */
 class BsLinkedSetFieldRenderer extends BsFieldRenderer
 {
-    /**
-     * @inheritDoc
-     */
+	/**
+	 * @inheritDoc
+	 */
 	public function Render()
 	{
 		$oOutput = parent::Render();
@@ -57,7 +58,13 @@ class BsLinkedSetFieldRenderer extends BsFieldRenderer
 		// Retrieve link and remote attributes
 		$aAttributesToDisplay = $this->oField->GetAttributesToDisplay();
 		$aLnkAttributesToDisplay = $this->oField->GetLnkAttributesToDisplay();
-		$iLinkAttributesToDisplayCount = count($this->oField->GetLnkAttributesToDisplay()) + 1;
+
+		// we sort the table on the first non link column
+		$iSortColumnIndex = count($this->oField->GetLnkAttributesToDisplay());
+		// if we are in edition mode, we skip the first column (selection checkbox column)
+		if (!$this->oField->GetReadOnly()) {
+			$iSortColumnIndex++;
+		}
 
 		// Vars to build the table
 		$sAttributesToDisplayAsJson = json_encode($aAttributesToDisplay);
@@ -65,17 +72,17 @@ class BsLinkedSetFieldRenderer extends BsFieldRenderer
 		$sAttCodesToDisplayAsJson = json_encode($this->oField->GetAttributesToDisplay(true));
 		$sLnkAttCodesToDisplayAsJson = json_encode($this->oField->GetLnkAttributesToDisplay(true));
 
-		$aItems = array();
-		$aItemIds = array();
-		$aAddedItemIds = array();
-		$aAddedTargetIds = array();
+		$aItems = [];
+		$aItemIds = [];
+		$aAddedItemIds = [];
+		$aAddedTargetIds = [];
 		$this->InjectRendererFileAssets($this->oField->GetLinkedClass(), $this->oField->GetLnkAttributesToDisplay(true), $oOutput);
 		$this->PrepareItems($aItems, $aItemIds, $oOutput, $aAddedItemIds, $aAddedTargetIds);
 		$sItemsAsJson = json_encode($aItems);
-		$sItemIdsAsJson = utils::EscapeHtml(json_encode(array('current' => $aItemIds, 'add' => $aAddedItemIds)));
+		$sItemIdsAsJson = utils::EscapeHtml(json_encode(['current' => $aItemIds, 'add' => $aAddedItemIds]));
 
 		foreach ($aAddedTargetIds as $sId) {
-			$aItemIds[$sId] = array();
+			$aItemIds[$sId] = [];
 		}
 
 		if (!$this->oField->GetHidden()) {
@@ -113,7 +120,7 @@ class BsLinkedSetFieldRenderer extends BsFieldRenderer
 
 			// Rendering table
 			// - Vars
-			$sTableId = 'table_' . $this->oField->GetGlobalId();
+			$sTableId = 'table_'.$this->oField->GetGlobalId();
 			// - Output
 			$oOutput->AddHtml(
 				<<<EOF
@@ -186,7 +193,7 @@ EOF
 								"render": function(data, type, row)
 								{
 									var oCheckboxElem = $('{$sSelectionInputHtml}');
-									if(row.limited_access)
+                                    if(row.limited_access)
 									{
 										oCheckboxElem.html('-');
 									}
@@ -215,7 +222,8 @@ EOF
 							"className": {$sIsEditable} && aColumnProperties.mandatory ? 'mandatory' : '',
 							"render": function(data, type, row){
 								var cellElem;
-                                                                
+                                var metadataNames = ['object_class', 'object_id', 'attribute_code', 'attribute_type', 'value_raw'];
+									
 								// Preparing the cell data
 								if(data.url !== undefined)
 								{
@@ -226,8 +234,19 @@ EOF
 								{
 									cellElem = $('<span></span>');
 								}
-								cellElem.html('<span>' + data.value + '</span>');
-                                
+								for(var sPropName in row.attributes[data.prefix+data.attribute_code])
+			                    {
+			                        var propValue = row.attributes[data.prefix+data.attribute_code][sPropName];
+			                        if(sPropName === 'value_html')
+			                        {
+			                            cellElem.html(propValue);
+			                        }
+			                        else if(metadataNames.indexOf(sPropName) > -1)
+			                        {
+			                            cellElem.attr('data-'+sPropName.replace('_', '-'), propValue)
+			                        }
+			                    }
+                                                                
 								return cellElem.prop('outerHTML');
 							},
 						});
@@ -236,7 +255,6 @@ EOF
                     for(sKey in oColumnProperties_{$this->oField->GetGlobalId()})
 					{
                         aColumnProperties = oColumnProperties_{$this->oField->GetGlobalId()}[sKey];
-                        
 						// Level main column
 						aColumnsDefinition.push({
 							"width": "auto",
@@ -248,7 +266,8 @@ EOF
 							"data": "attributes." + sKey,
 							"className": aColumnProperties.mandatory ? 'mandatory' : '',
 							"render": function(data, type, row){
-								var cellElem;
+								var cellElem;                                
+                                var metadataNames = ['object_class', 'object_id', 'attribute_code', 'attribute_type', 'value_raw'];
                                 
 								// Preparing the cell data
 								if(data.url !== undefined)
@@ -260,7 +279,19 @@ EOF
 								{
 									cellElem = $('<span></span>');
 								}
-								cellElem.html('<span>' + data.value + '</span>');
+								
+								for(var sPropName in row.attributes[data.attribute_code])
+			                    {
+			                     	var propValue = row.attributes[data.attribute_code][sPropName];
+			                        if(sPropName === 'value_html')
+			                        {
+			                            cellElem.html(propValue);
+			                        }
+			                        else if(metadataNames.indexOf(sPropName) > -1)
+			                        {
+			                            cellElem.attr('data-'+sPropName.replace('_', '-'), propValue)
+			                        }
+			                    }
                                 
 								return cellElem.prop('outerHTML');
 							},
@@ -275,7 +306,7 @@ EOF
 				// We would just have to override / complete the necessary elements
 				var buildTable_{$this->oField->GetGlobalId()} = function()
 				{
-					var iDefaultOrderColumnIndex = {$iLinkAttributesToDisplayCount};
+					var iDefaultOrderColumnIndex = {$iSortColumnIndex};
 
 					// Instantiates datatables
 					oTable_{$this->oField->GetGlobalId()} = $('#{$sTableId}').DataTable({
@@ -549,17 +580,17 @@ JS
 					}
 				});
 JS
-                );
+				);
 
 				// Rendering table
 				// - Vars
-				$sButtonRemoveId = 'btn_remove_' . $this->oField->GetGlobalId();
-				$sButtonAddId = 'btn_add_' . $this->oField->GetGlobalId();
+				$sButtonRemoveId = 'btn_remove_'.$this->oField->GetGlobalId();
+				$sButtonAddId = 'btn_add_'.$this->oField->GetGlobalId();
 				$sLabelRemove = Dict::S('UI:Button:Remove');
 				$sLabelAdd = Dict::S('UI:Button:AddObject');
 				// - Output
 				$oOutput->AddHtml(
-<<<EOF
+					<<<EOF
 					<div class="row">
 						<div class="col-xs-12">
 							<div class="btn-group" role="group">
@@ -576,7 +607,7 @@ EOF
 				$sAddButtonEndpoint = str_replace('-sMode-', 'from-attribute', $this->oField->GetSearchEndpoint());
 				// - Output
 				$oOutput->AddJs(
-	<<<JS
+					<<<JS
 					// Handles items selection/deselection
 					// - Remove button state handler
 					var updateRemoveButtonState_{$this->oField->GetGlobalId()} = function()
@@ -663,7 +694,7 @@ EOF
 						{
 							oOptions['base_modal'] = {
 								'usage': 'replace',
-								'selector': '.modal[data-source-element="{$sButtonAddId}"]:first'
+								'selector': '.modal[data-source-element="{$sButtonAddId}"]'
 							};
 						}
 						CombodoModal.OpenModal(oOptions);
@@ -673,9 +704,8 @@ JS
 			}
 		}
 		// ... and in hidden mode
-		else
-		{
-			$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $sItemIdsAsJson . '" />');
+		else {
+			$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" value="'.$sItemIdsAsJson.'" />');
 		}
 
 		// End of table rendering
@@ -685,18 +715,18 @@ JS
 		return $oOutput;
 	}
 
-    /**
-     * @param $aItems
-     * @param $aItemIds
-     *
-     * @throws \Exception
-     * @throws \CoreException
-     */
+	/**
+	 * @param $aItems
+	 * @param $aItemIds
+	 *
+	 * @throws \Exception
+	 * @throws \CoreException
+	 */
 	protected function PrepareItems(&$aItems, &$aItemIds, $oOutput, &$aAddedItemIds, &$aAddedTargetIds)
 	{
 		/** @var \ormLinkSet $oValueSet */
 		$oValueSet = $this->oField->GetCurrentValue();
-		$oValueSet->OptimizeColumnLoad(array($this->oField->GetTargetClass() => $this->oField->GetAttributesToDisplay(true)));
+		$oValueSet->OptimizeColumnLoad([$this->oField->GetTargetClass() => $this->oField->GetAttributesToDisplay(true)]);
 		while ($oItem = $oValueSet->Fetch()) {
 
 			// In case of indirect linked set, we must retrieve the remote object
@@ -704,8 +734,7 @@ JS
 				try {
 					// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
 					$oRemoteItem = MetaModel::GetObject($this->oField->GetTargetClass(), $oItem->Get($this->oField->GetExtKeyToRemote()), true, true);
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					// In some cases we can't retrieve an object from a linkedset, eg. when the extkey to remote is 0 due to a database corruption.
 					// Rather than crashing we rather just skip the object like in the administration console
 					IssueLog::Error('Could not retrieve object of linkedset in form #'.$this->oField->GetFormPath().' for field #'.$this->oField->GetId().'. Message: '.$e->getMessage());
@@ -721,17 +750,17 @@ JS
 				continue;
 			}
 
-			$aItemProperties = array(
+			$aItemProperties = [
 				'id'             => ($this->oField->IsIndirect() && $oItem->IsNew()) ? -1 * $oRemoteItem->GetKey() : $oItem->GetKey(),
 				'target_id'      => $oRemoteItem->GetKey(),
 				'name'           => $oItem->GetName(),
-				'attributes'     => array(),
+				'attributes'     => [],
 				'limited_access' => $bLimitedAccessItem,
 				'disabled'       => true,
 				'active'         => false,
 				'inactive'       => true,
 				'not-selectable' => true,
-			);
+			];
 
 			// Link attributes to display
 			$this->PrepareItem($oItem, $this->oField->GetLinkedClass(), $this->oField->GetLnkAttributesToDisplay(true), !$this->oField->GetReadOnly(), $aItemProperties, 'lnk__');
@@ -743,10 +772,10 @@ JS
 			// and form reconstruct
 			$aItems[] = $aItemProperties;
 			if ($oItem->IsNew()) {
-				$aAddedItemIds[-1 * $aItemProperties['id']] = array();
+				$aAddedItemIds[-1 * $aItemProperties['id']] = [];
 				$aAddedTargetIds[] = $oRemoteItem->GetKey();
 			} else {
-				$aItemIds[$aItemProperties['id']] = array();
+				$aItemIds[$aItemProperties['id']] = [];
 			}
 		}
 		$oValueSet->rewind();
@@ -762,6 +791,15 @@ JS
 	 */
 	protected function InjectRendererFileAssets(string $sClass, array $aAttributesCodesToDisplay, $oOutput)
 	{
+		// handle abstract class
+		while (MetaModel::IsAbstract($sClass)) {
+			$aChildClasses = MetaModel::EnumChildClasses($sClass);
+			if (count($aChildClasses) > 0) {
+				$sClass = $aChildClasses[0];
+			}
+		}
+
+		// create a fake object to pass to renderers for retrieving global assets
 		$oItem = MetaModel::NewObject($sClass);
 
 		// Iterate throw attributes...
@@ -770,10 +808,13 @@ JS
 			// Retrieve attribute definition
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 
+			// make form field from attribute
 			$oField = $oAttDef->MakeFormField($oItem);
 
+			// retrieve the form field renderer
 			$sFieldRendererClass = static::GetFieldRendererClass($oField);
 
+			// retrieve renderer global assets
 			if ($sFieldRendererClass !== null) {
 				/** @var FieldRenderer $oFieldRenderer */
 				$oFieldRenderer = new $sFieldRendererClass($oField);
@@ -781,7 +822,6 @@ JS
 				static::TransferFieldRendererGlobalOutput($oFieldOutput, $oOutput);
 			}
 		}
-
 	}
 
 	/**
@@ -803,13 +843,27 @@ JS
 
 			if ($sAttCode !== 'id') {
 
-				// Prepare attribute properties
-				$aAttProperties = array(
-					'att_code' => $sAttCode,
-				);
-
 				// Retrieve attribute definition
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+
+				// Prepare attribute properties
+				$aAttProperties = [
+						'prefix' => $sAttribueKeyPrefix,
+						'object_class'  => $sClass,
+						'object_id'  => $oItem->GetKey(),
+						'attribute_code' => $sAttCode,
+						'attribute_type' => get_class($oAttDef),
+				];
+				// - Value raw
+				// For simple fields, we get the raw (stored) value as well
+				$bExcludeRawValue = false;
+				foreach (ApplicationHelper::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude) {
+					if (is_a($oAttDef, $sAttDefClassToExclude, true)) {
+						$bExcludeRawValue = true;
+						break;
+					}
+				}
+				$aAttProperties['value_raw'] = ($bExcludeRawValue === false) ? $oItem->Get($sAttCode) : null;
 
 				// External key specific
 				if ($bIsEditable) {
@@ -829,23 +883,23 @@ JS
 						$oFieldOutput = $oFieldRenderer->Render();
 						$aAttProperties['js_inline'] = $oFieldOutput->GetJs();
 						$aAttProperties['css_inline'] = $oFieldOutput->GetCss();
-						$aAttProperties['value'] = $oFieldOutput->GetHtml();
+						$aAttProperties['value_html'] = $oFieldOutput->GetHtml();
 					}
 
-				} else if ($oAttDef->IsExternalKey()) {
+				} elseif ($oAttDef->IsExternalKey()) {
 
 					/** @var \AttributeExternalKey $oAttDef */
-					$aAttProperties['value'] = $oItem->Get($sAttCode.'_friendlyname');
+					$aAttProperties['value_html'] = utils::EscapeHtml($oItem->Get($sAttCode.'_friendlyname'));
 
 					// Checking if user can access object's external key
-					$sObjectUrl = ApplicationContext::MakeObjectUrl($sClass, $oItem->Get($sAttCode));
+					$sObjectUrl = ApplicationContext::MakeObjectUrl($oAttDef->GetTargetClass(), $oItem->Get($sAttCode));
 					if (!empty($sObjectUrl)) {
 						$aAttProperties['url'] = $sObjectUrl;
 					}
 
 				} else { // Others attributes
 
-					$aAttProperties['value'] = $oAttDef->GetAsHTML($oItem->Get($sAttCode));
+					$aAttProperties['value_html'] = $oAttDef->GetAsHTML($oItem->Get($sAttCode));
 
 					if ($oAttDef instanceof AttributeFriendlyName) {
 						// Checking if user can access object

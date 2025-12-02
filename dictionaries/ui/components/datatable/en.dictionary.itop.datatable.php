@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -18,7 +19,7 @@
  */
 
 // Display DataTable
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'UI:Datatables:Language:Processing'            => 'Please wait...',
 	'UI:Datatables:Language:LengthMenu'            => '_MENU_ per page',
 	'UI:Datatables:Language:ZeroRecords'           => 'No result',
@@ -33,4 +34,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Datatables:Column:RowActions:Description'  => '',
 	'UI:Datatables:RowActions:ConfirmationDialog'  => 'Action Confirmation',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action ?',
-));
+]);

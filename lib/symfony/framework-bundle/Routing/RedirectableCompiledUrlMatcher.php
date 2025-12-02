@@ -21,10 +21,7 @@ use Symfony\Component\Routing\Matcher\RedirectableUrlMatcherInterface;
  */
 class RedirectableCompiledUrlMatcher extends CompiledUrlMatcher implements RedirectableUrlMatcherInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function redirect(string $path, string $route, string $scheme = null): array
+    public function redirect(string $path, string $route, ?string $scheme = null): array
     {
         return [
             '_controller' => 'Symfony\\Bundle\\FrameworkBundle\\Controller\\RedirectController::urlRedirectAction',

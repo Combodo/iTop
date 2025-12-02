@@ -1,44 +1,18 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @author	LinProfs <info@linprofs.com>
- * 
- * Linux & Open Source Professionals
- * http://www.linprofs.com
- * 
- * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ * Localized data
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//
-// Class: Ticket
-//
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+/**
+ * @author LinProfs <info@linprofs.com>
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
+ */
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Nummer',
@@ -90,25 +64,24 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Afgesloten',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
 	'Ticket:ImpactAnalysis' => 'Impactanalyse',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkContactToTicket' => 'Link Contact / Ticket',
 	'Class:lnkContactToTicket+' => '',
-	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
+	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Ref',
 	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Contact',
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
-	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact name~~',
-	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
+	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact naam',
+	'Class:lnkContactToTicket/Attribute:contact_name+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'E-mailadres contact',
 	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
 	'Class:lnkContactToTicket/Attribute:role' => 'Rol',
@@ -117,13 +90,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Manueel toegevoegd',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Automatisch afgeleid',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Niet verwittigen',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:WorkOrder' => 'Werkopdracht',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => 'Naam',
@@ -156,11 +129,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Sluiten',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Ticket:baseinfo' => 'Globale informatie',
 	'Ticket:date' => 'Data',
 	'Ticket:contact' => 'Contacten',
@@ -250,5 +222,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Doel gebaseerd op een SLT (TTO)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Doel gebaseerd op een SLT (TTR)',
-));
+]);
 
+//
+// Class: Ticket
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:Ticket/Attribute:team_email' => 'Team email~~',
+	'Class:Ticket/Attribute:team_email+' => '~~',
+]);

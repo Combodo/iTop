@@ -1,43 +1,17 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
  * Localized data
  *
- * @author      Izzet Sirin <izzet.sirin@htr.com.tr>
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//
-// Class: Ticket
-//
-//
-// Class: Ticket
-//
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+/**
+ * @author Izzet Sirin <izzet.sirin@htr.com.tr>
+ *
+ */
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Ticket' => 'Kayıt',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Referans',
@@ -89,14 +63,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Closed~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Etki Analizi',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToTicket' => 'Kişi / Çağrı kaydı bağla',
 	'Class:lnkContactToTicket+' => '~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
@@ -116,13 +89,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Elle eklendi',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Hesaplandı',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Bildirme',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:WorkOrder' => 'İş emri',
 	'Class:WorkOrder+' => '~~',
 	'Class:WorkOrder/Attribute:name' => 'İsim',
@@ -155,11 +128,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Kapat',
 	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Ticket:baseinfo' => 'Genel Bilgi',
 	'Ticket:date' => 'Tarihler',
 	'Ticket:contact' => 'Kişiler',
@@ -249,5 +221,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'TTO tipi bir SLT\'ye dayalı hedef',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Çözme zamanı',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'TTR tipi  bir SLT\'ye dayalı hedef',
-));
+]);
 
+//
+// Class: Ticket
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'Class:Ticket/Attribute:team_email' => 'Team email~~',
+	'Class:Ticket/Attribute:team_email+' => '~~',
+]);

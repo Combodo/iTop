@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -10,60 +10,6 @@
  */
 aTruncatedLists = {}; // To keep track of the list being loaded, each member is an ajaxRequest object
 
-function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams) {
-	$('#'+divId).block();
-	//$('#'+divId).blockUI();
-	if (aTruncatedLists[divId] != undefined) {
-		try {
-			aAjaxRequest = aTruncatedLists[divId];
-			aAjaxRequest.abort();
-		} catch (e) {
-			// Do nothing special, just continue
-			console.log('Uh,uh, exception !');
-		}
-	}
-	aTruncatedLists[divId] = $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?style=list',
-		{operation: 'ajax', filter: sSerializedFilter, extra_params: sExtraParams},
-		function (data) {
-			aTruncatedLists[divId] = undefined;
-			if (data.length > 0) {
-				$('#'+divId).html(data);
-				//$('#'+divId+' .listResults').tableHover(); // hover tables
-				$('#'+divId+' .listResults').each(function () {
-					var table = $(this);
-					var id = $(this).parent();
-					aTruncatedLists[divId] = undefined;
-					var checkbox = (table.find('th:first :checkbox').length > 0);
-					if (checkbox) {
-						// There is a checkbox in the first column, don't make it sortable
-						table.tablesorter({headers: {0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']}).tablesorterPager({container: $("#pager")}); // sortable and zebra tables
-					} else {
-						// There is NO checkbox in the first column, all columns are considered sortable
-						table.tablesorter({widgets: ['myZebra', 'truncatedList']}).tablesorterPager({container: $("#pager"), totalRows: 97, filter: sSerializedFilter, extra_params: sExtraParams}); // sortable and zebra tables
-					}
-				});
-				$('#'+divId).unblock();
-			}
-		}
-	);
-}
-
-/**
- * Truncate a previously expanded list !
- */
-function TruncateList(divId, iLimit, sNewLabel, sLinkLabel) {
-	$('#'+divId).block();
-	var iCount = 0;
-	$('#'+divId+' table.listResults tr:gt('+iLimit+')').each(function () {
-		$(this).remove();
-	});
-	$('#lbl_'+divId).html(sNewLabel);
-	$('#'+divId+' table.listResults tr:last td').addClass('truncated');
-	$('#'+divId+' table.listResults').addClass('truncated');
-	$('#trc_'+divId).html(sLinkLabel);
-	$('#'+divId+' .listResults').trigger("update"); //  Reset the cache
-	$('#'+divId).unblock();
-}
 
 /**
  * Reload any block -- used for periodic auto-reload
@@ -96,30 +42,6 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams) {
 			);
 		}
 	}
-}
-
-function SaveGroupBySortOrder(sTableId, aValues) {
-	var sDashboardId = $('#'+sTableId).closest('.ibo-dashboard').attr('id');
-	var sPrefKey = 'GroupBy_'+sDashboardId+'_'+sTableId;
-	if (aValues.length != 0) {
-		$sValue = JSON.stringify(aValues);
-		if (GetUserPreference(sPrefKey, null) != $sValue) {
-			SetUserPreference(sPrefKey, $sValue, true);
-		}
-	}
-}
-
-function LoadGroupBySortOrder(sTableId) {
-	var sDashboardId = $('#'+sTableId).closest('.ibo-dashboard').attr('id');
-	var sPrefKey = 'GroupBy_'+sDashboardId+'_'+sTableId;
-	var sValues = GetUserPreference(sPrefKey, null);
-	if (sValues != null) {
-		aValues = JSON.parse(sValues);
-		window.setTimeout(function () {
-			$('#'+sTableId+' table.listResults').trigger('sorton', [aValues]);
-		}, 50);
-	}
-
 }
 
 /**
@@ -195,7 +117,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sEx
 			oDiv.empty();
 			oDiv.append(data);
 			oDiv.unblock();
-			oDiv.parent().resize(); // Inform the parent that the form has just been (potentially) resized
+			oDiv.parent().trigger('resize'); // Inform the parent that the form has just been (potentially) resized
 			oDiv.find('form.search_form_handler').triggerHandler('itop.search.form.reloaded');
 		}
 	);
@@ -213,10 +135,14 @@ function SetUserPreference(sPreferenceCode, sPrefValue, bPersistent) {
 	} catch (err) {
 		sPreviousValue = undefined;
 	}
-	oUserPreferences[sPreferenceCode] = sPrefValue;
 	if (bPersistent && (sPrefValue != sPreviousValue)) {
-		ajax_request = $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			{operation: 'set_pref', code: sPreferenceCode, value: sPrefValue}); // Make it persistent
+		return $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+			{operation: 'set_pref', code: sPreferenceCode, value: sPrefValue}, function (data) {
+			}).done(function() {
+				oUserPreferences[sPreferenceCode] = sPrefValue;
+			}); // Make it persistent
+	} else {
+		oUserPreferences[sPreferenceCode] = sPrefValue;
 	}
 }
 
@@ -303,17 +229,6 @@ function ToggleField(value, field_id) {
 }
 
 /**
- * For the fields that cannot be visually disabled, they can be blocked
- * @return
- */
-function BlockField(field_id, bBlocked) {
-	if (bBlocked) {
-		$('#'+field_id).block({message: ' ** disabled ** ', enableValidation : true});
-	} else {
-		$('#'+field_id).unblock();
-	}
-}
-/**
  * Updates (enables/disables) a "duration" field
  */
 function ToggleDurationField(field_id) {
@@ -347,6 +262,7 @@ function PropagateCheckBox(bCurrValue, aFieldsList, bCheck) {
 	}
 }
 
+//used only in designer
 function FixTableSorter(table) {
 	if (table[0].config == undefined) {
 		// Table is not sort-able, let's fix it
@@ -366,6 +282,24 @@ function DashletCreationDlg(sOQL, sContext) {
 		$('body').append(data);
 	});
 	return false;
+}
+
+function OpenOql(sOQL) {
+	sBaseUrl = GetAbsoluteUrlAppRoot() + 'pages/run_query.php';
+	var form = document.createElement("form");
+	form.setAttribute("method", "post");
+	form.setAttribute("action", sBaseUrl);
+	form.setAttribute("target", '_blank');
+	form.setAttribute("id", 'run_query_form');
+	var input = document.createElement('input');
+	input.type = 'hidden';
+	input.name = 'expression';
+	input.value = sOQL;
+	form.appendChild(input);
+	document.body.appendChild(form);
+	// form.submit() is blocked by the browser
+	$('#run_query_form').trigger('submit');
+	document.body.removeChild(form);
 }
 
 function ShortcutListDlg(sOQL, sDataTableId, sContext) {
@@ -590,33 +524,6 @@ function ExportInitButton(sSelector) {
 	});
 }
 
-/**
- * @deprecated 3.0.0 N°4367 deprecated, use {@see CombodoSanitizer.EscapeHtml} instead
- *
- * @param sValue value to escape
- * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contains html entities we want to keep)
- * @returns {string} escaped value, ready to insert in the DOM without XSS risk
- *
- * @since 2.6.5, 2.7.2, 3.0.0 N°3332
- * @see https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#rule-1-html-encode-before-inserting-untrusted-data-into-html-element-content
- * @see https://stackoverflow.com/questions/295566/sanitize-rewrite-html-on-the-client-side/430240#430240 why inserting in the DOM (for
- *        example the text() JQuery way) isn't safe
- */
-function EncodeHtml(sValue, bReplaceAmp) {
-	var sEncodedValue = (sValue+'')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;')
-		.replace(/'/g, '&#x27;')
-		.replace(/\//g, '&#x2F;');
-
-	if (bReplaceAmp) {
-		sEncodedValue = sEncodedValue.replace(/&/g, '&amp;');
-	}
-
-	return sEncodedValue;
-}
-
 // Very simple equivalent to format: placeholders are %1$s %2$d ...
 function Format() {
 	var args = [];
@@ -641,7 +548,7 @@ function Format() {
 
 /**
  * Enable to access translation keys client side.
- * The called keys needs to be exported using \WebPage::add_dict_entry
+ * The called keys needs to be exported using WebPage::add_dict_entry
  */
 var Dict = {};
 if (typeof aDictEntries == 'undefined') {
@@ -797,7 +704,7 @@ const CombodoGlobalToolbox = {
 		}
 
 		// Attribute replacement
-		let aAttrElements = ['title', 'name', 'for'];
+		let aAttrElements = ['title', 'name', 'for', 'src'];
 		aAttrElements.forEach(function(e){
 			$(`[data-template-attr-${e}]`, oElement).each(function(){
 				$(this).attr(e, aData[$(this).attr(`data-template-attr-${e}`)]);
@@ -1138,6 +1045,34 @@ const CombodoJSConsole = {
 }
 
 /**
+ * Helper to reflect ongoing JS activity to other processes like BeHat
+ * @api
+ * @since 3.0.4 3.1.1 3.2.0 N°6765
+ */
+const CombodoJsActivity = {
+	BODY_DATA_ATTR_NAME_READY: "data-ready-scripts",
+
+	/**
+	 * Counter so that we set the flag as done only on the last call
+	 * @type number
+	 */
+	iOngoingScriptsCount: 0,
+
+	AddOngoingScript: function() {
+		this.iOngoingScriptsCount++;
+		$("body").attr(this.BODY_DATA_ATTR_NAME_READY, "start");
+	},
+
+	RemoveOngoingScript: function() {
+		this.iOngoingScriptsCount--;
+
+		if (this.iOngoingScriptsCount < 1) {
+			$("body").attr(this.BODY_DATA_ATTR_NAME_READY, "done");
+		}
+	}
+}
+
+/**
  * Helper to Sanitize string
  *
  * Note: Same as in php (see \utils::Sanitize)
@@ -1260,6 +1195,23 @@ const CombodoInlineImage = {
 };
 
 /**
+ * Abstract Fetch API wrapper to manage AJAX requests in iTop.
+ */
+const CombodoHTTP = {
+	/**
+	 * @param {string} sUrl URL to fetch
+	 * @param {Object} oOptions Fetch options
+	 * @return {Promise<Response>}
+	 */
+	Fetch: function(sUrl, oOptions) {
+		oOptions = oOptions || {};
+		oOptions.headers = oOptions.headers || {};
+		oOptions.headers['X-Combodo-Ajax'] = true;
+		return fetch(sUrl, oOptions);
+	}
+}
+
+/**
  * Abstract wrapper to manage modal dialogs in iTop.
  * Implementations for the various GUIs may vary but APIs are the same.
  *
@@ -1356,7 +1308,7 @@ let CombodoModal = {
 		let oSelectorElem = null;
 		switch(typeof oOptions.base_modal.selector) {
 			case 'string':
-				oSelectorElem = $(oOptions.base_modal.selector);
+				oSelectorElem = $(oOptions.base_modal.selector).first();
 				if (oSelectorElem.length === 0) {
 					CombodoJSConsole.Error('Could not open modal dialog as the selector option did not return any element: ' + oOptions.base_modal.selector);
 					return null;
@@ -1546,4 +1498,63 @@ let CombodoModal = {
 	OpenErrorModal: function(sMessage, oOptions) {
 		CombodoModal.OpenInformativeModal(sMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR, oOptions);
 	},
+};
+
+/**
+ * Abstract wrapper to manage toasts in iTop.
+ * Implementations for the various GUIs may vary but APIs are the same.
+ *
+ * @since 3.2.0
+ */
+let CombodoToast = {
+	/**
+	 * Open a standard toast and put the content into it.
+	 *
+	 * @param sMessage {String} Message to be displayed in the toast
+	 * @param sSeverity {String} Severity of the information. Default values are success, information, warning, error.
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenToast: function(sMessage, sSeverity, aOptions = {}) {
+		// Meant for overloading
+		CombodoJSConsole.Debug('CombodoToast.OpenToast not implemented');
+	},
+	/**
+	 * Open a standard toast for success messages.
+	 *
+	 * @param sMessage {String} Success message to be displayed in the toast
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenSuccessToast: function(sMessage, aOptions = {}) {
+		CombodoToast.OpenToast(sMessage, 'success', aOptions);
+	},
+	
+	/**
+	 * Open a standard toast for information messages.
+	 *
+	 * @param sMessage {String} Information message to be displayed in the toast
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenInformationToast: function(sMessage, aOptions = {}) {
+		CombodoToast.OpenToast(sMessage, 'information', aOptions);
+	},
+	
+	/**
+	 * Open a standard toast for warning messages.
+	 *
+	 * @param sMessage {String} Warning message to be displayed in the toast
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenWarningToast: function(sMessage, aOptions = {}) {
+		CombodoToast.OpenToast(sMessage, 'warning', aOptions);
+	},
+	
+	/**
+	 * Open a standard toast for error messages.
+	 *
+	 * @param sMessage {String} Error message to be displayed in the toast
+	 * @param aOptions {Object} {@see CombodoModal.OpenModal
+	 */
+	OpenErrorToast: function(sMessage, aOptions = {}) {
+		CombodoToast.OpenToast(sMessage, 'error', aOptions);
+	}
 };

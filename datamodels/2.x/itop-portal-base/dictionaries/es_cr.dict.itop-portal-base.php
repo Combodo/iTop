@@ -1,27 +1,14 @@
 <?php
+
 /**
  * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-// Portal
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Page:DefaultTitle' => '%1$s - Portal de Usuario',
 	'Page:PleaseWait' => 'Por favor espere...',
 	'Page:Home' => 'Inicio',
@@ -65,18 +52,19 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Abierto</a> / <a href="%4$s" class="file_download_link">Descarga</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'es', //work with moment.js locales
-));
+]);
 
 // Object form
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Cerrar este registro',
 	'Portal:Form:Close:Warning' => '¿Desea abandorar este formulario? Datos modificados se perderan',
 	'Portal:Error:ObjectCannotBeCreated' => 'Error: no se puede crear el objeto. Verifique los objetos asociados y archivos adjuntos antes de enviar nuevamente este formulario.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Error: no se puede actualizar el objeto. Verifique los objetos asociados y archivos adjuntos antes de enviar nuevamente este formulario.',
-));
+	'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
+]);
 
 // UserProfile brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Brick:Portal:UserProfile:Name' => 'Perfil del usuario',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Mi perfil',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Cerrar Sesión',
@@ -87,15 +75,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'No se puede cambiar la contraseña, póngase en contacto con el administrador de %1$s',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Información Personal',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Foto',
-));
+]);
 
 // AggregatePageBrick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Tablero de Control',
-));
+]);
 
 // BrowseBrick brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Brick:Portal:Browse:Name' => 'Buscar en todos los elementos',
 	'Brick:Portal:Browse:Mode:List' => 'Lista',
 	'Brick:Portal:Browse:Mode:Tree' => 'Árbol',
@@ -108,10 +96,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Expandir todo',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Desplegar todo',
 	'Brick:Portal:Browse:Filter:NoData' => 'Sin elementos',
-));
+	'Brick:Portal:Browse:Mosaic:Back' => 'Volver',
+]);
 
 // ManageBrick brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Brick:Portal:Manage:Name' => 'Administrar elementos',
 	'Brick:Portal:Manage:Table:NoData' => 'Sin elementos',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Acciones',
@@ -126,33 +115,33 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Manage:fct:avg' => 'Promedio',
 	'Brick:Portal:Manage:fct:min' => 'Mínimo',
 	'Brick:Portal:Manage:fct:max' => 'Máximo',
-));
+]);
 
 // ObjectBrick brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Brick:Portal:Object:Name' => 'Objecto',
 	'Brick:Portal:Object:Form:Create:Title' => 'Nuevo %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Actualizando %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Actualizando %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Por favor, proporcione la siguiente información:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Guardado',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s guardado',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Selección %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selección %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Selección %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selección %1$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copiar liga al objeto',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copiado'
-));
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copiado',
+]);
 
 // CreateBrick brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Brick:Portal:Create:Name' => 'Creación rápida',
 	'Brick:Portal:Create:ChooseType' => 'Por favor, seleccione un tipo',
-));
+]);
 
 // Filter brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Brick:Portal:Filter:Name' => 'Prefiltre un bloquek',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'Brick:Portal:Filter:Name' => 'Prefiltrar bloque',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'Ej.:. Conectar a WiFi',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Buscar',
-));
+]);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="UserRequest" _delta="define">
       <parent>Ticket</parent>
@@ -7,10 +7,10 @@
         <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
-        <category>bizmodel,searchable,requestmgmt</category>
+        <category>bizmodel,searchable,requestmgmt,popular</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>ticket_request</db_table>
@@ -446,6 +446,10 @@
           <target_attcode>tto</target_attcode>
           <item_code>100_overrun</item_code>
         </field>
+        <field id="tto_time_spent" xsi:type="AttributeSubItem">
+          <target_attcode>tto</target_attcode>
+          <item_code>timespent</item_code>
+        </field>
         <field id="ttr_escalation_deadline" xsi:type="AttributeSubItem">
           <target_attcode>ttr</target_attcode>
           <item_code>100_deadline</item_code>
@@ -457,6 +461,10 @@
         <field id="sla_ttr_over" xsi:type="AttributeSubItem">
           <target_attcode>ttr</target_attcode>
           <item_code>100_overrun</item_code>
+        </field>
+        <field id="ttr_time_spent" xsi:type="AttributeSubItem">
+          <target_attcode>ttr</target_attcode>
+          <item_code>timespent</item_code>
         </field>
         <field id="time_spent" xsi:type="AttributeDuration">
           <sql>time_spent</sql>
@@ -496,6 +504,7 @@
           <sql>solution</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
+          <format>html</format>
         </field>
         <field id="pending_reason" xsi:type="AttributeText">
           <sql>pending_reason</sql>
@@ -1260,78 +1269,6 @@
         }
         ]]></code>
         </method>
-        <method id="SetAssignedDate">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetAssignedDate($sStimulusCode)
-	{
-		$this->Set('assignment_date', time());
-		return true;
-	}]]></code>
-        </method>
-        <method id="SetLastPendingDate">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetLastPendingDate($sStimulusCode)
-	{
-		$this->Set('last_pending_date', time());
-		return true;
-	}]]></code>
-        </method>
-        <method id="SetResolveDate">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() and SetElapsedTime() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetResolveDate($sStimulusCode)
-	{
-		$this->Set('resolution_date', time());
-                $iTimeSpent = time() - AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
-		$this->Set('time_spent', $iTimeSpent);
-		return true;
-	}]]></code>
-        </method>
-        <method id="SetClosureDate">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentDate() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetClosureDate($sStimulusCode)
-	{
-		$this->Set('close_date', time());
-		return true;
-	}]]></code>
-        </method>
-        <method id="SetApprover">
-          <comment><![CDATA[/**
-	 * To be deprecated: use SetCurrentUser() instead
-	 * @return void
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetApprover($sStimulusCode)
-	{
-		$this->Set('approver_id', UserRights::GetUserId());
-		return true;
-	}]]></code>
-        </method>
         <method id="DoCheckToWrite">
           <static>false</static>
           <access>public</access>
@@ -1404,8 +1341,8 @@
 			$iSvcSubcat = $this->Get('servicesubcategory_id');
 			if ($iSvcSubcat != 0)
 			{
-				$sType = $this->Get('servicesubcategory_id->request_type');
-				$this->Set('request_type', $sType);
+				$oSvcSubcat = MetaModel::GetObject(ServiceSubcategory::class, $iSvcSubcat, true, true);
+				$this->Set('request_type', $oSvcSubcat->Get('request_type'));
 			}
 		}
 
@@ -1439,41 +1376,6 @@
               'panel_title_tooltip' => Dict::S($sTabCode."+"),
             ]);
         }
-	}]]></code>
-        </method>
-        <method id="resolveChilds">
-          <comment><![CDATA[/**
-	 * To be deprecated: use ResolveChildTickets() instead
-	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function resolveChilds($sStimulusCode)
-	{
-				
-		$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
-		$oChildRequestSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL),
-						array(),
-						array(
-							'ticket' => $this->GetKey(),
-							)
-						);
-		while($oRequest = $oChildRequestSet->Fetch())
-		{
-			if ( $oRequest->Get('status') != 'resolved')
-			{
-				$oRequest->set('servicesubcategory_id',$this->Get('servicesubcategory_id'));
-				$oRequest->set('service_id',$this->Get('service_id'));		
-				$oRequest->set('team_id',$this->Get('team_id'));
-				$oRequest->set('agent_id',$this->Get('agent_id'));	
-				$oRequest->set('resolution_code',$this->Get('resolution_code'));
-				$oRequest->set('solution','Automatically resolved by request:[[UserRequest:'.$this->Get('ref').']]');
-				$oRequest->ApplyStimulus('ev_autoresolve');
-				$oRequest->DBUpdate();
-			}
-		}
-		return true;
-
 	}]]></code>
         </method>
         <method id="ResolveChildTickets">
@@ -1536,7 +1438,7 @@
                   $this->Set('team_id', $oParentTicket->Get('team_id'));
                   $this->Set('agent_id', $oParentTicket->Get('agent_id'));
            }
-			$sParent = '[['.get_class($oParentTicket).':'.$oParentTicket->Get('ref').']]';
+			$sParent = '[['.get_class($oParentTicket).':'.$oParentTicket->GetKey().'|'.$oParentTicket->Get('ref').']]';
 			$this->Set('solution', Dict::Format('Tickets:ResolvedFrom', $sParent, MetaModel::GetName(get_class($oParentTicket))));
 			$this->ApplyStimulus('ev_autoresolve');
 			$this->DBUpdate();
@@ -1608,11 +1510,9 @@
           <code><![CDATA[
     protected function OnInsert()
 	{
-        parent::OnInsert();
-		$this->ComputeImpactedItems();
-
-		$this->SetIfNull('last_update', time());
-		$this->SetIfNull('start_date', time());
+      parent::OnInsert();
+      $this->SetIfNull('last_update', time());
+      $this->SetIfNull('start_date', time());
 	}]]></code>
         </method>
         <method id="OnUpdate">
@@ -2107,7 +2007,6 @@
     <menu id="UserRequest:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
       <rank>3</rank>
       <parent>RequestManagement</parent>
-      <template_file/>
     </menu>
     <menu id="UserRequest:MyRequests" xsi:type="OQLMenuNode" _delta="define">
       <rank>0</rank>
@@ -2157,7 +2056,7 @@
                                           AND (R.id != :this->id)
                                         ]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
+                  <icon>itop-request-mgmt/images/incident-red.svg</icon>
                   <default>yes</default>
                 </item>
               </items>
@@ -2180,7 +2079,7 @@
                                           AND (R.id != :this->id)
                                         ]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
+                  <icon>itop-request-mgmt/images/incident-red.svg</icon>
                   <default>yes</default>
                 </item>
               </items>
@@ -2206,7 +2105,7 @@
                                           AND (L.impact_code != 'not_impacted')
                                         ]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
+                  <icon>itop-request-mgmt/images/incident-red.svg</icon>
                   <default>yes</default>
                 </item>
               </items>
@@ -2224,7 +2123,7 @@
                                           AND (L.impact_code != 'not_impacted')
                                         ]]></oql>
                   <dict>Tickets:Related:OpenIncidents</dict>
-                  <icon>itop-request-mgmt/images/incident-red.png</icon>
+                  <icon>itop-request-mgmt/images/incident-red.svg</icon>
                   <default>yes</default>
                 </item>
               </items>

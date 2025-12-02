@@ -24,12 +24,12 @@ $(function()
 			this.element.addClass('form_field');
 
 			this.element
-			.bind('set_validators', function(oEvent, oData){
+			.on('set_validators', function(oEvent, oData){
 				oEvent.stopPropagation();
 				me.options.validators = oData;
 			});
 			this.element
-			.bind('validate get_current_value set_current_value', function(oEvent, oData){
+			.on('validate get_current_value set_current_value', function(oEvent, oData){
 				oEvent.stopPropagation();
 		
 				var callback = me.options[oEvent.type+'_callback'];
@@ -75,9 +75,9 @@ $(function()
 		getCurrentValue: function()
 		{
 			var value = null;
-			
-			this.element.find(':input').each(function(iIndex, oElem){
-				if($(oElem).is(':hidden') || $(oElem).is(':text') || $(oElem).is(':password') || $(oElem).is('textarea'))
+
+			this.element.find(':input:not(:button)').each(function(iIndex, oElem){
+				if($(oElem).is(':hidden:not(.ck-hidden,.ck-input-text)') || $(oElem).is(':text:not(.ck-input-text)') || $(oElem).is(':password') || $(oElem).is('textarea'))
 				{
 					value = $(oElem).val();
 				}
@@ -131,7 +131,7 @@ $(function()
 				
 				var bMandatory = (this.options.validators.mandatory !== undefined);
 				var bNotEmptyExtKey = (this.options.validators.notemptyextkey !== undefined);
-				var bEmpty = ($.isArray(oValue)) ? (oValue.length === 0) : (oValue === '' || oValue === undefined);
+				var bEmpty = (Array.isArray(oValue)) ? (oValue.length === 0) : (oValue === '' || oValue === undefined);
 				var value = oValue;
 				
 				// This is just a safety check in case a field doesn't always return an object when no value assigned, so we have to check the mandatory validator here...
@@ -167,7 +167,7 @@ $(function()
 								oResult.error_messages.push(oValidator.message);
 							}
 							// ... In case of non empty array, we have to check if the value is not null
-							else if($.isArray(value))
+							else if(Array.isArray(value))
 							{
 								for(var i in value)
 								{
@@ -215,7 +215,7 @@ $(function()
 									oResult.error_messages.push(oValidator.message);
 								}
 							}
-							else if($.isArray(value))
+							else if(Array.isArray(value))
 							{	
 								for(var i in value)
 								{

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -168,6 +168,13 @@ CombodoModal._InstantiateModal = function(oModalElem, oOptions) {
 
 	// Show modal
 	if (oOptions.auto_open) {
+
+		// Append modal to body if not already in DOM, this is also done when the modal is shown, but it happens after show.bs.modal event is triggered
+		// As we put this event listener on the body, it is not triggered when the modal is not in the DOM yet
+		if (oModalElem.parent().length === 0) {
+			$('body').append(oModalElem);
+		}
+		
 		oModalElem.modal('show');
 	}
 

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -18,7 +19,7 @@
  */
 
 // Activity panel
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close',
@@ -29,7 +30,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity',
 	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Draft entry',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Show / hide logs entries on this tab',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Show / hide log entries on this tab',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Choose which logs to display on this tab',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'State changes',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Show / hide state changes on this tab',
@@ -56,4 +57,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	// Closed cover
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activity panel',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Click to open the activity panel',
-));
+]);

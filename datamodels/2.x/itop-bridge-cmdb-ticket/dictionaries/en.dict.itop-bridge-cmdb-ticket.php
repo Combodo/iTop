@@ -1,5 +1,6 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -17,7 +18,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
 * @author       Benjamin Planque <benjamin.planque@combodo.com>
-* @copyright   Copyright (C) 2010-2023 Combodo SARL
+* @copyright   Copyright (C) 2010-2024 Combodo SAS
 * @license     http://opensource.org/licenses/AGPL-3.0
 */
 
@@ -33,7 +34,7 @@
 // Class: lnkFunctionalCIToTicket
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkFunctionalCIToTicket' => 'Link FunctionalCI / Ticket',
 	'Class:lnkFunctionalCIToTicket+' => '',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s',
@@ -53,12 +54,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Added manually',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Computed',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Not impacted',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item',
-));
+]);

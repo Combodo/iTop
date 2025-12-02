@@ -1,9 +1,9 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'gui'
@@ -19,7 +19,7 @@
 // Class: AuditCategory
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:AuditCategory'                                    => 'Audit Category',
 	'Class:AuditCategory+'                                   => 'Audit category defines a scope of objects which needs to be audited.
 It groups all audit rules applying to that object scope',
@@ -36,21 +36,23 @@ It groups all audit rules applying to that object scope',
 	'Class:AuditCategory/Attribute:warning_error_tolerance'  => 'Error threshold',
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)',
 	'Class:AuditCategory/Attribute:domains_list'             => 'Domains',
-	'Class:AuditCategory/Attribute:domains_list+'            => 'Domains which includes this category',
-));
+	'Class:AuditCategory/Attribute:domains_list+'            => 'Domains which include this category',
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:AuditRule'                                   => 'Audit Rule',
 	'Class:AuditRule+'                                  => 'An audit rule corresponds a single check within an audit category.
 It is applied on the scope of objects defined by the audit category',
 	'Class:AuditRule/Attribute:name'                    => 'Rule name',
 	'Class:AuditRule/Attribute:name+'                   => 'Short name for this rule',
 	'Class:AuditRule/Attribute:description'             => 'Description',
-	'Class:AuditRule/Attribute:description+'            => 'What is checked? How should it be fixed? Who should do it? ...',
+	'Class:AuditRule/Attribute:description+'            => 'What is checked?',
+	'Class:AuditRule/Attribute:process'                 => 'Correction process',
+	'Class:AuditRule/Attribute:process+'                => 'How should it be fixed? Who should do it? ...',
 	'Class:AuditRule/Attribute:query'                   => 'Query to run',
 	'Class:AuditRule/Attribute:query+'                  => 'The OQL expression to run. Returned classes must be aligned with those of the category\'s scope',
 	'Class:AuditRule/Attribute:valid_flag'              => 'Returned objects: ',
@@ -65,13 +67,15 @@ It is applied on the scope of objects defined by the audit category',
 	'Class:AuditRule/Attribute:category_id+'            => 'The category of this rule',
 	'Class:AuditRule/Attribute:category_name'           => 'Category name',
 	'Class:AuditRule/Attribute:category_name+'          => 'Name of the category of this rule',
-));
+	'Class:AuditRule/Attribute:contact_id' => 'Owner',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule',
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:AuditDomain'                            => 'Audit Domain',
 	'Class:AuditDomain+'                           => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors',
@@ -83,13 +87,13 @@ Domain usually correspond to who is responsible for checking and fixing errors',
 	'Class:AuditDomain/Attribute:icon+'            => '',
 	'Class:AuditDomain/Attribute:categories_list'  => 'Categories',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain',
 	'Class:lnkAuditCategoryToAuditDomain+' => '',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category',
@@ -100,13 +104,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Query'                                     => 'Query',
 	'Class:Query+'                                    => 'A query is a data set defined in a dynamic way',
 	'Class:Query/Attribute:name'                      => 'Name',
@@ -133,7 +137,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:QueryOQL+'                                 => 'A query based on the Object Query Language',
 	'Class:QueryOQL/Attribute:oql'                    => 'Expression',
 	'Class:QueryOQL/Attribute:oql+'                   => 'OQL Expression',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -144,7 +148,7 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class: User
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:User'                                 => 'User',
 	'Class:User+'                                => 'User login',
 	'Class:User/Attribute:finalclass'            => 'Type of account',
@@ -173,28 +177,33 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User/Attribute:allowed_org_list+'     => 'The end user is allowed to see data belonging to the following organizations. If no organization is specified, there is no restriction.',
 	'Class:User/Attribute:status'                => 'Status',
 	'Class:User/Attribute:status+'               => 'Whether the user account is enabled or disabled.',
-	'Class:User/Attribute:status/Value:enabled' => 'Enabled',
+	'Class:User/Attribute:status/Value:enabled'  => 'Enabled',
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled',
 
 	'Class:User/Error:LoginMustBeUnique' => 'Login must be unique - "%1$s" is already being used.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'At least one profile must be assigned to this user.',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)',
 	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'You cannot remove your own rights to edit Users',
+	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.',
 	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.',
+	'Class:User/Warning:NoOrganizationMeansFullAccess' => 'No "Allowed Organizations" defined for this user, this means they have access to all organizations',
+	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office',
 	'Class:UserInternal' => 'User Internal',
 	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT,
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_Profiles' => 'Profile',
 	'Class:URP_Profiles+' => 'User profile',
 	'Class:URP_Profiles/Attribute:name' => 'Name',
@@ -203,13 +212,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_Profiles/Attribute:description+' => 'one line description',
 	'Class:URP_Profiles/Attribute:user_list' => 'Users',
 	'Class:URP_Profiles/Attribute:user_list+' => 'persons having this role',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_Dimensions' => 'dimension',
 	'Class:URP_Dimensions+' => 'application dimension (defining silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Name',
@@ -218,13 +227,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'one line description',
 	'Class:URP_Dimensions/Attribute:type' => 'Type',
 	'Class:URP_Dimensions/Attribute:type+' => 'class name or data type (projection unit)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_UserProfile' => 'User to profile',
 	'Class:URP_UserProfile+' => 'user profiles',
 	'Class:URP_UserProfile/Name' => 'Link between %1$s and %2$s',
@@ -238,17 +247,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_UserProfile/Attribute:profile+' => 'Profile name',
 	'Class:URP_UserProfile/Attribute:reason' => 'Reason',
 	'Class:URP_UserProfile/Attribute:reason+' => 'explain why this person may have this role',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_UserOrg' => 'User organizations',
 	'Class:URP_UserOrg+' => 'Allowed organizations',
-	'Class:URP_UserOrg/Name' => 'LinkGG between %1$s and %2$s',
+	'Class:URP_UserOrg/Name' => 'Link between %1$s and %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'User',
 	'Class:URP_UserOrg/Attribute:userid+' => 'user account',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -259,13 +267,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Allowed organization',
 	'Class:URP_UserOrg/Attribute:reason' => 'Reason',
 	'Class:URP_UserOrg/Attribute:reason+' => 'explain why this person is allowed to see the data belonging to this organization',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => 'profile projections',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimension',
@@ -280,13 +288,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL expression (using $user) | constant |  | +attribute code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Target attribute code (optional)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'class projections',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimension',
@@ -299,13 +307,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL expression (using $this) | constant |  | +attribute code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Target attribute code (optional)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_ActionGrant' => 'action_permission',
 	'Class:URP_ActionGrant+' => 'permissions on classes',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profile',
@@ -322,15 +330,15 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_ActionGrant/Attribute:action' => 'Action',
 	'Class:URP_ActionGrant/Attribute:action+' => 'operations to perform on the given class',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_StimulusGrant' => 'stimulus_permission',
-	'Class:URP_StimulusGrant+' => 'permissions on stimilus in the life cycle of the object',
+	'Class:URP_StimulusGrant+' => 'permissions on stimulus in the life cycle of the object',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profile',
 	'Class:URP_StimulusGrant/Attribute:profileid+' => 'usage profile',
 	'Class:URP_StimulusGrant/Attribute:profile' => 'Profile',
@@ -345,25 +353,25 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'stimulus code',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_AttributeGrant' => 'attribute_permission',
 	'Class:URP_AttributeGrant+' => 'permissions at the attributes level',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Action grant',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribute',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:UserDashboard' => 'User dashboard',
 	'Class:UserDashboard+' => '',
 	'Class:UserDashboard/Attribute:user_id' => 'User',
@@ -372,22 +380,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '',
 	'Class:UserDashboard/Attribute:contents' => 'Contents',
 	'Class:UserDashboard/Attribute:contents+' => '',
-));
-
-//
-// Expression to Natural language
-//
-Dict::Add('EN US', 'English', 'English', array(
-	'Expression:Unit:Short:DAY' => 'd',
-	'Expression:Unit:Short:WEEK' => 'w',
-	'Expression:Unit:Short:MONTH' => 'm',
-	'Expression:Unit:Short:YEAR' => 'y',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Menu:WelcomeMenu' => 'Welcome',
 	'Menu:WelcomeMenu+' => 'Welcome to '.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => 'Welcome',
@@ -406,52 +404,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:MyShortcuts' => 'My Shortcuts',
 	'Menu:DataAdministration' => 'Data administration',
 	'Menu:DataAdministration+' => '',
-));
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'BooleanLabel:yes' => 'yes',
 	'BooleanLabel:no' => 'no',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
 	'UI:WelcomeMenu:Title' => 'Welcome to '.ITOP_APPLICATION_SHORT,
-
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' is a complete, OpenSource, IT Operational Portal.</p>
-<ul>It includes:
-<li>A complete CMDB (Configuration management database) to document and manage the IT inventory.</li>
-<li>An Incident management module to track and communicate about all issues occurring in the IT.</li>
-<li>A change management module to plan and track the changes to the IT environment.</li>
-<li>A known error database to speed up the resolution of incidents.</li>
-<li>An outage module to document all planned outages and notify the appropriate contacts.</li>
-<li>Dashboards to quickly get an overview of your IT.</li>
-</ul>
-<p>All the modules can be setup, step by step, indepently of each other.</p>',
-
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' is service provider oriented, it allows IT engineers to manage easily multiple customers or organizations.
-<ul>'.ITOP_APPLICATION_SHORT.', delivers a feature-rich set of business processes that:
-<li>Enhances IT management effectiveness</li> 
-<li>Drives IT operations performance</li> 
-<li>Improves customer satisfaction and provides executives with insights into business performance.</li>
-</ul>
-</p>
-<p>'.ITOP_APPLICATION_SHORT.' is completely open to be integrated within your current IT Management infrastructure.</p>
-<p>
-<ul>Adopting this new generation of IT Operational portal will help you to:
-<li>Better manage a more and more complex IT environment.</li>
-<li>Implement ITIL processes at your own pace.</li>
-<li>Manage the most important asset of your IT: Documentation.</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text'            => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Open requests: %1$d',
 	'UI:WelcomeMenu:MyCalls'         => 'My requests',
 	'UI:WelcomeMenu:OpenIncidents'   => 'Open incidents: %1$d',
@@ -548,6 +511,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:MaintenanceMode'                            => 'Application is currently in maintenance',
 	'UI:Error:MaintenanceTitle'                           => 'Maintenance',
 	'UI:Error:InvalidToken'                               => 'Error: the requested operation has already been performed (CSRF token not found)',
+	'UI:Error:TwigController'                             => 'Internal error in form controller',
 
 	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)',
 
@@ -585,6 +549,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:Manage' => 'Manage...',
 	'UI:Menu:EMail' => 'eMail',
 	'UI:Menu:CSVExport' => 'CSV Export...',
+	'UI:Menu:OpenOQL' => 'View the OQL query',
 	'UI:Menu:Modify' => 'Modify...',
 	'UI:Menu:Delete' => 'Delete...',
 	'UI:Menu:BulkDelete' => 'Delete...',
@@ -701,6 +666,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:TreatFirstLineAsHeader'     => 'Treat the first line as a header (column names)',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => 'Skip %1$s line(s) at the beginning of the file',
 	'UI:CSVImport:CSVDataPreview'             => 'CSV Data Preview',
+	'UI:CSVImport:Column'                     => 'Column %1$s',
 	'UI:CSVImport:SelectFile'                 => 'Select the file to import:',
 	'UI:CSVImport:Tab:LoadFromFile'           => 'Load from a file',
 	'UI:CSVImport:Tab:CopyPaste'              => 'Copy and paste data',
@@ -760,6 +726,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Row-Issue-Reconciliation'     => 'failed to reconcile',
 	'UI:CSVReport-Row-Issue-Ambiguous'          => 'ambiguous reconciliation',
 	'UI:CSVReport-Row-Issue-Internal'           => 'Internal error: %1$s, %2$s',
+	'UI:CSVReport-Value-Issue-NoValue'          => 'No value',
+	'UI:CSVReport-Row-Issue-NbField'            => 'Not the expected number of columns (found: %1$s, expected: %2$s)',
 
 	'UI:CSVReport-Icon-Unchanged'         => 'Unchanged',
 	'UI:CSVReport-Icon-Modified'          => 'Modified',
@@ -819,7 +787,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Dashboard:ObjectsInError'            => 'Objects in errors',
 	'UI:Audit:Dashboard:ObjectsValidated'          => 'Objects validated',
 	'UI:Audit:AuditCategory:Subtitle'              => '%1$s errors ouf of %2$s - %3$s%% of the object are valid',
-
 
 	'UI:RunQuery:Title'                => ITOP_APPLICATION_SHORT.' - OQL Query Evaluation',
 	'UI:RunQuery:QueryExamples'        => 'Query Examples',
@@ -885,7 +852,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:RelationDown_Description' => 'Down: %1$s',
 	'UI:Schema:RelationUp_Description' => 'Up: %1$s',
 	'UI:Schema:RelationPropagates' => '%1$s: propagate to %2$d levels, query: %3$s',
-	'UI:Schema:RelationDoesNotPropagate' => '%1$s: does not propagates (%2$d levels), query: %3$s',
+	'UI:Schema:RelationDoesNotPropagate' => '%1$s: does not propagate (%2$d levels), query: %3$s',
 	'UI:Schema:Class_ReferencingClasses_From_By' => '%1$s is referenced by the class %2$s via the field %3$s',
 	'UI:Schema:Class_IsLinkedTo_Class_Via_ClassAndAttribute' => '%1$s is linked to %2$s via %3$s::<em>%4$s</em>',
 	'UI:Schema:Links:1-n' => 'Classes pointing to %1$s (1:n links):',
@@ -900,13 +867,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Must change',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'User will be prompted to change the value',
 	'UI:Schema:LifeCycleEmptyList' => 'empty list',
-	'UI:Schema:ClassFilter' => 'Class:~~',
-	'UI:Schema:DisplayLabel' => 'Display:~~',
-	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code~~',
-	'UI:Schema:DisplaySelector/Label' => 'Label~~',
-	'UI:Schema:DisplaySelector/Code' => 'Code~~',
-	'UI:Schema:Attribute/Filter' => 'Filter~~',
-	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
+	'UI:Schema:ClassFilter' => 'Class:',
+	'UI:Schema:DisplayLabel' => 'Display:',
+	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code',
+	'UI:Schema:DisplaySelector/Label' => 'Label',
+	'UI:Schema:DisplaySelector/Code' => 'Code',
+	'UI:Schema:Attribute/Filter' => 'Filter',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"',
 	'UI:Schema:Events' => 'Events',
 	'UI:Schema:Events:Defined' => 'Defined events',
 	'UI:Schema:Events:NoEvent' => 'No event defined',
@@ -938,7 +905,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Delete:NotAllowedToDelete' => 'You are not allowed to delete this object',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'You are not allowed to update the fields: %1$s',
 	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action',
-	'UI:Error:NotEnoughRightsToDelete' => 'This object could not be deleted because the current user do not have sufficient rights',
+	'UI:Error:NotEnoughRightsToDelete' => 'This object could not be deleted because the current user does not have sufficient rights.',
 	'UI:Error:CannotDeleteBecause' => 'This object could not be deleted because: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'This object could not be deleted because some manual operations must be performed prior to that',
 	'UI:Error:CannotDeleteBecauseManualOpNeeded' => 'This object could not be deleted because some manual operations must be performed prior to that',
@@ -1104,6 +1071,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 <ol>
 	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
 	A special page: <a href="../setup/email.test.php" target="_blank">email.test.php</a> is available for testing and troubleshooting your PHP mail configuration.</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
 </ol>
 </p>
@@ -1135,7 +1103,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Document:NoPreview' => 'No preview is available for this type of document',
 	'UI:Download-CSV' => 'Download %1$s',
 
-	'UI:DeadlineMissedBy_duration' => 'Missed  by %1$s',
+	'UI:DeadlineMissedBy_duration' => 'Missed by %1$s',
 	'UI:Deadline_LessThan1Min' => '< 1 min',
 	'UI:Deadline_Minutes' => '%1$d min',
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
@@ -1265,7 +1233,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select',
 	'UI:NavigateAwayConfirmationMessage' => 'Any modification will be discarded.',
-	'UI:CancelConfirmationMessage' => 'You will loose your changes. Continue anyway?',
+	'UI:CancelConfirmationMessage' => 'You will lose your changes. Continue anyway?',
 	'UI:AutoApplyConfirmationMessage' => 'Some changes have not been applied yet. Do you want '.ITOP_APPLICATION_SHORT.' to take them into account?',
 	'UI:Create_Class_InState' => 'Create the %1$s in state: ',
 	'UI:OrderByHint_Values' => 'Sort order: %1$s',
@@ -1303,14 +1271,13 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Dashboard:EditCustom' => 'Edit custom version...',
 	'UI:Dashboard:CreateCustom' => 'Create a custom version...',
 	'UI:Dashboard:DeleteCustom' => 'Delete custom version...',
-	'UI:Dashboard:RevertConfirm' => 'Every changes made to the original version will be lost. Please confirm that you want to do this.',
+	'UI:Dashboard:RevertConfirm' => 'Every change made to the original version will be lost. Please confirm that you want to do this.',
 	'UI:ExportDashBoard' => 'Export to a file',
 	'UI:ImportDashBoard' => 'Import from a file...',
 	'UI:ImportDashboardTitle' => 'Import From a File',
 	'UI:ImportDashboardText' => 'Select a dashboard file to import:',
 	'UI:Dashboard:Actions' => 'Dashboard actions',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.',
-
 
 	'UI:DashletCreation:Title' => 'Create a new Dashlet',
 	'UI:DashletCreation:Dashboard' => 'Dashboard',
@@ -1400,10 +1367,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	// ---
 
 	'UI:DashletHeaderStatic:Label' => 'Header',
-	'UI:DashletHeaderStatic:Description' => 'Displays an horizontal separator',
+	'UI:DashletHeaderStatic:Description' => 'Displays a horizontal separator',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Title',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Contacts',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Icon',
+	'UI:DashletIcon:None' => 'None',
 
 	'UI:DashletHeaderDynamic:Label' => 'Header with statistics',
 	'UI:DashletHeaderDynamic:Description' => 'Header with stats (grouped by...)',
@@ -1460,7 +1428,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Month-10-Short'                => 'Oct',
 	'Month-11-Short'                => 'Nov',
 	'Month-12-Short'                => 'Dec',
-	'Calendar-FirstDayOfWeek'       => 0,
+	'Calendar-FirstDayOfWeek'       => '0',
 	// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList'                                 => 'Create a Shortcut...',
@@ -1468,6 +1436,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ShortcutRenameDlg:Title'                           => 'Rename the shortcut',
 	'UI:ShortcutListDlg:Title'                             => 'Create a shortcut for the list',
 	'UI:ShortcutDelete:Confirm'                            => 'Please confirm that wou wish to delete the shortcut(s).',
+	'UI:ObjectShortcutInsert'                               => 'Insert Object Shortcut',
 	'Class:Shortcut'                                       => 'Shortcut',
 	'Class:Shortcut+'                                      => '',
 	'Class:Shortcut/Attribute:name'                        => 'Name',
@@ -1613,7 +1582,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	//   - Numeric widget
 	//   None yet
 	//   - DateTime widget
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s',
 	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
@@ -1684,12 +1653,12 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s',
 
 	'UI:StateChanged' => 'State changed',
-));
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Expression:Operator:AND' => ' AND ',
 	'Expression:Operator:OR' => ' OR ',
 	'Expression:Operator:=' => ': ',
@@ -1705,12 +1674,12 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Expression:Verb:NOW' => 'now',
 	'Expression:Verb:ISNULL' => ': undefined',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'UI:Newsroom:NoNewMessage' => 'No new message',
 	'UI:Newsroom:XNewMessage' => '%1$s new message(s)',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read',
@@ -1718,12 +1687,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Newsroom:Preferences' => 'Newsroom preferences',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration',
 	'UI:Newsroom:ResetCache' => 'Reset cache',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.',
-));
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal',
+]);
 
-
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Menu:DataSources'            => 'Synchronization Data Sources',
 	'Menu:DataSources+'           => 'Data synchro used for batch import of external data',
 	'Menu:AuditCategories'        => 'Audit configuration',
@@ -1746,5 +1719,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:UserManagement'         => 'User management',
 	'Menu:Queries'                => 'Queries',
 	'Menu:ConfigurationTools'     => 'Configuration',
+	'Menu:ConfigEditor'           => 'General configuration',
+	'Menu:ConfigEditor+'          => 'Configuration File editor',
+	'Menu:Integrations'           => 'Integrations',
+	'Menu:Integrations+'          => '',
 
-));
+]);

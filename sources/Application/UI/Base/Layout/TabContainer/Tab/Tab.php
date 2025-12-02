@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,9 +20,8 @@
 
 namespace Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab;
 
-
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
-use TabManager;
+use Combodo\iTop\Application\WebPage\TabManager;
 use utils;
 
 /**

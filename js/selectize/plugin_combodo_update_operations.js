@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -41,6 +41,25 @@ Selectize.define("combodo_update_operations", function (aOptions) {
 			oSelf.bIsInitialized = true;
 			oSelf.updateOperationsInput();
 		};
+	})();
+
+	// Override enable function
+	oSelf.enable = (function () {
+		let oOriginal = oSelf.enable;
+		return function () {
+			oOriginal.apply(oSelf, arguments);
+			oSelf.$operationsInput.prop('disabled', false);
+		}
+	})();
+
+	// Override disable function
+	oSelf.disable = (function () {
+		let oOriginal = oSelf.disable;
+		return function () {
+			oOriginal.apply(oSelf, arguments);
+			if(oSelf.$operationsInput !== undefined)
+				oSelf.$operationsInput.prop('disabled', true);
+		}
 	})();
 
 	// Override addItem function

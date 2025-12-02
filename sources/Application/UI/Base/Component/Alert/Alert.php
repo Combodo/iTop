@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\Alert;
-
 
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
@@ -254,10 +254,9 @@ class Alert extends UIContentBlock
 	 */
 	public function IsOpenedByDefault(): bool
 	{
-		if($this->IsCollapsible()) {
+		if ($this->IsCollapsible()) {
 			return $this->bIsOpenedByDefault;
-		}
-		else {
+		} else {
 			return true;
 		}
 	}

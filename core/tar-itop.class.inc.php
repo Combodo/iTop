@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -23,7 +24,7 @@
  */
 class ITopArchiveTar extends Archive_Tar
 {
-	const READ_BUFFER_SIZE = 1024*1024;
+	public const READ_BUFFER_SIZE = 1024 * 1024;
 
 	public function __construct($p_tarname, $p_compress = null)
 	{

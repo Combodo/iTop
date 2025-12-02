@@ -1,22 +1,16 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+/**
+ *
+ */
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Attachments:TabTitle_Count' => 'Załączniki (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Załączniki',
 	'Attachments:FieldsetTitle' => 'Załączniki',
@@ -37,13 +31,13 @@ lub zapytaj administratora '.ITOP_APPLICATION_SHORT.', czy dysk serwera '.ITOP_A
 	'Attachments:Render:Icons' => 'Wyświetlaj jako ikony',
 	'Attachments:Render:Table' => 'Wyświetl jako listę',
 	'UI:Attachments:DropYourFileHint' => 'Upuść pliki w dowolnym miejscu w tym obszarze',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Attachment' => 'Załącznik',
 	'Class:Attachment+' => '',
 	'Class:Attachment/Attribute:expire' => 'Wygasa',
@@ -58,36 +52,42 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => 'Zawartość',
 	'Class:Attachment/Attribute:contents+' => '',
-));
+]);
 
-
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Attachments:File:Thumbnail' => 'Ikona',
 	'Attachments:File:Name' => 'Nazwa pliku',
 	'Attachments:File:Date' => 'Data przesłania',
 	'Attachments:File:Uploader' => 'Przesłany przez',
 	'Attachments:File:Size' => 'Rozmiar',
 	'Attachments:File:MimeType' => 'Typ',
-	'Attachments:File:DownloadsCount' => 'Downloads~~',
-));
+	'Attachments:File:DownloadsCount' => 'Pobrano',
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Attachment/Attribute:creation_date' => 'Data utworzenia',
 	'Class:Attachment/Attribute:creation_date+' => '',
 	'Class:Attachment/Attribute:user_id' => 'Id użytkownika',
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Id kontaktu',
 	'Class:Attachment/Attribute:contact_id+' => '',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
-	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
-));
+Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Class:TriggerOnAttachmentDownload' => 'Wyzwalacz (po pobraniu załącznika obiektu)',
+	'Class:TriggerOnAttachmentDownload+' => 'Wyzwalacz po pobraniu załącznika obiektu [klasy podrzędnej] danej klasy',
+	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
+	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
+	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
+	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
+]);

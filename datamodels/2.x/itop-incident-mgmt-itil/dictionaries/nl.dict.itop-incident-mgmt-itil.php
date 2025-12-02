@@ -1,13 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @author      Thomas Casteleyn <info@super-visions.com>
- * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+/**
+ * @author Thomas Casteleyn <info@super-visions.com>
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ *
+ */
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:IncidentManagement' => 'Incident Management',
 	'Menu:IncidentManagement+' => 'Incident Management',
 	'Menu:Incident:Overview' => 'Overzicht',
@@ -29,8 +34,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Open incidenten per status',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Open incidenten per agent',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Open incidenten per klant',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -46,7 +50,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Class: Incident
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Status',
@@ -137,6 +141,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Attribute:tto+' => '',
 	'Class:Incident/Attribute:ttr' => 'TTR',
 	'Class:Incident/Attribute:ttr+' => '',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'Deadline TTO',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA TTO gepasseerd',
@@ -225,4 +233,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem deze kenmerken over: service, team, agent, oplossing',
 	'Tickets:Related:OpenIncidents' => 'Open incidenten',
-));
+]);

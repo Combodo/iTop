@@ -1,0 +1,16 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$nav-pills--li--border-radius: $common-border-radius-300 !default;
+
+.nav-pills > li > a{
+  border-top-left-radius: $nav-pills--li--border-radius!important;
+  border-top-right-radius: $nav-pills--li--border-radius!important;
+}
+
+.panel-heading{
+  border-top-right-radius: $nav-pills--li--border-radius!important;
+}

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -45,6 +46,7 @@ class UpdateController extends Controller
 		$aParams['sFileUploadMaxSize'] = utils::BytesToFriendlyFormat($aParams['iFileUploadMaxSize']);
 		$aParams['sPostMaxSize'] = ini_get('post_max_size');
 		$aParams['sUploadMaxSize'] = ini_get('upload_max_filesize');
+		$aParams['bDontUpgradeIfIntegrityFailed'] = !utils::IsDevelopmentEnvironment();
 		$oFilter = DBObjectSearch::FromOQL('SELECT ModuleInstallation WHERE parent_id=0 AND name!="datamodel"');
 		$oSet = new DBObjectSet($oFilter, ['installed' => false]); // Most recent first
 		$aParams['oSet'] = $oSet;
@@ -53,7 +55,7 @@ class UpdateController extends Controller
 		$bConfigParamSetupLaunchButtonEnabled = $oConfig->Get('setup.launch_button.enabled');
 		if (is_null($bConfigParamSetupLaunchButtonEnabled)) {
 			$bIsSetupLaunchButtonEnabled = utils::IsDevelopmentEnvironment();
-		} else if (false === $bConfigParamSetupLaunchButtonEnabled) {
+		} elseif (false === $bConfigParamSetupLaunchButtonEnabled) {
 			$bIsSetupLaunchButtonEnabled = false;
 		} else {
 			$bIsSetupLaunchButtonEnabled = $bConfigParamSetupLaunchButtonEnabled || utils::IsDevelopmentEnvironment();
@@ -107,8 +109,7 @@ class UpdateController extends Controller
 			} else {
 				throw new Exception(Dict::S('iTopUpdate:Error:NoFile'));
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$iError = UPLOAD_ERR_NO_FILE;
 			$sError = $e->getMessage();
 		}
@@ -129,7 +130,6 @@ class UpdateController extends Controller
 		$sTransactionId = utils::GetNewTransactionId();
 		$aParams['sTransactionId'] = $sTransactionId;
 
-		$this->AddSaas('css/backoffice/main.scss');
 		$this->m_sOperation = 'ConfirmUpdate';
 		$this->DisplaySetupPage($aParams);
 	}
@@ -158,25 +158,24 @@ class UpdateController extends Controller
 			'sAjaxURL'        => utils::GetAbsoluteUrlAppRoot().'/pages/UI.php',
 		];
 		$this->AddLinkedScript(utils::GetAbsoluteUrlAppRoot().'setup/jquery.progression.js');
-		$this->AddSaas('css/backoffice/main.scss');
 		$this->AddSaas('env-'.utils::GetCurrentEnvironment().'/itop-core-update/css/itop-core-update.scss');
 		$this->m_sOperation = 'UpdateCoreFiles';
 		$this->DisplaySetupPage($aParams);
 	}
 
-    public function OperationRunSetup()
-    {
-	    SetupUtils::CheckSetupToken(true);
-	    $sConfigFile = APPCONF.'production/'.ITOP_CONFIG_FILE;
-	    @chmod($sConfigFile, 0770);
-	    $sRedirectURL = utils::GetAbsoluteUrlAppRoot().'setup/index.php';
-	    header("Location: $sRedirectURL");
-    }
+	public function OperationRunSetup()
+	{
+		SetupUtils::CheckSetupToken(true);
+		$sConfigFile = APPCONF.'production/'.ITOP_CONFIG_FILE;
+		@chmod($sConfigFile, 0770);
+		$sRedirectURL = utils::GetAbsoluteUrlAppRoot().'setup/index.php';
+		header("Location: $sRedirectURL");
+	}
 
-    private function GetPreviousInstallations()
-    {
-        return DBToolsUtils::GetPreviousInstallations();
-    }
+	private function GetPreviousInstallations()
+	{
+		return DBToolsUtils::GetPreviousInstallations();
+	}
 
 	// Returns a file size limit in bytes based on the PHP upload_max_filesize
 	// and post_max_size

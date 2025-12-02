@@ -1,24 +1,17 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-
-	// Bulk modify
+/**
+ *
+ */
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Bulk:modify:IncompatibleAttribute' => 'Dieses Attribut kann in einer Massenänderung nicht bearbeitet werden.',
-
-));
+	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Excel-Sicherheitswarnung',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Das Öffnen einer Datei mit nicht vertrauenswürdigen Daten in Microsoft Excel kann zu einer Formel-Injektion führen. Stellen Sie sicher, dass Ihre Excel-Einstellungen so konfiguriert sind, dass Dateien sicher verarbeitet werden. <a href="%1$s">Erfahren Sie mehr in unserer Dokumentation.</a>',
+]);

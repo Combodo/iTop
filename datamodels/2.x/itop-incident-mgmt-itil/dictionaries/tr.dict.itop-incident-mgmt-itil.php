@@ -1,30 +1,20 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+/**
+ *
+ */
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:IncidentManagement' => 'Incident Management~~',
-	'Menu:IncidentManagement+' => 'Incident Management~~',
+	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Overview~~',
-	'Menu:Incident:Overview+' => 'Overview~~',
+	'Menu:Incident:Overview+' => '',
 	'Menu:NewIncident' => 'New incident~~',
 	'Menu:NewIncident+' => 'Create a new incident ticket~~',
 	'Menu:SearchIncidents' => 'Search for incidents~~',
@@ -34,16 +24,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Incident:MyIncidents' => 'Incidents assigned to me~~',
 	'Menu:Incident:MyIncidents+' => 'Incidents assigned to me (as Agent)~~',
 	'Menu:Incident:EscalatedIncidents' => 'Escalated incidents~~',
-	'Menu:Incident:EscalatedIncidents+' => 'Escalated incidents~~',
+	'Menu:Incident:EscalatedIncidents+' => '',
 	'Menu:Incident:OpenIncidents' => 'All open incidents~~',
-	'Menu:Incident:OpenIncidents+' => 'All open incidents~~',
+	'Menu:Incident:OpenIncidents+' => '',
 	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Last 14 days incident per priority~~',
 	'UI-IncidentManagementOverview-Last-14-days' => 'Last 14 days number of incidents~~',
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Open incidents by status~~',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Open incidents by agent~~',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Open incidents by customer~~',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -59,7 +48,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 // Class: Incident
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Incident' => 'Incident~~',
 	'Class:Incident+' => '~~',
 	'Class:Incident/Attribute:status' => 'Status~~',
@@ -81,7 +70,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Incident/Attribute:status/Value:closed' => 'Closed~~',
 	'Class:Incident/Attribute:status/Value:closed+' => '~~',
 	'Class:Incident/Attribute:impact' => 'Impact~~',
-	'Class:Incident/Attribute:impact+' => '~~',
+	'Class:Incident/Attribute:impact+' => 'Impact is the severity of the incident, how many end users are affected~~',
 	'Class:Incident/Attribute:impact/Value:1' => 'A department~~',
 	'Class:Incident/Attribute:impact/Value:1+' => '~~',
 	'Class:Incident/Attribute:impact/Value:2' => 'A service~~',
@@ -89,39 +78,39 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Incident/Attribute:impact/Value:3' => 'A person~~',
 	'Class:Incident/Attribute:impact/Value:3+' => '~~',
 	'Class:Incident/Attribute:priority' => 'Priority~~',
-	'Class:Incident/Attribute:priority+' => '~~',
-	'Class:Incident/Attribute:priority/Value:1' => 'critical~~',
-	'Class:Incident/Attribute:priority/Value:1+' => 'critical~~',
-	'Class:Incident/Attribute:priority/Value:2' => 'high~~',
-	'Class:Incident/Attribute:priority/Value:2+' => 'high~~',
-	'Class:Incident/Attribute:priority/Value:3' => 'medium~~',
-	'Class:Incident/Attribute:priority/Value:3+' => 'medium~~',
-	'Class:Incident/Attribute:priority/Value:4' => 'low~~',
-	'Class:Incident/Attribute:priority/Value:4+' => 'low~~',
+	'Class:Incident/Attribute:priority+' => 'Order in which tickets need to be handled~~',
+	'Class:Incident/Attribute:priority/Value:1' => 'Critical~~',
+	'Class:Incident/Attribute:priority/Value:1+' => '',
+	'Class:Incident/Attribute:priority/Value:2' => 'High~~',
+	'Class:Incident/Attribute:priority/Value:2+' => '',
+	'Class:Incident/Attribute:priority/Value:3' => 'Medium~~',
+	'Class:Incident/Attribute:priority/Value:3+' => '',
+	'Class:Incident/Attribute:priority/Value:4' => 'Low~~',
+	'Class:Incident/Attribute:priority/Value:4+' => '',
 	'Class:Incident/Attribute:urgency' => 'Urgency~~',
-	'Class:Incident/Attribute:urgency+' => '~~',
-	'Class:Incident/Attribute:urgency/Value:1' => 'critical~~',
-	'Class:Incident/Attribute:urgency/Value:1+' => 'critical~~',
-	'Class:Incident/Attribute:urgency/Value:2' => 'high~~',
-	'Class:Incident/Attribute:urgency/Value:2+' => 'high~~',
-	'Class:Incident/Attribute:urgency/Value:3' => 'medium~~',
-	'Class:Incident/Attribute:urgency/Value:3+' => 'medium~~',
-	'Class:Incident/Attribute:urgency/Value:4' => 'low~~',
-	'Class:Incident/Attribute:urgency/Value:4+' => 'low~~',
+	'Class:Incident/Attribute:urgency+' => 'How quickly the fault needs to be resolved~~',
+	'Class:Incident/Attribute:urgency/Value:1' => 'Critical~~',
+	'Class:Incident/Attribute:urgency/Value:1+' => '',
+	'Class:Incident/Attribute:urgency/Value:2' => 'High~~',
+	'Class:Incident/Attribute:urgency/Value:2+' => '',
+	'Class:Incident/Attribute:urgency/Value:3' => 'Medium~~',
+	'Class:Incident/Attribute:urgency/Value:3+' => '',
+	'Class:Incident/Attribute:urgency/Value:4' => 'Low~~',
+	'Class:Incident/Attribute:urgency/Value:4+' => '',
 	'Class:Incident/Attribute:origin' => 'Origin~~',
-	'Class:Incident/Attribute:origin+' => '~~',
+	'Class:Incident/Attribute:origin+' => 'What\'s the trigger of this incident ticket creation~~',
 	'Class:Incident/Attribute:origin/Value:in_person' => 'In-person~~',
 	'Class:Incident/Attribute:origin/Value:in_person+' => 'Incident created following a face-to-face discussion~~',
 	'Class:Incident/Attribute:origin/Value:chat' => 'Chat~~',
 	'Class:Incident/Attribute:origin/Value:chat+' => 'Incident created following a ~~',
-	'Class:Incident/Attribute:origin/Value:mail' => 'email~~',
-	'Class:Incident/Attribute:origin/Value:mail+' => 'email~~',
-	'Class:Incident/Attribute:origin/Value:monitoring' => 'monitoring~~',
-	'Class:Incident/Attribute:origin/Value:monitoring+' => 'monitoring~~',
-	'Class:Incident/Attribute:origin/Value:phone' => 'phone~~',
-	'Class:Incident/Attribute:origin/Value:phone+' => 'phone~~',
-	'Class:Incident/Attribute:origin/Value:portal' => 'portal~~',
-	'Class:Incident/Attribute:origin/Value:portal+' => 'portal~~',
+	'Class:Incident/Attribute:origin/Value:mail' => 'Email~~',
+	'Class:Incident/Attribute:origin/Value:mail+' => 'Incident created on an email reception~~',
+	'Class:Incident/Attribute:origin/Value:monitoring' => 'Monitoring~~',
+	'Class:Incident/Attribute:origin/Value:monitoring+' => 'Incident created on a monitoring alert~~',
+	'Class:Incident/Attribute:origin/Value:phone' => 'Phone~~',
+	'Class:Incident/Attribute:origin/Value:phone+' => 'Incident created following a phone call~~',
+	'Class:Incident/Attribute:origin/Value:portal' => 'Portal~~',
+	'Class:Incident/Attribute:origin/Value:portal+' => 'Incident created on the user portal~~',
 	'Class:Incident/Attribute:service_id' => 'Service~~',
 	'Class:Incident/Attribute:service_id+' => '~~',
 	'Class:Incident/Attribute:service_name' => 'Service name~~',
@@ -133,9 +122,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Incident/Attribute:escalation_flag' => 'Hot Flag~~',
 	'Class:Incident/Attribute:escalation_flag+' => '~~',
 	'Class:Incident/Attribute:escalation_flag/Value:no' => 'No~~',
-	'Class:Incident/Attribute:escalation_flag/Value:no+' => 'No~~',
+	'Class:Incident/Attribute:escalation_flag/Value:no+' => '',
 	'Class:Incident/Attribute:escalation_flag/Value:yes' => 'Yes~~',
-	'Class:Incident/Attribute:escalation_flag/Value:yes+' => 'Yes~~',
+	'Class:Incident/Attribute:escalation_flag/Value:yes+' => '',
 	'Class:Incident/Attribute:escalation_reason' => 'Hot reason~~',
 	'Class:Incident/Attribute:escalation_reason+' => '~~',
 	'Class:Incident/Attribute:assignment_date' => 'Assignment date~~',
@@ -146,10 +135,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Incident/Attribute:last_pending_date+' => '~~',
 	'Class:Incident/Attribute:cumulatedpending' => 'Cumulated pending~~',
 	'Class:Incident/Attribute:cumulatedpending+' => '~~',
-	'Class:Incident/Attribute:tto' => 'tto~~',
-	'Class:Incident/Attribute:tto+' => '~~',
-	'Class:Incident/Attribute:ttr' => 'ttr~~',
-	'Class:Incident/Attribute:ttr+' => '~~',
+	'Class:Incident/Attribute:tto' => 'TTO~~',
+	'Class:Incident/Attribute:tto+' => 'Time To Own~~',
+	'Class:Incident/Attribute:ttr' => 'TTR~~',
+	'Class:Incident/Attribute:ttr+' => 'Time To Resolve~~',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'TTO Deadline~~',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '~~',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA tto passed~~',
@@ -165,21 +158,21 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Incident/Attribute:time_spent' => 'Resolution delay~~',
 	'Class:Incident/Attribute:time_spent+' => '~~',
 	'Class:Incident/Attribute:resolution_code' => 'Resolution code~~',
-	'Class:Incident/Attribute:resolution_code+' => '~~',
-	'Class:Incident/Attribute:resolution_code/Value:assistance' => 'assistance~~',
-	'Class:Incident/Attribute:resolution_code/Value:assistance+' => 'assistance~~',
-	'Class:Incident/Attribute:resolution_code/Value:bug fixed' => 'bug fixed~~',
-	'Class:Incident/Attribute:resolution_code/Value:bug fixed+' => 'bug fixed~~',
-	'Class:Incident/Attribute:resolution_code/Value:hardware repair' => 'hardware repair~~',
-	'Class:Incident/Attribute:resolution_code/Value:hardware repair+' => 'hardware repair~~',
-	'Class:Incident/Attribute:resolution_code/Value:other' => 'other~~',
-	'Class:Incident/Attribute:resolution_code/Value:other+' => 'other~~',
-	'Class:Incident/Attribute:resolution_code/Value:software patch' => 'software patch~~',
-	'Class:Incident/Attribute:resolution_code/Value:software patch+' => 'software patch~~',
-	'Class:Incident/Attribute:resolution_code/Value:system update' => 'system update~~',
-	'Class:Incident/Attribute:resolution_code/Value:system update+' => 'system update~~',
-	'Class:Incident/Attribute:resolution_code/Value:training' => 'training~~',
-	'Class:Incident/Attribute:resolution_code/Value:training+' => 'training~~',
+	'Class:Incident/Attribute:resolution_code+' => 'What was done to resolve the incident?~~',
+	'Class:Incident/Attribute:resolution_code/Value:assistance' => 'Assistance~~',
+	'Class:Incident/Attribute:resolution_code/Value:assistance+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:bug fixed' => 'Bug fixed~~',
+	'Class:Incident/Attribute:resolution_code/Value:bug fixed+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:hardware repair' => 'Hardware repair~~',
+	'Class:Incident/Attribute:resolution_code/Value:hardware repair+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:other' => 'Other~~',
+	'Class:Incident/Attribute:resolution_code/Value:other+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:software patch' => 'Software patch~~',
+	'Class:Incident/Attribute:resolution_code/Value:software patch+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:system update' => 'System update~~',
+	'Class:Incident/Attribute:resolution_code/Value:system update+' => '',
+	'Class:Incident/Attribute:resolution_code/Value:training' => 'Training~~',
+	'Class:Incident/Attribute:resolution_code/Value:training+' => '',
 	'Class:Incident/Attribute:solution' => 'Solution~~',
 	'Class:Incident/Attribute:solution+' => '~~',
 	'Class:Incident/Attribute:pending_reason' => 'Pending reason~~',
@@ -205,13 +198,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Incident/Attribute:user_satisfaction' => 'User satisfaction~~',
 	'Class:Incident/Attribute:user_satisfaction+' => '~~',
 	'Class:Incident/Attribute:user_satisfaction/Value:1' => 'Very satisfied~~',
-	'Class:Incident/Attribute:user_satisfaction/Value:1+' => 'Very satisfied~~',
-	'Class:Incident/Attribute:user_satisfaction/Value:2' => 'Fairly statisfied~~',
-	'Class:Incident/Attribute:user_satisfaction/Value:2+' => 'Fairly statisfied~~',
-	'Class:Incident/Attribute:user_satisfaction/Value:3' => 'Rather Dissatified~~',
-	'Class:Incident/Attribute:user_satisfaction/Value:3+' => 'Rather Dissatified~~',
+	'Class:Incident/Attribute:user_satisfaction/Value:1+' => '',
+	'Class:Incident/Attribute:user_satisfaction/Value:2' => 'Fairly satisfied~~',
+	'Class:Incident/Attribute:user_satisfaction/Value:2+' => '',
+	'Class:Incident/Attribute:user_satisfaction/Value:3' => 'Rather dissatisfied~~',
+	'Class:Incident/Attribute:user_satisfaction/Value:3+' => '',
 	'Class:Incident/Attribute:user_satisfaction/Value:4' => 'Very Dissatisfied~~',
-	'Class:Incident/Attribute:user_satisfaction/Value:4+' => 'Very Dissatisfied~~',
+	'Class:Incident/Attribute:user_satisfaction/Value:4+' => '',
 	'Class:Incident/Attribute:user_comment' => 'User comment~~',
 	'Class:Incident/Attribute:user_comment+' => '~~',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname' => 'parent_incident_id_friendlyname~~',
@@ -238,4 +231,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-));
+]);

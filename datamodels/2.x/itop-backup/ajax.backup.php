@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2010-2023 Combodo SARL
+ * Copyright (C) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,11 +18,16 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-if (!defined('APPROOT')) require_once(__DIR__.'/../../approot.inc.php');
+use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+
+if (!defined('APPROOT')) {
+	require_once(__DIR__.'/../../approot.inc.php');
+}
 require_once(APPROOT.'/application/application.inc.php');
 
 require_once(APPROOT.'core/mutex.class.inc.php');
-
 
 /**
  * @param WebPage $oPage
@@ -40,23 +46,15 @@ function DisplayErrorAndDie($oPage, $sHtmlErrorMessage, $exitCode = null)
 	die($exitCode);
 }
 
-
-
-
-
-
 $sOperation = utils::ReadParam('operation', '');
 
 $oPage = new AjaxPage('');
 $oPage->SetContentType('text/html');
 
-
-
 /**
  * Check security
  */
-switch ($sOperation)
-{
+switch ($sOperation) {
 	/**
 	 * Can't use normal check methods (DoLogin for ex) as the datamodel can't be loaded here
 	 * So we're only using a token generated in the restore_token operation
@@ -64,8 +62,10 @@ switch ($sOperation)
 	case 'restore_exec':
 		IssueLog::Enable(APPROOT.'log/error.log');
 		if (utils::GetConfig()->Get('demo_mode')) {
-			DisplayErrorAndDie($oPage,
-				'<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>');
+			DisplayErrorAndDie(
+				$oPage,
+				'<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>'
+			);
 		}
 
 		$sToken = utils::ReadParam('token', '', false, 'raw_data');
@@ -89,38 +89,30 @@ switch ($sOperation)
 		$sTransactionId = utils::ReadParam('transaction_id', '', true, 'transaction_id');
 		// the consumer page is not reloaded after download, we need to keep the transaction_id
 		$bRemoveTransactionId = ($sOperation !== 'download');
-		if (!utils::IsTransactionValid($sTransactionId, $bRemoveTransactionId))
-		{
+		if (!utils::IsTransactionValid($sTransactionId, $bRemoveTransactionId)) {
 			$sEscapedOperation = utils::HtmlEntities($sOperation);
 			DisplayErrorAndDie($oPage, "<div data-error-stimulus=\"Error\">Error: invalid Transaction ID. The operation '$sEscapedOperation' was NOT performed!</div>");
 		}
 
 		ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
 
-		if (utils::GetConfig()->Get('demo_mode'))
-		{
+		if (utils::GetConfig()->Get('demo_mode')) {
 			DisplayErrorAndDie($oPage, '<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>');
 		}
 		break;
 }
 
-
 /**
  * Backup from an interactive session
  */
-try
-{
-	switch ($sOperation)
-	{
+try {
+	switch ($sOperation) {
 		case 'backup':
-			try
-			{
+			try {
 				set_time_limit(0);
-				$oBB = new BackupExec(APPROOT.'data/backups/manual/', 0 /*iRetentionCount*/);
+				$oBB = new BackupExec(utils::GetDataPath().'backups/manual/', 0 /*iRetentionCount*/);
 				$sRes = $oBB->Process(time() + 36000); // 10 hours to complete should be sufficient!
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				$oPage->p('Error: '.$e->getMessage());
 				IssueLog::Error($sOperation.' - '.$e->getMessage());
 			}
@@ -128,21 +120,20 @@ try
 			$oPage->output();
 			break;
 
-		/*
-		 * Fix a specific token :
-		 *  We can't load the MetaModel because in DBRestore, after restore is done we're launching a compile !
-		 *  So as LoginWebPage::DoLogin needs a loaded DataModel, we can't use it
-		 *  Also, we can't use \utils::IsTransactionValid as it uses \MetaModel::GetConfig
-		 *  As a result we're setting a token file to make sure the restore is called by an authenticated user with the correct rights !
-		 */
+			/*
+			 * Fix a specific token :
+			 *  We can't load the MetaModel because in DBRestore, after restore is done we're launching a compile !
+			 *  So as LoginWebPage::DoLogin needs a loaded DataModel, we can't use it
+			 *  Also, we can't use \utils::IsTransactionValid as it uses \MetaModel::GetConfig
+			 *  As a result we're setting a token file to make sure the restore is called by an authenticated user with the correct rights !
+			 */
 		case 'restore_get_token':
 			$oPage = new JsonPage();
 			$oPage->SetOutputDataOnly(true);
 
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
 			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
-			if ($oRestoreMutex->IsLocked())
-			{
+			if ($oRestoreMutex->IsLocked()) {
 				DisplayErrorAndDie($oPage, '<p>'.Dict::S('bkp-restore-running').'</p>');
 			}
 
@@ -155,10 +146,10 @@ try
 			$oPage->output();
 			break;
 
-		/*
-		 * We can't call \LoginWebPage::DoLogin because DBRestore will do a compile after restoring the DB
-		 * Authentication is checked with a token file (see $sOperation='restore_get_token')
-		 */
+			/*
+			 * We can't call \LoginWebPage::DoLogin because DBRestore will do a compile after restoring the DB
+			 * Authentication is checked with a token file (see $sOperation='restore_get_token')
+			 */
 		case 'restore_exec':
 			require_once(APPROOT."setup/runtimeenv.class.inc.php");
 			require_once(APPROOT.'/application/utils.inc.php');
@@ -166,8 +157,7 @@ try
 			require_once(__DIR__.'/dbrestore.class.inc.php');
 
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
-			try
-			{
+			try {
 				set_time_limit(0);
 
 				// Get the file and destroy the token (single usage)
@@ -181,19 +171,15 @@ try
 				$oDBRS = new DBRestore($oItopConfig);
 				$oDBRS->SetMySQLBinDir($sMySQLBinDir);
 
-				$sBackupDir = APPROOT.'data/backups/';
+				$sBackupDir = utils::GetDataPath().'backups/';
 				$sBackupFile = $sBackupDir.$sFile;
 				$sRes = $oDBRS->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
 
 				IssueLog::Info('Backup Restore - Done, releasing the LOCK');
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				$oPage->p('Error: '.$e->getMessage());
 				IssueLog::Error($sOperation.' - '.$e->getMessage());
-			}
-			finally
-			{
+			} finally {
 				unlink($tokenRealPath);
 			}
 
@@ -206,18 +192,14 @@ try
 			}
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oBackup = new DBBackupScheduled();
-			$sBackupDir = APPROOT.'data/backups/';
+			$sBackupDir = utils::GetDataPath().'backups/';
 			$sBackupFilePath = utils::RealPath($sBackupDir.$sFile, $sBackupDir);
-			if ($sBackupFilePath === false)
-			{
+			if ($sBackupFilePath === false) {
 				throw new CoreUnexpectedValue('Invalid file path');
 			}
 			$oBackup->DownloadBackup($sBackupFilePath);
 			break;
 	}
-}
-catch (Exception $e)
-{
+} catch (Exception $e) {
 	IssueLog::Error($sOperation.' - '.$e->getMessage());
 }
-

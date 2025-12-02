@@ -1,6 +1,5 @@
 <?php
 
-
 use Combodo\iTop\Controller\OAuth\OAuthLandingController;
 
 require_once('../approot.inc.php');
@@ -10,6 +9,5 @@ IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUE
 $sTemplates = APPROOT.'templates/pages/backoffice/oauth';
 
 $oUpdateController = new OAuthLandingController($sTemplates, 'core');
-$oUpdateController->AllowOnlyAdmin();
 $oUpdateController->SetDefaultOperation('Landing');
 $oUpdateController->HandleOperation();

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -30,7 +31,7 @@ use MySQLException;
 use UILinksWidgetDirect;
 use UserRights;
 use utils;
-use WebPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Class BlockDirectLinkSetEditTable
@@ -93,10 +94,10 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 		$this->oUILinksDirectWidget = $oUILinksDirectWidget;
 
 		// compute
-		$this->aLabels = array(
+		$this->aLabels = [
 			'creation_title'  => Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
 			'selection_title' => Dict::Format('UI:SelectionOf_Class', MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())),
-		);
+		];
 		$oContext = new ApplicationContext();
 		$this->sSubmitUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?'.$oContext->GetForLink();
 
@@ -121,10 +122,13 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 	{
 		$this->oAttributeLinkedSet = MetaModel::GetAttributeDef($this->oUILinksDirectWidget->GetClass(), $this->oUILinksDirectWidget->GetAttCode());
 
+		$sEditWhen = $this->oAttributeLinkedSet->GetEditWhen();
+		$bIsEditableBasedOnEditWhen = ($sEditWhen === LINKSET_EDITWHEN_ALWAYS || $sEditWhen === LINKSET_EDITWHEN_ON_HOST_EDITION);
+
 		// User rights
-		$this->bIsAllowCreate = UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES;
-		$this->bIsAllowModify = UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES;
-		$this->bIsAllowDelete = UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES;
+		$this->bIsAllowCreate = UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES && $bIsEditableBasedOnEditWhen;
+		$this->bIsAllowModify = UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES && $bIsEditableBasedOnEditWhen;
+		$this->bIsAllowDelete = UserRights::IsActionAllowed($this->oAttributeLinkedSet->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES && $bIsEditableBasedOnEditWhen;
 	}
 
 	/**
@@ -140,7 +144,7 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \DBObjectSet $oValue
 	 * @param string $sFormPrefix
 	 * @param \DBObject $oCurrentObj
@@ -179,8 +183,7 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 			$oTablePanel->AddToolbarBlock($oToolbar);
 			$oTablePanel->AddSubBlock($oDatatable);
 			$this->AddSubBlock($oTablePanel);
-		}
-		catch (\Exception $e) {
+		} catch (\Exception $e) {
 			$oAlert = AlertUIBlockFactory::MakeForDanger('error', Dict::S('UI:Datatables:Language:Error'));
 			$oAlert->SetIsClosable(false);
 			$oAlert->SetIsCollapsible(false);
@@ -214,20 +217,20 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
 			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
-			if ($this->bIsAllowCreate) {
-				$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Create'));
-				$oActionButtonCreate->SetTooltip(Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($this->oAttributeLinkedSet->GetLinkedClass())))
-					->AddDataAttribute('action', 'create')
-					->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('createRow');");
-				$oToolbar->AddSubBlock($oActionButtonCreate);
-			}
+				if ($this->bIsAllowCreate) {
+					$oActionButtonCreate = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Create'));
+					$oActionButtonCreate->SetTooltip(Dict::Format('UI:ClickToCreateNew', MetaModel::GetName($this->oAttributeLinkedSet->GetLinkedClass())))
+						->AddDataAttribute('action', 'create')
+						->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('createRow');");
+					$oToolbar->AddSubBlock($oActionButtonCreate);
+				}
 
-			if ($this->bIsAllowDelete) {
-				$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Delete'));
-				$oActionButtonDelete->AddDataAttribute('action', 'delete')
-					->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('deleteSelection');");
-				$oToolbar->AddSubBlock($oActionButtonDelete);
-			}
+				if ($this->bIsAllowDelete) {
+					$oActionButtonDelete = ButtonUIBlockFactory::MakeNeutral(Dict::S('UI:Button:Delete'));
+					$oActionButtonDelete->AddDataAttribute('action', 'delete')
+						->SetOnClickJsCode("$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('deleteSelection');");
+					$oToolbar->AddSubBlock($oActionButtonDelete);
+				}
 				break;
 
 			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
@@ -267,17 +270,17 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 	 * @throws MySQLException
 	 * @throws Exception
 	 */
-	private function GetTableRows(\WebPage $oPage, iDBObjectSetIterator $oValue): array
+	private function GetTableRows(WebPage $oPage, iDBObjectSetIterator $oValue): array
 	{
 		// result data
-		$aRows = array();
+		$aRows = [];
 
 		// set pointer to start
 		$oValue->Rewind();
 
 		// create a row table for each value...
 		while ($oLinkObj = $oValue->Fetch()) {
-			$aRow = array();
+			$aRow = [];
 			$aRow['form::select'] = '<input type="checkbox" class="selectList'.$this->oUILinksDirectWidget->GetInputId().'" onClick="oWidget'.$this->oUILinksDirectWidget->GetInputId().'.directlinks(\'instance\')._onSelectChange();" value="'.$oLinkObj->GetKey().'"/>';
 			foreach ($this->oUILinksDirectWidget->GetZList() as $sLinkedAttCode) {
 				$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
@@ -304,19 +307,27 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 	 */
 	private function GetRowActions(DBObject $oHostObject): array
 	{
-		$aRowActions = array();
+		$aRowActions = [];
 
-		$sDeleteButtonTooltip = $this->oAttributeLinkedSet->SearchSpecificLabel('UI:Links:Delete:Button+', '', true,
+		$sDeleteButtonTooltip = $this->oAttributeLinkedSet->SearchSpecificLabel(
+			'UI:Links:Delete:Button+',
+			'',
+			true,
 			MetaModel::GetName($this->oAttributeLinkedSet->GetHostClass()),
 			$oHostObject->Get('friendlyname'),
 			$this->oAttributeLinkedSet->GetLabel(),
-			MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass()));
+			MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())
+		);
 
-		$sRemoveButtonTooltip = $this->oAttributeLinkedSet->SearchSpecificLabel('UI:Links:Remove:Button+', '', true,
+		$sRemoveButtonTooltip = $this->oAttributeLinkedSet->SearchSpecificLabel(
+			'UI:Links:Remove:Button+',
+			'',
+			true,
 			MetaModel::GetName($this->oAttributeLinkedSet->GetHostClass()),
 			$oHostObject->Get('friendlyname'),
 			$this->oAttributeLinkedSet->GetLabel(),
-			MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass()));
+			MetaModel::GetName($this->oUILinksDirectWidget->GetLinkedClass())
+		);
 
 		// until a full link set refactoring (continue using edit_mode property)
 		switch ($this->oAttributeLinkedSet->GetEditMode()) {
@@ -328,24 +339,24 @@ class BlockDirectLinkSetEditTable extends UIContentBlock
 
 			case LINKSET_EDITMODE_INPLACE: // The whole linkset can be edited 'in-place'
 			case LINKSET_EDITMODE_ACTIONS: // Show the usual 'Actions' popup menu
-			if ($this->bIsAllowDelete) {
-				$aRowActions[] = array(
-					'label'         => 'UI:Links:Delete:Button',
-					'tooltip'       => $sDeleteButtonTooltip,
-					'icon_classes'  => 'fas fa-trash',
-					'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
-				);
-			}
+				if ($this->bIsAllowDelete) {
+					$aRowActions[] = [
+						'label'         => 'UI:Links:Delete:Button',
+						'tooltip'       => $sDeleteButtonTooltip,
+						'icon_classes'  => 'fas fa-trash',
+						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
+					];
+				}
 				break;
 
 			case LINKSET_EDITMODE_ADDREMOVE: // The whole linkset can be edited 'in-place'
 				if ($this->bIsAllowModify) {
-					$aRowActions[] = array(
+					$aRowActions[] = [
 						'label'         => 'UI:Links:Remove:Button',
 						'tooltip'       => $sRemoveButtonTooltip,
 						'icon_classes'  => 'fas fa-minus',
 						'js_row_action' => "$('#{$this->oUILinksDirectWidget->GetInputId()}').directlinks('Remove', $(':checkbox', oTrElement));",
-					);
+					];
 				}
 				break;
 

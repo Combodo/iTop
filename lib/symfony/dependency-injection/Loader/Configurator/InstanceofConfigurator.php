@@ -22,6 +22,7 @@ class InstanceofConfigurator extends AbstractServiceConfigurator
     use Traits\BindTrait;
     use Traits\CallTrait;
     use Traits\ConfiguratorTrait;
+    use Traits\ConstructorTrait;
     use Traits\LazyTrait;
     use Traits\PropertyTrait;
     use Traits\PublicTrait;
@@ -30,9 +31,9 @@ class InstanceofConfigurator extends AbstractServiceConfigurator
 
     public const FACTORY = 'instanceof';
 
-    private $path;
+    private ?string $path;
 
-    public function __construct(ServicesConfigurator $parent, Definition $definition, string $id, string $path = null)
+    public function __construct(ServicesConfigurator $parent, Definition $definition, string $id, ?string $path = null)
     {
         parent::__construct($parent, $definition, $id, []);
 

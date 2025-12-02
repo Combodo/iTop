@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -71,7 +72,7 @@ class LinksBulkDataPostProcessor implements iDataPostProcessor
 
 				// Group by links attached to object selection
 				$oFieldExp = new FieldExpression($sTargetField, 'lnk');
-				$sQuery = $oDbObjectSearch->MakeGroupByQuery([$sTargetField], array('grouped_by_1' => $oFieldExp), true);
+				$sQuery = $oDbObjectSearch->MakeGroupByQuery([$sTargetField], ['grouped_by_1' => $oFieldExp], true);
 				$aGroupResult = CMDBSource::QueryToArray($sQuery, MYSQLI_ASSOC);
 
 				// Iterate throw result...
@@ -109,8 +110,7 @@ class LinksBulkDataPostProcessor implements iDataPostProcessor
 
 				// Order items
 				usort($aResult, [self::class, "CompareItems"]);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 
 				ExceptionLog::LogException($e);
 			}
@@ -128,7 +128,7 @@ class LinksBulkDataPostProcessor implements iDataPostProcessor
 	 *
 	 * @return array|int
 	 */
-	static private function CompareItems($aItemA, $aItemB): int
+	private static function CompareItems($aItemA, $aItemB): int
 	{
 		if ($aItemA['occurrence'] === $aItemB['occurrence']) {
 			return 0;

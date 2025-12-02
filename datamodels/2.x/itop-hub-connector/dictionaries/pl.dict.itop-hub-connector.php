@@ -1,27 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
-	// Dictionary entries go here
+/**
+ *
+ */
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Połącz się z iTop Hub',
 	'Menu:iTopHub:Register+' => 'Przejdź do iTop Hub, aby zaktualizować swoją instancję '.ITOP_APPLICATION_SHORT,
@@ -76,6 +65,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s wersja: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Zainstalowana',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Wersja %1$s <b>NIE</b> zainstalowana.',
-));
-
-
+]);

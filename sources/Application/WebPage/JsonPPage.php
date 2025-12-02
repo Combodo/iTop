@@ -1,9 +1,15 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+namespace Combodo\iTop\Application\WebPage;
+
+use CoreException;
+use ExecutionKPI;
+use utils;
 
 /**
  * Class JsonPPage
@@ -38,7 +44,7 @@ class JsonPPage extends JsonPage
 	 *
 	 * @return $this
 	 * @throws \CoreException
-	 *@see \JsonPPage::$sCallbackName
+	 *@see JsonPPage::$sCallbackName
 	 *
 	 */
 	public function SetCallbackName(string $sCallbackName)
@@ -54,7 +60,7 @@ class JsonPPage extends JsonPage
 
 	/**
 	 * @return string
-	 *@see \JsonPPage::$sCallbackName
+	 *@see JsonPPage::$sCallbackName
 	 */
 	public function GetCallbackName(): string
 	{
@@ -68,6 +74,6 @@ class JsonPPage extends JsonPage
 	{
 		$sContent = parent::ComputeContent();
 
-		return $this->sCallbackName . '(' . $sContent . ');';
+		return $this->sCallbackName.'('.$sContent.');';
 	}
 }

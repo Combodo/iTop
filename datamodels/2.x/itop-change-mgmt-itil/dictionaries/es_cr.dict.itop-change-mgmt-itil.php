@@ -1,29 +1,15 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
  * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Menu:ChangeManagement' => 'Administración de cambios',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'Menu:ChangeManagement' => 'Administración de Cambios',
 	'Menu:Change:Overview' => 'Resumen de cambios',
 	'Menu:Change:Overview+' => 'Resumen de cambios',
 	'Menu:NewChange' => 'Nuevo cambio',
@@ -46,7 +32,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Cambios por estatus de los últimos 7 días',
 	'Tickets:Related:OpenChanges' => 'Cambios abiertos',
 	'Tickets:Related:RecentChanges' => 'Cambios recientes (72 hrs)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -58,12 +44,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Change' => 'Cambio',
 	'Class:Change+' => 'Cambio',
 	'Class:Change/Attribute:status' => 'Estatus',
@@ -160,13 +145,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Change/Stimulus:ev_monitor+' => 'Monitorear',
 	'Class:Change/Stimulus:ev_finish' => 'Finalizar',
 	'Class:Change/Stimulus:ev_finish+' => 'Finalizar',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:RoutineChange' => 'Cambio Rutinario',
 	'Class:RoutineChange+' => 'Cambio Rutinario',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Validar',
@@ -191,13 +176,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => 'Monitorear',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Finalizar',
 	'Class:RoutineChange/Stimulus:ev_finish+' => 'Finalizar',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:ApprovedChange' => 'Cambios Aprobados',
 	'Class:ApprovedChange+' => 'Cambios Aprobados',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Fecha de Aprobación',
@@ -226,13 +211,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => 'Monitorear',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Finalizar',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => 'Finalizar',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:NormalChange' => 'Cambio Normal',
 	'Class:NormalChange+' => 'Cambio Normal',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Fecha de Aceptación',
@@ -261,13 +246,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => 'Monitorear',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Finalizar',
 	'Class:NormalChange/Stimulus:ev_finish+' => 'Finalizar',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:EmergencyChange' => 'Cambio de Emergencia',
 	'Class:EmergencyChange+' => 'Cambio de Emergencia',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Validar',
@@ -292,4 +277,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => 'Monitorear',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Finalizar',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => 'Finalizar',
-));
+]);

@@ -1,9 +1,16 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+/**
+ *
+ */
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AuditCategory' => '監査カテゴリ',
 	'Class:AuditCategory+' => '監査全体の内部セクション',
 	'Class:AuditCategory/Attribute:name' => 'カテゴリ名',
@@ -19,23 +26,22 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance' => 'Error threshold~~',
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
-	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which includes this category~~',
-));
+	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AuditRule' => '監査ルール',
 	'Class:AuditRule+' => '指定された監査カテゴリをチェックするためのルール',
 	'Class:AuditRule/Attribute:name' => 'ルール名',
 	'Class:AuditRule/Attribute:name+' => 'ルールの短縮名',
 	'Class:AuditRule/Attribute:description' => '監査ルール説明',
 	'Class:AuditRule/Attribute:description+' => 'この監査ルールの長い説明',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => '実行するクエリ',
 	'Class:AuditRule/Attribute:query+' => '実行するOQL式',
 	'Class:AuditRule/Attribute:valid_flag' => '有効なオブジェクト',
@@ -47,14 +53,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AuditRule/Attribute:category_id' => 'カテゴリ',
 	'Class:AuditRule/Attribute:category_id+' => 'このルールのカテゴリ',
 	'Class:AuditRule/Attribute:category_name' => 'カテゴリ',
-	'Class:AuditRule/Attribute:category_name+' => 'このルールのカテゴリ名'
-));
+	'Class:AuditRule/Attribute:category_name+' => 'このルールのカテゴリ名',
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -66,13 +74,13 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -83,13 +91,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Query' => 'クエリ',
 	'Class:Query+' => 'クエリは動的な方法で定義されるデータセットです。',
 	'Class:Query/Attribute:name' => '名前',
@@ -116,7 +124,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:QueryOQL+' => ' Object Query Language に基づいたクエリ',
 	'Class:QueryOQL/Attribute:oql' => '式',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL 式',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -127,7 +135,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 // Class: User
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:User' => 'ユーザー',
 	'Class:User+' => 'ユーザーログイン',
 	'Class:User/Attribute:finalclass' => 'アカウントタイプ',
@@ -160,23 +168,28 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled~~',
 	'Class:User/Error:LoginMustBeUnique' => 'ログイン名は一意でないといけません。- "%1s" はすでに使われています。',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => '少なくとも1件のプロフィールがこのユーザに指定されなければなりません。',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'You cannot remove your own rights to edit Users~~',
+	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
 	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
+	'Class:User/Warning:NoOrganizationMeansFullAccess' => 'No "Allowed Organizations" defined for this user, this means they have access to all organizations~~',
+	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'User Internal~~',
 	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT.'~~',
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_Profiles' => 'プロフィール',
 	'Class:URP_Profiles+' => 'ユーザプロフィール',
 	'Class:URP_Profiles/Attribute:name' => '名前',
@@ -185,13 +198,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_Profiles/Attribute:description+' => '1行の説明',
 	'Class:URP_Profiles/Attribute:user_list' => 'ユーザー',
 	'Class:URP_Profiles/Attribute:user_list+' => 'この役割をもつ人',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_Dimensions' => 'ディメンション',
 	'Class:URP_Dimensions+' => 'アプリケーションディメンション(defining silos)',
 	'Class:URP_Dimensions/Attribute:name' => '名前',
@@ -200,13 +213,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_Dimensions/Attribute:description+' => '1行の説明',
 	'Class:URP_Dimensions/Attribute:type' => 'タイプ',
 	'Class:URP_Dimensions/Attribute:type+' => 'クラス名、もしくはデータ型(projection unit)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_UserProfile' => 'ユーザープロフィール',
 	'Class:URP_UserProfile+' => 'ユーザープロフィール',
 	'Class:URP_UserProfile/Name' => '%1$s と %2$s間のリンク',
@@ -220,14 +233,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_UserProfile/Attribute:profile+' => 'プロフィール名',
 	'Class:URP_UserProfile/Attribute:reason' => '理由',
 	'Class:URP_UserProfile/Attribute:reason+' => 'なぜ、この人物がこの役割を持つかを説明する',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_UserOrg' => 'ユーザー組織',
 	'Class:URP_UserOrg+' => '許可された組織',
 	'Class:URP_UserOrg/Name' => '%1$s と %2$s 間のリンク',
@@ -241,13 +253,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '許可された組織',
 	'Class:URP_UserOrg/Attribute:reason' => '理由',
 	'Class:URP_UserOrg/Attribute:reason+' => 'なぜこの人物がこの組織に属するデータを参照できるのかを説明する',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_ProfileProjection' => 'プロフィールプロジェクション',
 	'Class:URP_ProfileProjection+' => 'プロフィールプロジェクション',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'ディメンション',
@@ -262,13 +274,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => '($userを使う)OQL式 | 定数 |  | +属性コード',
 	'Class:URP_ProfileProjection/Attribute:attribute' => '属性',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'ターゲット属性コード (オプション)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_ClassProjection' => 'クラスプロジェクション',
 	'Class:URP_ClassProjection+' => 'クラスのプロジェクション',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'ディメンション',
@@ -281,13 +293,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_ClassProjection/Attribute:value+' => '($this を使った)OQL式 | 定数 |  | +属性コード',
 	'Class:URP_ClassProjection/Attribute:attribute' => '属性',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'ターゲット属性コード(オプション)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_ActionGrant' => 'アクション権限',
 	'Class:URP_ActionGrant+' => 'クラスに対する権限',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'プロフィール',
@@ -304,13 +316,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'いいえ',
 	'Class:URP_ActionGrant/Attribute:action' => 'アクション',
 	'Class:URP_ActionGrant/Attribute:action+' => '指定されたクラスに実行する操作',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_StimulusGrant' => 'シティミュラス権限',
 	'Class:URP_StimulusGrant+' => 'オブジェクトのライフサイクル中のシティミュラスにおける権限',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'プロフィール',
@@ -327,25 +339,25 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'いいえ',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'シティミュラス',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'シティミュラスコード',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_AttributeGrant' => '属性権限',
 	'Class:URP_AttributeGrant+' => '属性レベルでの権限',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => '実行権限',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => '実行権限',
 	'Class:URP_AttributeGrant/Attribute:attcode' => '属性',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => '属性コード',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:UserDashboard' => 'User dashboard~~',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'User~~',
@@ -354,22 +366,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-));
-
-//
-// Expression to Natural language
-//
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:WelcomeMenu' => 'ようこそ',
 	'Menu:WelcomeMenu+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
 	'Menu:WelcomeMenuPage' => 'ようこそ',
@@ -386,52 +388,20 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:NotificationsMenu' => '通知',
 	'Menu:NotificationsMenu+' => '通知の設定',
 	'Menu:MyShortcuts' => '私のショートカット',
+	'Menu:Notifications:Title' => '監査カテゴリ',
 	'Menu:DataAdministration' => 'データ管理',
 	'Menu:DataAdministration+' => 'データ管理',
-));
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'BooleanLabel:yes' => 'はい',
 	'BooleanLabel:no' => 'いいえ',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
 	'UI:WelcomeMenu:Title' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.'は、オープンソースの、完結したIT運用ポータルです。</p>
-<ul>以下を含みます。
-<li>ITインベントリを文書化し、管理するための完全なCMDB(構成管理データベース)。</li>
-<li>IT環境で発生する出来事を追跡、共有するためのインシデント管理モジュール。</li>
-<li>IT環境への変更を計画、追跡するための変更管理モジュール。</li>
-<li>インシデントの解決をスピードアップするための既知のエラーデータベース。</li>
-<li>すべての計画停止を文書化し、適切な連絡先を通知するために停止モジュール。</li>
-<li>ITの概観を素早く得るためのダッシュボード。</li>
-</ul>
-<p>すべてのモジュールはお互いに独立しており、別個にセットアップが可能です。</p>',
-	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.'はサービスプロバイダ志向であり、ITエンジニアが複数の顧客や組織を簡単に管理できるようになります。
-<ul>iTopは、機能豊富な下記のビジネスプロセスのセットを提供します。
-<li>IT管理の実効性の強化。</li>
-<li>IT運用効率化の推進。</li>
-<li>顧客満足度の改善と、業績への洞察を経営経営幹部へ提供。</li>
-</ul>
-</p>
-<p>iTopは完全にオープンなので、あなたが今使っているIT管理インフラとの統合が可能です。</p>
-<p>
-<ul>この新世代IT運用ポータルの採用は、下記のお手伝いをします。
-<li>ますます複雑になるIT環境のより良い管理。</li>
-<li>あなたのペースでのITILプロセス実装。</li>
-<li>ITの中でもっとも重要な財産である「文書化」の管理。</li>
-</ul>
-</p>',
-	'UI:WelcomeMenu:Text' => '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
-
-<div>This version features a brand new modern and accessible backoffice design.</div>
-
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
-
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => '要求を開く: %1$d',
 	'UI:WelcomeMenu:MyCalls' => '担当中の要求',
 	'UI:WelcomeMenu:OpenIncidents' => 'インシデントを開く: %1$d',
@@ -439,8 +409,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:WelcomeMenu:MyIncidents' => '担当中のインシデント',
 	'UI:AllOrganizations' => '全ての組織',
 	'UI:YourSearch' => '検索',
-	'UI:LoggedAsMessage' => '%1$s としてログイン済み (%2$s)~~',
-	'UI:LoggedAsMessage+Admin' => '%1$s　(管理者)としてログイン済み (%2$s)~~',
+	'UI:LoggedAsMessage' => '%1$s としてログイン済み (%2$s)',
+	'UI:LoggedAsMessage+Admin' => '%1$s　(管理者)としてログイン済み (%2$s)',
 	'UI:Button:Logoff' => 'ログオフ',
 	'UI:Button:GlobalSearch' => '検索',
 	'UI:Button:Search' => '　検索　',
@@ -487,7 +457,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
 	'UI:InputFile:SelectFile' => 'Select a file~~',
 	'UI:SearchToggle' => '検索（トグル↓↑)',
-	'UI:ClickToCreateNew' => '新規 %1$s を作成~~',
+	'UI:ClickToCreateNew' => '新規 %1$s を作成',
 	'UI:SearchFor_Class' => '%1$s オブジェクトを検索',
 	'UI:NoObjectToDisplay' => '表示するオブジェクトはありません。',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
@@ -561,6 +531,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:Manage' => '管理...',
 	'UI:Menu:EMail' => 'Eメール',
 	'UI:Menu:CSVExport' => 'CSVエクスポート...',
+	'UI:Menu:OpenOQL' => 'View the OQL query~~',
 	'UI:Menu:Modify' => '修正...',
 	'UI:Menu:Delete' => '削除...',
 	'UI:Menu:BulkDelete' => '削除...',
@@ -607,8 +578,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.~~',
 	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
-	'UI:ResetPwd-EmailSubject' => 'Reset your iTop password~~',
-	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your iTop password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
+	'UI:ResetPwd-EmailSubject' => 'Reset your '.ITOP_APPLICATION_SHORT.' password~~',
+	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your '.ITOP_APPLICATION_SHORT.' password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
 	'UI:ResetPwd-Title' => 'Reset password~~',
 	'UI:ResetPwd-Error-InvalidToken' => 'Sorry, either the password has already been reset, or you have received several emails. Please make sure that you use the link provided in the very last email received.~~',
 	'UI:ResetPwd-Error-EnterPassword' => 'Enter a new password for the account \'%1$s\'.~~',
@@ -674,6 +645,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:TreatFirstLineAsHeader' => '1行めをヘッダ(カラム名)として扱う。',
 	'UI:CSVImport:Skip_N_LinesAtTheBeginning' => 'ファイル最初の%1$s 行をスキップする',
 	'UI:CSVImport:CSVDataPreview' => 'CSVデータプレビュー',
+	'UI:CSVImport:Column' => 'Column %1$s~~',
 	'UI:CSVImport:SelectFile' => 'インポートするファイルを選択してください:',
 	'UI:CSVImport:Tab:LoadFromFile' => 'ファイルからロード',
 	'UI:CSVImport:Tab:CopyPaste' => 'データをコピーとペースト',
@@ -694,11 +666,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.~~',
 	'UI:CSVImport:AlertNoSearchCriteria' => '少なくとも1つ以上の検索条件を選択してください。',
 	'UI:CSVImport:Encoding' => '文字エンコーディング',
+	'UI:CSVImport:ViewAllPossibleValues' => 'View all possible values~~',
+	'UI:CSVImport:ViewAllAmbiguousValues' => 'View all ambiguous values~~',
 	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - ユニバーサル検索',
 	'UI:UniversalSearch:Error' => 'エラー：%1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => '検索するクラスを選択してください。',
 	'UI:CSVReport-Value-Modified' => '修正済み',
-	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-SetIssue' => 'Invalid value for attribute~~',
 	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
 	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-NoMatch-PossibleValues' => 'Some possible \'%1$s\' value(s): %2$s~~',
@@ -747,7 +721,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVExport:LostChars' => 'エンコーディングの課題',
 	'UI:CSVExport:LostChars+' => 'ダウンロードファイルは %1$s でエンコードされます. iTop はこのフォーマットと整合性のない文字を検出しました。 これらの文字は代りの文字になります。（たとえばアクセント付き文字からはアクセント記号が無くなります。または、削除されます。 Webブラウザからコピー／ペーストが出来ます。 あるいは、システム管理者にエンコードの変更を問い合わせください。 (See parameter \'csv_file_default_charset\').',
 	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB 監査',
-	'UI:Audit:InteractiveAudit' => '対話型監査',
 	'UI:Audit:Interactive:All:Title' => 'Audit results~~',
 	'UI:Audit:Interactive:All:SubTitle' => 'Full audit: includes all rules, all categories, all domains~~',
 	'UI:Audit:Interactive:All:BreadCrumb' => 'Full audit~~',
@@ -761,6 +734,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Interactive:Domain:BreadCrumb' => '%1$s~~',
 	'UI:Audit:Interactive:Domain:BreadCrumb+' => 'Audit for Domain: %1$s~~',
 	'UI:Audit:Interactive:Selection:Title' => 'Selection of an audit~~',
+	'UI:Audit:InteractiveAudit' => '対話型監査',
 	'UI:Audit:Interactive:Selection:SubTitle' => 'Select a domain to get the results limited to this domain or select "All categories" to get a full audit (can take time or even fail if too much data to audit)~~',
 	'UI:Audit:Interactive:Selection:BreadCrumb' => 'Selection~~',
 	'UI:Audit:Interactive:Selection:BreadCrumb+' => 'Selection of an Audit to run~~',
@@ -782,7 +756,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
 	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
-	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%% of the object are valid~~',
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQLクエリ評価',
 	'UI:RunQuery:QueryExamples' => 'クエリの例',
 	'UI:RunQuery:QueryResults' => 'Query Results~~',
@@ -801,7 +775,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'An error occured while running the query~~',
 	'UI:Query:UrlForExcel' => 'MS-Excel Webクエリに使用するURL',
-	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'.Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
+	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' オブジェクトスキーマ',
 	'UI:Schema:TitleForClass' => '%1$s schema~~',
 	'UI:Schema:CategoryMenuItem' => 'カテゴリ <b>%1$s</b>',
@@ -915,7 +889,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class' => '%2$sクラスの%1$dオブジェクトの削除',
 	'UI:Delete:CannotDeleteBecause' => '削除できません: %1$s',
 	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => '自動的に削除されるべきですが、出来ません。: %1$s',
-	'UI:Delete:MustBeDeletedManuallyButNotPossible' => '手動で削除されるべきですが、出来ません。: %1$',
+	'UI:Delete:MustBeDeletedManuallyButNotPossible' => '手動で削除されるべきですが、出来ません。: %1$s',
 	'UI:Delete:WillBeDeletedAutomatically' => '自動的に削除されます。',
 	'UI:Delete:MustBeDeletedManually' => '手動で削除されるべきです。',
 	'UI:Delete:CannotUpdateBecause_Issue' => '自動的に更新されるべきですが、しかし: %1$s',
@@ -944,8 +918,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:SearchResultsTitle' => '検索結果',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => '検索するものがありません。',
-	'UI:Search:NeedleTooShort' => 'The search string \\"%1$s\\" is too short. Please type at least %2$d characters.~~',
-	'UI:Search:Ongoing' => 'Searching for \\"%1$s\\"~~',
+	'UI:Search:NeedleTooShort' => 'The search string "%1$s" is too short. Please type at least %2$d characters.~~',
+	'UI:Search:Ongoing' => 'Searching for "%1$s"~~',
 	'UI:Search:Enlarge' => 'Broaden the search~~',
 	'UI:FullTextSearchTitle_Text' => '"%1$s"の結果：',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%2$sクラスの%1$dオブジェクトが見つかりました。',
@@ -963,6 +937,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:BulkDeleteTitle' => '削除するオブジェクトを選択してください。',
 	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.'オブジェクトが作成されました。',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s が作成されました。',
+	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:StandardDashboard' => 'Standard~~',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => '状態%3$sにあるオブジェクト：%2$sに、ターゲット状態:%4$sで、%1$sを適用します。',
 	'UI:ObjectCouldNotBeWritten' => 'そのオブジェクトへは書き込みできません: %1$s',
 	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - 致命的なエラー',
@@ -1054,11 +1030,12 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 <ol>
 	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
 	特別なページ: <a href="../setup/email.test.php" target="_blank">email.test.php</a> は、PHPのメール設定をテストしたりトラブルシュートするのに利用可能であす。</li>
+	<li>Sending a newsroom message: Display a news to user directly in the application through the newsroom (bell icon on the left menu)</li>
 	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
 </ol>
 </p>
 <p>実行するには、アクションがトリガーに関連づけられている必要があります。
-トリガーに関連づけられると、各々のアクションは順番が与えられ、どの順序でアクションが実行されるかが指定されます。</p>~~',
+トリガーに関連づけられると、各々のアクションは順番が与えられ、どの順序でアクションが実行されるかが指定されます。</p>',
 	'UI:NotificationsMenu:Triggers' => 'トリガー',
 	'UI:NotificationsMenu:AvailableTriggers' => '利用可能トリガー',
 	'UI:NotificationsMenu:OnCreate' => 'オブジェクトが作成された時',
@@ -1160,7 +1137,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s 日 %2$s 時 %3$s 分 %4$s 秒',
 	'UI:ModifyAllPageTitle' => '全てを修正',
 	'UI:Modify_ObjectsOf_Class' => 'Modifying objects of class %1$s~~',
-	'UI:Modify_N_ObjectsOf_Class' => 'クラス%2$Sの%1$dオブジェクトを修正',
+	'UI:Modify_N_ObjectsOf_Class' => 'クラス%2$sの%1$dオブジェクトを修正',
 	'UI:Modify_M_ObjectsOf_Class_OutOf_N' => 'クラス%2$sの%3$d中%1$dを修正',
 	'UI:Menu:ModifyAll' => '修正...',
 	'UI:Menu:ModifyAll_Class' => 'Modify %1$s objects...~~',
@@ -1180,7 +1157,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:BulkModify_Count_DistinctValues' => '%1$d 個の個別の値:',
 	'UI:BulkModify:Value_Exists_N_Times' => '%1$s, %2$d 回存在',
 	'UI:BulkModify:N_MoreValues' => '%1$d 個以上の値...',
-	'UI:AttemptingToSetAReadOnlyAttribute_Name' => '読み込み専用フィールド %1$にセットしょうとしています。',
+	'UI:AttemptingToSetAReadOnlyAttribute_Name' => '読み込み専用フィールド %1$sにセットしょうとしています。',
 	'UI:FailedToApplyStimuli' => 'アクションは失敗しました。',
 	'UI:StimulusModify_N_ObjectsOf_Class' => '%1$s: クラス%3$sの%2$dオブジェクトを修正',
 	'UI:CaseLogTypeYourTextHere' => 'テキストを入力ください:',
@@ -1203,10 +1180,10 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'クイックアクセス組織',
 	'UI:FavoriteOrganizations+' => '迅速なアクセスのためのドロップダウンメニューに表示したい組織は、以下のリストで確認してください。セキュリティ設定ではないことに注意してください。全ての組織のオブジェクトは、表示可能です。ドロップダウンリストで「すべての組織(All Organizations)」を選択することでアクセスすることができます。',
-	'UI:FavoriteLanguage' => 'ユーザインターフェースの言語~~',
+	'UI:FavoriteLanguage' => 'ユーザインターフェースの言語',
 	'UI:Favorites:SelectYourLanguage' => '希望する言語を選択ください。',
 	'UI:FavoriteOtherSettings' => '他のセッティング',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'リストの規定の長さ: %1$s items 毎ページ~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'リストの規定の長さ: %1$s items 毎ページ',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => '全ての変更を破棄します。',
@@ -1245,6 +1222,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
 	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
 	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
+	'UI:Dashboard:Edit' => 'このページを編集...',
 	'UI:Dashboard:RevertConfirm' => '元のバージョンに加えられたすべての変更は失われます。この実行を望む事をご確認ください。',
 	'UI:ExportDashBoard' => 'ファイルへエキスポート',
 	'UI:ImportDashBoard' => 'ファイルからインポート...',
@@ -1252,6 +1230,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ImportDashboardText' => 'インポートするダッシュボードファイルを選択ください。:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
+	'UI:Dashboard:Revert' => '元のバージョンに戻す...',
 	'UI:DashletCreation:Title' => '新しいダッシュレットを作成',
 	'UI:DashletCreation:Dashboard' => 'ダッシュボード',
 	'UI:DashletCreation:DashletType' => 'ダッシュレットタイプ',
@@ -1307,7 +1286,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:DashletGroupByBars:Description' => '棒グラフ',
 	'UI:DashletGroupByTable:Label' => 'グループ化 (table)による',
 	'UI:DashletGroupByTable:Description' => 'リスト (フィールドでグループ化)',
-    // New in 2.5
 	'UI:DashletGroupBy:Prop-Function' => 'Aggregation function~~',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute~~',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction~~',
@@ -1325,12 +1303,12 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:GroupBy:min+' => 'Minimum of %1$s~~',
 	'UI:GroupBy:max' => 'Maximum~~',
 	'UI:GroupBy:max+' => 'Maximum of %1$s~~',
-    // ---
 	'UI:DashletHeaderStatic:Label' => 'ヘッダー',
 	'UI:DashletHeaderStatic:Description' => '水平セパレータの表示',
 	'UI:DashletHeaderStatic:Prop-Title' => '題名',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => '連絡先',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'アイコン',
+	'UI:DashletIcon:None' => 'None~',
 	'UI:DashletHeaderDynamic:Label' => '統計付ヘッダー',
 	'UI:DashletHeaderDynamic:Description' => '状態付ヘッダー (..によるグループ化)',
 	'UI:DashletHeaderDynamic:Prop-Title' => '題名',
@@ -1363,7 +1341,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Month-10' => 'October~~',
 	'Month-11' => 'November~~',
 	'Month-12' => 'December~~',
-    // Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Su~~',
 	'DayOfWeek-Monday-Min' => 'Mo~~',
 	'DayOfWeek-Tuesday-Min' => 'Tu~~',
@@ -1384,12 +1361,12 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
 	'Calendar-FirstDayOfWeek' => '0~~',
-    // 0 = Sunday, 1 = Monday, etc...
 	'UI:Menu:ShortcutList' => 'ショートカットを作成',
 	'UI:Menu:FilterList' => 'Display list with search criteria~~',
 	'UI:ShortcutRenameDlg:Title' => 'ショートカットの名前変更',
 	'UI:ShortcutListDlg:Title' => 'このリストのショートカットを作成',
 	'UI:ShortcutDelete:Confirm' => 'このショートカットを本当に削除してもいいですか。',
+	'UI:ObjectShortcutInsert' => 'Insert Object Shortcut~~',
 	'Class:Shortcut' => 'ショートカット',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => '名前',
@@ -1398,6 +1375,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Class:ShortcutOQL+' => '',
 	'Class:ShortcutOQL/Attribute:oql' => 'クエリ',
 	'Class:ShortcutOQL/Attribute:oql+' => '',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatic refresh~~',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:none' => 'Disabled~~',
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate~~',
@@ -1480,23 +1460,18 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
-    // Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
 	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
-    // - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used~~',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular~~',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others~~',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.~~',
-    // - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:Criteria:Remove' => 'Remove~~',
 	'UI:Search:Criteria:Locked' => 'Locked~~',
-    // - Criteria titles
-    //   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty~~',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty~~',
@@ -1518,57 +1493,38 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any~~',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s~~',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s up to %2$s~~',
-    //   - Numeric widget
-    //   None yet
-    //   - DateTime widget
-	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s~~',
-    //   - Enum widget
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= %1$s <= %3$s~~',
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any~~',
-    //   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-    //   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
-    //   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
 	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
-    // - Criteria operators
-    //   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty~~',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty~~',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals~~',
 	'UI:Search:Criteria:Operator:Default:Between' => 'Between~~',
-    //   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains~~',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with~~',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
-    //   - Numeric widget
 	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',
-    // => '=',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',
-    // => '>',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',
-    // > '>=',
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',
-    // => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',
-    // > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',
-    // => '≠',
-    //   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
-    // - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...~~',
 	'UI:Search:Value:Search:Placeholder' => 'Search...~~',
 	'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.~~',
@@ -1576,7 +1532,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:Value:Autocomplete:NoResult' => 'No result.~~',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none~~',
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Check all / none visibles~~',
-    // - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'From~~',
 	'UI:Search:Criteria:Numeric:Until' => 'To~~',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Any~~',
@@ -1593,12 +1548,12 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
 	'UI:StateChanged' => 'State changed~~',
-));
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Expression:Operator:AND' => ' AND ~~',
 	'Expression:Operator:OR' => ' OR ~~',
 	'Expression:Operator:=' => ': ~~',
@@ -1611,12 +1566,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Expression:Unit:Long:MINUTE' => 'minute(s)~~',
 	'Expression:Verb:NOW' => 'now~~',
 	'Expression:Verb:ISNULL' => ': undefined~~',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
 	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
@@ -1624,17 +1579,20 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration~~',
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
+	'UI:Newsroom:ResetCache:Success:Message' => 'Your newsroom cache has been successfully reset~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
-));
+	'UI:Newsroom:Priority:1:Tooltip' => 'Critical~~',
+	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
+	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
+	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
+]);
 
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:DataSources' => '同期データソース',
 	'Menu:DataSources+' => '全ての同期データソース',
 	'Menu:AuditCategories' => '監査カテゴリ',
 	'Menu:AuditCategories+' => '監査カテゴリ',
-	'Menu:Notifications:Title' => '監査カテゴリ',
 	'Menu:AuditCategories:Title' => 'Audit configuration~~',
 	'Menu:RunQueriesMenu' => 'クエリ実行',
 	'Menu:RunQueriesMenu+' => '任意のクエリを実行',
@@ -1650,14 +1608,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:UserAccountsMenu' => 'ユーザアカウント',
 	'Menu:UserAccountsMenu+' => 'ユーザアカウント',
 	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント',
-	'Menu:UserManagement' => 'User Management~~',
+	'Menu:UserManagement' => 'User management~~',
 	'Menu:Queries' => 'Queries~~',
-	'Menu:ConfigurationTools' => 'Configuration~~'
-));
-// Additional language entries not present in English dict
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
-	'UI:Dashboard:Edit' => 'このページを編集...',
-	'UI:Dashboard:Revert' => '元のバージョンに戻す...'
-));
+	'Menu:ConfigurationTools' => 'Configuration~~',
+	'Menu:ConfigEditor' => 'General configuration~~',
+	'Menu:ConfigEditor+' => 'Configuration File editor~~',
+	'Menu:Integrations' => 'Integrations~~',
+	'Menu:Integrations+' => '~~',
+
+]);

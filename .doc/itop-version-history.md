@@ -1,7 +1,14 @@
 # iTop version history
 
 ```mermaid
-%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'showBranches': true,'mainBranchName': 'develop','rotateCommitLabel': true}} }%%
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 'themeVariables': {
+              'git0': 'lawngreen',
+              'git3': 'dodgerblue',
+              'git4': 'grey',
+              'git5': 'grey',
+              'git6': 'grey',
+              'git7': 'grey'
+       }, 'gitGraph': {'showBranches': true,'mainBranchName': 'develop','rotateCommitLabel': true}} }%%
 gitGraph
     commit id: "2016-07-06" tag: "2.3.0" type: HIGHLIGHT
     branch support/2.3 order: 900
@@ -70,6 +77,33 @@ gitGraph
     commit id: "2023-08-09" tag: "3.1.0-2"
     checkout support/2.7
     commit id: "2023-08-10" tag: "2.7.9"
+    checkout support/3.1
+    commit id: "2023-12-20" tag: "3.1.1"
+    checkout develop
+    commit id: "2024-01-15" tag: "Start 3.2" type: HIGHLIGHT
+    branch support/3.2 order: 830
+    checkout support/2.7
+    commit id: "2024-01-17a" tag: "2.7.10"
+    checkout support/3.0
+    commit id: "2024-01-17b" tag: "3.0.4"
+    checkout support/3.2
+    commit id: "2024-06-25" tag: "3.2.0-beta1" type: REVERSE
+    commit id: "2024-08-07" tag: "3.2.0"
+    commit id: "2024-09-13" tag: "3.2.0-2"
+    checkout support/3.1
+    commit id: "2024-09-27" tag: "3.1.2"
+    checkout support/2.7
+    commit id: "2024-09-28" tag: "2.7.11"
+    checkout support/2.7
+    commit id: "2025-02-25" tag: "2.7.12"
+    checkout support/3.1
+    commit id: "2025-02-25 " tag: "3.1.3"
+    checkout support/3.2
+    commit id: "2025-02-25  " tag: "3.2.1"
+    commit id: "2025-04-08" tag: "3.2.1-1"
+    commit id: "2025-08-19" tag: "3.2.2-1"
+    checkout support/2.7
+    commit id: "2025-10-07" tag: "2.7.13"
 ```
 
 To learn more, check the [iTop community versions history on the official wiki](https://www.itophub.io/wiki/page?id=latest:release:start).

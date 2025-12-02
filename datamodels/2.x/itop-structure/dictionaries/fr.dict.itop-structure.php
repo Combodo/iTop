@@ -1,65 +1,17 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-//
-// Class: Organization
-//
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-//
-// Class: Organization
-//
-Dict::Add('FR FR', 'French', 'Français', array(
+/**
+ * @author Benjamin Planque <benjamin.planque@combodo.com>
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Organization' => 'Organisation',
 	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => 'Nom organisation',
@@ -86,13 +38,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Organization:Overview:FunctionalCIs' => 'Infrastructure de cette organisation',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'par type',
 	'Organization:Overview:Users' => 'Utilisateurs '.ITOP_APPLICATION_SHORT.' dans cette organisation',
-));
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Location' => 'Lieu',
 	'Class:Location+' => 'Tout type de lieu: Région, Pays, Ville, Site, batiment, Bureau,...',
 	'Class:Location/Attribute:name' => 'Nom',
@@ -119,13 +71,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Location/Attribute:physicaldevice_list+' => 'Tous les matériels dans ce lieu',
 	'Class:Location/Attribute:person_list' => 'Contacts',
 	'Class:Location/Attribute:person_list+' => 'Tous les contacts situés dans ce lieu',
-));
+	'Class:Location/Attribute:person_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Location/Attribute:person_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Location/Attribute:person_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Location/Attribute:person_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Location/Attribute:person_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Location/Attribute:person_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Contact' => 'Contact',
 	'Class:Contact+' => '',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
@@ -157,13 +115,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Contact/Attribute:cis_list+' => 'Tous les éléments de configuration liés à ce contact',
 	'Class:Contact/Attribute:finalclass' => 'Sous-classe de Contact',
 	'Class:Contact/Attribute:finalclass+' => 'Nom de la classe instanciable',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Person' => 'Personne',
 	'Class:Person+' => '',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s',
@@ -185,10 +143,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => 'Equipes',
 	'Class:Person/Attribute:team_list+' => 'Toutes les équipes dont fait partie cette personne',
+	'Class:Person/Attribute:team_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
+	'Class:Person/Attribute:team_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Person/Attribute:team_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Person/Attribute:team_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => 'Tous les tickets dont cette personne est le bénéficiaire',
 	'Class:Person/Attribute:user_list' => 'Utilisateurs',
 	'Class:Person/Attribute:user_list+' => 'Les comptes utilisateurs associés à cette personne',
+	'Class:Person/Attribute:user_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Person/Attribute:user_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Person/Attribute:user_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Person/Attribute:user_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Person/Attribute:user_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Person/Attribute:user_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Nom du manager',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Photo',
@@ -199,27 +167,38 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Person/UniquenessRule:name+' => 'Le nom de l\'employé devrait être unique dans l\'organisation',
 	'Class:Person/UniquenessRule:name' => 'Il y a déjà une personne avec ce nom dans l\'organisation \'$this->org_name$\'',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible de déplacer cette personne sous l\'organisation \'%1$s\', cela casserait son accès au portail utilisateur, car il n\'a pas le droit de voir cette organisation',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Team' => 'Equipe',
 	'Class:Team+' => '',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Membres',
 	'Class:Team/Attribute:persons_list+' => 'Toutes les personnes appartenant à cette équipe',
+	'Class:Team/Attribute:persons_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
+	'Class:Team/Attribute:persons_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Team/Attribute:persons_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Team/Attribute:persons_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
+	'Class:Team/Attribute:overview' => 'Tableau de bord',
+	'Team:Overview' => 'Tickets et équipements gérés par cette équipe',
+	'Team:Overview:ActiveTickets' => 'Tickets ouverts',
+	'Team:Overview:FunctionalCIs-ByType' => 'CI Fonctionnels',
+	'Team:Overview:UserRequest-ByStatus' => 'Demandes utilisateur par état',
+	'Team:Overview:UserRequest-ClosedByMonth' => 'Demandes utilisateur fermées par mois (12 derniers mois)',
+	'Team:Overview:UserRequest-ClosedByAgent' => 'Demandes utilisateur fermées par agent (12 derniers mois)',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'Tous les tickets assignés à cette équipe',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Document' => 'Document',
 	'Class:Document+' => '',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
@@ -249,77 +228,77 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Document/Attribute:cis_list+' => 'Tous les éléments de configuration liés à ce document',
 	'Class:Document/Attribute:finalclass' => 'Sous-classe de Document',
 	'Class:Document/Attribute:finalclass+' => 'Nom de la classe instanciable',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DocumentFile' => 'Document Fichier',
 	'Class:DocumentFile+' => '',
 	'Class:DocumentFile/Attribute:file' => 'Fichier',
 	'Class:DocumentFile/Attribute:file+' => '',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DocumentNote' => 'Document Note',
 	'Class:DocumentNote+' => '',
 	'Class:DocumentNote/Attribute:text' => 'Texte',
 	'Class:DocumentNote/Attribute:text+' => '',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DocumentWeb' => 'Document Web',
 	'Class:DocumentWeb+' => '',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Typology' => 'Typologie',
 	'Class:Typology+' => '',
 	'Class:Typology/Attribute:name' => 'Nom',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Sous-classe de Typologie',
 	'Class:Typology/Attribute:finalclass+' => 'Nom de la classe instanciable',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DocumentType' => 'Type de document',
 	'Class:DocumentType+' => '',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContactType' => 'Type de contact',
 	'Class:ContactType+' => '',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkPersonToTeam' => 'Lien Personne / Equipe',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
@@ -336,13 +315,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'Un rôle parmi une typologie de rôles possibles',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Nom Role',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:DataAdministration' => 'Administration des données',
 	'Menu:DataAdministration+' => 'Administration des données',
 	'Menu:Catalogs' => 'Catalogues',
@@ -380,48 +359,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Typology+' => 'Typologie configuration',
 	'UI_WelcomeMenu_AllConfigItems' => 'Résumé',
 	'Menu:ConfigManagement:Typology' => 'Configuration des typologies',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Person:info' => 'Informations générales',
 	'User:info' => 'Informations générales',
 	'User:profiles' => 'Profils (minimum un)',
 	'Person:personal_info' => 'Informations personnelles',
 	'Person:notifiy' => 'Notification',
-));
+]);
 
 // Themes
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'theme:fullmoon' => 'Full moon',
 	'theme:test-red' => 'Instance de test (Rouge)',
-));
-//
-// n:n relations custom labels : nom de classe féminin
-//
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Person/Attribute:team_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
-	'Class:Person/Attribute:team_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Person/Attribute:team_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Person/Attribute:team_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
-	'Class:Team/Attribute:persons_list/UI:Links:Add:Button+' => 'Ajouter une %4$s',
-	'Class:Team/Attribute:persons_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Team/Attribute:persons_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Team/Attribute:persons_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s'
-));
-// 1:n relations custom labels for tooltip and pop-up title
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Location/Attribute:person_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:Location/Attribute:person_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Location/Attribute:person_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Location/Attribute:person_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:Location/Attribute:person_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Location/Attribute:person_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:Person/Attribute:user_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Person/Attribute:user_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Person/Attribute:user_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Person/Attribute:user_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
-	'Class:Person/Attribute:user_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Person/Attribute:user_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s'
-));
+]);

@@ -1,6 +1,7 @@
 <?php
+
 /*
- * Copyright (C) 2010-2023 Combodo SARL
+ * Copyright (C) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -16,7 +17,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 
 /**
  * Simple redirection page to check PHP requirements

@@ -1,0 +1,29 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* 
+Lifecycle palette 
+ CSS variables 
+ These are defined in themes/ as utils/ is included thrice and each time these variables are redeclared in the stylesheets
+*/
+:root {
+  --ipb-lifecycle-new-state-primary-color: #{$ipb-lifecycle-new-state-primary-color};
+  --ipb-lifecycle-new-state-secondary-color: #{$ipb-lifecycle-new-state-secondary-color};
+  --ipb-lifecycle-neutral-state-primary-color: #{$ipb-lifecycle-neutral-state-primary-color};
+  --ipb-lifecycle-neutral-state-secondary-color: #{$ipb-lifecycle-neutral-state-secondary-color};
+  --ipb-lifecycle-waiting-state-primary-color: #{$ipb-lifecycle-waiting-state-primary-color};
+  --ipb-lifecycle-waiting-state-secondary-color: #{$ipb-lifecycle-waiting-state-secondary-color};
+  --ipb-lifecycle-success-state-primary-color: #{$ipb-lifecycle-success-state-primary-color};
+  --ipb-lifecycle-success-state-secondary-color: #{$ipb-lifecycle-success-state-secondary-color};
+  --ipb-lifecycle-failure-state-primary-color: #{$ipb-lifecycle-failure-state-primary-color};
+  --ipb-lifecycle-failure-state-secondary-color: #{$ipb-lifecycle-failure-state-secondary-color};
+  --ipb-lifecycle-frozen-state-primary-color: #{$ipb-lifecycle-frozen-state-primary-color};
+  --ipb-lifecycle-frozen-state-secondary-color: #{$ipb-lifecycle-frozen-state-secondary-color};
+
+  --ipb-lifecycle-active-state-primary-color: #{$ipb-lifecycle-active-state-primary-color};
+  --ipb-lifecycle-active-state-secondary-color: #{$ipb-lifecycle-active-state-secondary-color};
+  --ipb-lifecycle-inactive-state-primary-color: #{$ipb-lifecycle-inactive-state-primary-color};
+  --ipb-lifecycle-inactive-state-secondary-color: #{$ipb-lifecycle-inactive-state-secondary-color};
+}

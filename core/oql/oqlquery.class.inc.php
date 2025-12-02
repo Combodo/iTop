@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Classes defined for lexical analyze (see oql-parser.y)
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -495,8 +495,8 @@ class OqlObjectQuery extends OqlQuery
 				{
 					throw new OqlNormalizeException('Unknown class in join condition (right expression)', $sSourceQuery, $oRightField->GetParentDetails(), array_keys($aAliases));
 				}
-				$aExtKeys = $oModelReflection->ListAttributes($aAliases[$sFromClass], 'AttributeExternalKey');
-				$aObjKeys = $oModelReflection->ListAttributes($aAliases[$sFromClass], 'AttributeObjectKey');
+				$aExtKeys = $oModelReflection->ListAttributes($aAliases[$sFromClass], \Combodo\iTop\Core\AttributeDefinition\AttributeExternalKey::class);
+				$aObjKeys = $oModelReflection->ListAttributes($aAliases[$sFromClass], \Combodo\iTop\Core\AttributeDefinition\AttributeObjectKey::class);
 				$aAllKeys = array_merge($aExtKeys, $aObjKeys);
 				if (!array_key_exists($sExtKeyAttCode, $aAllKeys))
 				{
@@ -557,7 +557,7 @@ class OqlObjectQuery extends OqlQuery
 					}
 					$aAttList = $oModelReflection->ListAttributes($aAliases[$sFromClass]);
 					$sAttType = $aAttList[$sExtKeyAttCode];
-					if(($iOperatorCode != TREE_OPERATOR_EQUALS) && !is_subclass_of($sAttType, 'AttributeHierarchicalKey') && ($sAttType != 'AttributeHierarchicalKey'))
+					if(($iOperatorCode != TREE_OPERATOR_EQUALS) && !is_subclass_of($sAttType, \Combodo\iTop\Core\AttributeDefinition\AttributeHierarchicalKey::class) && ($sAttType != \Combodo\iTop\Core\AttributeDefinition\AttributeHierarchicalKey::class))
 					{
 						throw new OqlNormalizeException("The specified tree operator $sOperator is not applicable to the key", $sSourceQuery, $oLeftField->GetNameDetails());
 					}

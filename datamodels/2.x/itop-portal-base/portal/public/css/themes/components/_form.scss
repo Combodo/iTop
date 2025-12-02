@@ -1,0 +1,45 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb--fieldset--background-color: $ipb-color-grey-50 !default;
+$ipb--fieldset--border-color: $ipb-color-grey-200 !default;
+$ipb--fieldset--border: 1px solid $ipb--fieldset--border-color !default;
+
+$ipb--fieldset--inside--fieldset--background-color: $ipb-color-grey-100 !default;
+
+$ipb-field--has-tooltip--content: "\f05a" !default;
+$ipb-field--has-tooltip--color: $ipb-color-grey-700 !default;
+
+$ipb-field--is-mandatory--content: "\f069" !default;
+$ipb-field--is-mandatory--color: $ipb-color-primary-700 !default;
+
+$ipb-form--linkedset--toggler--color: $ipb-color-primary-700 !default;
+
+.form_fields {
+  fieldset {
+    background-color: $ipb--fieldset--background-color;
+    border: $ipb--fieldset--border;
+    fieldset {
+      background-color: $ipb--fieldset--inside--fieldset--background-color;
+    }
+  }
+}
+
+.form_field_label > .control-label[data-tooltip-instantiated="true"]:after {
+  content: $ipb-field--has-tooltip--content;
+  color: $ipb-field--has-tooltip--color;
+}
+
+.form_field .form_mandatory .control-label:after{
+  content: $ipb-field--is-mandatory--content;
+  color: $ipb-field--is-mandatory--color;
+};
+
+.form_linkedset_toggler, .form_upload_toggler {
+  & > .glyphicon{
+    color: $ipb-form--linkedset--toggler--color;
+  }
+}

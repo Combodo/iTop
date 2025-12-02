@@ -2,6 +2,7 @@
 #
 # Rebuild the iTop Lexer / Parser
 # PEAR is required to build (really?)
+# PHP 8.0+ is not supported by the parser generator
 # Launch this batch from the core/oql/build directory
 # with ./build.bash
 #

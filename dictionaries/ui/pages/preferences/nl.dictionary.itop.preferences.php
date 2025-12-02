@@ -1,23 +1,16 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
-// Navigation menu
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+/**
+ *
+ */
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Preferences:Title' => 'Voorkeuren',
 	'UI:Preferences:UserInterface:Title' => 'Gebruikersinterface',
 	'UI:Preferences:General:Title' => 'Algemeen',
@@ -45,6 +38,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Preferences:Tabs:Scrollable:Label' => 'Navigatie',
 	'UI:Preferences:Tabs:Scrollable:Classic' => 'Klassiek',
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'Scrollbaar',
+	'UI:Preferences:General:Toasts' => 'Toast notifications position~~',
+	'UI:Preferences:General:Toasts:Bottom' => 'Bottom~~',
+	'UI:Preferences:General:Toasts:Top' => 'Top~~',
 	'UI:Preferences:ChooseAPlaceholder' => 'Gebruikersafbeelding placeholder',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Kies een standaard afbeelding die getoond wordt als het contact gelinkt aan jouw gebruiker geen eigen afbeelding heeft.',
-));
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
+	'UI:Preferences:Notifications' => 'Notifications~~',
+	'UI:Preferences:Notifications+' => 'Configure the notifications you want to receive <a href="%1$s">on this page</a>.~~',
+
+]);

@@ -1,53 +1,44 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Menu:ProblemManagement' => 'Gestione dei Problemi',
-	'Menu:ProblemManagement+' => 'Gestione dei Problemi',
+/**
+ *
+ */
+Dict::Add('IT IT', 'Italian', 'Italiano', [
+	'Menu:ProblemManagement' => 'Gestione dei problemi',
+	'Menu:ProblemManagement+' => 'Gestione dei problemi',
 	'Menu:Problem:Overview' => 'Panoramica',
 	'Menu:Problem:Overview+' => 'Panoramica',
-	'Menu:NewProblem' => 'Nuovo Problema',
-	'Menu:NewProblem+' => 'Nuovo Problema',
-	'Menu:SearchProblems' => 'Ricerca per Problema',
-	'Menu:SearchProblems+' => 'Ricerca per Problema',
+	'Menu:NewProblem' => 'Nuovo problema',
+	'Menu:NewProblem+' => 'Nuovo problema',
+	'Menu:SearchProblems' => 'Ricerca per problema',
+	'Menu:SearchProblems+' => 'Ricerca per problema',
 	'Menu:Problem:Shortcuts' => 'Scorciatoia',
-	'Menu:Problem:MyProblems' => 'I Miei Problemi',
-	'Menu:Problem:MyProblems+' => 'I Miei Problemi',
-	'Menu:Problem:OpenProblems' => 'Tutti i Problemi Aperti',
-	'Menu:Problem:OpenProblems+' => 'Tutti i Problemi Aperti',
-	'UI-ProblemManagementOverview-ProblemByService' => 'Problemi per Servizio',
-	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemi per Servizio',
-	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemi per Priorità',
-	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Problemi per Priorità',
+	'Menu:Problem:MyProblems' => 'I miei problemi',
+	'Menu:Problem:MyProblems+' => 'I miei problemi',
+	'Menu:Problem:OpenProblems' => 'Tutti i problemi aperti',
+	'Menu:Problem:OpenProblems+' => 'Tutti i problemi aperti',
+	'UI-ProblemManagementOverview-ProblemByService' => 'Problemi per servizio',
+	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemi per servizio',
+	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemi per priorità',
+	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Problemi per priorità',
 	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Problemi non assegnati',
 	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Problemi non assegnati',
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard per la gestione dei problemi',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard per la gestione dei problemi',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Problem' => 'Problema',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Stato',
@@ -102,12 +93,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Problem/Attribute:related_change_id+' => '',
 	'Class:Problem/Attribute:related_change_ref' => 'Ref',
 	'Class:Problem/Attribute:related_change_ref+' => '',
-	'Class:Problem/Attribute:assignment_date' => 'Data di asseganzione',
+	'Class:Problem/Attribute:assignment_date' => 'Data di assegnazione',
 	'Class:Problem/Attribute:assignment_date+' => '',
 	'Class:Problem/Attribute:resolution_date' => 'Data di risoluzione',
 	'Class:Problem/Attribute:resolution_date+' => '',
-	'Class:Problem/Attribute:knownerrors_list' => 'Errori Conosciuti',
-	'Class:Problem/Attribute:knownerrors_list+' => 'All the known errors that are linked to this problem~~',
+	'Class:Problem/Attribute:knownerrors_list' => 'Errori conosciuti',
+	'Class:Problem/Attribute:knownerrors_list+' => 'Tutti gli errori conosciuti collegati a questo problema',
 	'Class:Problem/Attribute:related_request_list' => 'Richiesta collegata',
 	'Class:Problem/Attribute:related_request_list+' => 'Tutte le richieste collegate a questo problema',
 	'Class:Problem/Attribute:related_incident_list' => 'Incidenti collegati',
@@ -120,4 +111,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Chiudere',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

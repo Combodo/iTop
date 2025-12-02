@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitdf408f3f8ea034d298269cdf7647358b
+class ComposerStaticInitCombodo_ItopPortalBase_Portal
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -45,8 +45,10 @@ class ComposerStaticInitdf408f3f8ea034d298269cdf7647358b
         'Combodo\\iTop\\Portal\\Controller\\DefaultController' => __DIR__ . '/../..' . '/src/Controller/DefaultController.php',
         'Combodo\\iTop\\Portal\\Controller\\ManageBrickController' => __DIR__ . '/../..' . '/src/Controller/ManageBrickController.php',
         'Combodo\\iTop\\Portal\\Controller\\ObjectController' => __DIR__ . '/../..' . '/src/Controller/ObjectController.php',
+        'Combodo\\iTop\\Portal\\Controller\\PreferencesController' => __DIR__ . '/../..' . '/src/Controller/PreferencesController.php',
         'Combodo\\iTop\\Portal\\Controller\\SessionMessageController' => __DIR__ . '/../..' . '/src/Controller/SessionMessageController.php',
         'Combodo\\iTop\\Portal\\Controller\\UserProfileBrickController' => __DIR__ . '/../..' . '/src/Controller/UserProfileBrickController.php',
+        'Combodo\\iTop\\Portal\\DataCollector\\PortalCollector' => __DIR__ . '/../..' . '/src/DataCollector/PortalCollector.php',
         'Combodo\\iTop\\Portal\\DependencyInjection\\SilexCompatBootstrap\\PortalXmlConfiguration\\AbstractConfiguration' => __DIR__ . '/../..' . '/src/DependencyInjection/SilexCompatBootstrap/PortalXmlConfiguration/AbstractConfiguration.php',
         'Combodo\\iTop\\Portal\\DependencyInjection\\SilexCompatBootstrap\\PortalXmlConfiguration\\Basic' => __DIR__ . '/../..' . '/src/DependencyInjection/SilexCompatBootstrap/PortalXmlConfiguration/Basic.php',
         'Combodo\\iTop\\Portal\\DependencyInjection\\SilexCompatBootstrap\\PortalXmlConfiguration\\Forms' => __DIR__ . '/../..' . '/src/DependencyInjection/SilexCompatBootstrap/PortalXmlConfiguration/Forms.php',
@@ -63,6 +65,7 @@ class ComposerStaticInitdf408f3f8ea034d298269cdf7647358b
         'Combodo\\iTop\\Portal\\Helper\\BrickControllerHelper' => __DIR__ . '/../..' . '/src/Helper/BrickControllerHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\BrowseBrickHelper' => __DIR__ . '/../..' . '/src/Helper/BrowseBrickHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\ContextManipulatorHelper' => __DIR__ . '/../..' . '/src/Helper/ContextManipulatorHelper.php',
+        'Combodo\\iTop\\Portal\\Helper\\ExtensibilityHelper' => __DIR__ . '/../..' . '/src/Helper/ExtensibilityHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\LifecycleValidatorHelper' => __DIR__ . '/../..' . '/src/Helper/LifecycleValidatorHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\NavigationRuleHelper' => __DIR__ . '/../..' . '/src/Helper/NavigationRuleHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\ObjectFormHandlerHelper' => __DIR__ . '/../..' . '/src/Helper/ObjectFormHandlerHelper.php',
@@ -71,13 +74,26 @@ class ComposerStaticInitdf408f3f8ea034d298269cdf7647358b
         'Combodo\\iTop\\Portal\\Helper\\SecurityHelper' => __DIR__ . '/../..' . '/src/Helper/SecurityHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\SessionMessageHelper' => __DIR__ . '/../..' . '/src/Helper/SessionMessageHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\UIExtensionsHelper' => __DIR__ . '/../..' . '/src/Helper/UIExtensionsHelper.php',
+        'Combodo\\iTop\\Portal\\Hook\\iAbstractPortalTabContentExtension' => __DIR__ . '/../..' . '/src/Hook/iAbstractPortalTabContentExtension.php',
+        'Combodo\\iTop\\Portal\\Hook\\iAbstractPortalTabExtension' => __DIR__ . '/../..' . '/src/Hook/iAbstractPortalTabExtension.php',
+        'Combodo\\iTop\\Portal\\Hook\\iUserProfileTabContentExtension' => __DIR__ . '/../..' . '/src/Hook/iUserProfileTabContentExtension.php',
+        'Combodo\\iTop\\Portal\\Hook\\iUserProfileTabExtension' => __DIR__ . '/../..' . '/src/Hook/iUserProfileTabExtension.php',
         'Combodo\\iTop\\Portal\\Kernel' => __DIR__ . '/../..' . '/src/Kernel.php',
         'Combodo\\iTop\\Portal\\Routing\\ItopExtensionsExtraRoutes' => __DIR__ . '/../..' . '/src/Routing/ItopExtensionsExtraRoutes.php',
         'Combodo\\iTop\\Portal\\Routing\\UrlGenerator' => __DIR__ . '/../..' . '/src/Routing/UrlGenerator.php',
+        'Combodo\\iTop\\Portal\\Service\\TemplatesProvider\\TemplateDefinitionDto' => __DIR__ . '/../..' . '/src/Service/TemplatesProvider/TemplateDefinitionDto.php',
+        'Combodo\\iTop\\Portal\\Service\\TemplatesProvider\\TemplatesProviderInterface' => __DIR__ . '/../..' . '/src/Service/TemplatesProvider/TemplatesProviderInterface.php',
+        'Combodo\\iTop\\Portal\\Service\\TemplatesProvider\\TemplatesProviderService' => __DIR__ . '/../..' . '/src/Service/TemplatesProvider/TemplatesProviderService.php',
+        'Combodo\\iTop\\Portal\\Service\\TemplatesProvider\\TemplatesRegister' => __DIR__ . '/../..' . '/src/Service/TemplatesProvider/TemplatesRegister.php',
         'Combodo\\iTop\\Portal\\Twig\\AppExtension' => __DIR__ . '/../..' . '/src/Twig/AppExtension.php',
         'Combodo\\iTop\\Portal\\Twig\\AppGlobal' => __DIR__ . '/../..' . '/src/Twig/AppGlobal.php',
+        'Combodo\\iTop\\Portal\\Twig\\AppIconUrlAccessor' => __DIR__ . '/../..' . '/src/Twig/AppIconUrlAccessor.php',
         'Combodo\\iTop\\Portal\\Twig\\AppVariable' => __DIR__ . '/../..' . '/src/Twig/AppVariable.php',
+        'Combodo\\iTop\\Portal\\Twig\\CKEditorExtension' => __DIR__ . '/../..' . '/src/Twig/CKEditorExtension.php',
         'Combodo\\iTop\\Portal\\Twig\\CurrentUserAccessor' => __DIR__ . '/../..' . '/src/Twig/CurrentUserAccessor.php',
+        'Combodo\\iTop\\Portal\\Twig\\PortalBlockExtension' => __DIR__ . '/../..' . '/src/Twig/PortalBlockExtension.php',
+        'Combodo\\iTop\\Portal\\Twig\\PortalTwigContext' => __DIR__ . '/../..' . '/src/Twig/PortalTwigContext.php',
+        'Combodo\\iTop\\Portal\\Twig\\TemplatesTwigExtension' => __DIR__ . '/../..' . '/src/Twig/TemplatesTwigExtension.php',
         'Combodo\\iTop\\Portal\\UrlMaker\\AbstractPortalUrlMaker' => __DIR__ . '/../..' . '/src/UrlMaker/AbstractPortalUrlMaker.php',
         'Combodo\\iTop\\Portal\\VariableAccessor\\AbstractStringVariableAccessor' => __DIR__ . '/../..' . '/src/VariableAccessor/AbstractStringVariableAccessor.php',
         'Combodo\\iTop\\Portal\\VariableAccessor\\AbstractVariableAccessor' => __DIR__ . '/../..' . '/src/VariableAccessor/AbstractVariableAccessor.php',
@@ -89,9 +105,9 @@ class ComposerStaticInitdf408f3f8ea034d298269cdf7647358b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitdf408f3f8ea034d298269cdf7647358b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitdf408f3f8ea034d298269cdf7647358b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitdf408f3f8ea034d298269cdf7647358b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitCombodo_ItopPortalBase_Portal::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitCombodo_ItopPortalBase_Portal::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitCombodo_ItopPortalBase_Portal::$classMap;
 
         }, null, ClassLoader::class);
     }

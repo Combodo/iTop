@@ -1,77 +1,66 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/*
-* @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2023 Combodo SARL
-* @licence	http://opensource.org/licenses/AGPL-3.0
-*		
-*/
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
+ */
+/**
+ * @author ITOMIG GmbH <martin.raenker@itomig.de>
+ *
+ */
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:KnownError' => 'Known Error',
 	'Class:KnownError+' => 'Dokumentierter Fehler für ein Problem',
 	'Class:KnownError/Attribute:name' => 'Name',
-	'Class:KnownError/Attribute:name+' => '',
+	'Class:KnownError/Attribute:name+' => 'This is expected to be a unique identifier within the Known Errors of this organization~~',
 	'Class:KnownError/Attribute:org_id' => 'Kunde',
-	'Class:KnownError/Attribute:org_id+' => '',
+	'Class:KnownError/Attribute:org_id+' => 'Link the known error to the service provider in charge of handling them, or maybe to a customer organization if the error is specific to them~~',
 	'Class:KnownError/Attribute:cust_name' => 'Kundenname',
 	'Class:KnownError/Attribute:cust_name+' => '',
 	'Class:KnownError/Attribute:problem_id' => 'Zugehöriges Problem',
-	'Class:KnownError/Attribute:problem_id+' => '',
+	'Class:KnownError/Attribute:problem_id+' => 'The problem which couldn\'t be solved immediately and has led to the creation of this known error~~',
 	'Class:KnownError/Attribute:problem_ref' => 'Referenz',
 	'Class:KnownError/Attribute:problem_ref+' => '',
 	'Class:KnownError/Attribute:symptom' => 'Symptom',
-	'Class:KnownError/Attribute:symptom+' => '',
+	'Class:KnownError/Attribute:symptom+' => 'What are the observable effects of this error?~~',
 	'Class:KnownError/Attribute:root_cause' => 'Grundursache',
-	'Class:KnownError/Attribute:root_cause+' => '',
+	'Class:KnownError/Attribute:root_cause+' => 'What is the underlying cause of this error?~~',
 	'Class:KnownError/Attribute:workaround' => 'Workaround',
-	'Class:KnownError/Attribute:workaround+' => '',
+	'Class:KnownError/Attribute:workaround+' => 'How to bypass the effects of this error until a proper solution is found?~~',
 	'Class:KnownError/Attribute:solution' => 'Lösung',
-	'Class:KnownError/Attribute:solution+' => '',
+	'Class:KnownError/Attribute:solution+' => 'What is the permanent solution for this error?~~',
 	'Class:KnownError/Attribute:error_code' => 'Fehlercode',
-	'Class:KnownError/Attribute:error_code+' => '',
+	'Class:KnownError/Attribute:error_code+' => 'If a specific error code is associated to this known error, specify it here~~',
 	'Class:KnownError/Attribute:domain' => 'Bereich',
-	'Class:KnownError/Attribute:domain+' => '',
+	'Class:KnownError/Attribute:domain+' => 'Choose the technical domain related to this known error?~~',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Anwendung',
-	'Class:KnownError/Attribute:domain/Value:Application+' => 'Anwendung',
+	'Class:KnownError/Attribute:domain/Value:Application+' => '',
 	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Desktop',
-	'Class:KnownError/Attribute:domain/Value:Desktop+' => 'Desktop',
+	'Class:KnownError/Attribute:domain/Value:Desktop+' => '',
 	'Class:KnownError/Attribute:domain/Value:Network' => 'Netzwerk',
-	'Class:KnownError/Attribute:domain/Value:Network+' => 'Netzwerk',
+	'Class:KnownError/Attribute:domain/Value:Network+' => '',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Server',
-	'Class:KnownError/Attribute:domain/Value:Server+' => 'Server',
+	'Class:KnownError/Attribute:domain/Value:Server+' => '',
 	'Class:KnownError/Attribute:vendor' => 'Anbieter',
-	'Class:KnownError/Attribute:vendor+' => '',
+	'Class:KnownError/Attribute:vendor+' => 'A free text field to identify the vendor of the CI(s) concerned by this known error~~',
 	'Class:KnownError/Attribute:model' => 'Modell',
-	'Class:KnownError/Attribute:model+' => '',
+	'Class:KnownError/Attribute:model+' => 'The model of the CI(s) concerned by this known error~~',
 	'Class:KnownError/Attribute:version' => 'Version',
-	'Class:KnownError/Attribute:version+' => '',
+	'Class:KnownError/Attribute:version+' => 'The version of the CI(s) concerned by this known error~~',
 	'Class:KnownError/Attribute:ci_list' => 'CIs',
 	'Class:KnownError/Attribute:ci_list+' => 'Alle CIs, die mit diesem Known Error verknüpft sind',
 	'Class:KnownError/Attribute:document_list' => 'Dokumente',
 	'Class:KnownError/Attribute:document_list+' => 'Alle Dokumente, die mit diesem Known Error verknüpft sind',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkErrorToFunctionalCI' => 'Verknüpfung KnownError/FunctionalCI',
 	'Class:lnkErrorToFunctionalCI+' => '',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
@@ -85,13 +74,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Begründung',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkDocumentToError' => 'Verknüpfung Dokumente/KnownError',
 	'Class:lnkDocumentToError+' => '',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
@@ -105,9 +94,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Verknüpfungstyp',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
+]);
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ProblemManagement' => 'Problem Management',
 	'Menu:ProblemManagement+' => 'Problem Management',
 	'Menu:Problem:Shortcuts' => 'Shortcuts',
@@ -117,4 +106,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:SearchError+' => 'Nach dokumentierten Fehlern suchen',
 	'Menu:Problem:KnownErrors' => 'Alle Known Errors',
 	'Menu:Problem:KnownErrors+' => 'Alle Known Errors',
-));
+]);

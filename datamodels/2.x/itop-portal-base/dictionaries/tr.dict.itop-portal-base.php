@@ -1,23 +1,16 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
-// Portal
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+/**
+ *
+ */
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Page:DefaultTitle' => '%1$s User portal~~',
 	'Page:PleaseWait' => 'Please wait...~~',
 	'Page:Home' => 'Home~~',
@@ -36,7 +29,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Error:HTTP:400' => 'Bad request~~',
 	'Error:HTTP:401' => 'Authentication~~',
 	'Error:HTTP:404' => 'Page not found~~',
-	'Error:HTTP:500' => 'Oops! An error has occured.~~',
+	'Error:HTTP:500' => 'Oops! An error has occurred.~~',
 	'Error:HTTP:GetHelp' => 'Please contact your %1$s administrator if the problem keeps happening.~~',
 	'Error:XHR:Fail' => 'Could not load data, please contact your %1$s administrator~~',
 	'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.~~',
@@ -61,18 +54,19 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>~~',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>~~',
 	'Portal:Calendar-FirstDayOfWeek' => 'tr', //work with moment.js locales
-));
+]);
 
 // Object form
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
-	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost~~',
-	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
-	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
-));
+	'Portal:Form:Close:Warning' => 'Do you want to leave this form? Data entered may be lost~~',
+	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting this form again.~~',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting this form again.~~',
+	'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
+]);
 
 // UserProfile brick
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Brick:Portal:UserProfile:Name' => 'User profile~~',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'My profile~~',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Logoff~~',
@@ -81,17 +75,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirm password~~',
 	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'To change your password, please contact your %1$s administrator~~',
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Can\'t change password, please contact your %1$s administrator~~',
-	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Personal informations~~',
+	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Personal information~~',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Photo~~',
-));
+]);
 
 // AggregatePageBrick
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard~~',
-));
+]);
 
 // BrowseBrick brick
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Brick:Portal:Browse:Name' => 'Browse throught items~~',
 	'Brick:Portal:Browse:Mode:List' => 'List~~',
 	'Brick:Portal:Browse:Mode:Tree' => 'Tree~~',
@@ -104,10 +98,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Expand all~~',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Collapse all~~',
 	'Brick:Portal:Browse:Filter:NoData' => 'No item~~',
-));
+	'Brick:Portal:Browse:Mosaic:Back' => 'Back~~',
+]);
 
 // ManageBrick brick
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Brick:Portal:Manage:Name' => 'Manage items~~',
 	'Brick:Portal:Manage:Table:NoData' => 'No item.~~',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
@@ -122,33 +117,33 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Brick:Portal:Manage:fct:avg' => 'Average~~',
 	'Brick:Portal:Manage:fct:min' => 'Min~~',
 	'Brick:Portal:Manage:fct:max' => 'Max~~',
-));
+]);
 
 // ObjectBrick brick
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Brick:Portal:Object:Name' => 'Object~~',
 	'Brick:Portal:Object:Form:Create:Title' => 'New %1$s~~',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Updating %2$s (%1$s)~~',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s~~',
-	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following informations:~~',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Updating %1$s~~',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s~~',
+	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, complete the following information:~~',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Saved~~',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s saved~~',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)~~',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)~~',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s~~',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s~~',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
-));
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~',
+]);
 
 // CreateBrick brick
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Brick:Portal:Create:Name' => 'Quick creation~~',
 	'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
-));
+]);
 
 // Filter brick
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi~~',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
-));
+]);

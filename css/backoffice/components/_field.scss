@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -80,16 +80,30 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
       }
     }
   }
+
+  /* N°6543 - We need the rule to keep text inside the column when width is defined */
+  &[data-attribute-type="AttributeHTML"],
+  &[data-attribute-type="AttributeText"],
+  &[data-attribute-type="AttributeLongText"] {
+    &[data-attribute-flag-read-only="true"] {
+      display: grid;
+
+      > .ibo-field--value {
+        max-width: 100%;
+        overflow: auto;
+      }
+    }
+  }
 }
 
-/* Large field = Label on top, value below */
-.ibo-field-large {
-  display: block;
+  /* Large field = Label on top, value below */
+  .ibo-field-large {
+    display: block;
 
-  .ibo-field--label {
-    position: relative; /* Necessary for fullscreen toggler */
-    display: flex;
-    align-items: center;
+    .ibo-field--label {
+      position: relative; /* Necessary for fullscreen toggler */
+      display: flex;
+      align-items: center;
     max-width: initial;
     width: 100%;
   }
@@ -182,8 +196,6 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
   /* Hack to force a table to fit its container without overflow (see N°2127) */
   /* Note that along with with, we now display a "expand" icon on large fields so we can have a better view of its content */
   .HTML {
-    @extend .ibo-vendors-ckeditor--display-content;
-
     table {
       table-layout: fixed;
       width: 100%;

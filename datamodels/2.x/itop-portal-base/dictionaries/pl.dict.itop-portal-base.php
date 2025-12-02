@@ -1,23 +1,16 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
-// Portal
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+/**
+ *
+ */
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Page:DefaultTitle' => '%1$s portal użytkownika',
 	'Page:PleaseWait' => 'Proszę czekać...',
 	'Page:Home' => 'Start',
@@ -61,18 +54,19 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Pobierz</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'en-us', //work with moment.js locales
-));
+]);
 
 // Object form
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Zamknij ten wpis',
 	'Portal:Form:Close:Warning' => 'Chcesz opuścić ten formularz? Wprowadzone dane mogą zostać utracone',
 	'Portal:Error:ObjectCannotBeCreated' => 'Błąd: nie można utworzyć obiektu. Sprawdź powiązane obiekty i załączniki przed ponownym przesłaniem tego formularza.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Błąd: nie można zaktualizować obiektu. Sprawdź powiązane obiekty i załączniki przed ponownym przesłaniem tego formularza.',
-));
+	'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
+]);
 
 // UserProfile brick
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Brick:Portal:UserProfile:Name' => 'Profil użytkownika',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Mój profil',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Wyloguj',
@@ -83,15 +77,15 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Nie można zmienić hasła. Skontaktuj się z administratorem %1$s',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Informacje osobiste',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Zdjęcie',
-));
+]);
 
 // AggregatePageBrick
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Pulpit',
-));
+]);
 
 // BrowseBrick brick
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Brick:Portal:Browse:Name' => 'Przeglądaj elementy',
 	'Brick:Portal:Browse:Mode:List' => 'Lista',
 	'Brick:Portal:Browse:Mode:Tree' => 'Drzewo',
@@ -104,10 +98,11 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Rozwiń wszystkie',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Zwiń wszystkie',
 	'Brick:Portal:Browse:Filter:NoData' => 'Brak elementu',
-));
+	'Brick:Portal:Browse:Mosaic:Back' => 'Wstecz',
+]);
 
 // ManageBrick brick
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Brick:Portal:Manage:Name' => 'Zarządzaj elementami',
 	'Brick:Portal:Manage:Table:NoData' => 'Brak elementu.',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Akcje',
@@ -122,33 +117,33 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Brick:Portal:Manage:fct:avg' => 'Średnia',
 	'Brick:Portal:Manage:fct:min' => 'Minimum',
 	'Brick:Portal:Manage:fct:max' => 'Maksimum',
-));
+]);
 
 // ObjectBrick brick
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Brick:Portal:Object:Name' => 'Obiekty',
 	'Brick:Portal:Object:Form:Create:Title' => 'Nowy %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Aktualizacja %2$s (%1$s)',
-	'Brick:Portal:Object:Form:View:Title' => '%1$s: %2$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Aktualizacja %1$s',
+	'Brick:Portal:Object:Form:View:Title' => '%1$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Prosimy o uzupełnienie poniższych informacji:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Zapisany',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s zapisany',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Wybierz %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Wybierz %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Wybierz %1$s',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Wybierz %1$s',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Skopiuj obiekt',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Skopiowano'
-));
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Skopiowano',
+]);
 
 // CreateBrick brick
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Brick:Portal:Create:Name' => 'Szybkie tworzenie',
 	'Brick:Portal:Create:ChooseType' => 'Proszę wybrać typ',
-));
+]);
 
 // Filter brick
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Brick:Portal:Filter:Name' => 'Wstępny filtr',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'na przykład. podłącz wifi',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Szukaj',
-));
+]);

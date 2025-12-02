@@ -1,24 +1,26 @@
 <?php
+
 /**
- * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
+ * Localized data
  *
- * @author      Vladimir Kunin <v.b.kunin@gmail.com>
- * @link        http://community.itop-itsm.ru  iTop Russian Community
- * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	// Dictionary entries go here
+/**
+ * @author Vladimir Kunin <v.b.kunin@gmail.com>
+ *
+ */
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Подключение к iTop Hub',
 	'Menu:iTopHub:Register+' => 'Перейдите в iTop Hub, чтобы обновить ваш экземпляр '.ITOP_APPLICATION_SHORT,
-	'Menu:iTopHub:Register:Description' => '<p>Get access to your community platform iTop Hub!</br>Find all the content and information you need, manage your instances through personalized tools & install more extensions.</br><br/>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>~~',
+	'Menu:iTopHub:Register:Description' => '<p>Get access to your community platform iTop Hub!<br>Find all the content and information you need, manage your instances through personalized tools & install more extensions.<br><br>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>~~',
 	'Menu:iTopHub:MyExtensions' => 'Установленные расширения',
 	'Menu:iTopHub:MyExtensions+' => 'Расширения, развернутые на данном экземпляре '.ITOP_APPLICATION_SHORT,
 	'Menu:iTopHub:BrowseExtensions' => 'Получить расширения из iTop Hub',
 	'Menu:iTopHub:BrowseExtensions+' => 'Найдите дополнительные расширения на iTop Hub',
-	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Look into iTop Hub’s store, your one stop place to find wonderful '.ITOP_APPLICATION_SHORT.' extensions !</br>Find the ones that will help you customize and adapt '.ITOP_APPLICATION_SHORT.' to your processes.</br><br/>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>~~',
+	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Look into iTop Hub’s store, your one stop place to find wonderful iTop extensions !<br>Find the ones that will help you customize and adapt '.ITOP_APPLICATION_SHORT.' to your processes.<br><br>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>',
 	'iTopHub:GoBtn' => 'Go To iTop Hub~~',
 	'iTopHub:CloseBtn' => 'Close~~',
 	'iTopHub:GoBtn:Tooltip' => 'Jump to www.itophub.io~~',
@@ -33,7 +35,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'iTopHub:Landing:Status' => 'Deployment status~~',
 	'iTopHub:Landing:Install' => 'Deploying extensions...~~',
 	'iTopHub:CompiledOK' => 'Compilation successful.~~',
-	'iTopHub:ConfigurationSafelyReverted' => 'Error detected during deployment!<br/>'.ITOP_APPLICATION_SHORT.' configuration has NOT been modified.~~',
+	'iTopHub:ConfigurationSafelyReverted' => 'Error detected during deployment!<br>'.ITOP_APPLICATION_SHORT.' configuration has NOT been modified.~~',
 	'iTopHub:FailAuthent' => 'Authentication failed for this action.~~',
 	'iTopHub:InstalledExtensions' => 'Extensions deployed on this instance~~',
 	'iTopHub:ExtensionCategory:Manual' => 'Extensions deployed manually~~',
@@ -64,6 +66,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.~~',
 	'iTopHub:InstallationStatus:Installed' => 'Installed~~',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>NOT</b> installed.~~',
-));
-
-
+]);

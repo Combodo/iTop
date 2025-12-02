@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -29,7 +30,8 @@ class ThemeHandlerService
 	{
 	}
 
-	public function CompileTheme($sThemeId, $bSetup = false, $sSetupCompilationTimestamp = "", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null){
+	public function CompileTheme($sThemeId, $bSetup = false, $sSetupCompilationTimestamp = "", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
+	{
 		return ThemeHandler::CompileTheme($sThemeId, $bSetup, $sSetupCompilationTimestamp, $aThemeParameters, $aImportsPaths, $sWorkingPath);
 	}
 }

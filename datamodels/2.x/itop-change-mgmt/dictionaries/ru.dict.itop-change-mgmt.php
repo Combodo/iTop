@@ -1,14 +1,17 @@
 <?php
+
 /**
- * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
+ * Localized data
  *
- * @author      Vladimir Kunin <v.b.kunin@gmail.com>
- * @link        http://community.itop-itsm.ru  iTop Russian Community
- * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+/**
+ * @author Vladimir Kunin <v.b.kunin@gmail.com>
+ *
+ */
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:ChangeManagement' => 'Управление изменениями',
 	'Menu:Change:Overview' => 'Обзор',
 	'Menu:Change:Overview+' => 'Управление изменениями - Обзор',
@@ -32,7 +35,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Изменения по статусу за 7 дней',
 	'Tickets:Related:OpenChanges' => 'Открытые изменения',
 	'Tickets:Related:RecentChanges' => 'Недавние изменения (72ч)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -44,12 +47,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Change' => 'Изменение',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Статус',
@@ -124,4 +126,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Да',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
-));
+]);

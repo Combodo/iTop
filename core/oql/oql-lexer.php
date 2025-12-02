@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2023 Combodo SARL
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
 /**
  * OQL syntax analyzer, to be used prior to run the lexical analyzer
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -235,7 +235,7 @@ class OQLLexerRaw
                     $match = false;
                     foreach ($yy_yymore_patterns[$this->token] as $index => $rule) {
                         if (preg_match('/' . $rule . '/',
-                                $this->data, $yymatches, null, $this->count)) {
+                                $this->data, $yymatches, 0, $this->count)) {
                             $yymatches = array_filter($yymatches, 'strlen'); // remove empty sub-patterns
                             if ($match) {
                                 if (strlen($yymatches[0]) > strlen($match[0][0])) {

@@ -4,6 +4,9 @@
     "sempro/phpunit-pretty-print": "^1.4"
   },
   "autoload": {
+    "classmap": [
+      "unitary-tests/"
+    ],
     "psr-4": {
       "Combodo\\iTop\\Test\\UnitTest\\": "src/BaseTestCase/",
       "Combodo\\iTop\\Test\\UnitTest\\Hook\\": "src/Hook/",

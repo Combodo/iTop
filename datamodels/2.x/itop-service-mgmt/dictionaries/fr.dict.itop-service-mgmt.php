@@ -1,28 +1,16 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-//
-// Menu, fieldsets, UI, messages translations
-//
-Dict::Add('FR FR', 'French', 'Français', array(
+/**
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:ServiceManagement' => 'Gestion des services',
 	'Menu:ServiceManagement+' => '',
 	'Menu:Service:Overview' => 'Vue d\'ensemble',
@@ -53,33 +41,32 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Contract:baseinfo' => 'Information générale',
 	'Contract:moreinfo' => 'Aspects contractuels',
 	'Contract:cost' => 'Coûts',
-));
+]);
 
 //
 // Class: Organization
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Modèle de support',
-	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:deliverymodel_id+' => 'C\'est indispensable pour définir les équipes auxquelles les tickets pourront être assignés',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nom modèle de support',
-));
-
+]);
 
 //
 // Class: ContractType
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContractType' => 'Type de contrat',
 	'Class:ContractType+' => '',
-));
+]);
 
 //
 // Class: Contract
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Contract' => 'Contrat',
 	'Class:Contract+' => '',
 	'Class:Contract/Attribute:name' => 'Nom',
@@ -128,23 +115,23 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Contract/Attribute:status/Value:production+' => '',
 	'Class:Contract/Attribute:finalclass' => 'Sous-classe de Contrat',
 	'Class:Contract/Attribute:finalclass+' => 'Nom de la classe instanciable',
-));
+]);
 //
 // Class: CustomerContract
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:CustomerContract' => 'Contrat client',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
 	'Class:CustomerContract/Attribute:services_list+' => 'Tous les services achetés pour ce contrat',
-));
+]);
 
 //
 // Class: ProviderContract
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ProviderContract' => 'Contrat fournisseur',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
@@ -157,13 +144,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ProviderContract/Attribute:contracttype_id+' => '',
 	'Class:ProviderContract/Attribute:contracttype_name' => 'Nom Type de contrat',
 	'Class:ProviderContract/Attribute:contracttype_name+' => '',
-));
+	'Class:ProviderContract/Attribute:services_list' => 'Services',
+	'Class:ProviderContract/Attribute:services_list+' => 'Tous les services achetés par ce contrat',
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContactToContract' => 'Lien Contact / Contrat',
 	'Class:lnkContactToContract+' => '',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
@@ -175,13 +164,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkContactToContract/Attribute:contact_id+' => '',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Nom contact',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContractToDocument' => 'Lien Contrat / Document',
 	'Class:lnkContractToDocument+' => '',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
@@ -193,13 +182,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Nom document',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: ServiceFamily
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ServiceFamily' => 'Famille de service',
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Nom',
@@ -208,13 +197,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Tous les services de cette catégorie',
-));
+]);
 
 //
 // Class: Service
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Service' => 'Service',
 	'Class:Service+' => '',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s',
@@ -228,6 +217,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Service/Attribute:servicefamily_id+' => '',
 	'Class:Service/Attribute:servicefamily_name' => 'Nom Famille de service',
 	'Class:Service/Attribute:servicefamily_name+' => '',
+	'Class:Service/Attribute:services_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Service/Attribute:services_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Service/Attribute:services_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Service/Attribute:services_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Service/Attribute:services_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Service/Attribute:services_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
 	'Class:Service/Attribute:description' => 'Description',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:documents_list' => 'Documents',
@@ -252,13 +247,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Service/Attribute:functionalcis_list+' => 'Tous les éléments de configuration utilsiés pour fournir ce service',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Sous catégories de service',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Toutes les sous catégories de service pour ce service',
-));
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
+]);
 
 //
 // Class: lnkDocumentToService
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToService' => 'Lien Document / Service',
 	'Class:lnkDocumentToService+' => '',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s',
@@ -270,13 +271,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToService/Attribute:document_id+' => '',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Nom document',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkContactToService
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContactToService' => 'Lien Contact / Service',
 	'Class:lnkContactToService+' => '',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s',
@@ -288,13 +289,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkContactToService/Attribute:contact_id+' => '',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Nom contact',
 	'Class:lnkContactToService/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: ServiceSubcategory
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ServiceSubcategory' => 'Sous catégorie de service',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
@@ -320,13 +321,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => '',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Production',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => '',
-));
+]);
 
 //
 // Class: SLA
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SLA' => 'Niveau de service',
 	'Class:SLA+' => '',
 	'Class:SLA/Attribute:name' => 'Nom',
@@ -341,14 +342,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SLA/Attribute:slts_list+' => 'Tous les objectifs pour ce niveau de service',
 	'Class:SLA/Attribute:customercontracts_list' => 'Contrats clients',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Services contractés par des clients avec ce niveau de service',
+	'Class:SLA/Attribute:customercontracts_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:SLA/Attribute:customercontracts_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:SLA/Attribute:customercontracts_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:SLA/Attribute:customercontracts_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:SLA/Attribute:customercontracts_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:SLA/Attribute:customercontracts_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Impossible de sauvegarder le lien avec le contrat client %1$s et le service %2$s : un SLA existe déjà.',
-));
+]);
 
 //
 // Class: SLT
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SLT' => 'SLT',
 	'Class:SLT+' => 'Objectif de niveau de service (SLT)',
 	'Class:SLT/Attribute:name' => 'Nom',
@@ -385,13 +392,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes',
 	'Class:SLT/Attribute:slas_list' => 'SLAs',
 	'Class:SLT/Attribute:slas_list+' => 'Tous les niveaux de service utilisant cet objectif',
-));
+]);
 
 //
 // Class: lnkSLAToSLT
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkSLAToSLT' => 'Lien SLA / SLT',
 	'Class:lnkSLAToSLT+' => '',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
@@ -413,13 +420,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Unité SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkCustomerContractToService' => 'Lien Contrat client / Service',
 	'Class:lnkCustomerContractToService+' => '',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
@@ -435,13 +442,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'Nom SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
-));
+]);
 
 //
 // Class: lnkProviderContractToService
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkProviderContractToService' => 'Lien Contrat fournisseur / Service',
 	'Class:lnkProviderContractToService+' => '',
 	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s',
@@ -453,19 +460,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Nom contrat fournisseur',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
-));
+]);
 
 //
 // Class: DeliveryModel
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DeliveryModel' => 'Modèle de support',
 	'Class:DeliveryModel+' => '',
-	'Class:DeliveryModel/Attribute:name' => 'Nom Modèle de support',
-	'Class:DeliveryModel/Attribute:name+' => '',
+	'Class:DeliveryModel/Attribute:name' => 'Nom du modèle de support',
+	'Class:DeliveryModel/Attribute:name+' => 'Attachez à ce modèle les équipes qui géreront les tickets',
 	'Class:DeliveryModel/Attribute:org_id' => 'Organisation',
-	'Class:DeliveryModel/Attribute:org_id+' => '',
+	'Class:DeliveryModel/Attribute:org_id+' => 'Généralement le fournisseur des services',
 	'Class:DeliveryModel/Attribute:organization_name' => 'Nom organisation',
 	'Class:DeliveryModel/Attribute:organization_name+' => '',
 	'Class:DeliveryModel/Attribute:description' => 'Description',
@@ -474,13 +481,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'Tous les contacts (Equipe ou Personne) pour ce modèle de support',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Clients',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Tous les clients ayant ce modèle de support',
-));
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+]);
 
 //
 // Class: lnkDeliveryModelToContact
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDeliveryModelToContact' => 'Lien Modèle de support / Contact',
 	'Class:lnkDeliveryModelToContact+' => '',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
@@ -496,31 +509,44 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Nom Rôle',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
-));
-// 1:n relations custom labels for tooltip and pop-up title
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:DeliveryModel/Attribute:customers_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Service/Attribute:services_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Service/Attribute:services_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Service/Attribute:services_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Service/Attribute:services_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:Service/Attribute:services_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Service/Attribute:services_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Service/Attribute:servicesubcategories_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
-	'Class:SLA/Attribute:customercontracts_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:SLA/Attribute:customercontracts_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:SLA/Attribute:customercontracts_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:SLA/Attribute:customercontracts_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
-	'Class:SLA/Attribute:customercontracts_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:SLA/Attribute:customercontracts_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s'
-));
+]);
+
+//
+// Class: lnkContactToContract
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:lnkContactToContract/Attribute:customer_id' => 'Client',
+	'Class:lnkContactToContract/Attribute:customer_id+' => '',
+	'Class:lnkContactToContract/Attribute:provider_id' => 'Fournisseur',
+	'Class:lnkContactToContract/Attribute:provider_id+' => '',
+]);
+
+//
+// Class: lnkContractToDocument
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:lnkContractToDocument/Attribute:customer_id' => 'Client',
+	'Class:lnkContractToDocument/Attribute:customer_id+' => '',
+	'Class:lnkContractToDocument/Attribute:provider_id' => 'Fournisseur',
+	'Class:lnkContractToDocument/Attribute:provider_id+' => '',
+]);
+
+//
+// Class: lnkCustomerContractToService
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Fournisseur',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
+]);
+
+//
+// Class: lnkProviderContractToService
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Fournisseur',
+	'Class:lnkProviderContractToService/Attribute:provider_id+' => '',
+]);

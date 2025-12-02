@@ -1,6 +1,7 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,15 +9,18 @@ use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\PDFPage;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Bulk export: PDF export, based on the HTML export converted to PDF
  *
- * @copyright   Copyright (C) 2023 Combodo SARL
+ * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class PDFBulkExport extends HTMLBulkExport
@@ -26,13 +30,13 @@ class PDFBulkExport extends HTMLBulkExport
 	 * @internal
 	 * @since 2.7.8
 	 */
-	const ENUM_OUTPUT_TYPE_SAMPLE = 'sample';
+	public const ENUM_OUTPUT_TYPE_SAMPLE = 'sample';
 	/**
 	 * @var string For the real export
 	 * @internal
 	 * @since 2.7.8
 	 */
-	const ENUM_OUTPUT_TYPE_REAL = 'real';
+	public const ENUM_OUTPUT_TYPE_REAL = 'real';
 
 	public function DisplayUsage(Page $oP)
 	{
@@ -45,11 +49,11 @@ class PDFBulkExport extends HTMLBulkExport
 
 	public function EnumFormParts()
 	{
-		return array_merge(array('pdf_options' => array('pdf_options')), parent::EnumFormParts());
+		return array_merge(['pdf_options' => ['pdf_options']], parent::EnumFormParts());
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
 	 * @return UIContentBlock
@@ -68,8 +72,6 @@ class PDFBulkExport extends HTMLBulkExport
 
 				//page format
 				$oSelectFormat = SelectUIBlockFactory::MakeForSelectWithLabel("page_size", Dict::S('Core:BulkExport:PDFPageSize'));
-				$oSelectFormat->SetIsLabelBefore(false);
-				//$oSelectFormat->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetFormat->AddSubBlock($oSelectFormat);
 
 				$aPossibleFormat = ['A3', 'A4', 'Letter'];
@@ -79,10 +81,7 @@ class PDFBulkExport extends HTMLBulkExport
 				}
 				$oFieldSetFormat->AddSubBlock(new Html('</br>'));
 
-				$oSelectOrientation = SelectUIBlockFactory::MakeForSelectWithLabel("page_orientation",
-					Dict::S('Core:BulkExport:PDFPageOrientation'));
-				$oSelectOrientation->SetIsLabelBefore(false);
-				//$oSelectOrientation->AddCSSClass('ibo-input-checkbox');
+				$oSelectOrientation = SelectUIBlockFactory::MakeForSelectWithLabel("page_orientation", Dict::S('Core:BulkExport:PDFPageOrientation'));
 				$oFieldSetFormat->AddSubBlock($oSelectOrientation);
 
 				$aPossibleOrientation = ['P', 'L'];
@@ -127,33 +126,31 @@ EOF
 				break;
 
 			default:
-				return parent:: GetFormPart($oP, $sPartId);
+				return parent::GetFormPart($oP, $sPartId);
 		}
 	}
-
 
 	public function ReadParameters()
 	{
 		parent::ReadParameters();
 		$this->aStatusInfo['page_size'] = utils::ReadParam('page_size', 'A4', true, 'raw_data');
 		$this->aStatusInfo['page_orientation'] = utils::ReadParam('page_orientation', 'L', true);
-		
+
 		$sDateFormatRadio = utils::ReadParam('pdf_date_format_radio', '');
-		switch($sDateFormatRadio)
-		{
+		switch ($sDateFormatRadio) {
 			case 'default':
-			// Export from the UI => format = same as is the UI
-			$this->aStatusInfo['date_format'] = (string)AttributeDateTime::GetFormat();
-			break;
-			
+				// Export from the UI => format = same as is the UI
+				$this->aStatusInfo['date_format'] = (string)AttributeDateTime::GetFormat();
+				break;
+
 			case 'custom':
-			// Custom format specified from the UI
-			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
-			break;
-			
+				// Custom format specified from the UI
+				$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
+				break;
+
 			default:
-			// Export from the command line (or scripted) => default format is SQL, as in previous versions of iTop, unless specified otherwise
-			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetSQLFormat(), true, 'raw_data');
+				// Export from the command line (or scripted) => default format is SQL, as in previous versions of iTop, unless specified otherwise
+				$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetSQLFormat(), true, 'raw_data');
 		}
 	}
 
@@ -162,8 +159,7 @@ EOF
 		$this->aStatusInfo['tmp_file'] = $this->MakeTmpFile('data');
 		$sData = parent::GetHeader();
 		$hFile = @fopen($this->aStatusInfo['tmp_file'], 'ab');
-		if ($hFile === false)
-		{
+		if ($hFile === false) {
 			throw new Exception('PDFBulkExport: Failed to open temporary data file: "'.$this->aStatusInfo['tmp_file'].'" for writing.');
 		}
 		fwrite($hFile, $sData."\n");
@@ -182,8 +178,7 @@ EOF
 		AttributeDateTime::SetFormat($oPrevFormat);
 		AttributeDate::SetFormat($oPrevDateFormat);
 		$hFile = @fopen($this->aStatusInfo['tmp_file'], 'ab');
-		if ($hFile === false)
-		{
+		if ($hFile === false) {
 			throw new Exception('PDFBulkExport: Failed to open temporary data file: "'.$this->aStatusInfo['tmp_file'].'" for writing.');
 		}
 		fwrite($hFile, $sData."\n");
@@ -216,8 +211,7 @@ EOF
 	 */
 	protected function GetSampleData($oObj, $sAttCode)
 	{
-		if ($sAttCode !== 'id')
-		{
+		if ($sAttCode !== 'id') {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 
 			// As sample data will be displayed in the web browser, AttributeImage needs to be rendered with a regular HTML format, meaning its "src" looking like "data:image/png;base64,iVBORw0KGgoAAAANSUh..."
@@ -247,17 +241,12 @@ EOF
 				$value = $oObj->Get($sAttCode);
 				if ($value instanceof ormDocument) {
 					$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-					if ($oAttDef instanceof AttributeImage)
-					{
+					if ($oAttDef instanceof AttributeImage) {
 						$sRet = $this->GetAttributeImageValue($oObj, $sAttCode, static::ENUM_OUTPUT_TYPE_REAL);
-					}
-					else
-					{
+					} else {
 						$sRet = parent::GetValue($oObj, $sAttCode);
 					}
-				}
-				else
-				{
+				} else {
 					$sRet = parent::GetValue($oObj, $sAttCode);
 				}
 		}
@@ -336,7 +325,7 @@ EOF
 
 	public function GetSupportedFormats()
 	{
-		return array('pdf' => Dict::S('Core:BulkExport:PDFFormat'));
+		return ['pdf' => Dict::S('Core:BulkExport:PDFFormat')];
 	}
 
 	public function GetMimeType()

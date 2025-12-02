@@ -1,0 +1,61 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ibo-vendors-datatables--column-sorting-icon--opacity: 0.3 !default;
+$ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted: 1 !default;
+$ibo-vendors-datatables--column-sorting-icon--content: "\f0dc" !default;
+$ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc: "\f0d8" !default;
+$ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc: "\f0d7" !default;
+
+table.dataTable thead {
+
+  .sorting {
+    white-space: nowrap;
+  }
+
+  .sorting::after {
+      position: relative;
+      bottom: unset;
+      right: -10px;
+      content: $ibo-vendors-datatables--column-sorting-icon--content;
+      opacity: $ibo-vendors-datatables--column-sorting-icon--opacity;
+      @extend %fa-solid-base;
+    }
+
+  .sorting_asc:after {
+      content: $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc;
+      opacity: $ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted;
+    }
+
+  .sorting_desc:after {
+      content: $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc;
+      opacity: $ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted;
+    }
+
+}
+
+table.table > thead > tr > th,
+table.table > tbody > tr > th,
+table.table > tfoot > tr > th,
+table.table > thead > tr > td,
+table.table > tbody > tr > td,
+table.table > tfoot > tr > td {
+  vertical-align: middle;
+}
+
+
+table .ipb-table--actions--wrapper {
+  display: flex;
+  align-items: center;
+
+  > a {
+    flex-grow: 1;
+  }
+
+  .group-actions {
+
+  }
+}

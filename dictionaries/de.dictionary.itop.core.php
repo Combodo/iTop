@@ -1,26 +1,16 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @author	Stephan Rosenke <stephan.rosenke@itomig.de>, <martin.raenker@itomig.de>
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    http://opensource.org/licenses/AGPL-3.0
+ * @author Stephan Rosenke <stephan.rosenke@itomig.de>
+ * @author Martin Raenker <martin.raenker@itomig.de>
+ * @author Attila Baroti <attila.baroti@itomig.de>
+ *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Core:DeletedObjectLabel' => '%1s (gelöscht)',
 	'Core:DeletedObjectTip' => 'Das Objekt wurde gelöscht am %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'Objekt nicht gefunden (Klasse: %1$s, id: %2$d)',
@@ -40,6 +30,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributeTagSet' => 'Liste von Tags',
 	'Core:AttributeTagSet+' => 'List von Tags',
 	'Core:AttributeSet:placeholder' => 'Zum Hinzufügen klicken',
+	'Core:Placeholder:CannotBeResolved' => '(%1$s : kann nicht gelöst werden)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s von %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s von Kindklassen)',
@@ -167,8 +158,7 @@ Operatoren:<br/>
 	'Core:Context=GUI:Console' => 'Konsole',
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
-));
-
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
@@ -179,7 +169,7 @@ Operatoren:<br/>
 // Class: CMDBChange
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChange' => 'Change',
 	'Class:CMDBChange+' => 'Protokollierung der Änderungen',
 	'Class:CMDBChange/Attribute:date' => 'Datum',
@@ -194,13 +184,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON Webservices',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP Webservices',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Durch eine Extension',
-));
+]);
 
 //
 // Class: CMDBChangeOp
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOp' => 'Change-Operation',
 	'Class:CMDBChangeOp+' => 'Protokoll einer Änderung',
 	'Class:CMDBChangeOp/Attribute:change' => 'Change',
@@ -215,51 +205,51 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Typ',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpCreate
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOpCreate' => 'Objekterstellung',
 	'Class:CMDBChangeOpCreate+' => 'Protokoll der Objekterstellung',
-));
+]);
 
 //
 // Class: CMDBChangeOpDelete
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOpDelete' => 'Objektlöschung',
 	'Class:CMDBChangeOpDelete+' => 'Protokoll der Objektlöschung',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttribute
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOpSetAttribute' => 'Objektänderung',
 	'Class:CMDBChangeOpSetAttribute+' => 'Protokoll der Objektänderungen',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Attribut',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'Code der geänderten Eigenschaft',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeScalar
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'Eigenschaften ändern',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Aufzeichnen der Änderungen am Objekt',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Vorheriger Wert',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'Vorheriger Wert des Attributes',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Neuer Wert',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'Neuer Wert des Attributes',
-));
+]);
 // Used by CMDBChangeOp... & derived classes
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Change:ObjectCreated' => 'Objekt erstellt',
 	'Change:ObjectDeleted' => 'Objekt gelöscht',
 	'Change:ObjectModified' => 'Objekt geändert',
@@ -276,35 +266,35 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Change:LinkSet:Added' => 'hinzugefügt: %1$s',
 	'Change:LinkSet:Removed' => 'entfernt: %1$s',
 	'Change:LinkSet:Modified' => 'modifizert: %1$s',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeBlob
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'Daten ändern',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'Aufzeichnen der Datenänderung',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Vorherige Daten',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'Vorherige Inhalte des Attributes',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeText
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:CMDBChangeOpSetAttributeText' => 'Text ändern',
 	'Class:CMDBChangeOpSetAttributeText+' => 'Aufzeichnen der Textänderung',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Vorherige Daten',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'Vorherige Inhalte des Attributes',
-));
+]);
 
 //
 // Class: Event
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Event' => 'Log Event',
 	'Class:Event+' => 'Ein anwendungsinternes Event',
 	'Class:Event/Attribute:message' => 'Nachricht',
@@ -315,14 +305,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Event/Attribute:userinfo+' => 'Identifikation des Benutzers, der die Aktion ausführte, die dieses Event ausgelöst hat',
 	'Class:Event/Attribute:finalclass' => 'Typ',
 	'Class:Event/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: EventNotification
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:EventNotification' => 'Notification Event',
+Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:EventNotification' => 'Gesendete Benachrichtigung',
 	'Class:EventNotification+' => 'Protokollierung der gesendeten Benachrichtigungen',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
 	'Class:EventNotification/Attribute:trigger_id+' => '',
@@ -330,13 +320,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:EventNotification/Attribute:action_id+' => '',
 	'Class:EventNotification/Attribute:object_id' => 'Objekt-ID',
 	'Class:EventNotification/Attribute:object_id+' => '',
-));
+]);
 
 //
 // Class: EventNotificationEmail
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventNotificationEmail' => 'E-Mail Emission Event',
 	'Class:EventNotificationEmail+' => 'Verfolgung einer E-Mail, die gesendet wurde',
 	'Class:EventNotificationEmail/Attribute:to' => 'An',
@@ -353,13 +343,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Anhänge',
 	'Class:EventNotificationEmail/Attribute:attachments+' => 'Anhänge in der Nachricht',
-));
+]);
 
 //
 // Class: EventIssue
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventIssue' => 'Issue Event',
 	'Class:EventIssue+' => 'Protokollierung eines Issues (Warnungen, Fehler, etc.)',
 	'Class:EventIssue/Attribute:issue' => 'Issue',
@@ -376,13 +366,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:EventIssue/Attribute:callstack+' => 'Call stack',
 	'Class:EventIssue/Attribute:data' => 'Daten',
 	'Class:EventIssue/Attribute:data+' => 'Mehr Informationen',
-));
+]);
 
 //
 // Class: EventWebService
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventWebService' => 'Web Service Event',
 	'Class:EventWebService+' => 'Protokollierung eines Web Service Calls',
 	'Class:EventWebService/Attribute:verb' => 'Verb',
@@ -397,9 +387,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:EventWebService/Attribute:log_error+' => 'Ergebnis der Fehlerprotokollierung',
 	'Class:EventWebService/Attribute:data' => 'Daten',
 	'Class:EventWebService/Attribute:data+' => 'Ergebnisdaten',
-));
+]);
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventRestService' => 'REST/JSON Call',
 	'Class:EventRestService+' => 'Trace eines REST/JSON-Calls',
 	'Class:EventRestService/Attribute:operation' => 'Operation',
@@ -414,13 +404,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP Antwort (JSON)',
 	'Class:EventRestService/Attribute:provider' => 'Provider',
 	'Class:EventRestService/Attribute:provider+' => 'PHP-Klasse, die die erwartete Operation implementiert',
-));
+]);
 
 //
 // Class: EventLoginUsage
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EventLoginUsage' => 'Login Verwendung',
 	'Class:EventLoginUsage+' => '',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
@@ -429,13 +419,48 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'Benutzer-Mailadresse',
 	'Class:EventLoginUsage/Attribute:contact_email+' => '',
-));
+]);
+
+//
+// Class: EventNotificationNewsroom
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:EventNotificationNewsroom' => 'Gesendete Newsroom-Benachrichtigung',
+	'Class:EventNotificationNewsroom+' => '',
+	'Class:EventNotificationNewsroom/Attribute:title' => 'Titel',
+	'Class:EventNotificationNewsroom/Attribute:title+' => '',
+	'Class:EventNotificationNewsroom/Attribute:icon' => 'Icon',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority' => 'Priorität',
+	'Class:EventNotificationNewsroom/Attribute:priority+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => 'Kritisch',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1+' => 'Kritisch',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2' => 'Dringend',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2+' => 'Dringend',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3' => 'Wichtig',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3+' => 'Wichtig',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4' => 'Standard',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4+' => 'Standard',
+	'Class:EventNotificationNewsroom/Attribute:url' => 'URL',
+	'Class:EventNotificationNewsroom/Attribute:url+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read' => 'Lesen',
+	'Class:EventNotificationNewsroom/Attribute:read+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no' => 'Nein',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no+' => 'Nein',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes' => 'Ja',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes+' => 'Ja',
+	'Class:EventNotificationNewsroom/Attribute:read_date' => 'Lese Datum',
+	'Class:EventNotificationNewsroom/Attribute:read_date+' => '',
+	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Kontakt',
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Action' => 'Benutzerdefinierte Aktion',
 	'Class:Action+' => 'Benutzerdefinierte Aktionen',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s',
@@ -453,26 +478,35 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Zugehörige Trigger',
 	'Class:Action/Attribute:trigger_list+' => 'Trigger, die mit dieser Aktion verknüpft sind',
+	'Class:Action/Attribute:asynchronous' => 'Asynchron',
+	'Class:Action/Attribute:asynchronous+' => 'Ob diese Aktion im Hintergrund ausgeführt werden soll oder nicht',
+	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Globale Einstellung verwenden',
+	'Class:Action/Attribute:asynchronous/Value:yes' => 'Ja',
+	'Class:Action/Attribute:asynchronous/Value:no' => 'Nein',
 	'Class:Action/Attribute:finalclass' => 'Typ',
 	'Class:Action/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
 	'Action:WarningNoTriggerLinked' => 'Warnung, es ist kein Trigger mit dieser Aktion verknüpft. Die Aktion ist nicht aktiv solange nicht mindestens 1 Trigger verknüpft ist.',
-));
+	'Action:last_executions_tab' => 'Letzte Ausführungen',
+	'Action:last_executions_tab_panel_title' => 'Ausführungen dieser Aktion (%1$s)',
+	'Action:last_executions_tab_limit_days' => 'die letzten %1$s Tage',
+	'Action:last_executions_tab_limit_none' => 'keine Einschränkung',
+]);
 
 //
 // Class: ActionNotification
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ActionNotification' => 'Benachrichtigung',
 	'Class:ActionNotification+' => 'Benachrichtigung (Kurzbeschreibung)',
-));
+]);
 
 //
 // Class: ActionEmail
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:ActionEmail' => 'E-Mail-Benachrichtigung',
+Dict::Add('DE DE', 'German', 'Deutsch', [
+	'Class:ActionEmail' => 'Benachrichtigung via E-mail',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'Dieser Zustand entscheidet, wer benachrichtigt werden soll: nur der Testempfänger, alle (To, cc und Bcc) oder niemand',
 	'Class:ActionEmail/Attribute:status/Value:test+' => 'Nur der Testempfänger wird benachrichtigt',
@@ -522,13 +556,56 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'ActionEmail:preview_warning' => 'Die tatsächliche E-Mail kann im E-Mail-Client anders aussehen als diese Vorschau in Ihrem Browser.',
 	'ActionEmail:preview_more_info' => 'Weitere Informationen zu den CSS-Funktionen, die von den verschiedenen E-Mail-Clients unterstützt werden, finden Sie unter %1$s',
 	'ActionEmail:content_placeholder_missing' => 'Der Platzhalter "%1$s" wurde in der HTML-Vorlage nicht gefunden. Der Inhalt des Feldes "%2$s" wird nicht in den generierten E-Mails enthalten sein.',
-));
+]);
+
+//
+// Class: ActionNewsroom
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', [
+	'ActionNewsroom:trigger' => 'Trigger',
+	'ActionNewsroom:content' => 'Nachricht',
+	'ActionNewsroom:settings' => 'Einstellungen',
+	'Class:ActionNewsroom' => 'Benachrichtigung durch Newsroom',
+	'Class:ActionNewsroom+' => '',
+	'Class:ActionNewsroom/Attribute:title' => 'Titel',
+	'Class:ActionNewsroom/Attribute:title+' => 'Titel der Nachricht. Kann Platzhalter wie $this->attribute_code$ enthalten',
+	'Class:ActionNewsroom/Attribute:message' => 'Nachricht',
+	'Class:ActionNewsroom/Attribute:message+' => 'Inhalt der Nachrichten, im Markdown-Format, nicht HTML. Kann Platzhalter enthalten wie:
+- $this->attribute_code$ jedes Attribut des Objekts, das die Benachrichtigung auslöst,
+- $this->hyperlink()$ Hyperlink im Backoffice zum Objekt, das die Benachrichtigung auslöst,
+- $this->hyperlink(portal)$ Hyperlink im Portal zum Objekt, das die Benachrichtigung auslöst,
+- $this->attribute_external_key->attribute$ rekursive Syntax für jedes entfernte Attribut,
+- $current_contact->attribute$ Attribut der Person, die die Benachrichtigung ausgelöst hat',
+	'Class:ActionNewsroom/Attribute:icon' => 'Icon',
+	'Class:ActionNewsroom/Attribute:icon+' => 'Icon, das neben den Nachrichten im Newsroom angezeigt wird.
+- Wenn ausgefüllt, wird das benutzerdefinierte Icon verwendet
+- Andernfalls wird, wenn das auslösende Objekt ein Icon hat (z.B. Bild eines Person-Objekts), dieses verwendet
+- Andernfalls wird, wenn das auslösende Objekt ein Klassen-Icon im Datenmodell definiert hat, dieses verwendet
+- Andernfalls wird das kompakte Anwendung-Logo verwendet',
+	'Class:ActionNewsroom/Attribute:priority' => 'Priorität',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by decreasing priority, when displayed in the Newsroom popup~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Kritisch',
+	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Kritisch',
+	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Dringend',
+	'Class:ActionNewsroom/Attribute:priority/Value:2+' => 'Dringend',
+	'Class:ActionNewsroom/Attribute:priority/Value:3' => 'Wichtig',
+	'Class:ActionNewsroom/Attribute:priority/Value:3+' => 'Wichtig',
+	'Class:ActionNewsroom/Attribute:priority/Value:4' => 'Standard',
+	'Class:ActionNewsroom/Attribute:priority/Value:4+' => 'Standard',
+	'Class:ActionNewsroom/Attribute:test_recipient_id' => 'Testempfänger',
+	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Person für Testbenachrichtigungen (statt regulärer Empfänger)',
+	'Class:ActionNewsroom/Attribute:recipients' => 'Empfänger',
+	'Class:ActionNewsroom/Attribute:recipients+' => 'Eine OQL-Abfrage, die Kontakt-Objekte zurückgibt',
+	'Class:ActionNewsroom/Attribute:url' => 'URL',
+	'Class:ActionNewsroom/Attribute:url+' => 'Wenn leer, verweist die URL auf das Objekt, das die Benachrichtigung ausgelöst hat. Sie können jedoch auch eine benutzerdefinierte URL angeben.',
+]);
 
 //
 // Class: Trigger
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Trigger' => 'Trigger',
 	'Class:Trigger+' => 'Custom event handler',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
@@ -542,13 +619,18 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Trigger/Attribute:context+' => 'Kontext, der diesen Trigger auslösen lassen darf',
 	'Class:Trigger/Attribute:complement' => 'Zusätzliche Informationen',
 	'Class:Trigger/Attribute:complement+' => 'Weitere Informationen in englischer Sprache, die durch diesen Trigger bereitgestellt werden',
-));
+	'Class:Trigger/Attribute:subscription_policy' => 'Abonnementrichtlinie',
+	'Class:Trigger/Attribute:subscription_policy+' => 'Ermöglicht es Benutzern, sich vom Trigger abzumelden',
+	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Vollständige Abmeldung erlauben',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Mindestens einen Kanal erzwingen (Nachricht oder E-Mail)',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Abmeldung verweigern',
+]);
 
 //
 // Class: TriggerOnObject
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnObject' => 'Trigger (klassenunabhängig)',
 	'Class:TriggerOnObject+' => 'Trigger einer gegebenen Klasse an Objekten',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Zielklasse',
@@ -557,115 +639,115 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TriggerOnObject/Attribute:filter+' => 'Einschränkung der Objekte (der Zielklasse) welche den Trigger aktivieren.',
 	'TriggerOnObject:WrongFilterQuery' => 'Fehlerhafter Filter-Query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Der Filter muss Objekte vom Typ \\"%1$s\\" zurückgeben.',
-));
+]);
 
 //
 // Class: TriggerOnPortalUpdate
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnPortalUpdate' => 'Trigger (bei Update aus dem Portal)',
 	'Class:TriggerOnPortalUpdate+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateChange
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnStateChange' => 'Trigger (bei Statusänderung)',
 	'Class:TriggerOnStateChange+' => 'Trigger bei Änderung des Objektstatus',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Status',
 	'Class:TriggerOnStateChange/Attribute:state+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateEnter
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnStateEnter' => 'Trigger (beim Eintritt eines Status)',
 	'Class:TriggerOnStateEnter+' => 'Trigger bei Eintritt einer Objektstatusänderung',
-));
+]);
 
 //
 // Class: TriggerOnStateLeave
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnStateLeave' => 'Trigger (beim Verlassen eines Status)',
 	'Class:TriggerOnStateLeave+' => 'Trigger beim Verlassen einer Objektstatusänderung',
-));
+]);
 
 //
 // Class: TriggerOnObjectCreate
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnObjectCreate' => 'Trigger (bei Objekterstellung)',
 	'Class:TriggerOnObjectCreate+' => 'Trigger bei Objekterstellung (einer Kindklasse) einer gegebenen Klasse',
-));
+]);
 
 //
 // Class: TriggerOnObjectDelete
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnObjectDelete' => 'Trigger (bei Objektlöschung)',
 	'Class:TriggerOnObjectDelete+' => 'Trigger bei Objektlöschung einer gegebenen Klasse oder Kindklasse',
-));
+]);
 
 //
 // Class: TriggerOnObjectUpdate
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (bei Objektanpassung)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger bei Objektanpassung einer gegebenen Klasse oder Kindklasse',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Ziel-Felder',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectMention
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnObjectMention' => 'Trigger (bei Objekterwähnung)',
 	'Class:TriggerOnObjectMention+' => 'Trigger bei Objekterwähnung (@xxx) einer Objekt mit [eine Kinderklasse von] eine gegebene Klasse in ein Log-Attribut',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filter für Objekterwähnung',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Einschränkung der Objekte welche diesen Trigger aktivieren. Wenn leer, wird er von jedem Objekt (beliebige Klasse) aktiviert.',
-));
+]);
 
 //
 // Class: TriggerOnAttributeBlobDownload
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (beim Herunterladen einer Datei eines Objekts)',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger für das Herunterladen einer Datei (Blob) der angegebenen Klasse oder einer Unterklasse',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Ziel-Felder',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnThresholdReached
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnThresholdReached' => 'Trigger (bei Schwellenwert)',
 	'Class:TriggerOnThresholdReached+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Uhr stoppen',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Schwellenwert',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-));
+]);
 
 //
 // Class: lnkTriggerAction
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkTriggerAction' => 'Aktion/Trigger',
 	'Class:lnkTriggerAction+' => 'Verknüpfung zwischen einem Trigger und einer Aktion',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Aktion',
@@ -678,12 +760,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
 	'Class:lnkTriggerAction/Attribute:order' => 'Reihenfolge',
 	'Class:lnkTriggerAction/Attribute:order+' => 'Reihenfolge der Aktionsausführungen',
-));
+]);
 
 //
 // Synchro Data Source
 //
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:SynchroDataSource' => 'Synchronisations-Datenquelle',
 	'Class:SynchroDataSource/Attribute:name' => 'Name',
 	'Class:SynchroDataSource/Attribute:name+' => '',
@@ -771,10 +853,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:Synchro:NeverRun' => 'Synchronisation noch nicht erfolgt. Kein Protokoll verfügbar.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Die letzte Synchronisation endete um %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Die Synchronisation, die um %1$s gestartet wurde, läuft noch ...',
-	'Menu:DataSources' => 'Datenquellen für die Synchronisation',
-    // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => 'Alle Datenquellen für die Synchronisation',
-    // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Ignoriert (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Verschwunden (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Vorhanden (%1$s)',
@@ -898,16 +976,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Voreinstellungen',
 	'Core:ExecProcess:Code1' => 'Falscher Befehl oder Befehl mit Fehler beendet (z.B. falscher Skriptname).',
 	'Core:ExecProcess:Code255' => 'PHP-Fehler (Parsing oder Laufzeit)',
-    // Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
-    // Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Abgelaufene Zeit (gespeichert als \\"%1$s\\")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Zeitaufwand für \\"%1$s\\"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline für \\"%1$s\\" um %2$d%%',
-    // Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Fehlender Parameter "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => 'ungültiger Wert für den Parameter "query". Es gibt keinen Eintrag in der Query-Bibliothek, der zu der id "%1$s" korrespondiert.',
 	'Core:BulkExport:ExportFormatPrompt' => 'Exportformat:',
@@ -960,43 +1035,31 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Angepasstes format: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Seite %1$s',
 	'Core:DateTime:Placeholder_d' => 'TT',
-    // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'T',
-    // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM',
-    // Month on 2 digits i.e. 01-12
 	'Core:DateTime:Placeholder_n' => 'M',
-    // Month on 1 or 2 digits 1-12
 	'Core:DateTime:Placeholder_Y' => 'JJJJ',
-    // Year on 4 digits
 	'Core:DateTime:Placeholder_y' => 'JJ',
-    // Year on 2 digits
 	'Core:DateTime:Placeholder_H' => 'hh',
-    // Hour 00..23
 	'Core:DateTime:Placeholder_h' => 'h',
-    // Hour 01..12
 	'Core:DateTime:Placeholder_G' => 'hh',
-    // Hour 0..23
 	'Core:DateTime:Placeholder_g' => 'h',
-    // Hour 1..12
 	'Core:DateTime:Placeholder_a' => 'am/pm',
-    // am/pm (lowercase)
 	'Core:DateTime:Placeholder_A' => 'AM/PM',
-    // AM/PM (uppercase)
 	'Core:DateTime:Placeholder_i' => 'mm',
-    // minutes, 2 digits: 00..59
 	'Core:DateTime:Placeholder_s' => 'ss',
-    // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Falsches Format',
 	'Core:Validator:Mandatory' => 'Bitte dieses Feld ausfüllen',
 	'Core:Validator:MustBeInteger' => 'Muss ein Integer sein',
 	'Core:Validator:MustSelectOne' => 'Min. ein Eintrag muss ausgewählt sein',
-));
+	'Menu:DataSources' => 'Datenquellen für die Synchronisation',
+	'Menu:DataSources+' => 'Alle Datenquellen für die Synchronisation',
+]);
 
 //
 // Class: TagSetFieldData
 //
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TagSetFieldData' => '%2$s für die Klasse %1$s',
 	'Class:TagSetFieldData+' => '',
 	'Class:TagSetFieldData/Attribute:code' => 'Code',
@@ -1018,12 +1081,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tag "Attribute Code" kann nicht geändert werden',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag Verwendung (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Kein Eintrag für dieses Tag gefunden',
-));
+]);
 
 //
 // Class: DBProperty
 //
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DBProperty' => 'DB Eigenschaft',
 	'Class:DBProperty+' => '',
 	'Class:DBProperty/Attribute:name' => 'Name',
@@ -1036,12 +1099,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => 'Änderungskommentar',
 	'Class:DBProperty/Attribute:change_comment+' => '',
-));
+]);
 
 //
 // Class: BackgroundTask
 //
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:BackgroundTask' => 'Hintergrund-Task',
 	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Klassenname',
@@ -1066,12 +1129,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => 'Status',
 	'Class:BackgroundTask/Attribute:status+' => '',
-));
+]);
 
 //
 // Class: AsyncTask
 //
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:AsyncTask' => 'Async. Task',
 	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Erstellt',
@@ -1096,43 +1159,44 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Ungültiges Format der Konfiguration für "async_task_retries[%1$s]". Erwartet wird ein Array mit den Schlüsseln: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Ungültiges Format der Konfiguration für "async_task_retries[%1$s]": unerwarteter Schlüssel "%2$s". Erwartet werden nur die Schlüssel: %3$s',
-));
+]);
 
 //
 // Class: AbstractResource
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:AbstractResource' => 'Abstrakte Ressource',
 	'Class:AbstractResource+' => '',
-));
+]);
 
 //
 // Class: ResourceAdminMenu
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ResourceAdminMenu' => 'Ressource "Admin Menü"',
 	'Class:ResourceAdminMenu+' => '',
-));
+]);
 
 //
 // Class: ResourceRunQueriesMenu
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ResourceRunQueriesMenu' => 'Ressource "Abfrage Ausführen Menü"',
 	'Class:ResourceRunQueriesMenu+' => '',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ResourceSystemMenu' => 'Ressource "System Menü"',
 	'Class:ResourceSystemMenu+' => '',
-));
-
-
-
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
+]);

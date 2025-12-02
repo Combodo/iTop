@@ -1,29 +1,20 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'Menu:ConfigEditor' => 'Konfiguracja ogólna',
-	'config-edit-title' => 'Edycja pliku konfiguracyjnego',
+/**
+ *
+ */
+Dict::Add('PL PL', 'Polish', 'Polski', [
+	'Menu:ConfigFileEditor' => 'Plain text editor~~',
+	'itop-config/Operation:Edit/Title' => 'Edycja pliku konfiguracyjnego',
 	'config-edit-intro' => 'Zachowaj ostrożność podczas edycji pliku konfiguracyjnego.',
+	'Menu:ConfigEditor' => 'Konfiguracja ogólna',
 	'config-apply' => 'Zastosuj',
 	'config-apply-title' => 'Zastosuj (Ctrl+S)',
 	'config-cancel' => 'Reset',
@@ -34,8 +25,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'config-parse-error' => 'Linia %2$d: %1$s.<br/>Plik NIE został zaktualizowany.',
 	'config-current-line' => 'Edycja linii: %1$s',
 	'config-saved-warning-db-password' => 'Zapisano pomyślnie, ale kopia zapasowa nie działa z powodu nieobsługiwanych znaków w haśle bazy danych.',
-	'config-error-transaction' => 'Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.~~',
-	'config-error-file-changed' => 'Error: The Configuration file has changed since you opened it and cannot be saved. Refresh and apply your changes again.~~',
-	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the configuration file cannot be edited.~~',
-	'config-interactive-not-allowed' => ITOP_APPLICATION_SHORT.' interactive edition of the configuration as been disabled. See <code>\'config_editor\' => \'disabled\'</code> in the configuration file.~~',
-));
+	'config-error-transaction' => 'Błąd: nieprawidłowy identyfikator transakcji. Konfiguracja <b>NIE</b> została zmodyfikowana.',
+	'config-error-file-changed' => 'Błąd: Plik konfiguracyjny został zmieniony od czasu jego otwarcia i nie można go zapisać. Odśwież i ponownie zastosuj zmiany.',
+	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' jest w <b>trybie demonstracyjnym</b>: nie można edytować pliku konfiguracyjnego.',
+	'config-interactive-not-allowed' => ITOP_APPLICATION_SHORT.' interaktywna edycja konfiguracji została wyłączona. Zobacz <code>\'config_editor\' => \'disabled\'</code> w pliku konfiguracyjnym.',
+]);

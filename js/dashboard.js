@@ -291,7 +291,7 @@ $(function()
 		},
 		// Dirty means: at least one change has not been committed yet
 		is_dirty: function () {
-			if ($('#dashboard_editor .ui-layout-east .itop-property-field-modified').size() > 0) {
+			if ($('#dashboard_editor .ui-layout-east .itop-property-field-modified').length > 0) {
 				return true;
 			} else {
 				return false;
@@ -332,11 +332,14 @@ $(function()
 			oParams.dashlet_class = sDashletClass;
 			oParams.dashlet_id = sDashletId;
 			oParams.dashlet_type = options.dashlet_type;
+			oParams.ajax_promise_id = 'ajax_promise_' + sDashletId;
 			var me = this;
 			$.post(this.options.render_to, oParams, function (data) {
 				me.ajax_div.html(data);
-				me.add_dashlet_finalize(options, sDashletId, sDashletClass);
-				me.mark_as_modified();
+				window[oParams.ajax_promise_id].then(function(){
+					me.add_dashlet_finalize(options, sDashletId, sDashletClass);
+					me.mark_as_modified();
+				});
 			});
 		},
 		on_dashlet_moved: function (oDashlet, oReceiver, bRefresh) {

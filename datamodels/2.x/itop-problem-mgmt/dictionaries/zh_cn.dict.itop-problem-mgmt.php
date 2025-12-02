@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -42,7 +43,7 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ProblemManagement' => '问题管理',
 	'Menu:ProblemManagement+' => '问题管理',
 	'Menu:Problem:Overview' => '概况',
@@ -65,12 +66,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ProblemMgmtMenuOverview:Title' => '问题管理仪表盘',
 	'UI:ProblemMgmtMenuOverview:Title+' => '问题管理仪表盘',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Problem' => '问题',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => '状态',
@@ -94,7 +95,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Problem/Attribute:product' => '产品',
 	'Class:Problem/Attribute:product+' => '',
 	'Class:Problem/Attribute:impact' => '影响范围',
-	'Class:Problem/Attribute:impact+' => '',
+	'Class:Problem/Attribute:impact+' => '问题影响的范围,多少人受影响',
 	'Class:Problem/Attribute:impact/Value:1' => '部门',
 	'Class:Problem/Attribute:impact/Value:1+' => '',
 	'Class:Problem/Attribute:impact/Value:2' => '服务',
@@ -102,7 +103,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Problem/Attribute:impact/Value:3' => '个体',
 	'Class:Problem/Attribute:impact/Value:3+' => '',
 	'Class:Problem/Attribute:urgency' => '紧急度',
-	'Class:Problem/Attribute:urgency+' => '',
+	'Class:Problem/Attribute:urgency+' => '问题得多快解决',
 	'Class:Problem/Attribute:urgency/Value:1' => '紧急',
 	'Class:Problem/Attribute:urgency/Value:1+' => '紧急',
 	'Class:Problem/Attribute:urgency/Value:2' => '高',
@@ -112,7 +113,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Problem/Attribute:urgency/Value:4' => '低',
 	'Class:Problem/Attribute:urgency/Value:4+' => '低',
 	'Class:Problem/Attribute:priority' => '优先级',
-	'Class:Problem/Attribute:priority+' => '',
+	'Class:Problem/Attribute:priority+' => '优先处理哪个问题',
 	'Class:Problem/Attribute:priority/Value:1' => '紧急',
 	'Class:Problem/Attribute:priority/Value:1+' => '紧急',
 	'Class:Problem/Attribute:priority/Value:2' => '高',
@@ -143,4 +144,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => '关闭',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

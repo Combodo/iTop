@@ -1,29 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * @author Hipska (2019)
- * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+/**
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ */
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'bkp-backup-running' => 'Er wordt een backup gemaakt. Even geduld...',
 	'bkp-restore-running' => 'Er wordt een herstel uitgevoerd. Even geduld...',
 	'Menu:BackupStatus' => 'Geplande backups',
@@ -50,7 +38,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'bkp-status-backups-manual' => 'Manuele backups',
 	'bkp-status-backups-none' => 'Nog geen backups beschikbaar',
 	'bkp-next-backup' => 'De volgende backup wordt gemaakt op <b>%1$s</b> (%2$s) om %3$s',
-	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
+	'bkp-next-backup-unknown' => 'De volgende backup is nog <b>niet gepland</b>.',
 	'bkp-button-backup-now' => 'Maak nu een backup',
 	'bkp-button-restore-now' => 'Herstel',
 	'bkp-confirm-backup' => 'Bevestig dat de backup nu gemaakt mag worden.',
@@ -58,4 +46,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'bkp-wait-backup' => 'Wacht tot de backup gemaakt is...',
 	'bkp-wait-restore' => 'Wacht tot de backup hersteld is...',
 	'bkp-success-restore' => 'Herstel is succesvol voltooid.',
-));
+]);

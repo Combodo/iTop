@@ -1,12 +1,11 @@
 <?php
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Application\UI\Base\Component\Input;
-
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use utils;
@@ -138,4 +137,8 @@ class InputWithLabel extends UIBlock
 		return utils::IsNotNullOrEmptyString($this->sDescription);
 	}
 
+	public function GetSubBlocks(): array
+	{
+		return [$this->oInput->GetId() => $this->oInput];
+	}
 }

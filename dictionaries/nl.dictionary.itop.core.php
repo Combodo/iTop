@@ -1,40 +1,25 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @author	LinProfs <info@linprofs.com>
- * 
- * Linux & Open Source Professionals
- * http://www.linprofs.com
+ * Localized data
  *
- * @author Hipska (2018, 2019)
- * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2019 - 2022)
- * 
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+/**
+ * @author LinProfs <info@linprofs.com>
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2019 - 2022)
+ */
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Core:DeletedObjectLabel' => '%1s (verwijderd)',
 	'Core:DeletedObjectTip' => 'Het object is verwijderd op %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'Object niet gevonden (klasse: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'Object kon niet worden gevonden. Het kan al eerder verwijderd zijn waardoor ook de historiek al gewist is.',
 	'Core:UniquenessDefaultError' => 'De regel \'%1$s\' die unieke waardes afdwingt, blokkeert deze actie',
-	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s~~',
-	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
+	'Core:CheckConsistencyError' => 'Consistentieregels niet gevolgd: %1$s',
+	'Core:CheckValueError' => 'Onverwachte waarde voor attribuut \'%1$s\' (%2$s) : %3$s',
 	'Core:AttributeLinkedSet' => 'Reeks van objecten',
 	'Core:AttributeLinkedSet+' => 'Elke soort objecten van dezelfde klasse of subklasse',
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Dubbele records in het \'%1$s\' veld : %2$s',
@@ -47,6 +32,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeTagSet' => 'Lijst van tags',
 	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'klik om toe te voegen',
+	'Core:Placeholder:CannotBeResolved' => '(%1$s : kan niet worden omgezet)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s van %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s van subklasses)',
@@ -174,8 +160,7 @@ Operators:<br/>
 	'Core:Context=GUI:Console' => 'Console',
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portaal',
-));
-
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
@@ -186,7 +171,7 @@ Operators:<br/>
 // Class: CMDBChange
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:CMDBChange' => 'Aanpassing',
 	'Class:CMDBChange+' => 'Opvolging van aanpassingen',
 	'Class:CMDBChange/Attribute:date' => 'datum',
@@ -201,13 +186,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Via een extensie',
-));
+]);
 
 //
 // Class: CMDBChangeOp
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:CMDBChangeOp' => 'Aanpassingsactie',
 	'Class:CMDBChangeOp+' => 'Opvolging van uitgevoerde aanpassingen',
 	'Class:CMDBChangeOp/Attribute:change' => 'Aanpassing',
@@ -222,51 +207,51 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Soort',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpCreate
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:CMDBChangeOpCreate' => 'Aanmaken object',
 	'Class:CMDBChangeOpCreate+' => 'Historiek van aanmaken van het object',
-));
+]);
 
 //
 // Class: CMDBChangeOpDelete
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:CMDBChangeOpDelete' => 'Verwijderen object',
 	'Class:CMDBChangeOpDelete+' => 'Historiek van verwijderen van het object',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttribute
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:CMDBChangeOpSetAttribute' => 'Aanpassen object',
 	'Class:CMDBChangeOpSetAttribute+' => 'Historiek van het aanpassen van de objecteigenschappen',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Attribuut',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'Code van de aangepaste eigenschap',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeScalar
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'Aanpassen objecteigenschap',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Historiek van gewijzigde eigenschappen',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Vorige waarde',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'Vorige waarde van de eigenschap',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Nieuwe waarde',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'Nieuwe waarde van de eigenschap',
-));
+]);
 // Used by CMDBChangeOp... & derived classes
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Change:ObjectCreated' => 'Object aangemaakt',
 	'Change:ObjectDeleted' => 'Object verwijderd',
 	'Change:ObjectModified' => 'Object aangepast',
@@ -283,35 +268,35 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Change:LinkSet:Added' => 'toegevoegd %1$s',
 	'Change:LinkSet:Removed' => 'verwijderd %1$s',
 	'Change:LinkSet:Modified' => 'aangepast %1$s',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeBlob
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'Aanpassen data',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'Historiek van data-aanpassingen',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Vorige data',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'Vorige inhoud van de eigenschap',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeText
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:CMDBChangeOpSetAttributeText' => 'Aanpassen tekst',
 	'Class:CMDBChangeOpSetAttributeText+' => 'Historiek van tekstaanpassingen',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Vorige data',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'Vorige inhoud van de eigenschap',
-));
+]);
 
 //
 // Class: Event
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Event' => 'Gebeurtenis',
 	'Class:Event+' => 'Een interne gebeurtenis binnen de applicatie',
 	'Class:Event/Attribute:message' => 'Inhoud',
@@ -322,13 +307,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Event/Attribute:userinfo+' => 'Info over wie/wat (bv. welke service) de aanpassing heeft doorgevoerd',
 	'Class:Event/Attribute:finalclass' => 'Type',
 	'Class:Event/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: EventNotification
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:EventNotification' => 'Gebeurtenis - melding',
 	'Class:EventNotification+' => 'Historiek van de melding die getriggerd werd',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
@@ -337,13 +322,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventNotification/Attribute:action_id+' => 'De gebruiker die de melding veroorzaakte',
 	'Class:EventNotification/Attribute:object_id' => 'ID object',
 	'Class:EventNotification/Attribute:object_id+' => 'ID object (klasse gedefineerd door de trigger)',
-));
+]);
 
 //
 // Class: EventNotificationEmail
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:EventNotificationEmail' => 'Gebeurtenis - versturen van e-mail',
 	'Class:EventNotificationEmail+' => 'Historiek van de e-mail die verstuurd is',
 	'Class:EventNotificationEmail/Attribute:to' => 'Aan',
@@ -360,13 +345,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Bijlagen',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-));
+]);
 
 //
 // Class: EventIssue
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:EventIssue' => 'Gebeurtenis - probleem',
 	'Class:EventIssue+' => 'Log van een probleem (waarschuwing, fout, ...)',
 	'Class:EventIssue/Attribute:issue' => 'Probleem',
@@ -383,13 +368,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Data',
 	'Class:EventIssue/Attribute:data+' => 'Meer informatie',
-));
+]);
 
 //
 // Class: EventWebService
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:EventWebService' => 'Gebeurtenis - web service',
 	'Class:EventWebService+' => 'Log van een webservice-aanroep',
 	'Class:EventWebService/Attribute:verb' => 'Werkwoord',
@@ -404,9 +389,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventWebService/Attribute:log_error+' => 'Resultaat foutenlog',
 	'Class:EventWebService/Attribute:data' => 'Data',
 	'Class:EventWebService/Attribute:data+' => 'Resulterende data',
-));
+]);
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:EventRestService' => 'Gebeurtenis - REST/JSON API-aanroep',
 	'Class:EventRestService+' => 'Log van een aangeroepen REST/JSON-service',
 	'Class:EventRestService/Attribute:operation' => 'Handeling',
@@ -421,13 +406,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP-antwoord (JSON)',
 	'Class:EventRestService/Attribute:provider' => 'Provider',
 	'Class:EventRestService/Attribute:provider+' => 'PHP-klasse die de verwachte handeling gebruikt',
-));
+]);
 
 //
 // Class: EventLoginUsage
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:EventLoginUsage' => 'Gebeurtenis - gebruik van login',
 	'Class:EventLoginUsage+' => 'Verbinding met de applicatie',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
@@ -436,16 +421,51 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'E-mailadres van de gebruiker',
 	'Class:EventLoginUsage/Attribute:contact_email+' => '',
-));
+]);
+
+//
+// Class: EventNotificationNewsroom
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Class:EventNotificationNewsroom' => 'News sent~~',
+	'Class:EventNotificationNewsroom+' => '',
+	'Class:EventNotificationNewsroom/Attribute:title' => 'Titel',
+	'Class:EventNotificationNewsroom/Attribute:title+' => '',
+	'Class:EventNotificationNewsroom/Attribute:icon' => 'Pictogram',
+	'Class:EventNotificationNewsroom/Attribute:icon+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority' => 'Prioriteit',
+	'Class:EventNotificationNewsroom/Attribute:priority+' => '',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1' => 'Critical~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:1+' => 'Critical~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2' => 'Urgent~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:2+' => 'Urgent~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3' => 'Important~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:3+' => 'Important~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4' => 'Standard~~',
+	'Class:EventNotificationNewsroom/Attribute:priority/Value:4+' => 'Standard~~',
+	'Class:EventNotificationNewsroom/Attribute:url' => 'URL',
+	'Class:EventNotificationNewsroom/Attribute:url+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read' => 'Gelezen',
+	'Class:EventNotificationNewsroom/Attribute:read+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no' => 'Nee',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:no+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes' => 'Ja',
+	'Class:EventNotificationNewsroom/Attribute:read/Value:yes+' => '',
+	'Class:EventNotificationNewsroom/Attribute:read_date' => 'Datum gelezen',
+	'Class:EventNotificationNewsroom/Attribute:read_date+' => '',
+	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact',
+	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Action' => 'Actie',
 	'Class:Action+' => 'Door gebruiker gedefinieerde actie',
-	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
+	'Class:Action/ComplementaryName' => '%1$s: %2$s',
 	'Class:Action/Attribute:name' => 'Naam',
 	'Class:Action/Attribute:name+' => '',
 	'Class:Action/Attribute:description' => 'Beschrijving',
@@ -460,25 +480,34 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Gerelateerde triggers',
 	'Class:Action/Attribute:trigger_list+' => 'Triggers gelinkt aan deze actie',
+	'Class:Action/Attribute:asynchronous' => 'Asynchroon',
+	'Class:Action/Attribute:asynchronous+' => 'Of deze actie op de achtergrond moet worden uitgevoerd of niet',
+	'Class:Action/Attribute:asynchronous/Value:use_global_setting' => 'Gebruik globale instelling',
+	'Class:Action/Attribute:asynchronous/Value:yes' => 'Ja',
+	'Class:Action/Attribute:asynchronous/Value:no' => 'Nee',
 	'Class:Action/Attribute:finalclass' => 'Type',
 	'Class:Action/Attribute:finalclass+' => '',
 	'Action:WarningNoTriggerLinked' => 'Opgelet: er is geen trigger gelinkt aan deze actie. Zonder minstens 1 actieve trigger zal de actie nooit uitgevoerd worden.',
-));
+	'Action:last_executions_tab' => 'Laatste uitvoeringen',
+	'Action:last_executions_tab_panel_title' => 'Uitvoeringen van deze actie (%1$s)',
+	'Action:last_executions_tab_limit_days' => 'laatste %1$s dagen',
+	'Action:last_executions_tab_limit_none' => 'geen limiet',
+]);
 
 //
 // Class: ActionNotification
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ActionNotification' => 'Melding',
 	'Class:ActionNotification+' => 'Melding (abstract)',
-));
+]);
 
 //
 // Class: ActionEmail
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ActionEmail' => 'E-mailmelding',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'Status bepaalt wie op de hoogte zal gesteld worden: enkel de testontvanger, iedereen (Aan, CC en BCC) of niemand',
@@ -513,32 +542,73 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Hoog',
 	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
-	'Class:ActionEmail/Attribute:language' => 'Language~~',
+	'Class:ActionEmail/Attribute:language' => 'Taal',
 	'Class:ActionEmail/Attribute:language+' => 'Language to use for placeholders ($xxx$) inside the message (state, importance, priority, etc)~~',
-	'Class:ActionEmail/Attribute:html_template' => 'HTML template~~',
+	'Class:ActionEmail/Attribute:html_template' => 'HTML sjabloon',
 	'Class:ActionEmail/Attribute:html_template+' => 'Optional HTML template wrapping around the content of the \'Body\' attribute below, useful for tailored email layouts (in the template, content of the \'Body\' attribute will replace the $content$ placeholder)~~',
-	'Class:ActionEmail/Attribute:ignore_notify' => 'Ignore the Notify flag~~',
-	'Class:ActionEmail/Attribute:ignore_notify+' => 'If set to \'Yes\' the \'Notify\' flag on Contacts has no effect.~~',
-	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'No~~',
-	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Yes~~',
-	'ActionEmail:main' => 'Message~~',
-	'ActionEmail:trigger' => 'Triggers~~',
-	'ActionEmail:recipients' => 'Contacts~~',
-	'ActionEmail:preview_tab' => 'Preview~~',
-	'ActionEmail:preview_tab+' => 'Preview of the eMail template~~',
+	'Class:ActionEmail/Attribute:ignore_notify' => 'Negeer de Melding vlag',
+	'Class:ActionEmail/Attribute:ignore_notify+' => 'Indien ingesteld op \'Ja\' heeft de vlag \'Melding\' in Contacten geen effect.',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:no' => 'Nee',
+	'Class:ActionEmail/Attribute:ignore_notify/Value:yes' => 'Ja',
+	'ActionEmail:main' => 'Bericht',
+	'ActionEmail:trigger' => 'Triggers',
+	'ActionEmail:recipients' => 'Contacten',
+	'ActionEmail:preview_tab' => 'Voorbeeld',
+	'ActionEmail:preview_tab+' => 'Voorbeeld van het E-mail sjabloon',
 	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
 	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
 	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
-));
+]);
+
+//
+// Class: ActionNewsroom
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'ActionNewsroom:trigger' => 'Triggers',
+	'ActionNewsroom:content' => 'Bericht',
+	'ActionNewsroom:settings' => 'Instellingen',
+	'Class:ActionNewsroom' => 'Newsroom melding',
+	'Class:ActionNewsroom+' => '',
+	'Class:ActionNewsroom/Attribute:title' => 'Titel',
+	'Class:ActionNewsroom/Attribute:title+' => 'Title of the news. Can contain placeholders like $this->attribute_code$~~',
+	'Class:ActionNewsroom/Attribute:message' => 'Message~~',
+	'Class:ActionNewsroom/Attribute:message+' => 'Contents of the news, in Markdown format not HTML. Can contain placeholders like:
+- $this->attribute_code$ any attribute of the object triggering the notification,
+- $this->attribute_external_key->attribute$ recursive syntax for any remote attribute,
+- $current_contact->attribute$ attribute of the Person who triggered the notification~~',
+	'Class:ActionNewsroom/Attribute:icon' => 'Pictogram',
+	'Class:ActionNewsroom/Attribute:icon+' => 'Icon to appear next to the news in the newsroom.
+- If filled, the custom icon will be used
+- Else the icon of the triggering object if there is one (e.g. picture of a Person),
+- Else the icon of the triggering object class,
+- Otherwise, the application compact logo will be used~~',
+	'Class:ActionNewsroom/Attribute:priority' => 'Prioriteit',
+	'Class:ActionNewsroom/Attribute:priority+' => 'News will be ordered by decreasing priority, when displayed in the Newsroom popup~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:1' => 'Critical~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:1+' => 'Critical~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:2' => 'Urgent~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:2+' => 'Urgent~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:3' => 'Important~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:3+' => 'Important~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:4' => 'Standard~~',
+	'Class:ActionNewsroom/Attribute:priority/Value:4+' => 'Standard~~',
+	'Class:ActionNewsroom/Attribute:test_recipient_id' => 'Testontvanger',
+	'Class:ActionNewsroom/Attribute:test_recipient_id+' => 'Persoon om te gebruiken wanneer de melding getest wordt',
+	'Class:ActionNewsroom/Attribute:recipients' => 'Ontvangers',
+	'Class:ActionNewsroom/Attribute:recipients+' => 'OQL die de lijst van Contacten definiëert',
+	'Class:ActionNewsroom/Attribute:url' => 'URL',
+	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
+]);
 
 //
 // Class: Trigger
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Trigger' => 'Trigger',
 	'Class:Trigger+' => 'Aanleiding tot het uitvoeren van een actie',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
+	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
 	'Class:Trigger/Attribute:description' => 'Beschrijving',
 	'Class:Trigger/Attribute:description+' => 'Beschrijving in één regel',
 	'Class:Trigger/Attribute:action_list' => 'Getriggerde acties',
@@ -548,14 +618,19 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Trigger/Attribute:context' => 'Context',
 	'Class:Trigger/Attribute:context+' => 'In welke context de trigger uitgevoerd kan worden',
 	'Class:Trigger/Attribute:complement' => 'Additional information~~',
-	'Class:Trigger/Attribute:complement+' => 'Further information as provided in english, by this trigger~~',
-));
+	'Class:Trigger/Attribute:complement+' => 'Computed automatically in english for triggers derived from TriggerOnObject~~',
+	'Class:Trigger/Attribute:subscription_policy' => 'Abonnementsbeleid',
+	'Class:Trigger/Attribute:subscription_policy+' => 'Staat gebruikers toe zich af te melden voor de trigger',
+	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Volledige uitschrijving toestaan',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Forceer minimaal één kanaal (nieuws of e-mail)',
+	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Afmelding weigeren',
+]);
 
 //
 // Class: TriggerOnObject
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnObject' => 'Trigger (afhankelijk van klasse)',
 	'Class:TriggerOnObject+' => 'Trigger op een bepaalde klasse van objecten',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Toegepast op klasse',
@@ -564,115 +639,115 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TriggerOnObject/Attribute:filter+' => 'Beperk de objecten (van de opgegeven klasse) die de trigger zullen activeren.',
 	'TriggerOnObject:WrongFilterQuery' => 'Verkeerde filter-query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'De filter-query moet verwijzen naar objecten van klasse "%1$s"',
-));
+]);
 
 //
 // Class: TriggerOnPortalUpdate
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnPortalUpdate' => 'Trigger (als er vanuit het portaal geüpdatet wordt)',
 	'Class:TriggerOnPortalUpdate+' => 'Trigger op de update van de eindgebruiker van het portaal',
-));
+]);
 
 //
 // Class: TriggerOnStateChange
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnStateChange' => 'Trigger (als de status verandert)',
 	'Class:TriggerOnStateChange+' => 'Trigger als de status van het object verandert',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Status',
 	'Class:TriggerOnStateChange/Attribute:state+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateEnter
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnStateEnter' => 'Trigger (als een status van toepassing wordt)',
 	'Class:TriggerOnStateEnter+' => 'Trigger als de status van het object naar deze status verandert',
-));
+]);
 
 //
 // Class: TriggerOnStateLeave
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnStateLeave' => 'Trigger (als een status niet meer van toepassing is)',
 	'Class:TriggerOnStateLeave+' => 'Trigger als de status van het object niet meer deze status heeft',
-));
+]);
 
 //
 // Class: TriggerOnObjectCreate
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnObjectCreate' => 'Trigger (bij het aanmaken van een object)',
 	'Class:TriggerOnObjectCreate+' => 'Trigger bij het aanmaken van een object van de opgegeven klasse (of subklasse ervan)',
-));
+]);
 
 //
 // Class: TriggerOnObjectDelete
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnObjectDelete' => 'Trigger (bij het verwijderen van een object)',
 	'Class:TriggerOnObjectDelete+' => 'Trigger bij het verwijderen van een object van de opgegeven klasse (of subklasse ervan)',
-));
+]);
 
 //
 // Class: TriggerOnObjectUpdate
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (bij het aanpassen van een object)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger bij het aanpassen van een object van de opgegeven klasse (of subklasse ervan)',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Doelvelden',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectMention
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnObjectMention' => 'Trigger (bij vermelden van object)',
 	'Class:TriggerOnObjectMention+' => 'Trigger bij vermelden (@xxx) van een object van de opgegeven klasse (of subklasse ervan) in een log',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filter',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Beperk de lijst van vermelde objecten die de trigger zullen activeren. Indien leeg, zullen alle objecten (van eender welke klasse) de trigger activeren.',
-));
+]);
 
 //
 // Class: TriggerOnAttributeBlobDownload
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
-	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
-));
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Doelvelden',
+	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
+]);
 
 //
 // Class: TriggerOnThresholdReached
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnThresholdReached' => 'Trigger (op drempelwaarde)',
 	'Class:TriggerOnThresholdReached+' => 'Trigger op Stopwatch drempelwaarde bereikt',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stopwatch',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Drempelwaarde',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-));
+]);
 
 //
 // Class: lnkTriggerAction
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkTriggerAction' => 'Link Actie / Trigger',
 	'Class:lnkTriggerAction+' => 'Link tussen een trigger en een actie',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Actie',
@@ -685,12 +760,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
 	'Class:lnkTriggerAction/Attribute:order' => 'Volgorde',
 	'Class:lnkTriggerAction/Attribute:order+' => 'De volgorde in het uitvoeren van de actie',
-));
+]);
 
 //
 // Synchro Data Source
 //
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:SynchroDataSource' => 'Synchronisatie-databron',
 	'Class:SynchroDataSource/Attribute:name' => 'Naam',
 	'Class:SynchroDataSource/Attribute:name+' => '',
@@ -778,10 +853,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:Synchro:NeverRun' => 'Deze synchro heeft nog niet gelopen. Er is nog geen log.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'De laatste synchronisatie eindigde op %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'De synchronisatie is gestart op %1$s en is nog bezig...',
-	'Menu:DataSources' => 'Synchronisatie Databronnen',
-    // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => 'Alle gesynchroniseerde Databronnen',
-    // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Genegeerd (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Verdwenen (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Bestaand (%1$s)',
@@ -905,16 +976,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Voorkeuren',
 	'Core:ExecProcess:Code1' => 'Verkeerde commando of commando beëindigd met fouten (bijvoorbeeld verkeerde scriptnaam)',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, of runtime)',
-    // Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
 	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
-    // Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Tijd voorbij (opgeslagen als "%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tijd gespendeerd voor "%1$s"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline voor "%1$s" at %2$d%%',
-    // Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Ontbrekende parameter "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Ongeldige waarde voor de parameter "query". Er is geen Query Phrasebook die overeenkomt met id: "%1$s".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export-formaat:',
@@ -967,43 +1035,31 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Aangepast formaat: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Pagina %1$s',
 	'Core:DateTime:Placeholder_d' => 'DD',
-    // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D',
-    // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM',
-    // Month on 2 digits i.e. 01-12
 	'Core:DateTime:Placeholder_n' => 'M',
-    // Month on 1 or 2 digits 1-12
 	'Core:DateTime:Placeholder_Y' => 'YYYY',
-    // Year on 4 digits
 	'Core:DateTime:Placeholder_y' => 'YY',
-    // Year on 2 digits
 	'Core:DateTime:Placeholder_H' => 'hh',
-    // Hour 00..23
 	'Core:DateTime:Placeholder_h' => 'h',
-    // Hour 01..12
 	'Core:DateTime:Placeholder_G' => 'hh',
-    // Hour 0..23
 	'Core:DateTime:Placeholder_g' => 'h',
-    // Hour 1..12
 	'Core:DateTime:Placeholder_a' => 'am/pm',
-    // am/pm (lowercase)
 	'Core:DateTime:Placeholder_A' => 'AM/PM',
-    // AM/PM (uppercase)
 	'Core:DateTime:Placeholder_i' => 'mm',
-    // minutes, 2 digits: 00..59
 	'Core:DateTime:Placeholder_s' => 'ss',
-    // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Verkeerd formaat',
 	'Core:Validator:Mandatory' => 'Gelieve dit veld in te vullen',
 	'Core:Validator:MustBeInteger' => 'Dit moet een integer (geheel getal) zijn',
 	'Core:Validator:MustSelectOne' => 'Gelieve één optie te kiezen',
-));
+	'Menu:DataSources' => 'Synchronisatie Databronnen',
+	'Menu:DataSources+' => 'Alle gesynchroniseerde Databronnen',
+]);
 
 //
 // Class: TagSetFieldData
 //
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TagSetFieldData' => '%2$s voor klasse %1$s',
 	'Class:TagSetFieldData+' => '',
 	'Class:TagSetFieldData/Attribute:code' => 'Code',
@@ -1025,12 +1081,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribuutcode" kunnen niet aangepast worden',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Gebruik tags (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Geen invoer gevorden voor deze tag',
-));
+]);
 
 //
 // Class: DBProperty
 //
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:DBProperty' => 'Database-eigenschap',
 	'Class:DBProperty+' => '',
 	'Class:DBProperty/Attribute:name' => 'Naam',
@@ -1043,12 +1099,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => 'Commentaar wijziging',
 	'Class:DBProperty/Attribute:change_comment+' => '',
-));
+]);
 
 //
 // Class: BackgroundTask
 //
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:BackgroundTask' => 'Achtergrondtaak',
 	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Naam klasse',
@@ -1073,12 +1129,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => 'Status',
 	'Class:BackgroundTask/Attribute:status+' => '',
-));
+]);
 
 //
 // Class: AsyncTask
 //
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:AsyncTask' => 'Asynchrone taak',
 	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Gemaakt',
@@ -1103,43 +1159,44 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Ongeldig formaat bij de configuratie van "async_tasks_retries[%1$s]". Er wordt een Array verwacht met de volgende sleutels: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Ongeldig formaat bij de configuratie van "async_tasks_retries[%1$s]": onverwachte sleutel "%2$s". Enkel deze sleutels worden verwacht: %3$s',
-));
+]);
 
 //
 // Class: AbstractResource
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:AbstractResource' => 'Abstracte Tool',
 	'Class:AbstractResource+' => '',
-));
+]);
 
 //
 // Class: ResourceAdminMenu
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ResourceAdminMenu' => 'Tool "Admin Menu"',
 	'Class:ResourceAdminMenu+' => '',
-));
+]);
 
 //
 // Class: ResourceRunQueriesMenu
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ResourceRunQueriesMenu' => 'Tool "Voer query\'s uit" Menu',
 	'Class:ResourceRunQueriesMenu+' => '',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ResourceSystemMenu' => 'Tool "System Menu"',
 	'Class:ResourceSystemMenu+' => '',
-));
-
-
-
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
+	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
+]);

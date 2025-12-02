@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem;
-
 
 /**
  * Class UrlPopoverMenuItem
@@ -41,7 +41,7 @@ class UrlPopoverMenuItem extends PopoverMenuItem
 	{
 		return $this->oPopupMenuItem->GetUrl();
 	}
-	
+
 	/**
 	 * @see \URLPopupMenuItem::GetTarget()
 	 * @return string

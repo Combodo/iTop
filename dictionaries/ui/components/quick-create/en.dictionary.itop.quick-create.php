@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -18,11 +19,12 @@
  */
 
 // Quick create
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object',
 	'UI:Component:QuickCreate:Input:Placeholder' => 'Select object type...',
 	'UI:Component:QuickCreate:Recents:Title' => 'Recents',
 	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'You haven\'t create any object yet',
+	'UI:Component:QuickCreate:MostPopular:Title' => 'Most popular',
 	'UI:Component:QuickCreate:HistoryDisabled' => 'History is disabled',
 	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open quick create',
-));
+]);

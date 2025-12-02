@@ -1,0 +1,62 @@
+/*
+ * @copyright   Copyright (C) 2010-2024 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-toast--padding-y: $ibo-spacing-400 !default;
+$ibo-toast--padding-right: $ibo-spacing-300 !default;
+$ibo-toast--padding-left: $ibo-spacing-500 !default;
+$ibo-toast--border-radius: $ibo-border-radius-300 !default;
+$ibo-toast--box-shadow: $ibo-elevation-200 !default;
+$ibo-toast--max-width: calc(50% - 20px) !default;
+
+@keyframes decreaseHighlight {
+  0% {
+    height: 100%;
+  }
+  8%{
+    border-radius: 0 0 0 3px;
+  }
+  100% {
+    height: 0;
+  }
+}
+
+.ibo-toast {
+  display: inline-flex;
+  position: fixed;
+  align-items: center;
+
+  max-width: $ibo-toast--max-width ;
+  padding: $ibo-toast--padding-y $ibo-toast--padding-right $ibo-toast--padding-y $ibo-toast--padding-left;
+  border-radius: $ibo-toast--border-radius;
+
+  box-shadow: $ibo-toast--box-shadow;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+  z-index: 2147483647;
+  &::before {
+    @include ibo-vertical-highlight;
+    top: initial;
+    bottom: 0;
+    border-radius: $ibo-toast--border-radius 0 0 $ibo-toast--border-radius;
+  }
+  &.ibo-is-auto-closeable::before{
+    animation: decreaseHighlight 5s linear forwards;
+  }
+  &:hover::before {
+    animation: none; /* Pause animation on hover */
+  }
+  &.ibo-is-error{
+    @extend %ibo-alert-danger;
+  }
+  &.ibo-is-warning{
+    @extend %ibo-alert-warning;
+  }
+  &.ibo-is-success{
+    @extend %ibo-alert-success;
+  }
+  &.ibo-is-information{
+    @extend %ibo-alert-information;
+  }
+}

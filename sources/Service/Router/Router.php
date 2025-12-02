@@ -1,11 +1,14 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Service\Router;
 
+use Combodo\iTop\Controller\iController;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Service\Router\Exception\RouteNotFoundException;
 use ReflectionClass;
 use ReflectionMethod;
@@ -40,6 +43,11 @@ class Router
 		return static::$oSingleton;
 	}
 
+	/**
+	 * @var bool $bUseCache
+	 */
+	protected $bUseCache = null;
+
 	/**********************/
 	/* Non-static methods */
 	/**********************/
@@ -52,6 +60,14 @@ class Router
 	protected function __construct()
 	{
 		// Don't do anything, we don't want to be initialized
+	}
+
+	/**
+	 * @param bool|null $bUseCache Force cache usage for testing purposes, or leave it null for the default behavior
+	 */
+	public function SetUseCache(?bool $bUseCache): void
+	{
+		$this->bUseCache = $bUseCache;
 	}
 
 	/**
@@ -78,11 +94,11 @@ class Router
 		$sUrl = $bAbsoluteUrl ? utils::GetAbsoluteUrlAppRoot() : '';
 
 		// Add route URL
-		$sUrl .=  'pages/UI.php?route=' . $sRoute;
+		$sUrl .=  'pages/UI.php?route='.$sRoute;
 
 		// Add parameters and url encode them
 		if (count($aParams) > 0) {
-			$sUrl .= '&' . http_build_query($aParams);
+			$sUrl .= '&'.http_build_query($aParams);
 		}
 
 		return $sUrl;
@@ -105,7 +121,7 @@ class Router
 	 *
 	 * @return mixed Response from the route's handler, can be anything.
 	 *               Even though it can be anything, in most cases, response will either be:
-	 *               - A \WebPage for usual backoffice operations
+	 *               - A WebPage for usual backoffice operations
 	 *               - null for TwigBase backoffice operations
 	 */
 	public function DispatchRoute(string $sRoute)
@@ -137,7 +153,7 @@ class Router
 	public function GetRoutes(): array
 	{
 		$aRoutes = [];
-		$bUseCache = false === utils::IsDevelopmentEnvironment();
+		$bUseCache = is_null($this->bUseCache) ? (false === utils::IsDevelopmentEnvironment()) : $this->bUseCache;
 		$bMustWriteCache = false;
 		$sCacheFilePath = $this->GetCacheFileAbsPath();
 
@@ -161,7 +177,7 @@ class Router
 
 		// If no cache, force to re-scan for routes
 		if (count($aRoutes) === 0) {
-			foreach (utils::GetClassesForInterface('Combodo\iTop\Controller\iController', '', ['[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]']) as $sControllerFQCN) {
+			foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iController::class) as $sControllerFQCN) {
 				$sRouteNamespace = $sControllerFQCN::ROUTE_NAMESPACE;
 				// Ignore controller with no namespace
 				if (is_null($sRouteNamespace)) {
@@ -182,10 +198,10 @@ class Router
 					// eg. "do_something"
 					$sRouteOperation = utils::ToSnakeCase(substr($oReflectionMethod->name, $iPos + strlen($sPrefix)));
 
-					$aRoutes[$sRouteNamespace . '.' . $sRouteOperation] = [
+					$aRoutes[$sRouteNamespace.'.'.$sRouteOperation] = [
 						'namespace' => $sRouteNamespace,
 						'operation' => $sRouteOperation,
-						'controller' => $sControllerFQCN . '::' . $sMethodName,
+						'controller' => $sControllerFQCN.'::'.$sMethodName,
 						'description' => $oReflectionMethod->getDocComment(),
 					];
 				}

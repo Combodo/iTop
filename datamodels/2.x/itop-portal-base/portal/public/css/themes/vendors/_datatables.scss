@@ -1,0 +1,129 @@
+$ipb-vendors--datatables--paginate-button--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'default'), '') !default;
+$ipb-vendors--datatables--paginate-button--hover--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'default'), ':hover') !default;
+$ipb-vendors--datatables--paginate-button--focus--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'default'), ':active') !default;
+$ipb-vendors--datatables--paginate-button--disabled--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'default'), ':disabled') !default;
+$ipb-vendors--datatables--paginate-button--active--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'primary'), '') !default;
+$ipb-vendors--datatables--paginate-button--active--hover--colors: map-get(map-get(map-get($ipb-button-colors, ''), 'primary'), ':hover') !default;
+
+$ipb-vendors-datatables--columns-header--border-bottom-color: $ipb-color-grey-400 !default;
+$ipb-vendors-datatables--columns-header--border-bottom: 2px solid $ipb-vendors-datatables--columns-header--border-bottom-color !default;
+
+$ipb-vendors-datatables--row--is-odd--background-color: $ipb-color-white-100 !default;
+$ipb-vendors-datatables--row--is-even--background-color: $ipb-color-white-200 !default;
+$ipb-vendors-datatables--row--hover--background-color: $ipb-color-blue-100 !default;
+$ipb-vendors-datatables--row--is-selected--color: $ipb-color-blue-900 !default;
+$ipb-vendors-datatables--row--is-selected--background-color: $ipb-color-blue-200 !default;
+$ipb-vendors-datatables--row--is-selected--hover--background-color: $ipb-color-blue-100 !default;
+
+$ipb-vendors-datatables--row-highlight--colors:(
+        'red': ($ipb-color-red-100, $ipb-color-red-200),
+        'danger': ($ipb-color-danger-200, $ipb-color-danger-300),
+        'alert': ($ipb-color-red-200, $ipb-color-red-300),
+        'orange': ($ipb-color-orange-100, $ipb-color-orange-200),
+        'warning': ($ipb-color-warning-200, $ipb-color-warning-300),
+        'blue': ($ipb-color-blue-200, $ipb-color-blue-300),
+        'info': ($ipb-color-information-200, $ipb-color-information-300),
+        'green': ($ipb-color-green-100, $ipb-color-green-200),
+        'success': ($ipb-color-success-100, $ipb-color-success-200),
+) !default;
+
+$ipb-vendors-datatables--row-highlight--first-cell--colors:(
+        'red': ($ipb-color-red-300),
+        'danger': ($ipb-color-danger-400),
+        'alert': ($ipb-color-red-400),
+        'orange': ($ipb-color-orange-300),
+        'warning': ($ipb-color-warning-400),
+        'blue': ($ipb-color-blue-400),
+        'info': ($ipb-color-information-400),
+        'green': ($ipb-color-green-300),
+        'success': ($ipb-color-success-300),
+) !default;
+
+.table {
+  > thead > tr > th {
+    border-bottom: $ipb-vendors-datatables--columns-header--border-bottom !important;
+  }
+}
+
+.table-striped > tbody > tr{
+  background-color: $ipb-vendors-datatables--row--is-even--background-color;
+  &:nth-of-type(2n+1) {
+    background-color: $ipb-vendors-datatables--row--is-odd--background-color;
+  }
+  @each $sColorLabel, $aAttributes in $ipb-vendors-datatables--row-highlight--colors {
+    $sBgColor: nth($aAttributes, 1);
+    $sBgColorHover: nth($aAttributes, 2);
+    &.ipb-is-#{$sColorLabel}, &.#{$sColorLabel}{
+      td {
+        background-color: $sBgColor;
+      }
+      &:hover td {
+        background-color: $sBgColorHover;
+      }
+
+    }
+  }
+  @each $sColorLabel, $aAttributes in $ipb-vendors-datatables--row-highlight--first-cell--colors {
+    $sBgColor: nth($aAttributes, 1);
+    &.ipb-is-#{$sColorLabel} td:first-child::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background-color: $sBgColor;
+    }
+  }
+  &:hover {
+    background-color: $ipb-vendors-datatables--row--hover--background-color;
+  }
+}
+
+table.dataTable  {
+  > thead, tbody, tfoot {
+    > tr.selected {
+      background-color: $ipb-vendors-datatables--row--is-selected--background-color;
+      color: $ipb-vendors-datatables--row--is-selected--color;
+      &:hover {
+        background-color: $ipb-vendors-datatables--row--is-selected--hover--background-color;
+      }
+    }
+  }
+}
+
+.pagination > .paginate_button{
+  > a {
+    background-color: nth($ipb-vendors--datatables--paginate-button--colors, 1);
+    color: nth($ipb-vendors--datatables--paginate-button--colors, 2);
+    border-color: nth($ipb-vendors--datatables--paginate-button--colors, 3);
+
+    &:hover {
+      background-color: nth($ipb-vendors--datatables--paginate-button--hover--colors, 1);
+      color: nth($ipb-vendors--datatables--paginate-button--hover--colors, 2);
+      border-color: nth($ipb-vendors--datatables--paginate-button--hover--colors, 3)
+    }
+
+    &:focus {
+      background-color: nth($ipb-vendors--datatables--paginate-button--focus--colors, 1);
+      color: nth($ipb-vendors--datatables--paginate-button--focus--colors, 2);
+      border-color: nth($ipb-vendors--datatables--paginate-button--focus--colors, 3)
+
+    }
+  }
+  &.disabled > a {
+    background-color: nth($ipb-vendors--datatables--paginate-button--disabled--colors, 1);
+    color: nth($ipb-vendors--datatables--paginate-button--disabled--colors, 2);
+    border-color: nth($ipb-vendors--datatables--paginate-button--disabled--colors, 3)
+  }
+  &.active > a {
+    background-color: nth($ipb-vendors--datatables--paginate-button--active--colors, 1);
+    color: nth($ipb-vendors--datatables--paginate-button--active--colors, 2);
+    border-color: nth($ipb-vendors--datatables--paginate-button--active--colors, 3);
+    &:hover{
+      background-color: nth($ipb-vendors--datatables--paginate-button--active--hover--colors, 1);
+      color: nth($ipb-vendors--datatables--paginate-button--active--hover--colors, 2);
+      border-color: nth($ipb-vendors--datatables--paginate-button--active--hover--colors, 3)
+    }
+  }
+}

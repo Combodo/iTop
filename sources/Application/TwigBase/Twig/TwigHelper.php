@@ -1,6 +1,7 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -10,16 +11,17 @@ use Combodo\iTop\Application\TwigBase\UI\UIBlockExtension;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\Forms\Twig\Extension\FormCompatibilityExtension;
 use Combodo\iTop\Renderer\BlockRenderer;
 use CoreTemplateException;
 use ExecutionKPI;
 use IssueLog;
 use Twig\Environment;
 use Twig\Error\Error;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 use utils;
-use WebPage;
-
 
 /**
  * Class TwigHelper
@@ -73,14 +75,17 @@ class TwigHelper
 	 * @return Environment
 	 * @throws \Twig\Error\LoaderError
 	 */
-	public static function GetTwigEnvironment($sViewPath, $aAdditionalPaths = array())
+	public static function GetTwigEnvironment($sViewPath, $aAdditionalPaths = [])
 	{
 		$oLoader = new FilesystemLoader($sViewPath);
 		foreach ($aAdditionalPaths as $sAdditionalPath) {
 			$oLoader->addPath($sAdditionalPath);
 		}
 
-		$oTwig = new Environment($oLoader);
+		// Create Twig environment
+		$oTwig = new Environment($oLoader, [
+			'debug' => utils::IsDevelopmentEnvironment(),
+		]);
 		Extension::RegisterTwigExtensions($oTwig);
 		if (!utils::IsDevelopmentEnvironment()) {
 			// Disable the cache in development environment
@@ -90,7 +95,9 @@ class TwigHelper
 			$oTwig->setCache($sCachePath);
 		}
 
+		$oTwig->addExtension(new DebugExtension());
 		$oTwig->addExtension(new UIBlockExtension());
+		$oTwig->addExtension(new FormCompatibilityExtension());
 
 		return $oTwig;
 	}
@@ -99,7 +106,7 @@ class TwigHelper
 	 * Display the twig page based on the name or the operation onto the page specified with SetPage().
 	 * Use this method if you have to insert HTML into an existing page.
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param string $sViewPath Absolute path of the templates folder
 	 * @param string $sTemplateName Name of the twig template, ie MyTemplate for MyTemplate.html.twig
 	 * @param array $aParams Params used by the twig template
@@ -108,7 +115,7 @@ class TwigHelper
 	 * @throws \Exception
 	 * @api
 	 */
-	public static function RenderIntoPage(WebPage $oPage, $sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = self::DEFAULT_FILE_TYPE)
+	public static function RenderIntoPage(WebPage $oPage, $sViewPath, $sTemplateName, $aParams = [], $sDefaultType = self::DEFAULT_FILE_TYPE)
 	{
 		$oTwig = self::GetTwigEnvironment($sViewPath);
 		$oTwig->addGlobal('UIBlockParent', [$oPage]);
@@ -121,7 +128,7 @@ class TwigHelper
 	/**
 	 * Render the TWIG template directly in $oBlock
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \Combodo\iTop\Application\UI\Base\UIBlock $oBlock
 	 * @param string $sViewPath
 	 * @param string $sTemplateName
@@ -132,7 +139,7 @@ class TwigHelper
 	 * @throws \Twig\Error\LoaderError
 	 * @since 3.0.0
 	 */
-	public static function RenderIntoBlock(WebPage $oPage, UIBlock $oBlock, $sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = self::DEFAULT_FILE_TYPE)
+	public static function RenderIntoBlock(WebPage $oPage, UIBlock $oBlock, $sViewPath, $sTemplateName, $aParams = [], $sDefaultType = self::DEFAULT_FILE_TYPE)
 	{
 		$oTwig = self::GetTwigEnvironment($sViewPath);
 		$oTwig->addGlobal('UIBlockParent', [$oBlock]);
@@ -161,8 +168,7 @@ class TwigHelper
 			$oKPI->ComputeStats('Render TWIG', $sFileName);
 
 			return $sResult;
-		}
-		catch (Error $oTwigException) {
+		} catch (Error $oTwigException) {
 			$oTwigPreviousException = $oTwigException->getPrevious();
 			if (!is_null(($oTwigPreviousException)) && ($oTwigPreviousException instanceof CoreTemplateException)) {
 				// handles recursive calls : if we're here, an exception was already raised in a child template !

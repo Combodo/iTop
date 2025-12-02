@@ -1,0 +1,61 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-tile--background-color: $ipb-color-white-100 !default;
+$ipb-tile--border-color: $ipb-color-grey-200 !default;
+$ipb-tile--border: 1px solid $ipb-tile--border-color!default;  
+
+$ipb-tile--decoration--opacity: 0.1 !default;
+$ipb-tile--decoration--background-color: common-adjust-alpha($ipb-color-blue-700, $ipb-tile--decoration--opacity) !default;
+$ipb-tile--decoration--hover--opacity: 0.25 !default;
+$ipb-tile--decoration--hover--background-color: common-adjust-alpha($ipb-tile--decoration--background-color, $ipb-tile--decoration--hover--opacity) !default;
+$ipb-tile--decoration--icon--color: $ipb-color-blue-700 !default;
+
+$ipb-tile--title--color: $common-base-variable--text-color !default;
+
+$ipb-tile--description--color: $common-base-variable--text-color !default;
+
+.ipb-tile{
+  background-color: $ipb-tile--background-color;
+  border: $ipb-tile--border;
+  
+  &[data-role="navigation-trigger"] {
+    @include ipb-heavy-animated-border;
+  }
+}
+
+
+.ipb-tile--decoration {
+  background-color: $ipb-tile--decoration--background-color;
+}
+.ipb-tile:hover {
+  .ipb-tile--decoration {
+    background-color: $ipb-tile--decoration--hover--background-color;
+  }
+}
+
+.ipb-tile--decoration--icon {
+  &.icon {
+    color: $ipb-tile--decoration--icon--color;
+  }
+}
+
+.ipb-tile--title{
+  color: $ipb-tile--title--color;
+}
+
+.ipb-tile--description{
+  color: $ipb-tile--description--color;
+}
+
+.ipb-tile--manage .ipb-tile--title {
+  > span:first-child {
+    @include ipb-text-overflow-ellipsis;
+  }
+  > span:nth-child(2) {
+    @include ipb-following-dot;
+  }
+}

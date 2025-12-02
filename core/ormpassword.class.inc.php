@@ -1,9 +1,10 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,7 +17,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 require_once(APPROOT.'/core/simplecrypt.class.inc.php');
 
 /**
@@ -26,7 +26,7 @@ require_once(APPROOT.'/core/simplecrypt.class.inc.php');
  * If a cryptographic random number generator is available (on Linux or Windows)
  * it will be used for generating the salt.
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @package     itopORM
  */
@@ -45,7 +45,7 @@ class ormPassword
 		//only used for <= 2.5 hashed password
 		$this->m_sSalt = $sSalt;
 	}
-	
+
 	/**
 	 * Encrypts the clear text password, with a unique salt
 	 */
@@ -68,17 +68,17 @@ class ormPassword
 	{
 		return utils::IsNullOrEmptyString($this->m_sHashed);
 	}
-	
+
 	public function GetHash()
 	{
 		return $this->m_sHashed;
 	}
-	
+
 	public function GetSalt()
 	{
 		return $this->m_sSalt;
 	}
-	
+
 	/**
 	 * Displays the password: displays some stars
 	 * @return string
@@ -97,19 +97,16 @@ class ormPassword
 	{
 		$bResult = false;
 		$aInfo = password_get_info($this->m_sHashed);
-		if (is_null($aInfo["algo"]) || $aInfo["algo"] === 0)
-		{
+		if (is_null($aInfo["algo"]) || $aInfo["algo"] === 0) {
 			//unknown, assume it's a legacy password
 			$sHashedPwd = $this->ComputeHash($sClearTextPassword);
 			$bResult = ($this->m_sHashed == $sHashedPwd);
-		}
-		else
-		{
+		} else {
 			$bResult = password_verify($sClearTextPassword, $this->m_sHashed);
 		}
 		return $bResult;
 	}
-		
+
 	/**
 	 * Computes the hashed version of a password using a unique salt
 	 * for this password. A unique salt is generated if needed
@@ -117,11 +114,9 @@ class ormPassword
 	 */
 	protected function ComputeHash($sClearTextPwd)
 	{
-		if ($this->m_sSalt == null)
-		{
+		if ($this->m_sSalt == null) {
 			$this->m_sSalt = SimpleCrypt::GetNewSalt();
 		}
 		return hash('sha256', $this->m_sSalt.$sClearTextPwd);
 	}
 }
-?>

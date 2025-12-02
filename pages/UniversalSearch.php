@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,6 +18,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\iTopWebPage;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/applicationcontext.class.inc.php');
@@ -31,13 +34,11 @@ ApplicationMenu::CheckMenuIdEnabled('UniversalSearchMenu');
 $oAppContext = new ApplicationContext();
 
 $oP = new iTopWebPage(Dict::S('UI:UniversalSearchTitle'));
-$oP->add_linked_script("../js/json.js");
-$oP->add_linked_script("../js/forms-json-utils.js");
-$oP->add_linked_script("../js/wizardhelper.js");
-$oP->add_linked_script("../js/wizard.utils.js");
-$oP->add_linked_script("../js/extkeywidget.js");
-$oP->add_linked_script("../js/jquery.blockUI.js");
-		
+$oP->LinkScriptFromAppRoot("js/forms-json-utils.js");
+$oP->LinkScriptFromAppRoot("js/wizardhelper.js");
+$oP->LinkScriptFromAppRoot("js/extkeywidget.js");
+$oP->LinkScriptFromAppRoot("js/jquery.blockUI.js");
+
 // From now on the context is limited to the the selected organization ??
 
 // Now render the content of the page
@@ -49,18 +50,17 @@ $sOperation = utils::ReadParam('operation', '');
 
 $oP->SetBreadCrumbEntry('ui-tool-universalsearch', Dict::S('Menu:UniversalSearchMenu'), Dict::S('Menu:UniversalSearchMenu+'), '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-
-
 //$sSearchHeaderForceDropdown
-$sSearchHeaderForceDropdown = '<select  id="select_class" name="baseClass" onChange="this.form.submit();">';
-$aClassLabels = array();
-foreach(MetaModel::GetClasses('bizmodel') as $sCurrentClass)
-{
-	$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
+$sSearchHeaderForceDropdown = '<select  id="select_class" name="baseClass" onChange="this.form.trigger(\'submit\');">';
+$aClassLabels = [];
+foreach (MetaModel::GetClasses('bizmodel, grant_by_profile') as $sCurrentClass) {
+	if ((MetaModel::HasCategory($sCurrentClass, 'grant_by_profile') && UserRights::IsActionAllowed($sCurrentClass, UR_ACTION_BULK_MODIFY))
+		|| (MetaModel::HasCategory($sCurrentClass, 'bizmodel') && UserRights::IsActionAllowed($sCurrentClass, UR_ACTION_BULK_READ))) {
+		$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
+	}
 }
 asort($aClassLabels);
-foreach($aClassLabels as $sCurrentClass => $sLabel)
-{
+foreach ($aClassLabels as $sCurrentClass => $sLabel) {
 	$sDescription = MetaModel::GetClassDescription($sCurrentClass);
 	$sSelected = ($sCurrentClass == $sBaseClass) ? " SELECTED" : "";
 	$sSearchHeaderForceDropdown .= "<option value=\"$sCurrentClass\" title=\"$sDescription\"$sSelected>$sLabel</option>";
@@ -68,35 +68,24 @@ foreach($aClassLabels as $sCurrentClass => $sLabel)
 $sSearchHeaderForceDropdown .= "</select>\n";
 //end of $sSearchHeaderForceDropdown
 
-
-try 
-{
-	if ($sOperation == 'search_form')
-	{
-			$sOQL = "SELECT $sClass $sOQLClause";
-			$oFilter = DBObjectSearch::FromOQL($sOQL);
-	}
-	else
-	{
+try {
+	if ($sOperation == 'search_form') {
+		$sOQL = "SELECT $sClass $sOQLClause";
+		$oFilter = DBObjectSearch::FromOQL($sOQL);
+	} else {
 		// Second part: advanced search form:
-		if (!empty($sFilter))
-		{
+		if (!empty($sFilter)) {
 			$oFilter = DBSearch::unserialize($sFilter);
-		}
-		else if (!empty($sClass))
-		{
+		} elseif (!empty($sClass)) {
 			$oFilter = new DBObjectSearch($sClass);
 		}
 	}
-}
-catch (CoreException $e)
-{
+} catch (CoreException $e) {
 	$oFilter = new DBObjectSearch($sClass);
 	$oP->P("<b>".Dict::Format('UI:UniversalSearch:Error', $e->getHtmlDesc())."</b>");
 }
 
-if ($oFilter != null)
-{
+if ($oFilter != null) {
 	$oSet = new CMDBObjectSet($oFilter);
 	$oBlock = new DisplayBlock($oFilter, 'search', false);
 	$aExtraParams = $oAppContext->GetAsHash();
@@ -108,7 +97,7 @@ if ($oFilter != null)
 	$aExtraParams['submit_on_load'] = false;
 	$oBlock->Display($oP, 0, $aExtraParams);
 
-	// Search results	
+	// Search results
 	$oResultBlock = new DisplayBlock($oFilter, 'list', false);
 	$oResultBlock->Display($oP, 1);
 

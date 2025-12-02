@@ -1,5 +1,14 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+
+$ibo-input-richtext-placeholder--height: $ibo-size-600 !default;
+$ibo-input-richtext-placeholder--width: 100% !default;
+
 .ibo-input-richtext-placeholder{
-  height: 200px;
-  width: 100%;
+  height: $ibo-input-richtext-placeholder--height;
+  width: $ibo-input-richtext-placeholder--width;
   visibility: hidden;
 }

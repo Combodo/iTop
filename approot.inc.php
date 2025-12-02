@@ -11,7 +11,7 @@ define('APPCONF', APPROOT.'conf/');
  *
  * @see ITOP_CORE_VERSION to get full iTop core version
  */
-define('ITOP_DESIGN_LATEST_VERSION', '3.2');
+define('ITOP_DESIGN_LATEST_VERSION', '3.3');
 
 /**
  * Constant containing the iTop core version, whatever application was built
@@ -23,11 +23,13 @@ define('ITOP_DESIGN_LATEST_VERSION', '3.2');
  * @used-by utils::GetItopVersionWikiSyntax()
  * @used-by iTopModulesPhpVersionIntegrationTest
  */
-define('ITOP_CORE_VERSION', '3.2.0');
+define('ITOP_CORE_VERSION', '3.3.0');
 
 /**
- * @since 3.0.4 N°6274 Allow to test if PHPUnit is currently running. Starting with PHPUnit 9.5 we'll be able to replace it with $GLOBALS['phpunit_version']
+ * @var string
+ * @since 3.0.4 3.1.0 3.2.0 N°6274 Allow to test if PHPUnit is currently running. Starting with PHPUnit 9.5 we'll be able to replace it with $GLOBALS['phpunit_version']
+ * @since 3.0.4 3.1.1 3.2.0 N°6976 Fix constant name (DeprecatedCallsLog error handler was never set)
  */
-define('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME', 'ITOP_PHPUNIT_RUNNING');
+const ITOP_PHPUNIT_RUNNING_CONSTANT_NAME = 'ITOP_PHPUNIT_RUNNING';
 
 require_once APPROOT.'bootstrap.inc.php';

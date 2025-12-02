@@ -1,23 +1,21 @@
 <?php
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Renderer\Console;
 
-
 use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
-use WebPage;
 
 class ConsoleBlockRenderer extends BlockRenderer
 {
-
 	/**
 	 * Add blocks to the page using twig template
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock UIBlock containing template using UIBlock tags
 	 * @param array $aContextParams
 	 *
@@ -40,7 +38,7 @@ class ConsoleBlockRenderer extends BlockRenderer
 	/**
 	 * Helper to use directly in TWIG to render a block and its sub blocks
 	 *
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
 	 * @param array $aContextParams
 	 *
@@ -66,12 +64,12 @@ class ConsoleBlockRenderer extends BlockRenderer
 			$oPage->AddDeferredBlock($oDeferredBlock);
 		}
 		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
-			static::AddDeferredBlocksToPage( $oPage, $oSubBlock);
+			static::AddDeferredBlocksToPage($oPage, $oSubBlock);
 		}
 	}
 
 	/**
-	 * @param \WebPage $oPage
+	 * @param WebPage $oPage
 	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
 	 * @param array $aContextParams
 	 *
@@ -81,11 +79,11 @@ class ConsoleBlockRenderer extends BlockRenderer
 	{
 		// CSS files
 		foreach ($oBlock->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
-			$oPage->add_linked_stylesheet($sFileAbsUrl);
+			$oPage->LinkStylesheetFromURI($sFileAbsUrl);
 		}
 		// JS files
 		foreach ($oBlock->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
-			$oPage->add_linked_script($sFileAbsUrl);
+			$oPage->LinkScriptFromURI($sFileAbsUrl);
 		}
 		static::AddCssJsTemplatesToPageRecursively($oPage, $oBlock, $aContextParams);
 	}

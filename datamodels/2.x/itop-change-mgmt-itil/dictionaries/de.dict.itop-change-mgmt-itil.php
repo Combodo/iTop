@@ -1,28 +1,17 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/*
-* @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2023 Combodo SARL
-* @licence	http://opensource.org/licenses/AGPL-3.0
-*		
-*/
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
+ */
+/**
+ * @author ITOMIG GmbH <martin.raenker@itomig.de>
+ *
+ */
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ChangeManagement' => 'Change Management',
 	'Menu:Change:Overview' => 'Übersicht',
 	'Menu:Change:Overview+' => '',
@@ -46,7 +35,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes der letzten sieben Tage nach Status',
 	'Tickets:Related:OpenChanges' => 'Offene Changes',
 	'Tickets:Related:RecentChanges' => 'Kürzlich erfolgte Changes (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -58,12 +47,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Change' => 'Change',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Status',
@@ -160,13 +148,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Abschließen',
 	'Class:Change/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:RoutineChange' => 'Routine Change',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Validieren',
@@ -191,13 +179,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Abschließen',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ApprovedChange' => 'Genehmigte Changes',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Datum der Genehmigung',
@@ -226,13 +214,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Abschließen',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:NormalChange' => 'Normaler Change',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Datum der Annahme',
@@ -261,13 +249,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Abschließen',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:EmergencyChange' => 'Emergency Change',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Validieren',
@@ -292,4 +280,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Abschließen',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-));
+]);

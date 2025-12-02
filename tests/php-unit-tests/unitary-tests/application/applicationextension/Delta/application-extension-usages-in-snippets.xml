@@ -71,16 +71,6 @@ class ExampleFor_iApplicationUIExtension extends \AbstractApplicationUIExtension
 }
       ]]></content>
     </snippet>
-    <snippet id="ExampleFor_iApplicationObjectExtension" _delta="define">
-      <placement>core</placement>
-      <rank>0</rank>
-      <content><![CDATA[
-class ExampleFor_iApplicationObjectExtension extends \AbstractApplicationObjectExtension
-{
-	// Do nothing, we just need the class to exists for the unit test
-}
-      ]]></content>
-    </snippet>
     <snippet id="ExampleFor_iPopupMenuExtension" _delta="define">
       <placement>core</placement>
       <rank>0</rank>
@@ -104,16 +94,6 @@ class ExampleFor_ApplicationPopupMenuItem extends \ApplicationPopupMenuItem
   {
 	  // Do nothing, we just need the class to exists for the unit test
   }
-}
-      ]]></content>
-    </snippet>
-    <snippet id="ExampleFor_iPageUIExtension" _delta="define">
-      <placement>core</placement>
-      <rank>0</rank>
-      <content><![CDATA[
-class ExampleFor_iPageUIExtension extends \AbstractPageUIExtension
-{
-	// Do nothing, we just need the class to exists for the unit test
 }
       ]]></content>
     </snippet>
@@ -236,6 +216,19 @@ CSS;
 }
       ]]></content>
     </snippet>
+    <snippet id="ExampleFor_iBackofficeSassExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iBackofficeSassExtension implements \iBackofficeSassExtension
+{
+	public function GetSass(): string
+	{
+		return "css/setup.scss";
+	}
+}
+      ]]></content>
+    </snippet>
     <snippet id="ExampleFor_iBackofficeDictEntriesExtension" _delta="define">
       <placement>core</placement>
       <rank>0</rank>
@@ -291,7 +284,7 @@ class ExampleFor_iQueryModifier implements \iQueryModifier
 
 	public function GetFieldExpression(QueryBuilderContext &$oBuild, $sClass, $sAttCode, $sColId, Expression $oFieldSQLExp, SQLQuery &$oSelect)
 	{
-	  // Do nothing, we just need the class to exists for the unit test
+	  return $oFieldSQLExp;
 	}
 }
       ]]></content>
@@ -349,6 +342,21 @@ class ExampleFor_iKPILoggerExtension implements \iKPILoggerExtension
 	public function LogOperation($oKpiLogData)
 	{
 	  // Do nothing, we just need the class to exists for the unit test
+	}
+}
+      ]]></content>
+    </snippet>
+    <snippet id="ExampleFor_iBackupExtraFilesExtension" _delta="define">
+      <placement>core</placement>
+      <rank>0</rank>
+      <content><![CDATA[
+class ExampleFor_iBackupExtraFilesExtension implements \iBackupExtraFilesExtension
+{
+	public function GetExtraFilesRelPaths(): array
+	{
+		return [
+		  'foo'
+		];
 	}
 }
       ]]></content>

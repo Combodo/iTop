@@ -20,41 +20,23 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
  */
 class AutoAliasServicePass implements CompilerPassInterface
 {
-    private $privateAliases = [];
-
     /**
-     * {@inheritdoc}
+     * @return void
      */
     public function process(ContainerBuilder $container)
     {
         foreach ($container->findTaggedServiceIds('auto_alias') as $serviceId => $tags) {
             foreach ($tags as $tag) {
                 if (!isset($tag['format'])) {
-                    throw new InvalidArgumentException(sprintf('Missing tag information "format" on auto_alias service "%s".', $serviceId));
+                    throw new InvalidArgumentException(\sprintf('Missing tag information "format" on auto_alias service "%s".', $serviceId));
                 }
 
                 $aliasId = $container->getParameterBag()->resolveValue($tag['format']);
                 if ($container->hasDefinition($aliasId) || $container->hasAlias($aliasId)) {
                     $alias = new Alias($aliasId, $container->getDefinition($serviceId)->isPublic());
                     $container->setAlias($serviceId, $alias);
-
-                    if (!$alias->isPublic()) {
-                        $alias->setPublic(true);
-                        $this->privateAliases[] = $alias;
-                    }
                 }
             }
         }
-    }
-
-    /**
-     * @internal to be removed in Symfony 6.0
-     */
-    public function getPrivateAliases(): array
-    {
-        $privateAliases = $this->privateAliases;
-        $this->privateAliases = [];
-
-        return $privateAliases;
     }
 }

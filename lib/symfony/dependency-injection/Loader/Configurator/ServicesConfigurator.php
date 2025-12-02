@@ -26,15 +26,15 @@ class ServicesConfigurator extends AbstractConfigurator
 {
     public const FACTORY = 'services';
 
-    private $defaults;
-    private $container;
-    private $loader;
-    private $instanceof;
-    private $path;
-    private $anonymousHash;
-    private $anonymousCount;
+    private Definition $defaults;
+    private ContainerBuilder $container;
+    private PhpFileLoader $loader;
+    private array $instanceof;
+    private ?string $path;
+    private string $anonymousHash;
+    private int $anonymousCount;
 
-    public function __construct(ContainerBuilder $container, PhpFileLoader $loader, array &$instanceof, string $path = null, int &$anonymousCount = 0)
+    public function __construct(ContainerBuilder $container, PhpFileLoader $loader, array &$instanceof, ?string $path = null, int &$anonymousCount = 0)
     {
         $this->defaults = new Definition();
         $this->container = $container;
@@ -70,7 +70,7 @@ class ServicesConfigurator extends AbstractConfigurator
      * @param string|null $id    The service id, or null to create an anonymous service
      * @param string|null $class The class of the service, or null when $id is also the class name
      */
-    final public function set(?string $id, string $class = null): ServiceConfigurator
+    final public function set(?string $id, ?string $class = null): ServiceConfigurator
     {
         $defaults = $this->defaults;
         $definition = new Definition();
@@ -80,7 +80,7 @@ class ServicesConfigurator extends AbstractConfigurator
                 throw new \LogicException('Anonymous services must have a class name.');
             }
 
-            $id = sprintf('.%d_%s', ++$this->anonymousCount, preg_replace('/^.*\\\\/', '', $class).'~'.$this->anonymousHash);
+            $id = \sprintf('.%d_%s', ++$this->anonymousCount, preg_replace('/^.*\\\\/', '', $class).'~'.$this->anonymousHash);
         } elseif (!$defaults->isPublic() || !$defaults->isPrivate()) {
             $definition->setPublic($defaults->isPublic() && !$defaults->isPrivate());
         }
@@ -101,7 +101,7 @@ class ServicesConfigurator extends AbstractConfigurator
      *
      * @return $this
      */
-    final public function remove(string $id): self
+    final public function remove(string $id): static
     {
         $this->container->removeDefinition($id);
         $this->container->removeAlias($id);
@@ -129,7 +129,7 @@ class ServicesConfigurator extends AbstractConfigurator
      */
     final public function load(string $namespace, string $resource): PrototypeConfigurator
     {
-        return new PrototypeConfigurator($this, $this->loader, $this->defaults, $namespace, $resource, true);
+        return new PrototypeConfigurator($this, $this->loader, $this->defaults, $namespace, $resource, true, $this->path);
     }
 
     /**
@@ -163,7 +163,7 @@ class ServicesConfigurator extends AbstractConfigurator
 
                 $services[$i] = $definition;
             } elseif (!$service instanceof ReferenceConfigurator) {
-                throw new InvalidArgumentException(sprintf('"%s()" expects a list of definitions as returned by "%s()" or "%s()", "%s" given at index "%s" for service "%s".', __METHOD__, InlineServiceConfigurator::FACTORY, ReferenceConfigurator::FACTORY, $service instanceof AbstractConfigurator ? $service::FACTORY.'()' : get_debug_type($service), $i, $id));
+                throw new InvalidArgumentException(\sprintf('"%s()" expects a list of definitions as returned by "%s()" or "%s()", "%s" given at index "%s" for service "%s".', __METHOD__, InlineServiceConfigurator::FACTORY, ReferenceConfigurator::FACTORY, $service instanceof AbstractConfigurator ? $service::FACTORY.'()' : get_debug_type($service), $i, $id));
             }
         }
 
@@ -180,7 +180,7 @@ class ServicesConfigurator extends AbstractConfigurator
     /**
      * Registers a service.
      */
-    final public function __invoke(string $id, string $class = null): ServiceConfigurator
+    final public function __invoke(string $id, ?string $class = null): ServiceConfigurator
     {
         return $this->set($id, $class);
     }

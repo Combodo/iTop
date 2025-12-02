@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,8 +20,10 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use DOMFormatException;
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
+use DOMFormatException;
 
 /**
  * Description of CreateBrick
@@ -33,12 +35,10 @@ use Combodo\iTop\DesignElement;
 class CreateBrick extends PortalBrick
 {
 	// Overloaded constants
-	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-plus';
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-plus fa-2x';
-	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/create/modal.html.twig';
-
+	public const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-plus';
+	public const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-plus fa-2x';
 	/** @var string DEFAULT_CLASS */
-	const DEFAULT_CLASS = '';
+	public const DEFAULT_CLASS = '';
 
 	// Overloaded variables
 	public static $sRouteName = 'p_create_brick';
@@ -48,6 +48,18 @@ class CreateBrick extends PortalBrick
 	/** @var array $aRules */
 	protected $aRules;
 
+	public const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/create/modal.html.twig';
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(
+			self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH.'create/modal.html.twig')
+		);
+	}
+
 	/**
 	 * Constructor
 	 */
@@ -56,7 +68,7 @@ class CreateBrick extends PortalBrick
 		parent::__construct();
 
 		$this->sClass = static::DEFAULT_CLASS;
-		$this->aRules = array();
+		$this->aRules = [];
 	}
 
 	/**
@@ -123,26 +135,24 @@ class CreateBrick extends PortalBrick
 
 		// Checking specific elements
 		/** @var \Combodo\iTop\DesignElement $oBrickSubNode */
-		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
-		{
-			switch ($oBrickSubNode->nodeName)
-			{
+		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode) {
+			switch ($oBrickSubNode->nodeName) {
 				case 'class':
 					$this->SetClass($oBrickSubNode->GetText(self::DEFAULT_CLASS));
 					break;
 
 				case 'rules':
 					/** @var \Combodo\iTop\DesignElement $oRuleNode */
-					foreach ($oBrickSubNode->GetNodes('*') as $oRuleNode)
-					{
-						if ($oRuleNode->hasAttribute('id') && $oRuleNode->getAttribute('id') !== '')
-						{
+					foreach ($oBrickSubNode->GetNodes('*') as $oRuleNode) {
+						if ($oRuleNode->hasAttribute('id') && $oRuleNode->getAttribute('id') !== '') {
 							$this->aRules[] = $oRuleNode->getAttribute('id');
-						}
-						else
-						{
-							throw new DOMFormatException('CreateBrick:  /rules/rule tag must have an "id" attribute and it must not be empty',
-								null, null, $oRuleNode);
+						} else {
+							throw new DOMFormatException(
+								'CreateBrick:  /rules/rule tag must have an "id" attribute and it must not be empty',
+								null,
+								null,
+								$oRuleNode
+							);
 						}
 					}
 					break;

@@ -152,7 +152,7 @@ $(function()
         _initChooseDefaultOperator: function()
 		{
             //if the class has an index, in order to maximize the performance, we force the default operator to "equal"
-            if (this.options.field.has_index && typeof this.options.available_operators['='] == 'object' && this.options.values.length == 0)
+			if (this.options.field.has_index && this.options.available_operators['='] != null && typeof this.options.available_operators['='] == 'object' && this.options.values.length == 0)
             {
                 this.options.operator = '=';
                 this.options.available_operators['='].rank = -1;//we want it to be the first displayed
@@ -226,7 +226,7 @@ $(function()
 
 			// Focus on right input
 			var oOpElemRadioChecked = this.element.find('.sfc_fg_operator .sfc_op_radio:checked');
-			var oOpElemInputFirst = oOpElemRadioChecked.closest('.sfc_fg_operator').find('.sfc_op_content input[type="text"]:first');
+			var oOpElemInputFirst = oOpElemRadioChecked.closest('.sfc_fg_operator').find('.sfc_op_content input[type="text"]').first();
 
 			oOpElemInputFirst.filter(':not([data-no-auto-focus])').trigger('click').trigger('focus');
 
@@ -656,7 +656,7 @@ $(function()
 				if ($(oEvent.target).is('input[type="text"], select')) {
 					return;
 				}
-				oOpContentElem.focus();
+				oOpContentElem.trigger('focus');
 			});
 			// - Mark as draft on key typing
 			oOpContentElem.on('keydown', function(oEvent){

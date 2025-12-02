@@ -1,36 +1,25 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	// Dictionary entries go here
+/**
+ *
+ */
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Mit dem iTop Hub verbinden',
 	'Menu:iTopHub:Register+' => ITOP_APPLICATION_SHORT.'-Instanzen über den iTop Hub updaten',
-	'Menu:iTopHub:Register:Description' => '<p>Zugriff auf die Community-Plattform iTop Hub!</br>Hier finden sie Informationen zu ihren '.ITOP_APPLICATION_SHORT.' Instanzen, können diese mit personalisierten Tools verwalten und sich Erweiterungen installieren.</br><br/>Durch die Verbindung mit dem iTop Hub, werden Informationen zu Ihrer '.ITOP_APPLICATION_SHORT.' Instanz zum iTop Hub übertragen.</p>',
+	'Menu:iTopHub:Register:Description' => '<p>Zugriff auf die Community-Plattform iTop Hub!<br>Hier finden sie Informationen zu ihren '.ITOP_APPLICATION_SHORT.' Instanzen, können diese mit personalisierten Tools verwalten und sich Erweiterungen installieren.<br><br>Durch die Verbindung mit dem iTop Hub, werden Informationen zu Ihrer '.ITOP_APPLICATION_SHORT.' Instanz zum iTop Hub übertragen.</p>',
 	'Menu:iTopHub:MyExtensions' => 'Installierte Erweiterungen',
 	'Menu:iTopHub:MyExtensions+' => 'Liste der auf ihrer '.ITOP_APPLICATION_SHORT.' Instanz installierten Erweiterungen',
 	'Menu:iTopHub:BrowseExtensions' => 'Erweiterungen vom iTop Hub beziehen',
 	'Menu:iTopHub:BrowseExtensions+' => 'Mehr Erweiterungen auf dem iTop Hub entdecken',
-	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Zugriff auf die Community-Plattform iTop Hub!</br>Hier finden sie Informationen zu ihren '.ITOP_APPLICATION_SHORT.' Instanzen, können diese mit personalisierten Tools verwalten und sich Erweiterungen installieren.</br><br/>Durch die Verbindung mit dem iTop Hub, werden Informationen zu Ihrer '.ITOP_APPLICATION_SHORT.' Instanz zum iTop Hub übertragen.</p>',
+	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Zugriff auf die Community-Plattform iTop Hub!<br>Hier finden sie Informationen zu ihren '.ITOP_APPLICATION_SHORT.' Instanzen, können diese mit personalisierten Tools verwalten und sich Erweiterungen installieren.<br><br>Durch die Verbindung mit dem iTop Hub, werden Informationen zu Ihrer '.ITOP_APPLICATION_SHORT.' Instanz zum iTop Hub übertragen.</p>',
 	'iTopHub:GoBtn' => 'Gehe zum iTop Hub',
 	'iTopHub:CloseBtn' => 'Schließen',
 	'iTopHub:GoBtn:Tooltip' => 'Gehe zu www.itophub.io',
@@ -45,7 +34,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopHub:Landing:Status' => 'Installationsstatus',
 	'iTopHub:Landing:Install' => 'Erweiterungen werden installiert...',
 	'iTopHub:CompiledOK' => 'Installation erfolgreich',
-	'iTopHub:ConfigurationSafelyReverted' => 'Fehler während der Installation!<br/>'.ITOP_APPLICATION_SHORT.' Konfiguration wurde NICHT angepasst.',
+	'iTopHub:ConfigurationSafelyReverted' => 'Fehler während der Installation!<br>'.ITOP_APPLICATION_SHORT.' Konfiguration wurde NICHT angepasst.',
 	'iTopHub:FailAuthent' => 'Die Authentifizierung für diese Aktion ist fehlgeschlagen.',
 	'iTopHub:InstalledExtensions' => 'Erweiterungen, die auf dieser Instanz installiert sind',
 	'iTopHub:ExtensionCategory:Manual' => 'Manuell installierte Erweiterungen',
@@ -76,6 +65,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s Version: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Installiert',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>NICHT</b> installiert.',
-));
-
-
+]);

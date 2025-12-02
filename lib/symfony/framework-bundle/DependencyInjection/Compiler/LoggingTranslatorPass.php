@@ -17,11 +17,18 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+trigger_deprecation('symfony/framework-bundle', '6.4', 'The "%s" class is deprecated, use "%s" instead.', LoggingTranslatorPass::class, \Symfony\Component\Translation\DependencyInjection\LoggingTranslatorPass::class);
+
 /**
  * @author Abdellatif Ait boudad <a.aitboudad@gmail.com>
+ *
+ * @deprecated since Symfony 6.4, use Symfony\Component\Translation\DependencyInjection\LoggingTranslatorPass instead.
  */
 class LoggingTranslatorPass implements CompilerPassInterface
 {
+    /**
+     * @return void
+     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasAlias('logger') || !$container->hasAlias('translator')) {
@@ -34,7 +41,7 @@ class LoggingTranslatorPass implements CompilerPassInterface
             $class = $container->getParameterBag()->resolveValue($definition->getClass());
 
             if (!$r = $container->getReflectionClass($class)) {
-                throw new InvalidArgumentException(sprintf('Class "%s" used for service "%s" cannot be found.', $class, $translatorAlias));
+                throw new InvalidArgumentException(\sprintf('Class "%s" used for service "%s" cannot be found.', $class, $translatorAlias));
             }
             if ($r->isSubclassOf(TranslatorInterface::class) && $r->isSubclassOf(TranslatorBagInterface::class)) {
                 $container->getDefinition('translator.logging')->setDecoratedService('translator');

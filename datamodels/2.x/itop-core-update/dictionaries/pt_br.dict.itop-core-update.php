@@ -1,32 +1,23 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+/**
+ *
+ */
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'iTopUpdate:UI:PageTitle' => 'Atualização do '.ITOP_APPLICATION_SHORT,
 	'itop-core-update:UI:SelectUpdateFile' => 'Atualização do '.ITOP_APPLICATION_SHORT,
 	'itop-core-update:UI:ConfirmUpdate' => 'Atualização do '.ITOP_APPLICATION_SHORT,
 	'itop-core-update:UI:UpdateCoreFiles' => 'Atualização do '.ITOP_APPLICATION_SHORT,
 	'iTopUpdate:UI:MaintenanceModeActive' => 'O '.ITOP_APPLICATION_SHORT.' encontra-se em manutenção, nenhum usuário pode acessar a aplicação. Você precisa rodar o Setup ou restaurar os arquivos da aplicação para voltar ao modo normal',
 	'itop-core-update:UI:UpdateDone' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+
 	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Atualização do '.ITOP_APPLICATION_SHORT,
 	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Confirmar Atualização do '.ITOP_APPLICATION_SHORT,
 	'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Aplicação em Atualização',
@@ -39,8 +30,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopUpdate:UI:NewVersion' => 'Nova versão',
 	'iTopUpdate:UI:Back' => 'Voltar',
 	'iTopUpdate:UI:Cancel' => 'Cancelar',
+	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>Alguns módulos novos foram detectados</b>, uma atualização parcial não pode ser executada.</br>Siga o <a target="_blank" href="%2$s"> procedimento</a> para atualizar manualmente seu iTop. Você deve usar o <a href="%1$s">Setup</a> para atualizar a aplicação.',
 	'iTopUpdate:UI:Continue' => 'Continuar',
-	'iTopUpdate:UI:RunSetup' => 'Rodar Setup',
+	'iTopUpdate:UI:RunSetup' => 'Executar Setup',
 	'iTopUpdate:UI:WithDBBackup' => 'Backup do banco de dados',
 	'iTopUpdate:UI:WithFilesBackup' => 'Backup dos arquivos da aplicação',
 	'iTopUpdate:UI:WithoutBackup' => 'Backup não planejado',
@@ -70,11 +62,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Aplicação não pode ser atualizada: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Atenção: a atualização da aplicação pode falhar: %1$s',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Alguns arquivos modificados foram detectados</b>, uma atualização parcial não pode ser executada.</br>Siga o <a target="_blank" href="%2$s"> procedimento</a> para atualizar manualmente seu iTop. Você deve usar o <a href="%1$s">Setup</a> para atualizar a aplicação.',
-	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>Alguns módulos novos foram detectados</b>, uma atualização parcial não pode ser executada.</br>Siga o <a target="_blank" href="%2$s"> procedimento</a> para atualizar manualmente seu iTop. Você deve usar o <a href="%1$s">Setup</a> para atualizar a aplicação.',
 	'iTopUpdate:UI:CheckInProgress' => 'Aguarde a verificação de integridade',
 	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup~~',
 	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?~~',
-    // Setup Messages
+	'iTopUpdate:UI:FastSetupLaunch' => 'Fast Setup~~',
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Pronto para começar',
 	'iTopUpdate:UI:SetupMessage:EnterMaintenance' => 'Entrando em modo manutenção',
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Backup do banco de dados',
@@ -85,7 +76,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Atualizar banco de dados',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Saindo do modo manutenção',
 	'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Atualização completa',
-    // Errors
 	'iTopUpdate:Error:MissingFunction' => 'Impossível iniciar a atualização, função ausente',
 	'iTopUpdate:Error:MissingFile' => 'O arquivo %1$s está ausente',
 	'iTopUpdate:Error:CorruptedFile' => 'O arquivo %1$s está corrompido',
@@ -103,11 +93,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopUpdate:UI:UpdateDone' => 'Atualizado com sucesso',
 	'Menu:iTopUpdate' => 'Atualização do '.ITOP_APPLICATION_SHORT,
 	'Menu:iTopUpdate+' => 'Atualização do '.ITOP_APPLICATION_SHORT,
-    // Missing itop entries
 	'Class:ModuleInstallation/Attribute:installed' => 'Instalado em',
 	'Class:ModuleInstallation/Attribute:name' => 'Nome',
 	'Class:ModuleInstallation/Attribute:version' => 'Versão',
 	'Class:ModuleInstallation/Attribute:comment' => 'Comentário',
-));
-
-
+]);

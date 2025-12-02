@@ -1,27 +1,14 @@
 <?php
+
 /**
- * Localized data
+ * Spanish Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Miguel Turrubiates <miguel_tf@yahoo.com>
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'iTopUpdate:UI:PageTitle' => 'Actualización de aplicación',
 	'itop-core-update:UI:SelectUpdateFile' => 'Seleccionar archivo',
 	'itop-core-update:UI:ConfirmUpdate' => 'Confirmar actualización',
@@ -52,7 +39,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'Durante la actualización, la aplicación estará en modo sólo lectura.',
 	'iTopUpdate:UI:Status' => 'Estado',
 	'iTopUpdate:UI:Action' => 'Actualización',
-	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup~~',
+	'iTopUpdate:UI:Setup' => 'Configuración '.ITOP_APPLICATION_SHORT,
 	'iTopUpdate:UI:History' => 'Historial de versiones',
 	'iTopUpdate:UI:Progress' => 'Progreso de actualización',
 	'iTopUpdate:UI:DoBackup:Label' => 'Respaldo de archivos y base de datos',
@@ -71,11 +58,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'La aplicación no puede ser actualizada: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Advertencia: la actualización de la aplicación puede fallar: %1$s',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => 'Debe usar <a href="%1$s">setup</a> para actualizar la aplicación.<br />Algunos archivos modificados fueron detectados, una actualización parcial no puede ser realizada.',
-	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check~~',
-	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup~~',
-	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?~~',
-
-	// Setup Messages
+	'iTopUpdate:UI:CheckInProgress' => 'Espere durante la verificación de integridad',
+	'iTopUpdate:UI:SetupLaunch' => 'Inicie configuración '.ITOP_APPLICATION_SHORT,
+	'iTopUpdate:UI:SetupLaunchConfirm' => 'Esto iniciará configuración '.ITOP_APPLICATION_SHORT.', ¿Está seguro?',
+	'iTopUpdate:UI:FastSetupLaunch' => 'Fast Setup~~',
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Listo para empezar',
 	'iTopUpdate:UI:SetupMessage:EnterMaintenance' => 'Entrando en modo mantenimiento',
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Respaldo de base de datos',
@@ -86,8 +72,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Actualizar base de datos',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Saliendo del modo mantenimiento',
 	'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Actualización completada',
-
-	// Errors
 	'iTopUpdate:Error:MissingFunction' => 'Imposible comenzar actualización, función no disponible',
 	'iTopUpdate:Error:MissingFile' => 'Archivo no encontrado: %1$s',
 	'iTopUpdate:Error:CorruptedFile' => 'El archivo %1$s está corrupto',
@@ -105,12 +89,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'iTopUpdate:UI:UpdateDone' => 'Actualización éxitosa',
 	'Menu:iTopUpdate' => 'Actualización de aplicación',
 	'Menu:iTopUpdate+' => 'Actualización de aplicación',
-
-    // Missing itop entries
 	'Class:ModuleInstallation/Attribute:installed' => 'Instalado en',
 	'Class:ModuleInstallation/Attribute:name' => 'Nombre',
 	'Class:ModuleInstallation/Attribute:version' => 'Versión',
 	'Class:ModuleInstallation/Attribute:comment' => 'Comentario',
-));
-
-
+]);

@@ -1,26 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+/**
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'iTopUpdate:UI:PageTitle' => 'Mise à jour de l\'application',
 	'itop-core-update:UI:SelectUpdateFile' => 'Mise à jour',
 	'itop-core-update:UI:ConfirmUpdate' => 'Confirmation de la mise à jour',
@@ -73,8 +63,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopUpdate:UI:CheckInProgress' => 'Veuillez patienter pendant la vérification d\'intégrité',
 	'iTopUpdate:UI:SetupLaunch' => 'Lancer le Setup',
 	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?',
-
-	// Setup Messages
+	'iTopUpdate:UI:FastSetupLaunch' => 'Setup rapide',
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Prêt pour l\\installation',
 	'iTopUpdate:UI:SetupMessage:EnterMaintenance' => 'Application en maintenance',
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Sauvegarde des fichiers de l\'application',
@@ -85,8 +74,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Mise à jour de la base de données',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Application en utilisation normale',
 	'iTopUpdate:UI:SetupMessage:UpdateDone' => 'Installation terminée',
-
-	// Errors
 	'iTopUpdate:Error:MissingFunction' => 'Impossible de mettre à jour',
 	'iTopUpdate:Error:MissingFile' => 'Ficher manquant : %1$s',
 	'iTopUpdate:Error:CorruptedFile' => 'Le fichier %1$s est corrompu',
@@ -104,12 +91,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopUpdate:UI:UpdateDone' => 'Mise à jour effectuée',
 	'Menu:iTopUpdate' => 'Mise à jour de l\'application',
 	'Menu:iTopUpdate+' => 'Mise à jour de l\'application',
-
-    // Missing itop entries
 	'Class:ModuleInstallation/Attribute:installed' => 'Installé le',
 	'Class:ModuleInstallation/Attribute:name' => 'Nom',
 	'Class:ModuleInstallation/Attribute:version' => 'Version',
 	'Class:ModuleInstallation/Attribute:comment' => 'Commentaire',
-));
-
-
+]);

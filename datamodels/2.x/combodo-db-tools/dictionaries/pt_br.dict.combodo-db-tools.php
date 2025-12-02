@@ -1,28 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-// Database inconsistencies
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	// Dictionary entries go here
+/**
+ *
+ */
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:DBToolsMenu' => 'Ferramentas de Banco de Dados',
 	'DBTools:Class' => 'Classe',
 	'DBTools:Title' => 'Manutenção do Banco de Dados',
@@ -56,17 +44,17 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'DBAnalyzer-Fetch-Count-Error' => 'Erro na busca em `%1$s`, %2$d registros buscados / %3$d contados',
 	'DBAnalyzer-Integrity-FinalClass' => 'Campo `%2$s`.`%1$s` precisa ter o mesmo valor que `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Campo `%2$s`.`%1$s` precisa conter uma classe válida',
-));
+]);
 
 // Database Info
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'DBTools:DatabaseInfo' => 'Informação do banco de dados',
 	'DBTools:Base' => 'Banco',
 	'DBTools:Size' => 'Tamanho',
-));
+]);
 
 // Lost attachments
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'DBTools:LostAttachments' => 'Anexos perdidos',
 	'DBTools:LostAttachments:Disclaimer' => 'Aqui você procurará no seu banco de dados por anexos perdidos. Isto NÃO é uma ferramenta de recuperação de dados, pois não busca dados apagados',
 	'DBTools:LostAttachments:Button:Analyze' => 'Analisar',
@@ -83,5 +71,5 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Resultado da restauração:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d anexo(s) recuperado(s)',
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Armazenar como imagem embutida',
-	'DBTools:LostAttachments:History' => 'Anexo "%1$s" recuperado com as Ferramentas de Banco de Dados'
-));
+	'DBTools:LostAttachments:History' => 'Anexo "%1$s" recuperado com as Ferramentas de Banco de Dados',
+]);

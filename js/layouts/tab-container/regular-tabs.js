@@ -43,7 +43,7 @@ $.widget( "itop.regulartabs", $.ui.tabs, {
 			// the body anyway.
 			.on( "focus" + this.eventNamespace, ".ui-tabs-anchor", function() {
 				if ( $( this ).closest( "li" ).is( ".ui-state-disabled" ) ) {
-					this.blur();
+					this.trigger('blur');
 				}
 			} );
 

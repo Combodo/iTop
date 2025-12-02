@@ -1,9 +1,7 @@
-{# itop-portal-base/portal/templates/bricks/browse/mode_list.html.twig #}
-{# Browse brick list mode layout #}
-{% extends 'itop-portal-base/portal/templates/bricks/browse/layout.html.twig' %}
+{% extends template('page', 'Combodo\\iTop\\Portal\\Brick\\BrowseBrick', oBrick) %}
 
 {% block bBrowseMainContent%}
-	<table id="brick-content-table" class="object-list table table-striped table-bordered responsive" cellspacing="0" width="100%">
+	<table id="brick-content-table" class="object-list table table-striped responsive">
 		<tbody>
 		</tbody>
 	</table>
@@ -11,8 +9,8 @@
 
 {% block pPageLiveScripts %}
 	{{ parent() }}
-		
-	<script type="text/javascript">
+
+    <script type="text/javascript">
 		var sBrowseMode = '{{ sBrowseMode }}';
 		var sDataLoading = '{{ sDataLoading }}';
 		var oLevelsProperties = {{ aLevelsProperties|raw }};
@@ -22,8 +20,8 @@
 		var iSearchThrottle = 600;
 		var oKeyTimeout;
 		var aKeyTimeoutFilteredKeys = [9, 16, 17, 18, 19, 27, 33, 34, 35, 36, 37, 38, 39, 40]; // Tab, Shift, Ctrl, Alt, Pause, Esc, Page Up/Down, Home, End, Left/Up/Right/Down arrows
-		
-		// Show a loader inside the table
+
+        // Show a loader inside the table
 		var showTableLoader = function(oElem)
 		{
 			oElem.children('tbody').html('<tr><td class="datatables_overlay" colspan="100">' + $('#page_overlay').html() + '</td></tr>');
@@ -32,8 +30,8 @@
 		var getColumnsDefinition = function()
 		{
 			var aColumnsDefinition = [];
-			
-			for(sKey in oLevelsProperties)
+
+            for (sKey in oLevelsProperties)
 			{
 				// Level main column
 				aColumnsDefinition.push({
@@ -46,6 +44,8 @@
 					"data": oLevelsProperties[sKey].alias,
 					"render":
 						{_: function(data, type, row){
+                                let wrapperElement = $('<div></div>');
+                                wrapperElement.addClass('ipb-table--actions--wrapper');
 							var cellElem;
 							var levelAltId = data.level_alias+'_'+data.id;
 							var levelActions;
@@ -66,7 +66,8 @@
 							levelActionsKeys = Object.keys(levelActions);
 
 							// Preparing the cell data
-							cellElem = (levelActionsKeys.length > 0) ? $('<a></a>') : $('<span></span>');
+                                cellElem = (levelActionsKeys.length > 0) ? $('<a></a>') : $('<span></span>');
+                                wrapperElement.append(cellElem);
 							cellElem.attr('data-item-id', data.id).attr('data-level-alias', data.level_alias);
 
 							// Building metadata
@@ -125,13 +126,12 @@
 									}
 
 									// Preparing secondary actions container
-									var actionsElem = $('<div></div>').addClass('pull-right group-actions');
-									cellElem.append(actionsElem);
+                                    var actionsElem = $('<div></div>').addClass('group-actions');
+                                    wrapperElement.append(actionsElem);
 									// Preparing secondary actions
-									var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
-									var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
-									var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
-									actionsSSMenuElem.append(actionsSSMenuContainerElem);
+                                    var actionsSSTogglerElem = $('<button class="ipb-button btn btn-default alternative" data-toggle="ipb-dropdown" data-target="#item-actions-menu-' + levelAltId + '"><i class="fas fa-ellipsis-v"></i></button>');
+									var actionsSSMenuElem = $('<ipb-dropdown id="item-actions-menu-'+levelAltId+'" data-placement="left" class="item-action-wrapper"></ipb-dropdown>');
+
 									actionsElem.append(actionsSSTogglerElem);
 									actionsElem.append(actionsSSMenuElem);
 
@@ -140,7 +140,7 @@
 									{
 										var action = actionsButtons[j];
 										var actionElem = $('<a></a>');
-										var actionIconElem = $('<span></span>').appendTo(actionElem);
+										var actionIconElem = $('<span></span>').addClass('ipb-dropdown--icon').appendTo(actionElem);
 
 										switch(action.type)
 										{
@@ -174,12 +174,12 @@
 										}
 
 										actionElem.append(action.title);
-										actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
+                                        actionsSSMenuElem.append( $('<li></li>').append(actionElem) );
 									}
 								}
 							}
 
-							return cellElem.prop('outerHTML');
+                                return wrapperElement.prop('outerHTML');
 						},
 						filter:function (data, type, row) {
                         	return $.text($.parseHTML(data.name));
@@ -189,8 +189,8 @@
 						},
 					},
 				});
-				
-				// Level's fields columns
+
+                // Level's fields columns
 				if(oLevelsProperties[sKey].fields !== undefined)
 				{
 					for(var i in oLevelsProperties[sKey].fields)
@@ -231,15 +231,15 @@
 					}
 				}
 			}
-			
-			return aColumnsDefinition;
+
+            return aColumnsDefinition;
 		};
-		
-		$(document).ready(function()
+
+        $(document).ready(function ()
 		{
 			showTableLoader($('#brick-content-table'));
-			
-			// Note : Those options should be externalized in an library so we can use them on any DataTables for the portal.
+
+            // Note : Those options should be externalized in an library so we can use them on any DataTables for the portal.
 			// We would just have to override / complete the necessary elements
 			oTable = $('#brick-content-table').DataTable({
 				"language": {
@@ -331,8 +331,8 @@
 			// Note : The '.off()' call is to unbind event from DataTables that where triggered before we could intercept anything
 			$('#brick-content-table_filter input').off().on('keyup', function(event){
 				var me = this;
-				
-				// We trigger the search only if those keys where not pressed
+
+                // We trigger the search only if those keys where not pressed
 				if(aKeyTimeoutFilteredKeys.indexOf(event.which) < 0)
 				{
 					clearTimeout(oKeyTimeout);
@@ -348,11 +348,11 @@
 					showTableLoader($(this));
 				}
 			});
-			
-			// Auto collapse item actions popup
-			$('body').on('click', function(){
-				$('table .item-action-wrapper.collapse.in').collapse('hide');
-			});
+
+            // Auto collapse item actions popup
+			// $('body').on('click', function(){
+			// 	$('table .item-action-wrapper.collapse.in').collapse('hide');
+			// });
 		});
 	</script>
 {% endblock %}

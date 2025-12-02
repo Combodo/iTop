@@ -1,12 +1,16 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-//
-// Class: UserRequest
-//
-Dict::Add('FR FR', 'French', 'Français', array(
+/**
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:RequestManagement' => 'Gestion des demandes',
 	'Menu:RequestManagement+' => 'Gestion des demandes utilisateurs',
 	'Menu:RequestManagementProvider' => 'Gestion des demandes fournisseurs',
@@ -32,13 +36,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Demandes utilisateurs qui me sont assignées',
 	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Requêtes des 14 derniers jours par type',
 	'UI-RequestManagementOverview-Last-14-days' => 'Requêtes des 14 derniers jours',
-	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Requêtes ouvertes par statut',
+	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Requêtes ouvertes par état',
 	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Requêtes ouvertes par agent',
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Requêtes ouvertes par type',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requêtes ouvertes par client',
 	'Class:UserRequest:KnownErrorList' => 'Erreurs connues',
 	'Class:UserRequest:KnownErrorList+' => 'Erreurs connues liées à des éléments de configuration impactés par ce ticket',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -54,7 +58,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: UserRequest
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:UserRequest' => 'Demande Utilisateur',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Etat',
@@ -157,6 +161,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Attribute:tto+' => 'Delai garanti d\'assignation',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',
 	'Class:UserRequest/Attribute:ttr+' => 'Délai garanti de résolution',
+	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO temps passé',
+	'Class:UserRequest/Attribute:tto_time_spent+' => '',
+	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR temps passé',
+	'Class:UserRequest/Attribute:ttr_time_spent+' => '',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'Echéance TTO',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => '',
 	'Class:UserRequest/Attribute:sla_tto_passed' => 'SLA TTO dépassé ?',
@@ -209,6 +217,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Requêtes filles',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Toutes les requêtes liées à cette requête parente',
+	'Class:UserRequest/Attribute:related_request_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:UserRequest/Attribute:related_request_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:UserRequest/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:UserRequest/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:UserRequest/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:UserRequest/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
 	'Class:UserRequest/Attribute:public_log' => 'Journal public',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Satisfaction client',
@@ -252,20 +266,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'La demande parente ne peut pas être assignée à elle même',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution de la demande (ev_autoresolve), et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
-));
+]);
 
-
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Organization:Overview:UserRequests' => 'Demandes Utilisateurs pour cette organisation',
 	'Organization:Overview:MyUserRequests' => 'Mes Demandes Utilisateurs pour cette organisation',
 	'Organization:Overview:Tickets' => 'Les Tickets de cette organisation',
-));
-// 1:n relations custom labels for tooltip and pop-up title
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:UserRequest/Attribute:related_request_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:UserRequest/Attribute:related_request_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:UserRequest/Attribute:related_request_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:UserRequest/Attribute:related_request_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
-	'Class:UserRequest/Attribute:related_request_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:UserRequest/Attribute:related_request_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s'
-));
+]);

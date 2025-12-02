@@ -1,28 +1,16 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-//
-// Class: Ticket
-//
-Dict::Add('FR FR', 'French', 'Français', array(
+/**
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Référence',
@@ -63,6 +51,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Tous les éléments de configuration impactés par ce ticket. Les éléments marqués comme "Calculés" sont le résultat du calcul de l\'analyse d\'impact. Les éléments marqués comme "Non impactés" sont exclus de cette analyse.',
 	'Class:Ticket/Attribute:workorders_list' => 'Tâches',
 	'Class:Ticket/Attribute:workorders_list+' => 'Toutes les tâches de ce ticket',
+	'Class:Ticket/Attribute:workorders_list/UI:Links:Create:Button+' => 'Créer une %4$s',
+	'Class:Ticket/Attribute:workorders_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
+	'Class:Ticket/Attribute:workorders_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
+	'Class:Ticket/Attribute:workorders_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
+	'Class:Ticket/Attribute:workorders_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
+	'Class:Ticket/Attribute:workorders_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 	'Class:Ticket/Attribute:finalclass' => 'Sous-classe de Ticket',
 	'Class:Ticket/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:Ticket/Attribute:operational_status' => 'Etat agrégé',
@@ -74,14 +68,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Clos',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => 'Fermé',
 	'Ticket:ImpactAnalysis' => 'Analyse d\'Impact',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContactToTicket' => 'Lien Contact / Ticket',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
@@ -101,13 +94,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Ajouté manuellement',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Calculé',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Ne pas notifier',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:WorkOrder' => 'Tâche',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => 'Nom',
@@ -140,11 +133,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Fermer',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Ticket:baseinfo' => 'Informations générales',
 	'Ticket:date' => 'Dates',
 	'Ticket:contact' => 'Contacts',
@@ -230,30 +222,29 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:cmdbAbstractObject/Method:ApplyStimulus+' => 'Applique le stimulus spécifié à l\'objet courant',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1' => 'Code du stimulus',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1+' => 'Un code de stimulus valide pour la classe courante',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Button+' => 'Créer un %4$s',
+	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
+	'Class:Person/Attribute:tickets_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
+	'Class:Person/Attribute:tickets_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
+	'Class:Person/Attribute:tickets_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Person/Attribute:tickets_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer' => 'Temps d\'Assignation (TTO)',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Objectif calculé à partir d\'un SLT de type TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Temps de Résolution (TTR)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Objectif calculé à partir d\'un SLT de type TTR',
-));
-// 1:n relations custom labels for tooltip and pop-up title
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:Person/Attribute:tickets_list/UI:Links:Create:Button+' => 'Créer un %4$s',
-	'Class:Person/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Person/Attribute:tickets_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Person/Attribute:tickets_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de sa %1$s',
-	'Class:Person/Attribute:tickets_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
-	'Class:Person/Attribute:tickets_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
 	'Class:Team/Attribute:tickets_list/UI:Links:Create:Button+' => 'Créer un %4$s',
 	'Class:Team/Attribute:tickets_list/UI:Links:Create:Modal:Title' => 'Ajouter un %4$s à %2$s',
-	'Class:Team/Attribute:tickets_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Team/Attribute:tickets_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
 	'Class:Team/Attribute:tickets_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
 	'Class:Team/Attribute:tickets_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
-	'Class:Ticket/Attribute:workorders_list/UI:Links:Create:Button+' => 'Créer une %4$s',
-	'Class:Ticket/Attribute:workorders_list/UI:Links:Create:Modal:Title' => 'Ajouter une %4$s à %2$s',
-	'Class:Ticket/Attribute:workorders_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:Ticket/Attribute:workorders_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
-	'Class:Ticket/Attribute:workorders_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
-	'Class:Ticket/Attribute:workorders_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s'
-));
+	'Class:Team/Attribute:tickets_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
+	'Class:Team/Attribute:tickets_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+]);
 
+//
+// Class: Ticket
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:Ticket/Attribute:team_email' => 'Email équipe',
+	'Class:Ticket/Attribute:team_email+' => '',
+]);

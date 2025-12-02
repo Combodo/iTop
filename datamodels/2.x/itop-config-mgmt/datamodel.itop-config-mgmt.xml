@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="FunctionalCI" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
-        <category>bizmodel,searchable</category>
+        <category>bizmodel,searchable,popular</category>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>functionalci</db_table>
@@ -77,7 +77,7 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-        <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+        <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkContactToFunctionalCI</linked_class>
           <ext_key_to_me>functionalci_id</ext_key_to_me>
           <count_min>0</count_min>
@@ -4351,7 +4351,6 @@
             </item>
             <item id="document_id">
               <rank>20</rank>
-              <rank>20</rank>
             </item>
           </items>
         </list>
@@ -4491,6 +4490,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <style>
           <icon/>
         </style>
@@ -4509,6 +4511,13 @@
         </uniqueness_rules>
       </properties>
       <fields>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="physicaldevices_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalDevice</linked_class>
           <ext_key_to_me>brand_id</ext_key_to_me>
@@ -4525,8 +4534,11 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="physicaldevices_list">
+            <item id="logo">
               <rank>20</rank>
+            </item>
+            <item id="physicaldevices_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -4544,6 +4556,13 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="Model" _delta="define">
@@ -4564,6 +4583,9 @@
             <attribute id="type"/>
           </complementary_attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>picture</image_attribute>
+        </fields_semantic>
         <style>
           <icon/>
         </style>
@@ -4595,6 +4617,13 @@
         <field id="brand_name" xsi:type="AttributeExternalField">
           <extkey_attcode>brand_id</extkey_attcode>
           <target_attcode>name</target_attcode>
+        </field>
+        <field id="picture" xsi:type="AttributeImage">
+          <display_max_width>256</display_max_width>
+          <display_max_height>256</display_max_height>
+          <storage_max_width>512</storage_max_width>
+          <storage_max_height>512</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="type" xsi:type="AttributeEnum">
           <sort_type>label</sort_type>
@@ -4678,11 +4707,14 @@
             <item id="brand_id">
               <rank>20</rank>
             </item>
-            <item id="type">
+            <item id="picture">
               <rank>30</rank>
             </item>
-            <item id="physicaldevices_list">
+            <item id="type">
               <rank>40</rank>
+            </item>
+            <item id="physicaldevices_list">
+              <rank>50</rank>
             </item>
           </items>
         </details>
@@ -4716,6 +4748,9 @@
             </item>
             <item id="type">
               <rank>20</rank>
+            </item>
+            <item id="picture">
+              <rank>30</rank>
             </item>
           </items>
         </summary>
@@ -5700,8 +5735,7 @@
           <duplicates/>
         </field>
       </fields>
-      <methods>
-			</methods>
+      <methods/>
       <presentation>
         <details>
           <items>
@@ -6353,17 +6387,7 @@
             <attribute id="connectableci_id"/>
           </attributes>
         </reconciliation>
-        <uniqueness_rules>
-          <rule id="no_duplicate">
-            <attributes>
-              <attribute id="networkdevice_id"/>
-              <attribute id="connectableci_id"/>
-            </attributes>
-            <filter><![CDATA[]]></filter>
-            <disabled>false</disabled>
-            <is_blocking>true</is_blocking>
-          </rule>
-        </uniqueness_rules>
+        <uniqueness_rules/>
       </properties>
       <fields>
         <field id="networkdevice_id" xsi:type="AttributeExternalKey">
@@ -7204,7 +7228,12 @@
     </class>
     <class id="DocumentFile" _delta="must_exist">
       <presentation>
-        <details><items><item id="cis_list" _delta="define"><rank>70</rank></item></items>&gt;
+        <details>
+          <items>
+            <item id="cis_list" _delta="define">
+              <rank>70</rank>
+            </item>
+          </items>
         </details>
       </presentation>
     </class>

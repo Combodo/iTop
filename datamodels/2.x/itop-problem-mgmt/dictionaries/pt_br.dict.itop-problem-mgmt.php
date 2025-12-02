@@ -1,49 +1,16 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+/**
+ *
+ */
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:ProblemManagement' => 'Gerenciamento de problemas',
 	'Menu:ProblemManagement+' => 'Lista de gerenciamento de problemas',
 	'Menu:Problem:Overview' => 'Visão geral',
@@ -66,12 +33,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Painel de gerenciamento de problemas',
 	'UI:ProblemMgmtMenuOverview:Title+' => '',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Problem' => 'Problema',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Status',
@@ -131,11 +98,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Problem/Attribute:resolution_date' => 'Data de solução',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Erros conhecidos',
-	'Class:Problem/Attribute:knownerrors_list+' => 'Todos os erros conhecidos associados a este problema',
+	'Class:Problem/Attribute:knownerrors_list+' => 'Todos os Erros conhecidos associados à este Problema',
 	'Class:Problem/Attribute:related_request_list' => 'Solicitações relacionadas',
-	'Class:Problem/Attribute:related_request_list+' => 'Todas as solicitações associadas a este problema',
+	'Class:Problem/Attribute:related_request_list+' => 'Todas as Solicitações associados à este Problema',
 	'Class:Problem/Attribute:related_incident_list' => 'Incidentes relacionados',
-	'Class:Problem/Attribute:related_incident_list+' => 'Todos os incidentes associados a este problema',
+	'Class:Problem/Attribute:related_incident_list+' => 'Todos os Incidentes associados à este Problema',
 	'Class:Problem/Stimulus:ev_assign' => 'Atribuir',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => 'Reatribuir',
@@ -144,4 +111,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Fechar',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

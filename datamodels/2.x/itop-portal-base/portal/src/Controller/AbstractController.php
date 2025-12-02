@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,7 +20,13 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use \Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderInterface;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Service\Attribute\Required;
 
 /**
  * Class AbstractController
@@ -29,35 +35,55 @@ use \Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbst
  * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since   2.3.0
  */
-abstract class AbstractController extends SymfonyAbstractController
+abstract class AbstractController extends SymfonyAbstractController implements TemplatesProviderInterface
 {
-	/**
-	 * Return services needed inside controllers.
-	 * Allow access to service via $controller->get(`service_name`).
-	 *
-	 * Improvement: Use service dependency injection
-	 *
-	 * @return array array of service injected to controllers
-	 * @since 3.1.0
-	 *
-	 */
-	public static function getSubscribedServices(): array
+	public const TEMPLATES_BASE_PATH = 'itop-portal-base/portal/templates/';
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		return array_merge(parent::getSubscribedServices(), [
-			'brick_collection'        => 'Combodo\iTop\Portal\Brick\BrickCollection',
-			'request_manipulator'     => 'Combodo\iTop\Portal\Helper\RequestManipulatorHelper',
-			'scope_validator'         => 'Combodo\iTop\Portal\Helper\ScopeValidatorHelper',
-			'security_helper'         => 'Combodo\iTop\Portal\Helper\SecurityHelper',
-			'context_manipulator'     => 'Combodo\iTop\Portal\Helper\ContextManipulatorHelper',
-			'navigation_rule_helper'  => 'Combodo\iTop\Portal\Helper\NavigationRuleHelper',
-			'ui_extensions_helper'    => 'Combodo\iTop\Portal\Helper\UIExtensionsHelper',
-			'lifecycle_validator'     => 'Combodo\iTop\Portal\Helper\LifecycleValidatorHelper',
-			'url_generator'           => 'router',
-			'object_form_handler'     => 'Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper',
-			'browse_brick'            => 'Combodo\iTop\Portal\Helper\BrowseBrickHelper',
-			'brick_controller_helper' => 'Combodo\iTop\Portal\Helper\BrickControllerHelper',
-			'session_message_helper'  => 'Combodo\iTop\Portal\Helper\SessionMessageHelper',
-		]);
+		$oTemplatesRegister->RegisterTemplates(
+			self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH.'layout.html.twig'),
+			TemplateDefinitionDto::Create('navigation_menu', static::TEMPLATES_BASE_PATH.'/pages/navigation_menu.html.twig'),
+			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH.'modal/layout.html.twig'),
+			TemplateDefinitionDto::Create('loader', static::TEMPLATES_BASE_PATH.'helpers/loader.html.twig'),
+			TemplateDefinitionDto::Create('tagset_clic_handler_js', static::TEMPLATES_BASE_PATH.'helpers/tagset_clic_handler.js.twig'),
+			TemplateDefinitionDto::Create('session_message', static::TEMPLATES_BASE_PATH.'helpers/session_messages/session_message.html.twig'),
+			TemplateDefinitionDto::Create('session_messages', static::TEMPLATES_BASE_PATH.'helpers/session_messages/session_messages.html.twig'),
+		);
+	}
+
+	/**
+	 * @var \Symfony\Component\Routing\RouterInterface symfony router
+	 *
+	 * @since 3.2.0 N°6933
+	 */
+	private RouterInterface $oRouter;
+
+	#[Required]
+	public function setRouter(RouterInterface $oRouter): void
+	{
+		$this->oRouter = $oRouter;
+	}
+
+	/** @var TemplatesProviderService templates provider service */
+	private TemplatesProviderService $oTemplatesService;
+	#[Required]
+	public function SetTemplatesService(TemplatesProviderService $oTemplatesService): void
+	{
+		$this->oTemplatesService = $oTemplatesService;
+
+	}
+
+	/**
+	 * Return the templates provider service.
+	 *
+	 * @return \Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesProviderService
+	 */
+	protected function GetTemplatesProviderService(): TemplatesProviderService
+	{
+		return $this->oTemplatesService;
 	}
 
 	/**
@@ -76,7 +102,7 @@ abstract class AbstractController extends SymfonyAbstractController
 	 */
 	protected function ForwardToRoute($sRouteName, $aRouteParams, $aQueryParameters, $bPreserveDefaultRouteParams = true)
 	{
-		$oRouteCollection = $this->get('router')->getRouteCollection();
+		$oRouteCollection = $this->oRouter->getRouteCollection();
 		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
 
 		if ($bPreserveDefaultRouteParams) {
@@ -87,35 +113,31 @@ abstract class AbstractController extends SymfonyAbstractController
 	}
 
 	/**
-	 * @param string $sRouteName
-	 * @param array  $aRouteParams
-	 * @param array  $aQueryParameters
+	 * Returns the controller template path
 	 *
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @since 3.2.1
 	 *
-	 * @deprecated 2.7.6 N°4356 use {@see ForwardToRoute} instead !
+	 * @param string $sTemplateId
+	 *
+	 * @return string
 	 */
-	protected function ForwardFromRoute($sRouteName, $aRouteParams, $aQueryParameters)
+	public function GetTemplatePath(string $sTemplateId): string
 	{
-		return $this->forward($this->GetControllerNameFromRoute($sRouteName), $aRouteParams, $aQueryParameters);
+		return static::GetTemplatesProviderService()->GetProviderInstanceTemplatePath($this, $sTemplateId);
 	}
 
 	/**
-	 * Returns a string containing the controller and action name of a specific route, typically used for request forwarding.
+	 * Sets the brick template path
 	 *
-	 * Example: 'p_object_create' returns 'Combodo\iTop\Portal\Controller\ObjectController::CreateAction'
+	 * @since 3.2.1
+	 * @param string $sTemplateId
+	 * @param string $sTileTemplatePath
 	 *
-	 * @param string $sRouteName
-	 *
-	 * @return string
-	 *
-	 * @deprecated 2.7.6 N°4356 use {@see ForwardToRoute} instead !
+	 * @return \Combodo\iTop\Portal\Controller\AbstractController
 	 */
-	protected function GetControllerNameFromRoute($sRouteName)
+	public function SetTemplatePath(string $sTemplateId, string $sTileTemplatePath): AbstractController
 	{
-		$oRouteCollection = $this->get('router')->getRouteCollection();
-		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
-
-		return $aRouteDefaults['_controller'];
+		static::GetTemplatesProviderService()->OverrideInstanceTemplatePath($this, $sTemplateId, $sTileTemplatePath);
+		return $this;
 	}
 }

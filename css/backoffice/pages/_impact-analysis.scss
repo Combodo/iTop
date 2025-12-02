@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -21,6 +21,10 @@ $ibo-display-graph--search-box--criterion--content--padding-y: $ibo-spacing-0 !d
 $ibo-display-graph--search-box--criterion--content--padding-x: 15px !default;
 
 $ibo-display-graph--search-box--criterion--content--checkbox--margin-right: 10px !default;
+
+$ibo-display-graph--graph-grouping-threshold--padding-right: $ibo-spacing-0 !default;
+
+$ibo-display-graph--impacted-placeholder-height: $ibo-size-650 !default;
 
 .itop-simple-graph {
   margin-top: $ibo-simple-graph--margin-top;
@@ -83,7 +87,7 @@ $ibo-display-graph--search-box--criterion--content--checkbox--margin-right: 10px
 }
 #graph_grouping_threshold{
   width: auto;
-  padding-right: 0;
+  padding-right: $ibo-display-graph--graph-grouping-threshold--padding-right;
 }  
 .ibo-display-graph--search-box {
   .sf_criterion_area{
@@ -121,5 +125,5 @@ $ibo-display-graph--search-box--criterion--content--checkbox--margin-right: 10px
   }
 }
 #impacted_objects_lists_placeholder, #impacted_groups_placeholder{
-  height: 250px;
+  height: $ibo-display-graph--impacted-placeholder-height;
 }

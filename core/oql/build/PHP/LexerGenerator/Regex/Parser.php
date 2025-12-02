@@ -33,17 +33,19 @@ class PHP_LexerGenerator_Regex_yyToken implements ArrayAccess
         return $this->_string;
     }
 
-    function offsetExists($offset)
+    function offsetExists($offset): bool
     {
         return isset($this->metadata[$offset]);
     }
 
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
     function offsetGet($offset)
     {
         return $this->metadata[$offset];
     }
 
-    function offsetSet($offset, $value)
+    function offsetSet($offset, $value): void
     {
         if ($offset === null) {
             if (isset($value[0])) {
@@ -66,7 +68,7 @@ class PHP_LexerGenerator_Regex_yyToken implements ArrayAccess
         }
     }
 
-    function offsetUnset($offset)
+    function offsetUnset($offset): void
     {
         unset($this->metadata[$offset]);
     }

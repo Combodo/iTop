@@ -1,6 +1,7 @@
 <?php
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -83,13 +84,13 @@ class TransactionsTest extends ItopTestCase
 		$oLinkSet = $oTicket->Get('contacts_list');
 		$oLinkSet->AddItem(MetaModel::NewObject('lnkContactToTicket', ['contact_id' => 6]));
 		$oLinkSet->AddItem(MetaModel::NewObject('lnkContactToTicket', ['contact_id' => 7]));
+		$oTicket->Set('contacts_list', $oLinkSet);
 
 		$this->oMySQLiMock->SetFailAt($iFailAt);
 		$this->debug("---> DBInsert()");
 		try {
 			$oTicket->DBWrite();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			// If an exception occurs must be a deadlock
 			$this->assertTrue(CMDBSource::IsDeadlockException($e), $e->getMessage());
 		}
@@ -160,7 +161,7 @@ class TransactionsTest extends ItopTestCase
 	}
 
 	/**
- 	 * Test DBUpdate database transaction by provoking deadlock exceptions
+	 * Test DBUpdate database transaction by provoking deadlock exceptions
 	 *
 	 * @dataProvider DBUpdateProvider
 	 * @param $iFailAt
@@ -188,7 +189,7 @@ class TransactionsTest extends ItopTestCase
 		$oLinkSet = $oTicket->Get('contacts_list');
 		$oLinkSet->AddItem(MetaModel::NewObject('lnkContactToTicket', ['contact_id' => 6]));
 		$oLinkSet->AddItem(MetaModel::NewObject('lnkContactToTicket', ['contact_id' => 7]));
-		//$oTicket->Set('contacts_list', $oLinkSet);
+		$oTicket->Set('contacts_list', $oLinkSet);
 
 		$this->oMySQLiMock->SetShowRequest(false);
 		$oTicket->DBWrite();
@@ -209,8 +210,7 @@ class TransactionsTest extends ItopTestCase
 		$this->debug("---> DBUpdate()");
 		try {
 			$oTicket->DBWrite();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			// If an exception occurs must be a deadlock
 			$this->assertTrue(CMDBSource::IsDeadlockException($e));
 		}
@@ -221,9 +221,9 @@ class TransactionsTest extends ItopTestCase
 		// Reload from db after the update to check the value present in the database
 		$oTicket = MetaModel::GetObject('UserRequest', $oTicket->GetKey());
 		if ($bIsModified) {
-			$this->assertEquals('Create OK', $oTicket->Get('solution'));
+			$this->assertEquals('<p>Create OK</p>', $oTicket->Get('solution'));
 		} else {
-			$this->assertEquals('Test OK', $oTicket->Get('solution'));
+			$this->assertEquals('<p>Test OK</p>', $oTicket->Get('solution'));
 		}
 
 		if (!$oTicket->IsNew()) {
@@ -257,24 +257,22 @@ class TransactionsTest extends ItopTestCase
 
 	/**
 	 * @return void
-	 * @doesNotPerformAssertions
 	 */
-	public function testTransactionOpenedThenClosed()
+	public function testIsInsideTransaction()
 	{
-		CMDBSource::Query('START TRANSACTION;');
-		CMDBSource::Query('COMMIT;');
-	}
+		static::assertFalse(CMDBSource::IsInsideTransaction(), 'Should not be already inside a transaction');
 
-	/**
-	 * This will throw an exception in the tearDown method.
-	 * This cannot be detected nor by `@expectedException` nor `expectException` method, so we have a specific tearDown impl
-	 *
-	 * @return void
-	 * @doesNotPerformAssertions
-	 */
-	public function testTransactionOpenedNotClosed()
-	{
+		// First, with a transaction ended by a "COMMIT" statement
 		CMDBSource::Query('START TRANSACTION;');
+		static::assertTrue(CMDBSource::IsInsideTransaction(), 'Should be inside a translation');
+		CMDBSource::Query('COMMIT;');
+		static::assertFalse(CMDBSource::IsInsideTransaction(), 'Should not be inside a transaction anymore');
+
+		// Second, with a transaction ended by a "ROLLBACK" statement
+		CMDBSource::Query('START TRANSACTION;');
+		static::assertTrue(CMDBSource::IsInsideTransaction(), 'Should be inside a translation (again)');
+		CMDBSource::Query('ROLLBACK;');
+		static::assertFalse(CMDBSource::IsInsideTransaction(), 'Should not be inside a transaction anymore');
 	}
 
 	protected function tearDown(): void
@@ -282,8 +280,7 @@ class TransactionsTest extends ItopTestCase
 		try {
 			DbConnectionWrapper::SetDbConnectionMockForQuery();
 			parent::tearDown();
-		}
-		catch (MySQLTransactionNotClosedException $e) {
+		} catch (MySQLTransactionNotClosedException $e) {
 			if ($this->getName() === 'testTransactionOpenedNotClosed') {
 				$this->debug('Executing the testTransactionOpenNoClose method throws a '.MySQLTransactionNotClosedException::class.' exception in tearDown');
 			}

@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,7 +8,8 @@
 @import "../../../node_modules/bulma-scss/utilities/all";
 @import "../../../node_modules/bulma-scss/base/all";
 @import "../../../node_modules/bulma-scss/elements/content";
-@import "ckeditor";
+@import "highlightjs";
+@import "ckeditor/all";
 @import "c3";
 @import "tippy";
 @import "jqueryui";
@@ -18,3 +19,4 @@
 @import "jquery-blockui";
 @import "magnific-popup";
 @import "selectize";
+@import "toastify";

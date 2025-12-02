@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <portals>
     <portal id="itop-portal" _delta="define">
       <!-- ID must match module_design[id] -->
@@ -16,6 +16,10 @@
     <module_design id="itop-portal" xsi:type="portal" _delta="define">
       <properties>
         <name>portal:itop-portal</name>
+        <ui_version>2025</ui_version>
+        <ui_settings>
+          <navigation_menu>vertical</navigation_menu>
+        </ui_settings>
         <!-- Can be either a fileref or a relative path to the file (To be tested). Takes over env-xxx/branding/portal-logo.png -->
         <!-- Priority order is <logo> from xml > env-xxx/branding/portal-logo.png > /images/logo-itop-dark-bg.svg -->
         <!--<fileref ref="brt_6a2be154b2a62659d3332c513bdad715"  />-->
@@ -41,7 +45,7 @@
         </allowed_portals>
       </properties>
       <classes>
-        <class id="User" _delta="define">
+        <class id="User">
           <!-- Allow <allowed_profile>s to apply the <transition>s below. Flags on <field>s will be merged with those from datamodel -->
           <!-- See example in UserRequest class -->
           <!--<lifecycle/>-->
@@ -56,21 +60,21 @@
             </scope>
           </scopes>
         </class>
-        <class id="Organization" _delta="define">
+        <class id="Organization">
           <scopes>
             <scope id="all">
               <oql_view><![CDATA[SELECT Organization WHERE id = :current_contact->org_id]]></oql_view>
             </scope>
           </scopes>
         </class>
-        <class id="Location" _delta="define">
+        <class id="Location">
           <scopes>
             <scope id="all">
               <oql_view><![CDATA[SELECT Location WHERE org_id = :current_contact->org_id]]></oql_view>
             </scope>
           </scopes>
         </class>
-        <class id="Contact" _delta="define">
+        <class id="Contact">
           <scopes>
             <scope id="all">
               <oql_view><![CDATA[SELECT Contact WHERE org_id = :current_contact->org_id]]></oql_view>
@@ -145,9 +149,9 @@
       </bricks>
       <navigation_rules>
         <!-- Close form (either the modal or the whole page) -->
-        <navigation_rule id="close-form" xsi:type="close" _delta="define"/>
+        <navigation_rule id="close-form" xsi:type="close"/>
         <!-- Go to the homepage -->
-        <navigation_rule id="go-to-homepage" xsi:type="go-to-homepage" _delta="define"/>
+        <navigation_rule id="go-to-homepage" xsi:type="go-to-homepage"/>
       </navigation_rules>
     </module_design>
   </module_designs>

@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -21,7 +22,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Menu:ChangeManagement' => 'Change management',
 	'Menu:Change:Overview' => 'Overview',
 	'Menu:Change:Overview+' => '',
@@ -45,7 +46,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes by status for the last 7 days',
 	'Tickets:Related:OpenChanges' => 'Open changes',
 	'Tickets:Related:RecentChanges' => 'Recent changes (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -57,15 +58,14 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Change' => 'Change',
 	'Class:Change+' => '',
-	'Class:Change/Attribute:status' => 'Etat',
+	'Class:Change/Attribute:status' => 'Status',
 	'Class:Change/Attribute:status+' => '',
 	'Class:Change/Attribute:status/Value:new' => 'New',
 	'Class:Change/Attribute:status/Value:new+' => '',
@@ -151,7 +151,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Change/Stimulus:ev_approve+' => '',
 	'Class:Change/Stimulus:ev_replan' => 'Replan',
 	'Class:Change/Stimulus:ev_replan+' => '',
-	'Class:Change/Stimulus:ev_notapprove' => 'Reject',
+	'Class:Change/Stimulus:ev_notapprove' => 'Reject approval',
 	'Class:Change/Stimulus:ev_notapprove+' => '',
 	'Class:Change/Stimulus:ev_implement' => 'Implement',
 	'Class:Change/Stimulus:ev_implement+' => '',
@@ -159,13 +159,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Finish',
 	'Class:Change/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:RoutineChange' => 'Routine Change',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Validate',
@@ -190,13 +190,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Finish',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:ApprovedChange' => 'Approved Changes',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Approval Date',
@@ -225,13 +225,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Finish',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:NormalChange' => 'Normal Change',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Acceptance date',
@@ -260,13 +260,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Finish',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:EmergencyChange' => 'Emergency Change',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Validate',
@@ -291,4 +291,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Finish',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-));
+]);

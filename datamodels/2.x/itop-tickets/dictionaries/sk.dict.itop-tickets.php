@@ -1,72 +1,50 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//
-// Class: Ticket
-//
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+/**
+ *
+ */
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Ticket' => 'Ticket',
-	'Class:Ticket+' => '',
+	'Class:Ticket+' => '~~',
 	'Class:Ticket/Attribute:ref' => 'Referencia',
-	'Class:Ticket/Attribute:ref+' => '',
+	'Class:Ticket/Attribute:ref+' => '~~',
 	'Class:Ticket/Attribute:org_id' => 'Organizácia',
-	'Class:Ticket/Attribute:org_id+' => '',
+	'Class:Ticket/Attribute:org_id+' => '~~',
 	'Class:Ticket/Attribute:org_name' => 'Názov organizácie',
-	'Class:Ticket/Attribute:org_name+' => '',
+	'Class:Ticket/Attribute:org_name+' => '~~',
 	'Class:Ticket/Attribute:caller_id' => 'Zadávateľ',
-	'Class:Ticket/Attribute:caller_id+' => '',
+	'Class:Ticket/Attribute:caller_id+' => '~~',
 	'Class:Ticket/Attribute:caller_name' => 'Meno volajúceho',
-	'Class:Ticket/Attribute:caller_name+' => '',
+	'Class:Ticket/Attribute:caller_name+' => '~~',
 	'Class:Ticket/Attribute:team_id' => 'Tím',
-	'Class:Ticket/Attribute:team_id+' => '',
+	'Class:Ticket/Attribute:team_id+' => '~~',
 	'Class:Ticket/Attribute:team_name' => 'Názov tímu',
-	'Class:Ticket/Attribute:team_name+' => '',
+	'Class:Ticket/Attribute:team_name+' => '~~',
 	'Class:Ticket/Attribute:agent_id' => 'Agent',
-	'Class:Ticket/Attribute:agent_id+' => '',
+	'Class:Ticket/Attribute:agent_id+' => '~~',
 	'Class:Ticket/Attribute:agent_name' => 'Meno agenta',
-	'Class:Ticket/Attribute:agent_name+' => '',
+	'Class:Ticket/Attribute:agent_name+' => '~~',
 	'Class:Ticket/Attribute:title' => 'Nadpis',
-	'Class:Ticket/Attribute:title+' => '',
+	'Class:Ticket/Attribute:title+' => '~~',
 	'Class:Ticket/Attribute:description' => 'Popis',
-	'Class:Ticket/Attribute:description+' => '',
+	'Class:Ticket/Attribute:description+' => '~~',
 	'Class:Ticket/Attribute:start_date' => 'Dátum začiatku',
-	'Class:Ticket/Attribute:start_date+' => '',
+	'Class:Ticket/Attribute:start_date+' => '~~',
 	'Class:Ticket/Attribute:end_date' => 'Dátum ukončenia',
-	'Class:Ticket/Attribute:end_date+' => '',
+	'Class:Ticket/Attribute:end_date+' => '~~',
 	'Class:Ticket/Attribute:last_update' => 'Posledná aktualizácia',
-	'Class:Ticket/Attribute:last_update+' => '',
+	'Class:Ticket/Attribute:last_update+' => '~~',
 	'Class:Ticket/Attribute:close_date' => 'Dátum uzavretia',
-	'Class:Ticket/Attribute:close_date+' => '',
+	'Class:Ticket/Attribute:close_date+' => '~~',
 	'Class:Ticket/Attribute:private_log' => 'Skrytý záznam',
-	'Class:Ticket/Attribute:private_log+' => '',
+	'Class:Ticket/Attribute:private_log+' => '~~',
 	'Class:Ticket/Attribute:contacts_list' => 'Kontakty',
 	'Class:Ticket/Attribute:contacts_list+' => 'All the contacts linked to this ticket~~',
 	'Class:Ticket/Attribute:functionalcis_list' => 'Komponenty',
@@ -74,7 +52,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Ticket/Attribute:workorders_list' => 'Pracovné príkazy',
 	'Class:Ticket/Attribute:workorders_list+' => 'All the work orders for this ticket~~',
 	'Class:Ticket/Attribute:finalclass' => 'Typ',
-	'Class:Ticket/Attribute:finalclass+' => '',
+	'Class:Ticket/Attribute:finalclass+' => 'Name of the final class~~',
 	'Class:Ticket/Attribute:operational_status' => 'Operational status~~',
 	'Class:Ticket/Attribute:operational_status+' => 'Computed after the detailed status~~',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'Ongoing~~',
@@ -84,77 +62,75 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Closed~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Impact Analysis~~',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContactToTicket' => 'väzba - Kontakt / Ticket',
-	'Class:lnkContactToTicket+' => '',
+	'Class:lnkContactToTicket+' => '~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Ticket',
-	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
+	'Class:lnkContactToTicket/Attribute:ticket_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Referencia na Ticket',
-	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
+	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Kontakt',
-	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_name' => 'Contact name~~',
 	'Class:lnkContactToTicket/Attribute:contact_name+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_email' => 'Email kontaktu',
-	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
+	'Class:lnkContactToTicket/Attribute:contact_email+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role' => 'Rola',
-	'Class:lnkContactToTicket/Attribute:role+' => '',
+	'Class:lnkContactToTicket/Attribute:role+' => '~~',
 	'Class:lnkContactToTicket/Attribute:role_code' => 'Role~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Added manually~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Computed~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Do not notify~~',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:WorkOrder' => 'Pracovný príkaz',
-	'Class:WorkOrder+' => '',
+	'Class:WorkOrder+' => '~~',
 	'Class:WorkOrder/Attribute:name' => 'Názov',
-	'Class:WorkOrder/Attribute:name+' => '',
+	'Class:WorkOrder/Attribute:name+' => '~~',
 	'Class:WorkOrder/Attribute:status' => 'Stav',
-	'Class:WorkOrder/Attribute:status+' => '',
+	'Class:WorkOrder/Attribute:status+' => '~~',
 	'Class:WorkOrder/Attribute:status/Value:open' => 'Otvorený',
-	'Class:WorkOrder/Attribute:status/Value:open+' => '',
+	'Class:WorkOrder/Attribute:status/Value:open+' => '~~',
 	'Class:WorkOrder/Attribute:status/Value:closed' => 'Zatvorený',
-	'Class:WorkOrder/Attribute:status/Value:closed+' => '',
+	'Class:WorkOrder/Attribute:status/Value:closed+' => '~~',
 	'Class:WorkOrder/Attribute:description' => 'Popis',
-	'Class:WorkOrder/Attribute:description+' => '',
+	'Class:WorkOrder/Attribute:description+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_id' => 'Ticket',
-	'Class:WorkOrder/Attribute:ticket_id+' => '',
+	'Class:WorkOrder/Attribute:ticket_id+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_ref' => 'Referencia na Ticket',
-	'Class:WorkOrder/Attribute:ticket_ref+' => '',
+	'Class:WorkOrder/Attribute:ticket_ref+' => '~~',
 	'Class:WorkOrder/Attribute:team_id' => 'Tím',
-	'Class:WorkOrder/Attribute:team_id+' => '',
+	'Class:WorkOrder/Attribute:team_id+' => '~~',
 	'Class:WorkOrder/Attribute:team_name' => 'Názov tímu',
-	'Class:WorkOrder/Attribute:team_name+' => '',
+	'Class:WorkOrder/Attribute:team_name+' => '~~',
 	'Class:WorkOrder/Attribute:agent_id' => 'Agent',
-	'Class:WorkOrder/Attribute:agent_id+' => '',
+	'Class:WorkOrder/Attribute:agent_id+' => '~~',
 	'Class:WorkOrder/Attribute:agent_email' => 'Email agenta',
-	'Class:WorkOrder/Attribute:agent_email+' => '',
+	'Class:WorkOrder/Attribute:agent_email+' => '~~',
 	'Class:WorkOrder/Attribute:start_date' => 'Dátum začiatku',
-	'Class:WorkOrder/Attribute:start_date+' => '',
+	'Class:WorkOrder/Attribute:start_date+' => '~~',
 	'Class:WorkOrder/Attribute:end_date' => 'Dátum ukončenia',
-	'Class:WorkOrder/Attribute:end_date+' => '',
+	'Class:WorkOrder/Attribute:end_date+' => '~~',
 	'Class:WorkOrder/Attribute:log' => 'Záznam',
-	'Class:WorkOrder/Attribute:log+' => '',
+	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Zatvoriť',
-	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
+]);
 
 // Fieldset translation
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Ticket:baseinfo' => 'Všeobecné informácia',
 	'Ticket:date' => 'Dátumy',
 	'Ticket:contact' => 'Kontakt',
@@ -244,5 +220,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
-));
+]);
 
+//
+// Class: Ticket
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'Class:Ticket/Attribute:team_email' => 'Team email~~',
+	'Class:Ticket/Attribute:team_email+' => '~~',
+]);

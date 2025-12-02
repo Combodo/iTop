@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,7 +17,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 
 namespace Combodo\iTop\Portal\Helper;
 
@@ -53,11 +52,10 @@ class BrickControllerHelper
 	public function ExtractSortParams()
 	{
 		// Getting sort params
-		$aSortParams = $this->oRequestManipulator->ReadParam('aSortParams', array());
+		$aSortParams = $this->oRequestManipulator->ReadParam('aSortParams', [], FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 
 		// Converting sort direction to proper format for DBObjectSet as it only accept real booleans
-		foreach ($aSortParams as $sAttributeAlias => $sDirection)
-		{
+		foreach ($aSortParams as $sAttributeAlias => $sDirection) {
 			$aSortParams[$sAttributeAlias] = ($sDirection === 'true');
 		}
 

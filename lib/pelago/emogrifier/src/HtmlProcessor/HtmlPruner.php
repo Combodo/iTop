@@ -6,11 +6,12 @@ namespace Pelago\Emogrifier\HtmlProcessor;
 
 use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\Utilities\ArrayIntersector;
+use Pelago\Emogrifier\Utilities\Preg;
 
 /**
  * This class can remove things from HTML.
  */
-class HtmlPruner extends AbstractHtmlProcessor
+final class HtmlPruner extends AbstractHtmlProcessor
 {
     /**
      * We need to look for display:none, but we need to do a case-insensitive search. Since DOMDocument only
@@ -27,7 +28,7 @@ class HtmlPruner extends AbstractHtmlProcessor
     /**
      * Removes elements that have a "display: none;" style.
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function removeElementsWithDisplayNone(): self
     {
@@ -57,7 +58,7 @@ class HtmlPruner extends AbstractHtmlProcessor
      *
      * @param array<array-key, string> $classesToKeep names of classes that should not be removed
      *
-     * @return self fluent interface
+     * @return $this
      */
     public function removeRedundantClasses(array $classesToKeep = []): self
     {
@@ -84,9 +85,10 @@ class HtmlPruner extends AbstractHtmlProcessor
     {
         $classesToKeepIntersector = new ArrayIntersector($classesToKeep);
 
+        $preg = new Preg();
         /** @var \DOMElement $element */
         foreach ($elements as $element) {
-            $elementClasses = \preg_split('/\\s++/', \trim($element->getAttribute('class')));
+            $elementClasses = $preg->split('/\\s++/', \trim($element->getAttribute('class')));
             $elementClassesToKeep = $classesToKeepIntersector->intersectWith($elementClasses);
             if ($elementClassesToKeep !== []) {
                 $element->setAttribute('class', \implode(' ', $elementClassesToKeep));
@@ -118,15 +120,17 @@ class HtmlPruner extends AbstractHtmlProcessor
      *
      * @param CssInliner $cssInliner object instance that performed the CSS inlining
      *
-     * @return self fluent interface
+     * @return $this
      *
      * @throws \BadMethodCallException if `inlineCss` has not first been called on `$cssInliner`
      */
     public function removeRedundantClassesAfterCssInlined(CssInliner $cssInliner): self
     {
+        $preg = new Preg();
+
         $classesToKeepAsKeys = [];
         foreach ($cssInliner->getMatchingUninlinableSelectors() as $selector) {
-            \preg_match_all('/\\.(-?+[_a-zA-Z][\\w\\-]*+)/', $selector, $matches);
+            $preg->matchAll('/\\.(-?+[_a-zA-Z][\\w\\-]*+)/', $selector, $matches);
             $classesToKeepAsKeys += \array_fill_keys($matches[1], true);
         }
 

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry;
-
 
 use DateTime;
 use MetaModel;
@@ -63,7 +63,11 @@ class TransitionEntry extends ActivityEntry
 	 * @throws \OQLException
 	 */
 	public function __construct(
-		DateTime $oDateTime, string $sAuthorLogin, string $sObjectClass, string $sOriginStateCode, string $sTargetStateCode,
+		DateTime $oDateTime,
+		string $sAuthorLogin,
+		string $sObjectClass,
+		string $sOriginStateCode,
+		string $sTargetStateCode,
 		?string $sId = null
 	) {
 		parent::__construct($oDateTime, $sAuthorLogin, null, $sId);

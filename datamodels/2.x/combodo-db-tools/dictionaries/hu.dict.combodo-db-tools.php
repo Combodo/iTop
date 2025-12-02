@@ -1,28 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-// Database inconsistencies
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	// Dictionary entries go here
+/**
+ *
+ */
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:DBToolsMenu' => 'DB eszközök',
 	'DBTools:Class' => 'Osztály',
 	'DBTools:Title' => 'Adatbázis karbantartó eszközök',
@@ -42,31 +30,31 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'DBTools:FetchCheck' => 'Lehívás ellenőrzés (hosszú)',
 	'DBTools:SelectAnalysisType' => 'Válasszon elemzés típust',
 	'DBTools:Analyze' => 'Elemzés',
-	'DBTools:Details' => 'Részletek mutatása',
-	'DBTools:ShowAll' => 'Minden hiba mutatása',
+	'DBTools:Details' => 'Részletek megjelenítése',
+	'DBTools:ShowAll' => 'Minden hiba megjelenítése',
 	'DBTools:Inconsistencies' => 'Adatbázis inkonzisztenciák',
 	'DBTools:DetailedErrorTitle' => '%2$s hiba a %1$s osztályban: %3$s',
 	'DBTools:DetailedErrorLimit' => 'List limited to %1$s errors~~',
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Árva rekord a `%1$s` -ban, kell hogy legyen megfelelője a `%2$s` táblázatban',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Érvénytelen a %1$s  külső kulcs (oszlop: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Hiányzik a %1$s külső külcs (oszlop: `%2$s.%3$s`)',
-	'DBAnalyzer-Integrity-InvalidValue' => '%1$s értéke érvénytelen (oszlop: `%2$s.%3$s`)~~',
+	'DBAnalyzer-Integrity-InvalidValue' => '%1$s értéke érvénytelen (oszlop: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Néhány felhasználónak egyáltalán nincs fiókja',
 	'DBAnalyzer-Integrity-HKInvalid' => 'Sérült a `%1$s` hierarchikus kulcs',
 	'DBAnalyzer-Fetch-Count-Error' => 'Lekérési hiba a `%1$s` -nál, %2$d bejegyzés lekérve / %3$d megszámlálva',
 	'DBAnalyzer-Integrity-FinalClass' => 'A `%2$s`.`%1$s` mezőnek ugyanolyan értékűnek kell lennie mint a `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => '`%2$s`.`%1$s` mezőnek érvényes osztályt kell tartalmaznia',
-));
+]);
 
 // Database Info
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'DBTools:DatabaseInfo' => 'Adatbázis információ',
 	'DBTools:Base' => 'Bázis',
 	'DBTools:Size' => 'Méret',
-));
+]);
 
 // Lost attachments
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'DBTools:LostAttachments' => 'Elveszett mellékletek',
 	'DBTools:LostAttachments:Disclaimer' => 'Itt kereshet az adatbázisban elveszett vagy elkeveredett mellékletek után. Ez NEM egy adat-visszaállítási eszköz, nem állítja vissza a törölt adatokat.',
 	'DBTools:LostAttachments:Button:Analyze' => 'Elemzés',
@@ -83,5 +71,5 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Visszaállítás eredménye:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d melléklet lett visszaállítva.',
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Soron belüli képként tárolva',
-	'DBTools:LostAttachments:History' => 'A "%1$s" melléklet visszaállítva a DB eszközzel'
-));
+	'DBTools:LostAttachments:History' => 'A "%1$s" melléklet visszaállítva a DB eszközzel',
+]);

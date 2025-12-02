@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,13 +18,13 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
 
-
 /**
  * ormDocument
- * encapsulate the behavior of a binary data set that will be stored an attribute of class AttributeBlob 
+ * encapsulate the behavior of a binary data set that will be stored an attribute of class AttributeBlob
  *
  * @package     itopORM
  */
@@ -47,6 +48,42 @@ class ormDocument
 	 * @since 3.1.0
 	 */
 	public const DEFAULT_DOWNLOADS_COUNT = 0;
+	private static $aKnownExtensions = [
+		'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+		'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
+		'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+		'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+		'sldx' => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
+		'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+		'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
+		'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+		'jpg'  => 'image/jpeg',
+		'jpeg' => 'image/jpeg',
+		'gif'  => 'image/gif',
+		'png'  => 'image/png',
+		'pdf'  => 'application/pdf',
+		'doc'  => 'application/msword',
+		'dot'  => 'application/msword',
+		'xls'  => 'application/vnd.ms-excel',
+		'ppt'  => 'application/vnd.ms-powerpoint',
+		'vsd'  => 'application/x-visio',
+		'vdx'  => 'application/visio.drawing',
+		'odt'  => 'application/vnd.oasis.opendocument.text',
+		'ods'  => 'application/vnd.oasis.opendocument.spreadsheet',
+		'odp'  => 'application/vnd.oasis.opendocument.presentation',
+		'zip'  => 'application/zip',
+		'txt'  => 'text/plain',
+		'htm'  => 'text/html',
+		'html' => 'text/html',
+		'exe'  => 'application/octet-stream',
+	];
+
+	public static function GetKnownExtensions(): array
+	{
+		return self::$aKnownExtensions;
+	}
 
 	protected $m_data;
 	protected $m_sMimeType;
@@ -75,9 +112,41 @@ class ormDocument
 		$this->m_iDownloadsCount = $iDownloadsCount;
 	}
 
+	/**
+	 * @param string $sPath Absolute path of the document to read
+	 *
+	 * @return \ormDocument
+	 * @throws \Exception
+	 */
+	public static function FromFile(string $sPath): ormDocument
+	{
+		$sPath = utils::RealPath($sPath, APPROOT);
+		if (false === $sPath) {
+			throw new Exception("Failed to load the file '$sPath'. The file does not exist or the current process is not allowed to access it.");
+		}
+		$sData = @file_get_contents($sPath);
+		if (false === $sData) {
+			throw new Exception("Failed to load the file '$sPath'. The file does not exist or the current process is not allowed to access it.");
+		}
+		$sExtension = strtolower(pathinfo($sPath, PATHINFO_EXTENSION));
+		$sFileName = basename($sPath);
+
+		$sMimeType = 'text/plain';
+		if (array_key_exists($sExtension, ormDocument::$aKnownExtensions)) {
+			$sMimeType = ormDocument::$aKnownExtensions[$sExtension];
+		} elseif (extension_loaded('fileinfo')) {
+			$fInfo = new finfo(FILEINFO_MIME);
+			$sMimeType = $fInfo->file($sPath);
+		}
+
+		return new ormDocument($sData, $sMimeType, $sFileName);
+	}
+
 	public function __toString()
 	{
-	    if($this->IsEmpty()) return '';
+		if ($this->IsEmpty()) {
+			return '';
+		}
 
 		return MyHelpers::beautifulstr($this->m_data, 100, true);
 	}
@@ -113,7 +182,7 @@ class ormDocument
 			return true;
 		}
 	}
-	
+
 	public function GetMimeType()
 	{
 		return $this->m_sMimeType;
@@ -121,8 +190,7 @@ class ormDocument
 	public function GetMainMimeType()
 	{
 		$iSeparatorPos = strpos($this->m_sMimeType, '/');
-		if ($iSeparatorPos > 0)
-		{
+		if ($iSeparatorPos > 0) {
 			return substr($this->m_sMimeType, 0, $iSeparatorPos);
 		}
 		return $this->m_sMimeType;
@@ -200,22 +268,22 @@ class ormDocument
 		}
 		return $sResult;
 	}
-		
+
 	/**
 	 * Returns an hyperlink to display the document *inline*
 	 * @return string
-	 */	 	 	
+	 */
 	public function GetDisplayLink($sClass, $Id, $sAttCode)
 	{
 		$sUrl = $this->GetDisplayURL($sClass, $Id, $sAttCode);
 
 		return "<a href=\"$sUrl\" target=\"_blank\" >".utils::EscapeHtml($this->GetFileName())."</a>\n";
 	}
-	
+
 	/**
 	 * Returns an hyperlink to download the document (content-disposition: attachment)
 	 * @return string
-	 */	 	 	
+	 */
 	public function GetDownloadLink($sClass, $Id, $sAttCode)
 	{
 		$sUrl = $this->GetDownloadURL($sClass, $Id, $sAttCode);
@@ -231,7 +299,7 @@ class ormDocument
 	{
 		$sSignature = $this->GetSignature();
 		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
-		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
+		return utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
 	}
 
 	/**
@@ -243,22 +311,21 @@ class ormDocument
 		// Compute a signature to reset the cache anytime the data changes (this is acceptable if used only with icon files)
 		$sSignature = $this->GetSignature();
 		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
-		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
+		return utils::GetAbsoluteUrlAppRoot()."pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
 	}
 
 	public function IsPreviewAvailable()
 	{
 		$bRet = false;
-		switch($this->GetMimeType())
-		{
+		switch ($this->GetMimeType()) {
 			case 'image/png':
 			case 'image/jpg':
 			case 'image/jpeg':
 			case 'image/gif':
 			case 'image/bmp':
 			case 'image/svg+xml':
-			$bRet = true;
-			break;
+				$bRet = true;
+				break;
 		}
 		return $bRet;
 	}
@@ -278,11 +345,9 @@ class ormDocument
 	 */
 	public static function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment', $sSecretField = null, $sSecretValue = null)
 	{
-		try
-		{
+		try {
 			$oObj = MetaModel::GetObject($sClass, $id, false, false);
-			if (!is_object($oObj))
-			{
+			if (!is_object($oObj)) {
 				// If access to the document is not granted, check if the access to the host object is allowed
 				$oObj = MetaModel::GetObject($sClass, $id, false, true);
 				if ($oObj instanceof Attachment) {
@@ -297,30 +362,28 @@ class ormDocument
 					throw new Exception("Invalid id ($id) for class '$sClass' - the object does not exist or you are not allowed to view it");
 				}
 			}
-			if (($sSecretField != null) && ($oObj->Get($sSecretField) != $sSecretValue))
-			{
+			if (($sSecretField != null) && ($oObj->Get($sSecretField) != $sSecretValue)) {
 				usleep(200);
 				throw new Exception("Invalid secret for class '$sClass' - the object does not exist or you are not allowed to view it");
 			}
 			/** @var \ormDocument $oDocument */
 			$oDocument = $oObj->Get($sAttCode);
-			if (is_object($oDocument))
-			{
-				$aEventData = array(
+			if (is_object($oDocument)) {
+				$aEventData = [
 					'debug_info' => $oDocument->GetFileName(),
 					'object' => $oObj,
 					'att_code' => $sAttCode,
 					'document' => $oDocument,
 					'content_disposition' => $sContentDisposition,
-					);
-				EventService::FireEvent(new EventData(EVENT_DOWNLOAD_DOCUMENT, $sClass, $aEventData));
+					];
+				EventService::FireEvent(new EventData(\EVENT_DOWNLOAD_DOCUMENT, $sClass, $aEventData));
 				$oPage->TrashUnexpectedOutput();
 				$oPage->SetContentType($oDocument->GetMimeType());
-				$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
+				$oPage->SetContentDisposition($sContentDisposition, $oDocument->GetFileName());
 				$oPage->add($oDocument->GetData());
 
 				// Update downloads count only when content disposition is set to "attachment" as other disposition are to display the document within the page
-				if($sContentDisposition === static::ENUM_CONTENT_DISPOSITION_ATTACHMENT) {
+				if ($sContentDisposition === static::ENUM_CONTENT_DISPOSITION_ATTACHMENT) {
 					$oDocument->IncreaseDownloadsCount();
 					$oObj->Set($sAttCode, $oDocument);
 					// $oObj can be a \DBObject or \cmdbAbstractObject so we ahve to protect it
@@ -331,11 +394,103 @@ class ormDocument
 					$oObj->DBUpdate();
 				}
 			}
-		}
-		catch(Exception $e)
-		{
+		} catch (Exception $e) {
 			$oPage->p($e->getMessage());
 		}
+	}
+
+	/**
+	 * Resize an image so that it fits in the given dimensions
+	 * @param int $iMaxImageWidth Maximum width for the resized image
+	 * @param int $iMaxImageHeight Maximum height for the resized image
+	 * @param array|null $aFinalDimensions Image dimensions after resizing or null if unable to read the image
+	 * @return ormDocument The resampled image
+	 *
+	 */
+	public function ResizeImageToFit(int $iMaxWidth, int $iMaxHeight, array|null &$aFinalDimensions = null): static
+	{
+		$aFinalDimensions = null;
+		// If gd extension is not loaded, we put a warning in the log and return the image as is
+		if (extension_loaded('gd') === false) {
+			IssueLog::Warning('Image could not be resized as the "gd" extension does not seem to be loaded. Its dimensions will remain the same instead of '.$iMaxWidth.'x'.$iMaxHeight);
+			return $this;
+		}
+		$oGdImage = false;
+		switch ($this->GetMimeType()) {
+			case 'image/gif':
+			case 'image/jpeg':
+			case 'image/png':
+				$oGdImage = @imagecreatefromstring($this->GetData());
+				break;
+			default:
+				// Unsupported image type, return the image as-is
+				return $this;
+		}
+
+		if ($oGdImage === false) {
+			IssueLog::Warning('Image could not be resized as . It will remain as imagecreatefromstring could not read its data.Its dimensions will remain the same instead of '.$iMaxWidth.'x'.$iMaxHeight);
+			return $this;
+		}
+
+		$iWidth = imagesx($oGdImage);
+		$iHeight = imagesy($oGdImage);
+
+		if (($iMaxWidth === 0 || $iWidth <= $iMaxWidth) && ($iMaxHeight === 0 || $iHeight <= $iMaxHeight)) {
+			// No need to resize
+			$aFinalDimensions = [
+				'width' => $iWidth,
+				'height' => $iHeight,
+			];
+			return $this;
+		}
+
+		$fScale = 1.0;
+		if ($iMaxWidth > 0) {
+			$fScale = min($fScale, $iMaxWidth / $iWidth);
+		}
+		if ($iMaxHeight > 0) {
+			$fScale = min($fScale, $iMaxHeight / $iHeight);
+		}
+		$iNewWidth = (int)($iWidth * $fScale);
+		$iNewHeight = (int)($iHeight * $fScale);
+
+		$oNewGdImage = imagecreatetruecolor($iNewWidth, $iNewHeight);
+
+		$aFinalDimensions = [
+			'width' => $iNewWidth,
+			'height' => $iNewHeight,
+		];
+
+		// Preserve transparency
+		if ($this->GetMimeType() == "image/gif" || $this->GetMimeType() == "image/png") {
+			imagecolortransparent($oNewGdImage, imagecolorallocatealpha($oNewGdImage, 0, 0, 0, 127));
+			imagealphablending($oNewGdImage, false);
+			imagesavealpha($oNewGdImage, true);
+		}
+		imagecopyresampled($oNewGdImage, $oGdImage, 0, 0, 0, 0, $iNewWidth, $iNewHeight, $iWidth, $iHeight);
+
+		ob_start();
+		switch ($this->GetMimeType()) {
+			case 'image/gif':
+				imagegif($oNewGdImage); // send image to output buffer
+				break;
+
+			case 'image/jpeg':
+				imagejpeg($oNewGdImage, null, 80); // null = send image to output buffer, 80 = good quality
+				break;
+
+			case 'image/png':
+				imagepng($oNewGdImage, null, 5); // null = send image to output buffer, 5 = medium compression
+				break;
+		}
+		$oResampledImage = new ormDocument(ob_get_contents(), $this->GetMimeType(), $this->GetFileName());
+		@ob_end_clean();
+
+		imagedestroy($oGdImage);
+		imagedestroy($oNewGdImage);
+
+		return $oResampledImage;
+
 	}
 
 	/**
@@ -343,6 +498,7 @@ class ormDocument
 	 */
 	public function GetSignature(): string
 	{
-		return md5($this->GetData());
+		return md5($this->GetData() ?? '');
 	}
+
 }

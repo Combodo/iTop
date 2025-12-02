@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -48,7 +49,7 @@ class UrlGenerator implements RouterInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
+	public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
 	{
 		$parameters = $this->getExtraParams($parameters);
 
@@ -66,7 +67,7 @@ class UrlGenerator implements RouterInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function getContext()
+	public function getContext(): RequestContext
 	{
 		return $this->router->getContext();
 	}
@@ -82,7 +83,7 @@ class UrlGenerator implements RouterInterface
 	/**
 	 * @inheritDoc
 	 */
-	public function match($pathinfo)
+	public function match($pathinfo): array
 	{
 		return $this->router->match($pathinfo);
 	}

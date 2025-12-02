@@ -1,21 +1,19 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
-use Combodo\iTop\Test\UnitTest\Hook\TestsRunStartHook;
 use Combodo\iTop\Test\UnitTest\Service\UnitTestRunTimeEnvironment;
 use Config;
 use Exception;
-use IssueLog;
 use MetaModel;
 use SetupUtils;
 use utils;
-
 
 /**
  * Class ItopCustomDatamodelTestCase
@@ -26,14 +24,14 @@ use utils;
  *   - Override the {@see ItopCustomDatamodelTestCase::GetDatamodelDeltaAbsPath()} method to define where you XML delta is
  *   - Implement your test case methods as usual
  *
- * @since N°6097 2.7.9 3.0.4 3.1.0
+ * @since 2.7.9 3.0.4 3.1.0 N°6097
  */
 abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 {
 	/**
-	 * @var bool[]
+	 * @var UnitTestRunTimeEnvironment
 	 */
-	protected static $aReadyCustomEnvironments = [];
+	protected $oEnvironment = null;
 
 	/**
 	 * @inheritDoc
@@ -55,6 +53,14 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 	 * @return string Abs path to the XML delta to use for the tests of that class
 	 */
 	abstract public function GetDatamodelDeltaAbsPath(): string;
+
+	protected function setUp(): void
+	{
+		static::LoadRequiredItopFiles();
+		$this->oEnvironment = new UnitTestRunTimeEnvironment('production', $this->GetTestEnvironment());
+
+		parent::setUp();
+	}
 
 	/**
 	 * @inheritDoc
@@ -87,45 +93,21 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 	/**
 	 * @return string Absolute path to the {@see \Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase::GetTestEnvironment()} folder
 	 */
-	final private function GetTestEnvironmentFolderAbsPath(): string
+	final protected function GetTestEnvironmentFolderAbsPath(): string
 	{
 		return APPROOT.'env-'.$this->GetTestEnvironment().'/';
 	}
 
 	/**
-	 * Mark {@see \Combodo\iTop\Test\UnitTest\ItopDataTestCase::GetTestEnvironment()} as ready (compiled)
-	 *
-	 * @return void
+	 * @return bool True if the {@see \Combodo\iTop\Test\UnitTest\ItopDataTestCase::GetTestEnvironment()} is ready (compiled, up-to-date, but not necessarily started)
 	 */
-	final private function MarkEnvironmentReady(): void
+	final protected function IsEnvironmentReady(): bool
 	{
-		if (false === $this->IsEnvironmentReady()) {
-			touch(static::GetTestEnvironmentFolderAbsPath());
-		}
-	}
-
-	/**
-	 * @return bool True if the {@see \Combodo\iTop\Test\UnitTest\ItopDataTestCase::GetTestEnvironment()} is ready (compiled, but not started)
-	 *
-	 * @details Having the environment ready means that it has been compiled for this global tests run, not that it is a relic from a previous global tests run
-	 */
-	final private function IsEnvironmentReady(): bool
-	{
-		// As these test cases run in separate processes, the best way we found to let know a process if its environment was already prepared for **this run** was to compare the modification times of:
-		// - its own env-<ENV> folder
-		// - a file generated at the beginning of the global test run {@see \Combodo\iTop\Test\UnitTest\Hook\TestsRunStartHook}
-		$sRunStartedFilePath = TestsRunStartHook::GetRunStartedFileAbsPath();
-		$sEnvFolderPath = static::GetTestEnvironmentFolderAbsPath();
-
 		clearstatcache();
-		if (false === file_exists($sRunStartedFilePath) || false === file_exists($sEnvFolderPath)) {
+		if (false === file_exists($this->GetTestEnvironmentFolderAbsPath())) {
 			return false;
 		}
-
-		$iRunStartedFileModificationTime = filemtime($sRunStartedFilePath);
-		$iEnvFolderModificationTime = filemtime($sEnvFolderPath);
-
-		return $iEnvFolderModificationTime >= $iRunStartedFileModificationTime;
+		return $this->oEnvironment->IsUpToDate();
 	}
 
 	/**
@@ -141,6 +123,12 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 		// Note: To improve performances, we compile all XML deltas from test cases derived from this class and make a single environment where everything will be ran at once.
 		//       This requires XML deltas to be compatible, but it is a known and accepted trade-off. See PR #457
 		if (false === $this->IsEnvironmentReady()) {
+
+			$this->debug("Preparing custom environment '$sTestEnv' with the following datamodel files:");
+			foreach ($this->oEnvironment->GetCustomDatamodelFiles() as $sCustomDatamodelFile) {
+				$this->debug("  - $sCustomDatamodelFile");
+			}
+
 			//----------------------------------------------------
 			// Clear any previous "$sTestEnv" environment
 			//----------------------------------------------------
@@ -149,17 +137,8 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			$sConfFile = utils::GetConfigFilePath($sTestEnv);
 			$sConfFolder = dirname($sConfFile);
 			if (is_file($sConfFile)) {
-				chmod($sConfFile, 0777);
 				SetupUtils::tidydir($sConfFolder);
 			}
-
-			// - Datamodel delta files
-			// - Cache folder
-			// - Compiled folder
-			// We don't need to clean them as they are already by the compilation
-
-			// - Drop database
-			// We don't do that now, it will be done before re-creating the DB, once the metamodel is started
 
 			//----------------------------------------------------
 			// Prepare "$sTestEnv" environment
@@ -179,9 +158,9 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			$oTestConfig->Set('db_name', $oTestConfig->Get('db_name').'_'.$sTestEnvSanitizedForDBName);
 
 			// - Compile env. based on the existing 'production' env.
-			$oEnvironment = new UnitTestRunTimeEnvironment($sTestEnv);
+			$oEnvironment = new UnitTestRunTimeEnvironment($sSourceEnv, $sTestEnv);
 			$oEnvironment->WriteConfigFileSafe($oTestConfig);
-			$oEnvironment->CompileFrom($sSourceEnv, false);
+			$oEnvironment->CompileFrom($sSourceEnv);
 
 			// - Force re-creating a fresh DB
 			CMDBSource::InitFromConfig($oTestConfig);
@@ -190,9 +169,10 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			}
 			CMDBSource::CreateDB($oTestConfig->Get('db_name'));
 			MetaModel::Startup($sConfFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sTestEnv);
+			// N°7446 For some reason we need to create the DB schema before starting the MM, then only we can create the tables.
+			MetaModel::DBCreate();
 
-			$this->MarkEnvironmentReady();
-			$this->debug('Preparation of custom environment "'.$sTestEnv.'" done.');
+			$this->debug("Custom environment '$sTestEnv' is ready!");
 		}
 
 		parent::PrepareEnvironment();

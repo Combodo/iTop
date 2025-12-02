@@ -1,0 +1,150 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+@import "../node_modules/bulma-scss/utilities/mixins";
+
+$ipb-browse-brick--mosaic-item--highlight-color:  $ipb-color-blue-800, $ipb-color-orange-800, $ipb-color-green-800, $ipb-color-pink-800, $ipb-color-cyan-800, $ipb-color-yellow-800, $ipb-color-purple-800 !default;
+
+$ipb-browse-brick--mosaic-breadcrumb--active--color: $ipb-color-grey-800 !default;
+$ipb-browse-brick--mosaic-breadcrumb--a--color: $ipb-color-primary-800 !default;
+
+
+$ipb-browse-brick--mosaic-group-item--color: $common-base-variable--text-color !default;
+$ipb-browse-brick--mosaic-group-item--border-color: $ipb-color-grey-300 !default;
+$ipb-browse-brick--mosaic-group-item--border: 1px solid $ipb-browse-brick--mosaic-group-item--border-color !default;
+$ipb-browse-brick--mosaic-group-item--background-color: $ipb-color-white-100 !default;
+$ipb-browse-brick--mosaic-item--background-color: $ipb-color-white-100 !default;
+$ipb-browse-brick--mosaic-item--color: $common-base-variable--text-color !default;
+$ipb-browse-brick--mosaic-item--hover--color: inherit !default;
+$ipb-browse-brick--mosaic-item--hover--background-color--alpha: 0.05 !default;
+
+$ipb-browse-brick--mosaic-item-description--color: $ipb-color-grey-800 !default;
+
+$ipb-browse-brick--mosaic-item-image--background-color: common-adjust-alpha($ipb-color-blue-700, .1) !default;
+$ipb-browse-brick--mosaic-item-image--background-color--alpha: 0.1 !default;
+$ipb-browse-brick--mosaic-item-image--color: $ipb-color-blue-700 !default;
+
+$ipb-browse-brick-panel--mosaic--background-color: transparent !default;
+$ipb-browse-brick-panel--mosaic--border: none !default;
+
+$ipb-browse-brick--tree-item--color: $ipb-color-grey-900 !default;
+$ipb-browse-brick--tree-item--hyperlink--color: $common-hyperlink-color !default;
+
+$ipb-browse-brick--tree-item-filter-data--color: $ipb-color-grey-800 !default;
+
+$ipb-browse-brick--tree-item--description--color: $ipb-color-grey-800 !default;
+
+$ipb-browse-brick--tree-item--wrapper--color: inherit !default;
+
+$ipb-browse-brick--list-group-item--background-color: $ipb-color-white-100 !default;
+$ipb-browse-brick--list-group-item--border-top-color: $ipb-color-grey-400 !default;
+$ipb-browse-brick--list-group-item--border-top: 1px solid $ipb-browse-brick--list-group-item--border-top-color !default;
+
+$ipb-browse-brick--list-group--tree--background-color: $ipb-color-white-100 !default;
+
+$ipb-browse-brick--no-item--text--color: $ipb-color-grey-800 !default;
+
+.page_browse_brick_as_mosaic .ipb-browse-brick-panel{
+  background-color: $ipb-browse-brick-panel--mosaic--background-color !important;
+  border: $ipb-browse-brick-panel--mosaic--border !important;
+}
+
+#mosaic-breadcrumb {
+  a {
+    color: $ipb-browse-brick--mosaic-breadcrumb--a--color;
+  }
+  .active {
+    color: $ipb-browse-brick--mosaic-breadcrumb--active--color;
+  }
+}
+
+.mosaic-group-item {
+  background-color: $ipb-browse-brick--mosaic-group-item--background-color;
+  color: $ipb-browse-brick--mosaic-group-item--color;
+  border: $ipb-browse-brick--mosaic-group-item--border;
+
+  @for $i from 1 through length($ipb-browse-brick--mosaic-item--highlight-color) {
+    &:nth-child(#{length($ipb-browse-brick--mosaic-item--highlight-color)}n + #{$i}){
+      .mosaic-item:hover{
+        background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), $ipb-browse-brick--mosaic-item--hover--background-color--alpha);
+      }
+      .mosaic-item-image {
+        background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), $ipb-browse-brick--mosaic-item-image--background-color--alpha);
+        color: nth($ipb-browse-brick--mosaic-item--highlight-color, $i);
+      }
+    }
+  }
+}
+
+.mosaic-item {
+  background-color: $ipb-browse-brick--mosaic-item--background-color;
+  color: $ipb-browse-brick--mosaic-item--color;
+  
+  &:hover {
+    color: $ipb-browse-brick--mosaic-item--hover--color;
+  }
+}
+
+.mosaic-item-text {
+  .mosaic-item-description {
+    color: $ipb-browse-brick--mosaic-item-description--color;
+  }
+}
+
+.mosaic-item-image {
+  background-color: $ipb-browse-brick--mosaic-item-image--background-color;
+  color: $ipb-browse-brick--mosaic-item-image--color;
+}
+
+.list-group-item .list-group-item-text, .tree-item {
+  color: $ipb-browse-brick--tree-item--color;
+
+  & a {
+    color: $ipb-browse-brick--tree-item--hyperlink--color;
+  }
+}
+
+.list-group.tree .list-group-item .list-group-item-description {
+  color: $ipb-browse-brick--tree-item--description--color;
+}
+
+.list-group-item .tree-item-wrapper .tree-item-filter-data {
+  color: $ipb-browse-brick--tree-item-filter-data--color;
+  a {
+    color: $ipb-browse-brick--tree-item-filter-data--color;
+  }
+}
+
+#brick_content_tree .list-group-item>.tree-item-wrapper {;
+  color: $ipb-browse-brick--tree-item--wrapper--color;
+}
+
+#brick_content_tree  .list-group-item {
+  background-color: $ipb-browse-brick--list-group-item--background-color;
+  border: none;
+  border-top: $ipb-browse-brick--list-group-item--border-top;
+
+
+  @for $i from 1 through length($ipb-browse-brick--mosaic-item--highlight-color) {
+    &:nth-child(#{length($ipb-browse-brick--mosaic-item--highlight-color)}n + #{$i - 1}) {
+      &:hover {
+        background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), $ipb-browse-brick--mosaic-item--hover--background-color--alpha);
+      }
+      > .tree-item-wrapper .tree-item-image {
+        background-color: common-adjust-alpha(nth($ipb-browse-brick--mosaic-item--highlight-color, $i), $ipb-browse-brick--mosaic-item-image--background-color--alpha);
+        color: nth($ipb-browse-brick--mosaic-item--highlight-color, $i);
+      }
+    }
+  }
+}
+
+.list-group.tree {
+  background-color: $ipb-browse-brick--list-group--tree--background-color;
+}
+
+.ipb-browse-brick--no-item--text {
+  color: $ipb-browse-brick--no-item--text--color;
+}

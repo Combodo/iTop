@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-structure/3.2.0',
-	array(
+	'itop-structure/3.3.0',
+	[
 		// Identification
 		//
 		'label' => 'Core iTop Structure',
@@ -12,28 +11,28 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
-		),
+		'dependencies' => [
+		],
 		'mandatory' => true,
 		'visible' => false,
 		'installer' => 'StructureInstaller',
 
 		// Components
 		//
-		'datamodel' => array(
+		'datamodel' => [
 			'main.itop-structure.php',
-		),
-		'data.struct' => array(
-		),
-		'data.sample' => array(
+		],
+		'data.struct' => [
+		],
+		'data.sample' => [
 			'data.sample.organizations.xml',
 			'data.sample.locations.xml',
 			'data.sample.persons.xml',
 			'data.sample.teams.xml',
 			'data.sample.contactteam.xml',
 			'data.sample.contacttype.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
@@ -41,13 +40,12 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
-		),
-	)
+		'settings' => [
+		],
+	]
 );
 
-if (!class_exists('StructureInstaller'))
-{
+if (!class_exists('StructureInstaller')) {
 	// Module installation handler
 	//
 	class StructureInstaller extends ModuleInstallerAPI
@@ -66,8 +64,15 @@ if (!class_exists('StructureInstaller'))
 		 */
 		public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			if (strlen($sPreviousVersion) > 0)
-			{
+			if (strlen($sPreviousVersion) > 0) {
+				// Search for existing ActionEmail where the language attribute was defined on its child
+				if (version_compare($sPreviousVersion, '3.2.0', '<')) {
+					SetupLog::Info("|  Migrate ActionEmail language attribute values to its parent.");
+					$sTableToRead = MetaModel::DBGetTable('ActionEmail');
+					$sTableToSet = MetaModel::DBGetTable('ActionNotification');
+					self::MoveColumnInDB($sTableToRead, 'language', $sTableToSet, 'language', true);
+					SetupLog::Info("|  ActionEmail migration done.");
+				}
 				// If you want to migrate data from one format to another, do it here
 				self::RenameEnumValueInDB('Software', 'type', 'DBserver', 'DBServer');
 				self::RenameEnumValueInDB('Software', 'type', 'Webserver', 'WebServer');
@@ -85,7 +90,7 @@ if (!class_exists('StructureInstaller'))
 				self::RenameClassInDB('IPinterface', 'IPInterface');
 			}
 		}
-	
+
 		/**
 		 * Handler called after the creation/update of the database schema
 		 * @param $oConfiguration Config The new configuration of the application
@@ -94,6 +99,19 @@ if (!class_exists('StructureInstaller'))
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
+			// Default language will be used for actions
+			// Note: There is a issue when upgrading, default language cannot be retrieved from the passed configuration, we have to read it from the disk
+			if (utils::IsNullOrEmptyString($sPreviousVersion)) {
+				// Fresh install
+				$sDefaultLanguage = $oConfiguration->GetDefaultLanguage();
+			} else {
+				// Upgrade
+				$sDefaultLanguage = utils::GetConfig(true)->GetDefaultLanguage();
+			}
+			// Fallback language on english if not french
+			$sDefaultLanguage = $sDefaultLanguage === 'FR FR' ? 'FR FR' : 'EN US';
+			SetupLog::Info("Default app language used for actions: $sDefaultLanguage");
+
 			// Search for existing TriggerOnObject where the Trigger string complement is empty and fed it with target_class field value
 			if (version_compare($sPreviousVersion, '3.1.0', '<')) {
 				SetupLog::Info("|  Feed computed field triggering_class on existing Triggers.");
@@ -115,7 +133,7 @@ if (!class_exists('StructureInstaller'))
 				SetupLog::Info("|  | ".$iNbProcessed." triggers processed.");
 			}
 
-			// Add default configuration, so Persons are notified if mentioned on any Caselog
+			// Add notifications by email to Persons if mentioned on any log
 			if (version_compare($sPreviousVersion, '3.0.0', '<')) {
 				SetupLog::Info("Adding default triggers/action for Person objects mentions. All DM classes with at least 1 log attribute will be concerned...");
 
@@ -129,7 +147,7 @@ if (!class_exists('StructureInstaller'))
 					foreach (MetaModel::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL, true) as $sClass) {
 						$aLogAttCodes = MetaModel::GetAttributesList($sClass, ['AttributeCaseLog']);
 
-						// Skip class with log attribute
+						// Skip class with no log attribute
 						if (count($aLogAttCodes) === 0) {
 							continue;
 						}
@@ -175,7 +193,7 @@ if (!class_exists('StructureInstaller'))
 						}
 
 						// Build the trigger
-						$oTrigger = MetaModel::NewObject('TriggerOnObjectMention');
+						$oTrigger = MetaModel::NewObject(TriggerOnObjectMention::class);
 						$oTrigger->Set('description', 'Person mentioned on '.$sClass);
 						$oTrigger->Set('target_class', $sClass);
 						$oTrigger->Set('mentioned_filter', $oPersonSearch->ToOQL());
@@ -191,15 +209,32 @@ if (!class_exists('StructureInstaller'))
 
 				// Build the corresponding action and link it to the triggers
 				if (count($aCreatedTriggerIds) > 0) {
-					$oAction = MetaModel::NewObject('ActionEmail');
-					$oAction->Set('name', 'Notification to persons mentioned in logs');
+					// Actions data for english and french
+					$aActionsData = [
+						'EN US' => [
+							'name' => 'Notification to persons mentioned in logs',
+							'subject' => 'You have been mentioned in "$this->friendlyname$"',
+							'body' => '<p>Hello $mentioned->first_name$,</p>
+								<p>You have been mentioned by $current_contact->friendlyname$ in $this->hyperlink()$</p>',
+						],
+						'FR FR' => [
+							'name' => 'Notification aux personnes mentionnées dans les journaux',
+							'subject' => 'Vous avez été mentionné dans "$this->friendlyname$"',
+							'body' => '<p>Bonjour $mentioned->first_name$,</p>
+								<p>Vous avez été mentionné par $current_contact->friendlyname$ dans $this->hyperlink()$</p>',
+						],
+					];
+
+					// Create action in app. default language and link it to the triggers
+					$aData = $aActionsData[$sDefaultLanguage];
+					$oAction = MetaModel::NewObject(ActionEmail::class);
+					$oAction->Set('name', $aData['name']);
 					$oAction->Set('status', 'enabled');
+					$oAction->Set('language', $sDefaultLanguage);
 					$oAction->Set('from', '$current_contact->email$');
 					$oAction->Set('to', 'SELECT Person WHERE id = :mentioned->id');
-					$oAction->Set('subject', 'You have been mentioned in "$this->friendlyname$"');
-					$oAction->Set('body', '<p>Hello $mentioned->first_name$,</p>
-								<p>You have been mentioned by $current_contact->friendlyname$ in $this->hyperlink()$</p>'
-					);
+					$oAction->Set('subject', $aData['subject']);
+					$oAction->Set('body', $aData['body']);
 
 					/** @var \ormLinkSet $oOrm */
 					$oOrm = $oAction->Get('trigger_list');
@@ -219,6 +254,195 @@ if (!class_exists('StructureInstaller'))
 				} else {
 					SetupLog::Info("... default triggers/action successfully created for $iClassesWithLogCount classes.");
 				}
+			}
+
+			// Add notifications by newsroom to Persons if mentioned on any log
+			if (version_compare($sPreviousVersion, '3.2.0', '<')) {
+				SetupLog::Info("Adding default newsroom actions for Person objects mentions. All existing TriggerOnObjectMention mentioning the Person class will be concerned...");
+
+				$sPersonClass = Person::class;
+				$iExistingTriggersCount = 0;
+
+				// Actions data for english and french
+				$aActionsData = [
+					'EN US' => [
+						'name' => 'Notification to persons mentioned in logs',
+						'message' => 'You have been mentioned by $current_contact->friendlyname$',
+					],
+					'FR FR' => [
+						'name' => 'Notification aux personnes mentionnées dans les journaux',
+						'message' => 'Vous avez été mentionné par $current_contact->friendlyname$',
+					],
+				];
+
+				// Start by creating the default action no matter what (even if there is no relevant trigger, it will be there for future use)
+				$aData = $aActionsData[$sDefaultLanguage];
+				$oAction = MetaModel::NewObject(ActionNewsroom::class);
+				$oAction->Set('name', $aData['name']);
+				$oAction->Set('status', 'enabled');
+				$oAction->Set('language', $sDefaultLanguage);
+				$oAction->Set('priority', 3); // Important priority as a mention is probably more important than a simple notification
+				$oAction->Set('recipients', 'SELECT Person WHERE id = :mentioned->id');
+				$oAction->Set('title', '$this->friendlyname$');
+				$oAction->Set('message', $aData['message']);
+				$oAction->DBWrite();
+
+				SetupLog::Info("|- Created newsroom action \"{$oAction->Get('name')}\".");
+
+				// Retrieve all triggers and find those with a mentioned_filter on the Person class
+				$oTriggersSearch = DBObjectSearch::FromOQL("SELECT ".TriggerOnObjectMention::class);
+				$oTriggersSearch->AllowAllData();
+
+				$oTriggersSet = new DBObjectSet($oTriggersSearch);
+				while ($oTrigger = $oTriggersSet->Fetch()) {
+					// If mentioned class is not a Person, ignore
+					$oMentionedFilter = DBSearch::FromOQL($oTrigger->Get('mentioned_filter'));
+					if (!is_null($oMentionedFilter) && is_a($oMentionedFilter->GetClass(), $sPersonClass, true) === false) {
+						SetupLog::Info("|- Action \"{$oAction->GetName()}\" NOT LINKED to existing trigger \"{$oTrigger->GetName()}\". (mentioned class \"{$oMentionedFilter->GetClass()}\")");
+						continue;
+					}
+
+					// Link the trigger to the action
+					/** @var \ormLinkSet $oOrm */
+					$oOrm = $oTrigger->Get('action_list');
+					$oLink = new lnkTriggerAction();
+					$oLink->Set('action_id', $oAction->GetKey());
+					$oOrm->AddItem($oLink);
+
+					$oTrigger->Set('action_list', $oOrm);
+					$oTrigger->DBUpdate();
+					$iExistingTriggersCount++;
+
+					SetupLog::Info("|- Linked newsroom action \"{$oAction->GetName()}\" to existing trigger \"{$oTrigger->GetName()}\".");
+				}
+
+				if ($iExistingTriggersCount === 0) {
+					SetupLog::Info("... no action created as there is no existing trigger on mention for the $sPersonClass class.");
+				} else {
+					SetupLog::Info("... default newsroom action successfully created and linked to $iExistingTriggersCount triggers on mention.");
+				}
+			}
+
+			// Force subscription policy to ForceAtLeastOneChannel for all existing TriggerOnObjectMention
+			if (version_compare($sPreviousVersion, '3.2.0', '<')) {
+				SetupLog::Info("Forcing subscription policy to ForceAtLeastOneChannel for all existing TriggerOnObjectMention...");
+
+				$oTriggersSearch = DBObjectSearch::FromOQL("SELECT ".TriggerOnObjectMention::class);
+				$oTriggersSearch->AllowAllData();
+
+				$oTriggersSet = new DBObjectSet($oTriggersSearch);
+				while ($oTrigger = $oTriggersSet->Fetch()) {
+					$oTrigger->Set('subscription_policy', \Combodo\iTop\Core\Trigger\Enum\SubscriptionPolicy::ForceAtLeastOneChannel->value);
+					$oTrigger->DBUpdate();
+
+					SetupLog::Info("|- Trigger \"{$oTrigger->GetName()}\" updated.");
+				}
+
+				SetupLog::Info("... all existing TriggerOnObjectMention updated.");
+			}
+
+			// Add notifications by newsroom (not linked to any trigger yet) for TriggerOnPortalUpdate and TriggerOnReachingState
+			if (version_compare($sPreviousVersion, '3.2.0', '<')) {
+				// TriggerOnPortalUpdate
+				SetupLog::Info("Adding default newsroom action for TriggerOnPortalUpdate (not linked to any trigger yet)...");
+
+				//  - Actions data for english and french
+				$aActionsData = [
+					'EN US' => [
+						'name' => 'Notification on public log update through the portal',
+						'message' => 'New message from $current_contact->friendlyname$',
+					],
+					'FR FR' => [
+						'name' => 'Notification sur MAJ du journal public via le portail',
+						'message' => 'Nouveau message de $current_contact->friendlyname$',
+					],
+				];
+
+				// - Create action in app. default language and link it to the triggers
+				$aData = $aActionsData[$sDefaultLanguage];
+				$oAction = MetaModel::NewObject(ActionNewsroom::class);
+				$oAction->Set('name', $aData['name']);
+				$oAction->Set('status', 'enabled');
+				$oAction->Set('language', $sDefaultLanguage);
+				$oAction->Set('priority', 4); // Standard priority
+				$oAction->Set('recipients', 'SELECT Person WHERE id = :this->agent_id');
+				$oAction->Set('title', '$this->friendlyname$');
+				$oAction->Set('message', $aData['message']);
+				$oAction->DBWrite();
+
+				// TriggerOnReachingState
+				SetupLog::Info("Adding default newsroom action for TriggerOnReachingState (not linked to any trigger yet)...");
+
+				// Actions data for english and french
+				$aActionsData = [
+					'EN US' => [
+						'name' => 'Notification to agent when ticket assigned',
+						'message' => 'Ticket has been assigned to you',
+					],
+					'FR FR' => [
+						'name' => 'Notification à l\'agent à l\'assignation du ticket',
+						'message' => 'Le ticket vous a été assigné',
+					],
+				];
+
+				// Create action in app. default language and link it to the triggers
+				$aData = $aActionsData[$sDefaultLanguage];
+				$oAction = MetaModel::NewObject(ActionNewsroom::class);
+				$oAction->Set('name', $aData['name']);
+				$oAction->Set('status', 'enabled');
+				$oAction->Set('language', $sDefaultLanguage);
+				$oAction->Set('priority', 3); // Important priority
+				$oAction->Set('recipients', 'SELECT Person WHERE id = :this->agent_id');
+				$oAction->Set('title', '$this->friendlyname$');
+				$oAction->Set('message', $aData['message']);
+				$oAction->DBWrite();
+			}
+
+			//N°824 - Fill object_class in EventNotification from the Triggers target_class
+			if (version_compare($sPreviousVersion, '3.2.0', '<')) {
+				SetupLog::Info("Filling object_class in EventNotification from the Triggers target_class");
+				$iNbProcessed = 0;
+
+				$sTableToSet = MetaModel::DBGetTable('EventNotification', 'object_class');
+				$oAttDefToSet = MetaModel::GetAttributeDef('EventNotification', 'object_class');
+				$oAttDefObjectId = MetaModel::GetAttributeDef('EventNotification', 'object_id');
+				$oAttDefTriggerId = MetaModel::GetAttributeDef('EventNotification', 'trigger_id');
+
+				$aColumnsToSets = array_keys($oAttDefToSet->GetSQLColumns());
+				$sColumnToSet = $aColumnsToSets[0]; // We know that a string has only one column
+				$aColumnsTriggerId = array_keys($oAttDefTriggerId->GetSQLColumns());
+				$sColumnTriggerId = $aColumnsTriggerId[0]; // We know that a string has only one column
+				$aColumnsObjectd = array_keys($oAttDefObjectId->GetSQLColumns());
+				$sColumnObjectId = $aColumnsObjectd[0]; // We know that a string has only one column
+
+				$oSearch = DBObjectSearch::FromOQL('SELECT TriggerOnObject');
+				$oSet = new DBObjectSet($oSearch);
+				$aTriggerIdToTargetClass = [];
+				while ($oTrigger = $oSet->Fetch()) {
+					$aTriggerIdToTargetClass[$oTrigger->GetKey()] =  $oTrigger->Get('target_class');
+				}
+
+				foreach ($aTriggerIdToTargetClass as $sKey => $sTargetClass) {
+
+					if (MetaModel::HasChildrenClasses($sTargetClass)) {
+						//in this case, we have toget the name of the final class
+						$sTableToRead = MetaModel::DBGetTable($sTargetClass, 'finalclass');
+						$oAttDefToRead = MetaModel::GetAttributeDef($sTargetClass, 'finalclass');
+						$aColumnsToReads = array_keys($oAttDefToRead->GetSQLColumns());
+						$sColumnToRead = $aColumnsToReads[0]; // We know that a string has only one column
+						$sObjectPrimaryKey = MetaModel::DBGetKey($sTargetClass);
+
+						$sRepair = "UPDATE `$sTableToSet` JOIN `$sTableToRead` ON `$sTableToSet`.`$sColumnObjectId` = `$sTableToRead`.`$sObjectPrimaryKey` SET `$sTableToSet`.`$sColumnToSet` = `$sTableToRead`.`$sColumnToRead` WHERE  `$sTableToSet`.`$sColumnTriggerId` = '".$sKey."' AND `$sTableToSet`.`$sColumnToSet` = ''";
+					} else {
+
+						$sRepair = "UPDATE `$sTableToSet` SET `$sTableToSet`.`$sColumnToSet` = '".$sTargetClass."' WHERE `$sTableToSet`.`$sColumnTriggerId` = '".$sKey."' AND `$sTableToSet`.`$sColumnToSet` = ''";
+					}
+
+					SetupLog::Info(" |  | Query: ".$sRepair);
+					CMDBSource::Query($sRepair);
+					$iNbProcessed += CMDBSource::AffectedRows();
+				}
+				SetupLog::Info("|  | ".$iNbProcessed." EventNotification processed.");
 			}
 		}
 	}

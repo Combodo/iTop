@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2010-2023 Combodo SARL
+ * Copyright (C) 2010-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -22,9 +23,11 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Spinner\SpinnerUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 if (!defined('APPROOT')) {
@@ -57,7 +60,6 @@ function GenerateBackupsList(string $sListTitleDictKey, string $sNoRecordDictKey
 
 	return $oBlockForList;
 }
-
 
 /////////////////////////////////////////////////////////////////////
 // Main program
@@ -94,15 +96,10 @@ try {
 	//
 	$sMySQLBinDir = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', '');
 	$sMySQLBinDir = utils::ReadParam('mysql_bindir', $sMySQLBinDir, true);
-	if (empty($sMySQLBinDir)) {
-		$sMySQLDump = 'mysqldump';
-	} else {
-		//echo 'Info - Found mysql_bindir: '.$sMySQLBinDir;
-		$sMySQLDump = '"'.$sMySQLBinDir.'/mysqldump"';
-	}
+	$sMySQLDump = DBBackup::MakeSafeMySQLCommand($sMySQLBinDir, 'mysqldump');
 	$sCommand = "$sMySQLDump -V 2>&1";
 
-	$aOutput = array();
+	$aOutput = [];
 	$iRetCode = 0;
 	exec($sCommand, $aOutput, $iRetCode);
 	if ($iRetCode == 0) {
@@ -130,7 +127,7 @@ try {
 	// Destination directory
 	//
 	// Make sure the target directory exists and is writeable
-	$sBackupDir = realpath(APPROOT.'data/backups/');
+	$sBackupDir = realpath(utils::GetDataPath().'backups/');
 	SetupUtils::builddir($sBackupDir);
 	if (!is_dir($sBackupDir)) {
 		$oBlockForChecks->AddSubBlock(
@@ -178,7 +175,7 @@ try {
 	// Week Days
 	//
 	$sScheduleInfo = empty($sZipNameInfo) ? '' : $sZipNameInfo.'<br>';
-	$aWeekDayToString = array(
+	$aWeekDayToString = [
 		1 => Dict::S('DayOfWeek-Monday'),
 		2 => Dict::S('DayOfWeek-Tuesday'),
 		3 => Dict::S('DayOfWeek-Wednesday'),
@@ -186,8 +183,8 @@ try {
 		5 => Dict::S('DayOfWeek-Friday'),
 		6 => Dict::S('DayOfWeek-Saturday'),
 		7 => Dict::S('DayOfWeek-Sunday'),
-	);
-	$aDayLabels = array();
+	];
+	$aDayLabels = [];
 	$oBackupExec = new BackupExec();
 	foreach ($oBackupExec->InterpretWeekDays() as $iDay) {
 		$aDayLabels[] = $aWeekDayToString[$iDay];
@@ -205,11 +202,10 @@ try {
 			->SetIsCollapsible(false)
 	);
 
-
 	//--- List of backups
 	//
 	$aFiles = $oBackup->ListFiles($sBackupDirAuto);
-	$aFilesToDelete = array();
+	$aFilesToDelete = [];
 	while (count($aFiles) > $iRetention - 1) {
 		$aFilesToDelete[] = array_shift($aFiles);
 	}
@@ -220,10 +216,10 @@ try {
 	} else {
 		$sDisableRestore = '';
 	}
-	$sRestore= Dict::S('bkp-button-restore-now');
+	$sRestore = Dict::S('bkp-button-restore-now');
 	//--- 1st table: list the backups made in the background
 	//
-	$aDetails = array();
+	$aDetails = [];
 	$sButtonOnClickJS = '';
 	foreach ($oBackup->ListFiles($sBackupDirAuto) as $sBackupFile) {
 		$sFileName = basename($sBackupFile);
@@ -231,12 +227,14 @@ try {
 		if (MetaModel::GetConfig()->Get('demo_mode')) {
 			$sName = $sFileName;
 		} else {
-			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php',
-				array(
+			$sAjax = utils::GetAbsoluteUrlModulePage(
+				'itop-backup',
+				'ajax.backup.php',
+				[
 					'operation' => 'download',
 					'file' => $sFilePath,
 					'transaction_id' => $sTransactionId,
-				)
+				]
 			);
 			$sName = "<a href=\"$sAjax\">".$sFileName.'</a>';
 		}
@@ -246,21 +244,21 @@ try {
 		$oButton = ButtonUIBlockFactory::MakeNeutral($sRestore);
 		$oButton->SetIsDisabled($oRestoreMutex->IsLocked());
 		if (in_array($sBackupFile, $aFilesToDelete)) {
-			$aDetails[] = array(
+			$aDetails[] = [
 				'file' => $sName.' <span class="next_to_delete" title="'.Dict::S('bkp-next-to-delete').'">*</span>',
 				'size' => $sSize,
 				'actions' => BlockRenderer::RenderBlockTemplates($oButton),
-			);
+			];
 		} else {
-			$aDetails[] = array('file' => $sName, 'size' => $sSize, 'actions' => BlockRenderer::RenderBlockTemplates($oButton));
+			$aDetails[] = ['file' => $sName, 'size' => $sSize, 'actions' => BlockRenderer::RenderBlockTemplates($oButton)];
 		}
 		$sButtonOnClickJS .= '$("#'.$oButton->GetId().'").off("click").on("click", function () {LaunchRestoreNow("'.$sFileEscaped.'", "'.$sConfirmRestore.'");});';
 	}
-	$aConfig = array(
-		'file' => array('label' => Dict::S('bkp-table-file'), 'description' => Dict::S('bkp-table-file+')),
-		'size' => array('label' => Dict::S('bkp-table-size'), 'description' => Dict::S('bkp-table-size+')),
-		'actions' => array('label' => Dict::S('bkp-table-actions'), 'description' => Dict::S('bkp-table-actions+')),
-	);
+	$aConfig = [
+		'file' => ['label' => Dict::S('bkp-table-file'), 'description' => Dict::S('bkp-table-file+')],
+		'size' => ['label' => Dict::S('bkp-table-size'), 'description' => Dict::S('bkp-table-size+')],
+		'actions' => ['label' => Dict::S('bkp-table-actions'), 'description' => Dict::S('bkp-table-actions+')],
+	];
 	$sTableId = 'datatable_background_backups';
 	$oP->AddUiBlock(
 		GenerateBackupsList(
@@ -279,10 +277,9 @@ $('#$sTableId').on('init.dt draw.dt', function(){
 JS
 	);
 
-
 	//--- 2nd table: list the backups made manually
 	//
-	$aDetails = array();
+	$aDetails = [];
 	$sButtonOnClickJS = '';
 	foreach ($oBackup->ListFiles($sBackupDirManual) as $sBackupFile) {
 		$sFileName = basename($sBackupFile);
@@ -290,12 +287,14 @@ JS
 		if (MetaModel::GetConfig()->Get('demo_mode')) {
 			$sName = $sFileName;
 		} else {
-			$sAjax = utils::GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php',
-				array(
+			$sAjax = utils::GetAbsoluteUrlModulePage(
+				'itop-backup',
+				'ajax.backup.php',
+				[
 					'operation' => 'download',
 					'file' => $sFilePath,
 					'transaction_id' => $sTransactionId,
-				)
+				]
 			);
 			$sName = "<a href=\"$sAjax\">".$sFileName.'</a>';
 		}
@@ -304,14 +303,14 @@ JS
 		$sFileEscaped = addslashes($sFilePath);
 		$oButton = ButtonUIBlockFactory::MakeNeutral("$sRestore");
 		$oButton->SetIsDisabled($oRestoreMutex->IsLocked());
-		$aDetails[] = array('file' => $sName, 'size' => $sSize, 'actions' => BlockRenderer::RenderBlockTemplates($oButton));
+		$aDetails[] = ['file' => $sName, 'size' => $sSize, 'actions' => BlockRenderer::RenderBlockTemplates($oButton)];
 		$sButtonOnClickJS .= '$("#'.$oButton->GetId().'").off("click").on("click", function () {LaunchRestoreNow("'.$sFileEscaped.'", "'.$sConfirmRestore.'");});';
 	}
-	$aConfig = array(
-		'file' => array('label' => Dict::S('bkp-table-file'), 'description' => Dict::S('bkp-table-file+')),
-		'size' => array('label' => Dict::S('bkp-table-size'), 'description' => Dict::S('bkp-table-size+')),
-		'actions' => array('label' => Dict::S('bkp-table-actions'), 'description' => Dict::S('bkp-table-actions+')),
-	);
+	$aConfig = [
+		'file' => ['label' => Dict::S('bkp-table-file'), 'description' => Dict::S('bkp-table-file+')],
+		'size' => ['label' => Dict::S('bkp-table-size'), 'description' => Dict::S('bkp-table-size+')],
+		'actions' => ['label' => Dict::S('bkp-table-actions'), 'description' => Dict::S('bkp-table-actions+')],
+	];
 	$sTableId = 'datatable_manual_backups';
 	$oP->AddUiBlock(
 		GenerateBackupsList(
@@ -330,13 +329,11 @@ $('#$sTableId').on('init.dt draw.dt', function(){
 JS
 	);
 
-
 	//--- Backup now
 	$oBlockForBackupNow = new UIContentBlock();
 	$oBlockForBackupNow->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('bkp-button-backup-now'), 2));
 
 	$oP->AddUiBlock($oBlockForBackupNow);
-
 
 	// Ongoing operation ?
 	//
@@ -361,15 +358,16 @@ JS
 	//
 	/** @var \BackgroundTask $oTask */
 	$oTask = MetaModel::GetObjectByName(BackgroundTask::class, BackupExec::class, false);
-	if ($oTask)
-	{
+	if ($oTask) {
 		$oTimezone = new DateTimeZone(MetaModel::GetConfig()->Get('timezone'));
 		$oNext = new DateTime($oTask->Get('next_run_date'), $oTimezone);
-		$sNextOccurrence = Dict::Format('bkp-next-backup', $aWeekDayToString[$oNext->Format('N')], $oNext->Format('Y-m-d'),
-			$oNext->Format('H:i'));
-	}
-	else
-	{
+		$sNextOccurrence = Dict::Format(
+			'bkp-next-backup',
+			$aWeekDayToString[$oNext->Format('N')],
+			$oNext->Format('Y-m-d'),
+			$oNext->Format('H:i')
+		);
+	} else {
 		$sNextOccurrence = Dict::S('bkp-next-backup-unknown');
 	}
 	$oBlockForBackupNow->AddSubBlock(
@@ -380,7 +378,7 @@ JS
 
 	// Do backup now
 	//
-	$sBackUpNow= Dict::S('bkp-button-backup-now');
+	$sBackUpNow = Dict::S('bkp-button-backup-now');
 	$oLaunchBackupButton = ButtonUIBlockFactory::MakeForPrimaryAction($sBackUpNow);
 	$oLaunchBackupButton->SetOnClickJsCode('LaunchBackupNow();');
 	$oBlockForBackupNow->AddSubBlock($oLaunchBackupButton);
@@ -403,7 +401,6 @@ JS
 	$sPleaseWaitRestore = addslashes(Dict::S('bkp-wait-restore'));
 	$sRestoreDone = addslashes(Dict::S('bkp-success-restore'));
 
-
 	$sMySQLBinDir = addslashes(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
 	$sDBHost = addslashes(MetaModel::GetConfig()->Get('db_host'));
 	$sDBUser = addslashes(MetaModel::GetConfig()->Get('db_user'));
@@ -412,6 +409,9 @@ JS
 	$sDBSubName = addslashes(MetaModel::GetConfig()->Get('db_subname'));
 
 	$sEnvironment = addslashes(utils::GetCurrentEnvironment());
+
+	$oModalSpinner = SpinnerUIBlockFactory::MakeMedium(null, $sPleaseWaitBackup);
+	$sModalSpinnerHtml = BlockRenderer::RenderBlockTemplates($oModalSpinner);
 
 	$oP->add_script(
 		<<<JS
@@ -424,7 +424,7 @@ function LaunchBackupNow()
 	{
 		const oModal = CombodoModal.OpenModal({
 				title: '$sBackUpNow',
-				content: '<i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitBackup'
+				content: `$sModalSpinnerHtml`
 		});
 
 		var oParams = {};
@@ -495,13 +495,10 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 JS
 	);
 
-	if (MetaModel::GetConfig()->Get('demo_mode'))
-	{
+	if (MetaModel::GetConfig()->Get('demo_mode')) {
 		$oP->add_ready_script("$('button').prop('disabled', true).attr('title', 'Disabled in demonstration mode')");
 	}
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
 	$oP = new iTopWebPage(Dict::S('bkp-status-title'));
 	$oP->p('<b>'.$e->getMessage().'</b>');
 }

@@ -1,26 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+/**
+ *
+ */
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'iTopUpdate:UI:PageTitle' => 'Alkalmazásfrissítés',
 	'itop-core-update:UI:SelectUpdateFile' => 'Alkalmazásfrissítés',
 	'itop-core-update:UI:ConfirmUpdate' => 'Alkalmazásfrissítés',
@@ -49,7 +39,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'iTopUpdate:UI:UploadArchive' => 'Válasszon egy csomagot a feltöltéshez',
 	'iTopUpdate:UI:ServerFile' => 'A kiszolgálón már meglévő csomag elérési útvonala',
 	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'A frissítés során az alkalmazás csak olvasható lesz.',
-	'iTopUpdate:UI:Status' => 'Státusz',
+	'iTopUpdate:UI:Status' => 'Állapotjelentés',
 	'iTopUpdate:UI:Action' => 'Frissítés',
 	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup~~',
 	'iTopUpdate:UI:History' => 'Verziótörténet',
@@ -69,12 +59,11 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Az alkalmazás frissíthető',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Az alkalmazás nem frissíthető: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Figyelem: alkalmazás frissítés sikertelen lehet: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>SNéhány módosított fájlt észleltünk</b>, a részleges frissítés nem hajtható végre.</br>Kövesse a <a target="_blank" href="%2$s"> eljárást</a> az iTop manuális frissítéséhez. Az alkalmazás frissítéséhez a <a href="%1$s">setup</a> parancsot kell használnia.',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Néhány manuálisan módosított fájlt észleltünk</b>, a részleges frissítés nem hajtható végre.</br>Kövesse ezt az <a target="_blank" href="%2$s"> eljárást</a> az iTop manuális frissítéséhez. Az alkalmazás frissítéséhez a <a href="%1$s">setup</a> parancsot kell használnia.',
 	'iTopUpdate:UI:CheckInProgress' => 'Kérjük, várjon az integritás ellenőrzés alatt',
 	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup~~',
 	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?~~',
-
-	// Setup Messages
+	'iTopUpdate:UI:FastSetupLaunch' => 'Fast Setup~~',
 	'iTopUpdate:UI:SetupMessage:Ready' => 'Készen állunk',
 	'iTopUpdate:UI:SetupMessage:EnterMaintenance' => 'Karbantartási módba lépés',
 	'iTopUpdate:UI:SetupMessage:Backup' => 'Adatbázis biztonsági mentése',
@@ -85,10 +74,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'iTopUpdate:UI:SetupMessage:UpdateDatabase' => 'Adatbázis frissítés',
 	'iTopUpdate:UI:SetupMessage:ExitMaintenance' => 'Kilépés a karbantartási módból',
 	'iTopUpdate:UI:SetupMessage:UpdateDone' => 'A frissítés befejeződött',
-
-	// Errors
 	'iTopUpdate:Error:MissingFunction' => 'Lehetetlen elindítani a frissítést, hiányzó funkció',
-	'iTopUpdate:Error:MissingFile' => 'Hiányzó fájl: %1$',
+	'iTopUpdate:Error:MissingFile' => 'Hiányzó fájl: %1$s',
 	'iTopUpdate:Error:CorruptedFile' => 'A %1$s fájl sérült',
 	'iTopUpdate:Error:BadFileFormat' => 'A frissítési fájl nem zip fájl',
 	'iTopUpdate:Error:BadFileContent' => 'A frissítési fájl nem alkalmazás archívum',
@@ -104,12 +91,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'iTopUpdate:UI:UpdateDone' => 'Frissítés sikeres',
 	'Menu:iTopUpdate' => 'Alkalmazás frissítés',
 	'Menu:iTopUpdate+' => 'Alkalmazás frissítés',
-
-    // Missing itop entries
 	'Class:ModuleInstallation/Attribute:installed' => 'Telepítve ',
 	'Class:ModuleInstallation/Attribute:name' => 'Név',
 	'Class:ModuleInstallation/Attribute:version' => 'Verzió',
 	'Class:ModuleInstallation/Attribute:comment' => 'Megjegyzés',
-));
-
-
+]);

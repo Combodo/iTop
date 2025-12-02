@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license   https://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -22,5 +23,5 @@
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Core:ormValue:ormDocument:DownloadsCount' => '%1s~~',
-	'Core:ormValue:ormDocument:DownloadsCount+' => 'Downloaded %1$s time(s)~~',
+	'Core:ormValue:ormDocument:DownloadsCount+' => '已下载%1$s次',
 ]);

@@ -1,25 +1,16 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+/**
+ *
+ */
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:IncidentManagement' => 'インシデント管理',
 	'Menu:IncidentManagement+' => 'インシデント管理',
 	'Menu:Incident:Overview' => '概要',
@@ -41,8 +32,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => '状態別オープンインシデント',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'エージェント別オープンインシデント',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => '顧客別オープンインシデント',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -58,7 +48,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 // Class: Incident
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Incident' => 'インシデント',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => '状態',
@@ -149,6 +139,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident/Attribute:tto+' => '',
 	'Class:Incident/Attribute:ttr' => 'ttr',
 	'Class:Incident/Attribute:ttr+' => '',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'TTO 期限',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA tto 合格',
@@ -237,4 +231,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-));
+]);

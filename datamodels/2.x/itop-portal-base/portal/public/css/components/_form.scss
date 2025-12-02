@@ -1,0 +1,44 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb--fieldset--padding-y: 10px !default;
+$ipb--fieldset--padding-x: 7px !default;
+$ipb--fieldset--border-radius: $common-border-radius-500 !default;
+
+$ipb--fieldset--legend--padding-y: $common-spacing-0 !default;
+$ipb--fieldset--legend--padding-x: 13px !default;
+
+$ipb-field--has-tooltip-or-is-mandatory--vertical-align: top !default;
+$ipb-field--has-tooltip-or-is-mandatory--left: $common-spacing-200 !default;
+
+$ipb-field--is-mandatory--font-size: 0.6rem !default;
+
+.form_fields {
+  fieldset {
+    padding: $ipb--fieldset--padding-y $ipb--fieldset--padding-x;
+    border-radius: $ipb--fieldset--border-radius;
+    legend {
+      padding: $ipb--fieldset--legend--padding-y $ipb--fieldset--legend--padding-x;
+    }
+  }
+}
+
+
+.form_field_label > .control-label[data-tooltip-instantiated="true"]:after, .form_field .form_mandatory .control-label:after {
+  position: relative;
+  vertical-align: $ipb-field--has-tooltip-or-is-mandatory--vertical-align;
+  left: $ipb-field--has-tooltip-or-is-mandatory--left;
+  @extend %fa-solid-base;
+}
+
+.form_field_label > .control-label[data-tooltip-instantiated="true"]:after {
+    cursor: pointer;
+    @extend %common-font-size-50;
+}
+
+.form_field .form_mandatory .control-label:after{
+  font-size: $common-font-size-20;
+};

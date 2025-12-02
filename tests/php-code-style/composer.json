@@ -1,0 +1,7 @@
+{
+    "require-dev": {
+        "php": "^7.0 || ^8.0",
+        "friendsofphp/php-cs-fixer": "^3.89",
+        "phpstan/phpstan": "^2.1"
+    }
+}

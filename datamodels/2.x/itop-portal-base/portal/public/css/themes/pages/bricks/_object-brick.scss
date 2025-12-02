@@ -1,0 +1,11 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-object-brick--url-to-clipboard-tooltip-copied--color: $ipb-color-green-500!default;
+
+.url-to-clipboard-tooltip-copied {
+  color: $ipb-object-brick--url-to-clipboard-tooltip-copied--color;
+}

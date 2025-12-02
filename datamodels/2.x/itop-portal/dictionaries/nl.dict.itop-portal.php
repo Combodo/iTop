@@ -1,34 +1,18 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'portal:itop-portal' => 'Standaard portaal', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
+/**
+ * @author Benjamin Planque <benjamin.planque@combodo.com>
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
+ */
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'portal:itop-portal' => 'Standaard portaal',
 	'Page:DefaultTitle' => '%1$s - Gebruikersportaal',
 	'Brick:Portal:UserProfile:Title' => 'Mijn profiel',
 	'Brick:Portal:NewRequest:Title' => 'Nieuw verzoek',
@@ -38,4 +22,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Openstaand',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Opgelost',
 	'Brick:Portal:ClosedRequests:Title' => 'Gesloten verzoeken',
-));
+	'Brick:Portal:ListAllRequests:Title' => 'Alle verzoeken',
+	'Brick:Portal:ListAllRequests:Title+' => '<p>Bekijk alle verzoeken ongeacht hun status.</p>',
+	'Brick:Portal:ListAllRequests:Tab' => 'Openstaand en gesloten',
+	'Brick:Portal:SearchInAllRequests:Title' => 'Zoek in alle verzoeken',
+	'Brick:Portal:SearchInAllRequests:Title+' => '<p>Ongeacht hun status.</p>',
+]);

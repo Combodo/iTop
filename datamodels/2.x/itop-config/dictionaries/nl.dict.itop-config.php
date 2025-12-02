@@ -1,30 +1,21 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
- * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Menu:ConfigEditor' => 'Configuratie',
-	'config-edit-title' => 'Aanpassen configuratie',
+/**
+ * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
+ */
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'Menu:ConfigFileEditor' => 'Plain text editor~~',
+	'itop-config/Operation:Edit/Title' => 'Aanpassen configuratie',
 	'config-edit-intro' => 'Wees uiterst voorzichtig bij het aanpassen van de configuratie.',
+	'Menu:ConfigEditor' => 'Configuratie',
 	'config-apply' => 'Opslaan',
 	'config-apply-title' => 'Opslaan (Ctrl+S)',
 	'config-cancel' => 'Herbegin',
@@ -35,8 +26,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'config-parse-error' => 'Regel %2$d: %1$s.<br/>Het bestand werd <b>NIET</b> opgeslagen.',
 	'config-current-line' => 'Huidige regel: %1$s',
 	'config-saved-warning-db-password' => 'Wijzigingen zijn opgeslagen, maar de backup zal niet werken doordat het databasewachtwoord karakters bevat die niet ondersteund zijn.',
-	'config-error-transaction' => 'Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.~~',
-	'config-error-file-changed' => 'Error: The Configuration file has changed since you opened it and cannot be saved. Refresh and apply your changes again.~~',
-	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the configuration file cannot be edited.~~',
-	'config-interactive-not-allowed' => ITOP_APPLICATION_SHORT.' interactive edition of the configuration as been disabled. See <code>\'config_editor\' => \'disabled\'</code> in the configuration file.~~',
-));
+	'config-error-transaction' => 'Fout: ongeldige Transactie ID. De configuratie is <b>NIET</b> aangepast.',
+	'config-error-file-changed' => 'Fout: Het configuratiebestand is gewijzigd sinds je het geopend hebt en kan niet opgeslagen worden. Herlaad en pas je wijzigingen opnieuw toe.',
+	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demo mode</b>: Het configuratiebestand kan niet aangepast worden.',
+	'config-interactive-not-allowed' => 'Interactieve aanpassing van de '.ITOP_APPLICATION_SHORT.' configuratie is uitgeschackeld. Zie <code>\'config_editor\' => \'disabled\'</code> in het configuratiebestand.',
+]);

@@ -1,50 +1,25 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * Localized data.
+ * Localized data
  *
- * @author      Benjamin Planque <benjamin.planque@combodo.com>
- * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
- * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-//////////////////////////////////////////////////////////////////////
-// Relations
-//////////////////////////////////////////////////////////////////////
-//
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-//
-// Class: Organization
-//
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+/**
+ * @author Benjamin Planque <benjamin.planque@combodo.com>
+ * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
+ * @author Daniel Rokos <daniel.rokos@itopportal.cz>
+ *
+ */
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Organization' => 'Organizace',
 	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => 'Název',
 	'Class:Organization/Attribute:name+' => '',
 	'Class:Organization/Attribute:code' => 'Kód',
-	'Class:Organization/Attribute:code+' => 'Kód organizace (IČO, DIČO,...)',
+	'Class:Organization/Attribute:code+' => 'Kód organizace (IČO, DIČ,...)',
 	'Class:Organization/Attribute:status' => 'Stav',
 	'Class:Organization/Attribute:status+' => '',
 	'Class:Organization/Attribute:status/Value:active' => 'Aktivní',
@@ -61,17 +36,17 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Mateřská organizace',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
-	'Class:Organization/Attribute:overview' => 'Overview~~',
-	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
-	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
-	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
-));
+	'Class:Organization/Attribute:overview' => 'Přehled',
+	'Organization:Overview:FunctionalCIs' => 'Konfigurační položky této organizace',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'podle typu',
+	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Uživatelé v rámci této organizace',
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Location' => 'Umístění',
 	'Class:Location+' => 'Jakékoli umístění: země, okres, město, čtvrť, budova, patro, místnost, rack,...',
 	'Class:Location/Attribute:name' => 'Název',
@@ -98,13 +73,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Location/Attribute:physicaldevice_list+' => 'Všechna zařízení v tomto umístění',
 	'Class:Location/Attribute:person_list' => 'Kontakty',
 	'Class:Location/Attribute:person_list+' => 'Všechny kontakty v tomto umístění',
-));
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Contact' => 'Kontakt',
 	'Class:Contact+' => '',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
@@ -136,13 +111,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Contact/Attribute:cis_list+' => 'Všechny konfigurační položky spojené s tímto kontaktem',
 	'Class:Contact/Attribute:finalclass' => 'Typ kontaktu',
 	'Class:Contact/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Person' => 'Osoba',
 	'Class:Person+' => '',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
@@ -156,7 +131,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Person/Attribute:mobile_phone+' => '',
 	'Class:Person/Attribute:location_id' => 'Umístění',
 	'Class:Person/Attribute:location_id+' => '',
-	'Class:Person/Attribute:location_name' => 'Umístění',
+	'Class:Person/Attribute:location_name' => 'Název umístění',
 	'Class:Person/Attribute:location_name+' => '',
 	'Class:Person/Attribute:manager_id' => 'Vedoucí',
 	'Class:Person/Attribute:manager_id+' => '',
@@ -166,38 +141,45 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Person/Attribute:team_list+' => 'Všechny týmy, kterých je tato osoba členem',
 	'Class:Person/Attribute:tickets_list' => 'Tikety',
 	'Class:Person/Attribute:tickets_list+' => 'Všechny tikety, které tato osoba zadala',
-	'Class:Person/Attribute:user_list' => 'Users~~',
-	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
+	'Class:Person/Attribute:user_list' => 'Uživatelé',
+	'Class:Person/Attribute:user_list+' => 'Všichni uživatelé přiřazení k této osobě',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Popisný název vedoucího',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
-	'Class:Person/Attribute:picture' => 'Picture~~',
+	'Class:Person/Attribute:picture' => 'Obrázek',
 	'Class:Person/Attribute:picture+' => '~~',
-	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization~~',
-	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
-	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
-	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
-	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-));
+	'Class:Person/UniquenessRule:employee_number+' => 'Osobní číslo musí být jedinečné v organizaci',
+	'Class:Person/UniquenessRule:employee_number' => 'v organizaci \'$this->org_name$\' již existuje osoba se stejným osobním číslem',
+	'Class:Person/UniquenessRule:name+' => 'Jméno zaměstnance by mělo být v rámci organizace jedinečné',
+	'Class:Person/UniquenessRule:name' => 'V organizaci \'$this->org_name$\' již existuje osoba se stejným jménem',
+	'Class:Person/Error:ChangingOrgDenied' => 'Tuto osobu nelze přesunout do organizace \'%1$s\' protože její přiřazený uživatel nemá oprávnění k této organizaci a přerušil by se tím přístup osoby k standardnímu portálu',
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Team' => 'Tým',
 	'Class:Team+' => '',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Členové',
 	'Class:Team/Attribute:persons_list+' => 'Všichni členové týmu',
+	'Class:Team/Attribute:overview' => 'Overview~~',
+	'Team:Overview' => 'Tickets and CIs managed by the team~~',
+	'Team:Overview:ActiveTickets' => 'Active tickets~~',
+	'Team:Overview:FunctionalCIs-ByType' => 'Functional CIs~~',
+	'Team:Overview:UserRequest-ByStatus' => 'User requests by status~~',
+	'Team:Overview:UserRequest-ClosedByMonth' => 'User requests closed in last 12 months~~',
+	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
 	'Class:Team/Attribute:tickets_list' => 'Tikety',
 	'Class:Team/Attribute:tickets_list+' => 'Všechny tikety přidělené tomuto týmu',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Document' => 'Dokument',
 	'Class:Document+' => '',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
@@ -224,80 +206,80 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Document/Attribute:status/Value:published' => 'Publikovaný',
 	'Class:Document/Attribute:status/Value:published+' => '',
 	'Class:Document/Attribute:cis_list' => 'Konfigurační položky',
-	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
+	'Class:Document/Attribute:cis_list+' => 'Všechny konfigurační položky spojené s tímto dokumentem',
 	'Class:Document/Attribute:finalclass' => 'Typ dokumentu',
 	'Class:Document/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:DocumentFile' => 'Dokument (soubor)',
 	'Class:DocumentFile+' => '',
 	'Class:DocumentFile/Attribute:file' => 'Soubor',
 	'Class:DocumentFile/Attribute:file+' => '',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:DocumentNote' => 'Dokument (poznámka)',
 	'Class:DocumentNote+' => '',
 	'Class:DocumentNote/Attribute:text' => 'Poznámka',
 	'Class:DocumentNote/Attribute:text+' => '',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:DocumentWeb' => 'Dokument (web)',
 	'Class:DocumentWeb+' => '',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Typology' => 'Typologie',
 	'Class:Typology+' => '',
 	'Class:Typology/Attribute:name' => 'Název',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Typ',
 	'Class:Typology/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:DocumentType' => 'Typ dokumentu',
 	'Class:DocumentType+' => '',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ContactType' => 'Typ kontaktu',
 	'Class:ContactType+' => '',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkPersonToTeam' => 'Spojení (Osoba / Tým)',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
@@ -314,13 +296,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Název role',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:DataAdministration' => 'Správa dat',
 	'Menu:DataAdministration+' => 'Správa dat',
 	'Menu:Catalogs' => 'Katalogy',
@@ -358,20 +340,20 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:Typology+' => 'Konfigurace typologie',
 	'UI_WelcomeMenu_AllConfigItems' => 'Souhrn',
 	'Menu:ConfigManagement:Typology' => 'Konfigurace typologie',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Person:info' => 'Obecné informace',
 	'User:info' => 'Obecné informace',
-	'User:profiles' => 'Profiles (minimum one)~~',
+	'User:profiles' => 'Profily (minimálně jeden)',
 	'Person:personal_info' => 'Osobní informace',
 	'Person:notifiy' => 'Upozornění',
-));
+]);
 
 // Themes
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'theme:fullmoon' => 'Full moon~~',
-	'theme:test-red' => 'Test instance (Red)~~',
-));
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'theme:fullmoon' => 'Úplněk',
+	'theme:test-red' => 'Testovací instance (červená)',
+]);

@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -35,7 +36,7 @@
 // Class: UserExternal
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:UserExternal' => 'External user',
 	'Class:UserExternal+' => 'User authentified outside of '.ITOP_APPLICATION_SHORT,
-));
+]);

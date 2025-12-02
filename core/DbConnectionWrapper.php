@@ -1,6 +1,7 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -60,14 +61,14 @@ class DbConnectionWrapper
 	 *
 	 * @param \mysqli|null $oMysqli
 	 * @since 3.0.4 3.1.1 3.2.0 Param $oMysqli becomes nullable
+	 * @since 3.1.0-4 N°6848 backport of restoring cnx on null parameter value
 	 */
 	public static function SetDbConnectionMockForQuery(?mysqli $oMysqli = null): void
 	{
 		if (is_null($oMysqli)) {
 			// Reset to standard connection
 			static::$oDbCnxMockableForQuery = static::$oDbCnxStandard;
-		}
-		else {
+		} else {
 			static::$oDbCnxMockableForQuery = $oMysqli;
 		}
 	}

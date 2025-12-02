@@ -62,12 +62,9 @@ class DBBackupTest extends ItopTestCase
 		$sCliArgsMinCfg = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
 
 		// depending on the MySQL vendor, we would have `--ssl` or `--ssl-mode=REQUIRED`
-		if (CMDBSource::IsSslModeDBVersion())
-		{
+		if (CMDBSource::IsSslModeDBVersion()) {
 			$this->assertStringStartsWith(' --ssl-mode=REQUIRED', $sCliArgsMinCfg);
-		}
-		else
-		{
+		} else {
 			$this->assertStringStartsWith(' --ssl', $sCliArgsMinCfg);
 			$this->assertStringNotContainsString('--ssl-mode', $sCliArgsMinCfg);
 		}
@@ -90,12 +87,9 @@ class DBBackupTest extends ItopTestCase
 		$sCliArgsCapathCfg = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
 
 		// depending on the MySQL vendor, we would have `--ssl` or `--ssl-mode=VERIFY_CA`
-		if (CMDBSource::IsSslModeDBVersion())
-		{
+		if (CMDBSource::IsSslModeDBVersion()) {
 			$this->assertStringStartsWith(' --ssl-mode=VERIFY_CA', $sCliArgsCapathCfg);
-		}
-		else
-		{
+		} else {
 			$this->assertStringStartsWith(' --ssl', $sCliArgsCapathCfg);
 			$this->assertStringNotContainsString('--ssl-mode', $sCliArgsCapathCfg);
 
@@ -104,30 +98,44 @@ class DBBackupTest extends ItopTestCase
 	}
 
 	/**
-	 *  Host is localhost, we should be forced into tcp
-	 *
-	 * @return void
+	 * @dataProvider GetMysqlCliPortAndTransportOptionsProvider
+	 * @since 2.7.10 3.0.4 3.1.2 3.2.0 test for N°6123 and N°6889
 	 */
-	public function testGetMysqlCliTransportOptionWithLocalhost()
+	public function testGetMysqlCliPortAndTransportOptions(string $sDbHost, ?int $iPort, ?int $iExpectedPortValue, string $sExpectedProtocolCliOption)
 	{
-		$sHost= 'localhost';
-		$sTransport = DBBackup::GetMysqlCliTransportOption($sHost);
+		if (is_null($iExpectedPortValue)) {
+			$sExpectedPortCliOption = '';
+		} else {
+			$sEscapedPortValue = \DBBackup::EscapeShellArg($iExpectedPortValue);
+			$sExpectedPortCliOption = ' --port='.$sEscapedPortValue;
+		}
 
-		$this->assertStringStartsWith('--protocol=tcp', $sTransport);
-		$this->assertStringEndsWith('--protocol=tcp', $sTransport);
+		$sActualCliOptions = $this->InvokeNonPublicStaticMethod(DBBackup::class, 'GetMysqlCliPortAndTransportOptions', [$sDbHost, $iPort]);
+		$this->assertEquals($sExpectedPortCliOption.$sExpectedProtocolCliOption, $sActualCliOptions);
 	}
 
-	/**
-	 * Host is not localhost, we shouldn't be forced into tcp
-	 *
-	 * @return void
-	 */
-	public function testGetMysqlCliTransportOptionWithoutLocalhost()
+	public function GetMysqlCliPortAndTransportOptionsProvider()
 	{
-		$sHost= '127.0.0.1';
-		$sTransport = DBBackup::GetMysqlCliTransportOption($sHost);
+		$iTestPort = 333306;
+		$iDefaultPort = 3306; // cannot access \CMDBSource::MYSQL_DEFAULT_PORT in dataprovider :(
 
-		$this->assertEmpty($sTransport);
+		return [
+			'Localhost no port' => ['localhost', null, null, ''],
+			'Localhost with port' => ['localhost', $iTestPort, $iTestPort, ' --protocol=tcp'],
+
+			// we want both port and protocol for 127.0.0.1, because it is an ip address so using tcp/ip stack !
+			'127.0.0.1 no port' => ['127.0.0.1', null, null, ''],
+			'127.0.0.1 with port' => ['127.0.0.1', $iTestPort, $iTestPort, ''],
+
+			'IP no port' => ['192.168.1.15', null, null, ''],
+			'IP with port' => ['192.168.1.15', $iTestPort, $iTestPort, ''],
+
+			'DNS no port' => ['dbserver.mycompany.com', null, null, ''],
+			'DNS with port' => ['dbserver.mycompany.com', $iTestPort, $iTestPort, ''],
+
+			'Windows name no port' => ['dbserver', null, null, ''],
+			'Windows name with port' => ['dbserver', $iTestPort, $iTestPort, ''],
+		];
 	}
 
 	/**

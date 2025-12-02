@@ -1,28 +1,17 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/*
-* @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2023 Combodo SARL
-* @licence	http://opensource.org/licenses/AGPL-3.0
-*		
-*/
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
+ */
+/**
+ * @author ITOMIG GmbH <martin.raenker@itomig.de>
+ *
+ */
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:IncidentManagement' => 'Incident Management',
 	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Übersicht',
@@ -44,8 +33,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Offene Incidents nach Status',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Offene Incidents nach Bearbeiter',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Offene Incidents nach Kunde',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -61,7 +49,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 // Class: Incident
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Status',
@@ -152,6 +140,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:tto+' => '',
 	'Class:Incident/Attribute:ttr' => 'TTR (Time To Resolve)',
 	'Class:Incident/Attribute:ttr+' => '',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'TTO-Deadline',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA TTO verletzt',
@@ -240,4 +232,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
 	'Tickets:Related:OpenIncidents' => 'Offene Incidents',
-));
+]);

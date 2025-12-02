@@ -1,25 +1,16 @@
 <?php
-// Copyright (c) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-//
-// Copyright 2018 David Gümbel, ITOMIG GmbH, david.guembel @ itomig DE
-// Database inconsistencies
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	// Dictionary entries go here
+
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
+ */
+/**
+ *
+ */
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:DBToolsMenu' => 'DB Tools',
 	'DBTools:Class' => 'Klasse',
 	'DBTools:Title' => 'Datenbankpflege-Tools',
@@ -53,17 +44,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch-Count-Fehler in `%1$s`, %2$d Einträge geholt (fetched) / %3$d gezählt',
 	'DBAnalyzer-Integrity-FinalClass' => 'Das Feld `%2$s`.`%1$s` muss den gleichen Wert `%3$s`.`%1$s` haben',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Das Feld `%2$s`.`%1$s` muss eine gültige Klasse enthalten',
-));
+]);
 
 // Database Info
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'DBTools:DatabaseInfo' => 'Datenbank-Informationen',
 	'DBTools:Base' => 'Datenbank',
 	'DBTools:Size' => 'Größe',
-));
+]);
 
 // Lost attachments
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'DBTools:LostAttachments' => 'Verlorene Attachments',
 	'DBTools:LostAttachments:Disclaimer' => 'Hier können Sie Ihre Datenbank nach verlorenen oder falsch platzierten Attachments durchsuchen. Dies ist kein Recovery-Tool - es stellt keine gelöschten Daten wieder her.',
 	'DBTools:LostAttachments:Button:Analyze' => 'Analysieren',
@@ -80,5 +71,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Restore-Ergebnisse:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d Attachments wurden wiederhergestellt.',
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Als Inline-Bild gespeichert',
-	'DBTools:LostAttachments:History' => 'Attachment "%1$s" mit DB-Tools wiederhergestellt'
-));
+	'DBTools:LostAttachments:History' => 'Attachment "%1$s" mit DB-Tools wiederhergestellt',
+]);

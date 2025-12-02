@@ -1,0 +1,41 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ipb-manage-brick--export-action--color: $ipb-color-grey-800 !default;
+$ipb-manage-brick--no-result--text--color: $ipb-color-grey-800 !default;
+
+$ipb-manage-brick--pie-chart--colors:
+        $ipb-color-blue-400 $ipb-color-blue-950 "rgb(44, 160, 44)",
+        $ipb-color-blue-500 $ipb-color-blue-950 "rgb(214, 39, 40)",
+        $ipb-color-blue-600 $ipb-color-blue-100 "rgb(148, 103, 189)",
+        $ipb-color-blue-700 $ipb-color-blue-100 "rgb(140, 86, 75)",
+        $ipb-color-blue-800 $ipb-color-blue-100 "rgb(227, 119, 194)",
+        $ipb-color-blue-900 $ipb-color-blue-100 "rgb(127, 127, 127)",
+        $ipb-color-blue-950 $ipb-color-blue-100 "rgb(188, 189, 34)",
+        $ipb-color-blue-100 $ipb-color-blue-950 "rgb(23, 190, 207)",
+        $ipb-color-blue-200 $ipb-color-blue-950 "rgb(31, 119, 180)",
+        $ipb-color-blue-300 $ipb-color-blue-950 "rgb(255, 127, 14)"
+!default;
+
+@each $background, $text, $originalColor in $ipb-manage-brick--pie-chart--colors {
+  .c3-chart-arc path[style="fill: #{$originalColor}; cursor: pointer; opacity: 1;"] {
+    fill: $background !important;
+  }
+  .c3-legend-item-tile[style="stroke: #{$originalColor}; pointer-events: none;"] {
+    stroke: $background !important;
+  }
+  .c3-chart-arc:has(path[style="fill: #{$originalColor}; cursor: pointer; opacity: 1;"])  text {
+    fill: $text !important;
+  }
+}
+
+.ipb-manage-brick--export-action {
+  color: $ipb-manage-brick--export-action--color;
+}
+
+.ipb-manage-brick--no-result--text {
+  color: $ipb-manage-brick--no-result--text--color;
+}

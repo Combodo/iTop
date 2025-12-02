@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,6 +21,8 @@
 namespace Combodo\iTop\Portal\Brick;
 
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use Dict;
 use DOMFormatException;
 
@@ -36,9 +38,11 @@ use DOMFormatException;
 class AggregatePageBrick extends PortalBrick
 {
 	// Overloaded constants
-	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-tachometer-alt';
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-tachometer-alt fa-2x';
-	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/aggregate-page/layout.html.twig';
+	public const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-tachometer-alt';
+	public const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-tachometer-alt fa-2x';
+
+	/** @var string @deprecated since 3.2.1 */
+	public const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/aggregate-page/layout.html.twig';
 
 	// Overloaded variables
 	public static $sRouteName = 'p_aggregatepage_brick';
@@ -46,12 +50,22 @@ class AggregatePageBrick extends PortalBrick
 	/**
 	 * @var string[] list of bricks to use, ordered by rank (key=id, value=rank)
 	 */
-	private $aAggregatePageBricks = array();
+	private $aAggregatePageBricks = [];
+
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(
+			self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH.'aggregate-page/layout.html.twig')
+		);
+	}
 
 	/**
 	 * AggregatePageBrick constructor.
 	 */
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 
@@ -70,25 +84,24 @@ class AggregatePageBrick extends PortalBrick
 		parent::LoadFromXml($oMDElement);
 
 		/** @var \Combodo\iTop\DesignElement $oBrickSubNode */
-		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
-		{
-			switch ($oBrickSubNode->nodeName)
-			{
+		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode) {
+			switch ($oBrickSubNode->nodeName) {
 				case 'aggregate_page_bricks':
 					/** @var \Combodo\iTop\DesignElement $oAggregatePageBrickNode */
-					foreach ($oBrickSubNode->GetNodes('./aggregate_page_brick') as $oAggregatePageBrickNode)
-					{
-						if (!$oAggregatePageBrickNode->hasAttribute('id'))
-						{
-							throw new DOMFormatException('AggregatePageBrick : must have an id attribute', null,
-								null, $oAggregatePageBrickNode);
+					foreach ($oBrickSubNode->GetNodes('./aggregate_page_brick') as $oAggregatePageBrickNode) {
+						if (!$oAggregatePageBrickNode->hasAttribute('id')) {
+							throw new DOMFormatException(
+								'AggregatePageBrick : must have an id attribute',
+								0,
+								null,
+								$oAggregatePageBrickNode
+							);
 						}
 						$sBrickName = $oAggregatePageBrickNode->getAttribute('id');
 
 						$iBrickRank = static::DEFAULT_RANK;
 						$oOptionalNode = $oAggregatePageBrickNode->GetOptionalElement('rank');
-						if ($oOptionalNode !== null)
-						{
+						if ($oOptionalNode !== null) {
 							$iBrickRank = $oOptionalNode->GetText();
 						}
 
@@ -109,6 +122,5 @@ class AggregatePageBrick extends PortalBrick
 	{
 		return $this->aAggregatePageBricks;
 	}
-
 
 }

@@ -1,5 +1,5 @@
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -51,7 +51,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		me.RegisterChange();
 
 		let oInput = $('#'+this.iInputId);
-		oInput.bind('update_value', function () {
+		oInput.on('update_value', function () {
 			$(this).val(me.GetUpdatedValue());
 		});
 		oInput.closest('form').on('submit', function () {
@@ -162,7 +162,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 					if (me.bDoSearch) {
 						me.SearchObjectsToAdd();
 					} else {
-						$('#count_'+me.id).change(function () {
+						$('#count_'+me.id).on('change', function () {
 							let c = this.value;
 							me.UpdateButtons(c);
 						});
@@ -174,7 +174,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	};
 
 	this.SearchObjectsToAdd = function () {
-		$('#count_'+me.id).change(function () {
+		$('#count_'+me.id).on('change', function () {
 			let c = this.value;
 			me.UpdateButtons(c);
 		});
@@ -260,7 +260,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 						theMap[this.name] = this.value;
 					}
 				}
-				$(this).parents('tr:first').remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
+				$(this).parents('tr').first().remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
 			}
 		);
 
@@ -342,7 +342,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		}
 		width = dlg.innerWidth()-padding_right-padding_left-22; // 5 (margin-left) + 5 (padding-left) + 5 (padding-right) + 5 (margin-right) + 2 for rounding !
 		height = dlg.innerHeight()-padding_top-padding_bottom-22;
-		wizard = dlg.find('.wizContainer:first');
+		wizard = dlg.find('.wizContainer').first();
 		wizard.width(width);
 		wizard.height(height);
 		form_height = searchForm.outerHeight();
@@ -390,16 +390,17 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 
 	this.RegisterChange = function () {
 		// Listen only used inputs
-		$('#linkedset_'+me.id+' :input[name^="attr_'+me.sAttCode+'["]').off('change').on('change', function () {
+		$('body').off('change', '#linkedset_'+me.id+' :input[name^="attr_'+me.sAttCode+'["]')
+			.on('change', '#linkedset_'+me.id+' :input[name^="attr_'+me.sAttCode+'["]', function () {
 			if (!($(this).hasClass('selection')))
-			{
-				let oCheckbox = $(this).closest('tr').find('.selection');
-				let iLink = oCheckbox.attr('data-link-id');
-				let iUniqueId = oCheckbox.attr('data-unique-id');
-				let sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
-				let value = $(this).val();;
-				return me.OnValueChange(iLink, iUniqueId, sAttCode, value, this);
-			}
+				{
+					let oCheckbox = $(this).closest('tr').find('.selection');
+					let iLink = oCheckbox.attr('data-link-id');
+					let iUniqueId = oCheckbox.attr('data-unique-id');
+					let sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
+					let value = $(this).val();;
+					return me.OnValueChange(iLink, iUniqueId, sAttCode, value, this);
+				}
 			return true;
 		});
 	};

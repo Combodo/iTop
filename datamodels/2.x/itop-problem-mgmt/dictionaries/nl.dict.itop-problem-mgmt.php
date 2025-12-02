@@ -1,55 +1,19 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @author	LinProfs <info@linprofs.com>
- * 
- * Linux & Open Source Professionals
- * http://www.linprofs.com
+ * Localized data
  *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
+ */
+/**
+ * @author LinProfs <info@linprofs.com>
  * @author Hipska (2018)
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
- * 
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ *
  */
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ProblemManagement' => 'Probleem Management',
 	'Menu:ProblemManagement+' => 'Probleem Management',
 	'Menu:Problem:Overview' => 'Overzicht',
@@ -72,12 +36,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard voor Probleem Management',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard voor Probleem Management',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Problem' => 'Probleem',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Status',
@@ -150,4 +114,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Sluit',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

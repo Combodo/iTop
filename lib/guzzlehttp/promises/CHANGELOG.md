@@ -1,7 +1,56 @@
 # CHANGELOG
 
 
-## 2.0.0 - TBC
+## 2.3.0 - 2025-08-22
+
+### Added
+
+- PHP 8.5 support
+
+
+## 2.2.0 - 2025-03-27
+
+### Fixed
+
+- Revert "Allow an empty EachPromise to be resolved by running the queue"
+
+
+## 2.1.0 - 2025-03-27
+
+### Added
+
+- Allow an empty EachPromise to be resolved by running the queue
+
+
+## 2.0.4 - 2024-10-17
+
+### Fixed
+
+- Once settled, don't allow further rejection of additional promises
+
+
+## 2.0.3 - 2024-07-18
+
+### Changed
+
+- PHP 8.4 support
+
+
+## 2.0.2 - 2023-12-03
+
+### Changed
+
+- Replaced `call_user_func*` with native calls
+
+
+## 2.0.1 - 2023-08-03
+
+### Changed
+
+- PHP 8.3 support
+
+
+## 2.0.0 - 2023-05-21
 
 ### Added
 

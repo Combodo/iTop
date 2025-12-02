@@ -1,90 +1,80 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+/**
+ *
+ */
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Ticket' => 'Hibajegy',
 	'Class:Ticket+' => '',
-	'Class:Ticket/Attribute:ref' => 'Referencia',
+	'Class:Ticket/Attribute:ref' => 'Referenciaszám',
 	'Class:Ticket/Attribute:ref+' => '',
 	'Class:Ticket/Attribute:org_id' => 'Szervezeti egység',
-	'Class:Ticket/Attribute:org_id+' => '~~',
+	'Class:Ticket/Attribute:org_id+' => '',
 	'Class:Ticket/Attribute:org_name' => 'Szervezeti egység név',
-	'Class:Ticket/Attribute:org_name+' => '~~',
+	'Class:Ticket/Attribute:org_name+' => '',
 	'Class:Ticket/Attribute:caller_id' => 'Kérelmező',
-	'Class:Ticket/Attribute:caller_id+' => '~~',
+	'Class:Ticket/Attribute:caller_id+' => '',
 	'Class:Ticket/Attribute:caller_name' => 'Kérelmező név',
-	'Class:Ticket/Attribute:caller_name+' => '~~',
+	'Class:Ticket/Attribute:caller_name+' => '',
 	'Class:Ticket/Attribute:team_id' => 'Csapat',
-	'Class:Ticket/Attribute:team_id+' => '~~',
+	'Class:Ticket/Attribute:team_id+' => '',
 	'Class:Ticket/Attribute:team_name' => 'Csapat név',
-	'Class:Ticket/Attribute:team_name+' => '~~',
-	'Class:Ticket/Attribute:agent_id' => 'Felelős',
-	'Class:Ticket/Attribute:agent_id+' => '~~',
-	'Class:Ticket/Attribute:agent_name' => 'Felelős neve',
-	'Class:Ticket/Attribute:agent_name+' => '~~',
-	'Class:Ticket/Attribute:title' => 'Cím',
+	'Class:Ticket/Attribute:team_name+' => '',
+	'Class:Ticket/Attribute:agent_id' => 'Ügyintéző',
+	'Class:Ticket/Attribute:agent_id+' => '',
+	'Class:Ticket/Attribute:agent_name' => 'Ügyintéző név',
+	'Class:Ticket/Attribute:agent_name+' => '',
+	'Class:Ticket/Attribute:title' => 'Tárgy',
 	'Class:Ticket/Attribute:title+' => '',
 	'Class:Ticket/Attribute:description' => 'Leírás',
 	'Class:Ticket/Attribute:description+' => '',
-	'Class:Ticket/Attribute:start_date' => 'Kezdő dátum',
+	'Class:Ticket/Attribute:start_date' => 'Megbízási dátum',
 	'Class:Ticket/Attribute:start_date+' => '',
-	'Class:Ticket/Attribute:end_date' => 'Záró dátum',
-	'Class:Ticket/Attribute:end_date+' => '~~',
-	'Class:Ticket/Attribute:last_update' => 'Utolsó frissítés',
-	'Class:Ticket/Attribute:last_update+' => '~~',
-	'Class:Ticket/Attribute:close_date' => 'Lezárás dátum',
-	'Class:Ticket/Attribute:close_date+' => '~~',
+	'Class:Ticket/Attribute:end_date' => 'Megoldási dátum dátum',
+	'Class:Ticket/Attribute:end_date+' => '',
+	'Class:Ticket/Attribute:last_update' => 'Utoljára frissítve',
+	'Class:Ticket/Attribute:last_update+' => '',
+	'Class:Ticket/Attribute:close_date' => 'Lezárási dátum',
+	'Class:Ticket/Attribute:close_date+' => '',
 	'Class:Ticket/Attribute:private_log' => 'Privát napló',
-	'Class:Ticket/Attribute:private_log+' => '~~',
+	'Class:Ticket/Attribute:private_log+' => '',
 	'Class:Ticket/Attribute:contacts_list' => 'Kapcsolattartók',
 	'Class:Ticket/Attribute:contacts_list+' => '',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CI-k',
 	'Class:Ticket/Attribute:functionalcis_list+' => '',
-	'Class:Ticket/Attribute:workorders_list' => 'Munkautasítások',
-	'Class:Ticket/Attribute:workorders_list+' => 'Munkautasítások ehhez a hibajegyhez',
-	'Class:Ticket/Attribute:finalclass' => 'Típus',
-	'Class:Ticket/Attribute:finalclass+' => '',
-	'Class:Ticket/Attribute:operational_status' => 'Feladat állapot',
+	'Class:Ticket/Attribute:workorders_list' => 'Munkaelrendelők',
+	'Class:Ticket/Attribute:workorders_list+' => 'Munkaelrendelő ehhez a hibajegyhez',
+	'Class:Ticket/Attribute:finalclass' => 'Hibajegy típus',
+	'Class:Ticket/Attribute:finalclass+' => 'A részletes állapot után számítja',
+	'Class:Ticket/Attribute:operational_status' => 'Műveleti állapot',
 	'Class:Ticket/Attribute:operational_status+' => '',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'Folyamatban',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => 'Munka folyamatban',
 	'Class:Ticket/Attribute:operational_status/Value:resolved' => 'Megoldva',
-	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '~~',
+	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '',
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Lezárva',
-	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
+	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
 	'Ticket:ImpactAnalysis' => 'Hatáselemzés',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkContactToTicket' => 'Kapcsolattartó / Hibajegy',
 	'Class:lnkContactToTicket+' => '~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Hibajegy',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '~~',
-	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Hibajegy Ref.',
+	'Class:lnkContactToTicket/Attribute:ticket_ref' => 'Referencia szám',
 	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '~~',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Kapcsolattartó',
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '~~',
@@ -98,14 +88,14 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Kézzel hozzáadva',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Számított',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Ne értesítsen',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:WorkOrder' => 'Munkautasítás',
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:WorkOrder' => 'Munkaelrendelő',
 	'Class:WorkOrder+' => '~~',
 	'Class:WorkOrder/Attribute:name' => 'Név',
 	'Class:WorkOrder/Attribute:name+' => '~~',
@@ -119,36 +109,35 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:WorkOrder/Attribute:description+' => '~~',
 	'Class:WorkOrder/Attribute:ticket_id' => 'Hibajegy',
 	'Class:WorkOrder/Attribute:ticket_id+' => '~~',
-	'Class:WorkOrder/Attribute:ticket_ref' => 'Hibajegy ref.',
+	'Class:WorkOrder/Attribute:ticket_ref' => 'Referencia szám',
 	'Class:WorkOrder/Attribute:ticket_ref+' => '~~',
 	'Class:WorkOrder/Attribute:team_id' => 'Csapat',
 	'Class:WorkOrder/Attribute:team_id+' => '~~',
 	'Class:WorkOrder/Attribute:team_name' => 'Csapat név',
 	'Class:WorkOrder/Attribute:team_name+' => '~~',
-	'Class:WorkOrder/Attribute:agent_id' => 'Felelős',
+	'Class:WorkOrder/Attribute:agent_id' => 'Ügyintéző',
 	'Class:WorkOrder/Attribute:agent_id+' => '~~',
-	'Class:WorkOrder/Attribute:agent_email' => 'Felelős email címe',
+	'Class:WorkOrder/Attribute:agent_email' => 'Ügyintéző email cím',
 	'Class:WorkOrder/Attribute:agent_email+' => '~~',
-	'Class:WorkOrder/Attribute:start_date' => 'Kezdő dátum',
+	'Class:WorkOrder/Attribute:start_date' => 'Megbízási dátum',
 	'Class:WorkOrder/Attribute:start_date+' => '~~',
-	'Class:WorkOrder/Attribute:end_date' => '',
-	'Class:WorkOrder/Attribute:end_date+' => 'Záró dátum',
+	'Class:WorkOrder/Attribute:end_date' => 'End date~~',
+	'Class:WorkOrder/Attribute:end_date+' => 'Megoldási dátum',
 	'Class:WorkOrder/Attribute:log' => 'Napló',
 	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Bezárás',
 	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Ticket:baseinfo' => 'Általános információk',
 	'Ticket:date' => 'Dátum',
 	'Ticket:contact' => 'Kapcsolattartók',
 	'Ticket:moreinfo' => 'Kiegészítő információk',
 	'Ticket:relation' => 'Kapcsolatok',
 	'Ticket:log' => 'Kommunikáció',
-	'Ticket:Type' => 'Minősítés',
+	'Ticket:Type' => 'Osztályozás',
 	'Ticket:support' => 'Támogatás',
 	'Ticket:resolution' => 'Megoldás',
 	'Ticket:SLA' => 'SLA jelentés',
@@ -174,7 +163,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1' => 'Célmező',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1+' => 'The field to set, in the current object. If the field is a string then the friendly name will be used, otherwise the identifier will be used. That friendly name is the name of the person if any is attached to the user, otherwise it is the login.~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson' => 'SetCurrentPerson',
-	'Class:cmdbAbstractObject/Method:SetCurrentPerson+' => 'Set a field with the currently logged in person (the \\"person\\" attached to the logged in \\"user\\").~~',
+	'Class:cmdbAbstractObject/Method:SetCurrentPerson+' => 'Set a field with the currently logged in person (the "person" attached to the logged in "user").~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson/Param:1' => 'Célmező',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson/Param:1+' => 'The field to set, in the current object. If the field is a string then the friendly name will be used, otherwise the identifier will be used.~~',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime' => 'SetElapsedTime',
@@ -184,7 +173,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2' => 'Referencia mező',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2+' => 'The field from which to get the reference date~~',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3' => 'Munkaórák',
-	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3+' => 'Leave empty to rely on the standard working hours scheme, or set to \\"DefaultWorkingTimeComputer\\" to force a 24x7 scheme~~',
+	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3+' => 'Leave empty to rely on the standard working hours scheme, or set to "DefaultWorkingTimeComputer" to force a 24x7 scheme~~',
 	'Class:cmdbAbstractObject/Method:SetIfNull' => 'SetIfNull',
 	'Class:cmdbAbstractObject/Method:SetIfNull+' => 'Set a field only if it is empty, with a static value~~',
 	'Class:cmdbAbstractObject/Method:SetIfNull/Param:1' => 'Célmező',
@@ -227,9 +216,17 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:cmdbAbstractObject/Method:ApplyStimulus+' => 'Apply the specified stimulus to the current object~~',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1' => 'Stimulus kód',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1+' => 'A valid stimulus code for the current class~~',
-	'Class:ResponseTicketTTO/Interface:iMetricComputer' => 'Time To Own~~',
+	'Class:ResponseTicketTTO/Interface:iMetricComputer' => 'Hozzárendelési idő',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Megoldási idő',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
-));
+]);
 
+//
+// Class: Ticket
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'Class:Ticket/Attribute:team_email' => 'Team email~~',
+	'Class:Ticket/Attribute:team_email+' => '~~',
+]);

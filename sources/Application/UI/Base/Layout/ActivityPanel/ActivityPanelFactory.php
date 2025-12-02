@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,14 +20,14 @@
 
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
 
-
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
-use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryFormFactory\CaseLogEntryFormFactory;
+use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryFormFactory;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
 use Exception;
+use ExecutionKPI;
 use IssueLog;
 use MetaModel;
 
@@ -58,6 +59,7 @@ class ActivityPanelFactory
 	 */
 	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE)
 	{
+		$oKPI = new ExecutionKPI();
 		$sObjClass = get_class($oObject);
 		$sObjId = $oObject->GetKey();
 
@@ -71,8 +73,7 @@ class ActivityPanelFactory
 
 		// Prepare caselogs
 		$aCaseLogTabs = $oActivityPanel->GetCaseLogTabs();
-		foreach($aCaseLogTabs as $sCaseLogAttCode => $aCaseLogData)
-		{
+		foreach ($aCaseLogTabs as $sCaseLogAttCode => $aCaseLogData) {
 			/** @var \ormCaseLog $oCaseLog */
 			$oCaseLog = $oObject->Get($sCaseLogAttCode);
 
@@ -158,8 +159,7 @@ class ActivityPanelFactory
 					while ($oNotifEvent = $oNotifEventsSet->Fetch()) {
 						try {
 							$oEntry = ActivityEntryFactory::MakeFromEventNotification($oNotifEvent);
-						}
-						catch (Exception $oException) {
+						} catch (Exception $oException) {
 							IssueLog::Debug(static::class.': Could not create entry from EventNotification #'.$oNotifEvent->GetKey().' related to trigger "'.$oNotifEvent->Get('trigger_id_friendlyname').'" / action "'.$oNotifEvent->Get('action_id_friendlyname').'" / object #'.$oNotifEvent->Get('object_id').': '.$oException->getMessage());
 							continue;
 						}
@@ -170,6 +170,8 @@ class ActivityPanelFactory
 				}
 			}
 		}
+
+		$oKPI->ComputeStatsForExtension(new ActivityPanelFactory(), 'MakeForObjectDetails');
 
 		return $oActivityPanel;
 	}

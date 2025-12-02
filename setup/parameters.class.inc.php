@@ -1,4 +1,5 @@
 <?php
+
 class InvalidParameterException extends Exception
 {
 }
@@ -6,7 +7,7 @@ class InvalidParameterException extends Exception
 abstract class Parameters
 {
 	public $aData = null;
-	
+
 	public function __construct()
 	{
 		$this->aData = null;
@@ -14,8 +15,7 @@ abstract class Parameters
 
 	public function Get($sCode, $default = '')
 	{
-		if (array_key_exists($sCode, $this->aData))
-		{
+		if (array_key_exists($sCode, $this->aData)) {
 			return $this->aData[$sCode];
 		}
 		return $default;
@@ -27,7 +27,7 @@ abstract class Parameters
 	public function GetParamForConfigArray()
 	{
 		$aDBParams = $this->Get('database');
-		$aParamValues = array(
+		$aParamValues = [
 			'mode' => $this->Get('mode'),
 			'db_server' => $aDBParams['server'],
 			'db_user' => $aDBParams['user'],
@@ -41,7 +41,7 @@ abstract class Parameters
 			'language' => $this->Get('language', ''),
 			'graphviz_path' => $this->Get('graphviz_path', ''),
 			'source_dir' => $this->Get('source_dir', ''),
-		);
+		];
 
 		return $aParamValues;
 	}
@@ -53,51 +53,37 @@ abstract class Parameters
 
 	public function ToXML(DOMNode $oRoot, $data = null, $sNodeName = null)
 	{
-		if ($data === null)
-		{
+		if ($data === null) {
 			$data = $this->aData;
 		}
-				
-		if (is_array($data))
-		{
-			if ($oRoot instanceof DOMDocument)
-			{
+
+		if (is_array($data)) {
+			if ($oRoot instanceof DOMDocument) {
 				$oNode = $oRoot->createElement($sNodeName);
-			}
-			else
-			{
+			} else {
 				$oNode = $oRoot->ownerDocument->createElement($sNodeName);
 			}
 			$oRoot->appendChild($oNode);
 
 			$aKeys = array_keys($data);
 			$bNumericKeys = true;
-			foreach($aKeys as $subkey)
-			{
-				if(((int)$subkey) !== $subkey)
-				{
+			foreach ($aKeys as $subkey) {
+				if (((int)$subkey) !== $subkey) {
 					$bNumericKeys = false;
 					break;
 				}
 			}
-			if ($bNumericKeys)
-			{
+			if ($bNumericKeys) {
 				$oNode->setAttribute("type", "array");
-				foreach($data as $key => $value)
-				{
-					$this->ToXML($oNode, $value , 'item');
+				foreach ($data as $key => $value) {
+					$this->ToXML($oNode, $value, 'item');
+				}
+			} else {
+				foreach ($data as $key => $value) {
+					$this->ToXML($oNode, $value, $key);
 				}
 			}
-			else
-			{
-				foreach($data as $key => $value)
-				{
-					$this->ToXML($oNode, $value , $key);
-				}
-			}
-		}
-		else
-		{
+		} else {
 			$oNode = $oRoot->ownerDocument->createElement($sNodeName);
 			$oRoot->appendChild($oNode);
 			$oTextNode = $oRoot->ownerDocument->createTextNode($data);
@@ -113,11 +99,10 @@ class PHPParameters extends Parameters
 	{
 		$this->aData = $aData;
 	}
-	
+
 	public function LoadFromFile($sParametersFile)
 	{
-		if ($this->aData == null)
-		{
+		if ($this->aData == null) {
 			require_once($sParametersFile);
 			$this->aData = $ITOP_PARAMS; // Defined in the file loaded just above
 		}
@@ -139,88 +124,75 @@ class XMLParameters extends Parameters
 	public function LoadFromFile($sParametersFile)
 	{
 		$this->sParametersFile = $sParametersFile;
-		if ($this->aData == null)
-		{
+		if ($this->aData == null) {
 			libxml_use_internal_errors(true);
 			$oXML = @simplexml_load_file($this->sParametersFile);
-			if (!$oXML)
-			{
-				$aMessage = array();
-				foreach(libxml_get_errors() as $oError)
-				{
+			if (!$oXML) {
+				$aMessage = [];
+				foreach (libxml_get_errors() as $oError) {
 					$aMessage[] = "(line: {$oError->line}) ".$oError->message; // Beware: $oError->columns sometimes returns wrong (misleading) value
 				}
 				libxml_clear_errors();
 				throw new InvalidParameterException("Invalid Parameters file '{$this->sParametersFile}': ".implode(' ', $aMessage));
 			}
-			
-			$this->aData = array();
-			foreach($oXML as $key => $oElement)
-			{
+
+			$this->aData = [];
+			foreach ($oXML as $key => $oElement) {
 				$this->aData[(string)$key] = $this->ReadElement($oElement);
 			}
 		}
 	}
-	
+
 	protected function ReadElement(SimpleXMLElement $oElement)
 	{
 		$sDefaultNodeType = (count($oElement->children()) > 0) ? 'hash' : 'string';
 		$sNodeType = $this->GetAttribute('type', $oElement, $sDefaultNodeType);
-		switch($sNodeType)
-		{
+		switch ($sNodeType) {
 			case 'array':
-			$value = array();
-			// Treat the current element as zero based array, child tag names are NOT meaningful
-			$sFirstTagName = null;
-			foreach($oElement->children() as $oChildElement)
-			{
-				if ($sFirstTagName == null)
-				{
-					$sFirstTagName = $oChildElement->getName();
+				$value = [];
+				// Treat the current element as zero based array, child tag names are NOT meaningful
+				$sFirstTagName = null;
+				foreach ($oElement->children() as $oChildElement) {
+					if ($sFirstTagName == null) {
+						$sFirstTagName = $oChildElement->getName();
+					} elseif ($sFirstTagName != $oChildElement->getName()) {
+						throw new InvalidParameterException("Invalid Parameters file '{$this->sParametersFile}': mixed tags ('$sFirstTagName' and '".$oChildElement->getName()."') inside array '".$oElement->getName()."'");
+					}
+					$val = $this->ReadElement($oChildElement);
+					$value[] = $val;
 				}
-				else if ($sFirstTagName != $oChildElement->getName())
-				{
-					throw new InvalidParameterException("Invalid Parameters file '{$this->sParametersFile}': mixed tags ('$sFirstTagName' and '".$oChildElement->getName()."') inside array '".$oElement->getName()."'");
-				}
-				$val = $this->ReadElement($oChildElement);
-				$value[] = $val;
-			}
-			break;
-			
+				break;
+
 			case 'hash':
-			$value = array();
-			// Treat the current element as a hash, child tag names are keys
-			foreach($oElement->children() as $oChildElement)
-			{
-				if (array_key_exists($oChildElement->getName(), $value))
-				{
-					throw new InvalidParameterException("Invalid Parameters file '{$this->sParametersFile}': duplicate tags '".$oChildElement->getName()."' inside hash '".$oElement->getName()."'");
+				$value = [];
+				// Treat the current element as a hash, child tag names are keys
+				foreach ($oElement->children() as $oChildElement) {
+					if (array_key_exists($oChildElement->getName(), $value)) {
+						throw new InvalidParameterException("Invalid Parameters file '{$this->sParametersFile}': duplicate tags '".$oChildElement->getName()."' inside hash '".$oElement->getName()."'");
+					}
+					$val = $this->ReadElement($oChildElement);
+					$value[$oChildElement->getName()] = $val;
 				}
-				$val = $this->ReadElement($oChildElement);
-				$value[$oChildElement->getName()] = $val;
-			}
-			break;
-			
+				break;
+
 			case 'int':
 			case 'integer':
-			$value = (int)$oElement;
-			break;
-			
+				$value = (int)$oElement;
+				break;
+
 			case 'string':
 			default:
-			$value = (string)$oElement;
+				$value = (string)$oElement;
 		}
 		return $value;
 	}
-	
+
 	protected function GetAttribute($sAttName, $oElement, $sDefaultValue)
 	{
 		$sRet = $sDefaultValue;
 
-		foreach($oElement->attributes() as $sKey => $oChildElement)
-		{
-			if ((string)$sKey == $sAttName)
-			{
+		foreach ($oElement->attributes() as $sKey => $oChildElement) {
+			if ((string)$sKey == $sAttName) {
 				$sRet = (string)$oChildElement;
 				break;
 			}

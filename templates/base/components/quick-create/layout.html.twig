@@ -20,10 +20,11 @@
 		<div class="ibo-quick-create--compartment">
 			<div class="ibo-quick-create--compartment-content" data-role="ibo-quick-create--compartment-results">
 			</div>
-			<div class="ibo-quick-create--compartment-title" data-role="ibo-quick-create--compartment-title">
+            {# History section #}
+			<div class="ibo-quick-create--compartment-title ibo-quick-create--history-classes--title" data-role="ibo-quick-create--compartment-title">
 				<span>{{ 'UI:Component:QuickCreate:Recents:Title'|dict_s }}</span>
 			</div>
-			<div class="ibo-quick-create--compartment-content" data-role="ibo-quick-create--compartment-content">
+			<div class="ibo-quick-create--compartment-content ibo-quick-create--history-classes--content" data-role="ibo-quick-create--compartment-content">
 				{% if oUIBlock.GetShowHistory == false %}
 					<div class="ibo-quick-create--compartment--placeholder">
 						<div class="ibo-quick-create--compartment--placeholder-hint">{{ 'UI:Component:QuickCreate:HistoryDisabled'|dict_s }}</div>
@@ -48,6 +49,23 @@
 					</div>
 				{% endif %}
 			</div>
+            {# Popular classes section #}
+            {% if oUIBlock.GetPopularClasses()|length > 0 %}
+                <div class="ibo-quick-create--compartment-title ibo-quick-create--popular-classes--title" data-role="ibo-quick-create--compartment-title">
+                    <span>{{ 'UI:Component:QuickCreate:MostPopular:Title'|dict_s }}</span>
+                </div>
+                <div class="ibo-quick-create--compartment-content ibo-quick-create--popular-classes--content" data-role="ibo-quick-create--compartment-content">
+                        {% for aClass in oUIBlock.GetPopularClasses() %}
+                            <a href="{{ aClass.target_url }}" class="ibo-quick-create--compartment-element" data-role="ibo-quick-create--compartment-element" data-class-code="{{ aQuery.class }}">
+                                {% if aClass.icon_url is defined and aClass.icon_url is not null%}
+                                    {# Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/ #}
+                                    <img src="{{ aClass.icon_url}}" alt="" class="ibo-quick-create--compartment-element-image">
+                                {% endif %}
+                                {{ aClass.label_html|raw }}
+                            </a>
+                        {% endfor %}
+                </div>
+            {% endif %}
 		</div>
 	</div>
 </div>

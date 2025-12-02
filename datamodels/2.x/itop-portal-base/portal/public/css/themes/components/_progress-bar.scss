@@ -1,0 +1,14 @@
+$ipb-progress--background-color: $ipb-color-grey-200 !default;
+
+$ipb-progress--bar--background-color: $ipb-color-primary-700 !default;
+$ipb-progress--bar--color: $ipb-color-white-100 !default;
+
+
+.ipb-progress, .progress {
+  background-color: $ipb-progress--background-color;
+}
+
+.ipb-progress--bar, .progress-bar {
+  background-color: $ipb-color-primary-700;
+  color: $ipb-progress--bar--color;
+}

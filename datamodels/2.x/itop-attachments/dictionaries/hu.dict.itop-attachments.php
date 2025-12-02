@@ -1,26 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+/**
+ *
+ */
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Attachments:TabTitle_Count' => 'Mellékletek (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Mellékletek',
 	'Attachments:FieldsetTitle' => 'Mellékletek',
@@ -34,25 +24,25 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Attachment:Max_Ko' => '(Maximum fájlméret: %1$s KB)',
 	'Attachments:NoAttachment' => 'Nincs melléklet. ',
 	'Attachments:PreviewNotAvailable' => 'Az előnézet nem érhető el ilyen típusú melléklethez',
-	'Attachments:Error:FileTooLarge' => 'Túl nagy a fájl a feltöltéshez. %1$s',
+	'Attachments:Error:FileTooLarge' => 'Túl nagy a %1$s fájl a feltöltéshez.',
 	'Attachments:Error:UploadedFileEmpty' => 'A kapott fájl üres, ezért nem csatolható. Vagy egy üres fájlt húzott be, vagy kérdezze meg a rendszergazdát, hátha az iTop szerver lemeze telt meg.',
 	'Attachments:Render:Icons' => 'Mutassa ikonként',
 	'Attachments:Render:Table' => 'Mutassa listaként',
 	'UI:Attachments:DropYourFileHint' => 'Húzza a fájlokat erre a területre',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Attachment' => 'Mellékletek',
 	'Class:Attachment+' => '~~',
 	'Class:Attachment/Attribute:expire' => 'Lejárat',
 	'Class:Attachment/Attribute:expire+' => '~~',
 	'Class:Attachment/Attribute:temp_id' => 'Átmeneti azonosító',
 	'Class:Attachment/Attribute:temp_id+' => '~~',
-	'Class:Attachment/Attribute:item_class' => 'Elem osztály',
+	'Class:Attachment/Attribute:item_class' => 'Elem típus',
 	'Class:Attachment/Attribute:item_class+' => '~~',
 	'Class:Attachment/Attribute:item_id' => 'Elem',
 	'Class:Attachment/Attribute:item_id+' => '~~',
@@ -60,10 +50,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Tartalom',
 	'Class:Attachment/Attribute:contents+' => '~~',
-));
+]);
 
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Attachments:File:Thumbnail' => 'Ikon',
 	'Attachments:File:Name' => 'Fájlnév',
 	'Attachments:File:Date' => 'Feltöltés dátuma',
@@ -71,25 +60,32 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Attachments:File:Size' => 'Méret',
 	'Attachments:File:MimeType' => 'Típus',
 	'Attachments:File:DownloadsCount' => 'Downloads~~',
-));
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Attachment/Attribute:creation_date' => 'Létrehozás dátuma',
 	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => 'Felhasználó',
 	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'Kapcsolattartó',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
-));
+	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)~~',
+	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email~~',
+	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered~~',
+	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)~~',
+	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete~~',
+	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger~~',
+]);

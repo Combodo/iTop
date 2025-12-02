@@ -1,0 +1,182 @@
+/*
+ * @copyright   Copyright (C) 2010-2025 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* TODO 3.3.0: move these to individual files */
+/* SCSS variables (can be overloaded) */
+$ipb-following-dot--size: $common-size-150 !default;
+$ipb-following-dot--color: $ipb-color-primary-600 !default;
+$ipb-following-dot--margin-top: calc(-1 * #{$ipb-following-dot--size} / 2) !default;
+$ipb-following-dot--margin-bottom: auto !default;
+$ipb-following-dot--margin-x: $common-spacing-300 !default;
+
+@mixin ipb-following-dot($size:$ipb-following-dot--size, $color:$ipb-following-dot--color) {
+  &:before {
+    content: '';
+    height: $size;
+    width: $size;
+    background-color: $color;
+    border-radius: 50%;
+    display: inline-block;
+    margin: $ipb-following-dot--margin-top $ipb-following-dot--margin-x $ipb-following-dot--margin-bottom $ipb-following-dot--margin-x;
+    vertical-align: middle;
+  }
+}
+
+/* SCSS variables */
+$ipb-heavy-animated-border--border-color: $ipb-color-blue-grey-700 !default;
+$ipb-heavy-animated-border--border-width: $common-size-50 !default;
+$ipb-heavy-animated-border--border-radius: $common-border-radius-500 !default;
+
+@mixin ipb-heavy-animated-border($width:$ipb-heavy-animated-border--border-width, $color:$ipb-heavy-animated-border--border-color) {
+  &:after{
+    content: '';
+    position: absolute;
+    top: -$width;
+    left: -$width;
+    right: -$width;
+    bottom: -$width;
+    border: $width solid transparent;
+    border-radius: $ipb-heavy-animated-border--border-radius;
+    transition: border-color 1s ease;
+    pointer-events: none;
+  }
+  &:hover{
+    &:after{
+      border-color: $color;
+    }
+  }
+}
+
+
+/* SCSS variables */
+$ipb-toggle-nav--color: $ipb-color-white-100 !default;
+
+@mixin ipb-toggle-nav($color:$ipb-toggle-nav--color) {
+
+  padding: 10px 8px;
+  border-radius: 5px;
+
+  .ipb-navigation-menu--toggle-icon {
+    position: relative;
+    display: flex;
+    height: 20px;
+    width: 28px;
+  }
+
+  .ipb-navigation-menu--toggle-bar {
+    position: absolute;
+    display: block;
+    height: 3px;
+    width: 100%;
+    opacity: 1;
+    transition: all 0.2s linear;
+    background-color: $color;
+
+    &:nth-child(1) {
+      top: 0;
+    }
+
+    &:nth-child(2) {
+      top: 8px;
+    }
+
+    &:nth-child(3) {
+      top: 16px;
+    }
+
+  }
+
+}
+
+@mixin ipb-toggle-nav-animated-cross($color:$ipb-toggle-nav--color) {
+
+  .ipb-navigation-menu--toggle-bar {
+
+    background-color: $color;
+
+    &:nth-child(1) {
+      top: 9px;
+      left: 2px;
+      width: 25px;
+      transform: rotateZ(-45deg);
+    }
+
+    &:nth-child(2) {
+      top: 8px;
+      left: 7px;
+      width: 0;
+      opacity: 0;
+    }
+
+    &:nth-child(3) {
+      top: 9px;
+      left: 2px;
+      width: 25px;
+      transform: rotateZ(45deg);
+    }
+
+  }
+
+}
+
+@mixin ipb-toggle-nav-animated-chevron-right($color:$ipb-toggle-nav--color) {
+
+  .ipb-navigation-menu--toggle-bar {
+
+    background-color: $color;
+
+    &:nth-child(1) {
+      top: 4px;
+      left: 7px;
+      width: 14px;
+      transform: rotateZ(-45deg);
+    }
+
+    &:nth-child(2) {
+      top: 8px;
+      left: 7px;
+      width: 0;
+      opacity: 0;
+    }
+
+    &:nth-child(3) {
+      top: 12px;
+      left: 7px;
+      width: 14px;
+      transform: rotateZ(45deg);
+    }
+
+  }
+
+}
+
+/* SCSS variables */
+$ipb-scrollbar--color: $ipb-color-grey-200 $ipb-color-blue-grey-800 !default;
+
+@mixin ipb-scrollbar($overflowX:hidden, $overflowY:auto, $scrollbarWidth:thin, $scrollbarColor:$ipb-scrollbar--color) {
+  overflow-x: $overflowX;
+  overflow-y: $overflowY;
+  scrollbar-width: $scrollbarWidth;
+  scrollbar-color: $scrollbarColor;
+}
+
+/* SCSS variables */
+
+@mixin ipb-text-overflow-ellipsis() {
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+/* SCSS variables */
+$ipb-animation--property: all;
+$ipb-animation--duration: 0.1s !default;
+$ipb-animation--timing: linear !default;
+
+@mixin ipb-transition($property: $ipb-animation--property, $duration:$ipb-animation--duration, $timing:$ipb-animation--timing) {
+  transition-property: $property;
+  transition-duration: $duration;
+  transition-timing-function: $timing;
+}

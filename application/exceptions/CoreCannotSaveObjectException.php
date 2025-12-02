@@ -1,6 +1,7 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -55,6 +56,23 @@ class CoreCannotSaveObjectException extends CoreException
 				$sContent .= "<li>".utils::HtmlEntities($sError)."</li>";
 			}
 			$sContent .= '</ul>';
+		}
+
+		return $sContent;
+	}
+
+	public function getTextMessage()
+	{
+		$sTitle = Dict::S('UI:Error:SaveFailed');
+		$sContent = $sTitle;
+
+		if (count($this->aIssues) == 1) {
+			$sIssue = reset($this->aIssues);
+			$sContent .= $sIssue;
+		} else {
+			foreach ($this->aIssues as $sError) {
+				$sContent .= " ".$sError.", ";
+			}
 		}
 
 		return $sContent;

@@ -1,9 +1,0 @@
-/build
-/vendor
-composer.phar
-composer.lock
-.DS_Store
-
-# IDE
-/.idea
-/.vscode

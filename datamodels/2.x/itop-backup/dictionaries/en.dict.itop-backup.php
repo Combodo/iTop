@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -21,7 +22,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 
 	'bkp-backup-running' => 'A backup is running. Please wait...',
 	'bkp-restore-running' => 'A restore is running. Please wait...',
@@ -58,4 +59,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'bkp-wait-backup' => 'Please wait for the backup to complete...',
 	'bkp-wait-restore' => 'Please wait for the restore to complete...',
 	'bkp-success-restore' => 'Restore successfully completed.',
-));
+]);

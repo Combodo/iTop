@@ -1,9 +1,10 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license   https://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -21,5 +22,5 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s is already linked to %3$s: %4$s, duplicates are not allowed on this relation.~~',
+	'Class:cmdbAbstractObject/UniquenessRule:no_duplicate' => '%1$s: %2$s 已关联至 %3$s: %4$s, 不允许重复关联.',
 ]);

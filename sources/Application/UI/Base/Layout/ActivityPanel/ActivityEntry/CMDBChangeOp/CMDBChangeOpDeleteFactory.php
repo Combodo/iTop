@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,7 +20,6 @@
 
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\CMDBChangeOp;
 
-
 /**
  * Class CMDBChangeOpDeleteFactory
  *
@@ -28,6 +28,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\CM
  * @since 3.0.0
  * @internal
  */
-class CMDBChangeOpDeleteFactory extends CMDBChangeOpFactory {
+class CMDBChangeOpDeleteFactory extends CMDBChangeOpFactory
+{
 	public const DEFAULT_DECORATION_CLASSES = 'fas fa-fw fa-trash';
 }

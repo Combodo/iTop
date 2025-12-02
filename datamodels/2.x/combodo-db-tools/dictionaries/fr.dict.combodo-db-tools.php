@@ -1,24 +1,16 @@
 <?php
-// Copyright (c) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-//
-// Database inconsistencies
-Dict::Add('FR FR', 'French', 'Français', array(
-	// Dictionary entries go here
+
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
+ */
+/**
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:DBToolsMenu' => 'Intégrité base de données',
 	'DBTools:Class' => 'Classe',
 	'DBTools:Title' => 'Contrôle de l\'intégrité de la base de données',
@@ -52,17 +44,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'DBAnalyzer-Fetch-Count-Error' => 'Erreur de récupération dans `%1$s`, %2$d enregistrements récupérés / %3$d comptés',
 	'DBAnalyzer-Integrity-FinalClass' => 'Le champ `%2$s`.`%1$s` doit avoir la même valeur que `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Le champ `%2$s`.`%1$s` doit contenir une classe valide',
-));
+]);
 
 // Database Info
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'DBTools:DatabaseInfo' => 'Information Base de Données',
 	'DBTools:Base' => 'Base',
 	'DBTools:Size' => 'Taille',
-));
+]);
 
 // Lost attachments
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'DBTools:LostAttachments' => 'Pièces jointes perdues',
 	'DBTools:LostAttachments:Disclaimer' => 'Ici vous pouvez retrouver des pièces jointes perdues ou égarées dans votre base de données. Ceci n\'est PAS un outil de récupération des données, il ne récupère pas les données effacées.',
 	'DBTools:LostAttachments:Button:Analyze' => 'Analyser',
@@ -79,5 +71,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Résultats de la restauration :',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d pièces jointes ont été restaurées.',
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Stockée comme "InlineImage"',
-	'DBTools:LostAttachments:History' => 'Pièce jointe "%1$s" restaurée avec l\'outil de BDD'
-));
+	'DBTools:LostAttachments:History' => 'Pièce jointe "%1$s" restaurée avec l\'outil de BDD',
+]);

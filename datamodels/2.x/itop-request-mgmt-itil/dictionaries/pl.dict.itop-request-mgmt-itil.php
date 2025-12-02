@@ -1,9 +1,16 @@
 <?php
-/*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+/**
+ *
+ */
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:RequestManagement' => 'Pomoc techniczna',
 	'Menu:RequestManagement+' => 'Pomoc techniczna',
 	'Menu:RequestManagementProvider' => 'Dostawca pomocy technicznej',
@@ -34,8 +41,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Otwarte zgłoszenia według typu',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Otwarte zgłoszenia według klientów',
 	'Class:UserRequest:KnownErrorList' => 'Znane błędy',
-	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
-));
+	'Class:UserRequest:KnownErrorList+' => 'Znane błędy związane z konfiguracją CI powiązaną z bieżącym zgłoszeniem',
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -51,7 +58,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 // Class: UserRequest
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:UserRequest' => 'Zgłoszenie użytkownika',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -110,10 +117,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserRequest/Attribute:urgency/Value:4+' => 'niska',
 	'Class:UserRequest/Attribute:origin' => 'Pochodzenie',
 	'Class:UserRequest/Attribute:origin+' => '',
-	'Class:UserRequest/Attribute:origin/Value:in_person' => 'In-person~~',
-	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Request created following a face-to-face discussion~~',
-	'Class:UserRequest/Attribute:origin/Value:chat' => 'Chat~~',
-	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Request created following a chat discussion~~',
+	'Class:UserRequest/Attribute:origin/Value:in_person' => 'Osobiście',
+	'Class:UserRequest/Attribute:origin/Value:in_person+' => 'Zgłoszenie utworzone po bezpośredniej rozmowie',
+	'Class:UserRequest/Attribute:origin/Value:chat' => 'Czat',
+	'Class:UserRequest/Attribute:origin/Value:chat+' => 'Zgłoszenie utworzone po dyskusji na czacie',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'e-mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => 'e-mail',
 	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'monitoring',
@@ -154,6 +161,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserRequest/Attribute:tto+' => '',
 	'Class:UserRequest/Attribute:ttr' => 'czas na rozwiązanie (TTR)',
 	'Class:UserRequest/Attribute:ttr+' => '',
+	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:UserRequest/Attribute:tto_time_spent+' => '~~',
+	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:UserRequest/Attribute:ttr_time_spent+' => '~~',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'Ostateczny termin podjęcia (TTO)',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => '',
 	'Class:UserRequest/Attribute:sla_tto_passed' => 'Gwarantowany czas podjęcia (SLA tto) zaliczony',
@@ -249,11 +260,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Nie można przypisać zgłoszenia nadrzędnego do samego siebie',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Połącz rozwiązanie kaskadowo do żądań podrzędnych (ev_autoresolve) i dopasuj następujące cechy zgłoszenia: usługa, zespół, agent, informacje o rozwiązaniu',
-));
+]);
 
-
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Organization:Overview:UserRequests' => 'Zgłoszenia użytkowników z tej organizacji',
 	'Organization:Overview:MyUserRequests' => 'Moje zgłoszenia użytkowników dla tej organizacji',
 	'Organization:Overview:Tickets' => 'Zgłoszenia tej organizacji',
-));
+]);

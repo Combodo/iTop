@@ -1,36 +1,25 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	// Dictionary entries go here
+/**
+ *
+ */
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:iTopHub' => 'iTop Hub~~',
 	'Menu:iTopHub:Register' => 'Connect to iTop Hub~~',
 	'Menu:iTopHub:Register+' => 'Go to iTop Hub to update your '.ITOP_APPLICATION_SHORT.' instance~~',
-	'Menu:iTopHub:Register:Description' => '<p>Get access to your community platform iTop Hub!</br>Find all the content and information you need, manage your instances through personalized tools & install more extensions.</br><br/>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>~~',
+	'Menu:iTopHub:Register:Description' => '<p>Get access to your community platform iTop Hub!<br>Find all the content and information you need, manage your instances through personalized tools & install more extensions.<br><br>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>~~',
 	'Menu:iTopHub:MyExtensions' => 'Deployed extensions~~',
 	'Menu:iTopHub:MyExtensions+' => 'See the list of extensions deployed on this instance of '.ITOP_APPLICATION_SHORT.'~~',
 	'Menu:iTopHub:BrowseExtensions' => 'Get extensions from iTop Hub~~',
 	'Menu:iTopHub:BrowseExtensions+' => 'Browse for more extensions on iTop Hub~~',
-	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Look into iTop Hub’s store, your one stop place to find wonderful '.ITOP_APPLICATION_SHORT.' extensions !</br>Find the ones that will help you customize and adapt '.ITOP_APPLICATION_SHORT.' to your processes.</br><br/>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>~~',
+	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Look into iTop Hub’s store, your one stop place to find wonderful iTop extensions !<br>Find the ones that will help you customize and adapt '.ITOP_APPLICATION_SHORT.' to your processes.<br><br>By connecting to the Hub from this page, you will push information about this '.ITOP_APPLICATION_SHORT.' instance into the Hub.</p>',
 	'iTopHub:GoBtn' => 'Go To iTop Hub~~',
 	'iTopHub:CloseBtn' => 'Close~~',
 	'iTopHub:GoBtn:Tooltip' => 'Jump to www.itophub.io~~',
@@ -45,7 +34,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'iTopHub:Landing:Status' => 'Deployment status~~',
 	'iTopHub:Landing:Install' => 'Deploying extensions...~~',
 	'iTopHub:CompiledOK' => 'Compilation successful.~~',
-	'iTopHub:ConfigurationSafelyReverted' => 'Error detected during deployment!<br/>'.ITOP_APPLICATION_SHORT.' configuration has NOT been modified.~~',
+	'iTopHub:ConfigurationSafelyReverted' => 'Error detected during deployment!<br>'.ITOP_APPLICATION_SHORT.' configuration has NOT been modified.~~',
 	'iTopHub:FailAuthent' => 'Authentication failed for this action.~~',
 	'iTopHub:InstalledExtensions' => 'Extensions deployed on this instance~~',
 	'iTopHub:ExtensionCategory:Manual' => 'Extensions deployed manually~~',
@@ -76,6 +65,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.~~',
 	'iTopHub:InstallationStatus:Installed' => 'Installed~~',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>NOT</b> installed.~~',
-));
-
-
+]);

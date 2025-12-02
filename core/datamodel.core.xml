@@ -1,5 +1,592 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
+  <classes>
+    <class id="lnkActionNotificationToContact" _delta="define">
+      <parent>DBObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>core/cmdb,view_in_gui</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>priv_lnk_action_notif_to_contact</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="action_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="action_id"/>
+            <attribute id="contact_id"/>
+            <attribute id="trigger_id"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule>
+            <attributes>
+              <attribute id="action_id"/>
+              <attribute id="contact_id"/>
+              <attribute id="trigger_id"/>
+            </attributes>
+            <filter/>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="action_id" xsi:type="AttributeExternalKey">
+          <sql>action_id</sql>
+          <target_class>ActionNotification</target_class>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="trigger_id" xsi:type="AttributeExternalKey">
+          <sql>trigger_id</sql>
+          <target_class>Trigger</target_class>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="subscribed" xsi:type="AttributeBoolean">
+          <sql>subscribed</sql>
+          <default_value>true</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <items>
+                <item id="action_id">
+                  <rank>10</rank>
+                </item>
+                <item id="contact_id">
+                  <rank>20</rank>
+                </item>
+                <item id="trigger_id">
+                  <rank>30</rank>
+                </item>
+                <item id="subscribed">
+                  <rank>40</rank>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <list>
+          <items>
+            <item id="action_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="trigger_id">
+              <rank>30</rank>
+            </item>
+            <item id="subscribed">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+        <default_search>
+          <items>
+            <item id="contact_id">
+              <rank>10</rank>
+            </item>
+            <item id="action_id">
+              <rank>20</rank>
+            </item>
+            <item id="trigger_id">
+              <rank>30</rank>
+            </item>
+            <item id="subscribed">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <methods/>
+    </class>
+    <class id="ActionNewsroom" _delta="define">
+      <php_parent>
+        <name>ActionNotification</name>
+      </php_parent>
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>grant_by_profile,core/cmdb,application</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>priv_action_newsroom</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+          <complementary_attributes>
+            <attribute id="finalclass"/>
+            <attribute id="description"/>
+          </complementary_attributes>
+        </naming>
+        <style>
+          <icon>../../images/icons/icons8-notification.svg</icon>
+        </style>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="title" xsi:type="AttributeString">
+          <sql>title</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="message" xsi:type="AttributeText">
+          <sql>message</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="icon" xsi:type="AttributeImage">
+          <sql>icon</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>256</storage_max_width>
+          <storage_max_height>256</storage_max_height>
+          <default_image/>
+        </field>
+        <field id="priority" xsi:type="AttributeEnum">
+          <sql>priority</sql>
+          <values>
+            <value id="1">
+              <code>1</code>
+            </value>
+            <value id="2">
+              <code>2</code>
+            </value>
+            <value id="3">
+              <code>3</code>
+            </value>
+            <value id="4">
+              <code>4</code>
+            </value>
+          </values>
+          <default_value>4</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="test_recipient_id" xsi:type="AttributeExternalKey">
+          <sql>test_recipient_id</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Person</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="recipients" xsi:type="AttributeOQL">
+          <sql>recipients</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="url" xsi:type="AttributeString">
+          <sql>url</sql>
+          <default_value>$this-&gt;url()$</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ActionNewsroom:content">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="description">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="language">
+                      <rank>40</rank>
+                    </item>
+                    <item id="title">
+                      <rank>50</rank>
+                    </item>
+                    <item id="message">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:ActionNewsroom:trigger">
+                  <items>
+                    <item id="trigger_list">
+                      <rank>10</rank>
+                    </item>
+                    <item id="asynchronous">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ActionNewsroom:settings">
+                  <items>
+                    <item id="priority">
+                      <rank>10</rank>
+                    </item>
+                    <item id="icon">
+                      <rank>20</rank>
+                    </item>
+                    <item id="test_recipient_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="recipients">
+                      <rank>40</rank>
+                    </item>
+                    <item id="url">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <list>
+          <items>
+            <item id="title">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="language">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+      <methods>
+        <method id="DoExecute">
+          <comment>	/**
+            *
+            *  Create EventNotificationNewsroom for each recipient
+            * @param $oTrigger
+            * @param $aContextArgs
+            *
+            * @return void
+            * @throws \ArchivedObjectException
+            * @throws \CoreCannotSaveObjectException
+            * @throws \CoreException
+            * @throws \CoreUnexpectedValue
+            * @throws \CoreWarning
+            * @throws \MySQLException
+            * @throws \OQLException
+            */</comment>
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[
+	public function DoExecute($oTrigger, $aContextArgs)
+	{
+		$aRecipientsIds = [];
+		$oPotentialRecipientsSearch = DBObjectSearch::FromOQL($this->Get('recipients'));
+		$oPotentialRecipientsSearch->AllowAllData();
+		$oPotentialRecipientsSet = new DBObjectSet($oPotentialRecipientsSearch, array(), $aContextArgs);
+
+		$bIsAsync = $this->IsAsynchronous();
+		[$sPreviousLanguage, $aPreviousPluginProperties] = $this->SetNotificationLanguage();
+
+		$sMessage = MetaModel::ApplyParams($this->Get('message'), $aContextArgs);
+		$sTitle = MetaModel::ApplyParams($this->Get('title'), $aContextArgs);
+		$sUrl = MetaModel::ApplyParams($this->Get('url'), $aContextArgs);
+    $iObjectId = 0;
+    $sObjectClass = null;
+		if (array_key_exists('this->object()', $aContextArgs)) {
+				$iObjectId = $aContextArgs['this->object()']->GetKey();
+				$sObjectClass = get_class($aContextArgs['this->object()']);
+    }
+
+    if ($this->IsBeingTested()) {
+      // If action is being tested, send notification to the test recipient only, no matter what (unsubscribed, disabled, no access to the backoffice, ...)
+      $iTestRecipientId = $this->Get('test_recipient_id');
+      if ($iTestRecipientId > 0) {
+        $aRecipientsIds[] = $iTestRecipientId;
+      }
+    } else {
+      // Otherwise, find the recipients to which we can actually send the notification among all the potential ones
+      while ($oPotentialRecipient = $oPotentialRecipientsSet->Fetch()) {
+        // Skip recipients that have no users
+        if ($oPotentialRecipient instanceof Person && UserRights::GetUserFromPerson($oPotentialRecipient, false) === null) {
+          continue;
+        }
+
+        // Skip potential recipient that have no user with access to the backoffice
+        $oPotentialRecipientUsersSearch = DBObjectSearch::FromOQL("SELECT User WHERE contactid = " . $oPotentialRecipient->GetKey() . " AND status = 'enabled'");
+        $oPotentialRecipientUsersSearch->AllowAllData();
+        $oPotentialRecipientUsersSet = new DBObjectSet($oPotentialRecipientUsersSearch);
+        $oPortalDispatcher = new PortalDispatcher('backoffice');
+        // - Check if the user has access to the backoffice
+        $bHasAccessToBackoffice = false;
+        while ($oPotentialRecipientUser = $oPotentialRecipientUsersSet->Fetch()) {
+          // Skip potential recipients with user that don't have access to the backoffice
+          if (false === $oPortalDispatcher->IsUserAllowed($oPotentialRecipientUser)) {
+                    continue;
+          }
+
+          $bHasAccessToBackoffice = true;
+          break;
+        }
+        // - Skip it if necessary
+        if (false === $bHasAccessToBackoffice) {
+          continue;
+        }
+
+        // Skip potential recipients that have unsubscribed
+        if (!\Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->IsSubscribed($oTrigger, $this, $oPotentialRecipient)) {
+          continue;
+        }
+
+        $aRecipientsIds[] = $oPotentialRecipient->GetKey();
+
+        // Register subscription even though the notification is not sent yet
+        \Combodo\iTop\Service\Notification\NotificationsService::GetInstance()->RegisterSubscription($oTrigger, $this, $oPotentialRecipient);
+      }
+    }
+
+		try {
+			if ($bIsAsync === true) {
+				AsyncSendNewsroom::AddToQueue($this->GetKey(), $oTrigger->GetKey(), $aRecipientsIds, $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
+			} else {
+				foreach ($aRecipientsIds as $iRecipientId) {
+					$oEvent = Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService::MakeEventFromAction($this, $iRecipientId, $oTrigger->GetKey(), $sMessage, $sTitle, $sUrl, $iObjectId, $sObjectClass);
+					$oEvent->DBInsertNoReload();
+				}
+			}
+		} catch (CoreCannotSaveObjectException $e) {
+			ExceptionLog::LogException($e);
+			foreach($aRecipientsIds as $iRecipientId) {
+				$oEvent = Combodo\iTop\Service\Notification\Event\EventNotificationNewsroomService::MakeEventFromAction($this,
+					$iRecipientId,
+					$oTrigger->GetKey(),
+					Dict::S('Core:EventNotificationNewsroom:ErrorOnDBInsert'),
+					Dict::S('Core:EventNotificationNewsroom:ErrorNotificationNotSent'),
+					$sUrl,
+					$iObjectId,
+					$sObjectClass
+				);
+				$oEvent->DBInsertNoReload();
+			}
+		}
+
+		$this->SetNotificationLanguage($sPreviousLanguage, $aPreviousPluginProperties['language_code'] ?? null);
+	}
+]]></code>
+        </method>
+        <method id="GetAsynchronousGlobalSetting">
+          <comment/>
+          <static>true</static>
+          <access>public</access>
+          <code><![CDATA[
+	public static function GetAsynchronousGlobalSetting(): bool
+	{
+		return utils::GetConfig()->Get('notifications.itop.send_asynchronously');
+	}
+]]></code>
+        </method>
+      </methods>
+    </class>
+    <class id="EventNotificationNewsroom" _delta="define">
+      <php_parent>
+        <name>EventNotification</name>
+      </php_parent>
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>core/cmdb,view_in_gui</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>priv_event_newsroom</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="title"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="title"/>
+          </attributes>
+        </reconciliation>
+        <order>
+          <columns>
+            <column id="date" ascending="false"/>
+          </columns>
+        </order>
+      </properties>
+      <fields>
+        <field id="title" xsi:type="AttributeString">
+          <sql>title</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="icon" xsi:type="AttributeImage">
+          <sql>icon</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <default_image/>
+        </field>
+        <field id="priority" xsi:type="AttributeEnum">
+          <sql>priority</sql>
+          <values>
+            <value id="1">
+              <code>1</code>
+            </value>
+            <value id="2">
+              <code>2</code>
+            </value>
+            <value id="3">
+              <code>3</code>
+            </value>
+            <value id="4">
+              <code>4</code>
+            </value>
+          </values>
+          <default_value>4</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="url" xsi:type="AttributeURL">
+          <sql>url</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <target>_blank</target>
+        </field>
+        <field id="read" xsi:type="AttributeEnum">
+          <sql>read</sql>
+          <values>
+            <value id="yes">
+              <code>yes</code>
+            </value>
+            <value id="no">
+              <code>no</code>
+            </value>
+          </values>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="read_date" xsi:type="AttributeDateTime">
+          <sql>read_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="date">
+              <rank>10</rank>
+            </item>
+            <item id="title">
+              <rank>20</rank>
+            </item>
+            <item id="message">
+              <rank>30</rank>
+            </item>
+            <item id="contact_id">
+              <rank>40</rank>
+            </item>
+            <item id="trigger_id">
+              <rank>50</rank>
+            </item>
+            <item id="action_id">
+              <rank>60</rank>
+            </item>
+            <item id="read">
+              <rank>70</rank>
+            </item>
+            <item id="url">
+              <rank>80</rank>
+            </item>
+          </items>
+        </details>
+        <summary>
+          <items>
+            <item id="date">
+              <rank>10</rank>
+            </item>
+            <item id="message">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
+        <list>
+          <items>
+            <item id="date">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+            <item id="message">
+              <rank>30</rank>
+            </item>
+            <item id="read">
+              <rank>40</rank>
+            </item>
+            <item id="read_date">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+        <default_search>
+          <items>
+            <item id="action_id">
+              <rank>10</rank>
+            </item>
+            <item id="trigger_id">
+              <rank>20</rank>
+            </item>
+            <item id="date">
+              <rank>30</rank>
+            </item>
+            <item id="contact_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <methods/>
+    </class>
+  </classes>
   <user_rights>
     <profiles>
       <profile id="1024" _delta="define">
@@ -282,6 +869,60 @@
           <field id="obj_attcode" xsi:type="AttributeString"/>
         </fields>
       </class>
+      <class id="DefaultWorkingTimeComputer" _delta="define">
+        <interfaces>
+          <interface id="iWorkingTimeComputer"/>
+        </interfaces>
+      </class>
+      <class id="ActionNotification" _delta="define">
+        <!-- Generated by toolkit/export-class-to-meta.php -->
+        <parent>Action</parent>
+        <properties>
+          <category>grant_by_profile,core/cmdb</category>
+        </properties>
+        <fields>
+          <field id="name" xsi:type="AttributeString"/>
+          <field id="description" xsi:type="AttributeString"/>
+          <field id="status" xsi:type="AttributeEnum"/>
+          <field id="trigger_list" xsi:type="AttributeLinkedSetIndirect"/>
+          <field id="language" xsi:type="AttributeApplicationLanguage"/>
+        </fields>
+      </class>
+      <class id="Event" _delta="define">
+        <!-- Generated by toolkit/export-class-to-meta.php -->
+        <parent>DBObject</parent>
+        <properties>
+          <category>core/cmdb,view_in_gui</category>
+        </properties>
+        <fields>
+          <field id="message" xsi:type="AttributeText"/>
+          <field id="date" xsi:type="AttributeDateTime"/>
+          <field id="userinfo" xsi:type="AttributeString"/>
+        </fields>
+      </class>
+      <class id="EventNotification" _delta="define">
+        <!-- Generated by toolkit/export-class-to-meta.php -->
+        <parent>Event</parent>
+        <properties>
+          <category>core/cmdb,view_in_gui</category>
+        </properties>
+        <fields>
+          <field id="message" xsi:type="AttributeText"/>
+          <field id="date" xsi:type="AttributeDateTime"/>
+          <field id="userinfo" xsi:type="AttributeString"/>
+          <field id="trigger_id" xsi:type="AttributeExternalKey">
+            <target_class>Trigger</target_class>
+          </field>
+          <field id="action_id" xsi:type="AttributeExternalKey">
+            <target_class>Action</target_class>
+          </field>
+          <field id="object_id" xsi:type="AttributeInteger"/>
+          <field id="trigger_id_friendlyname" xsi:type="AttributeExternalField"/>
+          <field id="trigger_id_finalclass_recall" xsi:type="AttributeExternalField"/>
+          <field id="action_id_friendlyname" xsi:type="AttributeExternalField"/>
+          <field id="action_id_finalclass_recall" xsi:type="AttributeExternalField"/>
+        </fields>
+      </class>
     </classes>
     <attribute_properties_definition _delta="define">
       <properties>
@@ -405,6 +1046,12 @@
           <type>string</type>
           <default/>
         </property>
+        <property id="class_exclusion_list">
+          <php_param>class_exclusion_list</php_param>
+          <mandatory>false</mandatory>
+          <type>string</type>
+          <default/>
+        </property>
         <property id="min_up">
           <php_param>min_up</php_param>
           <mandatory>true</mandatory>
@@ -498,6 +1145,12 @@
         </property>
         <property id="with_php_constraint">
           <php_param>with_php_constraint</php_param>
+          <mandatory>false</mandatory>
+          <type>boolean</type>
+          <default>false</default>
+        </property>
+        <property id="with_php_computation">
+          <php_param>with_php_computation</php_param>
           <mandatory>false</mandatory>
           <type>boolean</type>
           <default>false</default>

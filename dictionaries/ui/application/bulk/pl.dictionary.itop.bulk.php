@@ -1,24 +1,17 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
-
-	// Bulk modify
-	'UI:Bulk:modify:IncompatibleAttribute' => 'This attribute can\'t be edited in bulk context~~',
-
-));
+/**
+ *
+ */
+Dict::Add('PL PL', 'Polish', 'Polski', [
+	'UI:Bulk:modify:IncompatibleAttribute' => 'Tego atrybutu nie można edytować zbiorczo',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Ostrzeżenie dotyczące bezpieczeństwa programu Excel',
+	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Otwarcie pliku z niezaufanymi danymi w programie Microsoft Excel może spowodować wstrzyknięcie formuły. Upewnij się, że ustawienia programu Excel są skonfigurowane tak, aby bezpiecznie obsługiwać pliki. <a href="%1$s">Dowiedz się więcej w naszej dokumentacji.</a>',
+]);

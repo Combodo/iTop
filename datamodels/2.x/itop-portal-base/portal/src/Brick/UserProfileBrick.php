@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,36 +20,35 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use DOMFormatException;
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
+use DOMFormatException;
 
 /**
  * Description of UserProfileBrick
- * 
- * @package Combodo\iTop\Portal\Brick
- * @since 2.7.0
+ *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.7.0
+ * @package Combodo\iTop\Portal\Brick
  */
 class UserProfileBrick extends PortalBrick
 {
 	// Overloaded constants
-	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/user-profile/layout.html.twig';
-	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/user-profile/tile.html.twig';
-	const DEFAULT_VISIBLE_NAVIGATION_MENU = false;
-	const DEFAULT_VISIBLE_HOME = false;
-	const DEFAUT_TITLE = 'Brick:Portal:UserProfile:Title';
-	const DEFAULT_DECORATION_CLASS_HOME = 'glyphicon glyphicon-user';
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'glyphicon glyphicon-user';
-
+	public const DEFAULT_WIDTH = 200;
+	public const DEFAULT_VISIBLE_NAVIGATION_MENU          = false;
+	public const DEFAULT_VISIBLE_HOME                     = false;
+	public const DEFAULT_DECORATION_CLASS_HOME            = 'glyphicon glyphicon-user';
+	public const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'glyphicon glyphicon-user';
 	/** @var bool DEFAULT_SHOW_PICTURE_FORM */
-	const DEFAULT_SHOW_PICTURE_FORM = true;
+	public const DEFAULT_SHOW_PICTURE_FORM = true;
 	/** @var bool DEFAULT_SHOW_PREFERENCES_FORM */
-    const DEFAULT_SHOW_PREFERENCES_FORM = true;
-    /** @var bool DEFAULT_SHOW_PASSWORD_FORM */
-    const DEFAULT_SHOW_PASSWORD_FORM = true;
+	public const DEFAULT_SHOW_PREFERENCES_FORM = true;
+	/** @var bool DEFAULT_SHOW_PASSWORD_FORM */
+	public const DEFAULT_SHOW_PASSWORD_FORM = true;
 
 	// Overloaded variables
-	static $sRouteName = 'p_user_profile_brick';
+	public static $sRouteName = 'p_user_profile_brick';
 
 	/** @var array $aForm */
 	protected $aForm;
@@ -59,6 +59,18 @@ class UserProfileBrick extends PortalBrick
 	/** @var bool $bShowPasswordForm */
 	protected $bShowPasswordForm;
 
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(
+			self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH.'user-profile/layout.html.twig'),
+			TemplateDefinitionDto::Create('user_info', static::TEMPLATES_BASE_PATH.'user-profile/user_info.html.twig'),
+			TemplateDefinitionDto::Create('user_info_ready_js', static::TEMPLATES_BASE_PATH.'user-profile/user_info.ready.js.twig'),
+		);
+	}
+
 	/**
 	 * UserProfileBrick constructor.
 	 */
@@ -66,12 +78,12 @@ class UserProfileBrick extends PortalBrick
 	{
 		parent::__construct();
 
-		$this->aForm = array(
-			'id' => 'default-user-profile',
-			'type' => 'zlist',
+		$this->aForm = [
+			'id'     => 'default-user-profile',
+			'type'   => 'zlist',
 			'fields' => 'details',
 			'layout' => null,
-		);
+		];
 		$this->bShowPictureForm = static::DEFAULT_SHOW_PICTURE_FORM;
 		$this->bShowPreferencesForm = static::DEFAULT_SHOW_PREFERENCES_FORM;
 		$this->bShowPasswordForm = static::DEFAULT_SHOW_PASSWORD_FORM;
@@ -89,67 +101,75 @@ class UserProfileBrick extends PortalBrick
 	/**
 	 *
 	 * @param array $aForm
+	 *
 	 * @return \Combodo\iTop\Portal\Brick\UserProfileBrick
 	 */
 	public function SetForm($aForm)
 	{
 		$this->aForm = $aForm;
+
 		return $this;
 	}
 
-    /**
-     * @return bool
-     */
-    public function GetShowPictureForm()
-    {
-        return $this->bShowPictureForm;
-    }
+	/**
+	 * @return bool
+	 */
+	public function GetShowPictureForm()
+	{
+		return $this->bShowPictureForm;
+	}
 
-    /**
-     * @param $bShowPictureForm
-     * @return \Combodo\iTop\Portal\Brick\UserProfileBrick
-     */
-    public function SetShowPictureForm($bShowPictureForm)
-    {
-        $this->bShowPictureForm = $bShowPictureForm;
-        return $this;
-    }
+	/**
+	 * @param $bShowPictureForm
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\UserProfileBrick
+	 */
+	public function SetShowPictureForm($bShowPictureForm)
+	{
+		$this->bShowPictureForm = $bShowPictureForm;
 
-    /**
-     * @return bool
-     */
-    public function GetShowPreferencesForm()
-    {
-        return $this->bShowPreferencesForm;
-    }
+		return $this;
+	}
 
-    /**
-     * @param $bShowPreferencesForm
-     * @return \Combodo\iTop\Portal\Brick\UserProfileBrick
-     */
-    public function SetShowPreferencesForm($bShowPreferencesForm)
-    {
-        $this->bShowPreferencesForm = $bShowPreferencesForm;
-        return $this;
-    }
+	/**
+	 * @return bool
+	 */
+	public function GetShowPreferencesForm()
+	{
+		return $this->bShowPreferencesForm;
+	}
 
-    /**
-     * @return bool
-     */
-    public function GetShowPasswordForm()
-    {
-        return $this->bShowPasswordForm;
-    }
+	/**
+	 * @param $bShowPreferencesForm
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\UserProfileBrick
+	 */
+	public function SetShowPreferencesForm($bShowPreferencesForm)
+	{
+		$this->bShowPreferencesForm = $bShowPreferencesForm;
 
-    /**
-     * @param $bShowPasswordForm
-     * @return \Combodo\iTop\Portal\Brick\UserProfileBrick
-     */
-    public function SetShowPasswordForm($bShowPasswordForm)
-    {
-        $this->bShowPasswordForm = $bShowPasswordForm;
-        return $this;
-    }
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function GetShowPasswordForm()
+	{
+		return $this->bShowPasswordForm;
+	}
+
+	/**
+	 * @param $bShowPasswordForm
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\UserProfileBrick
+	 */
+	public function SetShowPasswordForm($bShowPasswordForm)
+	{
+		$this->bShowPasswordForm = $bShowPasswordForm;
+
+		return $this;
+	}
 
 	/**
 	 * Load the brick's data from the xml passed as a ModuleDesignElement.
@@ -167,76 +187,64 @@ class UserProfileBrick extends PortalBrick
 
 		// Checking specific elements
 		/** @var \Combodo\iTop\DesignElement $oBrickSubNode */
-		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
-		{
-			switch ($oBrickSubNode->nodeName)
-			{
+		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode) {
+			switch ($oBrickSubNode->nodeName) {
 				case 'form':
 					// Note : This is inspired by Combodo\iTop\Portal\Helper\ApplicationHelper::LoadFormsConfiguration()
 					// Enumerating fields
-					if ($oBrickSubNode->GetOptionalElement('fields') !== null)
-					{
+					if ($oBrickSubNode->GetOptionalElement('fields') !== null) {
 						$this->aForm['type'] = 'custom_list';
-						$this->aForm['fields'] = array();
+						$this->aForm['fields'] = [];
 
 						/** @var \Combodo\iTop\DesignElement $oFieldNode */
-						foreach ($oBrickSubNode->GetOptionalElement('fields')->GetNodes('field') as $oFieldNode)
-						{
+						foreach ($oBrickSubNode->GetOptionalElement('fields')->GetNodes('field') as $oFieldNode) {
 							$sFieldId = $oFieldNode->getAttribute('id');
-							if ($sFieldId !== '')
-							{
-								$aField = array();
+							if ($sFieldId !== '') {
+								$aField = [];
 								// Parsing field options like read_only, hidden and mandatory
-								if ($oFieldNode->GetOptionalElement('read_only'))
-								{
+								if ($oFieldNode->GetOptionalElement('read_only')) {
 									$aField['readonly'] = ($oFieldNode->GetOptionalElement('read_only')->GetText('true') === 'true') ? true : false;
 								}
-								if ($oFieldNode->GetOptionalElement('mandatory'))
-								{
+								if ($oFieldNode->GetOptionalElement('mandatory')) {
 									$aField['mandatory'] = ($oFieldNode->GetOptionalElement('mandatory')->GetText('true') === 'true') ? true : false;
 								}
-								if ($oFieldNode->GetOptionalElement('hidden'))
-								{
+								if ($oFieldNode->GetOptionalElement('hidden')) {
 									$aField['hidden'] = ($oFieldNode->GetOptionalElement('hidden')->GetText('true') === 'true') ? true : false;
 								}
 
 								$this->aForm['fields'][$sFieldId] = $aField;
-							}
-							else
-							{
-								throw new DOMFormatException('Field tag must have an id attribute', null, null, $oFieldNode);
+							} else {
+								throw new DOMFormatException('Field tag must have an id attribute', 0, null, $oFieldNode);
 							}
 						}
 					}
 					// Parsing presentation
-					if ($oBrickSubNode->GetOptionalElement('twig') !== null)
-					{
+					if ($oBrickSubNode->GetOptionalElement('twig') !== null) {
 						// Extracting the twig template and removing the first and last lines (twig tags)
 						$sXml = $oBrickSubNode->GetOptionalElement('twig')->Dump(true);
 						//$sXml = $oMDElement->saveXML($oBrickSubNode->GetOptionalElement('twig'));
 						$sXml = preg_replace('/^.+\n/', '', $sXml);
 						$sXml = preg_replace('/\n.+$/', '', $sXml);
 
-						$this->aForm['layout'] = array(
-							'type' => (preg_match('/\{\{|\{\#|\{\%/', $sXml) === 1) ? 'twig' : 'xhtml',
+						$this->aForm['layout'] = [
+							'type'    => (preg_match('/\{\{|\{\#|\{\%/', $sXml) === 1) ? 'twig' : 'xhtml',
 							'content' => $sXml,
-						);
+						];
 					}
 					break;
 
-                case 'show_picture_form':
-                case 'show_preferences_form':
-                case 'show_password_form':
-                    $sConstName = 'DEFAULT_'.strtoupper($oBrickSubNode->nodeName);
-                    $sSetterName = 'Set'.str_replace('_', '', ucwords($oBrickSubNode->nodeName, '_'));
+				case 'show_picture_form':
+				case 'show_preferences_form':
+				case 'show_password_form':
+					$sConstName = 'DEFAULT_'.strtoupper($oBrickSubNode->nodeName);
+					$sSetterName = 'Set'.str_replace('_', '', ucwords($oBrickSubNode->nodeName, '_'));
 
-                    $bNodeValue = ($oBrickSubNode->GetText(constant('static::'.$sConstName)) === 'true') ? true : false;
-                    $this->$sSetterName($bNodeValue);
-                    break;
+					$bNodeValue = ($oBrickSubNode->GetText(constant('static::'.$sConstName)) === 'true') ? true : false;
+					$this->$sSetterName($bNodeValue);
+					break;
 			}
 		}
 
 		return $this;
 	}
-
 }

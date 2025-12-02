@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,7 +22,6 @@ namespace Combodo\iTop\Portal\Twig;
 
 use Combodo\iTop\Application\TwigBase\Twig\Extension;
 use Twig\Extension\AbstractExtension;
-
 
 /**
  * Class AppExtension

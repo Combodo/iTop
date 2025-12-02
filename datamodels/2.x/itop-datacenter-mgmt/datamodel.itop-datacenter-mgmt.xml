@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <classes>
     <class id="Rack" _delta="define">
       <parent>PhysicalDevice</parent>
@@ -796,7 +796,6 @@
           <target_class>PowerConnection</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <allow_target_creation>false</allow_target_creation>
           <allow_target_creation>false</allow_target_creation>
         </field>
         <field id="powerstart_name" xsi:type="AttributeExternalField">

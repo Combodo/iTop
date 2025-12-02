@@ -1,25 +1,18 @@
 <?php
-/**
- * Copyright (C) 2013-2023 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
-// Navigation menu
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'UI:ErrorPage:UnstableVersion' => 'You are using an unstable version that may include bugs. If you think this error occurred because of this please send us your feedback!~~',
-	'UI:ErrorPage:KittyDisclaimer' => 'No kitty were injured during the making of this GIF and release.
 
-- The R&amp;D Team~~',
-));
+/**
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
+ */
+/**
+ *
+ */
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'UI:ErrorPage:UnstableVersion' => 'Používáte nestabilní verzi, která může obsahovat chyby. Pokud si myslíte, že k chybě došlo z tohoto důvodu, pošlete nám prosím zpětnou vazbu!',
+	'UI:ErrorPage:KittyDisclaimer' => 'Při tvorbě tohoto GIFu a vydání nebyla zraněna žádná kočička.
+
+- The R&amp;D Team',
+]);

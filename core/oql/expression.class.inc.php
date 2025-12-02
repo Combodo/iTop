@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -88,26 +88,6 @@ abstract class Expression {
 			$aRet[$sName] = Expression::FromOQL($sConditionExpr);
 		}
 		return $aRet;
-	}
-
-
-	/**
-	 * recursive rendering
-	 *
-	 * @deprecated 3.0.0 use RenderExpression
-	 *
-	 * @param array $aArgs used as input by default, or used as output if bRetrofitParams set to True
-	 * @param bool $bRetrofitParams
-	 *
-	 * @return array|string
-	 * @throws \MissingQueryArgument
-	 */
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
-	{
-		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use RenderExpression');
-
-		return $this->RenderExpression(false, $aArgs, $bRetrofitParams);
 	}
 
 	/**
@@ -575,6 +555,15 @@ class BinaryExpression extends Expression
 			case 'LIKE':
 				$sType = 'like';
 				break;
+			case 'NOT LIKE':
+				$sType = 'notlike';
+				break;
+			case 'IN':
+				$sType = 'in';
+				break;
+			case 'NOT IN':
+				$sType = 'notin';
+				break;
 			default:
 				throw new Exception("Operator '$sOperator' not yet supported");
 		}
@@ -639,7 +628,26 @@ class BinaryExpression extends Expression
 			case 'like':
 				$sEscaped = preg_quote($mRight, '/');
 				$sEscaped = str_replace(array('%', '_', '\\\\.*', '\\\\.'), array('.*', '.', '%', '_'), $sEscaped);
-				$result = (int) preg_match("/$sEscaped/i", $mLeft);
+				$pregRes = preg_match("/$sEscaped/i", $mLeft);
+				if ($pregRes === false) {
+					throw new Exception("Error in regular expression '$sEscaped'");
+				}
+				$result = ($pregRes === 1);
+				break;
+			case 'notlike':
+				$sEscaped = preg_quote($mRight, '/');
+				$sEscaped = str_replace(array('%', '_', '\\\\.*', '\\\\.'), array('.*', '.', '%', '_'), $sEscaped);
+				$pregRes = preg_match("/$sEscaped/i", $mLeft);
+				if ($pregRes === false) {
+					throw new Exception("Error in regular expression '$sEscaped'");
+				}
+				$result = ($pregRes !== 1);
+				break;
+			case 'in':
+				$result = in_array($mLeft, $mRight);
+				break;
+			case 'notin':
+				$result = !in_array($mLeft, $mRight);
 				break;
 		}
 		return $result;
@@ -2250,7 +2258,12 @@ class ListExpression extends Expression
 */
 	public function Evaluate(array $aArgs)
 	{
-		throw new Exception('list expression not yet supported');
+		//throw new Exception('list expression not yet supported');
+		$aResult = [];
+		foreach ($this->m_aExpressions as $oExpressions) {
+			$aResult[] = $oExpressions->Evaluate($aArgs);
+		}
+		return $aResult;
 	}
 
 	/**

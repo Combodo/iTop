@@ -1,27 +1,16 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+/**
+ *
+ */
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:IncidentManagement' => 'Gerenciamento de Incidentes',
 	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Visão geral',
@@ -43,8 +32,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidentes abertos por status',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Incidentes abertos por agente',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Incidentes abertos por cliente',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -60,7 +48,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Class: Incident
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Incident' => 'Incidente',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Status',
@@ -151,6 +139,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Attribute:tto+' => 'Tempo para atribuição',
 	'Class:Incident/Attribute:ttr' => 'TTR',
 	'Class:Incident/Attribute:ttr+' => 'Tempo para solução',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'Prazo determinado de atribuição (TTO)',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => 'Prazo determinado de Tempo para atribuição (TTO)',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA TTO superado',
@@ -200,7 +192,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Attribute:related_request_list' => 'Solicitações filhas',
 	'Class:Incident/Attribute:related_request_list+' => '',
 	'Class:Incident/Attribute:child_incidents_list' => 'Incidentes filhos',
-	'Class:Incident/Attribute:child_incidents_list+' => 'Todos os subincidentes associados a este incidente',
+	'Class:Incident/Attribute:child_incidents_list+' => 'Todos os Subincidentes associados à este Incidente',
 	'Class:Incident/Attribute:public_log' => 'Log público',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'Satisfação do usuário',
@@ -239,4 +231,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets (resolver solicitações filhas)',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Conecte a solução a solicitação filha (ev_autoresolve) e alinhe as seguintes características: serviço, equipe, agente, informação da solução',
 	'Tickets:Related:OpenIncidents' => 'Incidentes abertos',
-));
+]);

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
@@ -33,12 +32,9 @@ class UniquenessConstraintTest extends ItopTestCase
 	public function testUniquenessRuleValidityCheck($bIsRuleShouldBeValid, $bIsRuleOverride, $aRuleProperties)
 	{
 		$bRuleValidResult = true;
-		try
-		{
+		try {
 			MetaModel::CheckUniquenessRuleValidity($aRuleProperties, $bIsRuleOverride);
-		}
-		catch (CoreUnexpectedValue $e)
-		{
+		} catch (CoreUnexpectedValue $e) {
 			$bRuleValidResult = false;
 		}
 
@@ -47,32 +43,32 @@ class UniquenessConstraintTest extends ItopTestCase
 
 	public function uniquenessRuleValidityCheckProvider()
 	{
-		return array(
-			'simplest rule' => array(true, false, array('attributes' => array('name'))),
-			'with all properties' => array(
+		return [
+			'simplest rule' => [true, false, ['attributes' => ['name']]],
+			'with all properties' => [
 				true,
 				false,
-				array(
-					'attributes' => array('name'),
+				[
+					'attributes' => ['name'],
 					'filter' => 'name != \'\'',
 					'disabled' => false,
 					'is_blocking' => true,
-				),
-			),
-			'only disabled key without ancestor' => array(
+				],
+			],
+			'only disabled key without ancestor' => [
 				false,
 				false,
-				array(
+				[
 					'disabled' => true,
-				),
-			),
-			'only disabled key with ancestor' => array(
+				],
+			],
+			'only disabled key with ancestor' => [
 				true,
 				true,
-				array(
+				[
 					'disabled' => true,
-				),
-			),
-		);
+				],
+			],
+		];
 	}
 }

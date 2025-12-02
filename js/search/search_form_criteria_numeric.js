@@ -129,7 +129,7 @@ $(function()
 				if ($(oEvent.target).is('input[type="text"], select')) {
 					return;
 				}
-				oOpContentElemFrom.focus();
+				oOpContentElemFrom.trigger('focus');
 			});
 			// - Apply on "enter" key hit
 			// TODO: this could be refactored

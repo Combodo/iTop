@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -21,6 +21,8 @@
 namespace Combodo\iTop\Portal\Controller;
 
 use Combodo\iTop\Portal\Brick\BrickCollection;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplateDefinitionDto;
+use Combodo\iTop\Portal\Service\TemplatesProvider\TemplatesRegister;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -33,6 +35,16 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DefaultController extends AbstractController
 {
+	/** @inheritdoc  */
+	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
+	{
+		parent::RegisterTemplates($oTemplatesRegister);
+		$oTemplatesRegister->RegisterTemplates(
+			self::class,
+			TemplateDefinitionDto::Create('home', static::TEMPLATES_BASE_PATH.'home/layout.html.twig'),
+		);
+	}
+
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request  $oRequest
 	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBricksCollection
@@ -42,26 +54,24 @@ class DefaultController extends AbstractController
 	 */
 	public function HomeAction(Request $oRequest, BrickCollection $oBricksCollection)
 	{
-		$aData = array();
+		$aData = [];
 
 		// Rendering tiles
-		$aData['aTilesRendering'] = array();
-		foreach ($oBricksCollection->GetBricks() as $oBrick)
-		{
+		$aData['aTilesRendering'] = [];
+		foreach ($oBricksCollection->GetBricks() as $oBrick) {
 			// Doing it only for tile visible on home page to avoid unnecessary rendering
-			if (($oBrick->GetVisibleHome() === true) && ($oBrick->GetTileControllerAction() !== null))
-			{
+			if (($oBrick->GetVisibleHome() === true) && ($oBrick->GetTileControllerAction() !== null)) {
 				$aControllerActionParts = explode('::', $oBrick->GetTileControllerAction());
-				if (count($aControllerActionParts) !== 2)
-				{
-					return new Response('Tile controller action must be of form "\Namespace\ControllerClass::FunctionName" for brick "'.$oBrick->GetId().'"',
-						500);
+				if (count($aControllerActionParts) !== 2) {
+					return new Response(
+						'Tile controller action must be of form "\Namespace\ControllerClass::FunctionName" for brick "'.$oBrick->GetId().'"',
+						500
+					);
 				}
 
-				$aRouteParams = array();
+				$aRouteParams = [];
 				// Add sBrickId in the route params as it is necessary for each brick actions
-				if (is_a($aControllerActionParts[0], BrickController::class, true))
-				{
+				if (is_a($aControllerActionParts[0], BrickController::class, true)) {
 					$aRouteParams['sBrickId'] = $oBrick->GetId();
 				}
 
@@ -72,7 +82,7 @@ class DefaultController extends AbstractController
 		}
 
 		// Home page template
-		$sTemplatePath = $this->getParameter('combodo.portal.instance.conf')['properties']['templates']['home'];
+		$sTemplatePath = $this->GetTemplatePath('home');
 
 		return $this->render($sTemplatePath, $aData);
 	}

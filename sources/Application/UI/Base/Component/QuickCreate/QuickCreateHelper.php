@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -19,11 +20,11 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\QuickCreate;
 
-
 use appUserPreferences;
 use DBObject;
 use MetaModel;
 use utils;
+use UserRights;
 
 /**
  * Class QuickCreateHelper
@@ -59,10 +60,8 @@ class QuickCreateHelper
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 
 		// Remove same entry from history to avoid duplicates
-		for ($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
-		{
-			if ($aHistoryEntries[$iIdx]['class'] === $sClass)
-			{
+		for ($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++) {
+			if ($aHistoryEntries[$iIdx]['class'] === $sClass) {
 				unset($aHistoryEntries[$iIdx]);
 			}
 		}
@@ -71,7 +70,7 @@ class QuickCreateHelper
 		array_unshift($aHistoryEntries, $aNewEntry);
 
 		// Truncate history
-		static::TruncateHistory($aHistoryEntries);
+		static::Truncate($aHistoryEntries, 'quick_create.max_history_results');
 
 		appUserPreferences::SetPref(static::USER_PREF_CODE, $aHistoryEntries);
 	}
@@ -88,35 +87,31 @@ class QuickCreateHelper
 	{
 		/** @var array $aHistoryEntries */
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
-		static::TruncateHistory($aHistoryEntries);
 
-		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
-		{
+		static::Truncate($aHistoryEntries, 'quick_create.max_history_results');
+
+		for ($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++) {
 			$sClass = $aHistoryEntries[$iIdx]['class'];
 
 			if (!MetaModel::IsValidClass($sClass)) {
 				continue;
 			}
 			// Add class icon
-			if(!isset($aHistoryEntries[$iIdx]['icon_url']))
-			{
+			if (!isset($aHistoryEntries[$iIdx]['icon_url'])) {
 				$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
 				// Mind that some classes don't have an icon
-				if(!empty($sClassIconUrl))
-				{
+				if (!empty($sClassIconUrl)) {
 					$aHistoryEntries[$iIdx]['icon_url'] = $sClassIconUrl;
 				}
 			}
 
 			// Add class label
-			if(!isset($aHistoryEntries[$iIdx]['label_html']))
-			{
+			if (!isset($aHistoryEntries[$iIdx]['label_html'])) {
 				$aHistoryEntries[$iIdx]['label_html'] = utils::EscapeHtml(MetaModel::GetName($sClass));
 			}
 
 			// Add URL
-			if(!isset($aHistoryEntries[$iIdx]['target_url']))
-			{
+			if (!isset($aHistoryEntries[$iIdx]['target_url'])) {
 				$aHistoryEntries[$iIdx]['target_url'] = DBObject::ComputeStandardUIPage($sClass).'?operation=new&class='.$sClass;
 			}
 		}
@@ -125,16 +120,66 @@ class QuickCreateHelper
 	}
 
 	/**
-	 * Truncate $aHistoryEntries to 'global_search.max_history_results' entries
+	 * Return an array of popular object classes
 	 *
-	 * @param array $aHistoryEntries
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
-	protected static function TruncateHistory(array &$aHistoryEntries): void
+	public static function GetPopularClasses(): array
 	{
-		$iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('quick_create.max_history_results');
-		if(count($aHistoryEntries) > $iMaxHistoryResults)
-		{
-			$aHistoryEntries = array_slice($aHistoryEntries, 0, $iMaxHistoryResults);
+		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
+		static::Truncate($aHistoryEntries, 'quick_create.max_history_results');
+		$aPopularClassesNames = UserRights::GetAllowedClasses(UR_ACTION_CREATE, ['popular'], false);
+
+		// Prevent classes in both Popular and Recent to appear twice
+		for ($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++) {
+			if (($key = array_search($aHistoryEntries[$iIdx]['class'], $aPopularClassesNames)) !== false) {
+				unset($aPopularClassesNames[$key]);
+			}
+		}
+		//die(var_dump($aPopularClassesNames));
+		static::Truncate($aPopularClassesNames, 'quick_create.max_popular_results');
+		$aPopularClasses = [];
+		foreach ($aPopularClassesNames as $sClass) {
+			if (!MetaModel::IsValidClass($sClass)) {
+				continue;
+			}
+
+			// Add class icon
+			$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
+			// Mind that some classes don't have an icon
+			$sClassIconUrl = !empty($sClassIconUrl) ? $sClassIconUrl : null;
+
+			// Add class label
+			$sLabelHtml = utils::EscapeHtml(MetaModel::GetName($sClass));
+
+			// Add URL
+			$sTargetUrl = DBObject::ComputeStandardUIPage($sClass).'?operation=new&class='.$sClass;
+
+			$aPopularClasses[] =  [
+				'class' => $sClass,
+				'icon_url' => $sClassIconUrl,
+				'label_html' => $sLabelHtml,
+				'target_url' => $sTargetUrl,
+			];
+		}
+		return $aPopularClasses;
+	}
+
+	/**
+	 * Truncate an array to $sMaxEntriesParam
+	 *
+	 * @param array $aEntries
+	 * @param string $sMaxEntriesParam
+	 */
+	protected static function Truncate(array &$aEntries, string $sMaxEntriesParam = 'global_search.max_history_results'): void
+	{
+		$iMaxResults = (int) MetaModel::GetConfig()->Get($sMaxEntriesParam);
+		if (count($aEntries) > $iMaxResults) {
+			$aEntries = array_slice($aEntries, 0, $iMaxResults);
 		}
 	}
+
 }

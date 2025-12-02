@@ -1,23 +1,16 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
-// Display DataTable
-Dict::Add('FR FR', 'French', 'Français', array(
+/**
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Datatables:Language:Processing' => 'Patientez ...',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ par page',
 	'UI:Datatables:Language:ZeroRecords' => 'Pas de résultat',
@@ -30,6 +23,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Datatables:Language:Sort:Descending' => 'tri décroissant',
 	'UI:Datatables:Column:RowActions:Label' => '',
 	'UI:Datatables:Column:RowActions:Description' => '',
-	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation~~',
-	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action ?~~',
-));
+	'UI:Datatables:RowActions:ConfirmationDialog' => 'Confirmation',
+	'UI:Datatables:RowActions:ConfirmationMessage' => 'Confirmez-vous cette action ?',
+]);

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -20,6 +20,7 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use Combodo\iTop\Portal\Brick\BrickCollection;
 use Combodo\iTop\Portal\Brick\BrickNotFoundException;
 use IssueLog;
 use LogChannels;
@@ -27,7 +28,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
-
 
 /**
  * Class AggregatePageBrickController
@@ -41,6 +41,19 @@ use UserRights;
 class AggregatePageBrickController extends BrickController
 {
 	/**
+	 * Constructor.
+	 *
+	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
+	 *
+	 * @since 3.2.0 N°6933
+	 */
+	public function __construct(
+		protected BrickCollection $oBrickCollection
+	) {
+
+	}
+
+	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
 	 * @param string $sBrickId
 	 *
@@ -51,23 +64,20 @@ class AggregatePageBrickController extends BrickController
 	 */
 	public function DisplayAction(Request $oRequest, $sBrickId)
 	{
-		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
-		$oBrickCollection = $this->get('brick_collection');
-
 		/** @var \Combodo\iTop\Portal\Brick\AggregatePageBrick $oBrick */
-		$oBrick = $oBrickCollection->GetBrickById($sBrickId);
+		$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
 
 		$aAggregatePageBricksConf = $oBrick->GetAggregatePageBricks();
 		$aAggregatePageBricks = $this->GetOrderedAggregatePageBricksObjectsById($aAggregatePageBricksConf);
 
 		$aTilesRendering = $this->GetBricksTileRendering($oRequest, $aAggregatePageBricks);
 
-		$sLayoutTemplate = $oBrick->GetPageTemplatePath();
-		$aData = array(
+		$sLayoutTemplate = $oBrick->GetTemplatePath('page');
+		$aData = [
 			'oBrick' => $oBrick,
 			'aggregatepage_bricks' => $aAggregatePageBricks,
 			'aTilesRendering' => $aTilesRendering,
-		);
+		];
 		$oResponse = $this->render($sLayoutTemplate, $aData);
 
 		return $oResponse;
@@ -81,18 +91,11 @@ class AggregatePageBrickController extends BrickController
 	 */
 	private function GetOrderedAggregatePageBricksObjectsById($aAggregatePageBricksConf)
 	{
-		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
-		$oBrickCollection = $this->get('brick_collection');
-
-		$aAggregatePageBricks = array();
-		foreach ($aAggregatePageBricksConf as $sBrickId => $iBrickRank)
-		{
-			try
-			{
-				$oPortalBrick = $oBrickCollection->GetBrickById($sBrickId);
-			}
-			catch (BrickNotFoundException $oException)
-			{
+		$aAggregatePageBricks = [];
+		foreach ($aAggregatePageBricksConf as $sBrickId => $iBrickRank) {
+			try {
+				$oPortalBrick = $this->oBrickCollection->GetBrickById($sBrickId);
+			} catch (BrickNotFoundException $oException) {
 				IssueLog::Debug('AggregatePageBrick: Could not display brick, either wrong id or user profile not allowed', LogChannels::PORTAL, [
 					'brick_id' => $sBrickId,
 					'user_profiles' => UserRights::ListProfiles(),
@@ -114,21 +117,17 @@ class AggregatePageBrickController extends BrickController
 	 */
 	private function GetBricksTileRendering(Request $oRequest, $aBricks)
 	{
-		$aTilesRendering = array();
-		foreach ($aBricks as $oBrick)
-		{
-			if ($oBrick->GetTileControllerAction() !== null)
-			{
+		$aTilesRendering = [];
+		foreach ($aBricks as $oBrick) {
+			if ($oBrick->GetTileControllerAction() !== null) {
 				$aControllerActionParts = explode('::', $oBrick->GetTileControllerAction());
-				if (count($aControllerActionParts) !== 2)
-				{
+				if (count($aControllerActionParts) !== 2) {
 					throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Tile controller action must be of form "\Namespace\ControllerClass::FunctionName" for brick "'.$oBrick->GetId().'"');
 				}
 
-				$aRouteParams = array();
+				$aRouteParams = [];
 				// Add sBrickId in the route params as it is necessary for each brick actions
-				if (is_a($aControllerActionParts[0], BrickController::class, true))
-				{
+				if (is_a($aControllerActionParts[0], BrickController::class, true)) {
 					$aRouteParams['sBrickId'] = $oBrick->GetId();
 				}
 

@@ -1,10 +1,10 @@
 <?php
 
-
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
+use DBObjectSearch;
 use MetaModel;
 
 /**
@@ -15,11 +15,11 @@ use MetaModel;
  */
 class MetaModelTest extends ItopDataTestCase
 {
-    protected static $iDefaultUserOrgId = 1;
-    protected static $iDefaultUserCallerId = 1;
-    protected static $sDefaultUserRequestTitle = 'Unit test title';
-    protected static $sDefaultUserRequestDescription = 'Unit test description';
-    protected static $sDefaultUserRequestDescriptionAsHtml = '<p>Unit test description</p>';
+	protected static $iDefaultUserOrgId = 1;
+	protected static $iDefaultUserCallerId = 1;
+	protected static $sDefaultUserRequestTitle = 'Unit test title';
+	protected static $sDefaultUserRequestDescription = 'Unit test description';
+	protected static $sDefaultUserRequestDescriptionAsHtml = '<p>Unit test description</p>';
 
 	protected function setUp(): void
 	{
@@ -27,44 +27,73 @@ class MetaModelTest extends ItopDataTestCase
 		$this->RequireOnceItopFile('/core/metamodel.class.php');
 	}
 
-    /**
-     * @group itopRequestMgmt
-     * @covers       MetaModel::ApplyParams()
-     * @dataProvider ApplyParamsProvider
-     *
-     * @param string $sInput
-     * @param array $aParams
-     * @param string $sExpectedOutput
-     *
-     * @throws \Exception
-     */
+	protected function tearDown(): void
+	{
+		$this->InvokeNonPublicStaticMethod('PluginManager', 'ResetPlugins');
+		parent::tearDown();
+	}
+
+	/**
+	 * @covers MetaModel::GetObjectByName
+	 * @return void
+	 * @throws \CoreException
+	 */
+	public function testGetFinalClassName()
+	{
+		// Standalone classes
+		$this->assertEquals('Organization', MetaModel::GetFinalClassName('Organization', 1), 'Should work with standalone classes');
+		$this->assertEquals('SynchroDataSource', MetaModel::GetFinalClassName('SynchroDataSource', 1), 'Should work with standalone classes');
+
+		// 2 levels hierarchy
+		$this->assertEquals('Person', MetaModel::GetFinalClassName('Contact', 1));
+		$this->assertEquals('Person', MetaModel::GetFinalClassName('Person', 1));
+
+		// multi-level hierarchy
+		$oServer1 = MetaModel::GetObjectByName('Server', 'Server1');
+		$sServer1Id = $oServer1->GetKey();
+		foreach (MetaModel::EnumParentClasses('Server', ENUM_PARENT_CLASSES_ALL) as $sClass) {
+			$this->assertEquals('Server', MetaModel::GetFinalClassName($sClass, $sServer1Id), 'Should return Server for all the classes in the hierarchy');
+		}
+	}
+
+	/**
+	 * @group itopRequestMgmt
+	 * @covers       MetaModel::ApplyParams()
+	 * @dataProvider ApplyParamsProvider
+	 *
+	 * @param string $sInput
+	 * @param array $aParams
+	 * @param string $sExpectedOutput
+	 *
+	 * @throws \Exception
+	 */
 	public function testApplyParams($sInput, $aParams, $sExpectedOutput)
 	{
-        $oUserRequest = $this->createObject(
-            'UserRequest',
-            array(
-                'org_id' => static::$iDefaultUserOrgId,
-                'caller_id' => static::$iDefaultUserCallerId,
-                'title' => static::$sDefaultUserRequestTitle,
-                'description' => static::$sDefaultUserRequestDescriptionAsHtml,
-            )
-        );
+		$oUserRequest = $this->createObject(
+			'UserRequest',
+			[
+				'org_id' => static::$iDefaultUserOrgId,
+				'caller_id' => static::$iDefaultUserCallerId,
+				'title' => static::$sDefaultUserRequestTitle,
+				'description' => static::$sDefaultUserRequestDescriptionAsHtml,
+			]
+		);
 
-        $aParams['this->object()'] = $oUserRequest;
+		$aParams['this->object()'] = $oUserRequest;
 
-        $sGeneratedOutput = MetaModel::ApplyParams($sInput, $aParams);
+		$sGeneratedOutput = MetaModel::ApplyParams($sInput, $aParams);
 
 		$this->assertEquals($sExpectedOutput, $sGeneratedOutput, "ApplyParams test returned $sGeneratedOutput");
 	}
 
 	public function ApplyParamsProvider()
 	{
-	    $sTitle = static::$sDefaultUserRequestTitle;
+		$sTitle = static::$sDefaultUserRequestTitle;
 
-	    $aParams = [
+		$aParams = [
 			'simple' => 'I am simple',
-		    'foo->bar' => 'I am bar', // N°2889 - Placeholder with an arrow that is not an object
-	    ];
+			'foo->bar' => 'I am bar', // N°2889 - Placeholder with an arrow that is not an object
+		];
 
 		return [
 			'Simple placeholder' => [
@@ -88,19 +117,19 @@ class MetaModelTest extends ItopDataTestCase
 				'Result: <a href="http://foo.bar/I am bar">Hyperlink</a>',
 			],
 			'Placeholder for an object string attribute (text format)' => [
-		        'Title: $this->title$',
-                $aParams,
-                'Title: '.$sTitle,
+				'Title: $this->title$',
+				$aParams,
+				'Title: '.$sTitle,
 			],
 			'Placeholder for an object string attribute (html format)' => [
-                'Title: <p>$this-&gt;title$</p>',
-                $aParams,
-                'Title: <p>'.$sTitle.'</p>',
+				'Title: <p>$this-&gt;title$</p>',
+				$aParams,
+				'Title: <p>'.$sTitle.'</p>',
 			],
 			'Placeholder for an object string attribute url-encoded (html format)' => [
-                'Title: <a href="http://foo.bar/%24this-&gt;title%24">Hyperlink</a>',
-                $aParams,
-                'Title: <a href="http://foo.bar/'.$sTitle.'">Hyperlink</a>',
+				'Title: <a href="http://foo.bar/%24this-&gt;title%24">Hyperlink</a>',
+				$aParams,
+				'Title: <a href="http://foo.bar/'.$sTitle.'">Hyperlink</a>',
 			],
 			'Placeholder for an object HTML attribute as its default format' => [
 				'$this->description$',
@@ -141,14 +170,13 @@ class MetaModelTest extends ItopDataTestCase
 
 	public function GetDependentAttributesProvider()
 	{
-		$aRawCases = array(
-			array('Person', 'org_id', array('location_id', 'org_name', 'org_id_friendlyname', 'org_id_obsolescence_flag')),
-			array('Person', 'name', array('friendlyname')),
-			array('Person', 'status', array('obsolescence_flag')),
-		);
-		$aRet = array();
-		foreach ($aRawCases as $i => $aData)
-		{
+		$aRawCases = [
+			['Person', 'org_id', ['location_id', 'org_name', 'org_id_friendlyname', 'org_id_obsolescence_flag']],
+			['Person', 'name', ['friendlyname']],
+			['Person', 'status', ['obsolescence_flag']],
+		];
+		$aRet = [];
+		foreach ($aRawCases as $i => $aData) {
 			$aRet[$aData[0].'::'.$aData[1]] = $aData;
 		}
 		return $aRet;
@@ -175,16 +203,15 @@ class MetaModelTest extends ItopDataTestCase
 
 	public function GetPrerequisiteAttributesProvider()
 	{
-		$aRawCases = array(
-			array('Person', 'friendlyname', array('name', 'first_name')),
-			array('Person', 'obsolescence_flag', array('status')),
-			array('Person', 'org_id_friendlyname', array('org_id')),
-			array('Person', 'org_id', array()),
-			array('Person', 'org_name', array('org_id')),
-		);
-		$aRet = array();
-		foreach ($aRawCases as $i => $aData)
-		{
+		$aRawCases = [
+			['Person', 'friendlyname', ['name', 'first_name']],
+			['Person', 'obsolescence_flag', ['status']],
+			['Person', 'org_id_friendlyname', ['org_id']],
+			['Person', 'org_id', []],
+			['Person', 'org_name', ['org_id']],
+		];
+		$aRet = [];
+		foreach ($aRawCases as $i => $aData) {
 			$aRet[$aData[0].'::'.$aData[1]] = $aData;
 		}
 		return $aRet;
@@ -196,14 +223,18 @@ class MetaModelTest extends ItopDataTestCase
 	 */
 	public function testManualVersusAutomaticDependenciesOnExtKeys()
 	{
-		foreach (\MetaModel::GetClasses() as $sClass)
-		{
-			if (\MetaModel::IsAbstract($sClass)) continue;
+		foreach (\MetaModel::GetClasses() as $sClass) {
+			if (\MetaModel::IsAbstract($sClass)) {
+				continue;
+			}
 
-			foreach (\MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				if (\MetaModel::GetAttributeOrigin($sClass, $sAttCode) != $sClass) continue;
-				if (!$oAttDef instanceof \AttributeExternalKey) continue;
+			foreach (\MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+				if (\MetaModel::GetAttributeOrigin($sClass, $sAttCode) != $sClass) {
+					continue;
+				}
+				if (!$oAttDef instanceof \AttributeExternalKey) {
+					continue;
+				}
 
 				$aManual = $oAttDef->Get('depends_on');
 				$aAuto = \MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
@@ -216,8 +247,6 @@ class MetaModelTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @runInSeparateProcess
-	 *
 	 * @dataProvider enumPluginsProvider
 	 *
 	 * @param $expectedResults
@@ -226,7 +255,7 @@ class MetaModelTest extends ItopDataTestCase
 	 * @param $interface
 	 * @param null $sFilterInstanceOf
 	 */
-	public function testEnumPlugins($expectedInstanciationCalls, $expectedResults, $m_aExtensionClassNames, $m_aExtensionClasses, $interface, $sFilterInstanceOf=null)
+	public function testEnumPlugins($expectedInstanciationCalls, $expectedResults, $m_aExtensionClassNames, $m_aExtensionClasses, $interface, $sFilterInstanceOf = null)
 	{
 		$pluginInstanciationManager = new \PluginInstanciationManager();
 		$res = $pluginInstanciationManager->InstantiatePlugins($m_aExtensionClassNames, $interface);
@@ -254,7 +283,8 @@ class MetaModelTest extends ItopDataTestCase
 		}
 	}
 
-	public function enumPluginsProvider(){
+	public function enumPluginsProvider()
+	{
 		$aInterfaces = [
 			"empty conf" => [0, [], [], [], 'Wizzard'],
 			"simple instance retrieval" => [1, [Gryffindor::class => Gryffindor::class], ['Wizzard' => [Gryffindor::class]], [], 'Wizzard'],
@@ -265,8 +295,6 @@ class MetaModelTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @runInSeparateProcess
-	 *
 	 * @dataProvider getPluginsProvider
 	 *
 	 * @param $expectedInstanciationCalls
@@ -431,11 +459,49 @@ class MetaModelTest extends ItopDataTestCase
 			'Non existing person' => [10, false],
 		];
 	}
+
+	/**
+	 * @return void
+	 * @throws CoreException
+	 * @throws \OQLException
+	 * @dataProvider PurgeDataProvider
+	 *
+	 */
+	public function testPurgeData($iMaxChunkSize, $iNbQueriesExpected)
+	{
+		// Set max_chunk_size to $iMaxChunkSize (default 1000) to test chunk deletion with only 10 items
+		$oConfig = MetaModel::GetConfig();
+		$oConfig->Set('purge_data.max_chunk_size', $iMaxChunkSize);
+
+		$aPkPerson = [];
+		for ($i = 0; $i < 10; $i++) {
+			$oPerson = $this->CreatePerson($i, 1);
+			$sClass = get_class($oPerson);
+			$aPkPerson[] = $oPerson->GetKey();
+		}
+
+		$oFilter = DBObjectSearch::FromOQL('SELECT '.$sClass.' WHERE id IN ('.implode(',', $aPkPerson).')');
+		$iNbDelete = 0;
+
+		$this->assertDBQueryCount($iNbQueriesExpected, function () use ($oFilter, &$iNbDelete) {
+			$iNbDelete = MetaModel::PurgeData($oFilter);
+		});
+
+		$this->assertEquals($iNbDelete, 10, 'MetaModel::PurgeData must delete 10 objects per batch of 2 items');
+	}
+
+	public function PurgeDataProvider()
+	{
+		return [
+			'Purge 10 items with a max_chunk_size of 2 should be perfomed in 5 steps + an additional query to verify that the job is complete' => [2, 16],
+			'Purge 10 items with a max_chunk_size of 3 should be perfomed in 4 steps' => [3, 12],
+			'Purge 10 items with a max_chunk_size of 1000 (default value) should be perfomed in 1 step' => [1000, 3],
+		];
+	}
 }
 
 abstract class Wizzard
 {
-
 	/**
 	 * Wizzard constructor.
 	 */
@@ -446,23 +512,18 @@ abstract class Wizzard
 
 class Gryffindor extends Wizzard
 {
-
 }
 class Hufflepuff extends Wizzard
 {
-
 }
 class Ravenclaw extends Wizzard
 {
-
 }
 
 class Slytherin extends Wizzard
 {
-
 }
 
 class Muggle
 {
-
 }

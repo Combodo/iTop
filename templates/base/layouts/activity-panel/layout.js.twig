@@ -5,7 +5,6 @@ $('#{{ oUIBlock.GetId() }}').activity_panel({
     lock_enabled: {{ oUIBlock.IsLockEnabled()|var_export }},
     lock_watcher_period: {{ oUIBlock.GetLockWatcherPeriod() }},
     lock_endpoint: {{ oUIBlock.GetLockEndpoint()|var_export|raw }},
-    show_multiple_entries_submit_confirmation: {{ oUIBlock.GetShowMultipleEntriesSubmitConfirmation()|var_export }},
     save_state_endpoint: {{ oUIBlock.GetSaveStateEndpoint()|var_export|raw }},
     last_loaded_entries_ids: {{ oUIBlock.GetLastEntryIds()|json_encode|raw }},
     load_more_entries_endpoint: {{ oUIBlock.GetLoadMoreEntriesEndpoint()|var_export|raw }},

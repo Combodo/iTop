@@ -1,37 +1,26 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
+ */
+/**
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	// Dictionary entries go here
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Verbinding maken met iTop Hub',
 	'Menu:iTopHub:Register+' => 'Ga naar de iTop Hub om je iTop bij te werken.',
-	'Menu:iTopHub:Register:Description' => '<p>Verkrijg toegang tot jouw iTop Hub (community platform)!</br>Je vindt er alle informatie die je nodig hebt. Je kan je omgevingen beheren met gepersonaliseerde tools en extensies.</br><br/>Door van hieruit te verbinden met de Hub, stuur je informatie over deze '.ITOP_APPLICATION_SHORT.'-omgeving naar de Hub.</p>',
+	'Menu:iTopHub:Register:Description' => '<p>Verkrijg toegang tot jouw iTop Hub (community platform)!<br>Je vindt er alle informatie die je nodig hebt. Je kan je omgevingen beheren met gepersonaliseerde tools en extensies.<br><br>Door van hieruit te verbinden met de Hub, stuur je informatie over deze '.ITOP_APPLICATION_SHORT.'-omgeving naar de Hub.</p>',
 	'Menu:iTopHub:MyExtensions' => 'Mijn extensies',
 	'Menu:iTopHub:MyExtensions+' => 'Bekijk de lijst van extensies die je gebruikt in deze '.ITOP_APPLICATION_SHORT.'-omgeving.',
 	'Menu:iTopHub:BrowseExtensions' => 'Vind extensies op iTop Hub',
 	'Menu:iTopHub:BrowseExtensions+' => 'Blader door de extensiecatalogus op iTop Hub',
-	'Menu:iTopHub:BrowseExtensions:Description' => '<p>In de iTop Hub Store vind je heel wat extensies!</br>Blader door de catalogus en ontdek welke extensies jou helpen om iTop aan te passen aan jouw manier van werken.</br><br/>Door van hieruit te verbinden met de Hub, stuur je informatie over deze '.ITOP_APPLICATION_SHORT.'-omgeving naar de Hub.</p>',
+	'Menu:iTopHub:BrowseExtensions:Description' => '<p>In de iTop Hub Store vind je heel wat extensies!<br>Blader door de catalogus en ontdek welke extensies jou helpen om iTop aan te passen aan jouw manier van werken.<br><br>Door van hieruit te verbinden met de Hub, stuur je informatie over deze '.ITOP_APPLICATION_SHORT.'-omgeving naar de Hub.</p>',
 	'iTopHub:GoBtn' => 'Ga naar iTop Hub',
 	'iTopHub:CloseBtn' => 'Sluiten',
 	'iTopHub:GoBtn:Tooltip' => 'Ga naar www.itophub.io',
@@ -46,7 +35,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:Landing:Status' => 'Installatiestatus',
 	'iTopHub:Landing:Install' => 'Bezig met extensies te installeren...',
 	'iTopHub:CompiledOK' => 'Compilatie geslaagd.',
-	'iTopHub:ConfigurationSafelyReverted' => 'Er trad een fout op bij de installatie!<br/>'.ITOP_APPLICATION_SHORT.'-configuratie werd NIET aangepast.',
+	'iTopHub:ConfigurationSafelyReverted' => 'Er trad een fout op bij de installatie!<br>'.ITOP_APPLICATION_SHORT.'-configuratie werd NIET aangepast.',
 	'iTopHub:FailAuthent' => 'Aanmelden lukt niet voor deze actie.',
 	'iTopHub:InstalledExtensions' => 'Manueel geïnstalleerde extensies',
 	'iTopHub:ExtensionCategory:Manual' => 'Manueel geïnstalleerde extensies',
@@ -77,6 +66,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s versie: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Geïnstalleerd',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Versie %1$s is <b>NIET</b> geïnstalleerd.',
-));
-
-
+]);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -63,7 +63,7 @@ $(function () {
 				let $listLink = $eventTarget
 					.closest(this.js_selectors.dashlet_container)
 					.find(this.js_selectors.dashlet_action_list);
-				$listLink[0].click();
+				$listLink[0].trigger('click');
 			}
 		})
 });

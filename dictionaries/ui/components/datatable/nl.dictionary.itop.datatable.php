@@ -1,23 +1,16 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
-// Display DataTable
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+/**
+ * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
+ */
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Datatables:Language:Processing' => 'Even geduld…',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ per pagina',
 	'UI:Datatables:Language:ZeroRecords' => 'Geen resultaten',
@@ -28,8 +21,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Datatables:Language:DisplayLength:All' => 'Alles',
 	'UI:Datatables:Language:Sort:Ascending' => 'Oplopend sorteren',
 	'UI:Datatables:Language:Sort:Descending' => 'Aflopend sorteren',
-	'UI:Datatables:Column:RowActions:Label' => '~~',
-	'UI:Datatables:Column:RowActions:Description' => '~~',
-	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation~~',
-	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action ?~~',
-));
+	'UI:Datatables:Column:RowActions:Label' => '',
+	'UI:Datatables:Column:RowActions:Description' => '',
+	'UI:Datatables:RowActions:ConfirmationDialog' => 'Bevestiging actie',
+	'UI:Datatables:RowActions:ConfirmationMessage' => 'Bevestig je deze actie?',
+]);

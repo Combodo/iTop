@@ -1,23 +1,16 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Localized data
  *
- * This file is part of iTop.
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
  */
-// Navigation menu
-Dict::Add('FR FR', 'French', 'Français', array(
+/**
+ *
+ */
+Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Preferences:Title' => 'Préférences',
 	'UI:Preferences:UserInterface:Title' => 'Interface utilisateur',
 	'UI:Preferences:General:Title' => 'Général',
@@ -45,6 +38,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Preferences:Tabs:Scrollable:Label' => 'Navigation',
 	'UI:Preferences:Tabs:Scrollable:Classic' => 'Classique',
 	'UI:Preferences:Tabs:Scrollable:Scrollable' => 'Défilement',
+	'UI:Preferences:General:Toasts' => 'Position des notifications toast',
+	'UI:Preferences:General:Toasts:Bottom' => 'En bas',
+	'UI:Preferences:General:Toasts:Top' => 'En haut',
 	'UI:Preferences:ChooseAPlaceholder' => 'Avatar de l\'utilisateur',
 	'UI:Preferences:ChooseAPlaceholder+' => 'Choisissez un avatar qui sera affiché si le contact associé à votre compte utilisateur n\'en possède pas',
-));
+	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Votre avatar a été mis à jour avec succès',
+	'UI:Preferences:Notifications' => 'Notifications',
+	'UI:Preferences:Notifications+' => 'Désabonnez-vous des notifications qui vous importunent (emails et news) en suivant <a href="%1$s">ce lien</a>.',
+
+]);

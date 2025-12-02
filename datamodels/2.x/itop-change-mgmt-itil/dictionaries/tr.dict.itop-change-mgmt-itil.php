@@ -1,28 +1,17 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
  * Localized data
  *
- * @author      Izzet Sirin <izzet.sirin@htr.com.tr>
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+/**
+ * @author Izzet Sirin <izzet.sirin@htr.com.tr>
+ *
+ */
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ChangeManagement' => 'Değişiklik Yönetimi',
 	'Menu:Change:Overview' => 'Özet',
 	'Menu:Change:Overview+' => '',
@@ -46,7 +35,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Son 7 gün için duruma göre değişiklikler',
 	'Tickets:Related:OpenChanges' => 'Açık değişiklikler',
 	'Tickets:Related:RecentChanges' => 'Son değişiklikler (72H)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -58,12 +47,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Change' => 'Değişiklik',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Durumu',
@@ -160,13 +148,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Bitir',
 	'Class:Change/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:RoutineChange' => 'Sıradan değişiklik',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Doğrulanan',
@@ -191,13 +179,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Bitir',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ApprovedChange' => 'Onaylanan değişiklik',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Onay tarihi',
@@ -226,13 +214,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Bitir',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:NormalChange' => 'Normal değişiklik',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Kabul tarihi',
@@ -261,13 +249,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Bitir',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:EmergencyChange' => 'Acil değişiklik',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Doğrula',
@@ -292,4 +280,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Bitir',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-));
+]);

@@ -71,28 +71,24 @@ class_list(A) ::= class_list(L) COMA class_name(X). {
 where_statement(A) ::= WHERE condition(C). { A = C;}
 where_statement(A) ::= . { A = null;}
 
-join_statement(A) ::= join_item(J) join_statement(S). {
+join_statement(A) ::= join_statement(S) JOIN join_item(J). {
 	// insert the join statement on top of the existing list
-	array_unshift(S, J);
+	array_push(S, J);
 	// and return the updated array
 	A = S;
 }
-join_statement(A) ::= join_item(J). {
-	A = Array(J);
-}
-join_statement(A) ::= . { A = null;}
+join_statement(A) ::= . { A = [];}
 
-join_item(A) ::= JOIN class_name(X) AS_ALIAS class_name(Y) ON join_condition(C).
+join_item(A) ::= class_name(X) AS_ALIAS class_name(Y) ON join_condition(C).
 {
 	// create an array with one single item
 	A = new OqlJoinSpec(X, Y, C);
 }
-join_item(A) ::= JOIN class_name(X) ON join_condition(C).
+join_item(A) ::= class_name(X) ON join_condition(C).
 {
 	// create an array with one single item
 	A = new OqlJoinSpec(X, X, C);
 }
-
 join_condition(A) ::= field_id(X) EQ field_id(Y). { A = new BinaryOqlExpression(X, '=', Y); }
 join_condition(A) ::= field_id(X) BELOW field_id(Y). { A = new BinaryOqlExpression(X, 'BELOW', Y); }
 join_condition(A) ::= field_id(X) BELOW_STRICT field_id(Y). { A = new BinaryOqlExpression(X, 'BELOW_STRICT', Y); }

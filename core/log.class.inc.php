@@ -1,9 +1,10 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
+
+// Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,7 +16,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 
 /**
  * @since 2.7.0 N°2518 N°2793
@@ -66,7 +66,7 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	 * We are caching the file mtime though
 	 * @var array with full file path as key and DateTime (file last modification time) as value
 	 */
-	protected static $aLogFileLastModified = array();
+	protected static $aLogFileLastModified = [];
 	/** @var string */
 	protected $sLogFileFullPath;
 	/** @var string */
@@ -86,8 +86,7 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 
 	protected function GetLastModifiedDateForFile()
 	{
-		if (isset(static::$aLogFileLastModified[$this->sLogFileFullPath]))
-		{
+		if (isset(static::$aLogFileLastModified[$this->sLogFileFullPath])) {
 			return static::$aLogFileLastModified[$this->sLogFileFullPath];
 		}
 
@@ -131,16 +130,13 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 		$oConfig = utils::GetConfig();
 		utils::InitTimeZone($oConfig);
 
-		if ($this->GetLastModifiedDateForFile() === null)
-		{
-			if (!$this->IsLogFileExists())
-			{
+		if ($this->GetLastModifiedDateForFile() === null) {
+			if (!$this->IsLogFileExists()) {
 				return;
 			}
 
 			$iLogDateLastModifiedTimeStamp = filemtime($this->sLogFileFullPath);
-			if ($iLogDateLastModifiedTimeStamp === false)
-			{
+			if ($iLogDateLastModifiedTimeStamp === false) {
 				return;
 			}
 			$oDateTime = DateTime::createFromFormat('U', $iLogDateLastModifiedTimeStamp);
@@ -152,8 +148,7 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 
 		$oNow = new DateTime();
 		$bShouldRotate = $this->ShouldRotate($this->GetLastModifiedDateForFile(), $oNow);
-		if (!$bShouldRotate)
-		{
+		if (!$bShouldRotate) {
 			return;
 		}
 
@@ -170,33 +165,28 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	 */
 	protected function RotateLogFile($oLogFileLastModified)
 	{
-		if (!$this->IsLogFileExists()) // extra check, but useful for cron also !
-		{
+		if (!$this->IsLogFileExists()) { // extra check, but useful for cron also !
 			return;
 		}
 
 		$oLock = null;
-		try
-		{
+		try {
 			$oLock = new iTopMutex('log_rotation_'.$this->sLogFileFullPath);
 			$oLock->Lock();
-			if (!$this->IsLogFileExists()) // extra extra check if we were blocked and another process moved the file in the meantime
-			{
+			if (!$this->IsLogFileExists()) { // extra extra check if we were blocked and another process moved the file in the meantime
 				$oLock->Unlock();
 				return;
 			}
 			$this->ResetLastModifiedDateForFile();
 			$sNewLogFileName = $this->GetRotatedFileName($oLogFileLastModified);
 			rename($this->sLogFileFullPath, $sNewLogFileName);
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			// nothing to do, cannot log... file will be renamed on the next call O:)
 			return;
-		}
-		finally
-		{
-			if (!is_null($oLock)) { $oLock->Unlock();}
+		} finally {
+			if (!is_null($oLock)) {
+				$oLock->Unlock();
+			}
 		}
 	}
 
@@ -227,13 +217,11 @@ abstract class RotatingLogFileNameBuilder implements iLogFileNameBuilder
 	 */
 	public function IsLogFileExists()
 	{
-		if (!file_exists($this->sLogFileFullPath))
-		{
+		if (!file_exists($this->sLogFileFullPath)) {
 			return false;
 		}
 
-		if (!is_readable($this->sLogFileFullPath))
-		{
+		if (!is_readable($this->sLogFileFullPath)) {
 			return false;
 		}
 
@@ -290,13 +278,11 @@ class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 		$iNowYear = $oNow->format('Y');
 		$iNowDay = $oNow->format('z');
 
-		if ($iLogYear !== $iNowYear)
-		{
+		if ($iLogYear !== $iNowYear) {
 			return true;
 		}
 
-		if ($iLogDay !== $iNowDay)
-		{
+		if ($iLogDay !== $iNowDay) {
 			return true;
 		}
 
@@ -341,13 +327,11 @@ class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 		$iNowYear = $oNow->format('Y');
 		$iNowWeek = $oNow->format('W');
 
-		if ($iLogYear !== $iNowYear)
-		{
+		if ($iLogYear !== $iNowYear) {
 			return true;
 		}
 
-		if ($iLogWeek !== $iNowWeek)
-		{
+		if ($iLogWeek !== $iNowWeek) {
 			return true;
 		}
 
@@ -381,13 +365,11 @@ class MonthlyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 		$iNowYear = $oNow->format('Y');
 		$iNowMonth = $oNow->format('n');
 
-		if ($iLogYear !== $iNowYear)
-		{
+		if ($iLogYear !== $iNowYear) {
 			return true;
 		}
 
-		if ($iLogMonth !== $iNowMonth)
-		{
+		if ($iLogMonth !== $iNowMonth) {
 			return true;
 		}
 
@@ -435,8 +417,7 @@ class LogFileNameBuilderFactory
 	{
 		$oConfig = utils::GetConfig();
 		$sFileNameBuilderImpl = $oConfig->Get('log_filename_builder_impl');
-		if (!is_a($sFileNameBuilderImpl, iLogFileNameBuilder::class, true))
-		{
+		if (!is_a($sFileNameBuilderImpl, iLogFileNameBuilder::class, true)) {
 			$sFileNameBuilderImpl = 'DefaultLogFileNameBuilder';
 		}
 
@@ -444,11 +425,10 @@ class LogFileNameBuilderFactory
 	}
 }
 
-
 /**
  * File logging
  *
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @since 2.7.0 N°2518 N°2793 file log rotation
  */
@@ -469,38 +449,37 @@ class FileLog
 		$this->oFileNameBuilder = LogFileNameBuilderFactory::GetInstance($sFileName);
 	}
 
-	public function Error($sText, $sChannel = '', $aContext = array())
+	public function Error($sText, $sChannel = '', $aContext = [])
 	{
 		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
 	}
 
-	public function Warning($sText, $sChannel = '', $aContext = array())
+	public function Warning($sText, $sChannel = '', $aContext = [])
 	{
 		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
 	}
 
-	public function Info($sText, $sChannel = '', $aContext = array())
+	public function Info($sText, $sChannel = '', $aContext = [])
 	{
 		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
 	}
 
-	public function Ok($sText, $sChannel = '', $aContext = array())
+	public function Ok($sText, $sChannel = '', $aContext = [])
 	{
 		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
 	}
 
-	public function Debug($sText, $sChannel = '', $aContext = array())
+	public function Debug($sText, $sChannel = '', $aContext = [])
 	{
 		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
 	}
 
-	public function Trace($sText, $sChannel = '', $aContext = array())
+	public function Trace($sText, $sChannel = '', $aContext = [])
 	{
 		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
 	}
 
-
-	protected function Write($sText, $sLevel = '', $sChannel = '', $aContext = array())
+	protected function Write($sText, $sLevel = '', $sChannel = '', $aContext = [])
 	{
 		$sTextPrefix = empty($sLevel) ? '' : (str_pad($sLevel, 7));
 		$sTextPrefix .= ' | ';
@@ -533,7 +512,6 @@ class FileLog
 	}
 }
 
-
 /**
  * Simple enum like class to factorize channels values as constants
  * Channels are used especially as parameters in {@see \LogAPI} methods
@@ -542,32 +520,32 @@ class FileLog
  */
 class LogChannels
 {
-	public const APC = 'apc';
+	public const APC = 'Apc';
 
 	/**
 	 * @var string Everything related to the backup / restore
 	 * @since 3.1.0
 	 */
-	public const BACKUP = 'backup';
+	public const BACKUP = 'Backup';
 
 	/**
 	 * @since 3.0.0
 	 */
-	public const CLI = 'CLI';
+	public const CLI = 'Cli';
 
 	/**
 	 * @var string
 	 * @since 2.7.7 N°4558 use this new channel when logging DB transactions
 	 * @since 3.0.0 logs info in CMDBSource (see commit a117906f)
 	 */
-	public const CMDB_SOURCE = 'cmdbsource';
+	public const CMDB_SOURCE = 'CmdbSource';
 
 	/**
 	 * @since 3.0.0
 	 */
-	public const CONSOLE = 'console';
+	public const CONSOLE = 'Console';
 
-	public const CORE = 'core';
+	public const CORE = 'Core';
 
 	/**
 	 * @var string Everything related to the datatable component
@@ -575,16 +553,27 @@ class LogChannels
 	 */
 	public const DATATABLE = 'Datatable';
 
+	/**
+	 * @var string Everything related to the data integrity
+	 * @since 3.2.0
+	 */
+	public const DATA_INTEGRITY = 'DataIntegrity';
+
 	public const DEADLOCK = 'DeadLock';
+	/**
+	 * @var string Everything related to PHP sessions tracking
+	 * @since 3.1.1 3.2.0 N°6901
+	 */
+	public const SESSIONTRACKER = 'SessionTracker';
 
 	/**
 	 * @var string Everything related to the datamodel CRUD
 	 * @since 3.1.0
 	 */
-	public const DM_CRUD = 'DMCRUD';
+	public const DM_CRUD = 'DMCrud';
 
 	/**
-	 * @var string Everything related to the datamodel CRUD
+	 * @var string Everything related to webrequests
 	 * @since 3.1.0
 	 */
 	public const WEB_REQUEST = 'WebRequest';
@@ -599,7 +588,7 @@ class LogChannels
 	 * @var string
 	 * @since 2.7.9 3.0.3 3.1.0 N°5588
 	 */
-	public const EXPORT = 'export';
+	public const EXPORT = 'Export';
 
 	public const INLINE_IMAGE = 'InlineImage';
 
@@ -608,9 +597,9 @@ class LogChannels
 	 * @since 3.0.1 N°4849
 	 * @since 2.7.7 N°4635
 	 */
-	public const NOTIFICATIONS = 'notifications';
+	public const NOTIFICATIONS = 'Notifications';
 
-	public const PORTAL       = 'portal';
+	public const PORTAL       = 'Portal';
 
 	public const TEMPORARY_OBJECTS = 'TemporaryObjects';
 
@@ -618,9 +607,14 @@ class LogChannels
 	 * @var string
 	 * @since 3.1.0
 	 */
-	public const ROUTER = 'router';
-}
+	public const ROUTER   = 'Router';
 
+	/**
+	 * @var string
+	 * @since 3.2.0
+	 */
+	public const SECURITY = 'Security';
+}
 
 abstract class LogAPI
 {
@@ -649,18 +643,17 @@ abstract class LogAPI
 	 */
 	public const LEVEL_DEFAULT_DB = false;
 
-	protected static $aLevelsPriority = array(
+	protected static $aLevelsPriority = [
 		self::LEVEL_ERROR   => 400,
 		self::LEVEL_WARNING => 300,
 		self::LEVEL_INFO    => 200,
 		self::LEVEL_OK      => 200,
 		self::LEVEL_DEBUG   => 100,
 		self::LEVEL_TRACE   => 50,
-	);
+	];
 
 	public const ENUM_CONFIG_PARAM_FILE = 'log_level_min';
 	public const ENUM_CONFIG_PARAM_DB   = 'log_level_min.write_in_db';
-
 
 	/**
 	 * Parameter to enable log purge.
@@ -698,32 +691,32 @@ abstract class LogAPI
 		static::$m_oMockMetaModelConfig = $oMetaModelConfig;
 	}
 
-	public static function Error($sMessage, $sChannel = null, $aContext = array())
+	public static function Error($sMessage, $sChannel = null, $aContext = [])
 	{
 		static::Log(self::LEVEL_ERROR, $sMessage, $sChannel, $aContext);
 	}
 
-	public static function Warning($sMessage, $sChannel = null, $aContext = array())
+	public static function Warning($sMessage, $sChannel = null, $aContext = [])
 	{
 		static::Log(self::LEVEL_WARNING, $sMessage, $sChannel, $aContext);
 	}
 
-	public static function Info($sMessage, $sChannel = null, $aContext = array())
+	public static function Info($sMessage, $sChannel = null, $aContext = [])
 	{
 		static::Log(self::LEVEL_INFO, $sMessage, $sChannel, $aContext);
 	}
 
-	public static function Ok($sMessage, $sChannel = null, $aContext = array())
+	public static function Ok($sMessage, $sChannel = null, $aContext = [])
 	{
 		static::Log(self::LEVEL_OK, $sMessage, $sChannel, $aContext);
 	}
 
-	public static function Debug($sMessage, $sChannel = null, $aContext = array())
+	public static function Debug($sMessage, $sChannel = null, $aContext = [])
 	{
 		static::Log(self::LEVEL_DEBUG, $sMessage, $sChannel, $aContext);
 	}
 
-	public static function Trace($sMessage, $sChannel = null, $aContext = array())
+	public static function Trace($sMessage, $sChannel = null, $aContext = [])
 	{
 		static::Log(self::LEVEL_TRACE, $sMessage, $sChannel, $aContext);
 	}
@@ -731,7 +724,7 @@ abstract class LogAPI
 	/**
 	 * @throws \ConfigException if log wrongly configured
 	 */
-	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
+	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = [])
 	{
 		if (!isset(self::$aLevelsPriority[$sLevel])) {
 			IssueLog::Error("invalid log level '{$sLevel}'");
@@ -749,7 +742,7 @@ abstract class LogAPI
 	/**
 	 * @throws \ConfigException
 	 */
-	protected static function WriteLog(string $sLevel, string $sMessage, ?string $sChannel = null, ?array $aContext = array()): void
+	protected static function WriteLog(string $sLevel, string $sMessage, ?string $sChannel = null, ?array $aContext = []): void
 	{
 		if (
 			(null !== static::$m_oFileLog)
@@ -901,15 +894,13 @@ abstract class LogAPI
 		try {
 			self::$oLastEventIssue = static::GetEventIssue($sMessage, $sChannel, $aContext);
 			self::$oLastEventIssue->DBInsertNoReload();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			// calling low level methods : if we would call Error() for example we would try to write to DB again...
 			static::$m_oFileLog->Error('Failed to log issue into the DB', LogChannels::CORE, [
 				'exception message' => $e->getMessage(),
 				'exception stack'   => $e->getTraceAsString(),
 			]);
-		}
-		finally {
+		} finally {
 			$bWriteToDbReentrance = false;
 		}
 	}
@@ -977,13 +968,13 @@ abstract class LogAPI
 
 class SetupLog extends LogAPI
 {
-	const CHANNEL_DEFAULT = 'SetupLog';
+	public const CHANNEL_DEFAULT = 'SetupLog';
 	/**
 	 * @inheritDoc
 	 *
 	 * As this object is used during setup, without any conf file available, customizing the level can be done by changing this constant !
 	 */
-	const LEVEL_DEFAULT = self::LEVEL_INFO;
+	public const LEVEL_DEFAULT = self::LEVEL_INFO;
 
 	protected static $m_oFileLog = null;
 
@@ -1000,14 +991,14 @@ class SetupLog extends LogAPI
 
 class IssueLog extends LogAPI
 {
-	const CHANNEL_DEFAULT = 'IssueLog';
+	public const CHANNEL_DEFAULT = 'IssueLog';
 
 	protected static $m_oFileLog = null;
 }
 
 class ToolsLog extends LogAPI
 {
-	const CHANNEL_DEFAULT = 'ToolsLog';
+	public const CHANNEL_DEFAULT = 'ToolsLog';
 
 	protected static $m_oFileLog = null;
 }
@@ -1020,17 +1011,16 @@ class ToolsLog extends LogAPI
  */
 class DeadLockLog extends LogAPI
 {
-	const CHANNEL_WAIT_TIMEOUT = 'Deadlock-WaitTimeout';
-	const CHANNEL_DEADLOCK_FOUND = 'Deadlock-Found';
-	const CHANNEL_DEFAULT = self::CHANNEL_WAIT_TIMEOUT;
+	public const CHANNEL_WAIT_TIMEOUT = 'Deadlock-WaitTimeout';
+	public const CHANNEL_DEADLOCK_FOUND = 'Deadlock-Found';
+	public const CHANNEL_DEFAULT = self::CHANNEL_WAIT_TIMEOUT;
 
 	/** @var \FileLog we want our own instance ! */
 	protected static $m_oFileLog = null;
 
 	public static function Enable($sTargetFile = null)
 	{
-		if (empty($sTargetFile))
-		{
+		if (empty($sTargetFile)) {
 			$sTargetFile = APPROOT.'log/deadlocks.log';
 		}
 		parent::Enable($sTargetFile);
@@ -1039,8 +1029,7 @@ class DeadLockLog extends LogAPI
 	/** @noinspection PhpUnreachableStatementInspection we want to keep the break statements to keep clarity and avoid errors */
 	private static function GetChannelFromMysqlErrorNo($iMysqlErrorNo)
 	{
-		switch ($iMysqlErrorNo)
-		{
+		switch ($iMysqlErrorNo) {
 			case CMDBSource::MYSQL_ERRNO_WAIT_TIMEOUT:
 				return self::CHANNEL_WAIT_TIMEOUT;
 				break;
@@ -1065,13 +1054,12 @@ class DeadLockLog extends LogAPI
 	 * @since 2.7.1 method creation
 	 * @since 2.7.5 3.0.0 rename param names and fix phpdoc (thanks Hipska !)
 	 */
-	public static function Log($sLevel, $sMessage, $iMysqlErrorNumber = null, $aContext = array())
+	public static function Log($sLevel, $sMessage, $iMysqlErrorNumber = null, $aContext = [])
 	{
 		$sChannel = self::GetChannelFromMysqlErrorNo($iMysqlErrorNumber);
 		parent::Log($sLevel, $sMessage, $sChannel, $aContext);
 	}
 }
-
 
 /**
  * Starting with the WARNING level we will log in a dedicated file (/log/deprecated-calls.log) :
@@ -1085,6 +1073,11 @@ class DeadLockLog extends LogAPI
  */
 class DeprecatedCallsLog extends LogAPI
 {
+	/**
+	 * @var string
+	 * @since 3.2.0 N°4897
+	 */
+	public const ENUM_CHANNEL_PHP_API = 'deprecated-php-api';
 	public const ENUM_CHANNEL_PHP_METHOD = 'deprecated-php-method';
 	/**
 	 * @var string
@@ -1115,8 +1108,7 @@ class DeprecatedCallsLog extends LogAPI
 	{
 		try {
 			$bIsLogLevelEnabled = static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD);
-		}
-		catch (ConfigException $e) {
+		} catch (ConfigException $e) {
 			$bIsLogLevelEnabled = false;
 		}
 
@@ -1131,23 +1123,28 @@ class DeprecatedCallsLog extends LogAPI
 	 * @since 3.0.0 N°3002 logs deprecated notices in called code
 	 * @since 3.0.4 N°6274 do not set handler when in PHPUnit context (otherwise PHP notices won't be caught)
 	 */
-	public static function Enable($sTargetFile = null): void {
+	public static function Enable($sTargetFile = null): void
+	{
 		if (empty($sTargetFile)) {
 			$sTargetFile = APPROOT.'log/deprecated-calls.log';
 		}
 		parent::Enable($sTargetFile);
 
 		if (
-			(false === defined('ITOP_PHPUNIT_RUNNING_CONSTANT_NAME'))
+			(
+				(false === defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME))
+				|| (defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME) && (constant(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME) !== true))
+			)
 			&& static::IsLogLevelEnabledSafe(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD)
 		) {
+			IssueLog::Trace('Setting '.static::class.' error handler to catch DEPRECATED', static::ENUM_CHANNEL_PHP_LIBMETHOD);
 			set_error_handler([static::class, 'DeprecatedNoticesErrorHandler'], E_DEPRECATED | E_USER_DEPRECATED);
 		}
 	}
 
 	/**
 	 * This will catch a message for all E_DEPRECATED and E_USER_DEPRECATED errors.
-	 * This handler is set in DeprecatedCallsLog::Enable
+	 * This handler is set in {@see DeprecatedCallsLog::Enable}
 	 *
 	 * @param int $errno
 	 * @param string $errstr
@@ -1167,52 +1164,22 @@ class DeprecatedCallsLog extends LogAPI
 			return false;
 		}
 
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
+		if (isset($aStack[2]['function']) && ($aStack[2]['function'] == 'ForwardToTriggerError')) {
+			// Let the notice bubble up
+			return false;
+		}
+
 		if (false === static::IsLogLevelEnabledSafe(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD)) {
-			// returns true so that nothing is throwned !
+			// returns true so that nothing is thrown!
 			return true;
 		}
 
-		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
-		$iStackDeprecatedMethodLevel = 2; // level 0 = current method, level 1 = @trigger_error, level 2 = method containing the `trigger_error` call (can be either 'trigger_deprecation' or the faulty method), level 3 = In some cases, method containing the 'trigger_deprecation' call
-		// In case current level is actually a 'trigger_deprecation' call, try to go one level further to get the real deprecated method
-		if (array_key_exists($iStackDeprecatedMethodLevel, $aStack) && ($aStack[$iStackDeprecatedMethodLevel]['function'] === 'trigger_deprecation') && array_key_exists($iStackDeprecatedMethodLevel + 1, $aStack)) {
-			$iStackDeprecatedMethodLevel++;
-		}
-
-		$sDeprecatedObject = $aStack[$iStackDeprecatedMethodLevel]['class'];
-		$sDeprecatedMethod = $aStack[$iStackDeprecatedMethodLevel]['function'];
-		if (($sDeprecatedObject === __CLASS__) && ($sDeprecatedMethod === 'Log')) {
-			// We are generating a trigger_error ourselves, we don't want to trace them !
-			return false;
-		}
-		$sCallerFile = $aStack[$iStackDeprecatedMethodLevel]['file'];
-		$sCallerLine = $aStack[$iStackDeprecatedMethodLevel]['line'];
-		$sMessage = "Call to {$sDeprecatedObject}::{$sDeprecatedMethod} in {$sCallerFile}#L{$sCallerLine}";
-
-		$iStackCallerMethodLevel = $iStackDeprecatedMethodLevel + 1; // level 3 = caller of the deprecated method
-		if (array_key_exists($iStackCallerMethodLevel, $aStack)) {
-			$sCallerObject = $aStack[$iStackCallerMethodLevel]['class'] ?? null;
-			$sCallerMethod = $aStack[$iStackCallerMethodLevel]['function'] ?? null;
-			$sMessage .= ' (';
-			if (!is_null($sCallerObject)) {
-				$sMessage .= "{$sCallerObject}::{$sCallerMethod}";
-			} else {
-				$sCallerMethodFile = $aStack[$iStackCallerMethodLevel]['file'];
-				$sCallerMethodLine = $aStack[$iStackCallerMethodLevel]['line'];
-				if (!is_null($sCallerMethod)) {
-					$sMessage .= "call to {$sCallerMethod}() in {$sCallerMethodFile}#L{$sCallerMethodLine}";
-				} else {
-					$sMessage .= "{$sCallerMethodFile}#L{$sCallerMethodLine}";
-				}
-			}
-			$sMessage .= ')';
-		}
-
-		if (!empty($errstr)) {
-			$sMessage .= ' : '.$errstr;
-		}
+		$aStack = static::StripCallStack($aStack);
+		$sMessage = "$errstr, called from ".static::SummarizeCallStack($aStack);
 
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_LIBMETHOD);
+		static::ForwardToTriggerError($sMessage);
 
 		return true;
 	}
@@ -1238,6 +1205,8 @@ class DeprecatedCallsLog extends LogAPI
 	}
 
 	/**
+	 * Call this helper at the beginning of a deprecated file (in its global scope)
+	 *
 	 * @since 3.0.1 3.1.0 N°4725 silently handles ConfigException
 	 * @since 3.0.4 3.1.0 N°4725 remove forgotten throw PHPDoc annotation
 	 *
@@ -1250,8 +1219,7 @@ class DeprecatedCallsLog extends LogAPI
 			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_FILE)) {
 				return;
 			}
-		}
-		catch (ConfigException $e) {
+		} catch (ConfigException $e) {
 			return;
 		}
 
@@ -1272,9 +1240,43 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		static::Warning($sMessage, static::ENUM_CHANNEL_FILE);
+		static::ForwardToTriggerError($sMessage);
 	}
 
 	/**
+	 * Call this helper when calling a deprecated extension method
+	 *
+	 * @param string $sImplementationClass Class implementing the deprecated API
+	 * @param string $sDeprecatedApi Class name of the deprecated API
+	 * @param string $sDeprecatedMethod Method name of the deprecated API
+	 * @param string|null $sAdditionalMessage Additional message, mostly used to explain what API to use instead
+	 *
+	 * @return void
+	 * @since 3.2.0 N°4897
+	 */
+	public static function NotifyDeprecatedPhpApi(string $sImplementationClass, string $sDeprecatedApi, string $sDeprecatedMethod, ?string $sAdditionalMessage = null): void
+	{
+		try {
+			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_API)) {
+				return;
+			}
+		} catch (ConfigException $oException) {
+			return;
+		}
+
+		$sMessage = "Implementation of {$sDeprecatedApi}::{$sDeprecatedMethod}() in class {$sImplementationClass}";
+
+		if (!is_null($sAdditionalMessage)) {
+			$sMessage .= " : $sAdditionalMessage";
+		}
+
+		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_API);
+		static::ForwardToTriggerError($sMessage);
+	}
+
+	/**
+	 * Call this helper within deprecated methods
+	 *
 	 * @param string|null $sAdditionalMessage
 	 *
 	 * @link https://www.php.net/debug_backtrace
@@ -1286,31 +1288,27 @@ class DeprecatedCallsLog extends LogAPI
 			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_METHOD)) {
 				return;
 			}
-		}
-		catch (ConfigException $e) {
+		} catch (ConfigException $e) {
 			return;
 		}
 
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-		$iStackDeprecatedMethodLevel = 1; // level 0 = current method, level 1 = method containing the `NotifyDeprecatedPhpMethod` call
-		$sDeprecatedObject = $aStack[$iStackDeprecatedMethodLevel]['class'];
-		$sDeprecatedMethod = $aStack[$iStackDeprecatedMethodLevel]['function'];
-		$sCallerFile = $aStack[$iStackDeprecatedMethodLevel]['file'];
-		$sCallerLine = $aStack[$iStackDeprecatedMethodLevel]['line'];
-		$sMessage = "Call to {$sDeprecatedObject}::{$sDeprecatedMethod} in {$sCallerFile}#L{$sCallerLine}";
 
-		$iStackCallerMethodLevel = $iStackDeprecatedMethodLevel + 1; // level 2 = caller of the deprecated method
-		if (array_key_exists($iStackCallerMethodLevel, $aStack)) {
-			$sCallerObject = $aStack[$iStackCallerMethodLevel]['class'];
-			$sCallerMethod = $aStack[$iStackCallerMethodLevel]['function'];
-			$sMessage .= " ({$sCallerObject}::{$sCallerMethod})";
+		if (isset($aStack[1]['class'])) {
+			$sFunctionDesc = $aStack[1]['class'].$aStack[1]['type'].$aStack[1]['function'];
+		} else {
+			$sFunctionDesc = $aStack[1]['function'];
 		}
 
+		$sMessage = "Function $sFunctionDesc() is deprecated";
 		if (!is_null($sAdditionalMessage)) {
-			$sMessage .= ' : '.$sAdditionalMessage;
+			$sMessage .= ': '.$sAdditionalMessage;
 		}
+
+		$sMessage .= '. Caller: '.self::SummarizeCallStack(array_slice($aStack, 1));
 
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_METHOD);
+		static::ForwardToTriggerError($sMessage);
 	}
 
 	/**
@@ -1323,8 +1321,7 @@ class DeprecatedCallsLog extends LogAPI
 			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_ENDPOINT)) {
 				return;
 			}
-		}
-		catch (ConfigException $e) {
+		} catch (ConfigException $e) {
 			return;
 		}
 
@@ -1340,23 +1337,71 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_ENDPOINT);
+		static::ForwardToTriggerError($sMessage);
 	}
 
-	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
+	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = []): void
+	{
+		try {
+			parent::Log($sLevel, $sMessage, $sChannel, $aContext);
+		} catch (ConfigException $e) {
+			// nothing much we can do... and we don't want to crash the caller !
+		}
+	}
+
+	/**
+	 * Strips some elements from the top of the call stack to skip calls that are not relevant to report the deprecated call
+	 * @param array $aCallStack Call stack as returned by {@see debug_backtrace()}
+	 */
+	protected static function StripCallStack($aCallStack): array
+	{
+		if (!isset($aCallStack[0]['line'])) {
+			$aCallStack = array_slice($aCallStack, 1);
+		}
+		if (isset($aCallStack[1]['function']) && $aCallStack[1]['function'] === 'trigger_deprecation') {
+			$aCallStack = array_slice($aCallStack, 1);
+		}
+
+		return $aCallStack;
+	}
+
+	protected static function SummarizeCallStack($aCallStack, $bRecurse = true)
+	{
+		if (count($aCallStack) == 0) {
+			return null;
+		}
+		$sFileLine = $aCallStack[0]['file'].'#'.$aCallStack[0]['line'];
+		$sSummary = $sFileLine;
+
+		// If possible and meaningful, add the class and method
+		if (isset($aCallStack[1]['class'])) {
+			$sSummary = $aCallStack[1]['class'].$aCallStack[1]['type'].$aCallStack[1]['function']." ($sFileLine)";
+		} elseif (isset($aCallStack[1]['function'])) {
+			if (in_array($aCallStack[1]['function'], ['include', 'require', 'include_once', 'require_once'])) {
+				// No need to show the generic mechanism of inclusion
+				$bRecurse = false;
+			} else {
+				$sSummary = $aCallStack[1]['function']." ($sFileLine)";
+			}
+		}
+
+		if ($bRecurse) {
+			$sUpperSummary = static::SummarizeCallStack(array_slice($aCallStack, 1), false);
+			if (!is_null($sUpperSummary)) {
+				$sSummary .= ', itself called from '.$sUpperSummary;
+			}
+		}
+
+		return $sSummary;
+	}
+
+	private static function ForwardToTriggerError(string $sMessage): void
 	{
 		if (true === utils::IsDevelopmentEnvironment()) {
 			trigger_error($sMessage, E_USER_DEPRECATED);
 		}
-
-		try {
-			parent::Log($sLevel, $sMessage, $sChannel, $aContext);
-		}
-		catch (ConfigException $e) {
-			// nothing much we can do... and we don't want to crash the caller !
-		}
 	}
 }
-
 
 class LogFileRotationProcess implements iScheduledProcess
 {
@@ -1365,12 +1410,12 @@ class LogFileRotationProcess implements iScheduledProcess
 	 *
 	 * @var string[]
 	 */
-	const LOGFILES_TO_ROTATE = array(
+	public const LOGFILES_TO_ROTATE = [
 		'setup.log',
 		'error.log',
 		'tools.log',
 		'itop-fence.log',
-	);
+	];
 
 	/**
 	 * @inheritDoc
@@ -1408,7 +1453,7 @@ class LogFileRotationProcess implements iScheduledProcess
 	public function PurgeLogs(): array
 	{
 		// result
-		$aFilesResult = array();
+		$aFilesResult = [];
 
 		// Max keep days
 		$iMaxDays = MetaModel::GetConfig()->Get(LogAPI::ENUM_CONFIG_PARAM_PURGE_MAX_KEEP_DAYS);
@@ -1427,9 +1472,9 @@ class LogFileRotationProcess implements iScheduledProcess
 			$sFileRealPath = $oLogFile->getRealPath();
 
 			// Check file extension
-			if(!in_array($oLogFile->getExtension(), ['log','sql','xml'])){
+			if (!in_array($oLogFile->getExtension(), ['log','sql','xml'])) {
 				continue;
-		    }
+			}
 
 			// Compute number of days since last modification
 			$oDateFileLastModification = new DateTime();
@@ -1451,7 +1496,7 @@ class LogFileRotationProcess implements iScheduledProcess
 				if (!is_writable($sFileRealPath)) {
 					$aFileResult['error'] = Dict::S('itop-log-mgmt:UI:Error:file_read_only');
 				} // unlink OK
-				else if (unlink($sFileRealPath)) {
+				elseif (unlink($sFileRealPath)) {
 					$aFileResult['deleted'] = true;
 				} // unlink KO
 				else {
@@ -1474,8 +1519,7 @@ class LogFileRotationProcess implements iScheduledProcess
 	{
 		try {
 			$sLogFileNameBuilder = $this->GetLogFileNameBuilderClassName();
-		}
-		catch (ProcessException $e) {
+		} catch (ProcessException $e) {
 			return new DateTime('3000-01-01');
 		}
 
@@ -1491,8 +1535,7 @@ class LogFileRotationProcess implements iScheduledProcess
 	private function GetLogFileNameBuilderClassName()
 	{
 		$sLogFileNameBuilder = MetaModel::GetConfig()->Get('log_filename_builder_impl');
-		if (is_a($sLogFileNameBuilder, RotatingLogFileNameBuilder::class, true))
-		{
+		if (is_a($sLogFileNameBuilder, RotatingLogFileNameBuilder::class, true)) {
 			return $sLogFileNameBuilder;
 		}
 
@@ -1520,7 +1563,7 @@ class ExceptionLog extends LogAPI
 	 * As it encapsulate the operations performed using the Exception, you should prefer it to the standard API inherited from LogApi `ExceptionLog::Error($oException->getMessage(), get_class($oException), ['__exception' => $oException]);`
 	 * The parameter order is not standard, but in our use case, the resulting API is way more convenient this way !
 	 */
-	public static function LogException(Throwable $oException, $aContext = array(), $sLevel = self::LEVEL_ERROR): void
+	public static function LogException(Throwable $oException, $aContext = [], $sLevel = self::LEVEL_ERROR): void
 	{
 		if (!isset(self::$aLevelsPriority[$sLevel])) {
 			IssueLog::Error("invalid log level '{$sLevel}'");
@@ -1542,13 +1585,13 @@ class ExceptionLog extends LogAPI
 	}
 
 	/** @noinspection PhpUnhandledExceptionInspection */
-	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
+	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = [])
 	{
 		throw new ApplicationException('Do not call this directly, prefer using ExceptionLog::LogException() instead');
 	}
 
 	/** @noinspection PhpParameterNameChangedDuringInheritanceInspection */
-	protected static function WriteLog(string $sLevel, string $sMessage, ?string $sExceptionClass = null, ?array $aContext = array()): void
+	protected static function WriteLog(string $sLevel, string $sMessage, ?string $sExceptionClass = null, ?array $aContext = []): void
 	{
 		if (
 			(null !== static::$m_oFileLog)
@@ -1671,6 +1714,8 @@ class ExceptionLog extends LogAPI
 	 */
 	private static function GetLastEventIssue()
 	{
-		return self::$oLastEventIssue;
+		$oRet = self::$oLastEventIssue;
+		self::$oLastEventIssue = null;
+		return $oRet;
 	}
 }

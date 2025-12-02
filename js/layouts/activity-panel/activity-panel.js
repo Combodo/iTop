@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -32,7 +32,6 @@ $(function()
 					lock_token: null,
 					lock_watcher_period: 30,        // Period (in seconds) between lock status update, uses the "activity_panel.lock_watcher_period" config. param.
 					lock_endpoint: null,
-					show_multiple_entries_submit_confirmation: true,
 					save_state_endpoint: null,
 					last_loaded_entries_ids: {},
 					load_more_entries_endpoint: null,
@@ -122,6 +121,9 @@ $(function()
 			// the constructor
 			_create: function () {
 				this.element.addClass('ibo-activity-panel');
+
+				// Should be initialized globally, but as we don't actually do it
+				moment.locale(GetUserLanguage());
 
 				this._bindEvents();
 
@@ -368,7 +370,7 @@ $(function()
 					oEvent.stopImmediatePropagation();
 
 					// Simulate click on the only menu item
-					this.element.find(this.js_selectors.compose_menu_item+':first').trigger('click');
+					this.element.find(this.js_selectors.compose_menu_item).first().trigger('click');
 				}
 
 				// Else, the compose menu will open automatically
@@ -465,7 +467,7 @@ $(function()
 			 * been edited and the user hasn't dismiss the dialog.
 			 * @private
 			 */
-			_onRequestSubmission: function (oEvent, oData) {
+			_onRequestSubmission: async function (oEvent, oData) {
 				// Check lock state
 				if ((this.options.lock_enabled === true) && (this.enums.lock_status.locked_by_myself !== this.options.lock_status)) {
 					CombodoJSConsole.Debug('ActivityPanel: Could not submit entries, current user does not have the lock on the object');
@@ -473,8 +475,10 @@ $(function()
 				}
 
 				let sStimulusCode = (undefined !== oData.stimulus_code) ? oData.stimulus_code : null
-				// If several entry forms filled, show a confirmation message
-				if ((true === this.options.show_multiple_entries_submit_confirmation) && (Object.keys(this._GetEntriesFromAllForms()).length > 1)) {
+                // If several entry forms filled, show a confirmation message
+                if ((GetUserPreference('activity_panel.show_multiple_entries_submit_confirmation',true) === true
+                    || GetUserPreference('activity_panel.show_multiple_entries_submit_confirmation', true) === "true")
+                    && (Object.keys(await this._GetEntriesFromAllForms()).length > 1)) {
 					this._ShowEntriesSubmitConfirmation(sStimulusCode);
 				}
 				// Else push data directly to the server
@@ -615,11 +619,17 @@ $(function()
 			_InitializeCurrentTab : function(){
 				const sTabId = $.bbq.getState(this.element.attr('id'), true);
 				if(sTabId !== undefined){
+					let oTabTogglerElem = null;
 					if(sTabId.startsWith("caselog-")){
-						this._GetTabTogglerFromCaseLogAttCode(sTabId.replace("caselog-", "")).find(this.js_selectors.tab_title).trigger('click')
+						oTabTogglerElem = this._GetTabTogglerFromCaseLogAttCode(sTabId.replace("caselog-", "")).find(this.js_selectors.tab_title).trigger('click')
 					}
 					else if(sTabId === "activity"){
-						this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="activity"]').find(this.js_selectors.tab_title).trigger('click')
+						oTabTogglerElem = this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="activity"]').find(this.js_selectors.tab_title).trigger('click')
+					}
+
+					// Scroll to the tab toggler if found
+					if(oTabTogglerElem !== null){
+						oTabTogglerElem[0].scrollIntoView();
 					}
 				}
 			},
@@ -807,22 +817,41 @@ $(function()
 			 * @returns {Object} The case logs having a new entry and their values, format is {<ATT_CODE_1>: <HTML_VALUE_1>, <ATT_CODE_2>: <HTML_VALUE_2>}
 			 * @private
 			 */
-			_GetEntriesFromAllForms: function () {
+			_GetEntriesFromAllForms: async function () {
 				const me = this;
-
 				let oEntries = {};
-				this.element.find(this.js_selectors.caselog_entry_form).each(function () {
-					const oEntryFormElem = $(this);
-					const sEntryFormValue = oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
+				// this.element.find(this.js_selectors.caselog_entry_form).each(async function () {
+				// 	const oEntryFormElem = $(this);
+				// 	const sEntryFormValue = await oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
+				// 	console.log('huhu');
+				//
+				// 	if ('' !== sEntryFormValue) {
+				// 		const sCaseLogAttCode = oEntryFormElem.attr('data-attribute-code');
+				// 		oEntries[sCaseLogAttCode] = {
+				// 			value: sEntryFormValue,
+				// 			rank: me.element.find(me.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').attr('data-caselog-rank'),
+				// 		};
+				// 	}
+				// });
+
+				const aFormElements = this.element.find(this.js_selectors.caselog_entry_form);
+
+				// Create an array of promises for each form element
+				const aEntryPromises = aFormElements.map(async (index, element) => {
+					const oEntryFormElem = $(element);
+					const sEntryFormValue = await oEntryFormElem.triggerHandler('get_entry.caselog_entry_form.itop');
 
 					if ('' !== sEntryFormValue) {
 						const sCaseLogAttCode = oEntryFormElem.attr('data-attribute-code');
 						oEntries[sCaseLogAttCode] = {
 							value: sEntryFormValue,
-							rank: me.element.find(me.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').attr('data-caselog-rank'),
+							rank: this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="caselog"][data-caselog-attribute-code="' + sCaseLogAttCode + '"]').attr('data-caselog-rank'),
 						};
 					}
-				});
+				}).get(); // convert jQuery object to array
+
+				// Wait for all promises to resolve
+				await Promise.all(aEntryPromises);
 
 				return oEntries;
 			},
@@ -924,9 +953,9 @@ $(function()
 			 * @return {void}
 			 * @private
 			 */
-			_SendEntriesToServer: function (sStimulusCode = null) {
+			_SendEntriesToServer: async function (sStimulusCode = null) {
 				const me = this;
-				const oEntries = this._GetEntriesFromAllForms();
+				const oEntries = await this._GetEntriesFromAllForms();
 				const oExtraInputs = this._GetExtraInputsFromAllForms();
 
 				// Proceed only if entries to send
@@ -979,7 +1008,7 @@ $(function()
 						if (null !== sStimulusCode) {
 							if (me.options.lock_enabled) {
 								// Use a Promise to ensure that we redirect to the stimulus page ONLY when the lock is released, otherwise we might lock ourselves
-								const oPromise = new Promise(function(resolve) {
+								const oPromise = new Promise(function (resolve) {
 									// Store the resolve callback so we can call it later from outside
 									me.release_lock_promise_resolve = resolve;
 								});
@@ -1530,7 +1559,7 @@ $(function()
 			 */
 			_CreateEntryGroup: function (sAuthorLogin, sOrigin, sPosition = 'start') {
 				// Note: When using the ActivityPanel, there should always be at least one entry group already, the one from the object creation
-				let oEntryGroupElem = this.element.find(this.js_selectors.entry_group+':first')
+				let oEntryGroupElem = this.element.find(this.js_selectors.entry_group).first()
 					.clone()
 					.attr('data-entry-author-login', sAuthorLogin)
 					.attr('data-entry-group-origin', sOrigin)

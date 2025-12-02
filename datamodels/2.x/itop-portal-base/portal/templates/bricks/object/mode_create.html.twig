@@ -15,9 +15,9 @@
 	<input type="hidden" name="transaction_id" value="{{ form.transaction_id }}" />
 	<div class="form_alerts">
 		{% block pFormAlerts %}
-			<div class="alert alert-success" role="alert" style="display: none;"></div>
-			<div class="alert alert-warning" role="alert" style="display: none;"></div>
-			<div class="alert alert-error alert-danger" role="alert" style="display: none;"></div>
+			<div class="ipb-alert alert alert-success" role="alert" style="display: none;"></div>
+			<div class="ipb-alert alert alert-warning" role="alert" style="display: none;"></div>
+			<div class="ipb-alert alert alert-error alert-danger" role="alert" style="display: none;"></div>
 		{% endblock %}
 	</div>
 	<div class="form_fields">
@@ -30,7 +30,7 @@
             {# Misc. buttons #}
             {% if form.buttons is defined and (form.buttons.actions is defined or form.buttons.links is defined) %}
 				<div class="form_btn_misc">
-                    {% include 'itop-portal-base/portal/templates/bricks/object/plugins_buttons.html.twig' with {'aButtons': form.buttons} %}
+                    {% include template('plugins_buttons', 'Combodo\\iTop\\Portal\\Controller\\ObjectController') with {'aButtons': form.buttons} %}
 				</div>
             {% endif %}
 			{# Transition buttons #}
@@ -67,6 +67,8 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
+		CombodoJsActivity.AddOngoingScript();
+
 		// Form field set declaration
 		var oFieldSet_{{ sFormIdSanitized }} = $('#{{ sFormId }} > .form_fields').field_set({{ form.fieldset|json_encode()|raw }});
 		// Form handler declaration
@@ -149,5 +151,7 @@
 			$('#{{ sFormId }}').closest('.modal').scrollTop(0);
 			$('#{{ sFormId }}').closest('.modal').find('.modal-footer').hide();
 		{% endif %}
+
+		CombodoJsActivity.RemoveOngoingScript();
 	});
 </script>

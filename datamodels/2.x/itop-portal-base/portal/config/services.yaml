@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2023 Combodo SARL
+# Copyright (C) 2010-2024 Combodo SAS
 #
 #  This file is part of iTop.
 #
@@ -27,6 +27,7 @@ parameters:
 
   # Used in templates
   combodo.current_environment:        '%env(string:COMBODO_CURRENT_ENVIRONMENT)%'
+  combodo.approot:               '%env(string:COMBODO_APPROOT)%'
   combodo.absolute_url:               '%env(string:COMBODO_ABSOLUTE_URL)%'
   combodo.conf.app_icon_url:          '%env(string:COMBODO_CONF_APP_ICON_URL)%'
   combodo.modules.absolute_url:       '%env(string:COMBODO_MODULES_ABSOLUTE_URL)%'
@@ -35,6 +36,8 @@ parameters:
   combodo.portal.base.absolute_path:  '%env(string:COMBODO_PORTAL_BASE_ABSOLUTE_PATH)%'
   combodo.portal.instance.absolute_url: '%env(string:COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL)%'
   combodo.portal.instance.id:         '%env(string:PORTAL_ID)%'
+  combodo.portal.language:            '%env(string:COMBODO_PORTAL_LANGUAGE)%'
+  combodo.portal.metadata.language:   '%env(string:COMBODO_PORTAL_METADATA_LANGUAGE)%'
 
 services:
   # Default configuration for services in *this* file
@@ -52,6 +55,9 @@ services:
       $aCombodoPortalInstanceConf:        '%combodo.portal.instance.conf%'
       $sCombodoPortalInstanceAbsoluteUrl: '%env(string:COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL)%'
 
+  # Allow container service injection
+  Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
+
   # Makes classes in src/ available to be used as services
   # This creates a service per class whose id is the fully-qualified class name
   Combodo\iTop\Portal\:
@@ -68,8 +74,6 @@ services:
   _instanceof:
     Combodo\iTop\Portal\EventListener\UserProvider:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 500 }]
-      calls:
-        - [setContainer, ['@service_container']]
     Combodo\iTop\Portal\EventListener\ApplicationContextSetUrlMakerClass:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 400 }]
     Combodo\iTop\Portal\EventListener\ApplicationContextSetPluginPropertyClass:
@@ -78,8 +82,7 @@ services:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 200 }]
     Combodo\iTop\Portal\EventListener\ExceptionListener:
       tags: [{ name: 'kernel.event_listener',  event: 'kernel.exception', priority: 500 }]
-      calls:
-        - [setContainer, ['@service_container']]
+
 
   # Add more service definitions when explicit configuration is needed
   # Please note that last definitions always *replace* previous ones
@@ -103,6 +106,10 @@ services:
     decorates: 'router'
     arguments: ['@Combodo\iTop\Portal\Routing\UrlGenerator.inner']
 
+  # UI extension helper
+  Combodo\iTop\Portal\Helper\UIExtensionsHelper:
+    arguments: ['@service_container']
+
   # Standard services
   combodo.current_contact.photo_url:
     public: true
@@ -111,6 +118,10 @@ services:
 
   combodo.current_user:
     alias: Combodo\iTop\Portal\Twig\CurrentUserAccessor
+    public: true
+  
+  combodo.app_icon_url:
+    alias: Combodo\iTop\Portal\Twig\AppIconUrlAccessor
     public: true
 
   # Aliases

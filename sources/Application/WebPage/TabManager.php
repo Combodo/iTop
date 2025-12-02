@@ -1,23 +1,27 @@
 <?php
+
 /**
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+namespace Combodo\iTop\Application\WebPage;
 
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
-
+use DeprecatedCallsLog;
+use Dict;
 
 /**
  * Helper class to implement JQueryUI tabs inside a page
  */
 class TabManager
 {
-	const ENUM_TAB_TYPE_HTML = 'html';
-	const ENUM_TAB_TYPE_AJAX = 'ajax';
+	public const ENUM_TAB_TYPE_HTML = 'html';
+	public const ENUM_TAB_TYPE_AJAX = 'ajax';
 
-	const DEFAULT_TAB_TYPE = self::ENUM_TAB_TYPE_HTML;
+	public const DEFAULT_TAB_TYPE = self::ENUM_TAB_TYPE_HTML;
 
 	/**
 	 * @var TabContainer[]
@@ -73,34 +77,6 @@ class TabManager
 
 		// Append to the content of the tab
 		$oTab->AddSubBlock($oBlock);
-	}
-
-	/**
-	 * @return int
-	 * @deprecated 3.0.0
-	 */
-	public function GetCurrentTabLength()
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return 0;
-	}
-
-	/**
-	 * Truncates the given tab to the specifed length and returns the truncated part
-	 *
-	 * @param string $sTabContainer The tab container in which to truncate the tab
-	 * @param string $sTab The name/identifier of the tab to truncate
-	 * @param integer $iLength The length/offset at which to truncate the tab
-	 *
-	 * @return string The truncated part
-	 * @deprecated 3.0.0
-	 */
-	public function TruncateTab(string $sTabContainer, string $sTab, int $iLength)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return '';
 	}
 
 	/**
@@ -284,39 +260,6 @@ class TabManager
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Make the given tab the active one, as if it were clicked
-	 * DOES NOT WORK: apparently in the *old* version of jquery
-	 * that we are using this is not supported... TO DO upgrade
-	 * the whole jquery bundle...
-	 *
-	 * @param string $sTabContainer
-	 * @param string $sTabCode
-	 *
-	 * @return string
-	 * @deprecated 3.0.0
-	 */
-	public function SelectTab(string $sTabContainer, string $sTabCode)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return '';
-	}
-
-	/**
-	 * @param string $sContent
-	 * @param \WebPage $oPage
-	 *
-	 * @return mixed
-	 * @deprecated 3.0.0
-	 */
-	public function RenderIntoContent(string $sContent, WebPage $oPage)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-
-		return '';
 	}
 
 	/**

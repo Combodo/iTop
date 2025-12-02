@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Localized data
  *
- * @author    Robert Deng <denglx@gmail.com>
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ * @author Robert Deng <denglx@gmail.com>
  *
  * This file is part of iTop.
  *
@@ -33,8 +34,17 @@
 //
 // Class: UserLDAP
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:UserLDAP' => 'LDAP 用户',
-	'Class:UserLDAP+' => '用户身份由LDAP 认证',
-	'UserLDAP:server' => 'LDAP specifics~~',
-));
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:UserLDAP' => 'LDAP用户',
+	'Class:UserLDAP+' => '用户身份由LDAP认证',
+	'UserLDAP:server' => 'LDAP详情',
+]);
+
+//
+// Class: UserLDAP
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
+	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
+]);

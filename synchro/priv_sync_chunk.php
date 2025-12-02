@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Copyright (C) 2013-2023 Combodo SARL
+ * Copyright (C) 2013-2024 Combodo SAS
  *
  * This file is part of iTop.
  *
@@ -17,17 +18,18 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\WebPage\CLIPage;
+use Combodo\iTop\Application\WebPage\WebPage;
+
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-
 function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 {
 	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */, $sSanitizationFilter);
-	if (is_null($sValue))
-	{
+	if (is_null($sValue)) {
 		$oP->p("ERROR: Missing argument '$sParam'\n");
 		exit(29);
 	}
@@ -37,22 +39,18 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 /////////////////////////////////
 // Main program
 
-if (!utils::IsModeCLI())
-{
+if (!utils::IsModeCLI()) {
 	$oP = new WebPage(Dict::S("TitleSynchroExecution"));
-	$oP->p("This page is used internally by iTop");		
+	$oP->p("This page is used internally by iTop");
 	$oP->output();
 	exit -2;
 }
 
 $oP = new CLIPage(Dict::S("TitleSynchroExecution"));
 
-try
-{
+try {
 	utils::UseParamFile();
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
 	$oP->p("Error: ".$e->GetMessage());
 	$oP->output();
 	exit -2;
@@ -60,15 +58,12 @@ catch(Exception $e)
 
 // Next steps:
 //   specific arguments: 'csvfile'
-//   
+//
 $sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 $sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
-if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-{
+if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
 	UserRights::Login($sAuthUser); // Login & set the user's language
-}
-else
-{
+} else {
 	$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
 	$oP->output();
 	exit -1;
@@ -88,38 +83,28 @@ $oP->p('Last full load: '.$sLastFullLoad);
 $oP->p('Chunk size: '.$iChunkSize);
 $oP->p('Source: '.$iSource);
 
-try
-{
+try {
 	$oSynchroDataSource = MetaModel::GetObject('SynchroDataSource', $iSource);
 	$oLog = MetaModel::GetObject('SynchroLog', $iStatLog);
 	$oChange = MetaModel::GetObject('CMDBChange', $iChange);
-	
-	if (strlen($sLastFullLoad) > 0)
-	{
+
+	if (strlen($sLastFullLoad) > 0) {
 		$oLastFullLoad = new DateTime($sLastFullLoad);
 		$oSynchroExec = new SynchroExecution($oSynchroDataSource, $oLastFullLoad);
-	}
-	else
-	{
+	} else {
 		$oSynchroExec = new SynchroExecution($oSynchroDataSource);
 	}
-	if ($oSynchroExec->DoSynchronizeChunk($oLog, $oChange, $iChunkSize))
-	{
+	if ($oSynchroExec->DoSynchronizeChunk($oLog, $oChange, $iChunkSize)) {
 		// The last line MUST follow this convention
 		$oP->p("continue");
-	}
-	else
-	{
+	} else {
 		// The last line MUST follow this convention
 		$oP->p("finished");
 	}
 	$oP->output();
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
 	$oP->p("Error: ".$e->GetMessage());
 	$oP->add($e->getTraceAsString());
 	$oP->output();
 	exit(28);
 }
-?>

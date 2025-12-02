@@ -1,4 +1,4 @@
-{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 var iDiskFreeSpace = {{ iDiskFreeSpace }};
@@ -18,7 +18,7 @@ $.ajax({
         if(data.sMessageDetails){
             $("#header-requirements-details").removeClass("ibo-is-hidden");
             $('#can-core-update-details').html(data.sMessageDetails);
-            $("#toggle-requirements-details").click( function() { $("#can-core-update-details").toggle(); } );
+            $("#toggle-requirements-details").on('click', function() { $("#can-core-update-details").toggle(); } );
         }
         oRequirements.removeClass("ibo-is-information");
         if (data.bStatus) {
@@ -28,10 +28,17 @@ $.ajax({
             $("#file-container").removeClass("ibo-is-hidden");
             $("#check-in-progress").addClass("ibo-is-hidden");
         } else {
-            $("#check-update").prop("disabled", true);
-            $("#file").prop("disabled", true);
-            $('#form-update-outer').slideUp(600);
             oRequirements.addClass("ibo-is-failure");
+            {% if bDontUpgradeIfIntegrityFailed %}
+                $("#check-update").prop("disabled", true);
+                $("#file").prop("disabled", true);
+                $('#form-update-outer').slideUp(600);
+            {% else %}
+                $("#check-update").prop("disabled", false);
+                $("#file").prop("disabled", false);
+                $("#file-container").removeClass("ibo-is-hidden");
+                $("#check-in-progress").addClass("ibo-is-hidden");
+            {% endif %}
         }
     }
 });
@@ -55,7 +62,7 @@ var oGetDBDiskSpace = $.ajax({
     method: "POST",
     url: "{{ sAjaxURL|raw }}",
     data: {
-        route: "core_update_ajax.get_d_b_disk_space",
+        route: "core_update_ajax.get_db_disk_space",
         maintenance: true
     },
     dataType: "json",
@@ -99,7 +106,7 @@ $("#check-update").on("click", function(e) {
     $("#submit-wait").removeClass("ibo-is-hidden");
     $(this).prop("disabled", true);
     $(".ajax-spin").removeClass("fa-sync-alt").removeClass("fa-spin").addClass("fa-times");
-    $(this).parents('form').submit();
+    $(this).parents('form').trigger('submit');
     e.preventDefault();
     e.stopPropagation();
     return false;
@@ -108,3 +115,52 @@ $("#check-update").on("click", function(e) {
 $("#launch-setup-form").on("submit", function () {
     return window.confirm("{{ 'iTopUpdate:UI:SetupLaunchConfirm'|dict_s }}");
 });
+
+$("#launch-fast-setup").on("click", function(e) {
+    var oMessage = $("#fast-setup-alert");
+    var oContent = $("#fast-setup-content");
+    oMessage.removeClass("ibo-is-hidden");
+    oMessage.removeClass("ibo-is-failure");
+    oMessage.removeClass("ibo-is-success");
+    oMessage.addClass("ibo-is-information");
+    oContent.html("{{ 'iTopUpdate:UI:SetupMessage:Compile'|dict_s }}");
+
+    let fast_setup_wait = $("#fast-setup-wait");
+    fast_setup_wait.removeClass("ibo-is-hidden");
+    $(this).prop("disabled", true);
+
+    $.ajax({
+        method: "POST",
+        url: "{{ sAjaxURL|raw }}",
+        data: {
+            route: "core_update_ajax.rebuild_toolkit_environment"
+        },
+        dataType: "json",
+        complete: function(jqXHR, textStatus) {
+            $("#fast-setup-wait").addClass("ibo-is-hidden");
+            $("#launch-fast-setup").prop("disabled", false);
+            fast_setup_wait.addClass("ibo-is-hidden");
+        },
+        success: function (data) {
+            oMessage.removeClass("ibo-is-information");
+
+            if (data.bStatus) {
+                oMessage.removeClass("ibo-is-failure");
+                oMessage.addClass("ibo-is-success");
+                oContent.html("{{ 'iTopUpdate:UI:SetupMessage:UpdateDone'|dict_s }}");
+            } else {
+                oMessage.removeClass("ibo-is-success");
+                oMessage.addClass("ibo-is-failure");
+                oContent.html(data.sError);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            oMessage.removeClass("ibo-is-information");
+            oMessage.removeClass("ibo-is-success");
+            oMessage.addClass("ibo-is-failure");
+            oContent.html(textStatus + ' ' + errorThrown);
+        }
+    });
+
+});
+

@@ -1,12 +1,14 @@
 <?php
+
 /**
  * Localized data
  *
- * @author    Robert Deng <denglx@gmail.com>
- * @copyright Copyright (C) 2010-2023 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
  *
- * This file is part of iTop.
+ */
+/**
+ * @author Robert Deng <denglx@gmail.com>
  *
  * iTop is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,7 +35,7 @@
 //
 // Class: UserExternal
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserExternal' => '外部用户',
-	'Class:UserExternal+' => '用户在 '.ITOP_APPLICATION_SHORT.' 外部验证身份',
-));
+	'Class:UserExternal+' => '用户在'.ITOP_APPLICATION_SHORT.'外部验证身份',
+]);

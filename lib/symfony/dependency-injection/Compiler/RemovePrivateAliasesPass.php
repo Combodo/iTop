@@ -24,6 +24,8 @@ class RemovePrivateAliasesPass implements CompilerPassInterface
 {
     /**
      * Removes private aliases from the ContainerBuilder.
+     *
+     * @return void
      */
     public function process(ContainerBuilder $container)
     {
@@ -33,7 +35,7 @@ class RemovePrivateAliasesPass implements CompilerPassInterface
             }
 
             $container->removeAlias($id);
-            $container->log($this, sprintf('Removed service "%s"; reason: private alias.', $id));
+            $container->log($this, \sprintf('Removed service "%s"; reason: private alias.', $id));
         }
     }
 }

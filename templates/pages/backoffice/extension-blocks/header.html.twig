@@ -1,10 +1,7 @@
-{# @copyright   Copyright (C) 2010-2023 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
     <div id="ibo-page-header" data-role="ibo-page-header">
-        {% if aLayouts.sHeader is not empty %}
-            {{ aLayouts.sHeader|raw }}
-        {% endif %}
         {{ render_block(aLayouts.oHeader, {aPage: aPage}) }}
     </div>
 {% endapply %}

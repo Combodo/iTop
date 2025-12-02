@@ -1,6 +1,7 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,15 +9,18 @@ use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
+use Combodo\iTop\Application\Helper\ExportHelper;
+use Combodo\iTop\Application\WebPage\Page;
+use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
  * Bulk export: CSV export
  *
- * @copyright   Copyright (C) 2015-2023 Combodo SARL
+ * @copyright   Copyright (C) 2015-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class CSVBulkExport extends TabularBulkExport
@@ -37,56 +41,48 @@ class CSVBulkExport extends TabularBulkExport
 	{
 		parent::ReadParameters();
 		$this->aStatusInfo['separator'] = utils::ReadParam('separator', ',', true, 'raw_data');
-		if (strtolower($this->aStatusInfo['separator']) == 'tab')
-		{
+		if (strtolower($this->aStatusInfo['separator']) == 'tab') {
 			$this->aStatusInfo['separator'] = "\t";
-		}
-		else if (strtolower($this->aStatusInfo['separator']) == 'other')
-		{
+		} elseif (strtolower($this->aStatusInfo['separator']) == 'other') {
 			$this->aStatusInfo['separator'] = utils::ReadParam('other-separator', ',', true, 'raw_data');
 		}
-			
+
 		$this->aStatusInfo['text_qualifier'] = utils::ReadParam('text-qualifier', '"', true, 'raw_data');
-		if (strtolower($this->aStatusInfo['text_qualifier']) == 'other')
-		{
+		if (strtolower($this->aStatusInfo['text_qualifier']) == 'other') {
 			$this->aStatusInfo['text_qualifier'] = utils::ReadParam('other-text-qualifier', '"', true, 'raw_data');
 		}
 
 		$this->aStatusInfo['charset'] = strtoupper(utils::ReadParam('charset', 'UTF-8', true, 'raw_data'));
 		$this->aStatusInfo['formatted_text'] = (bool)utils::ReadParam('formatted_text', 0, true);
-		
+
 		$sDateFormatRadio = utils::ReadParam('csv_date_format_radio', '');
-		switch($sDateFormatRadio)
-		{
+		switch ($sDateFormatRadio) {
 			case 'default':
-			// Export from the UI => format = same as is the UI
-			$this->aStatusInfo['date_format'] = (string)AttributeDateTime::GetFormat();
-			break;
-			
+				// Export from the UI => format = same as is the UI
+				$this->aStatusInfo['date_format'] = (string)AttributeDateTime::GetFormat();
+				break;
+
 			case 'custom':
-			// Custom format specified from the UI
-			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
-			break;
-			
+				// Custom format specified from the UI
+				$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
+				break;
+
 			default:
-			// Export from the command line (or scripted) => default format is SQL, as in previous versions of iTop, unless specified otherwise
-			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetSQLFormat(), true, 'raw_data');
+				// Export from the command line (or scripted) => default format is SQL, as in previous versions of iTop, unless specified otherwise
+				$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetSQLFormat(), true, 'raw_data');
 		}
 	}
 
-
 	protected function SuggestField($sClass, $sAttCode)
 	{
-		switch($sAttCode)
-		{
+		switch ($sAttCode) {
 			case 'id': // replace 'id' by 'friendlyname'
 				$sAttCode = 'friendlyname';
 				break;
-					
+
 			default:
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if ($oAttDef instanceof AttributeExternalKey)
-				{
+				if ($oAttDef instanceof AttributeExternalKey) {
 					$sAttCode .= '_friendlyname';
 				}
 		}
@@ -96,11 +92,11 @@ class CSVBulkExport extends TabularBulkExport
 
 	public function EnumFormParts()
 	{
-		return array_merge(parent::EnumFormParts(), array('csv_options' => array('separator', 'charset', 'text-qualifier', 'no_localize', 'formatted_text'), 'interactive_fields_csv' => array('interactive_fields_csv')));
+		return array_merge(parent::EnumFormParts(), ['csv_options' => ['separator', 'charset', 'text-qualifier', 'no_localize', 'formatted_text'], 'interactive_fields_csv' => ['interactive_fields_csv']]);
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param WebPage $oP
 	 * @param $sPartId
 	 *
 	 * @return UIContentBlock
@@ -114,6 +110,7 @@ class CSVBulkExport extends TabularBulkExport
 
 			case 'csv_options':
 				$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:CSVOptions'));
+				$oPanel->AddSubBlock(ExportHelper::GetAlertForExcelMaliciousInjection());
 
 				$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
 				$oPanel->AddSubBlock($oMulticolumn);
@@ -124,11 +121,11 @@ class CSVBulkExport extends TabularBulkExport
 
 				$sRawSeparator = utils::ReadParam('separator', ',', true, 'raw_data');
 				$sCustomDateTimeFormat = utils::ReadParam('', ',', true, 'raw_data');
-				$aSep = array(
+				$aSep = [
 					';'   => Dict::S('UI:CSVImport:SeparatorSemicolon+'),
 					','   => Dict::S('UI:CSVImport:SeparatorComma+'),
 					'tab' => Dict::S('UI:CSVImport:SeparatorTab+'),
-				);
+				];
 				$sOtherSeparator = '';
 				if (!array_key_exists($sRawSeparator, $aSep)) {
 					$sOtherSeparator = $sRawSeparator;
@@ -151,10 +148,10 @@ class CSVBulkExport extends TabularBulkExport
 				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetTextQualifier));
 
 				$sRawQualifier = utils::ReadParam('text-qualifier', '"', true, 'raw_data');
-				$aQualifiers = array(
+				$aQualifiers = [
 					'"'  => Dict::S('UI:CSVImport:QualifierDoubleQuote+'),
 					'\'' => Dict::S('UI:CSVImport:QualifierSimpleQuote+'),
-				);
+				];
 				$sOtherQualifier = '';
 				if (!array_key_exists($sRawQualifier, $aQualifiers)) {
 					$sOtherQualifier = $sRawQualifier;
@@ -226,7 +223,6 @@ class CSVBulkExport extends TabularBulkExport
 				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioCustom);
 
-
 				$oP->add_ready_script(
 					<<<EOF
 $('#form_part_csv_options').on('preview_updated', function() { FormatDatesInPreview('csv', 'csv'); });
@@ -239,9 +235,8 @@ EOF
 				return $oPanel;
 				break;
 
-
 			default:
-				return parent:: GetFormPart($oP, $sPartId);
+				return parent::GetFormPart($oP, $sPartId);
 		}
 	}
 
@@ -249,8 +244,7 @@ EOF
 	{
 		if ($sAttCode != 'id') {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-			if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
-			{
+			if ($oAttDef instanceof AttributeDateTime) { // AttributeDate is derived from AttributeDateTime
 				$sClass = (get_class($oAttDef) == 'AttributeDateTime') ? 'user-formatted-date-time' : 'user-formatted-date';
 
 				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.utils::EscapeHtml($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj)).'</div>';
@@ -262,14 +256,13 @@ EOF
 
 	protected function GetValue($oObj, $sAttCode)
 	{
-		switch($sAttCode)
-		{
+		switch ($sAttCode) {
 			case 'id':
 				$sRet = $oObj->GetKey();
 				break;
-					
+
 			default:
-				$sRet = trim($oObj->GetAsCSV($sAttCode), '"');				
+				$sRet = trim($oObj->GetAsCSV($sAttCode), '"');
 		}
 		return $sRet;
 	}
@@ -281,20 +274,17 @@ EOF
 		$this->aStatusInfo['position'] = 0;
 		$this->aStatusInfo['total'] = $oSet->Count();
 
-		$aData = array();
-		foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
-		{
+		$aData = [];
+		foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
 			$aData[] = $aFieldSpec['sColLabel'];
 		}
-		$sFrom = array("\r\n", $this->aStatusInfo['text_qualifier']);
-		$sTo = array("\n", $this->aStatusInfo['text_qualifier'].$this->aStatusInfo['text_qualifier']);
-		foreach($aData as $idx => $sData)
-		{
+		$sFrom = ["\r\n", $this->aStatusInfo['text_qualifier']];
+		$sTo = ["\n", $this->aStatusInfo['text_qualifier'].$this->aStatusInfo['text_qualifier']];
+		foreach ($aData as $idx => $sData) {
 			// Escape and encode (if needed) the headers
 			$sEscaped = str_replace($sFrom, $sTo, (string)$sData);
 			$aData[$idx] = $this->aStatusInfo['text_qualifier'].$sEscaped.$this->aStatusInfo['text_qualifier'];
-			if ($this->aStatusInfo['charset'] != 'UTF-8')
-			{
+			if ($this->aStatusInfo['charset'] != 'UTF-8') {
 				// Note: due to bugs in the glibc library it's safer to call iconv on the smallest possible string
 				// and thus to convert field by field and not the whole row or file at once (see ticket N°991)
 				$aData[$idx] = @iconv('UTF-8', $this->aStatusInfo['charset'].'//IGNORE//TRANSLIT', $aData[$idx]);
@@ -321,45 +311,37 @@ EOF
 		$sExportDateTimeFormat = $this->aStatusInfo['date_format'];
 		$oPrevDateTimeFormat = AttributeDateTime::GetFormat();
 		$oPrevDateFormat = AttributeDate::GetFormat();
-		if ($sExportDateTimeFormat !== (string)$oPrevDateTimeFormat)
-		{
+		if ($sExportDateTimeFormat !== (string)$oPrevDateTimeFormat) {
 			// Change date & time formats
 			$oDateTimeFormat = new DateTimeFormat($sExportDateTimeFormat);
 			$oDateFormat = new DateTimeFormat($oDateTimeFormat->ToDateFormat());
 			AttributeDateTime::SetFormat($oDateTimeFormat);
 			AttributeDate::SetFormat($oDateFormat);
 		}
-		while($aRow = $oSet->FetchAssoc())
-		{
+		while ($aRow = $oSet->FetchAssoc()) {
 			set_time_limit(intval($iLoopTimeLimit));
-			$aData = array();
-			foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
-			{
+			$aData = [];
+			foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
 				$sAlias = $aFieldSpec['sAlias'];
 				$sAttCode = $aFieldSpec['sAttCode'];
 
 				$sField = '';
 				$oObj = $aRow[$sAlias];
-				if ($oObj != null)
-				{
-					switch($sAttCode)
-					{
+				if ($oObj != null) {
+					switch ($sAttCode) {
 						case 'id':
 							$sField = $oObj->GetKey();
 							break;
-								
+
 						default:
 							$sField = $oObj->GetAsCSV($sAttCode, $this->aStatusInfo['separator'], $this->aStatusInfo['text_qualifier'], $this->bLocalizeOutput, !$this->aStatusInfo['formatted_text']);
 					}
 				}
-				if ($this->aStatusInfo['charset'] != 'UTF-8')
-				{
+				if ($this->aStatusInfo['charset'] != 'UTF-8') {
 					// Note: due to bugs in the glibc library it's safer to call iconv on the smallest possible string
 					// and thus to convert field by field and not the whole row or file at once (see ticket N°991)
 					$aData[] = @iconv('UTF-8', $this->aStatusInfo['charset'].'//IGNORE//TRANSLIT', $sField);
-				}
-				else
-				{
+				} else {
 					$aData[] = $sField;
 				}
 			}
@@ -371,27 +353,23 @@ EOF
 		AttributeDate::SetFormat($oPrevDateFormat);
 		set_time_limit(intval($iPreviousTimeLimit));
 		$this->aStatusInfo['position'] += $this->iChunkSize;
-		if ($this->aStatusInfo['total'] == 0)
-		{
+		if ($this->aStatusInfo['total'] == 0) {
 			$iPercentage = 100;
-		}
-		else
-		{
-			$iPercentage = floor(min(100.0, 100.0*$this->aStatusInfo['position']/$this->aStatusInfo['total']));
+		} else {
+			$iPercentage = floor(min(100.0, 100.0 * $this->aStatusInfo['position'] / $this->aStatusInfo['total']));
 		}
 
-		if ($iCount < $this->iChunkSize)
-		{
+		if ($iCount < $this->iChunkSize) {
 			$sRetCode = 'done';
 		}
 
-		$aStatus = array('code' => $sRetCode, 'message' => Dict::S('Core:BulkExport:RetrievingData'), 'percentage' => $iPercentage);
+		$aStatus = ['code' => $sRetCode, 'message' => Dict::S('Core:BulkExport:RetrievingData'), 'percentage' => $iPercentage];
 		return $sData;
 	}
 
 	public function GetSupportedFormats()
 	{
-		return array('csv' => Dict::S('Core:BulkExport:CSVFormat'));
+		return ['csv' => Dict::S('Core:BulkExport:CSVFormat')];
 	}
 
 	public function GetMimeType()

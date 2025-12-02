@@ -1,26 +1,17 @@
 <?php
-// Copyright (C) 2010-2023 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 /**
- * @author	Erik Bøg <erik@boegmoeller.dk>
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * Localized data
+ *
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
+ * @license    https://opensource.org/licenses/AGPL-3.0
+ *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+/**
+ * @author Erik Bøg <erik@boegmoeller.dk>
+ *
+ */
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Reference',
@@ -72,14 +63,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Closed~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Impact Analysis~~',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkContactToTicket' => 'Sammenhæng Kontakt/Ticket',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
@@ -99,13 +89,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Added manually~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Computed~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Do not notify~~',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:WorkOrder' => 'Arbejdsordre',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => 'Navn',
@@ -138,11 +128,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Luk',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Ticket:baseinfo' => 'Almindelig information',
 	'Ticket:date' => 'Dato',
 	'Ticket:contact' => 'Kontakt',
@@ -175,7 +164,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1' => 'Target Field~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1+' => 'The field to set, in the current object. If the field is a string then the friendly name will be used, otherwise the identifier will be used. That friendly name is the name of the person if any is attached to the user, otherwise it is the login.~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson' => 'SetCurrentPerson~~',
-	'Class:cmdbAbstractObject/Method:SetCurrentPerson+' => 'Set a field with the currently logged in person (the \\"person\\" attached to the logged in \\"user\\").~~',
+	'Class:cmdbAbstractObject/Method:SetCurrentPerson+' => 'Set a field with the currently logged in person (the "person" attached to the logged in "user").~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson/Param:1' => 'Target Field~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson/Param:1+' => 'The field to set, in the current object. If the field is a string then the friendly name will be used, otherwise the identifier will be used.~~',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime' => 'SetElapsedTime~~',
@@ -185,7 +174,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2' => 'Reference Field~~',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2+' => 'The field from which to get the reference date~~',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3' => 'Working Hours~~',
-	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3+' => 'Leave empty to rely on the standard working hours scheme, or set to \\"DefaultWorkingTimeComputer\\" to force a 24x7 scheme~~',
+	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3+' => 'Leave empty to rely on the standard working hours scheme, or set to "DefaultWorkingTimeComputer" to force a 24x7 scheme~~',
 	'Class:cmdbAbstractObject/Method:SetIfNull' => 'SetIfNull~~',
 	'Class:cmdbAbstractObject/Method:SetIfNull+' => 'Set a field only if it is empty, with a static value~~',
 	'Class:cmdbAbstractObject/Method:SetIfNull/Param:1' => 'Target Field~~',
@@ -232,5 +221,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
-));
+]);
 
+//
+// Class: Ticket
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'Class:Ticket/Attribute:team_email' => 'Team email~~',
+	'Class:Ticket/Attribute:team_email+' => '~~',
+]);

@@ -1,4 +1,5 @@
 {
+  "name": "combodo/itop-attachments",
   "config" : {
     "classmap-authoritative" : true
   },

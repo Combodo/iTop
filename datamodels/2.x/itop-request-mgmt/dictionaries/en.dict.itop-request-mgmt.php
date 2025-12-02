@@ -1,15 +1,16 @@
 <?php
+
 /*
- * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => '',
 	'Menu:RequestManagementProvider' => 'Helpdesk provider',
 	'Menu:RequestManagementProvider+' => '',
-	'Menu:UserRequest:Provider' => 'Open requests transfered to provider',
+	'Menu:UserRequest:Provider' => 'Open requests transferred to provider',
 	'Menu:UserRequest:Provider+' => '',
 	'Menu:UserRequest:Overview' => 'Overview',
 	'Menu:UserRequest:Overview+' => '',
@@ -40,7 +41,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:UserRequest:MyWorkOrders+' => 'All work orders assigned to me',
 	'Class:Problem:KnownProblemList' => 'Known problems',
 	'Tickets:Related:OpenIncidents' => 'Open incidents',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -56,7 +57,7 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class: UserRequest
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:UserRequest' => 'User Request',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -161,6 +162,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest/Attribute:tto+' => 'Time To Own',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',
 	'Class:UserRequest/Attribute:ttr+' => 'Time To Resolve',
+	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO time spent',
+	'Class:UserRequest/Attribute:tto_time_spent+' => '',
+	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR time spent',
+	'Class:UserRequest/Attribute:ttr_time_spent+' => '',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'TTO Deadline',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => '',
 	'Class:UserRequest/Attribute:sla_tto_passed' => 'SLA tto passed',
@@ -217,9 +222,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest/Attribute:user_satisfaction/Value:1+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:2' => 'Fairly satisfied',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:2+' => '',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:3' => 'Rather dissatified',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:3' => 'Rather dissatisfied',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:3+' => '',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:4' => 'Very dissatified',
+	'Class:UserRequest/Attribute:user_satisfaction/Value:4' => 'Very dissatisfied',
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '',
 	'Class:UserRequest/Attribute:user_comment' => 'User comment',
 	'Class:UserRequest/Attribute:user_comment+' => '',
@@ -250,10 +255,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Wait for approval',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself',
-));
+]);
 
-
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Portal:TitleDetailsFor_Request' => 'Details for request',
 	'Portal:ButtonUpdate' => 'Update',
 	'Portal:ButtonClose' => 'Close',
@@ -279,11 +283,10 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info',
-));
+]);
 
-
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Organization:Overview:UserRequests' => 'User Requests from this organization',
 	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization',
 	'Organization:Overview:Tickets' => 'Tickets for this organization',
-));
+]);

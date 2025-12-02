@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2023 Combodo SARL
+ * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -21,10 +22,10 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 
-	'Menu:ConfigEditor' => 'General configuration',
-	'config-edit-title' => 'Configuration File Editor',
+	'Menu:ConfigFileEditor' => 'Plain text editor',
+	'itop-config/Operation:Edit/Title' => 'Configuration File Editor',
 	'config-edit-intro' => 'Be very cautious when editing the configuration file.',
 	'config-apply' => 'Apply',
 	'config-apply-title' => 'Apply (Ctrl+S)',
@@ -40,4 +41,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'config-error-file-changed' => 'Error: The Configuration file has changed since you opened it and cannot be saved. Refresh and apply your changes again.',
 	'config-not-allowed-in-demo' => 'Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the configuration file cannot be edited.',
 	'config-interactive-not-allowed' => ITOP_APPLICATION_SHORT." interactive edition of the configuration as been disabled. See <code>'config_editor' => 'disabled'</code> in the configuration file.",
-));
+]);
