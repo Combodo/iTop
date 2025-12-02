@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -18,7 +19,6 @@
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\WebPage\WebPage;
 
-
 /**
  * Base class for computing TTO or TTR on a ticket
  */
@@ -32,15 +32,11 @@ class ResponseTicketSLT
 	protected static function ComputeSLT($oTicket, $sMetric = 'TTO')
 	{
 		$iDeadline = null;
-		if (MetaModel::IsValidClass('SLT'))
-		{
-			$sType=get_class($oTicket);
-			if ($sType == 'Incident')
-			{
+		if (MetaModel::IsValidClass('SLT')) {
+			$sType = get_class($oTicket);
+			if ($sType == 'Incident') {
 				$sRequestType = 'incident';
-			}
-			else
-			{
+			} else {
 				$sRequestType = $oTicket->Get('request_type');
 			}
 
@@ -49,43 +45,40 @@ class ResponseTicketSLT
 			$aArgs['request_type'] = $sRequestType;
 
 			//echo "<p>Managing:".$sMetric."-".$this->Get('request_type')."-".$this->Get('importance')."</p>\n";
-			$oSLTSet = new DBObjectSet(DBObjectSearch::FromOQL(RESPONSE_TICKET_SLT_QUERY),
-						array(),
-						$aArgs
-						);
+			$oSLTSet = new DBObjectSet(
+				DBObjectSearch::FromOQL(RESPONSE_TICKET_SLT_QUERY),
+				[],
+				$aArgs
+			);
 
 			$iMinDuration = PHP_INT_MAX;
 			$sSLTName = '';
 
-			while($oSLT = $oSLTSet->Fetch())
-			{
+			while ($oSLT = $oSLTSet->Fetch()) {
 				$iDuration = (int)$oSLT->Get('value');
 				$sUnit = $oSLT->Get('unit');
-				switch($sUnit)
-				{
+				switch ($sUnit) {
 					case 'days':
-					$iDuration = $iDuration * 24; // 24 hours in 1 days
-					// Fall though
+						$iDuration = $iDuration * 24; // 24 hours in 1 days
+						// Fall though
 
+						// no break
 					case 'hours':
-					$iDuration = $iDuration * 60; // 60 minutes in 1 hour
-					// Fall though
+						$iDuration = $iDuration * 60; // 60 minutes in 1 hour
+						// Fall though
 
+						// no break
 					case 'minutes':
-					$iDuration = $iDuration * 60;
+						$iDuration = $iDuration * 60;
 				}
-				if ($iDuration < $iMinDuration)
-				{
+				if ($iDuration < $iMinDuration) {
 					$iMinDuration = $iDuration;
 					$sSLTName = $oSLT->GetName();
 				}
 			}
-			if ($iMinDuration == PHP_INT_MAX)
-			{
+			if ($iMinDuration == PHP_INT_MAX) {
 				$iDeadline = null;
-			}
-			else
-			{
+			} else {
 				// Store $sSLTName to keep track of which SLT has been used
 				$iDeadline = $iMinDuration;
 			}
@@ -129,7 +122,6 @@ class ResponseTicketTTR extends ResponseTicketSLT implements iMetricComputer
 	}
 }
 
-
 class _Ticket extends cmdbAbstractObject
 {
 	/**
@@ -154,24 +146,19 @@ class _Ticket extends cmdbAbstractObject
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
 		/** @var ormLinkSet $oContactsSet */
 		$oContactsSet = $this->Get('contacts_list');
-		$aCIsToImpactCode = array();
-		$aSources = array();
-		$aExcluded = array();
-		if (MetaModel::IsValidClass('FunctionalCI') && MetaModel::IsValidAttCode('Ticket', 'functionalcis_list'))
-		{
+		$aCIsToImpactCode = [];
+		$aSources = [];
+		$aExcluded = [];
+		if (MetaModel::IsValidClass('FunctionalCI') && MetaModel::IsValidAttCode('Ticket', 'functionalcis_list')) {
 			/** @var ormLinkSet $oCIsSet */
 			$oCIsSet = $this->Get('functionalcis_list');
-			foreach ($oCIsSet as $oLink)
-			{
+			foreach ($oCIsSet as $oLink) {
 				$iKey = $oLink->Get('functionalci_id');
-				$aCIsToImpactCode[$iKey] = array('link' => $oLink->GetKey(), 'code' => $oLink->Get('impact_code'));
-				if ($oLink->Get('impact_code') == 'manual')
-				{
+				$aCIsToImpactCode[$iKey] = ['link' => $oLink->GetKey(), 'code' => $oLink->Get('impact_code')];
+				if ($oLink->Get('impact_code') == 'manual') {
 					$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
 					$aSources[$iKey] = $oObj;
-				}
-				else if ($oLink->Get('impact_code') == 'not_impacted')
-				{
+				} elseif ($oLink->Get('impact_code') == 'not_impacted') {
 					$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
 					$aExcluded[] = $oObj;
 				}
@@ -179,128 +166,111 @@ class _Ticket extends cmdbAbstractObject
 
 		}
 
-		$aContactsToRoleCode = array();
-		foreach ($oContactsSet as $oLink)
-		{
+		$aContactsToRoleCode = [];
+		foreach ($oContactsSet as $oLink) {
 			$iKey = $oLink->Get('contact_id');
-            $aContactsToRoleCode[$iKey] = array('link' => $oLink->GetKey(), 'code' => $oLink->Get('role_code'));
-			if ($oLink->Get('role_code') == 'do_not_notify')
-			{
+			$aContactsToRoleCode[$iKey] = ['link' => $oLink->GetKey(), 'code' => $oLink->Get('role_code')];
+			if ($oLink->Get('role_code') == 'do_not_notify') {
 				$oObj = MetaModel::GetObject('Contact', $iKey);
 				$aExcluded[] = $oObj;
 			}
 		}
-		
+
 		$sContextKey = 'itop-tickets/relation_context/'.get_class($this).'/impacts/down';
-		$aContextDefs = DisplayableGraph::GetContextDefinitions($sContextKey, true, array('this' => $this));
-		$aDefaultContexts = array();
-		foreach($aContextDefs as $sKey => $aDefinition)
-		{
+		$aContextDefs = DisplayableGraph::GetContextDefinitions($sContextKey, true, ['this' => $this]);
+		$aDefaultContexts = [];
+		foreach ($aContextDefs as $sKey => $aDefinition) {
 			// Add the default context queries to the computation
-			if (array_key_exists('default', $aDefinition) && ($aDefinition['default'] == 'yes'))
-			{
+			if (array_key_exists('default', $aDefinition) && ($aDefinition['default'] == 'yes')) {
 				$aDefaultContexts[] = $aDefinition['oql'];
 			}
 		}
 		// Merge the directly impacted items with the "new" ones added by the "context" queries
-        $aGraphObjects = array();
-        $oRawGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, $this->GetImpactAnalysisMaxDepth(), true /* bEnableRedundancy */, $aExcluded);
-        $oIterator = new RelationTypeIterator($oRawGraph, 'Node');
-        foreach ($oIterator as $oNode)
-        {
-            // Any object node reached AND different from a source will do
-            if ( ($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')) )
-            {
-                $this->StoreComputedObject($aGraphObjects, $oNode->GetProperty('object'));
-            }
-        }
-        if (count($aDefaultContexts) > 0)
-		{
+		$aGraphObjects = [];
+		$oRawGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, $this->GetImpactAnalysisMaxDepth(), true /* bEnableRedundancy */, $aExcluded);
+		$oIterator = new RelationTypeIterator($oRawGraph, 'Node');
+		foreach ($oIterator as $oNode) {
+			// Any object node reached AND different from a source will do
+			if (($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source'))) {
+				$this->StoreComputedObject($aGraphObjects, $oNode->GetProperty('object'));
+			}
+		}
+		if (count($aDefaultContexts) > 0) {
 			$oAnnotatedGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, $this->GetImpactAnalysisMaxDepth(), true /* bEnableRedundancy */, $aExcluded, $aDefaultContexts);
 			$oIterator = new RelationTypeIterator($oAnnotatedGraph, 'Node');
-			foreach ($oIterator as $oNode)
-			{
-                // Only pick the nodes which are NOT impacted by a context root cause, and merge them in the list
-                if (($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')) && ($oNode->GetProperty('context_root_causes', null) == null))
-                {
-                    $this->StoreComputedObject($aGraphObjects, $oNode->GetProperty('object'));
-                }
+			foreach ($oIterator as $oNode) {
+				// Only pick the nodes which are NOT impacted by a context root cause, and merge them in the list
+				if (($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')) && ($oNode->GetProperty('context_root_causes', null) == null)) {
+					$this->StoreComputedObject($aGraphObjects, $oNode->GetProperty('object'));
+				}
 			}
 		}
 
 		// Remove unnecessary "computed" CIs and Contacts
-        foreach($aCIsToImpactCode as $iKey => $aCode)
-        {
-            if (($aCode['code'] == 'computed') && (!isset($aGraphObjects['FunctionalCI']) || (!array_key_exists($iKey, $aGraphObjects['FunctionalCI']))))
-            {
-                $oCIsSet->RemoveItem($aCode['link']);
-            }
-        }
-        foreach($aContactsToRoleCode as $iKey => $aCode)
-        {
-            if (($aCode['code'] == 'computed') && (!isset($aGraphObjects['Contact']) || (!array_key_exists($iKey, $aGraphObjects['Contact']))))
-            {
-                $oContactsSet->RemoveItem($aCode['link']);
-            }
-        }
-
-        // Add new nodes
-		foreach ($aGraphObjects as $sRootClass => $aObjects)
-		{
-			switch ($sRootClass)
-			{
-				case 'FunctionalCI':
-				// Only FunctionalCIs which are not already linked to the ticket
-                foreach($aObjects as $iKey => $oObj)
-                {
-                    if (!array_key_exists($iKey, $aCIsToImpactCode))
-                    {
-                        $oNewLink = new lnkFunctionalCIToTicket();
-                        $oNewLink->Set('functionalci_id', $iKey);
-                        $oNewLink->Set('impact_code', 'computed');
-                        $oCIsSet->AddItem($oNewLink);
-                    }
-                }
-				break;
-
-				case 'Contact':
-				// Only link Contacts which are not already linked to the ticket
-                foreach($aObjects as $iKey => $oObj)
-                {
-                    if (!array_key_exists($iKey, $aContactsToRoleCode))
-                    {
-                        $oNewLink = new lnkContactToTicket();
-                        $oNewLink->Set('contact_id', $iKey);
-                        $oNewLink->Set('role_code', 'computed');
-                        $oContactsSet->AddItem($oNewLink);
-                    }
-                }
-				break;
+		foreach ($aCIsToImpactCode as $iKey => $aCode) {
+			if (($aCode['code'] == 'computed') && (!isset($aGraphObjects['FunctionalCI']) || (!array_key_exists($iKey, $aGraphObjects['FunctionalCI'])))) {
+				$oCIsSet->RemoveItem($aCode['link']);
 			}
 		}
-		if (MetaModel::IsValidClass('FunctionalCI'))
-		{
+		foreach ($aContactsToRoleCode as $iKey => $aCode) {
+			if (($aCode['code'] == 'computed') && (!isset($aGraphObjects['Contact']) || (!array_key_exists($iKey, $aGraphObjects['Contact'])))) {
+				$oContactsSet->RemoveItem($aCode['link']);
+			}
+		}
+
+		// Add new nodes
+		foreach ($aGraphObjects as $sRootClass => $aObjects) {
+			switch ($sRootClass) {
+				case 'FunctionalCI':
+					// Only FunctionalCIs which are not already linked to the ticket
+					foreach ($aObjects as $iKey => $oObj) {
+						if (!array_key_exists($iKey, $aCIsToImpactCode)) {
+							$oNewLink = new lnkFunctionalCIToTicket();
+							$oNewLink->Set('functionalci_id', $iKey);
+							$oNewLink->Set('impact_code', 'computed');
+							$oCIsSet->AddItem($oNewLink);
+						}
+					}
+					break;
+
+				case 'Contact':
+					// Only link Contacts which are not already linked to the ticket
+					foreach ($aObjects as $iKey => $oObj) {
+						if (!array_key_exists($iKey, $aContactsToRoleCode)) {
+							$oNewLink = new lnkContactToTicket();
+							$oNewLink->Set('contact_id', $iKey);
+							$oNewLink->Set('role_code', 'computed');
+							$oContactsSet->AddItem($oNewLink);
+						}
+					}
+					break;
+			}
+		}
+		if (MetaModel::IsValidClass('FunctionalCI')) {
 			$this->Set('functionalcis_list', $oCIsSet);
 		}
 		$this->Set('contacts_list', $oContactsSet);
 	}
 
 	private function StoreComputedObject(&$aGraphObjects, $oObj)
-    {
-        $iKey = $oObj->GetKey();
-        $sRootClass = MetaModel::GetRootClass(get_class($oObj));
-        $aGraphObjects[$sRootClass][$iKey] = $oObj;
-    }
+	{
+		$iKey = $oObj->GetKey();
+		$sRootClass = MetaModel::GetRootClass(get_class($oObj));
+		$aGraphObjects[$sRootClass][$iKey] = $oObj;
+	}
 
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 		// Display the impact analysis for tickets not in 'closed' or 'resolved' status... and not in edition
-		if ((!$bEditMode) && (!in_array($this->Get('status'), array('resolved', 'closed'))))
-		{
-			$oPage->AddAjaxTab('Ticket:ImpactAnalysis',
+		if ((!$bEditMode) && (!in_array($this->Get('status'), ['resolved', 'closed']))) {
+			$oPage->AddAjaxTab(
+				'Ticket:ImpactAnalysis',
 				utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=ticket_impact&class='.get_class($this).'&id='.$this->GetKey(),
-				true, null, AjaxTab::ENUM_TAB_PLACEHOLDER_MISC);
+				true,
+				null,
+				AjaxTab::ENUM_TAB_PLACEHOLDER_MISC
+			);
 		}
 	}
 }

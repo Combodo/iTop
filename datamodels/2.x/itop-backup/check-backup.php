@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -29,17 +30,13 @@
 
 use Combodo\iTop\Application\WebPage\CLIPage;
 
-if (file_exists(__DIR__.'/../../approot.inc.php'))
-{
+if (file_exists(__DIR__.'/../../approot.inc.php')) {
 	require_once __DIR__.'/../../approot.inc.php';   // When in env-xxxx folder
-}
-else
-{
+} else {
 	require_once __DIR__.'/../../../approot.inc.php';   // When in datamodels/x.x folder
 }
 require_once(APPROOT.'application/utils.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
-
 
 /**
  * Uses production env
@@ -53,56 +50,43 @@ function GetConfig()
 	return $oConfig;
 }
 
-
 function ReadMandatoryParam($sParam)
 {
 	$value = utils::ReadParam($sParam, null, true /* Allow CLI */, 'raw_data');
-	if (is_null($value))
-	{
+	if (is_null($value)) {
 		throw new Exception("Missing argument '$sParam'");
 	}
-	return $value; 
+	return $value;
 }
 
-if (!function_exists('sys_get_temp_dir'))
-{
+if (!function_exists('sys_get_temp_dir')) {
 	// Based on http://www.phpit.net/
 	// article/creating-zip-tar-archives-dynamically-php/2/
 	function sys_get_temp_dir()
 	{
 		// Try to get from environment variable
-		if (!empty($_ENV['TMP']))
-		{
+		if (!empty($_ENV['TMP'])) {
 			return realpath($_ENV['TMP']);
-		}
-		else if (!empty($_ENV['TMPDIR']))
-		{
+		} elseif (!empty($_ENV['TMPDIR'])) {
 			return realpath($_ENV['TMPDIR']);
-		}
-		else if (!empty($_ENV['TEMP']))
-		{
+		} elseif (!empty($_ENV['TEMP'])) {
 			return realpath($_ENV['TEMP']);
 		}
 		// Detect by creating a temporary file
-		else
-		{
+		else {
 			// Try to use system's temporary directory
 			// as random name shouldn't exist
-			$temp_file = tempnam(md5(uniqid(rand(), TRUE)), '');
-			if ($temp_file)
-			{
+			$temp_file = tempnam(md5(uniqid(rand(), true)), '');
+			if ($temp_file) {
 				$temp_dir = realpath(dirname($temp_file));
 				unlink($temp_file);
 				return $temp_dir;
-			}
-			else
-			{
-				return FALSE;
+			} else {
+				return false;
 			}
 		}
 	}
 }
-
 
 /**
  * @param int $iRefTime Reference date time as a unix timestamp
@@ -122,14 +106,11 @@ function MakeArchiveFileName($iRefTime = null)
 	return $sBackupFile;
 }
 
-
-
 function RaiseAlarm($sMessage)
 {
 	echo "$sMessage\n";
 
-	try
-	{
+	try {
 		$sTicketLogin = ReadMandatoryParam('check_ticket_login');
 		$sTicketPwd = ReadMandatoryParam('check_ticket_pwd');
 		$sTicketTitle = ReadMandatoryParam('check_ticket_title');
@@ -138,9 +119,7 @@ function RaiseAlarm($sMessage)
 		$sTicketSubcategory = ReadMandatoryParam('check_ticket_service_subcategory');
 		$sTicketWorkgroup = ReadMandatoryParam('check_ticket_workgroup');
 		$sTicketImpactedServer = ReadMandatoryParam('check_ticket_impacted_server');
-	}
-	catch (Exception $e)
-	{
+	} catch (Exception $e) {
 		echo "The ticket could not be created: ".$e->GetMessage()."\n";
 		return;
 	}
@@ -151,60 +130,52 @@ function RaiseAlarm($sMessage)
 
 	$oConfig = GetConfig();
 	$sItopRootConfig = $oConfig->GetModuleSetting('itop-backup', 'itop_backup_incident');
-	if (empty($sItopRootConfig))
-	{
+	if (empty($sItopRootConfig)) {
 		// by default getting self !
 		// we could have '' as config value...
 		$sItopRootConfig = $oConfig->Get('app_root_url');
 	}
 
-	try
-	{
+	try {
 		$sWsdlUri = $sItopRootConfig.'/webservices/itop.wsdl.php';
 		$aSOAPMapping = SOAPMapping::GetMapping();
 		ini_set("soap.wsdl_cache_enabled", "0");
 		$oSoapClient = new SoapClient(
 			$sWsdlUri,
-			array(
+			[
 				'trace' => 1,
 				'classmap' => $aSOAPMapping, // defined in itopsoaptypes.class.inc.php
-			)
+			]
 		);
-	}
-	catch (Exception $e)
-	{
+	} catch (Exception $e) {
 		echo "ERROR: Failed to read WSDL of the target iTop ($sItopRootConfig)\n";
 
 		return;
 	}
 
-	try
-	{
-		$oRes = $oSoapClient->CreateIncidentTicket
-		(
+	try {
+		$oRes = $oSoapClient->CreateIncidentTicket(
 			$sTicketLogin, /* login */
 			$sTicketPwd, /* password */
 			$sTicketTitle, /* title */
 			$sMessage, /* description */
 			null, /* caller */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', $sTicketCustomer))), /* customer */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', $sTicketService))), /* service */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', $sTicketSubcategory))), /* service subcategory */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', $sTicketCustomer)]), /* customer */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', $sTicketService)]), /* service */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', $sTicketSubcategory)]), /* service subcategory */
 			'', /* product */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', $sTicketWorkgroup))), /* workgroup */
-			array(
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', $sTicketWorkgroup)]), /* workgroup */
+			[
 				new SOAPLinkCreationSpec(
 					'Server',
-					array(new SOAPSearchCondition('name', $sTicketImpactedServer)),
-					array()
+					[new SOAPSearchCondition('name', $sTicketImpactedServer)],
+					[]
 				),
-			), /* impacted cis */
+			], /* impacted cis */
 			'1', /* impact */
 			'1' /* urgency */
 		);
-	}
-	catch(Exception $e)
-	{
+	} catch (Exception $e) {
 		echo "The ticket could not be created: SOAP Exception = '".$e->getMessage()."'\n";
 
 		return;
@@ -214,102 +185,76 @@ function RaiseAlarm($sMessage)
 	//print_r($oRes);
 	//echo "</pre>\n";
 
-	if ($oRes->status)
-	{
+	if ($oRes->status) {
 		$sTicketName = $oRes->result[0]->values[1]->value;
 		echo "Created ticket: $sTicketName\n";
-	}
-	else
-	{
+	} else {
 		echo "ERROR: Failed to create the ticket in target iTop ($sItopRootConfig)\n";
-		foreach ($oRes->errors->messages as $oMessage)
-		{
+		foreach ($oRes->errors->messages as $oMessage) {
 			echo $oMessage->text."\n";
 		}
-	}	
+	}
 }
-
 
 //////////
 // Main
 
-try
-{
+try {
 	utils::UseParamFile();
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
 	echo "Error: ".$e->GetMessage()."\n";
 	exit;
 }
 
-
-if (utils::IsModeCLI())
-{
+if (utils::IsModeCLI()) {
 	SetupUtils::CheckPhpAndExtensionsForCli(new CLIPage('Check backup utility'));
 
 	echo date('Y-m-d H:i:s')." - running check-backup utility\n";
-	try
-	{
+	try {
 		$sAuthUser = ReadMandatoryParam('auth_user');
 		$sAuthPwd = ReadMandatoryParam('auth_pwd');
-	}
-	catch (Exception $e)
-	{
+	} catch (Exception $e) {
 		$sMessage = $e->getMessage();
 		ToolsLog::Error($sMessage);
 		echo $sMessage;
 		exit;
 	}
 	$bDownloadBackup = false;
-	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-	{
+	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
 		UserRights::Login($sAuthUser); // Login & set the user's language
-	}
-	else
-	{
+	} else {
 		ExitError($oP, "Access restricted or wrong credentials ('$sAuthUser')");
 	}
-}
-else
-{
+} else {
 	require_once(APPROOT.'application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	$bDownloadBackup = utils::ReadParam('download', false);
 }
 
-if (!UserRights::IsAdministrator())
-{
+if (!UserRights::IsAdministrator()) {
 	ExitError($oP, "Access restricted to administors");
 }
 
-
-
 // N°1802 : was moved from script param to config file (avoid direct call with untrusted param value)
 $sItopRootParam = utils::ReadParam('check_ticket_itop', null, true, 'raw_data');
-if (!empty($sItopRootParam))
-{
+if (!empty($sItopRootParam)) {
 	echo "ERROR: parameter 'check_ticket_itop' should now be specified in the config file 'itop_backup_incident' parameter\n";
 
 	return;
 }
 
-
 $sZipArchiveFile = MakeArchiveFileName().'.tar.gz';
 $sZipArchiveFileForDisplay = utils::HtmlEntities($sZipArchiveFile);
 echo date('Y-m-d H:i:s')." - Checking file: $sZipArchiveFileForDisplay\n";
 
-
-if (!file_exists($sZipArchiveFile))
-{
+if (!file_exists($sZipArchiveFile)) {
 	RaiseAlarm("Missing backup file '$sZipArchiveFileForDisplay'");
 
 	return;
 }
 
 $aStat = stat($sZipArchiveFile);
-if (!$aStat)
-{
+if (!$aStat) {
 	RaiseAlarm("Failed to stat backup file '$sZipArchiveFileForDisplay'");
 
 	return;
@@ -317,37 +262,28 @@ if (!$aStat)
 
 $iSize = (int)$aStat['size'];
 $iMIN = utils::ReadParam('check_size_min', 0);
-if ($iSize <= $iMIN)
-{
+if ($iSize <= $iMIN) {
 	RaiseAlarm("Backup file '$sZipArchiveFileForDisplay' too small (Found: $iSize, while expecting $iMIN bytes)");
 
 	return;
 }
 
-
 echo "Found the archive\n";
 $sOldArchiveFile = MakeArchiveFileName(time() - 86400).'.tar.gz'; // yesterday's archive
 $sOldArchiveFileForDisplay = utils::HtmlEntities($sOldArchiveFile);
-if (file_exists($sOldArchiveFile))
-{
-	if ($aOldStat = stat($sOldArchiveFile))
-	{
+if (file_exists($sOldArchiveFile)) {
+	if ($aOldStat = stat($sOldArchiveFile)) {
 		echo "Comparing its size with older file: $sOldArchiveFileForDisplay\n";
 		$iOldSize = (int)$aOldStat['size'];
 		$fVariationPercent = 100 * ($iSize - $iOldSize) / $iOldSize;
 		$sVariation = round($fVariationPercent, 2)." percent(s)";
 
 		$iREDUCTIONMAX = utils::ReadParam('check_size_reduction_max');
-		if ($fVariationPercent < -$iREDUCTIONMAX)
-		{
+		if ($fVariationPercent < -$iREDUCTIONMAX) {
 			RaiseAlarm("Backup file '$sZipArchiveFileForDisplay' changed by $sVariation, expecting a reduction limited to $iREDUCTIONMAX percents of the original size");
-		}
-		elseif ($fVariationPercent < 0)
-		{
+		} elseif ($fVariationPercent < 0) {
 			echo "Size variation: $sVariation (the maximum allowed reduction is $iREDUCTIONMAX) \n";
-		}
-		else
-		{
+		} else {
 			echo "The archive grew by: $sVariation\n";
 		}
 	}

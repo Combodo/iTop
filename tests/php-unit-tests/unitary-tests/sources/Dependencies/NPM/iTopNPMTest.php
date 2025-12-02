@@ -26,7 +26,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  */
 class iTopNPMTest extends ItopTestCase
 {
-
 	protected function setUp(): void
 	{
 		parent::setUp();

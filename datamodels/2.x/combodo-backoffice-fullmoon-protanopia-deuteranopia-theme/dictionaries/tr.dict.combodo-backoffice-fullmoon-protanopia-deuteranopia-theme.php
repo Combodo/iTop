@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,6 +22,6 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'theme:fullmoon-protanopia-deuteranopia' => 'Fullmoon (Protanopia & Deuteranopia)~~'
-));
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'theme:fullmoon-protanopia-deuteranopia' => 'Fullmoon (Protanopia & Deuteranopia)~~',
+]);

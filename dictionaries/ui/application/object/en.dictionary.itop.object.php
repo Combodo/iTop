@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -17,9 +18,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'UI:Object:Modal:Title' => 'Create an object',
 	'UI:Object:Modal:Create:MandatoryAttributeBlobInputs:Warning:Text' => 'This form contains a mandatory file attribute which cannot be set in modal mode. The creation of this object will be incomplete, edit it in a full-page form to complete it.',
 	'UI:Object:Modal:Modify:MandatoryAttributeBlobInputs:Warning:Text' => 'This form contains a mandatory file attribute which cannot be set in modal mode. This object is incomplete, edit it in a full-page form to complete it.',
 	'UI:Object:Modal:Modify:Filled:MandatoryAttributeBlobInputs:Warning:Text' => 'This form contains mandatory file attribute which cannot be modified in modal mode.',
-));
+]);

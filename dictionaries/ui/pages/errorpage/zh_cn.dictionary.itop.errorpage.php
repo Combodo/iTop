@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -17,9 +18,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Navigation menu
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:ErrorPage:UnstableVersion' => '当前正在使用可能包含缺陷的不稳定版本. 如果确信错误是因为缺陷导致请反馈给我们!',
 	'UI:ErrorPage:KittyDisclaimer' => '请放心, 制作此动画和发行版的时候没有任何猫咪受到伤害.
 
 - 研发团队',
-));
+]);

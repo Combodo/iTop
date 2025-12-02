@@ -24,9 +24,9 @@ class InterfaceDiscovery
 	private ?array $aForcedClassMap = null; // For testing purposes
 	private bool $bCheckInterfaceImplementation = true; // false only for testing purposes
 
-	const CACHE_NONE = 'CACHE_NONE';
-	const CACHE_DYNAMIC = 'CACHE_DYNAMIC';  // rebuild cache when files changes
-	const CACHE_STATIC = 'CACHE_STATIC';    // Built once at setup
+	public const CACHE_NONE = 'CACHE_NONE';
+	public const CACHE_DYNAMIC = 'CACHE_DYNAMIC';  // rebuild cache when files changes
+	public const CACHE_STATIC = 'CACHE_STATIC';    // Built once at setup
 
 	private function __construct()
 	{
@@ -91,7 +91,7 @@ class InterfaceDiscovery
 				continue;
 			}
 
-			if (! class_exists($sPHPClass)){
+			if (! class_exists($sPHPClass)) {
 				continue;
 			}
 
@@ -116,7 +116,7 @@ class InterfaceDiscovery
 
 		// guess all the autoload class maps from the extensions
 		$aAutoloadClassMaps = glob(APPROOT.'env-'.utils::GetCurrentEnvironment().'/*/vendor/composer/autoload_classmap.php');
-		if($aAutoloadClassMaps === false) {
+		if ($aAutoloadClassMaps === false) {
 			$aAutoloadClassMaps = [];
 		}
 		$aAutoloadClassMaps[] = APPROOT.'lib/composer/autoload_classmap.php';
@@ -141,8 +141,7 @@ class InterfaceDiscovery
 	{
 		try {
 			$oRefClass = new ReflectionClass($sPHPClass);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			return false;
 		}
 
@@ -251,12 +250,12 @@ class InterfaceDiscovery
 		$aClasses = $this->oCacheService->Fetch('InterfaceDiscovery', $sKey);
 
 		$aRealClasses = [];
-		foreach ($aClasses as $sPHPClass){
-			if (! class_exists($sPHPClass)){
+		foreach ($aClasses as $sPHPClass) {
+			if (! class_exists($sPHPClass)) {
 				continue;
 			}
 
-			$aRealClasses[]=$sPHPClass;
+			$aRealClasses[] = $sPHPClass;
 		}
 		return $aRealClasses;
 	}

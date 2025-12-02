@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -17,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Navigation menu
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Preferences:Title' => '首选项',
 	'UI:Preferences:UserInterface:Title' => '用户界面',
 	'UI:Preferences:General:Title' => '概况',
@@ -53,5 +54,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
 	'UI:Preferences:Notifications' => 'Notifications~~',
 	'UI:Preferences:Notifications+' => 'Configure the notifications you want to receive <a href="%1$s">on this page</a>.~~',
-	
-));
+
+]);

@@ -37,7 +37,7 @@ class CKEditorHelper
 	 *
 	 * @return array
 	 */
-	public static function GetCkeditorConfiguration(bool $bWithMentions, ?string $sInitialValue, array $aOverloadConfiguration = []) : array
+	public static function GetCkeditorConfiguration(bool $bWithMentions, ?string $sInitialValue, array $aOverloadConfiguration = []): array
 	{
 		// Extract language from user preferences
 		$sLanguageCountry = trim(UserRights::GetUserLanguage());
@@ -45,25 +45,24 @@ class CKEditorHelper
 		$aSanitizerConfiguration = self::GetDOMSanitizerForCKEditor();
 
 		// configuration
-		$aConfiguration = array(
+		$aConfiguration = [
 			'language' => $sLanguage,
 			'maximize' => [],
 			'detectChanges' => [
-				'initialValue' => $sInitialValue
+				'initialValue' => $sInitialValue,
 			],
 			'objectShortcut' => [
-				'buttonLabel' => Dict::S('UI:ObjectShortcutInsert')
+				'buttonLabel' => Dict::S('UI:ObjectShortcutInsert'),
 			],
 			'htmlSupport' => $aSanitizerConfiguration,
-		);
+		];
 
 		// Mentions
-		if($bWithMentions){
-			try{
+		if ($bWithMentions) {
+			try {
 				$aMentionConfiguration = self::GetMentionConfiguration();
 				$aConfiguration['mention'] = $aMentionConfiguration;
-			}
-			catch(Exception $e){
+			} catch (Exception $e) {
 				ExceptionLog::LogException($e);
 			}
 		}
@@ -78,7 +77,7 @@ class CKEditorHelper
 	 * @return array|array[]
 	 * @throws \Exception
 	 */
-	private static function GetMentionConfiguration() : array
+	private static function GetMentionConfiguration(): array
 	{
 		// initialize feeds
 		$aMentionConfiguration = ['feeds' => []];
@@ -87,7 +86,7 @@ class CKEditorHelper
 		$aMentionsAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
 
 		// iterate throw classes...
-		foreach($aMentionsAllowedClasses as $sMentionMarker => $sMentionScope) {
+		foreach ($aMentionsAllowedClasses as $sMentionMarker => $sMentionScope) {
 
 			// Retrieve mention class
 			// - First test if the conf is a simple data model class
@@ -108,7 +107,7 @@ class CKEditorHelper
 					'minimumCharacters' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
 					'feed_type' => 'ajax',
 					'feed_ajax_options' => [
-						'url' => utils::GetAbsoluteUrlAppRoot(). "pages/ajax.render.php?route=object.search_for_mentions&marker=".urlencode($sMentionMarker)."&needle=",
+						'url' => utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?route=object.search_for_mentions&marker=".urlencode($sMentionMarker)."&needle=",
 						'throttle' => 500,
 						'marker' => $sMentionMarker,
 					],
@@ -127,12 +126,12 @@ class CKEditorHelper
 	 *
 	 * @return string|null
 	 */
-	public static function PrepareCKEditorValueTextEncodingForTextarea(string $sValue = null) : ?string
+	public static function PrepareCKEditorValueTextEncodingForTextarea(string $sValue = null): ?string
 	{
-		if($sValue === null){
+		if ($sValue === null) {
 			return null;
 		}
-		return str_replace( '&', '&amp;', $sValue );
+		return str_replace('&', '&amp;', $sValue);
 	}
 
 	/**
@@ -150,10 +149,9 @@ class CKEditorHelper
 	{
 		// link CKEditor JS files
 		foreach (static::GetJSFilesRelPathsForCKEditor() as $sFile) {
-			try{
+			try {
 				$oPage->LinkScriptFromAppRoot($sFile);
-			}
-			catch(Exception $e){
+			} catch (Exception $e) {
 				ExceptionLog::LogException($e);
 			}
 		}
@@ -166,12 +164,11 @@ class CKEditorHelper
 		$oPage->add_ready_script("CombodoCKEditorHandler.CreateInstance('#$sInputElementId', $sConfigJS)");
 
 		// handle mentions template
-		if($bWithMentions){
-			try{
+		if ($bWithMentions) {
+			try {
 				$sMentionTemplate = self::GetMentionsTemplate($sInputElementId);
 				$oPage->add($sMentionTemplate);
-			}
-			catch(Exception $e){
+			} catch (Exception $e) {
 				ExceptionLog::LogException($e);
 			}
 		}
@@ -193,12 +190,11 @@ class CKEditorHelper
 	public static function ConfigureCKEditorElementForRenderingOutput(RenderingOutput $oOutput, string $sInputElementId, string $sInitialValue = null, bool $bWithMentions = false, bool $bAddJSFiles = true, array $aOverloadConfiguration = []): void
 	{
 		// link CKEditor JS files
-		if($bAddJSFiles){
+		if ($bAddJSFiles) {
 			foreach (static::GetJSFilesRelPathsForCKEditor() as $sFile) {
-				try{
+				try {
 					$oOutput->AddJsFile($sFile);
-				}
-				catch(Exception $e){
+				} catch (Exception $e) {
 					ExceptionLog::LogException($e);
 				}
 			}
@@ -212,12 +208,11 @@ class CKEditorHelper
 		$oOutput->AddJs("CombodoCKEditorHandler.CreateInstance('#$sInputElementId', $sConfigJS)");
 
 		// mentions template
-		if($bWithMentions){
-			try{
+		if ($bWithMentions) {
+			try {
 				$sMentionTemplate = self::GetMentionsTemplate($sInputElementId);
 				$oOutput->add($sMentionTemplate);
-			}
-			catch(Exception $e){
+			} catch (Exception $e) {
 				ExceptionLog::LogException($e);
 			}
 		}
@@ -256,7 +251,7 @@ HTML;
 			'node_modules/ckeditor5-itop-build/build/ckeditor.js',
 			'js/highlight/highlight.min.js',
 			'js/ckeditor.handler.js',
-			'js/ckeditor.feeds.js'
+			'js/ckeditor.feeds.js',
 		];
 
 		// add CKEditor translations resource
@@ -267,13 +262,12 @@ HTML;
 		// add corresponding ckeditor language file
 		// P1 language + country
 		// P2 language
-		$sLanguageFileRelPath = 'node_modules/ckeditor5-itop-build/build/translations/' . $sLanguage . '-' . $sCountry . '.js';
-		if(file_exists(APPROOT . $sLanguageFileRelPath)){
+		$sLanguageFileRelPath = 'node_modules/ckeditor5-itop-build/build/translations/'.$sLanguage.'-'.$sCountry.'.js';
+		if (file_exists(APPROOT.$sLanguageFileRelPath)) {
 			$aJSRelPaths[] = $sLanguageFileRelPath;
-		}
-		else {
-			$sLanguageFileRelPath = 'node_modules/ckeditor5-itop-build/build/translations/' . $sLanguage . '.js';
-			if(file_exists(APPROOT . $sLanguageFileRelPath)){
+		} else {
+			$sLanguageFileRelPath = 'node_modules/ckeditor5-itop-build/build/translations/'.$sLanguage.'.js';
+			if (file_exists(APPROOT.$sLanguageFileRelPath)) {
 				$aJSRelPaths[] = $sLanguageFileRelPath;
 			}
 		}
@@ -288,26 +282,26 @@ HTML;
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	public static function GetDOMSanitizerForCKEditor(DOMSanitizer $oSanitizer = null) : array
+	public static function GetDOMSanitizerForCKEditor(DOMSanitizer $oSanitizer = null): array
 	{
-		if($oSanitizer === null) {
+		if ($oSanitizer === null) {
 			/* @var $oSanitizer DOMSanitizer */
 			$sSanitizerClass = utils::GetConfig()->Get('html_sanitizer');
 			$oSanitizer = new $sSanitizerClass();
 		}
-		
+
 		$aWhitelist = [
 			'allow' => [],
-			'disallow' => []
+			'disallow' => [],
 		];
-		
+
 		// Build the allow list
 		foreach ($oSanitizer->GetTagsWhiteList() as $sTag => $aAttributes) {
 			$aAllowedItem = [
 				'name' => $sTag,
 				'attributes' => [],
 				'classes' => false,
-				'styles' => false
+				'styles' => false,
 			];
 
 			foreach ($aAttributes as $aAttr) {
@@ -317,7 +311,7 @@ HTML;
 					$aAllowedItem['classes'] = true;
 				} elseif (isset($oSanitizer->GetAttrsWhiteList()[$aAttr])) {
 					$aAllowedItem['attributes'][$aAttr] = [
-						'pattern' => $oSanitizer->GetAttrsWhiteList()[$aAttr]
+						'pattern' => $oSanitizer->GetAttrsWhiteList()[$aAttr],
 					];
 				} else {
 					$aAllowedItem['attributes'][$aAttr] = true;
@@ -339,7 +333,7 @@ HTML;
 			];
 
 			foreach ($oSanitizer->GetAttrsBlackList() as $aAttr) {
-					$aDisallowedItem['attributes'][$aAttr] = true;
+				$aDisallowedItem['attributes'][$aAttr] = true;
 			}
 
 			if (empty($aDisallowedItem['attributes'])) {
@@ -348,7 +342,7 @@ HTML;
 
 			$aWhitelist['disallow'][] = $aDisallowedItem;
 		}
-		
+
 		return $aWhitelist;
 	}
 }

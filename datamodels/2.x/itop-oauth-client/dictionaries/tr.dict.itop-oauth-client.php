@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
@@ -63,14 +64,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OAuthClient/Attribute:redirect_url+' => 'This url must be copied in the OAuth2 configuration of the provider
 Erase the field to recalculate default value~~',
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Mailbox list~~',
-	'Class:OAuthClient/Attribute:mailbox_list+' => '~~'
+	'Class:OAuthClient/Attribute:mailbox_list+' => '~~',
 ]);
 
 //
 // Class: OAuthClientAzure
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)~~',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Scope~~',
@@ -93,13 +94,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'No~~',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Tenant~~',
 	'Class:OAuthClientAzure/Attribute:tenant+' => 'Tenant ID of the configured application. For multi-tenant application, use "common".~~',
-));
+]);
 
 //
 // Class: OAuthClientGoogle
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)~~',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Scope~~',
@@ -120,4 +121,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => 'At least one OAuth client must have this flag to “Yes”, if you want iTop to use it for sending mails~~',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => 'Yes~~',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => 'No~~',
-));
+]);

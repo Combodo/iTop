@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -30,10 +31,9 @@ use ExecutionKPI;
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 class CaptureWebPage extends WebPage
 {
-	function __construct()
+	public function __construct()
 	{
 		$oKpi = new ExecutionKPI();
 		parent::__construct('capture web page');
@@ -51,8 +51,7 @@ class CaptureWebPage extends WebPage
 	public function GetJS()
 	{
 		$sRet = implode("\n", $this->a_scripts);
-		if (!empty($this->s_deferred_content))
-		{
+		if (!empty($this->s_deferred_content)) {
 			$sRet .= "\n\$('body').append('".addslashes(str_replace("\n", '', $this->s_deferred_content))."');";
 		}
 
@@ -93,4 +92,3 @@ class CaptureWebPage extends WebPage
 		throw new Exception(__method__.' should not be called');
 	}
 }
-

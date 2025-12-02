@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -40,4 +41,3 @@ LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (N°1934)
 
 /** @noinspection ForgottenDebugOutputInspection */
 phpinfo();
-?>

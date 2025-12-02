@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -30,13 +31,11 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 define('UNIT_MAX_CACHE_FILES', 10);
 
-
 /**
  * @runTestsInSeparateProcesses Required (at least) to mock the MetaModel and utils class
  */
 class apcEmulationTest extends ItopTestCase
 {
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -62,8 +61,7 @@ class apcEmulationTest extends ItopTestCase
 
 	public function testMultiple()
 	{
-		for($i = 0; $i < UNIT_MAX_CACHE_FILES; $i++)
-		{
+		for ($i = 0; $i < UNIT_MAX_CACHE_FILES; $i++) {
 			$this->assertTrue(apc_store('testMultiple'.$i, 'This is a test', 100));
 		}
 		$aInfo = apc_cache_info();
@@ -72,8 +70,7 @@ class apcEmulationTest extends ItopTestCase
 
 	public function testNumberOfFilesTTL()
 	{
-		for($i = 0; $i < 2 * UNIT_MAX_CACHE_FILES; $i++)
-		{
+		for ($i = 0; $i < 2 * UNIT_MAX_CACHE_FILES; $i++) {
 			$this->assertTrue(apc_store('testNumberOfFilesTTL'.$i, 'This is a test', 100));
 		}
 		$aInfo = apc_cache_info();
@@ -84,8 +81,7 @@ class apcEmulationTest extends ItopTestCase
 
 	public function testNumberOfFilesNoTTL()
 	{
-		for($i = 0; $i < 2 * UNIT_MAX_CACHE_FILES; $i++)
-		{
+		for ($i = 0; $i < 2 * UNIT_MAX_CACHE_FILES; $i++) {
 			$this->assertTrue(apc_store('testNumberOfFilesNoTTL'.$i, 'This is a test'));
 		}
 		$aInfo = apc_cache_info();
@@ -96,18 +92,16 @@ class apcEmulationTest extends ItopTestCase
 
 	public function testArray()
 	{
-		$aStoredEntries = array();
-		$aFetchedEntries = array();
-		for($i = 0; $i < UNIT_MAX_CACHE_FILES; $i++)
-		{
+		$aStoredEntries = [];
+		$aFetchedEntries = [];
+		for ($i = 0; $i < UNIT_MAX_CACHE_FILES; $i++) {
 			$sKey = 'testArray'.$i;
 			$aStoredEntries[$sKey] = 'This is a test ARRAY'.rand();
 			$aFetchedEntries[] = $sKey;
 		}
 		$aResStore = apc_store($aStoredEntries);
 		$this->assertEquals(UNIT_MAX_CACHE_FILES, count($aResStore));
-		foreach($aResStore as $bValue)
-		{
+		foreach ($aResStore as $bValue) {
 			$this->assertTrue($bValue);
 		}
 
@@ -117,12 +111,10 @@ class apcEmulationTest extends ItopTestCase
 		$aResFetch = apc_fetch($aFetchedEntries);
 		$this->assertEquals(UNIT_MAX_CACHE_FILES, count($aResFetch));
 
-		foreach($aResFetch as $sKey => $sValue)
-		{
+		foreach ($aResFetch as $sKey => $sValue) {
 			$this->assertEquals($aStoredEntries[$sKey], $sValue);
 		}
 	}
-
 
 	public function testSanity()
 	{
@@ -177,15 +169,13 @@ class apcEmulationTest extends ItopTestCase
 	{
 		$ilen = 20000000;
 		$sContent = str_pad(' TEST ', $ilen, "-=", STR_PAD_BOTH);
-		for($i = 0; $i < UNIT_MAX_CACHE_FILES; $i++)
-		{
+		for ($i = 0; $i < UNIT_MAX_CACHE_FILES; $i++) {
 			$this->assertTrue(apc_store('testHuge'.$i, $sContent, 100));
 		}
 		$aInfo = apc_cache_info();
 		$this->assertEquals(UNIT_MAX_CACHE_FILES, count($aInfo['cache_list']));
 
-		for($i = 0; $i < UNIT_MAX_CACHE_FILES; $i++)
-		{
+		for ($i = 0; $i < UNIT_MAX_CACHE_FILES; $i++) {
 			$this->assertEquals($ilen, strlen(apc_fetch('testHuge'.$i)));
 		}
 	}

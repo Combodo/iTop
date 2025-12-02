@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -60,7 +61,7 @@ class AttributeBlobEventListener implements iEventServiceSetup
 		$oDocument = $oEventData->Get('document');
 
 		$sTriggerClass = TriggerOnAttributeBlobDownload::class;
-		$aTriggerContextArgs = array(
+		$aTriggerContextArgs = [
 			'this->object()' => $oObject,
 			'attribute_code' => $sAttCode,
 			'file->mime_type' => $oDocument->GetMimeType(),
@@ -68,9 +69,9 @@ class AttributeBlobEventListener implements iEventServiceSetup
 			'file->downloads_count' => $oDocument->GetDownloadsCount(),
 			'file->data' => $oDocument->GetData(),
 			'file->data_as_base64' => base64_encode($oDocument->GetData()),
-		);
-		$aTriggerParams = array('class_list' => MetaModel::EnumParentClasses(get_class($oObject), ENUM_PARENT_CLASSES_ALL));
-		$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT $sTriggerClass AS t WHERE t.target_class IN (:class_list)"), array(), $aTriggerParams);
+		];
+		$aTriggerParams = ['class_list' => MetaModel::EnumParentClasses(get_class($oObject), ENUM_PARENT_CLASSES_ALL)];
+		$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT $sTriggerClass AS t WHERE t.target_class IN (:class_list)"), [], $aTriggerParams);
 
 		/** @var \Trigger $oTrigger */
 		while ($oTrigger = $oTriggerSet->Fetch()) {

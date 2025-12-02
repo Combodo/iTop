@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -17,6 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Navigation menu
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'core/Operation:Landing/Title' => 'OAuth令牌创建',
-));
+]);

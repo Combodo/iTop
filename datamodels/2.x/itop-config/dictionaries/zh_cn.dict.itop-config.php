@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -20,10 +21,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
 	'Menu:ConfigEditor' => '编辑配置文件',
-	'config-edit-title' => '配置文件编辑器',
+	'itop-config/Operation:Edit/Title' => '配置文件编辑器',
 	'config-edit-intro' => '编辑配置文件时请务必格外小心.',
 	'config-apply' => '应用',
 	'config-apply-title' => '应用 (Ctrl+S)',
@@ -39,4 +40,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'config-error-file-changed' => '错误: 配置文件在您打开以后已被更改, 无法保存. 请刷新并再次保存.',
 	'config-not-allowed-in-demo' => '抱歉, '.ITOP_APPLICATION_SHORT.'处于<b>演示模式</b>: 不能编辑配置文件.',
 	'config-interactive-not-allowed' => ITOP_APPLICATION_SHORT.'交互式配置编辑器已禁用. 请在配置文件中查看 <code>\'config_editor\' => \'disabled\'</code>.',
-));
+]);

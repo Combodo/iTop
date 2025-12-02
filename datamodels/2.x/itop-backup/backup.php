@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -19,14 +20,10 @@
 
 use Combodo\iTop\Application\WebPage\Page;
 
-if (!defined('APPROOT'))
-{
-	if (file_exists(__DIR__.'/../../approot.inc.php'))
-	{
+if (!defined('APPROOT')) {
+	if (file_exists(__DIR__.'/../../approot.inc.php')) {
 		require_once __DIR__.'/../../approot.inc.php';   // When in env-xxxx folder
-	}
-	else
-	{
+	} else {
 		require_once __DIR__.'/../../../approot.inc.php';   // When in datamodels/x.x folder
 	}
 }
@@ -57,7 +54,8 @@ class MyDBBackup extends DBBackup
 	}
 }
 
-function GetOperationName() {
+function GetOperationName()
+{
 	return "iTop - Database Backup";
 }
 
@@ -65,8 +63,7 @@ function Usage($oP)
 {
 	$oP->p('Perform a backup of the iTop database by running mysqldump');
 	$oP->p('Parameters:');
-	if (utils::IsModeCLI())
-	{
+	if (utils::IsModeCLI()) {
 		$oP->p('auth_user: login, must be administrator');
 		$oP->p('auth_pwd: ...');
 	}
@@ -74,13 +71,10 @@ function Usage($oP)
 	$oP->p('simulate [optional]: set to check the name of the file that would be created');
 	$oP->p('mysql_bindir [optional]: specify the path for mysqldump');
 
-	if (utils::IsModeCLI())
-	{
+	if (utils::IsModeCLI()) {
 		$oP->p('Example: php -q backup.php --auth_user=admin --auth_pwd=myPassw0rd');
 		$oP->p('Known limitation: the current directory must be the directory of backup.php');
-	}
-	else
-	{
+	} else {
 		$oP->p('Example: .../backup.php?backup_file=/tmp/backup.__DB__-__SUBNAME__.%Y-%m');
 	}
 }
@@ -91,67 +85,53 @@ function Usage($oP)
  * @throws \DictExceptionUnknownLanguage
  * @throws \OQLException
  */
-function ExecuteMainOperation($oP){
+function ExecuteMainOperation($oP)
+{
 
-	if (utils::IsModeCLI())
-	{
+	if (utils::IsModeCLI()) {
 		$oP->p(date('Y-m-d H:i:s')." - running backup utility");
 		$sAuthUser = ReadMandatoryParam($oP, 'auth_user');
 		$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd');
 		$bDownloadBackup = false;
-		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-		{
+		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
 			UserRights::Login($sAuthUser); // Login & set the user's language
-		}
-		else
-		{
+		} else {
 			ExitError($oP, "Access restricted or wrong credentials ('$sAuthUser')");
 		}
-	}
-	else
-	{
+	} else {
 		require_once(APPROOT.'application/loginwebpage.class.inc.php');
 		LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 		$bDownloadBackup = utils::ReadParam('download', false);
 	}
 
-	if (!UserRights::IsAdministrator())
-	{
+	if (!UserRights::IsAdministrator()) {
 		ExitError($oP, "Access restricted to administors");
 	}
 
-	if (CheckParam('?') || CheckParam('h') || CheckParam('help'))
-	{
+	if (CheckParam('?') || CheckParam('h') || CheckParam('help')) {
 		Usage($oP);
 		$oP->output();
 		exit;
 	}
 
-
 	$sDefaultBackupFileName = SetupUtils::GetTmpDir().'/'."__DB__-%Y-%m-%d";
 	$sBackupFile =  utils::ReadParam('backup_file', $sDefaultBackupFileName, true, 'raw_data');
 
-// Interpret strftime specifications (like %Y) and database placeholders
+	// Interpret strftime specifications (like %Y) and database placeholders
 	$oBackup = new MyDBBackup($oP);
 	$oBackup->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
 	$sBackupFile = $oBackup->MakeName($sBackupFile);
 
 	$bSimulate = utils::ReadParam('simulate', false, true);
 	$res = false;
-	if ($bSimulate)
-	{
+	if ($bSimulate) {
 		$oP->p("Simulate: would create file '$sBackupFile'");
-	}
-	elseif (MetaModel::GetConfig()->Get('demo_mode'))
-	{
+	} elseif (MetaModel::GetConfig()->Get('demo_mode')) {
 		$oP->p("Sorry, iTop is in demonstration mode: the feature is disabled");
-	}
-	else
-	{
+	} else {
 		$oBackup->CreateCompressedBackup($sBackupFile);
 	}
-	if ($res && $bDownloadBackup)
-	{
+	if ($res && $bDownloadBackup) {
 		$oBackup->DownloadBackup($sBackupFile);
 	}
 }

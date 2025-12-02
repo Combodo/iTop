@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:IncidentManagement' => 'Gerenciamento de Incidentes',
 	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Visão geral',
@@ -31,8 +32,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidentes abertos por status',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Incidentes abertos por agente',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Incidentes abertos por cliente',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -48,7 +48,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Class: Incident
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Incident' => 'Incidente',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Status',
@@ -139,6 +139,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Attribute:tto+' => 'Tempo para atribuição',
 	'Class:Incident/Attribute:ttr' => 'TTR',
 	'Class:Incident/Attribute:ttr+' => 'Tempo para solução',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'Prazo determinado de atribuição (TTO)',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => 'Prazo determinado de Tempo para atribuição (TTO)',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA TTO superado',
@@ -227,4 +231,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets (resolver solicitações filhas)',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Conecte a solução a solicitação filha (ev_autoresolve) e alinhe as seguintes características: serviço, equipe, agente, informação da solução',
 	'Tickets:Related:OpenIncidents' => 'Incidentes abertos',
-));
+]);

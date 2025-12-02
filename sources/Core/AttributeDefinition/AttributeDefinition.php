@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -63,7 +64,6 @@ define('DEL_MOVEUP', 3);
  */
 define('DEL_NONE', 4);
 
-
 /**
  * For Link sets: tracking_level
  *
@@ -87,10 +87,8 @@ define('LINKSET_EDITWHEN_ON_HOST_EDITION', 1); // The only possible action is to
 define('LINKSET_EDITWHEN_ON_HOST_DISPLAY', 2); // Show the usual 'Actions' popup menu
 define('LINKSET_EDITWHEN_ALWAYS', 3); // Show the usual 'Actions' popup menu
 
-
 define('LINKSET_DISPLAY_STYLE_PROPERTY', 'property');
 define('LINKSET_DISPLAY_STYLE_TAB', 'tab');
-
 
 /**
  * Wiki formatting - experimental
@@ -113,22 +111,21 @@ define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)(\|(.+))?\]\]/U');
  */
 abstract class AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE_RAW              = 'raw';
-	const SEARCH_WIDGET_TYPE_STRING           = 'string';
-	const SEARCH_WIDGET_TYPE_NUMERIC          = 'numeric';
-	const SEARCH_WIDGET_TYPE_ENUM             = 'enum';
-	const SEARCH_WIDGET_TYPE_EXTERNAL_KEY     = 'external_key';
-	const SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY = 'hierarchical_key';
-	const SEARCH_WIDGET_TYPE_EXTERNAL_FIELD   = 'external_field';
-	const SEARCH_WIDGET_TYPE_DATE_TIME        = 'date_time';
-	const SEARCH_WIDGET_TYPE_DATE             = 'date';
-	const SEARCH_WIDGET_TYPE_SET              = 'set';
-	const SEARCH_WIDGET_TYPE_TAG_SET          = 'tag_set';
+	public const SEARCH_WIDGET_TYPE_RAW              = 'raw';
+	public const SEARCH_WIDGET_TYPE_STRING           = 'string';
+	public const SEARCH_WIDGET_TYPE_NUMERIC          = 'numeric';
+	public const SEARCH_WIDGET_TYPE_ENUM             = 'enum';
+	public const SEARCH_WIDGET_TYPE_EXTERNAL_KEY     = 'external_key';
+	public const SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY = 'hierarchical_key';
+	public const SEARCH_WIDGET_TYPE_EXTERNAL_FIELD   = 'external_field';
+	public const SEARCH_WIDGET_TYPE_DATE_TIME        = 'date_time';
+	public const SEARCH_WIDGET_TYPE_DATE             = 'date';
+	public const SEARCH_WIDGET_TYPE_SET              = 'set';
+	public const SEARCH_WIDGET_TYPE_TAG_SET          = 'tag_set';
 
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
-
-	const INDEX_LENGTH = 95;
+	public const INDEX_LENGTH = 95;
 
 	protected $aCSSClasses;
 
@@ -223,7 +220,7 @@ abstract class AttributeDefinition
 		$this->m_sCode = $sCode;
 		$this->m_aParams = $aParams;
 		$this->ConsistencyCheck();
-		$this->aCSSClasses = array('attribute');
+		$this->aCSSClasses = ['attribute'];
 	}
 
 	public function GetParams()
@@ -253,7 +250,7 @@ abstract class AttributeDefinition
 	 */
 	public function ListSubItems()
 	{
-		$aSubItems = array();
+		$aSubItems = [];
 		foreach (MetaModel::ListAttributeDefs($this->m_sHostClass) as $sAttCode => $oAttDef) {
 			if ($oAttDef instanceof AttributeSubItem) {
 				if ($oAttDef->Get('target_attcode') == $this->m_sCode) {
@@ -269,7 +266,7 @@ abstract class AttributeDefinition
 	// to be overloaded
 	public static function ListExpectedParams()
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -604,8 +601,7 @@ abstract class AttributeDefinition
 		$sSepAttribute = null,
 		$sSepValue = null,
 		$sAttributeQualifier = null
-	)
-	{
+	) {
 		return $this->MakeRealValue($sProposedValue, null);
 	}
 
@@ -692,7 +688,7 @@ abstract class AttributeDefinition
 
 	public function GetHelpOnSmartSearch()
 	{
-		$aParents = array_merge(array(get_class($this) => get_class($this)), class_parents($this));
+		$aParents = array_merge([get_class($this) => get_class($this)], class_parents($this));
 		foreach ($aParents as $sClass) {
 			$sHelp = Dict::S("Core:$sClass?SmartSearch", '-missing-');
 			if ($sHelp != '-missing-') {
@@ -733,7 +729,7 @@ abstract class AttributeDefinition
 
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
-		return array();
+		return [];
 	}
 
 	public function GetNullValue()
@@ -783,7 +779,7 @@ abstract class AttributeDefinition
 	 */
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -806,7 +802,7 @@ abstract class AttributeDefinition
 	 */
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -816,7 +812,7 @@ abstract class AttributeDefinition
 	 */
 	public function GetSQLValues($value)
 	{
-		return array();
+		return [];
 	}
 
 	public function RequiresIndex()
@@ -837,7 +833,7 @@ abstract class AttributeDefinition
 	public function GetOrderBySQLExpressions($sClassAlias)
 	{
 		// Note: This is the responsibility of this function to place backticks around column aliases
-		return array('`'.$sClassAlias.$this->GetCode().'`');
+		return ['`'.$sClassAlias.$this->GetCode().'`'];
 	}
 
 	public function GetOrderByHint()
@@ -854,7 +850,7 @@ abstract class AttributeDefinition
 
 	public function FromImportToValue($aCols, $sPrefix = '')
 	{
-		$aValues = array();
+		$aValues = [];
 		foreach ($this->GetSQLExpressions($sPrefix) as $sAlias => $sExpr) {
 			// This is working, based on the assumption that importable fields
 			// are not computed fields => the expression is the name of a column
@@ -991,10 +987,13 @@ abstract class AttributeDefinition
 	 * @return string
 	 */
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		return (string)$sValue;
 	}
 
@@ -1110,12 +1109,12 @@ abstract class AttributeDefinition
 	 */
 	public function EnumTemplateVerbs()
 	{
-		return array(
+		return [
 			''      => 'Plain text (unlocalized) representation',
 			'html'  => 'HTML representation',
 			'label' => 'Localized representation',
 			'text'  => 'Plain text representation (without any markup)',
-		);
+		];
 	}
 
 	/**
@@ -1163,7 +1162,7 @@ abstract class AttributeDefinition
 	 * @throws CoreException
 	 * @throws OQLException
 	 */
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$oValSetDef = $this->GetValuesDef();
 		if (!$oValSetDef) {
@@ -1183,7 +1182,7 @@ abstract class AttributeDefinition
 	 * @throws CoreException
 	 * @throws OQLException
 	 */
-	public function GetAllowedValuesForSelect($aArgs = array(), $sContains = '')
+	public function GetAllowedValuesForSelect($aArgs = [], $sContains = '')
 	{
 		return $this->GetAllowedValues($aArgs, $sContains);
 	}
@@ -1220,13 +1219,11 @@ abstract class AttributeDefinition
 		if ((($this->GetType() == 'String') || ($this->GetType() == 'Text')) &&
 			(strlen($sNewValue) > strlen($sOldValue))) {
 			// Check if some text was not appended to the field
-			if (substr($sNewValue, 0, strlen($sOldValue)) == $sOldValue) // Text added at the end
-			{
+			if (substr($sNewValue, 0, strlen($sOldValue)) == $sOldValue) { // Text added at the end
 				$sDelta = $this->GetAsHTML(substr($sNewValue, strlen($sOldValue)));
 				$sResult = Dict::Format('Change:Text_AppendedTo_AttName', $sDelta, $sLabel);
 			} else {
-				if (substr($sNewValue, -strlen($sOldValue)) == $sOldValue)   // Text added at the beginning
-				{
+				if (substr($sNewValue, -strlen($sOldValue)) == $sOldValue) {   // Text added at the beginning
 					$sDelta = $this->GetAsHTML(substr($sNewValue, 0, strlen($sNewValue) - strlen($sOldValue)));
 					$sResult = Dict::Format('Change:Text_AppendedTo_AttName', $sDelta, $sLabel);
 				} else {
@@ -1236,8 +1233,12 @@ abstract class AttributeDefinition
 						if (is_null($sNewValue)) {
 							$sNewValueHtml = Dict::S('UI:UndefinedObject');
 						}
-						$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sLabel,
-							$sNewValueHtml, $sOldValueHtml);
+						$sResult = Dict::Format(
+							'Change:AttName_SetTo_NewValue_PreviousValue_OldValue',
+							$sLabel,
+							$sNewValueHtml,
+							$sOldValueHtml
+						);
 					}
 				}
 			}
@@ -1248,8 +1249,12 @@ abstract class AttributeDefinition
 				if (is_null($sNewValue)) {
 					$sNewValueHtml = Dict::S('UI:UndefinedObject');
 				}
-				$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sLabel, $sNewValueHtml,
-					$sOldValueHtml);
+				$sResult = Dict::Format(
+					'Change:AttName_SetTo_NewValue_PreviousValue_OldValue',
+					$sLabel,
+					$sNewValueHtml,
+					$sOldValueHtml
+				);
 			}
 		}
 

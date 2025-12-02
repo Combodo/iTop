@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Reference',
@@ -62,14 +63,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Closed~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Impact Analysis~~',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkContactToTicket' => 'Sammenhæng Kontakt/Ticket',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
@@ -89,13 +89,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Added manually~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Computed~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Do not notify~~',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:WorkOrder' => 'Arbejdsordre',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => 'Navn',
@@ -128,11 +128,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Luk',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Ticket:baseinfo' => 'Almindelig information',
 	'Ticket:date' => 'Dato',
 	'Ticket:contact' => 'Kontakt',
@@ -222,14 +221,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
-));
-
+]);
 
 //
 // Class: Ticket
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
-));
+]);

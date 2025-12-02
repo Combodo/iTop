@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -6,6 +7,6 @@
  * @license https://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'theme:light-grey' => 'Light Grey (deprecated)',
-));
+]);

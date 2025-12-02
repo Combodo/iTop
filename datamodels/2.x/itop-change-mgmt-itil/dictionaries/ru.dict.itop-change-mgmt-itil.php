@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:ChangeManagement' => 'Управление изменениями',
 	'Menu:Change:Overview' => 'Обзор',
 	'Menu:Change:Overview+' => 'Управление изменениями - Обзор',
@@ -34,7 +35,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Изменения по статусу за 7 дней',
 	'Tickets:Related:OpenChanges' => 'Открытые изменения',
 	'Tickets:Related:RecentChanges' => 'Недавние изменения (72ч)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -46,12 +47,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Change' => 'Изменение',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Статус',
@@ -148,13 +148,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Закончить',
 	'Class:Change/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:RoutineChange' => 'Стандартное изменение',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Подтвердить',
@@ -179,13 +179,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Закончить',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ApprovedChange' => 'Утверждаемые изменения',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Дата утверждения',
@@ -214,13 +214,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Закончить',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:NormalChange' => 'Нормальное изменение',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Дата принятия',
@@ -249,13 +249,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Закончить',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:EmergencyChange' => 'Экстренное изменение',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Подтвердить',
@@ -280,4 +280,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Закончить',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-));
+]);

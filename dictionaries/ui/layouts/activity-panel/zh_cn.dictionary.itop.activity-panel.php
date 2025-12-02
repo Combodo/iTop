@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -17,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Activity panel
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => '展开',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => '减少',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => '关闭',
@@ -55,4 +56,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Closed cover
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => '活动面板',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => '点击打开活动面板',
-));
+]);

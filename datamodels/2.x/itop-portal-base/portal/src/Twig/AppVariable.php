@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -33,93 +34,92 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class AppVariable implements ArrayAccess
 {
-    /** @var ContainerInterface */
-    private $container;
+	/** @var ContainerInterface */
+	private $container;
 
-    /** @var DecoratedAppVariable */
-    private $decorated;
+	/** @var DecoratedAppVariable */
+	private $decorated;
 
+	public function __construct(DecoratedAppVariable $decorated, ContainerInterface $container = null)
+	{
+		$this->decorated = $decorated;
+		$this->container = $container;
+	}
 
-    public function __construct(DecoratedAppVariable $decorated, ContainerInterface $container = null)
-    {
-        $this->decorated = $decorated;
-        $this->container = $container;
-    }
+	public function __call($name, $arguments)
+	{
+		if ($this->silexApplicationEmulation->offsetExists($name)) {
+			return $this->silexApplicationEmulation->offsetGet($name);
+		}
 
-    public function __call($name, $arguments)
-    {
-        if ($this->silexApplicationEmulation->offsetExists($name)) {
-            return $this->silexApplicationEmulation->offsetGet($name);
-        }
+		return $this->decorated->$name(...$arguments); //WARNING: use of http://php.net/manual/fr/functions.arguments.php#functions.variable-arg-list
+	}
 
-        return $this->decorated->$name(...$arguments); //WARNING: use of http://php.net/manual/fr/functions.arguments.php#functions.variable-arg-list
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function offsetExists($offset): bool
+	{
+		if ($this->container->hasParameter($offset)) {
+			return true;
+		}
+		if ($this->container->has($offset)) {
+			return true;
+		}
 
-    /**
-     * @inheritDoc
-     */
-    public function offsetExists($offset): bool
-    {
-        if ($this->container->hasParameter($offset)) {
-            return true;
-        }
-        if ($this->container->has($offset)) {
-            return true;
-        }
+		return false;
+	}
 
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
+	/**
+	 * @inheritDoc
+	 */
 	#[\ReturnTypeWillChange]
-    public function offsetGet($offset)
-    {
-	    if ($this->container->hasParameter($offset)) {
-		    return $this->container->getParameter($offset);
-	    }
-	    if ($this->container->has($offset)) {
-		    return $this->container->get($offset);
-	    }
+	public function offsetGet($offset)
+	{
+		if ($this->container->hasParameter($offset)) {
+			return $this->container->getParameter($offset);
+		}
+		if ($this->container->has($offset)) {
+			return $this->container->get($offset);
+		}
 
-	    return null;
-    }
+		return null;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function offsetSet($offset, $value): void
-    {
+	/**
+	 * @inheritDoc
+	 */
+	public function offsetSet($offset, $value): void
+	{
 
-        if ($this->container->hasParameter($offset)) {
-            $this->container->setParameter($offset, $value);
-            return;
-        }
+		if ($this->container->hasParameter($offset)) {
+			$this->container->setParameter($offset, $value);
+			return;
+		}
 
-        if ($this->container->has($offset)) {
-            $this->container->set($offset, $value);
-            return;
-        }
+		if ($this->container->has($offset)) {
+			$this->container->set($offset, $value);
+			return;
+		}
 
-        if (is_object($value)) {
-            $this->container->set($offset, $value);
-            return;
-        }
+		if (is_object($value)) {
+			$this->container->set($offset, $value);
+			return;
+		}
 
-        $this->container->setParameter($offset, $value);
-    }
+		$this->container->setParameter($offset, $value);
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function offsetUnset($offset): void
-    {
-        if ($this->container->hasParameter($offset)) {
-            $this->container->setParameter($offset, null);
-        } else if ($this->container->has($offset)) {
-	        $this->container->set($offset, null);
-        }
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function offsetUnset($offset): void
+	{
+		if ($this->container->hasParameter($offset)) {
+			$this->container->setParameter($offset, null);
+		} elseif ($this->container->has($offset)) {
+			$this->container->set($offset, null);
+		}
+	}
 
 }

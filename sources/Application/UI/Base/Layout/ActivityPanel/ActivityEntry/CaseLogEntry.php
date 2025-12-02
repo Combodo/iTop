@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry;
-
 
 use DateTime;
 use utils;
@@ -70,10 +70,10 @@ class CaseLogEntry extends ActivityEntry
 		$this->sAttCode = $sAttCode;
 		$this->SetCaseLogRank(static::DEFAULT_CASELOG_RANK);
 	}
-	
+
 	/*
 	* Set the author and its information based on the $sAuthorLogin using parent call
-    * If no parent call found no matching User, fallback on caselog author name and display it as foreign message 
+	* If no parent call found no matching User, fallback on caselog author name and display it as foreign message
 	*
 	* @param string $sAuthorLogin
 	*
@@ -84,13 +84,13 @@ class CaseLogEntry extends ActivityEntry
 	public function SetAuthor(string $sAuthorLogin)
 	{
 		parent::SetAuthor($sAuthorLogin);
-		
+
 		// If no User was found in parent call
-		if($this->sAuthorLogin === '') {
+		if ($this->sAuthorLogin === '') {
 			// Use caselog user_login info as friendlyname and compute its initials
 			$this->sAuthorFriendlyname = $this->sAuthorName;
 			$this->sAuthorInitials = utils::ToAcronym($this->sAuthorFriendlyname);
-			
+
 			// Reset Picture as we probably have default image
 			$this->sAuthorPictureAbsUrl = null;
 			// Reset bIsFromCurrentUser as UserRights often consider '' login as current user login

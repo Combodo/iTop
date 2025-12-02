@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -29,12 +29,12 @@ use Closure;
 class FileUploadField extends AbstractSimpleField
 {
 	/** @var bool DEFAULT_ALLOW_DELETE */
-	const DEFAULT_ALLOW_DELETE = true;
+	public const DEFAULT_ALLOW_DELETE = true;
 	/**
 	  * @var bool DEFAULT_DISPLAY_OPENED
 	  * @since 3.2.1 N°7534
 	  */
-	const DEFAULT_DISPLAY_OPENED = false;
+	public const DEFAULT_DISPLAY_OPENED = false;
 
 	/** @var string|null $sTransactionId */
 	protected $sTransactionId;
@@ -187,7 +187,7 @@ class FileUploadField extends AbstractSimpleField
 	 */
 	public function SetAllowDelete(bool $bAllowDelete)
 	{
-		$this->bAllowDelete = (boolean) $bAllowDelete;
+		$this->bAllowDelete = (bool) $bAllowDelete;
 		return $this;
 	}
 
@@ -199,7 +199,7 @@ class FileUploadField extends AbstractSimpleField
 	 * @return FileUploadField
 	 * @since 3.2.1 N°7534
 	 */
-	public function SetDisplayOpened(bool $bDisplayOpened) : FileUploadField
+	public function SetDisplayOpened(bool $bDisplayOpened): FileUploadField
 	{
 		$this->bDisplayOpened = $bDisplayOpened;
 
@@ -212,7 +212,7 @@ class FileUploadField extends AbstractSimpleField
 	 * @return boolean
 	 * @since 3.2.1 N°7534
 	 */
-	public function GetDisplayOpened() : bool
+	public function GetDisplayOpened(): bool
 	{
 		return $this->bDisplayOpened;
 	}

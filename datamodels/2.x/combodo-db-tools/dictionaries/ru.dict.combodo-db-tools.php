@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:DBToolsMenu' => 'Инструменты БД',
 	'DBTools:Class' => 'Класс',
 	'DBTools:Title' => 'Инструменты обслуживания базы данных',
@@ -44,17 +45,17 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted~~',
 	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value as `%3$s`.`%1$s`~~',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contain a valid class~~',
-));
+]);
 
 // Database Info
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'DBTools:DatabaseInfo' => 'Информация о базе данных',
 	'DBTools:Base' => 'База',
 	'DBTools:Size' => 'Размер',
-));
+]);
 
 // Lost attachments
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'DBTools:LostAttachments' => 'Потерянные вложения',
 	'DBTools:LostAttachments:Disclaimer' => 'Здесь вы можете найти потерянные или ошибочно перемещённые вложения в вашей базе данных. Это не инструмент восстановления данных, он не восстанавливает удаленные данные.',
 	'DBTools:LostAttachments:Button:Analyze' => 'Анализировать',
@@ -71,5 +72,5 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Результат восстановления:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d вложения были восстановлены.',
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Хранится в качестве "InlineImage"',
-	'DBTools:LostAttachments:History' => 'Вложение "%1$s" восстановлено с помощью инструментов обслуживания БД'
-));
+	'DBTools:LostAttachments:History' => 'Вложение "%1$s" восстановлено с помощью инструментов обслуживания БД',
+]);

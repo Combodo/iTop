@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author LinProfs <info@linprofs.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ChangeManagement' => 'Change Management',
 	'Menu:Change:Overview' => 'Overzicht',
 	'Menu:Change:Overview+' => '',
@@ -35,7 +36,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes per status van de afgelopen 7 dagen',
 	'Tickets:Related:OpenChanges' => 'Open changes',
 	'Tickets:Related:RecentChanges' => 'Recente changes (72u)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -47,12 +48,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Change' => 'Change',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Status',
@@ -127,4 +127,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Ja',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
-));
+]);

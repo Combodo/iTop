@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -20,6 +21,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	// Dictionary entries go here
-));
+]);

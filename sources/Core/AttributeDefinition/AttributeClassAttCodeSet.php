@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -15,9 +16,9 @@ use utils;
 
 class AttributeClassAttCodeSet extends AttributeSet
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
-	const DEFAULT_PARAM_INCLUDE_CHILD_CLASSES_ATTRIBUTES = false;
+	public const DEFAULT_PARAM_INCLUDE_CHILD_CLASSES_ATTRIBUTES = false;
 
 	public function __construct($sCode, array $aParams)
 	{
@@ -27,7 +28,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('class_field', 'attribute_definition_list', 'attribute_definition_exclusion_list'));
+		return array_merge(parent::ListExpectedParams(), ['class_field', 'attribute_definition_list', 'attribute_definition_exclusion_list']);
 	}
 
 	public function GetMaxSize()
@@ -42,7 +43,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 	 * @return array|null
 	 * @throws \CoreException
 	 */
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		if (!isset($aArgs['this'])) {
 			return null;
@@ -53,7 +54,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 		$sRootClass = $oHostObj->Get($sTargetClass);
 		$bIncludeChildClasses = $this->GetOptional('include_child_classes_attributes', static::DEFAULT_PARAM_INCLUDE_CHILD_CLASSES_ATTRIBUTES);
 
-		$aExcludeDefs = array();
+		$aExcludeDefs = [];
 		$sAttDefExclusionList = $this->Get('attribute_definition_exclusion_list');
 		if (!empty($sAttDefExclusionList)) {
 			foreach (explode(',', $sAttDefExclusionList) as $sAttDefName) {
@@ -62,7 +63,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 			}
 		}
 
-		$aAllowedDefs = array();
+		$aAllowedDefs = [];
 		$sAttDefList = $this->Get('attribute_definition_list');
 		if (!empty($sAttDefList)) {
 			foreach (explode(',', $sAttDefList) as $sAttDefName) {
@@ -71,9 +72,9 @@ class AttributeClassAttCodeSet extends AttributeSet
 			}
 		}
 
-		$aAllAttributes = array();
+		$aAllAttributes = [];
 		if (!empty($sRootClass)) {
-			$aClasses = array($sRootClass);
+			$aClasses = [$sRootClass];
 			if ($bIncludeChildClasses === true) {
 				$aClasses = $aClasses + MetaModel::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP);
 			}
@@ -94,9 +95,9 @@ class AttributeClassAttCodeSet extends AttributeSet
 							continue;
 						}
 
-						$aAllAttributes[$sAttCode] = array(
-							'classes' => array($sClass),
-						);
+						$aAllAttributes[$sAttCode] = [
+							'classes' => [$sClass],
+						];
 					} else {
 						$aAllAttributes[$sAttCode]['classes'][] = $sClass;
 					}
@@ -104,7 +105,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 			}
 		}
 
-		$aAllowedAttributes = array();
+		$aAllowedAttributes = [];
 		foreach ($aAllAttributes as $sAttCode => $aAttData) {
 			$iAttClassesCount = count($aAttData['classes']);
 			$sAttFirstClass = $aAttData['classes'][0];
@@ -141,18 +142,18 @@ class AttributeClassAttCodeSet extends AttributeSet
 	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
 		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
-		$aArgs = array();
+		$aArgs = [];
 		if (!empty($oHostObj)) {
 			$aArgs['this'] = $oHostObj;
 		}
 		$aAllowedAttributes = $this->GetAllowedValues($aArgs);
-		$aInvalidAttCodes = array();
+		$aInvalidAttCodes = [];
 		if (is_string($proposedValue) && !empty($proposedValue)) {
 			$aJsonFromWidget = json_decode($proposedValue, true);
 			if (is_null($aJsonFromWidget)) {
 				$proposedValue = trim($proposedValue);
 				$aProposedValues = $this->FromStringToArray($proposedValue);
-				$aValues = array();
+				$aValues = [];
 				foreach ($aProposedValues as $sValue) {
 					$sAttCode = trim($sValue);
 					if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode])) {
@@ -194,7 +195,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 				$sTargetClass = $this->Get('class_field');
 				$sClass = $oHostObject->Get($sTargetClass);
 
-				$aLocalizedValues = array();
+				$aLocalizedValues = [];
 				foreach ($value as $sAttCode) {
 					try {
 						$sAttClass = $sClass;
@@ -209,8 +210,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 
 						$sLabelForHtmlAttribute = utils::HtmlEntities(MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)");
 						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sAttCode.'</span>';
-					}
-					catch (Exception $e) {
+					} catch (Exception $e) {
 						// Ignore bad values
 					}
 				}

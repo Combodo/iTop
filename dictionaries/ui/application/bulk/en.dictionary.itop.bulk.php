@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -17,10 +18,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 
 	// Bulk modify
 	'UI:Bulk:modify:IncompatibleAttribute' => 'This attribute can\'t be edited in bulk context',
 	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Excel security warning',
 	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'Opening a file with untrusted data in Microsoft Excel may lead to formula injection. Ensure that your Excel settings are configured to handle files safely. <a href="%1$s">Learn more in our documentation.</a>',
-));
+]);

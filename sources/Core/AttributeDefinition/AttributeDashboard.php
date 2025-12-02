@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -32,8 +33,10 @@ class AttributeDashboard extends AttributeDefinition
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(),
-			array("definition_file", "is_user_editable"));
+		return array_merge(
+			parent::ListExpectedParams(),
+			["definition_file", "is_user_editable"]
+		);
 	}
 
 	public function GetDashboard()
@@ -67,7 +70,7 @@ class AttributeDashboard extends AttributeDefinition
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()

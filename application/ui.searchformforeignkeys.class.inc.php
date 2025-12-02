@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * Copyright (C) 2010-2024 Combodo SAS
@@ -19,7 +20,6 @@
  *  along with iTop. If not, see <http://www.gnu.org/licenses/>
  *
  */
-
 
 use Combodo\iTop\Application\WebPage\WebPage;
 
@@ -46,8 +46,10 @@ class UISearchFormForeignKeys
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
-		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_iInputId}",
-			array(
+		$oPage->AddUiBlock($oBlock->GetDisplay(
+			$oPage,
+			"SearchFormToAdd_{$this->m_iInputId}",
+			[
 				'menu' => false,
 				'result_list_outer_selector' => "SearchResultsToAdd_{$this->m_iInputId}",
 				'table_id' => "add_{$this->m_iInputId}",
@@ -55,12 +57,14 @@ class UISearchFormForeignKeys
 				'selection_mode' => true,
 				'cssCount' => "#count_{$this->m_iInputId}",
 				'query_params' => $oFilter->GetInternalParams(),
-			)));
+			]
+		));
 		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sCancel = Dict::S('UI:Button:Cancel');
 		$sAdd = Dict::S('UI:Button:Add');
 
-		$oPage->add(<<<HTML
+		$oPage->add(
+			<<<HTML
 <form id="ObjectsAddForm_{$this->m_iInputId}">
     <div id="SearchResultsToAdd_{$this->m_iInputId}" style="vertical-align:top;height:100%;overflow:auto;padding:0;border:0;">
         <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
@@ -101,20 +105,17 @@ $('#dlg_{$this->m_iInputId}').dialog('option', {title:'$sTitle'});
 $('#SearchFormToAdd_{$this->m_iInputId} form').on('submit.uilinksWizard', oForeignKeysWidget{$this->m_iInputId}.SearchObjectsToAdd);
 $('#SearchFormToAdd_{$this->m_iInputId}').on('resize', oForeignKeysWidget{$this->m_iInputId}.UpdateSizes);
 JS
-);
+		);
 	}
 
 	public function GetFullListForeignKeysFromSelection($oPage, $oFullSetFilter)
 	{
-		try
-		{
+		try {
 			$aLinkedObjects = utils::ReadMultipleSelectionWithFriendlyname($oFullSetFilter);
 			$oPage->add(json_encode($aLinkedObjects));
-		}
-		catch (CoreException $e)
-		{
+		} catch (CoreException $e) {
 			http_response_code(500);
-			$oPage->add(json_encode(array('error' => $e->GetMessage())));
+			$oPage->add(json_encode(['error' => $e->GetMessage()]));
 			IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 		}
 	}
@@ -129,20 +130,20 @@ JS
 	 */
 	public function ListResultsSearchForeignKeys(WebPage $oP, $sRemoteClass = '')
 	{
-		if ($sRemoteClass != '')
-		{
+		if ($sRemoteClass != '') {
 			// assert(MetaModel::IsParentClass($this->m_sRemoteClass, $sRemoteClass));
 			$oFilter = new DBObjectSearch($sRemoteClass);
-		}
-		else
-		{
+		} else {
 			// No remote class specified use the one defined in the linkedset
 			$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 		}
 
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oBlock->Display($oP, "ResultsToAdd_{$this->m_iInputId}",
-			array('menu' => false, 'cssCount' => "#count_{$this->m_iInputId}", 'selection_mode' => true, 'table_id' => "add_{$this->m_iInputId}"));
+		$oBlock->Display(
+			$oP,
+			"ResultsToAdd_{$this->m_iInputId}",
+			['menu' => false, 'cssCount' => "#count_{$this->m_iInputId}", 'selection_mode' => true, 'table_id' => "add_{$this->m_iInputId}"]
+		);
 	}
 
 }

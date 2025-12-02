@@ -33,7 +33,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CreateBrickController extends BrickController
 {
-
 	/**
 	 * Constructor.
 	 *
@@ -43,8 +42,7 @@ class CreateBrickController extends BrickController
 	 */
 	public function __construct(
 		protected BrickCollection $oBrickCollection
-	)
-	{
+	) {
 	}
 
 	/**
@@ -60,16 +58,15 @@ class CreateBrickController extends BrickController
 		/** @var \Combodo\iTop\Portal\Brick\CreateBrick $oBrick */
 		$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
 
-		$aRouteParams = array(
+		$aRouteParams = [
 			'sBrickId' => $sBrickId,
 			'sObjectClass' => $oBrick->GetClass(),
 			'ar_token' => null,
-		);
+		];
 
 		// Checking for actions rules
 		$aRules = $oBrick->GetRules();
-		if (!empty($aRules))
-		{
+		if (!empty($aRules)) {
 			$aRouteParams['ar_token'] = ContextManipulatorHelper::PrepareAndEncodeRulesToken($aRules);
 		}
 

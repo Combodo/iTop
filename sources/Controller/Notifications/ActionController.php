@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -19,7 +20,8 @@ use utils;
  * @internal
  * @since 3.2.0 N°5472 creation
  */
-class ActionController extends AbstractController {
+class ActionController extends AbstractController
+{
 	public const ROUTE_NAMESPACE = 'notifications.action';
 
 	/**
@@ -30,7 +32,7 @@ class ActionController extends AbstractController {
 	public function OperationLastExecutionsTab()
 	{
 		$sActionId = utils::ReadParam('action_id', null, false);
-		$sCannotLoadActionErrorMessage = __METHOD__ . ': invalid action_id parameter';
+		$sCannotLoadActionErrorMessage = __METHOD__.': invalid action_id parameter';
 		if (utils::IsNullOrEmptyString($sActionId)) {
 			throw new CoreUnexpectedValue($sCannotLoadActionErrorMessage);
 		}

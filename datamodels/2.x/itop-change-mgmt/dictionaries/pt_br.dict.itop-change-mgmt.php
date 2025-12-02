@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:ChangeManagement' => 'Gerenciamento de mudanças',
 	'Menu:Change:Overview' => 'Visão geral',
 	'Menu:Change:Overview+' => '',
@@ -33,7 +34,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Mudanças por status nos últimos 7 dias',
 	'Tickets:Related:OpenChanges' => 'Mudanças abertas',
 	'Tickets:Related:RecentChanges' => 'Mudanças recentes (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -45,12 +46,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Change' => 'Mudança',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Status',
@@ -125,4 +125,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Sim',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
-));
+]);

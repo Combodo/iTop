@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Kapcsolódás az iTop Hub-ra',
 	'Menu:iTopHub:Register+' => 'Továbblépés az iTop Hub-ra a '.ITOP_APPLICATION_SHORT.' példányának frissítéséhez',
@@ -64,6 +65,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s verzió: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Telepítve',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'A %1$s verzió <b>NINCS</b> telepítve.',
-));
-
-
+]);

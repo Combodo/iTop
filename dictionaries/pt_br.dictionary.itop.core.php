@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Core:DeletedObjectLabel' => '%1s (excluído)',
 	'Core:DeletedObjectTip' => 'O objeto foi excluído em %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'Objeto não encontrado (classe: %1$s, id: %2$d)',
@@ -157,8 +158,7 @@ Operadores:<br/>
 	'Core:Context=GUI:Console' => 'Console',
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal do usuário',
-));
-
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
@@ -169,7 +169,7 @@ Operadores:<br/>
 // Class: CMDBChange
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChange' => 'Alterações no CMDB',
 	'Class:CMDBChange+' => 'Controle de mudanças no CMDB',
 	'Class:CMDBChange/Attribute:date' => 'Data',
@@ -184,13 +184,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP WebServices',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Por uma extensão',
-));
+]);
 
 //
 // Class: CMDBChangeOp
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOp' => 'Operações de alteração',
 	'Class:CMDBChangeOp+' => 'Controle de operações de alteração',
 	'Class:CMDBChangeOp/Attribute:change' => 'Alteração',
@@ -205,51 +205,51 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Tipo',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpCreate
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOpCreate' => 'Criação de objeto',
 	'Class:CMDBChangeOpCreate+' => 'Controle de criação do objeto',
-));
+]);
 
 //
 // Class: CMDBChangeOpDelete
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOpDelete' => 'Exclusão de objeto',
 	'Class:CMDBChangeOpDelete+' => 'Controle de exclusão do objeto',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttribute
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOpSetAttribute' => 'Alteração de propriedades',
 	'Class:CMDBChangeOpSetAttribute+' => 'Controle de alteração de propriedades do objeto',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Atributo',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'Código da propriedade modificada',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeScalar
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'Alteração de propriedades escalares',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Controle de alterações de propriedades escalares do objeto',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Valor anterior',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'Valor anterior do atributo',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Novo valor',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'Novo valor do atributo',
-));
+]);
 // Used by CMDBChangeOp... & derived classes
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Change:ObjectCreated' => 'Objeto criado',
 	'Change:ObjectDeleted' => 'Objeto excluído',
 	'Change:ObjectModified' => 'Objeto modificado',
@@ -266,35 +266,35 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Change:LinkSet:Added' => 'adicionado %1$s',
 	'Change:LinkSet:Removed' => 'excluído %1$s',
 	'Change:LinkSet:Modified' => 'modificado %1$s',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeBlob
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'Alteração de conteúdo (Blob)',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'Controle de alterações de conteúdo de dados (Blob)',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Valor anterior',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'Conteúdo anterior do atributo',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeText
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:CMDBChangeOpSetAttributeText' => 'Alteração de texto',
 	'Class:CMDBChangeOpSetAttributeText+' => 'Controle de alterações de texto do objeto',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Valor anterior',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'Conteúdo anterior do atributo',
-));
+]);
 
 //
 // Class: Event
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Event' => 'Registro de evento',
 	'Class:Event+' => 'Um evento interno da aplicação',
 	'Class:Event/Attribute:message' => 'Mensagem',
@@ -305,13 +305,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Event/Attribute:userinfo+' => 'Identificação do usuário que estava executando a ação que desencadeou este evento',
 	'Class:Event/Attribute:finalclass' => 'Tipo',
 	'Class:Event/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: EventNotification
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventNotification' => 'Notificação de evento',
 	'Class:EventNotification+' => 'Controle de notificações que foram enviadas',
 	'Class:EventNotification/Attribute:trigger_id' => 'Gatilho',
@@ -320,13 +320,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventNotification/Attribute:action_id+' => 'Conta de usuário',
 	'Class:EventNotification/Attribute:object_id' => 'ID do objeto',
 	'Class:EventNotification/Attribute:object_id+' => 'ID do objeto (classe definida pelo gatilho?)',
-));
+]);
 
 //
 // Class: EventNotificationEmail
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventNotificationEmail' => 'Evento de envio de e-mail',
 	'Class:EventNotificationEmail+' => 'Controle de e-mails que foram enviados',
 	'Class:EventNotificationEmail/Attribute:to' => 'Para',
@@ -343,13 +343,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventNotificationEmail/Attribute:body+' => 'Conteúdo do e-mail',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Anexos',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-));
+]);
 
 //
 // Class: EventIssue
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventIssue' => 'Evento de entrega',
 	'Class:EventIssue+' => 'Controle de entrega (aviso, erro, etc.)',
 	'Class:EventIssue/Attribute:issue' => 'Entrega',
@@ -366,13 +366,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Dados',
 	'Class:EventIssue/Attribute:data+' => 'Mais informações',
-));
+]);
 
 //
 // Class: EventWebService
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventWebService' => 'Evento Web service',
 	'Class:EventWebService+' => 'Controle de uma solicitação de WebService',
 	'Class:EventWebService/Attribute:verb' => 'Verb',
@@ -387,9 +387,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventWebService/Attribute:log_error+' => '',
 	'Class:EventWebService/Attribute:data' => 'Dados',
 	'Class:EventWebService/Attribute:data+' => 'Mais informações',
-));
+]);
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventRestService' => 'Chamada REST/JSON',
 	'Class:EventRestService+' => 'Controle de uma chamada de serviço REST/JSON',
 	'Class:EventRestService/Attribute:operation' => 'Operação',
@@ -404,13 +404,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventRestService/Attribute:json_output+' => 'Resposta HTTP (JSON)',
 	'Class:EventRestService/Attribute:provider' => 'Provedor',
 	'Class:EventRestService/Attribute:provider+' => 'Classe PHP implementando a operação esperada',
-));
+]);
 
 //
 // Class: EventLoginUsage
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventLoginUsage' => 'Logins',
 	'Class:EventLoginUsage+' => 'Conexões com a aplicação',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
@@ -419,13 +419,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'E-mail do usuário',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Endereço de e-mail deste usuário',
-));
+]);
 
 //
 // Class: EventNotificationNewsroom
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:EventNotificationNewsroom' => 'News sent~~',
 	'Class:EventNotificationNewsroom+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:title' => 'Title~~',
@@ -454,13 +454,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Action' => 'Ação personalizada',
 	'Class:Action+' => 'Ações definidas pelo usuário',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
@@ -490,22 +490,22 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)~~',
 	'Action:last_executions_tab_limit_days' => 'past %1$s days~~',
 	'Action:last_executions_tab_limit_none' => 'no limit~~',
-));
+]);
 
 //
 // Class: ActionNotification
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ActionNotification' => 'Notificação',
 	'Class:ActionNotification+' => 'Notificação (resumo)',
-));
+]);
 
 //
 // Class: ActionEmail
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ActionEmail' => 'Notificação via E-mail',
 	'Class:ActionEmail+' => 'Lista de Notificações via E-mail',
 	'Class:ActionEmail/Attribute:status+' => 'Esse status especifica quem será notificado: apenas o destinatário do Teste, todos (Para, CC e CCO) ou ninguém',
@@ -556,14 +556,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
 	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
 	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
-));
-
+]);
 
 //
 // Class: ActionNewsroom
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'ActionNewsroom:trigger' => 'Trigger~~',
 	'ActionNewsroom:content' => 'Message~~',
 	'ActionNewsroom:settings' => 'Settings~~',
@@ -598,13 +597,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects~~',
 	'Class:ActionNewsroom/Attribute:url' => 'URL~~',
 	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
-));
+]);
 
 //
 // Class: Trigger
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Trigger' => 'Gatilho',
 	'Class:Trigger+' => 'Manipulador de eventos personalizado',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
@@ -623,13 +622,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription~~',
-));
+]);
 
 //
 // Class: TriggerOnObject
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnObject' => 'Gatilho (classe dependente)',
 	'Class:TriggerOnObject+' => 'Gatilho em uma determinada classe de objetos',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe alvo',
@@ -638,115 +637,115 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TriggerOnObject/Attribute:filter+' => 'Limita a lista de objetos (da classe de destino) que irá ativar o gatilho',
 	'TriggerOnObject:WrongFilterQuery' => 'Consulta de filtro incorreta: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'A consulta de filtro deve retornar objetos da classe \\"%1$s\\"',
-));
+]);
 
 //
 // Class: TriggerOnPortalUpdate
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnPortalUpdate' => 'Gatilho (quando atualizado a partir do portal do usuário)',
 	'Class:TriggerOnPortalUpdate+' => 'Gatilho acionado a partir de uma atualização do usuário final através do portal do usuário',
-));
+]);
 
 //
 // Class: TriggerOnStateChange
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnStateChange' => 'Gatilho (na mudança de status)',
 	'Class:TriggerOnStateChange+' => 'Gatilho de mudança de status do objeto',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Status',
 	'Class:TriggerOnStateChange/Attribute:state+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateEnter
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnStateEnter' => 'Gatilho (ao entrar em um status)',
 	'Class:TriggerOnStateEnter+' => 'Gatilho de mudança de status do objeto - entrada',
-));
+]);
 
 //
 // Class: TriggerOnStateLeave
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnStateLeave' => 'Gatilho (ao sair de um status)',
 	'Class:TriggerOnStateLeave+' => 'Gatilho de mudança de status do objeto - saída',
-));
+]);
 
 //
 // Class: TriggerOnObjectCreate
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnObjectCreate' => 'Gatilho (na criação do objeto)',
 	'Class:TriggerOnObjectCreate+' => 'Gatilho de criação de objeto de [uma classe filha] de determinada classe',
-));
+]);
 
 //
 // Class: TriggerOnObjectDelete
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnObjectDelete' => 'Gatilho (na exclusão de objetos)',
 	'Class:TriggerOnObjectDelete+' => 'Gatilho na exclusão de objeto de [uma classe filha] de determinada classe',
-));
+]);
 
 //
 // Class: TriggerOnObjectUpdate
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnObjectUpdate' => 'Gatilho (na atualização do objeto)',
 	'Class:TriggerOnObjectUpdate+' => 'Gatilho na atualização de objeto de [uma classe filha] de uma determinada classe',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Campos de destino',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectMention
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnObjectMention' => 'Gatilho (na menção do objeto)',
 	'Class:TriggerOnObjectMention+' => 'Gatilho em menção (@xxx) de um objeto de [uma classe filha] de uma determinada classe em um atributo de log',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filtro de menções',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limita a lista de objetos mencionados que ativarão o gatilho. Se vazio, qualquer objeto mencionado (de qualquer classe) irá ativá-lo',
-));
+]);
 
 //
 // Class: TriggerOnAttributeBlobDownload
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
-));
+]);
 
 //
 // Class: TriggerOnThresholdReached
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnThresholdReached' => 'Gatilho (no alcance do limite)',
 	'Class:TriggerOnThresholdReached+' => 'Gatilho no alcance do limite do cronômetro',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Cronômetro',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Limite',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-));
+]);
 
 //
 // Class: lnkTriggerAction
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkTriggerAction' => 'Ação/Gatilho',
 	'Class:lnkTriggerAction+' => 'Relação entre Gatilho / Ação',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Ação',
@@ -759,12 +758,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
 	'Class:lnkTriggerAction/Attribute:order' => 'Ordem',
 	'Class:lnkTriggerAction/Attribute:order+' => 'Ordem de execução das ações',
-));
+]);
 
 //
 // Synchro Data Source
 //
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:SynchroDataSource' => 'Fonte de Sincronização de Dados',
 	'Class:SynchroDataSource/Attribute:name' => 'Nome',
 	'Class:SynchroDataSource/Attribute:name+' => '',
@@ -1053,13 +1052,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:Validator:MustSelectOne' => 'Por favor, selecione um',
 	'INTERNAL:JQuery-DatePicker:LangCode' => 'pt-BR',
 	'Menu:DataSources' => 'Fontes de Sincronização de Dados',
-	'Menu:DataSources+' => 'Lista de Fontes de Sincronização de Dados'
-));
+	'Menu:DataSources+' => 'Lista de Fontes de Sincronização de Dados',
+]);
 
 //
 // Class: TagSetFieldData
 //
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TagSetFieldData' => '%2$s para classe %1$s',
 	'Class:TagSetFieldData+' => '',
 	'Class:TagSetFieldData/Attribute:code' => 'Código',
@@ -1081,12 +1080,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags de "Código do atributo" não podem ser alteradas',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Uso de tags (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Nenhuma entrada encontrada para esta tag',
-));
+]);
 
 //
 // Class: DBProperty
 //
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:DBProperty' => 'Propriedades do DB',
 	'Class:DBProperty+' => '',
 	'Class:DBProperty/Attribute:name' => 'Nome',
@@ -1099,12 +1098,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => 'Editar comentário',
 	'Class:DBProperty/Attribute:change_comment+' => '',
-));
+]);
 
 //
 // Class: BackgroundTask
 //
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:BackgroundTask' => 'Tarefas de fundo',
 	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Nome da classe',
@@ -1129,12 +1128,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => 'Status',
 	'Class:BackgroundTask/Attribute:status+' => '',
-));
+]);
 
 //
 // Class: AsyncTask
 //
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:AsyncTask' => 'Tarefa assíncrona',
 	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Criada',
@@ -1159,47 +1158,44 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Formato inválido para a configuração de "async_task_retries[%1$s]". Esperando um array com as seguintes chaves: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Formato inválido para a configuração de "async_task_retries[%1$s]": chave inesperada "%2$s". Esperando somente as seguintes chaves: %3$s',
-));
+]);
 
 //
 // Class: AbstractResource
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:AbstractResource' => 'Recurso Abstrato',
 	'Class:AbstractResource+' => '',
-));
+]);
 
 //
 // Class: ResourceAdminMenu
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ResourceAdminMenu' => 'Recurso Menu de Administração',
 	'Class:ResourceAdminMenu+' => '',
-));
+]);
 
 //
 // Class: ResourceRunQueriesMenu
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ResourceRunQueriesMenu' => 'Recurso Livro de Consultas',
 	'Class:ResourceRunQueriesMenu+' => '',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ResourceSystemMenu' => 'Recurso Menu do Sistema',
 	'Class:ResourceSystemMenu+' => '',
-    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
-    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
 	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
-));
-
-
-
+]);

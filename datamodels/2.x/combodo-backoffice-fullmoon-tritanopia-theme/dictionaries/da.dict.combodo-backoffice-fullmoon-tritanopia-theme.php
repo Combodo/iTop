@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,6 +22,6 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'theme:fullmoon-tritanopia' => 'Fullmoon (Tritanopia)~~',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -18,7 +19,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 {
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("allowed_values", "depends_on", "sql"));
+		return array_merge(parent::ListExpectedParams(), ["allowed_values", "depends_on", "sql"]);
 	}
 
 	// To be overriden, used in GetSQLColumns
@@ -100,7 +101,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		$aColumns = array();
+		$aColumns = [];
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $this->Get("sql");
 
@@ -116,7 +117,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function GetSQLValues($value)
 	{
-		$aValues = array();
+		$aValues = [];
 		$aValues[$this->Get("sql")] = $this->ScalarToSQL($value);
 
 		return $aValues;
@@ -124,7 +125,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->Get("sql")] = $this->GetSQLCol($bFullSpec);
 
 		return $aColumns;
@@ -132,7 +133,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function GetBasicFilterOperators()
 	{
-		return array("=" => "equals", "!=" => "differs from");
+		return ["=" => "equals", "!=" => "differs from"];
 	}
 
 	public function GetBasicFilterLooseOperator()

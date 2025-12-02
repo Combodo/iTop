@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -34,14 +35,10 @@ require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
 function IsIdField($sClassName, $sFieldCode)
 {
 	$bResult = false;
-	if (!empty($sFieldCode))
-	{
-		if ($sFieldCode == 'id')
-		{
+	if (!empty($sFieldCode)) {
+		if ($sFieldCode == 'id') {
 			$bResult = true;
-		}
-		else if (strpos($sFieldCode, '->') === false)
-		{
+		} elseif (strpos($sFieldCode, '->') === false) {
 			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sFieldCode);
 			$bResult = $oAttDef->IsExternalKey();
 		}
@@ -61,26 +58,22 @@ function IsIdField($sClassName, $sFieldCode)
  */
 function GetMappingsForExtKey($sAttCode, AttributeDefinition $oExtKeyAttDef, $bAdvanced)
 {
-	$aResult = array();
+	$aResult = [];
 	$sTargetClass = $oExtKeyAttDef->GetTargetClass();
-	foreach(MetaModel::ListAttributeDefs($sTargetClass) as $sTargetAttCode => $oTargetAttDef)
-	{
-		if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode))
-		{
+	foreach (MetaModel::ListAttributeDefs($sTargetClass) as $sTargetAttCode => $oTargetAttDef) {
+		if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode)) {
 			$bExtKey = $oTargetAttDef->IsExternalKey();
 			$sSuffix = '';
-			if ($bExtKey)
-			{
+			if ($bExtKey) {
 				$sSuffix = '->id';
 			}
-			if ($bAdvanced || !$bExtKey)
-			{
+			if ($bAdvanced || !$bExtKey) {
 				// When not in advanced mode do not allow to use reconciliation keys (on external keys) if they are themselves external keys !
 				$aResult[$sAttCode.'->'.$sTargetAttCode] = $oExtKeyAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel().$sSuffix;
 			}
 		}
 	}
-	return $aResult;	
+	return $aResult;
 }
 
 /**
@@ -102,15 +95,15 @@ function GetMappingsForExtKey($sAttCode, AttributeDefinition $oExtKeyAttDef, $bA
  */
 function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMode, $sDefaultChoice)
 {
-	$aChoices = array('' => Dict::S('UI:CSVImport:MappingSelectOne'));
+	$aChoices = ['' => Dict::S('UI:CSVImport:MappingSelectOne')];
 	$aChoices[':none:'] = Dict::S('UI:CSVImport:MappingNotApplicable');
 	$sFieldCode = ''; // Code of the attribute, if there is a match
-	$aMatches = array();
+	$aMatches = [];
 	if (preg_match('/^(.+)\*$/', $sFieldName, $aMatches)) {
 		// Remove any trailing "star" character.
 		// A star character at the end can be used to indicate a mandatory field
 		$sFieldName = $aMatches[1];
-	} else if (preg_match('/^(.+)\*->(.+)$/', $sFieldName, $aMatches)) {
+	} elseif (preg_match('/^(.+)\*->(.+)$/', $sFieldName, $aMatches)) {
 		// Remove any trailing "star" character before the arrow (->)
 		// A star character at the end can be used to indicate a mandatory field
 		$sFieldName = $aMatches[1].'->'.$aMatches[2];
@@ -135,7 +128,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 				// Note: Could not use "MetaModel::GetFriendlyNameAttributeCode($sTargetClass) === $sTargetAttCode" as it would return empty because the friendlyname is composite.
 				if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode) || ($oTargetAttDef instanceof AttributeFriendlyName)) {
 					$bExtKey = $oTargetAttDef->IsExternalKey();
-					$aSignatures = array();
+					$aSignatures = [];
 					$aSignatures[] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
 					$aSignatures[] = $sAttCode.'->'.$sTargetAttCode;
 					if ($bExtKey) {
@@ -154,8 +147,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 					}
 				}
 			}
-		}
-		else if (
+		} elseif (
 			($oAttDef->IsWritable() && (!$oAttDef->IsLinkset() || ($bAdvancedMode && $oAttDef->IsIndirect())))
 			|| ($oAttDef instanceof AttributeFriendlyName)
 		) {
@@ -171,18 +163,17 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 	$bIsIdField = IsIdField($sClassName, $sFieldCode);
 	foreach ($aChoices as $sAttCode => $sLabel) {
 		$bSelected = false;
-		if ($bIsIdField && (!$bAdvancedMode)) // When not in advanced mode, ID are mapped to n/a
-		{
+		if ($bIsIdField && (!$bAdvancedMode)) { // When not in advanced mode, ID are mapped to n/a
 			if ($sAttCode == ':none:') {
 				$bSelected = true;
 			}
-		} else if (empty($sFieldCode) && (strpos($sFieldName, '->') !== false)) {
+		} elseif (empty($sFieldCode) && (strpos($sFieldName, '->') !== false)) {
 			if ($sAttCode == ':none:') {
 				$bSelected = true;
 			}
-		} else if (is_null($sDefaultChoice) && ($sFieldCode == $sAttCode)) {
+		} elseif (is_null($sDefaultChoice) && ($sFieldCode == $sAttCode)) {
 			$bSelected = true;
-		} else if (!is_null($sDefaultChoice) && ($sDefaultChoice == $sAttCode)) {
+		} elseif (!is_null($sDefaultChoice) && ($sDefaultChoice == $sAttCode)) {
 			$bSelected = true;
 		}
 		$oOption = SelectOptionUIBlockFactory::MakeForSelectOption($sAttCode, $sLabel, $bSelected);
@@ -192,19 +183,16 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 	return $oSelect;
 }
 
-try
-{
+try {
 	require_once(APPROOT.'/application/startup.inc.php');
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-
 	$sOperation = utils::ReadParam('operation', '');
 
-	switch($sOperation)
-	{
+	switch ($sOperation) {
 		case 'parser_preview':
 			$oPage = new AjaxPage("");
 			$oPage->SetContentType('text/html');
@@ -245,7 +233,7 @@ try
 						$aColumns[] = '';
 
 						// first line as header
-						if($bFirstLineAsHeader){
+						if ($bFirstLineAsHeader) {
 							foreach ($aRow as $sCell) {
 								$aColumns[] = ["label" => utils::EscapeHtml($sCell)];
 							}
@@ -254,7 +242,7 @@ try
 
 						// default headers
 						for ($iDataColumnNumber = 0 ; $iDataColumnNumber < count($aRow) ; $iDataColumnNumber++) {
-							$aColumns[] = ["label" => Dict::Format('UI:CSVImport:Column', $iDataColumnNumber+1)];
+							$aColumns[] = ["label" => Dict::Format('UI:CSVImport:Column', $iDataColumnNumber + 1)];
 						}
 
 					}
@@ -289,8 +277,8 @@ try
 
 			$sInitFieldMapping = utils::ReadParam('init_field_mapping', '', false, 'raw_data');
 			$sInitSearchField = utils::ReadParam('init_search_field', '', false, 'raw_data');
-			$aInitFieldMapping = empty($sInitFieldMapping) ? array() : json_decode($sInitFieldMapping, true);
-			$aInitSearchField = empty($sInitSearchField) ? array() : json_decode($sInitSearchField, true);
+			$aInitFieldMapping = empty($sInitFieldMapping) ? [] : json_decode($sInitFieldMapping, true);
+			$aInitSearchField = empty($sInitSearchField) ? [] : json_decode($sInitSearchField, true);
 
 			$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop'));
 			$aData = $oCSVParser->ToArray($iLinesToSkip, null, 3 /* Max: 1 header line + 2 lines of sample data */);
@@ -349,7 +337,7 @@ try
 					// Propose a reconciliation scheme
 					//
 					$aReconciliationKeys = MetaModel::GetReconcKeys($sClassName);
-					$aMoreReconciliationKeys = array(); // Store: key => void to automatically remove duplicates
+					$aMoreReconciliationKeys = []; // Store: key => void to automatically remove duplicates
 					foreach ($aReconciliationKeys as $sAttCode) {
 						if (!MetaModel::IsValidAttCode($sClassName, $sAttCode)) {
 							continue;
@@ -371,7 +359,7 @@ try
 				} else {
 					// The reconciliation scheme is given (navigating back in the wizard)
 					//
-					$aDefaultKeys = array();
+					$aDefaultKeys = [];
 					foreach ($aInitSearchField as $iSearchField => $void) {
 						$sAttCodeEx = $aInitFieldMapping[$iSearchField];
 						$aDefaultKeys[] = $sAttCodeEx;
@@ -380,7 +368,7 @@ try
 				}
 
 				// Read only attributes (will be forced to "search")
-				$aReadOnlyKeys = array();
+				$aReadOnlyKeys = [];
 				foreach (MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef) {
 					if (!$oAttDef->IsWritable()) {
 						$aReadOnlyKeys[] = $sAttCode;
@@ -397,7 +385,7 @@ try
 EOF
 				);
 			}
-		break;
+			break;
 
 		case 'get_csv_template':
 			$sClassName = utils::ReadParam('class_name');
@@ -406,7 +394,7 @@ EOF
 				$oSearch = new DBObjectSearch($sClassName);
 				$oSearch->AddCondition('id', 0, '='); // Make sure we create an empty set
 				$oSet = new CMDBObjectSet($oSearch);
-				$sResult = cmdbAbstractObject::GetSetAsCSV($oSet, array('showMandatoryFields' => true));
+				$sResult = cmdbAbstractObject::GetSetAsCSV($oSet, ['showMandatoryFields' => true]);
 
 				$sClassDisplayName = MetaModel::GetName($sClassName);
 				$sDisposition = utils::ReadParam('disposition', 'inline');
@@ -419,8 +407,8 @@ EOF
 							require_once(APPROOT.'/application/excelexporter.class.inc.php');
 							$writer = new XLSXWriter();
 							$writer->setAuthor(UserRights::GetUserFriendlyName());
-							$aHeaders = array(0 => explode(',', $sResult)); // comma is the default separator
-							$writer->writeSheet($aHeaders, $sClassDisplayName, array());
+							$aHeaders = [0 => explode(',', $sResult)]; // comma is the default separator
+							$writer->writeSheet($aHeaders, $sClassDisplayName, []);
 							$oPage->add($writer->writeToString());
 							break;
 
@@ -446,9 +434,6 @@ EOF
 			break;
 	}
 	$oPage->output();
-}
-catch (Exception $e)
-{
+} catch (Exception $e) {
 	IssueLog::Error($e->getMessage());
 }
-

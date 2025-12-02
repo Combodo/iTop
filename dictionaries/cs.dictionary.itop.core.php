@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Core:DeletedObjectLabel' => '%1s (odstraněn)',
 	'Core:DeletedObjectTip' => 'Objekt byl odstraněn %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'Objekt nenalezen (třída: %1$s, id: %2$d)',
@@ -159,8 +160,7 @@ Operátory:<br/>
 	'Core:Context=GUI:Console' => 'Konzole',
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
-));
-
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
@@ -171,7 +171,7 @@ Operátory:<br/>
 // Class: CMDBChange
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:CMDBChange' => 'Změna',
 	'Class:CMDBChange+' => 'Trasování změn',
 	'Class:CMDBChange/Attribute:date' => 'datum',
@@ -186,13 +186,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'Webové služby REST/JSON',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'Wbové služby SOAP',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Rozšíření',
-));
+]);
 
 //
 // Class: CMDBChangeOp
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:CMDBChangeOp' => 'Změna operace',
 	'Class:CMDBChangeOp+' => 'Tracking provozu změn',
 	'Class:CMDBChangeOp/Attribute:change' => 'změna',
@@ -207,51 +207,51 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'typ',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpCreate
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:CMDBChangeOpCreate' => 'vytvoření objektu',
 	'Class:CMDBChangeOpCreate+' => 'Tracking vytvoření objektu',
-));
+]);
 
 //
 // Class: CMDBChangeOpDelete
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:CMDBChangeOpDelete' => 'odstranění objektu',
 	'Class:CMDBChangeOpDelete+' => 'Tracking odstranění objektu',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttribute
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:CMDBChangeOpSetAttribute' => 'změna objektu',
 	'Class:CMDBChangeOpSetAttribute+' => 'Tracking úprav objektu',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Atribut',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'kód upravené vlastnosti',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeScalar
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'změna vlastnosti objektu',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Záznam změny objektu',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Předchozí hodnota',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Nová hodnota',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '',
-));
+]);
 // Used by CMDBChangeOp... & derived classes
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Change:ObjectCreated' => 'Objekt vytvořen',
 	'Change:ObjectDeleted' => 'Objekt odstraněn',
 	'Change:ObjectModified' => 'Objekt upraven',
@@ -268,35 +268,35 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Change:LinkSet:Added' => 'přidán %1$s',
 	'Change:LinkSet:Removed' => 'odstraněn %1$s',
 	'Change:LinkSet:Modified' => 'upraven %1$s',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeBlob
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'změna dat',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'Tracking změny dat',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Předchozí data',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeText
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:CMDBChangeOpSetAttributeText' => 'změna textu',
 	'Class:CMDBChangeOpSetAttributeText+' => 'Tracking změny textu',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Předchozí data',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => '',
-));
+]);
 
 //
 // Class: Event
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Event' => 'Událost',
 	'Class:Event+' => '',
 	'Class:Event/Attribute:message' => 'Zpráva',
@@ -307,13 +307,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Event/Attribute:userinfo+' => 'identifikace uživatele, který spustil tuto událost',
 	'Class:Event/Attribute:finalclass' => 'Typ',
 	'Class:Event/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: EventNotification
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:EventNotification' => 'Upozornění',
 	'Class:EventNotification+' => '',
 	'Class:EventNotification/Attribute:trigger_id' => 'Triger',
@@ -322,13 +322,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:EventNotification/Attribute:action_id+' => '',
 	'Class:EventNotification/Attribute:object_id' => 'Objekt',
 	'Class:EventNotification/Attribute:object_id+' => '',
-));
+]);
 
 //
 // Class: EventNotificationEmail
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:EventNotificationEmail' => 'Odeslání emailu',
 	'Class:EventNotificationEmail+' => '',
 	'Class:EventNotificationEmail/Attribute:to' => 'Pro',
@@ -345,13 +345,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Přílohy',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-));
+]);
 
 //
 // Class: EventIssue
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:EventIssue' => 'Chyba',
 	'Class:EventIssue+' => '',
 	'Class:EventIssue/Attribute:issue' => 'Chyba',
@@ -368,13 +368,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Data',
 	'Class:EventIssue/Attribute:data+' => '',
-));
+]);
 
 //
 // Class: EventWebService
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:EventWebService' => 'Volání webové služby',
 	'Class:EventWebService+' => '',
 	'Class:EventWebService/Attribute:verb' => 'Název operace',
@@ -389,9 +389,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:EventWebService/Attribute:log_error+' => '',
 	'Class:EventWebService/Attribute:data' => 'Data',
 	'Class:EventWebService/Attribute:data+' => '',
-));
+]);
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:EventRestService' => 'Volání REST/JSON',
 	'Class:EventRestService+' => 'Stopa REST/JSON volání',
 	'Class:EventRestService/Attribute:operation' => 'Operace',
@@ -406,13 +406,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)',
 	'Class:EventRestService/Attribute:provider' => 'Poskytovatel',
 	'Class:EventRestService/Attribute:provider+' => 'Třída PHP implementující očekávanou operaci',
-));
+]);
 
 //
 // Class: EventLoginUsage
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:EventLoginUsage' => 'Použití aplikace',
 	'Class:EventLoginUsage+' => '',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
@@ -421,13 +421,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:EventLoginUsage/Attribute:contact_name+' => 'Kontaktní informace uživatele',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'Emailová adresa uživatele',
 	'Class:EventLoginUsage/Attribute:contact_email+' => '',
-));
+]);
 
 //
 // Class: EventNotificationNewsroom
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:EventNotificationNewsroom' => 'Zaslané novinky',
 	'Class:EventNotificationNewsroom+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:title' => 'Titulek',
@@ -456,13 +456,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Kontakt',
 	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Action' => 'Vlastní akce',
 	'Class:Action+' => '',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s',
@@ -492,22 +492,22 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Action:last_executions_tab_panel_title' => 'Provedení této akce (%1$s)',
 	'Action:last_executions_tab_limit_days' => 'posledních %1$s dní',
 	'Action:last_executions_tab_limit_none' => 'bez omezení',
-));
+]);
 
 //
 // Class: ActionNotification
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ActionNotification' => 'Upozornění',
 	'Class:ActionNotification+' => 'Upozornění (abstraktní)',
-));
+]);
 
 //
 // Class: ActionEmail
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ActionEmail' => 'Emailové upozornění',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'Tento stav určuje, kdo bude upozorněn: 
@@ -562,14 +562,13 @@ If omitted the From (label) is used.',
 	'ActionEmail:preview_warning' => 'Finální podoba emailu může vypadat v emailovém klientu jinak, než tento aktuální náhled v prohlížeci',
 	'ActionEmail:preview_more_info' => 'Další informace ohledně podpory CSS v emailových klientech, se dozvíte zde %1$s',
 	'ActionEmail:content_placeholder_missing' => 'Odkaz "%1$s" nebyl v HMTL šabloně nalezen. Obsah pole "%2$s" nebude součástí generovaného emailu',
-));
-
+]);
 
 //
 // Class: ActionNewsroom
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'ActionNewsroom:trigger' => 'Triger',
 	'ActionNewsroom:content' => 'Zpráva',
 	'ActionNewsroom:settings' => 'Nastavení',
@@ -604,13 +603,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ActionNewsroom/Attribute:recipients+' => 'Dotaz OQL vracející objekty Kontaktu',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
 	'Class:ActionNewsroom/Attribute:url+' => 'Pokud je URL prázdná, bude odkazovat na objekt, který upozornění spustil. Můžete však zadat vlastní URL adresu.',
-));
+]);
 
 //
 // Class: Trigger
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Trigger' => 'Triger',
 	'Class:Trigger+' => '',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
@@ -629,13 +628,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Povolit úplné odhlášení odběru',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Vynucení alespoň jednoho kanálu (Novinka nebo Email)',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Zakázat odmítnutí odběru',
-));
+]);
 
 //
 // Class: TriggerOnObject
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnObject' => 'Triger \'závislý na třídě objektů\'',
 	'Class:TriggerOnObject+' => '',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Cílová třída',
@@ -644,115 +643,115 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:TriggerOnObject/Attribute:filter+' => 'Omezit seznam objektů (cílové třídy), které aktivují triger',
 	'TriggerOnObject:WrongFilterQuery' => 'Špatný filtrační dotaz: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Filtrační dotaz musí vrátit objekty třídy "%1$s"',
-));
+]);
 
 //
 // Class: TriggerOnPortalUpdate
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnPortalUpdate' => 'Triger \'aktualizace přes portál\'',
 	'Class:TriggerOnPortalUpdate+' => 'Triger při aktualizaci koncovým uživatelem přes portál',
-));
+]);
 
 //
 // Class: TriggerOnStateChange
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnStateChange' => 'Triger \'změna stavu\'',
 	'Class:TriggerOnStateChange+' => '',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Stav',
 	'Class:TriggerOnStateChange/Attribute:state+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateEnter
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnStateEnter' => 'Triger \'změna stavu na\'',
 	'Class:TriggerOnStateEnter+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateLeave
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnStateLeave' => 'Triger \'změna stavu z\'',
 	'Class:TriggerOnStateLeave+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectCreate
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnObjectCreate' => 'Triger \'vytvoření objektu\'',
 	'Class:TriggerOnObjectCreate+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectDelete
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnObjectDelete' => 'Triger \'smazání objektu\'',
 	'Class:TriggerOnObjectDelete+' => 'Spustit při smazání objektu [podřízené třídy] dané třídy',
-));
+]);
 
 //
 // Class: TriggerOnObjectUpdate
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnObjectUpdate' => 'Triger \'aktualizace objektu\'',
 	'Class:TriggerOnObjectUpdate+' => 'Spustit při aktualizaci objektu [podřízené třídy] dané třídy',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Cílová pole',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectMention
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnObjectMention' => 'Triger (při zmíňce objektu)',
 	'Class:TriggerOnObjectMention+' => 'Spustit při zmínce (@xxx) o objektu [podřízené třídy] dané třídy v logu atributu',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filtr zmínek',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Omezit seznam zmíněných objektů, které aktivují triger. Pokud je prázdný, aktivuje jej libovolný zmíněný objekt (libovolné třídy).',
-));
+]);
 
 //
 // Class: TriggerOnAttributeBlobDownload
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Triger (při stažení pole dokumentu objektu)',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Spustit při stažení pole dokumentu objektu [podřízené třídy] dané třídy',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Cílová pole',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnThresholdReached
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnThresholdReached' => 'Triger \'prahová hodnota\'',
 	'Class:TriggerOnThresholdReached+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stopky',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Prahová hodnota',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-));
+]);
 
 //
 // Class: lnkTriggerAction
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkTriggerAction' => 'Spojení (Akce / Triger)',
 	'Class:lnkTriggerAction+' => '',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Akce',
@@ -765,12 +764,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
 	'Class:lnkTriggerAction/Attribute:order' => 'Pořadí',
 	'Class:lnkTriggerAction/Attribute:order+' => 'Pořadí, v jakém jsou akce vykonány',
-));
+]);
 
 //
 // Synchro Data Source
 //
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:SynchroDataSource' => 'Zdroje dat pro synchronizaci',
 	'Class:SynchroDataSource/Attribute:name' => 'Název',
 	'Class:SynchroDataSource/Attribute:name+' => '',
@@ -1058,13 +1057,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Core:Validator:MustBeInteger' => 'Musí být celé číslo',
 	'Core:Validator:MustSelectOne' => 'Zvolte prosím jednu hodnotu',
 	'Menu:DataSources' => 'Zdroje dat pro synchronizaci',
-	'Menu:DataSources+' => 'Všechny zdroje dat pro synchronizaci'
-));
+	'Menu:DataSources+' => 'Všechny zdroje dat pro synchronizaci',
+]);
 
 //
 // Class: TagSetFieldData
 //
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TagSetFieldData' => '%2$s pro třídu %1$s',
 	'Class:TagSetFieldData+' => '',
 	'Class:TagSetFieldData/Attribute:code' => 'Kód',
@@ -1086,12 +1085,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Atribut kód u Tagu nemůže být změněn',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Použití Tagu (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Pro Tag nebyl nalezen žádný vstup',
-));
+]);
 
 //
 // Class: DBProperty
 //
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:DBProperty' => 'Nastavení DB',
 	'Class:DBProperty+' => '',
 	'Class:DBProperty/Attribute:name' => 'Jméno',
@@ -1104,12 +1103,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => 'Změna komentáře',
 	'Class:DBProperty/Attribute:change_comment+' => '',
-));
+]);
 
 //
 // Class: BackgroundTask
 //
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:BackgroundTask' => 'Úkoly běžící na pozadí',
 	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Jméno třídy',
@@ -1134,12 +1133,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => 'Status',
 	'Class:BackgroundTask/Attribute:status+' => '',
-));
+]);
 
 //
 // Class: AsyncTask
 //
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:AsyncTask' => 'Asynchronní úkoly',
 	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Vytvořeno',
@@ -1164,47 +1163,44 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Špatný formát pro nastavení "async_task_retries[%1$s]". Je očekáváno pole obsahující následující klíče: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Špatný formát pro nastavení "async_task_retries[%1$s]": neočekávaný klíč "%2$s". Je očekáván jeden z následujících klíčů: %3$s',
-));
+]);
 
 //
 // Class: AbstractResource
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:AbstractResource' => 'Abstraktní zdroj',
 	'Class:AbstractResource+' => '',
-));
+]);
 
 //
 // Class: ResourceAdminMenu
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
 	'Class:ResourceAdminMenu+' => '',
-));
+]);
 
 //
 // Class: ResourceRunQueriesMenu
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '',
-    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
-    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
 	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
-));
-
-
-
+]);

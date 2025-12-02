@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -19,7 +20,7 @@ use utils;
  */
 class AttributeOneWayPassword extends AttributeDefinition implements iAttributeNoGroupBy
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -40,7 +41,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("depends_on"));
+		return array_merge(parent::ListExpectedParams(), ["depends_on"]);
 	}
 
 	public function GetEditClass()
@@ -92,7 +93,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 		if ($sPrefix == '') {
 			$sPrefix = $this->GetCode(); // Warning: AttributeOneWayPassword does not have any sql property so code = sql !
 		}
-		$aColumns = array();
+		$aColumns = [];
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $sPrefix.'_hash';
 		$aColumns['_salt'] = $sPrefix.'_salt';
@@ -128,11 +129,11 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 		//	 We will have to remove the blobs from the list of attributes when doing the select
 		//	 then the use of Get() should finalize the load
 		if ($value instanceof ormPassword) {
-			$aValues = array();
+			$aValues = [];
 			$aValues[$this->GetCode().'_hash'] = $value->GetHash();
 			$aValues[$this->GetCode().'_salt'] = $value->GetSalt();
 		} else {
-			$aValues = array();
+			$aValues = [];
 			$aValues[$this->GetCode().'_hash'] = '';
 			$aValues[$this->GetCode().'_salt'] = '';
 		}
@@ -142,7 +143,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode().'_hash'] = 'TINYBLOB';
 		$aColumns[$this->GetCode().'_salt'] = 'TINYBLOB';
 
@@ -151,7 +152,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 
 	public function GetImportColumns()
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode()] = 'TINYTEXT'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
@@ -173,7 +174,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -196,10 +197,13 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		return ''; // Not exportable in CSV
 	}
 

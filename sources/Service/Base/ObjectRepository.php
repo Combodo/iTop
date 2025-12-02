@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -62,8 +63,7 @@ class ObjectRepository
 			}
 
 			return $aResult;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 
 			ExceptionLog::LogException($e);
 
@@ -103,8 +103,7 @@ class ObjectRepository
 
 			// return object array
 			return ObjectRepository::DBSetToObjectArray($oDbObjectSet, $sObjectClass, $aFieldsToLoad);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 
 			ExceptionLog::LogException($e);
 
@@ -234,11 +233,10 @@ class ObjectRepository
 			}
 
 			// Link
-			$aData['link'] = utils::GetAbsoluteUrlAppRoot() . "pages/UI.php?operation=details&class=$sClass&id={$oDbObject->GetKey()}";
+			$aData['link'] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=details&class=$sClass&id={$oDbObject->GetKey()}";
 
 			return $aData;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 
 			ExceptionLog::LogException($e);
 
@@ -263,8 +261,7 @@ class ObjectRepository
 			}
 
 			return $oThisObj;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			return null;
 		}
 	}
@@ -315,7 +312,6 @@ class ObjectRepository
 		return ObjectRepository::ComputeOthersData($oObject, $sObjectClass, $aObjectData, $aComplementAttributeSpec, $sObjectImageAttCode);
 	}
 
-
 	/**
 	 * DeleteFromOql.
 	 *
@@ -340,8 +336,7 @@ class ObjectRepository
 
 			// return operation success
 			return true;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 
 			ExceptionLog::LogException($e);
 
@@ -349,6 +344,5 @@ class ObjectRepository
 		}
 
 	}
-
 
 }

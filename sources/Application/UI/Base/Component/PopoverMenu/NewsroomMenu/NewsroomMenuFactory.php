@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -62,17 +63,17 @@ class NewsroomMenuFactory
 	 */
 	protected static function PrepareParametersForNewsroomMenu()
 	{
-		$aProviderParams=[];
+		$aProviderParams = [];
 		$oUser = UserRights::GetUserObject();
 		/** @var iNewsroomProvider[] $aProviders */
 		$aProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(iNewsroomProvider::class);
-		foreach($aProviders as $cProvider) {
+		foreach ($aProviders as $cProvider) {
 			$oProvider = new $cProvider();
 			$oConfig = MetaModel::GetConfig();
 			$oProvider->SetConfig($oConfig);
 			$bProviderEnabled = appUserPreferences::GetPref('newsroom_provider_'.get_class($oProvider), true);
 			if ($bProviderEnabled && $oProvider->IsApplicable($oUser)) {
-				$aProviderParams[] = array(
+				$aProviderParams[] = [
 					'label' => $oProvider->GetLabel(),
 					'fetch_url' => $oProvider->GetFetchURL(),
 					'target' => utils::StartsWith($oProvider->GetFetchURL(), $oConfig->Get('app_root_url')) ? '_self' : '_blank',
@@ -80,25 +81,25 @@ class NewsroomMenuFactory
 					'mark_all_as_read_url' => $oProvider->GetMarkAllAsReadURL(),
 					'placeholders' => $oProvider->GetPlaceholders(),
 					'ttl' => $oProvider->GetTTL(),
-				);
+				];
 			}
 		}
-		$sImageUrl= 'fas fa-comment-dots';
-		$sPlaceholderImageUrl= 'far fa-envelope';
-		$aParams = array(
+		$sImageUrl = 'fas fa-comment-dots';
+		$sPlaceholderImageUrl = 'far fa-envelope';
+		$aParams = [
 			'image_icon' => $sImageUrl,
 			'no_message_icon' => file_get_contents(APPROOT.'images/illustrations/undraw_social_serenity.svg'),
 			'placeholder_image_icon' => $sPlaceholderImageUrl,
 			'cache_uuid' => 'itop-newsroom-'.UserRights::GetUserId().'-'.md5(APPROOT),
 			'providers' => $aProviderParams,
 			'display_limit' => (int)appUserPreferences::GetPref('newsroom_display_size', 7),
-			'labels' => array(
+			'labels' => [
 				'no_notification' => 'UI:Newsroom:NoNewMessage',
 				'x_notifications' => 'UI:Newsroom:XNewMessage',
 				'mark_all_as_read' => 'UI:Newsroom:MarkAllAsRead',
-				'view_all' => 'UI:Newsroom:ViewAllMessages'
-			),
-		);
+				'view_all' => 'UI:Newsroom:ViewAllMessages',
+			],
+		];
 		return $aParams;
 	}
 }

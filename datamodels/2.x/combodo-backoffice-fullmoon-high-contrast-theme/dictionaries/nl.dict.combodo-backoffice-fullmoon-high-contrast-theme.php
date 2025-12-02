@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,6 +22,6 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'theme:fullmoon-high-contrast' => 'Fullmoon (High contrast)~~',
-));
+]);

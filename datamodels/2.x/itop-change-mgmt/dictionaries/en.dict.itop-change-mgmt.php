@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,7 +22,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Menu:ChangeManagement' => 'Change management',
 	'Menu:Change:Overview' => 'Overview',
 	'Menu:Change:Overview+' => '',
@@ -45,7 +46,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes by status for the last 7 days',
 	'Tickets:Related:OpenChanges' => 'Open changes',
 	'Tickets:Related:RecentChanges' => 'Recent changes (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -57,12 +58,11 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Change' => 'Change',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Status',
@@ -137,4 +137,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Yes',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
-));
+]);

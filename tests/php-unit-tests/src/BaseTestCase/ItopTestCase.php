@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -14,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use ReflectionMethod;
 use SetupUtils;
 use Symfony\Component\HttpKernel\KernelInterface;
+
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 /**
@@ -97,7 +99,6 @@ abstract class ItopTestCase extends KernelTestCase
 		}
 	}
 
-
 	/**
 	 * @param array $args
 	 * @param string $sExportFileName relative to log folder
@@ -141,15 +142,16 @@ abstract class ItopTestCase extends KernelTestCase
 		}
 
 		$var_export = var_export($paramValues, true);
-		file_put_contents(APPROOT.'/log/' .$sExportFileName, $var_export);
+		file_put_contents(APPROOT.'/log/'.$sExportFileName, $var_export);
 		return $var_export;
 	}
 
-	protected function setUp(): void {
+	protected function setUp(): void
+	{
 		parent::setUp();
 
 		// Hack - Required the first time the Portal kernel is booted on a newly installed iTop
-		$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] = __DIR__ . '/../../../../../env-production/itop-portal-base/portal/public/';
+		$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] = __DIR__.'/../../../../../env-production/itop-portal-base/portal/public/';
 
 		$this->LoadRequiredItopFiles();
 		$this->LoadRequiredTestFiles();
@@ -188,29 +190,28 @@ abstract class ItopTestCase extends KernelTestCase
 
 		$sAppRootPath = static::GetFirstDirUpContainingFile(__DIR__, 'approot.inc.php');
 
-		return $sAppRootPath . '/';
+		return $sAppRootPath.'/';
 	}
 
 	private static function GetFirstDirUpContainingFile(string $sSearchPath, string $sFileToFindGlobPattern): ?string
 	{
 		for ($iDepth = 0; $iDepth < 8; $iDepth++) {
-			$aGlobFiles = glob($sSearchPath . '/' . $sFileToFindGlobPattern);
+			$aGlobFiles = glob($sSearchPath.'/'.$sFileToFindGlobPattern);
 			if (is_array($aGlobFiles) && (count($aGlobFiles) > 0)) {
-				return $sSearchPath . '/';
+				return $sSearchPath.'/';
 			}
 			$iOffsetSep = strrpos($sSearchPath, '/');
 			if ($iOffsetSep === false) {
 				$iOffsetSep = strrpos($sSearchPath, '\\');
 				if ($iOffsetSep === false) {
 					// Do not throw an exception here as PHPUnit will not show it clearly when determing the list of test to perform
-					return 'Could not find the approot file in ' . $sSearchPath;
+					return 'Could not find the approot file in '.$sSearchPath;
 				}
 			}
 			$sSearchPath = substr($sSearchPath, 0, $iOffsetSep);
 		}
 		return null;
 	}
-
 
 	/**
 	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceItopFile()}
@@ -222,7 +223,7 @@ abstract class ItopTestCase extends KernelTestCase
 	{
 		// At least make sure that the autoloader will be loaded, and that the APPROOT constant is defined
 		require_once __DIR__.'/../../../../approot.inc.php';
-    }
+	}
 
 	/**
 	 * Overload this method to require necessary files through {@see \Combodo\iTop\Test\UnitTest\ItopTestCase::RequireOnceUnitTestFile()}
@@ -246,7 +247,7 @@ abstract class ItopTestCase extends KernelTestCase
 	 */
 	protected function RequireOnceItopFile(string $sFileRelPath): void
 	{
-		require_once $this->GetAppRoot() . $sFileRelPath;
+		require_once $this->GetAppRoot().$sFileRelPath;
 	}
 
 	/**
@@ -263,7 +264,7 @@ abstract class ItopTestCase extends KernelTestCase
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 		$sCallerDirAbsPath = dirname($aStack[0]['file']);
 
-		require_once $sCallerDirAbsPath . DIRECTORY_SEPARATOR . $sFileRelPath;
+		require_once $sCallerDirAbsPath.DIRECTORY_SEPARATOR.$sFileRelPath;
 	}
 
 	protected function debug($sMsg)
@@ -272,11 +273,11 @@ abstract class ItopTestCase extends KernelTestCase
 			if (is_string($sMsg)) {
 				echo "$sMsg\n";
 			} else {
-		        /** @noinspection ForgottenDebugOutputInspection */
-		        print_r($sMsg);
-	        }
-        }
-    }
+				/** @noinspection ForgottenDebugOutputInspection */
+				print_r($sMsg);
+			}
+		}
+	}
 
 	public function GetMicroTime()
 	{
@@ -287,8 +288,7 @@ abstract class ItopTestCase extends KernelTestCase
 	public function WriteToCsvHeader($sFilename, $aHeader)
 	{
 		$sResultFile = APPROOT.'log/'.$sFilename;
-		if (is_file($sResultFile))
-		{
+		if (is_file($sResultFile)) {
 			@unlink($sResultFile);
 		}
 		SetupUtils::builddir(dirname($sResultFile));
@@ -379,7 +379,9 @@ abstract class ItopTestCase extends KernelTestCase
 	{
 		$class = new \ReflectionClass($sClass);
 		foreach ($class->getProperties() as $property) {
-			if (!$property->isStatic()) continue;
+			if (!$property->isStatic()) {
+				continue;
+			}
 			$property->setAccessible(true);
 			static::$aBackupStaticProperties[$sClass][$property->getName()] = $property->getValue();
 		}
@@ -397,7 +399,9 @@ abstract class ItopTestCase extends KernelTestCase
 	{
 		$class = new \ReflectionClass($sClass);
 		foreach ($class->getProperties() as $property) {
-			if (!$property->isStatic()) continue;
+			if (!$property->isStatic()) {
+				continue;
+			}
 			$property->setAccessible(true);
 			$property->setValue(null, static::$aBackupStaticProperties[$sClass][$property->getName()]);
 		}
@@ -414,7 +418,6 @@ abstract class ItopTestCase extends KernelTestCase
 
 		return $oProperty;
 	}
-
 
 	/**
 	 * @param object $oObject
@@ -455,38 +458,38 @@ abstract class ItopTestCase extends KernelTestCase
 		}
 	}
 
-	public static function CreateTmpdir() {
-		$sTmpDir=tempnam(sys_get_temp_dir(),'');
-		if (file_exists($sTmpDir))
-		{
+	public static function CreateTmpdir()
+	{
+		$sTmpDir = tempnam(sys_get_temp_dir(), '');
+		if (file_exists($sTmpDir)) {
 			unlink($sTmpDir);
 		}
 		mkdir($sTmpDir);
-		if (is_dir($sTmpDir))
-		{
+		if (is_dir($sTmpDir)) {
 			return $sTmpDir;
 		}
 
 		return sys_get_temp_dir();
 	}
 
-	public static function RecurseMkdir($sDir){
-		if (strpos($sDir, DIRECTORY_SEPARATOR) === 0){
+	public static function RecurseMkdir($sDir)
+	{
+		if (strpos($sDir, DIRECTORY_SEPARATOR) === 0) {
 			$sPath = DIRECTORY_SEPARATOR;
 		} else {
 			$sPath = "";
 		}
 
-		foreach (explode(DIRECTORY_SEPARATOR, $sDir) as $sSubDir){
+		foreach (explode(DIRECTORY_SEPARATOR, $sDir) as $sSubDir) {
 			if (($sSubDir === '..')) {
 				break;
 			}
 
-			if (( trim($sSubDir) === '' ) || ( $sSubDir === '.' )) {
+			if ((trim($sSubDir) === '') || ($sSubDir === '.')) {
 				continue;
 			}
 
-			$sPath .= $sSubDir . DIRECTORY_SEPARATOR;
+			$sPath .= $sSubDir.DIRECTORY_SEPARATOR;
 			if (!is_dir($sPath)) {
 				var_dump($sPath);
 				@mkdir($sPath);
@@ -495,16 +498,16 @@ abstract class ItopTestCase extends KernelTestCase
 
 	}
 
-	public static function RecurseCopy($src,$dst) {
+	public static function RecurseCopy($src, $dst)
+	{
 		$dir = opendir($src);
 		@mkdir($dst);
-		while(false !== ( $file = readdir($dir)) ) {
-			if (( $file != '.' ) && ( $file != '..' )) {
-				if ( is_dir($src . '/' . $file) ) {
-					static::RecurseCopy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
-				}
-				else {
-					copy($src . DIRECTORY_SEPARATOR . $file,$dst . DIRECTORY_SEPARATOR . $file);
+		while (false !== ($file = readdir($dir))) {
+			if (($file != '.') && ($file != '..')) {
+				if (is_dir($src.'/'.$file)) {
+					static::RecurseCopy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
+				} else {
+					copy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
 				}
 			}
 		}
@@ -521,8 +524,8 @@ abstract class ItopTestCase extends KernelTestCase
 		sort($aActual);
 		sort($aExpected);
 
-        $sExpected = var_export($aExpected, true);
-        $sActual = var_export($aActual, true);
+		$sExpected = var_export($aExpected, true);
+		$sActual = var_export($aActual, true);
 		if ($sExpected === $sActual) {
 			$this->assertTrue(true);
 			return;
@@ -553,7 +556,7 @@ abstract class ItopTestCase extends KernelTestCase
 	/**
 	 * @since 3.2.1
 	 */
-	static protected function AssertDateEqualsNow($sActualDate, $sMessage = ''): void
+	protected static function AssertDateEqualsNow($sActualDate, $sMessage = ''): void
 	{
 		$oActualDate = \DateTime::createFromFormat(\AttributeDate::GetInternalFormat(), $sActualDate);
 		$oNow = new \DateTime();
@@ -563,7 +566,7 @@ abstract class ItopTestCase extends KernelTestCase
 	/**
 	 * @since 3.2.1
 	 */
-	static protected function AssertDateTimeEqualsNow($sActualDate, $sMessage = ''): void
+	protected static function AssertDateTimeEqualsNow($sActualDate, $sMessage = ''): void
 	{
 		$oActualDateTime = \DateTime::createFromFormat(\AttributeDateTime::GetInternalFormat(), $sActualDate);
 		$oNow = new \DateTime();
@@ -576,17 +579,17 @@ abstract class ItopTestCase extends KernelTestCase
 	 *
 	 * @see static::bootKernel(), static::getContainer()
 	 * @see  \Combodo\iTop\Kernel, \Combodo\iTop\Portal\Kernel
-     *
+	 *
 	 * @param string $sKernelClass
 	 *
 	 * @since 3.2.1
 	 */
-	static protected function SetKernelClass(string $sKernelClass): void
+	protected static function SetKernelClass(string $sKernelClass): void
 	{
 		$_SERVER['KERNEL_CLASS'] = $sKernelClass;
 	}
 
-	static protected function bootKernel(array $options = []): KernelInterface
+	protected static function bootKernel(array $options = []): KernelInterface
 	{
 		if (!array_key_exists('KERNEL_CLASS', $_SERVER)) {
 			throw new \LogicException('static::SetKernelClass() must be called before booting the kernel.');
@@ -599,31 +602,33 @@ abstract class ItopTestCase extends KernelTestCase
 	 *
 	 * @since 3.2.1
 	 */
-	static protected function ReadTail($sFilename, $iLines = 1)
+	protected static function ReadTail($sFilename, $iLines = 1)
 	{
 		$handle = fopen($sFilename, "r");
 		$iLineCounter = $iLines;
 		$iPos = -2;
 		$bBeginning = false;
-		$aLines = array();
+		$aLines = [];
 		while ($iLineCounter > 0) {
 			$sChar = " ";
 			while ($sChar != "\n") {
-				if(fseek($handle, $iPos, SEEK_END) == -1) {
+				if (fseek($handle, $iPos, SEEK_END) == -1) {
 					$bBeginning = true;
 					break;
 				}
 				$sChar = fgetc($handle);
-				$iPos --;
+				$iPos--;
 			}
-			$iLineCounter --;
+			$iLineCounter--;
 			if ($bBeginning) {
 				rewind($handle);
 			}
 			$aLines[$iLines - $iLineCounter - 1] = fgets($handle);
-			if ($bBeginning) break;
+			if ($bBeginning) {
+				break;
+			}
 		}
-		fclose ($handle);
+		fclose($handle);
 		return array_reverse($aLines);
 	}
 }

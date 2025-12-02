@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -30,9 +31,9 @@ use MetaModel;
 use Symfony\Component\HttpFoundation\Response;
 use UserRights;
 use utils;
+
 use const APPROOT;
 use const MODULESROOT;
-
 
 /**
  * <p>Simple helper class to ease the production of HTML pages
@@ -64,7 +65,7 @@ class WebPage implements Page
 	/**
 	 * @since 2.7.0 N°2529
 	 */
-	const PAGES_CHARSET = 'utf-8';
+	public const PAGES_CHARSET = 'utf-8';
 
 	/**
 	 * @var string
@@ -149,7 +150,7 @@ class WebPage implements Page
 	 * @var string Rel. path to the template to use for the rendering. File name must be without the extension.
 	 * @since 3.0.0
 	 */
-	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/webpage/layout';
+	public const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/webpage/layout';
 
 	protected $s_title;
 	protected $s_content;
@@ -209,7 +210,6 @@ class WebPage implements Page
 	/** @var iUIContentBlock $oContentLayout */
 	protected $oContentLayout;
 	protected $sTemplateRelPath;
-
 
 	/**
 	 * @var bool|string|string[]
@@ -341,7 +341,7 @@ class WebPage implements Page
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function add_twig_template($sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = 'html')
+	public function add_twig_template($sViewPath, $sTemplateName, $aParams = [], $sDefaultType = 'html')
 	{
 		TwigHelper::RenderIntoPage($this, $sViewPath, $sTemplateName, $aParams, $sDefaultType);
 	}
@@ -399,7 +399,7 @@ class WebPage implements Page
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function table($aConfig, $aData, $aParams = array())
+	public function table($aConfig, $aData, $aParams = [])
 	{
 		$oDataTable = $this->GetTableBlock($aConfig, $aData);
 		$oDataTable->AddOption("bFullscreen", true);
@@ -421,7 +421,7 @@ class WebPage implements Page
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetTable($aConfig, $aData, $aParams = array())
+	public function GetTable($aConfig, $aData, $aParams = [])
 	{
 		static $iNbTables = 0;
 		$iNbTables++;
@@ -429,15 +429,13 @@ class WebPage implements Page
 		$sHtml .= "<table class=\"listResults\">\n";
 		$sHtml .= "<thead>\n";
 		$sHtml .= "<tr>\n";
-		foreach ($aConfig as $sName => $aDef)
-		{
+		foreach ($aConfig as $sName => $aDef) {
 			$sHtml .= "<th title=\"".$aDef['description']."\">".$aDef['label']."</th>\n";
 		}
 		$sHtml .= "</tr>\n";
 		$sHtml .= "</thead>\n";
 		$sHtml .= "<tbody>\n";
-		foreach ($aData as $aRow)
-		{
+		foreach ($aData as $aRow) {
 			$sHtml .= $this->GetTableRow($aRow, $aConfig);
 		}
 		$sHtml .= "</tbody>\n";
@@ -455,25 +453,19 @@ class WebPage implements Page
 	public function GetTableRow($aRow, $aConfig)
 	{
 		$sHtml = '';
-		if (isset($aRow['@class'])) // Row specific class, for hilighting certain rows
-		{
+		if (isset($aRow['@class'])) { // Row specific class, for hilighting certain rows
 			$sHtml .= "<tr class=\"{$aRow['@class']}\">";
-		}
-		else
-		{
+		} else {
 			$sHtml .= "<tr>";
 		}
-		foreach ($aConfig as $sName => $aAttribs)
-		{
+		foreach ($aConfig as $sName => $aAttribs) {
 			$sClass = isset($aAttribs['class']) ? 'class="'.$aAttribs['class'].'"' : '';
 
 			// Prepare metadata
 			// - From table config.
 			$sMetadata = '';
-			if(isset($aAttribs['metadata']))
-			{
-				foreach($aAttribs['metadata'] as $sMetadataProp => $sMetadataValue)
-				{
+			if (isset($aAttribs['metadata'])) {
+				foreach ($aAttribs['metadata'] as $sMetadataProp => $sMetadataValue) {
 					$sMetadataPropSanitized = str_replace('_', '-', $sMetadataProp);
 					$sMetadataValueSanitized = utils::HtmlEntities($sMetadataValue);
 					$sMetadata .= 'data-'.$sMetadataPropSanitized.'="'.$sMetadataValueSanitized.'" ';
@@ -481,13 +473,10 @@ class WebPage implements Page
 			}
 
 			// Prepare value
-			if(is_array($aRow[$sName]))
-			{
+			if (is_array($aRow[$sName])) {
 				$sValueHtml = ($aRow[$sName]['value_html'] === '') ? '&nbsp;' : $aRow[$sName]['value_html'];
 				$sMetadata .= 'data-value-raw="'.utils::HtmlEntities($aRow[$sName]['value_raw']).'" ';
-			}
-			else
-			{
+			} else {
 				$sValueHtml = ($aRow[$sName] === '') ? '&nbsp;' : $aRow[$sName];
 			}
 
@@ -555,7 +544,7 @@ class WebPage implements Page
 
 		// Ensure file is within the app folder
 		$sFileRelPathWithoutQueryParams = explode("?", $sFileRelPath)[0];
-		if (false === utils::RealPath(APPROOT . $sFileRelPathWithoutQueryParams, APPROOT)) {
+		if (false === utils::RealPath(APPROOT.$sFileRelPathWithoutQueryParams, APPROOT)) {
 			IssueLog::Warning("Linked resource added to page with a path from outside app directory, it will be ignored.", LogChannels::CONSOLE, [
 				"linked_resource_uri" => $sFileRelPath,
 				"request_uri" => $_SERVER['REQUEST_URI'] ?? '' /* CLI */,
@@ -570,7 +559,7 @@ class WebPage implements Page
 			$sAppRootUrl .= '/';
 		}
 
-		$this->LinkResourceFromURI($sAppRootUrl . $sFileRelPath, $sResourceType);
+		$this->LinkResourceFromURI($sAppRootUrl.$sFileRelPath, $sResourceType);
 	}
 
 	/**
@@ -593,7 +582,7 @@ class WebPage implements Page
 
 		// Ensure file is within the app folder
 		$sFileRelPathWithoutQueryParams = explode("?", $sFileRelPath)[0];
-		$sFileAbsPath = MODULESROOT . $sFileRelPathWithoutQueryParams;
+		$sFileAbsPath = MODULESROOT.$sFileRelPathWithoutQueryParams;
 		// For modules only, we don't check real path if symlink as the file would not be in under MODULESROOT
 		if (false === is_link($sFileAbsPath) && false === utils::RealPath($sFileAbsPath, MODULESROOT)) {
 			IssueLog::Warning("Linked resource added to page with a path from outside current env. directory, it will be ignored.", LogChannels::CONSOLE, [
@@ -603,7 +592,7 @@ class WebPage implements Page
 			return;
 		}
 
-		$this->LinkResourceFromURI(utils::GetAbsoluteUrlModulesRoot() . $sFileRelPath, $sResourceType);
+		$this->LinkResourceFromURI(utils::GetAbsoluteUrlModulesRoot().$sFileRelPath, $sResourceType);
 	}
 
 	/**
@@ -1019,8 +1008,10 @@ class WebPage implements Page
 	 */
 	protected function get_dict_signature()
 	{
-		return str_replace('_', '', Dict::GetUserLanguage()).'-'.md5(implode(',',
-					$this->a_dict_entries).'|'.implode(',', $this->a_dict_entries_prefixes));
+		return str_replace('_', '', Dict::GetUserLanguage()).'-'.md5(implode(
+			',',
+			$this->a_dict_entries
+		).'|'.implode(',', $this->a_dict_entries_prefixes));
 	}
 
 	/**
@@ -1028,13 +1019,11 @@ class WebPage implements Page
 	 */
 	protected function get_dict_file_content()
 	{
-		$aEntries = array();
-		foreach ($this->a_dict_entries as $sCode)
-		{
+		$aEntries = [];
+		foreach ($this->a_dict_entries as $sCode) {
 			$aEntries[$sCode] = Dict::S($sCode);
 		}
-		foreach ($this->a_dict_entries_prefixes as $sPrefix)
-		{
+		foreach ($this->a_dict_entries_prefixes as $sPrefix) {
 			$aEntries = array_merge($aEntries, Dict::ExportEntries($sPrefix));
 		}
 
@@ -1168,8 +1157,7 @@ JS;
 	{
 		$sCssRelPath = utils::GetCSSFromSASS($sSaasRelPath);
 		$sRootUrl = utils::GetAbsoluteUrlAppRoot();
-		if ($sRootUrl === '')
-		{
+		if ($sRootUrl === '') {
 			// We're running the setup of the first install...
 			$sRootUrl = '../';
 		}
@@ -1323,8 +1311,7 @@ JS;
 		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
 
 		$sHtml = "<div class=\"ibo-details\">\n";
-		foreach ($aFields as $aAttrib)
-		{
+		foreach ($aFields as $aAttrib) {
 			$sLayout = isset($aAttrib['layout']) ? $aAttrib['layout'] : 'small';
 
 			// Prepare metadata attributes
@@ -1335,13 +1322,10 @@ JS;
 			$sDataInputType = isset($aAttrib['inputtype']) ? 'data-input-type="'.utils::HtmlEntities($aAttrib['inputtype']).'"' : '';
 			// - Attribute flags
 			$sDataAttributeFlags = '';
-			if(isset($aAttrib['attflags']))
-			{
-				foreach($aPossibleAttFlags as $sFlagCode => $iFlagValue)
-				{
+			if (isset($aAttrib['attflags'])) {
+				foreach ($aPossibleAttFlags as $sFlagCode => $iFlagValue) {
 					// Note: Skip normal flag as we don't need it.
-					if($sFlagCode === 'normal')
-					{
+					if ($sFlagCode === 'normal') {
 						continue;
 					}
 					$sFormattedFlagCode = str_ireplace('_', '-', $sFlagCode);
@@ -1356,23 +1340,18 @@ JS;
 			$sHtml .= "<div class=\"ibo-field--label\">{$aAttrib['label']}</div>\n";
 
 			// By Rom, for csv import, proposed to show several values for column selection
-			if (is_array($aAttrib['value']))
-			{
+			if (is_array($aAttrib['value'])) {
 				$sHtml .= "<div class=\"ibo-field--value\">".implode("</div><div>", $aAttrib['value'])."</div>\n";
-			}
-			else
-			{
+			} else {
 				$sHtml .= "<div class=\"ibo-field--value\">".$aAttrib['value']."</div>\n";
 			}
 			// Checking if we should add comments & infos
 			$sComment = (isset($aAttrib['comments'])) ? $aAttrib['comments'] : '';
 			$sInfo = (isset($aAttrib['infos'])) ? $aAttrib['infos'] : '';
-			if ($sComment !== '')
-			{
+			if ($sComment !== '') {
 				$sHtml .= "<div class=\"ibo-field--comments\">$sComment</div>\n";
 			}
-			if ($sInfo !== '')
-			{
+			if ($sInfo !== '') {
 				$sHtml .= "<div class=\"ibo-field--infos\">$sInfo</div>\n";
 			}
 
@@ -1397,26 +1376,26 @@ JS;
 	 * @return string The HTML fragment corresponding to the radio buttons
 	 */
 	public function GetRadioButtons(
-		$aAllowedValues, $value, $iId, $sFieldName, $bMandatory, $bVertical, $sValidationField
+		$aAllowedValues,
+		$value,
+		$iId,
+		$sFieldName,
+		$bMandatory,
+		$bVertical,
+		$sValidationField
 	) {
 		$idx = 0;
 		$sHTMLValue = '';
-		foreach ($aAllowedValues as $key => $display_value)
-		{
-			if ((count($aAllowedValues) == 1) && ($bMandatory == 'true'))
-			{
+		foreach ($aAllowedValues as $key => $display_value) {
+			if ((count($aAllowedValues) == 1) && ($bMandatory == 'true')) {
 				// When there is only once choice, select it by default
 				$sSelected = 'checked';
-			}
-			else
-			{
+			} else {
 				$sSelected = ($value == $key) ? 'checked' : '';
 			}
 			$sHTMLValue .= "<input type=\"radio\" id=\"{$iId}_{$key}\" name=\"radio_$sFieldName\" onChange=\"$('#{$iId}').val(this.value).trigger('change');\" value=\"$key\" $sSelected><label class=\"radio\" for=\"{$iId}_{$key}\">&nbsp;$display_value</label>&nbsp;";
-			if ($bVertical)
-			{
-				if ($idx == 0)
-				{
+			if ($bVertical) {
+				if ($idx == 0) {
 					// Validation icon at the end of the first line
 					$sHTMLValue .= "&nbsp;{$sValidationField}\n";
 				}
@@ -1425,8 +1404,7 @@ JS;
 			$idx++;
 		}
 		$sHTMLValue .= "<input type=\"hidden\" id=\"$iId\" name=\"$sFieldName\" value=\"$value\"/>";
-		if (!$bVertical)
-		{
+		if (!$bVertical) {
 			// Validation icon at the end of the line
 			$sHTMLValue .= "&nbsp;{$sValidationField}\n";
 		}
@@ -1457,26 +1435,18 @@ JS;
 	protected function ob_get_clean_safe()
 	{
 		$sOutput = ob_get_contents();
-		if ($sOutput === false)
-		{
+		if ($sOutput === false) {
 			$sMsg = "Design/integration issue: No output buffer. Some piece of code has called ob_get_clean() or ob_end_clean() without calling ob_start()";
-			if ($this->bTrashUnexpectedOutput)
-			{
+			if ($this->bTrashUnexpectedOutput) {
 				IssueLog::Error($sMsg);
 				$sOutput = '';
-			}
-			else
-			{
+			} else {
 				$sOutput = $sMsg;
 			}
-		}
-		else
-		{
+		} else {
 			ob_end_clean(); // on some versions of PHP doing so when the output buffering is stopped can cause a notice
-			if ($this->bTrashUnexpectedOutput)
-			{
-				if (trim($sOutput) != '')
-				{
+			if ($this->bTrashUnexpectedOutput) {
+				if (trim($sOutput) != '') {
 					if (Utils::GetConfig() && Utils::GetConfig()->Get('debug_report_spurious_chars')) {
 						IssueLog::Error("Trashing unexpected output:'$sOutput'\n");
 					}
@@ -1706,11 +1676,10 @@ JS;
 	 *
 	 * @return bool True if the format is Ok, false otherwise
 	 */
-	function IsOutputFormatAvailable($sOutputFormat)
+	public function IsOutputFormatAvailable($sOutputFormat)
 	{
 		$bResult = false;
-		switch ($sOutputFormat)
-		{
+		switch ($sOutputFormat) {
 			case 'html':
 				$bResult = true; // Always supported
 				break;
@@ -1743,8 +1712,7 @@ JS;
 	 */
 	public function GetOutputOption($sFormat, $sOptionName)
 	{
-		if (isset($this->a_OutputOptions[$sFormat][$sOptionName]))
-		{
+		if (isset($this->a_OutputOptions[$sFormat][$sOptionName])) {
 			return $this->a_OutputOptions[$sFormat][$sOptionName];
 		}
 
@@ -1760,12 +1728,9 @@ JS;
 	 */
 	public function SetOutputOption($sFormat, $sOptionName, $sValue)
 	{
-		if (!isset($this->a_OutputOptions[$sFormat]))
-		{
-			$this->a_OutputOptions[$sFormat] = array($sOptionName => $sValue);
-		}
-		else
-		{
+		if (!isset($this->a_OutputOptions[$sFormat])) {
+			$this->a_OutputOptions[$sFormat] = [$sOptionName => $sValue];
+		} else {
 			$this->a_OutputOptions[$sFormat][$sOptionName] = $sValue;
 		}
 	}
@@ -1776,7 +1741,7 @@ JS;
 	 *
 	 * @return string
 	 */
-	public function RenderPopupMenuItems($aActions, $aFavoriteActions = array())
+	public function RenderPopupMenuItems($aActions, $aFavoriteActions = [])
 	{
 		$sPrevUrl = '';
 		$sHtml = '';
@@ -1784,12 +1749,14 @@ JS;
 			foreach ($aActions as $sActionId => $aAction) {
 				$sDataActionId = 'data-action-id="'.$sActionId.'"';
 				$sClass = isset($aAction['css_classes']) ? 'class="'.implode(' ', $aAction['css_classes']).'"' : '';
-				$sOnClick = isset($aAction['onclick']) ? 'onclick="'.htmlspecialchars($aAction['onclick'], ENT_QUOTES,
-						"UTF-8").'"' : '';
+				$sOnClick = isset($aAction['onclick']) ? 'onclick="'.htmlspecialchars(
+					$aAction['onclick'],
+					ENT_QUOTES,
+					"UTF-8"
+				).'"' : '';
 				$sTarget = isset($aAction['target']) ? "target=\"{$aAction['target']}\"" : "";
 				if (empty($aAction['url'])) {
-					if ($sPrevUrl != '') // Don't output consecutively two separators...
-					{
+					if ($sPrevUrl != '') { // Don't output consecutively two separators...
 						$sHtml .= "<li $sDataActionId>{$aAction['label']}</li>";
 					}
 					$sPrevUrl = '';
@@ -1858,8 +1825,6 @@ JS;
 			}
 		}
 	}
-
-
 
 	/**
 	 * Return the language for the page metadata based on the current user

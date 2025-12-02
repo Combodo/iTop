@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__,
 	'itop-tickets/3.3.0',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Tickets Management',
@@ -12,24 +11,25 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
+		'dependencies' => [
 			'itop-structure/2.7.1',
-		),
+			'itop-portal/3.0.0', // module_design_itop_design->module_designs->itop-portal
+		],
 		'mandatory' => false,
 		'visible' => true,
 		'installer' => 'TicketsInstaller',
 
 		// Components
 		//
-		'datamodel' => array(
+		'datamodel' => [
 			'main.itop-tickets.php',
-		),
-		'data.struct' => array(
+		],
+		'data.struct' => [
 	//		'data.struct.ta-actions.xml',
-		),
-		'data.sample' => array(
-		),
-		
+		],
+		'data.sample' => [
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup'     => '',
@@ -37,9 +37,9 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
-		),
-	)
+		'settings' => [
+		],
+	]
 );
 
 // Module installation handler
@@ -52,17 +52,12 @@ class TicketsInstaller extends ModuleInstallerAPI
 		CMDBObject::SetTrackInfo('Uninstallation');
 		$oSearch = new DBObjectSearch('TriggerOnObject');
 		$oSet = new DBObjectSet($oSearch);
-		while($oTrigger = $oSet->Fetch())
-		{
-			try
-			{
-				if (!MetaModel::IsValidClass($oTrigger->Get('target_class')))
-				{
+		while ($oTrigger = $oSet->Fetch()) {
+			try {
+				if (!MetaModel::IsValidClass($oTrigger->Get('target_class'))) {
 					$oTrigger->DBDelete();
 				}
-			}
-			catch(Exception $e)
-			{
+			} catch (Exception $e) {
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}

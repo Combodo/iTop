@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -15,7 +16,7 @@ use Exception;
  */
 class AttributeTemplateHTML extends AttributeText
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -36,7 +37,7 @@ class AttributeTemplateHTML extends AttributeText
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->Get('sql')] = $this->GetSQLCol();
 		if ($this->GetOptional('format', null) != null) {
 			// Add the extra column only if the property 'format' is specified for the attribute

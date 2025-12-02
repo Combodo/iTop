@@ -1,6 +1,6 @@
 <?php
 
-namespace  Combodo\iTop\Service\Notification\Event;
+namespace Combodo\iTop\Service\Notification\Event;
 
 use DBObjectSearch;
 use DBObjectSet;
@@ -17,11 +17,10 @@ class EventNotificationNewsroomGC implements iBackgroundProcess
 			$iDeletionTime = (int) MetaModel::GetConfig()->Get('notifications.itop.read_notification_retention');
 			$oDBObjectSearch = DBObjectSearch::FromOQL("SELECT EventNotificationNewsroom WHERE read='yes' AND read_date < DATE_SUB(NOW(), INTERVAL :deletion_time DAY)", ['deletion_time' => $iDeletionTime]);
 			$oEventNotificationNewsroomSet = new DBObjectSet($oDBObjectSearch);
-			while($oEventNotificationNewsroom = $oEventNotificationNewsroomSet->Fetch()){
+			while ($oEventNotificationNewsroom = $oEventNotificationNewsroomSet->Fetch()) {
 				$oEventNotificationNewsroom->DBDelete();
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			ExceptionLog::LogException($e);
 			return false;
 		}
@@ -30,6 +29,6 @@ class EventNotificationNewsroomGC implements iBackgroundProcess
 
 	public function GetPeriodicity()
 	{
-		return 24*3600; // Every day
+		return 24 * 3600; // Every day
 	}
 }

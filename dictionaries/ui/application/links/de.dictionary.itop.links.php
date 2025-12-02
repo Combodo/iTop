@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Links:Object:New:Modal:Title' => 'Ein Objekt erstellen',
 	'UI:Links:Create:Button' => 'Erstellen',
 	'UI:Links:Create:Button+' => '%4$s erstellen',
@@ -41,4 +42,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Links:Bulk:LinkExistForOneObject' => 'Ein Objekt ist verknüpft',
 	'UI:Links:Bulk:LinkExistForXObjects' => '{count} Objekte sind verknüpft',
 	'UI:Links:NewItem' => 'Neues Element',
-));
+]);

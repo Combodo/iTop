@@ -7,7 +7,8 @@ use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
-class PhpExpressionEvaluatorTest extends ItopDataTestCase {
+class PhpExpressionEvaluatorTest extends ItopDataTestCase
+{
 	public static $STATIC_PROPERTY = 123;
 	private static $PRIVATE_STATIC_PROPERTY = 123;
 	private const PRIVATE_CONSTANT = 123;
@@ -17,7 +18,8 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 		parent::tearDown();
 	}
 
-	public static function EvaluateExpressionProvider() {
+	public static function EvaluateExpressionProvider()
+	{
 		return [
 			'Array: [1000 => "a"]' => ['sExpression' => '[1000 => "a"]'],
 			'Array: ["a"]' => ['sExpression' => '["a"]'],
@@ -97,18 +99,18 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 	/**
 	 * @dataProvider EvaluateExpressionProvider
 	 */
-	public function testEvaluateExpression($sExpression, $forced_expected="NOTPROVIDED")
+	public function testEvaluateExpression($sExpression, $forced_expected = "NOTPROVIDED")
 	{
 		global $oGlobalNonNullVar;
-		$oGlobalNonNullVar="a";
+		$oGlobalNonNullVar = "a";
 
 		global $oGlobalNullVar;
-		$oGlobalNullVar=null;
+		$oGlobalNullVar = null;
 
-		$oNonNullVar="a";
+		$oNonNullVar = "a";
 
-		$oNullVar=null;
-		$_SERVER=[
+		$oNullVar = null;
+		$_SERVER = [
 			'toto' => 'titi',
 		];
 
@@ -117,7 +119,7 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 
 		$oPhpExpressionEvaluator = new PhpExpressionEvaluator(ModuleFileReader::FUNC_CALL_WHITELIST, ModuleFileReader::STATIC_CALLWHITELIST);
 		$res = $oPhpExpressionEvaluator->ParseAndEvaluateExpression($sExpression);
-		if ($forced_expected === "NOTPROVIDED"){
+		if ($forced_expected === "NOTPROVIDED") {
 			$this->assertEquals($this->UnprotectedComputeExpression($sExpression), $res, $sExpression);
 		} else {
 			$this->assertEquals($forced_expected, $res, $sExpression);
@@ -148,15 +150,15 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 	public function testEvaluateExpressionThrowsException($sExpression)
 	{
 		global $oGlobalNonNullVar;
-		$oGlobalNonNullVar="a";
+		$oGlobalNonNullVar = "a";
 
 		global $oGlobalNullVar;
-		$oGlobalNullVar=null;
+		$oGlobalNullVar = null;
 
-		$oNonNullVar="a";
+		$oNonNullVar = "a";
 
-		$oNullVar=null;
-		$_SERVER=[
+		$oNullVar = null;
+		$_SERVER = [
 			'toto' => 'titi',
 		];
 
@@ -168,21 +170,20 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 		$oPhpExpressionEvaluator->ParseAndEvaluateExpression($sExpression);
 	}
 
-
 	/**
 	 * @param string $sBooleanExpr
 	 *
 	 * @return mixed
 	 * @throws ModuleFileReaderException
 	 */
-	private function UnprotectedComputeExpression(string $sExpr) : mixed
+	private function UnprotectedComputeExpression(string $sExpr): mixed
 	{
 		try {
 			$bResult = null;
 			@eval('$bResult = '.$sExpr.';');
 
 			return $bResult;
-		} catch (\Throwable $t){
+		} catch (\Throwable $t) {
 			return null;
 		}
 	}
@@ -217,15 +218,17 @@ class PhpExpressionEvaluatorTest extends ItopDataTestCase {
 	/**
 	 * @dataProvider ParseAndEvaluateBooleanExpression_AutoselectProvider
 	 */
-	public function testEvaluateBooleanExpression_Autoselect(string $sBooleanExpression, bool $expected){
+	public function testEvaluateBooleanExpression_Autoselect(string $sBooleanExpression, bool $expected)
+	{
 		\SetupInfo::SetSelectedModules(["itop-storage-mgmt" => "123"]);
 		$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], ["SetupInfo::ModuleIsSelected"]);
 		$this->assertEquals($expected, $oPhpExpressionEvaluator->ParseAndEvaluateBooleanExpression($sBooleanExpression), $sBooleanExpression);
 	}
 }
 
-class EvaluationFakeClass {
-	public string $iIsOk="IsOkValue";
+class EvaluationFakeClass
+{
+	public string $iIsOk = "IsOkValue";
 
 	public function GetName()
 	{
@@ -234,7 +237,7 @@ class EvaluationFakeClass {
 
 	public function GetLongName($suffix)
 	{
-		return "gabuzomeu_" . $suffix;
+		return "gabuzomeu_".$suffix;
 	}
 
 	public function __toString(): string

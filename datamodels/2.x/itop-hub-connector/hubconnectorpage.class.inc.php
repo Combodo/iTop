@@ -18,11 +18,13 @@ class HubConnectorPage extends NiceWebPage
 
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->LinkScriptFromAppRoot('js/utils.js');
-		$this->add_script(<<<JS
+		$this->add_script(
+			<<<JS
 		var oUserPreferences = $sUserPrefs;
 JS
 		);
-		$this->add_style(<<<CSS
+		$this->add_style(
+			<<<CSS
 body {
     background-color: #FFFFFF;
     color: rgba(0, 0, 0, 0.87);

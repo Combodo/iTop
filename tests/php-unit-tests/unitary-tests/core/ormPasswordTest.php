@@ -1,4 +1,5 @@
 <?php
+
 /*!
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -15,7 +16,6 @@ use Utils;
  */
 class ormPasswordTest extends ItopDataTestCase
 {
-
 	/**
 	 * @param $sToHashValues
 	 * @param $sToHashSalt
@@ -37,19 +37,19 @@ class ormPasswordTest extends ItopDataTestCase
 
 	public function HashProvider()
 	{
-		return array(
-			'Bcrypt' => array(
+		return [
+			'Bcrypt' => [
 				'admin',
 				'',
 				PASSWORD_BCRYPT,
-				'$2y$10$P6yqXv/0pT4e9kfN6d95jOKX4KR5Il.N0vRLc2DoZoycwnU9mcnia'
-			),
-			'sha256 (legacy)' => array(
+				'$2y$10$P6yqXv/0pT4e9kfN6d95jOKX4KR5Il.N0vRLc2DoZoycwnU9mcnia',
+			],
+			'sha256 (legacy)' => [
 				'admin',
 				'salt',
 				'sha256',
-				'2bb7998496899acdd8137fad3a44faf96a84a03d7f230ce42e97cd17c7ae429e'
-			),
-		);
+				'2bb7998496899acdd8137fad3a44faf96a84a03d7f230ce42e97cd17c7ae429e',
+			],
+		];
 	}
 }

@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:ConfigFileEditor' => 'Éditeur de texte brut',
-	'config-edit-title' => 'Éditeur du Fichier de Configuration',
+	'itop-config/Operation:Edit/Title' => 'Éditeur du Fichier de Configuration',
 	'config-edit-intro' => 'Attention: une configuration incorrecte peut rendre '.ITOP_APPLICATION_SHORT.' inopérant pour tous les utilisateurs!',
 	'config-apply' => 'Enregistrer',
 	'config-apply-title' => 'Enregistrer (Ctrl+S)',
@@ -27,4 +28,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'config-error-file-changed' => 'Erreur : La configuration a été modifiée depuis que vous l\'avez ouvert. Vos modifications ne peuvent <b>PAS</b> être enregistrées. Rechargez la page et recommencez.',
 	'config-not-allowed-in-demo' => 'Désolé, '.ITOP_APPLICATION_SHORT.' est en <b>mode démonstration</b> : la configuration ne peut pas être modifiée.',
 	'config-interactive-not-allowed' => 'La modification interactive de la configuration n\'est pas autorisée. Voir le paramètre <code>\'config_editor\' => \'disabled\'</code> dans le fichier de configuration.',
-));
+]);

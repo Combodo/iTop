@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -26,7 +27,7 @@ use ValueSetObjects;
  */
 class AttributeExternalKey extends AttributeDBFieldVoid
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -60,8 +61,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 			}
 
 			return self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
-		}
-		catch (CoreException $e) {
+		} catch (CoreException $e) {
 		}
 
 		return self::SEARCH_WIDGET_TYPE_RAW;
@@ -69,7 +69,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("targetclass", "is_null_allowed", "on_target_delete"));
+		return array_merge(parent::ListExpectedParams(), ["targetclass", "is_null_allowed", "on_target_delete"]);
 	}
 
 	public function GetEditClass()
@@ -112,7 +112,6 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $this->GetOptional('display_style', 'select');
 	}
 
-
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
 		return 0;
@@ -126,7 +125,6 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 		return $this->Get("is_null_allowed");
 	}
-
 
 	public function GetBasicFilterOperators()
 	{
@@ -156,13 +154,12 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oValSetDef;
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		//throw new Exception("GetAllowedValues on ext key has been deprecated");
 		try {
 			return parent::GetAllowedValues($aArgs, $sContains);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			// Some required arguments could not be found, enlarge to any existing value
 			$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
 
@@ -170,7 +167,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		}
 	}
 
-	public function GetAllowedValuesForSelect($aArgs = array(), $sContains = '')
+	public function GetAllowedValuesForSelect($aArgs = [], $sContains = '')
 	{
 		//$this->GetValuesDef();
 		$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
@@ -178,8 +175,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oValSetDef->GetValuesForAutocomplete($aArgs, $sContains);
 	}
 
-
-	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	public function GetAllowedValuesAsObjectSet($aArgs = [], $sContains = '', $iAdditionalValue = null)
 	{
 		$oValSetDef = $this->GetValuesDef();
 		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains, $iAdditionalValue);
@@ -187,7 +183,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oSet;
 	}
 
-	public function GetAllowedValuesAsFilter($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	public function GetAllowedValuesAsFilter($aArgs = [], $sContains = '', $iAdditionalValue = null)
 	{
 		return DBObjectSearch::FromOQL($this->GetValuesDef()->GetFilterExpression());
 	}
@@ -282,8 +278,10 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 			if (!$oRemoteAttDef->IsLinkSet()) {
 				continue;
 			}
-			if (!is_subclass_of($this->GetHostClass(),
-					$oRemoteAttDef->GetLinkedClass()) && $oRemoteAttDef->GetLinkedClass() != $this->GetHostClass()) {
+			if (!is_subclass_of(
+				$this->GetHostClass(),
+				$oRemoteAttDef->GetLinkedClass()
+			) && $oRemoteAttDef->GetLinkedClass() != $this->GetHostClass()) {
 				continue;
 			}
 			if ($oRemoteAttDef->GetExtKeyToMe() != $this->GetCode()) {
@@ -328,13 +326,13 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 				// We set search object only if it has not already been set (overrided)
 				if ($oTmpField->GetSearch() === null) {
 					$oSearch = DBSearch::FromOQL($oTmpAttDef->GetValuesDef()->GetFilterExpression());
-					$oSearch->SetInternalParams(array('this' => $oObject));
+					$oSearch->SetInternalParams(['this' => $oObject]);
 					$oTmpField->SetSearch($oSearch);
 				}
 			});
 		} else {
 			$oSearch = DBSearch::FromOQL($this->GetValuesDef()->GetFilterExpression());
-			$oSearch->SetInternalParams(array('this' => $oObject));
+			$oSearch->SetInternalParams(['this' => $oObject]);
 			$oFormField->SetSearch($oSearch);
 		}
 

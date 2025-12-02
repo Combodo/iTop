@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -56,16 +57,12 @@ class CssFromSassCompiler
 			return;
 		}
 
-		$aImportPaths = array($_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/');
+		$aImportPaths = [$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/'];
 		foreach ($this->aCombodoPortalInstanceConf['properties']['themes'] as $sKey => $value) {
-			if (!is_array($value))
-			{
+			if (!is_array($value)) {
 				utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$value, $aImportPaths);
-			}
-			else
-			{
-				foreach ($value as $sSubValue)
-				{
+			} else {
+				foreach ($value as $sSubValue) {
 					utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$sSubValue, $aImportPaths);
 				}
 			}

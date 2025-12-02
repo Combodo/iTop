@@ -23,7 +23,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	public function ListSupportedLoginModes()
 	{
-		return array('form');
+		return ['form'];
 	}
 
 	/**
@@ -34,19 +34,17 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 		if (!Session::IsSet('login_mode') || Session::Get('login_mode') == 'form') {
 			$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
 			$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
-			if ($this->bForceFormOnError || empty($sAuthUser) || empty($sAuthPwd))
-			{
-				if (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER))
-				{
+			if ($this->bForceFormOnError || empty($sAuthUser) || empty($sAuthPwd)) {
+				if (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER)) {
 					// X-Combodo-Ajax is a special header automatically added to all ajax requests
 					// Let's reply that we're currently logged-out
 					header('HTTP/1.0 401 Unauthorized');
 					exit;
 				}
 
-                if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
-                    return LoginWebPage::LOGIN_FSM_CONTINUE;
-                }
+				if (LoginWebPage::getIOnExit() === LoginWebPage::EXIT_RETURN) {
+					return LoginWebPage::LOGIN_FSM_CONTINUE;
+				}
 
 				// No credentials yet, display the form
 				$oPage = LoginWebPage::NewLoginWebPage();
@@ -66,12 +64,10 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'form')
-		{
+		if (Session::Get('login_mode') == 'form') {
 			$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
 			$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
-			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
-			{
+			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal')) {
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
@@ -85,8 +81,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'form')
-		{
+		if (Session::Get('login_mode') == 'form') {
 			// Store 'auth_user' in session for further use
 			LoginWebPage::OnLoginSuccess(Session::Get('auth_user'), 'internal', Session::Get('login_mode'));
 		}
@@ -98,8 +93,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnError(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'form')
-		{
+		if (Session::Get('login_mode') == 'form') {
 			$this->bForceFormOnError = true;
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
@@ -110,8 +104,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnConnected(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'form')
-		{
+		if (Session::Get('login_mode') == 'form') {
 			Session::Set('can_logoff', true);
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
@@ -131,24 +124,23 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 		$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
 		$sAuthPwd = utils::ReadParam('suggest_pwd', '', true, 'raw_data');
 
-		$aData = array(
+		$aData = [
 			'sAuthUser' => $sAuthUser,
 			'sAuthPwd' => $sAuthPwd,
-		);
+		];
 		$oLoginContext->AddBlockExtension('login_input', new LoginBlockExtension('extensionblock/loginforminput.html.twig', $aData));
 		$oLoginContext->AddBlockExtension('login_submit', new LoginBlockExtension('extensionblock/loginformsubmit.html.twig'));
 		$oLoginContext->AddBlockExtension('login_form_footer', new LoginBlockExtension('extensionblock/loginformfooter.html.twig'));
 
 		$bEnableResetPassword = MetaModel::GetConfig()->Get('forgot_password');
 		$sResetPasswordUrl = MetaModel::GetConfig()->Get('forgot_password.url');
-		if ($sResetPasswordUrl == '')
-		{
-			$sResetPasswordUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php?loginop=forgot_pwd';
+		if ($sResetPasswordUrl == '') {
+			$sResetPasswordUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=forgot_pwd';
 		}
-		$aData = array(
+		$aData = [
 			'bEnableResetPassword' => $bEnableResetPassword,
 			'sResetPasswordUrl' => $sResetPasswordUrl,
-		);
+		];
 		$oLoginContext->AddBlockExtension('login_links', new LoginBlockExtension('extensionblock/loginformlinks.html.twig', $aData));
 
 		return $oLoginContext;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -36,8 +37,7 @@ class ConfigPlaceholdersResolverTest extends ItopTestCase
 	 */
 	public function testResolve($aEnv, $aServer, $sValue, $sExpected, $sExpectedExceptionClass = null)
 	{
-		if ($sExpectedExceptionClass)
-		{
+		if ($sExpectedExceptionClass) {
 			$this->expectException($sExpectedExceptionClass);
 		}
 
@@ -49,118 +49,118 @@ class ConfigPlaceholdersResolverTest extends ItopTestCase
 
 	public function providerResolve()
 	{
-		$stdObj = (object) array('%env(HTTP_PORT)?:8080%', '%server(toto)?:8080%', '%foo(toto)?:8080%');
+		$stdObj = (object) ['%env(HTTP_PORT)?:8080%', '%server(toto)?:8080%', '%foo(toto)?:8080%'];
 
-		return array(
-			'basic behaviour' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'),
-				'aServer' => array(),
+		return [
+			'basic behaviour' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'],
+				'aServer' => [],
 				'sValue'  => '%env(HTTP_PORT)%',
 				'sExpected' => '443',
-			),
+			],
 
-			'disabled if no ITOP_CONFIG_PLACEHOLDERS' => array(
-				'aEnv'    => array('HTTP_PORT' => '443'),
-				'aServer' => array(),
+			'disabled if no ITOP_CONFIG_PLACEHOLDERS' => [
+				'aEnv'    => ['HTTP_PORT' => '443'],
+				'aServer' => [],
 				'sValue'  => '%env(HTTP_PORT)%',
 				'sExpected' => '%env(HTTP_PORT)%',
-			),
+			],
 
-			'basic with default not used' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'),
-				'aServer' => array(),
+			'basic with default not used' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'],
+				'aServer' => [],
 				'sValue'  => '%env(HTTP_PORT)?:foo%',
 				'sExpected' => '443',
-			),
+			],
 
-			'basic with default used' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, ),
-				'aServer' => array(),
+			'basic with default used' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, ],
+				'aServer' => [],
 				'sValue'  => '%env(HTTP_PORT)?:foo%',
 				'sExpected' => 'foo',
-			),
+			],
 
-			'basic with default used and empty' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, ),
-				'aServer' => array(),
+			'basic with default used and empty' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, ],
+				'aServer' => [],
 				'sValue'  => '%env(HTTP_PORT)?:%',
 				'sExpected' => '',
-			),
+			],
 
-			'mixed with static' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'),
-				'aServer' => array('toto' => 'tutu'),
+			'mixed with static' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'],
+				'aServer' => ['toto' => 'tutu'],
 				'sValue'  => 'http://localhost:%env(HTTP_PORT)?:8080%/',
 				'sExpected' => 'http://localhost:443/',
-			),
+			],
 
-			'multiple occurrences' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'),
-				'aServer' => array('SERVER_NAME' => 'localhost'),
+			'multiple occurrences' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'],
+				'aServer' => ['SERVER_NAME' => 'localhost'],
 				'sValue'  => 'http://%server(SERVER_NAME)%:%env(HTTP_PORT)%/',
 				'sExpected' => 'http://localhost:443/',
-			),
+			],
 
-			'array as source' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'),
-				'aServer' => array('toto' => 'tutu'),
-				'sValue'  => array('http://localhost:%env(HTTP_PORT)?:8080%/', '%foo(HTTP_PORT)?:8080%', '%server(toto)?:8080%'),
-				'sExpected' => array('http://localhost:443/', '%foo(HTTP_PORT)?:8080%', 'tutu'),
-			),
+			'array as source' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'],
+				'aServer' => ['toto' => 'tutu'],
+				'sValue'  => ['http://localhost:%env(HTTP_PORT)?:8080%/', '%foo(HTTP_PORT)?:8080%', '%server(toto)?:8080%'],
+				'sExpected' => ['http://localhost:443/', '%foo(HTTP_PORT)?:8080%', 'tutu'],
+			],
 
-			'invalid source' => array(
-				'aEnv' => array('toto' => 'tutu'),
-				'aServer'    => array('HTTP_PORT' => '443'),
+			'invalid source' => [
+				'aEnv' => ['toto' => 'tutu'],
+				'aServer'    => ['HTTP_PORT' => '443'],
 				'sValue'  => '%foo(HTTP_PORT)?:8080%',
 				'sExpected' => '%foo(HTTP_PORT)?:8080%',
-			),
+			],
 
-			'ignored source' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'),
-				'aServer' => array('toto' => 'tutu'),
+			'ignored source' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'],
+				'aServer' => ['toto' => 'tutu'],
 				'sValue'  => $stdObj,
 				'sExpected' => $stdObj,
-			),
+			],
 
-			'env matching port' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'),
-				'aServer' => array('toto' => 'tutu'),
+			'env matching port' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, 'HTTP_PORT' => '443'],
+				'aServer' => ['toto' => 'tutu'],
 				'sValue'  => '%env(HTTP_PORT)?:8080%',
 				'sExpected' => '443',
-			),
-			'env no matching port with default ' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, 'foo' => 'bar'),
-				'aServer' => array('toto' => 'tutu'),
+			],
+			'env no matching port with default ' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, 'foo' => 'bar'],
+				'aServer' => ['toto' => 'tutu'],
 				'sValue'  => '%env(HTTP_PORT)?:8080%',
 				'sExpected' => '8080',
-			),
-			'env no matching port' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, 'foo' => 'bar'),
-				'aServer' => array('toto' => 'tutu'),
+			],
+			'env no matching port' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, 'foo' => 'bar'],
+				'aServer' => ['toto' => 'tutu'],
 				'sValue'  => '%env(HTTP_PORT)%',
 				'sExpected' => null,
 				'sExpectedExceptionClass' => 'ConfigException',
-			),
+			],
 
-			'server matching port' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, 'toto' => 'tutu'),
-				'aServer' => array('HTTP_PORT' => '443'),
+			'server matching port' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, 'toto' => 'tutu'],
+				'aServer' => ['HTTP_PORT' => '443'],
 				'sValue'  => '%server(HTTP_PORT)?:8080%',
 				'sExpected' => '443',
-			),
-			'server no matching port with default ' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, 'toto' => 'tutu'),
-				'aServer' => array('foo' => 'bar'),
+			],
+			'server no matching port with default ' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, 'toto' => 'tutu'],
+				'aServer' => ['foo' => 'bar'],
 				'sValue'  => '%server(HTTP_PORT)?:8080%',
 				'sExpected' => '8080',
-			),
-			'server no matching port' => array(
-				'aEnv'    => array('ITOP_CONFIG_PLACEHOLDERS' => 1, 'toto' => 'tutu'),
-				'aServer' => array('foo' => 'bar'),
+			],
+			'server no matching port' => [
+				'aEnv'    => ['ITOP_CONFIG_PLACEHOLDERS' => 1, 'toto' => 'tutu'],
+				'aServer' => ['foo' => 'bar'],
 				'sValue'  => '%server(HTTP_PORT)%',
 				'sExpected' => null,
 				'sExpectedExceptionClass' => 'ConfigException',
-			),
-		);
+			],
+		];
 	}
 }

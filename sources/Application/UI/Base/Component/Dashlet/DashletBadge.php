@@ -1,12 +1,11 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Application\UI\Base\Component\Dashlet;
-
 
 use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
 use utils;
@@ -55,10 +54,14 @@ class DashletBadge extends DashletContainer
 	 * @param array $aRefreshParams
 	 */
 	public function __construct(
-		string $sClassIconUrl, string $sHyperlink, string $iCount, string $sClassLabel, ?string $sCreateActionUrl = '',
-		?string $sCreateActionLabel = '', array $aRefreshParams = []
-	)
-	{
+		string $sClassIconUrl,
+		string $sHyperlink,
+		string $iCount,
+		string $sClassLabel,
+		?string $sCreateActionUrl = '',
+		?string $sCreateActionLabel = '',
+		array $aRefreshParams = []
+	) {
 		parent::__construct();
 
 		$this->sClassIconUrl = $sClassIconUrl;
@@ -70,7 +73,6 @@ class DashletBadge extends DashletContainer
 		$this->aRefreshParams = $aRefreshParams;
 		$this->sClassDescription = '';
 	}
-
 
 	/**
 	 * @return string
@@ -210,7 +212,7 @@ class DashletBadge extends DashletContainer
 	public function SetClassDescription(string $sClassDescription)
 	{
 		$this->sClassDescription = $sClassDescription;
-		
+
 		return $this;
 	}
 

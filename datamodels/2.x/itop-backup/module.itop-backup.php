@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-backup/3.3.0',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Backup utilities',
@@ -12,31 +11,31 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
-		),
+		'dependencies' => [
+		],
 		'mandatory' => true,
 		'visible' => false,
 
 		// Components
 		//
-		'datamodel' => array(
+		'datamodel' => [
 			'main.itop-backup.php',
-		),
-		'webservice' => array(
+		],
+		'webservice' => [
 			//'webservices.itop-backup.php',
-		),
-		'dictionary' => array(
+		],
+		'dictionary' => [
 			'en.dict.itop-backup.php',
 			'fr.dict.itop-backup.php',
 			//'de.dict.itop-backup.php',
-		),
-		'data.struct' => array(
+		],
+		'data.struct' => [
 			//'data.struct.itop-backup.xml',
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			//'data.sample.itop-backup.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
@@ -44,14 +43,14 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
+		'settings' => [
 			'mysql_bindir' => '',
 			'week_days' => 'monday, tuesday, wednesday, thursday, friday',
 			'time' => '23:30',
 			//'file_name_format' => '__DB__-%Y-%m-%d_%H_%M',
-			'retention_count' => 5, 
+			'retention_count' => 5,
 			'enabled' => true,
 			'itop_backup_incident' => '',
-		),
-	)
+		],
+	]
 );

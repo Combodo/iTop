@@ -1,6 +1,7 @@
 <?php
 
 namespace Combodo\iTop\Setup\ModuleDiscovery;
+
 use Exception;
 use SetupLog;
 

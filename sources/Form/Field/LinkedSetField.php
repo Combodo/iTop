@@ -32,11 +32,11 @@ use Combodo\iTop\Form\Validator\LinkedSetValidator;
 class LinkedSetField extends AbstractSimpleField
 {
 	/** @var bool DEFAULT_INDIRECT */
-	const DEFAULT_INDIRECT = false;
+	public const DEFAULT_INDIRECT = false;
 	/** @var bool DEFAULT_DISPLAY_OPENED */
-	const DEFAULT_DISPLAY_OPENED = false;
+	public const DEFAULT_DISPLAY_OPENED = false;
 	/** @var bool DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS */
-	const DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS = false;
+	public const DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS = false;
 
 	/** @var string $sTargetClass */
 	protected $sTargetClass;
@@ -71,9 +71,9 @@ class LinkedSetField extends AbstractSimpleField
 		$this->bIndirect = static::DEFAULT_INDIRECT;
 		$this->bDisplayOpened = static::DEFAULT_DISPLAY_OPENED;
 		$this->bDisplayLimitedAccessItems = static::DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS;
-		$this->aLimitedAccessItemIDs = array();
-		$this->aAttributesToDisplay = array();
-		$this->aLnkAttributesToDisplay = array();
+		$this->aLimitedAccessItemIDs = [];
+		$this->aAttributesToDisplay = [];
+		$this->aLnkAttributesToDisplay = [];
 		$this->sSearchEndpoint = null;
 		$this->sInformationEndpoint = null;
 
@@ -218,7 +218,7 @@ class LinkedSetField extends AbstractSimpleField
 
 		return $this;
 	}
-	
+
 	/**
 	 * Returns IDs of the linked items with a limited access (not visible or not editable)
 	 *
@@ -280,25 +280,25 @@ class LinkedSetField extends AbstractSimpleField
 	public function GetLnkAttributesToDisplay(bool $bAttCodesOnly = false)
 	{
 		return ($bAttCodesOnly) ? array_keys($this->aLnkAttributesToDisplay) : $this->aLnkAttributesToDisplay;
-    }
+	}
 
-    /**
-     * @param array $aAttributesToDisplay
-     * @return $this
-     * @since 3.1.0 N°803
-     */
-    public function SetLnkAttributesToDisplay(array $aAttributesToDisplay)
-    {
-        $this->aLnkAttributesToDisplay = $aAttributesToDisplay;
+	/**
+	 * @param array $aAttributesToDisplay
+	 * @return $this
+	 * @since 3.1.0 N°803
+	 */
+	public function SetLnkAttributesToDisplay(array $aAttributesToDisplay)
+	{
+		$this->aLnkAttributesToDisplay = $aAttributesToDisplay;
 
-        $this->RemoveValidatorsOfClass(LinkedSetValidator::class);
-        $this->AddValidator(new LinkedSetValidator($aAttributesToDisplay));
+		$this->RemoveValidatorsOfClass(LinkedSetValidator::class);
+		$this->AddValidator(new LinkedSetValidator($aAttributesToDisplay));
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * @return string|null
+	/**
+	 * @return string|null
 	 */
 	public function GetSearchEndpoint()
 	{

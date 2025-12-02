@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Spanish Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:AuditCategory' => 'Auditoría de Categorías',
 	'Class:AuditCategory+' => 'Auditoría de Categorías',
 	'Class:AuditCategory/Attribute:name' => 'Nombre de Categoría',
@@ -24,19 +25,21 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Porcentaje de objetos no válidos por debajo del cual el resultado es erróneo (rojo)',
 	'Class:AuditCategory/Attribute:domains_list' => 'Dominios',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Dominios que incluyen esta categoría',
-));
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:AuditRule' => 'Regla de Auditoría',
 	'Class:AuditRule+' => 'Regla a revisar para una categoría de auditoría específica',
 	'Class:AuditRule/Attribute:name' => 'Nombre de la Regla',
 	'Class:AuditRule/Attribute:name+' => 'Nombre corto para esta regla',
 	'Class:AuditRule/Attribute:description' => 'Descripción de regla de auditoría',
 	'Class:AuditRule/Attribute:description+' => 'Descripción larga para esta regla de auditoría',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Consulta a Ejecutar',
 	'Class:AuditRule/Attribute:query+' => 'Expresión OQL a ejecutar',
 	'Class:AuditRule/Attribute:valid_flag' => '¿Objetos Válidos?',
@@ -49,13 +52,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:AuditRule/Attribute:category_id+' => 'La categoría para esta regla',
 	'Class:AuditRule/Attribute:category_name' => 'Categoría',
 	'Class:AuditRule/Attribute:category_name+' => 'Nombre de la categoría para esta regla',
-));
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:AuditDomain' => 'Auditar Dominio',
 	'Class:AuditDomain+' => 'La auditoría de dominios permiten agrupar las categorías de auditoría.
 El dominio suele corresponder a quién se encarga de comprobar y corregir errores.',
@@ -67,13 +72,13 @@ El dominio suele corresponder a quién se encarga de comprobar y corregir errore
 	'Class:AuditDomain/Attribute:icon+' => 'Icono',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categorías',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Categorías de auditoría relacionadas. Al ejecutar la auditoría en un dominio, se verifican todas las categorías de auditoría relacionadas y solo esas.',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Relación Categoría de auditoría / Dominio de auditoría',
 	'Class:lnkAuditCategoryToAuditDomain+' => 'Relación Categoría de auditoría / Dominio de auditoría',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Categoría',
@@ -84,13 +89,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Dominio de auditoría',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Nombre de dominio',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Nombre de auditoria de dominio',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Query' => 'Consulta',
 	'Class:Query+' => 'Un query es un set de datos definidos de manera dinámica',
 	'Class:Query/Attribute:name' => 'Nombre',
@@ -117,7 +122,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:QueryOQL+' => 'Una consulta basada en Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Expresión',
 	'Class:QueryOQL/Attribute:oql+' => 'Expresión OQL',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -128,7 +133,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: User
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:User' => 'Usuario',
 	'Class:User+' => 'Credencial de usuario',
 	'Class:User/Attribute:finalclass' => 'Tipo de Cuenta',
@@ -161,9 +166,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:User/Attribute:status/Value:disabled' => 'Deshabilitado',
 	'Class:User/Error:LoginMustBeUnique' => 'Usuario debe ser único - "%1s" ya se encuentra en uso.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Al menos un Perfil debe ser asignado a este usuario.',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'No se puede agregar el perfil "%1$s"; denegará el acceso al backoffice',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Cambiar estatus no está permitido para su propio usuario',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Las organizaciones permitidas deben contener una organización de usuario',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'La lista actual de perfiles no otorga suficientes permisos de acceso (los usuarios ya no son modificables)',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'El perfil de usuario avanzado del Portal no otorga suficientes derechos de acceso (se debe agregar otro perfil)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Al menos una organización debe ser asignada a este usuario.',
@@ -174,13 +181,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:User/Warning:NoContactHasImpact' => 'Cuidado: no hay ninguna Persona definida sobre este Usuario, esto impide el acceso a portales, notificaciones de noticias y otros efectos secundarios en el back-office',
 	'Class:UserInternal' => 'Usuario Interno',
 	'Class:UserInternal+' => 'Usuario definido en '.ITOP_APPLICATION_SHORT,
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_Profiles' => 'Perfil',
 	'Class:URP_Profiles+' => 'Perfil de usuario',
 	'Class:URP_Profiles/Attribute:name' => 'Nombre',
@@ -189,13 +196,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_Profiles/Attribute:description+' => 'descripción en una línea',
 	'Class:URP_Profiles/Attribute:user_list' => 'Usuarios',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Personas que tienen este Rol.',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_Dimensions' => 'Dimensión',
 	'Class:URP_Dimensions+' => 'Dimensión de Aplicación (definiendo silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Nombre',
@@ -204,13 +211,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'Descripción en una línea',
 	'Class:URP_Dimensions/Attribute:type' => 'Tipo',
 	'Class:URP_Dimensions/Attribute:type+' => 'Nombre de Clase o Tipo de Datos (Unidad de Proyección)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_UserProfile' => 'Asignación de Perfiles',
 	'Class:URP_UserProfile+' => 'Perfiles de Usuarios',
 	'Class:URP_UserProfile/Name' => 'Vinculo entre %1$s y %2$s',
@@ -224,14 +231,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_UserProfile/Attribute:profile+' => 'Nombre del perfil',
 	'Class:URP_UserProfile/Attribute:reason' => 'Motivo',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Justificación de por qué esta persona tiene este rol',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_UserOrg' => 'Organizaciones de Usuario',
 	'Class:URP_UserOrg+' => 'Organizaciones Permitidas',
 	'Class:URP_UserOrg/Name' => 'Vínculo entre %1$s y %2$s',
@@ -245,13 +251,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Organización Permitida',
 	'Class:URP_UserOrg/Attribute:reason' => 'Motivo',
 	'Class:URP_UserOrg/Attribute:reason+' => 'Explicar porqué esta persona tiene permitido ver la información de esta Organización',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_ProfileProjection' => 'Proyecciones de Perfil',
 	'Class:URP_ProfileProjection+' => 'Proyecciones de Perfil',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimensión',
@@ -266,13 +272,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'Expresión OQL (usando $user) | constante |  | +código de atributo',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Atributo',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Código de Atributo Destino (opcional)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_ClassProjection' => 'Proyecciones de Clase',
 	'Class:URP_ClassProjection+' => 'Proyecciones de Clase',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimensión',
@@ -285,13 +291,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'Expresión OQL (usando $this) | constante |  | +código de atributo',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Atributo',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Código de Atributo Destino (opcional)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_ActionGrant' => 'Permisos sobre Acciones',
 	'Class:URP_ActionGrant+' => 'Permisos sobre Acciones',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Perfil',
@@ -308,13 +314,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_ActionGrant/Attribute:action' => 'Acción',
 	'Class:URP_ActionGrant/Attribute:action+' => 'Operaciones a realizar en la clase especificada',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_StimulusGrant' => 'Permisos de Cambio de Estado',
 	'Class:URP_StimulusGrant+' => 'Permisos de Cambio de Estado en el Ciclo de Vida del Objeto',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Perfil',
@@ -331,25 +337,25 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => '',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Cambio de Estado',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Código de Cambio de Estado',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:URP_AttributeGrant' => 'Permisos en Atributos',
 	'Class:URP_AttributeGrant+' => 'Permisos en Atributos',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Concesión de Acción',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'concesión de Acción',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Atributo',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Código de Atributo',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:UserDashboard' => 'Tablero de Usuario',
 	'Class:UserDashboard+' => 'Tablero de Usuario',
 	'Class:UserDashboard/Attribute:user_id' => 'Usuario',
@@ -358,12 +364,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserDashboard/Attribute:menu_code+' => 'Código de Menú',
 	'Class:UserDashboard/Attribute:contents' => 'Contenidos',
 	'Class:UserDashboard/Attribute:contents+' => 'Contenidos',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:WelcomeMenu' => 'Bienvenido',
 	'Menu:WelcomeMenu+' => 'Bienvenido a '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Bienvenido',
 	'Menu:WelcomeMenuPage+' => 'Bienvenido a '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Herramientas Administrativas',
@@ -380,14 +386,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:MyShortcuts' => 'Mis Accesos Rápidos',
 	'Menu:Notifications:Title' => 'Auditar categorías',
 	'Menu:DataAdministration' => 'Administración de Datos',
-	'Menu:DataAdministration+' => 'Administración de Datos'
-));
+	'Menu:DataAdministration+' => 'Administración de Datos',
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'BooleanLabel:yes' => 'Si',
 	'BooleanLabel:no' => 'No',
 	'UI:Login:Title' => 'Inicio de Sesión',
@@ -1534,13 +1540,13 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Hijos de los objetos seleccionados serán incluídos.',
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtrado',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtrado en %1$s',
-	'UI:StateChanged' => 'Estado cambiado'
-));
+	'UI:StateChanged' => 'Estado cambiado',
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Expression:Operator:AND' => ' Y ',
 	'Expression:Operator:OR' => ' O ',
 	'Expression:Operator:=' => ': ',
@@ -1553,12 +1559,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Expression:Unit:Long:MINUTE' => 'minuto(s)',
 	'Expression:Verb:NOW' => 'Ahora',
 	'Expression:Verb:ISNULL' => ': Nulo',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Newsroom:NoNewMessage' => 'Sin Mensajes',
 	'UI:Newsroom:XNewMessage' => '%1$s nuevo(s) mensaje(s)',
 	'UI:Newsroom:MarkAllAsRead' => 'Marcar todos los mensajes como leídos',
@@ -1573,10 +1579,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgente',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Importante',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal',
-));
+]);
 
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:DataSources' => 'Fuentes de Datos Sincronizables',
 	'Menu:DataSources+' => 'Fuentes de Datos Sincronizables',
 	'Menu:AuditCategories' => 'Auditar categorías',
@@ -1604,4 +1609,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:Integrations' => 'Integraciones',
 	'Menu:Integrations+' => '~~',
 
-));
+]);

@@ -1,11 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\Object;
-
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
@@ -113,7 +113,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 
 		return $this;
 	}
-	
+
 	/**
 	 * @see self::$sClassLabel
 	 * @return string
@@ -224,7 +224,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 		// Default icon is the class icon
 		$sIconUrl = $oObject->GetIcon(false);
 		// Note: Class icons are a square image with no margin around, so they need to be zoomed out in the medallion
-		$sIconCoverMethod = $oObject->HasInstanceIcon() && !$oObject->HasHighlightIcon() ?  static::ENUM_ICON_COVER_METHOD_COVER : static::ENUM_ICON_COVER_METHOD_ZOOMOUT;
+		$sIconCoverMethod = $oObject->HasInstanceIcon() && !$oObject->HasHighlightIcon() ? static::ENUM_ICON_COVER_METHOD_COVER : static::ENUM_ICON_COVER_METHOD_ZOOMOUT;
 
 		$this->SetIcon($sIconUrl, $sIconCoverMethod, true);
 	}

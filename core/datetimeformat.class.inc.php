@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,24 +17,23 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Helper class to generate Date & Time formatting strings in the various conventions
  * from the PHP DateTime::createFromFormat convention.
- * 
+ *
  * Example:
- * 
+ *
  * $oFormat = new DateTimeFormat('m/d/Y H:i');
  * $oFormat->ToExcel();
  * >> 'MM/dd/YYYY HH:mm'
- * 
+ *
  * @author Denis Flaven <denis.flaven@combodo.com>
  *
  */
 class DateTimeFormat
 {
 	protected $sPHPFormat;
-	
+
 	/**
 	 * Constructs the DateTimeFormat object
 	 * @param string $sPHPFormat A format string using the PHP 'DateTime::createFromFormat' convention
@@ -42,7 +42,7 @@ class DateTimeFormat
 	{
 		$this->sPHPFormat = (string)$sPHPFormat;
 	}
-	
+
 	/**
 	 * @return string
 	 */
@@ -50,34 +50,34 @@ class DateTimeFormat
 	{
 		return $this->sPHPFormat;
 	}
-	
+
 	/**
 	 * Return the mapping table for converting between various conventions for date/time formats
 	 */
 	protected static function GetFormatMapping()
 	{
-		return array(
+		return [
 				// Days
-				'd' => array('regexpr' => '(0[1-9]|[1-2][0-9]|3[0-1])', 'datepicker' => 'dd', 'excel' => 'dd', 'moment' => 'DD'), // Day of the month: 2 digits (with leading zero)
-				'j' => array('regexpr' => '([1-9]|[1-2][0-9]|3[0-1])', 'datepicker' => 'd', 'excel' => 'd', 'moment' => 'D'), // Day of the month: 1 or 2 digits (without leading zero)
+				'd' => ['regexpr' => '(0[1-9]|[1-2][0-9]|3[0-1])', 'datepicker' => 'dd', 'excel' => 'dd', 'moment' => 'DD'], // Day of the month: 2 digits (with leading zero)
+				'j' => ['regexpr' => '([1-9]|[1-2][0-9]|3[0-1])', 'datepicker' => 'd', 'excel' => 'd', 'moment' => 'D'], // Day of the month: 1 or 2 digits (without leading zero)
 				// Months
-				'm' => array('regexpr' => '(0[1-9]|1[0-2])', 'datepicker' => 'mm', 'excel' => 'MM', 'moment' => 'MM' ), // Month on 2 digits i.e. 01-12
-				'n' => array('regexpr' => '([1-9]|1[0-2])', 'datepicker' => 'm', 'excel' => 'm', 'moment' => 'M'), // Month on 1 or 2 digits 1-12
+				'm' => ['regexpr' => '(0[1-9]|1[0-2])', 'datepicker' => 'mm', 'excel' => 'MM', 'moment' => 'MM' ], // Month on 2 digits i.e. 01-12
+				'n' => ['regexpr' => '([1-9]|1[0-2])', 'datepicker' => 'm', 'excel' => 'm', 'moment' => 'M'], // Month on 1 or 2 digits 1-12
 				// Years
-				'Y' => array('regexpr' => '([0-9]{4})', 'datepicker' => 'yy', 'excel' => 'YYYY', 'moment' => 'YYYY'), // Year on 4 digits
-				'y' => array('regexpr' => '([0-9]{2})', 'datepicker' => 'y', 'excel' => 'YY', 'moment' => 'YY'), // Year on 2 digits
+				'Y' => ['regexpr' => '([0-9]{4})', 'datepicker' => 'yy', 'excel' => 'YYYY', 'moment' => 'YYYY'], // Year on 4 digits
+				'y' => ['regexpr' => '([0-9]{2})', 'datepicker' => 'y', 'excel' => 'YY', 'moment' => 'YY'], // Year on 2 digits
 				// Hours
-				'H' => array('regexpr' => '([0-1][0-9]|2[0-3])', 'datepicker' => 'HH', 'excel' => 'HH', 'moment' => 'HH'), // Hour 00..23
-				'h' => array('regexpr' => '(0[1-9]|1[0-2])', 'datepicker' => 'hh', 'excel' => 'hh', 'moment' => 'hh'), // Hour 01..12
-				'G' => array('regexpr' => '([0-9]|1[0-9]|2[0-3])', 'datepicker' => 'H', 'excel' => 'H', 'moment' => 'H'), // Hour 0..23
-				'g' => array('regexpr' => '([1-9]|1[0-2])', 'datepicker' => 'h', 'excel' => 'h', 'moment' => 'h'), // Hour 1..12
-				'a' => array('regexpr' => '(am|pm)', 'datepicker' => 'tt', 'excel' => 'am/pm', 'moment' => 'a'),
-				'A' => array('regexpr' => '(AM|PM)', 'datepicker' => 'TT', 'excel' => 'AM/PM', 'moment' => 'A'),
+				'H' => ['regexpr' => '([0-1][0-9]|2[0-3])', 'datepicker' => 'HH', 'excel' => 'HH', 'moment' => 'HH'], // Hour 00..23
+				'h' => ['regexpr' => '(0[1-9]|1[0-2])', 'datepicker' => 'hh', 'excel' => 'hh', 'moment' => 'hh'], // Hour 01..12
+				'G' => ['regexpr' => '([0-9]|1[0-9]|2[0-3])', 'datepicker' => 'H', 'excel' => 'H', 'moment' => 'H'], // Hour 0..23
+				'g' => ['regexpr' => '([1-9]|1[0-2])', 'datepicker' => 'h', 'excel' => 'h', 'moment' => 'h'], // Hour 1..12
+				'a' => ['regexpr' => '(am|pm)', 'datepicker' => 'tt', 'excel' => 'am/pm', 'moment' => 'a'],
+				'A' => ['regexpr' => '(AM|PM)', 'datepicker' => 'TT', 'excel' => 'AM/PM', 'moment' => 'A'],
 				// Minutes
-				'i' => array('regexpr' => '([0-5][0-9])', 'datepicker' => 'mm', 'excel' => 'mm', 'moment' => 'mm'),
+				'i' => ['regexpr' => '([0-5][0-9])', 'datepicker' => 'mm', 'excel' => 'mm', 'moment' => 'mm'],
 				// Seconds
-				's' => array('regexpr' => '([0-5][0-9])', 'datepicker' => 'ss', 'excel' => 'ss', 'moment' => 'ss'),	
-		);
+				's' => ['regexpr' => '([0-5][0-9])', 'datepicker' => 'ss', 'excel' => 'ss', 'moment' => 'ss'],
+		];
 	}
 
 	/**
@@ -87,57 +87,44 @@ class DateTimeFormat
 	 * @param string $sEscapePattern The replacement string for escaping characters in the output string. %s is the source char.
 	 * @param string $bEscapeAll True to systematically escape all litteral characters
 	 * @param array $sSpecialChars A string containing the only characters to escape in the output
-	 * @return string The string in the requested format 
+	 * @return string The string in the requested format
 	 */
 	protected function Transform($sOutputFormatCode, $sEscapePattern, $bEscapeAll = false, $sSpecialChars = '')
 	{
 		$aMappings = static::GetFormatMapping();
 		$sResult = '';
-		
+
 		$bEscaping = false;
-		for($i=0; $i < strlen($this->sPHPFormat); $i++)
-		{
-			if (($this->sPHPFormat[$i] == '\\'))
-			{
+		for ($i = 0; $i < strlen($this->sPHPFormat); $i++) {
+			if (($this->sPHPFormat[$i] == '\\')) {
 				$bEscaping = true;
 				continue;
 			}
-			
-			if ($bEscaping)
-			{
-				if (($sSpecialChars === '') || (strpos($sSpecialChars, $this->sPHPFormat[$i]) !== false))
-				{
+
+			if ($bEscaping) {
+				if (($sSpecialChars === '') || (strpos($sSpecialChars, $this->sPHPFormat[$i]) !== false)) {
 					$sResult .= sprintf($sEscapePattern, $this->sPHPFormat[$i]);
-				}
-				else
-				{
+				} else {
 					$sResult .= $this->sPHPFormat[$i];
 				}
-				
+
 				$bEscaping = false;
-			}
-			else if(array_key_exists($this->sPHPFormat[$i], $aMappings))
-			{
+			} elseif (array_key_exists($this->sPHPFormat[$i], $aMappings)) {
 				// Not a litteral value, must be replaced by its regular expression pattern
 				$sResult .= $aMappings[$this->sPHPFormat[$i]][$sOutputFormatCode];
-			}
-			else
-			{
-				if ($bEscapeAll || (strpos($sSpecialChars, $this->sPHPFormat[$i]) !== false))
-				{
+			} else {
+				if ($bEscapeAll || (strpos($sSpecialChars, $this->sPHPFormat[$i]) !== false)) {
 					$sResult .= sprintf($sEscapePattern, $this->sPHPFormat[$i]);
-				}
-				else
-				{
+				} else {
 					// Normal char with no special meaning, no need to escape it
 					$sResult .= $this->sPHPFormat[$i];
 				}
 			}
 		}
-		
-		return $sResult;		
-	}	
-	
+
+		return $sResult;
+	}
+
 	/**
 	 * Format a date into the supplied format string
 	 * @param mixed $date An int, string, DateTime object or null !!
@@ -146,38 +133,27 @@ class DateTimeFormat
 	 */
 	public function Format($date)
 	{
-		if ($date == null)
-		{
+		if ($date == null) {
 			$sDate = '';
-		}
-		else if (($date === '0000-00-00') || ($date === '0000-00-00 00:00:00'))
-		{
+		} elseif (($date === '0000-00-00') || ($date === '0000-00-00 00:00:00')) {
 			$sDate = '';
-		}
-		else if ($date instanceof DateTime)
-		{
+		} elseif ($date instanceof DateTime) {
 			// Parameter is a DateTime
 			$sDate = $date->format($this->sPHPFormat);
-		}
-		else if (is_int($date))
-		{
+		} elseif (is_int($date)) {
 			// Parameter is a Unix timestamp
 			$oDate = new DateTime();
 			$oDate->setTimestamp($date);
 			$sDate = $oDate->format($this->sPHPFormat);
-		}
-		else if (is_string($date))
-		{
+		} elseif (is_string($date)) {
 			$oDate = new DateTime($date);
 			$sDate = $oDate->format($this->sPHPFormat);
-		}
-		else
-		{
+		} else {
 			throw new Exception(__CLASS__."::Format: Unexpected date value: ".print_r($date, true));
 		}
 		return $sDate;
 	}
-	
+
 	/**
 	 * Parse a date in the supplied format and return the date as a string in the internal format
 	 * @param string $sDate The string to parse
@@ -187,22 +163,18 @@ class DateTimeFormat
 	 */
 	public function Parse($sDate)
 	{
-		if (($sDate == null) || ($sDate == '0000-00-00 00:00:00') || ($sDate == '0000-00-00'))
-		{
-			return null;	
-		}
-		else
-		{
+		if (($sDate == null) || ($sDate == '0000-00-00 00:00:00') || ($sDate == '0000-00-00')) {
+			return null;
+		} else {
 			$sFormat = preg_replace('/\\?/', '', $this->sPHPFormat); // replace escaped characters by a wildcard for parsing
 			$oDate = DateTime::createFromFormat($this->sPHPFormat, $sDate);
-			if ($oDate === false)
-			{
+			if ($oDate === false) {
 				throw new Exception(__CLASS__."::Parse: Unable to parse the date: '$sDate' using the format: '{$this->sPHPFormat}'");
 			}
 			return $oDate;
 		}
 	}
-	
+
 	/**
 	 * Get the date or datetime format string in the jQuery UI date picker format
 	 * @return string The format string using the date picker convention
@@ -211,7 +183,7 @@ class DateTimeFormat
 	{
 		return $this->Transform('datepicker', "'%s'");
 	}
-	
+
 	/**
 	 * Get a date or datetime format string in the Excel format
 	 * @return string The format string using the Excel convention
@@ -220,7 +192,7 @@ class DateTimeFormat
 	{
 		return $this->Transform('excel', "%s");
 	}
-	
+
 	/**
 	 * Get a date or datetime format string in the moment.js format
 	 * @return string The format string using the moment.js convention
@@ -229,16 +201,15 @@ class DateTimeFormat
 	{
 		return $this->Transform('moment', "[%s]", true /* escape all */);
 	}
-	
+
 	public static function GetJSSQLToCustomFormat()
 	{
-		$aPHPToMoment = array();
-		foreach(self::GetFormatMapping() as $sPHPCode => $aMapping)
-		{
+		$aPHPToMoment = [];
+		foreach (self::GetFormatMapping() as $sPHPCode => $aMapping) {
 			$aPHPToMoment[$sPHPCode] = $aMapping['moment'];
 		}
 		$sJSMapping = json_encode($aPHPToMoment);
-		
+
 		$sFunction =
 <<<EOF
 function PHPDateTimeFormatToSubFormat(sPHPFormat, sPlaceholders)
@@ -325,7 +296,7 @@ EOF
 		;
 		return $sFunction;
 	}
-	
+
 	/**
 	 * Get a placeholder text for a date or datetime format string
 	 * @return string The placeholder text (localized)
@@ -334,34 +305,27 @@ EOF
 	{
 		$aMappings = static::GetFormatMapping();
 		$sResult = '';
-		
+
 		$bEscaping = false;
-		for($i=0; $i < strlen($this->sPHPFormat); $i++)
-		{
-			if (($this->sPHPFormat[$i] == '\\'))
-			{
+		for ($i = 0; $i < strlen($this->sPHPFormat); $i++) {
+			if (($this->sPHPFormat[$i] == '\\')) {
 				$bEscaping = true;
 				continue;
 			}
-			
-			if ($bEscaping)
-			{
+
+			if ($bEscaping) {
 				$sResult .= $this->sPHPFormat[$i]; // No need to escape characters in the placeholder
 				$bEscaping = false;
-			}
-			else if(array_key_exists($this->sPHPFormat[$i], $aMappings))
-			{
+			} elseif (array_key_exists($this->sPHPFormat[$i], $aMappings)) {
 				// Not a litteral value, must be replaced by Dict equivalent
 				$sResult .= Dict::S('Core:DateTime:Placeholder_'.$this->sPHPFormat[$i]);
-			}
-			else
-			{
+			} else {
 
 				// Normal char with no special meaning
 				$sResult .= $this->sPHPFormat[$i];
 			}
 		}
-		
+
 		return $sResult;
 	}
 
@@ -373,14 +337,11 @@ EOF
 	{
 		$iStart = 999;
 		$iEnd = 0;
-		
-		foreach($aPlaceholders as $sChar)
-		{
+
+		foreach ($aPlaceholders as $sChar) {
 			$iPos = strpos($this->sPHPFormat, $sChar);
-			if ($iPos !== false)
-			{
-				if (($iPos > 0) && ($this->sPHPFormat[$iPos-1] == '\\'))
-				{
+			if ($iPos !== false) {
+				if (($iPos > 0) && ($this->sPHPFormat[$iPos - 1] == '\\')) {
 					// The placeholder is actually escaped, it's a litteral character, ignore it
 					continue;
 				}
@@ -391,25 +352,25 @@ EOF
 		$sFormat = substr($this->sPHPFormat, $iStart, $iEnd - $iStart + 1);
 		return $sFormat;
 	}
-	
+
 	/**
 	 * Produces the Date format string by extracting only the date part of the date and time format string
 	 * @return string
 	 */
 	public function ToDateFormat()
 	{
-		return $this->ToSubFormat(array('Y', 'y', 'd', 'j', 'm', 'n'));
+		return $this->ToSubFormat(['Y', 'y', 'd', 'j', 'm', 'n']);
 	}
-	
+
 	/**
 	 * Produces the Time format string by extracting only the time part of the date and time format string
 	 * @return string
 	 */
 	public function ToTimeFormat()
 	{
-		return $this->ToSubFormat(array('H', 'h', 'G', 'g', 'i', 's', 'a', 'A'));
+		return $this->ToSubFormat(['H', 'h', 'G', 'g', 'i', 's', 'a', 'A']);
 	}
-	
+
 	/**
 	 * Get the regular expression to (approximately) validate a date/time for the current format
 	 * The validation does not take into account the number of days in a month (i.e. June 31st will pass, as well as Feb 30th!)
@@ -419,8 +380,7 @@ EOF
 	public function ToRegExpr($sDelimiter = null)
 	{
 		$sRet = '^'.$this->Transform('regexpr', "\\%s", false /* escape all */, '.?*$^()[]:').'$';
-		if ($sDelimiter !== null)
-		{
+		if ($sDelimiter !== null) {
 			$sRet = $sDelimiter.str_replace($sDelimiter, '\\'.$sDelimiter, $sRet).$sDelimiter;
 		}
 		return $sRet;

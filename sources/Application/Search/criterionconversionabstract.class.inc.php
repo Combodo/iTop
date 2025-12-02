@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -19,25 +20,21 @@
  *
  */
 
-
 namespace Combodo\iTop\Application\Search;
-
 
 abstract class CriterionConversionAbstract
 {
-
-	const OP_CONTAINS = 'contains';
-	const OP_EQUALS = '=';
-	const OP_STARTS_WITH = 'starts_with';
-	const OP_ENDS_WITH = 'ends_with';
-	const OP_EMPTY = 'empty';
-	const OP_NOT_EMPTY = 'not_empty';
-	const OP_IN = 'IN';
-	const OP_BETWEEN_DATES = 'between_dates';
-	const OP_BETWEEN = 'between';
-	const OP_REGEXP = 'REGEXP';
-	const OP_ALL = 'all';
-	const OP_MATCHES = 'MATCHES';
+	public const OP_CONTAINS = 'contains';
+	public const OP_EQUALS = '=';
+	public const OP_STARTS_WITH = 'starts_with';
+	public const OP_ENDS_WITH = 'ends_with';
+	public const OP_EMPTY = 'empty';
+	public const OP_NOT_EMPTY = 'not_empty';
+	public const OP_IN = 'IN';
+	public const OP_BETWEEN_DATES = 'between_dates';
+	public const OP_BETWEEN = 'between';
+	public const OP_REGEXP = 'REGEXP';
+	public const OP_ALL = 'all';
+	public const OP_MATCHES = 'MATCHES';
 
 }
-

@@ -9,5 +9,4 @@
  */
 class URLButtonItem extends URLPopupMenuItem
 {
-
 }

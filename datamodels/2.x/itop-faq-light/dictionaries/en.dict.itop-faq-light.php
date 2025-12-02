@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -50,7 +51,7 @@
 // Class: FAQ
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Frequently asked questions',
 	'Class:FAQ/Attribute:title' => 'Title',
@@ -68,21 +69,21 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FAQ/Attribute:key_words' => 'Key words',
 	'Class:FAQ/Attribute:key_words+' => '',
 	'Class:FAQ/Attribute:domains' => 'Domains',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:FAQCategory' => 'FAQ Category',
 	'Class:FAQCategory+' => 'Category for FAQ',
 	'Class:FAQCategory/Attribute:name' => 'Name',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category',
-));
-Dict::Add('EN US', 'English', 'English', array(
+]);
+Dict::Add('EN US', 'English', 'English', [
 	'Menu:ProblemManagement' => 'Problem management',
 	'Menu:ProblemManagement+' => 'Problem management',
 	'Menu:Problem:Shortcuts' => 'Shortcuts',
@@ -93,4 +94,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Frequently Asked Questions',
 	'Brick:Portal:FAQ:Title+' => '<p>In a hurry?</p><p>Check out the list of most common questions and (maybe) find the expected answer right away.</p>',
-));
+]);

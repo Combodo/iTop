@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Perguntas frequentes (FAQ)',
 	'Class:FAQ/Attribute:title' => 'Título',
@@ -27,21 +28,21 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FAQ/Attribute:key_words' => 'Palavras-chaves',
 	'Class:FAQ/Attribute:key_words+' => '',
 	'Class:FAQ/Attribute:domains' => 'Domínios',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:FAQCategory' => 'Categorias de FAQ',
 	'Class:FAQCategory+' => '',
 	'Class:FAQCategory/Attribute:name' => 'Nome',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Todas as perguntas frequentes associadas à esta categoria',
-));
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+]);
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:ProblemManagement' => 'Gerencimento de problemas',
 	'Menu:ProblemManagement+' => '',
 	'Menu:Problem:Shortcuts' => 'Atalhos',
@@ -52,4 +53,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Perguntas frequentes (FAQ)',
 	'Brick:Portal:FAQ:Title+' => '<p>Com pressa?</p><p>Confira a lista de perguntas mais comuns e (talvez) encontre a resposta esperada imediatamente.</p>',
-));
+]);

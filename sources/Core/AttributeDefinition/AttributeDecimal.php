@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -20,7 +21,7 @@ use utils;
  */
 class AttributeDecimal extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -41,7 +42,7 @@ class AttributeDecimal extends AttributeDBField
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('digits', 'decimals' /* including precision */));
+		return array_merge(parent::ListExpectedParams(), ['digits', 'decimals' /* including precision */]);
 	}
 
 	public function GetEditClass()
@@ -76,7 +77,7 @@ class AttributeDecimal extends AttributeDBField
 
 	public function GetBasicFilterOperators()
 	{
-		return array(
+		return [
 			"!=" => "differs from",
 			"="  => "equals",
 			">"  => "greater (strict) than",
@@ -84,7 +85,7 @@ class AttributeDecimal extends AttributeDBField
 			"<"  => "less (strict) than",
 			"<=" => "less than",
 			"in" => "in",
-		);
+		];
 	}
 
 	public function GetBasicFilterLooseOperator()

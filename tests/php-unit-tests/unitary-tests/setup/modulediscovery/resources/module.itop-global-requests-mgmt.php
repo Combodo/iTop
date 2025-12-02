@@ -11,7 +11,7 @@
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-global-requests-mgmt/1.6.3',
-	array(
+	[
 		// Identification
 		//
 		'label'        => 'iTop Global Requests Management',
@@ -19,23 +19,23 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
+		'dependencies' => [
 			'itop-portal-base/3.2.0',
-		),
+		],
 		'mandatory' => false,
 		'visible' => true,
 		'installer' => GlobalRequestInstaller::class,
 
 		// Components
 		//
-		'datamodel' => array(
+		'datamodel' => [
 			'vendor/autoload.php',
-		),
-		'webservice' => array(),
-		'data.struct' => array(// add your 'structure' definition XML files here,
-		),
-		'data.sample' => array(// add your sample data XML files here,
-		),
+		],
+		'webservice' => [],
+		'data.struct' => [// add your 'structure' definition XML files here,
+		],
+		'data.sample' => [// add your sample data XML files here,
+		],
 
 		// Documentation
 		//
@@ -44,14 +44,13 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
+		'settings' => [
 			'target_state' => 'new',
 			'bypass_profiles' => 'Administrator, Service Manager',
 			'reuse_previous_answers' => true,
-		),
-	)
+		],
+	]
 );
-
 
 class GlobalRequestInstaller extends ModuleInstallerAPI
 {
@@ -71,5 +70,3 @@ class GlobalRequestInstaller extends ModuleInstallerAPI
 		//code
 	}
 }
-
-

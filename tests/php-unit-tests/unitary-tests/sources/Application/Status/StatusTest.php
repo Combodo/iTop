@@ -28,7 +28,7 @@ class StatusTest extends ItopTestCase
 		$sPath = APPROOT.'/webservices/status.php';
 
 		$sPHP = $this->GetPHPCommand();
-echo "About to execute: $sPHP $sPath\n";
+		echo "About to execute: $sPHP $sPath\n";
 		exec("$sPHP $sPath", $aOutput, $iRet);
 		$this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n".var_export($aOutput, true));
 

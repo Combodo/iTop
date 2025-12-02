@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2023 Combodo SARL
  *
@@ -31,7 +32,7 @@ use Twig\TwigFunction;
  */
 class TemplatesTwigExtension extends AbstractExtension
 {
-	const DEFAULT_PROVIDER_CLASS = 'Combodo\\iTop\\Portal\\Controller\\AbstractController';
+	public const DEFAULT_PROVIDER_CLASS = 'Combodo\\iTop\\Portal\\Controller\\AbstractController';
 
 	public function __construct(private readonly TemplatesProviderService $oTemplatesService)
 	{

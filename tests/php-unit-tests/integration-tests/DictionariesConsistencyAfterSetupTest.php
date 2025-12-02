@@ -16,7 +16,7 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		"Class:DatacenterDevice/Attribute:redundancy/count",
 		"Class:DatacenterDevice/Attribute:redundancy/disabled",
 		"Class:DatacenterDevice/Attribute:redundancy/percent",
-		"Class:TriggerOnThresholdReached/Attribute:threshold_index+"
+		"Class:TriggerOnThresholdReached/Attribute:threshold_index+",
 	];
 
 	protected function setUp(): void
@@ -33,7 +33,8 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		$this->SetNonPublicStaticProperty(\Dict::class, 'm_aData', $aDictEntriesByLanguage);
 	}
 
-	public function FormatProvider(){
+	public function FormatProvider()
+	{
 		return [
 			'key does not exist in dictionnary' => [
 				'sTemplate' => null,
@@ -55,13 +56,14 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 	 * @since 2.7.10 N°5491 - Inconsistent dictionary entries regarding arguments to pass to Dict::Format
 	 * @dataProvider FormatProvider
 	 */
-	public function testFormatWithOneArgumentAndCustomKey(?string $sTemplate, $sExpectedTranslation){
+	public function testFormatWithOneArgumentAndCustomKey(?string $sTemplate, $sExpectedTranslation)
+	{
 		//tricky way to mock GetLabelAndLangCode behavior via connected user language
 		$sLangCode = \Dict::GetUserLanguage();
 		$aDictByLang = $this->GetNonPublicStaticProperty(\Dict::class, 'm_aData');
 		$sDictKey = 'ITOP::DICT:FORMAT:BROKEN:KEY';
 
-		if (! is_null($sTemplate)){
+		if (! is_null($sTemplate)) {
 			$aDictByLang[$sLangCode][$sDictKey] = $sTemplate;
 		}
 
@@ -72,7 +74,8 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 
 	//test works after setup (no annotation @beforesetup)
 	//even if it does not extend ItopDataTestCase
-	private function ReadDictKeys($sLangCode) : array {
+	private function ReadDictKeys($sLangCode): array
+	{
 		\Dict::InitLangIfNeeded($sLangCode);
 
 		$aDictEntries = $this->GetNonPublicStaticProperty(\Dict::class, 'm_aData');
@@ -90,28 +93,30 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 	 *
 	 * @return array
 	 */
-	private function GetKeyArgCountMap($aDictEntry) {
+	private function GetKeyArgCountMap($aDictEntry)
+	{
 		$aKeyArgsCount = [];
-		foreach ($aDictEntry as $sKey => $sValue){
+		foreach ($aDictEntry as $sKey => $sValue) {
 			$aKeyArgsCount[$sKey] = $this->countArg($sValue);
 		}
 		ksort($aKeyArgsCount);
 		return $aKeyArgsCount;
 	}
 
-	private function countArg($sLabel) {
+	private function countArg($sLabel)
+	{
 		$iMaxIndex = 0;
-		if (preg_match_all("/%(\d+)/", $sLabel, $aMatches)){
+		if (preg_match_all("/%(\d+)/", $sLabel, $aMatches)) {
 			$aSubMatches = $aMatches[1];
-			if (is_array($aSubMatches)){
-				foreach ($aSubMatches as $aCurrentMatch){
+			if (is_array($aSubMatches)) {
+				foreach ($aSubMatches as $aCurrentMatch) {
 					$iIndex = $aCurrentMatch;
 					$iMaxIndex = ($iMaxIndex < $iIndex) ? $iIndex : $iMaxIndex;
 				}
 			}
-		} else if ((false !== strpos($sLabel, "%s"))
+		} elseif ((false !== strpos($sLabel, "%s"))
 			|| (false !== strpos($sLabel, "%d"))
-		){
+		) {
 			$iMaxIndex = 1;
 		}
 
@@ -122,7 +127,8 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 	 * Warning: hardcoded list of languages
 	 * It is hard to have it dynamically via Dict::GetLanguages as for each lang Dict::Init should be called first
 	 **/
-	public function LangCodeProvider(){
+	public function LangCodeProvider()
+	{
 		return [
 			'cs' => [ 'CS CZ' ],
 			'da' => [ 'DA DA' ],
@@ -154,7 +160,6 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 
 		$aDictEntry = $this->ReadDictKeys($sLanguageCodeToTest);
 
-
 		$aKeyArgsCountMap = [];
 		$aKeyArgsCountMap[$sReferenceLangCode] = $this->GetKeyArgCountMap($aReferenceLangDictEntry);
 		//$aKeyArgsCountMap[$sCode] = $this->GetKeyArgCountMap($aDictEntry);
@@ -164,30 +169,30 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 
 		$aMismatchedKeys = [];
 
-		foreach ($aKeyArgsCountMap[$sReferenceLangCode] as $sKey => $iExpectedNbOfArgs){
-			if (0 === $iExpectedNbOfArgs){
-				//no arg needed in EN. 
+		foreach ($aKeyArgsCountMap[$sReferenceLangCode] as $sKey => $iExpectedNbOfArgs) {
+			if (0 === $iExpectedNbOfArgs) {
+				//no arg needed in EN.
 				//let s assume job has been done correctly in EN to simplify
 				continue;
 			}
 
-			if (in_array($sKey, self::$aLabelCodeNotToCheck)){
+			if (in_array($sKey, self::$aLabelCodeNotToCheck)) {
 				//false positive: do not test
 				continue;
 			}
 
-			if (array_key_exists($sKey, $aDictEntry)){
+			if (array_key_exists($sKey, $aDictEntry)) {
 				$aPlaceHolders = [];
-				for ($i=0; $i<$iExpectedNbOfArgs; $i++){
-					$aPlaceHolders[]=$i;
+				for ($i = 0; $i < $iExpectedNbOfArgs; $i++) {
+					$aPlaceHolders[] = $i;
 				}
 
 				$sLabelTemplate = $aDictEntry[$sKey];
-				try{
+				try {
 					vsprintf($sLabelTemplate, $aPlaceHolders);
-				} catch(\Throwable $e){
+				} catch (\Throwable $e) {
 					$sError = $e->getMessage();
-					if (array_key_exists($sError, $aMismatchedKeys)){
+					if (array_key_exists($sError, $aMismatchedKeys)) {
 						$aMismatchedKeys[$sError][$sKey] = $iExpectedNbOfArgs;
 					} else {
 						$aMismatchedKeys[$sError] = [$sKey => $iExpectedNbOfArgs];
@@ -197,7 +202,7 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		}
 
 		$iCount = 0;
-		foreach ($aMismatchedKeys as $sError => $aKeys){
+		foreach ($aMismatchedKeys as $sError => $aKeys) {
 			var_dump($sError);
 			foreach ($aKeys as $sKey => $iExpectedNbOfArgs) {
 				$iCount++;
@@ -222,7 +227,8 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		$this->assertEquals([], $aMismatchedKeys, $sErrorMsg);
 	}
 
-	public function testEveryEnglishEntryShouldHaveItsFrenchCounterpart() {
+	public function testEveryEnglishEntryShouldHaveItsFrenchCounterpart()
+	{
 		$sReferenceLangCode = 'EN US';
 		$aReferenceLangDictEntries = $this->ReadDictKeys($sReferenceLangCode);
 
@@ -233,13 +239,14 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		$this->assertCount(0, $aMissingEntries, "The following entries are missing in french dictionaries : \n - ".implode("\n - ", $aMissingEntries));
 	}
 
-	public function testEveryFrenchEntryShouldBeTranslated() {
+	public function testEveryFrenchEntryShouldBeTranslated()
+	{
 		$sFrenchLangCode = 'FR FR';
 		$aFrenchDictEntries = $this->ReadDictKeys($sFrenchLangCode);
 
 		$aUntranslatedEntries = [];
-		foreach ($aFrenchDictEntries as $sKey => $sValue){
-			if(mb_substr($sValue,-2) === '~~'){
+		foreach ($aFrenchDictEntries as $sKey => $sValue) {
+			if (mb_substr($sValue, -2) === '~~') {
 				$aUntranslatedEntries[] = $sKey.' => '.var_export($sValue, true);
 			}
 		}
@@ -247,7 +254,8 @@ class DictionariesConsistencyAfterSetupTest extends ItopTestCase
 		$this->assertCount(0, $aUntranslatedEntries, "The following french entries require translation : \n - ".implode("\n - ", $aUntranslatedEntries));
 	}
 
-	public function VsprintfProvider(){
+	public function VsprintfProvider()
+	{
 		return [
 			'not enough args' => [
 				"sLabelTemplate" => "$1%s",

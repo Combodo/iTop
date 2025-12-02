@@ -56,7 +56,8 @@ $oPage = new iTopWebPage('Render all UI blocks');
 $oPageContentLayout = PageContentFactory::MakeStandardEmpty();
 $oPage->SetContentLayout($oPageContentLayout);
 
-$oPage->add_style(<<<CSS
+$oPage->add_style(
+	<<<CSS
 hr {
 	background-color: var(--ibo-color-grey-950);
 }
@@ -331,7 +332,6 @@ $oPage->AddUiBlock($oCollapsibleSectionSaveState);
 
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Fieldset/field examples', 2));
 
-
 $oDashletFieldset1 = new FieldSet('Fieldset 1');
 $oDashletField1 = FieldUIBlockFactory::MakeStandard('Field A');
 $oDashletInput1 = InputUIBlockFactory::MakeStandard('text', 'input1', 'Input 1');
@@ -360,13 +360,13 @@ $oDashletFieldset2->AddSubBlock($oDashletField6);
 // Code
 /////////
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Code examples (MakeForCode)', 2 ));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Code examples (MakeForCode)', 2));
 $oCode1 = UIContentBlockUIBlockFactory::MakeForCode('function mean(int $a, int $b) {
 	return ($a + $b)/2
 }');
 $oPage->AddUiBlock($oCode1);
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Code examples (MakeForPreformatted)', 2 ));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Code examples (MakeForPreformatted)', 2));
 $oCode2 = UIContentBlockUIBlockFactory::MakeForPreformatted('function mean(int $a, int $b) {
 	return ($a + $b)/2
 }');
@@ -376,7 +376,7 @@ $oPage->AddUiBlock($oCode2);
 // Pill
 /////////
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Pill examples', 2 ));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Pill examples', 2));
 
 $oBlock = new UIContentBlockWithJSRefreshCallback(null, ["ibo-dashlet-header-dynamic--container"]);
 $oPage->AddUiBlock($oBlock);
@@ -397,95 +397,97 @@ $oBlock->AddSubBlock($oPill6);
 // Title
 /////////
 
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title examples', 2 ));
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 1', 1 ));
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 2', 2 ));
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 3', 3 ));
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 4', 4 ));
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 5', 5 ));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title examples', 2));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 1', 1));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 2', 2));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 3', 3));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 4', 4));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Title example 5', 5));
 
 /////////
 // DataTable
 /////////
-$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Datatable examples', 2 ));
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Datatable examples', 2));
 
-$oPage->AddUiBlock(DataTableUIBlockFactory::MakeForStaticData('Static datatable',
-	array(
-		'a' => array('label' => 'a'),
-		'b' => array('label' => 'b'),
-		'c' => array('label' => 'c'),
-		'd' => array('label' => 'd')
-	),
-	array(
-		array(
-	'a' => 'A1', 'b' => 'B1', 'c' => 'C1', 'd' => 'D1'
-	), array(
-	'a' => 'A2', 'b' => 'B2', 'c' => 'C2', 'd' => 'D2'
-	), array(
-    'a' => 'A3', 'b' => 'B3', 'c' => 'C3', 'd' => 'D3'
-	), array(
+$oPage->AddUiBlock(DataTableUIBlockFactory::MakeForStaticData(
+	'Static datatable',
+	[
+		'a' => ['label' => 'a'],
+		'b' => ['label' => 'b'],
+		'c' => ['label' => 'c'],
+		'd' => ['label' => 'd'],
+	],
+	[
+		[
+	'a' => 'A1', 'b' => 'B1', 'c' => 'C1', 'd' => 'D1',
+	], [
+	'a' => 'A2', 'b' => 'B2', 'c' => 'C2', 'd' => 'D2',
+	], [
+	'a' => 'A3', 'b' => 'B3', 'c' => 'C3', 'd' => 'D3',
+	], [
 			'a' => 'A4',
 			'b' => 'B4',
 			'c' => 'C4',
 			'd' => 'D4',
-		),
-		array(
+		],
+		[
 			'@class' => 'ibo-is-red',
 			'a'      => 'A5 (Red highlighting)',
 			'b'      => 'B5',
 			'c'      => 'C5',
 			'd'      => 'D5',
-		),
-		array(
+		],
+		[
 			'@class' => 'ibo-is-danger',
 			'a'      => 'A6 (Danger highlighting)',
 			'b'      => 'B6',
 			'c'      => 'C6',
 			'd'      => 'D6',
-		),
-		array(
+		],
+		[
 			'@class' => 'ibo-is-orange',
 			'a'      => 'A7 (Orange highlighting)',
 			'b'      => 'B7',
 			'c'      => 'C7',
 			'd'      => 'D7',
-		),
-		array(
+		],
+		[
 			'@class' => 'ibo-is-warning',
 			'a'      => 'A8 (Warning highlighting)',
 			'b'      => 'B8',
 			'c'      => 'C8',
 			'd'      => 'D8',
-		),
-		array(
+		],
+		[
 			'@class' => 'ibo-is-blue',
 			'a'      => 'A9 (Blue highlighting)',
 			'b'      => 'B9',
 			'c'      => 'C9',
 			'd'      => 'D9',
-		),
-		array(
+		],
+		[
 			'@class' => 'ibo-is-info',
 			'a'      => 'A10 (Info highlighting)',
 			'b'      => 'B10',
 			'c'      => 'C10',
 			'd'      => 'D10',
-		),
-		array(
+		],
+		[
 			'@class' => 'ibo-is-green',
 			'a'      => 'A11 (Green highlighting)',
 			'b'      => 'B11',
 			'c'      => 'C11',
 			'd'      => 'D11',
-		),
-		array(
+		],
+		[
 			'@class' => 'ibo-is-success',
 			'a'      => 'A12 (Success highlighting)',
 			'b'      => 'B12',
 			'c'      => 'C12',
 			'd'      => 'D12',
-		),
-	)));
+		],
+	]
+));
 
 /////////
 // Set
@@ -548,39 +550,33 @@ $aOptions = [
 ];
 $oPage->add_style('.demo_set{color:red;}');
 
-$oSimpleSetBlock = SetUIBlockFactory::MakeForSimple('SetSimple', $aOptions, 'label', 'value', ['label']);
-$oSimpleSetBlock->SetName('SimpleSetBlock');
+$oSimpleSetBlock = SetUIBlockFactory::MakeForSimple('SetSimple', $aOptions, 'label', 'value', ['label'], null, null, 'SimpleSetBlock');
 $oPage->AddUiBlock($oSimpleSetBlock);
 
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Add Option Button', 3));
 
-$oSimpleAddSetBlock = SetUIBlockFactory::MakeForSimple('SetWithAddOption', $aOptions, 'label', 'value', ['label']);
-$oSimpleAddSetBlock->SetName('SetWithAddOption');
+$oSimpleAddSetBlock = SetUIBlockFactory::MakeForSimple('SetWithAddOption', $aOptions, 'label', 'value', ['label'], null, null, 'SetWithAddOption');
 $oSimpleAddSetBlock->SetHasAddOptionButton(true);
 $oPage->AddUiBlock($oSimpleAddSetBlock);
 
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Renderer', 3));
 
-$oSimpleSetBlockRenderer = SetUIBlockFactory::MakeForSimple('SetRenderer', $aOptions, 'label', 'value', ['label']);
-$oSimpleSetBlockRenderer->SetName('SimpleSetBlockWithRenderer');
+$oSimpleSetBlockRenderer = SetUIBlockFactory::MakeForSimple('SetRenderer', $aOptions, 'label', 'value', ['label'], null, null, 'SimpleSetBlockWithRenderer');
 $oSimpleSetBlockRenderer->SetOptionsTemplate('base/components/input/set/simple_option_renderer.html.twig');
 $oSimpleSetBlockRenderer->SetItemsTemplate('base/components/input/set/simple_option_renderer.html.twig');
 $oPage->AddUiBlock($oSimpleSetBlockRenderer);
 
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Grouping', 3));
 
-$oSimpleSetBlockGroup = SetUIBlockFactory::MakeForSimple('SetGroup', $aOptions, 'label', 'value', ['label'], 'group');
-$oSimpleSetBlockGroup->SetName('SimpleSetBlockWithGroup');
+$oSimpleSetBlockGroup = SetUIBlockFactory::MakeForSimple('SetGroup', $aOptions, 'label', 'value', ['label'], 'group', null, 'SimpleSetBlockWithGroup');
 $oPage->AddUiBlock($oSimpleSetBlockGroup);
 
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('OQL', 3));
 
-$oSimpleSetBlockOql = SetUIBlockFactory::MakeForOQL('SetOql', 'Person', 'SELECT Person');
-$oSimpleSetBlockOql->SetName('OqlSet');
+$oSimpleSetBlockOql = SetUIBlockFactory::MakeForOQL('SetOql', 'Person', 'SELECT Person', null, [], null, 'OqlSet');
 $oPage->AddUiBlock($oSimpleSetBlockOql);
 
-$oSimpleSetBlockOql2 = SetUIBlockFactory::MakeForOQL('SetOql2', 'Location', 'SELECT Location');
-$oSimpleSetBlockOql2->SetName('OqlSet2');
+$oSimpleSetBlockOql2 = SetUIBlockFactory::MakeForOQL('SetOql2', 'Location', 'SELECT Location', null, [], null, 'OqlSet2');
 $oPage->AddUiBlock($oSimpleSetBlockOql2);
 
 $oPage->output();

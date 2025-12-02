@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -19,7 +20,6 @@
 
 namespace Combodo\iTop\Application\UI\Base;
 
-
 /**
  * Interface iUIBlock
  *
@@ -31,7 +31,8 @@ namespace Combodo\iTop\Application\UI\Base;
  * @internal
  * @since   3.0.0
  */
-interface iUIBlock {
+interface iUIBlock
+{
 	/** @var string "Live" or "inline" JS is to be executed immediately when the code is parsed */
 	public const ENUM_JS_TYPE_LIVE = "live.js";
 	/** @var string "On init" JS is to be executed immediately when the DOM is ready */

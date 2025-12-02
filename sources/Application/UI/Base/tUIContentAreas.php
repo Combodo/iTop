@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -21,7 +22,8 @@ use Dict;
  * @internal
  * @since 3.0.0
  */
-trait tUIContentAreas {
+trait tUIContentAreas
+{
 	/** @var iUIContentBlock[] Blocks for the different content parts of the block */
 	protected $aContentAreasBlocks;
 
@@ -31,7 +33,8 @@ trait tUIContentAreas {
 	 * @return array
 	 * @see static::ENUM_CONTENT_AREA_MAIN, ...
 	 */
-	protected function EnumContentAreas(): array {
+	protected function EnumContentAreas(): array
+	{
 		return array_keys($this->aContentAreasBlocks);
 	}
 
@@ -40,7 +43,8 @@ trait tUIContentAreas {
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock[]
 	 */
-	protected function GetContentAreas(): array {
+	protected function GetContentAreas(): array
+	{
 		return $this->aContentAreasBlocks;
 	}
 
@@ -51,7 +55,8 @@ trait tUIContentAreas {
 	 *
 	 * @return bool
 	 */
-	protected function IsExistingContentArea(string $sAreaId): bool {
+	protected function IsExistingContentArea(string $sAreaId): bool
+	{
 		return isset($this->aContentAreasBlocks[$sAreaId]);
 	}
 
@@ -197,7 +202,8 @@ trait tUIContentAreas {
 	 *
 	 * @return $this
 	 */
-	protected function RemoveBlockFromContentArea(string $sAreaId, string $sBlockId) {
+	protected function RemoveBlockFromContentArea(string $sAreaId, string $sBlockId)
+	{
 		if (array_key_exists($sAreaId, $this->aContentAreasBlocks)) {
 			$this->aContentAreasBlocks[$sAreaId]->RemoveSubBlock($sBlockId);
 		}

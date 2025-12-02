@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'portal:itop-portal' => 'Standaard portaal',
 	'Page:DefaultTitle' => '%1$s - Gebruikersportaal',
 	'Brick:Portal:UserProfile:Title' => 'Mijn profiel',
@@ -26,4 +27,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:ListAllRequests:Tab' => 'Openstaand en gesloten',
 	'Brick:Portal:SearchInAllRequests:Title' => 'Zoek in alle verzoeken',
 	'Brick:Portal:SearchInAllRequests:Title+' => '<p>Ongeacht hun status.</p>',
-));
+]);

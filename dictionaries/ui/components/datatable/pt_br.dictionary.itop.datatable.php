@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'UI:Datatables:Language:Processing' => 'Aguarde...',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ por página',
 	'UI:Datatables:Language:ZeroRecords' => 'Nenhum resultado',
@@ -24,4 +25,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Datatables:Column:RowActions:Description' => '~~',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation~~',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action ?~~',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -13,7 +14,6 @@ use Exception;
 use MetaModel;
 use SetupUtils;
 use utils;
-
 
 /**
  * Class ItopCustomDatamodelTestCase
@@ -30,7 +30,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 {
 	/**
 	 * @var UnitTestRunTimeEnvironment
-     */
+	 */
 	protected $oEnvironment = null;
 
 	/**
@@ -49,15 +49,15 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 		$this->setRunClassInSeparateProcess(true);
 	}
 
-    /**
+	/**
 	 * @return string Abs path to the XML delta to use for the tests of that class
 	 */
 	abstract public function GetDatamodelDeltaAbsPath(): string;
 
 	protected function setUp(): void
 	{
-        static::LoadRequiredItopFiles();
-        $this->oEnvironment = new UnitTestRunTimeEnvironment('production', $this->GetTestEnvironment());
+		static::LoadRequiredItopFiles();
+		$this->oEnvironment = new UnitTestRunTimeEnvironment('production', $this->GetTestEnvironment());
 
 		parent::setUp();
 	}
@@ -107,8 +107,8 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 		if (false === file_exists($this->GetTestEnvironmentFolderAbsPath())) {
 			return false;
 		}
-        return $this->oEnvironment->IsUpToDate();
-    }
+		return $this->oEnvironment->IsUpToDate();
+	}
 
 	/**
 	 * @inheritDoc
@@ -124,10 +124,10 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 		//       This requires XML deltas to be compatible, but it is a known and accepted trade-off. See PR #457
 		if (false === $this->IsEnvironmentReady()) {
 
-            $this->debug("Preparing custom environment '$sTestEnv' with the following datamodel files:");
-            foreach ($this->oEnvironment->GetCustomDatamodelFiles() as $sCustomDatamodelFile) {
-                $this->debug("  - $sCustomDatamodelFile");
-            }
+			$this->debug("Preparing custom environment '$sTestEnv' with the following datamodel files:");
+			foreach ($this->oEnvironment->GetCustomDatamodelFiles() as $sCustomDatamodelFile) {
+				$this->debug("  - $sCustomDatamodelFile");
+			}
 
 			//----------------------------------------------------
 			// Clear any previous "$sTestEnv" environment
@@ -169,7 +169,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			}
 			CMDBSource::CreateDB($oTestConfig->Get('db_name'));
 			MetaModel::Startup($sConfFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sTestEnv);
-            // N°7446 For some reason we need to create the DB schema before starting the MM, then only we can create the tables.
+			// N°7446 For some reason we need to create the DB schema before starting the MM, then only we can create the tables.
 			MetaModel::DBCreate();
 
 			$this->debug("Custom environment '$sTestEnv' is ready!");

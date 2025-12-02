@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2010-2024 Combodo SAS
  *
@@ -34,22 +35,22 @@ class ormSet
 	/**
 	 * Object from the original set, minus the removed objects
 	 */
-	protected $aPreserved = array();
+	protected $aPreserved = [];
 
 	/**
 	 * New items
 	 */
-	protected $aAdded = array();
+	protected $aAdded = [];
 
 	/**
 	 * Removed items
 	 */
-	protected $aRemoved = array();
+	protected $aRemoved = [];
 
 	/**
 	 * Modified items (mass edit)
 	 */
-	protected $aModified = array();
+	protected $aModified = [];
 
 	/**
 	 * @var int Max number of tags in collection
@@ -62,12 +63,9 @@ class ormSet
 	public function __toString()
 	{
 		$aValue = $this->GetValues();
-		if (!empty($aValue))
-		{
+		if (!empty($aValue)) {
 			return implode(', ', $aValue);
-		}
-		else
-		{
+		} else {
 			return ' ';
 		}
 	}
@@ -86,8 +84,7 @@ class ormSet
 		$this->sAttCode = $sAttCode;
 
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		if (!$oAttDef instanceof AttributeSet)
-		{
+		if (!$oAttDef instanceof AttributeSet) {
 			throw new Exception("ormSet: field {$sClass}:{$sAttCode} is not a set");
 		}
 		$this->sClass = $sClass;
@@ -119,19 +116,16 @@ class ormSet
 	 */
 	public function SetValues($aItems)
 	{
-		if (!is_array($aItems))
-		{
+		if (!is_array($aItems)) {
 			throw new CoreUnexpectedValue("Wrong value {$aItems} for {$this->sClass}:{$this->sAttCode}");
 		}
 
-		$aValues = array();
+		$aValues = [];
 		$iCount = 0;
 		$bError = false;
-		foreach($aItems as $sItem)
-		{
+		foreach ($aItems as $sItem) {
 			$iCount++;
-			if (($this->iLimit != 0) && ($iCount > $this->iLimit))
-			{
+			if (($this->iLimit != 0) && ($iCount > $this->iLimit)) {
 				$bError = true;
 				continue;
 			}
@@ -139,13 +133,12 @@ class ormSet
 		}
 
 		$this->aPreserved = &$aValues;
-		$this->aRemoved = array();
-		$this->aAdded = array();
-		$this->aModified = array();
+		$this->aRemoved = [];
+		$this->aAdded = [];
+		$this->aModified = [];
 		$this->aOriginalObjects = $aValues;
 
-		if ($bError)
-		{
+		if ($bError) {
 			throw new CoreException("Maximum number of items ({$this->iLimit}) reached for {$this->sClass}:{$this->sAttCode}");
 		}
 	}
@@ -167,10 +160,9 @@ class ormSet
 
 	public function GetLabels()
 	{
-		$aLabels = array();
+		$aLabels = [];
 		$aValues = $this->GetValues();
-		foreach ($aValues as $sValue)
-		{
+		foreach ($aValues as $sValue) {
 			$aLabels[$sValue] = $sValue;
 		}
 		return $aLabels;
@@ -213,18 +205,16 @@ class ormSet
 		$oSet->SetValues($aOrigItems);
 
 		// now remove everything
-		foreach($aOrigItems as $oItem)
-		{
+		foreach ($aOrigItems as $oItem) {
 			$oSet->Remove($oItem);
 		}
 
 		// now add the tags of the other ItemSet
-		foreach($oOtherSet->GetValues() as $oItem)
-		{
+		foreach ($oOtherSet->GetValues() as $oItem) {
 			$oSet->Add($oItem);
 		}
 
-		$aDelta = array();
+		$aDelta = [];
 		$aDelta['added'] = $oSet->GetAdded();
 		$aDelta['removed'] = $oSet->GetRemoved();
 
@@ -250,17 +240,13 @@ class ormSet
 	 */
 	public function ApplyDelta($aDelta)
 	{
-		if (isset($aDelta['removed']))
-		{
-			foreach($aDelta['removed'] as $oItem)
-			{
+		if (isset($aDelta['removed'])) {
+			foreach ($aDelta['removed'] as $oItem) {
 				$this->Remove($oItem);
 			}
 		}
-		if (isset($aDelta['added']))
-		{
-			foreach($aDelta['added'] as $oItem)
-			{
+		if (isset($aDelta['added'])) {
+			foreach ($aDelta['added'] as $oItem) {
 				$this->Add($oItem);
 			}
 		}
@@ -276,24 +262,19 @@ class ormSet
 	 */
 	public function Add($oItem)
 	{
-		if (($this->iLimit != 0) && ($this->Count() > $this->iLimit))
-		{
+		if (($this->iLimit != 0) && ($this->Count() > $this->iLimit)) {
 			throw new CoreException("Maximum number of items ({$this->iLimit}) reached for {$this->sClass}:{$this->sAttCode}");
 		}
-		if ($this->IsItemInList($this->aPreserved, $oItem) || $this->IsItemInList($this->aAdded, $oItem))
-		{
+		if ($this->IsItemInList($this->aPreserved, $oItem) || $this->IsItemInList($this->aAdded, $oItem)) {
 			// nothing to do, already existing tag
 			return;
 		}
 		// if removed and added again
-		if (($this->RemoveItemFromList($this->aRemoved, $oItem)) !== false)
-		{
+		if (($this->RemoveItemFromList($this->aRemoved, $oItem)) !== false) {
 			// put it back into preserved
 			$this->aPreserved[] = $oItem;
 			// no need to add it to aModified : was already done when calling RemoveItem method
-		}
-		else
-		{
+		} else {
 			$this->aAdded[] = $oItem;
 			$this->aModified[] = $oItem;
 		}
@@ -304,21 +285,18 @@ class ormSet
 	 */
 	public function Remove($oItem)
 	{
-		if ($this->IsItemInList($this->aRemoved, $oItem))
-		{
+		if ($this->IsItemInList($this->aRemoved, $oItem)) {
 			// nothing to do, already removed tag
 			return;
 		}
 
-		if ($this->RemoveItemFromList($this->aAdded, $oItem) !== false)
-		{
+		if ($this->RemoveItemFromList($this->aAdded, $oItem) !== false) {
 			$this->aModified[] = $oItem;
 
 			return; // if present in added, can't be in preserved !
 		}
 
-		if ($this->RemoveItemFromList($this->aPreserved, $oItem) !== false)
-		{
+		if ($this->RemoveItemFromList($this->aPreserved, $oItem) !== false) {
 			$this->aModified[] = $oItem;
 			$this->aRemoved[] = $oItem;
 		}
@@ -337,14 +315,11 @@ class ormSet
 	 */
 	private function RemoveItemFromList(&$aItemList, $oItem)
 	{
-		if (!($this->IsItemInList($aItemList, $oItem)))
-		{
+		if (!($this->IsItemInList($aItemList, $oItem))) {
 			return false;
 		}
-		foreach ($aItemList as $index => $value)
-		{
-			if ($value === $oItem)
-			{
+		foreach ($aItemList as $index => $value) {
+			if ($value === $oItem) {
 				unset($aItemList[$index]);
 				return $oItem;
 			}
@@ -362,16 +337,13 @@ class ormSet
 	 */
 	public function GenerateDiffFromArray($aItems)
 	{
-		foreach($this->GetValues() as $oCurrentItem)
-		{
-			if (!in_array($oCurrentItem, $aItems))
-			{
+		foreach ($this->GetValues() as $oCurrentItem) {
+			if (!in_array($oCurrentItem, $aItems)) {
 				$this->Remove($oCurrentItem);
 			}
 		}
 
-		foreach($aItems as $oNewItem)
-		{
+		foreach ($aItems as $oNewItem) {
 			$this->Add($oNewItem);
 		}
 	}

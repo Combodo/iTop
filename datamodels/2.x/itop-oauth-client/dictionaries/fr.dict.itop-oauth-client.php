@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -67,14 +68,14 @@ Pour recalculer la valeur par défaut, il faut effacer le champ',
 	'Class:OAuthClient/Attribute:mailbox_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
 	'Class:OAuthClient/Attribute:mailbox_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
 	'Class:OAuthClient/Attribute:mailbox_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:OAuthClient/Attribute:mailbox_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s'
+	'Class:OAuthClient/Attribute:mailbox_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de son %1$s',
 ]);
 
 //
 // Class: OAuthClientAzure
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OAuthClientAzure' => 'Client OAuth pour Microsoft Azure',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Niveaux d\'accès',
@@ -97,13 +98,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'Non',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Locataire',
 	'Class:OAuthClientAzure/Attribute:tenant+' => 'Locataire (Tenant ID) de l\'application configurée. Pour des applications à locataires multiples, veuillez saisir "common".',
-));
+]);
 
 //
 // Class: OAuthClientGoogle
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OAuthClientGoogle' => 'Client OAuth pour Google',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Niveaux d\'accès',
@@ -124,4 +125,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => 'Le Client OAuth utilisé pour l\'envoi d\'emails doit être à \'Oui\'',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => 'Oui',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => 'Non',
-));
+]);

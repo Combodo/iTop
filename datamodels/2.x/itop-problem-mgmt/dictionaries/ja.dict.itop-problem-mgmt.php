@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ProblemManagement' => '問題管理',
 	'Menu:ProblemManagement+' => '問題管理',
 	'Menu:Problem:Overview' => '概要',
@@ -32,12 +33,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ProblemMgmtMenuOverview:Title' => '問題管理ダッシュボード',
 	'UI:ProblemMgmtMenuOverview:Title+' => '問題管理ダッシュボード',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Problem' => '問題',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => '状態',
@@ -110,4 +111,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'クローズ',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

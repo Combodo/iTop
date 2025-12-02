@@ -5,9 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Test\UnitTest\Service\Notification;
-
 
 use Combodo\iTop\Core\Trigger\Enum\SubscriptionPolicy;
 use Combodo\iTop\Service\Notification\NotificationsRepository;
@@ -21,7 +19,8 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
  * @package Combodo\iTop\Test\UnitTest\Service\Notification
  * @covers \Combodo\iTop\Service\Notification\NotificationsService
  */
-class NotificationsServiceTest extends ItopDataTestCase {
+class NotificationsServiceTest extends ItopDataTestCase
+{
 	public const CREATE_TEST_ORG = true;
 
 	/**
@@ -59,13 +58,11 @@ class NotificationsServiceTest extends ItopDataTestCase {
 		]);
 		$iActionNotificationID = $oActionNotification->GetKey();
 
-
 		$oService = NotificationsService::GetInstance();
 
 		// Case 1: Person hasn't received action so far, so it is implicitly subscribed by default
 		// - Assert
 		$this->assertTrue($oService->IsSubscribed($oTrigger, $oActionNotification, $oPerson));
-
 
 		// Case 2: Activate an action, the person should have an explicit subscription
 		// - Prepare
@@ -78,7 +75,6 @@ class NotificationsServiceTest extends ItopDataTestCase {
 		$iSubscribedCount = NotificationsRepository::GetInstance()->SearchSubscribedSubscriptionsByTriggerContactAndAction($iTriggerID, $iActionNotificationID, $iPersonID)->Count();
 		$this->assertEquals(1, $iSubscribedCount, "There should be 1 explicit subscription");
 		$this->assertTrue($oService->IsSubscribed($oTrigger, $oActionNotification, $oPerson));
-
 
 		// Case 3: Unsubscribe, person should have an explicit unsubscribe
 		// - Prepare

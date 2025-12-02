@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -15,10 +16,10 @@ use UserRequest;
 
 class DisplayBlockTest extends ItopCustomDatamodelTestCase
 {
-	const CREATE_TEST_ORG = true;
+	public const CREATE_TEST_ORG = true;
 	public function GetDatamodelDeltaAbsPath(): string
 	{
-		return __DIR__ . '/Delta/add-enum-value-with-quote.xml';
+		return __DIR__.'/Delta/add-enum-value-with-quote.xml';
 	}
 
 	public function renderChartAjaxProvider(): array

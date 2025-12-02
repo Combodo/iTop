@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,7 +17,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Send an email (abstraction for synchronous/asynchronous modes)
  *
@@ -27,9 +27,9 @@
 use Combodo\iTop\Core\Email\EmailFactory;
 use Combodo\iTop\Core\Email\iEMail;
 
-define ('EMAIL_SEND_OK', 0);
-define ('EMAIL_SEND_PENDING', 1);
-define ('EMAIL_SEND_ERROR', 2);
+define('EMAIL_SEND_OK', 0);
+define('EMAIL_SEND_PENDING', 1);
+define('EMAIL_SEND_ERROR', 2);
 
 class EMail implements iEMail
 {
@@ -43,18 +43,18 @@ class EMail implements iEMail
 	protected $oMailer;
 
 	// Serialization formats
-	const ORIGINAL_FORMAT = 1; // Original format, consisting in serializing the whole object, inculding the Swift Mailer's object.
+	public const ORIGINAL_FORMAT = 1; // Original format, consisting in serializing the whole object, inculding the Swift Mailer's object.
 	// Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
-	const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
-	
+	public const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
+
 	/** @var int ENUM_SEND_DEFAULT This option can be used when sending an e-mail to respect the default configuration parameter. */
-	const ENUM_SEND_DEFAULT = 0;
-	
+	public const ENUM_SEND_DEFAULT = 0;
+
 	/** @var int ENUM_SEND_FORCE_SYNCHRONOUS This option can be used when sending an e-mail to ignore the default and force synchronous sending instead. Example of a use case: instant e-mail test. */
-	const ENUM_SEND_FORCE_SYNCHRONOUS = 1;
-	
+	public const ENUM_SEND_FORCE_SYNCHRONOUS = 1;
+
 	/** @var int ENUM_SEND_FORCE_ASYNCHRONOUS This option can be used when sending an e-mail to ignore the default and force synchronous sending instead. Example of a use case: Bulk mails. */
-	const ENUM_SEND_FORCE_ASYNCHRONOUS = 2;
+	public const ENUM_SEND_FORCE_ASYNCHRONOUS = 2;
 
 	public function __construct()
 	{
@@ -157,7 +157,7 @@ class EMail implements iEMail
 	public function SetBody($sBody, $sMimeType = 'text/html', $sCustomStyles = null)
 	{
 		$this->oMailer->SetBody($sBody, $sMimeType, $sCustomStyles);
-		}
+	}
 
 	public function AddPart($sText, $sMimeType = 'text/html')
 	{

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Logo společnosti',
 	'UI:Layout:NavigationMenu:Silo:Label' => 'Vyberte organizaci, podle které chcete filtrovat',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Rozbalit / Sbalit',
@@ -23,4 +24,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Otevřít uživatelské menu',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filtrování položek menu',
 
-));
+]);

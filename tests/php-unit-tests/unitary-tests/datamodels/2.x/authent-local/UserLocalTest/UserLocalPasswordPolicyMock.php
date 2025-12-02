@@ -1,8 +1,9 @@
 <?php
+
 class UserLocalPasswordPolicyMockValid implements \UserLocalPasswordValidator
 {
-	const CHECK_STATUS = true;
-	const MESSAGE = null;
+	public const CHECK_STATUS = true;
+	public const MESSAGE = null;
 
 	public function __construct()
 	{
@@ -23,8 +24,8 @@ class UserLocalPasswordPolicyMockValid implements \UserLocalPasswordValidator
 
 class UserLocalPasswordPolicyMockNotValid extends UserLocalPasswordPolicyMockValid
 {
-	const CHECK_STATUS = false;
-	const MESSAGE = 'UserLocalPasswordPolicyMockNotValid';
+	public const CHECK_STATUS = false;
+	public const MESSAGE = 'UserLocalPasswordPolicyMockNotValid';
 }
 
 class UserLocalPasswordPolicyMockValidBis extends UserLocalPasswordPolicyMockValid
@@ -33,5 +34,5 @@ class UserLocalPasswordPolicyMockValidBis extends UserLocalPasswordPolicyMockVal
 
 class UserLocalPasswordPolicyMockNotValidBis extends UserLocalPasswordPolicyMockNotValid
 {
-	const MESSAGE = 'UserLocalPasswordPolicyMockNotValidBis';
+	public const MESSAGE = 'UserLocalPasswordPolicyMockNotValidBis';
 }

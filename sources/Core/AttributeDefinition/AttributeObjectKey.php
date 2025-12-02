@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -17,7 +18,7 @@ use MetaModel;
  */
 class AttributeObjectKey extends AttributeDBFieldVoid
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -38,7 +39,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('class_attcode', 'is_null_allowed'));
+		return array_merge(parent::ListExpectedParams(), ['class_attcode', 'is_null_allowed']);
 	}
 
 	public function GetEditClass()
@@ -60,7 +61,6 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 	{
 		return $this->Get("is_null_allowed");
 	}
-
 
 	public function GetBasicFilterOperators()
 	{

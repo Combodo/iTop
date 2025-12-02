@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Spanish Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:IncidentManagement' => 'Administración de Incidentes',
 	'Menu:IncidentManagement+' => 'Administración de Incidentes',
 	'Menu:Incident:Overview' => 'Resumen de Incidentes',
@@ -29,8 +30,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidentes Abiertos por Estatus',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Incidentes Abiertos por Analista',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Incidentes Abiertos por Cliente',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -46,7 +46,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: Incident
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Incident' => 'Incidente',
 	'Class:Incident+' => 'Incidente',
 	'Class:Incident/Attribute:status' => 'Estatus',
@@ -137,6 +137,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Attribute:tto+' => 'Tiempo de Asignación',
 	'Class:Incident/Attribute:ttr' => 'TDS - Tiempo de Solución',
 	'Class:Incident/Attribute:ttr+' => 'Tiempo de Solución',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'Límite de Tiempo de Asignación',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => 'Límite de Tiempo de Asignación',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA de Tiempo de Asignación Cumplido',
@@ -225,4 +229,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'Resolver tickets hijos',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
 	'Tickets:Related:OpenIncidents' => 'Incidentes Abiertos',
-));
+]);

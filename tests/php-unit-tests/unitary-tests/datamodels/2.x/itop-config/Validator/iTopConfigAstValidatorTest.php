@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Bruno DA SILVA, working for Combodo
  * Date: 31/12/2019
@@ -14,7 +15,6 @@ use PhpParser\PrettyPrinter\Standard;
 
 class iTopConfigAstValidatorTest extends ItopTestCase
 {
-
 	public function setUp(): void
 	{
 		parent::setUp();
@@ -22,7 +22,6 @@ class iTopConfigAstValidatorTest extends ItopTestCase
 		$this->RequireOnceItopFile('env-production/itop-config/src/Validator/ConfigNodesVisitor.php');
 		$this->RequireOnceItopFile('env-production/itop-config/src/Validator/iTopConfigAstValidator.php');
 	}
-
 
 	/**
 	 * @dataProvider InvalidDataProvider
@@ -34,10 +33,9 @@ class iTopConfigAstValidatorTest extends ItopTestCase
 	{
 		$oiTopConfigValidator = new iTopConfigAstValidator();
 		$this->expectException(\Exception::class);
-		try{
+		try {
 			$oiTopConfigValidator->Validate($sConf);
-		}catch (\Exception $e)
-		{
+		} catch (\Exception $e) {
 			$this->assertStringStartsWith('Invalid configuration:', $e->getMessage());
 			throw $e;
 		}
@@ -45,28 +43,27 @@ class iTopConfigAstValidatorTest extends ItopTestCase
 
 	public function InvalidDataProvider()
 	{
-		return array(
-			'invalid PHP' => array(
-				'sConf' => '<?php fiction Method(){}'
-			),
-			'function call' => array(
-				'sConf' => '<?php FunctionCall();'
-			),
-			'function declaration' => array(
-				'sConf' => '<?php function foo() {};'
-			),
-			'class instantiation' => array(
-				'sConf' => '<?php new Class {};'
-			),
-			'Class declaration' => array(
-				'sConf' => '<?php class foo {};'
-			),
-			'echo' => array(
-				'sConf' => '<?php echo "toto"; ?>'
-			),
-		);
+		return [
+			'invalid PHP' => [
+				'sConf' => '<?php fiction Method(){}',
+			],
+			'function call' => [
+				'sConf' => '<?php FunctionCall();',
+			],
+			'function declaration' => [
+				'sConf' => '<?php function foo() {};',
+			],
+			'class instantiation' => [
+				'sConf' => '<?php new Class {};',
+			],
+			'Class declaration' => [
+				'sConf' => '<?php class foo {};',
+			],
+			'echo' => [
+				'sConf' => '<?php echo "toto"; ?>',
+			],
+		];
 	}
-
 
 	/**
 	 * @dataProvider ValidDataProvider
@@ -85,13 +82,13 @@ class iTopConfigAstValidatorTest extends ItopTestCase
 
 	public function ValidDataProvider()
 	{
-		return array(
-			'simple code' => array(
-				'sConf' => '<?php $var = array("toto"); ?>'
-			),
-			'class constant' => array(
-				'sConf' => '<?php $var = array(foo::bar);'
-			),
-		);
+		return [
+			'simple code' => [
+				'sConf' => '<?php $var = array("toto"); ?>',
+			],
+			'class constant' => [
+				'sConf' => '<?php $var = array(foo::bar);',
+			],
+		];
 	}
 }

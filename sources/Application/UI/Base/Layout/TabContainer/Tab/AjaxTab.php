@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -19,7 +20,6 @@
 
 namespace Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab;
 
-
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIException;
 use Dict;
@@ -35,7 +35,6 @@ use utils;
  */
 class AjaxTab extends Tab
 {
-
 	/**
 	 * @see static::$sPlaceholderRelPath
 	 * @var string
@@ -92,7 +91,8 @@ class AjaxTab extends Tab
 	 *
 	 * @return $this
 	 */
-	public function SetUrl(string $sUrl) {
+	public function SetUrl(string $sUrl)
+	{
 		$this->sUrl = $sUrl;
 
 		return $this;
@@ -101,7 +101,8 @@ class AjaxTab extends Tab
 	/**
 	 * @return string
 	 */
-	public function GetUrl(): string {
+	public function GetUrl(): string
+	{
 		return $this->sUrl;
 	}
 
@@ -112,7 +113,8 @@ class AjaxTab extends Tab
 	 *
 	 * @return $this
 	 */
-	public function SetCache(bool $bCache) {
+	public function SetCache(bool $bCache)
+	{
 		$this->bCache = $bCache;
 
 		return $this;
@@ -123,7 +125,8 @@ class AjaxTab extends Tab
 	 *
 	 * @return string
 	 */
-	public function GetCache(): string {
+	public function GetCache(): string
+	{
 		return $this->bCache ? 'true' : 'false';
 	}
 
@@ -133,7 +136,8 @@ class AjaxTab extends Tab
 	 *
 	 * @return $this
 	 */
-	public function SetPlaceholderRelPath(string $sPlaceholderRelPath) {
+	public function SetPlaceholderRelPath(string $sPlaceholderRelPath)
+	{
 		$this->sPlaceholderRelPath = $sPlaceholderRelPath;
 
 		return $this;
@@ -143,7 +147,8 @@ class AjaxTab extends Tab
 	 *
 	 * @return string
 	 */
-	public function GetPlaceholderRelPath(): string {
+	public function GetPlaceholderRelPath(): string
+	{
 		return $this->sPlaceholderRelPath;
 	}
 
@@ -152,7 +157,8 @@ class AjaxTab extends Tab
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetPlaceholderAbsPath(): string {
+	public function GetPlaceholderAbsPath(): string
+	{
 		return utils::GetAbsoluteUrlAppRoot().$this->sPlaceholderRelPath;
 	}
 
@@ -163,7 +169,8 @@ class AjaxTab extends Tab
 	/**
 	 * @inheritDoc
 	 */
-	public function GetParameters(): array {
+	public function GetParameters(): array
+	{
 		$aParams = parent::GetParameters();
 
 		$aParams['sURL'] = $this->GetUrl();
@@ -180,7 +187,8 @@ class AjaxTab extends Tab
 	 * @inheritDoc
 	 * @throws \Combodo\iTop\Application\UI\Base\UIException
 	 */
-	public function AddHtml(string $sHtml) {
+	public function AddHtml(string $sHtml)
+	{
 		throw new UIException($this, Dict::Format('UIBlock:Error:AddBlockForbidden', $this->GetId()));
 	}
 
@@ -188,14 +196,16 @@ class AjaxTab extends Tab
 	 * @inheritDoc
 	 * @throws \Combodo\iTop\Application\UI\Base\UIException
 	 */
-	public function AddSubBlock(?iUIBlock $oSubBlock) {
+	public function AddSubBlock(?iUIBlock $oSubBlock)
+	{
 		throw new UIException($this, Dict::Format('UIBlock:Error:AddBlockForbidden', $this->GetId()));
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public function GetSubBlocks(): array {
+	public function GetSubBlocks(): array
+	{
 		return [];
 	}
 }

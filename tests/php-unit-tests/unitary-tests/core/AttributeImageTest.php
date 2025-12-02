@@ -36,7 +36,8 @@ class AttributeImageTest extends ItopDataTestCase
 	/**
 	 * Note that we need to reset manually the cache in \utils::GetAbsoluteUrlAppRoot, which is called from \AttributeImage::Get
 	 */
-	private function SetNewAppRootUrl(Config $oConfig, string $sAppRootUrl):void {
+	private function SetNewAppRootUrl(Config $oConfig, string $sAppRootUrl): void
+	{
 		$oConfig->Set('app_root_url', $sAppRootUrl);
 		$this->SetNonPublicStaticProperty(utils::class, 'sAbsoluteUrlAppRootCache', null);
 	}

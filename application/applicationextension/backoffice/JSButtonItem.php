@@ -9,5 +9,4 @@
  */
 class JSButtonItem extends JSPopupMenuItem
 {
-
 }

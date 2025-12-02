@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -25,7 +26,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use iTopDesignFormat;
 use utils;
 
-
 /**
  * Class SetupCssIntegrityChecklistTest
  */
@@ -35,19 +35,19 @@ class SetupCssIntegrityChecklistTest extends ItopTestCase
 	{
 		$sCssFileAbsPath = APPROOT."css/setup.css";
 
-        // First check if the compiled file exists
-        $this->assertTrue(file_exists($sCssFileAbsPath));
+		// First check if the compiled file exists
+		$this->assertTrue(file_exists($sCssFileAbsPath));
 
-        // Then check that it is not empty
-        $sVersionedCssFileContent = file_get_contents($sCssFileAbsPath);
-        $this->assertGreaterThan(0, strlen($sVersionedCssFileContent), "Compiled setup.css file seems empty");
+		// Then check that it is not empty
+		$sVersionedCssFileContent = file_get_contents($sCssFileAbsPath);
+		$this->assertGreaterThan(0, strlen($sVersionedCssFileContent), "Compiled setup.css file seems empty");
 
-        // Then check that the compiled file is up-to-date
+		// Then check that the compiled file is up-to-date
 		$sScssFileRelPath = "css/setup.scss";
-		$sScssFileAbsPath = APPROOT . $sScssFileRelPath;
-        touch($sScssFileAbsPath);
-        utils::GetCSSFromSASS($sScssFileRelPath);
-        $sCompiledCssFileContent = file_get_contents($sCssFileAbsPath);
-        $this->assertSame($sCompiledCssFileContent, $sVersionedCssFileContent, "Compiled setup.css file does not seem up to date as the one compiled just now is different");
+		$sScssFileAbsPath = APPROOT.$sScssFileRelPath;
+		touch($sScssFileAbsPath);
+		utils::GetCSSFromSASS($sScssFileRelPath);
+		$sCompiledCssFileContent = file_get_contents($sCssFileAbsPath);
+		$this->assertSame($sCompiledCssFileContent, $sVersionedCssFileContent, "Compiled setup.css file does not seem up to date as the one compiled just now is different");
 	}
 }

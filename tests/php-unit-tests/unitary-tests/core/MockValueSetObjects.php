@@ -2,14 +2,14 @@
 
 class MockValueSetObjects extends ValueSetObjects
 {
-	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = array(), $bAllowAllData = false, $aModifierProperties = array())
+	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = [], $bAllowAllData = false, $aModifierProperties = [])
 	{
-		parent::__construct($sFilterExp, $sValueAttCode , $aOrderBy, $bAllowAllData, $aModifierProperties );
+		parent::__construct($sFilterExp, $sValueAttCode, $aOrderBy, $bAllowAllData, $aModifierProperties);
 	}
 	public function GetFilterOQL(
-		$sOperation, $sContains
-	)
-	{
+		$sOperation,
+		$sContains
+	) {
 
 		return $this->GetFilter($sOperation, $sContains)->ToOQL();
 

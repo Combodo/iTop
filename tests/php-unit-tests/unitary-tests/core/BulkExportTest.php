@@ -5,9 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Test\UnitTest\Core;
-
 
 use BulkExport;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
@@ -15,8 +13,7 @@ use DBObjectSearch;
 
 class BulkExportTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
-
+	public const CREATE_TEST_ORG = true;
 
 	public function OrganizationsForExportProvider()
 	{
@@ -45,7 +42,7 @@ EOF;
 EOF;
 
 		return [
-			'Page1'=>[
+			'Page1' => [
 				'list_org' => [
 					['org1', true],
 					['org2', true],
@@ -63,9 +60,9 @@ EOF;
 				],
 				'export_org' => $sExportResultPage1,
 				'nb_pages' => 1,
-				'expected_status' =>'run'
+				'expected_status' => 'run',
 			],
-			'Page2'=>[
+			'Page2' => [
 				'list_org' => [
 					['org1', true],
 					['org2', true],
@@ -83,8 +80,8 @@ EOF;
 				],
 				'export_org' => $sExportResultPage2,
 				'nb_pages' => 2,
-				'expected_status' =>'done'
-			]
+				'expected_status' => 'done',
+			],
 		];
 	}
 
@@ -99,9 +96,12 @@ EOF;
 	 * @throws \OQLException
 	 * @throws \ReflectionException
 	 */
-	public function testExportWithShowObsoleteParam($aListOrg, 
- $sExpectedValue, $iNbPage, $sExpectedStatus)
-	{
+	public function testExportWithShowObsoleteParam(
+		$aListOrg,
+		$sExpectedValue,
+		$iNbPage,
+		$sExpectedStatus
+	) {
 		// Create tests organizations to have enough data (some obsolete)
 		$iFirstOrg = 0;
 		foreach ($aListOrg as $aOrg) {
@@ -110,18 +110,18 @@ EOF;
 				$oObj->Set('status', 'inactive');
 				$oObj->DBUpdate();
 			}
-			if($iFirstOrg === 0){
+			if ($iFirstOrg === 0) {
 				$iFirstOrg = $oObj->GetKey();
 			}
 		}
-		
+
 		$aResult = [
 			// Fallback error, just in case
 			'code' => 'error',
 			'percentage' => 100,
 			'message' => "Export not found for token",
 		];
-		
+
 		// Prepare status info and for obsolete data to `false` in order to check that we have less organizations
 		// in the export result than we have in DB
 		$aStatusInfo = [
@@ -132,15 +132,15 @@ EOF;
 					"sClass" => "Organization",
 					"sAttCode" => "name",
 					"sLabel" => "Name",
-					"sColLabel" => "Name"
-				]
+					"sColLabel" => "Name",
+				],
 			],
-		    "text_qualifier" => "\"",
-		    "charset" => "ISO-8859-1",
-		    "separator" => ",",
-		    "date_format" => "Y-m-d H:i:s",
-		    "formatted_text" => false,
-		    "show_obsolete_data" => false
+			"text_qualifier" => "\"",
+			"charset" => "ISO-8859-1",
+			"separator" => ",",
+			"date_format" => "Y-m-d H:i:s",
+			"formatted_text" => false,
+			"show_obsolete_data" => false,
 		];
 
 		$oSearch = DBObjectSearch::FromOQL('SELECT Organization  WHERE id >= '.$iFirstOrg);
@@ -154,7 +154,7 @@ EOF;
 		for ($i = 0; $i < $iNbPage; $i++) {
 			$data .= $oExporter->GetNextChunk($aResult);
 		}
-		$this->assertEquals($sExpectedStatus,$aResult['code']);
+		$this->assertEquals($sExpectedStatus, $aResult['code']);
 		$this->assertEquals($sExpectedValue, $data);
 	}
 

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:RequestManagement' => 'Gerenciamento de Solicitações',
 	'Menu:RequestManagement+' => '',
 	'Menu:RequestManagementProvider' => 'Solicitações a provedores(as)',
@@ -41,7 +42,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Solicitações abertas por cliente',
 	'Class:UserRequest:KnownErrorList' => 'Erros conhecidos',
 	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -57,7 +58,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Class: UserRequest
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:UserRequest' => 'Solicitação de Usuário',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -160,6 +161,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Attribute:tto+' => 'Tempo para atribuição (TTO)',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',
 	'Class:UserRequest/Attribute:ttr+' => 'Tempo para resolução (TTR)',
+	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:UserRequest/Attribute:tto_time_spent+' => '~~',
+	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:UserRequest/Attribute:ttr_time_spent+' => '~~',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'Prazo determinado de atribuição (TTO)',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => 'Prazo determinado de Tempo para atribuição (TTO)',
 	'Class:UserRequest/Attribute:sla_tto_passed' => 'SLA TTO superado',
@@ -255,11 +260,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Não é possível atribuir a solicitação pai a própria solicitação',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (resolver solicitações filhas)',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a solução a solicitações filhas (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de solução',
-));
+]);
 
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Organization:Overview:UserRequests' => 'Solicitações de usuários desta organização',
 	'Organization:Overview:MyUserRequests' => 'Minhas solicitações de usuário para esta organização',
 	'Organization:Overview:Tickets' => 'Solicitações desta organização',
-));
+]);

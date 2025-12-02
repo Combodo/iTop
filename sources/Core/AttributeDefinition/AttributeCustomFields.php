@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -21,7 +22,7 @@ use utils;
  */
 class AttributeCustomFields extends AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -42,7 +43,7 @@ class AttributeCustomFields extends AttributeDefinition
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("handler_class"));
+		return array_merge(parent::ListExpectedParams(), ["handler_class"]);
 	}
 
 	public function GetEditClass()
@@ -67,7 +68,7 @@ class AttributeCustomFields extends AttributeDefinition
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -198,8 +199,7 @@ class AttributeCustomFields extends AttributeDefinition
 			$sFormId = utils::IsNullOrEmptyString($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
 			$oHandler->BuildForm($oHostObject, $sFormId);
 			$oForm = $oHandler->GetForm();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$oForm = new \Combodo\iTop\Form\Form('');
 			$oField = new \Combodo\iTop\Form\Field\LabelField('');
 			$oField->SetLabel('Custom field error: '.$e->getMessage());
@@ -225,8 +225,7 @@ class AttributeCustomFields extends AttributeDefinition
 			$oHandler = $this->GetHandler();
 			$aValues = $oHandler->ReadValues($oHostObject);
 			$oRet = new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aValues);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$oRet = new ormCustomFieldsValue($oHostObject, $this->GetCode());
 		}
 
@@ -243,7 +242,7 @@ class AttributeCustomFields extends AttributeDefinition
 		$oValue = $oHostObject->Get($this->GetCode());
 		if (!($oValue instanceof ormCustomFieldsValue)) {
 			$oHandler = $this->GetHandler();
-			$aValues = array();
+			$aValues = [];
 		} else {
 			// Pass the values through the form to make sure that they are correct
 			$oHandler = $this->GetHandler($oValue->GetValues());
@@ -283,8 +282,7 @@ class AttributeCustomFields extends AttributeDefinition
 			$oHandler = $this->GetHandler($value->GetValues());
 			$oHandler->BuildForm($oHostObject, '');
 			$ret = $oHandler->Validate($oHostObject);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$ret = $e->getMessage();
 		}
 
@@ -312,8 +310,7 @@ class AttributeCustomFields extends AttributeDefinition
 		try {
 			/** @var ormCustomFieldsValue $value */
 			$sRet = $value->GetAsHTML($bLocalize);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$sRet = 'Custom field error: '.utils::EscapeHtml($e->getMessage());
 		}
 
@@ -324,8 +321,7 @@ class AttributeCustomFields extends AttributeDefinition
 	{
 		try {
 			$sRet = $value->GetAsXML($bLocalize);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$sRet = Str::pure2xml('Custom field error: '.$e->getMessage());
 		}
 
@@ -344,16 +340,18 @@ class AttributeCustomFields extends AttributeDefinition
 	 * @noinspection PhpParameterNameChangedDuringInheritanceInspection
 	 */
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		try {
 			$sRet = $value->GetAsCSV($sSeparator, $sTextQualifier, $bLocalize, $bConvertToPlainText);
-		}
-		catch (Exception $e) {
-			$sFrom = array("\r\n", $sTextQualifier);
-			$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		} catch (Exception $e) {
+			$sFrom = ["\r\n", $sTextQualifier];
+			$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 			$sEscaped = str_replace($sFrom, $sTo, 'Custom field error: '.$e->getMessage());
 			$sRet = $sTextQualifier.$sEscaped.$sTextQualifier;
 		}
@@ -385,8 +383,7 @@ class AttributeCustomFields extends AttributeDefinition
 	{
 		try {
 			$sRet = $value->GetForTemplate($sVerb, $bLocalize);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$sRet = 'Custom field error: '.$e->getMessage();
 		}
 
@@ -394,10 +391,13 @@ class AttributeCustomFields extends AttributeDefinition
 	}
 
 	public function MakeValueFromString(
-		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
+		$sProposedValue,
+		$bLocalizedValue = false,
+		$sSepItem = null,
+		$sSepAttribute = null,
+		$sSepValue = null,
 		$sAttributeQualifier = null
-	)
-	{
+	) {
 		return null;
 	}
 
@@ -414,8 +414,7 @@ class AttributeCustomFields extends AttributeDefinition
 	{
 		try {
 			$sRet = $value->GetForJSON();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$sRet = 'Custom field error: '.$e->getMessage();
 		}
 
@@ -438,8 +437,7 @@ class AttributeCustomFields extends AttributeDefinition
 	{
 		try {
 			$bEquals = $val1->Equals($val2);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$bEquals = false;
 		}
 

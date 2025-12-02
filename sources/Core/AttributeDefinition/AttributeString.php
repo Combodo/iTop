@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -19,7 +20,7 @@ use utils;
  */
 class AttributeString extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -85,7 +86,7 @@ class AttributeString extends AttributeDBField
 
 	public function GetBasicFilterOperators()
 	{
-		return array(
+		return [
 			"="             => "equals",
 			"!="            => "differs from",
 			"Like"          => "equals (no case)",
@@ -93,7 +94,7 @@ class AttributeString extends AttributeDBField
 			"Contains"      => "contains",
 			"Begins with"   => "begins with",
 			"Finishes with" => "finishes with",
-		);
+		];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -152,24 +153,27 @@ class AttributeString extends AttributeDBField
 	public function ScalarToSQL($value)
 	{
 		if (!is_string($value) && !is_null($value)) {
-			throw new CoreWarning('Expected the attribute value to be a string', array(
+			throw new CoreWarning('Expected the attribute value to be a string', [
 				'found_type' => gettype($value),
 				'value'      => $value,
 				'class'      => $this->GetHostClass(),
 				'attribute'  => $this->GetCode(),
-			));
+			]);
 		}
 
 		return $value;
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
-		$sFrom = array("\r\n", $sTextQualifier);
-		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+	) {
+		$sFrom = ["\r\n", $sTextQualifier];
+		$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 
 		return $sTextQualifier.$sEscaped.$sTextQualifier;

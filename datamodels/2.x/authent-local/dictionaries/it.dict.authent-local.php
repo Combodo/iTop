@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:UserLocal' => 'Utente '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal+' => 'Utente autenticato da '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Password',
@@ -29,4 +30,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'La password deve essere di almeno 8 caratteri e includere lettere maiuscole, minuscole, numeri e caratteri speciali.',
 	'UserLocal:password:expiration' => 'I campi sottostanti richiedono un\'estensione',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Impostare la scadenza della password su "Password monouso" non è consentito per il proprio utente',
-));
+]);

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Relation:impacts/Description' => 'Konfigurációs elem működését befolyásolják',
 	'Relation:impacts/DownStream' => 'Hatáselemzés',
 	'Relation:impacts/DownStream+' => 'Konfigurációs elem működését befolyásolják',
@@ -21,8 +22,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Relation:impacts/LoadData' => 'Adat betöltés',
 	'Relation:impacts/NoFilteredData' => 'kérjük, válassza ki az objektumokat a grafikus nézetben',
 	'Relation:impacts/FilteredData' => 'Filtered data~~',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -65,7 +65,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 // Class: lnkContactToFunctionalCI
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkContactToFunctionalCI' => 'Kapcsolattartó / Funkcionális CI',
 	'Class:lnkContactToFunctionalCI+' => '~~',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -77,13 +77,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Kapcsolattartó név',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '~~',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:FunctionalCI' => 'Funkcionális CI',
 	'Class:FunctionalCI+' => '',
 	'Class:FunctionalCI/Attribute:name' => 'CI Név',
@@ -116,13 +116,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Nyitott hibajegyek',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI~~',
-));
+]);
 
 //
 // Class: PhysicalDevice
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PhysicalDevice' => 'Fizikai eszköz',
 	'Class:PhysicalDevice+' => '~~',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s~~',
@@ -156,13 +156,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:PhysicalDevice/Attribute:purchase_date+' => '~~',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Garanciaidő vége',
 	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '~~',
-));
+]);
 
 //
 // Class: Rack
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Rack' => 'Rack',
 	'Class:Rack+' => '~~',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s~~',
@@ -172,64 +172,64 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Rack/Attribute:device_list+' => 'Minden fizikai eszköz amely ebbe a rack-be lett beszerelve',
 	'Class:Rack/Attribute:enclosure_list' => 'Beépítőkeretek',
 	'Class:Rack/Attribute:enclosure_list+' => 'Minden beépítőkeret ebben a rack-ben',
-));
+]);
 
 //
 // Class: TelephonyCI
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:TelephonyCI' => 'Telefónia CI',
 	'Class:TelephonyCI+' => '~~',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Telefonszám',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '~~',
-));
+]);
 
 //
 // Class: Phone
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Phone' => 'Telefon',
 	'Class:Phone+' => '~~',
-));
+]);
 
 //
 // Class: MobilePhone
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:MobilePhone' => 'Mobiltelefon',
 	'Class:MobilePhone+' => '',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
 	'Class:MobilePhone/Attribute:imei+' => '',
 	'Class:MobilePhone/Attribute:hw_pin' => 'PIN',
 	'Class:MobilePhone/Attribute:hw_pin+' => '',
-));
+]);
 
 //
 // Class: IPPhone
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:IPPhone' => 'Egyéb eszköz',
 	'Class:IPPhone+' => '~~',
-));
+]);
 
 //
 // Class: Tablet
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Tablet' => 'Táblagép',
 	'Class:Tablet+' => '~~',
-));
+]);
 
 //
 // Class: ConnectableCI
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ConnectableCI' => 'Kapcsolható CI',
 	'Class:ConnectableCI+' => '',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
@@ -237,13 +237,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Hálózati eszközök, melyek ehhez a konfigurációs elemhez kapcsolódnak',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Hálózati csatolók',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'A konfigurációs elem fizikai hálózati csatolói',
-));
+]);
 
 //
 // Class: DatacenterDevice
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DatacenterDevice' => 'Adatközpont eszköz',
 	'Class:DatacenterDevice+' => '~~',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s~~',
@@ -275,13 +275,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'A készülék akkor működik, ha legalább az egyik tápcsatlakozás (A vagy B) működik.',
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'A készülék akkor működik, ha az összes tápcsatlakozása működik.',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'Az eszköz akkor működik, ha legalább %1$s a %%-ből tápcsatlakozása működik.',
-));
+]);
 
 //
 // Class: NetworkDevice
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:NetworkDevice' => 'Hálózati eszköz',
 	'Class:NetworkDevice+' => '',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s~~',
@@ -297,13 +297,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
 	'Class:NetworkDevice/Attribute:ram+' => 'Műveleti memória',
-));
+]);
 
 //
 // Class: Server
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Server' => 'Szerver',
 	'Class:Server+' => '',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s~~',
@@ -325,61 +325,61 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Server/Attribute:ram+' => 'Műveleti memória',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Logikai kötetek',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'Logikai kötetek, melyek ehhez a szerverhez kapcsolódnak',
-));
+]);
 
 //
 // Class: StorageSystem
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:StorageSystem' => 'Tárolórendszer',
 	'Class:StorageSystem+' => '',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logikai kötetek',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Logikai kötetek ebben a tárolórendszerben',
-));
+]);
 
 //
 // Class: SANSwitch
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:SANSwitch' => 'SAN Switch',
 	'Class:SANSwitch+' => 'Tárolórendszer switch',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Kapcsolódó eszközök',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Ehhez a SAN-switch-hez csatlakozó konfigurációs elemek',
-));
+]);
 
 //
 // Class: TapeLibrary
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:TapeLibrary' => 'Szalagos tároló',
 	'Class:TapeLibrary+' => 'Mágnesszalagos tároló',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Szalagok',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Szalagok (kazetták) a szalagos tárolóhoz',
-));
+]);
 
 //
 // Class: NAS
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => 'Hálózati adattároló',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Fájlrendszerek',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'A NAS fájlrendszerei',
-));
+]);
 
 //
 // Class: PC
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PC' => 'PC',
 	'Class:PC+' => 'Személyi számítógép',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s~~',
@@ -401,45 +401,45 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:PC/Attribute:type/Value:desktop+' => 'desktop~~',
 	'Class:PC/Attribute:type/Value:laptop' => 'Laptop',
 	'Class:PC/Attribute:type/Value:laptop+' => 'laptop~~',
-));
+]);
 
 //
 // Class: Printer
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Printer' => 'Nyomtató',
 	'Class:Printer+' => '',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s~~',
-));
+]);
 
 //
 // Class: PowerConnection
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PowerConnection' => 'Tápellátás',
 	'Class:PowerConnection+' => '~~',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s~~',
-));
+]);
 
 //
 // Class: PowerSource
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PowerSource' => 'Áramforrás',
 	'Class:PowerSource+' => 'UPS, generátor, akkumulátor stb.',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDU-k',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Tápelosztók amik ezt az áramforrást használják',
-));
+]);
 
 //
 // Class: PDU
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => 'Tápelosztó a rack-ben',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
@@ -451,23 +451,23 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:PDU/Attribute:powerstart_id+' => '~~',
 	'Class:PDU/Attribute:powerstart_name' => 'Áramforrás név',
 	'Class:PDU/Attribute:powerstart_name+' => '~~',
-));
+]);
 
 //
 // Class: Peripheral
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Peripheral' => 'Periféria',
 	'Class:Peripheral+' => '~~',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s~~',
-));
+]);
 
 //
 // Class: Enclosure
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Enclosure' => 'Beépítőkeret',
 	'Class:Enclosure+' => 'Rack-be szerelhető készülékszerelvény',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s~~',
@@ -479,13 +479,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Enclosure/Attribute:nb_u+' => '~~',
 	'Class:Enclosure/Attribute:device_list' => 'Eszközök',
 	'Class:Enclosure/Attribute:device_list+' => '',
-));
+]);
 
 //
 // Class: ApplicationSolution
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ApplicationSolution' => 'Alkalmazásmegoldás',
 	'Class:ApplicationSolution+' => 'Több alkalmazás és CI kombinációja egy adott feladatra',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CI-k',
@@ -502,13 +502,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'A megoldás akkor működik, ha minden CI működik.',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'A megoldás akkor működik, ha legalább %1$s CI működik',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'A megoldás akkor működik, ha legalább %1$s a %%-ből CI működik',
-));
+]);
 
 //
 // Class: BusinessProcess
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:BusinessProcess' => 'Üzleti folyamat',
 	'Class:BusinessProcess+' => 'Személyek, szolgáltatások és CI-k értékteremtő kombinációja',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Alkalmazásmegoldások',
@@ -519,13 +519,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:BusinessProcess/Attribute:status/Value:active+' => 'active~~',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'Inaktív',
 	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'inactive~~',
-));
+]);
 
 //
 // Class: SoftwareInstance
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:SoftwareInstance' => 'Szoftverpéldány',
 	'Class:SoftwareInstance+' => 'A szoftver telepített példányai',
 	'Class:SoftwareInstance/Attribute:system_id' => 'Rendszer',
@@ -548,64 +548,64 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:SoftwareInstance/Attribute:status/Value:active+' => '',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inaktív',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => '',
-));
+]);
 
 //
 // Class: Middleware
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Middleware' => 'Middleware',
 	'Class:Middleware+' => 'Köztes szoftver rendszerek összekötéséhez',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware példányok',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Middleware példányok melyeket ez a middleware biztosít',
-));
+]);
 
 //
 // Class: DBServer
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DBServer' => 'Adatbázis szerver',
 	'Class:DBServer+' => 'Adatbázis kiszolgáló',
 	'Class:DBServer/Attribute:dbschema_list' => 'DB sémák',
 	'Class:DBServer/Attribute:dbschema_list+' => 'A DB szerver adatbázis sémái',
-));
+]);
 
 //
 // Class: WebServer
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:WebServer' => 'Webszerver',
 	'Class:WebServer+' => 'Webkiszolgáló',
 	'Class:WebServer/Attribute:webapp_list' => 'Webalkalmazások',
 	'Class:WebServer/Attribute:webapp_list+' => 'Webalkalmazások, melyek elérhetőek ezen a webszerveren',
-));
+]);
 
 //
 // Class: PCSoftware
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PCSoftware' => 'PC Szoftver',
 	'Class:PCSoftware+' => 'Személyi számítógép szoftverei',
-));
+]);
 
 //
 // Class: OtherSoftware
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OtherSoftware' => 'Egyéb szoftver',
 	'Class:OtherSoftware+' => '~~',
-));
+]);
 
 //
 // Class: MiddlewareInstance
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:MiddlewareInstance' => 'Middleware Példány',
 	'Class:MiddlewareInstance+' => '~~',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
@@ -613,13 +613,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware név',
 	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
-));
+]);
 
 //
 // Class: DatabaseSchema
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DatabaseSchema' => 'Adatbázis séma',
 	'Class:DatabaseSchema+' => '~~',
 	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
@@ -627,13 +627,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => 'DB szerver név',
 	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
-));
+]);
 
 //
 // Class: WebApplication
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:WebApplication' => 'Webalkalmazás',
 	'Class:WebApplication+' => '~~',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
@@ -643,14 +643,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:WebApplication/Attribute:webserver_name+' => '~~',
 	'Class:WebApplication/Attribute:url' => 'URL~~',
 	'Class:WebApplication/Attribute:url+' => '~~',
-));
-
+]);
 
 //
 // Class: VirtualDevice
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:VirtualDevice' => 'Virtuális eszköz',
 	'Class:VirtualDevice+' => '~~',
 	'Class:VirtualDevice/Attribute:status' => 'Állapot',
@@ -665,24 +664,24 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stock~~',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logikai kötetek',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Logikai kötetek, amiket ez az eszköz használ',
-));
+]);
 
 //
 // Class: VirtualHost
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:VirtualHost' => 'Virtuális gazdagép',
 	'Class:VirtualHost+' => '~~',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtuális gépek',
 	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Virtuális gépek, amelyeket ez a gazdagép futtat',
-));
+]);
 
 //
 // Class: Hypervisor
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Hypervisor' => 'Hypervisor',
 	'Class:Hypervisor+' => 'Virtuális gépeket futtató szoftver',
 	'Class:Hypervisor/Attribute:farm_id' => 'Szerverfarm',
@@ -693,13 +692,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Hypervisor/Attribute:server_id+' => '~~',
 	'Class:Hypervisor/Attribute:server_name' => 'Szerver név',
 	'Class:Hypervisor/Attribute:server_name+' => '~~',
-));
+]);
 
 //
 // Class: Farm
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Farm' => 'Szerverfarm',
 	'Class:Farm+' => 'Szerverek egy klaszterben',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisor-ok',
@@ -708,13 +707,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Farm/Attribute:redundancy/disabled' => 'A farm működik, ha az összes hypervisor működik.',
 	'Class:Farm/Attribute:redundancy/count' => 'A farm működik, ha legalább %1$s hypervisor működik',
 	'Class:Farm/Attribute:redundancy/percent' => 'A farm működik, ha legalább %1$s a %%-ből hypervisor működik.',
-));
+]);
 
 //
 // Class: VirtualMachine
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:VirtualMachine' => 'Virtuális gép',
 	'Class:VirtualMachine+' => '~~',
 	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
@@ -742,13 +741,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:VirtualMachine/Attribute:managementip+' => '~~',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Hálózati csatolók',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Logikai hálózati csatolók',
-));
+]);
 
 //
 // Class: LogicalVolume
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:LogicalVolume' => 'Logikai kötet',
 	'Class:LogicalVolume+' => '~~',
 	'Class:LogicalVolume/Attribute:name' => 'Név',
@@ -769,13 +768,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:LogicalVolume/Attribute:servers_list+' => 'Szerverek, melyek ezt a kötetet használják',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuális eszközök',
 	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Virtuális eszközök, melyek ezt a kötetet használják',
-));
+]);
 
 //
 // Class: lnkServerToVolume
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkServerToVolume' => 'Szerver / Kötet',
 	'Class:lnkServerToVolume+' => '~~',
 	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
@@ -789,13 +788,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
 	'Class:lnkServerToVolume/Attribute:size_used' => 'Felhasznált tárhely',
 	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
-));
+]);
 
 //
 // Class: lnkVirtualDeviceToVolume
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkVirtualDeviceToVolume' => 'Virtuális eszköz / Kötet',
 	'Class:lnkVirtualDeviceToVolume+' => '~~',
 	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
@@ -809,13 +808,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Felhasznált tárhely',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
-));
+]);
 
 //
 // Class: lnkSanToDatacenterDevice
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkSanToDatacenterDevice' => 'SAN / Adatközpont eszköz',
 	'Class:lnkSanToDatacenterDevice+' => '~~',
 	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
@@ -831,13 +830,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Eszköz FC port',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
-));
+]);
 
 //
 // Class: Tape
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Tape' => 'Szalag',
 	'Class:Tape+' => '~~',
 	'Class:Tape/Attribute:name' => 'Szalag név',
@@ -850,13 +849,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
 	'Class:Tape/Attribute:tapelibrary_name' => 'Szalagos tároló név',
 	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
-));
+]);
 
 //
 // Class: NASFileSystem
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:NASFileSystem' => 'NAS Fájlrendszer',
 	'Class:NASFileSystem+' => '~~',
 	'Class:NASFileSystem/Attribute:name' => 'Fájlrendszer név',
@@ -871,13 +870,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
 	'Class:NASFileSystem/Attribute:nas_name' => 'NAS név',
 	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
-));
+]);
 
 //
 // Class: Software
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Software' => 'Szoftver',
 	'Class:Software+' => '',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s~~',
@@ -907,13 +906,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Software/Attribute:softwarepatch_list+' => 'A szoftver javítócsomagjai',
 	'Class:Software/Attribute:softwarelicence_list' => 'Szoftver licencek',
 	'Class:Software/Attribute:softwarelicence_list+' => 'A szoftver licencei',
-));
+]);
 
 //
 // Class: Patch
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Patch' => 'Szervizcsomag',
 	'Class:Patch+' => 'Szoftver patch',
 	'Class:Patch/Attribute:name' => 'Szervizcsomag név',
@@ -924,13 +923,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:finalclass' => 'Szervizcsomag típus',
 	'Class:Patch/Attribute:finalclass+' => 'A végső osztály neve',
-));
+]);
 
 //
 // Class: OSPatch
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OSPatch' => 'OS javítócsomag',
 	'Class:OSPatch+' => 'Operációs rendszer szervizcsomag',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Eszközök',
@@ -939,13 +938,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:OSPatch/Attribute:osversion_id+' => '~~',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS verzió név',
 	'Class:OSPatch/Attribute:osversion_name+' => '~~',
-));
+]);
 
 //
 // Class: SoftwarePatch
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:SoftwarePatch' => 'Szoftver szervizcsomag',
 	'Class:SoftwarePatch+' => '~~',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Szoftver',
@@ -954,13 +953,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:SoftwarePatch/Attribute:software_name+' => '~~',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Szoftverpéldányok',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Rendszerek, amelyekre telepítve van ez a szoftverjavítás',
-));
+]);
 
 //
 // Class: Licence
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Licence' => 'Licenc',
 	'Class:Licence+' => '',
 	'Class:Licence/Attribute:name' => 'Licenc név',
@@ -989,13 +988,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes~~',
 	'Class:Licence/Attribute:finalclass' => 'Licenc típus',
 	'Class:Licence/Attribute:finalclass+' => 'A végső osztály neve',
-));
+]);
 
 //
 // Class: OSLicence
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OSLicence' => 'OS Licenc',
 	'Class:OSLicence+' => '~~',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
@@ -1007,13 +1006,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Virtuális gépek, melyek ezt a licencet használják',
 	'Class:OSLicence/Attribute:servers_list' => 'Szerverek',
 	'Class:OSLicence/Attribute:servers_list+' => 'Szerverek, melyek ezt a licencet használják',
-));
+]);
 
 //
 // Class: SoftwareLicence
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:SoftwareLicence' => 'Szoftver licenc',
 	'Class:SoftwareLicence+' => '~~',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s~~',
@@ -1023,13 +1022,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:SoftwareLicence/Attribute:software_name+' => '~~',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Szoftverpéldányok',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Rendszerek, melyek ezt a licencet használják',
-));
+]);
 
 //
 // Class: lnkDocumentToLicence
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToLicence' => 'Dokumentum / Licenc',
 	'Class:lnkDocumentToLicence+' => '~~',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s~~',
@@ -1041,35 +1040,35 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Dokumentum név',
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Class: OSVersion
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OSVersion' => 'OS Verzió',
 	'Class:OSVersion+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_id' => 'OS család',
 	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS család név',
 	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
-));
+]);
 
 //
 // Class: OSFamily
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:OSFamily' => 'OS család',
 	'Class:OSFamily+' => '~~',
-));
+]);
 
 //
 // Class: Brand
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Brand' => 'Gyártó',
 	'Class:Brand+' => '~~',
 	'Class:Brand/Attribute:logo' => 'Logo~~',
@@ -1078,13 +1077,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Ennek a gyártónak a fizikai eszközei',
 	'Class:Brand/UniquenessRule:name+' => '',
 	'Class:Brand/UniquenessRule:name' => 'Ez a gyártó már létezik',
-));
+]);
 
 //
 // Class: Model
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Model' => 'Modell',
 	'Class:Model+' => '~~',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s~~',
@@ -1136,37 +1135,37 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Model/Attribute:physicaldevices_list+' => 'Fizikai eszközök melyek ehhez a modellszámhoz tartoznak',
 	'Class:Model/UniquenessRule:name_brand+' => 'A névnek egyedinek kell lennie a gyártón belül',
 	'Class:Model/UniquenessRule:name_brand' => 'A gyártó ezen modellje már létezik',
-));
+]);
 
 //
 // Class: NetworkDeviceType
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:NetworkDeviceType' => 'Hálózati eszköz típus',
 	'Class:NetworkDeviceType+' => '~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Hálózati eszközök',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Ilyen típusú hálózati eszközök',
-));
+]);
 
 //
 // Class: IOSVersion
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:IOSVersion' => 'IOS Verzió',
 	'Class:IOSVersion+' => 'A hálózati eszköz firmware-je',
 	'Class:IOSVersion/Attribute:brand_id' => 'Gyártó',
 	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Gyártó név',
 	'Class:IOSVersion/Attribute:brand_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkDocumentToPatch
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToPatch' => 'Dokumentum / Szervizcsomag',
 	'Class:lnkDocumentToPatch+' => '~~',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s~~',
@@ -1178,13 +1177,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkDocumentToPatch/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Dokumentum név',
 	'Class:lnkDocumentToPatch/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkSoftwareInstanceToSoftwarePatch
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Szoftverpéldány / Szoftver szervizcsomag',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s~~',
@@ -1196,13 +1195,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '~~',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Szoftverpéldány név',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToOSPatch
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkFunctionalCIToOSPatch' => 'Funkcionális CI / OS szervizcsomag',
 	'Class:lnkFunctionalCIToOSPatch+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s~~',
@@ -1214,13 +1213,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'Funkcionális CI név',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkDocumentToSoftware
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToSoftware' => 'Dokumentum / Szoftver',
 	'Class:lnkDocumentToSoftware+' => '~~',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s~~',
@@ -1232,13 +1231,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Dokumentum név',
 	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Class: Subnet
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Subnet' => 'Alhálózat',
 	'Class:Subnet+' => '',
 	'Class:Subnet/Name' => '%1$s/%2$s~~',
@@ -1257,13 +1256,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Subnet/Attribute:ip_mask+' => '',
 	'Class:Subnet/Attribute:vlans_list' => 'VLAN-ok',
 	'Class:Subnet/Attribute:vlans_list+' => '',
-));
+]);
 
 //
 // Class: VLAN
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:VLAN' => 'VLAN',
 	'Class:VLAN+' => '~~',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag',
@@ -1278,13 +1277,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:VLAN/Attribute:subnets_list+' => '~~',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Fizikai hálózati csatolók',
 	'Class:VLAN/Attribute:physicalinterfaces_list+' => '~~',
-));
+]);
 
 //
 // Class: lnkSubnetToVLAN
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkSubnetToVLAN' => 'Alhálózat / VLAN',
 	'Class:lnkSubnetToVLAN+' => '~~',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s~~',
@@ -1298,26 +1297,26 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '~~',
-));
+]);
 
 //
 // Class: NetworkInterface
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:NetworkInterface' => 'Hálózati csatoló',
 	'Class:NetworkInterface+' => '',
 	'Class:NetworkInterface/Attribute:name' => 'Név',
 	'Class:NetworkInterface/Attribute:name+' => '~~',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Hálózati csatoló típus',
 	'Class:NetworkInterface/Attribute:finalclass+' => 'A végső osztály neve',
-));
+]);
 
 //
 // Class: IPInterface
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:IPInterface' => 'IP csatoló',
 	'Class:IPInterface+' => '~~',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP cím',
@@ -1332,13 +1331,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:IPInterface/Attribute:ipmask+' => '~~',
 	'Class:IPInterface/Attribute:speed' => 'Sebesség',
 	'Class:IPInterface/Attribute:speed+' => '~~',
-));
+]);
 
 //
 // Class: PhysicalInterface
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PhysicalInterface' => 'Fizikai csatoló',
 	'Class:PhysicalInterface+' => '~~',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s~~',
@@ -1348,13 +1347,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '~~',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLAN-ok',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '~~',
-));
+]);
 
 //
 // Class: lnkPhysicalInterfaceToVLAN
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Fizikai csatoló / VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s~~',
@@ -1370,27 +1369,26 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '~~',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '~~',
-));
-
+]);
 
 //
 // Class: LogicalInterface
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:LogicalInterface' => 'Logikai csatoló',
 	'Class:LogicalInterface+' => '~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Virtuális gép',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '~~',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Virtuális gép név',
 	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '~~',
-));
+]);
 
 //
 // Class: FiberChannelInterface
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:FiberChannelInterface' => 'FC csatoló',
 	'Class:FiberChannelInterface+' => '~~',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Sebesség',
@@ -1403,13 +1401,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '~~',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Eszköz név',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkConnectableCIToNetworkDevice
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkConnectableCIToNetworkDevice' => 'Kapcsolható CI / Hálózati eszköz',
 	'Class:lnkConnectableCIToNetworkDevice+' => 'Hálózati csatlakozással rendelkező eszközök',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s~~',
@@ -1431,13 +1429,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'bejövő link',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'Kimenő',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'kimenő link',
-));
+]);
 
 //
 // Class: lnkApplicationSolutionToFunctionalCI
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Alkalmazásmegoldás / Funkcionális CI',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -1449,13 +1447,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Funkcionális CI név',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkApplicationSolutionToBusinessProcess
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Alkalmazásmegoldás / Üzleti folyamat',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s~~',
@@ -1467,13 +1465,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '~~',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Alkalmazásmegoldás név',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '~~',
-));
+]);
 
 //
 // Class: Group
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Group' => 'Csoport',
 	'Class:Group+' => '',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s~~',
@@ -1503,13 +1501,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Group/Attribute:ci_list+' => '',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Fölérendelt csoport név',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
-));
+]);
 
 //
 // Class: lnkGroupToCI
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkGroupToCI' => 'CI csoport / CI',
 	'Class:lnkGroupToCI+' => '',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s~~',
@@ -1523,11 +1521,11 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Indoklás',
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Server:baseinfo' => 'Általános információ',
 	'Server:Date' => 'Dátumok',
 	'Server:moreinfo' => 'További információ',
@@ -1540,14 +1538,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'Szabad IP címek: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => '10 szabad IP cím kivonata',
 	'Class:Document:PreviewTab' => 'Előnézet',
-));
-
+]);
 
 //
 // Class: lnkDocumentToFunctionalCI
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToFunctionalCI' => 'Dokumentum / Funkcionális CI',
 	'Class:lnkDocumentToFunctionalCI+' => '~~',
 	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -1559,13 +1556,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Dokumentum név',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:Application' => 'Alkalmazások',
 	'Menu:Application+' => '',
 	'Menu:DBServer' => 'Adatbázis szerverek',
@@ -1610,15 +1607,15 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Szoftverkatalógus',
 	'Menu:Software+' => 'Szoftverek',
-));
+]);
 
 //
 // Class: PhysicalInterface
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
 	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
 	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
-));
+]);

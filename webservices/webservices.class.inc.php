@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,14 +17,12 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Implementation of iTop SOAP services
  *
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 require_once(APPROOT.'/webservices/itopsoaptypes.class.inc.php');
 
@@ -34,7 +33,6 @@ require_once(APPROOT.'/webservices/itopsoaptypes.class.inc.php');
  */
 class WebServiceResult
 {
-	
 	/**
 	 * Overall status
 	 *
@@ -71,37 +69,32 @@ class WebServiceResult
 	public function __construct()
 	{
 		$this->m_bStatus = true;
-		$this->m_aResult = array();
-		$this->m_aErrors = array();
-		$this->m_aWarnings = array();
-		$this->m_aInfos = array();
+		$this->m_aResult = [];
+		$this->m_aErrors = [];
+		$this->m_aWarnings = [];
+		$this->m_aInfos = [];
 	}
 
 	public function ToSoapStructure()
 	{
-		$aResults = array();
-		foreach($this->m_aResult as $sLabel => $aData)
-		{
-			$aValues = array();
-			foreach($aData as $sKey => $value)
-			{
+		$aResults = [];
+		foreach ($this->m_aResult as $sLabel => $aData) {
+			$aValues = [];
+			foreach ($aData as $sKey => $value) {
 				$aValues[] = new SOAPKeyValue($sKey, $value);
 			}
 			$aResults[] = new SoapResultMessage($sLabel, $aValues);
 		}
-		$aInfos = array();
-		foreach($this->m_aInfos as $sMessage)
-		{
+		$aInfos = [];
+		foreach ($this->m_aInfos as $sMessage) {
 			$aInfos[] = new SoapLogMessage($sMessage);
 		}
-		$aWarnings = array();
-		foreach($this->m_aWarnings as $sMessage)
-		{
+		$aWarnings = [];
+		foreach ($this->m_aWarnings as $sMessage) {
 			$aWarnings[] = new SoapLogMessage($sMessage);
 		}
-		$aErrors = array();
-		foreach($this->m_aErrors as $sMessage)
-		{
+		$aErrors = [];
+		foreach ($this->m_aErrors as $sMessage) {
 			$aErrors[] = new SoapLogMessage($sMessage);
 		}
 
@@ -135,11 +128,11 @@ class WebServiceResult
 	public function AddResultObject($sLabel, $oObject)
 	{
 		$oAppContext = new ApplicationContext();
-		$this->m_aResult[$sLabel] = array(
+		$this->m_aResult[$sLabel] = [
 			'id' => $oObject->GetKey(),
 			'name' => $oObject->GetRawName(),
 			'url' => $oAppContext->MakeObjectUrl(get_class($oObject), $oObject->GetKey(), null, false), // Raw URL without HTML tags
-		);
+		];
 	}
 
 	/**
@@ -183,8 +176,11 @@ class WebServiceResult
 	 */
 	public function LogIssue($sDescription, $bIsStopper = true)
 	{
-		if ($bIsStopper) $this->LogError($sDescription);
-		else             $this->LogWarning($sDescription);
+		if ($bIsStopper) {
+			$this->LogError($sDescription);
+		} else {
+			$this->LogWarning($sDescription);
+		}
 	}
 
 	/**
@@ -220,15 +216,13 @@ class WebServiceResult
 	public function GetReturnedDataAsText()
 	{
 		$sRet = '';
-		foreach ($this->m_aResult as $sKey => $value)
-		{
+		foreach ($this->m_aResult as $sKey => $value) {
 			$sRet .= "===== $sKey =====\n";
 			$sRet .= print_r($value, true);
 		}
 		return $sRet;
 	}
 }
-
 
 /**
  * Generic response of iTop SOAP services - failed login
@@ -251,13 +245,12 @@ class WebServiceResultFailedLogin extends WebServiceResult
  */
 abstract class WebServicesBase
 {
-	static public function GetWSDLContents($sServiceCategory = '')
+	public static function GetWSDLContents($sServiceCategory = '')
 	{
-		if ($sServiceCategory == '')
-		{
+		if ($sServiceCategory == '') {
 			$sServiceCategory = 'BasicServices';
 		}
-		$sWsdlFilePath = call_user_func(array($sServiceCategory, 'GetWSDLFilePath'));
+		$sWsdlFilePath = call_user_func([$sServiceCategory, 'GetWSDLFilePath']);
 		return file_get_contents($sWsdlFilePath);
 	}
 
@@ -271,15 +264,14 @@ abstract class WebServicesBase
 	 */
 	protected function LogUsage($sVerb, $oRes)
 	{
-		if (!MetaModel::IsLogEnabledWebService()) return;
+		if (!MetaModel::IsLogEnabledWebService()) {
+			return;
+		}
 
 		$oLog = new EventWebService();
-		if ($oRes->IsOk())
-		{
+		if ($oRes->IsOk()) {
 			$oLog->Set('message', $sVerb.' was successfully invoked');
-		}
-		else
-		{
+		} else {
 			$oLog->Set('message', $sVerb.' returned errors');
 		}
 		$oLog->Set('userinfo', UserRights::GetUser());
@@ -291,12 +283,11 @@ abstract class WebServicesBase
 		$this->TrimAndSetValue($oLog, 'data', (string)$oRes->GetReturnedDataAsText());
 		$oLog->DBInsertNoReload();
 	}
-	
+
 	protected function TrimAndSetValue($oLog, $sAttCode, $sValue)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($oLog), $sAttCode);
-		if (is_object($oAttDef))
-		{
+		if (is_object($oAttDef)) {
 			$iMaxSize = $oAttDef->GetMaxSize();
 			if ($iMaxSize && (mb_strlen($sValue) > $iMaxSize)) {
 				$sValue = mb_substr($sValue, 0, $iMaxSize);
@@ -317,12 +308,9 @@ abstract class WebServicesBase
 	protected function MyObjectSetScalar($sAttCode, $sParamName, $value, &$oTargetObj, &$oRes)
 	{
 		$res = $oTargetObj->CheckValue($sAttCode, $value);
-		if ($res === true)
-		{
+		if ($res === true) {
 			$oTargetObj->Set($sAttCode, $value);
-		}
-		else
-		{
+		} else {
 			// $res contains the error description
 			$oRes->LogError("Unexpected value for parameter $sParamName: $res");
 		}
@@ -343,31 +331,24 @@ abstract class WebServicesBase
 
 		$bIsMandatory = !$oExtKey->IsNullAllowed();
 
-		if (is_null($aExtKeyDesc))
-		{
-			if ($bIsMandatory)
-			{
+		if (is_null($aExtKeyDesc)) {
+			if ($bIsMandatory) {
 				$oRes->LogError("Parameter $sParamName: found null for a mandatory key");
-			}
-			else
-			{
+			} else {
 				// skip silently
 				return;
 			}
 		}
 
-		if (count($aExtKeyDesc) == 0)
-		{
+		if (count($aExtKeyDesc) == 0) {
 			$oRes->LogIssue("Parameter $sParamName: no search condition has been specified", $bIsMandatory);
 			return;
 		}
 
 		$sKeyClass = $oExtKey->GetTargetClass();
 		$oReconFilter = new DBObjectSearch($sKeyClass);
-		foreach ($aExtKeyDesc as $sForeignAttCode => $value)
-		{
-			if (!MetaModel::IsValidFilterCode($sKeyClass, $sForeignAttCode))
-			{
+		foreach ($aExtKeyDesc as $sForeignAttCode => $value) {
+			if (!MetaModel::IsValidFilterCode($sKeyClass, $sForeignAttCode)) {
 				$aCodes = MetaModel::GetFiltersList($sKeyClass);
 				$sMsg = "Parameter $sParamName: '$sForeignAttCode' is not a valid filter code for class '$sKeyClass', expecting a value in {".implode(', ', $aCodes)."}";
 				$oRes->LogIssue($sMsg, $bIsMandatory);
@@ -376,26 +357,24 @@ abstract class WebServicesBase
 			$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
 		}
 		$oExtObjects = new CMDBObjectSet($oReconFilter);
-		switch($oExtObjects->Count())
-		{
-		case 0:
-			$sMsg = "Parameter $sParamName: no match (searched: '".$oReconFilter->ToOQL(true)."')";
-			$oRes->LogIssue($sMsg, $bIsMandatory);
-			break;
-		case 1:
-			// Do change the external key attribute
-			$oForeignObj = $oExtObjects->Fetch();
-			$oTargetObj->Set($sAttCode, $oForeignObj->GetKey());
+		switch ($oExtObjects->Count()) {
+			case 0:
+				$sMsg = "Parameter $sParamName: no match (searched: '".$oReconFilter->ToOQL(true)."')";
+				$oRes->LogIssue($sMsg, $bIsMandatory);
+				break;
+			case 1:
+				// Do change the external key attribute
+				$oForeignObj = $oExtObjects->Fetch();
+				$oTargetObj->Set($sAttCode, $oForeignObj->GetKey());
 
-			// Report it (no need to report if the object already had this value
-			if (array_key_exists($sAttCode, $oTargetObj->ListChanges()))
-			{
-				$oRes->LogInfo("Parameter $sParamName: found match ".get_class($oForeignObj)."::".$oForeignObj->GetKey()." '".$oForeignObj->GetName()."'");
-			}
-			break;
-		default:
-			$sMsg = "Parameter $sParamName: Found ".$oExtObjects->Count()." matches (searched: '".$oReconFilter->ToOQL(true)."')";
-			$oRes->LogIssue($sMsg, $bIsMandatory);
+				// Report it (no need to report if the object already had this value
+				if (array_key_exists($sAttCode, $oTargetObj->ListChanges())) {
+					$oRes->LogInfo("Parameter $sParamName: found match ".get_class($oForeignObj)."::".$oForeignObj->GetKey()." '".$oForeignObj->GetName()."'");
+				}
+				break;
+			default:
+				$sMsg = "Parameter $sParamName: Found ".$oExtObjects->Count()." matches (searched: '".$oReconFilter->ToOQL(true)."')";
+				$oRes->LogIssue($sMsg, $bIsMandatory);
 		}
 	}
 
@@ -416,34 +395,29 @@ abstract class WebServicesBase
 		$sLinkClass = $oLinkAtt->GetLinkedClass();
 		$sExtKeyToItem = $oLinkAtt->GetExtKeyToRemote();
 
-		$aItemsFound = array();
-		$aItemsNotFound = array();
-		
-		if (is_null($aLinkList))
-		{
+		$aItemsFound = [];
+		$aItemsNotFound = [];
+
+		if (is_null($aLinkList)) {
 			return $aItemsNotFound;
 		}
 
-		foreach ($aLinkList as $aItemData)
-		{
-			if (!array_key_exists('class', $aItemData))
-			{
+		foreach ($aLinkList as $aItemData) {
+			if (!array_key_exists('class', $aItemData)) {
 				$oRes->LogWarning("Parameter $sParamName: missing 'class' specification");
 				continue; // skip
 			}
 			$sTargetClass = $aItemData['class'];
-			if (!MetaModel::IsValidClass($sTargetClass))
-			{
+			if (!MetaModel::IsValidClass($sTargetClass)) {
 				$oRes->LogError("Parameter $sParamName: invalid class '$sTargetClass'");
 				continue; // skip
 			}
-			if (!MetaModel::IsParentClass($sLinkedClass, $sTargetClass))
-			{
+			if (!MetaModel::IsParentClass($sLinkedClass, $sTargetClass)) {
 				$oRes->LogError("Parameter $sParamName: '$sTargetClass' is not a child class of '$sLinkedClass'");
 				continue; // skip
 			}
 			$oReconFilter = new DBObjectSearch($sTargetClass);
-			$aCIStringDesc = array();
+			$aCIStringDesc = [];
 			foreach ($aItemData['search'] as $sAttCode => $value) {
 				if (!MetaModel::IsValidFilterCode($sTargetClass, $sAttCode)) {
 					$aCodes = MetaModel::GetFiltersList($sTargetClass);
@@ -455,52 +429,42 @@ abstract class WebServicesBase
 				// The attribute is one of our reconciliation key
 				$oReconFilter->AddCondition($sAttCode, $value, '=');
 			}
-			if (count($aCIStringDesc) == 1)
-			{
+			if (count($aCIStringDesc) == 1) {
 				// take the last and unique value to describe the object
 				$sItemDesc = $value;
-			}
-			else
-			{
+			} else {
 				// describe the object by the given keys
 				$sItemDesc = $sTargetClass.'('.implode('/', $aCIStringDesc).')';
 			}
 
 			$oExtObjects = new CMDBObjectSet($oReconFilter);
-			switch($oExtObjects->Count())
-			{
-			case 0:
-				$oRes->LogWarning("Parameter $sParamName: object to link $sLinkedClass / $sItemDesc could not be found (searched: '".$oReconFilter->ToOQL(true)."')");
-				$aItemsNotFound[] = $sItemDesc;
-				break;
-			case 1:
-				$aItemsFound[] = array (
-					'object' => $oExtObjects->Fetch(),
-					'link_values' => @$aItemData['link_values'],
-					'desc' => $sItemDesc,
-				);
-				break;
-			default:
-				$oRes->LogWarning("Parameter $sParamName: Found ".$oExtObjects->Count()." matches for item '$sItemDesc' (searched: '".$oReconFilter->ToOQL(true)."')");
-				$aItemsNotFound[] = $sItemDesc;
+			switch ($oExtObjects->Count()) {
+				case 0:
+					$oRes->LogWarning("Parameter $sParamName: object to link $sLinkedClass / $sItemDesc could not be found (searched: '".$oReconFilter->ToOQL(true)."')");
+					$aItemsNotFound[] = $sItemDesc;
+					break;
+				case 1:
+					$aItemsFound[] =  [
+						'object' => $oExtObjects->Fetch(),
+						'link_values' => @$aItemData['link_values'],
+						'desc' => $sItemDesc,
+					];
+					break;
+				default:
+					$oRes->LogWarning("Parameter $sParamName: Found ".$oExtObjects->Count()." matches for item '$sItemDesc' (searched: '".$oReconFilter->ToOQL(true)."')");
+					$aItemsNotFound[] = $sItemDesc;
 			}
 		}
 
-		if (count($aItemsFound) > 0)
-		{
-			$aLinks = array();
-			foreach($aItemsFound as $aItemData)
-			{
+		if (count($aItemsFound) > 0) {
+			$aLinks = [];
+			foreach ($aItemsFound as $aItemData) {
 				$oLink = MetaModel::NewObject($sLinkClass);
 				$oLink->Set($sExtKeyToItem, $aItemData['object']->GetKey());
-				foreach($aItemData['link_values'] as $sKey => $value)
-				{
-					if(!MetaModel::IsValidAttCode($sLinkClass, $sKey))
-					{
+				foreach ($aItemData['link_values'] as $sKey => $value) {
+					if (!MetaModel::IsValidAttCode($sLinkClass, $sKey)) {
 						$oRes->LogWarning("Parameter $sParamName: Attaching item '".$aItemData['desc']."', the attribute code '$sKey' is not valid ; check the class '$sLinkClass'");
-					}
-					else
-					{
+					} else {
 						$oLink->Set($sKey, $value);
 					}
 				}
@@ -529,77 +493,71 @@ abstract class WebServicesBase
 	 */
 	protected function MyObjectInsert($oTargetObj, $sResultLabel, &$oRes)
 	{
-		if ($oRes->IsOk())
-		{
+		if ($oRes->IsOk()) {
 			list($bRes, $aIssues) = $oTargetObj->CheckToWrite();
-			if ($bRes)
-			{
+			if ($bRes) {
 				$iId = $oTargetObj->DBInsertNoReload();
 				$oRes->LogInfo("Created object ".get_class($oTargetObj)."::$iId");
 				$oRes->AddResultObject($sResultLabel, $oTargetObj);
-			}
-			else
-			{
+			} else {
 				$oRes->LogError("The ticket could not be created due to forbidden values (or inconsistent values)");
-				foreach($aIssues as $iIssue => $sIssue)
-				{
+				foreach ($aIssues as $iIssue => $sIssue) {
 					$oRes->LogError("Issue #$iIssue: $sIssue");
 				}
 			}
 		}
 	}
 
-
-	static protected function SoapStructToExternalKeySearch($oExternalKeySearch)
+	protected static function SoapStructToExternalKeySearch($oExternalKeySearch)
 	{
-		if (is_null($oExternalKeySearch)) return null;
-		if ($oExternalKeySearch->IsVoid()) return null;
+		if (is_null($oExternalKeySearch)) {
+			return null;
+		}
+		if ($oExternalKeySearch->IsVoid()) {
+			return null;
+		}
 
-		$aRes = array();
-		foreach($oExternalKeySearch->conditions as $oSearchCondition)
-		{
+		$aRes = [];
+		foreach ($oExternalKeySearch->conditions as $oSearchCondition) {
 			$aRes[$oSearchCondition->attcode] = $oSearchCondition->value;
 		}
 		return $aRes;
 	}
 
-	static protected function SoapStructToLinkCreationSpec(SoapLinkCreationSpec $oLinkCreationSpec)
+	protected static function SoapStructToLinkCreationSpec(SoapLinkCreationSpec $oLinkCreationSpec)
 	{
-		$aRes = array
-		(
+		$aRes =
+		[
 			'class' => $oLinkCreationSpec->class,
-			'search' => array(),
-			'link_values' => array(),
-		);
+			'search' => [],
+			'link_values' => [],
+		];
 
-		foreach($oLinkCreationSpec->conditions as $oSearchCondition)
-		{
+		foreach ($oLinkCreationSpec->conditions as $oSearchCondition) {
 			$aRes['search'][$oSearchCondition->attcode] = $oSearchCondition->value;
 		}
 
-		foreach($oLinkCreationSpec->attributes as $oAttributeValue)
-		{
+		foreach ($oLinkCreationSpec->attributes as $oAttributeValue) {
 			$aRes['link_values'][$oAttributeValue->attcode] = $oAttributeValue->value;
 		}
 
 		return $aRes;
 	}
 
-	static protected function SoapStructToAssociativeArray($aArrayOfAssocArray)
+	protected static function SoapStructToAssociativeArray($aArrayOfAssocArray)
 	{
-		if (is_null($aArrayOfAssocArray)) return array();
+		if (is_null($aArrayOfAssocArray)) {
+			return [];
+		}
 
-		$aRes = array();
-		foreach($aArrayOfAssocArray as $aAssocArray)
-		{
-			$aRow = array();
-			foreach ($aAssocArray as $oKeyValuePair)
-			{
+		$aRes = [];
+		foreach ($aArrayOfAssocArray as $aAssocArray) {
+			$aRow = [];
+			foreach ($aAssocArray as $oKeyValuePair) {
 				$aRow[$oKeyValuePair->key] = $oKeyValuePair->value;
 			}
-			$aRes[] = $aRow;		
+			$aRes[] = $aRow;
 		}
 		return $aRes;
 	}
 }
-?>

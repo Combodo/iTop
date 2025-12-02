@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -16,7 +17,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 
 /**
  * Simple redirection page to check PHP requirements

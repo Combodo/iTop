@@ -11,7 +11,6 @@ define('STATUS_RUNNING', 'RUNNING');
 
 class Status
 {
-
 	/**
 	 * @throws \CoreException
 	 * @throws \DictExceptionUnknownLanguage

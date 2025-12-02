@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Ticket' => 'Hibajegy',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Referenciaszám',
@@ -61,14 +62,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Lezárva',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
 	'Ticket:ImpactAnalysis' => 'Hatáselemzés',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkContactToTicket' => 'Kapcsolattartó / Hibajegy',
 	'Class:lnkContactToTicket+' => '~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
@@ -88,13 +88,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Kézzel hozzáadva',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Számított',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Ne értesítsen',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:WorkOrder' => 'Munkaelrendelő',
 	'Class:WorkOrder+' => '~~',
 	'Class:WorkOrder/Attribute:name' => 'Név',
@@ -127,11 +127,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Bezárás',
 	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Ticket:baseinfo' => 'Általános információk',
 	'Ticket:date' => 'Dátum',
 	'Ticket:contact' => 'Kapcsolattartók',
@@ -221,14 +220,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Megoldási idő',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
-));
-
+]);
 
 //
 // Class: Ticket
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
-));
+]);

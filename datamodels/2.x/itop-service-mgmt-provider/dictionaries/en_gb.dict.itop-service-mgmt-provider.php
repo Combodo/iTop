@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -34,7 +35,7 @@
 //
 // Menu, fieldsets, UI, messages translations
 //
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:ServiceManagement' => 'Service Management',
 	'Menu:ServiceManagement+' => 'Service Management Overview',
 	'Menu:Service:Overview' => 'Overview',
@@ -65,7 +66,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Contract:baseinfo' => 'General information',
 	'Contract:moreinfo' => 'Contractual information',
 	'Contract:cost' => 'Cost information',
-));
+]);
 
 /*
 	'UI:ServiceManagementMenu' => 'Gestion des Services',
@@ -80,30 +81,27 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 // Class: Organization
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery model',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery model name',
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
-));
-
-
+]);
 
 //
 // Class: ContractType
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:ContractType' => 'Contract Type',
 	'Class:ContractType+' => '',
-));
-
+]);
 
 //
 // Class: Contract
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Contract' => 'Contract',
 	'Class:Contract+' => '',
 	'Class:Contract/Attribute:name' => 'Name',
@@ -152,13 +150,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Contract/Attribute:status/Value:production+' => 'production',
 	'Class:Contract/Attribute:finalclass' => 'Contract sub-class',
 	'Class:Contract/Attribute:finalclass+' => 'Name of the final class',
-));
+]);
 
 //
 // Class: CustomerContract
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:CustomerContract' => 'Customer Contract',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
@@ -167,13 +165,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this contract',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Provider contracts',
 	'Class:CustomerContract/Attribute:providercontracts_list+' => 'All the provider contracts to deliver the services for this contract (underpinning contract)',
-));
+]);
 
 //
 // Class: ProviderContract
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:ProviderContract' => 'Provider Contract',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
@@ -182,13 +180,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement',
 	'Class:ProviderContract/Attribute:coverage' => 'Service hours',
 	'Class:ProviderContract/Attribute:coverage+' => '',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkContactToContract' => 'Link Contact / Contract',
 	'Class:lnkContactToContract+' => '',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
@@ -200,13 +198,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkContactToContract/Attribute:contact_id+' => '',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Contact Name',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkContractToDocument' => 'Link Contract / Document',
 	'Class:lnkContractToDocument+' => '',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
@@ -218,13 +216,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Document Name',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToProviderContract
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Link FunctionalCI / ProviderContract',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
@@ -236,13 +234,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI Name',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: ServiceFamily
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:ServiceFamily' => 'Service Family',
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Name',
@@ -251,13 +249,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
 	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category',
-));
+]);
 
 //
 // Class: Service
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Service' => 'Service',
 	'Class:Service+' => '',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s',
@@ -291,13 +289,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Service/Attribute:customercontracts_list+' => 'All the customer contracts that have purchased this service',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Service sub categories',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service',
-));
+]);
 
 //
 // Class: lnkDocumentToService
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkDocumentToService' => 'Link Document / Service',
 	'Class:lnkDocumentToService+' => '',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s',
@@ -309,13 +307,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkDocumentToService/Attribute:document_id+' => '',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Document Name',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkContactToService
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkContactToService' => 'Link Contact / Service',
 	'Class:lnkContactToService+' => '',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s',
@@ -327,13 +325,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkContactToService/Attribute:contact_id+' => '',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Contact Name',
 	'Class:lnkContactToService/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: ServiceSubcategory
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:ServiceSubcategory' => 'Service Subcategory',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
@@ -361,13 +359,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'service request',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider Name',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider',
-));
+]);
 
 //
 // Class: SLA
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:SLA' => 'SLA',
 	'Class:SLA+' => '',
 	'Class:SLA/Attribute:name' => 'Name',
@@ -383,13 +381,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:SLA/Attribute:customercontracts_list' => 'Customer contracts',
 	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracts using this SLA',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists',
-));
+]);
 
 //
 // Class: SLT
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:SLT' => 'SLT',
 	'Class:SLT+' => '',
 	'Class:SLT/Attribute:name' => 'Name',
@@ -424,13 +422,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => 'hours',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minutes',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes',
-));
+]);
 
 //
 // Class: lnkSLAToSLT
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkSLAToSLT' => 'Link SLA / SLT',
 	'Class:lnkSLAToSLT+' => '',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
@@ -452,13 +450,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'SLT value unit',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkCustomerContractToService' => 'Link Customer Contract / Service',
 	'Class:lnkCustomerContractToService+' => '',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
@@ -474,13 +472,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA Name',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
-));
+]);
 
 //
 // Class: lnkCustomerContractToProviderContract
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkCustomerContractToProviderContract' => 'Link Customer Contract / Provider Contract',
 	'Class:lnkCustomerContractToProviderContract+' => '',
 	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s',
@@ -492,13 +490,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Provider contract Name',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '',
-));
+]);
 
 //
 // Class: lnkCustomerContractToFunctionalCI
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkCustomerContractToFunctionalCI' => 'Link Customer Contract / FunctionalCI',
 	'Class:lnkCustomerContractToFunctionalCI+' => '',
 	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s',
@@ -510,13 +508,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => 'CI Name',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: DeliveryModel
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:DeliveryModel' => 'Delivery Model',
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:name' => 'Name',
@@ -531,13 +529,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Persons) for this delivery model',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Customers',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model',
-));
+]);
 
 //
 // Class: lnkDeliveryModelToContact
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkDeliveryModelToContact' => 'Link DeliveryModel / Contact',
 	'Class:lnkDeliveryModelToContact+' => '',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
@@ -553,4 +551,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Role name',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
-));
+]);

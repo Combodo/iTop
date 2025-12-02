@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -67,8 +68,8 @@ class BrickCollection
 		$this->aAllowedBricks = null;
 		$this->iDisplayedInHome = 0;
 		$this->iDisplayedInNavigationMenu = 0;
-		$this->aHomeOrdering = array();
-		$this->aNavigationMenuOrdering = array();
+		$this->aHomeOrdering = [];
+		$this->aNavigationMenuOrdering = [];
 
 		$this->Load();
 	}
@@ -84,8 +85,7 @@ class BrickCollection
 	public function __call($method, $arguments)
 	{
 		// Made for cleaner/easier access from twig (eg. app['brick_collection'].bricks)
-		switch ($method)
-		{
+		switch ($method) {
 			case 'bricks':
 				return $this->GetBricks();
 				break;
@@ -128,10 +128,8 @@ class BrickCollection
 	 */
 	public function GetBrickById($sId)
 	{
-		foreach ($this->GetBricks() as $oBrick)
-		{
-			if ($oBrick->GetId() === $sId)
-			{
+		foreach ($this->GetBricks() as $oBrick) {
+			if ($oBrick->GetId() === $sId) {
 				return $oBrick;
 			}
 		}
@@ -146,19 +144,15 @@ class BrickCollection
 	{
 		$aRawBrickList = $this->GetRawBrickList();
 
-		foreach ($aRawBrickList as $oBrick)
-		{
+		foreach ($aRawBrickList as $oBrick) {
 			ApplicationHelper::LoadBrickSecurity($oBrick);
 
-			if ($oBrick->GetActive() && $oBrick->IsGrantedForProfiles(UserRights::ListProfiles()))
-			{
+			if ($oBrick->GetActive() && $oBrick->IsGrantedForProfiles(UserRights::ListProfiles())) {
 				$this->aAllowedBricks[] = $oBrick;
-				if ($oBrick->GetVisibleHome())
-				{
+				if ($oBrick->GetVisibleHome()) {
 					$this->iDisplayedInHome++;
 				}
-				if ($oBrick->GetVisibleNavigationMenu())
-				{
+				if ($oBrick->GetVisibleNavigationMenu()) {
 					$this->iDisplayedInNavigationMenu++;
 				}
 			}
@@ -191,35 +185,30 @@ class BrickCollection
 	 */
 	private function GetRawBrickList()
 	{
-		$aBricks = array();
+		$aBricks = [];
 		/** @var \Combodo\iTop\DesignElement $oBrickNode */
-		foreach ($this->oModuleDesign->GetNodes('/module_design/bricks/brick') as $oBrickNode)
-		{
+		foreach ($this->oModuleDesign->GetNodes('/module_design/bricks/brick') as $oBrickNode) {
 			$sBrickClass = $oBrickNode->getAttribute('xsi:type');
-			try
-			{
-				if (class_exists($sBrickClass))
-				{
+			try {
+				if (class_exists($sBrickClass)) {
 					/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oBrick */
 					$oBrick = new $sBrickClass();
-					
+
 					// Load the brick specific properties from its XML definition
 					$oBrick->LoadFromXml($oBrickNode);
 
 					$aBricks[] = $oBrick;
+				} else {
+					throw new DOMFormatException(
+						'Unknown brick class "'.$sBrickClass.'" from xsi:type attribute',
+						null,
+						null,
+						$oBrickNode
+					);
 				}
-				else
-				{
-					throw new DOMFormatException('Unknown brick class "'.$sBrickClass.'" from xsi:type attribute', null,
-						null, $oBrickNode);
-				}
-			}
-			catch (DOMFormatException $e)
-			{
+			} catch (DOMFormatException $e) {
 				throw new Exception('Could not create brick ('.$sBrickClass.') from XML because of a DOM problem : '.$e->getMessage());
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				throw new Exception('Could not create brick ('.$sBrickClass.') from XML : '.$oBrickNode->Dump().' '.$e->getMessage());
 			}
 		}

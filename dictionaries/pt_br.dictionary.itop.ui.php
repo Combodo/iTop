@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:AuditCategory' => 'Categoria de Auditoria',
 	'Class:AuditCategory+' => 'Uma seção dentro da auditoria',
 	'Class:AuditCategory/Attribute:name' => 'Nome',
@@ -26,19 +27,21 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
-));
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:AuditRule' => 'Regra de Auditoria',
 	'Class:AuditRule+' => 'Uma regra para verificar se uma determinada categoria de Auditoria',
 	'Class:AuditRule/Attribute:name' => 'Nome',
 	'Class:AuditRule/Attribute:name+' => 'Nome curto para esta regra',
 	'Class:AuditRule/Attribute:description' => 'Descrição',
 	'Class:AuditRule/Attribute:description+' => 'Descrição longa para essa regra',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Executar consulta',
 	'Class:AuditRule/Attribute:query+' => 'Executar a expressão OQL',
 	'Class:AuditRule/Attribute:valid_flag' => 'Objetos válidos?',
@@ -51,13 +54,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:AuditRule/Attribute:category_id+' => 'A categoria para esta regra',
 	'Class:AuditRule/Attribute:category_name' => 'Categoria',
 	'Class:AuditRule/Attribute:category_name+' => 'Nome da categoria para essa regra',
-));
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -69,13 +74,13 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -86,13 +91,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Query' => 'Consulta',
 	'Class:Query+' => 'Uma consulta é um conjunto de dados definido de uma forma dinâmica',
 	'Class:Query/Attribute:name' => 'Nome',
@@ -119,7 +124,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:QueryOQL+' => 'Uma consulta baseada no Object Query Language (OQL)',
 	'Class:QueryOQL/Attribute:oql' => 'Expressão',
 	'Class:QueryOQL/Attribute:oql+' => 'Expressão Object Query Language (OQL)',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -130,7 +135,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Class: User
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:User' => 'Usuário',
 	'Class:User+' => '',
 	'Class:User/Attribute:finalclass' => 'Tipo de conta',
@@ -163,9 +168,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:User/Attribute:status/Value:disabled' => 'Inativa',
 	'Class:User/Error:LoginMustBeUnique' => 'Login deve ser único - "%1s" já existe',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Pelo menos um perfil deve ser atribuído a esse usuário',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'O perfil "%1$s" não pôde ser adicionado, ele negará o acesso ao backoffice',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Alterar o status da conta não é permitido para o seu próprio usuário',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'As organizações permitidas devem conter apenas usuários pertencentes a organização',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'A lista atual de perfis não fornece permissões de acesso suficientes (os usuários não são mais modificáveis)',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Pelo menos uma organização deve ser atribuída a esse usuário',
@@ -176,13 +183,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'Usuário Interno',
 	'Class:UserInternal+' => 'Usuário definido dentro do '.ITOP_APPLICATION_SHORT,
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:URP_Profiles' => 'Perfil',
 	'Class:URP_Profiles+' => 'Perfil do Usuário',
 	'Class:URP_Profiles/Attribute:name' => 'Nome',
@@ -191,13 +198,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_Profiles/Attribute:description+' => 'Uma descrição curta',
 	'Class:URP_Profiles/Attribute:user_list' => 'Usuários',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Pessoas que possuem esse perfil',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:URP_Dimensions' => 'Dimensão',
 	'Class:URP_Dimensions+' => 'Dimensão de aplicação (definição de silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Nome',
@@ -206,13 +213,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'Uma descrição curta',
 	'Class:URP_Dimensions/Attribute:type' => 'Tipo',
 	'Class:URP_Dimensions/Attribute:type+' => 'Nome da classe ou tipo de dado (unidade de mapeamento)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:URP_UserProfile' => 'Perfil de usuário',
 	'Class:URP_UserProfile+' => '',
 	'Class:URP_UserProfile/Name' => 'Relação entre %1$s e %2$s',
@@ -226,14 +233,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_UserProfile/Attribute:profile+' => 'Nome do perfil',
 	'Class:URP_UserProfile/Attribute:reason' => 'Função',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Explicação por que esta pessoa deve ter essa função',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:URP_UserOrg' => 'Organização do usuário',
 	'Class:URP_UserOrg+' => 'Organizações permitidas',
 	'Class:URP_UserOrg/Name' => 'Relação entre %1$s e %2$s',
@@ -247,13 +253,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Organização permitida',
 	'Class:URP_UserOrg/Attribute:reason' => 'Função',
 	'Class:URP_UserOrg/Attribute:reason+' => 'Explicação por que essa pessoa tem permissão para ver os dados pertencentes com essa organização',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:URP_ProfileProjection' => 'Mapeamentos de Perfil',
 	'Class:URP_ProfileProjection+' => '',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimensão',
@@ -268,13 +274,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'Expressão OQL (usando $user) | constante | | +código de atributo',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Atributo',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Código de atributo alvo (opcional)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'class projections',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimensão',
@@ -287,13 +293,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'Expressão OQL (usando $ user) | constante | | + código de atributo',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Atributo',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Código de atributo alvo (opcional)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:URP_ActionGrant' => 'action_permission',
 	'Class:URP_ActionGrant+' => 'Permissões de classes',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Perfil',
@@ -310,13 +316,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => '',
 	'Class:URP_ActionGrant/Attribute:action' => 'Ação',
 	'Class:URP_ActionGrant/Attribute:action+' => 'Operações a realizar em determinada classe',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:URP_StimulusGrant' => 'stimulus_permission',
 	'Class:URP_StimulusGrant+' => 'Permissões de estímulo do ciclo de vida do objeto',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Perfil',
@@ -333,25 +339,25 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => '',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Estímulo',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Código do estímulo',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:URP_AttributeGrant' => 'attribute_permission',
 	'Class:URP_AttributeGrant+' => 'Permissões a nível de atributos',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Concessão de permissão',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'Concessão de permissão',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Atributo',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Código do atributo',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:UserDashboard' => 'Painel do usuário',
 	'Class:UserDashboard+' => '',
 	'Class:UserDashboard/Attribute:user_id' => 'Usuário',
@@ -360,12 +366,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '',
 	'Class:UserDashboard/Attribute:contents' => 'Conteúdo',
 	'Class:UserDashboard/Attribute:contents+' => '',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:WelcomeMenu' => 'Página inicial do '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenu+' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Página inicial do '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage+' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Ferramentas Administrativas',
 	'Menu:AdminTools+' => 'Ferramentas Administrativas',
 	'Menu:AdminTools?' => 'Ferramentas acessíveis apenas para usuários com perfil de administrador',
@@ -380,14 +386,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:MyShortcuts' => 'Meus atalhos',
 	'Menu:Notifications:Title' => 'Categorias de Auditoria',
 	'Menu:DataAdministration' => 'Administração de Dados',
-	'Menu:DataAdministration+' => 'Administração de Dados'
-));
+	'Menu:DataAdministration+' => 'Administração de Dados',
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'BooleanLabel:yes' => 'Sim',
 	'BooleanLabel:no' => 'Não',
 	'UI:Login:Title' => 'Login no '.ITOP_APPLICATION_SHORT,
@@ -1535,13 +1541,13 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Os objetos filhos dos objetos selecionados serão incluídos',
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtrado',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtrado em %1$s',
-	'UI:StateChanged' => 'Status alterado'
-));
+	'UI:StateChanged' => 'Status alterado',
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Expression:Operator:AND' => ' E ',
 	'Expression:Operator:OR' => ' OU ',
 	'Expression:Operator:=' => ': ',
@@ -1554,12 +1560,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Expression:Unit:Long:MINUTE' => 'minuto(s)',
 	'Expression:Verb:NOW' => 'agora',
 	'Expression:Verb:ISNULL' => ': indefinido',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'UI:Newsroom:NoNewMessage' => 'Nenhuma mensagem nova',
 	'UI:Newsroom:XNewMessage' => '%1$s nova(s) mensagem(ns)',
 	'UI:Newsroom:MarkAllAsRead' => 'Marcar todas as mensagens como lidas',
@@ -1574,10 +1580,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
-));
+]);
 
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:DataSources' => 'Fontes de Sincronização de Dados',
 	'Menu:DataSources+' => 'Lista de Fontes de Sincronização de Dados',
 	'Menu:AuditCategories' => 'Categorias de Auditoria',
@@ -1605,4 +1610,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:Integrations' => 'Integrations~~',
 	'Menu:Integrations+' => '~~',
 
-));
+]);

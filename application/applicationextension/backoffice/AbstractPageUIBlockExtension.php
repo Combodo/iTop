@@ -9,27 +9,27 @@
  */
 abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
 {
-    /**
-     * @inheritDoc
-     */
-    public function GetBannerBlock()
-    {
-        return null;
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function GetBannerBlock()
+	{
+		return null;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function GetHeaderBlock()
-    {
-        return null;
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function GetHeaderBlock()
+	{
+		return null;
+	}
 
-    /**
-     * @inheritDoc
-     */
-    public function GetFooterBlock()
-    {
-        return null;
-    }
+	/**
+	 * @inheritDoc
+	 */
+	public function GetFooterBlock()
+	{
+		return null;
+	}
 }

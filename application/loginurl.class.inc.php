@@ -23,17 +23,15 @@ class LoginURL extends AbstractLoginFSMExtension
 	 */
 	public function ListSupportedLoginModes()
 	{
-		return array('url');
+		return ['url'];
 	}
 
 	protected function OnModeDetection(&$iErrorCode)
 	{
-		if (!Session::IsSet('login_mode') && !$this->bErrorOccurred)
-		{
+		if (!Session::IsSet('login_mode') && !$this->bErrorOccurred) {
 			$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
 			$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
-			if (!empty($sAuthUser) && !empty($sAuthPwd))
-			{
+			if (!empty($sAuthUser) && !empty($sAuthPwd)) {
 				Session::Set('login_mode', 'url');
 			}
 		}
@@ -42,8 +40,7 @@ class LoginURL extends AbstractLoginFSMExtension
 
 	protected function OnReadCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'url')
-		{
+		if (Session::Get('login_mode') == 'url') {
 			Session::Set('login_temp_auth_user', utils::ReadParam('auth_user', '', false, 'raw_data'));
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
@@ -51,12 +48,10 @@ class LoginURL extends AbstractLoginFSMExtension
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'url')
-		{
+		if (Session::Get('login_mode') == 'url') {
 			$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
 			$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
-			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
-			{
+			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal')) {
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
@@ -67,8 +62,7 @@ class LoginURL extends AbstractLoginFSMExtension
 
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'url')
-		{
+		if (Session::Get('login_mode') == 'url') {
 			LoginWebPage::OnLoginSuccess(Session::Get('auth_user'), 'internal', Session::Get('login_mode'));
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
@@ -76,8 +70,7 @@ class LoginURL extends AbstractLoginFSMExtension
 
 	protected function OnError(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'url')
-		{
+		if (Session::Get('login_mode') == 'url') {
 			$this->bErrorOccurred = true;
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
@@ -85,8 +78,7 @@ class LoginURL extends AbstractLoginFSMExtension
 
 	protected function OnConnected(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'url')
-		{
+		if (Session::Get('login_mode') == 'url') {
 			Session::Set('can_logoff', true);
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}

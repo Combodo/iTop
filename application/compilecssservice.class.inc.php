@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -32,7 +33,8 @@ class CompileCSSService
 	{
 	}
 
-	public function CompileCSSFromSASS($sSassContent, $aImportPaths =  [], $aVariables = []){
+	public function CompileCSSFromSASS($sSassContent, $aImportPaths =  [], $aVariables = [])
+	{
 		return utils::CompileCSSFromSASS($sSassContent, $aImportPaths, $aVariables);
 	}
 }

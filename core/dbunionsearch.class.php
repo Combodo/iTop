@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -26,29 +27,25 @@ class DBUnionSearch extends DBSearch
 	protected $aSearches; // source queries
 	protected $aSelectedClasses; // alias => classes (lowest common ancestors) computed at construction
 	protected $aColumnToAliases;
-    /**
-     * DBUnionSearch constructor.
-     *
-     * @api
-     *
-     * @param $aSearches
-     *
-     * @throws CoreException
-     */
+	/**
+	 * DBUnionSearch constructor.
+	 *
+	 * @api
+	 *
+	 * @param $aSearches
+	 *
+	 * @throws CoreException
+	 */
 	public function __construct($aSearches)
 	{
-		if (count ($aSearches) == 0)
-		{
+		if (count($aSearches) == 0) {
 			throw new CoreException('A DBUnionSearch must be made of at least one search');
 		}
 
-		$this->aSearches = array();
-		foreach ($aSearches as $oSearch)
-		{
-			if ($oSearch instanceof DBUnionSearch)
-			{
-				foreach ($oSearch->aSearches as $oSubSearch)
-				{
+		$this->aSearches = [];
+		foreach ($aSearches as $oSearch) {
+			if ($oSearch instanceof DBUnionSearch) {
+				foreach ($oSearch->aSearches as $oSubSearch) {
 					$this->aSearches[] = $oSubSearch->DeepClone();
 				}
 			} else {
@@ -69,15 +66,16 @@ class DBUnionSearch extends DBSearch
 	public function IsAllDataAllowed()
 	{
 		foreach ($this->aSearches as $oSearch) {
-			if ($oSearch->IsAllDataAllowed() === false) return false;
+			if ($oSearch->IsAllDataAllowed() === false) {
+				return false;
+			}
 		}
 		return true;
 	}
 
 	public function SetArchiveMode($bEnable)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->SetArchiveMode($bEnable);
 		}
 		parent::SetArchiveMode($bEnable);
@@ -85,8 +83,7 @@ class DBUnionSearch extends DBSearch
 
 	public function SetShowObsoleteData($bShow)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->SetShowObsoleteData($bShow);
 		}
 		parent::SetShowObsoleteData($bShow);
@@ -102,31 +99,25 @@ class DBUnionSearch extends DBSearch
 		// 1 - Collect all the column/classes
 		$aColumnToClasses = [];
 		$this->aColumnToAliases = [];
-		foreach ($this->aSearches as $iPos => $oSearch)
-		{
+		foreach ($this->aSearches as $iPos => $oSearch) {
 			$aSelected = array_values($oSearch->GetSelectedClasses());
 
-			if ($iPos != 0)
-			{
-				if (count($aSelected) < count($aColumnToClasses))
-				{
-					throw new Exception('Too few selected classes in the subquery #'.($iPos+1));
+			if ($iPos != 0) {
+				if (count($aSelected) < count($aColumnToClasses)) {
+					throw new Exception('Too few selected classes in the subquery #'.($iPos + 1));
 				}
-				if (count($aSelected) > count($aColumnToClasses))
-				{
-					throw new Exception('Too many selected classes in the subquery #'.($iPos+1));
+				if (count($aSelected) > count($aColumnToClasses)) {
+					throw new Exception('Too many selected classes in the subquery #'.($iPos + 1));
 				}
 			}
 
-			foreach ($aSelected as $iColumn => $sClass)
-			{
+			foreach ($aSelected as $iColumn => $sClass) {
 				$aColumnToClasses[$iColumn][$iPos] = $sClass;
 			}
 
 			// Store the aliases by column to map them later (the first query impose the aliases)
 			$aAliases = array_keys($oSearch->GetSelectedClasses());
-			foreach ($aAliases as $iColumn => $sAlias)
-			{
+			foreach ($aAliases as $iColumn => $sAlias) {
 				$this->aColumnToAliases[$iColumn][$iPos] = $sAlias;
 			}
 		}
@@ -137,13 +128,11 @@ class DBUnionSearch extends DBSearch
 
 		// 3 - Compute alias => lowest common ancestor
 		$this->aSelectedClasses = [];
-		foreach ($aColumnToClasses as $iColumn => $aClasses)
-		{
+		foreach ($aColumnToClasses as $iColumn => $aClasses) {
 			$sAlias = $aColumnToAlias[$iColumn];
 			$sAncestor = MetaModel::GetLowestCommonAncestor($aClasses);
-			if (is_null($sAncestor))
-			{
-				throw new Exception('Could not find a common ancestor for the column '.($iColumn+1).' (Classes: '.implode(', ', $aClasses).')');
+			if (is_null($sAncestor)) {
+				throw new Exception('Could not find a common ancestor for the column '.($iColumn + 1).' (Classes: '.implode(', ', $aClasses).')');
 			}
 			$this->aSelectedClasses[$sAlias] = $sAncestor;
 		}
@@ -164,12 +153,9 @@ class DBUnionSearch extends DBSearch
 	 */
 	public function GetClassName($sAlias)
 	{
-		if (array_key_exists($sAlias, $this->aSelectedClasses))
-		{
+		if (array_key_exists($sAlias, $this->aSelectedClasses)) {
 			return $this->aSelectedClasses[$sAlias];
-		}
-		else
-		{
+		} else {
 			throw new CoreException("Invalid class alias '$sAlias'");
 		}
 	}
@@ -185,20 +171,16 @@ class DBUnionSearch extends DBSearch
 		return key($this->aSelectedClasses);
 	}
 
-
 	/**
 	 * Change the class (only subclasses are supported as of now, because the conditions must fit the new class)
 	 * Defaults to the first selected class
 	 * Only the selected classes can be changed
-	 */	 	
+	 */
 	public function ChangeClass($sNewClass, $sAlias = null)
 	{
-		if (is_null($sAlias))
-		{
+		if (is_null($sAlias)) {
 			$sAlias = $this->GetClassAlias();
-		}
-		elseif (!array_key_exists($sAlias, $this->aSelectedClasses))
-		{
+		} elseif (!array_key_exists($sAlias, $this->aSelectedClasses)) {
 			// discard silently - necessary when recursing (??? copied from DBObjectSearch)
 			return;
 		}
@@ -207,8 +189,7 @@ class DBUnionSearch extends DBSearch
 		$iColumn = array_search($sAlias, array_keys($this->aSelectedClasses));
 
 		// 2 - change for each search
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$aSearchAliases = array_keys($oSearch->GetSelectedClasses());
 			$sSearchAlias = $aSearchAliases[$iColumn];
 			$oSearch->ChangeClass($sNewClass, $sSearchAlias);
@@ -279,38 +260,31 @@ class DBUnionSearch extends DBSearch
 	public function RenameAlias($sOldName, $sNewName)
 	{
 		$bRet = false;
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$bRet = $oSearch->RenameAlias($sOldName, $sNewName) || $bRet;
 		}
 		return $bRet;
 	}
 
-	public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array())
+	public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = [])
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation);
 		}
 	}
 
 	public function TranslateConditions($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->TranslateConditions($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
 	}
 
-
-
 	public function IsAny()
 	{
 		$bIsAny = true;
-		foreach ($this->aSearches as $oSearch)
-		{
-			if (!$oSearch->IsAny())
-			{
+		foreach ($this->aSearches as $oSearch) {
+			if (!$oSearch->IsAny()) {
 				$bIsAny = false;
 				break;
 			}
@@ -320,8 +294,7 @@ class DBUnionSearch extends DBSearch
 
 	public function ResetCondition()
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->ResetCondition();
 		}
 	}
@@ -329,13 +302,10 @@ class DBUnionSearch extends DBSearch
 	public function MergeConditionExpression($oExpression)
 	{
 		$aAliases = array_keys($this->aSelectedClasses);
-		foreach ($this->aSearches as $iSearchIndex => $oSearch)
-		{
+		foreach ($this->aSearches as $iSearchIndex => $oSearch) {
 			$oClonedExpression = $oExpression->DeepClone();
-			if ($iSearchIndex != 0)
-			{
-				foreach (array_keys($oSearch->GetSelectedClasses()) as $iColumn => $sSearchAlias)
-				{
+			if ($iSearchIndex != 0) {
+				foreach (array_keys($oSearch->GetSelectedClasses()) as $iColumn => $sSearchAlias) {
 					$oClonedExpression->RenameAlias($aAliases[$iColumn], $sSearchAlias);
 				}
 			}
@@ -346,13 +316,10 @@ class DBUnionSearch extends DBSearch
 	public function AddConditionExpression($oExpression)
 	{
 		$aAliases = array_keys($this->aSelectedClasses);
-		foreach ($this->aSearches as $iSearchIndex => $oSearch)
-		{
+		foreach ($this->aSearches as $iSearchIndex => $oSearch) {
 			$oClonedExpression = $oExpression->DeepClone();
-			if ($iSearchIndex != 0)
-			{
-				foreach (array_keys($oSearch->GetSelectedClasses()) as $iColumn => $sSearchAlias)
-				{
+			if ($iSearchIndex != 0) {
+				foreach (array_keys($oSearch->GetSelectedClasses()) as $iColumn => $sSearchAlias) {
 					$oClonedExpression->RenameAlias($aAliases[$iColumn], $sSearchAlias);
 				}
 			}
@@ -360,18 +327,16 @@ class DBUnionSearch extends DBSearch
 		}
 	}
 
-  	public function AddNameCondition($sName)
+	public function AddNameCondition($sName)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->AddNameCondition($sName);
 		}
 	}
 
 	public function AddCondition($sFilterCode, $value, $sOpCode = null)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->AddCondition($sFilterCode, $value, $sOpCode);
 		}
 	}
@@ -379,35 +344,32 @@ class DBUnionSearch extends DBSearch
 	/**
 	 * Specify a condition on external keys or link sets
 	 * @param String sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
-	 *                 Example: infra_list->ci_id->location_id->country	 
+	 *                 Example: infra_list->ci_id->location_id->country
 	 * @param Object value The value to match (can be an array => IN(val1, val2...)
 	 * @return void
 	 */
 	public function AddConditionAdvanced($sAttSpec, $value)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->AddConditionAdvanced($sAttSpec, $value);
 		}
 	}
 
 	public function AddCondition_FullText($sFullText)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->AddCondition_FullText($sFullText);
 		}
 	}
 
 	public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->AddCondition_FullTextOnAttributes($aAttCodes, $sNeedle);
 		}
 	}
 
-		/**
+	/**
 	 * @param DBObjectSearch $oFilter
 	 * @param $sExtKeyAttCode
 	 * @param int $iOperatorCode
@@ -415,8 +377,7 @@ class DBUnionSearch extends DBSearch
 	 */
 	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oConditionFilter = $oFilter->DeepClone();
 			$oSearch->AddCondition_PointingTo($oConditionFilter, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 		}
@@ -430,8 +391,7 @@ class DBUnionSearch extends DBSearch
 	 */
 	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oConditionFilter = $oFilter->DeepClone();
 			$oSearch->AddCondition_ReferencedBy($oConditionFilter, $sForeignExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 		}
@@ -439,9 +399,8 @@ class DBUnionSearch extends DBSearch
 
 	public function Filter($sClassAlias, DBSearch $oFilter)
 	{
-		$aSearches = array();
-		foreach ($this->aSearches as $oSearch)
-		{
+		$aSearches = [];
+		foreach ($this->aSearches as $oSearch) {
 			if (!$oSearch->IsAllDataAllowed()) {
 				$aSearches[] = $oSearch->Filter($sClassAlias, $oFilter);
 			} else {
@@ -453,9 +412,8 @@ class DBUnionSearch extends DBSearch
 
 	public function Intersect(DBSearch $oFilter)
 	{
-		$aSearches = array();
-		foreach ($this->aSearches as $oSearch)
-		{
+		$aSearches = [];
+		foreach ($this->aSearches as $oSearch) {
 			$aSearches[] = $oSearch->Intersect($oFilter);
 		}
 		return new DBUnionSearch($aSearches);
@@ -463,17 +421,15 @@ class DBUnionSearch extends DBSearch
 
 	public function SetInternalParams($aParams)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->SetInternalParams($aParams);
 		}
 	}
 
 	public function GetInternalParams()
 	{
-		$aParams = array();
-		foreach ($this->aSearches as $oSearch)
-		{
+		$aParams = [];
+		foreach ($this->aSearches as $oSearch) {
 			$aParams = array_merge($oSearch->GetInternalParams(), $aParams);
 		}
 		return $aParams;
@@ -481,9 +437,8 @@ class DBUnionSearch extends DBSearch
 
 	public function GetQueryParams()
 	{
-		$aParams = array();
-		foreach ($this->aSearches as $oSearch)
-		{
+		$aParams = [];
+		foreach ($this->aSearches as $oSearch) {
 			$aParams = array_merge($oSearch->GetQueryParams(), $aParams);
 		}
 		return $aParams;
@@ -492,7 +447,7 @@ class DBUnionSearch extends DBSearch
 	public function ListConstantFields()
 	{
 		// Somewhat complex to implement for unions, for a poor benefit
-		return array();
+		return [];
 	}
 
 	/**
@@ -501,20 +456,18 @@ class DBUnionSearch extends DBSearch
 	 */
 	public function ApplyParameters($aArgs)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->ApplyParameters($aArgs);
 		}
 	}
 
 	/**
 	 * Overloads for query building
-	 */ 
+	 */
 	public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false)
 	{
-		$aSubQueries = array();
-		foreach ($this->aSearches as $oSearch)
-		{
+		$aSubQueries = [];
+		foreach ($this->aSearches as $oSearch) {
 			$aSubQueries[] = $oSearch->ToOQL($bDevelopParams, $aContextParams, $bWithAllowAllFlag);
 		}
 		$sRet = implode(' UNION ', $aSubQueries);
@@ -527,9 +480,8 @@ class DBUnionSearch extends DBSearch
 	 */
 	public function ToJSON()
 	{
-		$sRet = array('unions' => array());
-		foreach ($this->aSearches as $oSearch)
-		{
+		$sRet = ['unions' => []];
+		foreach ($this->aSearches as $oSearch) {
 			$sRet['unions'][] = $oSearch->ToJSON();
 		}
 		return $sRet;
@@ -543,21 +495,19 @@ class DBUnionSearch extends DBSearch
 	 */
 	public function RemoveDuplicateQueries()
 	{
-		$aQueries = array();
-		$aSearches = array();
+		$aQueries = [];
+		$aSearches = [];
 
-		foreach ($this->GetSearches() as $oTmpSearch)
-		{
+		foreach ($this->GetSearches() as $oTmpSearch) {
 			$sQuery = $oTmpSearch->ToOQL(true);
-			if (!in_array($sQuery, $aQueries))
-			{
+			if (!in_array($sQuery, $aQueries)) {
 				$aQueries[] = $sQuery;
 				$aSearches[] = $oTmpSearch;
 			}
 		}
 
 		$oNewSearch = new DBUnionSearch($aSearches);
-		
+
 		return $oNewSearch;
 	}
 
@@ -567,60 +517,49 @@ class DBUnionSearch extends DBSearch
 	//
 	////////////////////////////////////////////////////////////////////////////
 
-	public function MakeDeleteQuery($aArgs = array())
+	public function MakeDeleteQuery($aArgs = [])
 	{
 		throw new Exception('MakeDeleteQuery is not implemented for the unions!');
 	}
 
-	public function MakeUpdateQuery($aValues, $aArgs = array())
+	public function MakeUpdateQuery($aValues, $aArgs = [])
 	{
 		throw new Exception('MakeUpdateQuery is not implemented for the unions!');
 	}
 
 	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
 	{
-		if (count($this->aSearches) == 1)
-		{
+		if (count($this->aSearches) == 1) {
 			return $this->aSearches[0]->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, $aSelectedClasses, $aSelectExpr);
 		}
 
-		$aSQLQueries = array();
+		$aSQLQueries = [];
 		$aAliases = array_keys($this->aSelectedClasses);
 		$aQueryAttToLoad = null;
-		$aUnionQuerySelectExpr = array();
-		foreach ($this->aSearches as $iSearch => $oSearch)
-		{
+		$aUnionQuerySelectExpr = [];
+		foreach ($this->aSearches as $iSearch => $oSearch) {
 			$aSearchAliases = array_keys($oSearch->GetSelectedClasses());
 
 			// The selected classes from the query build perspective are the lowest common ancestors amongst the various queries
 			// (used when it comes to determine which attributes must be selected)
-			$aSearchSelectedClasses = array();
-			foreach ($aSearchAliases as $iColumn => $sSearchAlias)
-			{
+			$aSearchSelectedClasses = [];
+			foreach ($aSearchAliases as $iColumn => $sSearchAlias) {
 				$sAlias = $aAliases[$iColumn];
 				$aSearchSelectedClasses[$sSearchAlias] = $this->aSelectedClasses[$sAlias];
 			}
 
-			if ($bGetCount)
-			{
+			if ($bGetCount) {
 				// Select only ids for the count to allow optimization of joins
-				foreach($aSearchAliases as $sSearchAlias)
-				{
-					$aQueryAttToLoad[$sSearchAlias] = array();
+				foreach ($aSearchAliases as $sSearchAlias) {
+					$aQueryAttToLoad[$sSearchAlias] = [];
 				}
-			}
-			else
-			{
-				if (is_null($aAttToLoad))
-				{
+			} else {
+				if (is_null($aAttToLoad)) {
 					$aQueryAttToLoad = null;
-				}
-				else
-				{
+				} else {
 					// (Eventually) Transform the aliases
-					$aQueryAttToLoad = array();
-					foreach($aAttToLoad as $sAlias => $aAttributes)
-					{
+					$aQueryAttToLoad = [];
+					foreach ($aAttToLoad as $sAlias => $aAttributes) {
 						$iColumn = array_search($sAlias, $aAliases);
 						$sQueryAlias = ($iColumn === false) ? $sAlias : $aSearchAliases[$iColumn];
 						$aQueryAttToLoad[$sQueryAlias] = $aAttributes;
@@ -628,66 +567,51 @@ class DBUnionSearch extends DBSearch
 				}
 			}
 
-			if (is_null($aGroupByExpr))
-			{
+			if (is_null($aGroupByExpr)) {
 				$aQueryGroupByExpr = null;
-			}
-			else
-			{
+			} else {
 				// Clone (and eventually transform) the group by expressions
-				$aQueryGroupByExpr = array();
-				$aTranslationData = array();
+				$aQueryGroupByExpr = [];
+				$aTranslationData = [];
 				$aQueryColumns = array_keys($oSearch->GetSelectedClasses());
-				foreach ($aAliases as $iColumn => $sAlias)
-				{
+				foreach ($aAliases as $iColumn => $sAlias) {
 					$sQueryAlias = $aQueryColumns[$iColumn];
 					$aTranslationData[$sAlias]['*'] = $sQueryAlias;
 					$aQueryGroupByExpr[$sAlias.'id'] = new FieldExpression('id', $sQueryAlias);
 				}
-				foreach ($aGroupByExpr as $sExpressionAlias => $oExpression)
-				{
+				foreach ($aGroupByExpr as $sExpressionAlias => $oExpression) {
 					$aQueryGroupByExpr[$sExpressionAlias] = $oExpression->Translate($aTranslationData, false, false);
 				}
 			}
 
-			if (is_null($aSelectExpr))
-			{
+			if (is_null($aSelectExpr)) {
 				$aQuerySelectExpr = null;
-			}
-			else
-			{
-				$aQuerySelectExpr = array();
-				$aTranslationData = array();
+			} else {
+				$aQuerySelectExpr = [];
+				$aTranslationData = [];
 				$aQueryColumns = array_keys($oSearch->GetSelectedClasses());
-				foreach($aAliases as $iColumn => $sAlias)
-				{
+				foreach ($aAliases as $iColumn => $sAlias) {
 					$sQueryAlias = $aQueryColumns[$iColumn];
 					$aTranslationData[$sAlias]['*'] = $sQueryAlias;
 				}
-				foreach($aSelectExpr as $sExpressionAlias => $oExpression)
-				{
-					$oExpression->Browse(function ($oNode) use (&$aQuerySelectExpr, &$aTranslationData)
-					{
-						if ($oNode instanceof FieldExpression)
-						{
+				foreach ($aSelectExpr as $sExpressionAlias => $oExpression) {
+					$oExpression->Browse(function ($oNode) use (&$aQuerySelectExpr, &$aTranslationData) {
+						if ($oNode instanceof FieldExpression) {
 							$sAlias = $oNode->GetParent()."__".$oNode->GetName();
-							if (!key_exists($sAlias, $aQuerySelectExpr))
-							{
+							if (!key_exists($sAlias, $aQuerySelectExpr)) {
 								$aQuerySelectExpr[$sAlias] = $oNode->Translate($aTranslationData, false, false);
 							}
 							$aTranslationData[$oNode->GetParent()][$oNode->GetName()] = new FieldExpression($sAlias);
 						}
 					});
 					// Only done for the first select as aliases are named after the first query
-					if (!array_key_exists($sExpressionAlias, $aUnionQuerySelectExpr))
-					{
+					if (!array_key_exists($sExpressionAlias, $aUnionQuerySelectExpr)) {
 						$aUnionQuerySelectExpr[$sExpressionAlias] = $oExpression->Translate($aTranslationData, false, false);
 					}
 				}
 			}
 			$oSubQuery = $oSearch->GetSQLQueryStructure($aQueryAttToLoad, false, $aQueryGroupByExpr, $aSearchSelectedClasses, $aQuerySelectExpr);
-			if (count($aSearchAliases) > 1)
-			{
+			if (count($aSearchAliases) > 1) {
 				// Necessary to make sure that selected columns will match throughout all the queries
 				// (default order of selected fields depending on the order of JOINS)
 				$oSubQuery->SortSelectedFields();
@@ -698,17 +622,17 @@ class DBUnionSearch extends DBSearch
 		$oSQLQuery = new SQLUnionQuery($aSQLQueries, $aGroupByExpr, $aUnionQuerySelectExpr);
 		//MyHelpers::var_dump_html($oSQLQuery, true);
 		//MyHelpers::var_dump_html($oSQLQuery->RenderSelect(), true);
-		if (self::$m_bDebugQuery) $oSQLQuery->DisplayHtml();
+		if (self::$m_bDebugQuery) {
+			$oSQLQuery->DisplayHtml();
+		}
 		return $oSQLQuery;
 	}
 
 	protected function IsDataFiltered()
 	{
 		$bIsAllDataFiltered = true;
-		foreach ($this->aSearches as $oSearch)
-		{
-			if (!$oSearch->IsDataFiltered())
-			{
+		foreach ($this->aSearches as $oSearch) {
+			if (!$oSearch->IsDataFiltered()) {
 				$bIsAllDataFiltered = false;
 				break;
 			}
@@ -718,19 +642,15 @@ class DBUnionSearch extends DBSearch
 
 	protected function SetDataFiltered()
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->SetDataFiltered();
 		}
 	}
 
-
-
 	public function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true)
 	{
 		$sInParamName = $this->GenerateUniqueParamName();
-		foreach ($this->aSearches as $iSearchIndex => $oSearch)
-		{
+		foreach ($this->aSearches as $iSearchIndex => $oSearch) {
 			$oFieldExpression = new FieldExpression($sFilterCode, $oSearch->GetClassAlias());
 
 			$sOperator = $bPositiveMatch ? 'IN' : 'NOT IN';
@@ -738,17 +658,16 @@ class DBUnionSearch extends DBSearch
 			$oParamExpression = new VariableExpression($sInParamName);
 			$oSearch->GetInternalParamsByRef()[$sInParamName] = $aValues;
 
-			$oListExpression = new ListExpression(array($oParamExpression));
+			$oListExpression = new ListExpression([$oParamExpression]);
 			$oInCondition = new BinaryExpression($oFieldExpression, $sOperator, $oListExpression);
 			$oSearch->AddConditionExpression($oInCondition);
 		}
 	}
 
-	function GetExpectedArguments(): array
+	public function GetExpectedArguments(): array
 	{
-		$aVariableCriteria = array();
-		foreach ($this->aSearches as $oSearch)
-		{
+		$aVariableCriteria = [];
+		foreach ($this->aSearches as $oSearch) {
 			$aVariableCriteria = array_merge($aVariableCriteria, $oSearch->GetExpectedArguments());
 		}
 

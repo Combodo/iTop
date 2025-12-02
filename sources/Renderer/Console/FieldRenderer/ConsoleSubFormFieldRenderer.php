@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -33,7 +34,7 @@ class ConsoleSubFormFieldRenderer extends FieldRenderer
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-    public function Render()
+	public function Render()
 	{
 		$oOutput = parent::Render();
 
@@ -43,18 +44,18 @@ class ConsoleSubFormFieldRenderer extends FieldRenderer
 		$oRenderer = new ConsoleFormRenderer($this->oField->GetForm());
 		$aRenderRes = $oRenderer->Render();
 
-		$aFieldSetOptions = array(
+		$aFieldSetOptions = [
 			'fields_list' => $aRenderRes,
 			'fields_impacts' => $this->oField->GetForm()->GetFieldsImpacts(),
-			'form_path' => $this->oField->GetForm()->GetId()
-		);
+			'form_path' => $this->oField->GetForm()->GetId(),
+		];
 		$sFieldSetOptions = json_encode($aFieldSetOptions);
 		$oOutput->AddJs(
-<<<EOF
+			<<<EOF
 			$("#fieldset_{$this->oField->GetGlobalId()}").field_set($sFieldSetOptions);
 			$("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").subform_field({field_set: $("#fieldset_{$this->oField->GetGlobalId()}")});
 EOF
-				);
+		);
 		return $oOutput;
 	}
 }

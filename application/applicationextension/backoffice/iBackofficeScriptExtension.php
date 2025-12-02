@@ -10,10 +10,10 @@
  */
 interface iBackofficeScriptExtension
 {
-    /**
-     * @return string
-     * @see \iTopWebPage::$a_scripts
-     * @api
-     */
-    public function GetScript(): string;
+	/**
+	 * @return string
+	 * @see \iTopWebPage::$a_scripts
+	 * @api
+	 */
+	public function GetScript(): string;
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -26,7 +27,7 @@ use TemporaryObjectDescriptor;
 class TemporaryObjectRepository
 {
 	/** @var TemporaryObjectRepository|null Singleton */
-	static private ?TemporaryObjectRepository $oSingletonInstance = null;
+	private static ?TemporaryObjectRepository $oSingletonInstance = null;
 
 	/**
 	 * GetInstance.
@@ -82,8 +83,7 @@ class TemporaryObjectRepository
 			$oTemporaryObjectDescriptor->DBInsert();
 
 			return $oTemporaryObjectDescriptor;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 
 			ExceptionLog::LogException($e);
 
@@ -174,8 +174,7 @@ class TemporaryObjectRepository
 
 			// return operation success
 			return $oDbObjectSet->count();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 
 			ExceptionLog::LogException($e);
 

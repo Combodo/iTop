@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  * This file is part of iTop.
@@ -21,9 +22,9 @@ use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
+
 use const ARRAY_FILTER_USE_BOTH;
 use const DIRECTORY_SEPARATOR;
-
 
 /**
  * Wrapper to load dictionary files without altering the main dictionary
@@ -49,7 +50,8 @@ class Dict
 
 	public static $sLastAddedLanguageCode = null;
 
-	public static function EnableLoadEntries(bool $bSaveKeyDuplicates = false) :void {
+	public static function EnableLoadEntries(bool $bSaveKeyDuplicates = false): void
+	{
 		self::$sLastAddedLanguageCode = null;
 		self::$m_aData = [];
 		self::$aKeysDuplicate = [];
@@ -83,8 +85,6 @@ class Dict
 		self::$aKeysDuplicate = [];
 	}
 }
-
-
 
 /**
  * For tests on compiled dict files, see {@see CompiledDictionariesConsistencyTest}
@@ -126,20 +126,28 @@ class DictionariesConsistencyTest extends ItopTestCase
 			static::assertTrue(true);
 		}
 		foreach ($aMatches[1] as $sLanguageCode) {
-			static::assertSame($sExpectedLanguageCode, $sLanguageCode,
-				"Unexpected language code for Dict::Add in dictionary $sDictFile");
+			static::assertSame(
+				$sExpectedLanguageCode,
+				$sLanguageCode,
+				"Unexpected language code for Dict::Add in dictionary $sDictFile"
+			);
 		}
 		foreach ($aMatches[2] as $sEnglishLanguageDesc) {
-			static::assertSame($sExpectedEnglishLanguageDesc, $sEnglishLanguageDesc,
-				"Unexpected language description (english) for Dict::Add in dictionary $sDictFile");
+			static::assertSame(
+				$sExpectedEnglishLanguageDesc,
+				$sEnglishLanguageDesc,
+				"Unexpected language description (english) for Dict::Add in dictionary $sDictFile"
+			);
 		}
-		foreach ($aMatches[3] as $sLocalizedLanguageDesc)
-		{
+		foreach ($aMatches[3] as $sLocalizedLanguageDesc) {
 			if (false === is_array($aExpectedLocalizedLanguageDesc)) {
-				$aExpectedLocalizedLanguageDesc = array($aExpectedLocalizedLanguageDesc);
+				$aExpectedLocalizedLanguageDesc = [$aExpectedLocalizedLanguageDesc];
 			}
-			static::assertContains($sLocalizedLanguageDesc,$aExpectedLocalizedLanguageDesc,
-				"Unexpected language description for Dict::Add in dictionary $sDictFile");
+			static::assertContains(
+				$sLocalizedLanguageDesc,
+				$aExpectedLocalizedLanguageDesc,
+				"Unexpected language description for Dict::Add in dictionary $sDictFile"
+			);
 		}
 	}
 
@@ -148,17 +156,15 @@ class DictionariesConsistencyTest extends ItopTestCase
 		$this->setUp();
 		$sAppRoot = static::GetAppRoot();
 
-
 		$aDictFilesCore = [];
 		$sCoreDictionariesPath = realpath($sAppRoot.'dictionaries');
 		$sDictFilePattern = '/^.+\.dict.*\.php$/i';
 		$oDirIterator = new RecursiveDirectoryIterator($sCoreDictionariesPath, RecursiveDirectoryIterator::SKIP_DOTS);
 		$oIterator = new RecursiveIteratorIterator($oDirIterator, RecursiveIteratorIterator::SELF_FIRST);
 		$oRegexIterator = new RegexIterator($oIterator, $sDictFilePattern, RegexIterator::GET_MATCH);
-		foreach($oRegexIterator as $file) {
+		foreach ($oRegexIterator as $file) {
 			$aDictFilesCore[] = $file[0];
 		}
-
 
 		$aDictFilesModules = array_merge(
 			glob($sAppRoot.'datamodels/2.x/*/*.dict*.php'), // legacy form in modules
@@ -170,15 +176,14 @@ class DictionariesConsistencyTest extends ItopTestCase
 		);
 		$this->RemoveModulesWithout7246Fixes($aDictFilesModules);
 
-
 		$aDictFiles = array_merge($aDictFilesCore, $aDictFilesModules);
 
-		$aTestCases = array();
+		$aTestCases = [];
 		foreach ($aDictFiles as $sDictFile) {
 			preg_match('/^(.*)\\.dict/', basename($sDictFile), $aMatches);
 			$sDictFileLangPrefix = $aMatches[1];
 
-				$aTestCases[$sDictFile] = array('sDictFile' => $sDictFile, 'sLanguagePrefix' => $sDictFileLangPrefix);
+			$aTestCases[$sDictFile] = ['sDictFile' => $sDictFile, 'sLanguagePrefix' => $sDictFileLangPrefix];
 		}
 
 		return $aTestCases;
@@ -189,11 +194,11 @@ class DictionariesConsistencyTest extends ItopTestCase
 	 *
 	 * @since 3.0.5 3.1.2 3.2.0 N°7246
 	 */
-	private function RemoveModulesWithout7246Fixes(array &$aDictFilesModules):void
+	private function RemoveModulesWithout7246Fixes(array &$aDictFilesModules): void
 	{
-		require_once static::GetAppRoot() . 'approot.inc.php'; // mandatory for tearDownAfterClass to work, of not present will thow `Undefined constant "LINKSET_TRACKING_LIST"`
+		require_once static::GetAppRoot().'approot.inc.php'; // mandatory for tearDownAfterClass to work, of not present will thow `Undefined constant "LINKSET_TRACKING_LIST"`
 		$this->RequireOnceItopFile('core/config.class.inc.php'); // source of the ITOP_VERSION constant
-		if (version_compare(ITOP_VERSION, '3.2.0', '>=')) { 
+		if (version_compare(ITOP_VERSION, '3.2.0', '>=')) {
 			return;
 		}
 
@@ -246,7 +251,8 @@ class DictionariesConsistencyTest extends ItopTestCase
 		$this->CheckDictionarySyntax(__DIR__.'/dictionaries-test/fr.dictionary.itop.core.OK.php', true);
 	}
 
-	private function GetPhpCodeFromDictFile(string $sDictFile) : string {
+	private function GetPhpCodeFromDictFile(string $sDictFile): string
+	{
 		$sPHP = file_get_contents($sDictFile);
 		// Strip php tag to allow "eval"
 		$sPHP = substr(trim($sPHP), strlen('<?php'));
@@ -281,14 +287,12 @@ class DictionariesConsistencyTest extends ItopTestCase
 			if (!$bIsSyntaxValid) {
 				$this->fail("Failed to detect syntax error in dictionary `{$sDictFile}` (which is known as being INCORRECT)");
 			}
-		}
-		catch (Error $e) {
+		} catch (Error $e) {
 			if ($bIsSyntaxValid) {
 				$iLine = $e->getLine() - $iLineShift;
 				$this->fail("Invalid dictionary: {$e->getMessage()} in {$sDictFile}:{$iLine}");
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			if ($bIsSyntaxValid) {
 				$iLine = $e->getLine() - $iLineShift;
 				$sExceptionClass = get_class($e);
@@ -303,7 +307,8 @@ class DictionariesConsistencyTest extends ItopTestCase
 	 *
 	 * @since 3.0.5 3.1.2 3.2.0 N°7143
 	 */
-	public function testNoDictFileInDatamodelsModuleRootDirectory():void {
+	public function testNoDictFileInDatamodelsModuleRootDirectory(): void
+	{
 		$sAppRoot = static::GetAppRoot();
 		$aDictFilesInDatamodelsModuleRootDir = glob($sAppRoot.'datamodels/2.x/*/*.dict*.php');
 		$this->assertNotFalse($aDictFilesInDatamodelsModuleRootDir, 'Searching for files returned an error');
@@ -311,7 +316,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 		$aExcludedModulesList = $this->GetLtsCompatibleModulesList();
 		$aDictFilesInDatamodelsModuleRootDir = array_filter(
 			$aDictFilesInDatamodelsModuleRootDir,
-			function($sDictFileFullPath) use ($aExcludedModulesList) {
+			function ($sDictFileFullPath) use ($aExcludedModulesList) {
 				$sModuleFullPath = dirname($sDictFileFullPath);
 				$sModuleDirectory = basename($sModuleFullPath);
 				return !in_array($sModuleDirectory, $aExcludedModulesList);
@@ -319,7 +324,9 @@ class DictionariesConsistencyTest extends ItopTestCase
 		);
 
 		$sDictFilesInDatamodelsModuleRootDirList = var_export($aDictFilesInDatamodelsModuleRootDir, true);
-		$this->assertCount(0, $aDictFilesInDatamodelsModuleRootDir,
+		$this->assertCount(
+			0,
+			$aDictFilesInDatamodelsModuleRootDir,
 			<<<EOF
 There are some files in datamodels module root dirs ! You must either: 
 - add the module in the GetLtsCompatibleModulesList method (if the module needs to keep compatibility with iTop 2.7)
@@ -336,7 +343,8 @@ EOF
 	 *            Indeed multiple targets will add modules that must remain compatible with iTop 2.7 LTS, though with dict files in their root dir
 	 *            The dictionaries directory in modules was added in 3.0.0 with N°2969
 	 */
-	private function GetLtsCompatibleModulesList(): array {
+	private function GetLtsCompatibleModulesList(): array
+	{
 		return [
 			'approval-base',
 			'authent-token',
@@ -385,7 +393,8 @@ EOF
 	/**
 	 * @dataProvider DictionaryFileProvider
 	 */
-	public function testDictKeyDefinedOncePerFile(string $sDictFileToTestFullPath): void {
+	public function testDictKeyDefinedOncePerFile(string $sDictFileToTestFullPath): void
+	{
 		Dict::EnableLoadEntries(true);
 
 		$sDictFileToTestPhp = $this->GetPhpCodeFromDictFile($sDictFileToTestFullPath);
@@ -406,17 +415,18 @@ EOF
 	 *
 	 * @return void
 	 */
-	public function testDictKeyDefinedOnceForWholeProject(string $sLang): void {
+	public function testDictKeyDefinedOnceForWholeProject(string $sLang): void
+	{
 		$this->markTestSkipped("Skip because duplicates exists in modules, while once is installed at setup. Possible solution : centralize common string in another dictionnary, and then enable this test.");
 
 		Dict::EnableLoadEntries(true);
 		$aDictKeysDefinedMultipleTimes = [];
 
-
 		foreach ($this->DictionaryFileProvider() as $aDictFile) {
 
-			if($aDictFile['sLanguagePrefix'] !== $sLang) continue;
-
+			if ($aDictFile['sLanguagePrefix'] !== $sLang) {
+				continue;
+			}
 
 			Dict::ResetFileDuplicate();
 			$sDictFileToTestFullPath = $aDictFile['sDictFile'];
@@ -426,21 +436,20 @@ EOF
 
 			foreach (Dict::$aKeysDuplicate as $sDictKey => $iNumberOfDuplicates) {
 				if (array_key_exists($sDictKey, $aDictKeysDefinedMultipleTimes)) {
-					$aDictKeysDefinedMultipleTimes[$sDictKey]+= $iNumberOfDuplicates;
+					$aDictKeysDefinedMultipleTimes[$sDictKey] += $iNumberOfDuplicates;
 				} else {
 					$aDictKeysDefinedMultipleTimes[$sDictKey] = $iNumberOfDuplicates;
 				}
 			}
 		}
-		$aDictKeysDefinedMoreThanOnce = array_filter($aDictKeysDefinedMultipleTimes, static function($iNumberOfDuplicates) {
+		$aDictKeysDefinedMoreThanOnce = array_filter($aDictKeysDefinedMultipleTimes, static function ($iNumberOfDuplicates) {
 			return $iNumberOfDuplicates > 0;
 		});
-		$this->assertEmpty($aDictKeysDefinedMoreThanOnce, "Some keys (". sizeof($aDictKeysDefinedMoreThanOnce).") are defined multiple times in the whole projectin lang $sLang: ".var_export($aDictKeysDefinedMoreThanOnce, true));
+		$this->assertEmpty($aDictKeysDefinedMoreThanOnce, "Some keys (".sizeof($aDictKeysDefinedMoreThanOnce).") are defined multiple times in the whole projectin lang $sLang: ".var_export($aDictKeysDefinedMoreThanOnce, true));
 
 	}
 
-
-		/**
+	/**
 	 * @dataProvider DictionaryFileProvider
 	 */
 	public function testNoRemainingTildesInTranslatedKeys(string $sDictFileToTestFullPath): void
@@ -448,7 +457,6 @@ EOF
 		Dict::EnableLoadEntries();
 		$sReferenceLangCode = 'EN US';
 		$sReferenceDictName = 'en';
-
 
 		$sDictFileToTestPhp = $this->GetPhpCodeFromDictFile($sDictFileToTestFullPath);
 		eval($sDictFileToTestPhp);
@@ -482,7 +490,6 @@ EOF
 		$aLangToTestDictEntries = Dict::$m_aData[$sLanguageCodeToTest];
 		$aReferenceLangDictEntries = Dict::$m_aData[$sReferenceLangCode];
 
-
 		$this->assertGreaterThan(0, count($aLangToTestDictEntries), 'There should be at least one entry in the dictionary file to test');
 		$aLangToTestDictEntriesNotEmptyValues = array_filter(
 			$aLangToTestDictEntries,
@@ -492,7 +499,6 @@ EOF
 			ARRAY_FILTER_USE_BOTH
 		);
 		$this->assertNotEmpty($aLangToTestDictEntriesNotEmptyValues);
-
 
 		$aTranslatedKeysWithTildes = [];
 		foreach ($aReferenceLangDictEntries as $sDictKey => $sReferenceLangLabel) {
@@ -522,13 +528,13 @@ EOF
 				$sLanguageCodeToTest.'_file_location' => $this->MakeFilePathClickable($sDictFileToTestFullPath, $sDictKeyLineNumberInDictFileToTest),
 				$sLanguageCodeToTest => $sTranslatedLabel,
 				$sReferenceLangCode.'_file_location' => $this->MakeFilePathClickable($sDictFileReferenceFullPath, $sDictKeyLineNumberInDictFileReference),
-				$sReferenceLangCode => $sReferenceLangLabel
+				$sReferenceLangCode => $sReferenceLangLabel,
 			];
 		}
 
 		$sPathRoot = static::GetAppRoot();
 		$sDictFileToTestRelativePath = str_replace($sPathRoot, '', $sDictFileToTestFullPath);
-		$this->assertEmpty($aTranslatedKeysWithTildes, "In {$sDictFileToTestRelativePath} \n following keys are different from their '{$sReferenceDictName}' counterpart (translated ?) but have tildes at the end:\n" . var_export($aTranslatedKeysWithTildes, true));
+		$this->assertEmpty($aTranslatedKeysWithTildes, "In {$sDictFileToTestRelativePath} \n following keys are different from their '{$sReferenceDictName}' counterpart (translated ?) but have tildes at the end:\n".var_export($aTranslatedKeysWithTildes, true));
 	}
 
 	/**
@@ -538,18 +544,19 @@ EOF
 	 * @return string a path that is clickable in PHPStorm 🤩
 	 *              For this to happen we need full path with correct dir sep + line number
 	 *              If it is not, check in File | Settings | Tools | Terminal the hyperlink option is checked
-     */
-	private function MakeFilePathClickable(string $sFullPath, int $iLineNumber):string {
-		return str_replace(array('//', '/'), array('/', DIRECTORY_SEPARATOR), $sFullPath).':'.$iLineNumber;
+	 */
+	private function MakeFilePathClickable(string $sFullPath, int $iLineNumber): string
+	{
+		return str_replace(['//', '/'], ['/', DIRECTORY_SEPARATOR], $sFullPath).':'.$iLineNumber;
 	}
 
 	private function FindDictKeyLineNumberInContent(string $sFileContent, string $sDictKey): int
 	{
-    	$aContentLines = explode("\n", $sFileContent);
+		$aContentLines = explode("\n", $sFileContent);
 		$sDictKeyToFind = "'{$sDictKey}'"; // adding string delimiters to match exact dict key (eg if not we would match 'Core:AttributeDateTime?SmartSearch' for 'Core:AttributeDateTime')
 
-		foreach($aContentLines as $iLineNumber => $line) {
-			if(strpos($line, $sDictKeyToFind) !== false){
+		foreach ($aContentLines as $iLineNumber => $line) {
+			if (strpos($line, $sDictKeyToFind) !== false) {
 				return $iLineNumber;
 			}
 		}
@@ -576,7 +583,7 @@ EOF
 				[
 					'Español, Castellaño', // old value
 					'Español, Castellano', // new value since N°3635
-				]
+				],
 			],
 			'fr'    => ['FR FR', 'French', 'Français'],
 			'hu'    => ['HU HU', 'Hungarian', 'Magyar'],

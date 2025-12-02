@@ -10,10 +10,10 @@
  */
 interface iBackofficeLinkedStylesheetsExtension
 {
-    /**
-     * @return array An array of absolute URLs to the files to include
-     * @see \iTopWebPage::$a_linked_stylesheets
-     * @api
-     */
-    public function GetLinkedStylesheetsAbsUrls(): array;
+	/**
+	 * @return array An array of absolute URLs to the files to include
+	 * @see \iTopWebPage::$a_linked_stylesheets
+	 * @api
+	 */
+	public function GetLinkedStylesheetsAbsUrls(): array;
 }

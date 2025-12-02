@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,10 +17,9 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Class ModuleHandler
- * Defines the API to implement module specific actions during page execution 
+ * Defines the API to implement module specific actions during page execution
  *
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -36,17 +36,16 @@ abstract class ModuleHandlerAPI implements ModuleHandlerApiInterface
 	}
 
 	public function __construct()
-    {
-    }
+	{
+	}
 
 }
 
-
 interface ModuleHandlerApiInterface
 {
-    public static function OnMetaModelStarted();
+	public static function OnMetaModelStarted();
 
-    public static function OnMenuCreation();
+	public static function OnMenuCreation();
 
-    public function __construct(); //empty params is required in order to be instantiable by MetaModel::InitClasses()
+	public function __construct(); //empty params is required in order to be instantiable by MetaModel::InitClasses()
 }

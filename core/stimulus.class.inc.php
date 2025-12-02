@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,7 +17,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Object lifecycle management: stimulus
  *
@@ -24,9 +24,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 /**
- * A stimulus is the trigger that makes the lifecycle go ahead (state machine) 
+ * A stimulus is the trigger that makes the lifecycle go ahead (state machine)
  *
  * @package     iTopORM
  */
@@ -36,7 +35,7 @@
 
 class ObjectStimulus
 {
-	private $m_aParams = array();
+	private $m_aParams = [];
 	private $m_sHostClass = null;
 	private $m_sCode = null;
 
@@ -62,7 +61,7 @@ class ObjectStimulus
 
 	public function GetLabel()
 	{
-		return Dict::S('Class:'.$this->m_sHostClass.'/Stimulus:'.$this->m_sCode, $this->m_sCode); 
+		return Dict::S('Class:'.$this->m_sHostClass.'/Stimulus:'.$this->m_sCode, $this->m_sCode);
 	}
 	public function GetDescription()
 	{
@@ -72,12 +71,9 @@ class ObjectStimulus
 	public function GetLabel_Obsolete()
 	{
 		// Written for compatibility with a data model written prior to version 0.9.1
-		if (array_key_exists('label', $this->m_aParams))
-		{
+		if (array_key_exists('label', $this->m_aParams)) {
 			return $this->m_aParams['label'];
-		}
-		else
-		{
+		} else {
 			return $this->GetLabel();
 		}
 	}
@@ -85,23 +81,20 @@ class ObjectStimulus
 	public function GetDescription_Obsolete()
 	{
 		// Written for compatibility with a data model written prior to version 0.9.1
-		if (array_key_exists('description', $this->m_aParams))
-		{
+		if (array_key_exists('description', $this->m_aParams)) {
 			return $this->m_aParams['description'];
-		}
-		else
-		{
+		} else {
 			return $this->GetDescription();
 		}
 	}
 
-// obsolete-	public function Get($sParamName) {return $this->m_aParams[$sParamName];}
+	// obsolete-	public function Get($sParamName) {return $this->m_aParams[$sParamName];}
 
 	// Note: I could factorize this code with the parameter management made for the AttributeDef class
 	// to be overloaded
-	static protected function ListExpectedParams()
+	protected static function ListExpectedParams()
 	{
-		return array();
+		return [];
 	}
 
 	private function ConsistencyCheck()
@@ -110,10 +103,8 @@ class ObjectStimulus
 		// Check that any mandatory param has been specified
 		//
 		$aExpectedParams = $this->ListExpectedParams();
-		foreach($aExpectedParams as $sParamName)
-		{
-			if (!array_key_exists($sParamName, $this->m_aParams))
-			{
+		foreach ($aExpectedParams as $sParamName) {
+			if (!array_key_exists($sParamName, $this->m_aParams)) {
 				$aBacktrace = debug_backtrace();
 				$sTargetClass = $aBacktrace[2]["class"];
 				$sCodeInfo = $aBacktrace[1]["file"]." - ".$aBacktrace[1]["line"];
@@ -122,8 +113,6 @@ class ObjectStimulus
 		}
 	}
 }
-
-
 
 class StimulusUserAction extends ObjectStimulus
 {
@@ -134,5 +123,3 @@ class StimulusInternal extends ObjectStimulus
 {
 	// Applied from page xxxx
 }
-
-?>

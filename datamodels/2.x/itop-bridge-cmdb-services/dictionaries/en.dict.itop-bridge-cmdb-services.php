@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -32,7 +33,7 @@
 // Class: lnkFunctionalCIToProviderContract
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Link FunctionalCI / ProviderContract',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
@@ -44,13 +45,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI Name',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToService
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkFunctionalCIToService' => 'Link FunctionalCI / Service',
 	'Class:lnkFunctionalCIToService+' => '',
 	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s',
@@ -62,26 +63,26 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'CI Name',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Provider contracts',
 	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'All the provider contracts for this configuration item',
 	'Class:FunctionalCI/Attribute:services_list' => 'Services',
 	'Class:FunctionalCI/Attribute:services_list+' => 'All the services impacted by this configuration item',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Document/Attribute:contracts_list' => 'Contracts',
 	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document',
 	'Class:Document/Attribute:services_list' => 'Services',
 	'Class:Document/Attribute:services_list+' => 'All the services linked to this document',
-));
+]);

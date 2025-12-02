@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'bkp-backup-running' => 'Un backup è in corso. Attendere prego...',
 	'bkp-restore-running' => 'Un ripristino è in corso. Attendere prego...',
 	'Menu:BackupStatus' => 'Backup programmati',
@@ -44,4 +45,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'bkp-wait-backup' => 'Attendere il completamento del backup...',
 	'bkp-wait-restore' => 'Attendere il completamento del ripristino...',
 	'bkp-success-restore' => 'Ripristino completato con successo.',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SARL
  *
@@ -17,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Newsroom:iTopNotification:Label' => ITOP_APPLICATION_SHORT,
 	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Your '.ITOP_APPLICATION_SHORT.' news~~',
 	'UI:Newsroom:iTopNotification:ViewAllPage:SubTitle' => 'Manage your news, flag them as read or unread, delete them, etc.~~',
@@ -59,4 +60,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message' => 'No news to delete~~',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message' => 'The news has been deleted~~',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteMultiple:Success:Message' => '%1$s news have been deleted~~',
-));
+]);

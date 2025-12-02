@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'portal:itop-portal' => 'Portail standard',
 	'Page:DefaultTitle' => '%1$s - Portail utilisateur',
 	'Brick:Portal:UserProfile:Title' => 'Mon profil',
@@ -26,4 +27,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:ListAllRequests:Tab' => 'En cours et fermées',
 	'Brick:Portal:SearchInAllRequests:Title' => 'Rechercher une demande',
 	'Brick:Portal:SearchInAllRequests:Title+' => '<p>Quelque soit son état</p>',
-));
+]);

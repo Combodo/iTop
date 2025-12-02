@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -17,7 +18,7 @@ use DBObject;
  */
 class AttributeDate extends AttributeDateTime
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE;
 
 	public static $oDateFormat = null;
 
@@ -91,12 +92,11 @@ class AttributeDate extends AttributeDateTime
 	public function GetImportColumns()
 	{
 		// Allow an empty string to be a valid value (synonym for "reset")
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode()] = 'VARCHAR(10)'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
-
 
 	/**
 	 * Override to specify Field class

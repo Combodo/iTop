@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -20,7 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	// Dictionary entries go here
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => '进入iTop Hub',
@@ -76,6 +77,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s 版本: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => '已安装',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => '版本 %1$s <b>未被</b> 安装.',
-));
-
-
+]);

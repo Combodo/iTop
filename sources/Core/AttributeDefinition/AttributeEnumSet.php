@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -16,18 +17,18 @@ use ValueSetEnumPadded;
  */
 class AttributeEnumSet extends AttributeSet
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('possible_values', 'is_null_allowed', 'max_items'));
+		return array_merge(parent::ListExpectedParams(), ['possible_values', 'is_null_allowed', 'max_items']);
 	}
 
 	public function GetMaxSize()
 	{
 		$aRawValues = $this->GetRawPossibleValues();
 		$iMaxItems = $this->GetMaxItems();
-		$aLengths = array();
+		$aLengths = [];
 		foreach (array_keys($aRawValues) as $sKey) {
 			$aLengths[] = strlen($sKey);
 		}
@@ -40,21 +41,21 @@ class AttributeEnumSet extends AttributeSet
 		return max(255, $iMaxSize);
 	}
 
-	private function GetRawPossibleValues($aArgs = array(), $sContains = '')
+	private function GetRawPossibleValues($aArgs = [], $sContains = '')
 	{
 		/** @var ValueSetEnumPadded $oValSetDef */
 		$oValSetDef = $this->Get('possible_values');
 		if (!$oValSetDef) {
-			return array();
+			return [];
 		}
 
 		return $oValSetDef->GetValues($aArgs, $sContains);
 	}
 
-	public function GetPossibleValues($aArgs = array(), $sContains = '')
+	public function GetPossibleValues($aArgs = [], $sContains = '')
 	{
 		$aRawValues = $this->GetRawPossibleValues($aArgs, $sContains);
-		$aLocalizedValues = array();
+		$aLocalizedValues = [];
 		foreach ($aRawValues as $sKey => $sValue) {
 			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 		}
@@ -75,8 +76,10 @@ class AttributeEnumSet extends AttributeSet
 
 		if (is_null($sValue)) {
 			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
-			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
-				Dict::S('Enum:Undefined'));
+			$sLabel = Dict::S(
+				'Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
+				Dict::S('Enum:Undefined')
+			);
 		} else {
 			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, null, true /*user lang*/);
 			if (is_null($sLabel)) {
@@ -97,11 +100,16 @@ class AttributeEnumSet extends AttributeSet
 	{
 		if (is_null($sValue)) {
 			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
-			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
-				Dict::S('Enum:Undefined'));
+			$sDescription = Dict::S(
+				'Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
+				Dict::S('Enum:Undefined')
+			);
 		} else {
-			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
-				'', true /* user language only */);
+			$sDescription = Dict::S(
+				'Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
+				'',
+				true /* user language only */
+			);
 			if (strlen($sDescription) == 0) {
 				$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
 				if ($sParentClass) {
@@ -133,7 +141,6 @@ class AttributeEnumSet extends AttributeSet
 		return $sRes;
 	}
 
-
 	/**
 	 * @param ormSet $value
 	 * @param string $sSeparator
@@ -151,7 +158,7 @@ class AttributeEnumSet extends AttributeSet
 		if (is_object($value) && ($value instanceof ormSet)) {
 			$aValues = $value->GetValues();
 			if ($bLocalize) {
-				$aLocalizedValues = array();
+				$aLocalizedValues = [];
 				foreach ($aValues as $sValue) {
 					$aLocalizedValues[] = $this->GetValueLabel($sValue);
 				}
@@ -184,7 +191,7 @@ class AttributeEnumSet extends AttributeSet
 			// Lookup for the values matching the input
 			//
 			$aValues = $this->FromStringToArray($sProposedValue);
-			$aFoundValues = array();
+			$aFoundValues = [];
 			$aRawValues = $this->GetPossibleValues();
 			foreach ($aValues as $sValue) {
 				$bFound = false;
@@ -217,7 +224,7 @@ class AttributeEnumSet extends AttributeSet
 	 */
 	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
 	{
-		$aValues = array();
+		$aValues = [];
 		if (!empty($proposedValue)) {
 			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 			// convert also other separators

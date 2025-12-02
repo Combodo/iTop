@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -25,7 +26,7 @@ use utils;
  */
 class AttributeCaseLog extends AttributeLongText
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -74,16 +75,15 @@ class AttributeCaseLog extends AttributeLongText
 		return $proposedValue->GetEntryCount() > 0;
 	}
 
-
 	public function ScalarToSQL($value)
 	{
 		if (!is_string($value) && !is_null($value)) {
-			throw new CoreWarning('Expected the attribute value to be a string', array(
+			throw new CoreWarning('Expected the attribute value to be a string', [
 				'found_type' => gettype($value),
 				'value'      => $value,
 				'class'      => $this->GetCode(),
 				'attribute'  => $this->GetHostClass(),
-			));
+			]);
 		}
 
 		return $value;
@@ -131,7 +131,6 @@ class AttributeCaseLog extends AttributeLongText
 		return ($val1->GetText() == $val2->GetText());
 	}
 
-
 	/**
 	 * Facilitate things: allow the user to Set the value from a string
 	 *
@@ -153,7 +152,8 @@ class AttributeCaseLog extends AttributeLongText
 			if ($oHostObj != null) {
 				$oPreviousLog = $oHostObj->Get($this->GetCode());
 				if (!is_object($oPreviousLog)) {
-					$oPreviousLog = $oHostObj->GetOriginal($this->GetCode());;
+					$oPreviousLog = $oHostObj->GetOriginal($this->GetCode());
+					;
 				}
 
 			}
@@ -187,7 +187,7 @@ class AttributeCaseLog extends AttributeLongText
 		if ($sPrefix == '') {
 			$sPrefix = $this->Get('sql');
 		}
-		$aColumns = array();
+		$aColumns = [];
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $sPrefix;
 		$aColumns['_index'] = $sPrefix.'_index';
@@ -232,7 +232,7 @@ class AttributeCaseLog extends AttributeLongText
 		if (!($value instanceof ormCaseLog)) {
 			$value = new ormCaseLog('');
 		}
-		$aValues = array();
+		$aValues = [];
 		$aValues[$this->GetCode()] = $value->GetText();
 		$aValues[$this->GetCode().'_index'] = serialize($value->GetIndex());
 
@@ -241,7 +241,7 @@ class AttributeCaseLog extends AttributeLongText
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode()] = 'LONGTEXT' // 2^32 (4 Gb)
 			.CMDBSource::GetSqlStringColumnDefinition();
 		$aColumns[$this->GetCode().'_index'] = 'BLOB';
@@ -252,11 +252,11 @@ class AttributeCaseLog extends AttributeLongText
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if ($value instanceof ormCaseLog) {
-			$sContent = $value->GetAsHTML(null, false, array(__class__, 'RenderWikiHtml'));
+			$sContent = $value->GetAsHTML(null, false, [__class__, 'RenderWikiHtml']);
 		} else {
 			$sContent = '';
 		}
-		$aStyles = array();
+		$aStyles = [];
 		if ($this->GetWidth() != '') {
 			$aStyles[] = 'width:'.$this->GetWidth();
 		}
@@ -271,15 +271,23 @@ class AttributeCaseLog extends AttributeLongText
 		return "<div class=\"caselog\" $sStyle>".$sContent.'</div>';
 	}
 
-
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		if ($value instanceof ormCaseLog) {
-			return parent::GetAsCSV($value->GetText($bConvertToPlainText), $sSeparator, $sTextQualifier, $oHostObject,
-				$bLocalize, $bConvertToPlainText);
+			return parent::GetAsCSV(
+				$value->GetText($bConvertToPlainText),
+				$sSeparator,
+				$sTextQualifier,
+				$oHostObject,
+				$bLocalize,
+				$bConvertToPlainText
+			);
 		} else {
 			return '';
 		}
@@ -299,12 +307,12 @@ class AttributeCaseLog extends AttributeLongText
 	 */
 	public function EnumTemplateVerbs()
 	{
-		return array(
+		return [
 			''          => 'Plain text representation of all the log entries',
 			'head'      => 'Plain text representation of the latest entry',
 			'head_html' => 'HTML representation of the latest entry',
 			'html'      => 'HTML representation of all the log entries',
-		);
+		];
 	}
 
 	/**

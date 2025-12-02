@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Vergroot',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduceer',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Sluit',
@@ -35,4 +36,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Nog geen activiteit.',
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activiteitenpaneel',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Klik om het activiteitenpaneel te openen',
-));
+]);

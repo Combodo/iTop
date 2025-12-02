@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => 'Felhasználói kérések kezelése',
 	'Menu:RequestManagementProvider' => 'Helpdesk szolgáltató',
@@ -41,7 +42,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Nyitott kérelmek ügyfelenként',
 	'Class:UserRequest:KnownErrorList' => 'Ismert hibák',
 	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -57,7 +58,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 // Class: UserRequest
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserRequest' => 'Felhasználói kérelem',
 	'Class:UserRequest+' => '~~',
 	'Class:UserRequest/Attribute:status' => 'Állapot',
@@ -160,6 +161,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:UserRequest/Attribute:tto+' => 'Time To Own~~',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',
 	'Class:UserRequest/Attribute:ttr+' => 'Time To Resolve~~',
+	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:UserRequest/Attribute:tto_time_spent+' => '~~',
+	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:UserRequest/Attribute:ttr_time_spent+' => '~~',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'TTO határidő',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => '~~',
 	'Class:UserRequest/Attribute:sla_tto_passed' => 'SLA TTO letelve',
@@ -255,11 +260,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Nem lehet hozzárendelni a Fölérendelt kérelmet magához a kérelemhez',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'A megoldás kaszkádosítása a kapcsolódó kérésekhez (ev_autoresolve), és a kérés következő jellemzőinek összehangolása: szolgáltatás, csapat, ügyintéző, megoldási információ.',
-));
+]);
 
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Organization:Overview:UserRequests' => 'Felhasználói kérelmek ebből a szervezeti egységből',
 	'Organization:Overview:MyUserRequests' => 'Hozzám rendelt kérelmek ebből a szervezeti egységből',
 	'Organization:Overview:Tickets' => 'Hibajegyek ebből a szervezeti egységből',
-));
+]);

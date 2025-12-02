@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This program is free software; you can redistribute it and/or modify
@@ -17,7 +18,7 @@
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-virtualization-mgmt/3.3.0',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Virtualization Management',
@@ -25,23 +26,23 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
-			'itop-config-mgmt/2.4.0'
-		),
+		'dependencies' => [
+			'itop-config-mgmt/2.4.0',
+		],
 		'mandatory' => false,
 		'visible' => true,
 
 		// Components
 		//
-		'datamodel' => array(
-		),
-		'webservice' => array(
-			
-		),
-		'data.struct' => array(
+		'datamodel' => [
+		],
+		'webservice' => [
+
+		],
+		'data.struct' => [
 			// add your 'structure' definition XML files here,
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			// add your sample data XML files here,
 			'data.sample.farm.xml',
 			'data.sample.hypervisor.xml',
@@ -51,17 +52,17 @@ SetupWebPage::AddModule(
 			'data.sample.webserver.xml',
 			'data.sample.webapp.xml',
 			'data.sample.applicationsolutionci.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '', // hyperlink to manual setup documentation, if any
-		'doc.more_information' => '', // hyperlink to more information, if any 
+		'doc.more_information' => '', // hyperlink to more information, if any
 
 		// Default settings
 		//
-		'settings' => array(
+		'settings' => [
 			// Module specific settings go here, if any
-		),
-	)
+		],
+	]
 );

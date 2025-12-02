@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -16,7 +17,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
@@ -49,8 +49,8 @@ function DisplayActionsTab(iTopWebPage &$oP, string $sClassToDisplay, array $aCl
 		return;
 	}
 
-	$aActionClasses = array();
-	foreach(MetaModel::EnumChildClasses($sClassToDisplay, ENUM_CHILD_CLASSES_ALL, true) as $sActionClass) {
+	$aActionClasses = [];
+	foreach (MetaModel::EnumChildClasses($sClassToDisplay, ENUM_CHILD_CLASSES_ALL, true) as $sActionClass) {
 		// Ignore abstract classes
 		if (MetaModel::IsAbstract($sActionClass)) {
 			continue;
@@ -74,12 +74,11 @@ function DisplayActionsTab(iTopWebPage &$oP, string $sClassToDisplay, array $aCl
 	$oP->SetCurrentTab('UI:NotificationsMenu:Actions:'.$sClassToDisplay);
 
 	$iBlock = 0;
-	foreach($aActionClasses as $sActionClass)
-	{
+	foreach ($aActionClasses as $sActionClass) {
 		$oFilter = new DBObjectSearch($sActionClass);
 		$oFilter->AddCondition('finalclass', $sActionClass); // derived classes will be further processed
 
-		$aParams = array('panel_title' => MetaModel::GetName($sActionClass));
+		$aParams = ['panel_title' => MetaModel::GetName($sActionClass)];
 
 		$sBlockId = 'block_'.utils::Sanitize($sClassToDisplay, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER).'_'.$iBlock;
 		$oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
@@ -91,8 +90,14 @@ function DisplayActionsTab(iTopWebPage &$oP, string $sClassToDisplay, array $aCl
 // Main program
 //
 $oP = new iTopWebPage(Dict::S('Menu:NotificationsMenu+'));
-$oP->SetBreadCrumbEntry('ui-tool-notifications', Dict::S('Menu:NotificationsMenu'), Dict::S('Menu:NotificationsMenu+'), '', 'fas fa-bell',
-	iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+$oP->SetBreadCrumbEntry(
+	'ui-tool-notifications',
+	Dict::S('Menu:NotificationsMenu'),
+	Dict::S('Menu:NotificationsMenu+'),
+	'',
+	'fas fa-bell',
+	iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES
+);
 
 $oPageContentLayout = PageContentFactory::MakeStandardEmpty();
 $oP->SetContentLayout($oPageContentLayout);
@@ -115,7 +120,7 @@ $oP->SetCurrentTabContainer('Tabs_0');
 $oP->SetCurrentTab('UI:NotificationsMenu:Triggers');
 
 $oFilter = new DBObjectSearch('Trigger');
-$aParams = array('panel_title' => Dict::S('UI:NotificationsMenu:AvailableTriggers'));
+$aParams = ['panel_title' => Dict::S('UI:NotificationsMenu:AvailableTriggers')];
 $oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
 $oBlock->Display($oP, 'block_0', $aParams);
 

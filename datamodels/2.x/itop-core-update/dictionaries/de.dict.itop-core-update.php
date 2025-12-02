@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'iTopUpdate:UI:PageTitle' => 'Anwendungsupgrade',
 	'itop-core-update:UI:SelectUpdateFile' => 'Upgrade-Datei hochladen',
 	'itop-core-update:UI:ConfirmUpdate' => 'Upgrade bestätigen',
@@ -94,6 +95,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ModuleInstallation/Attribute:name' => 'Name',
 	'Class:ModuleInstallation/Attribute:version' => 'Version',
 	'Class:ModuleInstallation/Attribute:comment' => 'Kommentar',
-));
-
-
+]);

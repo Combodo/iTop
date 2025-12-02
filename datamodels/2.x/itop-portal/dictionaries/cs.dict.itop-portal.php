@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'portal:itop-portal' => 'Standardní portál',
 	'Page:DefaultTitle' => '%1$s - Uživatelský portál',
 	'Brick:Portal:UserProfile:Title' => 'Můj profil',
@@ -26,4 +27,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:ListAllRequests:Tab' => 'Probíhající a uzavřené',
 	'Brick:Portal:SearchInAllRequests:Title' => 'Vyhledávání ve všech požadavcích',
 	'Brick:Portal:SearchInAllRequests:Title+' => '<p>Bez ohledu na jejich stav.</p>',
-));
+]);

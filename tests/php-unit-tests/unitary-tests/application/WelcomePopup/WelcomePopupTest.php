@@ -21,12 +21,12 @@ class WelcomePopupTest extends ItopDataTestCase
 		$bResult = usort($aProvidersMessagesData, [WelcomePopupService::class, 'SortOnImportance']);
 		$this->assertTrue($bResult);
 
-		$aMessageIdsSorted = array_map(function($aItem) {
+		$aMessageIdsSorted = array_map(function ($aItem) {
 			return $aItem['message']->GetId();
 		}, $aProvidersMessagesData);
 		$this->assertEquals($aExpected, $aMessageIdsSorted);
 	}
-	
+
 	/**
 	 * Data provider for testSortOnImportance
 	 * @return array[][]|string[][][][]|number[][][][]
@@ -76,10 +76,10 @@ class WelcomePopupTest extends ItopDataTestCase
 	{
 		$oService = WelcomePopupService::GetInstance();
 		$this->InvokeNonPublicMethod(WelcomePopupService::class, 'SetAcknowledgedMessagesCache', $oService, [$aCache]);
-		
+
 		$this->assertEquals($bExpected, $this->InvokeNonPublicMethod(WelcomePopupService::class, 'IsMessageAcknowledged', $oService, [$sMessageId]));
 	}
-	
+
 	public function isMessageAcknowledgedDataProvider()
 	{
 		return [
@@ -94,7 +94,7 @@ class WelcomePopupTest extends ItopDataTestCase
 			],
 		];
 	}
-	
+
 	public function testProcessMessages()
 	{
 		// Mock a WelcomePopup message provider, with a fixed class name
@@ -103,7 +103,7 @@ class WelcomePopupTest extends ItopDataTestCase
 			new Message('123', 'foo', '<p>Hello Foo</p>', null, [], 0),
 			new Message('456', 'bar', '<p>Hello Bar</p>', null, [], 1), // Already acknowledged will be skipped
 		]);
-		
+
 		// Mock another WelcomePopup message provider, with a different class name
 		$oProvider2 = $this->getMockBuilder(iWelcomePopupExtension::class)->setMockClassName('Provider2')->getMock();
 		$oProvider2->expects($this->once())->method('GetMessages')->willReturn([
@@ -113,7 +113,7 @@ class WelcomePopupTest extends ItopDataTestCase
 		$oService = WelcomePopupService::GetInstance();
 		$this->InvokeNonPublicMethod(WelcomePopupService::class, 'SetAcknowledgedMessagesCache', $oService, [[get_class($oProvider1).'::456']]);
 		$this->InvokeNonPublicMethod(WelcomePopupService::class, 'SetMessagesProviders', $oService, [[$oProvider1, $oProvider2]]);
-		
+
 		$aProvidersMessagesData = $this->InvokeNonPublicMethod(WelcomePopupService::class, 'ProcessMessages', $oService, []);
 		$this->assertEquals(
 			[
@@ -141,11 +141,11 @@ class WelcomePopupTest extends ItopDataTestCase
 	{
 		self::CreateUser('admin-testAcknowledgeMessage', 1, '-Passw0rd!Complex-');
 		UserRights::Login('admin-testAcknowledgeMessage');
-		
+
 		// Mock a WelcomePopup message provider, with a fixed class name
 		$oProvider1 = $this->getMockBuilder(iWelcomePopupExtension::class)->setMockClassName('Provider1')->getMock();
 		$oProvider1->expects($this->exactly(2))->method('AcknowledgeMessage');
-			
+
 		// Mock another WelcomePopup message provider, with a different class name
 		$oProvider2 = $this->getMockBuilder(iWelcomePopupExtension::class)->setMockClassName('Provider2')->getMock();
 		$oProvider2->expects($this->exactly(1))->method('AcknowledgeMessage');
@@ -154,24 +154,24 @@ class WelcomePopupTest extends ItopDataTestCase
 		$sMessageUUID2 = get_class($oProvider1).'::456789';
 		$sMessageUUID3 = get_class($oProvider2).'::456789'; // Same message id but different provider / UUID
 		$oService = WelcomePopupService::GetInstance();
-		
+
 		$this->InvokeNonPublicMethod(WelcomePopupService::class, 'SetMessagesProviders', $oService, [[$oProvider1, $oProvider2]]);
-		
+
 		$oService->AcknowledgeMessage($sMessageUUID1);
 		$this->assertTrue($this->InvokeNonPublicMethod(WelcomePopupService::class, 'IsMessageAcknowledged', $oService, [$sMessageUUID1]));
 		$this->assertFalse($this->InvokeNonPublicMethod(WelcomePopupService::class, 'IsMessageAcknowledged', $oService, ['-This-Message-Id-Is-Not-Ack0ledg3dged!']));
 		$this->assertFalse($this->InvokeNonPublicMethod(WelcomePopupService::class, 'IsMessageAcknowledged', $oService, [$sMessageUUID3]));
-		
+
 		$oService->AcknowledgeMessage($sMessageUUID2);
 		$this->assertTrue($this->InvokeNonPublicMethod(WelcomePopupService::class, 'IsMessageAcknowledged', $oService, [$sMessageUUID1]));
 		$this->assertTrue($this->InvokeNonPublicMethod(WelcomePopupService::class, 'IsMessageAcknowledged', $oService, [$sMessageUUID2]));
 		$this->assertFalse($this->InvokeNonPublicMethod(WelcomePopupService::class, 'IsMessageAcknowledged', $oService, ['-This-Message-Id-Is-Not-Ack0ledg3dged!']));
 		$this->assertFalse($this->InvokeNonPublicMethod(WelcomePopupService::class, 'IsMessageAcknowledged', $oService, [$sMessageUUID3]));
-		
+
 		$oService->AcknowledgeMessage($sMessageUUID3);
 		$this->assertTrue($this->InvokeNonPublicMethod(WelcomePopupService::class, 'IsMessageAcknowledged', $oService, [$sMessageUUID3]));
 	}
-	
+
 	/**
 	 * @dataProvider makeStringFitInProvider
 	 */
@@ -182,7 +182,7 @@ class WelcomePopupTest extends ItopDataTestCase
 		$this->assertTrue(mb_strlen($sFitted) <= $iLimit);
 		$this->assertEquals($sExpected, $sFitted);
 	}
-	
+
 	public function makeStringFitInProvider()
 	{
 		return [
@@ -193,4 +193,3 @@ class WelcomePopupTest extends ItopDataTestCase
 	}
 
 }
-

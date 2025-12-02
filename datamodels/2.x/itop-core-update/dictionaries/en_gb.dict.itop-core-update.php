@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -20,7 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'iTopUpdate:UI:PageTitle' => 'Application Upgrade',
 	'itop-core-update:UI:SelectUpdateFile' => 'Application Upgrade',
 	'itop-core-update:UI:ConfirmUpdate' => 'Confirm Application Upgrade',
@@ -54,7 +55,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 
 	'iTopUpdate:UI:Status' => 'Status',
 	'iTopUpdate:UI:Action' => 'Update',
-    'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup',
+	'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup',
 	'iTopUpdate:UI:History' => 'Versions History',
 	'iTopUpdate:UI:Progress' => 'Progress of the upgrade',
 
@@ -62,7 +63,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'iTopUpdate:UI:DoBackup:Warning' => 'Backup is not recommended due to limited available disk space',
 
 	'iTopUpdate:UI:DiskFreeSpace' => 'Disk free space',
-    'iTopUpdate:UI:ItopDiskSpace' => ITOP_APPLICATION_SHORT.' disk space',
+	'iTopUpdate:UI:ItopDiskSpace' => ITOP_APPLICATION_SHORT.' disk space',
 	'iTopUpdate:UI:DBDiskSpace' => 'Database disk space',
 	'iTopUpdate:UI:FileUploadMaxSize' => 'File upload max size',
 
@@ -78,8 +79,6 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a target="_blank" href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.',
 	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check',
-
-
 
 	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup',
 	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?',
@@ -117,11 +116,9 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Menu:iTopUpdate' => 'Application upgrade',
 	'Menu:iTopUpdate+' => 'Application upgrade',
 
-    // Missing itop entries
+	// Missing itop entries
 	'Class:ModuleInstallation/Attribute:installed' => 'Installed on',
 	'Class:ModuleInstallation/Attribute:name' => 'Name',
 	'Class:ModuleInstallation/Attribute:version' => 'Version',
 	'Class:ModuleInstallation/Attribute:comment' => 'Comment',
-));
-
-
+]);

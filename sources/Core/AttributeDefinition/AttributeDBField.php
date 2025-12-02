@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -17,7 +18,7 @@ class AttributeDBField extends AttributeDBFieldVoid
 {
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("default_value", "is_null_allowed"));
+		return array_merge(parent::ListExpectedParams(), ["default_value", "is_null_allowed"]);
 	}
 
 	public function GetDefaultValue(DBObject $oHostObject = null)

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -21,23 +22,23 @@
  * This page is called to perform "asynchronously" the setup actions
  * parameters
  * 'operation': one of 'compile_data_model', 'update_db_schema', 'after_db_creation', 'file'
- * 
- * if 'operation' == 'update_db_schema': 
+ *
+ * if 'operation' == 'update_db_schema':
  * 'mode': install | upgrade
- * 
+ *
  *  if 'operation' == 'after_db_creation':
  * 'mode': install | upgrade
- * 
- * if 'operation' == 'file': 
+ *
+ * if 'operation' == 'file':
  * 'file': string Name of the file to load
  * 'session_status': string 'start', 'continue' or 'end'
- * 'percent': integer 0..100 the percentage of completion once the file has been loaded 
+ * 'percent': integer 0..100 the percentage of completion once the file has been loaded
  */
 
 use Combodo\iTop\Application\WebPage\AjaxPage;
 
 $bBypassMaintenance = true; // Reset maintenance mode in case of problem
-define('SAFE_MINIMUM_MEMORY', 64*1024*1024);
+define('SAFE_MINIMUM_MEMORY', 64 * 1024 * 1024);
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/setup/setuppage.class.inc.php');
@@ -47,34 +48,25 @@ ini_set('max_execution_time', max(3600, ini_get('max_execution_time'))); // Unde
 date_default_timezone_set('Europe/Paris'); // Just to avoid a warning if the timezone is not set in php.ini
 
 $sMemoryLimit = trim(ini_get('memory_limit'));
-if (empty($sMemoryLimit))
-{
+if (empty($sMemoryLimit)) {
 	// On some PHP installations, memory_limit does not exist as a PHP setting!
 	// (encountered on a 5.2.0 under Windows)
 	// In that case, ini_set will not work, let's keep track of this and proceed with the data load
 	SetupLog::Info("No memory limit has been defined in this instance of PHP");
-}
-else
-{
+} else {
 	// Check that the limit will allow us to load the data
 	//
 	$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
-	if (!utils::IsMemoryLimitOk($iMemoryLimit, SAFE_MINIMUM_MEMORY))
-	{
-		if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === FALSE)
-		{
+	if (!utils::IsMemoryLimitOk($iMemoryLimit, SAFE_MINIMUM_MEMORY)) {
+		if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === false) {
 			SetupLog::Error("memory_limit is too small: $iMemoryLimit and can not be increased by the script itself.");
-		}
-		else
-		{
+		} else {
 			SetupLog::Info("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");
 		}
 	}
 }
 
-
 define('PHP_FATAL_ERROR_TAG', 'phpfatalerror');
-
 
 /**
  * Handler for register_shutdown_function, to catch PHP errors
@@ -83,8 +75,7 @@ function ShutdownCallback()
 {
 	$error = error_get_last();
 	$bIsErrorToReport = (($error !== null) && ($error['type'] & (E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR)));
-	if (!$bIsErrorToReport)
-	{
+	if (!$bIsErrorToReport) {
 		return;
 	}
 
@@ -97,19 +88,16 @@ function ShutdownCallback()
 	echo '<'.PHP_FATAL_ERROR_TAG.'>'.$sLogMessage.'</'.PHP_FATAL_ERROR_TAG.'>';
 }
 
-
 function FatalErrorCatcher($sOutput)
 {
-	if (preg_match('|<'.PHP_FATAL_ERROR_TAG.'>.*</'.PHP_FATAL_ERROR_TAG.'>|s', $sOutput, $aMatches))
-	{
+	if (preg_match('|<'.PHP_FATAL_ERROR_TAG.'>.*</'.PHP_FATAL_ERROR_TAG.'>|s', $sOutput, $aMatches)) {
 		header("HTTP/1.0 500 Internal server error.");
 		$errors = '';
-		foreach ($aMatches as $sMatch)
-		{
+		foreach ($aMatches as $sMatch) {
 			$errors .= strip_tags($sMatch)."\n";
 		}
 		$sOutput = "$errors\n";
-		// Logging to a file does not work if the whole memory is exhausted...		
+		// Logging to a file does not work if the whole memory is exhausted...
 		// SetupLog::Error("Fatal error - in $__FILE__ , $errors");
 	}
 	return $sOutput;
@@ -132,7 +120,6 @@ require_once(APPROOT.'/core/kpi.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once('./xmldataloader.class.inc.php');
 
-
 // Never cache this page
 header("Cache-Control: no-cache, must-revalidate");  // HTTP/1.1
 header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
@@ -141,41 +128,38 @@ header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
  * Main program
  */
 $sOperation = Utils::ReadParam('operation', '');
-try
-{
+try {
 	SetupUtils::CheckSetupToken();
 
-	switch($sOperation)
-	{
+	switch ($sOperation) {
 		case 'async_action':
-		ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
-		// While running the setup it is desirable to see any error that may happen
-		ini_set('display_errors', true);
-		ini_set('display_startup_errors', true);
-		
-		require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
-		require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
-		
-		$sClass = utils::ReadParam('step_class', '');
-		$sState = utils::ReadParam('step_state', '');
-		$sActionCode = utils::ReadParam('code', '');
-		$aParams = utils::ReadParam('params', array(), false, 'raw_data');
-		$oPage = new AjaxPage('');
-		$oDummyController = new WizardController('');
-		if (is_subclass_of($sClass, 'WizardStep'))
-		{
-			/** @var WizardStep $oStep */
-			$oStep = new $sClass($oDummyController, $sState);
-			$sConfigFile = utils::GetConfigFilePath();
-			if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig()) {
-				$sRelativePath = utils::GetConfigFilePathRelative();
-				$oPage->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
-				$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
-				$oPage->output();
-			} else {
-				$oStep->AsyncAction($oPage, $sActionCode, $aParams);
+			ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
+			// While running the setup it is desirable to see any error that may happen
+			ini_set('display_errors', true);
+			ini_set('display_startup_errors', true);
+
+			require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
+			require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
+
+			$sClass = utils::ReadParam('step_class', '');
+			$sState = utils::ReadParam('step_state', '');
+			$sActionCode = utils::ReadParam('code', '');
+			$aParams = utils::ReadParam('params', [], false, 'raw_data');
+			$oPage = new AjaxPage('');
+			$oDummyController = new WizardController('');
+			if (is_subclass_of($sClass, 'WizardStep')) {
+				/** @var WizardStep $oStep */
+				$oStep = new $sClass($oDummyController, $sState);
+				$sConfigFile = utils::GetConfigFilePath();
+				if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig()) {
+					$sRelativePath = utils::GetConfigFilePathRelative();
+					$oPage->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
+					$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
+					$oPage->output();
+				} else {
+					$oStep->AsyncAction($oPage, $sActionCode, $aParams);
+				}
 			}
-		}
 			$oPage->output();
 			break;
 
@@ -189,23 +173,17 @@ try
 		default:
 			throw(new Exception("Error unsupported operation '$sOperation'"));
 	}
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
 	header("HTTP/1.0 500 Internal server error.");
 	echo "<p>An error happened while processing the installation:</p>\n";
 	echo '<p>'.$e."</p>\n";
 	SetupLog::Error("An error happened while processing the installation: ".$e);
 }
 
-if (function_exists('memory_get_peak_usage'))
-{
-	if ($sOperation == 'file')
-	{
+if (function_exists('memory_get_peak_usage')) {
+	if ($sOperation == 'file') {
 		SetupLog::Info("loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
-	}
-	else
-	{
+	} else {
 		SetupLog::Info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());
 	}
 }

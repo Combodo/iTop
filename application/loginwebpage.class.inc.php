@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,7 +16,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 
 /**
  * Class LoginWebPage
@@ -37,33 +37,33 @@ use Combodo\iTop\Service\Events\EventService;
 
 class LoginWebPage extends NiceWebPage
 {
-	const EXIT_PROMPT = 0;
-	const EXIT_HTTP_401 = 1;
-	const EXIT_RETURN = 2;
-	
-	const EXIT_CODE_OK = 0;
-	const EXIT_CODE_MISSINGLOGIN = 1;
-	const EXIT_CODE_MISSINGPASSWORD = 2;
-	const EXIT_CODE_WRONGCREDENTIALS = 3;
-	const EXIT_CODE_MUSTBEADMIN = 4;
-	const EXIT_CODE_PORTALUSERNOTAUTHORIZED = 5;
-	const EXIT_CODE_NOTAUTHORIZED = 6;
+	public const EXIT_PROMPT = 0;
+	public const EXIT_HTTP_401 = 1;
+	public const EXIT_RETURN = 2;
+
+	public const EXIT_CODE_OK = 0;
+	public const EXIT_CODE_MISSINGLOGIN = 1;
+	public const EXIT_CODE_MISSINGPASSWORD = 2;
+	public const EXIT_CODE_WRONGCREDENTIALS = 3;
+	public const EXIT_CODE_MUSTBEADMIN = 4;
+	public const EXIT_CODE_PORTALUSERNOTAUTHORIZED = 5;
+	public const EXIT_CODE_NOTAUTHORIZED = 6;
 
 	// Login FSM States
-	const LOGIN_STATE_START = 'start';                          // Entry state
-	const LOGIN_STATE_MODE_DETECTION = 'login mode detection';  // Detect which login plugin to use
-	const LOGIN_STATE_READ_CREDENTIALS = 'read credentials';    // Read the credentials
-	const LOGIN_STATE_CHECK_CREDENTIALS = 'check credentials';  // Check if the credentials are valid
-	const LOGIN_STATE_CREDENTIALS_OK = 'credentials ok';        // User provisioning
-	const LOGIN_STATE_USER_OK = 'user ok';                      // Additional check (2FA)
-	const LOGIN_STATE_CONNECTED = 'connected';                  // User connected
-	const LOGIN_STATE_SET_ERROR = 'prepare for error';	        // Internal state to trigger ERROR state
-	const LOGIN_STATE_ERROR = 'error';                          // An error occurred, next state will be NONE
+	public const LOGIN_STATE_START = 'start';                          // Entry state
+	public const LOGIN_STATE_MODE_DETECTION = 'login mode detection';  // Detect which login plugin to use
+	public const LOGIN_STATE_READ_CREDENTIALS = 'read credentials';    // Read the credentials
+	public const LOGIN_STATE_CHECK_CREDENTIALS = 'check credentials';  // Check if the credentials are valid
+	public const LOGIN_STATE_CREDENTIALS_OK = 'credentials ok';        // User provisioning
+	public const LOGIN_STATE_USER_OK = 'user ok';                      // Additional check (2FA)
+	public const LOGIN_STATE_CONNECTED = 'connected';                  // User connected
+	public const LOGIN_STATE_SET_ERROR = 'prepare for error';	        // Internal state to trigger ERROR state
+	public const LOGIN_STATE_ERROR = 'error';                          // An error occurred, next state will be NONE
 
 	// Login FSM Returns
-	const LOGIN_FSM_RETURN = 0;           // End the FSM OK (connected)
-	const LOGIN_FSM_ERROR = 1;        // Error signaled
-	const LOGIN_FSM_CONTINUE = 2;     // Continue FSM
+	public const LOGIN_FSM_RETURN = 0;           // End the FSM OK (connected)
+	public const LOGIN_FSM_ERROR = 1;        // Error signaled
+	public const LOGIN_FSM_CONTINUE = 2;     // Continue FSM
 
 	protected static $sHandlerClass = __class__;
 	private static $iOnExit;
@@ -78,7 +78,7 @@ class LoginWebPage extends NiceWebPage
 	 */
 	public static function NewLoginWebPage()
 	{
-		return new self::$sHandlerClass;
+		return new self::$sHandlerClass();
 	}
 
 	protected static $m_sLoginFailedMessage = '';
@@ -94,7 +94,7 @@ class LoginWebPage extends NiceWebPage
 		$this->no_cache();
 		$this->add_http_headers();
 	}
-	
+
 	public function SetStyleSheet()
 	{
 		$this->LinkStylesheetFromAppRoot('css/login.css');
@@ -128,23 +128,18 @@ class LoginWebPage extends NiceWebPage
 		$oProfilesSet = $oUser->Get('profile_list');
 		//delete old profiles
 		$aExistingProfiles = [];
-		while ($oProfile = $oProfilesSet->Fetch())
-		{
+		while ($oProfile = $oProfilesSet->Fetch()) {
 			array_push($aExistingProfiles, $oProfile->Get('profileid'));
 			$iArrayKey = array_search($oProfile->Get('profileid'), $aProfiles);
-			if (!$iArrayKey)
-			{
+			if (!$iArrayKey) {
 				$oProfilesSet->RemoveItem($oProfile->Get('profileid'));
-			}
-			else
-			{
+			} else {
 				unset($aProfiles[$iArrayKey]);
 			}
 		}
 		//add profiles not already linked with user
-		foreach ($aProfiles as $iProfileId)
-		{
-			$oProfilesSet->AddItem(MetaModel::NewObject('URP_UserProfile', array('profileid' => $iProfileId, 'reason' => $sOrigin)));
+		foreach ($aProfiles as $iProfileId) {
+			$oProfilesSet->AddItem(MetaModel::NewObject('URP_UserProfile', ['profileid' => $iProfileId, 'reason' => $sOrigin]));
 		}
 		$oUser->Set('profile_list', $oProfilesSet);
 	}
@@ -154,56 +149,49 @@ class LoginWebPage extends NiceWebPage
 		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
 		$sDisplayIcon = Branding::GetLoginLogoAbsoluteUrl();
-		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES,
-				self::PAGES_CHARSET)."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
+		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities(
+			$sIconUrl,
+			ENT_QUOTES,
+			self::PAGES_CHARSET
+		)."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
 	}
 
 	public function DisplayLoginForm($bFailedLogin = false)
 	{
 		$oTwigContext = new LoginTwigRenderer();
-		$aPostedVars = array_merge(array('login_mode', 'loginop'), $oTwigContext->GetPostedVars());
+		$aPostedVars = array_merge(['login_mode', 'loginop'], $oTwigContext->GetPostedVars());
 
 		$sMessage = Dict::S('UI:Login:IdentifyYourself');
 
 		// Error message
-		if ($bFailedLogin)
-		{
-			if (self::$m_sLoginFailedMessage != '')
-			{
+		if ($bFailedLogin) {
+			if (self::$m_sLoginFailedMessage != '') {
 				$sMessage = self::$m_sLoginFailedMessage;
-			}
-			else
-			{
+			} else {
 				$sMessage = Dict::S('UI:Login:IncorrectLoginPassword');
 			}
 		}
 
 		// Keep the OTHER parameters posted
-		$aPreviousPostedVars = array();
-		foreach($_POST as $sPostedKey => $postedValue)
-		{
-			if (!in_array($sPostedKey, $aPostedVars))
-			{
-				if (is_array($postedValue))
-				{
-					foreach($postedValue as $sKey => $sValue)
-					{
+		$aPreviousPostedVars = [];
+		foreach ($_POST as $sPostedKey => $postedValue) {
+			if (!in_array($sPostedKey, $aPostedVars)) {
+				if (is_array($postedValue)) {
+					foreach ($postedValue as $sKey => $sValue) {
 						$sName = "{$sPostedKey}[{$sKey}]";
 						$aPreviousPostedVars[$sName] = $sValue;
 					}
-				}
-				else
-				{
+				} else {
 					$aPreviousPostedVars[$sPostedKey] = $postedValue;
 				}
 			}
 		}
 
-		$aVars = array(
+		$aVars = [
 			'bFailedLogin' => $bFailedLogin,
 			'sMessage' => $sMessage,
 			'aPreviousPostedVars' => $aPreviousPostedVars,
-		);
+		];
 		$aVars = array_merge($aVars, $oTwigContext->GetDefaultVars());
 
 		$oTwigContext->Render($this, 'login.html.twig', $aVars);
@@ -226,26 +214,21 @@ class LoginWebPage extends NiceWebPage
 	{
 		$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
 
-		try
-		{
+		try {
 			UserRights::Login($sAuthUser); // Set the user's language (if possible!)
-            /** @var UserInternal $oUser */
-            $oUser = UserRights::GetUserObject();
+			/** @var UserInternal $oUser */
+			$oUser = UserRights::GetUserObject();
 
-			if ($oUser != null)
-			{
-				if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token'))
-				{
+			if ($oUser != null) {
+				if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token')) {
 					throw new Exception(Dict::S('UI:ResetPwd-Error-NotPossible'));
 				}
-				if (!$oUser->CanChangePassword())
-				{
+				if (!$oUser->CanChangePassword()) {
 					throw new Exception(Dict::S('UI:ResetPwd-Error-FixedPwd'));
 				}
 
 				$sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
-				if ($sTo == '')
-				{
+				if ($sTo == '') {
 					throw new Exception(Dict::S('UI:ResetPwd-Error-NoEmail'));
 				}
 
@@ -265,8 +248,7 @@ class LoginWebPage extends NiceWebPage
 				$sResetUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=reset_pwd&auth_user='.urlencode($oUser->Get('login')).'&token='.urlencode($sToken);
 				$oEmail->SetBody(Dict::Format('UI:ResetPwd-EmailBody', $sResetUrl, $oUser->Get('login')));
 				$iRes = $oEmail->Send($aIssues, true /* force synchronous exec */);
-				switch ($iRes)
-				{
+				switch ($iRes) {
 					//case EMAIL_SEND_PENDING:
 					case EMAIL_SEND_OK:
 						break;
@@ -278,13 +260,10 @@ class LoginWebPage extends NiceWebPage
 				}
 			}
 
-
 			$oTwigContext = new LoginTwigRenderer();
 			$aVars = $oTwigContext->GetDefaultVars();
 			$oTwigContext->Render($this, 'forgotpwdsent.html.twig', $aVars);
-		}
-		catch(Exception $e)
-		{
+		} catch (Exception $e) {
 			$this->DisplayForgotPwdForm(true, $e->getMessage());
 		}
 	}
@@ -304,22 +283,16 @@ class LoginWebPage extends NiceWebPage
 		$aVars['sToken'] = $sToken;
 		$aVars['sErrorMessage'] = $sErrorMessage;
 
-		if (($oUser == null))
-		{
+		if (($oUser == null)) {
 			$aVars['bNoUser'] = true;
-		}
-		else
-		{
+		} else {
 			$aVars['bNoUser'] = false;
 			$aVars['sUserName'] = $oUser->GetFriendlyName();
 			$oEncryptedToken = $oUser->Get('reset_pwd_token');
 
-			if (!$oEncryptedToken->CheckPassword($sToken))
-			{
+			if (!$oEncryptedToken->CheckPassword($sToken)) {
 				$aVars['bBadToken'] = true;
-			}
-			else
-			{
+			} else {
 				$aVars['bBadToken'] = false;
 			}
 		}
@@ -342,21 +315,15 @@ class LoginWebPage extends NiceWebPage
 
 		$aVars['sAuthUser'] = $sAuthUser;
 		$aVars['sToken'] = $sToken;
-		if (($oUser == null))
-		{
+		if (($oUser == null)) {
 			$aVars['bNoUser'] = true;
-		}
-		else
-		{
+		} else {
 			$aVars['bNoUser'] = false;
 			$oEncryptedToken = $oUser->Get('reset_pwd_token');
 
-			if (!$oEncryptedToken->CheckPassword($sToken))
-			{
+			if (!$oEncryptedToken->CheckPassword($sToken)) {
 				$aVars['bBadToken'] = true;
-			}
-			else
-			{
+			} else {
 				$aVars['bBadToken'] = false;
 				// Trash the token and change the password
 				$oUser->Set('reset_pwd_token', new ormPassword());
@@ -413,7 +380,7 @@ class LoginWebPage extends NiceWebPage
 		// Note: This will destroy the session, and not just the session data!
 	}
 
-	static function SecureConnectionRequired()
+	public static function SecureConnectionRequired()
 	{
 		return MetaModel::GetConfig()->GetSecureConnectionRequired();
 	}
@@ -423,7 +390,7 @@ class LoginWebPage extends NiceWebPage
 	 * @param string $sString
 	 * @return bool True if the string contains some typical UTF-8 multi-byte sequences
 	 */
-	static function LooksLikeUTF8($sString)
+	public static function LooksLikeUTF8($sString)
 	{
 		return preg_match('%(?:
         			[\xC2-\xDF][\x80-\xBF]             # non-overlong 2-byte
@@ -446,22 +413,19 @@ class LoginWebPage extends NiceWebPage
 	protected static function Login($iOnExit)
 	{
 		self::$iOnExit = $iOnExit;
-		if (self::SecureConnectionRequired() && !utils::IsConnectionSecure())
-		{
+		if (self::SecureConnectionRequired() && !utils::IsConnectionSecure()) {
 			// Non secured URL... request for a secure connection
 			throw new Exception('Secure connection required!');
 		}
 		$bLoginDebug = MetaModel::GetConfig()->Get('login_debug');
 
-		if (Session::Get('login_state') == self::LOGIN_STATE_ERROR)
-		{
+		if (Session::Get('login_state') == self::LOGIN_STATE_ERROR) {
 			Session::Set('login_state', self::LOGIN_STATE_START);
 		}
 		$sLoginState = Session::Get('login_state');
 
 		$sSessionLog = '';
-		if ($bLoginDebug)
-		{
+		if ($bLoginDebug) {
 			IssueLog::Info("---------------------------------");
 			IssueLog::Info($_SERVER['REQUEST_URI']);
 			IssueLog::Info("--> Entering Login FSM with state: [$sLoginState]");
@@ -472,38 +436,30 @@ class LoginWebPage extends NiceWebPage
 		$iErrorCode = self::EXIT_CODE_OK;
 
 		// Finite state machine loop
-		while (true)
-		{
-			try
-			{
+		while (true) {
+			try {
 				$aLoginPlugins = self::GetLoginPluginList();
-				if (empty($aLoginPlugins))
-				{
+				if (empty($aLoginPlugins)) {
 					throw new Exception("Missing login classes");
 				}
 
 				/** @var iLoginFSMExtension $oLoginFSMExtensionInstance */
-				foreach ($aLoginPlugins as $oLoginFSMExtensionInstance)
-				{
-					if ($bLoginDebug)
-					{
+				foreach ($aLoginPlugins as $oLoginFSMExtensionInstance) {
+					if ($bLoginDebug) {
 						$sCurrSessionLog = session_id().' '.utils::GetSessionLog();
-						if ($sCurrSessionLog != $sSessionLog)
-						{
+						if ($sCurrSessionLog != $sSessionLog) {
 							$sSessionLog = $sCurrSessionLog;
 							IssueLog::Info("SESSION: $sSessionLog");
 						}
 						IssueLog::Info("Login: state: [$sLoginState] call: ".get_class($oLoginFSMExtensionInstance));
 					}
 					$iResponse = $oLoginFSMExtensionInstance->LoginAction($sLoginState, $iErrorCode);
-					if ($iResponse == self::LOGIN_FSM_RETURN)
-					{
+					if ($iResponse == self::LOGIN_FSM_RETURN) {
 						EventService::FireEvent(new EventData(EVENT_LOGIN, null, ['code' => $iErrorCode, 'state' => $sLoginState]));
 						Session::WriteClose();
 						return $iErrorCode; // Asked to exit FSM, generally login OK
 					}
-					if ($iResponse == self::LOGIN_FSM_ERROR)
-					{
+					if ($iResponse == self::LOGIN_FSM_ERROR) {
 						EventService::FireEvent(new EventData(EVENT_LOGIN, null, ['code' => $iErrorCode, 'state' => $sLoginState]));
 						$sLoginState = self::LOGIN_STATE_SET_ERROR; // Next state will be error
 						// An error was detected, skip the other plugins turn
@@ -515,9 +471,7 @@ class LoginWebPage extends NiceWebPage
 				// Every plugin has nothing else to do in this state, go forward
 				$sLoginState = self::AdvanceLoginFSMState($sLoginState);
 				Session::Set('login_state', $sLoginState);
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				EventService::FireEvent(new EventData(EVENT_LOGIN, null, ['state' => $_SESSION['login_state']]));
 				IssueLog::Error($e->getTraceAsString());
 				static::ResetSession();
@@ -537,30 +491,23 @@ class LoginWebPage extends NiceWebPage
 	 */
 	public static function GetLoginPluginList($sInterface = 'iLoginFSMExtension', $bFilterWithMode = true)
 	{
-		$aAllPlugins = array();
+		$aAllPlugins = [];
 
-		if ($bFilterWithMode)
-		{
+		if ($bFilterWithMode) {
 			$sCurrentLoginMode = Session::Get('login_mode', '');
-		}
-		else
-		{
+		} else {
 			$sCurrentLoginMode = '';
 		}
 
 		/** @var iLoginExtension $oLoginExtensionInstance */
-		foreach (MetaModel::EnumPlugins($sInterface) as $oLoginExtensionInstance)
-		{
+		foreach (MetaModel::EnumPlugins($sInterface) as $oLoginExtensionInstance) {
 			$aLoginModes = $oLoginExtensionInstance->ListSupportedLoginModes();
-			$aLoginModes = (is_array($aLoginModes) ? $aLoginModes : array());
-			foreach ($aLoginModes as $sLoginMode)
-			{
+			$aLoginModes = (is_array($aLoginModes) ? $aLoginModes : []);
+			foreach ($aLoginModes as $sLoginMode) {
 				// Keep only the plugins for the current login mode + before + after
-				if (empty($sCurrentLoginMode) || ($sLoginMode == $sCurrentLoginMode) || ($sLoginMode == 'before') || ($sLoginMode == 'after'))
-				{
-					if (!isset($aAllPlugins[$sLoginMode]))
-					{
-						$aAllPlugins[$sLoginMode] = array();
+				if (empty($sCurrentLoginMode) || ($sLoginMode == $sCurrentLoginMode) || ($sLoginMode == 'before') || ($sLoginMode == 'after')) {
+					if (!isset($aAllPlugins[$sLoginMode])) {
+						$aAllPlugins[$sLoginMode] = [];
 					}
 					$aAllPlugins[$sLoginMode][] = $oLoginExtensionInstance;
 					break; // Stop here to avoid registering a plugin twice
@@ -569,12 +516,10 @@ class LoginWebPage extends NiceWebPage
 		}
 
 		// Order and filter by the config list of allowed types (allowed_login_types)
-		$aAllowedLoginModes = array_merge(array('before'), MetaModel::GetConfig()->GetAllowedLoginTypes(), array('after'));
-		$aPlugins = array();
-		foreach ($aAllowedLoginModes as $sAllowedMode)
-		{
-			if (isset($aAllPlugins[$sAllowedMode]))
-			{
+		$aAllowedLoginModes = array_merge(['before'], MetaModel::GetConfig()->GetAllowedLoginTypes(), ['after']);
+		$aPlugins = [];
+		foreach ($aAllowedLoginModes as $sAllowedMode) {
+			if (isset($aAllPlugins[$sAllowedMode])) {
 				$aPlugins = array_merge($aPlugins, $aAllPlugins[$sAllowedMode]);
 			}
 		}
@@ -590,8 +535,7 @@ class LoginWebPage extends NiceWebPage
 	 */
 	private static function AdvanceLoginFSMState($sLoginState)
 	{
-		switch ($sLoginState)
-		{
+		switch ($sLoginState) {
 			case self::LOGIN_STATE_START:
 				return self::LOGIN_STATE_MODE_DETECTION;
 
@@ -638,8 +582,7 @@ class LoginWebPage extends NiceWebPage
 	public static function CheckUser($sAuthUser, $sAuthPassword = '', $sAuthentication = 'external')
 	{
 		$oUser = self::FindUser($sAuthUser, true, ucfirst(strtolower($sAuthentication)));
-		if (is_null($oUser))
-		{
+		if (is_null($oUser)) {
 			return false;
 		}
 
@@ -668,8 +611,7 @@ class LoginWebPage extends NiceWebPage
 	{
 		// User is Ok, let's save it in the session and proceed with normal login
 		$bLoginSuccess = UserRights::Login($sAuthUser, $sAuthentication); // Login & set the user's language
-		if (!$bLoginSuccess)
-		{
+		if (!$bLoginSuccess) {
 			throw new Exception("Bad user");
 		}
 		if (MetaModel::GetConfig()->Get('log_usage')) {
@@ -696,12 +638,10 @@ class LoginWebPage extends NiceWebPage
 	 */
 	public static function CheckLoggedUser(&$iErrorCode)
 	{
-		if (Session::IsSet('auth_user'))
-		{
+		if (Session::IsSet('auth_user')) {
 			// Already authenticated
 			$bRet = UserRights::Login(Session::Get('auth_user')); // Login & set the user's language
-			if ($bRet)
-			{
+			if ($bRet) {
 				$iErrorCode = self::EXIT_CODE_OK;
 				return self::LOGIN_FSM_RETURN;
 			}
@@ -727,8 +667,7 @@ class LoginWebPage extends NiceWebPage
 
 	public static function SetLoginModeAndReload($sNewLoginMode)
 	{
-		if (Session::Get('login_mode') == $sNewLoginMode)
-		{
+		if (Session::Get('login_mode') == $sNewLoginMode) {
 			return;
 		}
 		Session::Set('login_mode', $sNewLoginMode);
@@ -738,8 +677,7 @@ class LoginWebPage extends NiceWebPage
 	public static function HTTPReload()
 	{
 		$sOriginURL = utils::GetCurrentAbsoluteUrl();
-		if (!utils::StartsWith($sOriginURL, utils::GetAbsoluteUrlAppRoot()))
-		{
+		if (!utils::StartsWith($sOriginURL, utils::GetAbsoluteUrlAppRoot())) {
 			// If the found URL does not start with the configured AppRoot URL
 			$sOriginURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
 		}
@@ -752,7 +690,6 @@ class LoginWebPage extends NiceWebPage
 		header('Location: '.$sURL);
 		exit;
 	}
-
 
 	/**
 	 * Provisioning API: Find a User
@@ -767,33 +704,28 @@ class LoginWebPage extends NiceWebPage
 	 */
 	public static function FindUser($sAuthUser, $bMustBeValid = true, $sType = 'External')
 	{
-		try
-		{
-			$aArgs = array('login' => $sAuthUser);
+		try {
+			$aArgs = ['login' => $sAuthUser];
 			$sUserClass = "User$sType";
 			$oSearch = DBObjectSearch::FromOQL("SELECT $sUserClass WHERE login = :login");
-			if ($bMustBeValid)
-			{
+			if ($bMustBeValid) {
 				$oSearch->AddCondition('status', 'enabled');
 			}
-			$oSet = new DBObjectSet($oSearch, array(), $aArgs);
-			if ($oSet->CountExceeds(0))
-			{
+			$oSet = new DBObjectSet($oSearch, [], $aArgs);
+			if ($oSet->CountExceeds(0)) {
 				/** @var User $oUser */
 				$oUser = $oSet->Fetch();
 
 				return $oUser;
 			}
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			IssueLog::Error($e->getMessage());
 		}
 		return null;
 	}
 
 	/**
- 	 * Provisioning API: Find a Person by email
+	 * Provisioning API: Find a Person by email
 	 *
 	 * @api
 	 *
@@ -805,19 +737,15 @@ class LoginWebPage extends NiceWebPage
 	{
 		/** @var \Person $oPerson */
 		$oPerson = null;
-		try
-		{
+		try {
 			$oSearch = new DBObjectSearch('Person');
 			$oSearch->AddCondition('email', $sEmail);
 			$oSet = new DBObjectSet($oSearch);
-			if ($oSet->CountExceeds(1))
-			{
+			if ($oSet->CountExceeds(1)) {
 				throw new Exception(Dict::S('UI:Login:Error:MultipleContactsHaveSameEmail'));
 			}
 			$oPerson = $oSet->Fetch();
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			IssueLog::Error($e->getMessage());
 		}
 		return $oPerson;
@@ -836,16 +764,14 @@ class LoginWebPage extends NiceWebPage
 	 *
 	 * @return \Person
 	 */
-	public static function ProvisionPerson($sFirstName, $sLastName, $sEmail, $sOrganization, $aAdditionalParams = array())
+	public static function ProvisionPerson($sFirstName, $sLastName, $sEmail, $sOrganization, $aAdditionalParams = [])
 	{
 		/** @var Person $oPerson */
 		$oPerson = null;
-		try
-		{
+		try {
 			CMDBObject::SetTrackOrigin('custom-extension');
 			$sInfo = 'External User provisioning';
-			if (Session::IsSet('login_mode'))
-			{
+			if (Session::IsSet('login_mode')) {
 				$sInfo .= " (".Session::Get('login_mode').")";
 			}
 			CMDBObject::SetTrackInfo($sInfo);
@@ -855,19 +781,15 @@ class LoginWebPage extends NiceWebPage
 			$oPerson->Set('name', $sLastName);
 			$oPerson->Set('email', $sEmail);
 			$oOrg = MetaModel::GetObjectByName('Organization', $sOrganization, false);
-			if (is_null($oOrg))
-			{
+			if (is_null($oOrg)) {
 				throw new Exception(Dict::S('UI:Login:Error:WrongOrganizationName'));
 			}
 			$oPerson->Set('org_id', $oOrg->GetKey());
-			foreach ($aAdditionalParams as $sAttCode => $sValue)
-			{
+			foreach ($aAdditionalParams as $sAttCode => $sValue) {
 				$oPerson->Set($sAttCode, $sValue);
 			}
 			$oPerson->DBInsert();
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			IssueLog::Error($e->getMessage());
 		}
 		return $oPerson;
@@ -886,27 +808,23 @@ class LoginWebPage extends NiceWebPage
 	 */
 	public static function ProvisionUser($sAuthUser, $oPerson, $aRequestedProfiles)
 	{
-		if (!MetaModel::IsValidClass('URP_Profiles'))
-		{
+		if (!MetaModel::IsValidClass('URP_Profiles')) {
 			IssueLog::Error("URP_Profiles is not a valid class. Automatic creation of Users is not supported in this context, sorry.");
 			return null;
 		}
 
 		/** @var UserExternal $oUser */
 		$oUser = null;
-		try
-		{
+		try {
 			CMDBObject::SetTrackOrigin('custom-extension');
 			$sInfo = 'External User provisioning';
-			if (Session::IsSet('login_mode'))
-			{
+			if (Session::IsSet('login_mode')) {
 				$sInfo .= " (".Session::Get('login_mode').")";
 			}
 			CMDBObject::SetTrackInfo($sInfo);
 
 			$oUser = MetaModel::GetObjectByName('UserExternal', $sAuthUser, false);
-			if (is_null($oUser))
-			{
+			if (is_null($oUser)) {
 				$oUser = MetaModel::NewObject('UserExternal');
 				$oUser->Set('login', $sAuthUser);
 				$oUser->Set('contactid', $oPerson->GetKey());
@@ -916,41 +834,33 @@ class LoginWebPage extends NiceWebPage
 			// read all the existing profiles
 			$oProfilesSearch = new DBObjectSearch('URP_Profiles');
 			$oProfilesSet = new DBObjectSet($oProfilesSearch);
-			$aAllProfiles = array();
-			while ($oProfile = $oProfilesSet->Fetch())
-			{
+			$aAllProfiles = [];
+			while ($oProfile = $oProfilesSet->Fetch()) {
 				$aAllProfiles[mb_strtolower($oProfile->GetName())] = $oProfile->GetKey();
 			}
 
-			$aProfiles = array();
-			foreach ($aRequestedProfiles as $sRequestedProfile)
-			{
+			$aProfiles = [];
+			foreach ($aRequestedProfiles as $sRequestedProfile) {
 				$sRequestedProfile = mb_strtolower($sRequestedProfile);
-				if (isset($aAllProfiles[$sRequestedProfile]))
-				{
+				if (isset($aAllProfiles[$sRequestedProfile])) {
 					$aProfiles[] = $aAllProfiles[$sRequestedProfile];
 				}
 			}
 
-			if (empty($aProfiles))
-			{
+			if (empty($aProfiles)) {
 				throw new Exception(Dict::S('UI:Login:Error:NoValidProfiles'));
 			}
 
 			// Now synchronize the profiles
 			$sOrigin = 'External User provisioning';
-			if (Session::IsSet('login_mode'))
-			{
+			if (Session::IsSet('login_mode')) {
 				$sOrigin .= " (".Session::Get('login_mode').")";
 			}
 			$aExistingProfiles = self::SynchronizeProfiles($oUser, $aProfiles, $sOrigin);
-			if ($oUser->IsModified())
-			{
+			if ($oUser->IsModified()) {
 				$oUser->DBWrite();
 			}
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			IssueLog::Error($e->getMessage());
 		}
 
@@ -961,26 +871,18 @@ class LoginWebPage extends NiceWebPage
 	 * Overridable: depending on the user, head toward a dedicated portal
 	 * @param string|null $sRequestedPortalId
 	 * @param int $iOnExit How to complete the call: redirect or return a code
-	 */	 
+	 */
 	protected static function ChangeLocation($sRequestedPortalId = null, $iOnExit = self::EXIT_PROMPT)
 	{
-		$ret = call_user_func(array(self::$sHandlerClass, 'Dispatch'), $sRequestedPortalId);
-		if ($ret === true)
-		{
+		$ret = call_user_func([self::$sHandlerClass, 'Dispatch'], $sRequestedPortalId);
+		if ($ret === true) {
 			return self::EXIT_CODE_OK;
-		}
-		else if($ret === false)
-		{
+		} elseif ($ret === false) {
 			throw new Exception('Nowhere to go: Your combination of user Profiles denies you access to any '.ITOP_APPLICATION_SHORT.' portal. Please contact your administrator');
-		}
-		else
-		{
-			if ($iOnExit == self::EXIT_RETURN)
-			{
+		} else {
+			if ($iOnExit == self::EXIT_RETURN) {
 				return self::EXIT_CODE_PORTALUSERNOTAUTHORIZED;
-			}
-			else
-			{
+			} else {
 				// No rights to be here, redirect to the portal
 				header('Location: '.$ret);
 				die();
@@ -1002,7 +904,7 @@ class LoginWebPage extends NiceWebPage
 	 * @return int|mixed|string
 	 * @throws \Exception
 	 */
-	static function DoLogin($bMustBeAdmin = false, $bIsAllowedToPortalUsers = false, $iOnExit = self::EXIT_PROMPT)
+	public static function DoLogin($bMustBeAdmin = false, $bIsAllowedToPortalUsers = false, $iOnExit = self::EXIT_PROMPT)
 	{
 		$sRequestedPortalId = $bIsAllowedToPortalUsers ? 'legacy_portal' : 'backoffice';
 		return self::DoLoginEx($sRequestedPortalId, $bMustBeAdmin, $iOnExit);
@@ -1019,23 +921,18 @@ class LoginWebPage extends NiceWebPage
 	 * @return int|mixed|string
 	 * @throws \Exception
 	 */
-	static function DoLoginEx($sRequestedPortalId = null, $bMustBeAdmin = false, $iOnExit = self::EXIT_PROMPT)
+	public static function DoLoginEx($sRequestedPortalId = null, $bMustBeAdmin = false, $iOnExit = self::EXIT_PROMPT)
 	{
 		$operation = utils::ReadParam('loginop', '');
-	
+
 		$sMessage = self::HandleOperations($operation); // May exit directly
-	
+
 		$iRet = self::Login($iOnExit);
-		if ($iRet == self::EXIT_CODE_OK)
-		{
-			if ($bMustBeAdmin && !UserRights::IsAdministrator())
-			{
-				if ($iOnExit == self::EXIT_RETURN)
-				{
+		if ($iRet == self::EXIT_CODE_OK) {
+			if ($bMustBeAdmin && !UserRights::IsAdministrator()) {
+				if ($iOnExit == self::EXIT_RETURN) {
 					return self::EXIT_CODE_MUSTBEADMIN;
-				}
-				else
-				{
+				} else {
 					require_once(APPROOT.'/setup/setuppage.class.inc.php');
 					$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 					$oP->add("<h1>".Dict::S('UI:Login:Error:AccessAdmin')."</h1>\n");
@@ -1044,69 +941,52 @@ class LoginWebPage extends NiceWebPage
 					exit;
 				}
 			}
-			$iRet = call_user_func(array(self::$sHandlerClass, 'ChangeLocation'), $sRequestedPortalId, $iOnExit);
+			$iRet = call_user_func([self::$sHandlerClass, 'ChangeLocation'], $sRequestedPortalId, $iOnExit);
 		}
-		if ($iOnExit == self::EXIT_RETURN)
-		{
+		if ($iOnExit == self::EXIT_RETURN) {
 			return $iRet;
-		}
-		else
-		{
+		} else {
 			return $sMessage;
 		}
-	}	
+	}
 	protected static function HandleOperations($operation)
 	{
 		$sMessage = ''; // most of the operations never return, but some can return a message to be displayed
-		if ($operation == 'logoff')
-		{
+		if ($operation == 'logoff') {
 			self::ResetSession();
 			$oPage = self::NewLoginWebPage();
 			$oPage->DisplayLoginForm(false /* not a failed attempt */);
 			$oPage->output();
 			exit;
-		}
-		else if ($operation == 'forgot_pwd')
-		{
+		} elseif ($operation == 'forgot_pwd') {
 			$oPage = self::NewLoginWebPage();
 			$oPage->DisplayForgotPwdForm();
 			$oPage->output();
 			exit;
-		}
-		else if ($operation == 'forgot_pwd_go')
-		{
+		} elseif ($operation == 'forgot_pwd_go') {
 			$oPage = self::NewLoginWebPage();
 			$oPage->ForgotPwdGo();
 			$oPage->output();
 			exit;
-		}
-		else if ($operation == 'reset_pwd')
-		{
+		} elseif ($operation == 'reset_pwd') {
 			$oPage = self::NewLoginWebPage();
 			$oPage->DisplayResetPwdForm();
 			$oPage->output();
 			exit;
-		}
-		else if ($operation == 'do_reset_pwd')
-		{
+		} elseif ($operation == 'do_reset_pwd') {
 
 			try {
 				$oPage = self::NewLoginWebPage();
 				$oPage->DoResetPassword();
-			}
-			catch (CoreCannotSaveObjectException $e)
-			{
+			} catch (CoreCannotSaveObjectException $e) {
 				$oPage = self::NewLoginWebPage();
 				$oPage->DisplayResetPwdForm($e->getIssue());
 			}
 
 			$oPage->output();
 			exit;
-		}
-		else if ($operation == 'change_pwd')
-		{
-			if (Session::IsSet('auth_user'))
-			{
+		} elseif ($operation == 'change_pwd') {
+			if (Session::IsSet('auth_user')) {
 				$sAuthUser = Session::Get('auth_user');
 				$sIssue = Session::Get('pwd_issue');
 				Session::Unset('pwd_issue');
@@ -1118,16 +998,13 @@ class LoginWebPage extends NiceWebPage
 				$oPage->output();
 				exit;
 			}
-		}
-		else if ($operation == 'check_pwd_policy')
-		{
+		} elseif ($operation == 'check_pwd_policy') {
 			$sAuthUser = Session::Get('auth_user');
 			UserRights::Login($sAuthUser); // Set the user's language
 
-			$aPwdMap = array();
+			$aPwdMap = [];
 
-			foreach (array('new_pwd', 'retype_new_pwd') as $postedPwd)
-			{
+			foreach (['new_pwd', 'retype_new_pwd'] as $postedPwd) {
 				$oUser = new UserLocal();
 				$oUser->ValidatePassword($_POST[$postedPwd]);
 
@@ -1137,27 +1014,21 @@ class LoginWebPage extends NiceWebPage
 			echo json_encode($aPwdMap);
 			die();
 		}
-		if ($operation == 'do_change_pwd')
-		{
-			if (Session::IsSet('auth_user'))
-			{
+		if ($operation == 'do_change_pwd') {
+			if (Session::IsSet('auth_user')) {
 				$sAuthUser = Session::Get('auth_user');
 				UserRights::Login($sAuthUser); // Set the user's language
 				$sOldPwd = utils::ReadPostedParam('old_pwd', '', 'raw_data');
 				$sNewPwd = utils::ReadPostedParam('new_pwd', '', 'raw_data');
 
-				try
-				{
-					if (UserRights::CanChangePassword() && ((!UserRights::CheckCredentials($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
-					{
+				try {
+					if (UserRights::CanChangePassword() && ((!UserRights::CheckCredentials($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd)))) {
 						$oPage = self::NewLoginWebPage();
 						$oPage->DisplayChangePwdForm(true); // old pwd was wrong
 						$oPage->output();
 						exit;
 					}
-				}
-				catch (CoreCannotSaveObjectException $e)
-				{
+				} catch (CoreCannotSaveObjectException $e) {
 					$oPage = self::NewLoginWebPage();
 					$oPage->DisplayChangePwdForm(true, $e->getIssue()); // password policy was not met.
 					$oPage->output();
@@ -1168,26 +1039,27 @@ class LoginWebPage extends NiceWebPage
 		}
 		return $sMessage;
 	}
-	
+
 	protected static function Dispatch($sRequestedPortalId)
 	{
-		if ($sRequestedPortalId === null) return true; // allowed to any portal => return true
-		
+		if ($sRequestedPortalId === null) {
+			return true;
+		} // allowed to any portal => return true
+
 		$aPortalsConf = PortalDispatcherData::GetData();
-		$aDispatchers = array();
-		foreach($aPortalsConf as $sPortalId => $aConf)
-		{
+		$aDispatchers = [];
+		foreach ($aPortalsConf as $sPortalId => $aConf) {
 			$sHandlerClass = $aConf['handler'];
 			$aDispatchers[$sPortalId] = new $sHandlerClass($sPortalId);
 		}
-		
-		if (array_key_exists($sRequestedPortalId, $aDispatchers) && $aDispatchers[$sRequestedPortalId]->IsUserAllowed())
-		{
+
+		if (array_key_exists($sRequestedPortalId, $aDispatchers) && $aDispatchers[$sRequestedPortalId]->IsUserAllowed()) {
 			return true;
 		}
-		foreach($aDispatchers as $sPortalId => $oDispatcher)
-		{
-			if ($oDispatcher->IsUserAllowed()) return $oDispatcher->GetUrl();
+		foreach ($aDispatchers as $sPortalId => $oDispatcher) {
+			if ($oDispatcher->IsUserAllowed()) {
+				return $oDispatcher->GetUrl();
+			}
 		}
 		return false; // nothing matched !!
 	}

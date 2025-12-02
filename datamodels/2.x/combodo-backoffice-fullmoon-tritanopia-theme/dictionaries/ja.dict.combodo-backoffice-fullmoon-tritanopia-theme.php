@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,6 +22,6 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'theme:fullmoon-tritanopia' => 'Fullmoon (Tritanopia)~~',
-));
+]);

@@ -1,12 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Application\UI\Base\Component\Title;
-
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Text\Text;
@@ -50,10 +49,12 @@ class TitleUIBlockFactory extends AbstractUIBlockFactory
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Title\Title
 	 */
 	public static function MakeForPageWithIcon(
-		string $sTitle, string $sIconUrl, string $sIconCoverMethod = Title::DEFAULT_ICON_COVER_METHOD, bool $bIsMedallion = true,
+		string $sTitle,
+		string $sIconUrl,
+		string $sIconCoverMethod = Title::DEFAULT_ICON_COVER_METHOD,
+		bool $bIsMedallion = true,
 		?string $sId = null
-	)
-	{
+	) {
 		$oTitle = new Title(new Text($sTitle), 1, $sId);
 		$oTitle->SetIcon($sIconUrl, $sIconCoverMethod, $bIsMedallion);
 

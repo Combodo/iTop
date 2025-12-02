@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:ServiceManagement' => 'Управление услугами',
 	'Menu:ServiceManagement+' => 'Управление услугами',
 	'Menu:Service:Overview' => 'Обзор',
@@ -39,7 +40,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
-));
+]);
 
 /*
 	'UI:ServiceManagementMenu' => 'Gestion des Services',
@@ -54,30 +55,27 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Class: Organization
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Модель предоставления услуг',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'Модель предоставления услуг (Delivery Model)',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Модель предоставления услуг',
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
-));
-
-
+]);
 
 //
 // Class: ContractType
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContractType' => 'Тип договора',
 	'Class:ContractType+' => '',
-));
-
+]);
 
 //
 // Class: Contract
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Contract' => 'Договор',
 	'Class:Contract+' => '',
 	'Class:Contract/Attribute:name' => 'Название',
@@ -126,13 +124,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Contract/Attribute:status/Value:production+' => 'Эксплуатация',
 	'Class:Contract/Attribute:finalclass' => 'Тип',
 	'Class:Contract/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: CustomerContract
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:CustomerContract' => 'Договор с заказчиком',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Услуги',
@@ -141,13 +139,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'Конфигурационные единицы, охватываемые договором',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Договоры с поставщиками',
 	'Class:CustomerContract/Attribute:providercontracts_list+' => 'Договоры с поставщиками, используемые для поддержки услуг данного договора (Underpinning Contracts)',
-));
+]);
 
 //
 // Class: ProviderContract
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ProviderContract' => 'Договор с поставщиком',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'КЕ',
@@ -156,13 +154,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ProviderContract/Attribute:sla+' => 'Соглашение об уровне услуги (Service Level Agreement)',
 	'Class:ProviderContract/Attribute:coverage' => 'Время обслуживания',
 	'Class:ProviderContract/Attribute:coverage+' => '',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContactToContract' => 'Связь Контакт/Договор',
 	'Class:lnkContactToContract+' => '',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
@@ -174,13 +172,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkContactToContract/Attribute:contact_id+' => '',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Контакт',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContractToDocument' => 'Связь Договор/Документ',
 	'Class:lnkContractToDocument+' => '',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
@@ -192,13 +190,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Документ',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToProviderContract
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Связь Функциональная КЕ/Договор с поставщиком',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
@@ -210,13 +208,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'КЕ',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: ServiceFamily
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ServiceFamily' => 'Пакет услуг',
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Название',
@@ -225,13 +223,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Услуги',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Связанные услуги',
-));
+]);
 
 //
 // Class: Service
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Service' => 'Услуга',
 	'Class:Service+' => '',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
@@ -265,13 +263,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Service/Attribute:customercontracts_list+' => 'Договоры с заказчиками, по которым предоставляется услуга',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Подкатегории услуги',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Подкатегории услуги',
-));
+]);
 
 //
 // Class: lnkDocumentToService
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkDocumentToService' => 'Связь Документ/Услуга',
 	'Class:lnkDocumentToService+' => '',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
@@ -283,13 +281,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkDocumentToService/Attribute:document_id+' => '',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Документ',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkContactToService
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContactToService' => 'Связь Контакт/Услуга',
 	'Class:lnkContactToService+' => '',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
@@ -301,13 +299,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkContactToService/Attribute:contact_id+' => '',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Контакт',
 	'Class:lnkContactToService/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: ServiceSubcategory
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ServiceSubcategory' => 'Подкатегория услуги',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
@@ -335,13 +333,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'Запрос на обслуживание',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Поставщик',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Поставщик',
-));
+]);
 
 //
 // Class: SLA
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:SLA' => 'SLA',
 	'Class:SLA+' => '',
 	'Class:SLA/Attribute:name' => 'Название',
@@ -357,13 +355,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SLA/Attribute:customercontracts_list' => 'Договоры с заказчиками',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Договоры с заказчиками, в которых используется SLA',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
-));
+]);
 
 //
 // Class: SLT
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:SLT' => 'SLT',
 	'Class:SLT+' => '',
 	'Class:SLT/Attribute:name' => 'Название',
@@ -398,13 +396,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => 'Часы',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'Минуты',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'Минуты',
-));
+]);
 
 //
 // Class: lnkSLAToSLT
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkSLAToSLT' => 'Связь SLA/SLT',
 	'Class:lnkSLAToSLT+' => '',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
@@ -426,13 +424,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Единицы SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkCustomerContractToService' => 'Связь Договор с заказчиком/Услуга',
 	'Class:lnkCustomerContractToService+' => '',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
@@ -448,13 +446,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
-));
+]);
 
 //
 // Class: lnkCustomerContractToProviderContract
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkCustomerContractToProviderContract' => 'Связь Договор с заказчиком/Договор с поставщиком',
 	'Class:lnkCustomerContractToProviderContract+' => '',
 	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s~~',
@@ -466,13 +464,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Договор с поставщиком',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '',
-));
+]);
 
 //
 // Class: lnkCustomerContractToFunctionalCI
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkCustomerContractToFunctionalCI' => 'Связь Договор с заказчиком/Функциональная КЕ',
 	'Class:lnkCustomerContractToFunctionalCI+' => '',
 	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -484,13 +482,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => 'КЕ',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: DeliveryModel
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:DeliveryModel' => 'Модель предоставления услуг',
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:name' => 'Название',
@@ -505,13 +503,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'Контакты (команды и персоны), которые участвуют в предоставлении услуг по этой модели',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Заказчики',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Заказчики, которым предоставляются услуги по этой модели',
-));
+]);
 
 //
 // Class: lnkDeliveryModelToContact
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkDeliveryModelToContact' => 'Связь Модель предоставления услуг/Контакт',
 	'Class:lnkDeliveryModelToContact+' => '',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
@@ -527,35 +525,35 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Роль',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-));
+]);

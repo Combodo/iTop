@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Datatables:Language:Processing' => 'Por favor espere...',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ por página',
 	'UI:Datatables:Language:ZeroRecords' => 'Sin Resultados',
@@ -24,4 +25,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Datatables:Column:RowActions:Description' => 'Descripción',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Confirmación de acción',
 	'UI:Datatables:RowActions:ConfirmationMessage' => '¿Confirma la acción?',
-));
+]);

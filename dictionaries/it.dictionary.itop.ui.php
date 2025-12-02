@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:AuditCategory' => 'Categoria di Audit',
 	'Class:AuditCategory+' => 'Una sezione all\'interno del controllo globale',
 	'Class:AuditCategory/Attribute:name' => 'Nome della categoria',
@@ -26,19 +27,21 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentuale di oggetti non validi al di sotto della quale il risultato è un errore (rosso)',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domini',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domini che includono questa categoria',
-));
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:AuditRule' => 'Regola di Audit',
 	'Class:AuditRule+' => '',
 	'Class:AuditRule/Attribute:name' => 'Nome della regola',
 	'Class:AuditRule/Attribute:name+' => '',
 	'Class:AuditRule/Attribute:description' => 'Descrizione della regola di Audit',
 	'Class:AuditRule/Attribute:description+' => 'Descrizione dettagliata per questa regola di audit ',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Query da eseguire',
 	'Class:AuditRule/Attribute:query+' => 'Espressio OQL da eseguire',
 	'Class:AuditRule/Attribute:valid_flag' => 'Oggetti validi?',
@@ -51,13 +54,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:AuditRule/Attribute:category_id+' => 'Categoria per questa regola',
 	'Class:AuditRule/Attribute:category_name' => 'Categoria',
 	'Class:AuditRule/Attribute:category_name+' => 'Nome della categoria per questa regola',
-));
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:AuditDomain' => 'Dominio di Audit',
 	'Class:AuditDomain+' => 'I domini di audit permettono di raggruppare le categorie di audit.
 	Il dominio di solito corrisponde a chi è responsabile del controllo e della correzione degli errori o semplicemente interessato.',
@@ -69,13 +74,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categorie',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Categorie di audit correlate. Quando si esegue l\'audit su un dominio, vengono controllate solo le categorie di audit correlate.',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Collegamento Categoria Audit / Dominio Audit',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Categoria',
@@ -86,13 +91,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Dominio di Audit',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Nome dominio',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Nome dominio di Audit',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Query' => 'Query',
 	'Class:Query+' => 'Una query è un insieme di dati definito in modo dinamico',
 	'Class:Query/Attribute:name' => 'Nome',
@@ -119,7 +124,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:QueryOQL+' => 'Una query basata su Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Espressione',
 	'Class:QueryOQL/Attribute:oql+' => 'Espressione OQL',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -130,7 +135,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 // Class: User
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:User' => 'Utente',
 	'Class:User+' => 'Login Utente',
 	'Class:User/Attribute:finalclass' => 'Tipo di account',
@@ -163,9 +168,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:User/Attribute:status/Value:disabled' => 'Disabilitato',
 	'Class:User/Error:LoginMustBeUnique' => 'Il Login deve essere unico - "%1s" già in uso',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'È necessario almeno un profilo assegnato all\'utente.',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'Il profilo "%1$s" non può essere aggiunto poiché nega l\'accesso al back office.',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'La modifica dello stato non è consentita per il proprio utente.',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Le organizzazioni consentite devono includere l\'organizzazione dell\'utente.',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'L\'elenco attuale dei profili non conferisce diritti di accesso sufficienti (gli utenti non sono più modificabili).',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'Il profilo utente con poteri del portale non concede diritti di accesso sufficienti (deve essere aggiunto un altro profilo)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'È necessario assegnare almeno un\'organizzazione a questo utente.',
@@ -176,13 +183,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:User/Warning:NoContactHasImpact' => 'Attenzione: non è definita alcuna Persona per questo Utente, ciò impedisce l\'accesso ai portali, le notifiche di notizie e altri effetti collaterali nel back-office',
 	'Class:UserInternal' => 'Utente Interno',
 	'Class:UserInternal+' => 'Utente definito all\'interno di '.ITOP_APPLICATION_SHORT,
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:URP_Profiles' => 'Profilo',
 	'Class:URP_Profiles+' => '',
 	'Class:URP_Profiles/Attribute:name' => 'Nome',
@@ -191,13 +198,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_Profiles/Attribute:description+' => 'una linea di descrizione',
 	'Class:URP_Profiles/Attribute:user_list' => 'Utenti',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Persone che hanno questo ruuolo',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:URP_Dimensions' => 'dimensione',
 	'Class:URP_Dimensions+' => 'dimensione dell\'applicazione (definizione di silos))',
 	'Class:URP_Dimensions/Attribute:name' => 'Nome',
@@ -206,13 +213,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'una linea di descrizione',
 	'Class:URP_Dimensions/Attribute:type' => 'Tipo',
 	'Class:URP_Dimensions/Attribute:type+' => 'nome della classe o tipo di dato (proiezione dell\'unità)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:URP_UserProfile' => 'Utente da Profilare',
 	'Class:URP_UserProfile+' => '',
 	'Class:URP_UserProfile/Name' => 'Collegamento tra %1$s e %2$s',
@@ -226,14 +233,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_UserProfile/Attribute:profile+' => 'Nome del profilo',
 	'Class:URP_UserProfile/Attribute:reason' => 'Motivo',
 	'Class:URP_UserProfile/Attribute:reason+' => 'spiega perchè questo utente dovrebbe avere questo ruolo',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:URP_UserOrg' => 'Organizzazione dell\'utente',
 	'Class:URP_UserOrg+' => '',
 	'Class:URP_UserOrg/Name' => 'Collegamento tra %1$s e %2$s',
@@ -247,13 +253,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Organizzazione permesse',
 	'Class:URP_UserOrg/Attribute:reason' => 'Motivo',
 	'Class:URP_UserOrg/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => 'proiezioni di profilo',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimensione',
@@ -268,13 +274,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'Espressione OQL  (uso $user) | constante|  | +codice attributo',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attributo',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Codice attributo bersaglio (opzionale)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'proiezioni di classe',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimensione',
@@ -287,13 +293,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'Espressione OQL (uso $this) | constante|  | +codice attributo',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attributo',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Codice attributo bersaglio (opzionale)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:URP_ActionGrant' => 'azione_autorizzazione',
 	'Class:URP_ActionGrant+' => 'permesso su classi',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profilo',
@@ -310,13 +316,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_ActionGrant/Attribute:action' => 'Azione',
 	'Class:URP_ActionGrant/Attribute:action+' => '',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:URP_StimulusGrant' => 'stimulus_autorizzazione',
 	'Class:URP_StimulusGrant+' => '',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profilo',
@@ -333,25 +339,25 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Codice per lo Stimolus',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:URP_AttributeGrant' => 'attributo_autorizzazione',
 	'Class:URP_AttributeGrant+' => 'autorizzazioni a livello di attributi',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Azione di sovvenzione',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'azione di sovvenzione',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attributo',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'codice attributo',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:UserDashboard' => 'Dashboard Utente',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'Utente',
@@ -360,12 +366,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Contenuti',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:WelcomeMenu' => 'Benveuto',
 	'Menu:WelcomeMenu+' => '',
 	'Menu:WelcomeMenuPage' => 'Benvenuto',
@@ -384,14 +390,14 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:MyShortcuts' => 'Le mie scorciatoie',
 	'Menu:Notifications:Title' => 'Categorie di Audit',
 	'Menu:DataAdministration' => 'Dati di amministrazione',
-	'Menu:DataAdministration+' => ''
-));
+	'Menu:DataAdministration+' => '',
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'BooleanLabel:yes' => 'si',
 	'BooleanLabel:no' => 'no',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
@@ -1537,13 +1543,13 @@ Quando è associata a un trigger, a ogni azione è assegnato un numero "ordine",
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Verranno inclusi i figli degli oggetti selezionati.',
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtrato',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtrato su %1$s',
-	'UI:StateChanged' => 'Stato cambiato'
-));
+	'UI:StateChanged' => 'Stato cambiato',
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Expression:Operator:AND' => ' E ',
 	'Expression:Operator:OR' => ' O ',
 	'Expression:Operator:=' => ': ',
@@ -1556,12 +1562,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Expression:Unit:Long:MINUTE' => 'minuto(i)',
 	'Expression:Verb:NOW' => 'ora',
 	'Expression:Verb:ISNULL' => ': non definito',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'UI:Newsroom:NoNewMessage' => 'Nessun nuovo messaggio',
 	'UI:Newsroom:XNewMessage' => '%1$s nuovo/i messaggio/i',
 	'UI:Newsroom:MarkAllAsRead' => 'Segna tutti come letti',
@@ -1576,10 +1582,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgente',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Importante',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normale',
-));
+]);
 
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:DataSources' => 'Sorgente di sincronizzazione dei dati',
 	'Menu:DataSources+' => '',
 	'Menu:AuditCategories' => 'Categorie di Audit',
@@ -1607,4 +1612,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:Integrations' => 'Integrazioni',
 	'Menu:Integrations+' => '~~',
 
-));
+]);

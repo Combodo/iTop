@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -12,10 +13,9 @@ use MetaModel;
 
 class DBObjectTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = true;
-	const CREATE_TEST_ORG = true;
-	const DEBUG_UNIT_TEST = false;
-
+	public const USE_TRANSACTION = true;
+	public const CREATE_TEST_ORG = true;
+	public const DEBUG_UNIT_TEST = false;
 
 	public function testReloadNotNecessaryForInsert()
 	{
@@ -170,8 +170,7 @@ class DBObjectTest extends ItopDataTestCase
 		try {
 			$oPerson->Set('email', 'test1@combodo.com');
 			$this->assertTrue(false, 'Set() should have raised a CoreException');
-		}
-		catch (\CoreException $e) {
+		} catch (\CoreException $e) {
 			$this->assertEquals($sMessage, $e->getMessage());
 		}
 

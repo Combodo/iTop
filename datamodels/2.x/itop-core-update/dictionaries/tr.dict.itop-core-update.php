@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'iTopUpdate:UI:PageTitle' => 'Application Upgrade~~',
 	'itop-core-update:UI:SelectUpdateFile' => 'Application Upgrade~~',
 	'itop-core-update:UI:ConfirmUpdate' => 'Confirm Application Upgrade~~',
@@ -94,6 +95,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ModuleInstallation/Attribute:name' => 'Name~~',
 	'Class:ModuleInstallation/Attribute:version' => 'Version~~',
 	'Class:ModuleInstallation/Attribute:comment' => 'Comment~~',
-));
-
-
+]);

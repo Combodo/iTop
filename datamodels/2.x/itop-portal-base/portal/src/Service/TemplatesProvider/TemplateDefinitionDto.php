@@ -64,8 +64,7 @@ class TemplateDefinitionDto
 		private ?string $sPath = null,
 		private readonly ?bool $bIsOverridable = false,
 		private readonly ?string $sAlias = null,
-	)
-	{
+	) {
 		// save overridable values
 		$this->sInitialValue = $sPath;
 	}
@@ -89,7 +88,7 @@ class TemplateDefinitionDto
 	 */
 	public function GetPath(bool $bInitialValue = false): string
 	{
-		if($bInitialValue){
+		if ($bInitialValue) {
 			return $this->sInitialValue !== null ? $this->sInitialValue : '';
 		}
 

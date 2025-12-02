@@ -1,11 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Test\UnitTest\Core\Log;
-
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DeprecatedCallsLog;
@@ -208,7 +208,7 @@ class DeprecatedCallsLogTest extends ItopTestCase
 						'function' => 'require_once',
 					],
 				],
-				'out' => 'itop-root/env-production/core/main.php#1290'
+				'out' => 'itop-root/env-production/core/main.php#1290',
 			],
 			'From a persistent object method (deprecated PHP function)' => [
 				'in:stripped call stack' => [
@@ -262,7 +262,7 @@ class DeprecatedCallsLogTest extends ItopTestCase
 							'type' => '->',
 						],
 				],
-				'out' => 'Ticket->OnBeforeWriteTicket (itop-root/env-production/itop-tickets/model.itop-tickets.php#165), itself called from DBObject->FireEvent (itop-root/core/dbobject.class.php#6575)'
+				'out' => 'Ticket->OnBeforeWriteTicket (itop-root/env-production/itop-tickets/model.itop-tickets.php#165), itself called from DBObject->FireEvent (itop-root/core/dbobject.class.php#6575)',
 			],
 		];
 	}

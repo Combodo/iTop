@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -48,8 +49,7 @@ class DBSearchHelper
 								$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
 								$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
 							}
-						}
-						catch (Exception $e) {
+						} catch (Exception $e) {
 							// If filtering fails just ignore it
 						}
 					}

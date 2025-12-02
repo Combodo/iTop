@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -29,7 +30,7 @@
 //////////////////////////////////////////////////////////////////////
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'portal:itop-portal' => 'Standard portal',
 	'Page:DefaultTitle' => '%1$s - User portal',
 	'Brick:Portal:UserProfile:Title' => 'My profile',
@@ -45,4 +46,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Brick:Portal:ListAllRequests:Tab' => 'On-going and closed',
 	'Brick:Portal:SearchInAllRequests:Title' => 'Search in all requests',
 	'Brick:Portal:SearchInAllRequests:Title+' => '<p>Regardless of their status.</p>',
-));
+]);

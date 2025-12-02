@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Spanish Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Conectar a iTop Hub',
 	'Menu:iTopHub:Register+' => 'Ir a iTop Hub para actualizar su instancia de '.ITOP_APPLICATION_SHORT,
@@ -62,6 +63,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s versión: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Instalada',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Versión %1$s <b>NO</b> está instalada.',
-));
-
-
+]);

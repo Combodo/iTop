@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,7 +22,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	// Dictionary entries go here
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Connect to iTop Hub',
@@ -82,6 +83,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Installed',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>NOT</b> installed.',
-));
-
-
+]);

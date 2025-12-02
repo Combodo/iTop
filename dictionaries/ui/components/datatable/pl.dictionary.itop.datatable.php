@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI:Datatables:Language:Processing' => 'Proszę czekać...',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ na stronę',
 	'UI:Datatables:Language:ZeroRecords' => 'Brak wyników',
@@ -24,4 +25,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Datatables:Column:RowActions:Description' => '',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Potwierdzenie działania',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Czy potwierdzasz działanie?',
-));
+]);

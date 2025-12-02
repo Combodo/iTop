@@ -1,11 +1,9 @@
 <?php
 
-
 namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use SetupUtils;
-
 
 /**
  * Class SetupUtilsTest
@@ -17,10 +15,10 @@ use SetupUtils;
  */
 class SetupUtilsTest extends ItopTestCase
 {
-	const ERROR = 0;
-	const WARNING = 1;
-	const INFO = 2;
-	const TRACE = 3; // for log purposes : replace old SetupLog::Log calls
+	public const ERROR = 0;
+	public const WARNING = 1;
+	public const INFO = 2;
+	public const TRACE = 3; // for log purposes : replace old SetupLog::Log calls
 
 	protected function setUp(): void
 	{
@@ -33,7 +31,8 @@ class SetupUtilsTest extends ItopTestCase
 	/**
 	 * @dataProvider CheckGraphvizProvider
 	 */
-	public function testCheckGraphviz($sScriptPath, $iSeverity, $sLabel){
+	public function testCheckGraphviz($sScriptPath, $iSeverity, $sLabel)
+	{
 		/** @var \CheckResult $oCheck */
 		$aCheck = SetupUtils::CheckGraphviz($sScriptPath);
 		$bLabelFound = false;
@@ -46,7 +45,8 @@ class SetupUtilsTest extends ItopTestCase
 		$this->assertTrue($bLabelFound, "label '$sLabel' not found");
 	}
 
-	public function CheckGraphvizProvider() {
+	public function CheckGraphvizProvider()
+	{
 		if (substr(PHP_OS, 0, 3) === 'WIN') {
 			return [];
 		}
@@ -139,8 +139,11 @@ class SetupUtilsTest extends ItopTestCase
 			$this->assertEquals($sPHPMinVersion, $oComposerConfig->config->platform->php, "SetupUtils::PHP_MIN_VERSION ($sPHPMinVersion) is not equals composer.json > config > platform ($sComposerPlatformPhp)");
 			// Require/PHP must be set to the supported PHP versions range in order to keep our package constraints up-to-date
 			$sComposerRequirePhp = $oComposerConfig->require->php;
-			$this->assertEquals(">=$sPHPMinVersion <$sPHPNotValidatedVersion", $oComposerConfig->require->php,
-				"SetupUtils::PHP_MIN_VERSION ($sPHPMinVersion) and SetupUtils::PHP_NOT_VALIDATED_VERSION ($sPHPNotValidatedVersion) is not equals composer.json > require > php ($sComposerRequirePhp)");
+			$this->assertEquals(
+				">=$sPHPMinVersion <$sPHPNotValidatedVersion",
+				$oComposerConfig->require->php,
+				"SetupUtils::PHP_MIN_VERSION ($sPHPMinVersion) and SetupUtils::PHP_NOT_VALIDATED_VERSION ($sPHPNotValidatedVersion) is not equals composer.json > require > php ($sComposerRequirePhp)"
+			);
 		}
 	}
 }

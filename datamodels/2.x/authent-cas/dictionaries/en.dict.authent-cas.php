@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -6,8 +7,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'CAS:Error:UserNotAllowed' => 'User not allowed',
 	'CAS:Login:SignIn' => 'Sign in with CAS',
 	'CAS:Login:SignInTooltip' => 'Click here to authenticate yourself with the CAS server',
-));
+]);

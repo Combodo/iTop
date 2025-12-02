@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -17,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 
 	// Placeholders
 	// $%1s : host object class name
@@ -73,4 +74,4 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	// New item
 	'UI:Links:NewItem' => 'New item',
-));
+]);

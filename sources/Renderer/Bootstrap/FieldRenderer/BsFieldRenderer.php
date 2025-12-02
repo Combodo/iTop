@@ -32,7 +32,6 @@ use utils;
  */
 class BsFieldRenderer extends FieldRenderer
 {
-
 	/**
 	 * @inheritDoc
 	 */

@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkFunctionalCIToTicket' => 'Link Functioneel CI / Ticket',
 	'Class:lnkFunctionalCIToTicket+' => '',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s',
@@ -30,12 +31,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Manueel toegevoegd',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Automatisch afgeleid',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Niet geïmpacteerd',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Alle tickets voor dit configuratie-item',
-));
+]);

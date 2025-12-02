@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -47,8 +48,8 @@ use Dict;
  */
 class CriterionConversionTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = false;
-	const USE_TRANSACTION = false;
+	public const CREATE_TEST_ORG = false;
+	public const USE_TRANSACTION = false;
 
 	/**
 	 * @dataProvider ToOqlProvider
@@ -63,7 +64,8 @@ class CriterionConversionTest extends ItopDataTestCase
 	{
 		$oSearch = new DBObjectSearch($sClass);
 		$sOql = CriterionToOQL::Convert(
-			$oSearch, json_decode($sJSONCriterion, true)
+			$oSearch,
+			json_decode($sJSONCriterion, true)
 		);
 
 		$this->debug($sOql);
@@ -72,8 +74,8 @@ class CriterionConversionTest extends ItopDataTestCase
 
 	public function ToOqlProvider()
 	{
-		return array(
-			'>' => array(
+		return [
+			'>' => [
 				'UserRequest',
 				'{
                     "ref": "UserRequest.start_date",
@@ -86,9 +88,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "operator": ">",
                     "oql": ""
                 }',
-				"(`UserRequest`.`start_date` > '2017-01-01')"
-			),
-			'contains nothing' => array(
+				"(`UserRequest`.`start_date` > '2017-01-01')",
+			],
+			'contains nothing' => [
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -101,9 +103,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "operator": "contains",
                     "oql": ""
                 }',
-				"1"
-			),
-			'contains a regular string' => array(
+				"1",
+			],
+			'contains a regular string' => [
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -116,10 +118,10 @@ class CriterionConversionTest extends ItopDataTestCase
                     "operator": "contains",
                     "oql": ""
                 }',
-				"(`Contact`.`name` LIKE '%toto%')"
-			),
+				"(`Contact`.`name` LIKE '%toto%')",
+			],
 			// See PR #170
-			'contains 0 as a string' => array(
+			'contains 0 as a string' => [
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -132,9 +134,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "operator": "contains",
                     "oql": ""
                 }',
-				"(`Contact`.`name` LIKE '%0%')"
-			),
-			'starts_with nothing' => array(
+				"(`Contact`.`name` LIKE '%0%')",
+			],
+			'starts_with nothing' => [
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -147,9 +149,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "operator": "starts_with",
                     "oql": ""
                 }',
-				"1"
-			),
-			'starts_with a regular string' => array(
+				"1",
+			],
+			'starts_with a regular string' => [
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -162,9 +164,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "operator": "starts_with",
                     "oql": ""
                 }',
-				"(`Contact`.`name` LIKE 'toto%')"
-			),
-			'starts_with a 0 as a string' => array(
+				"(`Contact`.`name` LIKE 'toto%')",
+			],
+			'starts_with a 0 as a string' => [
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -177,9 +179,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "operator": "starts_with",
                     "oql": ""
                 }',
-				"(`Contact`.`name` LIKE '0%')"
-			),
-			'ends_with nothing' => array(
+				"(`Contact`.`name` LIKE '0%')",
+			],
+			'ends_with nothing' => [
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -192,9 +194,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "operator": "ends_with",
                     "oql": ""
                 }',
-				"1"
-			),
-			'ends_with a regular string' => array(
+				"1",
+			],
+			'ends_with a regular string' => [
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -207,9 +209,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "operator": "ends_with",
                     "oql": ""
                 }',
-				"(`Contact`.`name` LIKE '%toto')"
-			),
-			'ends_with 0 as a string' => array(
+				"(`Contact`.`name` LIKE '%toto')",
+			],
+			'ends_with 0 as a string' => [
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -222,9 +224,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "operator": "ends_with",
                     "oql": ""
                 }',
-				"(`Contact`.`name` LIKE '%0')"
-			),
-			'empty' => array(
+				"(`Contact`.`name` LIKE '%0')",
+			],
+			'empty' => [
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -237,9 +239,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "operator": "empty",
                     "oql": ""
                 }',
-				"(`Contact`.`name` = '')"
-			),
-			'not_empty' => array(
+				"(`Contact`.`name` = '')",
+			],
+			'not_empty' => [
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -252,9 +254,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "operator": "not_empty",
                     "oql": ""
                 }',
-				"(`Contact`.`name` != '')"
-			),
-		);
+				"(`Contact`.`name` != '')",
+			],
+		];
 	}
 
 	/**
@@ -266,7 +268,7 @@ class CriterionConversionTest extends ItopDataTestCase
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	function testToSearchForm($aCriterion, $sExpectedOperator)
+	public function testToSearchForm($aCriterion, $sExpectedOperator)
 	{
 		$oSearchForm = new SearchForm();
 		/** @var \DBObjectSearch $oSearch */
@@ -277,10 +279,10 @@ class CriterionConversionTest extends ItopDataTestCase
 		$this->assertEquals($sExpectedOperator, $aRes[0]['operator']);
 	}
 
-	function ToSearchFormProvider()
+	public function ToSearchFormProvider()
 	{
-		return array(
-			'=' => array(
+		return [
+			'=' => [
 				json_decode('[
                 {
                     "ref": "Contact.name",
@@ -295,9 +297,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "oql": "(`Contact`.`name` = \'toto\')"
                 }
             ]', true),
-				'='
-			),
-			'starts_with' => array(
+				'=',
+			],
+			'starts_with' => [
 				json_decode('[
                 {
                     "ref": "Contact.name",
@@ -312,9 +314,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "oql": "(`Contact`.`name` LIKE \'toto%\')"
                 }
             ]', true),
-				'starts_with'
-			),
-			'ends_with' => array(
+				'starts_with',
+			],
+			'ends_with' => [
 				json_decode('[
                 {
                     "ref": "Contact.name",
@@ -329,9 +331,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "oql": "(`Contact`.`name` LIKE \'%toto\')"
                 }
             ]', true),
-				'ends_with'
-			),
-			'contains' => array(
+				'ends_with',
+			],
+			'contains' => [
 				json_decode('[
                 {
                     "widget": "string",
@@ -346,9 +348,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "oql": "(`Contact`.`name` LIKE \'%toto%\')"
                 }
             ]', true),
-				'contains'
-			),
-			'empty1' => array(
+				'contains',
+			],
+			'empty1' => [
 				json_decode('[
                 {
                     "widget": "string",
@@ -363,9 +365,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "oql": "(`Contact`.`name` LIKE \'\')"
                 }
             ]', true),
-				'empty'
-			),
-			'empty2' => array(
+				'empty',
+			],
+			'empty2' => [
 				json_decode('[
                 {
                     "widget": "string",
@@ -380,9 +382,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "oql": "(`Contact`.`name` = \'\')"
                 }
             ]', true),
-				'empty'
-			),
-			'not_empty' => array(
+				'empty',
+			],
+			'not_empty' => [
 				json_decode('[
                 {
                     "widget": "string",
@@ -397,9 +399,9 @@ class CriterionConversionTest extends ItopDataTestCase
                     "oql": "(`Contact`.`name` != \'\')"
                 }
             ]', true),
-				'not_empty'
-			),
-		);
+				'not_empty',
+			],
+		];
 	}
 
 	/**
@@ -414,7 +416,7 @@ class CriterionConversionTest extends ItopDataTestCase
 	 * @throws \OQLException
 	 * @throws \CoreException
 	 */
-	function testOqlToSearchToOql($sOQL, $sExpectedOQL, $aExpectedCriterion)
+	public function testOqlToSearchToOql($sOQL, $sExpectedOQL, $aExpectedCriterion)
 	{
 		// For tests on tags
 		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First');
@@ -423,161 +425,161 @@ class CriterionConversionTest extends ItopDataTestCase
 		$this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion);
 	}
 
-	function OqlProvider()
+	public function OqlProvider()
 	{
-		return array(
-			'no criteria' => array(
+		return [
+			'no criteria' => [
 				'OQL' => 'SELECT WebApplication',
 				'ExpectedOQL' => "SELECT `WebApplication` FROM WebApplication AS `WebApplication` WHERE 1",
-				'ExpectedCriterion' => array(),
-			),
-			'string starts' => array(
+				'ExpectedCriterion' => [],
+			],
+			'string starts' => [
 				'OQL' => "SELECT Contact WHERE name LIKE 'toto%'",
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` WHERE (`Contact`.`name` LIKE 'toto%')",
-				'ExpectedCriterion' => array(array('widget' => 'string', 'operator' => 'starts_with', 'values' => array(array('value' => 'toto')))),
-			),
-			'string ends' => array(
+				'ExpectedCriterion' => [['widget' => 'string', 'operator' => 'starts_with', 'values' => [['value' => 'toto']]]],
+			],
+			'string ends' => [
 				'OQL' => "SELECT Contact WHERE name LIKE '%toto'",
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` WHERE (`Contact`.`name` LIKE '%toto')",
-				'ExpectedCriterion' => array(array('widget' => 'string', 'operator' => 'ends_with', 'values' => array(array('value' => 'toto')))),
-			),
-			'string contains 1' => array(
+				'ExpectedCriterion' => [['widget' => 'string', 'operator' => 'ends_with', 'values' => [['value' => 'toto']]]],
+			],
+			'string contains 1' => [
 				'OQL' => "SELECT Contact WHERE name LIKE '%toto%'",
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` WHERE (`Contact`.`name` LIKE '%toto%')",
-				'ExpectedCriterion' => array(array('widget' => 'string', 'operator' => 'contains', 'values' => array(array('value' => 'toto')))),
-			),
-			'string contains 2' => array(
+				'ExpectedCriterion' => [['widget' => 'string', 'operator' => 'contains', 'values' => [['value' => 'toto']]]],
+			],
+			'string contains 2' => [
 				'OQL' => "SELECT Person AS B WHERE B.name LIKE '%A%'",
 				'ExpectedOQL' => "SELECT `B` FROM Person AS `B` WHERE (`B`.`name` LIKE '%A%')",
-				'ExpectedCriterion' => array(array('widget' => 'string', 'operator' => 'contains', 'values' => array(array('value' => 'A')))),
-			),
-			'string NOT contains' => array(
+				'ExpectedCriterion' => [['widget' => 'string', 'operator' => 'contains', 'values' => [['value' => 'A']]]],
+			],
+			'string NOT contains' => [
 				'OQL' => "SELECT Person AS B WHERE B.name NOT LIKE '%A%'",
 				'ExpectedOQL' => "SELECT `B` FROM Person AS `B` WHERE (`B`.`name` NOT LIKE '%A%')",
-				'ExpectedCriterion' => array(array('widget' => 'string', 'operator' => 'NOT LIKE', 'values' => array(array('value' => '%A%')))),
-			),
-			'string regexp' => array(
+				'ExpectedCriterion' => [['widget' => 'string', 'operator' => 'NOT LIKE', 'values' => [['value' => '%A%']]]],
+			],
+			'string regexp' => [
 				'OQL' => "SELECT Server WHERE name REGEXP '^dbserver[0-9]+\\\\\\\\..+\\\\\\\\.[a-z]{2,3}$'",
 				'ExpectedOQL' => "SELECT `Server` FROM Server AS `Server` WHERE (`Server`.`name` REGEXP '^dbserver[0-9]+\\\\\\\\..+\\\\\\\\.[a-z]{2,3}$')",
-				'ExpectedCriterion' => array(array('widget' => 'string', 'operator' => 'REGEXP')),
-			),
-			'enum + key =' => array(
+				'ExpectedCriterion' => [['widget' => 'string', 'operator' => 'REGEXP']],
+			],
+			'enum + key =' => [
 				'OQL' => "SELECT Contact WHERE status = 'active' AND org_id = 3",
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` JOIN Organization AS `Organization` ON `Contact`.org_id = `Organization`.id JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE ((`Organization1`.`id` = '3') AND (`Contact`.`status` = 'active'))",
-				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN'), array('widget' => 'enum', 'operator' => 'IN')),
-			),
-			'enum =' => array(
+				'ExpectedCriterion' => [['widget' => 'hierarchical_key', 'operator' => 'IN'], ['widget' => 'enum', 'operator' => 'IN']],
+			],
+			'enum =' => [
 				'OQL' => "SELECT Contact WHERE status = 'active'",
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` WHERE (`Contact`.`status` = 'active')",
-				'ExpectedCriterion' => array(array('widget' => 'enum', 'operator' => 'IN', 'values' => array(array('value' => 'active')))),
-			),
-			'enum IN' => array(
+				'ExpectedCriterion' => [['widget' => 'enum', 'operator' => 'IN', 'values' => [['value' => 'active']]]],
+			],
+			'enum IN' => [
 				'OQL' => "SELECT Contact WHERE status IN ('active', 'inactive')",
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` WHERE 1",
-				'ExpectedCriterion' => array(array('widget' => 'enum', 'operator' => 'IN', 'values' => array(array('value' => 'active'), array('value' => 'inactive')))),
-			),
-			'enum NOT IN 1' => array(
+				'ExpectedCriterion' => [['widget' => 'enum', 'operator' => 'IN', 'values' => [['value' => 'active'], ['value' => 'inactive']]]],
+			],
+			'enum NOT IN 1' => [
 				'OQL' => "SELECT Contact WHERE status NOT IN ('active')",
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` WHERE (`Contact`.`status` = 'inactive')",
-				'ExpectedCriterion' => array(array('widget' => 'enum', 'operator' => 'IN', 'values' => array(array('value' => 'inactive')))),
-			),
-			'enum NOT IN 2' => array(
+				'ExpectedCriterion' => [['widget' => 'enum', 'operator' => 'IN', 'values' => [['value' => 'inactive']]]],
+			],
+			'enum NOT IN 2' => [
 				'OQL' => "SELECT Person AS p JOIN UserRequest AS u ON u.agent_id = p.id WHERE u.status != 'closed'",
 				'ExpectedOQL' => "SELECT `p` FROM Person AS `p` JOIN UserRequest AS `u` ON `u`.agent_id = `p`.id WHERE (`u`.`status` != 'closed')",
-				'ExpectedCriterion' => array(array('widget' => 'raw')),
-			),
-			'enum undefined 1' => array(
+				'ExpectedCriterion' => [['widget' => 'raw']],
+			],
+			'enum undefined 1' => [
 				'OQL' => "SELECT FunctionalCI WHERE ((business_criticity = 'high') OR ISNULL(business_criticity)) AND 1",
 				'ExpectedOQL' => "SELECT `FunctionalCI` FROM FunctionalCI AS `FunctionalCI` WHERE (((`FunctionalCI`.`business_criticity` = 'high') OR ISNULL(`FunctionalCI`.`business_criticity`)) AND 1)",
-				'ExpectedCriterion' => array(array('widget' => 'enum', 'has_undefined' => true, 'operator' => 'IN', 'values' => array(array('value' => 'high'), array('value' => 'null')))),
-			),
-			'enum undefined 2' => array(
+				'ExpectedCriterion' => [['widget' => 'enum', 'has_undefined' => true, 'operator' => 'IN', 'values' => [['value' => 'high'], ['value' => 'null']]]],
+			],
+			'enum undefined 2' => [
 				'OQL' => "SELECT FunctionalCI WHERE ((business_criticity IN ('high', 'medium')) OR ISNULL(business_criticity)) AND 1",
 				'ExpectedOQL' => "SELECT `FunctionalCI` FROM FunctionalCI AS `FunctionalCI` WHERE (((`FunctionalCI`.`business_criticity` IN ('high', 'medium')) OR ISNULL(`FunctionalCI`.`business_criticity`)) AND 1)",
-				'ExpectedCriterion' => array(array('widget' => 'enum', 'has_undefined' => true, 'operator' => 'IN', 'values' => array(array('value' => 'high'), array('value' => 'medium'), array('value' => 'null')))),
-			),
-			'enum undefined 3' => array(
+				'ExpectedCriterion' => [['widget' => 'enum', 'has_undefined' => true, 'operator' => 'IN', 'values' => [['value' => 'high'], ['value' => 'medium'], ['value' => 'null']]]],
+			],
+			'enum undefined 3' => [
 				'OQL' => "SELECT FunctionalCI WHERE ISNULL(business_criticity)",
 				'ExpectedOQL' => "SELECT `FunctionalCI` FROM FunctionalCI AS `FunctionalCI` WHERE ISNULL(`FunctionalCI`.`business_criticity`)",
-				'ExpectedCriterion' => array(array('widget' => 'enum', 'has_undefined' => true, 'operator' => 'IN', 'values' => array(array('value' => 'null')))),
-			),
-			'key NOT IN' => array(
+				'ExpectedCriterion' => [['widget' => 'enum', 'has_undefined' => true, 'operator' => 'IN', 'values' => [['value' => 'null']]]],
+			],
+			'key NOT IN' => [
 				'OQL' => "SELECT Contact WHERE org_id NOT IN ('1')",
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` WHERE (`Contact`.`org_id` NOT IN ('1'))",
-				'ExpectedCriterion' => array(array('widget' => 'raw', 'operator' => 'NOT IN')),
-			),
-			'key IN' => array(
+				'ExpectedCriterion' => [['widget' => 'raw', 'operator' => 'NOT IN']],
+			],
+			'key IN' => [
 				'OQL' => "SELECT Contact WHERE org_id IN ('1')",
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` JOIN Organization AS `Organization` ON `Contact`.org_id = `Organization`.id JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = '1')",
-				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN')),
-			),
-			'key IN 2' => array(
+				'ExpectedCriterion' => [['widget' => 'hierarchical_key', 'operator' => 'IN']],
+			],
+			'key IN 2' => [
 				'OQL' => "SELECT Contact WHERE org_id IN ('1', '999999')",
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` JOIN Organization AS `Organization` ON `Contact`.org_id = `Organization`.id JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = '1')",
-				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN')),
-			),
-			'key empty' => array(
+				'ExpectedCriterion' => [['widget' => 'hierarchical_key', 'operator' => 'IN']],
+			],
+			'key empty' => [
 				'OQL' => "SELECT Person WHERE location_id = '0'",
 				'ExpectedOQL' => "SELECT `Person` FROM Person AS `Person` WHERE (`Person`.`location_id` = '0')",
-				'ExpectedCriterion' => array(array('widget' => 'external_key', 'operator' => 'IN', 'values' => array(array('value' => '0')))),
-			),
-			'Double field' => array(
+				'ExpectedCriterion' => [['widget' => 'external_key', 'operator' => 'IN', 'values' => [['value' => '0']]]],
+			],
+			'Double field' => [
 				'OQL' => "SELECT UserRequest AS u WHERE u.close_date > u.start_date",
 				'ExpectedOQL' => "SELECT `u` FROM UserRequest AS `u` WHERE (`u`.`close_date` > `u`.`start_date`)",
-				'ExpectedCriterion' => array(array('widget' => 'raw')),
-			),
-			'Num between 1' => array(
+				'ExpectedCriterion' => [['widget' => 'raw']],
+			],
+			'Num between 1' => [
 				'OQL' => "SELECT Server WHERE nb_u >= 0 AND 1 >= nb_u",
 				'ExpectedOQL' => "SELECT `Server` FROM Server AS `Server` WHERE ((`Server`.`nb_u` >= '0') AND (`Server`.`nb_u` <= '1'))",
-				'ExpectedCriterion' => array(array('widget' => 'numeric', 'operator' => 'between')),
-			),
-			'Num ISNULL' => array(
+				'ExpectedCriterion' => [['widget' => 'numeric', 'operator' => 'between']],
+			],
+			'Num ISNULL' => [
 				'OQL' => "SELECT Server WHERE ISNULL(nb_u)",
 				'ExpectedOQL' => "SELECT `Server` FROM Server AS `Server` WHERE ISNULL(`Server`.`nb_u`)",
-				'ExpectedCriterion' => array(array('widget' => 'numeric', 'operator' => 'empty')),
-			),
-			'Hierarchical below 1' => array(
+				'ExpectedCriterion' => [['widget' => 'numeric', 'operator' => 'empty']],
+			],
+			'Hierarchical below 1' => [
 				'OQL' => "SELECT Person AS P JOIN Organization AS Node ON P.org_id = Node.id JOIN Organization AS Root ON Node.parent_id BELOW Root.id WHERE Root.id=1",
 				'ExpectedOQL' => "SELECT `P` FROM Person AS `P` JOIN Organization AS `Node` ON `P`.org_id = `Node`.id JOIN Organization AS `Root` ON `Node`.parent_id BELOW `Root`.id WHERE (`Root`.`id` = '1')",
-				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key')),
-			),
-			'Hierarchical below 2' => array(
+				'ExpectedCriterion' => [['widget' => 'hierarchical_key']],
+			],
+			'Hierarchical below 2' => [
 				'OQL' => "SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id = `Organization1`.id JOIN Organization AS `Organization11` ON `Organization1`.parent_id BELOW `Organization11`.id WHERE (((`Organization11`.`id` IN ('1', '2')) OR (`Organization`.`parent_id` = '0')) AND 1)",
 				'ExpectedOQL' => "SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id = `Organization1`.id JOIN Organization AS `Organization11` ON `Organization1`.parent_id BELOW `Organization11`.id WHERE (((`Organization11`.`id` IN ('1', '2')) OR (`Organization`.`parent_id` = '0')) AND 1)",
-				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key')),
-			),
-			'IP range' => array(
+				'ExpectedCriterion' => [['widget' => 'hierarchical_key']],
+			],
+			'IP range' => [
 				'OQL' => "SELECT DatacenterDevice AS dev WHERE INET_ATON(dev.managementip) > INET_ATON('10.22.32.224') AND INET_ATON(dev.managementip) < INET_ATON('10.22.32.255')",
 				'ExpectedOQL' => "SELECT `dev` FROM DatacenterDevice AS `dev` WHERE ((INET_ATON(`dev`.`managementip`) < INET_ATON('10.22.32.255')) AND (INET_ATON(`dev`.`managementip`) > INET_ATON('10.22.32.224')))",
-				'ExpectedCriterion' => array(array('widget' => 'raw')),
-			),
-			'TagSet Matches' => array(
+				'ExpectedCriterion' => [['widget' => 'raw']],
+			],
+			'TagSet Matches' => [
 				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." MATCHES 'tag1'",
 				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag1 _\'',
-				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
-			),
-			'TagSet Matches2' => array(
+				'ExpectedCriterion' => [['widget' => 'tag_set']],
+			],
+			'TagSet Matches2' => [
 				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." MATCHES 'tag1 tag2'",
 				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag1 tag2 _\'',
-				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
-			),
-			'TagSet Undefined' => array(
+				'ExpectedCriterion' => [['widget' => 'tag_set']],
+			],
+			'TagSet Undefined' => [
 				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." = ''",
 				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE (`".TAG_CLASS."`.`".TAG_ATTCODE."` = '')",
-				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
-			),
-			'TagSet Undefined and tag' => array(
+				'ExpectedCriterion' => [['widget' => 'tag_set']],
+			],
+			'TagSet Undefined and tag' => [
 				'OQL' => "SELECT ".TAG_CLASS." WHERE (((".TAG_ATTCODE." MATCHES 'tag1 tag2') OR (".TAG_ATTCODE." = '')) AND 1)",
 				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE ((`".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag1 tag2 _\' OR (`'.TAG_CLASS."`.`".TAG_ATTCODE."` = '')) AND 1)",
-				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
-			),
-			'TagSet equals' => array(
+				'ExpectedCriterion' => [['widget' => 'tag_set']],
+			],
+			'TagSet equals' => [
 				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." = 'tag1 tag2'",
 				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE (`".TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag1 _\' AND `'.TAG_CLASS."`.`".TAG_ATTCODE.'` MATCHES \'tag2 _\')',
-				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
-			),
+				'ExpectedCriterion' => [['widget' => 'tag_set']],
+			],
 
-		);
+		];
 	}
 
 	/**
@@ -592,87 +594,87 @@ class CriterionConversionTest extends ItopDataTestCase
 	 * @throws \OQLException
 	 * @throws \CoreException
 	 */
-    function testOqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion)
-    {
-    	\MetaModel::GetConfig()->Set('date_and_time_format', array('default' => array('date' => 'Y-m-d', 'time' => 'H:i:s', 'date_time' => '$date $time')));
-	    $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion);
-    }
-    function OqlProviderDates()
-    {
-        return array(
+	public function testOqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion)
+	{
+		\MetaModel::GetConfig()->Set('date_and_time_format', ['default' => ['date' => 'Y-m-d', 'time' => 'H:i:s', 'date_time' => '$date $time']]);
+		$this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion);
+	}
+	public function OqlProviderDates()
+	{
+		return [
 
-            'Date relative 1' => array(
-                'OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date",
-                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (DATE_SUB(NOW(), INTERVAL 14 DAY) < `UserRequest`.`start_date`)",
-                'ExpectedCriterion' => array(array('widget' => 'raw')),
-            ),
-            'Date relative 2' => array(
-                'OQL' => "SELECT Contract AS c WHERE c.end_date > NOW() AND c.end_date < DATE_ADD(NOW(), INTERVAL 30 DAY)",
-                'ExpectedOQL' => "SELECT `c` FROM Contract AS `c` WHERE ((`c`.`end_date` < DATE_ADD(NOW(), INTERVAL 30 DAY)) AND (`c`.`end_date` > NOW()))",
-                'ExpectedCriterion' => array(array('widget' => 'raw'), array('widget' => 'raw')),
-            ),
-            'Date relative 3' => array(
-                'OQL' => "SELECT UserRequest AS u WHERE u.close_date > DATE_ADD(u.start_date, INTERVAL 8 HOUR)",
-                'ExpectedOQL' => "SELECT `u` FROM UserRequest AS `u` WHERE (`u`.`close_date` > DATE_ADD(`u`.`start_date`, INTERVAL 8 HOUR))",
-                'ExpectedCriterion' => array(),
-            ),
-            'Date relative 4' => array(
-                'OQL' => "SELECT UserRequest AS u WHERE u.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND u.status = 'new'",
-                'ExpectedOQL' => "SELECT `u` FROM UserRequest AS `u` WHERE ((`u`.`start_date` < DATE_SUB(NOW(), INTERVAL 60 MINUTE)) AND (`u`.`status` = 'new'))",
-                'ExpectedCriterion' => array(array('widget' => 'raw')),
-            ),
-            'Date between 1' => array(
-                'OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND '2018-01-01 00:00:00' >= start_date",
-                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:01') AND (`UserRequest`.`start_date` <= '2018-01-01 00:00:00'))",
-                'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
-            ),
-            'Date between 2' => array(
-                'OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date",
-                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Organization AS `Organization` ON `UserRequest`.org_id = `Organization`.id JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE ((((`Organization1`.`id` = '3') AND (`UserRequest`.`start_date` >= '2017-01-01 00:00:01')) AND (`UserRequest`.`start_date` <= '2018-01-01 00:00:00')) AND (`UserRequest`.`status` = 'active'))",
-                'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN'), array('widget' => 'date_time', 'operator' => 'between_dates'), array('widget' => 'enum', 'operator' => 'IN')),
-            ),
-            'Date between 3' => array(
-                'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date",
-                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-01 00:00:00'))",
-                'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
-            ),
-            'Date between 4' => array(
-                'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date",
-                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-01 00:59:59'))",
-                'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
-            ),
-            'Date between 5' => array(
-                'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date",
-                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-01 23:59:59'))",
-                'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
-            ),
-            'Date between 6' => array(
-                'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01' AND '2017-01-02' >= start_date",
-                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-02 00:00:00'))",
-                'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
-            ),
-            'Date between 7' => array(
-                'OQL' => "SELECT CustomerContract WHERE ((start_date >= '2018-03-01') AND (start_date < '2018-04-01'))",
-                'ExpectedOQL' => "SELECT `CustomerContract` FROM CustomerContract AS `CustomerContract` WHERE ((`CustomerContract`.`start_date` >= '2018-03-01') AND (`CustomerContract`.`start_date` <= '2018-03-31'))",
-                'ExpectedCriterion' => array(array('widget' => 'date', 'operator' => 'between_dates')),
-            ),
-            'Date =' => array(
-                'OQL' => "SELECT CustomerContract WHERE (start_date = '2018-03-01')",
-                'ExpectedOQL' => "SELECT `CustomerContract` FROM CustomerContract AS `CustomerContract` WHERE ((`CustomerContract`.`start_date` >= '2018-03-01') AND (`CustomerContract`.`start_date` <= '2018-03-01'))",
-                'ExpectedCriterion' => array(array('widget' => 'date', 'operator' => 'between_dates')),
-            ),
-            'Date =2' => array(
-                'OQL' => "SELECT UserRequest WHERE (DATE_FORMAT(start_date, '%Y-%m-%d') = '2018-03-21')",
-                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2018-03-21 00:00:00') AND (`UserRequest`.`start_date` <= '2018-03-21 23:59:59'))",
-                'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
-            ),
-            'Date =3' => array(
-                'OQL' => "SELECT UserRequest WHERE (DATE_FORMAT(`UserRequest`.`start_date`, '%w') = '4')",
-                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (DATE_FORMAT(`UserRequest`.`start_date`, '%w') = '4')",
-                'ExpectedCriterion' => array(array('widget' => 'raw')),
-            ),
-        );
-    }
+			'Date relative 1' => [
+				'OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (DATE_SUB(NOW(), INTERVAL 14 DAY) < `UserRequest`.`start_date`)",
+				'ExpectedCriterion' => [['widget' => 'raw']],
+			],
+			'Date relative 2' => [
+				'OQL' => "SELECT Contract AS c WHERE c.end_date > NOW() AND c.end_date < DATE_ADD(NOW(), INTERVAL 30 DAY)",
+				'ExpectedOQL' => "SELECT `c` FROM Contract AS `c` WHERE ((`c`.`end_date` < DATE_ADD(NOW(), INTERVAL 30 DAY)) AND (`c`.`end_date` > NOW()))",
+				'ExpectedCriterion' => [['widget' => 'raw'], ['widget' => 'raw']],
+			],
+			'Date relative 3' => [
+				'OQL' => "SELECT UserRequest AS u WHERE u.close_date > DATE_ADD(u.start_date, INTERVAL 8 HOUR)",
+				'ExpectedOQL' => "SELECT `u` FROM UserRequest AS `u` WHERE (`u`.`close_date` > DATE_ADD(`u`.`start_date`, INTERVAL 8 HOUR))",
+				'ExpectedCriterion' => [],
+			],
+			'Date relative 4' => [
+				'OQL' => "SELECT UserRequest AS u WHERE u.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND u.status = 'new'",
+				'ExpectedOQL' => "SELECT `u` FROM UserRequest AS `u` WHERE ((`u`.`start_date` < DATE_SUB(NOW(), INTERVAL 60 MINUTE)) AND (`u`.`status` = 'new'))",
+				'ExpectedCriterion' => [['widget' => 'raw']],
+			],
+			'Date between 1' => [
+				'OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND '2018-01-01 00:00:00' >= start_date",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:01') AND (`UserRequest`.`start_date` <= '2018-01-01 00:00:00'))",
+				'ExpectedCriterion' => [['widget' => 'date_time', 'operator' => 'between_dates']],
+			],
+			'Date between 2' => [
+				'OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Organization AS `Organization` ON `UserRequest`.org_id = `Organization`.id JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE ((((`Organization1`.`id` = '3') AND (`UserRequest`.`start_date` >= '2017-01-01 00:00:01')) AND (`UserRequest`.`start_date` <= '2018-01-01 00:00:00')) AND (`UserRequest`.`status` = 'active'))",
+				'ExpectedCriterion' => [['widget' => 'hierarchical_key', 'operator' => 'IN'], ['widget' => 'date_time', 'operator' => 'between_dates'], ['widget' => 'enum', 'operator' => 'IN']],
+			],
+			'Date between 3' => [
+				'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-01 00:00:00'))",
+				'ExpectedCriterion' => [['widget' => 'date_time', 'operator' => 'between_dates']],
+			],
+			'Date between 4' => [
+				'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-01 00:59:59'))",
+				'ExpectedCriterion' => [['widget' => 'date_time', 'operator' => 'between_dates']],
+			],
+			'Date between 5' => [
+				'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-01 23:59:59'))",
+				'ExpectedCriterion' => [['widget' => 'date_time', 'operator' => 'between_dates']],
+			],
+			'Date between 6' => [
+				'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01' AND '2017-01-02' >= start_date",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-02 00:00:00'))",
+				'ExpectedCriterion' => [['widget' => 'date_time', 'operator' => 'between_dates']],
+			],
+			'Date between 7' => [
+				'OQL' => "SELECT CustomerContract WHERE ((start_date >= '2018-03-01') AND (start_date < '2018-04-01'))",
+				'ExpectedOQL' => "SELECT `CustomerContract` FROM CustomerContract AS `CustomerContract` WHERE ((`CustomerContract`.`start_date` >= '2018-03-01') AND (`CustomerContract`.`start_date` <= '2018-03-31'))",
+				'ExpectedCriterion' => [['widget' => 'date', 'operator' => 'between_dates']],
+			],
+			'Date =' => [
+				'OQL' => "SELECT CustomerContract WHERE (start_date = '2018-03-01')",
+				'ExpectedOQL' => "SELECT `CustomerContract` FROM CustomerContract AS `CustomerContract` WHERE ((`CustomerContract`.`start_date` >= '2018-03-01') AND (`CustomerContract`.`start_date` <= '2018-03-01'))",
+				'ExpectedCriterion' => [['widget' => 'date', 'operator' => 'between_dates']],
+			],
+			'Date =2' => [
+				'OQL' => "SELECT UserRequest WHERE (DATE_FORMAT(start_date, '%Y-%m-%d') = '2018-03-21')",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2018-03-21 00:00:00') AND (`UserRequest`.`start_date` <= '2018-03-21 23:59:59'))",
+				'ExpectedCriterion' => [['widget' => 'date_time', 'operator' => 'between_dates']],
+			],
+			'Date =3' => [
+				'OQL' => "SELECT UserRequest WHERE (DATE_FORMAT(`UserRequest`.`start_date`, '%w') = '4')",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (DATE_FORMAT(`UserRequest`.`start_date`, '%w') = '4')",
+				'ExpectedCriterion' => [['widget' => 'raw']],
+			],
+		];
+	}
 
 	/**
 	 *
@@ -685,98 +687,80 @@ class CriterionConversionTest extends ItopDataTestCase
 	 * @throws \MissingQueryArgument
 	 * @throws \OQLException
 	 */
-    function OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion)
-    {
-        $this->debug($sOQL);
-
-        $oSearchForm = new SearchForm();
-        $oSearch = DBSearch::FromOQL($sOQL);
-        $aFields = $oSearchForm->GetFields(new DBObjectSet($oSearch));
-        /** @var \DBObjectSearch $oSearch */
-        $aCriterion = $oSearchForm->GetCriterion($oSearch, $aFields);
-
-        $aAndCriterion = $aCriterion['or'][0]['and'];
-
-        $aNewCriterion = array();
-        foreach($aAndCriterion as $aCriteria)
-        {
-            if ($aCriteria['widget'] != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
-            {
-                unset($aCriteria['oql']);
-                foreach($aFields as $aCatFields)
-                {
-                    if (isset($aCatFields[$aCriteria['ref']]))
-                    {
-                        $aField = $aCatFields[$aCriteria['ref']];
-                        break;
-                    }
-                }
-                if (isset($aField))
-                {
-                    $aCriteria['code'] = $aField['code'];
-                    $aCriteria['class'] = $aField['class'];
-                }
-            }
-
-            if ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME || $aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
-            {
-                $sAttributeClass = ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME) ? AttributeDateTime::class : AttributeDate::class;
-
-	            /** @var \AttributeDateTime $sAttributeClass */
-	            /** @var \DateTimeFormat $oFormat */
-	            $oFormat = $sAttributeClass::GetFormat();
-
-                foreach($aCriteria['values'] as $i => $aValue)
-                {
-                    if (!empty($aValue['value'])) {
-                        $aCriteria['values'][$i]['value'] = $oFormat->Format($aValue['value']);
-                    }
-                }
-            }
-
-            $aNewCriterion[] = $aCriteria;
-        }
-        $this->debug($aNewCriterion);
-
-        $this->assertFalse($this->array_diff_assoc_recursive($aExpectedCriterion, $aNewCriterion), 'Criterion array contains critical parts');
-
-        $aCriterion['or'][0]['and'] = $aNewCriterion;
-
-        $oSearch->ResetCondition();
-        $oFilter = CriterionParser::Parse($oSearch->ToOQL(), $aCriterion);
-
-        $sResultOQL = $oFilter->ToOQL();
-        $this->debug($sResultOQL);
-
-        $this->assertEquals($sExpectedOQL, $sResultOQL);
-    }
-
-
-	function array_diff_assoc_recursive($array1, $array2)
+	public function OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion)
 	{
-		foreach($array1 as $key => $value)
-		{
-			if (is_array($value))
-			{
-				if (!isset($array2[$key]))
-				{
-					$difference[$key] = $value;
+		$this->debug($sOQL);
+
+		$oSearchForm = new SearchForm();
+		$oSearch = DBSearch::FromOQL($sOQL);
+		$aFields = $oSearchForm->GetFields(new DBObjectSet($oSearch));
+		/** @var \DBObjectSearch $oSearch */
+		$aCriterion = $oSearchForm->GetCriterion($oSearch, $aFields);
+
+		$aAndCriterion = $aCriterion['or'][0]['and'];
+
+		$aNewCriterion = [];
+		foreach ($aAndCriterion as $aCriteria) {
+			if ($aCriteria['widget'] != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW) {
+				unset($aCriteria['oql']);
+				foreach ($aFields as $aCatFields) {
+					if (isset($aCatFields[$aCriteria['ref']])) {
+						$aField = $aCatFields[$aCriteria['ref']];
+						break;
+					}
 				}
-				elseif (!is_array($array2[$key]))
-				{
-					$difference[$key] = $value;
+				if (isset($aField)) {
+					$aCriteria['code'] = $aField['code'];
+					$aCriteria['class'] = $aField['class'];
 				}
-				else
-				{
-					$new_diff = $this->array_diff_assoc_recursive($value, $array2[$key]);
-					if ($new_diff !== false)
-					{
-						$difference[$key] = $new_diff;
+			}
+
+			if ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME || $aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE) {
+				$sAttributeClass = ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME) ? AttributeDateTime::class : AttributeDate::class;
+
+				/** @var \AttributeDateTime $sAttributeClass */
+				/** @var \DateTimeFormat $oFormat */
+				$oFormat = $sAttributeClass::GetFormat();
+
+				foreach ($aCriteria['values'] as $i => $aValue) {
+					if (!empty($aValue['value'])) {
+						$aCriteria['values'][$i]['value'] = $oFormat->Format($aValue['value']);
 					}
 				}
 			}
-			elseif (!array_key_exists($key, $array2) || $array2[$key] != $value)
-			{
+
+			$aNewCriterion[] = $aCriteria;
+		}
+		$this->debug($aNewCriterion);
+
+		$this->assertFalse($this->array_diff_assoc_recursive($aExpectedCriterion, $aNewCriterion), 'Criterion array contains critical parts');
+
+		$aCriterion['or'][0]['and'] = $aNewCriterion;
+
+		$oSearch->ResetCondition();
+		$oFilter = CriterionParser::Parse($oSearch->ToOQL(), $aCriterion);
+
+		$sResultOQL = $oFilter->ToOQL();
+		$this->debug($sResultOQL);
+
+		$this->assertEquals($sExpectedOQL, $sResultOQL);
+	}
+
+	public function array_diff_assoc_recursive($array1, $array2)
+	{
+		foreach ($array1 as $key => $value) {
+			if (is_array($value)) {
+				if (!isset($array2[$key])) {
+					$difference[$key] = $value;
+				} elseif (!is_array($array2[$key])) {
+					$difference[$key] = $value;
+				} else {
+					$new_diff = $this->array_diff_assoc_recursive($value, $array2[$key]);
+					if ($new_diff !== false) {
+						$difference[$key] = $new_diff;
+					}
+				}
+			} elseif (!array_key_exists($key, $array2) || $array2[$key] != $value) {
 				$difference[$key] = $value;
 			}
 		}

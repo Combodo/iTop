@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,7 +16,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 
 /**
  * Simple helper class to interpret and transform a template string
@@ -70,22 +70,20 @@ class TemplateString
 	 *
 	 * @throws \Exception
 	 */
-	protected function Analyze($aParamTypes = array())
+	protected function Analyze($aParamTypes = [])
 	{
-		if (!is_null($this->m_aPlaceholders)) return;
+		if (!is_null($this->m_aPlaceholders)) {
+			return;
+		}
 
-		$this->m_aPlaceholders = array();
-		if (preg_match_all('/\\$([a-z0-9_]+(->[a-z0-9_]+)*)\\$/', $this->m_sRaw, $aMatches))
-		{
-			foreach($aMatches[1] as $sPlaceholder)
-			{
+		$this->m_aPlaceholders = [];
+		if (preg_match_all('/\\$([a-z0-9_]+(->[a-z0-9_]+)*)\\$/', $this->m_sRaw, $aMatches)) {
+			foreach ($aMatches[1] as $sPlaceholder) {
 				$oPlaceholder = new TemplateStringPlaceholder($sPlaceholder);
 				$oPlaceholder->bIsValid = false;
-				foreach ($aParamTypes as $sParamName => $sClass)
-				{
+				foreach ($aParamTypes as $sParamName => $sClass) {
 					$sParamPrefix = $sParamName.'->';
-					if (substr($sPlaceholder, 0, strlen($sParamPrefix)) == $sParamPrefix)
-					{
+					if (substr($sPlaceholder, 0, strlen($sParamPrefix)) == $sParamPrefix) {
 						// Todo - detect functions (label...)
 						$oPlaceholder->sFunction = '';
 
@@ -118,20 +116,16 @@ class TemplateString
 	 *
 	 * @return boolean
 	 */
-	public function IsValid($aParamTypes = array())
+	public function IsValid($aParamTypes = [])
 	{
 		$this->Analyze($aParamTypes);
 
-		foreach($this->m_aPlaceholders as $oPlaceholder)
-		{
-			if (!$oPlaceholder->bIsValid)
-			{
-				if (count($aParamTypes) == 0)
-				{
+		foreach ($this->m_aPlaceholders as $oPlaceholder) {
+			if (!$oPlaceholder->bIsValid) {
+				if (count($aParamTypes) == 0) {
 					return false;
 				}
-				if (array_key_exists($oPlaceholder->sParamName, $aParamTypes))
-				{
+				if (array_key_exists($oPlaceholder->sParamName, $aParamTypes)) {
 					return false;
 				}
 			}
@@ -146,36 +140,28 @@ class TemplateString
 	 *
 	 * @return string
 	 */
-	public function Render($aParamValues = array())
+	public function Render($aParamValues = [])
 	{
-		$aParamTypes = array();
-		foreach($aParamValues as $sParamName => $value)
-		{
+		$aParamTypes = [];
+		foreach ($aParamValues as $sParamName => $value) {
 			$aParamTypes[$sParamName] = get_class($value);
 		}
 		$this->Analyze($aParamTypes);
 
-		$aSearch = array();
-		$aReplace = array();
-		foreach($this->m_aPlaceholders as $oPlaceholder)
-		{
-			if (array_key_exists($oPlaceholder->sParamName, $aParamValues))
-			{
+		$aSearch = [];
+		$aReplace = [];
+		foreach ($this->m_aPlaceholders as $oPlaceholder) {
+			if (array_key_exists($oPlaceholder->sParamName, $aParamValues)) {
 				$oRef = $aParamValues[$oPlaceholder->sParamName];
-				try
-				{
+				try {
 					$value = $oRef->Get($oPlaceholder->sAttCode);
 					$aSearch[] = '$'.$oPlaceholder->sToken.'$';
 					$aReplace[] = $value;
 					$oPlaceholder->bIsValid = true;
-				}
-				catch(Exception $e)
-				{
+				} catch (Exception $e) {
 					$oPlaceholder->bIsValid = false;
 				}
-			}
-			else
-			{
+			} else {
 				$oPlaceholder->bIsValid = false;
 			}
 		}

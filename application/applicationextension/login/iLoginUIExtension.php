@@ -9,9 +9,9 @@
  */
 interface iLoginUIExtension extends iLoginExtension
 {
-    /**
-     * @return LoginTwigContext
-     * @api
-     */
-    public function GetTwigContext();
+	/**
+	 * @return LoginTwigContext
+	 * @api
+	 */
+	public function GetTwigContext();
 }

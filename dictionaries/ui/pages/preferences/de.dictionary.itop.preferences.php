@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'UI:Preferences:Title' => 'Einstellungen',
 	'UI:Preferences:UserInterface:Title' => 'Benutzerinterface',
 	'UI:Preferences:General:Title' => 'Generell',
@@ -45,5 +46,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Ihr Platzhalterbild wurde erfolgreich aktualisiert.',
 	'UI:Preferences:Notifications' => 'Benachrichtigungen',
 	'UI:Preferences:Notifications+' => 'Konfigurieren Sie die Benachrichtigungen, die Sie erhalten möchten. <a href="%1$s">auf dieser Seite</a>.',
-	
-));
+
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\Panel;
-
 
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
@@ -518,7 +518,8 @@ class Panel extends UIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function SetMainBlocks(array $aBlocks) {
+	public function SetMainBlocks(array $aBlocks)
+	{
 		$this->SetContentAreaBlocks(static::ENUM_CONTENT_AREA_MAIN, $aBlocks);
 
 		return $this;
@@ -530,7 +531,8 @@ class Panel extends UIContentBlock
 	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[]
 	 * @throws \Exception
 	 */
-	public function GetMainBlocks(): array {
+	public function GetMainBlocks(): array
+	{
 		return $this->GetContentAreaBlocks(static::ENUM_CONTENT_AREA_MAIN);
 	}
 
@@ -586,7 +588,8 @@ class Panel extends UIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function SetToolBlocks(array $aBlocks) {
+	public function SetToolBlocks(array $aBlocks)
+	{
 		$this->SetContentAreaBlocks(static::ENUM_CONTENT_AREA_TOOLBAR, $aBlocks);
 
 		return $this;
@@ -598,7 +601,8 @@ class Panel extends UIContentBlock
 	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[]
 	 * @throws \Exception
 	 */
-	public function GetToolbarBlocks(): array {
+	public function GetToolbarBlocks(): array
+	{
 		return $this->GetContentAreaBlocks(static::ENUM_CONTENT_AREA_TOOLBAR);
 	}
 
@@ -654,7 +658,8 @@ class Panel extends UIContentBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function AddHtml(string $sHtml) {
+	public function AddHtml(string $sHtml)
+	{
 		$oBlock = new Html($sHtml);
 		$this->AddMainBlock($oBlock);
 
@@ -666,7 +671,8 @@ class Panel extends UIContentBlock
 	 *
 	 * @inheritDoc
 	 */
-	public function AddSubBlock(?iUIBlock $oSubBlock) {
+	public function AddSubBlock(?iUIBlock $oSubBlock)
+	{
 		if ($oSubBlock) {
 			$this->AddMainBlock($oSubBlock);
 		}
@@ -680,7 +686,8 @@ class Panel extends UIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function RemoveSubBlock(string $sId) {
+	public function RemoveSubBlock(string $sId)
+	{
 		foreach ($this->GetContentAreas() as $oContentArea) {
 			$oContentArea->RemoveSubBlock($sId);
 		}
@@ -695,7 +702,8 @@ class Panel extends UIContentBlock
 	 *
 	 * @return bool
 	 */
-	public function HasSubBlock(string $sId): bool {
+	public function HasSubBlock(string $sId): bool
+	{
 		foreach ($this->GetContentAreas() as $oContentArea) {
 			if ($oContentArea->HasSubBlock($sId)) {
 				return true;
@@ -710,7 +718,8 @@ class Panel extends UIContentBlock
 	 *
 	 * @inheritDoc
 	 */
-	public function GetSubBlock(string $sId): ?iUIBlock {
+	public function GetSubBlock(string $sId): ?iUIBlock
+	{
 		foreach ($this->GetContentAreas() as $oContentArea) {
 			$oSubBlock = $oContentArea->GetSubBlock($sId);
 			if (!is_null($oSubBlock)) {
@@ -727,7 +736,8 @@ class Panel extends UIContentBlock
 	 * @inheritDoc
 	 * @return $this|\Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock
 	 */
-	public function SetSubBlocks(array $aSubBlocks): iUIContentBlock {
+	public function SetSubBlocks(array $aSubBlocks): iUIContentBlock
+	{
 		$this->SetMainBlocks($aSubBlocks);
 
 		return $this;

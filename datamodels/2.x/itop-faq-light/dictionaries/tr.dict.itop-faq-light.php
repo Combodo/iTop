@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:FAQ' => 'SSS',
 	'Class:FAQ+' => 'Sıkça Sorulan Sorular',
 	'Class:FAQ/Attribute:title' => 'Başlık',
@@ -28,21 +29,21 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:FAQ/Attribute:key_words' => 'Anahtar Kelimeler',
 	'Class:FAQ/Attribute:key_words+' => '~~',
 	'Class:FAQ/Attribute:domains' => 'Domains~~',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:FAQCategory' => 'SSS Kategori',
 	'Class:FAQCategory+' => 'SSS için kategori',
 	'Class:FAQCategory/Attribute:name' => 'İsim',
 	'Class:FAQCategory/Attribute:name+' => '~~',
 	'Class:FAQCategory/Attribute:faq_list' => 'SSS',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Bu kategoriyle ilgili tüm sık sorulan sorular',
-));
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+]);
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ProblemManagement' => 'Problem yönetimi',
 	'Menu:ProblemManagement+' => 'Problem yönetimi',
 	'Menu:Problem:Shortcuts' => 'Kısayollar',
@@ -53,4 +54,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Brick:Portal:FAQ:Menu' => 'SSS',
 	'Brick:Portal:FAQ:Title' => 'Sıkça Sorulan Sorular',
 	'Brick:Portal:FAQ:Title+' => '<p>In a hurry?</p><p>Check out the list of most common questions and (maybe) find the expected answer right away.</p>~~',
-));
+]);

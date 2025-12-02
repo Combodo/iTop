@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -19,7 +20,6 @@
 
 use Combodo\iTop\Application\WebPage\WebPage;
 
-
 /**
  * <p>Stores data for {@link AttributeTagSet} fields
  *
@@ -31,7 +31,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
  */
 abstract class TagSetFieldData extends cmdbAbstractObject
 {
-	private static $m_aAllowedValues = array();
+	private static $m_aAllowedValues = [];
 
 	/**
 	 * @throws \CoreException
@@ -39,62 +39,61 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			'category' => 'bizmodel',
 			'key_type' => 'autoincrement',
-			'name_attcode' => array('label'),
+			'name_attcode' => ['label'],
 			'state_attcode' => '',
-			'reconc_keys' => array('code'),
+			'reconc_keys' => ['code'],
 			'db_table' => 'priv_tagfielddata',
 			'db_key_field' => 'id',
 			'db_finalclass_field' => 'finalclass',
-		);
+		];
 
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeString("code", array(
+		MetaModel::Init_AddAttribute(new AttributeString("code", [
 			"allowed_values" => null,
 			"sql" => 'code',
 			"default_value" => '',
 			"is_null_allowed" => false,
-			"depends_on" => array(),
+			"depends_on" => [],
 			"validation_pattern" => '^[a-zA-Z][a-zA-Z0-9]{2,}$',
-		)));
-		MetaModel::Init_AddAttribute(new AttributeString("label", array(
+		]));
+		MetaModel::Init_AddAttribute(new AttributeString("label", [
 			"allowed_values" => null,
 			"sql" => 'label',
 			"default_value" => '',
 			"is_null_allowed" => false,
-			"depends_on" => array()
-		)));
-		MetaModel::Init_AddAttribute(new AttributeHTML("description", array(
+			"depends_on" => [],
+		]));
+		MetaModel::Init_AddAttribute(new AttributeHTML("description", [
 			"allowed_values" => null,
 			"sql" => 'description',
 			"default_value" => '',
 			"is_null_allowed" => true,
-			"depends_on" => array()
-		)));
-		MetaModel::Init_AddAttribute(new AttributeString("obj_class", array(
+			"depends_on" => [],
+		]));
+		MetaModel::Init_AddAttribute(new AttributeString("obj_class", [
 			"allowed_values" => null,
 			"sql" => 'obj_class',
 			"default_value" => '',
 			"is_null_allowed" => false,
-			"depends_on" => array()
-		)));
-		MetaModel::Init_AddAttribute(new AttributeString("obj_attcode", array(
+			"depends_on" => [],
+		]));
+		MetaModel::Init_AddAttribute(new AttributeString("obj_attcode", [
 			"allowed_values" => null,
 			"sql" => 'obj_attcode',
 			"default_value" => '',
 			"is_null_allowed" => false,
-			"depends_on" => array()
-		)));
+			"depends_on" => [],
+		]));
 
-
-		MetaModel::Init_SetZListItems('details', array('code', 'label', 'description'));
-		MetaModel::Init_SetZListItems('standard_search', array('code', 'label', 'description'));
-		MetaModel::Init_SetZListItems('list', array('code', 'label', 'description'));
+		MetaModel::Init_SetZListItems('details', ['code', 'label', 'description']);
+		MetaModel::Init_SetZListItems('standard_search', ['code', 'label', 'description']);
+		MetaModel::Init_SetZListItems('list', ['code', 'label', 'description']);
 	}
 
 	public function ComputeValues()
@@ -122,15 +121,12 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	 */
 	public static function ExtractTagFieldName($sClassName)
 	{
-		$aRes = array();
+		$aRes = [];
 		// Extract class and attcode from class name using pattern  TagSetFieldDataFor_<class>_<attcode>>;
-		if (preg_match('@^TagSetFieldDataFor_(?<class>\w+)__(?<attcode>\w+)$@', $sClassName, $aMatches))
-		{
+		if (preg_match('@^TagSetFieldDataFor_(?<class>\w+)__(?<attcode>\w+)$@', $sClassName, $aMatches)) {
 			$aRes['obj_class'] = $aMatches['class'];
 			$aRes['obj_attcode'] = $aMatches['attcode'];
-		}
-		else
-		{
+		} else {
 			throw new CoreException("Bad Class name format: $sClassName");
 		}
 		return $aRes;
@@ -146,8 +142,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		parent::DoCheckToDelete($oDeletionPlan);
 
 		$sTagCode = $this->Get('code');
-		if ($this->IsCodeUsed($sTagCode))
-		{
+		if ($this->IsCodeUsed($sTagCode)) {
 			$this->m_aDeleteIssues[] = Dict::S('Core:TagSetFieldData:ErrorDeleteUsedTag');
 		}
 		// Clear cache
@@ -172,34 +167,28 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		$sAttCode = $this->Get('obj_attcode');
 		$iMaxLen = 20;
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		if ($oAttDef instanceof AttributeTagSet)
-		{
+		if ($oAttDef instanceof AttributeTagSet) {
 			$iMaxLen = $oAttDef->GetTagCodeMaxLength();
 		}
 
 		$sTagCode = $this->Get('code');
 		// Check code syntax
 		$iMax = $iMaxLen - 1;
-		if (!preg_match("@^[a-zA-Z][a-zA-Z0-9]{2,$iMax}$@", $sTagCode))
-		{
+		if (!preg_match("@^[a-zA-Z][a-zA-Z0-9]{2,$iMax}$@", $sTagCode)) {
 			$this->m_aCheckIssues[] = Dict::Format('Core:TagSetFieldData:ErrorTagCodeSyntax', $iMaxLen);
 		}
 
 		// Check that the code is not a MySQL stop word
 		$sSQL = "SELECT value FROM information_schema.INNODB_FT_DEFAULT_STOPWORD";
-		try
-		{
+		try {
 			$aResults = CMDBSource::QueryToArray($sSQL);
-		} catch (MySQLException $e)
-		{
+		} catch (MySQLException $e) {
 			IssueLog::Warning($e->getMessage());
-			$aResults = array();
+			$aResults = [];
 		}
 
-		foreach($aResults as $aResult)
-		{
-			if ($aResult['value'] == $sTagCode)
-			{
+		foreach ($aResults as $aResult) {
+			if ($aResult['value'] == $sTagCode) {
 				$this->m_aCheckIssues[] = Dict::S('Core:TagSetFieldData:ErrorTagCodeReservedWord');
 				break;
 			}
@@ -207,8 +196,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 
 		$sTagLabel = $this->Get('label');
 		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
-		if (empty($sTagLabel) || (strpos($sTagLabel, $sSepItem) !== false))
-		{
+		if (empty($sTagLabel) || (strpos($sTagLabel, $sSepItem) !== false)) {
 			// Label must not contain | character
 			$this->m_aCheckIssues[] = Dict::Format('Core:TagSetFieldData:ErrorTagLabelSyntax', $sSepItem);
 		}
@@ -216,18 +204,14 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		// Check that code and labels are uniques
 		$id = $this->GetKey();
 		$sClassName = get_class($this);
-		if (empty($id))
-		{
+		if (empty($id)) {
 			$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE (code = :tag_code OR label = :tag_label)");
-		}
-		else
-		{
+		} else {
 			$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE id != :id AND (code = :tag_code OR label = :tag_label)");
 		}
-		$aArgs = array('id' => $id, 'tag_code' => $sTagCode, 'tag_label' => $sTagLabel);
-		$oSet = new DBObjectSet($oSearch, array(), $aArgs);
-		if ($oSet->CountExceeds(0))
-		{
+		$aArgs = ['id' => $id, 'tag_code' => $sTagCode, 'tag_label' => $sTagLabel];
+		$oSet = new DBObjectSet($oSearch, [], $aArgs);
+		if ($oSet->CountExceeds(0)) {
 			$this->m_aCheckIssues[] = Dict::S('Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel');
 		}
 		// Clear cache
@@ -244,50 +228,40 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	{
 		parent::OnUpdate();
 		$aChanges = $this->ListChanges();
-		if (array_key_exists('code', $aChanges))
-		{
+		if (array_key_exists('code', $aChanges)) {
 			$sTagCode = $this->GetOriginal('code');
-			if ($this->IsCodeUsed($sTagCode))
-			{
+			if ($this->IsCodeUsed($sTagCode)) {
 				throw new CoreException(Dict::S('Core:TagSetFieldData:ErrorCodeUpdateNotAllowed'));
 			}
 		}
-		if (array_key_exists('obj_class', $aChanges))
-		{
+		if (array_key_exists('obj_class', $aChanges)) {
 			throw new CoreException(Dict::S('Core:TagSetFieldData:ErrorClassUpdateNotAllowed'));
 		}
-		if (array_key_exists('obj_attcode', $aChanges))
-		{
+		if (array_key_exists('obj_attcode', $aChanges)) {
 			throw new CoreException(Dict::S('Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed'));
 		}
 	}
 
 	private function IsCodeUsed($sTagCode)
 	{
-		try
-		{
+		try {
 			$sClass = $this->Get('obj_class');
 			$sAttCode = $this->Get('obj_attcode');
 			$oSearch = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 			$oSet = new DBObjectSet($oSearch);
-			if ($oSet->CountExceeds(0))
-			{
+			if ($oSet->CountExceeds(0)) {
 				return true;
 			}
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			IssueLog::Warning($e->getMessage());
 		}
 		return false;
 	}
 
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	public function GetAttributeFlags($sAttCode, &$aReasons = [], $sTargetState = '')
 	{
-		if ($sAttCode == 'code')
-		{
-			if ((!$this->IsNew()) && ($this->IsCodeUsed($this->Get('code'))))
-			{
+		if ($sAttCode == 'code') {
+			if ((!$this->IsNew()) && ($this->IsCodeUsed($this->Get('code')))) {
 				return OPT_ATT_READONLY;
 			}
 		}
@@ -308,23 +282,20 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
-		if (!$bEditMode)
-		{
+		if (!$bEditMode) {
 			$sClass = $this->Get('obj_class');
 			$sAttCode = $this->Get('obj_attcode');
 			$sTagCode = $this->Get('code');
-
 
 			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 			$oSet = new DBObjectSet($oFilter);
 			$iCount = $oSet->Count();
 			$oPage->SetCurrentTab('Core:TagSetFieldData:WhereIsThisTagTab', Dict::Format('Core:TagSetFieldData:WhereIsThisTagTab', $iCount));
 
-			if ($iCount === 0)
-			{
+			if ($iCount === 0) {
 				$sNoEntries = Dict::S('Core:TagSetFieldData:NoEntryFound');
 				$oPage->add("<p>$sNoEntries</p>");
 
@@ -333,8 +304,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 
 			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 			$oSet = new DBObjectSet($oFilter);
-			if ($oSet->CountExceeds(0))
-			{
+			if ($oSet->CountExceeds(0)) {
 				$sClassLabel = MetaModel::GetName($sClass);
 				$oPage->add("<h2>$sClassLabel</h2>");
 				$oResultBlock = new DisplayBlock($oFilter, 'list', false);
@@ -345,26 +315,20 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 
 	public static function GetClassName($sClass)
 	{
-		if ($sClass == 'TagSetFieldData')
-		{
+		if ($sClass == 'TagSetFieldData') {
 			$aWords = preg_split('/(?=[A-Z]+)/', $sClass);
 			return trim(implode(' ', $aWords));
 		}
-		try
-		{
+		try {
 			$aTagFieldInfo = self::ExtractTagFieldName($sClass);
-		} catch (CoreException $e)
-		{
+		} catch (CoreException $e) {
 			return $sClass;
 		}
 		$sClassDesc = MetaModel::GetName($aTagFieldInfo['obj_class']);
 		$sAttDesc = MetaModel::GetAttributeDef($aTagFieldInfo['obj_class'], $aTagFieldInfo['obj_attcode'])->GetLabel();
-		if (Dict::Exists("Class:$sClass"))
-		{
+		if (Dict::Exists("Class:$sClass")) {
 			$sName = Dict::Format("Class:$sClass", $sClassDesc, $sAttDesc);
-		}
-		else
-		{
+		} else {
 			$sName = Dict::Format('Class:TagSetFieldData', $sClassDesc, $sAttDesc);
 		}
 		return $sName;
@@ -383,8 +347,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	{
 		$sClass = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
 		$sTagDataClass = self::GetTagDataClassName($sClass, $sAttCode);
-		if (!isset(self::$m_aAllowedValues[$sTagDataClass]))
-		{
+		if (!isset(self::$m_aAllowedValues[$sTagDataClass])) {
 			$oSearch = new DBObjectSearch($sTagDataClass);
 			$oSearch->AddCondition('obj_class', $sClass);
 			$oSearch->AddCondition('obj_attcode', $sAttCode);

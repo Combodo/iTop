@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'bkp-backup-running' => 'A mentés fut. Kérem várjon...',
 	'bkp-restore-running' => 'A visszaállítás fut. Kérem várjon...',
 	'Menu:BackupStatus' => 'Biztonsági mentés',
@@ -44,4 +45,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'bkp-wait-backup' => 'Várjon a mentés befejezéséig...',
 	'bkp-wait-restore' => 'Várjon a visszaállítás befejezéséig...',
 	'bkp-success-restore' => 'A visszaállítás sikerült.',
-));
+]);

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI:Datatables:Language:Processing' => 'Kérem várjon...',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ oldalanként',
 	'UI:Datatables:Language:ZeroRecords' => 'Nincs eredmény',
@@ -24,4 +25,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Datatables:Column:RowActions:Description' => '~~',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation~~',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action ?~~',
-));
+]);

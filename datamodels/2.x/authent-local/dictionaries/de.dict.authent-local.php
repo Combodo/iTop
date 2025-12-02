@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:UserLocal' => ITOP_APPLICATION_SHORT.'-Benutzer',
 	'Class:UserLocal+' => 'Benutzer, der von '.ITOP_APPLICATION_SHORT.' authentifiziert wird',
 	'Class:UserLocal/Attribute:password' => 'Passwort',
@@ -30,4 +31,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Das Passwort entspricht nicht dem in den Konfigurationsregeln hinterlegten RegEx-Ausdruck',
 	'UserLocal:password:expiration' => 'Die folgenden Felder benötigen eine '.ITOP_APPLICATION_SHORT.' Erweiterung',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Das setzen des Passwortablaufs auf "Einmalpasswort" ist für den eigenen Benutzer nicht erlaubt.',
-));
+]);

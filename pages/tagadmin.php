@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -26,8 +27,7 @@ require_once(APPROOT.'application/startup.inc.php');
 require_once(APPROOT.'application/loginwebpage.class.inc.php');
 IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
-try
-{
+try {
 	LoginWebPage::DoLogin();
 	// Check user rights and prompt if needed
 	ApplicationMenu::CheckMenuIdEnabled("TagAdminMenu");
@@ -55,16 +55,13 @@ try
 	$oP->SetBreadCrumbEntry('ui-tool-tag-admin', Dict::S('Menu:TagAdminMenu'), Dict::S('Menu:TagAdminMenu+'), '', 'fas fa-tags', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 	$sSearchHeaderForceDropdown = '<select  id="select_class" name="class" onChange="this.form.trigger(\'submit\');">';
-	$aClassLabels = array();
-	foreach(MetaModel::EnumChildClasses($sBaseClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sCurrentClass)
-	{
+	$aClassLabels = [];
+	foreach (MetaModel::EnumChildClasses($sBaseClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sCurrentClass) {
 		$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
 	}
 	asort($aClassLabels);
-	foreach($aClassLabels as $sCurrentClass => $sLabel)
-	{
-		if (empty($sClass))
-		{
+	foreach ($aClassLabels as $sCurrentClass => $sLabel) {
+		if (empty($sClass)) {
 			$sClass = $sCurrentClass;
 		}
 		$sSelected = ($sCurrentClass == $sClass) ? " SELECTED" : "";
@@ -72,34 +69,24 @@ try
 	}
 	$sSearchHeaderForceDropdown .= "</select>\n";
 
-	try
-	{
-		if ($sOperation == 'search_form')
-		{
+	try {
+		if ($sOperation == 'search_form') {
 			$sOQL = "SELECT $sClass $sOQLClause";
 			$oFilter = DBObjectSearch::FromOQL($sOQL);
-		}
-		else
-		{
+		} else {
 			// Second part: advanced search form:
-			if (!empty($sFilter))
-			{
+			if (!empty($sFilter)) {
 				$oFilter = DBSearch::unserialize($sFilter);
-			}
-			else if (!empty($sClass))
-			{
+			} elseif (!empty($sClass)) {
 				$oFilter = new DBObjectSearch($sClass);
 			}
 		}
-	}
-	catch (CoreException $e)
-	{
+	} catch (CoreException $e) {
 		$oFilter = new DBObjectSearch($sClass);
 		$oP->P("<b>".Dict::Format('UI:TagSetFieldData:Error', $e->getHtmlDesc())."</b>");
 	}
 
-	if (!empty($oFilter))
-	{
+	if (!empty($oFilter)) {
 		$oSearchContext = new ContextTag(ContextTag::TAG_OBJECT_SEARCH);
 
 		$oSet = new CMDBObjectSet($oFilter);
@@ -120,9 +107,7 @@ try
 		// Menu node
 		$sFilter = $oFilter->ToOQL();
 		$oP->add("\n<!-- $sFilter -->\n");
-	}
-	else
-	{
+	} else {
 		$oP->add("<p>");
 		$oP->add(Dict::S('UI:TagAdminMenu:NoTags'));
 		$oP->add("</p>");
@@ -130,9 +115,7 @@ try
 	$oP->add("</div>\n");
 
 	$oP->output();
-}
-catch (Exception $e)
-{
+} catch (Exception $e) {
 	require_once(APPROOT.'setup/setuppage.class.inc.php');
 
 	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));

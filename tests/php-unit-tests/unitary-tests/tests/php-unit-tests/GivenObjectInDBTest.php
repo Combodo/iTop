@@ -10,15 +10,15 @@ use MetaModel;
  */
 class GivenObjectInDBTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
+	public const CREATE_TEST_ORG = true;
 
 	public function testItShouldRelyOnFewerQueriesAsComparedToDBInsert()
 	{
-		$this->assertDBQueryCount(14, function() use (&$iKey) {
+		$this->assertDBQueryCount(14, function () use (&$iKey) {
 			$iKey = $this->createObject('Organization', ['name' => 'The world company']);
 		});
 
-		$this->assertDBQueryCount(2, function() use (&$iKey) {
+		$this->assertDBQueryCount(2, function () use (&$iKey) {
 			$iKey = $this->GivenObjectInDB('Organization', ['name' => 'The world company']);
 		});
 	}
@@ -53,7 +53,7 @@ class GivenObjectInDBTest extends ItopDataTestCase
 		$iTeam = $this->GivenObjectInDB('Team', [
 			'name' => 'The A Team',
 			'persons_list' => [
-				"person_id:$iPerson;role_id:$iRole"
+				"person_id:$iPerson;role_id:$iRole",
 			],
 		]);
 
@@ -98,8 +98,7 @@ class GivenObjectInDBTest extends ItopDataTestCase
 		$oObjectFromDBOptimized = MetaModel::GetObject($sClass, $iKey);
 
 		// Check that an object created by the mean of the std APIs will have the same values
-		foreach ($aValues as $sAttCode => $value)
-		{
+		foreach ($aValues as $sAttCode => $value) {
 			static::assertEquals(
 				$oObjectFromDBStandard->Get($sAttCode),
 				$oObjectFromDBOptimized->Get($sAttCode),
@@ -115,13 +114,13 @@ class GivenObjectInDBTest extends ItopDataTestCase
 				'class' => 'Organization',
 				'values' => [
 					'name' => 'Orga tartampion',
-				]
+				],
 			],
 			'FAQCategory' => [
 				'class' => 'FAQCategory',
 				'values' => [
 					'name' => 'FAQCategory_phpunit',
-				]
+				],
 			],
 			'Server' => [
 				'class' => 'Server',
@@ -129,7 +128,7 @@ class GivenObjectInDBTest extends ItopDataTestCase
 					'name' => 'Server tartampion',
 					'org_id' => 1,
 					'nb_u' => 123,
-	             ]
+				 ],
 			],
 			'TagSetFieldDataFor_FAQ__domains' => [
 				'class' => 'TagSetFieldDataFor_FAQ__domains',
@@ -139,7 +138,7 @@ class GivenObjectInDBTest extends ItopDataTestCase
 					'obj_class' => 'FAQ',
 					'obj_attcode' => 'domains',
 					'description' => '<p>tartampion</p>',
-				]
+				],
 			],
 			'Hypervisor' => [
 				'class' => 'Hypervisor',
@@ -148,15 +147,15 @@ class GivenObjectInDBTest extends ItopDataTestCase
 					'org_id' => 1,
 					'server_id' => 1,
 					'farm_id' => 0,
-				]
+				],
 			],
 			'Rack' => [
 				'class' => 'Rack',
 				'values' => [
 					'name' => "rackamuffin",
 					'description' => "rackadescription",
-					'org_id' => 1
-				]
+					'org_id' => 1,
+				],
 			],
 			'Person' => [
 				'class' => 'Person',
@@ -164,7 +163,7 @@ class GivenObjectInDBTest extends ItopDataTestCase
 					'name' => 'Person_tartampion',
 					'first_name' => 'Test',
 					'org_id' => 1,
-				]
+				],
 			],
 			'Farm' => [
 				'class' => 'Farm',
@@ -172,7 +171,7 @@ class GivenObjectInDBTest extends ItopDataTestCase
 					'name' => 'Farm_tartampion',
 					'org_id' => 1,
 					'redundancy' => '1',
-				]
+				],
 			],
 			'UserRequest' => [
 				'class' => 'UserRequest',
@@ -181,7 +180,7 @@ class GivenObjectInDBTest extends ItopDataTestCase
 					'title' => 'TICKET_TARTAMPION as a title',
 					'description' => '<p>Created for unit tests.</p>',
 					'org_id' => 1,
-				]
+				],
 			],
 		];
 	}

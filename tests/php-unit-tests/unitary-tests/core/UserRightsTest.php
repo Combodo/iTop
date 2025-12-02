@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -33,7 +34,8 @@ use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
 use DeleteException;
-use URP_UserProfile;
+use MetaModel;
+use UserLocal;
 use UserRights;
 use utils;
 
@@ -74,8 +76,23 @@ class UserRightsTest extends ItopDataTestCase
 		$iCount++;
 
 		$oUser = self::CreateUser($sLogin, $iProfileId);
-		$_SESSION = array();
+		$_SESSION = [];
 		UserRights::Login($sLogin);
+		return $oUser;
+	}
+
+	protected function GivenUserWithProfiles(string $sLogin, array $aProfileIds): DBObject
+	{
+		$oProfiles = new \ormLinkSet(\UserLocal::class, 'profile_list', \DBObjectSet::FromScratch(\URP_UserProfile::class));
+		foreach ($aProfileIds as $iProfileId) {
+			$oProfiles->AddItem(MetaModel::NewObject('URP_UserProfile', ['profileid' => $iProfileId, 'reason' => 'UNIT Tests']));
+		}
+		$oUser = MetaModel::NewObject('UserLocal', [
+			'login' => $sLogin,
+			'password' => 'Password1!',
+			'expiration' => UserLocal::EXPIRE_NEVER,
+			'profile_list' => $oProfiles,
+		]);
 		return $oUser;
 	}
 
@@ -102,8 +119,7 @@ class UserRightsTest extends ItopDataTestCase
 			// Fixture data required in this case only
 			try {
 				self::CreateUser('admin', 1);
-			}
-			catch (CoreCannotSaveObjectException $e) {
+			} catch (CoreCannotSaveObjectException $e) {
 				// The admin account could exist, depending on where and when the test suite is executed
 			}
 		}
@@ -225,7 +241,6 @@ class UserRightsTest extends ItopDataTestCase
 		];
 	}
 
-
 	/** Test IsActionAllowedOnAttribute
 	 *
 	 * @dataProvider ActionAllowedOnAttributeProvider
@@ -280,87 +295,79 @@ class UserRightsTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @dataProvider ProfileDenyingConsoleProvider
-	 * @doesNotPerformAssertions
+	 * @dataProvider UserCannotLoseConsoleAccessProvider
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \OQLException
 	 */
-	public function testProfileDenyingConsole(int $iProfileId)
+	public function testUserCannotLoseConsoleAccess(int $iProfileId)
 	{
 		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
 
-		try {
-			$this->AddProfileToUser($oUser, 2);
-			$this->fail('Profile should not be added');
-		} catch (CoreCannotSaveObjectException $e) {
-		}
+		$this->expectException(CoreCannotSaveObjectException::class);
+		$this->expectExceptionMessage('Profile "Portal user" cannot be added it will deny the access to backoffice');
+		$this->AddProfileToUser($oUser, 2);
 	}
 
-	public function ProfileDenyingConsoleProvider(): array
+	public function UserCannotLoseConsoleAccessProvider(): array
 	{
 		return [
 			'Administrator'         => [1],
+			'SuperUser'             => [117],
 		];
 	}
 
 	/**
-	 * @dataProvider ProfileCannotModifySelfProvider
-	 * @doesNotPerformAssertions
+	 * @dataProvider UserCannotElevateTheirOwnRightsProvider
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \OQLException
 	 */
-	public function testProfileCannotModifySelf(int $iProfileId)
+	public function testUserCannotElevateTheirOwnRights(int $iCurrentProfileId, int $iElevatedProfileId)
 	{
-		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
+		$oUser = $this->CreateUniqueUserAndLogin('test1', $iCurrentProfileId);
 
-		try {
-			$this->AddProfileToUser($oUser, 1); // trying to become an admin
-			$this->fail('User should not modify self');
-		} catch (CoreException $e) {
-		}
+		$this->expectException(CoreCannotSaveObjectException::class);
+		$this->AddProfileToUser($oUser, $iElevatedProfileId);
 	}
 
-	public function ProfileCannotModifySelfProvider(): array
+	public function UserCannotElevateTheirOwnRightsProvider(): array
 	{
 		return [
-			'Configuration manager' => [3],
+			'Configuration manager to SuperUser' => ['current' => 3, 'added' => 117],
+			'Configuration manager to Administrator'         => ['current' => 3, 'added' => 1],
+			'SuperUser to Administrator'         => ['current' => 117, 'added' => 1],
 		];
 	}
 
 	/**
-	 * @dataProvider DeletingSelfUserProvider
-	 * @doesNotPerformAssertions
+	 * @dataProvider UserCannotDeleteOwnUserProvider
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \OQLException
 	 */
-	public function testDeletingSelfUser(int $iProfileId)
+	public function testUserCannotDeleteOwnUser(int $iProfileId)
 	{
 		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
 
-		try {
-			$oUser->DBDelete();
-			$this->fail('Current User cannot be deleted');
-		} catch (DeleteException $e) {
-		}
+		$this->expectException(DeleteException::class);
+		$oUser->DBDelete();
 	}
 
-	public function DeletingSelfUserProvider(): array
+	public function UserCannotDeleteOwnUserProvider(): array
 	{
 		return [
 			'Administrator'         => [1],
 			'Configuration manager' => [3],
+			'SuperUser'             => [117],
 		];
 	}
 
 	/**
-	 * @dataProvider RemovingOwnContactProvider
-	 * @doesNotPerformAssertions
+	 * @dataProvider UserCannotRemoveOwnContactProvider
 	 *
 	 * @param int $iProfileId
 	 *
@@ -368,70 +375,83 @@ class UserRightsTest extends ItopDataTestCase
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \OQLException
 	 */
-	public function testRemovingOwnContact(int $iProfileId)
+	public function testUserCannotRemoveOwnContact(int $iProfileId)
 	{
 		$oUser = $this->CreateUniqueUserAndLogin('test1', $iProfileId);
 
 		$oUser->Set('contactid', 0);
-
-		try {
-			$oUser->DBWrite();
-			$this->fail('Current User cannot remove his own contact');
-		} catch (CoreCannotSaveObjectException $e) {
-		}
+		$this->expectException(CoreCannotSaveObjectException::class);
+		$oUser->DBWrite();
 	}
 
-	public function RemovingOwnContactProvider(): array
+	public function UserCannotRemoveOwnContactProvider(): array
 	{
 		return [
 			'Administrator'         => [1],
 			'Configuration manager' => [3],
+			'SuperUser'             => [117],
+		];
+	}
+
+	public function testAdminCannotRemoveOwnAdminProfile()
+	{
+		$oUser = $this->CreateUniqueUserAndLogin('admin111', 1); // Administrator
+		// Keep only the SuperUser profile (remove Administrator profile)
+		$this->AddProfileToUser($oUser, 117); // SuperUser profile for the test
+
+		$this->expectException(CoreCannotSaveObjectException::class);
+		$this->expectExceptionMessage('You cannot remove your own Administrator profile. Ask another Administrator to do it for you');
+		$this->RemoveProfileFromUser($oUser, 1); // Remove admin profile
+	}
+
+	/**
+	 * @dataProvider UserCannotLoseUserEditionRightsProvider
+	 */
+	public function testUserCannotLoseUserEditionRights(int $iProfileId)
+	{
+		$oUser = $this->CreateUniqueUserAndLogin('configmgr111', $iProfileId); // SuperUser
+		$this->AddProfileToUser($oUser, 3);
+
+		$this->expectException(CoreCannotSaveObjectException::class);
+		$this->expectExceptionMessage('You cannot remove your own rights to edit Users');
+		$this->RemoveProfileFromUser($oUser, $iProfileId);
+	}
+
+	public function UserCannotLoseUserEditionRightsProvider(): array
+	{
+		return [
+			'Administrator'         => [1],
+			'SuperUser' => [117],
 		];
 	}
 
 	/**
-	 * @doesNotPerformAssertions
-	 *
-	 * @throws \CoreException
-	 * @throws \DictExceptionUnknownLanguage
-	 * @throws \OQLException
+	 * @dataProvider PrivilegedUsersMustHaveBackofficeAccessProvider
 	 */
-	public function testUpgradingToAdmin()
+	public function testPrivilegedUsersMustHaveBackofficeAccess(int $iProfileId)
 	{
-		$oUser = $this->CreateUniqueUserAndLogin('test1', 3);
+		$oUser = $this->GivenUserWithProfiles('test1', [$iProfileId, 2]);
 
-		try {
-			$this->AddProfileToUser($oUser, 1);
-			$this->fail('Should not be able to upgrade to Administrator');
-		} catch (CoreCannotSaveObjectException $e) {
-		} catch (CoreException $e) {
-		}
+		$this->expectException(CoreCannotSaveObjectException::class);
+		$this->expectExceptionMessage('Profile "Portal user" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)');
+		$oUser->DBInsert();
+
 	}
-
-	/**
-	 * @doesNotPerformAssertions
-	 *
-	 * @throws \CoreException
-	 * @throws \DictExceptionUnknownLanguage
-	 * @throws \OQLException
-	 */
-	public function testDenyingUserModification()
+	public function PrivilegedUsersMustHaveBackofficeAccessProvider(): array
 	{
-		$oUser = $this->CreateUniqueUserAndLogin('test1', 1);
-		$this->AddProfileToUser($oUser, 3);
+		return [
+			'killing another administrator' => [1],
+			'killing superuser ' => [117],
+			'killing Rest User' => [1024],
 
-		// Keep only the profile 3 (remove profile 1)
-		$oUserProfile = new URP_UserProfile();
-		$oUserProfile->Set('profileid', 3);
-		$oUserProfile->Set('reason', 'UNIT Tests');
-		$oSet = DBObjectSet::FromObject($oUserProfile);
-		$oUser->Set('profile_list', $oSet);
-
-		try {
-			$oUser->DBWrite();
-			$this->fail('Should not be able to deny User modifications');
-		} catch (CoreCannotSaveObjectException $e) {
-		}
+		];
+	}
+	public function testNonPrivilegedUsersCanBeDeniedFromBackoffice()
+	{
+		$oUser = $this->GivenUserWithProfiles('test1', [5, 2]);
+		// No exception expected
+		$oUser->DBInsert();
+		$this->expectNotToPerformAssertions();
 	}
 
 	/**
@@ -457,7 +477,7 @@ class UserRightsTest extends ItopDataTestCase
 	public function NonAdminCanListOwnProfilesProvider(): array
 	{
 		return [
-			'with Admins visible'=> [false],
+			'with Admins visible' => [false],
 			'with Admins hidden' => [true],
 		];
 	}
@@ -474,18 +494,18 @@ class UserRightsTest extends ItopDataTestCase
 		$oSearch = new DBObjectSearch('URP_UserProfile');
 		$oSearch->AddCondition('userid', $oUserAdmin->GetKey());
 		$oSet = new DBObjectSet($oSearch);
-		$this->assertEquals($iExpectedCount, $oSet->Count());
+		$this->assertEquals($iExpectedCount, $oSet->Count(), 'Visibility on Link between User and Administrator Profiles should be controlled by hide_administrators setting');
 		// Get the Profiles as well
 		$oSearch = DBObjectSearch::FromOQL('SELECT URP_Profiles JOIN URP_UserProfile ON URP_UserProfile.profileid = URP_Profiles.id WHERE URP_UserProfile.userid='.$oUserAdmin->GetKey());
 		$oSet = new DBObjectSet($oSearch);
-		$this->assertEquals($iExpectedCount, $oSet->Count());
+		$this->assertEquals($iExpectedCount, $oSet->Count(), 'Visibility on Administrator Profiles should be controlled by hide_administrators setting');
 	}
 
 	public function NonAdminCannotListAdminProfilesProvider(): array
 	{
 		return [
-			'with Admins visible'=> [false, 1],
-			'with Admins hidden' => [true, 0],
+			'with Admins visible' => ['hide_administrators' => false, 'visible_objects' => 1],
+			'with Admins hidden' => ['hide_administrators' => true, 'visible_objects' => 0],
 		];
 	}
 
@@ -496,13 +516,13 @@ class UserRightsTest extends ItopDataTestCase
 
 		$this->assertDBQueryCount(
 			1,
-			fn() => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
+			fn () => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
 			'A query should be performed the first time FindUser is called'
 		);
 
 		$this->assertDBQueryCount(
 			0,
-			fn() => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
+			fn () => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
 			'The cache should prevent additional queries on subsequent calls'
 		);
 	}
@@ -514,13 +534,13 @@ class UserRightsTest extends ItopDataTestCase
 
 		$this->assertDBQueryCount(
 			2,
-			fn() => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
+			fn () => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
 			'Some queries should be performed the first time FindUser is called'
 		);
 
 		$this->assertDBQueryCount(
 			0,
-			fn() => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
+			fn () => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
 			'The cache should prevent additional queries on subsequent calls'
 		);
 	}
@@ -531,13 +551,13 @@ class UserRightsTest extends ItopDataTestCase
 
 		$this->assertDBQueryCount(
 			2,
-			fn() => $this->FindUserAndAssertItWasNotFound($sLogin),
+			fn () => $this->FindUserAndAssertItWasNotFound($sLogin),
 			'Some queries should be performed the first time FindUser is called'
 		);
 
 		$this->assertDBQueryCount(
 			0,
-			fn() => $this->FindUserAndAssertItWasNotFound($sLogin),
+			fn () => $this->FindUserAndAssertItWasNotFound($sLogin),
 			'The cache should prevent additional queries on subsequent calls'
 		);
 	}

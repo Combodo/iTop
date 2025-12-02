@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,6 +22,6 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'theme:fullmoon-tritanopia' => 'Fullmoon (Tritanopia)',
-));
+]);

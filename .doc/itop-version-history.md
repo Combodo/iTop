@@ -102,6 +102,8 @@ gitGraph
     commit id: "2025-02-25  " tag: "3.2.1"
     commit id: "2025-04-08" tag: "3.2.1-1"
     commit id: "2025-08-19" tag: "3.2.2-1"
+    checkout support/2.7
+    commit id: "2025-10-07" tag: "2.7.13"
 ```
 
 To learn more, check the [iTop community versions history on the official wiki](https://www.itophub.io/wiki/page?id=latest:release:start).

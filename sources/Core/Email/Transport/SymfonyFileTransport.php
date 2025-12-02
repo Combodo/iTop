@@ -19,7 +19,7 @@ class SymfonyFileTransport extends AbstractTransport
 	public function __construct(?string $sLogDir = null, string $sFilename = 'mail.log', ?EventDispatcherInterface $oDispatcher = null, ?LoggerInterface $oLogger = null)
 	{
 		parent::__construct($oDispatcher, $oLogger);
-		$this->sDir = rtrim($sLogDir ?? APPROOT . 'log/', DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+		$this->sDir = rtrim($sLogDir ?? APPROOT.'log/', DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 		$this->sFilename = $sFilename;
 	}
 
@@ -60,4 +60,3 @@ class SymfonyFileTransport extends AbstractTransport
 		return 'logfile';
 	}
 }
-

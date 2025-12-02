@@ -202,6 +202,11 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
   overflow-y: auto;
 }
 
+// N°7982 Default selectize stylesheet override
+.selectize-dropdown-content{
+  max-height: $ibo-input-select-selectize--dropdown--max-height;
+}
+
 .selectize-dropdown.ui-menu .ui-state-active {
   margin: unset;
   background-color: $ibo-input-select-selectize--item--active--background-color;

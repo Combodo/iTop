@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -28,7 +29,6 @@ IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUE
 
 utils::InitTimeZone();
 
-
 /**
  * @param string $sPagePath full path (if symlink, it will be resolved)
  * @param array $aPossibleBasePaths list of possible base paths
@@ -51,7 +51,6 @@ function CheckPageExists(string $sPagePath, array $aPossibleBasePaths)
 	return false;
 }
 
-
 $sModule = utils::ReadParam('exec_module', '');
 if ($sModule == '') {
 	echo "Missing argument 'exec_module'";
@@ -69,7 +68,6 @@ Session::Start();
 $sEnvironment = utils::ReadParam('exec_env', utils::GetCurrentEnvironment());
 Session::WriteClose();
 $oKPI->ComputeAndReport("Session Start");
-
 
 $sEnvFullPath = APPROOT.'env-'.$sEnvironment;
 $sPageRelativePath = $sModule.'/'.$sPage;

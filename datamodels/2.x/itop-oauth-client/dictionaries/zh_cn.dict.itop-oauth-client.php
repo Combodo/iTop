@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -68,7 +69,7 @@ EOF
 // Class: OAuthClientAzure
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => '范围',
@@ -91,13 +92,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => '否',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Tenant~~',
 	'Class:OAuthClientAzure/Attribute:tenant+' => 'Tenant ID of the configured application. For multi-tenant application, use "common".~~',
-));
+]);
 
 //
 // Class: OAuthClientGoogle
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => '范围',
@@ -118,4 +119,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => '如果您需要系统使用其发送邮件, 则至少需要有一个OAuth客户端标记为 "是"',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => '是',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => '否',
-));
+]);

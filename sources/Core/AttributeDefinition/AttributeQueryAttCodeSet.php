@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -19,7 +20,7 @@ use utils;
 
 class AttributeQueryAttCodeSet extends AttributeSet
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	public function __construct($sCode, array $aParams)
 	{
@@ -29,7 +30,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('query_field'));
+		return array_merge(parent::ListExpectedParams(), ['query_field']);
 	}
 
 	protected function GetSQLCol($bFullSpec = false)
@@ -55,28 +56,27 @@ class AttributeQueryAttCodeSet extends AttributeSet
 			$sQueryField = $this->Get('query_field');
 			$sQuery = $oHostObj->Get($sQueryField);
 			if (empty($sQuery)) {
-				return array();
+				return [];
 			}
 			$oFilter = DBSearch::FromOQL($sQuery);
 
 			return $oFilter->GetSelectedClasses();
 
-		}
-		catch (OQLException $e) {
+		} catch (OQLException $e) {
 			IssueLog::Warning($e->getMessage());
 		}
 
-		return array();
+		return [];
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		if (isset($aArgs['this'])) {
 			$oHostObj = $aArgs['this'];
 			$aClasses = $this->GetClassList($oHostObj);
 
-			$aAllowedAttributes = array();
-			$aAllAttributes = array();
+			$aAllowedAttributes = [];
+			$aAllAttributes = [];
 
 			if ((count($aClasses) == 1) && (array_keys($aClasses)[0] == array_values($aClasses)[0])) {
 				$sClass = reset($aClasses);
@@ -90,7 +90,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 					foreach ($aClasses as $sAlias => $sClass) {
 						$aAttributes = MetaModel::GetAttributesList($sClass);
 						foreach ($aAttributes as $sAttCode) {
-							$aAllAttributes[] = array('alias' => $sAlias, 'class' => $sClass, 'att_code' => $sAttCode);
+							$aAllAttributes[] = ['alias' => $sAlias, 'class' => $sClass, 'att_code' => $sAttCode];
 						}
 					}
 				}
@@ -125,16 +125,16 @@ class AttributeQueryAttCodeSet extends AttributeSet
 	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
 		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
-		$aArgs = array();
+		$aArgs = [];
 		if (!empty($oHostObj)) {
 			$aArgs['this'] = $oHostObj;
 		}
 		$aAllowedAttributes = $this->GetAllowedValues($aArgs);
-		$aInvalidAttCodes = array();
+		$aInvalidAttCodes = [];
 		if (is_string($proposedValue) && !empty($proposedValue)) {
 			$proposedValue = trim($proposedValue);
 			$aProposedValues = $this->FromStringToArray($proposedValue);
-			$aValues = array();
+			$aValues = [];
 			foreach ($aProposedValues as $sValue) {
 				$sAttCode = trim($sValue);
 				if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode])) {
@@ -174,7 +174,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 				$aArgs['this'] = $oHostObject;
 				$aAllowedAttributes = $this->GetAllowedValues($aArgs);
 
-				$aLocalizedValues = array();
+				$aLocalizedValues = [];
 				foreach ($value as $sAttCode) {
 					if (isset($aAllowedAttributes[$sAttCode])) {
 						$sLabelForHtmlAttribute = utils::HtmlEntities($aAllowedAttributes[$sAttCode]);

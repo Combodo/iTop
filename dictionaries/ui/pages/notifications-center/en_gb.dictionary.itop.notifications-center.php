@@ -1,10 +1,11 @@
 <?php
+
 /**
  * @copyright Copyright (C) 2024 Combodo SAS
  * @license https://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:NotificationsCenter:Page:Title' => 'Notifications centre',
 	'UI:NotificationsCenter:Panel:Title' => 'Notifications centre',
 	'UI:NotificationsCenter:Panel:SubTitle' => 'Manage Notifications that you have received : unsubscribe or limit them to a single channel',
@@ -16,4 +17,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'UI:NotificationsCenter:Subscribe:Error' => 'An error occurred while subscribing to the selected notifications.',
 	'UI:NotificationsCenter:Channel:OutOf:Text' => '%1$s out of %2$s',
 	'UI:NotificationsCenter:Advanced:Input:Label' => '%1$s: %2$s',
-));
+]);

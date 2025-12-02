@@ -1,11 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Test\UnitTest\Core\Log;
-
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
@@ -14,10 +14,12 @@ use FileLog;
 use IssueLog;
 use LogAPI;
 use utils;
+
 use const E_USER_DEPRECATED;
 use const ITOP_PHPUNIT_RUNNING_CONSTANT_NAME;
 
-class DeprecatedCallsLogErrorHandlerTest extends ItopTestCase {
+class DeprecatedCallsLogErrorHandlerTest extends ItopTestCase
+{
 	public const DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER = false;
 
 	/**
@@ -26,7 +28,8 @@ class DeprecatedCallsLogErrorHandlerTest extends ItopTestCase {
 	 *
 	 * @runInSeparateProcess so that other tests won't set the constant !
 	 */
-	public function testPhpLibMethodNoticeCatched():void {
+	public function testPhpLibMethodNoticeCatched(): void
+	{
 		if (defined(ITOP_PHPUNIT_RUNNING_CONSTANT_NAME)) {
 			// Should not happen thanks to the process isolation !
 			$this->fail('Constant to disable error handler is set, so we cannot test :(');
@@ -50,9 +53,9 @@ class DeprecatedCallsLogErrorHandlerTest extends ItopTestCase {
 		$oMockConfig
 			->method("Get")
 			->willReturnCallback(function ($sConfigParameterName) {
-				if ($sConfigParameterName==='log_level_min'){
+				if ($sConfigParameterName === 'log_level_min') {
 					return [
-						DeprecatedCallsLog::ENUM_CHANNEL_PHP_LIBMETHOD => LogAPI::LEVEL_TRACE
+						DeprecatedCallsLog::ENUM_CHANNEL_PHP_LIBMETHOD => LogAPI::LEVEL_TRACE,
 					];
 				}
 				/** @noinspection NullPointerExceptionInspection */

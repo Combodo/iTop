@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -21,9 +22,9 @@ use Combodo\iTop\Core\MetaModel\HierarchicalKey;
 
 class DatabaseAnalyzer
 {
-	const LIMIT = 100;
+	public const LIMIT = 100;
 
-	var $iTimeLimitPerOperation;
+	public $iTimeLimitPerOperation;
 
 	public function __construct($iTimeLimitPerOperation = null)
 	{
@@ -40,57 +41,42 @@ class DatabaseAnalyzer
 	 *
 	 * @throws \MySQLException
 	 */
-	private function ExecQuery($sSelWrongRecs, $sFixItRequest, $sErrorDesc, $sClass, &$aErrorsAndFixes, $aValueNames = array())
+	private function ExecQuery($sSelWrongRecs, $sFixItRequest, $sErrorDesc, $sClass, &$aErrorsAndFixes, $aValueNames = [])
 	{
-		if (!is_null($this->iTimeLimitPerOperation))
-		{
+		if (!is_null($this->iTimeLimitPerOperation)) {
 			set_time_limit(intval($this->iTimeLimitPerOperation));
 		}
 
 		$aWrongRecords = CMDBSource::QueryToArray($sSelWrongRecs.' limit '.self::LIMIT);
-		if (count($aWrongRecords) > 0)
-		{
-			foreach($aWrongRecords as $aRes)
-			{
-				if (!isset($aErrorsAndFixes[$sClass][$sErrorDesc]))
-				{
-					$aErrorsAndFixes[$sClass][$sErrorDesc] = array(
+		if (count($aWrongRecords) > 0) {
+			foreach ($aWrongRecords as $aRes) {
+				if (!isset($aErrorsAndFixes[$sClass][$sErrorDesc])) {
+					$aErrorsAndFixes[$sClass][$sErrorDesc] = [
 						'count' => 1,
 						'query' => $sSelWrongRecs,
-					);
-					if (!empty($sFixItRequest))
-					{
-						$aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'] = array($sFixItRequest);
-						$aErrorsAndFixes[$sClass][$sErrorDesc]['cleanup'] = array($sFixItRequest);
+					];
+					if (!empty($sFixItRequest)) {
+						$aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'] = [$sFixItRequest];
+						$aErrorsAndFixes[$sClass][$sErrorDesc]['cleanup'] = [$sFixItRequest];
 					}
-				}
-				else
-				{
+				} else {
 					$aErrorsAndFixes[$sClass][$sErrorDesc]['count'] += 1;
 				}
-				if (empty($aValueNames))
-				{
-					$aValues = array('id' => $aRes['id']);
-				}
-				else
-				{
-					$aValues = array();
-					foreach ($aValueNames as $sValueName)
-					{
+				if (empty($aValueNames)) {
+					$aValues = ['id' => $aRes['id']];
+				} else {
+					$aValues = [];
+					foreach ($aValueNames as $sValueName) {
 						$aValues[$sValueName] = $aRes[$sValueName];
 					}
 				}
 
-				if (isset($aRes['value']))
-				{
+				if (isset($aRes['value'])) {
 					$value = $aRes['value'];
 					$aValues['value'] = $value;
-					if (!isset($aErrorsAndFixes[$sClass][$sErrorDesc]['values'][$value]))
-					{
+					if (!isset($aErrorsAndFixes[$sClass][$sErrorDesc]['values'][$value])) {
 						$aErrorsAndFixes[$sClass][$sErrorDesc]['values'][$value] = 1;
-					}
-					else
-					{
+					} else {
 						$aErrorsAndFixes[$sClass][$sErrorDesc]['values'][$value] += 1;
 					}
 				}
@@ -109,30 +95,24 @@ class DatabaseAnalyzer
 	 */
 	public function CheckIntegrity($aClassSelection)
 	{
-		$aErrorsAndFixes = array();
+		$aErrorsAndFixes = [];
 
-		if (empty($aClassSelection))
-		{
+		if (empty($aClassSelection)) {
 			$aClassSelection = MetaModel::GetClasses();
-		}
-		else
-		{
+		} else {
 			$aClasses = $aClassSelection;
-			foreach($aClasses as $sClass)
-			{
+			foreach ($aClasses as $sClass) {
 				$aExpectedClasses = MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL);
 				$aClassSelection = array_merge($aClassSelection, $aExpectedClasses);
 			}
 			$aClassSelection = array_unique($aClassSelection);
 		}
 
-		foreach ($aClassSelection as $sClass)
-		{
+		foreach ($aClassSelection as $sClass) {
 			// Check uniqueness rules
 			$this->CheckUniquenessRules($sClass, $aErrorsAndFixes);
 
-			if (!MetaModel::HasTable($sClass))
-			{
+			if (!MetaModel::HasTable($sClass)) {
 				continue;
 			}
 
@@ -140,38 +120,30 @@ class DatabaseAnalyzer
 			$sTable = MetaModel::DBGetTable($sClass);
 			$sKeyField = MetaModel::DBGetKey($sClass);
 
-			if (!MetaModel::IsStandaloneClass($sClass))
-			{
+			if (!MetaModel::IsStandaloneClass($sClass)) {
 				$sRootTable = MetaModel::DBGetTable($sRootClass);
 				$sRootKey = MetaModel::DBGetKey($sRootClass);
-				if (!MetaModel::IsRootClass($sClass))
-				{
+				if (!MetaModel::IsRootClass($sClass)) {
 					$this->CheckRecordsInRootTable($sTable, $sKeyField, $sRootTable, $sRootKey, $sClass, $aErrorsAndFixes);
 					$this->CheckRecordsInChildTable($sRootClass, $sClass, $sRootTable, $sRootKey, $sTable, $sKeyField, $aErrorsAndFixes);
-					if (!MetaModel::IsLeafClass($sClass))
-					{
+					if (!MetaModel::IsLeafClass($sClass)) {
 						$this->CheckIntermediateFinalClass($sRootClass, $sClass, $sRootTable, $sRootKey, $sTable, $sKeyField, $aErrorsAndFixes);
 					}
 				}
 			}
 
-			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
+			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 				// Skip this attribute if not defined in this table
-				if (!MetaModel::IsAttributeOrigin($sClass, $sAttCode))
-				{
+				if (!MetaModel::IsAttributeOrigin($sClass, $sAttCode)) {
 					continue;
 				}
 
-				if ($oAttDef->IsExternalKey())
-				{
+				if ($oAttDef->IsExternalKey()) {
 					$this->CheckExternalKeys($oAttDef, $sTable, $sKeyField, $sAttCode, $sClass, $aErrorsAndFixes);
 					if ((MetaModel::GetAttributeOrigin($sClass, $sAttCode) == $sClass) && $oAttDef->IsHierarchicalKey()) {
 						$this->CheckHK($sClass, $sAttCode, $aErrorsAndFixes);
 					}
-				}
-				elseif ($oAttDef->IsDirectField() && !($oAttDef instanceof AttributeSet))
-				{
+				} elseif ($oAttDef->IsDirectField() && !($oAttDef instanceof AttributeSet)) {
 					$this->CheckAllowedValues($sClass, $sAttCode, $oAttDef, $sTable, $sKeyField, $aErrorsAndFixes);
 				}
 			}
@@ -196,38 +168,33 @@ class DatabaseAnalyzer
 	private function CheckUniquenessRule($sClass, $sUniquenessRuleId, $aUniquenessRuleProperties, &$aErrorsAndFixes)
 	{
 		$sOqlUniquenessQuery = "SELECT $sClass";
-		if (!(empty($sUniquenessFilter = $aUniquenessRuleProperties['filter'])))
-		{
+		if (!(empty($sUniquenessFilter = $aUniquenessRuleProperties['filter']))) {
 			$sOqlUniquenessQuery .= ' WHERE '.$sUniquenessFilter;
 		}
 		$oUniquenessQuery = DBObjectSearch::FromOQL($sOqlUniquenessQuery);
 
-		$aValueNames = array();
-		$aGroupByExpr = array();
-		foreach ($aUniquenessRuleProperties['attributes'] as $sAttributeCode)
-		{
+		$aValueNames = [];
+		$aGroupByExpr = [];
+		foreach ($aUniquenessRuleProperties['attributes'] as $sAttributeCode) {
 			$oExpr = Expression::FromOQL("$sClass.$sAttributeCode");
 			$aGroupByExpr[$sAttributeCode] = $oExpr;
 			$aValueNames[] = $sAttributeCode;
 		}
 
-		$aSelectExpr = array();
+		$aSelectExpr = [];
 
-		$sSQLUniquenessQuery = $oUniquenessQuery->MakeGroupByQuery(array(), $aGroupByExpr, false, $aSelectExpr);
+		$sSQLUniquenessQuery = $oUniquenessQuery->MakeGroupByQuery([], $aGroupByExpr, false, $aSelectExpr);
 
 		$sSQLUniquenessQuery .= ' having count(*) > 1';
 
 		$sErrorDesc = $this->GetUniquenessRuleMessage($sUniquenessRuleId);
 
 		$this->ExecQuery($sSQLUniquenessQuery, '', $sErrorDesc, $sClass, $aErrorsAndFixes, $aValueNames);
-		if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['res']))
-		{
-			$aFixit = array("-- In order to get the duplicates, run the following queries:");
-			foreach ($aErrorsAndFixes[$sClass][$sErrorDesc]['res'] as $aValues)
-			{
+		if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['res'])) {
+			$aFixit = ["-- In order to get the duplicates, run the following queries:"];
+			foreach ($aErrorsAndFixes[$sClass][$sErrorDesc]['res'] as $aValues) {
 				$oFixSearch = new DBObjectSearch($sClass);
-				foreach ($aValues as $sAttCode => $sValue)
-				{
+				foreach ($aValues as $sAttCode => $sValue) {
 					$oFixSearch->AddCondition($sAttCode, $sValue, '=');
 				}
 				$aFixit[] = $oFixSearch->MakeSelectQuery([], [], null, null, 0, 0, false, false).';';
@@ -251,13 +218,10 @@ class DatabaseAnalyzer
 	 */
 	private function CheckUniquenessRules($sClass, &$aErrorsAndFixes)
 	{
-		if (method_exists('MetaModel', 'GetUniquenessRules'))
-		{
+		if (method_exists('MetaModel', 'GetUniquenessRules')) {
 			$aUniquenessRules = MetaModel::GetUniquenessRules($sClass);
-			foreach ($aUniquenessRules as $sUniquenessRuleId => $aUniquenessRuleProperties)
-			{
-				if ($aUniquenessRuleProperties['disabled'] === true)
-				{
+			foreach ($aUniquenessRules as $sUniquenessRuleId => $aUniquenessRuleProperties) {
+				if ($aUniquenessRuleProperties['disabled'] === true) {
 					continue;
 				}
 				$this->CheckUniquenessRule($sClass, $sUniquenessRuleId, $aUniquenessRuleProperties, $aErrorsAndFixes);
@@ -375,8 +339,7 @@ class DatabaseAnalyzer
 		$this->ExecQuery($sSelWrongRecs, '', $sErrorDesc, $sClass, $aErrorsAndFixes);
 		$aFixIt = [];
 		// Fix it request needs the values of the enum to generate the requests
-		if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['values']))
-		{
+		if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['values'])) {
 			if ($oAttDef->IsNullAllowed()) {
 				$aFixIt[] = "-- Fix inconsistant values: remove the external key";
 				foreach (array_keys($aErrorsAndFixes[$sClass][$sErrorDesc]['values']) as $sKey) {
@@ -384,8 +347,7 @@ class DatabaseAnalyzer
 				}
 			} else {
 				$aAdditionalFixIt = $this->GetSpecificExternalKeysFixItForNull($sTable, $sExtKeyField, $sFilter, $sJoin);
-				foreach ($aAdditionalFixIt as $sFixIt)
-				{
+				foreach ($aAdditionalFixIt as $sFixIt) {
 					$aFixIt[] = $sFixIt;
 				}
 
@@ -411,11 +373,9 @@ class DatabaseAnalyzer
 			$sErrorDesc = Dict::Format('DBAnalyzer-Integrity-MissingExtKey', $sAttCode, $sTable, $sExtKeyField);
 			$this->ExecQuery($sSelWrongRecs, '', $sErrorDesc, $sClass, $aErrorsAndFixes);
 			$aFixIt = [];
-			if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['count']) && ($aErrorsAndFixes[$sClass][$sErrorDesc]['count'] > 0))
-			{
+			if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['count']) && ($aErrorsAndFixes[$sClass][$sErrorDesc]['count'] > 0)) {
 				$aAdditionalFixIt = $this->GetSpecificExternalKeysFixItForNull($sTable, $sExtKeyField, $sFilter);
-				foreach ($aAdditionalFixIt as $sFixIt)
-				{
+				foreach ($aAdditionalFixIt as $sFixIt) {
 					$aFixIt[] = $sFixIt;
 				}
 				$aFixIt[] = "-- Alternate fix: remove inconsistant entries:";
@@ -429,9 +389,8 @@ class DatabaseAnalyzer
 
 	private function GetSpecificExternalKeysFixItForNull($sTable, $sExtKeyField, $sFilter, $sJoin = '')
 	{
-		$aFixIt = array();
-		if ($sTable == 'ticket' && $sExtKeyField == 'org_id')
-		{
+		$aFixIt = [];
+		if ($sTable == 'ticket' && $sExtKeyField == 'org_id') {
 			$aFixIt[] = "-- Alternate fix: set the ticket org to the caller org";
 			$aFixIt[] = "UPDATE ticket JOIN contact AS c ON ticket.caller_id=c.id $sJoin SET ticket.org_id=c.org_id $sFilter";
 		}
@@ -454,8 +413,7 @@ class DatabaseAnalyzer
 	private function CheckAllowedValues($sClass, $sAttCode, AttributeDefinition $oAttDef, $sTable, $sKeyField, &$aErrorsAndFixes)
 	{
 		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode);
-		if (!is_null($aAllowedValues) && count($aAllowedValues) > 0)
-		{
+		if (!is_null($aAllowedValues) && count($aAllowedValues) > 0) {
 			$aAllowedValues = array_keys($aAllowedValues);
 			$sExpectedValues = implode(",", CMDBSource::Quote($aAllowedValues, true));
 
@@ -478,19 +436,14 @@ class DatabaseAnalyzer
 			$sErrorDesc = Dict::Format('DBAnalyzer-Integrity-InvalidValue', $sAttCode, $sTable, $sMyAttributeField);
 			$this->ExecQuery($sSelWrongRecs, $sFixItRequest, $sErrorDesc, $sClass, $aErrorsAndFixes);
 			// Fix it request needs the values of the enum to generate the requests
-			if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['values']))
-			{
-				if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['fixit']))
-				{
+			if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['values'])) {
+				if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'])) {
 					$aFixIt = $aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'];
 					$aFixIt[] = "-- Alternative: Replace enums with the appropriate value";
-				}
-				else
-				{
+				} else {
 					$aFixIt = ["-- Replace enums with the appropriate value"];
 				}
-				foreach (array_keys($aErrorsAndFixes[$sClass][$sErrorDesc]['values']) as $sKey)
-				{
+				foreach (array_keys($aErrorsAndFixes[$sClass][$sErrorDesc]['values']) as $sKey) {
 					foreach ($aAllowedValues as $sAllowedValue) {
 						$aFixIt[] = "-- Replace $sKey by $sAllowedValue";
 						$aFixIt[] = "UPDATE `$sTable` SET `$sTable`.`$sMyAttributeField` = '$sAllowedValue' WHERE `$sTable`.`$sMyAttributeField` = '$sKey'";

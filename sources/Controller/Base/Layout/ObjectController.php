@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -68,7 +69,7 @@ class ObjectController extends AbstractController
 		$bCheckSubClass = utils::ReadParam('checkSubclass', true);
 		$oAppContext = new ApplicationContext();
 		$oRouter = Router::GetInstance();
-		
+
 		if ($this->IsHandlingXmlHttpRequest()) {
 			$oPage = new AjaxPage('');
 		} else {
@@ -77,9 +78,7 @@ class ObjectController extends AbstractController
 			$this->AddRequiredForModificationJsFilesToPage($oPage);
 		}
 
-
-		if (empty($sClass))
-		{
+		if (empty($sClass)) {
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 		}
 		if (!is_subclass_of($sClass, cmdbAbstractObject::class)) {
@@ -87,43 +86,36 @@ class ObjectController extends AbstractController
 		}
 		// If the specified class has subclasses, ask the user an instance of which class to create
 		$aSubClasses = MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
-		$aPossibleClasses = array();
+		$aPossibleClasses = [];
 		$sRealClass = '';
-		if ($bCheckSubClass)
-		{
-			foreach($aSubClasses as $sCandidateClass)
-			{
-				if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
-				{
+		if ($bCheckSubClass) {
+			foreach ($aSubClasses as $sCandidateClass) {
+				if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
 					$aPossibleClasses[$sCandidateClass] = MetaModel::GetName($sCandidateClass);
 				}
 			}
 			// Only one of the subclasses can be instantiated...
-			if (count($aPossibleClasses) === 1)
-			{
+			if (count($aPossibleClasses) === 1) {
 				$aKeys = array_keys($aPossibleClasses);
 				$sRealClass = $aKeys[0];
 			}
-		}
-		else
-		{
+		} else {
 			$sRealClass = $sClass;
 		}
 
-		if (!empty($sRealClass))
-		{
+		if (!empty($sRealClass)) {
 			// Set all the default values in an object and clone this "default" object
 			$oObjToClone = MetaModel::NewObject($sRealClass);
 			// 1st - set context values
 			$oAppContext->InitObjectFromContext($oObjToClone);
 			// 2nd - set values from the page argument 'default'
 			$oObjToClone->UpdateObjectFromArg('default');
-			$aPrefillFormParam = array(
+			$aPrefillFormParam = [
 				'user' => Session::Get('auth_user'),
 				'context' => $oAppContext->GetAsHash(),
-				'default' => utils::ReadParam('default', array(), '', 'raw_data'),
+				'default' => utils::ReadParam('default', [], '', 'raw_data'),
 				'origin' => 'console',
-			);
+			];
 			// 3rd - prefill API
 			$oObjToClone->PrefillForm('creation_from_0', $aPrefillFormParam);
 
@@ -134,18 +126,18 @@ class ObjectController extends AbstractController
 			$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 			// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
 
-			$aFormExtraParams = array('wizard_container' => 1, 'keep_source_object' => true);
-			
+			$aFormExtraParams = ['wizard_container' => 1, 'keep_source_object' => true];
+
 			// - Update flags with parameters set in URL
 			FormHelper::UpdateFlagsFromContext($oObjToClone, $aFormExtraParams);
-			
+
 			if ($this->IsHandlingXmlHttpRequest()) {
 				$aFormExtraParams['js_handlers'] = [];
 				$aFormExtraParams['noRelations'] = true;
 				$aFormExtraParams['hide_transitions'] = true;
 				// Add a random prefix to avoid ID collision for form elements
 				$aFormExtraParams['formPrefix'] = utils::Sanitize(uniqid('', true), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER).'_';
-				// We display this form in a modal, once we submit (in ajax) we probably want to only close the modal 
+				// We display this form in a modal, once we submit (in ajax) we probably want to only close the modal
 				$aFormExtraParams['js_handlers']['form_on_submit'] =
 					<<<JS
 				event.preventDefault();
@@ -176,10 +168,10 @@ JS;
 				// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
 				FormHelper::DisableAttributeBlobInputs($sRealClass, $aFormExtraParams);
 
-				if(FormHelper::HasMandatoryAttributeBlobInputs($oObjToClone)){
+				if (FormHelper::HasMandatoryAttributeBlobInputs($oObjToClone)) {
 					$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal(FormHelper::ENUM_MANDATORY_BLOB_MODE_CREATE));
 				}
-				
+
 				$aFormExtraParams['js_handlers']['cancel_button_on_click'] =
 					<<<JS
 				function() {
@@ -191,7 +183,7 @@ JS;
 				$oPage->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE));
 			}
 
-			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObjToClone, array(), $aFormExtraParams);
+			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObjToClone, [], $aFormExtraParams);
 		} else {
 			if ($this->IsHandlingXmlHttpRequest()) {
 				$oClassForm = cmdbAbstractObject::DisplayFormBlockSelectClassToCreate($sClass, MetaModel::GetName($sClass), $oAppContext, $aPossibleClasses, ['state' => $sStateCode]);
@@ -209,9 +201,8 @@ JS;
 JS
 				);
 				$oPage->AddUiBlock($oClassForm);
-			}
-			else{
-				cmdbAbstractObject::DisplaySelectClassToCreate($sClass, $oPage, $oAppContext, $aPossibleClasses,['state' => $sStateCode]);
+			} else {
+				cmdbAbstractObject::DisplaySelectClassToCreate($sClass, $oPage, $oAppContext, $aPossibleClasses, ['state' => $sStateCode]);
 			}
 		}
 		return $oPage;
@@ -233,8 +224,7 @@ JS
 		$sFormTitle = utils::ReadPostedParam('form_title', null, utils::ENUM_SANITIZATION_FILTER_STRING);
 
 		// Check parameters
-		if (utils::IsNullOrEmptyString($sClass) || utils::IsNullOrEmptyString($sId))
-		{
+		if (utils::IsNullOrEmptyString($sClass) || utils::IsNullOrEmptyString($sId)) {
 			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 		}
 
@@ -248,11 +238,11 @@ JS
 		// - Is allowed to edit it?
 		$oSet = CMDBObjectSet::FromObject($oObj);
 		if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_NO) {
-			throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $sId));
+			throw new SecurityException('User not allowed to modify this object', ['class' => $sClass, 'id' => $sId]);
 		}
 
 		// Prepare web page (should more likely be some kind of response object like for Symfony)
-		$aFormExtraParams = array('wizard_container' => 1);
+		$aFormExtraParams = ['wizard_container' => 1];
 		FormHelper::UpdateFlagsFromContext($oObj, $aFormExtraParams);
 
 		// Allow form title customization
@@ -265,7 +255,7 @@ JS
 			$aFormExtraParams['js_handlers'] = [];
 			$aFormExtraParams['noRelations'] = true;
 			$aFormExtraParams['hide_transitions'] = true;
-			// We display this form in a modal, once we submit (in ajax) we probably want to only close the modal 
+			// We display this form in a modal, once we submit (in ajax) we probably want to only close the modal
 			$aFormExtraParams['js_handlers']['form_on_submit'] =
 				<<<JS
 				event.preventDefault();
@@ -293,7 +283,6 @@ JS
 				}
 JS;
 
-
 			$aFormExtraParams['js_handlers']['cancel_button_on_click'] =
 				<<<JS
 				function() {
@@ -304,12 +293,12 @@ JS;
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
 			FormHelper::DisableAttributeBlobInputs($sClass, $aFormExtraParams);
 
-			if(FormHelper::HasMandatoryAttributeBlobInputs($oObj)){
+			if (FormHelper::HasMandatoryAttributeBlobInputs($oObj)) {
 				$sMandatoryBlobAttCode = FormHelper::GetMandatoryAttributeBlobInputs($oObj);
 				$sAlertFormMandatoryAttMessageMode = FormHelper::ENUM_MANDATORY_BLOB_MODE_MODIFY_EMPTY;
 				$oMandatoryBlobAttCodeValue = $oObj->Get($sMandatoryBlobAttCode);
 				// If the current value of the mandatory attribute is not empty, display a different message
-				if($oMandatoryBlobAttCodeValue instanceof \ormDocument && !$oMandatoryBlobAttCodeValue->IsEmpty()){
+				if ($oMandatoryBlobAttCodeValue instanceof \ormDocument && !$oMandatoryBlobAttCodeValue->IsEmpty()) {
 					$sAlertFormMandatoryAttMessageMode = FormHelper::ENUM_MANDATORY_BLOB_MODE_MODIFY_FILLED;
 				}
 				$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal($sAlertFormMandatoryAttMessageMode));
@@ -329,7 +318,7 @@ JS;
 
 		return $oPage;
 	}
-	
+
 	/**
 	 * @return iTopWebPage|JsonPage Object edit form in its webpage
 	 * @throws \ApplicationException
@@ -350,29 +339,27 @@ JS;
 			$oPage->DisableBreadCrumb();
 			$this->AddRequiredForModificationJsFilesToPage($oPage);
 		}
-		
+
 		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$sClassLabel = MetaModel::GetName($sClass);
 		$sFormPrefix = utils::ReadPostedParam('formPrefix', '', utils::ENUM_SANITIZATION_FILTER_STRING);
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
-		$aErrors = array();
-		$aWarnings = array();
-		if ( empty($sClass) )
-		{
-			IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not created (empty class)', $sClass, array(
+		$aErrors = [];
+		$aWarnings = [];
+		if (empty($sClass)) {
+			IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not created (empty class)', $sClass, [
 				'$sTransactionId' => $sTransactionId,
 				'$sUser' => UserRights::GetUser(),
 				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 				'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-			));
+			]);
 
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 		}
-		if (!utils::IsTransactionValid($sTransactionId, false))
-		{
+		if (!utils::IsTransactionValid($sTransactionId, false)) {
 			$sUser = UserRights::GetUser();
 			IssueLog::Error(__CLASS__.'::'.__METHOD__." : invalid transaction_id ! data: user='$sUser', class='$sClass'");
-	
+
 			if ($this->IsHandlingXmlHttpRequest()) {
 				$aResult['data'] = ['error_message' => Dict::S('UI:Error:ObjectAlreadyCreated')];
 			} else {
@@ -382,25 +369,20 @@ JS;
 				$oPage->AddUiBlock($oErrorAlert);
 			}
 
-			IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not created (invalid transaction_id)', $sClass, array(
+			IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not created (invalid transaction_id)', $sClass, [
 				'$sTransactionId' => $sTransactionId,
 				'$sUser' => UserRights::GetUser(),
 				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 				'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-			));
-		}
-		else
-		{
+			]);
+		} else {
 			$oObj = MetaModel::NewObject($sClass);
-			if (MetaModel::HasLifecycle($sClass))
-			{
+			if (MetaModel::HasLifecycle($sClass)) {
 				$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 				$sTargetState = utils::ReadPostedParam('obj_state', '');
-				if ($sTargetState != '')
-				{
+				if ($sTargetState != '') {
 					$sOrigState = utils::ReadPostedParam('obj_state_orig', '');
-					if ($sTargetState != $sOrigState)
-					{
+					if ($sTargetState != $sOrigState) {
 						$aWarnings[] = Dict::S('UI:StateChanged');
 					}
 					$oObj->Set($sStateAttCode, $sTargetState);
@@ -408,24 +390,21 @@ JS;
 			}
 			$aErrors = $oObj->UpdateObjectFromPostedForm($sFormPrefix);
 		}
-		if (isset($oObj) && is_object($oObj))
-		{
+		if (isset($oObj) && is_object($oObj)) {
 			$sClass = get_class($oObj);
 			$sClassLabel = MetaModel::GetName($sClass);
 
-			try
-			{
-				if (!empty($aErrors) || !empty($aWarnings))
-				{
-					IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not created (see $aErrors)', $sClass, array(
+			try {
+				if (!empty($aErrors) || !empty($aWarnings)) {
+					IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not created (see $aErrors)', $sClass, [
 						'$sTransactionId' => $sTransactionId,
 						'$aErrors'        => $aErrors,
 						'$sUser'          => UserRights::GetUser(),
 						'HTTP_REFERER'    => @$_SERVER['HTTP_REFERER'],
 						'REQUEST_URI'     => @$_SERVER['REQUEST_URI'],
-					));
+					]);
 
-					throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
+					throw new CoreCannotSaveObjectException(['id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors]);
 				}
 
 				// Transactions are now handled in DBInsert
@@ -438,15 +417,14 @@ JS;
 				$oObj->CheckChangedExtKeysValues();
 				$oObj->DBInsertNoReload();
 
-
-				IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object created', $sClass, array(
+				IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object created', $sClass, [
 					'$id'             => $oObj->GetKey(),
 					'$sTransactionId' => $sTransactionId,
 					'$aErrors'        => $aErrors,
 					'$sUser'          => UserRights::GetUser(),
 					'HTTP_REFERER'    => @$_SERVER['HTTP_REFERER'],
 					'REQUEST_URI'     => @$_SERVER['REQUEST_URI'],
-				));
+				]);
 
 				utils::RemoveTransaction($sTransactionId);
 				$oPage->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
@@ -462,8 +440,7 @@ JS;
 					$oPage->add("<h1>$sMessage</h1>");
 					try {
 						ApplyNextAction($oPage, $oObj, $sNextAction);
-					}
-					catch (ApplicationException $e) {
+					} catch (ApplicationException $e) {
 						$sMessage = $e->getMessage();
 						$sSeverity = 'info';
 						ReloadAndDisplay($oPage, $oObj, 'create', $sMessage, $sSeverity);
@@ -477,8 +454,7 @@ JS;
 						ReloadAndDisplay($oPage, $oObj, 'create', $sMessage, 'ok');
 					}
 				}
-			}
-			catch (CoreCannotSaveObjectException $e) {
+			} catch (CoreCannotSaveObjectException $e) {
 				// Found issues, explain and give the user a second chance
 				//
 				$aIssues = $e->getIssues();
@@ -517,7 +493,8 @@ JS;
 	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 */
-	public function OperationApplyModify(){
+	public function OperationApplyModify()
+	{
 		$bPrintable = utils::ReadParam('printable', '0') === '1';
 		$aResult = [];
 		if ($this->IsHandlingXmlHttpRequest()) {
@@ -534,86 +511,79 @@ JS;
 		$sClassLabel = MetaModel::GetName($sClass);
 		$id = utils::ReadPostedParam('id', '');
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
-		if ( empty($sClass) || empty($id))
-		{
-			IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not updated (empty class or id)', $sClass, array(
+		if (empty($sClass) || empty($id)) {
+			IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not updated (empty class or id)', $sClass, [
 				'$id' => $id,
 				'$sTransactionId' => $sTransactionId,
 				'$sUser' => UserRights::GetUser(),
 				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 				'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-			));
+			]);
 			// TODO 3.1 Do not crash with an exception in ajax
 			throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 		}
 		$bDisplayDetails = true;
 		$oObj = MetaModel::GetObject($sClass, $id, false);
-		if ($oObj === null)
-		{
+		if ($oObj === null) {
 			$bDisplayDetails = false;
 
 			if ($this->IsHandlingXmlHttpRequest()) {
 				$aResult['data'] = ['error_message' => Dict::S('UI:ObjectDoesNotExist')];
 			} else {
 				$oPage->set_title(Dict::S('UI:ErrorPageTitle'));
-				
+
 				$oErrorAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:ObjectDoesNotExist'));
 				$oErrorAlert->SetIsClosable(false)
 					->SetIsCollapsible(false);
 				$oPage->AddUiBlock($oErrorAlert);
 
 			}
-			
-			IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not updated (id not found)', $sClass, array(
+
+			IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not updated (id not found)', $sClass, [
 				'$id' => $id,
 				'$sTransactionId' => $sTransactionId,
 				'$sUser' => UserRights::GetUser(),
 				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 				'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-			));
-		}
-		elseif (!utils::IsTransactionValid($sTransactionId, false))
-		{
+			]);
+		} elseif (!utils::IsTransactionValid($sTransactionId, false)) {
 			//TODO: since $bDisplayDetails= true, there will be an redirection, thus, the content generated here is ignored, only the $sMessage and $sSeverity are used after the redirection
 			$sUser = UserRights::GetUser();
 			IssueLog::Error(__CLASS__.'::'.__METHOD__."  : invalid transaction_id ! data: user='$sUser', class='$sClass'");
-			
+
 			if ($this->IsHandlingXmlHttpRequest()) {
 				$aResult['data'] = ['error_message' => Dict::S('UI:Error:ObjectAlreadyUpdated')];
 			} else {
 				$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 				$oPage->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
 			}
-			
+
 			$sMessage = Dict::Format('UI:Error:ObjectAlreadyUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 			$sSeverity = 'error';
 
-			IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not updated (invalid transaction_id)', $sClass, array(
+			IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not updated (invalid transaction_id)', $sClass, [
 				'$id' => $id,
 				'$sTransactionId' => $sTransactionId,
 				'$sUser' => UserRights::GetUser(),
 				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 				'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-			));
-		}
-		else
-		{
+			]);
+		} else {
 			$aErrors = $oObj->UpdateObjectFromPostedForm();
 			$sMessage = '';
 			$sSeverity = 'ok';
 
-			if (!$oObj->IsModified() && empty($aErrors))
-			{
+			if (!$oObj->IsModified() && empty($aErrors)) {
 				if ($this->IsHandlingXmlHttpRequest()) {
 					$aResult['data'] = ['error_message' => Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName())];
 				} else {
 					$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 				}
-				
+
 				$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 				$sSeverity = 'info';
 
-				IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not updated (see either $aErrors or IsModified)', $sClass, array(
+				IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object not updated (see either $aErrors or IsModified)', $sClass, [
 					'$id' => $id,
 					'$sTransactionId' => $sTransactionId,
 					'$aErrors' => $aErrors,
@@ -621,11 +591,9 @@ JS;
 					'$sUser' => UserRights::GetUser(),
 					'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 					'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-				));
-			}
-			else
-			{
-				IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object updated', $sClass, array(
+				]);
+			} else {
+				IssueLog::Trace(__CLASS__.'::'.__METHOD__.' Object updated', $sClass, [
 					'$id'             => $id,
 					'$sTransactionId' => $sTransactionId,
 					'$aErrors'        => $aErrors,
@@ -633,11 +601,11 @@ JS;
 					'$sUser'          => UserRights::GetUser(),
 					'HTTP_REFERER'    => @$_SERVER['HTTP_REFERER'],
 					'REQUEST_URI'     => @$_SERVER['REQUEST_URI'],
-				));
+				]);
 
 				try {
 					if (!empty($aErrors)) {
-						throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
+						throw new CoreCannotSaveObjectException(['id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors]);
 					}
 
 					$oObj->CheckChangedExtKeysValues();
@@ -655,9 +623,7 @@ JS;
 					if ($this->IsHandlingXmlHttpRequest()) {
 						$aResult['success'] = true;
 					}
-				}
-				catch (CoreCannotSaveObjectException $e)
-				{
+				} catch (CoreCannotSaveObjectException $e) {
 					// Found issues, explain and give the user a second chance
 					//
 					$bDisplayDetails = false;
@@ -666,13 +632,14 @@ JS;
 						$aResult['data'] = ['error_message' => $e->getHtmlMessage()];
 					} else {
 						$oPage->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
-						$oObj->DisplayModifyForm($oPage,
-							array('wizard_container' => true)); // wizard_container: display the wizard border and the title
+						$oObj->Reload();
+						$oObj->DisplayModifyForm(
+							$oPage,
+							['wizard_container' => true]
+						); // wizard_container: display the wizard border and the title
 					}
-					
-				}
-				catch (DeleteException $e)
-				{
+
+				} catch (DeleteException $e) {
 					if ($this->IsHandlingXmlHttpRequest()) {
 						$aResult['data'] = ['error_message' => Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName())];
 					} else {
@@ -680,8 +647,15 @@ JS;
 						// - 1) Don't be afraid nothing was modified
 						$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 						$sSeverity = 'info';
-						cmdbAbstractObject::SetSessionMessage(get_class($oObj), $oObj->GetKey(), 'UI:Class_Object_NotUpdated', $sMessage,
-							$sSeverity, 0, true /* must not exist */);
+						cmdbAbstractObject::SetSessionMessage(
+							get_class($oObj),
+							$oObj->GetKey(),
+							'UI:Class_Object_NotUpdated',
+							$sMessage,
+							$sSeverity,
+							0,
+							true /* must not exist */
+						);
 						// - 2) Ok, there was some trouble indeed
 						$sMessage = $e->getMessage();
 						$sSeverity = 'error';
@@ -702,8 +676,7 @@ JS;
 				if (!empty($sNextAction)) {
 					try {
 						ApplyNextAction($oPage, $oObj, $sNextAction);
-					}
-					catch (ApplicationException $e) {
+					} catch (ApplicationException $e) {
 						$sMessage = $e->getMessage();
 						$sSeverity = 'info';
 						ReloadAndDisplay($oPage, $oObj, 'update', $sMessage, $sSeverity);
@@ -736,28 +709,25 @@ JS;
 		return $oPage;
 	}
 
-	public function OperationSummary() {
+	public function OperationSummary()
+	{
 		$oPage = new AjaxPage('');
 
 		$sClass = utils::ReadParam('obj_class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$sObjectKey = utils::ReadParam('obj_key', 0, false);
-		
+
 		// - Check if we are allowed to see/make summary for this class
-		if(SummaryCardService::IsAllowedForClass($sClass)){
-			if (is_numeric($sObjectKey))
-			{
+		if (SummaryCardService::IsAllowedForClass($sClass)) {
+			if (is_numeric($sObjectKey)) {
 				$oObj = MetaModel::GetObject($sClass, $sObjectKey, false /* MustBeFound */);
-			}
-			else
-			{
+			} else {
 				$oObj = MetaModel::GetObjectByName($sClass, $sObjectKey, false /* MustBeFound */);
 			}
-	
-			if($oObj !== null) {
+
+			if ($oObj !== null) {
 				$oPage->AddUiBlock(new ObjectSummary($oObj));
 			}
-		}
-		else {
+		} else {
 			$oPage->AddUiBlock(
 				AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Error:ActionNotAllowed'))
 					->SetIsCollapsible(false)
@@ -816,7 +786,7 @@ JS;
 		// Retrieve this reference object (for OQL)
 		$sThisObjectData = utils::ReadPostedParam('this_object_data', null, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 		$oThisObj = null;
-		if($sThisObjectData !== null) {
+		if ($sThisObjectData !== null) {
 			$oThisObj = ObjectRepository::GetObjectFromWizardHelperData($sThisObjectData);
 		}
 
@@ -829,7 +799,7 @@ JS;
 		// Data post processor
 		// Note: Data post processor allow you to perform actions on search result (compute object result statistics, add others information...).
 		if ($aResult !== null && $aDataProcessor !== null) {
-			$aResult = call_user_func(array($aDataProcessor['class_name'], 'Execute'), $aResult, $aDataProcessor['settings']);
+			$aResult = call_user_func([$aDataProcessor['class_name'], 'Execute'], $aResult, $aDataProcessor['settings']);
 		}
 
 		return $oPage->SetData([
@@ -861,7 +831,7 @@ JS;
 			throw new ApplicationException('Invalid marker "'.$sMarker.'"');
 		}
 
-		$aMatches = array();
+		$aMatches = [];
 		// Retrieve mentioned class from marker
 		$sMentionedClass = $aMentionsAllowedClasses[$sMarker];
 		if (MetaModel::IsValidClass($sMentionedClass) === false) {
@@ -880,8 +850,8 @@ JS;
 
 			$aTriggerMentionedSearches = [];
 
-			$aTriggerSetParams = array('class_list' => MetaModel::EnumParentClasses($sHostClass, ENUM_PARENT_CLASSES_ALL));
-			$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), array(), $aTriggerSetParams);
+			$aTriggerSetParams = ['class_list' => MetaModel::EnumParentClasses($sHostClass, ENUM_PARENT_CLASSES_ALL)];
+			$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), [], $aTriggerSetParams);
 			/** @var \TriggerOnObjectMention $oTrigger */
 			while ($oTrigger = $oTriggerSet->Fetch()) {
 				$sTriggerMentionedOQL = $oTrigger->Get('mentioned_filter');
@@ -912,7 +882,6 @@ JS;
 		$sSearchMainClassAlias = $oSearch->GetClassAlias();
 
 		$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sSearchMainClassName);
-
 
 		// Optimize fields to load
 		$aObjectAttCodesToLoad = [];
@@ -947,8 +916,7 @@ JS;
 		try {
 			$oObject = MetaModel::GetObject($sObjectClass, $sObjectKey);
 			$aObjectData = ObjectRepository::ConvertObjectToArray($oObject, $sObjectClass);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$bSuccess = false;
 		}
 

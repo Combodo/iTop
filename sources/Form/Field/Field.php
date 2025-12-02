@@ -19,29 +19,29 @@ use Combodo\iTop\Form\Validator\MandatoryValidator;
  */
 abstract class Field
 {
-    /** @var string */
-	const ENUM_DISPLAY_MODE_COSY = 'cosy';          // Label above value
-    /** @var string */
-	const ENUM_DISPLAY_MODE_COMPACT = 'compact';    // Label and value side by side
-    /** @var string */
-	const ENUM_DISPLAY_MODE_DENSE = 'dense';        // Label and value side by side, closely
+	/** @var string */
+	public const ENUM_DISPLAY_MODE_COSY = 'cosy';          // Label above value
+	/** @var string */
+	public const ENUM_DISPLAY_MODE_COMPACT = 'compact';    // Label and value side by side
+	/** @var string */
+	public const ENUM_DISPLAY_MODE_DENSE = 'dense';        // Label and value side by side, closely
 
 	/** @var string */
-	const DEFAULT_LABEL = '';
+	public const DEFAULT_LABEL = '';
 	/** @var string */
-	const DEFAULT_DESCRIPTION = '';
+	public const DEFAULT_DESCRIPTION = '';
 	/** @var array */
-	const DEFAULT_METADATA = array();
+	public const DEFAULT_METADATA = [];
 	/** @var bool */
-	const DEFAULT_HIDDEN = false;
+	public const DEFAULT_HIDDEN = false;
 	/** @var bool */
-	const DEFAULT_READ_ONLY = false;
+	public const DEFAULT_READ_ONLY = false;
 	/** @var bool */
-	const DEFAULT_MANDATORY = false;
-    /** @var string */
-	const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_COSY;
+	public const DEFAULT_MANDATORY = false;
+	/** @var string */
+	public const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_COSY;
 	/** @var bool */
-	const DEFAULT_VALID = true;
+	public const DEFAULT_VALID = true;
 
 	/** @var string */
 	protected $sId;
@@ -93,7 +93,7 @@ abstract class Field
 	{
 		$this->sId = $sId;
 		// No space in such an id, that could be used as a DOM node id
-		$this->sGlobalId = 'field_' . str_replace(' ', '_', $sId) . '_' . uniqid();
+		$this->sGlobalId = 'field_'.str_replace(' ', '_', $sId).'_'.uniqid();
 		$this->sLabel = static::DEFAULT_LABEL;
 		$this->sDescription = static::DEFAULT_DESCRIPTION;
 		$this->aMetadata = static::DEFAULT_METADATA;
@@ -101,10 +101,10 @@ abstract class Field
 		$this->bReadOnly = static::DEFAULT_READ_ONLY;
 		$this->bMandatory = static::DEFAULT_MANDATORY;
 		$this->sDisplayMode = static::DEFAULT_DISPLAY_MODE;
-		$this->aValidators = array();
+		$this->aValidators = [];
 		$this->bValidationDisabled = false;
 		$this->bValid = static::DEFAULT_VALID;
-		$this->aErrorMessages = array();
+		$this->aErrorMessages = [];
 		$this->onFinalizeCallback = $onFinalizeCallback;
 	}
 
@@ -219,14 +219,14 @@ abstract class Field
 		return $this->bMandatory;
 	}
 
-    /**
-     *
-     * @return string
-     */
+	/**
+	 *
+	 * @return string
+	 */
 	public function GetDisplayMode()
-    {
-        return $this->sDisplayMode;
-    }
+	{
+		return $this->sDisplayMode;
+	}
 
 	public function GetValidators()
 	{
@@ -269,7 +269,7 @@ abstract class Field
 	{
 		return $this->currentValue;
 	}
-	
+
 	/**
 	 * Sets the field formpath
 	 * Usually Called by the form when adding the field
@@ -361,20 +361,20 @@ abstract class Field
 		if (false === $bMandatory) {
 			foreach ($this->aValidators as $iKey => $oValue) {
 				if ($oValue instanceof MandatoryValidator) {
-                    unset($this->aValidators[$iKey]);
-                }
-            }
-        }
+					unset($this->aValidators[$iKey]);
+				}
+			}
+		}
 
 		$this->bMandatory = $bMandatory;
 
 		return $this;
 	}
 
-    /**
-     * @return AbstractValidator
-     * @since 3.1.0 N°6414
-     */
+	/**
+	 * @return AbstractValidator
+	 * @since 3.1.0 N°6414
+	 */
 	protected function GetMandatoryValidatorInstance(): AbstractValidator
 	{
 		return new MandatoryValidator();
@@ -395,16 +395,16 @@ abstract class Field
 		return $this;
 	}
 
-    /**
-     *
-     * @param string $sDisplayMode
-     * @return $this
-     */
+	/**
+	 *
+	 * @param string $sDisplayMode
+	 * @return $this
+	 */
 	public function SetDisplayMode(string $sDisplayMode)
-    {
-        $this->sDisplayMode = $sDisplayMode;
-        return $this;
-    }
+	{
+		$this->sDisplayMode = $sDisplayMode;
+		return $this;
+	}
 
 	/**
 	 *
@@ -480,10 +480,10 @@ abstract class Field
 		return $this;
 	}
 
-    /**
-     * @param AbstractValidator $oValidator
-     * @return $this
-     */
+	/**
+	 * @param AbstractValidator $oValidator
+	 * @return $this
+	 */
 	public function AddValidator(AbstractValidator $oValidator)
 	{
 		$this->aValidators[] = $oValidator;
@@ -506,20 +506,20 @@ abstract class Field
 	}
 
 	/**
-     * @param string $sValidatorClassName validator class name, should be one of {@see AbstractValidator} children
-     * @return $this
-     * @since 3.1.0 N°6414
-     */
-    final public function RemoveValidatorsOfClass(string $sValidatorClassName)
-    {
-        foreach ($this->aValidators as $iKey => $oValue) {
-            if ($oValue instanceof $sValidatorClassName) {
-                unset($this->aValidators[$iKey]);
-            }
-        }
+	 * @param string $sValidatorClassName validator class name, should be one of {@see AbstractValidator} children
+	 * @return $this
+	 * @since 3.1.0 N°6414
+	 */
+	final public function RemoveValidatorsOfClass(string $sValidatorClassName)
+	{
+		foreach ($this->aValidators as $iKey => $oValue) {
+			if ($oValue instanceof $sValidatorClassName) {
+				unset($this->aValidators[$iKey]);
+			}
+		}
 
-        return $this;
-    }
+		return $this;
+	}
 
 	/**
 	 * Note : Function is protected as aErrorMessages should not be add from outside
@@ -542,7 +542,7 @@ abstract class Field
 	 */
 	protected function EmptyErrorMessages()
 	{
-		$this->aErrorMessages = array();
+		$this->aErrorMessages = [];
 		return $this;
 	}
 

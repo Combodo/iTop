@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:UserLocal' => ITOP_APPLICATION_SHORT.'-Bruger',
 	'Class:UserLocal+' => 'Bruger der godkendes af '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Password',
@@ -30,4 +31,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.~~',
 	'UserLocal:password:expiration' => 'The fields below require an extension~~',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
-));
+]);

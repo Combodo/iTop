@@ -30,12 +30,12 @@ class ModuleFileReaderTest extends ItopDataTestCase
 
 	public static function ReadModuleFileConfigurationFileNameProvider()
 	{
-		$aUsecases=[];
-		foreach (glob(__DIR__.'/resources/*.php') as $sModuleFilePath){
-			if (false !== strpos($sModuleFilePath, "module.__MODULE__.php")){
+		$aUsecases = [];
+		foreach (glob(__DIR__.'/resources/*.php') as $sModuleFilePath) {
+			if (false !== strpos($sModuleFilePath, "module.__MODULE__.php")) {
 				continue;
 			}
-			$aUsecases[basename($sModuleFilePath)]=[$sModuleFilePath];
+			$aUsecases[basename($sModuleFilePath)] = [$sModuleFilePath];
 		}
 
 		return $aUsecases;
@@ -46,8 +46,8 @@ class ModuleFileReaderTest extends ItopDataTestCase
 	 */
 	public function testReadModuleFileConfigurationVsLegacyMethod(string $sModuleFilePath)
 	{
-		$_SERVER=[
-			'SERVER_NAME' => 'titi'
+		$_SERVER = [
+			'SERVER_NAME' => 'titi',
 		];
 
 		$aRes = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFilePath);
@@ -75,8 +75,7 @@ class ModuleFileReaderTest extends ItopDataTestCase
 		file_put_contents($this->sTempModuleFilePath, $sPHpCode);
 		try {
 			return ModuleFileReader::GetInstance()->ReadModuleFileInformation($this->sTempModuleFilePath);
-		}
-		finally {
+		} finally {
 			@unlink($this->sTempModuleFilePath);
 		}
 	}
@@ -198,7 +197,7 @@ PHP;
 
 	public function testGetAndCheckModuleInstallerClass()
 	{
-		$sModuleInstallerClass = "TicketsInstaller" . uniqid();
+		$sModuleInstallerClass = "TicketsInstaller".uniqid();
 		$sPHpCode = file_get_contents(__DIR__.'/resources/module.itop-tickets.php');
 		$sPHpCode = str_replace("TicketsInstaller", $sModuleInstallerClass, $sPHpCode);
 		$this->sTempModuleFilePath = tempnam(__DIR__, "test");
@@ -211,8 +210,7 @@ PHP;
 			$this->assertFalse(class_exists($sModuleInstallerClass));
 
 			$this->assertEquals($sModuleInstallerClass, ModuleFileReader::GetInstance()->GetAndCheckModuleInstallerClass($aModuleInfo[2]));
-		}
-		finally {
+		} finally {
 			@unlink($this->sTempModuleFilePath);
 		}
 

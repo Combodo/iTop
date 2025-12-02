@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -11,12 +12,12 @@ namespace Combodo\iTop\Form\Validator;
  */
 abstract class AbstractRegexpValidator extends AbstractValidator
 {
-    public const VALIDATOR_NAME = 'abstract_regexp';
+	public const VALIDATOR_NAME = 'abstract_regexp';
 
-    /** @var string Override in children classes to set regexp to use for validation */
-    public const DEFAULT_REGEXP = '';
+	/** @var string Override in children classes to set regexp to use for validation */
+	public const DEFAULT_REGEXP = '';
 
-    protected string $sRegExp;
+	protected string $sRegExp;
 
 	public function __construct(?string $sErrorMessage = null)
 	{
@@ -36,21 +37,21 @@ abstract class AbstractRegexpValidator extends AbstractValidator
 		return [$this->sErrorMessage];
 	}
 
-    /**
-     * Returns the regular expression of the validator.
-     *
-     * @param boolean $bWithSlashes If true, surrounds $sRegExp with '/'. Used with preg_match & co
-     *
-     * @return string
-     */
-    public function GetRegExp($bWithSlashes = false)
-    {
-        if ($bWithSlashes) {
-            $sRet = '/'.str_replace('/', '\\/', $this->sRegExp).'/';
-        } else {
-            $sRet = $this->sRegExp;
-        }
+	/**
+	 * Returns the regular expression of the validator.
+	 *
+	 * @param boolean $bWithSlashes If true, surrounds $sRegExp with '/'. Used with preg_match & co
+	 *
+	 * @return string
+	 */
+	public function GetRegExp($bWithSlashes = false)
+	{
+		if ($bWithSlashes) {
+			$sRet = '/'.str_replace('/', '\\/', $this->sRegExp).'/';
+		} else {
+			$sRet = $this->sRegExp;
+		}
 
-        return $sRet;
-    }
+		return $sRet;
+	}
 }

@@ -39,15 +39,15 @@ use utils;
  * Description of BsLinkedSetFieldRenderer
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * 
- * @property \Combodo\iTop\Form\Field\LinkedSetField $oField 
- * 
+ *
+ * @property \Combodo\iTop\Form\Field\LinkedSetField $oField
+ *
  */
 class BsLinkedSetFieldRenderer extends BsFieldRenderer
 {
-    /**
-     * @inheritDoc
-     */
+	/**
+	 * @inheritDoc
+	 */
 	public function Render()
 	{
 		$oOutput = parent::Render();
@@ -62,7 +62,7 @@ class BsLinkedSetFieldRenderer extends BsFieldRenderer
 		// we sort the table on the first non link column
 		$iSortColumnIndex = count($this->oField->GetLnkAttributesToDisplay());
 		// if we are in edition mode, we skip the first column (selection checkbox column)
-		if(!$this->oField->GetReadOnly()){
+		if (!$this->oField->GetReadOnly()) {
 			$iSortColumnIndex++;
 		}
 
@@ -72,17 +72,17 @@ class BsLinkedSetFieldRenderer extends BsFieldRenderer
 		$sAttCodesToDisplayAsJson = json_encode($this->oField->GetAttributesToDisplay(true));
 		$sLnkAttCodesToDisplayAsJson = json_encode($this->oField->GetLnkAttributesToDisplay(true));
 
-		$aItems = array();
-		$aItemIds = array();
-		$aAddedItemIds = array();
-		$aAddedTargetIds = array();
+		$aItems = [];
+		$aItemIds = [];
+		$aAddedItemIds = [];
+		$aAddedTargetIds = [];
 		$this->InjectRendererFileAssets($this->oField->GetLinkedClass(), $this->oField->GetLnkAttributesToDisplay(true), $oOutput);
 		$this->PrepareItems($aItems, $aItemIds, $oOutput, $aAddedItemIds, $aAddedTargetIds);
 		$sItemsAsJson = json_encode($aItems);
-		$sItemIdsAsJson = utils::EscapeHtml(json_encode(array('current' => $aItemIds, 'add' => $aAddedItemIds)));
+		$sItemIdsAsJson = utils::EscapeHtml(json_encode(['current' => $aItemIds, 'add' => $aAddedItemIds]));
 
 		foreach ($aAddedTargetIds as $sId) {
-			$aItemIds[$sId] = array();
+			$aItemIds[$sId] = [];
 		}
 
 		if (!$this->oField->GetHidden()) {
@@ -120,7 +120,7 @@ class BsLinkedSetFieldRenderer extends BsFieldRenderer
 
 			// Rendering table
 			// - Vars
-			$sTableId = 'table_' . $this->oField->GetGlobalId();
+			$sTableId = 'table_'.$this->oField->GetGlobalId();
 			// - Output
 			$oOutput->AddHtml(
 				<<<EOF
@@ -580,17 +580,17 @@ JS
 					}
 				});
 JS
-                );
+				);
 
 				// Rendering table
 				// - Vars
-				$sButtonRemoveId = 'btn_remove_' . $this->oField->GetGlobalId();
-				$sButtonAddId = 'btn_add_' . $this->oField->GetGlobalId();
+				$sButtonRemoveId = 'btn_remove_'.$this->oField->GetGlobalId();
+				$sButtonAddId = 'btn_add_'.$this->oField->GetGlobalId();
 				$sLabelRemove = Dict::S('UI:Button:Remove');
 				$sLabelAdd = Dict::S('UI:Button:AddObject');
 				// - Output
 				$oOutput->AddHtml(
-<<<EOF
+					<<<EOF
 					<div class="row">
 						<div class="col-xs-12">
 							<div class="btn-group" role="group">
@@ -607,7 +607,7 @@ EOF
 				$sAddButtonEndpoint = str_replace('-sMode-', 'from-attribute', $this->oField->GetSearchEndpoint());
 				// - Output
 				$oOutput->AddJs(
-	<<<JS
+					<<<JS
 					// Handles items selection/deselection
 					// - Remove button state handler
 					var updateRemoveButtonState_{$this->oField->GetGlobalId()} = function()
@@ -704,9 +704,8 @@ JS
 			}
 		}
 		// ... and in hidden mode
-		else
-		{
-			$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $sItemIdsAsJson . '" />');
+		else {
+			$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" value="'.$sItemIdsAsJson.'" />');
 		}
 
 		// End of table rendering
@@ -716,18 +715,18 @@ JS
 		return $oOutput;
 	}
 
-    /**
-     * @param $aItems
-     * @param $aItemIds
-     *
-     * @throws \Exception
-     * @throws \CoreException
-     */
+	/**
+	 * @param $aItems
+	 * @param $aItemIds
+	 *
+	 * @throws \Exception
+	 * @throws \CoreException
+	 */
 	protected function PrepareItems(&$aItems, &$aItemIds, $oOutput, &$aAddedItemIds, &$aAddedTargetIds)
 	{
 		/** @var \ormLinkSet $oValueSet */
 		$oValueSet = $this->oField->GetCurrentValue();
-		$oValueSet->OptimizeColumnLoad(array($this->oField->GetTargetClass() => $this->oField->GetAttributesToDisplay(true)));
+		$oValueSet->OptimizeColumnLoad([$this->oField->GetTargetClass() => $this->oField->GetAttributesToDisplay(true)]);
 		while ($oItem = $oValueSet->Fetch()) {
 
 			// In case of indirect linked set, we must retrieve the remote object
@@ -735,8 +734,7 @@ JS
 				try {
 					// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
 					$oRemoteItem = MetaModel::GetObject($this->oField->GetTargetClass(), $oItem->Get($this->oField->GetExtKeyToRemote()), true, true);
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					// In some cases we can't retrieve an object from a linkedset, eg. when the extkey to remote is 0 due to a database corruption.
 					// Rather than crashing we rather just skip the object like in the administration console
 					IssueLog::Error('Could not retrieve object of linkedset in form #'.$this->oField->GetFormPath().' for field #'.$this->oField->GetId().'. Message: '.$e->getMessage());
@@ -752,17 +750,17 @@ JS
 				continue;
 			}
 
-			$aItemProperties = array(
+			$aItemProperties = [
 				'id'             => ($this->oField->IsIndirect() && $oItem->IsNew()) ? -1 * $oRemoteItem->GetKey() : $oItem->GetKey(),
 				'target_id'      => $oRemoteItem->GetKey(),
 				'name'           => $oItem->GetName(),
-				'attributes'     => array(),
+				'attributes'     => [],
 				'limited_access' => $bLimitedAccessItem,
 				'disabled'       => true,
 				'active'         => false,
 				'inactive'       => true,
 				'not-selectable' => true,
-			);
+			];
 
 			// Link attributes to display
 			$this->PrepareItem($oItem, $this->oField->GetLinkedClass(), $this->oField->GetLnkAttributesToDisplay(true), !$this->oField->GetReadOnly(), $aItemProperties, 'lnk__');
@@ -774,10 +772,10 @@ JS
 			// and form reconstruct
 			$aItems[] = $aItemProperties;
 			if ($oItem->IsNew()) {
-				$aAddedItemIds[-1 * $aItemProperties['id']] = array();
+				$aAddedItemIds[-1 * $aItemProperties['id']] = [];
 				$aAddedTargetIds[] = $oRemoteItem->GetKey();
 			} else {
-				$aItemIds[$aItemProperties['id']] = array();
+				$aItemIds[$aItemProperties['id']] = [];
 			}
 		}
 		$oValueSet->rewind();
@@ -794,9 +792,9 @@ JS
 	protected function InjectRendererFileAssets(string $sClass, array $aAttributesCodesToDisplay, $oOutput)
 	{
 		// handle abstract class
-		while(MetaModel::IsAbstract($sClass)){
+		while (MetaModel::IsAbstract($sClass)) {
 			$aChildClasses = MetaModel::EnumChildClasses($sClass);
-			if(count($aChildClasses) > 0){
+			if (count($aChildClasses) > 0) {
 				$sClass = $aChildClasses[0];
 			}
 		}
@@ -850,7 +848,7 @@ JS
 
 				// Prepare attribute properties
 				$aAttProperties = [
-						'prefix'=> $sAttribueKeyPrefix,
+						'prefix' => $sAttribueKeyPrefix,
 						'object_class'  => $sClass,
 						'object_id'  => $oItem->GetKey(),
 						'attribute_code' => $sAttCode,
@@ -859,10 +857,8 @@ JS
 				// - Value raw
 				// For simple fields, we get the raw (stored) value as well
 				$bExcludeRawValue = false;
-				foreach (ApplicationHelper::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
-				{
-					if (is_a($oAttDef, $sAttDefClassToExclude, true))
-					{
+				foreach (ApplicationHelper::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude) {
+					if (is_a($oAttDef, $sAttDefClassToExclude, true)) {
 						$bExcludeRawValue = true;
 						break;
 					}
@@ -890,7 +886,7 @@ JS
 						$aAttProperties['value_html'] = $oFieldOutput->GetHtml();
 					}
 
-				} else if ($oAttDef->IsExternalKey()) {
+				} elseif ($oAttDef->IsExternalKey()) {
 
 					/** @var \AttributeExternalKey $oAttDef */
 					$aAttProperties['value_html'] = utils::EscapeHtml($oItem->Get($sAttCode.'_friendlyname'));

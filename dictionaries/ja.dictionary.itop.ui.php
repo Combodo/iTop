@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AuditCategory' => '監査カテゴリ',
 	'Class:AuditCategory+' => '監査全体の内部セクション',
 	'Class:AuditCategory/Attribute:name' => 'カテゴリ名',
@@ -26,19 +27,21 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
-));
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AuditRule' => '監査ルール',
 	'Class:AuditRule+' => '指定された監査カテゴリをチェックするためのルール',
 	'Class:AuditRule/Attribute:name' => 'ルール名',
 	'Class:AuditRule/Attribute:name+' => 'ルールの短縮名',
 	'Class:AuditRule/Attribute:description' => '監査ルール説明',
 	'Class:AuditRule/Attribute:description+' => 'この監査ルールの長い説明',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => '実行するクエリ',
 	'Class:AuditRule/Attribute:query+' => '実行するOQL式',
 	'Class:AuditRule/Attribute:valid_flag' => '有効なオブジェクト',
@@ -51,13 +54,15 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AuditRule/Attribute:category_id+' => 'このルールのカテゴリ',
 	'Class:AuditRule/Attribute:category_name' => 'カテゴリ',
 	'Class:AuditRule/Attribute:category_name+' => 'このルールのカテゴリ名',
-));
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -69,13 +74,13 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -86,13 +91,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Query' => 'クエリ',
 	'Class:Query+' => 'クエリは動的な方法で定義されるデータセットです。',
 	'Class:Query/Attribute:name' => '名前',
@@ -119,7 +124,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:QueryOQL+' => ' Object Query Language に基づいたクエリ',
 	'Class:QueryOQL/Attribute:oql' => '式',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL 式',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -130,7 +135,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 // Class: User
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:User' => 'ユーザー',
 	'Class:User+' => 'ユーザーログイン',
 	'Class:User/Attribute:finalclass' => 'アカウントタイプ',
@@ -163,10 +168,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled~~',
 	'Class:User/Error:LoginMustBeUnique' => 'ログイン名は一意でないといけません。- "%1s" はすでに使われています。',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => '少なくとも1件のプロフィールがこのユーザに指定されなければなりません。',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'You cannot remove your own rights to edit Users~~',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
@@ -176,13 +183,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'User Internal~~',
 	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT.'~~',
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_Profiles' => 'プロフィール',
 	'Class:URP_Profiles+' => 'ユーザプロフィール',
 	'Class:URP_Profiles/Attribute:name' => '名前',
@@ -191,13 +198,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_Profiles/Attribute:description+' => '1行の説明',
 	'Class:URP_Profiles/Attribute:user_list' => 'ユーザー',
 	'Class:URP_Profiles/Attribute:user_list+' => 'この役割をもつ人',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_Dimensions' => 'ディメンション',
 	'Class:URP_Dimensions+' => 'アプリケーションディメンション(defining silos)',
 	'Class:URP_Dimensions/Attribute:name' => '名前',
@@ -206,13 +213,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_Dimensions/Attribute:description+' => '1行の説明',
 	'Class:URP_Dimensions/Attribute:type' => 'タイプ',
 	'Class:URP_Dimensions/Attribute:type+' => 'クラス名、もしくはデータ型(projection unit)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_UserProfile' => 'ユーザープロフィール',
 	'Class:URP_UserProfile+' => 'ユーザープロフィール',
 	'Class:URP_UserProfile/Name' => '%1$s と %2$s間のリンク',
@@ -226,14 +233,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_UserProfile/Attribute:profile+' => 'プロフィール名',
 	'Class:URP_UserProfile/Attribute:reason' => '理由',
 	'Class:URP_UserProfile/Attribute:reason+' => 'なぜ、この人物がこの役割を持つかを説明する',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_UserOrg' => 'ユーザー組織',
 	'Class:URP_UserOrg+' => '許可された組織',
 	'Class:URP_UserOrg/Name' => '%1$s と %2$s 間のリンク',
@@ -247,13 +253,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '許可された組織',
 	'Class:URP_UserOrg/Attribute:reason' => '理由',
 	'Class:URP_UserOrg/Attribute:reason+' => 'なぜこの人物がこの組織に属するデータを参照できるのかを説明する',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_ProfileProjection' => 'プロフィールプロジェクション',
 	'Class:URP_ProfileProjection+' => 'プロフィールプロジェクション',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'ディメンション',
@@ -268,13 +274,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => '($userを使う)OQL式 | 定数 |  | +属性コード',
 	'Class:URP_ProfileProjection/Attribute:attribute' => '属性',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'ターゲット属性コード (オプション)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_ClassProjection' => 'クラスプロジェクション',
 	'Class:URP_ClassProjection+' => 'クラスのプロジェクション',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'ディメンション',
@@ -287,13 +293,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_ClassProjection/Attribute:value+' => '($this を使った)OQL式 | 定数 |  | +属性コード',
 	'Class:URP_ClassProjection/Attribute:attribute' => '属性',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'ターゲット属性コード(オプション)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_ActionGrant' => 'アクション権限',
 	'Class:URP_ActionGrant+' => 'クラスに対する権限',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'プロフィール',
@@ -310,13 +316,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'いいえ',
 	'Class:URP_ActionGrant/Attribute:action' => 'アクション',
 	'Class:URP_ActionGrant/Attribute:action+' => '指定されたクラスに実行する操作',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_StimulusGrant' => 'シティミュラス権限',
 	'Class:URP_StimulusGrant+' => 'オブジェクトのライフサイクル中のシティミュラスにおける権限',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'プロフィール',
@@ -333,25 +339,25 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'いいえ',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'シティミュラス',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'シティミュラスコード',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:URP_AttributeGrant' => '属性権限',
 	'Class:URP_AttributeGrant+' => '属性レベルでの権限',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => '実行権限',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => '実行権限',
 	'Class:URP_AttributeGrant/Attribute:attcode' => '属性',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => '属性コード',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:UserDashboard' => 'User dashboard~~',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'User~~',
@@ -360,12 +366,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:WelcomeMenu' => 'ようこそ',
 	'Menu:WelcomeMenu+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
 	'Menu:WelcomeMenuPage' => 'ようこそ',
@@ -384,14 +390,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:MyShortcuts' => '私のショートカット',
 	'Menu:Notifications:Title' => '監査カテゴリ',
 	'Menu:DataAdministration' => 'データ管理',
-	'Menu:DataAdministration+' => 'データ管理'
-));
+	'Menu:DataAdministration+' => 'データ管理',
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'BooleanLabel:yes' => 'はい',
 	'BooleanLabel:no' => 'いいえ',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
@@ -1541,13 +1547,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Children of the selected objects will be included.~~',
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
-	'UI:StateChanged' => 'State changed~~'
-));
+	'UI:StateChanged' => 'State changed~~',
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Expression:Operator:AND' => ' AND ~~',
 	'Expression:Operator:OR' => ' OR ~~',
 	'Expression:Operator:=' => ': ~~',
@@ -1560,12 +1566,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Expression:Unit:Long:MINUTE' => 'minute(s)~~',
 	'Expression:Verb:NOW' => 'now~~',
 	'Expression:Verb:ISNULL' => ': undefined~~',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
 	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
@@ -1580,10 +1586,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
-));
+]);
 
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:DataSources' => '同期データソース',
 	'Menu:DataSources+' => '全ての同期データソース',
 	'Menu:AuditCategories' => '監査カテゴリ',
@@ -1611,4 +1616,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:Integrations' => 'Integrations~~',
 	'Menu:Integrations+' => '~~',
 
-));
+]);

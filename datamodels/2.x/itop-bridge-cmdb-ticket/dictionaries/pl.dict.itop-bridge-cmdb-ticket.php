@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkFunctionalCIToTicket' => 'Połączenie Konfiguracja / Zgłoszenie',
 	'Class:lnkFunctionalCIToTicket+' => '',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s',
@@ -30,12 +31,12 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Dodane ręcznie',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Obliczone',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Nie dotyczy',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Zgłoszenia',
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Wszystkie zgłoszenia dla tej konfiguracji',
-));
+]);

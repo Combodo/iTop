@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -25,7 +26,7 @@
  */
 class ThemeHandler
 {
-	const IMAGE_EXTENSIONS = ['png', 'gif', 'jpg', 'jpeg'];
+	public const IMAGE_EXTENSIONS = ['png', 'gif', 'jpg', 'jpeg'];
 
 	/** @var \CompileCSSService */
 	private static $oCompileCSSService;
@@ -50,7 +51,7 @@ class ThemeHandler
 				'imports' => [],
 				'stylesheets' => [
 					'main' => '../css/backoffice/main.scss',
-				]
+				],
 			],
 		];
 	}
@@ -63,8 +64,7 @@ class ThemeHandler
 	{
 		try {
 			$sThemeId = utils::GetConfig()->Get('backoffice_default_theme');
-		}
-		catch (CoreException $oCompileException) {
+		} catch (CoreException $oCompileException) {
 			// Fallback on our default theme in case the config. is not available yet
 			$aDefaultTheme = ThemeHandler::GetDefaultThemeInformation();
 			$sThemeId = $aDefaultTheme['name'];
@@ -85,8 +85,7 @@ class ThemeHandler
 			if (true === utils::GetConfig()->Get('user_preferences.allow_backoffice_theme_override')) {
 				$sThemeId = appUserPreferences::GetPref('backoffice_theme', null);
 			}
-		}
-		catch (Exception $oException) {
+		} catch (Exception $oException) {
 			// Do nothing, already handled by $sThemeId null by default
 		}
 
@@ -201,8 +200,7 @@ class ThemeHandler
 			if (static::ShouldThemeSignatureCheckBeForced($sThemeId)) {
 				static::CompileTheme($sThemeId);
 			}
-		}
-		catch (CoreException $oCompileException) {
+		} catch (CoreException $oCompileException) {
 			// Fallback on our default theme (should always be compilable) in case the previous theme doesn't exists
 			$aDefaultTheme = ThemeHandler::GetDefaultThemeInformation();
 			$sThemeId = $aDefaultTheme['name'];
@@ -258,13 +256,16 @@ class ThemeHandler
 	 * @throws \CoreException
 	 * @return boolean: indicate whether theme compilation occured
 	 */
-	public static function CompileTheme($sThemeId, $bSetup=false, $sSetupCompilationTimestamp="", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null) {
+	public static function CompileTheme($sThemeId, $bSetup = false, $sSetupCompilationTimestamp = "", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
+	{
 		if ($sSetupCompilationTimestamp === "") {
 			$sSetupCompilationTimestamp = microtime(true);
 		}
 
-		$sSetupCompilationTimestampInSecunds = (strpos($sSetupCompilationTimestamp, '.') !== false) ? explode('.',
-			$sSetupCompilationTimestamp)[0] : $sSetupCompilationTimestamp;
+		$sSetupCompilationTimestampInSecunds = (strpos($sSetupCompilationTimestamp, '.') !== false) ? explode(
+			'.',
+			$sSetupCompilationTimestamp
+		)[0] : $sSetupCompilationTimestamp;
 
 		$sEnv = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
 
@@ -317,7 +318,7 @@ class ThemeHandler
 			}
 		}
 
-		foreach ($oFindStylesheetObject->GetStylesheetFileURIs() as $sStylesheet){
+		foreach ($oFindStylesheetObject->GetStylesheetFileURIs() as $sStylesheet) {
 			$sTmpThemeScssContent .= '@import "'.$sStylesheet.'";'."\n";
 		}
 
@@ -329,11 +330,9 @@ class ThemeHandler
 
 		$iStyleLastModified = $oFindStylesheetObject->GetLastModified();
 
-		$aIncludedImages=static::GetIncludedImages($aThemeParametersWithVersion, $oFindStylesheetObject->GetAllStylesheetPaths(), $sThemeId);
-		foreach ($aIncludedImages as $sImage)
-		{
-			if (is_file($sImage))
-			{
+		$aIncludedImages = static::GetIncludedImages($aThemeParametersWithVersion, $oFindStylesheetObject->GetAllStylesheetPaths(), $sThemeId);
+		foreach ($aIncludedImages as $sImage) {
+			if (is_file($sImage)) {
 				$iStylesheetLastModified = @filemtime($sImage);
 				$iStyleLastModified = $iStyleLastModified < $iStylesheetLastModified ? $iStylesheetLastModified : $iStyleLastModified;
 			}
@@ -342,34 +341,28 @@ class ThemeHandler
 		// Checking if our compiled css is outdated
 		$iFilemetime = @filemtime($sThemeCssPath);
 		$bFileExists = file_exists($sThemeCssPath);
-		$bVarSignatureChanged=false;
-		if ($bFileExists && $bSetup)
-		{
+		$bVarSignatureChanged = false;
+		if ($bFileExists && $bSetup) {
 			$sPrecompiledSignature = static::GetSignature($sThemeCssPath);
 			//check variable signature has changed which is independant from any file modification
-			if (!empty($sPrecompiledSignature)){
+			if (!empty($sPrecompiledSignature)) {
 				$sPreviousVariableSignature = static::GetVarSignature($sPrecompiledSignature);
 				$sCurrentVariableSignature = md5(json_encode($aThemeParameters['variables']));
-				$bVarSignatureChanged= ($sPreviousVariableSignature!==$sCurrentVariableSignature);
+				$bVarSignatureChanged = ($sPreviousVariableSignature !== $sCurrentVariableSignature);
 			}
 		}
 
-		if (!$bFileExists || $bVarSignatureChanged || (is_writable($sThemeFolderPath) && ($iFilemetime < $iStyleLastModified)))
-		{
+		if (!$bFileExists || $bVarSignatureChanged || (is_writable($sThemeFolderPath) && ($iFilemetime < $iStyleLastModified))) {
 			// Dates don't match. Second chance: check if the already compiled stylesheet exists and is consistent based on its signature
 			$sActualSignature = static::ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages);
 
-			if ($bFileExists && !$bSetup)
-			{
+			if ($bFileExists && !$bSetup) {
 				$sPrecompiledSignature = static::GetSignature($sThemeCssPath);
 			}
 
-			if (!empty($sPrecompiledSignature) && $sActualSignature == $sPrecompiledSignature)
-			{
+			if (!empty($sPrecompiledSignature) && $sActualSignature == $sPrecompiledSignature) {
 				touch($sThemeCssPath); // Stylesheet is up to date, mark it as more recent to speedup next time
-			}
-			else
-			{
+			} else {
 				// Alas, we really need to recompile
 				// Add the signature to the generated CSS file so that the file can be used as a precompiled stylesheet if needed
 				$sSignatureComment =
@@ -381,14 +374,16 @@ $sActualSignature
 */
 
 CSS;
-				if (!static::$oCompileCSSService)
-				{
+				if (!static::$oCompileCSSService) {
 					static::$oCompileCSSService = new CompileCSSService();
 				}
 				//store it again to change $version with latest compiled time
 				SetupLog::Info("Compiling theme $sThemeId...");
-				$sTmpThemeCssContent = static::$oCompileCSSService->CompileCSSFromSASS($sTmpThemeScssContent, $aImportsPaths,
-					$aThemeParametersWithVersion);
+				$sTmpThemeCssContent = static::$oCompileCSSService->CompileCSSFromSASS(
+					$sTmpThemeScssContent,
+					$aImportsPaths,
+					$aThemeParametersWithVersion
+				);
 				SetupLog::Info("$sThemeId theme compilation done.");
 				file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
 				file_put_contents($sThemeCssPath, $sSignatureComment.$sTmpThemeCssContent);
@@ -413,13 +408,14 @@ CSS;
 	 * @return string
 	 * @throws \Exception
 	 */
-	public static function ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages) {
+	public static function ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages)
+	{
 		$aSignature = [
 			'variables' => md5(json_encode($aThemeParameters['variables'])),
 			'stylesheets' => [],
 			'variable_imports' => [],
 			'images' => [],
-			'utility_imports' => []
+			'utility_imports' => [],
 		];
 
 		$oFindStylesheetObject = new FindStylesheetObject();
@@ -461,8 +457,7 @@ CSS;
 			}
 		}
 
-		foreach ($aIncludedImages as $sImage)
-		{
+		foreach ($aIncludedImages as $sImage) {
 			if (is_file($sImage)) {
 				$sUri = str_replace(self::GetAppRootWithSlashes(), '', $sImage);
 				$aSignature['images'][$sUri] = md5_file($sImage);
@@ -489,7 +484,7 @@ CSS;
 		$aCompleteUrls = [];
 		$aToCompleteUrls = [];
 		$aMissingVariables = [];
-		$aFoundVariables = ['version'=>''];
+		$aFoundVariables = ['version' => ''];
 		$aMap = [
 			'aCompleteUrls' => $aCompleteUrls,
 			'aToCompleteUrls' => $aToCompleteUrls,
@@ -497,14 +492,11 @@ CSS;
 			'aFoundVariables' => $aFoundVariables,
 		];
 
-		foreach ($aStylesheetFiles as $sStylesheetFile)
-		{
+		foreach ($aStylesheetFiles as $sStylesheetFile) {
 			$aRes = static::GetAllUrlFromScss($aThemeParametersVariables, $sStylesheetFile);
 			/** @var array $aVal */
-			foreach($aMap as $key => $aVal)
-			{
-				if (array_key_exists($key, $aMap))
-				{
+			foreach ($aMap as $key => $aVal) {
+				if (array_key_exists($key, $aMap)) {
 					$aMap[$key] = array_merge($aVal, $aRes[$key]);
 				}
 			}
@@ -513,17 +505,14 @@ CSS;
 		$aMap = static::ResolveUncompleteUrlsFromScss($aMap, $aThemeParametersVariables, $aStylesheetFiles);
 		$aImages = [];
 
-		foreach ($aMap ['aCompleteUrls'] as $sUri => $sUrl)
-		{
+		foreach ($aMap ['aCompleteUrls'] as $sUri => $sUrl) {
 			$sImg = $sUrl;
-			if (preg_match("/(.*)\?/", $sUrl, $aMatches))
-			{
-				$sImg=$aMatches[1];
+			if (preg_match("/(.*)\?/", $sUrl, $aMatches)) {
+				$sImg = $aMatches[1];
 			}
 
 			if (static::HasImageExtension($sImg)
-				&& ! array_key_exists($sImg, $aImages))
-			{
+				&& ! array_key_exists($sImg, $aImages)) {
 				$sFilePath = utils::RealPath($sImg, APPROOT);
 				if ($sFilePath !== false) {
 					$sFilePathWithSlashes = str_replace('\\', '/', $sFilePath);
@@ -554,8 +543,8 @@ CSS;
 	 */
 	public static function CanonicalizePath($path)
 	{
-		$path = explode('/', str_replace('//','/', $path));
-		$stack = array();
+		$path = explode('/', str_replace('//', '/', $path));
+		$stack = [];
 		foreach ($path as $seg) {
 			if ($seg == '..') {
 				// Ignore this segment, remove last segment from stack
@@ -585,25 +574,23 @@ CSS;
 	 */
 	public static function ResolveUncompleteUrlsFromScss($aMap, $aThemeParametersVariables, $aStylesheetFile)
 	{
-		$sContent="";
-		foreach ($aStylesheetFile as $sStylesheetFile)
-		{
-			if (is_file($sStylesheetFile))
-			{
-				$sContent .= '\n' . file_get_contents($sStylesheetFile);
+		$sContent = "";
+		foreach ($aStylesheetFile as $sStylesheetFile) {
+			if (is_file($sStylesheetFile)) {
+				$sContent .= '\n'.file_get_contents($sStylesheetFile);
 			}
 		}
 
-		$aMissingVariables=$aMap['aMissingVariables'];
-		$aFoundVariables=$aMap['aFoundVariables'];
-		$aToCompleteUrls=$aMap['aToCompleteUrls'];
-		$aCompleteUrls=$aMap['aCompleteUrls'];
+		$aMissingVariables = $aMap['aMissingVariables'];
+		$aFoundVariables = $aMap['aFoundVariables'];
+		$aToCompleteUrls = $aMap['aToCompleteUrls'];
+		$aCompleteUrls = $aMap['aCompleteUrls'];
 		list($aMissingVariables, $aFoundVariables) = static::FindMissingVariables($aThemeParametersVariables, $aMissingVariables, $aFoundVariables, $sContent, true);
 		list($aToCompleteUrls, $aCompleteUrls) = static::ResolveUrls($aFoundVariables, $aToCompleteUrls, $aCompleteUrls);
-		$aMap['aMissingVariables']=$aMissingVariables;
-		$aMap['aFoundVariables']=$aFoundVariables;
-		$aMap['aToCompleteUrls']=$aToCompleteUrls;
-		$aMap['aCompleteUrls']=$aCompleteUrls;
+		$aMap['aMissingVariables'] = $aMissingVariables;
+		$aMap['aFoundVariables'] = $aFoundVariables;
+		$aMap['aToCompleteUrls'] = $aToCompleteUrls;
+		$aMap['aCompleteUrls'] = $aCompleteUrls;
 		return $aMap;
 	}
 
@@ -619,43 +606,29 @@ CSS;
 	 *
 	 * @return array
 	 */
-	public static function FindMissingVariables($aThemeParametersVariables, $aMissingVariables, $aFoundVariables, $sContent, $bForceEmptyValueWhenNotFound=false)
+	public static function FindMissingVariables($aThemeParametersVariables, $aMissingVariables, $aFoundVariables, $sContent, $bForceEmptyValueWhenNotFound = false)
 	{
 		$aNewMissingVars = [];
-		if (!empty($aMissingVariables))
-		{
-			foreach ($aMissingVariables as $var)
-			{
-				if (array_key_exists($var, $aThemeParametersVariables))
-				{
+		if (!empty($aMissingVariables)) {
+			foreach ($aMissingVariables as $var) {
+				if (array_key_exists($var, $aThemeParametersVariables)) {
 					$aFoundVariables[$var] = $aThemeParametersVariables[$var];
-				}
-				else
-				{
-					if (preg_match_all("/\\\$$var\s*:\s*[\"']{0,1}(.*)[\"']{0,1};/", $sContent, $aValues))
-					{
+				} else {
+					if (preg_match_all("/\\\$$var\s*:\s*[\"']{0,1}(.*)[\"']{0,1};/", $sContent, $aValues)) {
 						$sValue = $aValues[1][0];
-						if (preg_match_all("/([^!]+)!/", $sValue, $aSubValues))
-						{
+						if (preg_match_all("/([^!]+)!/", $sValue, $aSubValues)) {
 							$sValue = trim($aSubValues[1][0], ' "\'');
 						}
 
-						if (strpos($sValue, '$') === false)
-						{
+						if (strpos($sValue, '$') === false) {
 							$aFoundVariables[$var] = $sValue;
-						}
-						else{
+						} else {
 							$aNewMissingVars[] = $var;
 						}
-					}
-					else
-					{
-						if ($bForceEmptyValueWhenNotFound)
-						{
+					} else {
+						if ($bForceEmptyValueWhenNotFound) {
 							$aFoundVariables[$var] = '';
-						}
-						else
-						{
+						} else {
 							$aNewMissingVars[] = $var;
 						}
 					}
@@ -676,32 +649,23 @@ CSS;
 	 */
 	public static function ResolveUrls($aFoundVariables, array $aToCompleteUrls, array $aCompleteUrls)
 	{
-		if (!empty($aFoundVariables))
-		{
+		if (!empty($aFoundVariables)) {
 			$aFoundVariablesWithEmptyValue = [];
-			foreach ($aFoundVariables as $aFoundVariable => $sValue)
-			{
+			foreach ($aFoundVariables as $aFoundVariable => $sValue) {
 				$aFoundVariablesWithEmptyValue[$aFoundVariable] = '';
 			}
 
-			foreach ($aToCompleteUrls as $sUrlTemplate)
-			{
+			foreach ($aToCompleteUrls as $sUrlTemplate) {
 				unset($aToCompleteUrls[$sUrlTemplate]);
 				$sResolvedUrl = static::ResolveUrl($sUrlTemplate, $aFoundVariables);
-				if ($sResolvedUrl == false)
-				{
+				if ($sResolvedUrl == false) {
 					$aToCompleteUrls[$sUrlTemplate] = $sUrlTemplate;
-				}
-				else
-				{
+				} else {
 					$sUri = static::ResolveUrl($sUrlTemplate, $aFoundVariablesWithEmptyValue);
 					$aExplodedUri = explode('?', $sUri);
-					if (empty($aExplodedUri))
-					{
+					if (empty($aExplodedUri)) {
 						$aCompleteUrls[$sUri] = $sResolvedUrl;
-					}
-					else
-					{
+					} else {
 						$aCompleteUrls[$aExplodedUri[0]] = $sResolvedUrl;
 					}
 				}
@@ -726,41 +690,31 @@ CSS;
 		$aMissingVariables = [];
 		$aFoundVariables = [];
 
-		if (is_file($sStylesheetFile))
-		{
+		if (is_file($sStylesheetFile)) {
 			$sContent = file_get_contents($sStylesheetFile);
-			if (preg_match_all("/url\s*\((.*)\)/", $sContent, $aMatches))
-			{
-				foreach ($aMatches[1] as $path)
-				{
+			if (preg_match_all("/url\s*\((.*)\)/", $sContent, $aMatches)) {
+				foreach ($aMatches[1] as $path) {
 					$iRemainingClosingParenthesisPos = strpos($path, ')');
-					if ($iRemainingClosingParenthesisPos !== false){
+					if ($iRemainingClosingParenthesisPos !== false) {
 						$path = substr($path, 0, $iRemainingClosingParenthesisPos);
 					}
 					if (!array_key_exists($path, $aCompleteUrls)
-						&& !array_key_exists($path, $aToCompleteUrls))
-					{
-						if (preg_match_all("/\\$([\w\-_]+)/", $path, $aCurrentVars))
-						{
+						&& !array_key_exists($path, $aToCompleteUrls)) {
+						if (preg_match_all("/\\$([\w\-_]+)/", $path, $aCurrentVars)) {
 							/** @var string $aCurrentVars */
-							foreach ($aCurrentVars[1] as $var)
-							{
-								if (!array_key_exists($var, $aMissingVariables))
-								{
+							foreach ($aCurrentVars[1] as $var) {
+								if (!array_key_exists($var, $aMissingVariables)) {
 									$aMissingVariables[$var] = $var;
 								}
 							}
 							$aToCompleteUrls[$path] = $path;
-						}
-						else
-						{
+						} else {
 							$aCompleteUrls[$path] = trim($path, "\"'");
 						}
 					}
 				}
 			}
-			if (!empty($aMissingVariables))
-			{
+			if (!empty($aMissingVariables)) {
 				list($aMissingVariables, $aFoundVariables) = static::FindMissingVariables($aThemeParametersVariables, $aMissingVariables, $aFoundVariables, $sContent);
 				list($aToCompleteUrls, $aCompleteUrls) = static::ResolveUrls($aFoundVariables, $aToCompleteUrls, $aCompleteUrls);
 			}
@@ -770,7 +724,7 @@ CSS;
 			'aCompleteUrls' => $aCompleteUrls,
 			'aToCompleteUrls' => $aToCompleteUrls,
 			'aMissingVariables' => $aMissingVariables,
-			'aFoundVariables' => $aFoundVariables
+			'aFoundVariables' => $aFoundVariables,
 		];
 	}
 
@@ -784,23 +738,21 @@ CSS;
 	 */
 	public static function ResolveUrl($sUrlTemplate, $aFoundVariables)
 	{
-		$aPattern= [];
-		$aReplacement= [];
-		foreach ($aFoundVariables as $aFoundVariable => $aFoundVariableValue)
-		{
+		$aPattern = [];
+		$aReplacement = [];
+		foreach ($aFoundVariables as $aFoundVariable => $aFoundVariableValue) {
 			//XX + $key + YY
-			$aPattern[]="/['\"]\s*\+\s*\\\$" . $aFoundVariable . "[\s\+]+\s*['\"]/";
-			$aReplacement[]=$aFoundVariableValue;
+			$aPattern[] = "/['\"]\s*\+\s*\\\$".$aFoundVariable."[\s\+]+\s*['\"]/";
+			$aReplacement[] = $aFoundVariableValue;
 			//$key + YY
-			$aPattern[]="/\\\$" . $aFoundVariable. "[\s\+]+\s*['\"]/";
-			$aReplacement[]=$aFoundVariableValue;
+			$aPattern[] = "/\\\$".$aFoundVariable."[\s\+]+\s*['\"]/";
+			$aReplacement[] = $aFoundVariableValue;
 			//XX + $key
-			$aPattern[]="/['\"]\s*[\+\s]+\\\$" . $aFoundVariable . "$/";
-			$aReplacement[]=$aFoundVariableValue;
+			$aPattern[] = "/['\"]\s*[\+\s]+\\\$".$aFoundVariable."$/";
+			$aReplacement[] = $aFoundVariableValue;
 		}
-		$sResolvedUrl=preg_replace($aPattern, $aReplacement, $sUrlTemplate);
-		if (strpos($sResolvedUrl, "+")!==false)
-		{
+		$sResolvedUrl = preg_replace($aPattern, $aReplacement, $sUrlTemplate);
+		if (strpos($sResolvedUrl, "+") !== false) {
 			return false;
 		}
 		return trim($sResolvedUrl, "\"'");
@@ -814,16 +766,13 @@ CSS;
 	 */
 	private static function HasImageExtension($path)
 	{
-		foreach (static::IMAGE_EXTENSIONS as $sExt)
-		{
-			if (endsWith($path, $sExt))
-			{
+		foreach (static::IMAGE_EXTENSIONS as $sExt) {
+			if (endsWith($path, $sExt)) {
 				return true;
 			}
 		}
 		return false;
 	}
-
 
 	/**
 	 * @since 3.0.0 N°2982
@@ -843,16 +792,13 @@ CSS;
 		$iCount = 0;
 		$sPreviousLine = '';
 		$hFile = @fopen($sFilepath, "r");
-		if ($hFile !== false)
-		{
+		if ($hFile !== false) {
 			$sLine = '';
-			do
-			{
+			do {
 				$iCount++;
 				$sPreviousLine = $sLine;
 				$sLine = rtrim(fgets($hFile)); // Remove the trailing \n
-			}
-			while (($sLine !== false) && ($sLine != '=== SIGNATURE END ===') && ($iCount <= 100));
+			} while (($sLine !== false) && ($sLine != '=== SIGNATURE END ===') && ($iCount <= 100));
 			fclose($hFile);
 		}
 		return $sPreviousLine;
@@ -867,8 +813,7 @@ CSS;
 	public static function GetVarSignature($JsonSignature)
 	{
 		$aJsonArray = json_decode($JsonSignature, true);
-		if (array_key_exists('variables', $aJsonArray))
-		{
+		if (array_key_exists('variables', $aJsonArray)) {
 			return $aJsonArray['variables'];
 		}
 		return false;
@@ -892,23 +837,22 @@ CSS;
 			$oFindStylesheetObject->ResetLastStyleSheet();
 		}
 
-		foreach($aImportsPaths as $sPath)
-		{
+		foreach ($aImportsPaths as $sPath) {
 			$sAlterableFileURI = $sFileURI;
 			$sFilePath = $sPath.'/'.$sAlterableFileURI;
 			$sImportedFile = realpath($sFilePath);
-			if ($sImportedFile === false){
+			if ($sImportedFile === false) {
 				// Handle shortcut syntax : @import "typo" ;
 				// file matched: typo.scss
 				$sFilePath2 = "$sFilePath.scss";
 				$sImportedFile = realpath($sFilePath2);
-				if ($sImportedFile){
+				if ($sImportedFile) {
 					self::FindStylesheetFile("$sAlterableFileURI.scss", [ $sPath ], $oFindStylesheetObject, $bImports);
 					$sImportedFile = false;
 				}
 			}
 
-			if ($sImportedFile === false){
+			if ($sImportedFile === false) {
 				// Handle shortcut syntax : @import "typo" ;
 				// file matched: _typo.scss
 				$sShortCut = substr($sFilePath, strrpos($sFilePath, '/') + 1);
@@ -918,11 +862,10 @@ CSS;
 			}
 
 			if ((file_exists($sImportedFile))
-				&& (!$oFindStylesheetObject->AlreadyFetched($sImportedFile)))
-			{
-				if ($bImports){
+				&& (!$oFindStylesheetObject->AlreadyFetched($sImportedFile))) {
+				if ($bImports) {
 					$oFindStylesheetObject->AddImport($sAlterableFileURI, $sImportedFile);
-				}else{
+				} else {
 					$oFindStylesheetObject->AddStylesheet($sAlterableFileURI, $sImportedFile);
 				}
 				$oFindStylesheetObject->UpdateLastModified($sImportedFile);
@@ -930,8 +873,8 @@ CSS;
 				//Regexp matching on all included scss files : @import 'XXX.scss';
 				$sDirUri = dirname($sAlterableFileURI);
 				preg_match_all('/@import \s*[\"\']([^\"\']*)\s*[\"\']\s*;/', file_get_contents($sImportedFile), $aMatches);
-				if ( (is_array($aMatches)) && (count($aMatches)!==0) ){
-					foreach ($aMatches[1] as $sImportedFile){
+				if ((is_array($aMatches)) && (count($aMatches) !== 0)) {
+					foreach ($aMatches[1] as $sImportedFile) {
 						self::FindStylesheetFile("$sDirUri/$sImportedFile", [ $sPath ], $oFindStylesheetObject, true);
 					}
 				}
@@ -952,8 +895,7 @@ CSS;
 	{
 		$iPos = strrpos($sSubject, $sSearch);
 
-		if($iPos !== false)
-		{
+		if ($iPos !== false) {
 			$sSubject = substr_replace($sSubject, $sReplace, $iPos, strlen($sSearch));
 		}
 
@@ -982,18 +924,14 @@ CSS;
 	public static function CloneThemeParameterAndIncludeVersion($aThemeParameters, $bSetupCompilationTimestamp, $aImportsPaths)
 	{
 		$aThemeParametersVariable = [];
-		if (array_key_exists('variables', $aThemeParameters))
-		{
-			if (is_array($aThemeParameters['variables']))
-			{
+		if (array_key_exists('variables', $aThemeParameters)) {
+			if (is_array($aThemeParameters['variables'])) {
 				$aThemeParametersVariable = array_merge([], $aThemeParameters['variables']);
 			}
 		}
 
-		if (array_key_exists('variable_imports', $aThemeParameters))
-		{
-			if (is_array($aThemeParameters['variable_imports']))
-			{
+		if (array_key_exists('variable_imports', $aThemeParameters)) {
+			if (is_array($aThemeParameters['variable_imports'])) {
 				$aThemeParametersVariable = array_merge($aThemeParametersVariable, static::GetVariablesFromFile($aThemeParameters['variable_imports'], $aImportsPaths));
 			}
 		}
@@ -1009,11 +947,11 @@ CSS;
 	 * @return array
 	 * @since 3.0.0 N°3593
 	 */
-	public static function GetVariablesFromFile($aVariableFiles, $aImportsPaths){
+	public static function GetVariablesFromFile($aVariableFiles, $aImportsPaths)
+	{
 		$aVariablesResults = [];
-		foreach ($aVariableFiles as $sVariableFile)
-		{
-			foreach($aImportsPaths as $sPath) {
+		foreach ($aVariableFiles as $sVariableFile) {
+			foreach ($aImportsPaths as $sPath) {
 				$sFilePath = $sPath.'/'.$sVariableFile;
 				$sImportedFile = realpath($sFilePath);
 				if ($sImportedFile !== false) {
@@ -1029,9 +967,8 @@ CSS;
 				}
 			}
 		}
-		array_map( function($sVariableValue) { return ltrim($sVariableValue); }, $aVariablesResults );
+		array_map(function ($sVariableValue) { return ltrim($sVariableValue); }, $aVariablesResults);
 		return $aVariablesResults;
 	}
 
 }
-

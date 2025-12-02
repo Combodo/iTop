@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Relation:impacts/Description' => 'Prvky ovlivněné objektem',
 	'Relation:impacts/DownStream' => 'Dopad na',
 	'Relation:impacts/DownStream+' => 'Elements impacted by~~',
@@ -23,8 +24,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Relation:impacts/LoadData' => 'Load data~~',
 	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
 	'Relation:impacts/FilteredData' => 'Filtered data~~',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -67,7 +67,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 // Class: lnkContactToFunctionalCI
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkContactToFunctionalCI' => 'Spojení (Kontakt / Funkční konfigurační položka)',
 	'Class:lnkContactToFunctionalCI+' => '',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -79,13 +79,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Název kontaktu',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:FunctionalCI' => 'Funkční konfigurační položka',
 	'Class:FunctionalCI+' => '',
 	'Class:FunctionalCI/Attribute:name' => 'Název',
@@ -118,13 +118,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Aktivní tikety',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI~~',
-));
+]);
 
 //
 // Class: PhysicalDevice
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:PhysicalDevice' => 'Fyzické zařízení',
 	'Class:PhysicalDevice+' => '',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s~~',
@@ -158,13 +158,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:PhysicalDevice/Attribute:purchase_date+' => '',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Konec záruky',
 	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '',
-));
+]);
 
 //
 // Class: Rack
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Rack' => 'Rack',
 	'Class:Rack+' => '',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s',
@@ -174,64 +174,64 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Rack/Attribute:device_list+' => 'Všechna zařízení umístěná v tomto racku',
 	'Class:Rack/Attribute:enclosure_list' => 'Šasi',
 	'Class:Rack/Attribute:enclosure_list+' => 'Všechna šasi umístěná v tomto racku',
-));
+]);
 
 //
 // Class: TelephonyCI
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TelephonyCI' => 'Konfigurační položka Telefonie',
 	'Class:TelephonyCI+' => '',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Telefonní číslo',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '',
-));
+]);
 
 //
 // Class: Phone
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Phone' => 'Telefon',
 	'Class:Phone+' => '',
-));
+]);
 
 //
 // Class: MobilePhone
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:MobilePhone' => 'Mobilní telefon',
 	'Class:MobilePhone+' => '',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
 	'Class:MobilePhone/Attribute:imei+' => '',
 	'Class:MobilePhone/Attribute:hw_pin' => 'Hardware PIN',
 	'Class:MobilePhone/Attribute:hw_pin+' => '',
-));
+]);
 
 //
 // Class: IPPhone
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:IPPhone' => 'IP telefon',
 	'Class:IPPhone+' => '',
-));
+]);
 
 //
 // Class: Tablet
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Tablet' => 'Tablet',
 	'Class:Tablet+' => '',
-));
+]);
 
 //
 // Class: ConnectableCI
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ConnectableCI' => 'Připojitelná konfigurační položka',
 	'Class:ConnectableCI+' => '',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s',
@@ -239,13 +239,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Všechny síťová zařízení, která jsou připojena k tomuto zařízení',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Síťová rozhraní',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Všechna fyzická síťové rozhraní',
-));
+]);
 
 //
 // Class: DatacenterDevice
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:DatacenterDevice' => 'Zařízení datového centra',
 	'Class:DatacenterDevice+' => '',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s',
@@ -277,13 +277,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'Zařízení je v provozu, pokud je funkční alespoň jeden zdroj',
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'Zařízení je v provozu, pouze pokud jsou funknčí všechny zdroje',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'Zařízení je v provozu, pokud je alespoň %1$s %% zdrojů funkčních',
-));
+]);
 
 //
 // Class: NetworkDevice
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:NetworkDevice' => 'Síťový prvek',
 	'Class:NetworkDevice+' => '',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s~~',
@@ -299,13 +299,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
 	'Class:NetworkDevice/Attribute:ram+' => '',
-));
+]);
 
 //
 // Class: Server
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Server' => 'Server',
 	'Class:Server+' => '',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s',
@@ -327,61 +327,61 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Server/Attribute:ram+' => '',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Logické svazky',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'All the logical volumes connected to this server~~',
-));
+]);
 
 //
 // Class: StorageSystem
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:StorageSystem' => 'Úložný systém',
 	'Class:StorageSystem+' => '',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logické svazky',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Všechny logické svazky připojené k tomuto úložnému systému',
-));
+]);
 
 //
 // Class: SANSwitch
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:SANSwitch' => 'SAN Switch',
 	'Class:SANSwitch+' => '',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Zařízení',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Všechna zařízení připojená k tomuto SAN switchi',
-));
+]);
 
 //
 // Class: TapeLibrary
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TapeLibrary' => 'Pásková knihovna',
 	'Class:TapeLibrary+' => '',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Pásky',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Všechny pásky v této páskové knihovně',
-));
+]);
 
 //
 // Class: NAS
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Souborové systémy',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Všechny souborové systémy na tomto NASu',
-));
+]);
 
 //
 // Class: PC
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:PC' => 'PC',
 	'Class:PC+' => '',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s~~',
@@ -403,45 +403,45 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:PC/Attribute:type/Value:desktop+' => 'desktop',
 	'Class:PC/Attribute:type/Value:laptop' => 'notebook',
 	'Class:PC/Attribute:type/Value:laptop+' => 'notebook',
-));
+]);
 
 //
 // Class: Printer
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Printer' => 'Tiskárna',
 	'Class:Printer+' => '',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s',
-));
+]);
 
 //
 // Class: PowerConnection
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:PowerConnection' => 'Připojení k napájení',
 	'Class:PowerConnection+' => '',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s',
-));
+]);
 
 //
 // Class: PowerSource
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:PowerSource' => 'Zdroj napájení',
 	'Class:PowerSource+' => '',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDU',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Všechny jednotky pro rozvod energie využívající tento zdroj napájení',
-));
+]);
 
 //
 // Class: PDU
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => '',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
@@ -453,23 +453,23 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:PDU/Attribute:powerstart_id+' => '',
 	'Class:PDU/Attribute:powerstart_name' => 'Název zdroje energie',
 	'Class:PDU/Attribute:powerstart_name+' => '',
-));
+]);
 
 //
 // Class: Peripheral
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Peripheral' => 'Periferie',
 	'Class:Peripheral+' => '',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s~~',
-));
+]);
 
 //
 // Class: Enclosure
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Enclosure' => 'Šasi',
 	'Class:Enclosure+' => '',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
@@ -481,13 +481,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => 'Zařízení',
 	'Class:Enclosure/Attribute:device_list+' => 'Všechna zařízení v tom to šasi',
-));
+]);
 
 //
 // Class: ApplicationSolution
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:ApplicationSolution' => 'Aplikační řešení',
 	'Class:ApplicationSolution+' => '',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'Konfigurační položky',
@@ -504,13 +504,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'Řešení je v provozu, pokud jsou funkční všechny konfigurační položky',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'Řešení je v provozu, pokud je funkčních alespoň %1$s konfiguračních položek',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'Řešení je v provozu, pokud je funkčních alespoň %1$s %% konfiguračních položek',
-));
+]);
 
 //
 // Class: BusinessProcess
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:BusinessProcess' => 'Obchodní proces',
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Aplikační řešení',
@@ -521,13 +521,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:BusinessProcess/Attribute:status/Value:active+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'neaktivní',
 	'Class:BusinessProcess/Attribute:status/Value:inactive+' => '',
-));
+]);
 
 //
 // Class: SoftwareInstance
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:SoftwareInstance' => 'Instance softwaru',
 	'Class:SoftwareInstance+' => '',
 	'Class:SoftwareInstance/Attribute:system_id' => 'Systém',
@@ -550,64 +550,64 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:SoftwareInstance/Attribute:status/Value:active+' => '',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'neaktivní',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => '',
-));
+]);
 
 //
 // Class: Middleware
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Middleware' => 'Middleware',
 	'Class:Middleware+' => '',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Instance middlewaru',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Všechny instance tohoto middlewaru',
-));
+]);
 
 //
 // Class: DBServer
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:DBServer' => 'DB Server',
 	'Class:DBServer+' => '',
 	'Class:DBServer/Attribute:dbschema_list' => 'DB schémata',
 	'Class:DBServer/Attribute:dbschema_list+' => 'Všechna DB schémata pro tento DB server',
-));
+]);
 
 //
 // Class: WebServer
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:WebServer' => 'Web server',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Web aplikace',
 	'Class:WebServer/Attribute:webapp_list+' => 'Všechny webové aplikace dostupné na tomto web serveru',
-));
+]);
 
 //
 // Class: PCSoftware
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:PCSoftware' => 'PC Software',
 	'Class:PCSoftware+' => '',
-));
+]);
 
 //
 // Class: OtherSoftware
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:OtherSoftware' => 'Ostatní Software',
 	'Class:OtherSoftware+' => '',
-));
+]);
 
 //
 // Class: MiddlewareInstance
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:MiddlewareInstance' => 'Instance middlewaru',
 	'Class:MiddlewareInstance+' => '',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
@@ -615,13 +615,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Název middlewaru',
 	'Class:MiddlewareInstance/Attribute:middleware_name+' => '',
-));
+]);
 
 //
 // Class: DatabaseSchema
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:DatabaseSchema' => 'DB Schéma',
 	'Class:DatabaseSchema+' => '',
 	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
@@ -629,13 +629,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Název DB serveru',
 	'Class:DatabaseSchema/Attribute:dbserver_name+' => '',
-));
+]);
 
 //
 // Class: WebApplication
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:WebApplication' => 'Web aplikace',
 	'Class:WebApplication+' => '',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
@@ -645,14 +645,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:WebApplication/Attribute:webserver_name+' => '',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '',
-));
-
+]);
 
 //
 // Class: VirtualDevice
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:VirtualDevice' => 'Virtuální zařízení',
 	'Class:VirtualDevice+' => '',
 	'Class:VirtualDevice/Attribute:status' => 'Stav',
@@ -667,24 +666,24 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:VirtualDevice/Attribute:status/Value:stock+' => '',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logické svazky',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Všechny logické svazky používané tímto zařízením',
-));
+]);
 
 //
 // Class: VirtualHost
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:VirtualHost' => 'Virtual host',
 	'Class:VirtualHost+' => '',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtuální stroje (VM)',
 	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Všechny virtuální stroje hostované na tomto virtual hostu',
-));
+]);
 
 //
 // Class: Hypervisor
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Hypervisor' => 'Hypervisor',
 	'Class:Hypervisor+' => '',
 	'Class:Hypervisor/Attribute:farm_id' => 'Farma',
@@ -695,13 +694,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Hypervisor/Attribute:server_id+' => '',
 	'Class:Hypervisor/Attribute:server_name' => 'Název serveru',
 	'Class:Hypervisor/Attribute:server_name+' => '',
-));
+]);
 
 //
 // Class: Farm
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Farm' => 'Farma',
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisory',
@@ -710,13 +709,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Farm/Attribute:redundancy/disabled' => 'Farma je v provozu, pouze pokud jsou funknční všechny Hypervisory',
 	'Class:Farm/Attribute:redundancy/count' => 'Farma je v provozu, pokud je funkčních alespoň %1$s Hypervisorů',
 	'Class:Farm/Attribute:redundancy/percent' => 'Farma je v provozu, pokud je funkčních alespoň %1$s %% Hypervisorů',
-));
+]);
 
 //
 // Class: VirtualMachine
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:VirtualMachine' => 'Virtuální stroj (VM)',
 	'Class:VirtualMachine+' => '',
 	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
@@ -744,13 +743,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Síťová rozhraní',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Všechna logická síťová rozhraní',
-));
+]);
 
 //
 // Class: LogicalVolume
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:LogicalVolume' => 'Logický svazek',
 	'Class:LogicalVolume+' => '',
 	'Class:LogicalVolume/Attribute:name' => 'Název',
@@ -771,13 +770,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:LogicalVolume/Attribute:servers_list+' => 'Všechny servery užívající tento svazek',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtuální zařízení',
 	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Všechna virtuální zařízení užívající tento svazek',
-));
+]);
 
 //
 // Class: lnkServerToVolume
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkServerToVolume' => 'Spojení (Server / Svazek)',
 	'Class:lnkServerToVolume+' => '',
 	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
@@ -791,13 +790,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkServerToVolume/Attribute:server_name+' => '',
 	'Class:lnkServerToVolume/Attribute:size_used' => 'Využitá velikost',
 	'Class:lnkServerToVolume/Attribute:size_used+' => '',
-));
+]);
 
 //
 // Class: lnkVirtualDeviceToVolume
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkVirtualDeviceToVolume' => 'Spojení (Virtuální zařízení / Svazek)',
 	'Class:lnkVirtualDeviceToVolume+' => '',
 	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
@@ -811,13 +810,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Využitá velikost',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '',
-));
+]);
 
 //
 // Class: lnkSanToDatacenterDevice
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkSanToDatacenterDevice' => 'Spojení (SAN / Zařízení datového centra)',
 	'Class:lnkSanToDatacenterDevice+' => '',
 	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
@@ -833,13 +832,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'FC zařízení',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '',
-));
+]);
 
 //
 // Class: Tape
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Tape' => 'Páska',
 	'Class:Tape+' => '',
 	'Class:Tape/Attribute:name' => 'Název',
@@ -852,13 +851,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Tape/Attribute:tapelibrary_id+' => '',
 	'Class:Tape/Attribute:tapelibrary_name' => 'Název páskové knihovny',
 	'Class:Tape/Attribute:tapelibrary_name+' => '',
-));
+]);
 
 //
 // Class: NASFileSystem
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:NASFileSystem' => 'Souborový systém nas',
 	'Class:NASFileSystem+' => '',
 	'Class:NASFileSystem/Attribute:name' => 'Název',
@@ -873,13 +872,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:NASFileSystem/Attribute:nas_id+' => '',
 	'Class:NASFileSystem/Attribute:nas_name' => 'Název NAS',
 	'Class:NASFileSystem/Attribute:nas_name+' => '',
-));
+]);
 
 //
 // Class: Software
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Software' => 'Software',
 	'Class:Software+' => '',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s~~',
@@ -909,13 +908,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Software/Attribute:softwarepatch_list+' => 'Všechny záplaty (patche) pro tento software',
 	'Class:Software/Attribute:softwarelicence_list' => 'Licence softwaru',
 	'Class:Software/Attribute:softwarelicence_list+' => 'Všechny licence pro tento software',
-));
+]);
 
 //
 // Class: Patch
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Patch' => 'Záplata (patch)',
 	'Class:Patch+' => '',
 	'Class:Patch/Attribute:name' => 'Název',
@@ -926,13 +925,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:finalclass' => 'Typ',
 	'Class:Patch/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: OSPatch
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:OSPatch' => 'Záplata (patch) OS',
 	'Class:OSPatch+' => '',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Zařízení',
@@ -941,13 +940,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:OSPatch/Attribute:osversion_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'Název verze OS',
 	'Class:OSPatch/Attribute:osversion_name+' => '',
-));
+]);
 
 //
 // Class: SoftwarePatch
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:SoftwarePatch' => 'Záplata (patch) softwaru',
 	'Class:SoftwarePatch+' => '',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Software',
@@ -956,13 +955,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:SoftwarePatch/Attribute:software_name+' => '',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Instance softwaru',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Všechny systémy, kde je tato záplata (patch) softwaru instalována',
-));
+]);
 
 //
 // Class: Licence
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Licence' => 'Licence',
 	'Class:Licence+' => '',
 	'Class:Licence/Attribute:name' => 'Název',
@@ -991,13 +990,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Licence/Attribute:perpetual/Value:yes+' => '',
 	'Class:Licence/Attribute:finalclass' => 'Typ',
 	'Class:Licence/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: OSLicence
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:OSLicence' => 'Licence OS',
 	'Class:OSLicence+' => '',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
@@ -1009,13 +1008,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Všechny virtuální stroje (VM), kde je tato licence použita',
 	'Class:OSLicence/Attribute:servers_list' => 'Servery',
 	'Class:OSLicence/Attribute:servers_list+' => 'Všechny servery, kde je tato licence použita',
-));
+]);
 
 //
 // Class: SoftwareLicence
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:SoftwareLicence' => 'Licence softwaru',
 	'Class:SoftwareLicence+' => '',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s~~',
@@ -1025,13 +1024,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Instance softwaru',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Všechny systémy, kde je tato licence použita',
-));
+]);
 
 //
 // Class: lnkDocumentToLicence
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkDocumentToLicence' => 'Spojení (Dokument / Licence)',
 	'Class:lnkDocumentToLicence+' => '',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s~~',
@@ -1043,35 +1042,35 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Název dokumentu',
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: OSVersion
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:OSVersion' => 'Verze OS',
 	'Class:OSVersion+' => '',
 	'Class:OSVersion/Attribute:osfamily_id' => 'Rodina OS',
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Název rodiny OS',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
-));
+]);
 
 //
 // Class: OSFamily
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:OSFamily' => 'Rodina OS',
 	'Class:OSFamily+' => '',
-));
+]);
 
 //
 // Class: Brand
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Brand' => 'Výrobce',
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:logo' => 'Logo~~',
@@ -1080,13 +1079,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Všechna fyzická zařízení odpovídající této značce',
 	'Class:Brand/UniquenessRule:name+' => 'Jméno značky musí být unikátní',
 	'Class:Brand/UniquenessRule:name' => 'Tato značka již existuje',
-));
+]);
 
 //
 // Class: Model
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Model' => 'Model',
 	'Class:Model+' => '',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s~~',
@@ -1138,37 +1137,37 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Model/Attribute:physicaldevices_list+' => 'Všechna fyzická zařízení odpovídající tomuto modelu',
 	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
-));
+]);
 
 //
 // Class: NetworkDeviceType
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:NetworkDeviceType' => 'Typ síťového zařízení',
 	'Class:NetworkDeviceType+' => '',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Síťová zařízení',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Všechna síťová zařízení odpovídající tomuto typu',
-));
+]);
 
 //
 // Class: IOSVersion
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:IOSVersion' => 'Verze IOS',
 	'Class:IOSVersion+' => '',
 	'Class:IOSVersion/Attribute:brand_id' => 'Výrobce',
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Název výrobce',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToPatch
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkDocumentToPatch' => 'Spojení (Dokument / Záplata (patch))',
 	'Class:lnkDocumentToPatch+' => '',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s~~',
@@ -1180,13 +1179,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Název dokumentu',
 	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkSoftwareInstanceToSoftwarePatch
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Spojení (Instance softwaru / Záplata (patch) softwaru)',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s~~',
@@ -1198,13 +1197,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Název instance softwaru',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToOSPatch
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkFunctionalCIToOSPatch' => 'Spojení (Funkční konfigurační položka / Záplata (patch) OS)',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s~~',
@@ -1216,13 +1215,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'Název funkční konfigurační položky',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToSoftware
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkDocumentToSoftware' => 'Spojení (Dokument / Software)',
 	'Class:lnkDocumentToSoftware+' => '',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s~~',
@@ -1234,13 +1233,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Název dokumentu',
 	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: Subnet
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Subnet' => 'Podsíť (subnet)',
 	'Class:Subnet+' => '',
 	'Class:Subnet/Name' => '%1$s/%2$s~~',
@@ -1259,13 +1258,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Subnet/Attribute:ip_mask+' => '',
 	'Class:Subnet/Attribute:vlans_list' => 'VLAN',
 	'Class:Subnet/Attribute:vlans_list+' => '',
-));
+]);
 
 //
 // Class: VLAN
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:VLAN' => 'VLAN',
 	'Class:VLAN+' => '',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag',
@@ -1280,13 +1279,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:VLAN/Attribute:subnets_list+' => '',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Fyzická síťová rozhraní',
 	'Class:VLAN/Attribute:physicalinterfaces_list+' => '',
-));
+]);
 
 //
 // Class: lnkSubnetToVLAN
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkSubnetToVLAN' => 'Spojení (Podsíť (subnet) / VLAN)',
 	'Class:lnkSubnetToVLAN+' => '',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s',
@@ -1300,26 +1299,26 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '',
-));
+]);
 
 //
 // Class: NetworkInterface
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:NetworkInterface' => 'Síťové rozhraní',
 	'Class:NetworkInterface+' => '',
 	'Class:NetworkInterface/Attribute:name' => 'Název',
 	'Class:NetworkInterface/Attribute:name+' => '',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Typ',
 	'Class:NetworkInterface/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: IPInterface
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:IPInterface' => 'IP rozhraní',
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP adresa',
@@ -1334,13 +1333,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:IPInterface/Attribute:ipmask+' => '',
 	'Class:IPInterface/Attribute:speed' => 'Rychlost',
 	'Class:IPInterface/Attribute:speed+' => '',
-));
+]);
 
 //
 // Class: PhysicalInterface
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:PhysicalInterface' => 'Fyzické rozhraní',
 	'Class:PhysicalInterface+' => '',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s',
@@ -1350,13 +1349,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLAN',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
-));
+]);
 
 //
 // Class: lnkPhysicalInterfaceToVLAN
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Spojení (Fyzické rozhraní / VLAN)',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s~~',
@@ -1372,27 +1371,26 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
-));
-
+]);
 
 //
 // Class: LogicalInterface
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:LogicalInterface' => 'Logické rozhraní',
 	'Class:LogicalInterface+' => '',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Virtuální stroj (VM)',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Název virtuálního stroje (VM)',
 	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '',
-));
+]);
 
 //
 // Class: FiberChannelInterface
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:FiberChannelInterface' => 'FC rozhraní',
 	'Class:FiberChannelInterface+' => '',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Rychlost',
@@ -1405,13 +1403,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Název zařízení',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '',
-));
+]);
 
 //
 // Class: lnkConnectableCIToNetworkDevice
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkConnectableCIToNetworkDevice' => 'Spojení (Připojitelná konfigurační položka / Síťový prvek)',
 	'Class:lnkConnectableCIToNetworkDevice+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s~~',
@@ -1433,13 +1431,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'down link',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'up link',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'up link',
-));
+]);
 
 //
 // Class: lnkApplicationSolutionToFunctionalCI
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Spojení (Aplikační řešení / Funkční konfigurační položka)',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -1451,13 +1449,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Název funkční konfigurační položky',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: lnkApplicationSolutionToBusinessProcess
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Spojení (Aplikační řešení / Obchodní proces)',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s~~',
@@ -1469,13 +1467,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Název aplikačního řešení',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
-));
+]);
 
 //
 // Class: Group
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Group' => 'Skupina',
 	'Class:Group+' => '',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s',
@@ -1505,13 +1503,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Group/Attribute:ci_list+' => 'Všechny konfigurační položky spojené s touto skupinou',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Nadřazená skupina',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
-));
+]);
 
 //
 // Class: lnkGroupToCI
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkGroupToCI' => 'Spojení (Skupina / Konfigurační položka)',
 	'Class:lnkGroupToCI+' => '',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s~~',
@@ -1525,11 +1523,11 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Důvod',
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Server:baseinfo' => 'Obecné informace',
 	'Server:Date' => 'Data',
 	'Server:moreinfo' => 'Více informací',
@@ -1542,14 +1540,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'Počet volných adres: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Tady je výčet volných IP adres (10)',
 	'Class:Document:PreviewTab' => 'Náhled',
-));
-
+]);
 
 //
 // Class: lnkDocumentToFunctionalCI
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkDocumentToFunctionalCI' => 'Spojení (Dokument / Funkční konfigurační položka)',
 	'Class:lnkDocumentToFunctionalCI+' => '',
 	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -1561,13 +1558,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Název dokumentu',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:Application' => 'Aplikace',
 	'Menu:Application+' => 'Všechny aplikace',
 	'Menu:DBServer' => 'Databázové servery',
@@ -1612,15 +1609,15 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Katalog softwaru',
 	'Menu:Software+' => 'Katalog softwaru',
-));
+]);
 
 //
 // Class: PhysicalInterface
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
 	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
 	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
-));
+]);

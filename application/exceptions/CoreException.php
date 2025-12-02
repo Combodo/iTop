@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -35,10 +36,10 @@ class CoreException extends Exception
 		}
 		if (count($this->m_aContextData) > 0) {
 			$sMessage .= ": ";
-			$aContextItems = array();
+			$aContextItems = [];
 			foreach ($this->m_aContextData as $sKey => $value) {
 				if (is_array($value)) {
-					$aPairs = array();
+					$aPairs = [];
 					foreach ($value as $key => $val) {
 						if (is_array($val)) {
 							$aPairs[] = $key.'=>('.implode(', ', $val).')';

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Combodo\iTop\Test\UnitTest\Sources\Controller;
 
 use Combodo\iTop\Portal\Controller\AggregatePageBrickController;

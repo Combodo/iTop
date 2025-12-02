@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'iTopUpdate:UI:PageTitle' => 'Atualização do '.ITOP_APPLICATION_SHORT,
 	'itop-core-update:UI:SelectUpdateFile' => 'Atualização do '.ITOP_APPLICATION_SHORT,
 	'itop-core-update:UI:ConfirmUpdate' => 'Atualização do '.ITOP_APPLICATION_SHORT,
@@ -95,7 +96,5 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ModuleInstallation/Attribute:installed' => 'Instalado em',
 	'Class:ModuleInstallation/Attribute:name' => 'Nome',
 	'Class:ModuleInstallation/Attribute:version' => 'Versão',
-	'Class:ModuleInstallation/Attribute:comment' => 'Comentário'
-));
-
-
+	'Class:ModuleInstallation/Attribute:comment' => 'Comentário',
+]);

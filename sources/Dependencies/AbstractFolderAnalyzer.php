@@ -1,10 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace  Combodo\iTop\Dependencies;
+namespace Combodo\iTop\Dependencies;
 
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
@@ -57,7 +58,7 @@ abstract class AbstractFolderAnalyzer
 	 */
 	public function GetDependenciesRootFolderAbsPath(): string
 	{
-		return $this->GetApprootPathWithSlashes() . $this->GetDependenciesRootFolderRelPath();
+		return $this->GetApprootPathWithSlashes().$this->GetDependenciesRootFolderRelPath();
 	}
 
 	/**
@@ -77,16 +78,17 @@ abstract class AbstractFolderAnalyzer
 	 */
 	public function ListAllFilesAbsPaths(bool $bCheckQuestionableFilesOnly = true): array
 	{
-		$aAllTestDirs = array();
+		$aAllTestDirs = [];
 		$sPath = realpath($this->GetDependenciesRootFolderAbsPath());
 
-		$oDirectoryIterator = new RecursiveDirectoryIterator($sPath,  FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO|FilesystemIterator::SKIP_DOTS|FilesystemIterator::UNIX_PATHS);
+		$oDirectoryIterator = new RecursiveDirectoryIterator($sPath, FilesystemIterator::KEY_AS_PATHNAME | FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS);
 		$iterator = new RecursiveIteratorIterator(
 			$oDirectoryIterator,
-			RecursiveIteratorIterator::CHILD_FIRST);
+			RecursiveIteratorIterator::CHILD_FIRST
+		);
 
 		/** @var DirectoryIterator $file */
-		foreach($iterator as $file) {
+		foreach ($iterator as $file) {
 			$sDirName = $file->getFilename();
 			if ($bCheckQuestionableFilesOnly && !static::IsQuestionnableFile($sDirName)) {
 				continue;
@@ -110,7 +112,7 @@ abstract class AbstractFolderAnalyzer
 	 */
 	public function ListAllowedFilesAbsPaths(): array
 	{
-		return array_map(fn ($sRelPath): string => $this->GetDependenciesRootFolderAbsPath() . $sRelPath, $this->ListAllowedFilesRelPaths());
+		return array_map(fn ($sRelPath): string => $this->GetDependenciesRootFolderAbsPath().$sRelPath, $this->ListAllowedFilesRelPaths());
 	}
 
 	/**
@@ -123,7 +125,7 @@ abstract class AbstractFolderAnalyzer
 	 */
 	public function ListDeniedFilesAbsPaths(): array
 	{
-		return array_map(fn ($sRelPath): string => $this->GetDependenciesRootFolderAbsPath() . $sRelPath, $this->ListDeniedFilesRelPaths());
+		return array_map(fn ($sRelPath): string => $this->GetDependenciesRootFolderAbsPath().$sRelPath, $this->ListDeniedFilesRelPaths());
 	}
 
 	/**

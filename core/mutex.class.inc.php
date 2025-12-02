@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2013-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,7 +16,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 
 /**
  * Class iTopMutex
@@ -44,17 +44,20 @@ class iTopMutex
 	protected $sDBSubname;
 	protected $bDBTlsEnabled;
 	protected $sDBTlsCA;
-	static protected $aAcquiredLocks = array(); // Number of instances of the Mutex, having the lock, in this page
+	protected static $aAcquiredLocks = []; // Number of instances of the Mutex, having the lock, in this page
 
 	public function __construct(
-		$sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null, $bDBTlsEnabled = null, $sDBTlsCA = null
-	)
-	{
+		$sName,
+		$sDBHost = null,
+		$sDBUser = null,
+		$sDBPwd = null,
+		$bDBTlsEnabled = null,
+		$sDBTlsCA = null
+	) {
 		// Compute the name of a lock for mysql
 		// Note: names are server-wide!!! So let's make the name specific to this iTop instance
 		$oConfig = MetaModel::GetConfig();
-		if ($oConfig === null)
-		{
+		if ($oConfig === null) {
 			$oConfig = utils::GetConfig(); // Will return an empty config when called during the setup
 		}
 		$this->sDBHost = is_null($sDBHost) ? $oConfig->Get('db_host') : $sDBHost;
@@ -67,8 +70,7 @@ class iTopMutex
 		$this->sDBTlsCA = is_null($sDBTlsCA) ? $oConfig->Get('db_tls.ca') : $sDBTlsCA;
 
 		$this->sName = $sName;
-		if (substr($sName, -strlen($this->sDBName.$sDBSubname)) != $this->sDBName.$sDBSubname)
-		{
+		if (substr($sName, -strlen($this->sDBName.$sDBSubname)) != $this->sDBName.$sDBSubname) {
 			// If the name supplied already ends with the expected suffix
 			// don't add it twice, since the setup may try to detect an already
 			// running cron job by its mutex, without knowing if the config already exists or not
@@ -80,8 +82,7 @@ class iTopMutex
 
 		$this->bLocked = false; // Not yet locked
 
-		if (!array_key_exists($this->sName, self::$aAcquiredLocks))
-		{
+		if (!array_key_exists($this->sName, self::$aAcquiredLocks)) {
 			self::$aAcquiredLocks[$this->sName] = 0;
 		}
 
@@ -108,11 +109,9 @@ class iTopMutex
 		return new iTopMutex(...$aArgs);
 	}
 
-
 	public function __destruct()
 	{
-		if ($this->bLocked)
-		{
+		if ($this->bLocked) {
 			$this->Unlock();
 		}
 		mysqli_close($this->hDBLink);
@@ -122,27 +121,22 @@ class iTopMutex
 	 * Acquire the mutex. Uses a MySQL lock. <b>Warn</b> : can have an abnormal behavior on MySQL clusters (see R-016204)
 	 *
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/miscellaneous-functions.html#function_get-lock
-	 */	
+	 */
 	public function Lock()
 	{
-		if ($this->bLocked)
-		{
+		if ($this->bLocked) {
 			// Lock already acquired
 			return;
 		}
-		if (self::$aAcquiredLocks[$this->sName] == 0)
-		{
-			do
-			{
+		if (self::$aAcquiredLocks[$this->sName] == 0) {
+			do {
 				$res = $this->QueryToScalar("SELECT GET_LOCK('".$this->sName."', 3600)");
-				if (is_null($res))
-				{
+				if (is_null($res)) {
 					throw new Exception("Failed to acquire the lock '".$this->sName."'");
 				}
 				// $res === '1' means I hold the lock
 				// $res === '0' means it timed out
-			}
-			while ($res !== '1');
+			} while ($res !== '1');
 		}
 		$this->bLocked = true;
 		self::$aAcquiredLocks[$this->sName]++;
@@ -150,66 +144,56 @@ class iTopMutex
 
 	/**
 	 *	Attempt to acquire the mutex
-	 *	@returns bool True if the mutex is acquired, false if already locked elsewhere	 
-	 */	
+	 *	@returns bool True if the mutex is acquired, false if already locked elsewhere
+	 */
 	public function TryLock()
 	{
-		if ($this->bLocked)
-		{
+		if ($this->bLocked) {
 			return true; // Already acquired
 		}
-		if (self::$aAcquiredLocks[$this->sName] > 0)
-		{
+		if (self::$aAcquiredLocks[$this->sName] > 0) {
 			self::$aAcquiredLocks[$this->sName]++;
 			$this->bLocked = true;
 			return true;
 		}
-		
+
 		$res = $this->QueryToScalar("SELECT GET_LOCK('".$this->sName."', 0)");
-		if (is_null($res))
-		{
+		if (is_null($res)) {
 			throw new Exception("Failed to acquire the lock '".$this->sName."'");
 		}
 		// $res === '1' means I hold the lock
 		// $res === '0' means it timed out
-		if ($res === '1')
-		{
+		if ($res === '1') {
 			$this->bLocked = true;
 			self::$aAcquiredLocks[$this->sName]++;
 		}
-		if (($res !== '1') && ($res !== '0'))
-		{
+		if (($res !== '1') && ($res !== '0')) {
 			$sMsg = 'GET_LOCK('.$this->sName.', 0) returned: '.var_export($res, true).'. Expected values are: 0, 1 or null';
 			IssueLog::Error($sMsg);
 			throw new Exception($sMsg);
 		}
 		return ($res !== '0');
 	}
-	
+
 	/**
 	 *	Check if the mutex is locked WITHOUT TRYING TO ACQUIRE IT
 	 *	@returns bool True if the mutex is in use, false otherwise
 	 */
 	public function IsLocked()
 	{
-		if ($this->bLocked)
-		{
+		if ($this->bLocked) {
 			return true; // Already acquired
 		}
-		if (self::$aAcquiredLocks[$this->sName] > 0)
-		{
+		if (self::$aAcquiredLocks[$this->sName] > 0) {
 			return true;
 		}
-	
+
 		$res = $this->QueryToScalar("SELECT IS_FREE_LOCK('".$this->sName."')"); // IS_FREE_LOCK detects some error cases that IS_USED_LOCK do not detect
-		if (is_null($res))
-		{
+		if (is_null($res)) {
 			$sMsg = "MySQL Error, IS_FREE_LOCK('".$this->sName."') returned null. Error (".mysqli_errno($this->hDBLink).") = '".mysqli_error($this->hDBLink)."'";
 			IssueLog::Error($sMsg);
 			throw new Exception($sMsg);
-		}
-		else if ($res == '1')
-		{
+		} elseif ($res == '1') {
 			// Lock is free
 			return false;
 		}
@@ -218,21 +202,18 @@ class iTopMutex
 
 	/**
 	 *	Release the mutex
-	 */	
+	 */
 	public function Unlock()
 	{
-		if (!$this->bLocked)
-		{
+		if (!$this->bLocked) {
 			// ??? the lock is not acquired, exit
-	        return;	
+			return;
 		}
-		if (self::$aAcquiredLocks[$this->sName] == 0)
-		{
+		if (self::$aAcquiredLocks[$this->sName] == 0) {
 			return; // Safety net
 		}
-		
-		if (self::$aAcquiredLocks[$this->sName] == 1)
-		{
+
+		if (self::$aAcquiredLocks[$this->sName] == 1) {
 			$res = $this->QueryToScalar("SELECT RELEASE_LOCK('".$this->sName."')");
 		}
 		$this->bLocked = false;
@@ -259,7 +240,7 @@ class iTopMutex
 		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, false);
 
 		if (!$this->hDBLink) {
-            throw new MySQLException('Could not connect to the DB server '.mysqli_connect_error().' (mysql errno: '.mysqli_connect_errno(), array('host' => $sDBHost, 'user' => $sDBUser));
+			throw new MySQLException('Could not connect to the DB server '.mysqli_connect_error().' (mysql errno: '.mysqli_connect_errno(), ['host' => $sDBHost, 'user' => $sDBUser]);
 		}
 
 		// Make sure that the server variable `wait_timeout` is at least 86400 seconds for this connection,
@@ -290,20 +271,15 @@ class iTopMutex
 		}
 	}
 
-
 	protected function QueryToScalar($sSql)
 	{
 		$result = mysqli_query($this->hDBLink, $sSql);
-		if (!$result)
-		{
+		if (!$result) {
 			throw new Exception("Failed to issue MySQL query '".$sSql."': ".mysqli_error($this->hDBLink).' (mysql errno: '.mysqli_errno($this->hDBLink).')');
 		}
-		if ($aRow = mysqli_fetch_array($result, MYSQLI_BOTH))
-		{
+		if ($aRow = mysqli_fetch_array($result, MYSQLI_BOTH)) {
 			$res = $aRow[0];
-		}
-		else
-		{
+		} else {
 			mysqli_free_result($result);
 			throw new Exception("No result for query '".$sSql."'");
 		}

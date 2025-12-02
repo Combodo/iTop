@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ChangeManagement' => '変更管理',
 	'Menu:Change:Overview' => '概要',
 	'Menu:Change:Overview+' => '',
@@ -33,7 +34,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => '最近7日間の状態別変更',
 	'Tickets:Related:OpenChanges' => 'Open changes~~',
 	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -45,12 +46,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Change' => '変更',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => '状態',
@@ -125,4 +125,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Change/Attribute:outage/Value:no+' => '~~',
 	'Class:Change/Attribute:outage/Value:yes' => 'はい',
 	'Class:Change/Attribute:outage/Value:yes+' => '~~',
-));
+]);

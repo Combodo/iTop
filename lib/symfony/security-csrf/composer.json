@@ -1,0 +1,35 @@
+{
+    "name": "symfony/security-csrf",
+    "type": "library",
+    "description": "Symfony Security Component - CSRF Library",
+    "keywords": [],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "symfony/security-core": "^5.4|^6.0|^7.0"
+    },
+    "require-dev": {
+        "symfony/http-foundation": "^5.4|^6.0|^7.0"
+    },
+    "conflict": {
+        "symfony/http-foundation": "<5.4"
+    },
+    "autoload": {
+        "psr-4": { "Symfony\\Component\\Security\\Csrf\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "minimum-stability": "dev"
+}

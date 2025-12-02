@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -89,8 +90,7 @@ class TransactionsTest extends ItopTestCase
 		$this->debug("---> DBInsert()");
 		try {
 			$oTicket->DBWrite();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			// If an exception occurs must be a deadlock
 			$this->assertTrue(CMDBSource::IsDeadlockException($e), $e->getMessage());
 		}
@@ -161,7 +161,7 @@ class TransactionsTest extends ItopTestCase
 	}
 
 	/**
- 	 * Test DBUpdate database transaction by provoking deadlock exceptions
+	 * Test DBUpdate database transaction by provoking deadlock exceptions
 	 *
 	 * @dataProvider DBUpdateProvider
 	 * @param $iFailAt
@@ -210,8 +210,7 @@ class TransactionsTest extends ItopTestCase
 		$this->debug("---> DBUpdate()");
 		try {
 			$oTicket->DBWrite();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			// If an exception occurs must be a deadlock
 			$this->assertTrue(CMDBSource::IsDeadlockException($e));
 		}
@@ -281,8 +280,7 @@ class TransactionsTest extends ItopTestCase
 		try {
 			DbConnectionWrapper::SetDbConnectionMockForQuery();
 			parent::tearDown();
-		}
-		catch (MySQLTransactionNotClosedException $e) {
+		} catch (MySQLTransactionNotClosedException $e) {
 			if ($this->getName() === 'testTransactionOpenedNotClosed') {
 				$this->debug('Executing the testTransactionOpenNoClose method throws a '.MySQLTransactionNotClosedException::class.' exception in tearDown');
 			}

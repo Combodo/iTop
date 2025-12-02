@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -30,5 +31,4 @@ use Exception;
  */
 class BrickNotFoundException extends Exception
 {
-
 }

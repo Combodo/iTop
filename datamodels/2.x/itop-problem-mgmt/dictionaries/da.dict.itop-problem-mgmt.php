@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ProblemManagement' => 'Problem Management',
 	'Menu:ProblemManagement+' => 'Problem Management',
 	'Menu:Problem:Overview' => 'Oversigt',
@@ -33,12 +34,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard for problem Management',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard for problem Management',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Problem' => 'Problem',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Status',
@@ -111,4 +112,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Luk',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

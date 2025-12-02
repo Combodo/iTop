@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -35,7 +36,7 @@ class HTMLBulkExport extends TabularBulkExport
 
 	public function EnumFormParts()
 	{
-		return array_merge(parent::EnumFormParts(), array('interactive_fields_html' => array('interactive_fields_html')));
+		return array_merge(parent::EnumFormParts(), ['interactive_fields_html' => ['interactive_fields_html']]);
 	}
 
 	/**
@@ -52,17 +53,15 @@ class HTMLBulkExport extends TabularBulkExport
 				break;
 
 			default:
-				return parent:: GetFormPart($oP, $sPartId);
+				return parent::GetFormPart($oP, $sPartId);
 		}
 	}
 
 	protected function GetSampleData($oObj, $sAttCode)
 	{
-		if ($sAttCode != 'id')
-		{
+		if ($sAttCode != 'id') {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-			if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
-			{
+			if ($oAttDef instanceof AttributeDateTime) { // AttributeDate is derived from AttributeDateTime
 				$sClass = (get_class($oAttDef) == 'AttributeDateTime') ? 'user-formatted-date-time' : 'user-formatted-date';
 
 				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.utils::EscapeHtml($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj)).'</div>';
@@ -73,24 +72,18 @@ class HTMLBulkExport extends TabularBulkExport
 
 	protected function GetValue($oObj, $sAttCode)
 	{
-		switch($sAttCode)
-		{
+		switch ($sAttCode) {
 			case 'id':
 				$sRet = $oObj->GetHyperlink();
 				break;
-					
+
 			default:
 				$value = $oObj->Get($sAttCode);
-				if ($value instanceof ormCaseLog)
-				{
+				if ($value instanceof ormCaseLog) {
 					$sRet = $value->GetAsSimpleHtml();
-				}
-				elseif ($value instanceof ormStopWatch)
-				{
+				} elseif ($value instanceof ormStopWatch) {
 					$sRet = $value->GetTimeSpent();
-				}
-				else
-				{
+				} else {
 					$sRet = $oObj->GetAsHtml($sAttCode);
 				}
 		}
@@ -100,7 +93,7 @@ class HTMLBulkExport extends TabularBulkExport
 	public function GetHeader()
 	{
 		$sData = '';
-		
+
 		$oSet = new DBObjectSet($this->oSearch);
 		$this->aStatusInfo['status'] = 'running';
 		$this->aStatusInfo['position'] = 0;
@@ -109,8 +102,7 @@ class HTMLBulkExport extends TabularBulkExport
 		$sData .= "<table class=\"listResults\">\n";
 		$sData .= "<thead>\n";
 		$sData .= "<tr>\n";
-		foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
-		{
+		foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
 			$sData .= "<th>".$aFieldSpec['sColLabel']."</th>\n";
 		}
 		$sData .= "</tr>\n";
@@ -135,32 +127,25 @@ class HTMLBulkExport extends TabularBulkExport
 		$sData = '';
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		while($aRow = $oSet->FetchAssoc())
-		{
+		while ($aRow = $oSet->FetchAssoc()) {
 			set_time_limit(intval($iLoopTimeLimit));
 			$oMainObj = $aRow[$sFirstAlias];
 			$sHilightClass = '';
-			if ($oMainObj)
-			{
+			if ($oMainObj) {
 				$sHilightClass = MetaModel::GetHilightClass($sClass, $aRow[$sFirstAlias]);
 			}
-			if ($sHilightClass != '')
-			{
+			if ($sHilightClass != '') {
 				$sData .= "<tr class=\"$sHilightClass\">";
-			}
-			else
-			{
+			} else {
 				$sData .= "<tr>";
 			}
-			foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
-			{
+			foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
 				$sAlias = $aFieldSpec['sAlias'];
 				$sAttCode = $aFieldSpec['sAttCode'];
 
 				$oObj = $aRow[$sAlias];
 				$sField = '';
-				if ($oObj)
-				{
+				if ($oObj) {
 					$sField = $this->GetValue($oObj, $sAttCode);
 				}
 				$sValue = ($sField === '') ? '&nbsp;' : $sField;
@@ -171,21 +156,17 @@ class HTMLBulkExport extends TabularBulkExport
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
 		$this->aStatusInfo['position'] += $this->iChunkSize;
-		if ($this->aStatusInfo['total'] == 0)
-		{
+		if ($this->aStatusInfo['total'] == 0) {
 			$iPercentage = 100;
-		}
-		else
-		{
-			$iPercentage = floor(min(100.0, 100.0*$this->aStatusInfo['position']/$this->aStatusInfo['total']));
+		} else {
+			$iPercentage = floor(min(100.0, 100.0 * $this->aStatusInfo['position'] / $this->aStatusInfo['total']));
 		}
 
-		if ($iCount < $this->iChunkSize)
-		{
+		if ($iCount < $this->iChunkSize) {
 			$sRetCode = 'done';
 		}
 
-		$aStatus = array('code' => $sRetCode, 'message' => Dict::S('Core:BulkExport:RetrievingData'), 'percentage' => $iPercentage);
+		$aStatus = ['code' => $sRetCode, 'message' => Dict::S('Core:BulkExport:RetrievingData'), 'percentage' => $iPercentage];
 		return $sData;
 	}
 
@@ -198,7 +179,7 @@ class HTMLBulkExport extends TabularBulkExport
 
 	public function GetSupportedFormats()
 	{
-		return array('html' => Dict::S('Core:BulkExport:HTMLFormat'));
+		return ['html' => Dict::S('Core:BulkExport:HTMLFormat')];
 	}
 
 	public function GetMimeType()

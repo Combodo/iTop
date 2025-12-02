@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spanish Localized data
  *
@@ -61,14 +62,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:OAuthClient/Attribute:redirect_url+' => 'Esta url debe copiarse en la configuración OAuth2 del proveedor
 Borre el campo para recalcular el valor predeterminado',
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Lista de Buzones',
-	'Class:OAuthClient/Attribute:mailbox_list+' => 'Lista de Buzones'
+	'Class:OAuthClient/Attribute:mailbox_list+' => 'Lista de Buzones',
 ]);
 
 //
 // Class: OAuthClientAzure
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:OAuthClientAzure' => 'Cliente OAuth para Microsoft Azure',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Alcance',
@@ -91,13 +92,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'No',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Inquilino',
 	'Class:OAuthClientAzure/Attribute:tenant+' => 'ID de inquilino de la aplicación configurada. Para aplicaciones multiinquilino, utilice "common".',
-));
+]);
 
 //
 // Class: OAuthClientGoogle
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:OAuthClientGoogle' => 'Cliente OAuth para Google',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Alcance',
@@ -118,4 +119,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => 'Al menos un cliente OAuth debe tener este indicador en "Sí", si desea que iTop lo use para enviar correos electrónicos.',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => 'Si',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => 'No',
-));
+]);

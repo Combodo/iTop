@@ -56,12 +56,12 @@ abstract class FieldRenderer
 		return $this->sEndpoint;
 	}
 
-    /**
-     *
-     * @param string $sEndpoint
-     *
-     * @return \Combodo\iTop\Renderer\FieldRenderer
-     */
+	/**
+	 *
+	 * @param string $sEndpoint
+	 *
+	 * @return \Combodo\iTop\Renderer\FieldRenderer
+	 */
 	public function SetEndpoint($sEndpoint)
 	{
 		$this->sEndpoint = $sEndpoint;
@@ -82,18 +82,17 @@ abstract class FieldRenderer
 	 */
 	protected function GetValidatorsAsJson()
 	{
-		$aValidators = array();
-		foreach ($this->oField->GetValidators() as $oValidator)
-		{
+		$aValidators = [];
+		foreach ($this->oField->GetValidators() as $oValidator) {
 			if (false === ($oValidator instanceof AbstractRegexpValidator)) {
 				// no JS counterpart, so skipping !
 				continue;
 			}
 
-			$aValidators[$oValidator::GetName()] = array(
+			$aValidators[$oValidator::GetName()] = [
 				'reg_exp' => $oValidator->GetRegExp(),
 				'message' => Dict::S($oValidator->GetErrorMessage()),
-			);
+			];
 		}
 		// - Formatting options
 		return json_encode($aValidators);
@@ -109,8 +108,7 @@ abstract class FieldRenderer
 		$oOutput = new RenderingOutput();
 
 		// Field metadata
-		foreach ($this->oField->GetMetadata() as $sMetadataName => $sMetadataValue)
-		{
+		foreach ($this->oField->GetMetadata() as $sMetadataName => $sMetadataValue) {
 			$oOutput->AddMetadata($sMetadataName, utils::HtmlEntities($sMetadataValue));
 		}
 
