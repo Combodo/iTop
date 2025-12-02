@@ -38,7 +38,9 @@ final class Forms
 	public static function createFormFactoryBuilder(): FormFactoryBuilderInterface
 	{
 		// Set up the Validator component
-		$validator = Validation::createValidator();
+		$validator = Validation::createValidatorBuilder()
+			->enableAttributeMapping()->getValidator();
+
 		return (new FormFactoryBuilder())
 			->addExtension(new HttpFoundationExtension())
 			->addExtension(new ValidatorExtension($validator))

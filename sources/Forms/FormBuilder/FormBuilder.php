@@ -95,9 +95,12 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 			$oFormBlock->oDependencyMap = $this->oDependencyHandler->GetMap();
 		}
 
-		if (is_null($oFormBlock->GetParent())) {
+		if ($oFormBlock->IsRootBlock()) {
 			// Insert a hidden type to save the place
-			$this->builder->add('_turbo_trigger', HiddenType::class, ['prevent_form_build' => true]);
+			$this->builder->add('_turbo_trigger', HiddenType::class, [
+				'prevent_form_build' => true,
+				'mapped'             => false,
+			]);
 		}
 	}
 

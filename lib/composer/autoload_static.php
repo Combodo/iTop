@@ -920,6 +920,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Forms\\Register\\OptionsRegister' => __DIR__ . '/../..' . '/sources/Forms/Register/OptionsRegister.php',
         'Combodo\\iTop\\Forms\\Register\\RegisterException' => __DIR__ . '/../..' . '/sources/Forms/Register/RegisterException.php',
         'Combodo\\iTop\\Forms\\Twig\\Extension\\FormCompatibilityExtension' => __DIR__ . '/../..' . '/sources/Forms/Twig/Extension/FormCompatibilityExtension.php',
+        'Combodo\\iTop\\Forms\\Validator\\AttributeExist' => __DIR__ . '/../..' . '/sources/Forms/Validator/AttributeExist.php',
+        'Combodo\\iTop\\Forms\\Validator\\AttributeExistValidator' => __DIR__ . '/../..' . '/sources/Forms/Validator/AttributeExistValidator.php',
         'Combodo\\iTop\\PhpParser\\Evaluation\\PhpExpressionEvaluator' => __DIR__ . '/../..' . '/sources/PhpParser/Evaluation/PhpExpressionEvaluator.php',
         'Combodo\\iTop\\Renderer\\BlockRenderer' => __DIR__ . '/../..' . '/sources/Renderer/BlockRenderer.php',
         'Combodo\\iTop\\Renderer\\Bootstrap\\BsFieldRendererMappings' => __DIR__ . '/../..' . '/sources/Renderer/Bootstrap/BsFieldRendererMappings.php',
@@ -3729,7 +3731,6 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Symfony\\Component\\Validator\\Mapping\\PropertyMetadataInterface' => __DIR__ . '/..' . '/symfony/validator/Mapping/PropertyMetadataInterface.php',
         'Symfony\\Component\\Validator\\Mapping\\TraversalStrategy' => __DIR__ . '/..' . '/symfony/validator/Mapping/TraversalStrategy.php',
         'Symfony\\Component\\Validator\\ObjectInitializerInterface' => __DIR__ . '/..' . '/symfony/validator/ObjectInitializerInterface.php',
-        'Symfony\\Component\\Validator\\Test\\ConstraintValidatorTestCase' => __DIR__ . '/..' . '/symfony/validator/Test/ConstraintValidatorTestCase.php',
         'Symfony\\Component\\Validator\\Util\\PropertyPath' => __DIR__ . '/..' . '/symfony/validator/Util/PropertyPath.php',
         'Symfony\\Component\\Validator\\Validation' => __DIR__ . '/..' . '/symfony/validator/Validation.php',
         'Symfony\\Component\\Validator\\ValidatorBuilder' => __DIR__ . '/..' . '/symfony/validator/ValidatorBuilder.php',
@@ -4279,7 +4280,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'privUITransactionFile' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'privUITransactionSession' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'utils' => __DIR__ . '/../..' . '/application/utils.inc.php',
-        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

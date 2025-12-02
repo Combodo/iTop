@@ -534,6 +534,8 @@ return array(
     'Combodo\\iTop\\Forms\\Register\\OptionsRegister' => $baseDir . '/sources/Forms/Register/OptionsRegister.php',
     'Combodo\\iTop\\Forms\\Register\\RegisterException' => $baseDir . '/sources/Forms/Register/RegisterException.php',
     'Combodo\\iTop\\Forms\\Twig\\Extension\\FormCompatibilityExtension' => $baseDir . '/sources/Forms/Twig/Extension/FormCompatibilityExtension.php',
+    'Combodo\\iTop\\Forms\\Validator\\AttributeExist' => $baseDir . '/sources/Forms/Validator/AttributeExist.php',
+    'Combodo\\iTop\\Forms\\Validator\\AttributeExistValidator' => $baseDir . '/sources/Forms/Validator/AttributeExistValidator.php',
     'Combodo\\iTop\\PhpParser\\Evaluation\\PhpExpressionEvaluator' => $baseDir . '/sources/PhpParser/Evaluation/PhpExpressionEvaluator.php',
     'Combodo\\iTop\\Renderer\\BlockRenderer' => $baseDir . '/sources/Renderer/BlockRenderer.php',
     'Combodo\\iTop\\Renderer\\Bootstrap\\BsFieldRendererMappings' => $baseDir . '/sources/Renderer/Bootstrap/BsFieldRendererMappings.php',
@@ -3343,7 +3345,6 @@ return array(
     'Symfony\\Component\\Validator\\Mapping\\PropertyMetadataInterface' => $vendorDir . '/symfony/validator/Mapping/PropertyMetadataInterface.php',
     'Symfony\\Component\\Validator\\Mapping\\TraversalStrategy' => $vendorDir . '/symfony/validator/Mapping/TraversalStrategy.php',
     'Symfony\\Component\\Validator\\ObjectInitializerInterface' => $vendorDir . '/symfony/validator/ObjectInitializerInterface.php',
-    'Symfony\\Component\\Validator\\Test\\ConstraintValidatorTestCase' => $vendorDir . '/symfony/validator/Test/ConstraintValidatorTestCase.php',
     'Symfony\\Component\\Validator\\Util\\PropertyPath' => $vendorDir . '/symfony/validator/Util/PropertyPath.php',
     'Symfony\\Component\\Validator\\Validation' => $vendorDir . '/symfony/validator/Validation.php',
     'Symfony\\Component\\Validator\\ValidatorBuilder' => $vendorDir . '/symfony/validator/ValidatorBuilder.php',
@@ -3893,5 +3894,5 @@ return array(
     'privUITransactionFile' => $baseDir . '/application/transaction.class.inc.php',
     'privUITransactionSession' => $baseDir . '/application/transaction.class.inc.php',
     'utils' => $baseDir . '/application/utils.inc.php',
-    '©' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
+    'ï¿½' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
 );
