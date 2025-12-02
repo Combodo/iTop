@@ -4398,7 +4398,7 @@
         <field id="ospatches_list" xsi:type="AttributeLinkedSet">
           <linked_class>OSPatch</linked_class>
           <ext_key_to_me>osversion_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
+          <edit_mode>in_place</edit_mode>
         </field>
       </fields>
       <methods/>
@@ -4462,7 +4462,7 @@
         <field id="osversions_list" xsi:type="AttributeLinkedSet">
           <linked_class>OSVersion</linked_class>
           <ext_key_to_me>osfamily_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
+          <edit_mode>in_place</edit_mode>
         </field>
       </fields>
       <methods/>
@@ -4546,12 +4546,12 @@
         <field id="models_list" xsi:type="AttributeLinkedSet">
           <linked_class>Model</linked_class>
           <ext_key_to_me>brand_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
+          <edit_mode>in_place</edit_mode>
         </field>
         <field id="iosversions_list" xsi:type="AttributeLinkedSet">
           <linked_class>IOSVersion</linked_class>
           <ext_key_to_me>brand_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
+          <edit_mode>in_place</edit_mode>
         </field>
       </fields>
       <methods/>
