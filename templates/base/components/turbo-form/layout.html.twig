@@ -8,7 +8,11 @@
 </script>
 
 <turbo-frame id="{{ oUIBlock.GetId() }}">
-    {{ form_start(oUIBlock.GetFormView()) }}
+    {% if actionUrl is defined %}
+        {{ form_start(oUIBlock.GetFormView(), {'action': actionUrl}) }}
+    {% else %}
+        {{ form_start(oUIBlock.GetFormView()) }}
+    {% endif %}
     {{ form_widget(oUIBlock.GetFormView()) }}
 
     {%- block iboContentBlockContainer -%}
