@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -21,10 +22,9 @@ use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
 
-
 /**
  * ormDocument
- * encapsulate the behavior of a binary data set that will be stored an attribute of class AttributeBlob 
+ * encapsulate the behavior of a binary data set that will be stored an attribute of class AttributeBlob
  *
  * @package     itopORM
  */
@@ -134,7 +134,7 @@ class ormDocument
 		$sMimeType = 'text/plain';
 		if (array_key_exists($sExtension, ormDocument::$aKnownExtensions)) {
 			$sMimeType = ormDocument::$aKnownExtensions[$sExtension];
-		} else if (extension_loaded('fileinfo')) {
+		} elseif (extension_loaded('fileinfo')) {
 			$fInfo = new finfo(FILEINFO_MIME);
 			$sMimeType = $fInfo->file($sPath);
 		}
@@ -144,7 +144,9 @@ class ormDocument
 
 	public function __toString()
 	{
-	    if($this->IsEmpty()) return '';
+		if ($this->IsEmpty()) {
+			return '';
+		}
 
 		return MyHelpers::beautifulstr($this->m_data, 100, true);
 	}
@@ -180,7 +182,7 @@ class ormDocument
 			return true;
 		}
 	}
-	
+
 	public function GetMimeType()
 	{
 		return $this->m_sMimeType;
@@ -188,8 +190,7 @@ class ormDocument
 	public function GetMainMimeType()
 	{
 		$iSeparatorPos = strpos($this->m_sMimeType, '/');
-		if ($iSeparatorPos > 0)
-		{
+		if ($iSeparatorPos > 0) {
 			return substr($this->m_sMimeType, 0, $iSeparatorPos);
 		}
 		return $this->m_sMimeType;
@@ -267,22 +268,22 @@ class ormDocument
 		}
 		return $sResult;
 	}
-		
+
 	/**
 	 * Returns an hyperlink to display the document *inline*
 	 * @return string
-	 */	 	 	
+	 */
 	public function GetDisplayLink($sClass, $Id, $sAttCode)
 	{
 		$sUrl = $this->GetDisplayURL($sClass, $Id, $sAttCode);
 
 		return "<a href=\"$sUrl\" target=\"_blank\" >".utils::EscapeHtml($this->GetFileName())."</a>\n";
 	}
-	
+
 	/**
 	 * Returns an hyperlink to download the document (content-disposition: attachment)
 	 * @return string
-	 */	 	 	
+	 */
 	public function GetDownloadLink($sClass, $Id, $sAttCode)
 	{
 		$sUrl = $this->GetDownloadURL($sClass, $Id, $sAttCode);
@@ -298,7 +299,7 @@ class ormDocument
 	{
 		$sSignature = $this->GetSignature();
 		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
-		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
+		return utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
 	}
 
 	/**
@@ -310,22 +311,21 @@ class ormDocument
 		// Compute a signature to reset the cache anytime the data changes (this is acceptable if used only with icon files)
 		$sSignature = $this->GetSignature();
 		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
-		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
+		return utils::GetAbsoluteUrlAppRoot()."pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
 	}
 
 	public function IsPreviewAvailable()
 	{
 		$bRet = false;
-		switch($this->GetMimeType())
-		{
+		switch ($this->GetMimeType()) {
 			case 'image/png':
 			case 'image/jpg':
 			case 'image/jpeg':
 			case 'image/gif':
 			case 'image/bmp':
 			case 'image/svg+xml':
-			$bRet = true;
-			break;
+				$bRet = true;
+				break;
 		}
 		return $bRet;
 	}
@@ -345,11 +345,9 @@ class ormDocument
 	 */
 	public static function DownloadDocument(WebPage $oPage, $sClass, $id, $sAttCode, $sContentDisposition = 'attachment', $sSecretField = null, $sSecretValue = null)
 	{
-		try
-		{
+		try {
 			$oObj = MetaModel::GetObject($sClass, $id, false, false);
-			if (!is_object($oObj))
-			{
+			if (!is_object($oObj)) {
 				// If access to the document is not granted, check if the access to the host object is allowed
 				$oObj = MetaModel::GetObject($sClass, $id, false, true);
 				if ($oObj instanceof Attachment) {
@@ -364,30 +362,28 @@ class ormDocument
 					throw new Exception("Invalid id ($id) for class '$sClass' - the object does not exist or you are not allowed to view it");
 				}
 			}
-			if (($sSecretField != null) && ($oObj->Get($sSecretField) != $sSecretValue))
-			{
+			if (($sSecretField != null) && ($oObj->Get($sSecretField) != $sSecretValue)) {
 				usleep(200);
 				throw new Exception("Invalid secret for class '$sClass' - the object does not exist or you are not allowed to view it");
 			}
 			/** @var \ormDocument $oDocument */
 			$oDocument = $oObj->Get($sAttCode);
-			if (is_object($oDocument))
-			{
-				$aEventData = array(
+			if (is_object($oDocument)) {
+				$aEventData = [
 					'debug_info' => $oDocument->GetFileName(),
 					'object' => $oObj,
 					'att_code' => $sAttCode,
 					'document' => $oDocument,
 					'content_disposition' => $sContentDisposition,
-					);
+					];
 				EventService::FireEvent(new EventData(\EVENT_DOWNLOAD_DOCUMENT, $sClass, $aEventData));
 				$oPage->TrashUnexpectedOutput();
 				$oPage->SetContentType($oDocument->GetMimeType());
-				$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());
+				$oPage->SetContentDisposition($sContentDisposition, $oDocument->GetFileName());
 				$oPage->add($oDocument->GetData());
 
 				// Update downloads count only when content disposition is set to "attachment" as other disposition are to display the document within the page
-				if($sContentDisposition === static::ENUM_CONTENT_DISPOSITION_ATTACHMENT) {
+				if ($sContentDisposition === static::ENUM_CONTENT_DISPOSITION_ATTACHMENT) {
 					$oDocument->IncreaseDownloadsCount();
 					$oObj->Set($sAttCode, $oDocument);
 					// $oObj can be a \DBObject or \cmdbAbstractObject so we ahve to protect it
@@ -398,9 +394,7 @@ class ormDocument
 					$oObj->DBUpdate();
 				}
 			}
-		}
-		catch(Exception $e)
-		{
+		} catch (Exception $e) {
 			$oPage->p($e->getMessage());
 		}
 	}

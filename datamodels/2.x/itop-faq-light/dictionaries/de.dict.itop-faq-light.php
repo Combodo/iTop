@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => '',
 	'Class:FAQ/Attribute:title' => 'Titel',
@@ -28,21 +29,21 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:FAQ/Attribute:key_words' => 'Schlüsselwörter',
 	'Class:FAQ/Attribute:key_words+' => '',
 	'Class:FAQ/Attribute:domains' => 'Domäne',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:FAQCategory' => 'FAQ-Kategorie',
 	'Class:FAQCategory+' => '',
 	'Class:FAQCategory/Attribute:name' => 'Name',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Alle FAQ-Einträge (frequently asked questions) verknüpft mit dieser Kategorie',
-));
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+]);
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ProblemManagement' => 'Problem Management',
 	'Menu:ProblemManagement+' => 'Problem Management',
 	'Menu:Problem:Shortcuts' => 'Shortcuts',
@@ -53,4 +54,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Oft gestellte Fragen (FAQs)',
 	'Brick:Portal:FAQ:Title+' => '<p>In Eile?</p><p>Sehen Sie sich die meistgestellten Fragen an (FAQs) und finden Sie (eventuell) die Antwort direkt dort.</p>',
-));
+]);

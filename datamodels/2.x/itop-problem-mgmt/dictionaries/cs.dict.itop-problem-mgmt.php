@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:ProblemManagement' => 'Správa problémů',
 	'Menu:ProblemManagement+' => 'Správa problémů',
 	'Menu:Problem:Overview' => 'Přehled',
@@ -34,12 +35,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard pro správu problémů (Problem management)',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard pro správu problémů (Problem management)',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Problem' => 'Problém',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Stav',
@@ -112,4 +113,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Uzavřít',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

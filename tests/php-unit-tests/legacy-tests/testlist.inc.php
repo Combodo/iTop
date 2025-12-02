@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -23,15 +24,14 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 class TestBeHappy extends TestHandler // TestFunctionInOut, TestBizModel...
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Be happy!';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Sample test with success';
 	}
@@ -44,12 +44,12 @@ class TestBeHappy extends TestHandler // TestFunctionInOut, TestBizModel...
 }
 class TestBeSad extends TestHandler
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Be sad...';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Sample test with failure';
 	}
@@ -63,12 +63,12 @@ class TestBeSad extends TestHandler
 
 class TestUserRightsMatrixItop extends TestUserRights
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'User rights test on user rights matrix';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'blah blah blah';
 	}
@@ -105,19 +105,22 @@ class TestUserRightsMatrixItop extends TestUserRights
 
 class TestMyBizModel extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'A series of tests on a weird business model';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Attempts various operations and build complex queries';
 	}
-	
-	static public function GetConfigFile() {return '/config-test-mymodel.php';}
 
-	function test_linksinfo()
+	public static function GetConfigFile()
+	{
+		return '/config-test-mymodel.php';
+	}
+
+	public function test_linksinfo()
 	{
 		echo "<h4>Enum links</h4>";
 		self::DumpVariable(MetaModel::EnumReferencedClasses("cmdbTeam"));
@@ -126,56 +129,53 @@ class TestMyBizModel extends TestBizModel
 		self::DumpVariable(MetaModel::GetLinkClasses());
 		self::DumpVariable(MetaModel::GetLinkLabel("Liens_entre_contacts_et_workshop", "toworkshop"));
 	}
-	
-	function test_list_attributes()
+
+	public function test_list_attributes()
 	{
 		echo "<h4>List attributes</h4>";
-		foreach(MetaModel::ListAttributeDefs("cmdbTeam") as $sAttCode=>$oAttDef)
-		{
+		foreach (MetaModel::ListAttributeDefs("cmdbTeam") as $sAttCode => $oAttDef) {
 			echo $oAttDef->GetLabel()." / ".$oAttDef->GetDescription()." / ".$oAttDef->GetType()."</br>\n";
 		}
 	}
-	
-	function test_search()
+
+	public function test_search()
 	{
 		echo "<h4>Two searches</h4>";
 		$oFilterAllDevs = new DBObjectSearch("cmdbTeam");
 		$oAllDevs = new DBObjectSet($oFilterAllDevs);
-		
+
 		echo "Found ".$oAllDevs->Count()." items.</br>\n";
-		while ($oDev = $oAllDevs->Fetch())
-		{
-			$aValues = array();
-			foreach(MetaModel::GetAttributesList($oAllDevs->GetClass()) as $sAttCode)
-			{
+		while ($oDev = $oAllDevs->Fetch()) {
+			$aValues = [];
+			foreach (MetaModel::GetAttributesList($oAllDevs->GetClass()) as $sAttCode) {
 				$aValues[] = MetaModel::GetLabel(get_class($oDev), $sAttCode)." (".MetaModel::GetDescription(get_class($oDev), $sAttCode).") = ".$oDev->GetAsHTML($sAttCode);
 			}
 			echo $oDev->GetKey()." => ".implode(", ", $aValues)."</br>\n";
 		}
-	
+
 		// a second one
 		$oMyFilter = new DBObjectSearch("cmdbContact");
 		//$oMyFilter->AddCondition("name", "aii", "Finishes with");
 		$oMyFilter->AddCondition("name", "aii");
 		$this->search_and_show_list($oMyFilter);
-		
+
 	}
-	
-	function test_reload()
+
+	public function test_reload()
 	{
 		echo "<h4>Reload</h4>";
 		$team = MetaModel::GetObject("cmdbContact", "2");
 		echo "Chargement de l'attribut headcount: {$team->Get("headcount")}</br>\n";
 		self::DumpVariable($team);
 	}
-	
-	function test_setattribute()
+
+	public function test_setattribute()
 	{
 		echo "<h4>Set attribute and update</h4>";
 		/** @var cmdbTeam $team */
 		$team = MetaModel::GetObject("cmdbTeam", "2");
-		$team->Set("headcount", rand(1,1000));
-		$team->Set("email", "Luis ".rand(9,250));
+		$team->Set("headcount", rand(1, 1000));
+		$team->Set("email", "Luis ".rand(9, 250));
 		self::DumpVariable($team->ListChanges());
 		echo "New headcount = {$team->Get("headcount")}</br>\n";
 		echo "Computed name = {$team->Get("name")}</br>\n";
@@ -184,17 +184,17 @@ class TestMyBizModel extends TestBizModel
 		//DBSearch::StartDebugQuery();
 		$team->DBUpdate();
 		//DBSearch::StopDebugQuery();
-	
+
 		echo "<h4>Check the modified team</h4>";
 		$oTeam = MetaModel::GetObject("cmdbTeam", "2");
 		self::DumpVariable($oTeam);
 	}
-	function test_newobject()
+	public function test_newobject()
 	{
 		echo "<h4>Create a new object (team)</h4>";
 		$oNewTeam = MetaModel::NewObject("cmdbTeam");
 		$oNewTeam->Set("name", "ekip2choc #".rand(1000, 2000));
-		$oNewTeam->Set("email", "machin".rand(1,100)."@tnut.com");
+		$oNewTeam->Set("email", "machin".rand(1, 100)."@tnut.com");
 		$oNewTeam->Set("email", null);
 		$oNewTeam->Set("owner", "ITOP");
 		$oNewTeam->Set("headcount", "0".rand(38000, 38999)); // should be reset to an int value
@@ -206,35 +206,34 @@ class TestMyBizModel extends TestBizModel
 		echo "Deleted team: $iId</br>";
 		self::DumpVariable($oTeam);
 	}
-	
-	
-	function test_updatecolumn()
+
+	public function test_updatecolumn()
 	{
 		$oMyChange = MetaModel::NewObject("CMDBChange");
 		$oMyChange->Set("date", time());
-		$oMyChange->Set("userinfo", "test_updatecolumn / Made by robot #".rand(1,100));
+		$oMyChange->Set("userinfo", "test_updatecolumn / Made by robot #".rand(1, 100));
 		$iChangeId = $oMyChange->DBInsert();
-	
-		$sNewEmail = "updatecol".rand(9,250)."@quedlaballe.com";
+
+		$sNewEmail = "updatecol".rand(9, 250)."@quedlaballe.com";
 		echo "<h4>Update a the email: set to '$sNewEmail'</h4>";
 		$oMyFilter = new DBObjectSearch("cmdbContact");
 		$oMyFilter->AddCondition("name", "o", "Contains");
-	
+
 		echo "Candidates before:</br>";
 		$this->search_and_show_list($oMyFilter);
-	
-		MetaModel::BulkUpdateTracked($oMyChange, $oMyFilter, array("email" => $sNewEmail));
-	
+
+		MetaModel::BulkUpdateTracked($oMyChange, $oMyFilter, ["email" => $sNewEmail]);
+
 		echo "Candidates after:</br>";
 		$this->search_and_show_list($oMyFilter);
 	}
-	
-	function test_error()
+
+	public function test_error()
 	{
 		trigger_error("Stop requested", E_USER_ERROR);
 	}
-	
-	function test_changetracking()
+
+	public function test_changetracking()
 	{
 		echo '<h4>Create a change</h4>';
 		/** @var CMDBChange $oMyChange * */
@@ -260,49 +259,49 @@ class TestMyBizModel extends TestBizModel
 		echo "Deleted team: $iId</br>";
 		self::DumpVariable($oTeam);
 	}
-	
-	function test_zlist()
+
+	public function test_zlist()
 	{
 		echo "<h4>Test ZLists</h4>";
 		$aZLists = MetaModel::EnumZLists();
-		foreach ($aZLists as $sListCode)
-		{
+		foreach ($aZLists as $sListCode) {
 			$aListInfos = MetaModel::GetZListInfo($sListCode);
 			echo "<h4>List '".$sListCode."' (".$aListInfos["description"].") of type '".$aListInfos["type"]."'</h5>\n";
-	
-			foreach (MetaModel::GetSubclasses("cmdbObjectHomeMade") as $sKlass)
-			{
+
+			foreach (MetaModel::GetSubclasses("cmdbObjectHomeMade") as $sKlass) {
 				$aItems = MetaModel::FlattenZlist(MetaModel::GetZListItems($sKlass, $sListCode));
-				if (count($aItems) == 0) continue;
-	
+				if (count($aItems) == 0) {
+					continue;
+				}
+
 				echo "$sKlass - $sListCode : {".implode(", ", $aItems)."}</br>\n";
 			}
 		}
-	
+
 		echo "<h4>IsAttributeInZList()... </h4>";
 		echo "Liens_entre_contacts_et_workshop::ws_info in list1 ? ".(MetaModel::IsAttributeInZList("Liens_entre_contacts_et_workshop", "list1", "ws_info") ? "yes" : "no")."</br>\n";
 		echo "Liens_entre_contacts_et_workshop::toworkshop in list1 ? ".(MetaModel::IsAttributeInZList("Liens_entre_contacts_et_workshop", "list1", "toworkshop") ? "yes" : "no")."</br>\n";
-	
+
 	}
-	
-	function test_pkey()
+
+	public function test_pkey()
 	{
 		echo "<h4>Test search on pkey</h4>";
 		$sExpr1 = "SELECT cmdbContact WHERE id IN (40, 42)";
 		$sExpr2 = "SELECT cmdbContact WHERE IN NOT IN (40, 42)";
 		$this->search_and_show_list_from_oql($sExpr1);
 		$this->search_and_show_list_from_oql($sExpr2);
-	
+
 		echo "Et maintenant, on fusionne....</br>\n";
 		$oSet1 = new CMDBObjectSet(DBObjectSearch::FromOQL($sExpr1));
 		$oSet2 = new CMDBObjectSet(DBObjectSearch::FromOQL($sExpr2));
 		$oIntersect = $oSet1->CreateIntersect($oSet2);
 		$oDelta = $oSet1->CreateDelta($oSet2);
-	
+
 		$oMerge = clone $oSet1;
 		$oAppend->Append($oSet2);
 		$oAppend->Append($oSet2);
-	
+
 		echo "Set1 - Found ".$oSet1->Count()." items.</br>\n";
 		echo "Set2 - Found ".$oSet2->Count()." items.</br>\n";
 		echo "Intersect - Found ".$oIntersect->Count()." items.</br>\n";
@@ -310,51 +309,50 @@ class TestMyBizModel extends TestBizModel
 		echo "Append - Found ".$oAppend->Count()." items.</br>\n";
 		//$this->show_list($oObjSet);
 	}
-	
-	function test_relations()
+
+	public function test_relations()
 	{
 		echo "<h4>Test relations</h4>";
-		
+
 		//self::DumpVariable(MetaModel::EnumRelationQueries("cmdbObjectHomeMade", "Potes"));
 		self::DumpVariable(MetaModel::EnumRelationQueries("cmdbContact", "Potes"));
-	
+
 		$iMaxDepth = 9;
 		echo "Max depth = $iMaxDepth</br>\n";
-	
+
 		$oObj = MetaModel::GetObject("cmdbContact", 18);
 		$aRels = $oObj->GetRelatedObjectsDown("Potes", $iMaxDepth);
 		echo $oObj->Get('name')." has some 'Potes'...</br>\n";
-		foreach ($aRels as $sClass => $aObjs)
-		{
+		foreach ($aRels as $sClass => $aObjs) {
 			echo "$sClass, count = ".count($aObjs)." =&gt; ".implode(', ', array_keys($aObjs))."</br>\n";
 			$oObjectSet = CMDBObjectSet::FromArray($sClass, $aObjs);
 			$this->show_list($oObjectSet);
 		}
-	
+
 		echo "<h4>Test relations - same results, by the mean of a OQL</h4>";
 		$this->search_and_show_list_from_oql("cmdbContact: RELATED (Potes, $iMaxDepth) TO (cmdbContact: pkey = 18)");
-		
+
 	}
-	
-	function test_linkedset()
+
+	public function test_linkedset()
 	{
 		echo "<h4>Linked set attributes</h4>\n";
 		$oObj = MetaModel::GetObject("cmdbContact", 18);
-		
+
 		echo "<h5>Current workshops</h5>\n";
 		$oSetWorkshopsCurr = $oObj->Get("myworkshops");
 		$this->show_list($oSetWorkshopsCurr);
-	
+
 		echo "<h5>Setting workshops</h5>\n";
 		$oNewLink = new cmdbLiens();
 		$oNewLink->Set('toworkshop', 2);
 		$oNewLink->Set('function', 'mafonctioooon');
 		$oNewLink->Set('a1', 'tralala1');
 		$oNewLink->Set('a2', 'F7M');
-		$oSetWorkshops = CMDBObjectSet::FromArray("cmdbLiens", array($oNewLink));
-		$oObj->Set("myworkshops", $oSetWorkshops); 
+		$oSetWorkshops = CMDBObjectSet::FromArray("cmdbLiens", [$oNewLink]);
+		$oObj->Set("myworkshops", $oSetWorkshops);
 		$this->show_list($oSetWorkshops);
-	
+
 		echo "<h5>New workshops</h5>\n";
 		$oSetWorkshopsCurr = $oObj->Get("myworkshops");
 		$this->show_list($oSetWorkshopsCurr);
@@ -362,26 +360,24 @@ class TestMyBizModel extends TestBizModel
 		CMDBObject::SetTrackInfo('test_linkedset / Made by robot #'.rand(1, 100));
 		$oObj->DBUpdate();
 		$oObj = MetaModel::GetObject("cmdbContact", 18);
-	
+
 		echo "<h5>After the write</h5>\n";
 		$oSetWorkshopsCurr = $oObj->Get("myworkshops");
 		$this->show_list($oSetWorkshopsCurr);
 	}
-	
-	function test_object_lifecycle()
+
+	public function test_object_lifecycle()
 	{
 		echo "<h4>Test object lifecycle</h4>";
-	
-	
+
 		self::DumpVariable(MetaModel::GetStateAttributeCode("cmdbContact"));
 		self::DumpVariable(MetaModel::EnumStates("cmdbContact"));
 		self::DumpVariable(MetaModel::EnumStimuli("cmdbContact"));
-		foreach(MetaModel::EnumStates("cmdbContact") as $sStateCode => $aStateDef)
-		{
+		foreach (MetaModel::EnumStates("cmdbContact") as $sStateCode => $aStateDef) {
 			echo "<p>Transition from <strong>$sStateCode</strong></p>\n";
 			self::DumpVariable(MetaModel::EnumTransitions("cmdbContact", $sStateCode));
 		}
-	
+
 		$oObj = MetaModel::GetObject("cmdbContact", 18);
 		echo "Current state: ".$oObj->GetState()."... let's go to school...";
 		self::DumpVariable($oObj->EnumTransitions());
@@ -394,11 +390,10 @@ class TestMyBizModel extends TestBizModel
 		$oObj->ApplyStimulus("raise"); // should give an error
 	}
 
-
 	protected function DoExecute()
 	{
-//				$this->ReportError("Found two different OQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
-//			$this->ReportSuccess('Found '.$oSet->Count()." objects of class $sClassName");
+		//				$this->ReportError("Found two different OQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
+		//			$this->ReportSuccess('Found '.$oSet->Count()." objects of class $sClassName");
 		//$this->test_linksinfo();
 		//$this->test_list_attributes();
 		//$this->test_search();
@@ -417,19 +412,18 @@ class TestMyBizModel extends TestBizModel
 	}
 }
 
-
 ///////////////////////////////////////////////////////////////////////////
 // Test queries
 ///////////////////////////////////////////////////////////////////////////
 
 class TestItopEfficiency extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Itop - benchmark';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Measure time to perform the queries';
 	}
@@ -439,24 +433,21 @@ class TestItopEfficiency extends TestBizModel
 		echo "<h3>Testing query: $sOqlQuery</h3>";
 
 		$fStart = MyHelpers::getmicrotime();
-		for($i=0 ; $i < COUNT_BENCHMARK ; $i++)
-		{
+		for ($i = 0 ; $i < COUNT_BENCHMARK ; $i++) {
 			$oFilter = DBObjectSearch::FromOQL($sOqlQuery);
 		}
 		$fDuration = MyHelpers::getmicrotime() - $fStart;
 		$fParsingDuration = $fDuration / COUNT_BENCHMARK;
 
 		$fStart = MyHelpers::getmicrotime();
-		for($i=0 ; $i < COUNT_BENCHMARK ; $i++)
-		{
+		for ($i = 0 ; $i < COUNT_BENCHMARK ; $i++) {
 			$sSQL = $oFilter->MakeSelectQuery();
 		}
 		$fDuration = MyHelpers::getmicrotime() - $fStart;
 		$fBuildDuration = $fDuration / COUNT_BENCHMARK;
 
 		$fStart = MyHelpers::getmicrotime();
-		for($i=0 ; $i < COUNT_BENCHMARK ; $i++)
-		{
+		for ($i = 0 ; $i < COUNT_BENCHMARK ; $i++) {
 			$res = CMDBSource::Query($sSQL);
 		}
 		$fDuration = MyHelpers::getmicrotime() - $fStart;
@@ -471,8 +462,7 @@ class TestItopEfficiency extends TestBizModel
 		$fFetchDuration = $fDuration;
 
 		$fStart = MyHelpers::getmicrotime();
-		for($i=0 ; $i < COUNT_BENCHMARK ; $i++)
-		{
+		for ($i = 0 ; $i < COUNT_BENCHMARK ; $i++) {
 			$sOql = $oFilter->ToOQL();
 		}
 		$fDuration = MyHelpers::getmicrotime() - $fStart;
@@ -487,11 +477,10 @@ class TestItopEfficiency extends TestBizModel
 		echo "</ul>\n";
 
 		// Everything but the ToOQL (wich is interesting, anyhow)
-		$fTotal = $fParsingDuration + $fBuildDuration + $fQueryDuration + $fFetchDuration; 
+		$fTotal = $fParsingDuration + $fBuildDuration + $fQueryDuration + $fFetchDuration;
 
-		if ($fTotal == 0)
-		{
-			$aRet = array(
+		if ($fTotal == 0) {
+			$aRet = [
 				'rows' => CMDBSource::NbRows($res),
 				'duration (s)' => '0 (negligeable)',
 				'parsing (%)' => '?',
@@ -500,11 +489,9 @@ class TestItopEfficiency extends TestBizModel
 				'fetch (%)' => '?',
 				'to OQL (%)' => '?',
 				'parsing+build (%)' => '?',
-			);
-		}
-		else
-		{
-			$aRet = array(
+			];
+		} else {
+			$aRet = [
 				'rows' => CMDBSource::NbRows($res),
 				'duration (s)' => round($fTotal, 4),
 				'parsing (%)' => round(100 * $fParsingDuration / $fTotal, 1),
@@ -513,17 +500,17 @@ class TestItopEfficiency extends TestBizModel
 				'fetch (%)' => round(100 * $fFetchDuration / $fTotal, 1),
 				'to OQL (%)' => round(100 * $fToOqlDuration / $fTotal, 1),
 				'parsing+build (%)' => round(100 * ($fParsingDuration + $fBuildDuration) / $fTotal, 1),
-			);
+			];
 		}
 		return $aRet;
 	}
-	
+
 	protected function DoExecute()
 	{
-		define ('COUNT_BENCHMARK', 3);
+		define('COUNT_BENCHMARK', 3);
 		echo "<p>The test will be repeated ".COUNT_BENCHMARK." times</p>";
 
-		$aQueries = array(
+		$aQueries = [
 			'SELECT CMDBChangeOpSetAttribute',
 			'SELECT CMDBChangeOpSetAttribute WHERE id=10',
 			'SELECT CMDBChangeOpSetAttribute WHERE id=123456789',
@@ -535,21 +522,18 @@ class TestItopEfficiency extends TestBizModel
 			'SELECT Server',
 			'SELECT Server WHERE id=1',
 			'SELECT UserRequest JOIN Person ON UserRequest.agent_id = Person.id WHERE Person.id = 5',
-		);
-		$aStats  = array();
-		foreach ($aQueries as $sOQL)
-		{
+		];
+		$aStats  = [];
+		foreach ($aQueries as $sOQL) {
 			$aStats[$sOQL] = $this->DoBenchmark($sOQL);
 		}
 
-		$aData = array();
-		foreach ($aStats as $sOQL => $aResults)
-		{
-			$aValues = array();
+		$aData = [];
+		foreach ($aStats as $sOQL => $aResults) {
+			$aValues = [];
 			$aValues['OQL'] = htmlentities($sOQL, ENT_QUOTES, 'UTF-8');
 
-			foreach($aResults as $sDesc => $sInfo)
-			{
+			foreach ($aResults as $sDesc => $sInfo) {
 				$aValues[$sDesc] = htmlentities($sInfo, ENT_QUOTES, 'UTF-8');
 			}
 			$aData[] = $aValues;
@@ -564,12 +548,12 @@ class TestItopEfficiency extends TestBizModel
 
 class TestQueries extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Itop - queries';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Try as many queries as possible';
 	}
@@ -607,9 +591,8 @@ class TestQueries extends TestBizModel
 		// Everything but the ToOQL (which is interesting, anyhow)
 		$fTotal = $fParsingDuration + $fBuildDuration + $fQueryDuration + $fFetchDuration;
 
-		if ($fTotal == 0)
-		{
-			$aRet = array(
+		if ($fTotal == 0) {
+			$aRet = [
 				'rows' => CMDBSource::NbRows($res),
 				'duration (s)' => '0 (negligeable)',
 				'parsing (%)' => '?',
@@ -619,11 +602,9 @@ class TestQueries extends TestBizModel
 				'to OQL (%)' => '?',
 				'parsing+build (%)' => '?',
 				'joins' => $iJoins,
-			);
-		}
-		else
-		{
-			$aRet = array(
+			];
+		} else {
+			$aRet = [
 				'rows' => CMDBSource::NbRows($res),
 				'duration (s)' => round($fTotal, 4),
 				'parsing (%)' => round(100 * $fParsingDuration / $fTotal, 1),
@@ -633,33 +614,29 @@ class TestQueries extends TestBizModel
 				'to OQL (%)' => round(100 * $fToOqlDuration / $fTotal, 1),
 				'parsing+build (%)' => round(100 * ($fParsingDuration + $fBuildDuration) / $fTotal, 1),
 				'joins' => $iJoins,
-			);
+			];
 		}
 		return $aRet;
 	}
-	
+
 	protected function DoExecute()
 	{
-		$aQueries = array();
-		foreach (MetaModel::GetClasses() as $sClass)
-		{
+		$aQueries = [];
+		foreach (MetaModel::GetClasses() as $sClass) {
 			$aQueries[] = 'SELECT '.$sClass;
 			$aQueries[] = 'SELECT '.$sClass.' WHERE id = 1';
-		}	
-		$aStats  = array();
-		foreach ($aQueries as $sOQL)
-		{
+		}
+		$aStats  = [];
+		foreach ($aQueries as $sOQL) {
 			$aStats[$sOQL] = $this->DoBenchmark($sOQL);
 		}
 
-		$aData = array();
-		foreach ($aStats as $sOQL => $aResults)
-		{
-			$aValues = array();
+		$aData = [];
+		foreach ($aStats as $sOQL => $aResults) {
+			$aValues = [];
 			$aValues['OQL'] = htmlentities($sOQL, ENT_QUOTES, 'UTF-8');
 
-			foreach($aResults as $sDesc => $sInfo)
-			{
+			foreach ($aResults as $sDesc => $sInfo) {
 				$aValues[$sDesc] = htmlentities($sInfo, ENT_QUOTES, 'UTF-8');
 			}
 			$aData[] = $aValues;
@@ -674,12 +651,12 @@ class TestQueries extends TestBizModel
 
 class TestQueriesByAPI extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Itop - queries build programmaticaly';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Validate the DBObjectSearch API, through a set of complex (though realistic cases)';
 	}
@@ -687,14 +664,14 @@ class TestQueriesByAPI extends TestBizModel
 	protected function DoExecute()
 	{
 		// Note: relying on eval() - after upgrading to PHP 5.3 we can move to closure (aka anonymous functions)
-		$aQueries = array(
-			'Basic (validate the test)' => array(
+		$aQueries = [
+			'Basic (validate the test)' => [
 				'search' => '
 $oSearch = DBObjectSearch::FromOQL("SELECT P FROM Organization AS O JOIN Person AS P ON P.org_id = O.id WHERE org_id = 2");
 				',
-				'oql' => 'SELECT P FROM Organization AS O JOIN Person AS P ON P.org_id = O.id WHERE P.org_id = 2'
-			),
-			'Double constraint' => array(
+				'oql' => 'SELECT P FROM Organization AS O JOIN Person AS P ON P.org_id = O.id WHERE P.org_id = 2',
+			],
+			'Double constraint' => [
 				'search' => '
 $oSearch = DBObjectSearch::FromOQL("SELECT Contact AS c");
 $sClass = $oSearch->GetClass();
@@ -724,26 +701,24 @@ if ($oAttDef->IsExternalKey())
 	}
 }
 				',
-				'oql' => 'SELECT Contact AS C JOIN Organization ???'
-			),
-			'Simplified issue' => array(
+				'oql' => 'SELECT Contact AS C JOIN Organization ???',
+			],
+			'Simplified issue' => [
 				'search' => '
 $oSearch = DBObjectSearch::FromOQL("SELECT P FROM Organization AS O JOIN Person AS P ON P.org_id = O.id WHERE O.id = 2");
 $oOrgSearch = new DBObjectSearch("Organization", "O2");
 $oOrgSearch->AddCondition("id", 2);
 $oSearch->AddCondition_PointingTo($oOrgSearch, "org_id");
 				',
-				'oql' => 'SELECT P FROM Organization AS O JOIN Person AS P ON P.org_id = O.id JOIN Organization AS O2 ON P.org_id = O2.id WHERE O.id = 2 AND O2.id = 2'
-			),
-		);
-		foreach ($aQueries as $sQueryDesc => $aQuerySpec)
-		{
+				'oql' => 'SELECT P FROM Organization AS O JOIN Person AS P ON P.org_id = O.id JOIN Organization AS O2 ON P.org_id = O2.id WHERE O.id = 2 AND O2.id = 2',
+			],
+		];
+		foreach ($aQueries as $sQueryDesc => $aQuerySpec) {
 			echo "<h2>Query $sQueryDesc</h2>\n";
 			echo "<p>Using code: ".highlight_string("<?php\n".trim($aQuerySpec['search'])."\n?".'>', true)."</p>\n";
 			echo "<p>Expected OQL: ".$aQuerySpec['oql']."</p>\n";
 
-			if (isset($oSearch))
-			{
+			if (isset($oSearch)) {
 				unset($oSearch);
 			}
 			eval($aQuerySpec['search']);
@@ -756,12 +731,11 @@ $oSearch->AddCondition_PointingTo($oOrgSearch, "org_id");
 
 			$sSQL = $oSearch->MakeSelectQuery();
 			$res = CMDBSource::Query($sSQL);
-			foreach (CMDBSource::ExplainQuery($sSQL) as $aRow)
-			{
+			foreach (CMDBSource::ExplainQuery($sSQL) as $aRow) {
 			}
 		}
 
-//		throw new UnitTestException("Expecting result '{$aWebService['expected result']}', but got '$res'");
+		//		throw new UnitTestException("Expecting result '{$aWebService['expected result']}', but got '$res'");
 
 	}
 }
@@ -772,12 +746,12 @@ $oSearch->AddCondition_PointingTo($oOrgSearch, "org_id");
 
 class TestImportREST extends TestWebServices
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'CSV import (REST)';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Test various options and fonctionality of import.php';
 	}
@@ -787,21 +761,17 @@ class TestImportREST extends TestWebServices
 		$sCsvData = $aLoadSpec['csvdata'];
 
 		echo "<div style=\"padding: 10;\">\n";
-		if (is_null($iTestId))
-		{
+		if (is_null($iTestId)) {
 			echo "<h3 style=\"background-color: #ddddff; padding: 10;\">{$aLoadSpec['desc']}</h3>\n";
-		}
-		else
-		{
+		} else {
 			echo "<h3 style=\"background-color: #ddddff; padding: 10;\"><a href=\"?todo=exec&testid=TestImportREST&subtests=$iTestId\">$iTestId</a> - {$aLoadSpec['desc']}</h3>\n";
 		}
 
-		$aPostData = array('csvdata' => $sCsvData);
+		$aPostData = ['csvdata' => $sCsvData];
 
-		$aGetParams = array();
-		$aGetParamReport = array();
-		foreach($aLoadSpec['args'] as $sArg => $sValue)
-		{
+		$aGetParams = [];
+		$aGetParamReport = [];
+		foreach ($aLoadSpec['args'] as $sArg => $sValue) {
 			$aGetParams[] = $sArg.'='.urlencode($sValue);
 			$aGetParamReport[] = $sArg.'='.$sValue;
 		}
@@ -813,12 +783,9 @@ class TestImportREST extends TestWebServices
 
 		$sArguments = implode('<br/>', $aGetParamReport);
 
-		if (strlen($sCsvData) > 5000)
-		{
+		if (strlen($sCsvData) > 5000) {
 			$sCsvDataViewable = 'INPUT TOO LONG TO BE DISPLAYED ('.strlen($sCsvData).")\n".substr($sCsvData, 0, 500)."\n... TO BE CONTINUED";
-		}
-		else
-		{
+		} else {
 			$sCsvDataViewable = $sCsvData;
 		}
 
@@ -835,379 +802,374 @@ class TestImportREST extends TestWebServices
 
 		echo "</div>\n";
 	}
-	
+
 	protected function DoExecute()
 	{
 
-		$aLoads = array(
-			array(
+		$aLoads = [
+			[
 				'desc' => 'Missing class',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
-				),
+				'args' => [
+				],
 				'csvdata' => "xxx",
-			),
-			array(
+			],
+			[
 				'desc' => 'Wrong class',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'toto',
-				),
+				],
 				'csvdata' => "xxx",
-			),
-			array(
+			],
+			[
 				'desc' => 'Wrong output type',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'NetworkDevice',
 					'output' => 'onthefly',
-				),
+				],
 				'csvdata' => "xxx",
-			),
-			array(
+			],
+			[
 				'desc' => 'Weird format, working anyhow...',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Server',
 					'output' => 'details',
 					'separator' => '*',
 					'qualifier' => '@',
 					'reconciliationkeys' => 'org_id,name',
-				),
+				],
 				'csvdata' => 'name*org_id
 									server01*2
 									  @server02@@combodo@*   2
 									server45*99',
-			),
-			array(
+			],
+			[
 				'desc' => 'Load an organization',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Organization',
 					'output' => 'details',
 					'separator' => ';',
 					'reconciliationkeys' => '',
-				),
+				],
 				'csvdata' => "name;code\nWorldCompany;WCY",
-			),
-			array(
+			],
+			[
 				'desc' => 'Load a location',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'details',
 					'separator' => ';',
 					'reconciliationkeys' => '',
-				),
+				],
 				'csvdata' => "name;org_id;address\nParis;1;Centre de la Franca",
-			),
-			array(
+			],
+			[
 				'desc' => 'Load a person',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Person',
 					'output' => 'details',
 					'separator' => ';',
 					'reconciliationkeys' => '',
-				),
+				],
 				'csvdata' => "email;name;first_name;org_id;phone\njohn.foo@starac.com;Foo;John;1;+33(1)23456789",
-			),
-			array(
+			],
+			[
 				'desc' => 'Load a person - wrong email format',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Person',
 					'output' => 'details',
 					'separator' => ';',
 					'reconciliationkeys' => '',
-				),
+				],
 				'csvdata' => "email;name;first_name;org_id\nemailPASbon;Foo;John;1",
-			),
-			array(
+			],
+			[
 				'desc' => 'Load a team',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Team',
 					'output' => 'details',
 					'separator' => ';',
 					'reconciliationkeys' => '',
-				),
+				],
 				'csvdata' => "name;org_id;location_name\nSquadra Azzura2;1;Paris",
-			),
-			array(
+			],
+			[
 				'desc' => 'Load server',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Server',
 					'output' => 'details',
 					'separator' => ';',
 					'reconciliationkeys' => '',
-				),
+				],
 				'csvdata' => "name;status;owner_name;location_name;location_id->org_name;os_family;os_version;management_ip;cpu;ram;brand;model;serial_number\nlocalhost.;production;Demo;Grenoble;Demo;Ubuntu 9.10;2.6.31-19-generic-#56-Ubuntu SMP Thu Jan 28 01:26:53 UTC 2010;16.16.230.232;Intel(R) Core(TM)2 Duo CPU     T7100  @ 1.80GHz;2005;Hewlett-Packard;HP Compaq 6510b (GM108UC#ABF);CNU7370BNP",
-			),
-			array(
+			],
+			[
 				'desc' => 'Load server (column header localized in english)',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Server',
 					'output' => 'details',
 					'separator' => ';',
 					'reconciliationkeys' => '',
-				),
+				],
 				'csvdata' => "Name;Status;Owner Organization;Location;location_id->org_name;OS Family;OS Version;Management IP;CPU;RAM;Brand;Model;Serial  Number\nlocalhost.;production;Demo;Grenoble;Demo;Ubuntu 9.10;2.6.31-19-generic-#56-Ubuntu SMP Thu Jan 28 01:26:53 UTC 2010;16.16.230.232;Intel(R) Core(TM)2 Duo CPU     T7100  @ 1.80GHz;2005;Hewlett-Packard;HP Compaq 6510b (GM108UC#ABF);CNU7370BNP",
-			),
-			array(
+			],
+			[
 				'desc' => 'Load server (directly from Export results)',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Server',
 					'output' => 'details',
 					'reconciliationkeys' => '',
-				),
+				],
 				'csvdata' => 'id,Name,Status,Owner organization,Owner organization->Name,Business criticity,Brand,Model,Serial  Number,Asset Reference,Description,Location,Location->Name,Location details,Management IP,Default Gateway,CPU,RAM,Hard Disk,OS Family,OS Version
 1,"dbserver1.demo.com","production",2,"Demo","medium","HP","DL380","","","ouille
 [[Server:webserver.demo.com]]",1,"Grenoble","","10.1.1.10","255.255.255.0","2","16Gb","120Gb","Linux","Debian (Lenny)"',
-			),
-			array(
+			],
+			[
 				'desc' => 'Load server - wrong value for status',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Server',
 					'output' => 'details',
 					'separator' => ';',
 					'reconciliationkeys' => '',
-				),
+				],
 				'csvdata' => "name;status;owner_name;location_name;location_id->org_name;os_family;os_version;management_ip;cpu;ram;brand;model;serial_number\nlocalhost.;Production;Demo;Grenoble;Demo;Ubuntu 9.10;2.6.31-19-generic-#56-Ubuntu SMP Thu Jan 28 01:26:53 UTC 2010;16.16.230.232;Intel(R) Core(TM)2 Duo CPU     T7100  @ 1.80GHz;2005;Hewlett-Packard;HP Compaq 6510b (GM108UC#ABF);CNU7370BNP",
-			),
-			array(
+			],
+			[
 				'desc' => 'Load NW if',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'NetworkInterface',
 					'output' => 'details',
 					'separator' => ';',
 					'reconciliationkeys' => '',
-				),
+				],
 				'csvdata' => "name;status;org_id;device_name;physical_type;ip_address;ip_mask;mac_address;speed\neth0;implementation;2;localhost.;ethernet;16.16.230.232;255.255.240.0;00:1a:4b:68:e3:97;\nlo;implementation;2;localhost.;ethernet;127.0.0.1;255.0.0.0;;",
-			),
+			],
 			// Data Bruno
-			array(
+			[
 				'desc' => 'Load NW devices from real life',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'NetworkDevice',
 					'output' => 'details',
 					'separator' => ';',
 					'reconciliationkeys' => 'org_id,Name',
-					),
+					],
 				'csvdata' => 'name;management_ip;importance;Owner organization->Name;type
 									truc-machin-bidule;172.15.255.150;high;My Company/Department;switch
 									10.15.255.222;10.15.255.222;high;My Company/Department;switch',
-			),
-			array(
+			],
+			[
 				'desc' => 'Load NW ifs',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'NetworkInterface',
 					'output' => 'details',
 					'separator' => ';',
 					'reconciliationkeys' => 'device_id->name,name',
-				),
+				],
 				'csvdata' => 'device_id->name;org_id->name;name;ip_address;ip_mask;speed;link_type;mac_address;physical_type
 					truc-machin-bidule;My Company/Department;"GigabitEthernet44";;;0;downlink;00 12 F2 CB C4 EB ;ethernet
 					truc-machin-bidule;My Company/Department;"GigabitEthernet38";;;0;downlink;00 12 F2 CB C4 E5 ;ethernet
 					un-autre;My Company/Department;"GigabitEthernet2/3";;;1000000000;uplink;00 12 F2 20 0F 1A ;ethernet',
-			),
-			array(
+			],
+			[
 				'desc' => 'The simplest data load',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'details',
-				),
+				],
 				'csvdata' => "name\nParis",
-			),
-			array(
+			],
+			[
 				'desc' => 'The simplest data load + org',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'details',
 					'separator' => ';',
-				),
+				],
 				'csvdata' => "name;org_id\nParis;2",
-			),
-			array(
+			],
+			[
 				'desc' => 'The simplest data load + org (name)',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'details',
 					'separator' => ';',
-				),
+				],
 				'csvdata' => "name;org_name\nParis;Demo",
-			),
-			array(
+			],
+			[
 				'desc' => 'The simplest data load + org (code)',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'details',
 					'separator' => ';',
-				),
+				],
 				'csvdata' => "name;org_id->code\nParis;DEMO",
-			),
-			array(
+			],
+			[
 				'desc' => 'Ouput: summary',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'summary',
 					'separator' => ';',
-				),
+				],
 				'csvdata' => "name;org_id->code\nParis;DEMO",
-			),
-			array(
+			],
+			[
 				'desc' => 'Ouput: retcode',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'retcode',
 					'separator' => ';',
-				),
+				],
 				'csvdata' => "name;org_id->code\nParis;DEMO",
-			),
-			array(
+			],
+			[
 				'desc' => 'Error in reconciliation list',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'details',
 					'separator' => ';',
 					'reconciliationkeys' => 'org_id',
-				),
+				],
 				'csvdata' => "org_name;name\nDemo;Paris",
-			),
-			array(
+			],
+			[
 				'desc' => 'Error in attribute list that does not allow to compute reconciliation scheme',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'details',
 					'separator' => ';',
-				),
+				],
 				'csvdata' => "org_name;country\nDemo;France",
-			),
-			array(
+			],
+			[
 				'desc' => 'Error in attribute list - case A',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'details',
 					'separator' => ';',
-				),
+				],
 				'csvdata' => "name;org\nParis;2",
-			),
-			array(
+			],
+			[
 				'desc' => 'Error in attribute list - case B1 (key->attcode)',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'details',
 					'separator' => ';',
-				),
+				],
 				'csvdata' => "name;org->code\nParis;DEMO",
-			),
-			array(
+			],
+			[
 				'desc' => 'Error in attribute list - case B2 (key->attcode)',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'details',
 					'separator' => ';',
-				),
+				],
 				'csvdata' => "name;org_id->duns\nParis;DEMO",
-			),
-			array(
+			],
+			[
 				'desc' => 'Always changing... special comment in change tracking',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'details',
 					'separator' => ';',
-					'comment' => 'automated testing'
-				),
+					'comment' => 'automated testing',
+				],
 				'csvdata' => "org_name;name;address\nDemo;Le pantheon;Addresse bidon:".((string)microtime(true)),
-			),
-			array(
+			],
+			[
 				'desc' => 'Always changing... but "simulate"',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'Location',
 					'output' => 'details',
 					'separator' => ';',
 					'simulate' => '1',
-					'comment' => 'SHOULD NEVER APPEAR IN THE HISTORY'
-				),
+					'comment' => 'SHOULD NEVER APPEAR IN THE HISTORY',
+				],
 				'csvdata' => "org_name;name;address\nDemo;Le pantheon;restore address?",
-			),
-			array(
+			],
+			[
 				'desc' => 'Load a user account',
 				'login' => 'admin',
 				'password' => 'admin',
-				'args' => array(
+				'args' => [
 					'class' => 'UserLocal',
 					'output' => 'details',
 					'separator' => ',',
 					'simulate' => '0',
-					'comment' => 'automated testing'
-				),
+					'comment' => 'automated testing',
+				],
 				'csvdata' => "login,password,profile_list\nby_import_csv,fakepwd,profileid->name:Configuration Manager|profileid:10;reason:direct id",
-			),
-		); 
+			],
+		];
 
-     	$sSubTests = utils::ReadParam('subtests', null, true, 'raw_data');
-     	if (is_null($sSubTests))
-     	{
-			foreach ($aLoads as $iTestId => $aLoadSpec)
-			{
+		$sSubTests = utils::ReadParam('subtests', null, true, 'raw_data');
+		if (is_null($sSubTests)) {
+			foreach ($aLoads as $iTestId => $aLoadSpec) {
 				$this->DoExecSingleLoad($aLoadSpec, $iTestId);
 			}
-		}
-		else
-		{
+		} else {
 			$aSubTests = explode(',', $sSubTests);
-			foreach ($aSubTests as $iTestId)
-			{
+			foreach ($aSubTests as $iTestId) {
 				$this->DoExecSingleLoad($aLoads[$iTestId], $iTestId);
 			}
 		}
@@ -1221,28 +1183,27 @@ define('IMPORT_COUNT', 4000);
 
 class TestImportRESTMassive extends TestImportREST
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'CSV import (REST) - HUGE data set ('.IMPORT_COUNT.' PCs)';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Stress import.php';
 	}
 
 	protected function DoExecute()
 	{
-		$aLoadSpec = array(
+		$aLoadSpec = [
 			'desc' => 'Loading PCs: '.IMPORT_COUNT,
-			'args' => array(
+			'args' => [
 				'class' => 'PC',
 				'output' => 'summary',
-			),
+			],
 			'csvdata' => "name;org_id;brand\n",
-		);
-		for($i = 0 ; $i <= IMPORT_COUNT ; $i++)
-		{
+		];
+		for ($i = 0 ; $i <= IMPORT_COUNT ; $i++) {
 			$aLoadSpec['csvdata'] .= "pc.import.$i;2;Combodo\n";
 		}
 		$this->DoExecSingleLoad($aLoadSpec);
@@ -1253,318 +1214,317 @@ class TestImportRESTMassive extends TestImportREST
 // Test SOAP services
 ///////////////////////////////////////////////////////////////////////////
 
-$aCreateTicketSpecs = array(
-	array(
+$aCreateTicketSpecs = [
+	[
 		'service_category' => 'BasicServices',
 		'verb' => 'GetVersion',
 //		'expected result' => '1.0.1',
 		'expected result' => '$ITOP_VERSION$ [dev]',
 		'explain result' => 'no comment!',
-		'args' => array(),
-	),
-	array(
+		'args' => [],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => true,
 		'explain result' => 'link attribute unknown + a CI not found',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'desc of ticket', /* sDescription */
 			'initial situation blah blah blah', /* sInitialSituation */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Telecom and connectivity'))), /* aServiceDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Network Troubleshooting'))), /* aServiceSubcategoryDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aCallerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Demo')]), /* aCustomerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Telecom and connectivity')]), /* aServiceDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Network Troubleshooting')]), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
-			array(
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Hardware support')]), /* aWorkgroupDesc */
+			[
 				new SOAPLinkCreationSpec(
 					'InfrastructureCI',
-					array(new SOAPSearchCondition('name', 'dbserver1.demo.com')),
-					array(new SOAPAttributeValue('impacting', 'very critical'))
+					[new SOAPSearchCondition('name', 'dbserver1.demo.com')],
+					[new SOAPAttributeValue('impacting', 'very critical')]
 				),
 				new SOAPLinkCreationSpec(
 					'NetworkDevice',
-					array(new SOAPSearchCondition('name', 'switch01')),
-					array(new SOAPAttributeValue('impact', 'who cares'))
+					[new SOAPSearchCondition('name', 'switch01')],
+					[new SOAPAttributeValue('impact', 'who cares')]
 				),
 				new SOAPLinkCreationSpec(
 					'Server',
-					array(new SOAPSearchCondition('name', 'thisone')),
-					array(new SOAPAttributeValue('impact', 'our lives'))
+					[new SOAPSearchCondition('name', 'thisone')],
+					[new SOAPAttributeValue('impact', 'our lives')]
 				),
-			), /* aImpact */
+			], /* aImpact */
 			'1', /* sImpact */
 			'1', /* sUrgency */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => true,
 		'explain result' => 'caller not specified',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'PC burning', /* sDescription */
 			'The power supply suddenly started to warm up', /* sInitialSituation */
 			new SOAPExternalKeySearch(), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Demo')]), /* aCustomerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Computers and peripherals')]), /* aServiceDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
-			array(
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Hardware support')]), /* aWorkgroupDesc */
+			[
 				new SOAPLinkCreationSpec(
 					'InfrastructureCI',
-					array(new SOAPSearchCondition('name', 'dbserver1.demo.com')),
-					array()
+					[new SOAPSearchCondition('name', 'dbserver1.demo.com')],
+					[]
 				), /* aImpact */
-			),
+			],
 			'1', /* sImpact */
 			'1', /* sUrgency */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => false,
 		'explain result' => 'wrong class on CI to attach',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'PC burning', /* sDescription */
 			'The power supply suddenly started to warm up', /* sInitialSituation */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aCallerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Demo')]), /* aCustomerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Computers and peripherals')]), /* aServiceDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
-			array(
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Hardware support')]), /* aWorkgroupDesc */
+			[
 				new SOAPLinkCreationSpec(
 					'logInfra',
-					array(new SOAPSearchCondition('dummyfiltercode', 2)),
-					array(new SOAPAttributeValue('impact', 'very critical'))
+					[new SOAPSearchCondition('dummyfiltercode', 2)],
+					[new SOAPAttributeValue('impact', 'very critical')]
 				),
-			), /* aImpact */
+			], /* aImpact */
 			'1', /* sImpact */
 			'1', /* sUrgency */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => false,
 		'explain result' => 'wrong search condition on CI to attach',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'PC burning', /* sDescription */
 			'The power supply suddenly started to warm up', /* sInitialSituation */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aCallerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Demo')]), /* aCustomerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Computers and peripherals')]), /* aServiceDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
-			array(
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Hardware support')]), /* aWorkgroupDesc */
+			[
 				new SOAPLinkCreationSpec(
 					'InfrastructureCI',
-					array(new SOAPSearchCondition('dummyfiltercode', 2)),
-					array(new SOAPAttributeValue('impact', 'very critical'))
+					[new SOAPSearchCondition('dummyfiltercode', 2)],
+					[new SOAPAttributeValue('impact', 'very critical')]
 				),
-			), /* aImpact */
+			], /* aImpact */
 			'1', /* sImpact */
 			'1', /* sUrgency */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => true,
 		'explain result' => 'no CI to attach (empty array)',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aCallerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Demo')]), /* aCustomerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Computers and peripherals')]), /* aServiceDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
-			array(
-			), /* aImpact */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Hardware support')]), /* aWorkgroupDesc */
+			[
+			], /* aImpact */
 			'1', /* sImpact */
 			'1', /* sUrgency */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => true,
 		'explain result' => 'no CI to attach (null)',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aCallerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Demo')]), /* aCustomerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Computers and peripherals')]), /* aServiceDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Hardware support')]), /* aWorkgroupDesc */
 			null,  /* aImpact */
 			'1', /* sImpact */
 			'1', /* sUrgency */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => true,
 		'explain result' => 'caller unknown',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1000))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1000)]), /* aCallerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Demo')]), /* aCustomerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Computers and peripherals')]), /* aServiceDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
-			array(
-			), /* aImpact */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Hardware support')]), /* aWorkgroupDesc */
+			[
+			], /* aImpact */
 			'1', /* sImpact */
 			'1', /* sUrgency */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => false,
 		'explain result' => 'wrong values for impact and urgency',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aCallerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Demo')]), /* aCustomerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Computers and peripherals')]), /* aServiceDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
-			array(
-			), /* aImpact */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Hardware support')]), /* aWorkgroupDesc */
+			[
+			], /* aImpact */
 			'6', /* sImpact */
 			'7', /* sUrgency */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => false,
 		'explain result' => 'wrong password',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'xxxxx', /* sPassword */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aCallerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Demo')]), /* aCustomerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Computers and peripherals')]), /* aServiceDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
-			array(
-			), /* aImpact */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Hardware support')]), /* aWorkgroupDesc */
+			[
+			], /* aImpact */
 			'1', /* sImpact */
 			'1', /* sUrgency */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'CreateIncidentTicket',
 		'expected result' => false,
 		'explain result' => 'wrong login',
-		'args' => array(
+		'args' => [
 			'xxxxx', /* sLogin */
 			'yyyyy', /* sPassword */
 			'Houston not reachable', /* sDescription */
 			'Tried to join the shuttle', /* sInitialSituation */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aCallerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Demo'))), /* aCustomerDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Computers and peripherals'))), /* aServiceDesc */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('id', 1))), /* aServiceSubcategoryDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aCallerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Demo')]), /* aCustomerDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Computers and peripherals')]), /* aServiceDesc */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('id', 1)]), /* aServiceSubcategoryDesc */
 			'sub product of the service', /* sProduct */
-			new SOAPExternalKeySearch(array(new SOAPSearchCondition('name', 'Hardware support'))), /* aWorkgroupDesc */
-			array(
-			), /* aImpact */
+			new SOAPExternalKeySearch([new SOAPSearchCondition('name', 'Hardware support')]), /* aWorkgroupDesc */
+			[
+			], /* aImpact */
 			'1', /* sImpact */
 			'1', /* sUrgency */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'SearchObjects',
 		'expected result' => true,
 		'explain result' => '',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'SELECT Incident WHERE id > 20', /* sOQL */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'SearchObjects',
 		'expected result' => false,
 		'explain result' => 'wrong OQL',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'SELECT ThisClassDoesNotExist', /* sOQL */
-		),
-	),
-);
+		],
+	],
+];
 
-
-$aManageCloudUsersSpecs = array(
-	array(
+$aManageCloudUsersSpecs = [
+	[
 		'service_category' => '',
 		'verb' => 'SearchObjects',
 		'expected result' => false,
 		'explain result' => 'wrong OQL',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'SELECT ThisClassDoesNotExist', /* sOQL */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => '',
 		'verb' => 'SearchObjects',
 		'expected result' => true,
 		'explain result' => 'ok',
-		'args' => array(
+		'args' => [
 			'admin', /* sLogin */
 			'admin', /* sPassword */
 			'SELECT Organization', /* sOQL */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => 'CloudUsersManagementService',
 		'verb' => 'CreateAccount',
 		'expected result' => true,
 		'explain result' => 'ok',
-		'args' => array(
+		'args' => [
 			'admin', /* sAdminLogin */
 			'admin', /* sAdminPassword */
 			'http://myserver.mydomain.fr:8080', /* sCloudMgrUrl */
@@ -1573,27 +1533,27 @@ $aManageCloudUsersSpecs = array(
 			'Dupont', /* sLastName */
 			1, /* iOrgId */
 			'FR FR', /* sLanguage */
-			array(
-				array(
+			[
+				[
 					new SOAPKeyValue('profile_id', '2'),
 					new SOAPKeyValue('reason', 'whynot'),
-				),
-				array(
+				],
+				[
 					new SOAPKeyValue('profile_id', '3'),
 					new SOAPKeyValue('reason', 'because'),
-				),
-			), /* aProfiles (array of key/value pairs) */
-			array(
-			), /* aAllowedOrgs (array of key/value pairs) */
+				],
+			], /* aProfiles (array of key/value pairs) */
+			[
+			], /* aAllowedOrgs (array of key/value pairs) */
 			'comment on the creation operation', /* sComment */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => 'CloudUsersManagementService',
 		'verb' => 'ModifyAccount',
 		'expected result' => true,
 		'explain result' => 'ok',
-		'args' => array(
+		'args' => [
 			'admin', /* sAdminLogin */
 			'admin', /* sAdminPassword */
 			'andros@combodo.com', /* sLogin */
@@ -1601,47 +1561,53 @@ $aManageCloudUsersSpecs = array(
 			'robot', /* sLastName */
 			2, /* iOrgId */
 			'EN US', /* sLanguage */
-			array(
-				array(
+			[
+				[
 					new SOAPKeyValue('profile_id', '3'),
 					new SOAPKeyValue('reason', 'because'),
-				),
-			), /* aProfiles (array of key/value pairs) */
-			array(
-			), /* aAllowedOrgs (array of key/value pairs) */
+				],
+			], /* aProfiles (array of key/value pairs) */
+			[
+			], /* aAllowedOrgs (array of key/value pairs) */
 			'comment on the modify operation', /* sComment */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => 'CloudUsersManagementService',
 		'verb' => 'DeleteAccount',
 		'expected result' => true,
 		'explain result' => '',
-		'args' => array(
+		'args' => [
 			'admin', /* sAdminLogin */
 			'admin', /* sAdminPassword */
 			'andros@combodo.com', /* sLogin */
 			'comment on the deletion operation', /* sComment */
-		),
-	),
-	array(
+		],
+	],
+	[
 		'service_category' => 'CloudUsersManagementService',
 		'verb' => 'DeleteAccount',
 		'expected result' => false,
 		'explain result' => 'wrong login',
-		'args' => array(
+		'args' => [
 			'admin', /* sAdminLogin */
 			'admin', /* sAdminPassword */
 			'taratatata@sdf.com', /* sLogin */
 			'comment on the deletion operation', /* sComment */
-		),
-	),
-);
+		],
+	],
+];
 
 abstract class TestSoap extends TestSoapWebService
 {
-	static public function GetName() {return 'Test SOAP';}
-	static public function GetDescription() {return 'Do basic stuff to test the SOAP capability';}
+	public static function GetName()
+	{
+		return 'Test SOAP';
+	}
+	public static function GetDescription()
+	{
+		return 'Do basic stuff to test the SOAP capability';
+	}
 
 	protected $m_aTestSpecs;
 
@@ -1654,108 +1620,97 @@ abstract class TestSoap extends TestSoapWebService
 		// this file is generated dynamically with location = here
 		$sWsdlUri = 'http'.(utils::IsConnectionSecure() ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../webservices/itop.wsdl.php';
 
-		ini_set("soap.wsdl_cache_enabled","0");
+		ini_set("soap.wsdl_cache_enabled", "0");
 
-		foreach ($this->m_aTestSpecs as $iPos => $aWebService)
-		{
+		foreach ($this->m_aTestSpecs as $iPos => $aWebService) {
 			echo "<h2>SOAP call #$iPos - {$aWebService['verb']}</h2>\n";
 			echo "<p>Using WSDL: $sWsdlUriForService</p>\n";
 			echo "<p>{$aWebService['explain result']}</p>\n";
 
 			$sWsdlUriForService = $sWsdlUri.'?service_category='.$aWebService['service_category'];
-			$this->m_SoapClient = new SoapClient
-			(
+			$this->m_SoapClient = new SoapClient(
 				$sWsdlUriForService,
-				array(
+				[
 					'classmap' => $aSOAPMapping,
 					'trace' => 1,
-				)
+				]
 			);
-	
-			if (false)
-			{
-				self::DumpVariable($this->m_SoapClient->__getTypes());
-			} 
 
-			try
-			{
-				$oRes = call_user_func_array(array($this->m_SoapClient, $aWebService['verb']), $aWebService['args']);
+			if (false) {
+				self::DumpVariable($this->m_SoapClient->__getTypes());
 			}
-			catch(SoapFault $e)
-			{
-				print "<pre>\n"; 
-				print "Request: \n".htmlspecialchars($this->m_SoapClient->__getLastRequest()) ."\n"; 
-				print "Response: \n".htmlspecialchars($this->m_SoapClient->__getLastResponse())."\n"; 
+
+			try {
+				$oRes = call_user_func_array([$this->m_SoapClient, $aWebService['verb']], $aWebService['args']);
+			} catch (SoapFault $e) {
+				print "<pre>\n";
+				print "Request: \n".htmlspecialchars($this->m_SoapClient->__getLastRequest())."\n";
+				print "Response: \n".htmlspecialchars($this->m_SoapClient->__getLastResponse())."\n";
 				print "</pre>";
-				print "Response in HTML: <p>".$this->m_SoapClient->__getLastResponse()."</p>"; 
+				print "Response in HTML: <p>".$this->m_SoapClient->__getLastResponse()."</p>";
 				throw $e;
 			}
 
 			self::DumpVariable($oRes);
-	
-			print "<pre>\n"; 
-			print "Request: \n".htmlspecialchars($this->m_SoapClient->__getLastRequest()) ."\n"; 
-			print "Response: \n".htmlspecialchars($this->m_SoapClient->__getLastResponse())."\n"; 
+
+			print "<pre>\n";
+			print "Request: \n".htmlspecialchars($this->m_SoapClient->__getLastRequest())."\n";
+			print "Response: \n".htmlspecialchars($this->m_SoapClient->__getLastResponse())."\n";
 			print "</pre>";
 
-			if ($oRes instanceof SOAPResult)
-			{
+			if ($oRes instanceof SOAPResult) {
 				$res = $oRes->status;
-			}
-			elseif ($oRes instanceof SOAPSimpleResult)
-			{
+			} elseif ($oRes instanceof SOAPSimpleResult) {
 				$res = $oRes->status;
-			}
-			else
-			{
+			} else {
 				$res = $oRes;
 			}
-			if ($res != $aWebService['expected result'])
-			{
+			if ($res != $aWebService['expected result']) {
 				echo "Expecting:<br/>\n";
 				var_dump($aWebService['expected result']);
 				echo "Obtained:<br/>\n";
 				var_dump($res);
 				throw new UnitTestException("Expecting result '{$aWebService['expected result']}', but got '$res'");
 			}
-		} 
+		}
 	}
 }
 
 abstract class TestSoapDirect extends TestBizModel
 {
-	static public function GetName() {return 'Test web services locally';}
-	static public function GetDescription() {return 'Invoke the service directly (troubleshooting)';}
+	public static function GetName()
+	{
+		return 'Test web services locally';
+	}
+	public static function GetDescription()
+	{
+		return 'Invoke the service directly (troubleshooting)';
+	}
 
 	protected $m_aTestSpecs;
 
 	protected function DoExecute()
 	{
-		foreach ($this->m_aTestSpecs as $iPos => $aWebService)
-		{
+		foreach ($this->m_aTestSpecs as $iPos => $aWebService) {
 			$sServiceClass = $aWebService['service_category'];
-			if (empty($sServiceClass)) $sServiceClass = 'BasicServices';
+			if (empty($sServiceClass)) {
+				$sServiceClass = 'BasicServices';
+			}
 			$oWebServices = new $sServiceClass();
 
 			echo "<h2>SOAP call #$iPos - {$aWebService['verb']}</h2>\n";
 			echo "<p>{$aWebService['explain result']}</p>\n";
-			$oRes = call_user_func_array(array($oWebServices, $aWebService['verb']), $aWebService['args']);
+			$oRes = call_user_func_array([$oWebServices, $aWebService['verb']], $aWebService['args']);
 			self::DumpVariable($oRes);
 
-			if ($oRes instanceof SOAPResult)
-			{
+			if ($oRes instanceof SOAPResult) {
 				$res = $oRes->status;
-			}
-			elseif ($oRes instanceof SOAPSimpleResult)
-			{
+			} elseif ($oRes instanceof SOAPSimpleResult) {
 				$res = $oRes->status;
-			}
-			else
-			{
+			} else {
 				$res = $oRes;
 			}
-			if ($res != $aWebService['expected result'])
-			{
+			if ($res != $aWebService['expected result']) {
 				echo "Expecting:<br/>\n";
 				var_dump($aWebService['expected result']);
 				echo "Obtained:<br/>\n";
@@ -1769,7 +1724,10 @@ abstract class TestSoapDirect extends TestBizModel
 
 class TestSoap_Tickets extends TestSoap
 {
-	static public function GetName() {return 'Test SOAP - create ticket';}
+	public static function GetName()
+	{
+		return 'Test SOAP - create ticket';
+	}
 
 	protected function DoExecute()
 	{
@@ -1781,7 +1739,10 @@ class TestSoap_Tickets extends TestSoap
 
 class TestSoapDirect_Tickets extends TestSoapDirect
 {
-	static public function GetName() {return 'Test SOAP without SOAP - create ticket';}
+	public static function GetName()
+	{
+		return 'Test SOAP without SOAP - create ticket';
+	}
 
 	protected function DoExecute()
 	{
@@ -1791,10 +1752,12 @@ class TestSoapDirect_Tickets extends TestSoapDirect
 	}
 }
 
-
 class TestSoap_ManageCloudUsers extends TestSoap
 {
-	static public function GetName() {return 'Test SOAP - manage Cloud Users';}
+	public static function GetName()
+	{
+		return 'Test SOAP - manage Cloud Users';
+	}
 
 	protected function DoExecute()
 	{
@@ -1806,7 +1769,10 @@ class TestSoap_ManageCloudUsers extends TestSoap
 
 class TestSoapDirect_ManageCloudUsers extends TestSoapDirect
 {
-	static public function GetName() {return 'Test SOAP without SOAP - manage Cloud Users';}
+	public static function GetName()
+	{
+		return 'Test SOAP without SOAP - manage Cloud Users';
+	}
 
 	protected function DoExecute()
 	{
@@ -1816,14 +1782,18 @@ class TestSoapDirect_ManageCloudUsers extends TestSoapDirect
 	}
 }
 
-
 ////////////////////// End of SOAP TESTS
-
 
 class TestTriggerAndEmail extends TestBizModel
 {
-	static public function GetName() {return 'Test trigger and email';}
-	static public function GetDescription() {return 'Create a trigger and an email, then activates the trigger';}
+	public static function GetName()
+	{
+		return 'Test trigger and email';
+	}
+	public static function GetDescription()
+	{
+		return 'Create a trigger and an email, then activates the trigger';
+	}
 
 	protected function CreateEmailSpec($oTrigger, $sStatus, $sTo, $sCC, $sTesterEmail)
 	{
@@ -1885,8 +1855,7 @@ class TestTriggerAndEmail extends TestBizModel
 
 		// Error in OQL field(s)
 		//
-		$this->CreateEmailSpec
-		(
+		$this->CreateEmailSpec(
 			$oMyTrigger,
 			'test',
 			"SELECT Person WHERE naime = 'Dali'",
@@ -1896,8 +1865,7 @@ class TestTriggerAndEmail extends TestBizModel
 
 		// Error: no recipient
 		//
-		$this->CreateEmailSpec
-		(
+		$this->CreateEmailSpec(
 			$oMyTrigger,
 			'test',
 			"",
@@ -1907,8 +1875,7 @@ class TestTriggerAndEmail extends TestBizModel
 
 		// Test
 		//
-		$this->CreateEmailSpec
-		(
+		$this->CreateEmailSpec(
 			$oMyTrigger,
 			'test',
 			"SELECT Person WHERE name LIKE 'testemail%'",
@@ -1918,8 +1885,7 @@ class TestTriggerAndEmail extends TestBizModel
 
 		// Test failing because of a wrong test recipient address
 		//
-		$this->CreateEmailSpec
-		(
+		$this->CreateEmailSpec(
 			$oMyTrigger,
 			'test',
 			"SELECT Person WHERE name LIKE 'testemail%'",
@@ -1929,8 +1895,7 @@ class TestTriggerAndEmail extends TestBizModel
 
 		// Normal behavior
 		//
-		$this->CreateEmailSpec
-		(
+		$this->CreateEmailSpec(
 			$oMyTrigger,
 			'enabled',
 			"SELECT Person WHERE name LIKE 'testemail%'",
@@ -1940,8 +1905,7 @@ class TestTriggerAndEmail extends TestBizModel
 
 		// Does nothing, because it is disabled
 		//
-		$this->CreateEmailSpec
-		(
+		$this->CreateEmailSpec(
 			$oMyTrigger,
 			'disabled',
 			"SELECT Person WHERE name = 'testemail%'",
@@ -1957,12 +1921,12 @@ class TestTriggerAndEmail extends TestBizModel
 
 class TestDBProperties extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Itop - DB Properties';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Write and read a dummy property';
 	}
@@ -1978,12 +1942,12 @@ class TestDBProperties extends TestBizModel
 
 class TestCreateObjects extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Itop - create objects';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Create weird objects (reproduce a bug?)';
 	}
@@ -1991,7 +1955,7 @@ class TestCreateObjects extends TestBizModel
 	protected function DoExecute()
 	{
 		$oMyObj = MetaModel::NewObject("Server");
-		$oMyObj->Set("name", "test".rand(1,1000));
+		$oMyObj->Set("name", "test".rand(1, 1000));
 		$oMyObj->Set("org_id", 2);
 		$oMyObj->Set("status", 'production');
 		$this->ObjectToDB($oMyObj, $bReload = true);
@@ -2037,12 +2001,12 @@ class TestCreateObjects extends TestBizModel
 
 class TestSetLinkset extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Itop - Link set from a string';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Create a user account, setting its profile by the mean of a string (prerequisite to CSV import of linksets)';
 	}
@@ -2055,7 +2019,7 @@ class TestSetLinkset extends TestBizModel
 		//$oUser->Set('contactid', 0);
 		//$oUser->Set('language', $sLanguage);
 
-      $sLinkSetSpec = "profileid:10;reason:service manager|profileid->name:Problem Manager;'reason:problem manager;glandeur";
+		$sLinkSetSpec = "profileid:10;reason:service manager|profileid->name:Problem Manager;'reason:problem manager;glandeur";
 
 		$oAttDef = MetaModel::GetAttributeDef('UserLocal', 'profile_list');
 		$oSet = $oAttDef->MakeValueFromString($sLinkSetSpec, $bLocalizedValue = false);
@@ -2071,23 +2035,30 @@ abstract class TestLinkSet extends TestBizModel
 {
 	protected function StandardizedDump($oSet, $sAttPrefixToIgnore)
 	{
-		if (!$oSet->m_bLoaded) $oSet->Load();
+		if (!$oSet->m_bLoaded) {
+			$oSet->Load();
+		}
 		$oSet->Rewind();
 
-		$aRet = array();
-		while($oObject = $oSet->Fetch())
-		{
-			$aValues = array();
-			foreach(MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef)
-			{
+		$aRet = [];
+		while ($oObject = $oSet->Fetch()) {
+			$aValues = [];
+			foreach (MetaModel::ListAttributeDefs(get_class($oObject)) as $sAttCode => $oAttDef) {
 				//if (!$oAttDef->IsPartOfFingerprint()) continue;
 				//if ($oAttDef->IsMagic()) continue;
-				if ($sAttCode == 'friendlyname') continue;
-				if (substr($sAttCode, -strlen('_archive_flag')) == '_archive_flag') continue;
-				if (substr($sAttCode, -strlen('_obsolescence_flag')) == '_obsolescence_flag') continue;
-				if (substr($sAttCode, 0, strlen($sAttPrefixToIgnore)) == $sAttPrefixToIgnore) continue;
-				if ($oAttDef->IsScalar())
-				{
+				if ($sAttCode == 'friendlyname') {
+					continue;
+				}
+				if (substr($sAttCode, -strlen('_archive_flag')) == '_archive_flag') {
+					continue;
+				}
+				if (substr($sAttCode, -strlen('_obsolescence_flag')) == '_obsolescence_flag') {
+					continue;
+				}
+				if (substr($sAttCode, 0, strlen($sAttPrefixToIgnore)) == $sAttPrefixToIgnore) {
+					continue;
+				}
+				if ($oAttDef->IsScalar()) {
 					$aValues[] = $oObject->Get($sAttCode);
 				}
 			}
@@ -2101,12 +2072,12 @@ abstract class TestLinkSet extends TestBizModel
 
 class TestLinkSetRecording_NN_WithDuplicates extends TestLinkSet
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Linkset N-N having duplicated allowed (Connectable CI to Network Device)';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Simulate CSV/data synchro type of recording. Check the values and the history. Lots of issues there: #1145, #1146 and #1147';
 	}
@@ -2115,7 +2086,7 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestLinkSet
 	{
 		CMDBSource::Query('START TRANSACTION');
 		//CMDBSource::Query('ROLLBACK'); automatique !
-		
+
 		////////////////////////////////////////////////////////////////////////////////
 		// Set the stage
 		//
@@ -2124,303 +2095,301 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestLinkSet
 		$oServer->Set('org_id', 3);
 		$oServer->DBInsert();
 		$iServer = $oServer->GetKey();
-		
+
 		$oTypes = new DBObjectSet(DBObjectSearch::FromOQL('SELECT NetworkDeviceType WHERE name = "Router"'));
 		$oType = $oTypes->fetch();
-		
+
 		$oDevice = MetaModel::NewObject('NetworkDevice');
 		$oDevice->Set('name', 'test device A');
 		$oDevice->Set('org_id', 3);
 		$oDevice->Set('networkdevicetype_id', $oType->GetKey());
 		$oDevice->DBInsert();
 		$iDev1 = $oDevice->GetKey();
-		
+
 		$oDevice = MetaModel::NewObject('NetworkDevice');
 		$oDevice->Set('name', 'test device B');
 		$oDevice->Set('org_id', 3);
 		$oDevice->Set('networkdevicetype_id', $oType->GetKey());
 		$oDevice->DBInsert();
 		$iDev2 = $oDevice->GetKey();
-		
-		
+
 		////////////////////////////////////////////////////////////////////////////////
 		// Scenarii
 		//
-		$aScenarii = array(
-			array(
+		$aScenarii = [
+			[
 				'description' => 'Add the first item',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'networkdevice_id' => $iDev1,
 						'connectableci_id' => $iServer,
 						'network_port' => '',
 						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
-			 		"$iDev1, test device A, unit test linkset, , , downlink, test device A",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"$iDev1, test device A, unit test linkset, , , downlink, test device A",
+				],
 				'history_added' => 1,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Modify the unique item',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'networkdevice_id' => $iDev1,
 						'connectableci_id' => $iServer,
 						'network_port' => 'devTagada',
 						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
-			 		"$iDev1, test device A, unit test linkset, devTagada, , downlink, test device A",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"$iDev1, test device A, unit test linkset, devTagada, , downlink, test device A",
+				],
 				'history_added' => 1,
 				'history_removed' => 1,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Modify again the original item and add a second item',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'networkdevice_id' => $iDev1,
 						'connectableci_id' => $iServer,
 						'network_port' => '',
 						'device_port' => '',
-					),
-					array(
+					],
+					[
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => '',
 						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
-			 		"$iDev1, test device A, unit test linkset, , , downlink, test device A",
-			 		"$iDev2, test device B, unit test linkset, , , downlink, test device B",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"$iDev1, test device A, unit test linkset, , , downlink, test device A",
+					"$iDev2, test device B, unit test linkset, , , downlink, test device B",
+				],
 				'history_added' => 2,
 				'history_removed' => 1,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'No change, the links are added in the reverse order',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => '',
 						'device_port' => '',
-					),
-					array(
+					],
+					[
 						'networkdevice_id' => $iDev1,
 						'connectableci_id' => $iServer,
 						'network_port' => '',
 						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
-			 		"$iDev1, test device A, unit test linkset, , , downlink, test device A",
-			 		"$iDev2, test device B, unit test linkset, , , downlink, test device B",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"$iDev1, test device A, unit test linkset, , , downlink, test device A",
+					"$iDev2, test device B, unit test linkset, , , downlink, test device B",
+				],
 				'history_added' => 0,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Change on attribute on both links at the same time',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => 'PortDev B',
 						'device_port' => '',
-					),
-					array(
+					],
+					[
 						'networkdevice_id' => $iDev1,
 						'connectableci_id' => $iServer,
 						'network_port' => 'PortDev A',
 						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
-			 		"$iDev1, test device A, unit test linkset, PortDev A, , downlink, test device A",
-			 		"$iDev2, test device B, unit test linkset, PortDev B, , downlink, test device B",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"$iDev1, test device A, unit test linkset, PortDev A, , downlink, test device A",
+					"$iDev2, test device B, unit test linkset, PortDev B, , downlink, test device B",
+				],
 				'history_added' => 2,
 				'history_removed' => 2,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Removing A',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => 'PortDev B',
 						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
-			 		"$iDev2, test device B, unit test linkset, PortDev B, , downlink, test device B",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"$iDev2, test device B, unit test linkset, PortDev B, , downlink, test device B",
+				],
 				'history_added' => 0,
 				'history_removed' => 1,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Adding B again - with a different port (duplicate!)',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => 'port_123',
 						'device_port' => '',
-					),
-					array(
+					],
+					[
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => 'port_456',
 						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
-			 		"$iDev2, test device B, unit test linkset, port_123, , downlink, test device B",
-			 		"$iDev2, test device B, unit test linkset, port_456, , downlink, test device B",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"$iDev2, test device B, unit test linkset, port_123, , downlink, test device B",
+					"$iDev2, test device B, unit test linkset, port_456, , downlink, test device B",
+				],
 				'history_added' => 2,
 				'history_removed' => 1,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'No change (creating a set with the reloaded links, like in the UI)',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer AND network_port = 'port_123'",
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => 'port_123',
 						'device_port' => '',
-					),
-					array(
+					],
+					[
 						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer AND network_port = 'port_456'",
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => 'port_456',
 						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
+					],
+				],
+				'expected-res' =>  [
 					"$iDev2, test device B, unit test linkset, port_123, , downlink, test device B",
 					"$iDev2, test device B, unit test linkset, port_456, , downlink, test device B",
-				),
+				],
 				'history_added' => 0,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Change an attribute on one link (based on reloaded links, like in the UI)',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer AND network_port = 'port_123'",
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => 'port_123_modified',
 						'device_port' => '',
-					),
-					array(
+					],
+					[
 						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer AND network_port = 'port_456'",
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => 'port_456',
 						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
+					],
+				],
+				'expected-res' =>  [
 					"$iDev2, test device B, unit test linkset, port_123_modified, , downlink, test device B",
 					"$iDev2, test device B, unit test linkset, port_456, , downlink, test device B",
-				),
+				],
 				'history_added' => 0,
 				'history_removed' => 0,
 				'history_modified' => 1,
-			),
-			array(
+			],
+			[
 				'description' => 'Remove the second link (set based on reloaded links, like in the UI)',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'id' => "SELECT lnkConnectableCIToNetworkDevice WHERE networkdevice_id = $iDev2 AND connectableci_id = $iServer AND network_port = 'port_123_modified'",
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => 'port_123_modified',
 						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
+					],
+				],
+				'expected-res' =>  [
 					"$iDev2, test device B, unit test linkset, port_123_modified, , downlink, test device B",
-				),
+				],
 				'history_added' => 0,
 				'history_removed' => 1,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Remove all',
-				'links' => array(
-				),
-				'expected-res' => array (
-				),
+				'links' => [
+				],
+				'expected-res' =>  [
+				],
 				'history_added' => 0,
 				'history_removed' => 1,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Create one link from scratch, no port, to prepare for the next test case',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => 'portX',
 						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
+					],
+				],
+				'expected-res' =>  [
 					"$iDev2, test device B, unit test linkset, portX, , downlink, test device B",
-				),
+				],
 				'history_added' => 1,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Device B twice (same characteristics) - known issue #1145 (test failing until we fix it)',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => 'portX',
 						'device_port' => '',
-					),
-					array(
+					],
+					[
 						'networkdevice_id' => $iDev2,
 						'connectableci_id' => $iServer,
 						'network_port' => 'portX',
 						'device_port' => '',
-					),
-				),
-				'expected-res' => array (
-			 		"$iDev2, test device B, unit test linkset, portX, , downlink, test device B",
-			 		"$iDev2, test device B, unit test linkset, portX, , downlink, test device B",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"$iDev2, test device B, unit test linkset, portX, , downlink, test device B",
+					"$iDev2, test device B, unit test linkset, portX, , downlink, test device B",
+				],
 				'history_added' => 1,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),
-		);
-		
-		foreach ($aScenarii as $aScenario)
-		{
+			],
+		];
+
+		foreach ($aScenarii as $aScenario) {
 			echo "<h4>".$aScenario['description']."</h4>\n";
-		
+
 			$oChange = MetaModel::NewObject("CMDBChange");
 			$oChange->Set("date", time());
 			$oChange->Set("userinfo", CMDBChange::GetCurrentUserName());
@@ -2428,80 +2397,74 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestLinkSet
 			$oChange->DBInsert();
 			CMDBObject::SetCurrentChange($oChange);
 			$iChange = $oChange->GetKey();
-			
+
 			// Prepare set
 			$oLinkset = DBObjectSet::FromScratch('lnkConnectableCIToNetworkDevice');
-			foreach ($aScenario['links'] as $aLinkData)
-			{
-				if (array_key_exists('id', $aLinkData))
-				{
+			foreach ($aScenario['links'] as $aLinkData) {
+				if (array_key_exists('id', $aLinkData)) {
 					$sOQL = $aLinkData['id'];
 					$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
 					$oLink1 = $oSet->Fetch();
-					if (!is_object($oLink1)) throw new Exception('Failed to find the lnkConnectableCIToNetworkDevice: '.$sOQL);
-				}
-				else
-				{
+					if (!is_object($oLink1)) {
+						throw new Exception('Failed to find the lnkConnectableCIToNetworkDevice: '.$sOQL);
+					}
+				} else {
 					$oLink1 = MetaModel::NewObject('lnkConnectableCIToNetworkDevice');
 				}
-				foreach ($aLinkData as $sAttCode => $value)
-				{
-					if ($sAttCode == 'id') continue;
+				foreach ($aLinkData as $sAttCode => $value) {
+					if ($sAttCode == 'id') {
+						continue;
+					}
 					$oLink1->Set($sAttCode, $value);
 				}
 				$oLinkset->AddObject($oLink1);
 			}
-						
+
 			// Write
 			$oServer = MetaModel::GetObject('Server', $iServer);
 			$oServer->Set('networkdevice_list', $oLinkset);
 			$oServer->DBWrite();
-			
+
 			// Check Results
 			$bFoundIssue = false;
 			$oServer = MetaModel::GetObject('Server', $iServer);
 			$oLinkset = $oServer->Get('networkdevice_list');
-			
+
 			$aRes = $this->StandardizedDump($oLinkset, 'connectableci_id');
 			$sRes = var_export($aRes, true);
 			echo "Found: <pre>".$sRes."</pre>\n";
-		
+
 			$sExpectedRes = var_export($aScenario['expected-res'], true);
-			if ($sRes != $sExpectedRes)
-			{
+			if ($sRes != $sExpectedRes) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: <pre>".$sExpectedRes."</pre>\n";
 			}
-			
+
 			// Check History
-			$aQueryParams = array('change' => $iChange, 'objclass' => get_class($oServer), 'objkey' => $oServer->GetKey());
-			
-			$oAdded = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'added'"), array(), $aQueryParams);
+			$aQueryParams = ['change' => $iChange, 'objclass' => get_class($oServer), 'objkey' => $oServer->GetKey()];
+
+			$oAdded = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'added'"), [], $aQueryParams);
 			echo "added: ".$oAdded->Count()."<br/>\n";
-			if ($aScenario['history_added'] != $oAdded->Count())
-			{
+			if ($aScenario['history_added'] != $oAdded->Count()) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_added']."<br/>\n";
 			}
-		
-			$oRemoved = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'removed'"), array(), $aQueryParams);
+
+			$oRemoved = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'removed'"), [], $aQueryParams);
 			echo "removed: ".$oRemoved->Count()."<br/>\n";
-			if ($aScenario['history_removed'] != $oRemoved->Count())
-			{
+			if ($aScenario['history_removed'] != $oRemoved->Count()) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_removed']."<br/>\n";
 			}
-		
-			$oModified = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksTune WHERE objclass = :objclass AND objkey = :objkey AND change = :change"), array(), $aQueryParams);
+
+			$oModified = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksTune WHERE objclass = :objclass AND objkey = :objkey AND change = :change"), [], $aQueryParams);
 			echo "modified: ".$oModified->Count()."<br/>\n";
-			if ($aScenario['history_modified'] != $oModified->Count())
-			{
+			if ($aScenario['history_modified'] != $oModified->Count()) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_modified']."<br/>\n";
 			}
-		
-			if ($bFoundIssue)
-			{
+
+			if ($bFoundIssue) {
 				throw new Exception('Stopping on failed scenario');
 			}
 		}
@@ -2510,12 +2473,12 @@ class TestLinkSetRecording_NN_WithDuplicates extends TestLinkSet
 
 class TestLinkSetRecording_NN_NoDuplicates extends TestLinkSet
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Linksets N-N in general (99% of them)';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Simulate CSV/data synchro type of recording. Check the values and the history.';
 	}
@@ -2524,7 +2487,7 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestLinkSet
 	{
 		CMDBSource::Query('START TRANSACTION');
 		//CMDBSource::Query('ROLLBACK'); automatique !
-		
+
 		////////////////////////////////////////////////////////////////////////////////
 		// Set the stage
 		//
@@ -2533,213 +2496,212 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestLinkSet
 		$oTeam->Set('org_id', 3);
 		$oTeam->DBInsert();
 		$iTeam = $oTeam->GetKey();
-		
+
 		$oPerson = MetaModel::NewObject('Person');
 		$oPerson->Set('name', 'test person A');
 		$oPerson->Set('first_name', 'totoche');
 		$oPerson->Set('org_id', 3);
 		$oPerson->DBInsert();
 		$iPerson1 = $oPerson->GetKey();
-		
+
 		$oPerson = MetaModel::NewObject('Person');
 		$oPerson->Set('name', 'test person B');
 		$oPerson->Set('first_name', 'totoche');
 		$oPerson->Set('org_id', 3);
 		$oPerson->DBInsert();
 		$iPerson2 = $oPerson->GetKey();
-		
+
 		$oTypes = new DBObjectSet(DBSearch::FromOQL('SELECT ContactType WHERE name="Manager"'));
 		$iRole = $oTypes->Fetch()->GetKey();
 
 		////////////////////////////////////////////////////////////////////////////////
 		// Scenarii
 		//
-		$aScenarii = array(
-			array(
+		$aScenarii = [
+			[
 				'description' => 'Add the first item',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'person_id' => $iPerson1,
 						'team_id' => $iTeam,
 						'role_id' => 0,
-					),
-				),
-				'expected-res' => array (
-			 		"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
+				],
 				'history_added' => 1,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Modify the unique item',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'person_id' => $iPerson1,
 						'team_id' => $iTeam,
 						'role_id' => $iRole,
-					),
-				),
-				'expected-res' => array (
-			 		"unit test linkset, $iPerson1, test person A, $iRole, Manager, totoche test person A, Manager",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"unit test linkset, $iPerson1, test person A, $iRole, Manager, totoche test person A, Manager",
+				],
 				'history_added' => 0,
 				'history_removed' => 0,
 				'history_modified' => 1,
-			),
-			array(
+			],
+			[
 				'description' => 'Modify again the original item and add a second item',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'person_id' => $iPerson1,
 						'team_id' => $iTeam,
 						'role_id' => 0,
-					),
-					array(
+					],
+					[
 						'person_id' => $iPerson2,
 						'team_id' => $iTeam,
 						'role_id' => 0,
-					),
-				),
-				'expected-res' => array (
-			 		"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
-			 		"unit test linkset, $iPerson2, test person B, 0, , totoche test person B, ",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
+					"unit test linkset, $iPerson2, test person B, 0, , totoche test person B, ",
+				],
 				'history_added' => 1,
 				'history_removed' => 0,
 				'history_modified' => 1,
-			),
-			array(
+			],
+			[
 				'description' => 'No change, the links are added in the reverse order',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'person_id' => $iPerson2,
 						'team_id' => $iTeam,
 						'role_id' => 0,
-					),
-					array(
+					],
+					[
 						'person_id' => $iPerson1,
 						'team_id' => $iTeam,
 						'role_id' => 0,
-					),
-				),
-				'expected-res' => array (
-			 		"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
-			 		"unit test linkset, $iPerson2, test person B, 0, , totoche test person B, ",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
+					"unit test linkset, $iPerson2, test person B, 0, , totoche test person B, ",
+				],
 				'history_added' => 0,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Removing A',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'person_id' => $iPerson2,
 						'team_id' => $iTeam,
 						'role_id' => 0,
-					),
-				),
-				'expected-res' => array (
-			 		"unit test linkset, $iPerson2, test person B, 0, , totoche test person B, ",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"unit test linkset, $iPerson2, test person B, 0, , totoche test person B, ",
+				],
 				'history_added' => 0,
 				'history_removed' => 1,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Adding B again (duplicate!)',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'person_id' => $iPerson2,
 						'team_id' => $iTeam,
 						'role_id' => 0,
-					),
-					array(
+					],
+					[
 						'person_id' => $iPerson2,
 						'team_id' => $iTeam,
 						'role_id' => 0,
-					),
-				),
-				'expected-res' => array (
-			 		"unit test linkset, $iPerson2, test person B, 0, , totoche test person B, ",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"unit test linkset, $iPerson2, test person B, 0, , totoche test person B, ",
+				],
 				'history_added' => 0,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Remove all',
-				'links' => array(
-				),
-				'expected-res' => array (
-				),
+				'links' => [
+				],
+				'expected-res' =>  [
+				],
 				'history_added' => 0,
 				'history_removed' => 1,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Add the first item (again)',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'person_id' => $iPerson1,
 						'team_id' => $iTeam,
 						'role_id' => 0,
-					),
-				),
-				'expected-res' => array (
-			 		"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
+				],
 				'history_added' => 1,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Set the role (based on reloaded links, like in the UI)',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'id' => "SELECT lnkPersonToTeam WHERE person_id=$iPerson1 AND team_id=$iTeam",
 						'person_id' => $iPerson1,
 						'team_id' => $iTeam,
 						'role_id' => $iRole,
-					),
-				),
-				'expected-res' => array (
-			 		"unit test linkset, $iPerson1, test person A, 14, Manager, totoche test person A, Manager",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"unit test linkset, $iPerson1, test person A, 14, Manager, totoche test person A, Manager",
+				],
 				'history_added' => 0,
 				'history_removed' => 0,
 				'history_modified' => 1,
-			),
-			array(
+			],
+			[
 				'description' => 'Clear the role and add another person with a role (based on reloaded links, like in the UI)',
-				'links' => array(
-					array(
+				'links' => [
+					[
 						'id' => "SELECT lnkPersonToTeam WHERE person_id=$iPerson1 AND team_id=$iTeam",
 						'person_id' => $iPerson1,
 						'team_id' => $iTeam,
 						'role_id' => 0,
-					),
-					array(
+					],
+					[
 						'person_id' => $iPerson2,
 						'team_id' => $iTeam,
 						'role_id' => $iRole,
-					),
-				),
-				'expected-res' => array (
-			 		"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
-			 		"unit test linkset, $iPerson2, test person B, 14, Manager, totoche test person B, Manager",
-				),
+					],
+				],
+				'expected-res' =>  [
+					"unit test linkset, $iPerson1, test person A, 0, , totoche test person A, ",
+					"unit test linkset, $iPerson2, test person B, 14, Manager, totoche test person B, Manager",
+				],
 				'history_added' => 1,
 				'history_removed' => 0,
 				'history_modified' => 1,
-			),
-		);
-		
-		foreach ($aScenarii as $aScenario)
-		{
+			],
+		];
+
+		foreach ($aScenarii as $aScenario) {
 			echo "<h4>".$aScenario['description']."</h4>\n";
-		
+
 			$oChange = MetaModel::NewObject("CMDBChange");
 			$oChange->Set("date", time());
 			$oChange->Set("userinfo", CMDBChange::GetCurrentUserName());
@@ -2747,80 +2709,74 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestLinkSet
 			$oChange->DBInsert();
 			CMDBObject::SetCurrentChange($oChange);
 			$iChange = $oChange->GetKey();
-			
+
 			// Prepare set
 			$oLinkset = DBObjectSet::FromScratch('lnkPersonToTeam');
-			foreach ($aScenario['links'] as $aLinkData)
-			{
-				if (array_key_exists('id', $aLinkData))
-				{
+			foreach ($aScenario['links'] as $aLinkData) {
+				if (array_key_exists('id', $aLinkData)) {
 					$sOQL = $aLinkData['id'];
 					$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
 					$oLink1 = $oSet->Fetch();
-					if (!is_object($oLink1)) throw new Exception('Failed to find the lnkPersonToTeam: '.$sOQL);
-				}
-				else
-				{
+					if (!is_object($oLink1)) {
+						throw new Exception('Failed to find the lnkPersonToTeam: '.$sOQL);
+					}
+				} else {
 					$oLink1 = MetaModel::NewObject('lnkPersonToTeam');
 				}
-				foreach ($aLinkData as $sAttCode => $value)
-				{
-					if ($sAttCode == 'id') continue;
+				foreach ($aLinkData as $sAttCode => $value) {
+					if ($sAttCode == 'id') {
+						continue;
+					}
 					$oLink1->Set($sAttCode, $value);
 				}
 				$oLinkset->AddObject($oLink1);
 			}
-			
+
 			// Write
 			$oTeam = MetaModel::GetObject('Team', $iTeam);
 			$oTeam->Set('persons_list', $oLinkset);
 			$oTeam->DBWrite();
-			
+
 			// Check Results
 			$bFoundIssue = false;
 			$oTeam = MetaModel::GetObject('Team', $iTeam);
 			$oLinkset = $oTeam->Get('persons_list');
-			
+
 			$aRes = $this->StandardizedDump($oLinkset, 'team_id');
 			$sRes = var_export($aRes, true);
 			echo "Found: <pre>".$sRes."</pre>\n";
-		
+
 			$sExpectedRes = var_export($aScenario['expected-res'], true);
-			if ($sRes != $sExpectedRes)
-			{
+			if ($sRes != $sExpectedRes) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: <pre>".$sExpectedRes."</pre>\n";
 			}
-			
+
 			// Check History
-			$aQueryParams = array('change' => $iChange, 'objclass' => get_class($oTeam), 'objkey' => $oTeam->GetKey());
-			
-			$oAdded = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'added'"), array(), $aQueryParams);
+			$aQueryParams = ['change' => $iChange, 'objclass' => get_class($oTeam), 'objkey' => $oTeam->GetKey()];
+
+			$oAdded = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'added'"), [], $aQueryParams);
 			echo "added: ".$oAdded->Count()."<br/>\n";
-			if ($aScenario['history_added'] != $oAdded->Count())
-			{
+			if ($aScenario['history_added'] != $oAdded->Count()) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_added']."<br/>\n";
 			}
-		
-			$oRemoved = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'removed'"), array(), $aQueryParams);
+
+			$oRemoved = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'removed'"), [], $aQueryParams);
 			echo "removed: ".$oRemoved->Count()."<br/>\n";
-			if ($aScenario['history_removed'] != $oRemoved->Count())
-			{
+			if ($aScenario['history_removed'] != $oRemoved->Count()) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_removed']."<br/>\n";
 			}
-		
-			$oModified = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksTune WHERE objclass = :objclass AND objkey = :objkey AND change = :change"), array(), $aQueryParams);
+
+			$oModified = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksTune WHERE objclass = :objclass AND objkey = :objkey AND change = :change"), [], $aQueryParams);
 			echo "modified: ".$oModified->Count()."<br/>\n";
-			if ($aScenario['history_modified'] != $oModified->Count())
-			{
+			if ($aScenario['history_modified'] != $oModified->Count()) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_modified']."<br/>\n";
 			}
-		
-			if ($bFoundIssue)
-			{
+
+			if ($bFoundIssue) {
 				throw new Exception('Stopping on failed scenario');
 			}
 		}
@@ -2829,12 +2785,12 @@ class TestLinkSetRecording_NN_NoDuplicates extends TestLinkSet
 
 class TestLinkSetRecording_1N extends TestLinkSet
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Linkset 1-N (Network Interface vs Server: Edit in-place)';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Simulate CSV/data synchro type of recording. Check the values and the history.';
 	}
@@ -2856,103 +2812,102 @@ class TestLinkSetRecording_1N extends TestLinkSet
 		////////////////////////////////////////////////////////////////////////////////
 		// Scenarii
 		//
-		$aScenarii = array(
-			array(
+		$aScenarii = [
+			[
 				'description' => 'Add the first interface',
-				'interfaces' => array(
-					array(
+				'interfaces' => [
+					[
 					'connectableci_id' => $iServer,
 					'name' => 'eth0',
 					'speed' => '1000.00',
-					),
-				),
-				'expected-res' => array (
+					],
+				],
+				'expected-res' =>  [
 					"eth0, , , , , , 1000.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
-				),
+				],
 				'history_added' => 1,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Add a second interface',
-				'interfaces' => array(
-					array(
+				'interfaces' => [
+					[
 					'connectableci_id' => $iServer,
 					'name' => 'eth0',
 					'speed' => '1000.00',
-					),
-					array(
+					],
+					[
 					'connectableci_id' => $iServer,
 					'name' => 'eth1',
 					'speed' => '1000.00',
-					),
-				),
-				'expected-res' => array (
+					],
+				],
+				'expected-res' =>  [
 					"eth0, , , , , , 1000.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
 					"eth1, , , , , , 1000.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
-				),
+				],
 				'history_added' => 1,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Change the speed of an interface',
-				'interfaces' => array(
-					array(
+				'interfaces' => [
+					[
 					'connectableci_id' => $iServer,
 					'name' => 'eth0',
 					'speed' => '100.00',
-					),
-					array(
+					],
+					[
 					'connectableci_id' => $iServer,
 					'name' => 'eth1',
 					'speed' => '1000.00',
-					),
-				),
-				'expected-res' => array (
+					],
+				],
+				'expected-res' =>  [
 					"eth0, , , , , , 100.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
 					"eth1, , , , , , 1000.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
-				),
+				],
 				'history_added' => 1,
 				'history_removed' => 1,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Change the name of an interface',
-				'interfaces' => array(
-					array(
+				'interfaces' => [
+					[
 					'connectableci_id' => $iServer,
 					'name' => 'eth0-renamed',
 					'speed' => '1000.00',
-					),
-					array(
+					],
+					[
 					'connectableci_id' => $iServer,
 					'name' => 'eth1',
 					'speed' => '1000.00',
-					),
-				),
-				'expected-res' => array (
+					],
+				],
+				'expected-res' =>  [
 					"eth0-renamed, , , , , , 1000.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
 					"eth1, , , , , , 1000.00, $iServer, unit test linkset, PhysicalInterface, unit test linkset, Server",
-				),
+				],
 				'history_added' => 1,
 				'history_removed' => 1,
 				'history_modified' => 0,
-			),
-			array(
+			],
+			[
 				'description' => 'Remove all interfaces',
-				'interfaces' => array(
-				),
-				'expected-res' => array (
-				),
+				'interfaces' => [
+				],
+				'expected-res' =>  [
+				],
 				'history_added' => 0,
 				'history_removed' => 2,
 				'history_modified' => 0,
-			),
-		);
+			],
+		];
 
-		foreach ($aScenarii as $aScenario)
-		{
+		foreach ($aScenarii as $aScenario) {
 			echo "<h4>".$aScenario['description']."</h4>\n";
 
 			$oChange = MetaModel::NewObject("CMDBChange");
@@ -2962,84 +2917,76 @@ class TestLinkSetRecording_1N extends TestLinkSet
 			$oChange->DBInsert();
 			CMDBObject::SetCurrentChange($oChange);
 			$iChange = $oChange->GetKey();
-				
+
 			// Prepare set
 			$oLinkset = DBObjectSet::FromScratch('PhysicalInterface');
-			foreach ($aScenario['interfaces'] as $aIntfData)
-			{
+			foreach ($aScenario['interfaces'] as $aIntfData) {
 				$oInterface = MetaModel::NewObject('PhysicalInterface');
-				foreach ($aIntfData as $sAttCode => $value)
-				{
+				foreach ($aIntfData as $sAttCode => $value) {
 					$oInterface->Set($sAttCode, $value);
 				}
 				$oLinkset->AddObject($oInterface);
 			}
-				
+
 			// Write
 			$oServer = MetaModel::GetObject('Server', $iServer);
 			$oServer->Set('physicalinterface_list', $oLinkset);
 			$oServer->DBWrite();
-				
+
 			// Check Results
 			$bFoundIssue = false;
 			$oServer = MetaModel::GetObject('Server', $iServer);
 			$oLinkset = $oServer->Get('physicalinterface_list');
-				
+
 			$aRes = $this->StandardizedDump($oLinkset, 'zzz');
 			$sRes = var_export($aRes, true);
 			echo "Found: <pre>".$sRes."</pre>\n";
 
 			$sExpectedRes = var_export($aScenario['expected-res'], true);
-			if ($sRes != $sExpectedRes)
-			{
+			if ($sRes != $sExpectedRes) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: <pre>".$sExpectedRes."</pre>\n";
 			}
-				
+
 			// Check History
-			$aQueryParams = array('change' => $iChange, 'objclass' => get_class($oServer), 'objkey' => $oServer->GetKey());
-				
-			$oAdded = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'added'"), array(), $aQueryParams);
+			$aQueryParams = ['change' => $iChange, 'objclass' => get_class($oServer), 'objkey' => $oServer->GetKey()];
+
+			$oAdded = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'added'"), [], $aQueryParams);
 			echo "added: ".$oAdded->Count()."<br/>\n";
-			if ($aScenario['history_added'] != $oAdded->Count())
-			{
+			if ($aScenario['history_added'] != $oAdded->Count()) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_added']."<br/>\n";
 			}
 
-			$oRemoved = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'removed'"), array(), $aQueryParams);
+			$oRemoved = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'removed'"), [], $aQueryParams);
 			echo "removed: ".$oRemoved->Count()."<br/>\n";
-			if ($aScenario['history_removed'] != $oRemoved->Count())
-			{
+			if ($aScenario['history_removed'] != $oRemoved->Count()) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_removed']."<br/>\n";
 			}
 
-			$oModified = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksTune WHERE objclass = :objclass AND objkey = :objkey AND change = :change"), array(), $aQueryParams);
+			$oModified = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksTune WHERE objclass = :objclass AND objkey = :objkey AND change = :change"), [], $aQueryParams);
 			echo "modified: ".$oModified->Count()."<br/>\n";
-			if ($aScenario['history_modified'] != $oModified->Count())
-			{
+			if ($aScenario['history_modified'] != $oModified->Count()) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_modified']."<br/>\n";
 			}
 
-			if ($bFoundIssue)
-			{
+			if ($bFoundIssue) {
 				throw new Exception('Stopping on failed scenario');
 			}
 		}
 	}
 }
 
-
 class TestLinkSetRecording_1NAdd_Remove extends TestLinkSet
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Linkset 1-N (Delivery Model vs Organization: Edit Add/Remove)';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Simulate CSV/data synchro type of recording. Check the values and the history.';
 	}
@@ -3056,7 +3003,7 @@ class TestLinkSetRecording_1NAdd_Remove extends TestLinkSet
 		$oProvider->Set('name', 'Test-Provider1');
 		$oProvider->DBInsert();
 		$iProvider = $oProvider->GetKey();
-		
+
 		$oDM1 = new DeliveryModel();
 		$oDM1->Set('name', 'Test-DM-1');
 		$oDM1->Set('org_id', $iProvider);
@@ -3072,97 +3019,96 @@ class TestLinkSetRecording_1NAdd_Remove extends TestLinkSet
 		////////////////////////////////////////////////////////////////////////////////
 		// Scenarii
 		//
-		$aScenarii = array(
-			array(
+		$aScenarii = [
+			[
 				'description' => 'Add the first customer',
-				'organizations' => array(
-					array(
+				'organizations' => [
+					[
 						'deliverymodel_id' => $iDM1,
 						'name' => 'Test-Customer-1',
-						),
-					),
-				'expected-res' => array (
+						],
+					],
+				'expected-res' =>  [
 					"Test-Customer-1, , active, 0, , $iDM1, Test-DM-1, , Test-DM-1",
-				),
+				],
 				'history_added' => 0,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),	
-			array(
+			],
+			[
 				'description' => 'Remove the customer by loading an empty set',
-				'organizations' => array(
-					),
-				'expected-res' => array (
-				),
+				'organizations' => [
+					],
+				'expected-res' =>  [
+				],
 				'history_added' => 0,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),	
-			array(
+			],
+			[
 				'description' => 'Create two customers at once',
-				'organizations' => array(
-					array(
+				'organizations' => [
+					[
 						'deliverymodel_id' => $iDM1,
 						'name' => 'Test-Customer-1',
-					),
-					array(
+					],
+					[
 						'deliverymodel_id' => $iDM1,
 						'name' => 'Test-Customer-2',
-					),
-				),
-				'expected-res' => array (
+					],
+				],
+				'expected-res' =>  [
 					"Test-Customer-1, , active, 0, , $iDM1, Test-DM-1, , Test-DM-1",
 					"Test-Customer-2, , active, 0, , $iDM1, Test-DM-1, , Test-DM-1",
-				),
+				],
 				'history_added' => 0,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),	
-			array(
+			],
+			[
 				'description' => 'Move Customer-1 to the second Delivery Model',
-				'organizations' => array(
-					array(
+				'organizations' => [
+					[
 						'id' => "SELECT Organization WHERE name='Test-Customer-1'",
 						'deliverymodel_id' => $iDM2,
 						'name' => 'Test-Customer-1',
-					),
-					array(
+					],
+					[
 						'deliverymodel_id' => $iDM1,
 						'name' => 'Test-Customer-2',
-					),
-				),
-				'expected-res' => array (
+					],
+				],
+				'expected-res' =>  [
 					"Test-Customer-2, , active, 0, , $iDM1, Test-DM-1, , Test-DM-1",
-				),
+				],
 				'history_added' => 0,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),	
-			array(
+			],
+			[
 				'description' => 'Move Customer-1 back to the first Delivery Model and reset Customer-2 (no Delivery Model)',
-				'organizations' => array(
-					array(
+				'organizations' => [
+					[
 						'id' => "SELECT Organization WHERE name='Test-Customer-1'",
 						'deliverymodel_id' => $iDM1,
 						'name' => 'Test-Customer-1',
-					),
-					array(
+					],
+					[
 						'id' => "SELECT Organization WHERE name='Test-Customer-2'",
 						'deliverymodel_id' => 0,
 						'name' => 'Test-Customer-2',
-					),
-				),
-				'expected-res' => array (
+					],
+				],
+				'expected-res' =>  [
 					"Test-Customer-1, , active, 0, , $iDM1, Test-DM-1, , Test-DM-1",
-				),
+				],
 				'history_added' => 0,
 				'history_removed' => 0,
 				'history_modified' => 0,
-			),	
-		);
+			],
+		];
 
-		foreach ($aScenarii as $aScenario)
-		{
+		foreach ($aScenarii as $aScenario) {
 			echo "<h4>".$aScenario['description']."</h4>\n";
 
 			$oChange = MetaModel::NewObject("CMDBChange");
@@ -3175,22 +3121,21 @@ class TestLinkSetRecording_1NAdd_Remove extends TestLinkSet
 
 			// Prepare set
 			$oLinkset = DBObjectSet::FromScratch('Organization');
-			foreach ($aScenario['organizations'] as $aOrgData)
-			{
-				if (array_key_exists('id', $aOrgData))
-				{
+			foreach ($aScenario['organizations'] as $aOrgData) {
+				if (array_key_exists('id', $aOrgData)) {
 					$sOQL = $aOrgData['id'];
 					$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
 					$oOrg = $oSet->Fetch();
-					if (!is_object($oOrg)) throw new Exception('Failed to find the Organization: '.$sOQL);
-				}
-				else
-				{
+					if (!is_object($oOrg)) {
+						throw new Exception('Failed to find the Organization: '.$sOQL);
+					}
+				} else {
 					$oOrg = MetaModel::NewObject('Organization');
 				}
-				foreach ($aOrgData as $sAttCode => $value)
-				{
-					if ($sAttCode == 'id') continue;
+				foreach ($aOrgData as $sAttCode => $value) {
+					if ($sAttCode == 'id') {
+						continue;
+					}
 					$oOrg->Set($sAttCode, $value);
 				}
 				$oLinkset->AddObject($oOrg);
@@ -3211,41 +3156,36 @@ class TestLinkSetRecording_1NAdd_Remove extends TestLinkSet
 			echo "Found: <pre>".$sRes."</pre>\n";
 
 			$sExpectedRes = var_export($aScenario['expected-res'], true);
-			if ($sRes != $sExpectedRes)
-			{
+			if ($sRes != $sExpectedRes) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: <pre>".$sExpectedRes."</pre>\n";
 			}
 
 			// Check History
-			$aQueryParams = array('change' => $iChange, 'objclass' => get_class($oDM), 'objkey' => $oDM->GetKey());
+			$aQueryParams = ['change' => $iChange, 'objclass' => get_class($oDM), 'objkey' => $oDM->GetKey()];
 
-			$oAdded = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'added'"), array(), $aQueryParams);
+			$oAdded = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'added'"), [], $aQueryParams);
 			echo "added: ".$oAdded->Count()."<br/>\n";
-			if ($aScenario['history_added'] != $oAdded->Count())
-			{
+			if ($aScenario['history_added'] != $oAdded->Count()) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_added']."<br/>\n";
 			}
 
-			$oRemoved = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'removed'"), array(), $aQueryParams);
+			$oRemoved = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksAddRemove WHERE objclass = :objclass AND objkey = :objkey AND change = :change AND type = 'removed'"), [], $aQueryParams);
 			echo "removed: ".$oRemoved->Count()."<br/>\n";
-			if ($aScenario['history_removed'] != $oRemoved->Count())
-			{
+			if ($aScenario['history_removed'] != $oRemoved->Count()) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_removed']."<br/>\n";
 			}
 
-			$oModified = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksTune WHERE objclass = :objclass AND objkey = :objkey AND change = :change"), array(), $aQueryParams);
+			$oModified = new DBObjectSet(DBSearch::FromOQL("SELECT CMDBChangeOpSetAttributeLinksTune WHERE objclass = :objclass AND objkey = :objkey AND change = :change"), [], $aQueryParams);
 			echo "modified: ".$oModified->Count()."<br/>\n";
-			if ($aScenario['history_modified'] != $oModified->Count())
-			{
+			if ($aScenario['history_modified'] != $oModified->Count()) {
 				$bFoundIssue = true;
 				echo "NOT COMPLIANT!!! Expecting: ".$aScenario['history_modified']."<br/>\n";
 			}
 
-			if ($bFoundIssue)
-			{
+			if ($bFoundIssue) {
 				throw new Exception('Stopping on failed scenario');
 			}
 		}
@@ -3254,13 +3194,19 @@ class TestLinkSetRecording_1NAdd_Remove extends TestLinkSet
 
 class TestDateTimeFormats extends TestBizModel
 {
-	static public function GetName() {return 'Check Date & Time formating and parsing';}
-	static public function GetDescription() {return 'Check the formating and parsing of dates for various formats';}
+	public static function GetName()
+	{
+		return 'Check Date & Time formating and parsing';
+	}
+	public static function GetDescription()
+	{
+		return 'Check the formating and parsing of dates for various formats';
+	}
 	public function DoExecute()
 	{
 		require_once(APPROOT.'core/datetimeformat.class.inc.php');
 		$bRet = true;
-		$aTestFormats = array(
+		$aTestFormats = [
 				'French (short)' => 'd/m/Y H:i:s',
 				'French (short - no seconds)' => 'd/m/Y H:i',
 				'French (long)' => 'd/m/Y H\\h i\\m\\i\\n s\\s',
@@ -3270,60 +3216,53 @@ class TestDateTimeFormats extends TestBizModel
 				'English UK' => 'd/m/Y H:i:s',
 				'German' => 'd.m.Y H:i:s',
 				'SQL' => 'Y-m-d H:i:s',
-		);
+		];
 		// Valid date and times, all tests should pass
-		$aTestDates = array('2015-01-01 00:00:00', '2015-12-31 23:59:00', '2016-01-01 08:21:00', '2016-02-28 12:30:00', '2016-02-29 16:47:00', /*'2016-02-29 14:30:17'*/);
-		foreach($aTestFormats as $sDesc => $sFormat)
-		{
+		$aTestDates = ['2015-01-01 00:00:00', '2015-12-31 23:59:00', '2016-01-01 08:21:00', '2016-02-28 12:30:00', '2016-02-29 16:47:00', /*'2016-02-29 14:30:17'*/];
+		foreach ($aTestFormats as $sDesc => $sFormat) {
 			$this->ReportSuccess("Test of the '$sDesc' format: '$sFormat':");
 			$oFormat = new DateTimeFormat($sFormat);
-			foreach($aTestDates as $sTestDate)
-			{
+			foreach ($aTestDates as $sTestDate) {
 				$oDate = new DateTime($sTestDate);
 				$sFormattedDate = $oFormat->Format($oDate);
 				$oParsedDate = $oFormat->Parse($sFormattedDate);
 				$sPattern = $oFormat->ToRegExpr('/');
 				$bParseOk = ($oParsedDate->format('Y-m-d H:i:s') == $sTestDate);
-				if (!$bParseOk)
-				{
-					$this->ReportError('Parsed ('.$sFormattedDate.') date different from initial date (difference of '.((int)$oParsedDate->format('U')- (int)$oDate->format('U')).'s)');
+				if (!$bParseOk) {
+					$this->ReportError('Parsed ('.$sFormattedDate.') date different from initial date (difference of '.((int)$oParsedDate->format('U') - (int)$oDate->format('U')).'s)');
 					$bRet = false;
 				}
 				$bValidateOk = preg_match($sPattern, $sFormattedDate);
-				if (!$bValidateOk)
-				{
+				if (!$bValidateOk) {
 					$this->ReportError('Formatted date ('.$sFormattedDate.') does not match the validation pattern ('.$sPattern.')');
 					$bRet = false;
 				}
-				
+
 				$this->ReportSuccess("Formatted date: $sFormattedDate - Parsing: ".($bParseOk ? 'Ok' : '<b>KO</b>')." - Validation: ".($bValidateOk ? 'Ok' : '<b>KO</b>'));
 			}
 			echo "</p>\n";
 		}
 
 		// Invalid date & time strings, all regexpr validation should fail
-		$aInvalidTestDates = array(
-			'SQL' => array('2015-13-01 00:00:00', '2015-12-51 23:59:00', '2016-01-01 +08:21:00', '2016-02-28 24:30:00', '2016-02-29 16:67:88'),
-			'French (short)' => array('01/01/20150 00:00:00', '01/01/20150 00:00:00', '01/13/2015 00:00:00', '01/01/2015 40:00:00', '01/01/2015 00:99:00'),
-			'English US (12 hours)' => array('13/01/2015 12:00:00 am', '12/33/2015 12:00:00 am', '12/23/215 12:00:00 am', '05/04/2016 16:00:00 am', '05/04/2016 10:00:00 ap'),
-		);
-		
-		foreach($aInvalidTestDates as $sFormatName => $aDatesToParse)
-		{
+		$aInvalidTestDates = [
+			'SQL' => ['2015-13-01 00:00:00', '2015-12-51 23:59:00', '2016-01-01 +08:21:00', '2016-02-28 24:30:00', '2016-02-29 16:67:88'],
+			'French (short)' => ['01/01/20150 00:00:00', '01/01/20150 00:00:00', '01/13/2015 00:00:00', '01/01/2015 40:00:00', '01/01/2015 00:99:00'],
+			'English US (12 hours)' => ['13/01/2015 12:00:00 am', '12/33/2015 12:00:00 am', '12/23/215 12:00:00 am', '05/04/2016 16:00:00 am', '05/04/2016 10:00:00 ap'],
+		];
+
+		foreach ($aInvalidTestDates as $sFormatName => $aDatesToParse) {
 			$sFormat = $aTestFormats[$sFormatName];
 			$oFormat = new DateTimeFormat($sFormat);
 			$this->ReportSuccess("Test of the '$sFormatName' format: '$sFormat':");
-			foreach($aDatesToParse as $sDate)
-			{
+			foreach ($aDatesToParse as $sDate) {
 				$sPattern = $oFormat->ToRegExpr('/');
 				$bValidateOk = preg_match($sPattern, $sDate);
-				if ($bValidateOk)
-				{
+				if ($bValidateOk) {
 					$this->ReportError('Formatted date ('.$sFormattedDate.') matches the validation pattern ('.$sPattern.') whereas it should not!');
 					$bRet = false;
 				}
 				$this->ReportSuccess("Formatted date: $sDate - Validation: ".($bValidateOk ? '<b>KO</n>' : 'rejected, Ok.'));
-			}	
+			}
 		}
 		return $bRet;
 	}
@@ -3331,12 +3270,12 @@ class TestDateTimeFormats extends TestBizModel
 
 class TestExecActions extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Scripted actions API DBObject::ExecAction - syntax errors';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Check that wrong arguments are correclty reported';
 	}
@@ -3352,131 +3291,125 @@ class TestExecActions extends TestBizModel
 		////////////////////////////////////////////////////////////////////////////////
 		// Scenarii
 		//
-		$aScenarii = array(
-			array(
+		$aScenarii = [
+			[
 				'action' => 'set',
-				'error' => 'Action: set - Invalid syntax'
-			),
-			array(
+				'error' => 'Action: set - Invalid syntax',
+			],
+			[
 				'action' => 'smurf()',
-				'error' => 'Action: smurf() - Invalid verb'
-			),
-			array(
+				'error' => 'Action: smurf() - Invalid verb',
+			],
+			[
 				'action' => ' smurf () ',
-				'error' => 'Action:  smurf ()  - Invalid syntax'
-			),
-			array(
+				'error' => 'Action:  smurf ()  - Invalid syntax',
+			],
+			[
 				'action' => 'clone(some_att_code, another_one)',
-				'error' => 'Action: clone(some_att_code, another_one) - Unknown attribute Server::some_att_code'
-			),
-			array(
+				'error' => 'Action: clone(some_att_code, another_one) - Unknown attribute Server::some_att_code',
+			],
+			[
 				'action' => 'copy(toto, titi)',
-				'error' => 'Action: copy(toto, titi) - Unknown attribute Server::titi'
-			),
-			array(
+				'error' => 'Action: copy(toto, titi) - Unknown attribute Server::titi',
+			],
+			[
 				'action' => 'copy(toto, name)',
-				'error' => 'Action: copy(toto, name) - Unknown attribute UserRequest::toto'
-			),
-			array(
+				'error' => 'Action: copy(toto, name) - Unknown attribute UserRequest::toto',
+			],
+			[
 				'action' => 'copy()',
-				'error' => 'Action: copy() - Missing argument #1: source attribute'
-			),
-			array(
+				'error' => 'Action: copy() - Missing argument #1: source attribute',
+			],
+			[
 				'action' => 'copy(title)',
-				'error' => 'Action: copy(title) - Missing argument #2: target attribute'
-			),
-			array(
+				'error' => 'Action: copy(title) - Missing argument #2: target attribute',
+			],
+			[
 				'action' => 'set(toto)',
-				'error' => 'Action: set(toto) - Unknown attribute Server::toto'
-			),
-			array(
+				'error' => 'Action: set(toto) - Unknown attribute Server::toto',
+			],
+			[
 				'action' => 'set(toto, something)',
-				'error' => 'Action: set(toto, something) - Unknown attribute Server::toto'
-			),
-			array(
+				'error' => 'Action: set(toto, something) - Unknown attribute Server::toto',
+			],
+			[
 				'action' => 'set()',
-				'error' => 'Action: set() - Missing argument #1: target attribute'
-			),
-			array(
+				'error' => 'Action: set() - Missing argument #1: target attribute',
+			],
+			[
 				'action' => 'reset(toto)',
-				'error' => 'Action: reset(toto) - Unknown attribute Server::toto'
-			),
-			array(
+				'error' => 'Action: reset(toto) - Unknown attribute Server::toto',
+			],
+			[
 				'action' => 'reset()',
-				'error' => 'Action: reset() - Missing argument #1: target attribute'
-			),
-			array(
+				'error' => 'Action: reset() - Missing argument #1: target attribute',
+			],
+			[
 				'action' => 'nullify(toto)',
-				'error' => 'Action: nullify(toto) - Unknown attribute Server::toto'
-			),
-			array(
+				'error' => 'Action: nullify(toto) - Unknown attribute Server::toto',
+			],
+			[
 				'action' => 'nullify()',
-				'error' => 'Action: nullify() - Missing argument #1: target attribute'
-			),
-			array(
+				'error' => 'Action: nullify() - Missing argument #1: target attribute',
+			],
+			[
 				'action' => 'append(toto, something)',
-				'error' => 'Action: append(toto, something) - Unknown attribute Server::toto'
-			),
-			array(
+				'error' => 'Action: append(toto, something) - Unknown attribute Server::toto',
+			],
+			[
 				'action' => 'append(name)',
-				'error' => 'Action: append(name) - Missing argument #2: value to append'
-			),
-			array(
+				'error' => 'Action: append(name) - Missing argument #2: value to append',
+			],
+			[
 				'action' => 'append()',
-				'error' => 'Action: append() - Missing argument #1: target attribute'
-			),
-			array(
+				'error' => 'Action: append() - Missing argument #1: target attribute',
+			],
+			[
 				'action' => 'add_to_list(toto, titi)',
-				'error' => 'Action: add_to_list(toto, titi) - Unknown attribute UserRequest::toto'
-			),
-			array(
+				'error' => 'Action: add_to_list(toto, titi) - Unknown attribute UserRequest::toto',
+			],
+			[
 				'action' => 'add_to_list(caller_id, titi)',
-				'error' => 'Action: add_to_list(caller_id, titi) - Unknown attribute Server::titi'
-			),
-			array(
+				'error' => 'Action: add_to_list(caller_id, titi) - Unknown attribute Server::titi',
+			],
+			[
 				'action' => 'add_to_list(caller_id)',
-				'error' => 'Action: add_to_list(caller_id) - Missing argument #2: target attribute (link set)'
-			),
-			array(
+				'error' => 'Action: add_to_list(caller_id) - Missing argument #2: target attribute (link set)',
+			],
+			[
 				'action' => 'add_to_list()',
-				'error' => 'Action: add_to_list() - Missing argument #1: source attribute'
-			),
-			array(
+				'error' => 'Action: add_to_list() - Missing argument #1: source attribute',
+			],
+			[
 				'action' => 'apply_stimulus(toto)',
-				'error' => 'Action: apply_stimulus(toto) - Unknown stimulus Server::toto'
-			),
-			array(
+				'error' => 'Action: apply_stimulus(toto) - Unknown stimulus Server::toto',
+			],
+			[
 				'action' => 'apply_stimulus()',
-				'error' => 'Action: apply_stimulus() - Missing argument #1: stimulus'
-			),
-			array(
+				'error' => 'Action: apply_stimulus() - Missing argument #1: stimulus',
+			],
+			[
 				'action' => 'call_method(toto)',
-				'error' => 'Action: call_method(toto) - Unknown method Server::toto()'
-			),
-			array(
+				'error' => 'Action: call_method(toto) - Unknown method Server::toto()',
+			],
+			[
 				'action' => 'call_method()',
-				'error' => 'Action: call_method() - Missing argument #1: method name'
-			),
-		);
+				'error' => 'Action: call_method() - Missing argument #1: method name',
+			],
+		];
 
-		foreach ($aScenarii as $aScenario)
-		{
+		foreach ($aScenarii as $aScenario) {
 			echo "<h4>".htmlentities($aScenario['action'], ENT_QUOTES, 'UTF-8')."</h4>\n";
 			$sMessage = '';
-			try
-			{
-				$oTarget->ExecActions(array($aScenario['action']), array('source' => $oSource));
+			try {
+				$oTarget->ExecActions([$aScenario['action']], ['source' => $oSource]);
 				$sMessage = 'Expecting an exception... none has been thrown!';
-			}
-			catch (Exception $e)
-			{
-				if ($e->getMessage() != $aScenario['error'])
-				{
+			} catch (Exception $e) {
+				if ($e->getMessage() != $aScenario['error']) {
 					$sMessage = 'Wrong message: expecting "'.$aScenario['error'].'" and got "'.$e->getMessage().'"';
 				}
 			}
-			if ($sMessage !='')
-			{
+			if ($sMessage != '') {
 				throw new Exception($sMessage);
 			}
 		}
@@ -3485,19 +3418,19 @@ class TestExecActions extends TestBizModel
 
 class TestParsingOptimization extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Query optimizations (Merging joins on OQL parsing)';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Checking a few queries that do involve query optimizations (implemented for the sake of optimizing the portal)';
 	}
 
 	protected function DoExecute()
 	{
-		$aQueries = array(
+		$aQueries = [
 			"SELECT UserRequest AS u
 				JOIN Person AS p1 ON u.caller_id=p1.id
 				JOIN Organization AS o1 ON p1.org_id=o1.id
@@ -3510,9 +3443,8 @@ class TestParsingOptimization extends TestBizModel
 				JOIN Organization AS o1 ON p1.org_id=o1.id
 				JOIN Person ON u.caller_id=Person.id
 				JOIN Location AS l ON Person.location_id = l.id WHERE Person.status='active' AND p1.status='inactive' AND l.country='France'",
-		);
-		foreach ($aQueries as $sQuery)
-		{
+		];
+		foreach ($aQueries as $sQuery) {
 			echo "<h5>To Parse: ".htmlentities($sQuery, ENT_QUOTES, 'UTF-8')."</h5>\n";
 			$oSearch = DBSearch::FromOQL($sQuery);
 			$sQueryOpt = $oSearch->ToOQL();
@@ -3525,12 +3457,12 @@ class TestParsingOptimization extends TestBizModel
 
 class TestUnions extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Unions';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Checking a few UNION queries';
 	}
@@ -3539,27 +3471,27 @@ class TestUnions extends TestBizModel
 	{
 		// The two first items did reveal an issue with the query cache,
 		//because SELECT Person on the second line must not give the same query as SELECT Person on the first line
-		$aQueries = array(
+		$aQueries = [
 			"SELECT Person UNION SELECT Person" => true,
 			"SELECT Person UNION SELECT Team" => true,
 			"SELECT Person UNION SELECT Contact" => true,
 			"SELECT Contact UNION SELECT Person" => true,
 			"SELECT Person UNION SELECT Organization" => false,
-		);
-		foreach ($aQueries as $sQuery => $bSuccess)
-		{
+		];
+		foreach ($aQueries as $sQuery => $bSuccess) {
 			echo "<h5>To Parse: ".htmlentities($sQuery, ENT_QUOTES, 'UTF-8')."</h5>\n";
-			try
-			{
+			try {
 				$oSearch = DBSearch::FromOQL($sQuery);
-				if (!$bSuccess) throw new Exception('This query should not be parsable!');
+				if (!$bSuccess) {
+					throw new Exception('This query should not be parsable!');
+				}
 
 				CMDBSource::TestQuery($oSearch->MakeSelectQuery());
 				echo "<p>Successfully tested the SQL query.</p>\n";
-			}
-			catch (OQLException $e)
-			{
-				if ($bSuccess) throw $e;
+			} catch (OQLException $e) {
+				if ($bSuccess) {
+					throw $e;
+				}
 				echo "<p>Failed as expected.</p>\n";
 			}
 		}
@@ -3568,12 +3500,12 @@ class TestUnions extends TestBizModel
 
 class TestImplicitAlias extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'OQLImplicitAliases';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Checking implicit aliases resolution';
 	}
@@ -3582,7 +3514,7 @@ class TestImplicitAlias extends TestBizModel
 	{
 		// The two first items did reveal an issue with the query cache,
 		//because SELECT Person on the second line must not give the same query as SELECT Person on the first line
-		$aQueries = array(
+		$aQueries = [
 			"SELECT Person WHERE org_id = 1" => true,
 			"SELECT Person WHERE s.org_id = 1" => false,
 			"SELECT Person AS p WHERE p.org_id = 1" => true,
@@ -3593,21 +3525,21 @@ class TestImplicitAlias extends TestBizModel
 			"SELECT Server JOIN Location ON Server = Location.id" => false,
 			"SELECT Server JOIN Location ON Server.location_id = Location.id WHERE Server.org_id = 1" => true,
 			"SELECT Server JOIN Location ON Server.location_id = Location.id WHERE org_id = 1" => false,
-		);
-		foreach ($aQueries as $sQuery => $bSuccess)
-		{
+		];
+		foreach ($aQueries as $sQuery => $bSuccess) {
 			echo "<h5>To Parse: ".htmlentities($sQuery, ENT_QUOTES, 'UTF-8')."</h5>\n";
-			try
-			{
+			try {
 				$oSearch = DBSearch::FromOQL($sQuery);
-				if (!$bSuccess) throw new Exception('This query should not be parsable!');
+				if (!$bSuccess) {
+					throw new Exception('This query should not be parsable!');
+				}
 
 				CMDBSource::TestQuery($oSearch->MakeSelectQuery());
 				echo "<p>Successfully tested the SQL query.</p>\n";
-			}
-			catch (OQLException $e)
-			{
-				if ($bSuccess) throw $e;
+			} catch (OQLException $e) {
+				if ($bSuccess) {
+					throw $e;
+				}
 				echo "<p>Failed as expected.</p>\n";
 			}
 		}
@@ -3616,12 +3548,12 @@ class TestImplicitAlias extends TestBizModel
 
 class TestBug609 extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'UNION with JOINS ordered differently';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return '(N.609) Inconsistent SQL query (various symptoms, must mostly in the form of "Class \'IT Department\' not found"';
 	}
@@ -3634,8 +3566,7 @@ class TestBug609 extends TestBizModel
 		$oSearch = DBSearch::FromOQL("$sQueryB UNION $sQueryA");
 
 		$oSet = new DBObjectSet($oSearch);
-		while($oObject = $oSet->Fetch())
-		{
+		while ($oObject = $oSet->Fetch()) {
 			echo "Successfull load for <b>".$oObject->GetName()."</b><br>\n";
 		}
 	}
@@ -3643,12 +3574,12 @@ class TestBug609 extends TestBizModel
 
 class TestBug788 extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Graph - delete nodes';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return '(N.788) Graph not refreshed when unchecking some classes';
 	}
@@ -3673,8 +3604,7 @@ class TestBug788 extends TestBizModel
 		echo $oGraph->DumpAsHtmlImage();
 		echo $oGraph->DumpAsHTMLText();
 
-		if ((count($oGraph->_GetNodes()) != 2) || (count($oGraph->_GetEdges()) != 1))
-		{
+		if ((count($oGraph->_GetNodes()) != 2) || (count($oGraph->_GetEdges()) != 1)) {
 			throw new Exception('The graph should be made of 2 nodes and 1 edge');
 		}
 
@@ -3684,8 +3614,7 @@ class TestBug788 extends TestBizModel
 		echo $oGraph->DumpAsHtmlImage();
 		echo $oGraph->DumpAsHTMLText();
 
-		if ((count($oGraph->_GetNodes()) != 1) || (count($oGraph->_GetEdges()) != 0))
-		{
+		if ((count($oGraph->_GetNodes()) != 1) || (count($oGraph->_GetEdges()) != 0)) {
 			throw new Exception('The graph should contain only the node A');
 		}
 	}
@@ -3693,60 +3622,56 @@ class TestBug788 extends TestBizModel
 
 class WhereIsThe61TablesThreat extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return '61 tables';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Evaluate where is the 61 tables limit threat';
 	}
 
 	protected function DoExecute()
 	{
-		$aClassToCount_Full = array();
-		$aDistribution = array();
+		$aClassToCount_Full = [];
+		$aDistribution = [];
 		$iTotalClasses = 0;
-		foreach (MetaModel::GetClasses() as $sClass)
-		{
-			if (MetaModel::IsAbstract($sClass)) continue;
+		foreach (MetaModel::GetClasses() as $sClass) {
+			if (MetaModel::IsAbstract($sClass)) {
+				continue;
+			}
 
 			$iTotalClasses++;
 			$oSearch = DBSearch::FromOQL("SELECT $sClass WHERE id = 1");
-			$oSql = $oSearch->GetSQLQueryStructure(array(), false, null);
+			$oSql = $oSearch->GetSQLQueryStructure([], false, null);
 			$iCount = $oSql->CountTables();
 			$aClassToCount_Full[$sClass] = $iCount;
-			if (array_key_exists($iCount, $aDistribution))
-			{
+			if (array_key_exists($iCount, $aDistribution)) {
 				$aDistribution[$iCount]++;
-			}
-			else
-			{
+			} else {
 				$aDistribution[$iCount] = 1;
 			}
 		}
 		arsort($aClassToCount_Full);
 
 		$iHighestCount = max($aClassToCount_Full);
-		for($i = 1; $i < $iHighestCount ; $i++)
-		{
-			if (!array_key_exists($i, $aDistribution))
-			{
+		for ($i = 1; $i < $iHighestCount ; $i++) {
+			if (!array_key_exists($i, $aDistribution)) {
 				$aDistribution[$i] = 0;
 			}
 		}
 		ksort($aDistribution);
 
-
 		$i = 0;
 		$iLimit = 15;
 		$iCountThreshold = 10;
 		echo "<h5>TOP $iLimit offenders (+ those exceeding $iCountThreshold tables)</h5>";
-		foreach ($aClassToCount_Full as $sClass => $iCountFull)
-		{
+		foreach ($aClassToCount_Full as $sClass => $iCountFull) {
 			$i++;
-			if (($iCountFull <= $iCountThreshold) && ($i >= $iLimit)) break;
+			if (($iCountFull <= $iCountThreshold) && ($i >= $iLimit)) {
+				break;
+			}
 
 			echo "$sClass: $iCountFull tables<br/>";
 		}
@@ -3755,8 +3680,7 @@ class WhereIsThe61TablesThreat extends TestBizModel
 		echo "<p>Over a total of $iTotalClasses instantiable classes.</p>";
 		echo "<table>";
 		echo "<tr><td>Table count</td><td>Classes</td></tr>";
-		foreach ($aDistribution as $iTableCount => $iClassCount)
-		{
+		foreach ($aDistribution as $iTableCount => $iClassCount) {
 			echo "<tr><td>$iTableCount</td><td>$iClassCount</td></tr>";
 		}
 		echo "</table>";
@@ -3765,12 +3689,12 @@ class WhereIsThe61TablesThreat extends TestBizModel
 
 class TestBug689 extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'An OQL failing to export in XML';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return '(N.689) Reaching the limit of 61 tables';
 	}
@@ -3779,7 +3703,7 @@ class TestBug689 extends TestBizModel
 	{
 		$sOql = 'SELECT child, parent, s1, p, o FROM UserRequest AS child JOIN UserRequest AS parent ON child.parent_request_id = parent.id JOIN lnkFunctionalCIToTicket AS l1 ON l1.ticket_id = child.id JOIN Server AS s1 ON l1.functionalci_id = s1.id JOIN Person AS p ON child.caller_id = p.id JOIN Organization AS o ON p.org_id = o.id';
 		$oSearch = DBSearch::FromOQL($sOql);
-		$oSql = $oSearch->GetSQLQueryStructure(array(), false, null);
+		$oSql = $oSearch->GetSQLQueryStructure([], false, null);
 		//$sSql = $oSql->RenderSelect();
 
 		echo '<p>'.$sOql.'</p>';
@@ -3792,12 +3716,12 @@ class TestBug689 extends TestBizModel
 
 class TestDBObjectLinkedObjects extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'DBObject Linked objects API';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Add/Remove/Modify linked objects (recorded as a delta within DBObject, later recorded in DB)';
 	}
@@ -3832,7 +3756,7 @@ class TestDBObjectLinkedObjects extends TestBizModel
 		$oServer->Set('name', 'unit test linkset');
 		$oServer->Set('org_id', 3);
 		$oLinkSet = $oServer->Get('networkdevice_list');
-		$oLinkSet->AddItem(MetaModel::NewObject('lnkConnectableCIToNetworkDevice', array('networkdevice_id' => $iDev1)));
+		$oLinkSet->AddItem(MetaModel::NewObject('lnkConnectableCIToNetworkDevice', ['networkdevice_id' => $iDev1]));
 		$oServer->Set('networkdevice_list', $oLinkSet);
 		assert($oServer->IsModified(), 'Server is modified');
 		$oServer->DBInsert();
@@ -3845,7 +3769,7 @@ class TestDBObjectLinkedObjects extends TestBizModel
 		assert($oLink->Get('networkdevice_id') == $iDev1, 'New device correctly attached');
 
 		$oLinkSet = $oServer->Get('networkdevice_list');
-		$oLinkSet->AddItem(MetaModel::NewObject('lnkConnectableCIToNetworkDevice', array('networkdevice_id' => $iDev2)));
+		$oLinkSet->AddItem(MetaModel::NewObject('lnkConnectableCIToNetworkDevice', ['networkdevice_id' => $iDev2]));
 		$oServer->Set('networkdevice_list', $oLinkSet);
 		assert($oServer->IsModified(), 'Server is modified');
 		$oServer->DBUpdate();
@@ -3854,15 +3778,11 @@ class TestDBObjectLinkedObjects extends TestBizModel
 		$oLinkSet = $oServer->Get('networkdevice_list');
 		assert($oLinkSet->Count() == 2, 'Two NW Dev attached');
 		$oNewLinkSet = clone $oLinkSet;
-		while ($oLink = $oLinkSet->Fetch())
-		{
+		while ($oLink = $oLinkSet->Fetch()) {
 			$iLinkId = $oLink->Get('networkdevice_id');
-			if ($iLinkId == $iDev1)
-			{
+			if ($iLinkId == $iDev1) {
 				$oNewLinkSet->RemoveItem($oLink->GetKey());
-			}
-			elseif ($iLinkId == $iDev2)
-			{
+			} elseif ($iLinkId == $iDev2) {
 				$oLink->Set('network_port', 'lePortSalut');
 				$oNewLinkSet->ModifyItem($oLink);
 			}
@@ -3882,12 +3802,12 @@ class TestDBObjectLinkedObjects extends TestBizModel
 
 class TestDBObjectLinkedObjectsLegacy extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'DBObject Linked objects API (legacy usage)';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Alter a link set by redefining the whole list of links (not recommended!)';
 	}
@@ -3923,11 +3843,10 @@ class TestDBObjectLinkedObjectsLegacy extends TestBizModel
 		$oServer->Set('org_id', 3);
 		$oLinkSet = $oServer->Get('networkdevice_list');
 		$oNewLinkSet = DBObjectSet::FromScratch('lnkConnectableCIToNetworkDevice');
-		while ($oLink = $oLinkSet->Fetch())
-		{
+		while ($oLink = $oLinkSet->Fetch()) {
 			$oNewLinkSet->AddObject($oLink);
 		}
-		$oNewLinkSet->AddObject(MetaModel::NewObject('lnkConnectableCIToNetworkDevice', array('networkdevice_id' => $iDev1)));
+		$oNewLinkSet->AddObject(MetaModel::NewObject('lnkConnectableCIToNetworkDevice', ['networkdevice_id' => $iDev1]));
 		$oServer->Set('networkdevice_list', $oNewLinkSet);
 		assert($oServer->IsModified(), 'Server is modified');
 		$oServer->DBInsert();
@@ -3941,11 +3860,10 @@ class TestDBObjectLinkedObjectsLegacy extends TestBizModel
 
 		$oNewLinkSet = DBObjectSet::FromScratch('lnkConnectableCIToNetworkDevice');
 		$oLinkSet->Rewind();
-		while ($oLink = $oLinkSet->Fetch())
-		{
+		while ($oLink = $oLinkSet->Fetch()) {
 			$oNewLinkSet->AddObject($oLink);
 		}
-		$oNewLinkSet->AddObject(MetaModel::NewObject('lnkConnectableCIToNetworkDevice', array('networkdevice_id' => $iDev2)));
+		$oNewLinkSet->AddObject(MetaModel::NewObject('lnkConnectableCIToNetworkDevice', ['networkdevice_id' => $iDev2]));
 		$oServer->Set('networkdevice_list', $oNewLinkSet);
 		assert($oServer->IsModified(), 'Server is modified');
 		$oServer->DBUpdate();
@@ -3955,20 +3873,14 @@ class TestDBObjectLinkedObjectsLegacy extends TestBizModel
 		assert($oLinkSet->Count() == 2, 'Two NW Dev attached');
 		$oNewLinkSet = DBObjectSet::FromScratch('lnkConnectableCIToNetworkDevice');
 		$oServer->Set('networkdevice_list', $oNewLinkSet);
-		while ($oLink = $oLinkSet->Fetch())
-		{
+		while ($oLink = $oLinkSet->Fetch()) {
 			$iLinkId = $oLink->Get('networkdevice_id');
-			if ($iLinkId == $iDev1)
-			{
+			if ($iLinkId == $iDev1) {
 				// Remove...ie do not add it!
-			}
-			elseif ($iLinkId == $iDev2)
-			{
+			} elseif ($iLinkId == $iDev2) {
 				$oLink->Set('network_port', 'lePortSalut');
 				$oNewLinkSet->AddObject($oLink);
-			}
-			else
-			{
+			} else {
 				$oNewLinkSet->AddObject($oLink);
 			}
 		}

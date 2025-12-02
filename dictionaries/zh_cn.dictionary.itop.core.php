@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -9,7 +10,7 @@
 /**
  *
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
 	'Core:DeletedObjectTip' => '对象已被删除于 %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => '找不到对象 (类型: %1$s, 编号: %2$d)',
@@ -157,8 +158,7 @@ Operators:<br/>
 	'Core:Context=GUI:Console' => '命令行',
 	'Core:Context=CRON' => '定时任务',
 	'Core:Context=GUI:Portal' => '门户',
-));
-
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
@@ -169,7 +169,7 @@ Operators:<br/>
 // Class: CMDBChange
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChange' => '变更',
 	'Class:CMDBChange+' => '变更跟踪',
 	'Class:CMDBChange/Attribute:date' => '日期',
@@ -184,13 +184,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON服务',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP服务',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => '插件',
-));
+]);
 
 //
 // Class: CMDBChangeOp
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOp' => '变更操作',
 	'Class:CMDBChangeOp+' => '变更操作跟踪',
 	'Class:CMDBChangeOp/Attribute:change' => '变更',
@@ -205,51 +205,51 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOp/Attribute:objkey+' => '对象id',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDB 操作类型',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '根本属性的名称',
-));
+]);
 
 //
 // Class: CMDBChangeOpCreate
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOpCreate' => '对象创建',
 	'Class:CMDBChangeOpCreate+' => '对象创建跟踪',
-));
+]);
 
 //
 // Class: CMDBChangeOpDelete
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOpDelete' => '对象删除',
 	'Class:CMDBChangeOpDelete+' => '对象删除跟踪',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttribute
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOpSetAttribute' => '对象变化',
 	'Class:CMDBChangeOpSetAttribute+' => '对象属性变化跟踪',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => '属性',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => '更改的属性编码',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeScalar
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOpSetAttributeScalar' => '属性更改跟踪',
 	'Class:CMDBChangeOpSetAttributeScalar+' => '对象属性更改跟踪',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => '旧值',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '以前该属性的值',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => '新值',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '属性的新值',
-));
+]);
 // Used by CMDBChangeOp... & derived classes
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Change:ObjectCreated' => '对象已创建',
 	'Change:ObjectDeleted' => '对象已删除',
 	'Change:ObjectModified' => '对象已修改',
@@ -266,35 +266,35 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Change:LinkSet:Added' => '已添加 %1$s',
 	'Change:LinkSet:Removed' => '已移除 %1$s',
 	'Change:LinkSet:Modified' => '已修改 %1$s',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeBlob
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOpSetAttributeBlob' => '数据变更跟踪',
 	'Class:CMDBChangeOpSetAttributeBlob+' => '数据变更跟踪',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => '之前的值',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '该数据之前的内容',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeText
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:CMDBChangeOpSetAttributeText' => '文本变更跟踪',
 	'Class:CMDBChangeOpSetAttributeText+' => '文本变更跟踪',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => '旧值',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => '该文本之前的内容',
-));
+]);
 
 //
 // Class: Event
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Event' => '日志事件',
 	'Class:Event+' => '应用程序的内部事件',
 	'Class:Event/Attribute:message' => '消息',
@@ -305,13 +305,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Event/Attribute:userinfo+' => '触发此事件的动作执行用户的身份',
 	'Class:Event/Attribute:finalclass' => '事件类型',
 	'Class:Event/Attribute:finalclass+' => '根本属性的名称',
-));
+]);
 
 //
 // Class: EventNotification
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventNotification' => '通知事件',
 	'Class:EventNotification+' => '已发送通知的追踪',
 	'Class:EventNotification/Attribute:trigger_id' => '触发器',
@@ -321,14 +321,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventNotification/Attribute:action_id' => '用户',
 	'Class:EventNotification/Attribute:action_id+' => '用户账号',
 	'Class:EventNotification/Attribute:object_id' => '对象编号',
-	'Class:EventNotification/Attribute:object_id+' => '对象编号 (类型由触发器定义?)'
-));
+	'Class:EventNotification/Attribute:object_id+' => '对象编号 (类型由触发器定义?)',
+]);
 
 //
 // Class: EventNotificationEmail
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventNotificationEmail' => '邮件发送',
 	'Class:EventNotificationEmail+' => '跟踪每封已发送的邮件',
 	'Class:EventNotificationEmail/Attribute:to' => '收件人',
@@ -345,13 +345,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventNotificationEmail/Attribute:body+' => '内容',
 	'Class:EventNotificationEmail/Attribute:attachments' => '附件',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-));
+]);
 
 //
 // Class: EventIssue
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventIssue' => '问题事件',
 	'Class:EventIssue+' => '跟踪问题 (告警, 错误, 等)',
 	'Class:EventIssue/Attribute:issue' => '事件',
@@ -368,13 +368,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventIssue/Attribute:callstack+' => '调用栈',
 	'Class:EventIssue/Attribute:data' => '数据',
 	'Class:EventIssue/Attribute:data+' => '更多信息',
-));
+]);
 
 //
 // Class: EventWebService
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventWebService' => 'WebService调用',
 	'Class:EventWebService+' => '跟踪WebService调用',
 	'Class:EventWebService/Attribute:verb' => '命令',
@@ -389,9 +389,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventWebService/Attribute:log_error+' => '结果错误记录',
 	'Class:EventWebService/Attribute:data' => '数据',
 	'Class:EventWebService/Attribute:data+' => '结果数据',
-));
+]);
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventRestService' => 'REST/JSON 调用',
 	'Class:EventRestService+' => '跟踪REST/JSON服务调用',
 	'Class:EventRestService/Attribute:operation' => '操作',
@@ -406,13 +406,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP 响应 (json)',
 	'Class:EventRestService/Attribute:provider' => '提供者',
 	'Class:EventRestService/Attribute:provider+' => '实现该功能的PHP类',
-));
+]);
 
 //
 // Class: EventLoginUsage
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventLoginUsage' => '登录频率',
 	'Class:EventLoginUsage+' => '连接至应用',
 	'Class:EventLoginUsage/Attribute:user_id' => '登录',
@@ -421,13 +421,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventLoginUsage/Attribute:contact_name+' => '用户名',
 	'Class:EventLoginUsage/Attribute:contact_email' => '用户邮箱',
 	'Class:EventLoginUsage/Attribute:contact_email+' => '用户的邮箱地址',
-));
+]);
 
 //
 // Class: EventNotificationNewsroom
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:EventNotificationNewsroom' => 'News sent~~',
 	'Class:EventNotificationNewsroom+' => '',
 	'Class:EventNotificationNewsroom/Attribute:title' => '标题',
@@ -456,13 +456,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventNotificationNewsroom/Attribute:read_date+' => '',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => '联系人',
 	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Action' => '自定义操作',
 	'Class:Action+' => '用户定义的操作',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s',
@@ -492,24 +492,41 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)~~',
 	'Action:last_executions_tab_limit_days' => '过去 %1$s 天',
 	'Action:last_executions_tab_limit_none' => '无限制',
-));
+]);
 
 //
 // Class: ActionNotification
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ActionNotification' => '通知',
 	'Class:ActionNotification+' => '通知 (抽象)',
 	'Class:ActionNotification/Attribute:language' => '语言',
 	'Class:ActionNotification/Attribute:language+' => '',
-));
+]);
+
+//
+// Class: lnkActionNotificationToContact
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
+	'Class:lnkActionNotificationToContact' => 'Link ActionNotification / Contact~~',
+	'Class:lnkActionNotificationToContact+' => 'Contact subscription to Notification Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id' => 'Contact~~',
+	'Class:lnkActionNotificationToContact/Attribute:contact_id+' => 'Contact who subscribed (or not) to the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id' => 'Action~~',
+	'Class:lnkActionNotificationToContact/Attribute:action_id+' => 'The notification that the contact received at least once, and to which he can subscribe or unsubscribe~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id' => 'Trigger~~',
+	'Class:lnkActionNotificationToContact/Attribute:trigger_id+' => 'The trigger that fired the notification~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed' => 'Subscribed~~',
+	'Class:lnkActionNotificationToContact/Attribute:subscribed+' => 'If the contact unsubscribed (no) or is subscribed (yes and default) to the notification~~',
+]);
 
 //
 // Class: ActionEmail
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ActionEmail' => '邮件通知',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => '此状态将决定提醒谁: 
@@ -576,14 +593,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'ActionEmail:preview_warning' => '实际收到的邮件在客户端中可能与当前在浏览器中的预览有所不同.',
 	'ActionEmail:preview_more_info' => '若需更多不同邮件客户端支持的CSS特性信息, 请参阅%1$s',
 	'ActionEmail:content_placeholder_missing' => '标识符 "%1$s" 在HTML中不存在. 字段 "%2$s" 的内容将不会包含在生成的邮件中.',
-));
-
+]);
 
 //
 // Class: ActionNewsroom
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'ActionNewsroom:trigger' => '触发器',
 	'ActionNewsroom:content' => '消息',
 	'ActionNewsroom:settings' => '设置',
@@ -618,13 +634,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects~~',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
 	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
-));
+]);
 
 //
 // Class: Trigger
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Trigger' => '触发器',
 	'Class:Trigger+' => '自定义事件处理',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
@@ -643,13 +659,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription~~',
-));
+]);
 
 //
 // Class: TriggerOnObject
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnObject' => '触发器 (类型依赖的)',
 	'Class:TriggerOnObject+' => '在指定类型对象上的触发器',
 	'Class:TriggerOnObject/Attribute:target_class' => '目标类型',
@@ -658,115 +674,115 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnObject/Attribute:filter+' => '限定将激活触发器的对象 (目标类型的)',
 	'TriggerOnObject:WrongFilterQuery' => '错误的筛选查询: %1$s',
 	'TriggerOnObject:WrongFilterClass' => '筛选查询返回的对象必须是类型 "%1$s"',
-));
+]);
 
 //
 // Class: TriggerOnPortalUpdate
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnPortalUpdate' => '触发器 (工单更新时)',
 	'Class:TriggerOnPortalUpdate+' => '终端用户更新工单时触发',
-));
+]);
 
 //
 // Class: TriggerOnStateChange
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnStateChange' => '触发器 (当状态变化时)',
 	'Class:TriggerOnStateChange+' => '当对象状态变化时触发',
 	'Class:TriggerOnStateChange/Attribute:state' => '状态',
 	'Class:TriggerOnStateChange/Attribute:state+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateEnter
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnStateEnter' => '触发器 (进入指定状态)',
 	'Class:TriggerOnStateEnter+' => '对象进入指定状态时触发',
-));
+]);
 
 //
 // Class: TriggerOnStateLeave
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnStateLeave' => '触发器 (离开指定状态时)',
 	'Class:TriggerOnStateLeave+' => '对象离开指定状态时触发',
-));
+]);
 
 //
 // Class: TriggerOnObjectCreate
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnObjectCreate' => '触发器 (对象创建时)',
 	'Class:TriggerOnObjectCreate+' => '对象创建时触发',
-));
+]);
 
 //
 // Class: TriggerOnObjectDelete
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnObjectDelete' => '触发器 (对象删除时)',
 	'Class:TriggerOnObjectDelete+' => '指定类型或子类型对象删除时的触发器',
-));
+]);
 
 //
 // Class: TriggerOnObjectUpdate
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnObjectUpdate' => '触发器 (对象更新时)',
 	'Class:TriggerOnObjectUpdate+' => '指定类型或子类型对象更新时的触发器',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => '目标字段',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectMention
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnObjectMention' => '触发器 (对象提及时)',
 	'Class:TriggerOnObjectMention+' => '指定类型或子类型对象在属性日志中提及 (@xxx) 时的触发器',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => '提及筛选',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => '限丁将激活此触发器的提及对象. 如果为空则任何类的提及对象将激活此触发器.',
-));
+]);
 
 //
 // Class: TriggerOnAttributeBlobDownload
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnAttributeBlobDownload' => '触发器 (对象文档下载时)',
 	'Class:TriggerOnAttributeBlobDownload+' => '指定类型或子类型对象的文档下载时的触发器',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => '目标字段',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnThresholdReached
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnThresholdReached' => '触发器 (基于阈值)',
 	'Class:TriggerOnThresholdReached+' => '当达到某个阈值时触发',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => '秒表',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => '阈值',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-));
+]);
 
 //
 // Class: lnkTriggerAction
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkTriggerAction' => '操作/触发器',
 	'Class:lnkTriggerAction+' => '关联触发器和操作',
 	'Class:lnkTriggerAction/Attribute:action_id' => '操作',
@@ -779,12 +795,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
 	'Class:lnkTriggerAction/Attribute:order' => '顺序',
 	'Class:lnkTriggerAction/Attribute:order+' => '操作的执行顺序',
-));
+]);
 
 //
 // Synchro Data Source
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:SynchroDataSource' => '数据源同步',
 	'Class:SynchroDataSource/Attribute:name' => '名称',
 	'Class:SynchroDataSource/Attribute:name+' => '',
@@ -1078,13 +1094,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:Validator:Mandatory' => '这里必填',
 	'Core:Validator:MustBeInteger' => '必须是整数',
 	'Core:Validator:MustSelectOne' => '请选择',
-	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN'
-));
+	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
+]);
 
 //
 // Class: TagSetFieldData
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TagSetFieldData' => '类型%1$s的%2$s',
 	'Class:TagSetFieldData+' => '~~',
 	'Class:TagSetFieldData/Attribute:code' => '代码',
@@ -1106,12 +1122,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => '标签 "属性编码" 不能更改',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => '标签使用率 (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => '此标签没有条目',
-));
+]);
 
 //
 // Class: DBProperty
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DBProperty' => '数据库属性',
 	'Class:DBProperty+' => '~~',
 	'Class:DBProperty/Attribute:name' => '名称',
@@ -1124,12 +1140,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => '备注',
 	'Class:DBProperty/Attribute:change_comment+' => '',
-));
+]);
 
 //
 // Class: BackgroundTask
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:BackgroundTask' => '后台任务',
 	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => '类型名称',
@@ -1154,12 +1170,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => '状态',
 	'Class:BackgroundTask/Attribute:status+' => '',
-));
+]);
 
 //
 // Class: AsyncTask
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AsyncTask' => '异步任务',
 	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => '已创建',
@@ -1184,43 +1200,40 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => '配置 "async_task_retries[%1$s]" 的格式无效. 应该为包含以下值的数组: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => '配置 "async_task_retries[%1$s]" 的格式无效: 未知的值 "%2$s". 应该只包含以下值: %3$s',
-));
+]);
 
 //
 // Class: AbstractResource
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AbstractResource' => '抽象资源',
 	'Class:AbstractResource+' => '',
-));
+]);
 
 //
 // Class: ResourceAdminMenu
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ResourceAdminMenu' => '资源管理菜单',
 	'Class:ResourceAdminMenu+' => '',
-));
+]);
 
 //
 // Class: ResourceRunQueriesMenu
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ResourceRunQueriesMenu' => '资源运行查询菜单',
 	'Class:ResourceRunQueriesMenu+' => '',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ResourceSystemMenu' => '资源系统菜单',
 	'Class:ResourceSystemMenu+' => '',
-));
-
-
-
+]);

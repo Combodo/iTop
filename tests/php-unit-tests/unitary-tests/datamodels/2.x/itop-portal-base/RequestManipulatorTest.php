@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -32,7 +33,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class RequestManipulatorTest extends ItopDataTestCase
 {
-
 	protected function LoadRequiredItopFiles(): void
 	{
 		parent::LoadRequiredItopFiles();
@@ -53,7 +53,7 @@ class RequestManipulatorTest extends ItopDataTestCase
 		$oRequestManipulatorHelper = new RequestManipulatorHelper($oRequestStack);
 
 		// I - default null value
-		$oNullArrayValue = $oRequestManipulatorHelper->ReadParam('null_array_value',  null, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
+		$oNullArrayValue = $oRequestManipulatorHelper->ReadParam('null_array_value', null, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 		$this->assertNull($oNullArrayValue);
 
 		// II - default empty array value
@@ -68,6 +68,5 @@ class RequestManipulatorTest extends ItopDataTestCase
 		$aReadValue = $oRequestManipulatorHelper->ReadParam('array_value', null, FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY);
 		$this->assertEquals($aValue, $aReadValue);
 	}
-
 
 }

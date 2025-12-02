@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,7 @@
  */
 
 // Portal
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Page:DefaultTitle' => '%1$s User portal',
 	'Page:PleaseWait' => 'Please wait...',
 	'Page:Home' => 'Home',
@@ -62,19 +63,19 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'en-us', //work with moment.js locales
-));
+]);
 
 // Object form
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry',
 	'Portal:Form:Close:Warning' => 'Do you want to leave this form? Data entered may be lost',
 	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting this form again.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting this form again.',
-    'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s',
-));
+	'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s',
+]);
 
 // UserProfile brick
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Brick:Portal:UserProfile:Name' => 'User profile',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'My profile',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Logoff',
@@ -85,15 +86,15 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Can\'t change password, please contact your %1$s administrator',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Personal information',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Photo',
-));
+]);
 
 // AggregatePageBrick
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard',
-));
+]);
 
 // BrowseBrick brick
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Brick:Portal:Browse:Name' => 'Browse throught items',
 	'Brick:Portal:Browse:Mode:List' => 'List',
 	'Brick:Portal:Browse:Mode:Tree' => 'Tree',
@@ -106,10 +107,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Expand all',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Collapse all',
 	'Brick:Portal:Browse:Filter:NoData' => 'No item',
-));
+]);
 
 // ManageBrick brick
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Brick:Portal:Manage:Name' => 'Manage items',
 	'Brick:Portal:Manage:Table:NoData' => 'No item.',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
@@ -124,10 +125,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Manage:fct:avg' => 'Average',
 	'Brick:Portal:Manage:fct:min' => 'Min',
 	'Brick:Portal:Manage:fct:max' => 'Max',
-));
+]);
 
 // ObjectBrick brick
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Brick:Portal:Object:Name' => 'Object',
 	'Brick:Portal:Object:Form:Create:Title' => 'New %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Updating %2$s (%1$s)',
@@ -139,18 +140,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied'
-));
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied',
+]);
 
 // CreateBrick brick
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Brick:Portal:Create:Name' => 'Quick creation',
 	'Brick:Portal:Create:ChooseType' => 'Please, choose a type',
-));
+]);
 
 // Filter brick
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Brick:Portal:Filter:Name' => 'Prefilter a brick',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Search',
-));
+]);

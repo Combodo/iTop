@@ -1,11 +1,11 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\Spinner;
-
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
@@ -19,7 +19,7 @@ class Spinner extends UIBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-spinner';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/spinner/layout';
-	
+
 	/* @var string Display size for inline element, rather small */
 	public const ENUM_SPINNER_SIZE_INLINE = 'inline';
 	/* @var string Display size for small element, displayed in a column */
@@ -60,7 +60,7 @@ class Spinner extends UIBlock
 		$this->sDescription = $sDescription;
 		return $this;
 	}
-	
+
 	/**
 	 * @return bool
 	 */
@@ -68,7 +68,7 @@ class Spinner extends UIBlock
 	{
 		return $this->sDescription !== '';
 	}
-	
+
 	/**
 	 * @return string
 	 */

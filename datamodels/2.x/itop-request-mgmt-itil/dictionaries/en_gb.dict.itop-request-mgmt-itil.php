@@ -1,10 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => '',
 	'Menu:RequestManagementProvider' => 'Helpdesk provider',
@@ -36,7 +37,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Open requests by customer',
 	'Class:UserRequest:KnownErrorList' => 'Known Errors',
 	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -52,7 +53,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 // Class: UserRequest
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:UserRequest' => 'User Request',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -251,11 +252,10 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info.',
-));
+]);
 
-
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Organization:Overview:UserRequests' => 'User Requests from this organisation',
 	'Organization:Overview:MyUserRequests' => 'My User Requests for this organisation',
 	'Organization:Overview:Tickets' => 'Tickets for this organisation',
-));
+]);

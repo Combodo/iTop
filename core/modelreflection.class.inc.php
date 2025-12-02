@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,9 +17,8 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
- * Reflection API for the MetaModel (partial) 
+ * Reflection API for the MetaModel (partial)
  *
  * @copyright   Copyright (C) 2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -37,10 +37,9 @@ define('ENUM_CHILD_CLASSES_EXCLUDETOP', 1);
 */
 define('ENUM_CHILD_CLASSES_ALL', 2);
 
-
 abstract class ModelReflection
 {
-	abstract public function GetClassIcon($sClass, $bImgTag = true); 
+	abstract public function GetClassIcon($sClass, $bImgTag = true);
 	abstract public function IsValidAttCode($sClass, $sAttCode);
 	abstract public function GetName($sClass);
 	abstract public function GetLabel($sClass, $sAttCodeEx);
@@ -70,9 +69,8 @@ abstract class ModelReflection
 		$sLocalizedFormat = $this->DictString($sFormatCode);
 		$aArguments = func_get_args();
 		array_shift($aArguments);
-		
-		if ($sLocalizedFormat == $sFormatCode)
-		{
+
+		if ($sLocalizedFormat == $sFormatCode) {
 			// Make sure the information will be displayed (ex: an error occuring before the dictionary gets loaded)
 			return $sFormatCode.' - '.implode(', ', $aArguments);
 		}
@@ -88,7 +86,7 @@ abstract class ModelReflection
 	 * @return \RunTimeIconSelectionField
 	 */
 	abstract public function GetIconSelectionField($sCode, $sLabel = '', $defaultValue = '');
-	
+
 	abstract public function GetRootClass($sClass);
 	abstract public function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP);
 }
@@ -104,7 +102,6 @@ abstract class QueryReflection
 	abstract public function GetClassAlias();
 }
 
-
 class ModelReflectionRuntime extends ModelReflection
 {
 	public function __construct()
@@ -115,22 +112,22 @@ class ModelReflectionRuntime extends ModelReflection
 	{
 		return MetaModel::GetClassIcon($sClass, $bImgTag);
 	}
- 
+
 	public function IsValidAttCode($sClass, $sAttCode)
 	{
 		return MetaModel::IsValidAttCode($sClass, $sAttCode);
 	}
- 
+
 	public function GetName($sClass)
 	{
 		return MetaModel::GetName($sClass);
 	}
- 
+
 	public function GetLabel($sClass, $sAttCodeEx)
 	{
 		return MetaModel::GetLabel($sClass, $sAttCodeEx);
 	}
- 
+
 	public function GetValueLabel($sClass, $sAttCode, $sValue)
 	{
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
@@ -140,52 +137,41 @@ class ModelReflectionRuntime extends ModelReflection
 	public function ListAttributes($sClass, $sScope = null)
 	{
 		$aScope = null;
-		if ($sScope != null)
-		{
-			$aScope = array();
-			foreach (explode(',', $sScope) as $sScopeClass)
-			{
+		if ($sScope != null) {
+			$aScope = [];
+			foreach (explode(',', $sScope) as $sScopeClass) {
 				$aScope[] = trim($sScopeClass);
 			}
 		}
-		$aAttributes = array();
-		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-		{
+		$aAttributes = [];
+		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 			$sAttributeClass = get_class($oAttDef);
-			if ($aScope != null)
-			{
-				foreach ($aScope as $sScopeClass)
-				{
-					if (($sAttributeClass == $sScopeClass) || is_subclass_of($sAttributeClass, $sScopeClass))
-					{
+			if ($aScope != null) {
+				foreach ($aScope as $sScopeClass) {
+					if (($sAttributeClass == $sScopeClass) || is_subclass_of($sAttributeClass, $sScopeClass)) {
 						$aAttributes[$sAttCode] = $sAttributeClass;
 						break;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$aAttributes[$sAttCode] = $sAttributeClass;
 			}
 		}
 		return $aAttributes;
 	}
- 
+
 	public function GetAttributeProperty($sClass, $sAttCode, $sPropName, $default = null)
 	{
 		$ret = $default;
 
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$aParams = $oAttDef->GetParams();
-		if (array_key_exists($sPropName, $aParams))
-		{
+		if (array_key_exists($sPropName, $aParams)) {
 			$ret = $aParams[$sPropName];
 		}
 
-		if ($oAttDef instanceof AttributeHierarchicalKey)
-		{
-			if ($sPropName == 'targetclass')
-			{
+		if ($oAttDef instanceof AttributeHierarchicalKey) {
+			if ($sPropName == 'targetclass') {
 				$ret = $sClass;
 			}
 		}
@@ -196,29 +182,24 @@ class ModelReflectionRuntime extends ModelReflection
 	{
 		return MetaModel::GetAllowedValues_att($sClass, $sAttCode);
 	}
- 
+
 	public function HasChildrenClasses($sClass)
 	{
 		return MetaModel::HasChildrenClasses($sClass);
 	}
- 
+
 	public function GetClasses($sCategories = '', $bExcludeLinks = false)
 	{
 		$aClasses = MetaModel::GetClasses($sCategories);
-		if ($bExcludeLinks)
-		{
+		if ($bExcludeLinks) {
 			$aExcluded = MetaModel::GetLinkClasses();
-			$aRes = array();
-			foreach ($aClasses as $sClass)
-			{
-				if (!array_key_exists($sClass, $aExcluded))
-				{
+			$aRes = [];
+			foreach ($aClasses as $sClass) {
+				if (!array_key_exists($sClass, $aExcluded)) {
 					$aRes[] = $sClass;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$aRes = $aClasses;
 		}
 		return $aRes;
@@ -263,18 +244,17 @@ class ModelReflectionRuntime extends ModelReflection
 	{
 		return new RunTimeIconSelectionField($sCode, $sLabel, $defaultValue);
 	}
-	
+
 	public function GetRootClass($sClass)
 	{
 		return MetaModel::GetRootClass($sClass);
 	}
-	
+
 	public function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP)
 	{
 		return MetaModel::EnumChildClasses($sClass, $iOption);
 	}
 }
-
 
 class QueryReflectionRuntime extends QueryReflection
 {

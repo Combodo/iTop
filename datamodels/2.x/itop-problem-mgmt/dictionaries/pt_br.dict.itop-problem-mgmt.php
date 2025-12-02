@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:ProblemManagement' => 'Gerenciamento de problemas',
 	'Menu:ProblemManagement+' => 'Lista de gerenciamento de problemas',
 	'Menu:Problem:Overview' => 'Visão geral',
@@ -32,12 +33,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Painel de gerenciamento de problemas',
 	'UI:ProblemMgmtMenuOverview:Title+' => '',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Problem' => 'Problema',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Status',
@@ -110,4 +111,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Fechar',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

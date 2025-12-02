@@ -37,14 +37,15 @@ use Symfony\Contracts\Service\Attribute\Required;
  */
 abstract class AbstractController extends SymfonyAbstractController implements TemplatesProviderInterface
 {
-	const TEMPLATES_BASE_PATH = 'itop-portal-base/portal/templates/';
+	public const TEMPLATES_BASE_PATH = 'itop-portal-base/portal/templates/';
 
 	/** @inheritdoc  */
 	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
-		$oTemplatesRegister->RegisterTemplates(self::class,
-			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'layout.html.twig'),
-			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH . 'modal/layout.html.twig'),
+		$oTemplatesRegister->RegisterTemplates(
+			self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH.'layout.html.twig'),
+			TemplateDefinitionDto::Create('modal', static::TEMPLATES_BASE_PATH.'modal/layout.html.twig'),
 			TemplateDefinitionDto::Create('loader', static::TEMPLATES_BASE_PATH.'helpers/loader.html.twig'),
 			TemplateDefinitionDto::Create('tagset_clic_handler_js', static::TEMPLATES_BASE_PATH.'helpers/tagset_clic_handler.js.twig'),
 			TemplateDefinitionDto::Create('session_message', static::TEMPLATES_BASE_PATH.'helpers/session_messages/session_message.html.twig'),

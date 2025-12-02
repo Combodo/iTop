@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -26,7 +27,6 @@ require_once MODULESROOT.'itop-portal-base/portal/config/bootstrap.php';
 $oContext = new ContextTag(ContextTag::TAG_PORTAL);
 $oContext2 = new ContextTag('Portal:'.$_ENV['PORTAL_ID']);
 
-
 $oKPI = new ExecutionKPI();
 
 // Note: Manually refactored ternary condition to be PHP 5.x compatible
@@ -52,10 +52,8 @@ $oResponse = $oKernel->handle($oRequest);
 $oResponse->send();
 $oKPI->ComputeAndReport('Page execution and rendering');
 
-
 $oKPI = new ExecutionKPI();
 $oKernel->terminate($oRequest, $oResponse);
 $oKPI->ComputeAndReport('Symfony kernel termination');
-
 
 ExecutionKPI::ReportStats();

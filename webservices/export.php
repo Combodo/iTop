@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -16,7 +17,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 
 /**
  * ⚠ Warning, this page is only kept for legacy usages : **it is not maintained anymore**
@@ -39,18 +39,13 @@ require_once(APPROOT.'/application/excelexporter.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-
 const EXIT_CODE_ERROR = -1;
 const EXIT_CODE_FATAL = -2;
 
-
-try
-{
+try {
 	// Do this before loging, in order to allow setting user credentials from within the file
 	utils::UseParamFile();
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
 	echo "Error: ".$e->GetMessage()."<br/>\n";
 	exit(EXIT_CODE_FATAL);
 }
@@ -59,39 +54,31 @@ catch(Exception $e)
  * @since 3.1.0 N°6047
  */
 $oCtx = new ContextTag(ContextTag::TAG_EXPORT);
-if (utils::IsModeCLI())
-{
+if (utils::IsModeCLI()) {
 	$oP = new CLIPage("iTop - Export");
 	SetupUtils::CheckPhpAndExtensionsForCli($oP, EXIT_CODE_FATAL);
 
 	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data');
 	$sAuthPwd = utils::ReadParam('auth_pwd', null, true /* Allow CLI */, 'raw_data');
 
-	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-	{
+	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
 		UserRights::Login($sAuthUser); // Login & set the user's language
-	}
-	else
-	{
+	} else {
 		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
 		$oP->output();
 		exit(EXIT_CODE_ERROR);
 	}
-}
-else
-{
+} else {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 }
 ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 
-
 $oAppContext = new ApplicationContext();
 $iActiveNodeId = utils::ReadParam('menu', -1);
 $currentOrganization = utils::ReadParam('org_id', '');
 
-if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive())
-{
+if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive()) {
 	$oP = new CLIPage("iTop - Export");
 	$oP->p("The user account is not authorized to access the archives");
 	$oP->output();
@@ -108,19 +95,15 @@ $bFieldsAdvanced = utils::ReadParam('fields_advanced', 0);
 
 $oQuery = null;
 
-if (strlen($sExpression) == 0)
-{
+if (strlen($sExpression) == 0) {
 	$sQueryId = trim(utils::ReadParam('query', '', true /* Allow CLI */, 'raw_data'));
-	if (strlen($sQueryId) > 0)
-	{
-		$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
+	if (strlen($sQueryId) > 0) {
+		$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', ['query_id' => $sQueryId]);
 		$oQueries = new DBObjectSet($oSearch);
-		if ($oQueries->Count() > 0)
-		{
+		if ($oQueries->Count() > 0) {
 			$oQuery = $oQueries->Fetch();
 			$sExpression = $oQuery->Get('oql');
-			if (strlen($sFields) == 0)
-			{
+			if (strlen($sFields) == 0) {
 				$sFields = trim($oQuery->Get('fields'));
 			}
 		}
@@ -129,38 +112,29 @@ if (strlen($sExpression) == 0)
 
 $sFormat = strtolower(utils::ReadParam('format', 'html', true /* Allow CLI */));
 
-
 $aFields = explode(',', $sFields);
 // Clean the list of columns (empty it if every string is empty)
-foreach($aFields as $index => $sField)
-{
+foreach ($aFields as $index => $sField) {
 	$aFields[$index] = trim($sField);
-	if(strlen($aFields[$index]) == 0)
-	{
+	if (strlen($aFields[$index]) == 0) {
 		unset($aFields[$index]);
 	}
 }
 
 $oP = null;
 
-if (!empty($sExpression))
-{
-	try
-	{
+if (!empty($sExpression)) {
+	try {
 		$oFilter = DBObjectSearch::FromOQL($sExpression);
 
 		// Check and adjust column names
 		//
-		$aAliasToFields = array();
-		foreach($aFields as $index => $sField)
-		{
-			if (preg_match('/^(.*)\.(.*)$/', $sField, $aMatches))
-			{
+		$aAliasToFields = [];
+		foreach ($aFields as $index => $sField) {
+			if (preg_match('/^(.*)\.(.*)$/', $sField, $aMatches)) {
 				$sClassAlias = $aMatches[1];
 				$sAttCode = $aMatches[2];
-			}
-			else
-			{
+			} else {
 				$sClassAlias = $oFilter->GetClassAlias();
 				$sAttCode = $sField;
 				// Disambiguate the class alias
@@ -169,17 +143,13 @@ if (!empty($sExpression))
 			$aAliasToFields[$sClassAlias][] = $sAttCode;
 
 			$sClass = $oFilter->GetClassName($sClassAlias);
-			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
+			if (!MetaModel::IsValidAttCode($sClass, $sAttCode)) {
 				throw new CoreException("Invalid field specification $sField: $sAttCode is not a valid attribute for $sClass");
 			}
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if ($oAttDef instanceof AttributeSubItem)
-			{
+			if ($oAttDef instanceof AttributeSubItem) {
 				$aAliasToFields[$sClassAlias][] = $oAttDef->GetParentAttCode();
-			}
-			else if($oAttDef instanceof AttributeExternalField && $oAttDef->IsFriendlyName())
-			{
+			} elseif ($oAttDef instanceof AttributeExternalField && $oAttDef->IsFriendlyName()) {
 				$sKeyAttCode = $oAttDef->GetKeyAttCode();
 				$aAliasToFields[$sClassAlias][] = $sKeyAttCode;
 			}
@@ -187,35 +157,29 @@ if (!empty($sExpression))
 
 		// Read query parameters
 		//
-		$aArgs = array();
-		foreach($oFilter->GetQueryParams() as $sParam => $foo)
-		{
+		$aArgs = [];
+		foreach ($oFilter->GetQueryParams() as $sParam => $foo) {
 			$value = utils::ReadParam('arg_'.$sParam, null, true, 'raw_data');
-			if (!is_null($value))
-			{
+			if (!is_null($value)) {
 				$aArgs[$sParam] = $value;
 			}
 		}
 		$oFilter->SetInternalParams($aArgs);
-		foreach ($oFilter->GetSelectedClasses() as $sAlias => $sClass)
-		{
-			if ((UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_READ) && UR_ALLOWED_YES) == 0)
-			{
+		foreach ($oFilter->GetSelectedClasses() as $sAlias => $sClass) {
+			if ((UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_READ) && UR_ALLOWED_YES) == 0) {
 				throw new Exception("The current user does not have permission for exporting data of class $sClass");
 			}
 		}
 
 		// update last export information if check parameters ok
-		if($oQuery != null){
+		if ($oQuery != null) {
 			$oQuery->UpdateLastExportInformation();
 		}
 
-		if ($oFilter)
-		{
-			$oSet = new CMDBObjectSet($oFilter, array(), $aArgs);
+		if ($oFilter) {
+			$oSet = new CMDBObjectSet($oFilter, [], $aArgs);
 			$oSet->OptimizeColumnLoad($aAliasToFields);
-			switch($sFormat)
-			{
+			switch ($sFormat) {
 				case 'html':
 					$oP = new NiceWebPage("iTop - Export");
 					$oP->add_style('body { overflow: auto; }'); // Show scroll bars if needed
@@ -243,7 +207,7 @@ if (!empty($sExpression))
 							$bViewLink = false;
 						}
 						$sFields = implode(',', $aFields);
-						$aExtraParams = array(
+						$aExtraParams = [
 							'menu' => false,
 							'toolkit_menu' => false,
 							'display_limit' => false,
@@ -251,15 +215,15 @@ if (!empty($sExpression))
 							'zlist' => false,
 							'extra_fields' => $sFields,
 							'view_link' => $bViewLink,
-						);
+						];
 					} else {
-						$aExtraParams = array(
+						$aExtraParams = [
 							'menu' => false,
 							'toolkit_menu' => false,
 							'display_limit' => false,
 							'localize_values' => $bLocalize,
 							'zlist' => 'details',
-						);
+						];
 					}
 
 					$oResultBlock = new DisplayBlock($oFilter, 'list', false, $aExtraParams);
@@ -267,105 +231,85 @@ if (!empty($sExpression))
 					break;
 
 				case 'csv':
-				$oP = new CSVPage("iTop - Export");
-				$sFields = implode(',', $aFields);
-				$sCharset = utils::ReadParam('charset', MetaModel::GetConfig()->Get('csv_file_default_charset'), true /* Allow CLI */, 'raw_data');
-				$sCSVData = cmdbAbstractObject::GetSetAsCSV($oSet, array('fields' => $sFields, 'fields_advanced' => $bFieldsAdvanced, 'localize_values' => $bLocalize), $sCharset);
-				if ($sCharset == 'UTF-8')
-				{
-					$sOutputData = UTF8_BOM.$sCSVData;
-				}
-				else
-				{
-					$sOutputData = $sCSVData;
-				}
-				if ($sFileName == '')
-				{
-					// Plain text => Firefox will NOT propose to download the file
-					$oP->add_header("Content-type: text/plain; charset=$sCharset");
-				}
-				else
-				{
-					$oP->add_header("Content-type: text/csv; charset=$sCharset");
-				}
-				$oP->add($sOutputData);
-				break;
+					$oP = new CSVPage("iTop - Export");
+					$sFields = implode(',', $aFields);
+					$sCharset = utils::ReadParam('charset', MetaModel::GetConfig()->Get('csv_file_default_charset'), true /* Allow CLI */, 'raw_data');
+					$sCSVData = cmdbAbstractObject::GetSetAsCSV($oSet, ['fields' => $sFields, 'fields_advanced' => $bFieldsAdvanced, 'localize_values' => $bLocalize], $sCharset);
+					if ($sCharset == 'UTF-8') {
+						$sOutputData = UTF8_BOM.$sCSVData;
+					} else {
+						$sOutputData = $sCSVData;
+					}
+					if ($sFileName == '') {
+						// Plain text => Firefox will NOT propose to download the file
+						$oP->add_header("Content-type: text/plain; charset=$sCharset");
+					} else {
+						$oP->add_header("Content-type: text/csv; charset=$sCharset");
+					}
+					$oP->add($sOutputData);
+					break;
 
 				case 'spreadsheet':
-				$oP = new WebPage("iTop - Export for spreadsheet");
+					$oP = new WebPage("iTop - Export for spreadsheet");
 
-				// Integration within MS-Excel web queries + HTTPS + IIS:
-				// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
-				// Then the fix is to force the reset of header values Pragma and Cache-control
-				header("Pragma:", true);
-				header("Cache-control:", true);
+					// Integration within MS-Excel web queries + HTTPS + IIS:
+					// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
+					// Then the fix is to force the reset of header values Pragma and Cache-control
+					header("Pragma:", true);
+					header("Cache-control:", true);
 
-				$sFields = implode(',', $aFields);
-				$oP->add_style('table br {mso-data-placement:same-cell;}'); // Trick for Excel: keep line breaks inside the same cell !
-				cmdbAbstractObject::DisplaySetAsHTMLSpreadsheet($oP, $oSet, array('fields' => $sFields, 'fields_advanced' => $bFieldsAdvanced, 'localize_values' => $bLocalize));
-				break;
+					$sFields = implode(',', $aFields);
+					$oP->add_style('table br {mso-data-placement:same-cell;}'); // Trick for Excel: keep line breaks inside the same cell !
+					cmdbAbstractObject::DisplaySetAsHTMLSpreadsheet($oP, $oSet, ['fields' => $sFields, 'fields_advanced' => $bFieldsAdvanced, 'localize_values' => $bLocalize]);
+					break;
 
 				case 'xml':
-				$oP = new XMLPage("iTop - Export", true /* passthrough */);
-				cmdbAbstractObject::DisplaySetAsXML($oP, $oSet, array('localize_values' => $bLocalize));
-				break;
+					$oP = new XMLPage("iTop - Export", true /* passthrough */);
+					cmdbAbstractObject::DisplaySetAsXML($oP, $oSet, ['localize_values' => $bLocalize]);
+					break;
 
 				case 'xlsx':
-				$oP = new AjaxPage('');
-				$oExporter = new ExcelExporter();
-				$oExporter->SetObjectList($oFilter);
+					$oP = new AjaxPage('');
+					$oExporter = new ExcelExporter();
+					$oExporter->SetObjectList($oFilter);
 
-				// Run the export by chunk of 1000 objects to limit memory usage
-				$oExporter->SetChunkSize(1000);
-				do
-				{
-					$aStatus = $oExporter->Run(); // process one chunk
-				}
-				while( ($aStatus['code'] != 'done') && ($aStatus['code'] != 'error'));
+					// Run the export by chunk of 1000 objects to limit memory usage
+					$oExporter->SetChunkSize(1000);
+					do {
+						$aStatus = $oExporter->Run(); // process one chunk
+					} while (($aStatus['code'] != 'done') && ($aStatus['code'] != 'error'));
 
-				if ($aStatus['code'] == 'done')
-				{
-					$oP->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-					$oP->SetContentDisposition('attachment', $oFilter->GetClass().'.xlsx');
-					$oP->add(file_get_contents($oExporter->GetExcelFilePath()));
-					$oExporter->Cleanup();
-				}
-				else
-				{
-					$oP->add('Error, xlsx export failed: '.$aStatus['message']);
-				}
-				break;
+					if ($aStatus['code'] == 'done') {
+						$oP->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+						$oP->SetContentDisposition('attachment', $oFilter->GetClass().'.xlsx');
+						$oP->add(file_get_contents($oExporter->GetExcelFilePath()));
+						$oExporter->Cleanup();
+					} else {
+						$oP->add('Error, xlsx export failed: '.$aStatus['message']);
+					}
+					break;
 
 				default:
-				$oP = new WebPage("iTop - Export");
-				$oP->add("Unsupported format '$sFormat'. Possible values are: html, csv, spreadsheet or xml.");
+					$oP = new WebPage("iTop - Export");
+					$oP->add("Unsupported format '$sFormat'. Possible values are: html, csv, spreadsheet or xml.");
 			}
 		}
-	}
-	catch(Exception $e)
-	{
+	} catch (Exception $e) {
 		$oP = new WebPage("iTop - Export");
 		$oP->p("Error the query can not be executed.");
-		if ($e instanceof CoreException)
-		{
+		if ($e instanceof CoreException) {
 			$oP->p($e->GetHtmlDesc());
-		}
-		else
-		{
+		} else {
 			$oP->p($e->getMessage());
 		}
 	}
 }
-if (!$oP)
-{
+if (!$oP) {
 	// Display a short message about how to use this page
 	$bModeCLI = utils::IsModeCLI();
-	if ($bModeCLI)
-	{
+	if ($bModeCLI) {
 		$oP = new CLIPage("iTop - Export");
-	}
-	else
-	{
+	} else {
 		$oP = new WebPage("iTop - Export");
 	}
 	$oP->p("General purpose export page.");
@@ -384,11 +328,9 @@ if (!$oP)
 	$oP->p(" * filename: (optional, no effect in CLI mode) if set then the results will be downloaded as a file");
 }
 
-if ($sFileName != '')
-{
+if ($sFileName != '') {
 	$oP->add_header('Content-Disposition: attachment; filename="'.$sFileName.'"');
 }
 
 $oP->TrashUnexpectedOutput();
 $oP->output();
-?>

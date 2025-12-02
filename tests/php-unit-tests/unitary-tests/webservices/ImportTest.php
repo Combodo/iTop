@@ -5,8 +5,9 @@ namespace Combodo\iTop\Test\UnitTest\Webservices;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
-class ImportTest extends ItopDataTestCase {
-	const USE_TRANSACTION = false;
+class ImportTest extends ItopDataTestCase
+{
+	public const USE_TRANSACTION = false;
 
 	private $sUrl;
 	private $sUid;
@@ -15,30 +16,31 @@ class ImportTest extends ItopDataTestCase {
 	private $sTmpFile = "";
 	private $oOrg;
 
-	protected function tearDown() : void{
+	protected function tearDown(): void
+	{
 		parent::tearDown();
-		if (!empty($this->sTmpFile) && is_file($this->sTmpFile)){
+		if (!empty($this->sTmpFile) && is_file($this->sTmpFile)) {
 			unlink($this->sTmpFile);
 		}
 	}
 
-	protected function setUp() : void{
+	protected function setUp(): void
+	{
 		parent::setUp();
 
 		$this->sTmpFile = tempnam(sys_get_temp_dir(), 'import_csv_');
 
 		require_once(APPROOT.'application/startup.inc.php');
 		$this->sUid = date('dmYHis');
-		$this->sLogin = "import-" .$this->sUid;
+		$this->sLogin = "import-".$this->sUid;
 		$this->oOrg = $this->CreateOrganization($this->sUid);
 
 		$this->sUrl = \MetaModel::GetConfig()->Get('app_root_url');
 
-		$oRestProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
-		$oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
+		$oRestProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'REST Services User'], true);
+		$oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'Administrator'], true);
 
-		if (is_object($oRestProfile) && is_object($oAdminProfile))
-		{
+		if (is_object($oRestProfile) && is_object($oAdminProfile)) {
 			$oUser = $this->CreateContactlessUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
 			$this->AddProfileToUser($oUser, $oAdminProfile->GetKey());
 		} else {
@@ -46,7 +48,8 @@ class ImportTest extends ItopDataTestCase {
 		}
 	}
 
-	public function ImportOkProvider(){
+	public function ImportOkProvider()
+	{
 		return [
 			'with reconciliation key' => [ "sReconciliationKeys" => "name,first_name,org_id->name" ],
 			'without reconciliation key' => [ "sReconciliationKeys" => null ],
@@ -55,7 +58,8 @@ class ImportTest extends ItopDataTestCase {
 	/**
 	 * @dataProvider ImportOkProvider
 	 */
-	public function testImportOk($sReconciliationKeys){
+	public function testImportOk($sReconciliationKeys)
+	{
 		$sFirstName = "firstname_UID";
 		$sLastName = "lastname_UID";
 		$sEmail = "email_UID@toto.fr";
@@ -70,15 +74,16 @@ class ImportTest extends ItopDataTestCase {
 		);
 	}
 
-	public function ImportFailProvider(){
+	public function ImportFailProvider()
+	{
 		return [
 			'without reconciliation key' => [
 				"sReconciliationKeys" => null,
-				"sExpectedLastLineNeedle" => 'Issue: Unexpected attribute value(s);n/a;n/a;No match for value \'gabuzomeu\'. Some possible \'Organization\' value(s): '
+				"sExpectedLastLineNeedle" => 'Issue: Unexpected attribute value(s);n/a;n/a;No match for value \'gabuzomeu\'. Some possible \'Organization\' value(s): ',
 			],
 			'with reconciliation key' => [
 				"sReconciliationKeys" => "name,first_name,org_id->name",
-				"sExpectedLastLineNeedle" => 'Issue: failed to reconcile;n/a;n/a;No match for value \'gabuzomeu\'. Some possible \'Organization\' value(s): '
+				"sExpectedLastLineNeedle" => 'Issue: failed to reconcile;n/a;n/a;No match for value \'gabuzomeu\'. Some possible \'Organization\' value(s): ',
 			],
 		];
 	}
@@ -86,7 +91,8 @@ class ImportTest extends ItopDataTestCase {
 	 * @dataProvider ImportFailProvider
 	 */
 
-	public function testImportFail_ExternalKey($sReconciliationKeys, $sExpectedLastLineNeedle){
+	public function testImportFail_ExternalKey($sReconciliationKeys, $sExpectedLastLineNeedle)
+	{
 		$sFirstName = "firstname_UID";
 		$sLastName = "lastname_UID";
 		$sEmail = "email_UID@toto.fr";
@@ -101,7 +107,8 @@ class ImportTest extends ItopDataTestCase {
 		);
 	}
 
-	public function testImportFail_Enum(){
+	public function testImportFail_Enum()
+	{
 		$sFirstName = "firstname_UID";
 		$sLastName = "lastname_UID";
 		$sEmail = "email_UID@toto.fr";
@@ -110,7 +117,10 @@ class ImportTest extends ItopDataTestCase {
 			'"first_name","name", "email", "org_id->name", status',
 			sprintf('"%s", "%s", "%s", UID, toto', $sFirstName, $sLastName, $sEmail),
 			sprintf(
-				'Issue: Unexpected attribute value(s);n/a;n/a;ORGID;"%s";"%s";"%s";\'toto\' is an invalid value. Unexpected value for attribute \'status\': Value not allowed [toto]', $sFirstName, $sLastName, $sEmail
+				'Issue: Unexpected attribute value(s);n/a;n/a;ORGID;"%s";"%s";"%s";\'toto\' is an invalid value. Unexpected value for attribute \'status\': Value not allowed [toto]',
+				$sFirstName,
+				$sLastName,
+				$sEmail
 			),
 			null,
 			1,
@@ -118,7 +128,8 @@ class ImportTest extends ItopDataTestCase {
 		);
 	}
 
-	public function testImportFail_Date(){
+	public function testImportFail_Date()
+	{
 		$sFirstName = "firstname_UID";
 		$sLastName = "lastname_UID";
 		$sEmail = "email_UID@toto.fr";
@@ -127,7 +138,10 @@ class ImportTest extends ItopDataTestCase {
 			'"first_name","name", "email", "org_id->name", obsolescence_date',
 			sprintf('"%s", "%s", "%s", UID, toto', $sFirstName, $sLastName, $sEmail),
 			sprintf(
-				'Issue: Internal error: CoreUnexpectedValue, Wrong format for date attribute obsolescence_date, expecting "Y-m-d" and got "toto";n/a;n/a;n/a;%s;%s;%s;toto', $sFirstName, $sLastName, $sEmail
+				'Issue: Internal error: CoreUnexpectedValue, Wrong format for date attribute obsolescence_date, expecting "Y-m-d" and got "toto";n/a;n/a;n/a;%s;%s;%s;toto',
+				$sFirstName,
+				$sLastName,
+				$sEmail
 			),
 			null,
 			1,
@@ -135,7 +149,8 @@ class ImportTest extends ItopDataTestCase {
 		);
 	}
 
-	private function performImportTesting($sCsvHeaders, $sCsvFirstLineValues, $sExpectedLastLineNeedle, $sReconciliationKeys=null, $iExpectedIssue=1, $iExpectedCreated=0) {
+	private function performImportTesting($sCsvHeaders, $sCsvFirstLineValues, $sExpectedLastLineNeedle, $sReconciliationKeys = null, $iExpectedIssue = 1, $iExpectedCreated = 0)
+	{
 		$sContent = <<<CSVFILE
 $sCsvHeaders
 $sCsvFirstLineValues
@@ -150,7 +165,7 @@ CSVFILE;
 			'output' => 'details',
 		];
 
-		if (null != $sReconciliationKeys){
+		if (null != $sReconciliationKeys) {
 			$aParams["reconciliationkeys"] = $sReconciliationKeys;
 		}
 
@@ -171,13 +186,13 @@ CSVFILE;
 
 		$iOrgId = $this->oOrg->GetKey();
 		$sLastLineNeedle = $sExpectedLastLineNeedle;
-		foreach (["ORGID" => $iOrgId, "UID" => $this->sUid] as $sSearch => $sReplace){
+		foreach (["ORGID" => $iOrgId, "UID" => $this->sUid] as $sSearch => $sReplace) {
 			$sLastLineNeedle = str_replace($sSearch, $sReplace, $sLastLineNeedle);
 		}
 		$this->assertStringContainsString($sLastLineNeedle, $sLastline, 'The script we launched in an external process returned a value different than the expected error message');
 
 		$sPattern = "/Person;(\d+);/";
-		if (preg_match($sPattern,$sLastline,$aMatches)){
+		if (preg_match($sPattern, $sLastline, $aMatches)) {
 			var_dump($aMatches);
 			$iObjId  = $aMatches[1];
 			$oObj = MetaModel::GetObject("Person", $iObjId);

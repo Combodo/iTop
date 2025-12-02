@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:IncidentManagement' => 'インシデント管理',
 	'Menu:IncidentManagement+' => 'インシデント管理',
 	'Menu:Incident:Overview' => '概要',
@@ -31,8 +32,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => '状態別オープンインシデント',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'エージェント別オープンインシデント',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => '顧客別オープンインシデント',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -48,7 +48,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 // Class: Incident
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Incident' => 'インシデント',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => '状態',
@@ -227,4 +227,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-));
+]);

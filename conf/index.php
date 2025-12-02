@@ -1,2 +1,3 @@
 <?php
+
 echo 'Access denied';

@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Spanish Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ProblemManagement' => 'Administración de Problemas',
 	'Menu:ProblemManagement+' => 'Administración de Problemas',
 	'Menu:Problem:Overview' => 'Resumen de problemas',
@@ -30,12 +31,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Panel de Control de Administración de Problemas',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Panel de Control de Administración de Problemas',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Problem' => 'Problema',
 	'Class:Problem+' => 'Problema',
 	'Class:Problem/Attribute:status' => 'Estatus',
@@ -108,4 +109,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Problem/Stimulus:ev_resolve+' => 'Solucionar',
 	'Class:Problem/Stimulus:ev_close' => 'Cerrar',
 	'Class:Problem/Stimulus:ev_close+' => 'Cerrar',
-));
+]);

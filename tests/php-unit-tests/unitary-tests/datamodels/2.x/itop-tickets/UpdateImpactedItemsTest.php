@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -25,7 +26,6 @@ use MetaModel;
 use Organization;
 use UserRights;
 
-
 /**
  * @group itopVirtualizationMgmt
  * @group itopConfigMgmt
@@ -33,7 +33,7 @@ use UserRights;
  */
 class UpdateImpactedItemsTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
+	public const CREATE_TEST_ORG = true;
 	/**
 	 * @var Object Names to Ids
 	 */
@@ -63,7 +63,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 			Server_1 <-> Person_1
 		EOF);
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
-			'Server_1' => 'manual'
+			'Server_1' => 'manual',
 		]);
 
 		$oTicket->UpdateImpactedItems(); // impact analysis
@@ -71,7 +71,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		$this->assertCIsOrPersonsListEquals($oTicket, [
 			'Server_1' => 'manual',
 			'Hypervisor_1' => 'computed',
-			'Test Person_1' => 'computed'
+			'Test Person_1' => 'computed',
 		]);
 	}
 
@@ -84,7 +84,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 			Hypervisor_1 -> Server_1
 		EOF);
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
-			'Hypervisor_1' => 'manual'
+			'Hypervisor_1' => 'manual',
 		]);
 
 		$oTicket->UpdateImpactedItems(); // impact analysis
@@ -104,7 +104,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 			Farm_1 <-> Person_1
 		EOF);
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
-			'Server_1' => 'manual'
+			'Server_1' => 'manual',
 		]);
 
 		$oTicket->UpdateImpactedItems(); // impact analysis
@@ -113,7 +113,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 			'Server_1' => 'manual',
 			'Hypervisor_1' => 'computed',
 			'Farm_1' => 'computed',
-			'Test Person_1' => 'computed'
+			'Test Person_1' => 'computed',
 		]);
 	}
 
@@ -127,7 +127,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		EOF);
 		$this->GivenCINotAllowedToCurrentUser('Hypervisor_1');
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
-			'Server_1' => 'manual'
+			'Server_1' => 'manual',
 		]);
 
 		MetaModel::GetConfig()->Set('relations.complete_analysis', false);
@@ -149,7 +149,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		EOF);
 		$this->GivenCINotAllowedToCurrentUser('Hypervisor_1');
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
-			'Server_1' => 'manual'
+			'Server_1' => 'manual',
 		]);
 
 		MetaModel::GetConfig()->Set('relations.complete_analysis', true);
@@ -210,7 +210,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 			'Hypervisor_1' => 'manual',
 			'Hypervisor_2' => 'manual',
 			'Farm_1' => 'computed',
-			'Test Person_1' => 'computed'
+			'Test Person_1' => 'computed',
 		]);
 	}
 	public function testPreviouslyComputedNodesShouldBeIgnored()
@@ -228,7 +228,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
 			'Server_1' => 'manual',
 			'Server_2' => 'computed',
-			'Person_2' => 'computed'
+			'Person_2' => 'computed',
 		]);
 
 		$oTicket->UpdateImpactedItems(); // impact analysis
@@ -236,7 +236,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		$this->assertCIsOrPersonsListEquals($oTicket, [
 			'Server_1' => 'manual',
 			'Hypervisor_1' => 'computed',
-			'Test Person_1' => 'computed'
+			'Test Person_1' => 'computed',
 		]);
 	}
 
@@ -251,14 +251,13 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		EOF);
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
 			'Hypervisor_1' => 'computed',
-			'Person_1' => 'computed'
+			'Person_1' => 'computed',
 		]);
 
 		$oTicket->UpdateImpactedItems(); // impact analysis
 
 		$this->assertCIsOrPersonsListEquals($oTicket, []);
 	}
-
 
 	public function testNoImpactWhenNoCI()
 	{
@@ -281,13 +280,13 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 			Hypervisor_2 -> Farm_1
 		DOT);
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
-			'Hypervisor_1' => 'manual'
+			'Hypervisor_1' => 'manual',
 		]);
 
 		$oTicket->UpdateImpactedItems(); // impact analysis
 
 		$this->assertCIsOrPersonsListEquals($oTicket, [
-			'Hypervisor_1' => 'manual'
+			'Hypervisor_1' => 'manual',
 		]);
 	}
 
@@ -304,7 +303,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		DOT);
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
 			'Hypervisor_1' => 'manual',
-			'Hypervisor_2' => 'manual'
+			'Hypervisor_2' => 'manual',
 		]);
 
 		$oTicket->UpdateImpactedItems(); // impact analysis
@@ -312,7 +311,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		$this->assertCIsOrPersonsListEquals($oTicket, [
 			'Hypervisor_1' => 'manual',
 			'Hypervisor_2' => 'manual',
-			'Farm_1' => 'computed'
+			'Farm_1' => 'computed',
 		]);
 	}
 
@@ -329,7 +328,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
 			'Server_1' => 'manual',
 			'Hypervisor_1' => 'not_impacted',
-			'Person_1' => 'do_not_notify'
+			'Person_1' => 'do_not_notify',
 		]);
 
 		$oTicket->UpdateImpactedItems(); // impact analysis
@@ -337,7 +336,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		$this->assertCIsOrPersonsListEquals($oTicket, [
 			'Server_1' => 'manual',
 			'Hypervisor_1' => 'not_impacted',
-			'Test Person_1' => 'do_not_notify'
+			'Test Person_1' => 'do_not_notify',
 		]);
 	}
 
@@ -351,14 +350,14 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		DOT);
 		$oTicket = $this->GivenTicketWithCIsOrPersons([
 			'Hypervisor_1' => 'not_impacted',
-			'Person_1' => 'do_not_notify'
+			'Person_1' => 'do_not_notify',
 		]);
 
 		$oTicket->UpdateImpactedItems(); // impact analysis
 
 		$this->assertCIsOrPersonsListEquals($oTicket, [
 			'Hypervisor_1' => 'not_impacted',
-			'Test Person_1' => 'do_not_notify'
+			'Test Person_1' => 'do_not_notify',
 		]);
 	}
 
@@ -414,7 +413,6 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		}
 		$this->assertEquals($aExpected, $aActual, 'Unexpected value for functionalcis_list');
 	}
-
 
 	/**
 	 * @param int|string|null $sTicketId
@@ -489,7 +487,7 @@ class UpdateImpactedItemsTest extends ItopDataTestCase
 		return $this->aCIs[$sDescriptor];
 	}
 
-	private function GivenTicketWithCIsOrPersons(array $aLinkedObjects) : \UserRequest
+	private function GivenTicketWithCIsOrPersons(array $aLinkedObjects): \UserRequest
 	{
 		$oTicket = $this->GivenTicketObject(1);
 		foreach ($aLinkedObjects as $sObjectDescriptor => $sRole) {

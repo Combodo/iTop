@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -16,7 +17,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * DB Server abstraction
  *
@@ -29,7 +29,6 @@ use Combodo\iTop\Core\DbConnectionWrapper;
 require_once('MyHelpers.class.inc.php');
 require_once(APPROOT.'core/kpi.class.inc.php');
 
-
 /**
  * CMDBSource
  * database access wrapper
@@ -38,26 +37,26 @@ require_once(APPROOT.'core/kpi.class.inc.php');
  */
 class CMDBSource
 {
-	const ENUM_DB_VENDOR_MYSQL = 'MySQL';
-	const ENUM_DB_VENDOR_MARIADB = 'MariaDB';
-	const ENUM_DB_VENDOR_PERCONA = 'Percona';
+	public const ENUM_DB_VENDOR_MYSQL = 'MySQL';
+	public const ENUM_DB_VENDOR_MARIADB = 'MariaDB';
+	public const ENUM_DB_VENDOR_PERCONA = 'Percona';
 
 	/**
 	 * @since 2.7.10 3.0.4 3.1.2 3.0.2 N°6889 constant creation
 	 * @internal will be removed in a future version
 	 */
-	const MYSQL_DEFAULT_PORT = 3306;
+	public const MYSQL_DEFAULT_PORT = 3306;
 
 	/**
 	 * Error: 1205 SQLSTATE: HY000 (ER_LOCK_WAIT_TIMEOUT)
 	 *   Message: Lock wait timeout exceeded; try restarting transaction
 	 */
-	const MYSQL_ERRNO_WAIT_TIMEOUT = 1205;
+	public const MYSQL_ERRNO_WAIT_TIMEOUT = 1205;
 	/**
 	 * Error: 1213 SQLSTATE: 40001 (ER_LOCK_DEADLOCK)
 	 *   Message: Deadlock found when trying to get lock; try restarting transaction
 	 */
-	const MYSQL_ERRNO_DEADLOCK = 1213;
+	public const MYSQL_ERRNO_DEADLOCK = 1213;
 
 	protected static $m_sDBHost;
 	protected static $m_sDBUser;
@@ -128,9 +127,13 @@ class CMDBSource
 	 * @throws \MySQLException
 	 */
 	public static function Init(
-		$sServer, $sUser, $sPwd, $sSource = '', $bTlsEnabled = false, $sTlsCA = null
-	)
-	{
+		$sServer,
+		$sUser,
+		$sPwd,
+		$sSource = '',
+		$bTlsEnabled = false,
+		$sTlsCA = null
+	) {
 		self::$m_sDBHost = $sServer;
 		self::$m_sDBUser = $sUser;
 		self::$m_sDBPwd = $sPwd;
@@ -157,7 +160,13 @@ class CMDBSource
 	 * @uses IsOpenedDbConnectionUsingTls when asking for a TLS connection, to check if it was really opened using TLS
 	 */
 	public static function GetMysqliInstance(
-		$sDbHost, $sUser, $sPwd, $sSource = '', $bTlsEnabled = false, $sTlsCa = null, $bCheckTlsAfterConnection = false
+		$sDbHost,
+		$sUser,
+		$sPwd,
+		$sSource = '',
+		$bTlsEnabled = false,
+		$sTlsCa = null,
+		$bCheckTlsAfterConnection = false
 	) {
 		$sServer = null;
 		$iPort = null;
@@ -169,12 +178,10 @@ class CMDBSource
 		// but some other errors will still cause the query() method to return false !!!
 		mysqli_report(MYSQLI_REPORT_STRICT);
 
-		try
-		{
+		try {
 			$oMysqli = new mysqli();
 
-			if ($bTlsEnabled)
-			{
+			if ($bTlsEnabled) {
 				$iFlags = (empty($sTlsCa))
 					? MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT
 					: MYSQLI_CLIENT_SSL;
@@ -184,31 +191,31 @@ class CMDBSource
 				$oMysqli->ssl_set($bTlsEnabled, $sTlsCert, $sTlsCa, $sTlsCaPath, $sTlsCipher);
 			}
 			$oMysqli->real_connect($sServer, $sUser, $sPwd, '', $iPort, ini_get("mysqli.default_socket"), $iFlags);
-		}
-		catch(mysqli_sql_exception $e)
-		{
-			throw new MySQLException('Could not connect to the DB server', array('host' => $sServer, 'user' => $sUser),$e);
+		} catch (mysqli_sql_exception $e) {
+			throw new MySQLException('Could not connect to the DB server', ['host' => $sServer, 'user' => $sUser], $e);
 		}
 
 		if ($bTlsEnabled
 			&& $bCheckTlsAfterConnection
-			&& !self::IsOpenedDbConnectionUsingTls($oMysqli))
-		{
-			throw new MySQLException("Connection to the database is not encrypted whereas it was opened using TLS parameters",
-				null, null, $oMysqli);
+			&& !self::IsOpenedDbConnectionUsingTls($oMysqli)) {
+			throw new MySQLException(
+				"Connection to the database is not encrypted whereas it was opened using TLS parameters",
+				null,
+				null,
+				$oMysqli
+			);
 		}
 
-		if (!empty($sSource))
-		{
-			try
-			{
+		if (!empty($sSource)) {
+			try {
 				mysqli_report(MYSQLI_REPORT_STRICT); // Errors, in the next query, will throw mysqli_sql_exception
 				$oMysqli->query("USE `$sSource`");
-			}
-			catch(mysqli_sql_exception $e)
-			{
-				throw new MySQLException('Could not select DB',
-					array('host' => $sServer, 'user' => $sUser, 'db_name' => $sSource), $e);
+			} catch (mysqli_sql_exception $e) {
+				throw new MySQLException(
+					'Could not select DB',
+					['host' => $sServer, 'user' => $sUser, 'db_name' => $sSource],
+					$e
+				);
 			}
 		}
 
@@ -229,23 +236,17 @@ class CMDBSource
 		$aConnectInfo = explode(':', $sDbHost);
 
 		$bUsePersistentConnection = false;
-		if (strcasecmp($aConnectInfo[0], 'p') === 0)
-		{
+		if (strcasecmp($aConnectInfo[0], 'p') === 0) {
 			$bUsePersistentConnection = true;
 			$sServer = $aConnectInfo[0].':'.$aConnectInfo[1];
-		}
-		else
-		{
+		} else {
 			$sServer = $aConnectInfo[0];
 		}
 
 		$iConnectInfoCount = count($aConnectInfo);
-		if ($bUsePersistentConnection && ($iConnectInfoCount == 3))
-		{
+		if ($bUsePersistentConnection && ($iConnectInfoCount == 3)) {
 			$iPort = (int)($aConnectInfo[2]);
-		}
-		else if (!$bUsePersistentConnection && ($iConnectInfoCount == 2))
-		{
+		} elseif (!$bUsePersistentConnection && ($iConnectInfoCount == 2)) {
 			$iPort = (int)($aConnectInfo[1]);
 		}
 	}
@@ -287,12 +288,9 @@ class CMDBSource
 	 */
 	private static function IsMySqlVarNonEmpty($sVarName, $oMysqli)
 	{
-		try
-		{
+		try {
 			$sResult = self::QueryToScalar("SHOW SESSION STATUS LIKE '$sVarName'", 1, $oMysqli);
-		}
-		catch (MySQLQueryHasNoResultException $e)
-		{
+		} catch (MySQLQueryHasNoResultException $e) {
 			$sResult = null;
 		}
 
@@ -301,14 +299,10 @@ class CMDBSource
 
 	public static function SetCharacterSet($sCharset = DEFAULT_CHARACTER_SET, $sCollation = DEFAULT_COLLATION)
 	{
-		if (strlen($sCharset) > 0)
-		{
-			if (strlen($sCollation) > 0)
-			{
+		if (strlen($sCharset) > 0) {
+			if (strlen($sCollation) > 0) {
 				self::Query("SET NAMES '$sCharset' COLLATE '$sCollation'");
-			}
-			else
-			{
+			} else {
 				self::Query("SET NAMES '$sCharset'");
 			}
 		}
@@ -318,8 +312,7 @@ class CMDBSource
 	{
 		// Note: requires the installation of MySQL special tables,
 		//       otherwise, only 'SYSTEM' or "+10:00' may be specified which is NOT sufficient because of day light saving times
-		if (!is_null($sTimezone))
-		{
+		if (!is_null($sTimezone)) {
 			$sQuotedTimezone = self::Quote($sTimezone);
 			self::Query("SET time_zone = $sQuotedTimezone");
 		}
@@ -334,18 +327,16 @@ class CMDBSource
 
 	public static function IsDB($sSource)
 	{
-		try
-		{
+		try {
 			$aDBs = self::ListDB();
-			foreach($aDBs as $sDBName)
-			{
-			// perform a case insensitive test because on Windows the table names become lowercase :-(
-				if (strtolower($sDBName) == strtolower($sSource)) return true;
+			foreach ($aDBs as $sDBName) {
+				// perform a case insensitive test because on Windows the table names become lowercase :-(
+				if (strtolower($sDBName) == strtolower($sSource)) {
+					return true;
+				}
 			}
 			return false;
-		}
-		catch(Exception $e)
-		{
+		} catch (Exception $e) {
 			// In case we don't have rights to enumerate the databases
 			// Let's try to connect directly
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
@@ -386,13 +377,10 @@ class CMDBSource
 	{
 		$sDBVendor = static::ENUM_DB_VENDOR_MYSQL;
 
-		$sVersionComment = static::GetServerVariable('version') .  ' - ' . static::GetServerVariable('version_comment');
-		if(preg_match('/mariadb/i', $sVersionComment) === 1)
-		{
+		$sVersionComment = static::GetServerVariable('version').' - '.static::GetServerVariable('version_comment');
+		if (preg_match('/mariadb/i', $sVersionComment) === 1) {
 			$sDBVendor = static::ENUM_DB_VENDOR_MARIADB;
-		}
-		else if(preg_match('/percona/i', $sVersionComment) === 1)
-		{
+		} elseif (preg_match('/percona/i', $sVersionComment) === 1) {
 			$sDBVendor = static::ENUM_DB_VENDOR_PERCONA;
 		}
 
@@ -408,7 +396,7 @@ class CMDBSource
 	{
 		/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
 		if (!((bool)DbConnectionWrapper::GetDbConnection(true)->query("USE `$sSource`"))) {
-			throw new MySQLException('Could not select DB', array('db_name' => $sSource));
+			throw new MySQLException('Could not select DB', ['db_name' => $sSource]);
 		}
 		self::$m_sDBName = $sSource;
 	}
@@ -427,13 +415,11 @@ class CMDBSource
 
 	public static function DropDB($sDBToDrop = '')
 	{
-		if (empty($sDBToDrop))
-		{
+		if (empty($sDBToDrop)) {
 			$sDBToDrop = self::$m_sDBName;
 		}
 		self::Query("DROP DATABASE `$sDBToDrop`");
-		if ($sDBToDrop == self::$m_sDBName)
-		{
+		if ($sDBToDrop == self::$m_sDBName) {
 			self::$m_sDBName = '';
 		}
 		self::_TablesInfoCacheReset(); // reset the table info cache!
@@ -486,10 +472,22 @@ class CMDBSource
 		}
 	}
 
-	public static function DBHost() {return self::$m_sDBHost;}
-	public static function DBUser() {return self::$m_sDBUser;}
-	public static function DBPwd() {return self::$m_sDBPwd;}
-	public static function DBName() {return self::$m_sDBName;}
+	public static function DBHost()
+	{
+		return self::$m_sDBHost;
+	}
+	public static function DBUser()
+	{
+		return self::$m_sDBUser;
+	}
+	public static function DBPwd()
+	{
+		return self::$m_sDBPwd;
+	}
+	public static function DBName()
+	{
+		return self::$m_sDBName;
+	}
 
 	/**
 	 * Quote variable and protect against SQL injection attacks
@@ -504,24 +502,20 @@ class CMDBSource
 	 */
 	public static function Quote($value, $bAlways = false, $cQuoteStyle = "'")
 	{
-		if (is_null($value))
-		{
+		if (is_null($value)) {
 			return 'NULL';
 		}
 
-		if (is_array($value))
-		{
-			$aRes = array();
-			foreach ($value as $key => $itemvalue)
-			{
+		if (is_array($value)) {
+			$aRes = [];
+			foreach ($value as $key => $itemvalue) {
 				$aRes[$key] = self::Quote($itemvalue, $bAlways, $cQuoteStyle);
 			}
 			return $aRes;
 		}
 
 		// Quote if not a number or a numeric string
-		if ($bAlways || is_string($value))
-		{
+		if ($bAlways || is_string($value)) {
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
 			$value = $cQuoteStyle.DbConnectionWrapper::GetDbConnection()->real_escape_string($value).$cQuoteStyle;
 		}
@@ -538,8 +532,7 @@ class CMDBSource
 	 */
 	private static function RemoveSurroundingQuotes($sValue)
 	{
-		if (utils::StartsWith($sValue, '\'') && utils::EndsWith($sValue, '\''))
-		{
+		if (utils::StartsWith($sValue, '\'') && utils::EndsWith($sValue, '\'')) {
 			$sValue = substr($sValue, 1, -1);
 		}
 
@@ -549,33 +542,29 @@ class CMDBSource
 	/**
 	 * @param string $sSQLQuery
 	 *
-     * @return mysqli_result|null
-     * @throws MySQLException
-     * @throws MySQLHasGoneAwayException
+	 * @return mysqli_result|null
+	 * @throws MySQLException
+	 * @throws MySQLHasGoneAwayException
 	 *
 	 * @since 2.7.0 N°679 handles nested transactions
 	 */
 	public static function Query($sSQLQuery)
 	{
-		if (preg_match('/^START TRANSACTION;?$/i', $sSQLQuery))
-		{
+		if (preg_match('/^START TRANSACTION;?$/i', $sSQLQuery)) {
 			self::StartTransaction();
 
 			return null;
 		}
-		if (preg_match('/^COMMIT;?$/i', $sSQLQuery))
-		{
+		if (preg_match('/^COMMIT;?$/i', $sSQLQuery)) {
 			self::Commit();
 
 			return null;
 		}
-		if (preg_match('/^ROLLBACK;?$/i', $sSQLQuery))
-		{
+		if (preg_match('/^ROLLBACK;?$/i', $sSQLQuery)) {
 			self::Rollback();
 
 			return null;
 		}
-
 
 		return self::DBQuery($sSQLQuery);
 	}
@@ -603,20 +592,17 @@ class CMDBSource
 		}
 
 		$oKPI = new ExecutionKPI();
-		try
-		{
+		try {
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
 			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
-		}
-		catch (mysqli_sql_exception $e)
-		{
+		} catch (mysqli_sql_exception $e) {
 			self::LogDeadLock($e, true);
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
+			throw new MySQLException('Failed to issue SQL query', ['query' => $sSql, $e, 'stack' => $e->getTraceAsString()]);
 		} finally {
-            $oKPI->ComputeStats('Query exec (mySQL)', $sSql);
-        }
+			$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
+		}
 		if ($oResult === false) {
-			$aContext = array('query' => $sSql);
+			$aContext = ["\nstack" => (new Exception(''))->getTraceAsString(), "\nquery" => $sSql];
 
 			$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection(true)->errno;
 			$aMySqlHasGoneAwayErrorCodes = MySQLHasGoneAwayException::getErrorCodes();
@@ -645,7 +631,7 @@ class CMDBSource
 		// checks MySQL error code
 		if ($bCheckMysqliErrno) {
 			$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection($bForQuery)->errno;
-			if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK))) {
+			if (!in_array($iMySqlErrorNo, [self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK])) {
 				return;
 			}
 		} else {
@@ -659,21 +645,19 @@ class CMDBSource
 		if ($oError !== false) {
 			$aData = $oError->fetch_all(MYSQLI_ASSOC);
 			$sInnodbStatus = $aData[0];
-		}
-		else
-		{
+		} else {
 			$sInnodbStatus = 'Get status query cannot execute';
 		}
 
 		// log !
 		$sMessage = "deadlock detected: user= $sUser; errno=$iMySqlErrorNo";
-		$aLogContext = array(
+		$aLogContext = [
 			'userinfo' => $sUser,
 			'errno' => $iMySqlErrorNo,
 			'ex_msg' => $e->getMessage(),
 			'callstack' => $e->getTraceAsString(),
 			'data' => $sInnodbStatus,
-		);
+		];
 		DeadLockLog::Info($sMessage, $iMySqlErrorNo, $aLogContext);
 
 		IssueLog::Error($sMessage, LogChannels::DEADLOCK, [
@@ -695,7 +679,7 @@ class CMDBSource
 	 */
 	private static function StartTransaction()
 	{
-		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
+		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 3);
 
 		$bHasExistingTransactions = self::IsInsideTransaction();
 		if (!$bHasExistingTransactions) {
@@ -720,8 +704,8 @@ class CMDBSource
 	 */
 	private static function Commit()
 	{
-		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		if(isset($aStackTrace[2]['class']) && isset($aStackTrace[2]['function'])) {
+		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 3);
+		if (isset($aStackTrace[2]['class']) && isset($aStackTrace[2]['function'])) {
 			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
 		} else {
 			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].') ';
@@ -758,8 +742,8 @@ class CMDBSource
 	 */
 	private static function Rollback()
 	{
-		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		if(isset($aStackTrace[2]['class']) && isset($aStackTrace[2]['function'])) {
+		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 3);
+		if (isset($aStackTrace[2]['class']) && isset($aStackTrace[2]['function'])) {
 			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
 		} else {
 			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].') ';
@@ -808,8 +792,7 @@ class CMDBSource
 	 */
 	private static function RemoveLastTransactionLevel()
 	{
-		if (self::$m_iTransactionLevel === 0)
-		{
+		if (self::$m_iTransactionLevel === 0) {
 			return;
 		}
 
@@ -837,12 +820,10 @@ class CMDBSource
 		return false;
 	}
 
-
 	public static function GetInsertId()
 	{
 		$iRes = DbConnectionWrapper::GetDbConnection()->insert_id;
-		if (is_null($iRes))
-		{
+		if (is_null($iRes)) {
 			return 0;
 		}
 		return $iRes;
@@ -850,8 +831,7 @@ class CMDBSource
 
 	public static function InsertInto($sSQLQuery)
 	{
-		if (self::Query($sSQLQuery))
-		{
+		if (self::Query($sSQLQuery)) {
 			return self::GetInsertId();
 		}
 		return false;
@@ -887,30 +867,25 @@ class CMDBSource
 		try {
 			/** @noinspection NullPointerExceptionInspection this shouldn't happen : either cnx is passed or the DB was init */
 			$oResult = $oMysqliForQuery->query($sSql);
-		}
-		catch (mysqli_sql_exception $e) {
+		} catch (mysqli_sql_exception $e) {
 			$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
+			throw new MySQLException('Failed to issue SQL query', ['query' => $sSql, $e]);
 		}
 		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
 		if ($oResult === false) {
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
+			throw new MySQLException('Failed to issue SQL query', ['query' => $sSql]);
 		}
 
-		if ($aRow = $oResult->fetch_array(MYSQLI_BOTH))
-		{
+		if ($aRow = $oResult->fetch_array(MYSQLI_BOTH)) {
 			$res = $aRow[$iCol];
-		}
-		else
-		{
+		} else {
 			$oResult->free();
-			throw new MySQLQueryHasNoResultException('Found no result for query', array('query' => $sSql));
+			throw new MySQLQueryHasNoResultException('Found no result for query', ['query' => $sSql]);
 		}
 		$oResult->free();
 
 		return $res;
 	}
-
 
 	/**
 	 * @param string $sSql
@@ -921,26 +896,21 @@ class CMDBSource
 	 */
 	public static function QueryToArray($sSql, $iMode = MYSQLI_BOTH)
 	{
-		$aData = array();
+		$aData = [];
 		$oKPI = new ExecutionKPI();
-		try
-		{
+		try {
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
 			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
-		}
-		catch(mysqli_sql_exception $e)
-		{
+		} catch (mysqli_sql_exception $e) {
 			$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
+			throw new MySQLException('Failed to issue SQL query', ['query' => $sSql, $e]);
 		}
 		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
-		if ($oResult === false)
-		{
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
+		if ($oResult === false) {
+			throw new MySQLException('Failed to issue SQL query', ['query' => $sSql]);
 		}
 
-		while ($aRow = $oResult->fetch_array($iMode))
-		{
+		while ($aRow = $oResult->fetch_array($iMode)) {
 			$aData[] = $aRow;
 		}
 		$oResult->free();
@@ -956,10 +926,9 @@ class CMDBSource
 	 */
 	public static function QueryToCol($sSql, $col)
 	{
-		$aColumn = array();
+		$aColumn = [];
 		$aData = self::QueryToArray($sSql);
-		foreach($aData as $aRow)
-		{
+		foreach ($aData as $aRow) {
 			@$aColumn[] = $aRow[$col];
 		}
 		return $aColumn;
@@ -973,26 +942,21 @@ class CMDBSource
 	 */
 	public static function ExplainQuery($sSql)
 	{
-		$aData = array();
-		try
-		{
+		$aData = [];
+		try {
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
 			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
+		} catch (mysqli_sql_exception $e) {
+			throw new MySQLException('Failed to issue SQL query', ['query' => $sSql, $e]);
 		}
-		catch(mysqli_sql_exception $e)
-		{
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
-		}
-		if ($oResult === false)
-		{
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
+		if ($oResult === false) {
+			throw new MySQLException('Failed to issue SQL query', ['query' => $sSql]);
 		}
 
 		$aNames = self::GetColumns($oResult, $sSql);
 
 		$aData[] = $aNames;
-		while ($aRow = $oResult->fetch_array(MYSQLI_ASSOC))
-		{
+		while ($aRow = $oResult->fetch_array(MYSQLI_ASSOC)) {
 			$aData[] = $aRow;
 		}
 		$oResult->free();
@@ -1007,22 +971,17 @@ class CMDBSource
 	 */
 	public static function TestQuery($sSql)
 	{
-		try
-		{
+		try {
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
 			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
+		} catch (mysqli_sql_exception $e) {
+			throw new MySQLException('Failed to issue SQL query', ['query' => $sSql, $e]);
 		}
-		catch(mysqli_sql_exception $e)
-		{
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
-		}
-		if ($oResult === false)
-		{
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
+		if ($oResult === false) {
+			throw new MySQLException('Failed to issue SQL query', ['query' => $sSql]);
 		}
 
-		if (is_object($oResult))
-		{
+		if (is_object($oResult)) {
 			$oResult->free();
 		}
 		return '';
@@ -1052,16 +1011,12 @@ class CMDBSource
 	 */
 	public static function GetColumns($oResult, $sSql)
 	{
-		$aNames = array();
-		for ($i = 0; $i < (($___mysqli_tmp = $oResult->field_count) ? $___mysqli_tmp : 0) ; $i++)
-		{
+		$aNames = [];
+		for ($i = 0; $i < (($___mysqli_tmp = $oResult->field_count) ? $___mysqli_tmp : 0) ; $i++) {
 			$meta = $oResult->fetch_field_direct($i);
-			if (!$meta)
-			{
-				throw new MySQLException('mysql_fetch_field: No information available', array('query'=>$sSql, 'i'=>$i));
-			}
-			else
-			{
+			if (!$meta) {
+				throw new MySQLException('mysql_fetch_field: No information available', ['query' => $sSql, 'i' => $i]);
+			} else {
 				$aNames[] = $meta->name;
 			}
 		}
@@ -1088,20 +1043,32 @@ class CMDBSource
 	public static function IsKey($sTable, $iKey)
 	{
 		$aTableInfo = self::GetTableInfo($sTable);
-		if (empty($aTableInfo)) return false;
-		if (!array_key_exists($iKey, $aTableInfo["Fields"])) return false;
+		if (empty($aTableInfo)) {
+			return false;
+		}
+		if (!array_key_exists($iKey, $aTableInfo["Fields"])) {
+			return false;
+		}
 		$aFieldData = $aTableInfo["Fields"][$iKey];
-		if (!array_key_exists("Key", $aFieldData)) return false;
+		if (!array_key_exists("Key", $aFieldData)) {
+			return false;
+		}
 		return ($aFieldData["Key"] == "PRI");
 	}
 
 	public static function IsAutoIncrement($sTable, $sField)
 	{
 		$aTableInfo = self::GetTableInfo($sTable);
-		if (empty($aTableInfo)) return false;
-		if (!array_key_exists($sField, $aTableInfo["Fields"])) return false;
+		if (empty($aTableInfo)) {
+			return false;
+		}
+		if (!array_key_exists($sField, $aTableInfo["Fields"])) {
+			return false;
+		}
 		$aFieldData = $aTableInfo["Fields"][$sField];
-		if (!array_key_exists("Extra", $aFieldData)) return false;
+		if (!array_key_exists("Extra", $aFieldData)) {
+			return false;
+		}
 		//MyHelpers::debug_breakpoint($aFieldData);
 		return (strstr($aFieldData["Extra"], "auto_increment"));
 	}
@@ -1109,16 +1076,24 @@ class CMDBSource
 	public static function IsField($sTable, $sField)
 	{
 		$aTableInfo = self::GetTableInfo($sTable);
-		if (empty($aTableInfo)) return false;
-		if (!array_key_exists($sField, $aTableInfo["Fields"])) return false;
+		if (empty($aTableInfo)) {
+			return false;
+		}
+		if (!array_key_exists($sField, $aTableInfo["Fields"])) {
+			return false;
+		}
 		return true;
 	}
 
 	public static function IsNullAllowed($sTable, $sField)
 	{
 		$aTableInfo = self::GetTableInfo($sTable);
-		if (empty($aTableInfo)) return false;
-		if (!array_key_exists($sField, $aTableInfo["Fields"])) return false;
+		if (empty($aTableInfo)) {
+			return false;
+		}
+		if (!array_key_exists($sField, $aTableInfo["Fields"])) {
+			return false;
+		}
 		$aFieldData = $aTableInfo["Fields"][$sField];
 		return (strtolower($aFieldData["Null"]) == "yes");
 	}
@@ -1126,20 +1101,22 @@ class CMDBSource
 	public static function GetFieldType($sTable, $sField)
 	{
 		$aTableInfo = self::GetTableInfo($sTable);
-		if (empty($aTableInfo)) return false;
-		if (!array_key_exists($sField, $aTableInfo["Fields"])) return false;
+		if (empty($aTableInfo)) {
+			return false;
+		}
+		if (!array_key_exists($sField, $aTableInfo["Fields"])) {
+			return false;
+		}
 		$aFieldData = $aTableInfo["Fields"][$sField];
 		return ($aFieldData["Type"]);
 	}
 
 	private static function IsNumericType($aFieldData)
 	{
-		$aNumericTypes = array('tinyint(', 'decimal(', 'int(' );
+		$aNumericTypes = ['tinyint(', 'decimal(', 'int(' ];
 		$sType = strtolower($aFieldData["Type"]);
-		foreach ($aNumericTypes as $sNumericType)
-		{
-			if (strpos($sType, $sNumericType) === 0)
-			{
+		foreach ($aNumericTypes as $sNumericType) {
+			if (strpos($sType, $sNumericType) === 0) {
 				return true;
 			}
 		}
@@ -1172,21 +1149,18 @@ class CMDBSource
 		[$sItopFieldDataType, $sItopFieldTypeOptions, $sItopFieldOtherOptions] = static::GetFieldDataTypeAndOptions($sItopGeneratedFieldType);
 		[$sDbFieldDataType, $sDbFieldTypeOptions, $sDbFieldOtherOptions] = static::GetFieldDataTypeAndOptions($sDbFieldType);
 
-		if (strcasecmp($sItopFieldDataType, $sDbFieldDataType) !== 0)
-		{
+		if (strcasecmp($sItopFieldDataType, $sDbFieldDataType) !== 0) {
 			return false;
 		}
 
-		if (strcmp($sItopFieldTypeOptions, $sDbFieldTypeOptions) !== 0)
-		{
+		if (strcmp($sItopFieldTypeOptions, $sDbFieldTypeOptions) !== 0) {
 			// case sensitive comp as we need to check case for enum possible values for example
 			return false;
 		}
 
 		// remove the default value NULL added by MariadDB
 		$sMariaDbDefaultNull = ' DEFAULT \'NULL\'';
-		if (utils::EndsWith($sDbFieldOtherOptions, $sMariaDbDefaultNull))
-		{
+		if (utils::EndsWith($sDbFieldOtherOptions, $sMariaDbDefaultNull)) {
 			$sDbFieldOtherOptions = substr($sDbFieldOtherOptions, 0, -strlen($sMariaDbDefaultNull));
 		}
 		// remove quotes around default values (always present in MariaDB)
@@ -1194,17 +1168,16 @@ class CMDBSource
 			'/( DEFAULT )\'([^\']+)\'/',
 			function ($aMatches) use ($sItopFieldDataType) {
 				// ENUM default values should keep quotes, but all other numeric values don't have quotes
-				if (is_numeric($aMatches[2]) && ($sItopFieldDataType !== 'ENUM'))
-				{
+				if (is_numeric($aMatches[2]) && ($sItopFieldDataType !== 'ENUM')) {
 					return $aMatches[1].$aMatches[2];
 				}
 
 				return $aMatches[0];
 			},
-			$sDbFieldOtherOptions);
+			$sDbFieldOtherOptions
+		);
 
-		if (strcasecmp($sItopFieldOtherOptions, $sDbFieldOtherOptions) !== 0)
-		{
+		if (strcasecmp($sItopFieldOtherOptions, $sDbFieldOtherOptions) !== 0) {
 			return false;
 		}
 
@@ -1229,10 +1202,10 @@ class CMDBSource
 
 		$sDataType = isset($aMatches[1]) ? $aMatches[1] : '';
 
-		if (strcasecmp($sDataType, 'ENUM') === 0){
-			try{
+		if (strcasecmp($sDataType, 'ENUM') === 0) {
+			try {
 				return self::GetEnumOptions($sDataType, $sCompleteFieldType);
-			}catch(CoreException $e){
+			} catch (CoreException $e) {
 				//do nothing ; especially do not block setup.
 				IssueLog::Warning("enum was not parsed properly: $sCompleteFieldType. it should not happen during setup.");
 			}
@@ -1241,7 +1214,7 @@ class CMDBSource
 		$sTypeOptions = isset($aMatches[2]) ? $aMatches[3] : '';
 		$sOtherOptions = isset($aMatches[4]) ? $aMatches[4] : '';
 
-		return array($sDataType, $sTypeOptions, $sOtherOptions);
+		return [$sDataType, $sTypeOptions, $sOtherOptions];
 	}
 
 	/**
@@ -1262,16 +1235,16 @@ class CMDBSource
 		$iFirstOpeningParenthesis = strpos($sCompleteFieldType, '(');
 		$iLastEndingParenthesis = strrpos($sCompleteFieldType, ')');
 
-		if ($iFirstOpeningParenthesis === false || $iLastEndingParenthesis === false ){
+		if ($iFirstOpeningParenthesis === false || $iLastEndingParenthesis === false) {
 			//should never happen as GetFieldDataTypeAndOptions regexp matched.
 			//except if regexp is modiied/broken somehow one day...
-			throw new CoreException("GetEnumOptions issue with $sDataType parsing : " . $sCompleteFieldType);
+			throw new CoreException("GetEnumOptions issue with $sDataType parsing : ".$sCompleteFieldType);
 		}
 
 		$sTypeOptions = substr($sCompleteFieldType, $iFirstOpeningParenthesis + 1, $iLastEndingParenthesis - 1);
 		$sOtherOptions = substr($sCompleteFieldType, $iLastEndingParenthesis + 1);
 
-		return array($sDataType, $sTypeOptions, $sOtherOptions);
+		return [$sDataType, $sTypeOptions, $sOtherOptions];
 	}
 
 	/**
@@ -1284,47 +1257,40 @@ class CMDBSource
 	public static function GetFieldSpec($sTable, $sField)
 	{
 		$aTableInfo = self::GetTableInfo($sTable);
-		if (empty($aTableInfo)) return false;
-		if (!array_key_exists($sField, $aTableInfo["Fields"])) return false;
+		if (empty($aTableInfo)) {
+			return false;
+		}
+		if (!array_key_exists($sField, $aTableInfo["Fields"])) {
+			return false;
+		}
 		$aFieldData = $aTableInfo["Fields"][$sField];
 
 		$sRet = $aFieldData["Type"];
 
 		$sColumnCharset = $aFieldData["Charset"];
 		$sColumnCollation = $aFieldData["Collation"];
-		if (!empty($sColumnCharset))
-		{
+		if (!empty($sColumnCharset)) {
 			$sRet .= ' CHARACTER SET '.$sColumnCharset;
 			$sRet .= ' COLLATE '.$sColumnCollation;
 		}
 
-		if ($aFieldData["Null"] == 'NO')
-		{
+		if ($aFieldData["Null"] == 'NO') {
 			$sRet .= ' NOT NULL';
 		}
 
-		if (is_numeric($aFieldData["Default"]))
-		{
-			if (strtolower(substr($aFieldData["Type"], 0, 5)) == 'enum(')
-			{
+		if (is_numeric($aFieldData["Default"])) {
+			if (strtolower(substr($aFieldData["Type"], 0, 5)) == 'enum(') {
 				// Force quotes to match the column declaration statement
 				$sRet .= ' DEFAULT '.self::Quote($aFieldData["Default"], true);
-			}
-			else
-			{
-				if (self::IsNumericType($aFieldData))
-				{
+			} else {
+				if (self::IsNumericType($aFieldData)) {
 					$sRet .= ' DEFAULT '.$aFieldData["Default"];
-				}
-				else
-				{
+				} else {
 					$default = $aFieldData["Default"] + 0; // Coerce to a numeric variable
 					$sRet .= ' DEFAULT '.self::Quote($default);
 				}
 			}
-		}
-		elseif (is_string($aFieldData["Default"]) == 'string')
-		{
+		} elseif (is_string($aFieldData["Default"]) == 'string') {
 			$sDefaultValue = static::RemoveSurroundingQuotes($aFieldData["Default"]);
 			$sRet .= ' DEFAULT '.self::Quote($sDefaultValue);
 		}
@@ -1335,28 +1301,29 @@ class CMDBSource
 	public static function HasIndex($sTable, $sIndexId, $aFields = null, $aLength = null)
 	{
 		$aTableInfo = self::GetTableInfo($sTable);
-		if (empty($aTableInfo)) return false;
-		if (!array_key_exists($sIndexId, $aTableInfo['Indexes'])) return false;
+		if (empty($aTableInfo)) {
+			return false;
+		}
+		if (!array_key_exists($sIndexId, $aTableInfo['Indexes'])) {
+			return false;
+		}
 
-		if ($aFields == null)
-		{
+		if ($aFields == null) {
 			// Just searching for the name
 			return true;
 		}
 
 		// Compare the columns
 		$sSearchedIndex = implode(',', $aFields);
-		$aColumnNames = array();
-		$aSubParts = array();
-		foreach($aTableInfo['Indexes'][$sIndexId] as $aIndexDef)
-		{
+		$aColumnNames = [];
+		$aSubParts = [];
+		foreach ($aTableInfo['Indexes'][$sIndexId] as $aIndexDef) {
 			$aColumnNames[] = $aIndexDef['Column_name'];
 			$aSubParts[] = $aIndexDef['Sub_part'];
 		}
 		$sExistingIndex = implode(',', $aColumnNames);
 
-		if (is_null($aLength))
-		{
+		if (is_null($aLength)) {
 			return ($sSearchedIndex == $sExistingIndex);
 		}
 
@@ -1372,21 +1339,20 @@ class CMDBSource
 		assert(!empty($sTable));
 
 		$aTableInfo = self::GetTableInfo($sTable);
-		if (empty($aTableInfo)) return array(); // #@# or an error ?
+		if (empty($aTableInfo)) {
+			return [];
+		} // #@# or an error ?
 
 		return array_keys($aTableInfo["Fields"]);
 	}
 
 	// Cache the information about existing tables, and their fields
-	private static $m_aTablesInfo = array();
+	private static $m_aTablesInfo = [];
 	private static function _TablesInfoCacheReset($sTableName = null)
 	{
-		if (is_null($sTableName))
-		{
-			self::$m_aTablesInfo = array();
-		}
-		else
-		{
+		if (is_null($sTableName)) {
+			self::$m_aTablesInfo = [];
+		} else {
 			self::$m_aTablesInfo[strtolower($sTableName)] = null;
 		}
 	}
@@ -1399,8 +1365,7 @@ class CMDBSource
 	private static function _TableInfoCacheInit($sTableName)
 	{
 		if (isset(self::$m_aTablesInfo[strtolower($sTableName)])
-			&& (self::$m_aTablesInfo[strtolower($sTableName)] != null))
-		{
+			&& (self::$m_aTablesInfo[strtolower($sTableName)] != null)) {
 			return;
 		}
 
@@ -1410,7 +1375,7 @@ class CMDBSource
 		// Get table informations
 		//   We were using SHOW COLUMNS FROM... but this don't return charset and collation info !
 		//   so since 2.5 and #1001 (switch to utf8mb4) we're using INFORMATION_SCHEMA !
-		$aMapping = array(
+		$aMapping = [
 			"Name" => "COLUMN_NAME",
 			"Type" => "COLUMN_TYPE",
 			"Null" => "IS_NULLABLE",
@@ -1420,28 +1385,24 @@ class CMDBSource
 			"Charset" => "CHARACTER_SET_NAME",
 			"Collation" => "COLLATION_NAME",
 			"CharMaxLength" => "CHARACTER_MAXIMUM_LENGTH",
-		);
+		];
 		$sColumns = implode(', ', $aMapping);
 		$sDBName = self::$m_sDBName;
 		$aFields = self::QueryToArray("SELECT $sColumns FROM information_schema.`COLUMNS` WHERE table_schema = '$sDBName' AND table_name = '$sTableName';");
-		foreach ($aFields as $aFieldData)
-		{
-			$aFields = array();
-			foreach($aMapping as $sKey => $sColumn)
-			{
+		foreach ($aFields as $aFieldData) {
+			$aFields = [];
+			foreach ($aMapping as $sKey => $sColumn) {
 				$aFields[$sKey] = $aFieldData[$sColumn];
 			}
 			$sFieldName = $aFieldData["COLUMN_NAME"];
 			self::$m_aTablesInfo[strtolower($sTableName)]["Fields"][$sFieldName] = $aFields;
 		}
 
-		if (!is_null(self::$m_aTablesInfo[strtolower($sTableName)]))
-		{
+		if (!is_null(self::$m_aTablesInfo[strtolower($sTableName)])) {
 			$aIndexes = self::QueryToArray("SHOW INDEXES FROM `$sTableName`");
-			$aMyIndexes = array();
-			foreach ($aIndexes as $aIndexColumn)
-			{
-				$aMyIndexes[$aIndexColumn['Key_name']][$aIndexColumn['Seq_in_index']-1] = $aIndexColumn;
+			$aMyIndexes = [];
+			foreach ($aIndexes as $aIndexColumn) {
+				$aMyIndexes[$aIndexColumn['Key_name']][$aIndexColumn['Seq_in_index'] - 1] = $aIndexColumn;
 			}
 			self::$m_aTablesInfo[strtolower($sTableName)]["Indexes"] = $aMyIndexes;
 		}
@@ -1477,11 +1438,9 @@ class CMDBSource
 		$sTableCharset = $aTableInfo[0]['CHARACTER_SET_NAME'];
 		$sTableCollation = $aTableInfo[0]['TABLE_COLLATION'];
 
-		if ((DEFAULT_CHARACTER_SET == $sTableCharset) && (DEFAULT_COLLATION == $sTableCollation))
-		{
+		if ((DEFAULT_CHARACTER_SET == $sTableCharset) && (DEFAULT_COLLATION == $sTableCollation)) {
 			return null;
 		}
-
 
 		return 'ALTER TABLE `'.$sTableName.'` '.self::GetSqlStringColumnDefinition().';';
 
@@ -1496,23 +1455,18 @@ class CMDBSource
 	public static function DumpTable($sTable)
 	{
 		$sSql = "SELECT * FROM `$sTable`";
-		try
-		{
+		try {
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
 			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
+		} catch (mysqli_sql_exception $e) {
+			throw new MySQLException('Failed to issue SQL query', ['query' => $sSql], $e);
 		}
-		catch(mysqli_sql_exception $e)
-		{
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql), $e);
-		}
-		if ($oResult === false)
-		{
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
+		if ($oResult === false) {
+			throw new MySQLException('Failed to issue SQL query', ['query' => $sSql]);
 		}
 
-		$aRows = array();
-		while ($aRow = $oResult->fetch_array(MYSQLI_ASSOC))
-		{
+		$aRows = [];
+		while ($aRow = $oResult->fetch_array(MYSQLI_ASSOC)) {
 			$aRows[] = $aRow;
 		}
 		$oResult->free();
@@ -1537,19 +1491,15 @@ class CMDBSource
 	 */
 	public static function GetRawPrivileges()
 	{
-		try
-		{
+		try {
 			$oResult = self::Query('SHOW GRANTS'); // [ FOR CURRENT_USER()]
-		}
-		catch(MySQLException $e)
-		{
+		} catch (MySQLException $e) {
 			$iCode = self::GetErrNo();
 			return "Current user not allowed to see his own privileges (could not access to the database 'mysql' - $iCode)";
 		}
 
-		$aRes = array();
-		while ($aRow = $oResult->fetch_array(MYSQLI_NUM))
-		{
+		$aRes = [];
+		while ($aRow = $oResult->fetch_array(MYSQLI_NUM)) {
 			// so far, only one column...
 			$aRes[] = implode('/', $aRow);
 		}
@@ -1564,17 +1514,13 @@ class CMDBSource
 	 */
 	public static function IsSlaveServer()
 	{
-		try
-		{
+		try {
 			$oResult = self::Query('SHOW SLAVE STATUS');
-		}
-		catch(MySQLException $e)
-		{
-			throw new CoreException("Current user not allowed to check the status", array('mysql_error' => $e->getMessage()));
+		} catch (MySQLException $e) {
+			throw new CoreException("Current user not allowed to check the status", ['mysql_error' => $e->getMessage()]);
 		}
 
-		if ($oResult->num_rows == 0)
-		{
+		if ($oResult->num_rows == 0) {
 			return false;
 		}
 
@@ -1582,40 +1528,35 @@ class CMDBSource
 		$aRow = $oResult->fetch_array(MYSQLI_ASSOC);
 		$oResult->free();
 
-		if (!isset($aRow['Slave_IO_Running']))
-		{
+		if (!isset($aRow['Slave_IO_Running'])) {
 			return false;
 		}
-		if (!isset($aRow['Slave_SQL_Running']))
-		{
+		if (!isset($aRow['Slave_SQL_Running'])) {
 			return false;
 		}
 
 		// If at least one slave thread is running, then we consider that the slave is enabled
-		if ($aRow['Slave_IO_Running'] == 'Yes')
-		{
+		if ($aRow['Slave_IO_Running'] == 'Yes') {
 			return true;
 		}
-		if ($aRow['Slave_SQL_Running'] == 'Yes')
-		{
+		if ($aRow['Slave_SQL_Running'] == 'Yes') {
 			return true;
 		}
 		return false;
 	}
 
-    public static function GetClusterNb()
-    {
-        $result = 0;
-        $sSql = "SHOW STATUS LIKE 'wsrep_cluster_size';";
-        $aRows = self::QueryToArray($sSql);
-        if (count($aRows) > 0)
-        {
-            $result = $aRows[0]['Value'];
-        }
-        return intval($result);
-    }
+	public static function GetClusterNb()
+	{
+		$result = 0;
+		$sSql = "SHOW STATUS LIKE 'wsrep_cluster_size';";
+		$aRows = self::QueryToArray($sSql);
+		if (count($aRows) > 0) {
+			$result = $aRows[0]['Value'];
+		}
+		return intval($result);
+	}
 
-    /**
+	/**
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
 	 * @return string query to upgrade database charset and collation if needed, null if not
 	 * @throws \MySQLException
@@ -1631,8 +1572,7 @@ class CMDBSource
 		$sDBCharset = $aDBInfo[0]['DEFAULT_CHARACTER_SET_NAME'];
 		$sDBCollation = $aDBInfo[0]['DEFAULT_COLLATION_NAME'];
 
-		if ((DEFAULT_CHARACTER_SET == $sDBCharset) && (DEFAULT_COLLATION == $sDBCollation))
-		{
+		if ((DEFAULT_CHARACTER_SET == $sDBCharset) && (DEFAULT_COLLATION == $sDBCollation)) {
 			return null;
 		}
 
@@ -1649,8 +1589,7 @@ class CMDBSource
 	 */
 	public static function IsSslModeDBVersion()
 	{
-		if (static::GetDBVendor() === static::ENUM_DB_VENDOR_MYSQL)
-		{
+		if (static::GetDBVendor() === static::ENUM_DB_VENDOR_MYSQL) {
 			//Mysql 5.7.0 and upper deprecated --ssl and uses --ssl-mode instead
 			return version_compare(static::GetDBVersion(), '5.7.11', '>=');
 		}

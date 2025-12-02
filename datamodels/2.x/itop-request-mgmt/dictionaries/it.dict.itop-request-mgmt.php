@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:RequestManagement' => 'Service Request',
 	'Menu:RequestManagement+' => 'Service Request',
 	'Menu:RequestManagementProvider' => 'Service Request Fornitore',
@@ -45,7 +46,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:UserRequest:MyWorkOrders+' => 'Tutti i work order assegnati a me',
 	'Class:Problem:KnownProblemList' => 'Problemi conosciuti',
 	'Tickets:Related:OpenIncidents' => 'Incidenti aperti',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -61,7 +62,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 // Class: UserRequest
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:UserRequest' => 'Richeista utente',
 	'Class:UserRequest+' => '~~',
 	'Class:UserRequest/Attribute:status' => 'Stato',
@@ -255,10 +256,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'In attesa di essere approvata',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '~~',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Non si può assegnare una richiesta padre a se stesso',
-));
+]);
 
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Portal:TitleDetailsFor_Request' => 'Dettagi della richiesta',
 	'Portal:ButtonUpdate' => 'Aggiornameno',
 	'Portal:ButtonClose' => 'Chiuso',
@@ -283,11 +283,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Selezionate la vostra lingua preferita',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Risolve ticket figli',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Inoltra la risolzuione ai ticket collegati ev_autosolve), e allinea le caratteriche della richiesta: Servizio, team , agente e informazioni della risoluzione',
-));
+]);
 
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Organization:Overview:UserRequests' => 'Richieste utente per questa organizzazione',
 	'Organization:Overview:MyUserRequests' => 'Le Mie richieste utente per questa organizzazione',
 	'Organization:Overview:Tickets' => 'Ticket per questa organizzazione',
-));
+]);

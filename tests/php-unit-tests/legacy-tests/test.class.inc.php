@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -22,7 +23,6 @@
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 require_once(APPROOT.'/core/attributedef.class.inc.php');
 require_once(APPROOT.'/core/filterdef.class.inc.php');
@@ -48,11 +48,10 @@ require_once(APPROOT.'/core/userrights.class.inc.php');
 
 require_once(APPROOT.'/webservices/webservices.class.inc.php');
 
-
 // Just to differentiate programmatically triggered exceptions and other kind of errors (usefull?)
 class UnitTestException extends Exception
-{}
-
+{
+}
 
 /**
  * Improved display of the backtrace
@@ -69,7 +68,6 @@ class ExceptionFromError extends Exception
 	}
 }
 
-
 /**
  * Test handler API and basic helpers
  *
@@ -84,21 +82,33 @@ abstract class TestHandler
 
 	public function __construct()
 	{
-		$this->m_aSuccesses = array();
-		$this->m_aWarnings = array();
-		$this->m_aErrors = array();
+		$this->m_aSuccesses = [];
+		$this->m_aWarnings = [];
+		$this->m_aErrors = [];
 	}
 
-	static public function GetName() {return "fooname";}
-	static public function GetDescription(){return "foodesc";}
+	public static function GetName()
+	{
+		return "fooname";
+	}
+	public static function GetDescription()
+	{
+		return "foodesc";
+	}
 
-	protected function DoPrepare() {return true;}
+	protected function DoPrepare()
+	{
+		return true;
+	}
 	abstract protected function DoExecute();
-	protected function DoCleanup() {return true;}
+	protected function DoCleanup()
+	{
+		return true;
+	}
 
 	protected static function DumpVariable($var)
 	{
-		echo "<pre class=\"vardump\">\n"; 
+		echo "<pre class=\"vardump\">\n";
 		print_r($var);
 		echo "</pre>\n";
 	}
@@ -142,24 +152,25 @@ abstract class TestHandler
 	{
 		// Note: return false to call the default handler (stop the program if an error)
 
-		if ($errstr == 'assert()') $errno = E_USER_ERROR;
+		if ($errstr == 'assert()') {
+			$errno = E_USER_ERROR;
+		}
 
-		switch ($errno)
-		{
-		case E_USER_ERROR:
-		case E_WARNING: //(assertion failed)
-			$this->ReportError("$errfile@$errline - $errstr");
-			break;
-		case E_USER_WARNING:
-			$this->ReportWarning("$errfile@$errline - $errstr");
-			break;
-		case E_USER_NOTICE:
-			$this->ReportWarning("$errfile@$errline - $errstr");
-			break;
-		default:
-			$this->ReportWarning("$errfile@$errline - Unknown error type: [$errno] $errstr");
-			echo "Unknown error type: [$errno] $errstr in $errfile at $errline<br />\n";
-			break;
+		switch ($errno) {
+			case E_USER_ERROR:
+			case E_WARNING: //(assertion failed)
+				$this->ReportError("$errfile@$errline - $errstr");
+				break;
+			case E_USER_WARNING:
+				$this->ReportWarning("$errfile@$errline - $errstr");
+				break;
+			case E_USER_NOTICE:
+				$this->ReportWarning("$errfile@$errline - $errstr");
+				break;
+			default:
+				$this->ReportWarning("$errfile@$errline - Unknown error type: [$errno] $errstr");
+				echo "Unknown error type: [$errno] $errstr in $errfile at $errline<br />\n";
+				break;
 		}
 		return true; // do not call the default handler
 	}
@@ -167,24 +178,17 @@ abstract class TestHandler
 	public function Execute()
 	{
 		ob_start();
-		set_error_handler(array($this, 'error_handler'));
-		try
-		{
+		set_error_handler([$this, 'error_handler']);
+		try {
 			$this->DoPrepare();
 			$this->DoExecute();
-		}
-		catch (ExceptionFromError $e)
-		{
+		} catch (ExceptionFromError $e) {
 			$this->ReportError($e->getMessage().' - '.$e->getTraceAsHtml());
-		}
-		catch (CoreException $e)
-		{
+		} catch (CoreException $e) {
 			//$this->ReportError($e->getMessage());
 			//$this->ReportError($e->__tostring());
 			$this->ReportError($e->getMessage().' - '.$e->getTraceAsHtml());
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			//$this->ReportError($e->getMessage());
 			//$this->ReportError($e->__tostring());
 			$this->ReportError('class '.get_class($e).' --- '.$e->getMessage().' - '.$e->getTraceAsString());
@@ -194,10 +198,10 @@ abstract class TestHandler
 		return (count($this->GetErrors()) == 0);
 	}
 
-	static protected function DoPostRequestAuth($sRelativeUrl, $aData, $sLogin = 'admin', $sPassword = 'admin', $sOptionnalHeaders = null)
+	protected static function DoPostRequestAuth($sRelativeUrl, $aData, $sLogin = 'admin', $sPassword = 'admin', $sOptionnalHeaders = null)
 	{
 		$aDataAndAuth = $aData;
-// To be changed to use basic authentication
+		// To be changed to use basic authentication
 		$aDataAndAuth['operation'] = 'login';
 		$aDataAndAuth['auth_user'] = $sLogin;
 		$aDataAndAuth['auth_pwd'] = $sPassword;
@@ -212,50 +216,41 @@ abstract class TestHandler
 	// Source: http://netevil.org/blog/2006/nov/http-post-from-php-without-curl
 	// originaly named after do_post_request
 	// Partially adapted to our coding conventions
-	static protected function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null)
+	protected static function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null)
 	{
 		// $sOptionnalHeaders is a string containing additional HTTP headers that you would like to send in your request.
 
 		$sData = http_build_query($aData);
 
-		$aParams = array('http' => array(
+		$aParams = ['http' => [
 								'method' => 'POST',
 								'content' => $sData,
-								'header'=> "Content-type: application/x-www-form-urlencoded\r\nContent-Length: ".strlen($sData)."\r\n",
-								));
-		if ($sOptionnalHeaders !== null)
-		{
+								'header' => "Content-type: application/x-www-form-urlencoded\r\nContent-Length: ".strlen($sData)."\r\n",
+								]];
+		if ($sOptionnalHeaders !== null) {
 			$aParams['http']['header'] .= $sOptionnalHeaders;
 		}
 		$ctx = stream_context_create($aParams);
 
 		$fp = @fopen($sUrl, 'rb', false, $ctx);
-		if (!$fp)
-		{
+		if (!$fp) {
 			global $php_errormsg;
-			if (isset($php_errormsg))
-			{
+			if (isset($php_errormsg)) {
 				throw new Exception("Problem with $sUrl, $php_errormsg");
-			}
-			else
-			{
+			} else {
 				throw new Exception("Problem with $sUrl");
 			}
 		}
 		$response = @stream_get_contents($fp);
-		if ($response === false)
-		{
+		if ($response === false) {
 			throw new Exception("Problem reading data from $sUrl, $php_errormsg");
 		}
 		return $response;
 	}
 }
 
-
-
-
 /**
- * Test to execute a piece of code (checks if an error occurs)  
+ * Test to execute a piece of code (checks if an error occurs)
  *
  * @package     iTopORM
  */
@@ -264,9 +259,8 @@ abstract class TestFunction extends TestHandler
 	// simply overload DoExecute (temporary)
 }
 
-
 /**
- * Test to execute a piece of code (checks if an error occurs)  
+ * Test to execute a piece of code (checks if an error occurs)
  *
  * @package     iTopORM
  */
@@ -275,7 +269,7 @@ abstract class TestWebServices extends TestHandler
 }
 
 /**
- * Test to execute a piece of code (checks if an error occurs)  
+ * Test to execute a piece of code (checks if an error occurs)
  *
  * @package     iTopORM
  */
@@ -283,60 +277,52 @@ abstract class TestSoapWebService extends TestHandler
 {
 	// simply overload DoExecute (temporary)
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 	}
 }
 
 /**
- * Test to check that a function outputs some values depending on its input  
+ * Test to check that a function outputs some values depending on its input
  *
  * @package     iTopORM
  */
 abstract class TestFunctionInOut extends TestFunction
 {
-//	abstract static public function GetCallSpec(); // parameters to call_user_func
-//	abstract static public function GetInOut(); // array of input => output
+	//	abstract static public function GetCallSpec(); // parameters to call_user_func
+	//	abstract static public function GetInOut(); // array of input => output
 
 	protected function DoExecute()
 	{
 		$aTests = $this->GetInOut();
-		if (is_array($aTests))
-		{
-			foreach ($aTests as $iTestId => $aTest)
-			{
+		if (is_array($aTests)) {
+			foreach ($aTests as $iTestId => $aTest) {
 				$ret = call_user_func_array($this->GetCallSpec(), $aTest['args']);
-				if ($ret != $aTest['output'])
-				{
+				if ($ret != $aTest['output']) {
 					// Note: to be improved to cope with non string parameters
 					$this->ReportError("Found '$ret' while expecting '".$aTest['output']."'", $iTestId);
-				}
-				else
-				{
+				} else {
 					$this->ReportSuccess("Found the expected output '$ret'", $iTestId);
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$ret = call_user_func($this->GetCallSpec());
 			$this->ReportSuccess('Finished successfully');
 		}
 	}
 }
 
-
 /**
- * Test to check an URL (Searches for Error/Warning/Etc keywords)  
+ * Test to check an URL (Searches for Error/Warning/Etc keywords)
  *
  * @package     iTopORM
  */
 abstract class TestUrl extends TestHandler
 {
-//	abstract static public function GetUrl();
-//	abstract static public function GetErrorKeywords();
-//	abstract static public function GetWarningKeywords();
+	//	abstract static public function GetUrl();
+	//	abstract static public function GetErrorKeywords();
+	//	abstract static public function GetWarningKeywords();
 
 	protected function DoExecute()
 	{
@@ -344,9 +330,8 @@ abstract class TestUrl extends TestHandler
 	}
 }
 
-
 /**
- * Test to check a user management module  
+ * Test to check a user management module
  *
  * @package     iTopORM
  */
@@ -358,7 +343,6 @@ abstract class TestUserRights extends TestHandler
 	}
 }
 
-
 /**
  * Test to execute a scenario on a given DB
  *
@@ -366,10 +350,10 @@ abstract class TestUserRights extends TestHandler
  */
 abstract class TestScenarioOnDB extends TestHandler
 {
-//	abstract static public function GetDBHost();
-//	abstract static public function GetDBUser();
-//	abstract static public function GetDBPwd();
-//	abstract static public function GetDBName();
+	//	abstract static public function GetDBHost();
+	//	abstract static public function GetDBUser();
+	//	abstract static public function GetDBPwd();
+	//	abstract static public function GetDBName();
 
 	protected function DoPrepare()
 	{
@@ -380,8 +364,7 @@ abstract class TestScenarioOnDB extends TestHandler
 
 		CMDBSource::Init($sDBHost, $sDBUser, $sDBPwd);
 		CMDBSource::SetCharacterSet();
-		if (CMDBSource::IsDB($sDBName))
-		{
+		if (CMDBSource::IsDB($sDBName)) {
 			CMDBSource::DropDB($sDBName);
 		}
 		CMDBSource::CreateDB($sDBName);
@@ -393,26 +376,28 @@ abstract class TestScenarioOnDB extends TestHandler
 	}
 }
 
-
 /**
- * Test to use a business model on a given DB  
+ * Test to use a business model on a given DB
  *
  * @package     iTopORM
  */
 abstract class TestBizModel extends TestHandler
 {
-//	abstract static public function GetDBSubName();
-//	abstract static public function GetBusinessModelFile();
-//	abstract static public function GetConfigFile();
+	//	abstract static public function GetDBSubName();
+	//	abstract static public function GetBusinessModelFile();
+	//	abstract static public function GetConfigFile();
 
-	static public function GetConfigFile() {return 'conf/production/config-itop.php';}
+	public static function GetConfigFile()
+	{
+		return 'conf/production/config-itop.php';
+	}
 
 	protected function DoPrepare()
 	{
 		$sConfigFile = APPROOT.$this->GetConfigFile();
 		MetaModel::Startup($sConfigFile);
-// #@# Temporary disabled by Romain
-//		MetaModel::CheckDefinitions();
+		// #@# Temporary disabled by Romain
+		//		MetaModel::CheckDefinitions();
 
 		// something here to create records... but that's another story
 	}
@@ -420,52 +405,45 @@ abstract class TestBizModel extends TestHandler
 	protected $m_oChange;
 	protected function GetCurrentChange()
 	{
-		if (!isset($this->m_oChange))
-		{
-			 new CMDBChange();
+		if (!isset($this->m_oChange)) {
+			new CMDBChange();
 			$oMyChange = MetaModel::NewObject("CMDBChange");
 			$oMyChange->Set("date", time());
 			$oMyChange->Set("userinfo", "Someone doing some tests");
 			$iChangeId = $oMyChange->DBInsertNoReload();
-			$this->m_oChange = $oMyChange; 
+			$this->m_oChange = $oMyChange;
 		}
 		return $this->m_oChange;
 	}
 	protected function ObjectToDB($oNew, $bReload = false)
 	{
-		if ($bReload)
-		{
+		if ($bReload) {
 			$iId = $oNew->DBInsert();
-		}
-		else
-		{
+		} else {
 			$iId = $oNew->DBInsertNoReload();
 		}
 		return $iId;
 	}
 
-  	protected function UpdateObjectInDB($oObject)
+	protected function UpdateObjectInDB($oObject)
 	{
 		$oObject->DBUpdate();
 	}
 	protected function ResetDB()
 	{
-		if (MetaModel::DBExists(false))
-		{
+		if (MetaModel::DBExists(false)) {
 			MetaModel::DBDrop();
 		}
 		MetaModel::DBCreate();
 	}
 
-	static protected function show_list($oObjectSet)
+	protected static function show_list($oObjectSet)
 	{
 		$oObjectSet->Rewind();
-		$aData = array();
-		while ($oItem = $oObjectSet->Fetch())
-		{
-			$aValues = array();
-			foreach(MetaModel::GetAttributesList(get_class($oItem)) as $sAttCode)
-			{
+		$aData = [];
+		while ($oItem = $oObjectSet->Fetch()) {
+			$aValues = [];
+			foreach (MetaModel::GetAttributesList(get_class($oItem)) as $sAttCode) {
 				$aValues[$sAttCode] = $oItem->GetAsHTML($sAttCode);
 			}
 			//echo $oItem->GetKey()." => ".implode(", ", $aValues)."</br>\n";
@@ -474,21 +452,20 @@ abstract class TestBizModel extends TestHandler
 		echo MyHelpers::make_table_from_assoc_array($aData);
 	}
 
-	static protected function search_and_show_list(DBSearch $oMyFilter)
+	protected static function search_and_show_list(DBSearch $oMyFilter)
 	{
 		$oObjSet = new CMDBObjectSet($oMyFilter);
 		echo $oMyFilter->ToOQL()."' - Found ".$oObjSet->Count()." items.</br>\n";
 		self::show_list($oObjSet);
 	}
 
-	static protected function search_and_show_list_from_oql($sOQL)
+	protected static function search_and_show_list_from_oql($sOQL)
 	{
-		echo $sOQL."...<br/>\n"; 
+		echo $sOQL."...<br/>\n";
 		$oNewFilter = DBObjectSearch::FromOQL($sOQL);
 		self::search_and_show_list($oNewFilter);
 	}
 }
-
 
 /**
  * Test to execute a scenario common to any business model (tries to build all the possible queries, etc.)
@@ -497,12 +474,12 @@ abstract class TestBizModel extends TestHandler
  */
 abstract class TestBizModelGeneric extends TestBizModel
 {
-	static public function GetName()
+	public static function GetName()
 	{
 		return 'Full test on a given business model';
 	}
 
-	static public function GetDescription()
+	public static function GetDescription()
 	{
 		return 'Systematic tests: gets each and every existing class and tries every attribute, search filters, etc.';
 	}
@@ -511,8 +488,7 @@ abstract class TestBizModelGeneric extends TestBizModel
 	{
 		parent::DoPrepare();
 
-		if (!MetaModel::DBExists(false))
-		{
+		if (!MetaModel::DBExists(false)) {
 			MetaModel::DBCreate();
 		}
 		// something here to create records... but that's another story
@@ -520,12 +496,13 @@ abstract class TestBizModelGeneric extends TestBizModel
 
 	protected function DoExecute()
 	{
-		foreach(MetaModel::GetClasses() as $sClassName)
-		{
-			if (MetaModel::HasTable($sClassName)) continue;
+		foreach (MetaModel::GetClasses() as $sClassName) {
+			if (MetaModel::HasTable($sClassName)) {
+				continue;
+			}
 
 			$oNobody = MetaModel::GetObject($sClassName, 123);
-			$oBaby = new $sClassName;
+			$oBaby = new $sClassName();
 			$oFilter = new DBObjectSearch($sClassName);
 
 			// Challenge reversibility of OQL / filter object
@@ -533,8 +510,7 @@ abstract class TestBizModelGeneric extends TestBizModel
 			$sExpr1 = $oFilter->ToOQL();
 			$oNewFilter = DBObjectSearch::FromOQL($sExpr1);
 			$sExpr2 = $oNewFilter->ToOQL();
-			if ($sExpr1 != $sExpr2)
-			{
+			if ($sExpr1 != $sExpr2) {
 				$this->ReportError("Found two different OQL expression out of the (same?) filter: <em>$sExpr1</em> != <em>$sExpr2</em>");
 			}
 
@@ -546,6 +522,3 @@ abstract class TestBizModelGeneric extends TestBizModel
 		return true;
 	}
 }
-
-
-?>

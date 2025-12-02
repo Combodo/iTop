@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -13,7 +14,6 @@ class MockApplicationObjectExtensionForTest1 extends AbstractApplicationObjectEx
 	protected static $sClass;
 	protected static $sAttCodeToModify;
 	protected static $callBack;
-
 
 	public function __construct()
 	{

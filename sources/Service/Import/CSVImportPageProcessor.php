@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Combodo\iTop\Service\Import;
@@ -43,7 +44,6 @@ use utils;
  */
 class CSVImportPageProcessor
 {
-
 	/**
 	 * @param mixed $iBoxSkipLines
 	 * @param mixed $iNbSkippedLines
@@ -79,11 +79,27 @@ class CSVImportPageProcessor
 	 * @throws Exception
 	 */
 	public static function ProcessData(
-		mixed $iBoxSkipLines, mixed $iNbSkippedLines, mixed $sDateTimeFormat, mixed $sCustomDateTimeFormat, mixed $sClassName, WebPage $oPage, $aSynchroUpdate, mixed $sCSVData, mixed $sSeparator,
-		mixed $sTextQualifier, bool $bHeaderLine, array $aResult, mixed $aSearchFields, mixed $aFieldsMapping,
-		bool $bSimulate, mixed $sCSVDataTruncated, int $iCurrentStep, mixed $sEncoding, mixed $bAdvanced, mixed $sSynchroScope
-	): ?array
-	{
+		mixed $iBoxSkipLines,
+		mixed $iNbSkippedLines,
+		mixed $sDateTimeFormat,
+		mixed $sCustomDateTimeFormat,
+		mixed $sClassName,
+		WebPage $oPage,
+		$aSynchroUpdate,
+		mixed $sCSVData,
+		mixed $sSeparator,
+		mixed $sTextQualifier,
+		bool $bHeaderLine,
+		array $aResult,
+		mixed $aSearchFields,
+		mixed $aFieldsMapping,
+		bool $bSimulate,
+		mixed $sCSVDataTruncated,
+		int $iCurrentStep,
+		mixed $sEncoding,
+		mixed $bAdvanced,
+		mixed $sSynchroScope
+	): ?array {
 		$iSkippedLines = 0;
 		if ($iBoxSkipLines == 1) {
 			$iSkippedLines = $iNbSkippedLines;
@@ -106,12 +122,12 @@ class CSVImportPageProcessor
 		$aData = $oCSVParser->ToArray($iSkippedLines);
 		$iRealSkippedLines = $iSkippedLines;
 		if ($bHeaderLine) {
-			$aResult[] = $sTextQualifier . implode($sTextQualifier . $sSeparator . $sTextQualifier, array_shift($aData)) . $sTextQualifier; // Remove the first line and store it in case of error
+			$aResult[] = $sTextQualifier.implode($sTextQualifier.$sSeparator.$sTextQualifier, array_shift($aData)).$sTextQualifier; // Remove the first line and store it in case of error
 			$iRealSkippedLines++;
 		}
 
 		// Format for the line numbers
-		$sMaxLen = (strlen('' . count($aData)) < 3) ? 3 : strlen('' . count($aData)); // Pad line numbers to the appropriate number of chars, but at least 3
+		$sMaxLen = (strlen(''.count($aData)) < 3) ? 3 : strlen(''.count($aData)); // Pad line numbers to the appropriate number of chars, but at least 3
 
 		// Compute the list of search/reconciliation criteria
 		$aSearchKeys = [];
@@ -162,7 +178,7 @@ class CSVImportPageProcessor
 		$oMyChange = null;
 		if (!$bSimulate) {
 			// We're doing it for real, let's create a change
-			$sUserString = CMDBChange::GetCurrentUserName() . ' (CSV)';
+			$sUserString = CMDBChange::GetCurrentUserName().' (CSV)';
 			CMDBObject::SetCurrentChangeFromParams($sUserString, CMDBChangeOrigin::CSV_INTERACTIVE);
 			$oMyChange = CMDBObject::GetCurrentChange();
 		}
@@ -188,7 +204,7 @@ class CSVImportPageProcessor
 		$aColumns ["object"] = ["label" => "Object"];
 		foreach ($aFieldsMapping as $sAttCode) {
 			if (!empty($sAttCode) && ($sAttCode != ':none:') && ($sAttCode != 'finalclass')) {
-				$aColumns[$sClassName . '/' . $sAttCode] = ["label" => MetaModel::GetLabel($sClassName, $sAttCode)];
+				$aColumns[$sClassName.'/'.$sAttCode] = ["label" => MetaModel::GetLabel($sClassName, $sAttCode)];
 			}
 		}
 		$aColumns["message"] = ["label" => "Message"];
@@ -213,7 +229,7 @@ class CSVImportPageProcessor
 					$sFinalClass = $aResRow['finalclass'];
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
-					$sStatus = '<img src="' . $sAppRootUrl . 'images/unchanged.png" title="' . Dict::S('UI:CSVReport-Icon-Unchanged') . '">';
+					$sStatus = '<img src="'.$sAppRootUrl.'images/unchanged.png" title="'.Dict::S('UI:CSVReport-Icon-Unchanged').'">';
 					$sCSSRowClass = 'ibo-csv-import--row-unchanged';
 					break;
 
@@ -222,7 +238,7 @@ class CSVImportPageProcessor
 					$sFinalClass = $aResRow['finalclass'];
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
-					$sStatus = '<img src="' . $sAppRootUrl . 'images/modified.png" title="' . Dict::S('UI:CSVReport-Icon-Modified') . '">';
+					$sStatus = '<img src="'.$sAppRootUrl.'images/modified.png" title="'.Dict::S('UI:CSVReport-Icon-Modified').'">';
 					$sCSSRowClass = 'ibo-csv-import--row-modified';
 					break;
 
@@ -231,7 +247,7 @@ class CSVImportPageProcessor
 					$sFinalClass = $aResRow['finalclass'];
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
-					$sStatus = '<img src="' . $sAppRootUrl . 'images/delete.png" title="' . Dict::S('UI:CSVReport-Icon-Missing') . '">';
+					$sStatus = '<img src="'.$sAppRootUrl.'images/delete.png" title="'.Dict::S('UI:CSVReport-Icon-Missing').'">';
 					$sCSSRowClass = 'ibo-csv-import--row-modified';
 					if ($bSimulate) {
 						$sMessage = Dict::S('UI:CSVReport-Object-MissingToUpdate');
@@ -242,7 +258,7 @@ class CSVImportPageProcessor
 
 				case 'RowStatus_NewObj':
 					$iCreated++;
-					$sStatus = '<img src="' . $sAppRootUrl . 'images/added.png" title="' . Dict::S('UI:CSVReport-Icon-Created') . '">';
+					$sStatus = '<img src="'.$sAppRootUrl.'images/added.png" title="'.Dict::S('UI:CSVReport-Icon-Created').'">';
 					$sCSSRowClass = 'ibo-csv-import--row-added';
 					if ($bSimulate) {
 						$sMessage = Dict::S('UI:CSVReport-Object-ToCreate');
@@ -257,12 +273,12 @@ class CSVImportPageProcessor
 				case 'RowStatus_Issue':
 					$iErrors++;
 					$sMessage = self::GetDivAlert($oStatus->GetDescription());
-					$sStatus = '<div class="ibo-csv-import--cell-error"><i class="fas fa-exclamation-triangle" title="' . Dict::S('UI:CSVReport-Icon-Error') . '" /></div>';//translate
+					$sStatus = '<div class="ibo-csv-import--cell-error"><i class="fas fa-exclamation-triangle" title="'.Dict::S('UI:CSVReport-Icon-Error').'" /></div>';//translate
 					$sCSSMessageClass = 'ibo-csv-import--cell-error';
 					$sCSSRowClass = 'ibo-csv-import--row-error';
 					if (array_key_exists($iLine, $aData)) {
 						$aRow = $aData[$iLine];
-						$aResult[] = $sTextQualifier . implode($sTextQualifier . $sSeparator . $sTextQualifier, $aRow) . $sTextQualifier; // Remove the first line and store it in case of error
+						$aResult[] = $sTextQualifier.implode($sTextQualifier.$sSeparator.$sTextQualifier, $aRow).$sTextQualifier; // Remove the first line and store it in case of error
 					}
 					break;
 			}
@@ -286,7 +302,7 @@ class CSVImportPageProcessor
 						case 'CellStatus_Issue':
 						case 'CellStatus_NullIssue':
 							$sCellMessage .= self::GetDivAlert($oCellStatus->GetDescription());
-							$aTableRow[$sClassName . '/' . $sAttCode] = '<div class="ibo-csv-import--cell-error">' . Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue) . $sCellMessage . '</div>';
+							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-error">'.Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue).$sCellMessage.'</div>';
 							break;
 
 						case 'CellStatus_SearchIssue':
@@ -294,7 +310,7 @@ class CSVImportPageProcessor
 							$sDivAlert = self::GetDivAlert($oCellStatus->GetDescription());
 							$sAllowedValuesLinkUrl = $oCellStatus->GetAllowedValuesLinkUrl();
 							$sAllowedValuesLinkLabel = Dict::S('UI:CSVImport:ViewAllPossibleValues');
-							$aTableRow[$sClassName . '/' . $sAttCode] =
+							$aTableRow[$sClassName.'/'.$sAttCode] =
 								<<<HTML
 								<div class="ibo-csv-import--cell-error">
 									$sMessage
@@ -309,7 +325,7 @@ HTML;
 							$sDivAlert = self::GetDivAlert($oCellStatus->GetDescription());
 							$sSearchLinkUrl = $oCellStatus->GetSearchLinkUrl();
 							$sSearchLinkLabel = Dict::S('UI:CSVImport:ViewAllAmbiguousValues');
-							$aTableRow[$sClassName . '/' . $sAttCode] =
+							$aTableRow[$sClassName.'/'.$sAttCode] =
 								<<<HTML
 								<div class="ibo-csv-import--cell-error">
 									$sMessage
@@ -320,11 +336,11 @@ HTML;
 							break;
 
 						case 'CellStatus_Modify':
-							$aTableRow[$sClassName . '/' . $sAttCode] = '<div class="ibo-csv-import--cell-modified"><b>' . $sHtmlValue . '</b></div>';
+							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-modified"><b>'.$sHtmlValue.'</b></div>';
 							break;
 
 						default:
-							$aTableRow[$sClassName . '/' . $sAttCode] = $sHtmlValue . $sCellMessage;
+							$aTableRow[$sClassName.'/'.$sAttCode] = $sHtmlValue.$sCellMessage;
 					}
 				}
 			}
@@ -383,28 +399,28 @@ HTML;
 		$oMulticolumn->AddCSSClass('ml-1');
 		$oForm->AddSubBlock($oMulticolumn);
 
-		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="' . $sAppRootUrl . 'images/unchanged.png">&nbsp;' . sprintf($aDisplayFilters['unchanged'], $iUnchanged), '', "1", "show_unchanged", "checkbox");
+		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="'.$sAppRootUrl.'images/unchanged.png">&nbsp;'.sprintf($aDisplayFilters['unchanged'], $iUnchanged), '', "1", "show_unchanged", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
 		$oPage->add_ready_script("$('#show_unchanged').on('click', function(){ToggleRows('ibo-csv-import--row-unchanged')})");
 
-		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="' . $sAppRootUrl . 'images/modified.png">&nbsp;' . sprintf($aDisplayFilters['modified'], $iModified), '', "1", "show_modified", "checkbox");
+		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="'.$sAppRootUrl.'images/modified.png">&nbsp;'.sprintf($aDisplayFilters['modified'], $iModified), '', "1", "show_modified", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
 		$oPage->add_ready_script("$('#show_modified').on('click', function(){ToggleRows('ibo-csv-import--row-modified')})");
 
-		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="' . $sAppRootUrl . 'images/added.png">&nbsp;' . sprintf($aDisplayFilters['added'], $iCreated), '', "1", "show_created", "checkbox");
+		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="'.$sAppRootUrl.'images/added.png">&nbsp;'.sprintf($aDisplayFilters['added'], $iCreated), '', "1", "show_created", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
 		$oPage->add_ready_script("$('#show_created').on('click', function(){ToggleRows('ibo-csv-import--row-added')})");
 
-		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<span style="color:#A33; background-color: #FFF0F0;"><i class="fas fa-exclamation-triangle"></i>&nbsp;' . sprintf($aDisplayFilters['errors'], $iErrors) . '</span>', '', "1", "show_errors", "checkbox");
+		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<span style="color:#A33; background-color: #FFF0F0;"><i class="fas fa-exclamation-triangle"></i>&nbsp;'.sprintf($aDisplayFilters['errors'], $iErrors).'</span>', '', "1", "show_errors", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -418,7 +434,6 @@ HTML;
 		$oTable = DataTableUIBlockFactory::MakeForForm("csvImport", $aColumns, $aTableData);
 		$oTable->AddOption('bFullscreen', true);
 		$oPanel->AddSubBlock($oTable);
-
 
 		if ($bSimulate) {
 			$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Restart'))->SetOnClickJsCode("CSVRestart()"));

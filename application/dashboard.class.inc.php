@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -53,7 +54,7 @@ abstract class Dashboard
 		$this->sLayoutClass = 'DashboardLayoutOneCol';
 		$this->bAutoReload = false;
 		$this->iAutoReloadSec = MetaModel::GetConfig()->GetStandardReloadInterval();
-		$this->aCells = array();
+		$this->aCells = [];
 		$this->oDOMNode = null;
 		$this->sId = $sId;
 	}
@@ -65,8 +66,8 @@ abstract class Dashboard
 	 */
 	public function FromXml($sXml)
 	{
-		$this->aCells = array(); // reset the content of the dashboard
-		set_error_handler(array('Dashboard', 'ErrorHandler'));
+		$this->aCells = []; // reset the content of the dashboard
+		set_error_handler(['Dashboard', 'ErrorHandler']);
 		$oDoc = new DOMDocument();
 		$oDoc->loadXML($sXml);
 		restore_error_handler();
@@ -79,87 +80,69 @@ abstract class Dashboard
 	public function FromDOMDocument(DOMDocument $oDoc)
 	{
 		$this->oDOMNode = $oDoc->getElementsByTagName('dashboard')->item(0);
-		
-		if ($oLayoutNode = $this->oDOMNode->getElementsByTagName('layout')->item(0))
-		{
+
+		if ($oLayoutNode = $this->oDOMNode->getElementsByTagName('layout')->item(0)) {
 			$this->sLayoutClass = $oLayoutNode->textContent;
-		}
-		else
-		{
+		} else {
 			$this->sLayoutClass = 'DashboardLayoutOneCol';
 		}
-		
-		if ($oTitleNode = $this->oDOMNode->getElementsByTagName('title')->item(0))
-		{
+
+		if ($oTitleNode = $this->oDOMNode->getElementsByTagName('title')->item(0)) {
 			$this->sTitle = $oTitleNode->textContent;
-		}
-		else
-		{
+		} else {
 			$this->sTitle = '';
 		}
-		
+
 		$this->bAutoReload = false;
 		$this->iAutoReloadSec = MetaModel::GetConfig()->GetStandardReloadInterval();
-		if ($oAutoReloadNode = $this->oDOMNode->getElementsByTagName('auto_reload')->item(0))
-		{
-			if ($oAutoReloadEnabled = $oAutoReloadNode->getElementsByTagName('enabled')->item(0))
-			{
+		if ($oAutoReloadNode = $this->oDOMNode->getElementsByTagName('auto_reload')->item(0)) {
+			if ($oAutoReloadEnabled = $oAutoReloadNode->getElementsByTagName('enabled')->item(0)) {
 				$this->bAutoReload = ($oAutoReloadEnabled->textContent == 'true');
 			}
-			if ($oAutoReloadInterval = $oAutoReloadNode->getElementsByTagName('interval')->item(0))
-			{
+			if ($oAutoReloadInterval = $oAutoReloadNode->getElementsByTagName('interval')->item(0)) {
 				$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int)$oAutoReloadInterval->textContent);
 			}
 		}
 
-		if ($oCellsNode = $this->oDOMNode->getElementsByTagName('cells')->item(0))
-		{
+		if ($oCellsNode = $this->oDOMNode->getElementsByTagName('cells')->item(0)) {
 			$oCellsList = $oCellsNode->getElementsByTagName('cell');
-			$aCellOrder = array();
+			$aCellOrder = [];
 			$iCellRank = 0;
 			/** @var \DOMElement $oCellNode */
-			foreach($oCellsList as $oCellNode)
-			{
+			foreach ($oCellsList as $oCellNode) {
 				$oCellRank = $oCellNode->getElementsByTagName('rank')->item(0);
-				if ($oCellRank)
-				{
+				if ($oCellRank) {
 					$iCellRank = (float)$oCellRank->textContent;
 				}
 				$oDashletsNode = $oCellNode->getElementsByTagName('dashlets')->item(0);
 				{
 					$oDashletList = $oDashletsNode->getElementsByTagName('dashlet');
 					$iRank = 0;
-					$aDashletOrder = array();
+					$aDashletOrder = [];
 					/** @var \DOMElement $oDomNode */
-					foreach($oDashletList as $oDomNode)
-					{
+					foreach ($oDashletList as $oDomNode) {
 						$oRank =  $oDomNode->getElementsByTagName('rank')->item(0);
-						if ($oRank)
-						{
+						if ($oRank) {
 							$iRank = (float)$oRank->textContent;
 						}
 
 						$oNewDashlet = $this->InitDashletFromDOMNode($oDomNode);
-						$aDashletOrder[] = array('rank' => $iRank, 'dashlet' => $oNewDashlet);
+						$aDashletOrder[] = ['rank' => $iRank, 'dashlet' => $oNewDashlet];
 					}
-					usort($aDashletOrder, array(get_class($this), 'SortOnRank'));
-					$aDashletList = array();
-					foreach($aDashletOrder as $aItem)
-					{
+					usort($aDashletOrder, [get_class($this), 'SortOnRank']);
+					$aDashletList = [];
+					foreach ($aDashletOrder as $aItem) {
 						$aDashletList[] = $aItem['dashlet'];
 					}
-					$aCellOrder[] = array('rank' => $iCellRank, 'dashlets' => $aDashletList);
+					$aCellOrder[] = ['rank' => $iCellRank, 'dashlets' => $aDashletList];
 				}
 			}
-			usort($aCellOrder, array(get_class($this), 'SortOnRank'));
-			foreach($aCellOrder as $aItem)
-			{
+			usort($aCellOrder, [get_class($this), 'SortOnRank']);
+			foreach ($aCellOrder as $aItem) {
 				$this->aCells[] = $aItem['dashlets'];
 			}
-		}
-		else
-		{
-			$this->aCells = array();
+		} else {
+			$this->aCells = [];
 		}
 	}
 
@@ -169,20 +152,20 @@ abstract class Dashboard
 	 * @return mixed
 	 */
 	protected function InitDashletFromDOMNode($oDomNode)
-    {
-        $sId = $oDomNode->getAttribute('id');
+	{
+		$sId = $oDomNode->getAttribute('id');
 
-	    $sDashletType = $oDomNode->getAttribute('xsi:type');
+		$sDashletType = $oDomNode->getAttribute('xsi:type');
 
-        // Test if dashlet can be instantiated, otherwise (uninstalled, broken, ...) we display a placeholder
-	    $sClass = static::GetDashletClassFromType($sDashletType);
-	    /** @var \Dashlet $oNewDashlet */
-	    $oNewDashlet = new $sClass($this->oMetaModel, $sId);
-        $oNewDashlet->SetDashletType($sDashletType);
-        $oNewDashlet->FromDOMNode($oDomNode);
+		// Test if dashlet can be instantiated, otherwise (uninstalled, broken, ...) we display a placeholder
+		$sClass = static::GetDashletClassFromType($sDashletType);
+		/** @var \Dashlet $oNewDashlet */
+		$oNewDashlet = new $sClass($this->oMetaModel, $sId);
+		$oNewDashlet->SetDashletType($sDashletType);
+		$oNewDashlet->FromDOMNode($oDomNode);
 
-        return $oNewDashlet;
-    }
+		return $oNewDashlet;
+	}
 
 	/**
 	 * @param array $aItem1
@@ -208,12 +191,9 @@ abstract class Dashboard
 	 */
 	public static function ErrorHandler($errno, $errstr, $errfile, $errline)
 	{
-		if ($errno == E_WARNING && (substr_count($errstr,"DOMDocument::loadXML()")>0))
-		{
+		if ($errno == E_WARNING && (substr_count($errstr, "DOMDocument::loadXML()") > 0)) {
 			throw new DOMException($errstr);
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
@@ -231,7 +211,7 @@ abstract class Dashboard
 		$oMainNode = $oDoc->createElement('dashboard');
 		$oMainNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 		$oDoc->appendChild($oMainNode);
-		
+
 		$this->ToDOMNode($oMainNode);
 
 		$sXml = $oDoc->saveXML();
@@ -261,23 +241,21 @@ abstract class Dashboard
 
 		$oCellsNode = $oDoc->createElement('cells');
 		$oDefinition->appendChild($oCellsNode);
-		
+
 		$iCellRank = 0;
-		foreach ($this->aCells as $aCell)
-		{
+		foreach ($this->aCells as $aCell) {
 			$oCellNode = $oDoc->createElement('cell');
 			$oCellNode->setAttribute('id', $iCellRank);
 			$oCellsNode->appendChild($oCellNode);
 			$oCellRank = $oDoc->createElement('rank', $iCellRank);
 			$oCellNode->appendChild($oCellRank);
 			$iCellRank++;
-						
+
 			$iDashletRank = 0;
 			$oDashletsNode = $oDoc->createElement('dashlets');
 			$oCellNode->appendChild($oDashletsNode);
 			/** @var \Dashlet $oDashlet */
-			foreach ($aCell as $oDashlet)
-			{
+			foreach ($aCell as $oDashlet) {
 				$oNode = $oDoc->createElement('dashlet');
 				$oDashletsNode->appendChild($oNode);
 				$oNode->setAttribute('id', $oDashlet->GetID());
@@ -299,18 +277,15 @@ abstract class Dashboard
 		$this->sTitle = $aParams['title'];
 		$this->bAutoReload = $aParams['auto_reload'] == 'true';
 		$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int) $aParams['auto_reload_sec']);
-		
-		foreach($aParams['cells'] as $aCell)
-		{
-			$aCellDashlets = array();
-			foreach($aCell as $aDashletParams)
-			{
+
+		foreach ($aParams['cells'] as $aCell) {
+			$aCellDashlets = [];
+			foreach ($aCell as $aDashletParams) {
 				$sDashletClass = $aDashletParams['dashlet_class'];
 				$sId = $aDashletParams['dashlet_id'];
 				/** @var \Dashlet $oNewDashlet */
 				$oNewDashlet = new $sDashletClass($this->oMetaModel, $sId);
-				if (isset($aDashletParams['dashlet_type']))
-				{
+				if (isset($aDashletParams['dashlet_type'])) {
 					$oNewDashlet->SetDashletType($aDashletParams['dashlet_type']);
 				}
 				$oForm = $oNewDashlet->GetForm();
@@ -322,12 +297,12 @@ abstract class Dashboard
 			}
 			$this->aCells[] = $aCellDashlets;
 		}
-		
+
 	}
 
 	public function Save()
 	{
-		
+
 	}
 
 	/**
@@ -420,7 +395,7 @@ abstract class Dashboard
 	{
 		$sId = $this->GetNewDashletId();
 		$oDashlet->SetId($sId);
-		$this->aCells[] = array($oDashlet);
+		$this->aCells[] = [$oDashlet];
 	}
 
 	/**
@@ -430,7 +405,7 @@ abstract class Dashboard
 	 * @throws \ReflectionException
 	 * @throws \Exception
 	 */
-	public function RenderProperties($oPage, $aExtraParams = array())
+	public function RenderProperties($oPage, $aExtraParams = [])
 	{
 		// menu to pick a layout and edit other properties of the dashboard
 		$oPage->add('<div class="ui-widget-content ui-corner-all ibo-dashboard-editor--properties"><div class="ui-widget-header ui-corner-all ibo-dashboard-editor--properties-title">'.Dict::S('UI:DashboardEdit:Properties').'</div>');
@@ -442,7 +417,7 @@ abstract class Dashboard
 			if (is_subclass_of($sLayoutClass, 'DashboardLayout')) {
 				$oReflection = new ReflectionClass($sLayoutClass);
 				if (!$oReflection->isAbstract()) {
-					$aCallSpec = array($sLayoutClass, 'GetInfo');
+					$aCallSpec = [$sLayoutClass, 'GetInfo'];
 					$aInfo = call_user_func($aCallSpec);
 					$sChecked = ($this->sLayoutClass == $sLayoutClass) ? 'checked' : '';
 					$oPage->add('<input type="radio" name="layout_class" '.$sChecked.' value="'.$sLayoutClass.'" id="layout_'.$sLayoutClass.'"><label for="layout_'.$sLayoutClass.'"><img src="'.$sUrl.$aInfo['icon'].'" class="ibo-dashboard--properties--icon" data-role="ibo-dashboard--properties--icon"/></label>'); // title="" on either the img or the label does nothing !
@@ -466,7 +441,6 @@ abstract class Dashboard
 		$oField->SetBoundaries(MetaModel::GetConfig()->Get('min_reload_interval'), null); // no upper limit
 		$oForm->AddField($oField);
 
-
 		$this->SetFormParams($oForm, $aExtraParams);
 		$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');
 
@@ -474,7 +448,7 @@ abstract class Dashboard
 
 		$sRateTitle = addslashes(Dict::Format('UI:DashboardEdit:AutoReloadSec+', MetaModel::GetConfig()->Get('min_reload_interval')));
 		$oPage->add_ready_script(
-<<<EOF
+			<<<EOF
 	// Note: the title gets deleted by the validation mechanism
 	$("#attr_auto_reload_sec").attr('data-tooltip-content', '$sRateTitle');
 	CombodoTooltip.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
@@ -522,7 +496,7 @@ EOF
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout
 	 */
-	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
+	public function Render($oPage, $bEditMode = false, $aExtraParams = [], $bCanEdit = true)
 	{
 		$aExtraParams['dashboard_div_id'] = utils::Sanitize($aExtraParams['dashboard_div_id'] ?? null, $this->GetId(), utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 
@@ -551,7 +525,8 @@ EOF
 
 				$oToolbar->AddHtml($sHtml);
 			} else {
-				$oPage->add_script(<<<JS
+				$oPage->add_script(
+					<<<JS
 $(".ibo-top-bar--toolbar-dashboard-title").html("$sTitleForHTML").attr("title",  $('<div>').html("$sTitleForHTML").text());
 JS
 				);
@@ -595,7 +570,7 @@ JS
 	 * @param WebPage $oPage
 	 * @param array $aExtraParams
 	 */
-	public function RenderDashletsProperties(WebPage $oPage, $aExtraParams = array())
+	public function RenderDashletsProperties(WebPage $oPage, $aExtraParams = [])
 	{
 		// Toolbox/palette to edit the properties of each dashlet
 		$oPage->add('<div class="ui-widget-content ui-corner-all ibo-dashlet--properties"><div class="ui-widget-header ui-corner-all ibo-dashlet--properties--title">'.Dict::S('UI:DashboardEdit:DashletProperties').'</div>');
@@ -604,13 +579,10 @@ JS
 		$oLayout = new $this->sLayoutClass();
 
 		$oPage->add('<div id="dashlet_properties">');
-		foreach($this->aCells as $iCellIdx => $aCell)
-		{
+		foreach ($this->aCells as $iCellIdx => $aCell) {
 			/** @var \Dashlet $oDashlet */
-			foreach($aCell as $oDashlet)
-			{
-				if ($oDashlet->IsVisible())
-				{
+			foreach ($aCell as $oDashlet) {
+				if ($oDashlet->IsVisible()) {
 					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$oDashlet->GetID().'" style="display:none">');
 					$oForm = $oDashlet->GetForm();
 					$this->SetFormParams($oForm, $aExtraParams);
@@ -632,18 +604,17 @@ JS
 	 */
 	protected function GetAvailableDashlets()
 	{
-		$aDashlets = array();
+		$aDashlets = [];
 
-		foreach( get_declared_classes() as $sDashletClass)
-		{
+		foreach (get_declared_classes() as $sDashletClass) {
 			// DashletUnknown is not among the selection as it is just a fallback for dashlets that can't instantiated.
-			if (is_subclass_of($sDashletClass, 'Dashlet') && !in_array($sDashletClass, array('DashletUnknown', 'DashletProxy'))) {
+			if (is_subclass_of($sDashletClass, 'Dashlet') && !in_array($sDashletClass, ['DashletUnknown', 'DashletProxy'])) {
 				$oReflection = new ReflectionClass($sDashletClass);
 				if (!$oReflection->isAbstract()) {
-					$aCallSpec = array($sDashletClass, 'IsVisible');
+					$aCallSpec = [$sDashletClass, 'IsVisible'];
 					$bVisible = call_user_func($aCallSpec);
 					if ($bVisible) {
-						$aCallSpec = array($sDashletClass, 'GetInfo');
+						$aCallSpec = [$sDashletClass, 'GetInfo'];
 						$aInfo = call_user_func($aCallSpec);
 						$aDashlets[$sDashletClass] = $aInfo;
 					}
@@ -660,11 +631,9 @@ JS
 	protected function GetNewDashletId()
 	{
 		$iNewId = 0;
-		foreach($this->aCells as $aDashlets)
-		{
+		foreach ($this->aCells as $aDashlets) {
 			/** @var \Dashlet $oDashlet */
-			foreach($aDashlets as $oDashlet)
-			{
+			foreach ($aDashlets as $oDashlet) {
 				$iNewId = max($iNewId, (int)$oDashlet->GetID());
 			}
 		}
@@ -681,15 +650,15 @@ JS
 	 *
 	 * @return void
 	 */
-	abstract protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array());
+	abstract protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = []);
 
-    /**
-     * @param \DesignerForm $oForm
-     * @param array $aExtraParams
-     *
-     * @return mixed
-     */
-	abstract protected function SetFormParams($oForm, $aExtraParams = array());
+	/**
+	 * @param \DesignerForm $oForm
+	 * @param array $aExtraParams
+	 *
+	 * @return mixed
+	 */
+	abstract protected function SetFormParams($oForm, $aExtraParams = []);
 
 	/**
 	 * @param string $sType
@@ -699,8 +668,7 @@ JS
 	 */
 	public static function GetDashletClassFromType($sType, $oFactory = null)
 	{
-		if (is_subclass_of($sType, 'Dashlet'))
-		{
+		if (is_subclass_of($sType, 'Dashlet')) {
 			return $sType;
 		}
 		return 'DashletUnknown';
@@ -723,14 +691,12 @@ JS
 	 */
 	public static function GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletOrigId)
 	{
-		if(strpos($sDashletOrigId, '_ID_row') !== false)
-		{
+		if (strpos($sDashletOrigId, '_ID_row') !== false) {
 			return $sDashletOrigId;
 		}
 
 		$sDashletId = $sDashboardDivId."_ID_row".$iRow."_col".$iCol."_".$sDashletOrigId;
-		if ($bIsCustomized)
-		{
+		if ($bIsCustomized) {
 			$sDashletId = 'CUSTOM_'.$sDashletId;
 		}
 
@@ -782,9 +748,9 @@ class RuntimeDashboard extends Dashboard
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	protected function SetFormParams($oForm, $aExtraParams = array())
+	protected function SetFormParams($oForm, $aExtraParams = [])
 	{
-		$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
+		$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', ['operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams]);
 	}
 
 	/**
@@ -800,14 +766,11 @@ class RuntimeDashboard extends Dashboard
 		$oUDSearch->AddCondition('menu_code', $this->sId, '=');
 		$oUDSet = new DBObjectSet($oUDSearch);
 		$bIsNew = false;
-		if ($oUDSet->Count() > 0)
-		{
+		if ($oUDSet->Count() > 0) {
 			// Assuming there is at most one couple {user, menu}!
 			$oUserDashboard = $oUDSet->Fetch();
 			$oUserDashboard->Set('contents', $sXml);
-		}
-		else
-		{
+		} else {
 			// No such customized dashboard for the current user, let's create a new record
 			$oUserDashboard = new UserDashboard();
 			$oUserDashboard->Set('user_id', UserRights::GetUserId());
@@ -838,8 +801,7 @@ class RuntimeDashboard extends Dashboard
 		$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
 		$oUDSearch->AddCondition('menu_code', $this->sId, '=');
 		$oUDSet = new DBObjectSet($oUDSearch);
-		if ($oUDSet->Count() > 0)
-		{
+		if ($oUDSet->Count() > 0) {
 			// Assuming there is at most one couple {user, menu}!
 			$oUserDashboard = $oUDSet->Fetch();
 			utils::PushArchiveMode(false);
@@ -883,14 +845,11 @@ class RuntimeDashboard extends Dashboard
 			} else {
 				$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
 			}
-		}
-		else
-		{
+		} else {
 			$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
 		}
 
-		if ($sDashboardDefinition !== false)
-		{
+		if ($sDashboardDefinition !== false) {
 			$oDashboard = new RuntimeDashboard($sDashBoardId);
 			$oDashboard->FromXml($sDashboardDefinition);
 			$oDashboard->SetCustomFlag($bCustomized);
@@ -937,7 +896,6 @@ class RuntimeDashboard extends Dashboard
 			$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
 		}
 
-
 		if ($sDashboardDefinition !== false) {
 			$oDashboard = new RuntimeDashboard($sDashBoardId);
 			$oDashboard->FromXml($sDashboardDefinition);
@@ -954,11 +912,11 @@ class RuntimeDashboard extends Dashboard
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
+	public function Render($oPage, $bEditMode = false, $aExtraParams = [], $bCanEdit = true)
 	{
 		if (!isset($aExtraParams['query_params']) && isset($aExtraParams['this->class'])) {
 			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
-			$aRenderParams = array('query_params' => $oObj->ToArgsForQuery());
+			$aRenderParams = ['query_params' => $oObj->ToArgsForQuery()];
 		} else {
 			$aRenderParams = $aExtraParams;
 		}
@@ -968,7 +926,7 @@ class RuntimeDashboard extends Dashboard
 		if (isset($aExtraParams['query_params']['this->object()'])) {
 			/** @var \DBObject $oObj */
 			$oObj = $aExtraParams['query_params']['this->object()'];
-			$aAjaxParams = array('this->class' => get_class($oObj), 'this->id' => $oObj->GetKey());
+			$aAjaxParams = ['this->class' => get_class($oObj), 'this->id' => $oObj->GetKey()];
 			if (isset($aExtraParams['from_dashboard_page'])) {
 				$aAjaxParams['from_dashboard_page'] = $aExtraParams['from_dashboard_page'];
 			}
@@ -1001,9 +959,7 @@ class RuntimeDashboard extends Dashboard
 				}
 JS
 				);
-			}
-			else
-			{
+			} else {
 				$oPage->add_script(
 					<<<EOF
 				if (typeof(AutoReloadDashboardId$sDivId) !== 'undefined')
@@ -1032,7 +988,7 @@ EOF
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	protected function RenderSelector(WebPage $oPage, DashboardLayoutUIBlock $oDashboard, $aAjaxParams = array())
+	protected function RenderSelector(WebPage $oPage, DashboardLayoutUIBlock $oDashboard, $aAjaxParams = [])
 	{
 		if (!$this->HasCustomDashboard()) {
 			return;
@@ -1092,8 +1048,7 @@ JS
 	 */
 	protected function HasCustomDashboard()
 	{
-		try
-		{
+		try {
 			// Search for an eventual user defined dashboard
 			$oUDSearch = new DBObjectSearch('UserDashboard');
 			$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
@@ -1101,9 +1056,7 @@ JS
 			$oUDSet = new DBObjectSet($oUDSearch);
 
 			return ($oUDSet->Count() > 0);
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			return false;
 		}
 	}
@@ -1139,20 +1092,22 @@ JS
 			->AddCSSClass('ibo-action-button');
 
 		$oToolbar->AddSubBlock($oActionButton);
-		$aActions = array();
+		$aActions = [];
 		$sFile = addslashes(utils::LocalPath($this->sDefinitionFile));
 		$sJSExtraParams = json_encode($aExtraParams);
 		if ($this->HasCustomDashboard()) {
 			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:EditCustom'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
 			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
-			$oRevert = new JSPopupMenuItem('UI:Dashboard:RevertConfirm', Dict::S('UI:Dashboard:DeleteCustom'),
-				"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}', $sJSExtraParams); else return false");
+			$oRevert = new JSPopupMenuItem(
+				'UI:Dashboard:RevertConfirm',
+				Dict::S('UI:Dashboard:DeleteCustom'),
+				"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}', $sJSExtraParams); else return false"
+			);
 			$aActions[$oRevert->GetUID()] = $oRevert->GetMenuItem();
 		} else {
 			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:CreateCustom'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
 			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
 		}
-
 
 		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
 
@@ -1193,12 +1148,12 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	public function RenderProperties($oPage, $aExtraParams = array())
+	public function RenderProperties($oPage, $aExtraParams = [])
 	{
 		parent::RenderProperties($oPage, $aExtraParams);
 
 		$oPage->add_ready_script(
-<<<EOF
+			<<<EOF
 	$('#select_layout input').on('click', function() {
 		var sLayoutClass = $(this).val();
 		$('.itop-dashboard').runtimedashboard('option', {layout_class: sLayoutClass});
@@ -1225,7 +1180,6 @@ EOF
 		);
 	}
 
-
 	/**
 	 * @param WebPage $oPage
 	 *
@@ -1236,11 +1190,11 @@ EOF
 	 * @throws \ReflectionException
 	 * @throws \Exception
 	 */
-	public function RenderEditor($oPage, $aExtraParams = array())
+	public function RenderEditor($oPage, $aExtraParams = [])
 	{
 		if (isset($aExtraParams['this->class'])) {
 			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
-			$aRenderParams = array('query_params' => $oObj->ToArgsForQuery());
+			$aRenderParams = ['query_params' => $oObj->ToArgsForQuery()];
 		} else {
 			$aRenderParams = $aExtraParams;
 		}
@@ -1262,7 +1216,7 @@ EOF
 		$sDialogTitle = Dict::S('UI:DashboardEdit:Title');
 		$sOkButtonLabel = Dict::S('UI:Button:Save');
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
-		
+
 		$sId = json_encode($this->sId);
 		$sLayoutClass = json_encode($this->sLayoutClass);
 		$sAutoReload = $this->bAutoReload ? 'true' : 'false';
@@ -1275,9 +1229,9 @@ EOF
 		$sExitConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
 		$sCancelConfirmationMessage = addslashes(Dict::S('UI:CancelConfirmationMessage'));
 		$sAutoApplyConfirmationMessage = addslashes(Dict::S('UI:AutoApplyConfirmationMessage'));
-		
+
 		$oPage->add_ready_script(
-<<<JS
+			<<<JS
 window.bLeavingOnUserAction = false;
 
 $('#dashboard_editor').dialog({
@@ -1385,104 +1339,89 @@ JS
 		$sContextMenuId = $oAppContext->GetCurrentValue('menu', null);
 
 		$oForm = new DesignerForm();
-	
+
 		// Get the list of all 'dashboard' menus in which we can insert a dashlet
 		$aAllMenus = ApplicationMenu::ReflectionMenuNodes();
 		$sRootMenuId = ApplicationMenu::GetRootMenuId($sContextMenuId);
-		$aAllowedDashboards = array();
+		$aAllowedDashboards = [];
 		$sDefaultDashboard = null;
 
 		// Store the parent menus for acces check
-        $aParentMenus = array();
-        foreach($aAllMenus as $idx => $aMenu)
-        {
-            /** @var MenuNode $oMenu */
-            $oMenu = $aMenu['node'];
-            if (count(ApplicationMenu::GetChildren($oMenu->GetIndex())) > 0)
-            {
-                $aParentMenus[$oMenu->GetMenuId()] = $aMenu;
-            }
-        }
-
-        foreach($aAllMenus as $idx => $aMenu)
-		{
+		$aParentMenus = [];
+		foreach ($aAllMenus as $idx => $aMenu) {
+			/** @var MenuNode $oMenu */
 			$oMenu = $aMenu['node'];
-            if ($oMenu instanceof DashboardMenuNode)
-            {
-                // Get the root parent for access check
-                $sParentId = $aMenu['parent'];
-                $aParentMenu = $aParentMenus[$sParentId];
-                while (isset($aParentMenus[$aParentMenu['parent']]))
-                {
-                    // grand parent exists
-                    $sParentId = $aParentMenu['parent'];
-                    $aParentMenu = $aParentMenus[$sParentId];
-                }
-	            /** @var \MenuNode $oParentMenu */
-	            $oParentMenu = $aParentMenu['node'];
-                if ($oMenu->IsEnabled() && $oParentMenu->IsEnabled())
-                {
-                    $sMenuLabel = $oMenu->GetTitle();
-                    $sParentLabel = Dict::S('Menu:'.$sParentId);
-                    if ($sParentLabel != $sMenuLabel)
-                    {
-                        $aAllowedDashboards[$oMenu->GetMenuId()] = $sParentLabel.' - '.$sMenuLabel;
-                    }
-                    else
-                    {
-                        $aAllowedDashboards[$oMenu->GetMenuId()] = $sMenuLabel;
-                    }
-                    if (empty($sDefaultDashboard) && ($sRootMenuId == ApplicationMenu::GetRootMenuId($oMenu->GetMenuId())))
-                    {
-                        $sDefaultDashboard = $oMenu->GetMenuId();
-                    }
-                }
-            }
+			if (count(ApplicationMenu::GetChildren($oMenu->GetIndex())) > 0) {
+				$aParentMenus[$oMenu->GetMenuId()] = $aMenu;
+			}
 		}
-		asort($aAllowedDashboards);
-		
-		$oField = new DesignerComboField('menu_id', Dict::S('UI:DashletCreation:Dashboard'), $sDefaultDashboard);
-		$oField->SetAllowedValues($aAllowedDashboards);
-		$oField->SetMandatory(true);
-		$oForm->AddField($oField);
-				
-		// Get the list of possible dashlets that support a creation from
-		// an OQL
-		$aDashlets = array();
-		foreach(get_declared_classes() as $sDashletClass)
-		{
-			if (is_subclass_of($sDashletClass, 'Dashlet'))
-			{
-				$oReflection = new ReflectionClass($sDashletClass);
-				if (!$oReflection->isAbstract())
-				{
-					$aCallSpec = array($sDashletClass, 'CanCreateFromOQL');
-					$bShorcutMode = call_user_func($aCallSpec);
-					if ($bShorcutMode)
-					{
-						$aCallSpec = array($sDashletClass, 'GetInfo');
-						$aInfo = call_user_func($aCallSpec);
-						$aDashlets[$sDashletClass] = array('label' => $aInfo['label'], 'class' => $sDashletClass, 'icon' => $aInfo['icon']);
+
+		foreach ($aAllMenus as $idx => $aMenu) {
+			$oMenu = $aMenu['node'];
+			if ($oMenu instanceof DashboardMenuNode) {
+				// Get the root parent for access check
+				$sParentId = $aMenu['parent'];
+				$aParentMenu = $aParentMenus[$sParentId];
+				while (isset($aParentMenus[$aParentMenu['parent']])) {
+					// grand parent exists
+					$sParentId = $aParentMenu['parent'];
+					$aParentMenu = $aParentMenus[$sParentId];
+				}
+				/** @var \MenuNode $oParentMenu */
+				$oParentMenu = $aParentMenu['node'];
+				if ($oMenu->IsEnabled() && $oParentMenu->IsEnabled()) {
+					$sMenuLabel = $oMenu->GetTitle();
+					$sParentLabel = Dict::S('Menu:'.$sParentId);
+					if ($sParentLabel != $sMenuLabel) {
+						$aAllowedDashboards[$oMenu->GetMenuId()] = $sParentLabel.' - '.$sMenuLabel;
+					} else {
+						$aAllowedDashboards[$oMenu->GetMenuId()] = $sMenuLabel;
+					}
+					if (empty($sDefaultDashboard) && ($sRootMenuId == ApplicationMenu::GetRootMenuId($oMenu->GetMenuId()))) {
+						$sDefaultDashboard = $oMenu->GetMenuId();
 					}
 				}
 			}
 		}
-		
+		asort($aAllowedDashboards);
+
+		$oField = new DesignerComboField('menu_id', Dict::S('UI:DashletCreation:Dashboard'), $sDefaultDashboard);
+		$oField->SetAllowedValues($aAllowedDashboards);
+		$oField->SetMandatory(true);
+		$oForm->AddField($oField);
+
+		// Get the list of possible dashlets that support a creation from
+		// an OQL
+		$aDashlets = [];
+		foreach (get_declared_classes() as $sDashletClass) {
+			if (is_subclass_of($sDashletClass, 'Dashlet')) {
+				$oReflection = new ReflectionClass($sDashletClass);
+				if (!$oReflection->isAbstract()) {
+					$aCallSpec = [$sDashletClass, 'CanCreateFromOQL'];
+					$bShorcutMode = call_user_func($aCallSpec);
+					if ($bShorcutMode) {
+						$aCallSpec = [$sDashletClass, 'GetInfo'];
+						$aInfo = call_user_func($aCallSpec);
+						$aDashlets[$sDashletClass] = ['label' => $aInfo['label'], 'class' => $sDashletClass, 'icon' => $aInfo['icon']];
+					}
+				}
+			}
+		}
+
 		$oSelectorField = new DesignerFormSelectorField('dashlet_class', Dict::S('UI:DashletCreation:DashletType'), '');
 		$oForm->AddField($oSelectorField);
-		foreach($aDashlets as $sDashletClass => $aDashletInfo)
-		{
+		foreach ($aDashlets as $sDashletClass => $aDashletInfo) {
 			$oSubForm = new DesignerForm();
 			$oMetaModel = new ModelReflectionRuntime();
 			/** @var \Dashlet $oDashlet */
 			$oDashlet = new $sDashletClass($oMetaModel, 0);
 			$oDashlet->GetPropertiesFieldsFromOQL($oSubForm, $sOQL);
-			
+
 			$oSelectorField->AddSubForm($oSubForm, $aDashletInfo['label'], $aDashletInfo['class']);
 		}
 		$oField = new DesignerBooleanField('open_editor', Dict::S('UI:DashletCreation:EditNow'), true);
 		$oForm->AddField($oField);
-		
+
 		return $oForm;
 	}
 
@@ -1501,11 +1440,11 @@ JS
 
 		$oForm->Render($oPage);
 		$oPage->add('</div>');
-		
+
 		$sDialogTitle = Dict::S('UI:DashletCreation:Title');
 		$sOkButtonLabel = Dict::S('UI:Button:Ok');
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
-		
+
 		$oPage->add_ready_script(
 			<<<JS
 $('#dashlet_creation_dlg').dialog({
@@ -1603,7 +1542,7 @@ JS
 	/**
 	 * @inheritDoc
 	 */
-	protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array())
+	protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = [])
 	{
 		$sDashletIdOrig = $oDashlet->GetID();
 		$sDashboardSanitizedId = $this->GetSanitizedId();
@@ -1630,31 +1569,27 @@ JS
 	private function UpdateDashletUserPrefs(Dashlet $oDashlet, $sDashletIdOrig, array $aExtraParams)
 	{
 		$bIsDashletWithListPref = ($oDashlet instanceof  DashletObjectList);
-		if (!$bIsDashletWithListPref)
-		{
+		if (!$bIsDashletWithListPref) {
 			return;
 		}
 		/** @var \DashletObjectList $oDashlet */
 
 		$bDashletIdInNewFormat = ($sDashletIdOrig === $oDashlet->GetID());
-		if ($bDashletIdInNewFormat)
-		{
+		if ($bDashletIdInNewFormat) {
 			return;
 		}
 
 		$sNewPrefKey = $this->GetDashletObjectListAppUserPreferencesPrefix($oDashlet, $aExtraParams, $oDashlet->GetID());
 		$sPrefValueForNewKey = appUserPreferences::GetPref($sNewPrefKey, null);
 		$bHasPrefInNewFormat = ($sPrefValueForNewKey !== null);
-		if ($bHasPrefInNewFormat)
-		{
+		if ($bHasPrefInNewFormat) {
 			return;
 		}
 
 		$sOldPrefKey = $this->GetDashletObjectListAppUserPreferencesPrefix($oDashlet, $aExtraParams, $sDashletIdOrig);
 		$sPrefValueForOldKey = appUserPreferences::GetPref($sOldPrefKey, null);
 		$bHasPrefInOldFormat = ($sPrefValueForOldKey !== null);
-		if (!$bHasPrefInOldFormat)
-		{
+		if (!$bHasPrefInOldFormat) {
 			return;
 		}
 
@@ -1673,7 +1608,7 @@ JS
 	private function GetDashletObjectListAppUserPreferencesPrefix(DashletObjectList $oDashlet, $aExtraParams, $sDashletId)
 	{
 		$sDataTableId = Dashlet::APPUSERPREFERENCES_PREFIX.$sDashletId;
-		$aClassAliases = array();
+		$aClassAliases = [];
 		try {
 			$oFilter = $oDashlet->GetDBSearch($aExtraParams);
 			$aClassAliases = $oFilter->GetSelectedClasses();

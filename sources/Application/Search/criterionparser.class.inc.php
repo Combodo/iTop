@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -28,7 +29,6 @@
 
 namespace Combodo\iTop\Application\Search;
 
-
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToOQL;
 use DBObjectSearch;
 use Expression;
@@ -37,7 +37,6 @@ use OQLException;
 
 class CriterionParser
 {
-
 	/**
 	 * @param $sBaseOql
 	 * @param $aCriterion
@@ -47,30 +46,25 @@ class CriterionParser
 	 */
 	public static function Parse($sBaseOql, $aCriterion, $sHiddenCriteria = null)
 	{
-		try
-		{
+		try {
 			$oSearch = DBObjectSearch::FromOQL($sBaseOql);
 
-			$aExpression = array();
+			$aExpression = [];
 			$aOr = $aCriterion['or'];
-			foreach($aOr as $aAndList)
-			{
+			foreach ($aOr as $aAndList) {
 
 				$sExpression = self::ParseAndList($oSearch, $aAndList['and']);
-				if (!empty($sExpression))
-				{
+				if (!empty($sExpression)) {
 					$aExpression[] = $sExpression;
 				}
 			}
 
-			if (!empty($sHiddenCriteria))
-			{
+			if (!empty($sHiddenCriteria)) {
 				$oHiddenCriteriaExpression = Expression::FromOQL($sHiddenCriteria);
 				$oSearch->AddConditionExpression($oHiddenCriteriaExpression);
 			}
 
-			if (empty($aExpression))
-			{
+			if (empty($aExpression)) {
 				return $oSearch;
 			}
 
@@ -78,8 +72,7 @@ class CriterionParser
 			$oSearch->AddConditionExpression($oExpression);
 
 			return $oSearch;
-		} catch (OQLException $e)
-		{
+		} catch (OQLException $e) {
 			IssueLog::Error($e->getMessage());
 		}
 		return null;
@@ -87,19 +80,16 @@ class CriterionParser
 
 	private static function ParseAndList($oSearch, $aAnd)
 	{
-		$aExpression = array();
-		foreach($aAnd as $aCriteria)
-		{
+		$aExpression = [];
+		foreach ($aAnd as $aCriteria) {
 
 			$sExpression = CriterionToOQL::Convert($oSearch, $aCriteria);
-			if ($sExpression !== '1')
-			{
+			if ($sExpression !== '1') {
 				$aExpression[] = $sExpression;
 			}
 		}
 
-		if (empty($aExpression))
-		{
+		if (empty($aExpression)) {
 			return '1';
 		}
 

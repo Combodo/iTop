@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'iTopUpdate:UI:PageTitle' => 'Upgraden toepassing',
 	'itop-core-update:UI:SelectUpdateFile' => 'Upgrade',
 	'itop-core-update:UI:ConfirmUpdate' => 'Upgrade',
@@ -95,6 +96,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ModuleInstallation/Attribute:name' => 'Naam',
 	'Class:ModuleInstallation/Attribute:version' => 'Versie',
 	'Class:ModuleInstallation/Attribute:comment' => 'Opmerkingen',
-));
-
-
+]);

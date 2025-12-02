@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ProblemManagement' => 'Problem Management',
 	'Menu:ProblemManagement+' => '',
 	'Menu:Problem:Overview' => 'Übersicht',
@@ -33,12 +34,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard für das Problem Management',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard für das Problem Management',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Problem' => 'Problem',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Status',
@@ -111,4 +112,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Schließen',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

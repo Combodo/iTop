@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:iTopHub' => 'iTop Hub~~',
 	'Menu:iTopHub:Register' => 'Připojit k iTop Hubu',
 	'Menu:iTopHub:Register+' => 'Go to iTop Hub to update your '.ITOP_APPLICATION_SHORT.' instance~~',
@@ -64,6 +65,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s verze: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Installed~~',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Verze %1$s <b>Není</b> instalována.',
-));
-
-
+]);

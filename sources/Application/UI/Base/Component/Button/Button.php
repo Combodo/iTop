@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -19,7 +20,6 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\Button;
 
-
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
 /**
@@ -39,7 +39,7 @@ class Button extends UIBlock
 		'js/components/button.js',
 	];
 	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
-	
+
 	// Specific constants
 	/** @var string ENUM_ACTION_TYPE_REGULAR */
 	public const ENUM_ACTION_TYPE_REGULAR = 'regular';

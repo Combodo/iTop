@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:IncidentManagement' => 'Getione incidente',
 	'Menu:IncidentManagement+' => 'Gestione incidente',
 	'Menu:Incident:Overview' => 'Overview',
@@ -31,8 +32,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidenti aperti per stato',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Incidenti aperti per agente',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Incidenti aperti per cliente',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -48,7 +48,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 // Class: Incident
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Incident' => 'Incidente',
 	'Class:Incident+' => '~~',
 	'Class:Incident/Attribute:status' => 'Stato',
@@ -227,4 +227,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Risoluzione a cascata delle richieste figlie (ev_autoresolve), e allineare le seguenti caratteristiche: servizio, team, agente e risoluzione',
 	'Tickets:Related:OpenIncidents' => 'Incidenti aperti',
-));
+]);

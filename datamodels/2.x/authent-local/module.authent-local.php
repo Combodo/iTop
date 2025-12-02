@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'authent-local/3.2.1',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'User authentication based on the local DB',
@@ -12,23 +11,23 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
-		),
+		'dependencies' => [
+		],
 		'mandatory' => true,
 		'visible' => true,
 
 		// Components
 		//
-		'datamodel' => array(
+		'datamodel' => [
 			'model.authent-local.php',
-		),
-		'data.struct' => array(
+		],
+		'data.struct' => [
 			//'data.struct.authent-local.xml',
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			//'data.sample.authent-local.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
@@ -37,8 +36,8 @@ SetupWebPage::AddModule(
 		// Default settings
 		//
 
-		'settings' => array(
+		'settings' => [
 			// see the './datamodel.authent-local.xml' for the default settings!
-		),
-	)
+		],
+	]
 );

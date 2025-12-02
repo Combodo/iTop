@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Organization' => 'Organisation',
 	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => 'Name',
@@ -38,13 +39,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Organization:Overview:FunctionalCIs' => 'CIs dieser Organisation',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'nach Typ',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Benutzer innerhalb dieser Organisation',
-));
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Location' => 'Standort',
 	'Class:Location+' => 'Jeder Typ von Standort: Region, Land, Stadt, Seite, Gebäude, Flur, Raum, Rack,...',
 	'Class:Location/Attribute:name' => 'Name',
@@ -71,13 +72,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Location/Attribute:physicaldevice_list+' => 'Alle Geräte an diesem Standort',
 	'Class:Location/Attribute:person_list' => 'Kontakte',
 	'Class:Location/Attribute:person_list+' => 'Alle Kontakte, die sich an diesem Standort befinden',
-));
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Contact' => 'Kontakt',
 	'Class:Contact+' => '',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
@@ -109,13 +110,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Contact/Attribute:cis_list+' => 'Alle mit diesem Kontakt verknüpften CIs',
 	'Class:Contact/Attribute:finalclass' => 'Typ',
 	'Class:Contact/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Person' => 'Person',
 	'Class:Person+' => '',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s',
@@ -150,13 +151,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Person/UniquenessRule:name+' => 'Innerhalb einer Organisation muss der Name einer Person eindeutig sein',
 	'Class:Person/UniquenessRule:name' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit dem gleichen Namen',
 	'Class:Person/Error:ChangingOrgDenied' => 'Es ist nicht möglich, dieser Person der Organisation \'%1$s\' zuzuordnen, da dies seinen Zugang zum Benutzerportal unterbinden würde, da sein zugehöriger Benutzer nicht für diese Organisation zugelassen ist.',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
@@ -164,13 +165,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Team/Attribute:persons_list+' => 'Alle Personen, die zu diesem Team gehören',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'Alle diesem Team zugewiesenen Tickets',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Document' => 'Dokument',
 	'Class:Document+' => '',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
@@ -200,77 +201,77 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Document/Attribute:cis_list+' => 'Alle mit diesem Dokument verknüpften CIs',
 	'Class:Document/Attribute:finalclass' => 'Unterklasse von Dokument',
 	'Class:Document/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DocumentFile' => 'Dokument (Datei)',
 	'Class:DocumentFile+' => '',
 	'Class:DocumentFile/Attribute:file' => 'Datei',
 	'Class:DocumentFile/Attribute:file+' => '',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DocumentNote' => 'Dokument (Notiz)',
 	'Class:DocumentNote+' => '',
 	'Class:DocumentNote/Attribute:text' => 'Text',
 	'Class:DocumentNote/Attribute:text+' => '',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DocumentWeb' => 'Dokument (Web)',
 	'Class:DocumentWeb+' => '',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Typology' => 'Typologie',
 	'Class:Typology+' => '',
 	'Class:Typology/Attribute:name' => 'Name',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Typ',
 	'Class:Typology/Attribute:finalclass+' => 'Name der instanziierbaren Klasse',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:DocumentType' => 'Dokumenttyp',
 	'Class:DocumentType+' => '',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ContactType' => 'Kontakttyp',
 	'Class:ContactType+' => '',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkPersonToTeam' => 'Verknüpfung Person/Team',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
@@ -287,13 +288,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'Eine Rolle aus einer Typologie möglicher Rollen',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Rollenname',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:DataAdministration' => 'Data Management',
 	'Menu:DataAdministration+' => 'Data Management',
 	'Menu:Catalogs' => 'Kataloge',
@@ -331,20 +332,20 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:Typology+' => 'Typologie-Konfiguration',
 	'UI_WelcomeMenu_AllConfigItems' => 'Zusammenfassung',
 	'Menu:ConfigManagement:Typology' => 'Typologie-Konfiguration',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Person:info' => 'Allgemeine Informationen',
 	'User:info' => 'Allgemeine Informationen',
 	'User:profiles' => 'Profile (mindestens eines)',
 	'Person:personal_info' => 'Persönliche Informationen',
 	'Person:notifiy' => 'Benachrichtigungen',
-));
+]);
 
 // Themes
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'theme:fullmoon' => 'Full Moon',
 	'theme:test-red' => 'Test Red (Testinstanz)',
-));
+]);

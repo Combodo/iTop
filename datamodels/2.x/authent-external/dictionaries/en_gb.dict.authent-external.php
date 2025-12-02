@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -35,7 +36,7 @@
 // Class: UserExternal
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:UserExternal' => 'External user',
 	'Class:UserExternal+' => 'User authentified outside of '.ITOP_APPLICATION_SHORT,
-));
+]);

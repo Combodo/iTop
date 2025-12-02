@@ -1,10 +1,11 @@
 <?php
+
 /**
  * @copyright Copyright (C) 2024 Combodo SAS
  * @license https://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 
 	// Placeholders
 	// $%1s : host object class name
@@ -60,4 +61,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 
 	// New item
 	'UI:Links:NewItem' => 'New item',
-));
+]);

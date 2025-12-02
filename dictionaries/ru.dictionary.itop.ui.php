@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:AuditCategory' => 'Категория аудита',
 	'Class:AuditCategory+' => 'Раздел внутри общего аудита',
 	'Class:AuditCategory/Attribute:name' => 'Название категории',
@@ -27,13 +28,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
-));
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:AuditRule' => 'Правило аудита',
 	'Class:AuditRule+' => 'Правило для проверки данной категории аудита',
 	'Class:AuditRule/Attribute:name' => 'Название правила',
@@ -52,13 +53,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:AuditRule/Attribute:category_id+' => 'Категория для этого правила',
 	'Class:AuditRule/Attribute:category_name' => 'Категория',
 	'Class:AuditRule/Attribute:category_name+' => 'Категория для этого правила',
-));
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -70,13 +71,13 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -87,13 +88,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Query' => 'Запрос',
 	'Class:Query+' => 'Запрос - это набор данных, определенных динамическим путем',
 	'Class:Query/Attribute:name' => 'Название',
@@ -120,7 +121,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:QueryOQL+' => 'Запрос, основанный на OQL (Object Query Language)',
 	'Class:QueryOQL/Attribute:oql' => 'Выражение',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL Выражение',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -131,7 +132,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Class: User
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:User' => 'Пользователь',
 	'Class:User+' => 'Пользователь',
 	'Class:User/Attribute:finalclass' => 'Тип аккаунта',
@@ -177,13 +178,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'Внутренний пользователь',
 	'Class:UserInternal+' => 'Учетная запись создана внутри '.ITOP_APPLICATION_SHORT,
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_Profiles' => 'Профиль',
 	'Class:URP_Profiles+' => 'Пользовательский профиль',
 	'Class:URP_Profiles/Attribute:name' => 'Название',
@@ -192,13 +193,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_Profiles/Attribute:description+' => 'Описание',
 	'Class:URP_Profiles/Attribute:user_list' => 'Пользователи',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Пользователи, имеющие эту роль',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_Dimensions' => 'размерность',
 	'Class:URP_Dimensions+' => 'применение размерности (определение силосов)',
 	'Class:URP_Dimensions/Attribute:name' => 'Название',
@@ -207,13 +208,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'краткое описание',
 	'Class:URP_Dimensions/Attribute:type' => 'Тип',
 	'Class:URP_Dimensions/Attribute:type+' => 'имя класса или типа данных (проекционный блок)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_UserProfile' => 'Профиль пользователя',
 	'Class:URP_UserProfile+' => 'Профиль пользователя',
 	'Class:URP_UserProfile/Name' => 'Связь между %1$s и %2$s',
@@ -227,14 +228,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_UserProfile/Attribute:profile+' => 'Название профиля',
 	'Class:URP_UserProfile/Attribute:reason' => 'Причина',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Пояснение причины назначения этой роли',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_UserOrg' => 'Организации пользователя',
 	'Class:URP_UserOrg+' => 'Разрешённые организации',
 	'Class:URP_UserOrg/Name' => 'Связь между %1$s и %2$s',
@@ -248,13 +248,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Разрешённая организация',
 	'Class:URP_UserOrg/Attribute:reason' => 'Причина',
 	'Class:URP_UserOrg/Attribute:reason+' => 'Пояснение причины разрешения доступа к данным этой организации',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_ProfileProjection' => 'Проекция профиля',
 	'Class:URP_ProfileProjection+' => 'Проекция профиля',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Размерность',
@@ -269,13 +269,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL выражение (используя $user) | константа |  | +атрибут кода',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Атрибут',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Целевой атрибут кода (необязательный)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_ClassProjection' => 'Проекция классов',
 	'Class:URP_ClassProjection+' => 'Проекция классов',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Размерность',
@@ -288,13 +288,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL выражение (используя $this) | константа |  | +атрибут кода',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Атрибут',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Целевой атрибут кода (необязательный)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_ActionGrant' => 'действие разрешений',
 	'Class:URP_ActionGrant+' => 'разрешения на классы',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Профиль',
@@ -311,13 +311,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'нет',
 	'Class:URP_ActionGrant/Attribute:action' => 'Действие',
 	'Class:URP_ActionGrant/Attribute:action+' => 'действие выполняемое на данном классе',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_StimulusGrant' => 'разрешения стимулов',
 	'Class:URP_StimulusGrant+' => 'разрешения на стимулы в жизненном цикле объекта',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Профиль',
@@ -334,25 +334,25 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'нет',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Стимулы',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'код стимулов',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:URP_AttributeGrant' => 'разрешения атрибутов',
 	'Class:URP_AttributeGrant+' => 'разрешения на уровне атрибутов',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Действие предоставления',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'действие предоставления',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Атрибут',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Код атрибута',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:UserDashboard' => 'Дашборд пользователя',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'Пользователь',
@@ -361,12 +361,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '',
 	'Class:UserDashboard/Attribute:contents' => 'Содержимое',
 	'Class:UserDashboard/Attribute:contents+' => '',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:WelcomeMenu' => 'Добро пожаловать',
 	'Menu:WelcomeMenu+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Добро пожаловать',
 	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Инструменты администратора',
@@ -383,14 +383,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:MyShortcuts' => 'Избранное',
 	'Menu:Notifications:Title' => 'Категории аудита',
 	'Menu:DataAdministration' => 'Администрирование данных',
-	'Menu:DataAdministration+' => 'Администрирование данных'
-));
+	'Menu:DataAdministration+' => 'Администрирование данных',
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'BooleanLabel:yes' => 'да',
 	'BooleanLabel:no' => 'нет',
 	'UI:Login:Title' => 'Вход в '.ITOP_APPLICATION_SHORT, 'UI:WelcomeMenu:Title' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT, 'UI:WelcomeMenu:AllOpenRequests' => 'Открытые запросы: %1$d',
@@ -1533,13 +1533,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Включаются все нижестоящие объекты.',
 	'UI:Search:Criteria:Raw:Filtered' => 'Отфильтровано',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Отфильтровано по %1$s',
-	'UI:StateChanged' => 'State changed~~'
-));
+	'UI:StateChanged' => 'State changed~~',
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Expression:Operator:AND' => ' AND ',
 	'Expression:Operator:OR' => ' OR ',
 	'Expression:Operator:=' => ': ~~',
@@ -1552,12 +1552,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Expression:Unit:Long:MINUTE' => 'minute(s)',
 	'Expression:Verb:NOW' => 'now',
 	'Expression:Verb:ISNULL' => ': undefined~~',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Newsroom:NoNewMessage' => 'Нет новых сообщений',
 	'UI:Newsroom:XNewMessage' => 'Новые сообщения (%1$s)',
 	'UI:Newsroom:MarkAllAsRead' => 'Отметить все как прочитанные',
@@ -1572,10 +1572,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
-));
+]);
 
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:DataSources' => 'Синхронизация данных',
 	'Menu:DataSources+' => 'Синхронизация данных',
 	'Menu:AuditCategories' => 'Категории аудита',
@@ -1603,4 +1602,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:Integrations' => 'Integrations~~',
 	'Menu:Integrations+' => '~~',
 
-));
+]);

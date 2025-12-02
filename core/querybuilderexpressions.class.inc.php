@@ -26,25 +26,21 @@ class QueryBuilderExpressions
 	public function __construct(DBObjectSearch $oSearch, $aGroupByExpr = null, $aSelectExpr = null)
 	{
 		$this->m_oConditionExpr = $oSearch->GetCriteria();
-		if (!$oSearch->GetShowObsoleteData())
-		{
-			foreach ($oSearch->GetSelectedClasses() as $sAlias => $sClass)
-			{
-				if (MetaModel::IsObsoletable($sClass))
-				{
+		if (!$oSearch->GetShowObsoleteData()) {
+			foreach ($oSearch->GetSelectedClasses() as $sAlias => $sClass) {
+				if (MetaModel::IsObsoletable($sClass)) {
 					$oNotObsolete = new BinaryExpression(new FieldExpression('obsolescence_flag', $sAlias), '=', new ScalarExpression(0));
 					$this->m_oConditionExpr = $this->m_oConditionExpr->LogAnd($oNotObsolete);
 				}
 			}
 		}
-		$this->m_aSelectExpr = is_null($aSelectExpr) ? array() : $aSelectExpr;
+		$this->m_aSelectExpr = is_null($aSelectExpr) ? [] : $aSelectExpr;
 		$this->m_aGroupByExpr = $aGroupByExpr;
-		$this->m_aJoinFields = array();
-		$this->m_aJoinFields = array();
+		$this->m_aJoinFields = [];
+		$this->m_aJoinFields = [];
 
-		$this->m_aClassIds = array();
-		foreach ($oSearch->GetJoinedClasses() as $sClassAlias => $sClass)
-		{
+		$this->m_aClassIds = [];
+		foreach ($oSearch->GetJoinedClasses() as $sClassAlias => $sClass) {
 			$this->m_aClassIds[$sClassAlias] = new FieldExpression('id', $sClassAlias);
 		}
 	}
@@ -117,13 +113,11 @@ class QueryBuilderExpressions
 	 */
 	public function GetMandatoryTables(&$aTables = null)
 	{
-		if (is_null($aTables))
-		{
-			$aTables = array();
+		if (is_null($aTables)) {
+			$aTables = [];
 		}
 
-		foreach ($this->m_aClassIds as $sClass => $oExpression)
-		{
+		foreach ($this->m_aClassIds as $sClass => $oExpression) {
 			$oExpression->CollectUsedParents($aTables);
 		}
 
@@ -138,8 +132,7 @@ class QueryBuilderExpressions
 	public function GetUnresolvedFields($sAlias)
 	{
 		$aUnresolved = $this->GetExpectedFields($sAlias);
-		foreach ($this->m_aJoinFields as $oExpression)
-		{
+		foreach ($this->m_aJoinFields as $oExpression) {
 			$oExpression->GetUnresolvedFields($sAlias, $aUnresolved);
 		}
 		return $aUnresolved;
@@ -155,17 +148,14 @@ class QueryBuilderExpressions
 	 */
 	public function GetExpectedFields($sAlias)
 	{
-		$aUnresolved = array();
+		$aUnresolved = [];
 		$this->m_oConditionExpr->GetUnresolvedFields($sAlias, $aUnresolved);
 
-		foreach ($this->m_aSelectExpr as $sColAlias => $oExpr)
-		{
+		foreach ($this->m_aSelectExpr as $sColAlias => $oExpr) {
 			$oExpr->GetUnresolvedFields($sAlias, $aUnresolved);
 		}
-		if (!empty($this->m_aGroupByExpr))
-		{
-			foreach ($this->m_aGroupByExpr as $sColAlias => $oExpr)
-			{
+		if (!empty($this->m_aGroupByExpr)) {
+			foreach ($this->m_aGroupByExpr as $sColAlias => $oExpr) {
 				$oExpr->GetUnresolvedFields($sAlias, $aUnresolved);
 			}
 		}
@@ -175,31 +165,24 @@ class QueryBuilderExpressions
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		$this->m_oConditionExpr = $this->m_oConditionExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
-		foreach ($this->m_aSelectExpr as $sColAlias => $oExpr)
-		{
+		foreach ($this->m_aSelectExpr as $sColAlias => $oExpr) {
 			$this->m_aSelectExpr[$sColAlias] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
-			if ($this->m_aSelectExpr[$sColAlias] instanceof FieldExpressionResolved)
-			{
+			if ($this->m_aSelectExpr[$sColAlias] instanceof FieldExpressionResolved) {
 				// Split the field with the relevant alias
-				foreach ($this->m_aSelectExpr[$sColAlias]->AdditionalExpressions() as $sSuffix => $oAdditionalExpr)
-				{
+				foreach ($this->m_aSelectExpr[$sColAlias]->AdditionalExpressions() as $sSuffix => $oAdditionalExpr) {
 					$this->m_aSelectExpr[$sColAlias.$sSuffix] = $oAdditionalExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 				}
 			}
 		}
-		if ($this->m_aGroupByExpr)
-		{
-			foreach ($this->m_aGroupByExpr as $sColAlias => $oExpr)
-			{
+		if ($this->m_aGroupByExpr) {
+			foreach ($this->m_aGroupByExpr as $sColAlias => $oExpr) {
 				$this->m_aGroupByExpr[$sColAlias] = $oExpr->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 			}
 		}
-		foreach ($this->m_aJoinFields as $index => $oExpression)
-		{
+		foreach ($this->m_aJoinFields as $index => $oExpression) {
 			$this->m_aJoinFields[$index] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
-		foreach ($this->m_aClassIds as $sClass => $oExpression)
-		{
+		foreach ($this->m_aClassIds as $sClass => $oExpression) {
 			$this->m_aClassIds[$sClass] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
 	}
@@ -207,19 +190,15 @@ class QueryBuilderExpressions
 	public function RenameParam($sOldName, $sNewName)
 	{
 		$this->m_oConditionExpr->RenameParam($sOldName, $sNewName);
-		foreach ($this->m_aSelectExpr as $sColAlias => $oExpr)
-		{
+		foreach ($this->m_aSelectExpr as $sColAlias => $oExpr) {
 			$this->m_aSelectExpr[$sColAlias] = $oExpr->RenameParam($sOldName, $sNewName);
 		}
-		if ($this->m_aGroupByExpr)
-		{
-			foreach ($this->m_aGroupByExpr as $sColAlias => $oExpr)
-			{
+		if ($this->m_aGroupByExpr) {
+			foreach ($this->m_aGroupByExpr as $sColAlias => $oExpr) {
 				$this->m_aGroupByExpr[$sColAlias] = $oExpr->RenameParam($sOldName, $sNewName);
 			}
 		}
-		foreach ($this->m_aJoinFields as $index => $oExpression)
-		{
+		foreach ($this->m_aJoinFields as $index => $oExpression) {
 			$this->m_aJoinFields[$index] = $oExpression->RenameParam($sOldName, $sNewName);
 		}
 	}

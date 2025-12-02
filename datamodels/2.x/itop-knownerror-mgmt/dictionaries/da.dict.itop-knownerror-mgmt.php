@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:KnownError' => 'Known Error',
 	'Class:KnownError+' => 'Dokumenterede fejl for et bestående Issue',
 	'Class:KnownError/Attribute:name' => 'Navn',
@@ -53,13 +54,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
 	'Class:KnownError/Attribute:document_list' => 'Dokumenter',
 	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkErrorToFunctionalCI' => 'Sammenhæng Fejl/FunctionalCI',
 	'Class:lnkErrorToFunctionalCI+' => '',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -73,13 +74,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Årsag',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkDocumentToError' => 'Sammenhæng Dokumenter/Fejl',
 	'Class:lnkDocumentToError+' => '',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
@@ -93,9 +94,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Sammenhængstype',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
+]);
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ProblemManagement' => 'Problem Management',
 	'Menu:ProblemManagement+' => 'Problem Management',
 	'Menu:Problem:Shortcuts' => 'Genvej',
@@ -105,4 +106,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:SearchError+' => '',
 	'Menu:Problem:KnownErrors' => 'Alle kendte Fejl',
 	'Menu:Problem:KnownErrors+' => 'Alle kendte Fejl',
-));
+]);

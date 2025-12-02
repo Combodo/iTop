@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -38,18 +39,16 @@ use UserRequest;
 use UserRights;
 use utils;
 
-
 /**
  * @group specificOrgInSampleData
  */
 class DBObjectTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
-	const INVALID_OBJECT_KEY = 123456789;
+	public const CREATE_TEST_ORG = true;
+	public const INVALID_OBJECT_KEY = 123456789;
 
 	// Counts
 	public $aReloadCount = [];
-
 
 	protected function setUp(): void
 	{
@@ -81,18 +80,18 @@ class DBObjectTest extends ItopDataTestCase
 
 	public function keyProviderOK()
 	{
-		return array(
-			array(1, true),
-			array('255', true),
-			array(-24576, true),
-			array(0123, true),
-			array(0xCAFE, true),
-			array(PHP_INT_MIN, true),
-			array(PHP_INT_MAX, true),
-			array('test', false),
-			array('', false),
-			array('a255', false),
-			array('PHP_INT_MIN', false));
+		return [
+			[1, true],
+			['255', true],
+			[-24576, true],
+			[0123, true],
+			[0xCAFE, true],
+			[PHP_INT_MIN, true],
+			[PHP_INT_MAX, true],
+			['test', false],
+			['', false],
+			['a255', false],
+			['PHP_INT_MIN', false]];
 	}
 
 	/**
@@ -150,7 +149,7 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testAttributeRefresh_FriendlyNameWithoutCascade()
 	{
-		$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
+		$oObject = \MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
 
 		static::assertEquals('John Foo', $oObject->Get('friendlyname'));
 		$oObject->Set('name', 'Who');
@@ -179,7 +178,7 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testAttributeRefresh_FriendlyNameFromDB()
 	{
-		$oObject = \MetaModel::NewObject('Person', array('name' => 'Gary', 'first_name' => 'Romain', 'org_id' => 3, 'location_id' => 2));
+		$oObject = \MetaModel::NewObject('Person', ['name' => 'Gary', 'first_name' => 'Romain', 'org_id' => 3, 'location_id' => 2]);
 		$oObject->DBInsert();
 		$iObjKey = $oObject->GetKey();
 
@@ -196,7 +195,7 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testPartialAttributeEvaluation()
 	{
-		$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'org_id' => 3, 'location_id' => 2));
+		$oObject = \MetaModel::NewObject('Person', ['name' => 'Foo', 'org_id' => 3, 'location_id' => 2]);
 		static::assertEquals(' Foo', $oObject->Get('friendlyname'));
 	}
 
@@ -206,7 +205,7 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testEmptyAttributeEvaluation()
 	{
-		$oObject = \MetaModel::NewObject('Person', array('org_id' => 3, 'location_id' => 2));
+		$oObject = \MetaModel::NewObject('Person', ['org_id' => 3, 'location_id' => 2]);
 
 		static::assertEquals(' ', $oObject->Get('friendlyname'));
 	}
@@ -230,7 +229,7 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testAttributeRefresh_ObsolescenceFlagWithoutCascade()
 	{
-		$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
+		$oObject = \MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
 
 		static::assertEquals(false, (bool)$oObject->Get('obsolescence_flag'));
 		$oObject->Set('status', 'inactive');
@@ -262,26 +261,26 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testAttributeRefresh_ExternalKeysAndFields()
 	{
-		$this->assertDBQueryCount(0, function() use (&$oObject){
-			$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
+		$this->assertDBQueryCount(0, function () use (&$oObject) {
+			$oObject = \MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
 		});
-		$this->assertDBQueryCount(2, function() use (&$oObject){
+		$this->assertDBQueryCount(2, function () use (&$oObject) {
 			static::assertEquals('Demo', $oObject->Get('org_id_friendlyname'));
 			static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
 		});
 
 		// External key given as an id
-		$this->assertDBQueryCount(1, function() use (&$oObject){
+		$this->assertDBQueryCount(1, function () use (&$oObject) {
 			$oObject->Set('org_id', 2);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 		});
 
 		// External key given as an object
-		$this->assertDBQueryCount(1, function() use (&$oBordeaux){
+		$this->assertDBQueryCount(1, function () use (&$oBordeaux) {
 			$oBordeaux = \MetaModel::GetObject('Location', 1);
 		});
 
-		$this->assertDBQueryCount(0, function() use (&$oBordeaux, &$oObject){
+		$this->assertDBQueryCount(0, function () use (&$oBordeaux, &$oObject) {
 			/** @var DBObject $oObject */
 			$oObject->Set('location_id', $oBordeaux);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
@@ -290,7 +289,7 @@ class DBObjectTest extends ItopDataTestCase
 		});
 
 		static::assertEquals('Bordeaux', $oObject->Get('location_id_friendlyname'));
-//		static::assertEquals('toto', $oObject->EvaluateExpression(\Expression::FromOQL("CONCAT(org_name, '-', location_id_friendlyname)")));
+		//		static::assertEquals('toto', $oObject->EvaluateExpression(\Expression::FromOQL("CONCAT(org_name, '-', location_id_friendlyname)")));
 	}
 
 	/**
@@ -302,7 +301,7 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		$this->ResetReloadCount();
 
-		$this->assertDBQueryCount(0, function() use (&$oObject){
+		$this->assertDBQueryCount(0, function () use (&$oObject) {
 			$oObject = \MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
 		});
 		// The number of queries depends on the installed modules so it varies on CI
@@ -312,14 +311,14 @@ class DBObjectTest extends ItopDataTestCase
 		$this->debug("Created $sClass::$sKey");
 		$this->DebugReloadCount("Person::DBInsertNoReload()");
 
-		$this->assertDBQueryCount(0, function() use (&$oObject){
+		$this->assertDBQueryCount(0, function () use (&$oObject) {
 			static::assertEquals('Demo', $oObject->Get('org_id_friendlyname'));
 			static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
 		});
 		$this->DebugReloadCount("Get('org_id_friendlyname') and Get('location_id_friendlyname')");
 
 		// External key given as an id
-		$this->assertDBQueryCount(1, function() use (&$oObject){
+		$this->assertDBQueryCount(1, function () use (&$oObject) {
 			$oObject->Set('org_id', 2);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 		});
@@ -327,12 +326,12 @@ class DBObjectTest extends ItopDataTestCase
 		$this->DebugReloadCount("Set('org_id', 2) and Get('org_id_friendlyname')");
 
 		// External key given as an object
-		$this->assertDBQueryCount(1, function() use (&$oBordeaux){
+		$this->assertDBQueryCount(1, function () use (&$oBordeaux) {
 			$oBordeaux = MetaModel::GetObject('Location', 1);
 		});
 		$this->DebugReloadCount("GetObject('Location', 1)");
 
-		$this->assertDBQueryCount(0, function() use (&$oBordeaux, &$oObject){
+		$this->assertDBQueryCount(0, function () use (&$oBordeaux, &$oObject) {
 			$oObject->Set('location_id', $oBordeaux);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 			static::assertEquals('IT Department', $oObject->Get('org_name'));
@@ -340,7 +339,6 @@ class DBObjectTest extends ItopDataTestCase
 		});
 		$this->DebugReloadCount("Set('location_id',...) Get('org_id_friendlyname') Get('org_name') Get('location_id_friendlyname')");
 	}
-
 
 	/**
 	 * @covers DBObject::NewObject
@@ -351,7 +349,7 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		$this->ResetReloadCount();
 
-		$this->assertDBQueryCount(0, function() use (&$oPerson){
+		$this->assertDBQueryCount(0, function () use (&$oPerson) {
 			$oPerson = MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
 		});
 		// The number of queries depends on the installed modules so it varies on CI
@@ -361,7 +359,7 @@ class DBObjectTest extends ItopDataTestCase
 		$this->debug("Created $sPersonClass::$sPersonKey");
 		$this->DebugReloadCount("Person::DBInsertNoReload()");
 
-		$this->assertDBQueryCount(1, function() use (&$oTeam, &$oPerson){
+		$this->assertDBQueryCount(1, function () use (&$oTeam, &$oPerson) {
 			$oTeam = MetaModel::NewObject('Team', ['name' => 'Team Foo', 'org_id' => 3]);
 			// Add person to team
 			$oNewLink = new lnkPersonToTeam();
@@ -387,7 +385,7 @@ class DBObjectTest extends ItopDataTestCase
 		$this->assertCount(0, $oTeam->ListChanges());
 
 		// External key given as an id
-		$this->assertDBQueryCount(1, function() use (&$oTeam){
+		$this->assertDBQueryCount(1, function () use (&$oTeam) {
 			$oTeam->Set('org_id', 2);
 			static::assertEquals('IT Department', $oTeam->Get('org_id_friendlyname'));
 		});
@@ -395,10 +393,9 @@ class DBObjectTest extends ItopDataTestCase
 		$this->assertCount(1, $oTeam->ListChanges());
 	}
 
-
 	public function testSetExtKeyUnsetDependentAttribute()
 	{
-		$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
+		$oObject = \MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
 		$oOrg = \MetaModel::GetObject('Organization', 2);
 		$oObject->Set('org_id', $oOrg);
 
@@ -406,13 +403,13 @@ class DBObjectTest extends ItopDataTestCase
 		static::assertEquals(2, $oObject->Get('location_id'));
 
 		// Dependent external field is updated because the Set('org_id') is done with an object
-		$this->assertDBQueryCount(0, function() use (&$oObject){
+		$this->assertDBQueryCount(0, function () use (&$oObject) {
 			static::assertNotEmpty($oObject->Get('org_name'));
 		});
 
 		// Dependent external field is reset and reloaded from DB
 		$oObject->Set('org_id', 3);
-		$this->assertDBQueryCount(1, function() use (&$oObject){
+		$this->assertDBQueryCount(1, function () use (&$oObject) {
 			static::assertNotEmpty($oObject->Get('org_name'));
 		});
 	}
@@ -469,17 +466,16 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function testModelExpressions()
 	{
-		foreach (\MetaModel::GetClasses() as $sClass)
-		{
-			if (\MetaModel::IsAbstract($sClass)) continue;
+		foreach (\MetaModel::GetClasses() as $sClass) {
+			if (\MetaModel::IsAbstract($sClass)) {
+				continue;
+			}
 
 			$oObject = \MetaModel::NewObject($sClass);
-			foreach (\MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				if ($oAttDef->IsBasedOnOQLExpression())
-				{
+			foreach (\MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+				if ($oAttDef->IsBasedOnOQLExpression()) {
 					$this->debug("$sClass::$sAttCode");
-					$this->assertDBQueryCount(0, function() use (&$oObject, &$oAttDef){
+					$this->assertDBQueryCount(0, function () use (&$oObject, &$oAttDef) {
 						$oObject->EvaluateExpression($oAttDef->GetOQLExpression());
 					});
 				}
@@ -602,7 +598,7 @@ class DBObjectTest extends ItopDataTestCase
 
 		$oTeam = MetaModel::NewObject(Team::class, [
 			'name' => 'The A Team',
-			'org_id' => $oDemoOrg->GetKey()
+			'org_id' => $oDemoOrg->GetKey(),
 		]);
 
 		// Part 1 - Test with an invalid id (non-existing object)
@@ -664,8 +660,7 @@ class DBObjectTest extends ItopDataTestCase
 		try {
 			$oTeam->CheckChangedExtKeysValues();
 			$this->fail('An unauthorized object should be detected as invalid');
-		}
-		catch (InvalidExternalKeyValueException $e) {
+		} catch (InvalidExternalKeyValueException $e) {
 			// Ok, the exception was expected
 		}
 
@@ -678,8 +673,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oTeam->DBInsert(); // persisting invalid value and resets the object changed values
 		try {
 			$oTeam->CheckChangedExtKeysValues();
-		}
-		catch (InvalidExternalKeyValueException $e) {
+		} catch (InvalidExternalKeyValueException $e) {
 			$this->fail('An unauthorized value should be ignored when it is not being modified');
 		}
 	}
@@ -743,7 +737,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oQueryOQL = \MetaModel::NewObject('QueryOQL', [
 			'name' => 'Test Query',
 			'description' => 'Test Query',
-			'oql' => 'SELECT Person'
+			'oql' => 'SELECT Person',
 		]);
 		$oQueryOQL->DBInsert();
 
@@ -766,12 +760,12 @@ class DBObjectTest extends ItopDataTestCase
 	 */
 	public function getAttributeIntegerDBIncrementProvider()
 	{
-		return array(
-			'Incrementation #1' => array('export_count', [5], 5),
-			'Incrementation #2' => array('export_count', [5, 10], 15),
-			'Incrementation #3' => array('export_count', [50, 20, 10, 100], 180),
-			'Incrementation #4' => array('export_count', [50, 20, -10, 1000], 1060)
-		);
+		return [
+			'Incrementation #1' => ['export_count', [5], 5],
+			'Incrementation #2' => ['export_count', [5, 10], 15],
+			'Incrementation #3' => ['export_count', [50, 20, 10, 100], 180],
+			'Incrementation #4' => ['export_count', [50, 20, -10, 1000], 1060],
+		];
 	}
 
 	/**
@@ -786,7 +780,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oQueryOQL = \MetaModel::NewObject('QueryOQL', [
 			'name' => 'Test Query',
 			'description' => 'Test Query',
-			'oql' => 'SELECT Person'
+			'oql' => 'SELECT Person',
 		]);
 		$oQueryOQL->DBInsert();
 
@@ -809,7 +803,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oQueryOQL = \MetaModel::NewObject('QueryOQL', [
 			'name' => 'Test Query',
 			'description' => 'Test Query',
-			'oql' => 'SELECT Person'
+			'oql' => 'SELECT Person',
 		]);
 		$oQueryOQL->DBInsert();
 
@@ -835,12 +829,12 @@ class DBObjectTest extends ItopDataTestCase
 		$oQueryOQL = \MetaModel::NewObject('QueryOQL', [
 			'name' => 'Test Query',
 			'description' => 'Test Query',
-			'oql' => 'SELECT Person'
+			'oql' => 'SELECT Person',
 		]);
 		$oQueryOQL->DBInsert();
 
 		// assert query count
-		$this->assertDBQueryCount(2, function() use (&$oQueryOQL) {
+		$this->assertDBQueryCount(2, function () use (&$oQueryOQL) {
 			$oQueryOQL->DBIncrement('export_count', 1);
 		});
 	}
@@ -976,8 +970,7 @@ class DBObjectTest extends ItopDataTestCase
 		try {
 			$oPerson->Set('email', 'test1@combodo.com');
 			$this->assertTrue(false, 'Set() should have raised a CoreException');
-		}
-		catch (\CoreException $e) {
+		} catch (\CoreException $e) {
 			$this->assertEquals($sMessage, $e->getMessage());
 		}
 
@@ -1043,9 +1036,9 @@ class DBObjectTest extends ItopDataTestCase
 				'xml',
 				[
 					'ev_assign',
-				    'ev_timeout',
-				    'ev_wait_for_approval',
-				    'ev_autoresolve',
+					'ev_timeout',
+					'ev_wait_for_approval',
+					'ev_autoresolve',
 				],
 			],
 			'UserRequest - XML sort when in specific state' => [
@@ -1055,10 +1048,10 @@ class DBObjectTest extends ItopDataTestCase
 				'xml',
 				[
 					'ev_pending',
-				    'ev_resolve',
-				    'ev_reassign',
-				    'ev_timeout',
-				    'ev_autoresolve',
+					'ev_resolve',
+					'ev_reassign',
+					'ev_timeout',
+					'ev_autoresolve',
 				],
 			],
 			'UserRequest - Alphabetical (labels not codes) sort' => [
@@ -1068,9 +1061,9 @@ class DBObjectTest extends ItopDataTestCase
 				'alphabetical',
 				[
 					'ev_assign',
-				    'ev_autoresolve',
-				    'ev_timeout',
-				    'ev_wait_for_approval',
+					'ev_autoresolve',
+					'ev_timeout',
+					'ev_wait_for_approval',
 				],
 			],
 			'UserRequest - Alphabetical (labels not codes) sort when in specific state' => [
@@ -1079,11 +1072,11 @@ class DBObjectTest extends ItopDataTestCase
 				'assigned',
 				'alphabetical',
 				[
-				    'ev_autoresolve',
+					'ev_autoresolve',
 					'ev_resolve',
-				    'ev_pending',
-				    'ev_reassign',
-				    'ev_timeout',
+					'ev_pending',
+					'ev_reassign',
+					'ev_timeout',
 				],
 			],
 			'UserRequest - Fixed sort' => [
@@ -1092,10 +1085,10 @@ class DBObjectTest extends ItopDataTestCase
 				null,
 				'fixed',
 				[
-				    'ev_wait_for_approval',
+					'ev_wait_for_approval',
 					'ev_assign',
-				    'ev_timeout',
-				    'ev_autoresolve',
+					'ev_timeout',
+					'ev_autoresolve',
 				],
 			],
 			'UserRequest - Fixed sort when in specific state' => [
@@ -1115,10 +1108,10 @@ class DBObjectTest extends ItopDataTestCase
 				null,
 				'relative',
 				[
-				    'ev_wait_for_approval',
+					'ev_wait_for_approval',
 					'ev_assign',
-				    'ev_timeout',
-				    'ev_autoresolve',
+					'ev_timeout',
+					'ev_autoresolve',
 				],
 			],
 			'UserRequest - Relative sort when in specific state' => [
@@ -1210,8 +1203,7 @@ class DBObjectTest extends ItopDataTestCase
 		$bDeletionOK = true;
 		try {
 			$oDeletionPlan = $oPerson->DBDelete();
-		}
-		catch (CoreException $e) {
+		} catch (CoreException $e) {
 			$bDeletionOK = false;
 		}
 		$this->assertTrue($bDeletionOK);
@@ -1263,7 +1255,7 @@ class DBObjectTest extends ItopDataTestCase
 	/**
 	 * @since 3.1.0-3 3.1.1 3.2.0 N°6716 test creation
 	 */
-	public function testConstructorMemoryFootprint():void
+	public function testConstructorMemoryFootprint(): void
 	{
 		$idx = 0;
 		$fStart = microtime(true);
@@ -1285,7 +1277,7 @@ class DBObjectTest extends ItopDataTestCase
 				$sCurrPeak = \utils::BytesToFriendlyFormat($iMemoryPeakUsage, 4);
 				echo "$idx ".sprintf('%.1f ms', $fDuration * 1000)." - Peak Memory Usage: $sCurrPeak\n";
 
-				$this->assertTrue(($iMemoryPeakUsage - $iInitialPeak) <= $iMaxAllowedMemoryIncrease , "Peak memory changed from $sInitialPeak to $sCurrPeak after $i loops");
+				$this->assertTrue(($iMemoryPeakUsage - $iInitialPeak) <= $iMaxAllowedMemoryIncrease, "Peak memory changed from $sInitialPeak to $sCurrPeak after $i loops");
 
 				$fStartLoop = microtime(true);
 			}
@@ -1335,7 +1327,7 @@ class DBObjectTest extends ItopDataTestCase
 		$sPrefix = 'a'; // just a small prefix so that the emoji bytes won't have a power of 2 (we want a non even value)
 		$sEmojiToRepeat = '😎'; // this emoji is 4 bytes long
 		$sEmojiRepeats = str_repeat($sEmojiToRepeat, $iValueLength - mb_strlen($sPrefix));
-		$sValueToSet = 	$sPrefix . $sEmojiRepeats;
+		$sValueToSet = 	$sPrefix.$sEmojiRepeats;
 
 		$oTicket = MetaModel::NewObject('UserRequest', [
 			'ref'         => 'Test Ticket',
@@ -1354,14 +1346,14 @@ class DBObjectTest extends ItopDataTestCase
 		$bIsValueToSetBelowAttrMaxSize = ($iValueLength <= $iAttrMaxSize);
 		/** @noinspection PhpUnusedLocalVariableInspection */
 		[$bCheckStatus, $aCheckIssues, $bSecurityIssue] = $oTicket->CheckToWrite();
-		$this->assertEquals($bIsValueToSetBelowAttrMaxSize, $bCheckStatus, "CheckResult result:" . var_export($aCheckIssues, true));
+		$this->assertEquals($bIsValueToSetBelowAttrMaxSize, $bCheckStatus, "CheckResult result:".var_export($aCheckIssues, true));
 
 		$oTicket->SetTrim($sAttrCode, $sValueToSet);
 		$sValueInObject = $oTicket->Get($sAttrCode);
 		if ($bIsValueToSetBelowAttrMaxSize) {
-			$this->assertEquals($sValueToSet, $sValueInObject,'Should not alter string that is already shorter than attribute max length');
+			$this->assertEquals($sValueToSet, $sValueInObject, 'Should not alter string that is already shorter than attribute max length');
 		} else {
-			$this->assertEquals($iAttrMaxSize, mb_strlen($sValueInObject),'Should truncate at the same length than attribute max length');
+			$this->assertEquals($iAttrMaxSize, mb_strlen($sValueInObject), 'Should truncate at the same length than attribute max length');
 			$sLastCharsOfValueInObject = mb_substr($sValueInObject, -30);
 			$this->assertStringContainsString(' -truncated', $sLastCharsOfValueInObject, 'Should end with "truncated" comment');
 		}
@@ -1371,13 +1363,13 @@ class DBObjectTest extends ItopDataTestCase
 	{
 		return [
 				'short string should not be truncated' => ['name','name'],
-		        'simple ascii string longer than 255 characters truncated' => [
-							str_repeat('e',300),
-							str_repeat('e',232) . ' -truncated (300 chars)'
-		        ],
+				'simple ascii string longer than 255 characters truncated' => [
+							str_repeat('e', 300),
+							str_repeat('e', 232).' -truncated (300 chars)',
+				],
 				'smiley string longer than 255 characters truncated' => [
-					str_repeat('😃',300),
-					str_repeat('😃',232) . ' -truncated (300 chars)'
+					str_repeat('😃', 300),
+					str_repeat('😃', 232).' -truncated (300 chars)',
 				],
 
 			];
@@ -1387,7 +1379,8 @@ class DBObjectTest extends ItopDataTestCase
 	 * @dataProvider SetTrimProvider
 	 * @return void
 	 */
-	public function testSetTrim($sName, $sResult){
+	public function testSetTrim($sName, $sResult)
+	{
 		$oOrganisation = MetaModel::NewObject(Organization::class);
 		$oOrganisation->SetTrim('name', $sName);
 		$this->assertEquals($sResult, $oOrganisation->Get('name'), 'SetTrim must limit string to 255 characters');
@@ -1397,21 +1390,23 @@ class DBObjectTest extends ItopDataTestCase
 	 * @covers DBObject::SetComputedDate
 	 * @return void
 	 */
-	public function testSetComputedDateOnAttributeDate(){
-		$oObject = MetaModel::NewObject(\CustomerContract::class, ['name'=>'Test contract','org_id'=>'3','provider_id'=>'2']);
-		$oObject->Set('start_date',time());
+	public function testSetComputedDateOnAttributeDate()
+	{
+		$oObject = MetaModel::NewObject(\CustomerContract::class, ['name' => 'Test contract','org_id' => '3','provider_id' => '2']);
+		$oObject->Set('start_date', time());
 		$oObject->SetComputedDate('end_date', "+2 weeks", 'start_date');
-		$this->assertTrue(true,'No fatal error on computing date');
+		$this->assertTrue(true, 'No fatal error on computing date');
 	}
 	/**
 	 * @covers DBObject::SetComputedDate
 	 * @return void
 	 */
-	public function testSetComputedDateOnAttributeDateTime(){
-		$oObject = MetaModel::NewObject(\WorkOrder::class, ['name'=>'Test workorder','description'=>'Toto']);
-		$oObject->Set('start_date','2024-01-01 09:45:00');
+	public function testSetComputedDateOnAttributeDateTime()
+	{
+		$oObject = MetaModel::NewObject(\WorkOrder::class, ['name' => 'Test workorder','description' => 'Toto']);
+		$oObject->Set('start_date', '2024-01-01 09:45:00');
 		$oObject->SetComputedDate('end_date', "+2 weeks", 'start_date');
-		$this->assertTrue(true,'No fatal error on computing date');
+		$this->assertTrue(true, 'No fatal error on computing date');
 		$this->assertEquals("2024-01-15 09:45:00", $oObject->Get('end_date'), 'SetComputedDate +2 weeks on a WorkOrder DateTimeAttribute');
 
 	}

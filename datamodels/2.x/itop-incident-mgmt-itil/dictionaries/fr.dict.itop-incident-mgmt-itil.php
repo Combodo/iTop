@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:IncidentManagement' => 'Gestion des incidents',
 	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Vue d\'ensemble',
@@ -31,8 +32,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidents ouverts par statut',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Incidents ouverts par agent',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Incidents ouverts par client',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -48,7 +48,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: Incident
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Etat',
@@ -238,5 +238,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'L\'incident parent ne peut pas être lui-même',
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution du ticket (ev_autoresolve) vers les requêtes et incidents fils, et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
-	'Tickets:Related:OpenIncidents' => 'Incidents ouverts'
-));
+	'Tickets:Related:OpenIncidents' => 'Incidents ouverts',
+]);

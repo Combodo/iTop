@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -117,7 +118,7 @@ class Branding
 	 */
 	public static function GetLogoAbsoluteUrl($sType = self::DEFAULT_LOGO_TYPE)
 	{
-		return self::GetLogoPath($sType,  utils::GetAbsoluteUrlAppRoot(), utils::GetAbsoluteUrlModulesRoot()).'?t='.utils::GetCacheBusterTimestamp();
+		return self::GetLogoPath($sType, utils::GetAbsoluteUrlAppRoot(), utils::GetAbsoluteUrlModulesRoot()).'?t='.utils::GetCacheBusterTimestamp();
 	}
 
 	/**

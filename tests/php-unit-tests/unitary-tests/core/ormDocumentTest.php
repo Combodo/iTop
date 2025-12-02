@@ -1,4 +1,5 @@
 <?php
+
 /*!
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -23,7 +24,6 @@ class ormDocumentTest extends ItopDataTestCase
 
 		$this->RequireOnceItopFile('core/ormdocument.class.inc.php');
 	}
-
 
 	/**
 	 * @param array $aDocAData
@@ -52,13 +52,13 @@ class ormDocumentTest extends ItopDataTestCase
 					$sFirstDummyTextFileContentBase64,
 					"text/plain",
 					"a.txt",
-					0
+					0,
 				],
 				[
 					$sSecondDummyTextFileContentBase64,
 					"image/png",
 					"b.png",
-					1
+					1,
 				],
 				false,
 			],
@@ -67,13 +67,13 @@ class ormDocumentTest extends ItopDataTestCase
 					$sFirstDummyTextFileContentBase64,
 					"text/plain",
 					"a.txt",
-					0
+					0,
 				],
 				[
 					$sSecondDummyTextFileContentBase64,
 					"text/plain",
 					"a.txt",
-					0
+					0,
 				],
 				false,
 			],
@@ -82,13 +82,13 @@ class ormDocumentTest extends ItopDataTestCase
 					$sFirstDummyTextFileContentBase64,
 					"text/plain",
 					"a.txt",
-					0
+					0,
 				],
 				[
 					$sFirstDummyTextFileContentBase64,
 					"image/png",
 					"a.txt",
-					0
+					0,
 				],
 				false,
 			],
@@ -97,13 +97,13 @@ class ormDocumentTest extends ItopDataTestCase
 					$sFirstDummyTextFileContentBase64,
 					"text/plain",
 					"a.txt",
-					0
+					0,
 				],
 				[
 					$sFirstDummyTextFileContentBase64,
 					"text/plain",
 					"b.txt",
-					0
+					0,
 				],
 				false,
 			],
@@ -112,13 +112,13 @@ class ormDocumentTest extends ItopDataTestCase
 					$sFirstDummyTextFileContentBase64,
 					"text/plain",
 					"a.txt",
-					0
+					0,
 				],
 				[
 					$sFirstDummyTextFileContentBase64,
 					"text/plain",
 					"a.txt",
-					1
+					1,
 				],
 				true,
 			],
@@ -127,13 +127,13 @@ class ormDocumentTest extends ItopDataTestCase
 					$sFirstDummyTextFileContentBase64,
 					"text/plain",
 					"a.txt",
-					0
+					0,
 				],
 				[
 					$sFirstDummyTextFileContentBase64,
 					"text/plain",
 					"a.txt",
-					0
+					0,
 				],
 				false,
 			],

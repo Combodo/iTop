@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\NavigationMenu;
-
 
 use ApplicationContext;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\NewsroomMenu\NewsroomMenuFactory;
@@ -46,15 +46,17 @@ class NavigationMenuFactory
 	 */
 	public static function MakeStandard()
 	{
-		
+
 		$oNewsroomMenu = null;
-		if (MetaModel::GetConfig()->Get('newsroom_enabled'))
-		{
+		if (MetaModel::GetConfig()->Get('newsroom_enabled')) {
 			$oNewsroomMenu = NewsroomMenuFactory::MakeNewsroomMenuForNavigationMenu();
 		}
-		
+
 		return new NavigationMenu(
-			new ApplicationContext(), PopoverMenuFactory::MakeUserMenuForNavigationMenu(), $oNewsroomMenu, NavigationMenu::BLOCK_CODE
+			new ApplicationContext(),
+			PopoverMenuFactory::MakeUserMenuForNavigationMenu(),
+			$oNewsroomMenu,
+			NavigationMenu::BLOCK_CODE
 		);
 	}
 }

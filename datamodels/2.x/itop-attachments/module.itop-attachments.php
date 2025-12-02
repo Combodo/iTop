@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,11 +17,10 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-attachments/3.2.1',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Tickets Attachments',
@@ -28,49 +28,48 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(),
+		'dependencies' => [],
 		'mandatory' => false,
 		'visible' => true,
 		'installer' => 'AttachmentInstaller',
 
 		// Components
 		//
-		'datamodel' => array(
+		'datamodel' => [
 			'vendor/autoload.php',
 			'main.itop-attachments.php',
 			'renderers.itop-attachments.php',
-		),
-		'webservice' => array(
-			
-		),
-		'dictionary' => array(
+		],
+		'webservice' => [
 
-		),
-		'data.struct' => array(
+		],
+		'dictionary' => [
+
+		],
+		'data.struct' => [
 			// add your 'structure' definition XML files here,
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			// add your sample data XML files here,
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '', // hyperlink to manual setup documentation, if any
-		'doc.more_information' => '', // hyperlink to more information, if any 
+		'doc.more_information' => '', // hyperlink to more information, if any
 
 		// Default settings
 		//
-		'settings' => array(
-			'allowed_classes' => array('Ticket'), // List of classes for which to manage "Attachments"
+		'settings' => [
+			'allowed_classes' => ['Ticket'], // List of classes for which to manage "Attachments"
 			'position' => 'relations', // Where to display the attachments: relations | properties
 			'preview_max_width' => 290,
 			'icon_preview_max_size' => 500000, // Maximum size for attachment preview to be displayed as an icon. In bits
-		),
-	)
+		],
+	]
 );
 
-if (!class_exists('AttachmentInstaller'))
-{
+if (!class_exists('AttachmentInstaller')) {
 	// Module installation handler
 	//
 	class AttachmentInstaller extends ModuleInstallerAPI
@@ -91,7 +90,8 @@ if (!class_exists('AttachmentInstaller'))
 		 * @throws \MySQLException
 		 * @throws \MySQLHasGoneAwayException
 		 */
-		public static function GetOrphanAttachmentIds($sTableName, $iBulkSize){
+		public static function GetOrphanAttachmentIds($sTableName, $iBulkSize)
+		{
 			$sSqlQuery = <<<SQL
 SELECT id as attachment_id FROM `$sTableName` WHERE (`item_id`='' OR `item_id` IS NULL) LIMIT {$iBulkSize};
 SQL;
@@ -99,7 +99,7 @@ SQL;
 			$oQueryResult = CMDBSource::Query($sSqlQuery);
 
 			$aIds = [];
-			while($aRow = $oQueryResult->fetch_array()){
+			while ($aRow = $oQueryResult->fetch_array()) {
 				$aIds[] = $aRow['attachment_id'];
 			}
 
@@ -114,15 +114,13 @@ SQL;
 		 */
 		public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			if ($sPreviousVersion != '')
-			{
+			if ($sPreviousVersion != '') {
 				// Migrating from a previous version
 				// Check for records where item_id = '', since they are not attached to any object and cannot be migrated to the objkey schema
 				$sTableName = MetaModel::DBGetTable('Attachment');
 				$sCountQuery = "SELECT COUNT(*) FROM `$sTableName` WHERE (`item_id`='' OR `item_id` IS NULL)";
 				$iCount = CMDBSource::QueryToScalar($sCountQuery);
-				if ($iCount > 0)
-				{
+				if ($iCount > 0) {
 					SetupLog::Info("Cleanup of orphan attachments that cannot be migrated to the new ObjKey model: $iCount record(s) must be deleted.");
 
 					$iBulkSize = 100;
@@ -138,7 +136,7 @@ SQL;
 						$iDeletedCount += count($aIds);
 						$fElapsed = microtime(true) - $fStartTime;
 
-						if ($fElapsed > $iMaxDuration){
+						if ($fElapsed > $iMaxDuration) {
 							SetupLog::Info(sprintf("Cleanup of orphan attachments interrupted after %.3f s. $iDeletedCount records were deleted among $iCount.", $fElapsed));
 							break;
 						}
@@ -146,12 +144,10 @@ SQL;
 						$aIds = self::GetOrphanAttachmentIds($sTableName, $iBulkSize);
 					}
 
-					if (count($aIds) === 0){
+					if (count($aIds) === 0) {
 						SetupLog::Info("Cleanup of orphan attachments successfully completed.");
 					}
-				}
-				else
-				{
+				} else {
 					SetupLog::Info("No orphan attachment found.");
 				}
 			}
@@ -166,7 +162,7 @@ SQL;
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
 			// For each record having item_org_id unset,
-			//    get the org_id from the container object 
+			//    get the org_id from the container object
 			//
 			// Prerequisite: change null into 0 (workaround to the fact that we cannot use IS NULL in OQL)
 			SetupLog::Info("Initializing attachment/item_org_id - null to zero");
@@ -182,11 +178,10 @@ SQL;
 				'Attachment' => [
 					'item_class',
 					'item_id',
-				]
+				],
 			]);
 			$iUpdated = 0;
-			while ($oAttachment = $oSet->Fetch())
-			{
+			while ($oAttachment = $oSet->Fetch()) {
 				if (empty($oAttachment->Get('item_class'))) {
 					//do not treat orphan attachment
 					continue;

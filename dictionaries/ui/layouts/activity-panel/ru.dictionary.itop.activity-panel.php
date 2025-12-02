@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Расширить',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Уменьшить',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Закрыть',
@@ -35,4 +36,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Здесь пока пусто...',
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Активность',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Открыть панель активности',
-));
+]);

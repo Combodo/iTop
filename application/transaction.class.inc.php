@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -22,7 +23,7 @@ use Combodo\iTop\Application\Helper\Session;
  * submitted yet, in order to prevent double submissions. When created a transaction remains valid
  * until the user's session expires. This class is actually a wrapper to the underlying implementation
  * which choice is configured via the parameter 'transaction_storage'
- *  
+ *
  * @package     iTop
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -37,13 +38,11 @@ class privUITransaction
 	public static function GetNewTransactionId()
 	{
 		$bTransactionsEnabled = MetaModel::GetConfig()->Get('transactions_enabled');
-		if (!$bTransactionsEnabled)
-		{
+		if (!$bTransactionsEnabled) {
 			return 'notransactions'; // Any value will do
 		}
 		$sClass = 'privUITransaction'.MetaModel::GetConfig()->Get('transaction_storage');
-		if (!class_exists($sClass, false))
-		{
+		if (!class_exists($sClass, false)) {
 			IssueLog::Error("Incorrect value '".MetaModel::GetConfig()->Get('transaction_storage')."' for 'transaction_storage', the class '$sClass' does not exists. Using privUITransactionSession instead for storing sessions.");
 			$sClass = 'privUITransactionSession';
 		}
@@ -62,16 +61,14 @@ class privUITransaction
 	public static function IsTransactionValid($id, $bRemoveTransaction = true)
 	{
 		$bTransactionsEnabled = MetaModel::GetConfig()->Get('transactions_enabled');
-		if (!$bTransactionsEnabled)
-		{
+		if (!$bTransactionsEnabled) {
 			return true; // All values are valid
 		}
 		$sClass = 'privUITransaction'.MetaModel::GetConfig()->Get('transaction_storage');
-		if (!class_exists($sClass, false))
-		{
+		if (!class_exists($sClass, false)) {
 			$sClass = 'privUITransactionSession';
 		}
-		
+
 		return $sClass::IsTransactionValid($id, $bRemoveTransaction);
 	}
 
@@ -83,16 +80,14 @@ class privUITransaction
 	public static function RemoveTransaction($id)
 	{
 		$bTransactionsEnabled = MetaModel::GetConfig()->Get('transactions_enabled');
-		if (!$bTransactionsEnabled)
-		{
+		if (!$bTransactionsEnabled) {
 			return; // Nothing to do
 		}
 		$sClass = 'privUITransaction'.MetaModel::GetConfig()->Get('transaction_storage');
-		if (!class_exists($sClass, false))
-		{
+		if (!class_exists($sClass, false)) {
 			$sClass = 'privUITransactionSession';
 		}
-		
+
 		$sClass::RemoveTransaction($id);
 	}
 }
@@ -114,17 +109,16 @@ class privUITransactionSession
 	 */
 	public static function GetNewTransactionId()
 	{
-		if (!Session::IsSet('transactions'))
-		{
+		if (!Session::IsSet('transactions')) {
 			Session::Set('transactions', []);
 		}
 		// Strictly speaking, the two lines below should be grouped together
 		// by a critical section
 		// sem_acquire($rSemIdentified);
-		$id = static::GetUserPrefix() . str_replace(array('.', ' '), '', microtime());
+		$id = static::GetUserPrefix().str_replace(['.', ' '], '', microtime());
 		Session::Set(['transactions', $id], true);
 		// sem_release($rSemIdentified);
-		
+
 		return (string)$id;
 	}
 
@@ -135,20 +129,17 @@ class privUITransactionSession
 	 * @param int $id Identifier of the transaction, as returned by GetNewTransactionId
 	 * @param bool $bRemoveTransaction True if the transaction must be removed
 	 * @return bool True if the transaction is valid, false otherwise
-	 */	
+	 */
 	public static function IsTransactionValid($id, $bRemoveTransaction = true)
 	{
 		$bResult = false;
-		if (Session::IsSet('transactions'))
-		{
+		if (Session::IsSet('transactions')) {
 			// Strictly speaking, the eight lines below should be grouped together
 			// inside the same critical section as above
 			// sem_acquire($rSemIdentified);
-			if (Session::IsSet(['transactions', $id]))
-			{
+			if (Session::IsSet(['transactions', $id])) {
 				$bResult = true;
-				if ($bRemoveTransaction)
-				{
+				if ($bRemoveTransaction) {
 					Session::Unset(['transactions', $id]);
 				}
 			}
@@ -156,7 +147,7 @@ class privUITransactionSession
 		}
 		return $bResult;
 	}
-	
+
 	/**
 	 * Removes the transaction specified by its id
 	 * @param int $id The Identifier (as returned by GetNewTranscationId) of the transaction to be removed.
@@ -164,17 +155,15 @@ class privUITransactionSession
 	 */
 	public static function RemoveTransaction($id)
 	{
-		if (Session::IsSet('transactions'))
-		{
+		if (Session::IsSet('transactions')) {
 			// Strictly speaking, the three lines below should be grouped together
 			// inside the same critical section as above
 			// sem_acquire($rSemIdentified);
-			if (Session::IsSet(['transactions', $id]))
-			{
+			if (Session::IsSet(['transactions', $id])) {
 				Session::Unset(['transactions', $id]);
 			}
 			// sem_release($rSemIdentified);
-		}		
+		}
 	}
 
 	/**
@@ -197,7 +186,7 @@ class privUITransactionSession
 class privUITransactionFile
 {
 	/** @var int Value to use when no user logged */
-	const UNAUTHENTICATED_USER_ID = -666;
+	public const UNAUTHENTICATED_USER_ID = -666;
 
 	/**
 	 * @return int current user id, or {@see self::UNAUTHENTICATED_USER_ID} if no user logged
@@ -228,22 +217,18 @@ class privUITransactionFile
 	 */
 	public static function GetNewTransactionId()
 	{
-		if (!is_dir(APPROOT.'data/transactions'))
-		{
-			if (!is_writable(APPROOT.'data'))
-			{
+		if (!is_dir(APPROOT.'data/transactions')) {
+			if (!is_writable(APPROOT.'data')) {
 				throw new Exception('The directory "'.APPROOT.'data" must be writable to the application.');
 			}
 			// condition avoids race condition N°2345
 			// See https://github.com/kalessil/phpinspectionsea/blob/master/docs/probable-bugs.md#mkdir-race-condition
-			if (!mkdir($concurrentDirectory = APPROOT.'data/transactions') && !is_dir($concurrentDirectory))
-			{
+			if (!mkdir($concurrentDirectory = APPROOT.'data/transactions') && !is_dir($concurrentDirectory)) {
 				throw new Exception('Failed to create the directory "'.APPROOT.'data/transactions". Ajust the rights on the parent directory or let an administrator create the transactions directory and give the web sever enough rights to write into it.');
 			}
 		}
 
-		if (!is_writable(APPROOT.'data/transactions'))
-		{
+		if (!is_writable(APPROOT.'data/transactions')) {
 			throw new Exception('The directory "'.APPROOT.'data/transactions" must be writable to the application.');
 		}
 
@@ -277,8 +262,7 @@ class privUITransactionFile
 		// Constraint the transaction file within APPROOT.'data/transactions'
 		$sTransactionDir = realpath(APPROOT.'data/transactions');
 		$sFilepath = utils::RealPath($sTransactionDir.'/'.$id, $sTransactionDir);
-		if (($sFilepath === false) || (strlen($sTransactionDir) == strlen($sFilepath)))
-		{
+		if (($sFilepath === false) || (strlen($sTransactionDir) == strlen($sFilepath))) {
 			return false;
 		}
 
@@ -297,15 +281,11 @@ class privUITransactionFile
 			return false;
 		}
 
-		if ($bRemoveTransaction)
-		{
+		if ($bRemoveTransaction) {
 			$bResult = @unlink($sFilepath);
-			if (!$bResult)
-			{
+			if (!$bResult) {
 				self::Error('IsTransactionValid: FAILED to remove transaction '.$id);
-			}
-			else
-			{
+			} else {
 				self::Info('IsTransactionValid: OK. Removed transaction: '.$id);
 			}
 		}
@@ -347,13 +327,11 @@ class privUITransactionFile
 		}
 
 		clearstatcache();
-		$iLimit = time() - 24*3600;
+		$iLimit = time() - 24 * 3600;
 		$sPattern = $sTransactionDir ? "$sTransactionDir/*" : APPROOT.'data/transactions/*';
 		$aTransactions = glob($sPattern);
-		foreach($aTransactions as $sFileName)
-		{
-			if (filemtime($sFileName) < $iLimit)
-			{
+		foreach ($aTransactions as $sFileName) {
+			if (filemtime($sFileName) < $iLimit) {
 				@unlink($sFileName);
 				self::Info('CleanupOldTransactions: Deleted transaction: '.$sFileName);
 			}
@@ -367,10 +345,9 @@ class privUITransactionFile
 	protected static function GetPendingTransactions()
 	{
 		clearstatcache();
-		$aResult = array();
+		$aResult = [];
 		$aTransactions = glob(APPROOT.'data/transactions/'.self::GetUserPrefix().'*');
-		foreach($aTransactions as $sFileName)
-		{
+		foreach ($aTransactions as $sFileName) {
 			$aResult[] = date('Y-m-d H:i:s', filemtime($sFileName)).' - '.basename($sFileName);
 		}
 		sort($aResult);
@@ -398,13 +375,14 @@ class privUITransactionFile
 	{
 		self::Write('Warning | '.$sText);
 	}
-			
+
 	protected static function Error($sText)
 	{
 		self::Write('Error | '.$sText);
 	}
 
-	protected static function IsLogEnabled() {
+	protected static function IsLogEnabled()
+	{
 		$oConfig = MetaModel::GetConfig();
 		if (is_null($oConfig)) {
 			return false;

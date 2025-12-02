@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -71,11 +72,9 @@ interface BackupArchive
 	public function getFromName($name, $length = 0, $flags = null);
 }
 
-
 class BackupException extends Exception
 {
 }
-
 
 class DBBackup
 {
@@ -84,7 +83,7 @@ class DBBackup
 	 *
 	 * @since 2.5.0 see N°1001
 	 */
-	const MYSQL_VERSION_WITH_UTF8MB4_IN_PROGRAMS = '5.5.33';
+	public const MYSQL_VERSION_WITH_UTF8MB4_IN_PROGRAMS = '5.5.33';
 
 	// To be overriden depending on the expected usages
 	protected function LogInfo($sMsg)
@@ -121,8 +120,7 @@ class DBBackup
 	 */
 	public function __construct($oConfig = null)
 	{
-		if (is_null($oConfig))
-		{
+		if (is_null($oConfig)) {
 			// Defaulting to the current config
 			$oConfig = MetaModel::GetConfig();
 		}
@@ -134,7 +132,6 @@ class DBBackup
 		$this->sDBName = $oConfig->get('db_name');
 		$this->sDBSubName = $oConfig->get('db_subname');
 	}
-
 
 	/**
 	 * Create a normalized backup name, depending on the current date/time and Database
@@ -227,26 +224,23 @@ class DBBackup
 	 *
 	 * @param string $sSourceConfigFile
 	 * @param string $sTmpFolder
-	 * @param bool $bSkipSQLDumpForTesting 
+	 * @param bool $bSkipSQLDumpForTesting
 	 *
 	 * @return array list of files to archive
 	 * @throws \Exception
 	 */
 	protected function PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder, $bSkipSQLDumpForTesting = false)
 	{
-		$aRet = array();
-		if (is_dir($sTmpFolder))
-		{
+		$aRet = [];
+		if (is_dir($sTmpFolder)) {
 			SetupUtils::rrmdir($sTmpFolder);
 		}
 		$this->LogInfo("backup: creating tmp dir '$sTmpFolder'");
 		@mkdir($sTmpFolder, 0777, true);
-		if (is_null($sSourceConfigFile))
-		{
+		if (is_null($sSourceConfigFile)) {
 			$sSourceConfigFile = MetaModel::GetConfig()->GetLoadedFile();
 		}
-		if (!empty($sSourceConfigFile))
-		{
+		if (!empty($sSourceConfigFile)) {
 			$sFile = $sTmpFolder.'/config-itop.php';
 			$this->LogInfo("backup: adding resource '$sSourceConfigFile'");
 			@copy($sSourceConfigFile, $sFile); // During unattended install config file may be absent
@@ -254,16 +248,14 @@ class DBBackup
 		}
 
 		$sDeltaFile = APPROOT.'data/'.utils::GetCurrentEnvironment().'.delta.xml';
-		if (file_exists($sDeltaFile))
-		{
+		if (file_exists($sDeltaFile)) {
 			$sFile = $sTmpFolder.'/delta.xml';
 			$this->LogInfo("backup: adding resource '$sDeltaFile'");
 			copy($sDeltaFile, $sFile);
 			$aRet[] = $sFile;
 		}
 		$sExtraDir = APPROOT.'data/'.utils::GetCurrentEnvironment().'-modules/';
-		if (is_dir($sExtraDir))
-		{
+		if (is_dir($sExtraDir)) {
 			$sModules = utils::GetCurrentEnvironment().'-modules';
 			$sFile = $sTmpFolder.'/'.$sModules;
 			$this->LogInfo("backup: adding resource '$sExtraDir'");
@@ -272,38 +264,31 @@ class DBBackup
 		}
 
 		$aExtraFiles = [];
-		if (MetaModel::GetConfig() !== null) // During unattended install config file may be absent
-		{
+		if (MetaModel::GetConfig() !== null) { // During unattended install config file may be absent
 			$aExtraFiles = MetaModel::GetModuleSetting('itop-backup', 'extra_files', []);
 		}
 
-		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iBackupExtraFilesExtension::class) as $sExtensionClass)
-		{
+		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iBackupExtraFilesExtension::class) as $sExtensionClass) {
 			/** @var iBackupExtraFilesExtension $oExtensionInstance */
 			$oExtensionInstance = new $sExtensionClass();
 			$aExtraFiles = array_merge($aExtraFiles, $oExtensionInstance->GetExtraFilesRelPaths());
 		}
 
-		foreach($aExtraFiles as $sExtraFileOrDir)
-		{
-			if(!file_exists(APPROOT.'/'.$sExtraFileOrDir)) {
+		foreach ($aExtraFiles as $sExtraFileOrDir) {
+			if (!file_exists(APPROOT.'/'.$sExtraFileOrDir)) {
 				continue; // Ignore non-existing files
 			}
 
 			$sExtraFullPath = utils::RealPath(APPROOT.'/'.$sExtraFileOrDir, APPROOT);
-			if ($sExtraFullPath === false)
-			{
+			if ($sExtraFullPath === false) {
 				throw new Exception("Backup: Aborting, resource '$sExtraFileOrDir'. Considered as UNSAFE because not inside the iTop directory.");
 			}
-			if (is_dir($sExtraFullPath))
-			{
+			if (is_dir($sExtraFullPath)) {
 				$sFile = $sTmpFolder.'/'.$sExtraFileOrDir;
 				$this->LogInfo("backup: adding directory '$sExtraFileOrDir'");
 				SetupUtils::copydir($sExtraFullPath, $sFile);
 				$aRet[] = $sFile;
-			}
-			elseif (file_exists($sExtraFullPath))
-			{
+			} elseif (file_exists($sExtraFullPath)) {
 				$sFile = $sTmpFolder.'/'.$sExtraFileOrDir;
 				$this->LogInfo("backup: adding file '$sExtraFileOrDir'");
 				@mkdir(dirname($sFile), 0755, true);
@@ -311,8 +296,7 @@ class DBBackup
 				$aRet[] = $sFile;
 			}
 		}
-		if (!$bSkipSQLDumpForTesting)
-		{
+		if (!$bSkipSQLDumpForTesting) {
 			$sDataFile = $sTmpFolder.'/itop-dump.sql';
 			$this->DoBackup($sDataFile);
 			$aRet[] = $sDataFile;
@@ -346,19 +330,16 @@ class DBBackup
 		$this->DBConnect();
 
 		$sTables = '';
-		if ($this->sDBSubName != '')
-		{
+		if ($this->sDBSubName != '') {
 			// This instance of iTop uses a prefix for the tables, so there may be other tables in the database
 			// Let's explicitely list all the tables and views to dump
 			$aTables = $this->EnumerateTables();
-			if (count($aTables) == 0)
-			{
+			if (count($aTables) == 0) {
 				// No table has been found with the given prefix
 				throw new BackupException("No table has been found with the given prefix");
 			}
-			$aEscapedTables = array();
-			foreach ($aTables as $sTable)
-			{
+			$aEscapedTables = [];
+			foreach ($aTables as $sTable) {
 				$aEscapedTables[] = self::EscapeShellArg($sTable);
 			}
 			$sTables = implode(' ', $aEscapedTables);
@@ -393,39 +374,32 @@ EOF;
 		file_put_contents($sMySQLDumpCnfFile, $sMySQLDumpCnf, LOCK_EX);
 
 		// Note: opt implicitly sets lock-tables... which cancels the benefit of single-transaction!
-			//       skip-lock-tables compensates and allows for writes during a backup
-		$sCommand = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=" . $sMysqldumpCharset . " --add-drop-database --single-transaction --host=$sHost $sPortAndTransportOptions --user=$sUser $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
-		$sCommandDisplay = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=" . $sMysqldumpCharset . " --add-drop-database --single-transaction --host=$sHost $sPortAndTransportOptions --user=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
+		//       skip-lock-tables compensates and allows for writes during a backup
+		$sCommand = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortAndTransportOptions --user=$sUser $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
+		$sCommandDisplay = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortAndTransportOptions --user=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
 
 		// Now run the command for real
 		$this->LogInfo("backup: generate data file with command: $sCommandDisplay");
-		$aOutput = array();
+		$aOutput = [];
 		$iRetCode = 0;
 		exec($sCommand, $aOutput, $iRetCode);
 		@unlink($sMySQLDumpCnfFile);
-		foreach ($aOutput as $sLine)
-		{
+		foreach ($aOutput as $sLine) {
 			$this->LogInfo("mysqldump said: $sLine");
 		}
-		if ($iRetCode != 0)
-		{
+		if ($iRetCode != 0) {
 			// Cleanup residual output (Happens with Error 2020: Got packet bigger than 'maxallowedpacket' bytes...)
-			if (file_exists($sBackupFileName))
-			{
+			if (file_exists($sBackupFileName)) {
 				unlink($sBackupFileName);
 			}
 
 			$this->LogError("Failed to execute: $sCommandDisplay. The command returned:$iRetCode");
-			foreach ($aOutput as $sLine)
-			{
+			foreach ($aOutput as $sLine) {
 				$this->LogError("mysqldump said: $sLine");
 			}
-			if (count($aOutput) == 1)
-			{
+			if (count($aOutput) == 1) {
 				$sMoreInfo = trim($aOutput[0]);
-			}
-			else
-			{
+			} else {
 				$sMoreInfo = "Check the log files 'log/setup.log' or 'log/error.log' for more information.";
 			}
 			throw new BackupException("Failed to execute mysqldump: ".$sMoreInfo);
@@ -441,8 +415,7 @@ EOF;
 	 */
 	public function DownloadBackup($sFile)
 	{
-		if (!file_exists($sFile))
-		{
+		if (!file_exists($sFile)) {
 			throw new InvalidParameterException('Invalid file path');
 		}
 
@@ -475,25 +448,27 @@ EOF;
 		$sTlsEnabled = $oConfig->Get('db_tls.enabled');
 		$sTlsCA = $oConfig->Get('db_tls.ca');
 
-		try
-		{
-			$oMysqli = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sTlsEnabled, $sTlsCA,
-				false);
+		try {
+			$oMysqli = CMDBSource::GetMysqliInstance(
+				$sServer,
+				$sUser,
+				$sPwd,
+				$sSource,
+				$sTlsEnabled,
+				$sTlsCA,
+				false
+			);
 
-			if ($oMysqli->connect_errno)
-			{
+			if ($oMysqli->connect_errno) {
 				$sHost = is_null($this->iDBPort) ? $this->sDBHost : $this->sDBHost.' on port '.$this->iDBPort;
-                throw new MySQLException('Could not connect to the DB server '.$oMysqli->connect_errno.' (mysql errno: '.$oMysqli->connect_error, array('host' => $sHost, 'user' => $sUser));
-            }
-			if (!$oMysqli->select_db($this->sDBName))
-			{
+				throw new MySQLException('Could not connect to the DB server '.$oMysqli->connect_errno.' (mysql errno: '.$oMysqli->connect_error, ['host' => $sHost, 'user' => $sUser]);
+			}
+			if (!$oMysqli->select_db($this->sDBName)) {
 				throw new BackupException("The database '$this->sDBName' does not seem to exist");
 			}
 
 			return $oMysqli;
-		}
-		catch (MySQLException $e)
-		{
+		} catch (MySQLException $e) {
 			throw new BackupException($e->getMessage());
 		}
 	}
@@ -506,27 +481,21 @@ EOF;
 	protected function EnumerateTables()
 	{
 		$oMysqli = $this->DBConnect();
-		if ($this->sDBSubName != '')
-		{
+		if ($this->sDBSubName != '') {
 			$oResult = $oMysqli->query("SHOW TABLES LIKE '{$this->sDBSubName}%'");
-		}
-		else
-		{
+		} else {
 			$oResult = $oMysqli->query("SHOW TABLES");
 		}
-		if (!$oResult)
-		{
+		if (!$oResult) {
 			throw new BackupException("Failed to execute the SHOW TABLES query: ".$oMysqli->error);
 		}
-		$aTables = array();
-		while ($aRow = $oResult->fetch_row())
-		{
+		$aTables = [];
+		while ($aRow = $oResult->fetch_row()) {
 			$aTables[] = $aRow[0];
 		}
 
 		return $aTables;
 	}
-
 
 	/**
 	 * @param Config $oConfig
@@ -543,25 +512,18 @@ EOF;
 	public static function GetMysqlCliTlsOptions($oConfig)
 	{
 		$bDbTlsEnabled = $oConfig->Get('db_tls.enabled');
-		if (!$bDbTlsEnabled)
-		{
+		if (!$bDbTlsEnabled) {
 			return '';
 		}
 		$sTlsOptions = '';
 		// Mysql 5.7.11 and upper deprecated --ssl and uses --ssl-mode instead
-		if (CMDBSource::IsSslModeDBVersion())
-		{
-			if(empty($oConfig->Get('db_tls.ca')))
-			{
+		if (CMDBSource::IsSslModeDBVersion()) {
+			if (empty($oConfig->Get('db_tls.ca'))) {
 				$sTlsOptions .= ' --ssl-mode=REQUIRED';
-			}
-			else
-			{
+			} else {
 				$sTlsOptions .= ' --ssl-mode=VERIFY_CA';
 			}
-		}
-		else
-		{
+		} else {
 			$sTlsOptions .= ' --ssl';
 		}
 
@@ -584,8 +546,7 @@ EOF;
 	 */
 	private static function GetMysqliCliSingleOption($sCliArgName, $sData)
 	{
-		if (empty($sData))
-		{
+		if (empty($sData)) {
 			return '';
 		}
 
@@ -615,7 +576,7 @@ EOF;
 
 			$sPortOption = self::GetMysqliCliSingleOption('port', $iPort);
 			$sTransportOptions = ' --protocol=tcp';
-			return $sPortOption . $sTransportOptions;
+			return $sPortOption.$sTransportOptions;
 		}
 
 		if (is_null($iPort)) {
@@ -634,16 +595,15 @@ EOF;
 	{
 		if (empty($sMySQLBinDir)) {
 			$sMySQLCommand = $sCmd;
-		}
-		else {
+		} else {
 			$sMySQLBinDir = escapeshellcmd($sMySQLBinDir);
-			$sMySQLCommand = '"'.$sMySQLBinDir.'/$sCmd"';
+			$sMySQLCommand = $sMySQLBinDir.'/'.$sCmd;
 			if (!file_exists($sMySQLCommand)) {
 				throw new BackupException("$sCmd not found in $sMySQLBinDir");
 			}
 		}
 
-		return $sMySQLCommand;
+		return '"'.$sMySQLCommand.'"';
 	}
 
 	/**
@@ -680,15 +640,12 @@ class TarGzArchive implements BackupArchive
 	{
 		// remove leading and tailing /
 		$sFile = trim($sFile, "/ \t\n\r\0\x0B");
-		if ($this->aFiles === null)
-		{
+		if ($this->aFiles === null) {
 			// Initial load
 			$this->buildFileList();
 		}
-		foreach ($this->aFiles as $aArchFile)
-		{
-			if ($aArchFile['filename'] == $sFile)
-			{
+		foreach ($this->aFiles as $aArchFile) {
+			if ($aArchFile['filename'] == $sFile) {
 				return true;
 			}
 		}
@@ -705,15 +662,12 @@ class TarGzArchive implements BackupArchive
 	{
 		// remove leading and tailing /
 		$sDirectory = trim($sDirectory, "/ \t\n\r\0\x0B");
-		if ($this->aFiles === null)
-		{
+		if ($this->aFiles === null) {
 			// Initial load
 			$this->buildFileList();
 		}
-		foreach ($this->aFiles as $aArchFile)
-		{
-			if (($aArchFile['typeflag'] == 5) && ($aArchFile['filename'] == $sDirectory))
-			{
+		foreach ($this->aFiles as $aArchFile) {
+			if (($aArchFile['typeflag'] == 5) && ($aArchFile['filename'] == $sDirectory)) {
 				return true;
 			}
 		}
@@ -778,4 +732,3 @@ class TarGzArchive implements BackupArchive
 		$this->aFiles = $this->oArchive->listContent();
 	}
 }
-

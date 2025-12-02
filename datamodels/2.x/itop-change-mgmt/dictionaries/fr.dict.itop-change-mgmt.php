@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:ChangeManagement' => 'Gestion des changements',
 	'Menu:Change:Overview' => 'Vue d\'ensemble',
 	'Menu:Change:Overview+' => '',
@@ -33,7 +34,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changements par statut',
 	'Tickets:Related:OpenChanges' => 'Changements en cours',
 	'Tickets:Related:RecentChanges' => 'Changements récents (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -45,12 +46,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Change' => 'Ticket de Changement',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Etat',
@@ -148,5 +148,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Attribute:outage/Value:no' => 'Non',
 	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Oui',
-	'Class:Change/Attribute:outage/Value:yes+' => ''
-));
+	'Class:Change/Attribute:outage/Value:yes+' => '',
+]);

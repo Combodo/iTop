@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -98,11 +99,9 @@ class AjaxRenderController
 						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
 						$bExcludeRawValue = false;
 						// Only retrieve raw (stored) value for simple fields
-						foreach (cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
-						{
+						foreach (cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude) {
 							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-							if (is_a($oAttDef, $sAttDefClassToExclude, true))
-							{
+							if (is_a($oAttDef, $sAttDefClassToExclude, true)) {
 								$bExcludeRawValue = true;
 								break;
 							}
@@ -110,7 +109,7 @@ class AjaxRenderController
 
 						if (!$bExcludeRawValue) {
 							$oRawValue = $aObject[$sAlias]->Get($sAttCode);
-							if(($oRawValue instanceof AttributeTagSet) || ($oRawValue instanceof ormSet)){
+							if (($oRawValue instanceof AttributeTagSet) || ($oRawValue instanceof ormSet)) {
 								$aObj[$sAlias."/".$sAttCode."/raw"] = implode(", ", $oRawValue->GetValues());
 							} else {
 								$aObj[$sAlias."/".$sAttCode."/raw"] = $oRawValue;
@@ -150,18 +149,18 @@ class AjaxRenderController
 			$aErr = error_get_last();
 			if (($aErr !== null) && ($aErr['type'] & (E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR))) {
 				ob_end_clean();
-				echo json_encode(array('code' => 'error', 'percentage' => 100, 'message' => Dict::Format('UI:Error_Details', $aErr['message'])));
+				echo json_encode(['code' => 'error', 'percentage' => 100, 'message' => Dict::Format('UI:Error_Details', $aErr['message'])]);
 			}
 		});
 
 		try {
 			$token = utils::ReadParam('token', null);
 			$sTokenForDisplay = utils::HtmlEntities($token);
-			$aResult = array( // Fallback error, just in case
+			$aResult = [ // Fallback error, just in case
 				'code' => 'error',
 				'percentage' => 100,
 				'message' => "Export not found for token: '$sTokenForDisplay'",
-			);
+			];
 			$data = '';
 			if ($token === null) {
 				if ($bTokenOnly) {
@@ -171,14 +170,14 @@ class AjaxRenderController
 				$sExpression = utils::ReadParam('expression', null, false, 'raw_data');
 				$iQueryId = utils::ReadParam('query', null);
 				if ($sExpression === null) {
-					$oQuerySearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $iQueryId));
+					$oQuerySearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', ['query_id' => $iQueryId]);
 					$oQuerySearch->UpdateContextFromUser();
 					$oQueries = new DBObjectSet($oQuerySearch);
 					if ($oQueries->Count() > 0) {
 						$oQuery = $oQueries->Fetch();
 						$sExpression = $oQuery->Get('oql');
 					} else {
-						$aResult = array('code' => 'error', 'percentage' => 100, 'message' => "Invalid query phrasebook identifier: '$iQueryId'");
+						$aResult = ['code' => 'error', 'percentage' => 100, 'message' => "Invalid query phrasebook identifier: '$iQueryId'"];
 					}
 				}
 				if ($sExpression !== null) {
@@ -226,10 +225,10 @@ class AjaxRenderController
 			}
 			$oPage->SetData($aResult);
 		} catch (BulkExportException $e) {
-			$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->GetLocalizedMessage()));
+			$aResult = ['code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->GetLocalizedMessage())];
 			$oPage->SetData($aResult);
 		} catch (Exception $e) {
-			$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->getMessage()));
+			$aResult = ['code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->getMessage())];
 			$oPage->SetData($aResult);
 		}
 	}
@@ -249,7 +248,7 @@ class AjaxRenderController
 		$oPage->SetData($aResult);
 	}
 
-		/**
+	/**
 	 * @param string $sFilter
 	 *
 	 * @return array
@@ -258,7 +257,7 @@ class AjaxRenderController
 	public static function SearchAndRefresh(string $sFilter): array
 	{
 		$extraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
-		$aExtraParams = array();
+		$aExtraParams = [];
 		if (is_array($extraParams)) {
 			$aExtraParams = $extraParams;
 		} else {
@@ -279,9 +278,9 @@ class AjaxRenderController
 
 		$sTableId = utils::ReadParam('list_id', '');
 		$iLength = utils::ReadParam('end', 10, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
-		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
+		$aColumns = utils::ReadParam('columns', [], false, 'raw_data');
 		$sSelectMode = utils::ReadParam('select_mode', '');
-		$aClassAliases = utils::ReadParam('class_aliases', array());
+		$aClassAliases = utils::ReadParam('class_aliases', []);
 		$aResult = DataTableUIBlockFactory::GetOptionsForRendering($aColumns, $sSelectMode, $sFilter, $iLength, $aClassAliases, $aExtraParams, $sTableId);
 
 		return $aResult;
@@ -301,10 +300,10 @@ class AjaxRenderController
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public static function Search(string $sEncoding, string $sFilter):array
+	public static function Search(string $sEncoding, string $sFilter): array
 	{
 		$extraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
-		$aExtraParams = array();
+		$aExtraParams = [];
 		if (is_array($extraParams)) {
 			$aExtraParams = $extraParams;
 		} else {
@@ -340,8 +339,8 @@ class AjaxRenderController
 			// The first column is used for the selection (radio / checkbox) and is not sortable
 			$iSortCol--;
 		}
-		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
-		$aClassAliases = utils::ReadParam('class_aliases', array());
+		$aColumns = utils::ReadParam('columns', [], false, 'raw_data');
+		$aClassAliases = utils::ReadParam('class_aliases', []);
 
 		foreach ($aColumns as $sClass => $aAttCodes) {
 			foreach ($aAttCodes as $sAttCode => $aAttProperties) {
@@ -405,11 +404,11 @@ class AjaxRenderController
 					IssueLog::Warning(
 						"ajax.render.php received an invalid array for columns : check max_input_vars value in php.ini !",
 						null,
-						array(
+						[
 							'controller' => '\Combodo\iTop\Controller\AjaxRenderController::Search',
 							'max_input_vars' => $iMaxInputVarsValue,
 							'class.attcode with invalid format' => "$sClass.$sAttCode",
-						)
+						]
 					);
 					$aColumns[$sClass][$sAttCode]['checked'] = 'false';
 				}
@@ -417,20 +416,20 @@ class AjaxRenderController
 		}
 
 		// Filter the list to removed linked set since we are not able to display them here
-		$sIdName = isset($extraParams["id_for_select"])?$extraParams["id_for_select"]:"";
-		$aOrderBy = array();
+		$sIdName = isset($extraParams["id_for_select"]) ? $extraParams["id_for_select"] : "";
+		$aOrderBy = [];
 		$iSortIndex = 0;
 
-		$aColumnsLoad = array();
+		$aColumnsLoad = [];
 		foreach ($aClassAliases as $sAlias => $sClassName) {
-			$aColumnsLoad[$sAlias] = array();
+			$aColumnsLoad[$sAlias] = [];
 			if (!isset($aColumns[$sAlias])) {
 				continue;
 			}
-			// It's better to use default class order than asc first column when none specified by the request 
-			if($bForceSort && count(MetaModel::GetOrderByDefault($sClassName)) > 0){
+			// It's better to use default class order than asc first column when none specified by the request
+			if ($bForceSort && count(MetaModel::GetOrderByDefault($sClassName)) > 0) {
 				$iSortCol = -1;
-				
+
 				$aDefaultOrder = MetaModel::GetOrderByDefault($sClassName);
 				foreach ($aDefaultOrder as $sAttCode => $bOrder) {
 					$aOrderBy[$sAlias.'.'.$sAttCode] = $bOrder;
@@ -502,8 +501,8 @@ class AjaxRenderController
 		$iPageSize = utils::ReadParam('page_size', 10, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 		$sTableId = utils::ReadParam('table_id', null, false, 'raw_data');
 		$bSaveAsDefaults = (utils::ReadParam('defaults', 'true') == 'true');
-		$aClassAliases = utils::ReadParam('class_aliases', array(), false, 'raw_data');
-		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
+		$aClassAliases = utils::ReadParam('class_aliases', [], false, 'raw_data');
+		$aColumns = utils::ReadParam('columns', [], false, 'raw_data');
 
 		foreach ($aColumns as $sAlias => $aList) {
 			foreach ($aList as $sAttCode => $aData) {
@@ -538,7 +537,7 @@ class AjaxRenderController
 	public static function DatatableResetSettings(): bool
 	{
 		$sTableId = utils::ReadParam('table_id', null, false, 'raw_data');
-		$aClassAliases = utils::ReadParam('class_aliases', array(), false, 'raw_data');
+		$aClassAliases = utils::ReadParam('class_aliases', [], false, 'raw_data');
 		$bResetAll = (utils::ReadParam('defaults', 'true') == 'true');
 
 		$oSettings = new DataTableSettings($aClassAliases, $sTableId);
@@ -578,7 +577,7 @@ class AjaxRenderController
 			// Security filtering
 			$aFields = $oGroupByExp->ListRequiredFields();
 			foreach ($aFields as $sFieldAlias) {
-				$aMatches = array();
+				$aMatches = [];
 				if (preg_match('/^([^.]+)\\.([^.]+)$/', $sFieldAlias, $aMatches)) {
 					$sFieldClass = $oFilter->GetClassName($aMatches[1]);
 					$oAttDef = MetaModel::GetAttributeDef($sFieldClass, $aMatches[2]);
@@ -610,10 +609,10 @@ class AjaxRenderController
 			if (isset($aExtraParams['order_direction']) && isset($aExtraParams['order_by'])) {
 				switch ($aExtraParams['order_by']) {
 					case 'attribute':
-						$aOrderBy = array('grouped_by_1' => ($aExtraParams['order_direction'] === 'asc'));
+						$aOrderBy = ['grouped_by_1' => ($aExtraParams['order_direction'] === 'asc')];
 						break;
 					case 'function':
-						$aOrderBy = array($sFctVar => ($aExtraParams['order_direction'] === 'asc'));
+						$aOrderBy = [$sFctVar => ($aExtraParams['order_direction'] === 'asc')];
 						break;
 				}
 			}
@@ -625,9 +624,9 @@ class AjaxRenderController
 
 			$aRes = CMDBSource::QueryToArray($sSql);
 
-			$aGroupBy = array();
-			$aLabels = array();
-			$aValues = array();
+			$aGroupBy = [];
+			$aLabels = [];
+			$aValues = [];
 			$iTotalCount = 0;
 			foreach ($aRes as $iRow => $aRow) {
 				$sValue = $aRow['grouped_by_1'];
@@ -638,7 +637,7 @@ class AjaxRenderController
 				$iTotalCount += $aRow['_itop_count_'];
 			}
 
-			$aResult = array();
+			$aResult = [];
 			$oAppContext = new ApplicationContext();
 			$sParams = $oAppContext->GetForLink(true);
 			foreach ($aGroupBy as $iRow => $iCount) {
@@ -649,14 +648,14 @@ class AjaxRenderController
 				if (isset($aExtraParams['query_params'])) {
 					$aQueryParams = $aExtraParams['query_params'];
 				} else {
-					$aQueryParams = array();
+					$aQueryParams = [];
 				}
 				$sFilter = rawurlencode($oSubsetSearch->serialize(false, $aQueryParams));
 
-				$aResult[] = array(
+				$aResult[] = [
 					'group' => $aLabels[$iRow],
 					'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1$sParams&filter=$sFilter\">$iCount</a>",
-				); // TO DO: add the context information
+				]; // TO DO: add the context information
 			}
 
 		} else {
@@ -696,7 +695,7 @@ class AjaxRenderController
 		$aExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
 		$oFilter = DBObjectSearch::FromOQL($sFilter);
 		$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
-		$aQueryParams = array();
+		$aQueryParams = [];
 		if (isset($aExtraParams['query_params'])) {
 			$aQueryParams = $aExtraParams['query_params'];
 		}
@@ -810,7 +809,8 @@ class AjaxRenderController
 		foreach ($aLicenses as $oLicense) {
 			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
 			$oPage->add('<div id="license_'.$index.'" class="license_text ibo-is-html-content" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
-			$oPage->add_ready_script(<<<JS
+			$oPage->add_ready_script(
+				<<<JS
 $("#toggle_$index").on('click', function() { 
 	$(this).toggleClass('open');
 	$("#license_$index").slideToggle("normal"); 
@@ -845,7 +845,7 @@ EOF
 		);
 		$sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		$oPage->add('<div id="about_box"><div class="ibo-about-box--top-part">');
-		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
+		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="'.utils::GetAbsoluteUrlAppRoot().'images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
 		$oPage->add('<div>'.$sVersionString.'</div>');
 		$oPage->add("</div>");
 		self::DisplayAboutLicenses($oPage);
@@ -885,7 +885,7 @@ EOF
 
 		// Get the datamodel directory
 		$oFilter = DBObjectSearch::FromOQL('SELECT ModuleInstallation WHERE name="datamodel"');
-		$oSet = new DBObjectSet($oFilter, array('installed' => false)); // Most recent first
+		$oSet = new DBObjectSet($oFilter, ['installed' => false]); // Most recent first
 		$oLastInstall = $oSet->Fetch();
 		$sLastInstallDate = $oLastInstall->Get('installed');
 		$aDataModelInfo = json_decode($oLastInstall->Get('comment'), true);
@@ -894,7 +894,7 @@ EOF
 		require_once(APPROOT.'setup/runtimeenv.class.inc.php');
 		$sCurrEnv = utils::GetCurrentEnvironment();
 		$oRuntimeEnv = new RunTimeEnvironment($sCurrEnv);
-		$aSearchDirs = array(APPROOT.$sDataModelSourceDir);
+		$aSearchDirs = [APPROOT.$sDataModelSourceDir];
 		if (file_exists(APPROOT.'extensions')) {
 			$aSearchDirs[] = APPROOT.'extensions';
 		}
@@ -904,22 +904,22 @@ EOF
 		}
 		$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation(MetaModel::GetConfig(), $aSearchDirs);
 
-		$aItopSettings = array('cron_max_execution_time', 'timezone');
-		$aPHPSettings = array('memory_limit', 'max_execution_time', 'upload_max_filesize', 'post_max_size');
-		$aMySQLSettings = array('max_allowed_packet', 'key_buffer_size', 'query_cache_size');
-		$aMySQLStatuses = array('Key_read_requests', 'Key_reads');
+		$aItopSettings = ['cron_max_execution_time', 'timezone'];
+		$aPHPSettings = ['memory_limit', 'max_execution_time', 'upload_max_filesize', 'post_max_size'];
+		$aMySQLSettings = ['max_allowed_packet', 'key_buffer_size', 'query_cache_size'];
+		$aMySQLStatuses = ['Key_read_requests', 'Key_reads'];
 
 		if (extension_loaded('suhosin')) {
 			$aPHPSettings[] = 'suhosin.post.max_vars';
 			$aPHPSettings[] = 'suhosin.get.max_value_length';
 		}
 
-		$aMySQLVars = array();
+		$aMySQLVars = [];
 		foreach (CMDBSource::QueryToArray('SHOW VARIABLES') as $aRow) {
 			$aMySQLVars[$aRow['Variable_name']] = $aRow['Value'];
 		}
 
-		$aMySQLStats = array();
+		$aMySQLStats = [];
 		foreach (CMDBSource::QueryToArray('SHOW GLOBAL STATUS') as $aRow) {
 			$aMySQLStats[$aRow['Variable_name']] = $aRow['Value'];
 		}
@@ -927,7 +927,7 @@ EOF
 		// Display
 		//
 		$oPage->add('<div id="about_box"><div class="ibo-about-box--top-part">');
-		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
+		$oPage->add('<div><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="'.utils::GetAbsoluteUrlAppRoot().'images/logos/logo-combodo-dark.svg?t='.utils::GetCacheBusterTimestamp().'"/></a></div>');
 		$oPage->add('<div>'.$sVersionString.'<br/>'.'MySQL: '.$sMySQLVersion.'<br/>'.'PHP: '.$sPHPVersion.'<br/></div>');
 		$oPage->add("</div>");
 
@@ -963,7 +963,6 @@ EOF
 		$oPage->add('</ul>');
 		$oPage->add("</div>");
 		$oPage->add('</fieldset>');
-
 
 		// MUST NOT be localized, as the information given here will be sent to the support
 		$oPage->add("<a id=\"collapse_support_details\" class=\"CollapsibleLabel\" href=\"#\">".Dict::S('UI:About:Support')."</a></br>\n");
@@ -1026,6 +1025,5 @@ EOF
 
 		$oPage->add("</div>");
 	}
-
 
 }

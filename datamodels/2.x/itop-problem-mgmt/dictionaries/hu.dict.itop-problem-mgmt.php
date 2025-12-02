@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:ProblemManagement' => 'Problémakezelés',
 	'Menu:ProblemManagement+' => '',
 	'Menu:Problem:Overview' => 'Áttekintő',
@@ -32,12 +33,12 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Problémakezelés műszerfal',
 	'UI:ProblemMgmtMenuOverview:Title+' => '',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Problem' => 'Probléma',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Állapot',
@@ -110,4 +111,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Lezárás',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

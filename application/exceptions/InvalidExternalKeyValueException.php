@@ -12,13 +12,13 @@ class InvalidExternalKeyValueException extends CoreUnexpectedValue
 
 	public function __construct($oObject, $sAttCode, $aContextData = null, $oPrevious = null)
 	{
-		$aContextData[self::ENUM_PARAMS_OBJECT] = get_class($oObject) . '::' . $oObject->GetKey();
+		$aContextData[self::ENUM_PARAMS_OBJECT] = get_class($oObject).'::'.$oObject->GetKey();
 		$aContextData[self::ENUM_PARAMS_ATTCODE] = $sAttCode;
 		$aContextData[self::ENUM_PARAMS_ATTVALUE] = $oObject->Get($sAttCode);
 
 		$oCurrentUser = UserRights::GetUserObject();
 		if (false === is_null($oCurrentUser)) {
-			$aContextData[self::ENUM_PARAMS_USER] = get_class($oCurrentUser) . '::' . $oCurrentUser->GetKey();
+			$aContextData[self::ENUM_PARAMS_USER] = get_class($oCurrentUser).'::'.$oCurrentUser->GetKey();
 		}
 
 		parent::__construct('Attribute pointing to an object that is either non existing or not readable by the current user', $aContextData, '', $oPrevious);

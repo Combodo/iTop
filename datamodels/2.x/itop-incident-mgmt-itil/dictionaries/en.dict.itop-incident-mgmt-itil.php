@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,7 +22,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Menu:IncidentManagement' => 'Incident Management',
 	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Overview',
@@ -43,8 +44,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Open incidents by status',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Open incidents by agent',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Open incidents by customer',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -60,7 +60,7 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class: Incident
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Status',
@@ -240,4 +240,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info',
 	'Tickets:Related:OpenIncidents' => 'Open incidents',
-));
+]);

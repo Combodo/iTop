@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -34,8 +35,8 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => [
-            'itop-files-information/2.7.0',
-            'combodo-db-tools/2.7.0',
+			'itop-files-information/2.7.0',
+			'combodo-db-tools/2.7.0',
 		],
 		'mandatory' => false,
 		'visible' => true,

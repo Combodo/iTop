@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:DBToolsMenu' => 'DB eszközök',
 	'DBTools:Class' => 'Osztály',
 	'DBTools:Title' => 'Adatbázis karbantartó eszközök',
@@ -43,17 +44,17 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'DBAnalyzer-Fetch-Count-Error' => 'Lekérési hiba a `%1$s` -nál, %2$d bejegyzés lekérve / %3$d megszámlálva',
 	'DBAnalyzer-Integrity-FinalClass' => 'A `%2$s`.`%1$s` mezőnek ugyanolyan értékűnek kell lennie mint a `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => '`%2$s`.`%1$s` mezőnek érvényes osztályt kell tartalmaznia',
-));
+]);
 
 // Database Info
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'DBTools:DatabaseInfo' => 'Adatbázis információ',
 	'DBTools:Base' => 'Bázis',
 	'DBTools:Size' => 'Méret',
-));
+]);
 
 // Lost attachments
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'DBTools:LostAttachments' => 'Elveszett mellékletek',
 	'DBTools:LostAttachments:Disclaimer' => 'Itt kereshet az adatbázisban elveszett vagy elkeveredett mellékletek után. Ez NEM egy adat-visszaállítási eszköz, nem állítja vissza a törölt adatokat.',
 	'DBTools:LostAttachments:Button:Analyze' => 'Elemzés',
@@ -70,5 +71,5 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Visszaállítás eredménye:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d melléklet lett visszaállítva.',
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Soron belüli képként tárolva',
-	'DBTools:LostAttachments:History' => 'A "%1$s" melléklet visszaállítva a DB eszközzel'
-));
+	'DBTools:LostAttachments:History' => 'A "%1$s" melléklet visszaállítva a DB eszközzel',
+]);

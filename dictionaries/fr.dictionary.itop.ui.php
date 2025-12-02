@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:AuditCategory' => 'Catégorie d\'audit',
 	'Class:AuditCategory+' => 'La catégorie d\'audit définit un ensemble d\'objets qui doivent être audité.
 Elle regroupe toutes les régles qui s\'appliquent au même périmètre d\'objets',
@@ -27,13 +28,13 @@ Elle regroupe toutes les régles qui s\'appliquent au même périmètre d\'objet
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Pourcentage d\'objets en erreur au dela duquel le résultat est en erreur (rouge)',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domaines',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domaines incluant cette catégorie d\'audit',
-));
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:AuditRule' => 'Règle d\'audit',
 	'Class:AuditRule+' => 'Une règle d\'audit correspond à une vérification particulière.
 Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audit',
@@ -55,13 +56,13 @@ Elle s\'applique à tous les objets dans le périmètre de sa catégorie d\'audi
 	'Class:AuditRule/Attribute:category_id+' => '',
 	'Class:AuditRule/Attribute:category_name' => 'Nom de la catégorie',
 	'Class:AuditRule/Attribute:category_name+' => '',
-));
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:AuditDomain' => 'Domaine d\'audit',
 	'Class:AuditDomain+' => 'Un domaine permet de regrouper ensemble des catégories d\'audit.
 Cela recouvre en général, un domaine d\'intérêt ou de responsabilité',
@@ -74,13 +75,13 @@ Cela recouvre en général, un domaine d\'intérêt ou de responsabilité',
 	'Class:AuditDomain/Attribute:categories_list' => 'Catégories',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Catégories d\'audit incluses dans ce domaine. Cette inclusion n\'est pas exclusive.
 Lorsqu\'on execute l\'audit sur un domaine, toutes les catégories d\'audit incluses sont vérifiées en même temps et seulement celles là',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain',
 	'Class:lnkAuditCategoryToAuditDomain+' => '',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Catégorie',
@@ -91,13 +92,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Domaine d\'audit',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Nom du domain',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Nom du domain d\'audit',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Query' => 'Requête',
 	'Class:Query+' => 'Une requête définit un ensemble d\'information de manière dynamique',
 	'Class:Query/Attribute:name' => 'Nom',
@@ -124,7 +125,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:QueryOQL+' => 'Une requête écrite dans le langage "Object Query Language"',
 	'Class:QueryOQL/Attribute:oql' => 'Expression',
 	'Class:QueryOQL/Attribute:oql+' => 'Expression OQL',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -135,7 +136,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: User
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:User' => 'Utilisateur',
 	'Class:User+' => 'Compte utilisateur',
 	'Class:User/Attribute:finalclass' => 'Type de compte',
@@ -181,13 +182,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Warning:NoContactHasImpact' => 'Attention: il n\'y a pas de Personne liée à cet utilisateur, il ne pourra pas se connecter à un portail, ni recevoir de News, ni changer sa langue.',
 	'Class:UserInternal' => 'Utilisateur interne',
 	'Class:UserInternal+' => 'Utilisateur défini dans '.ITOP_APPLICATION_SHORT,
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_Profiles' => 'Profil',
 	'Class:URP_Profiles+' => 'Profil utilisateur',
 	'Class:URP_Profiles/Attribute:name' => 'Nom',
@@ -196,13 +197,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_Profiles/Attribute:description+' => '',
 	'Class:URP_Profiles/Attribute:user_list' => 'Utilisateurs',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Comptes utilisateur (logins) ayant ce profil',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_Dimensions' => 'Dimension',
 	'Class:URP_Dimensions+' => 'Dimension applicative (défini des silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Nom',
@@ -211,13 +212,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_Dimensions/Attribute:description+' => '',
 	'Class:URP_Dimensions/Attribute:type' => 'Type',
 	'Class:URP_Dimensions/Attribute:type+' => 'Nom de classe ou type de données (unité de projection)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_UserProfile' => 'Utilisateur/Profil',
 	'Class:URP_UserProfile+' => '',
 	'Class:URP_UserProfile/Name' => 'Lien entre %1$s et %2$s',
@@ -231,14 +232,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_UserProfile/Attribute:profile+' => '',
 	'Class:URP_UserProfile/Attribute:reason' => 'Raison',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Justifie le rôle affecté à cet utilisateur',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_UserOrg' => 'Utilisateur/Organisation',
 	'Class:URP_UserOrg+' => 'Organisations permises pour l\'utilisateur',
 	'Class:URP_UserOrg/Name' => 'Lien entre %1$s et %2$s',
@@ -252,13 +252,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
 	'Class:URP_UserOrg/Attribute:reason' => 'Raison',
 	'Class:URP_UserOrg/Attribute:reason+' => 'Justifie la permission de voir les données de cette organisation',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => 'profile projections',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimension',
@@ -273,13 +273,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL expression (using $user) | constant |  | +attribute code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Target attribute code (optional)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'class projections',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimension',
@@ -292,13 +292,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL expression (using $this) | constant |  | +attribute code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Target attribute code (optional)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_ActionGrant' => 'action_permission',
 	'Class:URP_ActionGrant+' => 'permissions on classes',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profile',
@@ -315,13 +315,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'non',
 	'Class:URP_ActionGrant/Attribute:action' => 'Action',
 	'Class:URP_ActionGrant/Attribute:action+' => 'operations to perform on the given class',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_StimulusGrant' => 'stimulus_permission',
 	'Class:URP_StimulusGrant+' => 'permissions on stimulus in the life cycle of the object',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profile',
@@ -338,25 +338,25 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'stimulus code',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:URP_AttributeGrant' => 'attribute_permission',
 	'Class:URP_AttributeGrant+' => 'permissions at the attributes level',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Action grant',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribute',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:UserDashboard' => 'Tableau de bord utilisateur',
 	'Class:UserDashboard+' => '',
 	'Class:UserDashboard/Attribute:user_id' => 'Utilisateur',
@@ -365,12 +365,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '',
 	'Class:UserDashboard/Attribute:contents' => 'Contenu',
 	'Class:UserDashboard/Attribute:contents+' => '',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:WelcomeMenu' => 'Bienvenue',
 	'Menu:WelcomeMenu+' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Bienvenue',
 	'Menu:WelcomeMenuPage+' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Administration',
@@ -387,14 +387,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:MyShortcuts' => 'Mes raccourcis',
 	'Menu:Notifications:Title' => 'Catégories d\'audit',
 	'Menu:DataAdministration' => 'Administration des données',
-	'Menu:DataAdministration+' => 'Administration des données'
-));
+	'Menu:DataAdministration+' => 'Administration des données',
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'BooleanLabel:yes' => 'oui',
 	'BooleanLabel:no' => 'non',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
@@ -1534,13 +1534,13 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Children of the selected objects will be included.~~',
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtré',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtré sur %1$s',
-	'UI:StateChanged' => 'Etat modifié'
-));
+	'UI:StateChanged' => 'Etat modifié',
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Expression:Operator:AND' => ' ET ',
 	'Expression:Operator:OR' => ' OU ',
 	'Expression:Operator:=' => ' : ',
@@ -1553,12 +1553,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Expression:Unit:Long:MINUTE' => 'minute(s)',
 	'Expression:Verb:NOW' => 'maintenant',
 	'Expression:Verb:ISNULL' => ' : non défini',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Newsroom:NoNewMessage' => 'Aucun nouveau message',
 	'UI:Newsroom:XNewMessage' => '%1$s nouveau(x) message(s)',
 	'UI:Newsroom:MarkAllAsRead' => 'Marquer tous les messages comme lus',
@@ -1573,10 +1573,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Standard',
-));
+]);
 
-
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:DataSources' => 'Synchronisation',
 	'Menu:DataSources+' => 'Configurations d\'import de données issues de sources externes',
 	'Menu:AuditCategories' => 'Configurer l\'audit',
@@ -1604,4 +1603,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Integrations' => 'Intégrations',
 	'Menu:Integrations+' => '',
 
-));
+]);

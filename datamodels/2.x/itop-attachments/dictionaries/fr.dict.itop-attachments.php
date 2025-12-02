@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Attachments:TabTitle_Count' => 'Pièces jointes (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Pièces jointes',
 	'Attachments:FieldsetTitle' => 'Pièces jointes',
@@ -30,13 +31,13 @@ Soit demandez à votre administrateur système s\'il reste de la place disque di
 	'Attachments:Render:Icons' => 'Affichage en icônes',
 	'Attachments:Render:Table' => 'Affichage en liste',
 	'UI:Attachments:DropYourFileHint' => 'Déposez vos fichiers dans cet espace',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Attachment' => 'Attachement',
 	'Class:Attachment+' => '',
 	'Class:Attachment/Attribute:expire' => 'Expire',
@@ -51,10 +52,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => 'Contenu',
 	'Class:Attachment/Attribute:contents+' => '',
-));
+]);
 
-
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Attachments:File:Thumbnail' => 'Icône',
 	'Attachments:File:Name' => 'Nom du fichier',
 	'Attachments:File:Date' => 'Date de chargement',
@@ -62,25 +62,25 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachments:File:Size' => 'Taille',
 	'Attachments:File:MimeType' => 'Type',
 	'Attachments:File:DownloadsCount' => 'Téléchargements',
-));
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Attachment/Attribute:creation_date' => 'Date de création',
 	'Class:Attachment/Attribute:creation_date+' => '',
 	'Class:Attachment/Attribute:user_id' => 'Utilisateur',
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Contact',
 	'Class:Attachment/Attribute:contact_id+' => '',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnAttachmentDownload' => 'Déclencheur sur le téléchargement d\'une pièce jointe d\'un objet',
 	'Class:TriggerOnAttachmentDownload+' => '',
-));
+]);

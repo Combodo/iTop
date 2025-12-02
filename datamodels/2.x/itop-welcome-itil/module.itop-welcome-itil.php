@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-welcome-itil/3.2.1',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'ITIL skin',
@@ -12,26 +11,26 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
-		),
+		'dependencies' => [
+		],
 		'mandatory' => true,
 		'visible' => false,
 		//'installer' => 'MyInstaller',
 
 		// Components
 		//
-		'datamodel' => array(
-		),
-		'webservice' => array(
+		'datamodel' => [
+		],
+		'webservice' => [
 			//'webservices.itop-welcome-itil.php',
-		),
-		'data.struct' => array(
+		],
+		'data.struct' => [
 			//'data.struct.itop-welcome-itil.xml',
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			//'data.sample.itop-welcome-itil.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
@@ -39,8 +38,8 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
+		'settings' => [
 			//'some_setting' => 'some value',
-		),
-	)
+		],
+	]
 );

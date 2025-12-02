@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => 'Verwaltung von Benutzeranfragen',
 	'Menu:RequestManagementProvider' => 'Helpdesk-Provider',
@@ -42,7 +43,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Offene Benutzeranfragen nach Kunde',
 	'Class:UserRequest:KnownErrorList' => 'Known Errors',
 	'Class:UserRequest:KnownErrorList+' => 'Dokumentiere Fehler im Zusammenhang mit CIs, die mit dem aktuellen Ticket verknüpft sind',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -58,7 +59,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 // Class: UserRequest
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:UserRequest' => 'Benutzeranfrage',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -256,11 +257,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kann Ticket nicht als eigenes Parent-Ticket verwenden',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
-));
+]);
 
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Organization:Overview:UserRequests' => 'Benutzeranfragen dieser Organisation',
 	'Organization:Overview:MyUserRequests' => 'Mir zugewiesene Benutzeranfragen dieser Organisation',
 	'Organization:Overview:Tickets' => 'Alle Tickets dieser Organisation',
-));
+]);

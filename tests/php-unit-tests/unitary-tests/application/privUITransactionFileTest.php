@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -32,9 +33,9 @@ use UserRights;
 class privUITransactionFileTest extends ItopDataTestCase
 {
 	/** @var int ID of the "support agent" pofile in the sample data */
-	const SAMPLE_DATA_SUPPORT_PROFILE_ID = 5;
-	const USER1_TEST_LOGIN = 'user1_support_test_privUITransaction';
-	const USER2_TEST_LOGIN = 'user2_support_test_privUITransaction';
+	public const SAMPLE_DATA_SUPPORT_PROFILE_ID = 5;
+	public const USER1_TEST_LOGIN = 'user1_support_test_privUITransaction';
+	public const USER2_TEST_LOGIN = 'user2_support_test_privUITransaction';
 
 	/**
 	 * @dataProvider cleanupOldTransactionsProvider
@@ -43,7 +44,7 @@ class privUITransactionFileTest extends ItopDataTestCase
 	{
 		MetaModel::GetConfig()->Set('transactions_gc_threshold', 100);
 
-		$iBaseLimit = time() - 24*3600; //24h
+		$iBaseLimit = time() - 24 * 3600; //24h
 
 		$sBaseDir = sys_get_temp_dir();
 		$sDir = "$sBaseDir/privUITransactionFileTest/cleanupOldTransactions";
@@ -53,10 +54,10 @@ class privUITransactionFileTest extends ItopDataTestCase
 		mkdir("$sDir", 0777, true);
 
 		for ($i = 0; $i < $iCleanableCreated; $i++) {
-			touch("$sDir/{$sCleanablePrefix}$i", $iBaseLimit - 10*60);
+			touch("$sDir/{$sCleanablePrefix}$i", $iBaseLimit - 10 * 60);
 		}
 		for ($i = 0; $i < $iPreservableCreated; $i++) {
-			touch("$sDir/{$sPreservablePrefix}$i", $iBaseLimit + 10*60);
+			touch("$sDir/{$sPreservablePrefix}$i", $iBaseLimit + 10 * 60);
 		}
 
 		$iCleanableCount = count(glob("$sDir/{$sCleanablePrefix}*"));
@@ -123,7 +124,8 @@ class privUITransactionFileTest extends ItopDataTestCase
 		];
 	}
 
-	public function rm($sDir) {
+	public function rm($sDir)
+	{
 		$aFiles = array_diff(scandir($sDir), ['.','..']);
 		foreach ($aFiles as $sFile) {
 			if ((is_dir("$sDir/$sFile"))) {
@@ -135,7 +137,7 @@ class privUITransactionFileTest extends ItopDataTestCase
 		return rmdir($sDir);
 	}
 
-	const USER_TEST_LOGIN = 'support_test_privUITransaction';
+	public const USER_TEST_LOGIN = 'support_test_privUITransaction';
 
 	/**
 	 * @throws \SecurityException

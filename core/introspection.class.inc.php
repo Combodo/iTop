@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -25,8 +26,8 @@ require_once('attributedef.class.inc.php');
 
 class Introspection
 {
-	protected $aAttributeHierarchy = array(); // class => child classes
-	protected $aAttributes = array();
+	protected $aAttributeHierarchy = []; // class => child classes
+	protected $aAttributes = [];
 
 	public function __construct()
 	{
@@ -35,25 +36,19 @@ class Introspection
 
 	protected function InitAttributes()
 	{
-		foreach(get_declared_classes() as $sPHPClass)
-		{
+		foreach (get_declared_classes() as $sPHPClass) {
 			$oRefClass = new ReflectionClass($sPHPClass);
-			if ($sPHPClass == 'AttributeDefinition' || $oRefClass->isSubclassOf('AttributeDefinition'))
-			{
-				if ($oParentClass = $oRefClass->getParentClass())
-				{
+			if ($sPHPClass == 'AttributeDefinition' || $oRefClass->isSubclassOf('AttributeDefinition')) {
+				if ($oParentClass = $oRefClass->getParentClass()) {
 					$sParentClass = $oParentClass->getName();
-					if (!array_key_exists($sParentClass, $this->aAttributeHierarchy))
-					{
-						$this->aAttributeHierarchy[$sParentClass] = array();
+					if (!array_key_exists($sParentClass, $this->aAttributeHierarchy)) {
+						$this->aAttributeHierarchy[$sParentClass] = [];
 					}
 					$this->aAttributeHierarchy[$sParentClass][] = $sPHPClass;
-				}
-				else
-				{
+				} else {
 					$sParentClass = null;
 				}
-				$this->aAttributes[$sPHPClass] = array(
+				$this->aAttributes[$sPHPClass] = [
 					'parent' => $sParentClass,
 					'LoadInObject' => $sPHPClass::LoadInObject(),
 					'LoadFromDB' => $sPHPClass::LoadFromDB(),
@@ -63,7 +58,7 @@ class Introspection
 					'IsScalar' => $sPHPClass::IsScalar(),
 					'IsLinkset' => $sPHPClass::IsLinkset(),
 					'IsHierarchicalKey' => $sPHPClass::IsHierarchicalKey(),
-				);
+				];
 			}
 		}
 	}
@@ -77,7 +72,7 @@ class Introspection
 	}
 	public function EnumAttributeCharacteristics()
 	{
-		return array(
+		return [
 			'LoadInObject' => 'Is the value stored in the object itself?',
 			'LoadFromDB' => 'Is the value read from the DB?',
 			'IsBasedOnDBColumns' => 'Is this a value stored within one or several columns?',
@@ -86,8 +81,6 @@ class Introspection
 			'IsScalar' => 'Is this a value that makes sense in a SQL/OQL expression?',
 			'IsLinkset' => 'Is this a collection (1-N or N-N)?',
 			'IsHierarchicalKey' => 'Is this attribute an external key pointing to the host class?',
-		);
+		];
 	}
 }
-
-

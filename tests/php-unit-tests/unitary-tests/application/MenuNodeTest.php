@@ -5,10 +5,12 @@ namespace Combodo\iTop\Test\UnitTest\Application;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
-class MenuNodeTest extends ItopDataTestCase {
+class MenuNodeTest extends ItopDataTestCase
+{
 	private \UserRequest $oUR;
 
-	protected function setUp(): void {
+	protected function setUp(): void
+	{
 		parent::setUp();
 
 		clearstatcache();
@@ -19,7 +21,6 @@ class MenuNodeTest extends ItopDataTestCase {
 		];
 		$this->oUR = $this->CreateUserRequest(666, $aUserRequestCustomParams);
 	}
-
 
 	public function RenderOQLSearchProvider()
 	{
@@ -66,16 +67,16 @@ OQL;
 SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (DATE_FORMAT(`UserRequest`.`ttr_escalation_deadline`, '%Y%v') != DATE_FORMAT(NOW(), '%Y%v'))
 OQL;
 
-		try{
+		try {
 			$sContent = $this->CallRenderOQLSearch(true, true, true, $sOql);
 			$this->assertTrue(false !== strpos($sContent, $this->oUR->Get('title')), $sContent);
-		} catch(\Exception $e){
+		} catch (\Exception $e) {
 			echo($e->getMessage());
 			$this->fail('Without N°7750 fix Exception raised => TypeError : date(): Argument #2 ($timestamp) must be of type ?int, string given');
 		}
 	}
 
-	public function CallRenderOQLSearch(bool $bSearchPane, bool $bSearchOpen, bool $bAutoreload, string $sOql) : string
+	public function CallRenderOQLSearch(bool $bSearchPane, bool $bSearchOpen, bool $bAutoreload, string $sOql): string
 	{
 		$sTitle = 'title';
 		$oPage = new WebPage($sTitle);
@@ -94,4 +95,3 @@ OQL;
 		return $oResponse->getContent();
 	}
 }
-

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -78,7 +79,7 @@ class UserProvider
 		// - Checking user rights and prompt if needed (401 HTTP code returned if XHR request)
 		$iExitMethod = ($oRequestEvent->getRequest()->isXmlHttpRequest()) ? LoginWebPage::EXIT_RETURN : LoginWebPage::EXIT_PROMPT;
 		$iLogonRes = LoginWebPage::DoLoginEx($this->sPortalId, false, $iExitMethod);
-		if( ($iExitMethod === LoginWebPage::EXIT_RETURN) && ($iLogonRes != 0) ) {
+		if (($iExitMethod === LoginWebPage::EXIT_RETURN) && ($iLogonRes != 0)) {
 			die(Dict::S('Portal:ErrorUserLoggedOut'));
 		}
 		// - User must be associated with a Contact
@@ -92,8 +93,8 @@ class UserProvider
 			throw new Exception('Could not load connected user.');
 		}
 
-        // User allowed to log off or not
-        $this->bUserCanLogOff = utils::CanLogOff();
+		// User allowed to log off or not
+		$this->bUserCanLogOff = utils::CanLogOff();
 
 		// Allowed portals
 		$aAllowedPortals = UserRights::GetAllowedPortals();
@@ -145,6 +146,5 @@ class UserProvider
 	{
 		return $this->aAllowedPortals;
 	}
-
 
 }

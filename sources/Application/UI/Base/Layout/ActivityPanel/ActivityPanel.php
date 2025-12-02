@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
-
 
 use appUserPreferences;
 use AttributeDateTime;
@@ -102,7 +102,6 @@ class ActivityPanel extends UIBlock
 	/** @var bool */
 	protected $bPrefilterEditsOnLogs;
 
-
 	/**
 	 * ActivityPanel constructor.
 	 *
@@ -167,7 +166,6 @@ class ActivityPanel extends UIBlock
 			$this->AddCaseLogTab($sCaseLogAttCode);
 		}
 
-
 		return $this;
 	}
 
@@ -186,7 +184,8 @@ class ActivityPanel extends UIBlock
 	 *
 	 * @return int
 	 */
-	public function GetObjectId(): int {
+	public function GetObjectId(): int
+	{
 		return $this->oObject->GetKey();
 	}
 
@@ -195,7 +194,8 @@ class ActivityPanel extends UIBlock
 	 *
 	 * @return string
 	 */
-	public function GetObjectClass(): string {
+	public function GetObjectClass(): string
+	{
 		return get_class($this->oObject);
 	}
 
@@ -211,7 +211,7 @@ class ActivityPanel extends UIBlock
 	public function SetObjectMode(string $sMode)
 	{
 		// Consistency check
-		if(!in_array($sMode, cmdbAbstractObject::EnumDisplayModes())){
+		if (!in_array($sMode, cmdbAbstractObject::EnumDisplayModes())) {
 			throw new Exception("Activity panel: Object mode '$sMode' not allowed, should be either ".implode(' / ', cmdbAbstractObject::EnumDisplayModes()));
 		}
 
@@ -301,8 +301,7 @@ class ActivityPanel extends UIBlock
 		// Reset entries
 		$this->aEntries = [];
 
-		foreach ($aEntries as $oEntry)
-		{
+		foreach ($aEntries as $oEntry) {
 			$this->AddEntry($oEntry);
 		}
 
@@ -316,8 +315,7 @@ class ActivityPanel extends UIBlock
 	 */
 	public function GetEntries(): array
 	{
-		if ($this->bAreEntriesSorted === false)
-		{
+		if ($this->bAreEntriesSorted === false) {
 			$this->SortEntries();
 		}
 
@@ -336,18 +334,15 @@ class ActivityPanel extends UIBlock
 
 		$aCurrentGroup = ['author_login' => null, 'origin' => null, 'entries' => []];
 		$aPreviousEntryData = ['author_login' => null, 'origin' => null];
-		foreach($this->GetEntries() as $sId => $oEntry)
-		{
+		foreach ($this->GetEntries() as $sId => $oEntry) {
 			// New entry data
 			$sAuthorLogin = $oEntry->GetAuthorLogin();
 			$sOrigin = $oEntry->GetOrigin();
 
 			// Check if it's time to change of group
-			if(($sAuthorLogin !== $aPreviousEntryData['author_login']) || ($sOrigin !== $aPreviousEntryData['origin']))
-			{
+			if (($sAuthorLogin !== $aPreviousEntryData['author_login']) || ($sOrigin !== $aPreviousEntryData['origin'])) {
 				// Flush current group if necessary
-				if(empty($aCurrentGroup['entries']) === false)
-				{
+				if (empty($aCurrentGroup['entries']) === false) {
 					$aGroupedEntries[] = $aCurrentGroup;
 				}
 
@@ -360,8 +355,7 @@ class ActivityPanel extends UIBlock
 		}
 
 		// Flush last group
-		if(empty($aCurrentGroup['entries']) === false)
-		{
+		if (empty($aCurrentGroup['entries']) === false) {
 			$aGroupedEntries[] = $aCurrentGroup;
 		}
 
@@ -375,16 +369,14 @@ class ActivityPanel extends UIBlock
 	 */
 	protected function SortEntries()
 	{
-		if(count($this->aEntries) > 1)
-		{
-			uasort($this->aEntries, function($oEntryA, $oEntryB){
+		if (count($this->aEntries) > 1) {
+			uasort($this->aEntries, function ($oEntryA, $oEntryB) {
 				/** @var ActivityEntry $oEntryA */
 				/** @var ActivityEntry $oEntryB */
 				$sDateTimeA = $oEntryA->GetRawDateTime();
 				$sDateTimeB = $oEntryB->GetRawDateTime();
 
-				if ($sDateTimeA === $sDateTimeB)
-				{
+				if ($sDateTimeA === $sDateTimeB) {
 					return 0;
 				}
 
@@ -410,14 +402,12 @@ class ActivityPanel extends UIBlock
 		$this->bAreEntriesSorted = false;
 
 		// Add case log to the panel and update metadata when necessary
-		if ($oEntry instanceof CaseLogEntry)
-		{
+		if ($oEntry instanceof CaseLogEntry) {
 			$sCaseLogAttCode = $oEntry->GetAttCode();
 			$sAuthorLogin = $oEntry->GetAuthorLogin();
 
 			// Initialize case log metadata
-			if ($this->HasCaseLogTab($sCaseLogAttCode) === false)
-			{
+			if ($this->HasCaseLogTab($sCaseLogAttCode) === false) {
 				$this->AddCaseLogTab($sCaseLogAttCode);
 			}
 
@@ -428,8 +418,7 @@ class ActivityPanel extends UIBlock
 			// - Message count
 			$this->aCaseLogs[$sCaseLogAttCode]['total_messages_count']++;
 			// - Authors
-			if(array_key_exists($sAuthorLogin, $this->aCaseLogs[$sCaseLogAttCode]['authors']) === false)
-			{
+			if (array_key_exists($sAuthorLogin, $this->aCaseLogs[$sCaseLogAttCode]['authors']) === false) {
 				$this->aCaseLogs[$sCaseLogAttCode]['authors'][$sAuthorLogin] = [
 					'messages_count' => 0,
 				];
@@ -450,12 +439,10 @@ class ActivityPanel extends UIBlock
 	 */
 	public function RemoveEntry(string $sEntryId)
 	{
-		if (array_key_exists($sEntryId, $this->aEntries))
-		{
+		if (array_key_exists($sEntryId, $this->aEntries)) {
 			// Recompute case logs metadata only if necessary
 			$oEntry = $this->aEntries[$sEntryId];
-			if ($oEntry instanceof CaseLogEntry)
-			{
+			if ($oEntry instanceof CaseLogEntry) {
 				$sCaseLogAttCode = $oEntry->GetAttCode();
 				$sAuthorLogin = $oEntry->GetAuthorLogin();
 
@@ -464,8 +451,7 @@ class ActivityPanel extends UIBlock
 				$this->aCaseLogs[$sCaseLogAttCode]['total_messages_count']--;
 				// - Authors
 				$this->aCaseLogs[$sCaseLogAttCode]['authors'][$sAuthorLogin]['messages_count']--;
-				if($this->aCaseLogs[$sCaseLogAttCode]['authors'][$sAuthorLogin]['messages_count'] === 0)
-				{
+				if ($this->aCaseLogs[$sCaseLogAttCode]['authors'][$sAuthorLogin]['messages_count'] === 0) {
 					unset($this->aCaseLogs[$sCaseLogAttCode]['authors'][$sAuthorLogin]);
 				}
 			}
@@ -564,8 +550,7 @@ class ActivityPanel extends UIBlock
 	protected function AddCaseLogTab(string $sAttCode)
 	{
 		// Add case log only if not already existing
-		if (!array_key_exists($sAttCode, $this->aCaseLogs))
-		{
+		if (!array_key_exists($sAttCode, $this->aCaseLogs)) {
 			$iFlags = ($this->GetObject()->IsNew()) ? $this->GetObject()->GetInitialStateAttributeFlags($sAttCode) : $this->GetObject()->GetAttributeFlags($sAttCode);
 			$bIsHidden = (OPT_ATT_HIDDEN === ($iFlags & OPT_ATT_HIDDEN));
 			$bIsReadOnly = (OPT_ATT_READONLY === ($iFlags & OPT_ATT_READONLY));
@@ -615,8 +600,7 @@ class ActivityPanel extends UIBlock
 	 */
 	protected function RemoveCaseLogTab(string $sAttCode)
 	{
-		if (array_key_exists($sAttCode, $this->aCaseLogs))
-		{
+		if (array_key_exists($sAttCode, $this->aCaseLogs)) {
 			unset($this->aCaseLogs[$sAttCode]);
 		}
 
@@ -694,7 +678,7 @@ class ActivityPanel extends UIBlock
 	 */
 	public function SetCaseLogTabEntryForm(string $sCaseLogId, CaseLogEntryForm $oCaseLogEntryForm)
 	{
-		if ($this->HasCaseLogTab($sCaseLogId)){
+		if ($this->HasCaseLogTab($sCaseLogId)) {
 			$this->aCaseLogTabsEntryForms[$sCaseLogId] = $oCaseLogEntryForm;
 		}
 
@@ -744,8 +728,7 @@ class ActivityPanel extends UIBlock
 		foreach ($this->GetCaseLogTabsEntryForms() as $oCaseLogEntryForm) {
 			if ($oCaseLogEntryForm->IsSubmitAutonomous()) {
 				$iAutonomousSubmission++;
-			}
-			else {
+			} else {
 				$iBridgedSubmissions++;
 			}
 		}
@@ -949,7 +932,7 @@ class ActivityPanel extends UIBlock
 	 */
 	public function GetSubBlocks(): array
 	{
-		$aSubBlocks = array();
+		$aSubBlocks = [];
 
 		foreach ($this->GetCaseLogTabsEntryForms() as $sCaseLogId => $oCaseLogEntryForm) {
 			$aSubBlocks[$oCaseLogEntryForm->GetId()] = $oCaseLogEntryForm;
@@ -974,7 +957,6 @@ class ActivityPanel extends UIBlock
 		$this->bShowMultipleEntriesSubmitConfirmation = appUserPreferences::GetPref('activity_panel.show_multiple_entries_submit_confirmation', static::DEFAULT_SHOW_MULTIPLE_ENTRIES_SUBMI_CONFIRMATION) !== 'false';
 		return $this;
 	}
-
 
 	/**
 	 * @return bool

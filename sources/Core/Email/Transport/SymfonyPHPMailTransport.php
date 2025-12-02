@@ -1,4 +1,5 @@
 <?php
+
 namespace Combodo\iTop\Core\Email\Transport;
 
 use Symfony\Component\Mailer\SentMessage;
@@ -33,7 +34,6 @@ class SymfonyPHPMailTransport extends AbstractTransport
 		return $oHeaders->get('Subject')->getBodyAsString();
 	}
 
-
 	/**
 	 * @param Email $oRawEmail
 	 *
@@ -56,13 +56,13 @@ class SymfonyPHPMailTransport extends AbstractTransport
 		$sHeaders = '';
 		foreach ($oHeaders->all() as $header) {
 			if (strtolower($header->getName()) !== 'to' && strtolower($header->getName()) !== 'subject') {
-				$sHeaders .= $header->toString() . "\r\n";
+				$sHeaders .= $header->toString()."\r\n";
 			}
 		}
 
 		$oBodyHeader = $oRawEmail->getBody()->getPreparedHeaders();
 		foreach ($oBodyHeader->all() as $header) {
-			$sHeaders .= $header->toString() . "\r\n";
+			$sHeaders .= $header->toString()."\r\n";
 		}
 
 		// Remove trailing line break
@@ -84,7 +84,6 @@ class SymfonyPHPMailTransport extends AbstractTransport
 		$sHeaders = $this->prepareHeaders($oRawEmail);
 
 		$success = mail($sTo, $sSubject, $sBody, $sHeaders);
-
 
 		if (!$success) {
 			throw new \RuntimeException('The mail() function failed to send the message. Check server mail configuration.');

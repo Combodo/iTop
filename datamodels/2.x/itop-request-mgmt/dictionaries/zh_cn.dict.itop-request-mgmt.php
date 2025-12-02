@@ -1,9 +1,10 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:RequestManagement' => '服务台',
 	'Menu:RequestManagement+' => '',
 	'Menu:RequestManagementProvider' => '服务台供应商',
@@ -39,7 +40,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:UserRequest:MyWorkOrders+' => '分配给我的所有工单',
 	'Class:Problem:KnownProblemList' => '已知问题',
 	'Tickets:Related:OpenIncidents' => '打开的事件',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -55,7 +56,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class: UserRequest
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserRequest' => '用户需求',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => '状态',
@@ -249,10 +250,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => '等待审核',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => '不能分配父级需求给自己',
-));
+]);
 
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Portal:TitleDetailsFor_Request' => '需求详情',
 	'Portal:ButtonUpdate' => '更新',
 	'Portal:ButtonClose' => '关闭',
@@ -277,11 +277,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Portal:ChooseYourFavoriteLanguage' => '选择您喜欢的语言',
 	'Class:UserRequest/Method:ResolveChildTickets' => '解决子工单',
 	'Class:UserRequest/Method:ResolveChildTickets+' => '递归解决子工单 (自动解决), 并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案',
-));
+]);
 
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Organization:Overview:UserRequests' => '来自此组织的用户需求',
 	'Organization:Overview:MyUserRequests' => '我在此组织的用户需求',
 	'Organization:Overview:Tickets' => '来自此组织的工单',
-));
+]);

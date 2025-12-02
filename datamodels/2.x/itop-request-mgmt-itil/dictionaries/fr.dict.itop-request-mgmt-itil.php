@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:RequestManagement' => 'Gestion des demandes',
 	'Menu:RequestManagement+' => 'Gestion des demandes utilisateurs',
 	'Menu:RequestManagementProvider' => 'Gestion des demandes fournisseurs',
@@ -41,7 +42,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requêtes ouvertes par client',
 	'Class:UserRequest:KnownErrorList' => 'Erreurs connues',
 	'Class:UserRequest:KnownErrorList+' => 'Erreurs connues liées à des éléments de configuration impactés par ce ticket',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -57,7 +58,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: UserRequest
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:UserRequest' => 'Demande Utilisateur',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Etat',
@@ -260,12 +261,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'La demande parente ne peut pas être assignée à elle même',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution de la demande (ev_autoresolve), et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution'
-));
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution de la demande (ev_autoresolve), et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
+]);
 
-
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Organization:Overview:UserRequests' => 'Demandes Utilisateurs pour cette organisation',
 	'Organization:Overview:MyUserRequests' => 'Mes Demandes Utilisateurs pour cette organisation',
 	'Organization:Overview:Tickets' => 'Les Tickets de cette organisation',
-));
+]);

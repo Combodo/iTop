@@ -1,6 +1,7 @@
 <?php
 
 namespace Combodo\iTop\Test\UnitTest;
+
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -8,7 +9,7 @@ use PHPUnit\Framework\TestCase;
  */
 class tearDownAfterFailureTest extends TestCase
 {
-	static $bIsCorrectlyInitialized = true;
+	public static $bIsCorrectlyInitialized = true;
 
 	protected function tearDown(): void
 	{
@@ -16,7 +17,7 @@ class tearDownAfterFailureTest extends TestCase
 		static::$bIsCorrectlyInitialized = true;
 	}
 
-	function testIsInitializedAndChangeIt()
+	public function testIsInitializedAndChangeIt()
 	{
 		static::assertTrue(static::$bIsCorrectlyInitialized);
 
@@ -26,18 +27,18 @@ class tearDownAfterFailureTest extends TestCase
 		throw new \Exception('hello');
 	}
 
-	function testIsStillInitialized()
+	public function testIsStillInitialized()
 	{
 		static::assertTrue(static::$bIsCorrectlyInitialized);
 	}
 
-	function testFailingDueToUnexpectedException()
+	public function testFailingDueToUnexpectedException()
 	{
 		static::$bIsCorrectlyInitialized = false;
 		This_Is_Not_A_Function_And_Causes_A_Fatal_Error();
 	}
 
-	function testIsStillInitializedAnyway()
+	public function testIsStillInitializedAnyway()
 	{
 		static::assertTrue(static::$bIsCorrectlyInitialized);
 	}

@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:KnownError' => 'Известная ошибка',
 	'Class:KnownError+' => 'Проблема, имеющая задокументированные корневую причину и обходное решение',
 	'Class:KnownError/Attribute:name' => 'Название',
@@ -53,13 +54,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:KnownError/Attribute:ci_list+' => 'Связанный конфигурационные единицы',
 	'Class:KnownError/Attribute:document_list' => 'Документы',
 	'Class:KnownError/Attribute:document_list+' => 'Связанные документы',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkErrorToFunctionalCI' => 'Связь Известная ошибка/Функциональная КЕ',
 	'Class:lnkErrorToFunctionalCI+' => 'Infra related to a known error',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -73,13 +74,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Причина',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkDocumentToError' => 'Связь Документ/Известная ошибка',
 	'Class:lnkDocumentToError+' => 'A link between a document and a known error',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
@@ -93,9 +94,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Тип связи',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
+]);
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:ProblemManagement' => 'Управление проблемами',
 	'Menu:ProblemManagement+' => 'Управление проблемами',
 	'Menu:Problem:Shortcuts' => 'Ярлыки',
@@ -105,4 +106,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:SearchError+' => 'Поиск известных ошибок',
 	'Menu:Problem:KnownErrors' => 'Известные ошибки',
 	'Menu:Problem:KnownErrors+' => 'База известных ошибок',
-));
+]);

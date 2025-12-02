@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -50,7 +51,7 @@
 // Class: KnownError
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:KnownError' => 'Known Error',
 	'Class:KnownError+' => 'Error documented for a known issue',
 	'Class:KnownError/Attribute:name' => 'Name',
@@ -93,13 +94,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error',
 	'Class:KnownError/Attribute:document_list' => 'Documents',
 	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkErrorToFunctionalCI' => 'Link Error / FunctionalCI',
 	'Class:lnkErrorToFunctionalCI+' => 'Infra related to a known error',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
@@ -113,13 +114,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reason',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkDocumentToError' => 'Link Documents / Errors',
 	'Class:lnkDocumentToError+' => 'A link between a document and a known error',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
@@ -133,9 +134,9 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
+]);
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:ProblemManagement' => 'Problem Management',
 	'Menu:ProblemManagement+' => 'Problem Management',
 	'Menu:Problem:Shortcuts' => 'Shortcuts',
@@ -145,4 +146,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Menu:SearchError+' => 'Search for known errors',
 	'Menu:Problem:KnownErrors' => 'All known errors',
 	'Menu:Problem:KnownErrors+' => 'All known errors',
-));
+]);

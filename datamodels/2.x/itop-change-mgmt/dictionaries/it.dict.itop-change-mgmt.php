@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ChangeManagement' => 'Gestione dei cambi',
 	'Menu:Change:Overview' => 'Panoramica',
 	'Menu:Change:Overview+' => '~~',
@@ -33,7 +34,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Cambiamenti per stato negli ultimi 7 giorni',
 	'Tickets:Related:OpenChanges' => 'Cambiamenti aperti',
 	'Tickets:Related:RecentChanges' => 'Cambiamenti recenti (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -45,12 +46,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Change' => 'Cambio',
 	'Class:Change+' => '~~',
 	'Class:Change/Attribute:status' => 'Stato',
@@ -125,4 +125,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Change/Attribute:outage/Value:no+' => '~~',
 	'Class:Change/Attribute:outage/Value:yes' => 'Si',
 	'Class:Change/Attribute:outage/Value:yes+' => '~~',
-));
+]);

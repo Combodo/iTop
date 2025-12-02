@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Page:DefaultTitle' => 'Пользовательский портал %1$s',
 	'Page:PleaseWait' => 'Пожалуйста, подождите...',
 	'Page:Home' => 'Домашняя страница',
@@ -54,19 +55,19 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Открыть</a> / <a href="%4$s" class="file_download_link">Скачать</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'ru', //work with moment.js locales
-));
+]);
 
 // Object form
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
 	'Portal:Form:Close:Warning' => 'Вы действительно хотите закрыть эту форму? Введённые данные могут быть утеряны.',
 	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting this form again.~~',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting this form again.~~',
-    'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
-));
+	'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
+]);
 
 // UserProfile brick
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Brick:Portal:UserProfile:Name' => 'Профиль пользователя',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Мой профиль',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Выйти',
@@ -77,15 +78,15 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Не удалось изменить пароль, пожалуйста, свяжитесь с вашим администратором %1$s.',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Персональная информация',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Фотография',
-));
+]);
 
 // AggregatePageBrick
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Дашборд',
-));
+]);
 
 // BrowseBrick brick
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Brick:Portal:Browse:Name' => 'Просмотр элементов',
 	'Brick:Portal:Browse:Mode:List' => 'Список',
 	'Brick:Portal:Browse:Mode:Tree' => 'Дерево',
@@ -98,10 +99,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Развернуть все',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Свернуть все',
 	'Brick:Portal:Browse:Filter:NoData' => 'Нет элементов',
-));
+]);
 
 // ManageBrick brick
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Brick:Portal:Manage:Name' => 'Управление элементами',
 	'Brick:Portal:Manage:Table:NoData' => 'Нет элементов',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Действия',
@@ -116,10 +117,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:Manage:fct:avg' => 'Среднее',
 	'Brick:Portal:Manage:fct:min' => 'Минимум',
 	'Brick:Portal:Manage:fct:max' => 'Максимум',
-));
+]);
 
 // ObjectBrick brick
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Brick:Portal:Object:Name' => 'Object',
 	'Brick:Portal:Object:Form:Create:Title' => 'Создать %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Обновление %2$s (%1$s)',
@@ -131,18 +132,18 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Выбрать %1$s (%2$s)',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Скопировать ссылку на объект',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Ссылка скопирована'
-));
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Ссылка скопирована',
+]);
 
 // CreateBrick brick
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Brick:Portal:Create:Name' => 'Быстрое создание',
 	'Brick:Portal:Create:ChooseType' => 'Пожалуйста, выберите тип',
-));
+]);
 
 // Filter brick
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Brick:Portal:Filter:Name' => 'Фильтр',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'например, подключить wi-fi',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Искать',
-));
+]);

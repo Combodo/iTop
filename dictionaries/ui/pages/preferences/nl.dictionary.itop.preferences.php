@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Preferences:Title' => 'Voorkeuren',
 	'UI:Preferences:UserInterface:Title' => 'Gebruikersinterface',
 	'UI:Preferences:General:Title' => 'Algemeen',
@@ -45,5 +46,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
 	'UI:Preferences:Notifications' => 'Notifications~~',
 	'UI:Preferences:Notifications+' => 'Configure the notifications you want to receive <a href="%1$s">on this page</a>.~~',
-	
-));
+
+]);

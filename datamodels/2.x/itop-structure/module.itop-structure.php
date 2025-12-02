@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-structure/3.2.1',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Core iTop Structure',
@@ -12,28 +11,28 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
-		),
+		'dependencies' => [
+		],
 		'mandatory' => true,
 		'visible' => false,
 		'installer' => 'StructureInstaller',
 
 		// Components
 		//
-		'datamodel' => array(
+		'datamodel' => [
 			'main.itop-structure.php',
-		),
-		'data.struct' => array(
-		),
-		'data.sample' => array(
+		],
+		'data.struct' => [
+		],
+		'data.sample' => [
 			'data.sample.organizations.xml',
 			'data.sample.locations.xml',
 			'data.sample.persons.xml',
 			'data.sample.teams.xml',
 			'data.sample.contactteam.xml',
 			'data.sample.contacttype.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
@@ -41,13 +40,12 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
-		),
-	)
+		'settings' => [
+		],
+	]
 );
 
-if (!class_exists('StructureInstaller'))
-{
+if (!class_exists('StructureInstaller')) {
 	// Module installation handler
 	//
 	class StructureInstaller extends ModuleInstallerAPI
@@ -66,14 +64,13 @@ if (!class_exists('StructureInstaller'))
 		 */
 		public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			if (strlen($sPreviousVersion) > 0)
-			{
+			if (strlen($sPreviousVersion) > 0) {
 				// Search for existing ActionEmail where the language attribute was defined on its child
 				if (version_compare($sPreviousVersion, '3.2.0', '<')) {
 					SetupLog::Info("|  Migrate ActionEmail language attribute values to its parent.");
 					$sTableToRead = MetaModel::DBGetTable('ActionEmail');
 					$sTableToSet = MetaModel::DBGetTable('ActionNotification');
-					self::MoveColumnInDB($sTableToRead, 'language',  $sTableToSet, 'language', true);
+					self::MoveColumnInDB($sTableToRead, 'language', $sTableToSet, 'language', true);
 					SetupLog::Info("|  ActionEmail migration done.");
 				}
 				// If you want to migrate data from one format to another, do it here
@@ -93,7 +90,7 @@ if (!class_exists('StructureInstaller'))
 				self::RenameClassInDB('IPinterface', 'IPInterface');
 			}
 		}
-	
+
 		/**
 		 * Handler called after the creation/update of the database schema
 		 * @param $oConfiguration Config The new configuration of the application
@@ -225,7 +222,7 @@ if (!class_exists('StructureInstaller'))
 							'subject' => 'Vous avez été mentionné dans "$this->friendlyname$"',
 							'body' => '<p>Bonjour $mentioned->first_name$,</p>
 								<p>Vous avez été mentionné par $current_contact->friendlyname$ dans $this->hyperlink()$</p>',
-						]
+						],
 					];
 
 					// Create action in app. default language and link it to the triggers
@@ -275,7 +272,7 @@ if (!class_exists('StructureInstaller'))
 					'FR FR' => [
 						'name' => 'Notification aux personnes mentionnées dans les journaux',
 						'message' => 'Vous avez été mentionné par $current_contact->friendlyname$',
-					]
+					],
 				];
 
 				// Start by creating the default action no matter what (even if there is no relevant trigger, it will be there for future use)
@@ -293,7 +290,7 @@ if (!class_exists('StructureInstaller'))
 				SetupLog::Info("|- Created newsroom action \"{$oAction->Get('name')}\".");
 
 				// Retrieve all triggers and find those with a mentioned_filter on the Person class
-				$oTriggersSearch = DBObjectSearch::FromOQL("SELECT " . TriggerOnObjectMention::class);
+				$oTriggersSearch = DBObjectSearch::FromOQL("SELECT ".TriggerOnObjectMention::class);
 				$oTriggersSearch->AllowAllData();
 
 				$oTriggersSet = new DBObjectSet($oTriggersSearch);
@@ -330,7 +327,7 @@ if (!class_exists('StructureInstaller'))
 			if (version_compare($sPreviousVersion, '3.2.0', '<')) {
 				SetupLog::Info("Forcing subscription policy to ForceAtLeastOneChannel for all existing TriggerOnObjectMention...");
 
-				$oTriggersSearch = DBObjectSearch::FromOQL("SELECT " . TriggerOnObjectMention::class);
+				$oTriggersSearch = DBObjectSearch::FromOQL("SELECT ".TriggerOnObjectMention::class);
 				$oTriggersSearch->AllowAllData();
 
 				$oTriggersSet = new DBObjectSet($oTriggersSearch);
@@ -358,7 +355,7 @@ if (!class_exists('StructureInstaller'))
 					'FR FR' => [
 						'name' => 'Notification sur MAJ du journal public via le portail',
 						'message' => 'Nouveau message de $current_contact->friendlyname$',
-					]
+					],
 				];
 
 				// - Create action in app. default language and link it to the triggers
@@ -385,7 +382,7 @@ if (!class_exists('StructureInstaller'))
 					'FR FR' => [
 						'name' => 'Notification à l\'agent à l\'assignation du ticket',
 						'message' => 'Le ticket vous a été assigné',
-					]
+					],
 				];
 
 				// Create action in app. default language and link it to the triggers

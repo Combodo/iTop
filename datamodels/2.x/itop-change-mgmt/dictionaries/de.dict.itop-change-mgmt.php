@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ChangeManagement' => 'Change Management',
 	'Menu:Change:Overview' => 'Übersicht',
 	'Menu:Change:Overview+' => '',
@@ -34,7 +35,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes der letzten sieben Tage nach Status',
 	'Tickets:Related:OpenChanges' => 'Offene Changes',
 	'Tickets:Related:RecentChanges' => 'Kürzlich erfolgte Changes (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -46,12 +47,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Change' => 'Change',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Status',
@@ -126,4 +126,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Ja',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
-));
+]);

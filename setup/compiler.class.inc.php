@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -17,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\Page;
@@ -27,34 +27,32 @@ require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/modelfactory.class.inc.php');
 require_once(APPROOT.'core/moduledesign.class.inc.php');
 
-
 class DOMFormatException extends Exception
 {
-    /**
-     * Overrides the Exception default constructor to automatically add informations about the concerned node (path and
-     * line number)
-     * 
-     * @param string $message
-     * @param $code
-     * @param $previous
-     * @param DesignElement|null $node DOMNode causing the DOMFormatException
-     */
-    public function __construct($message, $code = 0, $previous = null, DesignElement $node = null)
-    {
-        if($node !== null)
-        {
-            $message .= ' ('.MFDocument::GetItopNodePath($node).' at line '.$node->getLineNo().')';
-        }
-        parent::__construct($message, $code, $previous);
-    }
+	/**
+	 * Overrides the Exception default constructor to automatically add informations about the concerned node (path and
+	 * line number)
+	 *
+	 * @param string $message
+	 * @param $code
+	 * @param $previous
+	 * @param DesignElement|null $node DOMNode causing the DOMFormatException
+	 */
+	public function __construct($message, $code = 0, $previous = null, DesignElement $node = null)
+	{
+		if ($node !== null) {
+			$message .= ' ('.MFDocument::GetItopNodePath($node).' at line '.$node->getLineNo().')';
+		}
+		parent::__construct($message, $code, $previous);
+	}
 }
 
 /**
  * Compiler class
- */ 
+ */
 class MFCompiler
 {
-	const DATA_PRECOMPILED_FOLDER = 'data'.DIRECTORY_SEPARATOR.'precompiled_styles'.DIRECTORY_SEPARATOR;
+	public const DATA_PRECOMPILED_FOLDER = 'data'.DIRECTORY_SEPARATOR.'precompiled_styles'.DIRECTORY_SEPARATOR;
 
 	/**
 	 * @var string
@@ -107,7 +105,7 @@ class MFCompiler
 	 * @var string
 	 * @since 2.7.5 3.0.0 N°4020
 	 */
-	const REBUILD_HKEYS_NEVER = APPROOT.'data/.setup-rebuild-hkeys-never';
+	public const REBUILD_HKEYS_NEVER = APPROOT.'data/.setup-rebuild-hkeys-never';
 
 	/** @var \ModelFactory */
 	protected $oFactory;
@@ -315,31 +313,24 @@ class MFCompiler
 			SetupUtils::builddir($sTempTargetDir); // Here is the directory
 		}
 
-		try
-		{
+		try {
 			$this->DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks);
-		}
-		catch (Exception $e)
-		{
-			if ($sTempTargetDir != $sFinalTargetDir)
-			{
+		} catch (Exception $e) {
+			if ($sTempTargetDir != $sFinalTargetDir) {
 				// Cleanup the temporary directory
 				SetupUtils::rrmdir($sTempTargetDir);
 			}
-			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
-			{
+			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
 				SetupUtils::ExitMaintenanceMode();
 			}
 			throw $e;
 		}
 
-		if ($sTempTargetDir != $sFinalTargetDir)
-		{
+		if ($sTempTargetDir != $sFinalTargetDir) {
 			// Move the results to the target directory
 			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
 		}
-		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
-		{
+		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
 			SetupUtils::ExitMaintenanceMode();
 		}
 
@@ -347,18 +338,15 @@ class MFCompiler
 		// In case of bad luck (this happens **sometimes** - see N. 550), we may analyze the database structure
 		// with the previous datamodel still loaded (in opcode cache) and thus fail to create the new fields
 		// Finally the application crashes (because of the missing field) when the cache gets updated
-		if (function_exists('opcache_reset'))
-		{
+		if (function_exists('opcache_reset')) {
 			// Zend opcode cache
 			opcache_reset();
 		}
-		if (function_exists('apc_clear_cache'))
-		{
+		if (function_exists('apc_clear_cache')) {
 			// old style APC
 			apc_clear_cache();
 		}
 	}
-	
 
 	/**
 	 * Perform the actual "Compilation" of all modules
@@ -370,15 +358,14 @@ class MFCompiler
 	 */
 	protected function DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks = false)
 	{
-		$aAllClasses = array(); // flat list of classes
-		$aModulesInfo = array(); // Hash array of module_name => array('version' => string, 'root_dir' => string)
+		$aAllClasses = []; // flat list of classes
+		$aModulesInfo = []; // Hash array of module_name => array('version' => string, 'root_dir' => string)
 
 		// Determine the target modules for the MENUS
 		//
-		$aMenuNodes = array();
-		$aMenusByModule = array();
-		foreach ($this->oFactory->GetNodes('menus/menu') as $oMenuNode)
-		{
+		$aMenuNodes = [];
+		$aMenusByModule = [];
+		foreach ($this->oFactory->GetNodes('menus/menu') as $oMenuNode) {
 			$sMenuId = $oMenuNode->getAttribute('id');
 			$aMenuNodes[$sMenuId] = $oMenuNode;
 
@@ -408,7 +395,7 @@ class MFCompiler
 
 		// List root classes
 		//
-		$this->aRootClasses = array();
+		$this->aRootClasses = [];
 		foreach ($this->oFactory->ListRootClasses() as $oClass) {
 			$this->Log("Root class (with child classes): ".$oClass->getAttribute('id'));
 			$this->aRootClasses[$oClass->getAttribute('id')] = $oClass;
@@ -421,8 +408,8 @@ class MFCompiler
 		// Compile, module by module
 		//
 		$aModules = $this->oFactory->GetLoadedModules();
-		$aDataModelFiles = array();
-		$aWebservicesFiles = array();
+		$aDataModelFiles = [];
+		$aWebservicesFiles = [];
 		$iStart = strlen(realpath(APPROOT));
 		$sRelFinalTargetDir = substr($sFinalTargetDir, strlen(APPROOT));
 
@@ -451,32 +438,26 @@ class MFCompiler
 				$sRelativeDir = $sModuleName;
 				$sRealRelativeDir = $sModuleName;
 			}
-			$aModulesInfo[$sModuleName] = array('root_dir' => $sRealRelativeDir, 'version' => $sModuleVersion);
+			$aModulesInfo[$sModuleName] = ['root_dir' => $sRealRelativeDir, 'version' => $sModuleVersion];
 
 			$sCompiledCode = '';
 
 			$oConstants = $this->oFactory->ListConstants($sModuleName);
-			if ($oConstants->length > 0)
-			{
-				foreach($oConstants as $oConstant)
-				{
+			if ($oConstants->length > 0) {
+				foreach ($oConstants as $oConstant) {
 					$sCompiledCode .= $this->CompileConstant($oConstant)."\n";
 				}
 			}
 
 			$oEvents = $this->oFactory->ListEvents($sModuleName);
-			if ($oEvents->length > 0)
-			{
-				foreach($oEvents as $oEvent)
-				{
+			if ($oEvents->length > 0) {
+				foreach ($oEvents as $oEvent) {
 					$sCompiledCode .= $this->CompileEvent($oEvent, $sModuleName)."\n";
 				}
 			}
 
-			if (array_key_exists($sModuleName, $this->aSnippets))
-			{
-				foreach( $this->aSnippets[$sModuleName]['before'] as $aSnippet)
-				{
+			if (array_key_exists($sModuleName, $this->aSnippets)) {
+				foreach ($this->aSnippets[$sModuleName]['before'] as $aSnippet) {
 					$sCompiledCode .= "\n";
 					$sCompiledCode .= "/**\n";
 					$sCompiledCode .= " * Snippet: {$aSnippet['snippet_id']}\n";
@@ -485,26 +466,18 @@ class MFCompiler
 				}
 			}
 
-
 			$oClasses = $this->oFactory->ListClasses($sModuleName);
 			$iClassCount = $oClasses->length;
-			if ($iClassCount == 0)
-			{
+			if ($iClassCount == 0) {
 				$this->Log("Found module without classes declared: $sModuleName");
-			}
-			else
-			{
+			} else {
 				/** @var \MFElement $oClass */
-				foreach($oClasses as $oClass)
-				{
+				foreach ($oClasses as $oClass) {
 					$sClass = $oClass->getAttribute("id");
 					$aAllClasses[] = $sClass;
-					try
-					{
+					try {
 						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
-					}
-					catch (DOMFormatException $e)
-					{
+					} catch (DOMFormatException $e) {
 						$sMessage = "Failed to process class '$sClass', ";
 						if (!empty($sModuleRootDir)) {
 							$sMessage .= "from '$sModuleRootDir': ";
@@ -515,12 +488,9 @@ class MFCompiler
 				}
 			}
 
-			if (!array_key_exists($sModuleName, $aMenusByModule))
-			{
+			if (!array_key_exists($sModuleName, $aMenusByModule)) {
 				$this->Log("Found module without menus declared: $sModuleName");
-			}
-			else
-			{
+			} else {
 				$sMenuCreationClass = 'MenuCreation_'.preg_replace('/[^A-Za-z0-9_]/', '_', $sModuleName);
 				$sCompiledCode .=
 <<<EOF
@@ -536,10 +506,9 @@ class $sMenuCreationClass extends ModuleHandlerAPI
 
 EOF;
 				// Preliminary: determine parent menus not defined within the current module
-				$aMenusToLoad = array();
-				$aParentMenus = array();
-				foreach($aMenusByModule[$sModuleName] as $sMenuId)
-				{
+				$aMenusToLoad = [];
+				$aParentMenus = [];
+				foreach ($aMenusByModule[$sModuleName] as $sMenuId) {
 					$oMenuNode = $aMenuNodes[$sMenuId];
 					// compute parent hierarchy
 					$aParentIdHierarchy = [];
@@ -553,18 +522,15 @@ EOF;
 					$aMenusToLoad[] = $sMenuId;
 				}
 				$aMenusToLoad = array_unique($aMenusToLoad);
-				$aMenuLinesForAll = array();
-				$aMenuLinesForAdmins = array();
-				$aAdminMenus = array();
-				foreach($aMenusToLoad as $sMenuId)
-				{
+				$aMenuLinesForAll = [];
+				$aMenuLinesForAdmins = [];
+				$aAdminMenus = [];
+				foreach ($aMenusToLoad as $sMenuId) {
 					$oMenuNode = $aMenuNodes[$sMenuId];
-					if (is_null($oMenuNode))
-					{
+					if (is_null($oMenuNode)) {
 						throw new Exception("Module '{$oModule->GetId()}' (location : '$sModuleRootDir') contains an unknown menuId :  '$sMenuId'");
 					}
-					if ($oMenuNode->getAttribute("xsi:type") == 'MenuGroup')
-					{
+					if ($oMenuNode->getAttribute("xsi:type") == 'MenuGroup') {
 						// Note: this algorithm is wrong
 						// 1 - the module may appear empty in the current module, while children are defined in other modules
 						// 2 - check recursively that child nodes are not empty themselves
@@ -572,43 +538,33 @@ EOF;
 						// a- browse the modules and build the menu tree
 						// b- browse the tree and blacklist empty menus
 						// c- before compiling, discard if blacklisted
-						if (!in_array($oMenuNode->getAttribute("id"), $aParentMenus))
-						{
+						if (!in_array($oMenuNode->getAttribute("id"), $aParentMenus)) {
 							// Discard empty menu groups
 							continue;
 						}
 					}
-					try
-					{
+					try {
 						/** @var iTopWebPage $oP */
 						$aMenuLines = $this->CompileMenu($oMenuNode, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
-					}
-					catch (DOMFormatException $e)
-					{
+					} catch (DOMFormatException $e) {
 						throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
 					}
 					$sParent = $oMenuNode->GetChildText('parent', null);
-					if (($oMenuNode->GetChildText('enable_admin_only') == '1') || isset($aAdminMenus[$sParent]))
-					{
+					if (($oMenuNode->GetChildText('enable_admin_only') == '1') || isset($aAdminMenus[$sParent])) {
 						$aMenuLinesForAdmins = array_merge($aMenuLinesForAdmins, $aMenuLines);
 						$aAdminMenus[$oMenuNode->getAttribute("id")] = true;
-					}
-					else
-					{
+					} else {
 						$aMenuLinesForAll = array_merge($aMenuLinesForAll, $aMenuLines);
 					}
 				}
 				$sIndent = "\t\t";
-				foreach ($aMenuLinesForAll as $sPHPLine)
-				{
+				foreach ($aMenuLinesForAll as $sPHPLine) {
 					$sCompiledCode .= $sIndent.$sPHPLine."\n";
 				}
-				if (count($aMenuLinesForAdmins) > 0)
-				{
+				if (count($aMenuLinesForAdmins) > 0) {
 					$sCompiledCode .= $sIndent."if (UserRights::IsAdministrator())\n";
 					$sCompiledCode .= $sIndent."{\n";
-					foreach ($aMenuLinesForAdmins as $sPHPLine)
-					{
+					foreach ($aMenuLinesForAdmins as $sPHPLine) {
 						$sCompiledCode .= $sIndent."\t".$sPHPLine."\n";
 					}
 					$sCompiledCode .= $sIndent."}\n";
@@ -623,15 +579,12 @@ EOF;
 
 			// User rights
 			//
-			if ($sModuleName == $sUserRightsModule)
-			{
+			if ($sModuleName == $sUserRightsModule) {
 				$sCompiledCode .= $this->CompileUserRights($oUserRightsNode);
 			}
 
-			if (array_key_exists($sModuleName, $this->aSnippets))
-			{
-				foreach( $this->aSnippets[$sModuleName]['after'] as $aSnippet)
-				{
+			if (array_key_exists($sModuleName, $this->aSnippets)) {
+				foreach ($this->aSnippets[$sModuleName]['after'] as $aSnippet) {
 					$sCompiledCode .= "\n";
 					$sCompiledCode .= "/**\n";
 					$sCompiledCode .= " * Snippet: {$aSnippet['snippet_id']}\n";
@@ -639,15 +592,13 @@ EOF;
 					$sCompiledCode .= $aSnippet['content']."\n";
 				}
 			}
-			
+
 			// Create (overwrite if existing) the compiled file
 			//
-			if (strlen($sCompiledCode) > 0)
-			{
+			if (strlen($sCompiledCode) > 0) {
 				// We have compiled something: write the code somewhere
 				//
-				if (strlen($sModuleRootDir) > 0)
-				{
+				if (strlen($sModuleRootDir) > 0) {
 					// Write the code into the given module as model.<module>.php
 					//
 					$sModelFileName = 'model.'.$sModuleName.'.php';
@@ -655,9 +606,7 @@ EOF;
 					$this->WritePHPFile($sResultFile, $sModuleName, $sModuleVersion, $sCompiledCode);
 					// In case the model file wasn't present in the module file, we're adding it ! (N°4875)
 					$oModule->AddFileToInclude('business', $sModelFileName);
-				}
-				else
-				{
+				} else {
 					// Write the code into core/main.php
 					//
 					$this->sMainPHPCode .=
@@ -674,8 +623,7 @@ EOF;
 			}
 
 			// files to include (PHP datamodels)
-			foreach($oModule->GetFilesToInclude('business') as $sRelFileName)
-			{
+			foreach ($oModule->GetFilesToInclude('business') as $sRelFileName) {
 				if (file_exists("{$sTempTargetDir}/{$sRelativeDir}/{$sRelFileName}")) {
 					$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
 				} else {
@@ -717,8 +665,7 @@ PHP;
 		// Compile the dictionaries -out of the modules
 		//
 		$sDictDir = $sTempTargetDir.'/dictionaries';
-		if (!is_dir($sDictDir))
-		{
+		if (!is_dir($sDictDir)) {
 			$this->Log("Creating directory $sDictDir");
 			mkdir($sDictDir, 0777, true);
 		}
@@ -732,10 +679,8 @@ PHP;
 		$oBrandingNode = $this->oFactory->GetNodes('branding')->item(0);
 		$this->CompileBranding($oBrandingNode, $sTempTargetDir, $sFinalTargetDir);
 
-		if (array_key_exists('_core_', $this->aSnippets))
-		{
-			foreach( $this->aSnippets['_core_']['before'] as $aSnippet)
-			{
+		if (array_key_exists('_core_', $this->aSnippets)) {
+			foreach ($this->aSnippets['_core_']['before'] as $aSnippet) {
 				$this->sMainPHPCode .= "\n";
 				$this->sMainPHPCode .= "/**\n";
 				$this->sMainPHPCode .= " * Snippet: {$aSnippet['snippet_id']}\n";
@@ -743,7 +688,7 @@ PHP;
 				$this->sMainPHPCode .= $aSnippet['content']."\n";
 			}
 		}
-		
+
 		// Compile the portals
 		/** @var \MFElement $oPortalsNode */
 		$oPortalsNode = $this->oFactory->GetNodes('/itop_design/portals')->item(0);
@@ -757,11 +702,9 @@ PHP;
 		/** @var \MFElement $oParametersNode */
 		$oParametersNode = $this->oFactory->GetNodes('/itop_design/module_parameters')->item(0);
 		$this->CompileParameters($oParametersNode, $sTempTargetDir, $sFinalTargetDir);
-		
-		if (array_key_exists('_core_', $this->aSnippets))
-		{
-			foreach( $this->aSnippets['_core_']['after'] as $aSnippet)
-			{
+
+		if (array_key_exists('_core_', $this->aSnippets)) {
+			foreach ($this->aSnippets['_core_']['after'] as $aSnippet) {
 				$this->sMainPHPCode .= "\n";
 				$this->sMainPHPCode .= "/**\n";
 				$this->sMainPHPCode .= " * Snippet: {$aSnippet['snippet_id']}\n";
@@ -770,14 +713,12 @@ PHP;
 			}
 		}
 
-		if (count($this->aRelations) > 0)
-		{
+		if (count($this->aRelations) > 0) {
 			$this->sMainPHPCode .= "\n";
 			$this->sMainPHPCode .= "/**\n";
 			$this->sMainPHPCode .= " * Relations\n";
 			$this->sMainPHPCode .= " */\n";
-			foreach($this->aRelations as $sRelationCode => $aData)
-			{
+			foreach ($this->aRelations as $sRelationCode => $aData) {
 				$sRelCodeSafe = addslashes($sRelationCode);
 				$this->sMainPHPCode .= "MetaModel::RegisterRelation('$sRelCodeSafe');\n";
 			}
@@ -791,7 +732,7 @@ PHP;
 		$sCurrDate = date(DATE_ISO8601);
 		// Autoload
 		$sPHPFile = $sTempTargetDir.'/autoload.php';
-		$sPHPFileContent = 
+		$sPHPFileContent =
 <<<EOF
 <?php
 //
@@ -800,7 +741,7 @@ PHP;
 //
 EOF
 		;
-		
+
 		$sPHPFileContent .= "\nMetaModel::IncludeModule(MODULESROOT.'/core/main.php');\n";
 		$sPHPFileContent .= implode("\n", $aDataModelFiles);
 		$sPHPFileContent .= implode("\n", $aWebservicesFiles);
@@ -808,33 +749,27 @@ EOF
 		$sModulesInfo = str_replace("'".$sRelFinalTargetDir."/", "\$sCurrEnv.'/", $sModulesInfo);
 		$sPHPFileContent .= "\nfunction GetModulesInfo()\n{\n\$sCurrEnv = 'env-'.utils::GetCurrentEnvironment();\nreturn ".$sModulesInfo.";\n}\n";
 		file_put_contents($sPHPFile, $sPHPFileContent);
-		
+
 	} // DoCompile()
 
 	/**
 	 * Helper to form a valid ZList from the array built by GetNodeAsArrayOfItems()
 	 *
 	 * @param array $aItems
-	 */	 	
+	 */
 	protected function ArrayOfItemsToZList(&$aItems)
 	{
 		// Note: $aItems can be null in some cases so we have to protect it otherwise a PHP warning will be thrown during the foreach
-		if(!is_array($aItems))
-		{
-			$aItems = array();
+		if (!is_array($aItems)) {
+			$aItems = [];
 		}
-		$aTransformed = array();
+		$aTransformed = [];
 
-		foreach ($aItems as $key => $value)
-		{
-			if (is_null($value))
-			{
+		foreach ($aItems as $key => $value) {
+			if (is_null($value)) {
 				$aTransformed[] = $key;
-			}
-			else
-			{
-				if (is_array($value))
-				{
+			} else {
+				if (is_array($value)) {
 					$this->ArrayOfItemsToZList($value);
 				}
 				$aTransformed[$key] = $value;
@@ -847,29 +782,26 @@ EOF
 	 * Helper to format the flags for an attribute, in a given state
 	 * @param object $oAttNode DOM node containing the information to build the flags
 	 * Returns string PHP flags, based on the OPT_ATT_ constants, or empty (meaning 0, can be omitted)
-	 */ 
+	 */
 	protected function FlagsToPHP($oAttNode)
 	{
-		static $aNodeAttributeToFlag = array(
+		static $aNodeAttributeToFlag = [
 			'mandatory' => 'OPT_ATT_MANDATORY',
 			'read_only' => 'OPT_ATT_READONLY',
 			'must_prompt' => 'OPT_ATT_MUSTPROMPT',
 			'must_change' => 'OPT_ATT_MUSTCHANGE',
 			'hidden' => 'OPT_ATT_HIDDEN',
-		);
-	
-		$aFlags = array();
-		foreach ($aNodeAttributeToFlag as $sNodeAttribute => $sFlag)
-		{
+		];
+
+		$aFlags = [];
+		foreach ($aNodeAttributeToFlag as $sNodeAttribute => $sFlag) {
 			$bFlag = ($oAttNode->GetOptionalElement($sNodeAttribute) != null);
-			if ($bFlag)
-			{
+			if ($bFlag) {
 				$aFlags[] = $sFlag;
 			}
 		}
-		if (empty($aFlags))
-		{
-			$aFlags[] = 'OPT_ATT_NORMAL'; // When no flag is defined, reset the state to "normal"	
+		if (empty($aFlags)) {
+			$aFlags[] = 'OPT_ATT_NORMAL'; // When no flag is defined, reset the state to "normal"
 		}
 		$sRes = implode(' | ', $aFlags);
 		return $sRes;
@@ -885,31 +817,29 @@ EOF
 	 */
 	protected function TrackingLevelToPHP($sAttType, $sTrackingLevel)
 	{
-		static $aXmlToPHP_Links = array(
+		static $aXmlToPHP_Links = [
 			'none' => 'LINKSET_TRACKING_NONE',
 			'list' => 'LINKSET_TRACKING_LIST',
 			'details' => 'LINKSET_TRACKING_DETAILS',
 			'all' => 'LINKSET_TRACKING_ALL',
-		);
-	
-		static $aXmlToPHP_Others = array(
+		];
+
+		static $aXmlToPHP_Others = [
 			'none' => 'ATTRIBUTE_TRACKING_NONE',
 			'all' => 'ATTRIBUTE_TRACKING_ALL',
-		);
+		];
 
-		switch ($sAttType)
-		{
-		case 'AttributeLinkedSetIndirect':
-		case 'AttributeLinkedSet':
-			$aXmlToPHP = $aXmlToPHP_Links;
-			break;
+		switch ($sAttType) {
+			case 'AttributeLinkedSetIndirect':
+			case 'AttributeLinkedSet':
+				$aXmlToPHP = $aXmlToPHP_Links;
+				break;
 
-		default:
-			$aXmlToPHP = $aXmlToPHP_Others;
+			default:
+				$aXmlToPHP = $aXmlToPHP_Others;
 		}
 
-		if (!array_key_exists($sTrackingLevel, $aXmlToPHP))
-		{
+		if (!array_key_exists($sTrackingLevel, $aXmlToPHP)) {
 			throw new DOMFormatException("Tracking level: unknown value '$sTrackingLevel', expecting a value in {".implode(', ', array_keys($aXmlToPHP))."}");
 		}
 		return $aXmlToPHP[$sTrackingLevel];
@@ -925,21 +855,19 @@ EOF
 	 */
 	protected function EditModeToPHP($sEditMode)
 	{
-		static $aXmlToPHP = array(
+		static $aXmlToPHP = [
 			'none' => 'LINKSET_EDITMODE_NONE',
 			'add_only' => 'LINKSET_EDITMODE_ADDONLY',
 			'actions' => 'LINKSET_EDITMODE_ACTIONS',
 			'in_place' => 'LINKSET_EDITMODE_INPLACE',
 			'add_remove' => 'LINKSET_EDITMODE_ADDREMOVE',
-		);
-	
-		if (!array_key_exists($sEditMode, $aXmlToPHP))
-		{
+		];
+
+		if (!array_key_exists($sEditMode, $aXmlToPHP)) {
 			throw new DOMFormatException("Edit mode: unknown value '$sEditMode'");
 		}
 		return $aXmlToPHP[$sEditMode];
 	}
-
 
 	/**
 	 * Helper to format the edit-when for direct linkset
@@ -951,55 +879,41 @@ EOF
 	 */
 	protected function EditWhenToPHP($sEditWhen): string
 	{
-		static $aXmlToPHP = array(
+		static $aXmlToPHP = [
 			'never' => 'LINKSET_EDITWHEN_NEVER',
 			'on_host_edition' => 'LINKSET_EDITWHEN_ON_HOST_EDITION',
 			'on_host_display' => 'LINKSET_EDITWHEN_ON_HOST_DISPLAY',
 			'always' => 'LINKSET_EDITWHEN_ALWAYS',
-		);
+		];
 
-		if (!array_key_exists($sEditWhen, $aXmlToPHP))
-		{
+		if (!array_key_exists($sEditWhen, $aXmlToPHP)) {
 			throw new DOMFormatException("Edit mode: unknown value '$sEditWhen'");
 		}
 		return $aXmlToPHP[$sEditWhen];
 	}
-	
+
 	/**
 	 * Format a path (file or url) as an absolute path or relative to the module or the app
-	 */ 
+	 */
 	protected function PathToPHP($sPath, $sModuleRelativeDir, $bIsUrl = false)
 	{
-		if ($sPath == '')
-		{
+		if ($sPath == '') {
 			$sPHP = "''";
-		}
-		elseif (substr($sPath, 0, 2) == '$$')
-		{
+		} elseif (substr($sPath, 0, 2) == '$$') {
 			// Absolute
 			$sPHP = self::QuoteForPHP(substr($sPath, 2));
-		}
-		elseif (substr($sPath, 0, 1) == '$')
-		{
+		} elseif (substr($sPath, 0, 1) == '$') {
 			// Relative to the application
-			if ($bIsUrl)
-			{
+			if ($bIsUrl) {
 				$sPHP = "utils::GetAbsoluteUrlAppRoot().".self::QuoteForPHP(substr($sPath, 1));
-			}
-			else
-			{
+			} else {
 				$sPHP = "APPROOT.".self::QuoteForPHP(substr($sPath, 1));
 			}
-		}
-		else
-		{
+		} else {
 			// Relative to the module
-			if ($bIsUrl)
-			{
+			if ($bIsUrl) {
 				$sPHP = "utils::GetAbsoluteUrlModulePage('$sModuleRelativeDir', ".self::QuoteForPHP($sPath).")";
-			}
-			else
-			{
+			} else {
 				$sPHP = "__DIR__.'/$sPath'";
 			}
 		}
@@ -1019,14 +933,10 @@ EOF
 	protected function GetPropString($oNode, string $sTag, string $sDefault = null, bool $bAddQuotes = true)
 	{
 		$val = $oNode->GetChildText($sTag);
-		if (is_null($val))
-		{
-			if (is_null($sDefault))
-			{
+		if (is_null($val)) {
+			if (is_null($sDefault)) {
 				return null;
-			}
-			else
-			{
+			} else {
 				$val = $sDefault;
 			}
 		}
@@ -1049,18 +959,15 @@ EOF
 	protected function GetMandatoryPropString($oNode, string $sTag, bool $bAddQuotes = true)
 	{
 		$val = $oNode->GetChildText($sTag);
-		if (!is_null($val) && ($val !== ''))
-		{
+		if (!is_null($val) && ($val !== '')) {
 			if ($bAddQuotes) {
 				return "'".$val."'";
 			} else {
 				return $val;
 			}
-		}
-		else
-		{
+		} else {
 			throw new DOMFormatException("missing (or empty) mandatory tag '$sTag' under the tag '".$oNode->nodeName."'");
-		}	
+		}
 	}
 
 	/**
@@ -1074,12 +981,10 @@ EOF
 	{
 		$sValue = $this->GetPropBoolean($oNode, $sTag, $bDefault);
 
-		if ($sValue == null)
-		{
+		if ($sValue == null) {
 			return null;
 		}
-		if ($sValue == 'true')
-		{
+		if ($sValue == 'true') {
 			return true;
 		}
 
@@ -1097,14 +1002,10 @@ EOF
 	protected function GetPropBoolean($oNode, $sTag, $bDefault = null)
 	{
 		$val = $oNode->GetChildText($sTag);
-		if (is_null($val))
-		{
-			if (is_null($bDefault))
-			{
+		if (is_null($val)) {
+			if (is_null($bDefault)) {
 				return null;
-			}
-			else
-			{
+			} else {
 				return $bDefault ? 'true' : 'false';
 			}
 		}
@@ -1121,8 +1022,7 @@ EOF
 	protected function GetMandatoryPropBoolean($oNode, $sTag)
 	{
 		$val = $oNode->GetChildText($sTag);
-		if (is_null($val))
-		{
+		if (is_null($val)) {
 			throw new DOMFormatException("missing (or empty) mandatory tag '$sTag' under the tag '".$oNode->nodeName."'");
 		}
 		return $val == 'true' ? 'true' : 'false';
@@ -1131,14 +1031,10 @@ EOF
 	protected function GetPropNumber($oNode, $sTag, $nDefault = null)
 	{
 		$val = $oNode->GetChildText($sTag);
-		if (is_null($val))
-		{
-			if (is_null($nDefault))
-			{
+		if (is_null($val)) {
+			if (is_null($nDefault)) {
 				return null;
-			}
-			else
-			{
+			} else {
 				$val = $nDefault;
 			}
 		}
@@ -1155,8 +1051,7 @@ EOF
 	protected function GetMandatoryPropNumber($oNode, $sTag)
 	{
 		$val = $oNode->GetChildText($sTag);
-		if (is_null($val))
-		{
+		if (is_null($val)) {
 			throw new DOMFormatException("missing (or empty) mandatory tag '$sTag' under the tag '".$oNode->nodeName."'");
 		}
 		return (string)$val;
@@ -1164,18 +1059,15 @@ EOF
 
 	/**
 	 * Adds quotes and escape characters
-	 */	 	
+	 */
 	protected function QuoteForPHP($sStr, $bSimpleQuotes = false)
 	{
 		$sStr = $sStr ?? '';
-		if ($bSimpleQuotes)
-		{
-			$sEscaped = str_replace(array('\\', "'"), array('\\\\', "\\'"), $sStr);
+		if ($bSimpleQuotes) {
+			$sEscaped = str_replace(['\\', "'"], ['\\\\', "\\'"], $sStr);
 			$sRet = "'$sEscaped'";
-		}
-		else
-		{
-			$sEscaped = str_replace(array('\\', '"', "\n"), array('\\\\', '\\"', '\\n'), $sStr);
+		} else {
+			$sEscaped = str_replace(['\\', '"', "\n"], ['\\\\', '\\"', '\\n'], $sStr);
 			$sRet = '"'.$sEscaped.'"';
 		}
 		return $sRet;
@@ -1249,7 +1141,6 @@ EOF
 		$sOutput .= "  )\n";
 		$sOutput .= ");\n";
 
-
 		return $sOutput;
 	}
 
@@ -1259,47 +1150,37 @@ EOF
 		$sType = $oConstant->getAttribute('xsi:type');
 		$sText = $oConstant->GetText(null);
 
-		switch ($sType)
-		{
-		case 'integer':
-			if (is_null($sText))
-			{
-				// No data given => null
-				$sScalar = 'null';
-			}
-			else
-			{
-				$sScalar = (string)(int)$sText;
-			}
-			break;
-		
-		case 'float':
-			if (is_null($sText))
-			{
-				// No data given => null
-				$sScalar = 'null';
-			}
-			else
-			{
-				$sScalar = (string)(float)$sText;
-			}
-			break;
-		
-		case 'bool':
-			if (is_null($sText))
-			{
-				// No data given => null
-				$sScalar = 'null';
-			}
-			else
-			{
-				$sScalar = ($sText == 'true') ? 'true' : 'false';
-			}
-			break;
+		switch ($sType) {
+			case 'integer':
+				if (is_null($sText)) {
+					// No data given => null
+					$sScalar = 'null';
+				} else {
+					$sScalar = (string)(int)$sText;
+				}
+				break;
 
-		case 'string':
-		default:
-			$sScalar = $this->QuoteForPHP($sText, true);
+			case 'float':
+				if (is_null($sText)) {
+					// No data given => null
+					$sScalar = 'null';
+				} else {
+					$sScalar = (string)(float)$sText;
+				}
+				break;
+
+			case 'bool':
+				if (is_null($sText)) {
+					// No data given => null
+					$sScalar = 'null';
+				} else {
+					$sScalar = ($sText == 'true') ? 'true' : 'false';
+				}
+				break;
+
+			case 'string':
+			default:
+				$sScalar = $this->QuoteForPHP($sText, true);
 		}
 		$sPHPDefine = "define('$sName', $sScalar);";
 		return $sPHPDefine;
@@ -1324,7 +1205,7 @@ EOF
 
 		// Class characteristics
 		//
-		$aClassParams = array();
+		$aClassParams = [];
 		$aClassParams['category'] = $this->GetPropString($oProperties, 'category', '');
 		$aClassParams['key_type'] = "'autoincrement'";
 		if ((bool)$this->GetPropNumber($oProperties, 'is_link', 0)) {
@@ -1337,7 +1218,7 @@ EOF
 			$oNameAttributes = $oNaming->GetUniqueElement('attributes');
 			/** @var \DOMNodeList $oAttributes */
 			$oAttributes = $oNameAttributes->getElementsByTagName('attribute');
-			$aNameAttCodes = array();
+			$aNameAttCodes = [];
 			/** @var \MFElement $oAttribute */
 			foreach ($oAttributes as $oAttribute) {
 				$aNameAttCodes[] = $oAttribute->getAttribute('id');
@@ -1351,7 +1232,7 @@ EOF
 			if ($oComplementaryNameAttributes = $oNaming->GetOptionalElement('complementary_attributes')) {
 				/** @var \DOMNodeList $oAttributes */
 				$oComplementaryAttributes = $oComplementaryNameAttributes->getElementsByTagName('attribute');
-				$aComplementaryNameAttCodes = array();
+				$aComplementaryNameAttCodes = [];
 				/** @var \MFElement $oAttribute */
 				foreach ($oComplementaryAttributes as $oComplementaryAttribute) {
 					$aComplementaryNameAttCodes[] = $oComplementaryAttribute->getAttribute('id');
@@ -1391,7 +1272,7 @@ EOF
 		// Reconcialiation
 		if ($oReconciliation = $oProperties->GetOptionalElement('reconciliation')) {
 			$oReconcAttributes = $oReconciliation->getElementsByTagName('attribute');
-			$aReconcAttCodes = array();
+			$aReconcAttCodes = [];
 			foreach ($oReconcAttributes as $oAttribute) {
 				$aReconcAttCodes[] = $oAttribute->getAttribute('id');
 			}
@@ -1424,12 +1305,11 @@ EOF
 			$sCss .= $aClassStyleData['scss'];
 		}
 
-
 		$oOrder = $oProperties->GetOptionalElement('order');
 		if ($oOrder) {
 			$oColumnsNode = $oOrder->GetUniqueElement('columns');
 			$oColumns = $oColumnsNode->getElementsByTagName('column');
-			$aSortColumns = array();
+			$aSortColumns = [];
 			foreach ($oColumns as $oColumn) {
 				$aSortColumns[] = "'".$oColumn->getAttribute('id')."' => ".(($oColumn->getAttribute('ascending') == 'true') ? 'true' : 'false');
 			}
@@ -1438,11 +1318,9 @@ EOF
 			}
 		}
 
-		if ($oIndexes = $oProperties->GetOptionalElement('indexes'))
-		{
-			$aIndexes = array();
-			foreach($oIndexes->getElementsByTagName('index') as $oIndex)
-			{
+		if ($oIndexes = $oProperties->GetOptionalElement('indexes')) {
+			$aIndexes = [];
+			foreach ($oIndexes->getElementsByTagName('index') as $oIndex) {
 				$sIndexId = $oIndex->getAttribute('id');
 				/** @var DesignElement $oAttributes */
 				$oAttributes = $oIndex->GetUniqueElement('attributes');
@@ -1486,8 +1364,7 @@ PHP;
 			}
 		}
 
-		if (!empty($sEvents))
-		{
+		if (!empty($sEvents)) {
 			$sMethods .= <<<EOF
 	protected function RegisterEventListeners()
 	{
@@ -1511,14 +1388,14 @@ EOF;
 		}
 
 		if ($oUniquenessRules = $oProperties->GetOptionalElement('uniqueness_rules')) {
-			$aUniquenessRules = array();
+			$aUniquenessRules = [];
 			/** @var \MFElement $oUniquenessSingleRule */
 			foreach ($oUniquenessRules->GetElementsByTagName('rule') as $oUniquenessSingleRule) {
 				$sCurrentRuleId = $oUniquenessSingleRule->getAttribute('id');
 
 				$oAttributes = $oUniquenessSingleRule->GetUniqueElement('attributes', false);
 				if ($oAttributes) {
-					$aUniquenessAttributes = array();
+					$aUniquenessAttributes = [];
 					foreach ($oAttributes->getElementsByTagName('attribute') as $oAttribute) {
 						$aUniquenessAttributes[] = $oAttribute->getAttribute('id');
 					}
@@ -1529,8 +1406,11 @@ EOF;
 
 				$aUniquenessRules[$sCurrentRuleId]['filter'] = $oUniquenessSingleRule->GetChildText('filter');
 				$aUniquenessRules[$sCurrentRuleId]['disabled'] = $this->GetPropBooleanConverted($oUniquenessSingleRule, 'disabled', null);
-				$aUniquenessRules[$sCurrentRuleId]['is_blocking'] = $this->GetPropBooleanConverted($oUniquenessSingleRule, 'is_blocking',
-					null);
+				$aUniquenessRules[$sCurrentRuleId]['is_blocking'] = $this->GetPropBooleanConverted(
+					$oUniquenessSingleRule,
+					'is_blocking',
+					null
+				);
 			}
 
 			// we will check for rules validity later as for now we don't have objects hierarchy (see \MetaModel::InitClasses)
@@ -1548,37 +1428,29 @@ EOF;
 		// Fields
 		//
 		$oFields = $oClass->GetOptionalElement('fields');
-		if ($oFields)
-		{
+		if ($oFields) {
 			$this->CompileFiles($oFields, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, '');
 		}
 		$sAttributes = '';
-		$aTagFieldsInfo = array();
+		$aTagFieldsInfo = [];
 		/** @var \DOMElement $oField */
-		foreach($this->oFactory->ListFields($oClass) as $oField)
-		{
-			try
-			{
+		foreach ($this->oFactory->ListFields($oClass) as $oField) {
+			try {
 				// $oField
 				$sAttCode = $oField->getAttribute('id');
 				$sAttType = $oField->getAttribute('xsi:type');
 
-
 				$aParameters = $this->CompileAttribute($sAttType, $oField, $sModuleRelativeDir, $sClass, $sAttCode, $sCss, $aTagFieldsInfo, $sTempTargetDir);
 
-				$aParams = array();
-				foreach($aParameters as $sKey => $sValue)
-				{
-					if (!is_null($sValue))
-					{
+				$aParams = [];
+				foreach ($aParameters as $sKey => $sValue) {
+					if (!is_null($sValue)) {
 						$aParams[] = '"'.$sKey.'"=>'.$sValue;
 					}
 				}
 				$sParams = implode(', ', $aParams);
 				$sAttributes .= "		MetaModel::Init_AddAttribute(new $sAttType(\"$sAttCode\", array($sParams)));\n";
-			}
-			catch(Exception $e)
-			{
+			} catch (Exception $e) {
 				throw new DOMFormatException("Field: '$sAttCode', (type: $sAttType), ".$e->getMessage());
 			}
 		}
@@ -1593,61 +1465,54 @@ EOF;
 			$sLifecycle .= "\t\t//\n";
 
 			$oStimuli = $oLifecycle->GetUniqueElement('stimuli');
-			foreach ($oStimuli->getElementsByTagName('stimulus') as $oStimulus)
-			{
+			foreach ($oStimuli->getElementsByTagName('stimulus') as $oStimulus) {
 				$sStimulus = $oStimulus->getAttribute('id');
 				$sStimulusClass = $oStimulus->getAttribute('xsi:type');
 
 				$sLifecycle .= "		MetaModel::Init_DefineStimulus(new ".$sStimulusClass."(\"".$sStimulus."\", array()));\n";
 			}
 			$oHighlightScale = $oLifecycle->GetUniqueElement('highlight_scale', false);
-			if ($oHighlightScale)
-			{
+			if ($oHighlightScale) {
 				$sHighlightScale = "\t\t// Higlight Scale\n";
 				$sHighlightScale .= "		MetaModel::Init_DefineHighlightScale( array(\n";
 
 				$this->CompileFiles($oHighlightScale, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, '');
 
-				foreach ($oHighlightScale->getElementsByTagName('item') as $oItem)
-				{
+				foreach ($oHighlightScale->getElementsByTagName('item') as $oItem) {
 					$sItemCode = $oItem->getAttribute('id');
 					$fRank = (float)$oItem->GetChildText('rank');
 					$sColor = $oItem->GetChildText('color');
-					if (($sIcon = $oItem->GetChildText('icon')) && (strlen($sIcon) > 0))
-					{
+					if (($sIcon = $oItem->GetChildText('icon')) && (strlen($sIcon) > 0)) {
 						$sIcon = $sModuleRelativeDir.'/'.$sIcon;
 						$sIcon = "utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
-					}
-					else
-					{
+					} else {
 						$sIcon = "''";
 					}
-					switch($sColor)
-					{
+					switch ($sColor) {
 						// Known PHP constants: keep the literal value as-is
 						case 'HILIGHT_CLASS_CRITICAL':
 						case 'HIGHLIGHT_CLASS_CRITICAL':
-						$sColor = 'HILIGHT_CLASS_CRITICAL';
-						break;
+							$sColor = 'HILIGHT_CLASS_CRITICAL';
+							break;
 
 						case 'HILIGHT_CLASS_OK':
 						case 'HIGHLIGHT_CLASS_OK':
-						$sColor = 'HILIGHT_CLASS_OK';
-						break;
+							$sColor = 'HILIGHT_CLASS_OK';
+							break;
 
 						case 'HIGHLIGHT_CLASS_WARNING':
 						case 'HILIGHT_CLASS_WARNING':
-						$sColor = 'HILIGHT_CLASS_WARNING';
-						break;
+							$sColor = 'HILIGHT_CLASS_WARNING';
+							break;
 
 						case 'HIGHLIGHT_CLASS_NONE':
 						case 'HILIGHT_CLASS_NONE':
-						$sColor = 'HILIGHT_CLASS_NONE';
-						break;
+							$sColor = 'HILIGHT_CLASS_NONE';
+							break;
 
 						default:
-						// Future extension, specify your own color??
-						$sColor = "'".addslashes($sColor)."'";
+							// Future extension, specify your own color??
+							$sColor = "'".addslashes($sColor)."'";
 					}
 					$sHighlightScale .= "		    '$sItemCode' => array('rank' => $fRank, 'color' => $sColor, 'icon' => $sIcon),\n";
 
@@ -1656,62 +1521,48 @@ EOF;
 			}
 
 			$oStates = $oLifecycle->GetUniqueElement('states');
-			$aStatesDependencies = array();
-			$aStates = array();
-			foreach ($oStates->getElementsByTagName('state') as $oState)
-			{
+			$aStatesDependencies = [];
+			$aStates = [];
+			foreach ($oStates->getElementsByTagName('state') as $oState) {
 				$aStatesDependencies[$oState->getAttribute('id')] = $oState->GetChildText('inherit_flags_from', '');
 				$aStates[$oState->getAttribute('id')] = $oState;
 			}
-			$aStatesOrder = array();
-			while (count($aStatesOrder) < count($aStatesDependencies))
-			{
+			$aStatesOrder = [];
+			while (count($aStatesOrder) < count($aStatesDependencies)) {
 				$iResolved = 0;
-				foreach($aStatesDependencies as $sState => $sInheritFrom)
-				{
-					if (is_null($sInheritFrom))
-					{
+				foreach ($aStatesDependencies as $sState => $sInheritFrom) {
+					if (is_null($sInheritFrom)) {
 						// Already recorded as resolved
 						continue;
-					}
-					elseif ($sInheritFrom == '')
-					{
+					} elseif ($sInheritFrom == '') {
 						// Resolved
 						$aStatesOrder[$sState] = $sInheritFrom;
 						$aStatesDependencies[$sState] = null;
 						$iResolved++;
-					}
-					elseif (isset($aStatesOrder[$sInheritFrom]))
-					{
+					} elseif (isset($aStatesOrder[$sInheritFrom])) {
 						// Resolved
 						$aStatesOrder[$sState] = $sInheritFrom;
 						$aStatesDependencies[$sState] = null;
 						$iResolved++;
 					}
 				}
-				if ($iResolved == 0)
-				{
+				if ($iResolved == 0) {
 					// No change on this loop -> there are unmet dependencies
-					$aRemainingDeps = array();
-					foreach($aStatesDependencies as $sState => $sParentState)
-					{
-						if (strlen($sParentState) > 0)
-						{
+					$aRemainingDeps = [];
+					foreach ($aStatesDependencies as $sState => $sParentState) {
+						if (strlen($sParentState) > 0) {
 							$aRemainingDeps[] = $sState.' ('.$sParentState.')';
 						}
 					}
 					throw new DOMFormatException("Could not solve inheritance for states: ".implode(', ', $aRemainingDeps));
 				}
 			}
-			foreach ($aStatesOrder as $sState => $foo)
-			{
+			foreach ($aStatesOrder as $sState => $foo) {
 				$oState = $aStates[$sState];
 				$oInitialStatePath = $oState->GetOptionalElement('initial_state_path');
-				if ($oInitialStatePath)
-				{
-					$aInitialStatePath = array();
-					foreach ($oInitialStatePath->getElementsByTagName('state_ref') as $oIntermediateState)
-					{
+				if ($oInitialStatePath) {
+					$aInitialStatePath = [];
+					foreach ($oInitialStatePath->getElementsByTagName('state_ref') as $oIntermediateState) {
 						$aInitialStatePath[] = "'".$oIntermediateState->GetText()."'";
 					}
 					$sInitialStatePath = 'Array('.implode(', ', $aInitialStatePath).')';
@@ -1723,11 +1574,9 @@ EOF;
 				$sAttributeInherit = $oState->GetChildText('inherit_flags_from', '');
 				$sLifecycle .= "				\"attribute_inherit\" => '$sAttributeInherit',\n";
 				$oHighlight = $oState->GetUniqueElement('highlight', false);
-				if ($oHighlight)
-				{
+				if ($oHighlight) {
 					$sCode = $oHighlight->GetChildText('code', '');
-					if ($sCode != '')
-					{
+					if ($sCode != '') {
 						$sLifecycle .= "				'highlight' => array('code' => '$sCode'),\n";
 					}
 
@@ -1736,52 +1585,42 @@ EOF;
 				$sLifecycle .= "				\"attribute_list\" => array(\n";
 
 				$oFlags = $oState->GetUniqueElement('flags');
-				foreach ($oFlags->getElementsByTagName('attribute') as $oAttributeNode)
-				{
+				foreach ($oFlags->getElementsByTagName('attribute') as $oAttributeNode) {
 					$sFlags = $this->FlagsToPHP($oAttributeNode);
-					if (strlen($sFlags) > 0)
-					{
+					if (strlen($sFlags) > 0) {
 						$sAttCode = $oAttributeNode->GetAttribute('id');
 						$sLifecycle .= "					'$sAttCode' => $sFlags,\n";
 					}
 				}
 
 				$sLifecycle .= "				),\n";
-				if (!is_null($oInitialStatePath))
-				{
+				if (!is_null($oInitialStatePath)) {
 					$sLifecycle .= "				\"initial_state_path\" => $sInitialStatePath,\n";
 				}
 				$sLifecycle .= "			)\n";
 				$sLifecycle .= "		);\n";
 
 				$oTransitions = $oState->GetUniqueElement('transitions');
-				foreach ($oTransitions->getElementsByTagName('transition') as $oTransition)
-				{
+				foreach ($oTransitions->getElementsByTagName('transition') as $oTransition) {
 					$sStimulus = $oTransition->getAttribute('id');
 					$sTargetState = $oTransition->GetChildText('target');
 
 					$oActions = $oTransition->GetUniqueElement('actions');
-					$aVerbs = array();
-					foreach ($oActions->getElementsByTagName('action') as $oAction)
-					{
+					$aVerbs = [];
+					foreach ($oActions->getElementsByTagName('action') as $oAction) {
 						$sVerb = $oAction->GetChildText('verb');
 						$oParams = $oAction->GetOptionalElement('params');
-						$aActionParams = array();
-						if ($oParams)
-						{
+						$aActionParams = [];
+						if ($oParams) {
 							$oParamNodes = $oParams->getElementsByTagName('param');
-							foreach($oParamNodes as $oParam)
-							{
+							foreach ($oParamNodes as $oParam) {
 								$sParamType = $oParam->getAttribute('xsi:type');
-								if ($sParamType == '')
-								{
+								if ($sParamType == '') {
 									$sParamType = 'string';
 								}
 								$aActionParams[] = "array('type' => '$sParamType', 'value' => ".self::QuoteForPHP($oParam->textContent).")";
 							}
-						}
-						else
-						{
+						} else {
 							// Old (pre 2.1.0) format, when no parameter is specified, assume 1 parameter: reference sStimulusCode
 							$aActionParams[] = "array('type' => 'reference', 'value' => 'sStimulusCode')";
 						}
@@ -1790,28 +1629,25 @@ EOF;
 					}
 					$sActions = implode(', ', $aVerbs);
 
-                    $sLifecycle .= "		MetaModel::Init_DefineTransition(\"$sState\", \"$sStimulus\", array(\n";
-                    $sLifecycle .= "            \"target_state\"=>\"$sTargetState\",\n";
-                    $sLifecycle .= "            \"actions\"=>array($sActions),\n";
-                    $sLifecycle .= "            \"user_restriction\"=>null,\n";
-                    $sLifecycle .= "            \"attribute_list\"=>array(\n";
+					$sLifecycle .= "		MetaModel::Init_DefineTransition(\"$sState\", \"$sStimulus\", array(\n";
+					$sLifecycle .= "            \"target_state\"=>\"$sTargetState\",\n";
+					$sLifecycle .= "            \"actions\"=>array($sActions),\n";
+					$sLifecycle .= "            \"user_restriction\"=>null,\n";
+					$sLifecycle .= "            \"attribute_list\"=>array(\n";
 
 					$oFlags = $oTransition->GetOptionalElement('flags');
-					if($oFlags !== null)
-                    {
-                        foreach ($oFlags->getElementsByTagName('attribute') as $oAttributeNode)
-                        {
-                            $sFlags = $this->FlagsToPHP($oAttributeNode);
-                            if (strlen($sFlags) > 0)
-                            {
-                                $sAttCode = $oAttributeNode->GetAttribute('id');
-                                $sLifecycle .= "                '$sAttCode' => $sFlags,\n";
-                            }
-                        }
-                    }
+					if ($oFlags !== null) {
+						foreach ($oFlags->getElementsByTagName('attribute') as $oAttributeNode) {
+							$sFlags = $this->FlagsToPHP($oAttributeNode);
+							if (strlen($sFlags) > 0) {
+								$sAttCode = $oAttributeNode->GetAttribute('id');
+								$sLifecycle .= "                '$sAttCode' => $sFlags,\n";
+							}
+						}
+					}
 
-                    $sLifecycle .= "            )\n";
-                    $sLifecycle .= "        ));\n";
+					$sLifecycle .= "            )\n";
+					$sLifecycle .= "        ));\n";
 				}
 			}
 		}
@@ -1892,17 +1728,14 @@ EOF;
 		// Relations
 		//
 		$oRelations = $oClass->GetOptionalElement('relations');
-		if ($oRelations)
-		{
-			$aRelations = array();
-			foreach($oRelations->getElementsByTagName('relation') as $oRelation)
-			{
+		if ($oRelations) {
+			$aRelations = [];
+			foreach ($oRelations->getElementsByTagName('relation') as $oRelation) {
 				$sRelationId = $oRelation->getAttribute('id');
-				$this->aRelations[$sRelationId] = array('id' => $sRelationId);
+				$this->aRelations[$sRelationId] = ['id' => $sRelationId];
 
 				$oNeighbours = $oRelation->GetUniqueElement('neighbours');
-				foreach($oNeighbours->getElementsByTagName('neighbour') as $oNeighbour)
-				{
+				foreach ($oNeighbours->getElementsByTagName('neighbour') as $oNeighbour) {
 					$sNeighbourId = $oNeighbour->getAttribute('id');
 
 					$sDirection = $oNeighbour->GetChildText('direction', 'both');
@@ -1910,12 +1743,10 @@ EOF;
 					$sQueryDown = $oNeighbour->GetChildText('query_down');
 					$sQueryUp = $oNeighbour->GetChildText('query_up');
 
-					if (($sQueryDown == '') && ($sAttribute == ''))
-					{
+					if (($sQueryDown == '') && ($sAttribute == '')) {
 						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': either a query or an attribute must be specified");
 					}
-					if (($sQueryDown != '') && ($sAttribute != ''))
-					{
+					if (($sQueryDown != '') && ($sAttribute != '')) {
 						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': both a query and and attribute have been specified... which one should be used?");
 					}
 
@@ -1926,7 +1757,7 @@ EOF;
 					} elseif ($sDirection != 'down') {
 						throw new DOMFormatException("Relation '$sRelationId/$sNeighbourId': unknown direction ($sDirection), expecting 'both' or 'down'");
 					}
-					$aRelations[$sRelationId][$sNeighbourId] = array(
+					$aRelations[$sRelationId][$sNeighbourId] = [
 						'_legacy_' => false,
 						'sDirection' => $sDirection,
 						'sDefinedInClass' => $sClass,
@@ -1934,7 +1765,7 @@ EOF;
 						'sQueryDown' => $sQueryDown,
 						'sQueryUp' => $sQueryUp,
 						'sAttribute' => $sAttribute,
-					);
+					];
 				}
 			}
 
@@ -1942,12 +1773,10 @@ EOF;
 			$sMethods .= "\t{\n";
 			$sMethods .= "\t\tswitch (\$sRelCode)\n";
 			$sMethods .= "\t\t{\n";
-			foreach ($aRelations as $sRelationId => $aRelationData)
-			{
+			foreach ($aRelations as $sRelationId => $aRelationData) {
 				$sMethods .= "\t\tcase '$sRelationId':\n";
 				$sMethods .= "\t\t\t\$aRels = array(\n";
-				foreach ($aRelationData as $sNeighbourId => $aData)
-				{
+				foreach ($aRelationData as $sNeighbourId => $aData) {
 					//$sData = str_replace("\n", "\n\t\t\t\t", var_export($aData, true));
 					$sData = var_export($aData, true);
 					$sMethods .= "\t\t\t\t'$sNeighbourId' => $sData,\n";
@@ -1967,21 +1796,16 @@ EOF;
 		$bIsAbstractClass = ($oProperties->GetChildText('abstract') == 'true');
 		$oPhpParent = $oClass->GetUniqueElement('php_parent', false);
 		$aRequiredFiles = [];
-		if ($oPhpParent)
-		{
+		if ($oPhpParent) {
 			$sParentClass = $oPhpParent->GetChildText('name', '');
-			if ($sParentClass == '')
-			{
+			if ($sParentClass == '') {
 				throw new Exception("Failed to process class '".$oClass->getAttribute('id')."', missing required tag 'name' under 'php_parent'.");
 			}
 			$sIncludeFile = $oPhpParent->GetChildText('file', '');
-			if ($sIncludeFile != '')
-			{
+			if ($sIncludeFile != '') {
 				$aRequiredFiles[] = $sIncludeFile;
 			}
-		}
-		else
-		{
+		} else {
 			$sParentClass = $oClass->GetChildText('parent', 'DBObject');
 		}
 		$sInitMethodCalls =
@@ -1997,20 +1821,19 @@ EOF;
 		$sPHP .= $this->GeneratePhpCodeForClass($sClassName, $sParentClass, $sClassParams, $sInitMethodCalls, $bIsAbstractClass, $sMethods, $aRequiredFiles, $sCodeComment);
 
 		// N°931 generates TagFieldData classes for AttributeTag fields
-		if (!empty($aTagFieldsInfo))
-		{
+		if (!empty($aTagFieldsInfo)) {
 			$sTagClassParentClass = "TagSetFieldData";
-			$aTagClassParams = array
-			(
+			$aTagClassParams =
+			[
 				'category' => 'bizmodel',
 				'key_type' => 'autoincrement',
-				'name_attcode' => array('label'),
+				'name_attcode' => ['label'],
 				'state_attcode' => '',
-				'reconc_keys' => array('code'),
+				'reconc_keys' => ['code'],
 				'db_table' => '', // no need to have a corresponding table : this class exists only for rights, no additional field
 				'db_key_field' => 'id',
 				'db_finalclass_field' => 'finalclass',
-			);
+			];
 			$sTagInitMethodCalls =
 <<<EOF
         MetaModel::Init_SetZListItems('default_search', array (
@@ -2018,9 +1841,8 @@ EOF;
             1 => 'label',
         ));
 EOF
-            ;
-			foreach ($aTagFieldsInfo as $sTagFieldName)
-			{
+			;
+			foreach ($aTagFieldsInfo as $sTagFieldName) {
 				$sTagClassName = static::GetTagDataClassName($sClassName, $sTagFieldName);
 				$sTagClassParams = var_export($aTagClassParams, true);
 				$sPHP .= $this->GeneratePhpCodeForClass($sTagClassName, $sTagClassParentClass, $sTagClassParams, $sTagInitMethodCalls);
@@ -2056,13 +1878,11 @@ EOF
 	{
 		$aParameters = [];
 
-		$aDependencies = array();
+		$aDependencies = [];
 		$oDependencies = $oField->GetOptionalElement('dependencies');
-		if (!is_null($oDependencies))
-		{
+		if (!is_null($oDependencies)) {
 			$oDepNodes = $oDependencies->getElementsByTagName('attribute');
-			foreach($oDepNodes as $oDepAttribute)
-			{
+			foreach ($oDepNodes as $oDepAttribute) {
 				$aDependencies[] = "'".$oDepAttribute->getAttribute('id')."'";
 			}
 		}
@@ -2254,7 +2074,7 @@ EOF
 				$oXMLDoc->save($sTempTargetDir.'/'.$sFileName);
 				$aParameters['definition_file'] = "'".str_replace("'", "\\'", $sFileName)."'";
 			}
-		}  else if($sAttType == 'AttributeClass'){
+		} elseif ($sAttType == 'AttributeClass') {
 			$this->CompileCommonProperty('sql', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
 			$this->CompileCommonProperty('default_value', $oField, $aParameters, $sModuleRelativeDir, '');
@@ -2262,7 +2082,7 @@ EOF
 			$aParameters['class_category'] = $this->GetPropString($oField, 'class_category', '');
 			$aParameters['more_values'] = $this->GetPropString($oField, 'more_values', '');
 			$aParameters['depends_on'] = $sDependencies;
-		}else {
+		} else {
 			$this->CompileCommonProperty('sql', $oField, $aParameters, $sModuleRelativeDir);
 			$this->CompileCommonProperty('is_null_allowed', $oField, $aParameters, $sModuleRelativeDir, false);
 			$this->CompileCommonProperty('default_value', $oField, $aParameters, $sModuleRelativeDir, '');
@@ -2329,19 +2149,19 @@ EOF
 					break;
 				case 'edit_when':
 					$sEditWhen = $oField->GetChildText('edit_when');
-					if(!is_null($sEditWhen)){
+					if (!is_null($sEditWhen)) {
 						$aParameters['edit_when'] = $this->EditWhenToPHP($sEditWhen);
 					}
 					break;
 				case 'mappings':
 					$oMappings = $oField->GetUniqueElement('mappings');
 					$oMappingNodes = $oMappings->getElementsByTagName('mapping');
-					$aMapping = array();
+					$aMapping = [];
 					foreach ($oMappingNodes as $oMapping) {
 						$sMappingId = $oMapping->getAttribute('id');
 						$sMappingAttCode = $oMapping->GetChildText('attcode');
 						$aMapping[$sMappingId]['attcode'] = $sMappingAttCode;
-						$aMapping[$sMappingId]['values'] = array();
+						$aMapping[$sMappingId]['values'] = [];
 						$oMetaValues = $oMapping->GetUniqueElement('metavalues');
 						foreach ($oMetaValues->getElementsByTagName('metavalue') as $oMetaValue) {
 							$sMetaValue = $oMetaValue->getAttribute('id');
@@ -2365,7 +2185,7 @@ EOF
 				case 'states':
 					$oStates = $oField->GetUniqueElement('states');
 					$oStateNodes = $oStates->getElementsByTagName('state');
-					$aStates = array();
+					$aStates = [];
 					foreach ($oStateNodes as $oState) {
 						$aStates[] = '"'.$oState->GetAttribute('id').'"';
 					}
@@ -2374,7 +2194,7 @@ EOF
 				case 'thresholds':
 					$oThresholds = $oField->GetUniqueElement('thresholds');
 					$oThresholdNodes = $oThresholds->getElementsByTagName('threshold');
-					$aThresholds = array();
+					$aThresholds = [];
 					foreach ($oThresholdNodes as $oThreshold) {
 						$iPercent = (int)$oThreshold->getAttribute('id');
 
@@ -2388,10 +2208,10 @@ EOF
 
 						$oActions = $oThreshold->GetUniqueElement('actions');
 						$oActionNodes = $oActions->getElementsByTagName('action');
-						$aActions = array();
+						$aActions = [];
 						foreach ($oActionNodes as $oAction) {
 							$oParams = $oAction->GetOptionalElement('params');
-							$aActionParams = array();
+							$aActionParams = [];
 							if ($oParams) {
 								$oParamNodes = $oParams->getElementsByTagName('param');
 								foreach ($oParamNodes as $oParam) {
@@ -2525,9 +2345,9 @@ EOF
 			$sCode = $this->GetMandatoryPropString($oValue, 'code', false);
 			$sRankAsString = $this->GetPropNumber($oValue, 'rank');
 			// Consider value as ranked only if it is the desired sort type, this is to avoid issues if a <rank> node is left when sort type isn't "rank"
-			if (utils::IsNotNullOrEmptyString($sRankAsString) && ($sSortType === static::ENUM_ATTRIBUTE_ENUM_SORT_TYPE_RANK)){
+			if (utils::IsNotNullOrEmptyString($sRankAsString) && ($sSortType === static::ENUM_ATTRIBUTE_ENUM_SORT_TYPE_RANK)) {
 				$aValuesWithRank[$sCode] = (float) $sRankAsString;
-		    } else {
+			} else {
 				$aValuesWithoutRank[$sCode] = true;
 			}
 
@@ -2556,6 +2376,7 @@ EOF
 				// Default language (fallback -eg. english- if no dict entry for the current language -eg. italian-) can change at anytime in the configuration file -eg. from english to french-
 				// if that was to happen, users would not understand why they have labels from in english instead of french, which would cause support questions / investigations.
 				$sLocalizedSortAsPHPParam = ', true';
+				// no break
 			default:
 				// Sort values by their code
 				ksort($aValuesWithoutRank);
@@ -2732,10 +2553,10 @@ CSS;
 		// - Convert SCSS variable to CSS variable use as SCSS variable cannot be used elsewhere than during SCSS compiling
 		//   Note: We check the $sXXXColorForCSS instead of the $sXXXColorForOrm because its value has been altered.
 		if ($bHasMainColor && (stripos($sMainColorForCss, '$') === 0)) {
-		       $sMainColorForOrm = "'var($sMainColorCssVariableName)'";
+			$sMainColorForOrm = "'var($sMainColorCssVariableName)'";
 		}
 		if ($bHasComplementaryColor && (stripos($sComplementaryColorForCss, '$') === 0)) {
-		       $sComplementaryColorForOrm = "'var($sComplementaryColorCssVariableName)'";
+			$sComplementaryColorForOrm = "'var($sComplementaryColorCssVariableName)'";
 		}
 		$aData['orm_style_instantiation'] = "$sOrmStylePrefix new ormStyle($sCssRegularClassForOrm, $sCssAlternativeClassForOrm, $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses, $sIconRelPath)";
 
@@ -2748,7 +2569,6 @@ CSS;
 
 		return 'TagSetFieldDataFor_'.$sTagSuffix;
 	}
-
 
 	/**
 	 * @param \MFElement $oMenu
@@ -2769,136 +2589,118 @@ CSS;
 		$sMenuClass = $oMenu->getAttribute("xsi:type");
 
 		$sParent = $oMenu->GetChildText('parent', null);
-		if ($sParent)
-		{
+		if ($sParent) {
 			$sParentSpec = "\$__comp_menus__['$sParent']->GetIndex()";
-		}
-		else
-		{
+		} else {
 			$sParentSpec = '-1';
 		}
 
 		$fRank = (float) $oMenu->GetChildText('rank');
-		if ($sEnableClass = $oMenu->GetChildText('enable_class'))
-		{
+		if ($sEnableClass = $oMenu->GetChildText('enable_class')) {
 			$sEnableAction = $oMenu->GetChildText('enable_action', 'UR_ACTION_MODIFY');
 			$sEnablePermission = $oMenu->GetChildText('enable_permission', 'UR_ALLOWED_YES');
 			$sEnableStimulus = $oMenu->GetChildText('enable_stimulus');
-			if ($sEnableStimulus != null)
-			{
+			if ($sEnableStimulus != null) {
 				$sOptionalEnableParams = ", '$sEnableClass', $sEnableAction, $sEnablePermission, '$sEnableStimulus'";
-			}
-			else
-			{
+			} else {
 				$sOptionalEnableParams = ", '$sEnableClass', $sEnableAction, $sEnablePermission, null";
 			}
-		}
-		else
-		{
+		} else {
 			$sOptionalEnableParams = ", null, UR_ACTION_MODIFY, UR_ALLOWED_YES, null";
 		}
 
-		switch($sMenuClass)
-		{
-		case 'WebPageMenuNode':
-			$sUrl = $oMenu->GetChildText('url');
-			$sUrlSpec = $this->PathToPHP($sUrl, $sModuleRelativeDir, true /* Url */);
-			$bIsLinkInNewWindow = $this->GetPropBooleanConverted($oMenu, 'in_new_window', false);
-			if ($bIsLinkInNewWindow)
-			{
-				$sOptionalEnableParams .= ', true';
-			}
-			$sNewMenu = "new WebPageMenuNode('$sMenuId', $sUrlSpec, $sParentSpec, $fRank {$sOptionalEnableParams});";
-			break;
+		switch ($sMenuClass) {
+			case 'WebPageMenuNode':
+				$sUrl = $oMenu->GetChildText('url');
+				$sUrlSpec = $this->PathToPHP($sUrl, $sModuleRelativeDir, true /* Url */);
+				$bIsLinkInNewWindow = $this->GetPropBooleanConverted($oMenu, 'in_new_window', false);
+				if ($bIsLinkInNewWindow) {
+					$sOptionalEnableParams .= ', true';
+				}
+				$sNewMenu = "new WebPageMenuNode('$sMenuId', $sUrlSpec, $sParentSpec, $fRank {$sOptionalEnableParams});";
+				break;
 
-		case 'DashboardMenuNode':
-			$sTemplateFile = $oMenu->GetChildText('definition_file', '');
-			if ($sTemplateFile != '')
-			{
+			case 'DashboardMenuNode':
+				$sTemplateFile = $oMenu->GetChildText('definition_file', '');
+				if ($sTemplateFile != '') {
+					$sTemplateSpec = $this->PathToPHP($sTemplateFile, $sModuleRelativeDir);
+				} else {
+					$oDashboardDefinition = $oMenu->GetOptionalElement('definition');
+					if ($oDashboardDefinition == null) {
+						throw(new DOMFormatException('Missing definition for Dashboard menu "'.$sMenuId.'" expecting either a tag "definition_file" or "definition".'));
+					}
+					$sFileName = strtolower(str_replace([':', '/', '\\', '*'], '_', $sMenuId)).'_dashboard.xml';
+					$sTemplateSpec = $this->PathToPHP($sFileName, $sModuleRelativeDir);
+
+					$oXMLDoc = new DOMDocument('1.0', 'UTF-8');
+					$oXMLDoc->formatOutput = true; // indent (must be loaded with option LIBXML_NOBLANKS)
+					$oXMLDoc->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
+
+					$oRootNode = $oXMLDoc->createElement('dashboard'); // make sure that the document is not empty
+					$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
+					$oXMLDoc->appendChild($oRootNode);
+					foreach ($oDashboardDefinition->childNodes as $oNode) {
+						$oDefNode = $oXMLDoc->importNode($oNode, true); // layout, cells, etc Nodes and below
+						$oRootNode->appendChild($oDefNode);
+					}
+					$oXMLDoc->save($sTempTargetDir.'/'.$sModuleRelativeDir.'/'.$sFileName);
+				}
+				$sNewMenu = "new DashboardMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank {$sOptionalEnableParams});";
+				break;
+
+			case 'ShortcutContainerMenuNode':
+				$sNewMenu = "new ShortcutContainerMenuNode('$sMenuId', $sParentSpec, $fRank {$sOptionalEnableParams});";
+				break;
+
+			case 'OQLMenuNode':
+				$sOQL = self::QuoteForPHP($oMenu->GetChildText('oql'));
+				$bSearch = ($oMenu->GetChildText('do_search') == '1') ? 'true' : 'false';
+				$sSearchFormOpenXML = $oMenu->GetChildText('search_form_open');
+				switch ($sSearchFormOpenXML) {
+					case '1':
+						$sSearchFormOpen = 'true';
+						break;
+
+					case '0':
+						$sSearchFormOpen = 'false';
+						break;
+
+					default:
+						$sSearchFormOpen = 'true';
+				}
+				$sNewMenu = "new OQLMenuNode('$sMenuId', $sOQL, $sParentSpec, $fRank, $bSearch {$sOptionalEnableParams}, $sSearchFormOpen);";
+				break;
+
+			case 'NewObjectMenuNode':
+				$sClass = $oMenu->GetChildText('class');
+				$sNewMenu = "new NewObjectMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank {$sOptionalEnableParams});";
+				break;
+
+			case 'SearchMenuNode':
+				$sClass = $oMenu->GetChildText('class');
+				$sNewMenu = "new SearchMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank, null {$sOptionalEnableParams});";
+				break;
+
+			case 'TemplateMenuNode':
+				$sTemplateFile = $oMenu->GetChildText('template_file');
 				$sTemplateSpec = $this->PathToPHP($sTemplateFile, $sModuleRelativeDir);
-			}
-			else
-			{
-				$oDashboardDefinition = $oMenu->GetOptionalElement('definition');
-				if ($oDashboardDefinition == null)
-				{
-					throw(new DOMFormatException('Missing definition for Dashboard menu "'.$sMenuId.'" expecting either a tag "definition_file" or "definition".'));
-				}
-				$sFileName = strtolower(str_replace(array(':', '/', '\\', '*'), '_', $sMenuId)).'_dashboard.xml';
-				$sTemplateSpec = $this->PathToPHP($sFileName, $sModuleRelativeDir);
-
-				$oXMLDoc = new DOMDocument('1.0', 'UTF-8');
-				$oXMLDoc->formatOutput = true; // indent (must be loaded with option LIBXML_NOBLANKS)
-				$oXMLDoc->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
-
-				$oRootNode = $oXMLDoc->createElement('dashboard'); // make sure that the document is not empty
-				$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
-				$oXMLDoc->appendChild($oRootNode);
-				foreach ($oDashboardDefinition->childNodes as $oNode)
-				{
-					$oDefNode = $oXMLDoc->importNode($oNode, true); // layout, cells, etc Nodes and below
-					$oRootNode->appendChild($oDefNode);
-				}
-				$oXMLDoc->save($sTempTargetDir.'/'.$sModuleRelativeDir.'/'.$sFileName);
-			}
-			$sNewMenu = "new DashboardMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank {$sOptionalEnableParams});";
-			break;
-
-		case 'ShortcutContainerMenuNode':
-			$sNewMenu = "new ShortcutContainerMenuNode('$sMenuId', $sParentSpec, $fRank {$sOptionalEnableParams});";
-			break;
-
-		case 'OQLMenuNode':
-			$sOQL = self::QuoteForPHP($oMenu->GetChildText('oql'));
-			$bSearch = ($oMenu->GetChildText('do_search') == '1') ? 'true' : 'false';
-			$sSearchFormOpenXML = $oMenu->GetChildText('search_form_open');
-			switch($sSearchFormOpenXML)
-			{
-				case '1':
-				$sSearchFormOpen = 'true';
+				$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank {$sOptionalEnableParams});";
 				break;
-				
-				case '0':
-				$sSearchFormOpen = 'false';
+
+			case 'MenuGroup':
+				$oStyleNode = $oMenu->GetOptionalElement('style');
+				// Note: We use '' as the default value to ease the MenuGroup::__construct() call as we would have to make a different processing to not put the quotes around the parameter in case of null.
+				$sDecorationClasses = ($oStyleNode === null) ? '' : $oStyleNode->GetChildText('decoration_classes', '');
+
+				$sNewMenu = "new MenuGroup('$sMenuId', $fRank, '$sDecorationClasses' {$sOptionalEnableParams});";
 				break;
-				
-				default:
-				$sSearchFormOpen = 'true';
-			}
-			$sNewMenu = "new OQLMenuNode('$sMenuId', $sOQL, $sParentSpec, $fRank, $bSearch {$sOptionalEnableParams}, $sSearchFormOpen);";
-			break;
 
-		case 'NewObjectMenuNode':
-			$sClass = $oMenu->GetChildText('class');
-			$sNewMenu = "new NewObjectMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank {$sOptionalEnableParams});";
-			break;
-
-		case 'SearchMenuNode':
-			$sClass = $oMenu->GetChildText('class');
-			$sNewMenu = "new SearchMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank, null {$sOptionalEnableParams});";
-			break;
-
-		case 'TemplateMenuNode':
-			$sTemplateFile = $oMenu->GetChildText('template_file');
-			$sTemplateSpec = $this->PathToPHP($sTemplateFile, $sModuleRelativeDir);
-			$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank {$sOptionalEnableParams});";
-			break;
-
-		case 'MenuGroup':
-			$oStyleNode = $oMenu->GetOptionalElement('style');
-			// Note: We use '' as the default value to ease the MenuGroup::__construct() call as we would have to make a different processing to not put the quotes around the parameter in case of null.
-			$sDecorationClasses = ($oStyleNode === null) ? '' : $oStyleNode->GetChildText('decoration_classes', '');
-
-			$sNewMenu = "new MenuGroup('$sMenuId', $fRank, '$sDecorationClasses' {$sOptionalEnableParams});";
-			break;
-
-		default:
-			$sNewMenu = "new $sMenuClass('$sMenuId', $fRank {$sOptionalEnableParams});";
+			default:
+				$sNewMenu = "new $sMenuClass('$sMenuId', $fRank {$sOptionalEnableParams});";
 		}
 
-		$aPHPMenu = array("\$__comp_menus__['$sMenuId'] = $sNewMenu");
-		if ($sAutoReload = $oMenu->GetChildText('auto_reload'))
-		{
+		$aPHPMenu = ["\$__comp_menus__['$sMenuId'] = $sNewMenu"];
+		if ($sAutoReload = $oMenu->GetChildText('auto_reload')) {
 			$sAutoReload = self::QuoteForPHP($sAutoReload);
 			$aPHPMenu[] = "\$__comp_menus__['$sMenuId']->SetParameters(array('auto_reload' => $sAutoReload));";
 		}
@@ -2910,52 +2712,42 @@ CSS;
 	*/
 	protected function CumulateGrant(&$aGrants, $sKey, $bGrant)
 	{
-		if (isset($aGrants[$sKey]))
-		{
-			if (!$bGrant)
-			{
+		if (isset($aGrants[$sKey])) {
+			if (!$bGrant) {
 				$aGrants[$sKey] = false;
 			}
-		}
-		else
-		{
+		} else {
 			$aGrants[$sKey] = $bGrant;
 		}
 	}
 
 	protected function CompileUserRights($oUserRightsNode)
 	{
-		static $aActionsInShort = array(
+		static $aActionsInShort = [
 			'read' => 'r',
 			'bulk read' => 'br',
 			'write' => 'w',
 			'bulk write' => 'bw',
 			'delete' => 'd',
 			'bulk delete' => 'bd',
-		);
+		];
 
 		// Preliminary : create an index so that links will be taken into account implicitely
-		$aLinkToClasses = array();
+		$aLinkToClasses = [];
 		$oClasses = $this->oFactory->ListAllClasses();
-		foreach($oClasses as $oClass)
-		{
+		foreach ($oClasses as $oClass) {
 			$bIsLink = false;
 			$oProperties = $oClass->GetOptionalElement('properties');
-			if ($oProperties)
-			{
+			if ($oProperties) {
 				$bIsLink = (bool) $this->GetPropNumber($oProperties, 'is_link', 0);
 			}
-			if ($bIsLink)
-			{
-				foreach($this->oFactory->ListFields($oClass) as $oField)
-				{
+			if ($bIsLink) {
+				foreach ($this->oFactory->ListFields($oClass) as $oField) {
 					$sAttType = $oField->getAttribute('xsi:type');
-		
-					if (($sAttType == 'AttributeExternalKey') || ($sAttType == 'AttributeHierarchicalKey'))
-					{
+
+					if (($sAttType == 'AttributeExternalKey') || ($sAttType == 'AttributeHierarchicalKey')) {
 						$sOnTargetDel = $oField->GetChildText('on_target_delete');
-						if (($sOnTargetDel == 'DEL_AUTO') || ($sOnTargetDel == 'DEL_SILENT') || ($sOnTargetDel == 'DEL_NONE'))
-						{
+						if (($sOnTargetDel == 'DEL_AUTO') || ($sOnTargetDel == 'DEL_SILENT') || ($sOnTargetDel == 'DEL_NONE')) {
 							$sTargetClass = $oField->GetChildText('target_class');
 							$aLinkToClasses[$oClass->getAttribute('id')][] = $sTargetClass;
 						}
@@ -2966,17 +2758,15 @@ CSS;
 
 		// Groups
 		//
-		$aGroupClasses = array();
+		$aGroupClasses = [];
 		$oGroups = $oUserRightsNode->GetUniqueElement('groups');
-		foreach($oGroups->getElementsByTagName('group') as $oGroup)
-		{
+		foreach ($oGroups->getElementsByTagName('group') as $oGroup) {
 			$sGroupId = $oGroup->getAttribute("id");
 
-			$aClasses = array();
+			$aClasses = [];
 			$oClasses = $oGroup->GetUniqueElement('classes');
-			foreach($oClasses->getElementsByTagName('class') as $oClass)
-			{
-				
+			foreach ($oClasses->getElementsByTagName('class') as $oClass) {
+
 				$sClass = $oClass->getAttribute("id");
 				$aClasses[] = $sClass;
 
@@ -2989,65 +2779,52 @@ CSS;
 
 		// Profiles and grants
 		//
-		$aProfiles = array();
+		$aProfiles = [];
 		// Hardcode the administrator profile
-		$aProfiles[1] = array(
+		$aProfiles[1] = [
 			'name' => 'Administrator',
 			'description' => 'Has the rights on everything (bypassing any control)',
-		); 
+		];
 
-		$aGrants = array();
+		$aGrants = [];
 		$oProfiles = $oUserRightsNode->GetUniqueElement('profiles');
-		foreach($oProfiles->getElementsByTagName('profile') as $oProfile)
-		{
+		foreach ($oProfiles->getElementsByTagName('profile') as $oProfile) {
 			$iProfile = $oProfile->getAttribute("id");
 			$sName = $oProfile->GetChildText('name');
 			$sDescription = $oProfile->GetChildText('description');
 
 			$oGroups = $oProfile->GetUniqueElement('groups');
-			foreach($oGroups->getElementsByTagName('group') as $oGroup)
-			{
+			foreach ($oGroups->getElementsByTagName('group') as $oGroup) {
 				$sGroupId = $oGroup->getAttribute("id");
 
 				$oActions = $oGroup->GetUniqueElement('actions');
-				foreach($oActions->getElementsByTagName('action') as $oAction)
-				{
+				foreach ($oActions->getElementsByTagName('action') as $oAction) {
 					$sAction = $oAction->getAttribute("id");
-					if (strpos($sAction, 'action:') === 0)
-					{
+					if (strpos($sAction, 'action:') === 0) {
 						$sType = 'action';
 						$sActionCode = substr($sAction, strlen('action:'));
 						$sActionCode = $aActionsInShort[$sActionCode];
-					}
-					else
-					{
+					} else {
 						$sType = 'stimulus';
 						$sActionCode = substr($sAction, strlen('stimulus:'));
 					}
 					$sGrant = $oAction->GetText();
 					$bGrant = ($sGrant == 'allow');
-					
-					if ($sGroupId == '*')
-					{
-						$aGrantClasses = array('*');
-					}
-					else
-					{
+
+					if ($sGroupId == '*') {
+						$aGrantClasses = ['*'];
+					} else {
 						if (array_key_exists($sGroupId, $aGroupClasses) === false) {
 							SetupLog::Error("Profile \"$sName\" relies on group \"$sGroupId\" but it does not seem to be present in the DM yet (did you forgot a dependency in your module?)");
 						}
 
 						$aGrantClasses = $aGroupClasses[$sGroupId];
 					}
-					foreach ($aGrantClasses as $sClass)
-					{
-						if ($sType == 'stimulus')
-						{
+					foreach ($aGrantClasses as $sClass) {
+						if ($sType == 'stimulus') {
 							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'_s_'.$sActionCode, $bGrant);
 							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'+_s_'.$sActionCode, $bGrant); // subclasses inherit this grant
-						}
-						else
-						{
+						} else {
 							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'_'.$sActionCode, $bGrant);
 							$this->CumulateGrant($aGrants, $iProfile.'_'.$sClass.'+_'.$sActionCode, $bGrant); // subclasses inherit this grant
 						}
@@ -3055,10 +2832,10 @@ CSS;
 				}
 			}
 
-			$aProfiles[$iProfile] = array(
+			$aProfiles[$iProfile] = [
 				'name' => $sName,
 				'description' => $sDescription,
-			);
+			];
 		}
 
 		$sProfiles = var_export($aProfiles, true);
@@ -3216,24 +2993,22 @@ class ProfilesConfig
 }
 
 EOF;
-	return $sPHP;
+		return $sPHP;
 	} // function CompileUserRights
 
 	protected function CompileDictionaries($oDictionaries, $sTempTargetDir, $sFinalTargetDir)
 	{
-		$aLanguages = array();
-		foreach($oDictionaries as $oDictionaryNode)
-		{
+		$aLanguages = [];
+		foreach ($oDictionaries as $oDictionaryNode) {
 			$sLang = $oDictionaryNode->getAttribute('id');
 			$sEnglishLanguageDesc = $oDictionaryNode->GetChildText('english_description');
 			$sLocalizedLanguageDesc = $oDictionaryNode->GetChildText('localized_description');
-			$aLanguages[$sLang] = array('description' => $sEnglishLanguageDesc, 'localized_description' => $sLocalizedLanguageDesc);
+			$aLanguages[$sLang] = ['description' => $sEnglishLanguageDesc, 'localized_description' => $sLocalizedLanguageDesc];
 
-			$aEntriesPHP = array();
+			$aEntriesPHP = [];
 			$oEntries = $oDictionaryNode->GetUniqueElement('entries');
 			/** @var MFElement $oEntry */
-			foreach ($oEntries->getElementsByTagName('entry') as $oEntry)
-			{
+			foreach ($oEntries->getElementsByTagName('entry') as $oEntry) {
 				$sStringCode = $oEntry->getAttribute('id');
 				$sValue = $oEntry->GetText('');
 				$aEntriesPHP[] = "\t'$sStringCode' => ".self::QuoteForPHP(self::FilterDictString($sValue), true).",";
@@ -3266,15 +3041,14 @@ Dict::SetLanguagesList(
 $sLanguagesDump
 );
 EOF;
-		
+
 		file_put_contents($sLanguagesFile, $sLanguagesFileContent);
 	}
 
 	protected static function FilterDictString(string $s): string
 	{
-		if (strpos($s, '~') !== false)
-		{
-			return str_replace(array('~~', '~*'), '', $s);
+		if (strpos($s, '~') !== false) {
+			return str_replace(['~~', '~*'], '', $s);
 		}
 		return $s;
 	}
@@ -3293,17 +3067,14 @@ EOF;
 	protected function CompileFiles($oNode, $sTempTargetDir, $sFinalTargetDir, $sRelativePath)
 	{
 		$oFileRefs = $oNode->GetNodes(".//fileref");
-		foreach ($oFileRefs as $oFileRef)
-		{
+		foreach ($oFileRefs as $oFileRef) {
 			$sFileId = $oFileRef->getAttribute('ref');
-			if ($sFileId !== '')
-			{
+			if ($sFileId !== '') {
 				$oNodes = $this->oFactory->GetNodes("/itop_design/files/file[@id='$sFileId']");
-				if ($oNodes->length == 0)
-				{
+				if ($oNodes->length == 0) {
 					throw new DOMFormatException('Could not find the file with ref '.$sFileId);
 				}
-	
+
 				$sName = $oNodes->item(0)->GetChildText('name');
 				$sData = base64_decode($oNodes->item(0)->GetChildText('data'));
 				$aPathInfo = pathinfo($sName);
@@ -3311,19 +3082,17 @@ EOF;
 				$sFilePath = $sTempTargetDir.'/images/'.$sFile;
 				@mkdir($sTempTargetDir.'/images');
 				file_put_contents($sFilePath, $sData);
-				if (!file_exists($sFilePath))
-				{
+				if (!file_exists($sFilePath)) {
 					throw new Exception('Could not write icon file '.$sFilePath);
 				}
 				$oParentNode = $oFileRef->parentNode;
 				$oParentNode->removeChild($oFileRef);
-				
+
 				$oTextNode = $oParentNode->ownerDocument->createTextNode($sRelativePath.'/images/'.$sFile);
 				$oParentNode->appendChild($oTextNode);
 			}
 		}
 	}
-
 
 	/**
 	 * @param \MFElement $oBrandingNode
@@ -3339,12 +3108,11 @@ EOF;
 		$sIcon = trim($oBrandingNode->GetChildText($sNodeName) ?? '');
 		if (strlen($sIcon) > 0) {
 			$sSourceFile = $sTempTargetDir.'/'.$sIcon;
-			$aIconName=explode(".", $sIcon);
-			$sIconExtension=$aIconName[count($aIconName)-1];
+			$aIconName = explode(".", $sIcon);
+			$sIconExtension = $aIconName[count($aIconName) - 1];
 			$sTargetFile = '/branding/'.$sTargetFile.'.'.$sIconExtension;
 
-			if (!file_exists($sSourceFile))
-			{
+			if (!file_exists($sSourceFile)) {
 				throw new Exception("Branding $sNodeName: could not find the file $sIcon ($sSourceFile)");
 			}
 
@@ -3369,17 +3137,16 @@ EOF;
 		// Note: During compilation, we don't have access to "env-xxx", so we have to set several imports paths:
 		// - The CSS directory for the native imports (eg. "../css/css-variables.scss")
 		// - The SCSS from modules
-		$aImportsPaths = array(
+		$aImportsPaths = [
 			APPROOT.'css/',
 			APPROOT.'css/backoffice/main.scss',
 			$sTempTargetDir.'/',
-		);
+		];
 
 		// Build compiled themes folder
 		$sThemesRelDirPath = 'branding/themes/';
 		$sThemesAbsDirPath = $sTempTargetDir.$sThemesRelDirPath;
-		if(!is_dir($sThemesAbsDirPath))
-		{
+		if (!is_dir($sThemesAbsDirPath)) {
 			SetupUtils::builddir($sThemesAbsDirPath);
 		}
 
@@ -3392,21 +3159,21 @@ EOF;
 		// Parsing theme from common theme node
 		/** @var \MFElement $oThemesCommonNodes */
 		$oThemesCommonNodes = $oBrandingNode->GetUniqueElement('themes_common', false);
-		$aThemesCommonParameters = array(
-			'variables' => array(),
-			'variable_imports' => array(),
-			'utility_imports' => array(),
-			'stylesheets' => array(),
-		);
-		
-		if($oThemesCommonNodes !== null) {
+		$aThemesCommonParameters = [
+			'variables' => [],
+			'variable_imports' => [],
+			'utility_imports' => [],
+			'stylesheets' => [],
+		];
+
+		if ($oThemesCommonNodes !== null) {
 			/** @var \DOMNodeList $oThemesCommonVariables */
 			$oThemesCommonVariables = $oThemesCommonNodes->GetNodes('variables/variable');
 			foreach ($oThemesCommonVariables as $oVariable) {
 				$sVariableId = $oVariable->getAttribute('id');
 				$aThemesCommonParameters['variables'][$sVariableId] = $oVariable->GetText();
 			}
-	
+
 			/** @var \DOMNodeList $oThemesCommonImports */
 			$oThemesCommonImports = $oThemesCommonNodes->GetNodes('imports/import');
 			foreach ($oThemesCommonImports as $oImport) {
@@ -3420,7 +3187,7 @@ EOF;
 					SetupLog::Warning('CompileThemes: Theme common has an import (#'.$sImportId.') without explicit xsi:type, it will be ignored. Check Datamodel XML Reference to fix it.');
 				}
 			}
-	
+
 			// Stylesheets
 			// - Manually added in the XML
 			/** @var \DOMNodeList $oThemesCommonStylesheets */
@@ -3432,18 +3199,17 @@ EOF;
 		}
 
 		// Parsing themes from DM
-		$aThemes = array();
+		$aThemes = [];
 		/** @var \DOMNodeList $oThemeNodes */
 		$oThemeNodes = $oBrandingNode->GetNodes('themes/theme');
-		foreach($oThemeNodes as $oTheme)
-		{
+		foreach ($oThemeNodes as $oTheme) {
 			$sThemeId = $oTheme->getAttribute('id');
-			$aThemeParameters = array(
-				'variables' => array(),
-				'variable_imports' => array(),
-				'utility_imports' => array(),
-				'stylesheets' => array(),
-			);
+			$aThemeParameters = [
+				'variables' => [],
+				'variable_imports' => [],
+				'utility_imports' => [],
+				'stylesheets' => [],
+			];
 
 			/** @var \DOMNodeList $oVariables */
 			$oVariables = $oTheme->GetNodes('variables/variable');
@@ -3470,8 +3236,7 @@ EOF;
 			// - Manually added in the XML
 			/** @var \DOMNodeList $oStylesheets */
 			$oStylesheets = $oTheme->GetNodes('stylesheets/stylesheet');
-			foreach($oStylesheets as $oStylesheet)
-			{
+			foreach ($oStylesheets as $oStylesheet) {
 				$sStylesheetId = $oStylesheet->getAttribute('id');
 				$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
 			}
@@ -3481,11 +3246,11 @@ EOF;
 
 			// - Overload default values with module ones
 			foreach ($aThemeParameters as $sThemeParameterName => $aThemeParameter) {
-				if(array_key_exists($sThemeParameterName, $aThemesCommonParameters)){
+				if (array_key_exists($sThemeParameterName, $aThemesCommonParameters)) {
 					$aThemeParameters[$sThemeParameterName] = array_merge($aThemeParameter, $aThemesCommonParameters[$sThemeParameterName]);
 				}
 			}
-			
+
 			$aThemes[$sThemeId] = [
 				'theme_parameters' => $aThemeParameters,
 				'precompiled_stylesheet' => $oTheme->GetChildText('precompiled_stylesheet', ''),
@@ -3493,36 +3258,33 @@ EOF;
 		}
 
 		// Force to have a default theme if none in the DM
-		if(empty($aThemes))
-		{
+		if (empty($aThemes)) {
 			$aDefaultThemeInfo = ThemeHandler::GetDefaultThemeInformation();
 			$aDefaultThemeInfo['parameters']['stylesheets'][$sDmStylesheetId] = $sThemesRelDirPath.$sDmStylesheetFilename;
 			$aThemes[$aDefaultThemeInfo['name']] = $aDefaultThemeInfo['parameters'];
 		}
 
-		$sPostCompilationPrecompiledThemeFolder = APPROOT . self::DATA_PRECOMPILED_FOLDER;
-		if (! is_dir($sPostCompilationPrecompiledThemeFolder)){
+		$sPostCompilationPrecompiledThemeFolder = APPROOT.self::DATA_PRECOMPILED_FOLDER;
+		if (! is_dir($sPostCompilationPrecompiledThemeFolder)) {
 			mkdir($sPostCompilationPrecompiledThemeFolder);
 		}
 
 		// Compile themes
 		$fStart = microtime(true);
-		foreach($aThemes as $sThemeId => $aThemeInfos)
-		{
+		foreach ($aThemes as $sThemeId => $aThemeInfos) {
 			$aThemeParameters = $aThemeInfos['theme_parameters'];
 			$sPrecompiledStylesheet = $aThemeInfos['precompiled_stylesheet'];
 
 			$sThemeDir = $sThemesAbsDirPath.$sThemeId;
-			if(!is_dir($sThemeDir))
-			{
+			if (!is_dir($sThemeDir)) {
 				SetupUtils::builddir($sThemeDir);
 			}
 
 			// Check if a precompiled version of the theme is supplied
-			$sPostCompilationLatestPrecompiledFile = $sPostCompilationPrecompiledThemeFolder . $sThemeId . ".css";
+			$sPostCompilationLatestPrecompiledFile = $sPostCompilationPrecompiledThemeFolder.$sThemeId.".css";
 
 			$sPrecompiledFileToUse = $this->UseLatestPrecompiledFile($sTempTargetDir, $sPrecompiledStylesheet, $sPostCompilationLatestPrecompiledFile, $sThemeId);
-			if ($sPrecompiledFileToUse != null){
+			if ($sPrecompiledFileToUse != null) {
 				copy($sPrecompiledFileToUse, $sThemeDir.'/main.css');
 				// Make sure that the copy of the precompiled file is older than any other files to force a validation of the signature
 				touch($sThemeDir.'/main.css', 1577836800 /* 2020-01-01 00:00:00 */);
@@ -3534,7 +3296,7 @@ EOF;
 			$bHasCompiled = static::$oThemeHandlerService->CompileTheme($sThemeId, true, $this->sCompilationTimeStamp, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
 
 			if ($bHasCompiled) {
-				if (utils::GetConfig()->Get('theme.enable_precompilation')){
+				if (utils::GetConfig()->Get('theme.enable_precompilation')) {
 					/*if (utils::IsDevelopmentEnvironment() && ! empty(trim($sPrecompiledStylesheet)))  //N°4438 - Disable (temporary) copy of precompiled stylesheets after setup
 					{ //help developers to detect & push theme precompilation changes
 						$sInitialPrecompiledFilePath = null;
@@ -3562,10 +3324,11 @@ EOF;
 				SetupLog::Info("No theme '$sThemeId' compilation was required during setup.");
 			}
 		}
-		$this->Log(sprintf('Themes compilation took: %.3f ms for %d themes.', (microtime(true) - $fStart)*1000.0, count($aThemes)));
+		$this->Log(sprintf('Themes compilation took: %.3f ms for %d themes.', (microtime(true) - $fStart) * 1000.0, count($aThemes)));
 	}
 
-	public static function SetThemeHandlerService(ThemeHandlerService $oThemeHandlerService): void {
+	public static function SetThemeHandlerService(ThemeHandlerService $oThemeHandlerService): void
+	{
 		self::$oThemeHandlerService = $oThemeHandlerService;
 	}
 
@@ -3579,35 +3342,36 @@ EOF;
 	 *
 	 * @return string : file path of latest precompiled file to use for setup
 	 */
-	public function UseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeId) : ?string {
+	public function UseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeId): ?string
+	{
 		if (! utils::GetConfig()->Get('theme.enable_precompilation')) {
 			return null;
 		}
 
 		$bDataXmlPrecompiledFileExists = false;
 		clearstatcache();
-		if (!empty($sPrecompiledFileUri)){
-			$sDataXmlProvidedPrecompiledFile = $sTempTargetDir . DIRECTORY_SEPARATOR . $sPrecompiledFileUri;
+		if (!empty($sPrecompiledFileUri)) {
+			$sDataXmlProvidedPrecompiledFile = $sTempTargetDir.DIRECTORY_SEPARATOR.$sPrecompiledFileUri;
 			$bDataXmlPrecompiledFileExists = file_exists($sDataXmlProvidedPrecompiledFile) ;
-			if (!$bDataXmlPrecompiledFileExists){
+			if (!$bDataXmlPrecompiledFileExists) {
 				SetupLog::Warning("Missing defined theme '$sThemeId' precompiled file configured with: '$sPrecompiledFileUri'");
 			} else {
-				$sSourceDir = APPROOT . utils::GetConfig()->Get('source_dir');
+				$sSourceDir = APPROOT.utils::GetConfig()->Get('source_dir');
 
 				$aDirToCheck = [
 					$sSourceDir,
-					APPROOT . DIRECTORY_SEPARATOR . 'extensions/',
+					APPROOT.DIRECTORY_SEPARATOR.'extensions/',
 				];
 
 				$iDataXmlFileLastModified = 0;
-				foreach ($aDirToCheck as $sDir){
-					$sCurrentFile = $sDir . DIRECTORY_SEPARATOR . $sPrecompiledFileUri;
-					if (is_file($sCurrentFile)){
+				foreach ($aDirToCheck as $sDir) {
+					$sCurrentFile = $sDir.DIRECTORY_SEPARATOR.$sPrecompiledFileUri;
+					if (is_file($sCurrentFile)) {
 						$iDataXmlFileLastModified = max($iDataXmlFileLastModified, @filemtime($sCurrentFile));
 					}
 				}
 
-				if ($iDataXmlFileLastModified == 0){
+				if ($iDataXmlFileLastModified == 0) {
 					SetupLog::Warning("Missing defined theme '$sThemeId' precompiled file in datamodels/X.x or extensions directory configured with: '$sPrecompiledFileUri'. That should not happen!");
 					$bDataXmlPrecompiledFileExists = false;
 				}
@@ -3617,17 +3381,17 @@ EOF;
 
 		$bPostCompilationPrecompiledFileExists = file_exists($sPostCompilationLatestPrecompiledFile);
 
-		if (!$bDataXmlPrecompiledFileExists && !$bPostCompilationPrecompiledFileExists){
+		if (!$bDataXmlPrecompiledFileExists && !$bPostCompilationPrecompiledFileExists) {
 			return null;
 		}
 
-		if (!$bDataXmlPrecompiledFileExists){
+		if (!$bDataXmlPrecompiledFileExists) {
 			$sPrecompiledFileToUse = $sPostCompilationLatestPrecompiledFile;
-		} else if (!$bPostCompilationPrecompiledFileExists){
+		} elseif (!$bPostCompilationPrecompiledFileExists) {
 			$sPrecompiledFileToUse = $sDataXmlProvidedPrecompiledFile;
-		} else{
+		} else {
 			$iPostCompilationFileLastModified = @filemtime($sPostCompilationLatestPrecompiledFile);
-			SetupLog::Debug("Theme '$sThemeId' check mtime between data XML file " . $iDataXmlFileLastModified . " and latest postcompilation file: " . $iPostCompilationFileLastModified);
+			SetupLog::Debug("Theme '$sThemeId' check mtime between data XML file ".$iDataXmlFileLastModified." and latest postcompilation file: ".$iPostCompilationFileLastModified);
 
 			$sPrecompiledFileToUse = $iDataXmlFileLastModified > $iPostCompilationFileLastModified ? $sDataXmlProvidedPrecompiledFile : $sPostCompilationLatestPrecompiledFile;
 		}
@@ -3648,21 +3412,20 @@ EOF;
 	{
 		// Enable relative paths
 		SetupUtils::builddir($sTempTargetDir.'/branding');
-		if ($oBrandingNode)
-		{
+		if ($oBrandingNode) {
 			// Transform file refs into files in the images folder
 			$this->CompileFiles($oBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
 			$aDataBranding = [];
 
-				$aLogosToCompile = [
-					['sNodeName' => 'login_logo', 'sTargetFile' => 'login-logo', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_LOGO],
-					['sNodeName' => 'main_logo', 'sTargetFile' => 'main-logo-full', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL],
-					['sNodeName' => 'main_logo_compact', 'sTargetFile' => 'main-logo-compact', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT],
-					['sNodeName' => 'portal_logo', 'sTargetFile' => 'portal-logo', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_LOGO],
-					['sNodeName' => 'login_favicon', 'sTargetFile' => 'login_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_FAVICON],
-					['sNodeName' => 'main_favicon', 'sTargetFile' => 'main_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_FAVICON],
-					['sNodeName' => 'portal_favicon', 'sTargetFile' => 'portal_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_FAVICON],
-				];
+			$aLogosToCompile = [
+				['sNodeName' => 'login_logo', 'sTargetFile' => 'login-logo', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_LOGO],
+				['sNodeName' => 'main_logo', 'sTargetFile' => 'main-logo-full', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL],
+				['sNodeName' => 'main_logo_compact', 'sTargetFile' => 'main-logo-compact', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT],
+				['sNodeName' => 'portal_logo', 'sTargetFile' => 'portal-logo', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_LOGO],
+				['sNodeName' => 'login_favicon', 'sTargetFile' => 'login_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_FAVICON],
+				['sNodeName' => 'main_favicon', 'sTargetFile' => 'main_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_FAVICON],
+				['sNodeName' => 'portal_favicon', 'sTargetFile' => 'portal_favicon', 'sType' => Branding::ENUM_LOGO_TYPE_PORTAL_FAVICON],
+			];
 			foreach ($aLogosToCompile as $aLogo) {
 				$sLogo = $this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $aLogo['sNodeName'], $aLogo['sTargetFile']);
 				if ($sLogo != null) {
@@ -3678,12 +3441,11 @@ EOF;
 			file_put_contents($sWorkingPath.'/branding/logos.json', json_encode($aDataBranding));
 
 			// Cleanup the images directory (eventually made by CompileFiles)
-			if (file_exists($sTempTargetDir.'/branding/images'))
-			{
+			if (file_exists($sTempTargetDir.'/branding/images')) {
 				SetupUtils::rrmdir($sTempTargetDir.'/branding/images');
 			}
 
-			// Compile themes 
+			// Compile themes
 			$this->CompileThemes($oBrandingNode, $sTempTargetDir);
 		}
 	}
@@ -3695,40 +3457,34 @@ EOF;
 	 */
 	protected function CompilePortals($oPortalsNode, $sTempTargetDir, $sFinalTargetDir)
 	{
-		if ($oPortalsNode)
-		{
+		if ($oPortalsNode) {
 			// Create some static PHP data in <env-xxx>/core/main.php
 			$oPortals = $oPortalsNode->GetNodes('portal');
-			$aPortalsConfig = array();
-			foreach($oPortals as $oPortal)
-			{
+			$aPortalsConfig = [];
+			foreach ($oPortals as $oPortal) {
 				$sPortalId = $oPortal->getAttribute('id');
-				$aPortalsConfig[$sPortalId] = array();
+				$aPortalsConfig[$sPortalId] = [];
 				$aPortalsConfig[$sPortalId]['rank'] = (float)$oPortal->GetChildText('rank', 0);
 				$aPortalsConfig[$sPortalId]['handler']  = $oPortal->GetChildText('handler', 'PortalDispatcher');
 				$aPortalsConfig[$sPortalId]['url']  = $oPortal->GetChildText('url', 'portal/index.php');
 				$oAllow = $oPortal->GetOptionalElement('allow');
-				$aPortalsConfig[$sPortalId]['allow'] = array();
-				if ($oAllow)
-				{
-					foreach($oAllow->GetNodes('profile') as $oProfile)
-					{
+				$aPortalsConfig[$sPortalId]['allow'] = [];
+				if ($oAllow) {
+					foreach ($oAllow->GetNodes('profile') as $oProfile) {
 						$aPortalsConfig[$sPortalId]['allow'][] = $oProfile->getAttribute('id');
 					}
 				}
 				$oDeny = $oPortal->GetOptionalElement('deny');
-				$aPortalsConfig[$sPortalId]['deny'] = array();
-				if ($oDeny)
-				{
-					foreach($oDeny->GetNodes('profile') as $oProfile)
-					{
+				$aPortalsConfig[$sPortalId]['deny'] = [];
+				if ($oDeny) {
+					foreach ($oDeny->GetNodes('profile') as $oProfile) {
 						$aPortalsConfig[$sPortalId]['deny'][] = $oProfile->getAttribute('id');
 					}
-				}	
+				}
 			}
-			
-			uasort($aPortalsConfig, array(get_class($this), 'SortOnRank'));
-			
+
+			uasort($aPortalsConfig, [get_class($this), 'SortOnRank']);
+
 			$this->sMainPHPCode .= "\n";
 			$this->sMainPHPCode .= "/**\n";
 			$this->sMainPHPCode .= " * Portal(s) definition(s) extracted from the XML definition at compile time\n";
@@ -3760,18 +3516,16 @@ EOF;
 	 */
 	protected function CompileParameters($oParametersNode, $sTempTargetDir, $sFinalTargetDir)
 	{
-		if ($oParametersNode)
-		{
+		if ($oParametersNode) {
 			// Create some static PHP data in <env-xxx>/core/main.php
 			$oParameters = $oParametersNode->GetNodes('parameters');
-			$aParametersConfig = array();
-			foreach($oParameters as $oParams)
-			{
+			$aParametersConfig = [];
+			foreach ($oParameters as $oParams) {
 				$sModuleId = $oParams->getAttribute('id');
 				$oParamsReader = new MFParameters($oParams);
 				$aParametersConfig[$sModuleId] = $oParamsReader->GetAll();
 			}
-			
+
 			$this->sMainPHPCode .= "\n";
 			$this->sMainPHPCode .= "/**\n";
 			$this->sMainPHPCode .= " * Modules parameters extracted from the XML definition at compile time\n";
@@ -3799,12 +3553,10 @@ EOF;
 	 */
 	protected function CompileModuleDesigns($oDesigns, $sTempTargetDir, $sFinalTargetDir)
 	{
-		if ($oDesigns)
-		{
+		if ($oDesigns) {
 			SetupUtils::builddir($sTempTargetDir.'/core/module_designs/images');
 			$this->CompileFiles($oDesigns, $sTempTargetDir.'/core/module_designs', $sFinalTargetDir.'/core/module_designs', 'core/module_designs');
-			foreach ($oDesigns->GetNodes('module_design') as $oDesign)
-			{
+			foreach ($oDesigns->GetNodes('module_design') as $oDesign) {
 				$oDoc = new ModuleDesign();
 				$oClone = $oDoc->importNode($oDesign->cloneNode(true), true);
 				$oDoc->appendChild($oClone);
@@ -3819,58 +3571,44 @@ EOF;
 	protected function LoadSnippets()
 	{
 		$oSnippets = $this->oFactory->GetNodes('/itop_design/snippets/snippet');
-		foreach($oSnippets as $oSnippet)
-		{
+		foreach ($oSnippets as $oSnippet) {
 			$sSnippetId = $oSnippet->getAttribute('id');
 			$sPlacement = $oSnippet->GetChildText('placement', null);
-			if ($sPlacement == 'core')
-			{
+			if ($sPlacement == 'core') {
 				$sModuleId = '_core_';
-			}
-			else if ($sPlacement == 'module')
-			{
+			} elseif ($sPlacement == 'module') {
 				$sModuleId = $oSnippet->GetChildText('module', null);
-				if ($sModuleId == null)
-				{
+				if ($sModuleId == null) {
 					throw new DOMFormatException("Invalid definition for snippet id='$sSnippetId' with placement=module. Missing '<module>' tag.");
 				}
-			}
-			else if ($sPlacement === 'null')
-			{
+			} elseif ($sPlacement === 'null') {
 				throw new DOMFormatException("Invalid definition for snippet id='$sSnippetId'. Missing <placement> tag.");
-			}
-			else
-			{
+			} else {
 				throw new DOMFormatException("Invalid definition for snippet id='$sSnippetId'. Incorrect value '$sPlacement' for <placement> tag. The allowed values are either 'core' or 'module'.");
 			}
-			if (!array_key_exists($sModuleId, $this->aSnippets))
-			{
-				$this->aSnippets[$sModuleId] = array('before' => array(), 'after' => array());
+			if (!array_key_exists($sModuleId, $this->aSnippets)) {
+				$this->aSnippets[$sModuleId] = ['before' => [], 'after' => []];
 			}
 
 			$fOrder = (float) $oSnippet->GetChildText('rank', 0);
 			$sContent = $oSnippet->GetChildText('content', '');
-			if ($fOrder < 0)
-			{
-				$this->aSnippets[$sModuleId]['before'][] = array(
+			if ($fOrder < 0) {
+				$this->aSnippets[$sModuleId]['before'][] = [
 					'rank' => $fOrder,
 					'content' => $sContent,
 					'snippet_id' => $sSnippetId,
-				);
-			}
-			else
-			{
-				$this->aSnippets[$sModuleId]['after'][] = array(
+				];
+			} else {
+				$this->aSnippets[$sModuleId]['after'][] = [
 					'rank' => $fOrder,
 					'content' => $sContent,
 					'snippet_id' => $sSnippetId,
-				);
+				];
 			}
 		}
-		foreach($this->aSnippets as $sModuleId => $void)
-		{
-			uasort($this->aSnippets[$sModuleId]['before'], array(get_class($this), 'SortOnRank'));
-			uasort($this->aSnippets[$sModuleId]['after'], array(get_class($this), 'SortOnRank'));
+		foreach ($this->aSnippets as $sModuleId => $void) {
+			uasort($this->aSnippets[$sModuleId]['before'], [get_class($this), 'SortOnRank']);
+			uasort($this->aSnippets[$sModuleId]['after'], [get_class($this), 'SortOnRank']);
 		}
 	}
 
@@ -3922,14 +3660,14 @@ EOF;
 				$sContext = '["'.implode('", "', $aContexts).'"]';
 			}
 
-			$aEventListeners[] = array(
+			$aEventListeners[] = [
 				'event_name' => $sEventName,
 				'callback'   => $sCallback,
 				'content'    => $sCallbackFct,
 				'rank'   => $fRank,
 				'source'     => $sEventSource,
 				'context'    => $sContext,
-			);
+			];
 		}
 
 		if (empty($aEventListeners)) {
@@ -3960,13 +3698,13 @@ $sRegister
 PHP;
 
 		$fOrder = 0;
-		$this->aSnippets[$sModuleId]['after'][] = array(
+		$this->aSnippets[$sModuleId]['after'][] = [
 			'rank'       => $fOrder,
 			'content'    => $sContent,
 			'snippet_id' => $sClassName,
-		);
+		];
 		foreach ($this->aSnippets as $sModuleId => $void) {
-			uasort($this->aSnippets[$sModuleId]['after'], array(get_class($this), 'SortOnRank'));
+			uasort($this->aSnippets[$sModuleId]['after'], [get_class($this), 'SortOnRank']);
 		}
 	}
 
@@ -4000,7 +3738,6 @@ PHP;
 
 		return $aDefinition;
 	}
-
 
 	/**
 	 * @throws \DOMFormatException
@@ -4068,7 +3805,6 @@ PHP;
 		return $this->aDynamicAttributeDefinitions[$sAttributeName]['properties'];
 	}
 
-
 	/**
 	 * We can't use var_export() as we need to output some PHP code, for example `utils::GetAbsoluteUrlModulesRoot()` calls
 	 *
@@ -4078,9 +3814,8 @@ PHP;
 	 */
 	private function GetAssociativeArrayAsPhpCode($aAssocArray)
 	{
-		$aArrayPhp = array();
-		foreach ($aAssocArray as $sKey => $sPHPValue)
-		{
+		$aArrayPhp = [];
+		foreach ($aAssocArray as $sKey => $sPHPValue) {
 			$aArrayPhp[] = "			'$sKey' => $sPHPValue,";
 		}
 		$sArrayPhp = implode("\n", $aArrayPhp);
@@ -4113,17 +3848,13 @@ PHP;
 	) {
 		$sPHP = "\n\n$sCodeComment\n";
 
-		foreach ($aRequiredFiles as $sIncludeFile)
-		{
+		foreach ($aRequiredFiles as $sIncludeFile) {
 			$sPHP .= "\nrequire_once('$sIncludeFile');\n";
 		}
 
-		if ($bIsAbstractClass)
-		{
+		if ($bIsAbstractClass) {
 			$sPHP .= 'abstract class '.$sClassName;
-		}
-		else
-		{
+		} else {
 			$sPHP .= 'class '.$sClassName;
 		}
 		$sPHP .= " extends $sParentClassName\n";
@@ -4155,8 +3886,8 @@ EOF;
 	private function GeneratePhpCodeForZlist(string $sListCode, DOMNode $oListNode): string
 	{
 		$aAttributes = $oListNode->GetNodeAsArrayOfItems();
-		if(!is_array($aAttributes)) {
-			$aAttributes = array();
+		if (!is_array($aAttributes)) {
+			$aAttributes = [];
 		}
 		$this->ArrayOfItemsToZList($aAttributes);
 
@@ -4185,13 +3916,11 @@ EOF;
 	 */
 	protected function WriteFile($sFilename, $sContent, $flags = null)
 	{
-		if (is_file($sFilename) || is_link($sFilename))
-		{
+		if (is_file($sFilename) || is_link($sFilename)) {
 			@unlink($sFilename);
 		}
 		$ret = file_put_contents($sFilename, $sContent, $flags ?? 0);
-		if ($ret === false)
-		{
+		if ($ret === false) {
 			$iLen = strlen($sContent);
 			$fFree = @disk_free_space(dirname($sFilename));
 			$aErr = error_get_last();
@@ -4305,15 +4034,11 @@ XML;
 	 */
 	protected function WritePHPFile($sResultFile, $sModuleName, $sModuleVersion, $sCompiledCode)
 	{
-		if (is_file($sResultFile))
-		{
+		if (is_file($sResultFile)) {
 			$this->Log("Updating $sResultFile for module $sModuleName in version $sModuleVersion");
-		}
-		else
-		{
+		} else {
 			$sResultDir = dirname($sResultFile);
-			if (!is_dir($sResultDir))
-			{
+			if (!is_dir($sResultDir)) {
 				$this->Log("Creating directory $sResultDir");
 				mkdir($sResultDir, 0777, true);
 			}
@@ -4346,8 +4071,7 @@ EOF;
 
 	private static function RemoveSurroundingQuotes($sValue)
 	{
-		if (utils::StartsWith($sValue, '\'') && utils::EndsWith($sValue, '\''))
-		{
+		if (utils::StartsWith($sValue, '\'') && utils::EndsWith($sValue, '\'')) {
 			$sValue = substr($sValue, 1, -1);
 		}
 

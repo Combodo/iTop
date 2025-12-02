@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => 'Helpdesk',
 	'Menu:RequestManagementProvider' => 'Поставщик техподдержки',
@@ -46,7 +47,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:UserRequest:MyWorkOrders+' => 'Назначенные мне наряды на работу',
 	'Class:Problem:KnownProblemList' => 'Известные проблемы',
 	'Tickets:Related:OpenIncidents' => 'Открытые инциденты',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -62,7 +63,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Class: UserRequest
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:UserRequest' => 'Запрос',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Статус',
@@ -256,10 +257,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Ждать утверждения',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Невозможно назначить этот же запрос в качестве родительского',
-));
+]);
 
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Portal:TitleDetailsFor_Request' => 'Детали запроса',
 	'Portal:ButtonUpdate' => 'Обновить',
 	'Portal:ButtonClose' => 'Закрыть',
@@ -284,11 +284,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Выберите язык',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Каскадное решение дочерних запросов (ev_autoresolve) с установкой следующих параметров: услуга, команда, агент, информация о решении.',
-));
+]);
 
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Organization:Overview:UserRequests' => 'Запросы пользователей этой организации',
 	'Organization:Overview:MyUserRequests' => 'Мои запросы пользователей этой организации',
 	'Organization:Overview:Tickets' => 'Тикеты этой организации',
-));
+]);

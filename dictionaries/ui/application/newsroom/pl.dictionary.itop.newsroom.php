@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SARL
  *
@@ -16,7 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI:Newsroom:iTopNotification:Label' => ITOP_APPLICATION_SHORT,
 	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Twoje wiadomości '.ITOP_APPLICATION_SHORT,
 	'UI:Newsroom:iTopNotification:ViewAllPage:SubTitle' => 'Zarządzaj swoimi wiadomościami, oznaczaj je jako przeczytane lub nieprzeczytane, usuwaj je itp.',
@@ -58,4 +59,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message' => 'Brak wiadomości do usunięcia',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message' => 'Wiadomość została usunięta',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteMultiple:Success:Message' => '%1$s wiadomości zostało usuniętych',
-));
+]);

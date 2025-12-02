@@ -10,7 +10,6 @@ use MFElement;
 use ModelFactory;
 use PHPUnit\Framework\ExpectationFailedException;
 
-
 /**
  * Class ModelFactoryTest
  *
@@ -678,8 +677,7 @@ class ModelFactoryTest extends ItopTestCase
 		$oDeltaRoot = $oDocument->firstChild;
 		try {
 			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument);
-		}
-		catch (\Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertNull($sExpectedXML, 'LoadDelta() should not have failed with exception: '.$e->getMessage());
 			$this->assertEquals($sExpectedXMLOrErrorMessage, $e->getMessage());
 			return;
@@ -2202,7 +2200,9 @@ XML
 	 */
 	public function AlterationAPIsProvider()
 	{
-		define('CASE_NO_FLAG', <<<XML
+		define(
+			'CASE_NO_FLAG',
+			<<<XML
 <root_tag>
 	<container_tag>
 		<target_tag/>
@@ -2210,7 +2210,9 @@ XML
 </root_tag>
 XML
 		);
-		define('CASE_ABOVE_A_FLAG', <<<XML
+		define(
+			'CASE_ABOVE_A_FLAG',
+			<<<XML
 <root_tag>
 	<container_tag>
 		<target_tag>
@@ -2220,7 +2222,9 @@ XML
 </root_tag>
 XML
 		);
-		define('CASE_IN_A_DEFINITION', <<<XML
+		define(
+			'CASE_IN_A_DEFINITION',
+			<<<XML
 <root_tag>
 	<container_tag _alteration="added">
 		<target_tag>
@@ -2230,7 +2234,9 @@ XML
 </root_tag>
 XML
 		);
-		define('CASE_FLAG_ON_TARGET_define', <<<XML
+		define(
+			'CASE_FLAG_ON_TARGET_define',
+			<<<XML
 <root_tag>
 	<container_tag>
 		<target_tag _alteration="added"/>
@@ -2238,7 +2244,9 @@ XML
 </root_tag>
 XML
 		);
-		define('CASE_FLAG_ON_TARGET_redefine', <<<XML
+		define(
+			'CASE_FLAG_ON_TARGET_redefine',
+			<<<XML
 <root_tag>
 	<container_tag>
 		<target_tag _alteration="replaced"/>
@@ -2246,7 +2254,9 @@ XML
 </root_tag>
 XML
 		);
-		define('CASE_FLAG_ON_TARGET_needed', <<<XML
+		define(
+			'CASE_FLAG_ON_TARGET_needed',
+			<<<XML
 <root_tag>
 	<container_tag>
 		<target_tag _alteration="needed"/>
@@ -2254,7 +2264,9 @@ XML
 </root_tag>
 XML
 		);
-		define('CASE_FLAG_ON_TARGET_forced', <<<XML
+		define(
+			'CASE_FLAG_ON_TARGET_forced',
+			<<<XML
 <root_tag>
 	<container_tag>
 		<target_tag _alteration="forced"/>
@@ -2262,7 +2274,9 @@ XML
 </root_tag>
 XML
 		);
-		define('CASE_FLAG_ON_TARGET_removed', <<<XML
+		define(
+			'CASE_FLAG_ON_TARGET_removed',
+			<<<XML
 <root_tag>
 	<container_tag>
 		<target_tag _alteration="removed"/>
@@ -2270,7 +2284,9 @@ XML
 </root_tag>
 XML
 		);
-		define('CASE_FLAG_ON_TARGET_old_id', <<<XML
+		define(
+			'CASE_FLAG_ON_TARGET_old_id',
+			<<<XML
 <root_tag>
 	<container_tag>
 		<target_tag id="fraise" _old_id="tagada"/>
@@ -2278,7 +2294,9 @@ XML
 </root_tag>
 XML
 		);
-		define('CASE_MISSING_TARGET', <<<XML
+		define(
+			'CASE_MISSING_TARGET',
+			<<<XML
 <root_tag>
 	<container_tag/>
 </root_tag>
@@ -3066,7 +3084,7 @@ XML
 			$oNode->setAttribute('id', $sClassName);
 			$oNode->setAttribute('_created_in', $sModuleName);
 			$oDoc = $oNode->ownerDocument;
-			foreach (array('properties', 'fields', 'methods', 'presentation') as $sElementName) {
+			foreach (['properties', 'fields', 'methods', 'presentation'] as $sElementName) {
 				$oElement = $oDoc->createElement($sElementName);
 				$oNode->appendChild($oElement);
 			}
@@ -3180,7 +3198,6 @@ XML
 		$aDiff = array_diff($aExpectedClasses, $aFoundClasses);
 		$this->assertCount(0, $aDiff);
 	}
-
 
 	/**
 	 * @test
@@ -3423,11 +3440,9 @@ XML
 			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument, ModelFactory::LOAD_DELTA_MODE_LAX);
 			$this->assertNotNull($sExpectedXML, "LoadDelta(lax) should  have failed with exception: $sExpectedXMLInLaxMode");
 			$this->AssertEqualModels($sExpectedXML, $oFactory, 'LoadDelta(lax) did not produce the expected result');
-		}
-		catch (ExpectationFailedException $e) {
+		} catch (ExpectationFailedException $e) {
 			throw $e;
-		}
-		catch (\Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertNull($sExpectedXML, 'LoadDelta(lax) should not have failed with exception: '.$e->getMessage());
 			$this->assertEquals($sExpectedXMLInLaxMode, $e->getMessage());
 		}
@@ -3448,11 +3463,9 @@ XML
 			$oFactory->LoadDelta($oDeltaRoot, $oFactoryDocument, ModelFactory::LOAD_DELTA_MODE_STRICT);
 			$this->assertNotNull($sExpectedXML, "LoadDelta(lax) should  have failed with exception: $sExpectedXMLInStrictMode");
 			$this->AssertEqualModels($sExpectedXML, $oFactory, 'LoadDelta(strict) did not produce the expected result');
-		}
-		catch (ExpectationFailedException $e) {
+		} catch (ExpectationFailedException $e) {
 			throw $e;
-		}
-		catch (\Exception $e) {
+		} catch (\Exception $e) {
 			$this->assertNull($sExpectedXML, 'LoadDelta(strict) should not have failed with exception: '.$e->getMessage());
 			$this->assertEquals($sExpectedXMLInStrictMode, $e->getMessage());
 		}
@@ -3672,10 +3685,12 @@ XML
 		];
 	}
 
-	public function testDictEntryIsIntegratedIntoMF() {
+	public function testDictEntryIsIntegratedIntoMF()
+	{
 		$oFactory = new ModelFactory([]);
 		$sLanguageCode = 'RU URSS';
-		$oFactory->IntegrateDictEntriesIntoXML($sLanguageCode,
+		$oFactory->IntegrateDictEntriesIntoXML(
+			$sLanguageCode,
 			[
 				'english_description'   => 'Russian',
 				'localized_description' => 'URSS',
@@ -3686,7 +3701,8 @@ XML
 		);
 		$this->assertDictEntryUniqueAndEquals($oFactory, $sLanguageCode, 'key1', 'Label 1', 'New entry in new language should be present in XML');
 
-		$oFactory->IntegrateDictEntriesIntoXML($sLanguageCode,
+		$oFactory->IntegrateDictEntriesIntoXML(
+			$sLanguageCode,
 			[
 				'english_description'   => 'Russian',
 				'localized_description' => 'URSS',

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -20,7 +21,6 @@ require_once(APPROOT.'application/startup.inc.php');
 const CONFIG_ERROR = 0;
 const CONFIG_WARNING = 1;
 const CONFIG_INFO = 2;
-
 
 /**
  * @param $sContents
@@ -199,8 +199,7 @@ try {
 			$sConfig = str_replace("\r\n", "\n", $sConfigContent);
 			$sOriginalConfig = $sConfig;
 		}
-	}
-	catch (Exception $e) {
+	} catch (Exception $e) {
 		$oAlert = GetAlertFromException($e);
 		$oP->AddUiBlock($oAlert);
 	}
@@ -300,7 +299,8 @@ var EditorUtils = (function() {
 })();
 JS
 	);
-	$oP->add_ready_script(<<<'JS'
+	$oP->add_ready_script(
+		<<<'JS'
 var editor = ace.edit("new_config");
 
 var configurationSource = $('input[name="new_config"]');
@@ -344,7 +344,8 @@ JS
 	);
 
 	$sConfirmCancel = addslashes(Dict::S('config-confirm-cancel'));
-	$oP->add_script(<<<JS
+	$oP->add_script(
+		<<<JS
 function ResetConfig()
 {
 	$("#operation").attr('value', 'revert');

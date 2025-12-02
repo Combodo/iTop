@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -25,7 +26,7 @@
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-files-information/3.2.1',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'iTop files information',
@@ -33,22 +34,22 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
-		),
+		'dependencies' => [
+		],
 		'mandatory' => false,
 		'visible' => false,
 
 		// Components
 		//
-		'datamodel' => array(
-            'src/Service/FilesInformation.php',
-            'src/Service/FilesInformationException.php',
+		'datamodel' => [
+			'src/Service/FilesInformation.php',
+			'src/Service/FilesInformationException.php',
 			'src/Service/FilesInformationUtils.php',
 			'src/Service/FilesIntegrity.php',
-		),
-		'webservice' => array(),
-		'data.struct' => array(),
-		'data.sample' => array(),
+		],
+		'webservice' => [],
+		'data.struct' => [],
+		'data.sample' => [],
 
 		// Documentation
 		//
@@ -57,6 +58,6 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(),
-	)
+		'settings' => [],
+	]
 );

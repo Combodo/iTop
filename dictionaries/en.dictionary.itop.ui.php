@@ -1,9 +1,9 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'gui'
@@ -19,7 +19,7 @@
 // Class: AuditCategory
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:AuditCategory'                                    => 'Audit Category',
 	'Class:AuditCategory+'                                   => 'Audit category defines a scope of objects which needs to be audited.
 It groups all audit rules applying to that object scope',
@@ -37,13 +37,13 @@ It groups all audit rules applying to that object scope',
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)',
 	'Class:AuditCategory/Attribute:domains_list'             => 'Domains',
 	'Class:AuditCategory/Attribute:domains_list+'            => 'Domains which include this category',
-));
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:AuditRule'                                   => 'Audit Rule',
 	'Class:AuditRule+'                                  => 'An audit rule corresponds a single check within an audit category.
 It is applied on the scope of objects defined by the audit category',
@@ -65,13 +65,13 @@ It is applied on the scope of objects defined by the audit category',
 	'Class:AuditRule/Attribute:category_id+'            => 'The category of this rule',
 	'Class:AuditRule/Attribute:category_name'           => 'Category name',
 	'Class:AuditRule/Attribute:category_name+'          => 'Name of the category of this rule',
-));
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:AuditDomain'                            => 'Audit Domain',
 	'Class:AuditDomain+'                           => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors',
@@ -83,13 +83,13 @@ Domain usually correspond to who is responsible for checking and fixing errors',
 	'Class:AuditDomain/Attribute:icon+'            => '',
 	'Class:AuditDomain/Attribute:categories_list'  => 'Categories',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain',
 	'Class:lnkAuditCategoryToAuditDomain+' => '',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category',
@@ -100,13 +100,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Query'                                     => 'Query',
 	'Class:Query+'                                    => 'A query is a data set defined in a dynamic way',
 	'Class:Query/Attribute:name'                      => 'Name',
@@ -133,7 +133,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:QueryOQL+'                                 => 'A query based on the Object Query Language',
 	'Class:QueryOQL/Attribute:oql'                    => 'Expression',
 	'Class:QueryOQL/Attribute:oql+'                   => 'OQL Expression',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -144,7 +144,7 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class: User
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:User'                                 => 'User',
 	'Class:User+'                                => 'User login',
 	'Class:User/Attribute:finalclass'            => 'Type of account',
@@ -191,13 +191,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office',
 	'Class:UserInternal' => 'User Internal',
 	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT,
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_Profiles' => 'Profile',
 	'Class:URP_Profiles+' => 'User profile',
 	'Class:URP_Profiles/Attribute:name' => 'Name',
@@ -206,13 +206,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_Profiles/Attribute:description+' => 'one line description',
 	'Class:URP_Profiles/Attribute:user_list' => 'Users',
 	'Class:URP_Profiles/Attribute:user_list+' => 'persons having this role',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_Dimensions' => 'dimension',
 	'Class:URP_Dimensions+' => 'application dimension (defining silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Name',
@@ -221,13 +221,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'one line description',
 	'Class:URP_Dimensions/Attribute:type' => 'Type',
 	'Class:URP_Dimensions/Attribute:type+' => 'class name or data type (projection unit)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_UserProfile' => 'User to profile',
 	'Class:URP_UserProfile+' => 'user profiles',
 	'Class:URP_UserProfile/Name' => 'Link between %1$s and %2$s',
@@ -241,14 +241,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_UserProfile/Attribute:profile+' => 'Profile name',
 	'Class:URP_UserProfile/Attribute:reason' => 'Reason',
 	'Class:URP_UserProfile/Attribute:reason+' => 'explain why this person may have this role',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_UserOrg' => 'User organizations',
 	'Class:URP_UserOrg+' => 'Allowed organizations',
 	'Class:URP_UserOrg/Name' => 'Link between %1$s and %2$s',
@@ -262,13 +261,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Allowed organization',
 	'Class:URP_UserOrg/Attribute:reason' => 'Reason',
 	'Class:URP_UserOrg/Attribute:reason+' => 'explain why this person is allowed to see the data belonging to this organization',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => 'profile projections',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimension',
@@ -283,13 +282,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL expression (using $user) | constant |  | +attribute code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Target attribute code (optional)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'class projections',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimension',
@@ -302,13 +301,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL expression (using $this) | constant |  | +attribute code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Target attribute code (optional)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_ActionGrant' => 'action_permission',
 	'Class:URP_ActionGrant+' => 'permissions on classes',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profile',
@@ -325,13 +324,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_ActionGrant/Attribute:action' => 'Action',
 	'Class:URP_ActionGrant/Attribute:action+' => 'operations to perform on the given class',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_StimulusGrant' => 'stimulus_permission',
 	'Class:URP_StimulusGrant+' => 'permissions on stimulus in the life cycle of the object',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profile',
@@ -348,25 +347,25 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'stimulus code',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:URP_AttributeGrant' => 'attribute_permission',
 	'Class:URP_AttributeGrant+' => 'permissions at the attributes level',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Action grant',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribute',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:UserDashboard' => 'User dashboard',
 	'Class:UserDashboard+' => '',
 	'Class:UserDashboard/Attribute:user_id' => 'User',
@@ -375,12 +374,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '',
 	'Class:UserDashboard/Attribute:contents' => 'Contents',
 	'Class:UserDashboard/Attribute:contents+' => '',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Menu:WelcomeMenu' => 'Welcome',
 	'Menu:WelcomeMenu+' => 'Welcome to '.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => 'Welcome',
@@ -399,13 +398,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:MyShortcuts' => 'My Shortcuts',
 	'Menu:DataAdministration' => 'Data administration',
 	'Menu:DataAdministration+' => '',
-));
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'BooleanLabel:yes' => 'yes',
 	'BooleanLabel:no' => 'no',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
@@ -779,7 +778,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Audit:Dashboard:ObjectsInError'            => 'Objects in errors',
 	'UI:Audit:Dashboard:ObjectsValidated'          => 'Objects validated',
 	'UI:Audit:AuditCategory:Subtitle'              => '%1$s errors ouf of %2$s - %3$s%% of the object are valid',
-
 
 	'UI:RunQuery:Title'                => ITOP_APPLICATION_SHORT.' - OQL Query Evaluation',
 	'UI:RunQuery:QueryExamples'        => 'Query Examples',
@@ -1272,7 +1270,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Dashboard:Actions' => 'Dashboard actions',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.',
 
-
 	'UI:DashletCreation:Title' => 'Create a new Dashlet',
 	'UI:DashletCreation:Dashboard' => 'Dashboard',
 	'UI:DashletCreation:DashletType' => 'Dashlet Type',
@@ -1646,12 +1643,12 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s',
 
 	'UI:StateChanged' => 'State changed',
-));
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Expression:Operator:AND' => ' AND ',
 	'Expression:Operator:OR' => ' OR ',
 	'Expression:Operator:=' => ': ',
@@ -1667,12 +1664,12 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Expression:Verb:NOW' => 'now',
 	'Expression:Verb:ISNULL' => ': undefined',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'UI:Newsroom:NoNewMessage' => 'No new message',
 	'UI:Newsroom:XNewMessage' => '%1$s new message(s)',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read',
@@ -1687,10 +1684,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal',
-));
+]);
 
-
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Menu:DataSources'            => 'Synchronization Data Sources',
 	'Menu:DataSources+'           => 'Data synchro used for batch import of external data',
 	'Menu:AuditCategories'        => 'Audit configuration',
@@ -1718,4 +1714,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Integrations'           => 'Integrations',
 	'Menu:Integrations+'          => '',
 
-));
+]);

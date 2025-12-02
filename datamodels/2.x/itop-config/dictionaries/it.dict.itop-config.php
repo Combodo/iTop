@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
 	'config-edit-title' => 'Editor del File di Configurazione',
 	'config-edit-intro' => 'Prestare molta attenzione durante la modifica del file di configurazione.',
@@ -28,4 +29,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'config-error-file-changed' => 'Errore: Il file di Configurazione è stato modificato da quando lo hai aperto e non può essere salvato. Aggiorna e applica nuovamente le tue modifiche.',
 	'config-not-allowed-in-demo' => 'Spiacente, '.ITOP_APPLICATION_SHORT.' è in <b>modalità dimostrativa</b>: il file di configurazione non può essere modificato.',
 	'config-interactive-not-allowed' => 'La modifica interattiva della configurazione di '.ITOP_APPLICATION_SHORT.' è stata disabilitata. Vedere <code>\'config_editor\' => \'disabled\'</code> nel file di configurazione.',
-));
+]);

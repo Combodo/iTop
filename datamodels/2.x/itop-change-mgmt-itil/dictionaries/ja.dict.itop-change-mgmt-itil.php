@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ChangeManagement' => '変更管理',
 	'Menu:Change:Overview' => '概要',
 	'Menu:Change:Overview+' => '',
@@ -33,7 +34,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => '最近7日間の状態別変更',
 	'Tickets:Related:OpenChanges' => 'Open changes~~',
 	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -45,12 +46,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Change' => '変更',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => '状態',
@@ -147,13 +147,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => '終了',
 	'Class:Change/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:RoutineChange' => 'ルーチン変更',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => '受け付け',
@@ -178,13 +178,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => '終了',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ApprovedChange' => '承認済の変更',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => '承認日',
@@ -213,13 +213,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => '終了',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:NormalChange' => '通常変更',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => '受理日',
@@ -248,13 +248,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => '終了',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:EmergencyChange' => '緊急変更',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => '受け付け',
@@ -279,4 +279,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => '終了',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-));
+]);

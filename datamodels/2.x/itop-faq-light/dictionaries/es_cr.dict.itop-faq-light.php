@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Spanish Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:FAQ' => 'Preguntas y Respuestas Frecuentes',
 	'Class:FAQ+' => 'Preguntas y Respuestas Frecuentes',
 	'Class:FAQ/Attribute:title' => 'Asunto',
@@ -25,21 +26,21 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FAQ/Attribute:key_words' => 'Palabras Clave',
 	'Class:FAQ/Attribute:key_words+' => 'Palabras Clave',
 	'Class:FAQ/Attribute:domains' => 'Ámbito',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:FAQCategory' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory+' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory/Attribute:name' => 'Nombre',
 	'Class:FAQCategory/Attribute:name+' => 'Nombre de Categoría de Preguntas y Respuestas Frecuentes',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'FAQs',
-));
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+]);
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ProblemManagement' => 'Administración de Problemas',
 	'Menu:ProblemManagement+' => 'GestAdministraciónión de problemas',
 	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
@@ -50,4 +51,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:FAQ:Menu' => 'Preguntas y Respuestas',
 	'Brick:Portal:FAQ:Title' => 'Preguntas y Respuestas Frecuentes',
 	'Brick:Portal:FAQ:Title+' => '<p>¿En una prisa?</p><p>Vea la lista de las preguntas más comunes y encontrará (tal vez) la respuesta inmediata a sus necesidades.</p>',
-));
+]);

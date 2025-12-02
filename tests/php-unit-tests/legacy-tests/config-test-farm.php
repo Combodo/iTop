@@ -8,31 +8,29 @@
 // The file is used in MetaModel::LoadConfig() which does all the necessary initialization job
 //
 
-$MySettings = array(
+$MySettings = [
 	'db_host' => 'localhost',
 	'db_user' => 'root',
 	'db_pwd' => '',
 	'db_name' => 'TestFarm',
 	'db_subname' => '', // use it to differentiate two applications instances running on the same DB
-);
+];
 
 // Modules: file names should be specified as a absolute paths
 
-$MyModules = array(
-	'application' => array (
+$MyModules = [
+	'application' =>  [
 //		'../core/event.class.inc.php',
 //		'../core/action.class.inc.php',
 //		'../core/trigger.class.inc.php',
 		// to be continued...
-	),
-	'business' => array (
+	],
+	'business' =>  [
 		'../business/test_farm.class.inc.php',
 		// to be continued...
-	),
-	'addons' => array (
+	],
+	'addons' =>  [
 		//'user rights' => '/addons/userrights/userrightsnull.class.inc.php', // or userrightsmatrix.class.inc.php
 		// other modules to come later
-	)
-);
-
-?>
+	],
+];

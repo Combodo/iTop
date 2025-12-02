@@ -7,10 +7,9 @@ use Config;
 use Exception;
 use MetaModel;
 
-
 class CliResetSessionTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = false;
+	public const USE_TRANSACTION = false;
 
 	private $sCookieFile = "";
 	private $sUrl;
@@ -18,38 +17,37 @@ class CliResetSessionTest extends ItopDataTestCase
 	private $sPassword = "Iuytrez9876543ç_è-(";
 	protected $sConfigTmpBackupFile;
 
-
 	/**
-     * @throws Exception
-     */
-    protected function setUp(): void
-    {
-	    parent::setUp();
+	 * @throws Exception
+	 */
+	protected function setUp(): void
+	{
+		parent::setUp();
 
 		$this->sConfigTmpBackupFile = tempnam(sys_get_temp_dir(), "config_");
-	    MetaModel::GetConfig()->WriteToFile($this->sConfigTmpBackupFile);
+		MetaModel::GetConfig()->WriteToFile($this->sConfigTmpBackupFile);
 
-	    $this->sLogin = "rest-user-".date('dmYHis');
-	    $this->CreateTestOrganization();
+		$this->sLogin = "rest-user-".date('dmYHis');
+		$this->CreateTestOrganization();
 
-	    $this->sCookieFile = tempnam(sys_get_temp_dir(), 'jsondata_');
+		$this->sCookieFile = tempnam(sys_get_temp_dir(), 'jsondata_');
 
-	    $this->sUrl = \MetaModel::GetConfig()->Get('app_root_url');
+		$this->sUrl = \MetaModel::GetConfig()->Get('app_root_url');
 
-	    $oRestProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
-	    $oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
+		$oRestProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'REST Services User'], true);
+		$oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'Administrator'], true);
 
-	    if (is_object($oRestProfile) && is_object($oAdminProfile)) {
-		    $oUser = $this->CreateUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
-		    $this->AddProfileToUser($oUser, $oAdminProfile->GetKey());
-	    }
-    }
+		if (is_object($oRestProfile) && is_object($oAdminProfile)) {
+			$oUser = $this->CreateUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
+			$this->AddProfileToUser($oUser, $oAdminProfile->GetKey());
+		}
+	}
 
 	protected function tearDown(): void
 	{
 		parent::tearDown();
 
-		if (! is_null($this->sConfigTmpBackupFile) && is_file($this->sConfigTmpBackupFile)){
+		if (! is_null($this->sConfigTmpBackupFile) && is_file($this->sConfigTmpBackupFile)) {
 			//put config back
 			$sConfigPath = MetaModel::GetConfig()->GetLoadedFile();
 			@chmod($sConfigPath, 0770);
@@ -154,11 +152,11 @@ class CliResetSessionTest extends ItopDataTestCase
 	{
 		$ch = curl_init();
 
-		curl_setopt ($ch, CURLOPT_COOKIEJAR, $this->sCookieFile);
-		curl_setopt ($ch, CURLOPT_COOKIEFILE, $this->sCookieFile);
+		curl_setopt($ch, CURLOPT_COOKIEJAR, $this->sCookieFile);
+		curl_setopt($ch, CURLOPT_COOKIEFILE, $this->sCookieFile);
 
 		$sUrl = "$this->sUrl/$sUri";
-		if (!is_null($sForcedLoginMode)){
+		if (!is_null($sForcedLoginMode)) {
 			$sUrl .= "?login_mode=$sForcedLoginMode";
 		}
 		curl_setopt($ch, CURLOPT_URL, $sUrl);
@@ -179,16 +177,16 @@ class CliResetSessionTest extends ItopDataTestCase
 		Set-Cookie: itop-2e83d2e9b00e354fdc528621cac532ac=q7ldcjq0rvbn33ccr9q8u8e953; path=/
 		 */
 		//var_dump($sResponse);
-		$iHeaderSize = curl_getinfo($ch,CURLINFO_HEADER_SIZE);
+		$iHeaderSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 		$sBody = substr($sResponse, $iHeaderSize);
 
 		//$iHttpCode = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
-		if (preg_match('/HTTP.* (\d*) /', $sResponse, $aMatches)){
+		if (preg_match('/HTTP.* (\d*) /', $sResponse, $aMatches)) {
 			$sHttpCode = $aMatches[1];
 		} else {
 			$sHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		}
-		curl_close ($ch);
+		curl_close($ch);
 
 		$this->assertEquals(200, $sHttpCode, "The test logic assumes that the HTTP request is correctly handled");
 		return $sBody;

@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -30,45 +30,45 @@ use utils;
  */
 class LinkedSetValidator extends AbstractRegexpValidator
 {
-    public const VALIDATOR_NAME = 'linkedset_validator';
-    private $aAttributesToDisplayCodes;
+	public const VALIDATOR_NAME = 'linkedset_validator';
+	private $aAttributesToDisplayCodes;
 
-    public function __construct($aAttributesToDisplayCodes)
-    {
-        $this->aAttributesToDisplayCodes = $aAttributesToDisplayCodes;
+	public function __construct($aAttributesToDisplayCodes)
+	{
+		$this->aAttributesToDisplayCodes = $aAttributesToDisplayCodes;
 
-        parent::__construct();
-    }
+		parent::__construct();
+	}
 
-    public function Validate($value): array
-    {
-        $aErrorMessages = [];
+	public function Validate($value): array
+	{
+		$aErrorMessages = [];
 
-        /** @var ormLinkSet $oSet */
-        $oSet = $value;
+		/** @var ormLinkSet $oSet */
+		$oSet = $value;
 
-        // validate each links...
-        /** @var \DBObject $oItem */
-        foreach ($oSet as $oItem) {
-            $aChanges = $oItem->ListChanges();
-            foreach ($aChanges as $sAttCode => $AttValue) {
-                if (!in_array($sAttCode, $this->aAttributesToDisplayCodes)) {
-                    continue;
-                }
-                $res = $oItem->CheckValue($sAttCode);
-                if ($res !== true) {
-                    $sAttLabel = $oItem->GetLabel($sAttCode);
-                    $sItem = utils::IsNullOrEmptyString($oItem->Get('friendlyname'))
-                        ? Dict::S('UI:Links:NewItem')
-                        : $oItem->Get('friendlyname');
-                    $sIssue = Dict::Format('Core:CheckValueError', $sAttLabel, $sAttCode, $res);
-                    $aErrorMessages[] = '<b>' . $sItem . ' : </b>' . $sIssue;
-                }
-            }
-        }
+		// validate each links...
+		/** @var \DBObject $oItem */
+		foreach ($oSet as $oItem) {
+			$aChanges = $oItem->ListChanges();
+			foreach ($aChanges as $sAttCode => $AttValue) {
+				if (!in_array($sAttCode, $this->aAttributesToDisplayCodes)) {
+					continue;
+				}
+				$res = $oItem->CheckValue($sAttCode);
+				if ($res !== true) {
+					$sAttLabel = $oItem->GetLabel($sAttCode);
+					$sItem = utils::IsNullOrEmptyString($oItem->Get('friendlyname'))
+						? Dict::S('UI:Links:NewItem')
+						: $oItem->Get('friendlyname');
+					$sIssue = Dict::Format('Core:CheckValueError', $sAttLabel, $sAttCode, $res);
+					$aErrorMessages[] = '<b>'.$sItem.' : </b>'.$sIssue;
+				}
+			}
+		}
 
-        $oSet->Rewind();
+		$oSet->Rewind();
 
-        return $aErrorMessages;
-    }
+		return $aErrorMessages;
+	}
 }

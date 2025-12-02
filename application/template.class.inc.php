@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -30,12 +31,12 @@ class DisplayTemplate
 {
 	protected $m_sTemplate;
 	protected $m_aTags;
-	static protected $iBlockCount = 0;
-	
+	protected static $iBlockCount = 0;
+
 	public function __construct($sTemplate)
 	{
 		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		$this->m_aTags = array(
+		$this->m_aTags = [
 			'itopblock',
 			'itopcheck',
 			'itoptabs',
@@ -43,11 +44,11 @@ class DisplayTemplate
 			'itoptoggle',
 			'itopstring',
 			'sqlblock',
-		);
+		];
 		$this->m_sTemplate = $sTemplate;
 	}
-	
-	public function Render(WebPage $oPage, $aParams = array())
+
+	public function Render(WebPage $oPage, $aParams = [])
 	{
 		$this->m_sTemplate = MetaModel::ApplyParams($this->m_sTemplate, $aParams);
 		$iStart = 0;
@@ -55,70 +56,55 @@ class DisplayTemplate
 		$iCount = 0;
 		$iBeforeTagPos = $iStart;
 		$iAfterTagPos = $iStart;
-		while($sTag = $this->GetNextTag($iStart, $iEnd))
-		{
+		while ($sTag = $this->GetNextTag($iStart, $iEnd)) {
 			$sContent = $this->GetTagContent($sTag, $iStart, $iEnd);
 			$iAfterTagPos = $iEnd + strlen('</'.$sTag.'>');
 			$sOuterTag = substr($this->m_sTemplate, $iStart, $iAfterTagPos - $iStart);
 			$oPage->add(substr($this->m_sTemplate, $iBeforeTagPos, $iStart - $iBeforeTagPos));
-			if ($sTag == DisplayBlock::TAG_BLOCK)
-			{
-				try
-				{
+			if ($sTag == DisplayBlock::TAG_BLOCK) {
+				try {
 					$oBlock = DisplayBlock::FromTemplate($sOuterTag);
-					if (is_object($oBlock))
-					{
+					if (is_object($oBlock)) {
 						$oBlock->Display($oPage, 'block_'.self::$iBlockCount, $aParams);
 					}
-				}
-				catch(OQLException $e)
-				{
+				} catch (OQLException $e) {
 					$oPage->p('Error in template (please contact your administrator) - Invalid query<!--'.$sOuterTag.'-->');
-				}
-				catch(Exception $e)
-				{
+				} catch (Exception $e) {
 					$oPage->p('Error in template (please contact your administrator)<!--'.$e->getMessage().'--><!--'.$sOuterTag.'-->');
 				}
-				
+
 				self::$iBlockCount++;
-			}
-			else
-			{
+			} else {
 				$aAttributes = $this->GetTagAttributes($sTag, $iStart, $iEnd);
 				//$oPage->p("Tag: $sTag - ($iStart, $iEnd)");
 				$this->RenderTag($oPage, $sTag, $aAttributes, $sContent);
-	
+
 			}
 			$iAfterTagPos = $iEnd + strlen('</'.$sTag.'>');
 			$iBeforeTagPos = $iAfterTagPos;
 			$iStart = $iEnd;
-			$iEnd = strlen($this->m_sTemplate); 
+			$iEnd = strlen($this->m_sTemplate);
 			$iCount++;
 		}
 		$oPage->add(substr($this->m_sTemplate, $iAfterTagPos));
 	}
-	
+
 	public function GetNextTag(&$iStartPos, &$iEndPos)
 	{
 		$iChunkStartPos = $iStartPos;
 		$sNextTag = null;
 		$iStartPos = $iEndPos;
-		foreach($this->m_aTags as $sTag)
-		{
+		foreach ($this->m_aTags as $sTag) {
 			// Search for the opening tag
 			$iOpeningPos = stripos($this->m_sTemplate, '<'.$sTag.' ', $iChunkStartPos);
-			if ($iOpeningPos === false)
-			{
+			if ($iOpeningPos === false) {
 				$iOpeningPos = stripos($this->m_sTemplate, '<'.$sTag.'>', $iChunkStartPos);
 			}
-			if ($iOpeningPos !== false)
-			{
+			if ($iOpeningPos !== false) {
 				$iClosingPos = stripos($this->m_sTemplate, '</'.$sTag.'>', $iOpeningPos);
 			}
-			if ( ($iOpeningPos !== false) && ($iClosingPos !== false))
-			{
-				if ($iOpeningPos < $iStartPos)
-				{
+			if (($iOpeningPos !== false) && ($iClosingPos !== false)) {
+				if ($iOpeningPos < $iStartPos) {
 					// This is the next tag
 					$iStartPos = $iOpeningPos;
 					$iEndPos = $iClosingPos;
@@ -128,108 +114,100 @@ class DisplayTemplate
 		}
 		return $sNextTag;
 	}
-	
+
 	public function GetTagContent($sTag, $iStartPos, $iEndPos)
 	{
 		$sContent  = "";
 		$iContentStart = strpos($this->m_sTemplate, '>', $iStartPos); // Content of tag start immediatly after the first closing bracket
-		if ($iContentStart !== false)
-		{
-			$sContent = substr($this->m_sTemplate, 1+$iContentStart, $iEndPos - $iContentStart - 1);
+		if ($iContentStart !== false) {
+			$sContent = substr($this->m_sTemplate, 1 + $iContentStart, $iEndPos - $iContentStart - 1);
 		}
 		return $sContent;
 	}
 
 	public function GetTagAttributes($sTag, $iStartPos, $iEndPos)
 	{
-		$aAttr  = array();
+		$aAttr  = [];
 		$iAttrStart = strpos($this->m_sTemplate, ' ', $iStartPos); // Attributes start just after the first space
 		$iAttrEnd = strpos($this->m_sTemplate, '>', $iStartPos); // Attributes end just before the first closing bracket
-		if ( ($iAttrStart !== false) && ($iAttrEnd !== false) && ($iAttrEnd > $iAttrStart))
-		{
-			$sAttributes = substr($this->m_sTemplate, 1+$iAttrStart, $iAttrEnd - $iAttrStart - 1);
+		if (($iAttrStart !== false) && ($iAttrEnd !== false) && ($iAttrEnd > $iAttrStart)) {
+			$sAttributes = substr($this->m_sTemplate, 1 + $iAttrStart, $iAttrEnd - $iAttrStart - 1);
 			$aAttributes = explode(' ', $sAttributes);
-			foreach($aAttributes as $sAttr)
-			{
-				if ( preg_match('/(.+) *= *"(.+)"$/', $sAttr, $aMatches) )
-				{
+			foreach ($aAttributes as $sAttr) {
+				if (preg_match('/(.+) *= *"(.+)"$/', $sAttr, $aMatches)) {
 					$aAttr[strtolower($aMatches[1])] = $aMatches[2];
 				}
 			}
 		}
 		return $aAttr;
 	}
-	
+
 	protected function RenderTag($oPage, $sTag, $aAttributes, $sContent)
 	{
 		static $iTabContainerCount = 0;
-		switch($sTag)
-		{
+		switch ($sTag) {
 			case 'itoptabs':
 				$oPage->AddTabContainer('Tabs_'.$iTabContainerCount);
 				$oPage->SetCurrentTabContainer('Tabs_'.$iTabContainerCount);
 				$iTabContainerCount++;
 				//$oPage->p('Content:<pre>'.htmlentities($sContent, ENT_QUOTES, 'UTF-8').'</pre>');
 				$oTemplate = new DisplayTemplate($sContent);
-				$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
+				$oTemplate->Render($oPage, []); // no params to apply, they have already been applied
 				$oPage->SetCurrentTabContainer('');
-			break;
-			
+				break;
+
 			case 'itopcheck':
 				$sClassName = $aAttributes['class'];
-				if (MetaModel::IsValidClass($sClassName) && UserRights::IsActionAllowed($sClassName, UR_ACTION_READ))
-				{
+				if (MetaModel::IsValidClass($sClassName) && UserRights::IsActionAllowed($sClassName, UR_ACTION_READ)) {
 					$oTemplate = new DisplayTemplate($sContent);
-					$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
-				}
-				else
-				{
+					$oTemplate->Render($oPage, []); // no params to apply, they have already been applied
+				} else {
 					// Leave a trace for those who'd like to understand why nothing is displayed
 					$oPage->add("<!-- class $sClassName does not exist, skipping some part of the template -->\n");
 				}
-			break;
-			
+				break;
+
 			case 'itoptab':
 				$oPage->SetCurrentTab($aAttributes['name'], str_replace('_', ' ', $aAttributes['name']));
 				$oTemplate = new DisplayTemplate($sContent);
-				$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
+				$oTemplate->Render($oPage, []); // no params to apply, they have already been applied
 				//$oPage->p('iTop Tab Content:<pre>'.htmlentities($sContent, ENT_QUOTES, 'UTF-8').'</pre>');
 				$oPage->SetCurrentTab('');
-			break;
-			
+				break;
+
 			case 'itoptoggle':
 				$sName = isset($aAttributes['name']) ? $aAttributes['name'] : 'Tagada';
 				$bOpen = isset($aAttributes['open']) ? $aAttributes['open'] : true;
 				$oPage->StartCollapsibleSection(Dict::S($sName), $bOpen);
 				$oTemplate = new DisplayTemplate($sContent);
-				$oTemplate->Render($oPage, array()); // no params to apply, they have already been applied
+				$oTemplate->Render($oPage, []); // no params to apply, they have already been applied
 				//$oPage->p('iTop Tab Content:<pre>'.htmlentities($sContent, ENT_QUOTES, 'UTF-8').'</pre>');
 				$oPage->EndCollapsibleSection();
-			break;
-			
+				break;
+
 			case 'itopstring':
 				$oPage->add(Dict::S($sContent));
-			break;
-			
+				break;
+
 			case 'sqlblock':
 				$oBlock = SqlBlock::FromTemplate($sContent);
 				$oBlock->RenderContent($oPage);
-			break;
-			
+				break;
+
 			case 'itopblock': // No longer used, handled by DisplayBlock::FromTemplate see above
 				$oPage->add("<!-- Application Error: should be handled by DisplayBlock::FromTemplate -->");
-			break;
-			
+				break;
+
 			default:
 				// Unknown tag, just ignore it or now -- output an HTML comment
 				$oPage->add("<!-- unsupported tag: $sTag -->");
 		}
 	}
-	
+
 	/**
 	 * Unit test
 	 */
-	static public function UnitTest()
+	public static function UnitTest()
 	{
 		require_once(APPROOT.'/application/startup.inc.php');
 
@@ -250,11 +228,11 @@ class DisplayTemplate
 				<itopblock blockclass="DisplayBlock" type="list" encoding="text/oql">SELECT Document AS d JOIN lnkDocumentToCI as l ON l.document_id = d.id WHERE l.ci_id = $id$)</itopblock>
 			</itoptab>
 		</itoptabs>';
-		
+
 		$oPage = new iTopWebPage('Unit Test');
 		//$oPage->add("Template content: <pre>".htmlentities($sTemplate, ENT_QUOTES, 'UTF-8')."</pre>\n");
 		$oTemplate = new DisplayTemplate($sTemplate);
-		$oTemplate->Render($oPage, array('class'=>'Network device','pkey'=> 271, 'name' => 'deliversw01.mecanorama.fr', 'org_id' => 3));
+		$oTemplate->Render($oPage, ['class' => 'Network device','pkey' => 271, 'name' => 'deliversw01.mecanorama.fr', 'org_id' => 3]);
 		$oPage->output();
 	}
 }
@@ -275,89 +253,68 @@ class ObjectDetailsTemplate extends DisplayTemplate
 		$this->m_oObj = $oObj;
 		$this->m_sPrefix = $sFormPrefix;
 	}
-	
-	public function Render(WebPage $oPage, $aParams = array(), $bEditMode = false)
+
+	public function Render(WebPage $oPage, $aParams = [], $bEditMode = false)
 	{
-		$sStateAttCode = MetaModel :: GetStateAttributeCode(get_class($this->m_oObj));
-		$aTemplateFields = array();
+		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this->m_oObj));
+		$aTemplateFields = [];
 		preg_match_all('/\\$this->([a-z0-9_]+)\\$/', $this->m_sTemplate, $aMatches);
-		foreach ($aMatches[1] as $sAttCode)
-		{
-			if (MetaModel::IsValidAttCode(get_class($this->m_oObj), $sAttCode))
-			{
+		foreach ($aMatches[1] as $sAttCode) {
+			if (MetaModel::IsValidAttCode(get_class($this->m_oObj), $sAttCode)) {
 				$aTemplateFields[] = $sAttCode;
-			}
-			else
-			{
-				$aParams['this->'.$sAttCode] = "<!--Unknown attribute: $sAttCode-->";					
+			} else {
+				$aParams['this->'.$sAttCode] = "<!--Unknown attribute: $sAttCode-->";
 			}
 		}
 		preg_match_all('/\\$this->field\\(([a-z0-9_]+)\\)\\$/', $this->m_sTemplate, $aMatches);
-		foreach ($aMatches[1] as $sAttCode)
-		{
-			if (MetaModel::IsValidAttCode(get_class($this->m_oObj), $sAttCode))
-			{
+		foreach ($aMatches[1] as $sAttCode) {
+			if (MetaModel::IsValidAttCode(get_class($this->m_oObj), $sAttCode)) {
 				$aTemplateFields[] = $sAttCode;
-			}
-			else
-			{
+			} else {
 				$aParams['this->field('.$sAttCode.')'] = "<!--Unknown attribute: $sAttCode-->";
 			}
 		}
-		$aFieldsComments = (isset($aParams['fieldsComments'])) ? $aParams['fieldsComments'] : array();
-		$aFieldsMap = array();
+		$aFieldsComments = (isset($aParams['fieldsComments'])) ? $aParams['fieldsComments'] : [];
+		$aFieldsMap = [];
 
 		$sClass = get_class($this->m_oObj);
 		// Renders the fields used in the template
-		foreach(MetaModel::ListAttributeDefs(get_class($this->m_oObj)) as $sAttCode => $oAttDef)
-		{
+		foreach (MetaModel::ListAttributeDefs(get_class($this->m_oObj)) as $sAttCode => $oAttDef) {
 			$aParams['this->label('.$sAttCode.')'] = $oAttDef->GetLabel();
 			$aParams['this->comments('.$sAttCode.')'] = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
 			$iInputId = '2_'.$sAttCode; // TODO: generate a real/unique prefix...
-			if (in_array($sAttCode, $aTemplateFields))
-			{
-				if ($this->m_oObj->IsNew())
-				{
+			if (in_array($sAttCode, $aTemplateFields)) {
+				if ($this->m_oObj->IsNew()) {
 					$iFlags = $this->m_oObj->GetInitialStateAttributeFlags($sAttCode);
+				} else {
+					$iFlags = $this->m_oObj->GetAttributeFlags($sAttCode);
 				}
-				else
-				{
-				$iFlags = $this->m_oObj->GetAttributeFlags($sAttCode);
-				}
-				if (($iFlags & OPT_ATT_MANDATORY) && $this->m_oObj->IsNew())
-				{
+				if (($iFlags & OPT_ATT_MANDATORY) && $this->m_oObj->IsNew()) {
 					$iFlags = $iFlags & ~OPT_ATT_READONLY; // Mandatory fields cannot be read-only when creating an object
 				}
-				
-				if ((!$oAttDef->IsWritable()) || ($sStateAttCode == $sAttCode))
-				{
+
+				if ((!$oAttDef->IsWritable()) || ($sStateAttCode == $sAttCode)) {
 					$iFlags = $iFlags | OPT_ATT_READONLY;
 				}
 
-				if ($iFlags & OPT_ATT_HIDDEN)
-				{
+				if ($iFlags & OPT_ATT_HIDDEN) {
 					$aParams['this->label('.$sAttCode.')'] = '';
 					$aParams['this->field('.$sAttCode.')'] = '';
 					$aParams['this->comments('.$sAttCode.')'] = '';
 					$aParams['this->'.$sAttCode] = '';
-				}
-				else
-				{
-					if ($bEditMode && ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE)))
-					{
+				} else {
+					if ($bEditMode && ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE))) {
 						// Check if the attribute is not read-only because of a synchro...
-						$aReasons = array();
+						$aReasons = [];
 						$sSynchroIcon = '';
-						if ($iFlags & OPT_ATT_SLAVE)
-						{
+						if ($iFlags & OPT_ATT_SLAVE) {
 							$iSynchroFlags = $this->m_oObj->GetSynchroReplicaFlags($sAttCode, $aReasons);
 							$sAppRooturl = utils::GetAbsoluteUrlAppRoot();
 							$sSynchroIcon = "&nbsp;<img id=\"synchro_$iInputId\" src=\"{$sAppRooturl}images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 							$sTip = '';
-							foreach($aReasons as $aRow)
-							{
+							foreach ($aReasons as $aRow) {
 								$sDescription = utils::EscapeHtml($aRow['description']);
-								$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
+								$sDescription = str_replace(["\r\n", "\n"], "<br/>", $sDescription);
 								$sTip .= "<div class='synchro-source'>";
 								$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
 								$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
@@ -371,46 +328,43 @@ class ObjectDetailsTemplate extends DisplayTemplate
 						$aFieldsMap[$sAttCode] = $iInputId;
 						$aParams['this->comments('.$sAttCode.')'] = $sSynchroIcon;
 					}
-	
-					if ($bEditMode && !($iFlags & OPT_ATT_READONLY)) //TODO: check the data synchro status...
-					{
-						$aParams['this->field('.$sAttCode.')'] = "<span id=\"field_{$iInputId}\">".$this->m_oObj->GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef,
-						$this->m_oObj->Get($sAttCode),
-						$this->m_oObj->GetEditValue($sAttCode),
-						$iInputId, // InputID
-						'',
-						$iFlags,
-						array('this' => $this->m_oObj) // aArgs
-					).'</span>';
-					$aFieldsMap[$sAttCode] = $iInputId;
-				}
-				else 
-				{
+
+					if ($bEditMode && !($iFlags & OPT_ATT_READONLY)) { //TODO: check the data synchro status...
+						$aParams['this->field('.$sAttCode.')'] = "<span id=\"field_{$iInputId}\">".$this->m_oObj->GetFormElementForField(
+							$oPage,
+							$sClass,
+							$sAttCode,
+							$oAttDef,
+							$this->m_oObj->Get($sAttCode),
+							$this->m_oObj->GetEditValue($sAttCode),
+							$iInputId, // InputID
+							'',
+							$iFlags,
+							['this' => $this->m_oObj] // aArgs
+						).'</span>';
+						$aFieldsMap[$sAttCode] = $iInputId;
+					} else {
 						$aParams['this->field('.$sAttCode.')'] = $this->m_oObj->GetAsHTML($sAttCode);
 					}
-					$aParams['this->'.$sAttCode] = "<table class=\"field\"><tr><td class=\"label\">".$aParams['this->label('.$sAttCode.')'].":</td><td>".$aParams['this->field('.$sAttCode.')']."</td><td>".$aParams['this->comments('.$sAttCode.')']."</td></tr></table>";					
+					$aParams['this->'.$sAttCode] = "<table class=\"field\"><tr><td class=\"label\">".$aParams['this->label('.$sAttCode.')'].":</td><td>".$aParams['this->field('.$sAttCode.')']."</td><td>".$aParams['this->comments('.$sAttCode.')']."</td></tr></table>";
 				}
 			}
 		}
-		
+
 		// Renders the PlugIns used in the template
 		preg_match_all('/\\$PlugIn:([A-Za-z0-9_]+)->properties\\(\\)\\$/', $this->m_sTemplate, $aMatches);
 		$aPlugInProperties = $aMatches[1];
-		foreach($aPlugInProperties as $sPlugInClass)
-		{
+		foreach ($aPlugInProperties as $sPlugInClass) {
 			/** @var \iApplicationUIExtension $oInstance */
 			$oInstance = MetaModel::GetPlugins('iApplicationUIExtension', $sPlugInClass);
-			if ($oInstance != null) // Safety check...
-			{
+			if ($oInstance != null) { // Safety check...
 				$offset = $oPage->start_capture();
 				$oInstance->OnDisplayProperties($this->m_oObj, $oPage, $bEditMode);
 				$sContent = $oPage->end_capture($offset);
-				$aParams["PlugIn:{$sPlugInClass}->properties()"]= $sContent;			
+				$aParams["PlugIn:{$sPlugInClass}->properties()"] = $sContent;
+			} else {
+				$aParams["PlugIn:{$sPlugInClass}->properties()"] = "Missing PlugIn: $sPlugInClass";
 			}
-			else
-			{
-				$aParams["PlugIn:{$sPlugInClass}->properties()"]= "Missing PlugIn: $sPlugInClass";				
-			}			
 		}
 
 		$offset = $oPage->start_capture();
@@ -424,4 +378,3 @@ class ObjectDetailsTemplate extends DisplayTemplate
 }
 
 //DisplayTemplate::UnitTest();
-?>

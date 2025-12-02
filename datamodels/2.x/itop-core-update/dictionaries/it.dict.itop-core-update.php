@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'iTopUpdate:UI:PageTitle' => 'Aggiornamento dell\'Applicazione',
 	'itop-core-update:UI:SelectUpdateFile' => 'Aggiornamento dell\'Applicazione',
 	'itop-core-update:UI:ConfirmUpdate' => 'Aggiornamento dell\'Applicazione',
@@ -94,6 +95,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ModuleInstallation/Attribute:name' => 'Nome',
 	'Class:ModuleInstallation/Attribute:version' => 'Versione',
 	'Class:ModuleInstallation/Attribute:comment' => 'Commento',
-));
-
-
+]);

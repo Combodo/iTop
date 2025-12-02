@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -21,7 +22,6 @@ namespace Combodo\iTop\Portal\Twig;
 
 use Combodo\iTop\Application\TwigBase\Twig\Extension;
 use Twig\Extension\AbstractExtension;
-
 
 /**
  * Class AppExtension

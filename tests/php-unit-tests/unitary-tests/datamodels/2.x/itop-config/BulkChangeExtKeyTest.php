@@ -6,7 +6,6 @@ use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
-
 /**
  * created a dedicated test for external keys imports.
  *
@@ -14,28 +13,31 @@ use MetaModel;
  *
  * @package Combodo\iTop\Test\UnitTest\Core
  */
-class BulkChangeExtKeyTest extends ItopDataTestCase {
-	const CREATE_TEST_ORG = true;
+class BulkChangeExtKeyTest extends ItopDataTestCase
+{
+	public const CREATE_TEST_ORG = true;
 
 	/**
 	 * this test may delete Person objects to cover all usecases
 	 * DO NOT CHANGE USE_TRANSACTION value to avoid any DB loss!
 	 */
-	const USE_TRANSACTION = true;
+	public const USE_TRANSACTION = true;
 
 	private $sUid;
 
-	protected function setUp() : void {
+	protected function setUp(): void
+	{
 		parent::setUp();
 		require_once(APPROOT.'core/bulkchange.class.inc.php');
 	}
 
-	private function deleteAllRacks(){
+	private function deleteAllRacks()
+	{
 		$oSearch = \DBSearch::FromOQL("SELECT Rack");
 		$oSet = new \DBObjectSet($oSearch);
 		$iCount = $oSet->Count();
-		if ($iCount != 0){
-			while ($oRack = $oSet->Fetch()){
+		if ($iCount != 0) {
+			while ($oRack = $oSet->Fetch()) {
 				$oRack->DBDelete();
 			}
 		}
@@ -44,7 +46,8 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	/**
 	 * @dataProvider ReconciliationKeyProvider
 	 */
-	public function testExternalFieldIssueImportFail_NoObjectAtAll($bIsRackReconKey){
+	public function testExternalFieldIssueImportFail_NoObjectAtAll($bIsRackReconKey)
+	{
 		$this->deleteAllRacks();
 
 		$this->performBulkChangeTest(
@@ -55,7 +58,8 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		);
 	}
 
-	public function createRackObjects($aRackDict) {
+	public function createRackObjects($aRackDict)
+	{
 		foreach ($aRackDict as $iOrgId => $aRackNames) {
 			foreach ($aRackNames as $sRackName) {
 				$this->createObject('Rack', ['name' => $sRackName, 'description' => "{$sRackName}Desc", 'org_id' => $iOrgId]);
@@ -63,9 +67,10 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		}
 	}
 
-	private function createAnotherUserInAnotherOrg() {
+	private function createAnotherUserInAnotherOrg()
+	{
 		$oOrg2 = $this->CreateOrganization('UnitTestOrganization2');
-		$oProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Configuration Manager'), true);
+		$oProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'Configuration Manager'], true);
 
 		$sUid = $this->GetUid();
 
@@ -75,13 +80,13 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		$oSet = \DBObjectSet::FromObject($oUserProfile);
 
 		$oPerson = $this->CreatePerson('666', $oOrg2->GetKey());
-		$oUser = $this->createObject('UserLocal', array(
+		$oUser = $this->createObject('UserLocal', [
 			'contactid' => $oPerson->GetKey(),
 			'login' => $sUid,
 			'password' => "ABCdef$sUid@12345",
 			'language' => 'EN US',
 			'profile_list' => $oSet,
-		));
+		]);
 
 		$oAllowedOrgList = $oUser->Get('allowed_org_list');
 		/** @var \URP_UserOrg $oUserOrg */
@@ -92,22 +97,23 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		return [$oOrg2, $oUser];
 	}
 
-	public function ReconciliationKeyProvider(){
+	public function ReconciliationKeyProvider()
+	{
 		return [
 			'rack_id NOT a reconcilication key' => [ false ],
 			'rack_id reconcilication key' => [ true ],
 		];
 	}
 
-
 	/**
 	 * @dataProvider ReconciliationKeyProvider
 	 */
-	public function testExternalFieldIssueImportFail_NoObjectVisibleByCurrentUser($bIsRackReconKey){
+	public function testExternalFieldIssueImportFail_NoObjectVisibleByCurrentUser($bIsRackReconKey)
+	{
 		$this->deleteAllRacks();
 		$this->createRackObjects(
 			[
-				$this->getTestOrgId() => ['RackTest1', 'RackTest2', 'RackTest3', 'RackTest4']
+				$this->getTestOrgId() => ['RackTest1', 'RackTest2', 'RackTest3', 'RackTest4'],
 			]
 		);
 
@@ -125,7 +131,8 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	/**
 	 * @dataProvider ReconciliationKeyProvider
 	 */
-	public function testExternalFieldIssueImportFail_SomeObjectVisibleByCurrentUser($bIsRackReconKey){
+	public function testExternalFieldIssueImportFail_SomeObjectVisibleByCurrentUser($bIsRackReconKey)
+	{
 		$this->deleteAllRacks();
 		[$oOrg2, $oUser] = $this->createAnotherUserInAnotherOrg();
 		$this->createRackObjects(
@@ -148,11 +155,12 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	/**
 	 * @dataProvider ReconciliationKeyProvider
 	 */
-	public function testExternalFieldIssueImportFail_AllObjectsVisibleByCurrentUser($bIsRackReconKey){
+	public function testExternalFieldIssueImportFail_AllObjectsVisibleByCurrentUser($bIsRackReconKey)
+	{
 		$this->deleteAllRacks();
 		$this->createRackObjects(
 			[
-				$this->getTestOrgId() => ['RackTest1', 'RackTest2', 'RackTest3', 'RackTest4']
+				$this->getTestOrgId() => ['RackTest1', 'RackTest2', 'RackTest3', 'RackTest4'],
 			]
 		);
 
@@ -167,11 +175,12 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 	/**
 	 * @dataProvider ReconciliationKeyProvider
 	 */
-	public function testExternalFieldIssueImportFail_AllObjectsVisibleByCurrentUser_AmbigousMatch($bIsRackReconKey){
+	public function testExternalFieldIssueImportFail_AllObjectsVisibleByCurrentUser_AmbigousMatch($bIsRackReconKey)
+	{
 		$this->deleteAllRacks();
 		$this->createRackObjects(
 			[
-				$this->getTestOrgId() => ['UnexistingRack', 'UnexistingRack']
+				$this->getTestOrgId() => ['UnexistingRack', 'UnexistingRack'],
 			]
 		);
 
@@ -187,15 +196,15 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		);
 	}
 
-
 	/**
 	 * @dataProvider ReconciliationKeyProvider
 	 */
-	public function testExternalFieldIssueImportFail_AllObjectsVisibleByCurrentUser_FurtherExtKeyForRack($bIsRackReconKey){
+	public function testExternalFieldIssueImportFail_AllObjectsVisibleByCurrentUser_FurtherExtKeyForRack($bIsRackReconKey)
+	{
 		$this->deleteAllRacks();
 		$this->createRackObjects(
 			[
-				$this->getTestOrgId() => ['RackTest1', 'RackTest2', 'RackTest3', 'RackTest4']
+				$this->getTestOrgId() => ['RackTest1', 'RackTest2', 'RackTest3', 'RackTest4'],
 			]
 		);
 
@@ -214,24 +223,32 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		);
 	}
 
-
-	private function GetUid(){
-		if (is_null($this->sUid)){
+	private function GetUid()
+	{
+		if (is_null($this->sUid)) {
 			$this->sUid = uniqid('test');
 		}
 
 		return $this->sUid;
 	}
 
-	public function performBulkChangeTest($sExpectedDisplayableValue, $sExpectedDescription, $oOrg, $bIsRackReconKey,
-		$aAdditionalCsvData=null, $aExtKeys=null, $sSearchLinkUrl=null, $sError="Object not found") {
-		if ($sSearchLinkUrl===null){
+	public function performBulkChangeTest(
+		$sExpectedDisplayableValue,
+		$sExpectedDescription,
+		$oOrg,
+		$bIsRackReconKey,
+		$aAdditionalCsvData = null,
+		$aExtKeys = null,
+		$sSearchLinkUrl = null,
+		$sError = "Object not found"
+	) {
+		if ($sSearchLinkUrl === null) {
 			$sSearchLinkUrl = 'UI.php?operation=search&filter='.rawurlencode('%5B%22SELECT+%60Rack%60+FROM+Rack+AS+%60Rack%60+WHERE+%28%60Rack%60.%60name%60+%3D+%3Aname%29%22%2C%7B%22name%22%3A%22UnexistingRack%22%7D%2C%5B%5D%5D');
 		}
-		if (is_null($oOrg)){
+		if (is_null($oOrg)) {
 			$iOrgId = $this->getTestOrgId();
 			$sOrgName = "UnitTestOrganization";
-		}else{
+		} else {
 			$iOrgId = $oOrg->GetKey();
 			$sOrgName = $oOrg->Get('name');
 		}
@@ -239,15 +256,15 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 		$sUid = $this->GetUid();
 
 		$aCsvData = [[$sOrgName, "UnexistingRack", "$sUid"]];
-		if ($aAdditionalCsvData !== null){
-			foreach ($aAdditionalCsvData as $i => $aData){
-				foreach ($aData as $sData){
+		if ($aAdditionalCsvData !== null) {
+			foreach ($aAdditionalCsvData as $i => $aData) {
+				foreach ($aData as $sData) {
 					$aCsvData[$i][] = $sData;
 				}
 			}
 		}
 		$aAttributes = ["name" => 2];
-		if ($aExtKeys == null){
+		if ($aExtKeys == null) {
 			$aExtKeys = ["org_id" => ["name" => 0], "rack_id" => ["name" => 1]];
 		}
 		$aReconcilKeys = [ "name" ];
@@ -259,18 +276,17 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 			2 => "\"$sUid\"",
 			"rack_id" => [
 				$sExpectedDisplayableValue,
-				$sExpectedDescription
+				$sExpectedDescription,
 			],
 			"__STATUS__" => "Issue: Unexpected attribute value(s)",
 			"__ERRORS__" => $sError,
 		];
 
-		if ($bIsRackReconKey){
+		if ($bIsRackReconKey) {
 			$aReconcilKeys[] = "rack_id";
 			$aResult[2] = $sUid;
 			$aResult["__STATUS__"] = "Issue: failed to reconcile";
 		}
-
 
 		CMDBSource::Query('START TRANSACTION');
 		try {
@@ -279,8 +295,8 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 			$db_core_transactions_enabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 			MetaModel::GetConfig()->Set('db_core_transactions_enabled', false);
 
-			$this->debug("aCsvData:" . json_encode($aCsvData[0]));
-			$this->debug("aReconcilKeys:" . var_export($aReconcilKeys));
+			$this->debug("aCsvData:".json_encode($aCsvData[0]));
+			$this->debug("aReconcilKeys:".var_export($aReconcilKeys));
 			$oBulk = new \BulkChange(
 				"Server",
 				$aCsvData,
@@ -302,24 +318,33 @@ class BulkChangeExtKeyTest extends ItopDataTestCase {
 			foreach ($aRes as $aRow) {
 				if (array_key_exists('__STATUS__', $aRow)) {
 					$sStatus = $aRow['__STATUS__'];
-					$this->debug("sStatus:" . $sStatus->GetDescription());
+					$this->debug("sStatus:".$sStatus->GetDescription());
 					$this->assertEquals($aResult["__STATUS__"], $sStatus->GetDescription());
 					foreach ($aRow as $i => $oCell) {
 						if ($i != "finalclass" && $i != "__STATUS__" && $i != "__ERRORS__") {
-							$this->debug("i:" . $i);
+							$this->debug("i:".$i);
 							if (array_key_exists($i, $aResult)) {
-								$this->debug("aResult:" . var_export($aResult[$i]));
+								$this->debug("aResult:".var_export($aResult[$i]));
 								if ($oCell instanceof \CellStatus_SearchIssue ||
 									$oCell instanceof \CellStatus_Ambiguous) {
-									$this->assertEquals($aResult[$i][0], $oCell->GetCLIValue(),
-										"failure on " . get_class($oCell) . ' cell type');
-									$this->assertEquals($sSearchLinkUrl, $oCell->GetSearchLinkUrl(),
-										"failure on " . get_class($oCell) . ' cell type');
-									$this->assertEquals($aResult[$i][1], $oCell->GetDescription(),
-										"failure on " . get_class($oCell) . ' cell type');
+									$this->assertEquals(
+										$aResult[$i][0],
+										$oCell->GetCLIValue(),
+										"failure on ".get_class($oCell).' cell type'
+									);
+									$this->assertEquals(
+										$sSearchLinkUrl,
+										$oCell->GetSearchLinkUrl(),
+										"failure on ".get_class($oCell).' cell type'
+									);
+									$this->assertEquals(
+										$aResult[$i][1],
+										$oCell->GetDescription(),
+										"failure on ".get_class($oCell).' cell type'
+									);
 								}
 							}
-						} else if ($i === "__ERRORS__") {
+						} elseif ($i === "__ERRORS__") {
 							$sErrors = array_key_exists("__ERRORS__", $aResult) ? $aResult["__ERRORS__"] : "";
 							$this->assertEquals($sErrors, $oCell->GetDescription());
 						}

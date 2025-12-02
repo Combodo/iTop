@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -89,7 +90,7 @@ class JsonPage extends WebPage
 	 */
 	protected function OutputHeaders(): void
 	{
-		$this->add_header('Content-type: ' . $this->sContentType);
+		$this->add_header('Content-type: '.$this->sContentType);
 
 		foreach ($this->a_headers as $s_header) {
 			header($s_header);

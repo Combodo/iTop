@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -54,44 +55,34 @@ class QueryBuilderContext
 		$this->m_oQBExpressions = new QueryBuilderExpressions($oFilter, $aGroupByExpr, $aSelectExpr);
 
 		$this->m_aClassAliases = $oFilter->GetJoinedClasses();
-		$this->m_aTableAliases = array();
-		$this->m_aFilteredTables = array();
+		$this->m_aTableAliases = [];
+		$this->m_aFilteredTables = [];
 
 		$this->m_aModifierProperties = $aModifierProperties;
-		if (is_null($aSelectedClasses))
-		{
+		if (is_null($aSelectedClasses)) {
 			$this->m_aSelectedClasses = $oFilter->GetSelectedClasses();
-		}
-		else
-		{
+		} else {
 			// For the unions, the selected classes can be upper in the hierarchy (lowest common ancestor)
 			$this->m_aSelectedClasses = $aSelectedClasses;
 		}
 
 		// Add all the attribute of interest
-		foreach ($this->m_aSelectedClasses as $sClassAlias => $sClass)
-		{
+		foreach ($this->m_aSelectedClasses as $sClassAlias => $sClass) {
 			$sTableAlias = $sClassAlias;
-			if (empty($sTableAlias))
-			{
+			if (empty($sTableAlias)) {
 				$sTableAlias = $this->GenerateClassAlias("$sClass", $sClass);
 				$this->m_sEmptyClassAlias = $sTableAlias;
 			}
 			// default to the whole list of attributes + the very std id/finalclass
 			$this->m_oQBExpressions->AddSelect($sClassAlias.'id', new FieldExpression('id', $sTableAlias));
-			if (is_null($aAttToLoad) || !array_key_exists($sClassAlias, $aAttToLoad))
-			{
+			if (is_null($aAttToLoad) || !array_key_exists($sClassAlias, $aAttToLoad)) {
 				$sSelectedClass = $this->GetSelectedClass($sClassAlias);
 				$aAttList = MetaModel::ListAttributeDefs($sSelectedClass);
-			}
-			else
-			{
+			} else {
 				$aAttList = $aAttToLoad[$sClassAlias];
 			}
-			foreach ($aAttList as $sAttCode => $oAttDef)
-			{
-				if (!$oAttDef->IsScalar())
-				{
+			foreach ($aAttList as $sAttCode => $oAttDef) {
+				if (!$oAttDef->IsScalar()) {
 					continue;
 				}
 				$oExpression = new FieldExpression($sAttCode, $sTableAlias);
@@ -117,13 +108,10 @@ class QueryBuilderContext
 
 	public function GetModifierProperties($sPluginClass)
 	{
-		if (array_key_exists($sPluginClass, $this->m_aModifierProperties))
-		{
+		if (array_key_exists($sPluginClass, $this->m_aModifierProperties)) {
 			return $this->m_aModifierProperties[$sPluginClass];
-		}
-		else
-		{
-			return array();
+		} else {
+			return [];
 		}
 	}
 
@@ -134,13 +122,10 @@ class QueryBuilderContext
 
 	public function AddFilteredTable($sTableAlias, $oCondition)
 	{
-		if (array_key_exists($sTableAlias, $this->m_aFilteredTables))
-		{
+		if (array_key_exists($sTableAlias, $this->m_aFilteredTables)) {
 			$this->m_aFilteredTables[$sTableAlias][] = $oCondition;
-		}
-		else
-		{
-			$this->m_aFilteredTables[$sTableAlias] = array($oCondition);
+		} else {
+			$this->m_aFilteredTables[$sTableAlias] = [$oCondition];
 		}
 	}
 
@@ -156,6 +141,5 @@ class QueryBuilderContext
 	{
 		return $this->m_sEmptyClassAlias;
 	}
-
 
 }

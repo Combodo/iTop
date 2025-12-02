@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:KnownError' => 'Errori conosciuti',
 	'Class:KnownError+' => 'Errori documentati per problemi noti',
 	'Class:KnownError/Attribute:name' => 'Nome',
@@ -52,13 +53,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
 	'Class:KnownError/Attribute:document_list' => 'Documenti',
 	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkErrorToFunctionalCI' => 'Link Errore /CIFunzionale',
 	'Class:lnkErrorToFunctionalCI+' => 'Infra impattata dal errore conosciuto',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -72,13 +73,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Ragione',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToError' => 'Link Documento / Errore',
 	'Class:lnkDocumentToError+' => 'Link tra il documento e l\'errore conosciuto',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
@@ -92,9 +93,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
-));
+]);
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ProblemManagement' => 'Gestione dei Problemi',
 	'Menu:ProblemManagement+' => 'Gestione dei Problemi',
 	'Menu:Problem:Shortcuts' => 'Scorciatoia',
@@ -104,4 +105,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:SearchError+' => 'Ricerca per Errori Conosciuti',
 	'Menu:Problem:KnownErrors' => 'Tutti gli errori conosciuti',
 	'Menu:Problem:KnownErrors+' => 'Tutti gli errori conosciuti',
-));
+]);

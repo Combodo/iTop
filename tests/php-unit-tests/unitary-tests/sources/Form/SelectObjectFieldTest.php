@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -12,8 +13,10 @@ use ContextTag;
 use DBObjectSearch;
 use Organization;
 
-class SelectObjectFieldTest extends ItopDataTestCase {
-	public function testValidate(): void {
+class SelectObjectFieldTest extends ItopDataTestCase
+{
+	public function testValidate(): void
+	{
 		$oSelectObjectField = new SelectObjectField('test');
 		$oSelectObjectField->SetSearch(DBObjectSearch::FromOQL('SELECT '.Organization::class));
 
@@ -26,7 +29,8 @@ class SelectObjectFieldTest extends ItopDataTestCase {
 		$this->ValidateSelectObjectField($oSelectObjectField);
 	}
 
-	private function ValidateSelectObjectField(SelectObjectField $oSelectObjectField): void {
+	private function ValidateSelectObjectField(SelectObjectField $oSelectObjectField): void
+	{
 		$oSelectObjectField->SetCurrentValue(null);
 		$this->assertTrue($oSelectObjectField->Validate(), 'No value must be valid');
 

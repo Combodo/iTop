@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Spanish Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ConfigFileEditor' => 'Plain text editor~~',
 	'config-edit-title' => 'Editor de Archivo de Configuración',
 	'config-edit-intro' => 'Sea muy cuidadoso cuando edite el archivo de configuración. En particular, sólo los elementos superiores (ejem.: the global configuration y modules settings) deberian ser editados.',
@@ -26,4 +27,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'config-error-file-changed' => 'Error: el archivo de configuración ha cambiado desde que lo abrió y no se puede guardar. Actualice y aplique sus cambios nuevamente.',
 	'config-not-allowed-in-demo' => 'Lo sentimos, '.ITOP_APPLICATION_SHORT.' está en <b>modo de demostración</b>: el archivo de configuración no se puede editar.',
 	'config-interactive-not-allowed' => ITOP_APPLICATION_SHORT.' edición interactiva de la configuración como deshabilitada. Consulte <code>\'config_editor\' => \'disabled\'</code> en el archivo de configuración.',
-));
+]);

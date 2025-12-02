@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:IncidentManagement' => 'Incident Management',
 	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Übersicht',
@@ -32,8 +33,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Offene Incidents nach Status',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Offene Incidents nach Bearbeiter',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Offene Incidents nach Kunde',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -49,7 +49,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 // Class: Incident
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Status',
@@ -228,4 +228,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
 	'Tickets:Related:OpenIncidents' => 'Offene Incidents',
-));
+]);

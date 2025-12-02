@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author LinProfs <info@linprofs.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => 'Helpdesk',
 	'Menu:RequestManagementProvider' => 'Helpdesk leverancier',
@@ -47,7 +48,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:UserRequest:MyWorkOrders+' => 'Alle werkopdrachten toegewezen aan mij',
 	'Class:Problem:KnownProblemList' => 'Gekende fouten',
 	'Tickets:Related:OpenIncidents' => 'Open incidenten',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -63,7 +64,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Class: UserRequest
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:UserRequest' => 'Gebruikersverzoek',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -257,10 +258,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Wacht op goedkeuring',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kan het verzoek niet als hoofdverzoek toewijzen aan zichzelf',
-));
+]);
 
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Portal:TitleDetailsFor_Request' => 'Details van het verzoek',
 	'Portal:ButtonUpdate' => 'Wijzig',
 	'Portal:ButtonClose' => 'Sluit',
@@ -285,11 +285,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Kies je voorkeurstaal',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Los subverzoeken op',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem de kenmerken over wat betreft service, team, agent, oplossing',
-));
+]);
 
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Organization:Overview:UserRequests' => 'Gebruikersverzoeken van deze organisatie',
 	'Organization:Overview:MyUserRequests' => 'Mijn gebruikersverzoeken voor deze organisatie',
 	'Organization:Overview:Tickets' => 'Tickets voor deze organisatie',
-));
+]);

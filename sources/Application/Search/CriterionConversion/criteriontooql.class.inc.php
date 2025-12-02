@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -19,9 +20,7 @@
  *
  */
 
-
 namespace Combodo\iTop\Application\Search\CriterionConversion;
-
 
 use AttributeDate;
 use AttributeDateTime;
@@ -39,32 +38,26 @@ use utils;
 
 class CriterionToOQL extends CriterionConversionAbstract
 {
-
 	public static function Convert($oSearch, $aCriteria)
 	{
-		if (!empty($aCriteria['oql']))
-		{
+		if (!empty($aCriteria['oql'])) {
 			return $aCriteria['oql'];
 		}
 
 		$aRef = explode('.', $aCriteria['ref']);
 		$aCriteria['code'] = $aRef[1];
-		for($i = 0; $i < count($aRef); $i++)
-		{
+		for ($i = 0; $i < count($aRef); $i++) {
 			$aRef[$i] = '`'.$aRef[$i].'`';
 		}
 		$sRef = implode('.', $aRef);
 
-		if (isset($aCriteria['operator']))
-		{
+		if (isset($aCriteria['operator'])) {
 			$sOperator = $aCriteria['operator'];
-		}
-		else
-		{
+		} else {
 			$sOperator = self::OP_ALL;
 		}
 
-		$aMappedOperators = array(
+		$aMappedOperators = [
 			self::OP_CONTAINS => 'ContainsToOql',
 			self::OP_EQUALS => 'EqualsToOql',
 			self::OP_STARTS_WITH => 'StartsWithToOql',
@@ -77,10 +70,9 @@ class CriterionToOQL extends CriterionConversionAbstract
 			self::OP_IN => 'InToOql',
 			self::OP_MATCHES => 'MatchesToOql',
 			self::OP_ALL => 'AllToOql',
-		);
+		];
 
-		if (array_key_exists($sOperator, $aMappedOperators))
-		{
+		if (array_key_exists($sOperator, $aMappedOperators)) {
 			$sFct = $aMappedOperators[$sOperator];
 
 			return self::$sFct($oSearch, $sRef, $aCriteria);
@@ -93,9 +85,8 @@ class CriterionToOQL extends CriterionConversionAbstract
 
 	private static function GetValues($aCriteria)
 	{
-		if (!array_key_exists('values', $aCriteria))
-		{
-			return array();
+		if (!array_key_exists('values', $aCriteria)) {
+			return [];
 		}
 
 		return $aCriteria['values'];
@@ -103,12 +94,10 @@ class CriterionToOQL extends CriterionConversionAbstract
 
 	private static function GetValue($aValues, $iIndex)
 	{
-		if (!array_key_exists($iIndex, $aValues))
-		{
+		if (!array_key_exists($iIndex, $aValues)) {
 			return null;
 		}
-		if (!array_key_exists('value', $aValues[$iIndex]))
-		{
+		if (!array_key_exists('value', $aValues[$iIndex])) {
 			return null;
 		}
 
@@ -155,8 +144,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
-		if (($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC) && ($sValue === '0'))
-		{
+		if (($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC) && ($sValue === '0')) {
 			return "({$sRef} = '0')";
 		}
 
@@ -182,10 +170,9 @@ class CriterionToOQL extends CriterionConversionAbstract
 	protected static function MatchesToOql($oSearch, $sRef, $aCriteria)
 	{
 		$aValues = self::GetValues($aCriteria);
-		$aRawValues = array();
+		$aRawValues = [];
 		$bHasUnDefined = isset($aCriteria['has_undefined']) ? $aCriteria['has_undefined'] : false;
-		for($i = 0; $i < count($aValues); $i++)
-		{
+		for ($i = 0; $i < count($aValues); $i++) {
 			$sRawValue = self::GetValue($aValues, $i);
 			if (!utils::StrLen($sRawValue)) {
 				$bHasUnDefined = true;
@@ -194,21 +181,16 @@ class CriterionToOQL extends CriterionConversionAbstract
 			}
 		}
 		// This allow to search for complete words
-		if (!empty($aRawValues))
-		{
+		if (!empty($aRawValues)) {
 			$sValue = implode(' ', $aRawValues).' _';
-		}
-		else
-		{
-			if ($bHasUnDefined)
-			{
+		} else {
+			if ($bHasUnDefined) {
 				return "({$sRef} = '')";
 			}
 			return "1";
 		}
 
-		if ($bHasUnDefined)
-		{
+		if ($bHasUnDefined) {
 			return "((({$sRef} MATCHES '{$sValue}') OR ({$sRef} = '')) AND 1)";
 		}
 		return "({$sRef} MATCHES '{$sValue}')";
@@ -216,10 +198,8 @@ class CriterionToOQL extends CriterionConversionAbstract
 
 	protected static function EmptyToOql($oSearch, $sRef, $aCriteria)
 	{
-		if (isset($aCriteria['widget']))
-		{
-			switch ($aCriteria['widget'])
-			{
+		if (isset($aCriteria['widget'])) {
+			switch ($aCriteria['widget']) {
 				case AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC:
 				case AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD:
 				case AttributeDefinition::SEARCH_WIDGET_TYPE_DATE:
@@ -233,10 +213,8 @@ class CriterionToOQL extends CriterionConversionAbstract
 
 	protected static function NotEmptyToOql($oSearch, $sRef, $aCriteria)
 	{
-		if (isset($aCriteria['widget']))
-		{
-			switch ($aCriteria['widget'])
-			{
+		if (isset($aCriteria['widget'])) {
+			switch ($aCriteria['widget']) {
 				case AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC:
 				case AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD:
 				case AttributeDefinition::SEARCH_WIDGET_TYPE_DATE:
@@ -266,71 +244,54 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$sClass = $aCriteria['class'];
 		$aValues = self::GetValues($aCriteria);
 
-		if (count($aValues) == 0)
-		{
+		if (count($aValues) == 0) {
 			// Ignore when nothing is selected
 			return "1";
 		}
 
 		$oAttDef = null;
-		try
-		{
+		try {
 			$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
-		} catch (\CoreException $e)
-		{
+		} catch (\CoreException $e) {
 			return "1";
 		}
-		if (array_key_exists($sAttCode, $aAttributeDefs))
-		{
+		if (array_key_exists($sAttCode, $aAttributeDefs)) {
 			$oAttDef = $aAttributeDefs[$sAttCode];
 		}
 
 		// Hierarchical keys
 		$sHierarchicalKeyCode = false;
 		$sTargetClass = '';
-		if (isset($oAttDef) && $oAttDef->IsExternalKey() && ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY))
-		{
-			if ($oAttDef instanceof AttributeExternalKey)
-			{
+		if (isset($oAttDef) && $oAttDef->IsExternalKey() && ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY)) {
+			if ($oAttDef instanceof AttributeExternalKey) {
 				$sTargetClass = $oAttDef->GetTargetClass();
-			}
-			else
-			{
+			} else {
 				/** @var AttributeExternalKey $oFinalAttDef */
 				$oFinalAttDef = $oAttDef->GetFinalAttDef();
 				$sTargetClass = $oFinalAttDef->GetTargetClass();
 			}
 
-			try
-			{
+			try {
 				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
-			} catch (\CoreException $e)
-			{
+			} catch (\CoreException $e) {
 			}
 		}
 
 		$sFilterOnUndefined = '';
-		if ($oAttDef instanceof AttributeEnum)
-		{
+		if ($oAttDef instanceof AttributeEnum) {
 			$aAllowedValues = SearchForm::GetFieldAllowedValues($oAttDef);
-			if (array_key_exists('values', $aAllowedValues))
-			{
+			if (array_key_exists('values', $aAllowedValues)) {
 				// Can't invert the test if NULL is allowed
-				if (!$oAttDef->IsNullAllowed())
-				{
+				if (!$oAttDef->IsNullAllowed()) {
 					$aAllowedValues = $aAllowedValues['values'];
-					if (count($aValues) == count($aAllowedValues))
-					{
+					if (count($aValues) == count($aAllowedValues)) {
 						// All entries are selected
 						return "1";
 					}
 					// more selected values than remaining so use NOT IN
-					else
-					{
-						if (count($aValues) > (count($aAllowedValues) / 2))
-						{
-							foreach($aValues as $aValue)
-							{
+					else {
+						if (count($aValues) > (count($aAllowedValues) / 2)) {
+							foreach ($aValues as $aValue) {
 								unset($aAllowedValues[$aValue['value']]);
 							}
 							$sInList = implode("','", array_keys($aAllowedValues));
@@ -340,11 +301,9 @@ class CriterionToOQL extends CriterionConversionAbstract
 					}
 				}
 				// search for "undefined"
-				for($i = 0; $i < count($aValues); $i++)
-				{
+				for ($i = 0; $i < count($aValues); $i++) {
 					$aValue = $aValues[$i];
-					if (isset($aValue['value']) && ($aValue['value'] === 'null'))
-					{
+					if (isset($aValue['value']) && ($aValue['value'] === 'null')) {
 						$sFilterOnUndefined = "ISNULL({$sRef})";
 						unset($aValues[$i]);
 						break;
@@ -353,14 +312,11 @@ class CriterionToOQL extends CriterionConversionAbstract
 			}
 		}
 
-		if ($sHierarchicalKeyCode !== false)
-		{
+		if ($sHierarchicalKeyCode !== false) {
 			// search for "undefined"
-			for($i = 0; $i < count($aValues); $i++)
-			{
+			for ($i = 0; $i < count($aValues); $i++) {
 				$aValue = $aValues[$i];
-				if (isset($aValue['value']) && ($aValue['value'] === '0'))
-				{
+				if (isset($aValue['value']) && ($aValue['value'] === '0')) {
 					$sFilterOnUndefined = "({$sRef} = '0')";
 					unset($aValues[$i]);
 					break;
@@ -368,28 +324,22 @@ class CriterionToOQL extends CriterionConversionAbstract
 			}
 		}
 
-		$aInValues = array();
-		foreach($aValues as $aValue)
-		{
+		$aInValues = [];
+		foreach ($aValues as $aValue) {
 			$aInValues[] = $aValue['value'];
 		}
 		$sInList = implode("','", $aInValues);
 
 		$sCondition = '1';
-		if (count($aInValues) == 1)
-		{
+		if (count($aInValues) == 1) {
 			$sCondition = "({$sRef} = '$sInList')";
-		}
-		elseif (count($aInValues) > 1)
-		{
+		} elseif (count($aInValues) > 1) {
 			$sCondition = "({$sRef} IN ('$sInList'))";
 		}
 
 		// Hierarchical keys
-		try
-		{
-			if (($sHierarchicalKeyCode !== false) && ($oSearch instanceof DBObjectSearch))
-			{
+		try {
+			if (($sHierarchicalKeyCode !== false) && ($oSearch instanceof DBObjectSearch)) {
 				// NOTE: The hierarchy does not work for unions for now. It'll be done with the full support of unions in search.
 				// Add all the joins for hierarchical key
 				$oFilter = new DBObjectSearch($sTargetClass);
@@ -404,22 +354,17 @@ class CriterionToOQL extends CriterionConversionAbstract
 				// Use the 'below' operator by default
 				$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
 				$oCriteria = $oSearch->GetCriteria();
-				$aArgs = MetaModel::PrepareQueryArguments(array(), $oSearch->GetInternalParams(), $oSearch->GetExpectedArguments() );
+				$aArgs = MetaModel::PrepareQueryArguments([], $oSearch->GetInternalParams(), $oSearch->GetExpectedArguments());
 				$oSearch->ResetCondition();
 				$sCondition = $oCriteria->RenderExpression(false, $aArgs);
 			}
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 		}
 
-		if (!empty($sFilterOnUndefined))
-		{
-			if (count($aValues) === 0)
-			{
+		if (!empty($sFilterOnUndefined)) {
+			if (count($aValues) === 0) {
 				$sCondition = $sFilterOnUndefined;
-			}
-			else
-			{
+			} else {
 				// Add 'AND 1' to group the 'OR' inside an AND list for OQL parsing
 				$sCondition = "(({$sCondition} OR {$sFilterOnUndefined}) AND 1)";
 			}
@@ -430,55 +375,44 @@ class CriterionToOQL extends CriterionConversionAbstract
 
 	protected static function BetweenDatesToOql($oSearch, $sRef, $aCriteria)
 	{
-		$aOQL = array();
+		$aOQL = [];
 
 		$aValues = self::GetValues($aCriteria);
-		if (count($aValues) != 2)
-		{
+		if (count($aValues) != 2) {
 			return "1";
 		}
 
 		$sWidget = $aCriteria['widget'];
-		if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME)
-		{
+		if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME) {
 			$sAttributeClass = AttributeDateTime::class;
-		}
-		else
-		{
+		} else {
 			$sAttributeClass = AttributeDate::class;
 		}
 		$oFormat = $sAttributeClass::GetFormat();
 
 		$sStartDate = $aValues[0]['value'];
-		if (!empty($sStartDate))
-		{
-			try
-			{
+		if (!empty($sStartDate)) {
+			try {
 				$oDate = $oFormat->parse($sStartDate);
 				$sStartDate = $oDate->format($sAttributeClass::GetSQLFormat());
 				$aOQL[] = "({$sRef} >= '$sStartDate')";
-			} catch (Exception $e)
-			{
+			} catch (Exception $e) {
 			}
 		}
 
 		$sEndDate = $aValues[1]['value'];
-		if (!empty($sEndDate))
-		{
-			try
-			{
+		if (!empty($sEndDate)) {
+			try {
 				$oDate = $oFormat->parse($sEndDate);
 				$sEndDate = $oDate->format($sAttributeClass::GetSQLFormat());
 				$aOQL[] = "({$sRef} <= '$sEndDate')";
-			} catch (Exception $e)
-			{
+			} catch (Exception $e) {
 			}
 		}
 
 		$sOQL = implode(' AND ', $aOQL);
 
-		if (empty($sOQL))
-		{
+		if (empty($sOQL)) {
 			$sOQL = "1";
 		}
 
@@ -495,41 +429,30 @@ class CriterionToOQL extends CriterionConversionAbstract
 	 */
 	protected static function BetweenToOql($oSearch, $sRef, $aCriteria)
 	{
-		$aOQL = array();
+		$aOQL = [];
 
 		$aValues = self::GetValues($aCriteria);
-		if (count($aValues) != 2)
-		{
+		if (count($aValues) != 2) {
 			return "1";
 		}
 
-		if (isset($aValues[0]['value']))
-		{
+		if (isset($aValues[0]['value'])) {
 			$sStartNum = trim($aValues[0]['value']);
-			if (is_numeric($sStartNum))
-			{
+			if (is_numeric($sStartNum)) {
 				$aOQL[] = "({$sRef} >= '$sStartNum')";
-			}
-			else
-			{
-				if (!empty($sStartNum))
-				{
+			} else {
+				if (!empty($sStartNum)) {
 					throw new AjaxSearchException("'$sStartNum' is not a numeric value", 400);
 				}
 			}
 		}
 
-		if (isset($aValues[1]['value']))
-		{
+		if (isset($aValues[1]['value'])) {
 			$sEndNum = trim($aValues[1]['value']);
-			if (is_numeric($sEndNum))
-			{
+			if (is_numeric($sEndNum)) {
 				$aOQL[] = "({$sRef} <= '$sEndNum')";
-			}
-			else
-			{
-				if (!empty($sEndNum))
-				{
+			} else {
+				if (!empty($sEndNum)) {
 					throw new AjaxSearchException("'$sEndNum' is not a numeric value", 400);
 				}
 			}
@@ -537,14 +460,12 @@ class CriterionToOQL extends CriterionConversionAbstract
 
 		$sOQL = implode(' AND ', $aOQL);
 
-		if (empty($sOQL))
-		{
+		if (empty($sOQL)) {
 			$sOQL = "1";
 		}
 
 		return $sOQL;
 	}
-
 
 	protected static function AllToOql($oSearch, $sRef, $aCriteria)
 	{

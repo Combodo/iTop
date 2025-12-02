@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:RequestManagement' => 'Gerenciamento de Solicitações',
 	'Menu:RequestManagement+' => 'Gerenciamento de Solicitações',
 	'Menu:RequestManagementProvider' => 'Solicitações a provedores',
@@ -41,7 +42,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Solicitações abertas por cliente',
 	'Class:UserRequest:KnownErrorList' => 'Erros conhecidos',
 	'Class:UserRequest:KnownErrorList+' => 'Known Errors related to Functional CI linked to the current ticket~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -57,7 +58,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Class: UserRequest
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:UserRequest' => 'Solicitação de Usuário',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -255,11 +256,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Não é possível atribuir a solicitação pai a própria solicitação',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a solução a pedidos filhos (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de solução',
-));
+]);
 
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Organization:Overview:UserRequests' => 'Solicitações de usuários desta organização',
 	'Organization:Overview:MyUserRequests' => 'Minhas solicitações de usuário para esta organização',
 	'Organization:Overview:Tickets' => 'Solicitações desta organização',
-));
+]);

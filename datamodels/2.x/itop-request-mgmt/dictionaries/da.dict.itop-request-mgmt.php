@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => '',
 	'Menu:RequestManagementProvider' => 'Helpdesk Leverandør',
@@ -46,7 +47,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:UserRequest:MyWorkOrders+' => '',
 	'Class:Problem:KnownProblemList' => 'Kendte problemer',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -62,7 +63,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 // Class: UserRequest
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:UserRequest' => 'Brugerhenvendelse',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -256,10 +257,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Afventer godkendelse',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
-));
+]);
 
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Portal:TitleDetailsFor_Request' => 'Dealjer for Brugerhenvendelser',
 	'Portal:ButtonUpdate' => 'Opdater',
 	'Portal:ButtonClose' => 'Luk',
@@ -284,11 +284,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Vælg dit foretrukne sprog',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
-));
+]);
 
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
 	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
 	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
-));
+]);

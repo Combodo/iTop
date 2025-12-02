@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Organization' => 'Kurum',
 	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => 'Adı',
@@ -38,13 +39,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
-));
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Location' => 'Yerleşke',
 	'Class:Location+' => 'Yerleşke : Bölge, Ülke, Şehir, Yerleşke, Bina, Kat, Oda, kabin,...',
 	'Class:Location/Attribute:name' => 'Adı',
@@ -71,13 +72,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Location/Attribute:physicaldevice_list+' => 'Bu konumdaki tüm cihazlar',
 	'Class:Location/Attribute:person_list' => 'Kişiler',
 	'Class:Location/Attribute:person_list+' => 'Bu konumda bulunan tüm kişiler',
-));
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Contact' => 'İrtibat',
 	'Class:Contact+' => '',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
@@ -109,13 +110,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Contact/Attribute:cis_list+' => 'Bu kişiyle bağlantılı tüm yapılandırma öğeleri',
 	'Class:Contact/Attribute:finalclass' => 'Tip',
 	'Class:Contact/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Person' => 'Kişi',
 	'Class:Person+' => '',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
@@ -150,13 +151,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Team' => 'Ekip',
 	'Class:Team+' => '',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
@@ -164,13 +165,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Team/Attribute:persons_list+' => 'Bu ekibe ait tüm kişiler',
 	'Class:Team/Attribute:tickets_list' => 'Çağrı Kayıtları',
 	'Class:Team/Attribute:tickets_list+' => 'Bu ekibe atanan tüm çağrı kayıtları',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Document' => 'Doküman',
 	'Class:Document+' => '',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
@@ -200,77 +201,77 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Document/Attribute:cis_list+' => 'Bu belgeye bağlı tüm yapılandırma öğeleri',
 	'Class:Document/Attribute:finalclass' => 'Belge Türü',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DocumentFile' => 'Belge dosyası',
 	'Class:DocumentFile+' => '~~',
 	'Class:DocumentFile/Attribute:file' => 'Dosya',
 	'Class:DocumentFile/Attribute:file+' => '~~',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DocumentNote' => 'Belge Notu',
 	'Class:DocumentNote+' => '~~',
 	'Class:DocumentNote/Attribute:text' => 'Metin',
 	'Class:DocumentNote/Attribute:text+' => '~~',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DocumentWeb' => 'Belge Web',
 	'Class:DocumentWeb+' => '~~',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '~~',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Typology' => 'Tipoloji',
 	'Class:Typology+' => '~~',
 	'Class:Typology/Attribute:name' => 'İsim',
 	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'Tip',
 	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DocumentType' => 'Belge Türü',
 	'Class:DocumentType+' => '~~',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ContactType' => 'İletişim Tipi',
 	'Class:ContactType+' => '~~',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkPersonToTeam' => 'Bağlantılı Kişi / Ekip',
 	'Class:lnkPersonToTeam+' => '~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
@@ -287,13 +288,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles~~',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Rol Adı',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:DataAdministration' => 'Veri yönetimi',
 	'Menu:DataAdministration+' => 'Veri yönetimi',
 	'Menu:Catalogs' => 'Kataloglar',
@@ -331,20 +332,20 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Typology+' => 'Tipoloji Yapılandırması',
 	'UI_WelcomeMenu_AllConfigItems' => 'Özet',
 	'Menu:ConfigManagement:Typology' => 'Tipoloji Yapılandırması',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Person:info' => 'Genel Bilgi',
 	'User:info' => 'Genel Bilgi',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Bildirim',
-));
+]);
 
 // Themes
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -25,7 +26,7 @@
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'combodo-db-tools/3.2.1',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Database maintenance tools',
@@ -33,21 +34,21 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
+		'dependencies' => [
 			'itop-structure/3.0.0',
-		),
+		],
 		'mandatory' => false,
 		'visible' => true,
 
 		// Components
 		//
-		'datamodel' => array(
+		'datamodel' => [
 			'src/Service/DBToolsUtils.php',
-            'src/Service/DBAnalyzerUtils.php',
-		),
-		'webservice' => array(),
-		'data.struct' => array(),
-		'data.sample' => array(),
+			'src/Service/DBAnalyzerUtils.php',
+		],
+		'webservice' => [],
+		'data.struct' => [],
+		'data.sample' => [],
 
 		// Documentation
 		//
@@ -56,6 +57,6 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(),
-	)
+		'settings' => [],
+	]
 );

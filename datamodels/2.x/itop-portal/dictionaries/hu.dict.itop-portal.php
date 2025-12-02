@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'portal:itop-portal' => 'Standard portál',
 	'Page:DefaultTitle' => '%1$s - Felhasználói portál',
 	'Brick:Portal:UserProfile:Title' => 'Saját profil',
@@ -26,4 +27,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Brick:Portal:ListAllRequests:Tab' => 'On-going and closed~~',
 	'Brick:Portal:SearchInAllRequests:Title' => 'Search in all requests~~',
 	'Brick:Portal:SearchInAllRequests:Title+' => '<p>Regardless of their status.</p>~~',
-));
+]);

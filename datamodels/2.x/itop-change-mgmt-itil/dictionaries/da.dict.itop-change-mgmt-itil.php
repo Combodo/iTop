@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ChangeManagement' => 'Change Management',
 	'Menu:Change:Overview' => 'Oversigt',
 	'Menu:Change:Overview+' => '',
@@ -34,7 +35,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes de sidste 7 dage efter status',
 	'Tickets:Related:OpenChanges' => 'Open changes~~',
 	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -46,12 +47,11 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Change' => 'Change',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Status',
@@ -148,13 +148,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Afslut',
 	'Class:Change/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:RoutineChange' => 'Rutine Ændring',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Valider',
@@ -179,13 +179,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Afslut',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ApprovedChange' => 'Godkendte Changes',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Dato for godkendelse',
@@ -214,13 +214,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Afslut',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:NormalChange' => 'Normal Ændring',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Dato for accept',
@@ -249,13 +249,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Afslut',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:EmergencyChange' => 'Emergency Ændring',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Valider',
@@ -280,4 +280,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Afslut',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-));
+]);

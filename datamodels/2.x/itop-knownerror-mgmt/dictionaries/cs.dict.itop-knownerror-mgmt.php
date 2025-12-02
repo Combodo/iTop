@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:KnownError' => 'Známá chyba',
 	'Class:KnownError+' => 'Pro známou příčinu zdokumentovaná chyba',
 	'Class:KnownError/Attribute:name' => 'Název',
@@ -54,13 +55,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:KnownError/Attribute:ci_list+' => 'Všechny konfigurační položky vztahující se k této známé chybě',
 	'Class:KnownError/Attribute:document_list' => 'Dokumenty',
 	'Class:KnownError/Attribute:document_list+' => 'Všechny dokumenty spojené s touto známou chybou',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkErrorToFunctionalCI' => 'Spojení (Chyba / Funkční konfigurační položka)',
 	'Class:lnkErrorToFunctionalCI+' => 'Konfigurační položky vztahující se k chybě',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -74,13 +75,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Důvod',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkDocumentToError' => 'Spojení (Dokument / Chyba)',
 	'Class:lnkDocumentToError+' => 'Spojení mezi dokumentem a známou chybou',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
@@ -94,9 +95,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
+]);
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:ProblemManagement' => 'Správa problémů',
 	'Menu:ProblemManagement+' => 'Správa problémů',
 	'Menu:Problem:Shortcuts' => 'Odkazy',
@@ -106,4 +107,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:SearchError+' => 'Hledat známé chyby',
 	'Menu:Problem:KnownErrors' => 'Všechny známé chyby',
 	'Menu:Problem:KnownErrors+' => 'Všechny známé chyby',
-));
+]);

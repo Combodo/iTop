@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'bkp-backup-running' => 'Kopia zapasowa jest uruchomiona. Proszę czekać...',
 	'bkp-restore-running' => 'Trwa przywracanie. Proszę czekać...',
 	'Menu:BackupStatus' => 'Kopie zapasowe',
@@ -44,4 +45,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'bkp-wait-backup' => 'Poczekaj na zakończenie tworzenia kopii zapasowej...',
 	'bkp-wait-restore' => 'Poczekaj na zakończenie przywracania...',
 	'bkp-success-restore' => 'Przywracanie zakończone pomyślnie.',
-));
+]);

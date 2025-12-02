@@ -5,9 +5,7 @@ namespace Combodo\iTop\Test\UnitTest\Core\Sanitizer;
 use HTMLSanitizer;
 use SVGDOMSanitizer;
 
-
 require_once __DIR__.'/AbstractDOMSanitizerTest.php';
-
 
 class SVGDOMSanitizerTest extends AbstractDOMSanitizerTest
 {
@@ -49,4 +47,3 @@ class SVGDOMSanitizerTest extends AbstractDOMSanitizerTest
 		];
 	}
 }
-

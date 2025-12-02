@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Bruno DA SILVA, working for Combodo
  * Date: 31/12/2019
@@ -7,17 +8,16 @@
 
 namespace Combodo\iTop\Config\Validator;
 
-
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 
 class ConfigNodesVisitor extends NodeVisitorAbstract
 {
-	private $aAllowedNodeClasses = array();
+	private $aAllowedNodeClasses = [];
 
 	public function __construct()
 	{
-		$this->aAllowedNodeClasses = array(
+		$this->aAllowedNodeClasses = [
 			Node\Scalar::class,
 
 			Node\Name::class,
@@ -53,7 +53,7 @@ class ConfigNodesVisitor extends NodeVisitorAbstract
 
 			Node\Stmt\Const_::class,
 			Node\Stmt\Global_::class,
-		);
+		];
 	}
 
 	/**
@@ -74,10 +74,8 @@ class ConfigNodesVisitor extends NodeVisitorAbstract
 	 */
 	public function ValidateNode(Node $node)
 	{
-		foreach ($this->aAllowedNodeClasses as $sAllowedNodeClass)
-		{
-			if ($node instanceof $sAllowedNodeClass)
-			{
+		foreach ($this->aAllowedNodeClasses as $sAllowedNodeClass) {
+			if ($node instanceof $sAllowedNodeClass) {
 				return;
 			}
 		}
@@ -92,47 +90,37 @@ class ConfigNodesVisitor extends NodeVisitorAbstract
 	 */
 	private function ThrowInvalidConf(Node $node)
 	{
-		if (in_array('name', $node->getSubNodeNames()))
-		{
+		if (in_array('name', $node->getSubNodeNames())) {
 			$sMessage = sprintf(
 				"Invalid configuration: %s of type %s is forbidden in line %d",
 				$node->name,
 				$node->getType(),
 				$node->getLine()
 			);
-		}
-		elseif (in_array('class', $node->getSubNodeNames()))
-		{
+		} elseif (in_array('class', $node->getSubNodeNames())) {
 
-			if (in_array('name', $node->class->getSubNodeNames()))
-			{
+			if (in_array('name', $node->class->getSubNodeNames())) {
 				$sMessage = sprintf(
 					"Invalid configuration: usage of the class '%s' (%s) is forbidden in line %d",
 					is_object($node->class) ? $node->class->name : $node->class,
 					$node->getType(),
 					$node->getLine()
 				);
-			}
-			else
-			{
+			} else {
 				$sMessage = sprintf(
 					"Invalid configuration: usage of %s is forbidden in line %d",
 					$node->getType(),
 					$node->getLine()
 				);
 			}
-		}
-		elseif ($node->hasAttribute('name'))
-		{
+		} elseif ($node->hasAttribute('name')) {
 			$sMessage = sprintf(
 				"Invalid configuration: %s of type %s is forbidden in line %d",
 				$node->getAttribute('name'),
 				$node->getType(),
 				$node->getLine()
 			);
-		}
-		else
-		{
+		} else {
 			$sMessage = sprintf(
 				"Invalid configuration: %s is forbidden in line %d",
 				$node->getType(),

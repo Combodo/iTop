@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,10 +17,9 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * data generator
- * helps the consultants in creating dummy data sets, for various test purposes (validation, usability, scalability) 
+ * helps the consultants in creating dummy data sets, for various test purposes (validation, usability, scalability)
  *
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -37,60 +37,50 @@ class cmdbDataGenerator
 	protected $m_sOrganizationCode;
 	protected $m_sOrganizationName;
 	protected $m_OrganizationDomains;
-	
+
 	/**
 	 * Constructor
 	 */
 	public function __construct($sOrganizationId = "")
 	{
 		global $aCompanies, $aCompaniesCode;
-		if ($sOrganizationId == '')
-		{
+		if ($sOrganizationId == '') {
 			// No organization provided, pick a random and unused one from our predefined list
-			$retries = 5*count($aCompanies);
-			while ( ($retries > 0) && !isset($this->m_sOrganizationCode)) // Stupid algorithm, but I'm too lazy to do something bulletproof tonight
-			{
+			$retries = 5 * count($aCompanies);
+			while (($retries > 0) && !isset($this->m_sOrganizationCode)) { // Stupid algorithm, but I'm too lazy to do something bulletproof tonight
 				$index = rand(0, count($aCompanies) - 1);
-				if (!$this->OrganizationExists($aCompanies[$index]['code']))
-				{
+				if (!$this->OrganizationExists($aCompanies[$index]['code'])) {
 					$this->m_sOrganizationCode = $aCompanies[$index]['code'];
 					$this->m_sOrganizationName = $aCompanies[$index]['name'];
 					$this->m_OrganizationDomains = $aCompanies[$index]['domain'];
 				}
 				$retries--;
 			}
-		}
-		else
-		{
+		} else {
 			// A code has been provided, let's take the information we need from the organization itself
 			$this->m_sOrganizationId = $sOrganizationId;
 			$oOrg = $this->GetOrganization($sOrganizationId);
-			if ($oOrg == null)
-			{
+			if ($oOrg == null) {
 				echo "Unable to find the organization '$sOrganisationCode' in the database... can not add objects into this organization.<br/>\n";
 				exit();
 			}
 			$this->m_sOrganizationCode = $oOrg->Get('code');
 			$this->m_sOrganizationName = $oOrg->Get('name');
-			if (!isset($aCompaniesCode[$this->m_sOrganizationCode]['domain']))
-			{
+			if (!isset($aCompaniesCode[$this->m_sOrganizationCode]['domain'])) {
 				// Generate some probable domain names for this organization
-				$this->m_OrganizationDomains = array(strtolower($this->m_sOrganizationCode).".com", strtolower($this->m_sOrganizationCode).".org", strtolower($this->m_sOrganizationCode)."corp.net",);
-			}
-			else
-			{
+				$this->m_OrganizationDomains = [strtolower($this->m_sOrganizationCode).".com", strtolower($this->m_sOrganizationCode).".org", strtolower($this->m_sOrganizationCode)."corp.net",];
+			} else {
 				// Pick the domain names for this organization from the predefined list
 				$this->m_OrganizationDomains = $aCompaniesCode[$this->m_sOrganizationCode]['domain'];
 			}
 		}
-		
-		if (!isset($this->m_sOrganizationCode))
-		{
+
+		if (!isset($this->m_sOrganizationCode)) {
 			echo "Unable to find an organization code which is not already used... can not create a new organization. Enhance the list of fake organizations (\$aCompanies in data_sample.inc.php).<br/>\n";
 			exit();
 		}
 	}
-	
+
 	/**
 	 * Get the current organization id used by the generator
 	 *
@@ -100,7 +90,7 @@ class cmdbDataGenerator
 	{
 		return $this->m_sOrganizationId;
 	}
-	
+
 	/**
 	 * Get the current organization id used by the generator
 	 *
@@ -111,7 +101,7 @@ class cmdbDataGenerator
 	{
 		$this->m_sOrganizationId = $sId;
 	}
-	
+
 	/**
 	 * Get the current organization code used by the generator
 	 *
@@ -127,69 +117,66 @@ class cmdbDataGenerator
 	 *
 	 * @return string The organization name
 	 */
-	function GetOrganizationName()
+	public function GetOrganizationName()
 	{
 		return $this->m_sOrganizationName;
 	}
-	
+
 	/**
 	 * Get a pseudo random first name taken from a (big) prefedined list
 	 *
 	 * @return string A random first name
 	 */
-	function GenerateFirstName()
+	public function GenerateFirstName()
 	{
 		global $aFirstNames;
 		return $aFirstNames[rand(0, count($aFirstNames) - 1)];
 	}
-	
+
 	/**
 	 * Get a pseudo random last name taken from a (big) prefedined list
 	 *
 	 * @return string A random last name
 	 */
-	function GenerateLastName()
+	public function GenerateLastName()
 	{
 		global $aNames;
 		return $aNames[rand(0, count($aNames) - 1)];
 	}
-	
+
 	/**
 	 * Get a pseudo random country name taken from a prefedined list
 	 *
 	 * @return string A random city name
 	 */
-	function GenerateCountryName()
+	public function GenerateCountryName()
 	{
 		global $aCountries;
 		return $aCountries[rand(0, count($aCountries) - 1)];
 	}
-	
+
 	/**
 	 * Get a pseudo random city name taken from a (big) prefedined list
 	 *
 	 * @return string A random city name
 	 */
-	function GenerateCityName()
+	public function GenerateCityName()
 	{
 		global $aCities;
 		return $aCities[rand(0, count($aCities) - 1)];
 	}
-	
+
 	/**
 	 * Get a pseudo random email address made of the first name, last name and organization's domain
 	 *
 	 * @return string A random email address
 	 */
-	function GenerateEmail($sFirstName, $sLastName)
+	public function GenerateEmail($sFirstName, $sLastName)
 	{
-		if (rand(1, 20) > 18)
-		{
+		if (rand(1, 20) > 18) {
 			// some people (let's say 5~10%) have an irregular email address
 			$sEmail = strtolower($this->CleanForEmail($sLastName))."@".strtolower($this->GenerateDomain());
-		}
-		else
-		{
+		} else {
 			$sEmail = strtolower($this->CleanForEmail($sFirstName)).".".strtolower($this->CleanForEmail($sLastName))."@".strtolower($this->GenerateDomain());
 		}
 		return $sEmail;
@@ -203,7 +190,7 @@ class cmdbDataGenerator
 	 *  - domain() => returns a domain name for the current organization
 	 *  - enum(aaa,bb,c,dddd) => returns randomly one of aaa,bb,c or dddd with the same
 	 *    probability of occurence. If you want to change the probability you can repeat some values
-	 *    i.e enum(most probable,most probable,most probable,most probable,most probable,rare) 
+	 *    i.e enum(most probable,most probable,most probable,most probable,most probable,rare)
 	 *	- number(xxx-yyy) => a random number between xxx and yyy (bounds included)
 	 *   note that if the first number (xxx) begins with a zero, then the result will zero padded
 	 *   to the same number of digits as xxx.
@@ -215,39 +202,28 @@ class cmdbDataGenerator
 	 * @param string $sTemplate The template used for generating the string
 	 * @return string The generated pseudo random the string
 	 */
-	function GenerateString($sTemplate)
+	public function GenerateString($sTemplate)
 	{
 		$sResult = "";
 		$aParts = explode("\|", $sTemplate);
-		foreach($aParts as $sPart)
-		{
-			if (preg_match("/domain\(\)/", $sPart, $aMatches))
-			{
+		foreach ($aParts as $sPart) {
+			if (preg_match("/domain\(\)/", $sPart, $aMatches)) {
 				$sResult .= strtolower($this->GenerateDomain());
-			}
-			elseif (preg_match("/enum\((.+)\)/", $sPart, $aMatches))
-			{
+			} elseif (preg_match("/enum\((.+)\)/", $sPart, $aMatches)) {
 				$sEnumValues = $aMatches[1];
 				$aEnumValues = explode(",", $sEnumValues);
 				$sResult .= $aEnumValues[rand(0, count($aEnumValues) - 1)];
-			}
-			elseif (preg_match("/number\((\d+)-(\d+)\)/", $sPart, $aMatches))
-			{
+			} elseif (preg_match("/number\((\d+)-(\d+)\)/", $sPart, $aMatches)) {
 				$sStartNumber = $aMatches[1];
-				if ($sStartNumber[0] == '0')
-				{
+				if ($sStartNumber[0] == '0') {
 					// number must be zero padded
 					$sFormat = "%0".strlen($sStartNumber)."d";
-				}
-				else
-				{
+				} else {
 					$sFormat = "%d";
 				}
 				$sEndNumber = $aMatches[2];
 				$sResult .= sprintf($sFormat, rand($sStartNumber, $sEndNumber));
-			}
-			else
-			{
+			} else {
 				$sResult .= $sPart;
 			}
 		}
@@ -264,27 +240,22 @@ class cmdbDataGenerator
 	 * @param string $aFilterCriteria A hash array of filterCOde => FilterValue (the strict operator '=' is used )
 	 * @return mixed The key to an object of the given class, or null if none are found
 	 */
-	function GenerateKey($sClass, $aFilterCriteria)
+	public function GenerateKey($sClass, $aFilterCriteria)
 	{
 		$retKey = null;
 		$oFilter = new DBObjectSearch($sClass);
-		foreach($aFilterCriteria as $sFilterCode => $filterValue)
-		{
+		foreach ($aFilterCriteria as $sFilterCode => $filterValue) {
 			$oFilter->AddCondition($sFilterCode, $filterValue, '=');
 		}
 		$oSet = new CMDBObjectSet($oFilter);
-		if ($oSet->Count() > 0)
-		{
+		if ($oSet->Count() > 0) {
 			$max_count = $index = rand(1, $oSet->Count());
-			do
-			{
+			do {
 				$oObj = $oSet->Fetch();
 				$index--;
-			}
-			while($index > 0);
-			
-			if (!is_object($oObj))
-			{
+			} while ($index > 0);
+
+			if (!is_object($oObj)) {
 				echo "<pre>";
 				echo "ERROR: non empty set, but invalid object picked! class='$sClass'\n";
 				echo "Index chosen: $max_count\n";
@@ -292,9 +263,7 @@ class cmdbDataGenerator
 				echo "Filter criteria:\n";
 				print_r($aFilterCriteria);
 				echo "</pre>";
-			}
-			else
-			{
+			} else {
 				$retKey = $oObj->GetKey();
 			}
 		}
@@ -305,7 +274,7 @@ class cmdbDataGenerator
 	//  Protected methods
 	//
 	///////////////////////////////////////////////////////////////////////////////
-		
+
 	/**
 	 * Generate a (random) domain name consistent with the organization name & code
 	 *
@@ -316,17 +285,14 @@ class cmdbDataGenerator
 	 */
 	protected function GenerateDomain()
 	{
-		if (is_array($this->m_OrganizationDomains))
-		{
-			$sDomain = $this->m_OrganizationDomains[rand(0, count($this->m_OrganizationDomains)-1)];
-		}
-		else
-		{
+		if (is_array($this->m_OrganizationDomains)) {
+			$sDomain = $this->m_OrganizationDomains[rand(0, count($this->m_OrganizationDomains) - 1)];
+		} else {
 			$sDomain = $this->m_OrganizationDomains;
 		}
 		return $sDomain;
 	}
-	
+
 	/**
 	 * Strips accented characters from a string in order to produce a suitable email address
 	 *
@@ -335,7 +301,7 @@ class cmdbDataGenerator
 	 */
 	protected function CleanForEmail($sText)
 	{
-		return str_replace(array("'", "�", "�", "�", "�", "�", "�", "�", "�", "�"), array("", "e", "e", "e", "c", "a", "a", "n", "oe", "ae"), $sText);
+		return str_replace(["'", "�", "�", "�", "�", "�", "�", "�", "�", "�"], ["", "e", "e", "e", "c", "a", "a", "n", "oe", "ae"], $sText);
 	}
 
 	/**
@@ -364,11 +330,9 @@ class cmdbDataGenerator
 		$oFilter = new DBObjectSearch('Organization');
 		$oFilter->AddCondition('id', $sId, '=');
 		$oSet = new CMDBObjectSet($oFilter);
-		if ($oSet->Count() > 0)
-		{
+		if ($oSet->Count() > 0) {
 			$oOrg = $oSet->Fetch(); // Let's take the first one found
 		}
 		return $oOrg;
 	}
 }
-?>

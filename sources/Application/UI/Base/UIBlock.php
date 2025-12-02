@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base;
-
 
 use utils;
 
@@ -328,7 +328,8 @@ abstract class UIBlock implements iUIBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function AddHtml(string $sHTML) {
+	public function AddHtml(string $sHTML)
+	{
 		// By default this does nothing
 		return $this;
 	}
@@ -336,7 +337,8 @@ abstract class UIBlock implements iUIBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function GetParameters(): array {
+	public function GetParameters(): array
+	{
 		return [];
 	}
 
@@ -345,7 +347,7 @@ abstract class UIBlock implements iUIBlock
 	 */
 	public function AddJsFileRelPath(string $sPath)
 	{
-		if(!in_array($sPath, $this->aJsFilesRelPath)) {
+		if (!in_array($sPath, $this->aJsFilesRelPath)) {
 			$this->aJsFilesRelPath[] = $sPath;
 		}
 
@@ -357,7 +359,7 @@ abstract class UIBlock implements iUIBlock
 	 */
 	public function AddMultipleJsFilesRelPaths(array $aPaths)
 	{
-		foreach($aPaths as $sPath){
+		foreach ($aPaths as $sPath) {
 			$this->AddJsFileRelPath($sPath);
 		}
 
@@ -369,7 +371,7 @@ abstract class UIBlock implements iUIBlock
 	 */
 	public function AddCssFileRelPath(string $sPath)
 	{
-		if(!in_array($sPath, $this->aCssFilesRelPath)) {
+		if (!in_array($sPath, $this->aCssFilesRelPath)) {
 			$this->aCssFilesRelPath[] = $sPath;
 		}
 
@@ -381,7 +383,7 @@ abstract class UIBlock implements iUIBlock
 	 */
 	public function AddMultipleCssFilesRelPaths(array $aPaths)
 	{
-		foreach($aPaths as $sPath){
+		foreach ($aPaths as $sPath) {
 			$this->AddCssFileRelPath($sPath);
 		}
 

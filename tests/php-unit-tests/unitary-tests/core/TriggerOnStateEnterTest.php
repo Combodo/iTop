@@ -8,7 +8,7 @@ use Person;
 
 class TriggerOnStateEnterTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
+	public const CREATE_TEST_ORG = true;
 
 	protected function setUp(): void
 	{

@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'portal:itop-portal' => 'Standard portal~~',
 	'Page:DefaultTitle' => '%1$s - User portal~~',
 	'Brick:Portal:UserProfile:Title' => 'My profile~~',
@@ -26,4 +27,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Brick:Portal:ListAllRequests:Tab' => 'On-going and closed~~',
 	'Brick:Portal:SearchInAllRequests:Title' => 'Search in all requests~~',
 	'Brick:Portal:SearchInAllRequests:Title+' => '<p>Regardless of their status.</p>~~',
-));
+]);

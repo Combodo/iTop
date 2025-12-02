@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -9,7 +10,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use Combodo\iTop\Test\UnitTest\Core\ValueSetEnum\ABCEnum;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use ValueSetEnum;
-
 
 /**
  * Class ValueSetEnumTest
@@ -22,7 +22,7 @@ class ValueSetEnumTest extends ItopTestCase
 {
 	public static function setupBeforeClass(): void
 	{
-		require_once __DIR__ . "/ValueSetEnum/ABCEnum.php";
+		require_once __DIR__."/ValueSetEnum/ABCEnum.php";
 	}
 
 	/**
@@ -92,7 +92,7 @@ class ValueSetEnumTest extends ItopTestCase
 			"Invalid int value" => [
 				123,
 				[],
-			]
+			],
 		];
 	}
 }

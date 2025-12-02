@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -32,7 +33,7 @@ class SpreadsheetBulkExport extends TabularBulkExport
 
 	public function EnumFormParts()
 	{
-		return array_merge(parent::EnumFormParts(), array('spreadsheet_options' => array('no-localize'), 'interactive_fields_spreadsheet' => array('interactive_fields_spreadsheet')));
+		return array_merge(parent::EnumFormParts(), ['spreadsheet_options' => ['no-localize'], 'interactive_fields_spreadsheet' => ['interactive_fields_spreadsheet']]);
 	}
 
 	/**
@@ -106,7 +107,7 @@ EOF
 				break;
 
 			default:
-				return parent:: GetFormPart($oP, $sPartId);
+				return parent::GetFormPart($oP, $sPartId);
 		}
 	}
 
@@ -116,18 +117,17 @@ EOF
 		$this->aStatusInfo['formatted_text'] = (bool)utils::ReadParam('formatted_text', 1, true);
 
 		$sDateFormatRadio = utils::ReadParam('spreadsheet_date_format_radio', '');
-		switch($sDateFormatRadio)
-		{
+		switch ($sDateFormatRadio) {
 			case 'default':
 				// Export from the UI => format = same as is the UI
 				$this->aStatusInfo['date_format'] = (string)AttributeDateTime::GetFormat();
 				break;
-					
+
 			case 'custom':
 				// Custom format specified from the UI
 				$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
 				break;
-					
+
 			default:
 				// Export from the command line (or scripted) => default format is SQL, as in previous versions of iTop, unless specified otherwise
 				$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetSQLFormat(), true, 'raw_data');
@@ -136,11 +136,9 @@ EOF
 
 	protected function GetSampleData($oObj, $sAttCode)
 	{
-		if ($sAttCode != 'id')
-		{
+		if ($sAttCode != 'id') {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-			if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
-			{
+			if ($oAttDef instanceof AttributeDateTime) { // AttributeDate is derived from AttributeDateTime
 				$sClass = (get_class($oAttDef) == 'AttributeDateTime') ? 'user-formatted-date-time' : 'user-formatted-date';
 
 				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.utils::EscapeHtml($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj)).'</div>';
@@ -152,12 +150,11 @@ EOF
 	protected function GetValue($oObj, $sAttCode)
 	{
 		$bFormattedText =  (array_key_exists('formatted_text', $this->aStatusInfo) ? $this->aStatusInfo['formatted_text'] : false);
-		switch($sAttCode)
-		{
+		switch ($sAttCode) {
 			case 'id':
 				$sRet = $oObj->GetKey();
 				break;
-					
+
 			default:
 				$value = $oObj->Get($sAttCode);
 				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
@@ -167,28 +164,19 @@ EOF
 					$sRet = $value->GetTimeSpent();
 				} elseif ($value instanceof ormDocument) {
 					$sRet = '';
-				} elseif ($oAttDef instanceof AttributeText)
-				{
-					if ($bFormattedText)
-					{
+				} elseif ($oAttDef instanceof AttributeText) {
+					if ($bFormattedText) {
 						// Replace paragraphs (<p...>...</p>, etc) by line breaks (<br/>) since Excel (pre-2016) splits the cells when there is a paragraph
 						$sRet = static::HtmlToSpreadsheet($oObj->GetAsHTML($sAttCode));
-					}
-					else
-					{
+					} else {
 						$sRet = utils::HtmlToText($oObj->GetAsHTML($sAttCode));
 					}
-				}
-				elseif ($oAttDef instanceof AttributeString)
-				{
+				} elseif ($oAttDef instanceof AttributeString) {
 					$sRet = $oObj->GetAsHTML($sAttCode);
-				}
-				elseif ($oAttDef instanceof AttributeCustomFields)
-				{
+				} elseif ($oAttDef instanceof AttributeCustomFields) {
 					// Stick to the weird implementation made in GetNextChunk
 					$sRet = utils::TextToHtml($oObj->GetEditValue($sAttCode));
-				}
-				else {
+				} else {
 					if ($this->bLocalizeOutput) {
 						$sRet = utils::EscapeHtml($oObj->GetEditValue());
 					} else {
@@ -216,34 +204,26 @@ EOF
 		$this->aStatusInfo['position'] = 0;
 		$this->aStatusInfo['total'] = $oSet->Count();
 
-		$aData = array();
-		foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
-		{
+		$aData = [];
+		foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
 			$sColLabel = $aFieldSpec['sColLabel'];
-			if ($aFieldSpec['sAttCode'] != 'id')
-			{
+			if ($aFieldSpec['sAttCode'] != 'id') {
 				$oAttDef = MetaModel::GetAttributeDef($aFieldSpec['sClass'], $aFieldSpec['sAttCode']);
 				$oFinalAttDef = $oAttDef->GetFinalAttDef();
-				if (get_class($oFinalAttDef) == 'AttributeDateTime')
-				{
+				if (get_class($oFinalAttDef) == 'AttributeDateTime') {
 					$aData[] = $sColLabel.' ('.Dict::S('UI:SplitDateTime-Date').')';
 					$aData[] = $sColLabel.' ('.Dict::S('UI:SplitDateTime-Time').')';
-				}
-				else
-				{
+				} else {
 					$aData[] = $sColLabel;
 				}
-			}
-			else
-			{
+			} else {
 				$aData[] = $sColLabel;
 			}
 		}
 		$sData = '';
 		$sData .= "<table border=\"1\">\n";
 		$sData .= "<tr>\n";
-		foreach($aData as $sLabel)
-		{
+		foreach ($aData as $sLabel) {
 			$sData .= "<td>".$sLabel."</td>\n";
 		}
 		$sData .= "</tr>\n";
@@ -270,47 +250,41 @@ EOF
 		$sData = '';
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		while($aRow = $oSet->FetchAssoc())
-		{
+		while ($aRow = $oSet->FetchAssoc()) {
 			set_time_limit(intval($iLoopTimeLimit));
 
 			$sData .= "<tr>";
-			foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
-			{
+			foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
 				$sAlias = $aFieldSpec['sAlias'];
 				$sAttCode = $aFieldSpec['sAttCode'];
 
 				$sField = '';
 				/** @var \DBObject $oObj */
 				$oObj = $aRow[$sAlias];
-				if ($oObj == null)
-				{
+				if ($oObj == null) {
 					$sData .= "<td x:str></td>";
 					continue;
 				}
 
-				switch($sAttCode)
-				{
+				switch ($sAttCode) {
 					case 'id':
 						$sField = $oObj->GetKey();
 						$sData .= "<td>$sField</td>";
 						break;
-							
+
 					default:
 						$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 						$oFinalAttDef = $oAttDef->GetFinalAttDef();
-						if (get_class($oFinalAttDef) == 'AttributeDateTime')
-						{
+						if (get_class($oFinalAttDef) == 'AttributeDateTime') {
 							// Split the date and time in two columns
 							$sDate = $oDateFormat->Format($oObj->Get($sAttCode));
 							$sTime = $oTimeFormat->Format($oObj->Get($sAttCode));
 							$sData .= "<td>$sDate</td>";
 							$sData .= "<td>$sTime</td>";
-						}
-						else if (get_class($oFinalAttDef) == 'AttributeDate') {
+						} elseif (get_class($oFinalAttDef) == 'AttributeDate') {
 							$sDate = $oDateFormat->Format($oObj->Get($sAttCode));
 							$sData .= "<td>$sDate</td>";
-						} else if ($oAttDef instanceof AttributeCaseLog) {
+						} elseif ($oAttDef instanceof AttributeCaseLog) {
 							$rawValue = $oObj->Get($sAttCode);
 							$sField = str_replace("\n", "<br/>", utils::EscapeHtml($rawValue->__toString()));
 							// Trick for Excel: treat the content as text even if it begins with an equal sign
@@ -319,31 +293,22 @@ EOF
 							if ($bFormattedText) {
 								// Replace paragraphs (<p...>...</p>, etc) by line breaks (<br/>) since Excel (pre-2016) splits the cells when there is a paragraph
 								$sField = static::HtmlToSpreadsheet($oObj->GetAsHTML($sAttCode));
-							}
-							else
-							{
+							} else {
 								// Convert to plain text
 								$sField = utils::HtmlToText($oObj->GetAsHTML($sAttCode));
 							}
 							$sData .= "<td x:str>$sField</td>";
-						}
-						elseif ($oAttDef instanceof AttributeCustomFields)
-						{
+						} elseif ($oAttDef instanceof AttributeCustomFields) {
 							// GetAsHTML returns a table that would not fit
 							$sField = utils::TextToHtml($oObj->GetEditValue($sAttCode));
 							$sData .= "<td x:str>$sField</td>";
-						}
-						else if ($oAttDef instanceof AttributeString)
-						{
+						} elseif ($oAttDef instanceof AttributeString) {
 							$sField = $oObj->GetAsHTML($sAttCode, $this->bLocalizeOutput);
 							$sData .= "<td x:str>$sField</td>";
-						}
-						else if ($oAttDef instanceof AttributeTagSet)
-						{
+						} elseif ($oAttDef instanceof AttributeTagSet) {
 							$sField = utils::HtmlEntities($oObj->GetAsCSV($sAttCode, $this->bLocalizeOutput, ''));
 							$sData .= "<td x:str>$sField</td>";
-						}
-						else {
+						} else {
 							$rawValue = $oObj->Get($sAttCode);
 							if ($this->bLocalizeOutput) {
 								$sField = utils::EscapeHtml($oFinalAttDef->GetEditValue($rawValue));
@@ -360,21 +325,17 @@ EOF
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
 		$this->aStatusInfo['position'] += $this->iChunkSize;
-		if ($this->aStatusInfo['total'] == 0)
-		{
+		if ($this->aStatusInfo['total'] == 0) {
 			$iPercentage = 100;
-		}
-		else
-		{
-			$iPercentage = floor(min(100.0, 100.0*$this->aStatusInfo['position']/$this->aStatusInfo['total']));
+		} else {
+			$iPercentage = floor(min(100.0, 100.0 * $this->aStatusInfo['position'] / $this->aStatusInfo['total']));
 		}
 
-		if ($iCount < $this->iChunkSize)
-		{
+		if ($iCount < $this->iChunkSize) {
 			$sRetCode = 'done';
 		}
 
-		$aStatus = array('code' => $sRetCode, 'message' => Dict::S('Core:BulkExport:RetrievingData'), 'percentage' => $iPercentage);
+		$aStatus = ['code' => $sRetCode, 'message' => Dict::S('Core:BulkExport:RetrievingData'), 'percentage' => $iPercentage];
 		return $sData;
 	}
 
@@ -387,7 +348,7 @@ EOF
 
 	public function GetSupportedFormats()
 	{
-		return array('spreadsheet' => Dict::S('Core:BulkExport:SpreadsheetFormat'));
+		return ['spreadsheet' => Dict::S('Core:BulkExport:SpreadsheetFormat')];
 	}
 
 	public function GetMimeType()
@@ -410,33 +371,30 @@ EOF
 	 */
 	public static function HtmlToSpreadsheet($sHtml)
 	{
-		if (trim(strip_tags($sHtml)) === '')
-		{
+		if (trim(strip_tags($sHtml)) === '') {
 			// Display this value as an empty cell in the table
 			return '&nbsp;';
 		}
 		// The tags listed here are a subset of the whitelist defined in HTMLDOMSanitizer
 		// Tags causing a visual "line break" in the displayed page (i.e. display: block) are to be replaced by a <span> followed by a <br/>
 		// in order to preserve any inline style/attribute of the removed tag
-		$aTagsToReplace = array(
+		$aTagsToReplace = [
 				'pre', 'div', 'p', 'hr', 'center', 'h1', 'h2', 'h3', 'h4', 'li', 'fieldset', 'legend', 'nav', 'section', 'tr', 'caption',
-		);
+		];
 		// Tags to completely remove from the markup
-		$aTagsToRemove = array(
+		$aTagsToRemove = [
 				'table', 'thead', 'tbody', 'ul', 'ol', 'td', 'th',
-		);
+		];
 
 		// Remove the englobing <div class="HTML" >...</div> to prevent an extra line break
 		$sHtml = preg_replace('|^<div class="HTML" >(.*)</div>$|s', '$1', $sHtml); // Must use the "s" (. matches newline) modifier
-		
-		foreach($aTagsToReplace as $sTag)
-		{
+
+		foreach ($aTagsToReplace as $sTag) {
 			$sHtml = preg_replace("|<{$sTag} ?([^>]*)>|is", '<span $1>', $sHtml);
 			$sHtml = preg_replace("|</{$sTag}>|i", '</span><br/>', $sHtml);
 		}
 
-		foreach($aTagsToRemove as $sTag)
-		{
+		foreach ($aTagsToRemove as $sTag) {
 			$sHtml = preg_replace("|<{$sTag} ?([^>]*)>|is", '', $sHtml);
 			$sHtml = preg_replace("|</{$sTag}>|i", '', $sHtml);
 		}

@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -34,17 +34,16 @@ class EmailField extends StringField
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-    public function GetDisplayValue()
-    {
-        $sLabel = Str::pure2html($this->currentValue);
-        if (utils::StrLen($sLabel) > 128)
-        {
-            // Truncate the length to 128 characters, by removing the middle
-            $sLabel = substr($sLabel, 0, 100).'.....'.substr($sLabel, -20);
-        }
+	public function GetDisplayValue()
+	{
+		$sLabel = Str::pure2html($this->currentValue);
+		if (utils::StrLen($sLabel) > 128) {
+			// Truncate the length to 128 characters, by removing the middle
+			$sLabel = substr($sLabel, 0, 100).'.....'.substr($sLabel, -20);
+		}
 
-        $sUrlDecorationClass = utils::GetConfig()->Get('email_decoration_class');
+		$sUrlDecorationClass = utils::GetConfig()->Get('email_decoration_class');
 
-        return "<a class=\"mailto\" href=\"mailto:$this->currentValue\"><span class=\"form_field_decoration text_decoration $sUrlDecorationClass\"></span>$sLabel</a>";
-    }
+		return "<a class=\"mailto\" href=\"mailto:$this->currentValue\"><span class=\"form_field_decoration text_decoration $sUrlDecorationClass\"></span>$sLabel</a>";
+	}
 }

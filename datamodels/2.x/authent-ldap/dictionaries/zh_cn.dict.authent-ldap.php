@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -33,17 +34,17 @@
 //
 // Class: UserLDAP
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserLDAP' => 'LDAP用户',
 	'Class:UserLDAP+' => '用户身份由LDAP认证',
 	'UserLDAP:server' => 'LDAP详情',
-));
+]);
 
 //
 // Class: UserLDAP
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserLDAP/Attribute:ldap_server' => 'Ldap server~~',
 	'Class:UserLDAP/Attribute:ldap_server+' => '~~',
-));
+]);

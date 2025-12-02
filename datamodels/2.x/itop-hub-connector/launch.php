@@ -114,7 +114,7 @@ use Combodo\iTop\Application\WebPage\NiceWebPage;
  */
 function CleanVersionNumber($sString)
 {
-	$aMatches = array();
+	$aMatches = [];
 	if (preg_match("|^([0-9\\.]+)-|", $sString, $aMatches)) {
 		return $aMatches[1];
 	}
@@ -124,11 +124,11 @@ function CleanVersionNumber($sString)
 
 function collect_configuration()
 {
-	$aConfiguration = array(
-		'php' => array(),
-		'mysql' => array(),
-		'apache' => array(),
-	);
+	$aConfiguration = [
+		'php' => [],
+		'mysql' => [],
+		'apache' => [],
+	];
 
 	// Database information
 	$m_oMysqli = CMDBSource::GetMysqli();
@@ -170,7 +170,7 @@ function collect_configuration()
 
 	// PHP extensions
 	if (!MetaModel::GetConfig()->GetModuleSetting('itop-hub-connector', 'php_extensions_enable', true)) {
-		$aConfiguration['php_extensions'] = array();
+		$aConfiguration['php_extensions'] = [];
 	} else {
 		foreach (get_loaded_extensions() as $extension) {
 			$aConfiguration['php_extensions'][$extension] = $extension;
@@ -178,8 +178,8 @@ function collect_configuration()
 	}
 
 	// Collect some PHP settings having a known impact on iTop
-	$aIniGet = MetaModel::GetConfig()->GetModuleSetting('itop-hub-connector', 'php_settings_array', array()); // by default, on the time of the writting, it values are : array('post_max_size', 'upload_max_filesize', 'apc.enabled', 'timezone', 'memory_limit', 'max_execution_time');
-	$aConfiguration['php_settings'] = array();
+	$aIniGet = MetaModel::GetConfig()->GetModuleSetting('itop-hub-connector', 'php_settings_array', []); // by default, on the time of the writting, it values are : array('post_max_size', 'upload_max_filesize', 'apc.enabled', 'timezone', 'memory_limit', 'max_execution_time');
+	$aConfiguration['php_settings'] = [];
 	foreach ($aIniGet as $iniGet) {
 		$aConfiguration['php_settings'][$iniGet] = (string)ini_get($iniGet);
 	}
@@ -197,22 +197,22 @@ function collect_configuration()
 	// iTop Installation Options, i.e. "Extensions"
 	$oExtensionMap = new iTopExtensionsMap();
 	$oExtensionMap->LoadChoicesFromDatabase($oConfig);
-	$aConfiguration['itop_extensions'] = array();
+	$aConfiguration['itop_extensions'] = [];
 	foreach ($oExtensionMap->GetChoices() as $oExtension) {
 		switch ($oExtension->sSource) {
 			case iTopExtension::SOURCE_MANUAL:
 			case iTopExtension::SOURCE_REMOTE:
-				$aConfiguration['itop_extensions'][$oExtension->sCode] = array(
+				$aConfiguration['itop_extensions'][$oExtension->sCode] = [
 					'label' => $oExtension->sLabel,
 					'value' => $oExtension->sInstalledVersion,
-				);
+				];
 				break;
 
 			default:
-				$aConfiguration['itop_installation_options'][$oExtension->sCode] = array(
+				$aConfiguration['itop_installation_options'][$oExtension->sCode] = [
 					'label' => $oExtension->sLabel,
 					'value' => true,
-				);
+				];
 		}
 	}
 
@@ -223,13 +223,13 @@ function MakeDataToPost($sTargetRoute)
 {
 	if (MetaModel::GetConfig()->Get('demo_mode')) {
 		// Don't expose such information in demo mode
-		$aDataToPost = array('disabled' => true, 'reason' => 'demo_mode');
+		$aDataToPost = ['disabled' => true, 'reason' => 'demo_mode'];
 	} else {
 		$aConfiguration = collect_configuration();
 
-		$aDataToPost = array(
+		$aDataToPost = [
 			'itop_hub_target_route' => $sTargetRoute,
-			'itop_stack' => array(
+			'itop_stack' => [
 				"uuidBdd" => (string)trim(DBProperty::GetProperty('database_uuid', ''), '{}'), // TODO check if empty and... regenerate a new UUID ??
 				"uuidFile" => (string)trim(@file_get_contents(APPROOT."data/instance.txt"), "{} \n"), // TODO check if empty and... regenerate a new UUID ??
 				'instance_friendly_name' => (string)$_SERVER['SERVER_NAME'],
@@ -242,8 +242,8 @@ function MakeDataToPost($sTargetRoute)
 				'itop_modules' => (object)$aConfiguration['itop_modules'],
 				'itop_extensions' => (object)$aConfiguration['itop_extensions'],
 				'itop_installation_options' => (object)$aConfiguration['itop_installation_options'],
-			),
-			'server_stack' => array(
+			],
+			'server_stack' => [
 				'os_name' => (string)PHP_OS,
 				'web_server_name' => (string)$aConfiguration['web_server_name'],
 				'web_server_version' => (string)$aConfiguration['web_server_version'],
@@ -253,8 +253,8 @@ function MakeDataToPost($sTargetRoute)
 				'php_version' => (string)CleanVersionNumber(phpversion()),
 				'php_settings' => (object)$aConfiguration['php_settings'],
 				'php_extensions' => (object)$aConfiguration['php_extensions'],
-			),
-		);
+			],
+		];
 	}
 
 	return $aDataToPost;
@@ -282,23 +282,23 @@ try {
 
 	switch ($sTargetRoute) {
 		case 'inform_after_setup':
-		// Hidden IFRAME at the end of the setup
-		require_once (APPROOT.'/application/ajaxwebpage.class.inc.php');
+			// Hidden IFRAME at the end of the setup
+			require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
-        $sParamToken = utils::ReadParam('setup_token');
-        $oTokenValidation = new TokenValidation();
-        $bIsTokenValid = $oTokenValidation->isSetupTokenValid($sParamToken);
-        if (UserRights::IsAdministrator() || $bIsTokenValid) {
-	        $oPage = new NiceWebPage('');
-	        $aDataToPost = MakeDataToPost($sTargetRoute);
-	        $oPage->add('<form id="hub_launch_form" action="'.$sHubUrlStateless.'" method="post">');
-	        $oPage->add('<input type="hidden" name="json" value="'.utils::EscapeHtml(json_encode($aDataToPost)).'">');
-	        $oPage->add_ready_script('$("#hub_launch_form").submit();');
-        } else {
-            IssueLog::Error('TokenValidation failed on inform_after_setup page');
-            throw new Exception("Not allowed");
-        }
-		break;
+			$sParamToken = utils::ReadParam('setup_token');
+			$oTokenValidation = new TokenValidation();
+			$bIsTokenValid = $oTokenValidation->isSetupTokenValid($sParamToken);
+			if (UserRights::IsAdministrator() || $bIsTokenValid) {
+				$oPage = new NiceWebPage('');
+				$aDataToPost = MakeDataToPost($sTargetRoute);
+				$oPage->add('<form id="hub_launch_form" action="'.$sHubUrlStateless.'" method="post">');
+				$oPage->add('<input type="hidden" name="json" value="'.utils::EscapeHtml(json_encode($aDataToPost)).'">');
+				$oPage->add_ready_script('$("#hub_launch_form").submit();');
+			} else {
+				IssueLog::Error('TokenValidation failed on inform_after_setup page');
+				throw new Exception("Not allowed");
+			}
+			break;
 
 		default:
 			// All other cases, special "Hub like" web page
@@ -337,7 +337,8 @@ try {
 			$sButtonLabelClose = Dict::S('iTopHub:CloseBtn');
 			$sButtonLabelGo = Dict::S('iTopHub:GoBtn');
 			$sButtonLabelTooltip = Dict::S('iTopHub:GoBtn:Tooltip');
-			$oPage->add(<<<HTML
+			$oPage->add(
+				<<<HTML
 <p>
 <button type="button" class="ibo-button" id="CancelBtn" title="Go back to iTop"><img src="$sCloseUrl"><span class="ibo-button--label">$sButtonLabelClose</span></button>
 <span class="horiz-spacer"></span>
@@ -405,8 +406,7 @@ JS
 	}
 
 	$oPage->output();
-}
-catch (CoreException $e) {
+} catch (CoreException $e) {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
@@ -431,8 +431,7 @@ catch (CoreException $e) {
 
 	// For debugging only
 	// throw $e;
-}
-catch (Exception $e) {
+} catch (Exception $e) {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
@@ -448,11 +447,10 @@ catch (Exception $e) {
 			$oLog->Set('issue', 'PHP Exception');
 			$oLog->Set('impact', 'Page could not be displayed');
 			$oLog->Set('callstack', $e->getTrace());
-			$oLog->Set('data', array());
+			$oLog->Set('data', []);
 			$oLog->DBInsertNoReload();
 		}
 
 		IssueLog::Error($e->getMessage());
 	}
 }
-	

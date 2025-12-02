@@ -1,11 +1,11 @@
 <?php
 
-require_once(dirname(__FILE__, 3) . '/approot.inc.php');
-require_once(__DIR__ . '/InstallationFileService.php');
+require_once(dirname(__FILE__, 3).'/approot.inc.php');
+require_once(__DIR__.'/InstallationFileService.php');
 
 function PrintUsageAndExit()
 {
-    echo <<<EOF
+	echo <<<EOF
 Usage: php unattended-install.php --param-file=<path_to_response_file> [--installation_xml=<path_to_installation_xml>] [--use_itop_config]
 
 Options:
@@ -22,27 +22,26 @@ Advanced options:
     --clean=1                               In case of a first installation, cleanup the environment before proceeding: delete the configuration file, the cache directory, the target directory, the database (default: 0)
     --install=0                             Set to 0 to perform a dry-run (default: 1)
 EOF;
-    exit(-1);
+	exit(-1);
 }
 /////////////////////////////////////////////////
 
 $oCtx = new ContextTag(ContextTag::TAG_SETUP);
 
 $sCleanName = strtolower(trim(PHP_SAPI));
-if ($sCleanName !== 'cli')
-{
+if ($sCleanName !== 'cli') {
 	echo "Mode CLI only";
 	exit(-1);
 }
 
 if (in_array('--help', $argv)) {
-    PrintUsageAndExit();
+	PrintUsageAndExit();
 }
 
 $sParamFile = utils::ReadParam('param-file', null, true /* CLI allowed */, 'raw_data') ?? utils::ReadParam('response_file', null, true /* CLI allowed */, 'raw_data');
 if (is_null($sParamFile)) {
 	echo "Missing mandatory argument `--param-file`.\n";
-    PrintUsageAndExit();
+	PrintUsageAndExit();
 }
 $bCheckConsistency = (utils::ReadParam('check-consistency', '0', true /* CLI allowed */) == '1');
 
@@ -56,8 +55,7 @@ $oParams = new XMLParameters($sParamFile);
 $sMode = $oParams->Get('mode');
 
 $sTargetEnvironment = $oParams->Get('target_env', '');
-if ($sTargetEnvironment == '')
-{
+if ($sTargetEnvironment == '') {
 	$sTargetEnvironment = 'production';
 }
 
@@ -106,12 +104,12 @@ SetupLog::Info($sMsg, null, $aSelectedModules);
 // Configuration file
 $sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
 $bUseItopConfig = in_array('--use_itop_config', $argv);
-if ($bUseItopConfig && file_exists($sConfigFile)){
+if ($bUseItopConfig && file_exists($sConfigFile)) {
 	//unattended run based on db settings coming from itop configuration
 	copy($sConfigFile, "$sConfigFile.backup");
 
 	$oConfig = new Config($sConfigFile);
-	$aDBXmlSettings = $oParams->Get('database', array());
+	$aDBXmlSettings = $oParams->Get('database', []);
 	$aDBXmlSettings ['server'] = $oConfig->Get('db_host');
 	$aDBXmlSettings ['user'] = $oConfig->Get('db_user');
 	$aDBXmlSettings ['pwd'] = $oConfig->Get('db_pwd');
@@ -127,7 +125,7 @@ if ($bUseItopConfig && file_exists($sConfigFile)){
 		'source_dir' => 'source_dir',
 		'graphviz_path' => 'graphviz_path',
 	];
-	foreach($aFields as $sSetupField => $sConfField){
+	foreach ($aFields as $sSetupField => $sConfField) {
 		$oParams->Set($sSetupField, $oConfig->Get($sConfField));
 	}
 
@@ -135,7 +133,7 @@ if ($bUseItopConfig && file_exists($sConfigFile)){
 	$oParams->Set('language', $oConfig->GetDefaultLanguage());
 } else {
 	//unattended run based on db settings coming from response_file (XML file)
-	$aDBXmlSettings = $oParams->Get('database', array());
+	$aDBXmlSettings = $oParams->Get('database', []);
 }
 
 $sDBServer = $aDBXmlSettings['server'];
@@ -146,36 +144,29 @@ $sDBPrefix = $aDBXmlSettings['prefix'];
 $bDBTlsEnabled = $aDBXmlSettings['db_tls_enabled'];
 $sDBTlsCa = $aDBXmlSettings['db_tls_ca'];
 
-if ($sMode == 'install')
-{
+if ($sMode == 'install') {
 	echo "Installation mode detected.\n";
 
 	$bClean = utils::ReadParam('clean', false, true /* CLI allowed */);
-	if ($bClean)
-	{
+	if ($bClean) {
 		echo "Cleanup mode detected.\n";
 
-		if (file_exists($sConfigFile))
-		{
+		if (file_exists($sConfigFile)) {
 			echo "Trying to delete the configuration file: '$sConfigFile'.\n";
 			@chmod($sConfigFile, 0770); // RWX for owner and group, nothing for others
 			unlink($sConfigFile);
-		}
-		else
-		{
+		} else {
 			echo "No config file to delete ($sConfigFile does not exist).\n";
 		}
 
 		// Starting with iTop 2.7.0, a failed setup leaves some lock files, let's remove them
-		$aLockFiles = array(
+		$aLockFiles = [
 			'data/.readonly' => 'read-only lock file',
 			'data/.maintenance' => 'maintenance mode lock file',
-		);
-		foreach($aLockFiles as $sFile => $sDescription)
-		{
-	 		$sLockFile = APPROOT.$sFile;
-			if (file_exists($sLockFile))
-			{
+		];
+		foreach ($aLockFiles as $sFile => $sDescription) {
+			$sLockFile = APPROOT.$sFile;
+			if (file_exists($sLockFile)) {
 				echo "Trying to delete the $sDescription: '$sLockFile'.\n";
 				unlink($sLockFile);
 			}
@@ -184,69 +175,49 @@ if ($sMode == 'install')
 		// Starting with iTop 2.6.0, let's remove the cache directory as well
 		// Can cause some strange issues in the setup (apparently due to the Dict class being automatically loaded ??)
 		$sCacheDir = APPROOT.'data/cache-'.$sTargetEnvironment;
-		if (file_exists($sCacheDir))
-		{
-			if (is_dir($sCacheDir))
-			{
-			 	echo "Emptying the cache directory '$sCacheDir'.\n";
-			 	SetupUtils::tidydir($sCacheDir);
-			}
-			else
-			{
+		if (file_exists($sCacheDir)) {
+			if (is_dir($sCacheDir)) {
+				echo "Emptying the cache directory '$sCacheDir'.\n";
+				SetupUtils::tidydir($sCacheDir);
+			} else {
 				die("ERROR the cache directory '$sCacheDir' exists, but is NOT a directory !!!\nExiting.\n");
 			}
 		}
 
 		// env-xxx directory
 		$sTargetDir = APPROOT.'env-'.$sTargetEnvironment;
-		if (file_exists($sTargetDir))
-		{
-			if (is_dir($sTargetDir))
-			{
-			 	echo "Emptying the target directory '$sTargetDir'.\n";
-			 	SetupUtils::tidydir($sTargetDir);
-			}
-			else
-			{
+		if (file_exists($sTargetDir)) {
+			if (is_dir($sTargetDir)) {
+				echo "Emptying the target directory '$sTargetDir'.\n";
+				SetupUtils::tidydir($sTargetDir);
+			} else {
 				die("ERROR the target dir '$sTargetDir' exists, but is NOT a directory !!!\nExiting.\n");
 			}
-		}
-		else
-		{
+		} else {
 			echo "No target directory to delete ($sTargetDir does not exist).\n";
 		}
 
-		if ($sDBPrefix != '')
-		{
+		if ($sDBPrefix != '') {
 			die("Cleanup not implemented for a partial database (prefix= '$sDBPrefix')\nExiting.");
 		}
 
-		try
-		{
+		try {
 			$oMysqli = CMDBSource::GetMysqliInstance($sDBServer, $sDBUser, $sDBPwd, null, $bDBTlsEnabled, $sDBTlsCa, true);
 
-			if ($oMysqli->select_db($sDBName))
-			{
+			if ($oMysqli->select_db($sDBName)) {
 				echo "Deleting database '$sDBName'\n";
 				$oMysqli->query("DROP DATABASE `$sDBName`");
-			}
-			else
-			{
+			} else {
 				echo "The database '$sDBName' does not seem to exist. Nothing to cleanup.\n";
 			}
-		}
-		catch (MySQLException $e)
-		{
-		    die($e->getMessage()."\nExiting");
+		} catch (MySQLException $e) {
+			die($e->getMessage()."\nExiting");
 		}
 	}
-}
-else
-{
+} else {
 	//use settings from itop conf
 	$sTargetEnvironment = $oParams->Get('target_env', '');
-	if ($sTargetEnvironment == '')
-	{
+	if ($sTargetEnvironment == '') {
 		$sTargetEnvironment = 'production';
 	}
 	$sTargetDir = APPROOT.'env-'.$sTargetEnvironment;
@@ -260,10 +231,8 @@ $sSourceDir = $oParams->Get('source_dir', 'datamodels/latest');
 $sExtensionDir = $oParams->Get('extensions_dir', 'extensions');
 $aChecks = array_merge($aChecks, SetupUtils::CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules));
 
-foreach($aChecks as $oCheckResult)
-{
-	switch ($oCheckResult->iSeverity)
-	{
+foreach ($aChecks as $oCheckResult) {
+	switch ($oCheckResult->iSeverity) {
 		case CheckResult::ERROR:
 			$bHasErrors = true;
 			$sHeader = "Error";
@@ -284,15 +253,13 @@ foreach($aChecks as $oCheckResult)
 			break;
 	}
 	echo $sHeader.": ".$oCheckResult->sLabel;
-	if (strlen($oCheckResult->sDescription))
-	{
+	if (strlen($oCheckResult->sDescription)) {
 		echo ' - '.$oCheckResult->sDescription;
 	}
 	echo "\n";
 }
 
-if ($bHasErrors)
-{
+if ($bHasErrors) {
 	echo "Encountered stopper issues. Aborting...\n";
 	$sLogMsg = "Encountered stopper issues. Aborting...";
 	echo "$sLogMsg\n";
@@ -303,103 +270,76 @@ if ($bHasErrors)
 $bFoundIssues = false;
 
 $bInstall = utils::ReadParam('install', true, true /* CLI allowed */);
-if ($bInstall)
-{
+if ($bInstall) {
 	echo "Starting the unattended installation...\n";
 	$oWizard = new ApplicationInstaller($oParams);
 	$bRes = $oWizard->ExecuteAllSteps();
-	if (!$bRes)
-	{
+	if (!$bRes) {
 		echo "\nencountered installation issues!";
 		$bFoundIssues = true;
-	}
-	else
-	{
-		try
-		{
+	} else {
+		try {
 			$oMysqli = CMDBSource::GetMysqliInstance($sDBServer, $sDBUser, $sDBPwd, null, $bDBTlsEnabled, $sDBTlsCa, true);
-			if ($oMysqli->select_db($sDBName))
-			{
+			if ($oMysqli->select_db($sDBName)) {
 				// Check the presence of a table to record information about the MTP (from the Designer)
 				$sDesignerUpdatesTable = $sDBPrefix.'priv_designer_update';
 				$sSQL = "SELECT id FROM `$sDesignerUpdatesTable`";
-				if ($oMysqli->query($sSQL) !== false)
-				{
+				if ($oMysqli->query($sSQL) !== false) {
 					// Record the Designer Udpates in the priv_designer_update table
 					$sDeltaFile = APPROOT.'data/'.$sTargetEnvironment.'.delta.xml';
-					if (is_readable($sDeltaFile))
-					{
+					if (is_readable($sDeltaFile)) {
 						// Retrieve the revision
 						$oDoc = new DOMDocument();
 						$oDoc->load($sDeltaFile);
 						$iRevision = 0;
 						$iRevision = $oDoc->firstChild->getAttribute('revision_id');
-						if ($iRevision > 0) // Safety net, just in case...
-						{
+						if ($iRevision > 0) { // Safety net, just in case...
 							$sDate = date('Y-m-d H:i:s');
 							$sSQL = "INSERT INTO `$sDesignerUpdatesTable` (revision_id, compilation_date, comment) VALUES ($iRevision, '$sDate', 'Deployed using unattended.php.')";
-							if ($oMysqli->query($sSQL) !== false)
-							{
+							if ($oMysqli->query($sSQL) !== false) {
 								echo "\nDesigner update (MTP at revision $iRevision) successfully recorded.\n";
-							}
-							else
-							{
+							} else {
 								echo "\nFailed to record designer updates(".$oMysqli->error.").\n";
 							}
-						}
-						else
-						{
+						} else {
 							echo "\nFailed to read the revision from $sDeltaFile file. No designer update information will be recorded.\n";
 
 						}
-					}
-					else
-					{
+					} else {
 						echo "\nNo $sDeltaFile file (or the file is not accessible). No designer update information to record.\n";
 					}
 				}
 			}
-		}
-		catch (MySQLException $e)
-		{
-		    // Continue anyway
+		} catch (MySQLException $e) {
+			// Continue anyway
 		}
 	}
-}
-else
-{
+} else {
 	echo "No installation requested.\n";
 }
-if (!$bFoundIssues && $bCheckConsistency)
-{
+if (!$bFoundIssues && $bCheckConsistency) {
 	echo "Checking data model consistency.\n";
 	ob_start();
 	$sCheckRes = '';
-	try
-	{
+	try {
 		MetaModel::CheckDefinitions(false);
 		$sCheckRes = ob_get_clean();
-	}
-	catch(Exception $e)
-	{
+	} catch (Exception $e) {
 		$sCheckRes = ob_get_clean()."\nException: ".$e->getMessage();
 	}
-	if (strlen($sCheckRes) > 0)
-	{
+	if (strlen($sCheckRes) > 0) {
 		echo $sCheckRes;
 		echo "\nfound consistency issues!";
 		$bFoundIssues = true;
 	}
 }
 
-if (! $bFoundIssues)
-{
+if (! $bFoundIssues) {
 	// last line: used to check the install
 	// the only way to track issues in case of Fatal error or even parsing error!
 	$sLogMsg = "installed!";
 
-	if ($bUseItopConfig && is_file("$sConfigFile.backup"))
-	{
+	if ($bUseItopConfig && is_file("$sConfigFile.backup")) {
 		echo "\nuse config file provided by backup in $sConfigFile.";
 		copy("$sConfigFile.backup", $sConfigFile);
 	}

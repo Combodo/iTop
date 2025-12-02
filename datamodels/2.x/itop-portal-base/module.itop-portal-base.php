@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -20,37 +21,38 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-portal-base/3.2.1', array(
+	'itop-portal-base/3.2.1',
+	[
 	// Identification
 	'label' => 'Portal Development Library',
 		'category' => 'Portal',
 	// Setup
-	'dependencies' => array(
-	),
+	'dependencies' => [
+	],
 	'mandatory' => true,
 	'visible' => false,
 	// Components
-	'datamodel' => array(
+	'datamodel' => [
 		// Note: The autoloader is there instead of portal/config/bootstrap.php in order to be available for other modules with a dependency on this one.
 		// eg. If a module has a class extending \Combodo\iTop\Portal\Controller\AbstractController, it needs to find it even if the portal kernel is not loaded.
 		'portal/vendor/autoload.php',
-	),
-	'webservice' => array(
+	],
+	'webservice' => [
 	//'webservices.itop-portal-base.php',
-	),
-	'dictionary' => array(
-	),
-	'data.struct' => array(
+	],
+	'dictionary' => [
+	],
+	'data.struct' => [
 	//'data.struct.itop-portal-base.xml',
-	),
-	'data.sample' => array(
+	],
+	'data.sample' => [
 	//'data.sample.itop-portal-base.xml',
-	),
+	],
 	// Documentation
 	'doc.manual_setup' => '',
 	'doc.more_information' => '',
 	// Default settings
-	'settings' => array(
-	),
-	)
+	'settings' => [
+	],
+	]
 );

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'iTopUpdate:UI:PageTitle' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'itop-core-update:UI:SelectUpdateFile' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'itop-core-update:UI:ConfirmUpdate' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'itop-core-update:UI:UpdateCoreFiles' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'iTopUpdate:UI:MaintenanceModeActive' => 'O '.ITOP_APPLICATION_SHORT.' encontra-se em manutenção, nenhum usuário pode acessar a aplicação. Você precisa rodar o Setup ou restaurar os arquivos da aplicação para voltar ao modo normal',
 	'itop-core-update:UI:UpdateDone' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'itop-core-update/Operation:SelectUpdateFile/Title' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'itop-core-update/Operation:ConfirmUpdate/Title' => 'Confirmar Atualização do '.ITOP_APPLICATION_SHORT, 'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Aplicação em Atualização',
 	'itop-core-update/Operation:UpdateDone/Title' => 'Atualização do '.ITOP_APPLICATION_SHORT.' finalizada',
@@ -84,7 +85,5 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:iTopUpdate' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'Menu:iTopUpdate+' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'Class:ModuleInstallation/Attribute:installed' => 'Instalado em',
 	'Class:ModuleInstallation/Attribute:name' => 'Nome',
 	'Class:ModuleInstallation/Attribute:version' => 'Versão',
-	'Class:ModuleInstallation/Attribute:comment' => 'Comentário'
-));
-
-
+	'Class:ModuleInstallation/Attribute:comment' => 'Comentário',
+]);

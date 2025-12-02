@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Attachments:TabTitle_Count' => 'Attachments (%1$d)~~',
 	'Attachments:EmptyTabTitle' => 'Attachments~~',
 	'Attachments:FieldsetTitle' => 'Attachments~~',
@@ -30,13 +31,13 @@ or ask your '.ITOP_APPLICATION_SHORT.' administrator if the '.ITOP_APPLICATION_S
 	'Attachments:Render:Icons' => 'Display as icons~~',
 	'Attachments:Render:Table' => 'Display as list~~',
 	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Attachment' => 'Attachment~~',
 	'Class:Attachment+' => '~~',
 	'Class:Attachment/Attribute:expire' => 'Expire~~',
@@ -51,10 +52,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Contents~~',
 	'Class:Attachment/Attribute:contents+' => '~~',
-));
+]);
 
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Attachments:File:Thumbnail' => 'Icon~~',
 	'Attachments:File:Name' => 'File name~~',
 	'Attachments:File:Date' => 'Upload date~~',
@@ -62,25 +62,25 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Attachments:File:Size' => 'Size~~',
 	'Attachments:File:MimeType' => 'Type~~',
 	'Attachments:File:DownloadsCount' => 'Downloads~~',
-));
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Attachment/Attribute:creation_date' => 'Creation date~~',
 	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => 'User id~~',
 	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'Contact id~~',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
-));
+]);

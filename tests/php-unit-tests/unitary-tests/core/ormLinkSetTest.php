@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -17,7 +18,6 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 //
 
-
 /**
  * Created by PhpStorm.
  * User: Eric
@@ -25,13 +25,11 @@
  * Time: 11:56
  */
 
-
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Exception;
 use ormLinkSet;
-
 
 /**
  * @group itopRequestMgmt
@@ -40,15 +38,15 @@ use ormLinkSet;
  */
 class ormLinkSetTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
+	public const CREATE_TEST_ORG = true;
 
 	/**
-     * @throws Exception
-     */
-    protected function setUp(): void
-    {
-	    parent::setUp();
-    }
+	 * @throws Exception
+	 */
+	protected function setUp(): void
+	{
+		parent::setUp();
+	}
 
 	/**
 	 *
@@ -75,7 +73,7 @@ class ormLinkSetTest extends ItopDataTestCase
 	public function testBasic()
 	{
 		$oServer = $this->CreateServer(1);
-		$aPersons = array();
+		$aPersons = [];
 		for ($i = 0; $i < 3; $i++) {
 			$oPerson = $this->CreatePerson($i);
 			$aPersons[] = $oPerson;
@@ -94,7 +92,7 @@ class ormLinkSetTest extends ItopDataTestCase
 	public function testSuccesiveAdds()
 	{
 		$oServer = $this->CreateServer(1);
-		$aPersons = array();
+		$aPersons = [];
 		for ($i = 0; $i < 3; $i++) {
 			$oPerson = $this->CreatePerson($i);
 			$aPersons[] = $oPerson;
@@ -123,7 +121,7 @@ class ormLinkSetTest extends ItopDataTestCase
 	public function testRemove()
 	{
 		$oServer = $this->CreateServer(1);
-		$aPersons = array();
+		$aPersons = [];
 		for ($i = 0; $i < 3; $i++) {
 			$oPerson = $this->CreatePerson($i);
 			$aPersons[] = $oPerson;
@@ -175,7 +173,7 @@ class ormLinkSetTest extends ItopDataTestCase
 	public function testRemoveThenAdd()
 	{
 		$oServer = $this->CreateServer(1);
-		$aPersons = array();
+		$aPersons = [];
 		for ($i = 0; $i < 3; $i++) {
 			$oPerson = $this->CreatePerson($i);
 			$aPersons[] = $oPerson;
@@ -207,7 +205,7 @@ class ormLinkSetTest extends ItopDataTestCase
 	public function testAddDuplicate()
 	{
 		$oServer = $this->CreateServer(1);
-		$aPersons = array();
+		$aPersons = [];
 		for ($i = 0; $i < 3; $i++) {
 			$oPerson = $this->CreatePerson($i);
 			$aPersons[] = $oPerson;
@@ -238,7 +236,7 @@ class ormLinkSetTest extends ItopDataTestCase
 	public function testModifyThenRemove()
 	{
 		$oServer = $this->CreateServer(1);
-		$aPersons = array();
+		$aPersons = [];
 		for ($i = 0; $i < 3; $i++) {
 			$oPerson = $this->CreatePerson($i);
 			$aPersons[] = $oPerson;
@@ -304,7 +302,6 @@ class ormLinkSetTest extends ItopDataTestCase
 		];
 	}
 
-
 	/**
 	 * don't work cf bug N°4402
 	 * @throws Exception
@@ -327,7 +324,6 @@ class ormLinkSetTest extends ItopDataTestCase
 		static::assertEquals(1, $oSetOldFcisList->Count());
 	}*/
 
-
 	/**
 	 * @throws Exception
 	 */
@@ -336,12 +332,12 @@ class ormLinkSetTest extends ItopDataTestCase
 		$oServer = $this->CreateServer(1);
 		$oServer->Set('serialnumber', 'my serialnumber');
 		$oServer->DBUpdate();
-		static::assertEquals('',  $oServer->ListPreviousValuesForUpdatedAttributes()['serialnumber']);
+		static::assertEquals('', $oServer->ListPreviousValuesForUpdatedAttributes()['serialnumber']);
 
 		$this->ReloadObject($oServer);
 		$oServer->Set('serialnumber', 'my serialnumber2');
 		$oServer->DBUpdate();
-		static::assertEquals('my serialnumber',  $oServer->ListPreviousValuesForUpdatedAttributes()['serialnumber']);
+		static::assertEquals('my serialnumber', $oServer->ListPreviousValuesForUpdatedAttributes()['serialnumber']);
 
 	}
 	/**
@@ -353,11 +349,11 @@ class ormLinkSetTest extends ItopDataTestCase
 		$idOrgInit = $oServer->Get('org_id');
 
 		$oOrganization = $this->CreateOrganization(1);
-		$oServer->Set('org_id',$oOrganization);
+		$oServer->Set('org_id', $oOrganization);
 		$oServer->DBUpdate();
-		static::assertEquals($idOrgInit,  $oServer->ListPreviousValuesForUpdatedAttributes()['org_id']);
-		static::assertNotEquals($oOrganization->GetKey(),  $oServer->ListPreviousValuesForUpdatedAttributes()['org_id']);
-		static::assertEquals($oOrganization->GetKey(),  $oServer->Get('org_id'));
+		static::assertEquals($idOrgInit, $oServer->ListPreviousValuesForUpdatedAttributes()['org_id']);
+		static::assertNotEquals($oOrganization->GetKey(), $oServer->ListPreviousValuesForUpdatedAttributes()['org_id']);
+		static::assertEquals($oOrganization->GetKey(), $oServer->Get('org_id'));
 	}
 	/**
 	 * don't work cf bug N°4402

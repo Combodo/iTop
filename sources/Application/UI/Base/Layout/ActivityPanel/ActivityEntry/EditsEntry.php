@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry;
-
 
 use DateTime;
 use Dict;
@@ -137,8 +137,7 @@ class EditsEntry extends ActivityEntry
 	 */
 	public function RemoveAttribute(string $sAttCode)
 	{
-		if (array_key_exists($sAttCode, $this->aAttributes))
-		{
+		if (array_key_exists($sAttCode, $this->aAttributes)) {
 			unset($this->aAttributes[$sAttCode]);
 		}
 
@@ -180,8 +179,7 @@ class EditsEntry extends ActivityEntry
 		// We need the array to be indexed by numbers instead of being associative
 		$aAttributesData = array_values($this->GetAttributes());
 		$iAttributesCount = count($aAttributesData);
-		switch($iAttributesCount)
-		{
+		switch ($iAttributesCount) {
 			case 0:
 				$sDescriptionAsHtml = '';
 				break;
@@ -204,8 +202,7 @@ class EditsEntry extends ActivityEntry
 				$sFirstAttLabelAsHtml = '<span class="ibo-edits-entry--attribute-label" data-attribute-code="'.$aAttributesData[0]['code'].'">'.$aAttributesData[0]['label'].'</span>';
 				$sSecondAttLabelAsHtml = '<span class="ibo-edits-entry--attribute-label" data-attribute-code="'.$aAttributesData[1]['code'].'">'.$aAttributesData[1]['label'].'</span>';
 
-				switch($iAttributesCount)
-				{
+				switch ($iAttributesCount) {
 					case 2:
 						$sDescriptionAsHtml = Dict::Format('Change:TwoAttributesChanged', $sFirstAttLabelAsHtml, $sSecondAttLabelAsHtml);
 						break;

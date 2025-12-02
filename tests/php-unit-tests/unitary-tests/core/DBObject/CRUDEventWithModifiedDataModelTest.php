@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2025 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -14,20 +15,20 @@ use IssueLog;
 use LogChannels;
 use MetaModel;
 use utils;
+
 use const EVENT_DB_LINKS_CHANGED;
 
 class CRUDEventWithModifiedDataModelTest extends ItopCustomDatamodelTestCase
 {
+	use EventTest;
+	use ClassesWithDebug;
 	public function GetDatamodelDeltaAbsPath(): string
 	{
 		return __DIR__.'/Delta/dbobjecttest.xml';
 	}
 
-	const USE_TRANSACTION = true;
-	const CREATE_TEST_ORG = false;
-
-	use EventTest;
-	use ClassesWithDebug;
+	public const USE_TRANSACTION = true;
+	public const CREATE_TEST_ORG = false;
 
 	private static string $sLogFile = 'log/test_error_CRUDEventTest.log';
 
@@ -79,4 +80,3 @@ class CRUDEventWithModifiedDataModelTest extends ItopCustomDatamodelTestCase
 		$this->AssertEventCountEquals(0, EVENT_DB_LINKS_CHANGED, 'Event EVENT_DB_LINKS_CHANGED should not have been thrown on deleted objects');
 	}
 }
-

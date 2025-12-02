@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  *
  *
  */
-
 
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
@@ -64,7 +64,6 @@ define('DEFAULT_LOG_ISSUE', true);
 define('DEFAULT_LOG_WEB_SERVICE', true);
 
 define('DEFAULT_QUERY_CACHE_ENABLED', true);
-
 
 define('DEFAULT_MIN_DISPLAY_LIMIT', 20);
 define('DEFAULT_MAX_DISPLAY_LIMIT', 30);
@@ -447,14 +446,14 @@ class Config
 			'show_in_conf_sample' => true,
 		],
 		'export_pdf_font' => [ // @since 2.7.0 PR #49 / N°1947
-		                       'type'                => 'string',
-		                       'description'         => 'Font used when generating a PDF file',
-		                       'default'             => 'DejaVuSans', // DejaVuSans is a UTF-8 Unicode font, embedded in the TCPPDF lib we're using
-		                       // Standard PDF fonts like helvetica or times newroman are NOT Unicode
-		                       // A new DroidSansFallback can be used to improve CJK support (se PR #49)
-		                       'value'               => '',
-		                       'source_of_value'     => '',
-		                       'show_in_conf_sample' => false,
+							   'type'                => 'string',
+							   'description'         => 'Font used when generating a PDF file',
+							   'default'             => 'DejaVuSans', // DejaVuSans is a UTF-8 Unicode font, embedded in the TCPPDF lib we're using
+							   // Standard PDF fonts like helvetica or times newroman are NOT Unicode
+							   // A new DroidSansFallback can be used to improve CJK support (se PR #49)
+							   'value'               => '',
+							   'source_of_value'     => '',
+							   'show_in_conf_sample' => false,
 		],
 		'access_mode' => [
 			'type' => 'integer',
@@ -897,7 +896,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-        'forgot_password.url' => [
+		'forgot_password.url' => [
 			'type'                => 'string',
 			'description'         => 'Set this value to your "forgot password" service URL if it should be handled out of '.ITOP_APPLICATION_SHORT.'. Note that it will apply to all users (iTop users, LDAP users, ...)',
 			'default'             => '',
@@ -1843,8 +1842,7 @@ class Config
 
 		$value = $this->oConfigPlaceholdersResolver->Resolve($value);
 
-		switch ($sType)
-		{
+		switch ($sType) {
 			case 'bool':
 				$value = (bool)$value;
 				break;
@@ -1852,7 +1850,7 @@ class Config
 				$value = (string)$value;
 				break;
 			case 'integer':
-				$value = (integer)$value;
+				$value = (int)$value;
 				break;
 			case 'float':
 				$value = (float)$value;
@@ -1860,11 +1858,10 @@ class Config
 			case 'array':
 				break;
 			default:
-				throw new CoreException('Unknown type for setting', array('property' => $sPropCode, 'type' => $sType));
+				throw new CoreException('Unknown type for setting', ['property' => $sPropCode, 'type' => $sType]);
 		}
 
-		if ($this->m_aSettings[$sPropCode]['value'] == $value)
-		{
+		if ($this->m_aSettings[$sPropCode]['value'] == $value) {
 			//when you set the exact same value than the previous one, then, you still can preserve the non evaluated version and so on preserve vars/jokers.
 			$bCanOverride = true;
 		}
@@ -2006,18 +2003,16 @@ class Config
 		$this->oConfigPlaceholdersResolver = new ConfigPlaceholdersResolver();
 
 		$this->m_sFile = $sConfigFile;
-		if (is_null($sConfigFile))
-		{
+		if (is_null($sConfigFile)) {
 			$bLoadConfig = false;
 		}
 
-		$this->m_aAddons = array(
+		$this->m_aAddons = [
 			// Default AddOn, always present can be moved to an official iTop Module later if needed
 			'user rights' => 'addons/userrights/userrightsprofile.class.inc.php',
-		);
+		];
 
-		foreach ($this->m_aSettings as $sPropCode => $aSettingInfo)
-		{
+		foreach ($this->m_aSettings as $sPropCode => $aSettingInfo) {
 			$this->m_aSettings[$sPropCode]['value'] = $aSettingInfo['default'];
 		}
 
@@ -2033,7 +2028,7 @@ class Config
 		$this->m_sDefaultLanguage = 'EN US';
 		$this->m_sAllowedLoginTypes = DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
-		$this->m_aCharsets = array();
+		$this->m_aCharsets = [];
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
 		$this->m_iPasswordHashAlgo = DEFAULT_HASH_ALGO;
 		$this->m_sAppSecret = bin2hex(random_bytes(16));
@@ -2043,10 +2038,9 @@ class Config
 		$this->m_sEncryptionLibrary = isset($aEncryptParams['lib']) ? $aEncryptParams['lib'] : DEFAULT_ENCRYPTION_LIB;
 		$this->m_sEncryptionKey = isset($aEncryptParams['key']) ? $aEncryptParams['key'] : DEFAULT_ENCRYPTION_KEY;
 
-		$this->m_aModuleSettings = array();
+		$this->m_aModuleSettings = [];
 
-		if ($bLoadConfig)
-		{
+		if ($bLoadConfig) {
 			$this->Load($sConfigFile);
 			$this->Verify();
 		}
@@ -2075,14 +2069,14 @@ class Config
 	 */
 	protected function CheckFile($sPurpose, $sFileName)
 	{
-		if (!file_exists($sFileName))
-		{
-			throw new ConfigException("Could not find $sPurpose file", array('file' => $sFileName));
+		if (!file_exists($sFileName)) {
+			throw new ConfigException("Could not find $sPurpose file", ['file' => $sFileName]);
 		}
-		if (!is_readable($sFileName))
-		{
-			throw new ConfigException("Could not read $sPurpose file (the file exists but cannot be read). Do you have the rights to access this file?",
-				array('file' => $sFileName));
+		if (!is_readable($sFileName)) {
+			throw new ConfigException(
+				"Could not read $sPurpose file (the file exists but cannot be read). Do you have the rights to access this file?",
+				['file' => $sFileName]
+			);
 		}
 	}
 
@@ -2109,70 +2103,65 @@ class Config
 		// This does not work on several lines
 		// preg_match('/^<\\?php(.*)\\?'.'>$/', $sConfigCode, $aMatches)...
 		// So, I've implemented a solution suggested in the PHP doc (search for phpWrapper)
-		try
-		{
+		try {
 			ob_start();
 			eval('?'.'>'.trim($sConfigCode));
 			$sNoise = trim(ob_get_contents());
 			ob_end_clean();
-		}
-		catch (Error $e)
-		{
+		} catch (Error $e) {
 			// PHP 7
-			throw new ConfigException('Error in configuration file',
-				array('file' => $sConfigFile, 'error' => $e->getMessage().' at line '.$e->getLine()));
-		}
-		catch (Exception $e)
-		{
+			throw new ConfigException(
+				'Error in configuration file',
+				['file' => $sConfigFile, 'error' => $e->getMessage().' at line '.$e->getLine()]
+			);
+		} catch (Exception $e) {
 			// well, never reach in case of parsing error :-(
 			// will be improved in PHP 6 ?
-			throw new ConfigException('Error in configuration file',
-				array('file' => $sConfigFile, 'error' => $e->getMessage()));
+			throw new ConfigException(
+				'Error in configuration file',
+				['file' => $sConfigFile, 'error' => $e->getMessage()]
+			);
 		}
-		if (strlen($sNoise) > 0)
-		{
+		if (strlen($sNoise) > 0) {
 			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack)
-			throw new ConfigException('Syntax error in configuration file',
-				array('file' => $sConfigFile, 'error' => '<tt>'.utils::EscapeHtml($sNoise, ENT_QUOTES).'</tt>'));
+			throw new ConfigException(
+				'Syntax error in configuration file',
+				['file' => $sConfigFile, 'error' => '<tt>'.utils::EscapeHtml($sNoise, ENT_QUOTES).'</tt>']
+			);
 		}
 
-		if (!isset($MySettings) || !is_array($MySettings))
-		{
-			throw new ConfigException('Missing array in configuration file',
-				array('file' => $sConfigFile, 'expected' => '$MySettings'));
+		if (!isset($MySettings) || !is_array($MySettings)) {
+			throw new ConfigException(
+				'Missing array in configuration file',
+				['file' => $sConfigFile, 'expected' => '$MySettings']
+			);
 		}
 
-		if (!array_key_exists('addons', $MyModules))
-		{
-			throw new ConfigException('Missing item in configuration file',
-				array('file' => $sConfigFile, 'expected' => '$MyModules[\'addons\']'));
+		if (!array_key_exists('addons', $MyModules)) {
+			throw new ConfigException(
+				'Missing item in configuration file',
+				['file' => $sConfigFile, 'expected' => '$MyModules[\'addons\']']
+			);
 		}
-		if (!array_key_exists('user rights', $MyModules['addons']))
-		{
+		if (!array_key_exists('user rights', $MyModules['addons'])) {
 			// Add one, by default
 			$MyModules['addons']['user rights'] = '/addons/userrights/userrightsnull.class.inc.php';
 		}
 
 		$this->m_aAddons = $MyModules['addons'];
 
-		foreach ($MySettings as $sPropCode => $rawvalue)
-		{
-			if ($this->IsProperty($sPropCode))
-			{
-				if (is_string($rawvalue))
-				{
+		foreach ($MySettings as $sPropCode => $rawvalue) {
+			if ($this->IsProperty($sPropCode)) {
+				if (is_string($rawvalue)) {
 					$value = trim($rawvalue);
-				}
-				else
-				{
+				} else {
 					$value = $rawvalue;
 				}
 				$this->Set($sPropCode, $value, $sConfigFile, true);
 			}
 		}
 
-		if (file_exists(READONLY_MODE_FILE))
-		{
+		if (file_exists(READONLY_MODE_FILE)) {
 			$this->Set('access_mode', ACCESS_READONLY, READONLY_MODE_FILE);
 		}
 
@@ -2188,14 +2177,14 @@ class Config
 		$this->m_iFastReloadInterval = isset($MySettings['fast_reload_interval']) ? trim($MySettings['fast_reload_interval']) : DEFAULT_FAST_RELOAD_INTERVAL;
 		$this->m_bSecureConnectionRequired = isset($MySettings['secure_connection_required']) ? (bool)trim($MySettings['secure_connection_required']) : DEFAULT_SECURE_CONNECTION_REQUIRED;
 
-		$this->m_aModuleSettings = isset($MyModuleSettings) ? $MyModuleSettings : array();
+		$this->m_aModuleSettings = isset($MyModuleSettings) ? $MyModuleSettings : [];
 
 		$this->m_sDefaultLanguage = isset($MySettings['default_language']) ? trim($MySettings['default_language']) : 'EN US';
 		$this->m_sAllowedLoginTypes = isset($MySettings['allowed_login_types']) ? trim($MySettings['allowed_login_types']) : DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = isset($MySettings['ext_auth_variable']) ? trim($MySettings['ext_auth_variable']) : DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : $this->m_sEncryptionKey;
 		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
-		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : array();
+		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : [];
 		$this->m_iPasswordHashAlgo = isset($MySettings['password_hash_algo']) ? $MySettings['password_hash_algo'] : $this->m_iPasswordHashAlgo;
 		$this->m_sAppSecret = isset($MySettings['application.secret']) ? trim($MySettings['application.secret']) : $this->m_sAppSecret;
 	}
@@ -2218,8 +2207,7 @@ class Config
 	 */
 	public function GetModuleSetting($sModule, $sProperty, $defaultvalue = null)
 	{
-		if (isset($this->m_aModuleSettings[$sModule][$sProperty]))
-		{
+		if (isset($this->m_aModuleSettings[$sModule][$sProperty])) {
 			return $this->m_aModuleSettings[$sModule][$sProperty];
 		}
 
@@ -2241,11 +2229,9 @@ class Config
 	public function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
 	{
 		$ret = $defaultvalue;
-		if (class_exists('ModulesXMLParameters'))
-		{
+		if (class_exists('ModulesXMLParameters')) {
 			$aAllParams = ModulesXMLParameters::GetData($sModule);
-			if (array_key_exists($sProperty, $aAllParams))
-			{
+			if (array_key_exists($sProperty, $aAllParams)) {
 				$ret = $aAllParams[$sProperty];
 			}
 		}
@@ -2436,7 +2422,7 @@ class Config
 	public function AddAllowedLoginTypes($sLoginMode)
 	{
 		$aAllowedLoginTypes = $this->GetAllowedLoginTypes();
-		if (in_array($sLoginMode, $aAllowedLoginTypes)){
+		if (in_array($sLoginMode, $aAllowedLoginTypes)) {
 			return;
 		}
 
@@ -2459,7 +2445,6 @@ class Config
 		$this->m_sAppSecret = $sKey;
 	}
 
-
 	public function SetCSVImportCharsets($aCharsets)
 	{
 		$this->m_aCharsets = $aCharsets;
@@ -2472,12 +2457,9 @@ class Config
 
 	public function GetLoadedFile()
 	{
-		if (is_null($this->m_sFile))
-		{
+		if (is_null($this->m_sFile)) {
 			return '';
-		}
-		else
-		{
+		} else {
 			return $this->m_sFile;
 		}
 	}
@@ -2489,9 +2471,8 @@ class Config
 	 */
 	public function ToArray()
 	{
-		$aSettings = array();
-		foreach ($this->m_aSettings as $sPropCode => $aSettingInfo)
-		{
+		$aSettings = [];
+		foreach ($this->m_aSettings as $sPropCode => $aSettingInfo) {
 			$aSettings[$sPropCode] = $aSettingInfo['value'];
 		}
 		$aSettings['log_global'] = $this->m_bLogGlobal;
@@ -2513,15 +2494,12 @@ class Config
 		$aSettings['password_hash_algo'] = $this->m_iPasswordHashAlgo;
 		$aSettings['application.secret'] = $this->m_sAppSecret;
 
-		foreach ($this->m_aModuleSettings as $sModule => $aProperties)
-		{
-			foreach ($aProperties as $sProperty => $value)
-			{
+		foreach ($this->m_aModuleSettings as $sModule => $aProperties) {
+			foreach ($aProperties as $sProperty => $value) {
 				$aSettings['module_settings'][$sModule][$sProperty] = $value;
 			}
 		}
-		foreach ($this->m_aAddons as $sKey => $sFile)
-		{
+		foreach ($this->m_aAddons as $sKey => $sFile) {
 			$aSettings['addon_list'][] = $sFile;
 		}
 
@@ -2540,22 +2518,18 @@ class Config
 	 */
 	public function WriteToFile($sFileName = '')
 	{
-		if (empty($sFileName))
-		{
+		if (empty($sFileName)) {
 			$sFileName = $this->m_sFile;
 		}
 		$oHandle = null;
 		$sConfig = null;
 
-		if ($this->m_sFile !== null && is_file($this->m_sFile))
-		{
+		if ($this->m_sFile !== null && is_file($this->m_sFile)) {
 			$oHandle = fopen($this->m_sFile, 'r');
 			$index = 0;
-			while (!flock($oHandle, LOCK_SH))
-			{
-				if ($index > 50)
-				{
-					throw new ConfigException("Could not read to configuration file", array('file' => $this->m_sFile));
+			while (!flock($oHandle, LOCK_SH)) {
+				if ($index > 50) {
+					throw new ConfigException("Could not read to configuration file", ['file' => $this->m_sFile]);
 				}
 				usleep(100000);
 				$index++;
@@ -2563,61 +2537,59 @@ class Config
 			$sConfig = file_get_contents($this->m_sFile);
 		}
 		$this->oItopConfigParser = new iTopConfigParser($sConfig);
-		if ($oHandle !==null)
-		{
+		if ($oHandle !== null) {
 			flock($oHandle, LOCK_UN);
 		}
 
 		$hFile = @fopen($sFileName, 'w');
-		if ($hFile !== false)
-		{
+		if ($hFile !== false) {
 			fwrite($hFile, "<?php\n");
 			fwrite($hFile, "\n/**\n");
 			fwrite($hFile, " *\n");
 			fwrite($hFile, " * Configuration file, generated by the ".ITOP_APPLICATION." configuration wizard\n");
 			fwrite($hFile, " *\n");
-			fwrite($hFile,
-				" * The file is used in MetaModel::LoadConfig() which does all the necessary initialization job\n");
+			fwrite(
+				$hFile,
+				" * The file is used in MetaModel::LoadConfig() which does all the necessary initialization job\n"
+			);
 			fwrite($hFile, " *\n");
 			fwrite($hFile, " */\n");
 
 			$aConfigSettings = $this->m_aSettings;
 
 			// Old fashioned boolean settings
-			$aBoolValues = array(
+			$aBoolValues = [
 				'log_global' => $this->m_bLogGlobal,
 				'log_notification' => $this->m_bLogNotification,
 				'log_issue' => $this->m_bLogIssue,
 				'log_web_service' => $this->m_bLogWebService,
 				'secure_connection_required' => $this->m_bSecureConnectionRequired,
-			);
-			foreach ($aBoolValues as $sKey => $bValue)
-			{
-				$aConfigSettings[$sKey] = array(
+			];
+			foreach ($aBoolValues as $sKey => $bValue) {
+				$aConfigSettings[$sKey] = [
 					'show_in_conf_sample' => true,
 					'type' => 'bool',
 					'value' => $bValue,
-				);
+				];
 			}
 
 			// Old fashioned integer settings
-			$aIntValues = array(
+			$aIntValues = [
 				'fast_reload_interval'     => $this->m_iFastReloadInterval,
 				'max_display_limit'        => $this->m_iMaxDisplayLimit,
 				'min_display_limit'        => $this->m_iMinDisplayLimit,
 				'standard_reload_interval' => $this->m_iStandardReloadInterval,
-			);
-			foreach ($aIntValues as $sKey => $iValue)
-			{
-				$aConfigSettings[$sKey] = array(
+			];
+			foreach ($aIntValues as $sKey => $iValue) {
+				$aConfigSettings[$sKey] = [
 					'show_in_conf_sample' => true,
 					'type' => 'integer',
 					'value' => $iValue,
-				);
+				];
 			}
 
 			// Old fashioned remaining values
-			$aOtherValues = array(
+			$aOtherValues = [
 				'default_language' => $this->m_sDefaultLanguage,
 				'allowed_login_types' => $this->m_sAllowedLoginTypes,
 				'ext_auth_variable' => $this->m_sExtAuthVariable,
@@ -2626,45 +2598,37 @@ class Config
 				'csv_import_charsets' => $this->m_aCharsets,
 				'password_hash_algo' => $this->m_iPasswordHashAlgo,
 				'application.secret' => $this->m_sAppSecret,
-			);
-			foreach ($aOtherValues as $sKey => $value)
-			{
-				$aConfigSettings[$sKey] = array(
+			];
+			foreach ($aOtherValues as $sKey => $value) {
+				$aConfigSettings[$sKey] = [
 					'show_in_conf_sample' => true,
 					'type' => is_string($value) ? 'string' : 'mixed',
 					'value' => $value,
-				);
+				];
 			}
 
 			ksort($aConfigSettings);
 			fwrite($hFile, "\$MySettings = array(\n");
-			foreach ($aConfigSettings as $sPropCode => $aSettingInfo)
-			{
+			foreach ($aConfigSettings as $sPropCode => $aSettingInfo) {
 				// Write all values that are either always visible or present in the cloned config file
-				if ($aSettingInfo['show_in_conf_sample'] || (!empty($aSettingInfo['source_of_value']) && ($aSettingInfo['source_of_value'] != 'unknown')))
-				{
+				if ($aSettingInfo['show_in_conf_sample'] || (!empty($aSettingInfo['source_of_value']) && ($aSettingInfo['source_of_value'] != 'unknown'))) {
 					fwrite($hFile, "\n");
 
-					if (isset($aSettingInfo['description']))
-					{
+					if (isset($aSettingInfo['description'])) {
 						fwrite($hFile, "\t// $sPropCode: {$aSettingInfo['description']}\n");
 					}
 
-					if (isset($aSettingInfo['default']))
-					{
-						$sComment = self::PrettyVarExport(null,$aSettingInfo['default'], "\t//\t\t", true);
-						fwrite($hFile,"\t//\tdefault: {$sComment}\n");
+					if (isset($aSettingInfo['default'])) {
+						$sComment = self::PrettyVarExport(null, $aSettingInfo['default'], "\t//\t\t", true);
+						fwrite($hFile, "\t//\tdefault: {$sComment}\n");
 					}
 
-					if (isset($this->m_aCanOverrideSettings[$sPropCode]) && $this->m_aCanOverrideSettings[$sPropCode])
-					{
+					if (isset($this->m_aCanOverrideSettings[$sPropCode]) && $this->m_aCanOverrideSettings[$sPropCode]) {
 						$aParserValue = $this->oItopConfigParser->GetVarValue('MySettings', $sPropCode);
-					}
-					else
-					{
+					} else {
 						$aParserValue = null;
 					}
-					$sSeenAs = self::PrettyVarExport($aParserValue,$aSettingInfo['value'], "\t");
+					$sSeenAs = self::PrettyVarExport($aParserValue, $aSettingInfo['value'], "\t");
 					fwrite($hFile, "\t'$sPropCode' => $sSeenAs,\n");
 				}
 			}
@@ -2673,11 +2637,9 @@ class Config
 			fwrite($hFile, "\n");
 			fwrite($hFile, "/**\n *\n * Modules specific settings\n *\n */\n");
 			fwrite($hFile, "\$MyModuleSettings = array(\n");
-			foreach ($this->m_aModuleSettings as $sModule => $aProperties)
-			{
+			foreach ($this->m_aModuleSettings as $sModule => $aProperties) {
 				fwrite($hFile, "\t'$sModule' => array (\n");
-				foreach ($aProperties as $sProperty => $value)
-				{
+				foreach ($aProperties as $sProperty => $value) {
 					$sNiceExport = self::PrettyVarExport($this->oItopConfigParser->GetVarValue('MyModuleSettings', $sProperty), $value, "\t\t");
 					fwrite($hFile, "\t\t'$sProperty' => $sNiceExport,\n");
 				}
@@ -2692,15 +2654,11 @@ class Config
 			fwrite($hFile, " */\n");
 			fwrite($hFile, "\$MyModules = array(\n");
 			$aParserValue = $this->oItopConfigParser->GetVarValue('MyModules', 'addons');
-			if ($aParserValue['found'])
-			{
+			if ($aParserValue['found']) {
 				fwrite($hFile, "\t'addons' => {$aParserValue['value']},\n");
-			}
-			else
-			{
+			} else {
 				fwrite($hFile, "\t'addons' => array (\n");
-				foreach ($this->m_aAddons as $sKey => $sFile)
-				{
+				foreach ($this->m_aAddons as $sKey => $sFile) {
 					fwrite($hFile, "\t\t'$sKey' => '$sFile',\n");
 				}
 				fwrite($hFile, "\t),\n");
@@ -2713,10 +2671,8 @@ class Config
 			utils::SetConfig($this);
 
 			return $bReturn;
-		}
-		else
-		{
-			throw new ConfigException("Could not write to configuration file", array('file' => $sFileName));
+		} else {
+			throw new ConfigException("Could not write to configuration file", ['file' => $sFileName]);
 		}
 	}
 
@@ -2737,32 +2693,25 @@ class Config
 	 */
 	public function UpdateFromParams($aParamValues, $sModulesDir = null, $bPreserveModuleSettings = false)
 	{
-		if (isset($aParamValues['application_path']))
-		{
+		if (isset($aParamValues['application_path'])) {
 			$this->Set('app_root_url', $aParamValues['application_path']);
 		}
-		if (isset($aParamValues['graphviz_path']))
-		{
+		if (isset($aParamValues['graphviz_path'])) {
 			$this->Set('graphviz_path', $aParamValues['graphviz_path']);
 		}
-		if (isset($aParamValues['mode']) && isset($aParamValues['language']))
-		{
-			if (($aParamValues['mode'] == 'install') || $this->GetDefaultLanguage() == '')
-			{
+		if (isset($aParamValues['mode']) && isset($aParamValues['language'])) {
+			if (($aParamValues['mode'] == 'install') || $this->GetDefaultLanguage() == '') {
 				$this->SetDefaultLanguage($aParamValues['language']);
 			}
 		}
-		if (isset($aParamValues['db_server']))
-		{
+		if (isset($aParamValues['db_server'])) {
 			$this->Set('db_host', $aParamValues['db_server']);
 			$this->Set('db_user', $aParamValues['db_user']);
 			$this->Set('db_pwd', $aParamValues['db_pwd']);
 			$sDBName = $aParamValues['db_name'];
-			if ($sDBName == '')
-			{
+			if ($sDBName == '') {
 				// Todo - obsolete after the transition to the new setup (2.0) is complete (WARNING: used by the designer)
-				if (isset($aParamValues['new_db_name']))
-				{
+				if (isset($aParamValues['new_db_name'])) {
 					$sDBName = $aParamValues['new_db_name'];
 				}
 			}
@@ -2770,39 +2719,29 @@ class Config
 			$this->Set('db_subname', $aParamValues['db_prefix']);
 
 			$bDbTlsEnabled = (bool)$aParamValues['db_tls_enabled'];
-			if ($bDbTlsEnabled)
-			{
+			if ($bDbTlsEnabled) {
 				$this->Set('db_tls.enabled', $bDbTlsEnabled, 'UpdateFromParams');
-			}
-			else
-			{
+			} else {
 				// disabled : we don't want parameter in the file
 				$this->Set('db_tls.enabled', $bDbTlsEnabled, null);
 			}
 			$sDbTlsCa = $bDbTlsEnabled ? $aParamValues['db_tls_ca'] : null;
-			if (isset($sDbTlsCa) && !empty($sDbTlsCa))
-			{
+			if (isset($sDbTlsCa) && !empty($sDbTlsCa)) {
 				$this->Set('db_tls.ca', $sDbTlsCa, 'UpdateFromParams');
-			}
-			else
-			{
+			} else {
 				// empty parameter : we don't want it in the file
 				$this->Set('db_tls.ca', null, null);
 			}
 		}
 
-		if (isset($aParamValues['selected_modules']))
-		{
+		if (isset($aParamValues['selected_modules'])) {
 			$aSelectedModules = explode(',', $aParamValues['selected_modules']);
-		}
-		else
-		{
+		} else {
 			$aSelectedModules = null;
 		}
 		$this->UpdateIncludes($sModulesDir, $aSelectedModules);
 
-		if (isset($aParamValues['source_dir']))
-		{
+		if (isset($aParamValues['source_dir'])) {
 			$this->Set('source_dir', $aParamValues['source_dir']);
 		}
 	}
@@ -2820,8 +2759,7 @@ class Config
 	 */
 	public function UpdateIncludes($sModulesDir, $aSelectedModules = null)
 	{
-		if ($sModulesDir === null)
-		{
+		if ($sModulesDir === null) {
 			return;
 		}
 
@@ -2829,40 +2767,30 @@ class Config
 		$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
 		$aAddOns = $oEmptyConfig->GetAddOns();
 
-		$aModules = ModuleDiscovery::GetAvailableModules(array(APPROOT.$sModulesDir));
-		foreach ($aModules as $sModuleId => $aModuleInfo)
-		{
-			list ($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-			if (is_null($aSelectedModules) || in_array($sModuleName, $aSelectedModules))
-			{
-				if (isset($aModuleInfo['settings']))
-				{
-					list ($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-					foreach ($aModuleInfo['settings'] as $sProperty => $value)
-					{
-						if (isset($this->m_aModuleSettings[$sName][$sProperty]))
-						{
+		$aModules = ModuleDiscovery::GetAvailableModules([APPROOT.$sModulesDir]);
+		foreach ($aModules as $sModuleId => $aModuleInfo) {
+			list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+			if (is_null($aSelectedModules) || in_array($sModuleName, $aSelectedModules)) {
+				if (isset($aModuleInfo['settings'])) {
+					list($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+					foreach ($aModuleInfo['settings'] as $sProperty => $value) {
+						if (isset($this->m_aModuleSettings[$sName][$sProperty])) {
 							// Do nothing keep the original value
-						}
-						else
-						{
+						} else {
 							$this->SetModuleSetting($sName, $sProperty, $value);
 						}
 					}
 				}
-				if (isset($aModuleInfo['installer']))
-				{
+				if (isset($aModuleInfo['installer'])) {
 					$sModuleInstallerClass = $aModuleInfo['installer'];
-					if (!class_exists($sModuleInstallerClass))
-					{
+					if (!class_exists($sModuleInstallerClass)) {
 						throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
 					}
-					if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI'))
-					{
+					if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI')) {
 						throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
 					}
-					$aCallSpec = array($sModuleInstallerClass, 'BeforeWritingConfig');
-					call_user_func_array($aCallSpec, array($this));
+					$aCallSpec = [$sModuleInstallerClass, 'BeforeWritingConfig'];
+					call_user_func_array($aCallSpec, [$this]);
 				}
 			}
 		}
@@ -2878,10 +2806,8 @@ class Config
 	 */
 	protected static function ChangePrefix(&$aStrings, $sSearchPrefix, $sNewPrefix)
 	{
-		foreach ($aStrings as &$sFile)
-		{
-			if (substr($sFile, 0, strlen($sSearchPrefix)) == $sSearchPrefix)
-			{
+		foreach ($aStrings as &$sFile) {
+			if (substr($sFile, 0, strlen($sSearchPrefix)) == $sSearchPrefix) {
 				$sFile = $sNewPrefix.substr($sFile, strlen($sSearchPrefix));
 			}
 		}
@@ -2912,22 +2838,19 @@ class Config
 	 */
 	protected static function PrettyVarExport($aParserValue, $value, $sIndentation, $bForceIndentation = false)
 	{
-		if (is_array($aParserValue) && $aParserValue['found'])
-		{
+		if (is_array($aParserValue) && $aParserValue['found']) {
 			return $aParserValue['value'];
 		}
 
 		$sExport = var_export($value, true);
-		$sNiceExport = str_replace(array("\r\n", "\n", "\r"), "\n".$sIndentation, trim($sExport));
-		if (!$bForceIndentation)
-		{
+		$sNiceExport = str_replace(["\r\n", "\n", "\r"], "\n".$sIndentation, trim($sExport));
+		if (!$bForceIndentation) {
 			/** @var array $aImported */
 			$aImported = null;
 			eval('$aImported='.$sNiceExport.';');
 			// Check if adding the identations at the beginning of each line
 			// did not modify the values (in case of a string containing a line break)
-			if ($aImported != $value)
-			{
+			if ($aImported != $value) {
 				$sNiceExport = $sExport;
 			}
 		}
@@ -2956,37 +2879,31 @@ class ConfigPlaceholdersResolver
 
 	public function Resolve($rawValue)
 	{
-		if (empty($this->aEnv['ITOP_CONFIG_PLACEHOLDERS']) && empty($this->aServer['ITOP_CONFIG_PLACEHOLDERS']))
-		{
+		if (empty($this->aEnv['ITOP_CONFIG_PLACEHOLDERS']) && empty($this->aServer['ITOP_CONFIG_PLACEHOLDERS'])) {
 			return $rawValue;
 		}
 
-		if (is_array($rawValue))
-		{
-			$aResolvedRawValue = array();
-			foreach ($rawValue as $key => $value)
-			{
+		if (is_array($rawValue)) {
+			$aResolvedRawValue = [];
+			foreach ($rawValue as $key => $value) {
 				$aResolvedRawValue[$key] = $this->Resolve($value);
 			}
 
 			return $aResolvedRawValue;
 		}
 
-		if (!is_string($rawValue))
-		{
+		if (!is_string($rawValue)) {
 			return $rawValue;
 		}
 
 		$sPattern = '/\%(env|server)\((\w+)\)(?:\?:(\w*))?\%/'; //3 capturing groups, ie `%env(HTTP_PORT)?:8080%` produce: `env` `HTTP_PORT` and `8080`.
 
-		if (! preg_match_all($sPattern, $rawValue, $aMatchesCollection, PREG_SET_ORDER))
-		{
+		if (! preg_match_all($sPattern, $rawValue, $aMatchesCollection, PREG_SET_ORDER)) {
 			return $rawValue;
 		}
 
 		$sValue = $rawValue;
-		foreach ($aMatchesCollection as $aMatches)
-		{
+		foreach ($aMatchesCollection as $aMatches) {
 			$sWholeMask = $aMatches[0];
 			$sSource = $aMatches[1];
 			$sKey = $aMatches[2];
@@ -3002,33 +2919,26 @@ class ConfigPlaceholdersResolver
 
 	private function Get($sSourceName, $sKey, $sDefault, $sWholeMask)
 	{
-		if ('env' == $sSourceName)
-		{
+		if ('env' == $sSourceName) {
 			$aSource = $this->aEnv;
-		}
-		else if ('server' == $sSourceName)
-		{
+		} elseif ('server' == $sSourceName) {
 			$aSource = $this->aServer;
-		}
-		else
-		{
+		} else {
 			$sErrorMessage = sprintf('unsupported source name "%s" into "%s"', $sSourceName, $sWholeMask);
-			IssueLog::Error($sErrorMessage, self::class, array($sSourceName, $sKey, $sDefault, $sWholeMask));
+			IssueLog::Error($sErrorMessage, self::class, [$sSourceName, $sKey, $sDefault, $sWholeMask]);
 			throw new ConfigException($sErrorMessage);
 		}
 
-		if (array_key_exists($sKey, $aSource))
-		{
+		if (array_key_exists($sKey, $aSource)) {
 			return $aSource[$sKey];
 		}
 
-		if (null !== $sDefault)
-		{
+		if (null !== $sDefault) {
 			return $sDefault;
 		}
 
 		$sErrorMessage = sprintf('key "%s" not found into "%s" while expanding', $sSourceName, $sWholeMask);
-		IssueLog::Error($sErrorMessage, self::class, array($sSourceName, $sKey, $sDefault, $sWholeMask));
+		IssueLog::Error($sErrorMessage, self::class, [$sSourceName, $sKey, $sDefault, $sWholeMask]);
 		throw new ConfigException($sErrorMessage);
 	}
 }

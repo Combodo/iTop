@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:RequestManagement' => 'Helpdesk~~',
 	'Menu:RequestManagement+' => '',
 	'Menu:RequestManagementProvider' => 'Helpdesk provider~~',
@@ -45,7 +46,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:UserRequest:MyWorkOrders+' => 'All work orders assigned to me~~',
 	'Class:Problem:KnownProblemList' => 'Known problems~~',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -61,7 +62,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 // Class: UserRequest
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:UserRequest' => 'User Request~~',
 	'Class:UserRequest+' => '~~',
 	'Class:UserRequest/Attribute:status' => 'Status~~',
@@ -255,10 +256,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Wait for approval~~',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '~~',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
-));
+]);
 
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Portal:TitleDetailsFor_Request' => 'Details for request~~',
 	'Portal:ButtonUpdate' => 'Update~~',
 	'Portal:ButtonClose' => 'Close~~',
@@ -283,11 +283,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Choose your favorite language~~',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
-));
+]);
 
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
 	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
 	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
-));
+]);

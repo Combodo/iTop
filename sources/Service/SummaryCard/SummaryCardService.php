@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -16,11 +17,11 @@ use UserRights;
  * Class SummaryCardService
  *
  * Service containing methods to call SummaryCards functionalities
- * 
+ *
  * @since 3.1.0
  */
-class SummaryCardService {
-
+class SummaryCardService
+{
 	/**
 	 * @param $sObjClass
 	 * @param $sObjKey
@@ -32,7 +33,7 @@ class SummaryCardService {
 	{
 		$oRouter = Router::GetInstance();
 		$sRoute = $oRouter->GenerateUrl("object.summary", ["obj_class" => $sObjClass, "obj_key" => $sObjKey]);
-		return 
+		return
 	<<<HTML
 data-tooltip-content="$sRoute" 
 data-tooltip-interaction-enabled="true" 
@@ -45,12 +46,12 @@ data-tooltip-max-width="600px"
 data-tooltip-theme="object-summary" 
 data-tooltip-append-to="body"
 HTML;
-		
-}
+
+	}
 
 	/**
 	 * Check if the user is allowed to see this class and if the class is allowed to display its summary
-	 * 
+	 *
 	 * @param string $sClass
 	 *
 	 * @return bool
@@ -71,20 +72,20 @@ HTML;
 		if (appUserPreferences::GetPref('show_summary_cards', true) === false) {
 			return false;
 		}
-			
+
 		// - This class has a summary zlist
 		$aDetailsList = MetaModel::GetZListItems($sClass, 'summary');
-		if(count($aDetailsList) > 0) {
+		if (count($aDetailsList) > 0) {
 			return true;
 		}
-		
+
 		// - Then maybe this class has complementary attributes
 		$aComplementAttributeSpec = MetaModel::GetNameSpec($sClass, FriendlyNameType::COMPLEMENTARY);
 		$aAdditionalField = $aComplementAttributeSpec[1];
 		if (count($aAdditionalField) > 0) {
 			return true;
 		}
-		
-		return false;	
+
+		return false;
 	}
 }

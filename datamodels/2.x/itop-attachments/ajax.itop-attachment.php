@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -37,7 +38,7 @@ function RenderAttachments(AjaxPage $oPage, $iTransactionId)
 	$sId = utils::ReadParam('objkey', '');
 	$oObject = MetaModel::GetObject($sClass, $sId, false);
 	$bEditMode = utils::ReadParam('edit_mode', 0);
-	$aAttachmentsDeleted = utils::ReadParam('attachments_deleted', array());
+	$aAttachmentsDeleted = utils::ReadParam('attachments_deleted', []);
 
 	$oPage->SetContentType('text/html');
 	$oAttachmentsRenderer = AttachmentsRendererFactory::GetInstance($oPage, $sClass, $sId, $iTransactionId);
@@ -45,18 +46,14 @@ function RenderAttachments(AjaxPage $oPage, $iTransactionId)
 	$bIsReadOnlyState = (is_null($oObject))
 		? false
 		: AttachmentPlugIn::IsReadonlyState($oObject, $oObject->GetState(), AttachmentPlugIn::ENUM_GUI_BACKOFFICE);
-	if ($bEditMode && !$bIsReadOnlyState)
-	{
+	if ($bEditMode && !$bIsReadOnlyState) {
 		$oAttachmentsRenderer->AddAttachmentsListContent(true, $aAttachmentsDeleted);
-	}
-	else
-	{
+	} else {
 		$oAttachmentsRenderer->RenderViewAttachmentsList();
 	}
 }
 
-try
-{
+try {
 	require_once APPROOT.'/application/startup.inc.php';
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
 	LoginWebPage::DoLoginEx(null /* any portal */, false);
@@ -65,35 +62,27 @@ try
 
 	$sOperation = utils::ReadParam('operation', '');
 
-	switch ($sOperation)
-	{
+	switch ($sOperation) {
 		case 'add':
 			$oPage = new JsonPage();
 			$oPage->SetOutputDataOnly(true);
 
-			$aResult = array(
+			$aResult = [
 				'error' => '',
 				'att_id' => 0,
 				'preview' => 'false',
 				'msg' => '',
-			);
+			];
 			$sClass = stripslashes(utils::ReadParam('obj_class', '', false, 'class'));
 			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
-			if (empty($sClass))
-			{
+			if (empty($sClass)) {
 				$aResult['error'] = "Missing argument 'obj_class'";
-			}
-			elseif (empty($sTempId))
-			{
+			} elseif (empty($sTempId)) {
 				$aResult['error'] = "Missing argument 'temp_id'";
-			}
-			else
-			{
-				try
-				{
+			} else {
+				try {
 					$oDoc = utils::ReadPostedDocument('file');
-					if ($oDoc->IsEmpty())
-					{
+					if ($oDoc->IsEmpty()) {
 						throw new FileUploadException(Dict::S('Attachments:Error:UploadedFileEmpty'));
 					}
 					/** @var Attachment $oAttachment */
@@ -109,9 +98,7 @@ try
 					$aResult['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
 					$aResult['att_id'] = $iAttId;
 					$aResult['preview'] = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
-				}
-				catch (FileUploadException $e)
-				{
+				} catch (FileUploadException $e) {
 					$aResult['error'] = $e->GetMessage();
 				}
 			}
@@ -121,9 +108,8 @@ try
 		case 'remove':
 			$iAttachmentId = utils::ReadParam('att_id', '');
 			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE id = :id");
-			$oSet = new DBObjectSet($oSearch, array(), array('id' => $iAttachmentId));
-			while ($oAttachment = $oSet->Fetch())
-			{
+			$oSet = new DBObjectSet($oSearch, [], ['id' => $iAttachmentId]);
+			while ($oAttachment = $oSet->Fetch()) {
 				$oAttachment->DBDelete();
 			}
 			break;
@@ -138,8 +124,7 @@ try
 	}
 
 	$oPage->output();
-}
-catch (Exception $e) {
+} catch (Exception $e) {
 	// note: transform to cope with XSS attacks
 	echo utils::EscapeHtml($e->GetMessage());
 	IssueLog::Error($e->getMessage());

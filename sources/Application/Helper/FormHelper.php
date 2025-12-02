@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -41,7 +42,6 @@ class FormHelper
 	 */
 	public const ENUM_MANDATORY_BLOB_MODE_MODIFY_FILLED = 'Modify:Filled';
 
-
 	/**
 	 * DisableAttributeBlobInputs.
 	 *
@@ -69,7 +69,7 @@ class FormHelper
 			// Set attribute blobs in read only
 			if ($oAttDef instanceof AttributeBlob) {
 				$aExtraParams['fieldsFlags'][$sAttCode] = OPT_ATT_READONLY;
-				$aExtraParams['fieldsComments'][$sAttCode] = '&nbsp;<img src="' . $sAppRootUrl . 'images/transp-lock.png" style="vertical-align:middle" title="'.utils::EscapeHtml(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
+				$aExtraParams['fieldsComments'][$sAttCode] = '&nbsp;<img src="'.$sAppRootUrl.'images/transp-lock.png" style="vertical-align:middle" title="'.utils::EscapeHtml(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
 			}
 		}
 	}
@@ -93,12 +93,12 @@ class FormHelper
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns true if the object has a mandatory attribute blob
-	 * 
+	 *
 	 * @see N°6861 - Display warning when creating/editing a mandatory blob in modal
-	 * 
+	 *
 	 * @param \DBObject $oObject
 	 *
 	 * @return bool
@@ -111,7 +111,7 @@ class FormHelper
 
 	/**
 	 * Returns an Alert explaining what will happen when a mandatory attribute blob is displayed in a form
-	 * 
+	 *
 	 * @see N°6861 - Display warning when creating/editing a mandatory blob in modal
 	 * @see self::ENUM_MANDATORY_BLOB_MODE_XXX
 	 *
@@ -122,19 +122,19 @@ class FormHelper
 	public static function GetAlertForMandatoryAttributeBlobInputsInModal(string $sMode = self::ENUM_MANDATORY_BLOB_MODE_MODIFY_EMPTY): Alert
 	{
 		$sMessage = Dict::S('UI:Object:Modal:'.$sMode.':MandatoryAttributeBlobInputs:Warning:Text');
-		
+
 		// If the mandatory attribute is already filled, there's no risk to make an object incomplete so we display an information level alert
-		if($sMode === self::ENUM_MANDATORY_BLOB_MODE_MODIFY_FILLED){
+		if ($sMode === self::ENUM_MANDATORY_BLOB_MODE_MODIFY_FILLED) {
 			return AlertUIBlockFactory::MakeForInformation('', $sMessage);
 		}
 
 		return 	AlertUIBlockFactory::MakeForWarning('', $sMessage);
 	}
-	
+
 	/**
 	 * Update flags to be sent to form with url parameters
 	 * For now only supports "readonly" param
-	 * 
+	 *
 	 * @param \DBObject $oObject
 	 * @param array $aExtraParams
 	 *
@@ -145,21 +145,21 @@ class FormHelper
 	{
 		$aRawValues = utils::ReadParam('readonly', [], '', 'raw_data');
 		$sObjectClass = get_class($oObject);
-		
-		if(array_key_exists('fieldsFlags', $aExtraParams) === false ) {
+
+		if (array_key_exists('fieldsFlags', $aExtraParams) === false) {
 			$aExtraParams['fieldsFlags'] = [];
-		}		
-		
-		if(array_key_exists('forceFieldsSubmission', $aExtraParams) === false ) {
+		}
+
+		if (array_key_exists('forceFieldsSubmission', $aExtraParams) === false) {
 			$aExtraParams['forceFieldsSubmission'] = [];
 		}
 		// - For each attribute present in readonly array in url, add a flag and mark them as to be submitted with their default value
-		foreach($aRawValues as $sAttCode => $sValue) {
-			if(MetaModel::IsValidAttCode($sObjectClass, $sAttCode)) {
+		foreach ($aRawValues as $sAttCode => $sValue) {
+			if (MetaModel::IsValidAttCode($sObjectClass, $sAttCode)) {
 				$aExtraParams['fieldsFlags'][$sAttCode] = array_key_exists($sAttCode, $aExtraParams['fieldsFlags']) ?
 					$aExtraParams['fieldsFlags'][$sAttCode] & OPT_ATT_READONLY :
 					OPT_ATT_READONLY;
-				
+
 				$aExtraParams['forceFieldsSubmission'][] = $sAttCode;
 			}
 		}
@@ -167,14 +167,15 @@ class FormHelper
 
 	/**
 	 * Get attribute flag for an object allowing to cross-check with extra flags present in a form
-	 * 
+	 *
 	 * @param \DBObject $oObject
 	 * @param string $sAttCode
 	 * @param array $aExtraFlags
 	 *
 	 * @return int
 	 */
-	public static function GetAttributeFlagsForObject(DBObject $oObject, string $sAttCode, array $aExtraFlags = []): int {
+	public static function GetAttributeFlagsForObject(DBObject $oObject, string $sAttCode, array $aExtraFlags = []): int
+	{
 		$iFlags = $oObject->GetFormAttributeFlags($sAttCode);
 		if (array_key_exists($sAttCode, $aExtraFlags)) {
 			// the caller may override some flags if needed

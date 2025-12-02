@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:RequestManagement' => 'ヘルプデスク',
 	'Menu:RequestManagement+' => '',
 	'Menu:RequestManagementProvider' => 'ヘルプデスクプロバイダー',
@@ -45,7 +46,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:UserRequest:MyWorkOrders+' => '',
 	'Class:Problem:KnownProblemList' => '既知の問題',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -61,7 +62,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 // Class: UserRequest
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:UserRequest' => 'ユーザ要求',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => '状態',
@@ -255,10 +256,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => '承認待ち',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
-));
+]);
 
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Portal:TitleDetailsFor_Request' => '要求の詳細',
 	'Portal:ButtonUpdate' => '更新',
 	'Portal:ButtonClose' => 'クローズ',
@@ -283,11 +283,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'お好みの言語を選択ください',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
-));
+]);
 
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
 	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
 	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
-));
+]);

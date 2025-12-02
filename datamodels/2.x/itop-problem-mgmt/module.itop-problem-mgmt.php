@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-problem-mgmt/3.2.1',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Problem Management',
@@ -12,23 +11,23 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
+		'dependencies' => [
 			'itop-tickets/2.0.0',
-		),
+		],
 		'mandatory' => false,
 		'visible' => true,
 
 		// Components
 		//
-		'datamodel' => array(
-		),
-		'data.struct' => array(
+		'datamodel' => [
+		],
+		'data.struct' => [
 			//'data.struct.itop-problem-mgmt.xml',
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			//'data.sample.itop-problem-mgmt.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
@@ -36,7 +35,7 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
-		),
-	)
+		'settings' => [
+		],
+	]
 );

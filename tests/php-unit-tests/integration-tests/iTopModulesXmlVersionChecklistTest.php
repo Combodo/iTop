@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  * This file is part of iTop.
@@ -19,7 +20,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DOMDocument;
 use iTopDesignFormat;
 
-
 /**
  * @covers iTopDesignFormat
  *
@@ -34,7 +34,6 @@ class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 
 		$this->RequireOnceItopFile('setup/itopdesignformat.class.inc.php');
 	}
-
 
 	/**
 	 * Verify if the `datamodels/2.x/datamodel.*.xml` files refer to the latest version of the design
@@ -61,8 +60,11 @@ class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 		if ($oFormat->Convert()) {
 			// Compare the original and new format
 			$sExpectedXmlVersion = ITOP_DESIGN_LATEST_VERSION;
-			$this->assertSame($oTransformedXml->saveXML(), $oOriginalXml->saveXML(),
-				"Datamodel file $sXmlFile:2 not in the latest format ($sExpectedXmlVersion)");
+			$this->assertSame(
+				$oTransformedXml->saveXML(),
+				$oOriginalXml->saveXML(),
+				"Datamodel file $sXmlFile:2 not in the latest format ($sExpectedXmlVersion)"
+			);
 		} else {
 			$this->fail("Failed to convert $sXmlFile into the latest format");
 		}
@@ -80,11 +82,11 @@ class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 		$aXmlFiles[] = $sAppRoot.'core/datamodel.core.xml';
 		$aXmlFiles[] = $sAppRoot.'application/datamodel.application.xml';
 
-		$aTestCases = array();
+		$aTestCases = [];
 		foreach ($aXmlFiles as $sXmlFile) {
-			$aTestCases[$sXmlFile] = array(
+			$aTestCases[$sXmlFile] = [
 				'sXmlFile' => $sXmlFile,
-			);
+			];
 		}
 
 		return $aTestCases;

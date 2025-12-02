@@ -6,8 +6,8 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 abstract class AbstractDOMSanitizerTest extends ItopTestCase
 {
-	const INPUT_DIRECTORY = 'input';
-	const OUTPUT_DIRECTORY = 'output';
+	public const INPUT_DIRECTORY = 'input';
+	public const OUTPUT_DIRECTORY = 'output';
 
 	protected function setUp(): void
 	{
@@ -46,7 +46,7 @@ abstract class AbstractDOMSanitizerTest extends ItopTestCase
 	protected function GetTagAttributeValue($sTagAttribute, $iAttributeCounter)
 	{
 		$sTagAttrValue = ' '.$sTagAttribute.'="';
-		if (in_array($sTagAttribute, array('href', 'src'))) {
+		if (in_array($sTagAttribute, ['href', 'src'])) {
 			return $sTagAttrValue.'http://www.combodo.com"';
 		}
 
@@ -59,11 +59,10 @@ abstract class AbstractDOMSanitizerTest extends ItopTestCase
 
 	protected function IsClosingTag($sTag)
 	{
-		if (in_array($sTag, array('br', 'img', 'hr'))) {
+		if (in_array($sTag, ['br', 'img', 'hr'])) {
 			return false;
 		}
 
 		return true;
 	}
 }
-

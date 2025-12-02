@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2023 Combodo SARL
  *
@@ -35,7 +36,7 @@ use Twig\TwigFunction;
 class CKEditorExtension extends AbstractExtension
 {
 	/** @inheritdoc  */
-	public function getFunctions() : array
+	public function getFunctions(): array
 	{
 		return [
 			new TwigFunction('inject_ckeditor_resources', [$this, 'injectCKEditorResources']),
@@ -48,15 +49,15 @@ class CKEditorExtension extends AbstractExtension
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function injectCKEditorResources() : string
+	public function injectCKEditorResources(): string
 	{
 		$sScriptTemplate = '';
 		$aJSFilesRelPaths = CKEditorHelper::GetJSFilesRelPathsForCKEditor();
 
-		foreach ($aJSFilesRelPaths as $sJSFileRelPath){
-			$sUrl = \utils::GetAbsoluteUrlAppRoot() . $sJSFileRelPath;
+		foreach ($aJSFilesRelPaths as $sJSFileRelPath) {
+			$sUrl = \utils::GetAbsoluteUrlAppRoot().$sJSFileRelPath;
 			$sUrl = \utils::AddParameterToUrl($sUrl, 't', \utils::GetCacheBusterTimestamp());
-			$sScriptTemplate .= '<script type="text/javascript" src="' . $sUrl . '"></script>';
+			$sScriptTemplate .= '<script type="text/javascript" src="'.$sUrl.'"></script>';
 		}
 
 		return $sScriptTemplate;

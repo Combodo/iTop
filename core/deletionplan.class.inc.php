@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -9,7 +10,7 @@
  */
 
 /**
- * Deletion plan (other objects to be deleted/modified, eventual issues, etc.) 
+ * Deletion plan (other objects to be deleted/modified, eventual issues, etc.)
  *
  * @package     iTopORM
  */
@@ -25,34 +26,34 @@ class DeletionPlan
 	protected $m_iToDelete;
 	protected $m_iToUpdate;
 
-  	protected $m_aToDelete;
-  	protected $m_aToUpdate;
+	protected $m_aToDelete;
+	protected $m_aToUpdate;
 
-	protected static $m_aModeUpdate = array(
-		DEL_SILENT => array(
+	protected static $m_aModeUpdate = [
+		DEL_SILENT => [
 			DEL_SILENT => DEL_SILENT,
 			DEL_AUTO => DEL_AUTO,
-			DEL_MANUAL => DEL_MANUAL
-		),
-		DEL_MANUAL => array(
+			DEL_MANUAL => DEL_MANUAL,
+		],
+		DEL_MANUAL => [
 			DEL_SILENT => DEL_MANUAL,
 			DEL_AUTO => DEL_AUTO,
-			DEL_MANUAL => DEL_MANUAL
-		),
-		DEL_AUTO => array(
+			DEL_MANUAL => DEL_MANUAL,
+		],
+		DEL_AUTO => [
 			DEL_SILENT => DEL_AUTO,
 			DEL_AUTO => DEL_AUTO,
-			DEL_MANUAL => DEL_AUTO
-		)
-	);
+			DEL_MANUAL => DEL_AUTO,
+		],
+	];
 
 	public function __construct()
 	{
 		$this->m_iToDelete = 0;
 		$this->m_iToUpdate = 0;
 
-		$this->m_aToDelete = array();
-		$this->m_aToUpdate = array();
+		$this->m_aToDelete = [];
+		$this->m_aToUpdate = [];
 
 		$this->m_bFoundStopper = false;
 		$this->m_bFoundSecurityIssue = false;
@@ -65,22 +66,17 @@ class DeletionPlan
 		$this->m_iToDelete = 0;
 		$this->m_iToUpdate = 0;
 
-		foreach($this->m_aToDelete as $sClass => $aToDelete)
-		{
-			foreach($aToDelete as $iId => $aData)
-			{
+		foreach ($this->m_aToDelete as $sClass => $aToDelete) {
+			foreach ($aToDelete as $iId => $aData) {
 				$this->m_iToDelete++;
-				if (isset($aData['issue']))
-				{
+				if (isset($aData['issue'])) {
 					$this->m_bFoundStopper = true;
 					$this->m_bFoundManualOperation = true;
-					if (isset($aData['issue_security']))
-					{
+					if (isset($aData['issue_security'])) {
 						$this->m_bFoundSecurityIssue = true;
 					}
 				}
-				if ($aData['mode'] == DEL_MANUAL)
-				{
+				if ($aData['mode'] == DEL_MANUAL) {
 					$this->m_aToDelete[$sClass][$iId]['issue'] = $sClass.'::'.$iId.' '.Dict::S('UI:Delete:MustBeDeletedManually');
 					$this->m_bFoundStopper = true;
 					$this->m_bFoundManualDelete = true;
@@ -92,30 +88,25 @@ class DeletionPlan
 		// www.php.net/manual/fr/function.set-time-limit.php#72305
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		foreach($this->m_aToUpdate as $sClass => $aToUpdate)
-		{
-			foreach($aToUpdate as $iId => $aData)
-			{
+		foreach ($this->m_aToUpdate as $sClass => $aToUpdate) {
+			foreach ($aToUpdate as $iId => $aData) {
 				set_time_limit(intval($iLoopTimeLimit));
 				$this->m_iToUpdate++;
 
 				$oObject = $aData['to_reset'];
-				$aExtKeyLabels = array();
-				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
-				{
+				$aExtKeyLabels = [];
+				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef) {
 					$oObject->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
 					$aExtKeyLabels[] = $aRemoteAttDef->GetLabel();
 				}
-				$this->m_aToUpdate[$sClass][$iId]['attributes_list'] = implode(', ', $aExtKeyLabels); 
+				$this->m_aToUpdate[$sClass][$iId]['attributes_list'] = implode(', ', $aExtKeyLabels);
 
 				list($bRes, $aIssues, $bSecurityIssues) = $oObject->CheckToWrite();
-				if (!$bRes)
-				{
+				if (!$bRes) {
 					$this->m_aToUpdate[$sClass][$iId]['issue'] = implode(', ', $aIssues);
 					$this->m_bFoundStopper = true;
 
-					if ($bSecurityIssues)
-					{
+					if ($bSecurityIssues) {
 						$this->m_aToUpdate[$sClass][$iId]['issue_security'] = true;
 						$this->m_bFoundSecurityIssue = true;
 					}
@@ -127,23 +118,17 @@ class DeletionPlan
 
 	public function GetIssues()
 	{
-		$aIssues = array();
-		foreach ($this->m_aToDelete as $sClass => $aToDelete)
-		{
-			foreach ($aToDelete as $iId => $aData)
-			{
-				if (isset($aData['issue']))
-				{
+		$aIssues = [];
+		foreach ($this->m_aToDelete as $sClass => $aToDelete) {
+			foreach ($aToDelete as $iId => $aData) {
+				if (isset($aData['issue'])) {
 					$aIssues[] = $aData['issue'];
 				}
 			}
 		}
-		foreach ($this->m_aToUpdate as $sClass => $aToUpdate)
-		{
-			foreach ($aToUpdate as $iId => $aData)
-			{
-				if (isset($aData['issue']))
-				{
+		foreach ($this->m_aToUpdate as $sClass => $aToUpdate) {
+			foreach ($aToUpdate as $iId => $aData) {
+				if (isset($aData['issue'])) {
 					$aIssues[] = $aData['issue'];
 				}
 			}
@@ -192,63 +177,50 @@ class DeletionPlan
 
 	public function AddToDelete($oObject, $iDeletionMode = null)
 	{
-		if (is_null($iDeletionMode))
-		{
+		if (is_null($iDeletionMode)) {
 			$bRequestedExplicitely = true;
 			$iDeletionMode = DEL_AUTO;
-		}
-		else
-		{
+		} else {
 			$bRequestedExplicitely = false;
 		}
 
 		$sClass = get_class($oObject);
 		$iId = $oObject->GetKey();
 
-		if (isset($this->m_aToUpdate[$sClass][$iId]))
-		{
+		if (isset($this->m_aToUpdate[$sClass][$iId])) {
 			unset($this->m_aToUpdate[$sClass][$iId]);
 		}
 
-		if (isset($this->m_aToDelete[$sClass][$iId]))
-		{
-			if ($this->m_aToDelete[$sClass][$iId]['requested_explicitely'])
-			{
+		if (isset($this->m_aToDelete[$sClass][$iId])) {
+			if ($this->m_aToDelete[$sClass][$iId]['requested_explicitely']) {
 				// No change: let it in mode DEL_AUTO
-			}
-			else
-			{
+			} else {
 				$iPrevDeletionMode = $this->m_aToDelete[$sClass][$iId]['mode'];
 				$iNewDeletionMode = self::$m_aModeUpdate[$iPrevDeletionMode][$iDeletionMode];
 				$this->m_aToDelete[$sClass][$iId]['mode'] = $iNewDeletionMode;
-	
-				if ($bRequestedExplicitely)
-				{
+
+				if ($bRequestedExplicitely) {
 					// This object was in the root list
 					$this->m_aToDelete[$sClass][$iId]['requested_explicitely'] = true;
 					$this->m_aToDelete[$sClass][$iId]['mode'] = DEL_AUTO;
 				}
 			}
-		}
-		else
-		{
-			$this->m_aToDelete[$sClass][$iId] = array(
+		} else {
+			$this->m_aToDelete[$sClass][$iId] = [
 				'to_delete' => $oObject,
 				'mode' => $iDeletionMode,
 				'requested_explicitely' => $bRequestedExplicitely,
-			);
+			];
 		}
 	}
 
 	public function SetDeletionIssues($oObject, $aIssues, $bSecurityIssue)
 	{
-		if (count($aIssues ?? []) > 0)
-		{
+		if (count($aIssues ?? []) > 0) {
 			$sClass = get_class($oObject);
 			$iId = $oObject->GetKey();
 			$this->m_aToDelete[$sClass][$iId]['issue'] = implode(', ', $aIssues);
-			if ($bSecurityIssue)
-			{
+			if ($bSecurityIssue) {
 				$this->m_aToDelete[$sClass][$iId]['issue_security'] = true;
 			}
 		}
@@ -258,21 +230,16 @@ class DeletionPlan
 	{
 		$sClass = get_class($oObject);
 		$iId = $oObject->GetKey();
-		if (isset($this->m_aToDelete[$sClass][$iId]))
-		{
+		if (isset($this->m_aToDelete[$sClass][$iId])) {
 			// skip... it should be deleted anyhow !
-		}
-		else
-		{
-			if (!isset($this->m_aToUpdate[$sClass][$iId]))
-			{
-				$this->m_aToUpdate[$sClass][$iId] = array(
+		} else {
+			if (!isset($this->m_aToUpdate[$sClass][$iId])) {
+				$this->m_aToUpdate[$sClass][$iId] = [
 					'to_reset' => $oObject,
-				);
+				];
 			}
 			$this->m_aToUpdate[$sClass][$iId]['attributes'][$oAttDef->GetCode()] = $oAttDef;
 			$this->m_aToUpdate[$sClass][$iId]['values'][$oAttDef->GetCode()] = $value;
 		}
 	}
 }
-?>

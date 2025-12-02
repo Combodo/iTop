@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -41,7 +42,7 @@
 //
 // Class: Organization
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Organization' => '组织',
 	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => '名称',
@@ -68,13 +69,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Organization:Overview:FunctionalCIs' => '此组织的所有配置项',
 	'Organization:Overview:FunctionalCIs:subtitle' => '按类型',
 	'Organization:Overview:Users' => '此组织里所有的'.ITOP_APPLICATION_SHORT.'用户',
-));
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Location' => '地点',
 	'Class:Location+' => '任何类型的地点: 区域, 国家, 城市, 位置, 建筑, 楼层, 房间, 机架,...',
 	'Class:Location/Attribute:name' => '名称',
@@ -101,13 +102,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Location/Attribute:physicaldevice_list+' => '此位置的所有设备',
 	'Class:Location/Attribute:person_list' => '联系人',
 	'Class:Location/Attribute:person_list+' => '此位置的所有联系人',
-));
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Contact' => '联系人',
 	'Class:Contact+' => '',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
@@ -139,13 +140,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Contact/Attribute:cis_list+' => '此联系人关联的所有配置项',
 	'Class:Contact/Attribute:finalclass' => '联系人类型',
 	'Class:Contact/Attribute:finalclass+' => '根本属性的名称',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Person' => '人员',
 	'Class:Person+' => '',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
@@ -180,13 +181,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person/UniquenessRule:name+' => '同一组织内的员工姓名必须唯一',
 	'Class:Person/UniquenessRule:name' => '\'$this->org_name$\' 内已经有人叫这个名字',
 	'Class:Person/Error:ChangingOrgDenied' => '无法移动此人员到组织 \'%1$s\' 因为这将终端其用户门户的访问, 其关联的用户没有被授权访问此组织',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Team' => '团队',
 	'Class:Team+' => '',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
@@ -194,13 +195,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Team/Attribute:persons_list+' => '此团队包含的所有成员',
 	'Class:Team/Attribute:tickets_list' => '工单',
 	'Class:Team/Attribute:tickets_list+' => '此团队的所有工单',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Document' => '文档',
 	'Class:Document+' => '',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
@@ -230,77 +231,77 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Document/Attribute:cis_list+' => '此文档关联的所有配置项',
 	'Class:Document/Attribute:finalclass' => '文档类型',
 	'Class:Document/Attribute:finalclass+' => '根本属性的名称',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DocumentFile' => '文档文件',
 	'Class:DocumentFile+' => '',
 	'Class:DocumentFile/Attribute:file' => '文件',
 	'Class:DocumentFile/Attribute:file+' => '',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DocumentNote' => '文档笔记',
 	'Class:DocumentNote+' => '',
 	'Class:DocumentNote/Attribute:text' => '正文',
 	'Class:DocumentNote/Attribute:text+' => '',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DocumentWeb' => '文档网页',
 	'Class:DocumentWeb+' => '',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Typology' => '拓扑',
 	'Class:Typology+' => '',
 	'Class:Typology/Attribute:name' => '名称',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => '拓扑类型',
 	'Class:Typology/Attribute:finalclass+' => '根本属性的名称',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:DocumentType' => '文档类型',
 	'Class:DocumentType+' => '',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ContactType' => '联系人类型',
 	'Class:ContactType+' => '',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkPersonToTeam' => '关联 人员/团队',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
@@ -317,13 +318,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:role_name' => '角色名称',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:DataAdministration' => '数据管理',
 	'Menu:DataAdministration+' => '数据管理',
 	'Menu:Catalogs' => '类别',
@@ -361,20 +362,20 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Typology+' => '类型配置',
 	'UI_WelcomeMenu_AllConfigItems' => '摘要',
 	'Menu:ConfigManagement:Typology' => '类型配置',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Person:info' => '基本信息',
 	'User:info' => '基本信息',
 	'User:profiles' => '角色 (至少一个)',
 	'Person:personal_info' => '个人信息',
 	'Person:notifiy' => '通知',
-));
+]);
 
 // Themes
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'theme:fullmoon' => '满月',
 	'theme:test-red' => '测试 (红色)',
-));
+]);

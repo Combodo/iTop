@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => 'Helpdesk',
 	'Menu:RequestManagementProvider' => 'Poskytovatel helpdesku',
@@ -47,7 +48,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:UserRequest:MyWorkOrders+' => 'Všechny pracovní příkazy přidělené mně',
 	'Class:Problem:KnownProblemList' => 'Známé problémy',
 	'Tickets:Related:OpenIncidents' => 'Otevřené incidenty',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -63,7 +64,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 // Class: UserRequest
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:UserRequest' => 'Uživatelský požadavek',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Stav',
@@ -257,10 +258,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Čeká na schválení',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Požadavek nemůže být nadřazený sám sobě',
-));
+]);
 
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Portal:TitleDetailsFor_Request' => 'Detaily požadavku',
 	'Portal:ButtonUpdate' => 'Aktualizovat',
 	'Portal:ButtonClose' => 'Uzavřít',
@@ -285,11 +285,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Vyberte svůj jazyk',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Vyřešit podřízené tikety',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Kaskádovat vyřešení do podřízeného požadavku (ev_autoresolve) a sjednotit následující vlastnosti: služba, tým, řešitel, informace o vyřešení',
-));
+]);
 
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Organization:Overview:UserRequests' => 'Uživatelské požadavky z této organizace',
 	'Organization:Overview:MyUserRequests' => 'Moje uživatelské požadavky pro tuto organizaci',
 	'Organization:Overview:Tickets' => 'Tikety pro tuto organizaci',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -19,7 +20,7 @@ abstract class TabularBulkExport extends BulkExport
 {
 	public function EnumFormParts()
 	{
-		return array_merge(parent::EnumFormParts(), array('tabular_fields' => array('fields')));
+		return array_merge(parent::EnumFormParts(), ['tabular_fields' => ['fields']]);
 	}
 
 	/**
@@ -49,21 +50,17 @@ abstract class TabularBulkExport extends BulkExport
 
 	protected function SuggestFields($aSuggestedFields)
 	{
-		$aRet = array();
+		$aRet = [];
 		// By defaults all fields are Ok, nothing gets translated but
 		// you can overload this method if some fields are better exported
 		// (in a given format) by using an alternate field, for example id => friendlyname
 		$aAliases = $this->oSearch->GetSelectedClasses();
-		foreach($aSuggestedFields as $idx => $sField)
-		{
-			if (preg_match('/^([^\\.]+)\\.(.+)$/', $sField, $aMatches))
-			{
+		foreach ($aSuggestedFields as $idx => $sField) {
+			if (preg_match('/^([^\\.]+)\\.(.+)$/', $sField, $aMatches)) {
 				$sAlias = $aMatches[1];
 				$sAttCode = $aMatches[2];
 				$sClass = $aAliases[$sAlias];
-			}
-			else
-			{
+			} else {
 				$sAlias = '';
 				$sAttCode = $sField;
 				$sClass = reset($aAliases);
@@ -72,8 +69,7 @@ abstract class TabularBulkExport extends BulkExport
 			$sAttCodeEx = MetaModel::NormalizeFieldSpec($sClass, $sMostRelevantField);
 			// Remove the aliases (if any) from the field names to make them compatible
 			// with the 'short' notation used in this case by the widget
-			if (count($aAliases) > 1)
-			{
+			if (count($aAliases) > 1) {
 				$sAttCodeEx = $sAlias.'.'.$sAttCodeEx;
 			}
 			$aRet[] = $sAttCodeEx;
@@ -93,9 +89,8 @@ abstract class TabularBulkExport extends BulkExport
 
 	protected function GetSubAttributes($sClass, $sAttCode, $oAttDef)
 	{
-		$aResult = array();
-		switch(get_class($oAttDef))
-		{
+		$aResult = [];
+		switch (get_class($oAttDef)) {
 			case 'AttributeExternalKey':
 			case 'AttributeHierarchicalKey':
 
@@ -103,74 +98,56 @@ abstract class TabularBulkExport extends BulkExport
 				$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 				$sRemoteClass = $oKeyAttDef->GetTargetClass();
 				$sFriendlyNameAttCode = MetaModel::GetFriendlyNameAttributeCode($sRemoteClass);
-				if (!is_null($sFriendlyNameAttCode))
-				{
+				if (!is_null($sFriendlyNameAttCode)) {
 					// The friendly name is made of a single attribute, check if that attribute is present as an external field
-					foreach(MetaModel::ListAttributeDefs($sClass) as $sSubAttCode => $oSubAttDef)
-					{
-						if ($oSubAttDef instanceof AttributeExternalField)
-						{
-							if (($oSubAttDef->GetKeyAttCode() == $sAttCode) && ($oSubAttDef->GetExtAttCode() == $sFriendlyNameAttCode))
-							{
+					foreach (MetaModel::ListAttributeDefs($sClass) as $sSubAttCode => $oSubAttDef) {
+						if ($oSubAttDef instanceof AttributeExternalField) {
+							if (($oSubAttDef->GetKeyAttCode() == $sAttCode) && ($oSubAttDef->GetExtAttCode() == $sFriendlyNameAttCode)) {
 								$bAddFriendlyName = false;
 							}
 						}
 					}
 				}
 
-				$aResult[$sAttCode] = array('code' => $sAttCode, 'unique_label' => $oAttDef->GetLabel(), 'label' => Dict::S('UI:CSVImport:idField'), 'attdef' => $oAttDef);
+				$aResult[$sAttCode] = ['code' => $sAttCode, 'unique_label' => $oAttDef->GetLabel(), 'label' => Dict::S('UI:CSVImport:idField'), 'attdef' => $oAttDef];
 
-				if ($bAddFriendlyName)
-				{
-					if ($this->IsExportableField($sClass, $sAttCode.'->friendlyname'))
-					{
-						$aResult[$sAttCode.'->friendlyname'] = array('code' =>  $sAttCode.'->friendlyname', 'unique_label' => $oAttDef->GetLabel().'->'.Dict::S('Core:FriendlyName-Label'), 'label' => Dict::S('Core:FriendlyName-Label'), 'attdef' => MetaModel::GetAttributeDef($sClass, $sAttCode.'_friendlyname'));
+				if ($bAddFriendlyName) {
+					if ($this->IsExportableField($sClass, $sAttCode.'->friendlyname')) {
+						$aResult[$sAttCode.'->friendlyname'] = ['code' =>  $sAttCode.'->friendlyname', 'unique_label' => $oAttDef->GetLabel().'->'.Dict::S('Core:FriendlyName-Label'), 'label' => Dict::S('Core:FriendlyName-Label'), 'attdef' => MetaModel::GetAttributeDef($sClass, $sAttCode.'_friendlyname')];
 					}
 				}
 
-				foreach(MetaModel::ListAttributeDefs($sClass) as $sSubAttCode => $oSubAttDef)
-				{
-					if ($oSubAttDef instanceof AttributeExternalField)
-					{
-						if ($this->IsExportableField($sClass, $sSubAttCode, $oSubAttDef))
-						{
-							if ($oSubAttDef->GetKeyAttCode() == $sAttCode)
-							{
+				foreach (MetaModel::ListAttributeDefs($sClass) as $sSubAttCode => $oSubAttDef) {
+					if ($oSubAttDef instanceof AttributeExternalField) {
+						if ($this->IsExportableField($sClass, $sSubAttCode, $oSubAttDef)) {
+							if ($oSubAttDef->GetKeyAttCode() == $sAttCode) {
 								$sAttCodeEx = $sAttCode.'->'.$oSubAttDef->GetExtAttCode();
-								$aResult[$sAttCodeEx] = array('code' => $sAttCodeEx, 'unique_label' => $oAttDef->GetLabel().'->'.$oSubAttDef->GetExtAttDef()->GetLabel(), 'label' => MetaModel::GetLabel($sRemoteClass, $oSubAttDef->GetExtAttCode()), 'attdef' => $oSubAttDef);
+								$aResult[$sAttCodeEx] = ['code' => $sAttCodeEx, 'unique_label' => $oAttDef->GetLabel().'->'.$oSubAttDef->GetExtAttDef()->GetLabel(), 'label' => MetaModel::GetLabel($sRemoteClass, $oSubAttDef->GetExtAttCode()), 'attdef' => $oSubAttDef];
 							}
 						}
 					}
 				}
 
 				// Add the reconciliation keys
-				foreach(MetaModel::GetReconcKeys($sRemoteClass) as $sRemoteAttCode)
-			  	{
-			  	    if (!empty($sRemoteAttCode))
-                    {
-                        $sAttCodeEx = $sAttCode.'->'.$sRemoteAttCode;
-                        if (!array_key_exists($sAttCodeEx, $aResult))
-                        {
-                            $oRemoteAttDef = MetaModel::GetAttributeDef($sRemoteClass, $sRemoteAttCode);
-                            if ($this->IsExportableField($sRemoteClass, $sRemoteAttCode, $oRemoteAttDef))
-                            {
-                                $aResult[$sAttCodeEx] = array('code' => $sAttCodeEx, 'unique_label' => $oAttDef->GetLabel().'->'.$oRemoteAttDef->GetLabel(), 'label' => MetaModel::GetLabel($sRemoteClass, $sRemoteAttCode), 'attdef' => $oRemoteAttDef);
-                            }
-                        }
-                    }
-			  	}
+				foreach (MetaModel::GetReconcKeys($sRemoteClass) as $sRemoteAttCode) {
+					if (!empty($sRemoteAttCode)) {
+						$sAttCodeEx = $sAttCode.'->'.$sRemoteAttCode;
+						if (!array_key_exists($sAttCodeEx, $aResult)) {
+							$oRemoteAttDef = MetaModel::GetAttributeDef($sRemoteClass, $sRemoteAttCode);
+							if ($this->IsExportableField($sRemoteClass, $sRemoteAttCode, $oRemoteAttDef)) {
+								$aResult[$sAttCodeEx] = ['code' => $sAttCodeEx, 'unique_label' => $oAttDef->GetLabel().'->'.$oRemoteAttDef->GetLabel(), 'label' => MetaModel::GetLabel($sRemoteClass, $sRemoteAttCode), 'attdef' => $oRemoteAttDef];
+							}
+						}
+					}
+				}
 				break;
-					
+
 			case 'AttributeStopWatch':
-				foreach(MetaModel::ListAttributeDefs($sClass) as $sSubAttCode => $oSubAttDef)
-				{
-					if ($oSubAttDef instanceof AttributeSubItem)
-					{
-						if ($oSubAttDef->GetParentAttCode() == $sAttCode)
-						{
-							if ($this->IsExportableField($sClass, $sSubAttCode, $oSubAttDef))
-							{
-								$aResult[$sSubAttCode] = array('code' => $sSubAttCode, 'unique_label' => $oSubAttDef->GetLabel(), 'label' => $oSubAttDef->GetLabel(), 'attdef' => $oSubAttDef);
+				foreach (MetaModel::ListAttributeDefs($sClass) as $sSubAttCode => $oSubAttDef) {
+					if ($oSubAttDef instanceof AttributeSubItem) {
+						if ($oSubAttDef->GetParentAttCode() == $sAttCode) {
+							if ($this->IsExportableField($sClass, $sSubAttCode, $oSubAttDef)) {
+								$aResult[$sSubAttCode] = ['code' => $sSubAttCode, 'unique_label' => $oSubAttDef->GetLabel(), 'label' => $oSubAttDef->GetLabel(), 'attdef' => $oSubAttDef];
 							}
 						}
 					}
@@ -184,85 +161,66 @@ abstract class TabularBulkExport extends BulkExport
 	{
 		$oSet = new DBObjectSet($this->oSearch);
 		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
-		$aAuthorizedClasses = array();
-		foreach($aSelectedClasses as $sAlias => $sClassName)
-		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) != UR_ALLOWED_NO)
-			{
+		$aAuthorizedClasses = [];
+		foreach ($aSelectedClasses as $sAlias => $sClassName) {
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) != UR_ALLOWED_NO) {
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
-		$aAllFieldsByAlias = array();
-		$aAllAttCodes = array();
-		foreach($aAuthorizedClasses as $sAlias => $sClass)
-		{
-			$aAllFields = array();
-			if (count($aAuthorizedClasses) > 1 )
-			{
+		$aAllFieldsByAlias = [];
+		$aAllAttCodes = [];
+		foreach ($aAuthorizedClasses as $sAlias => $sClass) {
+			$aAllFields = [];
+			if (count($aAuthorizedClasses) > 1) {
 				$sShortAlias = $sAlias.'.';
-			}
-			else
-			{
+			} else {
 				$sShortAlias = '';
 			}
-			if ($this->IsExportableField($sClass, 'id'))
-			{
+			if ($this->IsExportableField($sClass, 'id')) {
 				$sFriendlyNameAttCode = MetaModel::GetFriendlyNameAttributeCode($sClass);
-				if (is_null($sFriendlyNameAttCode))
-				{
+				if (is_null($sFriendlyNameAttCode)) {
 					// The friendly name is made of several attribute
-					$aSubAttr = array(
-						array('attcodeex' => 'id', 'code' => $sShortAlias.'id', 'unique_label' => $sShortAlias.Dict::S('UI:CSVImport:idField'), 'label' => $sShortAlias.'id'),
-						array('attcodeex' => 'friendlyname', 'code' => $sShortAlias.'friendlyname', 'unique_label' => $sShortAlias.Dict::S('Core:FriendlyName-Label'), 'label' => $sShortAlias.Dict::S('Core:FriendlyName-Label')),
-					);
-				}
-				else
-				{
+					$aSubAttr = [
+						['attcodeex' => 'id', 'code' => $sShortAlias.'id', 'unique_label' => $sShortAlias.Dict::S('UI:CSVImport:idField'), 'label' => $sShortAlias.'id'],
+						['attcodeex' => 'friendlyname', 'code' => $sShortAlias.'friendlyname', 'unique_label' => $sShortAlias.Dict::S('Core:FriendlyName-Label'), 'label' => $sShortAlias.Dict::S('Core:FriendlyName-Label')],
+					];
+				} else {
 					// The friendly name has no added value
-					$aSubAttr = array();
+					$aSubAttr = [];
 				}
-				$aAllFields[] = array('attcodeex' => 'id', 'code' => $sShortAlias.'id', 'unique_label' => $sShortAlias.Dict::S('UI:CSVImport:idField'), 'label' => Dict::S('UI:CSVImport:idField'), 'subattr' => $aSubAttr);
+				$aAllFields[] = ['attcodeex' => 'id', 'code' => $sShortAlias.'id', 'unique_label' => $sShortAlias.Dict::S('UI:CSVImport:idField'), 'label' => Dict::S('UI:CSVImport:idField'), 'subattr' => $aSubAttr];
 			}
-			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				if($this->IsSubAttribute($sClass, $sAttCode, $oAttDef)) continue;
+			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+				if ($this->IsSubAttribute($sClass, $sAttCode, $oAttDef)) {
+					continue;
+				}
 
-				if ($this->IsExportableField($sClass, $sAttCode, $oAttDef))
-				{
+				if ($this->IsExportableField($sClass, $sAttCode, $oAttDef)) {
 					$sShortLabel = $oAttDef->GetLabel();
 					$sLabel = $sShortAlias.$oAttDef->GetLabel();
 					$aSubAttr = $this->GetSubAttributes($sClass, $sAttCode, $oAttDef);
-					$aValidSubAttr = array();
-					foreach($aSubAttr as $aSubAttDef)
-					{
-						$aValidSubAttr[] = array('attcodeex' => $aSubAttDef['code'], 'code' => $sShortAlias.$aSubAttDef['code'], 'label' => $aSubAttDef['label'], 'unique_label' => $sShortAlias.$aSubAttDef['unique_label']);
+					$aValidSubAttr = [];
+					foreach ($aSubAttr as $aSubAttDef) {
+						$aValidSubAttr[] = ['attcodeex' => $aSubAttDef['code'], 'code' => $sShortAlias.$aSubAttDef['code'], 'label' => $aSubAttDef['label'], 'unique_label' => $sShortAlias.$aSubAttDef['unique_label']];
 					}
-					$aAllFields[] = array('attcodeex' => $sAttCode, 'code' => $sShortAlias.$sAttCode, 'label' => $sShortLabel, 'unique_label' => $sLabel, 'subattr' => $aValidSubAttr);
+					$aAllFields[] = ['attcodeex' => $sAttCode, 'code' => $sShortAlias.$sAttCode, 'label' => $sShortLabel, 'unique_label' => $sLabel, 'subattr' => $aValidSubAttr];
 				}
 			}
-			usort($aAllFields,  array(get_class($this), 'SortOnLabel'));
-			if (count($aAuthorizedClasses) > 1)
-			{
+			usort($aAllFields, [get_class($this), 'SortOnLabel']);
+			if (count($aAuthorizedClasses) > 1) {
 				$sKey = MetaModel::GetName($sClass).' ('.$sAlias.')';
-			}
-			else
-			{
+			} else {
 				$sKey = MetaModel::GetName($sClass);
 			}
 			$aAllFieldsByAlias[$sKey] = $aAllFields;
 
-			foreach ($aAllFields as $aFieldSpec)
-			{
+			foreach ($aAllFields as $aFieldSpec) {
 				$sAttCode = $aFieldSpec['attcodeex'];
-				if (count($aFieldSpec['subattr']) > 0)
-				{
-					foreach ($aFieldSpec['subattr'] as $aSubFieldSpec)
-					{
+				if (count($aFieldSpec['subattr']) > 0) {
+					foreach ($aFieldSpec['subattr'] as $aSubFieldSpec) {
 						$aAllAttCodes[$sAlias][] = $aSubFieldSpec['attcodeex'];
 					}
-				}
-				else
-				{
+				} else {
 					$aAllAttCodes[$sAlias][] = $sAttCode;
 				}
 			}
@@ -274,19 +232,16 @@ abstract class TabularBulkExport extends BulkExport
 		$oSet = new DBObjectSet($this->oSearch);
 		$iCount = $oSet->Count();
 
-		foreach ($this->oSearch->GetSelectedClasses() as $sAlias => $sClass)
-		{
-			$aColumns[$sAlias] = array();
+		foreach ($this->oSearch->GetSelectedClasses() as $sAlias => $sClass) {
+			$aColumns[$sAlias] = [];
 		}
 		$oSet->OptimizeColumnLoad($aColumns);
 		$iPreviewLimit = 3;
 		$oSet->SetLimit($iPreviewLimit);
-		$aSampleData = array();
-		while($aRow = $oSet->FetchAssoc())
-		{
-			$aSampleRow = array();
-			foreach($aAuthorizedClasses as $sAlias => $sClass)
-			{
+		$aSampleData = [];
+		while ($aRow = $oSet->FetchAssoc()) {
+			$aSampleRow = [];
+			foreach ($aAuthorizedClasses as $sAlias => $sClass) {
 				if (count($aAuthorizedClasses) > 1) {
 					$sShortAlias = $sAlias.'.';
 				} else {
@@ -302,7 +257,7 @@ abstract class TabularBulkExport extends BulkExport
 			$aSampleData[] = $aSampleRow;
 		}
 		$sJSSampleData = json_encode($aSampleData);
-		$aLabels = array(
+		$aLabels = [
 			'preview_header' => Dict::S('Core:BulkExport:DragAndDropHelp'),
 			'empty_preview' => Dict::S('Core:BulkExport:EmptyPreview'),
 			'columns_order' => Dict::S('Core:BulkExport:ColumnsOrder'),
@@ -310,7 +265,7 @@ abstract class TabularBulkExport extends BulkExport
 			'check_all' => Dict::S('Core:BulkExport:CheckAll'),
 			'uncheck_all' => Dict::S('Core:BulkExport:UncheckAll'),
 			'no_field_selected' => Dict::S('Core:BulkExport:NoFieldSelected'),
-		);
+		];
 		$sJSLabels = json_encode($aLabels);
 		$oP->add_ready_script(
 			<<<EOF
@@ -323,7 +278,7 @@ EOF
 		return $oUIContentBlock;
 	}
 
-	static public function SortOnLabel($aItem1, $aItem2)
+	public static function SortOnLabel($aItem1, $aItem2)
 	{
 		return strcmp($aItem1['label'], $aItem2['label']);
 	}
@@ -337,18 +292,23 @@ EOF
 	 */
 	protected function IsExportableField($sClass, $sAttCode, $oAttDef = null)
 	{
-		if ($sAttCode == 'id') return true;
-		if (is_null($oAttDef))
-		{
+		if ($sAttCode == 'id') {
+			return true;
+		}
+		if (is_null($oAttDef)) {
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		}
-		if ($oAttDef instanceof AttributeLinkedSet) return false;
+		if ($oAttDef instanceof AttributeLinkedSet) {
+			return false;
+		}
 		return true; //$oAttDef->IsScalar();
 	}
 
 	protected function GetSampleData($oObj, $sAttCode)
 	{
-		if ($sAttCode == 'id') return $oObj->GetKey();
+		if ($sAttCode == 'id') {
+			return $oObj->GetKey();
+		}
 		return $oObj->GetEditValue($sAttCode);
 	}
 
@@ -357,31 +317,22 @@ EOF
 		parent::ReadParameters();
 		$sQueryId = utils::ReadParam('query', null, true);
 		$sFields = utils::ReadParam('fields', null, true, 'raw_data');
-		if ((($sFields === null) || ($sFields === '')) && ($sQueryId === null))
-		{
+		if ((($sFields === null) || ($sFields === '')) && ($sQueryId === null)) {
 			throw new BulkExportMissingParameterException('fields');
-		}
-		else
-		{
-			if (($sQueryId !== null) && ($sQueryId !== null))
-			{
-				$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
+		} else {
+			if (($sQueryId !== null) && ($sQueryId !== null)) {
+				$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', ['query_id' => $sQueryId]);
 				$oQueries = new DBObjectSet($oSearch);
-				if ($oQueries->Count() > 0)
-				{
+				if ($oQueries->Count() > 0) {
 					$oQuery = $oQueries->Fetch();
-					if (($sFields === null) || ($sFields === ''))
-					{
+					if (($sFields === null) || ($sFields === '')) {
 						// No 'fields' parameter supplied, take the fields from the query phrasebook definition
 						$sFields = trim($oQuery->Get('fields'));
-						if ($sFields === '')
-						{
+						if ($sFields === '') {
 							throw new BulkExportMissingParameterException('fields');
 						}
 					}
-				}
-				else
-				{
+				} else {
 					throw BulkExportException('Invalid value for the parameter: query. There is no Query Phrasebook with id = '.$sQueryId, Dict::Format('Core:BulkExport:InvalidParameter_Query', $sQueryId));
 				}
 			}
@@ -396,72 +347,55 @@ EOF
 		//
 		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
 		$aAliases = array_keys($aSelectedClasses);
-		$aAuthorizedClasses = array();
-		foreach($aSelectedClasses as $sAlias => $sClassName)
-		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ) == UR_ALLOWED_YES)
-			{
+		$aAuthorizedClasses = [];
+		foreach ($aSelectedClasses as $sAlias => $sClassName) {
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ) == UR_ALLOWED_YES) {
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
 		$aFields = explode(',', $sFields);
-		$this->aStatusInfo['fields'] = array();
-		foreach($aFields as $sFieldSpec)
-		{
+		$this->aStatusInfo['fields'] = [];
+		foreach ($aFields as $sFieldSpec) {
 			// Trim the values since it's natural to write: fields=name, first_name, org_name instead of fields=name,first_name,org_name
 			$sExtendedAttCode = trim($sFieldSpec);
 
-			if (preg_match('/^([^\.]+)\.(.+)$/', $sExtendedAttCode, $aMatches))
-			{
+			if (preg_match('/^([^\.]+)\.(.+)$/', $sExtendedAttCode, $aMatches)) {
 				$sAlias = $aMatches[1];
 				$sAttCode = $aMatches[2];
-			}
-			else
-			{
+			} else {
 				$sAlias = reset($aAliases);
 				$sAttCode = $sExtendedAttCode;
 			}
-			if (!array_key_exists($sAlias, $aSelectedClasses))
-			{
+			if (!array_key_exists($sAlias, $aSelectedClasses)) {
 				throw new Exception("Invalid alias '$sAlias' for the column '$sExtendedAttCode'. Availables aliases: '".implode("', '", $aAliases)."'");
 			}
 			$sClass = $aSelectedClasses[$sAlias];
-			if (!array_key_exists($sAlias, $aAuthorizedClasses))
-			{
+			if (!array_key_exists($sAlias, $aAuthorizedClasses)) {
 				throw new Exception("You do not have enough permissions to bulk read data of class '$sClass' (alias: $sAlias)");
 			}
-				
-			if ($this->bLocalizeOutput)
-			{
-				try
-				{
+
+			if ($this->bLocalizeOutput) {
+				try {
 					$sLabel = MetaModel::GetLabel($sClass, $sAttCode);
-				}
-				catch (Exception $e)
-				{
+				} catch (Exception $e) {
 					throw new Exception("Wrong field specification '$sFieldSpec': ".$e->getMessage());
-			}
-			}
-			else
-			{
+				}
+			} else {
 				$sLabel = $sAttCode;
 			}
-			if (count($aAuthorizedClasses) > 1)
-			{
+			if (count($aAuthorizedClasses) > 1) {
 				$sColLabel = $sAlias.'.'.$sLabel;
-			}
-			else
-			{
+			} else {
 				$sColLabel = $sLabel;
 			}
-			$this->aStatusInfo['fields'][] = array(
+			$this->aStatusInfo['fields'][] = [
 				'sFieldSpec' => $sExtendedAttCode,
 				'sAlias' => $sAlias,
 				'sClass' => $sClass,
 				'sAttCode' => $sAttCode,
 				'sLabel' => $sLabel,
-				'sColLabel' => $sColLabel
-			);
+				'sColLabel' => $sColLabel,
+			];
 		}
 	}
 
@@ -470,29 +404,23 @@ EOF
 	 */
 	protected function OptimizeColumnLoad(DBObjectSet $oSet)
 	{
-		$aColumnsToLoad = array();
+		$aColumnsToLoad = [];
 
-		foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
-		{
+		foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
 			$sClass = $aFieldSpec['sClass'];
 			$sAlias = $aFieldSpec['sAlias'];
 			$sAttCode = $aFieldSpec['sAttCode'];
-				
-			if (!array_key_exists($sAlias, $aColumnsToLoad))
-			{
-				$aColumnsToLoad[$sAlias] = array();
+
+			if (!array_key_exists($sAlias, $aColumnsToLoad)) {
+				$aColumnsToLoad[$sAlias] = [];
 			}
 			// id is not a real attribute code and, moreover, is always loaded
-			if ($sAttCode != 'id')
-			{
+			if ($sAttCode != 'id') {
 				// Extended attributes are not recognized by DBObjectSet::OptimizeColumnLoad
-				if (($iPos = strpos($sAttCode, '->')) === false)
-				{
+				if (($iPos = strpos($sAttCode, '->')) === false) {
 					$aColumnsToLoad[$sAlias][] = $sAttCode;
 					$sClass = '???';
-				}
-				else
-				{
+				} else {
 					$sExtKeyAttCode = substr($sAttCode, 0, $iPos);
 					$sRemoteAttCode = substr($sAttCode, $iPos + 2);
 
@@ -501,8 +429,7 @@ EOF
 
 					// Load the external field (if any) to avoid getting the remote object (see DBObject::Get that does the same)
 					$oExtFieldAtt = MetaModel::FindExternalField($sClass, $sExtKeyAttCode, $sRemoteAttCode);
-					if (!is_null($oExtFieldAtt))
-					{
+					if (!is_null($oExtFieldAtt)) {
 						$aColumnsToLoad[$sAlias][] = $oExtFieldAtt->GetCode();
 					}
 				}
@@ -512,17 +439,14 @@ EOF
 		// Add "always loaded attributes"
 		//
 		$aSelectedClasses = $this->oSearch->GetSelectedClasses();
-		foreach ($aSelectedClasses as $sAlias => $sClass)
-		{
-			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				if ($oAttDef->AlwaysLoadInTables())
-				{
+		foreach ($aSelectedClasses as $sAlias => $sClass) {
+			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+				if ($oAttDef->AlwaysLoadInTables()) {
 					$aColumnsToLoad[$sAlias][] = $sAttCode;
 				}
 			}
 		}
 
 		$oSet->OptimizeColumnLoad($aColumnsToLoad);
-	}	 	
+	}
 }

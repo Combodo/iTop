@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,7 +17,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Load XML data from a set of files
  *
@@ -24,7 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-define ('KEYS_CACHE_FILE', APPROOT.'data/keyscache.tmp');
+define('KEYS_CACHE_FILE', APPROOT.'data/keyscache.tmp');
 /**
  * Class to load sets of objects from XML files into the database
  * XML files can be produced by the 'export' web service or by any other means
@@ -49,17 +49,17 @@ class XMLDataLoader
 
 	public function __construct()
 	{
-		$this->m_aKeys = array();
-		$this->m_aObjectsCache = array();
+		$this->m_aKeys = [];
+		$this->m_aObjectsCache = [];
 		$this->m_oChange = null;
 		$this->m_sCacheFileName = KEYS_CACHE_FILE;
 		$this->LoadKeysCache();
 		$this->m_bSessionActive = true;
-		$this->m_aErrors = array();
-		$this->m_aWarnings = array();
+		$this->m_aErrors = [];
+		$this->m_aWarnings = [];
 		$this->m_iCountCreated = 0;
 	}
-	
+
 	public function StartSession($oChange)
 	{
 		// Do cleanup any existing cache file (shall not be necessary unless a setup was interrupted abruptely)
@@ -68,22 +68,17 @@ class XMLDataLoader
 		$this->m_oChange = $oChange;
 		$this->m_bSessionActive  = true;
 	}
-	
+
 	public function EndSession($bStrict = false)
 	{
 		$this->ResolveExternalKeys();
 		$this->m_bSessionActive  = false;
 
-		if (count($this->m_aErrors) > 0)
-		{
+		if (count($this->m_aErrors) > 0) {
 			return false;
-		}
-		elseif ($bStrict && count($this->m_aWarnings) > 0)
-		{
+		} elseif ($bStrict && count($this->m_aWarnings) > 0) {
 			return false;
-		}
-		else
-		{
+		} else {
 			return true;
 		}
 	}
@@ -102,81 +97,70 @@ class XMLDataLoader
 	{
 		return $this->m_iCountCreated;
 	}
-	
+
 	public function __destruct()
 	{
 		// Stopping in the middle of a session, let's save the context information
-		if ($this->m_bSessionActive)
-		{
+		if ($this->m_bSessionActive) {
 			$this->SaveKeysCache();
-		}
-		else
-		{
+		} else {
 			$this->ClearKeysCache();
 		}
 	}
-			
+
 	/**
 	 * Stores the keys & object cache in a file
 	 */
 	protected function SaveKeysCache()
 	{
-		if (!is_dir(APPROOT.'data'))
-		{
+		if (!is_dir(APPROOT.'data')) {
 			mkdir(APPROOT.'data');
 		}
 		$hFile = @fopen($this->m_sCacheFileName, 'w');
-		if ($hFile !== false)
-		{
-			$sData = serialize( array('keys' => $this->m_aKeys,
+		if ($hFile !== false) {
+			$sData = serialize(['keys' => $this->m_aKeys,
 									'objects' => $this->m_aObjectsCache,
 									'change' => $this->m_oChange,
 									'errors' => $this->m_aErrors,
 									'warnings' => $this->m_aWarnings,
-									));
+									]);
 			fwrite($hFile, $sData);
 			fclose($hFile);
-		}
-		else
-		{
+		} else {
 			throw new Exception("Cannot write to file: '{$this->m_sCacheFileName}'");
 		}
 	}
-		 	
+
 	/**
 	 * Loads the keys & object cache from the tmp file
 	 */
 	protected function LoadKeysCache()
 	{
 		$sFileContent = @file_get_contents($this->m_sCacheFileName);
-		if (!empty($sFileContent))
-		{
+		if (!empty($sFileContent)) {
 			$aCache = unserialize($sFileContent);
 			$this->m_aKeys = $aCache['keys'];
-			$this->m_aObjectsCache = $aCache['objects']; 
+			$this->m_aObjectsCache = $aCache['objects'];
 			$this->m_oChange = $aCache['change'];
 			$this->m_aErrors = $aCache['errors'];
 			$this->m_aWarnings = $aCache['warnings'];
 		}
-	}	 	
-	
+	}
+
 	/**
 	 * Remove the tmp file used to store the keys cache
 	 */
 	protected function ClearKeysCache()
 	{
-		if(is_file($this->m_sCacheFileName))
-		{
+		if (is_file($this->m_sCacheFileName)) {
 			unlink($this->m_sCacheFileName);
-		}
-		else
-		{
+		} else {
 			//echo "<p>Hm, it looks like the file does not exist!!!</p>";
 		}
-		$this->m_aKeys = array();
-		$this->m_aObjectsCache = array(); 
-	}	 	
-	
+		$this->m_aKeys = [];
+		$this->m_aObjectsCache = [];
+	}
+
 	/**
 	 * Helper function to load the objects from a standard XML file into the database
 	 *
@@ -186,7 +170,7 @@ class XMLDataLoader
 	 *
 	 * @since 3.0.0 Added $bSearch parameter
 	 */
-	function LoadFile($sFilePath, $bUpdateKeyCacheOnly = false, bool $bSearch = false)
+	public function LoadFile($sFilePath, $bUpdateKeyCacheOnly = false, bool $bSearch = false)
 	{
 		global $aKeys;
 
@@ -197,15 +181,15 @@ class XMLDataLoader
 			throw(new Exception("Unable to load xml file - $sFilePath"));
 		}
 
-		$aReplicas = array();
+		$aReplicas = [];
 		foreach ($oXml as $sClass => $oXmlObj) {
 			if (!MetaModel::IsValidClass($sClass)) {
 				SetupLog::Error("Unknown class - $sClass");
 				throw(new Exception("Unknown class - $sClass"));
 			}
 
-			$iSrcId = (integer)$oXmlObj['id']; // Mandatory to cast
-			
+			$iSrcId = (int)$oXmlObj['id']; // Mandatory to cast
+
 			// Import algorithm
 			// Here enumerate all the attributes of the object
 			// for all attribute that is neither an external field
@@ -216,52 +200,38 @@ class XMLDataLoader
 			// Once all the objects have been created re-assign all the external keys to
 			// their actual Ids
 			$iExistingId = $this->GetObjectKey($sClass, $iSrcId);
-			if ($iExistingId != 0)
-			{
+			if ($iExistingId != 0) {
 				$oTargetObj = MetaModel::GetObject($sClass, $iExistingId);
-			}
-			else
-			{
+			} else {
 				$oTargetObj = MetaModel::NewObject($sClass);
 			}
-			foreach($oXmlObj as $sAttCode => $oSubNode)
-			{
-				if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
-				{
+			foreach ($oXmlObj as $sAttCode => $oSubNode) {
+				if (!MetaModel::IsValidAttCode($sClass, $sAttCode)) {
 					$sMsg = "Unknown attribute code - $sClass/$sAttCode";
 					continue; // ignore silently...
 				}
 
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if (($oAttDef->IsWritable()) && ($oAttDef->IsScalar()))
-				{
-					if ($oAttDef->IsExternalKey())
-					{
-						if (substr(trim($oSubNode), 0, 6) == 'SELECT')
-						{
+				if (($oAttDef->IsWritable()) && ($oAttDef->IsScalar())) {
+					if ($oAttDef->IsExternalKey()) {
+						if (substr(trim($oSubNode), 0, 6) == 'SELECT') {
 							$sQuery = trim($oSubNode);
 							$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sQuery));
 							$iMatches = $oSet->Count();
-							if ($iMatches == 1)
-							{
+							if ($iMatches == 1) {
 								$oFoundObject = $oSet->Fetch();
 								$iExtKey = $oFoundObject->GetKey();
-							}
-							else
-							{
+							} else {
 								$sMsg = "Ext key not reconcilied - $sClass/$iSrcId - $sAttCode: '".$sQuery."' - found $iMatches matche(s)";
 								SetupLog::Error($sMsg);
 								$this->m_aErrors[] = $sMsg;
 								$iExtKey = 0;
 							}
-						}
-						else
-						{
-							$iDstObj = (integer)($oSubNode);
+						} else {
+							$iDstObj = (int)($oSubNode);
 							// Attempt to find the object in the list of loaded objects
 							$iExtKey = $this->GetObjectKey($oAttDef->GetTargetClass(), $iDstObj);
-							if ($iExtKey == 0)
-							{
+							if ($iExtKey == 0) {
 								$iExtKey = -$iDstObj; // Convention: Unresolved keys are stored as negative !
 								$oTargetObj->RegisterAsDirty();
 							}
@@ -269,31 +239,23 @@ class XMLDataLoader
 						}
 						//$oTargetObj->CheckValue($sAttCode, $iExtKey);
 						$oTargetObj->Set($sAttCode, $iExtKey);
-					}
-					elseif ($oAttDef instanceof AttributeBlob)
-					{
+					} elseif ($oAttDef instanceof AttributeBlob) {
 						$sMimeType = (string) $oSubNode->mimetype;
 						$sFileName = (string) $oSubNode->filename;
 						$data = base64_decode((string) $oSubNode->data);
 						$oDoc = new ormDocument($data, $sMimeType, $sFileName);
 						$oTargetObj->Set($sAttCode, $oDoc);
-					}
-					elseif ($oAttDef instanceof AttributeTagSet)
-					{
+					} elseif ($oAttDef instanceof AttributeTagSet) {
 						// TODO
-                    }
-					else
-					{
+					} else {
 						$value = (string)$oSubNode;
 
-						if ($value == '')
-						{
+						if ($value == '') {
 							$value = $oAttDef->GetNullValue();
 						}
 
 						$res = $oTargetObj->CheckValue($sAttCode, $value);
-						if ($res !== true)
-						{
+						if ($res !== true) {
 							// $res contains the error description
 							$sMsg = "Value not allowed - $sClass/$iSrcId - $sAttCode: '".$oSubNode."' ; $res";
 							SetupLog::Error($sMsg);
@@ -307,153 +269,123 @@ class XMLDataLoader
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Get the new ID of an object in the database given its original ID
 	 * This may fail (return 0) if the object has not yet been created in the database
-	 * This is why the order of the import may be important  
-	 */ 
+	 * This is why the order of the import may be important
+	 */
 	protected function GetObjectKey($sClass, $iSrcId)
 	{
-		if (isset($this->m_aKeys[$sClass]) && isset($this->m_aKeys[$sClass][$iSrcId]))
-		{
+		if (isset($this->m_aKeys[$sClass]) && isset($this->m_aKeys[$sClass][$iSrcId])) {
 			return $this->m_aKeys[$sClass][$iSrcId];
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * Store an object in the database and remember the mapping
 	 * between its original ID and the newly created ID in the database
-	 */  
+	 */
 	protected function StoreObject($sClass, $oTargetObj, $iSrcId, $bSearch = false, $bUpdateKeyCacheOnly = false)
 	{
 		$iObjId = 0;
-		try
-		{
-			if ($bSearch)
-			{
+		try {
+			if ($bSearch) {
 				// Check if the object does not already exist, based on its usual reconciliation keys...
 				$aReconciliationKeys = MetaModel::GetReconcKeys($sClass);
-				if (count($aReconciliationKeys) > 0)
-				{
+				if (count($aReconciliationKeys) > 0) {
 					// Some reconciliation keys have been defined, use them to search for the object
 					$oSearch = new DBObjectSearch($sClass);
 					$iConditionsCount  = 0;
-					foreach($aReconciliationKeys as $sAttCode)
-					{
-						if ($oTargetObj->Get($sAttCode) != '')
-						{
+					foreach ($aReconciliationKeys as $sAttCode) {
+						if ($oTargetObj->Get($sAttCode) != '') {
 							$oSearch->AddCondition($sAttCode, $oTargetObj->Get($sAttCode), '=');
 							$iConditionsCount++;
 						}
 					}
-					if ($iConditionsCount > 0) // Search only if there are some valid conditions...
-					{
+					if ($iConditionsCount > 0) { // Search only if there are some valid conditions...
 						$oSet = new DBObjectSet($oSearch);
-						if ($oSet->count() == 1)
-						{
+						if ($oSet->count() == 1) {
 							// The object already exists, reuse it
 							$oExistingObject = $oSet->Fetch();
 							$iObjId = $oExistingObject->GetKey();
 						}
 					}
 				}
-			}	
-			
-			if ($iObjId == 0)
-			{
-				if($oTargetObj->IsNew())
-				{
-					if (!$bUpdateKeyCacheOnly)
-					{
-			        	$iObjId = $oTargetObj->DBInsertNoReload();
+			}
+
+			if ($iObjId == 0) {
+				if ($oTargetObj->IsNew()) {
+					if (!$bUpdateKeyCacheOnly) {
+						$iObjId = $oTargetObj->DBInsertNoReload();
 						$this->m_iCountCreated++;
 					}
-				}
-				else
-				{
+				} else {
 					$iObjId = $oTargetObj->GetKey();
-					if (!$bUpdateKeyCacheOnly)
-					{
+					if (!$bUpdateKeyCacheOnly) {
 						$oTargetObj->DBUpdate();
 					}
 				}
-			}	        
-		}
-		catch(Exception $e)
-		{
+			}
+		} catch (Exception $e) {
 			SetupLog::Error("An object could not be recorded - $sClass/$iSrcId - ".$e->getMessage());
 			$this->m_aErrors[] = "An object could not be recorded - $sClass/$iSrcId - ".$e->getMessage();
 		}
 		$aParentClasses = MetaModel::EnumParentClasses($sClass);
 		$aParentClasses[] = $sClass;
-		foreach($aParentClasses as $sObjClass)
-		{
+		foreach ($aParentClasses as $sObjClass) {
 			$this->m_aKeys[$sObjClass][$iSrcId] = $iObjId;
 		}
 		$this->m_aObjectsCache[$sClass][$iObjId] = $oTargetObj;
 	}
-	
+
 	/**
 	 * Maps an external key to its (newly created) value
 	 */
-	 
+
 	protected function ResolveExternalKeys()
 	{
 		/**
 		 * @var string $sClass
 		 * @var \CMDBObject[] $oObjList
 		 */
-		foreach($this->m_aObjectsCache as $sClass => $oObjList)
-		{
-			foreach($oObjList as $oTargetObj)
-			{
+		foreach ($this->m_aObjectsCache as $sClass => $oObjList) {
+			foreach ($oObjList as $oTargetObj) {
 				$bChanged = false;
 				$sClass = get_class($oTargetObj);
-				foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
-				{
-					if ( ($oAttDef->IsExternalKey()) && ($oTargetObj->Get($sAttCode) < 0) ) // Convention unresolved key = negative
-					{
+				foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+					if (($oAttDef->IsExternalKey()) && ($oTargetObj->Get($sAttCode) < 0)) { // Convention unresolved key = negative
 						$sTargetClass = $oAttDef->GetTargetClass();
 						$iTempKey = $oTargetObj->Get($sAttCode);
 
 						$iExtKey = $this->GetObjectKey($sTargetClass, -$iTempKey);
-						if ($iExtKey == 0)
-						{
+						if ($iExtKey == 0) {
 							$sMsg = "unresolved extkey in $sClass::".$oTargetObj->GetKey()."(".$oTargetObj->GetName().")::$sAttCode=$sTargetClass::$iTempKey";
 							SetupLog::Warning($sMsg);
 							$this->m_aWarnings[] = $sMsg;
 							//echo "<pre>aKeys[".$sTargetClass."]:\n";
 							//print_r($this->m_aKeys[$sTargetClass]);
 							//echo "</pre>\n";
-						}
-						else
-						{
+						} else {
 							$bChanged = true;
 							$oTargetObj->Set($sAttCode, $iExtKey);
 						}
 					}
 				}
-				if ($bChanged)
-				{
-					try
-					{
-						if (is_subclass_of($oTargetObj, 'CMDBObject'))
-						{
+				if ($bChanged) {
+					try {
+						if (is_subclass_of($oTargetObj, 'CMDBObject')) {
 							$oTargetObj::SetCurrentChange($this->m_oChange);
 						}
 						$oTargetObj->DBUpdate();
-					}
-					catch(Exception $e)
-					{
+					} catch (Exception $e) {
 						$this->m_aErrors[] = "The object changes could not be tracked - $sClass/$iExtKey - ".$e->getMessage();
 					}
 				}
 			}
 		}
-	
+
 		return true;
 	}
 }
-?>

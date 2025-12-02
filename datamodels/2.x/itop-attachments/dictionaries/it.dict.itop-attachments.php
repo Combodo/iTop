@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Attachments:TabTitle_Count' => 'Allegati (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Allegati',
 	'Attachments:FieldsetTitle' => 'Allegati',
@@ -30,13 +31,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Attachments:Render:Icons' => 'Visualizza come icone',
 	'Attachments:Render:Table' => 'Visualizza come lista',
 	'UI:Attachments:DropYourFileHint' => 'Rilascia i file ovunque in quest\'area',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Attachment' => 'Allegato',
 	'Class:Attachment+' => '~~',
 	'Class:Attachment/Attribute:expire' => 'Scadenza',
@@ -51,10 +52,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Contenuti',
 	'Class:Attachment/Attribute:contents+' => '~~',
-));
+]);
 
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Attachments:File:Thumbnail' => 'Icona',
 	'Attachments:File:Name' => 'Nome del file',
 	'Attachments:File:Date' => 'Data di caricamento',
@@ -62,25 +62,25 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Attachments:File:Size' => 'Dimensione',
 	'Attachments:File:MimeType' => 'Tipo',
 	'Attachments:File:DownloadsCount' => 'Download',
-));
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Attachment/Attribute:creation_date' => 'Data di creazione',
 	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => 'ID utente',
 	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'ID contatto',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (al download di un allegato dell\'oggetto)',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger al download di un allegato di un oggetto di [una sottoclasse di] la classe data',
-));
+]);

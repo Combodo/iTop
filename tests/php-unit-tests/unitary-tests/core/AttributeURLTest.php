@@ -5,7 +5,8 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use AttributeURLDefaultPattern;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
-class AttributeURLTest extends ItopTestCase {
+class AttributeURLTest extends ItopTestCase
+{
 	public function setUp(): void
 	{
 		parent::setUp();
@@ -19,7 +20,7 @@ class AttributeURLTest extends ItopTestCase {
 	 */
 	public function testCheckFormat(string $sUrlValue, int $iExpectedResult): void
 	{
-		$oAttDefUrl = new AttributeURLDefaultPattern('myCode', ["target"=>'_blank', "allowed_values"=>null, "sql"=>'url', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false]);
+		$oAttDefUrl = new AttributeURLDefaultPattern('myCode', ["target" => '_blank', "allowed_values" => null, "sql" => 'url', "default_value" => '', "is_null_allowed" => true, "depends_on" => [], "always_load_in_tables" => false]);
 		$bResult = $oAttDefUrl->CheckFormat($sUrlValue);
 
 		$this->assertSame($iExpectedResult, $bResult);

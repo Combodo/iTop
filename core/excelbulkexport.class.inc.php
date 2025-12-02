@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -45,19 +46,18 @@ class ExcelBulkExport extends TabularBulkExport
 	{
 		parent::ReadParameters();
 		$this->aStatusInfo['formatted_text'] = (bool)utils::ReadParam('formatted_text', 0, true);
-			
+
 		$sDateFormatRadio = utils::ReadParam('excel_date_format_radio', '');
-		switch($sDateFormatRadio)
-		{
+		switch ($sDateFormatRadio) {
 			case 'default':
-			// Export from the UI => format = same as is the UI
-			$this->aStatusInfo['date_format'] = (string)AttributeDateTime::GetFormat();
-			break;
-			
+				// Export from the UI => format = same as is the UI
+				$this->aStatusInfo['date_format'] = (string)AttributeDateTime::GetFormat();
+				break;
+
 			case 'custom':
-			// Custom format specified from the UI
-			$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
-			break;
+				// Custom format specified from the UI
+				$this->aStatusInfo['date_format'] = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
+				break;
 
 			default:
 				// Export from the command line (or scripted) => default format is SQL, as in previous versions of iTop, unless specified otherwise
@@ -67,7 +67,7 @@ class ExcelBulkExport extends TabularBulkExport
 
 	public function EnumFormParts()
 	{
-		return array_merge(parent::EnumFormParts(), array('xlsx_options' => array('formatted_text'), 'interactive_fields_xlsx' => array('interactive_fields_xlsx')));
+		return array_merge(parent::EnumFormParts(), ['xlsx_options' => ['formatted_text'], 'interactive_fields_xlsx' => ['interactive_fields_xlsx']]);
 	}
 
 	/**
@@ -121,7 +121,6 @@ class ExcelBulkExport extends TabularBulkExport
 				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioCustom);
 
-
 				$oP->add_ready_script(
 					<<<EOF
 $('#form_part_xlsx_options').on('preview_updated', function() { FormatDatesInPreview('excel', 'xlsx'); });
@@ -141,16 +140,14 @@ EOF
 
 	protected function SuggestField($sClass, $sAttCode)
 	{
-		switch($sAttCode)
-		{
+		switch ($sAttCode) {
 			case 'id': // replace 'id' by 'friendlyname'
 				$sAttCode = 'friendlyname';
 				break;
-					
+
 			default:
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if ($oAttDef instanceof AttributeExternalKey)
-				{
+				if ($oAttDef instanceof AttributeExternalKey) {
 					$sAttCode .= '_friendlyname';
 				}
 		}
@@ -162,8 +159,7 @@ EOF
 	{
 		if ($sAttCode != 'id') {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-			if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
-			{
+			if ($oAttDef instanceof AttributeDateTime) { // AttributeDate is derived from AttributeDateTime
 				$sClass = (get_class($oAttDef) == 'AttributeDateTime') ? 'user-formatted-date-time' : 'user-formatted-date';
 
 				return '<div class="'.$sClass.'" data-date="'.$oObj->Get($sAttCode).'">'.utils::EscapeHtml($oAttDef->GetEditValue($oObj->Get($sAttCode), $oObj)).'</div>';
@@ -175,74 +171,50 @@ EOF
 
 	protected function GetValue($oObj, $sAttCode)
 	{
-		switch($sAttCode)
-		{
+		switch ($sAttCode) {
 			case 'id':
 				$sRet = $oObj->GetKey();
 				break;
-					
+
 			default:
-			$value = $oObj->Get($sAttCode);
-			if ($value instanceOf ormCaseLog)
-			{
-				 if (array_key_exists('formatted_text', $this->aStatusInfo) && $this->aStatusInfo['formatted_text'])
-				 {
-				 	$sText = $value->GetText();
-				 }
-				 else
-				 {
-				 	$sText = $value->GetAsPlainText();
-				 }
-				// Extract the case log as text and remove the "===" which make Excel think that the cell contains a formula the next time you edit it!
-				$sRet = trim(preg_replace('/========== ([^=]+) ============/', '********** $1 ************', $sText));
-			}
-			else if ($value instanceOf DBObjectSet)
-			{
-				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-				$sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
-			}
-            else if ($value instanceOf ormDocument)
-            {
-                $oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-                $sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
-            }
-            else if ($value instanceOf ormSet)
-            {
-                $oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-                $sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
-            }
-			else
-			{
-				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-				if ($oAttDef instanceof AttributeDateTime)
-				{
-					// Date and times are formatted using the ISO encoding, not the localized format
-					if ($oAttDef->IsNull($value))
-					{
-						// NOt a valid date
-						$sRet = '';
+				$value = $oObj->Get($sAttCode);
+				if ($value instanceof ormCaseLog) {
+					if (array_key_exists('formatted_text', $this->aStatusInfo) && $this->aStatusInfo['formatted_text']) {
+						$sText = $value->GetText();
+					} else {
+						$sText = $value->GetAsPlainText();
 					}
-					else
-					{
-						$sRet = $value;
+					// Extract the case log as text and remove the "===" which make Excel think that the cell contains a formula the next time you edit it!
+					$sRet = trim(preg_replace('/========== ([^=]+) ============/', '********** $1 ************', $sText));
+				} elseif ($value instanceof DBObjectSet) {
+					$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+					$sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
+				} elseif ($value instanceof ormDocument) {
+					$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+					$sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
+				} elseif ($value instanceof ormSet) {
+					$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+					$sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
+				} else {
+					$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+					if ($oAttDef instanceof AttributeDateTime) {
+						// Date and times are formatted using the ISO encoding, not the localized format
+						if ($oAttDef->IsNull($value)) {
+							// NOt a valid date
+							$sRet = '';
+						} else {
+							$sRet = $value;
+						}
+					} elseif (array_key_exists('formatted_text', $this->aStatusInfo) && $this->aStatusInfo['formatted_text']) {
+						if ($oAttDef instanceof AttributeText && $oAttDef->GetFormat() == 'html') {
+							$sRet = str_replace("&gt;", ">", $value);
+						} else {
+							$sRet = $oAttDef->GetEditValue($value, $oObj);
+						}
+					} else {
+						$sRet = $oAttDef->GetAsPlainText($value, $oObj);
 					}
 				}
-				else if (array_key_exists('formatted_text', $this->aStatusInfo) && $this->aStatusInfo['formatted_text'])
-				{
-					if ($oAttDef instanceof AttributeText && $oAttDef->GetFormat()=='html')
-					{
-						$sRet = str_replace("&gt;", ">", $value);
-					}
-					else
-					{
-						$sRet = $oAttDef->GetEditValue($value, $oObj);
-					}
-				}
-				else
-				{
-					$sRet = $oAttDef->GetAsPlainText($value, $oObj);
-				}
-			}
 		}
 		return $sRet;
 	}
@@ -255,14 +227,12 @@ EOF
 		$this->aStatusInfo['position'] = 0;
 		$this->aStatusInfo['total'] = $oSet->Count();
 
-		foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
-		{
+		foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
 			$sExtendedAttCode = $aFieldSpec['sFieldSpec'];
 			$sAttCode = $aFieldSpec['sAttCode'];
 			$sColLabel = $aFieldSpec['sColLabel'];
-				
-			switch($sAttCode)
-			{
+
+			switch ($sAttCode) {
 				case 'id':
 					$sType = '0';
 					break;
@@ -270,22 +240,18 @@ EOF
 				default:
 					$oAttDef = MetaModel::GetAttributeDef($aFieldSpec['sClass'], $aFieldSpec['sAttCode']);
 					$sType = 'string';
-					if($oAttDef instanceof AttributeDate)
-					{
+					if ($oAttDef instanceof AttributeDate) {
 						$sType = 'date';
-					}
-					else if($oAttDef instanceof AttributeDateTime)
-					{
+					} elseif ($oAttDef instanceof AttributeDateTime) {
 						$sType = 'datetime';
 					}
 			}
-			$aTableHeaders[] = array('label' => $sColLabel, 'type' => $sType);
+			$aTableHeaders[] = ['label' => $sColLabel, 'type' => $sType];
 		}
 
 		$sRow = json_encode($aTableHeaders);
 		$hFile = @fopen($this->aStatusInfo['tmp_file'], 'ab');
-		if ($hFile === false)
-		{
+		if ($hFile === false) {
 			throw new Exception('ExcelBulkExport: Failed to open temporary data file: "'.$this->aStatusInfo['tmp_file'].'" for writing.');
 		}
 		fwrite($hFile, $sRow."\n");
@@ -307,19 +273,16 @@ EOF
 		$iCount = 0;
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		while($aRow = $oSet->FetchAssoc())
-		{
+		while ($aRow = $oSet->FetchAssoc()) {
 			set_time_limit(intval($iLoopTimeLimit));
-			$aData = array();
-			foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
-			{
+			$aData = [];
+			foreach ($this->aStatusInfo['fields'] as $iCol => $aFieldSpec) {
 				$sAlias = $aFieldSpec['sAlias'];
 				$sAttCode = $aFieldSpec['sAttCode'];
 
 				$oObj = $aRow[$sAlias];
 				$sField = '';
-				if ($oObj)
-				{
+				if ($oObj) {
 					$sField = $this->GetValue($oObj, $sAttCode);
 				}
 				$aData[] = $sField;
@@ -329,41 +292,35 @@ EOF
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
 		$this->aStatusInfo['position'] += $this->iChunkSize;
-		if ($this->aStatusInfo['total'] == 0)
-		{
+		if ($this->aStatusInfo['total'] == 0) {
 			$iPercentage = 100;
 			$sRetCode = 'done';  // Next phase (GetFooter) will be to build the xlsx file
+		} else {
+			$iPercentage = floor(min(100.0, 100.0 * $this->aStatusInfo['position'] / $this->aStatusInfo['total']));
 		}
-		else
-		{
-			$iPercentage = floor(min(100.0, 100.0*$this->aStatusInfo['position']/$this->aStatusInfo['total']));
-		}
-		if ($iCount < $this->iChunkSize)
-		{
+		if ($iCount < $this->iChunkSize) {
 			$sRetCode = 'done';
 		}
-		$aStatus = array('code' => $sRetCode, 'message' =>  Dict::S('Core:BulkExport:RetrievingData'), 'percentage' => $iPercentage);
+		$aStatus = ['code' => $sRetCode, 'message' =>  Dict::S('Core:BulkExport:RetrievingData'), 'percentage' => $iPercentage];
 		return ''; // The actual XLSX file is built in GetFooter();
 	}
 
 	public function GetFooter()
 	{
 		$hFile = @fopen($this->aStatusInfo['tmp_file'], 'rb');
-		if ($hFile === false)
-		{
+		if ($hFile === false) {
 			throw new Exception('ExcelBulkExport: Failed to open temporary data file: "'.$this->aStatusInfo['tmp_file'].'" for reading.');
 		}
 		$sHeaders = fgets($hFile);
 		$aHeaders = json_decode($sHeaders, true);
 
-		$aData = array();
-		while($sLine = fgets($hFile))
-		{
+		$aData = [];
+		while ($sLine = fgets($hFile)) {
 			$aRow = json_decode($sLine);
 			$aData[] = $aRow;
 		}
 		fclose($hFile);
-			
+
 		$fStartExcel = microtime(true);
 		$writer = new XLSXWriter();
 		$sDateFormat = isset($this->aStatusInfo['date_format']) ? $this->aStatusInfo['date_format'] : (string)AttributeDateTime::GetFormat();
@@ -372,14 +329,13 @@ EOF
 		$oDateFormat = new DateTimeFormat($oDateTimeFormat->ToDateFormat());
 		$writer->setDateFormat($oDateFormat->ToExcel());
 		$writer->setAuthor(UserRights::GetUserFriendlyName());
-		$aHeaderTypes = array();
-		$aHeaderNames = array();
-		foreach($aHeaders as $Header)
-		{
+		$aHeaderTypes = [];
+		$aHeaderNames = [];
+		foreach ($aHeaders as $Header) {
 			$aHeaderNames[] = $Header['label'];
 			$aHeaderTypes[] = $Header['type'];
 		}
-		$writer->writeSheet($aData,'Sheet1', $aHeaderTypes, $aHeaderNames);
+		$writer->writeSheet($aData, 'Sheet1', $aHeaderTypes, $aHeaderNames);
 		$fExcelTime = microtime(true) - $fStartExcel;
 		//$this->aStatistics['excel_build_duration'] = $fExcelTime;
 
@@ -405,6 +361,6 @@ EOF
 
 	public function GetSupportedFormats()
 	{
-		return array('xlsx' => Dict::S('Core:BulkExport:XLSXFormat'));
+		return ['xlsx' => Dict::S('Core:BulkExport:XLSXFormat')];
 	}
 }

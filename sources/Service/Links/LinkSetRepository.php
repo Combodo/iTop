@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -24,7 +25,6 @@ use utils;
  */
 class LinkSetRepository
 {
-
 	/**
 	 * Get list of remote objects information based on a linkSet
 	 *
@@ -36,7 +36,7 @@ class LinkSetRepository
 	 *
 	 * @return array|null
 	 */
-	static public function LinksDbSetToTargetObjectArray(iDBObjectSetIterator $oDbObjectSet, bool $bForce, array &$aInitialOptions, string $sTargetClass, string $sTargetField = null): ?array
+	public static function LinksDbSetToTargetObjectArray(iDBObjectSetIterator $oDbObjectSet, bool $bForce, array &$aInitialOptions, string $sTargetClass, string $sTargetField = null): ?array
 	{
 		try {
 
@@ -90,8 +90,7 @@ class LinkSetRepository
 			}
 
 			return $aInitialOptions;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 
 			ExceptionLog::LogException($e);
 

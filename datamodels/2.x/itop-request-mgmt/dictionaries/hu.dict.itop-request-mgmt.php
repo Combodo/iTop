@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => 'Kérelmek kezelése',
 	'Menu:RequestManagementProvider' => 'Helpdesk szolgáltató',
@@ -45,7 +46,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:UserRequest:MyWorkOrders+' => 'All work orders assigned to me~~',
 	'Class:Problem:KnownProblemList' => 'Ismert problémák',
 	'Tickets:Related:OpenIncidents' => 'Nyitott incidensek',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -61,7 +62,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 // Class: UserRequest
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserRequest' => 'Felhasználói kérelem',
 	'Class:UserRequest+' => '~~',
 	'Class:UserRequest/Attribute:status' => 'Állapot',
@@ -255,10 +256,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Jóváhagyásra vár',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '~~',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Nem lehet hozzárendelni a fölérendelt kérelmet magához a kérelemhez',
-));
+]);
 
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Portal:TitleDetailsFor_Request' => 'Kérelem részletei',
 	'Portal:ButtonUpdate' => 'Frissítés',
 	'Portal:ButtonClose' => 'Lezárás',
@@ -283,11 +283,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Válassza ki a kívánt nyelvet',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'A megoldás kaszkádosítása a kapcsolódó kérésekhez (ev_autoresolve), és a kérés következő jellemzőinek összehangolása: szolgáltatás, csapat, ügyintéző, megoldási információ.',
-));
+]);
 
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Organization:Overview:UserRequests' => 'Felhasználói kérelmek ebből a szervezeti egységből',
 	'Organization:Overview:MyUserRequests' => 'Hozzám rendelt kérelmek ebből a szervezeti egységből',
 	'Organization:Overview:Tickets' => 'Hibajegyek ebből a szervezeti egységből',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This program is free software; you can redistribute it and/or modify
@@ -22,11 +23,11 @@
  * @author      Denis Flaven <denis.flaven@combodo.com>
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
- 
- SetupWebPage::AddModule(
+
+SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	 'itop-storage-mgmt/3.2.1',
-	array(
+	'itop-storage-mgmt/3.2.1',
+	[
 		// Identification
 		//
 		'label' => 'Advanced Storage Management',
@@ -34,42 +35,41 @@
 
 		// Setup
 		//
-		'dependencies' => array(
-			'itop-config-mgmt/2.4.0'
-		),
+		'dependencies' => [
+			'itop-config-mgmt/2.4.0',
+		],
 		'mandatory' => false,
 		'visible' => true,
 		'installer' => 'StorageMgmtInstaller',
 
 		// Components
 		//
-		'datamodel' => array(
-		),
-		'webservice' => array(
-			
-		),
-		'data.struct' => array(
+		'datamodel' => [
+		],
+		'webservice' => [
+
+		],
+		'data.struct' => [
 			// add your 'structure' definition XML files here,
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			// add your sample data XML files here,
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '', // hyperlink to manual setup documentation, if any
-		'doc.more_information' => '', // hyperlink to more information, if any 
+		'doc.more_information' => '', // hyperlink to more information, if any
 
 		// Default settings
 		//
-		'settings' => array(
+		'settings' => [
 			// Module specific settings go here, if any
-		),
-	)
+		],
+	]
 );
 
-if (!class_exists('StorageMgmtInstaller'))
-{
+if (!class_exists('StorageMgmtInstaller')) {
 	// Module installation handler
 	//
 	class StorageMgmtInstaller extends ModuleInstallerAPI
@@ -88,13 +88,12 @@ if (!class_exists('StorageMgmtInstaller'))
 		 */
 		public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			if (strlen($sPreviousVersion) > 0)
-			{
+			if (strlen($sPreviousVersion) > 0) {
 				// If you want to migrate data from one format to another, do it here
 				self::RenameClassInDB('NasFileSystem', 'NASFileSystem');
 			}
 		}
-	
+
 		/**
 		 * Handler called after the creation/update of the database schema
 		 * @param $oConfiguration Config The new configuration of the application

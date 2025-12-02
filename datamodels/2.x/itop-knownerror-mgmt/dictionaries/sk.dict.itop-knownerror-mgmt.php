@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:KnownError' => 'Known Error~~',
 	'Class:KnownError+' => 'Error documented for a known issue~~',
 	'Class:KnownError/Attribute:name' => 'Name~~',
@@ -52,13 +53,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
 	'Class:KnownError/Attribute:document_list' => 'Documents~~',
 	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkErrorToFunctionalCI' => 'Link Error / FunctionalCI~~',
 	'Class:lnkErrorToFunctionalCI+' => 'Infra related to a known error~~',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -72,13 +73,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reason~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkDocumentToError' => 'Link Documents / Errors~~',
 	'Class:lnkDocumentToError+' => 'A link between a document and a known error~~',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
@@ -92,9 +93,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type~~',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
-));
+]);
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:ProblemManagement' => 'Problem Management~~',
 	'Menu:ProblemManagement+' => 'Problem Management~~',
 	'Menu:Problem:Shortcuts' => 'Shortcuts~~',
@@ -104,4 +105,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:SearchError+' => 'Search for known errors~~',
 	'Menu:Problem:KnownErrors' => 'All known errors~~',
 	'Menu:Problem:KnownErrors+' => 'All known errors~~',
-));
+]);

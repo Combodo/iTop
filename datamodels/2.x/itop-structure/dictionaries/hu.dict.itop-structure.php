@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Organization' => 'Szevezeti egység',
 	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => 'Név',
@@ -37,13 +38,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Organization:Overview:FunctionalCIs' => 'A szervezet konfigurációs elemei',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'típus szerint',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' szervezeten belüli felhasználók',
-));
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Location' => 'Helyszín',
 	'Class:Location+' => '',
 	'Class:Location/Attribute:name' => 'Név',
@@ -70,13 +71,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Location/Attribute:physicaldevice_list+' => 'A helyszín összes eszköze',
 	'Class:Location/Attribute:person_list' => 'Kapcsolattartók',
 	'Class:Location/Attribute:person_list+' => 'A helyszín összes kapcsolattartója',
-));
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Contact' => 'Kapcsolattartó',
 	'Class:Contact+' => '',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
@@ -108,13 +109,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Contact/Attribute:cis_list+' => 'A kapcsolattartóhoz tartozó összes konfigurációs elem',
 	'Class:Contact/Attribute:finalclass' => 'Kapcsolattartó típus',
 	'Class:Contact/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Person' => 'Kapcsolattartó',
 	'Class:Person+' => '',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
@@ -149,13 +150,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Person/UniquenessRule:name+' => 'Az alkalmazott nevének egyedinek kell lennie a szervezeten belül',
 	'Class:Person/UniquenessRule:name' => 'A \'$this->org_name$\' szervezetben már van egy ugyanilyen nevű személy.',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Team' => 'Csapat',
 	'Class:Team+' => '',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
@@ -163,13 +164,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Team/Attribute:persons_list+' => '',
 	'Class:Team/Attribute:tickets_list' => 'Hibajegyek',
 	'Class:Team/Attribute:tickets_list+' => '',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Document' => 'Dokumentum',
 	'Class:Document+' => '',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
@@ -199,77 +200,77 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Document/Attribute:cis_list+' => '',
 	'Class:Document/Attribute:finalclass' => 'Dokumentum típus',
 	'Class:Document/Attribute:finalclass+' => 'A végső osztály neve',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DocumentFile' => 'Dokumentum fájl',
 	'Class:DocumentFile+' => '~~',
 	'Class:DocumentFile/Attribute:file' => 'Fájl',
 	'Class:DocumentFile/Attribute:file+' => '~~',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DocumentNote' => 'Dokumentum jegyzet',
 	'Class:DocumentNote+' => '~~',
 	'Class:DocumentNote/Attribute:text' => 'Szöveg',
 	'Class:DocumentNote/Attribute:text+' => '~~',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DocumentWeb' => 'Webdokumentum',
 	'Class:DocumentWeb+' => '~~',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Typology' => 'Tipológia',
 	'Class:Typology+' => '~~',
 	'Class:Typology/Attribute:name' => 'Név',
 	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'Tipológia típus',
 	'Class:Typology/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:DocumentType' => 'Dokumentum típus',
 	'Class:DocumentType+' => '~~',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ContactType' => 'Kapcsolattartó típus',
 	'Class:ContactType+' => '~~',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkPersonToTeam' => 'Kapcsolattartó / Csapat',
 	'Class:lnkPersonToTeam+' => '~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
@@ -286,13 +287,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles~~',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Szerepkör név',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:DataAdministration' => 'Adat adminisztráció',
 	'Menu:DataAdministration+' => '',
 	'Menu:Catalogs' => 'Katalógusok',
@@ -330,20 +331,20 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:Typology+' => '',
 	'UI_WelcomeMenu_AllConfigItems' => 'Összegzés',
 	'Menu:ConfigManagement:Typology' => 'Tipológia konfiguráció',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Person:info' => 'Általános információk',
 	'User:info' => 'Általános információk',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Személyes információk',
 	'Person:notifiy' => 'Értesítés',
-));
+]);
 
 // Themes
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'theme:fullmoon' => 'Full moon',
 	'theme:test-red' => 'Tesztpéldány (Red)',
-));
+]);

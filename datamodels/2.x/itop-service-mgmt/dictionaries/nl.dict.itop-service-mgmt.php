@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author LinProfs <info@linprofs.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ServiceManagement' => 'Service Management',
 	'Menu:ServiceManagement+' => 'Overzicht van Service Management',
 	'Menu:Service:Overview' => 'Overzicht',
@@ -42,34 +43,33 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Contract:baseinfo' => 'Algemene informatie',
 	'Contract:moreinfo' => 'Contractuele informatie',
 	'Contract:cost' => 'Financiële informatie',
-));
+]);
 
 //
 // Class: Organization
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Leveringsmodel',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'This is required for Tickets handling.
 The delivery model specifies the teams to which tickets can be assigned.~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Naam leveringsmodel',
-));
-
+]);
 
 //
 // Class: ContractType
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ContractType' => 'Soort contract',
 	'Class:ContractType+' => '',
-));
+]);
 
 //
 // Class: Contract
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Contract' => 'Contract',
 	'Class:Contract+' => '',
 	'Class:Contract/Attribute:name' => 'Naam',
@@ -118,23 +118,23 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Contract/Attribute:status/Value:production+' => 'Productie',
 	'Class:Contract/Attribute:finalclass' => 'Subklasse contract',
 	'Class:Contract/Attribute:finalclass+' => '',
-));
+]);
 //
 // Class: CustomerContract
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:CustomerContract' => 'Klantencontract',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
 	'Class:CustomerContract/Attribute:services_list+' => 'Alle services die aangeschaft zijn voor dit contract',
-));
+]);
 
 //
 // Class: ProviderContract
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ProviderContract' => 'Leverancierscontract',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CI\'s',
@@ -149,13 +149,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ProviderContract/Attribute:contracttype_name+' => '',
 	'Class:ProviderContract/Attribute:services_list' => 'Services',
 	'Class:ProviderContract/Attribute:services_list+' => 'Alle services die aangeschaft zijn voor dit contract',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkContactToContract' => 'Link Contact / Contract',
 	'Class:lnkContactToContract+' => '',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
@@ -167,13 +167,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkContactToContract/Attribute:contact_id+' => '',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Naam contact',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkContractToDocument' => 'Link Contract / Document',
 	'Class:lnkContractToDocument+' => '',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
@@ -185,13 +185,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Naam document',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: ServiceFamily
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ServiceFamily' => 'Servicecategorie',
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Naam',
@@ -200,13 +200,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Alle services in deze categorie',
-));
+]);
 
 //
 // Class: Service
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Service' => 'Service',
 	'Class:Service+' => '',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s',
@@ -244,13 +244,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Service/Attribute:functionalcis_list+' => 'Alle configuratie-items die gebruikt worden voor het beschikbaarheid van deze service',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Subcategorieën service',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Alle subcategorieën van deze service',
-));
+]);
 
 //
 // Class: lnkDocumentToService
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkDocumentToService' => 'Link Document / Service',
 	'Class:lnkDocumentToService+' => '',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s',
@@ -262,13 +262,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkDocumentToService/Attribute:document_id+' => '',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Naam document',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkContactToService
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkContactToService' => 'Link Contact / Service',
 	'Class:lnkContactToService+' => '',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s',
@@ -280,13 +280,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkContactToService/Attribute:contact_id+' => '',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Naam contact',
 	'Class:lnkContactToService/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: ServiceSubcategory
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ServiceSubcategory' => 'Subcategorie service',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
@@ -312,13 +312,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => 'Buiten gebruik',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Productie',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'Productie',
-));
+]);
 
 //
 // Class: SLA
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:SLA' => 'SLA',
 	'Class:SLA+' => '',
 	'Class:SLA/Attribute:name' => 'Naam',
@@ -334,13 +334,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SLA/Attribute:customercontracts_list' => 'Klantencontracten',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Alle klantencontracten die gebruik maken van deze SLA',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Kan de link tussen klantencontract %1$s en service %2$s niet opslaan: SLA bestaat al.',
-));
+]);
 
 //
 // Class: SLT
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:SLT' => 'SLT',
 	'Class:SLT+' => '',
 	'Class:SLT/Attribute:name' => 'Naam',
@@ -377,13 +377,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minuten',
 	'Class:SLT/Attribute:slas_list' => 'SLAs',
 	'Class:SLT/Attribute:slas_list+' => 'Alle Service Level Agreements die deze SLT gebruiken',
-));
+]);
 
 //
 // Class: lnkSLAToSLT
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkSLAToSLT' => 'Link SLA / SLT',
 	'Class:lnkSLAToSLT+' => '',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
@@ -405,13 +405,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Eenheid SLT-waarde',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkCustomerContractToService' => 'Link Klantencontract / Service',
 	'Class:lnkCustomerContractToService+' => '',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
@@ -427,13 +427,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'Naam SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
-));
+]);
 
 //
 // Class: lnkProviderContractToService
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkProviderContractToService' => 'Link Leverancierscontract / Service',
 	'Class:lnkProviderContractToService+' => '',
 	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s',
@@ -445,13 +445,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Naam leverancierscontract',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
-));
+]);
 
 //
 // Class: DeliveryModel
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:DeliveryModel' => 'Delivery Model',
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:name' => 'Naam',
@@ -466,13 +466,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'Alle contacten (teams en personen) voor dit leveringsmodel',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Klanten',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Alle klanten die gebruik maken van dit leveringsmodel',
-));
+]);
 
 //
 // Class: lnkDeliveryModelToContact
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkDeliveryModelToContact' => 'Link Leveringsmodel / Contact',
 	'Class:lnkDeliveryModelToContact+' => '',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
@@ -488,44 +488,44 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Naam rol',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkProviderContractToService
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkProviderContractToService/Attribute:provider_id+' => '~~',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -23,7 +24,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-abstract class CustomFieldsHandler {
+abstract class CustomFieldsHandler
+{
 	/** @var string $sAttCode */
 	protected $sAttCode;
 	/** @var array{
@@ -47,7 +49,8 @@ abstract class CustomFieldsHandler {
 	 *
 	 * @param $sAttCode
 	 */
-	final public function __construct($sAttCode) {
+	final public function __construct($sAttCode)
+	{
 		$this->sAttCode = $sAttCode;
 		$this->aValues = null;
 	}
@@ -59,7 +62,8 @@ abstract class CustomFieldsHandler {
 	 * @throws \ApplicationException if {@link static::$oForm} attribute not initialized yet
 	 * @since 3.1.0 N°6322 N°1150 Add template_id checks
 	 */
-	public function Validate(DBObject $oHostObject) {
+	public function Validate(DBObject $oHostObject)
+	{
 		if (false === isset($this->oForm)) {
 			throw new ApplicationException('oForm attribute not init yet. You must call BuildForm before this method !');
 		}
@@ -68,9 +72,8 @@ abstract class CustomFieldsHandler {
 			$this->oForm->Validate();
 			if ($this->oForm->GetValid()) {
 				$ret = true;
-			}
-			else {
-				$aMessages = array();
+			} else {
+				$aMessages = [];
 				foreach ($this->oForm->GetErrorMessages() as $sFieldId => $aFieldMessages) {
 					$aMessages[] = $sFieldId.': '.implode(', ', $aFieldMessages);
 				}
@@ -87,7 +90,8 @@ abstract class CustomFieldsHandler {
 	 *
 	 * @return \Combodo\iTop\Form\Form
 	 */
-	public function GetForm() {
+	public function GetForm()
+	{
 		return $this->oForm;
 	}
 
@@ -96,15 +100,17 @@ abstract class CustomFieldsHandler {
 		$this->aValues = $aValues;
 	}
 
-	public static function GetPrerequisiteAttributes($sClass = null) {
-		return array();
+	public static function GetPrerequisiteAttributes($sClass = null)
+	{
+		return [];
 	}
 
 	/**
 	 * List the available verbs for 'GetForTemplate'
 	 */
-	public static function EnumTemplateVerbs() {
-		return array();
+	public static function EnumTemplateVerbs()
+	{
+		return [];
 	}
 
 	/**
@@ -168,7 +174,6 @@ abstract class CustomFieldsHandler {
 		// Default impl doing nothing, to avoid errors on children not having this method
 		return null;
 	}
-
 
 	/**
 	 * @param DBObject $oHostObject

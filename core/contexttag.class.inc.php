@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2016-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -15,7 +16,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 
 /**
  * Simple helper class for keeping track of the context inside the call stack
@@ -63,7 +63,7 @@ class ContextTag
 	 * @since 3.1.0 N°6047
 	 */
 	public const TAG_IMPORT    = 'Import';
-		/**
+	/**
 	 * @since 3.1.0 N°6047
 	 */
 	public const TAG_EXPORT    = 'Export';
@@ -74,7 +74,7 @@ class ContextTag
 	 */
 	public const TAG_OBJECT_SEARCH = 'ObjectSearch';
 
-	protected static $aStack = array();
+	protected static $aStack = [];
 
 	/**
 	 * Store a context tag on the stack
@@ -124,33 +124,29 @@ class ContextTag
 	 */
 	public static function GetTags()
 	{
-		$aRawTags = array(
+		$aRawTags = [
 			ContextTag::TAG_REST,
 			ContextTag::TAG_SYNCHRO,
 			ContextTag::TAG_SETUP,
 			ContextTag::TAG_CONSOLE,
 			ContextTag::TAG_CRON,
-			ContextTag::TAG_PORTAL);
+			ContextTag::TAG_PORTAL];
 
-		$aTags = array();
+		$aTags = [];
 
-		foreach ($aRawTags as $sRawTag)
-		{
+		foreach ($aRawTags as $sRawTag) {
 			$aTags[$sRawTag] = Dict::S("Core:Context={$sRawTag}");
 		}
 
 		$aPortalsConf = PortalDispatcherData::GetData();
-		$aDispatchers = array();
-		foreach ($aPortalsConf as $sPortalId => $aConf)
-		{
+		$aDispatchers = [];
+		foreach ($aPortalsConf as $sPortalId => $aConf) {
 			$sHandlerClass = $aConf['handler'];
 			$aDispatchers[$sPortalId] = new $sHandlerClass($sPortalId);
 		}
 
-		foreach ($aDispatchers as $sPortalId => $oDispatcher)
-		{
-			if ($sPortalId != 'backoffice')
-			{
+		foreach ($aDispatchers as $sPortalId => $oDispatcher) {
+			if ($sPortalId != 'backoffice') {
 				$aTags['Portal:'.$sPortalId] = $oDispatcher->GetLabel();
 			}
 		}

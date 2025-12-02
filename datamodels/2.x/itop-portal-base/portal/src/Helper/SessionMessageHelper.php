@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -35,21 +36,21 @@ use utils;
 class SessionMessageHelper implements IteratorAggregate
 {
 	/** @var string ENUM_SEVERITY_INFO */
-	const ENUM_SEVERITY_INFO = 'info';
+	public const ENUM_SEVERITY_INFO = 'info';
 	/** @var string ENUM_SEVERITY_OK */
-	const ENUM_SEVERITY_OK = 'ok';
+	public const ENUM_SEVERITY_OK = 'ok';
 	/** @var string ENUM_SEVERITY_WARNING */
-	const ENUM_SEVERITY_WARNING = 'warning';
+	public const ENUM_SEVERITY_WARNING = 'warning';
 	/** @var string ENUM_SEVERITY_ERROR */
-	const ENUM_SEVERITY_ERROR = 'error';
+	public const ENUM_SEVERITY_ERROR = 'error';
 
 	/** @var string DEFAULT_SEVERITY */
-	const DEFAULT_SEVERITY = self::ENUM_SEVERITY_INFO;
+	public const DEFAULT_SEVERITY = self::ENUM_SEVERITY_INFO;
 
 	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $oContainer */
 	private $oContainer;
 	/** @var array $aAllMessages */
-	private $aAllMessages = array();
+	private $aAllMessages = [];
 
 	/**
 	 * SessionMessageHelper constructor.
@@ -71,11 +72,10 @@ class SessionMessageHelper implements IteratorAggregate
 	 * @param array $aMetadata An array of key => scalar value
 	 * @param int $iRank
 	 */
-	public function AddMessage($sId, $sContent, $sSeverity = self::DEFAULT_SEVERITY, $aMetadata = array(), $iRank = 1)
+	public function AddMessage($sId, $sContent, $sSeverity = self::DEFAULT_SEVERITY, $aMetadata = [], $iRank = 1)
 	{
 		$sKey = $this->GetMessagesKey();
-		if(!Session::IsSet(['obj_messages', $sKey]))
-		{
+		if (!Session::IsSet(['obj_messages', $sKey])) {
 			Session::Set(['obj_messages', $sKey], []);
 		}
 
@@ -115,7 +115,7 @@ class SessionMessageHelper implements IteratorAggregate
 	 */
 	private function GetMessagesKey()
 	{
-		return 'GUI:' . $this->oContainer->getParameter('combodo.portal.instance.id');
+		return 'GUI:'.$this->oContainer->getParameter('combodo.portal.instance.id');
 	}
 
 	/**
@@ -126,23 +126,18 @@ class SessionMessageHelper implements IteratorAggregate
 	 */
 	private function FetchMessages()
 	{
-		if (!empty($this->aAllMessages))
-		{
+		if (!empty($this->aAllMessages)) {
 			return;
 		}
 
-		$this->aAllMessages = array();
-		if (is_array(Session::Get('obj_messages')))
-		{
-			foreach (Session::Get('obj_messages') as $sMessageKey => $aMessageObjectData)
-			{
-				$aObjectMessages = array();
-				$aRanks = array();
-				foreach ($aMessageObjectData as $sMessageId => $aMessageData)
-				{
+		$this->aAllMessages = [];
+		if (is_array(Session::Get('obj_messages'))) {
+			foreach (Session::Get('obj_messages') as $sMessageKey => $aMessageObjectData) {
+				$aObjectMessages = [];
+				$aRanks = [];
+				foreach ($aMessageObjectData as $sMessageId => $aMessageData) {
 					$sMsgClass = 'alert alert-dismissible alert-';
-					switch ($aMessageData['severity'])
-					{
+					switch ($aMessageData['severity']) {
 						case static::ENUM_SEVERITY_INFO:
 							$sMsgClass .= 'info';
 							break;
@@ -168,14 +163,13 @@ class SessionMessageHelper implements IteratorAggregate
 							$sMsgMetadata .= 'data-'.str_replace('_', '-', $sMetadatumName).'="'.utils::HtmlEntities($sMetadatumValue).'" ';
 						}
 					}
-					$aObjectMessages[] = array('css_classes' => $sMsgClass, 'message' => $aMessageData['message'], 'metadata' => $sMsgMetadata);
+					$aObjectMessages[] = ['css_classes' => $sMsgClass, 'message' => $aMessageData['message'], 'metadata' => $sMsgMetadata];
 					$aRanks[] = $aMessageData['rank'];
 				}
 				Session::Unset(['obj_messages', $sMessageKey]);
 
 				array_multisort($aRanks, $aObjectMessages);
-				foreach ($aObjectMessages as $aObjectMessage)
-				{
+				foreach ($aObjectMessages as $aObjectMessage) {
 					$this->aAllMessages[] = $aObjectMessage;
 				}
 			}

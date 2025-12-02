@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\GlobalSearch;
-
 
 use appUserPreferences;
 use MetaModel;
@@ -59,15 +59,13 @@ class GlobalSearchHelper
 		];
 
 		// Set icon only when necessary
-		if (!empty($sIconRelUrl))
-		{
+		if (!empty($sIconRelUrl)) {
 			//Ensure URL is relative to limit space in the preferences and avoid broken links in case app_root_url changes
 			$aNewEntry['icon_url'] = str_replace(utils::GetAbsoluteUrlAppRoot(), '', $sIconRelUrl);
 		}
 
 		// Set label only when necessary to avoid unnecessary space filling of the preferences in the DB
-		if(!empty($sLabelAsHtml))
-		{
+		if (!empty($sLabelAsHtml)) {
 			$aNewEntry['label_html'] = $sLabelAsHtml;
 		}
 
@@ -75,10 +73,8 @@ class GlobalSearchHelper
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 
 		// Remove same query from history to avoid duplicates
-		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
-		{
-			if($aHistoryEntries[$iIdx]['query'] === $sQuery)
-			{
+		for ($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++) {
+			if ($aHistoryEntries[$iIdx]['query'] === $sQuery) {
 				unset($aHistoryEntries[$iIdx]);
 			}
 		}
@@ -107,21 +103,21 @@ class GlobalSearchHelper
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 		static::TruncateHistory($aHistoryEntries);
 
-		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++){
+		for ($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++) {
 			$sRawQuery = $aHistoryEntries[$iIdx]['query'];
 
 			// Make icon URL absolute
-			if(isset($aHistoryEntries[$iIdx]['icon_url'])){
+			if (isset($aHistoryEntries[$iIdx]['icon_url'])) {
 				$aHistoryEntries[$iIdx]['icon_url'] = utils::GetAbsoluteUrlAppRoot().$aHistoryEntries[$iIdx]['icon_url'];
 			}
 
 			// Add HTML label if missing
-			if(!isset($aHistoryEntries[$iIdx]['label_html'])) {
+			if (!isset($aHistoryEntries[$iIdx]['label_html'])) {
 				$aHistoryEntries[$iIdx]['label_html'] = utils::EscapeHtml($sRawQuery);
 			}
 
 			// Add URL
-			if(!isset($aHistoryEntries[$iIdx]['target_url'])){
+			if (!isset($aHistoryEntries[$iIdx]['target_url'])) {
 				$aHistoryEntries[$iIdx]['target_url'] = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=full_text&text='.urlencode($sRawQuery);
 			}
 		}
@@ -137,8 +133,7 @@ class GlobalSearchHelper
 	protected static function TruncateHistory(array &$aHistoryEntries): void
 	{
 		$iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('global_search.max_history_results');
-		if(count($aHistoryEntries) > $iMaxHistoryResults)
-		{
+		if (count($aHistoryEntries) > $iMaxHistoryResults) {
 			$aHistoryEntries = array_slice($aHistoryEntries, 0, $iMaxHistoryResults);
 		}
 	}

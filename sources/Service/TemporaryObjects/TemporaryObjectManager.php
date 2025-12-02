@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -28,7 +29,7 @@ use utils;
 class TemporaryObjectManager
 {
 	/** @var TemporaryObjectManager|null Singleton */
-	static private ?TemporaryObjectManager $oSingletonInstance = null;
+	private static ?TemporaryObjectManager $oSingletonInstance = null;
 
 	/** @var TemporaryObjectRepository $oTemporaryObjectRepository */
 	private TemporaryObjectRepository $oTemporaryObjectRepository;
@@ -106,8 +107,7 @@ class TemporaryObjectManager
 
 			// return operation success
 			return true;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			ExceptionLog::LogException($e);
 
 			return false;
@@ -138,15 +138,13 @@ class TemporaryObjectManager
 			}
 
 			return $bResult;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			ExceptionLog::LogException($e);
 
 			return false;
 		}
 
 	}
-
 
 	/**
 	 * Extends the temporary object descriptor lifetime
@@ -181,8 +179,7 @@ class TemporaryObjectManager
 
 			// return operation success
 			return true;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			ExceptionLog::LogException($e);
 
 			return false;
@@ -275,8 +272,7 @@ class TemporaryObjectManager
 			IssueLog::Debug("Temporary Object [$sItemClass:$sItemId] $sOperation confirmed", LogChannels::TEMPORARY_OBJECTS, utils::GetStackTraceAsArray());
 
 			return true;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			ExceptionLog::LogException($e);
 
 			return false;
@@ -315,8 +311,7 @@ class TemporaryObjectManager
 			$oTemporaryObjectDescriptor->DBDelete();
 
 			return true;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			ExceptionLog::LogException($e);
 
 			return false;
@@ -353,8 +348,7 @@ class TemporaryObjectManager
 			// Get host class attribute definition
 			try {
 				$oAttDef = MetaModel::GetAttributeDef($sHostClass, $sHostAttCode);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				ExceptionLog::LogException($e);
 
 				return;
@@ -392,8 +386,7 @@ class TemporaryObjectManager
 			$this->CancelTemporaryObjects($oDBObjectSet->ToArray());
 
 			return true;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			ExceptionLog::LogException($e);
 
 			return false;

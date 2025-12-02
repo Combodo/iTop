@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Référence',
@@ -66,15 +67,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Ticket/Attribute:operational_status/Value:resolved+' => '',
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Clos',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => 'Fermé',
-	'Ticket:ImpactAnalysis' => 'Analyse d\'Impact'
-));
-
+	'Ticket:ImpactAnalysis' => 'Analyse d\'Impact',
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContactToTicket' => 'Lien Contact / Ticket',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
@@ -94,13 +94,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Ajouté manuellement',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Calculé',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Ne pas notifier',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:WorkOrder' => 'Tâche',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => 'Nom',
@@ -133,11 +133,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Fermer',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Ticket:baseinfo' => 'Informations générales',
 	'Ticket:date' => 'Dates',
 	'Ticket:contact' => 'Contacts',
@@ -238,15 +237,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Team/Attribute:tickets_list/UI:Links:Delete:Button+' => 'Supprimer ce %4$s',
 	'Class:Team/Attribute:tickets_list/UI:Links:Delete:Modal:Title' => 'Supprimer un %4$s',
 	'Class:Team/Attribute:tickets_list/UI:Links:Remove:Button+' => 'Retirer ce %4$s',
-	'Class:Team/Attribute:tickets_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s'
-));
-
+	'Class:Team/Attribute:tickets_list/UI:Links:Remove:Modal:Title' => 'Retirer ce %4$s de son %1$s',
+]);
 
 //
 // Class: Ticket
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
-));
+]);

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:KnownError' => 'Erro Conhecido',
 	'Class:KnownError+' => 'Erro documentado de um problema conhecido',
 	'Class:KnownError/Attribute:name' => 'Nome',
@@ -52,13 +53,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:KnownError/Attribute:ci_list+' => 'Todos os itens de configuração associados a este erro conhecido',
 	'Class:KnownError/Attribute:document_list' => 'Documentos',
 	'Class:KnownError/Attribute:document_list+' => 'Todos os documentos associados a este erro conhecido',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkErrorToFunctionalCI' => 'Link Erro Conhecido / IC',
 	'Class:lnkErrorToFunctionalCI+' => 'Infraestrutura associada a este erro conhecido',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -72,13 +73,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Motivo do link',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkDocumentToError' => 'Link Documentos / Erros',
 	'Class:lnkDocumentToError+' => 'Uma ligação entre um documento e um erro conhecido',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
@@ -92,9 +93,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Tipo de link',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
+]);
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:ProblemManagement' => 'Gerenciamento de Problemas',
 	'Menu:ProblemManagement+' => 'Lista de Gerenciamento de Problemas',
 	'Menu:Problem:Shortcuts' => 'Atalhos',
@@ -104,4 +105,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:SearchError+' => '',
 	'Menu:Problem:KnownErrors' => 'Erros Conhecidos',
 	'Menu:Problem:KnownErrors+' => 'Erro documentado de um problema conhecido',
-));
+]);

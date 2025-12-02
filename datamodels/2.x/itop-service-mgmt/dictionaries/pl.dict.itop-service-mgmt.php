@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:ServiceManagement' => 'Zarządzanie usługami',
 	'Menu:ServiceManagement+' => 'Omówienie zarządzania usługami',
 	'Menu:Service:Overview' => 'Przegląd',
@@ -40,34 +41,33 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Contract:baseinfo' => 'Informacje ogólne',
 	'Contract:moreinfo' => 'Informacje o umowach',
 	'Contract:cost' => 'Informacje o kosztach',
-));
+]);
 
 //
 // Class: Organization
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Model obsługi',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'This is required for Tickets handling.
 The delivery model specifies the teams to which tickets can be assigned.~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nazwa modelu obsługi',
-));
-
+]);
 
 //
 // Class: ContractType
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ContractType' => 'Typ umowy',
 	'Class:ContractType+' => '',
-));
+]);
 
 //
 // Class: Contract
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Contract' => 'Umowa',
 	'Class:Contract+' => '',
 	'Class:Contract/Attribute:name' => 'Nazwa',
@@ -116,23 +116,23 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Contract/Attribute:status/Value:production+' => 'użytkowane',
 	'Class:Contract/Attribute:finalclass' => 'Podklasa umowy',
 	'Class:Contract/Attribute:finalclass+' => 'Nazwa ostatniej klasy',
-));
+]);
 //
 // Class: CustomerContract
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:CustomerContract' => 'Umowa z klientem',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Usługi',
 	'Class:CustomerContract/Attribute:services_list+' => 'Wszystkie usługi zakupione w ramach tej umowy',
-));
+]);
 
 //
 // Class: ProviderContract
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ProviderContract' => 'Umowa z dostawcą',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'Konfiguracje',
@@ -147,13 +147,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ProviderContract/Attribute:contracttype_name+' => '',
 	'Class:ProviderContract/Attribute:services_list' => 'Usługi',
 	'Class:ProviderContract/Attribute:services_list+' => 'Wszystkie usługi zakupione w ramach niniejszej umowy',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkContactToContract' => 'Połączenie Kontakt / Umowa',
 	'Class:lnkContactToContract+' => '',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
@@ -165,13 +165,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkContactToContract/Attribute:contact_id+' => '',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Nazwa kontaktu',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkContractToDocument' => 'Połączenie Umowa / Dokument',
 	'Class:lnkContractToDocument+' => '',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
@@ -183,13 +183,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Nazwa dokumentu',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: ServiceFamily
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ServiceFamily' => 'Rodzina usług',
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Nazwa',
@@ -198,13 +198,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Usługi',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Wszystkie usługi w tej kategorii',
-));
+]);
 
 //
 // Class: Service
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Service' => 'Usługa',
 	'Class:Service+' => '',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s',
@@ -242,13 +242,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Service/Attribute:functionalcis_list+' => 'Wszystkie elementy konfiguracji, które są używane do świadczenia tej usługi',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Podkategorie usług',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Wszystkie podkategorie tej usługi',
-));
+]);
 
 //
 // Class: lnkDocumentToService
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkDocumentToService' => 'Połączenie Dokument / Usługa',
 	'Class:lnkDocumentToService+' => '',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s',
@@ -260,13 +260,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkDocumentToService/Attribute:document_id+' => '',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Nazwa dokumentu',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkContactToService
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkContactToService' => 'Połączenie Kontakt / Usługa',
 	'Class:lnkContactToService+' => '',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s',
@@ -278,13 +278,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkContactToService/Attribute:contact_id+' => '',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Nazwa kontaktu',
 	'Class:lnkContactToService/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: ServiceSubcategory
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ServiceSubcategory' => 'Podkategoria usługi',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
@@ -310,13 +310,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => 'wycofane',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'użytkowane',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'użytkowane',
-));
+]);
 
 //
 // Class: SLA
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:SLA' => 'Umowa SLA',
 	'Class:SLA+' => '',
 	'Class:SLA/Attribute:name' => 'Nazwa',
@@ -332,13 +332,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:SLA/Attribute:customercontracts_list' => 'Umowy z klientami',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Wszystkie umowy z klientami korzystające z tej umowy SLA',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Nie udało się zapisać połączenia z umową klienta %1$s i usługą %2$s : Umowa SLA już istnieje',
-));
+]);
 
 //
 // Class: SLT
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:SLT' => 'Poziom usług SLT',
 	'Class:SLT+' => '',
 	'Class:SLT/Attribute:name' => 'Nazwa',
@@ -375,13 +375,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minut',
 	'Class:SLT/Attribute:slas_list' => 'SLA',
 	'Class:SLT/Attribute:slas_list+' => 'Wszystkie umowy dotyczące poziomu usług korzystające z tego SLT',
-));
+]);
 
 //
 // Class: lnkSLAToSLT
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkSLAToSLT' => 'Połączenie SLA / SLT',
 	'Class:lnkSLAToSLT+' => '',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
@@ -403,13 +403,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Jednostka wartości SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkCustomerContractToService' => 'Połączenie Umowa z klientem / Usługa',
 	'Class:lnkCustomerContractToService+' => '',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
@@ -425,13 +425,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'Nazwa umowy SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
-));
+]);
 
 //
 // Class: lnkProviderContractToService
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkProviderContractToService' => 'Połączenie Umowa z dostawcą / Usługa',
 	'Class:lnkProviderContractToService+' => '',
 	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s',
@@ -443,13 +443,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Nazwa umowy z dostawcą',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
-));
+]);
 
 //
 // Class: DeliveryModel
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:DeliveryModel' => 'Model obsługi',
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:name' => 'Nazwa',
@@ -464,13 +464,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'Wszystkie kontakty (zespoły i osoby) dla tego modelu obsługi',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Klienci',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Wszyscy klienci posiadający ten model obsługi',
-));
+]);
 
 //
 // Class: lnkDeliveryModelToContact
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkDeliveryModelToContact' => 'Połączenie Model obsługi / Kontakt',
 	'Class:lnkDeliveryModelToContact+' => '',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
@@ -486,44 +486,44 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Nazwa roli',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkProviderContractToService
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkProviderContractToService/Attribute:provider_id+' => '~~',
-));
+]);

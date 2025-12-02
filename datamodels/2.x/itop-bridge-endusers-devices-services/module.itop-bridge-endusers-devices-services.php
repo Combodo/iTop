@@ -1,4 +1,5 @@
 <?php
+
 //
 // iTop module definition file
 //
@@ -6,7 +7,7 @@
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-bridge-endusers-devices-services/3.2.1',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Bridge for CMDB endusers objects and Services',
@@ -14,29 +15,29 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
+		'dependencies' => [
 			'itop-config-mgmt/2.7.1',
 			'itop-service-mgmt/2.7.1 || itop-service-mgmt-provider/2.7.1',
 			'itop-endusers-devices/3.1.0',
 
-		),
+		],
 		'mandatory' => false,
 		'visible' => false,
 		'auto_select' => 'SetupInfo::ModuleIsSelected("itop-endusers-devices") && (SetupInfo::ModuleIsSelected("itop-service-mgmt") || SetupInfo::ModuleIsSelected("itop-service-mgmt-provider")) ',
 
 		// Components
 		//
-		'datamodel' => array(
-		),
-		'webservice' => array(
+		'datamodel' => [
+		],
+		'webservice' => [
 
-		),
-		'data.struct' => array(
+		],
+		'data.struct' => [
 			// add your 'structure' definition XML files here,
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			// add your sample data XML files here,
-		),
+		],
 
 		// Documentation
 		//
@@ -45,11 +46,8 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
+		'settings' => [
 			// Module specific settings go here, if any
-		),
-	)
+		],
+	]
 );
-
-
-?>

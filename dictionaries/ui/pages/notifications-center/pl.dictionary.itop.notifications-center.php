@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SARL
  *
@@ -16,7 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI:NotificationsCenter:Page:Title' => 'Centrum powiadomień',
 	'UI:NotificationsCenter:Panel:Title' => 'Centrum powiadomień',
 	'UI:NotificationsCenter:Panel:SubTitle' => 'Zarządzaj otrzymanymi powiadomieniami: zrezygnuj z subskrypcji lub ogranicz je do jednego kanału',
@@ -28,4 +29,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:NotificationsCenter:Subscribe:Error' => 'Wystąpił błąd podczas subskrybowania wybranych powiadomień.',
 	'UI:NotificationsCenter:Channel:OutOf:Text' => '%1$s poza %2$s',
 	'UI:NotificationsCenter:Advanced:Input:Label' => '%1$s: %2$s',
-));
+]);

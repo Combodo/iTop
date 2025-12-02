@@ -17,8 +17,7 @@ use TriggerOnObjectCreate;
  */
 class TriggerTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = false;
-
+	public const USE_TRANSACTION = false;
 
 	protected function setUp(): void
 	{
@@ -43,18 +42,16 @@ class TriggerTest extends ItopDataTestCase
 		try {
 			try {
 				MetaModel::NewObject('Toto');
-			}
-			catch (\Exception $e) {
+			} catch (\Exception $e) {
 				\utils::EnrichRaisedException($oTrigger, $e);
 			}
 			$this->assertTrue(false, "An exception should have been thrown");
-		}
-		catch (\CoreException $e1) {
+		} catch (\CoreException $e1) {
 			$this->assertEquals('CoreException', get_class($e1));
 			$this->assertStringStartsWith('Unknown class \'Toto\' (<b title="Trigger">TriggerOnObjectCreate</b>::-', $e1->getMessage());
 
 			$fullStackTraceAsString = $e1->getFullStackTraceAsString();
-			$this->assertStringContainsString("MetaModel::NewObject", $fullStackTraceAsString,"new enriched exception should contain root cause method: " . $fullStackTraceAsString);
+			$this->assertStringContainsString("MetaModel::NewObject", $fullStackTraceAsString, "new enriched exception should contain root cause method: ".$fullStackTraceAsString);
 		}
 	}
 
@@ -75,13 +72,11 @@ class TriggerTest extends ItopDataTestCase
 		try {
 			try {
 				MetaModel::NewObject('CoreException');
-			}
-			catch (\Exception $e) {
+			} catch (\Exception $e) {
 				\utils::EnrichRaisedException($oCmdbAbstract, $e);
 			}
 			$this->assertTrue(false, "An exception should have been thrown");
-		}
-		catch (\Exception $e1) {
+		} catch (\Exception $e1) {
 			$this->assertEquals($e, $e1);
 		}
 	}
@@ -113,13 +108,12 @@ class TriggerTest extends ItopDataTestCase
 			$this->assertStringContainsString($oPerson1->GetRawName(), $sTestLogFileContent);
 
 			$this->assertStringContainsString($sExceptionMessage, $sTestLogFileContent);
-		}
-		finally {
+		} finally {
 			IssueLog::Enable(APPROOT.'log/error.log');
 		}
 	}
 }
 
-class NonCmdbAbstractObject{
-
+class NonCmdbAbstractObject
+{
 }

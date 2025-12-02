@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => 'Helpdesk',
 	'Menu:RequestManagementProvider' => 'Helpdesk leverancier',
@@ -42,7 +43,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Open verzoeken per organisatie',
 	'Class:UserRequest:KnownErrorList' => 'Gekende fouten',
 	'Class:UserRequest:KnownErrorList+' => 'Gekende fouten gerelateerd aan configuratie-items gekoppeld aan het huidige verzoek',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -58,7 +59,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Class: UserRequest
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:UserRequest' => 'Gebruikersverzoek',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -256,11 +257,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kan het verzoek niet aan zichzelf toewijzen als hoofdincident',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (los subverzoeken op)',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem deze kenmerken over: service, team, agent, oplossing',
-));
+]);
 
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Organization:Overview:UserRequests' => 'Gebruikersverzoeken van deze organisatie',
 	'Organization:Overview:MyUserRequests' => 'Mijn gebruikersverzoeken voor deze organisatie',
 	'Organization:Overview:Tickets' => 'Tickets voor deze organisatie',
-));
+]);

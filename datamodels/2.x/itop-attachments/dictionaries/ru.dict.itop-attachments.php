@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Attachments:TabTitle_Count' => 'Вложения (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Вложения',
 	'Attachments:FieldsetTitle' => 'Вложения',
@@ -31,13 +32,13 @@ or ask your '.ITOP_APPLICATION_SHORT.' administrator if the '.ITOP_APPLICATION_S
 	'Attachments:Render:Icons' => 'Display as icons~~',
 	'Attachments:Render:Table' => 'Display as list~~',
 	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Attachment' => 'Вложение',
 	'Class:Attachment+' => '',
 	'Class:Attachment/Attribute:expire' => 'Истекает',
@@ -52,10 +53,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => 'Содержимое',
 	'Class:Attachment/Attribute:contents+' => '',
-));
+]);
 
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Attachments:File:Thumbnail' => 'Предпросмотр',
 	'Attachments:File:Name' => 'Имя файла',
 	'Attachments:File:Date' => 'Дата',
@@ -63,25 +63,25 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Attachments:File:Size' => 'Размер',
 	'Attachments:File:MimeType' => 'Тип',
 	'Attachments:File:DownloadsCount' => 'Downloads~~',
-));
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Attachment/Attribute:creation_date' => 'Дата создания',
 	'Class:Attachment/Attribute:creation_date+' => '',
 	'Class:Attachment/Attribute:user_id' => 'Пользователь',
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Контакт',
 	'Class:Attachment/Attribute:contact_id+' => '',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
-));
+]);

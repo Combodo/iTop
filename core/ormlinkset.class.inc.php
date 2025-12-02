@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 require_once('dbobjectiterator.php');
-
 
 /**
  * The value for an attribute representing a set of links between the host object and "remote" objects
@@ -56,22 +56,22 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * Object from the original set, minus the removed objects
 	 * @var DBObject[] array of iObjectId => DBObject
 	 */
-	protected $aPreserved = array();
+	protected $aPreserved = [];
 
 	/**
 	 * @var DBObject[] New items
 	 */
-	protected $aAdded = array();
+	protected $aAdded = [];
 
 	/**
 	 * @var DBObject[] Modified items (could also be found in aPreserved)
 	 */
-	protected $aModified = array();
+	protected $aModified = [];
 
 	/**
 	 * @var int[] Removed items
 	 */
-	protected $aRemoved = array();
+	protected $aRemoved = [];
 
 	/**
 	 * @var int Position in the collection
@@ -100,13 +100,11 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$this->oOriginalSet = $oOriginalSet ? clone $oOriginalSet : null;
 
 		$oAttDef = MetaModel::GetAttributeDef($sHostClass, $sAttCode);
-		if (!$oAttDef instanceof AttributeLinkedSet)
-		{
+		if (!$oAttDef instanceof AttributeLinkedSet) {
 			throw new Exception("ormLinkSet: $sAttCode is not a link set");
 		}
 		$this->sClass = $oAttDef->GetLinkedClass();
-		if ($oOriginalSet && ($oOriginalSet->GetClass() != $this->sClass))
-		{
+		if ($oOriginalSet && ($oOriginalSet->GetClass() != $this->sClass)) {
 			throw new Exception("ormLinkSet: wrong class for the original set, found {$oOriginalSet->GetClass()} while expecting {$oAttDef->GetLinkedClass()}");
 		}
 	}
@@ -140,41 +138,37 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	{
 		assert($oLink instanceof $this->sClass);
 		// No impact on the iteration algorithm
-        $iObjectId = $oLink->GetKey();
+		$iObjectId = $oLink->GetKey();
 		$this->aAdded[$iObjectId] = $oLink;
 		$this->bHasDelta = true;
 	}
 
-    /**
-     * @param DBObject $oObject
-     * @param string $sClassAlias
-     *
-     * @deprecated Since iTop 2.4, use {@link \ormLinkSet::AddItem()} instead.
-     */
+	/**
+	 * @param DBObject $oObject
+	 * @param string $sClassAlias
+	 *
+	 * @deprecated Since iTop 2.4, use {@link \ormLinkSet::AddItem()} instead.
+	 */
 	public function AddObject(DBObject $oObject, $sClassAlias = '')
-    {
-	    DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \ormLinkSet::AddItem() instead');
-	    $this->AddItem($oObject);
-    }
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \ormLinkSet::AddItem() instead');
+		$this->AddItem($oObject);
+	}
 
 	/**
 	 * @param $iObjectId
 	 */
 	public function RemoveItem($iObjectId)
 	{
-		if (array_key_exists($iObjectId, $this->aPreserved))
-		{
+		if (array_key_exists($iObjectId, $this->aPreserved)) {
 			unset($this->aPreserved[$iObjectId]);
 			$this->aRemoved[$iObjectId] = $iObjectId;
 			$this->bHasDelta = true;
+		} else {
+			if (array_key_exists($iObjectId, $this->aAdded)) {
+				unset($this->aAdded[$iObjectId]);
+			}
 		}
-		else
-        {
-            if (array_key_exists($iObjectId, $this->aAdded))
-            {
-                unset($this->aAdded[$iObjectId]);
-            }
-        }
 	}
 
 	/**
@@ -185,12 +179,11 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		assert($oLink instanceof $this->sClass);
 
 		$iObjectId = $oLink->GetKey();
-        if (array_key_exists($iObjectId, $this->aPreserved))
-        {
-            unset($this->aPreserved[$iObjectId]);
-            $this->aModified[$iObjectId] = $oLink;
-            $this->bHasDelta = true;
-        }
+		if (array_key_exists($iObjectId, $this->aPreserved)) {
+			unset($this->aPreserved[$iObjectId]);
+			$this->aModified[$iObjectId] = $oLink;
+			$this->bHasDelta = true;
+		}
 	}
 
 	/**
@@ -200,33 +193,25 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 */
 	protected function LoadOriginalIds()
 	{
-		if ($this->aOriginalObjects === null)
-		{
-			if ($this->oOriginalSet)
-			{
+		if ($this->aOriginalObjects === null) {
+			if ($this->oOriginalSet) {
 				$this->aOriginalObjects = $this->GetArrayOfIndex();
 				$this->aPreserved = $this->aOriginalObjects; // Copy (not effective until aPreserved gets modified)
-                foreach ($this->aRemoved as $iObjectId)
-                {
-                    if (array_key_exists($iObjectId, $this->aPreserved))
-                    {
-                        unset($this->aPreserved[$iObjectId]);
-                    }
-                }
-                foreach ($this->aModified as $iObjectId => $oLink)
-                {
-                    if (array_key_exists($iObjectId, $this->aPreserved))
-                    {
-                        unset($this->aPreserved[$iObjectId]);
-                    }
-                }
-			}
-			else
-			{
+				foreach ($this->aRemoved as $iObjectId) {
+					if (array_key_exists($iObjectId, $this->aPreserved)) {
+						unset($this->aPreserved[$iObjectId]);
+					}
+				}
+				foreach ($this->aModified as $iObjectId => $oLink) {
+					if (array_key_exists($iObjectId, $this->aPreserved)) {
+						unset($this->aPreserved[$iObjectId]);
+					}
+				}
+			} else {
 
 				// Nothing to load
-				$this->aOriginalObjects = array();
-				$this->aPreserved = array();
+				$this->aOriginalObjects = [];
+				$this->aPreserved = [];
 			}
 		}
 	}
@@ -242,58 +227,53 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 */
 	protected function GetArrayOfIndex()
 	{
-		$aRet = array();
+		$aRet = [];
 		$this->oOriginalSet->Rewind();
 		$iRow = 0;
-		while ($oObject = $this->oOriginalSet->Fetch())
-		{
+		while ($oObject = $this->oOriginalSet->Fetch()) {
 			$aRet[$oObject->GetKey()] = $iRow++;
 		}
 		return $aRet;
 	}
 
-    /**
-     * @param bool $bWithId
-     * @return array
-     * @deprecated Since iTop 2.4, use foreach($this as $oItem){} instead
-     */
-    public function ToArray($bWithId = true)
-    {
-	    DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use foreach($this as $oItem){} instead');
-	    $aRet = array();
-	    foreach ($this as $oItem) {
-		    if ($bWithId) {
-			    $aRet[$oItem->GetKey()] = $oItem;
-		    } else {
-			    $aRet[] = $oItem;
-            }
-        }
-        return $aRet;
-    }
+	/**
+	 * @param bool $bWithId
+	 * @return array
+	 * @deprecated Since iTop 2.4, use foreach($this as $oItem){} instead
+	 */
+	public function ToArray($bWithId = true)
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use foreach($this as $oItem){} instead');
+		$aRet = [];
+		foreach ($this as $oItem) {
+			if ($bWithId) {
+				$aRet[$oItem->GetKey()] = $oItem;
+			} else {
+				$aRet[] = $oItem;
+			}
+		}
+		return $aRet;
+	}
 
-    /**
-     * @param string $sAttCode
-     * @param bool $bWithId
-     * @return array
-     */
-    public function GetColumnAsArray($sAttCode, $bWithId = true)
-    {
-        $aRet = array();
-        foreach($this as $oItem)
-        {
-            if ($bWithId)
-            {
-                $aRet[$oItem->GetKey()] = $oItem->Get($sAttCode);
-            }
-            else
-            {
-                $aRet[] = $oItem->Get($sAttCode);
-            }
-        }
-        return $aRet;
-    }
+	/**
+	 * @param string $sAttCode
+	 * @param bool $bWithId
+	 * @return array
+	 */
+	public function GetColumnAsArray($sAttCode, $bWithId = true)
+	{
+		$aRet = [];
+		foreach ($this as $oItem) {
+			if ($bWithId) {
+				$aRet[$oItem->GetKey()] = $oItem->Get($sAttCode);
+			} else {
+				$aRet[] = $oItem->Get($sAttCode);
+			}
+		}
+		return $aRet;
+	}
 
-    /**
+	/**
 	 * The class of the objects of the collection (at least a common ancestor)
 	 *
 	 * @return string
@@ -331,13 +311,11 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$this->LoadOriginalIds();
 
 		$iCount = $this->Count();
-		if ($iPosition >= $iCount)
-		{
+		if ($iPosition >= $iCount) {
 			throw new Exception("Invalid position $iPosition: the link set is made of $iCount items.");
 		}
 		$this->rewind();
-		for($iPos = 0 ; $iPos < $iPosition ; $iPos++)
-		{
+		for ($iPos = 0 ; $iPos < $iPosition ; $iPos++) {
 			$this->next();
 		}
 	}
@@ -355,8 +333,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$this->LoadOriginalIds();
 
 		$ret = $this->current();
-		if ($ret === false)
-		{
+		if ($ret === false) {
 			$ret = null;
 		}
 		$this->next();
@@ -381,22 +358,16 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$this->LoadOriginalIds();
 
 		$iPreservedCount = count($this->aPreserved);
-		if ($this->iCursor < $iPreservedCount)
-		{
+		if ($this->iCursor < $iPreservedCount) {
 			$sId = key($this->aPreserved);
 			$oRet = MetaModel::GetObject($this->sClass, $sId);
-		}
-		else
-		{
-		    $iModifiedCount = count($this->aModified);
-		    if($this->iCursor < $iPreservedCount + $iModifiedCount)
-            {
-                $oRet = current($this->aModified);
-            }
-            else
-            {
-                $oRet = current($this->aAdded);
-            }
+		} else {
+			$iModifiedCount = count($this->aModified);
+			if ($this->iCursor < $iPreservedCount + $iModifiedCount) {
+				$oRet = current($this->aModified);
+			} else {
+				$oRet = current($this->aAdded);
+			}
 		}
 		return $oRet;
 	}
@@ -415,21 +386,15 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$this->LoadOriginalIds();
 
 		$iPreservedCount = count($this->aPreserved);
-		if ($this->iCursor < $iPreservedCount)
-		{
+		if ($this->iCursor < $iPreservedCount) {
 			next($this->aPreserved);
-		}
-		else
-		{
-		    $iModifiedCount = count($this->aModified);
-		    if($this->iCursor < $iPreservedCount + $iModifiedCount)
-            {
-                next($this->aModified);
-            }
-            else
-            {
-                next($this->aAdded);
-            }
+		} else {
+			$iModifiedCount = count($this->aModified);
+			if ($this->iCursor < $iPreservedCount + $iModifiedCount) {
+				next($this->aModified);
+			} else {
+				next($this->aAdded);
+			}
 		}
 		// Increment AFTER moving the internal cursors because when starting aModified / aAdded, we must leave it intact
 		$this->iCursor++;
@@ -477,12 +442,12 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 */
 	public function rewind(): void
 	{
-	    $this->LoadOriginalIds();
+		$this->LoadOriginalIds();
 
-	    $this->iCursor = 0;
+		$this->iCursor = 0;
 		reset($this->aPreserved);
-        reset($this->aAdded);
-        reset($this->aModified);
+		reset($this->aAdded);
+		reset($this->aModified);
 	}
 
 	/**
@@ -504,19 +469,14 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	public function Equals(ormLinkSet $oFellow)
 	{
 		$bRet = null;
-		if ($this === $oFellow)
-		{
+		if ($this === $oFellow) {
 			$bRet = true;
-		}
-		else
-		{
-			if ( ($this->oOriginalSet !== $oFellow->oOriginalSet)
-			&& ($this->oOriginalSet->GetFilter()->ToOQL() != $oFellow->oOriginalSet->GetFilter()->ToOQL()) )
-			{
+		} else {
+			if (($this->oOriginalSet !== $oFellow->oOriginalSet)
+			&& ($this->oOriginalSet->GetFilter()->ToOQL() != $oFellow->oOriginalSet->GetFilter()->ToOQL())) {
 				throw new Exception('ormLinkSet::Equals assumes that compared link sets have the same original scope');
 			}
-			if ($this->HasDelta())
-			{
+			if ($this->HasDelta()) {
 				throw new Exception('ormLinkSet::Equals assumes that left link set had no delta');
 			}
 			$bRet = !$oFellow->HasDelta();
@@ -532,22 +492,18 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 */
 	public function UpdateFromCompleteList(iDBObjectSetIterator $oFellow)
 	{
-		if ($oFellow === $this)
-		{
+		if ($oFellow === $this) {
 			throw new Exception('ormLinkSet::UpdateFromCompleteList assumes that the passed link set is at least a clone of the current one');
 		}
 		$bUpdateFromDelta = false;
-		if ($oFellow instanceof ormLinkSet)
-		{
-			if ( ($this->oOriginalSet === $oFellow->oOriginalSet)
-				|| ($this->oOriginalSet->GetFilter()->ToOQL() == $oFellow->oOriginalSet->GetFilter()->ToOQL()) )
-			{
+		if ($oFellow instanceof ormLinkSet) {
+			if (($this->oOriginalSet === $oFellow->oOriginalSet)
+				|| ($this->oOriginalSet->GetFilter()->ToOQL() == $oFellow->oOriginalSet->GetFilter()->ToOQL())) {
 				$bUpdateFromDelta = true;
 			}
 		}
 
-		if ($bUpdateFromDelta)
-		{
+		if ($bUpdateFromDelta) {
 			// Same original set -> simply update the delta
 			$this->iCursor = 0;
 			$this->aAdded = $oFellow->aAdded;
@@ -555,43 +511,37 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			$this->aModified = $oFellow->aModified;
 			$this->aPreserved = $oFellow->aPreserved;
 			$this->bHasDelta = $oFellow->bHasDelta;
-		}
-		else
-		{
+		} else {
 			// For backward compatibility reasons, let's rebuild a delta...
 
 			// Reset the delta
 			$this->iCursor = 0;
-			$this->aAdded = array();
-			$this->aRemoved = array();
-			$this->aModified = array();
-			$this->aPreserved = ($this->aOriginalObjects === null) ? array() : $this->aOriginalObjects;
+			$this->aAdded = [];
+			$this->aRemoved = [];
+			$this->aModified = [];
+			$this->aPreserved = ($this->aOriginalObjects === null) ? [] : $this->aOriginalObjects;
 			$this->bHasDelta = false;
 
 			/** @var \AttributeLinkedSet|\AttributeLinkedSetIndirect $oAttDef */
 			$oAttDef = MetaModel::GetAttributeDef($this->sHostClass, $this->sAttCode);
 			$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
 			$sAdditionalKey = null;
-			if ($oAttDef->IsIndirect() && !$oAttDef->DuplicatesAllowed())
-			{
+			if ($oAttDef->IsIndirect() && !$oAttDef->DuplicatesAllowed()) {
 				$sAdditionalKey = $oAttDef->GetExtKeyToRemote();
 			}
 			// Compare both collections by iterating the whole sets, order them, a build a fingerprint based on meaningful data (what make the difference)
 			/** @var \DBObject $oLink */
-			$oComparator = new DBObjectSetComparator($this, $oFellow, array($sExtKeyToMe), $sAdditionalKey);
+			$oComparator = new DBObjectSetComparator($this, $oFellow, [$sExtKeyToMe], $sAdditionalKey);
 			$aChanges = $oComparator->GetDifferences();
-			foreach ($aChanges['added'] as $oLink)
-			{
+			foreach ($aChanges['added'] as $oLink) {
 				$this->AddItem($oLink);
 			}
 
-			foreach ($aChanges['modified'] as $oLink)
-			{
+			foreach ($aChanges['modified'] as $oLink) {
 				$this->ModifyItem($oLink);
 			}
 
-			foreach ($aChanges['removed'] as $oLink)
-			{
+			foreach ($aChanges['removed'] as $oLink) {
 				$this->RemoveItem($oLink->GetKey());
 			}
 		}
@@ -607,9 +557,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	{
 		$aAdded = $this->aAdded;
 		$aModified = $this->aModified;
-		$aRemoved = array();
-		if (count($this->aRemoved) > 0)
-		{
+		$aRemoved = [];
+		if (count($this->aRemoved) > 0) {
 			$oSearch = new DBObjectSearch($this->sClass);
 			$oSearch->AddCondition('id', $this->aRemoved, 'IN');
 			$oSet = new DBObjectSet($oSearch);
@@ -639,30 +588,23 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
 		$sExtKeyToRemote = $oAttDef->IsIndirect() ? $oAttDef->GetExtKeyToRemote() : 'n/a';
 
-		$aCheckLinks = array();
-		$aCheckRemote = array();
-		foreach ($this->aAdded as $oLink)
-		{
-			if ($oLink->IsNew())
-			{
-				if ($oAttDef->IsIndirect() && !$oAttDef->DuplicatesAllowed())
-				{
+		$aCheckLinks = [];
+		$aCheckRemote = [];
+		foreach ($this->aAdded as $oLink) {
+			if ($oLink->IsNew()) {
+				if ($oAttDef->IsIndirect() && !$oAttDef->DuplicatesAllowed()) {
 					//todo: faire un test qui passe dans cette branche !
 					$aCheckRemote[] = $oLink->Get($sExtKeyToRemote);
 				}
-			}
-			else
-			{
+			} else {
 				//todo: faire un test qui passe dans cette branche !
 				$aCheckLinks[] = $oLink->GetKey();
 			}
 		}
-		foreach ($this->aRemoved as $iLinkId)
-		{
+		foreach ($this->aRemoved as $iLinkId) {
 			$aCheckLinks[] = $iLinkId;
 		}
-		foreach ($this->aModified as $iLinkId => $oLink)
-		{
+		foreach ($this->aModified as $iLinkId => $oLink) {
 			$aCheckLinks[] = $oLink->GetKey();
 		}
 
@@ -674,11 +616,10 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		// Check for the existing links
 		//
 		/** @var DBObject[] $aExistingLinks */
-		$aExistingLinks = array();
+		$aExistingLinks = [];
 		/** @var Int[] $aExistingRemote */
-		$aExistingRemote = array();
-		if (count($aCheckLinks) > 0)
-		{
+		$aExistingRemote = [];
+		if (count($aCheckLinks) > 0) {
 			$oSearch = new DBObjectSearch($this->sClass);
 			$oSearch->AddCondition('id', $aCheckLinks, 'IN');
 			$oSet = new DBObjectSet($oSearch);
@@ -687,8 +628,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 
 		// Check for the existing remote objects
 		//
-		if (count($aCheckRemote) > 0)
-		{
+		if (count($aCheckRemote) > 0) {
 			$oSearch = new DBObjectSearch($this->sClass);
 			$oSearch->AddCondition($sExtKeyToMe, $oHostObject->GetKey(), '=');
 			$oSearch->AddCondition($sExtKeyToRemote, $aCheckRemote, 'IN');
@@ -698,33 +638,27 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 
 		// Write the links according to the existing links
 		//
-		foreach ($this->aAdded as $oLink)
-		{
+		foreach ($this->aAdded as $oLink) {
 			// Make sure that the objects in the set point to "this"
 			$oLink->Set($sExtKeyToMe, $oHostObject->GetKey());
 
-			if ($oLink->IsNew())
-			{
-				if (count($aCheckRemote) > 0)
-				{
-				    $bIsDuplicate = false;
-				    foreach($aExistingRemote as $sLinkKey => $sExtKey)
-                    {
-                        if ($sExtKey == $oLink->Get($sExtKeyToRemote))
-                        {
-                            // Do not create a duplicate
-                            // + In the case of a remove action followed by an add action
-                            // of an existing link,
-                            // the final state to consider is add action,
-                            // so suppress the entry in the removed list.
-                            if (array_key_exists($sLinkKey, $this->aRemoved))
-                            {
-                                unset($this->aRemoved[$sLinkKey]);
-                            }
-	                        $bIsDuplicate = true;
-	                        break;
-                        }
-                    }
+			if ($oLink->IsNew()) {
+				if (count($aCheckRemote) > 0) {
+					$bIsDuplicate = false;
+					foreach ($aExistingRemote as $sLinkKey => $sExtKey) {
+						if ($sExtKey == $oLink->Get($sExtKeyToRemote)) {
+							// Do not create a duplicate
+							// + In the case of a remove action followed by an add action
+							// of an existing link,
+							// the final state to consider is add action,
+							// so suppress the entry in the removed list.
+							if (array_key_exists($sLinkKey, $this->aRemoved)) {
+								unset($this->aRemoved[$sLinkKey]);
+							}
+							$bIsDuplicate = true;
+							break;
+						}
+					}
 					if ($bIsDuplicate) {
 						continue;
 					}
@@ -802,8 +736,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		/** @var \AttributeLinkedSet|\AttributeLinkedSetIndirect $oAttDef */
 		$oAttDef = MetaModel::GetAttributeDef($this->sHostClass, $this->sAttCode);
 		$oLinkSearch = $this->GetFilter();
-		if ($oAttDef->IsIndirect())
-		{
+		if ($oAttDef->IsIndirect()) {
 			$oLinkSearch->RenameAlias($oLinkSearch->GetClassAlias(), self::LINK_ALIAS);
 			$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
 			/** @var \AttributeExternalKey $oLinkingAttDef */
@@ -814,8 +747,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			$sTargetClass = $oLinkingAttDef->GetTargetClass();
 			$oRemoteClassSearch = new DBObjectSearch($sTargetClass, self::REMOTE_ALIAS);
 
-			if (!$bShowObsolete && MetaModel::IsObsoletable($sTargetClass))
-			{
+			if (!$bShowObsolete && MetaModel::IsObsoletable($sTargetClass)) {
 				$oNotObsolete = new BinaryExpression(
 					new FieldExpression('obsolescence_flag', self::REMOTE_ALIAS),
 					'=',
@@ -824,8 +756,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 				$oRemoteClassSearch->AddConditionExpression($oNotObsolete);
 			}
 
-			if (!utils::IsArchiveMode() && MetaModel::IsArchivable($sTargetClass))
-			{
+			if (!utils::IsArchiveMode() && MetaModel::IsArchivable($sTargetClass)) {
 				$oNotArchived = new BinaryExpression(
 					new FieldExpression('archive_flag', self::REMOTE_ALIAS),
 					'=',
@@ -866,7 +797,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 */
 	public function GetValues()
 	{
-		$aValues = array();
+		$aValues = [];
 		foreach ($this->aPreserved as $sTagCode => $oTag) {
 			$aValues[] = $sTagCode;
 		}

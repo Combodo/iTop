@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AuditCategory' => '审计类别',
 	'Class:AuditCategory+' => '审计类别规定了需要被审计的对象的范围.
 其组合了用于此范围内对象的所有审计规则',
@@ -27,13 +28,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => '结果仍然显示为警告 (橙色) 的可允许的最大无效对象比例',
 	'Class:AuditCategory/Attribute:domains_list' => '审计域',
 	'Class:AuditCategory/Attribute:domains_list+' => '关联此类别的审计域列表',
-));
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AuditRule' => '审计规则',
 	'Class:AuditRule+' => '一条审计规则对应审计类别中的一项检查.
 其应用于审计规则定义的对象范围',
@@ -53,13 +54,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AuditRule/Attribute:category_id+' => '该规则对应的类别',
 	'Class:AuditRule/Attribute:category_name' => '类别',
 	'Class:AuditRule/Attribute:category_name+' => '该规则对应的类名称',
-));
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:AuditDomain' => '审计域',
 	'Class:AuditDomain+' => '审计域用于分组审计规则.
 审计域通常对应负责检查和修复错误的人',
@@ -71,13 +72,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AuditDomain/Attribute:icon+' => '',
 	'Class:AuditDomain/Attribute:categories_list' => '类别',
 	'Class:AuditDomain/Attribute:categories_list+' => '关联的审计类别',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkAuditCategoryToAuditDomain' => '关联审计类别/审计域',
 	'Class:lnkAuditCategoryToAuditDomain+' => '',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => '类别',
@@ -88,13 +89,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => '审计域',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => '名称',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => '审计域名称',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Query' => '查询',
 	'Class:Query+' => '查询是一种动态的数据集',
 	'Class:Query/Attribute:name' => '名称',
@@ -121,7 +122,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:QueryOQL+' => '一种基于对象查询的语言',
 	'Class:QueryOQL/Attribute:oql' => '表达式',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL表达式',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -132,7 +133,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class: User
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:User' => '用户',
 	'Class:User+' => '用户登录名',
 	'Class:User/Attribute:finalclass' => '账号类型',
@@ -178,13 +179,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => '内部用户',
 	'Class:UserInternal+' => ITOP_APPLICATION_SHORT.'内部定义的用户',
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:URP_Profiles' => '角色',
 	'Class:URP_Profiles+' => '用户角色',
 	'Class:URP_Profiles/Attribute:name' => '名称',
@@ -193,13 +194,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_Profiles/Attribute:description+' => '单行描述',
 	'Class:URP_Profiles/Attribute:user_list' => '用户',
 	'Class:URP_Profiles/Attribute:user_list+' => '拥有此角色的用户',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:URP_Dimensions' => '维度',
 	'Class:URP_Dimensions+' => '应用维度 (定义纵深)',
 	'Class:URP_Dimensions/Attribute:name' => '名称',
@@ -208,13 +209,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_Dimensions/Attribute:description+' => '单行描述',
 	'Class:URP_Dimensions/Attribute:type' => '类型',
 	'Class:URP_Dimensions/Attribute:type+' => '类型名称或数据类型 (投影单位)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:URP_UserProfile' => '角色目标用户',
 	'Class:URP_UserProfile+' => '用户的角色',
 	'Class:URP_UserProfile/Name' => '关联 %1$s 和 %2$s',
@@ -228,14 +229,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_UserProfile/Attribute:profile+' => '角色名称',
 	'Class:URP_UserProfile/Attribute:reason' => '原因',
 	'Class:URP_UserProfile/Attribute:reason+' => '解释为什么此用户需要拥有此角色',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:URP_UserOrg' => '用户组织',
 	'Class:URP_UserOrg+' => '可以访问的组织',
 	'Class:URP_UserOrg/Name' => '关联 %1$s 和 %2$s',
@@ -249,13 +249,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '可以访问的组织',
 	'Class:URP_UserOrg/Attribute:reason' => '原因',
 	'Class:URP_UserOrg/Attribute:reason+' => '解释为什么此用户可以访问此组织的数据',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:URP_ProfileProjection' => '角色映射',
 	'Class:URP_ProfileProjection+' => '角色映射',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => '维度',
@@ -270,13 +270,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL 表达式 (使用$user) | constant |  | +attribute code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => '属性',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => '目标属性编码 (可选)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:URP_ClassProjection' => '类型映射',
 	'Class:URP_ClassProjection+' => '类型映射',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => '维度',
@@ -289,13 +289,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL表达式 (使用$this) | constant |  | +attribute code',
 	'Class:URP_ClassProjection/Attribute:attribute' => '属性',
 	'Class:URP_ClassProjection/Attribute:attribute+' => '目标属性编码 (可选)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:URP_ActionGrant' => '操作权限',
 	'Class:URP_ActionGrant+' => '类型权限',
 	'Class:URP_ActionGrant/Attribute:profileid' => '角色',
@@ -312,13 +312,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => '否',
 	'Class:URP_ActionGrant/Attribute:action' => '操作',
 	'Class:URP_ActionGrant/Attribute:action+' => '可用于指定类型上的操作权限',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:URP_StimulusGrant' => '权限调整',
 	'Class:URP_StimulusGrant+' => '对象生命周期中权限的调整',
 	'Class:URP_StimulusGrant/Attribute:profileid' => '角色',
@@ -335,25 +335,25 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => '否',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => '调整',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => '调整编码',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:URP_AttributeGrant' => '属性权限',
 	'Class:URP_AttributeGrant+' => '属性的权限',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => '操作权限',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => '操作权限',
 	'Class:URP_AttributeGrant/Attribute:attcode' => '属性',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => '属性编码',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:UserDashboard' => '用户仪表盘',
 	'Class:UserDashboard+' => '',
 	'Class:UserDashboard/Attribute:user_id' => '用户',
@@ -362,12 +362,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '',
 	'Class:UserDashboard/Attribute:contents' => '内容',
 	'Class:UserDashboard/Attribute:contents+' => '',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:WelcomeMenu' => '欢迎',
 	'Menu:WelcomeMenu+' => '欢迎使用'.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => '欢迎',
@@ -386,13 +386,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:MyShortcuts' => '我的快捷方式',
 	'Menu:DataAdministration' => '数据管理',
 	'Menu:DataAdministration+' => '数据管理',
-));
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'BooleanLabel:yes' => '是',
 	'BooleanLabel:no' => '否',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.'登录',
@@ -1535,13 +1535,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => '将会包含选中对象的子集.',
 	'UI:Search:Criteria:Raw:Filtered' => '已筛选',
 	'UI:Search:Criteria:Raw:FilteredOn' => '基于%1$s筛选',
-	'UI:StateChanged' => '状态已改变'
-));
+	'UI:StateChanged' => '状态已改变',
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Expression:Operator:AND' => ' 与 ',
 	'Expression:Operator:OR' => ' 或 ',
 	'Expression:Operator:=' => ': ',
@@ -1554,12 +1554,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Expression:Unit:Long:MINUTE' => '分钟',
 	'Expression:Verb:NOW' => '现在',
 	'Expression:Verb:ISNULL' => ': 未定义',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Newsroom:NoNewMessage' => '没有新消息',
 	'UI:Newsroom:XNewMessage' => '%1$s 条新消息',
 	'UI:Newsroom:MarkAllAsRead' => '标记所有消息为已读',
@@ -1574,10 +1574,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Newsroom:Priority:2:Tooltip' => '紧急',
 	'UI:Newsroom:Priority:3:Tooltip' => '重要',
 	'UI:Newsroom:Priority:4:Tooltip' => '普通',
-));
+]);
 
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:DataSources' => '同步数据源',
 	'Menu:DataSources+' => '所有同步数据源',
 	'Menu:AuditCategories' => '审计类别',
@@ -1605,4 +1604,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Integrations' => '集成',
 	'Menu:Integrations+' => '~~',
 
-));
+]);

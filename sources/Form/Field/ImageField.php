@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -34,12 +34,9 @@ class ImageField extends BlobField
 	 */
 	public function GetDisplayValue()
 	{
-		if ($this->currentValue->IsEmpty())
-		{
+		if ($this->currentValue->IsEmpty()) {
 			$sValue = Dict::S('Portal:File:None');
-		}
-		else
-		{
+		} else {
 			$sFilename = $this->currentValue->GetFileName();
 			$iSize = utils::BytesToFriendlyFormat(utils::StrLen($this->currentValue->GetData()));
 			$sOpenLink = $this->GetDisplayUrl();

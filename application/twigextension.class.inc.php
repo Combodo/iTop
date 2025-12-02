@@ -34,24 +34,32 @@ class TwigExtension
 	{
 		// Filter to translate a string via the Dict::S function
 		// Usage in twig: {{ 'String:ToTranslate'|dict_s }}
-		$oTwigEnv->addFilter(new TwigFilter('dict_s',
+		$oTwigEnv->addFilter(
+			new TwigFilter(
+				'dict_s',
 				function ($sStringCode, $sDefault = null, $bUserLanguageOnly = false) {
 					return Dict::S($sStringCode, $sDefault, $bUserLanguageOnly);
-				})
+				}
+			)
 		);
 
 		// Filter to format a string via the Dict::Format function
 		// Usage in twig: {{ 'String:ToTranslate'|dict_format() }}
-		$oTwigEnv->addFilter(new TwigFilter('dict_format',
+		$oTwigEnv->addFilter(
+			new TwigFilter(
+				'dict_format',
 				function ($sStringCode, $sParam01 = null, $sParam02 = null, $sParam03 = null, $sParam04 = null) {
 					return Dict::Format($sStringCode, $sParam01, $sParam02, $sParam03, $sParam04);
-				})
+				}
+			)
 		);
 
 		// Filter to format output
 		// example a DateTime is converted to user format
 		// Usage in twig: {{ 'String:ToFormat'|output_format }}
-		$oTwigEnv->addFilter(new TwigFilter('date_format',
+		$oTwigEnv->addFilter(
+			new TwigFilter(
+				'date_format',
 				function ($sDate) {
 					try {
 						if (preg_match('@^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$@', trim($sDate))) {
@@ -60,22 +68,23 @@ class TwigExtension
 						if (preg_match('@^\d\d\d\d-\d\d-\d\d$@', trim($sDate))) {
 							return AttributeDate::GetFormat()->Format($sDate);
 						}
-					}
-					catch (Exception $e)
-					{
+					} catch (Exception $e) {
 					}
 					return $sDate;
-				})
+				}
+			)
 		);
-
 
 		// Filter to format output
 		// example a DateTime is converted to user format
 		// Usage in twig: {{ 'String:ToFormat'|output_format }}
-		$oTwigEnv->addFilter(new TwigFilter('size_format',
+		$oTwigEnv->addFilter(
+			new TwigFilter(
+				'size_format',
 				function ($sSize) {
 					return utils::BytesToFriendlyFormat($sSize);
-				})
+				}
+			)
 		);
 
 		// Filter to enable base64 encode/decode
@@ -85,7 +94,8 @@ class TwigExtension
 
 		// Filter to enable json decode  (encode already exists)
 		// Usage in twig: {{ aSomeArray|json_decode }}
-		$oTwigEnv->addFilter(new TwigFilter('json_decode', function ($sJsonString, $bAssoc = false) {
+		$oTwigEnv->addFilter(
+			new TwigFilter('json_decode', function ($sJsonString, $bAssoc = false) {
 				return json_decode($sJsonString, $bAssoc);
 			})
 		);

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Combodo\iTop\Test\UnitTest\Core;
@@ -37,8 +38,10 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
 	 */
 	public function testSanitizeAttributeOnRequestedObject()
 	{
-		$oContactTest = MetaModel::NewObject('ContactTest', [
-				'password' => self::SIMPLE_PASSWORD
+		$oContactTest = MetaModel::NewObject(
+			'ContactTest',
+			[
+				'password' => self::SIMPLE_PASSWORD,
 			]
 		);
 		$oRestResultWithObject = new RestResultWithObjects();
@@ -46,7 +49,8 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
 		$oRestResultWithObject->SanitizeContent();
 		static::assertJsonStringEqualsJsonString(
 			'{"objects":{"ContactTest::-1":{"code":0,"message":"ok","class":"ContactTest","key":-1,"fields":{"password":"*****"}}},"code":0,"message":null}',
-			json_encode($oRestResultWithObject));
+			json_encode($oRestResultWithObject)
+		);
 	}
 
 	/**
@@ -55,8 +59,10 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
 	 */
 	public function testSanitizeAttributeExternalFieldOnLink()
 	{
-		$oContactTest = $this->createObject('ContactTest', [
-				'password' => self::SIMPLE_PASSWORD
+		$oContactTest = $this->createObject(
+			'ContactTest',
+			[
+				'password' => self::SIMPLE_PASSWORD,
 			]
 		);
 
@@ -64,26 +70,31 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
 			'name' => 'test_server',
 		]);
 
-
 		// create lnkContactTestToServer
 		$oLnkContactTestToServer = $this->createObject('lnkContactTestToServer', [
 			'contact_test_id' => $oContactTest->GetKey(),
-			'test_server_id'  => $oTestServer->GetKey()
+			'test_server_id'  => $oTestServer->GetKey(),
 		]);
 
 		$oRestResultWithObject = new RestResultWithObjects();
-		$oRestResultWithObject->AddObject(0, 'ok', $oLnkContactTestToServer,
-			['lnkContactTestToServer' => ['contact_test_password']]);
+		$oRestResultWithObject->AddObject(
+			0,
+			'ok',
+			$oLnkContactTestToServer,
+			['lnkContactTestToServer' => ['contact_test_password']]
+		);
 
 		$oRestResultWithObject->SanitizeContent();
 
 		static::assertStringContainsString(
 			'*****',
-			json_encode($oRestResultWithObject));
+			json_encode($oRestResultWithObject)
+		);
 
 		static::assertStringNotContainsString(
 			self::SIMPLE_PASSWORD,
-			json_encode($oRestResultWithObject));
+			json_encode($oRestResultWithObject)
+		);
 	}
 
 	/**
@@ -92,7 +103,7 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
 	public function testSanitizeAttributeOnObjectRelatedThroughNNRelation()
 	{
 		$oContactTest = $this->createObject('ContactTest', [
-			'password' => self::SIMPLE_PASSWORD
+			'password' => self::SIMPLE_PASSWORD,
 		]);
 
 		$oTestServer = $this->createObject('TestServer', [
@@ -102,25 +113,30 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
 		// create lnkContactTestToServer
 		$this->createObject('lnkContactTestToServer', [
 			'contact_test_id' => $oContactTest->GetKey(),
-			'test_server_id'  => $oTestServer->GetKey()
+			'test_server_id'  => $oTestServer->GetKey(),
 		]);
 
 		$oTestServer->Reload();
 
 		$oRestResultWithObject = new RestResultWithObjects();
-		$oRestResultWithObject->AddObject(0, 'ok', $oTestServer,
-			['TestServer' => ['contact_list']]);
+		$oRestResultWithObject->AddObject(
+			0,
+			'ok',
+			$oTestServer,
+			['TestServer' => ['contact_list']]
+		);
 
 		$oRestResultWithObject->SanitizeContent();
 		static::assertStringContainsString(
 			'*****',
-			json_encode($oRestResultWithObject));
+			json_encode($oRestResultWithObject)
+		);
 
 		static::assertStringNotContainsString(
 			self::SIMPLE_PASSWORD,
-			json_encode($oRestResultWithObject));
+			json_encode($oRestResultWithObject)
+		);
 	}
-
 
 	/**
 	 * @throws CoreException
@@ -149,11 +165,13 @@ class RestServicesSanitizeOutputTest extends ItopCustomDatamodelTestCase
 
 		static::assertStringContainsString(
 			'*****',
-			json_encode($oRestResultWithObject));
+			json_encode($oRestResultWithObject)
+		);
 
 		static::assertStringNotContainsString(
 			self::SIMPLE_PASSWORD,
-			json_encode($oRestResultWithObject));
+			json_encode($oRestResultWithObject)
+		);
 
 	}
 

@@ -1,9 +1,9 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 define('stSTARTING', 1); //grey zone: the type is undetermined
 define('stRAW', 2); //building a non-qualified string
@@ -18,7 +18,6 @@ define('evOTHERCHAR', 4);
 define('evEND', 5);
 
 define('NULL_VALUE', '<NULL>');
-
 
 /**
  * CSVParser
@@ -41,9 +40,9 @@ class CSVParser
 	}
 
 	protected $m_sCurrCell = '';
-	protected $m_aCurrRow = array();
+	protected $m_aCurrRow = [];
 	protected $m_iToSkip = 0;
-	protected $m_aDataSet = array();
+	protected $m_aDataSet = [];
 
 	protected function __AddChar($c)
 	{
@@ -55,27 +54,20 @@ class CSVParser
 	}
 	protected function __AddCell($c = null, $aFieldMap = null, $bTrimSpaces = false)
 	{
-		if ($bTrimSpaces)
-		{
+		if ($bTrimSpaces) {
 			$sCell = trim($this->m_sCurrCell);
-		}
-		else
-		{
+		} else {
 			$sCell = $this->m_sCurrCell;
 		}
-		if ($sCell == NULL_VALUE)
-		{
+		if ($sCell == NULL_VALUE) {
 			$sCell = null;
 		}
 
-		if (!is_null($aFieldMap))
-		{
+		if (!is_null($aFieldMap)) {
 			$iNextCol = count($this->m_aCurrRow);
 			$iNextName = $aFieldMap[$iNextCol];
 			$this->m_aCurrRow[$iNextName] = $sCell;
-		}
-		else
-		{
+		} else {
 			$this->m_aCurrRow[] = $sCell;
 		}
 		$this->m_sCurrCell = '';
@@ -84,33 +76,24 @@ class CSVParser
 	{
 		$this->__AddCell($c, $aFieldMap, $bTrimSpaces);
 
-		if ($this->m_iToSkip > 0)
-		{
+		if ($this->m_iToSkip > 0) {
 			$this->m_iToSkip--;
-		}
-		elseif (count($this->m_aCurrRow) > 1)
-		{
+		} elseif (count($this->m_aCurrRow) > 1) {
 			$this->m_aDataSet[] = $this->m_aCurrRow;
-		}
-		elseif (count($this->m_aCurrRow) == 1)
-		{
+		} elseif (count($this->m_aCurrRow) == 1) {
 			// Get the unique value
 			$aValues = array_values($this->m_aCurrRow);
-			$sValue = $aValues[0]; 
-			if (strlen($sValue) > 0)
-			{
+			$sValue = $aValues[0];
+			if (strlen($sValue) > 0) {
 				$this->m_aDataSet[] = $this->m_aCurrRow;
 			}
-		}
-		else
-		{
+		} else {
 			// blank line, skip silently
 		}
-		$this->m_aCurrRow = array();
-		
+		$this->m_aCurrRow = [];
+
 		// More time for the next row
-		if ($this->m_iTimeLimitPerRow !== null)
-		{
+		if ($this->m_iTimeLimitPerRow !== null) {
 			set_time_limit(intval($this->m_iTimeLimitPerRow));
 		}
 	}
@@ -124,87 +107,71 @@ class CSVParser
 		$this->__AddRow($c, $aFieldMap, true);
 	}
 
-	function ToArray($iToSkip = 1, $aFieldMap = null, $iMax = 0)
+	public function ToArray($iToSkip = 1, $aFieldMap = null, $iMax = 0)
 	{
-		$aTransitions = array();
+		$aTransitions = [];
 
-		$aTransitions[stSTARTING][evBLANK] = array('', stSTARTING);
-		$aTransitions[stSTARTING][evSEPARATOR] = array('__AddCell', stSTARTING);
-		$aTransitions[stSTARTING][evNEWLINE] = array('__AddRow', stSTARTING);
-		$aTransitions[stSTARTING][evTEXTQUAL] = array('', stQUALIFIED);
-		$aTransitions[stSTARTING][evOTHERCHAR] = array('__AddChar', stRAW);
-		$aTransitions[stSTARTING][evEND] = array('__AddRow', stSTARTING);
+		$aTransitions[stSTARTING][evBLANK] = ['', stSTARTING];
+		$aTransitions[stSTARTING][evSEPARATOR] = ['__AddCell', stSTARTING];
+		$aTransitions[stSTARTING][evNEWLINE] = ['__AddRow', stSTARTING];
+		$aTransitions[stSTARTING][evTEXTQUAL] = ['', stQUALIFIED];
+		$aTransitions[stSTARTING][evOTHERCHAR] = ['__AddChar', stRAW];
+		$aTransitions[stSTARTING][evEND] = ['__AddRow', stSTARTING];
 
-		$aTransitions[stRAW][evBLANK] = array('__AddChar', stRAW);
-		$aTransitions[stRAW][evSEPARATOR] = array('__AddCellTrimmed', stSTARTING);
-		$aTransitions[stRAW][evNEWLINE] = array('__AddRowTrimmed', stSTARTING);
-		$aTransitions[stRAW][evTEXTQUAL] = array('__AddChar', stRAW);
-		$aTransitions[stRAW][evOTHERCHAR] = array('__AddChar', stRAW);
-		$aTransitions[stRAW][evEND] = array('__AddRowTrimmed', stSTARTING);
+		$aTransitions[stRAW][evBLANK] = ['__AddChar', stRAW];
+		$aTransitions[stRAW][evSEPARATOR] = ['__AddCellTrimmed', stSTARTING];
+		$aTransitions[stRAW][evNEWLINE] = ['__AddRowTrimmed', stSTARTING];
+		$aTransitions[stRAW][evTEXTQUAL] = ['__AddChar', stRAW];
+		$aTransitions[stRAW][evOTHERCHAR] = ['__AddChar', stRAW];
+		$aTransitions[stRAW][evEND] = ['__AddRowTrimmed', stSTARTING];
 
-		$aTransitions[stQUALIFIED][evBLANK] = array('__AddChar', stQUALIFIED);
-		$aTransitions[stQUALIFIED][evSEPARATOR] = array('__AddChar', stQUALIFIED);
-		$aTransitions[stQUALIFIED][evNEWLINE] = array('__AddChar', stQUALIFIED);
-		$aTransitions[stQUALIFIED][evTEXTQUAL] = array('', stESCAPED);
-		$aTransitions[stQUALIFIED][evOTHERCHAR] = array('__AddChar', stQUALIFIED);
-		$aTransitions[stQUALIFIED][evEND] = array('__AddRow', stSTARTING);
+		$aTransitions[stQUALIFIED][evBLANK] = ['__AddChar', stQUALIFIED];
+		$aTransitions[stQUALIFIED][evSEPARATOR] = ['__AddChar', stQUALIFIED];
+		$aTransitions[stQUALIFIED][evNEWLINE] = ['__AddChar', stQUALIFIED];
+		$aTransitions[stQUALIFIED][evTEXTQUAL] = ['', stESCAPED];
+		$aTransitions[stQUALIFIED][evOTHERCHAR] = ['__AddChar', stQUALIFIED];
+		$aTransitions[stQUALIFIED][evEND] = ['__AddRow', stSTARTING];
 
-		$aTransitions[stESCAPED][evBLANK] = array('', stESCAPED);
-		$aTransitions[stESCAPED][evSEPARATOR] = array('__AddCell', stSTARTING);
-		$aTransitions[stESCAPED][evNEWLINE] = array('__AddRow', stSTARTING);
-		$aTransitions[stESCAPED][evTEXTQUAL] = array('__AddChar', stQUALIFIED);
-		$aTransitions[stESCAPED][evOTHERCHAR] = array('__AddChar', stSTARTING);
-		$aTransitions[stESCAPED][evEND] = array('__AddRow', stSTARTING);
+		$aTransitions[stESCAPED][evBLANK] = ['', stESCAPED];
+		$aTransitions[stESCAPED][evSEPARATOR] = ['__AddCell', stSTARTING];
+		$aTransitions[stESCAPED][evNEWLINE] = ['__AddRow', stSTARTING];
+		$aTransitions[stESCAPED][evTEXTQUAL] = ['__AddChar', stQUALIFIED];
+		$aTransitions[stESCAPED][evOTHERCHAR] = ['__AddChar', stSTARTING];
+		$aTransitions[stESCAPED][evEND] = ['__AddRow', stSTARTING];
 
 		// Reset parser variables
 		$this->m_sCurrCell = '';
-		$this->m_aCurrRow = array();
+		$this->m_aCurrRow = [];
 		$this->m_iToSkip = $iToSkip;
-		$this->m_aDataSet = array();
+		$this->m_aDataSet = [];
 
 		$iDataLength = strlen($this->m_sCSVData);
 
 		$iState = stSTARTING;
 		$iTimeLimit = null;
-		if ($this->m_iTimeLimitPerRow !== null)
-		{
+		if ($this->m_iTimeLimitPerRow !== null) {
 			// Give some time for the first row
 			$iTimeLimit = ini_get('max_execution_time');
 			set_time_limit(intval($this->m_iTimeLimitPerRow));
 		}
-		for($i = 0; $i <= $iDataLength ; $i++)
-		{
-			if ($i == $iDataLength)
-			{
+		for ($i = 0; $i <= $iDataLength ; $i++) {
+			if ($i == $iDataLength) {
 				$c = null;
 				$iEvent = evEND;
-			}
-			else
-			{
+			} else {
 				$c = $this->m_sCSVData[$i];
 
-				if ($c == $this->m_sSep)
-				{
+				if ($c == $this->m_sSep) {
 					$iEvent = evSEPARATOR;
-				}
-				elseif ($c == ' ')
-				{
+				} elseif ($c == ' ') {
 					$iEvent = evBLANK;
-				}
-				elseif ($c == "\t")
-				{
+				} elseif ($c == "\t") {
 					$iEvent = evBLANK;
-				}
-				elseif ($c == "\n")
-				{
+				} elseif ($c == "\n") {
 					$iEvent = evNEWLINE;
-				}
-				elseif ($c == $this->m_sTextQualifier)
-				{
+				} elseif ($c == $this->m_sTextQualifier) {
 					$iEvent = evTEXTQUAL;
-				}
-				else
-				{
+				} else {
 					$iEvent = evOTHERCHAR;
 				}
 			}
@@ -212,24 +179,21 @@ class CSVParser
 			$sAction = $aTransitions[$iState][$iEvent][0];
 			$iState = $aTransitions[$iState][$iEvent][1];
 
-			if (!empty($sAction))
-			{
-				$aCallSpec = array($this, $sAction);
-				if (is_callable($aCallSpec))
-				{
+			if (!empty($sAction)) {
+				$aCallSpec = [$this, $sAction];
+				if (is_callable($aCallSpec)) {
 					call_user_func($aCallSpec, $c, $aFieldMap);
-				}
-				else
-				{
+				} else {
 					throw new CSVParserException("CSVParser: unknown verb '$sAction'");
 				}
 			}
 
 			$iLineCount = count($this->m_aDataSet);
-			if (($iMax > 0) && ($iLineCount >= $iMax)) break;
+			if (($iMax > 0) && ($iLineCount >= $iMax)) {
+				break;
+			}
 		}
-		if ($iTimeLimit !== null)
-		{
+		if ($iTimeLimit !== null) {
 			// Restore the previous time limit
 			set_time_limit(intval($iTimeLimit));
 		}
@@ -242,6 +206,3 @@ class CSVParser
 		return $aHeader[0];
 	}
 }
-
-
-?>

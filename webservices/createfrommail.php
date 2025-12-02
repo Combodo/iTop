@@ -41,12 +41,11 @@ require_once(APPROOT.'/application/startup.inc.php');
 
 function GetSender($aHeaders)
 {
-	$aResult = array('name' => '', 'email' => '');
+	$aResult = ['name' => '', 'email' => ''];
 	$aResult['name'] = $aHeaders['From'];
-	$aMatches = array();
-	if (preg_match('/\(([0-9a-zA-Z\._]+)@(.+)@(.+)\)/U', array_pop($aHeaders['Received']), $aMatches))
-	{
-		$aResult['email'] = $aMatches[1].'@'.$aMatches[2];		
+	$aMatches = [];
+	if (preg_match('/\(([0-9a-zA-Z\._]+)@(.+)@(.+)\)/U', array_pop($aHeaders['Received']), $aMatches)) {
+		$aResult['email'] = $aMatches[1].'@'.$aMatches[2];
 	}
 	return $aResult;
 }
@@ -61,16 +60,14 @@ function GetSender($aHeaders)
 function CreateTicket($sSenderEmail, $sSubject, $sBody)
 {
 	$oTicket = null;
-	try
-	{
+	try {
 		$oContactSearch = new DBObjectSearch('Contact'); // Can be either a Person or a Team, but must be a valid Contact
 		$oContactSearch->AddCondition('email', $sSenderEmail, '=');
 		$oSet = new DBObjectSet($oContactSearch);
-		if ($oSet->Count() == 1)
-		{
+		if ($oSet->Count() == 1) {
 			$oContact = $oSet->Fetch();
 			$oOrganization = MetaModel::GetObject('Organization', $oContact->Get('org_id'));
-			$oTicket = new UserRequest;
+			$oTicket = new UserRequest();
 			$oTicket->Set('title', $sSubject);
 			$oTicket->Set('description', $sBody);
 			$oTicket->Set('org_id', $oOrganization->GetKey());
@@ -86,14 +83,10 @@ function CreateTicket($sSenderEmail, $sSubject, $sBody)
 			$sUserString = $oContact->GetName().', submitted by email';
 			CMDBObject::SetTrackInfo($sUserString);
 			$oTicket->DBInsert();
-		}
-		else
-		{
+		} else {
 			echo "No contact found in iTop having the email: $sSenderEmail, email message ignored.\n";
 		}
-	}
-	catch(Exception $e)
-	{
+	} catch (Exception $e) {
 		echo "Error: exception ".$e->getMessage();
 		$oTicket = null;
 	}
@@ -111,15 +104,14 @@ $oPop3->login(MAILBOX_ACCOUNT, MAILBOX_PASSWORD);
 // Note: it is expected that the sender of the email exists a valid contact as a 'Contact'
 // in iTop (identified by her/his email address), otherwise the ticket creation will fail
 $iNbMessages = $oPop3->numMsg();
-for($index = 1; $index <= $iNbMessages; $index++)
-{
+for ($index = 1; $index <= $iNbMessages; $index++) {
 	$params['include_bodies'] = true;
 	$params['decode_bodies'] = true;
 	$params['decode_headers'] = true;
 	$params['crlf']		= "\r\n";
 	$aHeaders = $oPop3->getParsedHeaders($index);
 	$aSender = GetSender($aHeaders);
-	$oDecoder = new Mail_mimeDecode( $oPop3->getRawHeaders($index).$params['crlf'].$oPop3->getBody($index) );  
+	$oDecoder = new Mail_mimeDecode($oPop3->getRawHeaders($index).$params['crlf'].$oPop3->getBody($index));
 	$oStructure = $oDecoder->decode($params);
 	$sSubject = $aHeaders['Subject'];
 	// Search for the text/plain body part
@@ -129,19 +121,14 @@ for($index = 1; $index <= $iNbMessages; $index++)
 	//echo "<pre>\n";
 	//print_r($oStructure);
 	//echo "</pre>\n";
-	if (!isset($oStructure->parts) || count($oStructure->parts) == 0)
-	{
+	if (!isset($oStructure->parts) || count($oStructure->parts) == 0) {
 		$sTextBody = $oStructure->body;
-	}
-	else
-	{
+	} else {
 		// Find the first "part" of the body which is in text/plain
-		while( ($iPartIndex < count($oStructure->parts)) && (!$bFound) )
-		{
+		while (($iPartIndex < count($oStructure->parts)) && (!$bFound)) {
 			//echo "<p>Reading part $iPartIndex</p>\n";
-			if ( ($oStructure->parts[$iPartIndex]->ctype_primary == 'text') &&
-				 ($oStructure->parts[$iPartIndex]->ctype_secondary == 'plain') )
-			{
+			if (($oStructure->parts[$iPartIndex]->ctype_primary == 'text') &&
+				 ($oStructure->parts[$iPartIndex]->ctype_secondary == 'plain')) {
 				$sTextBody = $oStructure->parts[$iPartIndex]->body;
 				$bFound = true;
 				//echo "<p>Plain text found ! ($sTextBody)</p>\n";
@@ -149,14 +136,11 @@ for($index = 1; $index <= $iNbMessages; $index++)
 			$iPartIndex++;
 		}
 		// Try again but this time look for an HTML part
-		if (!$bFound)
-		{
-			while( ($iPartIndex < count($oStructure->parts)) && (!$bFound) )
-			{
+		if (!$bFound) {
+			while (($iPartIndex < count($oStructure->parts)) && (!$bFound)) {
 				//echo "<p>Reading part $iPartIndex</p>\n";
-				if ( ($oStructure->parts[$iPartIndex]->ctype_primary == 'text') &&
-					 ($oStructure->parts[$iPartIndex]->ctype_secondary == 'html') )
-				{
+				if (($oStructure->parts[$iPartIndex]->ctype_primary == 'text') &&
+					 ($oStructure->parts[$iPartIndex]->ctype_secondary == 'html')) {
 					$sTextBody = $oStructure->parts[$iPartIndex]->body;
 					$bFound = true;
 					//echo "<p>HTML text found ! (".htmlentities($sTextBody, ENT_QUOTES, 'UTF-8').")</p>\n";
@@ -171,11 +155,10 @@ for($index = 1; $index <= $iNbMessages; $index++)
 	// name  => 'john foo <john.foo@combodo.com>
 
 	$oTicket = CreateTicket($aSender['email'], $sSubject, $sTextBody);
-	if ($oTicket != null)
-	{
+	if ($oTicket != null) {
 		// Ticket created, delete the email
 		$oPop3->deleteMsg($index);
-		echo "Ticket: ".$oTicket->GetName()." created.\n";	
+		echo "Ticket: ".$oTicket->GetName()." created.\n";
 	}
 }
 $oPop3->disconnect();

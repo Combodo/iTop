@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Page:DefaultTitle' => 'Uživatelský portál %1$s',
 	'Page:PleaseWait' => 'Počkejte prosím',
 	'Page:Home' => 'Domů',
@@ -53,19 +54,19 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Otevřít</a> / <a href="%4$s" class="file_download_link">Stáhnout</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'cs', //work with moment.js locales
-));
+]);
 
 // Object form
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Zavřít tento vstup',
 	'Portal:Form:Close:Warning' => 'Opravdu chcete opustit tento formulář? Data vložená do formuláře budou ztracena ',
 	'Portal:Error:ObjectCannotBeCreated' => 'Chyba: objekt nelze vytvořit. Před opětovným odesláním tohoto formuláře zkontrolujte související objekty a přílohy.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Chyba: objekt nelze vytvořit. Před opětovným odesláním tohoto formuláře zkontrolujte související objekty a přílohy.',
-    'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
-));
+	'Portal:Error:CheckToWriteFailed' => 'Error during validation of field \'%1$s\': %2$s~~',
+]);
 
 // UserProfile brick
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Brick:Portal:UserProfile:Name' => 'Uživatelský profil',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Můj profil',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Odhlásit',
@@ -76,15 +77,15 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Nepodařilo se změnit heslo, kontaktujte prosím administrátora',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Osobní informace',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Foto',
-));
+]);
 
 // AggregatePageBrick
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Nástěnka',
-));
+]);
 
 // BrowseBrick brick
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Brick:Portal:Browse:Name' => 'Procházet položky',
 	'Brick:Portal:Browse:Mode:List' => 'Seznam',
 	'Brick:Portal:Browse:Mode:Tree' => 'Strom',
@@ -97,10 +98,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Rozbalit vše',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Sbalit vše',
 	'Brick:Portal:Browse:Filter:NoData' => 'Žádná položka',
-));
+]);
 
 // ManageBrick brick
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Brick:Portal:Manage:Name' => 'Spravovat položky',
 	'Brick:Portal:Manage:Table:NoData' => 'Žádná položka',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Akce',
@@ -115,10 +116,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Manage:fct:avg' => 'Průměr',
 	'Brick:Portal:Manage:fct:min' => 'Min',
 	'Brick:Portal:Manage:fct:max' => 'Max',
-));
+]);
 
 // ObjectBrick brick
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Brick:Portal:Object:Name' => 'Objekt',
 	'Brick:Portal:Object:Form:Create:Title' => 'Nový %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Aktualizace %2$s (%1$s)',
@@ -130,18 +131,18 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Vybrat %1$s (%2$s)',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Zkopíruj odkaz na objekt',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Zkopírováno'
-));
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Zkopírováno',
+]);
 
 // CreateBrick brick
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Brick:Portal:Create:Name' => 'Rychlé vytvoření',
 	'Brick:Portal:Create:ChooseType' => 'Vyberte typ',
-));
+]);
 
 // Filter brick
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Brick:Portal:Filter:Name' => 'Předfiltrování dlaždice',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'např. připojení k wifi',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Vyhledat',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -28,7 +29,7 @@
  */
 function apc_cache_info($cache_type = '', $limited = false)
 {
-	$aInfo = array();
+	$aInfo = [];
 	$sRootCacheDir = apcFile::GetCacheFileName();
 	$aInfo['cache_list'] = apcFile::GetCacheEntries($sRootCacheDir);
 	return $aInfo;
@@ -40,13 +41,11 @@ function apc_cache_info($cache_type = '', $limited = false)
  * @param int $ttl
  * @return array|bool
  */
-function apc_store($key, $var = NULL, $ttl = 0)
+function apc_store($key, $var = null, $ttl = 0)
 {
-	if (is_array($key))
-	{
-		$aResult = array();
-		foreach($key as $sKey => $value)
-		{
+	if (is_array($key)) {
+		$aResult = [];
+		foreach ($key as $sKey => $value) {
 			$aResult[] = apcFile::StoreOneFile($sKey, $value, $ttl);
 		}
 		return $aResult;
@@ -89,8 +88,7 @@ function apc_clear_cache($cache_type = '')
  */
 function apc_delete($key)
 {
-	if (empty($key))
-	{
+	if (empty($key)) {
 		return false;
 	}
 	$bRet1 = apcFile::DeleteEntry(apcFile::GetCacheFileName($key));
@@ -126,17 +124,17 @@ function apc_exists($keys)
 class apcFile
 {
 	// Check only once per request
-	static public $aFilesByTime = null;
-	static public $iFileCount = 0;
+	public static $aFilesByTime = null;
+	public static $iFileCount = 0;
 
 	/** Get the file name corresponding to the cache entry.
 	 * If an empty key is provided, the root of the cache is returned.
 	 * @param $sKey
 	 * @return string
 	 */
-	static public function GetCacheFileName($sKey = '')
+	public static function GetCacheFileName($sKey = '')
 	{
-		$sPath = str_replace(array(' ', '/', '\\', '.'), '-', $sKey ?? '');
+		$sPath = str_replace([' ', '/', '\\', '.'], '-', $sKey ?? '');
 		return utils::GetCachePath().'apc-emul/'.$sPath;
 	}
 
@@ -144,26 +142,21 @@ class apcFile
 	 * @param $sEntry string starting folder.
 	 * @return array list of entries stored into array of key 'info'
 	 */
-	static public function GetCacheEntries($sEntry)
+	public static function GetCacheEntries($sEntry)
 	{
-		$aResult = array();
-		if (is_dir($sEntry))
-		{
-			$aFiles = array_diff(scandir($sEntry), array('.', '..'));
-			foreach($aFiles as $sFile)
-			{
+		$aResult = [];
+		if (is_dir($sEntry)) {
+			$aFiles = array_diff(scandir($sEntry), ['.', '..']);
+			foreach ($aFiles as $sFile) {
 				$sSubFile = $sEntry.'/'.$sFile;
 				$aResult = array_merge($aResult, self::GetCacheEntries($sSubFile));
 			}
-		}
-		else
-		{
+		} else {
 			$sKey = basename($sEntry);
-			if (strpos($sKey, '-') === 0)
-			{
+			if (strpos($sKey, '-') === 0) {
 				$sKey = substr($sKey, 1);
 			}
-			$aResult[] = array('info' => $sKey);
+			$aResult[] = ['info' => $sKey];
 		}
 		return $aResult;
 	}
@@ -172,35 +165,25 @@ class apcFile
 	 * @param $sCache
 	 * @return bool true if the entry was deleted false if error occurs (like entry did not exist).
 	 */
-	static public function DeleteEntry($sCache)
+	public static function DeleteEntry($sCache)
 	{
-		if (is_dir($sCache))
-		{
-			$aFiles = array_diff(scandir($sCache), array('.', '..'));
-			foreach($aFiles as $sFile)
-			{
+		if (is_dir($sCache)) {
+			$aFiles = array_diff(scandir($sCache), ['.', '..']);
+			foreach ($aFiles as $sFile) {
 				$sSubFile = $sCache.'/'.$sFile;
-				if (!self::DeleteEntry($sSubFile))
-				{
+				if (!self::DeleteEntry($sSubFile)) {
 					return false;
 				}
 			}
-			if (!@rmdir($sCache))
-			{
+			if (!@rmdir($sCache)) {
 				return false;
 			}
-		}
-		else
-		{
-			if (is_file($sCache))
-			{
-				if (!@unlink($sCache))
-				{
+		} else {
+			if (is_file($sCache)) {
+				if (!@unlink($sCache)) {
 					return false;
 				}
-			}
-			else
-			{
+			} else {
 				return false;
 			}
 		}
@@ -215,23 +198,22 @@ class apcFile
 	 * @return bool
 	 * @since 3.2.0 N°7068
 	 */
-	static public function ExistsOneFile($sKey) {
-		return is_file(self::GetCacheFileName('-' . $sKey)) || is_file(self::GetCacheFileName($sKey));
+	public static function ExistsOneFile($sKey)
+	{
+		return is_file(self::GetCacheFileName('-'.$sKey)) || is_file(self::GetCacheFileName($sKey));
 	}
 
 	/** Get one cache entry content.
 	 * @param $sKey
 	 * @return bool|mixed
 	 */
-	static public function FetchOneFile($sKey)
+	public static function FetchOneFile($sKey)
 	{
 		// Try the 'TTLed' version
 		$sValue = self::ReadCacheLocked(self::GetCacheFileName('-'.$sKey));
-		if ($sValue === false)
-		{
+		if ($sValue === false) {
 			$sValue = self::ReadCacheLocked(self::GetCacheFileName($sKey));
-			if ($sValue === false)
-			{
+			if ($sValue === false) {
 				return false;
 			}
 		}
@@ -245,7 +227,7 @@ class apcFile
 	 * @param int $iTTL time to live
 	 * @return bool
 	 */
-	static public function StoreOneFile($sKey, $value, $iTTL)
+	public static function StoreOneFile($sKey, $value, $iTTL)
 	{
 		if (empty($sKey)) {
 			return false;
@@ -279,40 +261,31 @@ class apcFile
 	 * remove older files if the mamximum is reached.
 	 * @param $sNewFilename
 	 */
-	static protected function AddFile($sNewFilename)
+	protected static function AddFile($sNewFilename)
 	{
-		if (strpos(basename($sNewFilename), '-') !== 0)
-		{
+		if (strpos(basename($sNewFilename), '-') !== 0) {
 			return;
 		}
 
 		$iMaxFiles = MetaModel::GetConfig()->Get('apc_cache_emulation.max_entries');
-		if ($iMaxFiles == 0)
-		{
+		if ($iMaxFiles == 0) {
 			return;
 		}
-		if (!self::$aFilesByTime)
-		{
+		if (!self::$aFilesByTime) {
 			self::ListFilesByTime();
 			self::$iFileCount = count(self::$aFilesByTime);
-			if ($iMaxFiles !== 0)
-			{
+			if ($iMaxFiles !== 0) {
 				asort(self::$aFilesByTime);
 			}
-		}
-		else
-		{
+		} else {
 			self::$aFilesByTime[$sNewFilename] = time();
 			self::$iFileCount++;
 		}
-		if (self::$iFileCount > $iMaxFiles)
-		{
+		if (self::$iFileCount > $iMaxFiles) {
 			$iFileNbToRemove = self::$iFileCount - $iMaxFiles;
-			foreach(self::$aFilesByTime as $sFileToRemove => $iTime)
-			{
+			foreach (self::$aFilesByTime as $sFileToRemove => $iTime) {
 				@unlink($sFileToRemove);
-				if (--$iFileNbToRemove === 0)
-				{
+				if (--$iFileNbToRemove === 0) {
 					break;
 				}
 			}
@@ -324,25 +297,19 @@ class apcFile
 	/** Get the list of files with their associated access time
 	 * @param string $sCheck Directory to scan
 	 */
-	static protected function ListFilesByTime($sCheck = null)
+	protected static function ListFilesByTime($sCheck = null)
 	{
-		if (empty($sCheck))
-		{
+		if (empty($sCheck)) {
 			$sCheck = self::GetCacheFileName();
 		}
 		// Garbage collection
-		$aFiles = array_diff(@scandir($sCheck), array('.', '..'));
-		foreach($aFiles as $sFile)
-		{
+		$aFiles = array_diff(@scandir($sCheck), ['.', '..']);
+		foreach ($aFiles as $sFile) {
 			$sSubFile = $sCheck.'/'.$sFile;
-			if (is_dir($sSubFile))
-			{
+			if (is_dir($sSubFile)) {
 				self::ListFilesByTime($sSubFile);
-			}
-			else
-			{
-				if (strpos(basename($sSubFile), '-') === 0)
-				{
+			} else {
+				if (strpos(basename($sSubFile), '-') === 0) {
 					self::$aFilesByTime[$sSubFile] = @fileatime($sSubFile);
 				}
 			}
@@ -353,7 +320,7 @@ class apcFile
 	 * @param $sFilename
 	 * @return bool|string the content of the cache entry or false if error
 	 */
-	static protected function ReadCacheLocked($sFilename)
+	protected static function ReadCacheLocked($sFilename)
 	{
 		$sContent = false;
 		$file = @fopen($sFilename, 'r');
@@ -367,7 +334,7 @@ class apcFile
 		return $sContent;
 	}
 
-	static protected function ResetFileCount()
+	protected static function ResetFileCount()
 	{
 		self::$aFilesByTime = null;
 		self::$iFileCount = 0;

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:RequestManagement' => 'Pomoc techniczna',
 	'Menu:RequestManagement+' => 'Pomoc techniczna',
 	'Menu:RequestManagementProvider' => 'Dostawca pomocy technicznej',
@@ -45,7 +46,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Menu:UserRequest:MyWorkOrders+' => 'Wszystkie zlecenia pracy przydzielone do mnie',
 	'Class:Problem:KnownProblemList' => 'Znane problemy',
 	'Tickets:Related:OpenIncidents' => 'Otwarte incydenty',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -61,7 +62,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 // Class: UserRequest
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:UserRequest' => 'Zgłoszenie użytkownika',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -255,10 +256,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Do zatwierdzenia',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Nie można przypisać zgłoszenia nadrzędnego do samego siebie',
-));
+]);
 
-
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Portal:TitleDetailsFor_Request' => 'Szczegóły zgłoszenia',
 	'Portal:ButtonUpdate' => 'Aktualizuj',
 	'Portal:ButtonClose' => 'Zamknij',
@@ -283,11 +283,10 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Wybierz swój ulubiony język',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Rozpatrz zgłoszenia podrzędne',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Połącz rozwiązanie kaskadowo do żądań podrzędnych (ev_autoresolve) i dopasuj następujące cechy zgłoszenia: usługa, zespół, agent, informacje o rozwiązaniu',
-));
+]);
 
-
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Organization:Overview:UserRequests' => 'User Requests from this organization',
 	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization',
 	'Organization:Overview:Tickets' => 'Tickets for this organization',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -20,7 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ChangeManagement' => '变更管理',
 	'Menu:Change:Overview' => '概况',
 	'Menu:Change:Overview+' => '',
@@ -44,7 +45,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => '最近一周的变更 (按状态)',
 	'Tickets:Related:OpenChanges' => '打开的变更',
 	'Tickets:Related:RecentChanges' => '最近的变更 (72小时)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -56,12 +57,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Change' => '变更',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => '状态',
@@ -136,4 +136,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => '是',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
-));
+]);

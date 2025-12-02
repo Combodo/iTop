@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,7 +22,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 // Database inconsistencies
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => '数据库工具',
 	'DBTools:Class' => '类型',
@@ -56,17 +57,17 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBAnalyzer-Fetch-Count-Error' => '读取计数出错于 `%1$s`, %2$d个记录已读取 / %3$d已',
 	'DBAnalyzer-Integrity-FinalClass' => '字段 `%2$s`.`%1$s` 必须是相同的值, 而不是 `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => '字段 `%2$s`.`%1$s` 必须包含一个有效的类型',
-));
+]);
 
 // Database Info
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'DBTools:DatabaseInfo' => '数据库信息',
 	'DBTools:Base' => '数据库',
 	'DBTools:Size' => '大小',
-));
+]);
 
 // Lost attachments
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'DBTools:LostAttachments' => '附件缺失',
 	'DBTools:LostAttachments:Disclaimer' => '可以在此搜索数据库中丢失或错放的附件. 这不是数据恢复工具, 其无法恢复已删除的数据.',
 	'DBTools:LostAttachments:Button:Analyze' => '分析',
@@ -83,5 +84,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBTools:LostAttachments:Step:RestoreResults' => '还原结果:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d的附件被还原.',
 	'DBTools:LostAttachments:StoredAsInlineImage' => '存储为内嵌图像',
-	'DBTools:LostAttachments:History' => '附件 "%1$s" 已使用数据库工具还原'
-));
+	'DBTools:LostAttachments:History' => '附件 "%1$s" 已使用数据库工具还原',
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -42,12 +43,10 @@ ini_set('display_errors', true);
 ini_set('display_startup_errors', true);
 date_default_timezone_set('Europe/Paris'); // Just to avoid a warning if the timezone is not set in php.ini
 
-
 /////////////////////////////////////////////////////////////////////
 // Fake functions to protect the first run of the installer
 // in case the PHP JSON module is not installed...
-if (!function_exists('json_encode'))
-{
+if (!function_exists('json_encode')) {
 	function json_encode($value, $options = null)
 	{
 		return '[]';
@@ -56,7 +55,7 @@ if (!function_exists('json_encode'))
 if (!function_exists('json_decode')) {
 	function json_decode($json, $assoc = null)
 	{
-		return array();
+		return [];
 	}
 }
 /////////////////////////////////////////////////////////////////////

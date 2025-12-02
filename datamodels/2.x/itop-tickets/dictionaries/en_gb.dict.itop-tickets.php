@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -31,12 +32,11 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Ticket
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Ref',
@@ -88,14 +88,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Closed',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
 	'Ticket:ImpactAnalysis' => 'Impact Analysis',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkContactToTicket' => 'Link Contact / Ticket',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
@@ -115,13 +114,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Added manually',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Computed',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Do not notify',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:WorkOrder' => 'Work Order',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => 'Name',
@@ -154,11 +153,10 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Close',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Ticket:baseinfo' => 'General Information',
 	'Ticket:date' => 'Dates',
 	'Ticket:contact' => 'Contacts',
@@ -248,5 +246,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR',
-));
-
+]);

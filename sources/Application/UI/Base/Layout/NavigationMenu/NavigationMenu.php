@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -89,7 +90,6 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	/** @var bool */
 	protected $bShowMenusCount;
 
-
 	/**
 	 * NavigationMenu constructor.
 	 *
@@ -105,7 +105,10 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	 * @throws \Exception
 	 */
 	public function __construct(
-		ApplicationContext $oAppContext, PopoverMenu $oUserMenu, NewsroomMenu $oNewsroomMenu = null, ?string $sId = null
+		ApplicationContext $oAppContext,
+		PopoverMenu $oUserMenu,
+		NewsroomMenu $oNewsroomMenu = null,
+		?string $sId = null
 	) {
 		parent::__construct($sId);
 
@@ -116,7 +119,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		$this->sAppFullIconUrl = Branding::GetFullMainLogoAbsoluteUrl();
 		$this->sAppIconLink = $oConfig->Get('app_icon_url');
 		$this->SetShowMenusCount($oConfig->Get('navigation_menu.show_menus_count'));
-		$this->aSiloSelection = array();
+		$this->aSiloSelection = [];
 		$this->aMenuGroups = ApplicationMenu::GetMenuGroups($oAppContext->GetAsHash());
 		$this->oUserMenu = $oUserMenu;
 		$this->oNewsroomMenu = $oNewsroomMenu;
@@ -197,7 +200,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		$oAppContext = new ApplicationContext();
 		$sCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
 
-		if(!empty($sCurrentOrganization)) {
+		if (!empty($sCurrentOrganization)) {
 			return $sCurrentOrganization;
 		}
 		return '';
@@ -287,7 +290,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		$sPropCode = 'app_icon_url';
 
 		// Try if a custom URL was set in the configuration file
-		if(MetaModel::GetConfig()->IsCustomValue($sPropCode)) {
+		if (MetaModel::GetConfig()->IsCustomValue($sPropCode)) {
 			$this->sAppIconLink = MetaModel::GetConfig()->Get($sPropCode);
 		}
 		// Otherwise use the home page
@@ -300,7 +303,8 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	 * @return True if the silo selection is enabled, false otherwise
 	 * @since 3.1.0
 	 */
-	public function IsSiloSelectionEnabled() : bool {
+	public function IsSiloSelectionEnabled(): bool
+	{
 		return MetaModel::GetConfig()->Get('navigation_menu.show_organization_filter');
 	}
 
@@ -315,7 +319,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		$this->bHasSiloSelected = false;
 		$this->sSiloLabel = null;
 
-		if (! $this->IsSiloSelectionEnabled()){
+		if (! $this->IsSiloSelectionEnabled()) {
 			return;
 		}
 
@@ -323,8 +327,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 		// List of visible Organizations
 		$iCount = 0;
 		$oSet = null;
-		if (MetaModel::IsValidClass('Organization'))
-		{
+		if (MetaModel::IsValidClass('Organization')) {
 			// Display the list of *favorite* organizations... but keeping in mind what is the real number of organizations
 			$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
 			$oSearchFilter = new DBObjectSearch('Organization');
@@ -335,14 +338,12 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 			// Now get the list of Orgs to be displayed in the menu
 			$oSearchFilter = DBObjectSearch::FromOQL(ApplicationMenu::GetFavoriteSiloQuery());
 			$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
-			if (!empty($aFavoriteOrgs))
-			{
+			if (!empty($aFavoriteOrgs)) {
 				$oSearchFilter->AddCondition('id', $aFavoriteOrgs, 'IN');
 			}
 			$oSet = new CMDBObjectSet($oSearchFilter); // List of favorite orgs
 		}
-		switch ($iCount)
-		{
+		switch ($iCount) {
 			case 0:
 			case 1:
 				// No such dimension/silo or only one possible choice => nothing to select
@@ -352,7 +353,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 				$oAppContext = new ApplicationContext();
 				$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
 
-				if(!empty($iCurrentOrganization)) {
+				if (!empty($iCurrentOrganization)) {
 					$oCurrentOrganization = MetaModel::GetObject('Organization', $iCurrentOrganization, true, true);
 					$this->bHasSiloSelected = true;
 					$this->sSiloLabel = $oCurrentOrganization->GetRawName();
@@ -364,12 +365,22 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 
 				$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
 				$iMaxComboLength = MetaModel::GetConfig()->Get('max_combo_length');
-				$this->aSiloSelection['html'] .= $oWidget->DisplaySelect($oPage, $iMaxComboLength, false, Dict::S('UI:Layout:NavigationMenu:Silo:Label'), $oSet, $iCurrentOrganization, false, 'c[org_id]', '',
-					array(
+				$this->aSiloSelection['html'] .= $oWidget->DisplaySelect(
+					$oPage,
+					$iMaxComboLength,
+					false,
+					Dict::S('UI:Layout:NavigationMenu:Silo:Label'),
+					$oSet,
+					$iCurrentOrganization,
+					false,
+					'c[org_id]',
+					'',
+					[
 						'iFieldSize' => 20,
 						'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
 						'sDefaultValue' => Dict::S('UI:AllOrganizations'),
-					));
+					]
+				);
 				$this->aSiloSelection['html'] .= $oPage->GetHtml();
 				// Add other dimensions/context information to this form
 				$oAppContext->Reset('org_id'); // org_id is handled above and we want to be able to change it here !
@@ -378,7 +389,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 				$this->aSiloSelection['html'] .= '</form>';
 
 				$sAddClearButton = "";
-				if ($this->bHasSiloSelected ){
+				if ($this->bHasSiloSelected) {
 					$sAddClearButton = "$('#mini_clear_org_id').removeClass('ibo-is-hidden');";
 				}
 
@@ -415,21 +426,17 @@ JS;
 	{
 		$bIsExpanded = false;
 		// Check if menu should be opened only if we re not in demo mode
-		if (false === MetaModel::GetConfig()->Get('demo_mode'))
-		{
+		if (false === MetaModel::GetConfig()->Get('demo_mode')) {
 			// Force state if necessary...
-			if (utils::ReadParam('force_menu_pane', null) === 0)
-			{
+			if (utils::ReadParam('force_menu_pane', null) === 0) {
 				$bIsExpanded = false;
 			}
 			// ... otherwise look for the new user pref ...
-			elseif (appUserPreferences::GetPref('navigation_menu.expanded', null) !== null)
-			{
+			elseif (appUserPreferences::GetPref('navigation_menu.expanded', null) !== null) {
 				$bIsExpanded = appUserPreferences::GetPref('navigation_menu.expanded', null) === 'expanded';
 			}
 			// ... or fallback on the old one
-			elseif (appUserPreferences::GetPref('menu_pane', null) !== null)
-			{
+			elseif (appUserPreferences::GetPref('menu_pane', null) !== null) {
 				$bIsExpanded = appUserPreferences::GetPref('menu_pane', null) === 'opened';
 			}
 		}
@@ -469,7 +476,7 @@ JS;
 			'sOrganization' => UserRights::GetContactOrganizationFriendlyname(),
 			'sFirstname' => UserRights::GetContactFirstname(),
 			'sPictureUrl' => $sPictureUrl,
-			'sWelcomeMessage' => Dict::Format('UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text', UserRights::GetContactFirstname())
+			'sWelcomeMessage' => Dict::Format('UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text', UserRights::GetContactFirstname()),
 		];
 
 		// Logon message

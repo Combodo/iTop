@@ -14,7 +14,6 @@ use DBSearch;
  */
 class DBSearchIntersectTest extends ItopTestCase
 {
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -46,103 +45,100 @@ class DBSearchIntersectTest extends ItopTestCase
 
 	public function FilterProvider()
 	{
-		$aTests = array();
+		$aTests = [];
 
-		$aTests['Union filtered by parent class'] = array(
+		$aTests['Union filtered by parent class'] = [
 			'left' => "SELECT ApplicationSolution UNION SELECT BusinessProcess",
 			'right' => "SELECT FunctionalCI WHERE org_id = 3",
 			'alias' => "ApplicationSolution",
-			'result' => "SELECT `ApplicationSolution` FROM ApplicationSolution AS `ApplicationSolution` WHERE (`ApplicationSolution`.`org_id` = 3) UNION SELECT `BusinessProcess` FROM BusinessProcess AS `BusinessProcess` WHERE (`BusinessProcess`.`org_id` = 3)");
+			'result' => "SELECT `ApplicationSolution` FROM ApplicationSolution AS `ApplicationSolution` WHERE (`ApplicationSolution`.`org_id` = 3) UNION SELECT `BusinessProcess` FROM BusinessProcess AS `BusinessProcess` WHERE (`BusinessProcess`.`org_id` = 3)"];
 
-		$aTests['Test union #2902'] = array(
+		$aTests['Test union #2902'] = [
 			'left' => "SELECT `L-1` FROM ServiceFamily AS `L-1` WHERE 1",
 			'right' => "SELECT `sf` FROM ServiceFamily AS `sf` JOIN Service AS `s` ON `s`.servicefamily_id = `sf`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id WHERE (`cc`.`org_id` = 3) UNION SELECT `sf` FROM ServiceFamily AS `sf` JOIN Service AS `s` ON `s`.servicefamily_id = `sf`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id JOIN Organization AS `child` ON `cc`.org_id = `child`.id JOIN Organization AS `root` ON `child`.parent_id BELOW `root`.id WHERE (`root`.`id` = 3)",
 			'alias' => "L-1",
-			'result' => "SELECT `L-1` FROM ServiceFamily AS `L-1` JOIN Service AS `s` ON `s`.servicefamily_id = `L-1`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id WHERE (`cc`.`org_id` = 3) UNION SELECT `L-1` FROM ServiceFamily AS `L-1` JOIN Service AS `s` ON `s`.servicefamily_id = `L-1`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id JOIN Organization AS `child` ON `cc`.org_id = `child`.id JOIN Organization AS `root` ON `child`.parent_id BELOW `root`.id WHERE (`root`.`id` = 3)");
+			'result' => "SELECT `L-1` FROM ServiceFamily AS `L-1` JOIN Service AS `s` ON `s`.servicefamily_id = `L-1`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id WHERE (`cc`.`org_id` = 3) UNION SELECT `L-1` FROM ServiceFamily AS `L-1` JOIN Service AS `s` ON `s`.servicefamily_id = `L-1`.id JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `s`.id JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id JOIN Organization AS `child` ON `cc`.org_id = `child`.id JOIN Organization AS `root` ON `child`.parent_id BELOW `root`.id WHERE (`root`.`id` = 3)"];
 
-		$aTests['Multiple selected classes inverted'] = array(
+		$aTests['Multiple selected classes inverted'] = [
 			'left' => "SELECT `L`, `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE 1",
 			'right' => "SELECT Person WHERE org_id = 3",
 			'alias' => "P",
-			'result' => "SELECT `L`, `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE (`P`.`org_id` = 3)");
+			'result' => "SELECT `L`, `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE (`P`.`org_id` = 3)"];
 
-		$aTests['Multiple selected classes inverted 1'] = array(
+		$aTests['Multiple selected classes inverted 1'] = [
 			'left' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS D ON D.location_id = L.id JOIN Person AS P2 ON P.manager_id = P2.id WHERE 1",
 			'right' => "SELECT Location WHERE org_id = 3",
 			'alias' => "L",
-			'result' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS `D` ON `D`.location_id = `L`.id JOIN Person AS `P2` ON `P`.manager_id = `P2`.id WHERE (`L`.`org_id` = 3)");
+			'result' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS `D` ON `D`.location_id = `L`.id JOIN Person AS `P2` ON `P`.manager_id = `P2`.id WHERE (`L`.`org_id` = 3)"];
 
-		$aTests['Multiple selected classes inverted 2'] = array(
+		$aTests['Multiple selected classes inverted 2'] = [
 			'left' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS D ON D.location_id = L.id JOIN Person AS P2 ON P.manager_id = P2.id WHERE (`L`.`org_id` = 3)",
 			'right' => "SELECT Person WHERE org_id = 3",
 			'alias' => "P",
-			'result' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS `D` ON `D`.location_id = `L`.id JOIN Person AS `P2` ON `P`.manager_id = `P2`.id WHERE ((`L`.`org_id` = 3) AND (`P`.`org_id` = 3))");
+			'result' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS `D` ON `D`.location_id = `L`.id JOIN Person AS `P2` ON `P`.manager_id = `P2`.id WHERE ((`L`.`org_id` = 3) AND (`P`.`org_id` = 3))"];
 
-		$aTests['Same class'] = array(
+		$aTests['Same class'] = [
 			'left' => "SELECT Contact WHERE name = 'Christie'",
 			'right' => "SELECT Contact WHERE org_id = 3",
 			'alias' => "Contact",
-			'result' => "SELECT `Contact` FROM Contact AS `Contact` WHERE ((`Contact`.`name` = 'Christie') AND (`Contact`.`org_id` = 3))");
+			'result' => "SELECT `Contact` FROM Contact AS `Contact` WHERE ((`Contact`.`name` = 'Christie') AND (`Contact`.`org_id` = 3))"];
 
-		$aTests['Different Alias'] = array(
+		$aTests['Different Alias'] = [
 			'left' => "SELECT Contact AS C WHERE C.name = 'Christie'",
 			'right' => "SELECT Contact AS CC WHERE CC.org_id = 3",
 			'alias' => "C",
-			'result' => "SELECT `C` FROM Contact AS `C` WHERE ((`C`.`name` = 'Christie') AND (`C`.`org_id` = 3))");
+			'result' => "SELECT `C` FROM Contact AS `C` WHERE ((`C`.`name` = 'Christie') AND (`C`.`org_id` = 3))"];
 
-		$aTests['Multiple selected classes'] = array(
+		$aTests['Multiple selected classes'] = [
 			'left' => "SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE 1",
 			'right' => "SELECT Location WHERE org_id = 3",
 			'alias' => "L",
-			'result' => "SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 3)");
+			'result' => "SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 3)"];
 
-		$aTests['Joined classes'] = array(
+		$aTests['Joined classes'] = [
 			'left' => "SELECT `L` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE 1",
 			'right' => "SELECT Person WHERE org_id = 3",
 			'alias' => "P",
-			'result' => "SELECT `L` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`P`.`org_id` = 3)");
+			'result' => "SELECT `L` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`P`.`org_id` = 3)"];
 
-		$aTests['Joined filter'] = array(
+		$aTests['Joined filter'] = [
 			'left' => "SELECT `P` FROM Person AS `P` WHERE 1",
 			'right' => "SELECT `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE `L`.org_id = 3",
 			'alias' => "P",
-			'result' => "SELECT `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 3)");
+			'result' => "SELECT `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 3)"];
 
-		$aTests['Joined filter on joined classes'] = array(
+		$aTests['Joined filter on joined classes'] = [
 			'left' => "SELECT `L` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE 1",
 			'right' => "SELECT Person FROM Person AS Person JOIN Location ON Person.location_id = Location.id WHERE Location.org_id = 3",
 			'alias' => "P",
-			'result' => "SELECT `L` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id JOIN Location AS `Location` ON `P`.location_id = `Location`.id WHERE (`Location`.`org_id` = 3)");
+			'result' => "SELECT `L` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id JOIN Location AS `Location` ON `P`.location_id = `Location`.id WHERE (`Location`.`org_id` = 3)"];
 
-		$aTests['Alias collision'] = array(
+		$aTests['Alias collision'] = [
 			'left' => "SELECT `L` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE 1",
 			'right' => "SELECT Person FROM Person AS Person JOIN Location AS `L` ON Person.location_id = `L`.id WHERE `L`.org_id = 3",
 			'alias' => "P",
-			'result' => "SELECT `L` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id JOIN Location AS `L1` ON `P`.location_id = `L1`.id WHERE (`L1`.`org_id` = 3)");
+			'result' => "SELECT `L` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id JOIN Location AS `L1` ON `P`.location_id = `L1`.id WHERE (`L1`.`org_id` = 3)"];
 
-		$aTests['Test Subclass1'] = array(
+		$aTests['Test Subclass1'] = [
 			'left' => "SELECT `U` FROM UserRequest AS `U` WHERE `U`.agent_id = 3",
 			'right' => "SELECT `Ticket` WHERE org_id = 3",
 			'alias' => "U",
-			'result' => "SELECT `U` FROM UserRequest AS `U` WHERE ((`U`.`agent_id` = 3) AND (`U`.`org_id` = 3))");
+			'result' => "SELECT `U` FROM UserRequest AS `U` WHERE ((`U`.`agent_id` = 3) AND (`U`.`org_id` = 3))"];
 
-		$aTests['Test Subclass and join'] = array(
+		$aTests['Test Subclass and join'] = [
 			'left' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id  WHERE `UserRequest`.agent_id = 3",
 			'right' => "SELECT `Ticket` WHERE org_id = 3",
 			'alias' => "UserRequest",
-			'result' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id WHERE ((`UserRequest`.`agent_id` = 3) AND (`UserRequest`.`org_id` = 3))");
+			'result' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id WHERE ((`UserRequest`.`agent_id` = 3) AND (`UserRequest`.`org_id` = 3))"];
 
-		$aTests['Test Subclass and union'] = array(
+		$aTests['Test Subclass and union'] = [
 			'left' => "SELECT `U` FROM UserRequest AS `U` WHERE `U`.agent_id = 3 UNION SELECT `T` FROM Ticket AS `T` WHERE `T`.agent_id = 3 ",
 			'right' => "SELECT `Ticket` WHERE org_id = 3",
 			'alias' => "U",
-			'result' => "SELECT `U` FROM UserRequest AS `U` WHERE ((`U`.`agent_id` = 3) AND (`U`.`org_id` = 3)) UNION SELECT `T` FROM Ticket AS `T` WHERE ((`T`.`agent_id` = 3) AND (`T`.`org_id` = 3))");
-
-
+			'result' => "SELECT `U` FROM UserRequest AS `U` WHERE ((`U`.`agent_id` = 3) AND (`U`.`org_id` = 3)) UNION SELECT `T` FROM Ticket AS `T` WHERE ((`T`.`agent_id` = 3) AND (`T`.`org_id` = 3))"];
 
 		return $aTests;
 	}
-
 
 	/**
 	 * @dataProvider IntersectProvider
@@ -169,47 +165,47 @@ class DBSearchIntersectTest extends ItopTestCase
 
 	public function IntersectProvider()
 	{
-		$aTests = array();
+		$aTests = [];
 
-		$aTests['Nested selects 2'] = array(
+		$aTests['Nested selects 2'] = [
 			'left' => "SELECT `U` FROM UserRequest AS `U` WHERE U.agent_id = 3",
 			'right' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))",
-			'result' => "SELECT `U` FROM UserRequest AS `U` JOIN Person AS `P` ON `U`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE ((`U`.`agent_id` = 3) AND (`U`.`org_id` IN (SELECT `Organization1` FROM Organization AS `Organization1` WHERE (`Organization1`.`id` = `U`.`org_id`))))");
+			'result' => "SELECT `U` FROM UserRequest AS `U` JOIN Person AS `P` ON `U`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE ((`U`.`agent_id` = 3) AND (`U`.`org_id` IN (SELECT `Organization1` FROM Organization AS `Organization1` WHERE (`Organization1`.`id` = `U`.`org_id`))))"];
 
-		$aTests['Nested selects'] = array(
+		$aTests['Nested selects'] = [
 			'left' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))",
 			'right' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE UserRequest.agent_id = 3",
-			'result' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE ((`UserRequest`.`org_id` IN (SELECT `Organization1` FROM Organization AS `Organization1` WHERE (`Organization1`.`id` = `UserRequest`.`org_id`))) AND (`UserRequest`.`agent_id` = 3))");
+			'result' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE ((`UserRequest`.`org_id` IN (SELECT `Organization1` FROM Organization AS `Organization1` WHERE (`Organization1`.`id` = `UserRequest`.`org_id`))) AND (`UserRequest`.`agent_id` = 3))"];
 
-		$aTests['Multiple selected classes inverted'] = array(
+		$aTests['Multiple selected classes inverted'] = [
 			'left' => "SELECT `L`, `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE 1",
 			'right' => "SELECT Person WHERE org_id = 3",
-			'result' => "SELECT `L`, `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE (`P`.`org_id` = 3)");
+			'result' => "SELECT `L`, `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE (`P`.`org_id` = 3)"];
 
-//		$aTests['Multiple selected classes inverted 2'] = array(
-//			'left' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS D ON D.location_id = L.id JOIN Person AS P2 ON P.manager_id = P2.id WHERE (`L`.`org_id` = 3)",
-//			'right' => "SELECT Person WHERE org_id = 3",
-//			'result' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS `D` ON `D`.location_id = `L`.id JOIN Person AS `P2` ON `P`.manager_id = `P2`.id WHERE ((`L`.`org_id` = 3) AND (`P`.`org_id` = 3))");
+		//		$aTests['Multiple selected classes inverted 2'] = array(
+		//			'left' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS D ON D.location_id = L.id JOIN Person AS P2 ON P.manager_id = P2.id WHERE (`L`.`org_id` = 3)",
+		//			'right' => "SELECT Person WHERE org_id = 3",
+		//			'result' => "SELECT `L`, `P`, `D` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id JOIN Server AS `D` ON `D`.location_id = `L`.id JOIN Person AS `P2` ON `P`.manager_id = `P2`.id WHERE ((`L`.`org_id` = 3) AND (`P`.`org_id` = 3))");
 
-		$aTests['Same class'] = array(
+		$aTests['Same class'] = [
 			'left' => "SELECT Contact WHERE name = 'Christie'",
 			'right' => "SELECT Contact WHERE org_id = 3",
-			'result' => "SELECT `Contact` FROM Contact AS `Contact` WHERE ((`Contact`.`name` = 'Christie') AND (`Contact`.`org_id` = 3))");
+			'result' => "SELECT `Contact` FROM Contact AS `Contact` WHERE ((`Contact`.`name` = 'Christie') AND (`Contact`.`org_id` = 3))"];
 
-		$aTests['Different Alias'] = array(
+		$aTests['Different Alias'] = [
 			'left' => "SELECT Contact AS C WHERE C.name = 'Christie'",
 			'right' => "SELECT Contact AS CC WHERE CC.org_id = 3",
-			'result' => "SELECT `C` FROM Contact AS `C` WHERE ((`C`.`name` = 'Christie') AND (`C`.`org_id` = 3))");
+			'result' => "SELECT `C` FROM Contact AS `C` WHERE ((`C`.`name` = 'Christie') AND (`C`.`org_id` = 3))"];
 
-		$aTests['Multiple selected classes'] = array(
+		$aTests['Multiple selected classes'] = [
 			'left' => "SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE 1",
 			'right' => "SELECT Location WHERE org_id = 3",
-			'result' => "SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 3)");
+			'result' => "SELECT `L`, `P` FROM Location AS `L` JOIN Person AS `P` ON `P`.location_id = `L`.id WHERE (`L`.`org_id` = 3)"];
 
-		$aTests['Alias collision'] = array(
+		$aTests['Alias collision'] = [
 			'left' => "SELECT `P` FROM Person AS `P` WHERE 1",
 			'right' => "SELECT `Person` FROM Person AS `Person` JOIN Person AS `P` ON `P`.manager_id = `Person`.id WHERE `P`.org_id = 3",
-			'result' => "SELECT `P` FROM Person AS `P` JOIN Person AS `P1` ON `P1`.manager_id = `P`.id WHERE (`P1`.`org_id` = 3)");
+			'result' => "SELECT `P` FROM Person AS `P` JOIN Person AS `P1` ON `P1`.manager_id = `P`.id WHERE (`P1`.`org_id` = 3)"];
 
 		return $aTests;
 	}
@@ -352,100 +348,100 @@ class DBSearchIntersectTest extends ItopTestCase
 
 	public function IntersectOptimizationProvider()
 	{
-		$aQueries = array(
-			'Exact same query' => array(
+		$aQueries = [
+			'Exact same query' => [
 				'Base Query' => 'SELECT s FROM Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"',
 				'Filter OQL' => 'SELECT s FROM Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"',
 				'Result    ' => "SELECT `s` FROM Service AS `s` JOIN Organization AS `o` ON `s`.org_id = `o`.id WHERE ((`o`.`name` = 'The World Company') AND (`o`.`name` = 'The World Company'))",
-			),
-			'Same query, other aliases' => array(
+			],
+			'Same query, other aliases' => [
 				'Base Query' => 'SELECT s FROM Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"',
 				'Filter OQL' => 'SELECT s2 FROM Service AS s2 JOIN Organization AS o2 ON s2.org_id = o2.id WHERE o2.name = "The World Company"',
 				'Result    ' => "SELECT `s` FROM Service AS `s` JOIN Organization AS `o` ON `s`.org_id = `o`.id WHERE ((`o`.`name` = 'The World Company') AND (`o`.`name` = 'The World Company'))",
-			),
-			'Same aliases, different condition' => array(
+			],
+			'Same aliases, different condition' => [
 				'Base Query' => 'SELECT s FROM Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"',
 				'Filter OQL' => 'SELECT s FROM Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.parent_id = 0',
 				'Result    ' => "SELECT `s` FROM Service AS `s` JOIN Organization AS `o` ON `s`.org_id = `o`.id WHERE ((`o`.`name` = 'The World Company') AND (`o`.`parent_id` = 0))",
-			),
-			'Other aliases, different condition' => array(
+			],
+			'Other aliases, different condition' => [
 				'Base Query' => 'SELECT s FROM Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"',
 				'Filter OQL' => 'SELECT s2 FROM Service AS s2 JOIN Organization AS o2 ON s2.org_id = o2.id WHERE o2.parent_id = 0',
 				'Result    ' => "SELECT `s` FROM Service AS `s` JOIN Organization AS `o` ON `s`.org_id = `o`.id WHERE ((`o`.`name` = 'The World Company') AND (`o`.`parent_id` = 0))",
-			),
-			'Same aliases, simpler query tree' => array(
+			],
+			'Same aliases, simpler query tree' => [
 				'Base Query' => 'SELECT s FROM Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"',
 				'Filter OQL' => 'SELECT s FROM Service AS s WHERE name LIKE "Save the World"',
 				'Result    ' => "SELECT `s` FROM Service AS `s` JOIN Organization AS `o` ON `s`.org_id = `o`.id WHERE ((`o`.`name` = 'The World Company') AND (`s`.`name` LIKE 'Save the World'))",
-			),
-			'Other aliases, simpler query tree' => array(
+			],
+			'Other aliases, simpler query tree' => [
 				'Base Query' => 'SELECT s FROM Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"',
 				'Filter OQL' => 'SELECT s2 FROM Service AS s2 WHERE name LIKE "Save the World"',
 				'Result    ' => "SELECT `s` FROM Service AS `s` JOIN Organization AS `o` ON `s`.org_id = `o`.id WHERE ((`o`.`name` = 'The World Company') AND (`s`.`name` LIKE 'Save the World'))",
-			),
-			'Same aliases, different query tree' => array(
+			],
+			'Same aliases, different query tree' => [
 				'Base Query' => 'SELECT s FROM Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"',
 				'Filter OQL' => 'SELECT s FROM Service AS s JOIN ServiceFamily AS f ON s.servicefamily_id = f.id WHERE s.org_id = 123 AND f.name = "Care"',
 				'Result    ' => "SELECT `s` FROM Service AS `s` JOIN Organization AS `o` ON `s`.org_id = `o`.id JOIN ServiceFamily AS `f` ON `s`.servicefamily_id = `f`.id WHERE ((`o`.`name` = 'The World Company') AND ((`s`.`org_id` = 123) AND (`f`.`name` = 'Care')))",
-			),
-			'Other aliases, different query tree' => array(
+			],
+			'Other aliases, different query tree' => [
 				'Base Query' => 'SELECT s FROM Service AS s JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "The World Company"',
 				'Filter OQL' => 'SELECT s2 FROM Service AS s2 JOIN ServiceFamily AS f ON s2.servicefamily_id = f.id WHERE s2.org_id = 123 AND f.name = "Care"',
 				'Result    ' => "SELECT `s` FROM Service AS `s` JOIN Organization AS `o` ON `s`.org_id = `o`.id JOIN ServiceFamily AS `f` ON `s`.servicefamily_id = `f`.id WHERE ((`o`.`name` = 'The World Company') AND ((`s`.`org_id` = 123) AND (`f`.`name` = 'Care')))",
-			),
+			],
 
-			'2 - Exact same query' => array(
+			'2 - Exact same query' => [
 				'Base Query' => 'SELECT o FROM Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"',
 				'Filter OQL' => 'SELECT o FROM Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"',
 				'Result    ' => "SELECT `o` FROM Organization AS `o` JOIN Service AS `s` ON `s`.org_id = `o`.id WHERE ((`s`.`name` = 'Help') AND (`s`.`name` = 'Help'))",
-			),
-			'2 - Same query, other aliases' => array(
+			],
+			'2 - Same query, other aliases' => [
 				'Base Query' => 'SELECT o FROM Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"',
 				'Filter OQL' => 'SELECT o2 FROM Organization AS o2 JOIN Service AS s2 ON s2.org_id = o2.id WHERE s2.name = "Help"',
 				'Result    ' => "SELECT `o` FROM Organization AS `o` JOIN Service AS `s` ON `s`.org_id = `o`.id WHERE ((`s`.`name` = 'Help') AND (`s`.`name` = 'Help'))",
-			),
-			'2 - Same aliases, different condition' => array(
+			],
+			'2 - Same aliases, different condition' => [
 				'Base Query' => 'SELECT o FROM Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"',
 				'Filter OQL' => 'SELECT o FROM Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.servicefamily_id = 321',
 				'Result    ' => "SELECT `o` FROM Organization AS `o` JOIN Service AS `s` ON `s`.org_id = `o`.id WHERE ((`s`.`name` = 'Help') AND (`s`.`servicefamily_id` = 321))",
-			),
-			'2 - Other aliases, different condition' => array(
+			],
+			'2 - Other aliases, different condition' => [
 				'Base Query' => 'SELECT o FROM Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"',
 				'Filter OQL' => 'SELECT o2 FROM Organization AS o2 JOIN Service AS s2 ON s2.org_id = o2.id WHERE s2.servicefamily_id = 321',
 				'Result    ' => "SELECT `o` FROM Organization AS `o` JOIN Service AS `s` ON `s`.org_id = `o`.id WHERE ((`s`.`name` = 'Help') AND (`s`.`servicefamily_id` = 321))",
-			),
-			'2 - Same aliases, simpler query tree' => array(
+			],
+			'2 - Same aliases, simpler query tree' => [
 				'Base Query' => 'SELECT o FROM Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"',
 				'Filter OQL' => 'SELECT o FROM Organization AS o WHERE o.name = "Demo"',
 				'Result    ' => "SELECT `o` FROM Organization AS `o` JOIN Service AS `s` ON `s`.org_id = `o`.id WHERE ((`s`.`name` = 'Help') AND (`o`.`name` = 'Demo'))",
-			),
-			'2 - Other aliases, simpler query tree' => array(
+			],
+			'2 - Other aliases, simpler query tree' => [
 				'Base Query' => 'SELECT o FROM Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"',
 				'Filter OQL' => 'SELECT o2 FROM Organization AS o2 WHERE o2.name = "Demo"',
 				'Result    ' => "SELECT `o` FROM Organization AS `o` JOIN Service AS `s` ON `s`.org_id = `o`.id WHERE ((`s`.`name` = 'Help') AND (`o`.`name` = 'Demo'))",
-			),
-			'2 - Same aliases, different query tree' => array(
+			],
+			'2 - Same aliases, different query tree' => [
 				'Base Query' => 'SELECT o FROM Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"',
 				'Filter OQL' => 'SELECT o FROM Organization AS o JOIN Location AS l ON l.org_id = o.id WHERE l.name = "Paris"',
 				'Result    ' => "SELECT `o` FROM Organization AS `o` JOIN Service AS `s` ON `s`.org_id = `o`.id JOIN Location AS `l` ON `l`.org_id = `o`.id WHERE ((`s`.`name` = 'Help') AND (`l`.`name` = 'Paris'))",
-			),
-			'2 - Other aliases, different query tree' => array(
+			],
+			'2 - Other aliases, different query tree' => [
 				'Base Query' => 'SELECT o FROM Organization AS o JOIN Service AS s ON s.org_id = o.id WHERE s.name = "Help"',
 				'Filter OQL' => 'SELECT o2 FROM Organization AS o2 JOIN Location AS l ON l.org_id = o2.id WHERE l.name = "Paris"',
 				'Result    ' => "SELECT `o` FROM Organization AS `o` JOIN Service AS `s` ON `s`.org_id = `o`.id JOIN Location AS `l` ON `l`.org_id = `o`.id WHERE ((`s`.`name` = 'Help') AND (`l`.`name` = 'Paris'))",
-			),
+			],
 
-			'Internal query optimizations 1' => array(
+			'Internal query optimizations 1' => [
 				'Base Query' => 'SELECT o FROM Organization AS o',
 				'Filter OQL' => 'SELECT o FROM Organization AS o JOIN Location AS l ON l.org_id = o.id JOIN Organization AS p ON o.parent_id = p.id WHERE l.name = "Paris" AND p.code LIKE "toto"',
 				'Result    ' => "SELECT `o` FROM Organization AS `o` JOIN Organization AS `p` ON `o`.parent_id = `p`.id JOIN Location AS `l` ON `l`.org_id = `o`.id WHERE ((`l`.`name` = 'Paris') AND (`p`.`code` LIKE 'toto'))",
-			),
-			'Internal query optimizations 2' => array(
+			],
+			'Internal query optimizations 2' => [
 				'Base Query' => 'SELECT r FROM UserRequest AS r JOIN Service AS s ON r.service_id = s.id JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "left_name"',
 				'Filter OQL' => 'SELECT r FROM UserRequest AS r JOIN Service AS s ON r.service_id = s.id JOIN Organization AS o ON s.org_id = o.id WHERE o.name = "right_name"',
 				'Result    ' => "SELECT `r` FROM UserRequest AS `r` JOIN Service AS `s` ON `r`.service_id = `s`.id JOIN Organization AS `o` ON `s`.org_id = `o`.id WHERE ((`o`.`name` = 'left_name') AND (`o`.`name` = 'right_name'))",
-			),
-		);
+			],
+		];
 
 		return $aQueries;
 	}

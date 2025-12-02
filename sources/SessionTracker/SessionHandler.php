@@ -32,7 +32,7 @@ class SessionHandler extends \SessionHandler
 	 * @return bool
 	 */
 	#[ReturnTypeWillChange]
-	public function destroy($session_id) : bool
+	public function destroy($session_id): bool
 	{
 		IssueLog::Debug("Destroy PHP session", \LogChannels::SESSIONTRACKER, [
 			'session_id' => $session_id,
@@ -50,7 +50,7 @@ class SessionHandler extends \SessionHandler
 	 * @param int $max_lifetime
 	 */
 	#[ReturnTypeWillChange]
-	public function gc($max_lifetime) : bool
+	public function gc($max_lifetime): bool
 	{
 		IssueLog::Debug("Run PHP sessions garbage collector", \LogChannels::SESSIONTRACKER, [
 			'max_lifetime' => $max_lifetime,
@@ -65,7 +65,7 @@ class SessionHandler extends \SessionHandler
 	 * @param string $session_name
 	 */
 	#[ReturnTypeWillChange]
-	public function open($save_path, $session_name) : bool
+	public function open($save_path, $session_name): bool
 	{
 		$bRes = parent::open($save_path, $session_name);
 
@@ -88,7 +88,7 @@ class SessionHandler extends \SessionHandler
 	 * @return bool
 	 */
 	#[ReturnTypeWillChange]
-	public function write($session_id, $data) : bool
+	public function write($session_id, $data): bool
 	{
 		$bRes = parent::write($session_id, $data);
 
@@ -104,9 +104,9 @@ class SessionHandler extends \SessionHandler
 		return $bRes;
 	}
 
-	public static function session_set_save_handler() : void
+	public static function session_set_save_handler(): void
 	{
-		if (false === utils::GetConfig()->Get('sessions_tracking.enabled')){
+		if (false === utils::GetConfig()->Get('sessions_tracking.enabled')) {
 			//feature disabled
 			return;
 		}
@@ -126,7 +126,7 @@ class SessionHandler extends \SessionHandler
 		$sessionhandler->gc_with_time_limit($iMaxLifetime, time() + $iMaxDurationInSeconds);
 	}
 
-	private function generate_session_content(?string $sPreviousFileVersionContent) : ?string
+	private function generate_session_content(?string $sPreviousFileVersionContent): ?string
 	{
 		try {
 			$sUserId = UserRights::GetUserId();
@@ -139,15 +139,15 @@ class SessionHandler extends \SessionHandler
 			// - Data corruption (not a json / not an array / no previous creation_time key)
 			$iCreationTime = time();
 
-			$aJson=[];
+			$aJson = [];
 			if (! is_null($sPreviousFileVersionContent)) {
 				$aJson = json_decode($sPreviousFileVersionContent, true);
-				if (is_array($aJson)){
+				if (is_array($aJson)) {
 					if (array_key_exists('creation_time', $aJson)) {
 						$iCreationTime = $aJson['creation_time'];
 					}
-			    } else {
-					$aJson=[];
+				} else {
+					$aJson = [];
 				}
 			}
 
@@ -155,62 +155,62 @@ class SessionHandler extends \SessionHandler
 				'login_mode'    => Session::Get('login_mode'),
 				'user_id'       => $sUserId,
 				'creation_time' => $iCreationTime,
-				'context'       => implode('|', ContextTag::GetStack())
+				'context'       => implode('|', ContextTag::GetStack()),
 			];
 
 			$oiSessionHandlerExtension = $this->GetSessionHandlerExtension();
-			if (! is_null($oiSessionHandlerExtension)){
+			if (! is_null($oiSessionHandlerExtension)) {
 				$oiSessionHandlerExtension->CompleteSessionData($aJson, $aData);
 			}
 
-			return json_encode (
+			return json_encode(
 				$aData
 			);
-		} catch(Exception $e) {
+		} catch (Exception $e) {
 			IssueLog::Error(__METHOD__, null, [ 'error' => $e->getMessage() ]);
 		}
 
 		return null;
 	}
 
-	private function GetSessionHandlerExtension() : ?iSessionHandlerExtension
+	private function GetSessionHandlerExtension(): ?iSessionHandlerExtension
 	{
 		$sSessionHandlerExtensionClass = utils::GetConfig()->Get('sessions_tracking.session_handler_extension');
-		if (strlen($sSessionHandlerExtensionClass) !=0){
-			try{
-				if (! class_exists($sSessionHandlerExtensionClass)){
+		if (strlen($sSessionHandlerExtensionClass) != 0) {
+			try {
+				if (! class_exists($sSessionHandlerExtensionClass)) {
 					throw new \Exception("Cannot find class");
 				}
 
 				/** @var iSessionHandlerExtension $oSessionHandlerExtension */
-				$oSessionHandlerExtension = new $sSessionHandlerExtensionClass;
-				if ($oSessionHandlerExtension instanceof iSessionHandlerExtension){
+				$oSessionHandlerExtension = new $sSessionHandlerExtensionClass();
+				if ($oSessionHandlerExtension instanceof iSessionHandlerExtension) {
 					return $oSessionHandlerExtension;
 				}
 
 				throw new \Exception("Not an instance of iSessionHandlerExtension");
-			} catch(\Exception $e) {
-				IssueLog::Error(__METHOD__ . ': cannot instanciate iSessionHandlerExtension', null, ['sessions_tracking.session_handler_extension' => $sSessionHandlerExtensionClass]);
+			} catch (\Exception $e) {
+				IssueLog::Error(__METHOD__.': cannot instanciate iSessionHandlerExtension', null, ['sessions_tracking.session_handler_extension' => $sSessionHandlerExtensionClass]);
 			}
 		}
 
 		return null;
 	}
 
-	private function get_file_path($session_id) : string
+	private function get_file_path($session_id): string
 	{
-		return utils::GetDataPath() . "sessions/session_$session_id";
+		return utils::GetDataPath()."sessions/session_$session_id";
 	}
 
-	private function touch_session_file($session_id) : ?string
+	private function touch_session_file($session_id): ?string
 	{
 		if (strlen($session_id) == 0) {
 			return null;
 		}
 
 		clearstatcache();
-		if (! is_dir(utils::GetDataPath() . "sessions")) {
-			@mkdir(utils::GetDataPath() . "sessions");
+		if (! is_dir(utils::GetDataPath()."sessions")) {
+			@mkdir(utils::GetDataPath()."sessions");
 		}
 
 		$sFilePath = $this->get_file_path($session_id);
@@ -243,7 +243,7 @@ class SessionHandler extends \SessionHandler
 	 *
 	 * @return int
 	 */
-	public function gc_with_time_limit(int $max_lifetime, int $iTimeLimit = -1) : int
+	public function gc_with_time_limit(int $max_lifetime, int $iTimeLimit = -1): int
 	{
 		$aFiles = $this->list_session_files();
 		$iProcessed = 0;
@@ -264,13 +264,13 @@ class SessionHandler extends \SessionHandler
 		return $iProcessed;
 	}
 
-	public function list_session_files() : array
+	public function list_session_files(): array
 	{
 		clearstatcache();
-		if (! is_dir(utils::GetDataPath() . "sessions")) {
-			@mkdir(utils::GetDataPath() . "sessions");
+		if (! is_dir(utils::GetDataPath()."sessions")) {
+			@mkdir(utils::GetDataPath()."sessions");
 		}
 
-		return glob(utils::GetDataPath() . "sessions/session_*");
+		return glob(utils::GetDataPath()."sessions/session_*");
 	}
 }

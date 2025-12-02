@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:AuditCategory' => 'Auditcategorie',
 	'Class:AuditCategory+' => 'Een onderdeel van de gehele audit',
 	'Class:AuditCategory/Attribute:name' => 'Naam categorie',
@@ -26,13 +27,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domeinen',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
-));
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:AuditRule' => 'Auditregel',
 	'Class:AuditRule+' => 'Een regel voor het controleren van een bepaalde Auditcategorie',
 	'Class:AuditRule/Attribute:name' => 'Naam regel',
@@ -51,13 +52,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AuditRule/Attribute:category_id+' => 'De categorie voor deze regel',
 	'Class:AuditRule/Attribute:category_name' => 'Categorie',
 	'Class:AuditRule/Attribute:category_name+' => 'Naam van de categorie voor deze regel',
-));
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:AuditDomain' => 'Audit Domein',
 	'Class:AuditDomain+' => 'Audit domeinen groeperen de audit categorieën.
 Het domein komt meestal overeen met wie er verantwoordelijk is om de fouten te controleren en oplossen',
@@ -69,13 +70,13 @@ Het domein komt meestal overeen met wie er verantwoordelijk is om de fouten te c
 	'Class:AuditDomain/Attribute:icon+' => '',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categorieën',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Categorie',
@@ -86,13 +87,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domein',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domein naam',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domein naam',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Query' => 'Query',
 	'Class:Query+' => 'Een query is een definie voor een dataset die op een dynamische manier wordt samengesteld',
 	'Class:Query/Attribute:name' => 'Naam',
@@ -119,7 +120,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:QueryOQL+' => 'Een query gebaseerd op de Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Expressie',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL-expressie',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -130,7 +131,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Class: User
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:User' => 'Gebruiker',
 	'Class:User+' => 'Login voor gebruiker',
 	'Class:User/Attribute:finalclass' => 'Accounttype',
@@ -176,13 +177,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'Interne gebruiker',
 	'Class:UserInternal+' => 'Gebruiker gedefinieerd in '.ITOP_APPLICATION_SHORT,
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:URP_Profiles' => 'Profiel',
 	'Class:URP_Profiles+' => 'Gebruikersprofiel',
 	'Class:URP_Profiles/Attribute:name' => 'Naam',
@@ -191,13 +192,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_Profiles/Attribute:description+' => 'Beschrijving van dit profiel',
 	'Class:URP_Profiles/Attribute:user_list' => 'Gebruikers',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Gebruikers met deze rol',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:URP_Dimensions' => 'Dimensie',
 	'Class:URP_Dimensions+' => 'Dimensie van de applicatie (definieert silo\'s)',
 	'Class:URP_Dimensions/Attribute:name' => 'Naam',
@@ -206,13 +207,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'Beschrijving van deze dimensie',
 	'Class:URP_Dimensions/Attribute:type' => 'Type',
 	'Class:URP_Dimensions/Attribute:type+' => 'Klassenaam of data type (projection unit)',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:URP_UserProfile' => 'Gebruiker / Profiel',
 	'Class:URP_UserProfile+' => 'Koppeling tussen gebruikers en profielen',
 	'Class:URP_UserProfile/Name' => 'Link tussen %1$s en %2$s',
@@ -226,14 +227,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_UserProfile/Attribute:profile+' => 'Naam van het profiel',
 	'Class:URP_UserProfile/Attribute:reason' => 'Reden',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Leg uit waarom deze persoon deze rol heeft',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:URP_UserOrg' => 'Gebruiker / Organisatie',
 	'Class:URP_UserOrg+' => 'Koppeling tussen gebruikers en organisaties',
 	'Class:URP_UserOrg/Name' => 'Link tussen %1$s en %2$s',
@@ -247,13 +247,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => 'Mijn organisatie',
 	'Class:URP_UserOrg/Attribute:reason' => 'Reden',
 	'Class:URP_UserOrg/Attribute:reason+' => 'Leg uit waarom deze persoon de data van deze organisatie mag inzien',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => 'profile projections',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimensie',
@@ -268,13 +268,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL-expressie (gebruikt $user) | constant |  | +attribute code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribuut',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Code van doelattribuut (optioneel)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'class projections',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimensie',
@@ -287,13 +287,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL-expressie (gebruikt $this) | constant |  | +attribute code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribuut',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Code van doelattribuut (optioneel)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:URP_ActionGrant' => 'action_permission',
 	'Class:URP_ActionGrant+' => 'Toestemming aan klasses',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profiel',
@@ -310,13 +310,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'Nee',
 	'Class:URP_ActionGrant/Attribute:action' => 'Actie',
 	'Class:URP_ActionGrant/Attribute:action+' => 'Actie om uit te voeren op een bepaalde klasse',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:URP_StimulusGrant' => 'stimulus_permission',
 	'Class:URP_StimulusGrant+' => 'Toegestane stimulus in de levenscyclus van het object',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profiel',
@@ -333,25 +333,25 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'Nee',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Code van stimulus',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:URP_AttributeGrant' => 'attribute_permission',
 	'Class:URP_AttributeGrant+' => 'Toestemming op het niveau van de attributen',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Actie verleen',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'Actie verleen',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribuut',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Code van attribuut',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:UserDashboard' => 'Gebruikerdashboard',
 	'Class:UserDashboard+' => '',
 	'Class:UserDashboard/Attribute:user_id' => 'Gebruiker',
@@ -360,12 +360,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '',
 	'Class:UserDashboard/Attribute:contents' => 'Inhoud',
 	'Class:UserDashboard/Attribute:contents+' => '',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:WelcomeMenu' => 'Welkom',
 	'Menu:WelcomeMenu+' => 'Welkom in '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Welkom',
 	'Menu:WelcomeMenuPage+' => 'Welkom in '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Admintools',
@@ -382,14 +382,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:MyShortcuts' => 'Mijn snelkoppelingen',
 	'Menu:Notifications:Title' => 'Auditcategorieën',
 	'Menu:DataAdministration' => 'Databeheer',
-	'Menu:DataAdministration+' => 'Databeheer'
-));
+	'Menu:DataAdministration+' => 'Databeheer',
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'BooleanLabel:yes' => 'Ja',
 	'BooleanLabel:no' => 'Nee',
 	'UI:Login:Title' => 'Aanmelden in '.ITOP_APPLICATION_SHORT, 'UI:WelcomeMenu:Title' => 'Welkom in '.ITOP_APPLICATION_SHORT, 'UI:WelcomeMenu:AllOpenRequests' => 'Open aanvragen: %1$d',
@@ -1534,13 +1534,13 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Sub-objecten van geselecteerde objecten zullen mee opgenomen worden.',
 	'UI:Search:Criteria:Raw:Filtered' => 'Gefilterd',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Gefiltered op %1$s',
-	'UI:StateChanged' => 'Status veranderd'
-));
+	'UI:StateChanged' => 'Status veranderd',
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Expression:Operator:AND' => ' EN ',
 	'Expression:Operator:OR' => ' OF ',
 	'Expression:Operator:=' => ': ',
@@ -1553,12 +1553,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Expression:Unit:Long:MINUTE' => 'minute(n)',
 	'Expression:Verb:NOW' => 'nu',
 	'Expression:Verb:ISNULL' => ': ongedefinieerd (NULL)',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Newsroom:NoNewMessage' => 'Geen nieuw bericht',
 	'UI:Newsroom:XNewMessage' => '%1$s nieuw(e) bericht(en)',
 	'UI:Newsroom:MarkAllAsRead' => 'Markeer alle berichten als gelezen',
@@ -1573,10 +1573,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
-));
+]);
 
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:DataSources' => 'Synchronisatie-databronnen',
 	'Menu:DataSources+' => 'Alle Synchronisatie-databronnen',
 	'Menu:AuditCategories' => 'Auditcategorieën',
@@ -1604,4 +1603,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Integrations' => 'Integraties',
 	'Menu:Integrations+' => '',
 
-));
+]);

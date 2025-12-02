@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Organization' => 'Organisation',
 	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => 'Navn',
@@ -38,13 +39,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
-));
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Location' => 'Placering',
 	'Class:Location+' => 'Enhver type af placering: Region, land, by, bygning, rum rack, ...',
 	'Class:Location/Attribute:name' => 'Navn',
@@ -71,13 +72,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
 	'Class:Location/Attribute:person_list' => 'List Kontakter',
 	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
-));
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Contact' => 'Kontakt',
 	'Class:Contact+' => '',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
@@ -109,13 +110,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
 	'Class:Contact/Attribute:finalclass' => 'Type',
 	'Class:Contact/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Person' => 'Person',
 	'Class:Person+' => '',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
@@ -150,13 +151,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
@@ -164,13 +165,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
 	'Class:Team/Attribute:tickets_list' => 'List Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Document' => 'Dokument',
 	'Class:Document+' => '',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
@@ -200,77 +201,77 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Dokumenttype',
 	'Class:Document/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:DocumentFile' => 'Dokument (Data)',
 	'Class:DocumentFile+' => '',
 	'Class:DocumentFile/Attribute:file' => 'Data',
 	'Class:DocumentFile/Attribute:file+' => '',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:DocumentNote' => 'Dokument (Noter)',
 	'Class:DocumentNote+' => '',
 	'Class:DocumentNote/Attribute:text' => 'Tekst',
 	'Class:DocumentNote/Attribute:text+' => '',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:DocumentWeb' => 'Dokument (Web)',
 	'Class:DocumentWeb+' => '',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Typology' => 'Typologi',
 	'Class:Typology+' => '',
 	'Class:Typology/Attribute:name' => 'Navn',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Type',
 	'Class:Typology/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:DocumentType' => 'Dokumentype',
 	'Class:DocumentType+' => '',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ContactType' => 'Kontakttype',
 	'Class:ContactType+' => '',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkPersonToTeam' => 'Sammenhæng Person/Team',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
@@ -287,13 +288,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Rollen navn',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:DataAdministration' => 'Data administration',
 	'Menu:DataAdministration+' => '',
 	'Menu:Catalogs' => 'Katalog',
@@ -331,20 +332,20 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:Typology+' => '',
 	'UI_WelcomeMenu_AllConfigItems' => 'Sammenfatning',
 	'Menu:ConfigManagement:Typology' => 'Typologi Konfiguration',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Person:info' => 'Almindelig Information',
 	'User:info' => 'Almindelig Information',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Underretning',
-));
+]);
 
 // Themes
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
-));
+]);

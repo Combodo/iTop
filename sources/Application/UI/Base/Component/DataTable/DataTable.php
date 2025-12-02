@@ -1,11 +1,11 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
-
 
 use ApplicationContext;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
@@ -63,7 +63,6 @@ class DataTable extends UIContentBlock
 
 	public const DEFAULT_ACTION_ROW_CONFIRMATION = true;
 
-
 	/**
 	 * Panel constructor.
 	 *
@@ -95,17 +94,14 @@ class DataTable extends UIContentBlock
 	 */
 	public function SetAjaxUrl(string $sAjaxUrl)
 	{
-		if (strlen($sAjaxUrl) > 0)
-		{
+		if (strlen($sAjaxUrl) > 0) {
 			$oAppContext = new ApplicationContext();
-			if(strpos ($sAjaxUrl,'?')) {
+			if (strpos($sAjaxUrl, '?')) {
 				$this->sAjaxUrl = $sAjaxUrl.$oAppContext->GetForLink(true);
 			} else {
 				$this->sAjaxUrl = $sAjaxUrl."?".$oAppContext->GetForLink();
 			}
-		}
-		else
-		{
+		} else {
 			$this->sAjaxUrl = $sAjaxUrl;
 		}
 

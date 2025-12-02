@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:ChangeManagement' => 'Gestion des changements',
 	'Menu:Change:Overview' => 'Vue d\'ensemble',
 	'Menu:Change:Overview+' => '',
@@ -33,7 +34,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changements par statut',
 	'Tickets:Related:OpenChanges' => 'Changements en cours',
 	'Tickets:Related:RecentChanges' => 'Changements récents (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -45,12 +46,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Change' => 'Ticket de Changement',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Etat',
@@ -170,14 +170,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Change/Stimulus:ev_monitor' => 'Marquer comme suivi',
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Fermer',
-	'Class:Change/Stimulus:ev_finish+' => ''
-));
+	'Class:Change/Stimulus:ev_finish+' => '',
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:RoutineChange' => 'Changement de Routine',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Valider',
@@ -202,13 +202,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Fermer',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ApprovedChange' => 'Changement pré-approuvé',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Date d\'approbation',
@@ -237,13 +237,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Fermer',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:NormalChange' => 'Changement Normal',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Date d\'acceptation',
@@ -272,13 +272,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Fermer',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:EmergencyChange' => 'Changement urgent',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Valider',
@@ -303,4 +303,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Fermer',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-));
+]);

@@ -58,7 +58,7 @@ class WelcomePopupService
 		if ($aProviderMessageData1['message']->GetImportance() === $aProviderMessageData2['message']->GetImportance()) {
 			return strcmp($aProviderMessageData1['message']->GetID(), $aProviderMessageData2['message']->GetID());
 		}
-		return ($aProviderMessageData1['message']->GetImportance() < $aProviderMessageData2['message']->GetImportance())  ? -1 : 1;
+		return ($aProviderMessageData1['message']->GetImportance() < $aProviderMessageData2['message']->GetImportance()) ? -1 : 1;
 	}
 
 	/**********************/
@@ -84,7 +84,7 @@ class WelcomePopupService
 		$this->LoadProviders();
 		return $this->ProcessMessages();
 	}
-	
+
 	/**
 	 * Get the {@see \Combodo\iTop\Application\WelcomePopup\Message} to display from a list of {@see \iWelcomePopupExtension} instances
 	 * The messages are ordered by importance ({@see \iWelcomePopupExtension::ENUM_IMPORTANCE_CRITICAL} first) then by ID
@@ -97,7 +97,7 @@ class WelcomePopupService
 		$this->LoadProviders();
 		/** @var array $aAllProvidersMessagesData */
 		$aAllProvidersMessagesData = [];
-		foreach($this->aMessagesProviders as $oProvider) {
+		foreach ($this->aMessagesProviders as $oProvider) {
 			$aProviderMessages = $oProvider->GetMessages();
 			if (count($aProviderMessages) === 0) {
 				IssueLog::Debug('Empty list of messages for '.$oProvider::class, LogChannels::CONSOLE);
@@ -105,9 +105,9 @@ class WelcomePopupService
 			}
 
 			$sProviderIconRelPath = $oProvider->GetIconRelPath();
-			foreach($aProviderMessages as $oMessage) {
+			foreach ($aProviderMessages as $oMessage) {
 				if (false === ($oMessage instanceof Message)) {
-					IssueLog::Error('Invalid message returned by iWelcomePopupExtension::GetMessages(), must be of class ' . Message::class, LogChannels::CONSOLE, [
+					IssueLog::Error('Invalid message returned by iWelcomePopupExtension::GetMessages(), must be of class '.Message::class, LogChannels::CONSOLE, [
 						'provider_class' => $oProvider::class,
 						'message' => $oMessage,
 					]);
@@ -124,13 +124,13 @@ class WelcomePopupService
 		// Filter the acknowledged messages AFTER getting all messages
 		// This allows for "replacing" a message (from another provider for example)
 		// by automatically acknowledging it when called in GetMessages()
-		foreach($aAllProvidersMessagesData as $key => $aProviderMessageData) {
+		foreach ($aAllProvidersMessagesData as $key => $aProviderMessageData) {
 			if ($this->IsMessageAcknowledged($aProviderMessageData['uuid'])) {
 				IssueLog::Debug('Ignoring already acknowledged message '.$aProviderMessageData['uuid'], LogChannels::CONSOLE);
 				unset($aAllProvidersMessagesData[$key]);
 			}
 		}
-		usort($aAllProvidersMessagesData,  [static::class, 'SortOnImportance']);
+		usort($aAllProvidersMessagesData, [static::class, 'SortOnImportance']);
 		return $aAllProvidersMessagesData;
 	}
 
@@ -162,21 +162,23 @@ class WelcomePopupService
 			if ($oProvider !== null) {
 				$oProvider->AcknowledgeMessage($sMessageId);
 			}
-		} catch(Exception $e) {
+		} catch (Exception $e) {
 			IssueLog::Error("Failed to acknowledge the message $sMessageUUID for user ".UserRights::GetConnectedUserId().". Reason: ".$e->getMessage(), LogChannels::CONSOLE);
 		}
 	}
-	
+
 	/**
 	 * Load the provider of messages, decoupled from the constructor for testability
 	 */
 	protected function LoadProviders(): void
 	{
-		if ($this->aMessagesProviders !== null) return;
+		if ($this->aMessagesProviders !== null) {
+			return;
+		}
 
 		$aProviders = [];
 		$aProviderClasses = InterfaceDiscovery::GetInstance()->FindItopClasses(iWelcomePopupExtension::class);
-		foreach($aProviderClasses as $sProviderClass) {
+		foreach ($aProviderClasses as $sProviderClass) {
 			$aProviders[] = new $sProviderClass();
 		}
 		$this->SetMessagesProviders($aProviders);
@@ -189,9 +191,9 @@ class WelcomePopupService
 	 */
 	protected function IsMessageAcknowledged(string $sMessageUUID): bool
 	{
-		$iUserId = UserRights::GetConnectedUserId();	
+		$iUserId = UserRights::GetConnectedUserId();
 		if (static::$aAcknowledgedMessages === null) {
-			
+
 			$oSearch = new DBObjectSearch(WelcomePopupAcknowledge::class);
 			$oSearch->AddCondition('user_id', $iUserId);
 			$oSet = new DBObjectSet($oSearch);
@@ -200,7 +202,7 @@ class WelcomePopupService
 		}
 		return in_array($sMessageUUID, static::$aAcknowledgedMessages);
 	}
-	
+
 	/**
 	 * Set the cache of acknowledged messages (useful for testing)
 	 * @param array $aAcknowledgedMessages
@@ -218,7 +220,7 @@ class WelcomePopupService
 	{
 		$this->aMessagesProviders = $aMessagesProviders;
 	}
-	
+
 	/**
 	 * Retrieve the provider associated with a message
 	 * @param string $sMessageUUID
@@ -228,14 +230,14 @@ class WelcomePopupService
 	{
 		$this->LoadProviders();
 		$sProviderKey = substr($sMessageUUID, 0, strpos($sMessageUUID, '::'));
-		foreach($this->aMessagesProviders as $oProvider) {
+		foreach ($this->aMessagesProviders as $oProvider) {
 			if ($this->MakeStringFitIn($oProvider::class, static::PROVIDER_KEY_LENGTH) === $sProviderKey) {
 				return $oProvider;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Shorten the given string (if needed) but preserving its uniqueness
 	 * @param string $sProviderClass
@@ -244,12 +246,11 @@ class WelcomePopupService
 	 */
 	protected function MakeStringFitIn(string $sProviderClass, int $iLengthLimit): string
 	{
-		if(mb_strlen($sProviderClass) <= $iLengthLimit) {
+		if (mb_strlen($sProviderClass) <= $iLengthLimit) {
 			return $sProviderClass;
 		}
-		// Truncate the string to $iLimitLength and replace the first carahcters with the MD5 of the complete string 
+		// Truncate the string to $iLimitLength and replace the first carahcters with the MD5 of the complete string
 		$sMD5 = md5($sProviderClass, false);
 		return $sMD5.'-'.mb_substr($sProviderClass, -($iLengthLimit - strlen($sMD5) - 1)); // strlen is OK on the MD5 string, and '-' is not allowed in a class name
 	}
 }
-

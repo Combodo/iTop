@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:RequestManagement' => 'Gerenciamento de Solicitações',
 	'Menu:RequestManagement+' => 'Gerenciamento de Solicitações',
 	'Menu:RequestManagementProvider' => 'Solicitações a provedores',
@@ -45,7 +46,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:UserRequest:MyWorkOrders+' => 'Todas as ordens de serviço atribuídas a mim',
 	'Class:Problem:KnownProblemList' => 'Problemas conhecidos',
 	'Tickets:Related:OpenIncidents' => 'Incidentes abertos',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -61,7 +62,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Class: UserRequest
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:UserRequest' => 'Solicitação de Usuário',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -255,10 +256,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Aguardar por aprovação',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Não é possível atribuir a solicitação pai a própria solicitação',
-));
+]);
 
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Portal:TitleDetailsFor_Request' => 'Detalhes da solicitação',
 	'Portal:ButtonUpdate' => 'Atualizado',
 	'Portal:ButtonClose' => 'Fechado',
@@ -283,11 +283,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Escolha seu idioma favorito',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a solução a pedidos filhos (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de solução',
-));
+]);
 
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Organization:Overview:UserRequests' => 'Solicitações de usuários desta organização',
 	'Organization:Overview:MyUserRequests' => 'Minhas solicitações de usuário para esta organização',
 	'Organization:Overview:Tickets' => 'Solicitações desta organização',
-));
+]);

@@ -24,31 +24,31 @@ class Event extends DBObject implements iDisplay
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_event",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
-			"order_by_default" => array('date' => false)
-		);
+			"order_by_default" => ['date' => false],
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeText("message", array("allowed_values"=>null, "sql"=>"message", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeDateTime("date", array("allowed_values"=>null, "sql"=>"date", "default_value"=>"NOW()", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-//		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeText("message", ["allowed_values" => null, "sql" => "message", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("date", ["allowed_values" => null, "sql" => "date", "default_value" => "NOW()", "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("userinfo", ["allowed_values" => null, "sql" => "userinfo", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		//		MetaModel::Init_AddAttribute(new AttributeString("userinfo", array("allowed_values"=>null, "sql"=>"userinfo", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'message', 'userinfo')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'finalclass', 'message')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'message', 'userinfo']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'finalclass', 'message']); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
 	/**
@@ -58,12 +58,9 @@ class Event extends DBObject implements iDisplay
 	 */
 	public static function MapContextParam($sContextParam)
 	{
-		if ($sContextParam == 'menu')
-		{
+		if ($sContextParam == 'menu') {
 			return null;
-		}
-		else
-		{
+		} else {
 			return $sContextParam;
 		}
 	}
@@ -79,7 +76,7 @@ class Event extends DBObject implements iDisplay
 	public function GetHilightClass()
 	{
 		// Possible return values are:
-		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE	
+		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
 		return HILIGHT_CLASS_NONE; // Not hilighted by default
 	}
 
@@ -88,7 +85,7 @@ class Event extends DBObject implements iDisplay
 		return 'UI.php';
 	}
 
-	function DisplayDetails(WebPage $oPage, $bEditMode = false)
+	public function DisplayDetails(WebPage $oPage, $bEditMode = false)
 	{
 		// Object's details
 		//$this->DisplayBareHeader($oPage, $bEditMode);
@@ -97,21 +94,23 @@ class Event extends DBObject implements iDisplay
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$this->DisplayBareProperties($oPage, $bEditMode);
 	}
-	
-	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
-	{
-		if ($bEditMode) return array(); // Not editable
 
-		$aDetails = array();
+	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = [])
+	{
+		if ($bEditMode) {
+			return [];
+		} // Not editable
+
+		$aDetails = [];
 		$sClass = get_class($this);
 		$aZList = MetaModel::FlattenZlist(MetaModel::GetZListItems($sClass, 'details'));
 		foreach ($aZList as $sAttCode) {
 			$sDisplayValue = $this->GetAsHTML($sAttCode);
-			$aDetails[] = array('label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue);
+			$aDetails[] = ['label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue];
 		}
 		$oPage->Details($aDetails);
 
-		return array();
+		return [];
 	}
 }
 
@@ -119,33 +118,33 @@ class EventNotification extends Event
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_event_notification",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"order_by_default" => array('date' => false),
-			'indexes' => array(
-				array('object_id'),
-			)
-		);
+			"order_by_default" => ['date' => false],
+			'indexes' => [
+				['object_id'],
+			],
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("trigger_id", array("targetclass"=>"Trigger", "jointype"=> "", "allowed_values"=>null, "sql"=>"trigger_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("action_id", array("targetclass" => "Action", "jointype" => "", "allowed_values" => null, "sql" => "action_id", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array())));
-		MetaModel::Init_AddAttribute(new AttributeInteger("object_id", array("allowed_values" => null, "sql" => "object_id", "default_value" => 0, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("trigger_id", ["targetclass" => "Trigger", "jointype" => "", "allowed_values" => null, "sql" => "trigger_id", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("action_id", ["targetclass" => "Action", "jointype" => "", "allowed_values" => null, "sql" => "action_id", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeInteger("object_id", ["allowed_values" => null, "sql" => "object_id", "default_value" => 0, "is_null_allowed" => false, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'message', 'userinfo', 'trigger_id', 'action_id', 'object_id')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'message')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'message', 'userinfo', 'trigger_id', 'action_id', 'object_id']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'message']); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
 
@@ -153,35 +152,35 @@ class EventNotificationEmail extends EventNotification
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_event_email",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"order_by_default" => array('date' => false)
-		);
+			"order_by_default" => ['date' => false],
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeText("to", array("allowed_values"=>null, "sql"=>"to", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("cc", array("allowed_values"=>null, "sql"=>"cc", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("bcc", array("allowed_values"=>null, "sql"=>"bcc", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("from", array("allowed_values"=>null, "sql"=>"from", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("subject", array("allowed_values"=>null, "sql"=>"subject", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeHTML("body", array("allowed_values"=>null, "sql"=>"body", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeTable("attachments", array("allowed_values"=>null, "sql"=>"attachments", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeText("to", ["allowed_values" => null, "sql" => "to", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("cc", ["allowed_values" => null, "sql" => "cc", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("bcc", ["allowed_values" => null, "sql" => "bcc", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("from", ["allowed_values" => null, "sql" => "from", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("subject", ["allowed_values" => null, "sql" => "subject", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeHTML("body", ["allowed_values" => null, "sql" => "body", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeTable("attachments", ["allowed_values" => null, "sql" => "attachments", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'message', 'trigger_id', 'action_id', 'object_id', 'to', 'cc', 'bcc', 'from', 'subject', 'body', 'attachments')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'message', 'to', 'subject', 'attachments')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'message', 'trigger_id', 'action_id', 'object_id', 'to', 'cc', 'bcc', 'from', 'subject', 'body', 'attachments']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'message', 'to', 'subject', 'attachments']); // Attributes to be displayed for a list
 
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
 
@@ -189,34 +188,34 @@ class EventIssue extends Event
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_event_issue",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"order_by_default" => array('date' => false)
-		);
+			"order_by_default" => ['date' => false],
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("issue", array("allowed_values"=>null, "sql"=>"issue", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("impact", array("allowed_values"=>null, "sql"=>"impact", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("page", array("allowed_values"=>null, "sql"=>"page", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributePropertySet("arguments_post", array("allowed_values"=>null, "sql"=>"arguments_post", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributePropertySet("arguments_get", array("allowed_values"=>null, "sql"=>"arguments_get", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeTable("callstack", array("allowed_values"=>null, "sql"=>"callstack", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributePropertySet("data", array("allowed_values"=>null, "sql"=>"data", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("issue", ["allowed_values" => null, "sql" => "issue", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("impact", ["allowed_values" => null, "sql" => "impact", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("page", ["allowed_values" => null, "sql" => "page", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributePropertySet("arguments_post", ["allowed_values" => null, "sql" => "arguments_post", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributePropertySet("arguments_get", ["allowed_values" => null, "sql" => "arguments_get", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeTable("callstack", ["allowed_values" => null, "sql" => "callstack", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributePropertySet("data", ["allowed_values" => null, "sql" => "data", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'message', 'userinfo', 'issue', 'impact', 'page', 'arguments_post', 'arguments_get', 'callstack', 'data')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'issue', 'impact')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'message', 'userinfo', 'issue', 'impact', 'page', 'arguments_post', 'arguments_get', 'callstack', 'data']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'issue', 'impact']); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
 	protected function OnInsert()
@@ -229,20 +228,16 @@ class EventIssue extends Event
 			$this->Set('userinfo', UserRights::GetUserId());
 		}
 
-		if (array_key_exists('_GET', $GLOBALS) && is_array($GLOBALS['_GET']))
-		{
+		if (array_key_exists('_GET', $GLOBALS) && is_array($GLOBALS['_GET'])) {
 			$this->Set('arguments_get', $this->SanitizeRequestParams($GLOBALS['_GET']));
-		}
-		else
-		{
-			$this->Set('arguments_get', array());
+		} else {
+			$this->Set('arguments_get', []);
 		}
 
-		if (array_key_exists('_POST', $GLOBALS) && is_array($GLOBALS['_POST']))
-		{
+		if (array_key_exists('_POST', $GLOBALS) && is_array($GLOBALS['_POST'])) {
 			$this->Set('arguments_post', $this->SanitizeRequestParams($GLOBALS['_POST']));
 		} else {
-			$this->Set('arguments_post', array());
+			$this->Set('arguments_post', []);
 		}
 		$sLength = mb_strlen($this->Get('issue'));
 		if ($sLength > 255) {
@@ -279,44 +274,42 @@ class EventIssue extends Event
 			}
 		}
 
-
 		return $aSanitizedParams;
 	}
 }
-
 
 class EventWebService extends Event
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_event_webservice",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"order_by_default" => array('date' => false)
-		);
+			"order_by_default" => ['date' => false],
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("verb", array("allowed_values"=>null, "sql"=>"verb", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("verb", ["allowed_values" => null, "sql" => "verb", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
 		//MetaModel::Init_AddAttribute(new AttributeStructure("arguments", array("allowed_values"=>null, "sql"=>"data", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeBoolean("result", array("allowed_values"=>null, "sql"=>"result", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("log_info", array("allowed_values"=>null, "sql"=>"log_info", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("log_warning", array("allowed_values"=>null, "sql"=>"log_warning", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("log_error", array("allowed_values"=>null, "sql"=>"log_error", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("data", array("allowed_values"=>null, "sql"=>"data", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeBoolean("result", ["allowed_values" => null, "sql" => "result", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("log_info", ["allowed_values" => null, "sql" => "log_info", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("log_warning", ["allowed_values" => null, "sql" => "log_warning", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("log_error", ["allowed_values" => null, "sql" => "log_error", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("data", ["allowed_values" => null, "sql" => "data", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'verb', 'result', 'log_info', 'log_warning', 'log_error', 'data')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'verb', 'result')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'verb', 'result', 'log_info', 'log_warning', 'log_error', 'data']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'verb', 'result']); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
 
@@ -324,34 +317,34 @@ class EventRestService extends Event
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_event_restservice",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"order_by_default" => array('date' => false)
-		);
+			"order_by_default" => ['date' => false],
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("operation", array("allowed_values"=>null, "sql"=>"operation", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("version", array("allowed_values"=>null, "sql"=>"version", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("json_input", array("allowed_values"=>null, "sql"=>"json_input", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("operation", ["allowed_values" => null, "sql" => "operation", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("version", ["allowed_values" => null, "sql" => "version", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("json_input", ["allowed_values" => null, "sql" => "json_input", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
 
-		MetaModel::Init_AddAttribute(new AttributeInteger("code", array("allowed_values"=>null, "sql"=>"code", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeText("json_output", array("allowed_values"=>null, "sql"=>"json_output", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("provider", array("allowed_values"=>null, "sql"=>"provider", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("code", ["allowed_values" => null, "sql" => "code", "default_value" => 0, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("json_output", ["allowed_values" => null, "sql" => "json_output", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("provider", ["allowed_values" => null, "sql" => "provider", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'operation', 'version', 'json_input', 'message', 'code', 'json_output', 'provider')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'operation', 'message')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'operation', 'version', 'json_input', 'message', 'code', 'json_output', 'provider']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'operation', 'message']); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
 
@@ -359,66 +352,64 @@ class EventLoginUsage extends Event
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "core/cmdb,view_in_gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_event_loginusage",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"order_by_default" => array('date' => false)
-		);
+			"order_by_default" => ['date' => false],
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", array("targetclass"=>"User", "jointype"=> "", "allowed_values"=>null, "sql"=>"user_id", "is_null_allowed"=>false, "on_target_delete"=>DEL_SILENT, "depends_on"=>array())));
-		$aZList = array('date', 'user_id');
-		if (MetaModel::IsValidAttCode('Contact', 'name'))
-		{
-			MetaModel::Init_AddAttribute(new AttributeExternalField("contact_name", array("allowed_values"=>null, "extkey_attcode"=>"user_id", "target_attcode"=>"contactid", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", ["targetclass" => "User", "jointype" => "", "allowed_values" => null, "sql" => "user_id", "is_null_allowed" => false, "on_target_delete" => DEL_SILENT, "depends_on" => []]));
+		$aZList = ['date', 'user_id'];
+		if (MetaModel::IsValidAttCode('Contact', 'name')) {
+			MetaModel::Init_AddAttribute(new AttributeExternalField("contact_name", ["allowed_values" => null, "extkey_attcode" => "user_id", "target_attcode" => "contactid", "is_null_allowed" => true, "depends_on" => []]));
 			$aZList[] = 'contact_name';
 		}
-		if (MetaModel::IsValidAttCode('Contact', 'email'))
-		{
-			MetaModel::Init_AddAttribute(new AttributeExternalField("contact_email", array("allowed_values"=>null, "extkey_attcode"=>"user_id", "target_attcode"=>"email", "is_null_allowed"=>true, "depends_on"=>array())));
+		if (MetaModel::IsValidAttCode('Contact', 'email')) {
+			MetaModel::Init_AddAttribute(new AttributeExternalField("contact_email", ["allowed_values" => null, "extkey_attcode" => "user_id", "target_attcode" => "email", "is_null_allowed" => true, "depends_on" => []]));
 			$aZList[] = 'contact_email';
 		}
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array_merge($aZList, array('userinfo', 'message'))); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array_merge($aZList, array('userinfo'))); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array_merge($aZList, ['userinfo', 'message'])); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array_merge($aZList, ['userinfo'])); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', $aZList); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
 
 class EventOnObject extends Event
 {
-    public static function Init()
-    {
-        $aParams = array
-        (
-            "category" => "core/cmdb,view_in_gui",
-            "key_type" => "autoincrement",
-            "name_attcode" => "",
-            "state_attcode" => "",
-            "reconc_keys" => array(),
-            "db_table" => "priv_event_onobject",
-            "db_key_field" => "id",
-            "db_finalclass_field" => "",
-            "display_template" => "",
-            "order_by_default" => array('date' => false)
-        );
-        MetaModel::Init_Params($aParams);
-        MetaModel::Init_InheritAttributes();
-        MetaModel::Init_AddAttribute(new AttributeString("obj_class", array("allowed_values"=>null, "sql"=>"obj_class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-        MetaModel::Init_AddAttribute(new AttributeInteger("obj_key", array("allowed_values"=>null, "sql"=>"obj_key", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+	public static function Init()
+	{
+		$aParams =
+		[
+			"category" => "core/cmdb,view_in_gui",
+			"key_type" => "autoincrement",
+			"name_attcode" => "",
+			"state_attcode" => "",
+			"reconc_keys" => [],
+			"db_table" => "priv_event_onobject",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+			"order_by_default" => ['date' => false],
+		];
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeString("obj_class", ["allowed_values" => null, "sql" => "obj_class", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeInteger("obj_key", ["allowed_values" => null, "sql" => "obj_key", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
 
-        // Display lists
-        MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'obj_class', 'obj_key', 'message')); // Attributes to be displayed for the complete details
-        MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'obj_class', 'obj_key', 'message')); // Attributes to be displayed for a list
-    }
+		// Display lists
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'obj_class', 'obj_key', 'message']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'obj_class', 'obj_key', 'message']); // Attributes to be displayed for a list
+	}
 }

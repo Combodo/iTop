@@ -7,7 +7,8 @@ require_once '../../approot.inc.php';
 
 require_once(APPROOT.'/application\utils.inc.php');
 $index = 0;
-function testSanitize ($sValue, $sType, &$index ){
+function testSanitize($sValue, $sType, &$index)
+{
 	$sDefaultVal = '!defaultVal!';
 	$sValueEscapedJs = str_replace('"', '\"', $sValue);
 	$sSanitizedValue = utils::Sanitize($sValue, $sDefaultVal, $sType);
@@ -43,7 +44,7 @@ HTML;
 	$index++;
 }
 
-$aValues = array(
+$aValues = [
 	"test",
 	"t;e-s_t$",
 	"123test",
@@ -55,9 +56,9 @@ $aValues = array(
 	"éèç",
 	"q<div>&egrave;</div>=hcb test",
 //	"<script>console.debug('((\'&egrave;é&');</script>q<div>&egrave;</div>=hcb test",
-);
+];
 
-$aTypes = array(
+$aTypes = [
 	utils::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM,
 	utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER,
 	utils::ENUM_SANITIZATION_FILTER_FIELD_NAME,
@@ -66,7 +67,7 @@ $aTypes = array(
 	utils::ENUM_SANITIZATION_FILTER_STRING,
 	utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID,
 	utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME,
-);
+];
 
 ?>
 <!DOCTYPE>

@@ -275,8 +275,7 @@ class TemplatesProviderService
 				if ($oParent) {
 					$sCurrentClass = $oReflexion->getParentClass()->getName();
 				}
-			}
-			catch (Exception) {
+			} catch (Exception) {
 			}
 
 		} while ($oParent); // continue while parent class exists

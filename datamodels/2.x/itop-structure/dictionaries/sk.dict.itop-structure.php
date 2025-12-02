@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Organization' => 'Organizácia',
 	'Class:Organization+' => '~~',
 	'Class:Organization/Attribute:name' => 'Názov',
@@ -37,13 +38,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
-));
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Location' => 'Poloha',
 	'Class:Location+' => 'Any type of location: Region, Country, City, Site, Building, Floor, Room, Rack,...~~',
 	'Class:Location/Attribute:name' => 'Názov',
@@ -70,13 +71,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location~~',
 	'Class:Location/Attribute:person_list' => 'Kontakty',
 	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location~~',
-));
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Contact' => 'Kontakt',
 	'Class:Contact+' => '~~',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
@@ -108,13 +109,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact~~',
 	'Class:Contact/Attribute:finalclass' => 'Typ kontaktu',
 	'Class:Contact/Attribute:finalclass+' => 'Name of the final class~~',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Person' => 'Osoba',
 	'Class:Person+' => '~~',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
@@ -149,13 +150,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Team' => 'Tím',
 	'Class:Team+' => '~~',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
@@ -163,13 +164,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
 	'Class:Team/Attribute:tickets_list' => 'Tickety',
 	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team~~',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Document' => 'Dokument',
 	'Class:Document+' => '~~',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
@@ -199,77 +200,77 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Typ dokumentu',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class~~',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DocumentFile' => 'Dokumentový súbor',
 	'Class:DocumentFile+' => '~~',
 	'Class:DocumentFile/Attribute:file' => 'Súbor',
 	'Class:DocumentFile/Attribute:file+' => '~~',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DocumentNote' => 'Poznámka dokumentu',
 	'Class:DocumentNote+' => '~~',
 	'Class:DocumentNote/Attribute:text' => 'Text',
 	'Class:DocumentNote/Attribute:text+' => '~~',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DocumentWeb' => 'Web stránka dokumentu',
 	'Class:DocumentWeb+' => '~~',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '~~',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Typology' => 'Typológia',
 	'Class:Typology+' => '~~',
 	'Class:Typology/Attribute:name' => 'Názov',
 	'Class:Typology/Attribute:name+' => '~~',
 	'Class:Typology/Attribute:finalclass' => 'Typ',
 	'Class:Typology/Attribute:finalclass+' => 'Name of the final class~~',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DocumentType' => 'Typ dokumentu',
 	'Class:DocumentType+' => '~~',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ContactType' => 'Typ kontaktu',
 	'Class:ContactType+' => '~~',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkPersonToTeam' => 'väzba - Osoba / Tím',
 	'Class:lnkPersonToTeam+' => '~~',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
@@ -286,13 +287,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles~~',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Názov role',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '~~',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:DataAdministration' => 'Dátová administrácia',
 	'Menu:DataAdministration+' => 'Data administration~~',
 	'Menu:Catalogs' => 'Katalógy',
@@ -330,20 +331,20 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:Typology+' => 'Typology configuration~~',
 	'UI_WelcomeMenu_AllConfigItems' => 'Zhrnutie',
 	'Menu:ConfigManagement:Typology' => 'Konfiguračná typológia',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Person:info' => 'Všeobecné informácie',
 	'User:info' => 'Všeobecné informácie',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Upozornenie',
-));
+]);
 
 // Themes
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
-));
+]);

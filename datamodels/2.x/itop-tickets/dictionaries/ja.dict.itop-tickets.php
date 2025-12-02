@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Ticket' => 'チケット',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => '参照',
@@ -61,14 +62,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Closed~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Impact Analysis~~',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkContactToTicket' => 'リンク 連絡先/チケット',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
@@ -88,13 +88,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Added manually~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Computed~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Do not notify~~',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:WorkOrder' => '作業指示',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => '名前',
@@ -127,11 +127,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'クローズ',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Ticket:baseinfo' => '基本情報',
 	'Ticket:date' => '日付',
 	'Ticket:contact' => '連絡先',
@@ -221,14 +220,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
-));
-
+]);
 
 //
 // Class: Ticket
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
-));
+]);

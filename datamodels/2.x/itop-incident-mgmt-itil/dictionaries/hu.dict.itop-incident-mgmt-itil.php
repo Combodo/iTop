@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:IncidentManagement' => 'Incidenskezelés',
 	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Áttekintő',
@@ -31,8 +32,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Nyitott incidensek állapotuk szerint',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Nyitott incidensek ügyintézőnként',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Nyitott incidensek ügyfelenként',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -48,7 +48,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 // Class: Incident
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Incident' => 'Incidens',
 	'Class:Incident+' => '~~',
 	'Class:Incident/Attribute:status' => 'Állapot',
@@ -227,4 +227,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'A megoldás kaszkádozása a kapcsolódó jegyhez (ev_autoresolve), és a következő jellemzők összehangolása: szolgáltatás, csapat, ügyintéző, megoldási információ.',
 	'Tickets:Related:OpenIncidents' => 'Nyitott incidensek',
-));
+]);

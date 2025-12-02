@@ -1,11 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
-
 
 use appUserPreferences;
 use BinaryExpression;
@@ -124,7 +124,9 @@ class ActivityPanelHelper
 		if (null !== $sChangeOpIdToOffsetFrom) {
 			$oSearch->AddConditionExpression(
 				new BinaryExpression(
-					new FieldExpression('id', 'CO'), '<', new VariableExpression('id')
+					new FieldExpression('id', 'CO'),
+					'<',
+					new VariableExpression('id')
 				)
 			);
 			$aArgs['id'] = $sChangeOpIdToOffsetFrom;
@@ -162,8 +164,7 @@ class ActivityPanelHelper
 			$iChangeId = $oChangeOp->Get('change');
 			try {
 				$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp, $oChange);
-			}
-			catch (Exception $oException) {
+			} catch (Exception $oException) {
 				IssueLog::Debug(static::class.': Could not create entry from CMDBChangeOp #'.$oChangeOp->GetKey().' related to '.$oChangeOp->Get('objclass').'::'.$oChangeOp->Get('objkey').': '.$oException->getMessage());
 				continue;
 			}

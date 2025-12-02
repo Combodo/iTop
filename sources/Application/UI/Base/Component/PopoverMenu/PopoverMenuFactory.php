@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,8 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu;
-
-
 
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Dict;
@@ -80,7 +79,7 @@ class PopoverMenuFactory
 
 		return $oMenu;
 	}
-	
+
 	/**
 	 * Return the allowed portals items for the current user
 	 *
@@ -89,10 +88,8 @@ class PopoverMenuFactory
 	protected static function PrepareAllowedPortalsItemsForUserMenu()
 	{
 		$aItems = [];
-		foreach (UserRights::GetAllowedPortals() as $aAllowedPortal)
-		{
-			if ($aAllowedPortal['id'] !== 'backoffice')
-			{
+		foreach (UserRights::GetAllowedPortals() as $aAllowedPortal) {
+			if ($aAllowedPortal['id'] !== 'backoffice') {
 				$oPopupMenuItem = new URLPopupMenuItem(
 					'portal:'.$aAllowedPortal['id'],
 					Dict::S($aAllowedPortal['label']),
@@ -127,8 +124,7 @@ class PopoverMenuFactory
 		);
 
 		// Archive mode
-		if(true === utils::IsArchiveMode())
-		{
+		if (true === utils::IsArchiveMode()) {
 			$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 				new JSPopupMenuItem(
 					'UI:ArchiveModeOff',
@@ -136,9 +132,7 @@ class PopoverMenuFactory
 					'return ArchiveMode(false);'
 				)
 			);
-		}
-		elseif(UserRights::CanBrowseArchive())
-		{
+		} elseif (UserRights::CanBrowseArchive()) {
 			$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 				new JSPopupMenuItem(
 					'UI:ArchiveModeOn',
@@ -149,8 +143,7 @@ class PopoverMenuFactory
 		}
 
 		// Logoff
-		if(utils::CanLogOff())
-		{
+		if (utils::CanLogOff()) {
 			$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 				new URLPopupMenuItem(
 					'UI:LogOffMenu',
@@ -161,8 +154,7 @@ class PopoverMenuFactory
 		}
 
 		// Change password
-		if (UserRights::CanChangePassword())
-		{
+		if (UserRights::CanChangePassword()) {
 			$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 				new URLPopupMenuItem(
 					'UI:ChangePwdMenu',
@@ -189,7 +181,7 @@ class PopoverMenuFactory
 		utils::GetPopupMenuItemsBlock($oMenu, iPopupMenuExtension::MENU_USER_ACTIONS, null, $aOriginalItems);
 
 		$aTransformedItems = [];
-		foreach($aOriginalItems as $sItemID => $aItemData) {
+		foreach ($aOriginalItems as $sItemID => $aItemData) {
 			$aTransformedItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItemData($sItemID, $aItemData);
 		}
 

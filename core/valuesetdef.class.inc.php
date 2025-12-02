@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,7 +16,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 
 /**
  * Value set definitions (from a fixed list or from a query, etc.)
@@ -37,16 +37,14 @@ require_once('MyHelpers.class.inc.php');
 abstract class ValueSetDefinition
 {
 	protected $m_bIsLoaded = false;
-	protected $m_aValues = array();
-
+	protected $m_aValues = [];
 
 	// Displayable description that could be computed out of the std usage context
 	public function GetValuesDescription()
 	{
-		$aValues = $this->GetValues(array(), '');
-		$aDisplayedValues = array();
-		foreach($aValues as $key => $value)
-		{
+		$aValues = $this->GetValues([], '');
+		$aDisplayedValues = [];
+		foreach ($aValues as $key => $value) {
 			$aDisplayedValues[] = "$key => $value";
 		}
 		$sAllowedValues = implode(', ', $aDisplayedValues);
@@ -62,24 +60,18 @@ abstract class ValueSetDefinition
 	 */
 	public function GetValues($aArgs, $sContains = '', $sOperation = 'contains')
 	{
-		if (!$this->m_bIsLoaded)
-		{
+		if (!$this->m_bIsLoaded) {
 			$this->LoadValues($aArgs);
 			$this->m_bIsLoaded = true;
 		}
-		if (strlen($sContains) == 0)
-		{
+		if (strlen($sContains) == 0) {
 			// No filtering
 			$aRet = $this->m_aValues;
-		}
-		else
-		{
+		} else {
 			// Filter on results containing the needle <sContain>
-			$aRet = array();
-			foreach ($this->m_aValues as $sKey=>$sValue)
-			{
-				if (stripos($sValue, $sContains) !== false)
-				{
+			$aRet = [];
+			foreach ($this->m_aValues as $sKey => $sValue) {
+				if (stripos($sValue, $sContains) !== false) {
 					$aRet[$sKey] = $sValue;
 				}
 			}
@@ -103,9 +95,8 @@ abstract class ValueSetDefinition
 	abstract protected function LoadValues($aArgs);
 }
 
-
 /**
- * Set of existing values for an attribute, given a search filter 
+ * Set of existing values for an attribute, given a search filter
  *
  * @package     iTopORM
  */
@@ -122,11 +113,10 @@ class ValueSetObjects extends ValueSetDefinition
 	private $m_bSort;
 	private $m_iLimit;
 
-
 	/**
 	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
-	 */	
-	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = array(), $bAllowAllData = false, $aModifierProperties = array())
+	 */
+	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = [], $bAllowAllData = false, $aModifierProperties = [])
 	{
 		$this->m_sContains = '';
 		$this->m_sOperation = '';
@@ -166,54 +156,48 @@ class ValueSetObjects extends ValueSetDefinition
 	{
 		$this->m_aOrderBy = $aOrderBy;
 	}
-	public function ToObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	public function ToObjectSet($aArgs = [], $sContains = '', $iAdditionalValue = null)
 	{
-		if ($this->m_bAllowAllData)
-		{
+		if ($this->m_bAllowAllData) {
 			$oFilter = DBObjectSearch::FromOQL_AllData($this->m_sFilterExpr);
-		}
-		else
-		{
+		} else {
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
 		}
-		if (!is_null($this->m_oExtraCondition))
-		{
+		if (!is_null($this->m_oExtraCondition)) {
 			$oFilter = $oFilter->Intersect($this->m_oExtraCondition);
 		}
-		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
-		{
-			foreach ($aProperties as $sProperty => $value)
-			{
+		foreach ($this->m_aModifierProperties as $sPluginClass => $aProperties) {
+			foreach ($aProperties as $sProperty => $value) {
 				$oFilter->SetModifierProperty($sPluginClass, $sProperty, $value);
 			}
 		}
-		if ($iAdditionalValue > 0)
-		{
+		if ($iAdditionalValue > 0) {
 			$oSearchAdditionalValue = new DBObjectSearch($oFilter->GetClass());
-			$oSearchAdditionalValue->AddConditionExpression( new BinaryExpression(
-			    new FieldExpression('id', $oSearchAdditionalValue->GetClassAlias()),
-                '=',
-                new VariableExpression('current_extkey_id'))
-            );
+			$oSearchAdditionalValue->AddConditionExpression(
+				new BinaryExpression(
+					new FieldExpression('id', $oSearchAdditionalValue->GetClassAlias()),
+					'=',
+					new VariableExpression('current_extkey_id')
+				)
+			);
 			$oSearchAdditionalValue->AllowAllData();
 			$oSearchAdditionalValue->SetArchiveMode(true);
-			$oSearchAdditionalValue->SetInternalParams( array('current_extkey_id' => $iAdditionalValue) );
+			$oSearchAdditionalValue->SetInternalParams(['current_extkey_id' => $iAdditionalValue]);
 
-			$oFilter = new DBUnionSearch(array($oFilter, $oSearchAdditionalValue));
+			$oFilter = new DBUnionSearch([$oFilter, $oSearchAdditionalValue]);
 		}
 
 		return new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
 	}
 
-    /**
-     * @inheritDoc
-     * @throws CoreException
-     * @throws OQLException
-     */
-    public function GetValues($aArgs, $sContains = '', $sOperation = 'contains')
+	/**
+	 * @inheritDoc
+	 * @throws CoreException
+	 * @throws OQLException
+	 */
+	public function GetValues($aArgs, $sContains = '', $sOperation = 'contains')
 	{
-		if (!$this->m_bIsLoaded || ($sContains != $this->m_sContains) || ($sOperation != $this->m_sOperation))
-		{
+		if (!$this->m_bIsLoaded || ($sContains != $this->m_sContains) || ($sOperation != $this->m_sOperation)) {
 			$this->LoadValues($aArgs, $sContains, $sOperation);
 			$this->m_bIsLoaded = true;
 		}
@@ -236,15 +220,15 @@ class ValueSetObjects extends ValueSetDefinition
 		$this->m_sContains = $sContains;
 		$this->m_sOperation = $sOperation;
 
-		$this->m_aValues = array();
+		$this->m_aValues = [];
 
 		$oFilter = $this->GetFilter($sOperation, $sContains);
 
 		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs, null, $this->m_iLimit, 0, $this->m_bSort);
 		if (empty($this->m_sValueAttCode)) {
-			$aAttToLoad = array($oFilter->GetClassAlias() => array('friendlyname'));
+			$aAttToLoad = [$oFilter->GetClassAlias() => ['friendlyname']];
 		} else {
-			$aAttToLoad = array($oFilter->GetClassAlias() => array($this->m_sValueAttCode));
+			$aAttToLoad = [$oFilter->GetClassAlias() => [$this->m_sValueAttCode]];
 		}
 		$oObjects->OptimizeColumnLoad($aAttToLoad);
 		while ($oObject = $oObjects->Fetch()) {
@@ -257,7 +241,6 @@ class ValueSetObjects extends ValueSetDefinition
 
 		return true;
 	}
-
 
 	/**
 	 * Get filter for functions LoadValues and LoadValuesForAutocomplete
@@ -308,7 +291,7 @@ class ValueSetObjects extends ValueSetDefinition
 				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
 				if (count($aAttributes) > 0) {
 					$sClassAlias = $oFilter->GetClassAlias();
-					$aFilters = array();
+					$aFilters = [];
 					$oValueExpr = new ScalarExpression($this->m_sContains);
 					foreach ($aAttributes as $sAttribute) {
 						$oNewFilter = $oFilter->DeepClone();
@@ -366,8 +349,7 @@ class ValueSetObjects extends ValueSetDefinition
 
 	public function GetValuesForAutocomplete($aArgs, $sContains = '', $sOperation = 'contains')
 	{
-		if (!$this->m_bIsLoaded || ($sContains != $this->m_sContains) || ($sOperation != $this->m_sOperation))
-		{
+		if (!$this->m_bIsLoaded || ($sContains != $this->m_sContains) || ($sOperation != $this->m_sOperation)) {
 			$this->LoadValuesForAutocomplete($aArgs, $sContains, $sOperation);
 			$this->m_bIsLoaded = true;
 		}
@@ -387,7 +369,7 @@ class ValueSetObjects extends ValueSetDefinition
 	 */
 	protected function LoadValuesForAutocomplete($aArgs, $sContains = '', $sOperation = 'contains')
 	{
-		$this->m_aValues = array();
+		$this->m_aValues = [];
 
 		$oFilter = $this->GetFilter($sOperation, $sContains);
 		$sClass = $oFilter->GetClass();
@@ -455,9 +437,8 @@ class ValueSetObjects extends ValueSetDefinition
 	}
 }
 
-
 /**
- * Fixed set values (could be hardcoded in the business model) 
+ * Fixed set values (could be hardcoded in the business model)
  *
  * @package     iTopORM
  */
@@ -525,8 +506,7 @@ class ValueSetEnum extends ValueSetDefinition
 	protected function LoadValues($aArgs)
 	{
 		$aValues = [];
-		if (is_array($this->m_values))
-		{
+		if (is_array($this->m_values)) {
 			foreach ($this->m_values as $key => $value) {
 				// Handle backed-enum case
 				if (is_object($value) && enum_exists(get_class($value))) {
@@ -536,18 +516,13 @@ class ValueSetEnum extends ValueSetDefinition
 
 				$aValues[$key] = $value;
 			}
-		}
-		elseif (is_string($this->m_values) && strlen($this->m_values) > 0)
-		{
-			foreach (explode(",", $this->m_values) as $sVal)
-			{
+		} elseif (is_string($this->m_values) && strlen($this->m_values) > 0) {
+			foreach (explode(",", $this->m_values) as $sVal) {
 				$sVal = trim($sVal);
-				$sKey = $sVal; 
+				$sKey = $sVal;
 				$aValues[$sKey] = $sVal;
 			}
-		}
-		else
-		{
+		} else {
 			$aValues = [];
 		}
 		$this->m_aValues = $aValues;
@@ -564,17 +539,13 @@ class ValueSetEnumPadded extends ValueSetEnum
 	public function __construct($Values, bool $bSortByValues = false)
 	{
 		parent::__construct($Values, $bSortByValues);
-		if (is_string($Values))
-		{
+		if (is_string($Values)) {
 			$this->LoadValues(null);
-		}
-		else
-		{
+		} else {
 			$this->m_aValues = $Values;
 		}
-		$aPaddedValues = array();
-		foreach ($this->m_aValues as $sKey => $sVal)
-		{
+		$aPaddedValues = [];
+		foreach ($this->m_aValues as $sKey => $sVal) {
 			// Pad keys to the min. length required by the \AttributeSet
 			$sKey = str_pad($sKey, 3, '_', STR_PAD_LEFT);
 			$aPaddedValues[$sKey] = $sVal;
@@ -603,17 +574,15 @@ class ValueSetRange extends ValueSetDefinition
 	protected function LoadValues($aArgs)
 	{
 		$iValue = $this->m_iStart;
-		for($iValue = $this->m_iStart; $iValue <= $this->m_iEnd; $iValue += $this->m_iStep)
-		{
+		for ($iValue = $this->m_iStart; $iValue <= $this->m_iEnd; $iValue += $this->m_iStep) {
 			$this->m_aValues[$iValue] = $iValue;
 		}
 		return true;
 	}
 }
 
-
 /**
- * Data model classes 
+ * Data model classes
  *
  * @package     iTopORM
  */
@@ -631,29 +600,21 @@ class ValueSetEnumClasses extends ValueSetEnum
 	{
 		// Call the parent to parse the additional values...
 		parent::LoadValues($aArgs);
-		
+
 		// Translate the labels of the additional values
-		foreach($this->m_aValues as $sClass => $void)
-		{
-			if (MetaModel::IsValidClass($sClass))
-			{
+		foreach ($this->m_aValues as $sClass => $void) {
+			if (MetaModel::IsValidClass($sClass)) {
 				$this->m_aValues[$sClass] = MetaModel::GetName($sClass);
-			}
-			else
-			{
+			} else {
 				unset($this->m_aValues[$sClass]);
 			}
 		}
 
 		// Then, add the classes from the category definition
-		foreach (MetaModel::GetClasses($this->m_sCategories) as $sClass)
-		{
-			if (MetaModel::IsValidClass($sClass))
-			{
+		foreach (MetaModel::GetClasses($this->m_sCategories) as $sClass) {
+			if (MetaModel::IsValidClass($sClass)) {
 				$this->m_aValues[$sClass] = MetaModel::GetName($sClass);
-			}
-			else
-			{
+			} else {
 				unset($this->m_aValues[$sClass]);
 			}
 		}

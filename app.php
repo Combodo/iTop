@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -25,5 +26,5 @@ require_once('approot.inc.php');
 require_once('application/startup.inc.php');
 
 return function (array $context) {
-    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+	return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
 };

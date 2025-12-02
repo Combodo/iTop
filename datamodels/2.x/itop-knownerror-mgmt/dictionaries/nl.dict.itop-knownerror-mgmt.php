@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author LinProfs <info@linprofs.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:KnownError' => 'Gekende fout',
 	'Class:KnownError+' => 'Gedocumenteerde fout voor een gekend probleem',
 	'Class:KnownError/Attribute:name' => 'Naam',
@@ -54,13 +55,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:KnownError/Attribute:ci_list+' => 'Alle configuratie-items gerelateerd aan deze gekende fout',
 	'Class:KnownError/Attribute:document_list' => 'Documenten',
 	'Class:KnownError/Attribute:document_list+' => 'Alle documenten gerelateerd aan deze gekende fout',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkErrorToFunctionalCI' => 'Link Fout / Functioneel CI',
 	'Class:lnkErrorToFunctionalCI+' => 'Infrastructuur gelinkt aan een gekende fout',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
@@ -74,13 +75,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reden',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkDocumentToError' => 'Link Document / Fout',
 	'Class:lnkDocumentToError+' => 'Een link tussen een document en een gekende fout',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
@@ -94,9 +95,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Soort link',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
+]);
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ProblemManagement' => 'Probleem Management',
 	'Menu:ProblemManagement+' => 'Probleem Management',
 	'Menu:Problem:Shortcuts' => 'Snelkoppelingen',
@@ -106,4 +107,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:SearchError+' => 'Zoek naar gekende fouten',
 	'Menu:Problem:KnownErrors' => 'Alle gekende fouten',
 	'Menu:Problem:KnownErrors+' => 'Alle gekende fouten',
-));
+]);

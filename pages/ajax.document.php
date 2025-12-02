@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -22,16 +23,13 @@ use Combodo\iTop\Application\WebPage\DownloadPage;
 require_once('../approot.inc.php');
 require_once(APPROOT.'application/utils.inc.php');
 
-
-if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && (strlen($_SERVER['HTTP_IF_MODIFIED_SINCE']) > 0))
-{
+if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && (strlen($_SERVER['HTTP_IF_MODIFIED_SINCE']) > 0)) {
 	// The content is garanteed to be unmodified since the URL includes a signature based on the contents of the document
 	header('Last-Modified: Mon, 1 January 2018 00:00:00 GMT', true, 304); // Any date in the past
 	exit;
 }
 
-try
-{
+try {
 	require_once(APPROOT.'/application/application.inc.php');
 	require_once(APPROOT.'/application/startup.inc.php');
 
@@ -48,19 +46,14 @@ try
 			LoginWebPage::DoLoginEx('backoffice', false);
 			$id = utils::ReadParam('id', '');
 			$sField = utils::ReadParam('field', '');
-			if ($sClass == 'Attachment')
-			{
+			if ($sClass == 'Attachment') {
 				$iCacheSec = 31556926; // One year ahead: an attachment cannot change
-			}
-			else
-			{
+			} else {
 				$iCacheSec = (int)utils::ReadParam('cache', 0);
 			}
-			if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField))
-			{
+			if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField)) {
 				ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'attachment');
-				if ($iCacheSec > 0)
-				{
+				if ($iCacheSec > 0) {
 					$oPage->set_cache($iCacheSec);
 					// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 					// so we're resetting its value ! (see N°3416)
@@ -88,7 +81,7 @@ try
 				$oPage->add_header("Last-Modified: Wed, 15 Jun 2016 13:21:15 GMT"); // An arbitrary date in the past is ok
 			}
 			break;
-			
+
 		case 'dict':
 			$sSignature = Utils::ReadParam('s', ''); // Sanitization prevents / and ..
 			$oPage->SetContentType('text/javascript');
@@ -100,17 +93,14 @@ try
 
 			$oPage->add(file_get_contents(Utils::GetCachePath().$sSignature.'.js'));
 			break;
-			
+
 		default:
-		$oPage->p("Invalid query.");
+			$oPage->p("Invalid query.");
 	}
 
 	$oPage->output();
-}
-catch (Exception $e)
-{
+} catch (Exception $e) {
 	// note: transform to cope with XSS attacks
 	echo utils::EscapeHtml($e->GetMessage());
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
-

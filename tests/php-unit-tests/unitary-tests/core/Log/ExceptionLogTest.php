@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (C) 2013-2024 Combodo SAS
  * This file is part of iTop.
@@ -18,12 +19,11 @@ namespace Combodo\iTop\Test\UnitTest\Core\Log;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ExceptionLog;
 
-
 require_once(__DIR__.'/ExceptionLogTest/Exceptions.php');
 
 class ExceptionLogTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = false;
+	public const USE_TRANSACTION = false;
 
 	protected function setUp(): void
 	{
@@ -46,16 +46,14 @@ class ExceptionLogTest extends ItopDataTestCase
 				switch ($code) {
 					case 'log_level_min':
 
-						if (is_null($logLevelMin))
-						{
+						if (is_null($logLevelMin)) {
 							$logLevelMin = '';//this should be the default value, if it did change, please fix it here
 						}
 
 						return $logLevelMin;
 					case 'log_level_min.write_in_db':
 
-						if (is_null($logLevelMinWriteInDb))
-						{
+						if (is_null($logLevelMinWriteInDb)) {
 							$logLevelMinWriteInDb = [ 'Exception' => 'Error', ];//this should be the default value, if it did change, please fix it here
 						}
 
@@ -69,12 +67,15 @@ class ExceptionLogTest extends ItopDataTestCase
 		foreach ($aLevels as $i => $sLevel) {
 			$sExpectedFile = __FILE__;
 			// @formatter:off
-			$oException = new $aExceptions[$i]("Iteration number $i"); $sExpectedLine = __LINE__; //Both should remain on the same line
+			$oException = new $aExceptions[$i]("Iteration number $i");
+			$sExpectedLine = __LINE__ - 1; //Both should remain on the same line
 			// @formatter:on
 
 			$iExpectedWriteNumber = $aExpectedWriteNumber[$i];
 			$iExpectedDbWriteNumber = $aExpectedDbWriteNumber[$i];
-			$aExpectedFileContext = array_merge($aContext, [
+			$aExpectedFileContext = array_merge(
+				$aContext,
+				[
 					'exception class'               => get_class($oException),
 					'file'                          => $sExpectedFile,
 					'line'                          => $sExpectedLine,
@@ -294,6 +295,3 @@ class ExceptionLogTest extends ItopDataTestCase
 		$this->assertEquals('Ok', $resultFilePerDefaultWhenKeyNotFound);
 	}
 }
-
-
-

@@ -524,7 +524,7 @@ abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
 	 */
 	public function EnumUsedAttributes($oObject)
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -548,7 +548,7 @@ abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
 	 */
 	public function EnumAllowedActions(DBObjectSet $oSet)
 	{
-		return array();
+		return [];
 	}
 
 }
@@ -686,7 +686,7 @@ abstract class AbstractApplicationObjectExtension implements iApplicationObjectE
 	 */
 	public function OnCheckToWrite($oObject)
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -694,7 +694,7 @@ abstract class AbstractApplicationObjectExtension implements iApplicationObjectE
 	 */
 	public function OnCheckToDelete($oObject)
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -739,21 +739,21 @@ interface iPopupMenuExtension
 	 * $param is a DBObjectSet containing the list of objects
 	 * @api
 	 */
-	const MENU_OBJLIST_ACTIONS = 1;
+	public const MENU_OBJLIST_ACTIONS = 1;
 	/**
 	 * Insert an item into the Toolkit menu of a list
 	 *
 	 * $param is a DBObjectSet containing the list of objects
 	 * @api
 	 */
-	const MENU_OBJLIST_TOOLKIT = 2;
+	public const MENU_OBJLIST_TOOLKIT = 2;
 	/**
 	 * Insert an item into the Actions menu on an object details page
 	 *
 	 * $param is a DBObject instance: the object currently displayed
 	 * @api
 	 */
-	const MENU_OBJDETAILS_ACTIONS = 3;
+	public const MENU_OBJDETAILS_ACTIONS = 3;
 	/**
 	 * Insert an item into the Dashboard menu
 	 *
@@ -763,14 +763,14 @@ interface iPopupMenuExtension
 	 * $param is a Dashboard instance: the dashboard currently displayed
 	 * @api
 	 */
-	const MENU_DASHBOARD_ACTIONS = 4;
+	public const MENU_DASHBOARD_ACTIONS = 4;
 	/**
 	 * Insert an item into the User menu (upper right corner)
 	 *
 	 * $param is null
 	 * @api
 	 */
-	const MENU_USER_ACTIONS = 5;
+	public const MENU_USER_ACTIONS = 5;
 	/**
 	 * Insert an item into the Action menu on an object item in an objects list in the portal
 	 *
@@ -778,7 +778,7 @@ interface iPopupMenuExtension
 	 * the current line)
 	 * @api
 	 */
-	const PORTAL_OBJLISTITEM_ACTIONS = 7;
+	public const PORTAL_OBJLISTITEM_ACTIONS = 7;
 	/**
 	 * Insert an item into the Action menu on an object details page in the portal
 	 *
@@ -786,7 +786,7 @@ interface iPopupMenuExtension
 	 * currently displayed)
 	 * @api
 	 */
-	const PORTAL_OBJDETAILS_ACTIONS = 8;
+	public const PORTAL_OBJDETAILS_ACTIONS = 8;
 
 	/**
 	 * Insert an item into the Actions menu of a list in the portal
@@ -796,7 +796,7 @@ interface iPopupMenuExtension
 	 *
 	 * @todo
 	 */
-	const PORTAL_OBJLIST_ACTIONS = 6;
+	public const PORTAL_OBJLIST_ACTIONS = 6;
 	/**
 	 * Insert an item into the user menu of the portal
 	 * Note: This is not implemented yet !
@@ -805,7 +805,7 @@ interface iPopupMenuExtension
 	 *
 	 * @todo
 	 */
-	const PORTAL_USER_ACTIONS = 9;
+	public const PORTAL_USER_ACTIONS = 9;
 	/**
 	 * Insert an item into the navigation menu of the portal
 	 * Note: This is not implemented yet !
@@ -814,7 +814,7 @@ interface iPopupMenuExtension
 	 *
 	 * @todo
 	 */
-	const PORTAL_MENU_ACTIONS = 10;
+	public const PORTAL_MENU_ACTIONS = 10;
 
 	/**
 	 * Get the list of items to be added to a menu.
@@ -864,7 +864,7 @@ abstract class ApplicationPopupMenuItem
 		$this->sLabel = $sLabel;
 		$this->sTooltip = '';
 		$this->sIconClass = '';
-		$this->aCssClasses = array();
+		$this->aCssClasses = [];
 	}
 
 	/**
@@ -919,7 +919,6 @@ abstract class ApplicationPopupMenuItem
 	{
 		$this->aCssClasses[] = $sCssClass;
 	}
-
 
 	/**
 	 * @param $sTooltip
@@ -976,7 +975,7 @@ abstract class ApplicationPopupMenuItem
 	/** @ignore */
 	public function GetLinkedScripts()
 	{
-		return array();
+		return [];
 	}
 }
 
@@ -1015,13 +1014,13 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 	/** @ignore */
 	public function GetMenuItem()
 	{
-		return array('label' => $this->GetLabel(),
+		return ['label' => $this->GetLabel(),
 			'url' => $this->GetUrl(),
 			'target' => $this-> GetTarget(),
 			'css_classes' => $this->aCssClasses,
 			'icon_class' => $this->sIconClass,
-			'tooltip' => $this->sTooltip
-		);
+			'tooltip' => $this->sTooltip,
+		];
 	}
 
 	/** @ignore */
@@ -1065,7 +1064,7 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	 *     ans $sTarget will be ignored
 	 * @param array $aIncludeJSFiles An array of file URLs to be included (once) to provide some JS libraries for the page.
 	 */
-	public function __construct($sUID, $sLabel, $sJSCode, $aIncludeJSFiles = array())
+	public function __construct($sUID, $sLabel, $sJSCode, $aIncludeJSFiles = [])
 	{
 		parent::__construct($sUID, $sLabel);
 		$this->sJsCode = $sJSCode;
@@ -1077,14 +1076,14 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	public function GetMenuItem()
 	{
 		// Note: the semicolumn is a must here!
-		return array(
+		return [
 			'label' => $this->GetLabel(),
 			'onclick' => $this->GetJsCode().'; return false;',
 			'url' => $this->GetUrl(),
 			'css_classes' => $this->GetCssClasses(),
 			'icon_class' => $this->sIconClass,
-			'tooltip' => $this->sTooltip
-		);
+			'tooltip' => $this->sTooltip,
+		];
 	}
 
 	/** @ignore */
@@ -1116,7 +1115,7 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
  */
 class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
 {
-	static $idx = 0;
+	public static $idx = 0;
 
 	/**
 	 * Constructor
@@ -1130,7 +1129,7 @@ class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
 	/** @ignore */
 	public function GetMenuItem()
 	{
-		return array('label' => '<hr class="menu-separator">', 'url' => '', 'css_classes' => $this->aCssClasses);
+		return ['label' => '<hr class="menu-separator">', 'url' => '', 'css_classes' => $this->aCssClasses];
 	}
 }
 
@@ -1143,7 +1142,6 @@ class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
  */
 class URLButtonItem extends URLPopupMenuItem
 {
-
 }
 
 /**
@@ -1155,7 +1153,6 @@ class URLButtonItem extends URLPopupMenuItem
  */
 class JSButtonItem extends JSPopupMenuItem
 {
-
 }
 
 /**
@@ -1504,9 +1501,9 @@ interface iBackofficeDictEntriesPrefixesExtension
  */
 interface iPortalUIExtension
 {
-	const ENUM_PORTAL_EXT_UI_BODY = 'Body';
-	const ENUM_PORTAL_EXT_UI_NAVIGATION_MENU = 'NavigationMenu';
-	const ENUM_PORTAL_EXT_UI_MAIN_CONTENT = 'MainContent';
+	public const ENUM_PORTAL_EXT_UI_BODY = 'Body';
+	public const ENUM_PORTAL_EXT_UI_NAVIGATION_MENU = 'NavigationMenu';
+	public const ENUM_PORTAL_EXT_UI_MAIN_CONTENT = 'MainContent';
 
 	/**
 	 * Returns an array of CSS file urls
@@ -1593,7 +1590,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	 */
 	public function GetCSSFiles(Container $oContainer)
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -1609,7 +1606,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	 */
 	public function GetJSFiles(Container $oContainer)
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -1729,62 +1726,62 @@ class RestResult
 	 * Result: no issue has been encountered
 	 * @api
 	 */
-	const OK = 0;
+	public const OK = 0;
 	/**
 	 * Result: missing/wrong credentials or the user does not have enough rights to perform the requested operation
 	 * @api
 	 */
-	const UNAUTHORIZED = 1;
+	public const UNAUTHORIZED = 1;
 	/**
 	 * Result: the parameter 'version' is missing
 	 * @api
 	 */
-	const MISSING_VERSION = 2;
+	public const MISSING_VERSION = 2;
 	/**
 	 * Result: the parameter 'json_data' is missing
 	 * @api
 	 */
-	const MISSING_JSON = 3;
+	public const MISSING_JSON = 3;
 	/**
 	 * Result: the input structure is not a valid JSON string
 	 * @api
 	 */
-	const INVALID_JSON = 4;
+	public const INVALID_JSON = 4;
 	/**
 	 * Result: the parameter 'auth_user' is missing, authentication aborted
 	 * @api
 	 */
-	const MISSING_AUTH_USER = 5;
+	public const MISSING_AUTH_USER = 5;
 	/**
 	 * Result: the parameter 'auth_pwd' is missing, authentication aborted
 	 * @api
 	 */
-	const MISSING_AUTH_PWD = 6;
+	public const MISSING_AUTH_PWD = 6;
 	/**
 	 * Result: no operation is available for the specified version
 	 * @api
 	 */
-	const UNSUPPORTED_VERSION = 10;
+	public const UNSUPPORTED_VERSION = 10;
 	/**
 	 * Result: the requested operation is not valid for the specified version
 	 * @api
 	 */
-	const UNKNOWN_OPERATION = 11;
+	public const UNKNOWN_OPERATION = 11;
 	/**
 	 * Result: the requested operation cannot be performed because it can cause data (integrity) loss
 	 * @api
 	 */
-	const UNSAFE = 12;
+	public const UNSAFE = 12;
 	/**
 	 * Result: the request page number is not valid. It must be an integer greater than 0
 	 * @api
 	 */
-	const INVALID_PAGE = 13;
+	public const INVALID_PAGE = 13;
 	/**
 	 * Result: the operation could not be performed, see the message for troubleshooting
 	 * @api
 	 */
-	const INTERNAL_ERROR = 100;
+	public const INTERNAL_ERROR = 100;
 
 	/**
 	 * Default constructor - ok!
@@ -1807,7 +1804,7 @@ class RestResult
 	 * @api
 	 */
 	public $message;
-	
+
 	/**
 	 * Sanitize the content of this result to hide sensitive information
 	 */
@@ -1854,16 +1851,12 @@ class RestUtils
 	 */
 	public static function GetMandatoryParam($oData, $sParamName)
 	{
-		if (isset($oData->$sParamName))
-		{
+		if (isset($oData->$sParamName)) {
 			return $oData->$sParamName;
-		}
-		else
-		{
+		} else {
 			throw new Exception("Missing parameter '$sParamName'");
 		}
 	}
-
 
 	/**
 	 * Read an optional parameter from a Rest/Json structure.
@@ -1879,16 +1872,12 @@ class RestUtils
 	 */
 	public static function GetOptionalParam($oData, $sParamName, $default)
 	{
-		if (isset($oData->$sParamName))
-		{
+		if (isset($oData->$sParamName)) {
 			return $oData->$sParamName;
-		}
-		else
-		{
+		} else {
 			return $default;
 		}
 	}
-
 
 	/**
 	 * Read a class from a Rest/Json structure.
@@ -1903,14 +1892,12 @@ class RestUtils
 	public static function GetClass($oData, $sParamName)
 	{
 		$sClass = self::GetMandatoryParam($oData, $sParamName);
-		if (!MetaModel::IsValidClass($sClass))
-		{
+		if (!MetaModel::IsValidClass($sClass)) {
 			throw new Exception("$sParamName: '$sClass' is not a valid class'");
 		}
 
 		return $sClass;
 	}
-
 
 	/**
 	 * Read a list of attribute codes from a Rest/Json structure.
@@ -1927,31 +1914,21 @@ class RestUtils
 	public static function GetFieldList($sClass, $oData, $sParamName)
 	{
 		$sFields = self::GetOptionalParam($oData, $sParamName, '*');
-		$aShowFields = array();
-		if ($sFields == '*')
-		{
-			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
+		$aShowFields = [];
+		if ($sFields == '*') {
+			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 				$aShowFields[$sClass][] = $sAttCode;
 			}
-		}
-		elseif ($sFields == '*+')
-		{
-			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sRefClass)
-			{
-				foreach (MetaModel::ListAttributeDefs($sRefClass) as $sAttCode => $oAttDef)
-				{
+		} elseif ($sFields == '*+') {
+			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sRefClass) {
+				foreach (MetaModel::ListAttributeDefs($sRefClass) as $sAttCode => $oAttDef) {
 					$aShowFields[$sRefClass][] = $sAttCode;
 				}
 			}
-		}
-		else
-		{
-			foreach (explode(',', $sFields) as $sAttCode)
-			{
+		} else {
+			foreach (explode(',', $sFields) as $sAttCode) {
 				$sAttCode = trim($sAttCode);
-				if (($sAttCode != 'id') && (!MetaModel::IsValidAttCode($sClass, $sAttCode)))
-				{
+				if (($sAttCode != 'id') && (!MetaModel::IsValidAttCode($sClass, $sAttCode))) {
 					throw new Exception("$sParamName: invalid attribute code '$sAttCode'");
 				}
 				$aShowFields[$sClass][] = $sAttCode;
@@ -1974,45 +1951,36 @@ class RestUtils
 	 */
 	protected static function FindObjectFromCriteria($sClass, $oCriteria)
 	{
-		$aCriteriaReport = array();
-		if (isset($oCriteria->finalclass))
-		{
-			if (!MetaModel::IsValidClass($oCriteria->finalclass))
-			{
+		$aCriteriaReport = [];
+		if (isset($oCriteria->finalclass)) {
+			if (!MetaModel::IsValidClass($oCriteria->finalclass)) {
 				throw new Exception("finalclass: Unknown class '".$oCriteria->finalclass."'");
 			}
-			if (!MetaModel::IsParentClass($sClass, $oCriteria->finalclass))
-			{
+			if (!MetaModel::IsParentClass($sClass, $oCriteria->finalclass)) {
 				throw new Exception("finalclass: '".$oCriteria->finalclass."' is not a child class of '$sClass'");
 			}
 			$sClass = $oCriteria->finalclass;
 		}
 		$oSearch = new DBObjectSearch($sClass);
-		foreach ($oCriteria as $sAttCode => $value)
-		{
+		foreach ($oCriteria as $sAttCode => $value) {
 			$realValue = static::MakeValue($sClass, $sAttCode, $value);
 			$oSearch->AddCondition($sAttCode, $realValue, '=');
-			if (is_object($value) || is_array($value))
-			{
+			if (is_object($value) || is_array($value)) {
 				$value = json_encode($value);
 			}
 			$aCriteriaReport[] = "$sAttCode: $value ($realValue)";
 		}
 		$oSet = new DBObjectSet($oSearch);
 		$iCount = $oSet->Count();
-		if ($iCount == 0)
-		{
+		if ($iCount == 0) {
 			throw new Exception("No item found with criteria: ".implode(', ', $aCriteriaReport));
-		}
-		elseif ($iCount > 1)
-		{
+		} elseif ($iCount > 1) {
 			throw new Exception("Several items found ($iCount) with criteria: ".implode(', ', $aCriteriaReport));
 		}
 		$res = $oSet->Fetch();
 
 		return $res;
 	}
-
 
 	/**
 	 * Find an object from a polymorph search specification (Rest/Json)
@@ -2029,43 +1997,29 @@ class RestUtils
 	 */
 	public static function FindObjectFromKey($sClass, $key, $bAllowNullValue = false)
 	{
-		if (is_object($key))
-		{
+		if (is_object($key)) {
 			$res = static::FindObjectFromCriteria($sClass, $key);
-		}
-		elseif (is_numeric($key))
-		{
-			if ($bAllowNullValue && ($key == 0))
-			{
+		} elseif (is_numeric($key)) {
+			if ($bAllowNullValue && ($key == 0)) {
 				$res = null;
-			}
-			else
-			{
+			} else {
 				$res = MetaModel::GetObject($sClass, $key, false);
-				if (is_null($res))
-				{
+				if (is_null($res)) {
 					throw new Exception("Invalid object $sClass::$key");
 				}
 			}
-		}
-		elseif (is_string($key))
-		{
+		} elseif (is_string($key)) {
 			// OQL
 			$oSearch = DBObjectSearch::FromOQL($key);
 			$oSet = new DBObjectSet($oSearch);
 			$iCount = $oSet->Count();
-			if ($iCount == 0)
-			{
+			if ($iCount == 0) {
 				throw new Exception("No item found for query: $key");
-			}
-			elseif ($iCount > 1)
-			{
+			} elseif ($iCount > 1) {
 				throw new Exception("Several items found ($iCount) for query: $key");
 			}
 			$res = $oSet->Fetch();
-		}
-		else
-		{
+		} else {
 			throw new Exception("Wrong format for key");
 		}
 
@@ -2086,47 +2040,37 @@ class RestUtils
 	 */
 	public static function GetObjectSetFromKey($sClass, $key, $iLimit = 0, $iOffset = 0)
 	{
-		if (is_object($key))
-		{
-			if (isset($key->finalclass))
-			{
+		if (is_object($key)) {
+			if (isset($key->finalclass)) {
 				$sClass = $key->finalclass;
-				if (!MetaModel::IsValidClass($sClass))
-				{
+				if (!MetaModel::IsValidClass($sClass)) {
 					throw new Exception("finalclass: Unknown class '$sClass'");
 				}
 			}
 
 			$oSearch = new DBObjectSearch($sClass);
-			foreach ($key as $sAttCode => $value)
-			{
+			foreach ($key as $sAttCode => $value) {
 				$realValue = static::MakeValue($sClass, $sAttCode, $value);
 				$oSearch->AddCondition($sAttCode, $realValue, '=');
 			}
-		}
-		elseif (is_numeric($key))
-		{
+		} elseif (is_numeric($key)) {
 			$oSearch = new DBObjectSearch($sClass);
 			$oSearch->AddCondition('id', $key);
-		}
-		elseif (is_string($key))
-		{
+		} elseif (is_string($key)) {
 			// OQL
-            try {
-                $oSearch = DBObjectSearch::FromOQL($key);
-            } catch (Exception $e) {
-                throw new CoreOqlException('Query failed to execute', [
-                        'query' => $key,
-                        'exception_class' => get_class($e),
-                        'exception_message' => $e->getMessage(),
-                ]);
-            }
-        }
-		else
-		{
+			try {
+				$oSearch = DBObjectSearch::FromOQL($key);
+			} catch (Exception $e) {
+				throw new CoreOqlException('Query failed to execute', [
+						'query' => $key,
+						'exception_class' => get_class($e),
+						'exception_message' => $e->getMessage(),
+				]);
+			}
+		} else {
 			throw new Exception("Wrong format for key");
 		}
-		$oObjectSet = new DBObjectSet($oSearch, array(), array(), null, $iLimit, $iOffset);
+		$oObjectSet = new DBObjectSet($oSearch, [], [], null, $iLimit, $iOffset);
 
 		return $oObjectSet;
 	}
@@ -2144,53 +2088,38 @@ class RestUtils
 	 */
 	public static function MakeValue($sClass, $sAttCode, $value)
 	{
-		try
-		{
-			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
+		try {
+			if (!MetaModel::IsValidAttCode($sClass, $sAttCode)) {
 				throw new Exception("Unknown attribute");
 			}
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if ($oAttDef instanceof AttributeExternalKey)
-			{
+			if ($oAttDef instanceof AttributeExternalKey) {
 				$oExtKeyObject = static::FindObjectFromKey($oAttDef->GetTargetClass(), $value, true /* allow null */);
 				$value = ($oExtKeyObject != null) ? $oExtKeyObject->GetKey() : 0;
-			}
-			elseif ($oAttDef instanceof AttributeLinkedSet)
-			{
-				if (!is_array($value))
-				{
+			} elseif ($oAttDef instanceof AttributeLinkedSet) {
+				if (!is_array($value)) {
 					throw new Exception("A link set must be defined by an array of objects");
 				}
 				$sLnkClass = $oAttDef->GetLinkedClass();
-				$aLinks = array();
-				foreach ($value as $oValues)
-				{
+				$aLinks = [];
+				foreach ($value as $oValues) {
 					$oLnk = static::MakeObjectFromFields($sLnkClass, $oValues);
 					// Fix for N°1939
-					if (($oAttDef instanceof AttributeLinkedSetIndirect) && ($oLnk->Get($oAttDef->GetExtKeyToRemote()) == 0))
-					{
+					if (($oAttDef instanceof AttributeLinkedSetIndirect) && ($oLnk->Get($oAttDef->GetExtKeyToRemote()) == 0)) {
 						continue;
 					}
 					$aLinks[] = $oLnk;
 				}
 				$value = DBObjectSet::FromArray($sLnkClass, $aLinks);
-			}
-			elseif ($oAttDef instanceof AttributeTagSet)
-			{
-				if (!is_array($value))
-				{
+			} elseif ($oAttDef instanceof AttributeTagSet) {
+				if (!is_array($value)) {
 					throw new Exception("A tag set must be defined by an array of tag codes");
 				}
 				$value = $oAttDef->FromJSONToValue($value);
-			}
-			else
-			{
+			} else {
 				$value = $oAttDef->FromJSONToValue($value);
 			}
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			throw new Exception("$sAttCode: ".$e->getMessage(), $e->getCode());
 		}
 
@@ -2210,15 +2139,11 @@ class RestUtils
 	public static function MakeObjectFromFields($sClass, $aFields)
 	{
 		$oObject = MetaModel::NewObject($sClass);
-		foreach ($aFields as $sAttCode => $value)
-		{
+		foreach ($aFields as $sAttCode => $value) {
 			$realValue = static::MakeValue($sClass, $sAttCode, $value);
-			try
-			{
+			try {
 				$oObject->Set($sAttCode, $realValue);
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				throw new Exception("$sAttCode: ".$e->getMessage(), $e->getCode());
 			}
 		}
@@ -2239,15 +2164,11 @@ class RestUtils
 	public static function UpdateObjectFromFields($oObject, $aFields)
 	{
 		$sClass = get_class($oObject);
-		foreach ($aFields as $sAttCode => $value)
-		{
+		foreach ($aFields as $sAttCode => $value) {
 			$realValue = static::MakeValue($sClass, $sAttCode, $value);
-			try
-			{
+			try {
 				$oObject->Set($sAttCode, $realValue);
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				throw new Exception("$sAttCode: ".$e->getMessage(), $e->getCode());
 			}
 		}
@@ -2255,7 +2176,6 @@ class RestUtils
 		return $oObject;
 	}
 }
-
 
 /**
  * Helpers for modules extensibility, with discover performed by the MetaModel.
@@ -2279,21 +2199,21 @@ interface iModuleExtension
  */
 interface iKPILoggerExtension
 {
-    /**
-     * Init the statistics collected
-     *
-     * @return void
-     */
-    public function InitStats();
+	/**
+	 * Init the statistics collected
+	 *
+	 * @return void
+	 */
+	public function InitStats();
 
-    /**
-     * Add a new KPI to the stats
-     *
-     * @param \Combodo\iTop\Core\Kpi\KpiLogData $oKpiLogData
-     *
-     * @return mixed
-     */
-    public function LogOperation($oKpiLogData);
+	/**
+	 * Add a new KPI to the stats
+	 *
+	 * @param \Combodo\iTop\Core\Kpi\KpiLogData $oKpiLogData
+	 *
+	 * @return mixed
+	 */
+	public function LogOperation($oKpiLogData);
 }
 
 /**
@@ -2310,7 +2230,6 @@ interface iBackupExtraFilesExtension
 	 */
 	public function GetExtraFilesRelPaths(): array;
 }
-
 
 /**
  * Interface to provide messages to be displayed in the "Welcome Popup"
@@ -2372,7 +2291,7 @@ abstract class AbstractWelcomePopupExtension implements iWelcomePopupExtension
 	{
 		return [];
 	}
-	
+
 	/**
 	 * @inheritDoc
 	 */

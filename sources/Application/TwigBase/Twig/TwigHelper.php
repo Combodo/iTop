@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -19,7 +20,6 @@ use Twig\Environment;
 use Twig\Error\Error;
 use Twig\Loader\FilesystemLoader;
 use utils;
-
 
 /**
  * Class TwigHelper
@@ -73,7 +73,7 @@ class TwigHelper
 	 * @return Environment
 	 * @throws \Twig\Error\LoaderError
 	 */
-	public static function GetTwigEnvironment($sViewPath, $aAdditionalPaths = array())
+	public static function GetTwigEnvironment($sViewPath, $aAdditionalPaths = [])
 	{
 		$oLoader = new FilesystemLoader($sViewPath);
 		foreach ($aAdditionalPaths as $sAdditionalPath) {
@@ -108,7 +108,7 @@ class TwigHelper
 	 * @throws \Exception
 	 * @api
 	 */
-	public static function RenderIntoPage(WebPage $oPage, $sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = self::DEFAULT_FILE_TYPE)
+	public static function RenderIntoPage(WebPage $oPage, $sViewPath, $sTemplateName, $aParams = [], $sDefaultType = self::DEFAULT_FILE_TYPE)
 	{
 		$oTwig = self::GetTwigEnvironment($sViewPath);
 		$oTwig->addGlobal('UIBlockParent', [$oPage]);
@@ -132,7 +132,7 @@ class TwigHelper
 	 * @throws \Twig\Error\LoaderError
 	 * @since 3.0.0
 	 */
-	public static function RenderIntoBlock(WebPage $oPage, UIBlock $oBlock, $sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = self::DEFAULT_FILE_TYPE)
+	public static function RenderIntoBlock(WebPage $oPage, UIBlock $oBlock, $sViewPath, $sTemplateName, $aParams = [], $sDefaultType = self::DEFAULT_FILE_TYPE)
 	{
 		$oTwig = self::GetTwigEnvironment($sViewPath);
 		$oTwig->addGlobal('UIBlockParent', [$oBlock]);
@@ -161,8 +161,7 @@ class TwigHelper
 			$oKPI->ComputeStats('Render TWIG', $sFileName);
 
 			return $sResult;
-		}
-		catch (Error $oTwigException) {
+		} catch (Error $oTwigException) {
 			$oTwigPreviousException = $oTwigException->getPrevious();
 			if (!is_null(($oTwigPreviousException)) && ($oTwigPreviousException instanceof CoreTemplateException)) {
 				// handles recursive calls : if we're here, an exception was already raised in a child template !

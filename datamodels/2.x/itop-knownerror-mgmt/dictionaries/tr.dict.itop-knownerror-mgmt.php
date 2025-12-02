@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:KnownError' => 'Bilinen hata',
 	'Class:KnownError+' => 'Hata bilinen hatalara kaydedildi',
 	'Class:KnownError/Attribute:name' => 'Adı',
@@ -53,13 +54,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
 	'Class:KnownError/Attribute:document_list' => 'Dokümanlar',
 	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkErrorToFunctionalCI' => 'Hata / İşlevsel CI bağla',
 	'Class:lnkErrorToFunctionalCI+' => ' Bilinen bir hatayla ilgili alt bilgi',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -73,13 +74,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Sebep',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkDocumentToError' => 'Belge / hata bağla',
 	'Class:lnkDocumentToError+' => 'Bir belge ile bilinen bir hata arasındaki bağlantı',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
@@ -93,9 +94,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Bağlantı tipi',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
-));
+]);
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ProblemManagement' => 'Problem Yönetimi',
 	'Menu:ProblemManagement+' => 'Problem Yönetimi',
 	'Menu:Problem:Shortcuts' => 'Kısayollar',
@@ -105,4 +106,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:SearchError+' => 'Bilinen hataları ara',
 	'Menu:Problem:KnownErrors' => 'Tüm bilinen hatalar',
 	'Menu:Problem:KnownErrors+' => 'Tüm bilinen hatalar',
-));
+]);

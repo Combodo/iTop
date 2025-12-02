@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -6,7 +7,7 @@
 
 class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
+	public const CREATE_TEST_ORG = true;
 
 	// Count the calls by name
 	private static array $aCalls = [];
@@ -84,7 +85,6 @@ class ApplicationObjectExtensionTest extends \Combodo\iTop\Test\UnitTest\ItopDat
 		$oPerson = $this->CreatePerson(1);
 		$this->assertEquals(2, self::$iCalls);
 	}
-
 
 	public function testModificationsOnInsertWith2Extensions()
 	{

@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,7 +17,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Definition of a filter
  * Most of the time, a filter corresponds to an attribute, but we could imagine other search criteria
@@ -25,10 +25,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
-
 require_once('MyHelpers.class.inc.php');
-
 
 /**
  * Definition of a filter (could be made out of an existing attribute, or from an expression)
@@ -42,10 +39,13 @@ abstract class FilterDefinition
 	abstract public function GetTypeDesc();
 
 	protected $m_sCode;
-	private $m_aParams = array();
-	protected function Get($sParamName) {return $this->m_aParams[$sParamName];}
-	
-	public function __construct($sCode, $aParams = array())
+	private $m_aParams = [];
+	protected function Get($sParamName)
+	{
+		return $this->m_aParams[$sParamName];
+	}
+
+	public function __construct($sCode, $aParams = [])
 	{
 		DeprecatedCallsLog::NotifyDeprecatedPhpMethod("Deprecated class ".$this->GetClass().". Do not use. Will be removed in next version.");
 		$this->m_sCode = $sCode;
@@ -54,9 +54,9 @@ abstract class FilterDefinition
 	}
 
 	// to be overloaded
-	static protected function ListExpectedParams()
+	protected static function ListExpectedParams()
 	{
-		return array();
+		return [];
 	}
 
 	private function ConsistencyCheck()
@@ -64,21 +64,22 @@ abstract class FilterDefinition
 		// Check that any mandatory param has been specified
 		//
 		$aExpectedParams = $this->ListExpectedParams();
-		foreach($aExpectedParams as $sParamName)
-		{
-			if (!array_key_exists($sParamName, $this->m_aParams))
-			{
+		foreach ($aExpectedParams as $sParamName) {
+			if (!array_key_exists($sParamName, $this->m_aParams)) {
 				$aBacktrace = debug_backtrace();
 				$sTargetClass = $aBacktrace[2]["class"];
 				$sCodeInfo = $aBacktrace[1]["file"]." - ".$aBacktrace[1]["line"];
 				throw new CoreException("ERROR missing parameter '$sParamName' in ".get_class($this)." declaration for class $sTargetClass ($sCodeInfo)");
 			}
 		}
-	} 
+	}
 
-	public function GetCode() {return $this->m_sCode;} 
-	abstract public function GetLabel(); 
-	abstract public function GetValuesDef(); 
+	public function GetCode()
+	{
+		return $this->m_sCode;
+	}
+	abstract public function GetLabel();
+	abstract public function GetValuesDef();
 
 	// returns an array of opcode=>oplabel (e.g. "differs from")
 	abstract public function GetOperators();
@@ -90,11 +91,10 @@ abstract class FilterDefinition
 	public function GetOpDescription($sOpCode)
 	{
 		$aOperators = $this->GetOperators();
-		if (!array_key_exists($sOpCode, $aOperators))
-		{
+		if (!array_key_exists($sOpCode, $aOperators)) {
 			throw new CoreException("Unknown operator '$sOpCode'");
 		}
-		
+
 		return $aOperators[$sOpCode];
 	}
 }
@@ -107,18 +107,24 @@ abstract class FilterDefinition
  */
 class FilterPrivateKey extends FilterDefinition
 {
-	static protected function ListExpectedParams()
+	protected static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("id_field"));
+		return array_merge(parent::ListExpectedParams(), ["id_field"]);
 	}
 
-	public function GetType() {return "PrivateKey";}
-	public function GetTypeDesc() {return "Match against object identifier";}
+	public function GetType()
+	{
+		return "PrivateKey";
+	}
+	public function GetTypeDesc()
+	{
+		return "Match against object identifier";
+	}
 
 	public function GetLabel()
 	{
 		return "Object Private Key";
-	} 
+	}
 
 	public function GetValuesDef()
 	{
@@ -127,12 +133,12 @@ class FilterPrivateKey extends FilterDefinition
 
 	public function GetOperators()
 	{
-		return array(
-			"="=>"equals",
-			"!="=>"differs from",
-			"IN"=>"in",
-			"NOTIN"=>"not in"
-		);
+		return [
+			"=" => "equals",
+			"!=" => "differs from",
+			"IN" => "in",
+			"NOTIN" => "not in",
+		];
 	}
 	public function GetLooseOperator()
 	{
@@ -141,9 +147,9 @@ class FilterPrivateKey extends FilterDefinition
 
 	public function GetSQLExpressions()
 	{
-		return array(
+		return [
 			'' => $this->Get("id_field"),
-		);
+		];
 	}
 }
 
@@ -155,22 +161,28 @@ class FilterPrivateKey extends FilterDefinition
  */
 class FilterFromAttribute extends FilterDefinition
 {
-	static protected function ListExpectedParams()
+	protected static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("refattribute"));
+		return array_merge(parent::ListExpectedParams(), ["refattribute"]);
 	}
 
 	public function __construct($oRefAttribute, $sSuffix = '')
 	{
 		// In this very specific case, the code is the one of the attribute
-		 // (this to get a very very simple syntax upon declaration)
-		$aParam = array();
+		// (this to get a very very simple syntax upon declaration)
+		$aParam = [];
 		$aParam["refattribute"] = $oRefAttribute;
 		parent::__construct($oRefAttribute->GetCode().$sSuffix, $aParam);
 	}
 
-	public function GetType() {return "Basic";}
-	public function GetTypeDesc() {return "Match against field contents";}
+	public function GetType()
+	{
+		return "Basic";
+	}
+	public function GetTypeDesc()
+	{
+		return "Match against field contents";
+	}
 
 	public function __GetRefAttribute() // for checking purposes only !!!
 	{
@@ -181,7 +193,7 @@ class FilterFromAttribute extends FilterDefinition
 	{
 		$oAttDef = $this->Get("refattribute");
 		return $oAttDef->GetLabel();
-	} 
+	}
 
 	public function GetValuesDef()
 	{
@@ -189,7 +201,7 @@ class FilterFromAttribute extends FilterDefinition
 		return $oAttDef->GetValuesDef();
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$oAttDef = $this->Get("refattribute");
 		return $oAttDef->GetAllowedValues($aArgs, $sContains);
@@ -212,5 +224,3 @@ class FilterFromAttribute extends FilterDefinition
 		return $oAttDef->GetSQLExpressions();
 	}
 }
-
-?>

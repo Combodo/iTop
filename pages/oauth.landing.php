@@ -1,6 +1,5 @@
 <?php
 
-
 use Combodo\iTop\Controller\OAuth\OAuthLandingController;
 
 require_once('../approot.inc.php');

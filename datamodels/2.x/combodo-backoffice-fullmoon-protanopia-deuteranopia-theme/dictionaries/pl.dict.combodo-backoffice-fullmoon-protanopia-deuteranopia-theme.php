@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -20,6 +21,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'theme:fullmoon-protanopia-deuteranopia' => 'Pełnia Księżyca (Protanopia i Deuteranopia)'
-));
+Dict::Add('PL PL', 'Polish', 'Polski', [
+	'theme:fullmoon-protanopia-deuteranopia' => 'Pełnia Księżyca (Protanopia i Deuteranopia)',
+]);

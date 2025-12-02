@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:IncidentManagement' => 'Správa incidentů',
 	'Menu:IncidentManagement+' => 'Správa incidentů',
 	'Menu:Incident:Overview' => 'Přehled',
@@ -33,8 +34,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Otevřené incidenty podle stavu',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Otevřené incidenty podle řešitele',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Otevřené incidenty podle zákazníka',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -50,7 +50,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 // Class: Incident
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Stav',
@@ -229,4 +229,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'Vyřešit podřízené tikety',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Kaskádovat vyřešení do podřízeného tiketu (ev_autoresolve) a sjednotit následující vlastnosti: služba, tým, řešitel, informace o vyřešení',
 	'Tickets:Related:OpenIncidents' => 'Otevřené incidenty',
-));
+]);

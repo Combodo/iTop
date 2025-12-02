@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -149,7 +150,7 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 		$this->sWizHelper = 'oWizardHelper'.$sFormPrefix;
 		$oValue->Rewind();
 		$bAllowRemoteExtKeyEdit = $oValue->Count() <= utils::GetConfig()->Get('link_set_max_edit_ext_key');
-		$aForm = array();
+		$aForm = [];
 		$iMaxAddedId = 0;
 		$iAddedId = -1; // Unique id for new links
 		$this->aRemoved = json_decode(\utils::ReadPostedParam("attr_{$sFormPrefix}{$this->oUILinksWidget->GetAttCode()}_tbd", '[]', 'raw_data'), true);
@@ -174,7 +175,8 @@ class BlockIndirectLinkSetEditTable extends UIContentBlock
 					$sAttCode = substr($sName, strlen($sPrefix));
 					$oCurrentLink->Set($sAttCode, $sValue);
 					$sEscapedValue = addslashes($sValue);
-					$oPage->add_ready_script(<<<EOF
+					$oPage->add_ready_script(
+						<<<EOF
 oWidget{$this->oUILinksWidget->GetInputId()}.OnValueChange($sCurrentLinkId, $iAddedId, "$sAttCode", "$sEscapedValue");
 EOF
 					);
@@ -189,8 +191,6 @@ EOF
 				$bReadOnly = true;
 				$oLinkedObj = MetaModel::GetObject($this->oUILinksWidget->GetRemoteClass(), $oCurrentLink->Get($this->oUILinksWidget->GetExternalKeyToRemote()), false /* Must not be found */, true);
 			}
-
-
 
 			$iMaxAddedId = max($iMaxAddedId, $key);
 			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly, $bAllowRemoteExtKeyEdit);
@@ -267,8 +267,8 @@ EOF
 	public function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false, $bAllowRemoteExtKeyEdit = true)
 	{
 		$sPrefix = "{$this->oUILinksWidget->GetAttCode()}{$this->oUILinksWidget->GetNameSuffix()}";
-		$aRow = array();
-		$aFieldsMap = array();
+		$aRow = [];
+		$aFieldsMap = [];
 		$iKey = 0;
 
 		if (is_object($linkObjOrId) && (!$linkObjOrId->IsNew())) {
@@ -299,23 +299,30 @@ EOF
 			}
 
 			$sState = $linkObjOrId->GetState();
-			$sRemoteKeySafeFieldId = $this->GetFieldId($aArgs['this']->GetKey(), $this->oUILinksWidget->GetExternalKeyToRemote());;
+			$sRemoteKeySafeFieldId = $this->GetFieldId($aArgs['this']->GetKey(), $this->oUILinksWidget->GetExternalKeyToRemote());
+			;
 		} else {
 			// form for creating a new record
 			if (is_object($linkObjOrId)) {
 				// New link existing only in memory
 				$oNewLinkObj = $linkObjOrId;
 				$iRemoteObjKey = $oNewLinkObj->Get($this->oUILinksWidget->GetExternalKeyToRemote());
-				$oNewLinkObj->Set($this->oUILinksWidget->GetExternalKeyToMe(),
-					$oCurrentObj); // Setting the extkey with the object also fills the related external fields
+				$oNewLinkObj->Set(
+					$this->oUILinksWidget->GetExternalKeyToMe(),
+					$oCurrentObj
+				); // Setting the extkey with the object also fills the related external fields
 			} else {
 				$iRemoteObjKey = $linkObjOrId;
 				$oNewLinkObj = MetaModel::NewObject($this->oUILinksWidget->GetLinkedClass());
 				$oRemoteObj = MetaModel::GetObject($this->oUILinksWidget->GetRemoteClass(), $iRemoteObjKey);
-				$oNewLinkObj->Set($this->oUILinksWidget->GetExternalKeyToRemote(),
-					$oRemoteObj); // Setting the extkey with the object alsoo fills the related external fields
-				$oNewLinkObj->Set($this->oUILinksWidget->GetExternalKeyToMe(),
-					$oCurrentObj); // Setting the extkey with the object also fills the related external fields
+				$oNewLinkObj->Set(
+					$this->oUILinksWidget->GetExternalKeyToRemote(),
+					$oRemoteObj
+				); // Setting the extkey with the object alsoo fills the related external fields
+				$oNewLinkObj->Set(
+					$this->oUILinksWidget->GetExternalKeyToMe(),
+					$oCurrentObj
+				); // Setting the extkey with the object also fills the related external fields
 			}
 			$sPrefix .= "[-$iUniqueId][";
 			$sNameSuffix = "]"; // To make a tabular form
@@ -328,20 +335,21 @@ EOF
 			if ($iUniqueId > 0) {
 				// Rows created with ajax call need OnLinkAdded call.
 				//
-					$oP->add_ready_script(
-						<<<EOF
+				$oP->add_ready_script(
+					<<<EOF
 PrepareWidgets();
 oWidget{$this->oUILinksWidget->GetInputId()}.OnLinkAdded($iUniqueId, $iRemoteObjKey);
 EOF
-					);
+				);
 			} else {
 				// Rows added before loading the form don't have to call OnLinkAdded.
 				// Listeners are already present and DOM is not recreated
 				$iPositiveUniqueId = -$iUniqueId;
-					$oP->add_ready_script(<<<EOF
+				$oP->add_ready_script(
+					<<<EOF
 oWidget{$this->oUILinksWidget->GetInputId()}.AddLink($iPositiveUniqueId, $iRemoteObjKey);
 EOF
-					);
+				);
 			}
 
 			foreach ($this->oUILinksWidget->GetEditableFields() as $sFieldCode) {
@@ -353,11 +361,11 @@ EOF
 				$aFieldsMap[$sFieldCode] = $sSafeFieldId;
 
 				$sValue = $oNewLinkObj->Get($sFieldCode);
-					$oP->add_ready_script(
-						<<<JS
+				$oP->add_ready_script(
+					<<<JS
 oWidget{$this->oUILinksWidget->GetInputId()}.OnValueChange($iKey, $iUniqueId, '$sFieldCode', '$sValue');
 JS
-					);
+				);
 			}
 
 			$sState = '';
@@ -439,17 +447,17 @@ JS
 			$sFieldForHtml = $oAttDef->GetAsHTML($sValue);
 		} else {
 			$sFieldForHtml = cmdbAbstractObject::GetFormElementForField(
-					$oP,
-					$this->oUILinksWidget->GetLinkedClass(),
-					$sFieldCode,
-					$oAttDef,
-					$sValue,
-					$sDisplayValue,
-					$sSafeFieldId,
-					$sNameSuffix,
-					0,
-					$aArgs
-				);
+				$oP,
+				$this->oUILinksWidget->GetLinkedClass(),
+				$sFieldCode,
+				$oAttDef,
+				$sValue,
+				$sDisplayValue,
+				$sSafeFieldId,
+				$sNameSuffix,
+				0,
+				$aArgs
+			);
 		}
 
 		$aRow[$sRowFieldCode] = <<<HTML
@@ -494,21 +502,25 @@ JS
 	 */
 	private function GetRowActions(DBObject $oHostObject): array
 	{
-		$aRowActions = array();
+		$aRowActions = [];
 
-		$sRemoveButtonTooltip = $this->oAttributeLinkedSetIndirect->SearchSpecificLabel('UI:Links:Remove:Button+', '', true,
+		$sRemoveButtonTooltip = $this->oAttributeLinkedSetIndirect->SearchSpecificLabel(
+			'UI:Links:Remove:Button+',
+			'',
+			true,
 			MetaModel::GetName($this->oAttributeLinkedSetIndirect->GetHostClass()),
 			$oHostObject->Get('friendlyname'),
 			$this->oAttributeLinkedSetIndirect->GetLabel(),
-			MetaModel::GetName($this->oUILinksWidget->GetRemoteClass()));
+			MetaModel::GetName($this->oUILinksWidget->GetRemoteClass())
+		);
 
 		if ($this->bIsAllowDelete) {
-			$aRowActions[] = array(
+			$aRowActions[] = [
 				'label'         => 'UI:Links:Remove:Button',
 				'tooltip'       => $sRemoveButtonTooltip,
 				'icon_classes'  => 'fas fa-minus',
 				'js_row_action' => "oWidget{$this->oUILinksWidget->GetInputId()}.Remove(oTrElement);",
-			);
+			];
 		}
 
 		return $aRowActions;

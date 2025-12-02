@@ -16,9 +16,10 @@ use User;
  * @package Combodo\iTop\Application\Newsroom
  * @since 3.2.0
  */
-class iTopNewsroomProvider extends NewsroomProviderBase {
-
-	public function IsApplicable(User $oUser = null){
+class iTopNewsroomProvider extends NewsroomProviderBase
+{
+	public function IsApplicable(User $oUser = null)
+	{
 		return true;
 	}
 	public function GetLabel()
@@ -43,7 +44,7 @@ class iTopNewsroomProvider extends NewsroomProviderBase {
 
 	private static function MakeURL($sRouteCode)
 	{
-		return Router::GetInstance()->GenerateUrl(iTopNewsroomController::ROUTE_NAMESPACE . '.' . $sRouteCode);
+		return Router::GetInstance()->GenerateUrl(iTopNewsroomController::ROUTE_NAMESPACE.'.'.$sRouteCode);
 	}
 
 	public function GetTTL()

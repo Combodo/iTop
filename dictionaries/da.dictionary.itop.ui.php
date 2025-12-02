@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:AuditCategory' => 'Audit-kategori',
 	'Class:AuditCategory+' => 'Udsnit af alle Audits',
 	'Class:AuditCategory/Attribute:name' => 'Kategori navn',
@@ -26,13 +27,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
-));
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:AuditRule' => 'Audit-regel',
 	'Class:AuditRule+' => 'En regel til at efterprøve den angivne Audit-kategori med',
 	'Class:AuditRule/Attribute:name' => 'Regel Navn',
@@ -51,13 +52,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:AuditRule/Attribute:category_id+' => 'Kategori for denne regel',
 	'Class:AuditRule/Attribute:category_name' => 'Kategori',
 	'Class:AuditRule/Attribute:category_name+' => 'Kategorinavn for denne regel',
-));
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -69,13 +70,13 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -86,13 +87,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Query' => 'Forespørgsel',
 	'Class:Query+' => '',
 	'Class:Query/Attribute:name' => 'Navn',
@@ -119,7 +120,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:QueryOQL+' => '',
 	'Class:QueryOQL/Attribute:oql' => 'Udtryk',
 	'Class:QueryOQL/Attribute:oql+' => '',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -130,7 +131,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 // Class: User
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:User' => 'Bruger',
 	'Class:User+' => 'Bruger log in',
 	'Class:User/Attribute:finalclass' => 'Type af brugerkonto',
@@ -176,13 +177,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'User Internal~~',
 	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT.'~~',
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_Profiles' => 'Profil',
 	'Class:URP_Profiles+' => 'Brugerprofil',
 	'Class:URP_Profiles/Attribute:name' => 'Navn',
@@ -191,13 +192,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:URP_Profiles/Attribute:description+' => 'Kort beskrivelse',
 	'Class:URP_Profiles/Attribute:user_list' => 'Brugere',
 	'Class:URP_Profiles/Attribute:user_list+' => 'Personer, der har denne Rolle',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_Dimensions' => 'Dimension',
 	'Class:URP_Dimensions+' => 'Anvendelsesdimension (Fastlæggelse af siloer)',
 	'Class:URP_Dimensions/Attribute:name' => 'Navn',
@@ -206,13 +207,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'Kort beskrivelse',
 	'Class:URP_Dimensions/Attribute:type' => 'Type',
 	'Class:URP_Dimensions/Attribute:type+' => 'Klassenavn eller datatype',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_UserProfile' => 'Brugerprofil',
 	'Class:URP_UserProfile+' => 'Brugerprofil',
 	'Class:URP_UserProfile/Name' => 'Link mellem %1$s and %2$s',
@@ -226,14 +227,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:URP_UserProfile/Attribute:profile+' => 'Profilnavn',
 	'Class:URP_UserProfile/Attribute:reason' => 'Begrundelse',
 	'Class:URP_UserProfile/Attribute:reason+' => 'Begrundelse, hvorfor denne bruger skal have denne profil',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_UserOrg' => 'Bruger organisation(er)',
 	'Class:URP_UserOrg+' => 'Tilladte organisation(er)',
 	'Class:URP_UserOrg/Name' => 'Link mellem %1$s og %2$s',
@@ -247,13 +247,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
 	'Class:URP_UserOrg/Attribute:reason' => 'Begrundelse',
 	'Class:URP_UserOrg/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_ProfileProjection' => 'Profil_projection',
 	'Class:URP_ProfileProjection+' => 'Profilbillede',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimension',
@@ -268,13 +268,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL-udtryk (Benyttes af $user) | konstant | | + Attribut-Code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribut',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Mål for Attribut-kode (valgfri)',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_ClassProjection' => 'Klasse_projection',
 	'Class:URP_ClassProjection+' => 'Klassebillede',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimension',
@@ -287,13 +287,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL-udtryk (Benyttes af $this) | konstant | | + Attribut-Code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribut',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Mål for Attribut-kode (valgfri)',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_ActionGrant' => 'Handlings godkendelser',
 	'Class:URP_ActionGrant+' => 'Tilladelser på klasser',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profil',
@@ -310,13 +310,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'Nej',
 	'Class:URP_ActionGrant/Attribute:action' => 'Handling',
 	'Class:URP_ActionGrant/Attribute:action+' => 'Handling som skal udføres på den valgte klasse',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_StimulusGrant' => 'Tilladels til påvirkning',
 	'Class:URP_StimulusGrant+' => 'Tilladelserne til påvirkning af livscyklus af objektet',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profil',
@@ -333,25 +333,25 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'Nej',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Påvirkning',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Påvirknings-kode',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:URP_AttributeGrant' => 'Godkendelse af Attributter',
 	'Class:URP_AttributeGrant+' => 'Godkendelse af Attributter',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Tillad handling',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'Tillad handling',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribut',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Attribut-kode',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:UserDashboard' => 'User dashboard~~',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'User~~',
@@ -360,12 +360,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:WelcomeMenu' => 'Velkomen',
 	'Menu:WelcomeMenu+' => 'Velkommen til '.ITOP_APPLICATION_SHORT, 'Menu:WelcomeMenuPage' => 'Velkomen',
 	'Menu:WelcomeMenuPage+' => 'Velkommen til '.ITOP_APPLICATION_SHORT, 'Menu:AdminTools' => 'Admin værktøjer',
@@ -382,14 +382,14 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:MyShortcuts' => 'Mine Genveje',
 	'Menu:Notifications:Title' => 'Audit Kategorier',
 	'Menu:DataAdministration' => 'Data administration~~',
-	'Menu:DataAdministration+' => '~~'
-));
+	'Menu:DataAdministration+' => '~~',
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'BooleanLabel:yes' => 'yes~~',
 	'BooleanLabel:no' => 'no~~',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
@@ -1534,13 +1534,13 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Children of the selected objects will be included.~~',
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
-	'UI:StateChanged' => 'State changed~~'
-));
+	'UI:StateChanged' => 'State changed~~',
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Expression:Operator:AND' => ' AND ~~',
 	'Expression:Operator:OR' => ' OR ~~',
 	'Expression:Operator:=' => ': ~~',
@@ -1553,12 +1553,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Expression:Unit:Long:MINUTE' => 'minute(s)~~',
 	'Expression:Verb:NOW' => 'now~~',
 	'Expression:Verb:ISNULL' => ': undefined~~',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
 	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
@@ -1573,10 +1573,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
-));
+]);
 
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:DataSources' => 'Synkroniserings Data Kilder',
 	'Menu:DataSources+' => 'Data synchro used for batch import of external data~~',
 	'Menu:AuditCategories' => 'Audit Kategorier',
@@ -1604,4 +1603,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:Integrations' => 'Integrations~~',
 	'Menu:Integrations+' => '~~',
 
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -31,21 +32,21 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
  */
 class Kernel extends BaseKernel
 {
-    use MicroKernelTrait;
+	use MicroKernelTrait;
 
 	private function getConfigDir(): string
 	{
-		return $this->getProjectDir() . '/resources/symfony/config';
+		return $this->getProjectDir().'/resources/symfony/config';
 	}
 
 	public function getCacheDir(): string
 	{
 		$sEnv =  Session::Get('itop_env', 'production');
-		return $this->getProjectDir() . "/data/cache-$sEnv/symfony";
+		return $this->getProjectDir()."/data/cache-$sEnv/symfony";
 	}
 
 	public function getLogDir(): string
 	{
-		return $this->getProjectDir() . '/log/symfony';
+		return $this->getProjectDir().'/log/symfony';
 	}
 }

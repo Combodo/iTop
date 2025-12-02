@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2010-2024 Combodo SAS
  *
@@ -49,23 +50,19 @@ final class ormTagSet extends ormSet
 	 */
 	public function SetValues($aTagCodes)
 	{
-		if (is_null($aTagCodes))
-		{
-			$aTagCodes = array();
+		if (is_null($aTagCodes)) {
+			$aTagCodes = [];
 		}
-		if (!is_array($aTagCodes))
-		{
+		if (!is_array($aTagCodes)) {
 			throw new CoreUnexpectedValue("Wrong value {$aTagCodes} for {$this->sClass}:{$this->sAttCode}");
 		}
 
-		$oTags = array();
+		$oTags = [];
 		$iCount = 0;
 		$bError = false;
-		foreach($aTagCodes as $sTagCode)
-		{
+		foreach ($aTagCodes as $sTagCode) {
 			$iCount++;
-			if (($this->iLimit != 0) && ($iCount > $this->iLimit))
-			{
+			if (($this->iLimit != 0) && ($iCount > $this->iLimit)) {
 				$bError = true;
 				continue;
 			}
@@ -74,13 +71,12 @@ final class ormTagSet extends ormSet
 		}
 
 		$this->aPreserved = &$oTags;
-		$this->aRemoved = array();
-		$this->aAdded = array();
-		$this->aModified = array();
+		$this->aRemoved = [];
+		$this->aAdded = [];
+		$this->aModified = [];
 		$this->aOriginalObjects = $oTags;
 
-		if ($bError)
-		{
+		if ($bError) {
 			throw new CoreException("Maximum number of tags ({$this->iLimit}) reached for {$this->sClass}:{$this->sAttCode}");
 		}
 	}
@@ -90,13 +86,11 @@ final class ormTagSet extends ormSet
 	 */
 	public function GetValues()
 	{
-		$aValues = array();
-		foreach($this->aPreserved as $sTagCode => $oTag)
-		{
+		$aValues = [];
+		foreach ($this->aPreserved as $sTagCode => $oTag) {
 			$aValues[] = $sTagCode;
 		}
-		foreach($this->aAdded as $sTagCode => $oTag)
-		{
+		foreach ($this->aAdded as $sTagCode => $oTag) {
 			$aValues[] = $sTagCode;
 		}
 
@@ -110,25 +104,19 @@ final class ormTagSet extends ormSet
 	 */
 	public function GetLabels()
 	{
-		$aTags = array();
+		$aTags = [];
 		/** @var \TagSetFieldData $oTag */
-		foreach($this->aPreserved as $sTagCode => $oTag)
-		{
-			try
-			{
+		foreach ($this->aPreserved as $sTagCode => $oTag) {
+			try {
 				$aTags[$sTagCode] = $oTag->Get('label');
-			} catch (CoreException $e)
-			{
+			} catch (CoreException $e) {
 				IssueLog::Error($e->getMessage());
 			}
 		}
-		foreach($this->aAdded as $sTagCode => $oTag)
-		{
-			try
-			{
+		foreach ($this->aAdded as $sTagCode => $oTag) {
+			try {
 				$aTags[$sTagCode] = $oTag->Get('label');
-			} catch (CoreException $e)
-			{
+			} catch (CoreException $e) {
 				IssueLog::Error($e->getMessage());
 			}
 		}
@@ -142,13 +130,11 @@ final class ormTagSet extends ormSet
 	 */
 	public function GetTags()
 	{
-		$aTags = array();
-		foreach($this->aPreserved as $sTagCode => $oTag)
-		{
+		$aTags = [];
+		foreach ($this->aPreserved as $sTagCode => $oTag) {
 			$aTags[$sTagCode] = $oTag;
 		}
-		foreach($this->aAdded as $sTagCode => $oTag)
-		{
+		foreach ($this->aAdded as $sTagCode => $oTag) {
 			$aTags[$sTagCode] = $oTag;
 		}
 		ksort($aTags);
@@ -161,9 +147,8 @@ final class ormTagSet extends ormSet
 	 */
 	private function GetAddedCodes()
 	{
-		$aTags = array();
-		foreach($this->aAdded as $sTagCode => $oTag)
-		{
+		$aTags = [];
+		foreach ($this->aAdded as $sTagCode => $oTag) {
 			$aTags[] = $sTagCode;
 		}
 		ksort($aTags);
@@ -176,9 +161,8 @@ final class ormTagSet extends ormSet
 	 */
 	private function GetRemovedCodes()
 	{
-		$aTags = array();
-		foreach($this->aRemoved as $sTagCode => $oTag)
-		{
+		$aTags = [];
+		foreach ($this->aRemoved as $sTagCode => $oTag) {
 			$aTags[] = $sTagCode;
 		}
 		ksort($aTags);
@@ -191,9 +175,8 @@ final class ormTagSet extends ormSet
 	 */
 	private function GetAddedTags()
 	{
-		$aTags = array();
-		foreach($this->aAdded as $sTagCode => $oTag)
-		{
+		$aTags = [];
+		foreach ($this->aAdded as $sTagCode => $oTag) {
 			$aTags[$sTagCode] = $oTag;
 		}
 		ksort($aTags);
@@ -206,9 +189,8 @@ final class ormTagSet extends ormSet
 	 */
 	private function GetRemovedTags()
 	{
-		$aTags = array();
-		foreach($this->aRemoved as $sTagCode => $oTag)
-		{
+		$aTags = [];
+		foreach ($this->aRemoved as $sTagCode => $oTag) {
 			$aTags[$sTagCode] = $oTag;
 		}
 		ksort($aTags);
@@ -236,16 +218,14 @@ final class ormTagSet extends ormSet
 		$aOrigTagCodes = $this->GetValues();
 		$oTag->SetValues($aOrigTagCodes);
 		// now remove everything
-		foreach($aOrigTagCodes as $sTagCode)
-		{
+		foreach ($aOrigTagCodes as $sTagCode) {
 			$oTag->Remove($sTagCode);
 		}
 		// now add the tags of the other TagSet
-		foreach($oOtherTagSet->GetValues() as $sTagCode)
-		{
+		foreach ($oOtherTagSet->GetValues() as $sTagCode) {
 			$oTag->Add($sTagCode);
 		}
-		$aDelta = array();
+		$aDelta = [];
 		$aDelta['added'] = $oTag->GetAddedCodes();
 		$aDelta['removed'] = $oTag->GetRemovedCodes();
 
@@ -272,16 +252,14 @@ final class ormTagSet extends ormSet
 		$aOrigTagCodes = $this->GetValues();
 		$oTag->SetValues($aOrigTagCodes);
 		// now remove everything
-		foreach($aOrigTagCodes as $sTagCode)
-		{
+		foreach ($aOrigTagCodes as $sTagCode) {
 			$oTag->Remove($sTagCode);
 		}
 		// now add the tags of the other TagSet
-		foreach($oOtherTagSet->GetValues() as $sTagCode)
-		{
+		foreach ($oOtherTagSet->GetValues() as $sTagCode) {
 			$oTag->Add($sTagCode);
 		}
-		$aDelta = array();
+		$aDelta = [];
 		$aDelta['added'] = $oTag->GetAddedTags();
 		$aDelta['removed'] = $oTag->GetRemovedTags();
 
@@ -332,17 +310,13 @@ final class ormTagSet extends ormSet
 	 */
 	public function ApplyDelta($aDelta)
 	{
-		if (isset($aDelta['removed']))
-		{
-			foreach($aDelta['removed'] as $oItem)
-			{
+		if (isset($aDelta['removed'])) {
+			foreach ($aDelta['removed'] as $oItem) {
 				$this->Remove($oItem);
 			}
 		}
-		if (isset($aDelta['added']))
-		{
-			foreach($aDelta['added'] as $oItem)
-			{
+		if (isset($aDelta['added'])) {
+			foreach ($aDelta['added'] as $oItem) {
 				$this->Add($oItem);
 			}
 		}
@@ -357,22 +331,19 @@ final class ormTagSet extends ormSet
 	 */
 	public function GenerateDiffFromArray($aItems)
 	{
-		foreach($this->GetValues() as $oCurrentItem)
-		{
-			if (!in_array($oCurrentItem, $aItems))
-			{
+		foreach ($this->GetValues() as $oCurrentItem) {
+			if (!in_array($oCurrentItem, $aItems)) {
 				$this->Remove($oCurrentItem);
 			}
 		}
 
-		foreach($aItems as $oNewItem)
-		{
+		foreach ($aItems as $oNewItem) {
 			$this->Add($oNewItem);
 		}
 
 		// Keep only the aModified list
-		$this->aRemoved = array();
-		$this->aAdded = array();
+		$this->aRemoved = [];
+		$this->aAdded = [];
 	}
 
 	/**
@@ -384,13 +355,11 @@ final class ormTagSet extends ormSet
 	 */
 	public function IsValidTag($sTagCode)
 	{
-		try
-		{
+		try {
 			$this->GetTagFromCode($sTagCode);
 
 			return true;
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			return false;
 		}
 	}
@@ -403,24 +372,19 @@ final class ormTagSet extends ormSet
 	 */
 	public function Add($sTagCode)
 	{
-		if (($this->iLimit != 0) && ($this->Count() == $this->iLimit))
-		{
+		if (($this->iLimit != 0) && ($this->Count() == $this->iLimit)) {
 			throw new CoreException("Maximum number of tags ({$this->iLimit}) reached for {$this->sClass}:{$this->sAttCode}");
 		}
-		if ($this->IsTagInList($this->aPreserved, $sTagCode) || $this->IsTagInList($this->aAdded, $sTagCode))
-		{
+		if ($this->IsTagInList($this->aPreserved, $sTagCode) || $this->IsTagInList($this->aAdded, $sTagCode)) {
 			// nothing to do, already existing tag
 			return;
 		}
 		// if removed then added again
-		if (($oTag = $this->RemoveTagFromList($this->aRemoved, $sTagCode)) !== false)
-		{
+		if (($oTag = $this->RemoveTagFromList($this->aRemoved, $sTagCode)) !== false) {
 			// put it back into preserved
 			$this->aPreserved[$sTagCode] = $oTag;
 			// no need to add it to aModified : was already done when calling Remove method
-		}
-		else
-		{
+		} else {
 			$oTag = $this->GetTagFromCode($sTagCode);
 			$this->aAdded[$sTagCode] = $oTag;
 			$this->aModified[$sTagCode] = $oTag;
@@ -432,23 +396,20 @@ final class ormTagSet extends ormSet
 	 */
 	public function Remove($sTagCode)
 	{
-		if ($this->IsTagInList($this->aRemoved, $sTagCode))
-		{
+		if ($this->IsTagInList($this->aRemoved, $sTagCode)) {
 			// nothing to do, already removed tag
 			return;
 		}
 
 		$oTag = $this->RemoveTagFromList($this->aAdded, $sTagCode);
-		if ($oTag !== false)
-		{
+		if ($oTag !== false) {
 			$this->aModified[$sTagCode] = $oTag;
 
 			return; // if present in added, can't be in preserved !
 		}
 
 		$oTag = $this->RemoveTagFromList($this->aPreserved, $sTagCode);
-		if ($oTag !== false)
-		{
+		if ($oTag !== false) {
 			$this->aModified[$sTagCode] = $oTag;
 			$this->aRemoved[$sTagCode] = $oTag;
 		}
@@ -467,8 +428,7 @@ final class ormTagSet extends ormSet
 	 */
 	private function RemoveTagFromList(&$aTagList, $sTagCode)
 	{
-		if (!($this->IsTagInList($aTagList, $sTagCode)))
-		{
+		if (!($this->IsTagInList($aTagList, $sTagCode))) {
 			return false;
 		}
 
@@ -488,10 +448,8 @@ final class ormTagSet extends ormSet
 	private function GetTagFromCode($sTagCode)
 	{
 		$aAllowedTags = $this->GetAllowedTags();
-		foreach($aAllowedTags as $oAllowedTag)
-		{
-			if ($oAllowedTag->Get('code') === $sTagCode)
-			{
+		foreach ($aAllowedTags as $oAllowedTag) {
+			if ($oAllowedTag->Get('code') === $sTagCode) {
 				return $oAllowedTag;
 			}
 		}
@@ -508,10 +466,8 @@ final class ormTagSet extends ormSet
 	public function GetTagFromLabel($sTagLabel)
 	{
 		$aAllowedTags = $this->GetAllowedTags();
-		foreach($aAllowedTags as $oAllowedTag)
-		{
-			if ($oAllowedTag->Get('label') === $sTagLabel)
-			{
+		foreach ($aAllowedTags as $oAllowedTag) {
+			if ($oAllowedTag->Get('label') === $sTagLabel) {
 				return $oAllowedTag->Get('code');
 			}
 		}
@@ -538,12 +494,10 @@ final class ormTagSet extends ormSet
 	 */
 	public function Equals(ormSet $other)
 	{
-		if (!($other instanceof ormTagSet))
-		{
+		if (!($other instanceof ormTagSet)) {
 			return false;
 		}
-		if ($this->GetTagDataClass() !== $other->GetTagDataClass())
-		{
+		if ($this->GetTagDataClass() !== $other->GetTagDataClass()) {
 			return false;
 		}
 

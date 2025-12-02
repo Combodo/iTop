@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Preferences:Title' => 'Предпочтения',
 	'UI:Preferences:UserInterface:Title' => 'Пользовательский интерфейс',
 	'UI:Preferences:General:Title' => 'Основные',
@@ -45,5 +46,5 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Preferences:ChooseAPlaceholder:Success:Message' => 'Your placeholder image has been successfully updated~~',
 	'UI:Preferences:Notifications' => 'Notifications~~',
 	'UI:Preferences:Notifications+' => 'Configure the notifications you want to receive <a href="%1$s">on this page</a>.~~',
-	
-));
+
+]);

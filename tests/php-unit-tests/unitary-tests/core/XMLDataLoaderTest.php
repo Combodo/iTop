@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -30,17 +31,16 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObject;
 use MetaModel;
 
-
 /**
  * @group specificOrgInSampleData
  */
 class XMLDataLoaderTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = false;
+	public const CREATE_TEST_ORG = false;
 
 	public function testDataLoader()
 	{
-		$sXML = 
+		$sXML =
 <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>

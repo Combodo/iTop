@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -20,7 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'iTopUpdate:UI:PageTitle' => '应用升级',
 	'itop-core-update:UI:SelectUpdateFile' => '应用升级',
 	'itop-core-update:UI:ConfirmUpdate' => ' 升级',
@@ -106,11 +107,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:iTopUpdate' => '应用升级',
 	'Menu:iTopUpdate+' => '应用升级',
 
-    // Missing itop entries
+	// Missing itop entries
 	'Class:ModuleInstallation/Attribute:installed' => '安装时间',
 	'Class:ModuleInstallation/Attribute:name' => '名称',
 	'Class:ModuleInstallation/Attribute:version' => '版本',
 	'Class:ModuleInstallation/Attribute:comment' => '备注',
-));
-
-
+]);

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:IncidentManagement' => 'Zarządzanie incydentami',
 	'Menu:IncidentManagement+' => 'Zarządzanie incydentami',
 	'Menu:Incident:Overview' => 'Przegląd',
@@ -31,8 +32,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Otwarte incydenty według statusu',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Otwarte incydenty według agenta',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Otwarte incydenty według klienta',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -48,7 +48,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 // Class: Incident
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Incident' => 'Incydent',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Status',
@@ -227,4 +227,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'Rozpatrz zgłoszenia podrzędne',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Połącz rozwiązanie kaskadowo ze zgłoszeniem podrzędnym (ev_autoresolve) i dopasuj następujące cechy: usługa, zespół, agent, informacje o rozwiązaniu',
 	'Tickets:Related:OpenIncidents' => 'Otwarte incydenty',
-));
+]);

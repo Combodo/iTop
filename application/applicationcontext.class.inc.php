@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,7 +16,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 
 /**
  * Class ApplicationContext
@@ -47,16 +47,16 @@ interface iDBObjectURLMaker
 
 /**
  * Direct end-users to the standard iTop application: UI.php
- */ 
+ */
 class iTopStandardURLMaker implements iDBObjectURLMaker
 {
-    /**
-     * @param string $sClass
-     * @param string $iId
-     *
-     * @return string
-     * @throws \Exception
-     */
+	/**
+	 * @param string $sClass
+	 * @param string $iId
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
 	public static function MakeObjectURL($sClass, $iId)
 	{
 		$sPage = DBObject::ComputeStandardUIPage($sClass);
@@ -68,16 +68,16 @@ class iTopStandardURLMaker implements iDBObjectURLMaker
 
 /**
  * Direct end-users to the standard Portal application
- */ 
+ */
 class PortalURLMaker implements iDBObjectURLMaker
 {
-    /**
-     * @param string $sClass
-     * @param string $iId
-     *
-     * @return string
-     * @throws \Exception
-     */
+	/**
+	 * @param string $sClass
+	 * @param string $iId
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
 	public static function MakeObjectURL($sClass, $iId)
 	{
 		$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
@@ -85,7 +85,6 @@ class PortalURLMaker implements iDBObjectURLMaker
 		return $sUrl;
 	}
 }
-
 
 /**
  * Helper class to store and manipulate the parameters that make the application's context
@@ -99,99 +98,90 @@ class PortalURLMaker implements iDBObjectURLMaker
  */
 class ApplicationContext
 {
-    public static $m_sUrlMakerClass = null;
-    protected static $m_aPluginProperties = null;
-    protected static $aDefaultValues; // Cache shared among all instances
+	public static $m_sUrlMakerClass = null;
+	protected static $m_aPluginProperties = null;
+	protected static $aDefaultValues; // Cache shared among all instances
 
 	protected $aNames;
 	protected $aValues;
 
-    /**
-     * ApplicationContext constructor.
-     *
-     * @param bool $bReadContext
-     *
-     * @throws \Exception
-     */
+	/**
+	 * ApplicationContext constructor.
+	 *
+	 * @param bool $bReadContext
+	 *
+	 * @throws \Exception
+	 */
 	public function __construct($bReadContext = true)
 	{
-		$this->aNames = array(
-			'org_id', 'menu'
-		);
-		if ($bReadContext)
-		{
-			$this->ReadContext();			
+		$this->aNames = [
+			'org_id', 'menu',
+		];
+		if ($bReadContext) {
+			$this->ReadContext();
 		}
 
 	}
 
-    /**
-     * Read the context directly in the PHP parameters (either POST or GET)
-     * return nothing
-     *
-     * @throws \Exception
-     */
+	/**
+	 * Read the context directly in the PHP parameters (either POST or GET)
+	 * return nothing
+	 *
+	 * @throws \Exception
+	 */
 	protected function ReadContext()
 	{
-		if (!isset(self::$aDefaultValues))
-		{
-			self::$aDefaultValues = array();
-			$aContext = utils::ReadParam('c', array(), false, 'context_param');
-			foreach($this->aNames as $sName)
-			{
+		if (!isset(self::$aDefaultValues)) {
+			self::$aDefaultValues = [];
+			$aContext = utils::ReadParam('c', [], false, 'context_param');
+			foreach ($this->aNames as $sName) {
 				$sValue = isset($aContext[$sName]) ? $aContext[$sName] : '';
 				// TO DO: check if some of the context parameters are mandatory (or have default values)
-				if (!empty($sValue))
-				{
+				if (!empty($sValue)) {
 					self::$aDefaultValues[$sName] = $sValue;
 				}
 				// Hmm, there must be a better (more generic) way to handle the case below:
 				// When there is only one possible (allowed) organization, the context must be
 				// fixed to this org unless there is only one organization in the system then
 				// no filter is applied
-				if ($sName == 'org_id')
-				{
-					if (MetaModel::IsValidClass('Organization'))
-					{
+				if ($sName == 'org_id') {
+					if (MetaModel::IsValidClass('Organization')) {
 						$oSearchFilter = new DBObjectSearch('Organization');
 						$oSet = new CMDBObjectSet($oSearchFilter);
 						$iCount = $oSet->CountWithLimit(2);
-						if ($iCount > 1)
-						{
+						if ($iCount > 1) {
 							$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 							$oSet = new CMDBObjectSet($oSearchFilter);
 							$iCount = $oSet->CountWithLimit(2);
-							if ($iCount == 1)
-							{
+							if ($iCount == 1) {
 								// Only one possible value for org_id, set it in the context
 								$oOrg = $oSet->Fetch();
 								self::$aDefaultValues[$sName] = $oOrg->GetKey();
 							}
 						}
-					}					
+					}
 				}
 			}
 		}
 		$this->aValues = self::$aDefaultValues;
 	}
 
-    /**
-     * Returns the current value for the given parameter
-     *
-     * @param string $sParamName Name of the parameter to read
-     * @param string $defaultValue
-     *
-     * @return mixed The value for this parameter
-     */
+	/**
+	 * Returns the current value for the given parameter
+	 *
+	 * @param string $sParamName Name of the parameter to read
+	 * @param string $defaultValue
+	 *
+	 * @return mixed The value for this parameter
+	 */
 	public function GetCurrentValue($sParamName, $defaultValue = '')
 	{
-		if (isset($this->aValues[$sParamName]))
-		{
+		if (isset($this->aValues[$sParamName])) {
 			return $this->aValues[$sParamName];
 		}
 		return $defaultValue;
 	}
-	
+
 	/**
 	 * Returns the context as string with the format name1=value1&name2=value2....
 	 * @return string The context as a string to be appended to an href property
@@ -200,21 +190,20 @@ class ApplicationContext
 	public function GetForLink(bool $bWithLeadingAmpersand = false)
 	{
 		// If there are no parameters, return an empty string
-		if(empty($this->aValues)){
+		if (empty($this->aValues)) {
 			return '';
 		}
 
 		// Build the query string with ampersand separated parameters
-		$aParams = array();
-		foreach($this->aValues as $sName => $sValue)
-		{
+		$aParams = [];
+		foreach ($this->aValues as $sName => $sValue) {
 			$aParams[] = "c[$sName]".'='.urlencode($sValue);
 		}
 		$sReturnValue = implode('&', $aParams);
 
 		// add the leading ampersand if requested
-		if($bWithLeadingAmpersand){
-			$sReturnValue = '&' . $sReturnValue;
+		if ($bWithLeadingAmpersand) {
+			$sReturnValue = '&'.$sReturnValue;
 		}
 
 		return $sReturnValue;
@@ -278,14 +267,13 @@ class ApplicationContext
 	 */
 	public function GetAsHash()
 	{
-		$aReturn = array();
-		foreach($this->aValues as $sName => $sValue)
-		{
+		$aReturn = [];
+		foreach ($this->aValues as $sName => $sValue) {
 			$aReturn["c[$sName]"] = $sValue;
 		}
 		return $aReturn;
 	}
-	
+
 	/**
 	 * Returns an array of the context parameters NAMEs
 	 * @return array The list of context parameters
@@ -298,11 +286,10 @@ class ApplicationContext
 	 * Removes the specified parameter from the context, for example when the same parameter
 	 * is already a search parameter
 	 * @param string $sParamName Name of the parameter to remove
-	 */	
+	 */
 	public function Reset($sParamName)
 	{
-		if (isset($this->aValues[$sParamName]))
-		{
+		if (isset($this->aValues[$sParamName])) {
 			unset($this->aValues[$sParamName]);
 		}
 	}
@@ -318,27 +305,22 @@ class ApplicationContext
 	public function InitObjectFromContext(DBObject &$oObj)
 	{
 		$sClass = get_class($oObj);
-		foreach($this->GetNames() as $key)
-		{
-			$aCallSpec = array($sClass, 'MapContextParam');
-			if (is_callable($aCallSpec))
-			{
-				$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter					
+		foreach ($this->GetNames() as $key) {
+			$aCallSpec = [$sClass, 'MapContextParam'];
+			if (is_callable($aCallSpec)) {
+				$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter
 
-				if (MetaModel::IsValidAttCode($sClass, $sAttCode))
-				{
+				if (MetaModel::IsValidAttCode($sClass, $sAttCode)) {
 					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-					if ($oAttDef->IsWritable())
-					{
+					if ($oAttDef->IsWritable()) {
 						$value = $this->GetCurrentValue($key, null);
-						if (!is_null($value))
-						{
+						if (!is_null($value)) {
 							$oObj->Set($sAttCode, $value);
 						}
 					}
 				}
 			}
-		}		
+		}
 	}
 
 	/**
@@ -362,14 +344,10 @@ class ApplicationContext
 	 */
 	public static function GetUrlMakerClass()
 	{
-		if (is_null(self::$m_sUrlMakerClass))
-		{
-			if (Session::IsSet('UrlMakerClass'))
-			{
+		if (is_null(self::$m_sUrlMakerClass)) {
+			if (Session::IsSet('UrlMakerClass')) {
 				self::$m_sUrlMakerClass = Session::Get('UrlMakerClass');
-			}
-			else
-			{
+			} else {
 				self::$m_sUrlMakerClass = 'iTopStandardURLMaker';
 			}
 		}
@@ -387,23 +365,23 @@ class ApplicationContext
 	 * @return string the name of the class
 	 * @throws \Exception
 	 */
-   public static function MakeObjectUrl($sObjClass, $sObjKey, $sUrlMakerClass = null, $bWithNavigationContext = true)
-   {
-   	$oAppContext = new ApplicationContext();
+	public static function MakeObjectUrl($sObjClass, $sObjKey, $sUrlMakerClass = null, $bWithNavigationContext = true)
+	{
+		$oAppContext = new ApplicationContext();
 
-        if (is_null($sUrlMakerClass)) {
-	        $sUrlMakerClass = self::GetUrlMakerClass();
-        }
-		$sUrl = call_user_func(array($sUrlMakerClass, 'MakeObjectUrl'), $sObjClass, $sObjKey);
-	   if (utils::StrLen($sUrl) > 0) {
-		   if ($bWithNavigationContext) {
-			   return $sUrl.$oAppContext->GetForLink(true);
-		   } else {
-			   return $sUrl;
-		   }
-	   } else {
-		   return '';
-	   }
+		if (is_null($sUrlMakerClass)) {
+			$sUrlMakerClass = self::GetUrlMakerClass();
+		}
+		$sUrl = call_user_func([$sUrlMakerClass, 'MakeObjectUrl'], $sObjClass, $sObjKey);
+		if (utils::StrLen($sUrl) > 0) {
+			if ($bWithNavigationContext) {
+				return $sUrl.$oAppContext->GetForLink(true);
+			} else {
+				return $sUrl;
+			}
+		} else {
+			return '';
+		}
 	}
 
 	/**
@@ -412,13 +390,10 @@ class ApplicationContext
 	 */
 	protected static function LoadPluginProperties()
 	{
-		if (Session::IsSet('PluginProperties'))
-		{
+		if (Session::IsSet('PluginProperties')) {
 			self::$m_aPluginProperties = Session::Get('PluginProperties');
-		}
-		else
-		{
-			self::$m_aPluginProperties = array();
+		} else {
+			self::$m_aPluginProperties = [];
 		}
 	}
 
@@ -431,7 +406,9 @@ class ApplicationContext
 	 */
 	public static function SetPluginProperty($sPluginClass, $sProperty, $value)
 	{
-		if (is_null(self::$m_aPluginProperties)) self::LoadPluginProperties();
+		if (is_null(self::$m_aPluginProperties)) {
+			self::LoadPluginProperties();
+		}
 
 		self::$m_aPluginProperties[$sPluginClass][$sProperty] = $value;
 		Session::Set(['PluginProperties', $sPluginClass, $sProperty], $value);
@@ -444,15 +421,14 @@ class ApplicationContext
 	 */
 	public static function GetPluginProperties($sPluginClass)
 	{
-		if (is_null(self::$m_aPluginProperties)) self::LoadPluginProperties();
-
-		if (array_key_exists($sPluginClass, self::$m_aPluginProperties))
-		{
-			return self::$m_aPluginProperties[$sPluginClass];
+		if (is_null(self::$m_aPluginProperties)) {
+			self::LoadPluginProperties();
 		}
-		else
-		{
-			return array();
+
+		if (array_key_exists($sPluginClass, self::$m_aPluginProperties)) {
+			return self::$m_aPluginProperties[$sPluginClass];
+		} else {
+			return [];
 		}
 	}
 

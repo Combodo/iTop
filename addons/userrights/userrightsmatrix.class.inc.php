@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -23,30 +24,29 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 class UserRightsMatrixClassGrant extends DBObject
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_ur_matrixclasses",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("login", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
-		MetaModel::Init_AddAttribute(new AttributeString("class", array("allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", ["targetclass" => "User", "jointype" => "", "allowed_values" => null, "sql" => "userid", "is_null_allowed" => false, "on_target_delete" => DEL_MANUAL, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("login", ["allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "login"]));
+		MetaModel::Init_AddAttribute(new AttributeString("class", ["allowed_values" => null, "sql" => "class", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
 
-		MetaModel::Init_AddAttribute(new AttributeString("action", array("allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("action", ["allowed_values" => null, "sql" => "action", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeEnum("permission", ["allowed_values" => new ValueSetEnum('yes,no'), "sql" => "permission", "default_value" => "yes", "is_null_allowed" => false, "depends_on" => []]));
 	}
 }
 
@@ -54,25 +54,25 @@ class UserRightsMatrixClassStimulusGrant extends DBObject
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_ur_matrixclassesstimulus",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("login", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
-		MetaModel::Init_AddAttribute(new AttributeString("class", array("allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", ["targetclass" => "User", "jointype" => "", "allowed_values" => null, "sql" => "userid", "is_null_allowed" => false, "on_target_delete" => DEL_MANUAL, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("login", ["allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "login"]));
+		MetaModel::Init_AddAttribute(new AttributeString("class", ["allowed_values" => null, "sql" => "class", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
 
-		MetaModel::Init_AddAttribute(new AttributeString("stimulus", array("allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("stimulus", ["allowed_values" => null, "sql" => "action", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeEnum("permission", ["allowed_values" => new ValueSetEnum('yes,no'), "sql" => "permission", "default_value" => "yes", "is_null_allowed" => false, "depends_on" => []]));
 	}
 }
 
@@ -80,42 +80,39 @@ class UserRightsMatrixAttributeGrant extends DBObject
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_ur_matrixattributes",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "jointype"=> "", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("login", array("allowed_values"=>null, "extkey_attcode"=> 'userid', "target_attcode"=>"login")));
-		MetaModel::Init_AddAttribute(new AttributeString("class", array("allowed_values"=>null, "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("allowed_values"=>null, "sql"=>"attcode", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", ["targetclass" => "User", "jointype" => "", "allowed_values" => null, "sql" => "userid", "is_null_allowed" => false, "on_target_delete" => DEL_MANUAL, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("login", ["allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "login"]));
+		MetaModel::Init_AddAttribute(new AttributeString("class", ["allowed_values" => null, "sql" => "class", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("attcode", ["allowed_values" => null, "sql" => "attcode", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
 
-		MetaModel::Init_AddAttribute(new AttributeString("action", array("allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("action", ["allowed_values" => null, "sql" => "action", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeEnum("permission", ["allowed_values" => new ValueSetEnum('yes,no'), "sql" => "permission", "default_value" => "yes", "is_null_allowed" => false, "depends_on" => []]));
 	}
 }
 
-
-
-
 class UserRightsMatrix extends UserRightsAddOnAPI
 {
-	static public $m_aActionCodes = array(
+	public static $m_aActionCodes = [
 		UR_ACTION_READ => 'read',
 		UR_ACTION_MODIFY => 'modify',
 		UR_ACTION_DELETE => 'delete',
 		UR_ACTION_BULK_READ => 'bulk read',
 		UR_ACTION_BULK_MODIFY => 'bulk modify',
 		UR_ACTION_BULK_DELETE => 'bulk delete',
-	);
+	];
 
 	// Installation: create the very first user
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
@@ -149,8 +146,7 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		// Users must be added manually
 		// This procedure will then update the matrix when a new user is found or a new class/attribute appears
 		$oUserSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT User"));
-		while ($oUser = $oUserSet->Fetch())
-		{
+		while ($oUser = $oUserSet->Fetch()) {
 			$this->SetupUser($oUser->GetKey());
 		}
 		return true;
@@ -158,23 +154,16 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 
 	protected function SetupUser($iUserId, $bNewUser = false)
 	{
-		foreach(array('bizmodel', 'application', 'gui', 'core/cmdb') as $sCategory)
-		{
-			foreach (MetaModel::GetClasses($sCategory) as $sClass)
-			{
-				foreach (self::$m_aActionCodes as $iActionCode => $sAction)
-				{
-					if ($bNewUser)
-					{
+		foreach (['bizmodel', 'application', 'gui', 'core/cmdb'] as $sCategory) {
+			foreach (MetaModel::GetClasses($sCategory) as $sClass) {
+				foreach (self::$m_aActionCodes as $iActionCode => $sAction) {
+					if ($bNewUser) {
 						$bAddCell = true;
-					}
-					else
-					{
+					} else {
 						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant WHERE class = '$sClass' AND action = '$sAction' AND userid = $iUserId"));
 						$bAddCell = ($oSet->Count() < 1);
 					}
-					if ($bAddCell)
-					{
+					if ($bAddCell) {
 						// Create a new entry
 						$oMyClassGrant = MetaModel::NewObject("UserRightsMatrixClassGrant");
 						$oMyClassGrant->Set("userid", $iUserId);
@@ -184,19 +173,14 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 						$iId = $oMyClassGrant->DBInsertNoReload();
 					}
 				}
-				foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
-				{
-					if ($bNewUser)
-					{
+				foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus) {
+					if ($bNewUser) {
 						$bAddCell = true;
-					}
-					else
-					{
+					} else {
 						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND userid = $iUserId"));
 						$bAddCell = ($oSet->Count() < 1);
 					}
-					if ($bAddCell)
-					{
+					if ($bAddCell) {
 						// Create a new entry
 						$oMyClassGrant = MetaModel::NewObject("UserRightsMatrixClassStimulusGrant");
 						$oMyClassGrant->Set("userid", $iUserId);
@@ -206,21 +190,15 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 						$iId = $oMyClassGrant->DBInsertNoReload();
 					}
 				}
-				foreach (MetaModel::GetAttributesList($sClass) as $sAttCode)
-				{
-					if ($bNewUser)
-					{
+				foreach (MetaModel::GetAttributesList($sClass) as $sAttCode) {
+					if ($bNewUser) {
 						$bAddCell = true;
-					}
-					else
-					{
+					} else {
 						$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixAttributeGrant WHERE class = '$sClass' AND attcode = '$sAttCode' AND userid = $iUserId"));
 						$bAddCell = ($oSet->Count() < 1);
 					}
-					if ($bAddCell)
-					{
-						foreach (array('read', 'modify') as $sAction)
-						{
+					if ($bAddCell) {
+						foreach (['read', 'modify'] as $sAction) {
 							// Create a new entry
 							$oMyAttGrant = MetaModel::NewObject("UserRightsMatrixAttributeGrant");
 							$oMyAttGrant->Set("userid", $iUserId);
@@ -261,14 +239,13 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		*/
 	}
 
-
 	public function Init()
 	{
 		// Could be loaded in a shared memory (?)
 		return true;
 	}
 
-	public function GetSelectFilter($oUser, $sClass, $aSettings = array())
+	public function GetSelectFilter($oUser, $sClass, $aSettings = [])
 	{
 		$oNullFilter  = new DBObjectSearch($sClass);
 		return $oNullFilter;
@@ -276,21 +253,18 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 
 	public function IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet = null)
 	{
-		if (!array_key_exists($iActionCode, self::$m_aActionCodes))
-		{
+		if (!array_key_exists($iActionCode, self::$m_aActionCodes)) {
 			return UR_ALLOWED_NO;
 		}
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassGrant WHERE class = '$sClass' AND action = '$sAction' AND userid = '{$oUser->GetKey()}'"));
-		if ($oSet->Count() < 1)
-		{
+		if ($oSet->Count() < 1) {
 			return UR_ALLOWED_NO;
 		}
 
 		$oGrantRecord = $oSet->Fetch();
-		switch ($oGrantRecord->Get('permission'))
-		{
+		switch ($oGrantRecord->Get('permission')) {
 			case 'yes':
 				$iRetCode = UR_ALLOWED_YES;
 				break;
@@ -304,21 +278,18 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 
 	public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
 	{
-		if (!array_key_exists($iActionCode, self::$m_aActionCodes))
-		{
+		if (!array_key_exists($iActionCode, self::$m_aActionCodes)) {
 			return UR_ALLOWED_NO;
 		}
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixAttributeGrant WHERE class = '$sClass' AND attcode = '$sAttCode' AND action = '$sAction' AND userid = '{$oUser->GetKey()}'"));
-		if ($oSet->Count() < 1)
-		{
+		if ($oSet->Count() < 1) {
 			return UR_ALLOWED_NO;
 		}
 
 		$oGrantRecord = $oSet->Fetch();
-		switch ($oGrantRecord->Get('permission'))
-		{
+		switch ($oGrantRecord->Get('permission')) {
 			case 'yes':
 				$iRetCode = UR_ALLOWED_YES;
 				break;
@@ -333,14 +304,12 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 	public function IsStimulusAllowed($oUser, $sClass, $sStimulusCode, $oInstanceSet = null)
 	{
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserRightsMatrixClassStimulusGrant WHERE class = '$sClass' AND stimulus = '$sStimulusCode' AND userid = '{$oUser->GetKey()}'"));
-		if ($oSet->Count() < 1)
-		{
+		if ($oSet->Count() < 1) {
 			return UR_ALLOWED_NO;
 		}
 
 		$oGrantRecord = $oSet->Fetch();
-		switch ($oGrantRecord->Get('permission'))
-		{
+		switch ($oGrantRecord->Get('permission')) {
 			case 'yes':
 				$iRetCode = UR_ALLOWED_YES;
 				break;
@@ -358,5 +327,3 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 }
 
 UserRights::SelectModule('UserRightsMatrix');
-
-?>

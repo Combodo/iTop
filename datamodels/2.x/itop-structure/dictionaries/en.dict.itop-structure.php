@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,9 +22,6 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-
-
-
 // Dictionnary conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -36,7 +34,6 @@
 // Class:<class_name>/UniquenessRule:<rule_code>
 // Class:<class_name>/UniquenessRule:<rule_code>+
 
-
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -45,12 +42,11 @@
 //////////////////////////////////////////////////////////////////////
 //
 
-
 //
 // Class: Organization
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Organization' => 'Organization',
 	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => 'Name',
@@ -77,13 +73,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'by type',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization',
-));
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Location' => 'Location',
 	'Class:Location+' => 'Any type of location: Region, Country, City, Site, Building, Floor, Room, Rack,...',
 	'Class:Location/Attribute:name' => 'Name',
@@ -110,13 +106,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Location/Attribute:physicaldevice_list+' => 'All the devices in this location',
 	'Class:Location/Attribute:person_list' => 'Contacts',
 	'Class:Location/Attribute:person_list+' => 'All the contacts located on this location',
-));
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Contact' => 'Contact',
 	'Class:Contact+' => '',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
@@ -148,13 +144,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact',
 	'Class:Contact/Attribute:finalclass' => 'Contact sub-class',
 	'Class:Contact/Attribute:finalclass+' => 'Name of the final class',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Person' => 'Person',
 	'Class:Person+' => '',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s',
@@ -189,13 +185,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization',
 	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
@@ -203,13 +199,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'All the tickets assigned to this team',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Document' => 'Document',
 	'Class:Document+' => '',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
@@ -239,77 +235,77 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document',
 	'Class:Document/Attribute:finalclass' => 'Document sub-class',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentFile' => 'Document File',
 	'Class:DocumentFile+' => '',
 	'Class:DocumentFile/Attribute:file' => 'File',
 	'Class:DocumentFile/Attribute:file+' => '',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentNote' => 'Document Note',
 	'Class:DocumentNote+' => '',
 	'Class:DocumentNote/Attribute:text' => 'Text',
 	'Class:DocumentNote/Attribute:text+' => '',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentWeb' => 'Document Web',
 	'Class:DocumentWeb+' => '',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Typology' => 'Typology',
 	'Class:Typology+' => '',
 	'Class:Typology/Attribute:name' => 'Name',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Typology sub-class',
 	'Class:Typology/Attribute:finalclass+' => 'Name of the final class',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentType' => 'Document Type',
 	'Class:DocumentType+' => '',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:ContactType' => 'Contact Type',
 	'Class:ContactType+' => '',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkPersonToTeam' => 'Link Person / Team',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
@@ -326,13 +322,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'To select within a typology of possible roles',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Role name',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Menu:DataAdministration' => 'Data administration',
 	'Menu:DataAdministration+' => 'Data administration',
 	'Menu:Catalogs' => 'Catalogs',
@@ -370,20 +366,20 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Typology+' => 'Typology configuration',
 	'UI_WelcomeMenu_AllConfigItems' => 'Summary',
 	'Menu:ConfigManagement:Typology' => 'Typology configuration',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Person:info' => 'General information',
 	'User:info' => 'General information',
 	'User:profiles' => 'Profiles (minimum one)',
 	'Person:personal_info' => 'Personal information',
 	'Person:notifiy' => 'Notification',
-));
+]);
 
 // Themes
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'theme:fullmoon' => 'Full moon',
 	'theme:test-red' => 'Test instance (Red)',
-));
+]);

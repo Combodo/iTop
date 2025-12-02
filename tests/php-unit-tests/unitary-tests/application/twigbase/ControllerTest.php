@@ -1,10 +1,12 @@
 <?php
+
 namespace Combodo\iTop\Application\TwigBase\Controller;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
-class ControllerTest extends ItopDataTestCase {
+class ControllerTest extends ItopDataTestCase
+{
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -12,7 +14,8 @@ class ControllerTest extends ItopDataTestCase {
 		$this->RequireOnceUnitTestFile('FakeController.php');
 	}
 
-	public function CheckAccessProvider() {
+	public function CheckAccessProvider()
+	{
 		return [
 			'simple token access OK' => [
 				'access_token' => 'toto123',
@@ -42,7 +45,8 @@ class ControllerTest extends ItopDataTestCase {
 	 * Fix N°7147
 	 * @dataProvider CheckAccessProvider
 	 */
-	public function testCheckAccess($sConfiguredAccessToken, $sHttpAccessToken, $bSuccess, $bPost=false){
+	public function testCheckAccess($sConfiguredAccessToken, $sHttpAccessToken, $bSuccess, $bPost = false)
+	{
 		$sModuleName = "MyModule";
 		$sTokenParamName = "access_token_conf_param";
 
@@ -51,7 +55,7 @@ class ControllerTest extends ItopDataTestCase {
 		$_REQUEST = [];
 
 		$_REQUEST['exec_module'] = $sModuleName;
-		if ($bPost){
+		if ($bPost) {
 			$_POST[$sTokenParamName] = $sHttpAccessToken;
 		} else {
 			$_REQUEST[$sTokenParamName] = $sHttpAccessToken;
@@ -62,13 +66,13 @@ class ControllerTest extends ItopDataTestCase {
 
 		MetaModel::GetConfig()->SetModuleSetting($sModuleName, $sTokenParamName, $sConfiguredAccessToken);
 
-		if (! $bSuccess){
+		if (! $bSuccess) {
 			$this->expectExceptionMessage("Invalid token");
 		}
 
 		$this->InvokeNonPublicMethod(FakeController::class, "CheckAccess", $oController);
 
-		if ($bSuccess){
+		if ($bSuccess) {
 			$this->assertTrue(true, "no issue encountered");
 		}
 	}

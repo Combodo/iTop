@@ -38,7 +38,7 @@ use MetaModel;
 class LifecycleValidatorHelper
 {
 	/** @var string DEFAULT_GENERATED_CLASS */
-	const DEFAULT_GENERATED_CLASS = 'PortalLifecycleValues';
+	public const DEFAULT_GENERATED_CLASS = 'PortalLifecycleValues';
 
 	/** @var string|null $sCachePath */
 	protected $sCachePath;
@@ -64,9 +64,10 @@ class LifecycleValidatorHelper
 	{
 		$this->sFilename = "{$sPortalId}.lifecycle.php";
 		$this->sCachePath = $sPortalCachePath;
-		$this->sInstancePrefix = "{$sPortalId}-";;
+		$this->sInstancePrefix = "{$sPortalId}-";
+		;
 		$this->sGeneratedClass = static::DEFAULT_GENERATED_CLASS;
-		$this->aProfilesMatrix = array();
+		$this->aProfilesMatrix = [];
 
 		$this->Init($moduleDesign->GetNodes('/module_design/classes/class'));
 	}
@@ -143,8 +144,7 @@ class LifecycleValidatorHelper
 	public function Init(DOMNodeList $oNodes)
 	{
 		// Checking cache path
-		if ($this->sCachePath === null)
-		{
+		if ($this->sCachePath === null) {
 			$this->sCachePath = utils::GetCachePath();
 		}
 		// Building full pathname for file
@@ -152,61 +152,48 @@ class LifecycleValidatorHelper
 
 		// Creating file if not existing
 		// Note: This is a temporary cache system, it should soon evolve to a cache provider (fs, apc, memcache, ...)
-		if (!file_exists($sFilePath))
-		{
+		if (!file_exists($sFilePath)) {
 			// - Build php array from xml
-			$aProfiles = array();
+			$aProfiles = [];
 			// This will be used to know which classes have been set, so we can set the missing ones.
-			$aProfileClasses = array();
+			$aProfileClasses = [];
 			// Iterating over the class nodes
 			/** @var \Combodo\iTop\DesignElement $oClassNode */
-			foreach ($oNodes as $oClassNode)
-			{
+			foreach ($oNodes as $oClassNode) {
 				// Retrieving mandatory class id attribute
 				$sClass = $oClassNode->getAttribute('id');
-				if ($sClass === '')
-				{
+				if ($sClass === '') {
 					throw new DOMFormatException('Class tag must have an id attribute.', null, null, $oClassNode);
 				}
 
 				// Retrieving lifecycle node of the class
 				$oLifecycleNode = $oClassNode->GetOptionalElement('lifecycle');
-				if ($oLifecycleNode !== null)
-				{
+				if ($oLifecycleNode !== null) {
 					// Iterating over scope nodes of the class
 					$oStimuliNode = $oLifecycleNode->GetOptionalElement('stimuli');
-					if ($oStimuliNode !== null)
-					{
+					if ($oStimuliNode !== null) {
 						/** @var \Combodo\iTop\DesignElement $oStimulusNode */
-						foreach ($oStimuliNode->GetNodes('./stimulus') as $oStimulusNode)
-						{
+						foreach ($oStimuliNode->GetNodes('./stimulus') as $oStimulusNode) {
 							// Retrieving mandatory scope id attribute
 							$sStimulusId = $oStimulusNode->getAttribute('id');
-							if ($sStimulusId === '')
-							{
+							if ($sStimulusId === '') {
 								throw new DOMFormatException('Stimulus tag must have an id attribute.', null, null, $oStimulusNode);
 							}
 
 							// Retrieving profiles for the stimulus
 							$oProfilesNode = $oStimulusNode->GetOptionalElement('denied_profiles');
-							$aProfilesNames = array();
+							$aProfilesNames = [];
 							// If no profile is specified, we consider that it's for ALL the profiles
-							if (($oProfilesNode === null) || ($oProfilesNode->GetNodes('./denied_profile')->length === 0))
-							{
-								foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue)
-								{
+							if (($oProfilesNode === null) || ($oProfilesNode->GetNodes('./denied_profile')->length === 0)) {
+								foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue) {
 									$aProfilesNames[] = $aValue['name'];
 								}
-							}
-							else
-							{
+							} else {
 								/** @var \Combodo\iTop\DesignElement $oProfileNode */
-								foreach ($oProfilesNode->GetNodes('./denied_profile') as $oProfileNode)
-								{
+								foreach ($oProfilesNode->GetNodes('./denied_profile') as $oProfileNode) {
 									// Retrieving mandatory profile id attribute
 									$sProfileId = $oProfileNode->getAttribute('id');
-									if ($sProfileId === '')
-									{
+									if ($sProfileId === '') {
 										throw new DOMFormatException('Profile tag must have an id attribute.', null, null, $oProfileNode);
 									}
 									$aProfilesNames[] = $sProfileId;
@@ -214,21 +201,18 @@ class LifecycleValidatorHelper
 							}
 
 							//
-							foreach ($aProfilesNames as $sProfileName)
-							{
+							foreach ($aProfilesNames as $sProfileName) {
 								// Stimulus profile id
 								$iProfileId = $this->GetProfileIdFromProfileName($sProfileName);
 
 								// Now that we have the queries infos, we are going to build the queries for that profile / class
 								$sMatrixPrefix = $iProfileId.'_'.$sClass;
 								// - Creating profile / class entry if not already present
-								if (!array_key_exists($sMatrixPrefix, $aProfiles))
-								{
-									$aProfiles[$sMatrixPrefix] = array();
+								if (!array_key_exists($sMatrixPrefix, $aProfiles)) {
+									$aProfiles[$sMatrixPrefix] = [];
 								}
 								// - Adding stimulus if not already present
-								if (!in_array($sStimulusId, $aProfiles[$sMatrixPrefix]))
-								{
+								if (!in_array($sStimulusId, $aProfiles[$sMatrixPrefix])) {
 									$aProfiles[$sMatrixPrefix][] = $sStimulusId;
 								}
 							}
@@ -244,20 +228,15 @@ class LifecycleValidatorHelper
 			// If not, we add them
 			//
 			// Note: Classes / Stimuli not in the matrix are implicitly ALLOWED. That can happen by omitting the <lifecycle> in a <class>
-			foreach ($aProfileClasses as $sProfileClass)
-			{
-				foreach (MetaModel::EnumChildClasses($sProfileClass) as $sChildClass)
-				{
+			foreach ($aProfileClasses as $sProfileClass) {
+				foreach (MetaModel::EnumChildClasses($sProfileClass) as $sChildClass) {
 					// If the child class is not in the scope, we are going to try to add it
-					if (!in_array($sChildClass, $aProfileClasses))
-					{
-						foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue)
-						{
+					if (!in_array($sChildClass, $aProfileClasses)) {
+						foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue) {
 							$iProfileId = $iKey;
 
 							// If the current profile has scope for that class in that mode, we duplicate it
-							if (isset($aProfiles[$iProfileId.'_'.$sProfileClass]))
-							{
+							if (isset($aProfiles[$iProfileId.'_'.$sProfileClass])) {
 								$aProfiles[$iProfileId.'_'.$sChildClass] = $aProfiles[$iProfileId.'_'.$sProfileClass];
 							}
 						}
@@ -270,14 +249,12 @@ class LifecycleValidatorHelper
 
 			// - Write file on disk
 			//   - Creating dir if necessary
-			if (!is_dir($this->sCachePath))
-			{
+			if (!is_dir($this->sCachePath)) {
 				mkdir($this->sCachePath, 0777, true);
 			}
 			//   -- Then creating the file
 			$ret = file_put_contents($sFilePath, $sPHP);
-			if ($ret === false)
-			{
+			if ($ret === false) {
 				$iLen = strlen($sPHP);
 				$fFree = @disk_free_space(dirname($sFilePath));
 				$aErr = error_get_last();
@@ -285,8 +262,7 @@ class LifecycleValidatorHelper
 			}
 		}
 
-		if (!class_exists($this->sGeneratedClass))
-		{
+		if (!class_exists($this->sGeneratedClass)) {
 			require_once $this->sCachePath.$this->sFilename;
 		}
 	}
@@ -303,7 +279,7 @@ class LifecycleValidatorHelper
 	 */
 	public function GetStimuliForProfile($sProfile, $sClass)
 	{
-		return $this->GetStimuliForProfiles(array($sProfile), $sClass);
+		return $this->GetStimuliForProfiles([$sProfile], $sClass);
 	}
 
 	/**
@@ -319,17 +295,15 @@ class LifecycleValidatorHelper
 	 */
 	public function GetStimuliForProfiles($aProfiles, $sClass)
 	{
-		$aStimuli = array();
+		$aStimuli = [];
 
 		// Preparing available stimuli
-		foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $aData)
-		{
+		foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $aData) {
 			$aStimuli[$sStimulusCode] = true;
 		}
 
 		// Iterating on profiles to retrieving the different OQLs parts
-		foreach ($aProfiles as $sProfile)
-		{
+		foreach ($aProfiles as $sProfile) {
 			// Retrieving matrix information
 			$iProfileId = $this->GetProfileIdFromProfileName($sProfile);
 
@@ -337,10 +311,8 @@ class LifecycleValidatorHelper
 			$sLifecycleValuesClass = $this->sGeneratedClass;
 			$aProfileMatrix = $sLifecycleValuesClass::GetProfileStimuli($iProfileId, $sClass);
 
-			foreach ($aProfileMatrix as $sStimulusCode)
-			{
-				if (array_key_exists($sStimulusCode, $aStimuli))
-				{
+			foreach ($aProfileMatrix as $sStimulusCode) {
+				if (array_key_exists($sStimulusCode, $aStimuli)) {
 					unset($aStimuli[$sStimulusCode]);
 				}
 			}
@@ -364,18 +336,12 @@ class LifecycleValidatorHelper
 
 		// We try to find the profile from its name in order to retrieve it's id
 		// - If the regular UserRights add-on is installed we check the profiles array
-		if (class_exists('ProfilesConfig'))
-		{
-			if (defined($sProfile) && in_array($sProfile, ProfilesConfig::GetProfilesValues()))
-			{
+		if (class_exists('ProfilesConfig')) {
+			if (defined($sProfile) && in_array($sProfile, ProfilesConfig::GetProfilesValues())) {
 				$iProfileId = constant($sProfile);
-			}
-			else
-			{
-				foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue)
-				{
-					if ($aValue['name'] === $sProfile)
-					{
+			} else {
+				foreach (ProfilesConfig::GetProfilesValues() as $iKey => $aValue) {
+					if ($aValue['name'] === $sProfile) {
 						$iProfileId = $iKey;
 						break;
 					}
@@ -383,14 +349,12 @@ class LifecycleValidatorHelper
 			}
 		}
 		// - Else, we can't find the id from the name as we don't know the used UserRights add-on. It has to be a constant
-		else
-		{
+		else {
 			throw new Exception('Lifecycle validator : Unknown UserRights addon, lifecycle\'s profile must be a constant');
 		}
 
 		// If profile was not found from its name or from a constant, we throw an exception
-		if ($iProfileId === null)
-		{
+		if ($iProfileId === null) {
 			throw new Exception('Lifecycle validator : Could not find "'.$sProfile.'" in the profiles list');
 		}
 
@@ -404,7 +368,7 @@ class LifecycleValidatorHelper
 	 *
 	 * @return string
 	 */
-	protected function BuildPHPClass($aProfiles = array())
+	protected function BuildPHPClass($aProfiles = [])
 	{
 		$sProfiles = var_export($aProfiles, true);
 		$sClassName = $this->sGeneratedClass;
@@ -447,4 +411,3 @@ EOF;
 	}
 
 }
-

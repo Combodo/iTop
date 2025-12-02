@@ -5,9 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Application\WelcomePopup;
-
 
 use iWelcomePopupExtension;
 use utils;
@@ -18,7 +16,8 @@ use utils;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\WelcomePopup
  */
-class Message {
+class Message
+{
 	/** @var string Default TWIG template */
 	protected const DEFAULT_TWIG_TEMPLATE_REL_PATH = 'templates/application/welcome-popup/templates/left-title-description-right-illustration.html.twig';
 

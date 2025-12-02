@@ -9,7 +9,7 @@ use OAuthClient;
 abstract class OAuthClientProviderAbstract implements IOAuthClientProvider
 {
 	/** @var string */
-	static protected $sVendorName = '';
+	protected static $sVendorName = '';
 
 	/** @var \League\OAuth2\Client\Provider\GenericProvider */
 	protected $oVendorProvider;

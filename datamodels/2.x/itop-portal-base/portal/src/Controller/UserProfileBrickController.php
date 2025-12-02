@@ -45,6 +45,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
 use utils;
 use Dict;
+
 /**
  * Class UserProfileBrickController
  *
@@ -60,7 +61,7 @@ class UserProfileBrickController extends BrickController
 	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
 	 * @param \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator
 	 * @param \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper
- 
+
 	 *
 	 * @since 3.2.0 N°6933
 	 */
@@ -70,12 +71,11 @@ class UserProfileBrickController extends BrickController
 		protected BrickCollection $oBrickCollection,
 		protected UrlGenerator $oUrlGenerator,
 		protected SecurityHelper $oSecurityHelper
-	)
-	{
+	) {
 	}
 
 	/** @var string ENUM_FORM_TYPE_PICTURE */
-	const ENUM_FORM_TYPE_PICTURE = 'picture';
+	public const ENUM_FORM_TYPE_PICTURE = 'picture';
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
@@ -92,26 +92,20 @@ class UserProfileBrickController extends BrickController
 	public function DisplayAction(Request $oRequest, $sBrickId)
 	{
 		// If the brick id was not specified, we get the first one registered that is an instance of UserProfileBrick as default
-		if ($sBrickId === null)
-		{
+		if ($sBrickId === null) {
 			/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oTmpBrick */
-			foreach ($this->oBrickCollection->GetBricks() as $oTmpBrick)
-			{
-				if ($oTmpBrick instanceof UserProfileBrick)
-				{
+			foreach ($this->oBrickCollection->GetBricks() as $oTmpBrick) {
+				if ($oTmpBrick instanceof UserProfileBrick) {
 					$oBrick = $oTmpBrick;
 				}
 			}
 
 			// We make sure a UserProfileBrick was found
-			if (!isset($oBrick) || $oBrick === null)
-			{
+			if (!isset($oBrick) || $oBrick === null) {
 				$oBrick = new UserProfileBrick();
 				//throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'UserProfileBrick : Brick could not be loaded as there was no UserProfileBrick loaded in the application.');
 			}
-		}
-		else
-		{
+		} else {
 			$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
 		}
 
@@ -124,11 +118,14 @@ class UserProfileBrickController extends BrickController
 		$sTab = $this->oRequestManipulatorHelper->ReadParam('sTab', 'user-info', FILTER_UNSAFE_RAW, FILTER_FLAG_EMPTY_STRING_NULL);
 
 		// If this is ajax call, we are just submitting preferences or password forms
-		if ($oRequest->isXmlHttpRequest())
-		{
+		if ($oRequest->isXmlHttpRequest()) {
 			if ($sTab === "user-info") {
-				$aCurrentValues = $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW,
-					FILTER_REQUIRE_ARRAY);
+				$aCurrentValues = $this->oRequestManipulatorHelper->ReadParam(
+					'current_values',
+					[],
+					FILTER_UNSAFE_RAW,
+					FILTER_REQUIRE_ARRAY
+				);
 				$sFormType = $aCurrentValues['form_type'];
 				if ($sFormType === PreferencesFormManager::FORM_TYPE) {
 					$aData['form'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
@@ -143,8 +140,7 @@ class UserProfileBrickController extends BrickController
 			$oResponse = new JsonResponse($aData);
 		}
 		// Else, we are displaying page for first time
-		else
-		{
+		else {
 			if ($sTab === "user-info") {
 				// Retrieving current contact
 				/** @var \DBObject $oCurContact */
@@ -175,7 +171,6 @@ class UserProfileBrickController extends BrickController
 		return $oResponse;
 	}
 
-
 	private function ManageUserProfileBrickExtensibility(string $sTab, array &$aData): void
 	{
 		$aData['sTab'] = $sTab;
@@ -193,7 +188,7 @@ class UserProfileBrickController extends BrickController
 
 		// Read the current tab content From iPortalTabSectionExtension
 		$aTabSectionExtensions = ExtensibilityHelper::GetInstance()->GetPortalTabContentExtensions(iUserProfileTabContentExtension::class, $sTab);
-		if (count($aTabSectionExtensions) !== 0 && count($_POST) !== 0){
+		if (count($aTabSectionExtensions) !== 0 && count($_POST) !== 0) {
 			$sTransactionId = utils::ReadPostedParam('transaction_id', null, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
 			IssueLog::Debug(__FUNCTION__.": transaction [$sTransactionId]");
 			if (utils::IsNullOrEmptyString($sTransactionId) || !utils::IsTransactionValid($sTransactionId, false)) {
@@ -214,30 +209,28 @@ class UserProfileBrickController extends BrickController
 		}
 	}
 
+	public function EditPerson(Request $oRequest)
+	{
+		$oCurContact = UserRights::GetContactObject();
+		$sObjectClass = get_class($oCurContact);
+		$sObjectId = $oCurContact->GetKey();
 
-    public function EditPerson(Request $oRequest)
-    {
-        $oCurContact = UserRights::GetContactObject();
-        $sObjectClass = get_class($oCurContact);
-        $sObjectId = $oCurContact->GetKey();
+		// Checking security layers
+		// Warning : This is a dirty quick fix to allow editing its own contact information
+		$bAllowWrite = ($sObjectClass === 'Person' && $sObjectId == UserRights::GetContactId());
+		if (!$this->oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sObjectClass, $sObjectId) && !$bAllowWrite) {
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to modify '.$sObjectClass.'::'.$sObjectId.' object.');
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
 
-        // Checking security layers
-        // Warning : This is a dirty quick fix to allow editing its own contact information
-        $bAllowWrite = ($sObjectClass === 'Person' && $sObjectId == UserRights::GetContactId());
-        if (!$this->oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sObjectClass, $sObjectId) && !$bAllowWrite) {
-            IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to modify ' . $sObjectClass . '::' . $sObjectId . ' object.');
-            throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
-        }
+		$aForm = $this->GetBrick()->GetForm();
+		$aForm['submit_endpoint'] = $this->generateUrl('p_user_profile_brick_edit_person');
 
-        $aForm = $this->GetBrick()->GetForm();
-        $aForm['submit_endpoint'] = $this->generateUrl('p_user_profile_brick_edit_person');
+		$aData = ['sMode' => 'edit'];
+		$aData['form'] = $this->ObjectFormHandlerHelper->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId, $aForm);
 
-        $aData = ['sMode' => 'edit'];
-        $aData['form'] = $this->ObjectFormHandlerHelper->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId, $aForm);
-
-        return new JsonResponse($aData);
-    }
-
+		return new JsonResponse($aData);
+	}
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
@@ -249,13 +242,12 @@ class UserProfileBrickController extends BrickController
 	 */
 	public function HandlePreferencesForm(Request $oRequest, $sFormMode)
 	{
-		$aFormData = array();
+		$aFormData = [];
 
 		// Handling form
 		$sOperation = $this->oRequestManipulatorHelper->ReadParam('operation', null);
 		// - Create
-		if ($sOperation === null)
-		{
+		if ($sOperation === null) {
 			// - Creating renderer
 			$oFormRenderer = new BsFormRenderer();
 			$oFormRenderer->SetEndpoint($this->oUrlGenerator->generate('p_user_profile_brick'));
@@ -264,50 +256,47 @@ class UserProfileBrickController extends BrickController
 			$oFormManager->SetRenderer($oFormRenderer)
 				->Build();
 			// - Checking if we have to make the form read only
-			if ($sFormMode === ObjectFormHandlerHelper::ENUM_MODE_VIEW)
-			{
+			if ($sFormMode === ObjectFormHandlerHelper::ENUM_MODE_VIEW) {
 				$oFormManager->GetForm()->MakeReadOnly();
 			}
 		}
 		// - Submit
-		else
-		{
-			if ($sOperation === 'submit')
-			{
+		else {
+			if ($sOperation === 'submit') {
 				$sFormManagerClass = $this->oRequestManipulatorHelper->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
 				$sFormManagerData = $this->oRequestManipulatorHelper->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
-				if ($sFormManagerClass === null || $sFormManagerData === null)
-				{
+				if ($sFormManagerClass === null || $sFormManagerData === null) {
 					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formmanager_data must be defined.');
-					throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
-						'Parameters formmanager_class and formmanager_data must be defined.');
+					throw new HttpException(
+						Response::HTTP_INTERNAL_SERVER_ERROR,
+						'Parameters formmanager_class and formmanager_data must be defined.'
+					);
 				}
 
 				// Rebuilding manager from json
 				/** @var \Combodo\iTop\Form\FormManager $oFormManager */
 				$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
 				// Applying modification to object
-				$aFormData['validation'] = $oFormManager->OnSubmit(array(
-					'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', array(),  FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
-				));
+				$aFormData['validation'] = $oFormManager->OnSubmit([
+					'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', [], FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
+				]);
 				// Reloading page only if preferences were changed
-				if (($aFormData['validation']['valid'] === true) && !empty($aFormData['validation']['messages']['success']))
-				{
-					$aFormData['validation']['redirection'] = array(
+				if (($aFormData['validation']['valid'] === true) && !empty($aFormData['validation']['messages']['success'])) {
+					$aFormData['validation']['redirection'] = [
 						'url' => $this->oUrlGenerator->generate('p_user_profile_brick'),
 						'timeout_duration' => 1000, //since there are several ajax request, we use a longer timeout in hope that they will all be finished in time. A promise would have been more reliable, but since this change is made in a minor version, this approach is less error prone.
-					);
+					];
 				}
 			}
 		}
 		// Else, submit from another form
 
 		// Preparing field_set data
-		$aFieldSetData = array(
+		$aFieldSetData = [
 			'fields_list' => $oFormManager->GetRenderer()->Render(),
 			'fields_impacts' => $oFormManager->GetForm()->GetFieldsImpacts(),
 			'form_path' => $oFormManager->GetForm()->GetId(),
-		);
+		];
 
 		// Preparing form data
 		$aFormData['id'] = $oFormManager->GetForm()->GetId();
@@ -329,14 +318,13 @@ class UserProfileBrickController extends BrickController
 	 */
 	public function HandlePasswordForm(Request $oRequest, $sFormMode)
 	{
-		$aFormData = array();
+		$aFormData = [];
 
 		// Handling form
 		$sOperation = /** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 			$this->oRequestManipulatorHelper->ReadParam('operation', null);
 		// - Create
-		if ($sOperation === null)
-		{
+		if ($sOperation === null) {
 			// - Creating renderer
 			$oFormRenderer = new BsFormRenderer();
 			$oFormRenderer->SetEndpoint($this->oUrlGenerator->generate('p_user_profile_brick'));
@@ -345,41 +333,40 @@ class UserProfileBrickController extends BrickController
 			$oFormManager->SetRenderer($oFormRenderer)
 				->Build();
 			// - Checking if we have to make the form read only
-			if ($sFormMode === ObjectFormHandlerHelper::ENUM_MODE_VIEW)
-			{
+			if ($sFormMode === ObjectFormHandlerHelper::ENUM_MODE_VIEW) {
 				$oFormManager->GetForm()->MakeReadOnly();
 			}
 		}
 		// - Submit
-		else
-		{
-			if ($sOperation === 'submit')
-			{
+		else {
+			if ($sOperation === 'submit') {
 				$sFormManagerClass = $this->oRequestManipulatorHelper->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
 				$sFormManagerData = $this->oRequestManipulatorHelper->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
 				if ($sFormManagerClass === null || $sFormManagerData === null) {
 					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formmanager_data must be defined.');
-					throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
-						'Parameters formmanager_class and formmanager_data must be defined.');
+					throw new HttpException(
+						Response::HTTP_INTERNAL_SERVER_ERROR,
+						'Parameters formmanager_class and formmanager_data must be defined.'
+					);
 				}
 
 				// Rebuilding manager from json
 				/** @var \Combodo\iTop\Form\FormManager $oFormManager */
 				$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
 				// Applying modification to object
-				$aFormData['validation'] = $oFormManager->OnSubmit(array(
-					'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', array(), FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
-				));
+				$aFormData['validation'] = $oFormManager->OnSubmit([
+					'currentValues' => $this->oRequestManipulatorHelper->ReadParam('current_values', [], FILTER_UNSAFE_RAW, FILTER_REQUIRE_ARRAY),
+				]);
 			}
 		}
 		// Else, submit from another form
 
 		// Preparing field_set data
-		$aFieldSetData = array(
+		$aFieldSetData = [
 			'fields_list' => $oFormManager->GetRenderer()->Render(),
 			'fields_impacts' => $oFormManager->GetForm()->GetFieldsImpacts(),
 			'form_path' => $oFormManager->GetForm()->GetId(),
-		);
+		];
 
 		// Preparing form data
 		$aFormData['id'] = $oFormManager->GetForm()->GetId();
@@ -400,32 +387,27 @@ class UserProfileBrickController extends BrickController
 	 */
 	public function HandlePictureForm(Request $oRequest)
 	{
-		$aFormData = array();
+		$aFormData = [];
 		$sPictureAttCode = 'picture';
 
 		// Handling form
 		$sOperation = $this->oRequestManipulatorHelper->ReadParam('operation', null);
 		// - No operation specified
-		if ($sOperation === null)
-		{
+		if ($sOperation === null) {
 			IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Operation parameter must be specified.');
 			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Operation parameter must be specified.');
 		}
 		// - Submit
-		else
-		{
-			if ($sOperation === 'submit')
-			{
+		else {
+			if ($sOperation === 'submit') {
 				$oRequestFiles = $oRequest->files;
 				$oPictureFile = $oRequestFiles->get($sPictureAttCode);
-				if ($oPictureFile === null)
-				{
+				if ($oPictureFile === null) {
 					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameter picture must be defined.');
 					throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameter picture must be defined.');
 				}
 
-				try
-				{
+				try {
 					// Retrieving image as an ORMDocument
 					$oImage = utils::ReadPostedDocument($sPictureAttCode);
 					// Retrieving current contact
@@ -434,16 +416,19 @@ class UserProfileBrickController extends BrickController
 					// Resizing image
 					$oAttDef = MetaModel::GetAttributeDef(get_class($oCurContact), $sPictureAttCode);
 					$aSize = utils::GetImageSize($oImage->GetData());
-					$oImage = utils::ResizeImageToFit($oImage, $aSize[0], $aSize[1], $oAttDef->Get('storage_max_width'),
-						$oAttDef->Get('storage_max_height'));
+					$oImage = utils::ResizeImageToFit(
+						$oImage,
+						$aSize[0],
+						$aSize[1],
+						$oAttDef->Get('storage_max_width'),
+						$oAttDef->Get('storage_max_height')
+					);
 					// Setting it to the contact
 					$oCurContact->Set($sPictureAttCode, $oImage);
 					// Forcing allowed writing on the object if necessary.
 					$oCurContact->AllowWrite(true);
 					$oCurContact->DBUpdate();
-				}
-				catch (FileUploadException $e)
-				{
+				} catch (FileUploadException $e) {
 					$aFormData['error'] = $e->GetMessage();
 				}
 
@@ -456,10 +441,10 @@ class UserProfileBrickController extends BrickController
 					'cache' => 86400,
 					's' => $oOrmDoc->GetSignature(),
 				]);
-				$aFormData['validation'] = array(
+				$aFormData['validation'] = [
 					'valid' => true,
-					'messages' => array(),
-				);
+					'messages' => [],
+				];
 			}
 		}
 
@@ -468,30 +453,30 @@ class UserProfileBrickController extends BrickController
 		return $aFormData;
 	}
 
-    /**
-     * @param $sBrickId
-     * @return \Combodo\iTop\Portal\Brick\PortalBrick|UserProfileBrick
-     * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
-     */
-    public function GetBrick($sBrickId = null)
-    {
-        // If the brick id was not specified, we get the first one registered that is an instance of UserProfileBrick as default
-        if ($sBrickId === null) {
-            /** @var \Combodo\iTop\Portal\Brick\PortalBrick $oTmpBrick */
-            foreach ($this->oBrickCollection->GetBricks() as $oTmpBrick) {
-                if ($oTmpBrick instanceof UserProfileBrick) {
-                    $oBrick = $oTmpBrick;
-                }
-            }
+	/**
+	 * @param $sBrickId
+	 * @return \Combodo\iTop\Portal\Brick\PortalBrick|UserProfileBrick
+	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+	 */
+	public function GetBrick($sBrickId = null)
+	{
+		// If the brick id was not specified, we get the first one registered that is an instance of UserProfileBrick as default
+		if ($sBrickId === null) {
+			/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oTmpBrick */
+			foreach ($this->oBrickCollection->GetBricks() as $oTmpBrick) {
+				if ($oTmpBrick instanceof UserProfileBrick) {
+					$oBrick = $oTmpBrick;
+				}
+			}
 
-            // We make sure a UserProfileBrick was found
-            if (!isset($oBrick) || $oBrick === null) {
-                $oBrick = new UserProfileBrick();
-                //throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'UserProfileBrick : Brick could not be loaded as there was no UserProfileBrick loaded in the application.');
-            }
-        } else {
-            $oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
-        }
-        return $oBrick;
-    }
+			// We make sure a UserProfileBrick was found
+			if (!isset($oBrick) || $oBrick === null) {
+				$oBrick = new UserProfileBrick();
+				//throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'UserProfileBrick : Brick could not be loaded as there was no UserProfileBrick loaded in the application.');
+			}
+		} else {
+			$oBrick = $this->oBrickCollection->GetBrickById($sBrickId);
+		}
+		return $oBrick;
+	}
 }

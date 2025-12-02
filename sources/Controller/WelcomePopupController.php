@@ -1,4 +1,5 @@
 <?php
+
 namespace Combodo\iTop\Controller;
 
 use Combodo\iTop\Application\WebPage\JsonPage;
@@ -13,7 +14,7 @@ use utils;
 class WelcomePopupController extends AbstractController
 {
 	/** @inheritDoc */
-	const ROUTE_NAMESPACE = "welcome_popup";
+	public const ROUTE_NAMESPACE = "welcome_popup";
 
 	/**
 	 * Acknowledge a specific message for the current user
@@ -30,8 +31,7 @@ class WelcomePopupController extends AbstractController
 			$oService->AcknowledgeMessage($sMessageUUID);
 
 			$aResult = ['success' => true];
-		}
-		catch (Exception $oException) {
+		} catch (Exception $oException) {
 			$aResult = [
 				'success'       => false,
 				'error_message' => $oException->getMessage(),
@@ -42,4 +42,3 @@ class WelcomePopupController extends AbstractController
 		return $oPage;
 	}
 }
-

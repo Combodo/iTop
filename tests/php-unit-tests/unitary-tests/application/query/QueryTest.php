@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Dennis Lassiter
  *
@@ -38,11 +39,11 @@ use utils;
 class QueryTest extends ItopDataTestCase
 {
 	// disable transaction to avoid data inconsistency between test and call to export (outside test scope)
-	const USE_TRANSACTION = false;
+	public const USE_TRANSACTION = false;
 
 	// user for exportation process
-	const USER = 'dani2';
-	const PASSWORD = '1TopCombodo+';
+	public const USER = 'dani2';
+	public const PASSWORD = '1TopCombodo+';
 	private $oUser;
 
 	/** @inheritDoc */
@@ -60,7 +61,7 @@ class QueryTest extends ItopDataTestCase
 	 */
 	private function CreateExportUser()
 	{
-		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
+		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'Administrator'], true);
 		$this->oUser = $this->CreateUser(self::USER, $oAdminProfile->GetKey(), self::PASSWORD);
 	}
 
@@ -72,14 +73,14 @@ class QueryTest extends ItopDataTestCase
 	 * @param string $sOql query oql phrase
 	 * @param string|null $sFields fields to export
 	 */
-	private function CreateQueryOQL(string $sName, string $sDescription, string $sOql, string $sFields = null) : QueryOQL
+	private function CreateQueryOQL(string $sName, string $sDescription, string $sOql, string $sFields = null): QueryOQL
 	{
 		$oQuery = new QueryOQL();
 		$oQuery->Set('name', $sName);
 		$oQuery->Set('description', $sDescription);
 		$oQuery->Set('oql', $sOql);
 
-		if($sFields != null){
+		if ($sFields != null) {
 			$oQuery->Set('fields', $sFields);
 		}
 
@@ -154,10 +155,10 @@ class QueryTest extends ItopDataTestCase
 	 */
 	public function getQueryProvider()
 	{
-		return array(
-			'Export #1' => array('query without params', 'SELECT Person'),
-			'Export #2' => array('query with params', "SELECT Person WHERE first_name LIKE 'B%'")
-		);
+		return [
+			'Export #1' => ['query without params', 'SELECT Person'],
+			'Export #2' => ['query with params', "SELECT Person WHERE first_name LIKE 'B%'"],
+		];
 	}
 
 	/**
@@ -177,7 +178,7 @@ class QueryTest extends ItopDataTestCase
 
 		// curl options
 		curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_setopt($curl, CURLOPT_USERPWD, self::USER . ':' . self::PASSWORD);
+		curl_setopt($curl, CURLOPT_USERPWD, self::USER.':'.self::PASSWORD);
 		curl_setopt($curl, CURLOPT_URL, $url);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		// Force disable of certificate check as most of dev / test env have a self-signed certificate

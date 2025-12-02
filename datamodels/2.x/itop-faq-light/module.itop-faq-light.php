@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-faq-light/3.2.1',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Frequently Asked Questions Database',
@@ -12,24 +11,24 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
+		'dependencies' => [
 			'itop-structure/3.0.0 || itop-portal/3.0.0',
-		),
+		],
 		'mandatory' => false,
 		'visible' => true,
 		'installer' => 'FAQLightInstaller',
 
 		// Components
 		//
-		'datamodel' => array(
-		),
-		'data.struct' => array(
+		'datamodel' => [
+		],
+		'data.struct' => [
 			//'data.struct.itop-knownerror-mgmt.xml',
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			'data.sample.faq-domains.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '', // No manual installation instructions
@@ -37,13 +36,12 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
-		),
-	)
+		'settings' => [
+		],
+	]
 );
 
-if (!class_exists('FAQLightInstaller'))
-{
+if (!class_exists('FAQLightInstaller')) {
 	// Module installation handler
 	//
 	class FAQLightInstaller extends ModuleInstallerAPI
@@ -62,13 +60,12 @@ if (!class_exists('FAQLightInstaller'))
 		 */
 		public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			if (strlen($sPreviousVersion) > 0)
-			{
+			if (strlen($sPreviousVersion) > 0) {
 				// If you want to migrate data from one format to another, do it here
 				self::RenameClassInDB('FAQcategory', 'FAQCategory');
 			}
 		}
-	
+
 		/**
 		 * Handler called after the creation/update of the database schema
 		 * @param $oConfiguration Config The new configuration of the application

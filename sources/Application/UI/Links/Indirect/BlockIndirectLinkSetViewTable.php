@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -29,8 +30,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 			$oLinkingAttDef = MetaModel::GetAttributeDef($this->oAttDef->GetLinkedClass(), $this->oAttDef->GetExtKeyToRemote());
 
 			return $oLinkingAttDef->GetTargetClass();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			return '?';
 		}
 	}
@@ -38,7 +38,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 	/** @inheritdoc */
 	public function GetExtraParam(): array
 	{
-		$aExtraParams = array(
+		$aExtraParams = [
 			'link_attr'     => $this->oAttDef->GetExtKeyToMe(),
 			'object_id'     => $this->oDbObject->GetKey(),
 			'target_attr'   => $this->oAttDef->GetExtKeyToRemote(),
@@ -52,7 +52,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 			'currentId'     => $this->GetTableId(),
 			'panel_title'   => $this->oAttDef->GetLabel(),
 			'panel_icon'    => MetaModel::GetClassIcon($this->GetTargetClass(), false),
-		);
+		];
 
 		// Description
 		if ($this->oAttDef->HasDescription()) {
@@ -60,7 +60,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 		}
 
 		// Add creation in modal if creation allowed
-		if ( $this->bIsAllowCreate) {
+		if ($this->bIsAllowCreate) {
 			$aExtraParams['creation_in_modal'] = true;
 			$aExtraParams['creation_in_modal_tooltip'] = $this->GetDictionaryEntry(static::DICT_ADD_BUTTON_TOOLTIP);
 			$aExtraParams['creation_in_modal_form_title'] = $this->GetDictionaryEntry(static::DICT_ADD_MODAL_TITLE);
@@ -75,10 +75,10 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 	/** @inheritdoc */
 	public function GetRowActions(): array
 	{
-		$aRowActions = array();
+		$aRowActions = [];
 
 		if ($this->bIsAllowModify) {
-			$aRowActions[] = array(
+			$aRowActions[] = [
 				'label'         => 'UI:Links:ModifyLink:Button',
 				'name'          => 'ModifyButton',
 				'tooltip'       => $this->GetDictionaryEntry(static::DICT_MODIFY_LINK_BUTTON_TOOLTIP),
@@ -87,11 +87,11 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 				'metadata'      => [
 					'modal-title' => $this->GetDictionaryEntry(static::DICT_MODIFY_LINK_MODAL_TITLE),
 				],
-			);
+			];
 		}
 
 		if ($this->bIsAllowDelete) {
-			$aRowActions[] = array(
+			$aRowActions[] = [
 				'label'         => 'UI:Links:Remove:Button',
 				'name'          => 'RemoveButton',
 				'tooltip'       => $this->GetDictionaryEntry(static::DICT_REMOVE_BUTTON_TOOLTIP),
@@ -103,7 +103,7 @@ class BlockIndirectLinkSetViewTable extends AbstractBlockLinkSetViewTable
 					'row_data'                   => "Remote/hyperlink",
 					'do_not_show_again_pref_key' => $this->GetDoNotShowAgainPreferenceKey(),
 				],
-			);
+			];
 		}
 
 		return $aRowActions;

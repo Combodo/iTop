@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -26,7 +27,7 @@
 //////////////////////////////////////////////////////////////////////
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Relation:impacts/Description' => 'Elements impacted by',
 	'Relation:impacts/DownStream' => 'Impacts...',
 	'Relation:impacts/DownStream+' => 'Elements impacted by',
@@ -39,8 +40,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Relation:impacts/LoadData' => 'Load data',
 	'Relation:impacts/NoFilteredData' => 'please select objects and load data',
 	'Relation:impacts/FilteredData' => 'Filtered data',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -83,7 +83,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 // Class: lnkContactToFunctionalCI
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkContactToFunctionalCI' => 'Link Contact / FunctionalCI',
 	'Class:lnkContactToFunctionalCI+' => '',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s',
@@ -95,13 +95,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Contact name',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:FunctionalCI' => 'Functional CI',
 	'Class:FunctionalCI+' => '',
 	'Class:FunctionalCI/Attribute:name' => 'Name',
@@ -134,13 +134,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Name of the final class',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI',
-));
+]);
 
 //
 // Class: PhysicalDevice
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:PhysicalDevice' => 'Physical Device',
 	'Class:PhysicalDevice+' => '',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s',
@@ -174,13 +174,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:PhysicalDevice/Attribute:purchase_date+' => '',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'End of warranty',
 	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '',
-));
+]);
 
 //
 // Class: Rack
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Rack' => 'Rack',
 	'Class:Rack+' => '',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s',
@@ -190,64 +190,64 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Rack/Attribute:device_list+' => 'All the physical devices racked into this rack',
 	'Class:Rack/Attribute:enclosure_list' => 'Enclosures',
 	'Class:Rack/Attribute:enclosure_list+' => 'All the enclosures in this rack',
-));
+]);
 
 //
 // Class: TelephonyCI
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:TelephonyCI' => 'Telephony CI',
 	'Class:TelephonyCI+' => '',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Phone number',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '',
-));
+]);
 
 //
 // Class: Phone
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Phone' => 'Phone',
 	'Class:Phone+' => '',
-));
+]);
 
 //
 // Class: MobilePhone
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:MobilePhone' => 'Mobile Phone',
 	'Class:MobilePhone+' => '',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
 	'Class:MobilePhone/Attribute:imei+' => '',
 	'Class:MobilePhone/Attribute:hw_pin' => 'Hardware PIN',
 	'Class:MobilePhone/Attribute:hw_pin+' => '',
-));
+]);
 
 //
 // Class: IPPhone
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:IPPhone' => 'IP Phone',
 	'Class:IPPhone+' => '',
-));
+]);
 
 //
 // Class: Tablet
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Tablet' => 'Tablet',
 	'Class:Tablet+' => '',
-));
+]);
 
 //
 // Class: ConnectableCI
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:ConnectableCI' => 'Connectable CI',
 	'Class:ConnectableCI+' => 'Physical CI',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s',
@@ -255,13 +255,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'All network devices connected to this device',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Network interfaces',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'All the physical network interfaces',
-));
+]);
 
 //
 // Class: DatacenterDevice
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:DatacenterDevice' => 'Datacentre Device',
 	'Class:DatacenterDevice+' => '',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s',
@@ -294,13 +294,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	// Unused yet
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device %2$s is up if all its power connections are up',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device %2$s is up if at least %1$s %% of its power connections are up',
-));
+]);
 
 //
 // Class: NetworkDevice
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:NetworkDevice' => 'Network Device',
 	'Class:NetworkDevice+' => '',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s',
@@ -316,13 +316,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
 	'Class:NetworkDevice/Attribute:ram+' => '',
-));
+]);
 
 //
 // Class: Server
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Server' => 'Server',
 	'Class:Server+' => '',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s',
@@ -344,61 +344,61 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Server/Attribute:ram+' => '',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Logical volumes',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'All the logical volumes connected to this server',
-));
+]);
 
 //
 // Class: StorageSystem
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:StorageSystem' => 'Storage System',
 	'Class:StorageSystem+' => '',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logical volumes',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'All the logical volumes in this storage system',
-));
+]);
 
 //
 // Class: SANSwitch
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:SANSwitch' => 'SAN Switch',
 	'Class:SANSwitch+' => '',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Devices',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'All the devices connected to this SAN switch',
-));
+]);
 
 //
 // Class: TapeLibrary
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:TapeLibrary' => 'Tape Library',
 	'Class:TapeLibrary+' => '',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Tapes',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'All the tapes in the tape library',
-));
+]);
 
 //
 // Class: NAS
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Filesystems',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'All the file systems in this NAS',
-));
+]);
 
 //
 // Class: PC
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:PC' => 'PC',
 	'Class:PC+' => '',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s',
@@ -420,45 +420,45 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:PC/Attribute:type/Value:desktop+' => 'desktop',
 	'Class:PC/Attribute:type/Value:laptop' => 'laptop',
 	'Class:PC/Attribute:type/Value:laptop+' => 'laptop',
-));
+]);
 
 //
 // Class: Printer
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Printer' => 'Printer',
 	'Class:Printer+' => '',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s',
-));
+]);
 
 //
 // Class: PowerConnection
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:PowerConnection' => 'Power Connection',
 	'Class:PowerConnection+' => '',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s',
-));
+]);
 
 //
 // Class: PowerSource
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:PowerSource' => 'Power Source',
 	'Class:PowerSource+' => '',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
 	'Class:PowerSource/Attribute:pdus_list+' => 'All the PDUs using this power source',
-));
+]);
 
 //
 // Class: PDU
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => '',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s',
@@ -470,23 +470,23 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:PDU/Attribute:powerstart_id+' => '',
 	'Class:PDU/Attribute:powerstart_name' => 'Power start name',
 	'Class:PDU/Attribute:powerstart_name+' => '',
-));
+]);
 
 //
 // Class: Peripheral
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Peripheral' => 'Peripheral',
 	'Class:Peripheral+' => '',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s',
-));
+]);
 
 //
 // Class: Enclosure
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Enclosure' => 'Enclosure',
 	'Class:Enclosure+' => '',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
@@ -498,13 +498,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => 'Devices',
 	'Class:Enclosure/Attribute:device_list+' => 'All the devices in this enclosure',
-));
+]);
 
 //
 // Class: ApplicationSolution
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:ApplicationSolution' => 'Application Solution',
 	'Class:ApplicationSolution+' => '',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
@@ -521,13 +521,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up if all CIs are up',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up',
-));
+]);
 
 //
 // Class: BusinessProcess
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:BusinessProcess' => 'Business Process',
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Application solutions',
@@ -538,13 +538,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:BusinessProcess/Attribute:status/Value:active+' => 'active',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'inactive',
 	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'inactive',
-));
+]);
 
 //
 // Class: SoftwareInstance
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:SoftwareInstance' => 'Software Instance',
 	'Class:SoftwareInstance+' => '',
 	'Class:SoftwareInstance/Attribute:system_id' => 'System',
@@ -567,64 +567,64 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'active',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'inactive',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'inactive',
-));
+]);
 
 //
 // Class: Middleware
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Middleware' => 'Middleware',
 	'Class:Middleware+' => '',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware instances',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware',
-));
+]);
 
 //
 // Class: DBServer
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:DBServer' => 'DB Server',
 	'Class:DBServer+' => '',
 	'Class:DBServer/Attribute:dbschema_list' => 'DB schemas',
 	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server',
-));
+]);
 
 //
 // Class: WebServer
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:WebServer' => 'Web server',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Web applications',
 	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server',
-));
+]);
 
 //
 // Class: PCSoftware
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:PCSoftware' => 'PC Software',
 	'Class:PCSoftware+' => '',
-));
+]);
 
 //
 // Class: OtherSoftware
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:OtherSoftware' => 'Other Software',
 	'Class:OtherSoftware+' => '',
-));
+]);
 
 //
 // Class: MiddlewareInstance
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:MiddlewareInstance' => 'Middleware Instance',
 	'Class:MiddlewareInstance+' => '',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
@@ -632,13 +632,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware name',
 	'Class:MiddlewareInstance/Attribute:middleware_name+' => '',
-));
+]);
 
 //
 // Class: DatabaseSchema
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:DatabaseSchema' => 'Database Schema',
 	'Class:DatabaseSchema+' => '',
 	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
@@ -646,13 +646,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => 'DB server name',
 	'Class:DatabaseSchema/Attribute:dbserver_name+' => '',
-));
+]);
 
 //
 // Class: WebApplication
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:WebApplication' => 'Web Application',
 	'Class:WebApplication+' => '',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
@@ -662,14 +662,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:WebApplication/Attribute:webserver_name+' => '',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '',
-));
-
+]);
 
 //
 // Class: VirtualDevice
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:VirtualDevice' => 'Virtual Device',
 	'Class:VirtualDevice+' => '',
 	'Class:VirtualDevice/Attribute:status' => 'Status',
@@ -684,24 +683,24 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stock',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logical volumes',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'All the logical volumes used by this device',
-));
+]);
 
 //
 // Class: VirtualHost
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:VirtualHost' => 'Virtual Host',
 	'Class:VirtualHost+' => '',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtual machines',
 	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'All the virtual machines hosted by this host',
-));
+]);
 
 //
 // Class: Hypervisor
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Hypervisor' => 'Hypervisor',
 	'Class:Hypervisor+' => '',
 	'Class:Hypervisor/Attribute:farm_id' => 'Farm',
@@ -712,13 +711,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Hypervisor/Attribute:server_id+' => '',
 	'Class:Hypervisor/Attribute:server_name' => 'Server name',
 	'Class:Hypervisor/Attribute:server_name+' => '',
-));
+]);
 
 //
 // Class: Farm
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Farm' => 'Farm',
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
@@ -727,13 +726,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up',
 	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up',
 	'Class:Farm/Attribute:redundancy/percent' => 'The farm is up if at least %1$s %% of the hypervisors are up',
-));
+]);
 
 //
 // Class: VirtualMachine
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:VirtualMachine' => 'Virtual Machine',
 	'Class:VirtualMachine+' => '',
 	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
@@ -761,13 +760,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Network Interfaces',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'All the logical network interfaces',
-));
+]);
 
 //
 // Class: LogicalVolume
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:LogicalVolume' => 'Logical Volume',
 	'Class:LogicalVolume+' => '',
 	'Class:LogicalVolume/Attribute:name' => 'Name',
@@ -788,13 +787,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:LogicalVolume/Attribute:servers_list+' => 'All the servers using this volume',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtual devices',
 	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'All the virtual devices using this volume',
-));
+]);
 
 //
 // Class: lnkServerToVolume
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkServerToVolume' => 'Link Server / Volume',
 	'Class:lnkServerToVolume+' => '',
 	'Class:lnkServerToVolume/Name' => '%1$s / %2$s',
@@ -808,13 +807,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkServerToVolume/Attribute:server_name+' => '',
 	'Class:lnkServerToVolume/Attribute:size_used' => 'Size used',
 	'Class:lnkServerToVolume/Attribute:size_used+' => '',
-));
+]);
 
 //
 // Class: lnkVirtualDeviceToVolume
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkVirtualDeviceToVolume' => 'Link Virtual Device / Volume',
 	'Class:lnkVirtualDeviceToVolume+' => '',
 	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
@@ -828,13 +827,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Size used',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '',
-));
+]);
 
 //
 // Class: lnkSanToDatacenterDevice
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkSanToDatacenterDevice' => 'Link SAN / Datacentre Device',
 	'Class:lnkSanToDatacenterDevice+' => '',
 	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
@@ -850,13 +849,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Device fc',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '',
-));
+]);
 
 //
 // Class: Tape
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Tape' => 'Tape',
 	'Class:Tape+' => '',
 	'Class:Tape/Attribute:name' => 'Name',
@@ -869,13 +868,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Tape/Attribute:tapelibrary_id+' => '',
 	'Class:Tape/Attribute:tapelibrary_name' => 'Tape library name',
 	'Class:Tape/Attribute:tapelibrary_name+' => '',
-));
+]);
 
 //
 // Class: NASFileSystem
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:NASFileSystem' => 'NAS File System',
 	'Class:NASFileSystem+' => '',
 	'Class:NASFileSystem/Attribute:name' => 'Name',
@@ -890,13 +889,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:NASFileSystem/Attribute:nas_id+' => '',
 	'Class:NASFileSystem/Attribute:nas_name' => 'NAS name',
 	'Class:NASFileSystem/Attribute:nas_name+' => '',
-));
+]);
 
 //
 // Class: Software
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Software' => 'Software',
 	'Class:Software+' => '',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s',
@@ -926,13 +925,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Software/Attribute:softwarepatch_list+' => 'All the patches for this software',
 	'Class:Software/Attribute:softwarelicence_list' => 'Software Licences',
 	'Class:Software/Attribute:softwarelicence_list+' => 'All the licences for this software',
-));
+]);
 
 //
 // Class: Patch
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Patch' => 'Patch',
 	'Class:Patch+' => '',
 	'Class:Patch/Attribute:name' => 'Name',
@@ -943,13 +942,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:finalclass' => 'Patch sub-class',
 	'Class:Patch/Attribute:finalclass+' => 'Name of the final class',
-));
+]);
 
 //
 // Class: OSPatch
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:OSPatch' => 'OS Patch',
 	'Class:OSPatch+' => '',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Devices',
@@ -958,13 +957,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:OSPatch/Attribute:osversion_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'OS version name',
 	'Class:OSPatch/Attribute:osversion_name+' => '',
-));
+]);
 
 //
 // Class: SoftwarePatch
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:SoftwarePatch' => 'Software Patch',
 	'Class:SoftwarePatch+' => '',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Software',
@@ -973,13 +972,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:SoftwarePatch/Attribute:software_name+' => '',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Software instances',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'All the systems where this software patch is installed',
-));
+]);
 
 //
 // Class: Licence
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Licence' => 'Licence',
 	'Class:Licence+' => '',
 
@@ -1009,13 +1008,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes',
 	'Class:Licence/Attribute:finalclass' => 'Licence sub-class',
 	'Class:Licence/Attribute:finalclass+' => 'Name of the final class',
-));
+]);
 
 //
 // Class: OSLicence
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:OSLicence' => 'OS Licence',
 	'Class:OSLicence+' => '',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
@@ -1027,13 +1026,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this licence is used',
 	'Class:OSLicence/Attribute:servers_list' => 'Servers',
 	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this licence is used',
-));
+]);
 
 //
 // Class: SoftwareLicence
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:SoftwareLicence' => 'Software Licence',
 	'Class:SoftwareLicence+' => '',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s',
@@ -1043,13 +1042,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Software instances',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this licence is used',
-));
+]);
 
 //
 // Class: lnkDocumentToLicence
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkDocumentToLicence' => 'Link Document / Licence',
 	'Class:lnkDocumentToLicence+' => '',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s',
@@ -1061,35 +1060,35 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Document name',
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: OSVersion
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:OSVersion' => 'OS Version',
 	'Class:OSVersion+' => '',
 	'Class:OSVersion/Attribute:osfamily_id' => 'OS family',
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS family name',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
-));
+]);
 
 //
 // Class: OSFamily
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:OSFamily' => 'OS Family',
 	'Class:OSFamily+' => '',
-));
+]);
 
 //
 // Class: Brand
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Brand' => 'Brand',
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:logo' => 'Logo',
@@ -1098,13 +1097,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand',
 	'Class:Brand/UniquenessRule:name+' => 'The name must be unique',
 	'Class:Brand/UniquenessRule:name' => 'This brand already exists',
-));
+]);
 
 //
 // Class: Model
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Model' => 'Model',
 	'Class:Model+' => '',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s',
@@ -1156,37 +1155,37 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model',
 	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand',
 	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand',
-));
+]);
 
 //
 // Class: NetworkDeviceType
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:NetworkDeviceType' => 'Network Device Type',
 	'Class:NetworkDeviceType+' => '',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Network devices',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type',
-));
+]);
 
 //
 // Class: IOSVersion
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:IOSVersion' => 'IOS Version',
 	'Class:IOSVersion+' => '',
 	'Class:IOSVersion/Attribute:brand_id' => 'Brand',
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Brand name',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToPatch
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkDocumentToPatch' => 'Link Document / Patch',
 	'Class:lnkDocumentToPatch+' => '',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s',
@@ -1198,13 +1197,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Document name',
 	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkSoftwareInstanceToSoftwarePatch
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Link Software Instance / Software Patch',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s',
@@ -1216,13 +1215,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Software instance name',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToOSPatch
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkFunctionalCIToOSPatch' => 'Link FunctionalCI / OS patch',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s',
@@ -1234,13 +1233,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'Functionalci name',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToSoftware
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkDocumentToSoftware' => 'Link Document / Software',
 	'Class:lnkDocumentToSoftware+' => '',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s',
@@ -1252,13 +1251,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Document name',
 	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: Subnet
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Subnet' => 'Subnet',
 	'Class:Subnet+' => '',
 	'Class:Subnet/Name' => '%1$s/%2$s',
@@ -1277,13 +1276,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Subnet/Attribute:ip_mask+' => '',
 	'Class:Subnet/Attribute:vlans_list' => 'VLANs',
 	'Class:Subnet/Attribute:vlans_list+' => '',
-));
+]);
 
 //
 // Class: VLAN
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:VLAN' => 'VLAN',
 	'Class:VLAN+' => '',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag',
@@ -1298,13 +1297,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:VLAN/Attribute:subnets_list+' => '',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Physical network interfaces',
 	'Class:VLAN/Attribute:physicalinterfaces_list+' => '',
-));
+]);
 
 //
 // Class: lnkSubnetToVLAN
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkSubnetToVLAN' => 'Link Subnet / VLAN',
 	'Class:lnkSubnetToVLAN+' => '',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s',
@@ -1318,31 +1317,30 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '',
-));
+]);
 
 //
 // Class: NetworkInterface
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:NetworkInterface' => 'Network Interface',
 	'Class:NetworkInterface+' => '',
 	'Class:NetworkInterface/Attribute:name' => 'Name',
 	'Class:NetworkInterface/Attribute:name+' => '',
 	'Class:NetworkInterface/Attribute:finalclass' => 'NetworkInterface sub-class',
 	'Class:NetworkInterface/Attribute:finalclass+' => 'Name of the final class',
-));
+]);
 
 //
 // Class: IPInterface
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:IPInterface' => 'IP Interface',
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP address',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
-
 
 	'Class:IPInterface/Attribute:macaddress' => 'MAC address',
 	'Class:IPInterface/Attribute:macaddress+' => '',
@@ -1354,13 +1352,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:IPInterface/Attribute:ipmask+' => '',
 	'Class:IPInterface/Attribute:speed' => 'Speed',
 	'Class:IPInterface/Attribute:speed+' => '',
-));
+]);
 
 //
 // Class: PhysicalInterface
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:PhysicalInterface' => 'Physical Interface',
 	'Class:PhysicalInterface+' => '',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s',
@@ -1370,13 +1368,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
-));
+]);
 
 //
 // Class: lnkPhysicalInterfaceToVLAN
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Link PhysicalInterface / VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s',
@@ -1392,27 +1390,26 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
-));
-
+]);
 
 //
 // Class: LogicalInterface
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:LogicalInterface' => 'Logical Interface',
 	'Class:LogicalInterface+' => '',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Virtual machine',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Virtual machine name',
 	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '',
-));
+]);
 
 //
 // Class: FiberChannelInterface
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:FiberChannelInterface' => 'Fibre Channel Interface',
 	'Class:FiberChannelInterface+' => '',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Speed',
@@ -1425,13 +1422,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Device name',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '',
-));
+]);
 
 //
 // Class: lnkConnectableCIToNetworkDevice
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkConnectableCIToNetworkDevice' => 'Link ConnectableCI / NetworkDevice',
 	'Class:lnkConnectableCIToNetworkDevice+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s',
@@ -1453,13 +1450,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'down link',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'up link',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'up link',
-));
+]);
 
 //
 // Class: lnkApplicationSolutionToFunctionalCI
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Link ApplicationSolution / FunctionalCI',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s',
@@ -1471,13 +1468,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: lnkApplicationSolutionToBusinessProcess
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Link ApplicationSolution / BusinessProcess',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s',
@@ -1489,13 +1486,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Application solution name',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
-));
+]);
 
 //
 // Class: Group
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Group' => 'Group',
 	'Class:Group+' => '',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s',
@@ -1526,13 +1523,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Parent Group',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
-));
+]);
 
 //
 // Class: lnkGroupToCI
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkGroupToCI' => 'Link Group / CI',
 	'Class:lnkGroupToCI+' => '',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s',
@@ -1546,11 +1543,11 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Reason',
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Server:baseinfo' => 'General information',
 	'Server:Date' => 'Dates',
 	'Server:moreinfo' => 'More information',
@@ -1563,14 +1560,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
 	'Class:Document:PreviewTab' => 'Preview',
-));
-
+]);
 
 //
 // Class: lnkDocumentToFunctionalCI
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkDocumentToFunctionalCI' => 'Link Document / FunctionalCI',
 	'Class:lnkDocumentToFunctionalCI+' => '',
 	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s',
@@ -1582,13 +1578,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Document name',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:Application' => 'Applications',
 	'Menu:Application+' => 'All applications',
 	'Menu:DBServer' => 'Database servers',
@@ -1633,5 +1629,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Software catalogue',
 	'Menu:Software+' => 'Software catalogue',
-));
-?>
+]);

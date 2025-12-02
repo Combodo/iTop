@@ -1,13 +1,12 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 class PluginManager
 {
-
 	private $m_aExtensionClassNames;
 	private static $m_aExtensionClasses;
 	private $m_pluginInstantiationManager;
@@ -19,12 +18,9 @@ class PluginManager
 		}
 		$this->m_aExtensionClassNames = $m_aExtensionClassNames;
 
-		if ($m_pluginInstanciationManager == null)
-		{
+		if ($m_pluginInstanciationManager == null) {
 			$this->m_pluginInstantiationManager = new PluginInstanciationManager();
-		}
-		else
-		{
+		} else {
 			$this->m_pluginInstantiationManager = $m_pluginInstanciationManager;
 		}
 	}
@@ -38,7 +34,7 @@ class PluginManager
 	 */
 	public function EnumPlugins($sInterface, $sFilterInstanceOf = null, $bCanInstantiatePlugins = true)
 	{
-		$aPlugins = array();
+		$aPlugins = [];
 		if (array_key_exists($sInterface, self::$m_aExtensionClasses)) {
 			$aAllPlugins = self::$m_aExtensionClasses[$sInterface];
 
@@ -46,17 +42,14 @@ class PluginManager
 				return $aAllPlugins;
 			};
 
-			$aPlugins = array();
+			$aPlugins = [];
 			foreach ($aAllPlugins as $sPluginClass => $instance) {
 				if ($instance instanceof $sFilterInstanceOf) {
 					$aPlugins[$sPluginClass] = $instance;
 				}
 			}
-		}
-		else
-		{
-			if ($bCanInstantiatePlugins && array_key_exists($sInterface, $this->m_aExtensionClassNames))
-			{
+		} else {
+			if ($bCanInstantiatePlugins && array_key_exists($sInterface, $this->m_aExtensionClassNames)) {
 				$this->InstantiatePlugins($sInterface);
 
 				return $this->EnumPlugins($sInterface, $sFilterInstanceOf, false);
@@ -80,17 +73,12 @@ class PluginManager
 	public function GetPlugins($sInterface, $sClassName, $bCanInstantiatePlugins = true)
 	{
 		$oInstance = null;
-		if (array_key_exists($sInterface, self::$m_aExtensionClasses))
-		{
-			if (array_key_exists($sClassName, self::$m_aExtensionClasses[$sInterface]))
-			{
+		if (array_key_exists($sInterface, self::$m_aExtensionClasses)) {
+			if (array_key_exists($sClassName, self::$m_aExtensionClasses[$sInterface])) {
 				return self::$m_aExtensionClasses[$sInterface][$sClassName];
 			}
-		}
-		else
-		{
-			if ($bCanInstantiatePlugins && array_key_exists($sInterface, $this->m_aExtensionClassNames))
-			{
+		} else {
+			if ($bCanInstantiatePlugins && array_key_exists($sInterface, $this->m_aExtensionClassNames)) {
 				$this->InstantiatePlugins($sInterface);
 				return $this->GetPlugins($sInterface, $sClassName, false);
 			}

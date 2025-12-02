@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:RequestManagement' => 'Service Request',
 	'Menu:RequestManagement+' => 'Service Request',
 	'Menu:RequestManagementProvider' => 'Service Request Fornitore',
@@ -41,7 +42,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Richieste aperte dal cliente',
 	'Class:UserRequest:KnownErrorList' => 'Errori Conosiuti',
 	'Class:UserRequest:KnownErrorList+' => 'Errori noti relativi al CI Funzionale collegato al ticket corrente',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -57,7 +58,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 // Class: UserRequest
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:UserRequest' => 'Richiesta utente',
 	'Class:UserRequest+' => '~~',
 	'Class:UserRequest/Attribute:status' => 'Stati',
@@ -255,11 +256,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Non si può assegnare una richiesta padre a se stesso',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Risoluzione a cascata delle richieste figlie (ev_autoresolve), e allineare le seguenti caratteristiche: servizio, team, agente e risoluzione',
-));
+]);
 
-
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Organization:Overview:UserRequests' => 'Richieste utente per questa organizzazione',
 	'Organization:Overview:MyUserRequests' => 'Le mie richieste per questa organizzazione',
 	'Organization:Overview:Tickets' => 'Ticket per questa organizzazione',
-));
+]);

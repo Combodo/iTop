@@ -6,7 +6,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\TwigBase\Twig\Extension;
 use Combodo\iTop\Application\WebPage\NiceWebPage;
@@ -41,11 +40,11 @@ class LoginTwigContext
 	 */
 	public function __construct()
 	{
-		$this->aBlockExtension = array();
-		$this->aPostedVars = array();
+		$this->aBlockExtension = [];
+		$this->aPostedVars = [];
 		$this->sTwigLoaderPath = null;
-		$this->aCSSFiles = array();
-		$this->aJsFiles = array();
+		$this->aCSSFiles = [];
+		$this->aJsFiles = [];
 		$this->sTwigNameSpace = null;
 	}
 
@@ -179,7 +178,7 @@ class LoginBlockExtension
 	 * @param array $aData Data given to the twig template (into the variable {{ aData }})
 	 * @api
 	 */
-	public function __construct($sTwig, $aData = array())
+	public function __construct($sTwig, $aData = [])
 	{
 		$this->sTwig = $sTwig;
 		$this->aData = $aData;
@@ -210,21 +209,18 @@ class LoginTwigRenderer
 	public function __construct()
 	{
 		$this->aLoginPluginList = LoginWebPage::GetLoginPluginList('iLoginUIExtension', false);
-		$this->aPluginFormData = array();
-		$aTwigLoaders = array();
-		$this->aPostedVars = array();
-		foreach ($this->aLoginPluginList as $oLoginPlugin)
-		{
+		$this->aPluginFormData = [];
+		$aTwigLoaders = [];
+		$this->aPostedVars = [];
+		foreach ($this->aLoginPluginList as $oLoginPlugin) {
 			/** @var \iLoginUIExtension $oLoginPlugin */
 			$oLoginContext = $oLoginPlugin->GetTwigContext();
-			if (is_null($oLoginContext))
-			{
+			if (is_null($oLoginContext)) {
 				continue;
 			}
 			$this->aPluginFormData[] = $oLoginContext;
 			$sTwigLoaderPath = $oLoginContext->GetTwigLoaderPath();
-			if ($sTwigLoaderPath != null)
-			{
+			if ($sTwigLoaderPath != null) {
 				$oExtensionLoader = new FilesystemLoader();
 				$oExtensionLoader->setPaths($sTwigLoaderPath);
 				$aTwigLoaders[] = $oExtensionLoader;
@@ -232,8 +228,8 @@ class LoginTwigRenderer
 			$this->aPostedVars = array_merge($this->aPostedVars, $oLoginContext->GetPostedVars());
 		}
 
-		$oCoreLoader = new FilesystemLoader(array(), APPROOT.'templates');
-		$aCoreTemplatesPaths = array('pages/login', 'pages/login/password');
+		$oCoreLoader = new FilesystemLoader([], APPROOT.'templates');
+		$aCoreTemplatesPaths = ['pages/login', 'pages/login/password'];
 		// Having this path declared after the plugins let the plugins replace the core templates
 		$oCoreLoader->setPaths($aCoreTemplatesPaths);
 		// Having the core templates accessible within a different namespace offer the possibility to extend them while replacing them
@@ -251,19 +247,19 @@ class LoginTwigRenderer
 		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
 		$sDisplayIcon = Branding::GetLoginLogoAbsoluteUrl();
 
-		$aVars = array(
+		$aVars = [
 			'sAppRootUrl' => utils::GetAbsoluteUrlAppRoot(),
 			'aPluginFormData' => $this->GetPluginFormData(),
 			'sItopVersion' => ITOP_VERSION,
 			'sVersionShort' => $sVersionShort,
 			'sIconUrl' => $sIconUrl,
 			'sDisplayIcon' => $sDisplayIcon,
-		);
+		];
 
 		return $aVars;
 	}
 
-	public function Render(NiceWebPage $oPage, $sTwigFile, $aVars = array())
+	public function Render(NiceWebPage $oPage, $sTwigFile, $aVars = [])
 	{
 		$oTemplate = $this->GetTwig()->load($sTwigFile);
 		$oPage->add($oTemplate->renderBlock('body', $aVars));
@@ -272,17 +268,14 @@ class LoginTwigRenderer
 		$oPage->add_style($oTemplate->renderBlock('css', $aVars));
 
 		// Render CSS links
-		foreach ($this->aPluginFormData as $oFormData)
-		{
+		foreach ($this->aPluginFormData as $oFormData) {
 			/** @var \LoginTwigContext $oFormData */
 			$aCSSFiles = $oFormData->GetCSSFiles();
-			foreach ($aCSSFiles as $sCSSFile)
-			{
+			foreach ($aCSSFiles as $sCSSFile) {
 				$oPage->LinkStylesheetFromURI($sCSSFile);
 			}
 			$aJsFiles = $oFormData->GetJsFiles();
-			foreach ($aJsFiles as $sJsFile)
-			{
+			foreach ($aJsFiles as $sJsFile) {
 				$oPage->LinkScriptFromURI($sJsFile);
 
 			}

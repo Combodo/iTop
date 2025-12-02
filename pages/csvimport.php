@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -87,8 +88,8 @@ try {
 		$oSelectBlock = SelectUIBlockFactory::MakeForSelect($sName, 'select_'.$sName);
 		$oOption = SelectOptionUIBlockFactory::MakeForSelectOption("", Dict::S('UI:CSVImport:ClassesSelectOne'), false);
 		$oSelectBlock->AddSubBlock($oOption);
-		$aValidClasses = array();
-		$aClassCategories = array('bizmodel', 'addon/authentication');
+		$aValidClasses = [];
+		$aClassCategories = ['bizmodel', 'addon/authentication'];
 		if ($bAdvanced) {
 			$aClassCategories[] = 'grant_by_profile';
 		}
@@ -136,10 +137,9 @@ try {
 	 */
 	function CountCharsFromSet($sString, $aSet)
 	{
-		$aResult = array();
+		$aResult = [];
 		$aCount = count_chars($sString);
-		foreach($aSet as $sChar)
-		{
+		foreach ($aSet as $sChar) {
 			$aResult[$sChar] = isset($aCount[ord($sChar)]) ? $aCount[ord($sChar)] : 0;
 		}
 		return $aResult;
@@ -155,35 +155,33 @@ try {
 	{
 		$iLine = 0;
 		$iMaxLine = 20; // Process max 20 lines to guess the parameters
-		foreach($aPossibleSeparators as $sSep)
-		{
+		foreach ($aPossibleSeparators as $sSep) {
 			$aGuesses[$sSep]['total'] = $aGuesses[$sSep]['max'] = 0;
 			$aGuesses[$sSep]['min'] = 999;
 		}
-		$aStats = array();
-		while(($iLine < count($aCSVData)) && ($iLine < $iMaxLine) )
-		{
-			if (strlen($aCSVData[$iLine]) > 0)
-			{
+		$aStats = [];
+		while (($iLine < count($aCSVData)) && ($iLine < $iMaxLine)) {
+			if (strlen($aCSVData[$iLine]) > 0) {
 				$aStats[$iLine] = CountCharsFromSet($aCSVData[$iLine], $aPossibleSeparators);
 			}
 			$iLine++;
 		}
 		$iLine = 1;
-		foreach($aStats as $aLineStats)
-		{
-			foreach($aPossibleSeparators as $sSep)
-			{
+		foreach ($aStats as $aLineStats) {
+			foreach ($aPossibleSeparators as $sSep) {
 				$aGuesses[$sSep]['total'] += $aLineStats[$sSep];
-				if ($aLineStats[$sSep] > $aGuesses[$sSep]['max']) $aGuesses[$sSep]['max'] = $aLineStats[$sSep];
-				if ($aLineStats[$sSep] < $aGuesses[$sSep]['min']) $aGuesses[$sSep]['min'] = $aLineStats[$sSep];
+				if ($aLineStats[$sSep] > $aGuesses[$sSep]['max']) {
+					$aGuesses[$sSep]['max'] = $aLineStats[$sSep];
+				}
+				if ($aLineStats[$sSep] < $aGuesses[$sSep]['min']) {
+					$aGuesses[$sSep]['min'] = $aLineStats[$sSep];
+				}
 			}
 			$iLine++;
 		}
 
-		$aScores = array();
-		foreach($aGuesses as $sSep => $aData)
-		{
+		$aScores = [];
+		foreach ($aGuesses as $sSep => $aData) {
 			$aScores[$sSep] = $aData['total'] + $aData['max'] - $aData['min'];
 		}
 		arsort($aScores, SORT_NUMERIC); // Sort the array, higher scores first
@@ -200,10 +198,10 @@ try {
 	function GuessParameters($sCSVData)
 	{
 		$aData = explode("\n", $sCSVData);
-		$sSeparator = GuessFromFrequency($aData, array("\t", ',', ';', '|')); // Guess the most frequent (and regular) character on each line
-		$sQualifier = GuessFromFrequency($aData, array('"', "'")); // Guess the most frequent (and regular) character on each line
+		$sSeparator = GuessFromFrequency($aData, ["\t", ',', ';', '|']); // Guess the most frequent (and regular) character on each line
+		$sQualifier = GuessFromFrequency($aData, ['"', "'"]); // Guess the most frequent (and regular) character on each line
 
-		return array('separator' => $sSeparator, 'qualifier' => $sQualifier);
+		return ['separator' => $sSeparator, 'qualifier' => $sQualifier];
 	}
 
 	/**
@@ -212,10 +210,10 @@ try {
 	 * @param string $sClass The class of objects to synchronize
 	 * @param integer $iCount The number of objects to synchronize
 	 */
-	 function DisplaySynchroBanner(WebPage $oP, $sClass, $iCount)
-	 {
-		 $oP->AddSubBlock(AlertUIBlockFactory::MakeForInformation(MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:Title:BulkSynchro_nbItem_ofClass_class', $iCount, MetaModel::GetName($sClass))));
-	 }
+	function DisplaySynchroBanner(WebPage $oP, $sClass, $iCount)
+	{
+		$oP->AddSubBlock(AlertUIBlockFactory::MakeForInformation(MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:Title:BulkSynchro_nbItem_ofClass_class', $iCount, MetaModel::GetName($sClass))));
+	}
 
 	/**
 	 * Process the CSV data, for real or as a simulation
@@ -232,11 +230,11 @@ try {
 		}
 
 		// CSRF transaction id verification
-		if(!utils::IsTransactionValid(utils::ReadPostedParam('transaction_id', '', 'raw_data'))){
+		if (!utils::IsTransactionValid(utils::ReadPostedParam('transaction_id', '', 'raw_data'))) {
 			throw new CoreException(Dict::S('UI:Error:InvalidToken'));
 		}
 
-		$aResult = array();
+		$aResult = [];
 		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
 		$sCSVDataTruncated = utils::ReadParam('csvdata_truncated', '', false, 'raw_data');
 		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
@@ -244,22 +242,40 @@ try {
 		$bHeaderLine = (utils::ReadParam('header_line', '0') == 1);
 		$iNbSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
 		$iBoxSkipLines = utils::ReadParam('box_skiplines', '0');
-		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
-		$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
+		$aFieldsMapping = utils::ReadParam('field', [], false, 'raw_data');
+		$aSearchFields = utils::ReadParam('search_field', [], false, 'field_name');
 		$iCurrentStep = $bSimulate ? 4 : 5;
 		$bAdvanced = utils::ReadParam('advanced', 0);
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 		$sSynchroScope = utils::ReadParam('synchro_scope', '', false, 'raw_data');
-		$aSynchroUpdate = utils::ReadParam('synchro_update', array());
+		$aSynchroUpdate = utils::ReadParam('synchro_update', []);
 		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
 		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', (string)AttributeDateTime::GetFormat(), false, 'raw_data');
 
-		return CSVImportPageProcessor::ProcessData($iBoxSkipLines, $iNbSkippedLines, $sDateTimeFormat, $sCustomDateTimeFormat, $sClassName, $oPage, $aSynchroUpdate, $sCSVData, $sSeparator, $sTextQualifier, $bHeaderLine, $aResult, $aSearchFields, $aFieldsMapping, $bSimulate, $sCSVDataTruncated,
-			$iCurrentStep, $sEncoding,
-			$bAdvanced, $sSynchroScope);
+		return CSVImportPageProcessor::ProcessData(
+			$iBoxSkipLines,
+			$iNbSkippedLines,
+			$sDateTimeFormat,
+			$sCustomDateTimeFormat,
+			$sClassName,
+			$oPage,
+			$aSynchroUpdate,
+			$sCSVData,
+			$sSeparator,
+			$sTextQualifier,
+			$bHeaderLine,
+			$aResult,
+			$aSearchFields,
+			$aFieldsMapping,
+			$bSimulate,
+			$sCSVDataTruncated,
+			$iCurrentStep,
+			$sEncoding,
+			$bAdvanced,
+			$sSynchroScope
+		);
 
 	}
-
 
 	/**
 	 * Perform the actual load of the CSV data and display the results
@@ -306,14 +322,14 @@ try {
 		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
 		$sCSVDataTruncated = utils::ReadParam('csvdata_truncated', '', false, 'raw_data');
 		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
-		if ($sSeparator == 'tab') $sSeparator = "\t";
-		if ($sSeparator == 'other')
-		{
+		if ($sSeparator == 'tab') {
+			$sSeparator = "\t";
+		}
+		if ($sSeparator == 'other') {
 			$sSeparator = utils::ReadParam('other_separator', ',', false, 'raw_data');
 		}
 		$sTextQualifier = utils::ReadParam('text_qualifier', '"', false, 'raw_data');
-		if ($sTextQualifier == 'other')
-		{
+		if ($sTextQualifier == 'other') {
 			$sTextQualifier = utils::ReadParam('other_qualifier', '"', false, 'raw_data');
 		}
 		$bHeaderLine = (utils::ReadParam('header_line', '0') == 1);
@@ -333,7 +349,7 @@ try {
 			$oClassesSelect = SelectUIBlockFactory::MakeForSelect("class_name", "select_class_name");
 			$oDefaultSelect = SelectOptionUIBlockFactory::MakeForSelectOption("$sClassName", MetaModel::GetName($sClassName), true);
 			$oClassesSelect->AddSubBlock($oDefaultSelect);
-			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
+			$aSynchroUpdate = utils::ReadParam('synchro_update', []);
 		} else {
 			$oClassesSelect = GetClassesSelectUIBlock('class_name', $sClassName, UR_ACTION_BULK_MODIFY, (bool)$bAdvanced);
 		}
@@ -381,7 +397,7 @@ try {
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("synchro_scope", $sSynchroScope));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("date_time_format", $sDateTimeFormat));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("custom_date_time_format", $sCustomDateTimeFormat));
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("transaction_id",  utils::GetNewTransactionId(), "transaction_id")); // adding transaction_id field for next step (simulation)
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("transaction_id", utils::GetNewTransactionId(), "transaction_id")); // adding transaction_id field for next step (simulation)
 
 		if (!empty($sSynchroScope)) {
 			foreach ($aSynchroUpdate as $sKey => $value) {
@@ -403,10 +419,9 @@ try {
 	$('#advanced').on('click', function(ev) { DoReload(); } );
 EOF
 		);
-		if ($sClassName != '')
-		{
-			$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
-			$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
+		if ($sClassName != '') {
+			$aFieldsMapping = utils::ReadParam('field', [], false, 'raw_data');
+			$aSearchFields = utils::ReadParam('search_field', [], false, 'field_name');
 			$sFieldsMapping = addslashes(json_encode($aFieldsMapping));
 			$sSearchFields = addslashes(json_encode($aSearchFields));
 
@@ -414,7 +429,7 @@ EOF
 		}
 
 		$oPage->add_script(
-<<<EOF
+			<<<EOF
 	var aDefaultKeys = new Array();
 	var aReadOnlyKeys = new Array();
 	
@@ -633,7 +648,7 @@ EOF
 		}
 	}
 EOF
-	);
+		);
 	}
 
 	/**
@@ -645,35 +660,29 @@ EOF
 	{
 		$sOperation = utils::ReadParam('operation', 'csv_data');
 		$sCSVData = '';
-		switch($sOperation)
-		{
+		switch ($sOperation) {
 			case 'file_upload':
-			$oDocument = utils::ReadPostedDocument('csvdata');
-			if (!$oDocument->IsEmpty())
-			{
-				$sCSVData = $oDocument->GetData();
-			}
-			break;
+				$oDocument = utils::ReadPostedDocument('csvdata');
+				if (!$oDocument->IsEmpty()) {
+					$sCSVData = $oDocument->GetData();
+				}
+				break;
 
 			default:
-			$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
+				$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 		}
 		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 
 		// Compute a subset of the data set, now that we know the charset
-		if ($sEncoding == 'UTF-8')
-		{
+		if ($sEncoding == 'UTF-8') {
 			// Remove the BOM if any
-			if (substr($sCSVData, 0, 3) == UTF8_BOM)
-			{
+			if (substr($sCSVData, 0, 3) == UTF8_BOM) {
 				$sCSVData = substr($sCSVData, 3);
 			}
 			// Clean the input
 			// Todo: warn the user if some characters are lost/substituted
 			$sUTF8Data = iconv('UTF-8', 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
-		}
-		else
-		{
+		} else {
 			$sUTF8Data = iconv($sEncoding, 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
 		}
 
@@ -682,16 +691,15 @@ EOF
 		$iSkippedLines = utils::ReadParam('nb_skipped_lines', '');
 		$bBoxSkipLines = utils::ReadParam('box_skiplines', 0);
 		$sTextQualifier = utils::ReadParam('text_qualifier', '', false, 'raw_data');
-		if ($sTextQualifier == '') // May be set to an empty value by the previous page
-		{
+		if ($sTextQualifier == '') { // May be set to an empty value by the previous page
 			$sTextQualifier = $aGuesses['qualifier'];
 		}
-		$sOtherTextQualifier = in_array($sTextQualifier, array('"', "'")) ? '' : $sTextQualifier;
+		$sOtherTextQualifier = in_array($sTextQualifier, ['"', "'"]) ? '' : $sTextQualifier;
 		$bHeaderLine = utils::ReadParam('header_line', 0);
 		$sClassName = utils::ReadParam('class_name', '', false, 'class');
 		$bAdvanced = utils::ReadParam('advanced', 0);
-		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
-		$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
+		$aFieldsMapping = utils::ReadParam('field', [], false, 'raw_data');
+		$aSearchFields = utils::ReadParam('search_field', [], false, 'field_name');
 
 		// Create a truncated version of the data used for the fast preview
 		// Take about 20 lines of data... knowing that some lines may contain carriage returns
@@ -721,14 +729,13 @@ EOF
 			$oSet = new DBObjectSet($oSearch);
 			$iCount = $oSet->Count();
 			DisplaySynchroBanner($oPage, $sClassName, $iCount);
-			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
+			$aSynchroUpdate = utils::ReadParam('synchro_update', []);
 		}
 		$oPanel = TitleUIBlockFactory::MakeForPage(Dict::S('UI:Title:CSVImportStep2'));
 		$oPage->AddSubBlock($oPanel);
 
 		$oForm = FormUIBlockFactory::MakeStandard('wizForm');
 		$oPage->AddSubBlock($oForm);
-
 
 		$oContainer = PanelUIBlockFactory::MakeNeutral('');
 		$oForm->AddSubBlock($oContainer);
@@ -741,20 +748,19 @@ EOF
 		$oFieldSetSeparator = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:CSVImport:SeparatorCharacter'));
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetSeparator));
 
-		$aSep = array(
+		$aSep = [
 			';' => Dict::S('UI:CSVImport:SeparatorSemicolon+'),
 			',' => Dict::S('UI:CSVImport:SeparatorComma+'),
 			'tab' => Dict::S('UI:CSVImport:SeparatorTab+'),
-		);
+		];
 		$sSeparator = utils::ReadParam('separator', '', false, 'raw_data');
-		if ($sSeparator == '') // May be set to an empty value by the previous page
-		{
+		if ($sSeparator == '') { // May be set to an empty value by the previous page
 			$sSeparator = $aGuesses['separator'];
 		}
 		if ($sSeparator == "\t") {
 			$sSeparator = "tab";
 		}
-		$sOtherSeparator = in_array($sSeparator, array(',', ';', "\t")) ? '' : $sSeparator;
+		$sOtherSeparator = in_array($sSeparator, [',', ';', "\t"]) ? '' : $sSeparator;
 		$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator"  id="other_separator" value="'.utils::EscapeHtml($sOtherSeparator).'" onChange="DoPreview()"/>';
 
 		foreach ($aSep as $sVal => $sLabel) {
@@ -772,10 +778,10 @@ EOF
 		$oFieldSetTextQualifier = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:CSVImport:TextQualifierCharacter'));
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetTextQualifier));
 
-		$aQualifiers = array(
+		$aQualifiers = [
 			'"'  => Dict::S('UI:CSVImport:QualifierDoubleQuote+'),
 			'\'' => Dict::S('UI:CSVImport:QualifierSimpleQuote+'),
-		);
+		];
 		$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" maxlength="1" name="other_qualifier" value="'.utils::EscapeHtml($sOtherTextQualifier).'" onChange="DoPreview()/>';
 		foreach ($aQualifiers as $sVal => $sLabel) {
 			$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text_qualifier", $sVal, $sLabel, "radio");
@@ -798,8 +804,13 @@ EOF
 		$oFieldSetCommentsAndHeader->AddSubBlock($oCheckBoxHeader);
 		$oFieldSetCommentsAndHeader->AddSubBlock(new Html('</br>'));
 
-		$oCheckBoxSkip = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('UI:CSVImport:Skip_N_LinesAtTheBeginning', '<input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'">'), "box_skiplines", "1", "box_skiplines",
-			"checkbox");
+		$oCheckBoxSkip = InputUIBlockFactory::MakeForInputWithLabel(
+			Dict::Format('UI:CSVImport:Skip_N_LinesAtTheBeginning', '<input type="text" size=2 name="nb_skipped_lines" id="nb_skipped_lines" onChange="DoPreview()" value="'.$iSkippedLines.'">'),
+			"box_skiplines",
+			"1",
+			"box_skiplines",
+			"checkbox"
+		);
 		$oCheckBoxSkip->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oCheckBoxSkip->GetInput()->SetIsChecked(($bBoxSkipLines == 1));
 		$oCheckBoxSkip->SetBeforeInput(false);
@@ -922,9 +933,9 @@ EOF
 			 );
 	}
 EOF
-	);
+		);
 		$oPage->add_ready_script(
-<<<EOF
+			<<<EOF
 DoPreview();
 $('#custom_date_time_format').on('click', function() { $('#radio_date_time_custom').prop('checked', true); });
 EOF
@@ -945,7 +956,7 @@ EOF
 			$oSet = new DBObjectSet($oSearch);
 			$iCount = $oSet->Count();
 			DisplaySynchroBanner($oPage, $sClassName, $iCount);
-			$aSynchroUpdate = utils::ReadParam('synchro_update', array());
+			$aSynchroUpdate = utils::ReadParam('synchro_update', []);
 		} else {
 			$aSynchroUpdate = null;
 		}
@@ -980,8 +991,8 @@ EOF
 		if ($sEncoding == '') {
 			$sEncoding = MetaModel::GetConfig()->Get('csv_file_default_charset');
 		}
-		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
-		$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
+		$aFieldsMapping = utils::ReadParam('field', [], false, 'raw_data');
+		$aSearchFields = utils::ReadParam('search_field', [], false, 'field_name');
 		$aPossibleEncodings = utils::GetPossibleEncodings(MetaModel::GetConfig()->GetCSVImportCharsets());
 
 		foreach ($aPossibleEncodings as $sIconvCode => $sDisplayName) {
@@ -1015,7 +1026,6 @@ EOF
 		$oTabPaste = $oTabContainer->AddTab('UI:CSVImport:Tab:PasteData', Dict::S('UI:CSVImport:Tab:CopyPaste'));
 		$oFormPaste = FormUIBlockFactory::MakeStandard();
 		$oTabPaste->AddSubBlock($oFormPaste);
-
 
 		$sCSVData = utils::ReadParam('csvdata', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
 		$oTextarea = new TextArea('csvdata', $sCSVData, '', 120, 30);
@@ -1086,25 +1096,28 @@ ajax_request = $.post(GetAbsoluteUrlAppRoot()+'pages/ajax.csvimport.php',
 	 );
 }
 EOF
-	);
+		);
 		$oPage->add_ready_script(
-<<<EOF
+			<<<EOF
 $('#select_template_class').change( function() {
 	DisplayTemplate(this.value);
 });
 EOF
-	);
+		);
 
-		if (Utils::GetConfig()->Get('csv_import_history_display'))
-		{
+		if (Utils::GetConfig()->Get('csv_import_history_display')) {
 			$oPage->SetCurrentTabContainer('tabs1');
-			$oPage->AddAjaxTab('UI:History:BulkImports', utils::GetAbsoluteUrlAppRoot().'pages/csvimport.php?step=11', true /* bCache */,
-				null, AjaxTab::ENUM_TAB_PLACEHOLDER_MISC);
+			$oPage->AddAjaxTab(
+				'UI:History:BulkImports',
+				utils::GetAbsoluteUrlAppRoot().'pages/csvimport.php?step=11',
+				true /* bCache */,
+				null,
+				AjaxTab::ENUM_TAB_PLACEHOLDER_MISC
+			);
 		}
 	}
 
-	switch($iStep)
-	{
+	switch ($iStep) {
 		case 11:
 			// Asynchronous tab
 			$oPage = new AjaxPage('');
@@ -1142,19 +1155,15 @@ EOF
 	}
 
 	$oPage->output();
-}
-catch(CoreException $e)
-{
+} catch (CoreException $e) {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
 	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));
 	$oP->output();
 
-	if (MetaModel::IsLogEnabledIssue())
-	{
-		if (MetaModel::IsValidClass('EventIssue'))
-		{
+	if (MetaModel::IsLogEnabledIssue()) {
+		if (MetaModel::IsValidClass('EventIssue')) {
 			$oLog = new EventIssue();
 
 			$oLog->Set('message', $e->getMessage());
@@ -1171,19 +1180,15 @@ catch(CoreException $e)
 
 	// For debugging only
 	//throw $e;
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
 	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));
 	$oP->output();
 
-	if (MetaModel::IsLogEnabledIssue())
-	{
-		if (MetaModel::IsValidClass('EventIssue'))
-		{
+	if (MetaModel::IsLogEnabledIssue()) {
+		if (MetaModel::IsValidClass('EventIssue')) {
 			$oLog = new EventIssue();
 
 			$oLog->Set('message', $e->getMessage());
@@ -1191,7 +1196,7 @@ catch(Exception $e)
 			$oLog->Set('issue', 'PHP Exception');
 			$oLog->Set('impact', 'Page could not be displayed');
 			$oLog->Set('callstack', $e->getTrace());
-			$oLog->Set('data', array());
+			$oLog->Set('data', []);
 			$oLog->DBInsertNoReload();
 		}
 

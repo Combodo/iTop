@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-knownerror-mgmt/3.2.1',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Known Errors Database',
@@ -12,22 +11,22 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
+		'dependencies' => [
 			'itop-config-mgmt/2.2.0',
-		),
+		],
 		'mandatory' => false,
 		'visible' => true,
 
 		// Components
 		//
-		'datamodel' => array(
-		),
-		'data.struct' => array(
+		'datamodel' => [
+		],
+		'data.struct' => [
 			//'data.struct.itop-knownerror-mgmt.xml',
-		),
-		'data.sample' => array(
-		),
-		
+		],
+		'data.sample' => [
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '', // No manual installation instructions
@@ -35,7 +34,7 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
-		),
-	)
+		'settings' => [
+		],
+	]
 );

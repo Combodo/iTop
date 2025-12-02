@@ -1,10 +1,9 @@
 <?php
 
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-config/3.2.1',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'Configuration editor',
@@ -12,25 +11,25 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(),
+		'dependencies' => [],
 		'mandatory' => true,
 		'visible' => false,
 
 		// Components
 		//
-		'datamodel' => array(
+		'datamodel' => [
 			'src/Validator/ConfigNodesVisitor.php',
 			'src/Validator/iTopConfigAstValidator.php',
 			'src/Validator/iTopConfigSyntaxValidator.php',
-),
-		'webservice' => array(),
-		'dictionary' => array(
+],
+		'webservice' => [],
+		'dictionary' => [
 			'en.dict.itop-config.php',
 			'fr.dict.itop-config.php',
-		),
-		'data.struct' => array(),
-		'data.sample' => array(),
-		
+		],
+		'data.struct' => [],
+		'data.sample' => [],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
@@ -38,6 +37,6 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(),
-	)
+		'settings' => [],
+	]
 );

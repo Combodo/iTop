@@ -16,7 +16,6 @@ use Throwable;
  */
 class PortalCollector extends AbstractDataCollector
 {
-
 	/**
 	 * Constructor.
 	 *
@@ -90,13 +89,13 @@ class PortalCollector extends AbstractDataCollector
 		$iOverridesCount = 0;
 		$aExtensions = [];
 
-		foreach($aTemplatesDefinitions as $templates){
+		foreach ($aTemplatesDefinitions as $templates) {
 			foreach ($templates as $template) {
 
 				$aMatches = [];
 				preg_match('#([\w-]+)/#', $template->GetPath(), $aMatches);
 
-				if(!in_array($aMatches[1], $aExtensions)){
+				if (!in_array($aMatches[1], $aExtensions)) {
 					$aExtensions[] = $aMatches[1];
 				}
 

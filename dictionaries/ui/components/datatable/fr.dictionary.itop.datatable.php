@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Datatables:Language:Processing' => 'Patientez ...',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ par page',
 	'UI:Datatables:Language:ZeroRecords' => 'Pas de résultat',
@@ -24,4 +25,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Datatables:Column:RowActions:Description' => '',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Confirmation',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Confirmez-vous cette action ?',
-));
+]);

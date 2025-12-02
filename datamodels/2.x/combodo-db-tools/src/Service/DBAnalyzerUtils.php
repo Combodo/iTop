@@ -1,9 +1,9 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 namespace Combodo\iTop\DBTools\Service;
 
@@ -31,11 +31,9 @@ class DBAnalyzerUtils
 		fwrite($fReport, '-- Database Maintenance tools: '.date('Y-m-d H:i:s')."\r\n");
 		fwrite($fReport, "-- ".Dict::S('DBTools:Disclaimer')."\r\n");
 		fwrite($fReport, "-- ".Dict::S('DBTools:Indication')."\r\n");
-		foreach ($aResults as $sClass => $aErrorList)
-		{
+		foreach ($aResults as $sClass => $aErrorList) {
 			fwrite($fReport, '');
-			foreach ($aErrorList as $sErrorLabel => $aError)
-			{
+			foreach ($aErrorList as $sErrorLabel => $aError) {
 				fwrite($fReport, "\r\n-- \r\n");
 				fwrite($fReport, '-- Class: '.MetaModel::GetName($sClass).' ('.$sClass.")\r\n");
 				$iCount = $aError['count'];
@@ -48,13 +46,11 @@ class DBAnalyzerUtils
 					$sQuery = $aError['query'];
 					fwrite($fReport, '-- Query: '.$sQuery."\r\n");
 				}
-				
-				if (isset($aError['fixit']))
-				{
+
+				if (isset($aError['fixit'])) {
 					fwrite($fReport, "\r\n-- Fix it (indication):\r\n\r\n");
 					$aFixitQueries = $aError['fixit'];
-					foreach ($aFixitQueries as $sFixitQuery)
-					{
+					foreach ($aFixitQueries as $sFixitQuery) {
 						fwrite($fReport, "$sFixitQuery\r\n");
 					}
 					fwrite($fReport, "\r\n");

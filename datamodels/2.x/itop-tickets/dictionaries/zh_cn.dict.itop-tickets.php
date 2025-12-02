@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -32,7 +33,7 @@
 //
 // Class: Ticket
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Ticket' => '工单',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => '编号',
@@ -84,14 +85,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => '已关闭',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
 	'Ticket:ImpactAnalysis' => '影响分析',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkContactToTicket' => '关联联系人/工单',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
@@ -111,13 +111,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => '手动添加',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => '自动添加',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => '不通知',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:WorkOrder' => '工作任务',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => '名称',
@@ -150,11 +150,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => '关闭',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Ticket:baseinfo' => '基本信息',
 	'Ticket:date' => '日期信息',
 	'Ticket:contact' => '联系人',
@@ -244,14 +243,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => '响应时限',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'TTR',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => '解决时限',
-));
-
+]);
 
 //
 // Class: Ticket
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
-));
+]);

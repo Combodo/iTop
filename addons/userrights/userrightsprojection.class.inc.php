@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -24,9 +25,9 @@ define('ADMIN_PROFILE_ID', 1);
 class UserRightsBaseClass extends cmdbAbstractObject
 {
 	// Whenever something changes, reload the privileges
-	
+
 	// Whenever something changes, reload the privileges
-	
+
 	protected function AfterInsert()
 	{
 		UserRights::FlushPrivileges();
@@ -43,57 +44,50 @@ class UserRightsBaseClass extends cmdbAbstractObject
 	}
 }
 
-
-
-
 class URP_Profiles extends UserRightsBaseClass
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"                   => "addon/userrights",
 			"key_type"                   => "autoincrement",
 			"name_attcode"               => "name",
-			"complementary_name_attcode" => array('description'),
+			"complementary_name_attcode" => ['description'],
 			"state_attcode"              => "",
-			"reconc_keys"                => array(),
+			"reconc_keys"                => [],
 			"db_table"                   => "priv_urp_profiles",
 			"db_key_field"               => "id",
 			"db_finalclass_field"        => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("name", ["allowed_values" => null, "sql" => "name", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("description", ["allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
 
-		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("user_list", array("linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"profileid", "ext_key_to_remote"=>"userid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("user_list", ["linked_class" => "URP_UserProfile", "ext_key_to_me" => "profileid", "ext_key_to_remote" => "userid", "allowed_values" => null, "count_min" => 1, "count_max" => 0, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'user_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('description')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['name', 'description', 'user_list']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['description']); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('name', 'description')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('default_search', array ('name', 'description'));
+		MetaModel::Init_SetZListItems('standard_search', ['name', 'description']); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('default_search', ['name', 'description']);
 	}
 
-	function GetGrantAsHtml($oUserRights, $sClass, $sAction)
+	public function GetGrantAsHtml($oUserRights, $sClass, $sAction)
 	{
 		$oGrant = $oUserRights->GetClassActionGrant($this->GetKey(), $sClass, $sAction);
-		if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes')) 
-		{
+		if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes')) {
 			return '<span class="ibo-user-rights ibo-is-success">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
-		}
-		else
-		{
+		} else {
 			return '<span class="ibo-user-rights ibo-is-failure">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
 		}
 	}
-	
-	function DoShowGrantSumary($oPage)
+
+	public function DoShowGrantSumary($oPage)
 	{
-		if ($this->GetRawName() == "Administrator")
-		{
+		if ($this->GetRawName() == "Administrator") {
 			// Looks dirty, but ok that's THE ONE
 			$oPage->p(Dict::S('UI:UserManagement:AdminProfile+'));
 			return;
@@ -101,25 +95,24 @@ class URP_Profiles extends UserRightsBaseClass
 
 		// Note: for sure, we assume that the instance is derived from UserRightsProjection
 		$oUserRights = UserRights::GetModuleInstance();
-	
-		$aDisplayData = array();
-		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
-		{
-			// Skip non instantiable classes
-			if (MetaModel::IsAbstract($sClass)) continue;
 
-			$aStimuli = array();
-			foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
-			{
+		$aDisplayData = [];
+		foreach (MetaModel::GetClasses('bizmodel') as $sClass) {
+			// Skip non instantiable classes
+			if (MetaModel::IsAbstract($sClass)) {
+				continue;
+			}
+
+			$aStimuli = [];
+			foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus) {
 				$oGrant = $oUserRights->GetClassStimulusGrant($this->GetKey(), $sClass, $sStimulusCode);
-				if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes'))
-				{
+				if (is_object($oGrant) && ($oGrant->Get('permission') == 'yes')) {
 					$aStimuli[] = '<span title="'.$sStimulusCode.': '.utils::EscapeHtml($oStimulus->GetDescription()).'">'.utils::EscapeHtml($oStimulus->GetLabel()).'</span>';
 				}
 			}
 			$sStimuli = implode(', ', $aStimuli);
-			
-			$aDisplayData[] = array(
+
+			$aDisplayData[] = [
 				'class' => MetaModel::GetName($sClass),
 				'read' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Read'),
 				'bulkread' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Bulk Read'),
@@ -128,22 +121,22 @@ class URP_Profiles extends UserRightsBaseClass
 				'delete' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Delete'),
 				'bulkdelete' => $this->GetGrantAsHtml($oUserRights, $sClass, 'Bulk Delete'),
 				'stimuli' => $sStimuli,
-			);
+			];
 		}
-	
-		$aDisplayConfig = array();
-		$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));
-		$aDisplayConfig['read'] = array('label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+'));
-		$aDisplayConfig['bulkread'] = array('label' => Dict::S('UI:UserManagement:Action:BulkRead'), 'description' => Dict::S('UI:UserManagement:Action:BulkRead+'));
-		$aDisplayConfig['write'] = array('label' => Dict::S('UI:UserManagement:Action:Modify'), 'description' => Dict::S('UI:UserManagement:Action:Modify+'));
-		$aDisplayConfig['bulkwrite'] = array('label' => Dict::S('UI:UserManagement:Action:BulkModify'), 'description' => Dict::S('UI:UserManagement:Action:BulkModify+'));
-		$aDisplayConfig['delete'] = array('label' => Dict::S('UI:UserManagement:Action:Delete'), 'description' => Dict::S('UI:UserManagement:Action:Delete+'));
-		$aDisplayConfig['bulkdelete'] = array('label' => Dict::S('UI:UserManagement:Action:BulkDelete'), 'description' => Dict::S('UI:UserManagement:Action:BulkDelete+'));
-		$aDisplayConfig['stimuli'] = array('label' => Dict::S('UI:UserManagement:Action:Stimuli'), 'description' => Dict::S('UI:UserManagement:Action:Stimuli+'));
+
+		$aDisplayConfig = [];
+		$aDisplayConfig['class'] = ['label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+')];
+		$aDisplayConfig['read'] = ['label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+')];
+		$aDisplayConfig['bulkread'] = ['label' => Dict::S('UI:UserManagement:Action:BulkRead'), 'description' => Dict::S('UI:UserManagement:Action:BulkRead+')];
+		$aDisplayConfig['write'] = ['label' => Dict::S('UI:UserManagement:Action:Modify'), 'description' => Dict::S('UI:UserManagement:Action:Modify+')];
+		$aDisplayConfig['bulkwrite'] = ['label' => Dict::S('UI:UserManagement:Action:BulkModify'), 'description' => Dict::S('UI:UserManagement:Action:BulkModify+')];
+		$aDisplayConfig['delete'] = ['label' => Dict::S('UI:UserManagement:Action:Delete'), 'description' => Dict::S('UI:UserManagement:Action:Delete+')];
+		$aDisplayConfig['bulkdelete'] = ['label' => Dict::S('UI:UserManagement:Action:BulkDelete'), 'description' => Dict::S('UI:UserManagement:Action:BulkDelete+')];
+		$aDisplayConfig['stimuli'] = ['label' => Dict::S('UI:UserManagement:Action:Stimuli'), 'description' => Dict::S('UI:UserManagement:Action:Stimuli+')];
 		$oPage->table($aDisplayConfig, $aDisplayData);
 	}
 
-	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
@@ -152,34 +145,33 @@ class URP_Profiles extends UserRightsBaseClass
 	}
 }
 
-
 class URP_Dimensions extends UserRightsBaseClass
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_urp_dimensions",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeClass("type", array("class_category"=>"bizmodel", "more_values"=>"String,Integer", "sql"=>"type", "default_value"=>'String', "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("name", ["allowed_values" => null, "sql" => "name", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("description", ["allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeClass("type", ["class_category" => "bizmodel", "more_values" => "String,Integer", "sql" => "type", "default_value" => 'String', "is_null_allowed" => false, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('name', 'description', 'type')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('description')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['name', 'description', 'type']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['description']); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', ['name']); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', ['name']); // Criteria of the advanced search form
 	}
 
 	public function CheckProjectionSpec($oProjectionSpec, $sProjectedClass)
@@ -188,191 +180,162 @@ class URP_Dimensions extends UserRightsBaseClass
 		$sAttribute = $oProjectionSpec->Get('attribute');
 
 		// Shortcut: "any value" or "no value" means no projection
-		if (empty($sExpression)) return;
-		if ($sExpression == '<any>') return;
+		if (empty($sExpression)) {
+			return;
+		}
+		if ($sExpression == '<any>') {
+			return;
+		}
 
 		// 1st - compute the data type for the dimension
 		//
 		$sType = $this->Get('type');
-		if (MetaModel::IsValidClass($sType))
-		{
+		if (MetaModel::IsValidClass($sType)) {
 			$sExpectedType = $sType;
-		}
-		else
-		{
+		} else {
 			$sExpectedType = '_scalar_';
 		}
 
 		// 2nd - compute the data type for the projection
 		//
 		$sTargetClass = '';
-		if (($sExpression == '<this>') || ($sExpression == '<user>'))
-		{
+		if (($sExpression == '<this>') || ($sExpression == '<user>')) {
 			$sTargetClass = $sProjectedClass;
-		}
-		elseif ($sExpression == '<any>')
-		{
+		} elseif ($sExpression == '<any>') {
 			$sTargetClass = '';
-		}
-		else
-		{
+		} else {
 			// Evaluate wether it is a constant or not
-			try
-			{
+			try {
 				$oObjectSearch = DBObjectSearch::FromOQL_AllData($sExpression);
 
 				$sTargetClass = $oObjectSearch->GetClass();
-			}
-			catch (OqlException $e)
-			{
+			} catch (OqlException $e) {
 			}
 		}
 
-		if (empty($sTargetClass))
-		{
+		if (empty($sTargetClass)) {
 			$sFoundType = '_void_';
-		}
-		else
-		{
-			if (empty($sAttribute))
-			{
+		} else {
+			if (empty($sAttribute)) {
 				$sFoundType = $sTargetClass;
-			}
-			else
-			{
-				if (!MetaModel::IsValidAttCode($sTargetClass, $sAttribute))
-				{
-					throw new CoreException('Unkown attribute code in projection specification', array('found' => $sAttribute, 'expecting' => MetaModel::GetAttributesList($sTargetClass), 'class' => $sTargetClass, 'projection' => $oProjectionSpec));
+			} else {
+				if (!MetaModel::IsValidAttCode($sTargetClass, $sAttribute)) {
+					throw new CoreException('Unkown attribute code in projection specification', ['found' => $sAttribute, 'expecting' => MetaModel::GetAttributesList($sTargetClass), 'class' => $sTargetClass, 'projection' => $oProjectionSpec]);
 				}
 				$oAttDef = MetaModel::GetAttributeDef($sTargetClass, $sAttribute);
-				if ($oAttDef->IsExternalKey())
-				{
+				if ($oAttDef->IsExternalKey()) {
 					$sFoundType = $oAttDef->GetTargetClass();
-				}
-				else
-				{
+				} else {
 					$sFoundType = '_scalar_';
 				}
 			}
 		}
 
 		// Compare the dimension type and projection type
-		if (($sFoundType != '_void_') && ($sFoundType != $sExpectedType))
-		{
-			throw new CoreException('Wrong type in projection specification', array('found' => $sFoundType, 'expecting' => $sExpectedType, 'expression' => $sExpression, 'attribute' => $sAttribute, 'projection' => $oProjectionSpec));
+		if (($sFoundType != '_void_') && ($sFoundType != $sExpectedType)) {
+			throw new CoreException('Wrong type in projection specification', ['found' => $sFoundType, 'expecting' => $sExpectedType, 'expression' => $sExpression, 'attribute' => $sAttribute, 'projection' => $oProjectionSpec]);
 		}
 	}
 }
-
 
 class URP_UserProfile extends UserRightsBaseClass
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "addon/userrights",
 			"key_type"            => "autoincrement",
-			"name_attcode"        => array("userlogin", "profile"),
+			"name_attcode"        => ["userlogin", "profile"],
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_urp_userprofile",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
 			"is_link" 			  => true, /** @since 3.1.0 N°6482 */
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass" => "User", "jointype" => "", "allowed_values" => null, "sql" => "userid", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("userlogin", array("allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "login")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", ["targetclass" => "User", "jointype" => "", "allowed_values" => null, "sql" => "userid", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("userlogin", ["allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "login"]));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid",
-			array("targetclass" => "URP_Profiles", "jointype" => "", "allowed_values" => null, "sql" => "profileid", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => array(), "allow_target_creation" => false)));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("allowed_values" => null, "extkey_attcode" => 'profileid', "target_attcode" => "name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey(
+			"profileid",
+			["targetclass" => "URP_Profiles", "jointype" => "", "allowed_values" => null, "sql" => "profileid", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => [], "allow_target_creation" => false]
+		));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", ["allowed_values" => null, "extkey_attcode" => 'profileid', "target_attcode" => "name"]));
 
-		MetaModel::Init_AddAttribute(new AttributeString("reason", array("allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeString("reason", ["allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('userid', 'profileid', 'reason')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('profileid', 'reason')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['userid', 'profileid', 'reason']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['profileid', 'reason']); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('userid', 'profileid')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('userid', 'profileid')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', ['userid', 'profileid']); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', ['userid', 'profileid']); // Criteria of the advanced search form
 	}
 }
-
 
 class URP_ProfileProjection extends UserRightsBaseClass
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
 			"name_attcode" => "profileid",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_urp_profileprojection",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("dimensionid", array("targetclass"=>"URP_Dimensions", "jointype"=> "", "allowed_values"=>null, "sql"=>"dimensionid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("dimension", array("allowed_values"=>null, "extkey_attcode"=> 'dimensionid', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("dimensionid", ["targetclass" => "URP_Dimensions", "jointype" => "", "allowed_values" => null, "sql" => "dimensionid", "is_null_allowed" => false, "on_target_delete" => DEL_MANUAL, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("dimension", ["allowed_values" => null, "extkey_attcode" => 'dimensionid', "target_attcode" => "name"]));
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", ["targetclass" => "URP_Profiles", "jointype" => "", "allowed_values" => null, "sql" => "profileid", "is_null_allowed" => false, "on_target_delete" => DEL_MANUAL, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", ["allowed_values" => null, "extkey_attcode" => 'profileid', "target_attcode" => "name"]));
 
-		MetaModel::Init_AddAttribute(new AttributeString("value", array("allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("attribute", array("allowed_values"=>null, "sql"=>"attribute", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("value", ["allowed_values" => null, "sql" => "value", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("attribute", ["allowed_values" => null, "sql" => "attribute", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('dimensionid', 'profileid', 'value', 'attribute')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('profileid', 'value', 'attribute')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['dimensionid', 'profileid', 'value', 'attribute']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['profileid', 'value', 'attribute']); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('dimensionid', 'profileid')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('dimensionid', 'profileid')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', ['dimensionid', 'profileid']); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', ['dimensionid', 'profileid']); // Criteria of the advanced search form
 	}
 
 	protected $m_aUserProjections; // cache
 
 	public function ProjectUser(User $oUser)
 	{
-		if (is_array($this->m_aUserProjections))
-		{
+		if (is_array($this->m_aUserProjections)) {
 			// Hit!
 			return $this->m_aUserProjections;
 		}
 
 		$sExpr = $this->Get('value');
-		if ($sExpr == '<user>')
-		{
+		if ($sExpr == '<user>') {
 			$sColumn = $this->Get('attribute');
-			if (empty($sColumn))
-			{
-				$aRes = array($oUser->GetKey());
+			if (empty($sColumn)) {
+				$aRes = [$oUser->GetKey()];
+			} else {
+				$aRes = [$oUser->Get($sColumn)];
 			}
-			else
-			{
-				$aRes = array($oUser->Get($sColumn));
-			}
-			
-		}
-		elseif (($sExpr == '<any>') || ($sExpr == ''))
-		{
+
+		} elseif (($sExpr == '<any>') || ($sExpr == '')) {
 			$aRes = null;
-		}
-		elseif (strtolower(substr($sExpr, 0, 6)) == 'select')
-		{
+		} elseif (strtolower(substr($sExpr, 0, 6)) == 'select') {
 			$sColumn = $this->Get('attribute');
 			// SELECT...
-			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn, array(), true /*allow all data*/);
-			$aRes = $oValueSetDef->GetValues(array('user' => $oUser), '');
-		}
-		else
-		{
+			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn, [], true /*allow all data*/);
+			$aRes = $oValueSetDef->GetValues(['user' => $oUser], '');
+		} else {
 			// Constant value(s)
 			$aRes = explode(';', trim($sExpr));
 		}
@@ -381,69 +344,58 @@ class URP_ProfileProjection extends UserRightsBaseClass
 	}
 }
 
-
 class URP_ClassProjection extends UserRightsBaseClass
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
 			"name_attcode" => "dimensionid",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_urp_classprojection",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("dimensionid", array("targetclass"=>"URP_Dimensions", "jointype"=> "", "allowed_values"=>null, "sql"=>"dimensionid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("dimension", array("allowed_values"=>null, "extkey_attcode"=> 'dimensionid', "target_attcode"=>"name")));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("dimensionid", ["targetclass" => "URP_Dimensions", "jointype" => "", "allowed_values" => null, "sql" => "dimensionid", "is_null_allowed" => false, "on_target_delete" => DEL_MANUAL, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("dimension", ["allowed_values" => null, "extkey_attcode" => 'dimensionid', "target_attcode" => "name"]));
 
-		MetaModel::Init_AddAttribute(new AttributeClass("class", array("class_category"=>"", "more_values"=>"", "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("class", ["class_category" => "", "more_values" => "", "sql" => "class", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
 
-		MetaModel::Init_AddAttribute(new AttributeString("value", array("allowed_values"=>null, "sql"=>"value", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("attribute", array("allowed_values"=>null, "sql"=>"attribute", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("value", ["allowed_values" => null, "sql" => "value", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("attribute", ["allowed_values" => null, "sql" => "attribute", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('dimensionid', 'class', 'value', 'attribute')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('class', 'value', 'attribute')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['dimensionid', 'class', 'value', 'attribute']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['class', 'value', 'attribute']); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('dimensionid', 'class')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('dimensionid', 'class')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', ['dimensionid', 'class']); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', ['dimensionid', 'class']); // Criteria of the advanced search form
 	}
 
 	public function ProjectObject($oObject)
 	{
 		$sExpr = $this->Get('value');
-		if ($sExpr == '<this>')
-		{
+		if ($sExpr == '<this>') {
 			$sColumn = $this->Get('attribute');
-			if (empty($sColumn))
-			{
-				$aRes = array($oObject->GetKey());
+			if (empty($sColumn)) {
+				$aRes = [$oObject->GetKey()];
+			} else {
+				$aRes = [$oObject->Get($sColumn)];
 			}
-			else
-			{
-				$aRes = array($oObject->Get($sColumn));
-			}
-			
-		}
-		elseif (($sExpr == '<any>') || ($sExpr == ''))
-		{
+
+		} elseif (($sExpr == '<any>') || ($sExpr == '')) {
 			$aRes = null;
-		}
-		elseif (strtolower(substr($sExpr, 0, 6)) == 'select')
-		{ 
+		} elseif (strtolower(substr($sExpr, 0, 6)) == 'select') {
 			$sColumn = $this->Get('attribute');
 			// SELECT...
-			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn, array(), true /*allow all data*/);
-			$aRes = $oValueSetDef->GetValues(array('this' => $oObject), '');
-		}
-		else
-		{
+			$oValueSetDef = new ValueSetObjects($sExpr, $sColumn, [], true /*allow all data*/);
+			$aRes = $oValueSetDef->GetValues(['this' => $oObject], '');
+		} else {
 			// Constant value(s)
 			$aRes = explode(';', trim($sExpr));
 		}
@@ -452,122 +404,116 @@ class URP_ClassProjection extends UserRightsBaseClass
 
 }
 
-
 class URP_ActionGrant extends UserRightsBaseClass
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
 			"name_attcode" => "profileid",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_urp_grant_actions",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 
 		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeClass("class", array("class_category"=>"", "more_values"=>"", "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", ["targetclass" => "URP_Profiles", "jointype" => "", "allowed_values" => null, "sql" => "profileid", "is_null_allowed" => false, "on_target_delete" => DEL_MANUAL, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", ["allowed_values" => null, "extkey_attcode" => 'profileid', "target_attcode" => "name"]));
+		MetaModel::Init_AddAttribute(new AttributeClass("class", ["class_category" => "", "more_values" => "", "sql" => "class", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeEnum("permission", ["allowed_values" => new ValueSetEnum('yes,no'), "sql" => "permission", "default_value" => "yes", "is_null_allowed" => false, "depends_on" => []]));
 
-		MetaModel::Init_AddAttribute(new AttributeString("action", array("allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("action", ["allowed_values" => null, "sql" => "action", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('profileid', 'class', 'permission', 'action')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('class', 'permission', 'action')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['profileid', 'class', 'permission', 'action']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['class', 'permission', 'action']); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('profileid', 'class', 'permission', 'action')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('profileid', 'class', 'permission', 'action')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', ['profileid', 'class', 'permission', 'action']); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', ['profileid', 'class', 'permission', 'action']); // Criteria of the advanced search form
 	}
 }
-
 
 class URP_StimulusGrant extends UserRightsBaseClass
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
 			"name_attcode" => "profileid",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_urp_grant_stimulus",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 
 		// Common to all grant classes (could be factorized by class inheritence, but this has to be benchmarked)
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", array("targetclass"=>"URP_Profiles", "jointype"=> "", "allowed_values"=>null, "sql"=>"profileid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", array("allowed_values"=>null, "extkey_attcode"=> 'profileid', "target_attcode"=>"name")));
-		MetaModel::Init_AddAttribute(new AttributeClass("class", array("class_category"=>"", "more_values"=>"", "sql"=>"class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeEnum("permission", array("allowed_values"=>new ValueSetEnum('yes,no'), "sql"=>"permission", "default_value"=>"yes", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("profileid", ["targetclass" => "URP_Profiles", "jointype" => "", "allowed_values" => null, "sql" => "profileid", "is_null_allowed" => false, "on_target_delete" => DEL_MANUAL, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("profile", ["allowed_values" => null, "extkey_attcode" => 'profileid', "target_attcode" => "name"]));
+		MetaModel::Init_AddAttribute(new AttributeClass("class", ["class_category" => "", "more_values" => "", "sql" => "class", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeEnum("permission", ["allowed_values" => new ValueSetEnum('yes,no'), "sql" => "permission", "default_value" => "yes", "is_null_allowed" => false, "depends_on" => []]));
 
-		MetaModel::Init_AddAttribute(new AttributeString("stimulus", array("allowed_values"=>null, "sql"=>"action", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("stimulus", ["allowed_values" => null, "sql" => "action", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('profileid', 'class', 'permission', 'stimulus')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('class', 'permission', 'stimulus')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['profileid', 'class', 'permission', 'stimulus']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['class', 'permission', 'stimulus']); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('profileid', 'class', 'permission', 'stimulus')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('profileid', 'class', 'permission', 'stimulus')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', ['profileid', 'class', 'permission', 'stimulus']); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', ['profileid', 'class', 'permission', 'stimulus']); // Criteria of the advanced search form
 	}
 }
-
 
 class URP_AttributeGrant extends UserRightsBaseClass
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
 			"name_attcode" => "actiongrantid",
 			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"reconc_keys" => [],
 			"db_table" => "priv_urp_grant_attributes",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("actiongrantid", array("targetclass"=>"URP_ActionGrant", "jointype"=> "", "allowed_values"=>null, "sql"=>"actiongrantid", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("allowed_values"=>null, "sql"=>"attcode", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("actiongrantid", ["targetclass" => "URP_ActionGrant", "jointype" => "", "allowed_values" => null, "sql" => "actiongrantid", "is_null_allowed" => false, "on_target_delete" => DEL_MANUAL, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("attcode", ["allowed_values" => null, "sql" => "attcode", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('actiongrantid', 'attcode')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('attcode')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['actiongrantid', 'attcode']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['attcode']); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('actiongrantid', 'attcode')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('actiongrantid', 'attcode')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', ['actiongrantid', 'attcode']); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('advanced_search', ['actiongrantid', 'attcode']); // Criteria of the advanced search form
 	}
 }
 
-
-
-
 class UserRightsProjection extends UserRightsAddOnAPI
 {
-	static public $m_aActionCodes = array(
+	public static $m_aActionCodes = [
 		UR_ACTION_READ => 'read',
 		UR_ACTION_MODIFY => 'modify',
 		UR_ACTION_DELETE => 'delete',
 		UR_ACTION_BULK_READ => 'bulk read',
 		UR_ACTION_BULK_MODIFY => 'bulk modify',
 		UR_ACTION_BULK_DELETE => 'bulk delete',
-	);
+	];
 
 	// Installation: create the very first user
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
@@ -587,14 +533,14 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		$oContact->Set('org_id', $iOrgId);
 		$oContact->Set('email', 'my.email@foo.org');
 		$iContactId = $oContact->DBInsertNoReload();
-		
+
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('contactid', $iContactId);
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
 		$iUserId = $oUser->DBInsertNoReload();
-		
+
 		// Add this user to the very specific 'admin' profile
 		$oUserProfile = new URP_UserProfile();
 		$oUserProfile->Set('userid', $iUserId);
@@ -606,12 +552,9 @@ class UserRightsProjection extends UserRightsAddOnAPI
 
 	public function IsAdministrator($oUser)
 	{
-		if (in_array($oUser->GetKey(), $this->m_aAdmins))
-		{
+		if (in_array($oUser->GetKey(), $this->m_aAdmins)) {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
@@ -628,136 +571,113 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		//MetaModel::RegisterPlugin('userrights', 'ACbyProfile', array($this, 'CacheData'));
 	}
 
-	protected $m_aDimensions = array(); // id -> object
-	protected $m_aClassProj = array(); // class,dimensionid -> object
-	protected $m_aProfiles = array(); // id -> object
-	protected $m_aUserProfiles = array(); // userid,profileid -> object
-	protected $m_aProPro = array(); // profileid,dimensionid -> object
+	protected $m_aDimensions = []; // id -> object
+	protected $m_aClassProj = []; // class,dimensionid -> object
+	protected $m_aProfiles = []; // id -> object
+	protected $m_aUserProfiles = []; // userid,profileid -> object
+	protected $m_aProPro = []; // profileid,dimensionid -> object
 
-	protected $m_aAdmins = array(); // id of users being linked to the well-known admin profile
+	protected $m_aAdmins = []; // id of users being linked to the well-known admin profile
 
-	protected $m_aClassActionGrants = array(); // profile, class, action -> permission
-	protected $m_aClassStimulusGrants = array(); // profile, class, stimulus -> permission
-	protected $m_aObjectActionGrants = array(); // userid, class, id, action -> permission, list of attributes
+	protected $m_aClassActionGrants = []; // profile, class, action -> permission
+	protected $m_aClassStimulusGrants = []; // profile, class, stimulus -> permission
+	protected $m_aObjectActionGrants = []; // userid, class, id, action -> permission, list of attributes
 
 	public function CacheData()
 	{
 		// Could be loaded in a shared memory (?)
 
 		$oDimensionSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Dimensions"));
-		$this->m_aDimensions = array(); 
-		while ($oDimension = $oDimensionSet->Fetch())
-		{
-			$this->m_aDimensions[$oDimension->GetKey()] = $oDimension; 
+		$this->m_aDimensions = [];
+		while ($oDimension = $oDimensionSet->Fetch()) {
+			$this->m_aDimensions[$oDimension->GetKey()] = $oDimension;
 		}
-		
+
 		$oClassProjSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_ClassProjection"));
-		$this->m_aClassProjs = array(); 
-		while ($oClassProj = $oClassProjSet->Fetch())
-		{
-			$this->m_aClassProjs[$oClassProj->Get('class')][$oClassProj->Get('dimensionid')] = $oClassProj; 
+		$this->m_aClassProjs = [];
+		while ($oClassProj = $oClassProjSet->Fetch()) {
+			$this->m_aClassProjs[$oClassProj->Get('class')][$oClassProj->Get('dimensionid')] = $oClassProj;
 		}
 
 		$oProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_Profiles"));
-		$this->m_aProfiles = array(); 
-		while ($oProfile = $oProfileSet->Fetch())
-		{
-			$this->m_aProfiles[$oProfile->GetKey()] = $oProfile; 
+		$this->m_aProfiles = [];
+		while ($oProfile = $oProfileSet->Fetch()) {
+			$this->m_aProfiles[$oProfile->GetKey()] = $oProfile;
 		}
 
 		$oUserProfileSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_UserProfile"));
-		$this->m_aUserProfiles = array();
-		$this->m_aAdmins = array();
-		while ($oUserProfile = $oUserProfileSet->Fetch())
-		{
+		$this->m_aUserProfiles = [];
+		$this->m_aAdmins = [];
+		while ($oUserProfile = $oUserProfileSet->Fetch()) {
 			$this->m_aUserProfiles[$oUserProfile->Get('userid')][$oUserProfile->Get('profileid')] = $oUserProfile;
-			if ($oUserProfile->Get('profileid') == ADMIN_PROFILE_ID)
-			{
+			if ($oUserProfile->Get('profileid') == ADMIN_PROFILE_ID) {
 				$this->m_aAdmins[] = $oUserProfile->Get('userid');
 			}
 		}
 
 		$oProProSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData("SELECT URP_ProfileProjection"));
-		$this->m_aProPros = array(); 
-		while ($oProPro = $oProProSet->Fetch())
-		{
-			$this->m_aProPros[$oProPro->Get('profileid')][$oProPro->Get('dimensionid')] = $oProPro; 
+		$this->m_aProPros = [];
+		while ($oProPro = $oProProSet->Fetch()) {
+			$this->m_aProPros[$oProPro->Get('profileid')][$oProPro->Get('dimensionid')] = $oProPro;
 		}
 
-/*
-		echo "<pre>\n";
-		print_r($this->m_aDimensions);
-		print_r($this->m_aClassProjs);
-		print_r($this->m_aProfiles);
-		print_r($this->m_aUserProfiles);
-		print_r($this->m_aProPros);
-		echo "</pre>\n";
-exit;
-*/
+		/*
+				echo "<pre>\n";
+				print_r($this->m_aDimensions);
+				print_r($this->m_aClassProjs);
+				print_r($this->m_aProfiles);
+				print_r($this->m_aUserProfiles);
+				print_r($this->m_aProPros);
+				echo "</pre>\n";
+		exit;
+		*/
 
 		return true;
 	}
 
-	public function GetSelectFilter($oUser, $sClass, $aSettings = array())
+	public function GetSelectFilter($oUser, $sClass, $aSettings = [])
 	{
-		$aConditions = array();
-		foreach ($this->m_aDimensions as $iDimension => $oDimension)
-		{
+		$aConditions = [];
+		foreach ($this->m_aDimensions as $iDimension => $oDimension) {
 			$oClassProj = @$this->m_aClassProjs[$sClass][$iDimension];
-			if (is_null($oClassProj))
-			{
+			if (is_null($oClassProj)) {
 				// Authorize any for this dimension, then no additional criteria is required
 				continue;
 			}
- 
+
 			// 1 - Get class projection info
 			//
 			$oExpression = null;
 			$sExpr = $oClassProj->Get('value');
-			if ($sExpr == '<this>')
-			{
+			if ($sExpr == '<this>') {
 				$sColumn = $oClassProj->Get('attribute');
-				if (empty($sColumn))
-				{
+				if (empty($sColumn)) {
 					$oExpression = new FieldExpression('id', $sClass);
-				}
-				else
-				{
+				} else {
 					$oExpression = new FieldExpression($sColumn, $sClass);
 				}
-			}
-			elseif (($sExpr == '<any>') || ($sExpr == ''))
-			{
+			} elseif (($sExpr == '<any>') || ($sExpr == '')) {
 				// Authorize any for this dimension, then no additional criteria is required
 				continue;
-			}
-			elseif (strtolower(substr($sExpr, 0, 6)) == 'select')
-			{
-				throw new CoreException('Sorry, projections by the mean of OQL are not supported currently, please specify an attribute instead', array('class' => $sClass, 'expression' => $sExpr)); 
-			}
-			else
-			{
+			} elseif (strtolower(substr($sExpr, 0, 6)) == 'select') {
+				throw new CoreException('Sorry, projections by the mean of OQL are not supported currently, please specify an attribute instead', ['class' => $sClass, 'expression' => $sExpr]);
+			} else {
 				// Constant value(s)
 				// unsupported
-				throw new CoreException('Sorry, constant projections are not supported currently, please specify an attribute instead', array('class' => $sClass, 'expression' => $sExpr)); 
-//				$aRes = explode(';', trim($sExpr));
+				throw new CoreException('Sorry, constant projections are not supported currently, please specify an attribute instead', ['class' => $sClass, 'expression' => $sExpr]);
+				//				$aRes = explode(';', trim($sExpr));
 			}
 
 			// 2 - Get profile projection info and use it if needed
 			//
 			$aProjections = self::GetReadableProjectionsByDim($oUser, $sClass, $oDimension);
-			if (is_null($aProjections))
-			{
+			if (is_null($aProjections)) {
 				// Authorize any for this dimension, then no additional criteria is required
 				continue;
-			}
-			elseif (count($aProjections) == 0)
-			{
+			} elseif (count($aProjections) == 0) {
 				// Authorize none, then exit as quickly as possible
 				return false;
-			}
-			else
-			{
+			} else {
 				// Authorize the given set of values
 				$oListExpr = ListExpression::FromScalars($aProjections);
 				$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
@@ -765,16 +685,12 @@ exit;
 			}
 		}
 
-		if (count($aConditions) == 0)
-		{
+		if (count($aConditions) == 0) {
 			// allow all
 			return true;
-		}
-		else
-		{
+		} else {
 			$oFilter  = new DBObjectSearch($sClass);
-			foreach($aConditions as $oCondition)
-			{
+			foreach ($aConditions as $oCondition) {
 				$oFilter->AddConditionExpression($oCondition);
 			}
 			//return true;
@@ -785,27 +701,20 @@ exit;
 	// This verb has been made public to allow the development of an accurate feedback for the current configuration
 	public function GetClassActionGrant($iProfile, $sClass, $sAction)
 	{
-		if (isset($this->m_aClassActionGrants[$iProfile][$sClass][$sAction]))
-		{
+		if (isset($this->m_aClassActionGrants[$iProfile][$sClass][$sAction])) {
 			return $this->m_aClassActionGrants[$iProfile][$sClass][$sAction];
 		}
 
 		// Get the permission for this profile/class/action
 		$oSearch = DBObjectSearch::FromOQL_AllData("SELECT URP_ActionGrant WHERE class = :class AND action = :action AND profileid = :profile AND permission = 'yes'");
-		$oSet = new DBObjectSet($oSearch, array(), array('class'=>$sClass, 'action'=>$sAction, 'profile'=>$iProfile));
-		if ($oSet->Count() >= 1)
-		{
+		$oSet = new DBObjectSet($oSearch, [], ['class' => $sClass, 'action' => $sAction, 'profile' => $iProfile]);
+		if ($oSet->Count() >= 1) {
 			$oGrantRecord = $oSet->Fetch();
-		}
-		else
-		{
+		} else {
 			$sParentClass = MetaModel::GetParentPersistentClass($sClass);
-			if (empty($sParentClass))
-			{
+			if (empty($sParentClass)) {
 				$oGrantRecord = null;
-			}
-			else
-			{
+			} else {
 				$oGrantRecord = $this->GetClassActionGrant($iProfile, $sParentClass, $sAction);
 			}
 		}
@@ -816,149 +725,117 @@ exit;
 
 	protected function GetObjectActionGrant($oUser, $sClass, $iActionCode, /*DBObject*/ $oObject = null)
 	{
-		if(is_null($oObject))
-		{
+		if (is_null($oObject)) {
 			$iObjectRef = -999;
-		}
-		else
-		{
+		} else {
 			$iObjectRef = $oObject->GetKey();
 		}
 		// load and cache permissions for the current user on the given object
 		//
 		$aTest = @$this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$iObjectRef][$iActionCode];
-		if (is_array($aTest)) return $aTest;
+		if (is_array($aTest)) {
+			return $aTest;
+		}
 
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
 		$iInstancePermission = UR_ALLOWED_NO;
-		$aAttributes = array();
-		foreach($this->GetMatchingProfiles($oUser, $sClass, $oObject) as $iProfile)
-		{
+		$aAttributes = [];
+		foreach ($this->GetMatchingProfiles($oUser, $sClass, $oObject) as $iProfile) {
 			$oGrantRecord = $this->GetClassActionGrant($iProfile, $sClass, $sAction);
-			if (is_null($oGrantRecord))
-			{
+			if (is_null($oGrantRecord)) {
 				continue; // loop to the next profile
-			}
-			else
-			{
+			} else {
 				$iInstancePermission = UR_ALLOWED_YES;
 
 				// update the list of attributes with those allowed for this profile
 				//
 				$oSearch = DBObjectSearch::FromOQL_AllData("SELECT URP_AttributeGrant WHERE actiongrantid = :actiongrantid");
-				$oSet = new DBObjectSet($oSearch, array(), array('actiongrantid' => $oGrantRecord->GetKey()));
+				$oSet = new DBObjectSet($oSearch, [], ['actiongrantid' => $oGrantRecord->GetKey()]);
 				$aProfileAttributes = $oSet->GetColumnAsArray('attcode', false);
-				if (count($aProfileAttributes) == 0)
-				{
+				if (count($aProfileAttributes) == 0) {
 					$aAllAttributes = array_keys(MetaModel::ListAttributeDefs($sClass));
 					$aAttributes = array_merge($aAttributes, $aAllAttributes);
-				}
-				else
-				{
+				} else {
 					$aAttributes = array_merge($aAttributes, $aProfileAttributes);
 				}
 			}
 		}
 
-		$aRes = array(
+		$aRes = [
 			'permission' => $iInstancePermission,
 			'attributes' => $aAttributes,
-		);
+		];
 		$this->m_aObjectActionGrants[$oUser->GetKey()][$sClass][$iObjectRef][$iActionCode] = $aRes;
 		return $aRes;
 	}
-	
+
 	public function IsActionAllowed($oUser, $sClass, $iActionCode, $oInstanceSet = null)
 	{
-		if (is_null($oInstanceSet))
-		{
+		if (is_null($oInstanceSet)) {
 			$aObjectPermissions = $this->GetObjectActionGrant($oUser, $sClass, $iActionCode);
 			return $aObjectPermissions['permission'];
 		}
 
 		$oInstanceSet->Rewind();
-		while($oObject = $oInstanceSet->Fetch())
-		{
+		while ($oObject = $oInstanceSet->Fetch()) {
 			$aObjectPermissions = $this->GetObjectActionGrant($oUser, $sClass, $iActionCode, $oObject);
 
 			$iInstancePermission = $aObjectPermissions['permission'];
-			if (isset($iGlobalPermission))
-			{
-				if ($iInstancePermission != $iGlobalPermission)
-				{
+			if (isset($iGlobalPermission)) {
+				if ($iInstancePermission != $iGlobalPermission) {
 					$iGlobalPermission = UR_ALLOWED_DEPENDS;
 					break;
 				}
-			}
-			else
-			{
+			} else {
 				$iGlobalPermission = $iInstancePermission;
 			}
 		}
 		$oInstanceSet->Rewind();
 
-		if (isset($iGlobalPermission))
-		{
+		if (isset($iGlobalPermission)) {
 			return $iGlobalPermission;
-		}
-		else
-		{
+		} else {
 			return UR_ALLOWED_NO;
 		}
 	}
 
 	public function IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet = null)
 	{
-		if (is_null($oInstanceSet))
-		{
+		if (is_null($oInstanceSet)) {
 			$aObjectPermissions = $this->GetObjectActionGrant($oUser, $sClass, $iActionCode);
 			$aAttributes = $aObjectPermissions['attributes'];
-			if (in_array($sAttCode, $aAttributes))
-			{
+			if (in_array($sAttCode, $aAttributes)) {
 				return $aObjectPermissions['permission'];
-			}
-			else
-			{
+			} else {
 				return UR_ALLOWED_NO;
 			}
 		}
 
 		$oInstanceSet->Rewind();
-		while($oObject = $oInstanceSet->Fetch())
-		{
+		while ($oObject = $oInstanceSet->Fetch()) {
 			$aObjectPermissions = $this->GetObjectActionGrant($oUser, $sClass, $iActionCode, $oObject);
 
 			$aAttributes = $aObjectPermissions['attributes'];
-			if (in_array($sAttCode, $aAttributes))
-			{
+			if (in_array($sAttCode, $aAttributes)) {
 				$iInstancePermission = $aObjectPermissions['permission'];
-			}
-			else
-			{
-				$iInstancePermission = UR_ALLOWED_NO; 
+			} else {
+				$iInstancePermission = UR_ALLOWED_NO;
 			}
 
-			if (isset($iGlobalPermission))
-			{
-				if ($iInstancePermission != $iGlobalPermission)
-				{
+			if (isset($iGlobalPermission)) {
+				if ($iInstancePermission != $iGlobalPermission) {
 					$iGlobalPermission = UR_ALLOWED_DEPENDS;
 				}
-			}
-			else
-			{
+			} else {
 				$iGlobalPermission = $iInstancePermission;
 			}
 		}
 		$oInstanceSet->Rewind();
 
-		if (isset($iGlobalPermission))
-		{
+		if (isset($iGlobalPermission)) {
 			return $iGlobalPermission;
-		}
-		else
-		{
+		} else {
 			return UR_ALLOWED_NO;
 		}
 	}
@@ -966,20 +843,16 @@ exit;
 	// This verb has been made public to allow the development of an accurate feedback for the current configuration
 	public function GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode)
 	{
-		if (isset($this->m_aClassStimulusGrants[$iProfile][$sClass][$sStimulusCode]))
-		{
+		if (isset($this->m_aClassStimulusGrants[$iProfile][$sClass][$sStimulusCode])) {
 			return $this->m_aClassStimulusGrants[$iProfile][$sClass][$sStimulusCode];
 		}
 
 		// Get the permission for this profile/class/stimulus
 		$oSearch = DBObjectSearch::FromOQL_AllData("SELECT URP_StimulusGrant WHERE class = :class AND stimulus = :stimulus AND profileid = :profile AND permission = 'yes'");
-		$oSet = new DBObjectSet($oSearch, array(), array('class'=>$sClass, 'stimulus'=>$sStimulusCode, 'profile'=>$iProfile));
-		if ($oSet->Count() >= 1)
-		{
+		$oSet = new DBObjectSet($oSearch, [], ['class' => $sClass, 'stimulus' => $sStimulusCode, 'profile' => $iProfile]);
+		if ($oSet->Count() >= 1) {
 			$oGrantRecord = $oSet->Fetch();
-		}
-		else
-		{
+		} else {
 			$oGrantRecord = null;
 		}
 
@@ -991,14 +864,11 @@ exit;
 	{
 		// Note: this code is VERY close to the code of IsActionAllowed()
 
-		if (is_null($oInstanceSet))
-		{
+		if (is_null($oInstanceSet)) {
 			$iInstancePermission = UR_ALLOWED_NO;
-			foreach($this->GetMatchingProfiles($oUser, $sClass) as $iProfile)
-			{
+			foreach ($this->GetMatchingProfiles($oUser, $sClass) as $iProfile) {
 				$oGrantRecord = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
-				if (!is_null($oGrantRecord))
-				{
+				if (!is_null($oGrantRecord)) {
 					// no need to fetch the record, we've requested the records having permission = 'yes'
 					$iInstancePermission = UR_ALLOWED_YES;
 				}
@@ -1007,38 +877,28 @@ exit;
 		}
 
 		$oInstanceSet->Rewind();
-		while($oObject = $oInstanceSet->Fetch())
-		{
+		while ($oObject = $oInstanceSet->Fetch()) {
 			$iInstancePermission = UR_ALLOWED_NO;
-			foreach($this->GetMatchingProfiles($oUser, $sClass, $oObject) as $iProfile)
-			{
+			foreach ($this->GetMatchingProfiles($oUser, $sClass, $oObject) as $iProfile) {
 				$oGrantRecord = $this->GetClassStimulusGrant($iProfile, $sClass, $sStimulusCode);
-				if (!is_null($oGrantRecord))
-				{
+				if (!is_null($oGrantRecord)) {
 					// no need to fetch the record, we've requested the records having permission = 'yes'
 					$iInstancePermission = UR_ALLOWED_YES;
 				}
 			}
-			if (isset($iGlobalPermission))
-			{
-				if ($iInstancePermission != $iGlobalPermission)
-				{
+			if (isset($iGlobalPermission)) {
+				if ($iInstancePermission != $iGlobalPermission) {
 					$iGlobalPermission = UR_ALLOWED_DEPENDS;
 				}
-			}
-			else
-			{
+			} else {
 				$iGlobalPermission = $iInstancePermission;
 			}
 		}
 		$oInstanceSet->Rewind();
 
-		if (isset($iGlobalPermission))
-		{
+		if (isset($iGlobalPermission)) {
 			return $iGlobalPermission;
-		}
-		else
-		{
+		} else {
 			return UR_ALLOWED_NO;
 		}
 	}
@@ -1056,21 +916,17 @@ exit;
 		$iUser = $oUser->GetKey();
 		$iDimension = $oDimension->GetKey();
 
-		$aRes = array();
-		if (array_key_exists($iUser, $this->m_aUserProfiles))
-		{
-			foreach ($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
-			{
+		$aRes = [];
+		if (array_key_exists($iUser, $this->m_aUserProfiles)) {
+			foreach ($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile) {
 				// user projection to be cached on a given page !
-				if (!isset($this->m_aProPros[$iProfile][$iDimension]))
-				{
+				if (!isset($this->m_aProPros[$iProfile][$iDimension])) {
 					// No projection for a given profile: default to 'any'
 					return null;
 				}
 
 				$aUserProjection = $this->m_aProPros[$iProfile][$iDimension]->ProjectUser($oUser);
-				if (is_null($aUserProjection))
-				{
+				if (is_null($aUserProjection)) {
 					// No projection for a given profile: default to 'any'
 					return null;
 				}
@@ -1091,47 +947,32 @@ exit;
 		$iPKey = $oObject->GetKey();
 		$iDimension = $oDimension->GetKey();
 
-		if (isset($this->m_aClassProjs[$sClass][$iDimension]))
-		{
+		if (isset($this->m_aClassProjs[$sClass][$iDimension])) {
 			$aObjectProjection = $this->m_aClassProjs[$sClass][$iDimension]->ProjectObject($oObject);
-		}
-		else
-		{
+		} else {
 			// No projection for a given class: default to 'any'
 			$aObjectProjection = null;
 		}
 
-		$aRes = array();
-		if (array_key_exists($iUser, $this->m_aUserProfiles))
-		{
-			foreach ($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile)
-			{
-				if (is_null($aObjectProjection))
-				{
+		$aRes = [];
+		if (array_key_exists($iUser, $this->m_aUserProfiles)) {
+			foreach ($this->m_aUserProfiles[$iUser] as $iProfile => $oProfile) {
+				if (is_null($aObjectProjection)) {
 					$aRes[] = $iProfile;
-				}
-				else
-				{
+				} else {
 					// user projection to be cached on a given page !
-					if (isset($this->m_aProPros[$iProfile][$iDimension]))
-					{
+					if (isset($this->m_aProPros[$iProfile][$iDimension])) {
 						$aUserProjection = $this->m_aProPros[$iProfile][$iDimension]->ProjectUser($oUser);
-					}
-					else
-					{
+					} else {
 						// No projection for a given profile: default to 'any'
 						$aUserProjection = null;
 					}
 
-					if (is_null($aUserProjection))
-					{
+					if (is_null($aUserProjection)) {
 						$aRes[] = $iProfile;
-					}
-					else
-					{
+					} else {
 						$aMatchingValues = array_intersect($aObjectProjection, $aUserProjection);
-						if (count($aMatchingValues) > 0)
-						{
+						if (count($aMatchingValues) > 0) {
 							$aRes[] = $iProfile;
 						}
 					}
@@ -1141,18 +982,15 @@ exit;
 		return $aRes;
 	}
 
-	protected $m_aMatchingProfiles = array(); // cache of the matching profiles for a given user/object
-	
+	protected $m_aMatchingProfiles = []; // cache of the matching profiles for a given user/object
+
 	protected function GetMatchingProfiles($oUser, $sClass, /*DBObject*/ $oObject = null)
 	{
 		$iUser = $oUser->GetKey();
 
-		if(is_null($oObject))
-		{
+		if (is_null($oObject)) {
 			$iObjectRef = -999;
-		}
-		else
-		{
+		} else {
 			$iObjectRef = $oObject->GetKey();
 		}
 
@@ -1161,40 +999,29 @@ exit;
 		// Caches the result
 		//
 		$aTest = @$this->m_aMatchingProfiles[$iUser][$sClass][$iObjectRef];
-		if (is_array($aTest))
-		{
+		if (is_array($aTest)) {
 			return $aTest;
 		}
 
-		if (is_null($oObject))
-		{
-			if (array_key_exists($iUser, $this->m_aUserProfiles))
-			{
+		if (is_null($oObject)) {
+			if (array_key_exists($iUser, $this->m_aUserProfiles)) {
 				$aRes = array_keys($this->m_aUserProfiles[$iUser]);
-			}
-			else
-			{
+			} else {
 				// no profile has been defined for this user
-				$aRes = array();
+				$aRes = [];
 			}
-		}
-		else
-		{
-			$aProfileRes = array();
-			foreach ($this->m_aDimensions as $iDimension => $oDimension)
-			{
-				foreach ($this->GetMatchingProfilesByDim($oUser, $oObject, $oDimension) as $iProfile)
-				{
+		} else {
+			$aProfileRes = [];
+			foreach ($this->m_aDimensions as $iDimension => $oDimension) {
+				foreach ($this->GetMatchingProfilesByDim($oUser, $oObject, $oDimension) as $iProfile) {
 					@$aProfileRes[$iProfile] += 1;
 				}
 			}
-	
-			$aRes = array();
+
+			$aRes = [];
 			$iDimCount = count($this->m_aDimensions);
-			foreach ($aProfileRes as $iProfile => $iMatches)
-			{
-				if ($iMatches == $iDimCount)
-				{
+			foreach ($aProfileRes as $iProfile => $iMatches) {
+				if ($iMatches == $iDimCount) {
 					$aRes[] = $iProfile;
 				}
 			}
@@ -1202,7 +1029,7 @@ exit;
 
 		// store into the cache
 		$this->m_aMatchingProfiles[$iUser][$sClass][$iObjectRef] = $aRes;
-		return $aRes; 
+		return $aRes;
 	}
 
 	public function FlushPrivileges()
@@ -1211,7 +1038,4 @@ exit;
 	}
 }
 
-
 UserRights::SelectModule('UserRightsProjection');
-
-?>

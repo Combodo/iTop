@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Organization' => 'Организация',
 	'Class:Organization+' => 'Организация',
 	'Class:Organization/Attribute:name' => 'Название',
@@ -38,13 +39,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Organization:Overview:FunctionalCIs' => 'Конфигурационные единицы этой организации',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'по типу',
 	'Organization:Overview:Users' => 'Пользователи '.ITOP_APPLICATION_SHORT.' этой организации',
-));
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Location' => 'Расположение',
 	'Class:Location+' => 'Типы расположения: Регион, Страна, Город, Сайт, Здание, Этаж, Комната, Стойка и т.п.',
 	'Class:Location/Attribute:name' => 'Название',
@@ -71,13 +72,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Location/Attribute:physicaldevice_list+' => 'Устройства в этом расположении',
 	'Class:Location/Attribute:person_list' => 'Контакты',
 	'Class:Location/Attribute:person_list+' => 'Контакты в этом расположении',
-));
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Contact' => 'Контакт',
 	'Class:Contact+' => 'Контакт',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
@@ -109,13 +110,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Contact/Attribute:cis_list+' => 'Связанные конфигурационные единицы',
 	'Class:Contact/Attribute:finalclass' => 'Тип контакта',
 	'Class:Contact/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Person' => 'Персона',
 	'Class:Person+' => 'Персона',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
@@ -150,13 +151,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Person/UniquenessRule:name+' => 'Имя сотрудника должно быть уникальным внутри организации',
 	'Class:Person/UniquenessRule:name' => 'В организации \'$this->org_name$\' уже есть персона с таким именем',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Team' => 'Команда',
 	'Class:Team+' => 'Команда',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
@@ -164,13 +165,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Team/Attribute:persons_list+' => 'Участники команды',
 	'Class:Team/Attribute:tickets_list' => 'Тикеты',
 	'Class:Team/Attribute:tickets_list+' => 'Все тикеты, назначенные на команду',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Document' => 'Документ',
 	'Class:Document+' => 'Документ',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
@@ -200,77 +201,77 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Document/Attribute:cis_list+' => 'Связанные конфигурационные единицы',
 	'Class:Document/Attribute:finalclass' => 'Тип',
 	'Class:Document/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:DocumentFile' => 'Файл',
 	'Class:DocumentFile+' => 'Файл',
 	'Class:DocumentFile/Attribute:file' => 'Файл',
 	'Class:DocumentFile/Attribute:file+' => '',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:DocumentNote' => 'Заметка',
 	'Class:DocumentNote+' => 'Заметка',
 	'Class:DocumentNote/Attribute:text' => 'Заметка',
 	'Class:DocumentNote/Attribute:text+' => '',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:DocumentWeb' => 'Веб-документ',
 	'Class:DocumentWeb+' => 'Веб-документ',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Typology' => 'Типология',
 	'Class:Typology+' => 'Типология',
 	'Class:Typology/Attribute:name' => 'Название',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Тип',
 	'Class:Typology/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:DocumentType' => 'Тип документа',
 	'Class:DocumentType+' => '',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ContactType' => 'Тип контакта',
 	'Class:ContactType+' => '',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkPersonToTeam' => 'Связь Персона/Команда',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
@@ -287,13 +288,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Роль',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:DataAdministration' => 'Администрирование данных',
 	'Menu:DataAdministration+' => 'Администрирование данных',
 	'Menu:Catalogs' => 'Каталоги',
@@ -331,20 +332,20 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:Typology+' => 'Типология',
 	'UI_WelcomeMenu_AllConfigItems' => 'Все конфигурационные единицы',
 	'Menu:ConfigManagement:Typology' => 'Настройка типологии',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Person:info' => 'Основная информация',
 	'User:info' => 'Основная информация',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Личная информация',
 	'Person:notifiy' => 'Уведомления',
-));
+]);
 
 // Themes
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
-));
+]);

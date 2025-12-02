@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -49,11 +50,11 @@ use utils;
 class iTopWebPage extends NiceWebPage implements iTabbedPage
 {
 	/** @var string ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE */
-	const ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE = 'image';
+	public const ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE = 'image';
 	/** @var string ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES */
-	const ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES = 'css_classes';
+	public const ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES = 'css_classes';
 	/** @var string DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE */
-	const DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE = self::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE;
+	public const DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE = self::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE;
 
 	/** @inheritDoc */
 	protected const COMPATIBILITY_MOVED_LINKED_SCRIPTS_REL_PATH = [
@@ -84,7 +85,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	];
 
 	/** @var string DEFAULT_PAGE_TEMPLATE_REL_PATH The relative path (from <ITOP>/templates/) to the default page template */
-	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/itopwebpage/layout';
+	public const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/itopwebpage/layout';
 
 	private $m_aMessages;
 
@@ -150,7 +151,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 		utils::InitArchiveMode();
 
-		$this->m_aMessages = array();
+		$this->m_aMessages = [];
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
 		$this->no_cache();
@@ -198,7 +199,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// Tooltips
 		$this->LinkScriptFromAppRoot('node_modules/@popperjs/core/dist/umd/popper.min.js');
 		$this->LinkScriptFromAppRoot('node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
-		
+
 		// Toasts
 		$this->LinkScriptFromAppRoot('node_modules/toastify-js/src/toastify.js');
 
@@ -288,7 +289,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	 */
 	protected function PrepareLayout()
 	{
-		$aDaysMin = array(
+		$aDaysMin = [
 			Dict::S('DayOfWeek-Sunday-Min'),
 			Dict::S('DayOfWeek-Monday-Min'),
 			Dict::S('DayOfWeek-Tuesday-Min'),
@@ -296,8 +297,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 			Dict::S('DayOfWeek-Thursday-Min'),
 			Dict::S('DayOfWeek-Friday-Min'),
 			Dict::S('DayOfWeek-Saturday-Min'),
-		);
-		$aMonthsShort = array(
+		];
+		$aMonthsShort = [
 			Dict::S('Month-01-Short'),
 			Dict::S('Month-02-Short'),
 			Dict::S('Month-03-Short'),
@@ -310,12 +311,12 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 			Dict::S('Month-10-Short'),
 			Dict::S('Month-11-Short'),
 			Dict::S('Month-12-Short'),
-		);
+		];
 		$sTimeFormat = AttributeDateTime::GetFormat()->ToTimeFormat();
 		$oTimeFormat = new DateTimeFormat($sTimeFormat);
 
 		// Date picker options
-		$aPickerOptions = array(
+		$aPickerOptions = [
 			'showOn' => 'button',
 			'buttonText' => '', // N°6455 class will be added after JQuery UI widget
 			'dateFormat' => AttributeDate::GetFormat()->ToDatePicker(),
@@ -325,7 +326,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 			'dayNamesMin' => $aDaysMin,
 			'monthNamesShort' => $aMonthsShort,
 			'firstDay' => (int)Dict::S('Calendar-FirstDayOfWeek'),
-		);
+		];
 		$sJSDatePickerOptions = json_encode($aPickerOptions);
 
 		// Time picker additional options
@@ -344,8 +345,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$aPickerOptions['controlType'] = 'select';
 		$aPickerOptions['closeText'] = Dict::S('UI:Button:Ok');
 		$sJSDateTimePickerOptions = json_encode($aPickerOptions);
-		if ($sTimePickerLang != '"en"')
-		{
+		if ($sTimePickerLang != '"en"') {
 			// More options that cannot be passed via json_encode since they must be evaluated client-side
 			$aMoreJSOptions = ",
 				'timeText': $.timepicker.regional[$sTimePickerLang].timeText,
@@ -433,18 +433,17 @@ JS
 	$.blockUI.defaults.message= '<i class="fas fa-fw fa-spin fa-sync-alt"></i>'; 
 	$.blockUI.defaults.overlayCSS = {} 
 JS
-		);
+			);
 
-		// TODO 3.0.0: To preserve
-		$this->add_ready_script(InlineImage::FixImagesWidth());
+			// TODO 3.0.0: To preserve
+			$this->add_ready_script(InlineImage::FixImagesWidth());
 
-		// user pref for client side
-		// see GetUserPreference() in utils.js
-		$sUserPrefs = appUserPreferences::GetAsJSON();
-		$this->add_script("var oUserPreferences = $sUserPrefs;");
+			// user pref for client side
+			// see GetUserPreference() in utils.js
+			$sUserPrefs = appUserPreferences::GetAsJSON();
+			$this->add_script("var oUserPreferences = $sUserPrefs;");
 		}
 	}
-
 
 	/**
 	 * @see static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE, static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES
@@ -485,7 +484,6 @@ JS
 
 		$this->GetTopBarLayout()->SetBreadcrumbs(new Breadcrumbs($this->GetBreadCrumbsNewEntry(), Breadcrumbs::BLOCK_CODE));
 	}
-
 
 	/**
 	 * @internal
@@ -597,11 +595,9 @@ JS
 	{
 		$aNewEntry = null;
 
-		if ($this->bBreadCrumbEnabled)
-		{
+		if ($this->bBreadCrumbEnabled) {
 			// Default entry values
-			if (is_null($this->sBreadCrumbEntryId))
-			{
+			if (is_null($this->sBreadCrumbEntryId)) {
 				$this->sBreadCrumbEntryId = $this->s_title;
 				$this->sBreadCrumbEntryLabel = $this->s_title;
 				$this->sBreadCrumbEntryDescription = $this->s_title;
@@ -640,7 +636,7 @@ JS
 		$sAPIClassName = iPageUIExtension::class;
 		/** @var \iPageUIExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins($sAPIClassName) as $oExtensionInstance) {
-			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetBannerHtml", "use " . iPageUIBlockExtension::class . "::GetBannerBlock() instead");
+			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetBannerHtml", "use ".iPageUIBlockExtension::class."::GetBannerBlock() instead");
 			$sBannerHtml .= $oExtensionInstance->GetBannerHtml($this);
 		}
 
@@ -662,8 +658,7 @@ JS
 
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
 		/** @var \iPageUIBlockExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance)
-		{
+		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance) {
 			$oBlock =  $oExtensionInstance->GetBannerBlock();
 			if ($oBlock) {
 				$oBanner->AddSubBlock($oBlock);
@@ -690,7 +685,7 @@ JS
 		$sAPIClassName = iPageUIExtension::class;
 		/** @var \iPageUIExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins($sAPIClassName) as $oExtensionInstance) {
-			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetNorthPaneHtml", "use " . iPageUIBlockExtension::class . "::GetHeaderBlock() instead");
+			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetNorthPaneHtml", "use ".iPageUIBlockExtension::class."::GetHeaderBlock() instead");
 			$sHeaderHtml .= $oExtensionInstance->GetNorthPaneHtml($this);
 		}
 
@@ -727,11 +722,10 @@ JS
 		}
 
 		// Access mode
-		$sRestrictionMessage ='';
+		$sRestrictionMessage = '';
 		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE)) {
 			$sRestrictionMessage = Dict::S('UI:AccessRO-All');
-		}
-		elseif (!MetaModel::DBHasAccess(ACCESS_USER_WRITE)) {
+		} elseif (!MetaModel::DBHasAccess(ACCESS_USER_WRITE)) {
 			$sRestrictionMessage = Dict::S('UI:AccessRO-Users');
 		}
 
@@ -761,8 +755,7 @@ HTML;
 
 		// Call the extensions to add content to the page, warning they can also add styles or scripts through as they have access to the iTopWebPage
 		/** @var \iPageUIBlockExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance)
-		{
+		foreach (MetaModel::EnumPlugins('iPageUIBlockExtension') as $oExtensionInstance) {
 			$oBlock = $oExtensionInstance->GetHeaderBlock();
 			if ($oBlock) {
 				$oHeader->AddSubBlock($oBlock);
@@ -789,7 +782,7 @@ HTML;
 		$sAPIClassName = iPageUIExtension::class;
 		/** @var \iPageUIExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins($sAPIClassName) as $oExtensionInstance) {
-			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetSouthPaneHtml", "use " . iPageUIBlockExtension::class . "::GetFooterBlock() instead");
+			DeprecatedCallsLog::NotifyDeprecatedPhpApi(get_class($oExtensionInstance), $sAPIClassName, "GetSouthPaneHtml", "use ".iPageUIBlockExtension::class."::GetFooterBlock() instead");
 			$sFooterHtml .= $oExtensionInstance->GetSouthPaneHtml($this);
 		}
 
@@ -954,7 +947,7 @@ HTML;
 		$aData['aLayouts']['oPageContent'] = $this->GetContentLayout();
 		$aData['aDeferredBlocks']['oPageContent'] = $this->GetDeferredBlocks($this->GetContentLayout());
 		// - Prepare generic templates
-		$aData['aTemplates'] = array();
+		$aData['aTemplates'] = [];
 
 		// TODO 3.1 Replace hardcoded 'Please wait' with dict entries
 
@@ -967,12 +960,12 @@ HTML;
 
 		// - Small loader template
 		$oSmallLoaderTemplateContentBlock = new UIContentBlock();
-		$oSmallLoaderTemplateContentBlock->AddSubBlock(SpinnerUIBlockFactory::MakeSmall(null , 'Please wait'));
+		$oSmallLoaderTemplateContentBlock->AddSubBlock(SpinnerUIBlockFactory::MakeSmall(null, 'Please wait'));
 		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-small-loading-placeholder-template', $oSmallLoaderTemplateContentBlock);
 
 		// - Large loader template
 		$oLargeLoaderTemplateContentBlock = new UIContentBlock();
-		$oLargeLoaderTemplateContentBlock->AddSubBlock(SpinnerUIBlockFactory::MakeLarge(null , 'Please wait'));
+		$oLargeLoaderTemplateContentBlock->AddSubBlock(SpinnerUIBlockFactory::MakeLarge(null, 'Please wait'));
 		$aData['aTemplates'][] = TemplateUIBlockFactory::MakeForBlock('ibo-large-loading-placeholder-template', $oLargeLoaderTemplateContentBlock);
 
 		// - Do not show again template
@@ -1033,7 +1026,7 @@ HTML;
 	 */
 	public function AddTabContainer($sTabContainer, $sPrefix = '', iUIContentBlock $oParentBlock = null)
 	{
-		if(is_null($oParentBlock)) {
+		if (is_null($oParentBlock)) {
 			$oParentBlock = PanelUIBlockFactory::MakeNeutral('');
 			$this->AddUiBlock($oParentBlock);
 		}
@@ -1152,14 +1145,11 @@ HTML;
 		$sCurrentTabContainer = $this->m_oTabs->GetCurrentTabContainer();
 		$sCurrentTab = $this->m_oTabs->GetCurrentTab();
 
-		if (!empty($sCurrentTabContainer) && !empty($sCurrentTab))
-		{
+		if (!empty($sCurrentTabContainer) && !empty($sCurrentTab)) {
 			$iOffset = $this->m_oTabs->GetCurrentTabLength();
 
-			return array('tc' => $sCurrentTabContainer, 'tab' => $sCurrentTab, 'offset' => $iOffset);
-		}
-		else
-		{
+			return ['tc' => $sCurrentTabContainer, 'tab' => $sCurrentTab, 'offset' => $iOffset];
+		} else {
 			return parent::start_capture();
 		}
 	}
@@ -1169,19 +1159,13 @@ HTML;
 	 */
 	public function end_capture($offset)
 	{
-		if (is_array($offset))
-		{
-			if ($this->m_oTabs->TabExists($offset['tc'], $offset['tab']))
-			{
+		if (is_array($offset)) {
+			if ($this->m_oTabs->TabExists($offset['tc'], $offset['tab'])) {
 				$sCaptured = $this->m_oTabs->TruncateTab($offset['tc'], $offset['tab'], $offset['offset']);
-			}
-			else
-			{
+			} else {
 				$sCaptured = '';
 			}
-		}
-		else
-		{
+		} else {
 			$sCaptured = parent::end_capture($offset);
 		}
 
@@ -1208,13 +1192,12 @@ HTML;
 	 */
 	public function AddApplicationMessage($sHtmlMessage, $sHtmlIcon = null, $sTip = null)
 	{
-		if (strlen($sHtmlMessage))
-		{
-			$this->m_aMessages[] = array(
+		if (strlen($sHtmlMessage)) {
+			$this->m_aMessages[] = [
 				'icon' => $sHtmlIcon,
 				'message' => $sHtmlMessage,
 				'tip' => $sTip,
-			);
+			];
 		}
 	}
 

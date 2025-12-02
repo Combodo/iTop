@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:ChangeManagement' => 'Változáskezelés',
 	'Menu:Change:Overview' => 'Áttekintő',
 	'Menu:Change:Overview+' => 'Áttekintő oldal',
@@ -33,7 +34,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Változások állapotuk szerint az elmúlt 7 napban',
 	'Tickets:Related:OpenChanges' => 'Nyitott változások',
 	'Tickets:Related:RecentChanges' => 'Legutóbbi változások (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -45,12 +46,11 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Change' => 'Változás',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Állapot',
@@ -147,13 +147,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Befejezés',
 	'Class:Change/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:RoutineChange' => 'Szokásos változás',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Ellenőrzés',
@@ -178,13 +178,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Befejezés',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ApprovedChange' => 'Jóváhagyott változások',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Jóváhagyás dátuma',
@@ -213,13 +213,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Befejezés',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:NormalChange' => 'Normál változás',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Elfogadás dátuma',
@@ -248,13 +248,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Befejezés',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:EmergencyChange' => 'Sürgős változás',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Ellenőrzés',
@@ -279,4 +279,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Befejezés',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-));
+]);

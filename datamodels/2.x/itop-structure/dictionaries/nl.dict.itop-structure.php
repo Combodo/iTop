@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
@@ -12,7 +13,7 @@
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Organization' => 'Organisatie',
 	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => 'Naam',
@@ -39,13 +40,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Organization:Overview:FunctionalCIs' => 'Configuratie-items van deze organisatie',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'per type',
 	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.'-gebruikers in deze organisatie',
-));
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Location' => 'Locatie',
 	'Class:Location+' => 'Een locatie zoals: land, regio, gemeente/stad, gebouw, verdieping, kamer, ...',
 	'Class:Location/Attribute:name' => 'Naam',
@@ -72,13 +73,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Location/Attribute:physicaldevice_list+' => 'Alle apparaten die zich op deze locatie bevinden',
 	'Class:Location/Attribute:person_list' => 'Contacten',
 	'Class:Location/Attribute:person_list+' => 'Alle contacten die zich op deze locatie bevinden',
-));
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Contact' => 'Contact',
 	'Class:Contact+' => '',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
@@ -110,13 +111,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Contact/Attribute:cis_list+' => 'Alle configuratie-items die gerelateerd zijn aan dit team',
 	'Class:Contact/Attribute:finalclass' => 'Subklasse contact',
 	'Class:Contact/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Person' => 'Persoon',
 	'Class:Person+' => '',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s',
@@ -151,13 +152,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Person/UniquenessRule:name+' => 'De naam moet uniek zijn binnen een organisatie',
 	'Class:Person/UniquenessRule:name' => 'Er is al een persoon in de organisatie \'$this->org_name$\' met dezelfde naam',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
@@ -165,13 +166,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Team/Attribute:persons_list+' => 'Alle personen die lid zijn van dit team',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'Alle tickets die toegewezen zijn aan dit team',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Document' => 'Document',
 	'Class:Document+' => '',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
@@ -201,77 +202,77 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Document/Attribute:cis_list+' => 'Alle configuratie-items gerelateerd aan dit document',
 	'Class:Document/Attribute:finalclass' => 'Subklasse document',
 	'Class:Document/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:DocumentFile' => 'Document: Bestand',
 	'Class:DocumentFile+' => '',
 	'Class:DocumentFile/Attribute:file' => 'Bestand',
 	'Class:DocumentFile/Attribute:file+' => '',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:DocumentNote' => 'Document: Notitie',
 	'Class:DocumentNote+' => '',
 	'Class:DocumentNote/Attribute:text' => 'Tekst',
 	'Class:DocumentNote/Attribute:text+' => '',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:DocumentWeb' => 'Document: Web',
 	'Class:DocumentWeb+' => '',
 	'Class:DocumentWeb/Attribute:url' => 'Link (URL)',
 	'Class:DocumentWeb/Attribute:url+' => '',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Typology' => 'Typologie',
 	'Class:Typology+' => '',
 	'Class:Typology/Attribute:name' => 'Naam',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Subklasse typologie',
 	'Class:Typology/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:DocumentType' => 'Soort Document',
 	'Class:DocumentType+' => '',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ContactType' => 'Soort Contact',
 	'Class:ContactType+' => '',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:lnkPersonToTeam' => 'Link Persoon / Team',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
@@ -288,13 +289,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Naam rol',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:DataAdministration' => 'Databeheer',
 	'Menu:DataAdministration+' => 'Databeheer',
 	'Menu:Catalogs' => 'Catalogus',
@@ -332,20 +333,20 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Typology+' => 'Configuratie van de typologie',
 	'UI_WelcomeMenu_AllConfigItems' => 'Samenvatting',
 	'Menu:ConfigManagement:Typology' => 'Configuratie typologie',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Person:info' => 'Globale informatie',
 	'User:info' => 'Globale informatie',
 	'User:profiles' => 'Profielen (minimaal één)',
 	'Person:personal_info' => 'Persoonlijke informatie',
 	'Person:notifiy' => 'Notificeer',
-));
+]);
 
 // Themes
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'theme:fullmoon' => 'Full moon',
 	'theme:test-red' => 'Test instance (Rood)',
-));
+]);

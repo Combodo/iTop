@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -60,34 +61,34 @@ class ConfigTest extends ItopTestCase
 
 	public function ProviderPreserveVarOnWriteToFile()
 	{
-		return array(
-			'preserve var' => array(
+		return [
+			'preserve var' => [
 				'sConfigFile' => __DIR__.'/ConfigTest/config-itop-var.php',
 				'sExpectedContains' => 	"'app_root_url' => 'http://' . (isset(\$_SERVER['SERVER_NAME']) ? \$_SERVER['SERVER_NAME'] : 'localhost') . '/itop/iTop/'",
-				'aChanges' => array(),
-			),
-			'preserve joker' => array(
+				'aChanges' => [],
+			],
+			'preserve joker' => [
 				'sConfigFile' => __DIR__.'/ConfigTest/config-itop-joker.php',
 				'sExpectedContains' => 	"'app_root_url' => 'http://%server(SERVER_NAME)?:localhost%/itop/iTop/'",
-				'aChanges' => array(),
-			),
+				'aChanges' => [],
+			],
 
-			'preserve set same value' => array(
+			'preserve set same value' => [
 				'sConfigFile' => __DIR__.'/ConfigTest/config-itop-var.php',
 				'sExpectedContains' => 	"'app_root_url' => 'http://' . (isset(\$_SERVER['SERVER_NAME']) ? \$_SERVER['SERVER_NAME'] : 'localhost') . '/itop/iTop/'",
-				'aChanges' => array('app_root_url' => 'http://localhost/itop/iTop/'),
-			),
+				'aChanges' => ['app_root_url' => 'http://localhost/itop/iTop/'],
+			],
 
-			'overwrite var' => array(
+			'overwrite var' => [
 				'sConfigFile' => __DIR__.'/ConfigTest/config-itop-var.php',
 				'sExpectedContains' => 	"'app_root_url' => 'foo",
-				'aChanges' => array('app_root_url' => 'foo'),
-			),
-			'overwrite joker' => array(
+				'aChanges' => ['app_root_url' => 'foo'],
+			],
+			'overwrite joker' => [
 				'sConfigFile' => __DIR__.'/ConfigTest/config-itop-joker.php',
 				'sExpectedContains' => 	"'app_root_url' => 'foo",
-				'aChanges' => array('app_root_url' => 'foo'),
-			),
-		);
+				'aChanges' => ['app_root_url' => 'foo'],
+			],
+		];
 	}
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -43,7 +44,6 @@ use VirtualHost;
 use VirtualMachine;
 use XMLDataLoader;
 
-
 /** @see \Combodo\iTop\Test\UnitTest\ItopDataTestCase::CreateObjectWithTagSet() */
 define('TAG_CLASS', 'FAQ');
 define('TAG_ATTCODE', 'domains');
@@ -75,9 +75,9 @@ abstract class ItopDataTestCase extends ItopTestCase
 	/**
 	 * @var string Default environment to use for test cases
 	 */
-	const DEFAULT_TEST_ENVIRONMENT = 'production';
-	const USE_TRANSACTION = true;
-	const CREATE_TEST_ORG = false;
+	public const DEFAULT_TEST_ENVIRONMENT = 'production';
+	public const USE_TRANSACTION = true;
+	public const CREATE_TEST_ORG = false;
 
 	protected static $aURP_Profiles = [
 		'Administrator'         => 1,
@@ -121,15 +121,13 @@ abstract class ItopDataTestCase extends ItopTestCase
 
 		$this->PrepareEnvironment();
 
-		if (static::USE_TRANSACTION)
-		{
+		if (static::USE_TRANSACTION) {
 			CMDBSource::Query('START TRANSACTION');
 		}
-		if (static::CREATE_TEST_ORG)
-		{
+		if (static::CREATE_TEST_ORG) {
 			// Create a specific organization for the tests
 			$this->iTestOrgId = $this->GivenObjectInDB('Organization', [
-			    'name' => 'UnitTestOrganization',
+				'name' => 'UnitTestOrganization',
 			]);
 		}
 
@@ -161,17 +159,14 @@ abstract class ItopDataTestCase extends ItopTestCase
 		} else {
 			$this->debug("");
 			$this->aCreatedObjects = array_reverse($this->aCreatedObjects);
-			foreach ($this->aCreatedObjects as $oObject)
-			{
+			foreach ($this->aCreatedObjects as $oObject) {
 				/** @var DBObject $oObject */
-				try
-				{
+				try {
 					$sClass = get_class($oObject);
 					$iKey = $oObject->GetKey();
 					$this->debug("Removing $sClass::$iKey");
 					$oObject->DBDelete();
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					$this->debug("Error when removing created objects: $sClass::$iKey. Exception message: ".$e->getMessage());
 				}
 			}
@@ -196,7 +191,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 	/**
 	 * Helper to reset the metamodel cache : for a class and a key it will contain the SQL query, that could include silo filter
 	 */
-	protected function ResetMetaModelQueyCacheGetObject() {
+	protected function ResetMetaModelQueyCacheGetObject()
+	{
 		$this->SetNonPublicStaticProperty(MetaModel::class, 'aQueryCacheGetObject', []);
 	}
 
@@ -311,8 +307,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function createObject($sClass, $aParams)
 	{
 		$oMyObj = MetaModel::NewObject($sClass);
-		foreach ($aParams as $sAttCode => $oValue)
-		{
+		foreach ($aParams as $sAttCode => $oValue) {
 			$oMyObj->Set($sAttCode, $oValue);
 		}
 		$oMyObj->DBInsert();
@@ -336,8 +331,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected static function updateObject($sClass, $iKey, $aParams)
 	{
 		$oMyObj = MetaModel::GetObject($sClass, $iKey);
-		foreach ($aParams as $sAttCode => $oValue)
-		{
+		foreach ($aParams as $sAttCode => $oValue) {
 			$oMyObj->Set($sAttCode, $oValue);
 		}
 		$oMyObj->DBUpdate();
@@ -356,9 +350,9 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function CreateOrganization($sName)
 	{
 		/** @var \Organization $oObj */
-		$oObj = $this->createObject('Organization', array(
+		$oObj = $this->createObject('Organization', [
 			'name' => $sName,
-		));
+		]);
 		$this->debug("Created Organization {$oObj->Get('name')}");
 
 		return $oObj;
@@ -375,13 +369,13 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function CreateTicket($iNum)
 	{
 		/** @var Ticket $oTicket */
-		$oTicket = $this->createObject('UserRequest', array(
+		$oTicket = $this->createObject('UserRequest', [
 			'ref' => 'Ticket_'.$iNum,
 			'title' => 'TICKET_'.$iNum,
 			//'request_type' => 'incident',
 			'description' => 'Created for unit tests.',
 			'org_id' => $this->getTestOrgId(),
-		));
+		]);
 		$this->debug("Created {$oTicket->Get('title')} ({$oTicket->Get('ref')})");
 
 		return $oTicket;
@@ -407,13 +401,13 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function CreateTagData($sClass, $sAttCode, $sTagCode, $sTagLabel, $sTagDescription = '')
 	{
 		$sTagClass = TagSetFieldData::GetTagDataClassName($sClass, $sAttCode);
-		$oTagData = $this->createObject($sTagClass, array(
+		$oTagData = $this->createObject($sTagClass, [
 			'code' => $sTagCode,
 			'label' => $sTagLabel,
 			'obj_class' => $sClass,
 			'obj_attcode' => $sAttCode,
 			'description' => $sTagDescription,
-		));
+		]);
 		$this->debug("Created {$oTagData->Get('code')} ({$oTagData->Get('label')})");
 
 		/** @var \TagSetFieldData $oTagData */
@@ -446,7 +440,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	private function RemoveObjects($sClass, $sOQL)
 	{
 		$oFilter = DBSearch::FromOQL($sOQL);
-		$aRes = $oFilter->ToDataArray(array('id'));
+		$aRes = $oFilter->ToDataArray(['id']);
 		foreach ($aRes as $aRow) {
 			$this->debug($aRow);
 			$iKey = $aRow['id'];
@@ -457,7 +451,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 		}
 	}
 
-	protected function GetUserRequestParams($iNum) {
+	protected function GetUserRequestParams($iNum)
+	{
 		return [
 			'ref'         => 'Ticket_'.$iNum,
 			'title'       => 'BUG 1161_'.$iNum,
@@ -483,7 +478,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 * @uses \array_merge()
 	 * @uses createObject
 	 */
-	protected function CreateUserRequest($iNum, $aUserRequestCustomParams = []) {
+	protected function CreateUserRequest($iNum, $aUserRequestCustomParams = [])
+	{
 		$aUserRequestDefaultParams = $this->GetUserRequestParams($iNum);
 
 		$aUserRequestParams = array_merge($aUserRequestDefaultParams, $aUserRequestCustomParams);
@@ -507,11 +503,11 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function CreateServer($iNum, $iRackUnit = null)
 	{
 		/** @var Server $oServer */
-		$oServer = $this->createObject('Server', array(
+		$oServer = $this->createObject('Server', [
 			'name' => 'Server_'.$iNum,
 			'org_id' => $this->getTestOrgId(),
 			'nb_u' => $iRackUnit,
-		));
+		]);
 		$this->debug("Created {$oServer->GetName()} ({$oServer->GetKey()})");
 
 		return $oServer;
@@ -529,11 +525,11 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 */
 	protected function CreatePhysicalInterface($iNum, $iSpeed, $iConnectableCiId)
 	{
-		$oObj = $this->createObject('PhysicalInterface', array(
+		$oObj = $this->createObject('PhysicalInterface', [
 			'name' => "$iNum",
 			'speed' => $iSpeed,
 			'connectableci_id' => $iConnectableCiId,
-		));
+		]);
 		$this->debug("Created {$oObj->GetName()} ({$oObj->GetKey()})");
 
 		return $oObj;
@@ -551,11 +547,11 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 */
 	protected function CreateFiberChannelInterface($iNum, $iSpeed, $iConnectableCiId)
 	{
-		$oObj = $this->createObject('FiberChannelInterface', array(
+		$oObj = $this->createObject('FiberChannelInterface', [
 			'name' => "$iNum",
 			'speed' => $iSpeed,
 			'datacenterdevice_id' => $iConnectableCiId,
-		));
+		]);
 		$this->debug("Created {$oObj->GetName()} ({$oObj->GetKey()})");
 
 		return $oObj;
@@ -573,11 +569,11 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function CreatePerson($iNum, $iOrgId = 0)
 	{
 		/** @var Person $oPerson */
-		$oPerson = $this->createObject('Person', array(
+		$oPerson = $this->createObject('Person', [
 			'name' => 'Person_'.$iNum,
 			'first_name' => 'Test',
 			'org_id' => ($iOrgId == 0 ? $this->getTestOrgId() : $iOrgId),
-		));
+		]);
 		$this->debug("Created {$oPerson->GetName()} ({$oPerson->GetKey()})");
 
 		return $oPerson;
@@ -590,7 +586,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 * @return \UserLocal
 	 * @throws Exception
 	 */
-	protected function CreateUser($sLogin, $iProfileId, $sPassword=null, $iContactid=2)
+	protected function CreateUser($sLogin, $iProfileId, $sPassword = null, $iContactid = 2)
 	{
 		$oUser = $this->CreateContactlessUser($sLogin, $iProfileId, $sPassword);
 		$oUser->Set('contactid', $iContactid);
@@ -605,9 +601,9 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 * @return \UserLocal
 	 * @throws Exception
 	 */
-	protected function CreateContactlessUser($sLogin, $iProfileId, $sPassword=null)
+	protected function CreateContactlessUser($sLogin, $iProfileId, $sPassword = null)
 	{
-		if (empty($sPassword)){
+		if (empty($sPassword)) {
 			$sPassword = $sLogin;
 		}
 
@@ -616,12 +612,12 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$oUserProfile->Set('reason', 'UNIT Tests');
 		$oSet = DBObjectSet::FromObject($oUserProfile);
 		/** @var \UserLocal $oUser */
-		$oUser = $this->createObject('UserLocal', array(
+		$oUser = $this->createObject('UserLocal', [
 			'login' => $sLogin,
 			'password' => $sPassword,
 			'language' => 'EN US',
 			'profile_list' => $oSet,
-		));
+		]);
 		$this->debug("Created {$oUser->GetName()} ({$oUser->GetKey()})");
 
 		return $oUser;
@@ -642,14 +638,13 @@ abstract class ItopDataTestCase extends ItopTestCase
 		/** @var \ormLinkSet $oSet */
 		$oSet = $oUser->Get('profile_list');
 		$oSet->AddItem($oUserProfile);
-		$oUser = $this->updateObject(User::class, $oUser->GetKey(), array(
+		$oUser = $this->updateObject(User::class, $oUser->GetKey(), [
 			'profile_list' => $oSet,
-		));
+		]);
 		$this->debug("Updated {$oUser->GetName()} ({$oUser->GetKey()})");
 
 		return $oUser;
 	}
-
 
 	/**
 	 * Create a Hypervisor in database
@@ -664,18 +659,15 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function CreateHypervisor($iNum, $oServer, $oFarm = null)
 	{
 		/** @var Hypervisor $oHypervisor */
-		$oHypervisor = $this->createObject('Hypervisor', array(
+		$oHypervisor = $this->createObject('Hypervisor', [
 			'name' => 'Hypervisor_'.$iNum,
 			'org_id' => $this->getTestOrgId(),
 			'server_id' => $oServer->GetKey(),
 			'farm_id' => is_null($oFarm) ? 0 : $oFarm->GetKey(),
-		));
-		if (is_null($oFarm))
-		{
+		]);
+		if (is_null($oFarm)) {
 			$this->debug("Created {$oHypervisor->GetName()} ({$oHypervisor->GetKey()}) on {$oServer->GetName()}");
-		}
-		else
-		{
+		} else {
 			$this->debug("Created {$oHypervisor->GetName()} ({$oHypervisor->GetKey()}) on {$oServer->GetName()} part of {$oFarm->GetName()}");
 		}
 
@@ -694,11 +686,11 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function CreateFarm($iNum, $sRedundancy = '1')
 	{
 		/** @var Farm $oFarm */
-		$oFarm = $this->createObject('Farm', array(
+		$oFarm = $this->createObject('Farm', [
 			'name' => 'Farm_'.$iNum,
 			'org_id' => $this->getTestOrgId(),
 			'redundancy' => $sRedundancy,
-		));
+		]);
 		$this->debug("Created {$oFarm->GetName()} ({$oFarm->GetKey()}) redundancy $sRedundancy");
 
 		return $oFarm;
@@ -716,11 +708,11 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function CreateVirtualMachine($iNum, $oVirtualHost)
 	{
 		/** @var VirtualMachine $oVirtualMachine */
-		$oVirtualMachine = $this->createObject('VirtualMachine', array(
+		$oVirtualMachine = $this->createObject('VirtualMachine', [
 			'name' => 'VirtualMachine_'.$iNum,
 			'org_id' => $this->getTestOrgId(),
 			'virtualhost_id' => $oVirtualHost->GetKey(),
-		));
+		]);
 		$this->debug("Created {$oVirtualMachine->GetName()} ({$oVirtualMachine->GetKey()}) on {$oVirtualHost->GetName()}");
 
 		return $oVirtualMachine;
@@ -729,23 +721,21 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function CreateObjectWithTagSet()
 	{
 		$oFaqCategory = MetaModel::GetObject('FAQCategory', 1, false);
-		if (empty($oFaqCategory))
-		{
-			$oFaqCategory = $this->createObject('FAQCategory', array(
+		if (empty($oFaqCategory)) {
+			$oFaqCategory = $this->createObject('FAQCategory', [
 				'name' => 'FAQCategory_phpunit',
-			));
+			]);
 		}
 
 		/** @var \FAQ $oFaq */
-		$oFaq = $this->createObject('FAQ', array(
+		$oFaq = $this->createObject('FAQ', [
 			'category_id' => $oFaqCategory->GetKey(),
 			'title' => 'FAQ_phpunit',
-		));
+		]);
 		$this->debug("Created {$oFaq->GetName()}");
 
 		return $oFaq;
 	}
-
 
 	/**
 	 * Add a link between a contact and a CI.
@@ -782,10 +772,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function RemoveContactFromCI($oContact, $oCI)
 	{
 		$oContacts = $oCI->Get('contacts_list');
-		foreach ($oContacts as $oLnk)
-		{
-			if ($oLnk->Get('contact_id') == $oContact->GetKey())
-			{
+		foreach ($oContacts as $oLnk) {
+			if ($oLnk->Get('contact_id') == $oContact->GetKey()) {
 				$oContacts->RemoveItem($oLnk->GetKey());
 				$oCI->Set('contacts_list', $oContacts);
 				$this->debug("Removed {$oContact->GetName()} from {$oCI->Get('name')}");
@@ -817,7 +805,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 
 		$this->debug("Added {$oCI->GetName()} to {$oTicket->Get('ref')} with {$sImpactCode}");
 
-		return array($oCI->GetKey() => $sImpactCode);
+		return [$oCI->GetKey() => $sImpactCode];
 	}
 
 	/**
@@ -832,10 +820,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function RemoveCIFromTicket($oCI, $oTicket)
 	{
 		$oCIs = $oTicket->Get('functionalcis_list');
-		foreach ($oCIs as $oLnk)
-		{
-			if ($oLnk->Get('functionalci_id') == $oCI->GetKey())
-			{
+		foreach ($oCIs as $oLnk) {
+			if ($oLnk->Get('functionalci_id') == $oCI->GetKey()) {
 				$sImpactCode = $oLnk->Get('impact_code');
 				$oCIs->RemoveItem($oLnk->GetKey());
 				$oTicket->Set('functionalcis_list', $oCIs);
@@ -860,13 +846,12 @@ abstract class ItopDataTestCase extends ItopTestCase
 	 * @return array
 	 * @throws Exception
 	 */
-	protected function AddContactToTicket($oContact, $oTicket, $sRoleCode, $aParams = array())
+	protected function AddContactToTicket($oContact, $oTicket, $sRoleCode, $aParams = [])
 	{
 		$oNewLink = new lnkContactToTicket();
 		$oNewLink->Set('contact_id', $oContact->GetKey());
 		$oNewLink->Set('role_code', $sRoleCode);
-		foreach ($aParams as $sAttCode => $oValue)
-		{
+		foreach ($aParams as $sAttCode => $oValue) {
 			$oNewLink->Set($sAttCode, $oValue);
 		}
 		$oCIs = $oTicket->Get('contacts_list');
@@ -875,7 +860,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 
 		$this->debug("Added {$oContact->GetName()} to {$oTicket->Get('ref')} with {$sRoleCode}");
 
-		return array($oContact->GetKey() => $sRoleCode);
+		return [$oContact->GetKey() => $sRoleCode];
 	}
 
 	/**
@@ -890,10 +875,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function RemoveContactFromTicket($oContact, $oTicket)
 	{
 		$oContacts = $oTicket->Get('contacts_list');
-		foreach ($oContacts as $oLnk)
-		{
-			if ($oLnk->Get('contact_id') == $oContact->GetKey())
-			{
+		foreach ($oContacts as $oLnk) {
+			if ($oLnk->Get('contact_id') == $oContact->GetKey()) {
 				$sRoleCode = $oLnk->Get('role_code');
 				$oContacts->RemoveItem($oLnk->GetKey());
 				$oTicket->Set('contacts_list', $oContacts);
@@ -944,18 +927,14 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$oFunction();
 		$iFinalCount = (int) CMDBSource::QueryToScalar("SHOW SESSION STATUS LIKE 'Queries'", 1);
 		$iCount = $iFinalCount - 1 - $iInitialCount;
-		if ($iCount != $iExpectedCount)
-		{
+		if ($iCount != $iExpectedCount) {
 			if ($sMessage === '') {
 				$sMessage = "Expected $iExpectedCount queries. $iCount have been executed.";
-			}
-			else {
+			} else {
 				$sMessage .= " - Expected $iExpectedCount queries. $iCount have been executed.";
 			}
 			$this->fail($sMessage);
-		}
-		else
-		{
+		} else {
 			// Otherwise, PHP Unit will consider that no assertion has been made
 			$this->assertTrue(true);
 		}
@@ -993,8 +972,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$this->assertStringContainsString($sNeedle, $aLastLines[0], $sMessage);
 	}
 
-
-
 	/**
 	 * Import a set of XML files describing a consistent set of iTop objects
 	 * @param string[] $aFiles
@@ -1006,8 +983,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	{
 		$oLoader = new XMLDataLoader();
 		$oLoader->StartSession(CMDBObject::GetCurrentChange());
-		foreach($aFiles as $sFilePath)
-		{
+		foreach ($aFiles as $sFilePath) {
 			$oLoader->LoadFile($sFilePath, false, $bSearch);
 		}
 		$oLoader->EndSession();
@@ -1034,7 +1010,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 		return $ret;
 	}
 
-
 	protected function DBInsertSingleTable($sTableClass, $aValues, $iKey = 0)
 	{
 		$sTable = MetaModel::DBGetTable($sTableClass);
@@ -1044,8 +1019,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 		}
 
 		// fields in first array, values in the second
-		$aFieldsToWrite = array();
-		$aValuesToWrite = array();
+		$aFieldsToWrite = [];
+		$aValuesToWrite = [];
 
 		if (!empty($iKey) && ($iKey >= 0)) {
 			// Add it to the list of fields to write
@@ -1053,7 +1028,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 			$aValuesToWrite[] = CMDBSource::Quote($iKey);
 		}
 
-		$aHierarchicalKeys = array();
+		$aHierarchicalKeys = [];
 
 		foreach (MetaModel::ListAttributeDefs($sTableClass) as $sAttCode => $oAttDef) {
 			// Skip this attribute if not defined in this table
@@ -1110,8 +1085,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function GivenObject(string $sClass, array $aParams): DBObject
 	{
 		$oMyObj = MetaModel::NewObject($sClass);
-		foreach ($aParams as $sAttCode => $oValue)
-		{
+		foreach ($aParams as $sAttCode => $oValue) {
 			$oMyObj->Set($sAttCode, $oValue);
 		}
 
@@ -1333,16 +1307,14 @@ abstract class ItopDataTestCase extends ItopTestCase
 
 		$this->debug("Added CI $sCIId to {$oTicket->Get('ref')} with {$sImpactCode}");
 
-		return array($sCIId => $sImpactCode);
+		return [$sCIId => $sImpactCode];
 	}
 
 	protected function RemoveLnkFunctionalCIToTicketObject($sCIId, $oTicket)
 	{
 		$oCIs = $oTicket->Get('functionalcis_list');
-		foreach ($oCIs as $oLnk)
-		{
-			if ($oLnk->Get('functionalci_id') == $sCIId)
-			{
+		foreach ($oCIs as $oLnk) {
+			if ($oLnk->Get('functionalci_id') == $sCIId) {
 				$sImpactCode = $oLnk->Get('impact_code');
 				$oCIs->RemoveItem($oLnk->GetKey());
 				$oTicket->Set('functionalcis_list', $oCIs);
@@ -1355,7 +1327,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$this->assertTrue(false);
 	}
 
-	protected function AddLnkContactToTicketObject($sContactId, $oTicket, $sRoleCode, $aParams = array()): array
+	protected function AddLnkContactToTicketObject($sContactId, $oTicket, $sRoleCode, $aParams = []): array
 	{
 		$aParams['contact_id'] = $sContactId;
 		$aParams['role_code'] = $sRoleCode;
@@ -1367,16 +1339,14 @@ abstract class ItopDataTestCase extends ItopTestCase
 
 		$this->debug("Added contact $sContactId to {$oTicket->Get('ref')} with {$sRoleCode}");
 
-		return array($sContactId => $sRoleCode);
+		return [$sContactId => $sRoleCode];
 	}
 
 	protected function RemoveLnkContactToTicketObject($sContactId, $oTicket)
 	{
 		$oContacts = $oTicket->Get('contacts_list');
-		foreach ($oContacts as $oLnk)
-		{
-			if ($oLnk->Get('contact_id') == $sContactId)
-			{
+		foreach ($oContacts as $oLnk) {
+			if ($oLnk->Get('contact_id') == $sContactId) {
 				$sRoleCode = $oLnk->Get('role_code');
 				$oContacts->RemoveItem($oLnk->GetKey());
 				$oTicket->Set('contacts_list', $oContacts);
@@ -1395,10 +1365,10 @@ abstract class ItopDataTestCase extends ItopTestCase
 			'password' => 'tagada-Secret,007',
 			'language' => 'EN US',
 			'profile_list' => [
-				'profileid:'.$sProfileId
+				'profileid:'.$sProfileId,
 			],
 			'allowed_org_list' => [
-				'allowed_org_id:'.$iOrganization
+				'allowed_org_id:'.$iOrganization,
 			],
 		]);
 		return $sLogin;
@@ -1415,7 +1385,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	{
 		$sLogin = 'demo_test_'.uniqid(__CLASS__, true);
 
-		$aProfileList = array_map(function($sProfileId) {
+		$aProfileList = array_map(function ($sProfileId) {
 			return 'profileid:'.self::$aURP_Profiles[$sProfileId];
 		}, $aProfiles);
 
@@ -1442,7 +1412,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 		}
 	}
 
-	static protected function StartStopwatchInThePast(DBObject $oObject, string $sStopwatchAttCode, int $iDelayInSecond)
+	protected static function StartStopwatchInThePast(DBObject $oObject, string $sStopwatchAttCode, int $iDelayInSecond)
 	{
 		$iStartDate = time() - $iDelayInSecond;
 		/** @var \ormStopWatch $oStopwatch */
@@ -1453,8 +1423,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$oObject->Set($sStopwatchAttCode, $oStopwatch);
 	}
 
-
-	static protected function StopStopwatchInTheFuture(DBObject $oObject, string $sStopwatchAttCode, int $iDelayInSecond)
+	protected static function StopStopwatchInTheFuture(DBObject $oObject, string $sStopwatchAttCode, int $iDelayInSecond)
 	{
 		$iEndDate = time() + $iDelayInSecond;
 		/** @var \ormStopWatch $oStopwatch */

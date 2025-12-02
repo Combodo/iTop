@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -74,7 +75,7 @@ class UserRightsTest extends ItopDataTestCase
 		$iCount++;
 
 		$oUser = self::CreateUser($sLogin, $iProfileId);
-		$_SESSION = array();
+		$_SESSION = [];
 		UserRights::Login($sLogin);
 		return $oUser;
 	}
@@ -102,8 +103,7 @@ class UserRightsTest extends ItopDataTestCase
 			// Fixture data required in this case only
 			try {
 				self::CreateUser('admin', 1);
-			}
-			catch (CoreCannotSaveObjectException $e) {
+			} catch (CoreCannotSaveObjectException $e) {
 				// The admin account could exist, depending on where and when the test suite is executed
 			}
 		}
@@ -224,7 +224,6 @@ class UserRightsTest extends ItopDataTestCase
 			'Configuration manager ModuleInstallation read'  => [3, ['class' => 'ModuleInstallation', 'action' => 1, 'res' => true]],
 		];
 	}
-
 
 	/** Test IsActionAllowedOnAttribute
 	 *
@@ -457,7 +456,7 @@ class UserRightsTest extends ItopDataTestCase
 	public function NonAdminCanListOwnProfilesProvider(): array
 	{
 		return [
-			'with Admins visible'=> [false],
+			'with Admins visible' => [false],
 			'with Admins hidden' => [true],
 		];
 	}
@@ -484,7 +483,7 @@ class UserRightsTest extends ItopDataTestCase
 	public function NonAdminCannotListAdminProfilesProvider(): array
 	{
 		return [
-			'with Admins visible'=> [false, 1],
+			'with Admins visible' => [false, 1],
 			'with Admins hidden' => [true, 0],
 		];
 	}
@@ -496,13 +495,13 @@ class UserRightsTest extends ItopDataTestCase
 
 		$this->assertDBQueryCount(
 			1,
-			fn() => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
+			fn () => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
 			'A query should be performed the first time FindUser is called'
 		);
 
 		$this->assertDBQueryCount(
 			0,
-			fn() => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
+			fn () => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
 			'The cache should prevent additional queries on subsequent calls'
 		);
 	}
@@ -514,13 +513,13 @@ class UserRightsTest extends ItopDataTestCase
 
 		$this->assertDBQueryCount(
 			2,
-			fn() => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
+			fn () => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
 			'Some queries should be performed the first time FindUser is called'
 		);
 
 		$this->assertDBQueryCount(
 			0,
-			fn() => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
+			fn () => $this->FindUserAndAssertItHasBeenFound($sLogin, $iKey),
 			'The cache should prevent additional queries on subsequent calls'
 		);
 	}
@@ -531,13 +530,13 @@ class UserRightsTest extends ItopDataTestCase
 
 		$this->assertDBQueryCount(
 			2,
-			fn() => $this->FindUserAndAssertItWasNotFound($sLogin),
+			fn () => $this->FindUserAndAssertItWasNotFound($sLogin),
 			'Some queries should be performed the first time FindUser is called'
 		);
 
 		$this->assertDBQueryCount(
 			0,
-			fn() => $this->FindUserAndAssertItWasNotFound($sLogin),
+			fn () => $this->FindUserAndAssertItWasNotFound($sLogin),
 			'The cache should prevent additional queries on subsequent calls'
 		);
 	}

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Attachments:TabTitle_Count' => 'Mellékletek (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Mellékletek',
 	'Attachments:FieldsetTitle' => 'Mellékletek',
@@ -28,13 +29,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Attachments:Render:Icons' => 'Mutassa ikonként',
 	'Attachments:Render:Table' => 'Mutassa listaként',
 	'UI:Attachments:DropYourFileHint' => 'Húzza a fájlokat erre a területre',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Attachment' => 'Mellékletek',
 	'Class:Attachment+' => '~~',
 	'Class:Attachment/Attribute:expire' => 'Lejárat',
@@ -49,10 +50,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Attachment/Attribute:item_org_id+' => '~~',
 	'Class:Attachment/Attribute:contents' => 'Tartalom',
 	'Class:Attachment/Attribute:contents+' => '~~',
-));
+]);
 
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Attachments:File:Thumbnail' => 'Ikon',
 	'Attachments:File:Name' => 'Fájlnév',
 	'Attachments:File:Date' => 'Feltöltés dátuma',
@@ -60,25 +60,25 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Attachments:File:Size' => 'Méret',
 	'Attachments:File:MimeType' => 'Típus',
 	'Attachments:File:DownloadsCount' => 'Downloads~~',
-));
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Attachment/Attribute:creation_date' => 'Létrehozás dátuma',
 	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => 'Felhasználó',
 	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => 'Kapcsolattartó',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -67,8 +68,7 @@ class DbConnectionWrapper
 		if (is_null($oMysqli)) {
 			// Reset to standard connection
 			static::$oDbCnxMockableForQuery = static::$oDbCnxStandard;
-		}
-		else {
+		} else {
 			static::$oDbCnxMockableForQuery = $oMysqli;
 		}
 	}

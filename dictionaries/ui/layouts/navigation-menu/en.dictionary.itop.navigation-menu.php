@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,7 @@
  */
 
 // Navigation menu
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Company logo',
 	'UI:Layout:NavigationMenu:Silo:Label' => 'Select organization to filter on',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expand / Collapse',
@@ -32,4 +33,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Open user menu',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu entries',
 
-));
+]);

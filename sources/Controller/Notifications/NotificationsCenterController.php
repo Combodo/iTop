@@ -1,4 +1,5 @@
 <?php
+
 namespace Combodo\iTop\Controller\Notifications;
 
 use ActionNotification;
@@ -24,7 +25,6 @@ use utils;
 use UserRights;
 use appUserPreferences;
 
-
 /**
 *  Class NotificationsCenterController
 *
@@ -36,11 +36,12 @@ class NotificationsCenterController extends Controller
 {
 	public const ROUTE_NAMESPACE = 'notificationscenter';
 
-	public function CheckPostedCSRF(){
+	public function CheckPostedCSRF()
+	{
 		$sToken = utils::ReadParam('token', '', true, 'raw_data');
 		return utils::IsTransactionValid($sToken, false);
 	}
-	
+
 	/**
 	 * Displays a table containing all ActionNotifications that current user is likely to receive and allows to unsubscribe from them.
 	 *
@@ -60,12 +61,12 @@ class NotificationsCenterController extends Controller
 	{
 		$oPage = new iTopWebPage(Dict::S('UI:NotificationsCenter:Page:Title'));
 		// Create a panel that will contain the table
-		$oNotificationsPanel = new Panel(Dict::S('UI:NotificationsCenter:Panel:Title'), array(), 'grey', 'ibo-notifications-center');
+		$oNotificationsPanel = new Panel(Dict::S('UI:NotificationsCenter:Panel:Title'), [], 'grey', 'ibo-notifications-center');
 		$oNotificationsPanel->AddCSSClass('ibo-datatable-panel');
 
 		$oNotificationsPanel->AddSubTitleBlock(new Html(Dict::S('UI:NotificationsCenter:Panel:SubTitle')));
 		$sPictureUrl = UserRights::GetUserPictureAbsUrl();
-		$oNotificationsPanel->SetIcon($sPictureUrl,Panel::ENUM_ICON_COVER_METHOD_CONTAIN, true);
+		$oNotificationsPanel->SetIcon($sPictureUrl, Panel::ENUM_ICON_COVER_METHOD_CONTAIN, true);
 
 		$oAllNewsPageButton = ButtonUIBlockFactory::MakeIconLink(
 			'fas fa-bell',
@@ -75,10 +76,10 @@ class NotificationsCenterController extends Controller
 		$oNotificationsPanel->SetToolBlocks([$oAllNewsPageButton]);
 
 		$oNotificationsCenterTableColumns = [
-			'trigger'  => array('label' => MetaModel::GetName('Trigger')),
-			'trigger_class' => array('label' => MetaModel::GetAttributeDef('Trigger', 'finalclass')->GetLabel()),
-			'complement' => array('label' => MetaModel::GetAttributeDef('Trigger', 'complement')->GetLabel()),
-			'channels' => array('label' => Dict::S('UI:NotificationsCenter:Panel:Table:Channels')),
+			'trigger'  => ['label' => MetaModel::GetName('Trigger')],
+			'trigger_class' => ['label' => MetaModel::GetAttributeDef('Trigger', 'finalclass')->GetLabel()],
+			'complement' => ['label' => MetaModel::GetAttributeDef('Trigger', 'complement')->GetLabel()],
+			'channels' => ['label' => Dict::S('UI:NotificationsCenter:Panel:Table:Channels')],
 		];
 
 		// Get all subscribed/unsubscribed actions notifications for the current user
@@ -153,13 +154,13 @@ class NotificationsCenterController extends Controller
 					$aSetValues[] = $aChannel['value'];
 					$aChannels[$sNotificationClass]['mixed'] = true;
 					$aChannels[$sNotificationClass]['mixed_value'] = Dict::Format('UI:NotificationsCenter:Channel:OutOf:Text', $aChannel['total_subscribed'], $aChannel['total']);
-				} else if ($aChannel['subscribed'] === true) {
+				} elseif ($aChannel['subscribed'] === true) {
 					$aSetValues[] = $aChannel['value'];
 				}
-				
+
 				// Explode status array into a readable string
-				$aChannels[$sNotificationClass]['additional_field'] = implode(', ', array_map(function($iCount, $sStatus) use($sNotificationClass) {
-					return $iCount.' '. MetaModel::GetStateLabel($sNotificationClass, $sStatus);
+				$aChannels[$sNotificationClass]['additional_field'] = implode(', ', array_map(function ($iCount, $sStatus) use ($sNotificationClass) {
+					return $iCount.' '.MetaModel::GetStateLabel($sNotificationClass, $sStatus);
 				}, $aChannel['status'], array_keys($aChannel['status'])));
 			}
 			// Create a input set for the channels
@@ -206,8 +207,7 @@ $.ajax({
 JS
 			);
 			// Set the minimum number of channels to 1 if the subscription policy is {@see SubscriptionPolicy::ForceAtLeastOneChannel}
-			if($sTriggerSubscriptionPolicy === SubscriptionPolicy::ForceAtLeastOneChannel->value)
-			{
+			if ($sTriggerSubscriptionPolicy === SubscriptionPolicy::ForceAtLeastOneChannel->value) {
 				$oChannelSet->SetMinItems(1);
 			}
 			$oChannelSet->SetOnItemRemoveJs(
@@ -284,13 +284,13 @@ JS
 	 * @return \JsonPage
 	 * @throws \Exception
 	 */
-	function OperationUnsubscribeFromChannel(): \JsonPage
+	public function OperationUnsubscribeFromChannel(): \JsonPage
 	{
 		// Get the CSRF token from the request and check if it's valid
 		if (!$this->CheckPostedCSRF()) {
 			throw new \Exception('Invalid token');
 		}
-		
+
 		// Get the channel from the request
 		$sChannel = utils::ReadParam('channel', '', true, 'raw_data');
 		$aChannel = explode('|', $sChannel);
@@ -310,14 +310,14 @@ JS
 			if ($oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAllChannels->value) {
 				throw new \Exception('You are not allowed to unsubscribe from this channel');
 			}
-			
+
 			// Check if we are subscribed to at least 1 channel
 			$oSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByTriggerContactSubscriptionAndFinalclass($iTriggerId, \UserRights::GetContactId(), '1', $sFinalclass);
 			if ($oSubscribedActionsNotificationsSet->Count() === 0) {
 				throw new \Exception('You are not subscribed to any channel');
 			}
 			// Check the trigger subscription policy and if we are subscribed to at least 1 channel if necessary
-			if($oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAtLeastOneChannel->value) {
+			if ($oTrigger->Get('subscription_policy') === SubscriptionPolicy::ForceAtLeastOneChannel->value) {
 				$oTotalSubscribedActionsNotificationsSet = NotificationsRepository::GetInstance()->SearchSubscriptionsByTriggerContactAndSubscription($iTriggerId, \UserRights::GetContactId(), '1');
 				if (($oTotalSubscribedActionsNotificationsSet->Count() - $oSubscribedActionsNotificationsSet->Count()) === 0) {
 					throw new \Exception('You can\'t unsubscribe from this channel, you must be subscribed to at least one channel');
@@ -332,8 +332,7 @@ JS
 				'status'  => 'success',
 				'message' => Dict::S('UI:NotificationsCenter:Unsubscribe:Success'),
 			];
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			// Return an error message if an exception is thrown
 			$aReturnData = [
 				'status'  => 'error',
@@ -350,17 +349,17 @@ JS
 	 * @return \JsonPage
 	 * @throws \Exception
 	 */
-	function OperationSubscribeToChannel(): \JsonPage
+	public function OperationSubscribeToChannel(): \JsonPage
 	{
 		// Get the CSRF token from the request and check if it's valid
 		if (!$this->CheckPostedCSRF()) {
 			throw new \Exception('Invalid token');
 		}
-		
+
 		// Get the channel from the request
 		$sChannel = utils::ReadParam('channel', '', true, 'raw_data');
 		$aChannel = explode('|', $sChannel);
-		
+
 		$oPage = new \JsonPage();
 		$aReturnData = [];
 		try {
@@ -385,8 +384,7 @@ JS
 				'status'  => 'success',
 				'message' => Dict::S('UI:NotificationsCenter:Subscribe:Success'),
 			];
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			// Return an error message if an exception is thrown
 			$aReturnData = [
 				'status'  => 'error',

@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2015-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -16,13 +17,12 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Data structures (i.e. PHP classes) to build and use relation graphs
  *
  * @copyright   Copyright (C) 2015-2024 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 
 require_once(APPROOT.'core/simplegraph.class.inc.php');
@@ -61,24 +61,17 @@ class RelationObjectNode extends GraphNode
 	public function GetDotAttributes($bNoLabel = false)
 	{
 		$sDot = parent::GetDotAttributes();
-		if ($this->GetProperty('developped', false))
-		{
+		if ($this->GetProperty('developped', false)) {
 			$sDot .= ',fontcolor=black';
-		}
-		else
-		{
+		} else {
 			$sDot .= ',fontcolor=lightgrey';
 		}
-		if ($this->GetProperty('source', false) || $this->GetProperty('sink', false))
-		{
+		if ($this->GetProperty('source', false) || $this->GetProperty('sink', false)) {
 			$sDot .= ',shape=rectangle';
 		}
-		if ($this->GetProperty('is_reached', false))
-		{
+		if ($this->GetProperty('is_reached', false)) {
 			$sDot .= ',fillcolor="#ffdddd"';
-		}
-		else
-		{
+		} else {
 			$sDot .= ',fillcolor=white';
 		}
 		return $sDot;
@@ -92,11 +85,9 @@ class RelationObjectNode extends GraphNode
 	 */
 	public function ReachDown($sProperty, $value)
 	{
-		if (is_null($this->GetProperty($sProperty)) && ($this->GetProperty($sProperty.'_allowed') !== false))
-		{
+		if (is_null($this->GetProperty($sProperty)) && ($this->GetProperty($sProperty.'_allowed') !== false)) {
 			$this->SetProperty($sProperty, $value);
-			foreach ($this->GetOutgoingEdges() as $oOutgoingEdge)
-			{
+			foreach ($this->GetOutgoingEdges() as $oOutgoingEdge) {
 				// Recurse
 				$oOutgoingEdge->GetSinkNode()->ReachDown($sProperty, $value);
 			}
@@ -154,11 +145,9 @@ class RelationRedundancyNode extends GraphNode
 	public function ReachDown($sProperty, $value)
 	{
 		$this->SetProperty($sProperty.'_count', $this->GetProperty($sProperty.'_count', 0) + 1);
-		if ($this->GetProperty($sProperty.'_count') > $this->GetProperty('threshold'))
-		{
+		if ($this->GetProperty($sProperty.'_count') > $this->GetProperty('threshold')) {
 			// Looping... though there should be only ONE SINGLE outgoing edge
-			foreach ($this->GetOutgoingEdges() as $oOutgoingEdge)
-			{
+			foreach ($this->GetOutgoingEdges() as $oOutgoingEdge) {
 				// Recurse
 				$oOutgoingEdge->GetSinkNode()->ReachDown($sProperty, $value);
 			}
@@ -166,10 +155,9 @@ class RelationRedundancyNode extends GraphNode
 	}
 }
 
-
 /**
  * Helper to name the edges in a unique way
- */ 
+ */
 class RelationEdge extends GraphEdge
 {
 	/**
@@ -196,11 +184,11 @@ class RelationEdge extends GraphEdge
  *    source: boolean, that node was added as a source node
  *    sink: boolean, that node was added as a sink node
  *    reached: boolean, that node has been marked as reached (impacted by the source nodes)
- *    developped: boolean, that node has been visited to search for related objects    
+ *    developped: boolean, that node has been visited to search for related objects
  * 1) RelationRedundancyNode
  *    reached_count: int, the number of source nodes having reached=true
- *    threshold: float, if reached_count > threshold, the sink nodes become reachable    
- */ 
+ *    threshold: float, if reached_count > threshold, the sink nodes become reachable
+ */
 class RelationGraph extends SimpleGraph
 {
 	protected $aSourceNodes; // Index of source nodes (for a quicker access)
@@ -211,10 +199,10 @@ class RelationGraph extends SimpleGraph
 	public function __construct()
 	{
 		parent::__construct();
-		$this->aSourceNodes = array();
-		$this->aSinkNodes = array();
-		$this->aRedundancySettings = array();
-		$this->aContextSearches = array();
+		$this->aSourceNodes = [];
+		$this->aSinkNodes = [];
+		$this->aRedundancySettings = [];
+		$this->aContextSearches = [];
 	}
 
 	/**
@@ -252,25 +240,25 @@ class RelationGraph extends SimpleGraph
 	 */
 	public function AddContextQuery($key, $sOQL)
 	{
-		if ($sOQL === '') { return;}
-		
+		if ($sOQL === '') {
+			return;
+		}
+
 		$oSearch = static::MakeSearch($sOQL);
 		$aAliases = $oSearch->GetSelectedClasses();
-		if (count($aAliases) < 2 )
-		{
+		if (count($aAliases) < 2) {
 			IssueLog::Error("Invalid context query '$sOQL'. A context query must contain at least two columns.");
 			throw new Exception("Invalid context query '$sOQL'. A context query must contain at least two columns. Columns: ".implode(', ', $aAliases).'. ');
 		}
 		$aAliasNames = array_keys($aAliases);
 		$oCondition = new BinaryExpression(new FieldExpression('id', $aAliasNames[0]), '=', new VariableExpression('id'));
 		$oSearch->AddConditionExpression($oCondition);
-		
+
 		$sClass = $oSearch->GetClass();
-		if (!array_key_exists($sClass, $this->aContextSearches))
-		{
-			$this->aContextSearches[$sClass] = array();
+		if (!array_key_exists($sClass, $this->aContextSearches)) {
+			$this->aContextSearches[$sClass] = [];
 		}
-		$this->aContextSearches[$sClass][] = array('key' => $key, 'search' => $oSearch);
+		$this->aContextSearches[$sClass][] = ['key' => $key, 'search' => $oSearch];
 	}
 
 	/**
@@ -286,25 +274,19 @@ class RelationGraph extends SimpleGraph
 		$bRet = false;
 		$sFinalClass = get_class($oObj);
 		$aParentClasses = MetaModel::EnumParentClasses($sFinalClass, ENUM_PARENT_CLASSES_ALL);
-		
-		foreach($aParentClasses as $sClass)
-		{
-			if (array_key_exists($sClass, $this->aContextSearches))
-			{
-				foreach($this->aContextSearches[$sClass] as $aContextQuery)
-				{
+
+		foreach ($aParentClasses as $sClass) {
+			if (array_key_exists($sClass, $this->aContextSearches)) {
+				foreach ($this->aContextSearches[$sClass] as $aContextQuery) {
 					$aAliases = $aContextQuery['search']->GetSelectedClasses();
 					$aAliasNames = array_keys($aAliases);
 					$sRootCauseAlias = $aAliasNames[1]; // 1st column (=0) = object, second column = root cause
-					$oSet = new DBObjectSet($aContextQuery['search'], array(), array('id' => $oObj->GetKey()));
-					$oSet->OptimizeColumnLoad(array($aAliasNames[0] => array(), $aAliasNames[1] => array())); // Do not load any column... better do a reload than many joins 
-					while($aRow = $oSet->FetchAssoc())
-					{
-						if (!is_null($aRow[$sRootCauseAlias]))
-						{
-							if (!array_key_exists($aContextQuery['key'], $aRootCauses))
-							{
-								$aRootCauses[$aContextQuery['key']] = array();
+					$oSet = new DBObjectSet($aContextQuery['search'], [], ['id' => $oObj->GetKey()]);
+					$oSet->OptimizeColumnLoad([$aAliasNames[0] => [], $aAliasNames[1] => []]); // Do not load any column... better do a reload than many joins
+					while ($aRow = $oSet->FetchAssoc()) {
+						if (!is_null($aRow[$sRootCauseAlias])) {
+							if (!array_key_exists($aContextQuery['key'], $aRootCauses)) {
+								$aRootCauses[$aContextQuery['key']] = [];
 							}
 							$aRootCauses[$aContextQuery['key']][] = $aRow[$sRootCauseAlias];
 							$bRet = true;
@@ -327,47 +309,41 @@ class RelationGraph extends SimpleGraph
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public function ComputeRelatedObjectsDown($sRelCode, $iMaxDepth, $bEnableRedundancy, $aUnreachableObjects = array())
+	public function ComputeRelatedObjectsDown($sRelCode, $iMaxDepth, $bEnableRedundancy, $aUnreachableObjects = [])
 	{
 		//echo "<h5>Sources only...</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		// Build the graph out of the sources
-		foreach ($this->aSourceNodes as $oSourceNode)
-		{
+		foreach ($this->aSourceNodes as $oSourceNode) {
 			$this->AddRelatedObjects($sRelCode, true, $oSourceNode, $iMaxDepth, $bEnableRedundancy);
 			//echo "<h5>After processing of {$oSourceNode->GetId()}</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		}
-		
+
 		// Mark the unreachable nodes
-		foreach ($aUnreachableObjects as $oObj)
-		{
+		foreach ($aUnreachableObjects as $oObj) {
 			$sNodeId = RelationObjectNode::MakeId($oObj);
 			$oNode = $this->GetNode($sNodeId);
-			if($oNode)
-			{
+			if ($oNode) {
 				$oNode->SetProperty('is_reached_allowed', false);
 			}
 		}
-		
+
 		// Determine the reached nodes
-		foreach ($this->aSourceNodes as $oSourceNode)
-		{
+		foreach ($this->aSourceNodes as $oSourceNode) {
 			$oSourceNode->ReachDown('is_reached', true);
 			//echo "<h5>After reaching from {$oSourceNode->GetId()}</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		}
-		
+
 		// Mark also the "context" nodes as reached and record the "root causes" for each node
 		$oIterator = new RelationTypeIterator($this, 'Node');
-		foreach($oIterator as $oNode)
-		{
+		foreach ($oIterator as $oNode) {
 			$oObj = $oNode->GetProperty('object');
-			$aRootCauses = array();
-			if (!is_null($oObj) && $this->IsPartOfContext($oObj, $aRootCauses))
-			{
+			$aRootCauses = [];
+			if (!is_null($oObj) && $this->IsPartOfContext($oObj, $aRootCauses)) {
 				$oNode->SetProperty('context_root_causes', $aRootCauses);
 				$oNode->ReachDown('is_reached', true);
-			}	
+			}
 		}
-		if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
+		if (MetaModel::GetConfig()->Get('relations.complete_analysis')) {
 			$this->ApplyUserRightsOnGraph();
 		}
 	}
@@ -386,29 +362,25 @@ class RelationGraph extends SimpleGraph
 	{
 		//echo "<h5>Sinks only...</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		// Build the graph out of the sinks
-		foreach ($this->aSinkNodes as $oSinkNode)
-		{
+		foreach ($this->aSinkNodes as $oSinkNode) {
 			$this->AddRelatedObjects($sRelCode, false, $oSinkNode, $iMaxDepth, $bEnableRedundancy);
 			//echo "<h5>After processing of {$oSinkNode->GetId()}</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
 		}
 
 		// Mark also the "context" nodes as reached and record the "root causes" for each node
 		$oIterator = new RelationTypeIterator($this, 'Node');
-		foreach($oIterator as $oNode)
-		{
+		foreach ($oIterator as $oNode) {
 			$oObj = $oNode->GetProperty('object');
-			$aRootCauses = array();
-			if (!is_null($oObj) && $this->IsPartOfContext($oObj, $aRootCauses))
-			{
+			$aRootCauses = [];
+			if (!is_null($oObj) && $this->IsPartOfContext($oObj, $aRootCauses)) {
 				$oNode->SetProperty('context_root_causes', $aRootCauses);
 				$oNode->ReachDown('is_reached', true);
-			}	
+			}
 		}
-		if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
+		if (MetaModel::GetConfig()->Get('relations.complete_analysis')) {
 			$this->ApplyUserRightsOnGraph();
 		}
 	}
-
 
 	/**
 	 * Recursively find related objects, and add them into the graph
@@ -423,27 +395,22 @@ class RelationGraph extends SimpleGraph
 	 */
 	protected function AddRelatedObjects($sRelCode, $bDown, $oObjectNode, $iMaxDepth, $bEnableRedundancy)
 	{
-		if ($iMaxDepth > 0)
-		{
-			if ($oObjectNode instanceof RelationRedundancyNode)
-			{
+		if ($iMaxDepth > 0) {
+			if ($oObjectNode instanceof RelationRedundancyNode) {
 				// Note: this happens when recursing on an existing part of the graph
 				// Skip that redundancy node
 				$aRelatedEdges = $bDown ? $oObjectNode->GetOutgoingEdges() : $oObjectNode->GetIncomingEdges();
-				foreach ($aRelatedEdges as $oRelatedEdge)
-				{
+				foreach ($aRelatedEdges as $oRelatedEdge) {
 					$oRelatedNode = $bDown ? $oRelatedEdge->GetSinkNode() : $oRelatedEdge->GetSourceNode();
 					// Recurse (same depth)
 					$this->AddRelatedObjects($sRelCode, $bDown, $oRelatedNode, $iMaxDepth, $bEnableRedundancy);
 				}
-			}
-			elseif ($oObjectNode->GetProperty('developped', false))
-			{
+			} elseif ($oObjectNode->GetProperty('developped', false)) {
 				// No need to explore the underlying graph at all. We can stop here since the node has already been developped.
 				// Otherwise in case of "loops" in the graph we would recurse up to the max depth limit
 				// without producing any difference in the resulting graph... but potentially taking a LOOOONG time.
 				return;
-				
+
 				// Former code was
 				//$aRelatedEdges = $bDown ? $oObjectNode->GetOutgoingEdges() : $oObjectNode->GetIncomingEdges();
 				//foreach ($aRelatedEdges as $oRelatedEdge)
@@ -452,60 +419,50 @@ class RelationGraph extends SimpleGraph
 				//	// Recurse (decrement the depth)
 				//	$this->AddRelatedObjects($sRelCode, $bDown, $oRelatedNode, $iMaxDepth - 1, $bEnableRedundancy);
 				//}
-			}
-			else
-			{
+			} else {
 				$oObjectNode->SetProperty('developped', true);
-	
+
 				$oObject = $oObjectNode->GetProperty('object');
 				$iPreviousTimeLimit = ini_get('max_execution_time');
 				$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-				foreach (MetaModel::EnumRelationQueries(get_class($oObject), $sRelCode, $bDown) as $sDummy => $aQueryInfo)
-				{
-	 				$sQuery = $bDown ? $aQueryInfo['sQueryDown'] : $aQueryInfo['sQueryUp'];
-					try
-					{
+				foreach (MetaModel::EnumRelationQueries(get_class($oObject), $sRelCode, $bDown) as $sDummy => $aQueryInfo) {
+					$sQuery = $bDown ? $aQueryInfo['sQueryDown'] : $aQueryInfo['sQueryUp'];
+					try {
 						$oFlt = static::MakeSearch($sQuery);
-						if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
+						if (MetaModel::GetConfig()->Get('relations.complete_analysis')) {
 							//no filter to find all impacts
 							$oFlt->AllowAllData(true);
 						}
-						$oObjSet = new DBObjectSet($oFlt, array(), $oObject->ToArgsForQuery());
+						$oObjSet = new DBObjectSet($oFlt, [], $oObject->ToArgsForQuery());
 						$oRelatedObj = $oObjSet->Fetch();
-					}
-					catch (Exception $e)
-					{
+					} catch (Exception $e) {
 						$sDirection = $bDown ? 'downstream' : 'upstream';
 						throw new Exception("Wrong query ($sDirection) for the relation $sRelCode/{$aQueryInfo['sDefinedInClass']}/{$aQueryInfo['sNeighbour']}: ".$e->getMessage());
 					}
-					if ($oRelatedObj)
-					{
-						do
-						{
+					if ($oRelatedObj) {
+						do {
 							set_time_limit(intval($iLoopTimeLimit));
 
-								$sObjectRef = RelationObjectNode::MakeId($oRelatedObj);
-								$oRelatedNode = $this->GetNode($sObjectRef);
-								if (is_null($oRelatedNode)) {
-									$oRelatedNode = new RelationObjectNode($this, $oRelatedObj);
-								}
-								$oSourceNode = $bDown ? $oObjectNode : $oRelatedNode;
-								$oSinkNode = $bDown ? $oRelatedNode : $oObjectNode;
-							if ($bEnableRedundancy)
-							{
-									$oRedundancyNode = $this->ComputeRedundancy($sRelCode, $aQueryInfo, $oSourceNode, $oSinkNode);
-								} else {
-									$oRedundancyNode = null;
-								}
-								if (!$oRedundancyNode) {
-									// Direct link (otherwise handled by ComputeRedundancy)
-									new RelationEdge($this, $oSourceNode, $oSinkNode);
-								}
+							$sObjectRef = RelationObjectNode::MakeId($oRelatedObj);
+							$oRelatedNode = $this->GetNode($sObjectRef);
+							if (is_null($oRelatedNode)) {
+								$oRelatedNode = new RelationObjectNode($this, $oRelatedObj);
+							}
+							$oSourceNode = $bDown ? $oObjectNode : $oRelatedNode;
+							$oSinkNode = $bDown ? $oRelatedNode : $oObjectNode;
+							if ($bEnableRedundancy) {
+								$oRedundancyNode = $this->ComputeRedundancy($sRelCode, $aQueryInfo, $oSourceNode, $oSinkNode);
+							} else {
+								$oRedundancyNode = null;
+							}
+							if (!$oRedundancyNode) {
+								// Direct link (otherwise handled by ComputeRedundancy)
+								new RelationEdge($this, $oSourceNode, $oSinkNode);
+							}
 
 							// Recurse
 							$this->AddRelatedObjects($sRelCode, $bDown, $oRelatedNode, $iMaxDepth - 1, $bEnableRedundancy);
-						}
-						while ($oRelatedObj = $oObjSet->Fetch());
+						} while ($oRelatedObj = $oObjSet->Fetch());
 					}
 				}
 				set_time_limit(intval($iPreviousTimeLimit));
@@ -528,48 +485,41 @@ class RelationGraph extends SimpleGraph
 	{
 		$oRedundancyNode = null;
 		$oObject = $oToNode->GetProperty('object');
-		if ($this->IsRedundancyEnabled($sRelCode, $aQueryInfo, $oToNode))
-		{
+		if ($this->IsRedundancyEnabled($sRelCode, $aQueryInfo, $oToNode)) {
 			$sUniqueNeighbourId = $aQueryInfo['sDefinedInClass'].'-'.$aQueryInfo['sNeighbour'];
 			$sId = RelationRedundancyNode::MakeId($sRelCode, $sUniqueNeighbourId, $oFromNode->GetProperty('object'), $oToNode->GetProperty('object'));
 
 			$oRedundancyNode = $this->GetNode($sId);
-			if (is_null($oRedundancyNode))
-			{
+			if (is_null($oRedundancyNode)) {
 				// Get the upper neighbours
 				$sQuery = $aQueryInfo['sQueryUp'];
-				if (!$sQuery)
-				{
+				if (!$sQuery) {
 					throw new Exception("Redundancy cannot be enabled on the relation $sRelCode/{$aQueryInfo['sDefinedInClass']}/{$aQueryInfo['sNeighbour']}: its direction is \"{$aQueryInfo['sDirection']}\"");
 				}
-				try
-				{
+				try {
 					$oFlt = static::MakeSearch($sQuery);
-					if ( MetaModel::GetConfig()->Get('relations.complete_analysis')) {
+					if (MetaModel::GetConfig()->Get('relations.complete_analysis')) {
 						//no filter to find all impacts
 						$oFlt->AllowAllData(true);
 					}
-					$oObjSet = new DBObjectSet($oFlt, array(), $oObject->ToArgsForQuery());
+					$oObjSet = new DBObjectSet($oFlt, [], $oObject->ToArgsForQuery());
 					$iCount = $oObjSet->Count();
-				}
-				catch (Exception $e)
-				{
+				} catch (Exception $e) {
 					throw new Exception("Wrong query (upstream) for the relation $sRelCode/{$aQueryInfo['sDefinedInClass']}/{$aQueryInfo['sNeighbour']}: ".$e->getMessage());
 				}
-	
+
 				$iMinUp = $this->GetRedundancyMinUp($sRelCode, $aQueryInfo, $oToNode, $iCount);
 				$fThreshold = max(0, $iCount - $iMinUp);
 				$oRedundancyNode = new RelationRedundancyNode($this, $sId, $iMinUp, $fThreshold);
 				new RelationEdge($this, $oRedundancyNode, $oToNode);
-	
-				while ($oUpperObj = $oObjSet->Fetch())
-				{
-						$sObjectRef = RelationObjectNode::MakeId($oUpperObj);
-						$oUpperNode = $this->GetNode($sObjectRef);
-						if (is_null($oUpperNode)) {
-							$oUpperNode = new RelationObjectNode($this, $oUpperObj);
-						}
-						new RelationEdge($this, $oUpperNode, $oRedundancyNode);
+
+				while ($oUpperObj = $oObjSet->Fetch()) {
+					$sObjectRef = RelationObjectNode::MakeId($oUpperObj);
+					$oUpperNode = $this->GetNode($sObjectRef);
+					if (is_null($oUpperNode)) {
+						$oUpperNode = new RelationObjectNode($this, $oUpperObj);
+					}
+					new RelationEdge($this, $oUpperNode, $oRedundancyNode);
 				}
 			}
 		}
@@ -590,8 +540,7 @@ class RelationGraph extends SimpleGraph
 		$bRet = false;
 		$oToObject = $oToNode->GetProperty('object');
 		$oRedundancyAttDef = $this->FindRedundancyAttribute($sRelCode, $aQueryInfo, get_class($oToObject));
-		if ($oRedundancyAttDef)
-		{
+		if ($oRedundancyAttDef) {
 			$sValue = $oToObject->Get($oRedundancyAttDef->GetCode());
 			$bRet = $oRedundancyAttDef->IsEnabled($sValue);
 		}
@@ -614,15 +563,11 @@ class RelationGraph extends SimpleGraph
 
 		$oToObject = $oToNode->GetProperty('object');
 		$oRedundancyAttDef = $this->FindRedundancyAttribute($sRelCode, $aQueryInfo, get_class($oToObject));
-		if ($oRedundancyAttDef)
-		{
+		if ($oRedundancyAttDef) {
 			$sValue = $oToObject->Get($oRedundancyAttDef->GetCode());
-			if ($oRedundancyAttDef->GetMinUpType($sValue) == 'count')
-			{
+			if ($oRedundancyAttDef->GetMinUpType($sValue) == 'count') {
 				$iMinUp = $oRedundancyAttDef->GetMinUpValue($sValue);
-			}
-			else
-			{
+			} else {
 				$iMinUp = $iUpstreamObjects * $oRedundancyAttDef->GetMinUpValue($sValue) / 100;
 			}
 		}
@@ -641,16 +586,11 @@ class RelationGraph extends SimpleGraph
 	protected function FindRedundancyAttribute($sRelCode, $aQueryInfo, $sClass)
 	{
 		$oRet = null;
-		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-		{
-			if ($oAttDef instanceof AttributeRedundancySettings)
-			{
-				if ($oAttDef->Get('relation_code') == $sRelCode)
-				{
-					if ($oAttDef->Get('from_class') == $aQueryInfo['sFromClass'])
-					{
-						if ($oAttDef->Get('neighbour_id') == $aQueryInfo['sNeighbour'])
-						{
+		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+			if ($oAttDef instanceof AttributeRedundancySettings) {
+				if ($oAttDef->Get('relation_code') == $sRelCode) {
+					if ($oAttDef->Get('from_class') == $aQueryInfo['sFromClass']) {
+						if ($oAttDef->Get('neighbour_id') == $aQueryInfo['sNeighbour']) {
 							$oRet = $oAttDef;
 							break;
 						}
@@ -660,29 +600,26 @@ class RelationGraph extends SimpleGraph
 		}
 		return $oRet;
 	}
-	
+
 	/**
 	 * Get the objects referenced by the graph as a hash array: 'class' => array of objects
 	 * @return array Ambigous <multitype:multitype: , unknown>
 	 */
 	public function GetObjectsByClass()
 	{
-		$aResults = array();
+		$aResults = [];
 		$oIterator = new RelationTypeIterator($this, 'Node');
-		foreach($oIterator as $oNode)
-		{
+		foreach ($oIterator as $oNode) {
 			$oObj = $oNode->GetProperty('object'); // Some nodes (Redundancy Nodes and Group) do not contain an object
-			if ($oObj)
-			{
+			if ($oObj) {
 				$sObjClass  = get_class($oObj);
-				if (!array_key_exists($sObjClass, $aResults))
-				{
-					$aResults[$sObjClass] = array();
+				if (!array_key_exists($sObjClass, $aResults)) {
+					$aResults[$sObjClass] = [];
 				}
 				$aResults[$sObjClass][] = $oObj;
 			}
 		}
-		return $aResults;		
+		return $aResults;
 	}
 
 	/**
@@ -695,8 +632,7 @@ class RelationGraph extends SimpleGraph
 	protected static function MakeSearch($sOQL)
 	{
 		$oSearch = DBSearch::FromOQL($sOQL);
-		if (MetaModel::IsObsoletable($oSearch->GetClass()))
-		{
+		if (MetaModel::IsObsoletable($oSearch->GetClass())) {
 			// Exclude obsolete objects anytime
 			$oSearch->AddCondition('obsolescence_flag', 0);
 		}
@@ -704,7 +640,6 @@ class RelationGraph extends SimpleGraph
 		$oSearch->SetArchiveMode(false);
 		return $oSearch;
 	}
-
 
 	/**
 	 * @return void
@@ -733,7 +668,7 @@ class RelationGraph extends SimpleGraph
 				$sOQL = "SELECT ".$sClass.' WHERE id IN ('.implode(',', $aKeys).')';
 				$oSearch = DBObjectSearch::FromOQL($sOQL);
 				$aListId = $oSearch->SelectAttributeToArray('id');
-				foreach($aListId as$aItem ) {
+				foreach ($aListId as $aItem) {
 					unset($aArrayTest[$sClass][$aItem['id']]);
 				}
 			}

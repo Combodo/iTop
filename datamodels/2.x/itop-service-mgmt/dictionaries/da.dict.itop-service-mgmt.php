@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ServiceManagement' => 'Ydelses Management',
 	'Menu:ServiceManagement+' => 'Ydelses Management oversigt',
 	'Menu:Service:Overview' => 'Oversigt',
@@ -41,35 +42,34 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
-));
+]);
 
 //
 // Class: Organization
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Leverings model',
 	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Leverings model navn',
 	'Class:Organization/Attribute:deliverymodel_name+' => 'This is required for Tickets handling.
-The delivery model specifies the teams to which tickets can be assigned.~~'
-));
-
+The delivery model specifies the teams to which tickets can be assigned.~~',
+]);
 
 //
 // Class: ContractType
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ContractType' => 'Kontrakt type',
 	'Class:ContractType+' => '',
-));
+]);
 
 //
 // Class: Contract
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Contract' => 'Kontrakt',
 	'Class:Contract+' => '',
 	'Class:Contract/Attribute:name' => 'Navn',
@@ -118,23 +118,23 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Contract/Attribute:status/Value:production+' => '',
 	'Class:Contract/Attribute:finalclass' => 'Type',
 	'Class:Contract/Attribute:finalclass+' => '',
-));
+]);
 //
 // Class: CustomerContract
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CustomerContract' => 'Kunde kontrakt',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Ydelser',
 	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract~~',
-));
+]);
 
 //
 // Class: ProviderContract
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ProviderContract' => 'Leverandør kontrakt',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
@@ -149,13 +149,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ProviderContract/Attribute:contracttype_name+' => '',
 	'Class:ProviderContract/Attribute:services_list' => 'Services~~',
 	'Class:ProviderContract/Attribute:services_list+' => 'All the services purchased with this contract~~',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkContactToContract' => 'Sammenhæng Kontakt/Kontrakt',
 	'Class:lnkContactToContract+' => '',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s~~',
@@ -167,13 +167,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkContactToContract/Attribute:contact_id+' => '',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Kontakt navn',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkContractToDocument' => 'Sammenhæng Kontrakt/Dokument',
 	'Class:lnkContractToDocument+' => '',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s~~',
@@ -185,13 +185,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Dokument navn',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: ServiceFamily
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ServiceFamily' => 'Ydelses-familie',
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Navn',
@@ -200,13 +200,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Ydelser',
 	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category~~',
-));
+]);
 
 //
 // Class: Service
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Service' => 'Ydelse',
 	'Class:Service+' => '',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s~~',
@@ -244,13 +244,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Service/Attribute:functionalcis_list+' => 'All the configuration items that are used to provide this service~~',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Ydelses subkategorier',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'All the sub categories for this service~~',
-));
+]);
 
 //
 // Class: lnkDocumentToService
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkDocumentToService' => 'Sammenhæng Dokument/Ydelse',
 	'Class:lnkDocumentToService+' => '',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s~~',
@@ -262,13 +262,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDocumentToService/Attribute:document_id+' => '',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Dokument navn',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkContactToService
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkContactToService' => 'Sammenhæng Kontakt/Ydelse',
 	'Class:lnkContactToService+' => '',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s~~',
@@ -280,13 +280,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkContactToService/Attribute:contact_id+' => '',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Kontakt navn',
 	'Class:lnkContactToService/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: ServiceSubcategory
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ServiceSubcategory' => 'Ydelse underkategorier',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s~~',
@@ -312,13 +312,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => '',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Produktion',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => '',
-));
+]);
 
 //
 // Class: SLA
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:SLA' => 'SLA',
 	'Class:SLA+' => '',
 	'Class:SLA/Attribute:name' => 'Navn',
@@ -334,13 +334,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SLA/Attribute:customercontracts_list' => 'Kunde kontrakter',
 	'Class:SLA/Attribute:customercontracts_list+' => 'All the customer contracted services using this SLA~~',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
-));
+]);
 
 //
 // Class: SLT
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:SLT' => 'SLT',
 	'Class:SLT+' => 'Service Level Threshholds',
 	'Class:SLT/Attribute:name' => 'Navn',
@@ -377,13 +377,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:SLT/Attribute:unit/Value:minutes+' => '',
 	'Class:SLT/Attribute:slas_list' => 'SLAs~~',
 	'Class:SLT/Attribute:slas_list+' => 'All the service level agreements using this SLT~~',
-));
+]);
 
 //
 // Class: lnkSLAToSLT
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkSLAToSLT' => 'Sammenhæng SLA/SLT',
 	'Class:lnkSLAToSLT+' => '',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s~~',
@@ -405,13 +405,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Slt value unit~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkCustomerContractToService' => 'Sammenhæng Kunde kontrakt/Ydelse',
 	'Class:lnkCustomerContractToService+' => '',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s~~',
@@ -427,13 +427,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA navn',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
-));
+]);
 
 //
 // Class: lnkProviderContractToService
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkProviderContractToService' => 'Sammenhæng Leverandør kontrakt/Ydelse',
 	'Class:lnkProviderContractToService+' => '',
 	'Class:lnkProviderContractToService/Name' => '%1$s / %2$s~~',
@@ -445,13 +445,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Leverandør kontrakt navn',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
-));
+]);
 
 //
 // Class: DeliveryModel
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:DeliveryModel' => 'Leverings model',
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:name' => 'Navn',
@@ -466,13 +466,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Persons) for this delivery model~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Kunde',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
-));
+]);
 
 //
 // Class: lnkDeliveryModelToContact
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkDeliveryModelToContact' => 'Sammenhæng Leverings model/Kontakt',
 	'Class:lnkDeliveryModelToContact+' => '',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s~~',
@@ -488,44 +488,44 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Rolle navn',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkProviderContractToService
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkProviderContractToService/Attribute:provider_id+' => '~~',
-));
+]);

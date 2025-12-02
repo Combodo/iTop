@@ -21,8 +21,7 @@ class SymfonyOAuthTransport extends EsmtpTransport
 {
 	/** @var OAuthClientProviderAbstract|null */
 	protected static $oProvider = null;
-	const LOG_CHANNEL = 'OAuth';
-
+	public const LOG_CHANNEL = 'OAuth';
 
 	public function __construct($aConfig = [], ?LoggerInterface $oLogger = null)
 	{
@@ -90,16 +89,14 @@ class SymfonyOAuthTransport extends EsmtpTransport
 
 		try {
 			$oAccessToken = $oProvider->GetAccessToken();
-		}
-		catch (\Throwable $e) {
+		} catch (\Throwable $e) {
 			IssueLog::Error('Failed to get OAuth provider access token: '.$e->getMessage(), 'OAuth');
 			throw new TransportException('Failed to obtain OAuth access token for SMTP', 0, $e);
 		}
 
 		if ($oAccessToken === null) {
 			throw new IdentityProviderException('Not prior authentication to OAuth', 255, []);
-		}
-		elseif ($oAccessToken->hasExpired()) {
+		} elseif ($oAccessToken->hasExpired()) {
 			self::$oProvider->SetAccessToken(self::$oProvider->GetVendorProvider()->getAccessToken('refresh_token', [
 				'refresh_token' => $oAccessToken->getRefreshToken(),
 				'scope'         => self::$oProvider->GetScope(),
@@ -124,8 +121,7 @@ class SymfonyOAuthTransport extends EsmtpTransport
 		// Ensure a fresh token is available and set as SMTP password
 		try {
 			$this->ensureOAuthTokenIsReady();
-		}
-		catch (IdentityProviderException $e) {
+		} catch (IdentityProviderException $e) {
 			IssueLog::Error('Failed to get SMTP oAuth credentials for incoming mails for provider '.self::$oProvider::GetVendorName(), static::LOG_CHANNEL, [
 				'exception.message' => $e->getMessage(),
 				'exception.stack'   => $e->getTraceAsString(),

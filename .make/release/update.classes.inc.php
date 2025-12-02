@@ -199,7 +199,7 @@ class DatamodelsXmlFiles extends AbstractGlobFileVersionUpdater
 		libxml_clear_errors();
 		$oFileXml->formatOutput = true;
 		$oFileXml->preserveWhiteSpace = false;
-		$oFileXml->loadXML($sFileContent);
+		$oFileXml->loadXML($sFileContent, LIBXML_BIGLINES);
 
 		$oFileItopFormat = new iTopDesignFormat($oFileXml);
 

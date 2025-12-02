@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author LinProfs <info@linprofs.com>
@@ -12,7 +13,7 @@
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ProblemManagement' => 'Probleem Management',
 	'Menu:ProblemManagement+' => 'Probleem Management',
 	'Menu:Problem:Overview' => 'Overzicht',
@@ -35,12 +36,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard voor Probleem Management',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard voor Probleem Management',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Problem' => 'Probleem',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Status',
@@ -113,4 +114,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Sluit',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

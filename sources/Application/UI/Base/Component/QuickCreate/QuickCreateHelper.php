@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\QuickCreate;
-
 
 use appUserPreferences;
 use DBObject;
@@ -59,10 +59,8 @@ class QuickCreateHelper
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 
 		// Remove same entry from history to avoid duplicates
-		for ($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
-		{
-			if ($aHistoryEntries[$iIdx]['class'] === $sClass)
-			{
+		for ($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++) {
+			if ($aHistoryEntries[$iIdx]['class'] === $sClass) {
 				unset($aHistoryEntries[$iIdx]);
 			}
 		}
@@ -90,33 +88,28 @@ class QuickCreateHelper
 		$aHistoryEntries = appUserPreferences::GetPref(static::USER_PREF_CODE, []);
 		static::TruncateHistory($aHistoryEntries);
 
-		for($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++)
-		{
+		for ($iIdx = 0; $iIdx < count($aHistoryEntries); $iIdx++) {
 			$sClass = $aHistoryEntries[$iIdx]['class'];
 
 			if (!MetaModel::IsValidClass($sClass)) {
 				continue;
 			}
 			// Add class icon
-			if(!isset($aHistoryEntries[$iIdx]['icon_url']))
-			{
+			if (!isset($aHistoryEntries[$iIdx]['icon_url'])) {
 				$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
 				// Mind that some classes don't have an icon
-				if(!empty($sClassIconUrl))
-				{
+				if (!empty($sClassIconUrl)) {
 					$aHistoryEntries[$iIdx]['icon_url'] = $sClassIconUrl;
 				}
 			}
 
 			// Add class label
-			if(!isset($aHistoryEntries[$iIdx]['label_html']))
-			{
+			if (!isset($aHistoryEntries[$iIdx]['label_html'])) {
 				$aHistoryEntries[$iIdx]['label_html'] = utils::EscapeHtml(MetaModel::GetName($sClass));
 			}
 
 			// Add URL
-			if(!isset($aHistoryEntries[$iIdx]['target_url']))
-			{
+			if (!isset($aHistoryEntries[$iIdx]['target_url'])) {
 				$aHistoryEntries[$iIdx]['target_url'] = DBObject::ComputeStandardUIPage($sClass).'?operation=new&class='.$sClass;
 			}
 		}
@@ -132,8 +125,7 @@ class QuickCreateHelper
 	protected static function TruncateHistory(array &$aHistoryEntries): void
 	{
 		$iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('quick_create.max_history_results');
-		if(count($aHistoryEntries) > $iMaxHistoryResults)
-		{
+		if (count($aHistoryEntries) > $iMaxHistoryResults) {
 			$aHistoryEntries = array_slice($aHistoryEntries, 0, $iMaxHistoryResults);
 		}
 	}

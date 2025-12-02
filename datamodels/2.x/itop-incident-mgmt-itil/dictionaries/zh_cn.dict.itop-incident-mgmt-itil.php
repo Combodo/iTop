@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -20,7 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:IncidentManagement' => '事件管理',
 	'Menu:IncidentManagement+' => '事件管理',
 	'Menu:Incident:Overview' => '概况',
@@ -42,8 +43,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => '打开的事件 (按状态)',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => '打开的事件 (按办理人)',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => '打开的事件 (按客户)',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -59,7 +59,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class: Incident
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Incident' => '事件',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => '状态',
@@ -238,4 +238,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Method:ResolveChildTickets' => '解决子工单',
 	'Class:Incident/Method:ResolveChildTickets+' => '递归解决子工单 (自动解决), 并调整相关字段与父级工单保持一致: 服务, 团队, 办理人, 解决方案',
 	'Tickets:Related:OpenIncidents' => '打开的事件',
-));
+]);

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Déplier',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Replier',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Fermer',
@@ -35,4 +36,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Temps calme, il n\'y a pas encore d\'activité',
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Panneau d\'activité',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Cliquer pour ouvrir le panneau d\'activité',
-));
+]);

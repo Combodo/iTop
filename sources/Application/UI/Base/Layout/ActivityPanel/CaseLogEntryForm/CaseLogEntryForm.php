@@ -1,8 +1,10 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm;
 
 use AttributeCaseLog;
@@ -160,7 +162,7 @@ class CaseLogEntryForm extends UIContentBlock
 	 */
 	public function SetSubmitModeFromHostObjectMode($sObjectMode)
 	{
-		switch ($sObjectMode){
+		switch ($sObjectMode) {
 			case cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE:
 			case cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT:
 				$sSubmitMode = static::ENUM_SUBMIT_MODE_BRIDGED;
@@ -324,5 +326,5 @@ class CaseLogEntryForm extends UIContentBlock
 
 		return $aSubBlocks;
 	}
-	
+
 }

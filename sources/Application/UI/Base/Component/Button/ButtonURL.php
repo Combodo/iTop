@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -19,7 +20,6 @@
 
 namespace Combodo\iTop\Application\UI\Base\Component\Button;
 
-
 /**
  * Class Button
  *
@@ -37,14 +37,13 @@ class ButtonURL extends Button
 	/** @var string ENUM_TARGET_BLANK */
 	public const ENUM_TARGET_BLANK = '_blank';
 	/** @var string ENUM_TARGET_SELF */
-	public const ENUM_TARGET_SELF= '_self';
+	public const ENUM_TARGET_SELF = '_self';
 	/** @var string ENUM_TARGET_PARENT */
-	public const ENUM_TARGET_PARENT= '_parent';
+	public const ENUM_TARGET_PARENT = '_parent';
 	/** @var string ENUM_TARGET_TOP */
-	public const ENUM_TARGET_TOP= '_top';
+	public const ENUM_TARGET_TOP = '_top';
 	/** @var string DEFAULT_TARGET */
 	public const DEFAULT_TARGET = self::ENUM_TARGET_SELF;
-
 
 	/** @var string */
 	protected $sURL;
@@ -66,12 +65,27 @@ class ButtonURL extends Button
 	 * @param string $sOnClickJsCode
 	 */
 	public function __construct(
-		string $sLabel, string $sURL, string $sId = null, string $sTarget = self::DEFAULT_TARGET,  string $sTooltip = '', string $sIconClass = '',
-		string $sActionType = self::DEFAULT_ACTION_TYPE, string $sColor = self::DEFAULT_COLOR_SCHEME, string $sJsCode = '',
-		string $sOnClickJsCode = '')
-	{
-		parent::__construct($sLabel, $sId, $sTooltip, $sIconClass,
-			$sActionType, $sColor, $sJsCode, $sOnClickJsCode);
+		string $sLabel,
+		string $sURL,
+		string $sId = null,
+		string $sTarget = self::DEFAULT_TARGET,
+		string $sTooltip = '',
+		string $sIconClass = '',
+		string $sActionType = self::DEFAULT_ACTION_TYPE,
+		string $sColor = self::DEFAULT_COLOR_SCHEME,
+		string $sJsCode = '',
+		string $sOnClickJsCode = ''
+	) {
+		parent::__construct(
+			$sLabel,
+			$sId,
+			$sTooltip,
+			$sIconClass,
+			$sActionType,
+			$sColor,
+			$sJsCode,
+			$sOnClickJsCode
+		);
 		$this->sURL = $sURL;
 		$this->sTarget = $sTarget;
 	}
@@ -86,7 +100,7 @@ class ButtonURL extends Button
 
 	/**
 	 * @param string $sURL
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetURL(string $sURL)
@@ -105,7 +119,7 @@ class ButtonURL extends Button
 
 	/**
 	 * @param string $sTarget
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetTarget(string $sTarget)

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:RequestManagement' => 'Gestion des demandes',
 	'Menu:RequestManagement+' => 'Gestion des demandes utilisateurs',
 	'Menu:RequestManagementProvider' => 'Gestion des demandes fournisseurs',
@@ -45,7 +46,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:UserRequest:MyWorkOrders+' => '',
 	'Class:Problem:KnownProblemList' => 'Problèmes connus',
 	'Tickets:Related:OpenIncidents' => 'Incidents en cours',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -61,7 +62,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: UserRequest
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:UserRequest' => 'Demande Utilisateur',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Etat',
@@ -260,11 +261,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Attendre une approbation',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
-	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'La demande parente ne peut pas être assignée à elle même'
-));
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'La demande parente ne peut pas être assignée à elle même',
+]);
 
-
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Portal:TitleDetailsFor_Request' => 'Détail de la demande',
 	'Portal:ButtonUpdate' => 'Mettre à jour',
 	'Portal:ButtonClose' => 'Fermer',
@@ -289,11 +289,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Choisissez votre langue',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution de la demande (ev_autoresolve), et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
-));
+]);
 
-
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Organization:Overview:UserRequests' => 'Demandes Utilisateurs pour cette organisation',
 	'Organization:Overview:MyUserRequests' => 'Mes Demandes Utilisateurs pour cette organisation',
 	'Organization:Overview:Tickets' => 'Les Tickets de cette organisation',
-));
+]);

@@ -16,7 +16,7 @@ function DisplayStatus(WebPage $oPage)
 	$oPage->add('<div class="module-selection-body">');
 	// Now scan the extensions and display a report of the extensions brought by the hub
 	$sPath = APPROOT.'data/downloaded-extensions/';
-	$aExtraDirs = array();
+	$aExtraDirs = [];
 	if (is_dir($sPath)) {
 		$aExtraDirs[] = $sPath; // Also read the extra downloaded-modules directory
 	}
@@ -25,7 +25,7 @@ function DisplayStatus(WebPage $oPage)
 
 	foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
 		if ($oExtension->sSource == iTopExtension::SOURCE_REMOTE) {
-			$aCSSClasses = array('landing-extension');
+			$aCSSClasses = ['landing-extension'];
 			if ($oExtension->sInstalledVersion === '') {
 				$aCSSClasses[] = 'landing-installation';
 				$sInstallation = Dict::Format('iTopHub:InstallationStatus:Version_NotInstalled', $oExtension->sVersion);
@@ -68,12 +68,11 @@ function DoLanding(WebPage $oPage)
 
 	$oPage->add('<div class="module-selection-body" style="text-align: center; line-height: 14em;"><h2>'.Dict::S('iTopHub:Uncompressing').'</h2></div>');
 
-
 	$sProduct = utils::ReadParam('applicationName', '', false, 'raw_data');
 	$sVersion = utils::ReadParam('applicationVersion', '', false, 'raw_data');
 	$sInstanceUUID = utils::ReadParam('uuidFile', '', false, 'raw_data');
 	$sDatabaseUUID = utils::ReadParam('uuidBdd', '', false, 'raw_data');
-	$aExtensions = utils::ReadParam('extensions', array(), false, 'raw_data');
+	$aExtensions = utils::ReadParam('extensions', [], false, 'raw_data');
 
 	// Basic consistency validation
 	if ($sProduct != ITOP_APPLICATION) {
@@ -128,7 +127,7 @@ function DoLanding(WebPage $oPage)
 	}
 
 	// Now scan the extensions and display a report of the extensions brought by the hub
-	$sNextPage = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'land.php', array('operation' => 'install'));
+	$sNextPage = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'land.php', ['operation' => 'install']);
 	$oPage->add_ready_script("window.location.href='$sNextPage'");
 
 }
@@ -148,11 +147,10 @@ function DoInstall(WebPage $oPage)
 	$oPage->set_title(Dict::S('iTopHub:Landing:Install'));
 	$oPage->add('<div id="installation-summary" class="module-selection-body" style="position: relative">');
 
-
 	// Now scan the extensions and display a report of the extensions brought by the hub
 	// Now scan the extensions and display a report of the extensions brought by the hub
 	$sPath = APPROOT.'data/downloaded-extensions/';
-	$aExtraDirs = array();
+	$aExtraDirs = [];
 	if (is_dir($sPath)) {
 		$aExtraDirs[] = $sPath; // Also read the extra downloaded-modules directory
 	}
@@ -175,14 +173,14 @@ function DoInstall(WebPage $oPage)
 				$oPage->add('</div>');
 				$oPage->add('</div>');
 			} else {
-				$aCSSClasses = array('landing-extension');
+				$aCSSClasses = ['landing-extension'];
 				if ($oExtension->sInstalledVersion === '') {
 					$aCSSClasses[] = 'landing-installation';
 					$sInstallation = Dict::Format('iTopHub:InstallationEffect:Install', $oExtension->sVersion);
-				} else if ($oExtension->sInstalledVersion == $oExtension->sVersion) {
+				} elseif ($oExtension->sInstalledVersion == $oExtension->sVersion) {
 					$aCSSClasses[] = 'landing-no-change';
 					$sInstallation = Dict::Format('iTopHub:InstallationEffect:NoChange', $oExtension->sVersion);
-				} else if (version_compare($oExtension->sInstalledVersion, $oExtension->sVersion, '<')) {
+				} elseif (version_compare($oExtension->sInstalledVersion, $oExtension->sVersion, '<')) {
 					$aCSSClasses[] = 'landing-upgrade';
 					$sInstallation = Dict::Format('iTopHub:InstallationEffect:Upgrade', $oExtension->sInstalledVersion, $oExtension->sVersion);
 				} else {
@@ -213,9 +211,7 @@ function DoInstall(WebPage $oPage)
 
 	$oPage->add('</div>'); // module-selection-body
 
-
 	$oPage->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
-
 
 	$oPage->add('<div id="hub_installation_widget"></div>');
 	$oPage->add('<fieldset id="database-backup-fieldset"><legend>'.Dict::S('iTopHub:DBBackupLabel').'</legend>');
@@ -224,22 +220,22 @@ function DoInstall(WebPage $oPage)
 	$oPage->add('</fieldset>');
 	$oPage->add('<p style="text-align: center"><input type="button" id="hub_start_installation" type="button" disabled value="'.Dict::S('iTopHub:DeployBtn').'"/></p>');
 
-	$sIframeUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'launch.php', array('target' => 'inform_after_setup'));
-	$sStatusPageUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'land.php', array('operation' => 'done'));
+	$sIframeUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'launch.php', ['target' => 'inform_after_setup']);
+	$sStatusPageUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'land.php', ['operation' => 'done']);
 
-	$aWidgetParams = array(
-		'self_url' => utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'ajax.php', array('maintenance' => true)),
+	$aWidgetParams = [
+		'self_url' => utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'ajax.php', ['maintenance' => true]),
 		'iframe_url' => $sIframeUrl,
 		'redirect_after_completion_url' => $sStatusPageUrl,
 		'mysql_bindir' => MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''),
-		'labels' => array(
+		'labels' => [
 			'database_backup' => Dict::S('iTopHub:InstallationProgress:DatabaseBackup'),
 			'extensions_installation' => Dict::S('iTopHub:InstallationProgress:ExtensionsInstallation'),
 			'installation_successful' => Dict::S('iTopHub:InstallationProgress:InstallationSuccessful'),
 			'rollback' => Dict::S('iTopHub:ConfigurationSafelyReverted'),
-		),
+		],
 		'authent' => $sUID,
-	);
+	];
 
 	$sWidgetParams = json_encode($aWidgetParams);
 
@@ -248,7 +244,6 @@ function DoInstall(WebPage $oPage)
 	$oPage->add_ready_script("$('#hub_installation_widget').hub_installation('check_before_backup');");
 	$oPage->add('<div id="debug"></div>');
 }
-
 
 try {
 	require_once(APPROOT.'/application/application.inc.php');
@@ -266,7 +261,8 @@ try {
 	$oPage->LinkScriptFromModule('itop-hub-connector/js/hub.js');
 	$oPage->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
 
-	$oPage->add_style(<<<CSS
+	$oPage->add_style(
+		<<<CSS
 div.choice { margin: 0.5em;}
 div.choice a { text-decoration:none; font-weight: bold; color: #1C94C4 }
 div.description { margin-left: 2em; }
@@ -295,8 +291,7 @@ CSS
 	}
 
 	$oPage->output();
-}
-catch (Exception $e) {
+} catch (Exception $e) {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
@@ -312,7 +307,7 @@ catch (Exception $e) {
 			$oLog->Set('issue', 'PHP Exception');
 			$oLog->Set('impact', 'Page could not be displayed');
 			$oLog->Set('callstack', $e->getTrace());
-			$oLog->Set('data', array());
+			$oLog->Set('data', []);
 			$oLog->DBInsertNoReload();
 		}
 

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ServiceManagement' => 'Gestione del Servizio',
 	'Menu:ServiceManagement+' => 'Panoramica della Gestione del Servizio',
 	'Menu:Service:Overview' => 'Panoramica',
@@ -38,7 +39,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Contract:baseinfo' => 'Informazioni Generali',
 	'Contract:moreinfo' => 'Informazioni Contrattuali',
 	'Contract:cost' => 'Informazioni sui Costi',
-));
+]);
 
 /*
 	'UI:ServiceManagementMenu' => 'Gestion des Services',
@@ -53,30 +54,27 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 // Class: Organization
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Organization/Attribute:deliverymodel_id' => 'Modello di Consegna',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nome del Modello di Consegna',
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
-));
-
-
+]);
 
 //
 // Class: ContractType
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ContractType' => 'Tipo di Contratto',
 	'Class:ContractType+' => '',
-));
-
+]);
 
 //
 // Class: Contract
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Contract' => 'Contratto',
 	'Class:Contract+' => '~~',
 	'Class:Contract/Attribute:name' => 'Nome',
@@ -125,13 +123,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Contract/Attribute:status/Value:production+' => 'Produzione',
 	'Class:Contract/Attribute:finalclass' => 'Tipo',
 	'Class:Contract/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: CustomerContract
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:CustomerContract' => 'Contratto con Cliente',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Servizi',
@@ -140,13 +138,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'Tutti gli elementi di configurazione coperti da questo contratto',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Contratti con Provider',
 	'Class:CustomerContract/Attribute:providercontracts_list+' => 'Tutti i contratti con i provider per la fornitura dei servizi di questo contratto (contratto sottostante)',
-));
+]);
 
 //
 // Class: ProviderContract
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ProviderContract' => 'Contratto con Fornitore',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'Elementi di Configurazione',
@@ -155,13 +153,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ProviderContract/Attribute:sla+' => 'Accordo di Livello di Servizio',
 	'Class:ProviderContract/Attribute:coverage' => 'Copertura Oraria',
 	'Class:ProviderContract/Attribute:coverage+' => 'Ore di Servizio',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContactToContract' => 'Collegamento Contatto / Contratto',
 	'Class:lnkContactToContract+' => '~~',
 	'Class:lnkContactToContract/Name' => '%1$s / %2$s',
@@ -173,13 +171,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkContactToContract/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:contact_name' => 'Nome Contatto',
 	'Class:lnkContactToContract/Attribute:contact_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContractToDocument' => 'Collegamento Contratto / Documento',
 	'Class:lnkContractToDocument+' => '~~',
 	'Class:lnkContractToDocument/Name' => '%1$s / %2$s',
@@ -191,13 +189,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkContractToDocument/Attribute:document_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:document_name' => 'Nome Documento',
 	'Class:lnkContractToDocument/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToProviderContract
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Collegamento FunctionalCI / Contratto Fornitore',
 	'Class:lnkFunctionalCIToProviderContract+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
@@ -209,13 +207,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '~~',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Nome CI',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '~~',
-));
+]);
 
 //
 // Class: ServiceFamily
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ServiceFamily' => 'Famiglia di Servizi',
 	'Class:ServiceFamily+' => '~~',
 	'Class:ServiceFamily/Attribute:name' => 'Nome',
@@ -224,13 +222,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ServiceFamily/Attribute:icon+' => '~~',
 	'Class:ServiceFamily/Attribute:services_list' => 'Servizi',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Tutti i servizi in questa categoria',
-));
+]);
 
 //
 // Class: Service
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Service' => 'Servizio',
 	'Class:Service+' => '',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s',
@@ -264,13 +262,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Service/Attribute:customercontracts_list+' => 'Tutti i contratti con il cliente che hanno acquistato questo servizio',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Sottocategorie di servizio',
 	'Class:Service/Attribute:servicesubcategories_list+' => 'Tutte le sottocategorie per questo servizio',
-));
+]);
 
 //
 // Class: lnkDocumentToService
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDocumentToService' => 'Collegamento Documento / Servizio',
 	'Class:lnkDocumentToService+' => '~~',
 	'Class:lnkDocumentToService/Name' => '%1$s / %2$s',
@@ -282,13 +280,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkDocumentToService/Attribute:document_id+' => '~~',
 	'Class:lnkDocumentToService/Attribute:document_name' => 'Nome del Documento',
 	'Class:lnkDocumentToService/Attribute:document_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkContactToService
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContactToService' => 'Collegamento Contatto / Servizio',
 	'Class:lnkContactToService+' => '~~',
 	'Class:lnkContactToService/Name' => '%1$s / %2$s',
@@ -300,13 +298,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkContactToService/Attribute:contact_id+' => '~~',
 	'Class:lnkContactToService/Attribute:contact_name' => 'Nome del Contatto',
 	'Class:lnkContactToService/Attribute:contact_name+' => '~~',
-));
+]);
 
 //
 // Class: ServiceSubcategory
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ServiceSubcategory' => 'Sottocategoria del Servizio',
 	'Class:ServiceSubcategory+' => '',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
@@ -334,13 +332,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'service request~~',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Provider del Servizio',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Provider',
-));
+]);
 
 //
 // Class: SLA
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SLA' => 'SLA',
 	'Class:SLA+' => '~~',
 	'Class:SLA/Attribute:name' => 'Nome',
@@ -356,13 +354,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SLA/Attribute:customercontracts_list' => 'Contratti con i clienti',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Tutti i contratti con i clienti che utilizzano questa SLA',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Impossibile salvare il collegamento con il contratto del cliente %1$s e il servizio %2$s: SLA già esistente',
-));
+]);
 
 //
 // Class: SLT
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:SLT' => 'SLT',
 	'Class:SLT+' => '~~',
 	'Class:SLT/Attribute:name' => 'Nome',
@@ -397,13 +395,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => 'ore',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minuti',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minuti',
-));
+]);
 
 //
 // Class: lnkSLAToSLT
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkSLAToSLT' => 'Link SLA / SLT',
 	'Class:lnkSLAToSLT+' => '~~',
 	'Class:lnkSLAToSLT/Name' => '%1$s / %2$s',
@@ -425,13 +423,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Unità di misura del valore SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkCustomerContractToService' => 'Collegamento Contratto Cliente / Servizio',
 	'Class:lnkCustomerContractToService+' => '~~',
 	'Class:lnkCustomerContractToService/Name' => '%1$s / %2$s',
@@ -447,13 +445,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'Nome SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToProviderContract
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkCustomerContractToProviderContract' => 'Collegamento Contratto Cliente / Contratto Provider',
 	'Class:lnkCustomerContractToProviderContract+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Name' => '%1$s / %2$s',
@@ -465,13 +463,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '~~',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => 'Nome Contratto Provider',
 	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToFunctionalCI
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkCustomerContractToFunctionalCI' => 'Collegamento Contratto Cliente / CI Funzionale',
 	'Class:lnkCustomerContractToFunctionalCI+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Name' => '%1$s / %2$s',
@@ -483,13 +481,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '~~',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => 'Nome CI',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '~~',
-));
+]);
 
 //
 // Class: DeliveryModel
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:DeliveryModel' => 'Modello di Delivery',
 	'Class:DeliveryModel+' => '~~',
 	'Class:DeliveryModel/Attribute:name' => 'Nome',
@@ -504,13 +502,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:DeliveryModel/Attribute:contacts_list+' => 'Tutti i contatti (team e persone) per questo modello di Consegna',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Clienti',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'Tutti i clienti che hanno questo modello di Consegna',
-));
+]);
 
 //
 // Class: lnkDeliveryModelToContact
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkDeliveryModelToContact' => 'Collegamento Modello di Delivery / Contatto',
 	'Class:lnkDeliveryModelToContact+' => '~~',
 	'Class:lnkDeliveryModelToContact/Name' => '%1$s / %2$s',
@@ -526,35 +524,35 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '~~',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Nome del Ruolo',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '~~',
-));
+]);
 
 //
 // Class: lnkContactToContract
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContactToContract/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContactToContract/Attribute:customer_id+' => '~~',
 	'Class:lnkContactToContract/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContactToContract/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkContractToDocument
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkContractToDocument/Attribute:customer_id' => 'Customer id~~',
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-));
+]);
 
 //
 // Class: lnkCustomerContractToService
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
-));
+]);

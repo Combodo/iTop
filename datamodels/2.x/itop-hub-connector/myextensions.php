@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -26,7 +27,6 @@ $oAppContext = new ApplicationContext();
 $oPage = new iTopWebPage(Dict::S('iTopHub:InstalledExtensions'));
 $oPage->SetBreadCrumbEntry('ui-hub-myextensions', Dict::S('Menu:iTopHub:MyExtensions'), Dict::S('Menu:iTopHub:MyExtensions+'), '', 'fas fa-puzzle-piece', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-
 function GetExtensionInfoComponent(iTopExtension $oExtension): UIBlock
 {
 	$sExtensionDescription = Dict::Format('UI:About:Extension_Version', $oExtension->sVersion);
@@ -40,15 +40,11 @@ function GetExtensionInfoComponent(iTopExtension $oExtension): UIBlock
 		->SetOpenedByDefault(false);
 }
 
-
 try {
 	$oExtensionsMap = new iTopExtensionsMap();
 	$oExtensionsMap->LoadChoicesFromDatabase(MetaModel::GetConfig());
 
 	$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('iTopHub:InstalledExtensions')));
-
-
-
 
 	/**------------------------------------------------------------------------------------------------------
 	 * Remotely deployed ext
@@ -80,12 +76,11 @@ try {
 	$oHubButtonContainer = UIContentBlockUIBlockFactory::MakeStandard()
 		->AddCSSClass('hub-button');
 	$oPage->AddSubBlock($oHubButtonContainer);
-	$sUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'launch.php', array('target' => 'browse_extensions'));
+	$sUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'launch.php', ['target' => 'browse_extensions']);
 	$oHubButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('iTopHub:GetMoreExtensions'), 'install-extensions-button')
 		->SetOnClickJsCode("window.location.href='$sUrl'")
 		->SetIconClass('fa-fw fc fc-itophub-icon fc-1-5x');
 	$oHubButtonContainer->AddSubBlock($oHubButton);
-
 
 	/**------------------------------------------------------------------------------------------------------
 	 * Manually deployed ext
@@ -121,8 +116,7 @@ try {
 }
 CSS
 	);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
 	$oPage->p('<b>'.Dict::Format('UI:Error_Details', $e->getMessage()).'</b>');
 }
 

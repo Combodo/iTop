@@ -7,7 +7,6 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 use ModuleInstallerAPI;
 
-
 /**
  * Class ModuleInstallerAPITest
  *
@@ -38,7 +37,6 @@ class ModuleInstallerAPITest extends ItopDataTestCase
 		parent::tearDown();
 	}
 
-
 	/**
 	 * @param string $sTable
 	 * @param string $sAttCode
@@ -52,7 +50,7 @@ class ModuleInstallerAPITest extends ItopDataTestCase
 		$oOrigAttDef = MetaModel::GetAttributeDef($sTable, $sAttCode);
 		$sOrigColName = array_key_first($oOrigAttDef->GetSQLColumns());
 
-		return array($sOrigTable, $sOrigColName);
+		return [$sOrigTable, $sOrigColName];
 	}
 
 	/**
@@ -68,8 +66,8 @@ class ModuleInstallerAPITest extends ItopDataTestCase
 	{
 		// Create a table with the same structure as the original table(s)
 		// - Create a SQL query to get all the ids from the original tables
-		if(is_array($aOrigTables)) {
-			$sOrigDataQuery = implode(" UNION ", array_map(fn($sTable) => "SELECT id FROM `{$sTable}`", $aOrigTables));
+		if (is_array($aOrigTables)) {
+			$sOrigDataQuery = implode(" UNION ", array_map(fn ($sTable) => "SELECT id FROM `{$sTable}`", $aOrigTables));
 		}
 
 		CMDBSource::Query(
@@ -179,18 +177,18 @@ SQL
 		// Create 2 objects, so we know the ids for one of each class
 		$oPerson = $this->createObject('Person', ['first_name' => 'John', 'name' => 'Doe', 'org_id' => 1]);
 		$oTeam = $this->createObject('Team', ['name' => 'La tcheam', 'org_id' => 1]);
-		
+
 		// Info from the original tables (we don't need real data, just the ids)
 		$sOrigClass = "Person";
 		[$sOrigTable, $sOrigColName] = $this->GetInfoFromTable($sOrigClass, "first_name");
-	
+
 		$sOrigClass2 = "Team";
 		[$sOrigTable2, $sOrigColName2] = $this->GetInfoFromTable($sOrigClass2, "friendlyname");
 
 		// Info for the destination table
 		$sDstTable = static::$sWorkTable3;
 		$sDstColName = "existing_column";
-		
+
 		// Insert our ids into similar work tables
 		// Then insert data into their respective columns to be moved
 		$sOrigWorkTable = static::$sWorkTable;
@@ -202,7 +200,7 @@ SQL
 	WHERE 1
 	SQL
 		);
-		
+
 		$sOrigWorkTable2 = static::$sWorkTable2;
 		$this->CreateDestinationTable($sOrigWorkTable2, [$sOrigTable2], $sDstColName);
 		CMDBSource::Query(
@@ -212,23 +210,23 @@ SQL
 	WHERE 1
 	SQL
 		);
-	
+
 		// Create our destination table
 		$this->CreateDestinationTable($sDstTable, [$sOrigTable, $sOrigTable2], $sDstColName);
-		
+
 		// Try to move data from both tables into the same column
 		ModuleInstallerAPI::MoveColumnInDB($sOrigWorkTable, $sDstColName, $sDstTable, $sDstColName, true);
 		ModuleInstallerAPI::MoveColumnInDB($sOrigWorkTable2, $sDstColName, $sDstTable, $sDstColName, true);
-	
+
 		// Check if data was actually moved by getting the value from the destination table for the ids we stored earlier
-		$iPersonId = $oPerson->GetKey(); 
+		$iPersonId = $oPerson->GetKey();
 		$sFromTable1Data = CMDBSource::QueryToScalar(
 			<<<SQL
 	SELECT `{$sDstColName}` FROM `{$sDstTable}` WHERE `id` = {$iPersonId}
 	LIMIT 1
 	SQL
 		);
-	
+
 		$iTeamId = $oTeam->GetKey();
 		$sFromTable2Data = CMDBSource::QueryToScalar(
 			<<<SQL
@@ -236,7 +234,7 @@ SQL
 	LIMIT 1
 	SQL
 		);
-		
+
 		$this->assertEquals('from table 1', $sFromTable1Data, "Data was not moved as expected");
 		$this->assertEquals('from table 2', $sFromTable2Data, "Data was not moved as expected");
 	}

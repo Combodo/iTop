@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Page:DefaultTitle' => 'Portail utilisateur %1$s',
 	'Page:PleaseWait' => 'Veuillez patienter...',
 	'Page:Home' => 'Accueil',
@@ -53,19 +54,19 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Ouvrir</a> / <a href="%4$s" class="file_download_link">Télécharger</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'fr', //work with moment.js locales
-));
+]);
 
 // Object form
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Fermer cette entrée',
 	'Portal:Form:Close:Warning' => 'Voulez-vous quitter ce formulaire ? Les données saisies seront perdues',
 	'Portal:Error:ObjectCannotBeCreated' => 'Erreur: L\'objet n\'a pas été créé. Vérifiez les objets liés et les attachements avant de soumettre à nouveau le formulaire.',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Erreur: L\'objet n\'a pas été modifié. Vérifiez les objets liés et les attachements avant de soumettre à nouveau le formulaire.',
-    'Portal:Error:CheckToWriteFailed' => 'Erreur durant la validation du champ \'%1$s\' : %2$s',
-));
+	'Portal:Error:CheckToWriteFailed' => 'Erreur durant la validation du champ \'%1$s\' : %2$s',
+]);
 
 // UserProfile brick
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Brick:Portal:UserProfile:Name' => 'Profil utilisateur',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Mon profil',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Déconnexion',
@@ -76,15 +77,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Impossible de modifier votre mot de passe, veuillez contacter votre administrateur %1$s',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Informations personnelles',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Photo',
-));
+]);
 
 // AggregatePageBrick
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Tableau de bord',
-));
+]);
 
 // BrowseBrick brick
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Brick:Portal:Browse:Name' => 'Navigation dans les éléments',
 	'Brick:Portal:Browse:Mode:List' => 'Liste',
 	'Brick:Portal:Browse:Mode:Tree' => 'Hiérarchie',
@@ -97,10 +98,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Tout déplier',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Tout replier',
 	'Brick:Portal:Browse:Filter:NoData' => 'Aucun élément',
-));
+]);
 
 // ManageBrick brick
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Brick:Portal:Manage:Name' => 'Gestion d\'éléments',
 	'Brick:Portal:Manage:Table:NoData' => 'Aucun élément',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
@@ -115,10 +116,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:Manage:fct:avg' => 'Moyenne',
 	'Brick:Portal:Manage:fct:min' => 'Min',
 	'Brick:Portal:Manage:fct:max' => 'Max',
-));
+]);
 
 // ObjectBrick brick
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Brick:Portal:Object:Name' => 'Objet',
 	'Brick:Portal:Object:Form:Create:Title' => 'Création de %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Modification de %2$s (%1$s)',
@@ -130,18 +131,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Sélection de %1$s (%2$s)',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%2$s',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copier l\'url de l\'objet',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copié'
-));
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copié',
+]);
 
 // CreateBrick brick
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Brick:Portal:Create:Name' => 'Création rapide',
 	'Brick:Portal:Create:ChooseType' => 'Veuillez choisir le type',
-));
+]);
 
 // Filter brick
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Brick:Portal:Filter:Name' => 'Préfiltre une brique',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'ex : connecter wifi',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Rechercher',
-));
+]);

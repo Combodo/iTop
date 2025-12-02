@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Rozwiń',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Zwiń',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Zamknij',
@@ -35,4 +36,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Tu jest spokojnie, jeszcze nie ma aktywności',
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Panel aktywności',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Kliknij, aby otworzyć panel aktywności',
-));
+]);

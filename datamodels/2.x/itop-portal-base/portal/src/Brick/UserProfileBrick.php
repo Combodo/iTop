@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -34,19 +35,19 @@ use DOMFormatException;
 class UserProfileBrick extends PortalBrick
 {
 	// Overloaded constants
-	const DEFAULT_VISIBLE_NAVIGATION_MENU          = false;
-	const DEFAULT_VISIBLE_HOME                     = false;
-	const DEFAULT_DECORATION_CLASS_HOME            = 'glyphicon glyphicon-user';
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'glyphicon glyphicon-user';
+	public const DEFAULT_VISIBLE_NAVIGATION_MENU          = false;
+	public const DEFAULT_VISIBLE_HOME                     = false;
+	public const DEFAULT_DECORATION_CLASS_HOME            = 'glyphicon glyphicon-user';
+	public const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'glyphicon glyphicon-user';
 	/** @var bool DEFAULT_SHOW_PICTURE_FORM */
-	const DEFAULT_SHOW_PICTURE_FORM = true;
+	public const DEFAULT_SHOW_PICTURE_FORM = true;
 	/** @var bool DEFAULT_SHOW_PREFERENCES_FORM */
-	const DEFAULT_SHOW_PREFERENCES_FORM = true;
+	public const DEFAULT_SHOW_PREFERENCES_FORM = true;
 	/** @var bool DEFAULT_SHOW_PASSWORD_FORM */
-	const DEFAULT_SHOW_PASSWORD_FORM = true;
+	public const DEFAULT_SHOW_PASSWORD_FORM = true;
 
 	// Overloaded variables
-	static $sRouteName = 'p_user_profile_brick';
+	public static $sRouteName = 'p_user_profile_brick';
 
 	/** @var array $aForm */
 	protected $aForm;
@@ -61,8 +62,9 @@ class UserProfileBrick extends PortalBrick
 	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
 		parent::RegisterTemplates($oTemplatesRegister);
-		$oTemplatesRegister->RegisterTemplates(self::class,
-			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'user-profile/layout.html.twig'),
+		$oTemplatesRegister->RegisterTemplates(
+			self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH.'user-profile/layout.html.twig'),
 			TemplateDefinitionDto::Create('user_info', static::TEMPLATES_BASE_PATH.'user-profile/user_info.html.twig'),
 			TemplateDefinitionDto::Create('user_info_ready_js', static::TEMPLATES_BASE_PATH.'user-profile/user_info.ready.js.twig'),
 		);
@@ -75,12 +77,12 @@ class UserProfileBrick extends PortalBrick
 	{
 		parent::__construct();
 
-		$this->aForm = array(
+		$this->aForm = [
 			'id'     => 'default-user-profile',
 			'type'   => 'zlist',
 			'fields' => 'details',
 			'layout' => null,
-		);
+		];
 		$this->bShowPictureForm = static::DEFAULT_SHOW_PICTURE_FORM;
 		$this->bShowPreferencesForm = static::DEFAULT_SHOW_PREFERENCES_FORM;
 		$this->bShowPasswordForm = static::DEFAULT_SHOW_PASSWORD_FORM;
@@ -191,13 +193,13 @@ class UserProfileBrick extends PortalBrick
 					// Enumerating fields
 					if ($oBrickSubNode->GetOptionalElement('fields') !== null) {
 						$this->aForm['type'] = 'custom_list';
-						$this->aForm['fields'] = array();
+						$this->aForm['fields'] = [];
 
 						/** @var \Combodo\iTop\DesignElement $oFieldNode */
 						foreach ($oBrickSubNode->GetOptionalElement('fields')->GetNodes('field') as $oFieldNode) {
 							$sFieldId = $oFieldNode->getAttribute('id');
 							if ($sFieldId !== '') {
-								$aField = array();
+								$aField = [];
 								// Parsing field options like read_only, hidden and mandatory
 								if ($oFieldNode->GetOptionalElement('read_only')) {
 									$aField['readonly'] = ($oFieldNode->GetOptionalElement('read_only')->GetText('true') === 'true') ? true : false;
@@ -223,10 +225,10 @@ class UserProfileBrick extends PortalBrick
 						$sXml = preg_replace('/^.+\n/', '', $sXml);
 						$sXml = preg_replace('/\n.+$/', '', $sXml);
 
-						$this->aForm['layout'] = array(
+						$this->aForm['layout'] = [
 							'type'    => (preg_match('/\{\{|\{\#|\{\%/', $sXml) === 1) ? 'twig' : 'xhtml',
 							'content' => $sXml,
-						);
+						];
 					}
 					break;
 

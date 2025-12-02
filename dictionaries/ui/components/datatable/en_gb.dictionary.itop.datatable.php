@@ -1,11 +1,12 @@
 <?php
+
 /**
  * @copyright Copyright (C) 2024 Combodo SAS
  * @license https://opensource.org/licenses/AGPL-3.0
  */
 
 // Display DataTable
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'UI:Datatables:Language:Processing' => 'Please wait...',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ per page',
 	'UI:Datatables:Language:ZeroRecords' => 'No result',
@@ -20,4 +21,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'UI:Datatables:Column:RowActions:Description' => '',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action?',
-));
+]);

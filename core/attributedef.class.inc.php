@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -78,7 +79,6 @@ define('DEL_MOVEUP', 3);
  */
 define('DEL_NONE', 4);
 
-
 /**
  * For Link sets: tracking_level
  *
@@ -102,7 +102,6 @@ define('LINKSET_EDITWHEN_ON_HOST_EDITION', 1); // The only possible action is to
 define('LINKSET_EDITWHEN_ON_HOST_DISPLAY', 2); // Show the usual 'Actions' popup menu
 define('LINKSET_EDITWHEN_ALWAYS', 3); // Show the usual 'Actions' popup menu
 
-
 define('LINKSET_DISPLAY_STYLE_PROPERTY', 'property');
 define('LINKSET_DISPLAY_STYLE_TAB', 'tab');
 
@@ -123,26 +122,25 @@ interface iAttributeNoGroupBy
  */
 abstract class AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE_RAW = 'raw';
-	const SEARCH_WIDGET_TYPE_STRING = 'string';
-	const SEARCH_WIDGET_TYPE_NUMERIC = 'numeric';
-	const SEARCH_WIDGET_TYPE_ENUM = 'enum';
-	const SEARCH_WIDGET_TYPE_EXTERNAL_KEY = 'external_key';
-	const SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY = 'hierarchical_key';
-	const SEARCH_WIDGET_TYPE_EXTERNAL_FIELD = 'external_field';
-	const SEARCH_WIDGET_TYPE_DATE_TIME = 'date_time';
-	const SEARCH_WIDGET_TYPE_DATE = 'date';
-	const SEARCH_WIDGET_TYPE_SET = 'set';
-	const SEARCH_WIDGET_TYPE_TAG_SET = 'tag_set';
+	public const SEARCH_WIDGET_TYPE_RAW = 'raw';
+	public const SEARCH_WIDGET_TYPE_STRING = 'string';
+	public const SEARCH_WIDGET_TYPE_NUMERIC = 'numeric';
+	public const SEARCH_WIDGET_TYPE_ENUM = 'enum';
+	public const SEARCH_WIDGET_TYPE_EXTERNAL_KEY = 'external_key';
+	public const SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY = 'hierarchical_key';
+	public const SEARCH_WIDGET_TYPE_EXTERNAL_FIELD = 'external_field';
+	public const SEARCH_WIDGET_TYPE_DATE_TIME = 'date_time';
+	public const SEARCH_WIDGET_TYPE_DATE = 'date';
+	public const SEARCH_WIDGET_TYPE_SET = 'set';
+	public const SEARCH_WIDGET_TYPE_TAG_SET = 'tag_set';
 
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
-
-	const INDEX_LENGTH = 95;
+	public const INDEX_LENGTH = 95;
 
 	protected $aCSSClasses;
 
-    public function GetType()
+	public function GetType()
 	{
 		return Dict::S('Core:'.get_class($this));
 	}
@@ -196,12 +194,10 @@ abstract class AttributeDefinition
 	public function GetIndexLength()
 	{
 		$iMaxLength = $this->GetMaxSize();
-		if (is_null($iMaxLength))
-		{
+		if (is_null($iMaxLength)) {
 			return null;
 		}
-		if ($iMaxLength > static::INDEX_LENGTH)
-		{
+		if ($iMaxLength > static::INDEX_LENGTH) {
 			return static::INDEX_LENGTH;
 		}
 
@@ -215,12 +211,9 @@ abstract class AttributeDefinition
 
 	protected function GetOptional($sParamName, $default)
 	{
-		if (array_key_exists($sParamName, $this->m_aParams))
-		{
+		if (array_key_exists($sParamName, $this->m_aParams)) {
 			return $this->m_aParams[$sParamName];
-		}
-		else
-		{
+		} else {
 			return $default;
 		}
 	}
@@ -238,7 +231,7 @@ abstract class AttributeDefinition
 		$this->m_sCode = $sCode;
 		$this->m_aParams = $aParams;
 		$this->ConsistencyCheck();
-		$this->aCSSClasses = array('attribute');
+		$this->aCSSClasses = ['attribute'];
 	}
 
 	public function GetParams()
@@ -268,13 +261,10 @@ abstract class AttributeDefinition
 	 */
 	public function ListSubItems()
 	{
-		$aSubItems = array();
-		foreach(MetaModel::ListAttributeDefs($this->m_sHostClass) as $sAttCode => $oAttDef)
-		{
-			if ($oAttDef instanceof AttributeSubItem)
-			{
-				if ($oAttDef->Get('target_attcode') == $this->m_sCode)
-				{
+		$aSubItems = [];
+		foreach (MetaModel::ListAttributeDefs($this->m_sHostClass) as $sAttCode => $oAttDef) {
+			if ($oAttDef instanceof AttributeSubItem) {
+				if ($oAttDef->Get('target_attcode') == $this->m_sCode) {
 					$aSubItems[$sAttCode] = $oAttDef;
 				}
 			}
@@ -287,7 +277,7 @@ abstract class AttributeDefinition
 	// to be overloaded
 	public static function ListExpectedParams()
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -298,10 +288,8 @@ abstract class AttributeDefinition
 		// Check that any mandatory param has been specified
 		//
 		$aExpectedParams = static::ListExpectedParams();
-		foreach($aExpectedParams as $sParamName)
-		{
-			if (!array_key_exists($sParamName, $this->m_aParams))
-			{
+		foreach ($aExpectedParams as $sParamName) {
+			if (!array_key_exists($sParamName, $this->m_aParams)) {
 				$aBacktrace = debug_backtrace();
 				$sTargetClass = $aBacktrace[2]["class"];
 				$sCodeInfo = $aBacktrace[1]["file"]." - ".$aBacktrace[1]["line"];
@@ -567,16 +555,13 @@ abstract class AttributeDefinition
 	protected function SearchLabel($sDictEntrySuffix, $sDefault, $bUserLanguageOnly)
 	{
 		$sLabel = Dict::S('Class:'.$this->m_sHostClass.$sDictEntrySuffix, '', $bUserLanguageOnly);
-		if (strlen($sLabel) == 0)
-		{
+		if (strlen($sLabel) == 0) {
 			// Nothing found: go higher in the hierarchy (if possible)
 			//
 			$sLabel = $sDefault;
 			$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
-			if ($sParentClass)
-			{
-				if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
-				{
+			if ($sParentClass) {
+				if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode)) {
 					$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
 					$sLabel = $oAttDef->SearchLabel($sDictEntrySuffix, $sDefault, $bUserLanguageOnly);
 				}
@@ -596,11 +581,9 @@ abstract class AttributeDefinition
 	public function GetLabel($sDefault = null)
 	{
 		$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode, null, true /*user lang*/);
-		if (is_null($sLabel))
-		{
+		if (is_null($sLabel)) {
 			// If no default value is specified, let's define the most relevant one for developping purposes
-			if (is_null($sDefault))
-			{
+			if (is_null($sDefault)) {
 				$sDefault = str_replace('_', ' ', $this->m_sCode);
 			}
 			// Browse the hierarchy again, accepting default (english) translations
@@ -665,12 +648,9 @@ abstract class AttributeDefinition
 	public function GetLabel_Obsolete()
 	{
 		// Written for compatibility with a data model written prior to version 0.9.1
-		if (array_key_exists('label', $this->m_aParams))
-		{
+		if (array_key_exists('label', $this->m_aParams)) {
 			return $this->m_aParams['label'];
-		}
-		else
-		{
+		} else {
 			return $this->GetLabel();
 		}
 	}
@@ -685,11 +665,9 @@ abstract class AttributeDefinition
 	public function GetDescription($sDefault = null)
 	{
 		$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'+', null, true /*user lang*/);
-		if (is_null($sLabel))
-		{
+		if (is_null($sLabel)) {
 			// If no default value is specified, let's define the most relevant one for developping purposes
-			if (is_null($sDefault))
-			{
+			if (is_null($sDefault)) {
 				$sDefault = '';
 			}
 			// Browse the hierarchy again, accepting default (english) translations
@@ -719,11 +697,9 @@ abstract class AttributeDefinition
 	public function GetHelpOnEdition($sDefault = null)
 	{
 		$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'?', null, true /*user lang*/);
-		if (is_null($sLabel))
-		{
+		if (is_null($sLabel)) {
 			// If no default value is specified, let's define the most relevant one for developping purposes
-			if (is_null($sDefault))
-			{
+			if (is_null($sDefault)) {
 				$sDefault = '';
 			}
 			// Browse the hierarchy again, accepting default (english) translations
@@ -735,12 +711,10 @@ abstract class AttributeDefinition
 
 	public function GetHelpOnSmartSearch()
 	{
-		$aParents = array_merge(array(get_class($this) => get_class($this)), class_parents($this));
-		foreach($aParents as $sClass)
-		{
+		$aParents = array_merge([get_class($this) => get_class($this)], class_parents($this));
+		foreach ($aParents as $sClass) {
 			$sHelp = Dict::S("Core:$sClass?SmartSearch", '-missing-');
-			if ($sHelp != '-missing-')
-			{
+			if ($sHelp != '-missing-') {
 				return $sHelp;
 			}
 		}
@@ -756,12 +730,9 @@ abstract class AttributeDefinition
 	public function GetDescription_Obsolete()
 	{
 		// Written for compatibility with a data model written prior to version 0.9.1
-		if (array_key_exists('description', $this->m_aParams))
-		{
+		if (array_key_exists('description', $this->m_aParams)) {
 			return $this->m_aParams['description'];
-		}
-		else
-		{
+		} else {
 			return $this->GetDescription();
 		}
 	}
@@ -781,7 +752,7 @@ abstract class AttributeDefinition
 
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
-		return array();
+		return [];
 	}
 
 	public function GetNullValue()
@@ -831,7 +802,7 @@ abstract class AttributeDefinition
 	 */
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -853,7 +824,7 @@ abstract class AttributeDefinition
 	 */
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		return array();
+		return [];
 	}
 
 	/**
@@ -863,7 +834,7 @@ abstract class AttributeDefinition
 	 */
 	public function GetSQLValues($value)
 	{
-		return array();
+		return [];
 	}
 
 	public function RequiresIndex()
@@ -884,7 +855,7 @@ abstract class AttributeDefinition
 	public function GetOrderBySQLExpressions($sClassAlias)
 	{
 		// Note: This is the responsibility of this function to place backticks around column aliases
-		return array('`'.$sClassAlias.$this->GetCode().'`');
+		return ['`'.$sClassAlias.$this->GetCode().'`'];
 	}
 
 	public function GetOrderByHint()
@@ -901,9 +872,8 @@ abstract class AttributeDefinition
 
 	public function FromImportToValue($aCols, $sPrefix = '')
 	{
-		$aValues = array();
-		foreach($this->GetSQLExpressions($sPrefix) as $sAlias => $sExpr)
-		{
+		$aValues = [];
+		foreach ($this->GetSQLExpressions($sPrefix) as $sAlias => $sExpr) {
 			// This is working, based on the assumption that importable fields
 			// are not computed fields => the expression is the name of a column
 			$aValues[$sPrefix.$sAlias] = $aCols[$sExpr];
@@ -962,7 +932,7 @@ abstract class AttributeDefinition
 	 */
 	public function GetFilterDefinitions()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetEditValue($sValue, $oHostObj = null)
@@ -1059,7 +1029,11 @@ abstract class AttributeDefinition
 	 * @return string
 	 */
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
 		return (string)$sValue;
@@ -1177,12 +1151,12 @@ abstract class AttributeDefinition
 	 */
 	public function EnumTemplateVerbs()
 	{
-		return array(
+		return [
 			''      => 'Plain text (unlocalized) representation',
 			'html'  => 'HTML representation',
 			'label' => 'Localized representation',
 			'text'  => 'Plain text representation (without any markup)',
-		);
+		];
 	}
 
 	/**
@@ -1199,10 +1173,8 @@ abstract class AttributeDefinition
 	 */
 	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
 	{
-		if ($this->IsScalar())
-		{
-			switch ($sVerb)
-			{
+		if ($this->IsScalar()) {
+			switch ($sVerb) {
 				case '':
 					return $value;
 
@@ -1232,11 +1204,10 @@ abstract class AttributeDefinition
  * @throws \CoreException
  * @throws \OQLException
  */
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$oValSetDef = $this->GetValuesDef();
-		if (!$oValSetDef)
-		{
+		if (!$oValSetDef) {
 			return null;
 		}
 
@@ -1252,7 +1223,7 @@ abstract class AttributeDefinition
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public function GetAllowedValuesForSelect($aArgs = array(), $sContains = '')
+	public function GetAllowedValuesForSelect($aArgs = [], $sContains = '')
 	{
 		return $this->GetAllowedValues($aArgs, $sContains);
 	}
@@ -1273,69 +1244,58 @@ abstract class AttributeDefinition
 	 */
 	public function DescribeChangeAsHTML($sOldValue, $sNewValue, $sLabel = null)
 	{
-		if (is_null($sLabel))
-		{
+		if (is_null($sLabel)) {
 			$sLabel = $this->GetLabel();
 		}
 
 		$sNewValueHtml = $this->GetAsHTMLForHistory($sNewValue);
 		$sOldValueHtml = $this->GetAsHTMLForHistory($sOldValue);
 
-		if ($this->IsExternalKey())
-		{
+		if ($this->IsExternalKey()) {
 			/** @var \AttributeExternalKey $this */
 			$sTargetClass = $this->GetTargetClass();
 			$sOldValueHtml = (int)$sOldValue ? MetaModel::GetHyperLink($sTargetClass, (int)$sOldValue) : null;
 			$sNewValueHtml = (int)$sNewValue ? MetaModel::GetHyperLink($sTargetClass, (int)$sNewValue) : null;
 		}
 		if ((($this->GetType() == 'String') || ($this->GetType() == 'Text')) &&
-			(strlen($sNewValue) > strlen($sOldValue)))
-		{
+			(strlen($sNewValue) > strlen($sOldValue))) {
 			// Check if some text was not appended to the field
-			if (substr($sNewValue, 0, strlen($sOldValue)) == $sOldValue) // Text added at the end
-			{
+			if (substr($sNewValue, 0, strlen($sOldValue)) == $sOldValue) { // Text added at the end
 				$sDelta = $this->GetAsHTML(substr($sNewValue, strlen($sOldValue)));
 				$sResult = Dict::Format('Change:Text_AppendedTo_AttName', $sDelta, $sLabel);
-			}
-			else
-			{
-				if (substr($sNewValue, -strlen($sOldValue)) == $sOldValue)   // Text added at the beginning
-				{
+			} else {
+				if (substr($sNewValue, -strlen($sOldValue)) == $sOldValue) {   // Text added at the beginning
 					$sDelta = $this->GetAsHTML(substr($sNewValue, 0, strlen($sNewValue) - strlen($sOldValue)));
 					$sResult = Dict::Format('Change:Text_AppendedTo_AttName', $sDelta, $sLabel);
-				}
-				else
-				{
-					if (strlen($sOldValue) == 0)
-					{
+				} else {
+					if (strlen($sOldValue) == 0) {
 						$sResult = Dict::Format('Change:AttName_SetTo', $sLabel, $sNewValueHtml);
-					}
-					else
-					{
-						if (is_null($sNewValue))
-						{
+					} else {
+						if (is_null($sNewValue)) {
 							$sNewValueHtml = Dict::S('UI:UndefinedObject');
 						}
-						$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sLabel,
-							$sNewValueHtml, $sOldValueHtml);
+						$sResult = Dict::Format(
+							'Change:AttName_SetTo_NewValue_PreviousValue_OldValue',
+							$sLabel,
+							$sNewValueHtml,
+							$sOldValueHtml
+						);
 					}
 				}
 			}
-		}
-		else
-		{
-			if (strlen($sOldValue) == 0)
-			{
+		} else {
+			if (strlen($sOldValue) == 0) {
 				$sResult = Dict::Format('Change:AttName_SetTo', $sLabel, $sNewValueHtml);
-			}
-			else
-			{
-				if (is_null($sNewValue))
-				{
+			} else {
+				if (is_null($sNewValue)) {
 					$sNewValueHtml = Dict::S('UI:UndefinedObject');
 				}
-				$sResult = Dict::Format('Change:AttName_SetTo_NewValue_PreviousValue_OldValue', $sLabel, $sNewValueHtml,
-					$sOldValueHtml);
+				$sResult = Dict::Format(
+					'Change:AttName_SetTo_NewValue_PreviousValue_OldValue',
+					$sLabel,
+					$sNewValueHtml,
+					$sOldValueHtml
+				);
 			}
 		}
 
@@ -1417,8 +1377,7 @@ abstract class AttributeDefinition
 		$sParamName = $oField->GetParent().'_'.$oField->GetName();
 		$oRightExpr = new VariableExpression($sParamName);
 		$sOperator = $this->GetBasicFilterLooseOperator();
-		switch ($sOperator)
-		{
+		switch ($sOperator) {
 			case 'Contains':
 				$aParams[$sParamName] = "%$sSearchText%";
 				$sSQLOperator = 'LIKE';
@@ -1460,7 +1419,7 @@ abstract class AttributeDefinition
 	/*
 	 * return string
 	 */
-	public function GetRenderForDataTable(string $sClassAlias) :string
+	public function GetRenderForDataTable(string $sClassAlias): string
 	{
 		$sRenderFunction = "return data;";
 		return $sRenderFunction;
@@ -1488,8 +1447,10 @@ class AttributeDashboard extends AttributeDefinition
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(),
-			array("definition_file", "is_user_editable"));
+		return array_merge(
+			parent::ListExpectedParams(),
+			["definition_file", "is_user_editable"]
+		);
 	}
 
 	public function GetDashboard()
@@ -1522,7 +1483,7 @@ class AttributeDashboard extends AttributeDefinition
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -1591,8 +1552,10 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(),
-			array("allowed_values", "depends_on", "linked_class", "ext_key_to_me", "count_min", "count_max"));
+		return array_merge(
+			parent::ListExpectedParams(),
+			["allowed_values", "depends_on", "linked_class", "ext_key_to_me", "count_min", "count_max"]
+		);
 	}
 
 	public function GetEditClass()
@@ -1661,8 +1624,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		if ($oHostObject === null)
-		{
+		if ($oHostObject === null) {
 			return null;
 		}
 
@@ -1676,23 +1638,20 @@ class AttributeLinkedSet extends AttributeDefinition
 		$sMyClass = $oRemoteExtKeyAtt->GetTargetClass();
 
 		$oMyselfSearch = new DBObjectSearch($sMyClass);
-		if ($oHostObject !== null)
-		{
+		if ($oHostObject !== null) {
 			$oMyselfSearch->AddCondition('id', $oHostObject->GetKey(), '=');
 		}
 
 		$oLinkSearch = new DBObjectSearch($sLinkClass);
 		$oLinkSearch->AddCondition_PointingTo($oMyselfSearch, $sExtKeyToMe);
-		if ($this->IsIndirect())
-		{
+		if ($this->IsIndirect()) {
 			// Join the remote class so that the archive flag will be taken into account
 			/** @var \AttributeLinkedSetIndirect $this */
 			$sExtKeyToRemote = $this->GetExtKeyToRemote();
 			/** @var \AttributeExternalKey $oExtKeyToRemote */
 			$oExtKeyToRemote = MetaModel::GetAttributeDef($sLinkClass, $sExtKeyToRemote);
 			$sRemoteClass = $oExtKeyToRemote->GetTargetClass();
-			if (MetaModel::IsArchivable($sRemoteClass))
-			{
+			if (MetaModel::IsArchivable($sRemoteClass)) {
 				$oRemoteSearch = new DBObjectSearch($sRemoteClass);
 				/** @var \AttributeLinkedSetIndirect $this */
 				$oLinkSearch->AddCondition_PointingTo($oRemoteSearch, $this->GetExtKeyToRemote());
@@ -1771,7 +1730,7 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -1787,37 +1746,30 @@ class AttributeLinkedSet extends AttributeDefinition
 	/** @inheritDoc * */
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if($this->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_TAB){
+		if ($this->GetDisplayStyle() === LINKSET_DISPLAY_STYLE_TAB) {
 			return $this->GetAsHTMLForTab($sValue, $oHostObject, $bLocalize);
-		}
-		else{
+		} else {
 			return $this->GetAsHTMLForProperty($sValue, $oHostObject, $bLocalize);
 		}
 	}
 
 	public function GetAsHTMLForTab($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_object($sValue) && ($sValue instanceof ormLinkSet))
-		{
+		if (is_object($sValue) && ($sValue instanceof ormLinkSet)) {
 			$sValue->Rewind();
-			$aItems = array();
-			while ($oObj = $sValue->Fetch())
-			{
+			$aItems = [];
+			while ($oObj = $sValue->Fetch()) {
 				// Show only relevant information (hide the external key to the current object)
-				$aAttributes = array();
-				foreach(MetaModel::ListAttributeDefs($this->GetLinkedClass()) as $sAttCode => $oAttDef)
-				{
-					if ($sAttCode == $this->GetExtKeyToMe())
-					{
+				$aAttributes = [];
+				foreach (MetaModel::ListAttributeDefs($this->GetLinkedClass()) as $sAttCode => $oAttDef) {
+					if ($sAttCode == $this->GetExtKeyToMe()) {
 						continue;
 					}
-					if ($oAttDef->IsExternalField())
-					{
+					if ($oAttDef->IsExternalField()) {
 						continue;
 					}
 					$sAttValue = $oObj->GetAsHTML($sAttCode);
-					if (strlen($sAttValue) > 0)
-					{
+					if (strlen($sAttValue) > 0) {
 						$aAttributes[] = $sAttValue;
 					}
 				}
@@ -1843,8 +1795,7 @@ class AttributeLinkedSet extends AttributeDefinition
 			$oLinkSetBlock = new BlockLinkSetDisplayAsProperty($this->GetCode(), $this, $sValue);
 
 			return ConsoleBlockRenderer::RenderBlockTemplates($oLinkSetBlock);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$sMessage = "Error while displaying attribute {$this->GetCode()}";
 			IssueLog::Error($sMessage, IssueLog::CHANNEL_DEFAULT, [
 				'host_object_class' => $this->GetHostClass(),
@@ -1867,48 +1818,37 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function GetAsXML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_object($sValue) && ($sValue instanceof ormLinkSet))
-		{
+		if (is_object($sValue) && ($sValue instanceof ormLinkSet)) {
 			$sValue->Rewind();
 			$sRes = "<Set>\n";
-			while ($oObj = $sValue->Fetch())
-			{
+			while ($oObj = $sValue->Fetch()) {
 				$sObjClass = get_class($oObj);
 				$sRes .= "<$sObjClass id=\"".$oObj->GetKey()."\">\n";
 				// Show only relevant information (hide the external key to the current object)
-				foreach(MetaModel::ListAttributeDefs($sObjClass) as $sAttCode => $oAttDef)
-				{
-					if ($sAttCode == 'finalclass')
-					{
-						if ($sObjClass == $this->GetLinkedClass())
-						{
+				foreach (MetaModel::ListAttributeDefs($sObjClass) as $sAttCode => $oAttDef) {
+					if ($sAttCode == 'finalclass') {
+						if ($sObjClass == $this->GetLinkedClass()) {
 							// Simplify the output if the exact class could be determined implicitely
 							continue;
 						}
 					}
-					if ($sAttCode == $this->GetExtKeyToMe())
-					{
+					if ($sAttCode == $this->GetExtKeyToMe()) {
 						continue;
 					}
-					if ($oAttDef->IsExternalField())
-					{
+					if ($oAttDef->IsExternalField()) {
 						/** @var \AttributeExternalField $oAttDef */
-						if ($oAttDef->GetKeyAttCode() == $this->GetExtKeyToMe())
-						{
+						if ($oAttDef->GetKeyAttCode() == $this->GetExtKeyToMe()) {
 							continue;
 						}
 						/** @var AttributeExternalField $oAttDef */
-						if ($oAttDef->IsFriendlyName())
-						{
+						if ($oAttDef->IsFriendlyName()) {
 							continue;
 						}
 					}
-					if ($oAttDef instanceof AttributeFriendlyName)
-					{
+					if ($oAttDef instanceof AttributeFriendlyName) {
 						continue;
 					}
-					if (!$oAttDef->IsScalar())
-					{
+					if (!$oAttDef->IsScalar()) {
 						continue;
 					}
 					$sAttValue = $oObj->GetAsXML($sAttCode, $bLocalize);
@@ -1917,9 +1857,7 @@ class AttributeLinkedSet extends AttributeDefinition
 				$sRes .= "</$sObjClass>\n";
 			}
 			$sRes .= "</Set>\n";
-		}
-		else
-		{
+		} else {
 			$sRes = '';
 		}
 
@@ -1938,7 +1876,11 @@ class AttributeLinkedSet extends AttributeDefinition
 	 * @throws \CoreException
 	 */
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
 		$sSepItem = MetaModel::GetConfig()->Get('link_set_item_separator');
@@ -1946,46 +1888,39 @@ class AttributeLinkedSet extends AttributeDefinition
 		$sSepValue = MetaModel::GetConfig()->Get('link_set_value_separator');
 		$sAttributeQualifier = MetaModel::GetConfig()->Get('link_set_attribute_qualifier');
 
-		if (is_object($sValue) && ($sValue instanceof ormLinkSet))
-		{
+		if (is_object($sValue) && ($sValue instanceof ormLinkSet)) {
 			$sValue->Rewind();
-			$aItems = array();
-			while ($oObj = $sValue->Fetch())
-			{
+			$aItems = [];
+			while ($oObj = $sValue->Fetch()) {
 				$sObjClass = get_class($oObj);
 				// Show only relevant information (hide the external key to the current object)
-				$aAttributes = array();
-				foreach(MetaModel::ListAttributeDefs($sObjClass) as $sAttCode => $oAttDef)
-				{
-					if ($sAttCode == 'finalclass')
-					{
-						if ($sObjClass == $this->GetLinkedClass())
-						{
+				$aAttributes = [];
+				foreach (MetaModel::ListAttributeDefs($sObjClass) as $sAttCode => $oAttDef) {
+					if ($sAttCode == 'finalclass') {
+						if ($sObjClass == $this->GetLinkedClass()) {
 							// Simplify the output if the exact class could be determined implicitely
 							continue;
 						}
 					}
-					if ($sAttCode == $this->GetExtKeyToMe())
-					{
+					if ($sAttCode == $this->GetExtKeyToMe()) {
 						continue;
 					}
-					if ($oAttDef->IsExternalField())
-					{
+					if ($oAttDef->IsExternalField()) {
 						continue;
 					}
-					if (!$oAttDef->IsBasedOnDBColumns())
-					{
+					if (!$oAttDef->IsBasedOnDBColumns()) {
 						continue;
 					}
-					if (!$oAttDef->IsScalar())
-					{
+					if (!$oAttDef->IsScalar()) {
 						continue;
 					}
 					$sAttValue = $oObj->GetAsCSV($sAttCode, $sSepValue, '', $bLocalize);
-					if (strlen($sAttValue) > 0)
-					{
-						$sAttributeData = str_replace($sAttributeQualifier, $sAttributeQualifier.$sAttributeQualifier,
-							$sAttCode.$sSepValue.$sAttValue);
+					if (strlen($sAttValue) > 0) {
+						$sAttributeData = str_replace(
+							$sAttributeQualifier,
+							$sAttributeQualifier.$sAttributeQualifier,
+							$sAttCode.$sSepValue.$sAttValue
+						);
 						$aAttributes[] = $sAttributeQualifier.$sAttributeData.$sAttributeQualifier;
 					}
 				}
@@ -1993,9 +1928,7 @@ class AttributeLinkedSet extends AttributeDefinition
 				$aItems[] = $sAttributes;
 			}
 			$sRes = implode($sSepItem, $aItems);
-		}
-		else
-		{
+		} else {
 			$sRes = '';
 		}
 		$sRes = str_replace($sTextQualifier, $sTextQualifier.$sTextQualifier, $sRes);
@@ -2009,10 +1942,10 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function EnumTemplateVerbs()
 	{
-		return array(
+		return [
 			'' => 'Plain text (unlocalized) representation',
 			'html' => 'HTML representation (unordered list)',
-		);
+		];
 	}
 
 	/**
@@ -2035,11 +1968,9 @@ class AttributeLinkedSet extends AttributeDefinition
 		$oLinkSet = clone $value; // Workaround/Safety net for Trac #887
 		$iLimit = MetaModel::GetConfig()->Get('max_linkset_output');
 		$iCount = 0;
-		$aNames = array();
-		foreach($oLinkSet as $oItem)
-		{
-			if (($iLimit > 0) && ($iCount == $iLimit))
-			{
+		$aNames = [];
+		foreach ($oLinkSet as $oItem) {
+			if (($iLimit > 0) && ($iCount == $iLimit)) {
 				$iTotal = $oLinkSet->Count();
 				$aNames[] = '... '.Dict::Format('UI:TruncatedResults', $iCount, $iTotal);
 				break;
@@ -2048,8 +1979,7 @@ class AttributeLinkedSet extends AttributeDefinition
 			$iCount++;
 		}
 
-		switch ($sVerb)
-		{
+		switch ($sVerb) {
 			case '':
 				return implode("\n", $aNames);
 
@@ -2068,7 +1998,7 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetImportColumns()
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode()] = 'MEDIUMTEXT'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
@@ -2092,23 +2022,23 @@ class AttributeLinkedSet extends AttributeDefinition
 	 * @throws \Exception
 	 */
 	public function MakeValueFromString(
-		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
+		$sProposedValue,
+		$bLocalizedValue = false,
+		$sSepItem = null,
+		$sSepAttribute = null,
+		$sSepValue = null,
 		$sAttributeQualifier = null
 	) {
-		if (is_null($sSepItem) || empty($sSepItem))
-		{
+		if (is_null($sSepItem) || empty($sSepItem)) {
 			$sSepItem = MetaModel::GetConfig()->Get('link_set_item_separator');
 		}
-		if (is_null($sSepAttribute) || empty($sSepAttribute))
-		{
+		if (is_null($sSepAttribute) || empty($sSepAttribute)) {
 			$sSepAttribute = MetaModel::GetConfig()->Get('link_set_attribute_separator');
 		}
-		if (is_null($sSepValue) || empty($sSepValue))
-		{
+		if (is_null($sSepValue) || empty($sSepValue)) {
 			$sSepValue = MetaModel::GetConfig()->Get('link_set_value_separator');
 		}
-		if (is_null($sAttributeQualifier) || empty($sAttributeQualifier))
-		{
+		if (is_null($sAttributeQualifier) || empty($sAttributeQualifier)) {
 			$sAttributeQualifier = MetaModel::GetConfig()->Get('link_set_attribute_qualifier');
 		}
 
@@ -2119,100 +2049,97 @@ class AttributeLinkedSet extends AttributeDefinition
 
 		$aInput = $oCSVParser->ToArray(0 /* do not skip lines */);
 
-		$aLinks = array();
-		foreach($aInput as $aRow)
-		{
+		$aLinks = [];
+		foreach ($aInput as $aRow) {
 			// 1st - get the values, split the extkey->searchkey specs, and eventually get the finalclass value
-			$aExtKeys = array();
-			$aValues = array();
-			foreach($aRow as $sCell)
-			{
+			$aExtKeys = [];
+			$aValues = [];
+			foreach ($aRow as $sCell) {
 				$iSepPos = strpos($sCell, $sSepValue);
-				if ($iSepPos === false)
-				{
+				if ($iSepPos === false) {
 					// Houston...
-					throw new CoreException('Wrong format for link attribute specification', array('value' => $sCell));
+					throw new CoreException('Wrong format for link attribute specification', ['value' => $sCell]);
 				}
 
 				$sAttCode = trim(substr($sCell, 0, $iSepPos));
 				$sValue = substr($sCell, $iSepPos + strlen($sSepValue));
 
-				if (preg_match('/^(.+)->(.+)$/', $sAttCode, $aMatches))
-				{
+				if (preg_match('/^(.+)->(.+)$/', $sAttCode, $aMatches)) {
 					$sKeyAttCode = $aMatches[1];
 					$sRemoteAttCode = $aMatches[2];
 					$aExtKeys[$sKeyAttCode][$sRemoteAttCode] = $sValue;
-					if (!MetaModel::IsValidAttCode($sTargetClass, $sKeyAttCode))
-					{
-						throw new CoreException('Wrong attribute code for link attribute specification',
-							array('class' => $sTargetClass, 'attcode' => $sKeyAttCode));
+					if (!MetaModel::IsValidAttCode($sTargetClass, $sKeyAttCode)) {
+						throw new CoreException(
+							'Wrong attribute code for link attribute specification',
+							['class' => $sTargetClass, 'attcode' => $sKeyAttCode]
+						);
 					}
 					/** @var \AttributeExternalKey $oKeyAttDef */
 					$oKeyAttDef = MetaModel::GetAttributeDef($sTargetClass, $sKeyAttCode);
 					$sRemoteClass = $oKeyAttDef->GetTargetClass();
-					if (!MetaModel::IsValidAttCode($sRemoteClass, $sRemoteAttCode))
-					{
-						throw new CoreException('Wrong attribute code for link attribute specification',
-							array('class' => $sRemoteClass, 'attcode' => $sRemoteAttCode));
+					if (!MetaModel::IsValidAttCode($sRemoteClass, $sRemoteAttCode)) {
+						throw new CoreException(
+							'Wrong attribute code for link attribute specification',
+							['class' => $sRemoteClass, 'attcode' => $sRemoteAttCode]
+						);
 					}
-				}
-				else
-				{
-					if (!MetaModel::IsValidAttCode($sTargetClass, $sAttCode))
-					{
-						throw new CoreException('Wrong attribute code for link attribute specification',
-							array('class' => $sTargetClass, 'attcode' => $sAttCode));
+				} else {
+					if (!MetaModel::IsValidAttCode($sTargetClass, $sAttCode)) {
+						throw new CoreException(
+							'Wrong attribute code for link attribute specification',
+							['class' => $sTargetClass, 'attcode' => $sAttCode]
+						);
 					}
 					$oAttDef = MetaModel::GetAttributeDef($sTargetClass, $sAttCode);
-					$aValues[$sAttCode] = $oAttDef->MakeValueFromString($sValue, $bLocalizedValue, $sSepItem,
-						$sSepAttribute, $sSepValue, $sAttributeQualifier);
+					$aValues[$sAttCode] = $oAttDef->MakeValueFromString(
+						$sValue,
+						$bLocalizedValue,
+						$sSepItem,
+						$sSepAttribute,
+						$sSepValue,
+						$sAttributeQualifier
+					);
 				}
 			}
 
 			// 2nd - Instanciate the object and set the value
-			if (isset($aValues['finalclass']))
-			{
+			if (isset($aValues['finalclass'])) {
 				$sLinkClass = $aValues['finalclass'];
-				if (!is_subclass_of($sLinkClass, $sTargetClass))
-				{
-					throw new CoreException('Wrong class for link attribute specification',
-						array('requested_class' => $sLinkClass, 'expected_class' => $sTargetClass));
+				if (!is_subclass_of($sLinkClass, $sTargetClass)) {
+					throw new CoreException(
+						'Wrong class for link attribute specification',
+						['requested_class' => $sLinkClass, 'expected_class' => $sTargetClass]
+					);
 				}
-			}
-			elseif (MetaModel::IsAbstract($sTargetClass))
-			{
+			} elseif (MetaModel::IsAbstract($sTargetClass)) {
 				throw new CoreException('Missing finalclass for link attribute specification');
-			}
-			else
-			{
+			} else {
 				$sLinkClass = $sTargetClass;
 			}
 
 			$oLink = MetaModel::NewObject($sLinkClass);
-			foreach($aValues as $sAttCode => $sValue)
-			{
+			foreach ($aValues as $sAttCode => $sValue) {
 				$oLink->Set($sAttCode, $sValue);
 			}
 
 			// 3rd - Set external keys from search conditions
-			foreach($aExtKeys as $sKeyAttCode => $aReconciliation)
-			{
+			foreach ($aExtKeys as $sKeyAttCode => $aReconciliation) {
 				$oKeyAttDef = MetaModel::GetAttributeDef($sTargetClass, $sKeyAttCode);
 				$sKeyClass = $oKeyAttDef->GetTargetClass();
 				$oExtKeyFilter = new DBObjectSearch($sKeyClass);
-				$aReconciliationDesc = array();
-				foreach($aReconciliation as $sRemoteAttCode => $sValue)
-				{
+				$aReconciliationDesc = [];
+				foreach ($aReconciliation as $sRemoteAttCode => $sValue) {
 					$oExtKeyFilter->AddCondition($sRemoteAttCode, $sValue, '=');
 					$aReconciliationDesc[] = "$sRemoteAttCode=$sValue";
 				}
 				$oExtKeySet = new DBObjectSet($oExtKeyFilter);
-				switch ($oExtKeySet->Count())
-				{
+				switch ($oExtKeySet->Count()) {
 					case 0:
 						$sReconciliationDesc = implode(', ', $aReconciliationDesc);
-						throw new CoreException("Found no match",
-							array('ext_key' => $sKeyAttCode, 'reconciliation' => $sReconciliationDesc));
+						throw new CoreException(
+							"Found no match",
+							['ext_key' => $sKeyAttCode, 'reconciliation' => $sReconciliationDesc]
+						);
 						break;
 					case 1:
 						$oRemoteObj = $oExtKeySet->Fetch();
@@ -2220,33 +2147,32 @@ class AttributeLinkedSet extends AttributeDefinition
 						break;
 					default:
 						$sReconciliationDesc = implode(', ', $aReconciliationDesc);
-						throw new CoreException("Found several matches",
-							array('ext_key' => $sKeyAttCode, 'reconciliation' => $sReconciliationDesc));
-					// Found several matches, ambiguous
+						throw new CoreException(
+							"Found several matches",
+							['ext_key' => $sKeyAttCode, 'reconciliation' => $sReconciliationDesc]
+						);
+						// Found several matches, ambiguous
 				}
 			}
 
 			// Check (roughly) if such a link is valid
-			$aErrors = array();
-			foreach(MetaModel::ListAttributeDefs($sTargetClass) as $sAttCode => $oAttDef)
-			{
-				if ($oAttDef->IsExternalKey())
-				{
+			$aErrors = [];
+			foreach (MetaModel::ListAttributeDefs($sTargetClass) as $sAttCode => $oAttDef) {
+				if ($oAttDef->IsExternalKey()) {
 					/** @var \AttributeExternalKey $oAttDef */
-					if (($oAttDef->GetTargetClass() == $this->GetHostClass()) || (is_subclass_of($this->GetHostClass(),
-							$oAttDef->GetTargetClass())))
-					{
+					if (($oAttDef->GetTargetClass() == $this->GetHostClass()) || (is_subclass_of(
+						$this->GetHostClass(),
+						$oAttDef->GetTargetClass()
+					))) {
 						continue; // Don't check the key to self
 					}
 				}
 
-				if ($oAttDef->IsWritable() && $oAttDef->IsNull($oLink->Get($sAttCode)) && !$oAttDef->IsNullAllowed())
-				{
+				if ($oAttDef->IsWritable() && $oAttDef->IsNull($oLink->Get($sAttCode)) && !$oAttDef->IsNullAllowed()) {
 					$aErrors[] = $sAttCode;
 				}
 			}
-			if (count($aErrors) > 0)
-			{
+			if (count($aErrors) > 0) {
 				throw new CoreException("Missing value for mandatory attribute(s): ".implode(', ', $aErrors));
 			}
 
@@ -2264,39 +2190,30 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function GetForJSON($value)
 	{
-		$aRet = array();
-		if (is_object($value) && ($value instanceof ormLinkSet))
-		{
+		$aRet = [];
+		if (is_object($value) && ($value instanceof ormLinkSet)) {
 			$value->Rewind();
-			while ($oObj = $value->Fetch())
-			{
+			while ($oObj = $value->Fetch()) {
 				$sObjClass = get_class($oObj);
 				// Show only relevant information (hide the external key to the current object)
-				$aAttributes = array();
-				foreach(MetaModel::ListAttributeDefs($sObjClass) as $sAttCode => $oAttDef)
-				{
-					if ($sAttCode == 'finalclass')
-					{
-						if ($sObjClass == $this->GetLinkedClass())
-						{
+				$aAttributes = [];
+				foreach (MetaModel::ListAttributeDefs($sObjClass) as $sAttCode => $oAttDef) {
+					if ($sAttCode == 'finalclass') {
+						if ($sObjClass == $this->GetLinkedClass()) {
 							// Simplify the output if the exact class could be determined implicitely
 							continue;
 						}
 					}
-					if ($sAttCode == $this->GetExtKeyToMe())
-					{
+					if ($sAttCode == $this->GetExtKeyToMe()) {
 						continue;
 					}
-					if ($oAttDef->IsExternalField())
-					{
+					if ($oAttDef->IsExternalField()) {
 						continue;
 					}
-					if (!$oAttDef->IsBasedOnDBColumns())
-					{
+					if (!$oAttDef->IsBasedOnDBColumns()) {
 						continue;
 					}
-					if (!$oAttDef->IsScalar())
-					{
+					if (!$oAttDef->IsScalar()) {
 						continue;
 					}
 					$attValue = $oObj->Get($sAttCode);
@@ -2321,54 +2238,45 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		$sTargetClass = $this->Get('linked_class');
 
-		$aLinks = array();
-		foreach($json as $aValues)
-		{
-			if (isset($aValues['finalclass']))
-			{
+		$aLinks = [];
+		foreach ($json as $aValues) {
+			if (isset($aValues['finalclass'])) {
 				$sLinkClass = $aValues['finalclass'];
-				if (!is_subclass_of($sLinkClass, $sTargetClass))
-				{
-					throw new CoreException('Wrong class for link attribute specification',
-						array('requested_class' => $sLinkClass, 'expected_class' => $sTargetClass));
+				if (!is_subclass_of($sLinkClass, $sTargetClass)) {
+					throw new CoreException(
+						'Wrong class for link attribute specification',
+						['requested_class' => $sLinkClass, 'expected_class' => $sTargetClass]
+					);
 				}
-			}
-			elseif (MetaModel::IsAbstract($sTargetClass))
-			{
+			} elseif (MetaModel::IsAbstract($sTargetClass)) {
 				throw new CoreException('Missing finalclass for link attribute specification');
-			}
-			else
-			{
+			} else {
 				$sLinkClass = $sTargetClass;
 			}
 
 			$oLink = MetaModel::NewObject($sLinkClass);
-			foreach($aValues as $sAttCode => $sValue)
-			{
+			foreach ($aValues as $sAttCode => $sValue) {
 				$oLink->Set($sAttCode, $sValue);
 			}
 
 			// Check (roughly) if such a link is valid
-			$aErrors = array();
-			foreach(MetaModel::ListAttributeDefs($sTargetClass) as $sAttCode => $oAttDef)
-			{
-				if ($oAttDef->IsExternalKey())
-				{
+			$aErrors = [];
+			foreach (MetaModel::ListAttributeDefs($sTargetClass) as $sAttCode => $oAttDef) {
+				if ($oAttDef->IsExternalKey()) {
 					/** @var AttributeExternalKey $oAttDef */
-					if (($oAttDef->GetTargetClass() == $this->GetHostClass()) || (is_subclass_of($this->GetHostClass(),
-							$oAttDef->GetTargetClass())))
-					{
+					if (($oAttDef->GetTargetClass() == $this->GetHostClass()) || (is_subclass_of(
+						$this->GetHostClass(),
+						$oAttDef->GetTargetClass()
+					))) {
 						continue; // Don't check the key to self
 					}
 				}
 
-				if ($oAttDef->IsWritable() && $oAttDef->IsNull($oLink->Get($sAttCode)) && !$oAttDef->IsNullAllowed())
-				{
+				if ($oAttDef->IsWritable() && $oAttDef->IsNull($oLink->Get($sAttCode)) && !$oAttDef->IsNullAllowed()) {
 					$aErrors[] = $sAttCode;
 				}
 			}
-			if (count($aErrors) > 0)
-			{
+			if (count($aErrors) > 0) {
 				throw new CoreException("Missing value for mandatory attribute(s): ".implode(', ', $aErrors));
 			}
 
@@ -2388,10 +2296,9 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if ($proposedValue === null)
-		{
+		if ($proposedValue === null) {
 			$sLinkedClass = $this->GetLinkedClass();
-			$aLinkedObjectsArray = array();
+			$aLinkedObjectsArray = [];
 			$oSet = DBObjectSet::FromArray($sLinkedClass, $aLinkedObjectsArray);
 
 			return new ormLinkSet(
@@ -2412,12 +2319,9 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function Equals($val1, $val2)
 	{
-		if ($val1 === $val2)
-		{
+		if ($val1 === $val2) {
 			$bAreEquivalent = true;
-		}
-		else
-		{
+		} else {
 			$bAreEquivalent = ($val2->HasDelta() === false);
 		}
 
@@ -2453,8 +2357,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
@@ -2479,10 +2382,10 @@ class AttributeLinkedSet extends AttributeDefinition
 		// - Adding friendlyname attribute to the list is not already in it
 		$sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetClass);
 		if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay)) {
-			$aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);
+			$aAttCodesToDisplay = array_merge([$sTitleAttCode], $aAttCodesToDisplay);
 		}
 		// - Adding attribute properties
-		$aAttributesToDisplay = array();
+		$aAttributesToDisplay = [];
 		foreach ($aAttCodesToDisplay as $sAttCodeToDisplay) {
 			$oAttDefToDisplay = MetaModel::GetAttributeDef($sTargetClass, $sAttCodeToDisplay);
 			$aAttributesToDisplay[$sAttCodeToDisplay] = [
@@ -2495,7 +2398,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		// Append lnk attributes (filtered from zlist)
 		if ($this->IsIndirect()) {
 			$aLnkAttDefToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($this->m_sHostClass, $this->m_sCode);
-			$aLnkAttributesToDisplay = array();
+			$aLnkAttributesToDisplay = [];
 			foreach ($aLnkAttDefToDisplay as $oLnkAttDefToDisplay) {
 				$aLnkAttributesToDisplay[$oLnkAttDefToDisplay->GetCode()] = [
 					'att_code'  => $oLnkAttDefToDisplay->GetCode(),
@@ -2511,59 +2414,59 @@ class AttributeLinkedSet extends AttributeDefinition
 		return $oFormField;
 	}
 
-    public function IsPartOfFingerprint()
-    {
-        return false;
-    }
+	public function IsPartOfFingerprint()
+	{
+		return false;
+	}
 
-    /**
-     * @inheritDoc
-     * @param \ormLinkSet $proposedValue
-     */
-    public function HasAValue($proposedValue): bool
-    {
-        // Protection against wrong value type
-        if (false === ($proposedValue instanceof ormLinkSet)) {
-            return parent::HasAValue($proposedValue);
-        }
+	/**
+	 * @inheritDoc
+	 * @param \ormLinkSet $proposedValue
+	 */
+	public function HasAValue($proposedValue): bool
+	{
+		// Protection against wrong value type
+		if (false === ($proposedValue instanceof ormLinkSet)) {
+			return parent::HasAValue($proposedValue);
+		}
 
-        // We test if there is at least 1 item in the linkset (new or existing), not if an item is being added to it.
-        return $proposedValue->Count() > 0;
-    }
+		// We test if there is at least 1 item in the linkset (new or existing), not if an item is being added to it.
+		return $proposedValue->Count() > 0;
+	}
 
-    /**
-     * SearchSpecificLabel.
-     *
-     * @param string $sDictEntrySuffix
-     * @param string $sDefault
-     * @param bool $bUserLanguageOnly
-     * @param ...$aArgs
-     * @return string
-     * @since 3.1.0
-     */
-    public function SearchSpecificLabel(string $sDictEntrySuffix, string $sDefault, bool $bUserLanguageOnly, ...$aArgs): string
-    {
-        try {
-            $sNextClass = $this->m_sHostClass;
+	/**
+	 * SearchSpecificLabel.
+	 *
+	 * @param string $sDictEntrySuffix
+	 * @param string $sDefault
+	 * @param bool $bUserLanguageOnly
+	 * @param ...$aArgs
+	 * @return string
+	 * @since 3.1.0
+	 */
+	public function SearchSpecificLabel(string $sDictEntrySuffix, string $sDefault, bool $bUserLanguageOnly, ...$aArgs): string
+	{
+		try {
+			$sNextClass = $this->m_sHostClass;
 
-            do {
-                $sKey = "Class:{$sNextClass}/Attribute:{$this->m_sCode}/{$sDictEntrySuffix}";
-                if (Dict::S($sKey, null, $bUserLanguageOnly) !== $sKey) {
-                    return Dict::Format($sKey, ...$aArgs);
-                }
-                $sNextClass = MetaModel::GetParentClass($sNextClass);
-            } while ($sNextClass !== null);
+			do {
+				$sKey = "Class:{$sNextClass}/Attribute:{$this->m_sCode}/{$sDictEntrySuffix}";
+				if (Dict::S($sKey, null, $bUserLanguageOnly) !== $sKey) {
+					return Dict::Format($sKey, ...$aArgs);
+				}
+				$sNextClass = MetaModel::GetParentClass($sNextClass);
+			} while ($sNextClass !== null);
 
-            if (Dict::S($sDictEntrySuffix, null, $bUserLanguageOnly) !== $sKey) {
-                return Dict::Format($sDictEntrySuffix, ...$aArgs);
-            } else {
-                return $sDefault;
-            }
-        } catch (Exception $e) {
-            ExceptionLog::LogException($e);
-            return $sDefault;
-        }
-    }
+			if (Dict::S($sDictEntrySuffix, null, $bUserLanguageOnly) !== $sKey) {
+				return Dict::Format($sDictEntrySuffix, ...$aArgs);
+			} else {
+				return $sDefault;
+			}
+		} catch (Exception $e) {
+			ExceptionLog::LogException($e);
+			return $sDefault;
+		}
+	}
 }
 
 /**
@@ -2592,7 +2495,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("ext_key_to_remote"));
+		return array_merge(parent::ListExpectedParams(), ["ext_key_to_remote"]);
 	}
 
 	public function IsIndirect()
@@ -2617,8 +2520,10 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 
 	public function GetTrackingLevel()
 	{
-		return $this->GetOptional('tracking_level',
-			MetaModel::GetConfig()->Get('tracking_level_linked_set_indirect_default'));
+		return $this->GetOptional(
+			'tracking_level',
+			MetaModel::GetConfig()->Get('tracking_level_linked_set_indirect_default')
+		);
 	}
 
 	/**
@@ -2633,7 +2538,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 		/** @var \AttributeExternalKey $oExtKeyToRemote */
 		$oExtKeyToRemote = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToRemote());
 		$sRemoteClass = $oExtKeyToRemote->GetTargetClass();
-		foreach(MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef) {
+		foreach (MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef) {
 			if (!$oRemoteAttDef instanceof AttributeLinkedSetIndirect) {
 				continue;
 			}
@@ -2670,7 +2575,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 {
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("allowed_values", "depends_on", "sql"));
+		return array_merge(parent::ListExpectedParams(), ["allowed_values", "depends_on", "sql"]);
 	}
 
 	// To be overriden, used in GetSQLColumns
@@ -2684,20 +2589,14 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	protected function GetSQLColSpec()
 	{
 		$default = $this->ScalarToSQL($this->GetDefaultValue());
-		if (is_null($default))
-		{
+		if (is_null($default)) {
 			$sRet = '';
-		}
-		else
-		{
-			if (is_numeric($default))
-			{
+		} else {
+			if (is_numeric($default)) {
 				// Though it is a string in PHP, it will be considered as a numeric value in MySQL
 				// Then it must not be quoted here, to preserve the compatibility with the value returned by CMDBSource::GetFieldSpec
 				$sRet = " DEFAULT $default";
-			}
-			else
-			{
+			} else {
 				$sRet = " DEFAULT ".CMDBSource::Quote($default);
 			}
 		}
@@ -2758,7 +2657,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		$aColumns = array();
+		$aColumns = [];
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $this->Get("sql");
 
@@ -2774,7 +2673,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function GetSQLValues($value)
 	{
-		$aValues = array();
+		$aValues = [];
 		$aValues[$this->Get("sql")] = $this->ScalarToSQL($value);
 
 		return $aValues;
@@ -2782,7 +2681,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->Get("sql")] = $this->GetSQLCol($bFullSpec);
 
 		return $aColumns;
@@ -2790,12 +2689,12 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		return array($this->GetCode() => $this->GetCode());
+		return [$this->GetCode() => $this->GetCode()];
 	}
 
 	public function GetBasicFilterOperators()
 	{
-		return array("=" => "equals", "!=" => "differs from");
+		return ["=" => "equals", "!=" => "differs from"];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -2806,8 +2705,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		$sQValue = CMDBSource::Quote($value);
-		switch ($sOpCode)
-		{
+		switch ($sOpCode) {
 			case '!=':
 				return $this->GetSQLExpr()." != $sQValue";
 				break;
@@ -2827,7 +2725,7 @@ class AttributeDBField extends AttributeDBFieldVoid
 {
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("default_value", "is_null_allowed"));
+		return array_merge(parent::ListExpectedParams(), ["default_value", "is_null_allowed"]);
 	}
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
@@ -2848,7 +2746,7 @@ class AttributeDBField extends AttributeDBFieldVoid
  */
 class AttributeInteger extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -2890,15 +2788,15 @@ class AttributeInteger extends AttributeDBField
 
 	public function GetBasicFilterOperators()
 	{
-		return array(
+		return [
 			"!=" => "differs from",
 			"=" => "equals",
 			">" => "greater (strict) than",
 			">=" => "greater than",
 			"<" => "less (strict) than",
 			"<=" => "less than",
-			"in" => "in"
-		);
+			"in" => "in",
+		];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -2910,8 +2808,7 @@ class AttributeInteger extends AttributeDBField
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		$sQValue = CMDBSource::Quote($value);
-		switch ($sOpCode)
-		{
+		switch ($sOpCode) {
 			case '!=':
 				return $this->GetSQLExpr()." != $sQValue";
 				break;
@@ -2928,8 +2825,7 @@ class AttributeInteger extends AttributeDBField
 				return $this->GetSQLExpr()." <= $sQValue";
 				break;
 			case 'in':
-				if (!is_array($value))
-				{
+				if (!is_array($value)) {
 					throw new CoreException("Expected an array for argument value (sOpCode='$sOpCode')");
 				}
 
@@ -2962,12 +2858,10 @@ class AttributeInteger extends AttributeDBField
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_null($proposedValue))
-		{
+		if (is_null($proposedValue)) {
 			return null;
 		}
-		if ($proposedValue === '')
-		{
+		if ($proposedValue === '') {
 			return null;
 		} // 0 is transformed into '' !
 
@@ -2989,7 +2883,7 @@ class AttributeInteger extends AttributeDBField
  */
 class AttributeObjectKey extends AttributeDBFieldVoid
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -3010,7 +2904,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('class_attcode', 'is_null_allowed'));
+		return array_merge(parent::ListExpectedParams(), ['class_attcode', 'is_null_allowed']);
 	}
 
 	public function GetEditClass()
@@ -3032,7 +2926,6 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 	{
 		return $this->Get("is_null_allowed");
 	}
-
 
 	public function GetBasicFilterOperators()
 	{
@@ -3067,23 +2960,20 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 		return ((int) $proposedValue) !== 0;
 	}
 
-    /**
-     * @inheritDoc
-     *
-     * @param int|DBObject $proposedValue Object key or valid ({@see MetaModel::IsValidObject()}) datamodel object
-     */
+	/**
+	 * @inheritDoc
+	 *
+	 * @param int|DBObject $proposedValue Object key or valid ({@see MetaModel::IsValidObject()}) datamodel object
+	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_null($proposedValue))
-		{
+		if (is_null($proposedValue)) {
 			return 0;
 		}
-		if ($proposedValue === '')
-		{
+		if ($proposedValue === '') {
 			return 0;
 		}
-		if (MetaModel::IsValidObject($proposedValue))
-		{
+		if (MetaModel::IsValidObject($proposedValue)) {
 			return $proposedValue->GetKey();
 		}
 
@@ -3098,7 +2988,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
  */
 class AttributePercentage extends AttributeInteger
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -3121,29 +3011,19 @@ class AttributePercentage extends AttributeInteger
 	{
 		$iWidth = 5; // Total width of the percentage bar graph, in em...
 		$iValue = (int)$sValue;
-		if ($iValue > 100)
-		{
+		if ($iValue > 100) {
 			$iValue = 100;
-		}
-		else
-		{
-			if ($iValue < 0)
-			{
+		} else {
+			if ($iValue < 0) {
 				$iValue = 0;
 			}
 		}
-		if ($iValue > 90)
-		{
+		if ($iValue > 90) {
 			$sColor = "#cc3300";
-		}
-		else
-		{
-			if ($iValue > 50)
-			{
+		} else {
+			if ($iValue > 50) {
 				$sColor = "#cccc00";
-			}
-			else
-			{
+			} else {
 				$sColor = "#33cc00";
 			}
 		}
@@ -3163,7 +3043,7 @@ class AttributePercentage extends AttributeInteger
  */
 class AttributeDecimal extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -3184,7 +3064,7 @@ class AttributeDecimal extends AttributeDBField
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('digits', 'decimals' /* including precision */));
+		return array_merge(parent::ListExpectedParams(), ['digits', 'decimals' /* including precision */]);
 	}
 
 	public function GetEditClass()
@@ -3218,15 +3098,15 @@ class AttributeDecimal extends AttributeDBField
 
 	public function GetBasicFilterOperators()
 	{
-		return array(
+		return [
 			"!=" => "differs from",
 			"=" => "equals",
 			">" => "greater (strict) than",
 			">=" => "greater than",
 			"<" => "less (strict) than",
 			"<=" => "less than",
-			"in" => "in"
-		);
+			"in" => "in",
+		];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -3238,8 +3118,7 @@ class AttributeDecimal extends AttributeDBField
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		$sQValue = CMDBSource::Quote($value);
-		switch ($sOpCode)
-		{
+		switch ($sOpCode) {
 			case '!=':
 				return $this->GetSQLExpr()." != $sQValue";
 				break;
@@ -3256,8 +3135,7 @@ class AttributeDecimal extends AttributeDBField
 				return $this->GetSQLExpr()." <= $sQValue";
 				break;
 			case 'in':
-				if (!is_array($value))
-				{
+				if (!is_array($value)) {
 					throw new CoreException("Expected an array for argument value (sOpCode='$sOpCode')");
 				}
 
@@ -3290,12 +3168,10 @@ class AttributeDecimal extends AttributeDBField
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_null($proposedValue))
-		{
+		if (is_null($proposedValue)) {
 			return null;
 		}
-		if ($proposedValue === '')
-		{
+		if ($proposedValue === '') {
 			return null;
 		}
 
@@ -3306,8 +3182,7 @@ class AttributeDecimal extends AttributeDBField
 	{
 		assert(is_null($value) || preg_match('/'.$this->GetValidationPattern().'/', $value));
 
-		if (!is_null($value) && ($value !== ''))
-		{
+		if (!is_null($value) && ($value !== '')) {
 			$value = sprintf("%1.".$this->Get('decimals')."F", $value);
 		}
 		return $value; // null or string
@@ -3321,7 +3196,7 @@ class AttributeDecimal extends AttributeDBField
  */
 class AttributeBoolean extends AttributeInteger
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -3358,16 +3233,13 @@ class AttributeBoolean extends AttributeInteger
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_null($proposedValue))
-		{
+		if (is_null($proposedValue)) {
 			return null;
 		}
-		if ($proposedValue === '')
-		{
+		if ($proposedValue === '') {
 			return null;
 		}
-		if ((int)$proposedValue)
-		{
+		if ((int)$proposedValue) {
 			return true;
 		}
 
@@ -3376,8 +3248,7 @@ class AttributeBoolean extends AttributeInteger
 
 	public function ScalarToSQL($value)
 	{
-		if ($value)
-		{
+		if ($value) {
 			return 1;
 		}
 
@@ -3386,12 +3257,9 @@ class AttributeBoolean extends AttributeInteger
 
 	public function GetValueLabel($bValue)
 	{
-		if (is_null($bValue))
-		{
+		if (is_null($bValue)) {
 			$sLabel = Dict::S('Core:'.get_class($this).'/Value:null');
-		}
-		else
-		{
+		} else {
 			$sValue = $bValue ? 'yes' : 'no';
 			$sDefault = Dict::S('Core:'.get_class($this).'/Value:'.$sValue);
 			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, $sDefault, true /*user lang*/);
@@ -3402,16 +3270,16 @@ class AttributeBoolean extends AttributeInteger
 
 	public function GetValueDescription($bValue)
 	{
-		if (is_null($bValue))
-		{
+		if (is_null($bValue)) {
 			$sDescription = Dict::S('Core:'.get_class($this).'/Value:null+');
-		}
-		else
-		{
+		} else {
 			$sValue = $bValue ? 'yes' : 'no';
 			$sDefault = Dict::S('Core:'.get_class($this).'/Value:'.$sValue.'+');
-			$sDescription = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue.'+', $sDefault,
-				true /*user lang*/);
+			$sDescription = $this->SearchLabel(
+				'/Attribute:'.$this->m_sCode.'/Value:'.$sValue.'+',
+				$sDefault,
+				true /*user lang*/
+			);
 		}
 
 		return $sDescription;
@@ -3419,19 +3287,14 @@ class AttributeBoolean extends AttributeInteger
 
 	public function GetAsHTML($bValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_null($bValue))
-		{
+		if (is_null($bValue)) {
 			$sRes = '';
-		}
-		elseif ($bLocalize)
-		{
+		} elseif ($bLocalize) {
 			$sLabel = $this->GetValueLabel($bValue);
 			$sDescription = $this->GetValueDescription($bValue);
 			// later, we could imagine a detailed description in the title
 			$sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
-		}
-		else
-		{
+		} else {
 			$sRes = $bValue ? 'yes' : 'no';
 		}
 
@@ -3440,16 +3303,11 @@ class AttributeBoolean extends AttributeInteger
 
 	public function GetAsXML($bValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_null($bValue))
-		{
+		if (is_null($bValue)) {
 			$sFinalValue = '';
-		}
-		elseif ($bLocalize)
-		{
+		} elseif ($bLocalize) {
 			$sFinalValue = $this->GetValueLabel($bValue);
-		}
-		else
-		{
+		} else {
 			$sFinalValue = $bValue ? 'yes' : 'no';
 		}
 		$sRes = parent::GetAsXML($sFinalValue, $oHostObject, $bLocalize);
@@ -3458,19 +3316,18 @@ class AttributeBoolean extends AttributeInteger
 	}
 
 	public function GetAsCSV(
-		$bValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$bValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
-		if (is_null($bValue))
-		{
+		if (is_null($bValue)) {
 			$sFinalValue = '';
-		}
-		elseif ($bLocalize)
-		{
+		} elseif ($bLocalize) {
 			$sFinalValue = $this->GetValueLabel($bValue);
-		}
-		else
-		{
+		} else {
 			$sFinalValue = $bValue ? 'yes' : 'no';
 		}
 		$sRes = parent::GetAsCSV($sFinalValue, $sSeparator, $sTextQualifier, $oHostObject, $bLocalize);
@@ -3492,13 +3349,12 @@ class AttributeBoolean extends AttributeInteger
 	 */
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
 
-		$oFormField->SetChoices(array('yes' => $this->GetValueLabel(true), 'no' => $this->GetValueLabel(false)));
+		$oFormField->SetChoices(['yes' => $this->GetValueLabel(true), 'no' => $this->GetValueLabel(false)]);
 		parent::MakeFormField($oObject, $oFormField);
 
 		return $oFormField;
@@ -3506,12 +3362,9 @@ class AttributeBoolean extends AttributeInteger
 
 	public function GetEditValue($value, $oHostObj = null)
 	{
-		if (is_null($value))
-		{
+		if (is_null($value)) {
 			return '';
-		}
-		else
-		{
+		} else {
 			return $this->GetValueLabel($value);
 		}
 	}
@@ -3522,14 +3375,16 @@ class AttributeBoolean extends AttributeInteger
 	}
 
 	public function MakeValueFromString(
-		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
+		$sProposedValue,
+		$bLocalizedValue = false,
+		$sSepItem = null,
+		$sSepAttribute = null,
+		$sSepValue = null,
 		$sAttributeQualifier = null
 	) {
 		$sInput = mb_strtolower(trim($sProposedValue));
-		if ($bLocalizedValue)
-		{
-			switch ($sInput)
-			{
+		if ($bLocalizedValue) {
+			switch ($sInput) {
 				case '1': // backward compatibility
 				case $this->GetValueLabel(true):
 					$value = true;
@@ -3542,11 +3397,8 @@ class AttributeBoolean extends AttributeInteger
 				default:
 					$value = null;
 			}
-		}
-		else
-		{
-			switch ($sInput)
-			{
+		} else {
+			switch ($sInput) {
 				case '1': // backward compatibility
 				case 'yes':
 					$value = true;
@@ -3573,11 +3425,11 @@ class AttributeBoolean extends AttributeInteger
 		return CMDBChangeOpSetAttributeScalar::class;
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '') : array
+	public function GetAllowedValues($aArgs = [], $sContains = ''): array
 	{
 		return [
 			0 => $this->GetValueLabel(false),
-			1 => $this->GetValueLabel(true)
+			1 => $this->GetValueLabel(true),
 		];
 	}
 
@@ -3594,7 +3446,7 @@ class AttributeBoolean extends AttributeInteger
  */
 class AttributeString extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -3634,12 +3486,9 @@ class AttributeString extends AttributeDBField
 	public function GetValidationPattern()
 	{
 		$sPattern = $this->GetOptional('validation_pattern', '');
-		if (empty($sPattern))
-		{
+		if (empty($sPattern)) {
 			return parent::GetValidationPattern();
-		}
-		else
-		{
+		} else {
 			return $sPattern;
 		}
 	}
@@ -3647,12 +3496,9 @@ class AttributeString extends AttributeDBField
 	public function CheckFormat($value)
 	{
 		$sRegExp = $this->GetValidationPattern();
-		if (empty($sRegExp))
-		{
+		if (empty($sRegExp)) {
 			return true;
-		}
-		else
-		{
+		} else {
 			$sRegExp = str_replace('/', '\\/', $sRegExp);
 
 			return preg_match("/$sRegExp/", $value);
@@ -3666,15 +3512,15 @@ class AttributeString extends AttributeDBField
 
 	public function GetBasicFilterOperators()
 	{
-		return array(
+		return [
 			"=" => "equals",
 			"!=" => "differs from",
 			"Like" => "equals (no case)",
 			"NotLike" => "differs from (no case)",
 			"Contains" => "contains",
 			"Begins with" => "begins with",
-			"Finishes with" => "finishes with"
-		);
+			"Finishes with" => "finishes with",
+		];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -3685,8 +3531,7 @@ class AttributeString extends AttributeDBField
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		$sQValue = CMDBSource::Quote($value);
-		switch ($sOpCode)
-		{
+		switch ($sOpCode) {
 			case '=':
 			case '!=':
 				return $this->GetSQLExpr()." $sOpCode $sQValue";
@@ -3724,8 +3569,7 @@ class AttributeString extends AttributeDBField
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_null($proposedValue))
-		{
+		if (is_null($proposedValue)) {
 			return '';
 		}
 
@@ -3734,25 +3578,28 @@ class AttributeString extends AttributeDBField
 
 	public function ScalarToSQL($value)
 	{
-		if (!is_string($value) && !is_null($value))
-		{
-			throw new CoreWarning('Expected the attribute value to be a string', array(
+		if (!is_string($value) && !is_null($value)) {
+			throw new CoreWarning('Expected the attribute value to be a string', [
 				'found_type' => gettype($value),
 				'value' => $value,
 				'class' => $this->GetHostClass(),
-				'attribute' => $this->GetCode()
-			));
+				'attribute' => $this->GetCode(),
+			]);
 		}
 
 		return $value;
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
-		$sFrom = array("\r\n", $sTextQualifier);
-		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sFrom = ["\r\n", $sTextQualifier];
+		$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 
 		return $sTextQualifier.$sEscaped.$sTextQualifier;
@@ -3770,8 +3617,7 @@ class AttributeString extends AttributeDBField
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
@@ -3789,11 +3635,11 @@ class AttributeString extends AttributeDBField
  */
 class AttributeClass extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("class_category", "more_values"));
+		return array_merge(parent::ListExpectedParams(), ["class_category", "more_values"]);
 	}
 
 	public function __construct($sCode, $aParams)
@@ -3806,8 +3652,7 @@ class AttributeClass extends AttributeString
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
 		$sDefault = parent::GetDefaultValue($oHostObject);
-		if (!$this->IsNullAllowed() && $this->IsNull($sDefault))
-		{
+		if (!$this->IsNullAllowed() && $this->IsNull($sDefault)) {
 			// For this kind of attribute specifying null as default value
 			// is authorized even if null is not allowed
 
@@ -3821,8 +3666,7 @@ class AttributeClass extends AttributeString
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (empty($sValue))
-		{
+		if (empty($sValue)) {
 			return '';
 		}
 
@@ -3841,7 +3685,6 @@ class AttributeClass extends AttributeString
 
 }
 
-
 /**
  * An attribute that matches a class state
  *
@@ -3849,7 +3692,7 @@ class AttributeClass extends AttributeString
  */
 class AttributeClassState extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -3870,23 +3713,20 @@ class AttributeClassState extends AttributeString
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('class_field'));
+		return array_merge(parent::ListExpectedParams(), ['class_field']);
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
-		if (isset($aArgs['this']))
-		{
+		if (isset($aArgs['this'])) {
 			$oHostObj = $aArgs['this'];
 			$sTargetClass = $this->Get('class_field');
 			$sClass = $oHostObj->Get($sTargetClass);
 
-			$aAllowedStates = array();
-			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass)
-			{
+			$aAllowedStates = [];
+			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
 				$aValues = MetaModel::EnumStates($sChildClass);
-				foreach (array_keys($aValues) as $sState)
-				{
+				foreach (array_keys($aValues) as $sState) {
 					$aAllowedStates[$sState] = $sState.' ('.MetaModel::GetStateLabel($sChildClass, $sState).')';
 				}
 			}
@@ -3898,20 +3738,16 @@ class AttributeClassState extends AttributeString
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (empty($sValue))
-		{
+		if (empty($sValue)) {
 			return '';
 		}
 
-		if (!empty($oHostObject))
-		{
+		if (!empty($oHostObject)) {
 			$sTargetClass = $this->Get('class_field');
 			$sClass = $oHostObject->Get($sTargetClass);
-			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass)
-			{
+			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
 				$aValues = MetaModel::EnumStates($sChildClass);
-				if (in_array($sValue, $aValues))
-				{
+				if (in_array($sValue, $aValues)) {
 					$sLabelForHtmlAttribute = utils::EscapeHtml($sValue.' ('.MetaModel::GetStateLabel($sChildClass, $sValue).')');
 					$sHTML = '<span class="attribute-set-item" data-code="'.$sValue.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sValue.'</span>';
 
@@ -3932,7 +3768,7 @@ class AttributeClassState extends AttributeString
  */
 class AttributeApplicationLanguage extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	public static function ListExpectedParams()
 	{
@@ -3943,9 +3779,8 @@ class AttributeApplicationLanguage extends AttributeString
 	{
 		$this->m_sCode = $sCode;
 		$aAvailableLanguages = Dict::GetLanguages();
-		$aLanguageCodes = array();
-		foreach($aAvailableLanguages as $sLangCode => $aInfo)
-		{
+		$aLanguageCodes = [];
+		foreach ($aAvailableLanguages as $sLangCode => $aInfo) {
 			$aLanguageCodes[$sLangCode] = $aInfo['description'].' ('.$aInfo['localized_description'].')';
 		}
 
@@ -3976,7 +3811,7 @@ class AttributeApplicationLanguage extends AttributeString
  */
 class AttributeFinalClass extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 	public $m_sValue;
 
 	public function __construct($sCode, $aParams)
@@ -4015,16 +3850,12 @@ class AttributeFinalClass extends AttributeString
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (empty($sValue))
-		{
+		if (empty($sValue)) {
 			return '';
 		}
-		if ($bLocalize)
-		{
+		if ($bLocalize) {
 			return MetaModel::GetName($sValue);
-		}
-		else
-		{
+		} else {
 			return $sValue;
 		}
 	}
@@ -4044,46 +3875,47 @@ class AttributeFinalClass extends AttributeString
 	 * @throws \OQLException
 	 */
 	public function MakeValueFromString(
-		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
+		$sProposedValue,
+		$bLocalizedValue = false,
+		$sSepItem = null,
+		$sSepAttribute = null,
+		$sSepValue = null,
 		$sAttributeQualifier = null
 	) {
-		if ($bLocalizedValue)
-		{
+		if ($bLocalizedValue) {
 			// Lookup for the value matching the input
 			//
 			$sFoundValue = null;
 			$aRawValues = self::GetAllowedValues();
-			if (!is_null($aRawValues))
-			{
-				foreach($aRawValues as $sKey => $sValue)
-				{
-					if ($sProposedValue == $sValue)
-					{
+			if (!is_null($aRawValues)) {
+				foreach ($aRawValues as $sKey => $sValue) {
+					if ($sProposedValue == $sValue) {
 						$sFoundValue = $sKey;
 						break;
 					}
 				}
 			}
-			if (is_null($sFoundValue))
-			{
+			if (is_null($sFoundValue)) {
 				return null;
 			}
 
 			return $this->MakeRealValue($sFoundValue, null);
-		}
-		else
-		{
-			return parent::MakeValueFromString($sProposedValue, $bLocalizedValue, $sSepItem, $sSepAttribute, $sSepValue,
-				$sAttributeQualifier);
+		} else {
+			return parent::MakeValueFromString(
+				$sProposedValue,
+				$bLocalizedValue,
+				$sSepItem,
+				$sSepAttribute,
+				$sSepValue,
+				$sAttributeQualifier
+			);
 		}
 	}
-
 
 	// Because this is sometimes used to get a localized/string version of an attribute...
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
-		if (empty($sValue))
-		{
+		if (empty($sValue)) {
 			return '';
 		}
 
@@ -4109,15 +3941,16 @@ class AttributeFinalClass extends AttributeString
 	 * @throws \DictExceptionMissingString
 	 */
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
-		if ($bLocalize && $value != '')
-		{
+		if ($bLocalize && $value != '') {
 			$sRawValue = MetaModel::GetName($value);
-		}
-		else
-		{
+		} else {
 			$sRawValue = $value;
 		}
 
@@ -4126,16 +3959,12 @@ class AttributeFinalClass extends AttributeString
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if (empty($value))
-		{
+		if (empty($value)) {
 			return '';
 		}
-		if ($bLocalize)
-		{
+		if ($bLocalize) {
 			$sRawValue = MetaModel::GetName($value);
-		}
-		else
-		{
+		} else {
 			$sRawValue = $value;
 		}
 
@@ -4149,20 +3978,18 @@ class AttributeFinalClass extends AttributeString
 
 	public function GetValueLabel($sValue)
 	{
-		if (empty($sValue))
-		{
+		if (empty($sValue)) {
 			return '';
 		}
 
 		return MetaModel::GetName($sValue);
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$aRawValues = MetaModel::EnumChildClasses($this->GetHostClass(), ENUM_CHILD_CLASSES_ALL);
-		$aLocalizedValues = array();
-		foreach($aRawValues as $sClass)
-		{
+		$aLocalizedValues = [];
+		foreach ($aRawValues as $sClass) {
 			$aLocalizedValues[$sClass] = MetaModel::GetName($sClass);
 		}
 
@@ -4176,15 +4003,13 @@ class AttributeFinalClass extends AttributeString
 	public function CopyOnAllTables()
 	{
 		$sClass = self::GetHostClass();
-		if (MetaModel::IsLeafClass($sClass))
-		{
+		if (MetaModel::IsLeafClass($sClass)) {
 			// Leaf class, no finalclass
 			return false;
 		}
 		return true;
 	}
 }
-
 
 /**
  * Map a varchar column (size < ?) to an attribute that must never be shown to the user
@@ -4193,7 +4018,7 @@ class AttributeFinalClass extends AttributeString
  */
 class AttributePassword extends AttributeString implements iAttributeNoGroupBy
 {
-    const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -4239,17 +4064,14 @@ class AttributePassword extends AttributeString implements iAttributeNoGroupBy
 	{
 		// Note: due to this, you will get an error if a password is being declared as a search criteria (see ZLists)
 		// not allowed to search on passwords!
-		return array();
+		return [];
 	}
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (utils::IsNullOrEmptyString($sValue))
-		{
+		if (utils::IsNullOrEmptyString($sValue)) {
 			return '';
-		}
-		else
-		{
+		} else {
 			return '******';
 		}
 	}
@@ -4270,7 +4092,7 @@ class AttributePassword extends AttributeString implements iAttributeNoGroupBy
  */
 class AttributeEncryptedString extends AttributeString implements iAttributeNoGroupBy
 {
-    const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	protected function GetSQLCol($bFullSpec = false)
 	{
@@ -4286,13 +4108,12 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 	{
 		// Note: due to this, you will get an error if a an encrypted field is declared as a search criteria (see ZLists)
 		// not allowed to search on encrypted fields !
-		return array();
+		return [];
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_null($proposedValue))
-		{
+		if (is_null($proposedValue)) {
 			return null;
 		}
 
@@ -4329,7 +4150,7 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 		$oSimpleCrypt = new SimpleCrypt(MetaModel::GetConfig()->GetEncryptionLibrary());
 		$encryptedValue = $oSimpleCrypt->Encrypt(MetaModel::GetConfig()->GetEncryptionKey(), $value);
 
-		$aValues = array();
+		$aValues = [];
 		$aValues[$this->Get("sql")] = $encryptedValue;
 
 		return $aValues;
@@ -4348,9 +4169,7 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
 		return CMDBChangeOpSetAttributeEncrypted::class;
 	}
 
-
 }
-
 
 /**
  * Wiki formatting - experimental
@@ -4365,7 +4184,6 @@ class AttributeEncryptedString extends AttributeString implements iAttributeNoGr
  * - [[Server:123|Production server]]
  */
 define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)(\|(.+))?\]\]/U');
-
 
 /**
  * Map a text column (size > ?) to an attribute
@@ -4403,14 +4221,12 @@ class AttributeText extends AttributeString
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->Get('sql')] = $this->GetSQLCol($bFullSpec);
-		if ($this->GetOptional('format', null) != null)
-		{
+		if ($this->GetOptional('format', null) != null) {
 			// Add the extra column only if the property 'format' is specified for the attribute
 			$aColumns[$this->Get('sql').'_format'] = "ENUM('text','html')".CMDBSource::GetSqlStringColumnDefinition();
-			if ($bFullSpec)
-			{
+			if ($bFullSpec) {
 				$aColumns[$this->Get('sql').'_format'] .= " DEFAULT 'text'"; // default 'text' is for migrating old records
 			}
 		}
@@ -4420,15 +4236,13 @@ class AttributeText extends AttributeString
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		if ($sPrefix == '')
-		{
+		if ($sPrefix == '') {
 			$sPrefix = $this->Get('sql');
 		}
-		$aColumns = array();
+		$aColumns = [];
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $sPrefix;
-		if ($this->GetOptional('format', null) != null)
-		{
+		if ($this->GetOptional('format', null) != null) {
 			// Add the extra column only if the property 'format' is specified for the attribute
 			$aColumns['_format'] = $sPrefix.'_format';
 		}
@@ -4445,19 +4259,20 @@ class AttributeText extends AttributeString
 
 	public static function RenderWikiHtml($sText, $bWikiOnly = false)
 	{
-		if (!$bWikiOnly)
-		{
+		if (!$bWikiOnly) {
 			$sPattern = '/'.str_replace('/', '\/', utils::GetConfig()->Get('url_validation_pattern')).'/i';
-			if (preg_match_all($sPattern, $sText, $aAllMatches,
-				PREG_SET_ORDER /* important !*/ | PREG_OFFSET_CAPTURE /* important ! */))
-			{
+			if (preg_match_all(
+				$sPattern,
+				$sText,
+				$aAllMatches,
+				PREG_SET_ORDER /* important !*/ | PREG_OFFSET_CAPTURE /* important ! */
+			)) {
 				$i = count($aAllMatches);
 				// Replace the URLs by an actual hyperlink <a href="...">...</a>
 				// Let's do it backwards so that the initial positions are not modified by the replacement
 				// This works if the matches are captured: in the order they occur in the string  AND
 				// with their offset (i.e. position) inside the string
-				while ($i > 0)
-				{
+				while ($i > 0) {
 					$i--;
 					$sUrl = $aAllMatches[$i][0][0]; // String corresponding to the main pattern
 					$iPos = $aAllMatches[$i][0][1]; // Position of the main pattern
@@ -4466,40 +4281,31 @@ class AttributeText extends AttributeString
 				}
 			}
 		}
-		if (preg_match_all(WIKI_OBJECT_REGEXP, $sText, $aAllMatches, PREG_SET_ORDER))
-		{
-			foreach($aAllMatches as $iPos => $aMatches)
-			{
+		if (preg_match_all(WIKI_OBJECT_REGEXP, $sText, $aAllMatches, PREG_SET_ORDER)) {
+			foreach ($aAllMatches as $iPos => $aMatches) {
 				$sClass = trim($aMatches[1]);
 				$sName = trim($aMatches[2]);
 				$sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
-				if (MetaModel::IsValidClass($sClass))
-				{
-				    $bFound = false;
+				if (MetaModel::IsValidClass($sClass)) {
+					$bFound = false;
 
-				    // Try to find by name, then by id
-					if (is_object($oObj = MetaModel::GetObjectByName($sClass, $sName, false /* MustBeFound */)))
-                    {
-                        $bFound = true;
-                    }
-                    elseif(is_object($oObj = MetaModel::GetObject($sClass, (int) $sName, false /* MustBeFound */, true)))
-                    {
-                        $bFound = true;
-                    }
-
-                    if($bFound === true)
-                    {
-						// Propose a std link to the object
-                        $sHyperlinkLabel = (empty($sLabel)) ? $oObj->GetName() : $sLabel;
-                        $sText = str_replace($aMatches[0], $oObj->GetHyperlink(null, true, $sHyperlinkLabel), $sText);
+					// Try to find by name, then by id
+					if (is_object($oObj = MetaModel::GetObjectByName($sClass, $sName, false /* MustBeFound */))) {
+						$bFound = true;
+					} elseif (is_object($oObj = MetaModel::GetObject($sClass, (int) $sName, false /* MustBeFound */, true))) {
+						$bFound = true;
 					}
-					else
-					{
+
+					if ($bFound === true) {
+						// Propose a std link to the object
+						$sHyperlinkLabel = (empty($sLabel)) ? $oObj->GetName() : $sLabel;
+						$sText = str_replace($aMatches[0], $oObj->GetHyperlink(null, true, $sHyperlinkLabel), $sText);
+					} else {
 						// Propose a std link to the object
 						$sClassLabel = MetaModel::GetName($sClass);
 						$sToolTipForHtml = utils::EscapeHtml(Dict::Format('Core:UnknownObjectLabel', $sClass, $sName));
-						$sReplacement = "<span class=\"wiki_broken_link ibo-is-broken-hyperlink\" data-tooltip-content=\"$sToolTipForHtml\">$sClassLabel:$sName" . (!empty($sLabel) ? " ($sLabel)" : "") . "</span>";
+						$sReplacement = "<span class=\"wiki_broken_link ibo-is-broken-hyperlink\" data-tooltip-content=\"$sToolTipForHtml\">$sClassLabel:$sName".(!empty($sLabel) ? " ($sLabel)" : "")."</span>";
 						$sText = str_replace($aMatches[0], $sReplacement, $sText);
 						// Later: propose a link to create a new object
 						// Anyhow... there is no easy way to suggest default values based on the given FRIENDLY name
@@ -4514,31 +4320,25 @@ class AttributeText extends AttributeString
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		$aStyles = array();
-		if ($this->GetWidth() != '')
-		{
+		$aStyles = [];
+		if ($this->GetWidth() != '') {
 			$aStyles[] = 'width:'.$this->GetWidth();
 		}
-		if ($this->GetHeight() != '')
-		{
+		if ($this->GetHeight() != '') {
 			$aStyles[] = 'height:'.$this->GetHeight();
 		}
 		$sStyle = '';
-		if (count($aStyles) > 0)
-		{
+		if (count($aStyles) > 0) {
 			$sStyle = 'style="'.implode(';', $aStyles).'"';
 		}
 
-		if ($this->GetFormat() == 'text')
-		{
+		if ($this->GetFormat() == 'text') {
 			$sValue = parent::GetAsHTML($sValue, $oHostObject, $bLocalize);
 			$sValue = self::RenderWikiHtml($sValue);
 			$sValue = nl2br($sValue);
 
 			return "<div $sStyle>$sValue</div>";
-		}
-		else
-		{
+		} else {
 			$sValue = self::RenderWikiHtml($sValue, true /* wiki only */);
 
 			return "<div class=\"HTML ibo-is-html-content\" $sStyle>".InlineImage::FixUrls($sValue).'</div>';
@@ -4582,12 +4382,9 @@ class AttributeText extends AttributeString
 	 */
 	public function GetAsPlainText($sValue, $oHostObj = null)
 	{
-		if ($this->GetFormat() == 'html')
-		{
+		if ($this->GetFormat() == 'html') {
 			return (string)utils::HtmlToText($this->GetEditValue($sValue, $oHostObj));
-		}
-		else
-		{
+		} else {
 			return parent::GetAsPlainText($sValue, $oHostObj);
 		}
 	}
@@ -4659,8 +4456,7 @@ class AttributeText extends AttributeString
 	 */
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			/** @var \Combodo\iTop\Form\Field\TextAreaField $oFormField */
 			$oFormField = new $sFormFieldClass($this->GetCode(), null, $oObject);
@@ -4695,32 +4491,24 @@ class AttributeText extends AttributeString
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
 		$value = $aCols[$sPrefix.''];
-		if ($this->GetOptional('format', null) != null)
-		{
+		if ($this->GetOptional('format', null) != null) {
 			// Read from the extra column only if the property 'format' is specified for the attribute
 			$sFormat = $aCols[$sPrefix.'_format'];
-		}
-		else
-		{
+		} else {
 			$sFormat = $this->GetFormat();
 		}
 
-		switch ($sFormat)
-		{
+		switch ($sFormat) {
 			case 'text':
-				if ($this->GetFormat() == 'html')
-				{
+				if ($this->GetFormat() == 'html') {
 					$value = utils::TextToHtml($value);
 				}
 				break;
 
 			case 'html':
-				if ($this->GetFormat() == 'text')
-				{
+				if ($this->GetFormat() == 'text') {
 					$value = utils::HtmlToText($value);
-				}
-				else
-				{
+				} else {
 					$value = InlineImage::FixUrls((string)$value);
 				}
 				break;
@@ -4734,10 +4522,9 @@ class AttributeText extends AttributeString
 
 	public function GetSQLValues($value)
 	{
-		$aValues = array();
+		$aValues = [];
 		$aValues[$this->Get("sql")] = $this->ScalarToSQL($value);
-		if ($this->GetOptional('format', null) != null)
-		{
+		if ($this->GetOptional('format', null) != null) {
 			// Add the extra column only if the property 'format' is specified for the attribute
 			$aValues[$this->Get("sql").'_format'] = $this->GetFormat();
 		}
@@ -4746,18 +4533,20 @@ class AttributeText extends AttributeString
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
-		switch ($this->GetFormat())
-		{
+		switch ($this->GetFormat()) {
 			case 'html':
-				if ($bConvertToPlainText)
-				{
+				if ($bConvertToPlainText) {
 					$sValue = utils::HtmlToText((string)$sValue);
 				}
-				$sFrom = array("\r\n", $sTextQualifier);
-				$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+				$sFrom = ["\r\n", $sTextQualifier];
+				$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 				$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 
 				return $sTextQualifier.$sEscaped.$sTextQualifier;
@@ -4765,8 +4554,14 @@ class AttributeText extends AttributeString
 
 			case 'text':
 			default:
-				return parent::GetAsCSV($sValue, $sSeparator, $sTextQualifier, $oHostObject, $bLocalize,
-					$bConvertToPlainText);
+				return parent::GetAsCSV(
+					$sValue,
+					$sSeparator,
+					$sTextQualifier,
+					$oHostObject,
+					$bLocalize,
+					$bConvertToPlainText
+				);
 		}
 	}
 
@@ -4838,7 +4633,7 @@ class AttributeLongText extends AttributeText
  */
 class AttributeCaseLog extends AttributeLongText
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -4864,8 +4659,7 @@ class AttributeCaseLog extends AttributeLongText
 
 	public function IsNull($proposedValue)
 	{
-		if (!($proposedValue instanceof ormCaseLog))
-		{
+		if (!($proposedValue instanceof ormCaseLog)) {
 			return ($proposedValue == '');
 		}
 
@@ -4887,17 +4681,15 @@ class AttributeCaseLog extends AttributeLongText
 		return $proposedValue->GetEntryCount() > 0;
 	}
 
-
 	public function ScalarToSQL($value)
 	{
-		if (!is_string($value) && !is_null($value))
-		{
-			throw new CoreWarning('Expected the attribute value to be a string', array(
+		if (!is_string($value) && !is_null($value)) {
+			throw new CoreWarning('Expected the attribute value to be a string', [
 				'found_type' => gettype($value),
 				'value' => $value,
 				'class' => $this->GetCode(),
-				'attribute' => $this->GetHostClass()
-			));
+				'attribute' => $this->GetHostClass(),
+			]);
 		}
 
 		return $value;
@@ -4910,8 +4702,7 @@ class AttributeCaseLog extends AttributeLongText
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
-		if (!($sValue instanceOf ormCaseLog))
-		{
+		if (!($sValue instanceof ormCaseLog)) {
 			return '';
 		}
 
@@ -4928,13 +4719,10 @@ class AttributeCaseLog extends AttributeLongText
 	 */
 	public function GetAsPlainText($value, $oHostObj = null)
 	{
-		if ($value instanceOf ormCaseLog)
-		{
+		if ($value instanceof ormCaseLog) {
 			/** ormCaseLog $value */
 			return $value->GetAsPlainText();
-		}
-		else
-		{
+		} else {
 			return (string)$value;
 		}
 	}
@@ -4949,7 +4737,6 @@ class AttributeCaseLog extends AttributeLongText
 		return ($val1->GetText() == $val2->GetText());
 	}
 
-
 	/**
 	 * Facilitate things: allow the user to Set the value from a string
 	 *
@@ -4961,44 +4748,33 @@ class AttributeCaseLog extends AttributeLongText
 	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if ($proposedValue instanceof ormCaseLog)
-		{
+		if ($proposedValue instanceof ormCaseLog) {
 			// Passthrough
 			$ret = clone $proposedValue;
-		}
-		else
-		{
+		} else {
 			// Append the new value if an instance of the object is supplied
 			//
 			$oPreviousLog = null;
-			if ($oHostObj != null)
-			{
+			if ($oHostObj != null) {
 				$oPreviousLog = $oHostObj->Get($this->GetCode());
-				if (!is_object($oPreviousLog))
-				{
-					$oPreviousLog = $oHostObj->GetOriginal($this->GetCode());;
+				if (!is_object($oPreviousLog)) {
+					$oPreviousLog = $oHostObj->GetOriginal($this->GetCode());
+					;
 				}
 
 			}
-			if (is_object($oPreviousLog))
-			{
+			if (is_object($oPreviousLog)) {
 				$oCaseLog = clone($oPreviousLog);
-			}
-			else
-			{
+			} else {
 				$oCaseLog = new ormCaseLog();
 			}
 
-			if ($proposedValue instanceof stdClass)
-			{
+			if ($proposedValue instanceof stdClass) {
 				$oCaseLog->AddLogEntryFromJSON($proposedValue);
-			}
-			else
-			{
-				if (utils::StrLen($proposedValue) > 0)
-				{
+			} else {
+				if (utils::StrLen($proposedValue) > 0) {
 					//N°5135 - add impersonation information in caselog
-					if (UserRights::IsImpersonated()){
+					if (UserRights::IsImpersonated()) {
 						$sOnBehalfOf = Dict::Format('UI:Archive_User_OnBehalfOf_User', UserRights::GetRealUserFriendlyName(), UserRights::GetUserFriendlyName());
 						$oCaseLog->AddLogEntry($proposedValue, $sOnBehalfOf, UserRights::GetConnectedUserId());
 					} else {
@@ -5014,11 +4790,10 @@ class AttributeCaseLog extends AttributeLongText
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		if ($sPrefix == '')
-		{
+		if ($sPrefix == '') {
 			$sPrefix = $this->Get('sql');
 		}
-		$aColumns = array();
+		$aColumns = [];
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $sPrefix;
 		$aColumns['_index'] = $sPrefix.'_index';
@@ -5035,30 +4810,23 @@ class AttributeCaseLog extends AttributeLongText
 	 */
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		if (!array_key_exists($sPrefix, $aCols))
-		{
+		if (!array_key_exists($sPrefix, $aCols)) {
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
 		}
 		$sLog = $aCols[$sPrefix];
 
-		if (isset($aCols[$sPrefix.'_index']))
-		{
+		if (isset($aCols[$sPrefix.'_index'])) {
 			$sIndex = $aCols[$sPrefix.'_index'];
-		}
-		else
-		{
+		} else {
 			// For backward compatibility, allow the current state to be: 1 log, no index
 			$sIndex = '';
 		}
 
-		if (strlen($sIndex) > 0)
-		{
+		if (strlen($sIndex) > 0) {
 			$aIndex = unserialize($sIndex);
 			$value = new ormCaseLog($sLog, $aIndex);
-		}
-		else
-		{
+		} else {
 			$value = new ormCaseLog($sLog);
 		}
 
@@ -5067,11 +4835,10 @@ class AttributeCaseLog extends AttributeLongText
 
 	public function GetSQLValues($value)
 	{
-		if (!($value instanceOf ormCaseLog))
-		{
+		if (!($value instanceof ormCaseLog)) {
 			$value = new ormCaseLog('');
 		}
-		$aValues = array();
+		$aValues = [];
 		$aValues[$this->GetCode()] = $value->GetText();
 		$aValues[$this->GetCode().'_index'] = serialize($value->GetIndex());
 
@@ -5080,7 +4847,7 @@ class AttributeCaseLog extends AttributeLongText
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode()] = 'LONGTEXT' // 2^32 (4 Gb)
 			.CMDBSource::GetSqlStringColumnDefinition();
 		$aColumns[$this->GetCode().'_index'] = 'BLOB';
@@ -5090,56 +4857,53 @@ class AttributeCaseLog extends AttributeLongText
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if ($value instanceOf ormCaseLog)
-		{
-			$sContent = $value->GetAsHTML(null, false, array(__class__, 'RenderWikiHtml'));
-		}
-		else
-		{
+		if ($value instanceof ormCaseLog) {
+			$sContent = $value->GetAsHTML(null, false, [__class__, 'RenderWikiHtml']);
+		} else {
 			$sContent = '';
 		}
-		$aStyles = array();
-		if ($this->GetWidth() != '')
-		{
+		$aStyles = [];
+		if ($this->GetWidth() != '') {
 			$aStyles[] = 'width:'.$this->GetWidth();
 		}
-		if ($this->GetHeight() != '')
-		{
+		if ($this->GetHeight() != '') {
 			$aStyles[] = 'height:'.$this->GetHeight();
 		}
 		$sStyle = '';
-		if (count($aStyles) > 0)
-		{
+		if (count($aStyles) > 0) {
 			$sStyle = 'style="'.implode(';', $aStyles).'"';
 		}
 
 		return "<div class=\"caselog\" $sStyle>".$sContent.'</div>';
 	}
 
-
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
-		if ($value instanceOf ormCaseLog)
-		{
-			return parent::GetAsCSV($value->GetText($bConvertToPlainText), $sSeparator, $sTextQualifier, $oHostObject,
-				$bLocalize, $bConvertToPlainText);
-		}
-		else
-		{
+		if ($value instanceof ormCaseLog) {
+			return parent::GetAsCSV(
+				$value->GetText($bConvertToPlainText),
+				$sSeparator,
+				$sTextQualifier,
+				$oHostObject,
+				$bLocalize,
+				$bConvertToPlainText
+			);
+		} else {
 			return '';
 		}
 	}
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if ($value instanceOf ormCaseLog)
-		{
+		if ($value instanceof ormCaseLog) {
 			return parent::GetAsXML($value->GetText(), $oHostObject, $bLocalize);
-		}
-		else
-		{
+		} else {
 			return '';
 		}
 	}
@@ -5149,12 +4913,12 @@ class AttributeCaseLog extends AttributeLongText
 	 */
 	public function EnumTemplateVerbs()
 	{
-		return array(
+		return [
 			'' => 'Plain text representation of all the log entries',
 			'head' => 'Plain text representation of the latest entry',
 			'head_html' => 'HTML representation of the latest entry',
 			'html' => 'HTML representation of all the log entries',
-		);
+		];
 	}
 
 	/**
@@ -5170,8 +4934,7 @@ class AttributeCaseLog extends AttributeLongText
 	 */
 	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
 	{
-		switch ($sVerb)
-		{
+		switch ($sVerb) {
 			case '':
 				return $value->GetText(true);
 
@@ -5196,24 +4959,17 @@ class AttributeCaseLog extends AttributeLongText
 
 	public function FromJSONToValue($json)
 	{
-		if (is_string($json))
-		{
+		if (is_string($json)) {
 			// Will be correctly handled in MakeRealValue
 			$ret = $json;
-		}
-		else
-		{
-			if (isset($json->add_item))
-			{
+		} else {
+			if (isset($json->add_item)) {
 				// Will be correctly handled in MakeRealValue
 				$ret = $json->add_item;
-				if (!isset($ret->message))
-				{
+				if (!isset($ret->message)) {
 					throw new Exception("Missing mandatory entry: 'message'");
 				}
-			}
-			else
-			{
+			} else {
 				$ret = ormCaseLog::FromJSON($json);
 			}
 		}
@@ -5224,8 +4980,7 @@ class AttributeCaseLog extends AttributeLongText
 	public function Fingerprint($value)
 	{
 		$sFingerprint = '';
-		if ($value instanceOf ormCaseLog)
-		{
+		if ($value instanceof ormCaseLog) {
 			$sFingerprint = $value->GetText();
 		}
 
@@ -5297,14 +5052,12 @@ class AttributeHTML extends AttributeLongText
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->Get('sql')] = $this->GetSQLCol();
-		if ($this->GetOptional('format', null) != null)
-		{
+		if ($this->GetOptional('format', null) != null) {
 			// Add the extra column only if the property 'format' is specified for the attribute
 			$aColumns[$this->Get('sql').'_format'] = "ENUM('text','html')";
-			if ($bFullSpec)
-			{
+			if ($bFullSpec) {
 				$aColumns[$this->Get('sql').'_format'] .= " DEFAULT 'html'"; // default 'html' is for migrating old records
 			}
 		}
@@ -5359,8 +5112,7 @@ class AttributeEmailAddress extends AttributeString
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (empty($sValue))
-		{
+		if (empty($sValue)) {
 			return '';
 		}
 
@@ -5404,7 +5156,7 @@ class AttributeIPAddress extends AttributeString
 	public function GetOrderBySQLExpressions($sClassAlias)
 	{
 		// Note: This is the responsibility of this function to place backticks around column aliases
-		return array('INET_ATON(`'.$sClassAlias.$this->GetCode().'`)');
+		return ['INET_ATON(`'.$sClassAlias.$this->GetCode().'`)'];
 	}
 }
 
@@ -5434,8 +5186,10 @@ class AttributePhoneNumber extends AttributeString
 
 	public function GetValidationPattern()
 	{
-		return $this->GetOptional('validation_pattern',
-			'^'.utils::GetConfig()->Get('phone_number_validation_pattern').'$');
+		return $this->GetOptional(
+			'validation_pattern',
+			'^'.utils::GetConfig()->Get('phone_number_validation_pattern').'$'
+		);
 	}
 
 	public static function GetFormFieldClass()
@@ -5445,8 +5199,7 @@ class AttributePhoneNumber extends AttributeString
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (empty($sValue))
-		{
+		if (empty($sValue)) {
 			return '';
 		}
 
@@ -5466,7 +5219,7 @@ class AttributePhoneNumber extends AttributeString
  */
 class AttributeOQL extends AttributeText
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -5498,7 +5251,7 @@ class AttributeOQL extends AttributeText
  */
 class AttributeTemplateString extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -5525,7 +5278,7 @@ class AttributeTemplateString extends AttributeString
  */
 class AttributeTemplateText extends AttributeText
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -5552,7 +5305,7 @@ class AttributeTemplateText extends AttributeText
  */
 class AttributeTemplateHTML extends AttributeText
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -5573,14 +5326,12 @@ class AttributeTemplateHTML extends AttributeText
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->Get('sql')] = $this->GetSQLCol();
-		if ($this->GetOptional('format', null) != null)
-		{
+		if ($this->GetOptional('format', null) != null) {
 			// Add the extra column only if the property 'format' is specified for the attribute
 			$aColumns[$this->Get('sql').'_format'] = "ENUM('text','html')";
-			if ($bFullSpec)
-			{
+			if ($bFullSpec) {
 				$aColumns[$this->Get('sql').'_format'] .= " DEFAULT 'html'"; // default 'html' is for migrating old records
 			}
 		}
@@ -5599,7 +5350,6 @@ class AttributeTemplateHTML extends AttributeText
 	}
 }
 
-
 /**
  * Map a enum column to an attribute
  *
@@ -5607,7 +5357,7 @@ class AttributeTemplateHTML extends AttributeText
  */
 class AttributeEnum extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -5675,20 +5425,15 @@ class AttributeEnum extends AttributeString
 	protected function GetSQLColHelper($bFullSpec = false, $bIncludeActualValues = false, $sSQLTableName = null)
 	{
 		$oValDef = $this->GetValuesDef();
-		if ($oValDef)
-		{
-			$aValues = CMDBSource::Quote(array_keys($oValDef->GetValues(array(), "")), true);
-		}
-		else
-		{
-			$aValues = array();
+		if ($oValDef) {
+			$aValues = CMDBSource::Quote(array_keys($oValDef->GetValues([], "")), true);
+		} else {
+			$aValues = [];
 		}
 
 		// Preserve the values already present in the database to ease migrations
-		if ($bIncludeActualValues)
-		{
-			if ($sSQLTableName == null)
-			{
+		if ($bIncludeActualValues) {
+			if ($sSQLTableName == null) {
 				// No SQL table given, use the one of the attribute
 				$sHostClass = $this->GetHostClass();
 				$sSQLTableName = MetaModel::DBGetTable($sHostClass, $this->GetCode());
@@ -5696,8 +5441,7 @@ class AttributeEnum extends AttributeString
 			$aValues = array_unique(array_merge($aValues, $this->GetActualValuesInDB($sSQLTableName)));
 		}
 
-		if (count($aValues) > 0)
-		{
+		if (count($aValues) > 0) {
 			// The syntax used here do matters
 			// In particular, I had to remove unnecessary spaces to
 			// make sure that this string will match the field type returned by the DB
@@ -5705,9 +5449,7 @@ class AttributeEnum extends AttributeString
 			return "ENUM(".implode(",", $aValues).")"
 				.CMDBSource::GetSqlStringColumnDefinition()
 				.($bFullSpec ? $this->GetSQLColSpec() : '');
-		}
-		else
-		{
+		} else {
 			return "VARCHAR(255)"
 				.CMDBSource::GetSqlStringColumnDefinition()
 				.($bFullSpec ? " DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
@@ -5725,7 +5467,7 @@ class AttributeEnum extends AttributeString
 		// Right now the function is not passed the "target" SQL table, but if we improve this in the future
 		// we may call $this->GetSQLColHelper(true, true, $sDBTable); to take into account the actual 'enum' values
 		// in this table
-		return array($this->GetCode() => $this->GetSQLColHelper(false, false));
+		return [$this->GetCode() => $this->GetSQLColHelper(false, false)];
 	}
 
 	/**
@@ -5735,21 +5477,16 @@ class AttributeEnum extends AttributeString
 	 */
 	protected function GetActualValuesInDB(string $sDBTable)
 	{
-		$aValues = array();
-		try
-		{
+		$aValues = [];
+		try {
 			$sSQL = "SELECT DISTINCT `".$this->GetSQLExpr()."` AS value FROM `$sDBTable`;";
 			$aValuesInDB = CMDBSource::QueryToArray($sSQL);
-			foreach($aValuesInDB as $aRow)
-			{
-				if ($aRow['value'] !== null)
-				{
+			foreach ($aValuesInDB as $aRow) {
+				if ($aRow['value'] !== null) {
 					$aValues[] = $aRow['value'];
 				}
 			}
-		}
-		catch(MySQLException $e)
-		{
+		} catch (MySQLException $e) {
 			// Never mind, maybe the table does not exist yet (new installation from scratch)
 			// It seems more efficient to try and ignore errors than to test if the table & column really exists
 		}
@@ -5759,12 +5496,9 @@ class AttributeEnum extends AttributeString
 	protected function GetSQLColSpec()
 	{
 		$default = $this->ScalarToSQL($this->GetDefaultValue());
-		if (is_null($default))
-		{
+		if (is_null($default)) {
 			$sRet = '';
-		}
-		else
-		{
+		} else {
 			// ENUMs values are strings so the default value must be a string as well,
 			// otherwise MySQL interprets the number as the zero-based index of the value in the list (i.e. the nth value in the list)
 			$sRet = " DEFAULT ".CMDBSource::Quote($default);
@@ -5779,12 +5513,9 @@ class AttributeEnum extends AttributeString
 		//	   but that wasn't working for enums, because '' is NOT one of the allowed values
 		//	   that's why a null value must be forced to a real null
 		$value = parent::ScalarToSQL($value);
-		if ($this->IsNull($value))
-		{
+		if ($this->IsNull($value)) {
 			return null;
-		}
-		else
-		{
+		} else {
 			return $value;
 		}
 	}
@@ -5811,17 +5542,15 @@ class AttributeEnum extends AttributeString
 
 	public function GetValueLabel($sValue)
 	{
-		if (is_null($sValue))
-		{
+		if (is_null($sValue)) {
 			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
-			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
-				Dict::S('Enum:Undefined'));
-		}
-		else
-		{
+			$sLabel = Dict::S(
+				'Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
+				Dict::S('Enum:Undefined')
+			);
+		} else {
 			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, null, true /*user lang*/);
-			if (is_null($sLabel))
-			{
+			if (is_null($sLabel)) {
 				$sDefault = str_replace('_', ' ', $sValue);
 				// Browse the hierarchy again, accepting default (english) translations
 				$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, $sDefault, false);
@@ -5833,23 +5562,22 @@ class AttributeEnum extends AttributeString
 
 	public function GetValueDescription($sValue)
 	{
-		if (is_null($sValue))
-		{
+		if (is_null($sValue)) {
 			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
-			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
-				Dict::S('Enum:Undefined'));
-		}
-		else
-		{
-			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
-				'', true /* user language only */);
-			if (strlen($sDescription) == 0)
-			{
+			$sDescription = Dict::S(
+				'Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
+				Dict::S('Enum:Undefined')
+			);
+		} else {
+			$sDescription = Dict::S(
+				'Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
+				'',
+				true /* user language only */
+			);
+			if (strlen($sDescription) == 0) {
 				$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
-				if ($sParentClass)
-				{
-					if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
-					{
+				if ($sParentClass) {
+					if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode)) {
 						$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
 						$sDescription = $oAttDef->GetValueDescription($sValue);
 					}
@@ -5871,9 +5599,7 @@ class AttributeEnum extends AttributeString
 			$oBadge = FieldBadgeUIBlockFactory::MakeForField($sLabel, $oStyle);
 			$oRenderer = new BlockRenderer($oBadge);
 			$sRes = $oRenderer->RenderHtml();
-		}
-		else
-		{
+		} else {
 			$sRes = parent::GetAsHtml($sValue, $oHostObject, $bLocalize);
 		}
 
@@ -5882,16 +5608,11 @@ class AttributeEnum extends AttributeString
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_null($value))
-		{
+		if (is_null($value)) {
 			$sFinalValue = '';
-		}
-		elseif ($bLocalize)
-		{
+		} elseif ($bLocalize) {
 			$sFinalValue = $this->GetValueLabel($value);
-		}
-		else
-		{
+		} else {
 			$sFinalValue = $value;
 		}
 		$sRes = parent::GetAsXML($sFinalValue, $oHostObject, $bLocalize);
@@ -5900,19 +5621,18 @@ class AttributeEnum extends AttributeString
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
-		if (is_null($sValue))
-		{
+		if (is_null($sValue)) {
 			$sFinalValue = '';
-		}
-		elseif ($bLocalize)
-		{
+		} elseif ($bLocalize) {
 			$sFinalValue = $this->GetValueLabel($sValue);
-		}
-		else
-		{
+		} else {
 			$sFinalValue = $sValue;
 		}
 		$sRes = parent::GetAsCSV($sFinalValue, $sSeparator, $sTextQualifier, $oHostObject, $bLocalize);
@@ -5927,8 +5647,7 @@ class AttributeEnum extends AttributeString
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			// Later : We should check $this->Get('display_style') and create a Radio / Select / ... regarding its value
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
@@ -5942,12 +5661,9 @@ class AttributeEnum extends AttributeString
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
-		if (is_null($sValue))
-		{
+		if (is_null($sValue)) {
 			return '';
-		}
-		else
-		{
+		} else {
 			return $this->GetValueLabel($sValue);
 		}
 	}
@@ -5957,16 +5673,14 @@ class AttributeEnum extends AttributeString
 		return $value;
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$aRawValues = parent::GetAllowedValues($aArgs, $sContains);
-		if (is_null($aRawValues))
-		{
+		if (is_null($aRawValues)) {
 			return null;
 		}
-		$aLocalizedValues = array();
-		foreach($aRawValues as $sKey => $sValue)
-		{
+		$aLocalizedValues = [];
+		foreach ($aRawValues as $sKey => $sValue) {
 			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 		}
 
@@ -5990,38 +5704,41 @@ class AttributeEnum extends AttributeString
 	 * An enum can be localized
 	 */
 	public function MakeValueFromString(
-		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
+		$sProposedValue,
+		$bLocalizedValue = false,
+		$sSepItem = null,
+		$sSepAttribute = null,
+		$sSepValue = null,
 		$sAttributeQualifier = null
 	) {
-		if ($bLocalizedValue)
-		{
+		if ($bLocalizedValue) {
 			// Lookup for the value matching the input
 			//
 			$sFoundValue = null;
 			$aRawValues = parent::GetAllowedValues();
-			if (!is_null($aRawValues))
-			{
-				foreach($aRawValues as $sKey => $sValue)
-				{
+			if (!is_null($aRawValues)) {
+				foreach ($aRawValues as $sKey => $sValue) {
 					$sRefValue = $this->GetValueLabel($sKey);
-					if ($sProposedValue == $sRefValue)
-					{
+					if ($sProposedValue == $sRefValue) {
 						$sFoundValue = $sKey;
 						break;
 					}
 				}
 			}
-			if (is_null($sFoundValue))
-			{
+			if (is_null($sFoundValue)) {
 				return null;
 			}
 
 			return $this->MakeRealValue($sFoundValue, null);
-		}
-		else
-		{
-			return parent::MakeValueFromString($sProposedValue, $bLocalizedValue, $sSepItem, $sSepAttribute, $sSepValue,
-				$sAttributeQualifier);
+		} else {
+			return parent::MakeValueFromString(
+				$sProposedValue,
+				$bLocalizedValue,
+				$sSepItem,
+				$sSepAttribute,
+				$sSepValue,
+				$sAttributeQualifier
+			);
 		}
 	}
 
@@ -6035,8 +5752,7 @@ class AttributeEnum extends AttributeString
 	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if ($proposedValue == '')
-		{
+		if ($proposedValue == '') {
 			return null;
 		}
 
@@ -6079,7 +5795,7 @@ class AttributeMetaEnum extends AttributeEnum
 
 	public static function ListExpectedParams()
 	{
-		return array('allowed_values', 'sql', 'default_value', 'mapping');
+		return ['allowed_values', 'sql', 'default_value', 'mapping'];
 	}
 
 	public function IsNullAllowed()
@@ -6099,18 +5815,14 @@ class AttributeMetaEnum extends AttributeEnum
 
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
-		if (is_null($sClass))
-		{
+		if (is_null($sClass)) {
 			$sClass = $this->GetHostClass();
 		}
 		$aMappingData = $this->GetMapRule($sClass);
-		if ($aMappingData == null)
-		{
-			$aRet = array();
-		}
-		else
-		{
-			$aRet = array($aMappingData['attcode']);
+		if ($aMappingData == null) {
+			$aRet = [];
+		} else {
+			$aRet = [$aMappingData['attcode']];
 		}
 
 		return $aRet;
@@ -6124,22 +5836,19 @@ class AttributeMetaEnum extends AttributeEnum
 	 *
 	 * @return array|null
 	 */
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$oValSetDef = $this->GetValuesDef();
-		if (!$oValSetDef)
-		{
+		if (!$oValSetDef) {
 			return null;
 		}
 		$aRawValues = $oValSetDef->GetValueList();
 
-		if (is_null($aRawValues))
-		{
+		if (is_null($aRawValues)) {
 			return null;
 		}
-		$aLocalizedValues = array();
-		foreach($aRawValues as $sKey => $sValue)
-		{
+		$aLocalizedValues = [];
+		foreach ($aRawValues as $sKey => $sValue) {
 			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 		}
 
@@ -6158,26 +5867,20 @@ class AttributeMetaEnum extends AttributeEnum
 	public function MapValue($oObject)
 	{
 		$aMappingData = $this->GetMapRule(get_class($oObject));
-		if ($aMappingData == null)
-		{
+		if ($aMappingData == null) {
 			$sRet = $this->GetDefaultValue();
-		}
-		else
-		{
+		} else {
 			$sAttCode = $aMappingData['attcode'];
 			$value = $oObject->Get($sAttCode);
-			if (array_key_exists($value, $aMappingData['values']))
-			{
+			if (array_key_exists($value, $aMappingData['values'])) {
 				$sRet = $aMappingData['values'][$value];
-			}
-			elseif ($this->GetDefaultValue() != '')
-			{
+			} elseif ($this->GetDefaultValue() != '') {
 				$sRet = $this->GetDefaultValue();
-			}
-			else
-			{
-				throw new Exception('AttributeMetaEnum::MapValue(): mapping not found for value "'.$value.'" in '.get_class($oObject).', on attribute '.MetaModel::GetAttributeOrigin($this->GetHostClass(),
-						$this->GetCode()).'::'.$this->GetCode());
+			} else {
+				throw new Exception('AttributeMetaEnum::MapValue(): mapping not found for value "'.$value.'" in '.get_class($oObject).', on attribute '.MetaModel::GetAttributeOrigin(
+					$this->GetHostClass(),
+					$this->GetCode()
+				).'::'.$this->GetCode());
 			}
 		}
 
@@ -6187,19 +5890,13 @@ class AttributeMetaEnum extends AttributeEnum
 	public function GetMapRule($sClass)
 	{
 		$aMappings = $this->Get('mapping');
-		if (array_key_exists($sClass, $aMappings))
-		{
+		if (array_key_exists($sClass, $aMappings)) {
 			$aMappingData = $aMappings[$sClass];
-		}
-		else
-		{
+		} else {
 			$sParent = MetaModel::GetParentClass($sClass);
-			if (is_null($sParent))
-			{
+			if (is_null($sParent)) {
 				$aMappingData = null;
-			}
-			else
-			{
+			} else {
 				$aMappingData = $this->GetMapRule($sParent);
 			}
 		}
@@ -6215,7 +5912,7 @@ class AttributeMetaEnum extends AttributeEnum
  */
 class AttributeDateTime extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE_TIME;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE_TIME;
 
 	public static $oFormat = null;
 
@@ -6242,8 +5939,7 @@ class AttributeDateTime extends AttributeDBField
 	 */
 	public static function GetFormat()
 	{
-		if (self::$oFormat == null)
-		{
+		if (self::$oFormat == null) {
 			static::LoadFormatFromConfig();
 		}
 
@@ -6261,7 +5957,7 @@ class AttributeDateTime extends AttributeDBField
 		$sTimeFormat = isset($aFormats[$sLang]['time']) ? $aFormats[$sLang]['time'] : (isset($aFormats['default']['time']) ? $aFormats['default']['time'] : 'H:i:s');
 		$sDateAndTimeFormat = isset($aFormats[$sLang]['date_time']) ? $aFormats[$sLang]['date_time'] : (isset($aFormats['default']['date_time']) ? $aFormats['default']['date_time'] : '$date $time');
 
-		$sFullFormat = str_replace(array('$date', '$time'), array($sDateFormat, $sTimeFormat), $sDateAndTimeFormat);
+		$sFullFormat = str_replace(['$date', '$time'], [$sDateFormat, $sTimeFormat], $sDateAndTimeFormat);
 
 		self::SetFormat(new DateTimeFormat($sFullFormat));
 		AttributeDate::SetFormat(new DateTimeFormat($sDateFormat));
@@ -6306,16 +6002,13 @@ class AttributeDateTime extends AttributeDBField
 	 */
 	public function ParseSearchString($sSearchString)
 	{
-		try
-		{
+		try {
 			$oDateTime = $this->GetFormat()->Parse($sSearchString);
 			$sSearchString = $oDateTime->format($this->GetInternalFormat());
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$sFormatString = '!'.(string)AttributeDate::GetFormat(); // BEWARE: ! is needed to set non-parsed fields to zero !!!
 			$oDateTime = DateTime::createFromFormat($sFormatString, $sSearchString);
-			if ($oDateTime !== false)
-			{
+			if ($oDateTime !== false) {
 				$sSearchString = $oDateTime->format($this->GetInternalFormat());
 			}
 		}
@@ -6336,8 +6029,7 @@ class AttributeDateTime extends AttributeDBField
 	 */
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
@@ -6346,15 +6038,14 @@ class AttributeDateTime extends AttributeDBField
 
 		$oFormField = parent::MakeFormField($oObject, $oFormField);
 
-        // After call to the parent as it sets the current value
-        $oValue = $oObject->Get($this->GetCode());
-        if ($oValue === $this->GetNullValue()) {
-            $oValue = $this->GetDefaultValue($oObject);
-        }
-        $oFormField->SetCurrentValue($this->GetFormat()->Format($oValue));
+		// After call to the parent as it sets the current value
+		$oValue = $oObject->Get($this->GetCode());
+		if ($oValue === $this->GetNullValue()) {
+			$oValue = $this->GetDefaultValue($oObject);
+		}
+		$oFormField->SetCurrentValue($this->GetFormat()->Format($oValue));
 
-
-        return $oFormField;
+		return $oFormField;
 	}
 
 	/**
@@ -6362,10 +6053,10 @@ class AttributeDateTime extends AttributeDBField
 	 */
 	public function EnumTemplateVerbs()
 	{
-		return array(
+		return [
 			'' => 'Formatted representation',
 			'raw' => 'Not formatted representation',
-		);
+		];
 	}
 
 	/**
@@ -6373,8 +6064,7 @@ class AttributeDateTime extends AttributeDBField
 	 */
 	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
 	{
-		switch ($sVerb)
-		{
+		switch ($sVerb) {
 			case '':
 			case 'text':
 				return static::GetFormat()->format($value);
@@ -6403,7 +6093,6 @@ class AttributeDateTime extends AttributeDBField
 		return "DateTime";
 	}
 
-
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
 		return (string)static::GetFormat()->format($sValue);
@@ -6422,7 +6111,7 @@ class AttributeDateTime extends AttributeDBField
 	public function GetImportColumns()
 	{
 		// Allow an empty string to be a valid value (synonym for "reset")
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode()] = 'VARCHAR(19)'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
@@ -6469,7 +6158,7 @@ class AttributeDateTime extends AttributeDBField
 
 	public function GetBasicFilterOperators()
 	{
-		return array(
+		return [
 			"=" => "equals",
 			"!=" => "differs from",
 			"<" => "before",
@@ -6483,7 +6172,7 @@ class AttributeDateTime extends AttributeDBField
 			">|" => "after today + N days",
 			"<|" => "before today + N days",
 			"=|" => "equals today + N days",
-		);
+		];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -6496,8 +6185,7 @@ class AttributeDateTime extends AttributeDBField
 	{
 		$sQValue = CMDBSource::Quote($value);
 
-		switch ($sOpCode)
-		{
+		switch ($sOpCode) {
 			case '=':
 			case '!=':
 			case '<':
@@ -6536,8 +6224,7 @@ class AttributeDateTime extends AttributeDBField
 	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_null($proposedValue))
-		{
+		if (is_null($proposedValue)) {
 			return null;
 		}
 
@@ -6568,8 +6255,7 @@ class AttributeDateTime extends AttributeDBField
 
 	public function ScalarToSQL($value)
 	{
-		if (empty($value))
-		{
+		if (empty($value)) {
 			return null;
 		}
 
@@ -6587,27 +6273,26 @@ class AttributeDateTime extends AttributeDBField
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
-		if (empty($sValue) || ($sValue === '0000-00-00 00:00:00') || ($sValue === '0000-00-00'))
-		{
+		if (empty($sValue) || ($sValue === '0000-00-00 00:00:00') || ($sValue === '0000-00-00')) {
 			return '';
-		}
-		else
-		{
-			if ((string)static::GetFormat() !== static::GetInternalFormat())
-			{
+		} else {
+			if ((string)static::GetFormat() !== static::GetInternalFormat()) {
 				// Format conversion
 				$oDate = new DateTime($sValue);
-				if ($oDate !== false)
-				{
+				if ($oDate !== false) {
 					$sValue = static::GetFormat()->format($oDate);
 				}
 			}
 		}
-		$sFrom = array("\r\n", $sTextQualifier);
-		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sFrom = ["\r\n", $sTextQualifier];
+		$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 
 		return $sTextQualifier.$sEscaped.$sTextQualifier;
@@ -6627,52 +6312,46 @@ class AttributeDateTime extends AttributeDBField
 	 * @throws \CoreException
 	 */
 	public function GetSmartConditionExpression(
-		$sSearchText, FieldExpression $oField, &$aParams, $bParseSearchString = false
+		$sSearchText,
+		FieldExpression $oField,
+		&$aParams,
+		$bParseSearchString = false
 	) {
 		// Possible smart patterns
-		$aPatterns = array(
-			'between' => array('pattern' => '/^\[(.*),(.*)\]$/', 'operator' => 'n/a'),
-			'greater than or equal' => array('pattern' => '/^>=(.*)$/', 'operator' => '>='),
-			'greater than' => array('pattern' => '/^>(.*)$/', 'operator' => '>'),
-			'less than or equal' => array('pattern' => '/^<=(.*)$/', 'operator' => '<='),
-			'less than' => array('pattern' => '/^<(.*)$/', 'operator' => '<'),
-		);
+		$aPatterns = [
+			'between' => ['pattern' => '/^\[(.*),(.*)\]$/', 'operator' => 'n/a'],
+			'greater than or equal' => ['pattern' => '/^>=(.*)$/', 'operator' => '>='],
+			'greater than' => ['pattern' => '/^>(.*)$/', 'operator' => '>'],
+			'less than or equal' => ['pattern' => '/^<=(.*)$/', 'operator' => '<='],
+			'less than' => ['pattern' => '/^<(.*)$/', 'operator' => '<'],
+		];
 
 		$sPatternFound = '';
-		$aMatches = array();
-		foreach($aPatterns as $sPatName => $sPattern)
-		{
-			if (preg_match($sPattern['pattern'], $sSearchText, $aMatches))
-			{
+		$aMatches = [];
+		foreach ($aPatterns as $sPatName => $sPattern) {
+			if (preg_match($sPattern['pattern'], $sSearchText, $aMatches)) {
 				$sPatternFound = $sPatName;
 				break;
 			}
 		}
 
-		switch ($sPatternFound)
-		{
+		switch ($sPatternFound) {
 			case 'between':
 
 				$sParamName1 = $oField->GetParent().'_'.$oField->GetName().'_1';
 				$oRightExpr = new VariableExpression($sParamName1);
-				if ($bParseSearchString)
-				{
+				if ($bParseSearchString) {
 					$aParams[$sParamName1] = $this->ParseSearchString($aMatches[1]);
-				}
-				else
-				{
+				} else {
 					$aParams[$sParamName1] = $aMatches[1];
 				}
 				$oCondition1 = new BinaryExpression($oField, '>=', $oRightExpr);
 
 				$sParamName2 = $oField->GetParent().'_'.$oField->GetName().'_2';
 				$oRightExpr = new VariableExpression($sParamName2);
-				if ($bParseSearchString)
-				{
+				if ($bParseSearchString) {
 					$aParams[$sParamName2] = $this->ParseSearchString($aMatches[2]);
-				}
-				else
-				{
+				} else {
 					$aParams[$sParamName2] = $aMatches[2];
 				}
 				$oCondition2 = new BinaryExpression($oField, '<=', $oRightExpr);
@@ -6687,12 +6366,9 @@ class AttributeDateTime extends AttributeDBField
 				$sSQLOperator = $aPatterns[$sPatternFound]['operator'];
 				$sParamName = $oField->GetParent().'_'.$oField->GetName();
 				$oRightExpr = new VariableExpression($sParamName);
-				if ($bParseSearchString)
-				{
+				if ($bParseSearchString) {
 					$aParams[$sParamName] = $this->ParseSearchString($aMatches[1]);
-				}
-				else
-				{
+				} else {
 					$aParams[$sParamName] = $aMatches[1];
 				}
 				$oNewCondition = new BinaryExpression($oField, $sSQLOperator, $oRightExpr);
@@ -6707,7 +6383,6 @@ class AttributeDateTime extends AttributeDBField
 		return $oNewCondition;
 	}
 
-
 	public function GetHelpOnSmartSearch()
 	{
 		$sDict = parent::GetHelpOnSmartSearch();
@@ -6715,7 +6390,7 @@ class AttributeDateTime extends AttributeDBField
 		$oFormat = static::GetFormat();
 		$sExample = $oFormat->Format(new DateTime('2015-07-19 18:40:00'));
 
-		return vsprintf($sDict, array($oFormat->ToPlaceholder(), $sExample));
+		return vsprintf($sDict, [$oFormat->ToPlaceholder(), $sExample]);
 	}
 }
 
@@ -6760,16 +6435,13 @@ class AttributeDuration extends AttributeInteger
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_null($proposedValue))
-		{
+		if (is_null($proposedValue)) {
 			return null;
 		}
-		if (!is_numeric($proposedValue))
-		{
+		if (!is_numeric($proposedValue)) {
 			return null;
 		}
-		if (((int)$proposedValue) < 0)
-		{
+		if (((int)$proposedValue) < 0) {
 			return null;
 		}
 
@@ -6778,8 +6450,7 @@ class AttributeDuration extends AttributeInteger
 
 	public function ScalarToSQL($value)
 	{
-		if (is_null($value))
-		{
+		if (is_null($value)) {
 			return null;
 		}
 
@@ -6795,31 +6466,31 @@ class AttributeDuration extends AttributeInteger
 	{
 		$aDuration = self::SplitDuration($duration);
 
-		if ($duration < 60)
-		{
+		if ($duration < 60) {
 			// Less than 1 min
 			$sResult = Dict::Format('Core:Duration_Seconds', $aDuration['seconds']);
-		}
-		else
-		{
-			if ($duration < 3600)
-			{
+		} else {
+			if ($duration < 3600) {
 				// less than 1 hour, display it in minutes/seconds
 				$sResult = Dict::Format('Core:Duration_Minutes_Seconds', $aDuration['minutes'], $aDuration['seconds']);
-			}
-			else
-			{
-				if ($duration < 86400)
-				{
+			} else {
+				if ($duration < 86400) {
 					// Less than 1 day, display it in hours/minutes/seconds
-					$sResult = Dict::Format('Core:Duration_Hours_Minutes_Seconds', $aDuration['hours'],
-						$aDuration['minutes'], $aDuration['seconds']);
-				}
-				else
-				{
+					$sResult = Dict::Format(
+						'Core:Duration_Hours_Minutes_Seconds',
+						$aDuration['hours'],
+						$aDuration['minutes'],
+						$aDuration['seconds']
+					);
+				} else {
 					// more than 1 day, display it in days/hours/minutes/seconds
-					$sResult = Dict::Format('Core:Duration_Days_Hours_Minutes_Seconds', $aDuration['days'],
-						$aDuration['hours'], $aDuration['minutes'], $aDuration['seconds']);
+					$sResult = Dict::Format(
+						'Core:Duration_Days_Hours_Minutes_Seconds',
+						$aDuration['days'],
+						$aDuration['hours'],
+						$aDuration['minutes'],
+						$aDuration['seconds']
+					);
 				}
 			}
 		}
@@ -6827,7 +6498,7 @@ class AttributeDuration extends AttributeInteger
 		return $sResult;
 	}
 
-	static function SplitDuration($duration)
+	public static function SplitDuration($duration)
 	{
 		$duration = (int)$duration;
 		$days = floor($duration / 86400);
@@ -6835,7 +6506,7 @@ class AttributeDuration extends AttributeInteger
 		$minutes = floor(($duration - (86400 * $days + 3600 * $hours)) / 60);
 		$seconds = ($duration % 60); // modulo
 
-		return array('days' => $days, 'hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds);
+		return ['days' => $days, 'hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds];
 	}
 
 	public static function GetFormFieldClass()
@@ -6845,8 +6516,7 @@ class AttributeDuration extends AttributeInteger
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
@@ -6869,7 +6539,7 @@ class AttributeDuration extends AttributeInteger
  */
 class AttributeDate extends AttributeDateTime
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE;
 
 	public static $oDateFormat = null;
 
@@ -6892,8 +6562,7 @@ class AttributeDate extends AttributeDateTime
 
 	public static function GetFormat()
 	{
-		if (self::$oDateFormat == null)
-		{
+		if (self::$oDateFormat == null) {
 			AttributeDateTime::LoadFormatFromConfig();
 		}
 
@@ -6944,12 +6613,11 @@ class AttributeDate extends AttributeDateTime
 	public function GetImportColumns()
 	{
 		// Allow an empty string to be a valid value (synonym for "reset")
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode()] = 'VARCHAR(10)'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
-
 
 	/**
 	 * Override to specify Field class
@@ -7001,54 +6669,41 @@ class AttributeDeadline extends AttributeDateTime
 	public static function FormatDeadline($value)
 	{
 		$sResult = '';
-		if ($value !== null)
-		{
+		if ($value !== null) {
 			$iValue = AttributeDateTime::GetAsUnixSeconds($value);
 			$sDate = AttributeDateTime::GetFormat()->Format($value);
 			$difference = $iValue - time();
 
-			if ($difference >= 0)
-			{
+			if ($difference >= 0) {
 				$sDifference = self::FormatDuration($difference);
-			}
-			else
-			{
+			} else {
 				$sDifference = Dict::Format('UI:DeadlineMissedBy_duration', self::FormatDuration(-$difference));
 			}
 			$sFormat = MetaModel::GetConfig()->Get('deadline_format');
-			$sResult = str_replace(array('$date$', '$difference$'), array($sDate, $sDifference), $sFormat);
+			$sResult = str_replace(['$date$', '$difference$'], [$sDate, $sDifference], $sFormat);
 		}
 
 		return $sResult;
 	}
 
-	static function FormatDuration($duration)
+	public static function FormatDuration($duration)
 	{
 		$days = floor($duration / 86400);
 		$hours = floor(($duration - (86400 * $days)) / 3600);
 		$minutes = floor(($duration - (86400 * $days + 3600 * $hours)) / 60);
 
-		if ($duration < 60)
-		{
+		if ($duration < 60) {
 			// Less than 1 min
 			$sResult = Dict::S('UI:Deadline_LessThan1Min');
-		}
-		else
-		{
-			if ($duration < 3600)
-			{
+		} else {
+			if ($duration < 3600) {
 				// less than 1 hour, display it in minutes
 				$sResult = Dict::Format('UI:Deadline_Minutes', $minutes);
-			}
-			else
-			{
-				if ($duration < 86400)
-				{
+			} else {
+				if ($duration < 86400) {
 					// Less that 1 day, display it in hours/minutes
 					$sResult = Dict::Format('UI:Deadline_Hours_Minutes', $hours, $minutes);
-				}
-				else
-				{
+				} else {
 					// Less that 1 day, display it in hours/minutes
 					$sResult = Dict::Format('UI:Deadline_Days_Hours_Minutes', $days, $hours, $minutes);
 				}
@@ -7069,7 +6724,7 @@ class AttributeDeadline extends AttributeDateTime
  */
 class AttributeExternalKey extends AttributeDBFieldVoid
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -7095,18 +6750,15 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	 */
 	public function GetSearchType()
 	{
-		try
-		{
+		try {
 			$oRemoteAtt = $this->GetFinalAttDef();
 			$sTargetClass = $oRemoteAtt->GetTargetClass();
-			if (MetaModel::IsHierarchicalClass($sTargetClass))
-			{
+			if (MetaModel::IsHierarchicalClass($sTargetClass)) {
 				return self::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY;
 			}
 
 			return self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
-		} catch (CoreException $e)
-		{
+		} catch (CoreException $e) {
 		}
 
 		return self::SEARCH_WIDGET_TYPE_RAW;
@@ -7114,7 +6766,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("targetclass", "is_null_allowed", "on_target_delete"));
+		return array_merge(parent::ListExpectedParams(), ["targetclass", "is_null_allowed", "on_target_delete"]);
 	}
 
 	public function GetEditClass()
@@ -7157,7 +6809,6 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $this->GetOptional('display_style', 'select');
 	}
 
-
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
 		return 0;
@@ -7165,14 +6816,12 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function IsNullAllowed()
 	{
-		if (MetaModel::GetConfig()->Get('disable_mandatory_ext_keys'))
-		{
+		if (MetaModel::GetConfig()->Get('disable_mandatory_ext_keys')) {
 			return true;
 		}
 
 		return $this->Get("is_null_allowed");
 	}
-
 
 	public function GetBasicFilterOperators()
 	{
@@ -7194,8 +6843,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function GetValuesDef()
 	{
 		$oValSetDef = $this->Get("allowed_values");
-		if (!$oValSetDef)
-		{
+		if (!$oValSetDef) {
 			// Let's propose every existing value
 			$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
 		}
@@ -7203,14 +6851,12 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oValSetDef;
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		//throw new Exception("GetAllowedValues on ext key has been deprecated");
-		try
-		{
+		try {
 			return parent::GetAllowedValues($aArgs, $sContains);
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			// Some required arguments could not be found, enlarge to any existing value
 			$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
 
@@ -7218,15 +6864,14 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		}
 	}
 
-	public function GetAllowedValuesForSelect($aArgs = array(), $sContains = '')
+	public function GetAllowedValuesForSelect($aArgs = [], $sContains = '')
 	{
 		//$this->GetValuesDef();
 		$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
 		return $oValSetDef->GetValuesForAutocomplete($aArgs, $sContains);
 	}
 
-
-	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	public function GetAllowedValuesAsObjectSet($aArgs = [], $sContains = '', $iAdditionalValue = null)
 	{
 		$oValSetDef = $this->GetValuesDef();
 		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains, $iAdditionalValue);
@@ -7234,7 +6879,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oSet;
 	}
 
-	public function GetAllowedValuesAsFilter($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	public function GetAllowedValuesAsFilter($aArgs = [], $sContains = '', $iAdditionalValue = null)
 	{
 		return DBObjectSearch::FromOQL($this->GetValuesDef()->GetFilterExpression());
 	}
@@ -7264,12 +6909,10 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_null($proposedValue))
-		{
+		if (is_null($proposedValue)) {
 			return 0;
 		}
-		if ($proposedValue === '')
-		{
+		if ($proposedValue === '') {
 			return 0;
 		}
 		if (MetaModel::IsValidObject($proposedValue)) {
@@ -7327,19 +6970,17 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	{
 		$oRet = null;
 		$sRemoteClass = $this->GetTargetClass();
-		foreach(MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef)
-		{
-			if (!$oRemoteAttDef->IsLinkSet())
-			{
+		foreach (MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef) {
+			if (!$oRemoteAttDef->IsLinkSet()) {
 				continue;
 			}
-			if (!is_subclass_of($this->GetHostClass(),
-					$oRemoteAttDef->GetLinkedClass()) && $oRemoteAttDef->GetLinkedClass() != $this->GetHostClass())
-			{
+			if (!is_subclass_of(
+				$this->GetHostClass(),
+				$oRemoteAttDef->GetLinkedClass()
+			) && $oRemoteAttDef->GetLinkedClass() != $this->GetHostClass()) {
 				continue;
 			}
-			if ($oRemoteAttDef->GetExtKeyToMe() != $this->GetCode())
-			{
+			if ($oRemoteAttDef->GetExtKeyToMe() != $this->GetCode()) {
 				continue;
 			}
 			$oRet = $oRemoteAttDef;
@@ -7379,17 +7020,15 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 				/** @var $oObject \DBObject */
 
 				// We set search object only if it has not already been set (overrided)
-				if ($oTmpField->GetSearch() === null)
-				{
+				if ($oTmpField->GetSearch() === null) {
 					$oSearch = DBSearch::FromOQL($oTmpAttDef->GetValuesDef()->GetFilterExpression());
-					$oSearch->SetInternalParams(array('this' => $oObject));
+					$oSearch->SetInternalParams(['this' => $oObject]);
 					$oTmpField->SetSearch($oSearch);
 				}
 			});
-		}
-		else {
+		} else {
 			$oSearch = DBSearch::FromOQL($this->GetValuesDef()->GetFilterExpression());
-			$oSearch->SetInternalParams(array('this' => $oObject));
+			$oSearch->SetInternalParams(['this' => $oObject]);
 			$oFormField->SetSearch($oSearch);
 		}
 
@@ -7413,7 +7052,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
  */
 class AttributeHierarchicalKey extends AttributeExternalKey
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY;
 
 	protected $m_sTargetClass;
 
@@ -7460,8 +7099,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 	*/
 	public function SetHostClass($sHostClass)
 	{
-		if (!isset($this->m_sTargetClass))
-		{
+		if (!isset($this->m_sTargetClass)) {
 			$this->m_sTargetClass = $sHostClass;
 		}
 		parent::SetHostClass($sHostClass);
@@ -7499,7 +7137,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode()] = 'INT(11)'.($bFullSpec ? ' DEFAULT 0' : '');
 		$aColumns[$this->GetSQLLeft()] = 'INT(11)'.($bFullSpec ? ' DEFAULT 0' : '');
 		$aColumns[$this->GetSQLRight()] = 'INT(11)'.($bFullSpec ? ' DEFAULT 0' : '');
@@ -7519,13 +7157,10 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 
 	public function GetSQLValues($value)
 	{
-		if (!is_array($value))
-		{
+		if (!is_array($value)) {
 			$aValues[$this->GetCode()] = $value;
-		}
-		else
-		{
-			$aValues = array();
+		} else {
+			$aValues = [];
 			$aValues[$this->GetCode()] = $value[$this->GetCode()];
 			$aValues[$this->GetSQLRight()] = $value[$this->GetSQLRight()];
 			$aValues[$this->GetSQLLeft()] = $value[$this->GetSQLLeft()];
@@ -7534,28 +7169,24 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		return $aValues;
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$oFilter = $this->GetHierachicalFilter($aArgs, $sContains);
-		if ($oFilter)
-		{
+		if ($oFilter) {
 			$oValSetDef = $this->GetValuesDef();
 			$oValSetDef->SetCondition($oFilter);
 
 			return $oValSetDef->GetValues($aArgs, $sContains);
-		}
-		else
-		{
+		} else {
 			return parent::GetAllowedValues($aArgs, $sContains);
 		}
 	}
 
-	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	public function GetAllowedValuesAsObjectSet($aArgs = [], $sContains = '', $iAdditionalValue = null)
 	{
 		$oValSetDef = $this->GetValuesDef();
 		$oFilter = $this->GetHierachicalFilter($aArgs, $sContains, $iAdditionalValue);
-		if ($oFilter)
-		{
+		if ($oFilter) {
 			$oValSetDef->SetCondition($oFilter);
 		}
 		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains, $iAdditionalValue);
@@ -7563,26 +7194,23 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		return $oSet;
 	}
 
-	public function GetAllowedValuesAsFilter($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	public function GetAllowedValuesAsFilter($aArgs = [], $sContains = '', $iAdditionalValue = null)
 	{
 		$oFilter = $this->GetHierachicalFilter($aArgs, $sContains, $iAdditionalValue);
-		if ($oFilter)
-		{
+		if ($oFilter) {
 			return $oFilter;
 		}
 
 		return parent::GetAllowedValuesAsFilter($aArgs, $sContains, $iAdditionalValue);
 	}
 
-	private function GetHierachicalFilter($aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	private function GetHierachicalFilter($aArgs = [], $sContains = '', $iAdditionalValue = null)
 	{
-		if (array_key_exists('this', $aArgs))
-		{
+		if (array_key_exists('this', $aArgs)) {
 			// Hierarchical keys have one more constraint: the "parent value" cannot be
 			// "under" themselves
 			$iRootId = $aArgs['this']->GetKey();
-			if ($iRootId > 0) // ignore objects that do no exist in the database...
-			{
+			if ($iRootId > 0) { // ignore objects that do no exist in the database...
 				$sClass = $this->m_sTargetClass;
 
 				return DBObjectSearch::FromOQL("SELECT $sClass AS node JOIN $sClass AS root ON node.".$this->GetCode()." NOT BELOW root.id WHERE root.id = $iRootId");
@@ -7636,32 +7264,27 @@ class AttributeExternalField extends AttributeDefinition
 	public function GetSearchType()
 	{
 		// Not necessary the external key is already present
-		if ($this->IsFriendlyName())
-		{
+		if ($this->IsFriendlyName()) {
 			return self::SEARCH_WIDGET_TYPE_RAW;
 		}
 
-		try
-		{
+		try {
 			$oRemoteAtt = $this->GetFinalAttDef();
-			switch (true)
-			{
+			switch (true) {
 				case ($oRemoteAtt instanceof AttributeString):
 					return self::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD;
 				case ($oRemoteAtt instanceof AttributeExternalKey):
 					return self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 			}
-		} catch (CoreException $e)
-		{
+		} catch (CoreException $e) {
 		}
 
 		return self::SEARCH_WIDGET_TYPE_RAW;
 	}
 
-	function IsSearchable()
+	public function IsSearchable()
 	{
-		if ($this->IsFriendlyName())
-		{
+		if ($this->IsFriendlyName()) {
 			return true;
 		}
 		return parent::IsSearchable();
@@ -7669,7 +7292,7 @@ class AttributeExternalField extends AttributeDefinition
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("extkey_attcode", "target_attcode"));
+		return array_merge(parent::ListExpectedParams(), ["extkey_attcode", "target_attcode"]);
 	}
 
 	public function GetEditClass()
@@ -7698,12 +7321,9 @@ class AttributeExternalField extends AttributeDefinition
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		if ($sPrefix == '')
-		{
-			return array('' => $this->GetCode()); // Warning: Use GetCode() since AttributeExternalField does not have any 'sql' property
-		}
-		else
-		{
+		if ($sPrefix == '') {
+			return ['' => $this->GetCode()]; // Warning: Use GetCode() since AttributeExternalField does not have any 'sql' property
+		} else {
 			return $sPrefix;
 		}
 	}
@@ -7739,13 +7359,11 @@ class AttributeExternalField extends AttributeDefinition
 	{
 		$sLabelDefaultValue = '';
 		$sLabel = parent::GetLabel($sLabelDefaultValue);
-		if ($sLabelDefaultValue !== $sLabel)
-		{
+		if ($sLabelDefaultValue !== $sLabel) {
 			return $sLabel;
 		}
 
-		if ($this->IsFriendlyName() && ($this->Get("target_attcode") === "friendlyname"))
-		{
+		if ($this->IsFriendlyName() && ($this->Get("target_attcode") === "friendlyname")) {
 			// This will be used even if we are pointing to a friendlyname in a distance > 1
 			// For example we can link to a magic friendlyname (like org_id_friendlyname)
 			// If a specific label is needed, use a Dict key !
@@ -7769,8 +7387,7 @@ class AttributeExternalField extends AttributeDefinition
 	public function GetLabelForSearchField()
 	{
 		$sLabel = parent::GetLabel('');
-		if (strlen($sLabel) == 0)
-		{
+		if (strlen($sLabel) == 0) {
 			$sKeyAttCode = $this->Get("extkey_attcode");
 			$oExtKeyAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $sKeyAttCode);
 			$sLabel = $oExtKeyAttDef->GetLabel($this->m_sCode);
@@ -7785,8 +7402,7 @@ class AttributeExternalField extends AttributeDefinition
 	public function GetDescription($sDefault = null)
 	{
 		$sLabel = parent::GetDescription('');
-		if (strlen($sLabel) == 0)
-		{
+		if (strlen($sLabel) == 0) {
 			$oRemoteAtt = $this->GetExtAttDef();
 			$sLabel = $oRemoteAtt->GetDescription('');
 		}
@@ -7797,8 +7413,7 @@ class AttributeExternalField extends AttributeDefinition
 	public function GetHelpOnEdition($sDefault = null)
 	{
 		$sLabel = parent::GetHelpOnEdition('');
-		if (strlen($sLabel) == 0)
-		{
+		if (strlen($sLabel) == 0) {
 			$oRemoteAtt = $this->GetExtAttDef();
 			$sLabel = $oRemoteAtt->GetHelpOnEdition('');
 		}
@@ -7808,8 +7423,7 @@ class AttributeExternalField extends AttributeDefinition
 
 	public function IsExternalKey($iType = EXTKEY_RELATIVE)
 	{
-		switch ($iType)
-		{
+		switch ($iType) {
 			case EXTKEY_ABSOLUTE:
 				// see further
 				$oRemoteAtt = $this->GetExtAttDef();
@@ -7831,16 +7445,11 @@ class AttributeExternalField extends AttributeDefinition
 	public function IsFriendlyName()
 	{
 		$oRemoteAtt = $this->GetExtAttDef();
-		if ($oRemoteAtt instanceof AttributeExternalField)
-		{
+		if ($oRemoteAtt instanceof AttributeExternalField) {
 			$bRet = $oRemoteAtt->IsFriendlyName();
-		}
-		elseif ($oRemoteAtt instanceof AttributeFriendlyName)
-		{
+		} elseif ($oRemoteAtt instanceof AttributeFriendlyName) {
 			$bRet = true;
-		}
-		else
-		{
+		} else {
 			$bRet = false;
 		}
 
@@ -7876,20 +7485,15 @@ class AttributeExternalField extends AttributeDefinition
 	 */
 	public function GetKeyAttDef($iType = EXTKEY_RELATIVE)
 	{
-		switch ($iType)
-		{
+		switch ($iType) {
 			case EXTKEY_ABSOLUTE:
 				// see further
 				/** @var \AttributeExternalKey $oRemoteAtt */
 				$oRemoteAtt = $this->GetExtAttDef();
-				if ($oRemoteAtt->IsExternalField())
-				{
+				if ($oRemoteAtt->IsExternalField()) {
 					return $oRemoteAtt->GetKeyAttDef(EXTKEY_ABSOLUTE);
-				}
-				else
-				{
-					if ($oRemoteAtt->IsExternalKey())
-					{
+				} else {
+					if ($oRemoteAtt->IsExternalKey()) {
 						return $oRemoteAtt;
 					}
 				}
@@ -7909,9 +7513,8 @@ class AttributeExternalField extends AttributeDefinition
 
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
-		return array($this->Get("extkey_attcode"));
+		return [$this->Get("extkey_attcode")];
 	}
-
 
 	/**
 	 * @return \AttributeExternalField
@@ -7923,8 +7526,7 @@ class AttributeExternalField extends AttributeDefinition
 		$oKeyAttDef = $this->GetKeyAttDef();
 		/** @var \AttributeExternalField $oExtAttDef */
 		$oExtAttDef = MetaModel::GetAttributeDef($oKeyAttDef->GetTargetClass(), $this->Get("target_attcode"));
-		if (!is_object($oExtAttDef))
-		{
+		if (!is_object($oExtAttDef)) {
 			throw new CoreException("Invalid external field ".$this->GetCode()." in class ".$this->GetHostClass().". The class ".$oKeyAttDef->GetTargetClass()." has no attribute ".$this->Get("target_attcode"));
 		}
 
@@ -7963,7 +7565,7 @@ class AttributeExternalField extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		return array($this->GetCode() => $this->GetCode());
+		return [$this->GetCode() => $this->GetCode()];
 	}
 
 	public function GetBasicFilterOperators()
@@ -8037,7 +7639,6 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->ScalarToSQL($value);
 	}
 
-
 	// Do not overload GetSQLExpression here because this is handled in the joins
 	//public function GetSQLExpressions($sPrefix = '') {return array();}
 
@@ -8064,7 +7665,11 @@ class AttributeExternalField extends AttributeDefinition
 	}
 
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTestQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTestQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
 		$oExtAttDef = $this->GetExtAttDef();
@@ -8089,22 +7694,17 @@ class AttributeExternalField extends AttributeDefinition
 		// Retrieving AttDef from the remote attribute
 		$oRemoteAttDef = $this->GetExtAttDef();
 
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			// ExternalField's FormField are actually based on the FormField from the target attribute.
 			// Except for the AttributeExternalKey because we have no OQL and stuff
-			if ($oRemoteAttDef instanceof AttributeExternalKey)
-			{
+			if ($oRemoteAttDef instanceof AttributeExternalKey) {
 				$sFormFieldClass = static::GetFormFieldClass();
-			}
-			else
-			{
+			} else {
 				$sFormFieldClass = $oRemoteAttDef::GetFormFieldClass();
 			}
 			/** @var \Combodo\iTop\Form\Field\Field $oFormField */
 			$oFormField = new $sFormFieldClass($this->GetCode());
-			switch ($sFormFieldClass)
-			{
+			switch ($sFormFieldClass) {
 				case '\Combodo\iTop\Form\Field\SelectField':
 					$oFormField->SetChoices($oRemoteAttDef->GetAllowedValues($oObject->ToArgsForQuery()));
 					break;
@@ -8121,8 +7721,7 @@ class AttributeExternalField extends AttributeDefinition
 		}
 
 		// Manually setting for remote ExternalKey, otherwise, the id would be displayed.
-		if ($oRemoteAttDef instanceof AttributeExternalKey)
-		{
+		if ($oRemoteAttDef instanceof AttributeExternalKey) {
 			$oFormField->SetCurrentValue($oObject->Get($this->GetCode().'_friendlyname'));
 		}
 
@@ -8147,7 +7746,6 @@ class AttributeExternalField extends AttributeDefinition
 		return 'text';
 	}
 }
-
 
 /**
  * Map a varchar column to an URL (formats the ouput in HMTL)
@@ -8187,7 +7785,7 @@ class AttributeURL extends AttributeString
 	public static function ListExpectedParams()
 	{
 		//return parent::ListExpectedParams();
-		return array_merge(parent::ListExpectedParams(), array("target"));
+		return array_merge(parent::ListExpectedParams(), ["target"]);
 	}
 
 	protected function GetSQLCol($bFullSpec = false)
@@ -8210,13 +7808,11 @@ class AttributeURL extends AttributeString
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		$sTarget = $this->Get("target");
-		if (empty($sTarget))
-		{
+		if (empty($sTarget)) {
 			$sTarget = "_blank";
 		}
 		$sLabel = Str::pure2html($sValue);
-		if (strlen($sLabel) > 128)
-		{
+		if (strlen($sLabel) > 128) {
 			// Truncate the length to 128 characters, by removing the middle
 			$sLabel = substr($sLabel, 0, 100).'.....'.substr($sLabel, -20);
 		}
@@ -8267,7 +7863,7 @@ class AttributeURL extends AttributeString
  */
 class AttributeBlob extends AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -8288,7 +7884,7 @@ class AttributeBlob extends AttributeDefinition
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("depends_on"));
+		return array_merge(parent::ListExpectedParams(), ["depends_on"]);
 	}
 
 	public function GetEditClass()
@@ -8327,31 +7923,25 @@ class AttributeBlob extends AttributeDefinition
 	}
 
 	/**
-     * {@inheritDoc}
-     *
-     * @param string $proposedValue Can be an URL (including an URL to iTop itself), or a local path (CSV import)
+	 * {@inheritDoc}
+	 *
+	 * @param string $proposedValue Can be an URL (including an URL to iTop itself), or a local path (CSV import)
 	 *
 	 * @see AttributeDefinition::MakeRealValue()
 	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if ($proposedValue === null)
-		{
+		if ($proposedValue === null) {
 			return null;
 		}
 
-		if (is_object($proposedValue))
-		{
+		if (is_object($proposedValue)) {
 			$proposedValue = clone $proposedValue;
-		}
-		else
-		{
-			try
-			{
+		} else {
+			try {
 				// Read the file from iTop, an URL (or the local file system - for admins only)
 				$proposedValue = Utils::FileGetContentsAndMIMEType($proposedValue);
-			} catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				IssueLog::Warning(get_class($this)."::MakeRealValue - ".$e->getMessage());
 				// Not a real document !! store is as text !!! (This was the default behavior before)
 				$proposedValue = new ormDocument($e->getMessage()." \n".$proposedValue, 'text/plain');
@@ -8363,11 +7953,10 @@ class AttributeBlob extends AttributeDefinition
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		if ($sPrefix == '')
-		{
+		if ($sPrefix == '') {
 			$sPrefix = $this->GetCode();
 		}
-		$aColumns = array();
+		$aColumns = [];
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $sPrefix.'_mimetype';
 		$aColumns['_data'] = $sPrefix.'_data';
@@ -8416,24 +8005,18 @@ class AttributeBlob extends AttributeDefinition
 		//	 (temporary tables created on disk)
 		//	 We will have to remove the blobs from the list of attributes when doing the select
 		//	 then the use of Get() should finalize the load
-		if ($value instanceOf ormDocument)
-		{
-			$aValues = array();
-			if (!$value->IsEmpty())
-			{
+		if ($value instanceof ormDocument) {
+			$aValues = [];
+			if (!$value->IsEmpty()) {
 				$aValues[$this->GetCode().'_data'] = $value->GetData();
-			}
-			else
-			{
+			} else {
 				$aValues[$this->GetCode().'_data'] = '';
 			}
 			$aValues[$this->GetCode().'_mimetype'] = $value->GetMimeType();
 			$aValues[$this->GetCode().'_filename'] = $value->GetFileName();
 			$aValues[$this->GetCode().'_downloads_count'] = $value->GetDownloadsCount();
-		}
-		else
-		{
-			$aValues = array();
+		} else {
+			$aValues = [];
 			$aValues[$this->GetCode().'_data'] = '';
 			$aValues[$this->GetCode().'_mimetype'] = '';
 			$aValues[$this->GetCode().'_filename'] = '';
@@ -8445,7 +8028,7 @@ class AttributeBlob extends AttributeDefinition
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode().'_data'] = 'LONGBLOB'; // 2^32 (4 Gb)
 		$aColumns[$this->GetCode().'_mimetype'] = 'VARCHAR(255)'.CMDBSource::GetSqlStringColumnDefinition();
 		$aColumns[$this->GetCode().'_filename'] = 'VARCHAR(255)'.CMDBSource::GetSqlStringColumnDefinition();
@@ -8456,12 +8039,12 @@ class AttributeBlob extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -8476,8 +8059,7 @@ class AttributeBlob extends AttributeDefinition
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_object($value))
-		{
+		if (is_object($value)) {
 			return $value->GetAsHTML();
 		}
 
@@ -8495,12 +8077,15 @@ class AttributeBlob extends AttributeDefinition
 	 * @return string
 	 */
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
 		$sAttCode = $this->GetCode();
-		if ($sValue instanceof ormDocument && !$sValue->IsEmpty())
-		{
+		if ($sValue instanceof ormDocument && !$sValue->IsEmpty()) {
 			return $sValue->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $sAttCode);
 		}
 
@@ -8517,11 +8102,9 @@ class AttributeBlob extends AttributeDefinition
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$sRet = '';
-		if (is_object($value))
-		{
+		if (is_object($value)) {
 			/** @var \ormDocument $value */
-			if (!$value->IsEmpty())
-			{
+			if (!$value->IsEmpty()) {
 				$sRet = '<mimetype>'.$value->GetMimeType().'</mimetype>';
 				$sRet .= '<filename>'.$value->GetFileName().'</filename>';
 				$sRet .= '<data>'.base64_encode($value->GetData()).'</data>';
@@ -8534,16 +8117,13 @@ class AttributeBlob extends AttributeDefinition
 
 	public function GetForJSON($value)
 	{
-		if ($value instanceOf ormDocument)
-		{
-			$aValues = array();
+		if ($value instanceof ormDocument) {
+			$aValues = [];
 			$aValues['data'] = base64_encode($value->GetData());
 			$aValues['mimetype'] = $value->GetMimeType();
 			$aValues['filename'] = $value->GetFileName();
 			$aValues['downloads_count'] = $value->GetDownloadsCount();
-		}
-		else
-		{
+		} else {
 			$aValues = null;
 		}
 
@@ -8552,13 +8132,10 @@ class AttributeBlob extends AttributeDefinition
 
 	public function FromJSONToValue($json)
 	{
-		if (isset($json->data))
-		{
+		if (isset($json->data)) {
 			$data = base64_decode($json->data);
 			$value = new ormDocument($data, $json->mimetype, $json->filename, $json->downloads_count);
-		}
-		else
-		{
+		} else {
 			$value = null;
 		}
 
@@ -8568,8 +8145,7 @@ class AttributeBlob extends AttributeDefinition
 	public function Fingerprint($value)
 	{
 		$sFingerprint = '';
-		if ($value instanceOf ormDocument)
-		{
+		if ($value instanceof ormDocument) {
 			$sFingerprint = $value->GetSignature();
 		}
 
@@ -8584,8 +8160,7 @@ class AttributeBlob extends AttributeDefinition
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
 		/** @var $oFormField \Combodo\iTop\Form\Field\BlobField */
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
@@ -8599,14 +8174,12 @@ class AttributeBlob extends AttributeDefinition
 		// Setting current value correctly as the default method returns an empty string when there is no file yet.
 		/** @var \ormDocument $value */
 		$value = $oObject->Get($this->GetCode());
-		if(!is_object($value))
-		{
+		if (!is_object($value)) {
 			$oFormField->SetCurrentValue(new ormDocument());
 		}
 
 		// Generating urls
-		if(is_object($value) && !$value->IsEmpty())
-		{
+		if (is_object($value) && !$value->IsEmpty()) {
 			$oFormField->SetDownloadUrl($value->GetDownloadURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
 			$oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
 		}
@@ -8688,7 +8261,7 @@ class AttributeImage extends AttributeBlob
 		if ($sParamName === 'default_image') {
 			/** @noinspection NestedPositiveIfStatementsInspection */
 			if (!empty($oParamValue)) {
-				return utils::GetAbsoluteUrlModulesRoot() . $oParamValue;
+				return utils::GetAbsoluteUrlModulesRoot().$oParamValue;
 			}
 		}
 
@@ -8732,8 +8305,7 @@ class AttributeImage extends AttributeBlob
 	 */
 	public function CheckFormat($value)
 	{
-		if ($value instanceof ormDocument && !$value->IsEmpty())
-		{
+		if ($value instanceof ormDocument && !$value->IsEmpty()) {
 			return ($value->GetMainMimeType() == 'image');
 		}
 
@@ -8787,7 +8359,8 @@ class AttributeImage extends AttributeBlob
 	 * @since 2.6.0 new private method
 	 * @since 2.7.0 change visibility to protected
 	 */
-	protected function GetHtmlForImageUrl($sUrl, $iMaxWidthPx, $iMaxHeightPx) {
+	protected function GetHtmlForImageUrl($sUrl, $iMaxWidthPx, $iMaxHeightPx)
+	{
 		return '<img src="'.$sUrl.'" style="max-width: min('.$iMaxWidthPx.',100%); max-height: min('.$iMaxHeightPx.',100%)">';
 	}
 
@@ -8800,7 +8373,8 @@ class AttributeImage extends AttributeBlob
 	 * @since 2.6.0 new private method
 	 * @since 2.7.0 change visibility to protected
 	 */
-	protected function GetAttributeImageFileUrl($value, $oHostObject) {
+	protected function GetAttributeImageFileUrl($value, $oHostObject)
+	{
 		if (!is_object($value)) {
 			return null;
 		}
@@ -8809,8 +8383,7 @@ class AttributeImage extends AttributeBlob
 		}
 
 		$bExistingImageModified = ($oHostObject->IsModified() && (array_key_exists($this->GetCode(), $oHostObject->ListChanges())));
-		if ($oHostObject->IsNew() || ($bExistingImageModified))
-		{
+		if ($oHostObject->IsNew() || ($bExistingImageModified)) {
 			// If the object is modified (or not yet stored in the database) we must serve the content of the image directly inline
 			// otherwise (if we just give an URL) the browser will be given the wrong content... and may cache it
 			return 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
@@ -8826,8 +8399,7 @@ class AttributeImage extends AttributeBlob
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
@@ -8836,13 +8408,10 @@ class AttributeImage extends AttributeBlob
 
 		// Generating urls
 		$value = $oObject->Get($this->GetCode());
-		if (is_object($value) && !$value->IsEmpty())
-		{
+		if (is_object($value) && !$value->IsEmpty()) {
 			$oFormField->SetDownloadUrl($value->GetDownloadURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
-			$oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(),	$this->GetCode()));
-		}
-		else
-		{
+			$oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
+		} else {
 			$oDefaultImage = $this->Get('default_image');
 			if (is_object($oDefaultImage) && !$oDefaultImage->IsEmpty()) {
 				$oFormField->SetDownloadUrl($oDefaultImage);
@@ -8861,7 +8430,7 @@ class AttributeImage extends AttributeBlob
  */
 class AttributeStopWatch extends AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -8883,8 +8452,10 @@ class AttributeStopWatch extends AttributeDefinition
 	public static function ListExpectedParams()
 	{
 		// The list of thresholds must be an array of iPercent => array of 'option' => value
-		return array_merge(parent::ListExpectedParams(),
-			array("states", "goal_computing", "working_time_computing", "thresholds"));
+		return array_merge(
+			parent::ListExpectedParams(),
+			["states", "goal_computing", "working_time_computing", "thresholds"]
+		);
 	}
 
 	public function GetEditClass()
@@ -8940,8 +8511,7 @@ class AttributeStopWatch extends AttributeDefinition
 	public function NewStopWatch()
 	{
 		$oSW = new ormStopWatch();
-		foreach($this->ListThresholds() as $iThreshold => $aFoo)
-		{
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 			$oSW->DefineThreshold($iThreshold);
 		}
 
@@ -8951,8 +8521,7 @@ class AttributeStopWatch extends AttributeDefinition
 	// Facilitate things: allow the user to Set the value from a string
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (!$proposedValue instanceof ormStopWatch)
-		{
+		if (!$proposedValue instanceof ormStopWatch) {
 			return $this->NewStopWatch();
 		}
 
@@ -8961,18 +8530,16 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		if ($sPrefix == '')
-		{
+		if ($sPrefix == '') {
 			$sPrefix = $this->GetCode(); // Warning: a stopwatch does not have any 'sql' property, so its SQL column is equal to its attribute code !!
 		}
-		$aColumns = array();
+		$aColumns = [];
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $sPrefix.'_timespent';
 		$aColumns['_started'] = $sPrefix.'_started';
 		$aColumns['_laststart'] = $sPrefix.'_laststart';
 		$aColumns['_stopped'] = $sPrefix.'_stopped';
-		foreach($this->ListThresholds() as $iThreshold => $aFoo)
-		{
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 			$sThPrefix = '_'.$iThreshold;
 			$aColumns[$sThPrefix.'_deadline'] = $sPrefix.$sThPrefix.'_deadline';
 			$aColumns[$sThPrefix.'_passed'] = $sPrefix.$sThPrefix.'_passed';
@@ -8985,8 +8552,7 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public static function DateToSeconds($sDate)
 	{
-		if (is_null($sDate))
-		{
+		if (is_null($sDate)) {
 			return null;
 		}
 		$oDateTime = new DateTime($sDate);
@@ -8997,8 +8563,7 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public static function SecondsToDate($iSeconds)
 	{
-		if (is_null($iSeconds))
-		{
+		if (is_null($iSeconds)) {
 			return null;
 		}
 
@@ -9007,19 +8572,16 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		$aExpectedCols = array($sPrefix, $sPrefix.'_started', $sPrefix.'_laststart', $sPrefix.'_stopped');
-		foreach($this->ListThresholds() as $iThreshold => $aFoo)
-		{
+		$aExpectedCols = [$sPrefix, $sPrefix.'_started', $sPrefix.'_laststart', $sPrefix.'_stopped'];
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 			$sThPrefix = '_'.$iThreshold;
 			$aExpectedCols[] = $sPrefix.$sThPrefix.'_deadline';
 			$aExpectedCols[] = $sPrefix.$sThPrefix.'_passed';
 			$aExpectedCols[] = $sPrefix.$sThPrefix.'_triggered';
 			$aExpectedCols[] = $sPrefix.$sThPrefix.'_overrun';
 		}
-		foreach($aExpectedCols as $sExpectedCol)
-		{
-			if (!array_key_exists($sExpectedCol, $aCols))
-			{
+		foreach ($aExpectedCols as $sExpectedCol) {
+			if (!array_key_exists($sExpectedCol, $aCols)) {
 				$sAvailable = implode(', ', array_keys($aCols));
 				throw new MissingColumnException("Missing column '$sExpectedCol' from {$sAvailable}");
 			}
@@ -9032,8 +8594,7 @@ class AttributeStopWatch extends AttributeDefinition
 			self::DateToSeconds($aCols[$sPrefix.'_stopped'])
 		);
 
-		foreach($this->ListThresholds() as $iThreshold => $aDefinition)
-		{
+		foreach ($this->ListThresholds() as $iThreshold => $aDefinition) {
 			$sThPrefix = '_'.$iThreshold;
 			$value->DefineThreshold(
 				$iThreshold,
@@ -9050,26 +8611,22 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public function GetSQLValues($value)
 	{
-		if ($value instanceOf ormStopWatch)
-		{
-			$aValues = array();
+		if ($value instanceof ormStopWatch) {
+			$aValues = [];
 			$aValues[$this->GetCode().'_timespent'] = $value->GetTimeSpent();
 			$aValues[$this->GetCode().'_started'] = self::SecondsToDate($value->GetStartDate());
 			$aValues[$this->GetCode().'_laststart'] = self::SecondsToDate($value->GetLastStartDate());
 			$aValues[$this->GetCode().'_stopped'] = self::SecondsToDate($value->GetStopDate());
 
-			foreach($this->ListThresholds() as $iThreshold => $aFoo)
-			{
+			foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 				$sPrefix = $this->GetCode().'_'.$iThreshold;
 				$aValues[$sPrefix.'_deadline'] = self::SecondsToDate($value->GetThresholdDate($iThreshold));
 				$aValues[$sPrefix.'_passed'] = $value->IsThresholdPassed($iThreshold) ? '1' : '0';
 				$aValues[$sPrefix.'_triggered'] = $value->IsThresholdTriggered($iThreshold) ? '1' : '0';
 				$aValues[$sPrefix.'_overrun'] = $value->GetOverrun($iThreshold);
 			}
-		}
-		else
-		{
-			$aValues = array();
+		} else {
+			$aValues = [];
 			$aValues[$this->GetCode().'_timespent'] = '';
 			$aValues[$this->GetCode().'_started'] = '';
 			$aValues[$this->GetCode().'_laststart'] = '';
@@ -9081,13 +8638,12 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode().'_timespent'] = 'INT(11) UNSIGNED';
 		$aColumns[$this->GetCode().'_started'] = 'DATETIME';
 		$aColumns[$this->GetCode().'_laststart'] = 'DATETIME';
 		$aColumns[$this->GetCode().'_stopped'] = 'DATETIME';
-		foreach($this->ListThresholds() as $iThreshold => $aFoo)
-		{
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 			$sPrefix = $this->GetCode().'_'.$iThreshold;
 			$aColumns[$sPrefix.'_deadline'] = 'DATETIME';
 			$aColumns[$sPrefix.'_passed'] = 'TINYINT(1) UNSIGNED';
@@ -9100,12 +8656,12 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		$aRes = array(
+		$aRes = [
 			$this->GetCode()              => $this->GetCode(),
 			$this->GetCode().'_started'   => $this->GetCode(),
 			$this->GetCode().'_laststart' => $this->GetCode(),
 			$this->GetCode().'_stopped'   => $this->GetCode(),
-		);
+		];
 		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 			$sPrefix = $this->GetCode().'_'.$iThreshold;
 			$aRes[$sPrefix.'_deadline'] = $this->GetCode();
@@ -9119,7 +8675,7 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -9141,8 +8697,7 @@ class AttributeStopWatch extends AttributeDefinition
 	 */
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_object($value))
-		{
+		if (is_object($value)) {
 			return $value->GetAsHTML($this, $oHostObject);
 		}
 
@@ -9160,7 +8715,11 @@ class AttributeStopWatch extends AttributeDefinition
 	 * @return string
 	 */
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
 		return $value->GetTimeSpent();
@@ -9186,8 +8745,7 @@ class AttributeStopWatch extends AttributeDefinition
 	public function Fingerprint($value)
 	{
 		$sFingerprint = '';
-		if (is_object($value))
-		{
+		if (is_object($value)) {
 			$sFingerprint = $value->GetAsHTML($this);
 		}
 
@@ -9206,35 +8764,31 @@ class AttributeStopWatch extends AttributeDefinition
 	public function GetSubItemSQLExpression($sItemCode)
 	{
 		$sPrefix = $this->GetCode();
-		switch ($sItemCode)
-		{
+		switch ($sItemCode) {
 			case 'timespent':
-				return array('' => $sPrefix.'_timespent');
+				return ['' => $sPrefix.'_timespent'];
 			case 'started':
-				return array('' => $sPrefix.'_started');
+				return ['' => $sPrefix.'_started'];
 			case 'laststart':
-				return array('' => $sPrefix.'_laststart');
+				return ['' => $sPrefix.'_laststart'];
 			case 'stopped':
-				return array('' => $sPrefix.'_stopped');
+				return ['' => $sPrefix.'_stopped'];
 		}
 
-		foreach($this->ListThresholds() as $iThreshold => $aFoo)
-		{
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 			$sThPrefix = $iThreshold.'_';
-			if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
-			{
+			if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix) {
 				// The current threshold is concerned
 				$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
-				switch ($sThresholdCode)
-				{
+				switch ($sThresholdCode) {
 					case 'deadline':
-						return array('' => $sPrefix.'_'.$iThreshold.'_deadline');
+						return ['' => $sPrefix.'_'.$iThreshold.'_deadline'];
 					case 'passed':
-						return array('' => $sPrefix.'_'.$iThreshold.'_passed');
+						return ['' => $sPrefix.'_'.$iThreshold.'_passed'];
 					case 'triggered':
-						return array('' => $sPrefix.'_'.$iThreshold.'_triggered');
+						return ['' => $sPrefix.'_'.$iThreshold.'_triggered'];
 					case 'overrun':
-						return array('' => $sPrefix.'_'.$iThreshold.'_overrun');
+						return ['' => $sPrefix.'_'.$iThreshold.'_overrun'];
 				}
 			}
 		}
@@ -9252,8 +8806,7 @@ class AttributeStopWatch extends AttributeDefinition
 	public function GetSubItemValue($sItemCode, $value, $oHostObject = null)
 	{
 		$oStopWatch = $value;
-		switch ($sItemCode)
-		{
+		switch ($sItemCode) {
 			case 'timespent':
 				return $oStopWatch->GetTimeSpent();
 			case 'started':
@@ -9264,15 +8817,12 @@ class AttributeStopWatch extends AttributeDefinition
 				return $oStopWatch->GetStopDate();
 		}
 
-		foreach($this->ListThresholds() as $iThreshold => $aFoo)
-		{
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 			$sThPrefix = $iThreshold.'_';
-			if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
-			{
+			if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix) {
 				// The current threshold is concerned
 				$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
-				switch ($sThresholdCode)
-				{
+				switch ($sThresholdCode) {
 					case 'deadline':
 						return $oStopWatch->GetThresholdDate($iThreshold);
 					case 'passed':
@@ -9288,86 +8838,75 @@ class AttributeStopWatch extends AttributeDefinition
 		throw new CoreException("Unknown item code '$sItemCode' for attribute ".$this->GetHostClass().'::'.$this->GetCode());
 	}
 
+	public function GetSubItemSearchType($sItemCode)
+	{
+		switch ($sItemCode) {
+			case 'timespent':
+				return static::SEARCH_WIDGET_TYPE_NUMERIC;  //seconds
+			case 'started':
+			case 'laststart':
+			case 'stopped':
+				return static::SEARCH_WIDGET_TYPE_DATE_TIME; //timestamp
+		}
 
-    public function GetSubItemSearchType($sItemCode)
-    {
-        switch ($sItemCode)
-        {
-            case 'timespent':
-                return static::SEARCH_WIDGET_TYPE_NUMERIC;  //seconds
-            case 'started':
-            case 'laststart':
-            case 'stopped':
-                return static::SEARCH_WIDGET_TYPE_DATE_TIME; //timestamp
-        }
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
+			$sThPrefix = $iThreshold.'_';
+			if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix) {
+				// The current threshold is concerned
+				$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+				switch ($sThresholdCode) {
+					case 'deadline':
+						return static::SEARCH_WIDGET_TYPE_DATE_TIME; //timestamp
+					case 'passed':
+					case 'triggered':
+						return static::SEARCH_WIDGET_TYPE_ENUM; //booleans, used in conjuction with GetSubItemAllowedValues and IsSubItemNullAllowed
+					case 'overrun':
+						return static::SEARCH_WIDGET_TYPE_NUMERIC; //seconds
+				}
+			}
+		}
 
-        foreach($this->ListThresholds() as $iThreshold => $aFoo)
-        {
-            $sThPrefix = $iThreshold.'_';
-            if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
-            {
-                // The current threshold is concerned
-                $sThresholdCode = substr($sItemCode, strlen($sThPrefix));
-                switch ($sThresholdCode)
-                {
-                    case 'deadline':
-                        return static::SEARCH_WIDGET_TYPE_DATE_TIME; //timestamp
-                    case 'passed':
-                    case 'triggered':
-                        return static::SEARCH_WIDGET_TYPE_ENUM; //booleans, used in conjuction with GetSubItemAllowedValues and IsSubItemNullAllowed
-                    case 'overrun':
-                        return static::SEARCH_WIDGET_TYPE_NUMERIC; //seconds
-                }
-            }
-        }
+		return static::SEARCH_WIDGET_TYPE_RAW;
+	}
 
-        return static::SEARCH_WIDGET_TYPE_RAW;
-    }
+	public function GetSubItemAllowedValues($sItemCode, $aArgs = [], $sContains = '')
+	{
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
+			$sThPrefix = $iThreshold.'_';
+			if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix) {
+				// The current threshold is concerned
+				$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+				switch ($sThresholdCode) {
+					case 'passed':
+					case 'triggered':
+						return [
+							0 => $this->GetBooleanLabel(0),
+							1 => $this->GetBooleanLabel(1),
+						];
+				}
+			}
+		}
 
-    public function GetSubItemAllowedValues($sItemCode, $aArgs = array(), $sContains = '')
-    {
-        foreach($this->ListThresholds() as $iThreshold => $aFoo)
-        {
-            $sThPrefix = $iThreshold.'_';
-            if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
-            {
-                // The current threshold is concerned
-                $sThresholdCode = substr($sItemCode, strlen($sThPrefix));
-                switch ($sThresholdCode)
-                {
-                    case 'passed':
-                    case 'triggered':
-                        return array(
-                            0 => $this->GetBooleanLabel(0),
-                            1 => $this->GetBooleanLabel(1),
-                        );
-                }
-            }
-        }
+		return null;
+	}
 
-        return null;
-    }
+	public function IsSubItemNullAllowed($sItemCode, $bDefaultValue)
+	{
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
+			$sThPrefix = $iThreshold.'_';
+			if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix) {
+				// The current threshold is concerned
+				$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+				switch ($sThresholdCode) {
+					case 'passed':
+					case 'triggered':
+						return false;
+				}
+			}
+		}
 
-    public function IsSubItemNullAllowed($sItemCode, $bDefaultValue)
-    {
-        foreach($this->ListThresholds() as $iThreshold => $aFoo)
-        {
-            $sThPrefix = $iThreshold.'_';
-            if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
-            {
-                // The current threshold is concerned
-                $sThresholdCode = substr($sItemCode, strlen($sThPrefix));
-                switch ($sThresholdCode)
-                {
-                    case 'passed':
-                    case 'triggered':
-                       return false;
-                }
-            }
-        }
-
-        return $bDefaultValue;
-    }
+		return $bDefaultValue;
+	}
 
 	protected function GetBooleanLabel($bValue)
 	{
@@ -9379,8 +8918,7 @@ class AttributeStopWatch extends AttributeDefinition
 	public function GetSubItemAsHTMLForHistory($sItemCode, $sValue)
 	{
 		$sHtml = null;
-		switch ($sItemCode)
-		{
+		switch ($sItemCode) {
 			case 'timespent':
 				$sHtml = (int)$sValue ? Str::pure2html(AttributeDuration::FormatDuration($sValue)) : null;
 				break;
@@ -9391,18 +8929,17 @@ class AttributeStopWatch extends AttributeDefinition
 				break;
 
 			default:
-				foreach($this->ListThresholds() as $iThreshold => $aFoo)
-				{
+				foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 					$sThPrefix = $iThreshold.'_';
-					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
-					{
+					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix) {
 						// The current threshold is concerned
 						$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
-						switch ($sThresholdCode)
-						{
+						switch ($sThresholdCode) {
 							case 'deadline':
-								$sHtml = (int)$sValue ? date((string)AttributeDateTime::GetFormat(),
-									(int)$sValue) : null;
+								$sHtml = (int)$sValue ? date(
+									(string)AttributeDateTime::GetFormat(),
+									(int)$sValue
+								) : null;
 								break;
 							case 'passed':
 							case 'triggered':
@@ -9422,20 +8959,16 @@ class AttributeStopWatch extends AttributeDefinition
 	{
 		$sRet = $value;
 
-		switch ($sItemCode)
-		{
+		switch ($sItemCode) {
 			case 'timespent':
 				$sRet = AttributeDuration::FormatDuration($value);
 				break;
 			case 'started':
 			case 'laststart':
 			case 'stopped':
-				if (is_null($value))
-				{
+				if (is_null($value)) {
 					$sRet = ''; // Undefined
-				}
-				else
-				{
+				} else {
 					$oDateTime = new DateTime();
 					$oDateTime->setTimestamp($value);
 					$oDateTimeFormat = AttributeDateTime::GetFormat();
@@ -9444,28 +8977,21 @@ class AttributeStopWatch extends AttributeDefinition
 				break;
 
 			default:
-				foreach($this->ListThresholds() as $iThreshold => $aFoo)
-				{
+				foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 					$sThPrefix = $iThreshold.'_';
-					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
-					{
+					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix) {
 						// The current threshold is concerned
 						$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
-						switch ($sThresholdCode)
-						{
+						switch ($sThresholdCode) {
 							case 'deadline':
-								if ($value)
-								{
-									if (is_int($value))
-									{
+								if ($value) {
+									if (is_int($value)) {
 										$sDate = date(AttributeDateTime::GetInternalFormat(), $value);
 										$sRet = AttributeDeadline::FormatDeadline($sDate);
 									} else {
 										$sRet = $value;
 									}
-								}
-								else
-								{
+								} else {
 									$sRet = '';
 								}
 								break;
@@ -9488,20 +9014,16 @@ class AttributeStopWatch extends AttributeDefinition
 	{
 		$sHtml = $value;
 
-		switch ($sItemCode)
-		{
+		switch ($sItemCode) {
 			case 'timespent':
 				$sHtml = Str::pure2html(AttributeDuration::FormatDuration($value));
 				break;
 			case 'started':
 			case 'laststart':
 			case 'stopped':
-				if (is_null($value))
-				{
+				if (is_null($value)) {
 					$sHtml = ''; // Undefined
-				}
-				else
-				{
+				} else {
 					$oDateTime = new DateTime();
 					$oDateTime->setTimestamp($value);
 					$oDateTimeFormat = AttributeDateTime::GetFormat();
@@ -9510,23 +9032,17 @@ class AttributeStopWatch extends AttributeDefinition
 				break;
 
 			default:
-				foreach($this->ListThresholds() as $iThreshold => $aFoo)
-				{
+				foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 					$sThPrefix = $iThreshold.'_';
-					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
-					{
+					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix) {
 						// The current threshold is concerned
 						$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
-						switch ($sThresholdCode)
-						{
+						switch ($sThresholdCode) {
 							case 'deadline':
-								if ($value)
-								{
+								if ($value) {
 									$sDate = date(AttributeDateTime::GetInternalFormat(), $value);
 									$sHtml = Str::pure2html(AttributeDeadline::FormatDeadline($sDate));
-								}
-								else
-								{
+								} else {
 									$sHtml = '';
 								}
 								break;
@@ -9546,23 +9062,25 @@ class AttributeStopWatch extends AttributeDefinition
 	}
 
 	public function GetSubItemAsCSV(
-		$sItemCode, $value, $sSeparator = ',', $sTextQualifier = '"', $bConvertToPlainText = false
+		$sItemCode,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$bConvertToPlainText = false
 	) {
-		$sFrom = array("\r\n", $sTextQualifier);
-		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sFrom = ["\r\n", $sTextQualifier];
+		$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 		$sEscaped = str_replace($sFrom, $sTo, (string)$value);
 		$sRet = $sTextQualifier.$sEscaped.$sTextQualifier;
 
-		switch ($sItemCode)
-		{
+		switch ($sItemCode) {
 			case 'timespent':
 				$sRet = $sTextQualifier.AttributeDuration::FormatDuration($value).$sTextQualifier;
 				break;
 			case 'started':
 			case 'laststart':
 			case 'stopped':
-				if ($value !== null)
-				{
+				if ($value !== null) {
 					$oDateTime = new DateTime();
 					$oDateTime->setTimestamp($value);
 					$oDateTimeFormat = AttributeDateTime::GetFormat();
@@ -9571,18 +9089,14 @@ class AttributeStopWatch extends AttributeDefinition
 				break;
 
 			default:
-				foreach($this->ListThresholds() as $iThreshold => $aFoo)
-				{
+				foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 					$sThPrefix = $iThreshold.'_';
-					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
-					{
+					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix) {
 						// The current threshold is concerned
 						$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
-						switch ($sThresholdCode)
-						{
+						switch ($sThresholdCode) {
 							case 'deadline':
-								if ($value != '')
-								{
+								if ($value != '') {
 									$oDateTime = new DateTime();
 									$oDateTime->setTimestamp($value);
 									$oDateTimeFormat = AttributeDateTime::GetFormat();
@@ -9610,8 +9124,7 @@ class AttributeStopWatch extends AttributeDefinition
 	{
 		$sRet = Str::pure2xml((string)$value);
 
-		switch ($sItemCode)
-		{
+		switch ($sItemCode) {
 			case 'timespent':
 			case 'started':
 			case 'laststart':
@@ -9619,15 +9132,12 @@ class AttributeStopWatch extends AttributeDefinition
 				break;
 
 			default:
-				foreach($this->ListThresholds() as $iThreshold => $aFoo)
-				{
+				foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 					$sThPrefix = $iThreshold.'_';
-					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
-					{
+					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix) {
 						// The current threshold is concerned
 						$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
-						switch ($sThresholdCode)
-						{
+						switch ($sThresholdCode) {
 							case 'deadline':
 							case 'overrun':
 								break;
@@ -9656,41 +9166,31 @@ class AttributeStopWatch extends AttributeDefinition
 	{
 		$sRet = $value;
 
-		switch ($sItemCode)
-		{
+		switch ($sItemCode) {
 			case 'timespent':
 				break;
 
 			case 'started':
 			case 'laststart':
 			case 'stopped':
-				if (is_null($value))
-				{
+				if (is_null($value)) {
 					$sRet = ''; // Undefined
-				}
-				else
-				{
+				} else {
 					$sRet = date((string)AttributeDateTime::GetFormat(), $value);
 				}
 				break;
 
 			default:
-				foreach($this->ListThresholds() as $iThreshold => $aFoo)
-				{
+				foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 					$sThPrefix = $iThreshold.'_';
-					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
-					{
+					if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix) {
 						// The current threshold is concerned
 						$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
-						switch ($sThresholdCode)
-						{
+						switch ($sThresholdCode) {
 							case 'deadline':
-								if ($value)
-								{
+								if ($value) {
 									$sRet = date((string)AttributeDateTime::GetFormat(), $value);
-								}
-								else
-								{
+								} else {
 									$sRet = '';
 								}
 								break;
@@ -9768,40 +9268,40 @@ class AttributeSubItem extends AttributeDefinition
 	}
 
 	/**
-     * Return the search widget type corresponding to this attribute
-     * the computation is made by AttributeStopWatch::GetSubItemSearchType
-     *
-     * @return string
-     */
-    public function GetSearchType()
-    {
-        /** @var AttributeStopWatch $oParent */
-        $oParent = $this->GetTargetAttDef();
-
-        return $oParent->GetSubItemSearchType($this->Get('item_code'));
-    }
-
-    public function GetAllowedValues($aArgs = array(), $sContains = '')
-    {
-        /** @var AttributeStopWatch $oParent */
-        $oParent = $this->GetTargetAttDef();
-
-        return $oParent->GetSubItemAllowedValues($this->Get('item_code'), $aArgs, $sContains);
-    }
-
-    public function IsNullAllowed()
-    {
-        /** @var AttributeStopWatch $oParent */
-        $oParent = $this->GetTargetAttDef();
-
-        $bDefaultValue = parent::IsNullAllowed();
-
-        return $oParent->IsSubItemNullAllowed($this->Get('item_code'), $bDefaultValue);
-    }
-
-    public static function ListExpectedParams()
+	 * Return the search widget type corresponding to this attribute
+	 * the computation is made by AttributeStopWatch::GetSubItemSearchType
+	 *
+	 * @return string
+	 */
+	public function GetSearchType()
 	{
-		return array_merge(parent::ListExpectedParams(), array('target_attcode', 'item_code'));
+		/** @var AttributeStopWatch $oParent */
+		$oParent = $this->GetTargetAttDef();
+
+		return $oParent->GetSubItemSearchType($this->Get('item_code'));
+	}
+
+	public function GetAllowedValues($aArgs = [], $sContains = '')
+	{
+		/** @var AttributeStopWatch $oParent */
+		$oParent = $this->GetTargetAttDef();
+
+		return $oParent->GetSubItemAllowedValues($this->Get('item_code'), $aArgs, $sContains);
+	}
+
+	public function IsNullAllowed()
+	{
+		/** @var AttributeStopWatch $oParent */
+		$oParent = $this->GetTargetAttDef();
+
+		$bDefaultValue = parent::IsNullAllowed();
+
+		return $oParent->IsSubItemNullAllowed($this->Get('item_code'), $bDefaultValue);
+	}
+
+	public static function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), ['target_attcode', 'item_code']);
 	}
 
 	public function GetParentAttCode()
@@ -9850,7 +9350,7 @@ class AttributeSubItem extends AttributeDefinition
 		return null;
 	}
 
-//	public function IsNullAllowed() {return false;}
+	//	public function IsNullAllowed() {return false;}
 
 	public static function LoadInObject()
 	{
@@ -9876,7 +9376,7 @@ class AttributeSubItem extends AttributeDefinition
 	}
 
 	//
-//	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
+	//	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
@@ -9884,17 +9384,17 @@ class AttributeSubItem extends AttributeDefinition
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		return array();
+		return [];
 	}
 
 	public function GetFilterDefinitions()
 	{
-		return array($this->GetCode() => $this->GetCode());
+		return [$this->GetCode() => $this->GetCode()];
 	}
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -9905,8 +9405,7 @@ class AttributeSubItem extends AttributeDefinition
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		$sQValue = CMDBSource::Quote($value);
-		switch ($sOpCode)
-		{
+		switch ($sOpCode) {
 			case '!=':
 				return $this->GetSQLExpr()." != $sQValue";
 				break;
@@ -9949,12 +9448,21 @@ class AttributeSubItem extends AttributeDefinition
 	}
 
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
 		$oParent = $this->GetTargetAttDef();
-		$res = $oParent->GetSubItemAsCSV($this->Get('item_code'), $value, $sSeparator, $sTextQualifier,
-			$bConvertToPlainText);
+		$res = $oParent->GetSubItemAsCSV(
+			$this->Get('item_code'),
+			$value,
+			$sSeparator,
+			$sTextQualifier,
+			$bConvertToPlainText
+		);
 
 		return $res;
 	}
@@ -9990,8 +9498,7 @@ class AttributeSubItem extends AttributeDefinition
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
@@ -10012,7 +9519,7 @@ class AttributeSubItem extends AttributeDefinition
  */
 class AttributeOneWayPassword extends AttributeDefinition implements iAttributeNoGroupBy
 {
-    const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -10033,7 +9540,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("depends_on"));
+		return array_merge(parent::ListExpectedParams(), ["depends_on"]);
 	}
 
 	public function GetEditClass()
@@ -10070,12 +9577,9 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$oPassword = $proposedValue;
-		if (is_object($oPassword))
-		{
+		if (is_object($oPassword)) {
 			$oPassword = clone $proposedValue;
-		}
-		else
-		{
+		} else {
 			$oPassword = new ormPassword('', '');
 			$oPassword->SetPassword($proposedValue);
 		}
@@ -10085,11 +9589,10 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		if ($sPrefix == '')
-		{
+		if ($sPrefix == '') {
 			$sPrefix = $this->GetCode(); // Warning: AttributeOneWayPassword does not have any sql property so code = sql !
 		}
-		$aColumns = array();
+		$aColumns = [];
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $sPrefix.'_hash';
 		$aColumns['_salt'] = $sPrefix.'_salt';
@@ -10099,15 +9602,13 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		if (!array_key_exists($sPrefix, $aCols))
-		{
+		if (!array_key_exists($sPrefix, $aCols)) {
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
 		}
 		$hashed = isset($aCols[$sPrefix]) ? $aCols[$sPrefix] : '';
 
-		if (!array_key_exists($sPrefix.'_salt', $aCols))
-		{
+		if (!array_key_exists($sPrefix.'_salt', $aCols)) {
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '".$sPrefix."_salt' from {$sAvailable}");
 		}
@@ -10126,15 +9627,12 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 		//	 (temporary tables created on disk)
 		//	 We will have to remove the blobs from the list of attributes when doing the select
 		//	 then the use of Get() should finalize the load
-		if ($value instanceOf ormPassword)
-		{
-			$aValues = array();
+		if ($value instanceof ormPassword) {
+			$aValues = [];
 			$aValues[$this->GetCode().'_hash'] = $value->GetHash();
 			$aValues[$this->GetCode().'_salt'] = $value->GetSalt();
-		}
-		else
-		{
-			$aValues = array();
+		} else {
+			$aValues = [];
 			$aValues[$this->GetCode().'_hash'] = '';
 			$aValues[$this->GetCode().'_salt'] = '';
 		}
@@ -10144,7 +9642,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode().'_hash'] = 'TINYBLOB';
 		$aColumns[$this->GetCode().'_salt'] = 'TINYBLOB';
 
@@ -10153,7 +9651,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 
 	public function GetImportColumns()
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode()] = 'TINYTEXT'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
@@ -10161,8 +9659,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 
 	public function FromImportToValue($aCols, $sPrefix = '')
 	{
-		if (!isset($aCols[$sPrefix]))
-		{
+		if (!isset($aCols[$sPrefix])) {
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
 		}
@@ -10176,13 +9673,13 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 
 	public function GetFilterDefinitions()
 	{
-		return array();
+		return [];
 		// still not working... see later...
 	}
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -10197,8 +9694,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_object($value))
-		{
+		if (is_object($value)) {
 			return $value->GetAsHTML();
 		}
 
@@ -10206,7 +9702,11 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
 		return ''; // Not exportable in CSV
@@ -10258,7 +9758,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 // Indexed array having two dimensions
 class AttributeTable extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -10294,7 +9794,7 @@ class AttributeTable extends AttributeDBField
 
 	public function GetNullValue()
 	{
-		return array();
+		return [];
 	}
 
 	public function IsNull($proposedValue)
@@ -10310,7 +9810,6 @@ class AttributeTable extends AttributeDBField
 		return count($proposedValue) > 0;
 	}
 
-
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
 		return '';
@@ -10319,15 +9818,11 @@ class AttributeTable extends AttributeDBField
 	// Facilitate things: allow the user to Set the value from a string
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_null($proposedValue))
-		{
-			return array();
-		}
-		else
-		{
-			if (!is_array($proposedValue))
-			{
-				return array(0 => array(0 => $proposedValue));
+		if (is_null($proposedValue)) {
+			return [];
+		} else {
+			if (!is_array($proposedValue)) {
+				return [0 => [0 => $proposedValue]];
 			}
 		}
 
@@ -10336,23 +9831,18 @@ class AttributeTable extends AttributeDBField
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		try
-		{
+		try {
 			$value = @unserialize($aCols[$sPrefix.'']);
-			if ($value === false)
-			{
+			if ($value === false) {
 				$value = @json_decode($aCols[$sPrefix.''], true);
-				if (is_null($value))
-				{
+				if (is_null($value)) {
 					$value = false;
 				}
 			}
-			if ($value === false)
-			{
+			if ($value === false) {
 				$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
 			}
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
 		}
 
@@ -10361,13 +9851,10 @@ class AttributeTable extends AttributeDBField
 
 	public function GetSQLValues($value)
 	{
-		$aValues = array();
-		try
-		{
+		$aValues = [];
+		try {
 			$sSerializedValue = serialize($value);
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$sSerializedValue = json_encode($value);
 		}
 		$aValues[$this->Get("sql")] = $sSerializedValue;
@@ -10377,22 +9864,18 @@ class AttributeTable extends AttributeDBField
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if (!is_array($value))
-		{
-			throw new CoreException('Expecting an array', array('found' => get_class($value)));
+		if (!is_array($value)) {
+			throw new CoreException('Expecting an array', ['found' => get_class($value)]);
 		}
-		if (count($value) == 0)
-		{
+		if (count($value) == 0) {
 			return "";
 		}
 
 		$sRes = "<TABLE class=\"listResults\">";
 		$sRes .= "<TBODY>";
-		foreach($value as $iRow => $aRawData)
-		{
+		foreach ($value as $iRow => $aRawData) {
 			$sRes .= "<TR>";
-			foreach($aRawData as $iCol => $cell)
-			{
+			foreach ($aRawData as $iCol => $cell) {
 				// Note: avoid the warning in case the cell is made of an array
 				$sCell = @Str::pure2html((string)$cell);
 				$sCell = str_replace("\n", "<br>\n", $sCell);
@@ -10407,7 +9890,11 @@ class AttributeTable extends AttributeDBField
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
 		// Not implemented
@@ -10416,17 +9903,14 @@ class AttributeTable extends AttributeDBField
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if (!is_array($value) || count($value) == 0)
-		{
+		if (!is_array($value) || count($value) == 0) {
 			return "";
 		}
 
 		$sRes = "";
-		foreach($value as $iRow => $aRawData)
-		{
+		foreach ($value as $iRow => $aRawData) {
 			$sRes .= "<row>";
-			foreach($aRawData as $iCol => $cell)
-			{
+			foreach ($aRawData as $iCol => $cell) {
 				$sCell = Str::pure2xml((string)$cell);
 				$sRes .= "<cell icol=\"$iCol\">$sCell</cell>";
 			}
@@ -10465,9 +9949,8 @@ class AttributePropertySet extends AttributeTable
 	// Facilitate things: allow the user to Set the value from a string
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (!is_array($proposedValue))
-		{
-			return array('?' => (string)$proposedValue);
+		if (!is_array($proposedValue)) {
+			return ['?' => (string)$proposedValue];
 		}
 
 		return $proposedValue;
@@ -10475,21 +9958,17 @@ class AttributePropertySet extends AttributeTable
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if (!is_array($value))
-		{
-			throw new CoreException('Expecting an array', array('found' => get_class($value)));
+		if (!is_array($value)) {
+			throw new CoreException('Expecting an array', ['found' => get_class($value)]);
 		}
-		if (count($value) == 0)
-		{
+		if (count($value) == 0) {
 			return "";
 		}
 
 		$sRes = "<TABLE class=\"listResults\">";
 		$sRes .= "<TBODY>";
-		foreach($value as $sProperty => $sValue)
-		{
-			if ($sProperty == 'auth_pwd')
-			{
+		foreach ($value as $sProperty => $sValue) {
+			if ($sProperty == 'auth_pwd') {
 				$sValue = '*****';
 			}
 			$sRes .= "<TR>";
@@ -10504,29 +9983,30 @@ class AttributePropertySet extends AttributeTable
 	}
 
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
-		if (!is_array($value) || count($value) == 0)
-		{
+		if (!is_array($value) || count($value) == 0) {
 			return "";
 		}
 
-		$aRes = array();
-		foreach($value as $sProperty => $sValue)
-		{
-			if ($sProperty == 'auth_pwd')
-			{
+		$aRes = [];
+		foreach ($value as $sProperty => $sValue) {
+			if ($sProperty == 'auth_pwd') {
 				$sValue = '*****';
 			}
-			$sFrom = array(',', '=');
-			$sTo = array('\,', '\=');
+			$sFrom = [',', '='];
+			$sTo = ['\,', '\='];
 			$aRes[] = $sProperty.'='.str_replace($sFrom, $sTo, (string)$sValue);
 		}
 		$sRaw = implode(',', $aRes);
 
-		$sFrom = array("\r\n", $sTextQualifier);
-		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sFrom = ["\r\n", $sTextQualifier];
+		$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 		$sEscaped = str_replace($sFrom, $sTo, $sRaw);
 
 		return $sTextQualifier.$sEscaped.$sTextQualifier;
@@ -10534,16 +10014,13 @@ class AttributePropertySet extends AttributeTable
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if (!is_array($value) || count($value) == 0)
-		{
+		if (!is_array($value) || count($value) == 0) {
 			return "";
 		}
 
 		$sRes = "";
-		foreach($value as $sProperty => $sValue)
-		{
-			if ($sProperty == 'auth_pwd')
-			{
+		foreach ($value as $sProperty => $sValue) {
+			if ($sProperty == 'auth_pwd') {
 				$sValue = '*****';
 			}
 			$sRes .= "<property id=\"$sProperty\">";
@@ -10563,8 +10040,8 @@ class AttributePropertySet extends AttributeTable
  */
 abstract class AttributeSet extends AttributeDBFieldVoid
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
-	const EDITABLE_INPUT_ID_SUFFIX = '-setwidget-values'; // used client side, see js/jquery.itop-set-widget.js
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const EDITABLE_INPUT_ID_SUFFIX = '-setwidget-values'; // used client side, see js/jquery.itop-set-widget.js
 	protected $bDisplayLink; // Display search link in readonly mode
 
 	public function __construct($sCode, array $aParams)
@@ -10584,7 +10061,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('is_null_allowed', 'max_items'));
+		return array_merge(parent::ListExpectedParams(), ['is_null_allowed', 'max_items']);
 	}
 
 	/**
@@ -10597,7 +10074,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public function GetPossibleValues($aArgs = array(), $sContains = '')
+	public function GetPossibleValues($aArgs = [], $sContains = '')
 	{
 		return $this->GetAllowedValues($aArgs, $sContains);
 	}
@@ -10611,43 +10088,35 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public function GetJsonForWidget($oValue, $aArgs = array())
+	public function GetJsonForWidget($oValue, $aArgs = [])
 	{
-		$aJson = array();
+		$aJson = [];
 
 		// possible_values
 		$aAllowedValues = $this->GetPossibleValues($aArgs);
-		$aSetKeyValData = array();
-		foreach($aAllowedValues as $sCode => $sLabel)
-		{
+		$aSetKeyValData = [];
+		foreach ($aAllowedValues as $sCode => $sLabel) {
 			$aSetKeyValData[] = [
 				'code' => $sCode,
 				'label' => $sLabel,
 			];
 		}
 		$aJson['possible_values'] = $aSetKeyValData;
-		$aRemoved = array();
-		if (is_null($oValue))
-		{
-			$aJson['partial_values'] = array();
-			$aJson['orig_value'] = array();
-		}
-		else
-		{
+		$aRemoved = [];
+		if (is_null($oValue)) {
+			$aJson['partial_values'] = [];
+			$aJson['orig_value'] = [];
+		} else {
 			$aPartialValues = $oValue->GetModified();
-			foreach ($aPartialValues as $key => $value)
-			{
-				if (!isset($aAllowedValues[$value]))
-				{
+			foreach ($aPartialValues as $key => $value) {
+				if (!isset($aAllowedValues[$value])) {
 					unset($aPartialValues[$key]);
 				}
 			}
 			$aJson['partial_values'] = array_values($aPartialValues);
 			$aOrigValues = array_merge($oValue->GetValues(), $oValue->GetModified());
-			foreach ($aOrigValues as $key => $value)
-			{
-				if (!isset($aAllowedValues[$value]))
-				{
+			foreach ($aOrigValues as $key => $value) {
+				if (!isset($aAllowedValues[$value])) {
 					// Remove unwanted values
 					$aRemoved[] = $value;
 					unset($aOrigValues[$key]);
@@ -10655,7 +10124,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			}
 			$aJson['orig_value'] = array_values($aOrigValues);
 		}
-		$aJson['added'] = array();
+		$aJson['added'] = [];
 		$aJson['removed'] = $aRemoved;
 
 		$iMaxTags = $this->GetMaxItems();
@@ -10691,16 +10160,13 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 
 	public function GetEditValue($value, $oHostObj = null)
 	{
-		if (is_string($value))
-		{
+		if (is_string($value)) {
 			return $value;
 		}
-		if ($value instanceof ormSet)
-		{
+		if ($value instanceof ormSet) {
 			$value = $value->GetValues();
 		}
-		if (is_array($value))
-		{
+		if (is_array($value)) {
 			return implode(', ', $value);
 		}
 		return '';
@@ -10721,20 +10187,16 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 
 	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
 	{
-		$aValues = array();
-		if (!empty($proposedValue))
-		{
+		$aValues = [];
+		if (!empty($proposedValue)) {
 			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 			// convert also , separated strings
-			if ($sSepItem !== $sDefaultSepItem)
-			{
+			if ($sSepItem !== $sDefaultSepItem) {
 				$proposedValue = str_replace($sDefaultSepItem, $sSepItem, $proposedValue);
 			}
-			foreach(explode($sSepItem, $proposedValue) as $sCode)
-			{
+			foreach (explode($sSepItem, $proposedValue) as $sCode) {
 				$sValue = trim($sCode);
-				if ($sValue !== '')
-				{
+				if ($sValue !== '') {
 					$aValues[] = $sValue;
 				}
 			}
@@ -10772,21 +10234,16 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	{
 		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
 		$aAllowedValues = $this->GetPossibleValues();
-		if (is_string($proposedValue) && !empty($proposedValue))
-		{
+		if (is_string($proposedValue) && !empty($proposedValue)) {
 			$proposedValue = trim("$proposedValue");
 			$aValues = $this->FromStringToArray($proposedValue);
-			foreach ($aValues as $i => $sValue)
-			{
-				if (!isset($aAllowedValues[$sValue]))
-				{
+			foreach ($aValues as $i => $sValue) {
+				if (!isset($aAllowedValues[$sValue])) {
 					unset($aValues[$i]);
 				}
 			}
 			$oSet->SetValues($aValues);
-		}
-		elseif ($proposedValue instanceof ormSet)
-		{
+		} elseif ($proposedValue instanceof ormSet) {
 			$oSet = $proposedValue;
 		}
 
@@ -10823,8 +10280,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 
 	public function IsNull($proposedValue)
 	{
-		if (empty($proposedValue))
-		{
+		if (empty($proposedValue)) {
 			return true;
 		}
 
@@ -10854,12 +10310,10 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 */
 	public function GetValueLabel($sValue)
 	{
-		if ($sValue instanceof ormSet)
-		{
+		if ($sValue instanceof ormSet) {
 			$sValue = $sValue->GetValues();
 		}
-		if (is_array($sValue))
-		{
+		if (is_array($sValue)) {
 			return implode(', ', $sValue);
 		}
 		return $sValue;
@@ -10884,24 +10338,18 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 */
 	public function ScalarToSQL($value)
 	{
-		if (empty($value))
-		{
+		if (empty($value)) {
 			return '';
 		}
-		if ($value instanceof ormSet)
-		{
+		if ($value instanceof ormSet) {
 			$value = $value->GetValues();
 		}
-		if (is_array($value))
-		{
+		if (is_array($value)) {
 			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 			$sRes = implode($sSepItem, $value);
-			if (!empty($sRes))
-			{
+			if (!empty($sRes)) {
 				$value = "{$sSepItem}{$sRes}{$sSepItem}";
-			}
-			else
-			{
+			} else {
 				$value = '';
 			}
 		}
@@ -10919,13 +10367,11 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 */
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if ($value instanceof ormSet)
-		{
+		if ($value instanceof ormSet) {
 			$aValues = $value->GetValues();
 			return $this->GenerateViewHtmlForValues($aValues);
 		}
-		if (is_array($value))
-		{
+		if (is_array($value)) {
 			return implode(', ', $value);
 		}
 		return $value;
@@ -10945,9 +10391,11 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 */
 	public function GenerateViewHtmlForValues($aValues, $sCssClass = '', $bWithLink = true)
 	{
-		if (empty($aValues)) {return '';}
+		if (empty($aValues)) {
+			return '';
+		}
 		$sHtml = '<span class="'.$sCssClass.' '.implode(' ', $this->aCSSClasses).'">';
-		foreach($aValues as $sValue) {
+		foreach ($aValues as $sValue) {
 			$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode());
 			$sAttCode = $this->GetCode();
 			$sLabel = utils::EscapeHtml($this->GetValueLabel($sValue));
@@ -10996,20 +10444,14 @@ HTML;
 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
-		if (is_object($value) && ($value instanceof ormSet))
-		{
-			if ($bLocalize)
-			{
+		if (is_object($value) && ($value instanceof ormSet)) {
+			if ($bLocalize) {
 				$aValues = $value->GetLabels();
-			}
-			else
-			{
+			} else {
 				$aValues = $value->GetValues();
 			}
 			$sRes = implode($sSepItem, $aValues);
-		}
-		else
-		{
+		} else {
 			$sRes = '';
 		}
 
@@ -11030,7 +10472,8 @@ HTML;
 	{
 		/** @var \ormSet $original */
 		/** @var \ormSet $value */
-		parent::RecordAttChange($oObject,
+		parent::RecordAttChange(
+			$oObject,
 			implode(' ', $original->GetValues()),
 			implode(' ', $value->GetValues())
 		);
@@ -11047,48 +10490,44 @@ HTML;
  */
 class AttributeEnumSet extends AttributeSet
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('possible_values', 'is_null_allowed', 'max_items'));
+		return array_merge(parent::ListExpectedParams(), ['possible_values', 'is_null_allowed', 'max_items']);
 	}
 
 	public function GetMaxSize()
 	{
 		$aRawValues = $this->GetRawPossibleValues();
 		$iMaxItems = $this->GetMaxItems();
-		$aLengths = array();
-		foreach (array_keys($aRawValues) as $sKey)
-		{
+		$aLengths = [];
+		foreach (array_keys($aRawValues) as $sKey) {
 			$aLengths[] = strlen($sKey);
 		}
 		rsort($aLengths, SORT_NUMERIC);
 		$iMaxSize = 2;
-		for ($i = 0; $i < min($iMaxItems, count($aLengths)); $i++)
-		{
+		for ($i = 0; $i < min($iMaxItems, count($aLengths)); $i++) {
 			$iMaxSize += $aLengths[$i] + 1;
 		}
 		return max(255, $iMaxSize);
 	}
 
-	private function GetRawPossibleValues($aArgs = array(), $sContains = '')
+	private function GetRawPossibleValues($aArgs = [], $sContains = '')
 	{
 		/** @var ValueSetEnumPadded $oValSetDef */
 		$oValSetDef = $this->Get('possible_values');
-		if (!$oValSetDef)
-		{
-			return array();
+		if (!$oValSetDef) {
+			return [];
 		}
 
 		return $oValSetDef->GetValues($aArgs, $sContains);
 	}
 
-	public function GetPossibleValues($aArgs = array(), $sContains = '')
+	public function GetPossibleValues($aArgs = [], $sContains = '')
 	{
 		$aRawValues = $this->GetRawPossibleValues($aArgs, $sContains);
-		$aLocalizedValues = array();
-		foreach($aRawValues as $sKey => $sValue)
-		{
+		$aLocalizedValues = [];
+		foreach ($aRawValues as $sKey => $sValue) {
 			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 		}
 
@@ -11097,32 +10536,27 @@ class AttributeEnumSet extends AttributeSet
 
 	public function GetValueLabel($sValue)
 	{
-		if ($sValue instanceof ormSet)
-		{
+		if ($sValue instanceof ormSet) {
 			$sValue = implode(', ', $sValue->GetValues());
 		}
 
 		$aValues = $this->GetRawPossibleValues();
-		if (is_array($aValues) && is_string($sValue) && isset($aValues[$sValue]))
-		{
+		if (is_array($aValues) && is_string($sValue) && isset($aValues[$sValue])) {
 			$sValue = $aValues[$sValue];
 		}
 
-		if (is_null($sValue))
-		{
+		if (is_null($sValue)) {
 			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
-			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
-				Dict::S('Enum:Undefined'));
-		}
-		else
-		{
+			$sLabel = Dict::S(
+				'Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
+				Dict::S('Enum:Undefined')
+			);
+		} else {
 			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, null, true /*user lang*/);
-			if (is_null($sLabel))
-			{
+			if (is_null($sLabel)) {
 				// Browse the hierarchy again, accepting default (english) translations
 				$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, null, false);
-				if (is_null($sLabel))
-				{
+				if (is_null($sLabel)) {
 					$sDefault = trim(str_replace('_', ' ', $sValue));
 					// Browse the hierarchy again, accepting default (english) translations
 					$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sDefault, $sDefault, false);
@@ -11135,23 +10569,22 @@ class AttributeEnumSet extends AttributeSet
 
 	public function GetValueDescription($sValue)
 	{
-		if (is_null($sValue))
-		{
+		if (is_null($sValue)) {
 			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
-			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
-				Dict::S('Enum:Undefined'));
-		}
-		else
-		{
-			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
-				'', true /* user language only */);
-			if (strlen($sDescription) == 0)
-			{
+			$sDescription = Dict::S(
+				'Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
+				Dict::S('Enum:Undefined')
+			);
+		} else {
+			$sDescription = Dict::S(
+				'Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
+				'',
+				true /* user language only */
+			);
+			if (strlen($sDescription) == 0) {
 				$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
-				if ($sParentClass)
-				{
-					if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
-					{
+				if ($sParentClass) {
+					if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode)) {
 						$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
 						$sDescription = $oAttDef->GetValueDescription($sValue);
 					}
@@ -11164,27 +10597,20 @@ class AttributeEnumSet extends AttributeSet
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if ($bLocalize)
-		{
-			if ($value instanceof ormSet)
-			{
+		if ($bLocalize) {
+			if ($value instanceof ormSet) {
 				$sRes = $this->GenerateViewHtmlForValues($value->GetValues());
-			}
-			else
-			{
+			} else {
 				$sLabel = $this->GetValueLabel($value);
 				$sDescription = $this->GetValueDescription($value);
 				$sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
 			}
-		}
-		else
-		{
+		} else {
 			$sRes = parent::GetAsHtml($value, $oHostObject, $bLocalize);
 		}
 
 		return $sRes;
 	}
-
 
 	/**
 	 * @param ormSet $value
@@ -11200,22 +10626,17 @@ class AttributeEnumSet extends AttributeSet
 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
-		if (is_object($value) && ($value instanceof ormSet))
-		{
+		if (is_object($value) && ($value instanceof ormSet)) {
 			$aValues = $value->GetValues();
-			if ($bLocalize)
-			{
-				$aLocalizedValues = array();
-				foreach($aValues as $sValue)
-				{
+			if ($bLocalize) {
+				$aLocalizedValues = [];
+				foreach ($aValues as $sValue) {
 					$aLocalizedValues[] = $this->GetValueLabel($sValue);
 				}
 				$aValues = $aLocalizedValues;
 			}
 			$sRes = implode($sSepItem, $aValues);
-		}
-		else
-		{
+		} else {
 			$sRes = '';
 		}
 
@@ -11237,36 +10658,29 @@ class AttributeEnumSet extends AttributeSet
 	 */
 	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
 	{
-		if ($bLocalizedValue)
-		{
+		if ($bLocalizedValue) {
 			// Lookup for the values matching the input
 			//
 			$aValues = $this->FromStringToArray($sProposedValue);
-			$aFoundValues = array();
+			$aFoundValues = [];
 			$aRawValues = $this->GetPossibleValues();
-			foreach ($aValues as $sValue)
-			{
+			foreach ($aValues as $sValue) {
 				$bFound = false;
-				foreach ($aRawValues as $sCode => $sRawValue)
-				{
-					if ($sValue == $sRawValue)
-					{
+				foreach ($aRawValues as $sCode => $sRawValue) {
+					if ($sValue == $sRawValue) {
 						$aFoundValues[] = $sCode;
 						$bFound = true;
 						break;
 					}
 				}
-				if (!$bFound)
-				{
+				if (!$bFound) {
 					// Not found, break the import
 					return null;
 				}
 			}
 
 			return $this->MakeRealValue(implode(',', $aFoundValues), null);
-		}
-		else
-		{
+		} else {
 			return $this->MakeRealValue($sProposedValue, null, false);
 		}
 	}
@@ -11281,20 +10695,16 @@ class AttributeEnumSet extends AttributeSet
 	 */
 	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
 	{
-		$aValues = array();
-		if (!empty($proposedValue))
-		{
+		$aValues = [];
+		if (!empty($proposedValue)) {
 			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 			// convert also other separators
-			if ($sSepItem !== $sDefaultSepItem)
-			{
+			if ($sSepItem !== $sDefaultSepItem) {
 				$proposedValue = str_replace($sDefaultSepItem, $sSepItem, $proposedValue);
 			}
-			foreach(explode($sSepItem, $proposedValue) as $sCode)
-			{
+			foreach (explode($sSepItem, $proposedValue) as $sCode) {
 				$sValue = trim($sCode);
-				if (strlen($sValue) > 2)
-				{
+				if (strlen($sValue) > 2) {
 					$sLabel = $this->GetValueLabel($sValue);
 					$aValues[$sLabel] = $sValue;
 				}
@@ -11308,12 +10718,11 @@ class AttributeEnumSet extends AttributeSet
 	}
 }
 
-
 class AttributeClassAttCodeSet extends AttributeSet
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
-	const DEFAULT_PARAM_INCLUDE_CHILD_CLASSES_ATTRIBUTES = false;
+	public const DEFAULT_PARAM_INCLUDE_CHILD_CLASSES_ATTRIBUTES = false;
 
 	public function __construct($sCode, array $aParams)
 	{
@@ -11323,7 +10732,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('class_field', 'attribute_definition_list', 'attribute_definition_exclusion_list'));
+		return array_merge(parent::ListExpectedParams(), ['class_field', 'attribute_definition_list', 'attribute_definition_exclusion_list']);
 	}
 
 	public function GetMaxSize()
@@ -11338,10 +10747,9 @@ class AttributeClassAttCodeSet extends AttributeSet
 	 * @return array|null
 	 * @throws \CoreException
 	 */
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
-		if (!isset($aArgs['this']))
-		{
+		if (!isset($aArgs['this'])) {
 			return null;
 		}
 
@@ -11350,87 +10758,68 @@ class AttributeClassAttCodeSet extends AttributeSet
 		$sRootClass = $oHostObj->Get($sTargetClass);
 		$bIncludeChildClasses = $this->GetOptional('include_child_classes_attributes', static::DEFAULT_PARAM_INCLUDE_CHILD_CLASSES_ATTRIBUTES);
 
-		$aExcludeDefs = array();
+		$aExcludeDefs = [];
 		$sAttDefExclusionList = $this->Get('attribute_definition_exclusion_list');
-		if (!empty($sAttDefExclusionList))
-		{
-			foreach(explode(',', $sAttDefExclusionList) as $sAttDefName)
-			{
+		if (!empty($sAttDefExclusionList)) {
+			foreach (explode(',', $sAttDefExclusionList) as $sAttDefName) {
 				$sAttDefName = trim($sAttDefName);
 				$aExcludeDefs[$sAttDefName] = $sAttDefName;
 			}
 		}
 
-		$aAllowedDefs = array();
+		$aAllowedDefs = [];
 		$sAttDefList = $this->Get('attribute_definition_list');
-		if (!empty($sAttDefList))
-		{
-			foreach(explode(',', $sAttDefList) as $sAttDefName)
-			{
+		if (!empty($sAttDefList)) {
+			foreach (explode(',', $sAttDefList) as $sAttDefName) {
 				$sAttDefName = trim($sAttDefName);
 				$aAllowedDefs[$sAttDefName] = $sAttDefName;
 			}
 		}
 
-		$aAllAttributes = array();
-		if (!empty($sRootClass))
-		{
-			$aClasses = array($sRootClass);
-			if($bIncludeChildClasses === true)
-			{
+		$aAllAttributes = [];
+		if (!empty($sRootClass)) {
+			$aClasses = [$sRootClass];
+			if ($bIncludeChildClasses === true) {
 				$aClasses = $aClasses + MetaModel::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP);
 			}
 
-			foreach($aClasses as $sClass)
-			{
-				foreach(MetaModel::GetAttributesList($sClass) as $sAttCode)
-				{
+			foreach ($aClasses as $sClass) {
+				foreach (MetaModel::GetAttributesList($sClass) as $sAttCode) {
 					// Add attribute only if not already there (can be in leaf classes but not the root)
-					if(!array_key_exists($sAttCode, $aAllAttributes))
-					{
+					if (!array_key_exists($sAttCode, $aAllAttributes)) {
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 						$sAttDefClass = get_class($oAttDef);
 
 						// Skip excluded attdefs
-						if(isset($aExcludeDefs[$sAttDefClass]))
-						{
+						if (isset($aExcludeDefs[$sAttDefClass])) {
 							continue;
 						}
 						// Skip not allowed attdefs only if list specified
-						if(!empty($aAllowedDefs) && !isset($aAllowedDefs[$sAttDefClass]))
-						{
+						if (!empty($aAllowedDefs) && !isset($aAllowedDefs[$sAttDefClass])) {
 							continue;
 						}
 
-						$aAllAttributes[$sAttCode] = array(
-							'classes' => array($sClass),
-						);
-					}
-					else
-					{
+						$aAllAttributes[$sAttCode] = [
+							'classes' => [$sClass],
+						];
+					} else {
 						$aAllAttributes[$sAttCode]['classes'][] = $sClass;
 					}
 				}
 			}
 		}
 
-		$aAllowedAttributes = array();
-		foreach($aAllAttributes as $sAttCode => $aAttData)
-		{
+		$aAllowedAttributes = [];
+		foreach ($aAllAttributes as $sAttCode => $aAttData) {
 			$iAttClassesCount = count($aAttData['classes']);
 			$sAttFirstClass = $aAttData['classes'][0];
 			$sAttLabel = MetaModel::GetLabel($sAttFirstClass, $sAttCode);
 
-			if($sAttFirstClass === $sRootClass)
-			{
+			if ($sAttFirstClass === $sRootClass) {
 				$sLabel = Dict::Format('Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass', $sAttCode, $sAttLabel);
-			}
-			elseif($iAttClassesCount === 1)
-			{
+			} elseif ($iAttClassesCount === 1) {
 				$sLabel = Dict::Format('Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass', $sAttCode, $sAttLabel, MetaModel::GetName($sAttFirstClass));
-			}
-			else
-			{
+			} else {
 				$sLabel = Dict::Format('Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses', $sAttCode, $sAttLabel);
 			}
 			$aAllowedAttributes[$sAttCode] = $sLabel;
@@ -11457,42 +10846,32 @@ class AttributeClassAttCodeSet extends AttributeSet
 	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
 		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
-		$aArgs = array();
-		if (!empty($oHostObj))
-		{
+		$aArgs = [];
+		if (!empty($oHostObj)) {
 			$aArgs['this'] = $oHostObj;
 		}
 		$aAllowedAttributes = $this->GetAllowedValues($aArgs);
-		$aInvalidAttCodes = array();
-		if (is_string($proposedValue) && !empty($proposedValue))
-		{
+		$aInvalidAttCodes = [];
+		if (is_string($proposedValue) && !empty($proposedValue)) {
 			$aJsonFromWidget = json_decode($proposedValue, true);
-			if (is_null($aJsonFromWidget))
-			{
+			if (is_null($aJsonFromWidget)) {
 				$proposedValue = trim($proposedValue);
 				$aProposedValues = $this->FromStringToArray($proposedValue);
-				$aValues = array();
-				foreach($aProposedValues as $sValue)
-				{
+				$aValues = [];
+				foreach ($aProposedValues as $sValue) {
 					$sAttCode = trim($sValue);
-					if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
-					{
+					if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode])) {
 						$aValues[$sAttCode] = $sAttCode;
-					}
-					else
-					{
+					} else {
 						$aInvalidAttCodes[] = $sAttCode;
 					}
 				}
 				$oSet->SetValues($aValues);
 			}
-		}
-		elseif ($proposedValue instanceof ormSet)
-		{
+		} elseif ($proposedValue instanceof ormSet) {
 			$oSet = $proposedValue;
 		}
-		if (!empty($aInvalidAttCodes) && !$bIgnoreErrors)
-		{
+		if (!empty($aInvalidAttCodes) && !$bIgnoreErrors) {
 			$sTargetClass = $this->Get('class_field');
 			$sClass = $oHostObj->Get($sTargetClass);
 			throw new CoreUnexpectedValue("The attribute(s) ".implode(', ', $aInvalidAttCodes)." are invalid for class {$sClass}");
@@ -11512,22 +10891,17 @@ class AttributeClassAttCodeSet extends AttributeSet
 	 */
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if ($value instanceof ormSet)
-		{
+		if ($value instanceof ormSet) {
 			$value = $value->GetValues();
 		}
-		if (is_array($value))
-		{
-			if (!empty($oHostObject) && $bLocalize)
-			{
+		if (is_array($value)) {
+			if (!empty($oHostObject) && $bLocalize) {
 				$sTargetClass = $this->Get('class_field');
 				$sClass = $oHostObject->Get($sTargetClass);
 
-				$aLocalizedValues = array();
-				foreach($value as $sAttCode)
-				{
-					try
-					{
+				$aLocalizedValues = [];
+				foreach ($value as $sAttCode) {
+					try {
 						$sAttClass = $sClass;
 
 						// Look for the first class (current or children) that have this attcode
@@ -11540,8 +10914,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 
 						$sLabelForHtmlAttribute = utils::HtmlEntities(MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)");
 						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sAttCode.'</span>';
-					} catch (Exception $e)
-					{
+					} catch (Exception $e) {
 						// Ignore bad values
 					}
 				}
@@ -11560,7 +10933,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 
 class AttributeQueryAttCodeSet extends AttributeSet
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	public function __construct($sCode, array $aParams)
 	{
@@ -11570,7 +10943,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('query_field'));
+		return array_merge(parent::ListExpectedParams(), ['query_field']);
 	}
 
 	protected function GetSQLCol($bFullSpec = false)
@@ -11591,59 +10964,47 @@ class AttributeQueryAttCodeSet extends AttributeSet
 	 */
 	private function GetClassList($oHostObj)
 	{
-		try
-		{
+		try {
 			$sQueryField = $this->Get('query_field');
 			$sQuery = $oHostObj->Get($sQueryField);
-			if (empty($sQuery))
-			{
-				return array();
+			if (empty($sQuery)) {
+				return [];
 			}
 			$oFilter = DBSearch::FromOQL($sQuery);
 			return $oFilter->GetSelectedClasses();
 
-		} catch (OQLException $e)
-		{
+		} catch (OQLException $e) {
 			IssueLog::Warning($e->getMessage());
 		}
-		return array();
+		return [];
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
-		if (isset($aArgs['this']))
-		{
+		if (isset($aArgs['this'])) {
 			$oHostObj = $aArgs['this'];
 			$aClasses = $this->GetClassList($oHostObj);
 
-			$aAllowedAttributes = array();
-			$aAllAttributes = array();
+			$aAllowedAttributes = [];
+			$aAllAttributes = [];
 
-			if ((count($aClasses) == 1) && (array_keys($aClasses)[0] == array_values($aClasses)[0]))
-			{
+			if ((count($aClasses) == 1) && (array_keys($aClasses)[0] == array_values($aClasses)[0])) {
 				$sClass = reset($aClasses);
 				$aAttributes = MetaModel::GetAttributesList($sClass);
-				foreach($aAttributes as $sAttCode)
-				{
+				foreach ($aAttributes as $sAttCode) {
 					$aAllowedAttributes[$sAttCode] = "$sAttCode (".MetaModel::GetLabel($sClass, $sAttCode).')';
 				}
-			}
-			else
-			{
-				if (!empty($aClasses))
-				{
+			} else {
+				if (!empty($aClasses)) {
 					ksort($aClasses);
-					foreach($aClasses as $sAlias => $sClass)
-					{
+					foreach ($aClasses as $sAlias => $sClass) {
 						$aAttributes = MetaModel::GetAttributesList($sClass);
-						foreach($aAttributes as $sAttCode)
-						{
-							$aAllAttributes[] = array('alias' => $sAlias, 'class' => $sClass, 'att_code' => $sAttCode);
+						foreach ($aAttributes as $sAttCode) {
+							$aAllAttributes[] = ['alias' => $sAlias, 'class' => $sClass, 'att_code' => $sAttCode];
 						}
 					}
 				}
-				foreach($aAllAttributes as $aFullAttCode)
-				{
+				foreach ($aAllAttributes as $aFullAttCode) {
 					$sAttCode = $aFullAttCode['alias'].'.'.$aFullAttCode['att_code'];
 					$sClass = $aFullAttCode['class'];
 					$sLabel = "$sAttCode (".MetaModel::GetLabel($sClass, $aFullAttCode['att_code']).')';
@@ -11673,38 +11034,29 @@ class AttributeQueryAttCodeSet extends AttributeSet
 	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
 		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
-		$aArgs = array();
-		if (!empty($oHostObj))
-		{
+		$aArgs = [];
+		if (!empty($oHostObj)) {
 			$aArgs['this'] = $oHostObj;
 		}
 		$aAllowedAttributes = $this->GetAllowedValues($aArgs);
-		$aInvalidAttCodes = array();
-		if (is_string($proposedValue) && !empty($proposedValue))
-		{
+		$aInvalidAttCodes = [];
+		if (is_string($proposedValue) && !empty($proposedValue)) {
 			$proposedValue = trim($proposedValue);
 			$aProposedValues = $this->FromStringToArray($proposedValue);
-			$aValues = array();
-			foreach($aProposedValues as $sValue)
-			{
+			$aValues = [];
+			foreach ($aProposedValues as $sValue) {
 				$sAttCode = trim($sValue);
-				if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
-				{
+				if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode])) {
 					$aValues[$sAttCode] = $sAttCode;
-				}
-				else
-				{
+				} else {
 					$aInvalidAttCodes[] = $sAttCode;
 				}
 			}
 			$oSet->SetValues($aValues);
-		}
-		elseif ($proposedValue instanceof ormSet)
-		{
+		} elseif ($proposedValue instanceof ormSet) {
 			$oSet = $proposedValue;
 		}
-		if (!empty($aInvalidAttCodes) && !$bIgnoreErrors)
-		{
+		if (!empty($aInvalidAttCodes) && !$bIgnoreErrors) {
 			throw new CoreUnexpectedValue("The attribute(s) ".implode(', ', $aInvalidAttCodes)." are invalid");
 		}
 
@@ -11723,17 +11075,15 @@ class AttributeQueryAttCodeSet extends AttributeSet
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 
-		if ($value instanceof ormSet)
-		{
+		if ($value instanceof ormSet) {
 			$value = $value->GetValues();
 		}
-		if (is_array($value))
-		{
+		if (is_array($value)) {
 			if (!empty($oHostObject) && $bLocalize) {
 				$aArgs['this'] = $oHostObject;
 				$aAllowedAttributes = $this->GetAllowedValues($aArgs);
 
-				$aLocalizedValues = array();
+				$aLocalizedValues = [];
 				foreach ($value as $sAttCode) {
 					if (isset($aAllowedAttributes[$sAttCode])) {
 						$sLabelForHtmlAttribute = utils::HtmlEntities($aAllowedAttributes[$sAttCode]);
@@ -11757,7 +11107,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
  */
 class AttributeTagSet extends AttributeSet
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
 
 	public function __construct($sCode, array $aParams)
 	{
@@ -11772,7 +11122,7 @@ class AttributeTagSet extends AttributeSet
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('tag_code_max_len'));
+		return array_merge(parent::ListExpectedParams(), ['tag_code_max_len']);
 	}
 
 	/**
@@ -11784,15 +11134,14 @@ class AttributeTagSet extends AttributeSet
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public function GetJsonForWidget($oValue, $aArgs = array())
+	public function GetJsonForWidget($oValue, $aArgs = [])
 	{
-		$aJson = array();
+		$aJson = [];
 
 		// possible_values
 		$aTagSetObjectData = $this->GetAllowedValues($aArgs);
-		$aTagSetKeyValData = array();
-		foreach($aTagSetObjectData as $sTagCode => $sTagLabel)
-		{
+		$aTagSetKeyValData = [];
+		foreach ($aTagSetObjectData as $sTagCode => $sTagLabel) {
 			$aTagSetKeyValData[] = [
 				'code' => $sTagCode,
 				'label' => $sTagLabel,
@@ -11800,31 +11149,24 @@ class AttributeTagSet extends AttributeSet
 		}
 		$aJson['possible_values'] = $aTagSetKeyValData;
 
-		if (is_null($oValue))
-		{
-			$aJson['partial_values'] = array();
-			$aJson['orig_value'] = array();
-			$aJson['added'] = array();
-			$aJson['removed'] = array();
-		}
-		else
-		{
+		if (is_null($oValue)) {
+			$aJson['partial_values'] = [];
+			$aJson['orig_value'] = [];
+			$aJson['added'] = [];
+			$aJson['removed'] = [];
+		} else {
 			$aJson['orig_value'] = array_merge($oValue->GetValues(), $oValue->GetModified());
 			$aJson['added'] = $oValue->GetAdded();
 			$aJson['removed'] = $oValue->GetRemoved();
 
-			if ($oValue->DisplayPartial())
-			{
+			if ($oValue->DisplayPartial()) {
 				// For bulk updates
 				$aJson['partial_values'] = $oValue->GetModified();
-			}
-			else
-			{
+			} else {
 				// For simple updates
-				$aJson['partial_values'] = array();
+				$aJson['partial_values'] = [];
 			}
 		}
-
 
 		$iMaxTags = $this->GetMaxItems();
 		$aJson['max_items_allowed'] = $iMaxTags;
@@ -11834,11 +11176,9 @@ class AttributeTagSet extends AttributeSet
 
 	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
 	{
-		$aValues = array();
-		if (!empty($proposedValue))
-		{
-			foreach(explode(' ', $proposedValue) as $sCode)
-			{
+		$aValues = [];
+		if (!empty($proposedValue)) {
+			foreach (explode(' ', $proposedValue) as $sCode) {
 				$sValue = trim($sCode);
 				$aValues[] = $sValue;
 			}
@@ -11861,26 +11201,19 @@ class AttributeTagSet extends AttributeSet
 		$aTagCodes = $this->FromStringToArray("$sValue");
 		$sAttCode = $this->GetCode();
 		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
-		if ($bNoLimit)
-		{
+		if ($bNoLimit) {
 			$oTagSet = new ormTagSet($sClass, $sAttCode, 0);
-		}
-		else
-		{
+		} else {
 			$oTagSet = new ormTagSet($sClass, $sAttCode, $this->GetMaxItems());
 		}
-		$aGoodTags = array();
-		foreach($aTagCodes as $sTagCode)
-		{
-			if ($sTagCode === '')
-			{
+		$aGoodTags = [];
+		foreach ($aTagCodes as $sTagCode) {
+			if ($sTagCode === '') {
 				continue;
 			}
-			if ($oTagSet->IsValidTag($sTagCode))
-			{
+			if ($oTagSet->IsValidTag($sTagCode)) {
 				$aGoodTags[] = $sTagCode;
-				if (!$bNoLimit && (count($aGoodTags) === $this->GetMaxItems()))
-				{
+				if (!$bNoLimit && (count($aGoodTags) === $this->GetMaxItems())) {
 					// extra and bad tags are ignored
 					break;
 				}
@@ -11898,12 +11231,10 @@ class AttributeTagSet extends AttributeSet
 
 	public function GetEditValue($value, $oHostObj = null)
 	{
-		if (empty($value))
-		{
+		if (empty($value)) {
 			return '';
 		}
-		if ($value instanceof ormTagSet)
-		{
+		if ($value instanceof ormTagSet) {
 			$aValues = $value->GetValues();
 
 			return implode(' ', $aValues);
@@ -11919,22 +11250,20 @@ class AttributeTagSet extends AttributeSet
 
 	public function Equals($val1, $val2)
 	{
-		if (($val1 instanceof ormTagSet) && ($val2 instanceof ormTagSet))
-		{
+		if (($val1 instanceof ormTagSet) && ($val2 instanceof ormTagSet)) {
 			return $val1->Equals($val2);
 		}
 
 		return ($val1 == $val2);
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$sAttCode = $this->GetCode();
 		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
 		$aAllowedTags = TagSetFieldData::GetAllowedValues($sClass, $sAttCode);
-		$aAllowedValues = array();
-		foreach($aAllowedTags as $oAllowedTag)
-		{
+		$aAllowedValues = [];
+		foreach ($aAllowedTags as $oAllowedTag) {
 			$aAllowedValues[$oAllowedTag->Get('code')] = $oAllowedTag->Get('label');
 		}
 
@@ -11971,18 +11300,14 @@ class AttributeTagSet extends AttributeSet
 	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
 		$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
-		if (is_string($proposedValue) && !empty($proposedValue))
-		{
+		if (is_string($proposedValue) && !empty($proposedValue)) {
 			$sJsonFromWidget = json_decode($proposedValue, true);
-			if (is_null($sJsonFromWidget))
-			{
+			if (is_null($sJsonFromWidget)) {
 				$proposedValue = trim("$proposedValue");
 				$aTagCodes = $this->FromStringToArray($proposedValue);
 				$oTagSet->SetValues($aTagCodes);
 			}
-		}
-		elseif ($proposedValue instanceof ormTagSet)
-		{
+		} elseif ($proposedValue instanceof ormTagSet) {
 			$oTagSet = $proposedValue;
 		}
 
@@ -12004,20 +11329,19 @@ class AttributeTagSet extends AttributeSet
 	 */
 	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
 	{
-		if (is_null($sSepItem) || empty($sSepItem))
-		{
+		if (is_null($sSepItem) || empty($sSepItem)) {
 			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 		}
-		if (!empty($sProposedValue))
-		{
-			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
-				$this->GetCode(), $this->GetMaxItems());
+		if (!empty($sProposedValue)) {
+			$oTagSet = new ormTagSet(
+				MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
+				$this->GetCode(),
+				$this->GetMaxItems()
+			);
 			$aLabels = explode($sSepItem, $sProposedValue);
-			$aCodes = array();
-			foreach($aLabels as $sTagLabel)
-			{
-				if (!empty($sTagLabel))
-				{
+			$aCodes = [];
+			foreach ($aLabels as $sTagLabel) {
+				if (!empty($sTagLabel)) {
 					$aCodes[] = ($bLocalizedValue) ? $oTagSet->GetTagFromLabel($sTagLabel) : $sTagLabel;
 				}
 			}
@@ -12041,8 +11365,7 @@ class AttributeTagSet extends AttributeSet
 
 	public function IsNull($proposedValue)
 	{
-		if (is_null($proposedValue))
-		{
+		if (is_null($proposedValue)) {
 			return true;
 		}
 
@@ -12061,26 +11384,23 @@ class AttributeTagSet extends AttributeSet
 	 */
 	public function GetValueLabel($sValue)
 	{
-		if (empty($sValue))
-		{
+		if (empty($sValue)) {
 			return '';
 		}
-		if (is_string($sValue))
-		{
+		if (is_string($sValue)) {
 			$sValue = $this->GetExistingTagsFromString($sValue);
 		}
-		if ($sValue instanceof ormTagSet)
-		{
+		if ($sValue instanceof ormTagSet) {
 			$aValues = $sValue->GetLabels();
 
 			return implode(', ', $aValues);
 		}
-		throw new CoreWarning('Expected the attribute value to be a TagSet', array(
+		throw new CoreWarning('Expected the attribute value to be a TagSet', [
 			'found_type' => gettype($sValue),
 			'value' => $sValue,
 			'class' => $this->GetHostClass(),
-			'attribute' => $this->GetCode()
-		));
+			'attribute' => $this->GetCode(),
+		]);
 	}
 
 	/**
@@ -12091,22 +11411,20 @@ class AttributeTagSet extends AttributeSet
 	 */
 	public function ScalarToSQL($value)
 	{
-		if (empty($value))
-		{
+		if (empty($value)) {
 			return '';
 		}
-		if ($value instanceof ormTagSet)
-		{
+		if ($value instanceof ormTagSet) {
 			$aValues = $value->GetValues();
 
 			return implode(' ', $aValues);
 		}
-		throw new CoreWarning('Expected the attribute value to be a TagSet', array(
+		throw new CoreWarning('Expected the attribute value to be a TagSet', [
 			'found_type' => gettype($value),
 			'value' => $value,
 			'class' => $this->GetHostClass(),
-			'attribute' => $this->GetCode()
-		));
+			'attribute' => $this->GetCode(),
+		]);
 	}
 
 	/**
@@ -12121,56 +11439,46 @@ class AttributeTagSet extends AttributeSet
 	 */
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if ($value instanceof ormTagSet)
-		{
-			if ($bLocalize)
-			{
+		if ($value instanceof ormTagSet) {
+			if ($bLocalize) {
 				$aValues = $value->GetTags();
-			}
-			else
-			{
+			} else {
 				$aValues = $value->GetValues();
 			}
-			if (empty($aValues))
-			{
+			if (empty($aValues)) {
 				return '';
 			}
 
 			return $this->GenerateViewHtmlForValues($aValues);
 		}
-		if (is_string($value))
-		{
-			try
-			{
+		if (is_string($value)) {
+			try {
 				$oValue = $this->MakeRealValue($value, $oHostObject);
 
 				return $this->GetAsHTML($oValue, $oHostObject, $bLocalize);
-			} catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				// unknown tags are present display the code instead
 			}
 			$aTagCodes = $this->FromStringToArray($value);
-			$aValues = array();
-			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
-				$this->GetCode(), $this->GetMaxItems());
-			foreach($aTagCodes as $sTagCode)
-			{
-				try
-				{
+			$aValues = [];
+			$oTagSet = new ormTagSet(
+				MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
+				$this->GetCode(),
+				$this->GetMaxItems()
+			);
+			foreach ($aTagCodes as $sTagCode) {
+				try {
 					$oTagSet->Add($sTagCode);
-				} catch (Exception $e)
-				{
+				} catch (Exception $e) {
 					$aValues[] = $sTagCode;
 				}
 			}
 			$sHTML = '';
-			if (!empty($aValues))
-			{
+			if (!empty($aValues)) {
 				$sHTML .= $this->GenerateViewHtmlForValues($aValues, 'attribute-set-item-undefined');
 			}
 			$aValues = $oTagSet->GetTags();
-			if (!empty($aValues))
-			{
+			if (!empty($aValues)) {
 				$sHTML .= $this->GenerateViewHtmlForValues($aValues);
 			}
 
@@ -12193,17 +11501,15 @@ class AttributeTagSet extends AttributeSet
 
 		$aAllowedTags = TagSetFieldData::GetAllowedValues(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
 
-		if (!empty($aDelta['removed']))
-		{
-			$aRemoved = array();
-			foreach($aDelta['removed'] as $idx => $sTagCode)
-			{
-				if (empty($sTagCode)) {continue;}
+		if (!empty($aDelta['removed'])) {
+			$aRemoved = [];
+			foreach ($aDelta['removed'] as $idx => $sTagCode) {
+				if (empty($sTagCode)) {
+					continue;
+				}
 				$sTagLabel = $sTagCode;
-				foreach($aAllowedTags as $oTag)
-				{
-					if ($sTagCode === $oTag->Get('code'))
-					{
+				foreach ($aAllowedTags as $oTag) {
+					if ($sTagCode === $oTag->Get('code')) {
 						$sTagLabel = $oTag->Get('label');
 					}
 				}
@@ -12211,28 +11517,24 @@ class AttributeTagSet extends AttributeSet
 			}
 
 			$sRemoved = $this->GenerateViewHtmlForValues($aRemoved, 'history-removed');
-			if (!empty($sRemoved))
-			{
+			if (!empty($sRemoved)) {
 				$sResult .= Dict::Format('Change:LinkSet:Removed', $sRemoved);
 			}
 		}
 
-		if (!empty($aDelta['added']))
-		{
-			if (!empty($sRemoved))
-			{
+		if (!empty($aDelta['added'])) {
+			if (!empty($sRemoved)) {
 				$sResult .= ', ';
 			}
 
-			$aAdded = array();
-			foreach($aDelta['added'] as $idx => $sTagCode)
-			{
-				if (empty($sTagCode)) {continue;}
+			$aAdded = [];
+			foreach ($aDelta['added'] as $idx => $sTagCode) {
+				if (empty($sTagCode)) {
+					continue;
+				}
 				$sTagLabel = $sTagCode;
-				foreach($aAllowedTags as $oTag)
-				{
-					if ($sTagCode === $oTag->Get('code'))
-					{
+				foreach ($aAllowedTags as $oTag) {
+					if ($sTagCode === $oTag->Get('code')) {
 						$sTagLabel = $oTag->Get('label');
 					}
 				}
@@ -12240,8 +11542,7 @@ class AttributeTagSet extends AttributeSet
 			}
 
 			$sAdded = $this->GenerateViewHtmlForValues($aAdded, 'history-added');
-			if (!empty($sAdded))
-			{
+			if (!empty($sAdded)) {
 				$sResult .= Dict::Format('Change:LinkSet:Added', $sAdded);
 			}
 		}
@@ -12263,12 +11564,12 @@ class AttributeTagSet extends AttributeSet
 	 */
 	public function GenerateViewHtmlForValues($aValues, $sCssClass = '', $bWithLink = true)
 	{
-		if (empty($aValues)) {return '';}
+		if (empty($aValues)) {
+			return '';
+		}
 		$sHtml = '<span class="'.$sCssClass.' '.implode(' ', $this->aCSSClasses).'">';
-		foreach($aValues as $oTag)
-		{
-			if ($oTag instanceof TagSetFieldData)
-			{
+		foreach ($aValues as $oTag) {
+			if ($oTag instanceof TagSetFieldData) {
 				$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode());
 				$sAttCode = $this->GetCode();
 				$sTagCode = $oTag->Get('code');
@@ -12302,9 +11603,7 @@ HTML;
 				$sTooltipContent = utils::HtmlEntities($sTooltipContent);
 
 				$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.$sLabelForHtml.'" data-description="'.$sDescriptionForHtml.'" data-tooltip-content="'.$sTooltipContent.'" data-tooltip-html-enabled="'.$sTooltipHtmlEnabled.'">'.$sLabelForHtml.'</a>';
-			}
-			else
-			{
+			} else {
 				$sHtml .= '<span class="attribute-set-item">'.utils::EscapeHtml($oTag).'</span>';
 			}
 		}
@@ -12323,25 +11622,18 @@ HTML;
 	 */
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_object($value) && ($value instanceof ormTagSet))
-		{
+		if (is_object($value) && ($value instanceof ormTagSet)) {
 			$sRes = "<Set>\n";
-			if ($bLocalize)
-			{
+			if ($bLocalize) {
 				$aValues = $value->GetLabels();
-			}
-			else
-			{
+			} else {
 				$aValues = $value->GetValues();
 			}
-			if (!empty($aValues))
-			{
+			if (!empty($aValues)) {
 				$sRes .= '<Tag>'.implode('</Tag><Tag>', $aValues).'</Tag>';
 			}
 			$sRes .= "</Set>\n";
-		}
-		else
-		{
+		} else {
 			$sRes = '';
 		}
 
@@ -12353,10 +11645,10 @@ HTML;
 	 */
 	public function EnumTemplateVerbs()
 	{
-		return array(
+		return [
 			'' => 'Plain text representation',
 			'html' => 'HTML representation (unordered list)',
-		);
+		];
 	}
 
 	/**
@@ -12372,21 +11664,16 @@ HTML;
 	 */
 	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
 	{
-		if (is_object($value) && ($value instanceof ormTagSet))
-		{
-			if ($bLocalize)
-			{
+		if (is_object($value) && ($value instanceof ormTagSet)) {
+			if ($bLocalize) {
 				$aValues = $value->GetLabels();
 				$sSep = ', ';
-			}
-			else
-			{
+			} else {
 				$aValues = $value->GetValues();
 				$sSep = ' ';
 			}
 
-			switch ($sVerb)
-			{
+			switch ($sVerb) {
 				case '':
 					return implode($sSep, $aValues);
 
@@ -12409,9 +11696,8 @@ HTML;
 	 */
 	public function GetForJSON($value)
 	{
-		$aRet = array();
-		if (is_object($value) && ($value instanceof ormTagSet))
-		{
+		$aRet = [];
+		if (is_object($value) && ($value instanceof ormTagSet)) {
 			$aRet = $value->GetValues();
 		}
 
@@ -12443,8 +11729,7 @@ HTML;
 	 */
 	public function Fingerprint($value)
 	{
-		if ($value instanceof ormTagSet)
-		{
+		if ($value instanceof ormTagSet) {
 			$aValues = $value->GetValues();
 
 			return implode(' ', $aValues);
@@ -12466,13 +11751,13 @@ HTML;
  */
 class AttributeFriendlyName extends AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 	public $m_sValue;
 
 	public function __construct($sCode)
 	{
 		$this->m_sCode = $sCode;
-		$aParams = array();
+		$aParams = [];
 		$aParams["default_value"] = '';
 		parent::__construct($sCode, $aParams);
 
@@ -12492,7 +11777,7 @@ class AttributeFriendlyName extends AttributeDefinition
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
 		// Code duplicated with AttributeObsolescenceFlag
-		$aAttributes = $this->GetOptional("depends_on", array());
+		$aAttributes = $this->GetOptional("depends_on", []);
 		$oExpression = $this->GetOQLExpression();
 		foreach ($oExpression->ListRequiredFields() as $sAttCode) {
 			if (!in_array($sAttCode, $aAttributes)) {
@@ -12515,12 +11800,11 @@ class AttributeFriendlyName extends AttributeDefinition
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		if ($sPrefix == '')
-		{
+		if ($sPrefix == '') {
 			$sPrefix = $this->GetCode(); // Warning AttributeComputedFieldVoid does not have any sql property
 		}
 
-		return array('' => $sPrefix);
+		return ['' => $sPrefix];
 	}
 
 	public static function IsBasedOnOQLExpression()
@@ -12536,8 +11820,7 @@ class AttributeFriendlyName extends AttributeDefinition
 	public function GetLabel($sDefault = null)
 	{
 		$sLabel = parent::GetLabel('');
-		if (strlen($sLabel) == 0)
-		{
+		if (strlen($sLabel) == 0) {
 			$sLabel = Dict::S('Core:FriendlyName-Label');
 		}
 
@@ -12547,8 +11830,7 @@ class AttributeFriendlyName extends AttributeDefinition
 	public function GetDescription($sDefault = null)
 	{
 		$sLabel = parent::GetDescription('');
-		if (strlen($sLabel) == 0)
-		{
+		if (strlen($sLabel) == 0) {
 			$sLabel = Dict::S('Core:FriendlyName-Description');
 		}
 
@@ -12593,25 +11875,28 @@ class AttributeFriendlyName extends AttributeDefinition
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
-		$sFrom = array("\r\n", $sTextQualifier);
-		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sFrom = ["\r\n", $sTextQualifier];
+		$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 
 		return $sTextQualifier.$sEscaped.$sTextQualifier;
 	}
 
-	static function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\StringField';
 	}
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
@@ -12629,12 +11914,12 @@ class AttributeFriendlyName extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		return array($this->GetCode() => $this->GetCode());
+		return [$this->GetCode() => $this->GetCode()];
 	}
 
 	public function GetBasicFilterOperators()
 	{
-		return array("=" => "equals", "!=" => "differs from");
+		return ["=" => "equals", "!=" => "differs from"];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -12645,8 +11930,7 @@ class AttributeFriendlyName extends AttributeDefinition
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		$sQValue = CMDBSource::Quote($value);
-		switch ($sOpCode)
-		{
+		switch ($sOpCode) {
 			case '=':
 			case '!=':
 				return $this->GetSQLExpr()." $sOpCode $sQValue";
@@ -12677,7 +11961,7 @@ class AttributeFriendlyName extends AttributeDefinition
  */
 class AttributeRedundancySettings extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -12698,7 +11982,7 @@ class AttributeRedundancySettings extends AttributeDBField
 
 	public static function ListExpectedParams()
 	{
-		return array(
+		return [
 			'sql',
 			'relation_code',
 			'from_class',
@@ -12707,8 +11991,8 @@ class AttributeRedundancySettings extends AttributeDBField
 			'enabled_mode',
 			'min_up',
 			'min_up_type',
-			'min_up_mode'
-		);
+			'min_up_mode',
+		];
 	}
 
 	public function GetValuesDef()
@@ -12718,7 +12002,7 @@ class AttributeRedundancySettings extends AttributeDBField
 
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
-		return array();
+		return [];
 	}
 
 	public function GetEditClass()
@@ -12733,7 +12017,6 @@ class AttributeRedundancySettings extends AttributeDBField
 			.($bFullSpec ? $this->GetSQLColSpec() : '');
 	}
 
-
 	public function GetValidationPattern()
 	{
 		return "^[0-9]{1,3}|[0-9]{1,2}%|disabled$";
@@ -12747,14 +12030,10 @@ class AttributeRedundancySettings extends AttributeDBField
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
 		$sRet = 'disabled';
-		if ($this->Get('enabled'))
-		{
-			if ($this->Get('min_up_type') == 'count')
-			{
+		if ($this->Get('enabled')) {
+			if ($this->Get('min_up_type') == 'count') {
 				$sRet = (string)$this->Get('min_up');
-			}
-			else // percent
-			{
+			} else { // percent
 				$sRet = $this->Get('min_up').'%';
 			}
 		}
@@ -12779,8 +12058,7 @@ class AttributeRedundancySettings extends AttributeDBField
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		if (is_null($proposedValue))
-		{
+		if (is_null($proposedValue)) {
 			return '';
 		}
 
@@ -12789,14 +12067,13 @@ class AttributeRedundancySettings extends AttributeDBField
 
 	public function ScalarToSQL($value)
 	{
-		if (!is_string($value))
-		{
-			throw new CoreException('Expected the attribute value to be a string', array(
+		if (!is_string($value)) {
+			throw new CoreException('Expected the attribute value to be a string', [
 				'found_type' => gettype($value),
 				'value' => $value,
 				'class' => $this->GetHostClass(),
-				'attribute' => $this->GetCode()
-			));
+				'attribute' => $this->GetCode(),
+			]);
 		}
 
 		return $value;
@@ -12804,19 +12081,19 @@ class AttributeRedundancySettings extends AttributeDBField
 
 	public function GetRelationQueryData()
 	{
-		foreach(MetaModel::EnumRelationQueries($this->GetHostClass(), $this->Get('relation_code'),
-			false) as $sDummy => $aQueryInfo)
-		{
-			if ($aQueryInfo['sFromClass'] == $this->Get('from_class'))
-			{
-				if ($aQueryInfo['sNeighbour'] == $this->Get('neighbour_id'))
-				{
+		foreach (MetaModel::EnumRelationQueries(
+			$this->GetHostClass(),
+			$this->Get('relation_code'),
+			false
+		) as $sDummy => $aQueryInfo) {
+			if ($aQueryInfo['sFromClass'] == $this->Get('from_class')) {
+				if ($aQueryInfo['sNeighbour'] == $this->Get('neighbour_id')) {
 					return $aQueryInfo;
 				}
 			}
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -12831,11 +12108,9 @@ class AttributeRedundancySettings extends AttributeDBField
 	public function GetUserOptionFormat($sUserOption, $sDefault = null)
 	{
 		$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/'.$sUserOption, null, true /*user lang*/);
-		if (is_null($sLabel))
-		{
+		if (is_null($sLabel)) {
 			// If no default value is specified, let's define the most relevant one for developping purposes
-			if (is_null($sDefault))
-			{
+			if (is_null($sDefault)) {
 				$sDefault = str_replace('_', ' ', $this->m_sCode.':'.$sUserOption.'(%1$s)');
 			}
 			// Browse the hierarchy again, accepting default (english) translations
@@ -12861,16 +12136,23 @@ class AttributeRedundancySettings extends AttributeDBField
 		$sCurrentOption = $this->GetCurrentOption($sValue);
 		$sClass = $oHostObject ? get_class($oHostObject) : $this->m_sHostClass;
 
-		return sprintf($this->GetUserOptionFormat($sCurrentOption), $this->GetMinUpValue($sValue),
-			MetaModel::GetName($sClass));
+		return sprintf(
+			$this->GetUserOptionFormat($sCurrentOption),
+			$this->GetMinUpValue($sValue),
+			MetaModel::GetName($sClass)
+		);
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
 	) {
-		$sFrom = array("\r\n", $sTextQualifier);
-		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sFrom = ["\r\n", $sTextQualifier];
+		$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 
 		return $sTextQualifier.$sEscaped.$sTextQualifier;
@@ -12881,12 +12163,9 @@ class AttributeRedundancySettings extends AttributeDBField
 	 */
 	public function IsEnabled($sValue)
 	{
-		if ($this->get('enabled_mode') == 'fixed')
-		{
+		if ($this->get('enabled_mode') == 'fixed') {
 			$bRet = $this->get('enabled');
-		}
-		else
-		{
+		} else {
 			$bRet = ($sValue != 'disabled');
 		}
 
@@ -12898,15 +12177,11 @@ class AttributeRedundancySettings extends AttributeDBField
 	 */
 	public function GetMinUpType($sValue)
 	{
-		if ($this->get('min_up_mode') == 'fixed')
-		{
+		if ($this->get('min_up_mode') == 'fixed') {
 			$sRet = $this->get('min_up_type');
-		}
-		else
-		{
+		} else {
 			$sRet = 'count';
-			if (substr(trim($sValue), -1, 1) == '%')
-			{
+			if (substr(trim($sValue), -1, 1) == '%') {
 				$sRet = 'percent';
 			}
 		}
@@ -12919,15 +12194,11 @@ class AttributeRedundancySettings extends AttributeDBField
 	 */
 	public function GetMinUpValue($sValue)
 	{
-		if ($this->get('min_up_mode') == 'fixed')
-		{
+		if ($this->get('min_up_mode') == 'fixed') {
 			$iRet = (int)$this->Get('min_up');
-		}
-		else
-		{
+		} else {
 			$sRefValue = $sValue;
-			if (substr(trim($sValue), -1, 1) == '%')
-			{
+			if (substr(trim($sValue), -1, 1) == '%') {
 				$sRefValue = substr(trim($sValue), 0, -1);
 			}
 			$iRet = (int)trim($sRefValue);
@@ -12942,12 +12213,9 @@ class AttributeRedundancySettings extends AttributeDBField
 	public function IsVisible()
 	{
 		$bRet = false;
-		if ($this->Get('enabled_mode') == 'fixed')
-		{
+		if ($this->Get('enabled_mode') == 'fixed') {
 			$bRet = $this->Get('enabled');
-		}
-		elseif ($this->Get('enabled_mode') == 'user')
-		{
+		} elseif ($this->Get('enabled_mode') == 'user') {
 			$bRet = true;
 		}
 
@@ -12956,8 +12224,7 @@ class AttributeRedundancySettings extends AttributeDBField
 
 	public function IsWritable()
 	{
-		if (($this->Get('enabled_mode') == 'fixed') && ($this->Get('min_up_mode') == 'fixed'))
-		{
+		if (($this->Get('enabled_mode') == 'fixed') && ($this->Get('min_up_mode') == 'fixed')) {
 			return false;
 		}
 
@@ -12971,55 +12238,50 @@ class AttributeRedundancySettings extends AttributeDBField
 	{
 		$sRet = '';
 		$aUserOptions = $this->GetUserOptions($sCurrentValue);
-		if (count($aUserOptions) < 2)
-		{
+		if (count($aUserOptions) < 2) {
 			$bEditOption = false;
-		}
-		else
-		{
+		} else {
 			$bEditOption = $bEditMode;
 		}
 		$sCurrentOption = $this->GetCurrentOption($sCurrentValue);
-		foreach($aUserOptions as $sUserOption)
-		{
+		foreach ($aUserOptions as $sUserOption) {
 			$bSelected = ($sUserOption == $sCurrentOption);
 			$sRet .= '<div>';
-			$sRet .= $this->GetDisplayOption($sCurrentValue, $oPage, $sFormPrefix, $bEditOption, $sUserOption,
-				$bSelected);
+			$sRet .= $this->GetDisplayOption(
+				$sCurrentValue,
+				$oPage,
+				$sFormPrefix,
+				$bEditOption,
+				$sUserOption,
+				$bSelected
+			);
 			$sRet .= '</div>';
 		}
 
 		return $sRet;
 	}
 
-	const USER_OPTION_DISABLED = 'disabled';
-	const USER_OPTION_ENABLED_COUNT = 'count';
-	const USER_OPTION_ENABLED_PERCENT = 'percent';
+	public const USER_OPTION_DISABLED = 'disabled';
+	public const USER_OPTION_ENABLED_COUNT = 'count';
+	public const USER_OPTION_ENABLED_PERCENT = 'percent';
 
 	/**
 	 * Depending on the xxx_mode parameters, build the list of options that are allowed to the end-user
 	 */
 	protected function GetUserOptions($sValue)
 	{
-		$aRet = array();
-		if ($this->Get('enabled_mode') == 'user')
-		{
+		$aRet = [];
+		if ($this->Get('enabled_mode') == 'user') {
 			$aRet[] = self::USER_OPTION_DISABLED;
 		}
 
-		if ($this->Get('min_up_mode') == 'user')
-		{
+		if ($this->Get('min_up_mode') == 'user') {
 			$aRet[] = self::USER_OPTION_ENABLED_COUNT;
 			$aRet[] = self::USER_OPTION_ENABLED_PERCENT;
-		}
-		else
-		{
-			if ($this->GetMinUpType($sValue) == 'count')
-			{
+		} else {
+			if ($this->GetMinUpType($sValue) == 'count') {
 				$aRet[] = self::USER_OPTION_ENABLED_COUNT;
-			}
-			else
-			{
+			} else {
 				$aRet[] = self::USER_OPTION_ENABLED_PERCENT;
 			}
 		}
@@ -13033,14 +12295,10 @@ class AttributeRedundancySettings extends AttributeDBField
 	protected function GetCurrentOption($sValue)
 	{
 		$sRet = self::USER_OPTION_DISABLED;
-		if ($this->IsEnabled($sValue))
-		{
-			if ($this->GetMinUpType($sValue) == 'count')
-			{
+		if ($this->IsEnabled($sValue)) {
+			if ($this->GetMinUpType($sValue) == 'count') {
 				$sRet = self::USER_OPTION_ENABLED_COUNT;
-			}
-			else
-			{
+			} else {
 				$sRet = self::USER_OPTION_ENABLED_PERCENT;
 			}
 		}
@@ -13064,66 +12322,66 @@ class AttributeRedundancySettings extends AttributeDBField
 	 * @throws \Exception
 	 */
 	protected function GetDisplayOption(
-		$sCurrentValue, $oPage, $sFormPrefix, $bEditMode, $sUserOption, $bSelected = true
+		$sCurrentValue,
+		$oPage,
+		$sFormPrefix,
+		$bEditMode,
+		$sUserOption,
+		$bSelected = true
 	) {
 		$sRet = '';
 
 		$iCurrentValue = $this->GetMinUpValue($sCurrentValue);
-		if ($bEditMode)
-		{
+		if ($bEditMode) {
 			$sValue = null;
 			$sHtmlNamesPrefix = 'rddcy_'.$this->Get('relation_code').'_'.$this->Get('from_class').'_'.$this->Get('neighbour_id');
-			switch ($sUserOption)
-			{
+			switch ($sUserOption) {
 				case self::USER_OPTION_DISABLED:
 					$sValue = ''; // Empty placeholder
 					break;
 
 				case self::USER_OPTION_ENABLED_COUNT:
-					if ($bEditMode)
-					{
+					if ($bEditMode) {
 						$sName = $sHtmlNamesPrefix.'_min_up_count';
 						$sEditValue = $bSelected ? $iCurrentValue : '';
 						$sValue = '<input class="redundancy-min-up-count" type="string" size="3" name="'.$sName.'" value="'.$sEditValue.'">';
 						// To fix an issue on Firefox: focus set to the option (because the input is within the label for the option)
 						$oPage->add_ready_script("\$('[name=\"$sName\"]').on('click', function(){var me=this; setTimeout(function(){\$(me).focus();}, 100);});");
-					}
-					else
-					{
+					} else {
 						$sValue = $iCurrentValue;
 					}
 					break;
 
 				case self::USER_OPTION_ENABLED_PERCENT:
-					if ($bEditMode)
-					{
+					if ($bEditMode) {
 						$sName = $sHtmlNamesPrefix.'_min_up_percent';
 						$sEditValue = $bSelected ? $iCurrentValue : '';
 						$sValue = '<input class="redundancy-min-up-percent" type="string" size="3" name="'.$sName.'" value="'.$sEditValue.'">';
 						// To fix an issue on Firefox: focus set to the option (because the input is within the label for the option)
 						$oPage->add_ready_script("\$('[name=\"$sName\"]').on('click', function(){var me=this; setTimeout(function(){\$(me).focus();}, 100);});");
-					}
-					else
-					{
+					} else {
 						$sValue = $iCurrentValue;
 					}
 					break;
 			}
-			$sLabel = sprintf($this->GetUserOptionFormat($sUserOption), $sValue,
-				MetaModel::GetName($this->GetHostClass()));
+			$sLabel = sprintf(
+				$this->GetUserOptionFormat($sUserOption),
+				$sValue,
+				MetaModel::GetName($this->GetHostClass())
+			);
 
 			$sOptionName = $sHtmlNamesPrefix.'_user_option';
 			$sOptionId = $sOptionName.'_'.$sUserOption;
 			$sChecked = $bSelected ? 'checked' : '';
 			$sRet = '<input type="radio" name="'.$sOptionName.'" id="'.$sOptionId.'" value="'.$sUserOption.'" '.$sChecked.'> <label for="'.$sOptionId.'">'.$sLabel.'</label>';
-		}
-		else
-		{
+		} else {
 			// Read-only: display only the currently selected option
-			if ($bSelected)
-			{
-				$sRet = sprintf($this->GetUserOptionFormat($sUserOption), $iCurrentValue,
-					MetaModel::GetName($this->GetHostClass()));
+			if ($bSelected) {
+				$sRet = sprintf(
+					$this->GetUserOptionFormat($sUserOption),
+					$iCurrentValue,
+					MetaModel::GetName($this->GetHostClass())
+				);
 			}
 		}
 
@@ -13140,8 +12398,7 @@ class AttributeRedundancySettings extends AttributeDBField
 		$iMinUpCount = (int)utils::ReadPostedParam($sHtmlNamesPrefix.'_min_up_count', null, 'raw_data');
 		$iMinUpPercent = (int)utils::ReadPostedParam($sHtmlNamesPrefix.'_min_up_percent', null, 'raw_data');
 		$sSelectedOption = utils::ReadPostedParam($sHtmlNamesPrefix.'_user_option', null, 'raw_data');
-		switch ($sSelectedOption)
-		{
+		switch ($sSelectedOption) {
 			case self::USER_OPTION_ENABLED_COUNT:
 				$sRet = $iMinUpCount;
 				break;
@@ -13167,7 +12424,7 @@ class AttributeRedundancySettings extends AttributeDBField
  */
 class AttributeCustomFields extends AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -13188,7 +12445,7 @@ class AttributeCustomFields extends AttributeDefinition
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("handler_class"));
+		return array_merge(parent::ListExpectedParams(), ["handler_class"]);
 	}
 
 	public function GetEditClass()
@@ -13213,7 +12470,7 @@ class AttributeCustomFields extends AttributeDefinition
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -13237,8 +12494,7 @@ class AttributeCustomFields extends AttributeDefinition
 		$sHandlerClass = $this->Get('handler_class');
 		/** @var \TemplateFieldsHandler $oHandler */
 		$oHandler = new $sHandlerClass($this->GetCode());
-		if (!is_null($aValues))
-		{
+		if (!is_null($aValues)) {
 			$oHandler->SetCurrentValues($aValues);
 		}
 
@@ -13260,17 +12516,18 @@ class AttributeCustomFields extends AttributeDefinition
 	/**
 	 * Makes the string representation out of the values given by the form defined in GetDisplayForm
 	 */
-	public function ReadValueFromPostedForm($oHostObject, $sFormPrefix) {
+	public function ReadValueFromPostedForm($oHostObject, $sFormPrefix)
+	{
 		$aRawData = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->GetCode()}", '{}', 'raw_data'), true);
 		if ($aRawData != null) {
 			return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRawData);
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
 
-	public function MakeRealValue($proposedValue, $oHostObject) {
+	public function MakeRealValue($proposedValue, $oHostObject)
+	{
 		if (is_object($proposedValue) && ($proposedValue instanceof ormCustomFieldsValue)) {
 			if (false === $oHostObject->IsNew()) {
 				// In that case we need additional keys : see \TemplateFieldsHandler::DoBuildForm
@@ -13320,8 +12577,7 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 			$oFormField->SetForm($this->GetForm($oObject));
@@ -13346,8 +12602,7 @@ class AttributeCustomFields extends AttributeDefinition
 			$sFormId = utils::IsNullOrEmptyString($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
 			$oHandler->BuildForm($oHostObject, $sFormId);
 			$oForm = $oHandler->GetForm();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$oForm = new Form('');
 			$oField = new LabelField('');
 			$oField->SetLabel('Custom field error: '.$e->getMessage());
@@ -13369,13 +12624,11 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function ReadExternalValues(DBObject $oHostObject)
 	{
-		try
-		{
+		try {
 			$oHandler = $this->GetHandler();
 			$aValues = $oHandler->ReadValues($oHostObject);
 			$oRet = new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aValues);
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$oRet = new ormCustomFieldsValue($oHostObject, $this->GetCode());
 		}
 
@@ -13392,7 +12645,7 @@ class AttributeCustomFields extends AttributeDefinition
 		$oValue = $oHostObject->Get($this->GetCode());
 		if (!($oValue instanceof ormCustomFieldsValue)) {
 			$oHandler = $this->GetHandler();
-			$aValues = array();
+			$aValues = [];
 		} else {
 			// Pass the values through the form to make sure that they are correct
 			$oHandler = $this->GetHandler($oValue->GetValues());
@@ -13457,12 +12710,10 @@ class AttributeCustomFields extends AttributeDefinition
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		try
-		{
+		try {
 			/** @var \ormCustomFieldsValue $value */
 			$sRet = $value->GetAsHTML($bLocalize);
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$sRet = 'Custom field error: '.utils::EscapeHtml($e->getMessage());
 		}
 
@@ -13473,8 +12724,7 @@ class AttributeCustomFields extends AttributeDefinition
 	{
 		try {
 			$sRet = $value->GetAsXML($bLocalize);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$sRet = Str::pure2xml('Custom field error: '.$e->getMessage());
 		}
 
@@ -13493,16 +12743,18 @@ class AttributeCustomFields extends AttributeDefinition
 	 * @noinspection PhpParameterNameChangedDuringInheritanceInspection
 	 */
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		try {
 			$sRet = $value->GetAsCSV($sSeparator, $sTextQualifier, $bLocalize, $bConvertToPlainText);
-		}
-		catch (Exception $e) {
-			$sFrom = array("\r\n", $sTextQualifier);
-			$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		} catch (Exception $e) {
+			$sFrom = ["\r\n", $sTextQualifier];
+			$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 			$sEscaped = str_replace($sFrom, $sTo, 'Custom field error: '.$e->getMessage());
 			$sRet = $sTextQualifier.$sEscaped.$sTextQualifier;
 		}
@@ -13532,11 +12784,9 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
 	{
-		try
-		{
+		try {
 			$sRet = $value->GetForTemplate($sVerb, $bLocalize);
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$sRet = 'Custom field error: '.$e->getMessage();
 		}
 
@@ -13544,7 +12794,11 @@ class AttributeCustomFields extends AttributeDefinition
 	}
 
 	public function MakeValueFromString(
-		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
+		$sProposedValue,
+		$bLocalizedValue = false,
+		$sSepItem = null,
+		$sSepAttribute = null,
+		$sSepValue = null,
 		$sAttributeQualifier = null
 	) {
 		return null;
@@ -13563,8 +12817,7 @@ class AttributeCustomFields extends AttributeDefinition
 	{
 		try {
 			$sRet = $value->GetForJSON();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$sRet = 'Custom field error: '.$e->getMessage();
 		}
 
@@ -13585,11 +12838,9 @@ class AttributeCustomFields extends AttributeDefinition
 
 	public function Equals($val1, $val2)
 	{
-		try
-		{
+		try {
 			$bEquals = $val1->Equals($val2);
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$bEquals = false;
 		}
 
@@ -13624,13 +12875,13 @@ class AttributeArchiveFlag extends AttributeBoolean
 {
 	public function __construct($sCode)
 	{
-		parent::__construct($sCode, array(
+		parent::__construct($sCode, [
 			"allowed_values" => null,
 			"sql" => $sCode,
 			"default_value" => false,
 			"is_null_allowed" => false,
-			"depends_on" => array()
-		));
+			"depends_on" => [],
+		]);
 	}
 
 	public function RequiresIndex()
@@ -13706,13 +12957,13 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 {
 	public function __construct($sCode)
 	{
-		parent::__construct($sCode, array(
+		parent::__construct($sCode, [
 			"allowed_values" => null,
 			"sql" => $sCode,
 			"default_value" => "",
 			"is_null_allowed" => false,
-			"depends_on" => array()
-		));
+			"depends_on" => [],
+		]);
 	}
 
 	public function IsWritable()
@@ -13748,17 +12999,17 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
-		return array();
+		return [];
 	}
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		return array();
+		return [];
 	} // returns column/spec pairs (1 in most of the cases), for STRUCTURING (DB creation)
 
 	public function GetSQLValues($value)
 	{
-		return array();
+		return [];
 	} // returns column/value pairs (1 in most of the cases), for WRITING (Insert, Update)
 
 	public function GetEditClass()
@@ -13774,12 +13025,10 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
 		// Code duplicated with AttributeFriendlyName
-		$aAttributes = $this->GetOptional("depends_on", array());
+		$aAttributes = $this->GetOptional("depends_on", []);
 		$oExpression = $this->GetOQLExpression();
-		foreach ($oExpression->ListRequiredFields() as $sClass => $sAttCode)
-		{
-			if (!in_array($sAttCode, $aAttributes))
-			{
+		foreach ($oExpression->ListRequiredFields() as $sClass => $sAttCode) {
+			if (!in_array($sAttCode, $aAttributes)) {
 				$aAttributes[] = $sAttCode;
 			}
 		}

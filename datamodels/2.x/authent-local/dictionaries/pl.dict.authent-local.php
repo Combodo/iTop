@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:UserLocal' => 'Użytkownik '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal+' => 'Użytkownik uwierzytelniony przez '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Hasło',
@@ -29,4 +30,4 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Hasło musi mieć co najmniej 8 znaków i zawierać duże, małe litery, cyfry i znaki specjalne.',
 	'UserLocal:password:expiration' => 'Poniższe pola wymagają rozszerzenia',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Ustawienie wygaśnięcia hasła "Hasło jednorazowe" nie jest dozwolone dla własnego użytkownika',
-));
+]);

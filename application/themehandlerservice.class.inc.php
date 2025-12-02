@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -29,7 +30,8 @@ class ThemeHandlerService
 	{
 	}
 
-	public function CompileTheme($sThemeId, $bSetup = false, $sSetupCompilationTimestamp = "", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null){
+	public function CompileTheme($sThemeId, $bSetup = false, $sSetupCompilationTimestamp = "", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
+	{
 		return ThemeHandler::CompileTheme($sThemeId, $bSetup, $sSetupCompilationTimestamp, $aThemeParameters, $aImportsPaths, $sWorkingPath);
 	}
 }

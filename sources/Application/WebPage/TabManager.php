@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -12,16 +13,15 @@ use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
 use DeprecatedCallsLog;
 use Dict;
 
-
 /**
  * Helper class to implement JQueryUI tabs inside a page
  */
 class TabManager
 {
-	const ENUM_TAB_TYPE_HTML = 'html';
-	const ENUM_TAB_TYPE_AJAX = 'ajax';
+	public const ENUM_TAB_TYPE_HTML = 'html';
+	public const ENUM_TAB_TYPE_AJAX = 'ajax';
 
-	const DEFAULT_TAB_TYPE = self::ENUM_TAB_TYPE_HTML;
+	public const DEFAULT_TAB_TYPE = self::ENUM_TAB_TYPE_HTML;
 
 	/**
 	 * @var TabContainer[]

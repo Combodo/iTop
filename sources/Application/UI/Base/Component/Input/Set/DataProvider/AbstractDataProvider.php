@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -155,6 +156,5 @@ abstract class AbstractDataProvider implements iDataProvider
 	{
 		return $this->GetType() === iDataProvider::TYPE_SIMPLE_PROVIDER;
 	}
-
 
 }

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Relation:impacts/Description' => 'Elementos impactados por',
 	'Relation:impacts/DownStream' => 'Impacto...',
 	'Relation:impacts/DownStream+' => 'Elementos impactados por',
@@ -21,8 +22,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Relation:impacts/LoadData' => 'Load data~~',
 	'Relation:impacts/NoFilteredData' => 'please select objects and load data~~',
 	'Relation:impacts/FilteredData' => 'Filtered data~~',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -65,7 +65,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Class: lnkContactToFunctionalCI
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkContactToFunctionalCI' => 'Link Contato / IC',
 	'Class:lnkContactToFunctionalCI+' => '',
 	'Class:lnkContactToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -77,13 +77,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Nome do contato',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:FunctionalCI' => 'Item de Configuração',
 	'Class:FunctionalCI+' => '',
 	'Class:FunctionalCI/Attribute:name' => 'Nome',
@@ -116,13 +116,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
 	'Class:FunctionalCI/Tab:OpenedTickets' => 'Solicitações Ativas',
 	'Class:FunctionalCI/Tab:OpenedTickets+' => 'Active Tickets which are impacting this functional CI~~',
-));
+]);
 
 //
 // Class: PhysicalDevice
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PhysicalDevice' => 'Dispositivo Físico',
 	'Class:PhysicalDevice+' => 'Lista de Dispositivos Físicos',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s~~',
@@ -156,13 +156,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:PhysicalDevice/Attribute:purchase_date+' => '',
 	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Fim da garantia',
 	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '',
-));
+]);
 
 //
 // Class: Rack
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Rack' => 'Rack',
 	'Class:Rack+' => '',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s~~',
@@ -172,64 +172,64 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Rack/Attribute:device_list+' => 'Todos os dispositivos físicos empilhados neste rack',
 	'Class:Rack/Attribute:enclosure_list' => 'Gavetas',
 	'Class:Rack/Attribute:enclosure_list+' => 'Todas as gavetas neste rack',
-));
+]);
 
 //
 // Class: TelephonyCI
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TelephonyCI' => 'Telefonia',
 	'Class:TelephonyCI+' => '',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Número de telefone',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '',
-));
+]);
 
 //
 // Class: Phone
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Phone' => 'Telefone',
 	'Class:Phone+' => '',
-));
+]);
 
 //
 // Class: MobilePhone
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:MobilePhone' => 'Telefone Celular',
 	'Class:MobilePhone+' => '',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
 	'Class:MobilePhone/Attribute:imei+' => '',
 	'Class:MobilePhone/Attribute:hw_pin' => 'Hardware PIN',
 	'Class:MobilePhone/Attribute:hw_pin+' => '',
-));
+]);
 
 //
 // Class: IPPhone
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:IPPhone' => 'Telefone IP',
 	'Class:IPPhone+' => '',
-));
+]);
 
 //
 // Class: Tablet
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Tablet' => 'Tablet',
 	'Class:Tablet+' => '',
-));
+]);
 
 //
 // Class: ConnectableCI
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ConnectableCI' => 'Conectividade',
 	'Class:ConnectableCI+' => 'Físico',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
@@ -237,13 +237,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Todos os dispositivos de rede conectados neste dispositivo',
 	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Interface de rede',
 	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Todas as interfaces de rede',
-));
+]);
 
 //
 // Class: DatacenterDevice
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:DatacenterDevice' => 'Dispositivo de Datacenter',
 	'Class:DatacenterDevice+' => '',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s~~',
@@ -275,13 +275,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'O dispositivo está ativo se pelo menos uma conexão de energia (A ou B) estiver ativa',
 	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'O dispositivo está ativo se todas as conexões de energia estiverem ativadas',
 	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'O dispositivo está ativo se pelo menos %1$s %% de suas conexões de energia estiverem funcionando',
-));
+]);
 
 //
 // Class: NetworkDevice
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:NetworkDevice' => 'Dispositivo de Rede',
 	'Class:NetworkDevice+' => '',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s~~',
@@ -297,13 +297,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:NetworkDevice/Attribute:iosversion_name+' => '',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
 	'Class:NetworkDevice/Attribute:ram+' => '',
-));
+]);
 
 //
 // Class: Server
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Server' => 'Servidor',
 	'Class:Server+' => '',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s~~',
@@ -325,61 +325,61 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Server/Attribute:ram+' => '',
 	'Class:Server/Attribute:logicalvolumes_list' => 'Volumes lógicos',
 	'Class:Server/Attribute:logicalvolumes_list+' => 'Todos os volumoes lógicos associados a este servidor',
-));
+]);
 
 //
 // Class: StorageSystem
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:StorageSystem' => 'Sistema de Storage',
 	'Class:StorageSystem+' => '',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Volumes lógicos',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Todos os volumes lógicos neste sistema storage',
-));
+]);
 
 //
 // Class: SANSwitch
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:SANSwitch' => 'Switch SAN',
 	'Class:SANSwitch+' => '',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Dispositivos',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Todos os dispositivos associados a este switch SAN',
-));
+]);
 
 //
 // Class: TapeLibrary
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TapeLibrary' => 'Biblioteca de Fitas',
 	'Class:TapeLibrary+' => '',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Fitas',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'Todas as fitas associadas à esta biblioteca de fitas',
-));
+]);
 
 //
 // Class: NAS
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Sistemas de arquivos',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'Todos os sistemas de arquivos para esse NAS',
-));
+]);
 
 //
 // Class: PC
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PC' => 'PC',
 	'Class:PC+' => '',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s~~',
@@ -401,45 +401,45 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:PC/Attribute:type/Value:desktop+' => '',
 	'Class:PC/Attribute:type/Value:laptop' => 'Laptop',
 	'Class:PC/Attribute:type/Value:laptop+' => '',
-));
+]);
 
 //
 // Class: Printer
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Printer' => 'Impressora',
 	'Class:Printer+' => '',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s~~',
-));
+]);
 
 //
 // Class: PowerConnection
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PowerConnection' => 'Conexão de Energia',
 	'Class:PowerConnection+' => '',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s~~',
-));
+]);
 
 //
 // Class: PowerSource
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PowerSource' => 'Fonte de Energia',
 	'Class:PowerSource+' => '',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
 	'Class:PowerSource/Attribute:pdus_list+' => 'Todos os PDUs utilizando essa fonte de energia',
-));
+]);
 
 //
 // Class: PDU
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => '',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s~~',
@@ -451,23 +451,23 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:PDU/Attribute:powerstart_id+' => '',
 	'Class:PDU/Attribute:powerstart_name' => 'Nome da fonte de energia',
 	'Class:PDU/Attribute:powerstart_name+' => '',
-));
+]);
 
 //
 // Class: Peripheral
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Peripheral' => 'Periférico',
 	'Class:Peripheral+' => '',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s~~',
-));
+]);
 
 //
 // Class: Enclosure
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Enclosure' => 'Gaveta',
 	'Class:Enclosure+' => '',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s~~',
@@ -479,13 +479,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Enclosure/Attribute:nb_u+' => '',
 	'Class:Enclosure/Attribute:device_list' => 'Dispositivos',
 	'Class:Enclosure/Attribute:device_list+' => 'Todos os dispositivos para essa gaveta',
-));
+]);
 
 //
 // Class: ApplicationSolution
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ApplicationSolution' => 'Solução de Aplicação',
 	'Class:ApplicationSolution+' => '',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'ICs',
@@ -502,13 +502,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'A solução está funcionando se todos os ICs estiverem funcionando',
 	'Class:ApplicationSolution/Attribute:redundancy/count' => 'A solução está funcionando se no mínimo %1$s IC(s) estiver(em) funcionando',
 	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'A solução está funcionando se no mínimo %1$s %% dos ICs estiverem funcionando',
-));
+]);
 
 //
 // Class: BusinessProcess
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:BusinessProcess' => 'Processo de Negócio',
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Soluções de aplicação',
@@ -519,13 +519,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:BusinessProcess/Attribute:status/Value:active+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'Inativo',
 	'Class:BusinessProcess/Attribute:status/Value:inactive+' => '',
-));
+]);
 
 //
 // Class: SoftwareInstance
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:SoftwareInstance' => 'Instância de Software',
 	'Class:SoftwareInstance+' => '',
 	'Class:SoftwareInstance/Attribute:system_id' => 'Sistema',
@@ -548,64 +548,64 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'Ativo',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Inativo',
 	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'Inativo',
-));
+]);
 
 //
 // Class: Middleware
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Middleware' => 'Middleware',
 	'Class:Middleware+' => '',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Instância Middleware',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Todos as instância middleware fornecida por essa middleware',
-));
+]);
 
 //
 // Class: DBServer
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:DBServer' => 'Servidor de DB',
 	'Class:DBServer+' => '',
 	'Class:DBServer/Attribute:dbschema_list' => 'Esquemas de DB',
 	'Class:DBServer/Attribute:dbschema_list+' => 'Todos os esquemas para esse servidor de banco de dados',
-));
+]);
 
 //
 // Class: WebServer
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:WebServer' => 'Servidor Web',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Aplicações Web',
 	'Class:WebServer/Attribute:webapp_list+' => 'Todas as aplicações web disponíveis para esse servidor web',
-));
+]);
 
 //
 // Class: PCSoftware
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PCSoftware' => 'Software de PC',
 	'Class:PCSoftware+' => '',
-));
+]);
 
 //
 // Class: OtherSoftware
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:OtherSoftware' => 'Outro Software',
 	'Class:OtherSoftware+' => '',
-));
+]);
 
 //
 // Class: MiddlewareInstance
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:MiddlewareInstance' => 'Instância Middleware',
 	'Class:MiddlewareInstance+' => '',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
@@ -613,13 +613,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nome do middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_name+' => '',
-));
+]);
 
 //
 // Class: DatabaseSchema
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:DatabaseSchema' => 'Esquema de DB',
 	'Class:DatabaseSchema+' => '',
 	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s~~',
@@ -627,13 +627,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
 	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Nome do servidor de DB',
 	'Class:DatabaseSchema/Attribute:dbserver_name+' => '',
-));
+]);
 
 //
 // Class: WebApplication
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:WebApplication' => 'Aplicação Web',
 	'Class:WebApplication+' => '',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s~~',
@@ -643,14 +643,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:WebApplication/Attribute:webserver_name+' => '',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '',
-));
-
+]);
 
 //
 // Class: VirtualDevice
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:VirtualDevice' => 'Dispositivo Virtual',
 	'Class:VirtualDevice+' => '',
 	'Class:VirtualDevice/Attribute:status' => 'Status',
@@ -665,24 +664,24 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'Suporte',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Volume lógico',
 	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Todos os volumes lógicos associados a este dispositivo',
-));
+]);
 
 //
 // Class: VirtualHost
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:VirtualHost' => 'Host Virtual',
 	'Class:VirtualHost+' => '',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Máquinas Virtuais',
 	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Todas as máquinas virtuais hospedadas neste Host',
-));
+]);
 
 //
 // Class: Hypervisor
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Hypervisor' => 'Hypervisor',
 	'Class:Hypervisor+' => '',
 	'Class:Hypervisor/Attribute:farm_id' => 'Cluster/HA',
@@ -693,13 +692,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Hypervisor/Attribute:server_id+' => '',
 	'Class:Hypervisor/Attribute:server_name' => 'Nome do servidor',
 	'Class:Hypervisor/Attribute:server_name+' => '',
-));
+]);
 
 //
 // Class: Farm
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Farm' => 'Cluster/HA',
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
@@ -708,13 +707,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Farm/Attribute:redundancy/disabled' => 'O farm está ativo se todos os hipervisores estiverem em alta',
 	'Class:Farm/Attribute:redundancy/count' => 'O farm está ativo se pelo menos %1$s hypervisor(es) estiver (ão) para cima',
 	'Class:Farm/Attribute:redundancy/percent' => 'O farm está ativo se pelo menos %1$s %% dos hipervisores estiverem em alta',
-));
+]);
 
 //
 // Class: VirtualMachine
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:VirtualMachine' => 'Máquina Virtual',
 	'Class:VirtualMachine+' => '',
 	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s~~',
@@ -742,13 +741,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Placas de rede',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Todas as placas de rede',
-));
+]);
 
 //
 // Class: LogicalVolume
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:LogicalVolume' => 'Volume lógico',
 	'Class:LogicalVolume+' => '',
 	'Class:LogicalVolume/Attribute:name' => 'Nome',
@@ -769,13 +768,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:LogicalVolume/Attribute:servers_list+' => 'Todos os servidores usando esse volume',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Dispositivos virtuais',
 	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Todos os dispositivos virtuais usando esse volume',
-));
+]);
 
 //
 // Class: lnkServerToVolume
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkServerToVolume' => 'Link Servidor / Volume',
 	'Class:lnkServerToVolume+' => '',
 	'Class:lnkServerToVolume/Name' => '%1$s / %2$s~~',
@@ -789,13 +788,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkServerToVolume/Attribute:server_name+' => '',
 	'Class:lnkServerToVolume/Attribute:size_used' => 'Tamanho utilizado',
 	'Class:lnkServerToVolume/Attribute:size_used+' => '',
-));
+]);
 
 //
 // Class: lnkVirtualDeviceToVolume
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkVirtualDeviceToVolume' => 'Link Dispositivo Virtual / Volume',
 	'Class:lnkVirtualDeviceToVolume+' => '',
 	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s~~',
@@ -809,13 +808,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Tamanho utilizado',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '',
-));
+]);
 
 //
 // Class: lnkSanToDatacenterDevice
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkSanToDatacenterDevice' => 'Link SAN / Dispositivo Datacenter',
 	'Class:lnkSanToDatacenterDevice+' => '',
 	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s~~',
@@ -831,13 +830,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Dispositivo de FC',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '',
-));
+]);
 
 //
 // Class: Tape
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Tape' => 'Fita',
 	'Class:Tape+' => '',
 	'Class:Tape/Attribute:name' => 'Nome',
@@ -850,13 +849,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Tape/Attribute:tapelibrary_id+' => '',
 	'Class:Tape/Attribute:tapelibrary_name' => 'Nome da biblioteca de fitas',
 	'Class:Tape/Attribute:tapelibrary_name+' => '',
-));
+]);
 
 //
 // Class: NASFileSystem
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:NASFileSystem' => 'Sistema de arquivos NAS',
 	'Class:NASFileSystem+' => '',
 	'Class:NASFileSystem/Attribute:name' => 'Nome',
@@ -871,13 +870,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:NASFileSystem/Attribute:nas_id+' => '',
 	'Class:NASFileSystem/Attribute:nas_name' => 'Nome do NAS',
 	'Class:NASFileSystem/Attribute:nas_name+' => '',
-));
+]);
 
 //
 // Class: Software
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Software' => 'Software',
 	'Class:Software+' => '',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s~~',
@@ -907,13 +906,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Software/Attribute:softwarepatch_list+' => 'Todas as atualizações para esse software',
 	'Class:Software/Attribute:softwarelicence_list' => 'Licenças de Software',
 	'Class:Software/Attribute:softwarelicence_list+' => 'Todas as licenças software para esse software',
-));
+]);
 
 //
 // Class: Patch
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Patch' => 'Atualização',
 	'Class:Patch+' => '',
 	'Class:Patch/Attribute:name' => 'Nome',
@@ -924,13 +923,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Patch/Attribute:description+' => '',
 	'Class:Patch/Attribute:finalclass' => 'Tipo',
 	'Class:Patch/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: OSPatch
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:OSPatch' => 'Atualização de SO',
 	'Class:OSPatch+' => '',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Dispositivos',
@@ -939,13 +938,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:OSPatch/Attribute:osversion_id+' => '',
 	'Class:OSPatch/Attribute:osversion_name' => 'Nome da versão do SO',
 	'Class:OSPatch/Attribute:osversion_name+' => '',
-));
+]);
 
 //
 // Class: SoftwarePatch
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:SoftwarePatch' => 'Atualização de Software',
 	'Class:SoftwarePatch+' => '',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Software',
@@ -954,13 +953,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SoftwarePatch/Attribute:software_name+' => '',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Instâncias do Software',
 	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Todos os sistemas onde essa atualização de software está instalada',
-));
+]);
 
 //
 // Class: Licence
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Licence' => 'Licença',
 	'Class:Licence+' => '',
 	'Class:Licence/Attribute:name' => 'Nome',
@@ -989,13 +988,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'Sim',
 	'Class:Licence/Attribute:finalclass' => 'Tipo',
 	'Class:Licence/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: OSLicence
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:OSLicence' => 'Licença de SO',
 	'Class:OSLicence+' => '',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s~~',
@@ -1007,13 +1006,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Todas as máquinas virtuais onde essa licença é utilizada',
 	'Class:OSLicence/Attribute:servers_list' => 'servidores',
 	'Class:OSLicence/Attribute:servers_list+' => 'Todos os servidores onde essa licença é utilizada',
-));
+]);
 
 //
 // Class: SoftwareLicence
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:SoftwareLicence' => 'Licença de software',
 	'Class:SoftwareLicence+' => '',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s~~',
@@ -1023,13 +1022,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Instâncias do software',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Todos os sistemas onde essa licença é utilizada',
-));
+]);
 
 //
 // Class: lnkDocumentToLicence
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkDocumentToLicence' => 'Link Documento / Licença',
 	'Class:lnkDocumentToLicence+' => '',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s~~',
@@ -1041,35 +1040,35 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
 	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Nome do documento',
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: OSVersion
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:OSVersion' => 'Versão do OS',
 	'Class:OSVersion+' => '',
 	'Class:OSVersion/Attribute:osfamily_id' => 'Família do SO',
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nome da família do SO',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
-));
+]);
 
 //
 // Class: OSFamily
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:OSFamily' => 'Família do OS',
 	'Class:OSFamily+' => '',
-));
+]);
 
 //
 // Class: Brand
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Brand' => 'Fabricante',
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:logo' => 'Logo~~',
@@ -1078,13 +1077,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Todos os dispositivos físicos correspondentes a esse(a) fabricante',
 	'Class:Brand/UniquenessRule:name+' => 'O nome do(a) fabricante deve ser único',
 	'Class:Brand/UniquenessRule:name' => 'Esse(a) fabricante já existe',
-));
+]);
 
 //
 // Class: Model
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Model' => 'Modelo',
 	'Class:Model+' => '',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s~~',
@@ -1136,37 +1135,37 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Model/Attribute:physicaldevices_list+' => 'Todos os dispositivos físicos correspondentes a este modelo',
 	'Class:Model/UniquenessRule:name_brand+' => 'O nome do modelo deve ser único',
 	'Class:Model/UniquenessRule:name_brand' => 'Este modelo já existe',
-));
+]);
 
 //
 // Class: NetworkDeviceType
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:NetworkDeviceType' => 'Tipo de dispositivo de rede',
 	'Class:NetworkDeviceType+' => '',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Dispositivo de rede',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Todos os dispositivo de rede correspondentes a este tipo',
-));
+]);
 
 //
 // Class: IOSVersion
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:IOSVersion' => 'Versão do IOS',
 	'Class:IOSVersion+' => '',
 	'Class:IOSVersion/Attribute:brand_id' => 'Fabricante',
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nome do fabricante',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToPatch
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkDocumentToPatch' => 'Link Documento / Atualização',
 	'Class:lnkDocumentToPatch+' => '',
 	'Class:lnkDocumentToPatch/Name' => '%1$s / %2$s~~',
@@ -1178,13 +1177,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
 	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Nome do documento',
 	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: lnkSoftwareInstanceToSoftwarePatch
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Link Instância de Software / Atualização de Software',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Name' => '%1$s / %2$s~~',
@@ -1196,13 +1195,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Nome da instância de software',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToOSPatch
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkFunctionalCIToOSPatch' => 'Link IC / Atualização de SO',
 	'Class:lnkFunctionalCIToOSPatch+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Name' => '%1$s / %2$s~~',
@@ -1214,13 +1213,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'Nome do IC',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToSoftware
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkDocumentToSoftware' => 'Link Documento / Software',
 	'Class:lnkDocumentToSoftware+' => '',
 	'Class:lnkDocumentToSoftware/Name' => '%1$s / %2$s~~',
@@ -1232,13 +1231,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
 	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Nome do documento',
 	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Class: Subnet
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Subnet' => 'Sub-rede',
 	'Class:Subnet+' => '',
 	'Class:Subnet/Name' => '%1$s/%2$s~~',
@@ -1257,13 +1256,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Subnet/Attribute:ip_mask+' => '',
 	'Class:Subnet/Attribute:vlans_list' => 'VLANs',
 	'Class:Subnet/Attribute:vlans_list+' => '',
-));
+]);
 
 //
 // Class: VLAN
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:VLAN' => 'VLAN',
 	'Class:VLAN+' => '',
 	'Class:VLAN/Attribute:vlan_tag' => 'Nome da VLAN',
@@ -1278,13 +1277,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:VLAN/Attribute:subnets_list+' => '',
 	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Interfaces de rede física',
 	'Class:VLAN/Attribute:physicalinterfaces_list+' => '',
-));
+]);
 
 //
 // Class: lnkSubnetToVLAN
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkSubnetToVLAN' => 'Link Sub-rede / VLAN',
 	'Class:lnkSubnetToVLAN+' => '',
 	'Class:lnkSubnetToVLAN/Name' => '%1$s / %2$s~~',
@@ -1298,26 +1297,26 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'Nome da VLAN',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '',
-));
+]);
 
 //
 // Class: NetworkInterface
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:NetworkInterface' => 'Placa de Rede',
 	'Class:NetworkInterface+' => '',
 	'Class:NetworkInterface/Attribute:name' => 'Nome',
 	'Class:NetworkInterface/Attribute:name+' => '',
 	'Class:NetworkInterface/Attribute:finalclass' => 'Tipo',
 	'Class:NetworkInterface/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: IPInterface
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:IPInterface' => 'Endereço IP',
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'Endereço IP',
@@ -1332,13 +1331,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:IPInterface/Attribute:ipmask+' => '',
 	'Class:IPInterface/Attribute:speed' => 'Velocidade',
 	'Class:IPInterface/Attribute:speed+' => '',
-));
+]);
 
 //
 // Class: PhysicalInterface
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PhysicalInterface' => 'Placa física',
 	'Class:PhysicalInterface+' => '',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s~~',
@@ -1348,13 +1347,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
-));
+]);
 
 //
 // Class: lnkPhysicalInterfaceToVLAN
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkPhysicalInterfaceToVLAN' => 'Link Interfaces físicas / VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Name' => '%1$s %2$s / %3$s~~',
@@ -1370,27 +1369,26 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'Nome da VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
-));
-
+]);
 
 //
 // Class: LogicalInterface
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:LogicalInterface' => 'Placa lógica',
 	'Class:LogicalInterface+' => '',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Máquina virtual',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Nome da máquina virtual',
 	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '',
-));
+]);
 
 //
 // Class: FiberChannelInterface
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:FiberChannelInterface' => 'Placa Fiber Channel',
 	'Class:FiberChannelInterface+' => '',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Velocidade',
@@ -1403,13 +1401,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Nome do dispositivo',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '',
-));
+]);
 
 //
 // Class: lnkConnectableCIToNetworkDevice
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkConnectableCIToNetworkDevice' => 'Link ConnectableCI / NetworkDevice',
 	'Class:lnkConnectableCIToNetworkDevice+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Name' => '%1$s / %2$s~~',
@@ -1431,13 +1429,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'Link down',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'Link up',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'Link up',
-));
+]);
 
 //
 // Class: lnkApplicationSolutionToFunctionalCI
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Link Solução de Aplicação / IC',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -1449,13 +1447,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Nome do IC',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: lnkApplicationSolutionToBusinessProcess
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkApplicationSolutionToBusinessProcess' => 'Link ApplicationSolution / BusinessProcess',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Name' => '%1$s / %2$s~~',
@@ -1467,13 +1465,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Nome da solução de aplicação',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
-));
+]);
 
 //
 // Class: Group
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Group' => 'Grupo',
 	'Class:Group+' => '',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s~~',
@@ -1503,13 +1501,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Group/Attribute:ci_list+' => 'Todos os itens de configuração associados a este grupo',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Grupo pai',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
-));
+]);
 
 //
 // Class: lnkGroupToCI
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkGroupToCI' => 'Link Grupo / IC',
 	'Class:lnkGroupToCI+' => '',
 	'Class:lnkGroupToCI/Name' => '%1$s / %2$s~~',
@@ -1523,11 +1521,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkGroupToCI/Attribute:ci_name+' => '',
 	'Class:lnkGroupToCI/Attribute:reason' => 'Motivo do link',
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Server:baseinfo' => 'Informações gerais',
 	'Server:Date' => 'Data',
 	'Server:moreinfo' => 'Mais informações',
@@ -1540,14 +1538,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'IPs livres: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Aqui uma faixa de 10 endereços IPs livres',
 	'Class:Document:PreviewTab' => 'Visualização',
-));
-
+]);
 
 //
 // Class: lnkDocumentToFunctionalCI
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkDocumentToFunctionalCI' => 'Link de Documento / IC',
 	'Class:lnkDocumentToFunctionalCI+' => '',
 	'Class:lnkDocumentToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -1559,13 +1556,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nome do documento',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:Application' => 'Aplicações',
 	'Menu:Application+' => 'Lista de Aplicações',
 	'Menu:DBServer' => 'Servidores de Banco de Dados',
@@ -1610,15 +1607,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:OSVersion+' => 'Lista de Versões do SO',
 	'Menu:Software' => 'Catálogo de Software',
 	'Menu:Software+' => '',
-));
+]);
 
 //
 // Class: PhysicalInterface
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
 	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
 	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
 	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
-));
+]);

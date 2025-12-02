@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:KnownError' => '既知のエラー',
 	'Class:KnownError+' => '既知の課題として文書化されたエラー',
 	'Class:KnownError/Attribute:name' => '名前',
@@ -52,13 +53,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:KnownError/Attribute:ci_list+' => 'All the configuration items that are related to this known error~~',
 	'Class:KnownError/Attribute:document_list' => '文書',
 	'Class:KnownError/Attribute:document_list+' => 'All the documents linked to this known error~~',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkErrorToFunctionalCI' => 'リンク エラー/機能的CI',
 	'Class:lnkErrorToFunctionalCI+' => '既知のエラーに関連するインフラ',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -72,13 +73,13 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => '理由',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:lnkDocumentToError' => 'リンク 文書/エラー',
 	'Class:lnkDocumentToError+' => '文書と既知のエラー間のリンク',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
@@ -92,9 +93,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'リンクタイプ',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
+]);
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ProblemManagement' => '問題管理',
 	'Menu:ProblemManagement+' => '問題管理',
 	'Menu:Problem:Shortcuts' => 'ショートカット',
@@ -104,4 +105,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:SearchError+' => '既知のエラー検索',
 	'Menu:Problem:KnownErrors' => '全ての既知のエラー',
 	'Menu:Problem:KnownErrors+' => '全ての既知のエラー',
-));
+]);

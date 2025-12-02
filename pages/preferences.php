@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -143,11 +144,10 @@ JS
 	// Notifications
 	//
 	//////////////////////////////////////////////////////////////////////////
-	$oNotificationsBlock = new Panel(Dict::S('UI:Preferences:Notifications'), array(), Panel::ENUM_COLOR_SCHEME_GREY, 'ibo-notifications');
+	$oNotificationsBlock = new Panel(Dict::S('UI:Preferences:Notifications'), [], Panel::ENUM_COLOR_SCHEME_GREY, 'ibo-notifications');
 	$sNotificationsCenterUrl = Router::GetInstance()->GenerateUrl(NotificationsCenterController::ROUTE_NAMESPACE.'.display_page', [], true);
 	$oNotificationsBlock->AddSubBlock(new Html('<p>'.Dict::Format('UI:Preferences:Notifications+', $sNotificationsCenterUrl).'</p>'));
 	$oContentLayout->AddMainBlock($oNotificationsBlock);
-
 
 	//////////////////////////////////////////////////////////////////////////
 	//
@@ -155,7 +155,7 @@ JS
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	$oFavoriteOrganizationsBlock = new Panel(Dict::S('UI:FavoriteOrganizations'), array(), 'grey', 'ibo-favorite-organizations');
+	$oFavoriteOrganizationsBlock = new Panel(Dict::S('UI:FavoriteOrganizations'), [], 'grey', 'ibo-favorite-organizations');
 	$oFavoriteOrganizationsBlock->SetSubTitle(Dict::S('UI:FavoriteOrganizations+'));
 	$oFavoriteOrganizationsBlock->AddCSSClass('ibo-datatable-panel');
 	$oFavoriteOrganizationsForm = new Form();
@@ -210,7 +210,7 @@ JS
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	$oShortcutsBlock = new BlockShortcuts(Dict::S('Menu:MyShortcuts'), array(), 'grey', 'ibo-shortcuts');
+	$oShortcutsBlock = new BlockShortcuts(Dict::S('Menu:MyShortcuts'), [], 'grey', 'ibo-shortcuts');
 	$oShortcutsBlock->AddCSSClass('ibo-datatable-panel');
 
 	$oShortcutsBlock->sIdShortcuts = 'shortcut_list';
@@ -234,12 +234,22 @@ JS
 		$oShortcutsToolBar = ToolbarUIBlockFactory::MakeForButton();
 		$oShortcutsBlock->AddSubBlock($oShortcutsToolBar);
 		// - Rename button
-		$oShortcutsRenameButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Rename'), null, null, false,
-			"shortcut_btn_rename");
+		$oShortcutsRenameButton = ButtonUIBlockFactory::MakeForSecondaryAction(
+			Dict::S('UI:Button:Rename'),
+			null,
+			null,
+			false,
+			"shortcut_btn_rename"
+		);
 		$oShortcutsToolBar->AddSubBlock($oShortcutsRenameButton);
 		// - Delete button
-		$oShortcutsDeleteButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Delete'), null, null, false,
-			"shortcut_btn_delete");
+		$oShortcutsDeleteButton = ButtonUIBlockFactory::MakeForSecondaryAction(
+			Dict::S('UI:Button:Delete'),
+			null,
+			null,
+			false,
+			"shortcut_btn_delete"
+		);
 		$oShortcutsToolBar->AddSubBlock($oShortcutsDeleteButton);
 	}
 	$oContentLayout->AddMainBlock($oShortcutsBlock);
@@ -253,26 +263,27 @@ JS
 	$oUser = UserRights::GetUserObject();
 	/** @var iNewsroomProvider[] $aProviders */
 	$aProviders = InterfaceDiscovery::GetInstance()->FindItopClasses(iNewsroomProvider::class);
-	foreach($aProviders as $cProvider) 
-	{
+	foreach ($aProviders as $cProvider) {
 		$oProvider = new $cProvider();
-		if ($oProvider->IsApplicable($oUser))
-		{
+		if ($oProvider->IsApplicable($oUser)) {
 			$iCountProviders++;
 		}
 	}
 
 	$bNewsroomEnabled = (MetaModel::GetConfig()->Get('newsroom_enabled') !== false);
-	if ($bNewsroomEnabled && ($iCountProviders > 0))
-	{
-		$oNewsroomBlock = new Panel(Dict::S('UI:Newsroom:Preferences'), array(), 'grey', 'ibo-newsroom');
+	if ($bNewsroomEnabled && ($iCountProviders > 0)) {
+		$oNewsroomBlock = new Panel(Dict::S('UI:Newsroom:Preferences'), [], 'grey', 'ibo-newsroom');
 
 		$sNewsroomHtml = '';
 		$sNewsroomHtml .= '<form method="post">';
 		$iNewsroomDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', 7);
 
-		if ($iNewsroomDisplaySize < 1) $iNewsroomDisplaySize = 1;
-		if ($iNewsroomDisplaySize > 20) $iNewsroomDisplaySize = 20;
+		if ($iNewsroomDisplaySize < 1) {
+			$iNewsroomDisplaySize = 1;
+		}
+		if ($iNewsroomDisplaySize > 20) {
+			$iNewsroomDisplaySize = 20;
+		}
 		$sInput = '<input min="1" max="20" id="newsroom_display_size" type="number" size="2" name="newsroom_display_size" value="'.$iNewsroomDisplaySize.'">';
 		$sIcon = '<i id="newsroom_menu_icon" class="top-right-icon icon-additional-arrow fas fa-bell" style="top: 0;"></i>';
 		$sNewsroomHtml .= Dict::Format('UI:Newsroom:DisplayAtMost_X_Messages', $sInput, $sIcon);
@@ -281,22 +292,16 @@ JS
 		 * @var iNewsroomProvider[] $aProviders
 		 */
 		$sAppRootUrl = utils::GetAbsoluteUrlAppRoot();
-		foreach($aProviders as $cProvider) 
-		{
+		foreach ($aProviders as $cProvider) {
 			$oProvider = new $cProvider();
-			if ($oProvider->IsApplicable($oUser))
-			{
+			if ($oProvider->IsApplicable($oUser)) {
 				$sUrl = $oProvider->GetPreferencesUrl();
 				$sProviderClass = get_class($oProvider);
 				$sPreferencesLink = '';
-				if ($sUrl !== null)
-				{
-					if(substr($sUrl, 0, strlen($sAppRootUrl)) === $sAppRootUrl)
-					{
+				if ($sUrl !== null) {
+					if (substr($sUrl, 0, strlen($sAppRootUrl)) === $sAppRootUrl) {
 						$sTarget = ''; // Internal link, open in the same window
-					}
-					else
-					{
+					} else {
 						$sTarget = ' target="_blank"'; // External link, open in new window
 					}
 					$sPreferencesLink = ' - <a class=".newsroom-configuration-link" href="'.$sUrl.'"'.$sTarget.'>'.Dict::S('UI:Newsroom:ConfigurationLink').'</a>';
@@ -306,8 +311,10 @@ JS
 				// Forbid disabling internal newsroom provider
 				$sDisabledForHtml = $sProviderClass === iTopNewsroomProvider::class ? 'disabled' : '';
 
-				$sNewsroomHtml .= '<div><input type="checkbox" id="newsroom_provider_'.$sProviderClass.'" value="on" '.$sCheckedForHtml.' '.$sDisabledForHtml.' name="newsroom_provider_'.$sProviderClass.'"><label for="newsroom_provider_'.$sProviderClass.'">'.Dict::Format('UI:Newsroom:DisplayMessagesFor_Provider',
-						$oProvider->GetLabel()).'</label> '.$sPreferencesLink.'</div>';
+				$sNewsroomHtml .= '<div><input type="checkbox" id="newsroom_provider_'.$sProviderClass.'" value="on" '.$sCheckedForHtml.' '.$sDisabledForHtml.' name="newsroom_provider_'.$sProviderClass.'"><label for="newsroom_provider_'.$sProviderClass.'">'.Dict::Format(
+					'UI:Newsroom:DisplayMessagesFor_Provider',
+					$oProvider->GetLabel()
+				).'</label> '.$sPreferencesLink.'</div>';
 			}
 		}
 
@@ -317,7 +324,8 @@ JS
 
 		// - Reset button
 		$oNewsroomResetCacheButton = ButtonUIBlockFactory::MakeForAlternativeDestructiveAction(Dict::S('UI:Newsroom:ResetCache'));
-		$oNewsroomResetCacheButton->SetOnClickJsCode(<<<JS
+		$oNewsroomResetCacheButton->SetOnClickJsCode(
+			<<<JS
 $('#ibo-navigation-menu--notifications-menu').newsroom_menu('clearCache')
 CombodoToast.OpenSuccessToast(Dict.S('UI:Newsroom:ResetCache:Success:Message'));
 JS
@@ -328,10 +336,13 @@ JS
 		$oNewsroomCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
 		$oNewsroomToolbar->AddSubBlock($oNewsroomCancelButton);
 		// - Submit button
-		$oNewsroomSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation',
-			'apply_newsroom_preferences', true);
+		$oNewsroomSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(
+			Dict::S('UI:Button:Apply'),
+			'operation',
+			'apply_newsroom_preferences',
+			true
+		);
 		$oNewsroomToolbar->AddSubBlock($oNewsroomSubmitButton);
-
 
 		$sNewsroomEndHtml = '</form>';
 		$oNewsroomEndHtmlBlock = new Html($sNewsroomEndHtml);
@@ -350,7 +361,7 @@ JS
 	//////////////////////////////////////////////////////////////////////////
 
 	// Panel
-	$oKeyboardShortcutBlock = new Panel(Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Title'), array(), 'grey', 'ibo_keyboard_shortcuts');
+	$oKeyboardShortcutBlock = new Panel(Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Title'), [], 'grey', 'ibo_keyboard_shortcuts');
 	// Form
 	$oKeyboardShortcutForm = new Form('ibo-form-for-user-interface-preferences');
 	$oKeyboardShortcutForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'apply_keyboard_shortcuts'))
@@ -412,7 +423,6 @@ JS
 	$oKeyboardShortcutSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_keyboard_shortcuts', true);
 	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutSubmitButton);
 
-
 	$oContentLayout->AddMainBlock($oKeyboardShortcutBlock);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -421,23 +431,20 @@ JS
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	$oUserPicturePlaceHolderBlock = new Panel(Dict::S('UI:Preferences:ChooseAPlaceholder'), array(), 'grey', 'ibo-user-picture-placeholder');
+	$oUserPicturePlaceHolderBlock = new Panel(Dict::S('UI:Preferences:ChooseAPlaceholder'), [], 'grey', 'ibo-user-picture-placeholder');
 
 	$sUserPicturesFolderRelPath = 'images/user-pictures/';
-	$sUserPicturesFolderAbsPath = APPROOT . $sUserPicturesFolderRelPath;
-	$sUserPicturesFolderAbsUrl = utils::GetAbsoluteUrlAppRoot() . $sUserPicturesFolderRelPath;
+	$sUserPicturesFolderAbsPath = APPROOT.$sUserPicturesFolderRelPath;
+	$sUserPicturesFolderAbsUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolderRelPath;
 	$sUserDefaultPicture = appUserPreferences::GetPref('user_picture_placeholder', 'default-placeholder.png');
 	$sUserPicturePlaceHolderHtml = '';
 	$sUserPicturePlaceHolderHtml .= '<p>'.Dict::S('UI:Preferences:ChooseAPlaceholder+').'</p> <div class="ibo-preferences--user-preferences--picture-placeholder">';
-	foreach (scandir($sUserPicturesFolderAbsPath) as $sUserPicture)
-	{
-		if ($sUserPicture === '.' || $sUserPicture === '..')
-		{
+	foreach (scandir($sUserPicturesFolderAbsPath) as $sUserPicture) {
+		if ($sUserPicture === '.' || $sUserPicture === '..') {
 			continue;
 		}
 		$sAdditionalClass = '';
-		if ($sUserDefaultPicture === $sUserPicture)
-		{
+		if ($sUserDefaultPicture === $sUserPicture) {
 			$sAdditionalClass = ' ibo-is-active';
 		}
 		$sUserPicturePlaceHolderHtml .= '<a class="ibo-preferences--user-preferences--picture-placeholder--image'.$sAdditionalClass.'" data-image-name="'.$sUserPicture.'" data-role="ibo-preferences--user-preferences--picture-placeholder--image" href="#"> <img src="'.$sUserPicturesFolderAbsUrl.$sUserPicture.'"/> </a>';
@@ -473,7 +480,7 @@ $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]')
 	});
 });
 JS
-);
+	);
 	$sUserPicturePlaceHolderHtml .=
 		<<<HTML
 </div>
@@ -484,8 +491,7 @@ HTML
 	$oContentLayout->AddMainBlock($oUserPicturePlaceHolderBlock);
 
 	/** @var iPreferencesExtension $oLoginExtensionInstance */
-	foreach (MetaModel::EnumPlugins('iPreferencesExtension') as $oPreferencesExtensionInstance)
-	{
+	foreach (MetaModel::EnumPlugins('iPreferencesExtension') as $oPreferencesExtensionInstance) {
 		$oPreferencesExtensionInstance->DisplayPreferences($oP);
 	}
 
@@ -503,7 +509,7 @@ HTML
 function GetLanguageFieldBlock(): iUIBlock
 {
 	$aAvailableLanguages = Dict::GetLanguages();
-	$aSortedLanguages = array();
+	$aSortedLanguages = [];
 	foreach ($aAvailableLanguages as $sCode => $aLang) {
 		if (MetaModel::GetConfig()->Get('demo_mode') && ($sCode !== Dict::GetUserLanguage())) {
 			// Demo mode: only the current user language is listed in the available choices
@@ -582,10 +588,12 @@ function GetTabsLayoutFieldBlock(): iUIBlock
 	];
 	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('tab_layout', Dict::S('UI:Preferences:Tabs:Layout:Label'));
 	foreach ($aOptionsValues as $sValue) {
-		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
-			$sValue,
-			Dict::S('UI:Preferences:Tabs:Layout:'.ucfirst($sValue)),
-			$sValue === $sCurrentValue)
+		$oSelect->AddSubBlock(
+			SelectOptionUIBlockFactory::MakeForSelectOption(
+				$sValue,
+				Dict::S('UI:Preferences:Tabs:Layout:'.ucfirst($sValue)),
+				$sValue === $sCurrentValue
+			)
 		);
 	}
 
@@ -610,10 +618,12 @@ function GetTabsNavigationFieldBlock(): iUIBlock
 	];
 	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('tab_scrollable', Dict::S('UI:Preferences:Tabs:Scrollable:Label'));
 	foreach ($aOptionsValues as $sValue => $sDictEntrySuffix) {
-		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
-			$sValue,
-			Dict::S('UI:Preferences:Tabs:Scrollable:'.$sDictEntrySuffix),
-			$sValue === $sCurrentValueAsString)
+		$oSelect->AddSubBlock(
+			SelectOptionUIBlockFactory::MakeForSelectOption(
+				$sValue,
+				Dict::S('UI:Preferences:Tabs:Scrollable:'.$sDictEntrySuffix),
+				$sValue === $sCurrentValueAsString
+			)
 		);
 	}
 
@@ -678,7 +688,6 @@ HTML;
 	return new Html($sHtml);
 }
 
-
 /**
  * @return \Combodo\iTop\Application\UI\Base\iUIBlock
  * @throws \CoreException
@@ -717,7 +726,7 @@ function GetToastsPositionFieldBlock(): iUIBlock
 	$sPosition = appUserPreferences::GetPref('toasts_vertical_position', "bottom");
 
 	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('toasts_vertical_position', Dict::S('UI:Preferences:General:Toasts'));
-	
+
 	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("bottom", Dict::S('UI:Preferences:General:Toasts:Bottom'), $sPosition === "bottom"));
 	$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption("top", Dict::S('UI:Preferences:General:Toasts:Top'), $sPosition === "top"));
 
@@ -754,7 +763,7 @@ try {
 			case 'apply':
 				$oFilter = DBObjectSearch::FromOQL('SELECT Organization');
 				$sSelectionMode = utils::ReadParam('selectionMode', '');
-				$aExceptions = utils::ReadParam('storedSelection', array());
+				$aExceptions = utils::ReadParam('storedSelection', []);
 				if (($sSelectionMode == 'negative') && (count($aExceptions) == 0)) {
 					// All Orgs selected
 					appUserPreferences::SetPref('favorite_orgs', null);
@@ -816,17 +825,17 @@ try {
 				// - Obsolete data
 				$bShowObsoleteData = (bool)utils::ReadParam('show_obsolete_data', 0);
 				appUserPreferences::SetPref('show_obsolete_data', $bShowObsoleteData);
-				
+
 				// - Summary cards
 				$bShowSummaryCards = (bool)utils::ReadParam('show_summary_cards', 0);
 				appUserPreferences::SetPref('show_summary_cards', $bShowSummaryCards);
 
 				// - Toast notifications
 				$sToastsVerticalPosition = utils::ReadParam('toasts_vertical_position', "bottom");
-				if(utils::IsNotNullOrEmptyString($sToastsVerticalPosition) && in_array($sToastsVerticalPosition, ["bottom", "top"], true)) {
+				if (utils::IsNotNullOrEmptyString($sToastsVerticalPosition) && in_array($sToastsVerticalPosition, ["bottom", "top"], true)) {
 					appUserPreferences::SetPref('toasts_vertical_position', $sToastsVerticalPosition);
 				}
-				
+
 				// Redirect to force a reload/display of the page in case language has been changed
 				$oAppContext = new ApplicationContext();
 				$sURL = utils::GetAbsoluteUrlAppRoot().'pages/preferences.php?'.$oAppContext->GetForLink();
@@ -878,29 +887,25 @@ try {
 					}
 				}
 				$bProvidersModified = false;
-				foreach ($aProviders as $cProvider)
-				{
+				foreach ($aProviders as $cProvider) {
 					// Forbid disabling internal newsroom provider
 					if ($cProvider === iTopNewsroomProvider::class) {
 						continue;
 					}
 
 					$oProvider = new $cProvider();
-					if ($oProvider->IsApplicable($oUser))
-					{
+					if ($oProvider->IsApplicable($oUser)) {
 						$sProviderClass = get_class($oProvider);
 						$bProviderEnabled = (utils::ReadParam('newsroom_provider_'.$sProviderClass, 'off') == 'on');
 						$bCurrentValue = appUserPreferences::GetPref('newsroom_provider_'.$sProviderClass, true);
-						if ($bCurrentValue != $bProviderEnabled)
-						{
+						if ($bCurrentValue != $bProviderEnabled) {
 							// Save the preference only if it differs from the current value
 							$bProvidersModified = true;
 							appUserPreferences::SetPref('newsroom_provider_'.$sProviderClass, $bProviderEnabled);
 						}
 					}
 				}
-				if ($bProvidersModified)
-				{
+				if ($bProvidersModified) {
 					$oPage->add_ready_script(
 						<<<JS
 $('#ibo-navigation-menu--notifications-menu').newsroom_menu("clearCache");
@@ -913,26 +918,28 @@ JS
 
 			case 'display':
 			default:
-				$oPage->SetBreadCrumbEntry('ui-tool-preferences', Dict::S('UI:Preferences'), Dict::S('UI:Preferences'), '',
-					'fas fa-user-cog', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+				$oPage->SetBreadCrumbEntry(
+					'ui-tool-preferences',
+					Dict::S('UI:Preferences'),
+					Dict::S('UI:Preferences'),
+					'',
+					'fas fa-user-cog',
+					iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES
+				);
 				DisplayPreferences($oPage);
 		}
 	}
-	
+
 	$oPage->output();
-}
-catch(CoreException $e)
-{
+} catch (CoreException $e) {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
-	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
-	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));	
+	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
+	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));
 	$oP->output();
 
-	if (MetaModel::IsLogEnabledIssue())
-	{
-		if (MetaModel::IsValidClass('EventIssue'))
-		{
+	if (MetaModel::IsLogEnabledIssue()) {
+		if (MetaModel::IsValidClass('EventIssue')) {
 			$oLog = new EventIssue();
 
 			$oLog->Set('message', $e->getMessage());
@@ -949,19 +956,15 @@ catch(CoreException $e)
 
 	// For debugging only
 	//throw $e;
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
 	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
-	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
-	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));	
+	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
+	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));
 	$oP->output();
 
-	if (MetaModel::IsLogEnabledIssue())
-	{
-		if (MetaModel::IsValidClass('EventIssue'))
-		{
+	if (MetaModel::IsLogEnabledIssue()) {
+		if (MetaModel::IsValidClass('EventIssue')) {
 			$oLog = new EventIssue();
 
 			$oLog->Set('message', $e->getMessage());
@@ -969,7 +972,7 @@ catch(Exception $e)
 			$oLog->Set('issue', 'PHP Exception');
 			$oLog->Set('impact', 'Page could not be displayed');
 			$oLog->Set('callstack', $e->getTrace());
-			$oLog->Set('data', array());
+			$oLog->Set('data', []);
 			$oLog->DBInsertNoReload();
 		}
 

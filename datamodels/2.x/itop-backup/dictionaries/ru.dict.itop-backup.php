@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'bkp-backup-running' => 'Выполняется резервное копирование. Пожалуйста, подождите...',
 	'bkp-restore-running' => 'Выполняется восстановление из резервной копии. Пожалуйста, подождите...',
 	'Menu:BackupStatus' => 'Резервное копирование',
@@ -45,4 +46,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'bkp-wait-backup' => 'Пожалуйста, дождитесь завершения резервного копирования...',
 	'bkp-wait-restore' => 'Пожалуйста, дождитесь завершения восстановления...',
 	'bkp-success-restore' => 'Восстановление успешно завершено.',
-));
+]);

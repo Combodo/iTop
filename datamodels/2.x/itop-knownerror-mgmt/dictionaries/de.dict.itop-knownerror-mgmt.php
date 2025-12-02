@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:KnownError' => 'Known Error',
 	'Class:KnownError+' => 'Dokumentierter Fehler für ein Problem',
 	'Class:KnownError/Attribute:name' => 'Name',
@@ -53,13 +54,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:KnownError/Attribute:ci_list+' => 'Alle CIs, die mit diesem Known Error verknüpft sind',
 	'Class:KnownError/Attribute:document_list' => 'Dokumente',
 	'Class:KnownError/Attribute:document_list+' => 'Alle Dokumente, die mit diesem Known Error verknüpft sind',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkErrorToFunctionalCI' => 'Verknüpfung KnownError/FunctionalCI',
 	'Class:lnkErrorToFunctionalCI+' => '',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
@@ -73,13 +74,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Begründung',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkDocumentToError' => 'Verknüpfung Dokumente/KnownError',
 	'Class:lnkDocumentToError+' => '',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
@@ -93,9 +94,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Verknüpfungstyp',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
+]);
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ProblemManagement' => 'Problem Management',
 	'Menu:ProblemManagement+' => 'Problem Management',
 	'Menu:Problem:Shortcuts' => 'Shortcuts',
@@ -105,4 +106,4 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:SearchError+' => 'Nach dokumentierten Fehlern suchen',
 	'Menu:Problem:KnownErrors' => 'Alle Known Errors',
 	'Menu:Problem:KnownErrors+' => 'Alle Known Errors',
-));
+]);

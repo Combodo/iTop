@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\QuickCreate;
-
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;
@@ -77,7 +77,7 @@ class QuickCreate extends UIBlock implements iKeyboardShortcut
 	{
 		parent::__construct($sId);
 		$this->SetEndpoint(static::DEFAULT_ENDPOINT_REL_URL);
-		$this->aAvailableClasses = $this->FilterAvailableClasses(UserRights::GetAllowedClasses(UR_ACTION_CREATE, array('bizmodel'), true));
+		$this->aAvailableClasses = $this->FilterAvailableClasses(UserRights::GetAllowedClasses(UR_ACTION_CREATE, ['bizmodel'], true));
 		$this->aLastClasses = $aLastClasses;
 		$this->iMaxAutocompleteResults = (int) MetaModel::GetConfig()->Get('quick_create.max_autocomplete_results');
 		$this->bShowHistory = (bool) MetaModel::GetConfig()->Get('quick_create.show_history');
@@ -135,14 +135,14 @@ class QuickCreate extends UIBlock implements iKeyboardShortcut
 	{
 		$aFilteredClasses = [];
 
-		foreach ($aClasses as $sClassName => $sClassLabel){
+		foreach ($aClasses as $sClassName => $sClassLabel) {
 			// Skip not derivating from cmdbAbstractObject
-			if(false === is_a($sClassName, '\cmdbAbstractObject', true)) {
+			if (false === is_a($sClassName, '\cmdbAbstractObject', true)) {
 				continue;
 			}
 
 			// Skip n:n classes
-			if(MetaModel::IsLinkClass($sClassName)) {
+			if (MetaModel::IsLinkClass($sClassName)) {
 				continue;
 			}
 

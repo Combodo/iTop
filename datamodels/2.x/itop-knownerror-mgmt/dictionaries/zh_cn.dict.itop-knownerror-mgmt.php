@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -45,7 +46,7 @@
 //
 // Class: KnownError
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:KnownError' => '已知错误',
 	'Class:KnownError+' => '记录一个已知错误',
 	'Class:KnownError/Attribute:name' => '名称',
@@ -88,13 +89,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:KnownError/Attribute:ci_list+' => '此已知错误相关的所有配置项',
 	'Class:KnownError/Attribute:document_list' => '文档',
 	'Class:KnownError/Attribute:document_list+' => '此已知错误相关的所有文档',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkErrorToFunctionalCI' => '关联已知问题/功能配置项',
 	'Class:lnkErrorToFunctionalCI+' => '已知问题和功能配置项之间的关联',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
@@ -108,13 +109,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => '原因',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkDocumentToError' => '关联文档/已知问题',
 	'Class:lnkDocumentToError+' => '文档和已知问题之间的关联',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
@@ -128,9 +129,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => '关联类型',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
+]);
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ProblemManagement' => '问题管理',
 	'Menu:ProblemManagement+' => '问题管理',
 	'Menu:Problem:Shortcuts' => '快捷方式',
@@ -140,4 +141,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:SearchError+' => '搜索已知问题',
 	'Menu:Problem:KnownErrors' => '所有已知错误',
 	'Menu:Problem:KnownErrors+' => '所有已知错误',
-));
+]);

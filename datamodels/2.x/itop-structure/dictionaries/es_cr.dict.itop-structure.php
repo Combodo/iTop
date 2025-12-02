@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Spanish Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
- * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Organization' => 'Organización',
 	'Class:Organization+' => 'Organización',
 	'Class:Organization/Attribute:name' => 'Nombre',
@@ -34,13 +35,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Organization:Overview:FunctionalCIs' => 'Elementos de configuración en esta Organización',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'por tipo',
 	'Organization:Overview:Users' => 'Usuarios de iTop en la Organización',
-));
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Location' => 'Localidad',
 	'Class:Location+' => 'Cualquier Tipo de Localidad: Región, País, Ciudad, Sitio, Edificio, Piso, Cuarto, Rack,...',
 	'Class:Location/Attribute:name' => 'Nombre',
@@ -67,13 +68,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Location/Attribute:physicaldevice_list+' => 'Dispositivos',
 	'Class:Location/Attribute:person_list' => 'Contactos',
 	'Class:Location/Attribute:person_list+' => 'Contactos',
-));
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Contact' => 'Contacto',
 	'Class:Contact+' => 'Contacto',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
@@ -105,13 +106,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Contact/Attribute:cis_list+' => 'Elementos de Configuración relacionados con el contacto',
 	'Class:Contact/Attribute:finalclass' => 'Clase',
 	'Class:Contact/Attribute:finalclass+' => 'Clase',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Person' => 'Persona',
 	'Class:Person+' => 'Persona',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s',
@@ -146,13 +147,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Person/UniquenessRule:name+' => 'El nombre del empleado debe ser único dentro de su Organización',
 	'Class:Person/UniquenessRule:name' => 'Ya existe una persona en la organiación \'$this->org_name$\', con el mismo nombre',
 	'Class:Person/Error:ChangingOrgDenied' => 'Es imposible mover a esta persona a la organización \'%1$s\' ya que interrumpiría su acceso al Portal de usuario y su usuario asociado no estaría permitido en esta organización.',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Team' => 'Grupo de Trabajo',
 	'Class:Team+' => 'Grupo de Trabajo',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
@@ -160,13 +161,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Team/Attribute:persons_list+' => 'Miembros',
 	'Class:Team/Attribute:tickets_list' => 'Tickets',
 	'Class:Team/Attribute:tickets_list+' => 'Tickets',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Document' => 'Documento',
 	'Class:Document+' => 'Documento',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
@@ -196,77 +197,77 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Document/Attribute:cis_list+' => 'Elementos de Configuración referenciados en este documento',
 	'Class:Document/Attribute:finalclass' => 'Tipo de Documento',
 	'Class:Document/Attribute:finalclass+' => 'Tipo de Documento',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:DocumentFile' => 'Documento de Archivo',
 	'Class:DocumentFile+' => 'Documento de Archivo',
 	'Class:DocumentFile/Attribute:file' => 'Archivo',
 	'Class:DocumentFile/Attribute:file+' => 'Archivo',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:DocumentNote' => 'Nota',
 	'Class:DocumentNote+' => 'Nota',
 	'Class:DocumentNote/Attribute:text' => 'Texto',
 	'Class:DocumentNote/Attribute:text+' => 'Texto',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:DocumentWeb' => 'Documento Web',
 	'Class:DocumentWeb+' => 'Documento disponible en otro servidor Web',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => 'URL de Internet',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Typology' => 'Tipología',
 	'Class:Typology+' => 'Tipología',
 	'Class:Typology/Attribute:name' => 'Nombre',
 	'Class:Typology/Attribute:name+' => 'Nombre del Tipo',
 	'Class:Typology/Attribute:finalclass' => 'Clase',
 	'Class:Typology/Attribute:finalclass+' => 'Clase',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:DocumentType' => 'Tipo de Documento',
 	'Class:DocumentType+' => 'Tipo de Documento',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:ContactType' => 'Tipo de Contacto',
 	'Class:ContactType+' => 'Tipo de Contacto',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkPersonToTeam' => 'Relación Persona y Grupo',
 	'Class:lnkPersonToTeam+' => 'Relación Persona y Grupo',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
@@ -283,13 +284,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'Rol',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Rol',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => 'Rol',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:DataAdministration' => 'Administración de Datos',
 	'Menu:DataAdministration+' => 'Administración de Datos',
 	'Menu:Catalogs' => 'Catálogos',
@@ -327,20 +328,20 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:Typology+' => 'Configuración de Tipos',
 	'UI_WelcomeMenu_AllConfigItems' => 'Resumen',
 	'Menu:ConfigManagement:Typology' => 'Configuración de Tipos',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Person:info' => 'Información General',
 	'User:info' => 'Información General',
 	'User:profiles' => 'Perfiles (mínimo uno)',
 	'Person:personal_info' => 'Información Personal',
 	'Person:notifiy' => 'Notificación',
-));
+]);
 
 // Themes
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'theme:fullmoon' => 'Luna Llena',
 	'theme:test-red' => 'Instancia de Prueba (Red)',
-));
+]);

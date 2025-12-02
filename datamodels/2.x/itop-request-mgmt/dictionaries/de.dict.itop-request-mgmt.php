@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => 'Verwaltung von Nutzeranfragen und Störungsmeldungen',
 	'Menu:RequestManagementProvider' => 'Helpdesk-Provider',
@@ -46,7 +47,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:UserRequest:MyWorkOrders+' => '',
 	'Class:Problem:KnownProblemList' => 'Bekannte Problems',
 	'Tickets:Related:OpenIncidents' => 'Offene Incidents',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -62,7 +63,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 // Class: UserRequest
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:UserRequest' => 'Benutzeranfrage',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -256,10 +257,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Auf Genehmigung warten',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kann Ticket nicht als eigenes Parent-Ticket verwenden',
-));
+]);
 
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Portal:TitleDetailsFor_Request' => 'Details für Benutzeranfrage',
 	'Portal:ButtonUpdate' => 'Update',
 	'Portal:ButtonClose' => 'Schließen',
@@ -284,11 +284,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Wählen Sie Ihre bevorzugte Sprache',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
-));
+]);
 
-
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Organization:Overview:UserRequests' => 'Benutzeranfragen dieser Organisation',
 	'Organization:Overview:MyUserRequests' => 'Mir zugewiesene Benutzeranfragen dieser Organisation',
 	'Organization:Overview:Tickets' => 'Alle Tickets dieser Organisation',
-));
+]);

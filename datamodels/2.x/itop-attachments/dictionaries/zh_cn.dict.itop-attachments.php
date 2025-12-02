@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -9,7 +10,7 @@
 /**
  *
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Attachments:TabTitle_Count' => '附件 (%1$d)',
 	'Attachments:EmptyTabTitle' => '附件',
 	'Attachments:FieldsetTitle' => '附件',
@@ -30,13 +31,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:Render:Icons' => '显示为图标',
 	'Attachments:Render:Table' => '显示为列表',
 	'UI:Attachments:DropYourFileHint' => '将文件拖放到此区域的任意位置',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Attachment' => '附件',
 	'Class:Attachment+' => '',
 	'Class:Attachment/Attribute:expire' => '过期',
@@ -51,10 +52,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => '内容',
 	'Class:Attachment/Attribute:contents+' => '',
-));
+]);
 
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Attachments:File:Thumbnail' => '图标',
 	'Attachments:File:Name' => '文件名',
 	'Attachments:File:Date' => '上传日期',
@@ -62,25 +62,25 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:File:Size' => '大小',
 	'Attachments:File:MimeType' => '类型',
 	'Attachments:File:DownloadsCount' => '下载',
-));
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Attachment/Attribute:creation_date' => '创建日期',
 	'Class:Attachment/Attribute:creation_date+' => '~~',
 	'Class:Attachment/Attribute:user_id' => '用户编号',
 	'Class:Attachment/Attribute:user_id+' => '~~',
 	'Class:Attachment/Attribute:contact_id' => '联系人编号',
 	'Class:Attachment/Attribute:contact_id+' => '~~',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnAttachmentDownload' => '触发器 (于对象附件下载时)',
 	'Class:TriggerOnAttachmentDownload+' => '触发器于指定类型 [子类型] 对象附件下载时',
-));
+]);

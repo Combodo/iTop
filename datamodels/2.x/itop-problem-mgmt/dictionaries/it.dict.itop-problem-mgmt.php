@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ProblemManagement' => 'Gestione dei Problemi',
 	'Menu:ProblemManagement+' => 'Gestione dei Problemi',
 	'Menu:Problem:Overview' => 'Panoramica',
@@ -32,12 +33,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard per la gestione dei problemi',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard per la gestione dei problemi',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Problem' => 'Problema',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Stato',
@@ -110,4 +111,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Chiudere',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

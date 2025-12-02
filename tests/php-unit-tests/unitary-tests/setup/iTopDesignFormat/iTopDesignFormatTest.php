@@ -9,7 +9,6 @@ use iTopDesignFormat;
 use ReflectionException;
 use utils;
 
-
 /**
  * @covers iTopDesignFormat
  *
@@ -18,7 +17,7 @@ use utils;
  */
 class iTopDesignFormatTest extends ItopTestCase
 {
-	const SAMPLES_DIR_PATH = 'Convert-samples/';
+	public const SAMPLES_DIR_PATH = 'Convert-samples/';
 
 	protected function setUp(): void
 	{
@@ -61,8 +60,11 @@ class iTopDesignFormatTest extends ItopTestCase
 
 		$bResult = $oInputDesignFormat->Convert($sTargetVersion);
 		$aErrors = $oInputDesignFormat->GetErrors();
-		$this->assertCount($iExpectedErrors, $aErrors,
-			'errors in input format: '.var_export($aErrors, true));
+		$this->assertCount(
+			$iExpectedErrors,
+			$aErrors,
+			'errors in input format: '.var_export($aErrors, true)
+		);
 		if ($iExpectedErrors > 0) {
 			$this->assertFalse($bResult);
 			$this->assertEquals($sFirstErrorMessage, $aErrors[0]);
@@ -111,8 +113,10 @@ class iTopDesignFormatTest extends ItopTestCase
 		$oExpectedDesignFormat->GetITopDesignNode()->setAttribute('version', $sExpectedPreviousVersion);
 		$bConversionResult = $oExpectedDesignFormat->Convert($sExpectedVersion);
 
-		$this->assertTrue($bConversionResult,
-			'There were conversion errors: '.var_export($oExpectedDesignFormat->GetErrors(), true));
+		$this->assertTrue(
+			$bConversionResult,
+			'There were conversion errors: '.var_export($oExpectedDesignFormat->GetErrors(), true)
+		);
 
 		/** @noinspection PhpRedundantOptionalArgumentInspection We REALLY want those options so specifying it anyway */
 		$sConvertedXml = $oExpectedDesignFormat->GetXmlAsString(null, true, false);
@@ -244,24 +248,24 @@ class iTopDesignFormatTest extends ItopTestCase
 
 	public function MoveNodeProvider()
 	{
-		return array(
-			'From deleted to deleted' => array('from_deleted_to_deleted'),
-			'From deleted to in definition' => array('from_deleted_to_in-definition'),
-			'From deleted to not in definition' => array('from_deleted_to_not-in-definition'),
-			'From in definition to deleted' => array('from_in-definition_to_deleted'),
-			'From in definition to in definition' => array('from_in-definition_to_in-definition'),
-			'From in definition to not in definition' => array('from_in-definition_to_not-in-definition'),
-			'From not in definition to deleted' => array('from_not-in-definition_to_deleted'),
-			'From not in definition to in definition' => array('from_not-in-definition_to_in-definition'),
-			'From not in definition to not in definition' => array('from_not-in-definition_to_not-in-definition'),
-		);
+		return [
+			'From deleted to deleted' => ['from_deleted_to_deleted'],
+			'From deleted to in definition' => ['from_deleted_to_in-definition'],
+			'From deleted to not in definition' => ['from_deleted_to_not-in-definition'],
+			'From in definition to deleted' => ['from_in-definition_to_deleted'],
+			'From in definition to in definition' => ['from_in-definition_to_in-definition'],
+			'From in definition to not in definition' => ['from_in-definition_to_not-in-definition'],
+			'From not in definition to deleted' => ['from_not-in-definition_to_deleted'],
+			'From not in definition to in definition' => ['from_not-in-definition_to_in-definition'],
+			'From not in definition to not in definition' => ['from_not-in-definition_to_not-in-definition'],
+		];
 	}
 
 	private function GetFileContent($sFileName)
 	{
 		$sCurrentPath = __DIR__;
 
-		return file_get_contents($sCurrentPath . DIRECTORY_SEPARATOR . $sFileName . '.xml');
+		return file_get_contents($sCurrentPath.DIRECTORY_SEPARATOR.$sFileName.'.xml');
 	}
 
 	/**
@@ -286,7 +290,7 @@ class iTopDesignFormatTest extends ItopTestCase
 					continue;
 				}
 				if (false === \array_key_exists($aXmlVersionData[$sXmlVersionPointingToKey], iTopDesignFormat::$aVersions)) {
-					$aAVersionsErrors[] = "$sXmlVersion version: invalid value for `$sXmlVersionPointingToKey` key ! Value=" . $aXmlVersionData[$sXmlVersionPointingToKey];
+					$aAVersionsErrors[] = "$sXmlVersion version: invalid value for `$sXmlVersionPointingToKey` key ! Value=".$aXmlVersionData[$sXmlVersionPointingToKey];
 				}
 			}
 
@@ -308,6 +312,6 @@ class iTopDesignFormatTest extends ItopTestCase
 			}
 		}
 
-		$this->assertCount(0, $aAVersionsErrors, 'There were errors detected in iTopDesignFormat::$aVersions : ' . var_export($aAVersionsErrors, true));
+		$this->assertCount(0, $aAVersionsErrors, 'There were errors detected in iTopDesignFormat::$aVersions : '.var_export($aAVersionsErrors, true));
 	}
 }

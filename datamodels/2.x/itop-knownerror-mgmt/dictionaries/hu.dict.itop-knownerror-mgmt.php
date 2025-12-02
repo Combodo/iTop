@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:KnownError' => 'Ismert hiba',
 	'Class:KnownError+' => '',
 	'Class:KnownError/Attribute:name' => 'Ismert hiba név',
@@ -52,13 +53,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:KnownError/Attribute:ci_list+' => '',
 	'Class:KnownError/Attribute:document_list' => 'Dokumentumok',
 	'Class:KnownError/Attribute:document_list+' => '',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkErrorToFunctionalCI' => 'Hiba / Funkcionális CI',
 	'Class:lnkErrorToFunctionalCI+' => 'Infra ismert hibához kapcsolódóan',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s~~',
@@ -72,13 +73,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Hibaok',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkDocumentToError' => 'Dokumentumok / Hibák',
 	'Class:lnkDocumentToError+' => '',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s~~',
@@ -92,9 +93,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
-));
+]);
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:ProblemManagement' => 'Problémakezelés',
 	'Menu:ProblemManagement+' => '',
 	'Menu:Problem:Shortcuts' => 'Gyorsgomb',
@@ -104,4 +105,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:SearchError+' => '',
 	'Menu:Problem:KnownErrors' => 'Ismert hibák',
 	'Menu:Problem:KnownErrors+' => '',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spanish Localized data
  *
@@ -7,7 +8,7 @@
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
  * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'UI:Newsroom:iTopNotification:Label' => ITOP_APPLICATION_SHORT,
 	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Sus noticias de '.ITOP_APPLICATION_SHORT.'',
 	'UI:Newsroom:iTopNotification:ViewAllPage:SubTitle' => 'Gestione sus noticias, márquelas como leídas o no leídas, elimínadas, etc.',
@@ -49,4 +50,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message' => 'No hay noticias para eliminar',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message' => 'La noticia ha sido eliminada.',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteMultiple:Success:Message' => '%1$s noticias han sido eliminadas',
-));
+]);

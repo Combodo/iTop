@@ -30,15 +30,15 @@ class DataModelDependantCacheTest extends ItopTestCase
 	}
 
 	public function testShouldStoreAndFetchVariousDataTypes(): void
-    {
-	    $this->oCacheService->Store('pool-A', 'key-array', ['value1', 'value2']);
-	    $this->oCacheService->Store('pool-A', 'key-string', 'foo');
-	    $this->oCacheService->Store('pool-A', 'key-int', 1971);
+	{
+		$this->oCacheService->Store('pool-A', 'key-array', ['value1', 'value2']);
+		$this->oCacheService->Store('pool-A', 'key-string', 'foo');
+		$this->oCacheService->Store('pool-A', 'key-int', 1971);
 
 		$this->assertEquals(['value1', 'value2'], $this->oCacheService->Fetch('pool-A', 'key-array'));
-	    $this->assertEquals('foo', $this->oCacheService->Fetch('pool-A', 'key-string'));
-	    $this->assertEquals(1971, $this->oCacheService->Fetch('pool-A', 'key-int'));
-    }
+		$this->assertEquals('foo', $this->oCacheService->Fetch('pool-A', 'key-string'));
+		$this->assertEquals(1971, $this->oCacheService->Fetch('pool-A', 'key-int'));
+	}
 
 	public function testShouldNotAllowToStoreNull(): void
 	{

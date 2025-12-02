@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2014-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,7 +16,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 
 class DBRestore extends DBBackup
 {
@@ -54,12 +54,9 @@ class DBRestore extends DBBackup
 		$sPwd = self::EscapeShellArg($this->sDBPwd);
 		$sDBName = self::EscapeShellArg($this->sDBName);
 		$sMySQLExe = DBBackup::MakeSafeMySQLCommand($this->sMySQLBinDir, 'mysql');
-		if (is_null($this->iDBPort))
-		{
+		if (is_null($this->iDBPort)) {
 			$sPortOption = '';
-		}
-		else
-		{
+		} else {
 			$sPortOption = '--port='.$this->iDBPort.' ';
 		}
 		$sTlsOptions = self::GetMysqlCliTlsOptions($this->oConfig);
@@ -70,26 +67,20 @@ class DBRestore extends DBBackup
 
 		// Now run the command for real
 		$this->LogInfo("Executing command: $sCommandDisplay");
-		$aOutput = array();
+		$aOutput = [];
 		$iRetCode = 0;
 		exec($sCommand, $aOutput, $iRetCode);
-		foreach($aOutput as $sLine)
-		{
+		foreach ($aOutput as $sLine) {
 			$this->LogInfo("mysql said: $sLine");
 		}
-		if ($iRetCode != 0)
-		{
+		if ($iRetCode != 0) {
 			$this->LogError("Failed to execute: $sCommandDisplay. The command returned:$iRetCode");
-			foreach($aOutput as $sLine)
-			{
+			foreach ($aOutput as $sLine) {
 				$this->LogError("mysql said: $sLine");
 			}
-			if (count($aOutput) == 1) 
-			{
+			if (count($aOutput) == 1) {
 				$sMoreInfo = trim($aOutput[0]);
-			}
-			else
-			{
+			} else {
 				$sMoreInfo = "Check the log file '".realpath(APPROOT.'/log/error.log')."' for more information.";
 			}
 			throw new BackupException("Failed to execute mysql: ".$sMoreInfo);
@@ -175,9 +166,9 @@ class DBRestore extends DBBackup
 				@chmod($sConfigFile, 0770); // Allow overwriting the file
 				rename($sDataDir.'/config-itop.php', $sConfigFile);
 				@chmod($sConfigFile, 0440); // Read-only
-				
+
 				$aExtraFiles = $this->ListExtraFiles($sDataDir);
-				foreach($aExtraFiles as $sSourceFilePath => $sDestinationFilePath) {
+				foreach ($aExtraFiles as $sSourceFilePath => $sDestinationFilePath) {
 					SetupUtils::builddir(dirname($sDestinationFilePath));
 					rename($sSourceFilePath, $sDestinationFilePath);
 				}
@@ -198,9 +189,7 @@ class DBRestore extends DBBackup
 					throw new BackupException("Can't remove tmp folder", previous: $e);
 				}
 			}
-		}
-		finally
-		{
+		} finally {
 			IssueLog::Info('Backup Restore - LOCK released.');
 			$oRestoreMutex->Unlock();
 		}
@@ -216,10 +205,9 @@ class DBRestore extends DBBackup
 	{
 		$aExtraFiles = [];
 		$aStandardFiles = ['config-itop.php', 'itop-dump.sql', 'production-modules', 'delta.xml'];
-		$oDirectoryIterator = new RecursiveDirectoryIterator($sDataDir, FilesystemIterator::CURRENT_AS_FILEINFO|FilesystemIterator::SKIP_DOTS);
+		$oDirectoryIterator = new RecursiveDirectoryIterator($sDataDir, FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS);
 		$oIterator = new RecursiveIteratorIterator($oDirectoryIterator);
-		foreach ($oIterator as $oFileInfo)
-		{
+		foreach ($oIterator as $oFileInfo) {
 			if (in_array($oFileInfo->getFilename(), $aStandardFiles)) {
 				continue;
 			}

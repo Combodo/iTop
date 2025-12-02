@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Attachments:TabTitle_Count' => 'Anexos (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Anexos',
 	'Attachments:FieldsetTitle' => 'Anexos',
@@ -30,13 +31,13 @@ ou entre em contato com o seu administrador do '.ITOP_APPLICATION_SHORT.' pois o
 	'Attachments:Render:Icons' => 'Exibir como ícones',
 	'Attachments:Render:Table' => 'Exibir como lista',
 	'UI:Attachments:DropYourFileHint' => 'Solte arquivos em qualquer lugar nesta área',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Attachment' => 'Anexo',
 	'Class:Attachment+' => '',
 	'Class:Attachment/Attribute:expire' => 'Expira',
@@ -51,10 +52,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => 'Conteúdo',
 	'Class:Attachment/Attribute:contents+' => '',
-));
+]);
 
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Attachments:File:Thumbnail' => 'Ícone',
 	'Attachments:File:Name' => 'Nome do arquivo',
 	'Attachments:File:Date' => 'Data de envio',
@@ -62,25 +62,25 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Attachments:File:Size' => 'Tamanho',
 	'Attachments:File:MimeType' => 'Tipo',
 	'Attachments:File:DownloadsCount' => 'Downloads~~',
-));
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Attachment/Attribute:creation_date' => 'Data de criação',
 	'Class:Attachment/Attribute:creation_date+' => '',
 	'Class:Attachment/Attribute:user_id' => 'Identificador do usuário',
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Identificador do contato',
 	'Class:Attachment/Attribute:contact_id+' => '',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnAttachmentDownload' => 'Trigger (on object\'s attachment download)~~',
 	'Class:TriggerOnAttachmentDownload+' => 'Trigger on object\'s attachment download of [a child class of] the given class~~',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SARL
  *
@@ -17,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:NotificationsCenter:Page:Title' => 'Notifications center~~',
 	'UI:NotificationsCenter:Panel:Title' => 'Notifications center~~',
 	'UI:NotificationsCenter:Panel:SubTitle' => 'Manage Notifications that you have received : unsubscribe or limit them to a single channel~~',
@@ -29,4 +30,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:NotificationsCenter:Subscribe:Error' => 'An error occurred while subscribing to the selected notifications.~~',
 	'UI:NotificationsCenter:Channel:OutOf:Text' => '%1$s out of %2$s~~',
 	'UI:NotificationsCenter:Advanced:Input:Label' => '%1$s: %2$s~~',
-));
+]);

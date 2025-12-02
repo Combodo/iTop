@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Verbinding maken met iTop Hub',
 	'Menu:iTopHub:Register+' => 'Ga naar de iTop Hub om je iTop bij te werken.',
@@ -65,6 +66,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s versie: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Geïnstalleerd',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Versie %1$s is <b>NIET</b> geïnstalleerd.',
-));
-
-
+]);

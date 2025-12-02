@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -29,7 +30,6 @@ require_once APPROOT.'core/computing.inc.php';
 require_once APPROOT.'core/relationgraph.class.inc.php';
 require_once APPROOT.'core/apc-compat.php';
 require_once APPROOT.'core/expressioncache.class.inc.php';
-
 
 /**
  * We need to have all iLoginFSMExtension/iLoginUIExtension impl loaded ! Cannot use autoloader...
@@ -109,7 +109,6 @@ define('OPT_ATT_SLAVE', 32);
  */
 define('MYSQL_ENGINE', 'innodb');
 
-
 /**
  * The objects definitions as well as their mapping to the database
  *
@@ -127,7 +126,7 @@ abstract class MetaModel
 	/** @var bool */
 	private static $m_bTraceSourceFiles = false;
 	/** @var array */
-	private static $m_aClassToFile = array();
+	private static $m_aClassToFile = [];
 	/** @var string */
 	protected static $m_sEnvironment = 'production';
 
@@ -176,12 +175,10 @@ abstract class MetaModel
 		// $aBacktrace[0] is where we are
 		// $aBacktrace[1] is the caller of GetCallersPHPClass
 		// $aBacktrace[1] is the info we want
-		if (!empty($sExpectedFunctionName))
-		{
+		if (!empty($sExpectedFunctionName)) {
 			assert($aBacktrace[2]['function'] == $sExpectedFunctionName);
 		}
-		if ($bRecordSourceFile)
-		{
+		if ($bRecordSourceFile) {
 			self::$m_aClassToFile[$aBacktrace[2]["class"]] = $aBacktrace[1]["file"];
 		}
 		return $aBacktrace[2]["class"];
@@ -205,8 +202,7 @@ abstract class MetaModel
 		// See also IsValidClass()... ???? #@#
 		// class is mandatory
 		// (it is not possible to guess it when called as myderived::...)
-		if (!array_key_exists($sClass, self::$m_aClassParams))
-		{
+		if (!array_key_exists($sClass, self::$m_aClassParams)) {
 			throw new CoreException("Unknown class '$sClass'");
 		}
 	}
@@ -219,7 +215,7 @@ abstract class MetaModel
 	/** @var Config m_oConfig */
 	private static $m_oConfig = null;
 	/** @var array */
-	protected static $m_aModulesParameters = array();
+	protected static $m_aModulesParameters = [];
 
 	/** @var bool */
 	private static $m_bSkipCheckToWrite = false;
@@ -285,38 +281,38 @@ abstract class MetaModel
 	 */
 	private static $m_sTablePrefix = "";
 	/** @var array */
-	private static $m_Category2Class = array();
+	private static $m_Category2Class = [];
 	/**
 	 * array of "classname" => "rootclass"
 	 *
 	 * @var array
 	 */
-	private static $m_aRootClasses = array();
+	private static $m_aRootClasses = [];
 	/**
 	 * array of ("classname" => array of "parentclass")
 	 *
 	 * @var array
 	 */
-	private static $m_aParentClasses = array();
+	private static $m_aParentClasses = [];
 	/**
 	 * array of ("classname" => array of "childclass")
 	 *
 	 * @var array
 	 */
-	private static $m_aChildClasses = array();
+	private static $m_aChildClasses = [];
 
 	/**
 	 * array of ("classname" => array of class information)
 	 *
 	 * @var array
 	 */
-	private static $m_aClassParams = array();
+	private static $m_aClassParams = [];
 	/**
 	 * array of ("classname" => array of highlightscale information)
 	 *
 	 * @var array
 	 */
-	private static $m_aHighlightScales = array();
+	private static $m_aHighlightScales = [];
 
 	/**
 	 * @param string $sRefClass
@@ -615,47 +611,37 @@ abstract class MetaModel
 	 */
 	final public static function GetUniquenessRules($sClass, $bClassDefinitionOnly = false)
 	{
-		if (!isset(self::$m_aClassParams[$sClass]))
-		{
-			return array();
+		if (!isset(self::$m_aClassParams[$sClass])) {
+			return [];
 		}
 
-		$aCurrentUniquenessRules = array();
+		$aCurrentUniquenessRules = [];
 
-		if (array_key_exists('uniqueness_rules', self::$m_aClassParams[$sClass]))
-		{
+		if (array_key_exists('uniqueness_rules', self::$m_aClassParams[$sClass])) {
 			$aCurrentUniquenessRules = self::$m_aClassParams[$sClass]['uniqueness_rules'];
 		}
 
-		if ($bClassDefinitionOnly)
-		{
+		if ($bClassDefinitionOnly) {
 			return $aCurrentUniquenessRules;
 		}
 
 		$sParentClass = self::GetParentClass($sClass);
-		if ($sParentClass)
-		{
+		if ($sParentClass) {
 			$aParentUniquenessRules = self::GetUniquenessRules($sParentClass);
-			foreach ($aParentUniquenessRules as $sUniquenessRuleId => $aParentUniquenessRuleProperties)
-			{
+			foreach ($aParentUniquenessRules as $sUniquenessRuleId => $aParentUniquenessRuleProperties) {
 				$bCopyDisabledKey = true;
 				$bCurrentDisabledValue = null;
 
-				if (array_key_exists($sUniquenessRuleId, $aCurrentUniquenessRules))
-				{
-					if (self::IsUniquenessRuleContainingOnlyDisabledKey($aCurrentUniquenessRules[$sUniquenessRuleId]))
-					{
+				if (array_key_exists($sUniquenessRuleId, $aCurrentUniquenessRules)) {
+					if (self::IsUniquenessRuleContainingOnlyDisabledKey($aCurrentUniquenessRules[$sUniquenessRuleId])) {
 						$bCopyDisabledKey = false;
-					}
-					else
-					{
+					} else {
 						continue;
 					}
 				}
 
 				$aMergedUniquenessProperties = $aParentUniquenessRuleProperties;
-				if (!$bCopyDisabledKey)
-				{
+				if (!$bCopyDisabledKey) {
 					$aMergedUniquenessProperties['disabled'] = $aCurrentUniquenessRules[$sUniquenessRuleId]['disabled'];
 				}
 				$aCurrentUniquenessRules[$sUniquenessRuleId] = $aMergedUniquenessProperties;
@@ -675,8 +661,7 @@ abstract class MetaModel
 	 */
 	private static function SetUniquenessRuleRootClass($sRootClass, $sRuleId)
 	{
-		foreach (self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL) as $sClass)
-		{
+		foreach (self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL) as $sClass) {
 			self::$m_aClassParams[$sClass]['uniqueness_rules'][$sRuleId]['root_class'] = $sClass;
 		}
 	}
@@ -690,17 +675,14 @@ abstract class MetaModel
 	final public static function GetRootClassForUniquenessRule($sRuleId, $sLeafClassName)
 	{
 		$sFirstClassWithRuleId = null;
-		if (isset(self::$m_aClassParams[$sLeafClassName]['uniqueness_rules'][$sRuleId]))
-		{
+		if (isset(self::$m_aClassParams[$sLeafClassName]['uniqueness_rules'][$sRuleId])) {
 			$sFirstClassWithRuleId = $sLeafClassName;
 		}
 
 		$sParentClass = self::GetParentClass($sLeafClassName);
-		if ($sParentClass)
-		{
+		if ($sParentClass) {
 			$sParentClassWithRuleId = self::GetRootClassForUniquenessRule($sRuleId, $sParentClass);
-			if (!is_null($sParentClassWithRuleId))
-			{
+			if (!is_null($sParentClassWithRuleId)) {
 				$sFirstClassWithRuleId = $sParentClassWithRuleId;
 			}
 		}
@@ -719,29 +701,22 @@ abstract class MetaModel
 	 */
 	final public static function GetChildClassesWithDisabledUniquenessRule($sRootClass, $sRuleId)
 	{
-		$aClassesWithDisabledRule = array();
-		foreach (self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sChildClass)
-		{
-			if (array_key_exists($sChildClass, $aClassesWithDisabledRule))
-			{
+		$aClassesWithDisabledRule = [];
+		foreach (self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sChildClass) {
+			if (array_key_exists($sChildClass, $aClassesWithDisabledRule)) {
 				continue;
 			}
-			if (!array_key_exists('uniqueness_rules', self::$m_aClassParams[$sChildClass]))
-			{
+			if (!array_key_exists('uniqueness_rules', self::$m_aClassParams[$sChildClass])) {
 				continue;
 			}
-			if (!array_key_exists($sRuleId, self::$m_aClassParams[$sChildClass]['uniqueness_rules']))
-			{
+			if (!array_key_exists($sRuleId, self::$m_aClassParams[$sChildClass]['uniqueness_rules'])) {
 				continue;
 			}
 
-			if (self::$m_aClassParams[$sChildClass]['uniqueness_rules'][$sRuleId]['disabled'] === true)
-			{
+			if (self::$m_aClassParams[$sChildClass]['uniqueness_rules'][$sRuleId]['disabled'] === true) {
 				$aDisabledClassChildren = self::EnumChildClasses($sChildClass, ENUM_CHILD_CLASSES_ALL);
-				foreach ($aDisabledClassChildren as $sDisabledClassChild)
-				{
-					if (!self::IsAbstract($sDisabledClassChild))
-					{
+				foreach ($aDisabledClassChildren as $sDisabledClassChild) {
+					if (!self::IsAbstract($sDisabledClassChild)) {
 						$aClassesWithDisabledRule[] = $sDisabledClassChild;
 					}
 				}
@@ -765,7 +740,6 @@ abstract class MetaModel
 
 		return ((count($aNonNullRuleProperties) == 1) && (array_key_exists('disabled', $aNonNullRuleProperties)));
 	}
-
 
 	/**
 	 * @param string $sClass
@@ -931,7 +905,7 @@ abstract class MetaModel
 		$aAttributes = $aNameSpec[1];
 
 		$aPieces = preg_split('/%([0-9])\\$s/', $sFormat, -1, PREG_SPLIT_DELIM_CAPTURE);
-		$aExpressions = array();
+		$aExpressions = [];
 		foreach ($aPieces as $i => $sPiece) {
 			if ($i & 1) {
 				// $i is ODD - sPiece is a delimiter
@@ -942,12 +916,10 @@ abstract class MetaModel
 					$sAttCode = $aAttributes[$iReplacement];
 					$aExpressions[] = new FieldExpression($sAttCode);
 				}
-			} else
-			{
+			} else {
 				// $i is EVEN - sPiece is a literal
 				//
-				if (strlen($sPiece) > 0)
-				{
+				if (strlen($sPiece) > 0) {
 					$aExpressions[] = new ScalarExpression($sPiece);
 				}
 			}
@@ -1106,8 +1078,10 @@ abstract class MetaModel
 	final public static function GetOrderByDefault($sClass, $bOnlyDeclared = false)
 	{
 		self::_check_subclass($sClass);
-		$aOrderBy = array_key_exists("order_by_default",
-			self::$m_aClassParams[$sClass]) ? self::$m_aClassParams[$sClass]["order_by_default"] : array();
+		$aOrderBy = array_key_exists(
+			"order_by_default",
+			self::$m_aClassParams[$sClass]
+		) ? self::$m_aClassParams[$sClass]["order_by_default"] : [];
 		if ($bOnlyDeclared) {
 			// Used to reverse engineer the declaration of the data model
 			return $aOrderBy;
@@ -1178,7 +1152,7 @@ abstract class MetaModel
 	 */
 	final public static function GetDependentAttributes($sClass, $sAttCode)
 	{
-		$aResults = array();
+		$aResults = [];
 		self::_check_subclass($sClass);
 		foreach (self::ListAttributeDefs($sClass) as $sDependentAttCode => $void) {
 			$aPrerequisites = self::GetPrerequisiteAttributes($sClass, $sDependentAttCode);
@@ -1234,7 +1208,7 @@ abstract class MetaModel
 		// This API does not rely on our capability to query the DB and retrieve
 		// the list of existing tables
 		// Rather, it uses the list of expected tables, corresponding to the data model
-		$aTables = array();
+		$aTables = [];
 		foreach (self::GetClasses() as $sClass) {
 			if (!self::HasTable($sClass)) {
 				continue;
@@ -1243,7 +1217,7 @@ abstract class MetaModel
 
 			// Could be completed later with all the classes that are using a given table
 			if (!array_key_exists($sTable, $aTables)) {
-				$aTables[$sTable] = array();
+				$aTables[$sTable] = [];
 			}
 			$aTables[$sTable][] = $sClass;
 		}
@@ -1263,12 +1237,11 @@ abstract class MetaModel
 		if (isset(self::$m_aClassParams[$sClass]['indexes'])) {
 			$aRet = self::$m_aClassParams[$sClass]['indexes'];
 		} else {
-			$aRet = array();
+			$aRet = [];
 		}
 
 		return $aRet;
 	}
-
 
 	/**
 	 * @param $sClass
@@ -1280,15 +1253,12 @@ abstract class MetaModel
 	 */
 	private static function DBGetIndexesLength($sClass, $aColumns, $aTableInfo)
 	{
-		$aLength = array();
+		$aLength = [];
 		$aAttDefs = self::ListAttributeDefs($sClass);
-		foreach($aColumns as $sAttSqlCode)
-		{
+		foreach ($aColumns as $sAttSqlCode) {
 			$iLength = null;
-			foreach($aAttDefs as $sAttCode => $oAttDef)
-			{
-				if (($sAttCode == $sAttSqlCode) || ($oAttDef->IsParam('sql') && ($oAttDef->Get('sql') == $sAttSqlCode)))
-				{
+			foreach ($aAttDefs as $sAttCode => $oAttDef) {
+				if (($sAttCode == $sAttSqlCode) || ($oAttDef->IsParam('sql') && ($oAttDef->Get('sql') == $sAttSqlCode))) {
 					$iLength = $oAttDef->GetIndexLength();
 					break;
 				}
@@ -1420,25 +1390,25 @@ abstract class MetaModel
 	 *
 	 * @var \AttributeDefinition[][]
 	 */
-	private static $m_aAttribDefs = array();
+	private static $m_aAttribDefs = [];
 	/**
 	 * array of ("classname" => array of ("attcode"=>"sourceclass"))
 	 *
 	 * @var array
 	 */
-	private static $m_aAttribOrigins = array();
+	private static $m_aAttribOrigins = [];
 	/**
 	 * array of ("classname" => array of ("attcode"))
 	 *
 	 * @var array
 	 */
-	private static $m_aIgnoredAttributes = array();
+	private static $m_aIgnoredAttributes = [];
 	/**
 	 * array of  ("classname" => array of ("attcode" => array of ("metaattcode" => oMetaAttDef))
 	 *
 	 * @var array
 	 */
-	private static $m_aEnumToMeta = array();
+	private static $m_aEnumToMeta = [];
 
 	/**
 	 * @param string $sClass
@@ -1522,11 +1492,9 @@ abstract class MetaModel
 	final public static function GetKeysList($sClass)
 	{
 		self::_check_subclass($sClass);
-		$aExtKeys = array();
-		foreach(self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef)
-		{
-			if ($oAttDef->IsExternalKey())
-			{
+		$aExtKeys = [];
+		foreach (self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef) {
+			if ($oAttDef->IsExternalKey()) {
 				$aExtKeys[] = $sAttCode;
 			}
 		}
@@ -1584,9 +1552,7 @@ abstract class MetaModel
 					$bRes = false;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$bRes = array_key_exists($sAttCode, self::$m_aAttribDefs[$sClass]);
 		}
 
@@ -1640,8 +1606,7 @@ abstract class MetaModel
 	 */
 	public static function IsValidObject($oObject)
 	{
-		if (!is_object($oObject))
-		{
+		if (!is_object($oObject)) {
 			return false;
 		}
 		return (self::IsValidClass(get_class($oObject)));
@@ -1677,9 +1642,7 @@ abstract class MetaModel
 			$oKeyAttDef = self::GetAttributeDef($sClass, $sExtKeyAttCode);
 			$sRemoteClass = $oKeyAttDef->GetTargetClass();
 			return self::GetAttributeDef($sRemoteClass, $sRemoteAttCode);
-		}
-		else
-		{
+		} else {
 			throw new Exception("Unknown attribute $sAttCode from class $sClass");
 		}
 	}
@@ -1692,7 +1655,7 @@ abstract class MetaModel
 	 */
 	final public static function GetExternalKeys($sClass)
 	{
-		$aExtKeys = array();
+		$aExtKeys = [];
 		foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAtt) {
 			if ($oAtt->IsExternalKey()) {
 				$aExtKeys[$sAttCode] = $oAtt;
@@ -1710,7 +1673,7 @@ abstract class MetaModel
 	 */
 	final public static function GetLinkedSets($sClass)
 	{
-		$aLinkedSets = array();
+		$aLinkedSets = [];
 		foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAtt) {
 			// Note: Careful, this will only return SUB-classes, which does NOT include AttributeLinkedset itself! We might want to use "is_a()" instead.
 			if (is_subclass_of($oAtt, 'AttributeLinkedSet')) {
@@ -1730,9 +1693,9 @@ abstract class MetaModel
 	 */
 	final public static function GetExternalFields($sClass, $sKeyAttCode)
 	{
-		static $aExtFields = array();
+		static $aExtFields = [];
 		if (!isset($aExtFields[$sClass][$sKeyAttCode])) {
-			$aExtFields[$sClass][$sKeyAttCode] = array();
+			$aExtFields[$sClass][$sKeyAttCode] = [];
 			foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAtt) {
 				if ($oAtt->IsExternalField() && ($oAtt->GetKeyAttCode() == $sKeyAttCode)) {
 					$aExtFields[$sClass][$sKeyAttCode][$oAtt->GetExtAttCode()] = $oAtt;
@@ -1784,7 +1747,7 @@ abstract class MetaModel
 	}
 
 	/** @var array */
-	protected static $m_aTrackForwardCache = array();
+	protected static $m_aTrackForwardCache = [];
 
 	/**
 	 * List external keys for which there is a LinkSet (direct or indirect) on the other end
@@ -1800,20 +1763,17 @@ abstract class MetaModel
 	final public static function GetTrackForwardExternalKeys($sClass)
 	{
 		if (!isset(self::$m_aTrackForwardCache[$sClass])) {
-			$aRes = array();
+			$aRes = [];
 			foreach (MetaModel::GetExternalKeys($sClass) as $sAttCode => $oAttDef) {
 				$sRemoteClass = $oAttDef->GetTargetClass();
 				foreach (MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef) {
-					if (!$oRemoteAttDef->IsLinkSet())
-					{
+					if (!$oRemoteAttDef->IsLinkSet()) {
 						continue;
 					}
-					if (!is_subclass_of($sClass, $oRemoteAttDef->GetLinkedClass()) && $oRemoteAttDef->GetLinkedClass() != $sClass)
-					{
+					if (!is_subclass_of($sClass, $oRemoteAttDef->GetLinkedClass()) && $oRemoteAttDef->GetLinkedClass() != $sClass) {
 						continue;
 					}
-					if ($oRemoteAttDef->GetExtKeyToMe() != $sAttCode)
-					{
+					if ($oRemoteAttDef->GetExtKeyToMe() != $sAttCode) {
 						continue;
 					}
 					$aRes[$sAttCode] = $oRemoteAttDef;
@@ -1836,7 +1796,7 @@ abstract class MetaModel
 		if (isset(self::$m_aEnumToMeta[$sClass][$sAttCode])) {
 			$aRet = self::$m_aEnumToMeta[$sClass][$sAttCode];
 		} else {
-			$aRet = array();
+			$aRet = [];
 		}
 
 		return $aRet;
@@ -1855,21 +1815,15 @@ abstract class MetaModel
 	 */
 	public static function GetLabel($sClass, $sAttCodeEx, $bShowMandatory = false)
 	{
-		if (($iPos = strpos($sAttCodeEx, '->')) === false)
-		{
-			if ($sAttCodeEx == 'id')
-			{
+		if (($iPos = strpos($sAttCodeEx, '->')) === false) {
+			if ($sAttCodeEx == 'id') {
 				$sLabel = Dict::S('UI:CSVImport:idField');
-			}
-			else
-			{
+			} else {
 				$oAttDef = self::GetAttributeDef($sClass, $sAttCodeEx);
 				$sMandatory = ($bShowMandatory && !$oAttDef->IsNullAllowed()) ? '*' : '';
 				$sLabel = $oAttDef->GetLabel().$sMandatory;
 			}
-		}
-		else
-		{
+		} else {
 			$sExtKeyAttCode = substr($sAttCodeEx, 0, $iPos);
 			$sRemoteAttCode = substr($sAttCodeEx, $iPos + 2);
 			$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $sExtKeyAttCode);
@@ -1901,7 +1855,7 @@ abstract class MetaModel
 	/**
 	 * @var array array of (FilterCode => AttributeCode)
 	 */
-	private static $m_aFilterAttribList = array();
+	private static $m_aFilterAttribList = [];
 
 	/**
 	 * @deprecated 3.0.0 do not use : dead code, will be removed in the future N°4690 - Deprecate "FilterCodes"
@@ -1951,7 +1905,7 @@ abstract class MetaModel
 	/**
 	 * @var array array of ("listcode" => various info on the list, common to every classes)
 	 */
-	private static $m_aListInfos = array();
+	private static $m_aListInfos = [];
 	/**
 	 * array of ("classname" => array of "listcode" => list)
 	 * list may be an array of attcode / fltcode
@@ -1959,7 +1913,7 @@ abstract class MetaModel
 	 *
 	 * @var array
 	 */
-	private static $m_aListData = array();
+	private static $m_aListData = [];
 
 	/**
 	 * @return array
@@ -1974,7 +1928,7 @@ abstract class MetaModel
 	 *
 	 * @return mixed
 	 */
-	final static public function GetZListInfo($sListCode)
+	final public static function GetZListInfo($sListCode)
 	{
 		return self::$m_aListInfos[$sListCode];
 	}
@@ -1987,17 +1941,14 @@ abstract class MetaModel
 	 */
 	public static function GetZListItems($sClass, $sListCode)
 	{
-		if (array_key_exists($sClass, self::$m_aListData))
-		{
-			if (array_key_exists($sListCode, self::$m_aListData[$sClass]))
-			{
+		if (array_key_exists($sClass, self::$m_aListData)) {
+			if (array_key_exists($sListCode, self::$m_aListData[$sClass])) {
 				return self::$m_aListData[$sClass][$sListCode];
 			}
 		}
 		$sParentClass = self::GetParentPersistentClass($sClass);
-		if (empty($sParentClass))
-		{
-			return array();
+		if (empty($sParentClass)) {
+			return [];
 		} // nothing for the mother of all classes
 		// Dig recursively
 		return self::GetZListItems($sParentClass, $sListCode);
@@ -2050,28 +2001,23 @@ abstract class MetaModel
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$sDefaultState = MetaModel::GetDefaultState($sClass);
 
-		foreach (MetaModel::FlattenZList(MetaModel::GetZListItems($sLinkedClass, 'list')) as $sLnkAttCode)
-		{
+		foreach (MetaModel::FlattenZList(MetaModel::GetZListItems($sLinkedClass, 'list')) as $sLnkAttCode) {
 			$oLnkAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sLnkAttCode);
-			if ($sStateAttCode == $sLnkAttCode)
-			{
+			if ($sStateAttCode == $sLnkAttCode) {
 				// State attribute is always hidden from the UI
 				continue;
 			}
 			if (($sLnkAttCode == $sExtKeyToMe)
 				|| ($sLnkAttCode == $sExtKeyToRemote)
-				|| ($sLnkAttCode == 'finalclass'))
-			{
+				|| ($sLnkAttCode == 'finalclass')) {
 				continue;
 			}
-			if (!($oLnkAttDef->IsWritable()))
-			{
+			if (!($oLnkAttDef->IsWritable())) {
 				continue;
 			}
 
 			$iFlags = MetaModel::GetAttributeFlags($sLinkedClass, $sDefaultState, $sLnkAttCode);
-			if (!($iFlags & OPT_ATT_HIDDEN) && !($iFlags & OPT_ATT_READONLY))
-			{
+			if (!($iFlags & OPT_ATT_HIDDEN) && !($iFlags & OPT_ATT_READONLY)) {
 				$aAttCodesToPrint[] = $oLnkAttDef;
 			}
 		}
@@ -2091,7 +2037,7 @@ abstract class MetaModel
 	 * @since 3.0.0 N°2334 added code for n-n relations in {@see BlockIndirectLinkSetViewTable::GetAttCodesToDisplay}
 	 * @since 3.1.0 N°3200 method creation so that it can be used elsewhere
 	 */
-	public static function GetAttributeLinkedSetIndirectDatatableAttCodesToDisplay(string $sObjectClass, string $sObjectLinkedSetIndirectAttCode, string $sRemoteClass, string $sLnkExternalKeyToRemoteClassAttCode):array
+	public static function GetAttributeLinkedSetIndirectDatatableAttCodesToDisplay(string $sObjectClass, string $sObjectLinkedSetIndirectAttCode, string $sRemoteClass, string $sLnkExternalKeyToRemoteClassAttCode): array
 	{
 		$aLnkAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($sObjectClass, $sObjectLinkedSetIndirectAttCode);
 		$aRemoteAttDefsToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectRemoteClass($sRemoteClass);
@@ -2127,8 +2073,7 @@ abstract class MetaModel
 	public static function IsAttributeInZList($sClass, $sListCode, $sAttCodeOrFltCode, $sGroup = null)
 	{
 		$aZList = self::FlattenZlist(self::GetZListItems($sClass, $sListCode));
-		if (!$sGroup)
-		{
+		if (!$sGroup) {
 			return (in_array($sAttCodeOrFltCode, $aZList));
 		}
 		return (in_array($sAttCodeOrFltCode, $aZList[$sGroup]));
@@ -2142,7 +2087,7 @@ abstract class MetaModel
 	 *
 	 * @var array
 	 */
-	private static $m_aRelationInfos = array();
+	private static $m_aRelationInfos = [];
 
 	/**
 	 * @deprecated Use EnumRelationsEx instead
@@ -2161,7 +2106,7 @@ abstract class MetaModel
 		if (!empty($sClass)) {
 			// Return only the relations that have a meaning (i.e. for which at least one query is defined)
 			// for the specified class
-			$aClassRelations = array();
+			$aClassRelations = [];
 			foreach ($aResult as $sRelCode) {
 				$aQueriesDown = self::EnumRelationQueries($sClass, $sRelCode);
 				if (count($aQueriesDown) > 0) {
@@ -2172,8 +2117,7 @@ abstract class MetaModel
 				// The current patch has been implemented in DBObject and MetaModel
 				if ($sRelCode == 'impacts') {
 					$aQueriesUp = self::EnumRelationQueries($sClass, 'impacts', false);
-					if (count($aQueriesUp) > 0)
-					{
+					if (count($aQueriesUp) > 0) {
 						$aClassRelations[] = 'depends on';
 					}
 				}
@@ -2185,8 +2129,7 @@ abstract class MetaModel
 		// Temporary patch: until the impact analysis GUI gets rewritten,
 		// let's consider that "depends on" is equivalent to "impacts/up"
 		// The current patch has been implemented in DBObject and MetaModel
-		if (in_array('impacts', $aResult))
-		{
+		if (in_array('impacts', $aResult)) {
 			$aResult[] = 'depends on';
 		}
 
@@ -2206,18 +2149,15 @@ abstract class MetaModel
 		$aRelationInfo = array_keys(self::$m_aRelationInfos);
 		// Return only the relations that have a meaning (i.e. for which at least one query is defined)
 		// for the specified class
-		$aClassRelations = array();
-		foreach($aRelationInfo as $sRelCode)
-		{
+		$aClassRelations = [];
+		foreach ($aRelationInfo as $sRelCode) {
 			$aQueriesDown = self::EnumRelationQueries($sClass, $sRelCode, true /* Down */);
-			if (count($aQueriesDown) > 0)
-			{
+			if (count($aQueriesDown) > 0) {
 				$aClassRelations[$sRelCode]['down'] = self::GetRelationLabel($sRelCode, true);
 			}
 
 			$aQueriesUp = self::EnumRelationQueries($sClass, $sRelCode, false /* Up */);
-			if (count($aQueriesUp) > 0)
-			{
+			if (count($aQueriesUp) > 0) {
 				$aClassRelations[$sRelCode]['up'] = self::GetRelationLabel($sRelCode, false);
 			}
 		}
@@ -2232,18 +2172,15 @@ abstract class MetaModel
 	 * @return string
 	 * @throws \DictExceptionMissingString
 	 */
-	final static public function GetRelationDescription($sRelCode, $bDown = true)
+	final public static function GetRelationDescription($sRelCode, $bDown = true)
 	{
 		// Legacy convention had only one description describing the relation.
 		// Now, as the relation is bidirectional, we have a description for each directions.
 		$sLegacy = Dict::S("Relation:$sRelCode/Description");
 
-		if($bDown)
-		{
+		if ($bDown) {
 			$sKey = "Relation:$sRelCode/DownStream+";
-		}
-		else
-		{
+		} else {
 			$sKey = "Relation:$sRelCode/UpStream+";
 		}
 		$sRet = Dict::S($sKey, $sLegacy);
@@ -2266,8 +2203,7 @@ abstract class MetaModel
 			// Now, the relation from A to B says that something is transmitted from A to B, thus going DOWNstream as described in a petri net.
 			$sKey = "Relation:$sRelCode/DownStream";
 			$sLegacy = Dict::S("Relation:$sRelCode/VerbUp", $sKey);
-		} else
-		{
+		} else {
 			$sKey = "Relation:$sRelCode/UpStream";
 			$sLegacy = Dict::S("Relation:$sRelCode/VerbDown", $sKey);
 		}
@@ -2285,23 +2221,19 @@ abstract class MetaModel
 	 */
 	protected static function ComputeRelationQueries($sRelCode)
 	{
-		$aQueries = array();
-		foreach(self::GetClasses() as $sClass)
-		{
-			$aQueries[$sClass]['down'] = array();
-			if (!array_key_exists('up', $aQueries[$sClass]))
-			{
-				$aQueries[$sClass]['up'] = array();
+		$aQueries = [];
+		foreach (self::GetClasses() as $sClass) {
+			$aQueries[$sClass]['down'] = [];
+			if (!array_key_exists('up', $aQueries[$sClass])) {
+				$aQueries[$sClass]['up'] = [];
 			}
 
-			$aNeighboursDown = call_user_func_array(array($sClass, 'GetRelationQueriesEx'), array($sRelCode));
+			$aNeighboursDown = call_user_func_array([$sClass, 'GetRelationQueriesEx'], [$sRelCode]);
 
 			// Translate attributes into queries (new style of spec only)
-			foreach($aNeighboursDown as $sNeighbourId => $aNeighbourData)
-			{
+			foreach ($aNeighboursDown as $sNeighbourId => $aNeighbourData) {
 				$aNeighbourData['sFromClass'] = $aNeighbourData['sDefinedInClass'];
-				try
-				{
+				try {
 					if (Utils::StrLen($aNeighbourData['sQueryDown']) == 0) {
 						$oAttDef = self::GetAttributeDef($sClass, $aNeighbourData['sAttribute']);
 						if ($oAttDef instanceof AttributeExternalKey) {
@@ -2309,12 +2241,10 @@ abstract class MetaModel
 							$aNeighbourData['sToClass'] = $sTargetClass;
 							$aNeighbourData['sQueryDown'] = 'SELECT '.$sTargetClass.' AS o WHERE o.id = :this->'.$aNeighbourData['sAttribute'];
 							$aNeighbourData['sQueryUp'] = 'SELECT '.$aNeighbourData['sFromClass'].' AS o WHERE o.'.$aNeighbourData['sAttribute'].' = :this->id';
-						} elseif ($oAttDef instanceof AttributeLinkedSet)
-						{
+						} elseif ($oAttDef instanceof AttributeLinkedSet) {
 							$sLinkedClass = $oAttDef->GetLinkedClass();
 							$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
-							if ($oAttDef->IsIndirect())
-							{
+							if ($oAttDef->IsIndirect()) {
 								$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
 								$oRemoteAttDef = self::GetAttributeDef($sLinkedClass, $sExtKeyToRemote);
 								$sRemoteClass = $oRemoteAttDef->GetTargetClass();
@@ -2322,32 +2252,23 @@ abstract class MetaModel
 								$aNeighbourData['sToClass'] = $sRemoteClass;
 								$aNeighbourData['sQueryDown'] = "SELECT $sRemoteClass AS o JOIN $sLinkedClass AS lnk ON lnk.$sExtKeyToRemote = o.id WHERE lnk.$sExtKeyToMe = :this->id";
 								$aNeighbourData['sQueryUp'] = "SELECT ".$aNeighbourData['sFromClass']." AS o JOIN $sLinkedClass AS lnk ON lnk.$sExtKeyToMe = o.id WHERE lnk.$sExtKeyToRemote = :this->id";
-							}
-							else
-							{
+							} else {
 								$aNeighbourData['sToClass'] = $sLinkedClass;
 								$aNeighbourData['sQueryDown'] = "SELECT $sLinkedClass AS o WHERE o.$sExtKeyToMe = :this->id";
 								$aNeighbourData['sQueryUp'] = "SELECT ".$aNeighbourData['sFromClass']." AS o WHERE o.id = :this->$sExtKeyToMe";
 							}
-						}
-						else
-						{
+						} else {
 							throw new Exception("Unexpected attribute type for '{$aNeighbourData['sAttribute']}'. Expecting a link set or external key.");
 						}
-					}
-					else
-					{
+					} else {
 						$oSearch = DBObjectSearch::FromOQL($aNeighbourData['sQueryDown']);
 						$aNeighbourData['sToClass'] = $oSearch->GetClass();
 					}
-				}
-				catch (Exception $e)
-				{
+				} catch (Exception $e) {
 					throw new Exception("Wrong definition for the relation $sRelCode/{$aNeighbourData['sDefinedInClass']}/{$aNeighbourData['sNeighbour']}: ".$e->getMessage());
 				}
 
-				if ($aNeighbourData['sDirection'] == 'down')
-				{
+				if ($aNeighbourData['sDirection'] == 'down') {
 					$aNeighbourData['sQueryUp'] = null;
 				}
 
@@ -2355,13 +2276,10 @@ abstract class MetaModel
 				$aQueries[$sClass]['down'][$sArrowId] = $aNeighbourData;
 
 				// Compute the reverse index
-				if ($aNeighbourData['sDefinedInClass'] == $sClass)
-				{
-					if ($aNeighbourData['sDirection'] == 'both')
-					{
+				if ($aNeighbourData['sDefinedInClass'] == $sClass) {
+					if ($aNeighbourData['sDirection'] == 'both') {
 						$sToClass = $aNeighbourData['sToClass'];
-						foreach(self::EnumChildClasses($sToClass, ENUM_CHILD_CLASSES_ALL) as $sSubClass)
-						{
+						foreach (self::EnumChildClasses($sToClass, ENUM_CHILD_CLASSES_ALL) as $sSubClass) {
 							$aQueries[$sSubClass]['up'][$sArrowId] = $aNeighbourData;
 						}
 					}
@@ -2384,19 +2302,15 @@ abstract class MetaModel
 	 */
 	public static function EnumRelationQueries($sClass, $sRelCode, $bDown = true)
 	{
-		static $aQueries = array();
-		if (!isset($aQueries[$sRelCode]))
-		{
+		static $aQueries = [];
+		if (!isset($aQueries[$sRelCode])) {
 			$aQueries[$sRelCode] = self::ComputeRelationQueries($sRelCode);
 		}
 		$sDirection = $bDown ? 'down' : 'up';
-		if (isset($aQueries[$sRelCode][$sClass][$sDirection]))
-		{
+		if (isset($aQueries[$sRelCode][$sClass][$sDirection])) {
 			return $aQueries[$sRelCode][$sClass][$sDirection];
-		}
-		else
-		{
-			return array();
+		} else {
+			return [];
 		}
 	}
 
@@ -2414,9 +2328,13 @@ abstract class MetaModel
 	 * @throws \Exception
 	 */
 	public static function GetRelatedObjectsDown(
-		$sRelCode, $aSourceObjects, $iMaxDepth = 99, $bEnableRedundancy = true, $aUnreachable = array(), $aContexts = array()
-	)
-	{
+		$sRelCode,
+		$aSourceObjects,
+		$iMaxDepth = 99,
+		$bEnableRedundancy = true,
+		$aUnreachable = [],
+		$aContexts = []
+	) {
 		$oGraph = new RelationGraph();
 		foreach ($aSourceObjects as $oObject) {
 			$oGraph->AddSourceObject($oObject);
@@ -2440,7 +2358,7 @@ abstract class MetaModel
 	 * @return RelationGraph The graph of all the related objects
 	 * @throws \Exception
 	 */
-	public static function GetRelatedObjectsUp($sRelCode, $aSourceObjects, $iMaxDepth = 99, $bEnableRedundancy = true, $aContexts = array())
+	public static function GetRelatedObjectsUp($sRelCode, $aSourceObjects, $iMaxDepth = 99, $bEnableRedundancy = true, $aContexts = [])
 	{
 		$oGraph = new RelationGraph();
 		foreach ($aSourceObjects as $oObject) {
@@ -2461,19 +2379,19 @@ abstract class MetaModel
 	 *
 	 * @var array
 	 */
-	private static $m_aStates = array();
+	private static $m_aStates = [];
 	/**
 	 * array of ("classname" => array of ("stimuluscode"=>array('label'=>...)))
 	 *
 	 * @var array
 	 */
-	private static $m_aStimuli = array();
+	private static $m_aStimuli = [];
 	/**
 	 * array of ("classname" => array of ("statcode_from"=>array of ("stimuluscode" => array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD)))
 	 *
 	 * @var array
 	 */
-	private static $m_aTransitions = array();
+	private static $m_aTransitions = [];
 
 	/**
 	 * @param string $sClass
@@ -2482,18 +2400,14 @@ abstract class MetaModel
 	 */
 	public static function EnumStates($sClass)
 	{
-		if (array_key_exists($sClass, self::$m_aStates))
-		{
+		if (array_key_exists($sClass, self::$m_aStates)) {
 			return self::$m_aStates[$sClass];
-		}
-		elseif (self::HasStateAttributeCode($sClass))
-		{
+		} elseif (self::HasStateAttributeCode($sClass)) {
 			$sStateAttCode = self::GetStateAttributeCode($sClass);
 			$oAttDef = self::GetAttributeDef($sClass, $sStateAttCode);
 
 			$aStates = [];
-			foreach($oAttDef->GetAllowedValues() as $sStateCode => $sStateLabel)
-			{
+			foreach ($oAttDef->GetAllowedValues() as $sStateCode => $sStateLabel) {
 				$aStates[$sStateCode] = [
 					'attribute_inherit' => '',
 					'attribute_list' => [],
@@ -2501,10 +2415,8 @@ abstract class MetaModel
 			}
 
 			return $aStates;
-		}
-		else
-		{
-			return array();
+		} else {
+			return [];
 		}
 	}
 
@@ -2517,28 +2429,22 @@ abstract class MetaModel
 	 */
 	public static function EnumInitialStates($sClass)
 	{
-		if (array_key_exists($sClass, self::$m_aStates))
-		{
-			$aRet = array();
+		if (array_key_exists($sClass, self::$m_aStates)) {
+			$aRet = [];
 			// Add the states for which the flag 'is_initial_state' is set to <true>
-			foreach(self::$m_aStates[$sClass] as $aStateCode => $aProps)
-			{
-				if (isset($aProps['initial_state_path']))
-				{
+			foreach (self::$m_aStates[$sClass] as $aStateCode => $aProps) {
+				if (isset($aProps['initial_state_path'])) {
 					$aRet[$aStateCode] = $aProps['initial_state_path'];
 				}
 			}
 			// Add the default initial state
 			$sMainInitialState = self::GetDefaultState($sClass);
-			if (!isset($aRet[$sMainInitialState]))
-			{
-				$aRet[$sMainInitialState] = array();
+			if (!isset($aRet[$sMainInitialState])) {
+				$aRet[$sMainInitialState] = [];
 			}
 			return $aRet;
-		}
-		else
-		{
-			return array();
+		} else {
+			return [];
 		}
 	}
 
@@ -2549,13 +2455,10 @@ abstract class MetaModel
 	 */
 	public static function EnumStimuli($sClass)
 	{
-		if (array_key_exists($sClass, self::$m_aStimuli))
-		{
+		if (array_key_exists($sClass, self::$m_aStimuli)) {
 			return self::$m_aStimuli[$sClass];
-		}
-		else
-		{
-			return array();
+		} else {
+			return [];
 		}
 	}
 
@@ -2612,14 +2515,12 @@ abstract class MetaModel
 	 */
 	public static function EnumTransitions($sClass, $sStateCode)
 	{
-		if (array_key_exists($sClass, self::$m_aTransitions))
-		{
-			if (array_key_exists($sStateCode, self::$m_aTransitions[$sClass]))
-			{
+		if (array_key_exists($sClass, self::$m_aTransitions)) {
+			if (array_key_exists($sStateCode, self::$m_aTransitions[$sClass])) {
 				return self::$m_aTransitions[$sClass][$sStateCode];
 			}
 		}
-		return array();
+		return [];
 	}
 
 	/**
@@ -2637,15 +2538,15 @@ abstract class MetaModel
 	 */
 	public static function EnumPossibleAttributeFlags()
 	{
-		return $aPossibleAttFlags = array(
+		return $aPossibleAttFlags = [
 			'normal' => OPT_ATT_NORMAL,
 			'hidden' => OPT_ATT_HIDDEN,
 			'read_only' => OPT_ATT_READONLY,
 			'mandatory' => OPT_ATT_MANDATORY,
 			'must_change' => OPT_ATT_MUSTCHANGE,
 			'must_prompt' => OPT_ATT_MUSTPROMPT,
-			'slave' => OPT_ATT_SLAVE
-		);
+			'slave' => OPT_ATT_SLAVE,
+		];
 	}
 
 	/**
@@ -2713,7 +2614,7 @@ abstract class MetaModel
 	 */
 	public static function GetTransitionAttributes($sClass, $sStimulus, $sOriginState)
 	{
-		$aAttributes = array();
+		$aAttributes = [];
 
 		// Retrieving target state
 		$aTransitions = MetaModel::EnumTransitions($sClass, $sOriginState);
@@ -2725,19 +2626,15 @@ abstract class MetaModel
 		$aTargetState = $aStates[$sTargetState];
 		$aTargetStateAttributes = $aTargetState['attribute_list'];
 		// - Merging with results (only MUST_XXX and MANDATORY)
-		foreach($aTargetStateAttributes as $sTargetStateAttCode => $iTargetStateAttFlags)
-		{
+		foreach ($aTargetStateAttributes as $sTargetStateAttCode => $iTargetStateAttFlags) {
 			$iTmpAttFlags = OPT_ATT_NORMAL;
-			if ($iTargetStateAttFlags & OPT_ATT_MUSTPROMPT)
-			{
+			if ($iTargetStateAttFlags & OPT_ATT_MUSTPROMPT) {
 				$iTmpAttFlags = $iTmpAttFlags | OPT_ATT_MUSTPROMPT;
 			}
-			if ($iTargetStateAttFlags & OPT_ATT_MUSTCHANGE)
-			{
+			if ($iTargetStateAttFlags & OPT_ATT_MUSTCHANGE) {
 				$iTmpAttFlags = $iTmpAttFlags | OPT_ATT_MUSTCHANGE;
 			}
-			if ($iTargetStateAttFlags & OPT_ATT_MANDATORY)
-			{
+			if ($iTargetStateAttFlags & OPT_ATT_MANDATORY) {
 				$iTmpAttFlags = $iTmpAttFlags | OPT_ATT_MANDATORY;
 			}
 
@@ -2747,14 +2644,10 @@ abstract class MetaModel
 		// Retrieving attributes from transition
 		$aTransitionAttributes = $aTransition['attribute_list'];
 		// - Merging with results
-		foreach($aTransitionAttributes as $sAttCode => $iAttributeFlags)
-		{
-			if (array_key_exists($sAttCode, $aAttributes))
-			{
+		foreach ($aTransitionAttributes as $sAttCode => $iAttributeFlags) {
+			if (array_key_exists($sAttCode, $aAttributes)) {
 				$aAttributes[$sAttCode] = $aAttributes[$sAttCode] | $iAttributeFlags;
-			}
-			else
-			{
+			} else {
 				$aAttributes[$sAttCode] = $iAttributeFlags;
 			}
 		}
@@ -2779,7 +2672,7 @@ abstract class MetaModel
 			if (array_key_exists($sState, $aStates)) {
 				$bReadOnly = (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY);
 				$bHidden = (($iFlags & OPT_ATT_HIDDEN) == OPT_ATT_HIDDEN);
-				foreach($aStates[$sState] as $sPrevState) {
+				foreach ($aStates[$sState] as $sPrevState) {
 					$iPrevFlags = self::GetAttributeFlags($sClass, $sPrevState, $sAttCode);
 					if (($iPrevFlags & OPT_ATT_HIDDEN) != OPT_ATT_HIDDEN) {
 						$bReadOnly = $bReadOnly && (($iPrevFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY); // if it is/was not readonly => then it's not
@@ -2789,15 +2682,13 @@ abstract class MetaModel
 
 				if ($bReadOnly) {
 					$iFlags = $iFlags | OPT_ATT_READONLY;
-				}
-				else {
+				} else {
 					$iFlags = $iFlags & ~OPT_ATT_READONLY;
 				}
 
 				if ($bHidden) {
 					$iFlags = $iFlags | OPT_ATT_HIDDEN;
-				}
-				else {
+				} else {
 					$iFlags = $iFlags & ~OPT_ATT_HIDDEN;
 				}
 			}
@@ -2814,7 +2705,7 @@ abstract class MetaModel
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public static function GetAllowedValues_att($sClass, $sAttCode, $aArgs = array(), $sContains = '')
+	public static function GetAllowedValues_att($sClass, $sAttCode, $aArgs = [], $sContains = '')
 	{
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
 		return $oAttDef->GetAllowedValues($aArgs, $sContains);
@@ -2831,13 +2722,12 @@ abstract class MetaModel
 	 * @return mixed
 	 * @throws \CoreException
 	 */
-	public static function GetAllowedValues_flt($sClass, $sFltCode, $aArgs = array(), $sContains = '')
+	public static function GetAllowedValues_flt($sClass, $sFltCode, $aArgs = [], $sContains = '')
 	{
 		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use MetaModel::GetAllowedValues_flt: dead code, will be removed in the future. Use MetaModel::GetAllowedValues');
 
 		return self::GetAllowedValues_att($sClass, $sFltCode);
 	}
-
 
 	/**
 	 * @param string $sClass
@@ -2849,15 +2739,13 @@ abstract class MetaModel
 	 * @return mixed
 	 * @throws \Exception
 	 */
-	public static function GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs = array(), $sContains = '', $iAdditionalValue = null)
+	public static function GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs = [], $sContains = '', $iAdditionalValue = null)
 	{
 		/** @var \AttributeExternalKey $oAttDef */
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
 
 		return $oAttDef->GetAllowedValuesAsObjectSet($aArgs, $sContains, $iAdditionalValue);
 	}
-
-
 
 	//
 	// Business model declaration verbs (should be static)
@@ -2871,14 +2759,12 @@ abstract class MetaModel
 	public static function RegisterZList($sListCode, $aListInfo)
 	{
 		// Check mandatory params
-		$aMandatParams = array(
+		$aMandatParams = [
 			"description" => "detailed (though one line) description of the list",
 			"type" => "attributes | filters",
-		);
-		foreach($aMandatParams as $sParamName => $sParamDesc)
-		{
-			if (!array_key_exists($sParamName, $aListInfo))
-			{
+		];
+		foreach ($aMandatParams as $sParamName => $sParamDesc) {
+			if (!array_key_exists($sParamName, $aListInfo)) {
 				throw new CoreException("Declaration of list $sListCode - missing parameter $sParamName");
 			}
 		}
@@ -2925,8 +2811,7 @@ abstract class MetaModel
 	 */
 	public static function InitClasses($sTablePrefix)
 	{
-		if (count(self::GetClasses()) > 0)
-		{
+		if (count(self::GetClasses()) > 0) {
 			throw new CoreException("InitClasses should not be called more than once -skipped");
 		}
 
@@ -2935,54 +2820,43 @@ abstract class MetaModel
 
 		// Initialize the classes (declared attributes, etc.)
 		//
-		$aObsoletableRootClasses = array();
-		foreach(get_declared_classes() as $sPHPClass)
-		{
-			if (is_subclass_of($sPHPClass, 'DBObject'))
-			{
+		$aObsoletableRootClasses = [];
+		foreach (get_declared_classes() as $sPHPClass) {
+			if (is_subclass_of($sPHPClass, 'DBObject')) {
 				$sParent = self::GetParentPersistentClass($sPHPClass);
-				if (array_key_exists($sParent, self::$m_aIgnoredAttributes))
-				{
+				if (array_key_exists($sParent, self::$m_aIgnoredAttributes)) {
 					// Inherit info about attributes to ignore
 					self::$m_aIgnoredAttributes[$sPHPClass] = self::$m_aIgnoredAttributes[$sParent];
 				}
-				try
-				{
+				try {
 					$oMethod = new ReflectionMethod($sPHPClass, 'Init');
-					if ($oMethod->getDeclaringClass()->name == $sPHPClass)
-					{
-						call_user_func(array($sPHPClass, 'Init'));
+					if ($oMethod->getDeclaringClass()->name == $sPHPClass) {
+						call_user_func([$sPHPClass, 'Init']);
 
 						// Inherit archive flag
 						$bParentArchivable = isset(self::$m_aClassParams[$sParent]['archive']) ? self::$m_aClassParams[$sParent]['archive'] : false;
 						$bArchivable = isset(self::$m_aClassParams[$sPHPClass]['archive']) ? self::$m_aClassParams[$sPHPClass]['archive'] : null;
-						if (!$bParentArchivable && $bArchivable && !self::IsRootClass($sPHPClass))
-						{
+						if (!$bParentArchivable && $bArchivable && !self::IsRootClass($sPHPClass)) {
 							throw new Exception("Archivability must be declared on top of the class hierarchy above $sPHPClass (consistency throughout the whole class tree is a must)");
 						}
-						if ($bParentArchivable && ($bArchivable === false))
-						{
+						if ($bParentArchivable && ($bArchivable === false)) {
 							throw new Exception("$sPHPClass must be archivable (consistency throughout the whole class tree is a must)");
 						}
 						$bReallyArchivable = $bParentArchivable || $bArchivable;
 						self::$m_aClassParams[$sPHPClass]['archive'] = $bReallyArchivable;
 						$bArchiveRoot = $bReallyArchivable && !$bParentArchivable;
 						self::$m_aClassParams[$sPHPClass]['archive_root'] = $bArchiveRoot;
-						if ($bReallyArchivable)
-						{
+						if ($bReallyArchivable) {
 							self::$m_aClassParams[$sPHPClass]['archive_root_class'] = $bArchiveRoot ? $sPHPClass : self::$m_aClassParams[$sParent]['archive_root_class'];
 						}
 
 						// Inherit obsolescence expression
 						$sObsolescence = null;
-						if (isset(self::$m_aClassParams[$sPHPClass]['obsolescence_expression']))
-						{
+						if (isset(self::$m_aClassParams[$sPHPClass]['obsolescence_expression'])) {
 							// Defined or overloaded
 							$sObsolescence = self::$m_aClassParams[$sPHPClass]['obsolescence_expression'];
 							$aObsoletableRootClasses[self::$m_aRootClasses[$sPHPClass]] = true;
-						}
-						elseif (isset(self::$m_aClassParams[$sParent]['obsolescence_expression']))
-						{
+						} elseif (isset(self::$m_aClassParams[$sParent]['obsolescence_expression'])) {
 							// Inherited
 							$sObsolescence = self::$m_aClassParams[$sParent]['obsolescence_expression'];
 						}
@@ -2992,7 +2866,7 @@ abstract class MetaModel
 						// - State attribute
 						$bParentHasStateAttribute = (isset(self::$m_aClassParams[$sParent]['state_attcode']) && !empty(self::$m_aClassParams[$sParent]['state_attcode']));
 						$bHasStateAttribute = (isset(self::$m_aClassParams[$sPHPClass]['state_attcode']) && !empty(self::$m_aClassParams[$sPHPClass]['state_attcode']));
-						if($bParentHasStateAttribute && !$bHasStateAttribute) {
+						if ($bParentHasStateAttribute && !$bHasStateAttribute) {
 							// Set attribute code
 							self::$m_aClassParams[$sPHPClass]['state_attcode'] = self::$m_aClassParams[$sParent]['state_attcode'];
 
@@ -3001,43 +2875,34 @@ abstract class MetaModel
 						// - Image attribute
 						$bParentHasImageAttribute = (isset(self::$m_aClassParams[$sParent]['image_attcode']) && !empty(self::$m_aClassParams[$sParent]['image_attcode']));
 						$bHasImageAttribute = (isset(self::$m_aClassParams[$sPHPClass]['image_attcode']) && !empty(self::$m_aClassParams[$sPHPClass]['image_attcode']));
-						if($bParentHasImageAttribute && !$bHasImageAttribute) {
+						if ($bParentHasImageAttribute && !$bHasImageAttribute) {
 							// Set attribute code
 							self::$m_aClassParams[$sPHPClass]['image_attcode'] = self::$m_aClassParams[$sParent]['image_attcode'];
 						}
 
-						foreach(MetaModel::EnumPlugins('iOnClassInitialization') as $sPluginClass => $oClassInit)
-						{
+						foreach (MetaModel::EnumPlugins('iOnClassInitialization') as $sPluginClass => $oClassInit) {
 							$oClassInit->OnAfterClassInitialization($sPHPClass);
 						}
 					}
 
 					$aCurrentClassUniquenessRules = MetaModel::GetUniquenessRules($sPHPClass, true);
-					if (!empty($aCurrentClassUniquenessRules))
-					{
+					if (!empty($aCurrentClassUniquenessRules)) {
 						$aClassFields = self::GetAttributesList($sPHPClass);
-						foreach ($aCurrentClassUniquenessRules as $sUniquenessRuleId => $aUniquenessRuleProperties)
-						{
+						foreach ($aCurrentClassUniquenessRules as $sUniquenessRuleId => $aUniquenessRuleProperties) {
 							$bIsRuleOverride = self::HasSameUniquenessRuleInParent($sPHPClass, $sUniquenessRuleId);
-							try
-							{
+							try {
 								self::CheckUniquenessRuleValidity($aUniquenessRuleProperties, $bIsRuleOverride, $aClassFields);
-							}
-							catch (CoreUnexpectedValue $e)
-							{
+							} catch (CoreUnexpectedValue $e) {
 								throw new Exception("Invalid uniqueness rule declaration : class={$sPHPClass}, rule=$sUniquenessRuleId, reason={$e->getMessage()}");
 							}
 
-							if (!$bIsRuleOverride)
-							{
+							if (!$bIsRuleOverride) {
 								self::SetUniquenessRuleRootClass($sPHPClass, $sUniquenessRuleId);
 							}
 						}
 					}
 
-				}
-				catch (ReflectionException $e)
-				{
+				} catch (ReflectionException $e) {
 					// This class is only implementing methods, ignore it from the MetaModel perspective
 				}
 			}
@@ -3045,32 +2910,28 @@ abstract class MetaModel
 
 		// Add a 'class' attribute/filter to the root classes and their children
 		//
-		foreach(self::EnumRootClasses() as $sRootClass)
-		{
-			if (self::IsStandaloneClass($sRootClass))
-			{
+		foreach (self::EnumRootClasses() as $sRootClass) {
+			if (self::IsStandaloneClass($sRootClass)) {
 				continue;
 			}
 
 			$sDbFinalClassField = self::DBGetClassField($sRootClass);
-			if (strlen($sDbFinalClassField) == 0)
-			{
+			if (strlen($sDbFinalClassField) == 0) {
 				$sDbFinalClassField = 'finalclass';
 				self::$m_aClassParams[$sRootClass]["db_finalclass_field"] = 'finalclass';
 			}
-			$oClassAtt = new AttributeFinalClass('finalclass', array(
+			$oClassAtt = new AttributeFinalClass('finalclass', [
 				"sql"             => $sDbFinalClassField,
 				"default_value"   => $sRootClass,
 				"is_null_allowed" => false,
-				"depends_on"      => array(),
-			));
+				"depends_on"      => [],
+			]);
 			self::AddMagicAttribute($oClassAtt, $sRootClass);
 
 			$bObsoletable = array_key_exists($sRootClass, $aObsoletableRootClasses);
 			if ($bObsoletable && is_null(self::$m_aClassParams[$sRootClass]['obsolescence_expression'])) {
 				self::$m_aClassParams[$sRootClass]['obsolescence_expression'] = '0';
 			}
-
 
 			foreach (self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sChildClass) {
 				if (array_key_exists('finalclass', self::$m_aAttribDefs[$sChildClass])) {
@@ -3103,7 +2964,7 @@ abstract class MetaModel
 				$oArchiveFlag = new AttributeArchiveFlag('archive_flag');
 				self::AddMagicAttribute($oArchiveFlag, $sClass);
 
-				$oArchiveDate = new AttributeArchiveDate('archive_date', array('magic' => true, "allowed_values" => null, "sql" => 'archive_date', "default_value" => '', "is_null_allowed" => true, "depends_on" => array()));
+				$oArchiveDate = new AttributeArchiveDate('archive_date', ['magic' => true, "allowed_values" => null, "sql" => 'archive_date', "default_value" => '', "is_null_allowed" => true, "depends_on" => []]);
 				self::AddMagicAttribute($oArchiveDate, $sClass);
 			} elseif (self::$m_aClassParams[$sClass]["archive"]) {
 				$sArchiveRoot = self::$m_aClassParams[$sClass]['archive_root_class'];
@@ -3124,7 +2985,7 @@ abstract class MetaModel
 				self::AddMagicAttribute($oObsolescenceFlag, $sClass);
 
 				if (self::$m_aRootClasses[$sClass] == $sClass) {
-					$oObsolescenceDate = new AttributeObsolescenceDate('obsolescence_date', array('magic' => true, "allowed_values" => null, "sql" => 'obsolescence_date', "default_value" => '', "is_null_allowed" => true, "depends_on" => array()));
+					$oObsolescenceDate = new AttributeObsolescenceDate('obsolescence_date', ['magic' => true, "allowed_values" => null, "sql" => 'obsolescence_date', "default_value" => '', "is_null_allowed" => true, "depends_on" => []]);
 					self::AddMagicAttribute($oObsolescenceDate, $sClass);
 				} else {
 					$oObsolescenceDate = clone self::$m_aAttribDefs[$sRootClass]['obsolescence_date'];
@@ -3161,41 +3022,37 @@ abstract class MetaModel
 						$sKeyAttCode = $oAttDef->GetKeyAttCode();
 						$sRemoteAttCode = $oAttDef->GetExtAttCode()."_friendlyname";
 						$sFriendlyNameAttCode = $sAttCode.'_friendlyname';
-						$oFriendlyName = new AttributeExternalField($sFriendlyNameAttCode, array("allowed_values" => null, "extkey_attcode" => $sKeyAttCode, "target_attcode" => $sRemoteAttCode, "depends_on" => array()));
+						$oFriendlyName = new AttributeExternalField($sFriendlyNameAttCode, ["allowed_values" => null, "extkey_attcode" => $sKeyAttCode, "target_attcode" => $sRemoteAttCode, "depends_on" => []]);
 						self::AddMagicAttribute($oFriendlyName, $sClass, self::$m_aAttribOrigins[$sClass][$sKeyAttCode]);
 					} else {
 						// Create the friendly name attribute
 						$sFriendlyNameAttCode = $sAttCode.'_friendlyname';
-						$oFriendlyName = new AttributeExternalField($sFriendlyNameAttCode, array('allowed_values' => null, 'extkey_attcode' => $sAttCode, "target_attcode" => 'friendlyname', 'depends_on' => array()));
+						$oFriendlyName = new AttributeExternalField($sFriendlyNameAttCode, ['allowed_values' => null, 'extkey_attcode' => $sAttCode, "target_attcode" => 'friendlyname', 'depends_on' => []]);
 						self::AddMagicAttribute($oFriendlyName, $sClass, self::$m_aAttribOrigins[$sClass][$sAttCode]);
 
 						if (self::HasChildrenClasses($sRemoteClass)) {
 							// First, create an external field attribute, that gets the final class
 							$sClassRecallAttCode = $sAttCode.'_finalclass_recall';
-							$oClassRecall = new AttributeExternalField($sClassRecallAttCode, array(
+							$oClassRecall = new AttributeExternalField($sClassRecallAttCode, [
 								"allowed_values"  => null,
 								"extkey_attcode"  => $sAttCode,
 								"target_attcode"  => "finalclass",
 								"is_null_allowed" => true,
-								"depends_on"      => array(),
-							));
+								"depends_on"      => [],
+							]);
 							self::AddMagicAttribute($oClassRecall, $sClass, self::$m_aAttribOrigins[$sClass][$sAttCode]);
 
 							// Add it to the ZLists where the external key is present
 							//foreach(self::$m_aListData[$sClass] as $sListCode => $aAttributes)
 							$sListCode = 'list';
-							if (isset(self::$m_aListData[$sClass][$sListCode]))
-							{
+							if (isset(self::$m_aListData[$sClass][$sListCode])) {
 								$aAttributes = self::$m_aListData[$sClass][$sListCode];
 								// temporary.... no loop
 								{
-									if (in_array($sAttCode, $aAttributes))
-									{
-										$aNewList = array();
-										foreach($aAttributes as $iPos => $sAttToDisplay)
-										{
-											if (is_string($sAttToDisplay) && ($sAttToDisplay == $sAttCode))
-											{
+									if (in_array($sAttCode, $aAttributes)) {
+										$aNewList = [];
+										foreach ($aAttributes as $iPos => $sAttToDisplay) {
+											if (is_string($sAttToDisplay) && ($sAttToDisplay == $sAttCode)) {
 												// Insert the final class right before
 												$aNewList[] = $sClassRecallAttCode;
 											}
@@ -3219,7 +3076,7 @@ abstract class MetaModel
 							$sKeyAttCode = $sAttCode;
 							$sRemoteAttCode = 'archive_flag';
 						}
-						$oMagic = new AttributeExternalField($sCode, array("allowed_values" => null, "extkey_attcode" => $sKeyAttCode, "target_attcode" => $sRemoteAttCode, "depends_on" => array()));
+						$oMagic = new AttributeExternalField($sCode, ["allowed_values" => null, "extkey_attcode" => $sKeyAttCode, "target_attcode" => $sRemoteAttCode, "depends_on" => []]);
 						self::AddMagicAttribute($oMagic, $sClass, self::$m_aAttribOrigins[$sClass][$sKeyAttCode]);
 
 					}
@@ -3234,7 +3091,7 @@ abstract class MetaModel
 							$sKeyAttCode = $sAttCode;
 							$sRemoteAttCode = 'obsolescence_flag';
 						}
-						$oMagic = new AttributeExternalField($sCode, array("allowed_values" => null, "extkey_attcode" => $sKeyAttCode, "target_attcode" => $sRemoteAttCode, "depends_on" => array()));
+						$oMagic = new AttributeExternalField($sCode, ["allowed_values" => null, "extkey_attcode" => $sKeyAttCode, "target_attcode" => $sRemoteAttCode, "depends_on" => []]);
 						self::AddMagicAttribute($oMagic, $sClass, self::$m_aAttribOrigins[$sClass][$sKeyAttCode]);
 					}
 				}
@@ -3266,14 +3123,12 @@ abstract class MetaModel
 	private static function HasSameUniquenessRuleInParent($sClassName, $sUniquenessRuleId)
 	{
 		$sParentClass = self::GetParentClass($sClassName);
-		if (empty($sParentClass))
-		{
+		if (empty($sParentClass)) {
 			return false;
 		}
 
 		$aParentClassUniquenessRules = self::GetUniquenessRules($sParentClass);
-		if (array_key_exists($sUniquenessRuleId, $aParentClassUniquenessRules))
-		{
+		if (array_key_exists($sUniquenessRuleId, $aParentClassUniquenessRules)) {
 			return true;
 		}
 
@@ -3291,9 +3146,9 @@ abstract class MetaModel
 	 * @since 2.6.0 N°659 uniqueness constraint
 	 * @since 2.6.1 N°1968 (joli mois de mai...) disallow overrides of 'attributes' properties
 	 */
-	public static function CheckUniquenessRuleValidity($aUniquenessRuleProperties, $bRuleOverride = true, $aExistingClassFields = array())
+	public static function CheckUniquenessRuleValidity($aUniquenessRuleProperties, $bRuleOverride = true, $aExistingClassFields = [])
 	{
-		$MANDATORY_ATTRIBUTES = array('attributes');
+		$MANDATORY_ATTRIBUTES = ['attributes'];
 		$UNIQUENESS_MANDATORY_KEYS_NB = count($MANDATORY_ATTRIBUTES);
 
 		$bHasMissingMandatoryKey = true;
@@ -3302,18 +3157,14 @@ abstract class MetaModel
 		$bHasNonDisabledKeys = false;
 		$bDisabledKeyValue = null;
 
-		foreach ($aUniquenessRuleProperties as $sUniquenessRuleKey => $aUniquenessRuleProperty)
-		{
-			if ($sUniquenessRuleKey === 'disabled')
-			{
+		foreach ($aUniquenessRuleProperties as $sUniquenessRuleKey => $aUniquenessRuleProperty) {
+			if ($sUniquenessRuleKey === 'disabled') {
 				$bDisabledKeyValue = $aUniquenessRuleProperty;
-				if (!is_null($aUniquenessRuleProperty))
-				{
+				if (!is_null($aUniquenessRuleProperty)) {
 					continue;
 				}
 			}
-			if (is_null($aUniquenessRuleProperty))
-			{
+			if (is_null($aUniquenessRuleProperty)) {
 				continue;
 			}
 
@@ -3323,14 +3174,10 @@ abstract class MetaModel
 				$iMissingMandatoryKeysNb--;
 			}
 
-			if ($sUniquenessRuleKey === 'attributes')
-			{
-				if (!empty($aExistingClassFields))
-				{
-					foreach ($aUniquenessRuleProperties[$sUniquenessRuleKey] as $sRuleAttribute)
-					{
-						if (!in_array($sRuleAttribute, $aExistingClassFields, true))
-						{
+			if ($sUniquenessRuleKey === 'attributes') {
+				if (!empty($aExistingClassFields)) {
+					foreach ($aUniquenessRuleProperties[$sUniquenessRuleKey] as $sRuleAttribute) {
+						if (!in_array($sRuleAttribute, $aExistingClassFields, true)) {
 							throw new CoreUnexpectedValue("Uniqueness rule : non existing field '$sRuleAttribute'");
 						}
 					}
@@ -3338,21 +3185,17 @@ abstract class MetaModel
 			}
 		}
 
-		if ($iMissingMandatoryKeysNb === 0)
-		{
+		if ($iMissingMandatoryKeysNb === 0) {
 			$bHasMissingMandatoryKey = false;
 		}
 
-		if ($bRuleOverride && $bHasNonDisabledKeys)
-		{
+		if ($bRuleOverride && $bHasNonDisabledKeys) {
 			throw new CoreUnexpectedValue('Uniqueness rule : only the \'disabled\' key can be overridden');
 		}
-		if ($bRuleOverride && is_null($bDisabledKeyValue))
-		{
+		if ($bRuleOverride && is_null($bDisabledKeyValue)) {
 			throw new CoreUnexpectedValue('Uniqueness rule : when overriding a rule, value must be set for the \'disabled\' key');
 		}
-		if (!$bRuleOverride && $bHasMissingMandatoryKey)
-		{
+		if (!$bRuleOverride && $bHasMissingMandatoryKey) {
 			throw new CoreUnexpectedValue('Uniqueness rule : missing mandatory property');
 		}
 	}
@@ -3365,7 +3208,6 @@ abstract class MetaModel
 		// In fact it is an ABSTRACT function, but this is not compatible with the fact that it is STATIC (error in E_STRICT interpretation)
 	}
 
-
 	/**
 	 * @param array $aParams
 	 *
@@ -3375,7 +3217,7 @@ abstract class MetaModel
 	{
 		// Check mandatory params
 		// Warning: Do not put image_attcode as a mandatory attribute or it will break all PHP datamodel classes
-		$aMandatParams = array(
+		$aMandatParams = [
 			"category" => "group classes by modules defining their visibility in the UI",
 			"key_type" => "autoincrement | string",
 			"name_attcode" => "define which attribute is the class name, may be an array of attributes (format specified in the dictionary as 'Class:myclass/Name' => '%1\$s %2\$s...'",
@@ -3384,35 +3226,31 @@ abstract class MetaModel
 			"db_table" => "database table",
 			"db_key_field" => "database field which is the key",
 			"db_finalclass_field" => "database field wich is the reference to the actual class of the object, considering that this will be a compound class",
-		);
+		];
 
 		$sClass = self::GetCallersPHPClass("Init", self::$m_bTraceSourceFiles);
 
-		foreach($aMandatParams as $sParamName => $sParamDesc)
-		{
-			if (!array_key_exists($sParamName, $aParams))
-			{
+		foreach ($aMandatParams as $sParamName => $sParamDesc) {
+			if (!array_key_exists($sParamName, $aParams)) {
 				throw new CoreException("Declaration of class $sClass - missing parameter $sParamName");
 			}
 		}
 
 		$aCategories = explode(',', $aParams['category']);
-		foreach($aCategories as $sCategory)
-		{
+		foreach ($aCategories as $sCategory) {
 			self::$m_Category2Class[$sCategory][] = $sClass;
 		}
 		self::$m_Category2Class[''][] = $sClass; // all categories, include this one
 
-
 		self::$m_aRootClasses[$sClass] = $sClass; // first, let consider that I am the root... updated on inheritance
-		self::$m_aParentClasses[$sClass] = array();
-		self::$m_aChildClasses[$sClass] = array();
+		self::$m_aParentClasses[$sClass] = [];
+		self::$m_aChildClasses[$sClass] = [];
 
 		self::$m_aClassParams[$sClass] = $aParams;
 
-		self::$m_aAttribDefs[$sClass] = array();
-		self::$m_aAttribOrigins[$sClass] = array();
-		self::$m_aFilterAttribList[$sClass] = array();
+		self::$m_aAttribDefs[$sClass] = [];
+		self::$m_aAttribOrigins[$sClass] = [];
+		self::$m_aFilterAttribList[$sClass] = [];
 	}
 
 	/**
@@ -3423,13 +3261,11 @@ abstract class MetaModel
 	 */
 	protected static function object_array_mergeclone($aSource1, $aSource2)
 	{
-		$aRes = array();
-		foreach($aSource1 as $key => $object)
-		{
+		$aRes = [];
+		foreach ($aSource1 as $key => $object) {
 			$aRes[$key] = clone $object;
 		}
-		foreach($aSource2 as $key => $object)
-		{
+		foreach ($aSource2 as $key => $object) {
 			$aRes[$key] = clone $object;
 		}
 
@@ -3451,8 +3287,8 @@ abstract class MetaModel
 		}
 		if (isset(self::$m_aAttribDefs[$sSourceClass])) {
 			if (!isset(self::$m_aAttribDefs[$sTargetClass])) {
-				self::$m_aAttribDefs[$sTargetClass] = array();
-				self::$m_aAttribOrigins[$sTargetClass] = array();
+				self::$m_aAttribDefs[$sTargetClass] = [];
+				self::$m_aAttribOrigins[$sTargetClass] = [];
 			}
 			self::$m_aAttribDefs[$sTargetClass] = self::object_array_mergeclone(self::$m_aAttribDefs[$sTargetClass], self::$m_aAttribDefs[$sSourceClass]);
 			foreach (self::$m_aAttribDefs[$sTargetClass] as $sAttCode => $oAttDef) {
@@ -3461,13 +3297,10 @@ abstract class MetaModel
 			self::$m_aAttribOrigins[$sTargetClass] = array_merge(self::$m_aAttribOrigins[$sTargetClass], self::$m_aAttribOrigins[$sSourceClass]);
 		}
 		// Build root class information
-		if (array_key_exists($sSourceClass, self::$m_aRootClasses))
-		{
+		if (array_key_exists($sSourceClass, self::$m_aRootClasses)) {
 			// Inherit...
 			self::$m_aRootClasses[$sTargetClass] = self::$m_aRootClasses[$sSourceClass];
-		}
-		else
-		{
+		} else {
 			// This class will be the root class
 			self::$m_aRootClasses[$sSourceClass] = $sSourceClass;
 			self::$m_aRootClasses[$sTargetClass] = $sSourceClass;
@@ -3475,8 +3308,7 @@ abstract class MetaModel
 		self::$m_aParentClasses[$sTargetClass] += self::$m_aParentClasses[$sSourceClass];
 		self::$m_aParentClasses[$sTargetClass][] = $sSourceClass;
 		// I am the child of each and every parent...
-		foreach(self::$m_aParentClasses[$sTargetClass] as $sAncestorClass)
-		{
+		foreach (self::$m_aParentClasses[$sTargetClass] as $sAncestorClass) {
 			self::$m_aChildClasses[$sAncestorClass][] = $sTargetClass;
 		}
 	}
@@ -3490,12 +3322,10 @@ abstract class MetaModel
 	{
 		// Differs from self::IsValidClass()
 		// because it is being called before all the classes have been initialized
-		if (!class_exists($sClass))
-		{
+		if (!class_exists($sClass)) {
 			return false;
 		}
-		if (!is_subclass_of($sClass, 'DBObject'))
-		{
+		if (!is_subclass_of($sClass, 'DBObject')) {
 			return false;
 		}
 
@@ -3533,29 +3363,21 @@ abstract class MetaModel
 		// declared in a module which is currently not installed/active
 		// We simply discard those attributes
 		//
-		if ($oAtt->IsLinkSet())
-		{
+		if ($oAtt->IsLinkSet()) {
 			$sRemoteClass = $oAtt->GetLinkedClass();
-			if (!self::Init_IsKnownClass($sRemoteClass))
-			{
+			if (!self::Init_IsKnownClass($sRemoteClass)) {
 				self::$m_aIgnoredAttributes[$sTargetClass][$oAtt->GetCode()] = $sRemoteClass;
 				return;
 			}
-		}
-		elseif ($oAtt->IsExternalKey())
-		{
+		} elseif ($oAtt->IsExternalKey()) {
 			$sRemoteClass = $oAtt->GetTargetClass();
-			if (!self::Init_IsKnownClass($sRemoteClass))
-			{
+			if (!self::Init_IsKnownClass($sRemoteClass)) {
 				self::$m_aIgnoredAttributes[$sTargetClass][$oAtt->GetCode()] = $sRemoteClass;
 				return;
 			}
-		}
-		elseif ($oAtt->IsExternalField())
-		{
+		} elseif ($oAtt->IsExternalField()) {
 			$sExtKeyAttCode = $oAtt->GetKeyAttCode();
-			if (isset(self::$m_aIgnoredAttributes[$sTargetClass][$sExtKeyAttCode]))
-			{
+			if (isset(self::$m_aIgnoredAttributes[$sTargetClass][$sExtKeyAttCode])) {
 				// The corresponding external key has already been ignored
 				self::$m_aIgnoredAttributes[$sTargetClass][$oAtt->GetCode()] = self::$m_aIgnoredAttributes[$sTargetClass][$sExtKeyAttCode];
 
@@ -3597,22 +3419,16 @@ abstract class MetaModel
 	 */
 	protected static function Init_CheckZListItems(&$aItems, $sTargetClass)
 	{
-		foreach($aItems as $iFoo => $attCode)
-		{
-			if (is_array($attCode))
-			{
+		foreach ($aItems as $iFoo => $attCode) {
+			if (is_array($attCode)) {
 				// Note: to make sure that the values will be updated recursively,
 				//  do not pass $attCode, but $aItems[$iFoo] instead
 				self::Init_CheckZListItems($aItems[$iFoo], $sTargetClass);
-				if (count($aItems[$iFoo]) == 0)
-				{
+				if (count($aItems[$iFoo]) == 0) {
 					unset($aItems[$iFoo]);
 				}
-			}
-			else
-			{
-				if (isset(self::$m_aIgnoredAttributes[$sTargetClass][$attCode]))
-				{
+			} else {
+				if (isset(self::$m_aIgnoredAttributes[$sTargetClass][$attCode])) {
 					unset($aItems[$iFoo]);
 				}
 			}
@@ -3626,15 +3442,11 @@ abstract class MetaModel
 	 */
 	public static function FlattenZList($aList)
 	{
-		$aResult = array();
-		foreach($aList as $value)
-		{
-			if (!is_array($value))
-			{
+		$aResult = [];
+		foreach ($aList as $value) {
+			if (!is_array($value)) {
 				$aResult[] = $value;
-			}
-			else
-			{
+			} else {
 				$aResult = array_merge($aResult, self::FlattenZList($value));
 			}
 		}
@@ -3649,22 +3461,19 @@ abstract class MetaModel
 	public static function Init_DefineState($sStateCode, $aStateDef)
 	{
 		$sTargetClass = self::GetCallersPHPClass("Init");
-		if (is_null($aStateDef['attribute_list']))
-		{
-			$aStateDef['attribute_list'] = array();
+		if (is_null($aStateDef['attribute_list'])) {
+			$aStateDef['attribute_list'] = [];
 		}
 
 		$sParentState = $aStateDef['attribute_inherit'];
-		if (!empty($sParentState))
-		{
+		if (!empty($sParentState)) {
 			// Inherit from the given state (must be defined !)
 			//
 			$aToInherit = self::$m_aStates[$sTargetClass][$sParentState];
 
 			// Reset the constraint when it was mandatory to set the value at the previous state
 			//
-			foreach($aToInherit['attribute_list'] as $sState => $iFlags)
-			{
+			foreach ($aToInherit['attribute_list'] as $sState => $iFlags) {
 				$iFlags = $iFlags & ~OPT_ATT_MUSTPROMPT;
 				$iFlags = $iFlags & ~OPT_ATT_MUSTCHANGE;
 				$aToInherit['attribute_list'][$sState] = $iFlags;
@@ -3674,10 +3483,8 @@ abstract class MetaModel
 			$aStateDef['attribute_list'] = array_merge($aToInherit['attribute_list'], $aStateDef['attribute_list']);
 		}
 
-		foreach($aStateDef['attribute_list'] as $sAttCode => $iFlags)
-		{
-			if (isset(self::$m_aIgnoredAttributes[$sTargetClass][$sAttCode]))
-			{
+		foreach ($aStateDef['attribute_list'] as $sAttCode => $iFlags) {
+			if (isset(self::$m_aIgnoredAttributes[$sTargetClass][$sAttCode])) {
 				unset($aStateDef['attribute_list'][$sAttCode]);
 			}
 		}
@@ -3685,7 +3492,7 @@ abstract class MetaModel
 		self::$m_aStates[$sTargetClass][$sStateCode] = $aStateDef;
 
 		// by default, create an empty set of transitions associated to that state
-		self::$m_aTransitions[$sTargetClass][$sStateCode] = array();
+		self::$m_aTransitions[$sTargetClass][$sStateCode] = [];
 	}
 
 	/**
@@ -3725,16 +3532,14 @@ abstract class MetaModel
 	 */
 	public static function GetHighlightScale($sTargetClass)
 	{
-		$aScale = array();
-		$aParentScale = array();
+		$aScale = [];
+		$aParentScale = [];
 		$sParentClass = self::GetParentPersistentClass($sTargetClass);
-		if (!empty($sParentClass))
-		{
+		if (!empty($sParentClass)) {
 			// inherit the scale from the parent class
 			$aParentScale = self::GetHighlightScale($sParentClass);
 		}
-		if (array_key_exists($sTargetClass, self::$m_aHighlightScales))
-		{
+		if (array_key_exists($sTargetClass, self::$m_aHighlightScales)) {
 			$aScale = self::$m_aHighlightScales[$sTargetClass];
 		}
 		return array_merge($aParentScale, $aScale); // Merge both arrays, the values from the last one have precedence
@@ -3751,16 +3556,12 @@ abstract class MetaModel
 		$sCode = '';
 		if (array_key_exists($sTargetClass, self::$m_aStates)
 			&& array_key_exists($sStateCode, self::$m_aStates[$sTargetClass])
-			&& array_key_exists('highlight', self::$m_aStates[$sTargetClass][$sStateCode]))
-		{
+			&& array_key_exists('highlight', self::$m_aStates[$sTargetClass][$sStateCode])) {
 			$sCode = self::$m_aStates[$sTargetClass][$sStateCode]['highlight']['code'];
-		}
-		else
-		{
+		} else {
 			// Check the parent's definition
 			$sParentClass = self::GetParentPersistentClass($sTargetClass);
-			if (!empty($sParentClass))
-			{
+			if (!empty($sParentClass)) {
 				$sCode = self::GetHighlightCode($sParentClass, $sStateCode);
 			}
 		}
@@ -3801,9 +3602,8 @@ abstract class MetaModel
 	public static function Init_DefineTransition($sStateCode, $sStimulusCode, $aTransitionDef)
 	{
 		$sTargetClass = self::GetCallersPHPClass("Init");
-		if (is_null($aTransitionDef['actions']))
-		{
-			$aTransitionDef['actions'] = array();
+		if (is_null($aTransitionDef['actions'])) {
+			$aTransitionDef['actions'] = [];
 		}
 		self::$m_aTransitions[$sTargetClass][$sStateCode][$sStimulusCode] = $aTransitionDef;
 	}
@@ -3814,12 +3614,10 @@ abstract class MetaModel
 	public static function Init_InheritLifecycle($sSourceClass = '')
 	{
 		$sTargetClass = self::GetCallersPHPClass("Init");
-		if (empty($sSourceClass))
-		{
+		if (empty($sSourceClass)) {
 			// Default: inherit from parent class
 			$sSourceClass = self::GetParentPersistentClass($sTargetClass);
-			if (empty($sSourceClass))
-			{
+			if (empty($sSourceClass)) {
 				return;
 			} // no attributes for the mother of all classes
 		}
@@ -3866,12 +3664,9 @@ abstract class MetaModel
 	 */
 	public static function GetParentClass($sClass)
 	{
-		if (count(self::$m_aParentClasses[$sClass]) == 0)
-		{
+		if (count(self::$m_aParentClasses[$sClass]) == 0) {
 			return null;
-		}
-		else
-		{
+		} else {
 			return end(self::$m_aParentClasses[$sClass]);
 		}
 	}
@@ -3885,24 +3680,16 @@ abstract class MetaModel
 	public static function GetLowestCommonAncestor($aClasses)
 	{
 		$sAncestor = null;
-		foreach($aClasses as $sClass)
-		{
-			if (is_null($sAncestor))
-			{
+		foreach ($aClasses as $sClass) {
+			if (is_null($sAncestor)) {
 				// first loop
 				$sAncestor = $sClass;
-			}
-			elseif ($sClass == $sAncestor)
-			{
+			} elseif ($sClass == $sAncestor) {
 				// remains the same
-			}
-			elseif (self::GetRootClass($sClass) != self::GetRootClass($sAncestor))
-			{
+			} elseif (self::GetRootClass($sClass) != self::GetRootClass($sAncestor)) {
 				$sAncestor = null;
 				break;
-			}
-			else
-			{
+			} else {
 				$sAncestor = self::LowestCommonAncestor($sAncestor, $sClass);
 			}
 		}
@@ -3919,20 +3706,13 @@ abstract class MetaModel
 	 */
 	protected static function LowestCommonAncestor($sClassA, $sClassB)
 	{
-		if ($sClassA == $sClassB)
-		{
+		if ($sClassA == $sClassB) {
 			$sRet = $sClassA;
-		}
-		elseif (is_subclass_of($sClassA, $sClassB))
-		{
+		} elseif (is_subclass_of($sClassA, $sClassB)) {
 			$sRet = $sClassB;
-		}
-		elseif (is_subclass_of($sClassB, $sClassA))
-		{
+		} elseif (is_subclass_of($sClassB, $sClassA)) {
 			$sRet = $sClassA;
-		}
-		else
-		{
+		} else {
 			// Recurse
 			$sRet = self::LowestCommonAncestor($sClassA, self::GetParentClass($sClassB));
 		}
@@ -3950,10 +3730,8 @@ abstract class MetaModel
 	public static function IsHierarchicalClass($sClass)
 	{
 		$sHierarchicalKeyCode = false;
-		foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAtt)
-		{
-			if ($oAtt->IsHierarchicalKey())
-			{
+		foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAtt) {
+			if ($oAtt->IsHierarchicalKey()) {
 				$sHierarchicalKeyCode = $sAttCode; // Found the hierarchical key, no need to continue
 				break;
 			}
@@ -3980,23 +3758,16 @@ abstract class MetaModel
 	public static function EnumParentClasses($sClass, $iOption = ENUM_PARENT_CLASSES_EXCLUDELEAF, $bRootFirst = true)
 	{
 		self::_check_subclass($sClass);
-		if ($bRootFirst)
-		{
+		if ($bRootFirst) {
 			$aRes = self::$m_aParentClasses[$sClass];
-		}
-		else
-		{
+		} else {
 			$aRes = array_reverse(self::$m_aParentClasses[$sClass], true);
 		}
-		if ($iOption != ENUM_PARENT_CLASSES_EXCLUDELEAF)
-		{
-			if ($bRootFirst)
-			{
+		if ($iOption != ENUM_PARENT_CLASSES_EXCLUDELEAF) {
+			if ($bRootFirst) {
 				// Leaf class at the end
 				$aRes[] = $sClass;
-			}
-			else
-			{
+			} else {
 				// Leaf class on top
 				array_unshift($aRes, $sClass);
 			}
@@ -4019,8 +3790,7 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 
 		$aRes = self::$m_aChildClasses[$sClass];
-		if ($iOption != ENUM_CHILD_CLASSES_EXCLUDETOP)
-		{
+		if ($iOption != ENUM_CHILD_CLASSES_EXCLUDETOP) {
 			if ($bRootFirst) {
 				// Root class on top
 				array_unshift($aRes, $sClass);
@@ -4039,11 +3809,9 @@ abstract class MetaModel
 	 */
 	public static function EnumArchivableClasses()
 	{
-		$aRes = array();
-		foreach(self::GetClasses() as $sClass)
-		{
-			if (self::IsArchivable($sClass))
-			{
+		$aRes = [];
+		foreach (self::GetClasses() as $sClass) {
+			if (self::IsArchivable($sClass)) {
 				$aRes[] = $sClass;
 			}
 		}
@@ -4059,13 +3827,10 @@ abstract class MetaModel
 	 */
 	public static function EnumObsoletableClasses($bRootClassesOnly = true)
 	{
-		$aRes = array();
-		foreach(self::GetClasses() as $sClass)
-		{
-			if (self::IsObsoletable($sClass))
-			{
-				if ($bRootClassesOnly && !static::IsRootClass($sClass))
-				{
+		$aRes = [];
+		foreach (self::GetClasses() as $sClass) {
+			if (self::IsObsoletable($sClass)) {
+				if ($bRootClassesOnly && !static::IsRootClass($sClass)) {
 					continue;
 				}
 				$aRes[] = $sClass;
@@ -4103,11 +3868,9 @@ abstract class MetaModel
 	public static function GetSubclasses($sClass)
 	{
 		self::_check_subclass($sClass);
-		$aSubClasses = array();
-		foreach(self::$m_aClassParams as $sSubClass => $foo)
-		{
-			if (is_subclass_of($sSubClass, $sClass))
-			{
+		$aSubClasses = [];
+		foreach (self::$m_aClassParams as $sSubClass => $foo) {
+			if (is_subclass_of($sSubClass, $sClass)) {
 				$aSubClasses[] = $sSubClass;
 			}
 		}
@@ -4125,21 +3888,16 @@ abstract class MetaModel
 	public static function GetClasses($sCategories = '', $bStrict = false)
 	{
 		$aCategories = explode(',', $sCategories);
-		$aClasses = array();
-		foreach($aCategories as $sCategory)
-		{
+		$aClasses = [];
+		foreach ($aCategories as $sCategory) {
 			$sCategory = trim($sCategory);
-			if (strlen($sCategory) == 0)
-			{
+			if (strlen($sCategory) == 0) {
 				return array_keys(self::$m_aClassParams);
 			}
 
-			if (array_key_exists($sCategory, self::$m_Category2Class))
-			{
+			if (array_key_exists($sCategory, self::$m_Category2Class)) {
 				$aClasses = array_merge($aClasses, self::$m_Category2Class[$sCategory]);
-			}
-			elseif ($bStrict)
-			{
+			} elseif ($bStrict) {
 				throw new CoreException("unkown class category '$sCategory', expecting a value in {".implode(', ', array_keys(self::$m_Category2Class))."}");
 			}
 		}
@@ -4155,8 +3913,7 @@ abstract class MetaModel
 	 */
 	public static function HasTable($sClass)
 	{
-		if (strlen(self::DBGetTable($sClass)) == 0)
-		{
+		if (strlen(self::DBGetTable($sClass)) == 0) {
 			return false;
 		}
 		return true;
@@ -4185,13 +3942,11 @@ abstract class MetaModel
 	 *
 	 * @return array
 	 */
-	public static function PrepareQueryArguments($aArgs, $aMoreArgs = array(), $aExpectedArgs = null)
+	public static function PrepareQueryArguments($aArgs, $aMoreArgs = [], $aExpectedArgs = null)
 	{
-		$aScalarArgs = array();
-		if (is_null($aExpectedArgs) || count($aExpectedArgs) > 0 || count($aMoreArgs)>0)
-		{
-			foreach (array_merge($aArgs, $aMoreArgs) as $sArgName => $value)
-			{
+		$aScalarArgs = [];
+		if (is_null($aExpectedArgs) || count($aExpectedArgs) > 0 || count($aMoreArgs) > 0) {
+			foreach (array_merge($aArgs, $aMoreArgs) as $sArgName => $value) {
 				if (self::IsValidObject($value)) {
 					if (strpos($sArgName, '->object()') === false) {
 						// Normalize object arguments
@@ -4211,10 +3966,8 @@ abstract class MetaModel
 				}
 			}
 			return static::AddMagicPlaceholders($aScalarArgs, $aExpectedArgs);
-		}
-		else
-		{
-			return array();
+		} else {
+			return [];
 		}
 	}
 
@@ -4227,33 +3980,27 @@ abstract class MetaModel
 	{
 		// Add standard magic arguments
 		//
-		if (is_null($aExpectedArgs))
-		{
+		if (is_null($aExpectedArgs)) {
 			$aPlaceholders['current_contact_id'] = UserRights::GetContactId(); // legacy
 
 			$oUser = UserRights::GetUserObject();
-			if (!is_null($oUser))
-			{
+			if (!is_null($oUser)) {
 				$aPlaceholders['current_user->object()'] = $oUser;
 				$oContact = UserRights::GetContactObject();
-				if (!is_null($oContact))
-				{
+				if (!is_null($oContact)) {
 					$aPlaceholders['current_contact->object()'] = $oContact;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$aCurrentUser = [];
 			$aCurrentContact = [];
-			foreach ($aExpectedArgs as $expression)
-			{
+			foreach ($aExpectedArgs as $expression) {
 				$aName = explode('->', $expression->GetName());
 				if ($aName[0] == 'current_contact_id') {
 					$aPlaceholders['current_contact_id'] = UserRights::GetContactId();
-				} else if ($aName[0] == 'current_user') {
+				} elseif ($aName[0] == 'current_user') {
 					array_push($aCurrentUser, $aName[1]);
-				} else if ($aName[0] == 'current_contact') {
+				} elseif ($aName[0] == 'current_contact') {
 					array_push($aCurrentContact, $aName[1]);
 				}
 			}
@@ -4278,35 +4025,42 @@ abstract class MetaModel
 	 * @return void
 	 *
 	 */
-	private static function FillObjectPlaceholders(array &$aPlaceholders, string $sPlaceHolderPrefix, ?\DBObject $oObject, array $aCurrentUser) : void {
+	private static function FillObjectPlaceholders(array &$aPlaceholders, string $sPlaceHolderPrefix, ?\DBObject $oObject, array $aCurrentUser): void
+	{
 		$sPlaceHolderKey = $sPlaceHolderPrefix."->object()";
-		if (is_null($oObject)){
+		if (is_null($oObject)) {
 			$aContext = [
 				"current_user_id" => UserRights::GetUserId(),
 				"null object type" => $sPlaceHolderPrefix,
 				"fields" => $aCurrentUser,
 			];
-			IssueLog::Warning("Unresolved placeholders due to null object in current context", null,
-				$aContext);
+			IssueLog::Warning(
+				"Unresolved placeholders due to null object in current context",
+				null,
+				$aContext
+			);
 			$aPlaceholders[$sPlaceHolderKey] = Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
 			foreach ($aCurrentUser as $sField) {
-				$sPlaceHolderKey = $sPlaceHolderPrefix . "->$sField";
+				$sPlaceHolderKey = $sPlaceHolderPrefix."->$sField";
 				$aPlaceholders[$sPlaceHolderKey] = Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
 			}
 		} else {
 			$aPlaceholders[$sPlaceHolderKey] = $oObject;
 			foreach ($aCurrentUser as $sField) {
-				$sPlaceHolderKey = $sPlaceHolderPrefix . "->$sField";
+				$sPlaceHolderKey = $sPlaceHolderPrefix."->$sField";
 				// Mind that the "id" is not viewed as a valid att. code by \MetaModel::IsValidAttCode() so we have to test it manually
-				if ($sField !== "id" && false === MetaModel::IsValidAttCode(get_class($oObject), $sField)){
+				if ($sField !== "id" && false === MetaModel::IsValidAttCode(get_class($oObject), $sField)) {
 					$aContext = [
 						"current_user_id" => UserRights::GetUserId(),
 						"obj_class" => get_class($oObject),
 						"placeholder" => $sPlaceHolderKey,
 						"invalid_field" => $sField,
 					];
-					IssueLog::Warning("Unresolved placeholder due to invalid attribute", null,
-						$aContext);
+					IssueLog::Warning(
+						"Unresolved placeholder due to invalid attribute",
+						null,
+						$aContext
+					);
 					$aPlaceholders[$sPlaceHolderKey] = Dict::Format("Core:Placeholder:CannotBeResolved", $sPlaceHolderKey);
 					continue;
 				}
@@ -4325,28 +4079,24 @@ abstract class MetaModel
 	{
 		// Compute query modifiers properties (can be set in the search itself, by the context, etc.)
 		//
-		$aModifierProperties = array();
+		$aModifierProperties = [];
 		/**
 		 * @var string $sPluginClass
 		 * @var iQueryModifier $oQueryModifier
 		 */
-		foreach(MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
-		{
+		foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier) {
 			// Lowest precedence: the application context
 			$aPluginProps = ApplicationContext::GetPluginProperties($sPluginClass);
 			// Highest precedence: programmatically specified (or OQL)
-			foreach($oFilter->GetModifierProperties($sPluginClass) as $sProp => $value)
-			{
+			foreach ($oFilter->GetModifierProperties($sPluginClass) as $sProp => $value) {
 				$aPluginProps[$sProp] = $value;
 			}
-			if (count($aPluginProps) > 0)
-			{
+			if (count($aPluginProps) > 0) {
 				$aModifierProperties[$sPluginClass] = $aPluginProps;
 			}
 		}
 		return $aModifierProperties;
 	}
-
 
 	/**
 	 * Special processing for the hierarchical keys stored as nested sets
@@ -4360,22 +4110,16 @@ abstract class MetaModel
 	public static function HKInsertChildUnder($iId, $oAttDef, $sTable)
 	{
 		// Get the parent id.right value
-		if ($iId == 0)
-		{
+		if ($iId == 0) {
 			// No parent, insert completely at the right of the tree
 			$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
 			$aRes = CMDBSource::QueryToArray($sSQL);
-			if (count($aRes) == 0)
-			{
+			if (count($aRes) == 0) {
 				$iMyRight = 1;
-			}
-			else
-			{
+			} else {
 				$iMyRight = $aRes[0]['max'] + 1;
 			}
-		}
-		else
-		{
+		} else {
 			$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` FROM `$sTable` WHERE id=".$iId;
 			$iMyRight = CMDBSource::QueryToScalar($sSQL);
 			$sSQLUpdateRight = "UPDATE `$sTable` SET `".$oAttDef->GetSQLRight()."` = `".$oAttDef->GetSQLRight()."` + 2 WHERE `".$oAttDef->GetSQLRight()."` >= $iMyRight";
@@ -4383,7 +4127,7 @@ abstract class MetaModel
 			$sSQLUpdateLeft = "UPDATE `$sTable` SET `".$oAttDef->GetSQLLeft()."` = `".$oAttDef->GetSQLLeft()."` + 2 WHERE `".$oAttDef->GetSQLLeft()."` > $iMyRight";
 			CMDBSource::Query($sSQLUpdateLeft);
 		}
-		return array($oAttDef->GetSQLRight() => $iMyRight + 1, $oAttDef->GetSQLLeft() => $iMyRight);
+		return [$oAttDef->GetSQLRight() => $iMyRight + 1, $oAttDef->GetSQLLeft() => $iMyRight];
 	}
 
 	/**
@@ -4445,26 +4189,20 @@ abstract class MetaModel
 	public static function CheckHKeys(bool $bDiagnosticsOnly = false, bool $bVerbose = false, bool $bForceComputation = false)
 	{
 		$bChangeNeeded = false;
-		foreach(self::GetClasses() as $sClass)
-		{
-			if (!self::HasTable($sClass))
-			{
+		foreach (self::GetClasses() as $sClass) {
+			if (!self::HasTable($sClass)) {
 				continue;
 			}
 
-			foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
+			foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 				// Check (once) all the attributes that are hierarchical keys
-				if ((self::GetAttributeOrigin($sClass, $sAttCode) == $sClass) && $oAttDef->IsHierarchicalKey())
-				{
-					if ($bVerbose)
-					{
+				if ((self::GetAttributeOrigin($sClass, $sAttCode) == $sClass) && $oAttDef->IsHierarchicalKey()) {
+					if ($bVerbose) {
 						echo "The attribute $sAttCode from $sClass is a hierarchical key.\n";
 					}
 					$bResult = self::HKInit($sClass, $sAttCode, $bDiagnosticsOnly, $bVerbose, $bForceComputation);
 					$bChangeNeeded |= $bResult;
-					if ($bVerbose && !$bResult)
-					{
+					if ($bVerbose && !$bResult) {
 						echo "Ok, the attribute $sAttCode from class $sClass seems up to date.\n";
 					}
 				}
@@ -4495,40 +4233,31 @@ abstract class MetaModel
 		$bUpdateNeeded = $bForceComputation;
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
 		$sTable = self::DBGetTable($sClass, $sAttCode);
-		if ($oAttDef->IsHierarchicalKey())
-		{
+		if ($oAttDef->IsHierarchicalKey()) {
 			// Check if some values already exist in the table for the _right value, if so, do nothing
 			$sRight = $oAttDef->GetSQLRight();
 			$sSQL = "SELECT MAX(`$sRight`) AS MaxRight FROM `$sTable`";
 			$iMaxRight = CMDBSource::QueryToScalar($sSQL);
 			$sSQL = "SELECT COUNT(*) AS Count FROM `$sTable`"; // Note: COUNT(field) returns zero if the given field contains only NULLs
 			$iCount = CMDBSource::QueryToScalar($sSQL);
-			if (!$bForceComputation && ($iCount != 0) && ($iMaxRight == 0))
-			{
+			if (!$bForceComputation && ($iCount != 0) && ($iMaxRight == 0)) {
 				$bUpdateNeeded = true;
-				if ($bVerbose)
-				{
+				if ($bVerbose) {
 					echo "The table '$sTable' must be updated to compute the fields $sRight and ".$oAttDef->GetSQLLeft()."\n";
 				}
 			}
-			if ($bForceComputation && !$bDiagnosticsOnly)
-			{
+			if ($bForceComputation && !$bDiagnosticsOnly) {
 				echo "Rebuilding the fields $sRight and ".$oAttDef->GetSQLLeft()." from table '$sTable'...\n";
 			}
-			if ($bUpdateNeeded && !$bDiagnosticsOnly)
-			{
-				try
-				{
+			if ($bUpdateNeeded && !$bDiagnosticsOnly) {
+				try {
 					CMDBSource::Query('START TRANSACTION');
 					self::HKInitChildren($sTable, $sAttCode, $oAttDef, 0, $idx);
 					CMDBSource::Query('COMMIT');
-					if ($bVerbose)
-					{
+					if ($bVerbose) {
 						echo "Ok, table '$sTable' successfully updated.\n";
 					}
-				}
-				catch (Exception $e)
-				{
+				} catch (Exception $e) {
 					CMDBSource::Query('ROLLBACK');
 					throw new Exception("An error occured (".$e->getMessage().") while initializing the hierarchy for ($sClass, $sAttCode). The database was not modified.");
 				}
@@ -4555,8 +4284,7 @@ abstract class MetaModel
 		$aRes = CMDBSource::QueryToArray($sSQL);
 		$sLeft = $oAttDef->GetSQLLeft();
 		$sRight = $oAttDef->GetSQLRight();
-		foreach($aRes as $aValues)
-		{
+		foreach ($aRes as $aValues) {
 			$iChildId = $aValues['id'];
 			$iLeft = $iCurrIndex++;
 			self::HKInitChildren($sTable, $sAttCode, $oAttDef, $iChildId, $iCurrIndex);
@@ -4578,49 +4306,33 @@ abstract class MetaModel
 	 */
 	public static function RebuildMetaEnums($bVerbose = false)
 	{
-		foreach(self::GetClasses() as $sClass)
-		{
-			if (!self::HasTable($sClass))
-			{
+		foreach (self::GetClasses() as $sClass) {
+			if (!self::HasTable($sClass)) {
 				continue;
 			}
 
-			foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
+			foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 				// Check (once) all the attributes that are hierarchical keys
-				if ((self::GetAttributeOrigin($sClass, $sAttCode) == $sClass) && $oAttDef instanceof AttributeEnum)
-				{
-					if (isset(self::$m_aEnumToMeta[$sClass][$sAttCode]))
-					{
-						foreach(self::$m_aEnumToMeta[$sClass][$sAttCode] as $sMetaAttCode => $oMetaAttDef)
-						{
-							$aMetaValues = array(); // array of (metavalue => array of values)
-							foreach($oAttDef->GetAllowedValues() as $sCode => $sLabel)
-							{
+				if ((self::GetAttributeOrigin($sClass, $sAttCode) == $sClass) && $oAttDef instanceof AttributeEnum) {
+					if (isset(self::$m_aEnumToMeta[$sClass][$sAttCode])) {
+						foreach (self::$m_aEnumToMeta[$sClass][$sAttCode] as $sMetaAttCode => $oMetaAttDef) {
+							$aMetaValues = []; // array of (metavalue => array of values)
+							foreach ($oAttDef->GetAllowedValues() as $sCode => $sLabel) {
 								$aMappingData = $oMetaAttDef->GetMapRule($sClass);
-								if ($aMappingData == null)
-								{
+								if ($aMappingData == null) {
 									$sMetaValue = $oMetaAttDef->GetDefaultValue();
-								}
-								else
-								{
-									if (array_key_exists($sCode, $aMappingData['values']))
-									{
+								} else {
+									if (array_key_exists($sCode, $aMappingData['values'])) {
 										$sMetaValue = $aMappingData['values'][$sCode];
-									}
-									elseif ($oMetaAttDef->GetDefaultValue() != '')
-									{
+									} elseif ($oMetaAttDef->GetDefaultValue() != '') {
 										$sMetaValue = $oMetaAttDef->GetDefaultValue();
-									}
-									else
-									{
+									} else {
 										throw new Exception('MetaModel::RebuildMetaEnums(): mapping not found for value "'.$sCode.'"" in '.$sClass.', on attribute '.self::GetAttributeOrigin($sClass, $oMetaAttDef->GetCode()).'::'.$oMetaAttDef->GetCode());
 									}
 								}
 								$aMetaValues[$sMetaValue][] = $sCode;
 							}
-							foreach($aMetaValues as $sMetaValue => $aEnumValues)
-							{
+							foreach ($aMetaValues as $sMetaValue => $aEnumValues) {
 								$sMetaTable = self::DBGetTable($sClass, $sMetaAttCode);
 								$sEnumTable = self::DBGetTable($sClass);
 								$aColumns = array_keys($oMetaAttDef->GetSQLColumns());
@@ -4629,8 +4341,7 @@ abstract class MetaModel
 								$sEnumColumn = reset($aColumns);
 								$sValueList = implode(', ', CMDBSource::Quote($aEnumValues));
 								$sSql = "UPDATE `$sMetaTable` JOIN `$sEnumTable` ON `$sEnumTable`.id = `$sMetaTable`.id SET `$sMetaTable`.`$sMetaColumn` = '$sMetaValue' WHERE `$sEnumTable`.`$sEnumColumn` IN ($sValueList) AND `$sMetaTable`.`$sMetaColumn` != '$sMetaValue'";
-								if ($bVerbose)
-								{
+								if ($bVerbose) {
 									echo "Executing query: $sSql\n";
 								}
 								CMDBSource::Query($sSql);
@@ -4641,7 +4352,6 @@ abstract class MetaModel
 			}
 		}
 	}
-
 
 	/**
 	 * @param boolean $bDiagnostics
@@ -4655,20 +4365,16 @@ abstract class MetaModel
 		$sOQL = 'SELECT SynchroDataSource';
 		$oSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL));
 		$bFixNeeded = false;
-		if ($bVerbose && $oSet->Count() == 0)
-		{
+		if ($bVerbose && $oSet->Count() == 0) {
 			echo "There are no Data Sources in the database.\n";
 		}
-		while ($oSource = $oSet->Fetch())
-		{
-			if ($bVerbose)
-			{
+		while ($oSource = $oSet->Fetch()) {
+			if ($bVerbose) {
 				echo "Checking Data Source '".$oSource->GetName()."'...\n";
 				$bFixNeeded = $bFixNeeded | $oSource->CheckDBConsistency($bDiagnostics, $bVerbose);
 			}
 		}
-		if (!$bFixNeeded && $bVerbose)
-		{
+		if (!$bFixNeeded && $bVerbose) {
 			echo "Ok.\n";
 		}
 
@@ -4685,23 +4391,20 @@ abstract class MetaModel
 	 */
 	public static function GenerateUniqueAlias(&$aAliases, $sNewName, $sRealName)
 	{
-		if (!array_key_exists($sNewName, $aAliases))
-		{
+		if (!array_key_exists($sNewName, $aAliases)) {
 			$aAliases[$sNewName] = $sRealName;
 			return $sNewName;
 		}
 
-		for($i = 1; $i < 100; $i++)
-		{
+		for ($i = 1; $i < 100; $i++) {
 			$sAnAlias = $sNewName.$i;
-			if (!array_key_exists($sAnAlias, $aAliases))
-			{
+			if (!array_key_exists($sAnAlias, $aAliases)) {
 				// Create that new alias
 				$aAliases[$sAnAlias] = $sRealName;
 				return $sAnAlias;
 			}
 		}
-		throw new CoreException('Failed to create an alias', array('aliases' => $aAliases, 'new' => $sNewName));
+		throw new CoreException('Failed to create an alias', ['aliases' => $aAliases, 'new' => $sNewName]);
 	}
 
 	/**
@@ -4713,106 +4416,76 @@ abstract class MetaModel
 	 */
 	public static function CheckDefinitions($bExitOnError = true)
 	{
-		if (count(self::GetClasses()) == 0)
-		{
+		if (count(self::GetClasses()) == 0) {
 			throw new CoreException("MetaModel::InitClasses() has not been called, or no class has been declared ?!?!");
 		}
 
-		$aErrors = array();
-		$aSugFix = array();
-		foreach(self::GetClasses() as $sClass)
-		{
+		$aErrors = [];
+		$aSugFix = [];
+		foreach (self::GetClasses() as $sClass) {
 			$sTable = self::DBGetTable($sClass);
 			$sTableLowercase = strtolower($sTable);
-			if ($sTableLowercase != $sTable)
-			{
+			if ($sTableLowercase != $sTable) {
 				$aErrors[$sClass][] = "Table name '".$sTable."' has upper case characters. You might encounter issues when moving your installation between Linux and Windows.";
 				$aSugFix[$sClass][] = "Use '$sTableLowercase' instead. Step 1: If already installed, then rename manually in the DB: RENAME TABLE `$sTable` TO `{$sTableLowercase}_tempname`, `{$sTableLowercase}_tempname` TO `$sTableLowercase`; Step 2: Rename the table in the datamodel and compile the application. Note: the MySQL statement provided in step 1 has been designed to be compatible with Windows or Linux.";
 			}
 
 			$aNameSpec = self::GetNameSpec($sClass);
-			foreach($aNameSpec[1] as $i => $sAttCode)
-			{
-				if (!self::IsValidAttCode($sClass, $sAttCode))
-				{
+			foreach ($aNameSpec[1] as $i => $sAttCode) {
+				if (!self::IsValidAttCode($sClass, $sAttCode)) {
 					$aErrors[$sClass][] = "Unknown attribute code '".$sAttCode."' for the name definition";
 					$aSugFix[$sClass][] = "Expecting a value in ".implode(", ", self::GetAttributesList($sClass));
 				}
 			}
 
-			foreach(self::GetReconcKeys($sClass) as $sReconcKeyAttCode)
-			{
-				if (!empty($sReconcKeyAttCode) && !self::IsValidAttCode($sClass, $sReconcKeyAttCode))
-				{
+			foreach (self::GetReconcKeys($sClass) as $sReconcKeyAttCode) {
+				if (!empty($sReconcKeyAttCode) && !self::IsValidAttCode($sClass, $sReconcKeyAttCode)) {
 					$aErrors[$sClass][] = "Unknown attribute code '".$sReconcKeyAttCode."' in the list of reconciliation keys";
 					$aSugFix[$sClass][] = "Expecting a value in ".implode(", ", self::GetAttributesList($sClass));
 				}
 			}
 
 			$bHasWritableAttribute = false;
-			foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
+			foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 				// It makes no sense to check the attributes again and again in the subclasses
-				if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass)
-				{
+				if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) {
 					continue;
 				}
 
-				if ($oAttDef->IsExternalKey())
-				{
-					if (!self::IsValidClass($oAttDef->GetTargetClass()))
-					{
+				if ($oAttDef->IsExternalKey()) {
+					if (!self::IsValidClass($oAttDef->GetTargetClass())) {
 						$aErrors[$sClass][] = "Unknown class '".$oAttDef->GetTargetClass()."' for the external key '$sAttCode'";
 						$aSugFix[$sClass][] = "Expecting a value in {".implode(", ", self::GetClasses())."}";
 					}
-				}
-				elseif ($oAttDef->IsExternalField())
-				{
+				} elseif ($oAttDef->IsExternalField()) {
 					$sKeyAttCode = $oAttDef->GetKeyAttCode();
-					if (!self::IsValidAttCode($sClass, $sKeyAttCode) || !self::IsValidKeyAttCode($sClass, $sKeyAttCode))
-					{
+					if (!self::IsValidAttCode($sClass, $sKeyAttCode) || !self::IsValidKeyAttCode($sClass, $sKeyAttCode)) {
 						$aErrors[$sClass][] = "Unknown key attribute code '".$sKeyAttCode."' for the external field $sAttCode";
 						$aSugFix[$sClass][] = "Expecting a value in {".implode(", ", self::GetKeysList($sClass))."}";
-					}
-					else
-					{
+					} else {
 						$oKeyAttDef = self::GetAttributeDef($sClass, $sKeyAttCode);
 						$sTargetClass = $oKeyAttDef->GetTargetClass();
 						$sExtAttCode = $oAttDef->GetExtAttCode();
-						if (!self::IsValidAttCode($sTargetClass, $sExtAttCode))
-						{
+						if (!self::IsValidAttCode($sTargetClass, $sExtAttCode)) {
 							$aErrors[$sClass][] = "Unknown key attribute code '".$sExtAttCode."' for the external field $sAttCode";
 							$aSugFix[$sClass][] = "Expecting a value in {".implode(", ", self::GetKeysList($sTargetClass))."}";
 						}
 					}
-				}
-				else
-				{
-					if ($oAttDef->IsLinkSet())
-					{
+				} else {
+					if ($oAttDef->IsLinkSet()) {
 						// Do nothing...
-					}
-					else
-					{
-						if ($oAttDef instanceof AttributeStopWatch)
-						{
+					} else {
+						if ($oAttDef instanceof AttributeStopWatch) {
 							$aThresholds = $oAttDef->ListThresholds();
-							if (is_array($aThresholds))
-							{
-								foreach($aThresholds as $iPercent => $aDef)
-								{
-									if (array_key_exists('highlight', $aDef))
-									{
-										if (!array_key_exists('code', $aDef['highlight']))
-										{
+							if (is_array($aThresholds)) {
+								foreach ($aThresholds as $iPercent => $aDef) {
+									if (array_key_exists('highlight', $aDef)) {
+										if (!array_key_exists('code', $aDef['highlight'])) {
 											$aErrors[$sClass][] = "The 'code' element is missing for the 'highlight' property of the $iPercent% threshold in the attribute: '$sAttCode'.";
 											$aSugFix[$sClass][] = "Add a 'code' entry specifying the value of the highlight code for this threshold.";
-										}
-										else
-										{
+										} else {
 											$aScale = self::GetHighlightScale($sClass);
-											if (!array_key_exists($aDef['highlight']['code'], $aScale))
-											{
+											if (!array_key_exists($aDef['highlight']['code'], $aScale)) {
 												$aErrors[$sClass][] = "'{$aDef['highlight']['code']}' is not a valid value for the 'code' element of the $iPercent% threshold in the attribute: '$sAttCode'.";
 												$aSugFix[$sClass][] = "The possible highlight codes for this class are: ".implode(', ', array_keys($aScale)).".";
 											}
@@ -4820,25 +4493,18 @@ abstract class MetaModel
 									}
 								}
 							}
-						}
-						else // standard attributes
-						{
+						} else { // standard attributes
 							// Check that the default values definition is a valid object!
 							$oValSetDef = $oAttDef->GetValuesDef();
-							if (!is_null($oValSetDef) && !$oValSetDef instanceof ValueSetDefinition)
-							{
+							if (!is_null($oValSetDef) && !$oValSetDef instanceof ValueSetDefinition) {
 								$aErrors[$sClass][] = "Allowed values for attribute $sAttCode is not of the relevant type";
 								$aSugFix[$sClass][] = "Please set it as an instance of a ValueSetDefinition object.";
-							}
-							else
-							{
+							} else {
 								// Default value must be listed in the allowed values (if defined)
 								$aAllowedValues = self::GetAllowedValues_att($sClass, $sAttCode);
-								if (!is_null($aAllowedValues))
-								{
+								if (!is_null($aAllowedValues)) {
 									$sDefaultValue = $oAttDef->GetDefaultValue();
-									if (is_string($sDefaultValue) && !array_key_exists($sDefaultValue, $aAllowedValues))
-									{
+									if (is_string($sDefaultValue) && !array_key_exists($sDefaultValue, $aAllowedValues)) {
 										$aErrors[$sClass][] = "Default value '".$sDefaultValue."' for attribute $sAttCode is not an allowed value";
 										$aSugFix[$sClass][] = "Please pickup the default value out of {'".implode(", ", array_keys($aAllowedValues))."'}";
 									}
@@ -4848,13 +4514,10 @@ abstract class MetaModel
 					}
 				}
 				// Check dependencies
-				if ($oAttDef->IsWritable())
-				{
+				if ($oAttDef->IsWritable()) {
 					$bHasWritableAttribute = true;
-					foreach($oAttDef->GetPrerequisiteAttributes() as $sDependOnAttCode)
-					{
-						if (!self::IsValidAttCode($sClass, $sDependOnAttCode))
-						{
+					foreach ($oAttDef->GetPrerequisiteAttributes() as $sDependOnAttCode) {
+						if (!self::IsValidAttCode($sClass, $sDependOnAttCode)) {
 							$aErrors[$sClass][] = "Unknown attribute code '".$sDependOnAttCode."' in the list of prerequisite attributes";
 							$aSugFix[$sClass][] = "Expecting a value in ".implode(", ", self::GetAttributesList($sClass));
 						}
@@ -4865,43 +4528,32 @@ abstract class MetaModel
 			// Lifecycle
 			//
 			$sStateAttCode = self::GetStateAttributeCode($sClass);
-			if (strlen($sStateAttCode) > 0)
-			{
+			if (strlen($sStateAttCode) > 0) {
 				// Lifecycle - check that the state attribute does exist as an attribute
-				if (!self::IsValidAttCode($sClass, $sStateAttCode))
-				{
+				if (!self::IsValidAttCode($sClass, $sStateAttCode)) {
 					$aErrors[$sClass][] = "Unknown attribute code '".$sStateAttCode."' for the state definition";
 					$aSugFix[$sClass][] = "Expecting a value in {".implode(", ", self::GetAttributesList($sClass))."}";
-				}
-				else
-				{
+				} else {
 					// Lifecycle - check that there is a value set constraint on the state attribute
 					$aAllowedValuesRaw = self::GetAllowedValues_att($sClass, $sStateAttCode);
 					$aStates = array_keys(self::EnumStates($sClass));
-					if (is_null($aAllowedValuesRaw))
-					{
+					if (is_null($aAllowedValuesRaw)) {
 						$aErrors[$sClass][] = "Attribute '".$sStateAttCode."' will reflect the state of the object. It must be restricted to a set of values";
 						$aSugFix[$sClass][] = "Please define its allowed_values property as [new ValueSetEnum('".implode(", ", $aStates)."')]";
-					}
-					else
-					{
+					} else {
 						$aAllowedValues = array_keys($aAllowedValuesRaw);
 
 						// Lifecycle - check the the state attribute allowed values are defined states
-						foreach($aAllowedValues as $sValue)
-						{
-							if (!in_array($sValue, $aStates))
-							{
+						foreach ($aAllowedValues as $sValue) {
+							if (!in_array($sValue, $aStates)) {
 								$aErrors[$sClass][] = "Attribute '".$sStateAttCode."' (object state) has an allowed value ($sValue) which is not a known state";
 								$aSugFix[$sClass][] = "You may define its allowed_values property as [new ValueSetEnum('".implode(", ", $aStates)."')], or reconsider the list of states";
 							}
 						}
 
 						// Lifecycle - check that defined states are allowed values
-						foreach($aStates as $sStateValue)
-						{
-							if (!in_array($sStateValue, $aAllowedValues))
-							{
+						foreach ($aStates as $sStateValue) {
+							if (!in_array($sStateValue, $aAllowedValues)) {
 								$aErrors[$sClass][] = "Attribute '".$sStateAttCode."' (object state) has a state ($sStateValue) which is not an allowed value";
 								$aSugFix[$sClass][] = "You may define its allowed_values property as [new ValueSetEnum('".implode(", ", $aStates)."')], or reconsider the list of states";
 							}
@@ -4909,43 +4561,30 @@ abstract class MetaModel
 					}
 
 					// Lifecycle - check that the action handlers are defined
-					foreach(self::EnumStates($sClass) as $sStateCode => $aStateDef)
-					{
-						foreach(self::EnumTransitions($sClass, $sStateCode) as $sStimulusCode => $aTransitionDef)
-						{
-							foreach($aTransitionDef['actions'] as $actionHandler)
-							{
-								if (is_string($actionHandler))
-								{
-									if (!method_exists($sClass, $actionHandler))
-									{
+					foreach (self::EnumStates($sClass) as $sStateCode => $aStateDef) {
+						foreach (self::EnumTransitions($sClass, $sStateCode) as $sStimulusCode => $aTransitionDef) {
+							foreach ($aTransitionDef['actions'] as $actionHandler) {
+								if (is_string($actionHandler)) {
+									if (!method_exists($sClass, $actionHandler)) {
 										$aErrors[$sClass][] = "Unknown function '$actionHandler' in transition [$sStateCode/$sStimulusCode] for state attribute '$sStateAttCode'";
 										$aSugFix[$sClass][] = "Specify a function which prototype is in the form [public function $actionHandler(\$sStimulusCode){return true;}]";
 									}
-								}
-								else // if(is_array($actionHandler))
-								{
+								} else { // if(is_array($actionHandler))
 									$sActionHandler = $actionHandler['verb'];
-									if (!method_exists($sClass, $sActionHandler))
-									{
+									if (!method_exists($sClass, $sActionHandler)) {
 										$aErrors[$sClass][] = "Unknown function '$sActionHandler' in transition [$sStateCode/$sStimulusCode] for state attribute '$sStateAttCode'";
 										$aSugFix[$sClass][] = "Specify a function which prototype is in the form [public function $sActionHandler(...){return true;}]";
 									}
 								}
 							}
 						}
-						if (array_key_exists('highlight', $aStateDef))
-						{
-							if (!array_key_exists('code', $aStateDef['highlight']))
-							{
+						if (array_key_exists('highlight', $aStateDef)) {
+							if (!array_key_exists('code', $aStateDef['highlight'])) {
 								$aErrors[$sClass][] = "The 'code' element is missing for the 'highlight' property of state: '$sStateCode'.";
 								$aSugFix[$sClass][] = "Add a 'code' entry specifying the value of the highlight code for this state.";
-							}
-							else
-							{
+							} else {
 								$aScale = self::GetHighlightScale($sClass);
-								if (!array_key_exists($aStateDef['highlight']['code'], $aScale))
-								{
+								if (!array_key_exists($aStateDef['highlight']['code'], $aScale)) {
 									$aErrors[$sClass][] = "'{$aStateDef['highlight']['code']}' is not a valid value for the 'code' element in the 'highlight' property of state: '$sStateCode'.";
 									$aSugFix[$sClass][] = "The possible highlight codes for this class are: ".implode(', ', array_keys($aScale)).".";
 								}
@@ -4955,24 +4594,18 @@ abstract class MetaModel
 				}
 			}
 
-			if ($bHasWritableAttribute)
-			{
-				if (!self::HasTable($sClass))
-				{
+			if ($bHasWritableAttribute) {
+				if (!self::HasTable($sClass)) {
 					$aErrors[$sClass][] = "No table has been defined for this class";
 					$aSugFix[$sClass][] = "Either define a table name or move the attributes elsewhere";
 				}
 			}
 
-
 			// ZList
 			//
-			foreach(self::EnumZLists() as $sListCode)
-			{
-				foreach(self::FlattenZList(self::GetZListItems($sClass, $sListCode)) as $sMyAttCode)
-				{
-					if (!self::IsValidAttCode($sClass, $sMyAttCode))
-					{
+			foreach (self::EnumZLists() as $sListCode) {
+				foreach (self::FlattenZList(self::GetZListItems($sClass, $sListCode)) as $sMyAttCode) {
+					if (!self::IsValidAttCode($sClass, $sMyAttCode)) {
 						$aErrors[$sClass][] = "Unknown attribute code '".$sMyAttCode."' from ZList '$sListCode'";
 						$aSugFix[$sClass][] = "Expecting a value in {".implode(", ", self::GetAttributesList($sClass))."}";
 					}
@@ -4981,30 +4614,23 @@ abstract class MetaModel
 
 			// Check SQL columns uniqueness
 			//
-			if (self::HasTable($sClass))
-			{
-				$aTableColumns = array(); // array of column => attcode (the column is used by this attribute)
+			if (self::HasTable($sClass)) {
+				$aTableColumns = []; // array of column => attcode (the column is used by this attribute)
 				$aTableColumns[self::DBGetKey($sClass)] = 'id';
 
 				// Check that SQL columns are declared only once
 				//
-				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-				{
+				foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 					// Skip this attribute if not originally defined in this class
-					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass)
-					{
+					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) {
 						continue;
 					}
 
-					foreach($oAttDef->GetSQLColumns() as $sField => $sDBFieldType)
-					{
-						if (array_key_exists($sField, $aTableColumns))
-						{
+					foreach ($oAttDef->GetSQLColumns() as $sField => $sDBFieldType) {
+						if (array_key_exists($sField, $aTableColumns)) {
 							$aErrors[$sClass][] = "Column '$sField' declared for attribute $sAttCode, but already used for attribute ".$aTableColumns[$sField];
 							$aSugFix[$sClass][] = "Please find another name for the SQL column";
-						}
-						else
-						{
+						} else {
 							$aTableColumns[$sField] = $sAttCode;
 						}
 					}
@@ -5012,30 +4638,25 @@ abstract class MetaModel
 			}
 		} // foreach class
 
-		if (count($aErrors) > 0)
-		{
+		if (count($aErrors) > 0) {
 			echo "<div style=\"width:100%;padding:10px;background:#FFAAAA;display:;\">";
 			echo "<h3>Business model inconsistencies have been found</h3>\n";
 			// #@# later -> this is the responsibility of the caller to format the output
-			foreach($aErrors as $sClass => $aMessages)
-			{
+			foreach ($aErrors as $sClass => $aMessages) {
 				echo "<p>Wrong declaration for class <b>$sClass</b></p>\n";
 				echo "<ul >\n";
 				$i = 0;
-				foreach($aMessages as $sMsg)
-				{
+				foreach ($aMessages as $sMsg) {
 					echo "<li>$sMsg ({$aSugFix[$sClass][$i]})</li>\n";
 					$i++;
 				}
 				echo "</ul>\n";
 			}
-			if ($bExitOnError)
-			{
+			if ($bExitOnError) {
 				echo "<p>Aborting...</p>\n";
 			}
 			echo "</div>\n";
-			if ($bExitOnError)
-			{
+			if ($bExitOnError) {
 				exit;
 			}
 		}
@@ -5053,7 +4674,7 @@ abstract class MetaModel
 		}
 
 		// By design, some queries might be blank, we have to ignore them
-		$aCleanFixes = array();
+		$aCleanFixes = [];
 		foreach ($aSQLFixes as $sSQLFix) {
 			if (!empty($sSQLFix)) {
 				$aCleanFixes[] = $sSQLFix;
@@ -5078,40 +4699,29 @@ abstract class MetaModel
 	 */
 	public static function DBExists($bMustBeComplete = true)
 	{
-		if (!CMDBSource::IsDB(self::$m_sDBName))
-		{
+		if (!CMDBSource::IsDB(self::$m_sDBName)) {
 			return false;
 		}
 		CMDBSource::SelectDB(self::$m_sDBName);
 
-		$aFound = array();
-		$aMissing = array();
-		foreach(self::DBEnumTables() as $sTable => $aClasses)
-		{
-			if (CMDBSource::IsTable($sTable))
-			{
+		$aFound = [];
+		$aMissing = [];
+		foreach (self::DBEnumTables() as $sTable => $aClasses) {
+			if (CMDBSource::IsTable($sTable)) {
 				$aFound[] = $sTable;
-			}
-			else
-			{
+			} else {
 				$aMissing[] = $sTable;
 			}
 		}
 
-		if (count($aFound) == 0)
-		{
+		if (count($aFound) == 0) {
 			// no expected table has been found
 			return false;
-		}
-		else
-		{
-			if (count($aMissing) == 0)
-			{
+		} else {
+			if (count($aMissing) == 0) {
 				// the database is complete (still, could be some fields missing!)
 				return true;
-			}
-			else
-			{
+			} else {
 				// not all the tables, could be an older version
 				return !$bMustBeComplete;
 			}
@@ -5126,29 +4736,22 @@ abstract class MetaModel
 	{
 		$bDropEntireDB = true;
 
-		if (!empty(self::$m_sTablePrefix))
-		{
-			foreach(self::DBEnumTables() as $sTable)
-			{
+		if (!empty(self::$m_sTablePrefix)) {
+			foreach (self::DBEnumTables() as $sTable) {
 				// perform a case-insensitive test because on Windows the table names become lowercase :-(
-				if (strtolower(substr($sTable, 0, strlen(self::$m_sTablePrefix))) == strtolower(self::$m_sTablePrefix))
-				{
+				if (strtolower(substr($sTable, 0, strlen(self::$m_sTablePrefix))) == strtolower(self::$m_sTablePrefix)) {
 					CMDBSource::DropTable($sTable);
-				}
-				else
-				{
+				} else {
 					// There is at least one table which is out of the scope of the current application
 					$bDropEntireDB = false;
 				}
 			}
 		}
 
-		if ($bDropEntireDB)
-		{
+		if ($bDropEntireDB) {
 			CMDBSource::DropDB(self::$m_sDBName);
 		}
 	}
-
 
 	/**
 	 * @param callable $aCallback
@@ -5162,8 +4765,7 @@ abstract class MetaModel
 	{
 		// Note: we have to check if the DB does exist, because we may share the DB
 		//       with other applications (in which case the DB does exist, not the tables with the given prefix)
-		if (!CMDBSource::IsDB(self::$m_sDBName))
-		{
+		if (!CMDBSource::IsDB(self::$m_sDBName)) {
 			CMDBSource::CreateDB(self::$m_sDBName);
 		}
 		self::DBCreateTables($aCallback);
@@ -5180,13 +4782,11 @@ abstract class MetaModel
 		[$aErrors, $aSugFix, $aCondensedQueries] = self::DBCheckFormat();
 
 		//$sSQL = implode('; ', $aCondensedQueries); Does not work - multiple queries not allowed
-		foreach($aCondensedQueries as $sQuery)
-		{
+		foreach ($aCondensedQueries as $sQuery) {
 			$fStart = microtime(true);
 			CMDBSource::CreateTable($sQuery);
 			$fDuration = microtime(true) - $fStart;
-			if ($aCallback != null)
-			{
+			if ($aCallback != null) {
 				call_user_func($aCallback, $sQuery, $fDuration);
 			}
 		}
@@ -5201,14 +4801,10 @@ abstract class MetaModel
 	{
 		[$aErrors, $aSugFix] = self::DBCheckViews();
 
-		foreach($aSugFix as $sClass => $aTarget)
-		{
-			foreach($aTarget as $aQueries)
-			{
-				foreach($aQueries as $sQuery)
-				{
-					if (!empty($sQuery))
-					{
+		foreach ($aSugFix as $sClass => $aTarget) {
+			foreach ($aTarget as $aQueries) {
+				foreach ($aQueries as $sQuery) {
+					if (!empty($sQuery)) {
 						// forces a refresh of cached information
 						CMDBSource::CreateTable($sQuery);
 					}
@@ -5224,9 +4820,8 @@ abstract class MetaModel
 	 */
 	public static function DBDump()
 	{
-		$aDataDump = array();
-		foreach(self::DBEnumTables() as $sTable => $aClasses)
-		{
+		$aDataDump = [];
+		foreach (self::DBEnumTables() as $sTable => $aClasses) {
 			$aRows = CMDBSource::DumpTable($sTable);
 			$aDataDump[$sTable] = $aRows;
 		}
@@ -5242,16 +4837,12 @@ abstract class MetaModel
 	{
 		// Improvement: check the mySQL variable -> Read-only
 
-		if (utils::IsArchiveMode())
-		{
+		if (utils::IsArchiveMode()) {
 			return true;
 		}
-		if (UserRights::IsAdministrator())
-		{
+		if (UserRights::IsAdministrator()) {
 			return (!self::DBHasAccess(ACCESS_ADMIN_WRITE));
-		}
-		else
-		{
+		} else {
 			return (!self::DBHasAccess(ACCESS_USER_WRITE));
 		}
 	}
@@ -5264,8 +4855,7 @@ abstract class MetaModel
 	public static function DBHasAccess($iRequested = ACCESS_FULL)
 	{
 		$iMode = self::$m_oConfig->Get('access_mode');
-		if (($iMode & $iRequested) == 0)
-		{
+		if (($iMode & $iRequested) == 0) {
 			return false;
 		}
 
@@ -5284,12 +4874,10 @@ abstract class MetaModel
 	protected static function MakeDictEntry($sKey, $sValueFromOldSystem, $sDefaultValue, &$bNotInDico)
 	{
 		$sValue = Dict::S($sKey, 'x-no-nothing');
-		if ($sValue == 'x-no-nothing')
-		{
+		if ($sValue == 'x-no-nothing') {
 			$bNotInDico = true;
 			$sValue = $sValueFromOldSystem;
-			if (strlen($sValue) == 0)
-			{
+			if (strlen($sValue) == 0) {
 				$sValue = $sDefaultValue;
 			}
 		}
@@ -5323,7 +4911,7 @@ abstract class MetaModel
 		// Note: I did not use EnumCategories(), because a given class maybe found in several categories
 		// Need to invent the "module", to characterize the origins of a class
 		if (strlen($sModules) == 0) {
-			$aModules = array('bizmodel', 'core/cmdb', 'gui', 'application', 'addon/userrights');
+			$aModules = ['bizmodel', 'core/cmdb', 'gui', 'application', 'addon/userrights'];
 		} else {
 			$aModules = explode(', ', $sModules);
 		}
@@ -5352,54 +4940,39 @@ abstract class MetaModel
 				$sClassRes .= "Dict::Add('EN US', 'English', 'English', array(\n";
 				$sClassRes .= self::MakeDictEntry("Class:$sClass", self::GetName_Obsolete($sClass), $sClass, $bNotInDico);
 				$sClassRes .= self::MakeDictEntry("Class:$sClass+", self::GetClassDescription_Obsolete($sClass), '', $bNotInDico);
-				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-				{
+				foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 					// Skip this attribute if not originally defined in this class
-					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass)
-					{
+					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) {
 						continue;
 					}
 
 					$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode", $oAttDef->GetLabel_Obsolete(), $sAttCode, $bNotInDico);
 					$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode+", $oAttDef->GetDescription_Obsolete(), '', $bNotInDico);
-					if ($oAttDef instanceof AttributeEnum)
-					{
-						if (self::GetStateAttributeCode($sClass) == $sAttCode)
-						{
-							foreach(self::EnumStates($sClass) as $sStateCode => $aStateData)
-							{
-								if (array_key_exists('label', $aStateData))
-								{
+					if ($oAttDef instanceof AttributeEnum) {
+						if (self::GetStateAttributeCode($sClass) == $sAttCode) {
+							foreach (self::EnumStates($sClass) as $sStateCode => $aStateData) {
+								if (array_key_exists('label', $aStateData)) {
 									$sValue = $aStateData['label'];
-								}
-								else
-								{
+								} else {
 									$sValue = MetaModel::GetStateLabel($sClass, $sStateCode);
 								}
-								if (array_key_exists('description', $aStateData))
-								{
+								if (array_key_exists('description', $aStateData)) {
 									$sValuePlus = $aStateData['description'];
-								}
-								else
-								{
+								} else {
 									$sValuePlus = MetaModel::GetStateDescription($sClass, $sStateCode);
 								}
 								$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode/Value:$sStateCode", $sValue, '', $bNotInDico);
 								$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode/Value:$sStateCode+", $sValuePlus, '', $bNotInDico);
 							}
-						}
-						else
-						{
-							foreach($oAttDef->GetAllowedValues() as $sKey => $value)
-							{
+						} else {
+							foreach ($oAttDef->GetAllowedValues() as $sKey => $value) {
 								$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode/Value:$sKey", $value, '', $bNotInDico);
 								$sClassRes .= self::MakeDictEntry("Class:$sClass/Attribute:$sAttCode/Value:$sKey+", $value, '', $bNotInDico);
 							}
 						}
 					}
 				}
-				foreach(self::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
-				{
+				foreach (self::EnumStimuli($sClass) as $sStimulusCode => $oStimulus) {
 					$sClassRes .= self::MakeDictEntry("Class:$sClass/Stimulus:$sStimulusCode", $oStimulus->GetLabel_Obsolete(), '', $bNotInDico);
 					$sClassRes .= self::MakeDictEntry("Class:$sClass/Stimulus:$sStimulusCode+", $oStimulus->GetDescription_Obsolete(), '', $bNotInDico);
 				}
@@ -5407,8 +4980,7 @@ abstract class MetaModel
 				$sClassRes .= "));\n";
 				$sClassRes .= "\n";
 
-				if ($bNotInDico || ($sOutputFilter != 'NotInDictionary'))
-				{
+				if ($bNotInDico || ($sOutputFilter != 'NotInDictionary')) {
 					$sRes .= $sClassRes;
 				}
 			}
@@ -5417,7 +4989,6 @@ abstract class MetaModel
 		return $sRes;
 	}
 
-
 	/**
 	 * @return array
 	 * @throws \CoreException
@@ -5425,29 +4996,27 @@ abstract class MetaModel
 	 */
 	public static function DBCheckFormat()
 	{
-		$aErrors = array();
-		$aSugFix = array();
+		$aErrors = [];
+		$aSugFix = [];
 
 		$sAlterDBMetaData = CMDBSource::DBCheckCharsetAndCollation();
 
 		// A new way of representing things to be done - quicker to execute !
-		$aCreateTable = array(); // array of <table> => <table options>
-		$aCreateTableItems = array(); // array of <table> => array of <create definition>
-		$aAlterTableMetaData = array();
-		$aAlterTableItems = array(); // array of <table> => <alter specification>
-		$aPostTableAlteration = array(); // array of <table> => post alteration queries
+		$aCreateTable = []; // array of <table> => <table options>
+		$aCreateTableItems = []; // array of <table> => array of <create definition>
+		$aAlterTableMetaData = [];
+		$aAlterTableItems = []; // array of <table> => <alter specification>
+		$aPostTableAlteration = []; // array of <table> => post alteration queries
 
-		foreach(self::GetClasses() as $sClass)
-		{
-			if (!self::HasTable($sClass))
-			{
+		foreach (self::GetClasses() as $sClass) {
+			if (!self::HasTable($sClass)) {
 				continue;
 			}
 
 			// Check that the table exists
 			//
 			$sTable = self::DBGetTable($sClass);
-			$aSugFix[$sClass]['*First'] = array();
+			$aSugFix[$sClass]['*First'] = [];
 
 			$aTableInfo = CMDBSource::GetTableInfo($sTable);
 
@@ -5458,8 +5027,7 @@ abstract class MetaModel
 			$sAutoIncrement = (self::IsAutoIncrementKey($sClass) ? "AUTO_INCREMENT" : "");
 			$sKeyFieldDefinition = "`$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY";
 			$aTableInfo['Indexes']['PRIMARY']['used'] = true;
-			if (!CMDBSource::IsTable($sTable))
-			{
+			if (!CMDBSource::IsTable($sTable)) {
 				$bTableToCreate = true;
 				$aErrors[$sClass]['*'][] = "table '$sTable' could not be found in the DB";
 				$aSugFix[$sClass]['*'][] = "CREATE TABLE `$sTable` ($sKeyFieldDefinition) ENGINE = ".MYSQL_ENGINE." CHARACTER SET $sDbCharset COLLATE $sDbCollation";
@@ -5468,44 +5036,34 @@ abstract class MetaModel
 			}
 			// Check that the key field exists
 			//
-			elseif (!CMDBSource::IsField($sTable, $sKeyField))
-			{
+			elseif (!CMDBSource::IsField($sTable, $sKeyField)) {
 				$aErrors[$sClass]['id'][] = "key '$sKeyField' (table $sTable) could not be found";
 				$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable` ADD $sKeyFieldDefinition";
-				if (!$bTableToCreate)
-				{
+				if (!$bTableToCreate) {
 					$aAlterTableItems[$sTable]['field'][$sKeyField] = "ADD $sKeyFieldDefinition";
 				}
-			}
-			else
-			{
+			} else {
 				// Check the key field properties
 				//
-				if (!CMDBSource::IsKey($sTable, $sKeyField))
-				{
+				if (!CMDBSource::IsKey($sTable, $sKeyField)) {
 					$aErrors[$sClass]['id'][] = "key '$sKeyField' is not a key for table '$sTable'";
 					$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable`, DROP PRIMARY KEY, ADD PRIMARY key(`$sKeyField`)";
-					if (!$bTableToCreate)
-					{
+					if (!$bTableToCreate) {
 						$aAlterTableItems[$sTable]['field'][$sKeyField] = "CHANGE `$sKeyField` $sKeyFieldDefinition";
 					}
 				}
-				if (self::IsAutoIncrementKey($sClass) && !CMDBSource::IsAutoIncrement($sTable, $sKeyField))
-				{
+				if (self::IsAutoIncrementKey($sClass) && !CMDBSource::IsAutoIncrement($sTable, $sKeyField)) {
 					$aErrors[$sClass]['id'][] = "key '$sKeyField' (table $sTable) is not automatically incremented";
 					$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable` CHANGE `$sKeyField` $sKeyFieldDefinition";
-					if (!$bTableToCreate)
-					{
+					if (!$bTableToCreate) {
 						$aAlterTableItems[$sTable]['field'][$sKeyField] = "CHANGE `$sKeyField` $sKeyFieldDefinition";
 					}
 				}
 			}
 
-			if (!$bTableToCreate)
-			{
+			if (!$bTableToCreate) {
 				$sAlterTableMetaDataQuery = CMDBSource::DBCheckTableCharsetAndCollation($sTable);
-				if (!empty($sAlterTableMetaDataQuery))
-				{
+				if (!empty($sAlterTableMetaDataQuery)) {
 					$aAlterTableMetaData[$sTable] = $sAlterTableMetaDataQuery;
 				}
 			}
@@ -5514,135 +5072,101 @@ abstract class MetaModel
 			//
 			$aTableInfo['Fields'][$sKeyField]['used'] = true;
 			$aFriendlynameAttcodes = self::GetFriendlyNameAttributeCodeList($sClass);
-			foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				if (!$oAttDef->CopyOnAllTables())
-				{
+			foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+				if (!$oAttDef->CopyOnAllTables()) {
 					// Skip this attribute if not originally defined in this class
-					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass)
-					{
+					if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) {
 						continue;
 					}
 				}
-				foreach($oAttDef->GetSQLColumns(true) as $sField => $sDBFieldSpec)
-				{
+				foreach ($oAttDef->GetSQLColumns(true) as $sField => $sDBFieldSpec) {
 					// Keep track of columns used by iTop
 					$aTableInfo['Fields'][$sField]['used'] = true;
 
 					$bIndexNeeded = $oAttDef->RequiresIndex();
 					$bFullTextIndexNeeded = false;
-					if (!$bIndexNeeded)
-					{
+					if (!$bIndexNeeded) {
 						// Add an index on the columns of the friendlyname
-						if (in_array($sField, $aFriendlynameAttcodes))
-						{
+						if (in_array($sField, $aFriendlynameAttcodes)) {
 							$bIndexNeeded = true;
 						}
-					}
-					else
-					{
-						if ($oAttDef->RequiresFullTextIndex())
-						{
+					} else {
+						if ($oAttDef->RequiresFullTextIndex()) {
 							$bFullTextIndexNeeded = true;
 						}
 					}
 
 					$sFieldDefinition = "`$sField` $sDBFieldSpec";
-					if (!CMDBSource::IsField($sTable, $sField))
-					{
+					if (!CMDBSource::IsField($sTable, $sField)) {
 						$aErrors[$sClass][$sAttCode][] = "field '$sField' could not be found in table '$sTable'";
 						$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD $sFieldDefinition";
 
-						if ($bTableToCreate)
-						{
+						if ($bTableToCreate) {
 							$aCreateTableItems[$sTable][$sField] = $sFieldDefinition;
-						}
-						else
-						{
+						} else {
 							$aAlterTableItems[$sTable]['field'][$sField] = "ADD $sFieldDefinition";
 							$aAdditionalRequests = self::GetAdditionalRequestAfterAlter($sClass, $sTable, $sField);
-							if (!empty($aAdditionalRequests))
-							{
-								foreach ($aAdditionalRequests as $sAdditionalRequest)
-								{
+							if (!empty($aAdditionalRequests)) {
+								foreach ($aAdditionalRequests as $sAdditionalRequest) {
 									$aPostTableAlteration[$sTable][] = $sAdditionalRequest;
 								}
 							}
 						}
 
-						if ($bIndexNeeded)
-						{
+						if ($bIndexNeeded) {
 							$aTableInfo['Indexes'][$sField]['used'] = true;
 							$sIndexName = $sField;
 							$sColumns = '`'.$sField.'`';
 
-							if ($bFullTextIndexNeeded)
-							{
+							if ($bFullTextIndexNeeded) {
 								$sIndexType = 'FULLTEXT INDEX';
-							}
-							else
-							{
+							} else {
 								$sIndexType = 'INDEX';
-								$aColumns = array($sField);
+								$aColumns = [$sField];
 								$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
-								if (!is_null($aLength[0]))
-								{
+								if (!is_null($aLength[0])) {
 									$sColumns .= ' ('.$aLength[0].')';
 								}
 							}
 							$sSugFix = "ALTER TABLE `$sTable` ADD $sIndexType `$sIndexName` ($sColumns)";
 							$aSugFix[$sClass][$sAttCode][] = $sSugFix;
-							if ($bFullTextIndexNeeded)
-							{
+							if ($bFullTextIndexNeeded) {
 								// MySQL does not support multi fulltext index creation in a single query (mysql_errno = 1795)
 								$aPostTableAlteration[$sTable][] = $sSugFix;
-							}
-							elseif ($bTableToCreate)
-							{
+							} elseif ($bTableToCreate) {
 								$aCreateTableItems[$sTable][] = "$sIndexType `$sIndexName` ($sColumns)";
-							}
-							else
-							{
+							} else {
 								$aAlterTableItems[$sTable]['index'][] = "ADD $sIndexType `$sIndexName` ($sColumns)";
 							}
 						}
 
-					}
-					else
-					{
+					} else {
 						// Create indexes (external keys only... so far)
 						// (drop before change, add after change)
 						$sSugFixAfterChange = '';
 						$sAlterTableItemsAfterChange = '';
-						if ($bIndexNeeded)
-						{
+						if ($bIndexNeeded) {
 							$aTableInfo['Indexes'][$sField]['used'] = true;
 
-							if ($bFullTextIndexNeeded)
-							{
+							if ($bFullTextIndexNeeded) {
 								$sIndexType = 'FULLTEXT INDEX';
 								$aColumns = null;
 								$aLength = null;
-							}
-							else
-							{
+							} else {
 								$sIndexType = 'INDEX';
-								$aColumns = array($sField);
+								$aColumns = [$sField];
 								$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
 							}
 
-							if (!CMDBSource::HasIndex($sTable, $sField, $aColumns, $aLength))
-							{
+							if (!CMDBSource::HasIndex($sTable, $sField, $aColumns, $aLength)) {
 								$sIndexName = $sField;
 								$sColumns = '`'.$sField.'`';
-								if (isset($aLength[0]))
-								{
+								if (isset($aLength[0])) {
 									$sColumns .= ' ('.$aLength[0].')';
 								}
 
 								$aErrors[$sClass][$sAttCode][] = "Foreign key '$sField' in table '$sTable' should have an index";
-								if (CMDBSource::HasIndex($sTable, $sField))
-								{
+								if (CMDBSource::HasIndex($sTable, $sField)) {
 									$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` DROP INDEX `$sIndexName`";
 									$aAlterTableItems[$sTable]['index'][] = "DROP INDEX `$sIndexName`";
 								}
@@ -5654,8 +5178,7 @@ abstract class MetaModel
 						// The field already exists, does it have the relevant properties?
 						//
 						$sActualFieldSpec = CMDBSource::GetFieldSpec($sTable, $sField);
-						if (!CMDBSource::IsSameFieldTypes($sDBFieldSpec, $sActualFieldSpec))
-						{
+						if (!CMDBSource::IsSameFieldTypes($sDBFieldSpec, $sActualFieldSpec)) {
 							$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' has a wrong type: found <code>$sActualFieldSpec</code> while expecting <code>$sDBFieldSpec</code>";
 							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` CHANGE `$sField` $sFieldDefinition";
 							$aAlterTableItems[$sTable]['field'][$sField] = "CHANGE `$sField` $sFieldDefinition";
@@ -5663,16 +5186,12 @@ abstract class MetaModel
 
 						// Create indexes (external keys only... so far)
 						//
-						if (!empty($sSugFixAfterChange))
-						{
+						if (!empty($sSugFixAfterChange)) {
 							$aSugFix[$sClass][$sAttCode][] = $sSugFixAfterChange;
-							if ($bFullTextIndexNeeded)
-							{
+							if ($bFullTextIndexNeeded) {
 								// MySQL does not support multi fulltext index creation in a single query (mysql_errno = 1795)
 								$aPostTableAlteration[$sTable][] = $sSugFixAfterChange;
-							}
-							else
-							{
+							} else {
 								$aAlterTableItems[$sTable]['index'][] = $sAlterTableItemsAfterChange;
 							}
 						}
@@ -5681,60 +5200,45 @@ abstract class MetaModel
 			}
 
 			// Check indexes
-			foreach(self::DBGetIndexes($sClass) as $aColumns)
-			{
+			foreach (self::DBGetIndexes($sClass) as $aColumns) {
 				$sIndexId = implode('_', $aColumns);
 
-				if (isset($aTableInfo['Indexes'][$sIndexId]['used']) && $aTableInfo['Indexes'][$sIndexId]['used'])
-				{
+				if (isset($aTableInfo['Indexes'][$sIndexId]['used']) && $aTableInfo['Indexes'][$sIndexId]['used']) {
 					continue;
 				}
 
 				$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
 				$aTableInfo['Indexes'][$sIndexId]['used'] = true;
 
-				if (!CMDBSource::HasIndex($sTable, $sIndexId, $aColumns, $aLength))
-				{
+				if (!CMDBSource::HasIndex($sTable, $sIndexId, $aColumns, $aLength)) {
 					$sColumns = '';
 
-					for ($i = 0; $i < count($aColumns); $i++)
-					{
-						if (!empty($sColumns))
-						{
+					for ($i = 0; $i < count($aColumns); $i++) {
+						if (!empty($sColumns)) {
 							$sColumns .= ', ';
 						}
 						$sColumns .= '`'.$aColumns[$i].'`';
-						if (!is_null($aLength[$i]))
-						{
+						if (!is_null($aLength[$i])) {
 							$sColumns .= ' ('.$aLength[$i].')';
 						}
 					}
-					if (CMDBSource::HasIndex($sTable, $sIndexId))
-					{
+					if (CMDBSource::HasIndex($sTable, $sIndexId)) {
 						$aErrors[$sClass]['*'][] = "Wrong index '$sIndexId' ($sColumns) in table '$sTable'";
 						$aSugFix[$sClass]['*First'][] = "ALTER TABLE `$sTable` DROP INDEX `$sIndexId`";
 						$aSugFix[$sClass]['*'][] = "ALTER TABLE `$sTable` ADD INDEX `$sIndexId` ($sColumns)";
-					}
-					else
-					{
+					} else {
 						$aErrors[$sClass]['*'][] = "Missing index '$sIndexId' ($sColumns) in table '$sTable'";
 						$aSugFix[$sClass]['*'][] = "ALTER TABLE `$sTable` ADD INDEX `$sIndexId` ($sColumns)";
 					}
-					if ($bTableToCreate)
-					{
+					if ($bTableToCreate) {
 						$aCreateTableItems[$sTable][] = "INDEX `$sIndexId` ($sColumns)";
-					}
-					else
-					{
-						if (CMDBSource::HasIndex($sTable, $sIndexId))
-						{
+					} else {
+						if (CMDBSource::HasIndex($sTable, $sIndexId)) {
 							// Add the drop before CHARSET alteration
-							if (!isset($aAlterTableItems[$sTable]))
-							{
-								$aAlterTableItems[$sTable] = array();
+							if (!isset($aAlterTableItems[$sTable])) {
+								$aAlterTableItems[$sTable] = [];
 							}
-							if (isset($aAlterTableItems[$sTable]['index']))
-							{
+							if (isset($aAlterTableItems[$sTable]['index'])) {
 								array_unshift($aAlterTableItems[$sTable]['index'], "DROP INDEX `$sIndexId`");
 							}
 						}
@@ -5745,13 +5249,10 @@ abstract class MetaModel
 
 			// Find out unused columns
 			//
-			foreach($aTableInfo['Fields'] as $sField => $aFieldData)
-			{
-				if (!isset($aFieldData['used']) || !$aFieldData['used'])
-				{
+			foreach ($aTableInfo['Fields'] as $sField => $aFieldData) {
+				if (!isset($aFieldData['used']) || !$aFieldData['used']) {
 					$aErrors[$sClass]['*'][] = "Column '$sField' in table '$sTable' is not used";
-					if (!CMDBSource::IsNullAllowed($sTable, $sField))
-					{
+					if (!CMDBSource::IsNullAllowed($sTable, $sField)) {
 						// Allow null values so that new record can be inserted
 						// without specifying the value of this unknown column
 						$sFieldDefinition = "`$sField` ".CMDBSource::GetFieldType($sTable, $sField).' NULL';
@@ -5764,85 +5265,70 @@ abstract class MetaModel
 
 			// Find out unused indexes
 			//
-			foreach($aTableInfo['Indexes'] as $sIndexId => $aIndexData)
-			{
-				if (!isset($aIndexData['used']) || !$aIndexData['used'])
-				{
+			foreach ($aTableInfo['Indexes'] as $sIndexId => $aIndexData) {
+				if (!isset($aIndexData['used']) || !$aIndexData['used']) {
 					$aErrors[$sClass]['*'][] = "Index '$sIndexId' in table '$sTable' is not used and will be removed";
 					$aSugFix[$sClass]['*First'][] = "ALTER TABLE `$sTable` DROP INDEX `$sIndexId`";
 					// Add the drop before CHARSET alteration
-					if (!isset($aAlterTableItems[$sTable]))
-					{
-						$aAlterTableItems[$sTable] = array();
+					if (!isset($aAlterTableItems[$sTable])) {
+						$aAlterTableItems[$sTable] = [];
 					}
-					if (isset($aAlterTableItems[$sTable]['index']))
-					{
+					if (isset($aAlterTableItems[$sTable]['index'])) {
 						array_unshift($aAlterTableItems[$sTable]['index'], "DROP INDEX `$sIndexId`");
 					}
 				}
 			}
 
-			if (empty($aSugFix[$sClass]['*First'])) unset($aSugFix[$sClass]['*First']);
+			if (empty($aSugFix[$sClass]['*First'])) {
+				unset($aSugFix[$sClass]['*First']);
+			}
 		}
 
-		$aCondensedQueries = array();
-		if (!empty($sAlterDBMetaData))
-		{
+		$aCondensedQueries = [];
+		if (!empty($sAlterDBMetaData)) {
 			$aCondensedQueries[] = $sAlterDBMetaData;
 		}
-		foreach($aCreateTable as $sTable => $sTableOptions)
-		{
+		foreach ($aCreateTable as $sTable => $sTableOptions) {
 			$sTableItems = implode(', ', $aCreateTableItems[$sTable]);
 			$aCondensedQueries[] = "CREATE TABLE `$sTable` ($sTableItems) $sTableOptions";
 			// Add request right after the CREATE TABLE
-			if (isset($aPostTableAlteration[$sTable]))
-			{
-				foreach ($aPostTableAlteration[$sTable] as $sQuery)
-				{
+			if (isset($aPostTableAlteration[$sTable])) {
+				foreach ($aPostTableAlteration[$sTable] as $sQuery) {
 					$aCondensedQueries[] = $sQuery;
 				}
 				unset($aPostTableAlteration[$sTable]);
 			}
 		}
-		foreach ($aAlterTableMetaData as $sTableAlterQuery)
-		{
+		foreach ($aAlterTableMetaData as $sTableAlterQuery) {
 			$aCondensedQueries[] = $sTableAlterQuery;
 		}
-		foreach ($aAlterTableItems as $sTable => $aChangeList)
-		{
-			if (isset($aAlterTableItems[$sTable]['field']))
-			{
+		foreach ($aAlterTableItems as $sTable => $aChangeList) {
+			if (isset($aAlterTableItems[$sTable]['field'])) {
 				$sChangeList = implode(', ', $aChangeList['field']);
 				$aCondensedQueries[] = "ALTER TABLE `$sTable` $sChangeList";
 			}
-			if (isset($aAlterTableItems[$sTable]['index']))
-			{
+			if (isset($aAlterTableItems[$sTable]['index'])) {
 				$sChangeList = implode(', ', $aChangeList['index']);
 				$aCondensedQueries[] = "ALTER TABLE `$sTable` $sChangeList";
 			}
 			// Add request right after the ALTER TABLE
-			if (isset($aPostTableAlteration[$sTable]))
-			{
-				foreach ($aPostTableAlteration[$sTable] as $sQuery)
-				{
+			if (isset($aPostTableAlteration[$sTable])) {
+				foreach ($aPostTableAlteration[$sTable] as $sQuery) {
 					$aCondensedQueries[] = $sQuery;
 				}
 				unset($aPostTableAlteration[$sTable]);
-            }
+			}
 		}
 
 		// Add alterations not yet managed
-		foreach ($aPostTableAlteration as $aQueries)
-		{
-			foreach ($aQueries as $sQuery)
-			{
+		foreach ($aPostTableAlteration as $aQueries) {
+			foreach ($aQueries as $sQuery) {
 				$aCondensedQueries[] = $sQuery;
 			}
 		}
 
-		return array($aErrors, $aSugFix, $aCondensedQueries);
+		return [$aErrors, $aSugFix, $aCondensedQueries];
 	}
-
 
 	/**
 	 * @deprecated 2.7.0 N°2369 Method will not be removed any time soon as we still need to drop view if the instance is migrating from an iTop 2.x to an iTop 3.0 or newer, even if they skip iTop 3.0.
@@ -5855,23 +5341,21 @@ abstract class MetaModel
 	 */
 	public static function DBCheckViews()
 	{
-		$aErrors = array();
-		$aSugFix = array();
+		$aErrors = [];
+		$aSugFix = [];
 
 		// Reporting views (must be created after any other table)
 		//
-		foreach(self::GetClasses() as $sClass)
-		{
+		foreach (self::GetClasses() as $sClass) {
 			$sView = self::DBGetView($sClass);
-			if (CMDBSource::IsTable($sView))
-			{
+			if (CMDBSource::IsTable($sView)) {
 				// Remove deprecated views
 				$aErrors[$sClass]['*'][] = "Remove view '$sView' (deprecated, consider installing combodo-views if needed)";
 				$aSugFix[$sClass]['*'][] = "DROP VIEW `$sView`";
 			}
 		}
 
-		return array($aErrors, $aSugFix);
+		return [$aErrors, $aSugFix];
 	}
 
 	/**
@@ -5891,31 +5375,24 @@ abstract class MetaModel
 		$sTable = self::DBGetTable($sClass);
 		$sKeyField = self::DBGetKey($sClass);
 
-		if (array_key_exists($sTable, $aPlannedDel) && count($aPlannedDel[$sTable]) > 0)
-		{
+		if (array_key_exists($sTable, $aPlannedDel) && count($aPlannedDel[$sTable]) > 0) {
 			$sSelWrongRecs .= " AND maintable.`$sKeyField` NOT IN ('".implode("', '", $aPlannedDel[$sTable])."')";
 		}
 		$aWrongRecords = CMDBSource::QueryToCol($sSelWrongRecs, "id");
-		if (count($aWrongRecords) == 0)
-		{
+		if (count($aWrongRecords) == 0) {
 			return;
 		}
 
-		if (!array_key_exists($sRootClass, $aErrorsAndFixes))
-		{
-			$aErrorsAndFixes[$sRootClass] = array();
+		if (!array_key_exists($sRootClass, $aErrorsAndFixes)) {
+			$aErrorsAndFixes[$sRootClass] = [];
 		}
-		if (!array_key_exists($sTable, $aErrorsAndFixes[$sRootClass]))
-		{
-			$aErrorsAndFixes[$sRootClass][$sTable] = array();
+		if (!array_key_exists($sTable, $aErrorsAndFixes[$sRootClass])) {
+			$aErrorsAndFixes[$sRootClass][$sTable] = [];
 		}
 
-		foreach($aWrongRecords as $iRecordId)
-		{
-			if (array_key_exists($iRecordId, $aErrorsAndFixes[$sRootClass][$sTable]))
-			{
-				switch ($aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action'])
-				{
+		foreach ($aWrongRecords as $iRecordId) {
+			if (array_key_exists($iRecordId, $aErrorsAndFixes[$sRootClass][$sTable])) {
+				switch ($aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action']) {
 					case 'Delete':
 						// Already planned for a deletion
 						// Let's concatenate the errors description together
@@ -5926,48 +5403,46 @@ abstract class MetaModel
 						// Let's plan a deletion
 						break;
 				}
-			}
-			else
-			{
+			} else {
 				$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Reason'] = $sErrorDesc;
 			}
 
-			if (!$bProcessingFriends)
-			{
-				if (!array_key_exists($sTable, $aPlannedDel) || !in_array($iRecordId, $aPlannedDel[$sTable]))
-				{
+			if (!$bProcessingFriends) {
+				if (!array_key_exists($sTable, $aPlannedDel) || !in_array($iRecordId, $aPlannedDel[$sTable])) {
 					// Something new to be deleted...
 					$iNewDelCount++;
 				}
 			}
 
 			$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action'] = 'Delete';
-			$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action_Details'] = array();
+			$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action_Details'] = [];
 			$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Pass'] = 123;
 			$aPlannedDel[$sTable][] = $iRecordId;
 		}
 
 		// Now make sure that we would delete the records of the other tables for that class
 		//
-		if (!$bProcessingFriends)
-		{
+		if (!$bProcessingFriends) {
 			$sDeleteKeys = "'".implode("', '", $aWrongRecords)."'";
-			foreach(self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL) as $sFriendClass)
-			{
+			foreach (self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL) as $sFriendClass) {
 				$sFriendTable = self::DBGetTable($sFriendClass);
 				$sFriendKey = self::DBGetKey($sFriendClass);
 
 				// skip the current table
-				if ($sFriendTable == $sTable)
-				{
+				if ($sFriendTable == $sTable) {
 					continue;
 				}
 
 				$sFindRelatedRec = "SELECT DISTINCT maintable.`$sFriendKey` AS id FROM `$sFriendTable` AS maintable WHERE maintable.`$sFriendKey` IN ($sDeleteKeys)";
-				self::DBCheckIntegrity_Check2Delete($sFindRelatedRec,
-					"Cascading deletion of record in friend table `<em>$sTable</em>`", $sFriendClass, $aErrorsAndFixes,
-					$iNewDelCount, $aPlannedDel,
-					true);
+				self::DBCheckIntegrity_Check2Delete(
+					$sFindRelatedRec,
+					"Cascading deletion of record in friend table `<em>$sTable</em>`",
+					$sFriendClass,
+					$aErrorsAndFixes,
+					$iNewDelCount,
+					$aPlannedDel,
+					true
+				);
 			}
 		}
 	}
@@ -5990,63 +5465,51 @@ abstract class MetaModel
 		$sTable = self::DBGetTable($sClass);
 		$sKeyField = self::DBGetKey($sClass);
 
-		if (array_key_exists($sTable, $aPlannedDel) && count($aPlannedDel[$sTable]) > 0)
-		{
+		if (array_key_exists($sTable, $aPlannedDel) && count($aPlannedDel[$sTable]) > 0) {
 			$sSelWrongRecs .= " AND maintable.`$sKeyField` NOT IN ('".implode("', '", $aPlannedDel[$sTable])."')";
 		}
 		$aWrongRecords = CMDBSource::QueryToCol($sSelWrongRecs, "id");
-		if (count($aWrongRecords) == 0)
-		{
+		if (count($aWrongRecords) == 0) {
 			return;
 		}
 
-		if (!array_key_exists($sRootClass, $aErrorsAndFixes))
-		{
-			$aErrorsAndFixes[$sRootClass] = array();
+		if (!array_key_exists($sRootClass, $aErrorsAndFixes)) {
+			$aErrorsAndFixes[$sRootClass] = [];
 		}
-		if (!array_key_exists($sTable, $aErrorsAndFixes[$sRootClass]))
-		{
-			$aErrorsAndFixes[$sRootClass][$sTable] = array();
+		if (!array_key_exists($sTable, $aErrorsAndFixes[$sRootClass])) {
+			$aErrorsAndFixes[$sRootClass][$sTable] = [];
 		}
 
-		foreach($aWrongRecords as $iRecordId)
-		{
-			if (array_key_exists($iRecordId, $aErrorsAndFixes[$sRootClass][$sTable]))
-			{
+		foreach ($aWrongRecords as $iRecordId) {
+			if (array_key_exists($iRecordId, $aErrorsAndFixes[$sRootClass][$sTable])) {
 				$sAction = $aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action'];
 
 				//if ($sAction == 'Delete')
 				//{
-					// No need to update, the record will be deleted!
+				// No need to update, the record will be deleted!
 				//}
 
-				if ($sAction == 'Update')
-				{
+				if ($sAction == 'Update') {
 					// Already planned for an update
 					// Add this new update spec to the list
 					$bFoundSameSpec = false;
-					foreach ($aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action_Details'] as $aUpdateSpec)
-					{
-						if (($sColumn == $aUpdateSpec['column']) && ($sNewValue == $aUpdateSpec['newvalue']))
-						{
+					foreach ($aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action_Details'] as $aUpdateSpec) {
+						if (($sColumn == $aUpdateSpec['column']) && ($sNewValue == $aUpdateSpec['newvalue'])) {
 							$bFoundSameSpec = true;
 						}
 					}
-					if (!$bFoundSameSpec)
-					{
-						$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action_Details'][] = (array(
+					if (!$bFoundSameSpec) {
+						$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action_Details'][] = ([
 							'column' => $sColumn,
-							'newvalue' => $sNewValue
-						));
+							'newvalue' => $sNewValue,
+						]);
 						$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Reason'] .= ', '.$sErrorDesc;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Reason'] = $sErrorDesc;
 				$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action'] = 'Update';
-				$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action_Details'] = array(array('column' => $sColumn, 'newvalue' => $sNewValue));
+				$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action_Details'] = [['column' => $sColumn, 'newvalue' => $sNewValue]];
 				$aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Pass'] = 123;
 			}
 
@@ -6063,20 +5526,16 @@ abstract class MetaModel
 	 */
 	public static function DBCheckIntegrity_SinglePass(&$aErrorsAndFixes, &$iNewDelCount, &$aPlannedDel)
 	{
-		foreach(self::GetClasses() as $sClass)
-		{
-			if (!self::HasTable($sClass))
-			{
+		foreach (self::GetClasses() as $sClass) {
+			if (!self::HasTable($sClass)) {
 				continue;
 			}
 			$sRootClass = self::GetRootClass($sClass);
 			$sTable = self::DBGetTable($sClass);
 			$sKeyField = self::DBGetKey($sClass);
 
-			if (!self::IsStandaloneClass($sClass))
-			{
-				if (self::IsRootClass($sClass))
-				{
+			if (!self::IsStandaloneClass($sClass)) {
+				if (self::IsRootClass($sClass)) {
 					// Check that the final class field contains the name of a class which inherited from the current class
 					//
 					$sFinalClassField = self::DBGetClassField($sClass);
@@ -6086,9 +5545,7 @@ abstract class MetaModel
 
 					$sSelWrongRecs = "SELECT DISTINCT maintable.`$sKeyField` AS id FROM `$sTable` AS maintable WHERE `$sFinalClassField` NOT IN ($sAllowedValues)";
 					self::DBCheckIntegrity_Check2Delete($sSelWrongRecs, "final class (field `<em>$sFinalClassField</em>`) is wrong (expected a value in {".$sAllowedValues."})", $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
-				}
-				else
-				{
+				} else {
 					$sRootTable = self::DBGetTable($sRootClass);
 					$sRootKey = self::DBGetKey($sRootClass);
 					$sFinalClassField = self::DBGetClassField($sRootClass);
@@ -6110,16 +5567,13 @@ abstract class MetaModel
 				}
 			}
 
-			foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
+			foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 				// Skip this attribute if not defined in this table
-				if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass)
-				{
+				if (self::$m_aAttribOrigins[$sClass][$sAttCode] != $sClass) {
 					continue;
 				}
 
-				if ($oAttDef->IsExternalKey())
-				{
+				if ($oAttDef->IsExternalKey()) {
 					// Check that any external field is pointing to an existing object
 					//
 					$sRemoteClass = $oAttDef->GetTargetClass();
@@ -6133,46 +5587,35 @@ abstract class MetaModel
 					$sSelBase = "SELECT DISTINCT maintable.`$sKeyField` AS id, maintable.`$sExtKeyField` AS extkey FROM `$sTable` AS maintable LEFT JOIN `$sRemoteTable` ON maintable.`$sExtKeyField` = `$sRemoteTable`.`$sRemoteKey`";
 
 					$sSelWrongRecs = $sSelBase." WHERE `$sRemoteTable`.`$sRemoteKey` IS NULL";
-					if ($oAttDef->IsNullAllowed())
-					{
+					if ($oAttDef->IsNullAllowed()) {
 						// Exclude the records pointing to 0/null from the errors
 						$sSelWrongRecs .= " AND maintable.`$sExtKeyField` IS NOT NULL";
 						$sSelWrongRecs .= " AND maintable.`$sExtKeyField` != 0";
 						self::DBCheckIntegrity_Check2Update($sSelWrongRecs, "Record pointing to (external key '<em>$sAttCode</em>') non existing objects", $sExtKeyField, 'null', $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
-					}
-					else
-					{
+					} else {
 						self::DBCheckIntegrity_Check2Delete($sSelWrongRecs, "Record pointing to (external key '<em>$sAttCode</em>') non existing objects", $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
 					}
 
 					// Do almost the same, taking into account the records planned for deletion
-					if (array_key_exists($sRemoteTable, $aPlannedDel) && count($aPlannedDel[$sRemoteTable]) > 0)
-					{
+					if (array_key_exists($sRemoteTable, $aPlannedDel) && count($aPlannedDel[$sRemoteTable]) > 0) {
 						// This could be done by the mean of a 'OR ... IN (aIgnoreRecords)
 						// but in that case you won't be able to track the root cause (cascading)
 						$sSelWrongRecs = $sSelBase." WHERE maintable.`$sExtKeyField` IN ('".implode("', '", $aPlannedDel[$sRemoteTable])."')";
-						if ($oAttDef->IsNullAllowed())
-						{
+						if ($oAttDef->IsNullAllowed()) {
 							// Exclude the records pointing to 0/null from the errors
 							$sSelWrongRecs .= " AND maintable.`$sExtKeyField` IS NOT NULL";
 							$sSelWrongRecs .= " AND maintable.`$sExtKeyField` != 0";
 							self::DBCheckIntegrity_Check2Update($sSelWrongRecs, "Record pointing to (external key '<em>$sAttCode</em>') a record planned for deletion", $sExtKeyField, 'null', $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
-						}
-						else
-						{
+						} else {
 							self::DBCheckIntegrity_Check2Delete($sSelWrongRecs, "Record pointing to (external key '<em>$sAttCode</em>') a record planned for deletion", $sClass, $aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
 						}
 					}
-				}
-				else
-				{
-					if ($oAttDef->IsBasedOnDBColumns())
-					{
+				} else {
+					if ($oAttDef->IsBasedOnDBColumns()) {
 						// Check that the values fit the allowed values
 						//
 						$aAllowedValues = self::GetAllowedValues_att($sClass, $sAttCode);
-						if (!is_null($aAllowedValues) && count($aAllowedValues) > 0)
-						{
+						if (!is_null($aAllowedValues) && count($aAllowedValues) > 0) {
 							$sExpectedValues = implode(",", CMDBSource::Quote(array_keys($aAllowedValues), true));
 
 							$aCols = $oAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
@@ -6199,11 +5642,11 @@ abstract class MetaModel
 	{
 		// Records in error, and action to be taken: delete or update
 		// by RootClass/Table/Record
-		$aErrorsAndFixes = array();
+		$aErrorsAndFixes = [];
 
 		// Records to be ignored in the current/next pass
 		// by Table = array of RecordId
-		$aPlannedDel = array();
+		$aPlannedDel = [];
 
 		// Count of errors in the next pass: no error means that we can leave...
 		$iErrorCount = 0;
@@ -6211,8 +5654,7 @@ abstract class MetaModel
 		$iLoopCount = 0;
 
 		$iNewDelCount = 1; // startup...
-		while ($iNewDelCount > 0)
-		{
+		while ($iNewDelCount > 0) {
 			$iNewDelCount = 0;
 			self::DBCheckIntegrity_SinglePass($aErrorsAndFixes, $iNewDelCount, $aPlannedDel);
 			$iErrorCount += $iNewDelCount;
@@ -6221,20 +5663,17 @@ abstract class MetaModel
 			//
 			$iMaxDel = 1000;
 			$iPlannedDel = 0;
-			foreach($aPlannedDel as $sTable => $aPlannedDelOnTable)
-			{
+			foreach ($aPlannedDel as $sTable => $aPlannedDelOnTable) {
 				$iPlannedDel += count($aPlannedDelOnTable);
 			}
-			if ($iPlannedDel > $iMaxDel)
-			{
+			if ($iPlannedDel > $iMaxDel) {
 				throw new CoreWarning("DB Integrity Check safety net - Exceeding the limit of $iMaxDel planned record deletion");
 			}
 			// Safety net #2 - limit the iterations
 			//
 			$iLoopCount++;
 			$iMaxLoops = 10;
-			if ($iLoopCount > $iMaxLoops)
-			{
+			if ($iLoopCount > $iMaxLoops) {
 				throw new CoreWarning("DB Integrity Check safety net - Reached the limit of $iMaxLoops loops");
 			}
 		}
@@ -6242,29 +5681,24 @@ abstract class MetaModel
 		// Display the results
 		//
 		$iIssueCount = 0;
-		$aFixesDelete = array();
-		$aFixesUpdate = array();
+		$aFixesDelete = [];
+		$aFixesUpdate = [];
 
-		foreach($aErrorsAndFixes as $sRootClass => $aTables)
-		{
-			foreach($aTables as $sTable => $aRecords)
-			{
-				foreach($aRecords as $iRecord => $aError)
-				{
+		foreach ($aErrorsAndFixes as $sRootClass => $aTables) {
+			foreach ($aTables as $sTable => $aRecords) {
+				foreach ($aRecords as $iRecord => $aError) {
 					$sAction = $aError['Action'];
 					$sReason = $aError['Reason'];
 
-					switch ($sAction)
-					{
+					switch ($sAction) {
 						case 'Delete':
 							$sActionDetails = "";
 							$aFixesDelete[$sTable][] = $iRecord;
 							break;
 
 						case 'Update':
-							$aUpdateDesc = array();
-							foreach($aError['Action_Details'] as $aUpdateSpec)
-							{
+							$aUpdateDesc = [];
+							foreach ($aError['Action_Details'] as $aUpdateSpec) {
 								$aUpdateDesc[] = $aUpdateSpec['column']." -&gt; ".$aUpdateSpec['newvalue'];
 								$aFixesUpdate[$sTable][$aUpdateSpec['column']][$aUpdateSpec['newvalue']][] = $iRecord;
 							}
@@ -6281,17 +5715,14 @@ abstract class MetaModel
 			}
 		}
 
-		if ($iIssueCount > 0)
-		{
+		if ($iIssueCount > 0) {
 			// Build the queries to fix in the database
 			//
 			// First step, be able to get class data out of the table name
 			// Could be optimized, because we've made the job earlier... but few benefits, so...
-			$aTable2ClassProp = array();
-			foreach(self::GetClasses() as $sClass)
-			{
-				if (!self::HasTable($sClass))
-				{
+			$aTable2ClassProp = [];
+			foreach (self::GetClasses() as $sClass) {
+				if (!self::HasTable($sClass)) {
 					continue;
 				}
 
@@ -6299,18 +5730,15 @@ abstract class MetaModel
 				$sTable = self::DBGetTable($sClass);
 				$sKeyField = self::DBGetKey($sClass);
 
-				$aErrorsAndFixes[$sRootClass][$sTable] = array();
-				$aTable2ClassProp[$sTable] = array('rootclass' => $sRootClass, 'class' => $sClass, 'keyfield' => $sKeyField);
+				$aErrorsAndFixes[$sRootClass][$sTable] = [];
+				$aTable2ClassProp[$sTable] = ['rootclass' => $sRootClass, 'class' => $sClass, 'keyfield' => $sKeyField];
 			}
 			// Second step, build a flat list of SQL queries
-			$aSQLFixes = array();
+			$aSQLFixes = [];
 			$iPlannedUpdate = 0;
-			foreach($aFixesUpdate as $sTable => $aColumns)
-			{
-				foreach($aColumns as $sColumn => $aNewValues)
-				{
-					foreach($aNewValues as $sNewValue => $aRecords)
-					{
+			foreach ($aFixesUpdate as $sTable => $aColumns) {
+				foreach ($aColumns as $sColumn => $aNewValues) {
+					foreach ($aNewValues as $sNewValue => $aRecords) {
 						$iPlannedUpdate += count($aRecords);
 						$sWrongRecords = "'".implode("', '", $aRecords)."'";
 						$sKeyField = $aTable2ClassProp[$sTable]['keyfield'];
@@ -6320,8 +5748,7 @@ abstract class MetaModel
 				}
 			}
 			$iPlannedDel = 0;
-			foreach($aFixesDelete as $sTable => $aRecords)
-			{
+			foreach ($aFixesDelete as $sTable => $aRecords) {
 				$iPlannedDel += count($aRecords);
 				$sWrongRecords = "'".implode("', '", $aRecords)."'";
 				$sKeyField = $aTable2ClassProp[$sTable]['keyfield'];
@@ -6335,8 +5762,7 @@ abstract class MetaModel
 			echo "<h3>Database corruption error(s): $iErrorCount issues have been encountered. $iPlannedDel records will be deleted, $iPlannedUpdate records will be updated:</h3>\n";
 			// #@# later -> this is the responsibility of the caller to format the output
 			echo "<ul class=\"treeview\">\n";
-			foreach($aIssues as $sIssueDesc)
-			{
+			foreach ($aIssues as $sIssueDesc) {
 				echo "<li>$sIssueDesc</li>\n";
 			}
 			echo "</ul>\n";
@@ -6395,8 +5821,7 @@ abstract class MetaModel
 			}
 
 			ExpressionCache::Warmup();
-		}
-		finally {
+		} finally {
 			// Event service must be initialized after the MetaModel startup, otherwise it cannot discover classes implementing the iEventServiceSetup interface
 			EventService::InitService();
 			EventService::FireEvent(new EventData(ApplicationEvents::APPLICATION_EVENT_METAMODEL_STARTED));
@@ -6423,8 +5848,7 @@ abstract class MetaModel
 		utils::SetConfig($oConfiguration);
 
 		// Set log ASAP
-		if (self::$m_oConfig->GetLogGlobal())
-		{
+		if (self::$m_oConfig->GetLogGlobal()) {
 			if (self::$m_oConfig->GetLogIssue()) {
 				self::$m_bLogIssue = true;
 				IssueLog::Enable(APPROOT.'log/error.log');
@@ -6436,9 +5860,7 @@ abstract class MetaModel
 			DeadLockLog::Enable();
 			DeprecatedCallsLog::Enable();
 			ExceptionLog::Enable();
-		}
-		else
-		{
+		} else {
 			self::$m_bLogIssue = false;
 			self::$m_bLogNotification = false;
 			self::$m_bLogWebService = false;
@@ -6446,9 +5868,9 @@ abstract class MetaModel
 
 		ExecutionKPI::EnableDuration(self::$m_oConfig->Get('log_kpi_duration'));
 		ExecutionKPI::EnableMemory(self::$m_oConfig->Get('log_kpi_memory'));
-        ExecutionKPI::SetAllowedUser(self::$m_oConfig->Get('log_kpi_user_id'));
-        ExecutionKPI::SetGenerateLegacyReport(self::$m_oConfig->Get('log_kpi_generate_legacy_report'));
-        ExecutionKPI::SetSlowQueries(self::$m_oConfig->Get('log_kpi_slow_queries'));
+		ExecutionKPI::SetAllowedUser(self::$m_oConfig->Get('log_kpi_user_id'));
+		ExecutionKPI::SetGenerateLegacyReport(self::$m_oConfig->Get('log_kpi_generate_legacy_report'));
+		ExecutionKPI::SetSlowQueries(self::$m_oConfig->Get('log_kpi_slow_queries'));
 
 		self::$m_bSkipCheckToWrite = self::$m_oConfig->Get('skip_check_to_write');
 		self::$m_bSkipCheckExtKeys = self::$m_oConfig->Get('skip_check_ext_keys');
@@ -6466,8 +5888,7 @@ abstract class MetaModel
 		// Note: load the dictionary as soon as possible, because it might be
 		//       needed when some error occur
 		$sAppIdentity = 'itop-'.MetaModel::GetEnvironmentId();
-		if (self::$m_bUseAPCCache)
-		{
+		if (self::$m_bUseAPCCache) {
 			Dict::EnableCache($sAppIdentity);
 		}
 		require_once(APPROOT.'env-'.self::$m_sEnvironment.'/dictionaries/languages.php');
@@ -6525,8 +5946,7 @@ abstract class MetaModel
 			$oKPI->ComputeAndReport('Metamodel APC (fetch + read)');
 		}
 
-		if (count(self::$m_aAttribDefs) == 0)
-		{
+		if (count(self::$m_aAttribDefs) == 0) {
 			// The includes have been included, let's browse the existing classes and
 			// develop some data based on the proposed model
 			$oKPI = new ExecutionKPI();
@@ -6534,11 +5954,10 @@ abstract class MetaModel
 			self::InitClasses($sTablePrefix);
 
 			$oKPI->ComputeAndReport('Initialization of Data model structures');
-			if (self::$m_bUseAPCCache)
-			{
+			if (self::$m_bUseAPCCache) {
 				$oKPI = new ExecutionKPI();
 
-				$aCache = array();
+				$aCache = [];
 				$aCache['m_aExtensionClassNames'] = self::$m_aExtensionClassNames;
 				$aCache['m_Category2Class'] = self::$m_Category2Class;
 				$aCache['m_aRootClasses'] = self::$m_aRootClasses; // array of "classname" => "rootclass"
@@ -6567,7 +5986,7 @@ abstract class MetaModel
 
 		CMDBSource::InitFromConfig(self::$m_oConfig);
 		// Later when timezone implementation is correctly done: CMDBSource::SetTimezone($sDBTimezone);
-        ExecutionKPI::InitStats();
+		ExecutionKPI::InitStats();
 	}
 
 	/**
@@ -6592,8 +6011,7 @@ abstract class MetaModel
 	public static function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
 	{
 		$value = $defaultvalue;
-		if (!self::$m_aModulesParameters[$sModule] == null)
-		{
+		if (!self::$m_aModulesParameters[$sModule] == null) {
 			$value = self::$m_aModulesParameters[$sModule]->Get($sProperty, $defaultvalue);
 		}
 		return $value;
@@ -6636,8 +6054,8 @@ abstract class MetaModel
 		return md5(APPROOT).'-'.self::$m_sEnvironment;
 	}
 
-    /** @var array */
-    protected static $m_aExtensionClassNames = [];
+	/** @var array */
+	protected static $m_aExtensionClassNames = [];
 
 	/**
 	 * @param string $sToInclude
@@ -6649,42 +6067,29 @@ abstract class MetaModel
 	{
 		$sFirstChar = substr($sToInclude, 0, 1);
 		$sSecondChar = substr($sToInclude, 1, 1);
-		if (($sFirstChar != '/') && ($sFirstChar != '\\') && ($sSecondChar != ':'))
-		{
+		if (($sFirstChar != '/') && ($sFirstChar != '\\') && ($sSecondChar != ':')) {
 			// It is a relative path, prepend APPROOT
-			if (substr($sToInclude, 0, 3) == '../')
-			{
+			if (substr($sToInclude, 0, 3) == '../') {
 				// Preserve compatibility with config files written before 1.0.1
 				// Replace '../' by '<root>/'
 				$sFile = APPROOT.'/'.substr($sToInclude, 3);
-			}
-			else
-			{
+			} else {
 				$sFile = APPROOT.'/'.$sToInclude;
 			}
-		}
-		else
-		{
+		} else {
 			// Leave as is - should be an absolute path
 			$sFile = $sToInclude;
 		}
-		if (!file_exists($sFile))
-		{
+		if (!file_exists($sFile)) {
 			$sConfigFile = self::$m_oConfig->GetLoadedFile();
-			if ($sModuleType == null)
-			{
+			if ($sModuleType == null) {
 				throw new CoreException("Include: unable to load the file '$sFile'");
-			}
-			else
-			{
-				if (strlen($sConfigFile) > 0)
-				{
-					throw new CoreException('Include: wrong file name in configuration file', array('config file' => $sConfigFile, 'section' => $sModuleType, 'filename' => $sFile));
-				}
-				else
-				{
+			} else {
+				if (strlen($sConfigFile) > 0) {
+					throw new CoreException('Include: wrong file name in configuration file', ['config file' => $sConfigFile, 'section' => $sModuleType, 'filename' => $sFile]);
+				} else {
 					// The configuration is in memory only
-					throw new CoreException('Include: wrong file name in configuration file (in memory)', array('section' => $sModuleType, 'filename' => $sFile));
+					throw new CoreException('Include: wrong file name in configuration file (in memory)', ['section' => $sModuleType, 'filename' => $sFile]);
 				}
 			}
 		}
@@ -6697,10 +6102,8 @@ abstract class MetaModel
 		ob_start();
 		require_once($sFile);
 		$sPreviousContent = ob_get_clean();
-		if (self::$m_oConfig->Get('debug_report_spurious_chars'))
-		{
-			if ($sPreviousContent != '')
-			{
+		if (self::$m_oConfig->Get('debug_report_spurious_chars')) {
+			if ($sPreviousContent != '') {
 				IssueLog::Error("Spurious characters injected by '$sFile'");
 			}
 		}
@@ -6710,19 +6113,18 @@ abstract class MetaModel
 	//
 	//
 	/** @var array */
-	private static $aQueryCacheGetObject = array();
+	private static $aQueryCacheGetObject = [];
 	/** @var array */
-	private static $aQueryCacheGetObjectHits = array();
+	private static $aQueryCacheGetObjectHits = [];
 
 	/**
 	 * @return string
 	 */
 	public static function GetQueryCacheStatus()
 	{
-		$aRes = array();
+		$aRes = [];
 		$iTotalHits = 0;
-		foreach(self::$aQueryCacheGetObjectHits as $sClassSign => $iHits)
-		{
+		foreach (self::$aQueryCacheGetObjectHits as $sClassSign => $iHits) {
 			$aRes[] = "$sClassSign: $iHits";
 			$iTotalHits += $iHits;
 		}
@@ -6747,20 +6149,17 @@ abstract class MetaModel
 		// Build the query cache signature
 		//
 		$sQuerySign = $sClass;
-		if ($bAllowAllData)
-		{
+		if ($bAllowAllData) {
 			$sQuerySign .= '_all_';
 		}
-		if (is_array($aModifierProperties) && (count($aModifierProperties) > 0))
-		{
+		if (is_array($aModifierProperties) && (count($aModifierProperties) > 0)) {
 			array_multisort($aModifierProperties);
 			$sModifierProperties = json_encode($aModifierProperties);
 			$sQuerySign .= '_all_'.md5($sModifierProperties);
 		}
 		$sQuerySign .= utils::IsArchiveMode() ? '_arch_' : '';
 
-		if (!array_key_exists($sQuerySign, self::$aQueryCacheGetObject))
-		{
+		if (!array_key_exists($sQuerySign, self::$aQueryCacheGetObject)) {
 			// NOTE: Quick and VERY dirty caching mechanism which relies on
 			//       the fact that the string '987654321' will never appear in the
 			//       standard query
@@ -6768,27 +6167,21 @@ abstract class MetaModel
 			//       but this would slow down -by how much time?- the application
 			$oFilter = new DBObjectSearch($sClass);
 			$oFilter->AddCondition('id', 987654321, '=');
-			if ($aModifierProperties)
-			{
-				foreach($aModifierProperties as $sPluginClass => $aProperties)
-				{
-					foreach($aProperties as $sProperty => $value)
-					{
+			if ($aModifierProperties) {
+				foreach ($aModifierProperties as $sPluginClass => $aProperties) {
+					foreach ($aProperties as $sProperty => $value) {
 						$oFilter->SetModifierProperty($sPluginClass, $sProperty, $value);
 					}
 				}
 			}
-			if ($bAllowAllData)
-			{
+			if ($bAllowAllData) {
 				$oFilter->AllowAllData();
 			}
 			$oFilter->NoContextParameters();
 			$sSQL = $oFilter->MakeSelectQuery();
 			self::$aQueryCacheGetObject[$sQuerySign] = $sSQL;
 			self::$aQueryCacheGetObjectHits[$sQuerySign] = 0;
-		}
-		else
-		{
+		} else {
 			$sSQL = self::$aQueryCacheGetObject[$sQuerySign];
 			self::$aQueryCacheGetObjectHits[$sQuerySign] += 1;
 		}
@@ -6798,15 +6191,16 @@ abstract class MetaModel
 		$aRow = CMDBSource::FetchArray($res);
 		CMDBSource::FreeResult($res);
 
-		if ($bMustBeFound && empty($aRow))
-		{
+		if ($bMustBeFound && empty($aRow)) {
 			$sNotFoundErrorMessage = "No result for the single row query";
-			IssueLog::Info($sNotFoundErrorMessage, LogChannels::CMDB_SOURCE, [
+			$e = new CoreException($sNotFoundErrorMessage);
+			IssueLog::Error($sNotFoundErrorMessage, LogChannels::CMDB_SOURCE, [
 				'class' => $sClass,
 				'key' => $iKey,
 				'sql_query' => $sSQL,
+				'stack' => $e->getTraceAsString(),
 				]);
-			throw new CoreException($sNotFoundErrorMessage);
+			throw $e;
 		}
 
 		return $aRow;
@@ -6829,40 +6223,31 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 
-		if (strlen($sClassAlias) == 0)
-		{
+		if (strlen($sClassAlias) == 0) {
 			$sClassAlias = $sClass;
 		}
 
 		// Compound objects: if available, get the final object class
 		//
-		if (!array_key_exists($sClassAlias."finalclass", $aRow))
-		{
+		if (!array_key_exists($sClassAlias."finalclass", $aRow)) {
 			// Either this is a bug (forgot to specify a root class with a finalclass field
 			// Or this is the expected behavior, because the object is not made of several tables
-			if (self::IsAbstract($sClass))
-			{
+			if (self::IsAbstract($sClass)) {
 				throw new CoreUnexpectedValue("Querying the abstract '$sClass' class without finalClass attribute");
 			}
-			if (self::HasChildrenClasses($sClass))
-			{
+			if (self::HasChildrenClasses($sClass)) {
 				throw new CoreUnexpectedValue("Querying the '$sClass' class without the finalClass attribute, whereas this class has  children");
 			}
-		}
-		elseif (empty($aRow[$sClassAlias."finalclass"]))
-		{
+		} elseif (empty($aRow[$sClassAlias."finalclass"])) {
 			// The data is missing in the DB
 			// @#@ possible improvement: check that the class is valid !
 			$sRootClass = self::GetRootClass($sClass);
 			$sFinalClassField = self::DBGetClassField($sRootClass);
 			throw new CoreException("Empty class name for object $sClass::{$aRow["id"]} (root class '$sRootClass', field '{$sFinalClassField}' is empty)");
-		}
-		else
-		{
+		} else {
 			// do the job for the real target class
-			if (!class_exists($aRow[$sClassAlias."finalclass"]))
-			{
-				throw new CoreException("Class {$aRow[$sClassAlias."finalclass"]} derived from $sClass does not exist anymore, please remove corresponding tables in the database", array('row' => $aRow));
+			if (!class_exists($aRow[$sClassAlias."finalclass"])) {
+				throw new CoreException("Class {$aRow[$sClassAlias."finalclass"]} derived from $sClass does not exist anymore, please remove corresponding tables in the database", ['row' => $aRow]);
 			}
 			$sClass = $aRow[$sClassAlias."finalclass"];
 		}
@@ -6979,23 +6364,17 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 
 		utils::PushArchiveMode(true);
-		try
-		{
+		try {
 			$aRow = self::MakeSingleRow($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
-		}
-		catch(Exception $e)
-		{
+		} catch (Exception $e) {
 			// In the finally block we will pop the pushed archived mode
 			// otherwise the application stays in ArchiveMode true which has caused hazardious behavior!
 			throw $e;
-		}
-		finally
-		{
+		} finally {
 			utils::PopArchiveMode();
 		}
 
-		if (empty($aRow))
-		{
+		if (empty($aRow)) {
 			return null;
 		}
 
@@ -7017,11 +6396,9 @@ abstract class MetaModel
 		$oObjSearch = new DBObjectSearch($sClass);
 		$oObjSearch->AddNameCondition($sName);
 		$oSet = new DBObjectSet($oObjSearch);
-		if ($oSet->Count() != 1)
-		{
-			if ($bMustBeFound)
-			{
-				throw new CoreException('Failed to get an object by its name', array('class' => $sClass, 'name' => $sName));
+		if ($oSet->Count() != 1) {
+			if ($bMustBeFound) {
+				throw new CoreException('Failed to get an object by its name', ['class' => $sClass, 'name' => $sName]);
 			}
 			return null;
 		}
@@ -7030,7 +6407,7 @@ abstract class MetaModel
 	}
 
 	/** @var array */
-	static protected $m_aCacheObjectByColumn = array();
+	protected static $m_aCacheObjectByColumn = [];
 
 	/**
 	 * @param string $sClass
@@ -7059,15 +6436,11 @@ abstract class MetaModel
 			$oObjSearch->AllowAllData($bAllowAllData);
 			$oObjSearch->AddCondition($sAttCode, $value, '=');
 			$oSet = new DBObjectSet($oObjSearch);
-			if ($oSet->Count() == 1)
-			{
+			if ($oSet->Count() == 1) {
 				self::$m_aCacheObjectByColumn[$sClass][$sAttCode][$value] = $oSet->fetch();
-			}
-			else
-			{
-				if ($bMustBeFoundUnique)
-				{
-					throw new CoreException('Failed to get an object by column', array('class' => $sClass, 'attcode' => $sAttCode, 'value' => $value, 'matches' => $oSet->Count()));
+			} else {
+				if ($bMustBeFoundUnique) {
+					throw new CoreException('Failed to get an object by column', ['class' => $sClass, 'attcode' => $sAttCode, 'value' => $value, 'matches' => $oSet->Count()]);
 				}
 				self::$m_aCacheObjectByColumn[$sClass][$sAttCode][$value] = null;
 			}
@@ -7087,8 +6460,7 @@ abstract class MetaModel
 	public static function GetObjectFromOQL($sQuery, $aParams = null, $bAllowAllData = false)
 	{
 		$oFilter = DBObjectSearch::FromOQL($sQuery, $aParams);
-		if ($bAllowAllData)
-		{
+		if ($bAllowAllData) {
 			$oFilter->AllowAllData();
 		}
 		$oSet = new DBObjectSet($oFilter);
@@ -7116,7 +6488,7 @@ abstract class MetaModel
 		if (is_null($oObj)) {
 			// Whatever we are looking for, the root class is the key to search for
 			$sRootClass = self::GetRootClass($sTargetClass);
-			$oSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOpDelete WHERE objclass = :objclass AND objkey = :objkey', array('objclass' => $sRootClass, 'objkey' => $iKey));
+			$oSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOpDelete WHERE objclass = :objclass AND objkey = :objkey', ['objclass' => $sRootClass, 'objkey' => $iKey]);
 			$oSet = new DBObjectSet($oSearch);
 			$oRecord = $oSet->Fetch();
 			// An empty fname is obtained with iTop < 2.0
@@ -7148,10 +6520,8 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 		$oRet = new $sClass();
-		if (is_array($aValues))
-		{
-			foreach($aValues as $sAttCode => $value)
-			{
+		if (is_array($aValues)) {
+			foreach ($aValues as $sAttCode => $value) {
 				$oRet->Set($sAttCode, $value);
 			}
 		}
@@ -7201,7 +6571,7 @@ abstract class MetaModel
 		while ($bExecuteQuery) {
 			$oSet = new DBObjectSet($oFilter);
 			$oSet->SetLimit($iMaxChunkSize);
-			$oSet->OptimizeColumnLoad(array($sTargetClass => array('finalclass')));
+			$oSet->OptimizeColumnLoad([$sTargetClass => ['finalclass']]);
 			$aIdToClass = $oSet->GetColumnAsArray('finalclass', true);
 
 			$aIds = array_keys($aIdToClass);
@@ -7245,11 +6615,9 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 
 		// 1-N links (referenced by my class), returns an array of sAttCode=>sClass
-		$aResult = array();
-		foreach(self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef)
-		{
-			if ($oAttDef->IsExternalKey())
-			{
+		$aResult = [];
+		foreach (self::$m_aAttribDefs[$sClass] as $sAttCode => $oAttDef) {
+			if ($oAttDef->IsExternalKey()) {
 				$aResult[$sAttCode] = $oAttDef->GetTargetClass();
 			}
 		}
@@ -7269,39 +6637,31 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 
-		if ($bSkipLinkingClasses)
-		{
+		if ($bSkipLinkingClasses) {
 			$aLinksClasses = array_keys(self::GetLinkClasses());
 		}
 
 		// 1-N links (referencing my class), array of sClass => array of sAttcode
-		$aResult = array();
-		foreach(self::$m_aAttribDefs as $sSomeClass => $aClassAttributes)
-		{
-			if ($bSkipLinkingClasses && in_array($sSomeClass, $aLinksClasses))
-			{
+		$aResult = [];
+		foreach (self::$m_aAttribDefs as $sSomeClass => $aClassAttributes) {
+			if ($bSkipLinkingClasses && in_array($sSomeClass, $aLinksClasses)) {
 				continue;
 			}
 
-			$aExtKeys = array();
-			foreach($aClassAttributes as $sAttCode => $oAttDef)
-			{
-				if (self::$m_aAttribOrigins[$sSomeClass][$sAttCode] != $sSomeClass)
-				{
+			$aExtKeys = [];
+			foreach ($aClassAttributes as $sAttCode => $oAttDef) {
+				if (self::$m_aAttribOrigins[$sSomeClass][$sAttCode] != $sSomeClass) {
 					continue;
 				}
-				if ($oAttDef->IsExternalKey() && (self::IsParentClass($oAttDef->GetTargetClass(), $sClass)))
-				{
-					if ($bInnerJoinsOnly && $oAttDef->IsNullAllowed())
-					{
+				if ($oAttDef->IsExternalKey() && (self::IsParentClass($oAttDef->GetTargetClass(), $sClass))) {
+					if ($bInnerJoinsOnly && $oAttDef->IsNullAllowed()) {
 						continue;
 					}
 					// Ok, I want this one
 					$aExtKeys[$sAttCode] = $oAttDef;
 				}
 			}
-			if (count($aExtKeys) != 0)
-			{
+			if (count($aExtKeys) != 0) {
 				$aResult[$sSomeClass] = $aExtKeys;
 			}
 		}
@@ -7331,11 +6691,11 @@ abstract class MetaModel
 	 */
 	public static function GetLinkClasses(): array
 	{
-		$aRet = array();
-		foreach(self::GetClasses() as $sClass) {
+		$aRet = [];
+		foreach (self::GetClasses() as $sClass) {
 			if (self::IsLinkClass($sClass)) {
-				$aExtKeys = array();
-				foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+				$aExtKeys = [];
+				foreach (self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 					if ($oAttDef->IsExternalKey()) {
 						$aExtKeys[$sAttCode] = $oAttDef->GetTargetClass();
 					}
@@ -7386,8 +6746,8 @@ abstract class MetaModel
 		$aParams['APP_URL'] = utils::GetAbsoluteUrlAppRoot();
 		$aParams['MODULES_URL'] = utils::GetAbsoluteUrlModulesRoot();
 
-		$aSearches = array();
-		$aReplacements = array();
+		$aSearches = [];
+		$aReplacements = [];
 		foreach ($aParams as $sSearch => $replace) {
 			// Some environment parameters are objects, we just need scalars
 			if (is_object($replace)) {
@@ -7399,10 +6759,10 @@ abstract class MetaModel
 					// 1 - The delimiter
 					// 2 - The arrow
 					// 3 - The attribute code
-					$aRegExps = array(
+					$aRegExps = [
 						'/(\\$)'.$sName.'-(>|&gt;)([^\\$]+)\\$/', // Support both syntaxes: $this->xxx$ or $this-&gt;xxx$ for HTML compatibility
 						'/(%24)'.$sName.'-(>|&gt;)([^%24]+)%24/', // Support for urlencoded in HTML attributes (%20this-&gt;xxx%20)
-					);
+					];
 					foreach ($aRegExps as $sRegExp) {
 						if (preg_match_all($sRegExp, $sInput, $aMatches)) {
 							foreach ($aMatches[3] as $idx => $sPlaceholderAttCode) {
@@ -7412,8 +6772,7 @@ abstract class MetaModel
 										$aReplacements[] = $sReplacement;
 										$aSearches[] = $aMatches[1][$idx].$sName.'-'.$aMatches[2][$idx].$sPlaceholderAttCode.$aMatches[1][$idx];
 									}
-								}
-								catch (Exception $e) {
+								} catch (Exception $e) {
 									$aContext = [
 										'placeholder'   => $sPlaceholderAttCode,
 										'replace class' => get_class($replace),
@@ -7434,13 +6793,13 @@ abstract class MetaModel
 					continue; // Ignore this non-scalar value
 				}
 			} else {
-				$aRegExps = array(
+				$aRegExps = [
 					'/(\$)'.$sSearch.'\$/',   // Regular placeholders (eg. $APP_URL$) or placeholders with an arrow in plain text (eg. $foo->bar$)
 					'/(%24)'.$sSearch.'%24/', // Regular placeholders url-encoded in HTML attributes (eg. %24APP_URL%24)
 
 					'/(\$)'.utils::EscapeHtml($sSearch).'\$/',      // Placeholders with an arrow in HTML (eg. $foo-&gt;bar$)
 					'/(%24)'.utils::EscapeHtml($sSearch).'%24/',    // Placeholders with an arrow url-encoded in HTML attributes (eg. %24-&gt;bar%24)
-				);
+				];
 				foreach ($aRegExps as $sRegExp) {
 					if (preg_match_all($sRegExp, $sInput, $aMatches)) {
 						foreach ($aMatches[1] as $idx => $sDelimiter) {
@@ -7452,8 +6811,7 @@ abstract class MetaModel
 								// With an arrow in HTML
 								$aReplacements[] = (string) $replace;
 								$aSearches[] = $aMatches[1][$idx].utils::EscapeHtml($sSearch).$aMatches[1][$idx];
-							}
-							catch (Exception $e) {
+							} catch (Exception $e) {
 								IssueLog::Debug(
 									'Invalid placeholder in notification, no replacement will occur !',
 									LogChannels::NOTIFICATIONS,
@@ -7507,21 +6865,17 @@ abstract class MetaModel
 	 */
 	public static function GetCacheEntries($sEnvironment = null)
 	{
-		if (is_null($sEnvironment))
-		{
+		if (is_null($sEnvironment)) {
 			$sEnvironment = MetaModel::GetEnvironmentId();
 		}
-		$aEntries = array();
+		$aEntries = [];
 		$aCacheUserData = apc_cache_info_compat();
-		if (is_array($aCacheUserData) && isset($aCacheUserData['cache_list']))
-		{
+		if (is_array($aCacheUserData) && isset($aCacheUserData['cache_list'])) {
 			$sPrefix = 'itop-'.$sEnvironment.'-';
 
-			foreach($aCacheUserData['cache_list'] as $i => $aEntry)
-			{
+			foreach ($aCacheUserData['cache_list'] as $i => $aEntry) {
 				$sEntryKey = array_key_exists('info', $aEntry) ? $aEntry['info'] : $aEntry['key'];
-				if (strpos($sEntryKey, $sPrefix) === 0)
-				{
+				if (strpos($sEntryKey, $sPrefix) === 0) {
 					$sCleanKey = substr($sEntryKey, strlen($sPrefix));
 					$aEntries[$sCleanKey] = $aEntry;
 					$aEntries[$sCleanKey]['info'] = $sEntryKey;
@@ -7570,8 +6924,7 @@ abstract class MetaModel
 	 */
 	public static function ResetCache($sEnvironmentId = null)
 	{
-		if (is_null($sEnvironmentId))
-		{
+		if (is_null($sEnvironmentId)) {
 			$sEnvironmentId = MetaModel::GetEnvironmentId();
 		}
 
@@ -7579,10 +6932,8 @@ abstract class MetaModel
 		require_once(APPROOT.'/core/dict.class.inc.php');
 		Dict::ResetCache($sAppIdentity);
 
-		if (function_exists('apc_delete'))
-		{
-			foreach(self::GetCacheEntries($sEnvironmentId) as $sKey => $aAPCInfo)
-			{
+		if (function_exists('apc_delete')) {
+			foreach (self::GetCacheEntries($sEnvironmentId) as $sKey => $aAPCInfo) {
 				$sAPCKey = $aAPCInfo['info'];
 				apc_delete($sAPCKey);
 			}
@@ -7592,8 +6943,7 @@ abstract class MetaModel
 		UserRights::FlushPrivileges();
 
 		// Reset the opcache since otherwise the PHP "model" files may still be cached !!
-		if (function_exists('opcache_reset'))
-		{
+		if (function_exists('opcache_reset')) {
 			// Zend opcode cache
 			opcache_reset();
 		}
@@ -7620,42 +6970,29 @@ abstract class MetaModel
 	{
 		$sRet = $sField;
 
-		if ($sField == 'id')
-		{
+		if ($sField == 'id') {
 			$sRet = 'id';
-		}
-		elseif ($sField == 'friendlyname')
-		{
+		} elseif ($sField == 'friendlyname') {
 			$sFriendlyNameAttCode = static::GetFriendlyNameAttributeCode($sClass);
-			if (!is_null($sFriendlyNameAttCode))
-			{
+			if (!is_null($sFriendlyNameAttCode)) {
 				// The friendly name is made of a single attribute
 				$sRet = $sFriendlyNameAttCode;
 			}
-		}
-		else
-		{
+		} else {
 			$oAttDef = static::GetAttributeDef($sClass, $sField);
-			if ($oAttDef->IsExternalField())
-			{
-				if ($oAttDef->IsFriendlyName())
-				{
+			if ($oAttDef->IsExternalField()) {
+				if ($oAttDef->IsFriendlyName()) {
 					$oKeyAttDef = MetaModel::GetAttributeDef($sClass, $oAttDef->GetKeyAttCode());
 					$sRemoteClass = $oKeyAttDef->GetTargetClass();
 					$sFriendlyNameAttCode = static::GetFriendlyNameAttributeCode($sRemoteClass);
-					if (is_null($sFriendlyNameAttCode))
-					{
+					if (is_null($sFriendlyNameAttCode)) {
 						// The friendly name is made of several attributes
 						$sRet = $oAttDef->GetKeyAttCode().'->friendlyname';
-					}
-					else
-					{
+					} else {
 						// The friendly name is made of a single attribute
 						$sRet = $oAttDef->GetKeyAttCode().'->'.$sFriendlyNameAttCode;
 					}
-				}
-				else
-				{
+				} else {
 					$sRet = $oAttDef->GetKeyAttCode().'->'.$oAttDef->GetExtAttCode();
 				}
 			}
@@ -7665,11 +7002,10 @@ abstract class MetaModel
 
 	private static function GetAdditionalRequestAfterAlter($sClass, $sTable, $sField)
 	{
-		$aRequests = array();
+		$aRequests = [];
 
 		// Copy finalclass fields from root class to intermediate classes
-		if ($sField == self::DBGetClassField($sClass))
-		{
+		if ($sField == self::DBGetClassField($sClass)) {
 			$sRootClass = MetaModel::GetRootClass($sClass);
 			$sRootTable = self::DBGetTable($sRootClass);
 			$sKey = self::DBGetKey($sClass);
@@ -7785,7 +7121,7 @@ abstract class MetaModel
 			'iNewsroomProvider',
 		];
 		foreach ($aInterfaces as $sInterface) {
-			self::$m_aExtensionClassNames[$sInterface] = array();
+			self::$m_aExtensionClassNames[$sInterface] = [];
 		}
 
 		foreach (get_declared_classes() as $sPHPClass) {
@@ -7800,15 +7136,14 @@ abstract class MetaModel
 	}
 }
 
-
 // Standard attribute lists
-MetaModel::RegisterZList("noneditable", array("description" => "non editable fields", "type" => "attributes"));
+MetaModel::RegisterZList("noneditable", ["description" => "non editable fields", "type" => "attributes"]);
 
-MetaModel::RegisterZList("details", array("description" => "All attributes to be displayed for the 'details' of an object", "type" => "attributes"));
-MetaModel::RegisterZList("summary", array("description" => "All attributes to be displayed for shorter 'details' of an object", "type" => "attributes"));
-MetaModel::RegisterZList("list", array("description" => "All attributes to be displayed for a list of objects", "type" => "attributes"));
-MetaModel::RegisterZList("preview", array("description" => "All attributes visible in preview mode", "type" => "attributes"));
+MetaModel::RegisterZList("details", ["description" => "All attributes to be displayed for the 'details' of an object", "type" => "attributes"]);
+MetaModel::RegisterZList("summary", ["description" => "All attributes to be displayed for shorter 'details' of an object", "type" => "attributes"]);
+MetaModel::RegisterZList("list", ["description" => "All attributes to be displayed for a list of objects", "type" => "attributes"]);
+MetaModel::RegisterZList("preview", ["description" => "All attributes visible in preview mode", "type" => "attributes"]);
 
-MetaModel::RegisterZList("standard_search", array("description" => "List of criteria for the standard search", "type" => "filters"));
-MetaModel::RegisterZList("advanced_search", array("description" => "List of criteria for the advanced search", "type" => "filters"));
-MetaModel::RegisterZList("default_search", array("description" => "List of criteria displayed by default during search", "type" => "filters"));
+MetaModel::RegisterZList("standard_search", ["description" => "List of criteria for the standard search", "type" => "filters"]);
+MetaModel::RegisterZList("advanced_search", ["description" => "List of criteria for the advanced search", "type" => "filters"]);
+MetaModel::RegisterZList("default_search", ["description" => "List of criteria displayed by default during search", "type" => "filters"]);

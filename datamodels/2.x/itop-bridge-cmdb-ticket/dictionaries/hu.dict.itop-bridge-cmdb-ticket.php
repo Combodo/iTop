@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkFunctionalCIToTicket' => 'Funkcionális CI / Hibajegy',
 	'Class:lnkFunctionalCIToTicket+' => '~~',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s~~',
@@ -30,12 +31,12 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Kézzel hozzáadva',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Számított',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Nincs hatása',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Hibajegyek',
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'All the tickets for this configuration item~~',
-));
+]);
