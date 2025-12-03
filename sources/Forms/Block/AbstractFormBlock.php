@@ -16,6 +16,7 @@ use Combodo\iTop\Forms\IO\FormOutput;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
 use Combodo\iTop\Forms\Register\RegisterException;
+use Combodo\iTop\Forms\Block\Base\CollectionBlock;
 
 /**
  * Abstract form block.
@@ -25,8 +26,8 @@ use Combodo\iTop\Forms\Register\RegisterException;
  */
 abstract class AbstractFormBlock implements IFormBlock
 {
-	/** @var null|FormBlock */
-	private ?FormBlock $oParent = null;
+	/** @var null|FormBlock|CollectionBlock */
+	private FormBlock|CollectionBlock|null $oParent = null;
 
 	/** @var OptionsRegister */
 	private OptionsRegister $oOptionsRegister;
@@ -42,14 +43,14 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function __construct(private readonly string $sName, array $aOptions = [])
 	{
+		// Register IO
+		$this->RegisterIO($this->oIORegister = new IORegister($this));
+		$this->AfterIORegistered($this->oIORegister);
+
 		// Register options
 		$this->RegisterOptions($this->oOptionsRegister = new OptionsRegister());
 		$this->SetOptions($aOptions);
 		$this->AfterOptionsRegistered($this->oOptionsRegister);
-
-		// Register IO
-		$this->RegisterIO($this->oIORegister = new IORegister($this));
-		$this->AfterIORegistered($this->oIORegister);
 	}
 
 	/**
@@ -65,11 +66,11 @@ abstract class AbstractFormBlock implements IFormBlock
 	/**
 	 * Set the parent block.
 	 *
-	 * @param FormBlock $oParent
+	 * @param FormBlock|CollectionBlock $oParent
 	 *
 	 * @return void
 	 */
-	public function SetParent(FormBlock $oParent): void
+	public function SetParent(FormBlock|CollectionBlock $oParent): void
 	{
 		$this->oParent = $oParent;
 	}
@@ -77,9 +78,9 @@ abstract class AbstractFormBlock implements IFormBlock
 	/**
 	 * Get the parent block.
 	 *
-	 * @return FormBlock|null
+	 * @return FormBlock|CollectionBlock|null
 	 */
-	public function GetParent(): ?FormBlock
+	public function GetParent(): FormBlock|CollectionBlock|null
 	{
 		return $this->oParent;
 	}

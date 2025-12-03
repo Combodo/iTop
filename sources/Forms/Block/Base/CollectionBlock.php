@@ -25,9 +25,6 @@ class CollectionBlock extends AbstractTypeFormBlock
 	// Inputs
 	public const INPUT_CLASS_NAME = 'input_class_name';
 
-	/** @var FormBlock block */
-	protected AbstractTypeFormBlock $oPrototypeBlock;
-
 	/** @inheritdoc */
 	public function GetFormType(): string
 	{
@@ -56,15 +53,12 @@ class CollectionBlock extends AbstractTypeFormBlock
 	{
 		parent::RegisterOptions($oOptionsRegister);
 
+		$oOptionsRegister->SetOption('entry_block', null, false);
 		$oOptionsRegister->SetOption('prototype', true);
 		$oOptionsRegister->SetOption('allow_add', true);
 		$oOptionsRegister->SetOption('prototype_options', [
 			'label' => false,
 		]);
-
-		// not type options
-		$oOptionsRegister->SetOption('block_entry_type', FormBlock::class, false);
-		$oOptionsRegister->SetOption('block_entry_options', [], false);
 	}
 
 	/** @inheritdoc */
@@ -72,13 +66,11 @@ class CollectionBlock extends AbstractTypeFormBlock
 	{
 		parent::AfterOptionsRegistered($oOptionsRegister);
 
-		$sBlockEntryType = $this->GetOption('block_entry_type');
-		$sBlockEntryOptions = $this->GetOption('block_entry_options');
-		$this->oPrototypeBlock = new ($sBlockEntryType)('prototype', $sBlockEntryOptions);
+		$oBlockEntryType = $this->GetOption('entry_block');
 
 		try {
-			$oOptionsRegister->SetOption('entry_type', $this->oPrototypeBlock->GetFormType());
-			$oOptionsRegister->SetOption('entry_options', $this->oPrototypeBlock->GetOptions());
+			$oOptionsRegister->SetOption('entry_type', $oBlockEntryType->GetFormType());
+			$oOptionsRegister->SetOption('entry_options', $oBlockEntryType->GetOptions());
 		} catch (RegisterException $e) {
 
 		}

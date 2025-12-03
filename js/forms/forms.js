@@ -26,20 +26,3 @@ function isCheckbox (element) {
 		&& element.getAttribute('type') === 'checkbox'
 }
 
-function addFormToCollection(e) {
-	const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
-	const item = document.createElement('div');
-
-	item.style.marginTop = '20px';
-	item.innerHTML = collectionHolder
-		.dataset
-		.prototype
-		.replace(
-			/__name__/g,
-			collectionHolder.dataset.index
-		);
-
-	collectionHolder.appendChild(item);
-	collectionHolder.dataset.index++;
-	console.log(collectionHolder.dataset.index);
-}

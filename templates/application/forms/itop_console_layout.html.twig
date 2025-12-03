@@ -79,6 +79,7 @@
 {%- endblock form_rows -%}
 
 {%- block collection_widget -%}
+    <collection-element>
     {% if prototype is defined and not prototype.rendered %}
         {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'class': name, 'data-index': form|length > 0 ? form|last.vars.name + 1 : 0 }) -%}
     {% endif %}
@@ -88,6 +89,8 @@
             <button type="button" class="add_item_link ibo-button ibo-button ibo-is-regular " data-collection-holder-class="{{ name }}">{{ button_label|dict_s }}</button>
         </div>
     {% endif %}
+    </collection-element>
+
 {%- endblock collection_widget -%}
 
 {%- block form_label_content -%}
