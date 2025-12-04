@@ -94,7 +94,7 @@ class ChoiceFormType extends AbstractType
 			if ($oEvent->getData() === null) {
 				$oFirstElement = array_shift($options['choices']);
 				if ($oFirstElement !== null) {
-					$oEvent->setData($oFirstElement);
+					$oEvent->setData(strval($oFirstElement));
 				}
 			}
 		}
