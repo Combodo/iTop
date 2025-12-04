@@ -1400,18 +1400,22 @@ class WizStepModulesChoice extends WizardStep
 
 				$aExtensionsAdded = [];
 				$aExtensionsRemoved = [];
+				$aExtensionsNotUninstallable = [];
 				foreach ($this->oExtensionsMap->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
 					/* @var \iTopExtension $oExtension */
 					$bSelected = in_array($oExtension->sCode, $aExtensions);
 					if($oExtension->bInstalled && !$bSelected){
-						$aExtensionsRemoved[] = $oExtension->sLabel;
+						$aExtensionsRemoved[$oExtension->sCode] = $oExtension->sLabel;
 					}
 					else if(!$oExtension->bInstalled && $bSelected) {
-						$aExtensionsAdded[] = $oExtension->sLabel;
+						$aExtensionsAdded[$oExtension->sCode] = $oExtension->sLabel;
+					}
+					if(!$oExtension->CanBeUninstalled()){
+						$aExtensionsNotUninstallable[$oExtension->sCode] = true;
 					}
 				}
 
-				$sExtensionsAdded = 'No extension added.';
+				$sExtensionsAdded = '<ul><li>No extension added.</li></ul>';
 				if (count($aExtensionsAdded) > 0) {
 					$sExtensionsAdded = '<ul>';
 					foreach ($aExtensionsAdded as $sExtensionCode) {
@@ -1420,15 +1424,18 @@ class WizStepModulesChoice extends WizardStep
 					$sExtensionsAdded .= '</ul>';
 				}
 
-				$sExtensionsRemoved = 'No extension removed.';
+				$sExtensionsRemoved = '<ul><li>No extension removed.</li></ul>';
 				if (count($aExtensionsRemoved) > 0) {
 					$sExtensionsRemoved = '<ul>';
-					foreach ($aExtensionsRemoved as $sExtensionCode) {
-						$sExtensionsRemoved .= '<li>'.$sExtensionCode.'</li>';
+					foreach ($aExtensionsRemoved as $sCode => $sExtensionCode) {
+						$sForcedUninstall = '';
+						if (isset($aExtensionsNotUninstallable[$sCode])) {
+							$sForcedUninstall = ' (forced uninstallation)';
+						}
+						$sExtensionsRemoved .= '<li>'.$sExtensionCode.$sForcedUninstall.'</li>';
 					}
 					$sExtensionsRemoved .= '</ul>';
 				}
-
 
 				$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($aModules)));
 				$this->oWizard->SetParameter('selected_extensions', json_encode($aExtensions));
@@ -2253,10 +2260,10 @@ class WizStepSummary extends WizardStep
 		$oPage->add('<fieldset id="summary"><legend>Installation Parameters</legend>');
 		$oPage->add('<div id="params_summary">');
 
-		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Extensions Added</span>');
+		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Extensions to be installed</span>');
 		$oPage->add($this->oWizard->GetParameter('extensions_added'));
 		$oPage->add('</div>');
-		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Extensions Removed</span>');
+		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Extensions to be uninstalled</span>');
 		$oPage->add($this->oWizard->GetParameter('extensions_removed'));
 		$oPage->add('</div>');
 
