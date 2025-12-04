@@ -23,7 +23,7 @@
 
 {%- block choice_widget_collapsed -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input')|trim}) %}
-    <select is="choices-element" class="field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete ui-autocomplete-input" style="display: none"
+    <select is="choices-element" class="field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete ui-autocomplete-input"
         {{ block('widget_attributes') }}
         {% if multiple %} multiple="multiple" {% endif %}
             {% if max_items_selected is defined %} data-tom-select-max-items-selected="{{ max_items_selected }}" {% endif %}
@@ -79,16 +79,30 @@
 {%- endblock form_rows -%}
 
 {%- block collection_widget -%}
-    <collection-element>
+
     {% if prototype is defined and not prototype.rendered %}
-        {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'class': name, 'data-index': form|length > 0 ? form|last.vars.name + 1 : 0 }) -%}
+        {% set deleteBtn = '<button type="button" class="remove_item_link ibo-button ibo-is-regular ibo-is-danger">Supprimer</button>' %}
+        {%- set prototype_html = '<collection-entry-element>' ~ form_widget(prototype) ~ ' ' ~ deleteBtn ~'</collection-entry-element>' -%}
+        {%- set attr = attr|merge({'data-prototype': prototype_html, 'class': name, 'data-index': form|length > 0 ? form|last.vars.name + 1 : 0 }) -%}
     {% endif %}
-    {{- block('form_widget') -}}
-    {% if allow_add %}
-        <div style="margin-top: 20px;">
-            <button type="button" class="add_item_link ibo-button ibo-button ibo-is-regular " data-collection-holder-class="{{ name }}">{{ button_label|dict_s }}</button>
-        </div>
-    {% endif %}
+
+    <collection-element {{ block('widget_container_attributes') }}>
+
+        {% for child in form %}
+            <collection-entry-element>
+                {{ form_widget(child) }}
+                {% if allow_delete %}
+                    <button type="button" class="remove_item_link ibo-button ibo-is-regular ibo-is-danger">Supprimer</button>
+                {% endif %}
+            </collection-entry-element>
+        {% endfor %}
+
+        {% if allow_add %}
+            <div style="margin-top: 20px;">
+                <button type="button" class="add_item_link ibo-button ibo-button ibo-is-regular " data-collection-holder-class="{{ name }}">{{ button_label|dict_s }}</button>
+            </div>
+        {% endif %}
+
     </collection-element>
 
 {%- endblock collection_widget -%}
@@ -130,4 +144,3 @@
     </button>
     </div>
 {%- endblock oql_form_row -%}
-

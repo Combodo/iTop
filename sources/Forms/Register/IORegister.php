@@ -74,7 +74,7 @@ class IORegister
 		$oBlockOutput = $oOutputBlock->GetOutput($sOutputName);
 
 		$this->AddInput($sName, $oBlockOutput->GetDataType());
-		$this->DependsOn($sName, $sOutputBlockName, $sOutputName);
+		$this->InputDependsOn($sName, $sOutputBlockName, $sOutputName);
 
 		return $this;
 	}
@@ -91,7 +91,7 @@ class IORegister
 	 * @throws FormBlockIOException
 	 * @throws RegisterException
 	 */
-	public function DependsOn(string $sInputName, string $sOutputBlockName, string $sOutputName): self
+	public function InputDependsOn(string $sInputName, string $sOutputBlockName, string $sOutputName): self
 	{
 		$oOutputBlock = $this->oFormBlock->GetParent()?->Get($sOutputBlockName);
 		if (is_null($oOutputBlock)) {
@@ -115,7 +115,7 @@ class IORegister
 	 * @throws FormBlockIOException
 	 * @throws RegisterException
 	 */
-	public function ImpactParent(string $sOutputName, string $sParentOutputName): self
+	public function OutputImpactParent(string $sOutputName, string $sParentOutputName): self
 	{
 		$oFormOutput = $this->GetOutput($sOutputName);
 		$oParentFormOutput = $this->oFormBlock->GetParent()->GetOutput($sParentOutputName);
@@ -359,7 +359,7 @@ class IORegister
 	 * @throws FormBlockIOException
 	 * @throws RegisterException
 	 */
-	public function DependsOnParent(string $sInputName, string $sParentInputName): self
+	public function InputDependsOnParent(string $sInputName, string $sParentInputName): self
 	{
 		$oFormInput = $this->GetInput($sInputName);
 		$oParentFormInput = $this->oFormBlock->GetParent()->GetInput($sParentInputName);

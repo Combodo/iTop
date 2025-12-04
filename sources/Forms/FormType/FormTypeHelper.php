@@ -7,7 +7,9 @@
 
 namespace Combodo\iTop\Forms\FormType;
 
+use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
+use Combodo\iTop\Forms\FormBuilder\DependencyMap;
 use Symfony\Component\Form\FormInterface;
 
 /**
@@ -57,7 +59,7 @@ class FormTypeHelper
 		$oMap = $oBlockTurboTrigger->GetParent()->GetDependenciesMap();
 
 		// Add impacted blocks
-		$aImpacted = $oMap->GetBlocksImpactedBy($oBlockTurboTrigger->GetName());
+		$aImpacted = static::GetImpactedByRecursive($oMap, $oBlockTurboTrigger);
 		foreach ($aImpacted as $oImpactedBlock) {
 			$sName = $sParentName.'_'.$oImpactedBlock->GetName();
 			if ($oParent->has($oImpactedBlock->GetName())) {
@@ -72,6 +74,21 @@ class FormTypeHelper
 			'blocks_to_redraw' => $aBlocksToRedraw,
 			'current_block'   => $oFormTurboTrigger->createView(),
 		];
+	}
+
+	private static function GetImpactedByRecursive(DependencyMap $oMap, AbstractFormBlock $oBLock): ?array
+	{
+		$aImpacted = $oMap->GetBlocksImpactedBy($oBLock->GetName());
+		if ($aImpacted !== null) {
+			foreach ($aImpacted as $oImpactedBlock) {
+				$aRecursiveImpacted = static::GetImpactedByRecursive($oMap, $oImpactedBlock);
+				if ($aRecursiveImpacted !== null) {
+					$aImpacted = array_merge($aImpacted, $aRecursiveImpacted);
+				}
+			}
+		}
+
+		return $aImpacted;
 	}
 
 	/**

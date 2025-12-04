@@ -491,6 +491,7 @@ return array(
     'Combodo\\iTop\\Forms\\Block\\Base\\TextAreaFormBlock' => $baseDir . '/sources/Forms/Block/Base/TextAreaFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\TextFormBlock' => $baseDir . '/sources/Forms/Block/Base/TextFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\DataModel\\AttributeChoiceFormBlock' => $baseDir . '/sources/Forms/Block/DataModel/AttributeChoiceFormBlock.php',
+    'Combodo\\iTop\\Forms\\Block\\DataModel\\AttributeTypeChoiceFormBlock' => $baseDir . '/sources/Forms/Block/DataModel/AttributeTypeChoiceFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\DataModel\\AttributeValueChoiceFormBlock' => $baseDir . '/sources/Forms/Block/DataModel/AttributeValueChoiceFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\DataModel\\LabelFormBlock' => $baseDir . '/sources/Forms/Block/DataModel/LabelFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\DataModel\\OqlFormBlock' => $baseDir . '/sources/Forms/Block/DataModel/OqlFormBlock.php',
@@ -525,6 +526,8 @@ return array(
     'Combodo\\iTop\\Forms\\IO\\FormOutput' => $baseDir . '/sources/Forms/IO/FormOutput.php',
     'Combodo\\iTop\\Forms\\IO\\Format\\AbstractIOFormat' => $baseDir . '/sources/Forms/IO/Format/AbstractIOFormat.php',
     'Combodo\\iTop\\Forms\\IO\\Format\\AttributeIOFormat' => $baseDir . '/sources/Forms/IO/Format/AttributeIOFormat.php',
+    'Combodo\\iTop\\Forms\\IO\\Format\\AttributeTypeArrayIOFormat' => $baseDir . '/sources/Forms/IO/Format/AttributeTypeArrayIOFormat.php',
+    'Combodo\\iTop\\Forms\\IO\\Format\\AttributeTypeIOFormat' => $baseDir . '/sources/Forms/IO/Format/AttributeTypeIOFormat.php',
     'Combodo\\iTop\\Forms\\IO\\Format\\BooleanIOFormat' => $baseDir . '/sources/Forms/IO/Format/BooleanIOFormat.php',
     'Combodo\\iTop\\Forms\\IO\\Format\\ClassIOFormat' => $baseDir . '/sources/Forms/IO/Format/ClassIOFormat.php',
     'Combodo\\iTop\\Forms\\IO\\Format\\NumberIOFormat' => $baseDir . '/sources/Forms/IO/Format/NumberIOFormat.php',
@@ -3894,5 +3897,5 @@ return array(
     'privUITransactionFile' => $baseDir . '/application/transaction.class.inc.php',
     'privUITransactionSession' => $baseDir . '/application/transaction.class.inc.php',
     'utils' => $baseDir . '/application/utils.inc.php',
-    'ï¿½' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
+    '©' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
 );

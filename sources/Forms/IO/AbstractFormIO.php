@@ -19,6 +19,10 @@ use Symfony\Component\Form\FormEvents;
  */
 class AbstractFormIO
 {
+	public const EVENT_POST_SET_DATA = FormEvents::POST_SET_DATA;
+	public const EVENT_POST_SUBMIT   = FormEvents::POST_SUBMIT;
+	public const EVENT_FORM_STATIC   = 'form.static';
+
 	/** @var AbstractFormBlock The owner block */
 	private AbstractFormBlock $oOwnerBlock;
 
@@ -43,7 +47,7 @@ class AbstractFormIO
 	 * @param string $sName name of the IO
 	 * @param string $sType type of the IO
 	 *
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
+	 * @throws FormBlockIOException
 	 */
 	public function __construct(string $sName, string $sType, AbstractFormBlock $oOwnerBlock)
 	{
@@ -81,7 +85,7 @@ class AbstractFormIO
 	 * @param string $sName
 	 *
 	 * @return self
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
+	 * @throws FormBlockIOException
 	 */
 	public function SetName(string $sName): self
 	{
@@ -204,6 +208,9 @@ class AbstractFormIO
 	 */
 	private function Value(): mixed
 	{
+		if (array_key_exists('form.static', $this->aValues)) {
+			return $this->aValues['form.static'];
+		}
 		if (array_key_exists(FormEvents::POST_SUBMIT, $this->aValues)) {
 			return $this->aValues[FormEvents::POST_SUBMIT];
 		}
@@ -220,7 +227,7 @@ class AbstractFormIO
 	 * @param FormInput $oDestinationIO
 	 *
 	 * @return FormBinding
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
+	 * @throws FormBlockIOException
 	 */
 	public function BindToInput(FormInput $oDestinationIO): FormBinding
 	{
@@ -236,7 +243,7 @@ class AbstractFormIO
 	 * @param FormBinding $oFormBinding
 	 *
 	 * @return void
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException when already bound
+	 * @throws FormBlockIOException when already bound
 	 */
 	public function Attach(FormBinding $oFormBinding): void
 	{

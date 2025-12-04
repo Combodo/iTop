@@ -1,6 +1,6 @@
 class CollectionElement extends HTMLElement {
 
-	#eBtn;
+	#eBtnAdd;
 
 	// register the custom element
 	static {
@@ -11,7 +11,6 @@ class CollectionElement extends HTMLElement {
 		const collectionHolder = document.querySelector('.'+e.currentTarget.dataset.collectionHolderClass);
 		const item = document.createElement('div');
 
-		item.style.marginTop = '20px';
 		item.innerHTML = collectionHolder
 			.dataset
 			.prototype
@@ -22,13 +21,15 @@ class CollectionElement extends HTMLElement {
 
 		collectionHolder.appendChild(item);
 		collectionHolder.dataset.index++;
-		console.log(collectionHolder.dataset.index);
 	}
 
 	/** connectedCallback **/
 	connectedCallback() {
-		this.#eBtn = this.querySelector('.add_item_link');
-		this.#eBtn.addEventListener('click', CollectionElement.addFormToCollection);
+		this.#eBtnAdd = this.querySelector('.add_item_link');
+		this.#eBtnAdd.addEventListener('click', CollectionElement.addFormToCollection);
 	}
 
+	#removeCollectionItem() {
+
+	}
 }

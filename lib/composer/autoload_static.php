@@ -877,6 +877,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Forms\\Block\\Base\\TextAreaFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/TextAreaFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Base\\TextFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/TextFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\DataModel\\AttributeChoiceFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/DataModel/AttributeChoiceFormBlock.php',
+        'Combodo\\iTop\\Forms\\Block\\DataModel\\AttributeTypeChoiceFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/DataModel/AttributeTypeChoiceFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\DataModel\\AttributeValueChoiceFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/DataModel/AttributeValueChoiceFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\DataModel\\LabelFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/DataModel/LabelFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\DataModel\\OqlFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/DataModel/OqlFormBlock.php',
@@ -911,6 +912,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Forms\\IO\\FormOutput' => __DIR__ . '/../..' . '/sources/Forms/IO/FormOutput.php',
         'Combodo\\iTop\\Forms\\IO\\Format\\AbstractIOFormat' => __DIR__ . '/../..' . '/sources/Forms/IO/Format/AbstractIOFormat.php',
         'Combodo\\iTop\\Forms\\IO\\Format\\AttributeIOFormat' => __DIR__ . '/../..' . '/sources/Forms/IO/Format/AttributeIOFormat.php',
+        'Combodo\\iTop\\Forms\\IO\\Format\\AttributeTypeArrayIOFormat' => __DIR__ . '/../..' . '/sources/Forms/IO/Format/AttributeTypeArrayIOFormat.php',
+        'Combodo\\iTop\\Forms\\IO\\Format\\AttributeTypeIOFormat' => __DIR__ . '/../..' . '/sources/Forms/IO/Format/AttributeTypeIOFormat.php',
         'Combodo\\iTop\\Forms\\IO\\Format\\BooleanIOFormat' => __DIR__ . '/../..' . '/sources/Forms/IO/Format/BooleanIOFormat.php',
         'Combodo\\iTop\\Forms\\IO\\Format\\ClassIOFormat' => __DIR__ . '/../..' . '/sources/Forms/IO/Format/ClassIOFormat.php',
         'Combodo\\iTop\\Forms\\IO\\Format\\NumberIOFormat' => __DIR__ . '/../..' . '/sources/Forms/IO/Format/NumberIOFormat.php',
@@ -4280,7 +4283,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'privUITransactionFile' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'privUITransactionSession' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'utils' => __DIR__ . '/../..' . '/application/utils.inc.php',
-        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

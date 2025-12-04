@@ -43,14 +43,15 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function __construct(private readonly string $sName, array $aOptions = [])
 	{
-		// Register IO
-		$this->RegisterIO($this->oIORegister = new IORegister($this));
-		$this->AfterIORegistered($this->oIORegister);
-
 		// Register options
 		$this->RegisterOptions($this->oOptionsRegister = new OptionsRegister());
 		$this->SetOptions($aOptions);
 		$this->AfterOptionsRegistered($this->oOptionsRegister);
+
+		// Register IO
+		$this->RegisterIO($this->oIORegister = new IORegister($this));
+		$this->AfterIORegistered($this->oIORegister);
+
 	}
 
 	/**
@@ -307,9 +308,25 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @return $this
 	 * @throws FormBlockException
 	 */
-	public function DependsOn(string $sInputName, string $sOutputBlockName, string $sOutputName): AbstractFormBlock
+	public function InputDependsOn(string $sInputName, string $sOutputBlockName, string $sOutputName): AbstractFormBlock
 	{
-		$this->oIORegister->DependsOn($sInputName, $sOutputBlockName, $sOutputName);
+		$this->oIORegister->InputDependsOn($sInputName, $sOutputBlockName, $sOutputName);
+
+		return $this;
+	}
+
+	/**
+	 * Set an input value.
+	 *
+	 * @param string $sInputName
+	 * @param mixed $oValue
+	 *
+	 * @return $this
+	 * @throws RegisterException
+	 */
+	public function SetInputValue(string $sInputName, mixed $oValue): AbstractFormBlock
+	{
+		$this->oIORegister->GetInput($sInputName)->SetValue(AbstractFormIO::EVENT_FORM_STATIC, $oValue);
 		return $this;
 	}
 
@@ -322,9 +339,9 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @return $this
 	 * @throws FormBlockException
 	 */
-	public function DependsOnParent(string $sInputName, string $sParentInputName): AbstractFormBlock
+	public function InputDependsOnParent(string $sInputName, string $sParentInputName): AbstractFormBlock
 	{
-		$this->oIORegister->DependsOnParent($sInputName, $sParentInputName);
+		$this->oIORegister->InputDependsOnParent($sInputName, $sParentInputName);
 		return $this;
 	}
 
@@ -337,9 +354,9 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @return $this
 	 * @throws FormBlockException
 	 */
-	public function ImpactParent(string $sOutputName, string $sParentOutputName): AbstractFormBlock
+	public function OutputImpactParent(string $sOutputName, string $sParentOutputName): AbstractFormBlock
 	{
-		$this->oIORegister->ImpactParent($sOutputName, $sParentOutputName);
+		$this->oIORegister->OutputImpactParent($sOutputName, $sParentOutputName);
 		return $this;
 	}
 

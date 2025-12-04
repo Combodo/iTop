@@ -81,9 +81,9 @@ class IORegisterTest extends AbstractFormsTest
 		$oSubForm->AddInput('input_from_C', StringIOFormat::class);
 		$oSubForm->AddInput('unbound_input', StringIOFormat::class);
 
-		$this->GivenIORegister($oSubForm)->DependsOn('input_from_A', 'SubFormA', TextFormBlock::OUTPUT_TEXT);
-		$this->GivenIORegister($oSubForm)->DependsOn('input_from_B', 'SubFormB', CheckboxFormBlock::OUTPUT_CHECKED);
-		$this->GivenIORegister($oSubForm)->DependsOn('input_from_C', 'SubFormC', TextFormBlock::OUTPUT_TEXT);
+		$this->GivenIORegister($oSubForm)->InputDependsOn('input_from_A', 'SubFormA', TextFormBlock::OUTPUT_TEXT);
+		$this->GivenIORegister($oSubForm)->InputDependsOn('input_from_B', 'SubFormB', CheckboxFormBlock::OUTPUT_CHECKED);
+		$this->GivenIORegister($oSubForm)->InputDependsOn('input_from_C', 'SubFormC', TextFormBlock::OUTPUT_TEXT);
 
 		$aBoundInputs = $this->GivenIORegister($oSubForm)->GetBoundInputs();
 		$this->assertCount(3, $aBoundInputs);
@@ -96,7 +96,7 @@ class IORegisterTest extends AbstractFormsTest
 		$oSubFormA = $this->GivenSubFormBlock($this->oFormBlock, 'SubFormA', TextFormBlock::class);
 		$oIORegisterA = $this->GivenIORegister($oSubFormA);
 
-		$oIORegisterA->ImpactParent(TextFormBlock::OUTPUT_TEXT, 'output');
+		$oIORegisterA->OutputImpactParent(TextFormBlock::OUTPUT_TEXT, 'output');
 
 		$this->assertCount(1, $this->oIORegister->GetBoundOutputs());
 	}
@@ -119,7 +119,7 @@ class IORegisterTest extends AbstractFormsTest
 		$oSubFormA = $this->GivenSubFormBlock($this->oFormBlock, 'SubFormA', TextFormBlock::class);
 		$oIORegisterA = $this->GivenIORegister($oSubFormA);
 
-		$oIORegisterA->ImpactParent(TextFormBlock::OUTPUT_TEXT, 'output');
+		$oIORegisterA->OutputImpactParent(TextFormBlock::OUTPUT_TEXT, 'output');
 
 		$this->assertTrue($this->oFormBlock->GetOutput('output')->IsBound());
 	}
@@ -145,7 +145,7 @@ class IORegisterTest extends AbstractFormsTest
 
 		$this->expectException(RegisterException::class);
 
-		$this->oIORegister->DependsOn('non_existing_input', 'OtherBlock', 'test_output');
+		$this->oIORegister->InputDependsOn('non_existing_input', 'OtherBlock', 'test_output');
 	}
 
 	public function testDependingOnNonExistingOutputThrowsException(): void
@@ -153,7 +153,7 @@ class IORegisterTest extends AbstractFormsTest
 		$this->oIORegister->AddInput('test_input', StringIOFormat::class);
 
 		$this->expectException(RegisterException::class);
-		$this->oIORegister->DependsOn('test_input', 'OtherBlock', 'non_existing_output');
+		$this->oIORegister->InputDependsOn('test_input', 'OtherBlock', 'non_existing_output');
 	}
 
 	public function testDependingOnNonExistingBlockThrowsException(): void
@@ -162,7 +162,7 @@ class IORegisterTest extends AbstractFormsTest
 		$this->oIORegister->AddOutput('test_output', StringIOFormat::class);
 
 		$this->expectException(RegisterException::class);
-		$this->oIORegister->DependsOn('test_input', 'UnknownBlock', 'test');
+		$this->oIORegister->InputDependsOn('test_input', 'UnknownBlock', 'test');
 	}
 
 	public function testHasDependenciesBlocks(): void
@@ -172,7 +172,7 @@ class IORegisterTest extends AbstractFormsTest
 		$oSubForm = $this->GivenSubFormBlock($this->oFormBlock, 'SubForm', TextFormBlock::class);
 		$oSubForm->AddInput('input_from_A', StringIOFormat::class);
 
-		$this->GivenIORegister($oSubForm)->DependsOn('input_from_A', 'SubFormA', TextFormBlock::OUTPUT_TEXT);
+		$this->GivenIORegister($oSubForm)->InputDependsOn('input_from_A', 'SubFormA', TextFormBlock::OUTPUT_TEXT);
 		$this->assertTrue($this->GivenIORegister($oSubForm)->HasDependenciesBlocks());
 
 		$this->assertFalse($this->oIORegister->HasDependenciesBlocks());
@@ -185,7 +185,7 @@ class IORegisterTest extends AbstractFormsTest
 		$oSubForm = $this->GivenSubFormBlock($this->oFormBlock, 'SubForm', TextFormBlock::class);
 		$oSubForm->AddInput('input_from_A', StringIOFormat::class);
 
-		$this->GivenIORegister($oSubForm)->DependsOn('input_from_A', 'SubFormA', TextFormBlock::OUTPUT_TEXT);
+		$this->GivenIORegister($oSubForm)->InputDependsOn('input_from_A', 'SubFormA', TextFormBlock::OUTPUT_TEXT);
 		$this->assertFalse($this->GivenIORegister($oSubForm)->ImpactDependentsBlocks());
 
 		$this->assertTrue($this->GivenIORegister($oSubFormA)->ImpactDependentsBlocks());

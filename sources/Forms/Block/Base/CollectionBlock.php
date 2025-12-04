@@ -36,7 +36,7 @@ class CollectionBlock extends AbstractTypeFormBlock
 
 	public function EntryDependsOnParent(string $sInputName, string $sParentInputName): AbstractFormBlock
 	{
-		$this->oPrototypeBlock->DependsOnParent($sInputName, $sParentInputName);
+		$this->oPrototypeBlock->InputDependsOnParent($sInputName, $sParentInputName);
 
 		return $this;
 	}

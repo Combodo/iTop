@@ -29,7 +29,10 @@ class FormOutput extends AbstractFormIO
 	 *
 	 * @param string $sName
 	 * @param string $sType
+	 * @param AbstractFormBlock $oOwnerBlock
 	 * @param AbstractConverter|null $oConverter
+	 *
+	 * @throws FormBlockIOException
 	 */
 	public function __construct(string $sName, string $sType, AbstractFormBlock $oOwnerBlock, AbstractConverter $oConverter = null)
 	{
@@ -91,7 +94,7 @@ class FormOutput extends AbstractFormIO
 	 * @param FormOutput $oDestinationIO
 	 *
 	 * @return FormBinding
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
+	 * @throws FormBlockIOException
 	 */
 	public function BindToOutput(FormOutput $oDestinationIO): FormBinding
 	{

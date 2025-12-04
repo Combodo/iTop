@@ -80,7 +80,7 @@ class BlockTest extends AbstractFormsTest
 		$oFormBlock = new FormBlock('formBlock');
 		$oFormBlock->Add('allow_age', CheckboxFormBlock::class, []);
 		$oBirthdateBlock = $oFormBlock->Add('birthdate', TextFormBlock::class, [])
-			->DependsOn(AbstractTypeFormBlock::INPUT_VISIBLE, 'allow_age', CheckboxFormBlock::OUTPUT_CHECKED);
+			->InputDependsOn(AbstractTypeFormBlock::INPUT_VISIBLE, 'allow_age', CheckboxFormBlock::OUTPUT_CHECKED);
 
 		$this->assertTrue($oBirthdateBlock->HasDependenciesBlocks());
 	}
@@ -100,7 +100,7 @@ class BlockTest extends AbstractFormsTest
 		$oFormBlock->Add('lastname', TextFormBlock::class, []);
 		$oFormBlock->Add('allow_age', CheckboxFormBlock::class, []);
 		$oFormBlock->Add('birthdate', TextFormBlock::class, [])
-			->DependsOn(AbstractTypeFormBlock::INPUT_VISIBLE, 'allow_age', CheckboxFormBlock::OUTPUT_CHECKED);
+			->InputDependsOn(AbstractTypeFormBlock::INPUT_VISIBLE, 'allow_age', CheckboxFormBlock::OUTPUT_CHECKED);
 
 		// form builder
 		$oFormFactoryBuilder = Forms::createFormFactoryBuilder();

@@ -185,6 +185,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->LinkScriptFromAppRoot('js/forms/custom-elements/choices.js');
 		$this->LinkScriptFromAppRoot('js/forms/custom-elements/oql.js');
 		$this->LinkScriptFromAppRoot('js/forms/custom-elements/collection.js');
+		$this->LinkScriptFromAppRoot('js/forms/custom-elements/collection_entry.js');
 
 		// Used by inline image, CKEditor and other places
 		$this->LinkScriptFromAppRoot('node_modules/magnific-popup/dist/jquery.magnific-popup.min.js');
