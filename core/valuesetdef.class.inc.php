@@ -404,7 +404,8 @@ class ValueSetObjects extends ValueSetDefinition
 			if (count($aAdditionalField) > 0) {
 				$aArguments = [];
 				foreach ($aAdditionalField as $sAdditionalField) {
-					array_push($aArguments, $oObject->Get($sAdditionalField));
+					//getAsCSV to have user friendly value in text format
+					array_push($aArguments, $oObject->GetAsCSV($sAdditionalField,' ',''));
 				}
 				$aData['additional_field'] = utils::VSprintf($sFormatAdditionalField, $aArguments);
 			} else {

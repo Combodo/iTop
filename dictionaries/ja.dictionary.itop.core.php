@@ -610,7 +610,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:Trigger' => 'トリガー',
 	'Class:Trigger+' => 'カスタムイベントハンドラー',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
+	'Class:Trigger/ComplementaryName' => '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description' => '説明',
 	'Class:Trigger/Attribute:description+' => '1行の説明',
 	'Class:Trigger/Attribute:action_list' => 'トリガーされたアクション',

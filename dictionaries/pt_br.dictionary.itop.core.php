@@ -606,7 +606,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Trigger' => 'Gatilho',
 	'Class:Trigger+' => 'Manipulador de eventos personalizado',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
+	'Class:Trigger/ComplementaryName' => '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Descrição',
 	'Class:Trigger/Attribute:description+' => 'Uma descrição curta',
 	'Class:Trigger/Attribute:action_list' => 'Ações desencadeadas',

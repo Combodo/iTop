@@ -705,7 +705,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:Trigger'                         => '触发器',
 	'Class:Trigger+'                        => '自定义事件处理',
-	'Class:Trigger/ComplementaryName'       => '%1$s, %2$s',
+	'Class:Trigger/ComplementaryName' => '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description'   => '描述',
 	'Class:Trigger/Attribute:description+'  => '简短描述',
 	'Class:Trigger/Attribute:action_list'   => '触发的操作',

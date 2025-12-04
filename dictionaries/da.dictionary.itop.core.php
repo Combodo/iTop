@@ -611,7 +611,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Trigger' => 'Triggere',
 	'Class:Trigger+' => '',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
+	'Class:Trigger/ComplementaryName' => '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Beskrivelse',
 	'Class:Trigger/Attribute:description+' => '',
 	'Class:Trigger/Attribute:action_list' => 'Triggerede handlinger',

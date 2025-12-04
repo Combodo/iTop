@@ -284,7 +284,8 @@ class UIExtKeyWidget
 				if ($bAddingValue) {
 					$aArguments = [];
 					foreach ($aAdditionalField as $sAdditionalField) {
-						array_push($aArguments, $oObj->Get($sAdditionalField));
+						//getAsCSV to have user friendly value in text format
+						array_push($aArguments, $oObj->GetAsCSV($sAdditionalField, ' ', ''));
 					}
 					$aOption['additional_field'] = utils::HtmlEntities(utils::VSprintf($sFormatAdditionalField, $aArguments));
 				}

@@ -611,7 +611,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Trigger' => 'Триггер',
 	'Class:Trigger+' => 'Пользовательский обработчик событий',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
+	'Class:Trigger/ComplementaryName' => '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Описание',
 	'Class:Trigger/Attribute:description+' => 'Описание триггера',
 	'Class:Trigger/Attribute:action_list' => 'Действия триггера',

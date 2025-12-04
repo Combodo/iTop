@@ -19,7 +19,7 @@ class TriggerOnAttachmentDownload extends TriggerOnAttributeBlobDownload
 			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
-			"complementary_name_attcode" => ['finalclass', 'complement'],
+			"complementary_name_attcode" => ['finalclass', 'target_class'],
 			"state_attcode" => "",
 			"reconc_keys" => ['description'],
 			"db_table" => "priv_trigger_onattdownload",

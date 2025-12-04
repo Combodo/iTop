@@ -650,7 +650,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Trigger' => 'Déclencheur',
 	'Class:Trigger+' => '',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
+	'Class:Trigger/ComplementaryName' => '%1$s, classe cible : %2$s',
 	'Class:Trigger/Attribute:description' => 'Description',
 	'Class:Trigger/Attribute:description+' => 'Soyez explicite, afin que vos utilisateurs comprennent à quelles notifications précisement ils se désabonnent',
 	'Class:Trigger/Attribute:action_list' => 'Actions déclenchées',

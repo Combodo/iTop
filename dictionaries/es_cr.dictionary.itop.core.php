@@ -599,7 +599,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Trigger' => 'Disparador',
 	'Class:Trigger+' => 'Disparador',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
+	'Class:Trigger/ComplementaryName' => '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Descripción',
 	'Class:Trigger/Attribute:description+' => 'Descripción',
 	'Class:Trigger/Attribute:action_list' => 'Acciones',

@@ -608,7 +608,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Trigger' => 'Wyzwalacz',
 	'Class:Trigger+' => 'Niestandardowa obsługa zdarzeń',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
+	'Class:Trigger/ComplementaryName' => '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Opis',
 	'Class:Trigger/Attribute:description+' => 'jedna linia opisu',
 	'Class:Trigger/Attribute:action_list' => 'Działania wyzwalacza',

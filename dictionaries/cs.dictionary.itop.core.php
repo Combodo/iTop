@@ -612,7 +612,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Trigger' => 'Triger',
 	'Class:Trigger+' => '',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
+	'Class:Trigger/ComplementaryName' => '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Popis',
 	'Class:Trigger/Attribute:description+' => 'Krátký popis',
 	'Class:Trigger/Attribute:action_list' => 'Spouštěné akce',

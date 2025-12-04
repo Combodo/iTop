@@ -608,7 +608,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Trigger' => 'Trigger',
 	'Class:Trigger+' => 'Custom event handler',
-	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
+	'Class:Trigger/ComplementaryName' => '%1$s, class restriction: %2$s~~',
 	'Class:Trigger/Attribute:description' => 'Beschreibung',
 	'Class:Trigger/Attribute:description+' => 'Kurzbeschreibung',
 	'Class:Trigger/Attribute:action_list' => 'Verbundene Trigger-Aktionen',
