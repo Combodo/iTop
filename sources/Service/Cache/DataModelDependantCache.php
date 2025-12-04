@@ -90,7 +90,7 @@ class DataModelDependantCache
 		if (!is_file($sCacheFileName)) {
 			return null;
 		}
-		return include $sCacheFileName;
+		return include_once $sCacheFileName;
 	}
 
 	/**

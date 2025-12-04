@@ -34,13 +34,24 @@ class FormBlockService
 		return static::$oInstance;
 	}
 
+	/**
+	 * @param string $sId name of the form to retrieve
+	 *
+	 * @return \Combodo\iTop\Forms\Block\Base\FormBlock
+	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 */
 	public function GetFormBlockById(string $sId): FormBlock
 	{
-		if ($this->oCacheService->HasEntry(FormsCompiler::CACHE_POOL, $sId)) {
-			$this->oCacheService->Fetch(FormsCompiler::CACHE_POOL, $sId);
+		$sFilteredId = preg_replace('/[^0-9a-zA-Z_]/', '', $sId);
+		if (strlen($sFilteredId) === 0) {
+			throw new FormBlockException('Malformed name for block: '.json_encode($sId));
 		}
+		if (!$this->oCacheService->HasEntry(FormsCompiler::CACHE_POOL, $sFilteredId)) {
+			throw new FormBlockException('No block found for: '.json_encode($sFilteredId).' original value asked: '.json_encode($sId));
+		}
+		$this->oCacheService->Fetch(FormsCompiler::CACHE_POOL, $sFilteredId);
 
-		return new $sId($sId);
+		return new $sFilteredId($sFilteredId);
 	}
 
 }
