@@ -55,7 +55,7 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 
 		foreach ($aExtensionCodes as $sCode) {
 			/** @var \iTopExtension $oExtension */
-			$oExtension = $oExtensionsMap->Get($sCode);
+			$oExtension = $oExtensionsMap->GetFromExtensionCode($sCode);
 			if (!is_null($oExtension)) {
 				$sDir = $oExtension->sSourceDir;
 				\IssueLog::Info(__METHOD__.": remove extension locally", null, [$oExtension->sCode => $sDir]);

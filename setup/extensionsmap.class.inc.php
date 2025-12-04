@@ -575,7 +575,12 @@ class iTopExtensionsMap
 	 */
 	public function LoadChoicesFromDatabase(Config $oConfig)
 	{
-		foreach ($this->LoadInstalledExtensionsFromDatabase($oConfig) as $oExtension) {
+		$aLoadInstalledExtensionsFromDatabase = $this->LoadInstalledExtensionsFromDatabase($oConfig);
+		if (false === $aLoadInstalledExtensionsFromDatabase) {
+			return false;
+		}
+
+		foreach ($aLoadInstalledExtensionsFromDatabase as $oExtension) {
 			$this->MarkAsChosen($oExtension->sCode);
 			$this->SetInstalledVersion($oExtension->sCode, $oExtension->sVersion);
 		}
