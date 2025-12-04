@@ -49,15 +49,30 @@ class DataModelDependantCache
 			// NULL cannot be stored as it collides with Fetch() returning NULL when the key does not exist
 			throw new Exception('Cannot store NULL in the cache');
 		}
-		$sCacheFileName = $this->MakeCacheFileName($sPool, $sKey);
-		SetupUtils::builddir(dirname($sCacheFileName));
 
 		$sMoreInfo = '';
 		foreach ($aMoreInfo as $sKey => $sValue) {
 			$sMoreInfo .= "\n// $sKey: $sValue";
 		}
-		$sCacheContent = "<?php $sMoreInfo\nreturn ".var_export($value, true).";";
-		file_put_contents($sCacheFileName, $sCacheContent, LOCK_EX);
+		$sCacheContent = "<?php $sMoreInfo\nreturn ".var_export($value, true).';';
+
+		$this->StorePhpContent($sPool, $sKey, $sCacheContent);
+	}
+
+	/**
+	 *
+	 * @param string $sPool
+	 * @param string $sKey
+	 * @param string $sPHPContent must include '<?php'
+	 *
+	 * @return void
+	 */
+	public function StorePhpContent(string $sPool, string $sKey, string $sPHPContent): void
+	{
+		$sCacheFileName = $this->MakeCacheFileName($sPool, $sKey);
+		SetupUtils::builddir(dirname($sCacheFileName));
+
+		file_put_contents($sCacheFileName, $sPHPContent, LOCK_EX);
 	}
 
 	/**

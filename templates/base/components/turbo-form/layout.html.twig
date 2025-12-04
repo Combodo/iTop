@@ -8,8 +8,8 @@
 </script>
 
 <turbo-frame id="{{ oUIBlock.GetId() }}">
-    {% if actionUrl is defined %}
-        {{ form_start(oUIBlock.GetFormView(), {'action': actionUrl}) }}
+    {% if oUIBlock.GetAction() %}
+        {{ form_start(oUIBlock.GetFormView(), {action: oUIBlock.GetAction()}) }}
     {% else %}
         {{ form_start(oUIBlock.GetFormView()) }}
     {% endif %}
