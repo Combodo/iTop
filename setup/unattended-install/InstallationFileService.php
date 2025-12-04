@@ -79,7 +79,7 @@ class InstallationFileService
 	public function GetItopExtensionsMap(): ItopExtensionsMap
 	{
 		if (is_null($this->oItopExtensionsMap)) {
-			$this->oItopExtensionsMap = new iTopExtensionsMap($this->sTargetEnvironment, true);
+			$this->oItopExtensionsMap = new iTopExtensionsMap($this->sTargetEnvironment);
 		}
 		return $this->oItopExtensionsMap;
 	}

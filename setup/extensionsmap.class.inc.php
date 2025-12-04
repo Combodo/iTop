@@ -165,7 +165,7 @@ class iTopExtensionsMap
 	 */
 	protected $aScannedDirs;
 
-	public function __construct($sFromEnvironment = 'production', $bNormalizeOldExtensions = true, $aExtraDirs = [])
+	public function __construct($sFromEnvironment = 'production', $aExtraDirs = [])
 	{
 		$this->aExtensions = [];
 		$this->aScannedDirs = [];
