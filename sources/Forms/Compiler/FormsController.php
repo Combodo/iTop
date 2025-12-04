@@ -13,6 +13,7 @@ use Combodo\iTop\Forms\FormType\FormTypeHelper;
 use Combodo\iTop\ItopSdkFormDemonstrator\Helper\ItopSdkFormDemonstratorLog;
 use Exception;
 use IssueLog;
+use utils;
 
 class FormsController extends Controller
 {
@@ -56,7 +57,7 @@ class FormsController extends Controller
 
 			$this->DisplayPage([
 				'form' => $oForm->createView(),
-				'sAction' => '',
+				'sAction' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php?route=forms.dashlet_configuration&dashlet_code='.urlencode($sDashletId),
 			], 'BasicForm');
 
 		} catch (Exception $e) {
