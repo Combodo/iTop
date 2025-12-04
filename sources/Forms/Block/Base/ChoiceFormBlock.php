@@ -23,8 +23,8 @@ use Combodo\iTop\Forms\Register\IORegister;
 class ChoiceFormBlock extends AbstractTypeFormBlock
 {
 	// Outputs
-	public const OUTPUT_LABEL = 'output_label';
-	public const OUTPUT_VALUE = 'output_value';
+	public const OUTPUT_LABEL = 'label';
+	public const OUTPUT_VALUE = 'value';
 
 	/** @inheritdoc */
 	public function GetFormType(): string

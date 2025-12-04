@@ -48,13 +48,17 @@ class TurboFormUIBlockFactory extends AbstractUIBlockFactory
 	}
 
 	/**
+	 * For dashlet configuration forms
+	 *
+	 * @api
+	 *
 	 * @param string $sDashletId
-	 * @param string|null $sAction
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\TurboForm\TurboForm
+	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
 	 */
-	public static function MakeForDashlet(string $sDashletId, string $sId = null): TurboForm
+	public static function MakeForDashletConfiguration(string $sDashletId, string $sId = null): TurboForm
 	{
 		$oBlockForm = FormBlockService::GetInstance()->GetFormBlockById($sDashletId);
 		$oController = new FormsController();

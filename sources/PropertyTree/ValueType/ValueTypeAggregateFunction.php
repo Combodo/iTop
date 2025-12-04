@@ -7,15 +7,15 @@
 
 namespace Combodo\iTop\PropertyTree\ValueType;
 
-use Combodo\iTop\Forms\Block\DataModel\Dashlet\ClassAttributeGroupByFormBlock;
+use Combodo\iTop\Forms\Block\DataModel\Dashlet\AggregateFunctionFormBlock;
 
 /**
  * @since 3.3.0
  */
-class ValueTypeClassAttributeGroupBy extends AbstractValueType
+class ValueTypeAggregateFunction extends AbstractValueType
 {
 	public function getFormBlockClass(): string
 	{
-		return ClassAttributeGroupByFormBlock::class;
+		return AggregateFunctionFormBlock::class;
 	}
 }

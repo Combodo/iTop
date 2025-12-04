@@ -25,8 +25,8 @@ use Exception;
 class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 {
 	// inputs
-	public const INPUT_CLASS_NAME = 'input_class_name';
-	public const INPUT_ATTRIBUTE  = 'input_attribute';
+	public const INPUT_CLASS_NAME = 'class';
+	public const INPUT_ATTRIBUTE  = 'attribute';
 
 	/** @inheritdoc */
 	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void

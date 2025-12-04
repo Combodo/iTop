@@ -24,7 +24,7 @@ use Combodo\iTop\Forms\Register\OptionsRegister;
 class OqlFormBlock extends TextAreaFormBlock
 {
 	// outputs
-	public const OUTPUT_SELECTED_CLASS = 'output_selected_class';
+	public const OUTPUT_SELECTED_CLASS = 'selected_class';
 
 	/** @inheritdoc */
 	public function GetFormType(): string

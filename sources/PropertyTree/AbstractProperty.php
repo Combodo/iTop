@@ -9,6 +9,9 @@ namespace Combodo\iTop\PropertyTree;
 
 use Combodo\iTop\PropertyTree\ValueType\AbstractValueType;
 
+/**
+ * @since 3.3.0
+ */
 abstract class AbstractProperty
 {
 	/** @var array<AbstractProperty> */

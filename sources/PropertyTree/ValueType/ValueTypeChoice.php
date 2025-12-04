@@ -7,6 +7,16 @@
 
 namespace Combodo\iTop\PropertyTree\ValueType;
 
+use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
+use Combodo\iTop\Forms\Block\Base\FormBlock;
+
+/**
+ * @since 3.3.0
+ */
 class ValueTypeChoice extends AbstractValueType
 {
+	public function getFormBlockClass(): string
+	{
+		return ChoiceFormBlock::class;
+	}
 }

@@ -21,7 +21,7 @@ use Combodo\iTop\Forms\Register\IORegister;
 class NumberExpressionFormBlock extends AbstractExpressionFormBlock
 {
 	// Outputs
-	public const OUTPUT_RESULT = "output_result";
+	public const OUTPUT_RESULT = "result";
 
 	/** @inheritdoc */
 	protected function RegisterIO(IORegister $oIORegister): void
@@ -36,7 +36,8 @@ class NumberExpressionFormBlock extends AbstractExpressionFormBlock
 	 * @param string $sEventType
 	 *
 	 * @return mixed
-	 * @throws FormBlockException
+	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 * @throws \Combodo\iTop\Forms\Register\RegisterException
 	 */
 	public function ComputeExpression(string $sEventType): mixed
 	{

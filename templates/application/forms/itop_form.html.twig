@@ -1,0 +1,20 @@
+{# @copyright   Copyright (C) 2010-2025 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% if form and not bFormInModal %}
+    {% if sAction %}
+        {% UITurboForm Standard { oFormView: form, sAction: sAction } %}
+        <div class="form-buttons">
+            <button type="submit" name="form-action" value="submit" class="ibo-button ibo-button ibo-is-regular ibo-is-primary">{{ 'Form:Confirm'|dict_s }}</button>
+            <button type="submit" name="form-action" value="reset" class="ibo-button ibo-button ibo-is-regular">{{ 'Form:Reset'|dict_s }}</button>
+        </div>
+        {% EndUITurboForm %}
+    {% else %}
+        {% UITurboForm Standard { oFormView: form } %}
+        <div class="form-buttons">
+            <button type="submit" name="form-action" value="submit" class="ibo-button ibo-button ibo-is-regular ibo-is-primary">{{ 'Form:Confirm'|dict_s }}</button>
+            <button type="submit" name="form-action" value="reset" class="ibo-button ibo-button ibo-is-regular">{{ 'Form:Reset'|dict_s }}</button>
+        </div>
+        {% EndUITurboForm %}
+    {% endif %}
+{% endif %}

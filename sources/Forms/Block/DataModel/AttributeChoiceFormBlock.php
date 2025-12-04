@@ -7,10 +7,8 @@
 
 namespace Combodo\iTop\Forms\Block\DataModel;
 
-use Combodo\iTop\Core\AttributeDefinition\AttributeEnum;
 use Combodo\iTop\Forms\Block\FormBlockException;
-use Combodo\iTop\Forms\IO\Format\AttributeTypeArrayIOFormat;
-use Combodo\iTop\Forms\IO\Format\AttributeTypeIOFormat;
+use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 use Combodo\iTop\Forms\Register\RegisterException;
 use Combodo\iTop\Service\DependencyInjection\DIException;
 use Combodo\iTop\Service\DependencyInjection\DIService;
@@ -31,26 +29,29 @@ use utils;
 class AttributeChoiceFormBlock extends ChoiceFormBlock
 {
 	// inputs
-	public const INPUT_CLASS_NAME = 'input_class_name';
-	public const INPUT_ATTRIBUTE_TYPE = 'input_attribute_type';
+	public const INPUT_CLASS_NAME = 'class';
+	public const INPUT_CATEGORY = 'category';
 
 	// outputs
-	public const OUTPUT_ATTRIBUTE = 'output_attribute';
+	public const OUTPUT_ATTRIBUTE = 'attribute';
 
 	/** @inheritdoc */
 	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
 		parent::RegisterOptions($oOptionsRegister);
 		$oOptionsRegister->SetOption('placeholder', 'Select an attribute...');
-		$oOptionsRegister->SetOption('category', '', false);
 	}
 
-	/** @inheritdoc */
+	/** @inheritdoc
+	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 */
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
 		parent::RegisterIO($oIORegister);
 		$oIORegister->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
-		$oIORegister->AddInput(self::INPUT_ATTRIBUTE_TYPE, AttributeTypeIOFormat::class);
+		$oIORegister->AddInput(self::INPUT_CATEGORY, StringIOFormat::class);
+		// Default value
+		$this->SetInputValue(self::INPUT_CATEGORY, '');
 		$oIORegister->AddOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class);
 	}
 
@@ -67,7 +68,7 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 
 		// Get class name
 		$sClass = strval($this->GetInputValue(self::INPUT_CLASS_NAME));
-		$sAttType = $this->GetInputValue(self::INPUT_ATTRIBUTE_TYPE)->sAttributeType;
+		$sCategory = strval($this->GetInputValue(self::INPUT_CATEGORY));
 
 		// Empty class => no choices
 		if (utils::IsNullOrEmptyString($sClass)) {
@@ -75,14 +76,77 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 			return;
 		}
 
-		/** List attributes @var ModelReflection $oModelReflection */
+		$aAttributeCodes = self::ListAttributeCodesByCategory($sClass, $sCategory);
+
+		$oOptionsRegister->SetOption('choices', $aAttributeCodes);
+	}
+
+	/**
+	 * @param string $sClass
+	 * @param string|null $sCategory
+	 *
+	 * @return array
+	 * @throws \Combodo\iTop\Service\DependencyInjection\DIException
+	 */
+	public static function ListAttributeCodesByCategory(string $sClass, string $sCategory = ''): array
+	{
 		$oModelReflection = DIService::GetInstance()->GetService('ModelReflection');
-		$aAttributeCodes = array_keys($oModelReflection->ListAttributes($sClass, $sAttType));
-		$aAttributes = [];
-		foreach ($aAttributeCodes as $sAttCode) {
-			$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
-			$aAttributes[$sLabel] = $sAttCode;
+		$aAttributeCodes = [];
+
+		switch ($sCategory) {
+			case 'numeric':
+				foreach ($oModelReflection->ListAttributes($sClass, 'AttributeDecimal,AttributeDuration,AttributeInteger,AttributePercentage,AttributeSubItem') as $sAttCode => $sAttType) {
+					$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
+					$aAttributeCodes[$sLabel] = $sAttCode;
+				}
+				break;
+
+			case 'group_by':
+				$aForbiddenAttType = [
+					'AttributeLinkedSet',
+					'AttributeFriendlyName',
+					'iAttributeNoGroupBy', //we cannot only use iAttributeNoGroupBy since this method is also used by the designer who do not have access to the classes' PHP reflection API. So the known classes has to be listed altogether
+					'AttributeOneWayPassword',
+					'AttributeEncryptedString',
+					'AttributePassword',
+				];
+				foreach ($oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
+					foreach ($aForbiddenAttType as $sForbiddenAttType) {
+						if (is_a($sAttType, $sForbiddenAttType, true)) {
+							continue 2;
+						}
+					}
+					$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
+					$aAttributeCodes[$sLabel] = $sAttCode;
+				}
+				break;
+
+			case 'enum':
+				foreach ($oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
+					if (is_a($sAttType, 'AttributeEnum', true)) {
+						$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
+						$aAttributeCodes[$sLabel] = $sAttCode;
+					}
+				}
+				break;
+
+			case 'date':
+				foreach ($oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
+					if (is_a($sAttType, 'AttributeDateTime', true)) {
+						$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
+						$aAttributeCodes[$sLabel] = $sAttCode;
+					}
+				}
+				break;
+
+			case '':
+				foreach ($oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
+					$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
+					$aAttributeCodes[$sLabel] = $sAttCode;
+				}
+				break;
 		}
-		$oOptionsRegister->SetOption('choices', $aAttributes);
+
+		return $aAttributeCodes;
 	}
 }

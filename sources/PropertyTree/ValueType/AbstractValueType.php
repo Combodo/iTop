@@ -7,6 +7,10 @@
 
 namespace Combodo\iTop\PropertyTree\ValueType;
 
+/**
+ * @since 3.3.0
+ */
 abstract class AbstractValueType
 {
+	abstract public function getFormBlockClass(): string;
 }

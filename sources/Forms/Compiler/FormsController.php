@@ -22,7 +22,7 @@ class FormsController extends Controller
 	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
 	{
 		$sModuleName = 'core';
-		$sViewPath = APPROOT.'templates';
+		$sViewPath = APPROOT.'templates/application/forms';
 		parent::__construct($sViewPath, $sModuleName, $aAdditionalPaths);
 	}
 
@@ -43,14 +43,8 @@ class FormsController extends Controller
 					IssueLog::Info('form is valid');
 				}
 
-				// Retrieve form data
-				$aData = $oRequest->request->all($sDashletId);
-
 				// Compute blocks to redraw
-				$aBlocksToRedraw = FormTypeHelper::ComputeBlocksToRedraw($oFormBlock, $oForm, $aData['_turbo_trigger']);
-
-				// Display turbo response
-				$this->DisplayTurboAjaxPage($aBlocksToRedraw);
+				$this->HandleFormSubmitted($oFormBlock, $oForm);
 
 				return;
 			}
@@ -58,13 +52,13 @@ class FormsController extends Controller
 			$this->DisplayPage([
 				'form' => $oForm->createView(),
 				'sAction' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php?route=forms.dashlet_configuration&dashlet_code='.urlencode($sDashletId),
-			], 'BasicForm');
+			], 'itop_form');
 
 		} catch (Exception $e) {
 			ItopSdkFormDemonstratorLog::Exception($e->getMessage(), $e);
 			$this->DisplayPage([
 				'sError' => $e->getMessage(),
-			], 'BasicForm');
+			], 'itop_error');
 
 			return;
 		}

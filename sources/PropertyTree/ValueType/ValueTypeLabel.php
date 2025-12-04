@@ -7,6 +7,15 @@
 
 namespace Combodo\iTop\PropertyTree\ValueType;
 
+use Combodo\iTop\Forms\Block\DataModel\LabelFormBlock;
+
+/**
+ * @since 3.3.0
+ */
 class ValueTypeLabel extends AbstractValueType
 {
+	public function getFormBlockClass(): string
+	{
+		return LabelFormBlock::class;
+	}
 }

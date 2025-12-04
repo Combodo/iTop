@@ -7,6 +7,15 @@
 
 namespace Combodo\iTop\PropertyTree\ValueType;
 
+use Combodo\iTop\Forms\Block\Base\IntegerFormBlock;
+
+/**
+ * @since 3.3.0
+ */
 class ValueTypeInteger extends AbstractValueType
 {
+	public function getFormBlockClass(): string
+	{
+		return IntegerFormBlock::class;
+	}
 }

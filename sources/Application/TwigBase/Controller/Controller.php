@@ -28,7 +28,9 @@ use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\Forms;
+use Combodo\iTop\Forms\FormType\FormTypeHelper;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Dict;
 use Exception;
@@ -45,6 +47,7 @@ use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -1094,4 +1097,24 @@ abstract class Controller extends AbstractController
 		$this->bDebugAllowed = $bDebugAllowed;
 	}
 
+	protected function HandleFormSubmitted(FormBlock $oFormBlock, FormInterface $oForm): bool
+	{
+		$sTrigger = $this->GetRequest()->get($oFormBlock->GetName())['_turbo_trigger'];
+
+		if (!empty($sTrigger)) {
+
+			// Compute blocks to redraw
+			$aBlocksToRedraw = FormTypeHelper::ComputeBlocksToRedraw($oFormBlock, $oForm, $sTrigger);
+
+			// Display turbo response
+			$this->DisplayTurboAjaxPage($aBlocksToRedraw);
+
+		} else {
+
+			$this->DisplayTurboAjaxPage(['current_form' => $oForm->createView()]);
+
+		}
+
+		return true;
+	}
 }
