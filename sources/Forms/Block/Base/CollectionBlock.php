@@ -7,6 +7,7 @@
 
 namespace Combodo\iTop\Forms\Block\Base;
 
+use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\FormType\Base\CollectionFormType;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
@@ -25,20 +26,19 @@ class CollectionBlock extends AbstractTypeFormBlock
 	// Inputs
 	public const INPUT_CLASS_NAME = 'input_class_name';
 
+	private AbstractTypeFormBlock $oPrototypeBlock;
+
 	/** @inheritdoc */
 	public function GetFormType(): string
 	{
 		return CollectionFormType::class;
 	}
 
-	/**
-	 * Get the prototype block.
-	 *
-	 * @return AbstractTypeFormBlock
-	 */
-	public function GetPrototypeBlock(): AbstractTypeFormBlock
+	public function EntryDependsOnParent(string $sInputName, string $sParentInputName): AbstractFormBlock
 	{
-		return $this->oPrototypeBlock;
+		$this->oPrototypeBlock->DependsOnParent($sInputName, $sParentInputName);
+
+		return $this;
 	}
 
 	/** @inheritdoc */
@@ -53,7 +53,8 @@ class CollectionBlock extends AbstractTypeFormBlock
 	{
 		parent::RegisterOptions($oOptionsRegister);
 
-		$oOptionsRegister->SetOption('entry_block', null, false);
+		$oOptionsRegister->SetOption('block_entry_type', FormBlock::class, false);
+		$oOptionsRegister->SetOption('block_entry_options', [], false);
 		$oOptionsRegister->SetOption('prototype', true);
 		$oOptionsRegister->SetOption('allow_add', true);
 		$oOptionsRegister->SetOption('prototype_options', [
@@ -66,11 +67,14 @@ class CollectionBlock extends AbstractTypeFormBlock
 	{
 		parent::AfterOptionsRegistered($oOptionsRegister);
 
-		$oBlockEntryType = $this->GetOption('entry_block');
+		$oBlockEntryType = $this->GetOption('block_entry_type');
+		$oBlockEntryOptions = $this->GetOption('block_entry_options');
+		$this->oPrototypeBlock = new $oBlockEntryType('prototype', array_merge($this->GetOption('prototype_options'), $oBlockEntryOptions));
+		$this->oPrototypeBlock->SetParent($this);
 
 		try {
-			$oOptionsRegister->SetOption('entry_type', $oBlockEntryType->GetFormType());
-			$oOptionsRegister->SetOption('entry_options', $oBlockEntryType->GetOptions());
+			$oOptionsRegister->SetOption('entry_type', $this->oPrototypeBlock->GetFormType());
+			$oOptionsRegister->SetOption('entry_options', $this->oPrototypeBlock->GetOptions());
 		} catch (RegisterException $e) {
 
 		}
