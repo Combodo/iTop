@@ -46,11 +46,6 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 	 */
 	protected $aAdditionExtensionFoldersByCode = null;
 
-    public function GetEnvironment(): string
-	{
-		return $this->sFinalEnv;
-	}
-
 	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
 	{
 		$sDestModulesDir = APPROOT.'data/'.$this->sTargetEnv.'-modules/';

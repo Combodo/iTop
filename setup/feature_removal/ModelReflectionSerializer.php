@@ -35,7 +35,7 @@ class ModelReflectionSerializer
 		$iRes = 0;
 		exec(sprintf("$sPHPExec %s/get_model_reflection.php --env='%s'", __DIR__, $sEnv), $sOutput, $iRes);
 		if ($iRes != 0) {
-			\IssueLog::Error("Cannot get classes", null, ['code' => $iRes, "output" => $sOutput]);
+			\IssueLog::Error("Cannot get classes", null, ['env' => $sEnv, 'code' => $iRes, "output" => $sOutput]);
 			throw new CoreException("Cannot get classes");
 		}
 

@@ -64,7 +64,7 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 
 	protected function setUp(): void
 	{
-        static::LoadRequiredItopFiles();
+		static::LoadRequiredItopFiles();
 		if (is_null($this->oEnvironment)) {
 			$this->oEnvironment = new UnitTestRunTimeEnvironment($this->GetTestEnvironment());
 		}
@@ -133,7 +133,6 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 		// Note: To improve performances, we compile all XML deltas from test cases derived from this class and make a single environment where everything will be ran at once.
 		//       This requires XML deltas to be compatible, but it is a known and accepted trade-off. See PR #457
 		if (false === $this->IsEnvironmentReady()) {
-
 			$this->debug("Preparing custom environment '$sTestEnv' with the following datamodel files:");
 			foreach ($this->oEnvironment->GetCustomDatamodelFiles() as $sCustomDatamodelFile) {
 				$this->debug("  - $sCustomDatamodelFile");
@@ -190,6 +189,8 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			CMDBSource::Query("CREATE TABLE $sNewDB.priv_module_install SELECT * FROM $sPreviousDB.priv_module_install");
 
 			$this->debug("Custom environment '$sTestEnv' is ready!");
+		} else {
+			$this->debug("Custom environment '$sTestEnv' READY BUILT:");
 		}
 
 		parent::PrepareEnvironment();

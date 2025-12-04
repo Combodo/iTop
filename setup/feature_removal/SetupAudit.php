@@ -11,7 +11,7 @@ require_once APPROOT.'setup/feature_removal/ModelReflectionSerializer.php';
 class SetupAudit
 {
 	//file used when present to trigger audit exception when testing specific setups
-	const GETISSUE_ERROR_MSG_FILE_FORTESTONLY = '.setup_audit_error_msg.txt';
+	public const GETISSUE_ERROR_MSG_FILE_FORTESTONLY = '.setup_audit_error_msg.txt';
 
 	private string $sEnvBeforeExtensionRemoval;
 	private string $sEnvAfterExtensionRemoval;

@@ -462,7 +462,6 @@ abstract class MetaModel
 		return call_user_func([$sClass, 'GetClassDescription'], $sClass);
 	}
 
-
 	/**
 	 * @param string $sClass
 	 *

@@ -2,9 +2,7 @@
 
 require_once(dirname(__DIR__, 2).'/approot.inc.php');
 require_once(APPROOT.'application/application.inc.php');
-
 $sEnv = null;
-
 if (isset($argv)) {
 	foreach ($argv as $iArg => $sArg) {
 		if (preg_match('/^--env=(.*)$/', $sArg, $aMatches)) {
@@ -22,11 +20,12 @@ $sConfFile = utils::GetConfigFilePath($sEnv);
 
 try {
 	MetaModel::Startup($sConfFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
-}
-catch (\Throwable $e) {
+} catch (\Throwable $e) {
 	echo $e->getMessage();
 	echo $e->getTraceAsString();
-	\SetupLog::Error("Cannot read model from provided environment", null,
+	\SetupLog::Error(
+		"Cannot read model from provided environment",
+		null,
 		[
 			'env'   => $sEnv,
 			'error' => $e->getMessage(),

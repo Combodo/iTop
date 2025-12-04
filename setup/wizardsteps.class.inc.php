@@ -2127,9 +2127,7 @@ class WizStepSummary extends WizardStep
 				//$oSetupAudit->AuditExtensionsCleanupRules(true);
 				//}
 				*/
-			}
-			catch(MissingDependencyException $e)
-			{
+			} catch (MissingDependencyException $e) {
 				$this->bDependencyCheck = false;
 				$this->sDependencyIssue = $e->getHtmlDesc();
 			}

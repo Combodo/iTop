@@ -10,7 +10,7 @@ use Exception;
 
 class SetupAuditTest extends ItopCustomDatamodelTestCase
 {
-	const ENVT = 'php-unit-extensionremoval-tests';
+	public const ENVT = 'php-unit-extensionremoval-tests';
 
 	public function GetDatamodelDeltaAbsPath(): string
 	{
