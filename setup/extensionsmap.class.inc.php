@@ -179,7 +179,7 @@ class iTopExtensionsMap
 		foreach ($aExtraDirs as $sDir) {
 			$this->ReadDir($sDir, iTopExtension::SOURCE_REMOTE);
 		}
-		$this->CheckDependencies($sFromEnvironment);
+		$this->CheckDependencies();
 	}
 
 	/**
@@ -190,8 +190,10 @@ class iTopExtensionsMap
 	 */
 	protected function ScanDisk($sEnvironment)
 	{
-		if (!$this->ReadInstallationWizard(APPROOT.'/datamodels/2.x') && !$this->ReadInstallationWizard(APPROOT.'/datamodels/2.x')) {
+		if (!$this->ReadInstallationWizard(APPROOT.'/datamodels/2.x')) {
+			//no installation xml found in 2.x: let's read all extensions in 2.x first
 			if (!$this->ReadDir(APPROOT.'/datamodels/2.x', iTopExtension::SOURCE_WIZARD)) {
+				//nothing found in 2.x : fallback read in 1.x (flat structure)
 				$this->ReadDir(APPROOT.'/datamodels/1.x', iTopExtension::SOURCE_WIZARD);
 			}
 		}
@@ -387,19 +389,15 @@ class iTopExtensionsMap
 						// to this extension
 						$sModuleId = $aModuleInfo[ModuleFileReader::MODULE_INFO_ID];
 						list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-						if ($sModuleVersion == '') {
-							// Provide a default module version since version is mandatory when recording ExtensionInstallation
-							$sModuleVersion = '0.0.1';
-						}
 						$aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG]['uninstallable'] ??= 'yes';
 
-						if (($sParentExtensionId !== null) && (array_key_exists($sParentExtensionId, $this->aExtensions)) && ($this->aExtensions[$sParentExtensionId] instanceof iTopExtension)) {
-							// Already inside an extension, let's add this module the list of modules belonging to this extension
-							$this->aExtensions[$sParentExtensionId]->aModules[] = $sModuleName;
-							$this->aExtensions[$sParentExtensionId]->aModuleVersion[$sModuleName] = $sModuleVersion;
-							$this->aExtensions[$sParentExtensionId]->aModuleInfo[$sModuleName] = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG];
-						} else {
-							// Not already inside a folder containing an 'extension.xml' file
+						$oExtension = null;
+						if ($sParentExtensionId !== null) {
+							$oExtension = $this->aExtensions[$sParentExtensionId] ?? null;
+						}
+
+						if (is_null($oExtension)) {
+							// Not already inside an folder containing an 'extension.xml' file
 
 							// Ignore non-visible modules and auto-select ones, since these are never prompted
 							// as a choice to the end-user
@@ -423,6 +421,13 @@ class iTopExtensionsMap
 							$oExtension->sSourceDir = $sSearchDir;
 							$oExtension->bVisible = $bVisible;
 							$this->AddExtension($oExtension);
+						} else {
+							$oExtension->aModules[] = $sModuleName;
+							$oExtension->aModuleVersion[$sModuleName] = $sModuleVersion;
+							$oExtension->aModuleInfo[$sModuleName] = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG];
+
+							$this->aExtensions[$sParentExtensionId] = $oExtension;
+							$this->aExtensionsByCode[$oExtension->sCode] = $oExtension;
 						}
 
 						closedir($hDir);
@@ -444,10 +449,9 @@ class iTopExtensionsMap
 	/**
 	 * Check if some extension contains a module with missing dependencies...
 	 * If so, populate the aMissingDepenencies array
-	 * @param string $sFromEnvironment
 	 * @return void
 	 */
-	protected function CheckDependencies($sFromEnvironment)
+	protected function CheckDependencies()
 	{
 		$aSearchDirs = [];
 
@@ -459,7 +463,7 @@ class iTopExtensionsMap
 		$aSearchDirs = array_merge($aSearchDirs, $this->aScannedDirs);
 
 		try {
-			$aAllModules = ModuleDiscovery::GetAvailableModules($aSearchDirs, true);
+			ModuleDiscovery::GetAvailableModules($aSearchDirs, true);
 		} catch (MissingDependencyException $e) {
 			// Some modules have missing dependencies
 			// Let's check what is the impact at the "extensions" level
@@ -629,8 +633,6 @@ class iTopExtensionsMap
 	 */
 	public function ModuleIsChosenAsPartOfAnExtension($sModuleNameToFind, $sInSourceOnly = iTopExtension::SOURCE_REMOTE)
 	{
-		$bChosen = false;
-
 		foreach ($this->GetAllExtensions() as $oExtension) {
 			if (($oExtension->sSource == $sInSourceOnly) &&
 				($oExtension->bMarkedAsChosen == true) &&

@@ -23,34 +23,16 @@ class ModuleInstallationService
 	}
 
 	private ?array $aSelectInstall = null;
-	public function ReadFromDB(?Config $oConfig): array
+
+	/**
+* @param \Config|null $oConfig
+* @return array
+	 */
+	public function ReadComputeInstalledModules(?Config $oConfig): array
 	{
+		$aSelectInstall = [];
 		try {
-			$aSelectInstall = [];
-			if (! is_null($oConfig)) {
-				if (! is_null($this->aSelectInstall)) {
-					//test only
-					$aSelectInstall = $this->aSelectInstall;
-				} else {
-					CMDBSource::InitFromConfig($oConfig);
-
-					//read db module installations
-					$aSelectInstallOld = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_module_install");
-					//file_put_contents(APPROOT."/tests/php-unit-tests/unitary-tests/setup/ressources/priv_modules.json", json_encode($aSelectInstallOld, JSON_PRETTY_PRINT));
-
-					$iRootId = CMDBSource::QueryToScalar("SELECT max(parent_id) FROM ".$oConfig->Get('db_subname')."priv_module_install");
-					$sDbSubName = $oConfig->Get('db_subname');
-					// Get the latest installed modules, without the "root" ones (iTop version and datamodel version)
-					$sSQL = <<<SQL
-SELECT * FROM $sDbSubName.priv_module_install 
-WHERE 
-parent_id='$iRootId'
-OR id='$iRootId'
-SQL;
-					$aSelectInstall = CMDBSource::QueryToArray($sSQL);
-					//file_put_contents(APPROOT."/tests/php-unit-tests/unitary-tests/setup/ressources/priv_modules2.json", json_encode($aSelectInstall, JSON_PRETTY_PRINT));
-				}
-			}
+			$aSelectInstall = $this->ReadFromDB($oConfig);
 		} catch (MySQLException $e) {
 			// No database or erroneous information
 		}
@@ -58,24 +40,69 @@ SQL;
 		return $this->ComputeInstalledModules($aSelectInstall);
 	}
 
-	private function ComputeInstalledModulesLegacy(array $aSelectInstall): array
+	/**
+* @param \Config|null $oConfig
+* @return array
+* @throws \MySQLException
+* @throws \MySQLQueryHasNoResultException
+	 */
+	public function ReadFromDB(?Config $oConfig): array
 	{
-		$aInstallByModule = []; // array of <module> => array ('installed' => timestamp, 'version' => <version>)
-		$iRootId = 0;
-		foreach ($aSelectInstall as $aInstall) {
-			if (($aInstall['parent_id'] == 0) && ($aInstall['name'] != 'datamodel')) {
-				// Root module, what is its ID ?
-				$iId = (int) $aInstall['id'];
-				if ($iId > $iRootId) {
-					$iRootId = $iId;
-				}
-			}
+		if (is_null($oConfig)) {
+			return [];
 		}
 
+		if (! is_null($this->aSelectInstall)) {
+			//test only
+			return $this->aSelectInstall;
+		}
+
+		CMDBSource::InitFromConfig($oConfig);
+		//read db module installations
+		$tableWithPrefix = $this->GetTableWithPrefix($oConfig);
+		$iRootId = CMDBSource::QueryToScalar("SELECT max(parent_id) FROM $tableWithPrefix");
+		// Get the latest installed modules, without the "root" ones (iTop version and datamodel version)
+		$sSQL = <<<SQL
+SELECT * FROM $tableWithPrefix
+WHERE 
+parent_id='$iRootId'
+OR id='$iRootId'
+SQL;
+		return CMDBSource::QueryToArray($sSQL);
+	}
+
+	private function GetTableWithPrefix(Config $oConfig)
+	{
+		$sPrefix = $oConfig->Get('db_subname');
+		if (utils::IsNullOrEmptyString($sPrefix)) {
+			return "priv_module_install";
+		}
+
+		return "{$sPrefix}priv_module_install";
+	}
+
+	/**
+	 * @param \Config $oConfig
+	 *
+	 * @return array|false
+	 */
+	public function GetApplicationVersion(Config $oConfig)
+	{
+		try {
+			CMDBSource::InitFromConfig($oConfig);
+			$tableWithPrefix = $this->GetTableWithPrefix($oConfig);
+			$sSQLQuery = "SELECT * FROM $tableWithPrefix";
+			$aSelectInstall = CMDBSource::QueryToArray($sSQLQuery);
+		} catch (MySQLException $e) {
+			// No database or erroneous information
+			$this->log_error('Can not connect to the database: host: '.$oConfig->Get('db_host').', user:'.$oConfig->Get('db_user').', pwd:'.$oConfig->Get('db_pwd').', db name:'.$oConfig->Get('db_name'));
+			$this->log_error('Exception '.$e->getMessage());
+			return false;
+		}
+
+		$aResult = [];
+		// Scan the list of installed modules to get the version of the 'ROOT' module which holds the main application version
 		foreach ($aSelectInstall as $aInstall) {
-			//$aInstall['comment']; // unsused
-			$iInstalled = strtotime($aInstall['installed']);
-			$sModuleName = $aInstall['name'];
 			$sModuleVersion = $aInstall['version'];
 			if ($sModuleVersion == '') {
 				// Though the version cannot be empty in iTop 2.0, it used to be possible
@@ -85,27 +112,25 @@ SQL;
 			}
 
 			if ($aInstall['parent_id'] == 0) {
-				$sModuleName = ROOT_MODULE;
-			} elseif ($aInstall['parent_id'] != $iRootId) {
-				// Skip all modules belonging to previous installations
-				continue;
-			}
-
-			if (array_key_exists($sModuleName, $aInstallByModule)) {
-				if ($iInstalled < $aInstallByModule[$sModuleName]['installed']) {
-					continue;
+				if ($aInstall['name'] == DATAMODEL_MODULE) {
+					$aResult['datamodel_version'] = $sModuleVersion;
+					$aComments = json_decode($aInstall['comment'], true);
+					if (is_array($aComments)) {
+						$aResult = array_merge($aResult, $aComments);
+					}
+				} else {
+					$aResult['product_name'] = $aInstall['name'];
+					$aResult['product_version'] = $sModuleVersion;
 				}
 			}
-
-			if ($aInstall['parent_id'] == 0) {
-				$aInstallByModule[$sModuleName]['installed_version'] = $sModuleVersion;
-			}
-
-			$aInstallByModule[$sModuleName]['installed'] = $iInstalled;
-			$aInstallByModule[$sModuleName]['version'] = $sModuleVersion;
 		}
-
-		return $aInstallByModule;
+		if (!array_key_exists('datamodel_version', $aResult)) {
+			// Versions prior to 2.0 did not record the version of the datamodel
+			// so assume that the datamodel version is equal to the application version
+			$aResult['datamodel_version'] = $aResult['product_version'];
+		}
+		$this->log_info("GetApplicationVersion returns: product_name: ".$aResult['product_name'].', product_version: '.$aResult['product_version']);
+		return empty($aResult) ? false : $aResult;
 	}
 
 	private function ComputeInstalledModules(array $aSelectInstall): array

@@ -248,8 +248,6 @@ class RunTimeEnvironment
 		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
 		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
 
-		$aRet = [];
-
 		// Determine the installed modules and extensions
 		//
 		$oSourceConfig = new Config(APPCONF.$sSourceEnv.'/'.ITOP_CONFIG_FILE);
@@ -290,7 +288,6 @@ class RunTimeEnvironment
 		$aModules = $oFactory->FindModules();
 		foreach ($aModules as $oModule) {
 			$sModule = $oModule->GetName();
-			$sModuleRootDir = $oModule->GetRootDir();
 			$bIsExtra = $this->GetExtensionMap()->ModuleIsChosenAsPartOfAnExtension($sModule, iTopExtension::SOURCE_REMOTE);
 			if (array_key_exists($sModule, $aAvailableModules)) {
 				if (($aAvailableModules[$sModule]['installed_version'] != '') ||  $bIsExtra && !$oModule->IsAutoSelect()) { //Extra modules are always unless they are 'AutoSelect'
@@ -628,9 +625,7 @@ class RunTimeEnvironment
 	public function GetApplicationVersion(Config $oConfig)
 	{
 		try {
-			CMDBSource::InitFromConfig($oConfig);
-			$sSQLQuery = "SELECT * FROM ".$oConfig->Get('db_subname')."priv_module_install";
-			$aSelectInstall = CMDBSource::QueryToArray($sSQLQuery);
+			$aSelectInstall = ModuleInstallationService::GetInstance()->ReadFromDB($oConfig);
 		} catch (MySQLException $e) {
 			// No database or erroneous information
 			$this->log_error('Can not connect to the database: host: '.$oConfig->Get('db_host').', user:'.$oConfig->Get('db_user').', pwd:'.$oConfig->Get('db_pwd').', db name:'.$oConfig->Get('db_name'));

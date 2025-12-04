@@ -96,7 +96,7 @@ class AnalyzeInstallation
 			$aRes[$sModuleName] = $aModuleInfo;
 		}
 
-		$aCurrentlyInstalledModules = ModuleInstallationService::GetInstance()->ReadFromDB($oConfig);
+		$aCurrentlyInstalledModules = ModuleInstallationService::GetInstance()->ReadComputeInstalledModules($oConfig);
 
 		// Adjust the list of proposed modules
 		foreach ($aCurrentlyInstalledModules as $sModuleName => $aModuleDB) {
