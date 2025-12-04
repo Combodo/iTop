@@ -7,6 +7,6 @@
 
 namespace Combodo\iTop\PropertyTree\ValueType;
 
-class ValueTypeInteger
+class ValueTypeInteger extends AbstractValueType
 {
 }

@@ -7,6 +7,6 @@
 
 namespace Combodo\iTop\PropertyTree\ValueType;
 
-class ValueTypeOQL
+class ValueTypeOQL extends AbstractValueType
 {
 }

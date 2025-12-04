@@ -7,6 +7,6 @@
 
 namespace Combodo\iTop\PropertyTree\ValueType;
 
-class ValueTypeClassAttributeGroupBy
+class ValueTypeClassAttributeGroupBy extends AbstractValueType
 {
 }

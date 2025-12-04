@@ -7,6 +7,6 @@
 
 namespace Combodo\iTop\PropertyTree;
 
-class CollectionOfTrees
+class CollectionOfTrees extends AbstractProperty
 {
 }
