@@ -1397,9 +1397,44 @@ class WizStepModulesChoice extends WizardStep
 				if (class_exists('CreateITILProfilesInstaller')) {
 					$this->oWizard->SetParameter('old_addon', true);
 				}
+
+				$aExtensionsAdded = [];
+				$aExtensionsRemoved = [];
+				foreach ($this->oExtensionsMap->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
+					/* @var \iTopExtension $oExtension */
+					$bSelected = in_array($oExtension->sCode, $aExtensions);
+					if($oExtension->bInstalled && !$bSelected){
+						$aExtensionsRemoved[] = $oExtension->sLabel;
+					}
+					else if(!$oExtension->bInstalled && $bSelected) {
+						$aExtensionsAdded[] = $oExtension->sLabel;
+					}
+				}
+
+				$sExtensionsAdded = 'No extension added.';
+				if (count($aExtensionsAdded) > 0) {
+					$sExtensionsAdded = '<ul>';
+					foreach ($aExtensionsAdded as $sExtensionCode) {
+						$sExtensionsAdded .= '<li>'.$sExtensionCode.'</li>';
+					}
+					$sExtensionsAdded .= '</ul>';
+				}
+
+				$sExtensionsRemoved = 'No extension removed.';
+				if (count($aExtensionsRemoved) > 0) {
+					$sExtensionsRemoved = '<ul>';
+					foreach ($aExtensionsRemoved as $sExtensionCode) {
+						$sExtensionsRemoved .= '<li>'.$sExtensionCode.'</li>';
+					}
+					$sExtensionsRemoved .= '</ul>';
+				}
+
+
 				$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($aModules)));
 				$this->oWizard->SetParameter('selected_extensions', json_encode($aExtensions));
 				$this->oWizard->SetParameter('display_choices', $sDisplayChoices);
+				$this->oWizard->SetParameter('extensions_added', $sExtensionsAdded);
+				$this->oWizard->SetParameter('extensions_removed', $sExtensionsRemoved);
 				return ['class' => 'WizStepSummary', 'state' => ''];
 			}
 
@@ -2217,6 +2252,14 @@ class WizStepSummary extends WizardStep
 
 		$oPage->add('<fieldset id="summary"><legend>Installation Parameters</legend>');
 		$oPage->add('<div id="params_summary">');
+
+		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Extensions Added</span>');
+		$oPage->add($this->oWizard->GetParameter('extensions_added'));
+		$oPage->add('</div>');
+		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Extensions Removed</span>');
+		$oPage->add($this->oWizard->GetParameter('extensions_removed'));
+		$oPage->add('</div>');
+
 		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Database Parameters</span><ul>');
 		$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
 		$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
