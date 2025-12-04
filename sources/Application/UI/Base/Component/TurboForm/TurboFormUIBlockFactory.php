@@ -62,7 +62,7 @@ class TurboFormUIBlockFactory extends AbstractUIBlockFactory
 		$oForm = $oBuilder->getForm();
 
 		$oTurboForm = new TurboForm($oForm->createView(), $sId);
-		$oTurboForm->SetAction(utils::GetAbsoluteUrlAppRoot()."pages/UI.php?route=forms.dashlet_configuration&dashlet_code=$sDashletId");
+		$oTurboForm->SetAction(utils::GetAbsoluteUrlAppRoot().'pages/UI.php?route=forms.dashlet_configuration&dashlet_code='.urlencode($sDashletId));
 
 		return $oTurboForm;
 	}
