@@ -18,14 +18,21 @@ class FormsController extends Controller
 {
 	public const ROUTE_NAMESPACE = 'forms';
 
+	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
+	{
+		$sModuleName = 'core';
+		$sViewPath = APPROOT.'templates';
+		parent::__construct($sViewPath, $sModuleName, $aAdditionalPaths);
+	}
+
 	public function OperationDashletConfiguration()
 	{
 		try {
 			$oRequest = $this->getRequest();
-			$sId = $oRequest->query->get('dashlet_code');
+			$sDashletId = $oRequest->query->get('dashlet_code');
 
 			// Get the form block from the service (and the compiler)
-			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById($sId);
+			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById($sDashletId);
 			$oBuilder = $this->GetFormBuilder($oFormBlock, []);
 			$oForm = $oBuilder->getForm();
 			$oForm->handleRequest($oRequest);
@@ -36,7 +43,7 @@ class FormsController extends Controller
 				}
 
 				// Retrieve form data
-				$aData = $oForm->getData();
+				$aData = $oRequest->request->all($sDashletId);
 
 				// Compute blocks to redraw
 				$aBlocksToRedraw = FormTypeHelper::ComputeBlocksToRedraw($oFormBlock, $oForm, $aData['_turbo_trigger']);
