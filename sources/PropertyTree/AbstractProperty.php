@@ -11,6 +11,8 @@ use Combodo\iTop\PropertyTree\ValueType\AbstractValueType;
 
 abstract class AbstractProperty
 {
+	/** @var array<AbstractProperty> */
+	protected array $aChildren;
 	private ?AbstractValueType $oValueType;
 
 	public function GetValueType(): ?AbstractValueType
@@ -23,4 +25,13 @@ abstract class AbstractProperty
 		$this->oValueType = $oValueType;
 	}
 
+	public function AddChild(AbstractValueType $oValueType): void
+	{
+		$this->aChildren[] = $oValueType;
+	}
+
+	public function GetChildren(): array
+	{
+		return $this->aChildren;
+	}
 }
