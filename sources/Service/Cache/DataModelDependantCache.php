@@ -56,8 +56,24 @@ class DataModelDependantCache
 		foreach ($aMoreInfo as $sKey => $sValue) {
 			$sMoreInfo .= "\n// $sKey: $sValue";
 		}
-		$sCacheContent = "<?php $sMoreInfo\nreturn ".var_export($value, true).";";
+		$sCacheContent = "<?php $sMoreInfo\nreturn ".var_export($value, true).';';
 		file_put_contents($sCacheFileName, $sCacheContent, LOCK_EX);
+	}
+
+	/**
+	 *
+	 * @param string $sPool
+	 * @param string $sKey
+	 * @param string $sPHPContent must include '<?php'
+	 *
+	 * @return void
+	 */
+	public function StorePhpContent(string $sPool, string $sKey, string $sPHPContent): void
+	{
+		$sCacheFileName = $this->MakeCacheFileName($sPool, $sKey);
+		SetupUtils::builddir(dirname($sCacheFileName));
+
+		file_put_contents($sCacheFileName, $sPHPContent, LOCK_EX);
 	}
 
 	/**
@@ -74,7 +90,7 @@ class DataModelDependantCache
 		if (!is_file($sCacheFileName)) {
 			return null;
 		}
-		return include $sCacheFileName;
+		return include_once $sCacheFileName;
 	}
 
 	/**

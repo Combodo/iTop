@@ -46,14 +46,19 @@ class DIService
 	 * @api
 	 *
 	 * @param string $sName name of the service to get
+	 * @param bool $bMustBeFound if true a DIException is thrown when the service is not found
 	 *
-	 * @return mixed
+	 * @return mixed The service or null when the service is not found and $bMustBeFound is false
 	 * @throws \Combodo\iTop\Service\DependencyInjection\DIException
 	 */
-	final public function GetService(string $sName): mixed
+	final public function GetService(string $sName, bool $bMustBeFound = true): mixed
 	{
 		if (!isset($this->aServices[$sName])) {
-			throw new DIException("Service ".json_encode($sName)." not found");
+			if ($bMustBeFound) {
+				throw new DIException("Service ".json_encode($sName)." not found");
+			}
+
+			return null;
 		}
 
 		return $this->aServices[$sName];

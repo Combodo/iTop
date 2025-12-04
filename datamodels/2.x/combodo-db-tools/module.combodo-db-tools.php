@@ -30,7 +30,7 @@ SetupWebPage::AddModule(
 		// Identification
 		//
 		'label' => 'Database maintenance tools',
-		'category' => 'business',
+		'category' => 'Application management',
 
 		// Setup
 		//
