@@ -61,10 +61,10 @@ class iTopExtension
 	 */
 	public $bMarkedAsChosen;
 	/**
-	 * If null, check modules uninstallability
+	 * If null, check if at least one module cannot be uninstalled
 	 * @var bool|null
 	 */
-	public ?bool $bUninstallable = null;
+	public ?bool $bCanBeUninstalled = null;
 
 	/**
 	 * @var bool
@@ -130,14 +130,12 @@ class iTopExtension
 	 */
 	public function CanBeUninstalled(): bool
 	{
-		if (!is_null($this->bUninstallable)) {
-			return $this->bUninstallable;
+		if (!is_null($this->bCanBeUninstalled)) {
+			return $this->bCanBeUninstalled;
 		}
 		foreach ($this->aModuleInfo as $sModuleCode => $aModuleInfo) {
-			$bUninstallable = $aModuleInfo['uninstallable'] === 'yes';
-			if (!$bUninstallable) {
-				return false;
-			}
+			$this->bCanBeUninstalled = $aModuleInfo['uninstallable'] === 'yes';
+			return $this->bCanBeUninstalled;
 		}
 		return true;
 	}
@@ -451,6 +449,9 @@ class iTopExtensionsMap
 		return $this->aExtensions;
 	}
 
+	/**
+	 * @return array All available extensions and extensions currently installed but not available due to files removal
+	 */
 	public function GetAllExtensionsWithPreviouslyInstalled(): array
 	{
 		return array_merge($this->aExtensions, $this->aInstalledExtensions ?? []);
@@ -532,7 +533,7 @@ class iTopExtensionsMap
 		return true;
 	}
 
-	public function LoadInstalledExtensionsFromDatabase(Config $oConfig): array|false
+	protected function LoadInstalledExtensionsFromDatabase(Config $oConfig): array|false
 	{
 		try {
 			if (CMDBSource::DBName() === null) {
@@ -557,8 +558,9 @@ class iTopExtensionsMap
 				$oExtension->sSourceDir = '';
 				$oExtension->bVisible = true;
 				$oExtension->bInstalled = true;
-				$oExtension->bUninstallable = !isset($aExtensionInfo['uninstallable']) || $aExtensionInfo['uninstallable'] === 'yes';
-				if ($oChoice = $this->GetFromExtensionCode($oExtension->sCode)) {
+				$oExtension->bCanBeUninstalled = !isset($aExtensionInfo['uninstallable']) || $aExtensionInfo['uninstallable'] === 'yes';
+				$oChoice = $this->GetFromExtensionCode($oExtension->sCode);
+				if ($oChoice) {
 					$oChoice->bInstalled = true;
 				} else {
 					$oExtension->bRemovedFromDisk = true;
