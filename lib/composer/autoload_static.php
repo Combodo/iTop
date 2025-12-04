@@ -873,6 +873,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Forms\\Block\\Base\\DateFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/DateFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Base\\DateTimeFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/DateTimeFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Base\\FormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/FormBlock.php',
+        'Combodo\\iTop\\Forms\\Block\\Base\\HiddenFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/HiddenFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Base\\NumberFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/NumberFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Base\\TextAreaFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/TextAreaFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Base\\TextFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Base/TextFormBlock.php',

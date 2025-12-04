@@ -18,14 +18,17 @@ class FormsController extends Controller
 {
 	public const ROUTE_NAMESPACE = 'forms';
 
-	public function OperationDisplayForm()
+	public function OperationDashletConfiguration()
 	{
 		try {
+			$oRequest = $this->getRequest();
+			$sId = $oRequest->query->get('dashlet_code');
+
 			// Get the form block from the service (and the compiler)
-			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById('VerySimpleForm');
+			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById($sId);
 			$oBuilder = $this->GetFormBuilder($oFormBlock, []);
 			$oForm = $oBuilder->getForm();
-			$oForm->handleRequest($this->GetRequest());
+			$oForm->handleRequest($oRequest);
 
 			if ($oForm->isSubmitted()) {
 				if ($oForm->isValid()) {
@@ -46,6 +49,7 @@ class FormsController extends Controller
 
 			$this->DisplayPage([
 				'form' => $oForm->createView(),
+				'sAction' => '',
 			], 'BasicForm');
 
 		} catch (Exception $e) {

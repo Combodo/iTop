@@ -12,6 +12,7 @@ use Combodo\iTop\Forms\Block\FormBlockService;
 use Combodo\iTop\Forms\Compiler\FormsCompiler;
 use Combodo\iTop\Forms\Compiler\FormsController;
 use Symfony\Component\Form\FormView;
+use utils;
 
 /**
  * Class TurboFormUIBlockFactory
@@ -29,13 +30,21 @@ class TurboFormUIBlockFactory extends AbstractUIBlockFactory
 
 	/**
 	 * @api
+	 *
+	 * @param \Symfony\Component\Form\FormView $oFormView
+	 * @param string|null $sAction
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\TurboForm\TurboForm An HTML form in which you can add UIBlocks
 	 */
-	public static function MakeStandard(FormView $oFormView, string $sId = null): TurboForm
+	public static function MakeStandard(FormView $oFormView, string $sAction = null, string $sId = null): TurboForm
 	{
-		return new TurboForm($oFormView, $sId);
+		$oTurboForm = new TurboForm($oFormView, $sId);
+		if (!is_null($sAction)) {
+			$oTurboForm->setAction($sAction);
+		}
+
+		return $oTurboForm;
 	}
 
 	/**
@@ -45,7 +54,7 @@ class TurboFormUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\TurboForm\TurboForm
 	 */
-	public static function MakeForDashlet(string $sDashletId, string $sAction = null, string $sId = null): TurboForm
+	public static function MakeForDashlet(string $sDashletId, string $sId = null): TurboForm
 	{
 		$oBlockForm = FormBlockService::GetInstance()->GetFormBlockById($sDashletId);
 		$oController = new FormsController();
@@ -53,9 +62,7 @@ class TurboFormUIBlockFactory extends AbstractUIBlockFactory
 		$oForm = $oBuilder->getForm();
 
 		$oTurboForm = new TurboForm($oForm->createView(), $sId);
-		if (!is_null($sAction)) {
-			$oTurboForm->SetAction($sAction);
-		}
+		$oTurboForm->SetAction(utils::GetAbsoluteUrlAppRoot()."pages/UI.php?route=forms.dashlet_configuration&dashlet_code=$sDashletId");
 
 		return $oTurboForm;
 	}

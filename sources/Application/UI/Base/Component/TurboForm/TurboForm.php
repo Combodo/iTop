@@ -16,10 +16,10 @@ class TurboForm extends UIContentBlock
 	public const BLOCK_CODE = 'ibo-form';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/turbo-form/layout';
 
-	/** @var string */
-	protected $sOnSubmitJsCode;
-	/** @var string */
-	protected $sAction;
+	/** @var string|null */
+	protected ?string $sOnSubmitJsCode;
+	/** @var string|null */
+	protected ?string $sAction;
 	private FormView $oFormView;
 
 	public function __construct(FormView $oFormView, string $sId = null)
@@ -45,7 +45,7 @@ class TurboForm extends UIContentBlock
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
 	public function GetAction(): ?string
 	{

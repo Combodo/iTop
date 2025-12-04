@@ -487,6 +487,7 @@ return array(
     'Combodo\\iTop\\Forms\\Block\\Base\\DateFormBlock' => $baseDir . '/sources/Forms/Block/Base/DateFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\DateTimeFormBlock' => $baseDir . '/sources/Forms/Block/Base/DateTimeFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\FormBlock' => $baseDir . '/sources/Forms/Block/Base/FormBlock.php',
+    'Combodo\\iTop\\Forms\\Block\\Base\\HiddenFormBlock' => $baseDir . '/sources/Forms/Block/Base/HiddenFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\NumberFormBlock' => $baseDir . '/sources/Forms/Block/Base/NumberFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\TextAreaFormBlock' => $baseDir . '/sources/Forms/Block/Base/TextAreaFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\TextFormBlock' => $baseDir . '/sources/Forms/Block/Base/TextFormBlock.php',
