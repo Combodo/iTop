@@ -284,7 +284,7 @@ class iTopExtensionsMap
 
 	public function RemoveExtension(string $sCode): void
 	{
-		$oExtension = $this->Get($sCode);
+		$oExtension = $this->GetFromExtensionCode($sCode);
 		if (is_null($oExtension)) {
 			\IssueLog::Error(__METHOD__.": cannot find extension to remove", null, [$sCode]);
 
@@ -317,7 +317,7 @@ class iTopExtensionsMap
 
 		$aRes = [];
 		foreach (array_diff($aExtensionsFromDb, $aSelectedExtensions) as $sExtensionCode) {
-			$oExtension = $this->Get($sExtensionCode);
+			$oExtension = $this->GetFromExtensionCode($sExtensionCode);
 			if (!is_null($oExtension) && $oExtension->bVisible && $oExtension->sSource != iTopExtension::SOURCE_WIZARD) {
 
 				\SetupLog::Info(__METHOD__."$sExtensionCode", null, ['visible' => $oExtension->bVisible, 'mandatory' => $oExtension->bMandatory]);
@@ -510,7 +510,7 @@ class iTopExtensionsMap
 	 */
 	public function MarkAsChosen($sExtensionCode, $bMark = true)
 	{
-		$oExtension = $this->Get($sExtensionCode);
+		$oExtension = $this->GetFromExtensionCode($sExtensionCode);
 		if (!is_null($oExtension)) {
 			$oExtension->bMarkedAsChosen = $bMark;
 		}
@@ -518,7 +518,7 @@ class iTopExtensionsMap
 
 	public function MarkAsUninstallable($sExtensionCode, $bMark = true)
 	{
-		$oExtension = $this->Get($sExtensionCode);
+		$oExtension = $this->GetFromExtensionCode($sExtensionCode);
 		if (!is_null($oExtension)) {
 			$oExtension->bUninstallable = $bMark;
 		}
@@ -531,7 +531,7 @@ class iTopExtensionsMap
 	 */
 	public function IsMarkedAsChosen($sExtensionCode)
 	{
-		$oExtension = $this->Get($sExtensionCode);
+		$oExtension = $this->GetFromExtensionCode($sExtensionCode);
 		if (!is_null($oExtension)) {
 			return $oExtension->bMarkedAsChosen;
 		}
@@ -547,7 +547,7 @@ class iTopExtensionsMap
 	 */
 	protected function SetInstalledVersion($sExtensionCode, $sInstalledVersion)
 	{
-		$oExtension = $this->Get($sExtensionCode);
+		$oExtension = $this->GetFromExtensionCode($sExtensionCode);
 		if (!is_null($oExtension)) {
 			$oExtension->sInstalledVersion = $sInstalledVersion;
 		}
