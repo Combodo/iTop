@@ -38,8 +38,8 @@ class AnalyzeInstallationTest extends ItopTestCase
 				'expected' => [
 					'_Root_' => [
 						'installed_version' => '',
-						'available_version' => '3.3.0-dev-svn',
-						'name_code' => 'iTop',
+						'available_version' => 'ITOP_VERSION_FULL',
+						'name_code' => 'ITOP_APPLICATION',
 					],
 					'mandatory_module' => [
 						"mandatory" => true,
@@ -77,9 +77,9 @@ class AnalyzeInstallationTest extends ItopTestCase
 				'aInstalledModules' => json_decode(file_get_contents(__DIR__.'/ressources/priv_modules_simpleusecase.json'), true),
 				'expected' => [
 					'_Root_' => [
-						'installed_version' => '3.3.0-dev-svn',
-						'available_version' => '3.3.0-dev-svn',
-						'name_code' => 'iTop',
+						'installed_version' => 'ITOP_VERSION_FULL',
+						'available_version' => 'ITOP_VERSION_FULL',
+						'name_code' => 'ITOP_APPLICATION',
 					],
 					'mandatory_module' => [
 						"mandatory" => true,
@@ -117,8 +117,8 @@ class AnalyzeInstallationTest extends ItopTestCase
 				'expected' => [
 					'_Root_' => [
 						'installed_version' => '',
-						'available_version' => '3.3.0-dev-svn',
-						'name_code' => 'iTop',
+						'available_version' => 'ITOP_VERSION_FULL',
+						'name_code' => 'ITOP_APPLICATION',
 					],
 				],
 			],
@@ -127,9 +127,9 @@ class AnalyzeInstallationTest extends ItopTestCase
 				'aInstalledModules' => json_decode(file_get_contents(__DIR__.'/ressources/priv_modules2.json'), true),
 				'expected' => [
 					'_Root_' => [
-						'installed_version' => '3.3.0-dev-svn',
-						'available_version' => '3.3.0-dev-svn',
-						'name_code' => 'iTop',
+						'installed_version' => 'ITOP_VERSION_FULL',
+						'available_version' => 'ITOP_VERSION_FULL',
+						'name_code' => 'ITOP_APPLICATION',
 					],
 				],
 			],
@@ -146,6 +146,9 @@ class AnalyzeInstallationTest extends ItopTestCase
 	 */
 	public function testAnalyzeInstallation($aAvailableModules, $aInstalledModules, $expected)
 	{
+		$sContent = str_replace(['ITOP_VERSION_FULL', 'ITOP_APPLICATION'], [ITOP_VERSION_FULL, ITOP_APPLICATION], json_encode($expected));
+		$expected = json_decode($sContent, true);
+
 		$this->SetNonPublicProperty(AnalyzeInstallation::GetInstance(), "aAvailableModules", $aAvailableModules);
 		//$aModules = json_decode(file_get_contents(__DIR__.'/ressources/priv_modules2.json'), true);
 		$this->SetNonPublicProperty(ModuleInstallationService::GetInstance(), "aSelectInstall", $aInstalledModules);
