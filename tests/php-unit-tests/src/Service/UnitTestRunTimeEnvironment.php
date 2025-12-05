@@ -16,7 +16,6 @@ use RunTimeEnvironment;
 use SetupUtils;
 use utils;
 
-
 /**
  * Class UnitTestRunTimeEnvironment
  *
@@ -32,18 +31,18 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 	 */
 	protected $aCustomDatamodelFiles = null;
 
-    /**
-     * @var string
-     */
-    protected $sSourceEnv;
+	/**
+	 * @var string
+	 */
+	protected $sSourceEnv;
 
-    public function __construct($sSourceEnv, $sTargetEnv)
-    {
-        parent::__construct($sTargetEnv);
-        $this->sSourceEnv = $sSourceEnv;
-    }
+	public function __construct($sSourceEnv, $sTargetEnv)
+	{
+		parent::__construct($sTargetEnv);
+		$this->sSourceEnv = $sSourceEnv;
+	}
 
-    public function GetEnvironment(): string
+	public function GetEnvironment(): string
 	{
 		return $this->sFinalEnv;
 	}
@@ -60,19 +59,19 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 		parent::CompileFrom($sSourceEnv, $bUseSymLinks);
 	}
 
-    public function IsUpToDate()
-    {
-        clearstatcache();
-        $fLastCompilationTime = filemtime(APPROOT.'env-'.$this->sFinalEnv);
-	    $aModifiedFiles = [];
-        $this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'datamodels/2.x', $aModifiedFiles);
-        $this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'extensions', $aModifiedFiles);
-        $this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'data/production-modules', $aModifiedFiles);
-        foreach ($this->GetCustomDatamodelFiles() as $sCustomDatamodelFile) {
-            if (filemtime($sCustomDatamodelFile) > $fLastCompilationTime) {
-                $aModifiedFiles[] = $sCustomDatamodelFile;
-            }
-        }
+	public function IsUpToDate()
+	{
+		clearstatcache();
+		$fLastCompilationTime = filemtime(APPROOT.'env-'.$this->sFinalEnv);
+		$aModifiedFiles = [];
+		$this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'datamodels/2.x', $aModifiedFiles);
+		$this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'extensions', $aModifiedFiles);
+		$this->FindFilesModifiedAfter($fLastCompilationTime, APPROOT.'data/production-modules', $aModifiedFiles);
+		foreach ($this->GetCustomDatamodelFiles() as $sCustomDatamodelFile) {
+			if (filemtime($sCustomDatamodelFile) > $fLastCompilationTime) {
+				$aModifiedFiles[] = $sCustomDatamodelFile;
+			}
+		}
 		// Keep only xml files
 		$aFilesToCompile = [];
 		foreach ($aModifiedFiles as $sModifiedFile) {
@@ -80,17 +79,17 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 				$aFilesToCompile[] = $sModifiedFile;
 			}
 		}
-	    $aModifiedFiles = $aFilesToCompile;
-	    if (count($aModifiedFiles) > 0) {
-		    echo "The following files have been modified after the last compilation:\n";
-		    foreach ($aModifiedFiles as $sFile) {
-			    echo " - $sFile\n";
-		    }
-	    }
-        return (count($aModifiedFiles) === 0);
+		$aModifiedFiles = $aFilesToCompile;
+		if (count($aModifiedFiles) > 0) {
+			echo "The following files have been modified after the last compilation:\n";
+			foreach ($aModifiedFiles as $sFile) {
+				echo " - $sFile\n";
+			}
+		}
+		return (count($aModifiedFiles) === 0);
 	}
 
-    /**
+	/**
 	 * @inheritDoc
 	 */
 	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
@@ -99,8 +98,8 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 
 		foreach ($this->GetCustomDatamodelFiles() as $sDeltaFile) {
 			$sDeltaId = preg_replace('/[^\d\w]/', '', $sDeltaFile);
-            $sDeltaName = basename($sDeltaFile);
-            $sDeltaDir = dirname($sDeltaFile);
+			$sDeltaName = basename($sDeltaFile);
+			$sDeltaDir = dirname($sDeltaFile);
 			$oDelta = new MFCoreModule($sDeltaName, "$sDeltaDir/$sDeltaName", $sDeltaFile);
 			$aRet[$sDeltaId] = $oDelta;
 		}
@@ -119,16 +118,16 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 		// APPROOT, APPROOT/extensions/*, APPROOT/data/production-modules/*, APPROOT/data/production-modules/*/*
 
 		$aTestDirs = [];
-		foreach(['', 'extensions/*/', 'data/production-modules/*/', 'data/production-modules/*/*/'] as $sRoot) {
+		foreach (['', 'extensions/*/', 'data/production-modules/*/', 'data/production-modules/*/*/'] as $sRoot) {
 			$aTestDirs = array_merge($aTestDirs, glob(APPROOT.$sRoot.'tests', GLOB_ONLYDIR));
 		}
 
 		$aLoadedTestClasses = [];
-		foreach($aTestDirs as $sTestDir) {
+		foreach ($aTestDirs as $sTestDir) {
 			// Iterate on all PHP files in subdirectories
 			// Note: grep is not available on Windows, so we will use the PHP Reflection API
 			foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($sTestDir)) as $oFile) {
-				if ($oFile->isDir()){
+				if ($oFile->isDir()) {
 					continue;
 				}
 				if (! utils::EndsWith($oFile->getFilename(), 'Test.php')) {
@@ -154,16 +153,16 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 				if (in_array($sClass, $aLoadedTestClasses)) {
 					continue;
 				}
-				$aLoadedTestClasses[]=$sClass;
-                require_once $sFile;
+				$aLoadedTestClasses[] = $sClass;
+				require_once $sFile;
 				$oReflectionClass = new ReflectionClass($sClass);
 				if ($oReflectionClass->isAbstract()) {
 					continue;
 				}
-                // Check if the class extends ItopCustomDatamodelTestCase
-                if (!$oReflectionClass->isSubclassOf(ItopCustomDatamodelTestCase::class)) {
-                    continue;
-                }
+				// Check if the class extends ItopCustomDatamodelTestCase
+				if (!$oReflectionClass->isSubclassOf(ItopCustomDatamodelTestCase::class)) {
+					continue;
+				}
 				/** @var \Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase $oTestClassInstance */
 				$oTestClassInstance = new $sClass();
 				if ($oTestClassInstance->GetTestEnvironment() !== $this->sFinalEnv) {
@@ -182,18 +181,18 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 		return $this->aCustomDatamodelFiles;
 	}
 
-    private function FindFilesModifiedAfter(float $fReferenceTimestamp, string $sPathToScan, array &$aModifiedFiles)
-    {
-        if (!is_dir($sPathToScan)) {
-            return;
-        }
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sPathToScan)) as $oFile) {
-            if ($oFile->isDir()) {
-                continue;
-            }
-            if (filemtime($oFile->getPathname()) > $fReferenceTimestamp) {
-                $aModifiedFiles[] = $oFile->getPathname();
-            }
-        }
-    }
+	private function FindFilesModifiedAfter(float $fReferenceTimestamp, string $sPathToScan, array &$aModifiedFiles)
+	{
+		if (!is_dir($sPathToScan)) {
+			return;
+		}
+		foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sPathToScan)) as $oFile) {
+			if ($oFile->isDir()) {
+				continue;
+			}
+			if (filemtime($oFile->getPathname()) > $fReferenceTimestamp) {
+				$aModifiedFiles[] = $oFile->getPathname();
+			}
+		}
+	}
 }

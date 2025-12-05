@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -45,56 +46,56 @@
 //
 // Class: KnownError
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:KnownError' => '已知错误',
 	'Class:KnownError+' => '记录一个已知错误',
 	'Class:KnownError/Attribute:name' => '名称',
-	'Class:KnownError/Attribute:name+' => '',
+	'Class:KnownError/Attribute:name+' => 'This is expected to be a unique identifier within the Known Errors of this organization~~',
 	'Class:KnownError/Attribute:org_id' => '客户',
-	'Class:KnownError/Attribute:org_id+' => '',
+	'Class:KnownError/Attribute:org_id+' => 'Link the known error to the service provider in charge of handling them, or maybe to a customer organization if the error is specific to them~~',
 	'Class:KnownError/Attribute:cust_name' => '客户名称',
 	'Class:KnownError/Attribute:cust_name+' => '',
 	'Class:KnownError/Attribute:problem_id' => '相关问题',
-	'Class:KnownError/Attribute:problem_id+' => '',
+	'Class:KnownError/Attribute:problem_id+' => 'The problem which couldn\'t be solved immediately and has led to the creation of this known error~~',
 	'Class:KnownError/Attribute:problem_ref' => '问题编号',
 	'Class:KnownError/Attribute:problem_ref+' => '',
 	'Class:KnownError/Attribute:symptom' => '现象',
-	'Class:KnownError/Attribute:symptom+' => '',
+	'Class:KnownError/Attribute:symptom+' => 'What are the observable effects of this error?~~',
 	'Class:KnownError/Attribute:root_cause' => '问题根源',
-	'Class:KnownError/Attribute:root_cause+' => '',
+	'Class:KnownError/Attribute:root_cause+' => 'What is the underlying cause of this error?~~',
 	'Class:KnownError/Attribute:workaround' => '解决过程',
-	'Class:KnownError/Attribute:workaround+' => '',
+	'Class:KnownError/Attribute:workaround+' => 'How to bypass the effects of this error until a proper solution is found?~~',
 	'Class:KnownError/Attribute:solution' => '解决方案',
-	'Class:KnownError/Attribute:solution+' => '',
+	'Class:KnownError/Attribute:solution+' => 'What is the permanent solution for this error?~~',
 	'Class:KnownError/Attribute:error_code' => '错误编码',
-	'Class:KnownError/Attribute:error_code+' => '',
+	'Class:KnownError/Attribute:error_code+' => 'If a specific error code is associated to this known error, specify it here~~',
 	'Class:KnownError/Attribute:domain' => '类型',
-	'Class:KnownError/Attribute:domain+' => '',
+	'Class:KnownError/Attribute:domain+' => 'Choose the technical domain related to this known error?~~',
 	'Class:KnownError/Attribute:domain/Value:Application' => '应用',
-	'Class:KnownError/Attribute:domain/Value:Application+' => '应用',
+	'Class:KnownError/Attribute:domain/Value:Application+' => '',
 	'Class:KnownError/Attribute:domain/Value:Desktop' => '桌面',
-	'Class:KnownError/Attribute:domain/Value:Desktop+' => '桌面',
+	'Class:KnownError/Attribute:domain/Value:Desktop+' => '',
 	'Class:KnownError/Attribute:domain/Value:Network' => '网络',
-	'Class:KnownError/Attribute:domain/Value:Network+' => '网络',
+	'Class:KnownError/Attribute:domain/Value:Network+' => '',
 	'Class:KnownError/Attribute:domain/Value:Server' => '服务器',
-	'Class:KnownError/Attribute:domain/Value:Server+' => '服务器',
+	'Class:KnownError/Attribute:domain/Value:Server+' => '',
 	'Class:KnownError/Attribute:vendor' => '厂商',
-	'Class:KnownError/Attribute:vendor+' => '',
+	'Class:KnownError/Attribute:vendor+' => 'A free text field to identify the vendor of the CI(s) concerned by this known error~~',
 	'Class:KnownError/Attribute:model' => '型号',
-	'Class:KnownError/Attribute:model+' => '',
+	'Class:KnownError/Attribute:model+' => 'The model of the CI(s) concerned by this known error~~',
 	'Class:KnownError/Attribute:version' => '版本',
-	'Class:KnownError/Attribute:version+' => '',
+	'Class:KnownError/Attribute:version+' => 'The version of the CI(s) concerned by this known error~~',
 	'Class:KnownError/Attribute:ci_list' => '配置项',
 	'Class:KnownError/Attribute:ci_list+' => '此已知错误相关的所有配置项',
 	'Class:KnownError/Attribute:document_list' => '文档',
 	'Class:KnownError/Attribute:document_list+' => '此已知错误相关的所有文档',
-));
+]);
 
 //
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkErrorToFunctionalCI' => '关联已知问题/功能配置项',
 	'Class:lnkErrorToFunctionalCI+' => '已知问题和功能配置项之间的关联',
 	'Class:lnkErrorToFunctionalCI/Name' => '%1$s / %2$s',
@@ -108,13 +109,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => '原因',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: lnkDocumentToError
 //
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkDocumentToError' => '关联文档/已知问题',
 	'Class:lnkDocumentToError+' => '文档和已知问题之间的关联',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
@@ -128,9 +129,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => '关联类型',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
-));
+]);
 
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ProblemManagement' => '问题管理',
 	'Menu:ProblemManagement+' => '问题管理',
 	'Menu:Problem:Shortcuts' => '快捷方式',
@@ -140,4 +141,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:SearchError+' => '搜索已知问题',
 	'Menu:Problem:KnownErrors' => '所有已知错误',
 	'Menu:Problem:KnownErrors+' => '所有已知错误',
-));
+]);

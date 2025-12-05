@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -17,7 +18,7 @@ use Str;
  */
 class AttributeFinalClass extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 	public $m_sValue;
 
 	public function __construct($sCode, $aParams)
@@ -81,10 +82,13 @@ class AttributeFinalClass extends AttributeString
 	 * @throws OQLException
 	 */
 	public function MakeValueFromString(
-		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
+		$sProposedValue,
+		$bLocalizedValue = false,
+		$sSepItem = null,
+		$sSepAttribute = null,
+		$sSepValue = null,
 		$sAttributeQualifier = null
-	)
-	{
+	) {
 		if ($bLocalizedValue) {
 			// Lookup for the value matching the input
 			//
@@ -104,11 +108,16 @@ class AttributeFinalClass extends AttributeString
 
 			return $this->MakeRealValue($sFoundValue, null);
 		} else {
-			return parent::MakeValueFromString($sProposedValue, $bLocalizedValue, $sSepItem, $sSepAttribute, $sSepValue,
-				$sAttributeQualifier);
+			return parent::MakeValueFromString(
+				$sProposedValue,
+				$bLocalizedValue,
+				$sSepItem,
+				$sSepAttribute,
+				$sSepValue,
+				$sAttributeQualifier
+			);
 		}
 	}
-
 
 	// Because this is sometimes used to get a localized/string version of an attribute...
 	public function GetEditValue($sValue, $oHostObj = null)
@@ -139,10 +148,13 @@ class AttributeFinalClass extends AttributeString
 	 * @throws DictExceptionMissingString
 	 */
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		if ($bLocalize && $value != '') {
 			$sRawValue = MetaModel::GetName($value);
 		} else {
@@ -180,10 +192,10 @@ class AttributeFinalClass extends AttributeString
 		return MetaModel::GetName($sValue);
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$aRawValues = MetaModel::EnumChildClasses($this->GetHostClass(), ENUM_CHILD_CLASSES_ALL);
-		$aLocalizedValues = array();
+		$aLocalizedValues = [];
 		foreach ($aRawValues as $sClass) {
 			$aLocalizedValues[$sClass] = MetaModel::GetName($sClass);
 		}

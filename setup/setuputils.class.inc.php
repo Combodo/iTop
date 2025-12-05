@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -25,18 +26,20 @@ use Combodo\iTop\Application\WebPage\WebPage;
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-class CheckResult {
+class CheckResult
+{
 	// Severity levels
-	const ERROR = 0;
-	const WARNING = 1;
-	const INFO = 2;
-	const TRACE = 3; // for log purposes : replace old SetupLog::Log calls
+	public const ERROR = 0;
+	public const WARNING = 1;
+	public const INFO = 2;
+	public const TRACE = 3; // for log purposes : replace old SetupLog::Log calls
 
 	public $iSeverity;
 	public $sLabel;
 	public $sDescription;
 
-	public function __construct($iSeverity, $sLabel, $sDescription = '') {
+	public function __construct($iSeverity, $sLabel, $sDescription = '')
+	{
 		$this->iSeverity = $iSeverity;
 		$this->sLabel = $sLabel;
 		$this->sDescription = $sDescription;
@@ -46,7 +49,8 @@ class CheckResult {
 	 * @return string
 	 * @since 3.0.0 N°2214
 	 */
-	public function __toString(): string {
+	public function __toString(): string
+	{
 		$sPrintDesc = (empty($this->sDescription)) ? '' : " ({$this->sDescription})";
 
 		return "{$this->sLabel}$sPrintDesc";
@@ -60,8 +64,10 @@ class CheckResult {
 	 *
 	 * @since 3.0.0 N°2214
 	 */
-	public static function FilterCheckResultArray(array $aResults, array $aCheckResultSeverities): array {
-		return array_filter($aResults,
+	public static function FilterCheckResultArray(array $aResults, array $aCheckResultSeverities): array
+	{
+		return array_filter(
+			$aResults,
 			static function ($v) use ($aCheckResultSeverities) {
 				if (in_array($v->iSeverity, $aCheckResultSeverities, true)) {
 					return $v;
@@ -69,7 +75,8 @@ class CheckResult {
 
 				return false;
 			},
-			ARRAY_FILTER_USE_BOTH);
+			ARRAY_FILTER_USE_BOTH
+		);
 	}
 
 	/**
@@ -80,7 +87,8 @@ class CheckResult {
 	 *
 	 * @since 3.0.0 N°2214
 	 */
-	public static function FromObjectsToStrings(array $aResults): array {
+	public static function FromObjectsToStrings(array $aResults): array
+	{
 		return array_map(static function ($value) {
 			return $value->__toString();
 		}, $aResults);
@@ -96,18 +104,18 @@ class CheckResult {
 class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
-	const PHP_MIN_VERSION             = '8.1.0';
-	const MYSQL_MIN_VERSION           = '5.7.0'; // 5.6 is no longer supported
-	const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0) but has no query cache so mind the perf on large volumes !
+	public const PHP_MIN_VERSION             = '8.1.0';
+	public const MYSQL_MIN_VERSION           = '5.7.0'; // 5.6 is no longer supported
+	public const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0) but has no query cache so mind the perf on large volumes !
 
 	// -- versions that will be the minimum in next iTop major release (warning if not met)
-	const PHP_NEXT_MIN_VERSION   = ''; // No new PHP requirement for next iTop version yet
-	const MYSQL_NEXT_MIN_VERSION = ''; // No new MySQL requirement for next iTop version yet
+	public const PHP_NEXT_MIN_VERSION   = ''; // No new PHP requirement for next iTop version yet
+	public const MYSQL_NEXT_MIN_VERSION = ''; // No new MySQL requirement for next iTop version yet
 	// -- First recent version that is not yet validated by Combodo (warning)
-	const PHP_NOT_VALIDATED_VERSION = '8.4.0';
+	public const PHP_NOT_VALIDATED_VERSION = '8.4.0';
 
-	const MIN_MEMORY_LIMIT             = '32M';
-	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
+	public const MIN_MEMORY_LIMIT             = '32M';
+	public const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
 
 	/**
 	 * Check configuration parameters, for example :
@@ -135,8 +143,9 @@ class SetupUtils
 	 * @since 3.0.0 N°2214 disable some checks when in CLI mode
 	 * @since 3.0.0 N°2214 replace SetupLog::Ok calls by CheckResult::TRACE
 	 */
-	public static function CheckPhpAndExtensions() {
-		$aResult = array();
+	public static function CheckPhpAndExtensions()
+	{
+		$aResult = [];
 
 		// For log file(s)
 		if (!is_dir(APPROOT.'log')) {
@@ -167,83 +176,61 @@ class SetupUtils
 
 		asort($aMandatoryExtensions); // Sort the list to look clean !
 		ksort($aOptionalExtensions); // Sort the list to look clean !
-		$aExtensionsOk = array();
-		$aMissingExtensions = array();
-		$aMissingExtensionsLinks = array();
+		$aExtensionsOk = [];
+		$aMissingExtensions = [];
+		$aMissingExtensionsLinks = [];
 		// First check the mandatory extensions
-		foreach($aMandatoryExtensions as $sExtension)
-		{
-			if (extension_loaded($sExtension))
-			{
+		foreach ($aMandatoryExtensions as $sExtension) {
+			if (extension_loaded($sExtension)) {
 				$aExtensionsOk[] = $sExtension;
-			}
-			else
-			{
+			} else {
 				$aMissingExtensions[] = $sExtension;
 				$aMissingExtensionsLinks[] = "<a href=\"http://www.php.net/manual/en/book.$sExtension.php\" target=\"_blank\">$sExtension</a>";
 			}
 		}
-		if (count($aExtensionsOk) > 0)
-		{
+		if (count($aExtensionsOk) > 0) {
 			$aResult[] = new CheckResult(CheckResult::INFO, "Required PHP extension(s): ".implode(', ', $aExtensionsOk).".");
 		}
-		if (count($aMissingExtensions) > 0)
-		{
+		if (count($aMissingExtensions) > 0) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, "Missing PHP extension(s): ".implode(', ', $aMissingExtensionsLinks).".");
 		}
 		// Next check the optional extensions
-		$aExtensionsOk = array();
-		$aMissingExtensions = array();
-		foreach($aOptionalExtensions as $sExtension => $sMessage)
-		{
+		$aExtensionsOk = [];
+		$aMissingExtensions = [];
+		foreach ($aOptionalExtensions as $sExtension => $sMessage) {
 			//if sMessage is an array, extensions in it are conditional between them
-			if (is_array($sMessage))
-			{
+			if (is_array($sMessage)) {
 				$bIsAtLeastOneLoaded = false;
 				$sConditionalMissingMessage = '';
-				foreach($sMessage as $sConditionalExtension => $sConditionalMessage)
-				{
-					if (extension_loaded($sConditionalExtension))
-					{
+				foreach ($sMessage as $sConditionalExtension => $sConditionalMessage) {
+					if (extension_loaded($sConditionalExtension)) {
 						$bIsAtLeastOneLoaded = true;
 						$aExtensionsOk[] = $sConditionalExtension;
-					}
-					else
-					{
+					} else {
 						$sConditionalMissingMessage = $sConditionalMessage;
 					}
 				}
-				if(!$bIsAtLeastOneLoaded)
-				{
+				if (!$bIsAtLeastOneLoaded) {
 					$aMissingExtensions[$sExtension] = $sConditionalMissingMessage;
 				}
-			}
-			else
-			{
-				if (extension_loaded($sExtension))
-				{
+			} else {
+				if (extension_loaded($sExtension)) {
 					$aExtensionsOk[] = $sExtension;
-				}
-				else
-				{
+				} else {
 					$aMissingExtensions[$sExtension] = $sMessage;
 				}
 			}
 		}
-		if (count($aExtensionsOk) > 0)
-		{
+		if (count($aExtensionsOk) > 0) {
 			$aResult[] = new CheckResult(CheckResult::INFO, "Optional PHP extension(s): ".implode(', ', $aExtensionsOk).".");
 		}
-		if (count($aMissingExtensions) > 0)
-		{
-			foreach($aMissingExtensions as $sExtension => $sMessage)
-			{
+		if (count($aMissingExtensions) > 0) {
+			foreach ($aMissingExtensions as $sExtension => $sMessage) {
 				$aResult[] = new CheckResult(CheckResult::WARNING, "Missing optional PHP extension: $sExtension. ".$sMessage);
 			}
 		}
 		// Check some ini settings here
-		if (function_exists('php_ini_loaded_file')) // PHP >= 5.2.4
-		{
+		if (function_exists('php_ini_loaded_file')) { // PHP >= 5.2.4
 			$sPhpIniFile = php_ini_loaded_file();
 			// Other included/scanned files
 			if ($sFileList = php_ini_scanned_files()) {
@@ -259,45 +246,57 @@ class SetupUtils
 		}
 
 		if (!utils::IsModeCLI() && !ini_get('file_uploads')) {
-			$aResult[] = new CheckResult(CheckResult::ERROR,
-				"Files upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").");
+			$aResult[] = new CheckResult(
+				CheckResult::ERROR,
+				"Files upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').")."
+			);
 		}
 
 		if (!utils::IsModeCLI()) {
 			$sUploadTmpDir = self::GetUploadTmpDir();
 			if (empty($sUploadTmpDir)) {
 				$sUploadTmpDir = '/tmp';
-				$aResult[] = new CheckResult(CheckResult::WARNING,
-					"Temporary directory for files upload is not defined (upload_tmp_dir), assuming that $sUploadTmpDir is used.");
+				$aResult[] = new CheckResult(
+					CheckResult::WARNING,
+					"Temporary directory for files upload is not defined (upload_tmp_dir), assuming that $sUploadTmpDir is used."
+				);
 			}
 			// check that the upload directory is indeed writable from PHP
 			if (!empty($sUploadTmpDir)) {
 				if (!file_exists($sUploadTmpDir)) {
-					$aResult[] = new CheckResult(CheckResult::ERROR,
-						"Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP.");
-				}
-				else {
+					$aResult[] = new CheckResult(
+						CheckResult::ERROR,
+						"Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP."
+					);
+				} else {
 					if (!is_writable($sUploadTmpDir)) {
-						$aResult[] = new CheckResult(CheckResult::ERROR,
-							"Temporary directory for files upload ($sUploadTmpDir) is not writable.");
-					}
-					else {
-						$aResult[] = new CheckResult(CheckResult::TRACE,
-							"Info - Temporary directory for files upload ($sUploadTmpDir) is writable.");
+						$aResult[] = new CheckResult(
+							CheckResult::ERROR,
+							"Temporary directory for files upload ($sUploadTmpDir) is not writable."
+						);
+					} else {
+						$aResult[] = new CheckResult(
+							CheckResult::TRACE,
+							"Info - Temporary directory for files upload ($sUploadTmpDir) is writable."
+						);
 					}
 				}
 			}
 		}
 
 		if (!utils::IsModeCLI() && !ini_get('upload_max_filesize')) {
-			$aResult[] = new CheckResult(CheckResult::ERROR,
-				"File upload is not allowed on this server (upload_max_filesize = ".ini_get('upload_max_filesize').").");
+			$aResult[] = new CheckResult(
+				CheckResult::ERROR,
+				"File upload is not allowed on this server (upload_max_filesize = ".ini_get('upload_max_filesize').")."
+			);
 		}
 
 		$iMaxFileUploads = ini_get('max_file_uploads');
 		if (!utils::IsModeCLI() && !empty($iMaxFileUploads) && ($iMaxFileUploads < 1)) {
-			$aResult[] = new CheckResult(CheckResult::ERROR,
-				"File upload is not allowed on this server (max_file_uploads = ".ini_get('max_file_uploads').").");
+			$aResult[] = new CheckResult(
+				CheckResult::ERROR,
+				"File upload is not allowed on this server (max_file_uploads = ".ini_get('max_file_uploads').")."
+			);
 		}
 
 		if (!utils::IsModeCLI()) {
@@ -305,8 +304,10 @@ class SetupUtils
 			$iMaxPostSize = utils::ConvertToBytes(ini_get('post_max_size'));
 
 			if ($iMaxPostSize <= $iMaxUploadSize) {
-				$aResult[] = new CheckResult(CheckResult::WARNING,
-					"post_max_size (".ini_get('post_max_size').") in php.ini should be strictly greater than upload_max_filesize (".ini_get('upload_max_filesize').") otherwise you cannot upload files of the maximum size.");
+				$aResult[] = new CheckResult(
+					CheckResult::WARNING,
+					"post_max_size (".ini_get('post_max_size').") in php.ini should be strictly greater than upload_max_filesize (".ini_get('upload_max_filesize').") otherwise you cannot upload files of the maximum size."
+				);
 			}
 
 			$aResult[] = new CheckResult(CheckResult::TRACE, "Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
@@ -334,30 +335,28 @@ class SetupUtils
 		}
 
 		// Special case for APC
-		if (extension_loaded('apc'))
-		{
+		if (extension_loaded('apc')) {
 			$sAPCVersion = phpversion('apc');
 			$aResult[] = new CheckResult(CheckResult::INFO, "APC detected (version $sAPCVersion). The APC cache will be used to speed-up ".ITOP_APPLICATION.".");
 		}
 
 		// Special case Suhosin extension
-		if (extension_loaded('suhosin'))
-		{
+		if (extension_loaded('suhosin')) {
 			$sSuhosinVersion = phpversion('suhosin');
 			$aOk[] = "Suhosin extension detected (version $sSuhosinVersion).";
 
 			$iGetMaxValueLength = ini_get('suhosin.get.max_value_length');
 			if ($iGetMaxValueLength < self::SUHOSIN_GET_MAX_VALUE_LENGTH) {
-				$aResult[] = new CheckResult(CheckResult::WARNING,
-					"suhosin.get.max_value_length ($iGetMaxValueLength) is too small, the minimum value recommended to run the application is ".self::SUHOSIN_GET_MAX_VALUE_LENGTH.".");
-			}
-			else {
+				$aResult[] = new CheckResult(
+					CheckResult::WARNING,
+					"suhosin.get.max_value_length ($iGetMaxValueLength) is too small, the minimum value recommended to run the application is ".self::SUHOSIN_GET_MAX_VALUE_LENGTH."."
+				);
+			} else {
 				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - suhosin.get.max_value_length = $iGetMaxValueLength, ok.");
 			}
 		}
 
-		if (function_exists('php_ini_loaded_file')) // PHP >= 5.2.4
-		{
+		if (function_exists('php_ini_loaded_file')) { // PHP >= 5.2.4
 			$sPhpIniFile = php_ini_loaded_file();
 			// Other included/scanned files
 			if ($sFileList = php_ini_scanned_files()) {
@@ -387,22 +386,27 @@ class SetupUtils
 						$sSavePath = substr($sSavePath, $iPos + 1);
 					}
 					if (!is_writable($sSavePath)) {
-						$aResult[] = new CheckResult(CheckResult::ERROR,
-							"The value for session.save_path ($sSavePath) is not writable for the web server. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
+						$aResult[] = new CheckResult(
+							CheckResult::ERROR,
+							"The value for session.save_path ($sSavePath) is not writable for the web server. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)"
+						);
+					} else {
+						$aResult[] = new CheckResult(
+							CheckResult::INFO,
+							"The value for session.save_path ($sSavePath) is writable for the web server."
+						);
 					}
-					else {
-						$aResult[] = new CheckResult(CheckResult::INFO,
-							"The value for session.save_path ($sSavePath) is writable for the web server.");
-					}
+				} else {
+					$aResult[] = new CheckResult(
+						CheckResult::WARNING,
+						"Empty path for session.save_path. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)"
+					);
 				}
-				else {
-					$aResult[] = new CheckResult(CheckResult::WARNING,
-						"Empty path for session.save_path. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
-				}
-			}
-			else {
-				$aResult[] = new CheckResult(CheckResult::INFO,
-					"session.save_handler is: '".ini_get('session.save_handler')."' (different from 'files').");
+			} else {
+				$aResult[] = new CheckResult(
+					CheckResult::INFO,
+					"session.save_handler is: '".ini_get('session.save_handler')."' (different from 'files')."
+				);
 			}
 		}
 
@@ -451,38 +455,43 @@ class SetupUtils
 	 *
 	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	private static function CheckPhpVersion(array &$aResult) {
+	private static function CheckPhpVersion(array &$aResult)
+	{
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckPHPVersion');
 		$sPhpVersion = phpversion();
 
 		if (version_compare($sPhpVersion, self::PHP_MIN_VERSION, '>=')) {
-			$aResult[] = new CheckResult(CheckResult::INFO,
-				"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
-
+			$aResult[] = new CheckResult(
+				CheckResult::INFO,
+				"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")"
+			);
 
 			$sPhpNextMinVersion = self::PHP_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
 			if (!empty($sPhpNextMinVersion)) {
 				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>=')) {
-					$aResult[] = new CheckResult(CheckResult::INFO,
-						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")");
-				}
-				else
-				{
-					$aResult[] = new CheckResult(CheckResult::WARNING,
-						"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+					$aResult[] = new CheckResult(
+						CheckResult::INFO,
+						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")"
+					);
+				} else {
+					$aResult[] = new CheckResult(
+						CheckResult::WARNING,
+						"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")"
+					);
 				}
 			}
 
-			if (version_compare($sPhpVersion, self::PHP_NOT_VALIDATED_VERSION, '>='))
-			{
-				$aResult[] = new CheckResult(CheckResult::WARNING,
-					"The current PHP Version (".$sPhpVersion.") is not yet validated by Combodo. You may experience some incompatibility issues.");
+			if (version_compare($sPhpVersion, self::PHP_NOT_VALIDATED_VERSION, '>=')) {
+				$aResult[] = new CheckResult(
+					CheckResult::WARNING,
+					"The current PHP Version (".$sPhpVersion.") is not yet validated by Combodo. You may experience some incompatibility issues."
+				);
 			}
-		}
-		else
-		{
-			$aResult[] = new CheckResult(CheckResult::ERROR,
-				"Error: The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
+		} else {
+			$aResult[] = new CheckResult(
+				CheckResult::ERROR,
+				"Error: The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")"
+			);
 		}
 	}
 
@@ -497,10 +506,11 @@ class SetupUtils
 	 *
 	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules) {
-		$aResult = array();
+	public static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules)
+	{
+		$aResult = [];
 
-		$aDirsToScan = array(APPROOT.$sSourceDir);
+		$aDirsToScan = [APPROOT.$sSourceDir];
 		$sExtensionsPath = APPROOT.$sExtensionDir;
 		if (is_dir($sExtensionsPath)) {
 			// if the extensions dir exists, scan it for additional modules as well
@@ -525,8 +535,9 @@ class SetupUtils
 	 *
 	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null) {
-		$aResult = array();
+	public static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null)
+	{
+		$aResult = [];
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckBackupPrerequisites');
 
 		// zip extension
@@ -558,27 +569,28 @@ class SetupUtils
 			$aResult[] = new CheckResult(CheckResult::ERROR, $e->getMessage());
 			return $aResult;
 		}
-        if (!empty($sMySQLBinDir)) {
-	        $aResult[] = new CheckResult(CheckResult::TRACE, 'Info - Found mysql_bindir: '.$sMySQLBinDir);
-        }
+		if (!empty($sMySQLBinDir)) {
+			$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - Found mysql_bindir: '.$sMySQLBinDir);
+		}
 		$sCommand = "$sMySQLDump -V 2>&1";
 
-		$aOutput = array();
+		$aOutput = [];
 		$iRetCode = 0;
 		exec($sCommand, $aOutput, $iRetCode);
-		if ($iRetCode == 0)
-		{
+		if ($iRetCode == 0) {
 			$aResult[] = new CheckResult(CheckResult::INFO, "mysqldump is present: Ok.");
-		}
-		elseif ($iRetCode == 1) {
+		} elseif ($iRetCode == 1) {
 			// Unfortunately $aOutput is not really usable since we don't know its encoding (character set)
-			$aResult[] = new CheckResult(CheckResult::ERROR,
-				"mysqldump could not be found. Please make sure it is installed and in the path.");
-		}
-		else {
+			$aResult[] = new CheckResult(
+				CheckResult::ERROR,
+				"mysqldump could not be found. Please make sure it is installed and in the path."
+			);
+		} else {
 			// Unfortunately $aOutput is not really usable since we don't know its encoding (character set)
-			$aResult[] = new CheckResult(CheckResult::ERROR,
-				"mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and ".(empty($sMySQLBinDir) ? "in the path" : "located at : $sMySQLDump"));
+			$aResult[] = new CheckResult(
+				CheckResult::ERROR,
+				"mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and ".(empty($sMySQLBinDir) ? "in the path" : "located at : $sMySQLDump")
+			);
 		}
 		foreach ($aOutput as $sLine) {
 			$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - mysqldump -V said: '.$sLine);
@@ -611,7 +623,8 @@ class SetupUtils
 	 *
 	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckGraphviz($sGraphvizPath) {
+	public static function CheckGraphviz($sGraphvizPath)
+	{
 		$aResult = [];
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckGraphviz');
 
@@ -620,8 +633,10 @@ class SetupUtils
 		$aDisabled = explode(', ', ini_get('disable_functions'));
 		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - PHP functions disabled: '.implode(', ', $aDisabled));
 		if (in_array('exec', $aDisabled)) {
-			$aResult[] = new CheckResult(CheckResult::ERROR,
-				self::GetStringForJsonEncode('The PHP exec() function has been disabled on this server', 'Could not find Graphviz\' dot'));
+			$aResult[] = new CheckResult(
+				CheckResult::ERROR,
+				self::GetStringForJsonEncode('The PHP exec() function has been disabled on this server', 'Could not find Graphviz\' dot')
+			);
 		}
 
 		// availability of dot / dot.exe
@@ -632,34 +647,39 @@ class SetupUtils
 			if (!is_file($sGraphvizPath) || !is_executable($sGraphvizPath)) {
 				//N°3412 avoid shell injection
 				$aResult = [];
-				$aResult[] =  new CheckResult(CheckResult::WARNING,
+				$aResult[] =  new CheckResult(
+					CheckResult::WARNING,
 					self::GetStringForJsonEncode("$sGraphvizPath could not be executed: Please make sure it is installed and in the path", 'Graphviz could not be executed')
 				);
 				return $aResult;
 			}
 
-			if (!utils::IsWindowsEnvironment()){
+			if (!utils::IsWindowsEnvironment()) {
 				$sGraphvizPath = escapeshellcmd($sGraphvizPath);
 			}
 		}
 
 		$sCommand = "\"$sGraphvizPath\" -V 2>&1";
 
-		$aOutput = array();
+		$aOutput = [];
 		$iRetCode = 0;
 		exec($sCommand, $aOutput, $iRetCode);
 		if ($iRetCode == 0) {
-			$aResult[] = new CheckResult(CheckResult::INFO,
-				self::GetStringForJsonEncode("dot is present: ".$aOutput[0], 'Graphviz\' dot found'));
+			$aResult[] = new CheckResult(
+				CheckResult::INFO,
+				self::GetStringForJsonEncode("dot is present: ".$aOutput[0], 'Graphviz\' dot found')
+			);
 		} elseif ($iRetCode == 1) {
-			$aResult[] = new CheckResult(CheckResult::WARNING,
+			$aResult[] = new CheckResult(
+				CheckResult::WARNING,
 				self::GetStringForJsonEncode(
 					"dot could not be found: ".implode(' ', $aOutput)." - Please make sure it is installed and in the path.",
 					'Could not find Graphviz\' dot'
 				)
 			);
 		} else {
-			$aResult[] = new CheckResult(CheckResult::WARNING,
+			$aResult[] = new CheckResult(
+				CheckResult::WARNING,
 				self::GetStringForJsonEncode(
 					"dot could not be executed (retcode=$iRetCode): Please make sure it is installed and in the path",
 					'Could not find Graphviz\' dot'
@@ -684,7 +704,8 @@ class SetupUtils
 	 *
 	 * @since 3.0.0
 	 */
-	private static function GetStringForJsonEncode(string $sValue, string $sFallbackValue): string {
+	private static function GetStringForJsonEncode(string $sValue, string $sFallbackValue): string
+	{
 		return (json_encode($sValue) !== false)
 			? $sValue
 			: $sFallbackValue;
@@ -697,7 +718,8 @@ class SetupUtils
 	 * @return string Path to the system's temp directory
 	 * @uses \sys_get_temp_dir()
 	 */
-	public static function GetTmpDir() {
+	public static function GetTmpDir()
+	{
 		return realpath(sys_get_temp_dir());
 	}
 
@@ -706,7 +728,8 @@ class SetupUtils
 	 *
 	 * @return string Path to the temp directory used for uploading files
 	 */
-	public static function GetUploadTmpDir() {
+	public static function GetUploadTmpDir()
+	{
 		$sPath = ini_get('upload_tmp_dir');
 		if (empty($sPath)) {
 			$sPath = self::GetTmpDir();
@@ -722,8 +745,7 @@ class SetupUtils
 	 */
 	public static function rrmdir($dir)
 	{
-		if ((strlen(trim($dir)) == 0) || ($dir == '/') || ($dir == '\\'))
-		{
+		if ((strlen(trim($dir)) == 0) || ($dir == '/') || ($dir == '\\')) {
 			throw new Exception("Attempting to delete directory: '$dir'");
 		}
 		self::tidydir($dir);
@@ -737,7 +759,8 @@ class SetupUtils
 	 *
 	 * @throws Exception
 	 */
-	public static function tidydir(string $dir): void {
+	public static function tidydir(string $dir): void
+	{
 		if ((strlen(trim($dir)) == 0) || ($dir == '/') || ($dir == '\\')) {
 			throw new Exception("Attempting to delete directory: '$dir'");
 		}
@@ -753,7 +776,7 @@ class SetupUtils
 						} else {
 							if (!unlink($dir.'/'.$file)) {
 								SetupLog::Ok("Warning - FAILED to remove file '$dir/$file'");
-							} else if (file_exists($dir.'/'.$file)) {
+							} elseif (file_exists($dir.'/'.$file)) {
 								SetupLog::Ok("Warning - FAILED to remove file '$dir/.$file'");
 							}
 						}
@@ -769,13 +792,11 @@ class SetupUtils
 	 */
 	public static function builddir($dir)
 	{
-		if (empty($dir))
-		{
+		if (empty($dir)) {
 			// avoid infinite loops :/
 			return;
 		}
-		if (!is_dir($dir))
-		{
+		if (!is_dir($dir)) {
 			$parent = dirname($dir);
 			self::builddir($parent);
 			if (!mkdir($dir) && !is_dir($dir)) {
@@ -816,49 +837,33 @@ class SetupUtils
 	 */
 	public static function copydir($sSource, $sDest, $bUseSymbolicLinks = false)
 	{
-		if (is_dir($sSource))
-		{
-			if (!is_dir($sDest))
-			{
+		if (is_dir($sSource)) {
+			if (!is_dir($sDest)) {
 				mkdir($sDest, 0777 /* Default */, true);
 			}
 			$aFiles = scandir($sSource);
-			if(sizeof($aFiles) > 0 )
-			{
-				foreach($aFiles as $sFile)
-				{
-					if ($sFile == '.' || $sFile == '..' || $sFile == '.svn' || $sFile == '.git')
-					{
+			if (sizeof($aFiles) > 0) {
+				foreach ($aFiles as $sFile) {
+					if ($sFile == '.' || $sFile == '..' || $sFile == '.svn' || $sFile == '.git') {
 						// Skip
 						continue;
 					}
 
-					if (is_dir($sSource.'/'.$sFile))
-					{
+					if (is_dir($sSource.'/'.$sFile)) {
 						// Recurse
 						self::copydir($sSource.'/'.$sFile, $sDest.'/'.$sFile, $bUseSymbolicLinks);
-					}
-					else
-					{
-						if ($bUseSymbolicLinks)
-						{
-							if (function_exists('symlink'))
-							{
-								if (file_exists($sDest.'/'.$sFile))
-								{
+					} else {
+						if ($bUseSymbolicLinks) {
+							if (function_exists('symlink')) {
+								if (file_exists($sDest.'/'.$sFile)) {
 									unlink($sDest.'/'.$sFile);
 								}
 								symlink($sSource.'/'.$sFile, $sDest.'/'.$sFile);
-							}
-							else
-							{
+							} else {
 								throw(new Exception("Error, cannot *copy* '$sSource/$sFile' to '$sDest/$sFile' using symbolic links, 'symlink' is not supported on this system."));
 							}
-						}
-						else
-						{
-							if (is_link($sDest.'/'.$sFile))
-							{
+						} else {
+							if (is_link($sDest.'/'.$sFile)) {
 								unlink($sDest.'/'.$sFile);
 							}
 							copy($sSource.'/'.$sFile, $sDest.'/'.$sFile);
@@ -867,27 +872,17 @@ class SetupUtils
 				}
 			}
 			return true;
-		}
-		elseif (is_file($sSource))
-		{
-			if ($bUseSymbolicLinks)
-			{
-				if (function_exists('symlink'))
-				{
+		} elseif (is_file($sSource)) {
+			if ($bUseSymbolicLinks) {
+				if (function_exists('symlink')) {
 					return symlink($sSource, $sDest);
-				}
-				else
-				{
+				} else {
 					throw(new Exception("Error, cannot *copy* '$sSource' to '$sDest' using symbolic links, 'symlink' is not supported on this system."));
 				}
-			}
-			else
-			{
+			} else {
 				return copy($sSource, $sDest);
 			}
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
@@ -905,23 +900,18 @@ class SetupUtils
 	 */
 	public static function movedir($sSource, $sDest, $bRemoveSource = true)
 	{
-		if (!is_dir($sSource))
-		{
+		if (!is_dir($sSource)) {
 			throw new Exception("movedir: the source directory '$sSource' is not a valid directory or cannot be read");
 		}
-		if (!is_dir($sDest))
-		{
+		if (!is_dir($sDest)) {
 			self::builddir($sDest);
-		}
-		else
-		{
+		} else {
 			self::tidydir($sDest);
 		}
 
 		self::copydir($sSource, $sDest);
 		self::tidydir($sSource);
-		if($bRemoveSource === true)
-		{
+		if ($bRemoveSource === true) {
 			self::rmdir_safe($sSource);
 		}
 	}
@@ -931,30 +921,26 @@ class SetupUtils
 		$sSourceDir = '';
 		$sSourceEnvironment = '';
 		$sConfigFile = '';
-		$aResult = array(
+		$aResult = [
 			'found' => false,
-		);
+		];
 
-		if (file_exists($sDir.'/config-itop.php'))
-		{
+		if (file_exists($sDir.'/config-itop.php')) {
 			$sSourceDir = $sDir;
 			$sSourceEnvironment = '';
 			$sConfigFile = $sDir.'/config-itop.php';
 			$aResult['found'] = true;
-		}
-		else if (file_exists($sDir.'/conf/production/config-itop.php'))
-		{
+		} elseif (file_exists($sDir.'/conf/production/config-itop.php')) {
 			$sSourceDir = $sDir;
 			$sSourceEnvironment = 'production';
 			$sConfigFile = $sDir.'/conf/production/config-itop.php';
 			$aResult['found'] = true;
 		}
 
-		if ($aResult['found'])
-		{
+		if ($aResult['found']) {
 			$oPrevConf = new Config($sConfigFile);
 
-			$aResult = array(
+			$aResult = [
 				'found' => true,
 				'source_dir' => $sSourceDir,
 				'source_environment' => $sSourceEnvironment,
@@ -968,7 +954,7 @@ class SetupUtils
 				'db_tls_ca' => $oPrevConf->Get('db_tls.ca'),
 				'graphviz_path' => $oPrevConf->Get('graphviz_path'),
 				'mysql_bindir' => $oPrevConf->GetModuleSetting('itop-backup', 'mysql_bindir', ''),
-			);
+			];
 		}
 
 		return $aResult;
@@ -982,28 +968,31 @@ class SetupUtils
 	 */
 	public static function CheckDiskSpace($sDir)
 	{
-		while(($f = @disk_free_space($sDir)) == false)
-		{
-			if ($sDir == dirname($sDir)) break;
-			if ($sDir == '.') break;
+		while (($f = @disk_free_space($sDir)) == false) {
+			if ($sDir == dirname($sDir)) {
+				break;
+			}
+			if ($sDir == '.') {
+				break;
+			}
 			$sDir = dirname($sDir);
 		}
 
 		return $f;
 	}
 
-    /**
-     * @param float $fBytes size in raw bytes, for example 162594750464.0
-     * @return string formatted string, for example "161.62 GB"
-     *
-     * @link https://en.wiktionary.org/wiki/byte byte and not Byte
-     * @link https://en.wikipedia.org/wiki/Kilobyte kB and not KB (IEC 80000-13)
-     * @link https://en.wiktionary.org/wiki/petabyte petabyte PB
-     * @link https://en.wiktionary.org/wiki/exabyte exabyte EB
-     */
+	/**
+	 * @param float $fBytes size in raw bytes, for example 162594750464.0
+	 * @return string formatted string, for example "161.62 GB"
+	 *
+	 * @link https://en.wiktionary.org/wiki/byte byte and not Byte
+	 * @link https://en.wikipedia.org/wiki/Kilobyte kB and not KB (IEC 80000-13)
+	 * @link https://en.wiktionary.org/wiki/petabyte petabyte PB
+	 * @link https://en.wiktionary.org/wiki/exabyte exabyte EB
+	 */
 	public static function HumanReadableSize($fBytes)
 	{
-		$aSizes = array('bytes', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB');
+		$aSizes = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB'];
 		$index = 0;
 		while (($fBytes > 1000) && ($index < count($aSizes))) {
 			$index++;
@@ -1031,7 +1020,15 @@ class SetupUtils
 	 * @param string $sNewDBName
 	 */
 	public static function DisplayDBParameters(
-		$oPage, $bIsItopInstall, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $bTlsEnabled, $sTlsCA,
+		$oPage,
+		$bIsItopInstall,
+		$sDBServer,
+		$sDBUser,
+		$sDBPwd,
+		$sDBName,
+		$sDBPrefix,
+		$bTlsEnabled,
+		$sTlsCA,
 		$sNewDBName = ''
 	) {
 		$sWikiVersion = utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
@@ -1084,7 +1081,8 @@ class SetupUtils
 		$oPage->add('<span id="table_info"></span>');
 
 		// Sub options toggle (TLS, prefix)
-		$oPage->add_script(<<<'JS'
+		$oPage->add_script(
+			<<<'JS'
 function toggleCollapsableOptions($tbody) {
 	$tbody.children().not(":first-child").toggle();
 	updateCollapsableImage($tbody);
@@ -1094,8 +1092,7 @@ function updateCollapsableImage($tbody) {
 }
 JS
 		);
-		if ($bTlsEnabled)
-		{
+		if ($bTlsEnabled) {
 			$oPage->add_ready_script('toggleCollapsableOptions($("tbody#tls_options"));');
 		}
 		$oPage->add_ready_script(
@@ -1250,22 +1247,22 @@ EOF
 	 *     Array of database names (as strings) or null if not allowed)
 	 */
 	public static function CheckDbServer(
-		$sDBServer, $sDBUser, $sDBPwd, $bTlsEnabled = false, $sTlsCA = null
-	)
-	{
-		$aResult = array('checks' => array(), 'databases' => null);
+		$sDBServer,
+		$sDBUser,
+		$sDBPwd,
+		$bTlsEnabled = false,
+		$sTlsCA = null
+	) {
+		$aResult = ['checks' => [], 'databases' => null];
 
-		if ($bTlsEnabled)
-		{
-			if (!empty($sTlsCA) && !self::CheckFileExists($sTlsCA, $aResult, 'Can\'t open SSL CA file'))
-			{
+		if ($bTlsEnabled) {
+			if (!empty($sTlsCA) && !self::CheckFileExists($sTlsCA, $aResult, 'Can\'t open SSL CA file')) {
 				return $aResult;
 			}
 		}
 
-		try
-		{
-			$oDBSource = new CMDBSource;
+		try {
+			$oDBSource = new CMDBSource();
 			$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $bTlsEnabled, $sTlsCA);
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Connection to '$sDBServer' as '$sDBUser' successful.");
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Info - User privileges: ".($oDBSource->GetRawPrivileges()));
@@ -1280,16 +1277,17 @@ EOF
 			$sMaxAllowedPacketFriendly = utils::BytesToFriendlyFormat($iMaxAllowedPacket);
 			$iMaxUploadSize            = utils::ConvertToBytes(ini_get('upload_max_filesize'));
 			$sMaxUploadSizeFriendly    = utils::BytesToFriendlyFormat($iMaxUploadSize);
-			if ($iMaxAllowedPacket >= (500 + $iMaxUploadSize)) // Allow some space for the query + the file to upload
-			{
+			if ($iMaxAllowedPacket >= (500 + $iMaxUploadSize)) { // Allow some space for the query + the file to upload
 				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly).");
-			} else if ($iMaxAllowedPacket < $iMaxUploadSize) {
+			} elseif ($iMaxAllowedPacket < $iMaxUploadSize) {
 				$sWikiVersion                = utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
 				$sAttachmentsVarsWikiPageUrl = 'https://www.itophub.io/wiki/page?id='.$sWikiVersion
 					.':install:php_and_mysql_configuration#attachments_upload';
 
-				$aResult['checks'][] = new CheckResult(CheckResult::WARNING,
-					"MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is not big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly), whereas it should has a greater value. Consider increasing its value of at least 500KB. See the <a href=\"$sAttachmentsVarsWikiPageUrl\">documentation</a> for details.");
+				$aResult['checks'][] = new CheckResult(
+					CheckResult::WARNING,
+					"MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is not big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly), whereas it should has a greater value. Consider increasing its value of at least 500KB. See the <a href=\"$sAttachmentsVarsWikiPageUrl\">documentation</a> for details."
+				);
 			}
 
 			$iMaxConnections = $oDBSource->GetServerVariable('max_connections');
@@ -1299,21 +1297,18 @@ EOF
 				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_connections is set to $iMaxConnections.");
 			}
 
-            $iClusters = $oDBSource->GetClusterNb();
-            if ($iClusters > 0) {
-                SetupLog::Warning('Warning - Using Galera will cause malfunctions and data corruptions. Combodo does not support this type of infrastructure.');
-                $aResult['checks'][] = new CheckResult(CheckResult::WARNING, 'Using Galera will cause malfunctions and data corruptions. Combodo does not support this type of infrastructure.');
-            }
+			$iClusters = $oDBSource->GetClusterNb();
+			if ($iClusters > 0) {
+				SetupLog::Warning('Warning - Using Galera will cause malfunctions and data corruptions. Combodo does not support this type of infrastructure.');
+				$aResult['checks'][] = new CheckResult(CheckResult::WARNING, 'Using Galera will cause malfunctions and data corruptions. Combodo does not support this type of infrastructure.');
+			}
 
 			try {
 				$aResult['databases'] = $oDBSource->ListDB();
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$aResult['databases'] = null;
 			}
-		}
-		catch(Exception $e)
-		{
+		} catch (Exception $e) {
 			return false;
 		}
 
@@ -1332,8 +1327,7 @@ EOF
 	 */
 	private static function CheckFileExists($sPath, &$aResult, $sErrorMessage)
 	{
-		if (!is_readable($sPath))
-		{
+		if (!is_readable($sPath)) {
 			$aResult['checks'][] = new CheckResult(CheckResult::ERROR, $sErrorMessage);
 
 			return false;
@@ -1358,39 +1352,42 @@ EOF
 			&& ($sDBVendor === CMDBSource::ENUM_DB_VENDOR_MYSQL)
 			&& version_compare($sDBVersion, self::MYSQL_NOT_VALIDATED_VERSION, '>=')
 		) {
-			$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
-				"Error: Current MySQL version is $sDBVersion. iTop doesn't yet support MySQL ".self::MYSQL_NOT_VALIDATED_VERSION." and above.");
+			$aResult['checks'][] = new CheckResult(
+				CheckResult::ERROR,
+				"Error: Current MySQL version is $sDBVersion. iTop doesn't yet support MySQL ".self::MYSQL_NOT_VALIDATED_VERSION." and above."
+			);
 
 			return false;
 		}
 
 		$bRet = false;
-		if (version_compare($sDBVersion, self::MYSQL_MIN_VERSION, '>='))
-		{
-			$aResult['checks'][] = new CheckResult(CheckResult::INFO,
-				"Current MySQL version ($sDBVersion), greater than minimum required version (".self::MYSQL_MIN_VERSION.")");
+		if (version_compare($sDBVersion, self::MYSQL_MIN_VERSION, '>=')) {
+			$aResult['checks'][] = new CheckResult(
+				CheckResult::INFO,
+				"Current MySQL version ($sDBVersion), greater than minimum required version (".self::MYSQL_MIN_VERSION.")"
+			);
 
 			$sMySqlNextMinVersion = self::MYSQL_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
-			if (!empty($sMySqlNextMinVersion))
-			{
-				if (version_compare($sDBVersion, self::MYSQL_NEXT_MIN_VERSION, '>='))
-				{
-					$aResult['checks'][] = new CheckResult(CheckResult::INFO,
-						"Current MySQL version ($sDBVersion), greater than minimum required version for next ".ITOP_APPLICATION." release (".self::MYSQL_NEXT_MIN_VERSION.")");
-				}
-				else
-				{
-					$aResult['checks'][] = new CheckResult(CheckResult::WARNING,
-						"Warning : Current MySQL version is $sDBVersion, minimum required version for next ".ITOP_APPLICATION." release will be ".self::MYSQL_NEXT_MIN_VERSION);
+			if (!empty($sMySqlNextMinVersion)) {
+				if (version_compare($sDBVersion, self::MYSQL_NEXT_MIN_VERSION, '>=')) {
+					$aResult['checks'][] = new CheckResult(
+						CheckResult::INFO,
+						"Current MySQL version ($sDBVersion), greater than minimum required version for next ".ITOP_APPLICATION." release (".self::MYSQL_NEXT_MIN_VERSION.")"
+					);
+				} else {
+					$aResult['checks'][] = new CheckResult(
+						CheckResult::WARNING,
+						"Warning : Current MySQL version is $sDBVersion, minimum required version for next ".ITOP_APPLICATION." release will be ".self::MYSQL_NEXT_MIN_VERSION
+					);
 				}
 			}
 
 			$bRet = true;
-		}
-		else
-		{
-			$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
-				"Error: Current MySQL version is $sDBVersion, minimum required version is ".self::MYSQL_MIN_VERSION);
+		} else {
+			$aResult['checks'][] = new CheckResult(
+				CheckResult::ERROR,
+				"Error: Current MySQL version is $sDBVersion, minimum required version is ".self::MYSQL_MIN_VERSION
+			);
 			$bRet = false;
 		}
 
@@ -1408,10 +1405,13 @@ EOF
 	 * @throws \MySQLException
 	 */
 	public static function GetMySQLVersion(
-		$sDBServer, $sDBUser, $sDBPwd, $bTlsEnabled = false, $sTlsCa = null
-	)
-	{
-		$oDBSource = new CMDBSource;
+		$sDBServer,
+		$sDBUser,
+		$sDBPwd,
+		$bTlsEnabled = false,
+		$sTlsCa = null
+	) {
+		$oDBSource = new CMDBSource();
 		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $bTlsEnabled, $sTlsCa);
 		$sDBVersion = $oDBSource->GetDBVersion();
 
@@ -1429,13 +1429,11 @@ EOF
 		if ($bIsWindows && (preg_match('@([%!"])@', $sDBPwd) > 0)) {
 			// Unsupported Password, warn the user
 			$oPage->add_ready_script(
-<<<JS
+				<<<JS
 $("#db_info").html('<div class="message message-error"><span class="message-title">Error:</span>On Windows, the backup won\'t work because database password contains %, ! or &quot; character</div>');
 JS
 			);
-		}
-		else
-		{
+		} else {
 			$sTlsEnabled = (isset($aParameters['db_tls_enabled'])) ? $aParameters['db_tls_enabled'] : null;
 			$sTlsCA = (isset($aParameters['db_tls_ca'])) ? $aParameters['db_tls_ca'] : null;
 
@@ -1443,30 +1441,22 @@ JS
 
 			$checks = SetupUtils::CheckDbServer($sDBServer, $sDBUser, $sDBPwd, $sTlsEnabled, $sTlsCA);
 
-			if ($checks === false)
-			{
+			if ($checks === false) {
 				// Connection failed, disable the "Next" button
 				$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
 				$oPage->add_ready_script(
 					<<<JS
 $("#db_info").html('<div class="message message-error"><span class="message-title">Error:</span>No connection to the database</div>');
 JS
-			);
-			}
-			else
-			{
-				$aErrors = array();
-				$aWarnings = array();
-				foreach ($checks['checks'] as $oCheck)
-				{
-					if ($oCheck->iSeverity == CheckResult::ERROR)
-					{
+				);
+			} else {
+				$aErrors = [];
+				$aWarnings = [];
+				foreach ($checks['checks'] as $oCheck) {
+					if ($oCheck->iSeverity == CheckResult::ERROR) {
 						$aErrors[] = $oCheck->sLabel;
-					}
-					else
-					{
-						if ($oCheck->iSeverity == CheckResult::WARNING)
-						{
+					} else {
+						if ($oCheck->iSeverity == CheckResult::WARNING) {
 							$aWarnings[] = $oCheck->sLabel;
 						}
 					}
@@ -1581,7 +1571,7 @@ JS
 
 		if (strpos($sSourceDir, APPROOT) !== false) {
 			$sRelativeSourceDir = str_replace(APPROOT, '', $sSourceDir);
-		} else if (strpos($sSourceDir, $oWizard->GetParameter('previous_version_dir')) !== false) {
+		} elseif (strpos($sSourceDir, $oWizard->GetParameter('previous_version_dir')) !== false) {
 			$sRelativeSourceDir = str_replace($oWizard->GetParameter('previous_version_dir'), '', $sSourceDir);
 		} else {
 			throw(new Exception('Internal error: AnalyzeInstallation: source_dir is neither under APPROOT nor under previous_installation_dir ???'));
@@ -1590,7 +1580,7 @@ JS
 		$aParamValues = $oWizard->GetParamForConfigArray();
 		$aParamValues['source_dir'] = $sRelativeSourceDir;
 		$oConfig->UpdateFromParams($aParamValues, null);
-		$aDirsToScan = array($sSourceDir);
+		$aDirsToScan = [$sSourceDir];
 
 		if (is_dir(APPROOT.'extensions')) {
 			$aDirsToScan[] = APPROOT.'extensions';
@@ -1599,18 +1589,15 @@ JS
 			$aDirsToScan[] = $oWizard->GetParameter('copy_extensions_from');
 		}
 		$sExtraDir = utils::GetDataPath().'production-modules/';
-		if (is_dir($sExtraDir))
-		{
+		if (is_dir($sExtraDir)) {
 			$aDirsToScan[] = $sExtraDir;
 		}
 		$oProductionEnv = new RunTimeEnvironment();
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan, $bAbortOnMissingDependency, $aModulesToLoad);
 
-		foreach($aAvailableModules as $key => $aModule)
-		{
+		foreach ($aAvailableModules as $key => $aModule) {
 			$bIsExtra = (array_key_exists('root_dir', $aModule) && (strpos($aModule['root_dir'], $sExtraDir) !== false)); // Some modules (root, datamodel) have no 'root_dir'
-			if ($bIsExtra)
-			{
+			if ($bIsExtra) {
 				// Modules in data/production-modules/ are considered as mandatory and always installed
 				$aAvailableModules[$key]['visible'] = false;
 			}
@@ -1671,18 +1658,15 @@ JS
 	 */
 	public static function CheckManualInstallDirEmpty($aModules, $sExtensionsDir = 'extensions')
 	{
-		if (!static::IsProductVersion($aModules))
-		{
+		if (!static::IsProductVersion($aModules)) {
 			return '';
 		}
 
 		$sManualInstallModulesFullPath = APPROOT.$sExtensionsDir.DIRECTORY_SEPARATOR;
 		//simple test in order to prevent install iTop pro with module in extension folder
 		$aFileInfo = scandir($sManualInstallModulesFullPath);
-		foreach ($aFileInfo as $sFolder)
-		{
-			if ($sFolder != "." && $sFolder != ".." && is_dir($sManualInstallModulesFullPath.$sFolder) === true)
-			{
+		foreach ($aFileInfo as $sFolder) {
+			if ($sFolder != "." && $sFolder != ".." && is_dir($sManualInstallModulesFullPath.$sFolder) === true) {
 				return "Some modules are present in the '$sExtensionsDir' directory, this is not allowed when using ".ITOP_APPLICATION;
 			}
 		}
@@ -1699,86 +1683,71 @@ JS
 	 * @return hash Hash array ('added' => array(), 'removed' => array(), 'modified' => array())
 	 * @internal param array $aDOMManifest Array of array('path' => relative_path 'size'=> iSize, 'md5' => sHexMD5)
 	 */
-	public static function CheckDirAgainstManifest($sBaseDir, $sSourceDir, $aManifest, $aExcludeNames = array('.svn', '.git'), $aResult = null)
+	public static function CheckDirAgainstManifest($sBaseDir, $sSourceDir, $aManifest, $aExcludeNames = ['.svn', '.git'], $aResult = null)
 	{
-//echo "CheckDirAgainstManifest($sBaseDir, $sSourceDir ...)\n"; 
-		if ($aResult === null)
-		{
-			$aResult = array('added' => array(), 'removed' => array(), 'modified' => array());
+		//echo "CheckDirAgainstManifest($sBaseDir, $sSourceDir ...)\n";
+		if ($aResult === null) {
+			$aResult = ['added' => [], 'removed' => [], 'modified' => []];
 		}
 
-		if (substr($sSourceDir, 0, 1) == '/')
-		{
+		if (substr($sSourceDir, 0, 1) == '/') {
 			$sSourceDir = substr($sSourceDir, 1);
 		}
 
 		// Manifest limited to all the files supposed to be located in this directory
-		$aDirManifest = array();
-		foreach($aManifest as $aFileInfo)
-		{
+		$aDirManifest = [];
+		foreach ($aManifest as $aFileInfo) {
 			$sDir = dirname($aFileInfo['path']);
-			if ($sDir == '.')
-			{
+			if ($sDir == '.') {
 				// Hmm... the file seems located at the root of iTop
 				$sDir = '';
 			}
-			if ($sDir == $sSourceDir)
-			{
+			if ($sDir == $sSourceDir) {
 				$aDirManifest[basename($aFileInfo['path'])] = $aFileInfo;
 			}
 		}
 
-//echo "The manifest contains ".count($aDirManifest)." files for the directory '$sSourceDir' (and below)\n"; 
+		//echo "The manifest contains ".count($aDirManifest)." files for the directory '$sSourceDir' (and below)\n";
 
 		// Read the content of the directory
-		foreach(glob($sBaseDir.'/'.$sSourceDir .'/*') as $sFilePath)
-		{
+		foreach (glob($sBaseDir.'/'.$sSourceDir.'/*') as $sFilePath) {
 			$sFile = basename($sFilePath);
-//echo "Checking $sFile ($sFilePath)\n"; 
+			//echo "Checking $sFile ($sFilePath)\n";
 
-			if (in_array(basename($sFile), $aExcludeNames)) continue;
-
-			if(is_dir($sFilePath))
-			{
-				$aResult = self::CheckDirAgainstManifest($sBaseDir, $sSourceDir.'/'.$sFile, $aManifest, $aExcludeNames, $aResult);
+			if (in_array(basename($sFile), $aExcludeNames)) {
+				continue;
 			}
-			else
-			{
-				if (!array_key_exists($sFile, $aDirManifest))
-				{
-//echo "New file ".$sFile." in $sSourceDir\n"; 
+
+			if (is_dir($sFilePath)) {
+				$aResult = self::CheckDirAgainstManifest($sBaseDir, $sSourceDir.'/'.$sFile, $aManifest, $aExcludeNames, $aResult);
+			} else {
+				if (!array_key_exists($sFile, $aDirManifest)) {
+					//echo "New file ".$sFile." in $sSourceDir\n";
 					$aResult['added'][$sSourceDir.'/'.$sFile] = true;
-				}
-				else
-				{
+				} else {
 					$aStats = stat($sFilePath);
-					if ($aStats['size'] != $aDirManifest[$sFile]['size'])
-					{
+					if ($aStats['size'] != $aDirManifest[$sFile]['size']) {
 						// Different sizes
 						$aResult['modified'][$sSourceDir.'/'.$sFile] = 'Different sizes. Original size: '.$aDirManifest[$sFile]['size'].' bytes, actual file size on disk: '.$aStats['size'].' bytes.';
-					}
-					else
-					{
+					} else {
 						// Same size, compare the md5 signature
 						$sMD5 = md5_file($sFilePath);
-						if ($sMD5 != $aDirManifest[$sFile]['md5'])
-						{
+						if ($sMD5 != $aDirManifest[$sFile]['md5']) {
 							$aResult['modified'][$sSourceDir.'/'.$sFile] = 'Content modified (MD5 checksums differ).';
-//echo $sSourceDir.'/'.$sFile." modified ($sMD5 == {$aDirManifest[$sFile]['md5']})\n";
+							//echo $sSourceDir.'/'.$sFile." modified ($sMD5 == {$aDirManifest[$sFile]['md5']})\n";
 						}
-//else
-//{
-//	echo $sSourceDir.'/'.$sFile." unmodified ($sMD5 == {$aDirManifest[$sFile]['md5']})\n";
-//}
+						//else
+						//{
+						//	echo $sSourceDir.'/'.$sFile." unmodified ($sMD5 == {$aDirManifest[$sFile]['md5']})\n";
+						//}
 					}
-//echo "Removing ".$sFile." from aDirManifest\n"; 
+					//echo "Removing ".$sFile." from aDirManifest\n";
 					unset($aDirManifest[$sFile]);
 				}
 			}
 		}
 		// What remains in the array are files that were deleted
-		foreach($aDirManifest as $sDeletedFile => $void)
-		{
+		foreach ($aDirManifest as $sDeletedFile => $void) {
 			$aResult['removed'][$sSourceDir.'/'.$sDeletedFile] = true;
 		}
 		return $aResult;
@@ -1787,53 +1756,49 @@ JS
 	public static function CheckDataModelFiles($sManifestFile, $sBaseDir)
 	{
 		$oXML = simplexml_load_file($sManifestFile);
-		$aManifest = array();
-		foreach($oXML as $oFileInfo)
-		{
-			$aManifest[] = array('path' => (string)$oFileInfo->path, 'size' => (int)$oFileInfo->size, 'md5' => (string)$oFileInfo->md5);
+		$aManifest = [];
+		foreach ($oXML as $oFileInfo) {
+			$aManifest[] = ['path' => (string)$oFileInfo->path, 'size' => (int)$oFileInfo->size, 'md5' => (string)$oFileInfo->md5];
 		}
 
 		$sBaseDir = preg_replace('|modules/?$|', '', $sBaseDir);
 		$aResults = self::CheckDirAgainstManifest($sBaseDir, 'modules', $aManifest);
 
-//		echo "<pre>Comparison of ".dirname($sBaseDir)."/modules against $sManifestFile:\n".print_r($aResults, true)."</pre>";
+		//		echo "<pre>Comparison of ".dirname($sBaseDir)."/modules against $sManifestFile:\n".print_r($aResults, true)."</pre>";
 		return $aResults;
 	}
 
 	public static function CheckPortalFiles($sManifestFile, $sBaseDir)
 	{
 		$oXML = simplexml_load_file($sManifestFile);
-		$aManifest = array();
-		foreach($oXML as $oFileInfo)
-		{
-			$aManifest[] = array('path' => (string)$oFileInfo->path, 'size' => (int)$oFileInfo->size, 'md5' => (string)$oFileInfo->md5);
+		$aManifest = [];
+		foreach ($oXML as $oFileInfo) {
+			$aManifest[] = ['path' => (string)$oFileInfo->path, 'size' => (int)$oFileInfo->size, 'md5' => (string)$oFileInfo->md5];
 		}
 
 		$aResults = self::CheckDirAgainstManifest($sBaseDir, 'portal', $aManifest);
 
-//		echo "<pre>Comparison of ".dirname($sBaseDir)."/portal:\n".print_r($aResults, true)."</pre>";
+		//		echo "<pre>Comparison of ".dirname($sBaseDir)."/portal:\n".print_r($aResults, true)."</pre>";
 		return $aResults;
 	}
 
 	public static function CheckApplicationFiles($sManifestFile, $sBaseDir)
 	{
 		$oXML = simplexml_load_file($sManifestFile);
-		$aManifest = array();
-		foreach($oXML as $oFileInfo)
-		{
-			$aManifest[] = array('path' => (string)$oFileInfo->path, 'size' => (int)$oFileInfo->size, 'md5' => (string)$oFileInfo->md5);
+		$aManifest = [];
+		foreach ($oXML as $oFileInfo) {
+			$aManifest[] = ['path' => (string)$oFileInfo->path, 'size' => (int)$oFileInfo->size, 'md5' => (string)$oFileInfo->md5];
 		}
 
-		$aResults = array('added' => array(), 'removed' => array(), 'modified' => array());
-		foreach(array('addons', 'core', 'dictionaries', 'js', 'application', 'css', 'pages', 'synchro', 'webservices') as $sDir)
-		{
+		$aResults = ['added' => [], 'removed' => [], 'modified' => []];
+		foreach (['addons', 'core', 'dictionaries', 'js', 'application', 'css', 'pages', 'synchro', 'webservices'] as $sDir) {
 			$aTmp = self::CheckDirAgainstManifest($sBaseDir, $sDir, $aManifest);
 			$aResults['added'] = array_merge($aResults['added'], $aTmp['added']);
 			$aResults['modified'] = array_merge($aResults['modified'], $aTmp['modified']);
 			$aResults['removed'] = array_merge($aResults['removed'], $aTmp['removed']);
 		}
 
-//		echo "<pre>Comparison of ".dirname($sBaseDir)."/portal:\n".print_r($aResults, true)."</pre>";
+		//		echo "<pre>Comparison of ".dirname($sBaseDir)."/portal:\n".print_r($aResults, true)."</pre>";
 		return $aResults;
 	}
 
@@ -1846,10 +1811,8 @@ JS
 	public static function CheckVersion($sInstalledVersion, $sSourceDir)
 	{
 		$sManifestFilePath = self::GetVersionManifest($sInstalledVersion);
-		if ($sSourceDir != '')
-		{
-			if (file_exists($sManifestFilePath))
-			{
+		if ($sSourceDir != '') {
+			if (file_exists($sManifestFilePath)) {
 				$aDMchanges = self::CheckDataModelFiles($sManifestFilePath, $sSourceDir);
 				//$aPortalChanges = self::CheckPortalFiles($sManifestFilePath, $sSourceDir);
 				//$aCodeChanges = self::CheckApplicationFiles($sManifestFilePath, $sSourceDir);
@@ -1857,14 +1820,10 @@ JS
 				//echo("Changes detected compared to $sInstalledVersion:<br/>DataModel:<br/><pre>".print_r($aDMchanges, true)."</pre>");
 				//echo("Changes detected compared to $sInstalledVersion:<br/>DataModel:<br/><pre>".print_r($aDMchanges, true)."</pre><br/>Portal:<br/><pre>".print_r($aPortalChanges, true)."</pre><br/>Code:<br/><pre>".print_r($aCodeChanges, true)."</pre>");
 				return $aDMchanges;
-			}
-			else
-			{
+			} else {
 				return false;
 			}
-		}
-		else
-		{
+		} else {
 			throw(new Exception("Cannot check version '$sInstalledVersion', no source directory provided to check the files."));
 		}
 	}
@@ -1891,18 +1850,14 @@ JS
 	 */
 	public static function CheckWritableDirs($aWritableDirs)
 	{
-		$aNonWritableDirs = array();
+		$aNonWritableDirs = [];
 		foreach ($aWritableDirs as $sDir) {
 			$sFullPath = APPROOT.$sDir;
 			if (is_dir($sFullPath) && !is_writable($sFullPath)) {
 				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, "The directory <b>'".APPROOT.$sDir."'</b> exists but is not writable for the application.");
-			}
-			else if (file_exists($sFullPath) && !is_dir($sFullPath))
-			{
+			} elseif (file_exists($sFullPath) && !is_dir($sFullPath)) {
 				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, ITOP_APPLICATION." needs the directory <b>'".APPROOT.$sDir."'</b> to be writable. However <i>file</i> named <b>'".APPROOT.$sDir."'</b> already exists.");
-			}
-			else if (!is_dir($sFullPath) && !is_writable(APPROOT))
-			{
+			} elseif (!is_dir($sFullPath) && !is_writable(APPROOT)) {
 				$aNonWritableDirs[APPROOT.$sDir] = new CheckResult(CheckResult::ERROR, ITOP_APPLICATION." needs the directory <b>'".APPROOT.$sDir."'</b> to be writable. The directory <b>'".APPROOT.$sDir."'</b> does not exist and '".APPROOT."' is not writable, the application cannot create the directory '$sDir' inside it.");
 			}
 		}
@@ -1914,8 +1869,7 @@ JS
 		$sBaseDir = APPROOT.'datamodels';
 
 		$aDirs = glob($sBaseDir.'/*', GLOB_MARK | GLOB_ONLYDIR);
-		if ($aDirs !== false)
-		{
+		if ($aDirs !== false) {
 			sort($aDirs);
 			// Windows: there is a backslash at the end (though the path is made of slashes!!!)
 			$sDir = basename(array_pop($aDirs));
@@ -1947,22 +1901,18 @@ JS
 	 */
 	public static function GetLicenses($sEnv = null)
 	{
-		$aLicenses = array();
+		$aLicenses = [];
 		$aLicenceFiles = glob(APPROOT.'setup/licenses/*.xml');
 		if (empty($sEnv)) {
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'datamodels/*/*/license.*.xml'));
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/{*,*/*}/license.*.xml', GLOB_BRACE));
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(utils::GetDataPath().'*-modules/{*,*/*}/license.*.xml', GLOB_BRACE));
-		}
-		else
-		{
+		} else {
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'env-'.$sEnv.'/*/license.*.xml'));
 		}
-		foreach ($aLicenceFiles as $sFile)
-		{
+		foreach ($aLicenceFiles as $sFile) {
 			$oXml = simplexml_load_file($sFile);
-			if (!empty($oXml->license))
-			{
+			if (!empty($oXml->license)) {
 				foreach ($oXml->license as $oLicense) {
 					$aLicenses[(string)$oLicense->product] = $oLicense;
 				}
@@ -1998,8 +1948,7 @@ JS
 	public static function ExitMaintenanceMode($bLog = true)
 	{
 		@unlink(MAINTENANCE_MODE_FILE);
-		if ($bLog)
-		{
+		if ($bLog) {
 			SetupLog::Info("<---- Exiting maintenance mode");
 		}
 	}
@@ -2022,8 +1971,7 @@ JS
 	public static function ExitReadOnlyMode($bLog = true)
 	{
 		@unlink(READONLY_MODE_FILE);
-		if ($bLog)
-		{
+		if ($bLog) {
 			SetupLog::Info("<---- Exiting read only mode");
 		}
 	}
@@ -2039,8 +1987,7 @@ JS
 	 */
 	private static function WaitCronTermination($oConfig, $sMode)
 	{
-		try
-		{
+		try {
 			// Wait for cron to stop
 			if (is_null($oConfig) || ContextTag::Check(ContextTag::TAG_CRON)) {
 				return;
@@ -2058,13 +2005,11 @@ JS
 			$iStarted = time();
 			$iMaxDuration = $oConfig->Get('cron_max_execution_time');
 			$iTimeLimit = $iStarted + $iMaxDuration;
-			while ($oMutex->IsLocked())
-			{
+			while ($oMutex->IsLocked()) {
 				SetupLog::Info("Waiting for cron to stop ($iCount)");
 				$iCount++;
 				sleep(1);
-				if (time() > $iTimeLimit)
-				{
+				if (time() > $iTimeLimit) {
 					throw new Exception("Cannot enter $sMode mode, consider stopping the cron temporarily");
 				}
 			}
@@ -2147,7 +2092,8 @@ JS
 	/**
 	 * @return string[]
 	 */
-	public static function GetPHPMandatoryExtensions() {
+	public static function GetPHPMandatoryExtensions()
+	{
 		return [
 			'mysqli',
 			'iconv',
@@ -2170,7 +2116,8 @@ JS
 	/**
 	 * @return array
 	 */
-	public static function GetPHPOptionalExtensions() {
+	public static function GetPHPOptionalExtensions()
+	{
 		$aOptionalExtensions = [
 			'mcrypt, sodium or openssl' => [
 				'mcrypt' => 'Strong encryption will not be used.',
@@ -2194,7 +2141,7 @@ JS
  */
 class SetupInfo
 {
-	public static $aSelectedModules = array();
+	public static $aSelectedModules = [];
 
 	/**
 	 * Called by the setup process to initializes the list of selected modules. Do not call this method

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:iTopHub' => 'iTop Hub~~',
 	'Menu:iTopHub:Register' => 'Connect to iTop Hub~~',
 	'Menu:iTopHub:Register+' => 'Go to iTop Hub to update your '.ITOP_APPLICATION_SHORT.' instance~~',
@@ -64,6 +65,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.~~',
 	'iTopHub:InstallationStatus:Installed' => 'Installed~~',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>NOT</b> installed.~~',
-));
-
-
+]);

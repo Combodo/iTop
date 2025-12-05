@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry;
-
 
 use AttributeDateTime;
 use CMDBChange;
@@ -83,7 +83,7 @@ class ActivityEntryFactory
 		$oUser = MetaModel::GetObject('User', $aOrmEntry['user_id'], false, true);
 		$sUserLogin = ($oUser === null) ? '' : $oUser->Get('login');
 
-		// We sanitize OrmEntry even if it's already sanitized: if the entry is somehow truncated or metadata are wrong we may break whole page DOM 
+		// We sanitize OrmEntry even if it's already sanitized: if the entry is somehow truncated or metadata are wrong we may break whole page DOM
 		$oEntry = new CaseLogEntry(
 			DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $aOrmEntry['date']),
 			$sUserLogin,

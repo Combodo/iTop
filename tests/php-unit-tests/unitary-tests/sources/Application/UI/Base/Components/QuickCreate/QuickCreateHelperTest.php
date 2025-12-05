@@ -38,10 +38,10 @@ class QuickCreateHelperTest extends ItopDataTestCase
 	{
 		$aRecentClasses = [];
 		// User preferences will be reset during the rollback
-		foreach($aGivenClasses as $sClass) {
-			$aRecentClasses[] =  array(
+		foreach ($aGivenClasses as $sClass) {
+			$aRecentClasses[] =  [
 				'class' => $sClass,
-			);
+			];
 		}
 
 		appUserPreferences::SetPref(QuickCreateHelper::USER_PREF_CODE, $aRecentClasses);
@@ -50,7 +50,7 @@ class QuickCreateHelperTest extends ItopDataTestCase
 	private function AssertPopularClassesMatches(array $aExpectedClasses, array $aPopularClasses, string $sMessage = '')
 	{
 		$aFoundClasses = [];
-		foreach($aPopularClasses as $aClassData) {
+		foreach ($aPopularClasses as $aClassData) {
 			$aFoundClasses[] = $aClassData['class'];
 		}
 		sort($aFoundClasses);

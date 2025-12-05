@@ -1,19 +1,20 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:RequestManagement' => 'Gerenciamento de Solicitações',
-	'Menu:RequestManagement+' => 'Gerenciamento de Solicitações',
-	'Menu:RequestManagementProvider' => 'Solicitações a provedores',
-	'Menu:RequestManagementProvider+' => 'Solicitações a provedores',
+	'Menu:RequestManagement+' => '',
+	'Menu:RequestManagementProvider' => 'Solicitações a provedores(as)',
+	'Menu:RequestManagementProvider+' => '',
 	'Menu:UserRequest:Provider' => 'Solicitações abertas transferidas a provedores',
 	'Menu:UserRequest:Provider+' => 'Solicitações abertas transferidas a provedores',
 	'Menu:UserRequest:Overview' => 'Visão geral',
@@ -24,8 +25,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:SearchUserRequests+' => 'Pesquisar por solicitações',
 	'Menu:UserRequest:Shortcuts' => 'Atalhos',
 	'Menu:UserRequest:Shortcuts+' => '',
-	'Menu:UserRequest:MyRequests' => 'Solicitações abertas por mim',
-	'Menu:UserRequest:MyRequests+' => 'Solicitações abertas por mim (como Agente)',
+	'Menu:UserRequest:MyRequests' => 'Solicitações atribuídas a mim',
+	'Menu:UserRequest:MyRequests+' => 'Solicitações atribuídas a mim (como Agente)',
 	'Menu:UserRequest:MySupportRequests' => 'Minhas solicitações de suporte',
 	'Menu:UserRequest:MySupportRequests+' => 'Minhas solicitações de suporte',
 	'Menu:UserRequest:EscalatedRequests' => 'Solicitações escalonadas',
@@ -45,7 +46,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:UserRequest:MyWorkOrders+' => 'Todas as ordens de serviço atribuídas a mim',
 	'Class:Problem:KnownProblemList' => 'Problemas conhecidos',
 	'Tickets:Related:OpenIncidents' => 'Incidentes abertos',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -61,7 +62,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Class: UserRequest
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:UserRequest' => 'Solicitação de Usuário',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Status',
@@ -165,7 +166,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Attribute:tto' => 'TTO',
 	'Class:UserRequest/Attribute:tto+' => 'Tempo para atribuição (Time To Own)',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',
-	'Class:UserRequest/Attribute:ttr+' => 'Tempo para solução (Time To Resolution)',
+	'Class:UserRequest/Attribute:ttr+' => 'Tempo para resolução (Time To Resolution)',
+	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:UserRequest/Attribute:tto_time_spent+' => '~~',
+	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:UserRequest/Attribute:ttr_time_spent+' => '~~',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'Prazo determinado de atribuição (TTO)',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => 'Prazo determinado de Tempo para atribuição (TTO)',
 	'Class:UserRequest/Attribute:sla_tto_passed' => 'SLA TTO superado',
@@ -202,15 +207,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Attribute:pending_reason+' => '',
 	'Class:UserRequest/Attribute:parent_request_id' => 'Solicitação pai',
 	'Class:UserRequest/Attribute:parent_request_id+' => '',
-	'Class:UserRequest/Attribute:parent_request_ref' => 'Ref. Solicitação pai',
+	'Class:UserRequest/Attribute:parent_request_ref' => 'Ref. solicitação pai',
 	'Class:UserRequest/Attribute:parent_request_ref+' => '',
 	'Class:UserRequest/Attribute:parent_problem_id' => 'Problema pai',
 	'Class:UserRequest/Attribute:parent_problem_id+' => '',
-	'Class:UserRequest/Attribute:parent_problem_ref' => 'Ref. Problema pai',
+	'Class:UserRequest/Attribute:parent_problem_ref' => 'Ref. problema pai',
 	'Class:UserRequest/Attribute:parent_problem_ref+' => '',
 	'Class:UserRequest/Attribute:parent_change_id' => 'Mudança pai',
 	'Class:UserRequest/Attribute:parent_change_id+' => '',
-	'Class:UserRequest/Attribute:parent_change_ref' => 'Ref. Mudança pai',
+	'Class:UserRequest/Attribute:parent_change_ref' => 'Ref. mudança',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Subsolicitações',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Todas as solicitações associadas à esta solicitação pai',
@@ -255,10 +260,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Aguardar por aprovação',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Não é possível atribuir a solicitação pai a própria solicitação',
-));
+]);
 
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Portal:TitleDetailsFor_Request' => 'Detalhes da solicitação',
 	'Portal:ButtonUpdate' => 'Atualizado',
 	'Portal:ButtonClose' => 'Fechado',
@@ -283,11 +287,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Escolha seu idioma favorito',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a solução a pedidos filhos (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de solução',
-));
+]);
 
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Organization:Overview:UserRequests' => 'Solicitações de usuários desta organização',
 	'Organization:Overview:MyUserRequests' => 'Minhas solicitações de usuário para esta organização',
 	'Organization:Overview:Tickets' => 'Solicitações desta organização',
-));
+]);

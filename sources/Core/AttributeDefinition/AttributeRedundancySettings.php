@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -26,7 +27,7 @@ use utils;
  */
 class AttributeRedundancySettings extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -47,7 +48,7 @@ class AttributeRedundancySettings extends AttributeDBField
 
 	public static function ListExpectedParams()
 	{
-		return array(
+		return [
 			'sql',
 			'relation_code',
 			'from_class',
@@ -57,7 +58,7 @@ class AttributeRedundancySettings extends AttributeDBField
 			'min_up',
 			'min_up_type',
 			'min_up_mode',
-		);
+		];
 	}
 
 	public function GetValuesDef()
@@ -67,7 +68,7 @@ class AttributeRedundancySettings extends AttributeDBField
 
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
-		return array();
+		return [];
 	}
 
 	public function GetEditClass()
@@ -81,7 +82,6 @@ class AttributeRedundancySettings extends AttributeDBField
 			.CMDBSource::GetSqlStringColumnDefinition()
 			.($bFullSpec ? $this->GetSQLColSpec() : '');
 	}
-
 
 	public function GetValidationPattern()
 	{
@@ -99,8 +99,7 @@ class AttributeRedundancySettings extends AttributeDBField
 		if ($this->Get('enabled')) {
 			if ($this->Get('min_up_type') == 'count') {
 				$sRet = (string)$this->Get('min_up');
-			} else // percent
-			{
+			} else { // percent
 				$sRet = $this->Get('min_up').'%';
 			}
 		}
@@ -135,12 +134,12 @@ class AttributeRedundancySettings extends AttributeDBField
 	public function ScalarToSQL($value)
 	{
 		if (!is_string($value)) {
-			throw new CoreException('Expected the attribute value to be a string', array(
+			throw new CoreException('Expected the attribute value to be a string', [
 				'found_type' => gettype($value),
 				'value'      => $value,
 				'class'      => $this->GetHostClass(),
 				'attribute'  => $this->GetCode(),
-			));
+			]);
 		}
 
 		return $value;
@@ -148,8 +147,11 @@ class AttributeRedundancySettings extends AttributeDBField
 
 	public function GetRelationQueryData()
 	{
-		foreach (MetaModel::EnumRelationQueries($this->GetHostClass(), $this->Get('relation_code'),
-			false) as $sDummy => $aQueryInfo) {
+		foreach (MetaModel::EnumRelationQueries(
+			$this->GetHostClass(),
+			$this->Get('relation_code'),
+			false
+		) as $sDummy => $aQueryInfo) {
 			if ($aQueryInfo['sFromClass'] == $this->Get('from_class')) {
 				if ($aQueryInfo['sNeighbour'] == $this->Get('neighbour_id')) {
 					return $aQueryInfo;
@@ -157,7 +159,7 @@ class AttributeRedundancySettings extends AttributeDBField
 			}
 		}
 
-		return array();
+		return [];
 	}
 
 	/**
@@ -200,17 +202,23 @@ class AttributeRedundancySettings extends AttributeDBField
 		$sCurrentOption = $this->GetCurrentOption($sValue);
 		$sClass = $oHostObject ? get_class($oHostObject) : $this->m_sHostClass;
 
-		return sprintf($this->GetUserOptionFormat($sCurrentOption), $this->GetMinUpValue($sValue),
-			MetaModel::GetName($sClass));
+		return sprintf(
+			$this->GetUserOptionFormat($sCurrentOption),
+			$this->GetMinUpValue($sValue),
+			MetaModel::GetName($sClass)
+		);
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
-		$sFrom = array("\r\n", $sTextQualifier);
-		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+	) {
+		$sFrom = ["\r\n", $sTextQualifier];
+		$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 
 		return $sTextQualifier.$sEscaped.$sTextQualifier;
@@ -305,24 +313,30 @@ class AttributeRedundancySettings extends AttributeDBField
 		foreach ($aUserOptions as $sUserOption) {
 			$bSelected = ($sUserOption == $sCurrentOption);
 			$sRet .= '<div>';
-			$sRet .= $this->GetDisplayOption($sCurrentValue, $oPage, $sFormPrefix, $bEditOption, $sUserOption,
-				$bSelected);
+			$sRet .= $this->GetDisplayOption(
+				$sCurrentValue,
+				$oPage,
+				$sFormPrefix,
+				$bEditOption,
+				$sUserOption,
+				$bSelected
+			);
 			$sRet .= '</div>';
 		}
 
 		return $sRet;
 	}
 
-	const USER_OPTION_DISABLED        = 'disabled';
-	const USER_OPTION_ENABLED_COUNT   = 'count';
-	const USER_OPTION_ENABLED_PERCENT = 'percent';
+	public const USER_OPTION_DISABLED        = 'disabled';
+	public const USER_OPTION_ENABLED_COUNT   = 'count';
+	public const USER_OPTION_ENABLED_PERCENT = 'percent';
 
 	/**
 	 * Depending on the xxx_mode parameters, build the list of options that are allowed to the end-user
 	 */
 	protected function GetUserOptions($sValue)
 	{
-		$aRet = array();
+		$aRet = [];
 		if ($this->Get('enabled_mode') == 'user') {
 			$aRet[] = self::USER_OPTION_DISABLED;
 		}
@@ -374,9 +388,13 @@ class AttributeRedundancySettings extends AttributeDBField
 	 * @throws Exception
 	 */
 	protected function GetDisplayOption(
-		$sCurrentValue, $oPage, $sFormPrefix, $bEditMode, $sUserOption, $bSelected = true
-	)
-	{
+		$sCurrentValue,
+		$oPage,
+		$sFormPrefix,
+		$bEditMode,
+		$sUserOption,
+		$bSelected = true
+	) {
 		$sRet = '';
 
 		$iCurrentValue = $this->GetMinUpValue($sCurrentValue);
@@ -412,8 +430,11 @@ class AttributeRedundancySettings extends AttributeDBField
 					}
 					break;
 			}
-			$sLabel = sprintf($this->GetUserOptionFormat($sUserOption), $sValue,
-				MetaModel::GetName($this->GetHostClass()));
+			$sLabel = sprintf(
+				$this->GetUserOptionFormat($sUserOption),
+				$sValue,
+				MetaModel::GetName($this->GetHostClass())
+			);
 
 			$sOptionName = $sHtmlNamesPrefix.'_user_option';
 			$sOptionId = $sOptionName.'_'.$sUserOption;
@@ -422,8 +443,11 @@ class AttributeRedundancySettings extends AttributeDBField
 		} else {
 			// Read-only: display only the currently selected option
 			if ($bSelected) {
-				$sRet = sprintf($this->GetUserOptionFormat($sUserOption), $iCurrentValue,
-					MetaModel::GetName($this->GetHostClass()));
+				$sRet = sprintf(
+					$this->GetUserOptionFormat($sUserOption),
+					$iCurrentValue,
+					MetaModel::GetName($this->GetHostClass())
+				);
 			}
 		}
 

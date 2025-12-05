@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -12,13 +13,13 @@ class AttributeArchiveFlag extends AttributeBoolean
 {
 	public function __construct($sCode)
 	{
-		parent::__construct($sCode, array(
+		parent::__construct($sCode, [
 			"allowed_values"  => null,
 			"sql"             => $sCode,
 			"default_value"   => false,
 			"is_null_allowed" => false,
-			"depends_on"      => array(),
-		));
+			"depends_on"      => [],
+		]);
 	}
 
 	public function RequiresIndex()

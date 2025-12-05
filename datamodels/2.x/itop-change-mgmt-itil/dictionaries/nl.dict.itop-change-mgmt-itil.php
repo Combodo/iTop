@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Hipska (2018)
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ChangeManagement' => 'Change Management',
 	'Menu:Change:Overview' => 'Overzicht',
 	'Menu:Change:Overview+' => '',
@@ -35,7 +36,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes per status van de afgelopen 7 dagen',
 	'Tickets:Related:OpenChanges' => 'Open changes',
 	'Tickets:Related:RecentChanges' => 'Recente changes (72u)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -47,12 +48,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Change' => 'Change',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Status',
@@ -149,13 +149,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Sluit af',
 	'Class:Change/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:RoutineChange' => 'Routine Change',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Valideer',
@@ -180,13 +180,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Sluit af',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ApprovedChange' => 'Goedgekeurde Changes',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Datum goedkeuring',
@@ -215,13 +215,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Sluit af',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:NormalChange' => 'Normale Change',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Datum acceptatie',
@@ -250,13 +250,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Sluit af',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:EmergencyChange' => 'Dringende Change',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Valideer',
@@ -281,4 +281,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Sluit af',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-));
+]);

@@ -74,7 +74,3 @@ require_once(APPROOT.'application/applicationextension/rest/iRestInputSanitizer.
 require_once(APPROOT.'application/applicationextension/rest/iRestServiceProvider.php');
 require_once(APPROOT.'application/applicationextension/rest/RestResult.php');
 require_once(APPROOT.'application/applicationextension/rest/RestUtils.php');
-
-
-
-

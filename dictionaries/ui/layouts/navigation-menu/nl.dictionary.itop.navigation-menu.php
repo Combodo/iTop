@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Bedrijfslogo',
 	'UI:Layout:NavigationMenu:Silo:Label' => 'Selecteer de organisatie waarop gefilterd moet worden',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Vergroot / Verberg',
@@ -23,4 +24,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Open gebruikersmenu',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu\'s',
 
-));
+]);

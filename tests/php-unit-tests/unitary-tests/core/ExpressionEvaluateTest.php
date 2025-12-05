@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Combodo\iTop\Test\UnitTest\Core;
-
 
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
@@ -15,7 +13,7 @@ use ScalarExpression;
 
 class ExpressionEvaluateTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = false;
+	public const USE_TRANSACTION = false;
 
 	/**
 	 * @covers       Expression::GetParameters()
@@ -38,14 +36,14 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 
 	public function GetParametersProvider()
 	{
-		return array(
-			array('1 AND 0 OR :hello + :world', null, array('hello', 'world')),
-			array('1 AND 0 OR :hello + :world', 'this', array()),
-			array(':this->left + :this->right', null, array('this->left', 'this->right')),
-			array(':this->left + :this->right', 'this', array('left', 'right')),
-			array(':this->left + :this->right', 'that', array()),
-			array(':this_left + :this_right', 'this', array()),
-		);
+		return [
+			['1 AND 0 OR :hello + :world', null, ['hello', 'world']],
+			['1 AND 0 OR :hello + :world', 'this', []],
+			[':this->left + :this->right', null, ['this->left', 'this->right']],
+			[':this->left + :this->right', 'this', ['left', 'right']],
+			[':this->left + :this->right', 'that', []],
+			[':this_left + :this_right', 'this', []],
+		];
 	}
 
 	/**
@@ -59,8 +57,7 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 	public function _testExpressionEvaluateAllAtOnce()
 	{
 		$aTestCases = $this->VariousExpressionsProvider();
-		foreach ($aTestCases as $sCaseId => $aTestArgs)
-		{
+		foreach ($aTestCases as $sCaseId => $aTestArgs) {
 			$this->debug("Case $sCaseId:");
 			$this->testVariousExpressions($aTestArgs[0], $aTestArgs[1]);
 		}
@@ -80,141 +77,137 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 	public function testVariousExpressions($sExpression, $expectedValue)
 	{
 		$oExpression = Expression::FromOQL($sExpression);
-		$value = $oExpression->Evaluate(array());
+		$value = $oExpression->Evaluate([]);
 		$this->assertEquals($expectedValue, $value);
 	}
 
 	public function VariousExpressionsProvider()
 	{
-		if (false)
-		{
-			$aExpressions = array(
+		if (false) {
+			$aExpressions = [
 				// Test case to isolate for troubleshooting purposes
-				array("'a' IN ('a', 'b')", true),
-			);
-		}
-		else
-		{
-			$aExpressions = array(
+				["'a' IN ('a', 'b')", true],
+			];
+		} else {
+			$aExpressions = [
 				// The bare minimum
-				array('"blah"', 'blah'),
-				array('"\\\\"', '\\'),
+				['"blah"', 'blah'],
+				['"\\\\"', '\\'],
 
 				// Arithmetics
-				array('2+2', 4),
-				array('2+2-2', 2),
-				array('2*(3+4)', 14),
-				array('(2*3)+4', 10),
-				array('2*3+4', 10),
+				['2+2', 4],
+				['2+2-2', 2],
+				['2*(3+4)', 14],
+				['(2*3)+4', 10],
+				['2*3+4', 10],
 
 				// Strings
-				array("CONCAT('hello', 'world')", 'helloworld'),
+				["CONCAT('hello', 'world')", 'helloworld'],
 
 				// Not yet parsed - array("CONCAT_WS(' ', 'hello', 'world')", 'hello world'),
-				array("SUBSTR('abcdef', 2, 3)", 'bcd'),
-				array("TRIM(' Sin dolor  ')", 'Sin dolor'),
+				["SUBSTR('abcdef', 2, 3)", 'bcd'],
+				["TRIM(' Sin dolor  ')", 'Sin dolor'],
 
 				// Comparison operators
-				array('1 = 1', 1),
-				array('1 != 1', 0),
-				array('0 = 1', 0),
-				array('0 != 1', 1),
-				array('2 > 1', 1),
-				array('2 < 1', 0),
-				array('1 > 2', 0),
-				array('2 > 1', 1),
-				array('2 >= 1', 1),
-				array('2 >= 2', 1),
-				array("'the quick brown dog' LIKE '%QUICK%'", 1),
-				array("'the quick brown dog' LIKE '%SLOW%'", 0),
-				array("'the quick brown dog' LIKE '%QU_CK%'", 1),
-				array("'the quick brown dog' LIKE '%QU_ICK%'", 0),
-				array('"400 (km/h)" LIKE "400%"', 1),
-				array('"400 (km/h)" LIKE "100%"', 0),
-				array('"400 (km/h)" NOT LIKE "400%"', 0),
-				array('"400 (km/h)" NOT LIKE "100%"', 1),
-				array('"2020-06-12" > "2020-06-11"', 1),
-				array('"2020-06-12" < "2020-06-11"', 0),
-				array('" 2020-06-12" > "2020-06-11"', 0), // Leading spaces => a string
-				array('" 2020-06-12 " > "2020-06-11"', 0), // Trailing spaces => a string
-				array('"2020-06-12 17:35:13" > "2020-06-12 17:35:12"', 1),
-				array('"2020-06-12 17:35:13" < "2020-06-12 17:35:12"', 0),
-				array('"2020-06-12 17:35:13" > "2020-06-12"', 1),
-				array('"2020-06-12 17:35:13" < "2020-06-12"', 0),
-				array('"2020-06-12 00:00:00" = "2020-06-12"', 0),
+				['1 = 1', 1],
+				['1 != 1', 0],
+				['0 = 1', 0],
+				['0 != 1', 1],
+				['2 > 1', 1],
+				['2 < 1', 0],
+				['1 > 2', 0],
+				['2 > 1', 1],
+				['2 >= 1', 1],
+				['2 >= 2', 1],
+				["'the quick brown dog' LIKE '%QUICK%'", 1],
+				["'the quick brown dog' LIKE '%SLOW%'", 0],
+				["'the quick brown dog' LIKE '%QU_CK%'", 1],
+				["'the quick brown dog' LIKE '%QU_ICK%'", 0],
+				['"400 (km/h)" LIKE "400%"', 1],
+				['"400 (km/h)" LIKE "100%"', 0],
+				['"400 (km/h)" NOT LIKE "400%"', 0],
+				['"400 (km/h)" NOT LIKE "100%"', 1],
+				['"2020-06-12" > "2020-06-11"', 1],
+				['"2020-06-12" < "2020-06-11"', 0],
+				['" 2020-06-12" > "2020-06-11"', 0], // Leading spaces => a string
+				['" 2020-06-12 " > "2020-06-11"', 0], // Trailing spaces => a string
+				['"2020-06-12 17:35:13" > "2020-06-12 17:35:12"', 1],
+				['"2020-06-12 17:35:13" < "2020-06-12 17:35:12"', 0],
+				['"2020-06-12 17:35:13" > "2020-06-12"', 1],
+				['"2020-06-12 17:35:13" < "2020-06-12"', 0],
+				['"2020-06-12 00:00:00" = "2020-06-12"', 0],
 
 				// IN operator
-				array("'a' IN ('a')", true),
-				array("'a' IN ('b')", false),
-				array("'a' IN ('a', 'b')", true),
-				array("'z' IN ('a', 'b')", false),
-				array("'a' NOT IN ('a')", false),
-				array("'a' NOT IN ('b')", true),
-				array("'a' NOT IN ('a', 'b')", false),
-				array("'z' NOT IN ('a', 'b')", true),
+				["'a' IN ('a')", true],
+				["'a' IN ('b')", false],
+				["'a' IN ('a', 'b')", true],
+				["'z' IN ('a', 'b')", false],
+				["'a' NOT IN ('a')", false],
+				["'a' NOT IN ('b')", true],
+				["'a' NOT IN ('a', 'b')", false],
+				["'z' NOT IN ('a', 'b')", true],
 
 				// Logical operators
-				array('0 AND 0', 0),
-				array('1 AND 0', 0),
-				array('0 AND 1', 0),
-				array('1 AND 1', 1),
-				array('0 OR 0', 0),
-				array('0 OR 1', 1),
-				array('1 OR 0', 1),
-				array('1 OR 1', 1),
-				array('1 AND 0 OR 1', 1),
+				['0 AND 0', 0],
+				['1 AND 0', 0],
+				['0 AND 1', 0],
+				['1 AND 1', 1],
+				['0 OR 0', 0],
+				['0 OR 1', 1],
+				['1 OR 0', 1],
+				['1 OR 1', 1],
+				['1 AND 0 OR 1', 1],
 
 				// Casting
-				array('1 AND "blah"', 0),
-				array('1 AND "1"', 1),
-				array('1 AND "2"', 1),
-				array('1 AND "0"', 0),
-				array('1 AND "-1"', 1),
+				['1 AND "blah"', 0],
+				['1 AND "1"', 1],
+				['1 AND "2"', 1],
+				['1 AND "0"', 0],
+				['1 AND "-1"', 1],
 
 				// Null
-				array('NULL', null),
-				array('1 AND NULL', null),
-				array('CONCAT("Great but...", NULL)', null),
-				array('COALESCE(NULL, 123)', 123),
-				array('COALESCE(321, 123)', 321),
-				array('ISNULL(NULL)', 1),
-				array('ISNULL(123)', 0),
+				['NULL', null],
+				['1 AND NULL', null],
+				['CONCAT("Great but...", NULL)', null],
+				['COALESCE(NULL, 123)', 123],
+				['COALESCE(321, 123)', 321],
+				['ISNULL(NULL)', 1],
+				['ISNULL(123)', 0],
 
 				// Date functions
-				array("DATE('2020-03-12 13:18:30')", '2020-03-12'),
-				array("DATE_FORMAT('2009-10-04 22:23:00', '%Y %m %d %H %i %s')", '2009 10 04 22 23 00'),
-				array("DATE(NOW()) = CURRENT_DATE()", 1), // Could fail if executed around midnight!
-				array("TO_DAYS('2020-01-02')", 737791),
-				array("FROM_DAYS(737791)", '2020-01-02'),
-				array("FROM_DAYS(TO_DAYS('2020-01-02'))", '2020-01-02'), // Back and forth conversion to ensure it returns the same
-				array("YEAR('2020-05-03')", 2020),
-				array("MONTH('2020-05-03')", 5),
-				array("DAY('2020-05-03')", 3),
-				array("DATE_ADD('2020-02-28 18:00:00', INTERVAL 1 HOUR)", '2020-02-28 19:00:00'),
-				array("DATE_ADD('2020-02-28 18:00:00', INTERVAL 1 DAY)", '2020-02-29 18:00:00'),
-				array("DATE_SUB('2020-03-01 18:00:00', INTERVAL 1 HOUR)", '2020-03-01 17:00:00'),
-				array("DATE_SUB('2020-03-01 18:00:00', INTERVAL 1 DAY)", '2020-02-29 18:00:00'),
+				["DATE('2020-03-12 13:18:30')", '2020-03-12'],
+				["DATE_FORMAT('2009-10-04 22:23:00', '%Y %m %d %H %i %s')", '2009 10 04 22 23 00'],
+				["DATE(NOW()) = CURRENT_DATE()", 1], // Could fail if executed around midnight!
+				["TO_DAYS('2020-01-02')", 737791],
+				["FROM_DAYS(737791)", '2020-01-02'],
+				["FROM_DAYS(TO_DAYS('2020-01-02'))", '2020-01-02'], // Back and forth conversion to ensure it returns the same
+				["YEAR('2020-05-03')", 2020],
+				["MONTH('2020-05-03')", 5],
+				["DAY('2020-05-03')", 3],
+				["DATE_ADD('2020-02-28 18:00:00', INTERVAL 1 HOUR)", '2020-02-28 19:00:00'],
+				["DATE_ADD('2020-02-28 18:00:00', INTERVAL 1 DAY)", '2020-02-29 18:00:00'],
+				["DATE_SUB('2020-03-01 18:00:00', INTERVAL 1 HOUR)", '2020-03-01 17:00:00'],
+				["DATE_SUB('2020-03-01 18:00:00', INTERVAL 1 DAY)", '2020-02-29 18:00:00'],
 
 				// Misc. functions
-				array('IF(1, 123, 567)', 123),
-				array('IF(0, 123, 567)', 567),
-				array('ELT(3, "a", "b", "c")', 'c'),
-				array('ELT(0, "a", "b", "c")', null),
-				array('ELT(4, "a", "b", "c")', null),
-				array('INET_ATON("128.0.0.1")', 2147483649),
-				array('INET_NTOA(2147483649)', '128.0.0.1'),
-			);
+				['IF(1, 123, 567)', 123],
+				['IF(0, 123, 567)', 567],
+				['ELT(3, "a", "b", "c")', 'c'],
+				['ELT(0, "a", "b", "c")', null],
+				['ELT(4, "a", "b", "c")', null],
+				['INET_ATON("128.0.0.1")', 2147483649],
+				['INET_NTOA(2147483649)', '128.0.0.1'],
+			];
 
 			// N°5985 - Test bidirectional conversion across the centuries to ensure that it works on PHP 7.4 => 8.2+ even though the bug has been fixed in PHP 8.1 but still exists in PHP 7.4 => 8.1
 			for ($iUpperYearBound = 1925; $iUpperYearBound <= 2100; $iUpperYearBound = $iUpperYearBound + 25) {
-				$aExpressions[] = array("FROM_DAYS(TO_DAYS('$iUpperYearBound-01-02'))", "$iUpperYearBound-01-02");
+				$aExpressions[] = ["FROM_DAYS(TO_DAYS('$iUpperYearBound-01-02'))", "$iUpperYearBound-01-02"];
 			}
 		}
 
 		// Build a comprehensive index
-		$aRet = array();
-		foreach ($aExpressions as $aExp)
-		{
+		$aRet = [];
+		foreach ($aExpressions as $aExp) {
 			$aRet[$aExp[0]] = $aExp;
 		}
 		return $aRet;
@@ -231,27 +224,26 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 	{
 		$sNewExpression = "return $sExpression;";
 		$oExpression = eval($sNewExpression);
-		$res = $oExpression->Evaluate(array());
+		$res = $oExpression->Evaluate([]);
 		$this->assertEquals($expectedValue, $res);
 	}
 
 	public function NotYetParsableExpressionsProvider()
 	{
-		$aExpressions = array(
-			array("new \\FunctionExpression('CONCAT_WS', array(new \\ScalarExpression(' '), new \\ScalarExpression('Hello'), new \ScalarExpression('world!')))", 'Hello world!'),
-			array("new \\ScalarExpression('windows\\system32')", 'windows\\system32'),
-			array("new \\BinaryExpression(new \\ScalarExpression('100%'), 'LIKE', new \\ScalarExpression('___\%'))", 1),
-			array("new \\BinaryExpression(new \ScalarExpression('1000'), 'LIKE', new \ScalarExpression('___\%'))", 0),
+		$aExpressions = [
+			["new \\FunctionExpression('CONCAT_WS', array(new \\ScalarExpression(' '), new \\ScalarExpression('Hello'), new \ScalarExpression('world!')))", 'Hello world!'],
+			["new \\ScalarExpression('windows\\system32')", 'windows\\system32'],
+			["new \\BinaryExpression(new \\ScalarExpression('100%'), 'LIKE', new \\ScalarExpression('___\%'))", 1],
+			["new \\BinaryExpression(new \ScalarExpression('1000'), 'LIKE', new \ScalarExpression('___\%'))", 0],
 			// Net yet parsed - array("TIME(NOW()) = CURRENT_TIME()", 1), // Not relevant
 			// Not yet parsed - array("DATE_ADD('2020-02-28 18:00:00', INTERVAL 1 WEEK)", '2020-03-06 18:00:00'),
 			// Not yet parsed - array("DATE_SUB('2020-03-01 18:00:00', INTERVAL 1 WEEK)", '2020-02-23 18:00:00'),
 			// Not yet parsed - array('ROUND(1.2345, 2)', 1.23),
 			// Not yet parsed - array('FLOOR(1.2)', 1),
-		);
+		];
 		// Build a comprehensive index
-		$aRet = array();
-		foreach ($aExpressions as $aExp)
-		{
+		$aRet = [];
+		foreach ($aExpressions as $aExp) {
 			$aRet[$aExp[0]] = $aExp;
 		}
 		return $aRet;
@@ -269,17 +261,15 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 		$aTests = array_values($this->VariousExpressionsProvider());
 
 		// Expressions given as a PHP statement
-		foreach (array_values($this->NotYetParsableExpressionsProvider()) as $i => $aTest)
-		{
+		foreach (array_values($this->NotYetParsableExpressionsProvider()) as $i => $aTest) {
 			$sNewExpression = "return {$aTest[0]};";
 			$oExpression = eval($sNewExpression);
 			$sExpression = $oExpression->RenderExpression(true);
-			$aTests[] = array($sExpression, $aTest[1]);
+			$aTests[] = [$sExpression, $aTest[1]];
 		}
 
-		$aExpressions = array();
-		foreach ($aTests as $i => $aTest)
-		{
+		$aExpressions = [];
+		foreach ($aTests as $i => $aTest) {
 			$aExpressions[] = "{$aTest[0]} as test_$i";
 		}
 
@@ -289,8 +279,7 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 		$this->debug($sQuery);
 		$aResults = CMDBSource::QueryToArray($sQuery);
 
-		foreach ($aTests as $i => $aTest)
-		{
+		foreach ($aTests as $i => $aTest) {
 			$value = $aResults[0]["test_$i"];
 			$expectedValue = $aTest[1];
 			$this->debug("Test #$i: {$aTests[$i][0]} => ".var_export($value, true));
@@ -352,15 +341,15 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 
 	public function ExpressionWithParametersProvider()
 	{
-		return array(
+		return [
 			['`DBVariables["analyze_sample_percentage"]` > 10', ['DBVariables["analyze_sample_percentage"]' => 20], true],
 			['`DataBase["DBDataSize"]`', ['DataBase["DBDataSize"]' => 4096], 4096],
 			['`FileSystem["ItopInstallationIntegrity"]`', ['FileSystem["ItopInstallationIntegrity"]' => 'not_conform'], 'not_conform'],
 			['`DBTablesInfo["attachment"].DataSize` > 100', ['DBTablesInfo["attachment"].DataSize' => 200], true],
 			['`DBTablesInfo[].DataSize` > 100', ['DBTablesInfo[].DataSize' => 50], false],
 			['(`DBTablesInfo[].DataSize` > 100) AND (`DBTablesInfo[].DataFree` * 100 / (`DBTablesInfo[].DataSize` + `DBTablesInfo[].IndexSize` + `DBTablesInfo[].DataFree`) > 10)', ['DBTablesInfo[].DataSize' => 200, 'DBTablesInfo[].DataFree' => 100, 'DBTablesInfo[].IndexSize' => 10], true],
-			array('CONCAT(SUBSTR(name, 4), " cause")', array('name' => 'noble'), 'le cause'),
-		);
+			['CONCAT(SUBSTR(name, 4), " cause")', ['name' => 'noble'], 'le cause'],
+		];
 	}
 
 	/**
@@ -380,28 +369,24 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 		$oExpression = Expression::FromOQL($sExpression);
 
 		$res = $oExpression->IsTrue();
-		if ($bExpectTrue)
-		{
+		if ($bExpectTrue) {
 			$this->assertTrue($res, 'arg: '.$sExpression);
-		}
-		else
-		{
+		} else {
 			$this->assertFalse($res, 'arg: '.$sExpression);
 		}
 	}
 
 	public function TrueExpressionsProvider()
 	{
-		$aExpressions = array(
-			array('1', true),
-			array('0 OR 0', false),
-			array('1 AND 1', true),
-			array('1 AND (1 OR 0)', true)
-		);
+		$aExpressions = [
+			['1', true],
+			['0 OR 0', false],
+			['1 AND 1', true],
+			['1 AND (1 OR 0)', true],
+		];
 		// Build a comprehensive index
-		$aRet = array();
-		foreach ($aExpressions as $aExp)
-		{
+		$aRet = [];
+		foreach ($aExpressions as $aExp) {
 			$aRet[$aExp[0]] = $aExp;
 		}
 		return $aRet;
@@ -423,60 +408,56 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 	public function testTimeFormat($sFormat, $bProcessed, $sValueOrException)
 	{
 		$sDate = '2009-06-04 21:23:24';
-		$oExpression = new FunctionExpression('DATE_FORMAT', array(new ScalarExpression($sDate), new ScalarExpression("%$sFormat")));
-		if ($bProcessed)
-		{
+		$oExpression = new FunctionExpression('DATE_FORMAT', [new ScalarExpression($sDate), new ScalarExpression("%$sFormat")]);
+		if ($bProcessed) {
 			$sqlValue = CMDBSource::QueryToScalar("SELECT DATE_FORMAT('$sDate', '%$sFormat')");
 			$this->assertEquals($sqlValue, $sValueOrException, 'Check test against MySQL');
 
-			$res = $oExpression->Evaluate(array());
+			$res = $oExpression->Evaluate([]);
 			$this->assertEquals($sValueOrException, $res, 'Check evaluation');
-		}
-		else
-		{
+		} else {
 			static::expectException($sValueOrException);
-			$oExpression->Evaluate(array());
+			$oExpression->Evaluate([]);
 		}
 	}
 
 	public function TimeFormatsProvider()
 	{
-		$aTests = array(
-			array('a', true, 'Thu'),
-			array('b', true, 'Jun'),
-			array('c', true, '6'),
-			array('D', true, '4th'),
-			array('d', true, '04'),
-			array('e', true, '4'),
-			array('f', false, 'NotYetEvaluatedExpression'), // microseconds: no way!
-			array('H', true, '21'),
-			array('h', true, '09'),
-			array('I', true, '09'),
-			array('i', true, '23'),
-			array('j', true, '155'), // day of the year
-			array('k', true, '21'),
-			array('l', true, '9'),
-			array('M', true, 'June'),
-			array('m', true, '06'),
-			array('p', true, 'PM'),
-			array('r', true, '09:23:24 PM'),
-			array('S', true, '24'),
-			array('s', true, '24'),
-			array('T', true, '21:23:24'),
-			array('U', false, 'NotYetEvaluatedExpression'), // Week sunday based (mode 0)
-			array('u', false, 'NotYetEvaluatedExpression'), // Week monday based (mode 1)
-			array('V', false, 'NotYetEvaluatedExpression'), // Week sunday based (mode 2)
-			array('v', true, '23'), // Week monday based (mode 3 - ISO-8601)
-			array('W', true, 'Thursday'),
-			array('w', true, '4'),
-			array('X', false, 'NotYetEvaluatedExpression'),
-			array('x', true, '2009'), // to be used with %v (ISO - 8601)
-			array('Y', true, '2009'),
-			array('y', true, '09'),
-		);
-		$aRes = array();
-		foreach ($aTests as $aTest)
-		{
+		$aTests = [
+			['a', true, 'Thu'],
+			['b', true, 'Jun'],
+			['c', true, '6'],
+			['D', true, '4th'],
+			['d', true, '04'],
+			['e', true, '4'],
+			['f', false, 'NotYetEvaluatedExpression'], // microseconds: no way!
+			['H', true, '21'],
+			['h', true, '09'],
+			['I', true, '09'],
+			['i', true, '23'],
+			['j', true, '155'], // day of the year
+			['k', true, '21'],
+			['l', true, '9'],
+			['M', true, 'June'],
+			['m', true, '06'],
+			['p', true, 'PM'],
+			['r', true, '09:23:24 PM'],
+			['S', true, '24'],
+			['s', true, '24'],
+			['T', true, '21:23:24'],
+			['U', false, 'NotYetEvaluatedExpression'], // Week sunday based (mode 0)
+			['u', false, 'NotYetEvaluatedExpression'], // Week monday based (mode 1)
+			['V', false, 'NotYetEvaluatedExpression'], // Week sunday based (mode 2)
+			['v', true, '23'], // Week monday based (mode 3 - ISO-8601)
+			['W', true, 'Thursday'],
+			['w', true, '4'],
+			['X', false, 'NotYetEvaluatedExpression'],
+			['x', true, '2009'], // to be used with %v (ISO - 8601)
+			['Y', true, '2009'],
+			['y', true, '09'],
+		];
+		$aRes = [];
+		foreach ($aTests as $aTest) {
 			$aRes["Format %{$aTest[0]}"] = $aTest;
 		}
 		return $aRes;
@@ -501,13 +482,11 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 	public function testEveryTimeFormat($sDate)
 	{
 		$aFormats = $this->TimeFormatsProvider();
-		$aSelects = array();
-		foreach ($aFormats as $sFormatDesc => $aFormatSpec)
-		{
+		$aSelects = [];
+		foreach ($aFormats as $sFormatDesc => $aFormatSpec) {
 			$sFormat = $aFormatSpec[0];
 			$bProcessed = $aFormatSpec[1];
-			if ($bProcessed)
-			{
+			if ($bProcessed) {
 				$aSelects["%$sFormat"] = "DATE_FORMAT('$sDate', '%$sFormat') AS `$sFormat`";
 			}
 		}
@@ -515,29 +494,27 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 		$aRes = CMDBSource::QueryToArray($sSelects);
 		/** @var array $aMysqlDateFormatRsultsForAllFormats format as key, MySQL evaluated result as value */
 		$aMysqlDateFormatRsultsForAllFormats = $aRes[0];
-		foreach ($aFormats as $sFormatDesc => $aFormatSpec)
-		{
+		foreach ($aFormats as $sFormatDesc => $aFormatSpec) {
 			$sFormat = $aFormatSpec[0];
 			$bProcessed = $aFormatSpec[1];
-			if ($bProcessed)
-			{
-				$oExpression = new FunctionExpression('DATE_FORMAT', array(new ScalarExpression($sDate), new ScalarExpression("%$sFormat")));
-				$itopExpressionResult = $oExpression->Evaluate(array());
+			if ($bProcessed) {
+				$oExpression = new FunctionExpression('DATE_FORMAT', [new ScalarExpression($sDate), new ScalarExpression("%$sFormat")]);
+				$itopExpressionResult = $oExpression->Evaluate([]);
 				$this->assertSame($aMysqlDateFormatRsultsForAllFormats[$sFormat], $itopExpressionResult, "Format %$sFormat not matching MySQL for '$sDate'");
 			}
 		}
 	}
 	public function EveryTimeFormatProvider()
 	{
-		return array(
-			array('1971-07-19 8:40:00'),
-			array('1999-12-31 23:59:59'),
-			array('2000-01-01 00:00:00'),
-			array('2009-06-04 21:23:24'),
-			array('2020-02-29 23:59:59'),
-			array('2030-10-21 23:59:59'),
-			array('2050-12-21 23:59:59'),
-		);
+		return [
+			['1971-07-19 8:40:00'],
+			['1999-12-31 23:59:59'],
+			['2000-01-01 00:00:00'],
+			['2009-06-04 21:23:24'],
+			['2020-02-29 23:59:59'],
+			['2030-10-21 23:59:59'],
+			['2050-12-21 23:59:59'],
+		];
 	}
 
 	/**
@@ -557,8 +534,7 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 	public function testEveryTimeFormatOnDateRange($sStartDate, $sInterval, $iRepeat)
 	{
 		$oDate = new DateTime($sStartDate);
-		for ($i = 0 ; $i < $iRepeat ; $i++)
-		{
+		for ($i = 0 ; $i < $iRepeat ; $i++) {
 			$sDate = date_format($oDate, 'Y-m-d H:i:s');
 			$this->debug("Checking '$sDate'");
 			$this->testEveryTimeFormat($sDate);
@@ -568,11 +544,11 @@ class ExpressionEvaluateTest extends ItopDataTestCase
 
 	public function EveryTimeFormatOnDateRangeProvider()
 	{
-		return array(
-			'10 years, each 17 days' => array('2000-01-01', 'P17D', 365 * 10 / 17),
-			'1 day, hour by hour' => array('2000-01-01 00:01:02', 'PT1H', 24),
-			'1 hour, minute by minute' => array('2000-01-01 00:01:02', 'PT1M', 60),
-			'1 minute, second by second' => array('2000-01-01 00:01:02', 'PT1S', 60),
-		);
+		return [
+			'10 years, each 17 days' => ['2000-01-01', 'P17D', 365 * 10 / 17],
+			'1 day, hour by hour' => ['2000-01-01 00:01:02', 'PT1H', 24],
+			'1 hour, minute by minute' => ['2000-01-01 00:01:02', 'PT1M', 60],
+			'1 minute, second by second' => ['2000-01-01 00:01:02', 'PT1S', 60],
+		];
 	}
 }

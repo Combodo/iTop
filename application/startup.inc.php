@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -23,7 +24,6 @@ require_once(APPROOT.'core/contexttag.class.inc.php');
 require_once(APPROOT.'core/kpi.class.inc.php');
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 
-
 /**
  * File to include to initialize the datamodel in memory
  *
@@ -36,12 +36,10 @@ ExecutionKPI::EnableMemory(1);
 
 // This storage is freed on error (case of allowed memory exhausted)
 $sReservedMemory = str_repeat('*', 1024 * 1024);
-register_shutdown_function(function()
-{
+register_shutdown_function(function () {
 	global $sReservedMemory;
 	$sReservedMemory = null;
-	if (!is_null($err = error_get_last()) && ($err['type'] == E_ERROR))
-	{
+	if (!is_null($err = error_get_last()) && ($err['type'] == E_ERROR)) {
 		// Remove stack trace from MySQLException (since 2.7.2 see N°3174)
 		$sMessage = $err['message'];
 		if (strpos($sMessage, 'MySQLException') !== false) {
@@ -71,38 +69,30 @@ $oKPI->ComputeAndReport("Session Start");
 
 $sSwitchEnv = utils::ReadParam('switch_env', null);
 $bAllowCache = true;
-if (($sSwitchEnv != null) && file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE) &&( Session::Get('itop_env') !== $sSwitchEnv))
-{
+if (($sSwitchEnv != null) && file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE) && (Session::Get('itop_env') !== $sSwitchEnv)) {
 	Session::Set('itop_env', $sSwitchEnv);
 	$sEnv = $sSwitchEnv;
-    $bAllowCache = false;
-    // Reset the opcache since otherwise the PHP "model" files may still be cached !!
-    if (function_exists('opcache_reset'))
-    {
-        // Zend opcode cache
-        opcache_reset();
-    }
-    if (function_exists('apc_clear_cache'))
-    {
-        // APC(u) cache
-        apc_clear_cache();
-    }
+	$bAllowCache = false;
+	// Reset the opcache since otherwise the PHP "model" files may still be cached !!
+	if (function_exists('opcache_reset')) {
+		// Zend opcode cache
+		opcache_reset();
+	}
+	if (function_exists('apc_clear_cache')) {
+		// APC(u) cache
+		apc_clear_cache();
+	}
 	// TODO: reset the credentials as well ??
-}
-else if (Session::IsSet('itop_env'))
-{
+} elseif (Session::IsSet('itop_env')) {
 	$sEnv = Session::Get('itop_env');
-}
-else
-{
+} else {
 	$sEnv = ITOP_DEFAULT_ENV;
 	Session::Set('itop_env', ITOP_DEFAULT_ENV);
 }
 $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
 try {
-    MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);
-}
-catch (MySQLException $e) {
-    IssueLog::Debug($e->getMessage());
-    throw new MySQLException('Could not connect to the DB server', []);
+	MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);
+} catch (MySQLException $e) {
+	IssueLog::Debug($e->getMessage());
+	throw new MySQLException('Could not connect to the DB server', []);
 }

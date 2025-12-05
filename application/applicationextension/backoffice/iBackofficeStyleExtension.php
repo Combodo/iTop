@@ -10,10 +10,10 @@
  */
 interface iBackofficeStyleExtension
 {
-    /**
-     * @return string
-     * @see \iTopWebPage::$a_styles
-     * @api
-     */
-    public function GetStyle(): string;
+	/**
+	 * @return string
+	 * @see \iTopWebPage::$a_styles
+	 * @api
+	 */
+	public function GetStyle(): string;
 }

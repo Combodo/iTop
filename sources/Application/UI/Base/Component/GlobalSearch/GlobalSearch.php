@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\GlobalSearch;
-
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Application\UI\Hook\iKeyboardShortcut;

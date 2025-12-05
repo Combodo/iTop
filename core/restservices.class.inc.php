@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2013-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -18,7 +19,7 @@
 
 /**
  * REST/json services
- * 
+ *
  * Definition of common structures + the very minimum service provider (manage objects)
  *
  * @package     REST Services
@@ -36,15 +37,15 @@
 class ObjectResult
 {
 	/**
+	 * @var string
+	 * @api
+	 */
+	use SanitizeTrait;
+	/**
 	 * @var int
 	 * @api
 	 */
 	public $code;
-	/**
-	 * @var string
-	 * @api
-	 */
-    use SanitizeTrait;
 
 	public $message;
 	/**
@@ -62,7 +63,7 @@ class ObjectResult
 	 * @api
 	 */
 	public $fields;
-	
+
 	/**
 	 * Default constructor
 	 * @api
@@ -73,7 +74,7 @@ class ObjectResult
 		$this->message = '';
 		$this->class = $sClass;
 		$this->key = $iId;
-		$this->fields = array();
+		$this->fields = [];
 	}
 
 	/**
@@ -84,43 +85,38 @@ class ObjectResult
 	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
 	 * @param integer $iCode An error code (RestResult::OK is no issue has been found)
 	 * @param string $sMessage Description of the error if any, an empty string otherwise
-	 * 
+	 *
 	 * @return ObjectResult
 	 */
-	public static function FromDBObject(DBObject $oObj, ?array $aFieldSpec = null, $bExtendedOutput = false, $iCode = 0, $sMessage = '') : ObjectResult {
+	public static function FromDBObject(DBObject $oObj, ?array $aFieldSpec = null, $bExtendedOutput = false, $iCode = 0, $sMessage = ''): ObjectResult
+	{
 
 		$oObjRes = new ObjectResult($oObj::class, $oObj->GetKey());
 		$oObjRes->code = $iCode;
 		$oObjRes->message = $sMessage;
 
 		$aFields = null;
-		if (!is_null($aFieldSpec))
-		{
+		if (!is_null($aFieldSpec)) {
 			// Enum all classes in the hierarchy, starting with the current one
-			foreach (MetaModel::EnumParentClasses($oObj::class, ENUM_PARENT_CLASSES_ALL, false) as $sRefClass)
-			{
-				if (array_key_exists($sRefClass, $aFieldSpec))
-				{
+			foreach (MetaModel::EnumParentClasses($oObj::class, ENUM_PARENT_CLASSES_ALL, false) as $sRefClass) {
+				if (array_key_exists($sRefClass, $aFieldSpec)) {
 					$aFields = $aFieldSpec[$sRefClass];
 					break;
 				}
 			}
 		}
-		if (is_null($aFields))
-		{
+		if (is_null($aFields)) {
 			// No fieldspec given, or not found...
-			$aFields = array('id', 'friendlyname');
+			$aFields = ['id', 'friendlyname'];
 		}
 
-		foreach ($aFields as $sAttCode)
-		{
+		foreach ($aFields as $sAttCode) {
 			$oObjRes->AddField($oObj, $sAttCode, $bExtendedOutput);
 		}
 
 		return $oObjRes;
 
 	}
-
 
 	/**
 	 * Helper to make an output value for a given attribute
@@ -138,48 +134,37 @@ class ObjectResult
 	 */
 	protected function MakeResultValue(DBObject $oObject, $sAttCode, $bExtendedOutput = false)
 	{
-		if ($sAttCode == 'id')
-		{
+		if ($sAttCode == 'id') {
 			$value = $oObject->GetKey();
-		}
-		else
-		{
+		} else {
 			$sClass = get_class($oObject);
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			if ($oAttDef instanceof AttributeLinkedSet)
-			{
+			if ($oAttDef instanceof AttributeLinkedSet) {
 				// Iterate on the set and build an array of array of attcode=>value
 				$oSet = $oObject->Get($sAttCode);
-				$value = array();
-				while ($oLnk = $oSet->Fetch())
-				{
+				$value = [];
+				while ($oLnk = $oSet->Fetch()) {
 					$sLnkRefClass = $bExtendedOutput ? get_class($oLnk) : $oAttDef->GetLinkedClass();
 
-					$aLnkValues = array();
-					foreach (MetaModel::ListAttributeDefs($sLnkRefClass) as $sLnkAttCode => $oLnkAttDef)
-					{
+					$aLnkValues = [];
+					foreach (MetaModel::ListAttributeDefs($sLnkRefClass) as $sLnkAttCode => $oLnkAttDef) {
 						// Skip attributes pointing to the current object (redundant data)
-						if ($sLnkAttCode == $oAttDef->GetExtKeyToMe())
-						{
+						if ($sLnkAttCode == $oAttDef->GetExtKeyToMe()) {
 							continue;
 						}
 						// Skip any attribute of the link that points to the current object
 						$oLnkAttDef = MetaModel::GetAttributeDef($sLnkRefClass, $sLnkAttCode);
-						if (method_exists($oLnkAttDef, 'GetKeyAttCode'))
-						{
-							if ($oLnkAttDef->GetKeyAttCode() == $oAttDef->GetExtKeyToMe())
-							{
+						if (method_exists($oLnkAttDef, 'GetKeyAttCode')) {
+							if ($oLnkAttDef->GetKeyAttCode() == $oAttDef->GetExtKeyToMe()) {
 								continue;
 							}
 						}
-						
+
 						$aLnkValues[$sLnkAttCode] = $this->MakeResultValue($oLnk, $sLnkAttCode, $bExtendedOutput);
 					}
 					$value[] = $aLnkValues;
 				}
-			}
-			else
-			{
+			} else {
 				$value = $oAttDef->GetForJSON($oObject->Get($sAttCode));
 			}
 		}
@@ -207,18 +192,16 @@ class ObjectResult
 
 	public function SanitizeContent()
 	{
-		foreach($this->fields as $sFieldAttCode => $fieldValue) {
-            try {
-			$oAttDef = MetaModel::GetAttributeDef($this->class, $sFieldAttCode);
-            } catch (Exception $e) { // for special cases like ID
-                continue;
-            }
+		foreach ($this->fields as $sFieldAttCode => $fieldValue) {
+			try {
+				$oAttDef = MetaModel::GetAttributeDef($this->class, $sFieldAttCode);
+			} catch (Exception $e) { // for special cases like ID
+				continue;
+			}
 			$this->SanitizeFieldIfSensitive($this->fields, $sFieldAttCode, $fieldValue, $oAttDef);
 		}
 	}
 }
-
-
 
 /**
  * REST response for services managing objects. Derive this structure to add information and/or constants
@@ -255,12 +238,11 @@ class RestResultWithObjects extends RestResult
 		$this->objects[$sObjKey] = $oObjRes;
 	}
 
-public function SanitizeContent()
+	public function SanitizeContent()
 	{
 		parent::SanitizeContent();
 
-		foreach($this->objects as $sObjKey => $oObjRes)
-		{
+		foreach ($this->objects as $sObjKey => $oObjRes) {
 			$oObjRes->SanitizeContent();
 		}
 	}
@@ -280,7 +262,7 @@ class RestResultWithRelations extends RestResultWithObjects
 	public function __construct()
 	{
 		parent::__construct();
-		$this->relations = array();
+		$this->relations = [];
 	}
 
 	/**
@@ -292,11 +274,10 @@ class RestResultWithRelations extends RestResultWithObjects
 	 */
 	public function AddRelation($sSrcKey, $sDestKey)
 	{
-		if (!array_key_exists($sSrcKey, $this->relations))
-		{
-			$this->relations[$sSrcKey] = array();
+		if (!array_key_exists($sSrcKey, $this->relations)) {
+			$this->relations[$sSrcKey] = [];
 		}
-		$this->relations[$sSrcKey][] = array('key' => $sDestKey);
+		$this->relations[$sSrcKey][] = ['key' => $sDestKey];
 	}
 }
 
@@ -305,7 +286,7 @@ class RestResultWithRelations extends RestResultWithObjects
  *
  * @package     RESTAPI
  * @api
- * @since 2.0.1  
+ * @since 2.0.1
  */
 class RestDelete
 {
@@ -313,37 +294,37 @@ class RestDelete
 	 * Result: Object deleted as per the initial request
 	 * @api
 	 */
-	const OK = 0;
+	public const OK = 0;
 	/**
 	 * Result: general issue (user rights or ... ?)
 	 * @api
 	 */
-	const ISSUE = 1;
+	public const ISSUE = 1;
 	/**
 	 * Result: Must be deleted to preserve database integrity
 	 * @api
 	 */
-	const AUTO_DELETE = 2;
+	public const AUTO_DELETE = 2;
 	/**
 	 * Result: Must be deleted to preserve database integrity, but that is NOT possible
 	 * @api
 	 */
-	const AUTO_DELETE_ISSUE = 3;
+	public const AUTO_DELETE_ISSUE = 3;
 	/**
 	 * Result: Must be deleted to preserve database integrity, but this must be requested explicitly
 	 * @api
 	 */
-	const REQUEST_EXPLICITELY = 4;
+	public const REQUEST_EXPLICITELY = 4;
 	/**
 	 * Result: Must be updated to preserve database integrity
 	 * @api
 	 */
-	const AUTO_UPDATE = 5;
+	public const AUTO_UPDATE = 5;
 	/**
 	 * Result: Must be updated to preserve database integrity, but that is NOT possible
 	 * @api
 	 */
-	const AUTO_UPDATE_ISSUE = 6;
+	public const AUTO_UPDATE_ISSUE = 6;
 }
 
 /**
@@ -353,10 +334,10 @@ class RestDelete
  */
 class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 {
-    use SanitizeTrait;
-    /**
+	use SanitizeTrait;
+	/**
 	 * Enumerate services delivered by this class
-	 * 	 
+	 *
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
 	 * @return array An array of hash 'verb' => verb, 'description' => description
 	 */
@@ -368,37 +349,36 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 		// 1.1 - In the reply, objects have a 'key' entry so that it is no more necessary to split class::key programmaticaly
 		// 1.0 - Initial implementation in iTop 2.0.1
 		//
-		$aOps = array();
-		if (in_array($sVersion, array('1.0', '1.1', '1.2', '1.3', '1.4')))
-		{
-			$aOps[] = array(
+		$aOps = [];
+		if (in_array($sVersion, ['1.0', '1.1', '1.2', '1.3', '1.4'])) {
+			$aOps[] = [
 				'verb' => 'core/create',
-				'description' => 'Create an object'
-			);
-			$aOps[] = array(
+				'description' => 'Create an object',
+			];
+			$aOps[] = [
 				'verb' => 'core/update',
-				'description' => 'Update an object'
-			);
-			$aOps[] = array(
+				'description' => 'Update an object',
+			];
+			$aOps[] = [
 				'verb' => 'core/apply_stimulus',
-				'description' => 'Apply a stimulus to change the state of an object'
-			);
-			$aOps[] = array(
+				'description' => 'Apply a stimulus to change the state of an object',
+			];
+			$aOps[] = [
 				'verb' => 'core/get',
-				'description' => 'Search for objects'
-			);
-			$aOps[] = array(
+				'description' => 'Search for objects',
+			];
+			$aOps[] = [
 				'verb' => 'core/delete',
-				'description' => 'Delete objects'
-			);
-			$aOps[] = array(
+				'description' => 'Delete objects',
+			];
+			$aOps[] = [
 				'verb' => 'core/get_related',
-				'description' => 'Get related objects through the specified relation'
-			);
-			$aOps[] = array(
+				'description' => 'Get related objects through the specified relation',
+			];
+			$aOps[] = [
 				'verb' => 'core/check_credentials',
-				'description' => 'Check user credentials'
-			);
+				'description' => 'Check user credentials',
+			];
 		}
 		return $aOps;
 	}
@@ -419,457 +399,355 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 	public function ExecOperation($sVersion, $sVerb, $aParams)
 	{
 		$oResult = new RestResultWithObjects();
-		switch ($sVerb)
-		{
-		case 'core/create':
-			RestUtils::InitTrackingComment($aParams);
-			$sClass = RestUtils::GetClass($aParams, 'class');
-			$aFields = RestUtils::GetMandatoryParam($aParams, 'fields');
-			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
-			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
+		switch ($sVerb) {
+			case 'core/create':
+				RestUtils::InitTrackingComment($aParams);
+				$sClass = RestUtils::GetClass($aParams, 'class');
+				$aFields = RestUtils::GetMandatoryParam($aParams, 'fields');
+				$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
+				$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
 
-			if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES)
-			{
-				$oResult->code = RestResult::UNAUTHORIZED;
-				$oResult->message = "The current user does not have enough permissions for creating data of class $sClass";
-			}
-			elseif (UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY) != UR_ALLOWED_YES)
-			{
-				$oResult->code = RestResult::UNAUTHORIZED;
-				$oResult->message = "The current user does not have enough permissions for massively creating data of class $sClass";
-			}
-			else
-			{
-				$oObject = RestUtils::MakeObjectFromFields($sClass, $aFields);
-				$oObject->DBInsert();
-				$oResult->AddObject(0, 'created', $oObject, $aShowFields, $bExtendedOutput);
-			}
-			break;
-	
-		case 'core/update':
-			RestUtils::InitTrackingComment($aParams);
-			$sClass = RestUtils::GetClass($aParams, 'class');
-			$key = RestUtils::GetMandatoryParam($aParams, 'key');
-			$aFields = RestUtils::GetMandatoryParam($aParams, 'fields');
-			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
-			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
-	
-			// Note: the target class cannot be based on the result of FindObjectFromKey, because in case the user does not have read access, that function already fails with msg 'Nothing found'
-			$sTargetClass = RestUtils::GetObjectSetFromKey($sClass, $key)->GetFilter()->GetClass();
-			if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES)
-			{
-				$oResult->code = RestResult::UNAUTHORIZED;
-				$oResult->message = "The current user does not have enough permissions for modifying data of class $sTargetClass";
-			}
-			elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES)
-			{
-				$oResult->code = RestResult::UNAUTHORIZED;
-				$oResult->message = "The current user does not have enough permissions for massively modifying data of class $sTargetClass";
-			}
-			else
-			{
-				$oObject = RestUtils::FindObjectFromKey($sClass, $key);
-				RestUtils::UpdateObjectFromFields($oObject, $aFields);
-				$oObject->DBUpdate();
-				$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
-			}
-			break;
-	
-		case 'core/apply_stimulus':
-			RestUtils::InitTrackingComment($aParams);
-			$sClass = RestUtils::GetClass($aParams, 'class');
-			$key = RestUtils::GetMandatoryParam($aParams, 'key');
-			$aFields = RestUtils::GetMandatoryParam($aParams, 'fields');
-			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
-			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
-			$sStimulus = RestUtils::GetMandatoryParam($aParams, 'stimulus');
-	
-			// Note: the target class cannot be based on the result of FindObjectFromKey, because in case the user does not have read access, that function already fails with msg 'Nothing found'
-			$sTargetClass = RestUtils::GetObjectSetFromKey($sClass, $key)->GetFilter()->GetClass();
-			if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES)
-			{
-				$oResult->code = RestResult::UNAUTHORIZED;
-				$oResult->message = "The current user does not have enough permissions for modifying data of class $sTargetClass";
-			}
-			elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_BULK_MODIFY) != UR_ALLOWED_YES)
-			{
-				$oResult->code = RestResult::UNAUTHORIZED;
-				$oResult->message = "The current user does not have enough permissions for massively modifying data of class $sTargetClass";
-			}
-			else
-			{
-				$oObject = RestUtils::FindObjectFromKey($sClass, $key);
-				RestUtils::UpdateObjectFromFields($oObject, $aFields);
-			
-				$aTransitions = $oObject->EnumTransitions();
-				$aStimuli = MetaModel::EnumStimuli(get_class($oObject));
-				if (!isset($aTransitions[$sStimulus]))
-				{
-					// Invalid stimulus
-					$oResult->code = RestResult::INTERNAL_ERROR;
-					$oResult->message = "Invalid stimulus: '$sStimulus' on the object ".$oObject->GetName()." in state '".$oObject->GetState()."'";
+				if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES) {
+					$oResult->code = RestResult::UNAUTHORIZED;
+					$oResult->message = "The current user does not have enough permissions for creating data of class $sClass";
+				} elseif (UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_MODIFY) != UR_ALLOWED_YES) {
+					$oResult->code = RestResult::UNAUTHORIZED;
+					$oResult->message = "The current user does not have enough permissions for massively creating data of class $sClass";
+				} else {
+					$oObject = RestUtils::MakeObjectFromFields($sClass, $aFields);
+					$oObject->DBInsert();
+					$oResult->AddObject(0, 'created', $oObject, $aShowFields, $bExtendedOutput);
 				}
-				else
-				{
-					$aTransition = $aTransitions[$sStimulus];
-					$sTargetState = $aTransition['target_state'];
-					$aStates = MetaModel::EnumStates($sClass);
-					$aTargetStateDef = $aStates[$sTargetState];
-					$aExpectedAttributes = $aTargetStateDef['attribute_list'];
-					
-					$aMissingMandatory = array();
-					foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
-					{
-						if ( ($iExpectCode & OPT_ATT_MANDATORY) && ($oObject->Get($sAttCode) == ''))
-						{
-							$aMissingMandatory[] = $sAttCode;
-						}
-					}				
-					if (count($aMissingMandatory) == 0)
-					{
-						// If all the mandatory fields are already present, just apply the transition silently...
-						if ($oObject->ApplyStimulus($sStimulus))
-						{
-							$oObject->DBUpdate();
-							$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
-						}
-					}
-					else
-					{
-						// Missing mandatory attributes for the transition
+				break;
+
+			case 'core/update':
+				RestUtils::InitTrackingComment($aParams);
+				$sClass = RestUtils::GetClass($aParams, 'class');
+				$key = RestUtils::GetMandatoryParam($aParams, 'key');
+				$aFields = RestUtils::GetMandatoryParam($aParams, 'fields');
+				$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
+				$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
+
+				// Note: the target class cannot be based on the result of FindObjectFromKey, because in case the user does not have read access, that function already fails with msg 'Nothing found'
+				$sTargetClass = RestUtils::GetObjectSetFromKey($sClass, $key)->GetFilter()->GetClass();
+				if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES) {
+					$oResult->code = RestResult::UNAUTHORIZED;
+					$oResult->message = "The current user does not have enough permissions for modifying data of class $sTargetClass";
+				} elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES) {
+					$oResult->code = RestResult::UNAUTHORIZED;
+					$oResult->message = "The current user does not have enough permissions for massively modifying data of class $sTargetClass";
+				} else {
+					$oObject = RestUtils::FindObjectFromKey($sClass, $key);
+					RestUtils::UpdateObjectFromFields($oObject, $aFields);
+					$oObject->DBUpdate();
+					$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
+				}
+				break;
+
+			case 'core/apply_stimulus':
+				RestUtils::InitTrackingComment($aParams);
+				$sClass = RestUtils::GetClass($aParams, 'class');
+				$key = RestUtils::GetMandatoryParam($aParams, 'key');
+				$aFields = RestUtils::GetMandatoryParam($aParams, 'fields');
+				$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
+				$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
+				$sStimulus = RestUtils::GetMandatoryParam($aParams, 'stimulus');
+
+				// Note: the target class cannot be based on the result of FindObjectFromKey, because in case the user does not have read access, that function already fails with msg 'Nothing found'
+				$sTargetClass = RestUtils::GetObjectSetFromKey($sClass, $key)->GetFilter()->GetClass();
+				if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_MODIFY) != UR_ALLOWED_YES) {
+					$oResult->code = RestResult::UNAUTHORIZED;
+					$oResult->message = "The current user does not have enough permissions for modifying data of class $sTargetClass";
+				} elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_BULK_MODIFY) != UR_ALLOWED_YES) {
+					$oResult->code = RestResult::UNAUTHORIZED;
+					$oResult->message = "The current user does not have enough permissions for massively modifying data of class $sTargetClass";
+				} else {
+					$oObject = RestUtils::FindObjectFromKey($sClass, $key);
+					RestUtils::UpdateObjectFromFields($oObject, $aFields);
+
+					$aTransitions = $oObject->EnumTransitions();
+					$aStimuli = MetaModel::EnumStimuli(get_class($oObject));
+					if (!isset($aTransitions[$sStimulus])) {
+						// Invalid stimulus
 						$oResult->code = RestResult::INTERNAL_ERROR;
-						$oResult->message = 'Missing mandatory attribute(s) for applying the stimulus: '.implode(', ', $aMissingMandatory).'.';
+						$oResult->message = "Invalid stimulus: '$sStimulus' on the object ".$oObject->GetName()." in state '".$oObject->GetState()."'";
+					} else {
+						$aTransition = $aTransitions[$sStimulus];
+						$sTargetState = $aTransition['target_state'];
+						$aStates = MetaModel::EnumStates($sClass);
+						$aTargetStateDef = $aStates[$sTargetState];
+						$aExpectedAttributes = $aTargetStateDef['attribute_list'];
+
+						$aMissingMandatory = [];
+						foreach ($aExpectedAttributes as $sAttCode => $iExpectCode) {
+							if (($iExpectCode & OPT_ATT_MANDATORY) && ($oObject->Get($sAttCode) == '')) {
+								$aMissingMandatory[] = $sAttCode;
+							}
+						}
+						if (count($aMissingMandatory) == 0) {
+							// If all the mandatory fields are already present, just apply the transition silently...
+							if ($oObject->ApplyStimulus($sStimulus)) {
+								$oObject->DBUpdate();
+								$oResult->AddObject(0, 'updated', $oObject, $aShowFields, $bExtendedOutput);
+							}
+						} else {
+							// Missing mandatory attributes for the transition
+							$oResult->code = RestResult::INTERNAL_ERROR;
+							$oResult->message = 'Missing mandatory attribute(s) for applying the stimulus: '.implode(', ', $aMissingMandatory).'.';
+						}
 					}
 				}
-			}	
-			break;
-	
-		case 'core/get':
-			$sClass = RestUtils::GetClass($aParams, 'class');
-			$key = RestUtils::GetMandatoryParam($aParams, 'key');
-			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
-			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
-			$iLimit = (int)RestUtils::GetOptionalParam($aParams, 'limit', 0);
-			$iPage = (int)RestUtils::GetOptionalParam($aParams, 'page', 1);
+				break;
 
-			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key, $iLimit, self::getOffsetFromLimitAndPage($iLimit, $iPage));
-			$sTargetClass = $oObjectSet->GetFilter()->GetClass();
-	
-			if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ) != UR_ALLOWED_YES)
-			{
-				$oResult->code = RestResult::UNAUTHORIZED;
-				$oResult->message = "The current user does not have enough permissions for reading data of class $sTargetClass";
-			}
-			elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_BULK_READ) != UR_ALLOWED_YES)
-			{
-				$oResult->code = RestResult::UNAUTHORIZED;
-				$oResult->message = "The current user does not have enough permissions for exporting data of class $sTargetClass";
-			}
-			elseif ($iPage < 1)
-            {
-			    $oResult->code = RestResult::INVALID_PAGE;
-			    $oResult->message = "The request page number is not valid. It must be an integer greater than 0";
-            }
-			else
-			{
-                                if (!$bExtendedOutput && RestUtils::GetOptionalParam($aParams, 'output_fields', '*') != '*')
-                                {
-                                        $aFields = $aShowFields[$sClass];
-                                        //Id is not a valid attribute to optimize
-                                        if (in_array('id', $aFields))
-                                        {
-                                            unset($aFields[array_search('id', $aFields)]);
-                                        }
-                                        $aAttToLoad = array($oObjectSet->GetClassAlias() => $aFields);
-                                        $oObjectSet->OptimizeColumnLoad($aAttToLoad);
-                                }
+			case 'core/get':
+				$sClass = RestUtils::GetClass($aParams, 'class');
+				$key = RestUtils::GetMandatoryParam($aParams, 'key');
+				$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
+				$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
+				$iLimit = (int)RestUtils::GetOptionalParam($aParams, 'limit', 0);
+				$iPage = (int)RestUtils::GetOptionalParam($aParams, 'page', 1);
 
-				while ($oObject = $oObjectSet->Fetch())
-				{
-					$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);
+				$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key, $iLimit, self::getOffsetFromLimitAndPage($iLimit, $iPage));
+				$sTargetClass = $oObjectSet->GetFilter()->GetClass();
+
+				if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ) != UR_ALLOWED_YES) {
+					$oResult->code = RestResult::UNAUTHORIZED;
+					$oResult->message = "The current user does not have enough permissions for reading data of class $sTargetClass";
+				} elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_BULK_READ) != UR_ALLOWED_YES) {
+					$oResult->code = RestResult::UNAUTHORIZED;
+					$oResult->message = "The current user does not have enough permissions for exporting data of class $sTargetClass";
+				} elseif ($iPage < 1) {
+					$oResult->code = RestResult::INVALID_PAGE;
+					$oResult->message = "The request page number is not valid. It must be an integer greater than 0";
+				} else {
+					if (!$bExtendedOutput && RestUtils::GetOptionalParam($aParams, 'output_fields', '*') != '*') {
+						$aFields = $aShowFields[$sClass];
+						//Id is not a valid attribute to optimize
+						if (in_array('id', $aFields)) {
+							unset($aFields[array_search('id', $aFields)]);
+						}
+						$aAttToLoad = [$oObjectSet->GetClassAlias() => $aFields];
+						$oObjectSet->OptimizeColumnLoad($aAttToLoad);
+					}
+
+					while ($oObject = $oObjectSet->Fetch()) {
+						$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);
+					}
+					$oResult->message = "Found: ".$oObjectSet->Count();
 				}
-				$oResult->message = "Found: ".$oObjectSet->Count();
-			}
-			break;
+				break;
 
-		case 'core/delete':
-			RestUtils::InitTrackingComment($aParams);
-			$sClass = RestUtils::GetClass($aParams, 'class');
-			$key = RestUtils::GetMandatoryParam($aParams, 'key');
-			$bSimulate = RestUtils::GetOptionalParam($aParams, 'simulate', false);
-	
-			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
-			$sTargetClass = $oObjectSet->GetFilter()->GetClass();
-	
-			if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_DELETE) != UR_ALLOWED_YES)
-			{
-				$oResult->code = RestResult::UNAUTHORIZED;
-				$oResult->message = "The current user does not have enough permissions for deleting data of class $sTargetClass";
-			}
-			elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_DELETE) != UR_ALLOWED_YES)
-			{
-				$oResult->code = RestResult::UNAUTHORIZED;
-				$oResult->message = "The current user does not have enough permissions for massively deleting data of class $sTargetClass";
-			}
-			else
-			{
-				$aObjects = $oObjectSet->ToArray();
-				$this->DeleteObjects($oResult, $aObjects, $bSimulate);
-			}
-			break;
+			case 'core/delete':
+				RestUtils::InitTrackingComment($aParams);
+				$sClass = RestUtils::GetClass($aParams, 'class');
+				$key = RestUtils::GetMandatoryParam($aParams, 'key');
+				$bSimulate = RestUtils::GetOptionalParam($aParams, 'simulate', false);
 
-		case 'core/get_related':
-			$oResult = new RestResultWithRelations();
-			$sClass = RestUtils::GetClass($aParams, 'class');
-			$key = RestUtils::GetMandatoryParam($aParams, 'key');
-			$sRelation = RestUtils::GetMandatoryParam($aParams, 'relation');
-			$iMaxRecursionDepth = RestUtils::GetOptionalParam($aParams, 'depth', 20 /* = MAX_RECURSION_DEPTH */);
-			$sDirection = RestUtils::GetOptionalParam($aParams, 'direction', null);
-			$bEnableRedundancy = RestUtils::GetOptionalParam($aParams, 'redundancy', false);
-			$bReverse = false;
+				$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
+				$sTargetClass = $oObjectSet->GetFilter()->GetClass();
 
-			if (is_null($sDirection) && ($sRelation == 'depends on'))
-			{
-				// Legacy behavior, consider "depends on" as a forward relation
-				$sRelation = 'impacts';
-				$sDirection = 'up'; 
-				$bReverse = true; // emulate the legacy behavior by returning the edges
-			}
-			else if(is_null($sDirection))
-			{
-				$sDirection = 'down';
-			}
-	
-			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
-			if ($sDirection == 'down')
-			{
-				$oRelationGraph = $oObjectSet->GetRelatedObjectsDown($sRelation, $iMaxRecursionDepth, $bEnableRedundancy);
-			}
-			else if ($sDirection == 'up')
-			{
-				$oRelationGraph = $oObjectSet->GetRelatedObjectsUp($sRelation, $iMaxRecursionDepth, $bEnableRedundancy);
-			}
-			else
-			{
-				$oResult->code = RestResult::INTERNAL_ERROR;
-				$oResult->message = "Invalid value: '$sDirection' for the parameter 'direction'. Valid values are 'up' and 'down'";
-				return $oResult;
-				
-			}
-			
-			if ($bEnableRedundancy)
-			{
-				// Remove the redundancy nodes from the output
-				$oIterator = new RelationTypeIterator($oRelationGraph, 'Node');
-				foreach($oIterator as $oNode)
-				{
-					if ($oNode instanceof RelationRedundancyNode)
-					{
-						$oRelationGraph->FilterNode($oNode);
+				if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_DELETE) != UR_ALLOWED_YES) {
+					$oResult->code = RestResult::UNAUTHORIZED;
+					$oResult->message = "The current user does not have enough permissions for deleting data of class $sTargetClass";
+				} elseif (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_DELETE) != UR_ALLOWED_YES) {
+					$oResult->code = RestResult::UNAUTHORIZED;
+					$oResult->message = "The current user does not have enough permissions for massively deleting data of class $sTargetClass";
+				} else {
+					$aObjects = $oObjectSet->ToArray();
+					$this->DeleteObjects($oResult, $aObjects, $bSimulate);
+				}
+				break;
+
+			case 'core/get_related':
+				$oResult = new RestResultWithRelations();
+				$sClass = RestUtils::GetClass($aParams, 'class');
+				$key = RestUtils::GetMandatoryParam($aParams, 'key');
+				$sRelation = RestUtils::GetMandatoryParam($aParams, 'relation');
+				$iMaxRecursionDepth = RestUtils::GetOptionalParam($aParams, 'depth', 20 /* = MAX_RECURSION_DEPTH */);
+				$sDirection = RestUtils::GetOptionalParam($aParams, 'direction', null);
+				$bEnableRedundancy = RestUtils::GetOptionalParam($aParams, 'redundancy', false);
+				$bReverse = false;
+
+				if (is_null($sDirection) && ($sRelation == 'depends on')) {
+					// Legacy behavior, consider "depends on" as a forward relation
+					$sRelation = 'impacts';
+					$sDirection = 'up';
+					$bReverse = true; // emulate the legacy behavior by returning the edges
+				} elseif (is_null($sDirection)) {
+					$sDirection = 'down';
+				}
+
+				$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
+				if ($sDirection == 'down') {
+					$oRelationGraph = $oObjectSet->GetRelatedObjectsDown($sRelation, $iMaxRecursionDepth, $bEnableRedundancy);
+				} elseif ($sDirection == 'up') {
+					$oRelationGraph = $oObjectSet->GetRelatedObjectsUp($sRelation, $iMaxRecursionDepth, $bEnableRedundancy);
+				} else {
+					$oResult->code = RestResult::INTERNAL_ERROR;
+					$oResult->message = "Invalid value: '$sDirection' for the parameter 'direction'. Valid values are 'up' and 'down'";
+					return $oResult;
+
+				}
+
+				if ($bEnableRedundancy) {
+					// Remove the redundancy nodes from the output
+					$oIterator = new RelationTypeIterator($oRelationGraph, 'Node');
+					foreach ($oIterator as $oNode) {
+						if ($oNode instanceof RelationRedundancyNode) {
+							$oRelationGraph->FilterNode($oNode);
+						}
 					}
 				}
-			}
-			
-			$aIndexByClass = array();
-			$oIterator = new RelationTypeIterator($oRelationGraph);
-			foreach($oIterator as $oElement)
-			{
-				if ($oElement instanceof RelationObjectNode)
-				{
-					$oObject = $oElement->GetProperty('object');
-					if ($oObject)
-					{
-						if ($bEnableRedundancy && $sDirection == 'down')
-						{
-							// Add only the "reached" objects
-							if ($oElement->GetProperty('is_reached'))
-							{
+
+				$aIndexByClass = [];
+				$oIterator = new RelationTypeIterator($oRelationGraph);
+				foreach ($oIterator as $oElement) {
+					if ($oElement instanceof RelationObjectNode) {
+						$oObject = $oElement->GetProperty('object');
+						if ($oObject) {
+							if ($bEnableRedundancy && $sDirection == 'down') {
+								// Add only the "reached" objects
+								if ($oElement->GetProperty('is_reached')) {
+									$aIndexByClass[get_class($oObject)][$oObject->GetKey()] = null;
+									$oResult->AddObject(0, '', $oObject);
+								}
+							} else {
 								$aIndexByClass[get_class($oObject)][$oObject->GetKey()] = null;
 								$oResult->AddObject(0, '', $oObject);
 							}
 						}
-						else
-						{
-							$aIndexByClass[get_class($oObject)][$oObject->GetKey()] = null;
-							$oResult->AddObject(0, '', $oObject);
-						}
-					}
-				}
-				else if ($oElement instanceof RelationEdge)
-				{
-					$oSrcObj = $oElement->GetSourceNode()->GetProperty('object');
-					$oDestObj = $oElement->GetSinkNode()->GetProperty('object');
-					$sSrcKey = get_class($oSrcObj).'::'.$oSrcObj->GetKey();
-					$sDestKey = get_class($oDestObj).'::'.$oDestObj->GetKey();
-					if ($bEnableRedundancy)
-					{
-						// Add only the edges where both source and destination are "reached"
-						if ($oElement->GetSourceNode()->GetProperty('is_reached') && $oElement->GetSinkNode()->GetProperty('is_reached'))
-						{
-							if ($bReverse)
-							{
-								$oResult->AddRelation($sDestKey, $sSrcKey);
+					} elseif ($oElement instanceof RelationEdge) {
+						$oSrcObj = $oElement->GetSourceNode()->GetProperty('object');
+						$oDestObj = $oElement->GetSinkNode()->GetProperty('object');
+						$sSrcKey = get_class($oSrcObj).'::'.$oSrcObj->GetKey();
+						$sDestKey = get_class($oDestObj).'::'.$oDestObj->GetKey();
+						if ($bEnableRedundancy) {
+							// Add only the edges where both source and destination are "reached"
+							if ($oElement->GetSourceNode()->GetProperty('is_reached') && $oElement->GetSinkNode()->GetProperty('is_reached')) {
+								if ($bReverse) {
+									$oResult->AddRelation($sDestKey, $sSrcKey);
+								} else {
+									$oResult->AddRelation($sSrcKey, $sDestKey);
+								}
 							}
-							else
-							{
+						} else {
+							if ($bReverse) {
+								$oResult->AddRelation($sDestKey, $sSrcKey);
+							} else {
 								$oResult->AddRelation($sSrcKey, $sDestKey);
 							}
 						}
 					}
-					else
-					{
-						if ($bReverse)
-						{
-							$oResult->AddRelation($sDestKey, $sSrcKey);
-						}
-						else
-						{
-							$oResult->AddRelation($sSrcKey, $sDestKey);
-						}
-					}
 				}
-			}
 
-			if (count($aIndexByClass) > 0)
-			{
-				$aStats = array();
-				$aUnauthorizedClasses = array();
-				foreach ($aIndexByClass as $sClass => $aIds)
-				{
-					if (UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_READ) != UR_ALLOWED_YES)
-					{
-						$aUnauthorizedClasses[$sClass] = true;
+				if (count($aIndexByClass) > 0) {
+					$aStats = [];
+					$aUnauthorizedClasses = [];
+					foreach ($aIndexByClass as $sClass => $aIds) {
+						if (UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_READ) != UR_ALLOWED_YES) {
+							$aUnauthorizedClasses[$sClass] = true;
+						}
+						$aStats[] = $sClass.'= '.count($aIds);
 					}
-					$aStats[] = $sClass.'= '.count($aIds);
+					if (count($aUnauthorizedClasses) > 0) {
+						$sClasses = implode(', ', array_keys($aUnauthorizedClasses));
+						$oResult = new RestResult();
+						$oResult->code = RestResult::UNAUTHORIZED;
+						$oResult->message = "The current user does not have enough permissions for exporting data of class(es): $sClasses";
+					} else {
+						$oResult->message = "Scope: ".$oObjectSet->Count()."; Related objects: ".implode(', ', $aStats);
+					}
+				} else {
+					$oResult->message = "Nothing found";
 				}
-				if (count($aUnauthorizedClasses) > 0)
-				{
-					$sClasses = implode(', ', array_keys($aUnauthorizedClasses));
-					$oResult = new RestResult();
-					$oResult->code = RestResult::UNAUTHORIZED;
-					$oResult->message = "The current user does not have enough permissions for exporting data of class(es): $sClasses";
-				}
-				else
-				{
-					$oResult->message = "Scope: ".$oObjectSet->Count()."; Related objects: ".implode(', ', $aStats);
-				}
-			}
-			else
-			{
-				$oResult->message = "Nothing found";
-			}
-			break;
-			
-		case 'core/check_credentials':
-			$oResult = new RestResult();
-			$sUser = RestUtils::GetMandatoryParam($aParams, 'user');
-			$sPassword = RestUtils::GetMandatoryParam($aParams, 'password');
+				break;
 
-			if (UserRights::CheckCredentials($sUser, $sPassword) !== true)
-			{
-				$oResult->authorized = false;
-			}
-			else
-			{
-				$oResult->authorized = true;
-			}
-			break;
-	
-		default:
-			// unknown operation: handled at a higher level
+			case 'core/check_credentials':
+				$oResult = new RestResult();
+				$sUser = RestUtils::GetMandatoryParam($aParams, 'user');
+				$sPassword = RestUtils::GetMandatoryParam($aParams, 'password');
+
+				if (UserRights::CheckCredentials($sUser, $sPassword) !== true) {
+					$oResult->authorized = false;
+				} else {
+					$oResult->authorized = true;
+				}
+				break;
+
+			default:
+				// unknown operation: handled at a higher level
 		}
 		return $oResult;
 	}
 
 	public function SanitizeJsonInput(string $sJsonInput): string
 	{
-        $sSanitizedJsonInput = $sJsonInput;
-        $aJsonData = json_decode($sSanitizedJsonInput, true);
-        $sOperation = $aJsonData['operation'];
+		$sSanitizedJsonInput = $sJsonInput;
+		$aJsonData = json_decode($sSanitizedJsonInput, true);
+		$sOperation = $aJsonData['operation'];
 
-        switch ($sOperation) {
-            case 'core/check_credentials':
-                if (isset($aJsonData['password'])) {
-                    $aJsonData['password'] = '*****';
-                }
-                break;
-            case 'core/update':
-            case 'core/create':
-            default :
-            $sClass = $aJsonData['class'];
-            if (isset($aJsonData['fields'])) {
-                foreach ($aJsonData['fields'] as $sFieldAttCode => $fieldValue) {
-                    $oAttDef = MetaModel::GetAttributeDef($sClass, $sFieldAttCode);
-                    $this->SanitizeFieldIfSensitive($aJsonData['fields'], $sFieldAttCode, $fieldValue, $oAttDef);
-                }
-            }
-            break;
-        }
+		switch ($sOperation) {
+			case 'core/check_credentials':
+				if (isset($aJsonData['password'])) {
+					$aJsonData['password'] = '*****';
+				}
+				break;
+			case 'core/update':
+			case 'core/create':
+			default:
+				$sClass = $aJsonData['class'];
+				if (isset($aJsonData['fields'])) {
+					foreach ($aJsonData['fields'] as $sFieldAttCode => $fieldValue) {
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $sFieldAttCode);
+						$this->SanitizeFieldIfSensitive($aJsonData['fields'], $sFieldAttCode, $fieldValue, $oAttDef);
+					}
+				}
+				break;
+		}
 		return json_encode($aJsonData, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 	}
 
 	/**
-	 * Helper for object deletion	
+	 * Helper for object deletion
 	 */
 	public function DeleteObjects($oResult, $aObjects, $bSimulate)
 	{
 		$oDeletionPlan = new DeletionPlan();
-		foreach($aObjects as $oObj)
-		{
-			if ($bSimulate)
-			{
+		foreach ($aObjects as $oObj) {
+			if ($bSimulate) {
 				$oObj->CheckToDelete($oDeletionPlan);
-			}
-			else
-			{
+			} else {
 				$oObj->DBDelete($oDeletionPlan);
 			}
 		}
 
-		foreach ($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes)
-		{
-			foreach ($aDeletes as $iId => $aData)
-			{
+		foreach ($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes) {
+			foreach ($aDeletes as $iId => $aData) {
 				$oToDelete = $aData['to_delete'];
 				$bAutoDel = (($aData['mode'] == DEL_SILENT) || ($aData['mode'] == DEL_AUTO));
-				if (array_key_exists('issue', $aData))
-				{
-					if ($bAutoDel)
-					{
-						if (isset($aData['requested_explicitely'])) // i.e. in the initial list of objects to delete
-						{
+				if (array_key_exists('issue', $aData)) {
+					if ($bAutoDel) {
+						if (isset($aData['requested_explicitely'])) { // i.e. in the initial list of objects to delete
 							$iCode = RestDelete::ISSUE;
 							$sPlanned = 'Cannot be deleted: '.$aData['issue'];
-						}
-						else
-						{
+						} else {
 							$iCode = RestDelete::AUTO_DELETE_ISSUE;
 							$sPlanned = 'Should be deleted automatically... but: '.$aData['issue'];
 						}
-					}
-					else
-					{
+					} else {
 						$iCode = RestDelete::REQUEST_EXPLICITELY;
 						$sPlanned = 'Must be deleted explicitely... but: '.$aData['issue'];
 					}
-				}
-				else
-				{
-					if ($bAutoDel)
-					{
-						if (isset($aData['requested_explicitely']))
-						{
+				} else {
+					if ($bAutoDel) {
+						if (isset($aData['requested_explicitely'])) {
 							$iCode = RestDelete::OK;
-		               $sPlanned = '';
-						}
-						else
-						{
+							$sPlanned = '';
+						} else {
 							$iCode = RestDelete::AUTO_DELETE;
 							$sPlanned = 'Deleted automatically';
 						}
-					}
-					else
-					{
+					} else {
 						$iCode = RestDelete::REQUEST_EXPLICITELY;
 						$sPlanned = 'Must be deleted explicitely';
 					}
@@ -877,60 +755,43 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 				$oResult->AddObject($iCode, $sPlanned, $oToDelete);
 			}
 		}
-		foreach ($oDeletionPlan->ListUpdates() as $sRemoteClass => $aToUpdate)
-		{
-			foreach ($aToUpdate as $iId => $aData)
-			{
+		foreach ($oDeletionPlan->ListUpdates() as $sRemoteClass => $aToUpdate) {
+			foreach ($aToUpdate as $iId => $aData) {
 				$oToUpdate = $aData['to_reset'];
-				if (array_key_exists('issue', $aData))
-				{
+				if (array_key_exists('issue', $aData)) {
 					$iCode = RestDelete::AUTO_UPDATE_ISSUE;
 					$sPlanned = 'Should be updated automatically... but: '.$aData['issue'];
-				}
-				else
-				{
+				} else {
 					$iCode = RestDelete::AUTO_UPDATE;
 					$sPlanned = 'Reset external keys: '.$aData['attributes_list'];
 				}
 				$oResult->AddObject($iCode, $sPlanned, $oToUpdate);
 			}
 		}
-		
-		if ($oDeletionPlan->FoundStopper())
-		{
-			if ($oDeletionPlan->FoundSecurityIssue())
-			{
+
+		if ($oDeletionPlan->FoundStopper()) {
+			if ($oDeletionPlan->FoundSecurityIssue()) {
 				$iRes = RestResult::UNAUTHORIZED;
 				$sRes = 'Deletion not allowed on some objects';
-			}
-			elseif ($oDeletionPlan->FoundManualOperation())
-			{
-				$iRes = RestResult::UNSAFE; 
+			} elseif ($oDeletionPlan->FoundManualOperation()) {
+				$iRes = RestResult::UNSAFE;
 				$sRes = 'The deletion requires that other objects be deleted/updated, and those operations must be requested explicitely';
-			}
-			else
-			{
-				$iRes = RestResult::INTERNAL_ERROR; 
+			} else {
+				$iRes = RestResult::INTERNAL_ERROR;
 				$sRes = 'Some issues have been encountered. See the list of planned changes for more information about the issue(s).';
-			}		
-		}
-		else
-		{
-			$iRes = RestResult::OK; 
+			}
+		} else {
+			$iRes = RestResult::OK;
 			$sRes = 'Deleted: '.count($aObjects);
 			$iIndirect = $oDeletionPlan->GetTargetCount() - count($aObjects);
-			if ($iIndirect > 0)
-			{
+			if ($iIndirect > 0) {
 				$sRes .= ' plus (for DB integrity) '.$iIndirect;
 			}
 		}
 		$oResult->code = $iRes;
-		if ($bSimulate)
-		{
+		if ($bSimulate) {
 			$oResult->message = 'SIMULATING: '.$sRes;
-		}
-		else
-		{
+		} else {
 			$oResult->message = $sRes;
 		}
 	}
@@ -953,46 +814,45 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
  */
 trait SanitizeTrait
 {
-    /**
-     * Sanitize a field if it is sensitive.
-     *
-     * @param array $fields The fields array
-     * @param string $sFieldAttCode The attribute code
-     * @param mixed $oAttDef The attribute definition
-     * @throws Exception
-     */
-    private function SanitizeFieldIfSensitive(array &$fields, string $sFieldAttCode, $fieldValue, $oAttDef): void
-    {
-        // for simple attribute
-        if ($oAttDef instanceof iAttributeNoGroupBy) { // iAttributeNoGroupBy is equivalent to sensitive attribute
-            $fields[$sFieldAttCode] = '*****';
-            return;
-        }
-        // for 1-n / n-n relation
-        if ($oAttDef instanceof AttributeLinkedSet) {
-            foreach ($fieldValue as $i => $aLnkValues) {
-                foreach ($aLnkValues as $sLnkAttCode => $sLnkValue) {
-                    $oLnkAttDef = MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $sLnkAttCode);
-                    if ($oLnkAttDef instanceof iAttributeNoGroupBy) { // 1-n relation
-                        $fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
-                    }
-                    elseif ($oAttDef instanceof AttributeLinkedSetIndirect && $oLnkAttDef instanceof AttributeExternalField) { // for n-n relation
-                        $oExtKeyAttDef = MetaModel::GetAttributeDef($oLnkAttDef->GetTargetClass(), $oLnkAttDef->GetExtAttCode());
-                        if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) {
-                            $fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
-                        }
-                    }
-                }
-            }
-            return;
-        }
+	/**
+	 * Sanitize a field if it is sensitive.
+	 *
+	 * @param array $fields The fields array
+	 * @param string $sFieldAttCode The attribute code
+	 * @param mixed $oAttDef The attribute definition
+	 * @throws Exception
+	 */
+	private function SanitizeFieldIfSensitive(array &$fields, string $sFieldAttCode, $fieldValue, $oAttDef): void
+	{
+		// for simple attribute
+		if ($oAttDef instanceof iAttributeNoGroupBy) { // iAttributeNoGroupBy is equivalent to sensitive attribute
+			$fields[$sFieldAttCode] = '*****';
+			return;
+		}
+		// for 1-n / n-n relation
+		if ($oAttDef instanceof AttributeLinkedSet) {
+			foreach ($fieldValue as $i => $aLnkValues) {
+				foreach ($aLnkValues as $sLnkAttCode => $sLnkValue) {
+					$oLnkAttDef = MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $sLnkAttCode);
+					if ($oLnkAttDef instanceof iAttributeNoGroupBy) { // 1-n relation
+						$fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
+					} elseif ($oAttDef instanceof AttributeLinkedSetIndirect && $oLnkAttDef instanceof AttributeExternalField) { // for n-n relation
+						$oExtKeyAttDef = MetaModel::GetAttributeDef($oLnkAttDef->GetTargetClass(), $oLnkAttDef->GetExtAttCode());
+						if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) {
+							$fields[$sFieldAttCode][$i][$sLnkAttCode] = '*****';
+						}
+					}
+				}
+			}
+			return;
+		}
 
-        // for external attribute
-        if ($oAttDef instanceof AttributeExternalField) {
-            $oExtKeyAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
-            if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) {
-                $fields[$sFieldAttCode] = '*****';
-            }
-        }
-    }
+		// for external attribute
+		if ($oAttDef instanceof AttributeExternalField) {
+			$oExtKeyAttDef = MetaModel::GetAttributeDef($oAttDef->GetTargetClass(), $oAttDef->GetExtAttCode());
+			if ($oExtKeyAttDef instanceof iAttributeNoGroupBy) {
+				$fields[$sFieldAttCode] = '*****';
+			}
+		}
+	}
 }

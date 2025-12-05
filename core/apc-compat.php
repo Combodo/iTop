@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2016-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -20,8 +21,7 @@
 // Note: for PHP < 7, this compatibility used to be provided by APCU itself (if compiled with some options)
 //       for PHP 7+, it can be provided by the mean of apcu_bc, which is not so simple to install
 //       The current emulation aims at skipping this complexity
-if (!function_exists('apc_store') && function_exists('apcu_store'))
-{
+if (!function_exists('apc_store') && function_exists('apcu_store')) {
 	function apc_add($key, $var, $ttl = 0)
 	{
 		return apcu_add($key, $var, $ttl);
@@ -74,25 +74,23 @@ if (!function_exists('apc_store') && function_exists('apcu_store'))
  */
 function apc_cache_info_compat()
 {
-	if (!function_exists('apc_cache_info')) return array();
+	if (!function_exists('apc_cache_info')) {
+		return [];
+	}
 
 	$oFunction = new ReflectionFunction('apc_cache_info');
-	if ($oFunction->getNumberOfParameters() != 2)
-	{
+	if ($oFunction->getNumberOfParameters() != 2) {
 		// Beware: APCu behaves slightly differently from APC !!
 		// Worse: the compatibility layer integrated into APC differs from apcu-bc (testing the number of parameters is a must)
 		// In CLI mode (PHP > 7) apc_cache_info returns null and outputs an error message.
 		$aCacheUserData = @apc_cache_info();
-	}
-	else
-	{
+	} else {
 		$aCacheUserData = @apc_cache_info('user');
 	}
 	return $aCacheUserData;
 }
 
 // Cache emulation
-if (!function_exists('apc_store'))
-{
+if (!function_exists('apc_store')) {
 	require_once(APPROOT.'core/apc-emulation.php');
 }

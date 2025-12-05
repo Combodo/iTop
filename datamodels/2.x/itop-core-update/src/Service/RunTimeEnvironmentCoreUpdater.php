@@ -1,9 +1,9 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 namespace Combodo\iTop\CoreUpdate\Service;
 
@@ -29,14 +29,11 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	{
 		parent::__construct($sEnvironment, $bAutoCommit);
 
-		if ($sEnvironment != $this->sTargetEnv)
-		{
-			if (is_dir(APPROOT.'/env-'.$this->sTargetEnv))
-			{
+		if ($sEnvironment != $this->sTargetEnv) {
+			if (is_dir(APPROOT.'/env-'.$this->sTargetEnv)) {
 				SetupUtils::rrmdir(APPROOT.'/env-'.$this->sTargetEnv);
 			}
-			if (is_dir(APPROOT.'/data/'.$this->sTargetEnv.'-modules'))
-			{
+			if (is_dir(APPROOT.'/data/'.$this->sTargetEnv.'-modules')) {
 				SetupUtils::rrmdir(APPROOT.'/data/'.$this->sTargetEnv.'-modules');
 			}
 			SetupUtils::copydir(APPROOT.'/data/'.$sEnvironment.'-modules', APPROOT.'/data/'.$this->sTargetEnv.'-modules');
@@ -63,17 +60,14 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	 */
 	public static function CheckDirectory($sDir)
 	{
-		if (!is_dir($sDir))
-		{
-			if (!@mkdir($sDir,0770))
-			{
+		if (!is_dir($sDir)) {
+			if (!@mkdir($sDir, 0770)) {
 				throw new Exception('Creating directory '.$sDir.' is denied (Check access rights)');
 			}
 		}
 		// Try create a file
 		$sTempFile = $sDir.'/__itop_temp_file__';
-		if (!@touch($sTempFile))
-		{
+		if (!@touch($sTempFile)) {
 			throw new Exception('Write access to '.$sDir.' is denied (Check access rights)');
 		}
 		@unlink($sTempFile);
@@ -93,8 +87,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 
 		$oConfig->UpdateIncludes('env-'.$this->sTargetEnv);
 
-		if (is_null($sEnvironmentLabel))
-		{
+		if (is_null($sEnvironmentLabel)) {
 			$sEnvironmentLabel = $this->sTargetEnv;
 		}
 		$oConfig->Set('app_env_label', $sEnvironmentLabel, 'application updater');
@@ -110,19 +103,14 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	 */
 	protected function GetConfig($sEnvironment = null)
 	{
-		if (is_null($sEnvironment))
-		{
+		if (is_null($sEnvironment)) {
 			$sEnvironment = $this->sTargetEnv;
 		}
 		$sFile = APPCONF.$sEnvironment.'/'.ITOP_CONFIG_FILE;
-		if (file_exists($sFile))
-		{
-			try
-			{
+		if (file_exists($sFile)) {
+			try {
 				return new Config($sFile);
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 			}
 		}
 		throw new Exception('No configuration file available');
@@ -134,8 +122,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 
 		// Add new mandatory modules from datamodel 2.x only
 		$sSourceDirFull = APPROOT.$sSourceDir;
-		if (!is_dir($sSourceDirFull))
-		{
+		if (!is_dir($sSourceDirFull)) {
 			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
 		}
 		$aDirsToCompile = [$sSourceDirFull];
@@ -148,7 +135,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 			$aAvailableModules[$oModule->GetName()] = $oModule;
 		}
 		// TODO check the auto-selected modules here
-		foreach($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
+		foreach ($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
 			if ($oExtension->bMarkedAsChosen) {
 				foreach ($oExtension->aModules as $sModuleName) {
 					if (!isset($aRet[$sModuleName]) && isset($aAvailableModules[$sModuleName])) {

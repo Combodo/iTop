@@ -5,7 +5,7 @@ You want to contribute to iTop? Many thanks to you! 🎉 👍
 Here are some guidelines that will help us integrate your work!
 
 
-## Contributions
+
 
 ### Subjects
 You are welcome to create pull requests on any of those subjects:
@@ -161,4 +161,4 @@ We have one sticker per contribution type. You might get multiple stickers with 
 
 Here is the design of each stickers for year 2024:
 
-![iTop stickers 2024](.doc/contributing-guide/2024.contributing-stickers-side-by-side.png)
+![iTop stickers 2025](.doc/contributing-guide/2025.contributing-stickers-side-by-side.png)

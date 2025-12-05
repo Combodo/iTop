@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SARL
  *
@@ -16,7 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Newsroom:iTopNotification:Label' => ITOP_APPLICATION_SHORT,
 	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Your '.ITOP_APPLICATION_SHORT.' news~~',
 	'UI:Newsroom:iTopNotification:ViewAllPage:SubTitle' => 'Manage your news, flag them as read or unread, delete them, etc.~~',
@@ -58,4 +59,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message' => '没有可删除的消息',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message' => '消息已删除',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteMultiple:Success:Message' => '已删除 %1$s 条消息',
-));
+]);

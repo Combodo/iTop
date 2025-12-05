@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'bkp-backup-running' => 'A backup is running. Please wait...~~',
 	'bkp-restore-running' => 'A restore is running. Please wait...~~',
 	'Menu:BackupStatus' => 'Backups~~',
@@ -44,4 +45,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'bkp-wait-backup' => 'Please wait for the backup to complete...~~',
 	'bkp-wait-restore' => 'Please wait for the restore to complete...~~',
 	'bkp-success-restore' => 'Restore successfully completed.~~',
-));
+]);

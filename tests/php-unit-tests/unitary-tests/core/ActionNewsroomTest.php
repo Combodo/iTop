@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -31,21 +32,21 @@ use MissingQueryArgument;
 use MySQLException;
 use MySQLHasGoneAwayException;
 
-
 class ActionNewsroomTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
+	public const CREATE_TEST_ORG = true;
 	private int $iTrigger;
 	private int $iRecipientId;
 
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->iTrigger = $this->GivenObjectInDB('TriggerOnObjectCreate',
-			array(
+		$this->iTrigger = $this->GivenObjectInDB(
+			'TriggerOnObjectCreate',
+			[
 				'description' => '[TEST] TriggerOnObjectCreate',
 				'target_class' => 'UserRequest',
-			)
+			]
 		);
 		$this->iRecipientId = $this->GivenPersonInDB(1);
 	}
@@ -54,7 +55,7 @@ class ActionNewsroomTest extends ItopDataTestCase
 	{
 		return [
 			'With Sync ActionNewsroom' => ['bIsAsynchronous' => false],
-			'With Async ActionNewsroom' => ['bIsAsynchronous' => true]
+			'With Async ActionNewsroom' => ['bIsAsynchronous' => true],
 		];
 	}
 
@@ -71,7 +72,8 @@ class ActionNewsroomTest extends ItopDataTestCase
 	{
 		$iActionNewsroomId = $this->GivenActionNewsroomInDB(false, 'Body of the notification');
 
-		$this->CreateUserRequest(1,
+		$this->CreateUserRequest(
+			1,
 			[
 				'title'       => '[TEST] ActionNewsroom',
 				'org_id'      => $this->getTestOrgId(),
@@ -85,7 +87,7 @@ class ActionNewsroomTest extends ItopDataTestCase
 			[
 				'action_id' => $iActionNewsroomId,
 				'message' => 'Body of the notification',
-				'title' => 'Title'
+				'title' => 'Title',
 			]
 		);
 	}
@@ -99,13 +101,14 @@ class ActionNewsroomTest extends ItopDataTestCase
 	{
 		$iActionNewsroomId = $this->GivenActionNewsroomInDB($bIsAsynchronous, '$this->service_name$');
 
-		$this->CreateUserRequest(1,
+		$this->CreateUserRequest(
+			1,
 			[
 				'title'       => '[TEST] ActionNewsroom',
 				'org_id'      => $this->getTestOrgId(),
 				'caller_id'   => $this->iRecipientId,
 				'description' => 'PHPUnit Test',
-				'service_id' => 0
+				'service_id' => 0,
 			]
 		);
 
@@ -114,7 +117,7 @@ class ActionNewsroomTest extends ItopDataTestCase
 			[
 				'action_id' => $iActionNewsroomId,
 				'title' => 'Notification not sent',
-				'message' => 'An error occurred while saving the notification'
+				'message' => 'An error occurred while saving the notification',
 			]
 		);
 	}
@@ -129,7 +132,7 @@ class ActionNewsroomTest extends ItopDataTestCase
 			'password' => 'admin_123',
 			'language' => 'EN US',
 			'profile_list' => ['profileid:'.self::$aURP_Profiles['Administrator']],
-			'contactid' => $this->iRecipientId
+			'contactid' => $this->iRecipientId,
 		]);
 
 		return $this->GivenObjectInDB('ActionNewsroom', [
@@ -141,7 +144,7 @@ class ActionNewsroomTest extends ItopDataTestCase
 			'recipients' => "SELECT Person WHERE id = $this->iRecipientId",
 			'asynchronous' => $bIsAsynchronous ? 'yes' : 'no',
 			'trigger_list' => [
-				"trigger_id:$this->iTrigger"
+				"trigger_id:$this->iTrigger",
 			],
 		]);
 	}
@@ -151,9 +154,11 @@ class ActionNewsroomTest extends ItopDataTestCase
 	 */
 	private function GivenService(string $sName): int
 	{
-		return $this->GivenObjectInDB('Service', [
+		return $this->GivenObjectInDB(
+			'Service',
+			[
 				'name' => $sName,
-				'org_id' => $this->getTestOrgId()
+				'org_id' => $this->getTestOrgId(),
 			]
 		);
 	}

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Logo da organização',
 	'UI:Layout:NavigationMenu:Silo:Label' => 'Selecione a organização para filtrar',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expandir / Recolher',
@@ -23,4 +24,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Abrir menu do usuário',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filtrar entradas de menu',
 
-));
+]);

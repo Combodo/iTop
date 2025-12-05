@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -51,8 +52,10 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(),
-			array("allowed_values", "depends_on", "linked_class", "ext_key_to_me", "count_min", "count_max"));
+		return array_merge(
+			parent::ListExpectedParams(),
+			["allowed_values", "depends_on", "linked_class", "ext_key_to_me", "count_min", "count_max"]
+		);
 	}
 
 	public function GetEditClass()
@@ -228,7 +231,7 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -255,10 +258,10 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		if (is_object($sValue) && ($sValue instanceof ormLinkSet)) {
 			$sValue->Rewind();
-			$aItems = array();
+			$aItems = [];
 			while ($oObj = $sValue->Fetch()) {
 				// Show only relevant information (hide the external key to the current object)
-				$aAttributes = array();
+				$aAttributes = [];
 				foreach (MetaModel::ListAttributeDefs($this->GetLinkedClass()) as $sAttCode => $oAttDef) {
 					if ($sAttCode == $this->GetExtKeyToMe()) {
 						continue;
@@ -293,8 +296,7 @@ class AttributeLinkedSet extends AttributeDefinition
 			$oLinkSetBlock = new BlockLinkSetDisplayAsProperty($this->GetCode(), $this, $sValue);
 
 			return ConsoleBlockRenderer::RenderBlockTemplates($oLinkSetBlock);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$sMessage = "Error while displaying attribute {$this->GetCode()}";
 			IssueLog::Error($sMessage, IssueLog::CHANNEL_DEFAULT, [
 				'host_object_class' => $this->GetHostClass(),
@@ -375,10 +377,13 @@ class AttributeLinkedSet extends AttributeDefinition
 	 * @throws CoreException
 	 */
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		$sSepItem = MetaModel::GetConfig()->Get('link_set_item_separator');
 		$sSepAttribute = MetaModel::GetConfig()->Get('link_set_attribute_separator');
 		$sSepValue = MetaModel::GetConfig()->Get('link_set_value_separator');
@@ -386,11 +391,11 @@ class AttributeLinkedSet extends AttributeDefinition
 
 		if (is_object($sValue) && ($sValue instanceof ormLinkSet)) {
 			$sValue->Rewind();
-			$aItems = array();
+			$aItems = [];
 			while ($oObj = $sValue->Fetch()) {
 				$sObjClass = get_class($oObj);
 				// Show only relevant information (hide the external key to the current object)
-				$aAttributes = array();
+				$aAttributes = [];
 				foreach (MetaModel::ListAttributeDefs($sObjClass) as $sAttCode => $oAttDef) {
 					if ($sAttCode == 'finalclass') {
 						if ($sObjClass == $this->GetLinkedClass()) {
@@ -412,8 +417,11 @@ class AttributeLinkedSet extends AttributeDefinition
 					}
 					$sAttValue = $oObj->GetAsCSV($sAttCode, $sSepValue, '', $bLocalize);
 					if (strlen($sAttValue) > 0) {
-						$sAttributeData = str_replace($sAttributeQualifier, $sAttributeQualifier.$sAttributeQualifier,
-							$sAttCode.$sSepValue.$sAttValue);
+						$sAttributeData = str_replace(
+							$sAttributeQualifier,
+							$sAttributeQualifier.$sAttributeQualifier,
+							$sAttCode.$sSepValue.$sAttValue
+						);
 						$aAttributes[] = $sAttributeQualifier.$sAttributeData.$sAttributeQualifier;
 					}
 				}
@@ -435,10 +443,10 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function EnumTemplateVerbs()
 	{
-		return array(
+		return [
 			''     => 'Plain text (unlocalized) representation',
 			'html' => 'HTML representation (unordered list)',
-		);
+		];
 	}
 
 	/**
@@ -461,7 +469,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		$oLinkSet = clone $value; // Workaround/Safety net for Trac #887
 		$iLimit = MetaModel::GetConfig()->Get('max_linkset_output');
 		$iCount = 0;
-		$aNames = array();
+		$aNames = [];
 		foreach ($oLinkSet as $oItem) {
 			if (($iLimit > 0) && ($iCount == $iLimit)) {
 				$iTotal = $oLinkSet->Count();
@@ -491,7 +499,7 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetImportColumns()
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode()] = 'MEDIUMTEXT'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
@@ -515,10 +523,13 @@ class AttributeLinkedSet extends AttributeDefinition
 	 * @throws Exception
 	 */
 	public function MakeValueFromString(
-		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
+		$sProposedValue,
+		$bLocalizedValue = false,
+		$sSepItem = null,
+		$sSepAttribute = null,
+		$sSepValue = null,
 		$sAttributeQualifier = null
-	)
-	{
+	) {
 		if (is_null($sSepItem) || empty($sSepItem)) {
 			$sSepItem = MetaModel::GetConfig()->Get('link_set_item_separator');
 		}
@@ -539,16 +550,16 @@ class AttributeLinkedSet extends AttributeDefinition
 
 		$aInput = $oCSVParser->ToArray(0 /* do not skip lines */);
 
-		$aLinks = array();
+		$aLinks = [];
 		foreach ($aInput as $aRow) {
 			// 1st - get the values, split the extkey->searchkey specs, and eventually get the finalclass value
-			$aExtKeys = array();
-			$aValues = array();
+			$aExtKeys = [];
+			$aValues = [];
 			foreach ($aRow as $sCell) {
 				$iSepPos = strpos($sCell, $sSepValue);
 				if ($iSepPos === false) {
 					// Houston...
-					throw new CoreException('Wrong format for link attribute specification', array('value' => $sCell));
+					throw new CoreException('Wrong format for link attribute specification', ['value' => $sCell]);
 				}
 
 				$sAttCode = trim(substr($sCell, 0, $iSepPos));
@@ -559,24 +570,36 @@ class AttributeLinkedSet extends AttributeDefinition
 					$sRemoteAttCode = $aMatches[2];
 					$aExtKeys[$sKeyAttCode][$sRemoteAttCode] = $sValue;
 					if (!MetaModel::IsValidAttCode($sTargetClass, $sKeyAttCode)) {
-						throw new CoreException('Wrong attribute code for link attribute specification',
-							array('class' => $sTargetClass, 'attcode' => $sKeyAttCode));
+						throw new CoreException(
+							'Wrong attribute code for link attribute specification',
+							['class' => $sTargetClass, 'attcode' => $sKeyAttCode]
+						);
 					}
 					/** @var \AttributeExternalKey $oKeyAttDef */
 					$oKeyAttDef = MetaModel::GetAttributeDef($sTargetClass, $sKeyAttCode);
 					$sRemoteClass = $oKeyAttDef->GetTargetClass();
 					if (!MetaModel::IsValidAttCode($sRemoteClass, $sRemoteAttCode)) {
-						throw new CoreException('Wrong attribute code for link attribute specification',
-							array('class' => $sRemoteClass, 'attcode' => $sRemoteAttCode));
+						throw new CoreException(
+							'Wrong attribute code for link attribute specification',
+							['class' => $sRemoteClass, 'attcode' => $sRemoteAttCode]
+						);
 					}
 				} else {
 					if (!MetaModel::IsValidAttCode($sTargetClass, $sAttCode)) {
-						throw new CoreException('Wrong attribute code for link attribute specification',
-							array('class' => $sTargetClass, 'attcode' => $sAttCode));
+						throw new CoreException(
+							'Wrong attribute code for link attribute specification',
+							['class' => $sTargetClass, 'attcode' => $sAttCode]
+						);
 					}
 					$oAttDef = MetaModel::GetAttributeDef($sTargetClass, $sAttCode);
-					$aValues[$sAttCode] = $oAttDef->MakeValueFromString($sValue, $bLocalizedValue, $sSepItem,
-						$sSepAttribute, $sSepValue, $sAttributeQualifier);
+					$aValues[$sAttCode] = $oAttDef->MakeValueFromString(
+						$sValue,
+						$bLocalizedValue,
+						$sSepItem,
+						$sSepAttribute,
+						$sSepValue,
+						$sAttributeQualifier
+					);
 				}
 			}
 
@@ -584,8 +607,10 @@ class AttributeLinkedSet extends AttributeDefinition
 			if (isset($aValues['finalclass'])) {
 				$sLinkClass = $aValues['finalclass'];
 				if (!is_subclass_of($sLinkClass, $sTargetClass)) {
-					throw new CoreException('Wrong class for link attribute specification',
-						array('requested_class' => $sLinkClass, 'expected_class' => $sTargetClass));
+					throw new CoreException(
+						'Wrong class for link attribute specification',
+						['requested_class' => $sLinkClass, 'expected_class' => $sTargetClass]
+					);
 				}
 			} elseif (MetaModel::IsAbstract($sTargetClass)) {
 				throw new CoreException('Missing finalclass for link attribute specification');
@@ -603,7 +628,7 @@ class AttributeLinkedSet extends AttributeDefinition
 				$oKeyAttDef = MetaModel::GetAttributeDef($sTargetClass, $sKeyAttCode);
 				$sKeyClass = $oKeyAttDef->GetTargetClass();
 				$oExtKeyFilter = new DBObjectSearch($sKeyClass);
-				$aReconciliationDesc = array();
+				$aReconciliationDesc = [];
 				foreach ($aReconciliation as $sRemoteAttCode => $sValue) {
 					$oExtKeyFilter->AddCondition($sRemoteAttCode, $sValue, '=');
 					$aReconciliationDesc[] = "$sRemoteAttCode=$sValue";
@@ -612,8 +637,10 @@ class AttributeLinkedSet extends AttributeDefinition
 				switch ($oExtKeySet->Count()) {
 					case 0:
 						$sReconciliationDesc = implode(', ', $aReconciliationDesc);
-						throw new CoreException("Found no match",
-							array('ext_key' => $sKeyAttCode, 'reconciliation' => $sReconciliationDesc));
+						throw new CoreException(
+							"Found no match",
+							['ext_key' => $sKeyAttCode, 'reconciliation' => $sReconciliationDesc]
+						);
 						break;
 					case 1:
 						$oRemoteObj = $oExtKeySet->Fetch();
@@ -621,19 +648,23 @@ class AttributeLinkedSet extends AttributeDefinition
 						break;
 					default:
 						$sReconciliationDesc = implode(', ', $aReconciliationDesc);
-						throw new CoreException("Found several matches",
-							array('ext_key' => $sKeyAttCode, 'reconciliation' => $sReconciliationDesc));
-					// Found several matches, ambiguous
+						throw new CoreException(
+							"Found several matches",
+							['ext_key' => $sKeyAttCode, 'reconciliation' => $sReconciliationDesc]
+						);
+						// Found several matches, ambiguous
 				}
 			}
 
 			// Check (roughly) if such a link is valid
-			$aErrors = array();
+			$aErrors = [];
 			foreach (MetaModel::ListAttributeDefs($sTargetClass) as $sAttCode => $oAttDef) {
 				if ($oAttDef->IsExternalKey()) {
 					/** @var \AttributeExternalKey $oAttDef */
-					if (($oAttDef->GetTargetClass() == $this->GetHostClass()) || (is_subclass_of($this->GetHostClass(),
-							$oAttDef->GetTargetClass()))) {
+					if (($oAttDef->GetTargetClass() == $this->GetHostClass()) || (is_subclass_of(
+						$this->GetHostClass(),
+						$oAttDef->GetTargetClass()
+					))) {
 						continue; // Don't check the key to self
 					}
 				}
@@ -660,13 +691,13 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function GetForJSON($value)
 	{
-		$aRet = array();
+		$aRet = [];
 		if (is_object($value) && ($value instanceof ormLinkSet)) {
 			$value->Rewind();
 			while ($oObj = $value->Fetch()) {
 				$sObjClass = get_class($oObj);
 				// Show only relevant information (hide the external key to the current object)
-				$aAttributes = array();
+				$aAttributes = [];
 				foreach (MetaModel::ListAttributeDefs($sObjClass) as $sAttCode => $oAttDef) {
 					if ($sAttCode == 'finalclass') {
 						if ($sObjClass == $this->GetLinkedClass()) {
@@ -708,13 +739,15 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		$sTargetClass = $this->Get('linked_class');
 
-		$aLinks = array();
+		$aLinks = [];
 		foreach ($json as $aValues) {
 			if (isset($aValues['finalclass'])) {
 				$sLinkClass = $aValues['finalclass'];
 				if (!is_subclass_of($sLinkClass, $sTargetClass)) {
-					throw new CoreException('Wrong class for link attribute specification',
-						array('requested_class' => $sLinkClass, 'expected_class' => $sTargetClass));
+					throw new CoreException(
+						'Wrong class for link attribute specification',
+						['requested_class' => $sLinkClass, 'expected_class' => $sTargetClass]
+					);
 				}
 			} elseif (MetaModel::IsAbstract($sTargetClass)) {
 				throw new CoreException('Missing finalclass for link attribute specification');
@@ -728,12 +761,14 @@ class AttributeLinkedSet extends AttributeDefinition
 			}
 
 			// Check (roughly) if such a link is valid
-			$aErrors = array();
+			$aErrors = [];
 			foreach (MetaModel::ListAttributeDefs($sTargetClass) as $sAttCode => $oAttDef) {
 				if ($oAttDef->IsExternalKey()) {
 					/** @var AttributeExternalKey $oAttDef */
-					if (($oAttDef->GetTargetClass() == $this->GetHostClass()) || (is_subclass_of($this->GetHostClass(),
-							$oAttDef->GetTargetClass()))) {
+					if (($oAttDef->GetTargetClass() == $this->GetHostClass()) || (is_subclass_of(
+						$this->GetHostClass(),
+						$oAttDef->GetTargetClass()
+					))) {
 						continue; // Don't check the key to self
 					}
 				}
@@ -764,7 +799,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		if ($proposedValue === null) {
 			$sLinkedClass = $this->GetLinkedClass();
-			$aLinkedObjectsArray = array();
+			$aLinkedObjectsArray = [];
 			$oSet = DBObjectSet::FromArray($sLinkedClass, $aLinkedObjectsArray);
 
 			return new ormLinkSet(
@@ -848,10 +883,10 @@ class AttributeLinkedSet extends AttributeDefinition
 		// - Adding friendlyname attribute to the list is not already in it
 		$sTitleAttCode = MetaModel::GetFriendlyNameAttributeCode($sTargetClass);
 		if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay)) {
-			$aAttCodesToDisplay = array_merge(array($sTitleAttCode), $aAttCodesToDisplay);
+			$aAttCodesToDisplay = array_merge([$sTitleAttCode], $aAttCodesToDisplay);
 		}
 		// - Adding attribute properties
-		$aAttributesToDisplay = array();
+		$aAttributesToDisplay = [];
 		foreach ($aAttCodesToDisplay as $sAttCodeToDisplay) {
 			$oAttDefToDisplay = MetaModel::GetAttributeDef($sTargetClass, $sAttCodeToDisplay);
 			$aAttributesToDisplay[$sAttCodeToDisplay] = [
@@ -864,7 +899,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		// Append lnk attributes (filtered from zlist)
 		if ($this->IsIndirect()) {
 			$aLnkAttDefToDisplay = MetaModel::GetZListAttDefsFilteredForIndirectLinkClass($this->m_sHostClass, $this->m_sCode);
-			$aLnkAttributesToDisplay = array();
+			$aLnkAttributesToDisplay = [];
 			foreach ($aLnkAttDefToDisplay as $oLnkAttDefToDisplay) {
 				$aLnkAttributesToDisplay[$oLnkAttDefToDisplay->GetCode()] = [
 					'att_code'  => $oLnkAttDefToDisplay->GetCode(),
@@ -930,8 +965,7 @@ class AttributeLinkedSet extends AttributeDefinition
 			} else {
 				return $sDefault;
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			ExceptionLog::LogException($e);
 
 			return $sDefault;

@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -30,7 +31,7 @@ use Combodo\iTop\Renderer\BlockRenderer;
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class UIHTMLEditorWidget 
+class UIHTMLEditorWidget
 {
 	protected $m_iId;
 	protected $m_oAttDef;
@@ -41,7 +42,7 @@ class UIHTMLEditorWidget
 	protected $m_sValidationField;
 	protected $m_sValue;
 	protected $m_sMandatory;
-	
+
 	public function __construct($iInputId, $oAttDef, $sNameSuffix, $sFieldPrefix, $sHelpText, $sValidationField, $sValue, $sMandatory)
 	{
 		$this->m_iId = $iInputId;
@@ -54,7 +55,7 @@ class UIHTMLEditorWidget
 		$this->m_sMandatory = $sMandatory;
 		$this->m_sFieldPrefix = $sFieldPrefix;
 	}
-	
+
 	/**
 	 * Get the HTML fragment corresponding to the HTML editor widget
 	 *
@@ -63,7 +64,7 @@ class UIHTMLEditorWidget
 	 *
 	 * @return string The HTML fragment to be inserted into the page
 	 */
-	public function Display(WebPage $oPage, array $aArgs = array()) : string
+	public function Display(WebPage $oPage, array $aArgs = []): string
 	{
 		$iId = $this->m_iId;
 		$sCode = $this->m_sAttCode.$this->m_sNameSuffix;

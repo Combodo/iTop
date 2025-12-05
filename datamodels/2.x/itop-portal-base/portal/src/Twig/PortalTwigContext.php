@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -16,7 +17,6 @@ namespace Combodo\iTop\Portal\Twig;
  */
 class PortalTwigContext
 {
-
 	private array $aBlockExtension;
 
 	public function __construct()
@@ -35,7 +35,7 @@ class PortalTwigContext
 	 *
 	 * @since iTop 3.2.1
 	 */
-	function AddBlockExtension(string $sBlockName, PortalBlockExtension $oBlockExtension): void
+	public function AddBlockExtension(string $sBlockName, PortalBlockExtension $oBlockExtension): void
 	{
 		$this->aBlockExtension[$sBlockName] = $oBlockExtension;
 	}

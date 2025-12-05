@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -18,7 +19,7 @@ use Dict;
  */
 class AttributeBoolean extends AttributeInteger
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -97,8 +98,11 @@ class AttributeBoolean extends AttributeInteger
 		} else {
 			$sValue = $bValue ? 'yes' : 'no';
 			$sDefault = Dict::S('Core:'.get_class($this).'/Value:'.$sValue.'+');
-			$sDescription = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue.'+', $sDefault,
-				true /*user lang*/);
+			$sDescription = $this->SearchLabel(
+				'/Attribute:'.$this->m_sCode.'/Value:'.$sValue.'+',
+				$sDefault,
+				true /*user lang*/
+			);
 		}
 
 		return $sDescription;
@@ -135,10 +139,13 @@ class AttributeBoolean extends AttributeInteger
 	}
 
 	public function GetAsCSV(
-		$bValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$bValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		if (is_null($bValue)) {
 			$sFinalValue = '';
 		} elseif ($bLocalize) {
@@ -170,7 +177,7 @@ class AttributeBoolean extends AttributeInteger
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
 
-		$oFormField->SetChoices(array('yes' => $this->GetValueLabel(true), 'no' => $this->GetValueLabel(false)));
+		$oFormField->SetChoices(['yes' => $this->GetValueLabel(true), 'no' => $this->GetValueLabel(false)]);
 		parent::MakeFormField($oObject, $oFormField);
 
 		return $oFormField;
@@ -191,10 +198,13 @@ class AttributeBoolean extends AttributeInteger
 	}
 
 	public function MakeValueFromString(
-		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
+		$sProposedValue,
+		$bLocalizedValue = false,
+		$sSepItem = null,
+		$sSepAttribute = null,
+		$sSepValue = null,
 		$sAttributeQualifier = null
-	)
-	{
+	) {
 		$sInput = mb_strtolower(trim($sProposedValue));
 		if ($bLocalizedValue) {
 			switch ($sInput) {
@@ -238,7 +248,7 @@ class AttributeBoolean extends AttributeInteger
 		return CMDBChangeOpSetAttributeScalar::class;
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = ''): array
+	public function GetAllowedValues($aArgs = [], $sContains = ''): array
 	{
 		return [
 			0 => $this->GetValueLabel(false),

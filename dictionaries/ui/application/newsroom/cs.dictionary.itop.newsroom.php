@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SARL
  *
@@ -16,7 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI:Newsroom:iTopNotification:Label' => ITOP_APPLICATION_SHORT,
 	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Vaše '.ITOP_APPLICATION_SHORT.' novinky',
 	'UI:Newsroom:iTopNotification:ViewAllPage:SubTitle' => 'Spravujte oznámení, označujte je jako přečtené, smažte je, atd.',
@@ -58,4 +59,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message' => 'Žádné novinky nelze smazat',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message' => 'Novinky byly smazány',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteMultiple:Success:Message' => '%1$s novinek bylo smazáno',
-));
+]);

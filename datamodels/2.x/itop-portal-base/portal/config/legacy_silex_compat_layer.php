@@ -58,22 +58,21 @@ $oKPI->ComputeAndReport('Load portal lists definition');
 // A dedicated listener 'CssFromSassCompiler' exists to compile files again when by-passing HTTP cache.
 // This is to keep developers comfort when tuning the SCSS files.
 $oKPI = new ExecutionKPI();
-$aImportPaths = array($_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/');
+$aImportPaths = [$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/'];
 $aPortalConf = $container->getParameter('combodo.portal.instance.conf');
-foreach ($aPortalConf['properties']['themes'] as $sKey => $value)
-{
-	if (!is_array($value))
-	{
-		$aPortalConf['properties']['themes'][$sKey] = utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$value,
-				$aImportPaths);
-	}
-	else
-	{
-		$aValues = array();
-		foreach ($value as $sSubValue)
-		{
-			$aValues[] = utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$sSubValue,
-					$aImportPaths);
+foreach ($aPortalConf['properties']['themes'] as $sKey => $value) {
+	if (!is_array($value)) {
+		$aPortalConf['properties']['themes'][$sKey] = utils::GetCSSFromSASS(
+			'env-'.utils::GetCurrentEnvironment().'/'.$value,
+			$aImportPaths
+		);
+	} else {
+		$aValues = [];
+		foreach ($value as $sSubValue) {
+			$aValues[] = utils::GetCSSFromSASS(
+				'env-'.utils::GetCurrentEnvironment().'/'.$sSubValue,
+				$aImportPaths
+			);
 		}
 		$aPortalConf['properties']['themes'][$sKey] = $aValues;
 	}

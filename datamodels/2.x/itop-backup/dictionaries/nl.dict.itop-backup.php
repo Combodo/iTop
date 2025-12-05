@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'bkp-backup-running' => 'Er wordt een backup gemaakt. Even geduld...',
 	'bkp-restore-running' => 'Er wordt een herstel uitgevoerd. Even geduld...',
 	'Menu:BackupStatus' => 'Geplande backups',
@@ -45,4 +46,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'bkp-wait-backup' => 'Wacht tot de backup gemaakt is...',
 	'bkp-wait-restore' => 'Wacht tot de backup hersteld is...',
 	'bkp-success-restore' => 'Herstel is succesvol voltooid.',
-));
+]);

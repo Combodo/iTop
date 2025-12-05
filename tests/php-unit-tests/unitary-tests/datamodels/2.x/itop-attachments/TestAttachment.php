@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 namespace Combodo\iTop\Test\UnitTest\Module\ItopAttachment;
 
 use Combodo\iTop\Service\Events\EventData;
@@ -13,7 +15,7 @@ class TestAttachment extends ItopDataTestCase
 {
 	private string $sAddAttachmentName;
 	private string $sRemoveAttachmentName;
-	const CREATE_TEST_ORG = true;
+	public const CREATE_TEST_ORG = true;
 
 	public function setUp(): void
 	{

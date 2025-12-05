@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Organization' => 'Organização',
 	'Class:Organization+' => '',
 	'Class:Organization/Attribute:name' => 'Nome',
@@ -23,7 +24,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Organization/Attribute:status/Value:active+' => '',
 	'Class:Organization/Attribute:status/Value:inactive' => 'Inativo',
 	'Class:Organization/Attribute:status/Value:inactive+' => '',
-	'Class:Organization/Attribute:parent_id' => 'Pai',
+	'Class:Organization/Attribute:parent_id' => 'Organização pai',
 	'Class:Organization/Attribute:parent_id+' => 'Organização pai',
 	'Class:Organization/Attribute:parent_name' => 'Organização pai',
 	'Class:Organization/Attribute:parent_name+' => 'Nome da organização pai',
@@ -31,19 +32,19 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nome do modelo de entrega',
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
-	'Class:Organization/Attribute:parent_id_friendlyname' => 'Pai (nome amigável)',
+	'Class:Organization/Attribute:parent_id_friendlyname' => 'Organização pai (nome amigável)',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Nome amigável da organização pai',
 	'Class:Organization/Attribute:overview' => 'Visão geral',
-	'Organization:Overview:FunctionalCIs' => 'Itens de configuração associadas à esta organização',
+	'Organization:Overview:FunctionalCIs' => 'Itens de Configuração (ICs) associados à esta Organização',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'por tipo',
-	'Organization:Overview:Users' => 'Usuários do '.ITOP_APPLICATION_SHORT.' associados à esta organização',
-));
+	'Organization:Overview:Users' => 'Usuários do '.ITOP_APPLICATION_SHORT.' associados à esta Organização',
+]);
 
 //
 // Class: Location
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Location' => 'Localização',
 	'Class:Location+' => 'Qualquer tipo de localização: Região, País, Cidade, Lugar, Edifício, Andar, Sala, Rack, etc.',
 	'Class:Location/Attribute:name' => 'Nome',
@@ -67,16 +68,16 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Location/Attribute:country' => 'País',
 	'Class:Location/Attribute:country+' => '',
 	'Class:Location/Attribute:physicaldevice_list' => 'Dispositivos',
-	'Class:Location/Attribute:physicaldevice_list+' => 'Todos os dispositivos associados à esta localização',
+	'Class:Location/Attribute:physicaldevice_list+' => 'Todos os Dispositivos associados à esta Localização',
 	'Class:Location/Attribute:person_list' => 'Contatos',
-	'Class:Location/Attribute:person_list+' => 'Todos os contatos associados à esta localização',
-));
+	'Class:Location/Attribute:person_list+' => 'Todos os Contatos associados à esta Localização',
+]);
 
 //
 // Class: Contact
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Contact' => 'Contato',
 	'Class:Contact+' => '',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s~~',
@@ -105,24 +106,24 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Contact/Attribute:function' => 'Função',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'ICs',
-	'Class:Contact/Attribute:cis_list+' => 'Todos os itens de configuração associados a este contato',
+	'Class:Contact/Attribute:cis_list+' => 'Todos os Itens de Configuração (ICs) associados à este Contato',
 	'Class:Contact/Attribute:finalclass' => 'Tipo de contato',
 	'Class:Contact/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: Person
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Person' => 'Pessoa',
 	'Class:Person+' => '',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s~~',
-	'Class:Person/Attribute:name' => 'Último nome',
+	'Class:Person/Attribute:name' => 'Sobrenome',
 	'Class:Person/Attribute:name+' => '',
-	'Class:Person/Attribute:first_name' => 'Primeiro nome',
+	'Class:Person/Attribute:first_name' => 'Nome',
 	'Class:Person/Attribute:first_name+' => '',
-	'Class:Person/Attribute:employee_number' => 'Número de colaborador',
+	'Class:Person/Attribute:employee_number' => 'Matrícula do colaborador',
 	'Class:Person/Attribute:employee_number+' => '',
 	'Class:Person/Attribute:mobile_phone' => 'Celular',
 	'Class:Person/Attribute:mobile_phone+' => '',
@@ -135,9 +136,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Person/Attribute:manager_name' => 'Nome do gerente',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => 'Equipes',
-	'Class:Person/Attribute:team_list+' => 'Todas as equipes que essa pessoa pertence',
+	'Class:Person/Attribute:team_list+' => 'Todas as Equipes que esta Pessoa pertence',
 	'Class:Person/Attribute:tickets_list' => 'Solicitações',
-	'Class:Person/Attribute:tickets_list+' => 'Todos as solicitações que essa pessoa solicitou',
+	'Class:Person/Attribute:tickets_list+' => 'Todas as Solicitações que esta Pessoa solicitou',
 	'Class:Person/Attribute:user_list' => 'Users~~',
 	'Class:Person/Attribute:user_list+' => 'All the Users associated to this person~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Nome amigável do gerente',
@@ -149,27 +150,34 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Person/UniquenessRule:name+' => 'O nome do colaborador deve ser único dentro de sua organização',
 	'Class:Person/UniquenessRule:name' => 'Já existe uma pessoa na organização \'$this->org_name$\' com o mesmo nome',
 	'Class:Person/Error:ChangingOrgDenied' => 'Impossible to move this person under organization \'%1$s\' as it would break his access to the User Portal, his associated user not being allowed on this organization~~',
-));
+]);
 
 //
 // Class: Team
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Team' => 'Equipe',
 	'Class:Team+' => '',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:Team/Attribute:persons_list' => 'Membros',
 	'Class:Team/Attribute:persons_list+' => 'Todas as pessoas que pertencem a essa equipe',
+	'Class:Team/Attribute:overview' => 'Overview~~',
+	'Team:Overview' => 'Tickets and CIs managed by the team~~',
+	'Team:Overview:ActiveTickets' => 'Active tickets~~',
+	'Team:Overview:FunctionalCIs-ByType' => 'Functional CIs~~',
+	'Team:Overview:UserRequest-ByStatus' => 'User requests by status~~',
+	'Team:Overview:UserRequest-ClosedByMonth' => 'User requests closed in last 12 months~~',
+	'Team:Overview:UserRequest-ClosedByAgent' => 'User requests closed by agent in last 12 months~~',
 	'Class:Team/Attribute:tickets_list' => 'Solicitações',
 	'Class:Team/Attribute:tickets_list+' => 'Todas as solicitações atribuídas a essa equipe',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Document' => 'Documento',
 	'Class:Document+' => '',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s~~',
@@ -195,82 +203,82 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Document/Attribute:status/Value:obsolete+' => '',
 	'Class:Document/Attribute:status/Value:published' => 'Publicado',
 	'Class:Document/Attribute:status/Value:published+' => '',
-	'Class:Document/Attribute:cis_list' => 'CIs',
-	'Class:Document/Attribute:cis_list+' => 'Todos os itens de configuração associados a este documento',
-	'Class:Document/Attribute:finalclass' => 'Tipo documento',
+	'Class:Document/Attribute:cis_list' => 'ICs',
+	'Class:Document/Attribute:cis_list+' => 'Todos os Itens de Configuração (IC) associados à este Documento',
+	'Class:Document/Attribute:finalclass' => 'Tipo de documento',
 	'Class:Document/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: DocumentFile
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:DocumentFile' => 'Arquivo',
 	'Class:DocumentFile+' => '',
 	'Class:DocumentFile/Attribute:file' => 'Arquivo',
 	'Class:DocumentFile/Attribute:file+' => '',
-));
+]);
 
 //
 // Class: DocumentNote
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:DocumentNote' => 'Texto',
 	'Class:DocumentNote+' => '',
 	'Class:DocumentNote/Attribute:text' => 'Texto',
 	'Class:DocumentNote/Attribute:text+' => '',
-));
+]);
 
 //
 // Class: DocumentWeb
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:DocumentWeb' => 'Web',
 	'Class:DocumentWeb+' => '',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
-));
+]);
 
 //
 // Class: Typology
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Typology' => 'Tipologia',
 	'Class:Typology+' => '',
 	'Class:Typology/Attribute:name' => 'Nome',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Tipo',
 	'Class:Typology/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: DocumentType
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:DocumentType' => 'Tipo de documento',
 	'Class:DocumentType+' => '',
-));
+]);
 
 //
 // Class: ContactType
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:ContactType' => 'Tipo de contato',
 	'Class:ContactType+' => '',
-));
+]);
 
 //
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkPersonToTeam' => 'Link Pessoa / Equipe',
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'Class:lnkPersonToTeam' => 'Relação entre Pessoa / Equipe',
 	'Class:lnkPersonToTeam+' => '',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s~~',
 	'Class:lnkPersonToTeam/Name+' => '~~',
@@ -286,13 +294,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkPersonToTeam/Attribute:role_id+' => 'Define a função da Pessoa na Equipe (Líder de Equipe, Gerente...).',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Nome da função',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
-));
+]);
 
 //
 // Application Menu
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:DataAdministration' => 'Administração de dados',
 	'Menu:DataAdministration+' => '',
 	'Menu:Catalogs' => 'Catálogos',
@@ -302,24 +310,24 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:CSVImport' => 'Importar CSV',
 	'Menu:CSVImport+' => 'Criação ou atualização em massa',
 	'Menu:Organization' => 'Organizações',
-	'Menu:Organization+' => 'Lista de organizações',
+	'Menu:Organization+' => 'Lista de Organizações',
 	'Menu:ConfigManagement' => 'Gerenciamento configuração',
-	'Menu:ConfigManagement+' => 'Gerenciamento de configuração',
-	'Menu:ConfigManagementCI' => 'Itens de configuração',
-	'Menu:ConfigManagementCI+' => 'Lista de itens de configuração',
+	'Menu:ConfigManagement+' => '',
+	'Menu:ConfigManagementCI' => 'Itens de Configuração (ICs)',
+	'Menu:ConfigManagementCI+' => 'Lista de Itens de Configuração (ICs)',
 	'Menu:ConfigManagementOverview' => 'Visão geral',
 	'Menu:ConfigManagementOverview+' => '',
 	'Menu:Contact' => 'Contatos',
-	'Menu:Contact+' => 'Lista de contatos',
+	'Menu:Contact+' => 'Lista de Contatos',
 	'Menu:Contact:Count' => '%1$d contato(s)',
 	'Menu:Person' => 'Pessoas',
-	'Menu:Person+' => 'Lista de pessoas',
+	'Menu:Person+' => 'Lista de Pessoas',
 	'Menu:Team' => 'Equipes',
-	'Menu:Team+' => 'Lista de equipes',
+	'Menu:Team+' => 'Lista de Equipes',
 	'Menu:Document' => 'Documentos',
-	'Menu:Document+' => 'Lista de documentos',
+	'Menu:Document+' => 'Lista de Documentos',
 	'Menu:Location' => 'Localizações',
-	'Menu:Location+' => 'Lista de localizações',
+	'Menu:Location+' => 'Lista de Localizações',
 	'Menu:NewContact' => 'Novo contato',
 	'Menu:NewContact+' => '',
 	'Menu:SearchContacts' => 'Pesquisar por contatos',
@@ -330,20 +338,20 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:Typology+' => 'Lista de tipologias',
 	'UI_WelcomeMenu_AllConfigItems' => 'Índice',
 	'Menu:ConfigManagement:Typology' => 'Configuração de tipologias',
-));
+]);
 
 // Add translation for Fieldsets
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Person:info' => 'Informações gerais',
 	'User:info' => 'Informações gerais',
 	'User:profiles' => 'Profiles (minimum one)~~',
 	'Person:personal_info' => 'Informações pessoais',
 	'Person:notifiy' => 'Notificações',
-));
+]);
 
 // Themes
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'theme:fullmoon' => 'Full moon',
 	'theme:test-red' => 'Test instance (Red)',
-));
+]);

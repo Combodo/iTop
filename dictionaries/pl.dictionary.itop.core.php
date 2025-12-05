@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Core:DeletedObjectLabel' => '%1s (usunięto)',
 	'Core:DeletedObjectTip' => 'Obiekt został usunięty w dniu %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'Nie znaleziono obiektu (klasa: %1$s, id: %2$d)',
@@ -157,8 +158,7 @@ Operatory:<br/>
 	'Core:Context=GUI:Console' => 'Konsola',
 	'Core:Context=CRON' => 'cron',
 	'Core:Context=GUI:Portal' => 'Portal',
-));
-
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
@@ -169,7 +169,7 @@ Operatory:<br/>
 // Class: CMDBChange
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:CMDBChange' => 'Zmiana',
 	'Class:CMDBChange+' => 'Śledzenie zmian',
 	'Class:CMDBChange/Attribute:date' => 'data',
@@ -184,13 +184,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'Usługi sieciowe REST/JSON',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'Usługi internetowe SOAP',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Przez rozszerzenie',
-));
+]);
 
 //
 // Class: CMDBChangeOp
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:CMDBChangeOp' => 'Operacje zmian',
 	'Class:CMDBChangeOp+' => 'Zmiana dokonana przez osobę na jednym obiekcie w jednostce czasu',
 	'Class:CMDBChangeOp/Attribute:change' => 'zmiana',
@@ -205,51 +205,51 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:CMDBChangeOp/Attribute:objkey+' => 'identyfikator obiektu, którego dotyczy zmiana',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Podklasa CMDBChangeOp',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Nazwa finalna klasy gdzie dokonano zmiany',
-));
+]);
 
 //
 // Class: CMDBChangeOpCreate
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:CMDBChangeOpCreate' => 'tworzenie obiektu',
 	'Class:CMDBChangeOpCreate+' => 'Śledzenie tworzenia obiektów',
-));
+]);
 
 //
 // Class: CMDBChangeOpDelete
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:CMDBChangeOpDelete' => 'usunięcie obiektu',
 	'Class:CMDBChangeOpDelete+' => 'Śledzenie usuwania obiektów',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttribute
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:CMDBChangeOpSetAttribute' => 'zmiana obiektu',
 	'Class:CMDBChangeOpSetAttribute+' => 'Śledzenie zmian właściwości obiektu',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Atrybut',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'kod zmodyfikowanej właściwości',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeScalar
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'zmiana właściwości',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Śledzenie zmian właściwości skalarnych obiektu',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Poprzednia wartość',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'poprzednia wartość atrybutu',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Nowa wartość',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'nowa wartość atrybutu',
-));
+]);
 // Used by CMDBChangeOp... & derived classes
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Change:ObjectCreated' => 'Utworzono obiekt',
 	'Change:ObjectDeleted' => 'Obiekt usunięty',
 	'Change:ObjectModified' => 'Obiekt zmodyfikowany',
@@ -266,35 +266,35 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Change:LinkSet:Added' => 'dodano %1$s',
 	'Change:LinkSet:Removed' => 'usunięto %1$s',
 	'Change:LinkSet:Modified' => 'zmodyfikowano %1$s',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeBlob
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'zmiana danych',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'śledzenie zmian danych',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Poprzednie dane',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'poprzednia zawartość atrybutu',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeText
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:CMDBChangeOpSetAttributeText' => 'zmiana tekstu',
 	'Class:CMDBChangeOpSetAttributeText+' => 'śledzenie zmian tekstu',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Poprzednie dane',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'poprzednia zawartość atrybutu',
-));
+]);
 
 //
 // Class: Event
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Event' => 'Dziennik zdarzeń',
 	'Class:Event+' => 'Zdarzenie wewnętrzne aplikacji',
 	'Class:Event/Attribute:message' => 'Wiadomość',
@@ -305,13 +305,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Event/Attribute:userinfo+' => 'identyfikacja użytkownika wykonującego czynność, która wywołała to zdarzenie',
 	'Class:Event/Attribute:finalclass' => 'Podklasa zdarzenia',
 	'Class:Event/Attribute:finalclass+' => 'Nazwa finalnej klasy: określa rodzaj zdarzenia, które miało miejsce',
-));
+]);
 
 //
 // Class: EventNotification
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:EventNotification' => 'Powiadomienie o zdarzeniu',
 	'Class:EventNotification+' => 'Ślad powiadomienia, które zostało wysłane',
 	'Class:EventNotification/Attribute:trigger_id' => 'Wyzwalacz',
@@ -320,13 +320,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:EventNotification/Attribute:action_id+' => 'konto użytkownika',
 	'Class:EventNotification/Attribute:object_id' => 'Id obiektu',
 	'Class:EventNotification/Attribute:object_id+' => 'id obiektu (klasa zdefiniowana przez wyzwalacz?)',
-));
+]);
 
 //
 // Class: EventNotificationEmail
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:EventNotificationEmail' => 'Zdarzenie wysyłki wiadomości e-mail',
 	'Class:EventNotificationEmail+' => 'Ślad e-maila, który został wysłany',
 	'Class:EventNotificationEmail/Attribute:to' => 'TO',
@@ -343,13 +343,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Załączniki',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-));
+]);
 
 //
 // Class: EventIssue
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:EventIssue' => 'Zdarzenie związane z problemem',
 	'Class:EventIssue+' => 'Ślad problemu (ostrzeżenie, błąd itp.)',
 	'Class:EventIssue/Attribute:issue' => 'Problem',
@@ -366,13 +366,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Dane',
 	'Class:EventIssue/Attribute:data+' => 'Więcej informacji',
-));
+]);
 
 //
 // Class: EventWebService
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:EventWebService' => 'Usługa internetowa',
 	'Class:EventWebService+' => 'Ślad połączenia z usługą internetową',
 	'Class:EventWebService/Attribute:verb' => 'Operacja',
@@ -387,9 +387,9 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:EventWebService/Attribute:log_error+' => 'Wyniki dziennika błędów',
 	'Class:EventWebService/Attribute:data' => 'Dane',
 	'Class:EventWebService/Attribute:data+' => 'Dane wynikowe',
-));
+]);
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:EventRestService' => 'Połączenie REST / JSON',
 	'Class:EventRestService+' => 'Śledzenie wywołania usługi REST / JSON',
 	'Class:EventRestService/Attribute:operation' => 'Operacja',
@@ -404,13 +404,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:EventRestService/Attribute:json_output+' => 'Odpowiedź HTTP (json)',
 	'Class:EventRestService/Attribute:provider' => 'Dostawca',
 	'Class:EventRestService/Attribute:provider+' => 'Klasa PHP implementująca oczekiwaną operację',
-));
+]);
 
 //
 // Class: EventLoginUsage
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:EventLoginUsage' => 'Korzystanie z logowania',
 	'Class:EventLoginUsage+' => 'Połączenie z aplikacją',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
@@ -419,13 +419,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'E-mail użytkownika',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Adres e-mail użytkownika',
-));
+]);
 
 //
 // Class: EventNotificationNewsroom
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:EventNotificationNewsroom' => 'Wiadomości wysłane',
 	'Class:EventNotificationNewsroom+' => '',
 	'Class:EventNotificationNewsroom/Attribute:title' => 'Tytuł',
@@ -454,13 +454,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:EventNotificationNewsroom/Attribute:read_date+' => '',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Kontakt',
 	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Action' => 'Działanie własne',
 	'Class:Action+' => 'Działanie zdefiniowane przez użytkownika',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s',
@@ -490,22 +490,22 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Action:last_executions_tab_panel_title' => 'Wykonania tej akcji (%1$s)',
 	'Action:last_executions_tab_limit_days' => 'ostatnie %1$s dni',
 	'Action:last_executions_tab_limit_none' => 'bez limitu',
-));
+]);
 
 //
 // Class: ActionNotification
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ActionNotification' => 'Powiadomienie',
 	'Class:ActionNotification+' => 'Powiadomienie (abstrakcja)',
-));
+]);
 
 //
 // Class: ActionEmail
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ActionEmail' => 'Powiadomienie e-mail',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'Ten status decyduje o tym, kto zostanie powiadomiony: tylko odbiorca testowy, wszyscy (Do, DW i UDW) lub nikt',
@@ -556,14 +556,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'ActionEmail:preview_warning' => 'Rzeczywista wiadomość e-mail może wyglądać inaczej w kliencie poczty e-mail niż podgląd w przeglądarce.',
 	'ActionEmail:preview_more_info' => 'Aby uzyskać więcej informacji na temat funkcji CSS obsługiwanych przez różnych klientów poczty e-mail, zobacz %1$s',
 	'ActionEmail:content_placeholder_missing' => 'W szablonie HTML nie znaleziono symbolu zastępczego „%1$s”. Zawartość pola „%2$s” nie będzie uwzględniana w generowanych wiadomościach e-mail.',
-));
-
+]);
 
 //
 // Class: ActionNewsroom
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'ActionNewsroom:trigger' => 'Wyzwalacz',
 	'ActionNewsroom:content' => 'Wiadomość',
 	'ActionNewsroom:settings' => 'Ustawienia',
@@ -600,13 +599,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:ActionNewsroom/Attribute:recipients+' => 'Zapytanie OQL zwracające obiekty Kontakt',
 	'Class:ActionNewsroom/Attribute:url' => 'URL',
 	'Class:ActionNewsroom/Attribute:url+' => 'Jeśli jest pusty, adres URL będzie wskazywał obiekt wywołujący powiadomienie. Możesz także określić niestandardowy adres URL.',
-));
+]);
 
 //
 // Class: Trigger
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Trigger' => 'Wyzwalacz',
 	'Class:Trigger+' => 'Niestandardowa obsługa zdarzeń',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s',
@@ -625,13 +624,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Zezwalaj na całkowite anulowanie subskrypcji',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Wymuś co najmniej jeden kanał (Wiadomości lub E-mail)',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Odmów anulowania subskrypcji',
-));
+]);
 
 //
 // Class: TriggerOnObject
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:TriggerOnObject' => 'Wyzwalacz (zależny od klasy)',
 	'Class:TriggerOnObject+' => 'Wyzwalanie na danej klasie obiektów',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Klasa docelowa',
@@ -640,115 +639,115 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TriggerOnObject/Attribute:filter+' => 'Ogranicz listę obiektów (klasy docelowej), które aktywują wyzwalacz',
 	'TriggerOnObject:WrongFilterQuery' => 'Błędne zapytanie filtru: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Zapytanie filtru musi zwracać obiekty klasy "%1$s"',
-));
+]);
 
 //
 // Class: TriggerOnPortalUpdate
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:TriggerOnPortalUpdate' => 'Wyzwalacz (po aktualizacji z portalu)',
 	'Class:TriggerOnPortalUpdate+' => 'Wyzwalanie po aktualizacji użytkownika z portalu',
-));
+]);
 
 //
 // Class: TriggerOnStateChange
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:TriggerOnStateChange' => 'Wyzwalacz (przy zmianie stanu)',
 	'Class:TriggerOnStateChange+' => 'Wyzwalanie przy zmianie stanu obiektu',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Stan',
 	'Class:TriggerOnStateChange/Attribute:state+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateEnter
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:TriggerOnStateEnter' => 'Wyzwalacz (przy wejściu w stan)',
 	'Class:TriggerOnStateEnter+' => 'Wyzwalanie przy zmianie stanu obiektu - wejście',
-));
+]);
 
 //
 // Class: TriggerOnStateLeave
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:TriggerOnStateLeave' => 'Wyzwalacz (przy opuszczaniu stanu)',
 	'Class:TriggerOnStateLeave+' => 'Wyzwalanie przy zmianie stanu obiektu - wyjście',
-));
+]);
 
 //
 // Class: TriggerOnObjectCreate
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:TriggerOnObjectCreate' => 'Wyzwalacz (przy tworzeniu obiektu)',
 	'Class:TriggerOnObjectCreate+' => 'Wyzwalacz przy tworzeniu obiektu [klasy potomnej] danej klasy',
-));
+]);
 
 //
 // Class: TriggerOnObjectDelete
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:TriggerOnObjectDelete' => 'Wyzwalacz (przy usunięciu obiektu)',
 	'Class:TriggerOnObjectDelete+' => 'Wyzwalanie w przypadku usunięcia obiektu [klasy potomnej] danej klasy',
-));
+]);
 
 //
 // Class: TriggerOnObjectUpdate
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:TriggerOnObjectUpdate' => 'Wyzwalacz (przy aktualizacji obiektu)',
 	'Class:TriggerOnObjectUpdate+' => 'Wyzwalanie przy aktualizacji obiektu [klasy potomnej] danej klasy',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Pola docelowe',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectMention
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:TriggerOnObjectMention' => 'Wyzwalacz (przy wzmiance o obiekcie)',
 	'Class:TriggerOnObjectMention+' => 'Wyzwalanie przy wzmiance (@xxx) o obiekcie [klasy potomnej] danej klasy w atrybucie dziennika',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Wspomniany filtr',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Ogranicz listę wymienionych obiektów, które aktywują wyzwalacz. Jeśli jest pusty, dowolny wspomniany obiekt (dowolnej klasy) aktywuje go.',
-));
+]);
 
 //
 // Class: TriggerOnAttributeBlobDownload
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Wyzwalacz (po pobraniu dokumentu obiektu)',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Wyzwalaj pobranie z pola dokumentu obiektu [klasy potomnej] danej klasy',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Pola docelowe',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnThresholdReached
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:TriggerOnThresholdReached' => 'Wyzwalacz (na progu)',
 	'Class:TriggerOnThresholdReached+' => 'Osiągnięto próg wyzwalania przy stoperze',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stoper',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Próg',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-));
+]);
 
 //
 // Class: lnkTriggerAction
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:lnkTriggerAction' => 'Działanie / wyzwalacz',
 	'Class:lnkTriggerAction+' => 'Powiązanie między wyzwalaczem a działaniem',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Działanie',
@@ -761,12 +760,12 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
 	'Class:lnkTriggerAction/Attribute:order' => 'Order',
 	'Class:lnkTriggerAction/Attribute:order+' => 'Kolejność wykonywania działań',
-));
+]);
 
 //
 // Synchro Data Source
 //
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:SynchroDataSource' => 'Źródło danych synchronizacji',
 	'Class:SynchroDataSource/Attribute:name' => 'Nazwa',
 	'Class:SynchroDataSource/Attribute:name+' => '',
@@ -1051,13 +1050,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:Validator:MustBeInteger' => 'Musi być liczbą całkowitą',
 	'Core:Validator:MustSelectOne' => 'Proszę wybrać jeden',
 	'Menu:DataSources' => 'Źródła danych synchronizacji',
-	'Menu:DataSources+' => 'Wszystkie źródła danych synchronizacji'
-));
+	'Menu:DataSources+' => 'Wszystkie źródła danych synchronizacji',
+]);
 
 //
 // Class: TagSetFieldData
 //
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:TagSetFieldData' => '%2$s dla klasy %1$s',
 	'Class:TagSetFieldData+' => '',
 	'Class:TagSetFieldData/Attribute:code' => 'Kod',
@@ -1079,12 +1078,12 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tagów "Kod atrybutu" nie można zmieniać',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Użycie tagu (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Nie znaleziono wpisu dla tego tagu',
-));
+]);
 
 //
 // Class: DBProperty
 //
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:DBProperty' => 'Właściwości DB',
 	'Class:DBProperty+' => '',
 	'Class:DBProperty/Attribute:name' => 'Nazwa',
@@ -1097,12 +1096,12 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => 'Komentarz zmiany',
 	'Class:DBProperty/Attribute:change_comment+' => '',
-));
+]);
 
 //
 // Class: BackgroundTask
 //
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:BackgroundTask' => 'Zadanie w tle',
 	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Nazwa klasy',
@@ -1127,12 +1126,12 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => 'Status',
 	'Class:BackgroundTask/Attribute:status+' => '',
-));
+]);
 
 //
 // Class: AsyncTask
 //
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:AsyncTask' => 'Zadanie asynchroniczne',
 	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Utworzono',
@@ -1157,47 +1156,44 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Nieprawidłowy format konfiguracji "async_task_retries[%1$s]". Oczekuje się tablicy z następującymi kluczami: %2$s',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Nieprawidłowy format konfiguracji "async_task_retries[%1$s]": nieoczekiwany klucz "%2$s". Oczekuje się tylko następujących kluczy: %3$s',
-));
+]);
 
 //
 // Class: AbstractResource
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:AbstractResource' => 'Zasób abstrakcyjny',
 	'Class:AbstractResource+' => '',
-));
+]);
 
 //
 // Class: ResourceAdminMenu
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ResourceAdminMenu' => 'Zasób Menu administratora',
 	'Class:ResourceAdminMenu+' => '',
-));
+]);
 
 //
 // Class: ResourceRunQueriesMenu
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ResourceRunQueriesMenu' => 'Zasób Menu zapytań uruchamiania',
 	'Class:ResourceRunQueriesMenu+' => '',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('PL PL', 'Polish', 'Polski', array(
+Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:ResourceSystemMenu' => 'Zasób Menu systemowe',
 	'Class:ResourceSystemMenu+' => '',
-    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
-    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
 	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
-));
-
-
-
+]);

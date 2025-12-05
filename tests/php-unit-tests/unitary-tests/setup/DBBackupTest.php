@@ -62,12 +62,9 @@ class DBBackupTest extends ItopTestCase
 		$sCliArgsMinCfg = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
 
 		// depending on the MySQL vendor, we would have `--ssl` or `--ssl-mode=REQUIRED`
-		if (CMDBSource::IsSslModeDBVersion())
-		{
+		if (CMDBSource::IsSslModeDBVersion()) {
 			$this->assertStringStartsWith(' --ssl-mode=REQUIRED', $sCliArgsMinCfg);
-		}
-		else
-		{
+		} else {
 			$this->assertStringStartsWith(' --ssl', $sCliArgsMinCfg);
 			$this->assertStringNotContainsString('--ssl-mode', $sCliArgsMinCfg);
 		}
@@ -90,12 +87,9 @@ class DBBackupTest extends ItopTestCase
 		$sCliArgsCapathCfg = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
 
 		// depending on the MySQL vendor, we would have `--ssl` or `--ssl-mode=VERIFY_CA`
-		if (CMDBSource::IsSslModeDBVersion())
-		{
+		if (CMDBSource::IsSslModeDBVersion()) {
 			$this->assertStringStartsWith(' --ssl-mode=VERIFY_CA', $sCliArgsCapathCfg);
-		}
-		else
-		{
+		} else {
 			$this->assertStringStartsWith(' --ssl', $sCliArgsCapathCfg);
 			$this->assertStringNotContainsString('--ssl-mode', $sCliArgsCapathCfg);
 
@@ -113,11 +107,11 @@ class DBBackupTest extends ItopTestCase
 			$sExpectedPortCliOption = '';
 		} else {
 			$sEscapedPortValue = \DBBackup::EscapeShellArg($iExpectedPortValue);
-			$sExpectedPortCliOption = ' --port=' . $sEscapedPortValue;
+			$sExpectedPortCliOption = ' --port='.$sEscapedPortValue;
 		}
 
 		$sActualCliOptions = $this->InvokeNonPublicStaticMethod(DBBackup::class, 'GetMysqlCliPortAndTransportOptions', [$sDbHost, $iPort]);
-		$this->assertEquals($sExpectedPortCliOption . $sExpectedProtocolCliOption, $sActualCliOptions);
+		$this->assertEquals($sExpectedPortCliOption.$sExpectedProtocolCliOption, $sActualCliOptions);
 	}
 
 	public function GetMysqlCliPortAndTransportOptionsProvider()

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -45,7 +46,7 @@ class LinkSetController extends AbstractController
 		if (!$this->IsHandlingXmlHttpRequest()) {
 			throw new CoreException('LinksetController can only be called in ajax.');
 		}
-		
+
 		$oPage = new JsonPage();
 		$sErrorMessage = null;
 		$bOperationSuccess = false;
@@ -63,8 +64,7 @@ class LinkSetController extends AbstractController
 				if (!$bOperationSuccess) {
 					$sErrorMessage = json_encode($oDeletionPlan->GetIssues());
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$sErrorMessage = $e->getMessage();
 			}
 		} else {
@@ -89,7 +89,7 @@ class LinkSetController extends AbstractController
 		if (!$this->IsHandlingXmlHttpRequest()) {
 			throw new CoreException('LinksetController can only be called in ajax.');
 		}
-		
+
 		$oPage = new JsonPage();
 		$sErrorMessage = null;
 		$bOperationSuccess = false;
@@ -107,8 +107,7 @@ class LinkSetController extends AbstractController
 				$oLinkedObject->Set($sExternalKeyAttCode, null);
 				$oLinkedObject->DBWrite();
 				$bOperationSuccess = true;
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$sErrorMessage = $e->getMessage();
 			}
 		} else {
@@ -149,7 +148,7 @@ class LinkSetController extends AbstractController
 		$sRealClass = '';
 
 		$aSubClasses = MetaModel::EnumChildClasses($sProposedRealClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
-		$aPossibleClasses = array();
+		$aPossibleClasses = [];
 		foreach ($aSubClasses as $sCandidateClass) {
 			if (!MetaModel::IsAbstract($sCandidateClass) && (UserRights::IsActionAllowed($sCandidateClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
 				if ($sCandidateClass == $sProposedRealClass) {
@@ -167,13 +166,13 @@ class LinkSetController extends AbstractController
 		if ($sRealClass != '') {
 			$oLinksetDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
-			$aFieldFlags = array($sExtKeyToMe => OPT_ATT_READONLY);
+			$aFieldFlags = [$sExtKeyToMe => OPT_ATT_READONLY];
 			$oObj = DBObject::MakeDefaultInstance($sRealClass);
 
 			$oSourceObj = MetaModel::GetObject($sClass, $sId);
 
 			$oObj->Set($sExtKeyToMe, $sId);
-			$aPrefillParam = array('source_obj' => $oSourceObj);
+			$aPrefillParam = ['source_obj' => $oSourceObj];
 			$oObj->PrefillForm('creation_from_editinplace', $aPrefillParam);
 			// We display this form in a modal, once we submit (in ajax) we probably want to only close the modal
 			$sFormOnSubmitJsCode =
@@ -203,7 +202,6 @@ class LinkSetController extends AbstractController
 				}
 JS;
 
-			
 			$aExtraParams = [
 				'noRelations'           => true,
 				'hide_transitions'      => true,
@@ -228,20 +226,18 @@ JS
 
 			// Remove blob edition from creation form @see N°5863 to allow blob edition in modal context
 			FormHelper::DisableAttributeBlobInputs($sRealClass, $aExtraParams);
-			
-			if(FormHelper::HasMandatoryAttributeBlobInputs($oObj)){
-				$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal(FormHelper::ENUM_MANDATORY_BLOB_MODE_CREATE));
-			}	
 
-			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), $aExtraParams);
-		}
-		else
-		{
+			if (FormHelper::HasMandatoryAttributeBlobInputs($oObj)) {
+				$oPage->AddUiBlock(FormHelper::GetAlertForMandatoryAttributeBlobInputsInModal(FormHelper::ENUM_MANDATORY_BLOB_MODE_CREATE));
+			}
+
+			cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, [], $aExtraParams);
+		} else {
 			// - We'll let the user select a class if multiple classes are available
 			$oClassForm = FormUIBlockFactory::MakeStandard();
-			
+
 			// - When the user submit, redo the same request but with a real class
-			
+
 			$sCurrentParameters = json_encode([
 				'att_code' => $sAttCode,
 				'host_class' => $sClass,
@@ -295,8 +291,7 @@ JS
 			}
 			$aObjectData = ObjectRepository::ConvertObjectToArray($oObject, $sObjectClass);
 			$aObjectData['link_keys'] = [$sObjectKey];
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$bSuccess = false;
 		}
 

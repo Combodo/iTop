@@ -1,6 +1,6 @@
 <?php
-namespace Combodo\iTop\Service\Notification;
 
+namespace Combodo\iTop\Service\Notification;
 
 use ActionNotification;
 use Combodo\iTop\Core\Trigger\Enum\SubscriptionPolicy;
@@ -15,7 +15,8 @@ use Trigger;
  * @package Combodo\iTop\Service\Notification
  * @since 3.2.0
  */
-class NotificationsService {
+class NotificationsService
+{
 	protected static ?NotificationsService $oSingleton = null;
 
 	/**
@@ -40,7 +41,8 @@ class NotificationsService {
 	 *
 	 * @return void
 	 */
-	protected function __construct() {
+	protected function __construct()
+	{
 		// Don't do anything, we don't want to be initialized
 	}
 
@@ -74,8 +76,7 @@ class NotificationsService {
 			$oSubscribedActionsNotifications->Set('trigger_id', $oTrigger->GetKey());
 			$oSubscribedActionsNotifications->Set('subscribed', true);
 			$oSubscribedActionsNotifications->DBInsertNoReload();
-		}
-		else {
+		} else {
 			while ($oSubscribedActionsNotifications = $oSubscribedActionsNotificationsSet->Fetch()) {
 				// Update the subscription
 				$oSubscribedActionsNotifications->Set('subscribed', true);

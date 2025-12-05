@@ -1,11 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\TwigBase\Twig;
-
 
 use ApplicationMenu;
 use AttributeDate;
@@ -76,8 +76,7 @@ class Extension
 				if (preg_match('@^\d\d\d\d-\d\d-\d\d$@', trim($sDate))) {
 					return AttributeDate::GetFormat()->Format($sDate);
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 			}
 
 			return $sDate;
@@ -202,7 +201,8 @@ class Extension
 		// Function to render a UI block (HTML, inline CSS, inline JS) and its sub blocks directly in the TWIG
 		// Usage in twig: {{ render_block(oBlock) }}
 		/** @since 3.0.0 */
-		$aFunctions[] = new TwigFunction('render_block',
+		$aFunctions[] = new TwigFunction(
+			'render_block',
 			function (iUIBlock $oBlock, $aContextParams = []) {
 				$oRenderer = new BlockRenderer($oBlock, $aContextParams);
 
@@ -211,28 +211,29 @@ class Extension
 			['is_safe' => ['html']]
 		);
 
-
 		/** @since 3.2.0 */
-		$aFunctions[] = new TwigFunction('source_abs', function (Environment $oEnv, $sUrlAbsName) {
-			// Extract the source path from the absolute url and replace it with approot
-			$sAppRootAbsName = str_replace(utils::GetAbsoluteUrlAppRoot(), APPROOT, $sUrlAbsName);
-			$oLoader = $oEnv->getLoader();
-			// Check if the file is in any of the twig paths
-			if($oLoader instanceof  FilesystemLoader) {
-				$aPaths = $oLoader->getPaths();
-				foreach ($aPaths as $sPath) {
-					$sTwigPathRelativeName = substr($sAppRootAbsName, strlen($sPath) + 1);
-					// If we find our path in the absolute url and the file actually exist, return it
-					if (str_contains($sAppRootAbsName, $sPath) && $oLoader->exists($sTwigPathRelativeName)) {
-						return $oLoader->getSourceContext($sTwigPathRelativeName)->getCode();
+		$aFunctions[] = new TwigFunction(
+			'source_abs',
+			function (Environment $oEnv, $sUrlAbsName) {
+				// Extract the source path from the absolute url and replace it with approot
+				$sAppRootAbsName = str_replace(utils::GetAbsoluteUrlAppRoot(), APPROOT, $sUrlAbsName);
+				$oLoader = $oEnv->getLoader();
+				// Check if the file is in any of the twig paths
+				if ($oLoader instanceof  FilesystemLoader) {
+					$aPaths = $oLoader->getPaths();
+					foreach ($aPaths as $sPath) {
+						$sTwigPathRelativeName = substr($sAppRootAbsName, strlen($sPath) + 1);
+						// If we find our path in the absolute url and the file actually exist, return it
+						if (str_contains($sAppRootAbsName, $sPath) && $oLoader->exists($sTwigPathRelativeName)) {
+							return $oLoader->getSourceContext($sTwigPathRelativeName)->getCode();
+						}
 					}
 				}
-			}
-			// Otherwise return empty content
-			$oEmptySource = new Source('', $sUrlAbsName, '');
-			return $oEmptySource->getCode();
-		}, 
-		['needs_environment' => true,
+				// Otherwise return empty content
+				$oEmptySource = new Source('', $sUrlAbsName, '');
+				return $oEmptySource->getCode();
+			},
+			['needs_environment' => true,
 		 'is_safe' => ['all']]
 		);
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -62,14 +63,14 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OAuthClient/Attribute:redirect_url+' => 'This url must be copied in the OAuth2 configuration of the provider
 Erase the field to recalculate default value~~',
 	'Class:OAuthClient/Attribute:mailbox_list' => 'Lista delle caselle di posta',
-	'Class:OAuthClient/Attribute:mailbox_list+' => '~~'
+	'Class:OAuthClient/Attribute:mailbox_list+' => '~~',
 ]);
 
 //
 // Class: OAuthClientAzure
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure~~',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Ambito',
@@ -92,13 +93,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'No',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Tenant~~',
 	'Class:OAuthClientAzure/Attribute:tenant+' => 'Tenant ID of the configured application. For multi-tenant application, use "common".~~',
-));
+]);
 
 //
 // Class: OAuthClientGoogle
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google~~',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Ambito',
@@ -119,4 +120,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => 'Almeno un client OAuth deve avere questo flag impostato su “Sì”, se si desidera che iTop lo utilizzi per inviare email',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => 'Sì',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => 'No',
-));
+]);

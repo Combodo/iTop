@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,7 +17,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * SQLQuery
  * build an mySQL compatible SQL query
@@ -24,7 +24,6 @@
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 /**
  * SQLQuery
@@ -34,7 +33,6 @@
  */
 
 require_once('cmdbsource.class.inc.php');
-
 
 abstract class SQLQuery
 {
@@ -47,7 +45,7 @@ abstract class SQLQuery
 
 	/**
 	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects
-	 **/	 	
+	 **/
 	public function DeepClone()
 	{
 		return unserialize(serialize($this));
@@ -66,18 +64,17 @@ abstract class SQLQuery
 	abstract public function AddInnerJoin($oSQLQuery, $sLeftField, $sRightField, $sRightTable = '');
 
 	abstract public function DisplayHtml();
-	abstract public function RenderDelete($aArgs = array());
-	abstract public function RenderUpdate($aArgs = array());
-	abstract public function RenderSelect($aOrderBy = array(), $aArgs = array(), $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulQuery = false);
-	abstract public function RenderGroupBy($aArgs = array(), $bBeautifulQuery = false,  $aOrderBy = array(), $iLimitCount = 0, $iLimitStart = 0);
+	abstract public function RenderDelete($aArgs = []);
+	abstract public function RenderUpdate($aArgs = []);
+	abstract public function RenderSelect($aOrderBy = [], $aArgs = [], $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulQuery = false);
+	abstract public function RenderGroupBy($aArgs = [], $bBeautifulQuery = false, $aOrderBy = [], $iLimitCount = 0, $iLimitStart = 0);
 
 	abstract public function OptimizeJoins($aUsedTables, $bTopCall = true);
 
 	protected static function ClauseSelect($aFields, $sLineSep = '')
 	{
-		$aSelect = array();
-		foreach ($aFields as $sFieldAlias => $sSQLExpr)
-		{
+		$aSelect = [];
+		foreach ($aFields as $sFieldAlias => $sSQLExpr) {
 			$aSelect[] = "$sSQLExpr AS $sFieldAlias";
 		}
 		$sSelect = implode(",$sLineSep ", $aSelect);
@@ -92,9 +89,8 @@ abstract class SQLQuery
 
 	protected static function ClauseDelete($aDelTableAliases)
 	{
-		$aDelTables = array();
-		foreach ($aDelTableAliases as $sTableAlias)
-		{
+		$aDelTables = [];
+		foreach ($aDelTableAliases as $sTableAlias) {
 			$aDelTables[] = "$sTableAlias";
 		}
 		$sDelTables = implode(', ', $aDelTables);
@@ -114,38 +110,30 @@ abstract class SQLQuery
 		$sLineBreak = $sIndent ? "\n".str_repeat($sIndent, $iIndentLevel) : '';
 
 		$sFrom = "";
-		foreach ($aFrom as $sTableAlias => $aJoinInfo)
-		{
-			switch ($aJoinInfo["jointype"])
-			{
+		foreach ($aFrom as $sTableAlias => $aJoinInfo) {
+			switch ($aJoinInfo["jointype"]) {
 				case "first":
 					$sFrom .= $sLineBreakLong."`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
 					$sFrom .= self::ClauseFrom($aJoinInfo["subfrom"], $sIndent, $iIndentLevel + 1);
 					break;
 				case "inner":
 				case "inner_tree":
-					if (count($aJoinInfo["subfrom"]) > 0)
-					{
+					if (count($aJoinInfo["subfrom"]) > 0) {
 						$sFrom .= $sLineBreak."INNER JOIN ($sLineBreakLong`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
 						$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"], $sIndent, $iIndentLevel + 1);
 						$sFrom .= $sLineBreak.") ON ".$aJoinInfo["joincondition"];
-					}
-					else
-					{
+					} else {
 						// Unions do not suffer parenthesis around the "table AS alias"
 						$sFrom .= $sLineBreak."INNER JOIN $sLineBreakLong`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
 						$sFrom .= $sLineBreak." ON ".$aJoinInfo["joincondition"];
 					}
 					break;
 				case "left":
-					if (count($aJoinInfo["subfrom"]) > 0)
-					{
+					if (count($aJoinInfo["subfrom"]) > 0) {
 						$sFrom .= $sLineBreak."LEFT JOIN ($sLineBreakLong`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
 						$sFrom .= " ".self::ClauseFrom($aJoinInfo["subfrom"], $sIndent, $iIndentLevel + 1);
 						$sFrom .= $sLineBreak.") ON ".$aJoinInfo["joincondition"];
-					}
-					else
-					{
+					} else {
 						// Unions do not suffer parenthesis around the "table AS alias"
 						$sFrom .= $sLineBreak."LEFT JOIN $sLineBreakLong`".$aJoinInfo["tablename"]."` AS `$sTableAlias`";
 						$sFrom .= $sLineBreak." ON ".$aJoinInfo["joincondition"];
@@ -160,23 +148,19 @@ abstract class SQLQuery
 
 	protected static function ClauseValues($aValues)
 	{
-		$aSetValues = array();
-		foreach ($aValues as $sFieldSpec => $value)
-		{
+		$aSetValues = [];
+		foreach ($aValues as $sFieldSpec => $value) {
 			$aSetValues[] = "$sFieldSpec = ".CMDBSource::Quote($value);
 		}
 		$sSetValues = implode(', ', $aSetValues);
 		return $sSetValues;
 	}
 
-	protected static function ClauseWhere($oConditionExpr, $aArgs = array())
+	protected static function ClauseWhere($oConditionExpr, $aArgs = [])
 	{
-		if (is_null($oConditionExpr))
-		{
+		if (is_null($oConditionExpr)) {
 			return '1';
-		}
-		else
-		{
+		} else {
 			return $oConditionExpr->RenderExpression(true, $aArgs);
 		}
 	}
@@ -189,9 +173,8 @@ abstract class SQLQuery
 	 */
 	protected static function ClauseOrderBy($aOrderBy, $aExistingFields)
 	{
-		$aOrderBySpec = array();
-		foreach($aOrderBy as $sFieldAlias => $bAscending)
-		{
+		$aOrderBySpec = [];
+		foreach ($aOrderBy as $sFieldAlias => $bAscending) {
 			// Note: sFieldAlias must have backticks around column aliases
 			$aOrderBySpec[] = $sFieldAlias.($bAscending ? " ASC" : " DESC");
 		}

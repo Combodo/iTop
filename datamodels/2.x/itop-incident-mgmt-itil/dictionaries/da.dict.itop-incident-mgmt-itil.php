@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:IncidentManagement' => 'Incident Management',
 	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Oversigt',
@@ -32,8 +33,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Åbne Incidents efter status',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Åbne Incidents efter tildelt til',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Åbne Incidents efter bruger',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -49,7 +49,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 // Class: Incident
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Status',
@@ -140,6 +140,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Incident/Attribute:tto+' => '',
 	'Class:Incident/Attribute:ttr' => 'TTR (Time To Resolve)',
 	'Class:Incident/Attribute:ttr+' => '',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'TTO-Deadline',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA TTO overskredet',
@@ -228,4 +232,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-));
+]);

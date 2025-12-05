@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -19,7 +20,7 @@
  *
  */
 
-namespace  Combodo\iTop\Dependencies\Composer;
+namespace Combodo\iTop\Dependencies\Composer;
 
 use Combodo\iTop\Dependencies\AbstractFolderAnalyzer;
 
@@ -84,6 +85,7 @@ class iTopComposer extends AbstractFolderAnalyzer
 			'symfony/event-dispatcher/Tests',
 			'symfony/filesystem/Tests',
 			'symfony/finder/Tests',
+			'symfony/form/Test',
 			'symfony/http-client-contracts/Test',
 			'symfony/http-foundation/Test',
 			'symfony/http-kernel/Tests',
@@ -91,6 +93,7 @@ class iTopComposer extends AbstractFolderAnalyzer
 			'symfony/mailer/Test',
 			'symfony/mime/Test',
 			'symfony/routing/Tests',
+			'symfony/security-core/Test',
 			'symfony/stopwatch/Tests',
 			'symfony/translation-contracts/Test',
 			'symfony/twig-bridge/Test',

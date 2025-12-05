@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  * @author Thomas Casteleyn <thomas.casteleyn@super-visions.com>
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:DBToolsMenu' => 'Databasetools',
 	'DBTools:Class' => 'Klasse',
 	'DBTools:Title' => 'Onderhoudstools voor de database',
@@ -44,17 +45,17 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'DBAnalyzer-Fetch-Count-Error' => 'Opvraag-fout in "%1$s", %2$d records opgevraagd / %3$d geteld',
 	'DBAnalyzer-Integrity-FinalClass' => 'Veld `%2$s`.`%1$s` moet dezelfde waarde hebben als `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Veld `%2$s`.`%1$s` moet een geldige klasse bevatten.',
-));
+]);
 
 // Database Info
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'DBTools:DatabaseInfo' => 'Database-informatie',
 	'DBTools:Base' => 'Base',
 	'DBTools:Size' => 'Grootte',
-));
+]);
 
 // Lost attachments
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'DBTools:LostAttachments' => 'Verloren bijlages',
 	'DBTools:LostAttachments:Disclaimer' => 'Zoek hier verloren or verkeerd geplaatste bijlages. Dit is geen recovery-tool, het kan geen gewiste data herstellen.',
 	'DBTools:LostAttachments:Button:Analyze' => 'Analyseer',
@@ -71,5 +72,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Resultaten herstel:',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d bijlages werden hersteld.',
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Opgeslagen als afbeelding in tekst',
-	'DBTools:LostAttachments:History' => 'Bijlage "%1$s" werd hersteld met de databasetools'
-));
+	'DBTools:LostAttachments:History' => 'Bijlage "%1$s" werd hersteld met de databasetools',
+]);

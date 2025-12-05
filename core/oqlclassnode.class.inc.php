@@ -1,9 +1,9 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 class OQLClassNode
 {
@@ -27,22 +27,16 @@ class OQLClassNode
 	public function __construct($oBuild, $sNodeClass, $sNodeClassAlias, $sOQLClassAlias = null)
 	{
 		$this->sNodeClass = $sNodeClass;
-		if (empty($sNodeClassAlias))
-		{
+		if (empty($sNodeClassAlias)) {
 			$this->sNodeClassAlias = $oBuild->GetEmptyClassAlias();
-		}
-		else
-		{
+		} else {
 			$this->sNodeClassAlias = $sNodeClassAlias;
 		}
-		$this->aJoins = array();
-		$this->aExtKeys = array();
-		if (is_null($sOQLClassAlias))
-		{
+		$this->aJoins = [];
+		$this->aExtKeys = [];
+		if (is_null($sOQLClassAlias)) {
 			$this->sOQLClassAlias = $this->sNodeClassAlias;
-		}
-		else
-		{
+		} else {
 			$this->sOQLClassAlias = $sOQLClassAlias;
 		}
 		$this->oBuild = $oBuild;
@@ -60,9 +54,8 @@ class OQLClassNode
 
 	public function AddExternalKey($sKeyAttCode)
 	{
-		if (!isset($this->aExtKeys[$sKeyAttCode]))
-		{
-			$this->aExtKeys[$sKeyAttCode] = array();
+		if (!isset($this->aExtKeys[$sKeyAttCode])) {
+			$this->aExtKeys[$sKeyAttCode] = [];
 		}
 	}
 
@@ -71,7 +64,6 @@ class OQLClassNode
 		$this->AddExternalKey($sKeyAttCode);
 		$this->aExtKeys[$sKeyAttCode][$sFieldAttCode] = $oAttDef;
 	}
-
 
 	public function AddInnerJoin($oOQLClassNode, $sLeftField, $sRightField, $bOutbound = true)
 	{
@@ -82,7 +74,7 @@ class OQLClassNode
 	{
 		$this->AddJoin(OQLJoin::JOIN_LEFT, $oOQLClassNode, $sLeftField, $sRightField, $bOutbound);
 	}
-	
+
 	public function AddInnerJoinTree($oOQLClassNode, $sLeftField, $sRightField, $bOutbound = true, $iOperatorCode = TREE_OPERATOR_BELOW, $bInvertOnClause = false)
 	{
 		$this->AddJoin(OQLJoin::JOIN_INNER_TREE, $oOQLClassNode, $sLeftField, $sRightField, $bOutbound, $iOperatorCode, $bInvertOnClause);
@@ -90,8 +82,16 @@ class OQLClassNode
 
 	private function AddJoin($sJoinType, $oOQLClassNode, $sLeftField, $sRightField, $bOutbound = true, $sTreeOperator = null, $bInvertOnClause = false)
 	{
-		$oOQLJoin = new OQLJoin($this->oBuild, $sJoinType, $oOQLClassNode, $sLeftField, $sRightField, $bOutbound, $sTreeOperator,
-			$bInvertOnClause);
+		$oOQLJoin = new OQLJoin(
+			$this->oBuild,
+			$sJoinType,
+			$oOQLClassNode,
+			$sLeftField,
+			$sRightField,
+			$bOutbound,
+			$sTreeOperator,
+			$bInvertOnClause
+		);
 		$this->AddOQLJoin($sLeftField, $oOQLJoin);
 	}
 
@@ -116,14 +116,11 @@ class OQLClassNode
 	public function RenderDebug()
 	{
 		$sOQL = "SELECT `{$this->sNodeClassAlias}` FROM `{$this->sNodeClass}` AS `{$this->sNodeClassAlias}`";
-		foreach ($this->aJoins as $aJoins)
-		{
-			foreach ($aJoins as $oJoin)
-			{
+		foreach ($this->aJoins as $aJoins) {
+			foreach ($aJoins as $oJoin) {
 				$sOQL .= "{$oJoin->RenderDebug($this->sNodeClassAlias)}";
 			}
 		}
-
 
 		return $sOQL;
 	}
@@ -131,11 +128,9 @@ class OQLClassNode
 	public function Browse(Closure $callback)
 	{
 		$callback($this);
-		foreach ($this->GetJoins() as $aJoins)
-		{
+		foreach ($this->GetJoins() as $aJoins) {
 			/** @var \OQLJoin $oJoin */
-			foreach ($aJoins as $oJoin)
-			{
+			foreach ($aJoins as $oJoin) {
 				$oJoin->GetOOQLClassNode()->Browse($callback);
 			}
 		}
@@ -182,8 +177,7 @@ class OQLClassNode
 	public function RemoveJoin($sLeftKey, $index)
 	{
 		unset($this->aJoins[$sLeftKey][$index]);
-		if (empty($this->aJoins[$sLeftKey]))
-		{
+		if (empty($this->aJoins[$sLeftKey])) {
 			unset($this->aJoins[$sLeftKey]);
 		}
 	}
@@ -192,10 +186,10 @@ class OQLClassNode
 
 class OQLJoin
 {
-	const JOIN_INNER = 'inner';
-	const JOIN_LEFT = 'left';
-	const JOIN_INNER_TREE = 'inner_tree';
-	
+	public const JOIN_INNER = 'inner';
+	public const JOIN_LEFT = 'left';
+	public const JOIN_INNER_TREE = 'inner_tree';
+
 	private $sJoinType;
 	/** @var \OQLClassNode */
 	private $oOQLClassNode;
@@ -238,8 +232,16 @@ class OQLJoin
 
 	public function NewOQLJoinWithClassNode($oOQLClassNode)
 	{
-		return new self($this->oBuild, $this->sJoinType, $oOQLClassNode, $this->sLeftField, $this->sRightField, $this->bOutbound,
-			$this->sTreeOperator, $this->bInvertOnClause);
+		return new self(
+			$this->oBuild,
+			$this->sJoinType,
+			$oOQLClassNode,
+			$this->sLeftField,
+			$this->sRightField,
+			$this->bOutbound,
+			$this->sTreeOperator,
+			$this->bInvertOnClause
+		);
 	}
 
 	/**
@@ -252,27 +254,20 @@ class OQLJoin
 		// Translate the fields before copy to SQL
 		$sLeft = $oBaseSQLQuery->GetTableAlias().'.'.$this->sLeftField;
 		$oLeftField = $oBuild->m_oQBExpressions->GetJoinField($sLeft);
-		if ($oLeftField)
-		{
+		if ($oLeftField) {
 			$sSQLLeft = $oLeftField->GetName();
-		}
-		else
-		{
+		} else {
 			$sSQLLeft = "no_field_found_for_$sLeft";
 		}
 		$sRight = $oJoinedSQLQuery->GetTableAlias().'.'.$this->sRightField;
 		$oRightField = $oBuild->m_oQBExpressions->GetJoinField($sRight);
-		if ($oRightField)
-		{
+		if ($oRightField) {
 			$sSQLRight = $oRightField->GetName();
-		}
-		else
-		{
+		} else {
 			$sSQLRight = "no_field_found_for_$sRight";
 		}
 
-		switch ($this->sJoinType)
-		{
+		switch ($this->sJoinType) {
 			case self::JOIN_INNER:
 				$oBaseSQLQuery->AddInnerJoin($oJoinedSQLQuery, $sSQLLeft, $sSQLRight);
 				break;
@@ -296,10 +291,8 @@ class OQLJoin
 		$sOQL = "\n{$sPrefix}{$sType} JOIN `{$this->oOQLClassNode->GetNodeClass()}` AS `{$this->oOQLClassNode->GetNodeClassAlias()}`";
 		$sOQL .= "\n{$sPrefix}  ON `{$sClassAlias}`.`{$this->sLeftField}` = `{$this->oOQLClassNode->GetNodeClassAlias()}`.`{$this->sRightField}`";
 		$sPrefix .= "    ";
-		foreach ($this->oOQLClassNode->GetJoins() as $aJoins)
-		{
-			foreach ($aJoins as $oJoin)
-			{
+		foreach ($this->oOQLClassNode->GetJoins() as $aJoins) {
+			foreach ($aJoins as $oJoin) {
 				$sOQL .= " {$oJoin->RenderDebug($this->oOQLClassNode->GetNodeClassAlias(), $sPrefix)}";
 			}
 		}

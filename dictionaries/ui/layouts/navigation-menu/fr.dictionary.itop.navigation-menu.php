@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Logo entreprise',
 	'UI:Layout:NavigationMenu:Silo:Label' => 'Selectionnez l\'organisation sur laquelle filtrer',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Déplier / Replier',
@@ -23,4 +24,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Ouvre le menu utilisateur',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filtrer les entrées de menu',
 
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -53,7 +54,7 @@ class AttributeURL extends AttributeString
 	public static function ListExpectedParams()
 	{
 		//return parent::ListExpectedParams();
-		return array_merge(parent::ListExpectedParams(), array("target"));
+		return array_merge(parent::ListExpectedParams(), ["target"]);
 	}
 
 	protected function GetSQLCol($bFullSpec = false)

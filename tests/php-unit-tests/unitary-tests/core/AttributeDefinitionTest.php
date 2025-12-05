@@ -9,23 +9,28 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 use UserRequest;
 
-class AttributeDefinitionTest extends ItopDataTestCase {
-	const CREATE_TEST_ORG = true;
+class AttributeDefinitionTest extends ItopDataTestCase
+{
+	public const CREATE_TEST_ORG = true;
 
-	protected function setUp(): void {
+	protected function setUp(): void
+	{
 		parent::setUp();
 		require_once(APPROOT.'core/attributedef.class.inc.php');
 
 	}
 
-	public function testGetImportColumns(){
+	public function testGetImportColumns()
+	{
 		$oAttributeDefinition = MetaModel::GetAttributeDef("ApplicationSolution", "status");
 		$aImportColumns = $oAttributeDefinition->GetImportColumns();
 		var_dump($aImportColumns);
 
 		$this->assertTrue(is_array($aImportColumns), var_export($aImportColumns, true));
-		$this->assertEquals(["status" => "ENUM('active','inactive') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"],
-			$aImportColumns);
+		$this->assertEquals(
+			["status" => "ENUM('active','inactive') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"],
+			$aImportColumns
+		);
 	}
 
 	/**
@@ -279,7 +284,6 @@ PHP
 		self::assertNull($defaultValue, 'Invalid default value for Date attribute should give null default value');
 	}
 
-
 	public function testDateInvalidDefaultReturnsNullAsDefaultValue_Case2()
 	{
 		$oDateAttribute = $this->GivenAttribute(\WorkOrder::class, 'start_date', AttributeDate::class, '"27/01/2025"', false);
@@ -337,7 +341,7 @@ PHP
 			'default_value'         => $defaultValue,
 			'allowed_values'        => null,
 			'depends_on'            => [],
-			'always_load_in_tables' => false
+			'always_load_in_tables' => false,
 		]);
 		$oAttribute->SetHostClass($sHostClass);
 		return $oAttribute;

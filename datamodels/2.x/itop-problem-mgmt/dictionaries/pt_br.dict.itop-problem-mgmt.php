@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:ProblemManagement' => 'Gerenciamento de problemas',
 	'Menu:ProblemManagement+' => 'Lista de gerenciamento de problemas',
 	'Menu:Problem:Overview' => 'Visão geral',
@@ -32,12 +33,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Painel de gerenciamento de problemas',
 	'UI:ProblemMgmtMenuOverview:Title+' => '',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:Problem' => 'Problema',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Status',
@@ -97,11 +98,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Problem/Attribute:resolution_date' => 'Data de solução',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Erros conhecidos',
-	'Class:Problem/Attribute:knownerrors_list+' => 'Todos os erros conhecidos associados a este problema',
+	'Class:Problem/Attribute:knownerrors_list+' => 'Todos os Erros conhecidos associados à este Problema',
 	'Class:Problem/Attribute:related_request_list' => 'Solicitações relacionadas',
-	'Class:Problem/Attribute:related_request_list+' => 'Todas as solicitações associadas a este problema',
+	'Class:Problem/Attribute:related_request_list+' => 'Todas as Solicitações associados à este Problema',
 	'Class:Problem/Attribute:related_incident_list' => 'Incidentes relacionados',
-	'Class:Problem/Attribute:related_incident_list+' => 'Todos os incidentes associados a este problema',
+	'Class:Problem/Attribute:related_incident_list+' => 'Todos os Incidentes associados à este Problema',
 	'Class:Problem/Stimulus:ev_assign' => 'Atribuir',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => 'Reatribuir',
@@ -110,4 +111,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Fechar',
 	'Class:Problem/Stimulus:ev_close+' => '',
-));
+]);

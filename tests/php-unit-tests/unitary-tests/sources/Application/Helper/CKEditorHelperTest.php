@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -51,27 +52,27 @@ class CKEditorHelperTest extends ItopTestCase
 		$oSanitizer->SetStylesWhiteList($aSanitizerConfiguration['stylesWhiteList']);
 		$oSanitizer->SetTagsBlackList($aSanitizerConfiguration['tagsBlackList']);
 		$oSanitizer->SetAttrsBlackList($aSanitizerConfiguration['attrsBlackList']);
-		
+
 		$aCKEditorConfiguration = CKEditorHelper::GetDOMSanitizerForCKEditor($oSanitizer);
 		$this->assertEquals($aExpectedCKEditorConfiguration, $aCKEditorConfiguration);
 	}
-	
+
 	public function DOMSanitizerForCKEditorProvider(): array
 	{
 		return [
 			'Allow list small dataset' => [
 				[
-					'tagsWhiteList' => [		
-						'html' => array(),
-						'p' => array('style', 'class'),
-						'a' => array('href', 'name'),
+					'tagsWhiteList' => [
+						'html' => [],
+						'p' => ['style', 'class'],
+						'a' => ['href', 'name'],
 					],
 					'attrsWhiteList' => [
-						'href' => '/^(https:)/i'
+						'href' => '/^(https:)/i',
 					],
 					'stylesWhiteList' => [
 						'color',
-						'font-size'
+						'font-size',
 					],
 					'tagsBlackList' => [],
 					'attrsBlackList' => [],
@@ -82,7 +83,7 @@ class CKEditorHelperTest extends ItopTestCase
 							'name' => 'html',
 							'attributes' => false,
 							'classes' => false,
-							'styles' => false
+							'styles' => false,
 						],
 						[
 							'name' => 'p',
@@ -90,35 +91,35 @@ class CKEditorHelperTest extends ItopTestCase
 							'classes' => true,
 							'styles' => [
 								'color' => true,
-								'font-size' => true
-							]
+								'font-size' => true,
+							],
 						],
 						[
 							'name' => 'a',
 							'attributes' => [
 								'href' => [
-									'pattern' => '/^(https:)/i'
+									'pattern' => '/^(https:)/i',
 								],
-								'name' => true
+								'name' => true,
 							],
 							'classes' => false,
-							'styles' => false
-						]
+							'styles' => false,
+						],
 					],
-					'disallow' => []
-				]
+					'disallow' => [],
+				],
 			],
 			'Allow list medium dataset' => [
 				[
 					'tagsWhiteList' => [
-						'h1' => array('style', 'class'),
-						'h2' => array('style', 'class'),
-						'h3' => array('style', 'class'),
-						'h4' => array('style', 'class'),
-						'table' => array('style', 'class', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing', 'style'),
-						'tr' => array('style', 'class', 'align', 'valign', 'bgcolor', 'style'),
-						'ul' => array(),
-						'ol' => array(),
+						'h1' => ['style', 'class'],
+						'h2' => ['style', 'class'],
+						'h3' => ['style', 'class'],
+						'h4' => ['style', 'class'],
+						'table' => ['style', 'class', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing', 'style'],
+						'tr' => ['style', 'class', 'align', 'valign', 'bgcolor', 'style'],
+						'ul' => [],
+						'ol' => [],
 					],
 					'attrsWhiteList' => [
 						'href' => '/^(https:)/i',
@@ -166,8 +167,8 @@ class CKEditorHelperTest extends ItopTestCase
 								'vertical-align' => true,
 								'width' => true,
 								'white-space' => true,
-								'float' => true
-							]
+								'float' => true,
+							],
 						],
 						[
 							'name' => 'h2',
@@ -186,8 +187,8 @@ class CKEditorHelperTest extends ItopTestCase
 								'vertical-align' => true,
 								'width' => true,
 								'white-space' => true,
-								'float' => true
-							]
+								'float' => true,
+							],
 						],
 						[
 							'name' => 'h3',
@@ -206,8 +207,8 @@ class CKEditorHelperTest extends ItopTestCase
 								'vertical-align' => true,
 								'width' => true,
 								'white-space' => true,
-								'float' => true
-							]
+								'float' => true,
+							],
 						],
 						[
 							'name' => 'h4',
@@ -226,18 +227,18 @@ class CKEditorHelperTest extends ItopTestCase
 								'vertical-align' => true,
 								'width' => true,
 								'white-space' => true,
-								'float' => true
-							]
+								'float' => true,
+							],
 						],
 						[
 							'name' => 'table',
 							'attributes' => [
 								'width' => [
-									'pattern' => '/^([0-9]+(px|em|%)?)$/i'
+									'pattern' => '/^([0-9]+(px|em|%)?)$/i',
 								],
 								'summary' => true,
 								'align' => [
-									'pattern' => '/^(left|right|center|justify)$/i'
+									'pattern' => '/^(left|right|center|justify)$/i',
 								],
 								'border' => true,
 								'cellpadding' => true,
@@ -257,21 +258,21 @@ class CKEditorHelperTest extends ItopTestCase
 								'vertical-align' => true,
 								'width' => true,
 								'white-space' => true,
-								'float' => true
-							]
+								'float' => true,
+							],
 						],
 						[
 							'name' => 'tr',
 							'attributes' => [
 								'align' => [
-									'pattern' => '/^(left|right|center|justify)$/i'
+									'pattern' => '/^(left|right|center|justify)$/i',
 								],
 								'valign' => [
-									'pattern' => '/^(top|middle|bottom)$/i'
+									'pattern' => '/^(top|middle|bottom)$/i',
 								],
 								'bgcolor' => [
-									'pattern' => '/^#[0-9a-f]{6}$/i'
-								]
+									'pattern' => '/^#[0-9a-f]{6}$/i',
+								],
 							],
 							'classes' => true,
 							'styles' => [
@@ -287,24 +288,24 @@ class CKEditorHelperTest extends ItopTestCase
 								'vertical-align' => true,
 								'width' => true,
 								'white-space' => true,
-								'float' => true
-								]
+								'float' => true,
+								],
 							],
 						[
 							'name' => 'ul',
 							'attributes' => false,
 							'classes' => false,
-							'styles' => false
+							'styles' => false,
 						],
 						[
 							'name' => 'ol',
 							'attributes' => false,
 							'classes' => false,
-							'styles' => false
-						]
+							'styles' => false,
+						],
 					],
-					'disallow' => []
-				]
+					'disallow' => [],
+				],
 			],
 			'Disallow list small dataset' => [
 				[
@@ -326,24 +327,24 @@ class CKEditorHelperTest extends ItopTestCase
 						[
 							'name' => 'html',
 							'attributes' => [
-								'href' => true
+								'href' => true,
 							],
 						],
 						[
 							'name' => 'p',
 							'attributes' => [
-								'href' => true
+								'href' => true,
 							],
 						],
 						[
 							'name' => 'a',
 							'attributes' => [
-								'href' => true
+								'href' => true,
 							],
-						]
-					]
-				]
-			]
+						],
+					],
+				],
+			],
 		];
 	}
 }

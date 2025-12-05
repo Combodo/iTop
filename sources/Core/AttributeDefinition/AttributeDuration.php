@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -92,12 +93,21 @@ class AttributeDuration extends AttributeInteger
 			} else {
 				if ($duration < 86400) {
 					// Less than 1 day, display it in hours/minutes/seconds
-					$sResult = Dict::Format('Core:Duration_Hours_Minutes_Seconds', $aDuration['hours'],
-						$aDuration['minutes'], $aDuration['seconds']);
+					$sResult = Dict::Format(
+						'Core:Duration_Hours_Minutes_Seconds',
+						$aDuration['hours'],
+						$aDuration['minutes'],
+						$aDuration['seconds']
+					);
 				} else {
 					// more than 1 day, display it in days/hours/minutes/seconds
-					$sResult = Dict::Format('Core:Duration_Days_Hours_Minutes_Seconds', $aDuration['days'],
-						$aDuration['hours'], $aDuration['minutes'], $aDuration['seconds']);
+					$sResult = Dict::Format(
+						'Core:Duration_Days_Hours_Minutes_Seconds',
+						$aDuration['days'],
+						$aDuration['hours'],
+						$aDuration['minutes'],
+						$aDuration['seconds']
+					);
 				}
 			}
 		}
@@ -105,7 +115,7 @@ class AttributeDuration extends AttributeInteger
 		return $sResult;
 	}
 
-	static function SplitDuration($duration)
+	public static function SplitDuration($duration)
 	{
 		$duration = (int)$duration;
 		$days = floor($duration / 86400);
@@ -113,7 +123,7 @@ class AttributeDuration extends AttributeInteger
 		$minutes = floor(($duration - (86400 * $days + 3600 * $hours)) / 60);
 		$seconds = ($duration % 60); // modulo
 
-		return array('days' => $days, 'hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds);
+		return ['days' => $days, 'hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds];
 	}
 
 	public static function GetFormFieldClass()

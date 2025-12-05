@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:RequestManagement' => 'Gestion des demandes',
 	'Menu:RequestManagement+' => 'Gestion des demandes utilisateurs',
 	'Menu:RequestManagementProvider' => 'Gestion des demandes fournisseurs',
@@ -35,13 +36,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Demandes utilisateurs qui me sont assignées',
 	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Requêtes des 14 derniers jours par type',
 	'UI-RequestManagementOverview-Last-14-days' => 'Requêtes des 14 derniers jours',
-	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Requêtes ouvertes par statut',
+	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Requêtes ouvertes par état',
 	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Requêtes ouvertes par agent',
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Requêtes ouvertes par type',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requêtes ouvertes par client',
 	'Class:UserRequest:KnownErrorList' => 'Erreurs connues',
 	'Class:UserRequest:KnownErrorList+' => 'Erreurs connues liées à des éléments de configuration impactés par ce ticket',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -57,7 +58,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: UserRequest
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:UserRequest' => 'Demande Utilisateur',
 	'Class:UserRequest+' => '',
 	'Class:UserRequest/Attribute:status' => 'Etat',
@@ -160,6 +161,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Attribute:tto+' => 'Delai garanti d\'assignation',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',
 	'Class:UserRequest/Attribute:ttr+' => 'Délai garanti de résolution',
+	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO temps passé',
+	'Class:UserRequest/Attribute:tto_time_spent+' => '',
+	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR temps passé',
+	'Class:UserRequest/Attribute:ttr_time_spent+' => '',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'Echéance TTO',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => '',
 	'Class:UserRequest/Attribute:sla_tto_passed' => 'SLA TTO dépassé ?',
@@ -260,12 +265,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'La demande parente ne peut pas être assignée à elle même',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution de la demande (ev_autoresolve), et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution'
-));
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution de la demande (ev_autoresolve), et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
+]);
 
-
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Organization:Overview:UserRequests' => 'Demandes Utilisateurs pour cette organisation',
 	'Organization:Overview:MyUserRequests' => 'Mes Demandes Utilisateurs pour cette organisation',
 	'Organization:Overview:Tickets' => 'Les Tickets de cette organisation',
-));
+]);

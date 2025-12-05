@@ -1,9 +1,9 @@
 <?php
+
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DateTime;
-
 
 class WeeklyScheduledProcessTest extends ItopTestCase
 {
@@ -135,4 +135,3 @@ class WeeklyScheduledProcessTest extends ItopTestCase
 		$oWeeklyImpl->GetNextOccurrence();
 	}
 }
-

@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Подключение к iTop Hub',
 	'Menu:iTopHub:Register+' => 'Перейдите в iTop Hub, чтобы обновить ваш экземпляр '.ITOP_APPLICATION_SHORT,
@@ -65,6 +66,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.~~',
 	'iTopHub:InstallationStatus:Installed' => 'Installed~~',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>NOT</b> installed.~~',
-));
-
-
+]);

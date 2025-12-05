@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Core:DeletedObjectLabel' => '%1s (slettet)',
 	'Core:DeletedObjectTip' => 'Objektet er slettet på %1$s (%2$s)',
 	'Core:UnknownObjectLabel' => 'Objektet ikke fundet (klasse: %1$s, id: %2$d)',
@@ -158,8 +159,7 @@ Operators:<br/>
 	'Core:Context=GUI:Console' => 'Console~~',
 	'Core:Context=CRON' => 'cron~~',
 	'Core:Context=GUI:Portal' => 'Portal~~',
-));
-
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'core/cmdb'
@@ -170,7 +170,7 @@ Operators:<br/>
 // Class: CMDBChange
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CMDBChange' => 'Change',
 	'Class:CMDBChange+' => '',
 	'Class:CMDBChange/Attribute:date' => 'Dato',
@@ -185,13 +185,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
 	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
-));
+]);
 
 //
 // Class: CMDBChangeOp
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CMDBChangeOp' => 'Change Operation',
 	'Class:CMDBChangeOp+' => '',
 	'Class:CMDBChangeOp/Attribute:change' => 'Change',
@@ -206,51 +206,51 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Type',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpCreate
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CMDBChangeOpCreate' => 'Object oprettelse',
 	'Class:CMDBChangeOpCreate+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpDelete
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CMDBChangeOpDelete' => 'Object sletning',
 	'Class:CMDBChangeOpDelete+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttribute
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CMDBChangeOpSetAttribute' => 'Object ændring',
 	'Class:CMDBChangeOpSetAttribute+' => '',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Attribut',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeScalar
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CMDBChangeOpSetAttributeScalar' => 'Property ændring',
 	'Class:CMDBChangeOpSetAttributeScalar+' => '',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Tidligere værdi',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Ny værdi',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '',
-));
+]);
 // Used by CMDBChangeOp... & derived classes
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Change:ObjectCreated' => 'Objekt oprettet',
 	'Change:ObjectDeleted' => 'Objekt slettet',
 	'Change:ObjectModified' => 'Objekt ændret',
@@ -267,35 +267,35 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Change:LinkSet:Added' => 'tilføjet %1$s',
 	'Change:LinkSet:Removed' => 'fjernet %1$s',
 	'Change:LinkSet:Modified' => 'ændret %1$s',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeBlob
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CMDBChangeOpSetAttributeBlob' => 'Data ændring',
 	'Class:CMDBChangeOpSetAttributeBlob+' => '',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Tidligere data',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '',
-));
+]);
 
 //
 // Class: CMDBChangeOpSetAttributeText
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:CMDBChangeOpSetAttributeText' => 'Tekst ændring',
 	'Class:CMDBChangeOpSetAttributeText+' => '',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Tidligere data',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => '',
-));
+]);
 
 //
 // Class: Event
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Event' => 'Log Hændelse',
 	'Class:Event+' => '',
 	'Class:Event/Attribute:message' => 'Besked',
@@ -306,13 +306,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Event/Attribute:userinfo+' => '',
 	'Class:Event/Attribute:finalclass' => 'Type',
 	'Class:Event/Attribute:finalclass+' => '',
-));
+]);
 
 //
 // Class: EventNotification
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:EventNotification' => 'Notifikation hændelse',
 	'Class:EventNotification+' => '',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
@@ -321,13 +321,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:EventNotification/Attribute:action_id+' => '',
 	'Class:EventNotification/Attribute:object_id' => 'Object id',
 	'Class:EventNotification/Attribute:object_id+' => '',
-));
+]);
 
 //
 // Class: EventNotificationEmail
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:EventNotificationEmail' => 'Email emission hændelse',
 	'Class:EventNotificationEmail+' => '',
 	'Class:EventNotificationEmail/Attribute:to' => 'Til',
@@ -344,13 +344,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Vedhæftning(er)',
 	'Class:EventNotificationEmail/Attribute:attachments+' => '',
-));
+]);
 
 //
 // Class: EventIssue
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:EventIssue' => 'Hændelses emne',
 	'Class:EventIssue+' => '',
 	'Class:EventIssue/Attribute:issue' => 'Emne',
@@ -367,13 +367,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Data',
 	'Class:EventIssue/Attribute:data+' => '',
-));
+]);
 
 //
 // Class: EventWebService
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:EventWebService' => 'Web service hændelse',
 	'Class:EventWebService+' => '',
 	'Class:EventWebService/Attribute:verb' => 'Verb',
@@ -388,9 +388,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:EventWebService/Attribute:log_error+' => '',
 	'Class:EventWebService/Attribute:data' => 'Data',
 	'Class:EventWebService/Attribute:data+' => '',
-));
+]);
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:EventRestService' => 'REST/JSON call~~',
 	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
 	'Class:EventRestService/Attribute:operation' => 'Operation~~',
@@ -405,13 +405,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)~~',
 	'Class:EventRestService/Attribute:provider' => 'Provider~~',
 	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation~~',
-));
+]);
 
 //
 // Class: EventLoginUsage
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:EventLoginUsage' => 'Login Usage',
 	'Class:EventLoginUsage+' => '',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
@@ -420,13 +420,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'Bruger Email',
 	'Class:EventLoginUsage/Attribute:contact_email+' => '',
-));
+]);
 
 //
 // Class: EventNotificationNewsroom
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:EventNotificationNewsroom' => 'News sent~~',
 	'Class:EventNotificationNewsroom+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:title' => 'Title~~',
@@ -455,13 +455,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:EventNotificationNewsroom/Attribute:read_date+' => '~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id' => 'Contact~~',
 	'Class:EventNotificationNewsroom/Attribute:contact_id+' => '~~',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Action' => 'Brugerdefineret handling',
 	'Class:Action+' => '',
 	'Class:Action/ComplementaryName' => '%1$s: %2$s~~',
@@ -491,22 +491,22 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Action:last_executions_tab_panel_title' => 'Executions of this action (%1$s)~~',
 	'Action:last_executions_tab_limit_days' => 'past %1$s days~~',
 	'Action:last_executions_tab_limit_none' => 'no limit~~',
-));
+]);
 
 //
 // Class: ActionNotification
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ActionNotification' => 'Notifikation',
 	'Class:ActionNotification+' => '',
-));
+]);
 
 //
 // Class: ActionEmail
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ActionEmail' => 'Email besked',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: 
@@ -561,14 +561,13 @@ If omitted the From (label) is used.~~',
 	'ActionEmail:preview_warning' => 'The actual eMail may look different in the eMail client than this preview in your browser.~~',
 	'ActionEmail:preview_more_info' => 'For more information about the CSS features supported by the different eMail clients, refer to %1$s~~',
 	'ActionEmail:content_placeholder_missing' => 'The placeholder "%1$s" was not found in the HTML template. The content of the field "%2$s" will not be included in the generated emails.~~',
-));
-
+]);
 
 //
 // Class: ActionNewsroom
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'ActionNewsroom:trigger' => 'Trigger~~',
 	'ActionNewsroom:content' => 'Message~~',
 	'ActionNewsroom:settings' => 'Settings~~',
@@ -603,13 +602,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ActionNewsroom/Attribute:recipients+' => 'An OQL query returning Contact objects~~',
 	'Class:ActionNewsroom/Attribute:url' => 'URL~~',
 	'Class:ActionNewsroom/Attribute:url+' => 'By default, it points to the object triggering the notification. But you can also specify a custom URL.~~',
-));
+]);
 
 //
 // Class: Trigger
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Trigger' => 'Triggere',
 	'Class:Trigger+' => '',
 	'Class:Trigger/ComplementaryName' => '%1$s, %2$s~~',
@@ -628,13 +627,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Trigger/Attribute:subscription_policy/Value:allow_no_channel' => 'Allow complete unsubscription~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_at_least_one_channel' => 'Force at least one channel (News or Email)~~',
 	'Class:Trigger/Attribute:subscription_policy/Value:force_all_channels' => 'Deny unsubscription~~',
-));
+]);
 
 //
 // Class: TriggerOnObject
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnObject' => 'Trigger (klasse afhængig)',
 	'Class:TriggerOnObject+' => '',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Target klasse',
@@ -643,115 +642,115 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
 	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class "%1$s"~~',
-));
+]);
 
 //
 // Class: TriggerOnPortalUpdate
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnPortalUpdate' => 'Trigger (Når opdateret fra portalen)',
 	'Class:TriggerOnPortalUpdate+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateChange
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnStateChange' => 'Trigger (i tilstand ændring)',
 	'Class:TriggerOnStateChange+' => '',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Tilstand',
 	'Class:TriggerOnStateChange/Attribute:state+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateEnter
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnStateEnter' => 'Trigger (ved indtræden i en tilstand)',
 	'Class:TriggerOnStateEnter+' => '',
-));
+]);
 
 //
 // Class: TriggerOnStateLeave
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnStateLeave' => 'Trigger (når en tilstand forlades)',
 	'Class:TriggerOnStateLeave+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectCreate
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnObjectCreate' => 'Trigger (ved oprettelse af objekt)',
 	'Class:TriggerOnObjectCreate+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectDelete
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
 	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
-));
+]);
 
 //
 // Class: TriggerOnObjectUpdate
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
-));
+]);
 
 //
 // Class: TriggerOnObjectMention
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
 	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
-));
+]);
 
 //
 // Class: TriggerOnAttributeBlobDownload
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnAttributeBlobDownload' => 'Trigger (on object\'s document download)~~',
 	'Class:TriggerOnAttributeBlobDownload+' => 'Trigger on object\'s document field download of [a child class of] the given class~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnAttributeBlobDownload/Attribute:target_attcodes+' => '~~',
-));
+]);
 
 //
 // Class: TriggerOnThresholdReached
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TriggerOnThresholdReached' => 'Trigger (grænseværdi)',
 	'Class:TriggerOnThresholdReached+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stopur',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Grænse',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
-));
+]);
 
 //
 // Class: lnkTriggerAction
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkTriggerAction' => 'Handling/Trigger',
 	'Class:lnkTriggerAction+' => '',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Handling',
@@ -764,12 +763,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
 	'Class:lnkTriggerAction/Attribute:order' => 'Rækkefølge',
 	'Class:lnkTriggerAction/Attribute:order+' => '',
-));
+]);
 
 //
 // Synchro Data Source
 //
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:SynchroDataSource' => 'Synchro Data Kilde',
 	'Class:SynchroDataSource/Attribute:name' => 'Navn',
 	'Class:SynchroDataSource/Attribute:name+' => '',
@@ -1057,13 +1056,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
 	'Core:Validator:MustSelectOne' => 'Please, select one~~',
 	'Menu:DataSources' => 'Synkroniserings Data Kilder',
-	'Menu:DataSources+' => ''
-));
+	'Menu:DataSources+' => '',
+]);
 
 //
 // Class: TagSetFieldData
 //
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
 	'Class:TagSetFieldData+' => '',
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
@@ -1085,12 +1084,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
 	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
-));
+]);
 
 //
 // Class: DBProperty
 //
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:DBProperty' => 'DB property~~',
 	'Class:DBProperty+' => '',
 	'Class:DBProperty/Attribute:name' => 'Name~~',
@@ -1103,12 +1102,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
 	'Class:DBProperty/Attribute:change_comment+' => '',
-));
+]);
 
 //
 // Class: BackgroundTask
 //
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:BackgroundTask' => 'Background task~~',
 	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
@@ -1133,12 +1132,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => 'Status~~',
 	'Class:BackgroundTask/Attribute:status+' => '',
-));
+]);
 
 //
 // Class: AsyncTask
 //
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:AsyncTask' => 'Async. task~~',
 	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Created~~',
@@ -1163,47 +1162,44 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
 	'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
 	'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
-));
+]);
 
 //
 // Class: AbstractResource
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:AbstractResource' => 'Abstract Resource~~',
 	'Class:AbstractResource+' => '',
-));
+]);
 
 //
 // Class: ResourceAdminMenu
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
 	'Class:ResourceAdminMenu+' => '',
-));
+]);
 
 //
 // Class: ResourceRunQueriesMenu
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '',
-));
+]);
 
 //
 // Class: Action
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '',
-    'Class:EventNotification/Attribute:object_class' => 'Object class~~',
-    'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
+	'Class:EventNotification/Attribute:object_class' => 'Object class~~',
+	'Class:EventNotification/Attribute:object_class+' => 'Object class (Same as trigger)~~',
 	'Core:EventNotificationNewsroom:ErrorNotificationNotSent' => 'Notification not sent~~',
 	'Core:EventNotificationNewsroom:ErrorOnDBInsert' => 'An error occurred while saving the notification~~',
-));
-
-
-
+]);

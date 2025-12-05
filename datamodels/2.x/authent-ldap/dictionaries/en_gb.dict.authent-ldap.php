@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -35,8 +36,8 @@
 // Class: UserLDAP
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:UserLDAP' => 'LDAP user',
 	'Class:UserLDAP+' => 'User authenticated by LDAP',
 	'UserLDAP:server' => 'LDAP specifics',
-));
+]);

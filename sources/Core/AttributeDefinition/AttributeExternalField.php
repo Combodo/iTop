@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -56,14 +57,13 @@ class AttributeExternalField extends AttributeDefinition
 				case ($oRemoteAtt instanceof AttributeExternalKey):
 					return self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 			}
-		}
-		catch (CoreException $e) {
+		} catch (CoreException $e) {
 		}
 
 		return self::SEARCH_WIDGET_TYPE_RAW;
 	}
 
-	function IsSearchable()
+	public function IsSearchable()
 	{
 		if ($this->IsFriendlyName()) {
 			return true;
@@ -74,7 +74,7 @@ class AttributeExternalField extends AttributeDefinition
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("extkey_attcode", "target_attcode"));
+		return array_merge(parent::ListExpectedParams(), ["extkey_attcode", "target_attcode"]);
 	}
 
 	public function GetEditClass()
@@ -104,7 +104,7 @@ class AttributeExternalField extends AttributeDefinition
 	public function GetSQLExpressions($sPrefix = '')
 	{
 		if ($sPrefix == '') {
-			return array('' => $this->GetCode()); // Warning: Use GetCode() since AttributeExternalField does not have any 'sql' property
+			return ['' => $this->GetCode()]; // Warning: Use GetCode() since AttributeExternalField does not have any 'sql' property
 		} else {
 			return $sPrefix;
 		}
@@ -295,9 +295,8 @@ class AttributeExternalField extends AttributeDefinition
 
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
-		return array($this->Get("extkey_attcode"));
+		return [$this->Get("extkey_attcode")];
 	}
-
 
 	/**
 	 * @return AttributeExternalField
@@ -417,7 +416,6 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->ScalarToSQL($value);
 	}
 
-
 	// Do not overload GetSQLExpression here because this is handled in the joins
 	//public function GetSQLExpressions($sPrefix = '') {return array();}
 
@@ -444,10 +442,13 @@ class AttributeExternalField extends AttributeDefinition
 	}
 
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTestQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTestQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		$oExtAttDef = $this->GetExtAttDef();
 
 		return $oExtAttDef->GetAsCSV($value, $sSeparator, $sTestQualifier, null, $bLocalize, $bConvertToPlainText);

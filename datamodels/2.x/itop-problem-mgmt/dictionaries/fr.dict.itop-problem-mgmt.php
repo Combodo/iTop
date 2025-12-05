@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:ProblemManagement' => 'Gestion des problèmes',
 	'Menu:ProblemManagement+' => '',
 	'Menu:Problem:Overview' => 'Vue d\'ensemble',
@@ -32,12 +33,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ProblemMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Problèmes',
 	'UI:ProblemMgmtMenuOverview:Title+' => 'Tableau de bord de la Gestion des Problèmes',
 
-));
+]);
 //
 // Class: Problem
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Problem' => 'Problème',
 	'Class:Problem+' => '',
 	'Class:Problem/Attribute:status' => 'Etat',
@@ -127,5 +128,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Problem/Stimulus:ev_resolve' => 'Résoudre',
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Fermer',
-	'Class:Problem/Stimulus:ev_close+' => ''
-));
+	'Class:Problem/Stimulus:ev_close+' => '',
+]);

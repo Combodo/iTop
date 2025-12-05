@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -19,14 +20,10 @@
 
 use Combodo\iTop\Application\WebPage\Page;
 
-if (!defined('APPROOT'))
-{
-	if (file_exists(__DIR__.'/../../approot.inc.php'))
-	{
+if (!defined('APPROOT')) {
+	if (file_exists(__DIR__.'/../../approot.inc.php')) {
 		require_once __DIR__.'/../../approot.inc.php';   // When in env-xxxx folder
-	}
-	else
-	{
+	} else {
 		require_once __DIR__.'/../../../approot.inc.php';   // When in datamodels/x.x folder
 	}
 }
@@ -65,26 +62,23 @@ function Usage($oP)
 {
 	$oP->p('Restore an iTop from a backup file');
 	$oP->p('Parameters:');
-	if (utils::IsModeCLI())
-	{
+	if (utils::IsModeCLI()) {
 		$oP->p('auth_user: login, must be administrator');
 		$oP->p('auth_pwd: ...');
 	}
 	$oP->p('backup_file [optional]: name of the file to store the backup into. Follows the PHP strftime() (https://www.php.net/manual/fr/function.strftime.php) format spec. The following placeholders are available: __HOST__, __DB__, __SUBNAME__');
 	$oP->p('mysql_bindir [optional]: specify the path for mysql executable');
 
-	if (utils::IsModeCLI())
-	{
+	if (utils::IsModeCLI()) {
 		$oP->p('Example: php -q restore.php --auth_user=admin --auth_pwd=myPassw0rd --backup_file=/tmp/backup.zip');
 		$oP->p('Known limitation: the current directory must be the directory of backup.php');
-	}
-	else
-	{
+	} else {
 		$oP->p('Example: .../restore.php?backup_file=/tmp/backup.zip');
 	}
 }
 
-function GetOperationName() {
+function GetOperationName()
+{
 	return "iTop - iTop Restore";
 }
 
@@ -94,39 +88,32 @@ function GetOperationName() {
  * @throws \DictExceptionUnknownLanguage
  * @throws \OQLException
  */
-function ExecuteMainOperation($oP){
-	if (utils::IsModeCLI())
-	{
+function ExecuteMainOperation($oP)
+{
+	if (utils::IsModeCLI()) {
 		$oP->p(date('Y-m-d H:i:s')." - running restore utility");
 		$sAuthUser = ReadMandatoryParam($oP, 'auth_user');
 		$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd');
 		$sBackupFile = ReadMandatoryParam($oP, 'backup_file');
-		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-		{
+		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
 			UserRights::Login($sAuthUser); // Login & set the user's language
-		}
-		else
-		{
+		} else {
 			ExitError($oP, "Access restricted or wrong credentials ('$sAuthUser')");
 		}
 
-		if (!is_file($sBackupFile) || !is_readable($sBackupFile)){
+		if (!is_file($sBackupFile) || !is_readable($sBackupFile)) {
 			ExitError($oP, "Cannot access backup file ('$sBackupFile')");
 		}
-	}
-	else
-	{
+	} else {
 		require_once(APPROOT.'application/loginwebpage.class.inc.php');
 		LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	}
 
-	if (!UserRights::IsAdministrator())
-	{
+	if (!UserRights::IsAdministrator()) {
 		ExitError($oP, "Access restricted to administrators");
 	}
 
-	if (CheckParam('?') || CheckParam('h') || CheckParam('help'))
-	{
+	if (CheckParam('?') || CheckParam('h') || CheckParam('help')) {
 		Usage($oP);
 		$oP->output();
 		exit;
@@ -136,12 +123,9 @@ function ExecuteMainOperation($oP){
 	$oRestore = new MyCliRestore($oP);
 	$oRestore->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
 
-	if (MetaModel::GetConfig()->Get('demo_mode'))
-	{
+	if (MetaModel::GetConfig()->Get('demo_mode')) {
 		$oP->p("Sorry, iTop is in demonstration mode: the feature is disabled");
-	}
-	else
-	{
+	} else {
 		$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
 		$oRestore->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
 	}

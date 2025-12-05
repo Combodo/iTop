@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -17,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-
 interface iProcess
 {
 	/**
@@ -33,7 +33,7 @@ interface iProcess
 
 /**
  * interface iBackgroundProcess
- * Any extension that must be called regularly to be executed in the background 
+ * Any extension that must be called regularly to be executed in the background
  *
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -62,7 +62,6 @@ interface iScheduledProcess extends iProcess
 	public function GetNextOccurrence();
 }
 
-
 /**
  * Implementation of {@link iScheduledProcess}, using config parameters for module
  *
@@ -82,11 +81,11 @@ interface iScheduledProcess extends iProcess
 abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 {
 	// param have default names/values but can be overridden
-	const MODULE_SETTING_ENABLED = 'enabled';
-	const DEFAULT_MODULE_SETTING_ENABLED = true;
-	const MODULE_SETTING_WEEKDAYS = 'week_days';
-	const DEFAULT_MODULE_SETTING_WEEKDAYS = 'monday, tuesday, wednesday, thursday, friday, saturday, sunday';
-	const MODULE_SETTING_TIME = 'time';
+	public const MODULE_SETTING_ENABLED = 'enabled';
+	public const DEFAULT_MODULE_SETTING_ENABLED = true;
+	public const MODULE_SETTING_WEEKDAYS = 'week_days';
+	public const DEFAULT_MODULE_SETTING_WEEKDAYS = 'monday, tuesday, wednesday, thursday, friday, saturday, sunday';
+	public const MODULE_SETTING_TIME = 'time';
 
 	/**
 	 * @var Config can be used to mock config for tests
@@ -111,14 +110,12 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 	 */
 	public function getOConfig()
 	{
-		if (!isset($this->oConfig))
-		{
+		if (!isset($this->oConfig)) {
 			$this->oConfig = MetaModel::GetConfig();
 		}
 
 		return $this->oConfig;
 	}
-
 
 	/**
 	 * Interpret current setting for the week days
@@ -128,7 +125,7 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 	 */
 	public function InterpretWeekDays()
 	{
-		static $aWEEKDAYTON = array(
+		static $aWEEKDAYTON = [
 			'monday' => 1,
 			'tuesday' => 2,
 			'wednesday' => 3,
@@ -136,32 +133,26 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			'friday' => 5,
 			'saturday' => 6,
 			'sunday' => 7,
-		);
-		$aDays = array();
+		];
+		$aDays = [];
 		$sWeekDays = $this->getOConfig()->GetModuleSetting(
 			$this->GetModuleName(),
 			static::MODULE_SETTING_WEEKDAYS,
 			static::DEFAULT_MODULE_SETTING_WEEKDAYS
 		);
 
-		if ($sWeekDays !== '')
-		{
+		if ($sWeekDays !== '') {
 			$aWeekDaysRaw = explode(',', $sWeekDays);
-			foreach ($aWeekDaysRaw as $sWeekDay)
-			{
+			foreach ($aWeekDaysRaw as $sWeekDay) {
 				$sWeekDay = strtolower(trim($sWeekDay));
-				if (array_key_exists($sWeekDay, $aWEEKDAYTON))
-				{
+				if (array_key_exists($sWeekDay, $aWEEKDAYTON)) {
 					$aDays[] = $aWEEKDAYTON[$sWeekDay];
-				}
-				else
-				{
+				} else {
 					throw new ProcessInvalidConfigException($this->GetModuleName().": wrong format for setting '".static::MODULE_SETTING_WEEKDAYS."' (found '$sWeekDay')");
 				}
 			}
 		}
-		if (count($aDays) === 0)
-		{
+		if (count($aDays) === 0) {
 			throw new ProcessInvalidConfigException($this->GetModuleName().': missing setting \''.static::MODULE_SETTING_WEEKDAYS.'\'');
 		}
 		$aDays = array_unique($aDays);
@@ -185,8 +176,7 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			static::DEFAULT_MODULE_SETTING_ENABLED
 		);
 
-		if (!$bEnabled)
-		{
+		if (!$bEnabled) {
 			return new DateTime('3000-01-01');
 		}
 
@@ -202,21 +192,17 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			static::GetDefaultModuleSettingTime()
 		);
 		$sProcessTime = trim($sProcessTime);
-		if (!preg_match('/[0-2]\d:[0-5]\d/', $sProcessTime))
-		{
+		if (!preg_match('/[0-2]\d:[0-5]\d/', $sProcessTime)) {
 			throw new ProcessInvalidConfigException($this->GetModuleName().": wrong format for setting '".static::MODULE_SETTING_TIME."' (found '$sProcessTime')");
 		}
 
 		$oNow = new DateTime($sCurrentTime);
 		$iNextPos = false;
 		$sDay = $oNow->format('N');
-		for ($iDay = (int) $sDay; $iDay <= 7; $iDay++)
-		{
+		for ($iDay = (int) $sDay; $iDay <= 7; $iDay++) {
 			$iNextPos = array_search($iDay, $aDays, true);
-			if ($iNextPos !== false)
-			{
-				if (($iDay > $oNow->format('N')) || ($oNow->format('H:i') < $sProcessTime))
-				{
+			if ($iNextPos !== false) {
+				if (($iDay > $oNow->format('N')) || ($oNow->format('H:i') < $sProcessTime)) {
 					break;
 				}
 				$iNextPos = false; // necessary on sundays
@@ -225,17 +211,14 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 
 		// 3rd - Compute the result
 		//
-		if ($iNextPos === false)
-		{
+		if ($iNextPos === false) {
 			// Jump to the first day within the next week
 			$iFirstDayOfWeek = $aDays[0];
 			$iDayMove = $oNow->format('N') - $iFirstDayOfWeek;
 			$oRet = clone $oNow;
 			$oRet->modify(-$iDayMove.' days');
 			$oRet->modify('+1 weeks');
-		}
-		else
-		{
+		} else {
 			$iNextDayOfWeek = $aDays[$iNextPos];
 			$iMove = $iNextDayOfWeek - $oNow->format('N');
 			$oRet = clone $oNow;

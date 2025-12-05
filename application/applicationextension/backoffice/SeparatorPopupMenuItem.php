@@ -10,20 +10,20 @@
  */
 class SeparatorPopupMenuItem extends ApplicationPopupMenuItem
 {
-    static $idx = 0;
+	public static $idx = 0;
 
-    /**
-     * Constructor
-     * @api
-     */
-    public function __construct()
-    {
-        parent::__construct('_separator_' . (self::$idx++), '');
-    }
+	/**
+	 * Constructor
+	 * @api
+	 */
+	public function __construct()
+	{
+		parent::__construct('_separator_'.(self::$idx++), '');
+	}
 
-    /** @ignore */
-    public function GetMenuItem()
-    {
-        return array('label' => '<hr class="menu-separator">', 'url' => '', 'css_classes' => $this->aCssClasses);
-    }
+	/** @ignore */
+	public function GetMenuItem()
+	{
+		return ['label' => '<hr class="menu-separator">', 'url' => '', 'css_classes' => $this->aCssClasses];
+	}
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Eric
@@ -7,7 +8,6 @@
  */
 
 namespace Combodo\iTop\Test\UnitTest\Core;
-
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
@@ -22,7 +22,7 @@ use TagSetFieldData;
 class TagSetFieldDataTest extends ItopDataTestCase
 {
 	// Need database COMMIT in order to create the FULLTEXT INDEX of MySQL
-	const USE_TRANSACTION = false;
+	public const USE_TRANSACTION = false;
 
 	/**
 	 * @throws \CoreException
@@ -65,33 +65,27 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		$iCurrCount = count($aAllowedValues);
 		static::assertEquals(4, $iCurrCount - $iInitialCount);
 
-		try
-		{
+		try {
 			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag4', 'Fourth');
-		} catch (CoreException $e)
-		{
+		} catch (CoreException $e) {
 			$this->debug($e->getMessage());
 		}
 		$aAllowedValues = TagSetFieldData::GetAllowedValues(TAG_CLASS, TAG_ATTCODE);
 		$iCurrCount = count($aAllowedValues);
 		static::assertEquals(4, $iCurrCount - $iInitialCount);
 
-		try
-		{
+		try {
 			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag4', 'zembrek');
-		} catch (CoreException $e)
-		{
+		} catch (CoreException $e) {
 			$this->debug($e->getMessage());
 		}
 		$aAllowedValues = TagSetFieldData::GetAllowedValues(TAG_CLASS, TAG_ATTCODE);
 		$iCurrCount = count($aAllowedValues);
 		static::assertEquals(4, $iCurrCount - $iInitialCount);
 
-		try
-		{
+		try {
 			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'zembrek', 'Fourth');
-		} catch (CoreException $e)
-		{
+		} catch (CoreException $e) {
 			$this->debug($e->getMessage());
 		}
 		$aAllowedValues = TagSetFieldData::GetAllowedValues(TAG_CLASS, TAG_ATTCODE);
@@ -129,10 +123,10 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	public function testComputeValues()
 	{
 		$sTagClass = TagSetFieldData::GetTagDataClassName(TAG_CLASS, TAG_ATTCODE);
-		$oTagData = $this->createObject($sTagClass, array(
+		$oTagData = $this->createObject($sTagClass, [
 			'code' => 'tag1',
 			'label' => 'First',
-		));
+		]);
 		$this->debug("Created {$oTagData->Get('obj_class')}::{$oTagData->Get('obj_attcode')}");
 
 		static::assertEquals(TAG_CLASS, $oTagData->Get('obj_class'));
@@ -150,8 +144,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	{
 		try {
 			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, $sTagCode, 'First');
-		}
-		catch (CoreException $e) {
+		} catch (CoreException $e) {
 			static::assertTrue(true);
 			return;
 		}
@@ -161,22 +154,22 @@ class TagSetFieldDataTest extends ItopDataTestCase
 
 	public function InvalidTagCodeProvider()
 	{
-		return array(
-			'No space' => array('tag1 1'),
-			'No _' => array('tag_1'),
-			'No -' => array('tag-1'),
-			'No %' => array('tag%1'),
-			'At least 3 chars' => array(''),
-			'At least 3 chars 1' => array('a'),
-			'At least 3 chars 2' => array('ab'),
-			'No #' => array('#tag'),
-			'No !' => array('tag!'),
-			'Stop Word 1' => array('about'),
-			'Stop Word 2' => array('from'),
-			'Stop Word 3' => array('that'),
-			'Stop Word 4' => array('where'),
-			'Stop Word 5' => array('who'),
-		);
+		return [
+			'No space' => ['tag1 1'],
+			'No _' => ['tag_1'],
+			'No -' => ['tag-1'],
+			'No %' => ['tag%1'],
+			'At least 3 chars' => [''],
+			'At least 3 chars 1' => ['a'],
+			'At least 3 chars 2' => ['ab'],
+			'No #' => ['#tag'],
+			'No !' => ['tag!'],
+			'Stop Word 1' => ['about'],
+			'Stop Word 2' => ['from'],
+			'Stop Word 3' => ['that'],
+			'Stop Word 4' => ['where'],
+			'Stop Word 5' => ['who'],
+		];
 	}
 
 	/**
@@ -186,8 +179,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	{
 		try {
 			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First|Second');
-		}
-		catch (CoreException $e) {
+		} catch (CoreException $e) {
 			static::assertFalse(false);
 			return;
 		}
@@ -238,11 +230,9 @@ class TagSetFieldDataTest extends ItopDataTestCase
 
 		// Too long
 		$sTagCode = str_repeat('a', $iMaxLength + 1);
-		try
-		{
+		try {
 			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, $sTagCode, $sTagCode);
-		} catch (CoreException $e)
-		{
+		} catch (CoreException $e) {
 			$this->debug('Awaited: '.$e->getMessage());
 			static::assertTrue(true);
 			return;
@@ -259,30 +249,26 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		/** @var \AttributeTagSet $oAttDef */
 		$oAttDef = MetaModel::GetAttributeDef(TAG_CLASS, TAG_ATTCODE);
 		$iMaxTags = $oAttDef->GetMaxItems();
-		for ($i = 0; $i < $iMaxTags; $i++)
-		{
+		for ($i = 0; $i < $iMaxTags; $i++) {
 			$sTagCode = 'MaxTag'.$i;
 			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, $sTagCode, $sTagCode);
 		}
 		$oObjWithTagSet = $this->CreateObjectWithTagSet();
 		$this->debug("Max number of tags is $iMaxTags");
 		$sValue = '';
-		for ($i = 0; $i < ($iMaxTags + 1); $i++)
-		{
-			try
-			{
+		for ($i = 0; $i < ($iMaxTags + 1); $i++) {
+			try {
 				$sTagCode = 'MaxTag'.$i;
 				$sValue .= "$sTagCode ";
 				$oObjWithTagSet->Set(TAG_ATTCODE, $sValue);
 				$oObjWithTagSet->DBWrite();
-			} catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				// Should fail on the last iteration
 				static::assertEquals($iMaxTags, $i);
-				$this->debug("Setting (".($i+1).") tag(s) failed");
+				$this->debug("Setting (".($i + 1).") tag(s) failed");
 				return;
 			}
-			$this->debug("Setting (".($i+1).") tag(s) worked");
+			$this->debug("Setting (".($i + 1).") tag(s) worked");
 		}
 
 		static::assertFalse(true);

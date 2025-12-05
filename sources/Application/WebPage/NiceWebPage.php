@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -61,9 +62,9 @@ class NiceWebPage extends WebPage
 		'js/searchformforeignkeys.js',
 	];
 
-	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/nicewebpage/layout';
+	public const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/nicewebpage/layout';
 
-	var $m_sRootUrl;
+	public $m_sRootUrl;
 
 	public function __construct($s_title, $bPrintable = false)
 	{
@@ -145,8 +146,7 @@ JS
 		$this->LinkScriptFromAppRoot('node_modules/jquery/dist/jquery.min.js');
 		$this->LinkScriptFromAppRoot('js/ajax_hook.js');
 		$this->LinkScriptFromAppRoot('js/jquery.blockUI.js');
-		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
-		{
+		if (utils::IsDevelopmentEnvironment()) { // Needed since many other plugins still rely on oldies like $.browser
 			$this->LinkScriptFromAppRoot('js/jquery-migrate.dev-params.js');
 			$this->LinkScriptFromAppRoot('node_modules/jquery-migrate/dist/jquery-migrate.js');
 		} else {
@@ -170,11 +170,10 @@ JS
 		$this->add_dict_entries('UI:Combo');
 	}
 
-
 	public function SetRootUrl($sRootUrl)
-    {
-    	$this->m_sRootUrl = $sRootUrl;
-    }
+	{
+		$this->m_sRootUrl = $sRootUrl;
+	}
 
 	public function small_p($sText)
 	{
@@ -191,7 +190,7 @@ JS
 		return utils::GetAbsoluteUrlModulesRoot();
 	}
 
-	function GetApplicationContext()
+	public function GetApplicationContext()
 	{
 		$oAppContext = new ApplicationContext();
 		return $oAppContext->GetForLink();
@@ -203,11 +202,9 @@ JS
 		// $aTopLevelClasses = array('bizService', 'bizContact', 'logInfra', 'bizDocument');
 		// These are classes wich root class is cmdbAbstractObject !
 		$this->add("<select id=\"select_$sName\" name=\"$sName\">");
-		$aValidClasses = array();
-		foreach(MetaModel::GetClasses('bizmodel') as $sClassName)
-		{
-			if (is_null($iActionCode) || UserRights::IsActionAllowed($sClassName, $iActionCode))
-			{
+		$aValidClasses = [];
+		foreach (MetaModel::GetClasses('bizmodel') as $sClassName) {
+			if (is_null($iActionCode) || UserRights::IsActionAllowed($sClassName, $iActionCode)) {
 				$sSelected = ($sClassName == $sDefaultValue) ? " SELECTED" : "";
 				$sDescription = MetaModel::GetClassDescription($sClassName);
 				$sDisplayName = MetaModel::GetName($sClassName);
@@ -224,8 +221,7 @@ JS
 	public function add_select($aChoices, $sName, $sDefaultValue, $iWidthPx)
 	{
 		$this->add("<select id=\"select_$sName\" name=\"$sName\">");
-		foreach($aChoices as $sKey => $sValue)
-		{
+		foreach ($aChoices as $sKey => $sValue) {
 			$sSelected = ($sKey == $sDefaultValue) ? " SELECTED" : "";
 			$this->add("<option style=\"width: ".$iWidthPx." px;\" value=\"".htmlspecialchars($sKey)."\"$sSelected>".utils::EscapeHtml($sValue)."</option>");
 		}

@@ -16,7 +16,6 @@ use utils;
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 /**
  * @since 2.7.1 N°2641 class creation
  */
@@ -55,10 +54,9 @@ class ErrorPage extends NiceWebPage
 	public function error($sText)
 	{
 		$this->add("<div class=\"message message-error\">$sText</div>");
-		if(utils::IsEasterEggAllowed())
-		{
+		if (utils::IsEasterEggAllowed()) {
 			$this->add('<div class="message message-valid">'.Dict::S('UI:ErrorPage:UnstableVersion').'</div>');
-			$this->add('<img src="' . utils::GetAbsoluteUrlAppRoot() . 'images/alpha-fatal-error.gif">');
+			$this->add('<img src="'.utils::GetAbsoluteUrlAppRoot().'images/alpha-fatal-error.gif">');
 			$this->add('<div class="message message-valid">'.nl2br(Dict::S('UI:ErrorPage:KittyDisclaimer')).'</div>');
 		}
 		$this->log_error($sText);

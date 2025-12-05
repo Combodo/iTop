@@ -7,7 +7,6 @@ use Exception;
 use MetaModel;
 use utils;
 
-
 /**
  * @group itopRequestMgmt
  * @group restApi
@@ -15,12 +14,12 @@ use utils;
  */
 class RestTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = false;
-	const CREATE_TEST_ORG = false;
+	public const USE_TRANSACTION = false;
+	public const CREATE_TEST_ORG = false;
 
-	static private $sUrl;
-	static private $sLogin;
-	static private $sPassword = "Iuytrez9876543ç_è-(";
+	private static $sUrl;
+	private static $sLogin;
+	private static $sPassword = "Iuytrez9876543ç_è-(";
 
 	/**
 	 * This method is called before the first test of this test class is run (in the current process).
@@ -50,8 +49,8 @@ class RestTest extends ItopDataTestCase
 
 		$this->CreateTestOrganization();
 
-		$oRestProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
-		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
+		$oRestProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'REST Services User'], true);
+		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'Administrator'], true);
 
 		if (is_object($oRestProfile) && is_object($oAdminProfile)) {
 			$oUser = $this->CreateUser(static::$sLogin, $oRestProfile->GetKey(), static::$sPassword);
@@ -106,7 +105,8 @@ class RestTest extends ItopDataTestCase
 		$this->assertEquals(0, $aJSONResultAsArray['code'], $sJSONResult);
 	}
 
-	public function testCoreApiGet(){
+	public function testCoreApiGet()
+	{
 		// Create ticket
 		$description = date('dmY H:i:s');
 		$oTicket = $this->CreateSampleTicket($description);
@@ -190,12 +190,13 @@ JSON;
 	 * array_key_first comes with PHP7.3
 	 * itop should also work with previous PHP versions
 	 */
-	private function array_key_first($aTab){
-		if (!is_array($aTab) || empty($aTab)){
+	private function array_key_first($aTab)
+	{
+		if (!is_array($aTab) || empty($aTab)) {
 			return false;
 		}
 
-		foreach ($aTab as $sKey => $sVal){
+		foreach ($aTab as $sKey => $sVal) {
 			return $sKey;
 		}
 	}
@@ -258,7 +259,7 @@ JSON;
 		$oTicket = $this->createObject('UserRequest', [
 			'org_id' => $this->getTestOrgId(),
 			"title" => "Houston, got a problem",
-			"description" => $description
+			"description" => $description,
 		]);
 		return $oTicket;
 	}
@@ -287,8 +288,7 @@ JSON;
 
 				$oCurlFile = curl_file_create($sTmpFile);
 				$aPostFields['json_data'] = $oCurlFile;
-			}
-			else {
+			} else {
 				$aPostFields['json_data'] = $sJsonDataContent;
 			}
 		}
@@ -306,7 +306,7 @@ JSON;
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
 		$sJson = curl_exec($ch);
-		curl_close ($ch);
+		curl_close($ch);
 
 		if (!is_null($sTmpFile)) {
 			unlink($sTmpFile);

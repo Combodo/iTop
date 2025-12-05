@@ -6,10 +6,10 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class UnattendedInstallTest extends ItopDataTestCase
 {
-    protected function setUp(): void
-    {
-	    parent::setUp();
-    }
+	protected function setUp(): void
+	{
+		parent::setUp();
+	}
 	protected function tearDown(): void
 	{
 		parent::tearDown();
@@ -17,15 +17,16 @@ class UnattendedInstallTest extends ItopDataTestCase
 			'web.config',
 			'.htaccess',
 		];
-		foreach ($aFiles as $sFile){
+		foreach ($aFiles as $sFile) {
 			$sPath = APPROOT."setup/unattended-install/$sFile";
-			if (is_file("$sPath.back")){
+			if (is_file("$sPath.back")) {
 				rename("$sPath.back", $sPath);
 			}
 		}
 	}
 
-	private function callUnattendedFromHttp() : string {
+	private function callUnattendedFromHttp(): string
+	{
 		$ch = curl_init();
 
 		$sUrl = \MetaModel::GetConfig()->Get('app_root_url');
@@ -38,18 +39,19 @@ class UnattendedInstallTest extends ItopDataTestCase
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
 		$sJson = curl_exec($ch);
-		curl_close ($ch);
+		curl_close($ch);
 		return $sJson;
 	}
-	public function testCallUnattendedInstallFromHttp(){
+	public function testCallUnattendedInstallFromHttp()
+	{
 		$sJson = $this->callUnattendedFromHttp();
-		if (false !== strpos($sJson, "403 Forbidden")){
+		if (false !== strpos($sJson, "403 Forbidden")) {
 			//.htaccess / webconfig effect
 			$aFiles = [
 				'web.config',
 				'.htaccess',
 			];
-			foreach ($aFiles as $sFile){
+			foreach ($aFiles as $sFile) {
 				$sPath = APPROOT."setup/unattended-install/$sFile";
 				if (is_file("$sPath")) {
 					rename($sPath, "$sPath.back");
@@ -62,19 +64,20 @@ class UnattendedInstallTest extends ItopDataTestCase
 		$this->assertEquals("Mode CLI only", $sJson, "even without HTTP protection, script should NOT be called directly by HTTP");
 	}
 
-	public function testCallUnattendedInstallFromCLI() {
+	public function testCallUnattendedInstallFromCLI()
+	{
 		$sCliPath = realpath(APPROOT."/setup/unattended-install/unattended-install.php");
 		exec(sprintf("%s %s", PHP_BINARY, $sCliPath), $aOutput, $iCode);
 
 		$sOutput = implode('\n', $aOutput);
 		var_dump($sOutput);
 		$this->assertStringContainsString("Missing mandatory argument `--param-file`", $sOutput);
-        if (DIRECTORY_SEPARATOR === '\\') {
-            // Windows
-            $this->assertEquals(-1, $iCode);
-        } else {
-            // Linux
-            $this->assertEquals(255, $iCode);
-        }
+		if (DIRECTORY_SEPARATOR === '\\') {
+			// Windows
+			$this->assertEquals(-1, $iCode);
+		} else {
+			// Linux
+			$this->assertEquals(255, $iCode);
+		}
 	}
 }

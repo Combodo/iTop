@@ -36,7 +36,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class SessionMessageController extends AbstractController
 {
-
 	/**
 	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulatorHelper
 	 * @param \Combodo\iTop\Portal\Helper\SessionMessageHelper $oSessionMessageHelper
@@ -46,8 +45,7 @@ class SessionMessageController extends AbstractController
 	public function __construct(
 		protected RequestManipulatorHelper $oRequestManipulatorHelper,
 		protected SessionMessageHelper $oSessionMessageHelper
-	)
-	{
+	) {
 	}
 
 	/**
@@ -57,15 +55,14 @@ class SessionMessageController extends AbstractController
 	 */
 	public function AddMessageAction(Request $oRequest)
 	{
-		$aData = array();
+		$aData = [];
 
 		// Retrieve parameters
 		$sMessageSeverity = $this->oRequestManipulatorHelper->ReadParam('sSeverity');
 		$sMessageContent = $this->oRequestManipulatorHelper->ReadParam('sContent');
 
 		// Check parameters consistency
-		if (empty($sMessageSeverity) || empty($sMessageContent))
-		{
+		if (empty($sMessageSeverity) || empty($sMessageContent)) {
 			throw new HttpException(Response::HTTP_BAD_REQUEST, 'Message must have a severity and a content, make sure both sSeverity & sContent parameters are sent.');
 		}
 

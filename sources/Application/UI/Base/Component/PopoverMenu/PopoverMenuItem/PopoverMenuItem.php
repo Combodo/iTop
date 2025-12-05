@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem;
-
 
 use ApplicationPopupMenuItem;
 use Combodo\iTop\Application\UI\Base\UIBlock;
@@ -106,7 +106,7 @@ class PopoverMenuItem extends UIBlock
 	{
 		return $this->oPopupMenuItem->GetCssClasses();
 	}
-	
+
 	/**
 	 * @return string
 	 * @uses oPopupMenuItem
@@ -137,7 +137,7 @@ class PopoverMenuItem extends UIBlock
 	{
 		return $this->oPopupMenuItem->GetTooltip();
 	}
-	
+
 	/**
 	 * @return $this
 	 * @uses oPopupMenuItem
@@ -149,7 +149,6 @@ class PopoverMenuItem extends UIBlock
 		return $this;
 	}
 
-
 	/**
 	 * @return string
 	 * @uses oPopupMenuItem
@@ -159,6 +158,5 @@ class PopoverMenuItem extends UIBlock
 	{
 		return $this->oPopupMenuItem->GetUID();
 	}
-
 
 }

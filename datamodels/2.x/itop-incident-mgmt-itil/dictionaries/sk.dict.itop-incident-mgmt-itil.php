@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:IncidentManagement' => 'Incident Management~~',
 	'Menu:IncidentManagement+' => '~~',
 	'Menu:Incident:Overview' => 'Overview~~',
@@ -31,8 +32,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Open incidents by status~~',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Open incidents by agent~~',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Open incidents by customer~~',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -48,7 +48,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 // Class: Incident
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Incident' => 'Incident~~',
 	'Class:Incident+' => '~~',
 	'Class:Incident/Attribute:status' => 'Status~~',
@@ -139,6 +139,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Incident/Attribute:tto+' => 'Time To Own~~',
 	'Class:Incident/Attribute:ttr' => 'TTR~~',
 	'Class:Incident/Attribute:ttr+' => 'Time To Resolve~~',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'TTO Deadline~~',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '~~',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA tto passed~~',
@@ -227,4 +231,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-));
+]);

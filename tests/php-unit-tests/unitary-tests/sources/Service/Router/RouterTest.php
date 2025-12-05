@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -90,7 +91,7 @@ class RouterTest extends ItopDataTestCase
 				'object.modify',
 				[
 					'class' => 'Person',
-					'id' => 123
+					'id' => 123,
 				],
 				true,
 			],
@@ -247,7 +248,9 @@ class RouterTest extends ItopDataTestCase
 
 		// Generate corrupted cache manually
 		$sFaultyStatement = 'return 1;';
-		file_put_contents($sRoutesCacheFilePath, <<<PHP
+		file_put_contents(
+			$sRoutesCacheFilePath,
+			<<<PHP
 <?php
 
 {$sFaultyStatement}

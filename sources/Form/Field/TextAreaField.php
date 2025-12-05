@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -34,11 +34,11 @@ use AttributeText;
 class TextAreaField extends TextField
 {
 	/** @var string */
-	const ENUM_FORMAT_TEXT = 'text';
+	public const ENUM_FORMAT_TEXT = 'text';
 	/** @var string */
-	const ENUM_FORMAT_HTML = 'html';
+	public const ENUM_FORMAT_HTML = 'html';
 	/** @var string */
-	const DEFAULT_FORMAT = 'html';
+	public const DEFAULT_FORMAT = 'html';
 
 	/** @var string */
 	protected $sFormat;
@@ -121,17 +121,14 @@ class TextAreaField extends TextField
 		$this->sTransactionId = $sTransactionId;
 		return $this;
 	}
-	
+
 	public function GetDisplayValue()
 	{
-		if ($this->GetFormat() == TextAreaField::ENUM_FORMAT_TEXT)
-		{
-		    $sValue = \Str::pure2html($this->GetCurrentValue());
+		if ($this->GetFormat() == TextAreaField::ENUM_FORMAT_TEXT) {
+			$sValue = \Str::pure2html($this->GetCurrentValue());
 			$sValue = AttributeText::RenderWikiHtml($sValue);
-			return "<div>".str_replace("\n", "<br>\n", $sValue).'</div>';			
-		}
-		else
-		{
+			return "<div>".str_replace("\n", "<br>\n", $sValue).'</div>';
+		} else {
 			$sValue = AttributeText::RenderWikiHtml($this->GetCurrentValue(), true /* wiki only */);
 			return "<div class=\"HTML\">".InlineImage::FixUrls($sValue).'</div>';
 		}

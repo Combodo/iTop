@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -17,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Navigation menu
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => '公司标志',
 	'UI:Layout:NavigationMenu:Silo:Label' => '请选择要筛选的组织',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => '展开/折叠',
@@ -31,4 +32,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => '打开用户菜单',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => '筛选菜单',
 
-));
+]);

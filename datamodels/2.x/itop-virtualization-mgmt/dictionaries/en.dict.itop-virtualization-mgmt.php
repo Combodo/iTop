@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,15 +22,15 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	// Dictionary entries go here
-));
+]);
 
 //
 // Class: LogicalInterface
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:LogicalInterface/Attribute:org_id' => 'Org id',
 	'Class:LogicalInterface/Attribute:org_id+' => '',
-));
+]);

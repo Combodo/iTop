@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'iTopUpdate:UI:PageTitle' => 'Alkalmazásfrissítés',
 	'itop-core-update:UI:SelectUpdateFile' => 'Alkalmazásfrissítés',
 	'itop-core-update:UI:ConfirmUpdate' => 'Alkalmazásfrissítés',
@@ -94,6 +95,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ModuleInstallation/Attribute:name' => 'Név',
 	'Class:ModuleInstallation/Attribute:version' => 'Verzió',
 	'Class:ModuleInstallation/Attribute:comment' => 'Megjegyzés',
-));
-
-
+]);

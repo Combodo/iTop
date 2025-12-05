@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Jeffrey Bostoen <info@jeffreybostoen.be> (2018 - 2022)
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:UserLocal' => ITOP_APPLICATION_SHORT.'-gebruiker',
 	'Class:UserLocal+' => 'Gebruiker die aanmeldt met gegevens aangemaakt in het gebruikersbeheer van '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Wachtwoord',
@@ -30,4 +31,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Het wachtwoord bestaat uit minstens 8 tekens en bestaat uit een mix van minstens 1 hoofdletter, kleine letter, cijfer en speciaal teken.',
 	'UserLocal:password:expiration' => 'De velden hieronder vereisen een extensie.',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Je kan geen eenmalig wachtwoord instellen voor je eigen gebruiker.',
-));
+]);

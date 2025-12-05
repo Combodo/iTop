@@ -10,11 +10,11 @@
  */
 interface iBackofficeLinkedScriptsExtension
 {
-    /**
-     * Each script will be included using this property
-     * @return array An array of absolute URLs to the files to include
-     * @see \iTopWebPage::$a_linked_scripts
-     * @api
-     */
-    public function GetLinkedScriptsAbsUrls(): array;
+	/**
+	 * Each script will be included using this property
+	 * @return array An array of absolute URLs to the files to include
+	 * @see \iTopWebPage::$a_linked_scripts
+	 * @api
+	 */
+	public function GetLinkedScriptsAbsUrls(): array;
 }

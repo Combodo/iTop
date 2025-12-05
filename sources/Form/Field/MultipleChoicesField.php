@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -34,7 +34,7 @@ use Combodo\iTop\Form\Validator\MultipleChoicesValidator;
 abstract class MultipleChoicesField extends AbstractSimpleField
 {
 	/** @var bool DEFAULT_MULTIPLE_VALUES_ENABLED */
-	const DEFAULT_MULTIPLE_VALUES_ENABLED = false;
+	public const DEFAULT_MULTIPLE_VALUES_ENABLED = false;
 
 	/** @var bool $bMultipleValuesEnabled */
 	protected $bMultipleValuesEnabled;
@@ -48,8 +48,8 @@ abstract class MultipleChoicesField extends AbstractSimpleField
 	{
 		parent::__construct($sId, $onFinalizeCallback);
 		$this->bMultipleValuesEnabled = static::DEFAULT_MULTIPLE_VALUES_ENABLED;
-		$this->aChoices = array();
-		$this->currentValue = array();
+		$this->aChoices = [];
+		$this->currentValue = [];
 
 		$this->InitValidators();
 	}
@@ -60,14 +60,10 @@ abstract class MultipleChoicesField extends AbstractSimpleField
 	public function GetCurrentValue()
 	{
 		$value = null;
-		if (!empty($this->currentValue))
-		{
-			if ($this->bMultipleValuesEnabled)
-			{
+		if (!empty($this->currentValue)) {
+			if ($this->bMultipleValuesEnabled) {
 				$value = $this->currentValue;
-			}
-			else
-			{
+			} else {
 				reset($this->currentValue);
 				$value = current($this->currentValue);
 			}
@@ -84,17 +80,12 @@ abstract class MultipleChoicesField extends AbstractSimpleField
 	 */
 	public function SetCurrentValue($currentValue)
 	{
-		if (is_array($currentValue))
-		{
+		if (is_array($currentValue)) {
 			$this->currentValue = $currentValue;
-		}
-		elseif (is_null($currentValue))
-		{
-			$this->currentValue = array();
-		}
-		else
-		{
-			$this->currentValue = array($currentValue);
+		} elseif (is_null($currentValue)) {
+			$this->currentValue = [];
+		} else {
+			$this->currentValue = [$currentValue];
 		}
 		return $this;
 	}
@@ -147,8 +138,7 @@ abstract class MultipleChoicesField extends AbstractSimpleField
 	 */
 	public function RemoveValue($value)
 	{
-		if (array_key_exists($value, $this->currentValue))
-		{
+		if (array_key_exists($value, $this->currentValue)) {
 			unset($this->currentValue[$value]);
 		}
 		return $this;
@@ -199,49 +189,49 @@ abstract class MultipleChoicesField extends AbstractSimpleField
 		}
 		$this->aChoices[$sId] = $choice;
 
-        $this->InitValidators();
+		$this->InitValidators();
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * @param string $sId
-     *
-     * @return $this
-     */
-    public function RemoveChoice(string $sId)
-    {
-        if (in_array($sId, $this->aChoices)) {
-            unset($this->aChoices[$sId]);
-        }
+	/**
+	 * @param string $sId
+	 *
+	 * @return $this
+	 */
+	public function RemoveChoice(string $sId)
+	{
+		if (in_array($sId, $this->aChoices)) {
+			unset($this->aChoices[$sId]);
+		}
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * @param bool $bReadOnly
-     * @return MultipleChoicesField
-     * @since 3.1.0 N°6414
-     */
-    public function SetReadOnly(bool $bReadOnly)
-    {
-        if ($bReadOnly) {
-            /** @noinspection PhpRedundantOptionalArgumentInspection */
-            $this->SetValidationDisabled(true);
-        } else {
-            $this->SetValidationDisabled(false);
-        }
+	/**
+	 * @param bool $bReadOnly
+	 * @return MultipleChoicesField
+	 * @since 3.1.0 N°6414
+	 */
+	public function SetReadOnly(bool $bReadOnly)
+	{
+		if ($bReadOnly) {
+			/** @noinspection PhpRedundantOptionalArgumentInspection */
+			$this->SetValidationDisabled(true);
+		} else {
+			$this->SetValidationDisabled(false);
+		}
 
-        return parent::SetReadOnly($bReadOnly);
-    }
+		return parent::SetReadOnly($bReadOnly);
+	}
 
-    /**
-     * @return void
-     * @since 3.1.0 N°6414
-     */
-    protected function InitValidators(): void
-    {
-        $this->RemoveValidatorsOfClass(MultipleChoicesValidator::class);
-        $this->AddValidator(new MultipleChoicesValidator($this->aChoices));
-    }
+	/**
+	 * @return void
+	 * @since 3.1.0 N°6414
+	 */
+	protected function InitValidators(): void
+	{
+		$this->RemoveValidatorsOfClass(MultipleChoicesValidator::class);
+		$this->AddValidator(new MultipleChoicesValidator($this->aChoices));
+	}
 }

@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Sammenhæng FunctionalCI/Leverandør Kontrakt',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s~~',
@@ -22,13 +23,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'CI navn',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: lnkFunctionalCIToService
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:lnkFunctionalCIToService' => 'Sammenhæng FunctionalCI/Ydelse',
 	'Class:lnkFunctionalCIToService+' => '',
 	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s~~',
@@ -40,26 +41,26 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'CI navn',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Leverandør kontrakter',
 	'Class:FunctionalCI/Attribute:providercontracts_list+' => '',
 	'Class:FunctionalCI/Attribute:services_list' => 'Ydelser',
 	'Class:FunctionalCI/Attribute:services_list+' => '',
-));
+]);
 
 //
 // Class: Document
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Document/Attribute:contracts_list' => 'Kontrakter',
 	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
 	'Class:Document/Attribute:services_list' => 'Ydelser',
 	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
-));
+]);

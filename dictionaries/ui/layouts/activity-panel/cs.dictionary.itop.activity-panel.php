@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Rozšířit',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Zúžit',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Zavřít',
@@ -35,4 +36,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Je tu klid, zatím žádná aktivita.',
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Panel aktivit',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Kliknutím otevřete panel aktivit',
-));
+]);

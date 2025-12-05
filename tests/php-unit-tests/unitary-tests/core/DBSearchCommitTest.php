@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Eric
@@ -21,7 +22,7 @@ use DBSearch;
 class DBSearchCommitTest extends ItopDataTestCase
 {
 	// Need database COMMIT in order to create the FULLTEXT INDEX of MySQL
-	const USE_TRANSACTION = false;
+	public const USE_TRANSACTION = false;
 
 	/**
 	 * @group itopFaqLight
@@ -46,7 +47,6 @@ class DBSearchCommitTest extends ItopDataTestCase
 		$oSearch->AddCondition(TAG_ATTCODE, 'tag1', 'MATCHES');
 		$oSet = new DBObjectSet($oSearch);
 		static::assertEquals(1, $oSet->Count());
-
 
 		$oObjWithTagSet->Set(TAG_ATTCODE, 'tag1 tag2');
 		$oObjWithTagSet->DBWrite();
@@ -80,7 +80,6 @@ class DBSearchCommitTest extends ItopDataTestCase
 		$oSet = new \DBObjectSet($oSearch);
 		static::assertEquals(1, $oSet->Count());
 
-
 		$oObjWithTagSet->Set(TAG_ATTCODE, 'tag1 tag2');
 		$oObjWithTagSet->DBWrite();
 
@@ -91,8 +90,9 @@ class DBSearchCommitTest extends ItopDataTestCase
 	/**
 	 * @covers N°8511 - Enhance DBObjectSet to be able to order by id
  */
-	public function testDbObjectSetFetchMethodWorksWithOptimizeColumnLoadOrderedById(){
-		$sUID=uniqid();
+	public function testDbObjectSetFetchMethodWorksWithOptimizeColumnLoadOrderedById()
+	{
+		$sUID = uniqid();
 		$oOrg1 = $this->CreateOrganization($sUID);
 		$oOrg2 = $this->CreateOrganization($sUID);
 

@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Se connecter à iTop Hub',
 	'Menu:iTopHub:Register+' => 'Connectez-vous à iTop Hub pour enregistrer cette instance d\''.ITOP_APPLICATION_SHORT,
@@ -64,6 +65,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Installée',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>NON</b> installée.',
-));
-
-
+]);

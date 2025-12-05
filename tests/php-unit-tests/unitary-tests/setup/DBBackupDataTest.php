@@ -18,11 +18,9 @@ class DBBackupDataTest extends ItopDataTestCase
 		$sTmpDir = sys_get_temp_dir().'/testPrepareFilesToBackup-'.time();
 		$oBackup = new DBBackup(MetaModel::GetConfig());
 		MetaModel::GetConfig()->SetModuleSetting('itop-backup', 'extra_files', array_keys($aExtraFiles));
-		
-		foreach($aExtraFiles as $sExtraFile => $bExists)
-		{
-			if ($bExists)
-			{
+
+		foreach ($aExtraFiles as $sExtraFile => $bExists) {
+			if ($bExists) {
 				@mkdir(dirname(APPROOT.'/'.$sExtraFile), 0755, true);
 				file_put_contents(APPROOT.'/'.$sExtraFile, 'Hello World!');
 			}
@@ -32,29 +30,29 @@ class DBBackupDataTest extends ItopDataTestCase
 			if ($bUnsafeFileException) {
 				$this->expectExceptionMessage("Backup: Aborting, resource '$sExtraFile'. Considered as UNSAFE because not inside the iTop directory.");
 			}
-			$aFiles = $this->InvokeNonPublicMethod('DBBackup', 'PrepareFilesToBackup', $oBackup, [APPROOT . '/conf/'.$this->GetTestEnvironment().'/config-itop.php', $sTmpDir, true]);
+			$aFiles = $this->InvokeNonPublicMethod('DBBackup', 'PrepareFilesToBackup', $oBackup, [APPROOT.'/conf/'.$this->GetTestEnvironment().'/config-itop.php', $sTmpDir, true]);
 			SetupUtils::rrmdir($sTmpDir);
 			$aExpectedFiles = [
-				$sTmpDir . '/config-itop.php',
+				$sTmpDir.'/config-itop.php',
 			];
 			if (file_exists(APPROOT.'/data/'.$this->GetTestEnvironment().'.delta.xml')) {
-				$aExpectedFiles[] = $sTmpDir . '/' . 'delta.xml';
+				$aExpectedFiles[] = $sTmpDir.'/'.'delta.xml';
 			}
 			if (file_exists(APPROOT.'/data/'.$this->GetTestEnvironment().'-modules')) {
-				$aExpectedFiles[] = $sTmpDir . '/' . $this->GetTestEnvironment() . '-modules';
+				$aExpectedFiles[] = $sTmpDir.'/'.$this->GetTestEnvironment().'-modules';
 			}
 			foreach ($aExtraFiles as $sRelFile => $bExists) {
 				if ($bExists) {
-					$aExpectedFiles[] = $sTmpDir . '/' . $sRelFile;
+					$aExpectedFiles[] = $sTmpDir.'/'.$sRelFile;
 				}
 			}
 		} finally {
 			// Cleanup
 			foreach ($aExtraFiles as $sExtraFile => $bExists) {
 				if ($bExists) {
-					unlink(APPROOT . '/' . $sExtraFile);
-					$folderPath = dirname(APPROOT . '/' . $sExtraFile);
-					if (is_dir($folderPath) && count(glob($folderPath . '/*')) === 0) {
+					unlink(APPROOT.'/'.$sExtraFile);
+					$folderPath = dirname(APPROOT.'/'.$sExtraFile);
+					if (is_dir($folderPath) && count(glob($folderPath.'/*')) === 0) {
 						rmdir($folderPath);
 					}
 				}
@@ -65,8 +63,8 @@ class DBBackupDataTest extends ItopDataTestCase
 		sort($aExpectedFiles);
 		$this->assertEquals($aExpectedFiles, $aFiles);
 	}
-	
-	function prepareFilesToBackupProvider()
+
+	public function prepareFilesToBackupProvider()
 	{
 		return [
 			'no_extra_file' => ['aExtraFiles' => [], false],
@@ -80,43 +78,39 @@ class DBBackupDataTest extends ItopDataTestCase
 	/**
 	 * @dataProvider restoreListExtraFilesProvider
 	 */
-	function testRestoreListExtraFiles($aFilesToCreate, $aExpectedRelativeExtraFiles)
+	public function testRestoreListExtraFiles($aFilesToCreate, $aExpectedRelativeExtraFiles)
 	{
 		require_once(APPROOT.'/env-production/itop-backup/dbrestore.class.inc.php');
 
 		$sTmpDir = sys_get_temp_dir().'/testRestoreListExtraFiles-'.time();
-		
-		foreach($aFilesToCreate as $sRelativeName)
-		{
+
+		foreach ($aFilesToCreate as $sRelativeName) {
 			$sDir = $sTmpDir.'/'.dirname($sRelativeName);
-			if(!is_dir($sDir))
-			{
+			if (!is_dir($sDir)) {
 				mkdir($sDir, 0755, true);
 			}
 			file_put_contents($sTmpDir.'/'.$sRelativeName, 'Hello world.');
 		}
 		$aExpectedExtraFiles = [];
-		foreach($aExpectedRelativeExtraFiles as $sRelativeName)
-		{
+		foreach ($aExpectedRelativeExtraFiles as $sRelativeName) {
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 				$sRelativeName = str_replace('/', '\\', $sRelativeName);
 				$aExpectedExtraFiles[$sTmpDir.'\\'.$sRelativeName] = APPROOT.'\\'.$sRelativeName;
-			}
-			else {
+			} else {
 				$aExpectedExtraFiles[$sTmpDir.'/'.$sRelativeName] = APPROOT.'/'.$sRelativeName;
 			}
 		}
 
 		$oRestore = new DBRestore(MetaModel::GetConfig());
 		$aExtraFiles = $this->InvokeNonPublicMethod('DBRestore', 'ListExtraFiles', $oRestore, [$sTmpDir]);
-		
+
 		asort($aExtraFiles);
 		asort($aExpectedExtraFiles);
 		$this->assertEquals($aExpectedExtraFiles, $aExtraFiles);
 		SetupUtils::rrmdir($sTmpDir);
 	}
 
-	function restoreListExtraFilesProvider()
+	public function restoreListExtraFilesProvider()
 	{
 		return [
 			'no extra file' => ['aFilesToCreate' => ['config-itop.php', 'itop-dump.sql', 'delta.xml'], 'aExpectedExtraFiles' => []],
@@ -124,5 +118,5 @@ class DBBackupDataTest extends ItopDataTestCase
 			'one extra file' => ['aFilesToCreate' => ['config-itop.php', 'itop-dump.sql', 'delta.xml', 'production-modules/test/module.test.php', 'collectors/ldap/conf/params.local.xml'], 'aExpectedExtraFiles' => ['collectors/ldap/conf/params.local.xml']],
 		];
 	}
-	
+
 }

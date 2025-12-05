@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Izzet Sirin <izzet.sirin@htr.com.tr>
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Ticket' => 'Kayıt',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Referans',
@@ -62,14 +63,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Closed~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Etki Analizi',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:lnkContactToTicket' => 'Kişi / Çağrı kaydı bağla',
 	'Class:lnkContactToTicket+' => '~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
@@ -89,13 +89,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Elle eklendi',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Hesaplandı',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Bildirme',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:WorkOrder' => 'İş emri',
 	'Class:WorkOrder+' => '~~',
 	'Class:WorkOrder/Attribute:name' => 'İsim',
@@ -128,11 +128,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Kapat',
 	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Ticket:baseinfo' => 'Genel Bilgi',
 	'Ticket:date' => 'Tarihler',
 	'Ticket:contact' => 'Kişiler',
@@ -222,14 +221,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'TTO tipi bir SLT\'ye dayalı hedef',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Çözme zamanı',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'TTR tipi  bir SLT\'ye dayalı hedef',
-));
-
+]);
 
 //
 // Class: Ticket
 //
 
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
-));
+]);

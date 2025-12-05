@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'bkp-backup-running' => 'Une sauvegarde est en cours. Veuillez patienter...',
 	'bkp-restore-running' => 'Une restauration des données est en cours. Veuillez patienter...',
 	'Menu:BackupStatus' => 'Sauvegardes',
@@ -44,4 +45,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'bkp-wait-backup' => 'Sauvegarde en cours...',
 	'bkp-wait-restore' => 'Restauration des données en cours...',
 	'bkp-success-restore' => 'Restauration des données terminée.',
-));
+]);

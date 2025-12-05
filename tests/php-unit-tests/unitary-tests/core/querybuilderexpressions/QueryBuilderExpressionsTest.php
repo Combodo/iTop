@@ -4,7 +4,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 class QueryBuilderExpressionsTest extends \Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase
 {
-	const CREATE_TEST_ORG = true;
+	public const CREATE_TEST_ORG = true;
 
 	/**
 	 * @inheritDoc
@@ -19,13 +19,13 @@ class QueryBuilderExpressionsTest extends \Combodo\iTop\Test\UnitTest\ItopCustom
 		$oTagA = \MetaModel::NewObject(\TagSetFieldData::GetTagDataClassName('TestObject', 'tagset'), [
 			'code'        => 'tagA',
 			'label'       => 'Tag A',
-			'description' => 'Tag known as "A"'
+			'description' => 'Tag known as "A"',
 		]);
 		$oTagA->DBInsert();
 		$oTagB = \MetaModel::NewObject(\TagSetFieldData::GetTagDataClassName('TestObject', 'tagset'), [
 			'code'        => 'tagB',
 			'label'       => 'Tag B',
-			'description' => 'Tag known as "B"'
+			'description' => 'Tag known as "B"',
 		]);
 		$oTagB->DBInsert();
 
@@ -185,7 +185,7 @@ class QueryBuilderExpressionsTest extends \Combodo\iTop\Test\UnitTest\ItopCustom
 		// Create an indirection
 		$oSubObject = \MetaModel::NewObject('SubObject', [
 			'name'          => 'subobject for '.$iTestObject,
-			'testobject_id' => $iTestObject
+			'testobject_id' => $iTestObject,
 		]);
 		$oSubObject->DBInsert();
 

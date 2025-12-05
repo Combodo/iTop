@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -35,19 +36,15 @@ require_once(APPROOT.'/application/application.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
-
 function UsageAndExit($oP)
 {
 	global $aPageParams;
 	$bModeCLI = utils::IsModeCLI();
 
-	if ($bModeCLI)
-	{
+	if ($bModeCLI) {
 		$oP->p("USAGE:\n");
 		$oP->p("php -q synchro_exec.php --auth_user=<login> --auth_pwd=<password> --data_sources=<comma_separated_list_of_data_sources> [--max_chunk_size=<limit the count of replica loaded in a single pass>] [--simulate=<If set to 1, then the synchro will not be executed, but the expected report will be produced>]\n");
-	}
-	else
-	{
+	} else {
 		$oP->p("The parameter 'data_sources' is mandatory, and must contain a comma separated list of data sources\n");
 	}
 	$oP->output();
@@ -57,8 +54,7 @@ function UsageAndExit($oP)
 function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 {
 	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */, $sSanitizationFilter);
-	if (is_null($sValue))
-	{
+	if (is_null($sValue)) {
 		$oP->p("ERROR: Missing argument '$sParam'\n");
 		UsageAndExit($oP);
 	}
@@ -68,43 +64,32 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 /////////////////////////////////
 // Main program
 
-if (utils::IsModeCLI())
-{
+if (utils::IsModeCLI()) {
 	$oP = new CLIPage(Dict::S("TitleSynchroExecution"));
 	SetupUtils::CheckPhpAndExtensionsForCli($oP, -2);
-}
-else
-{
+} else {
 	$oP = new WebPage(Dict::S("TitleSynchroExecution"));
 }
 
-try
-{
+try {
 	utils::UseParamFile();
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
 	$oP->p("Error: ".$e->GetMessage());
 	$oP->output();
 	exit -2;
 }
 
-if (utils::IsModeCLI())
-{
+if (utils::IsModeCLI()) {
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
-	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
-	{
+	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
 		UserRights::Login($sAuthUser); // Login & set the user's language
-	}
-	else
-	{
+	} else {
 		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
 		$oP->output();
 		exit -1;
 	}
-}
-else {
+} else {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	//N°6022 - Make synchro scripts work by http via token authentication with SYNCHRO scopes
 	$oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
@@ -148,36 +133,27 @@ if ($sDataSourcesList == null) {
 	UsageAndExit($oP);
 }
 
-foreach(explode(',', $sDataSourcesList) as $iSDS)
-{
+foreach (explode(',', $sDataSourcesList) as $iSDS) {
 	$oSynchroDataSource = MetaModel::GetObject('SynchroDataSource', $iSDS, false);
-	if ($oSynchroDataSource == null)
-	{
+	if ($oSynchroDataSource == null) {
 		$oP->p("ERROR: The data source (id=".utils::HtmlEntities($iSDS).") does not exist. Exiting...");
 		$oP->output();
 		exit -3;
-	}
-	else
-	{
-		if ($bSimulate)
-		{
+	} else {
+		if ($bSimulate) {
 			CMDBSource::Query('START TRANSACTION');
 		}
-		try
-		{
+		try {
 			$oP->p("Working on ".utils::HtmlEntities($oSynchroDataSource->Get('name'))." (id=".utils::HtmlEntities($iSDS).")...");
 			$oSynchroExec = new SynchroExecution($oSynchroDataSource);
 			$oStatLog = $oSynchroExec->Process();
-			if ($bSimulate)
-			{
+			if ($bSimulate) {
 				CMDBSource::Query('ROLLBACK');
 			}
-			foreach ($oStatLog->GetTraces() as $sMessage)
-			{
+			foreach ($oStatLog->GetTraces() as $sMessage) {
 				$oP->p('#'.$sMessage);
 			}
-			if ($oStatLog->Get('status') == 'error')
-			{
+			if ($oStatLog->Get('status') == 'error') {
 				$oP->p("ERROR: ".$oStatLog->Get('last_error'));
 			}
 			$oP->p("Replicas: ".$oStatLog->Get('stats_nb_replica_total'));
@@ -194,12 +170,9 @@ foreach(explode(',', $sDataSourcesList) as $iSDS)
 			$oP->p("Objects reconciled (unchanged): ".$oStatLog->Get('stats_nb_obj_new_unchanged')." (".$oStatLog->Get('stats_nb_obj_new_updated_warnings')." warnings)");
 			$oP->p("Objects reconciliation errors: ".$oStatLog->Get('stats_nb_replica_reconciled_errors'));
 			$oP->p("Replica disappeared, no action taken: ".$oStatLog->Get('stats_nb_replica_disappeared_no_action'));
-		}
-		catch(Exception $e)
-		{
+		} catch (Exception $e) {
 			$oP->add($e->getMessage());
-			if ($bSimulate)
-			{
+			if ($bSimulate) {
 				CMDBSource::Query('ROLLBACK');
 			}
 		}

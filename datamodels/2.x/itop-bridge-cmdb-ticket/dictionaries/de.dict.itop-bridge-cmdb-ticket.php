@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkFunctionalCIToTicket' => 'Verknüpfung FunctionalCI/Ticket',
 	'Class:lnkFunctionalCIToTicket+' => '',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s',
@@ -30,12 +31,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Manuell hinzugefügt',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Berechnet',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Nicht betroffen',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Alle Ticket, die mit diesem CI verknüpft sind',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by Bruno DA SILVA, working for Combodo
  * Date: 31/12/2019
@@ -9,7 +10,6 @@ namespace Combodo\iTop\Config\Validator;
 
 class iTopConfigSyntaxValidator
 {
-
 	/**
 	 * @param $sRawConfig
 	 *
@@ -22,15 +22,13 @@ class iTopConfigSyntaxValidator
 			ob_start();
 			// in PHP < 7.0.0 syntax errors are in output
 			// in PHP >= 7.0.0 syntax errors are thrown as Error
-			$sConfig = preg_replace(array('#^\s*<\?php#', '#\?>\s*$#'), '', $sRawConfig);
+			$sConfig = preg_replace(['#^\s*<\?php#', '#\?>\s*$#'], '', $sRawConfig);
 			eval('if(0){'.trim($sConfig).'}');
 			$sNoise = trim(ob_get_contents());
-		}
-		catch (\Error $e) {
+		} catch (\Error $e) {
 			// ParseError only thrown in PHP7
 			throw new \Exception('Error in configuration: '.$e->getMessage().' at line '.$e->getLine(), iTopConfigValidator::CONFIG_ERROR);
-		}
-		finally {
+		} finally {
 			ob_end_clean();
 		}
 
@@ -40,8 +38,7 @@ class iTopConfigSyntaxValidator
 				$sLine = $aMatches[3];
 				$sMessage = \Dict::Format('config-parse-error', $sMessage, $sLine);
 				throw new \Exception($sMessage, iTopConfigValidator::CONFIG_ERROR);
-			}
-			else {
+			} else {
 				// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack)
 				throw new \Exception('Syntax error in configuration file: <tt>'.$sNoise.'</tt>', iTopConfigValidator::CONFIG_ERROR);
 			}

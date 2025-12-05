@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -27,22 +28,22 @@ namespace Combodo\iTop\Portal\VariableAccessor;
  */
 abstract class AbstractVariableAccessor
 {
-    /** @var string $storedVariable */
-    private $storedVariable;
+	/** @var string $storedVariable */
+	private $storedVariable;
 
-    /**
-     * @param string $variableToStore
-     */
-    public function __construct($variableToStore)
-    {
-        $this->storedVariable = $variableToStore;
-    }
+	/**
+	 * @param string $variableToStore
+	 */
+	public function __construct($variableToStore)
+	{
+		$this->storedVariable = $variableToStore;
+	}
 
 	/**
 	 * @return string
 	 */
-    public function getVariable()
-    {
-        return $this->storedVariable;
-    }
+	public function getVariable()
+	{
+		return $this->storedVariable;
+	}
 }

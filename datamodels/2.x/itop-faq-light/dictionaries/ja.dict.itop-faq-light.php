@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'よくある質問',
 	'Class:FAQ/Attribute:title' => 'タイトル',
@@ -27,21 +28,21 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:FAQ/Attribute:key_words' => 'キーワード',
 	'Class:FAQ/Attribute:key_words+' => '',
 	'Class:FAQ/Attribute:domains' => 'Domains~~',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:FAQCategory' => 'FAQカテゴリ',
 	'Class:FAQCategory+' => 'FAQのためのカテゴリ',
 	'Class:FAQCategory/Attribute:name' => '名前',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
 	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
-));
-Dict::Add('JA JP', 'Japanese', '日本語', array(
+]);
+Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ProblemManagement' => '問題管理',
 	'Menu:ProblemManagement+' => '問題管理',
 	'Menu:Problem:Shortcuts' => 'ショートカット',
@@ -52,4 +53,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Brick:Portal:FAQ:Menu' => 'FAQ~~',
 	'Brick:Portal:FAQ:Title' => 'Frequently Asked Questions~~',
 	'Brick:Portal:FAQ:Title+' => '<p>In a hurry?</p><p>Check out the list of most common questions and (maybe) find the expected answer right away.</p>~~',
-));
+]);

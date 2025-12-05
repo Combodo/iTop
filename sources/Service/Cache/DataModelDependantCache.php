@@ -21,8 +21,7 @@ class DataModelDependantCache
 
 	public static function GetInstance(): DataModelDependantCache
 	{
-		if (!isset(self::$oInstance))
-		{
+		if (!isset(self::$oInstance)) {
 			self::$oInstance = new DataModelDependantCache();
 		}
 		return self::$oInstance;
@@ -46,7 +45,7 @@ class DataModelDependantCache
 	 */
 	public function Store(string $sPool, string $sKey, mixed $value, array $aMoreInfo = []): void
 	{
-		if(is_null($value)) {
+		if (is_null($value)) {
 			// NULL cannot be stored as it collides with Fetch() returning NULL when the key does not exist
 			throw new Exception('Cannot store NULL in the cache');
 		}
@@ -72,7 +71,9 @@ class DataModelDependantCache
 	public function Fetch(string $sPool, string $sKey): mixed
 	{
 		$sCacheFileName = $this->MakeCacheFileName($sPool, $sKey);
-		if (!is_file($sCacheFileName)) return null;
+		if (!is_file($sCacheFileName)) {
+			return null;
+		}
 		return include $sCacheFileName;
 	}
 
@@ -98,7 +99,9 @@ class DataModelDependantCache
 	public function GetEntryModificationTime(string $sPool, string $sKey): int|null
 	{
 		$sCacheFileName = $this->MakeCacheFileName($sPool, $sKey);
-		if (!is_file($sCacheFileName)) return null;
+		if (!is_file($sCacheFileName)) {
+			return null;
+		}
 		return filemtime($sCacheFileName);
 	}
 	/**
@@ -145,7 +148,6 @@ class DataModelDependantCache
 	{
 		return $this->GetStorageRootDir()."/$sPool/";
 	}
-
 
 	/**
 	 * for test purpose

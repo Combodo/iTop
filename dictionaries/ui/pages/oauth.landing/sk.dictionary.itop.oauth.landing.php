@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,6 +19,6 @@
  */
 
 // Navigation menu
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'core/Operation:Landing/Title' => 'OAuth token creation~~',
-));
+]);

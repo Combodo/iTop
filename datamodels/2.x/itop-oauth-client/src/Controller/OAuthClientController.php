@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -13,7 +14,7 @@ use utils;
 
 class OAuthClientController extends Controller
 {
-	const LOG_CHANNEL = 'OAuth';
+	public const LOG_CHANNEL = 'OAuth';
 
 	public function OperationCreateMailbox()
 	{

@@ -16,7 +16,7 @@ interface iEMail
 	 * @throws \CoreException
 	 * @throws \Symfony\Component\CssSelector\Exception\SyntaxErrorException
 	 */
-	static public function UnSerializeV2($sSerializedMessage);
+	public static function UnSerializeV2($sSerializedMessage);
 
 	public function Send(&$aIssues, $bForceSynchronous = false, $oLog = null);
 

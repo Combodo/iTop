@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -31,20 +32,20 @@ class DashboardLayoutTest extends ItopTestCase
 	 */
 	public function GetDashletCoordinatesProvider()
 	{
-		return array(
-			'OneColLayout-Cell0' => array('DashboardLayoutOneCol', 0, array(0, 0)),
-			'OneColLayout-Cell1' => array('DashboardLayoutOneCol', 1, array(0, 1)),
-			'TwoColsLayout-Cell0' => array('DashboardLayoutTwoCols', 0, array(0, 0)),
-			'TwoColsLayout-Cell1' => array('DashboardLayoutTwoCols', 1, array(1, 0)),
-			'TwoColsLayout-Cell2' => array('DashboardLayoutTwoCols', 2, array(0, 1)),
-			'TwoColsLayout-Cell3' => array('DashboardLayoutTwoCols', 3, array(1, 1)),
-			'ThreeColsLayout-Cell0' => array('DashboardLayoutThreeCols', 0, array(0, 0)),
-			'ThreeColsLayout-Cell1' => array('DashboardLayoutThreeCols', 1, array(1, 0)),
-			'ThreeColsLayout-Cell2' => array('DashboardLayoutThreeCols', 2, array(2, 0)),
-			'ThreeColsLayout-Cell3' => array('DashboardLayoutThreeCols', 3, array(0, 1)),
-			'ThreeColsLayout-Cell4' => array('DashboardLayoutThreeCols', 4, array(1, 1)),
-			'ThreeColsLayout-Cell5' => array('DashboardLayoutThreeCols', 5, array(2, 1)),
-		);
+		return [
+			'OneColLayout-Cell0' => ['DashboardLayoutOneCol', 0, [0, 0]],
+			'OneColLayout-Cell1' => ['DashboardLayoutOneCol', 1, [0, 1]],
+			'TwoColsLayout-Cell0' => ['DashboardLayoutTwoCols', 0, [0, 0]],
+			'TwoColsLayout-Cell1' => ['DashboardLayoutTwoCols', 1, [1, 0]],
+			'TwoColsLayout-Cell2' => ['DashboardLayoutTwoCols', 2, [0, 1]],
+			'TwoColsLayout-Cell3' => ['DashboardLayoutTwoCols', 3, [1, 1]],
+			'ThreeColsLayout-Cell0' => ['DashboardLayoutThreeCols', 0, [0, 0]],
+			'ThreeColsLayout-Cell1' => ['DashboardLayoutThreeCols', 1, [1, 0]],
+			'ThreeColsLayout-Cell2' => ['DashboardLayoutThreeCols', 2, [2, 0]],
+			'ThreeColsLayout-Cell3' => ['DashboardLayoutThreeCols', 3, [0, 1]],
+			'ThreeColsLayout-Cell4' => ['DashboardLayoutThreeCols', 4, [1, 1]],
+			'ThreeColsLayout-Cell5' => ['DashboardLayoutThreeCols', 5, [2, 1]],
+		];
 	}
 
 	/**
@@ -59,6 +60,6 @@ class DashboardLayoutTest extends ItopTestCase
 		$oDashboardLayout = new $sDashboardLayoutClass();
 		$aDashletCoordinates = $oDashboardLayout->GetDashletCoordinates($iCellIdx);
 
-		$this->assertEquals($aExpectedCoordinates,$aDashletCoordinates);
+		$this->assertEquals($aExpectedCoordinates, $aDashletCoordinates);
 	}
 }

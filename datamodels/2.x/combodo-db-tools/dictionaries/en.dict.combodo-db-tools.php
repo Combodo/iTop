@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -22,7 +23,7 @@
  */
 
 // Database inconsistencies
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => 'Database integrity',
 	'DBTools:Class' => 'Class',
@@ -60,17 +61,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted',
 	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value as `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contain a valid class',
-));
+]);
 
 // Database Info
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'DBTools:DatabaseInfo' => 'Database Information',
 	'DBTools:Base' => 'Base',
 	'DBTools:Size' => 'Size',
-));
+]);
 
 // Lost attachments
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'DBTools:LostAttachments' => 'Lost attachments',
 	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, it does not retrieve deleted data.',
 
@@ -92,5 +93,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d attachments were restored.',
 
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Stored as inline image',
-	'DBTools:LostAttachments:History' => 'Attachment "%1$s" restored with DB tools'
-));
+	'DBTools:LostAttachments:History' => 'Attachment "%1$s" restored with DB tools',
+]);

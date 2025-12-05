@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkFunctionalCIToTicket' => 'Lien CI / Ticket',
 	'Class:lnkFunctionalCIToTicket+' => '',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s',
@@ -30,12 +31,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Ajouté manuellement',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Calculé',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'Non impacté',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Tous les tickets de cet élément de configuration',
-));
+]);

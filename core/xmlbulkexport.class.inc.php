@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -28,7 +29,7 @@ class XMLBulkExport extends BulkExport
 
 	public function EnumFormParts()
 	{
-		return array_merge(parent::EnumFormParts(), array('xml_options' => array('xml_no_options')));
+		return array_merge(parent::EnumFormParts(), ['xml_options' => ['xml_no_options']]);
 	}
 
 	/**
@@ -63,17 +64,17 @@ class XMLBulkExport extends BulkExport
 				break;
 
 			default:
-				return parent:: GetFormPart($oP, $sPartId);
+				return parent::GetFormPart($oP, $sPartId);
 		}
 	}
-	
+
 	public function ReadParameters()
 	{
 		parent::ReadParameters();
-	
+
 		$this->aStatusInfo['linksets'] = (utils::ReadParam('linksets', 0) == 1);
 	}
-	
+
 	protected function GetSampleData($oObj, $sAttCode)
 	{
 		$sRet = ($sAttCode == 'id') ? $oObj->GetKey() : $oObj->GetAsXML($sAttCode);
@@ -83,10 +84,8 @@ class XMLBulkExport extends BulkExport
 	public function GetHeader()
 	{
 		// Check permissions
-		foreach($this->oSearch->GetSelectedClasses() as $sAlias => $sClass)
-		{
-			if (UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_READ) != UR_ALLOWED_YES)
-			{
+		foreach ($this->oSearch->GetSelectedClasses() as $sAlias => $sClass) {
+			if (UserRights::IsActionAllowed($sClass, UR_ACTION_BULK_READ) != UR_ALLOWED_YES) {
 				throw new Exception("You do not have enough permissions to bulk read data of class '$sClass' (alias: $sAlias)");
 			}
 		}
@@ -105,36 +104,28 @@ class XMLBulkExport extends BulkExport
 
 		$iCount = 0;
 		$sData = '';
-		
+
 		$oSet = new DBObjectSet($this->oSearch);
 		$oSet->SetLimit($this->iChunkSize, $this->aStatusInfo['position']);
-		
+
 		$aClasses = $this->oSearch->GetSelectedClasses();
-		$aAuthorizedClasses = array();
-		$aClass2Attributes = array();
-		foreach($aClasses as $sAlias => $sClassName)
-		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) != UR_ALLOWED_NO)
-			{
+		$aAuthorizedClasses = [];
+		$aClass2Attributes = [];
+		foreach ($aClasses as $sAlias => $sClassName) {
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) != UR_ALLOWED_NO) {
 				$aAuthorizedClasses[$sAlias] = $sClassName;
-				$aAttributes = array();
-				foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode=>$oAttDef)
-				{
-					if ($oAttDef->IsLinkSet() && !$this->aStatusInfo['linksets'])
-					{
+				$aAttributes = [];
+				foreach (MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef) {
+					if ($oAttDef->IsLinkSet() && !$this->aStatusInfo['linksets']) {
 						continue;
 					}
-					if ($oAttDef->IsExternalField())
-					{
+					if ($oAttDef->IsExternalField()) {
 						continue;
 					}
 					$aAttributes[$sAttCode] = $oAttDef;
-					if ($oAttDef->IsExternalKey())
-					{
-						foreach(MetaModel::ListAttributeDefs($sClassName) as $sSubAttCode=>$oSubAttDef)
-						{
-							if ($oSubAttDef->IsExternalField() && ($oSubAttDef->GetKeyAttCode() == $sAttCode))
-							{
+					if ($oAttDef->IsExternalKey()) {
+						foreach (MetaModel::ListAttributeDefs($sClassName) as $sSubAttCode => $oSubAttDef) {
+							if ($oSubAttDef->IsExternalField() && ($oSubAttDef->GetKeyAttCode() == $sAttCode)) {
 								$aAttributes[$sAttCode.'_friendlyname'] = MetaModel::GetAttributeDef($sClassName, $sAttCode.'_friendlyname');
 								$aAttributes[$sSubAttCode] = $oSubAttDef;
 							}
@@ -147,64 +138,49 @@ class XMLBulkExport extends BulkExport
 
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		
-		while ($aObjects = $oSet->FetchAssoc())
-		{
+
+		while ($aObjects = $oSet->FetchAssoc()) {
 			set_time_limit(intval($iLoopTimeLimit));
-			if (count($aAuthorizedClasses) > 1)
-			{
+			if (count($aAuthorizedClasses) > 1) {
 				$sData .= "<Row>\n";
 			}
-			foreach($aAuthorizedClasses as $sAlias => $sClassName)
-			{
+			foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
 				$oObj = $aObjects[$sAlias];
-				if (is_null($oObj))
-				{
+				if (is_null($oObj)) {
 					$sData .= "<$sClassName alias=\"$sAlias\" id=\"null\">\n";
-				}
-				else
-				{
+				} else {
 					$sClassName = get_class($oObj);
 					$sData .= "<$sClassName alias=\"$sAlias\" id=\"".$oObj->GetKey()."\">\n";
 				}
-				foreach($aClass2Attributes[$sAlias] as $sAttCode=>$oAttDef)
-				{
-					if (is_null($oObj))
-					{
+				foreach ($aClass2Attributes[$sAlias] as $sAttCode => $oAttDef) {
+					if (is_null($oObj)) {
 						$sData .= "<$sAttCode>null</$sAttCode>\n";
-					}
-					else
-					{
+					} else {
 						$sValue = $oObj->GetAsXML($sAttCode, $this->bLocalizeOutput);
 						$sData .= "<$sAttCode>$sValue</$sAttCode>\n";
 					}
 				}
 				$sData .= "</$sClassName>\n";
 			}
-			if (count($aAuthorizedClasses) > 1)
-			{
+			if (count($aAuthorizedClasses) > 1) {
 				$sData .= "</Row>\n";
 			}
 			$iCount++;
 		}
-		
+
 		set_time_limit(intval($iPreviousTimeLimit));
 		$this->aStatusInfo['position'] += $this->iChunkSize;
-		if ($this->aStatusInfo['total'] == 0)
-		{
+		if ($this->aStatusInfo['total'] == 0) {
 			$iPercentage = 100;
-		}
-		else
-		{
-			$iPercentage = floor(min(100.0, 100.0*$this->aStatusInfo['position']/$this->aStatusInfo['total']));
+		} else {
+			$iPercentage = floor(min(100.0, 100.0 * $this->aStatusInfo['position'] / $this->aStatusInfo['total']));
 		}
 
-		if ($iCount < $this->iChunkSize)
-		{
+		if ($iCount < $this->iChunkSize) {
 			$sRetCode = 'done';
 		}
 
-		$aStatus = array('code' => $sRetCode, 'message' => Dict::S('Core:BulkExport:RetrievingData'), 'percentage' => $iPercentage);
+		$aStatus = ['code' => $sRetCode, 'message' => Dict::S('Core:BulkExport:RetrievingData'), 'percentage' => $iPercentage];
 		return $sData;
 	}
 
@@ -217,7 +193,7 @@ class XMLBulkExport extends BulkExport
 
 	public function GetSupportedFormats()
 	{
-		return array('xml' => Dict::S('Core:BulkExport:XMLFormat'));
+		return ['xml' => Dict::S('Core:BulkExport:XMLFormat')];
 	}
 
 	public function GetMimeType()

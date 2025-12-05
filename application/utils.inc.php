@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -29,7 +30,6 @@ use ScssPhp\ScssPhp\OutputStyle;
 use ScssPhp\ScssPhp\ValueConverter;
 use Soundasleep\Html2Text;
 
-
 /**
  * Static class utils
  *
@@ -46,7 +46,6 @@ define('SERVER_MAX_URL_LENGTH', 2048);
 class FileUploadException extends Exception
 {
 }
-
 
 /**
  * Helper functions to interact with forms: read parameters, upload files...
@@ -170,7 +169,7 @@ class utils
 
 	// Parameters loaded from a file, parameters of the page/command line still have precedence
 	private static $m_aParamsFromFile = null;
-	private static $m_aParamSource = array();
+	private static $m_aParamSource = [];
 
 	private static $iNextId = 0;
 
@@ -179,7 +178,6 @@ class utils
 	 * @used-by GetAbsoluteUrlAppRoot
 	 */
 	private static $sAbsoluteUrlAppRootCache = null;
-
 
 	protected static function LoadParamFile($sParamFile)
 	{
@@ -192,24 +190,21 @@ class utils
 		$sParams = file_get_contents($sParamFile);
 
 		if (is_null(self::$m_aParamsFromFile)) {
-			self::$m_aParamsFromFile = array();
+			self::$m_aParamsFromFile = [];
 		}
 
 		$aParamLines = explode("\n", $sParams ?? '');
-		foreach ($aParamLines as $sLine)
-		{
+		foreach ($aParamLines as $sLine) {
 			$sLine = trim($sLine);
 
 			// Ignore the line after a '#'
-			if (($iCommentPos = strpos($sLine, '#')) !== false)
-			{
+			if (($iCommentPos = strpos($sLine, '#')) !== false) {
 				$sLine = substr($sLine, 0, $iCommentPos);
 				$sLine = trim($sLine);
 			}
 
 			// Note: the line is supposed to be already trimmed
-			if (preg_match('/^(\S*)\s*=(.*)$/', $sLine, $aMatches))
-			{
+			if (preg_match('/^(\S*)\s*=(.*)$/', $sLine, $aMatches)) {
 				$sParam = $aMatches[1];
 				$value = trim($aMatches[2]);
 				self::$m_aParamsFromFile[$sParam] = $value;
@@ -221,11 +216,9 @@ class utils
 	public static function UseParamFile($sParamFileArgName = 'param_file', $bAllowCLI = true)
 	{
 		$sFileSpec = self::ReadParam($sParamFileArgName, '', $bAllowCLI, 'raw_data');
-		foreach(explode(',', $sFileSpec) as $sFile)
-		{
+		foreach (explode(',', $sFileSpec) as $sFile) {
 			$sFile = trim($sFile);
-			if (!empty($sFile))
-			{
+			if (!empty($sFile)) {
 				self::LoadParamFile($sFile);
 			}
 		}
@@ -240,12 +233,9 @@ class utils
 	 */
 	public static function GetParamSourceFile($sName)
 	{
-		if (array_key_exists($sName, self::$m_aParamSource))
-		{
+		if (array_key_exists($sName, self::$m_aParamSource)) {
 			return self::$m_aParamSource[$sName];
-		}
-		else
-		{
+		} else {
 			return null;
 		}
 	}
@@ -275,22 +265,18 @@ class utils
 	/**
 	 * @var boolean[]
 	 */
-	protected static $aModes = array();
+	protected static $aModes = [];
 
 	public static function InitArchiveMode()
 	{
-		if (Session::IsSet('archive_mode'))
-		{
+		if (Session::IsSet('archive_mode')) {
 			$iDefault = Session::Get('archive_mode');
-		}
-		else
-		{
+		} else {
 			$iDefault = 0;
 		}
 		// Read and record the value for switching the archive mode
 		$iCurrent = self::ReadParam('with-archive', $iDefault);
-		if (Session::IsInitialized())
-		{
+		if (Session::IsInitialized()) {
 			Session::Set('archive_mode', $iCurrent);
 		}
 		// Read and use the value for the current page (web services)
@@ -317,14 +303,10 @@ class utils
 	 */
 	public static function IsArchiveMode()
 	{
-		if (count(self::$aModes) > 0)
-		{
+		if (count(self::$aModes) > 0) {
 			$bRet = end(self::$aModes);
-		}
-		else
-		{
-			if (self::$bPageMode === null)
-			{
+		} else {
+			if (self::$bPageMode === null) {
 				self::InitArchiveMode();
 			}
 			$bRet = self::$bPageMode;
@@ -340,8 +322,7 @@ class utils
 	{
 		$bDefault = MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'); // default is false
 		$bShow = appUserPreferences::GetPref('show_obsolete_data', $bDefault);
-		if (static::IsArchiveMode())
-		{
+		if (static::IsArchiveMode()) {
 			$bShow = true;
 		}
 		return $bShow;
@@ -352,24 +333,17 @@ class utils
 		global $argv;
 		$retValue = $defaultValue;
 
-		if (!is_null(self::$m_aParamsFromFile))
-		{
-			if (isset(self::$m_aParamsFromFile[$sName]))
-			{
+		if (!is_null(self::$m_aParamsFromFile)) {
+			if (isset(self::$m_aParamsFromFile[$sName])) {
 				$retValue = self::$m_aParamsFromFile[$sName];
 			}
 		}
 
-		if (isset($_REQUEST[$sName]))
-		{
+		if (isset($_REQUEST[$sName])) {
 			$retValue = $_REQUEST[$sName];
-		}
-		elseif ($bAllowCLI && isset($argv))
-		{
-			foreach($argv as $iArg => $sArg)
-			{
-				if (preg_match('/^--'.$sName.'=(.*)$/', $sArg, $aMatches))
-				{
+		} elseif ($bAllowCLI && isset($argv)) {
+			foreach ($argv as $iArg => $sArg) {
+				if (preg_match('/^--'.$sName.'=(.*)$/', $sArg, $aMatches)) {
 					$retValue = $aMatches[1];
 				}
 			}
@@ -385,16 +359,12 @@ class utils
 
 	public static function Sanitize($value, $defaultValue, $sSanitizationFilter)
 	{
-		if ($value === $defaultValue)
-		{
+		if ($value === $defaultValue) {
 			// Preserve the real default value (can be used to detect missing mandatory parameters)
 			$retValue = $value;
-		}
-		else
-		{
+		} else {
 			$retValue = self::Sanitize_Internal($value, $sSanitizationFilter);
-			if ($retValue === false)
-			{
+			if ($retValue === false) {
 				$retValue = $defaultValue;
 			}
 		}
@@ -425,22 +395,18 @@ class utils
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
-		if (is_array($value))
-		{
-			$retValue = array();
-			foreach ($value as $key => $val)
-			{
+		if (is_array($value)) {
+			$retValue = [];
+			foreach ($value as $key => $val) {
 				$retValue[$key] = self::Sanitize_Internal($val, $sSanitizationFilter); // recursively check arrays
-				if ($retValue[$key] === false)
-				{
+				if ($retValue[$key] === false) {
 					return false;
 				}
 			}
 			return $retValue;
 		}
 
-		switch ($sSanitizationFilter)
-		{
+		switch ($sSanitizationFilter) {
 			case static::ENUM_SANITIZATION_FILTER_INTEGER:
 				$retValue = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
 				break;
@@ -469,57 +435,62 @@ class utils
 			case static::ENUM_SANITIZATION_FILTER_PARAMETER:
 			case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
 			case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
-				switch ($sSanitizationFilter)
-				{
+				switch ($sSanitizationFilter) {
 					case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
 						// Same as parameter type but keep the dot character
 						// transaction_id, the dot is mostly for Windows servers when using file storage as the tokens are named *.tmp
 						// - See N°1835
 						// - Note: It must be included at the regexp beginning otherwise you'll get an invalid character error
-						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, ["options" => ["regexp" => '/^[\. A-Za-z0-9_=-]*$/']]);
 						break;
 
 					case static::ENUM_SANITIZATION_FILTER_ROUTE:
 					case static::ENUM_SANITIZATION_FILTER_OPERATION:
 						// - Routes should be of the "controller_namespace_code.controller_method_name" form
 						// - Operations should be allowed to be namespaced as well even though then don't have dedicated controller yet
-						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[\.A-Za-z0-9_-]*$/')));
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, ["options" => ["regexp" => '/^[\.A-Za-z0-9_-]*$/']]);
 						break;
 
 					case static::ENUM_SANITIZATION_FILTER_PARAMETER:
-						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[ A-Za-z0-9_=-]*$/'))); // the '=', '%3D, '%2B', '%2F'
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, ["options" => ["regexp" => '/^[ A-Za-z0-9_=-]*$/']]); // the '=', '%3D, '%2B', '%2F'
 						// Characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
 						break;
 
 					case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
-						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, ["options" => ["regexp" => '/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/']]); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
 						break;
 
 					case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
-						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/^[ A-Za-z0-9_=%:+-]*$/')));
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, ["options" => ["regexp" => '/^[ A-Za-z0-9_=%:+-]*$/']]);
 						break;
 
 				}
 				break;
 
-			// For XML / HTML node identifiers
+				// For XML / HTML node identifiers
 			case static::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER:
 				$retValue = preg_replace('/[^a-zA-Z0-9_-]/', '', $value);
-				$retValue = filter_var($retValue, FILTER_VALIDATE_REGEXP,
-					['options' => ['regexp' => '/^[A-Za-z0-9][A-Za-z0-9_-]*$/']]);
+				$retValue = filter_var(
+					$retValue,
+					FILTER_VALIDATE_REGEXP,
+					['options' => ['regexp' => '/^[A-Za-z0-9][A-Za-z0-9_-]*$/']]
+				);
 				break;
 
-			// For XML / HTML node id selector
+				// For XML / HTML node id selector
 			case static::ENUM_SANITIZATION_FILTER_ELEMENT_SELECTOR:
-				$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
-					['options' => ['regexp' => '/^[#\.][A-Za-z0-9][A-Za-z0-9_-]*$/']]);
+				$retValue = filter_var(
+					$value,
+					FILTER_VALIDATE_REGEXP,
+					['options' => ['regexp' => '/^[#\.][A-Za-z0-9][A-Za-z0-9_-]*$/']]
+				);
 				break;
 
 			case static::ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
 				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
 				break;
 
-			// For URL
+				// For URL
 			case static::ENUM_SANITIZATION_FILTER_URL:
 				$retValue = filter_var($value, FILTER_SANITIZE_URL);
 				$retValue = filter_var($retValue, FILTER_VALIDATE_URL);
@@ -528,7 +499,7 @@ class utils
 			default:
 			case static::ENUM_SANITIZATION_FILTER_RAW_DATA:
 				$retValue = $value;
-			// Do nothing
+				// Do nothing
 		}
 
 		return $retValue;
@@ -543,55 +514,53 @@ class utils
 	 * @return ormDocument The uploaded file (can be 'empty' if nothing was uploaded)
 	 * @throws \FileUploadException
 	 */
-	public static function  ReadPostedDocument($sName, $sIndex = null)
+	public static function ReadPostedDocument($sName, $sIndex = null)
 	{
 		$oDocument = new ormDocument(); // an empty document
-		if(isset($_FILES[$sName]))
-		{
+		if (isset($_FILES[$sName])) {
 			$aFileInfo = $_FILES[$sName];
 
 			$sError = is_null($sIndex) ? $aFileInfo['error'] : $aFileInfo['error'][$sIndex];
-			switch($sError)
-			{
+			switch ($sError) {
 				case UPLOAD_ERR_OK:
-				$sTmpName = is_null($sIndex) ? $aFileInfo['tmp_name'] : $aFileInfo['tmp_name'][$sIndex];
-				$sMimeType = is_null($sIndex) ? $aFileInfo['type'] : $aFileInfo['type'][$sIndex];
-				$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
+					$sTmpName = is_null($sIndex) ? $aFileInfo['tmp_name'] : $aFileInfo['tmp_name'][$sIndex];
+					$sMimeType = is_null($sIndex) ? $aFileInfo['type'] : $aFileInfo['type'][$sIndex];
+					$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
 
-				$doc_content = file_get_contents($sTmpName);
+					$doc_content = file_get_contents($sTmpName);
 					$sMimeType = self::GetFileMimeType($sTmpName);
 					$oDocument = new ormDocument($doc_content, $sMimeType, $sName);
-				break;
+					break;
 
 				case UPLOAD_ERR_NO_FILE:
-				// no file to load, it's a normal case, just return an empty document
-				break;
+					// no file to load, it's a normal case, just return an empty document
+					break;
 
 				case UPLOAD_ERR_FORM_SIZE:
 				case UPLOAD_ERR_INI_SIZE:
-				throw new FileUploadException(Dict::Format('UI:Error:UploadedFileTooBig', ini_get('upload_max_filesize')));
-				break;
+					throw new FileUploadException(Dict::Format('UI:Error:UploadedFileTooBig', ini_get('upload_max_filesize')));
+					break;
 
 				case UPLOAD_ERR_PARTIAL:
-				throw new FileUploadException(Dict::S('UI:Error:UploadedFileTruncated.'));
-				break;
+					throw new FileUploadException(Dict::S('UI:Error:UploadedFileTruncated.'));
+					break;
 
 				case UPLOAD_ERR_NO_TMP_DIR:
-				throw new FileUploadException(Dict::S('UI:Error:NoTmpDir'));
-				break;
+					throw new FileUploadException(Dict::S('UI:Error:NoTmpDir'));
+					break;
 
 				case UPLOAD_ERR_CANT_WRITE:
-				throw new FileUploadException(Dict::Format('UI:Error:CannotWriteToTmp_Dir', ini_get('upload_tmp_dir')));
-				break;
+					throw new FileUploadException(Dict::Format('UI:Error:CannotWriteToTmp_Dir', ini_get('upload_tmp_dir')));
+					break;
 
 				case UPLOAD_ERR_EXTENSION:
-				$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
-				throw new FileUploadException(Dict::Format('UI:Error:UploadStoppedByExtension_FileName', $sName));
-				break;
+					$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
+					throw new FileUploadException(Dict::Format('UI:Error:UploadStoppedByExtension_FileName', $sName));
+					break;
 
 				default:
-				throw new FileUploadException(Dict::Format('UI:Error:UploadFailedUnknownCause_Code', $sError));
-				break;
+					throw new FileUploadException(Dict::Format('UI:Error:UploadFailedUnknownCause_Code', $sError));
+					break;
 
 			}
 		}
@@ -610,26 +579,22 @@ class utils
 	 */
 	public static function ReadMultipleSelection($oFullSetFilter)
 	{
-		$aSelectedObj = utils::ReadParam('selectObject', array());
+		$aSelectedObj = utils::ReadParam('selectObject', []);
 		$sSelectionMode = utils::ReadParam('selectionMode', '');
 		if ($sSelectionMode != '') {
 			// Paginated selection
-			$aExceptions = utils::ReadParam('storedSelection', array());
+			$aExceptions = utils::ReadParam('storedSelection', []);
 			if ($sSelectionMode == 'positive') {
 				// Only the explicitely listed items are selected
 				$aSelectedObj = $aExceptions;
-			}
-			else
-			{
+			} else {
 				// All items of the set are selected, except the one explicitely listed
-				$aSelectedObj = array();
+				$aSelectedObj = [];
 				$oFullSet = new DBObjectSet($oFullSetFilter);
 				$sClassAlias = $oFullSetFilter->GetClassAlias();
-				$oFullSet->OptimizeColumnLoad(array($sClassAlias => array('friendlyname'))); // We really need only the IDs but it does not work since id is not a real field
-				while($oObj = $oFullSet->Fetch())
-				{
-					if (!in_array($oObj->GetKey(), $aExceptions))
-					{
+				$oFullSet->OptimizeColumnLoad([$sClassAlias => ['friendlyname']]); // We really need only the IDs but it does not work since id is not a real field
+				while ($oObj = $oFullSet->Fetch()) {
+					if (!in_array($oObj->GetKey(), $aExceptions)) {
 						$aSelectedObj[] = $oObj->GetKey();
 					}
 				}
@@ -650,45 +615,37 @@ class utils
 	{
 		$sSelectionMode = utils::ReadParam('selectionMode', '');
 
-		if ($sSelectionMode != 'positive' && $sSelectionMode != 'negative')
-		{
+		if ($sSelectionMode != 'positive' && $sSelectionMode != 'negative') {
 			throw new CoreException('selectionMode must be either positive or negative');
 		}
 
 		// Paginated selection
-		$aSelectedIds = utils::ReadParam('storedSelection', array());
-		$aSelectedObjIds = utils::ReadParam('selectObject', array());
+		$aSelectedIds = utils::ReadParam('storedSelection', []);
+		$aSelectedObjIds = utils::ReadParam('selectObject', []);
 
 		//it means that the user has selected all the results of the search query
-		if (count($aSelectedObjIds) > 0 )
-		{
-			$sFilter=utils::ReadParam("sFilter",'',false,'raw_data');
-			if ($sFilter!='')
-			{
-				$oFullSetFilter=DBSearch::unserialize($sFilter);
+		if (count($aSelectedObjIds) > 0) {
+			$sFilter = utils::ReadParam("sFilter", '', false, 'raw_data');
+			if ($sFilter != '') {
+				$oFullSetFilter = DBSearch::unserialize($sFilter);
 
 			}
 		}
-		if (count($aSelectedIds) > 0 )
-		{
-			if ($sSelectionMode == 'positive')
-			{
+		if (count($aSelectedIds) > 0) {
+			if ($sSelectionMode == 'positive') {
 				// Only the explicitly listed items are selected
 				$oFullSetFilter->AddCondition('id', $aSelectedIds, 'IN');
-			}
-			else
-			{
+			} else {
 				// All items of the set are selected, except the one explicitly listed
 				$oFullSetFilter->AddCondition('id', $aSelectedIds, 'NOTIN');
 			}
 		}
 
-		$aSelectedObj = array();
+		$aSelectedObj = [];
 		$oFullSet = new DBObjectSet($oFullSetFilter);
 		$sClassAlias = $oFullSetFilter->GetClassAlias();
-		$oFullSet->OptimizeColumnLoad(array($sClassAlias => array('friendlyname'))); // We really need only the IDs but it does not work since id is not a real field
-		while ($oObj = $oFullSet->Fetch())
-		{
+		$oFullSet->OptimizeColumnLoad([$sClassAlias => ['friendlyname']]); // We really need only the IDs but it does not work since id is not a real field
+		while ($oObj = $oFullSet->Fetch()) {
 			$aSelectedObj[$oObj->GetKey()] = $oObj->Get('friendlyname');
 		}
 
@@ -719,8 +676,7 @@ class utils
 	 */
 	public static function GetUploadTempId($sTransactionId = null)
 	{
-		if ($sTransactionId === null)
-		{
+		if ($sTransactionId === null) {
 			$sTransactionId = static::GetNewTransactionId();
 		}
 		return $sTransactionId;
@@ -753,8 +709,10 @@ class utils
 			switch ($sUnit) {
 				case 'G':
 					$iReturn *= 1024;
+					// no break
 				case 'M':
 					$iReturn *= 1024;
+					// no break
 				case 'K':
 					$iReturn *= 1024;
 			}
@@ -828,8 +786,7 @@ class utils
 	{
 		$sReturn = '';
 		// Kilobytes
-		if ($value >= 1024)
-		{
+		if ($value >= 1024) {
 			$sReturn = 'K';
 			$value = $value / 1024;
 			if ($iPrecision === 0) {
@@ -837,27 +794,24 @@ class utils
 			}
 		}
 		// Megabytes
-		if ($value >= 1024)
-		{
+		if ($value >= 1024) {
 			$sReturn = 'M';
 			$value = $value / 1024;
 		}
 		// Gigabytes
-		if ($value >= 1024)
-		{
+		if ($value >= 1024) {
 			$sReturn = 'G';
 			$value = $value / 1024;
 		}
 		// Terabytes
-		if ($value >= 1024)
-		{
+		if ($value >= 1024) {
 			$sReturn = 'T';
 			$value = $value / 1024;
 		}
 
 		$value = round($value, $iPrecision);
 
-		return $value . '' . $sReturn . 'B';
+		return $value.''.$sReturn.'B';
 	}
 
 	/**
@@ -876,7 +830,7 @@ class utils
 		static $aDateTokens = null;
 		static $aDateRegexps = null;
 		if (is_null($aDateTokens)) {
-			$aSpec = array(
+			$aSpec = [
 				'%d' => '(?<day>[0-9]{2})',
 				'%m' => '(?<month>[0-9]{2})',
 				'%y' => '(?<year>[0-9]{2})',
@@ -884,15 +838,14 @@ class utils
 				'%H' => '(?<hour>[0-2][0-9])',
 				'%i' => '(?<minute>[0-5][0-9])',
 				'%s' => '(?<second>[0-5][0-9])',
-			);
+			];
 			$aDateTokens = array_keys($aSpec);
 			$aDateRegexps = array_values($aSpec);
 		}
 
-	   $sDateRegexp = str_replace($aDateTokens, $aDateRegexps, $sFormat);
+		$sDateRegexp = str_replace($aDateTokens, $aDateRegexps, $sFormat);
 
-	   if (preg_match('!^(?<head>)'.$sDateRegexp.'(?<tail>)$!', $sDate, $aMatches))
-	   {
+		if (preg_match('!^(?<head>)'.$sDateRegexp.'(?<tail>)$!', $sDate, $aMatches)) {
 			$sYear = isset($aMatches['year']) ? $aMatches['year'] : 0;
 			$sMonth = isset($aMatches['month']) ? $aMatches['month'] : 1;
 			$sDay = isset($aMatches['day']) ? $aMatches['day'] : 1;
@@ -900,12 +853,10 @@ class utils
 			$sMinute = isset($aMatches['minute']) ? $aMatches['minute'] : 0;
 			$sSecond = isset($aMatches['second']) ? $aMatches['second'] : 0;
 			return strtotime("$sYear-$sMonth-$sDay $sHour:$sMinute:$sSecond");
+		} else {
+			return false;
 		}
-	   else
-	   {
-	   	return false;
-	   }
-	   // http://www.spaweditor.com/scripts/regex/index.php
+		// http://www.spaweditor.com/scripts/regex/index.php
 	}
 
 	/**
@@ -1008,8 +959,7 @@ class utils
 		}
 
 		$sProductionEnvConfigPath = self::GetConfigFilePath('production');
-		if (file_exists($sProductionEnvConfigPath))
-		{
+		if (file_exists($sProductionEnvConfigPath)) {
 			$oProductionEnvDiskConfig = new Config($sProductionEnvConfigPath);
 			self::SetConfig($oProductionEnvDiskConfig);
 			return self::$oConfig;
@@ -1020,13 +970,11 @@ class utils
 
 	public static function InitTimeZone($oConfig = null)
 	{
-		if (is_null($oConfig))
-		{
+		if (is_null($oConfig)) {
 			$oConfig = self::GetConfig();
 		}
 		$sItopTimeZone = $oConfig->Get('timezone');
-		if (!empty($sItopTimeZone))
-		{
+		if (!empty($sItopTimeZone)) {
 			date_default_timezone_set($sItopTimeZone);
 		}
 		//		else
@@ -1065,21 +1013,14 @@ class utils
 	 */
 	public static function GetAbsoluteUrlAppRoot($bForceTrustProxy = false)
 	{
-		if (static::$sAbsoluteUrlAppRootCache === null || $bForceTrustProxy)
-		{
+		if (static::$sAbsoluteUrlAppRootCache === null || $bForceTrustProxy) {
 			static::$sAbsoluteUrlAppRootCache = self::GetConfig()->Get('app_root_url');
-			if (static::$sAbsoluteUrlAppRootCache == '')
-			{
+			if (static::$sAbsoluteUrlAppRootCache == '') {
 				static::$sAbsoluteUrlAppRootCache = self::GetDefaultUrlAppRoot($bForceTrustProxy);
-			}
-			elseif (strpos(static::$sAbsoluteUrlAppRootCache, SERVER_NAME_PLACEHOLDER) > -1)
-			{
-				if (isset($_SERVER['SERVER_NAME']))
-				{
+			} elseif (strpos(static::$sAbsoluteUrlAppRootCache, SERVER_NAME_PLACEHOLDER) > -1) {
+				if (isset($_SERVER['SERVER_NAME'])) {
 					$sServerName = $_SERVER['SERVER_NAME'];
-				}
-				else
-				{
+				} else {
 					// CLI mode ?
 					$sServerName = php_uname('n');
 				}
@@ -1111,7 +1052,6 @@ class utils
 
 		return self::GetAppRootUrl($sCurrentScript, $sAppRoot, $sAbsoluteUrl);
 	}
-
 
 	/**
 	 * Build the current absolute URL from the server's variables.
@@ -1203,11 +1143,9 @@ class utils
 	{
 		// $_SERVER['REQUEST_URI'] is empty when running on IIS
 		// Let's use Ivan Tcholakov's fix (found on www.dokeos.com)
-		if (empty($_SERVER['REQUEST_URI']))
-		{
+		if (empty($_SERVER['REQUEST_URI'])) {
 			$sPath = $_SERVER['SCRIPT_NAME'];
-			if (!empty($_SERVER['QUERY_STRING']))
-			{
+			if (!empty($_SERVER['QUERY_STRING'])) {
 				$sPath .= '?'.$_SERVER['QUERY_STRING'];
 			}
 			$_SERVER['REQUEST_URI'] = $sPath;
@@ -1232,21 +1170,15 @@ class utils
 		$sCurrentRelativePath = str_ireplace($sAppRoot, '', $sCurrentScript);
 
 		$sAppRootPos = strpos($sAbsoluteUrl, $sCurrentRelativePath);
-		if ($sAppRootPos !== false)
-		{
+		if ($sAppRootPos !== false) {
 			$sAppRootUrl = substr($sAbsoluteUrl, 0, $sAppRootPos); // remove the current page and path
-		}
-		else
-		{
+		} else {
 			// Second attempt without index.php at the end...
 			$sCurrentRelativePath = str_ireplace('index.php', '', $sCurrentRelativePath);
 			$sAppRootPos = strpos($sAbsoluteUrl, $sCurrentRelativePath);
-			if ($sAppRootPos !== false)
-			{
+			if ($sAppRootPos !== false) {
 				$sAppRootUrl = substr($sAbsoluteUrl, 0, $sAppRootPos); // remove the current page and path
-			}
-			else
-			{
+			} else {
 				// No luck...
 				throw new Exception("Failed to determine application root path $sAbsoluteUrl ($sCurrentRelativePath) APPROOT:'$sAppRoot'");
 			}
@@ -1263,13 +1195,10 @@ class utils
 	 */
 	public static function GetAppRevisionNumber()
 	{
-		if (ITOP_REVISION == 'svn')
-		{
+		if (ITOP_REVISION == 'svn') {
 			// This is NOT a version built using the build system, just display the main version
 			$sRevisionNumber = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
-		}
-		else
-		{
+		} else {
 			// This is a build made from SVN, let display the full information
 			$sRevisionNumber = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
 		}
@@ -1297,16 +1226,11 @@ class utils
 
 		$bTrustProxy = $bForceTrustProxy || self::IsProxyTrusted();
 
-		if ($bTrustProxy && !empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
-		{
+		if ($bTrustProxy && !empty($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
 			$bSecured = ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
-		}
-		elseif ($bTrustProxy && !empty($_SERVER['HTTP_X_FORWARDED_PROTOCOL']))
-		{
+		} elseif ($bTrustProxy && !empty($_SERVER['HTTP_X_FORWARDED_PROTOCOL'])) {
 			$bSecured = ($_SERVER['HTTP_X_FORWARDED_PROTOCOL'] === 'https');
-		}
-		elseif ((!empty($_SERVER['HTTPS'])) && (strtolower($_SERVER['HTTPS']) != 'off'))
-		{
+		} elseif ((!empty($_SERVER['HTTPS'])) && (strtolower($_SERVER['HTTPS']) != 'off')) {
 			$bSecured = (strcasecmp($_SERVER['HTTPS'], 'off') !== 0);
 		}
 
@@ -1320,7 +1244,7 @@ class utils
 	 * 2) the user did not log-in using the "basic" mode (i.e basic authentication) or by passing credentials in the URL
 	 * @return boolean True if logoff is supported, false otherwise
 	 */
-	static function CanLogOff()
+	public static function CanLogOff()
 	{
 		return Session::Get('can_logoff', false);
 	}
@@ -1334,16 +1258,15 @@ class utils
 		return Session::GetLog();
 	}
 
-	 static function DebugBacktrace($iLimit = 5)
-	 {
+	public static function DebugBacktrace($iLimit = 5)
+	{
 		$aFullTrace = debug_backtrace();
-		$aLightTrace = array();
-		for($i=1; ($i<=$iLimit && $i < count($aFullTrace)); $i++) // Skip the last function call... which is the call to this function !
-		{
+		$aLightTrace = [];
+		for ($i = 1; ($i <= $iLimit && $i < count($aFullTrace)); $i++) { // Skip the last function call... which is the call to this function !
 			$aLightTrace[$i] = $aFullTrace[$i]['function'].'(), called from line '.$aFullTrace[$i]['line'].' in '.$aFullTrace[$i]['file'];
 		}
 		echo "<p><pre>".print_r($aLightTrace, true)."</pre></p>\n";
-	 }
+	}
 
 	/**
 	 * Execute the given iTop PHP script, passing it the current credentials
@@ -1385,7 +1308,7 @@ class utils
 			$aArguments['param_file'] = $sParamFile;
 		}
 
-		$aArgs = array();
+		$aArgs = [];
 		foreach ($aArguments as $sName => $value) {
 			// Note: See comment from the 23-Apr-2004 03:30 in the PHP documentation
 			//    It suggests to rely on pctnl_* function instead of using escapeshellargs
@@ -1416,7 +1339,7 @@ class utils
 			throw new Exception(Dict::S('Core:ExecProcess:Code255')." - ".$sCommand.":\n".$sErrors);
 		}
 
-		return array($iRes, $aOutput);
+		return [$iRes, $aOutput];
 	}
 
 	/**
@@ -1434,7 +1357,7 @@ class utils
 	 */
 	public static function GetCompiledEnvironmentPath(): string
 	{
-		return APPROOT . 'env-' . MetaModel::GetEnvironment() . '/';
+		return APPROOT.'env-'.MetaModel::GetEnvironment().'/';
 	}
 
 	/**
@@ -1507,8 +1430,7 @@ class utils
 
 		// 1st - add standard built-in menu items
 		//
-		switch($iMenuId)
-		{
+		switch ($iMenuId) {
 			case iPopupMenuExtension::MENU_OBJLIST_ACTIONS:
 				// No native action there yet
 				break;
@@ -1538,8 +1460,10 @@ class utils
 
 				if (strlen($sUrl) < SERVER_MAX_URL_LENGTH) {
 					// Static menus: Email this page, CSV Export & Add to Dashboard
-					$aResult[] = new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'),
-							"mailto:?body=".urlencode($sUrl).' ' // Add an extra space to make it work in Outlook
+					$aResult[] = new URLPopupMenuItem(
+						'UI:Menu:EMail',
+						Dict::S('UI:Menu:EMail'),
+						"mailto:?body=".urlencode($sUrl).' ' // Add an extra space to make it work in Outlook
 					);
 				}
 
@@ -1547,18 +1471,17 @@ class utils
 					// Bulk export actions
 					$aResult[] = new JSPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), "ExportListDlg('$sOQL', '$sDataTableId', 'csv', ".json_encode(Dict::S('UI:Menu:CSVExport')).")");
 					$aResult[] = new JSPopupMenuItem('UI:Menu:ExportXLSX', Dict::S('ExcelExporter:ExportMenu'), "ExportListDlg('$sOQL', '$sDataTableId', 'xlsx', ".json_encode(Dict::S('ExcelExporter:ExportMenu')).")");
-					if (extension_loaded('gd'))
-					{
+					if (extension_loaded('gd')) {
 						// PDF export requires GD
 						$aResult[] = new JSPopupMenuItem('UI:Menu:ExportPDF', Dict::S('UI:Menu:ExportPDF'), "ExportListDlg('$sOQL', '$sDataTableId', 'pdf', ".json_encode(Dict::S('UI:Menu:ExportPDF')).")");
 					}
 				}
 				$aResult[] = new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL', '$sContext')");
 				$aResult[] = new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sDataTableId', '$sContext')");
-                if (ApplicationMenu::IsMenuIdEnabled('RunQueriesMenu')) {
-                    $oMenuItemPlay = new JSPopupMenuItem('UI:Menu:OpenOQL', Dict::S('UI:Menu:OpenOQL'), "OpenOql('$sOQL')");
-                    $aResult[] = $oMenuItemPlay;
-                }
+				if (ApplicationMenu::IsMenuIdEnabled('RunQueriesMenu')) {
+					$oMenuItemPlay = new JSPopupMenuItem('UI:Menu:OpenOQL', Dict::S('UI:Menu:OpenOQL'), "OpenOql('$sOQL')");
+					$aResult[] = $oMenuItemPlay;
+				}
 
 				break;
 
@@ -1571,7 +1494,7 @@ class utils
 				$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
 				$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
 
-				$aResult = array(
+				$aResult = [
 					new SeparatorPopupMenuItem(),
 					// Static menus: Email this page & CSV Export
 					new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'), "mailto:?subject=".urlencode($oObj->GetRawName())."&body=".urlencode($sUrl).' '), // Add an extra space to make it work in Outlook
@@ -1579,7 +1502,7 @@ class utils
 					new JSPopupMenuItem('UI:Menu:ExportXLSX', Dict::S('ExcelExporter:ExportMenu'), "ExportListDlg('$sOQL', '', 'xlsx', ".json_encode(Dict::S('ExcelExporter:ExportMenu')).")"),
 					new SeparatorPopupMenuItem(),
 					new URLPopupMenuItem('UI:Menu:PrintableVersion', Dict::S('UI:Menu:PrintableVersion'), $sUrl.'&printable=1', '_blank'),
-				);
+				];
 				break;
 
 			case iPopupMenuExtension::MENU_DASHBOARD_ACTIONS:
@@ -1595,11 +1518,11 @@ class utils
 				$sDashboardFileJS = addslashes($sDashboardFileRelative);
 				$sDashboardFileURL = urlencode($sDashboardFileRelative);
 				$sUploadDashboardTransactId = utils::GetNewTransactionId();
-				$aResult = array(
+				$aResult = [
 					new SeparatorPopupMenuItem(),
 					new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sDashboardId.'&file='.$sDashboardFileURL),
 					new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sDashboardId', file: '$sDashboardFileJS', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn', transaction: '$sUploadDashboardTransactId' })"),
-				);
+				];
 				if ($oDashboard->GetReloadURL()) {
 					$aResult[] = new SeparatorPopupMenuItem();
 					$aResult[] = new URLPopupMenuItem('UI:Menu:PrintableVersion', Dict::S('UI:Menu:PrintableVersion'), $oDashboard->GetReloadURL().'&printable=1', '_blank');
@@ -1786,8 +1709,7 @@ SQL;
 	 */
 	public static function GetConfigFilePathRelative($sEnvironment = null)
 	{
-		if (is_null($sEnvironment))
-		{
+		if (is_null($sEnvironment)) {
 			$sEnvironment = self::GetCurrentEnvironment();
 		}
 		return "conf/".$sEnvironment.'/'.ITOP_CONFIG_FILE;
@@ -1824,7 +1746,7 @@ SQL;
 	 *
 	 * @throws \Exception
 	 */
-	public static function GetAbsoluteUrlModulePage($sModule, $sPage, $aArguments = array(), $sEnvironment = null)
+	public static function GetAbsoluteUrlModulePage($sModule, $sPage, $aArguments = [], $sEnvironment = null)
 	{
 		$aArgs = self::GetExecPageArguments($sModule, $sPage, $aArguments, $sEnvironment);
 		$sArgs = http_build_query($aArgs);
@@ -1841,17 +1763,15 @@ SQL;
 	 * @return string[] key/value pair for the exec page query string. <b>Warning</b> : values are not url encoded !
 	 * @throws \Exception if one of the argument has a reserved name
 	 */
-	public static function GetExecPageArguments($sModule, $sPage, $aArguments = array(), $sEnvironment = null)
+	public static function GetExecPageArguments($sModule, $sPage, $aArguments = [], $sEnvironment = null)
 	{
 		$sEnvironment = is_null($sEnvironment) ? self::GetCurrentEnvironment() : $sEnvironment;
-		$aArgs = array();
+		$aArgs = [];
 		$aArgs['exec_module'] = $sModule;
 		$aArgs['exec_page'] = $sPage;
 		$aArgs['exec_env'] = $sEnvironment;
-		foreach($aArguments as $sName => $sValue)
-		{
-			if (($sName == 'exec_module') || ($sName == 'exec_page') || ($sName == 'exec_env'))
-			{
+		foreach ($aArguments as $sName => $sValue) {
+			if (($sName == 'exec_module') || ($sName == 'exec_page') || ($sName == 'exec_env')) {
 				throw new Exception("Module page: $sName is a reserved page argument name");
 			}
 			$aArgs[$sName] = $sValue;
@@ -1877,17 +1797,13 @@ SQL;
 	 */
 	public static function MakeUniqueName($sProposed, $aExisting)
 	{
-		if (in_array($sProposed, $aExisting))
-		{
+		if (in_array($sProposed, $aExisting)) {
 			$i = 1;
-			while (in_array($sProposed.$i, $aExisting) && ($i < 50))
-			{
+			while (in_array($sProposed.$i, $aExisting) && ($i < 50)) {
 				$i++;
 			}
 			return $sProposed.$i;
-		}
-		else
-		{
+		} else {
 			return $sProposed;
 		}
 	}
@@ -1899,7 +1815,7 @@ SQL;
 	 */
 	public static function GetSafeId($sId)
 	{
-		return str_replace(array(':', '[', ']', '+', '-', ' '), '_', $sId);
+		return str_replace([':', '[', ']', '+', '-', ' '], '_', $sId);
 	}
 
 	/**
@@ -1925,7 +1841,7 @@ SQL;
 	 *
 	 * @since 3.1.0 N°6172 as curl ext is now mandatory, method will crash with a ApplicationException if this PHP extension isn't available
 	 */
-	public static function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null, $aCurlOptions = array())
+	public static function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null, $aCurlOptions = [])
 	{
 		if (false === function_exists('curl_init')) {
 			throw new ApplicationException('\utils::DoPostRequest method called whereas the CURL PHP extension isn\'t available !');
@@ -1938,12 +1854,12 @@ SQL;
 		$aHeaders = explode("\n", $sOptionnalHeaders ?? '');
 		// N°3267 - Webservices: Fix optional headers not being taken into account
 		//          See https://www.php.net/curl_setopt CURLOPT_HTTPHEADER
-		$aHTTPHeaders = array();
+		$aHTTPHeaders = [];
 		foreach ($aHeaders as $sHeaderString) {
 			$aHTTPHeaders[] = trim($sHeaderString);
 		}
 		// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions
-		$aOptions = array(
+		$aOptions = [
 			CURLOPT_RETURNTRANSFER => true,     // return the content of the request
 			CURLOPT_HEADER         => false,    // don't return the headers in the output
 			CURLOPT_FOLLOWLOCATION => true,     // follow redirects
@@ -1960,7 +1876,7 @@ SQL;
 			CURLOPT_POST           => count($aData),
 			CURLOPT_POSTFIELDS     => http_build_query($aData),
 			CURLOPT_HTTPHEADER     => $aHTTPHeaders,
-		);
+		];
 
 		$aAllOptions = $aCurlOptions + $aOptions;
 		$ch = curl_init($sUrl);
@@ -1987,22 +1903,22 @@ SQL;
 	/**
 	 * Get a standard list of character sets
 	 *
- 	 * @param array $aAdditionalEncodings Additional values
+	 * @param array $aAdditionalEncodings Additional values
 	 * @return array of iconv code => english label, sorted by label
 	 */
-	public static function GetPossibleEncodings($aAdditionalEncodings = array())
+	public static function GetPossibleEncodings($aAdditionalEncodings = [])
 	{
 		// Encodings supported:
 		// ICONV_CODE => Display Name
 		// Each iconv installation supports different encodings
 		// Some reasonably common and useful encodings are listed here
-		$aPossibleEncodings = array(
+		$aPossibleEncodings = [
 			'UTF-8' => 'Unicode (UTF-8)',
 			'ISO-8859-1' => 'Western (ISO-8859-1)',
 			'WINDOWS-1251' => 'Cyrilic (Windows 1251)',
 			'WINDOWS-1252' => 'Western (Windows 1252)',
 			'ISO-8859-15' => 'Western (ISO-8859-15)',
-		);
+		];
 		$aPossibleEncodings = array_merge($aPossibleEncodings, $aAdditionalEncodings);
 		asort($aPossibleEncodings);
 		return $aPossibleEncodings;
@@ -2134,7 +2050,7 @@ SQL;
 		}
 		// else log the error if needed
 		if ($bLogErrors) {
-			IssueLog::Warning("Format string requires $iExpectedCount arguments, but only $iActualCount provided. Format: '$sFormat'"	);
+			IssueLog::Warning("Format string requires $iExpectedCount arguments, but only $iActualCount provided. Format: '$sFormat'");
 		}
 
 		// Create a replacement map
@@ -2159,7 +2075,7 @@ SQL;
 			}
 
 			// Remove any remaining nulls (for positions that weren't referenced)
-			$aReplacements = array_filter($aReplacements, static function($val) { return $val !== null; });
+			$aReplacements = array_filter($aReplacements, static function ($val) { return $val !== null; });
 		} else {
 			// For non-positional, we need to map each position
 			$aReplacements = [];
@@ -2209,8 +2125,7 @@ SQL;
 		try {
 			//return '<?xml encoding="UTF-8">'.$sHtml;
 			return Html2Text::convert('<?xml encoding="UTF-8">'.$sHtml, ['ignore_errors' => true]);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			return $e->getMessage();
 		}
 	}
@@ -2223,7 +2138,7 @@ SQL;
 	 */
 	public static function TextToHtml($sText)
 	{
-		if (static::IsNullOrEmptyString($sText)){
+		if (static::IsNullOrEmptyString($sText)) {
 			return '';
 		}
 		$sText = str_replace("\r\n", "\n", $sText);
@@ -2242,24 +2157,21 @@ SQL;
 	public static function GetCSSFromSASS($sSassRelPath, $aImportPaths = null)
 	{
 		// Avoiding compilation if file is already a css file.
-		if (preg_match('/\.css(\?.*)?$/', $sSassRelPath))
-		{
+		if (preg_match('/\.css(\?.*)?$/', $sSassRelPath)) {
 			return $sSassRelPath;
 		}
 
 		// Setting import paths
-		if ($aImportPaths === null)
-		{
-			$aImportPaths = array();
+		if ($aImportPaths === null) {
+			$aImportPaths = [];
 		}
-		$aImportPaths[] = APPROOT . '/css';
+		$aImportPaths[] = APPROOT.'/css';
 
 		$sSassPath = APPROOT.$sSassRelPath;
 		$sCssRelPath = preg_replace('/\.scss$/', '.css', $sSassRelPath);
 		$sCssPath = APPROOT.$sCssRelPath;
 		clearstatcache();
-		if (!file_exists($sCssPath) || (is_writable($sCssPath) && (filemtime($sCssPath) < filemtime($sSassPath))))
-		{
+		if (!file_exists($sCssPath) || (is_writable($sCssPath) && (filemtime($sCssPath) < filemtime($sSassPath)))) {
 			$sCss = static::CompileCSSFromSASS(file_get_contents($sSassPath), $aImportPaths);
 			file_put_contents($sCssPath, $sCss);
 		}
@@ -2277,7 +2189,7 @@ SQL;
 	 *
 	 * @since 2.7.0
 	 */
-	public static function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array())
+	public static function CompileCSSFromSASS($sSassContent, $aImportPaths = [], $aVariables = [])
 	{
 		$oSass = new Compiler();
 		$oSass->setOutputStyle(OutputStyle::COMPRESSED);
@@ -2327,17 +2239,17 @@ SQL;
 		$data = $sPrefix;
 		$data .= __FILE__;
 		$data .= mt_rand();
-		$hash = strtoupper(hash('ripemd128', $uid . md5($data)));
-		$sUUID = '{' .
-				substr($hash,  0,  8) .
-				'-' .
-				substr($hash,  8,  4) .
-				'-' .
-				substr($hash, 12,  4) .
-				'-' .
-				substr($hash, 16,  4) .
-				'-' .
-				substr($hash, 20, 12) .
+		$hash = strtoupper(hash('ripemd128', $uid.md5($data)));
+		$sUUID = '{'.
+				substr($hash, 0, 8).
+				'-'.
+				substr($hash, 8, 4).
+				'-'.
+				substr($hash, 12, 4).
+				'-'.
+				substr($hash, 16, 4).
+				'-'.
+				substr($hash, 20, 12).
 				'}';
 		return $sUUID;
 	}
@@ -2350,7 +2262,7 @@ SQL;
 	 */
 	public static function GetCurrentModuleName($iCallDepth = 0)
 	{
-        return ModuleService::GetInstance()->GetCurrentModuleName($iCallDepth + 1);
+		return ModuleService::GetInstance()->GetCurrentModuleName($iCallDepth + 1);
 	}
 
 	/**
@@ -2397,7 +2309,7 @@ SQL;
 	 */
 	public static function GetCurrentModuleSetting($sProperty, $defaultvalue = null)
 	{
-        return ModuleService::GetInstance()->GetCurrentModuleSetting($sProperty, $defaultvalue);
+		return ModuleService::GetInstance()->GetCurrentModuleSetting($sProperty, $defaultvalue);
 	}
 
 	/**
@@ -2406,7 +2318,7 @@ SQL;
 	 */
 	public static function GetCompiledModuleVersion($sModuleName)
 	{
-        return ModuleService::GetInstance()->GetCompiledModuleVersion($sModuleName);
+		return ModuleService::GetInstance()->GetCompiledModuleVersion($sModuleName);
 	}
 
 	/**
@@ -2417,8 +2329,7 @@ SQL;
 	public static function IsURL($sPath)
 	{
 		$bRet = false;
-		if ((substr($sPath, 0, 7) == 'http://') || (substr($sPath, 0, 8) == 'https://') || (substr($sPath, 0, 8) == 'ftp://'))
-		{
+		if ((substr($sPath, 0, 7) == 'http://') || (substr($sPath, 0, 8) == 'https://') || (substr($sPath, 0, 8) == 'ftp://')) {
 			$bRet = true;
 		}
 		return $bRet;
@@ -2442,7 +2353,7 @@ SQL;
 			// extract the "query" part of the URL and analyze it
 			$sQuery = parse_url($sPath, PHP_URL_QUERY);
 			if ($sQuery !== null) {
-				$aParams = array();
+				$aParams = [];
 				foreach (explode('&', $sQuery) as $sChunk) {
 					$aParts = explode('=', $sChunk ?? '');
 					if (count($aParts) != 2) {
@@ -2555,22 +2466,17 @@ TXT
 
 	protected static function ParseHeaders($aHeaders)
 	{
-		$aCleanHeaders = array();
-		foreach( $aHeaders as $sKey => $sValue )
-		{
+		$aCleanHeaders = [];
+		foreach ($aHeaders as $sKey => $sValue) {
 			$aTokens = explode(':', $sValue ?? '', 2);
-			if(isset($aTokens[1]))
-			{
+			if (isset($aTokens[1])) {
 				$aCleanHeaders[trim($aTokens[0])] = trim($aTokens[1]);
-			}
-			else
-			{
+			} else {
 				// The header is not in the form Header-Code: Value
 				$aCleanHeaders[] = $sValue; // Store the value as-is
-				$aMatches = array();
+				$aMatches = [];
 				// Check if it's not the HTTP response code
-				if( preg_match("|HTTP/[0-9\.]+\s+([0-9]+)|", $sValue, $aMatches) )
-				{
+				if (preg_match("|HTTP/[0-9\.]+\s+([0-9]+)|", $sValue, $aMatches)) {
 					$aCleanHeaders['reponse_code'] = intval($aMatches[1]);
 				}
 			}
@@ -2619,8 +2525,7 @@ TXT
 	 */
 	public static function IsHighCardinality($sClass)
 	{
-		if (utils::GetConfig()->Get('search_manual_submit'))
-		{
+		if (utils::GetConfig()->Get('search_manual_submit')) {
 			return true;
 		}
 		$aHugeClasses = MetaModel::GetConfig()->Get('high_cardinality_classes');
@@ -2639,20 +2544,17 @@ TXT
 	 */
 	public static function GetFileMimeType($sFilePath, $sDefaultMimeType = 'application/octet-stream')
 	{
-		if (!function_exists('finfo_file'))
-		{
+		if (!function_exists('finfo_file')) {
 			return $sDefaultMimeType;
 		}
 
 		$sMimeType = $sDefaultMimeType;
 		$rInfo = @finfo_open(FILEINFO_MIME_TYPE);
-		if ($rInfo !== false)
-		{
+		if ($rInfo !== false) {
 			$sType = @finfo_file($rInfo, $sFilePath);
 			if (($sType !== false)
 				&& is_string($sType)
-				&& ($sType !== ''))
-			{
+				&& ($sType !== '')) {
 				$sMimeType = $sType;
 			}
 		}
@@ -2682,14 +2584,12 @@ TXT
 	final public static function RealPath($sPath, $sBasePath)
 	{
 		$sFileRealPath = realpath($sPath);
-		if ($sFileRealPath === false)
-		{
+		if ($sFileRealPath === false) {
 			return false;
 		}
 
 		$sRealBasePath = realpath($sBasePath); // avoid problems when having '/' on Windows for example
-		if (!self::StartsWith($sFileRealPath, $sRealBasePath))
-		{
+		if (!self::StartsWith($sFileRealPath, $sRealBasePath)) {
 			return false;
 		}
 
@@ -2710,8 +2610,7 @@ TXT
 	{
 		$sRootPath = realpath($sBasePath);
 		$sFullPath = realpath($sAbsolutePath);
-		if (($sFullPath === false) || !self::StartsWith($sFullPath, $sRootPath))
-		{
+		if (($sFullPath === false) || !self::StartsWith($sFullPath, $sRootPath)) {
 			return false;
 		}
 		$sLocalPath = substr($sFullPath, strlen($sRootPath.DIRECTORY_SEPARATOR));
@@ -2730,8 +2629,7 @@ TXT
 	{
 		$sRootPath = realpath(APPROOT);
 		$sFullPath = realpath($sRootPath.DIRECTORY_SEPARATOR.$sPath);
-		if (($sFullPath === false) || !self::StartsWith($sFullPath, $sRootPath))
-		{
+		if (($sFullPath === false) || !self::StartsWith($sFullPath, $sRootPath)) {
 			return false;
 		}
 		return $sFullPath;
@@ -2744,8 +2642,7 @@ TXT
 
 	public static function GetCurrentUserName()
 	{
-		if (function_exists('posix_getpwuid'))
-		{
+		if (function_exists('posix_getpwuid')) {
 			return posix_getpwuid(posix_geteuid())['name'];
 		}
 
@@ -2767,13 +2664,12 @@ TXT
 	public static function EnrichRaisedException($oCmdbAbstract, $oException)
 	{
 		if (is_null($oCmdbAbstract) ||
-			! is_a($oCmdbAbstract, \cmdbAbstractObject::class))
-		{
+			! is_a($oCmdbAbstract, \cmdbAbstractObject::class)) {
 			throw $oException;
 		}
 
-		$sCmdbAbstractInfo = str_replace("\n", '', "" . $oCmdbAbstract);
-		$sMessage = $oException->getMessage() . " (" . $sCmdbAbstractInfo . ")";
+		$sCmdbAbstractInfo = str_replace("\n", '', "".$oCmdbAbstract);
+		$sMessage = $oException->getMessage()." (".$sCmdbAbstractInfo.")";
 
 		$e = new CoreException($sMessage, null, '', $oException);
 		throw $e;
@@ -3119,7 +3015,7 @@ TXT
 
 			// Prepare array for matched class if not already present
 			if (!array_key_exists($sMatchedClass, $aMentionedObjects)) {
-				$aMentionedObjects[$sMatchedClass] = array();
+				$aMentionedObjects[$sMatchedClass] = [];
 			}
 			// Add matched ID if not already there
 			if (!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass])) {

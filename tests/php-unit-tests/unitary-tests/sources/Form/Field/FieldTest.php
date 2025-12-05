@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -15,7 +16,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 class FieldTest extends ItopTestCase
 {
-    public function testIsValidationDisabled(): void
+	public function testIsValidationDisabled(): void
 	{
 		$oField = new StringField('test');
 		$oField->SetCurrentValue('toto@johny.invalid');
@@ -101,7 +102,8 @@ class FieldTest extends ItopTestCase
 		$this->assertCount(0, $oSubFormField->GetErrorMessages());
 	}
 
-	public function testRemoveValidatorsOfClass(): void {
+	public function testRemoveValidatorsOfClass(): void
+	{
 		$oField = new StringField('test');
 
 		$this->assertCount(0, $oField->GetValidators());

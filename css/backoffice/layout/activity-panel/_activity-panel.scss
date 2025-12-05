@@ -15,9 +15,10 @@ $ibo-activity-panel--padding-y: $ibo-spacing-0 !default;
 /* - Header */
 $ibo-activity-panel--header--background-color: $ibo-color-grey-100 !default;
 
-$ibo-activity-panel--togglers--color: $ibo-color-grey-600 !default;
-$ibo-activity-panel--togglers--on-hover--color: $ibo-color-grey-800 !default;
-$ibo-activity-panel--togglers--elements-spacing: 0.75rem !default;
+$ibo-activity-panel--actions--color: $ibo-color-grey-600 !default;
+$ibo-activity-panel--actions--on-hover--color: $ibo-color-grey-800 !default;
+$ibo-activity-panel--actions--elements-spacing: 0.75rem !default;
+$ibo-activity-panel--actions-padding-right: $ibo-activity-panel--padding-x !default;
 
 /* - Tabs togglers*/
 $ibo-activity-panel--tabs-togglers--padding-x: $ibo-activity-panel--padding-x * 3 !default; /* We need to increase this so the size toggler which will be set in abs. pos. can overlap it nicely */
@@ -152,35 +153,45 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 	background-color: $ibo-activity-panel--header--background-color;
 
 	/* Remove hyperlinks default color */
-	> .ibo-activity-panel--tabs-togglers a{
+  .ibo-activity-panel--togglers a{
 		color: $ibo-activity-panel--tab-toolbar--text-color;
 	}
 }
 
-/* Size/display togglers */
+/* All toggles container */
 .ibo-activity-panel--togglers {
-  position: absolute;
-  right: $ibo-activity-panel--padding-x;
-  top: 0;
-  bottom: 0;
-  @extend %ibo-fully-centered-content;
-  color: $ibo-activity-panel--togglers--color;
+  display: flex;
+  align-items: center;
+}
+
+/* Size/display togglers */
+.ibo-activity-panel--actions {
+  display: flex;
+  align-items: center;
+  flex-grow: 0;
+  position: sticky;
+  padding-right: $ibo-activity-panel--actions-padding-right;
+
+  background-color: $ibo-activity-panel--header--background-color;
+  color: $ibo-activity-panel--actions--color;
 
   &:hover {
-    color: $ibo-activity-panel--togglers--on-hover--color;
+    color: $ibo-activity-panel--actions--on-hover--color;
   }
 
   > *:not(:first-child) {
-    margin-left: $ibo-activity-panel--togglers--elements-spacing;
+    margin-left: $ibo-activity-panel--actions--elements-spacing;
   }
 }
 
 /* Tabs togglers */
 .ibo-activity-panel--tabs-togglers{
-	position: relative; /* For size toggler */
+  display: flex;
+  align-items: center;
+  justify-content: safe center;
+  flex-grow: 1;
 	padding-left: $ibo-activity-panel--tabs-togglers--padding-x;
-	padding-right: $ibo-activity-panel--tabs-togglers--padding-x;
-	@extend %ibo-fully-centered-content;
+  overflow-x: auto;
 }
 .ibo-activity-panel--tab-toggler{
 	&.ibo-is-active{

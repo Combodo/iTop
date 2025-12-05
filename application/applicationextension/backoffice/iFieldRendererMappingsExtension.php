@@ -11,25 +11,25 @@
  */
 interface iFieldRendererMappingsExtension
 {
-    /**
-     * @return array {
-     *              array: {
-     *                  field: string,
-     *                  form_renderer: string,
-     *                  field_renderer: string
-     *              }
-     *          }  List of field renderer mapping: FQCN field class, FQCN Form Renderer class, FQCN Field Renderer class
-     *
-     * Example:
-     *
-     * ```php
-     * [
-     *  ['field' => 'FQCN\FieldA', 'form_renderer' => 'Combodo\iTop\Renderer\Console\ConsoleFormRenderer', 'field_renderer' => 'FQCN\FieldRendererA'],
-     *  ['field' => 'FQCN\FieldB', 'form_renderer' => 'Combodo\iTop\Renderer\Console\ConsoleFormRenderer', 'field_renderer' => 'FQCN\FieldRendererB'],
-     *  ['field' => 'FQCN\FieldA', 'form_renderer' => 'Combodo\iTop\Renderer\Bootstrap\BsFormRenderer', 'field_renderer' => 'FQCN\FieldRendererA'],
-     *  ['field' => 'FQCN\FieldB', 'form_renderer' => 'Combodo\iTop\Renderer\Bootstrap\BsFormRenderer', 'field_renderer' => 'FQCN\FieldRendererB'],
-     * ]
-     * ```
-     */
-    public static function RegisterSupportedFields(): array;
+	/**
+	 * @return array {
+	 *              array: {
+	 *                  field: string,
+	 *                  form_renderer: string,
+	 *                  field_renderer: string
+	 *              }
+	 *          }  List of field renderer mapping: FQCN field class, FQCN Form Renderer class, FQCN Field Renderer class
+	 *
+	 * Example:
+	 *
+	 * ```php
+	 * [
+	 *  ['field' => 'FQCN\FieldA', 'form_renderer' => 'Combodo\iTop\Renderer\Console\ConsoleFormRenderer', 'field_renderer' => 'FQCN\FieldRendererA'],
+	 *  ['field' => 'FQCN\FieldB', 'form_renderer' => 'Combodo\iTop\Renderer\Console\ConsoleFormRenderer', 'field_renderer' => 'FQCN\FieldRendererB'],
+	 *  ['field' => 'FQCN\FieldA', 'form_renderer' => 'Combodo\iTop\Renderer\Bootstrap\BsFormRenderer', 'field_renderer' => 'FQCN\FieldRendererA'],
+	 *  ['field' => 'FQCN\FieldB', 'form_renderer' => 'Combodo\iTop\Renderer\Bootstrap\BsFormRenderer', 'field_renderer' => 'FQCN\FieldRendererB'],
+	 * ]
+	 * ```
+	 */
+	public static function RegisterSupportedFields(): array;
 }

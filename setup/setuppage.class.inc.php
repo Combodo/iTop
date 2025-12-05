@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -28,13 +29,12 @@ require_once(APPROOT.'core/log.class.inc.php');
 
 SetupLog::Enable(APPROOT.'/log/setup.log');
 
-
 /**
  * @uses SetupLog
  */
 class SetupPage extends NiceWebPage
 {
-	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/setuppage/layout';
+	public const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/setuppage/layout';
 
 	public function __construct($sTitle)
 	{
@@ -43,7 +43,7 @@ class SetupPage extends NiceWebPage
 		$this->LinkScriptFromAppRoot('node_modules/@popperjs/core/dist/umd/popper.js');
 		$this->LinkScriptFromAppRoot('node_modules/tippy.js/dist/tippy-bundle.umd.js');
 		$this->LinkScriptFromAppRoot("setup/setup.js");
-		$this->LinkScriptFromAppRoot("setup/csp-detection.js?itop_version_wiki_syntax=" . utils::GetItopVersionWikiSyntax());
+		$this->LinkScriptFromAppRoot("setup/csp-detection.js?itop_version_wiki_syntax=".utils::GetItopVersionWikiSyntax());
 		$this->LinkStylesheetFromAppRoot('css/font-awesome/css/all.min.css');
 		$this->LinkStylesheetFromAppRoot('css/font-combodo/font-combodo.css');
 		$this->LinkStylesheetFromAppRoot('node_modules/tippy.js/dist/tippy.css');
@@ -72,7 +72,7 @@ class SetupPage extends NiceWebPage
 	/**
 	 * Overriden because the application is not fully loaded when the setup is being run
 	 */
-	function GetApplicationContext()
+	public function GetApplicationContext()
 	{
 		return '';
 	}
@@ -104,33 +104,22 @@ class SetupPage extends NiceWebPage
 	public function form($aData)
 	{
 		$this->add("<table class=\"formTable\">\n");
-		foreach ($aData as $aRow)
-		{
+		foreach ($aData as $aRow) {
 			$this->add("<tr>\n");
-			if (isset($aRow['label']) && isset($aRow['input']) && isset($aRow['help']))
-			{
+			if (isset($aRow['label']) && isset($aRow['input']) && isset($aRow['help'])) {
 				$this->add("<td class=\"wizlabel\">{$aRow['label']}</td>\n");
 				$this->add("<td class=\"wizinput\">{$aRow['input']}</td>\n");
 				$this->add("<td class=\"wizhelp\">{$aRow['help']}</td>\n");
-			}
-			else
-			{
-				if (isset($aRow['label']) && isset($aRow['help']))
-				{
+			} else {
+				if (isset($aRow['label']) && isset($aRow['help'])) {
 					$this->add("<td colspan=\"2\" class=\"wizlabel\">{$aRow['label']}</td>\n");
 					$this->add("<td class=\"wizhelp\">{$aRow['help']}</td>\n");
-				}
-				else
-				{
-					if (isset($aRow['label']) && isset($aRow['input']))
-					{
+				} else {
+					if (isset($aRow['label']) && isset($aRow['input'])) {
 						$this->add("<td class=\"wizlabel\">{$aRow['label']}</td>\n");
 						$this->add("<td colspan=\"2\" class=\"wizinput\">{$aRow['input']}</td>\n");
-					}
-					else
-					{
-						if (isset($aRow['label']))
-						{
+					} else {
+						if (isset($aRow['label'])) {
 							$this->add("<td colspan=\"3\" class=\"wizlabel\">{$aRow['label']}</td>\n");
 						}
 					}
@@ -145,14 +134,12 @@ class SetupPage extends NiceWebPage
 	{
 		$this->add("<h3 class=\"clickable open\" id=\"{$sId}\">$sTitle</h3>");
 		$this->p('<ul id="'.$sId.'_list">');
-		foreach ($aItems as $sItem)
-		{
+		foreach ($aItems as $sItem) {
 			$this->p("<li>$sItem</li>\n");
 		}
 		$this->p('</ul>');
 		$this->add_ready_script("$('#{$sId}').on('click', function() { $(this).toggleClass('open'); $('#{$sId}_list').toggle();} );\n");
-		if (!$bOpen)
-		{
+		if (!$bOpen) {
 			$this->add_ready_script("$('#{$sId}').toggleClass('open'); $('#{$sId}_list').toggle();\n");
 		}
 	}

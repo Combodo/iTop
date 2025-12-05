@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  * This file is part of iTop.
@@ -17,6 +18,7 @@ namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Dict;
+
 use const APPROOT;
 
 /**
@@ -44,19 +46,19 @@ class CompiledDictionariesConsistencyTest extends ItopTestCase
 			'UI:CSVReport-Value-NoMatch-SomeObjectNotVisibleForCurrentUser' => ['arg1'],
 		];
 
-		$sCompiledLanguagesFilePath = APPROOT . 'env-' . \utils::GetCurrentEnvironment() . '/dictionaries/languages.php';
+		$sCompiledLanguagesFilePath = APPROOT.'env-'.\utils::GetCurrentEnvironment().'/dictionaries/languages.php';
 		$this->assertFileExists($sCompiledLanguagesFilePath, 'We must have an existing compiled language.php file in the current env !');
 		require_once($sCompiledLanguagesFilePath);
 		$this->assertNotEmpty(Dict::GetLanguages(), 'the languages.php file exists but didn\'t load any language');
 
-		foreach (glob(APPROOT . 'env-' . \utils::GetCurrentEnvironment() . '/dictionaries/*.dict.php') as $sDictFile) {
+		foreach (glob(APPROOT.'env-'.\utils::GetCurrentEnvironment().'/dictionaries/*.dict.php') as $sDictFile) {
 			if (preg_match('/.*\\/(.*).dict.php/', $sDictFile, $aMatches)) {
 				$sLangCode = $aMatches[1];
 				$sLanguageCode = strtoupper(str_replace('-', ' ', $sLangCode));
 				Dict::SetUserLanguage($sLanguageCode);
 
 				foreach ($aLabelsToTest as $sLabelKey => $aLabelArgs) {
-					echo "Testing $sDictFile, label $sLabelKey with " . \var_export($aLabelArgs, true) . "\n";
+					echo "Testing $sDictFile, label $sLabelKey with ".\var_export($aLabelArgs, true)."\n";
 					try {
 						$sLabelValue = Dict::Format($sLabelKey, ...$aLabelArgs);
 						//$this->debug($sLabelValue);
@@ -71,7 +73,7 @@ class CompiledDictionariesConsistencyTest extends ItopTestCase
 						]);
 					}
 				}
-				$this->assertEquals([], $aFailedLabels, "$sDictFile : test fail for lang $sLangCode and labels (" . implode(", ", $aFailedLabels) . ')');
+				$this->assertEquals([], $aFailedLabels, "$sDictFile : test fail for lang $sLangCode and labels (".implode(", ", $aFailedLabels).')');
 			}
 		}
 	}

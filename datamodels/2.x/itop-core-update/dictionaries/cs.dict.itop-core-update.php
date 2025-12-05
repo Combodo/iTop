@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'iTopUpdate:UI:PageTitle' => 'Application Upgrade~~',
 	'itop-core-update:UI:SelectUpdateFile' => 'Application Upgrade~~',
 	'itop-core-update:UI:ConfirmUpdate' => 'Confirm Application Upgrade~~',
@@ -94,6 +95,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ModuleInstallation/Attribute:name' => 'Jméno',
 	'Class:ModuleInstallation/Attribute:version' => 'Verze',
 	'Class:ModuleInstallation/Attribute:comment' => 'Komentář',
-));
-
-
+]);

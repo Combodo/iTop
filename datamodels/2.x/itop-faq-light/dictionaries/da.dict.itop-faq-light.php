@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Erik Bøg <erik@boegmoeller.dk>
  *
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => '',
 	'Class:FAQ/Attribute:title' => 'Titel',
@@ -28,21 +29,21 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:FAQ/Attribute:key_words' => 'Nøgleord',
 	'Class:FAQ/Attribute:key_words+' => '',
 	'Class:FAQ/Attribute:domains' => 'Domains~~',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:FAQCategory' => 'FAQ-Kategori',
 	'Class:FAQCategory+' => '',
 	'Class:FAQCategory/Attribute:name' => 'Navn',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
-));
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+]);
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ProblemManagement' => 'Problem Management',
 	'Menu:ProblemManagement+' => 'Problem Management',
 	'Menu:Problem:Shortcuts' => 'Genvej',
@@ -53,4 +54,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Brick:Portal:FAQ:Menu' => 'FAQ~~',
 	'Brick:Portal:FAQ:Title' => 'Frequently Asked Questions~~',
 	'Brick:Portal:FAQ:Title+' => '<p>In a hurry?</p><p>Check out the list of most common questions and (maybe) find the expected answer right away.</p>~~',
-));
+]);

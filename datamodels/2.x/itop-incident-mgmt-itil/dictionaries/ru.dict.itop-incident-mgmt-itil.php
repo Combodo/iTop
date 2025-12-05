@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:IncidentManagement' => 'Управление инцидентами',
 	'Menu:IncidentManagement+' => 'Управление инцидентами',
 	'Menu:Incident:Overview' => 'Обзор',
@@ -32,8 +33,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Открытые инциденты по статусу',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Открытые инциденты по агенту',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Открытые инциденты по заказчику',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -49,7 +49,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Class: Incident
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Incident' => 'Инцидент',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Статус',
@@ -140,6 +140,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Incident/Attribute:tto+' => '',
 	'Class:Incident/Attribute:ttr' => 'TTR',
 	'Class:Incident/Attribute:ttr+' => '',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'Срок TTO',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => 'Крайний срок назаначения агента (принятия в работу) по текущему SLA',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA TTO пропущено',
@@ -228,4 +232,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Каскадное решение дочерних тикетов (ev_autoresolve) с установкой следующих параметров: услуга, команда, агент, информация о решении.',
 	'Tickets:Related:OpenIncidents' => 'Открытые инциденты',
-));
+]);

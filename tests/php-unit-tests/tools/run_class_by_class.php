@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Usage: php run_class_by_class.php
  *
@@ -43,8 +44,7 @@ function RunTests($sFilterRegExp, $sUnitaryTestsDir = '', $bPassthru = false)
 	///echo "executing <<<$sCommand>>>\n";
 	if ($bPassthru) {
 		passthru($sCommand, $iResultCode);
-	}
-	else {
+	} else {
 		exec($sCommand, $aTrashedOutput, $iResultCode);
 	}
 	$bTestSuccess = ($iResultCode == 0); // or 1 in case of a failing test

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -17,7 +18,8 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
  * @internal
  * @since   3.0.0
  */
-interface iUIContentBlock {
+interface iUIContentBlock
+{
 	/**
 	 * Add raw HTML to the block
 	 *
@@ -84,7 +86,6 @@ interface iUIContentBlock {
 	 * @return $this
 	 */
 	public function SetSubBlocks(array $aSubBlocks);
-
 
 	/**
 	 * Add $oDeferredBlock, replacing any block with the same ID

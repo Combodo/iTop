@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\Button;
-
 
 /**
  * Class Button
@@ -66,19 +66,34 @@ class ButtonJS extends Button
 	 * @param string $sOnClickJsCode
 	 */
 	public function __construct(
-		string $sLabel, string $sId = null, string $sName = '', string $sValue = '', string $sType = self::DEFAULT_TYPE,
-		string $sTooltip = '', string $sIconClass = '',
-		string $sActionType = self::DEFAULT_ACTION_TYPE, string $sColor = self::DEFAULT_COLOR_SCHEME, string $sJsCode = '',
+		string $sLabel,
+		string $sId = null,
+		string $sName = '',
+		string $sValue = '',
+		string $sType = self::DEFAULT_TYPE,
+		string $sTooltip = '',
+		string $sIconClass = '',
+		string $sActionType = self::DEFAULT_ACTION_TYPE,
+		string $sColor = self::DEFAULT_COLOR_SCHEME,
+		string $sJsCode = '',
 		string $sOnClickJsCode = ''
 	) {
-		parent::__construct( $sLabel,$sId, $sTooltip, $sIconClass,
-		$sActionType, $sColor, $sJsCode, $sOnClickJsCode);
+		parent::__construct(
+			$sLabel,
+			$sId,
+			$sTooltip,
+			$sIconClass,
+			$sActionType,
+			$sColor,
+			$sJsCode,
+			$sOnClickJsCode
+		);
 
 		$this->sName = $sName;
 		$this->sValue = $sValue;
 		$this->sType = $sType;
 	}
-	
+
 	/**
 	 * @return string
 	 */

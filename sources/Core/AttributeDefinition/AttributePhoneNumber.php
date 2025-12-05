@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -35,8 +36,10 @@ class AttributePhoneNumber extends AttributeString
 
 	public function GetValidationPattern()
 	{
-		return $this->GetOptional('validation_pattern',
-			'^'.utils::GetConfig()->Get('phone_number_validation_pattern').'$');
+		return $this->GetOptional(
+			'validation_pattern',
+			'^'.utils::GetConfig()->Get('phone_number_validation_pattern').'$'
+		);
 	}
 
 	public static function GetFormFieldClass()

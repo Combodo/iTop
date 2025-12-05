@@ -36,9 +36,9 @@ class InterfaceDiscoveryTest extends ItopDataTestCase
 	public function testShouldSelectTheRequestedItopClasses()
 	{
 		$this->GivenClassMap([
-			'Combodo\iTop\Application\UI\Base\Component\Alert\Alert' => APPROOT . '/sources/Application/UI/Base/Component/Alert/Alert.php',
-			'Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory' => APPROOT . '/sources/Application/UI/Base/Component/Alert/AlertUIBlockFactory.php',
-			'Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory' => APPROOT . '/sources/Application/UI/Base/Component/ButtonGroup/ButtonGroupUIBlockFactory.php',
+			'Combodo\iTop\Application\UI\Base\Component\Alert\Alert' => APPROOT.'/sources/Application/UI/Base/Component/Alert/Alert.php',
+			'Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory' => APPROOT.'/sources/Application/UI/Base/Component/Alert/AlertUIBlockFactory.php',
+			'Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory' => APPROOT.'/sources/Application/UI/Base/Component/ButtonGroup/ButtonGroupUIBlockFactory.php',
 		]);
 
 		$this->AssertArraysHaveSameItems(
@@ -57,8 +57,8 @@ class InterfaceDiscoveryTest extends ItopDataTestCase
 	{
 		$this->SetNonPublicProperty($this->oInterfaceDiscovery, 'bCheckInterfaceImplementation', false);
 		$this->GivenClassMap([
-			'Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory2' => APPROOT . '/sources/Application/UI/Base/Component/Alert/AlertUIBlockFactory.php',
-			'Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory2' => APPROOT . '/sources/Application/UI/Base/Component/ButtonGroup/ButtonGroupUIBlockFactory.php',
+			'Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory2' => APPROOT.'/sources/Application/UI/Base/Component/Alert/AlertUIBlockFactory.php',
+			'Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory2' => APPROOT.'/sources/Application/UI/Base/Component/ButtonGroup/ButtonGroupUIBlockFactory.php',
 		]);
 
 		$this->AssertArraysHaveSameItems([], $this->oInterfaceDiscovery->FindItopClasses(iUIBlockFactory::class));
@@ -87,8 +87,8 @@ class InterfaceDiscoveryTest extends ItopDataTestCase
 	public function testShouldExcludeAliases()
 	{
 		$this->GivenClassMap([
-			'Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory' => APPROOT . '/sources/Application/UI/Base/Component/Alert/AlertUIBlockFactory.php',
-			'AlbertIsBlockingTheFactory' => APPROOT . '/sources/Application/UI/Base/Component/Alert/AlertUIBlockFactory.php',
+			'Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory' => APPROOT.'/sources/Application/UI/Base/Component/Alert/AlertUIBlockFactory.php',
+			'AlbertIsBlockingTheFactory' => APPROOT.'/sources/Application/UI/Base/Component/Alert/AlertUIBlockFactory.php',
 		]);
 
 		class_alias('Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory', 'AlbertIsBlockingTheFactory');
@@ -120,11 +120,13 @@ class InterfaceDiscoveryTest extends ItopDataTestCase
 		MetaModel::GetConfig()->Set('developer_mode.interface_cache.enabled', true);
 
 		$this->assertGreaterThan(0, count($this->oInterfaceDiscovery->FindItopClasses(iUIBlockFactory::class)));
-		$this->AssertDirectoryListingEquals([
+		$this->AssertDirectoryListingEquals(
+			[
 			'autoload_classmaps.php',
 			'1ab1e62be3e9984a8176deeb20f049b1_iUIBlockFactory.php',
 		],
-			$this->sCacheRootDir.'/InterfaceDiscovery');
+			$this->sCacheRootDir.'/InterfaceDiscovery'
+		);
 	}
 
 	public function testShouldProduceStaticCacheForProduction()

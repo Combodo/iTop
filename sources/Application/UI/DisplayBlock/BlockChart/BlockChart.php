@@ -1,11 +1,11 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Application\UI\DisplayBlock\BlockChart;
-
 
 use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
 use Combodo\iTop\Application\UI\Base\UIBlock;
@@ -30,7 +30,8 @@ class BlockChart extends UIBlock
 	/** @var string */
 	public $sUrl;
 
-	public function GetJSRefresh():string{
+	public function GetJSRefresh(): string
+	{
 		return " 
 			if (typeof(nbChar) === \"undefined\") {
 			    var nbChar = 0;

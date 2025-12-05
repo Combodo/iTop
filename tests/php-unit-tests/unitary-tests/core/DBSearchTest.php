@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -26,7 +27,6 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
-
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreOqlMultipleResultsForbiddenException;
@@ -35,7 +35,6 @@ use DBSearch;
 use Exception;
 use Expression;
 use FunctionExpression;
-
 
 /**
  * @group itopStorageMgmt
@@ -46,7 +45,7 @@ use FunctionExpression;
  */
 class DBSearchTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
+	public const CREATE_TEST_ORG = true;
 
 	/**
 	 * @throws \Exception
@@ -77,25 +76,25 @@ class DBSearchTest extends ItopDataTestCase
 		$oExpr1 = Expression::FromOQL('UserRequest.org_id');
 
 		// Alias => Expression
-		$aGroupBy = array('org_id' => $oExpr1);
+		$aGroupBy = ['org_id' => $oExpr1];
 
 		$oTimeExpr = Expression::FromOQL('UserRequest.time_spent');
-		$oSumExpr = new FunctionExpression('SUM', array($oTimeExpr));
-		$oAvgExpr = new FunctionExpression('AVG', array($oTimeExpr));
-		$oMinExpr = new FunctionExpression('MIN', array($oTimeExpr));
-		$oMaxExpr = new FunctionExpression('MAX', array($oTimeExpr));
+		$oSumExpr = new FunctionExpression('SUM', [$oTimeExpr]);
+		$oAvgExpr = new FunctionExpression('AVG', [$oTimeExpr]);
+		$oMinExpr = new FunctionExpression('MIN', [$oTimeExpr]);
+		$oMaxExpr = new FunctionExpression('MAX', [$oTimeExpr]);
 		// Alias => Expression
-		$aFunctions = array(
+		$aFunctions = [
 			'_itop_sum_' => $oSumExpr,
 			'_itop_avg_' => $oAvgExpr,
 			'_itop_min_' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
-			);
+			];
 
 		// Alias => Order
-		$aOrderBy = array('_itop_sum_' => true, '_itop_count_' => true);
+		$aOrderBy = ['_itop_sum_' => true, '_itop_count_' => true];
 
-		$aArgs = array();
+		$aArgs = [];
 
 		$sSQL = $oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy, $iLimit);
 		$this->debug($sSQL);
@@ -104,24 +103,22 @@ class DBSearchTest extends ItopDataTestCase
 		$this->debug($aRes);
 
 		self::assertEquals(count($aCountRes), count($aRes));
-		for ($i = 0; $i < count($aCountRes); $i++)
-		{
+		for ($i = 0; $i < count($aCountRes); $i++) {
 			self::assertEquals($aCountRes[$i], $aRes[$i]['_itop_count_']);
 		}
 	}
 
-
 	public function UReqProvider()
 	{
-		return array(
-			"1 line" => array(1, 1, array(array(1, 0, 0)), 0, array('1')),
-			"2 same lines" => array(1, 1, array(array(1, 0, 0), array(1, 0, 0)), 0, array('2')),
-			"2 diff lines" => array(2, 2, array(array(1, 0, 0), array(1, 1, 1)), 0, array('1', '1')),
-			"4 lines" => array(2, 2, array(array(1, 0, 0), array(1, 1, 1), array(1, 0, 0), array(1, 1, 1)), 0, array('2', '2')),
-			"5 lines" => array(2, 2, array(array(1, 0, 0), array(1, 0, 0), array(1, 1, 1), array(1, 0, 0), array(1, 1, 1)), 0, array('2', '3')),
-			"6 lines" => array(2, 4, array(array(1, 0, 0), array(1, 1, 3), array(1, 1, 1), array(1, 1, 3), array(1, 0, 2), array(1, 1, 1)), 0, array('2', '4')),
-			"6 lines limit" => array(2, 4, array(array(1, 0, 0), array(1, 1, 3), array(1, 1, 1), array(1, 1, 1), array(1, 0, 0), array(1, 1, 1)), 1, array('2')),
-		);
+		return [
+			"1 line" => [1, 1, [[1, 0, 0]], 0, ['1']],
+			"2 same lines" => [1, 1, [[1, 0, 0], [1, 0, 0]], 0, ['2']],
+			"2 diff lines" => [2, 2, [[1, 0, 0], [1, 1, 1]], 0, ['1', '1']],
+			"4 lines" => [2, 2, [[1, 0, 0], [1, 1, 1], [1, 0, 0], [1, 1, 1]], 0, ['2', '2']],
+			"5 lines" => [2, 2, [[1, 0, 0], [1, 0, 0], [1, 1, 1], [1, 0, 0], [1, 1, 1]], 0, ['2', '3']],
+			"6 lines" => [2, 4, [[1, 0, 0], [1, 1, 3], [1, 1, 1], [1, 1, 3], [1, 0, 2], [1, 1, 1]], 0, ['2', '4']],
+			"6 lines limit" => [2, 4, [[1, 0, 0], [1, 1, 3], [1, 1, 1], [1, 1, 1], [1, 0, 0], [1, 1, 1]], 1, ['2']],
+		];
 	}
 
 	/**
@@ -133,32 +130,28 @@ class DBSearchTest extends ItopDataTestCase
 	 */
 	private function init_db($iOrgNb, $iPersonNb, $aReq)
 	{
-		$aOrgIds = array();
+		$aOrgIds = [];
 		$sOrgs = '';
-		for($i = 0; $i < $iOrgNb; $i++)
-		{
+		for ($i = 0; $i < $iOrgNb; $i++) {
 			$oObj = $this->CreateOrganization('UnitTest_Org'.$i);
 			$sKey = $oObj->GetKey();
 			$aOrgIds[] = $sKey;
-			if ($i > 0)
-			{
+			if ($i > 0) {
 				$sOrgs .= ",";
 			}
 			$sOrgs .= $sKey;
 		}
 		self::assertEquals($iOrgNb, count($aOrgIds));
 
-		$aPersonIds = array();
-		for($i = 0; $i < $iPersonNb; $i++)
-		{
+		$aPersonIds = [];
+		for ($i = 0; $i < $iPersonNb; $i++) {
 			$oObj = $this->CreatePerson($i, $aOrgIds[$i % $iOrgNb]);
 			$aPersonIds[] = $oObj->GetKey();
 		}
 		self::assertEquals($iPersonNb, count($aPersonIds));
 
 		$i = 0;
-		foreach($aReq as $aParams)
-		{
+		foreach ($aReq as $aParams) {
 			$oObj = $this->CreateUserRequest($i, [
 				'time_spent' => $aParams[0],
 				'org_id' => $aOrgIds[$aParams[1]],
@@ -180,31 +173,30 @@ class DBSearchTest extends ItopDataTestCase
 		$this->CreatePhysicalInterface(1, 1000, $oServer->GetKey());
 		$this->CreateFiberChannelInterface(1, 1000, $oServer->GetKey());
 
-
 		$oSearch = DBSearch::FromOQL("SELECT FiberChannelInterface AS FCI WHERE FCI.name = '1' UNION SELECT PhysicalInterface AS PHI WHERE PHI.name = '1'");
 		self::assertNotNull($oSearch);
 		$oExpr1 = Expression::FromOQL('FCI.name');
 
 		// Alias => Expression (first select reference)
-		$aGroupBy = array('group1' => $oExpr1);
+		$aGroupBy = ['group1' => $oExpr1];
 
 		$oTimeExpr = Expression::FromOQL('FCI.speed');
-		$oSumExpr = new FunctionExpression('SUM', array($oTimeExpr));
-		$oAvgExpr = new FunctionExpression('AVG', array($oTimeExpr));
-		$oMinExpr = new FunctionExpression('MIN', array($oTimeExpr));
-		$oMaxExpr = new FunctionExpression('MAX', array($oTimeExpr));
+		$oSumExpr = new FunctionExpression('SUM', [$oTimeExpr]);
+		$oAvgExpr = new FunctionExpression('AVG', [$oTimeExpr]);
+		$oMinExpr = new FunctionExpression('MIN', [$oTimeExpr]);
+		$oMaxExpr = new FunctionExpression('MAX', [$oTimeExpr]);
 		// Alias => Expression
-		$aFunctions = array(
+		$aFunctions = [
 			'_itop_sum_' => $oSumExpr,
 			'_itop_avg_' => $oAvgExpr,
 			'_itop_min_' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
-		);
+		];
 
 		// Alias => Order
-		$aOrderBy = array('group1' => true, '_itop_count_' => true);
+		$aOrderBy = ['group1' => true, '_itop_count_' => true];
 
-		$aArgs = array();
+		$aArgs = [];
 
 		$sSQL = $oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy);
 		$this->debug($sSQL);
@@ -224,34 +216,34 @@ class DBSearchTest extends ItopDataTestCase
 
 		// Alias => Expression (first select reference)
 		$oExpr1 = Expression::FromOQL('FiberChannelInterface.name');
-		$aGroupBy = array('group1' => $oExpr1);
+		$aGroupBy = ['group1' => $oExpr1];
 
 		$oTimeExpr = Expression::FromOQL('FiberChannelInterface.speed');
-		$oSumExpr = new FunctionExpression('SUM', array($oTimeExpr));
-		$oAvgExpr = new FunctionExpression('AVG', array($oTimeExpr));
-		$oMinExpr = new FunctionExpression('MIN', array($oTimeExpr));
-		$oMaxExpr = new FunctionExpression('MAX', array($oTimeExpr));
+		$oSumExpr = new FunctionExpression('SUM', [$oTimeExpr]);
+		$oAvgExpr = new FunctionExpression('AVG', [$oTimeExpr]);
+		$oMinExpr = new FunctionExpression('MIN', [$oTimeExpr]);
+		$oMaxExpr = new FunctionExpression('MAX', [$oTimeExpr]);
 		// Alias => Expression
-		$aFunctions = array(
+		$aFunctions = [
 			'_itop_sum_' => $oSumExpr,
 			'_itop_avg_' => $oAvgExpr,
 			'_itop_min_' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
-		);
-		$aArgs = array();
+		];
+		$aArgs = [];
 
 		// Alias => Order
-		$aOrderBy = array(
+		$aOrderBy = [
 			'group1' => true,
 			'_itop_sum_' => true,
 			'_itop_avg_' => true,
 			'_itop_min_' => true,
-			'_itop_max_' => true);
+			'_itop_max_' => true];
 		$sSQL = $oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy);
 		self::assertNotEmpty($sSQL);
 
 		// Alias => Order
-		$aOrderBy = array('nothing_good' => true);
+		$aOrderBy = ['nothing_good' => true];
 		$this->expectException("CoreException");
 		$oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy);
 
@@ -268,29 +260,29 @@ class DBSearchTest extends ItopDataTestCase
 		$oExpr1 = Expression::FromOQL('FCI.name');
 
 		// Alias => Expression (first select reference)
-		$aGroupBy = array('group1' => $oExpr1);
+		$aGroupBy = ['group1' => $oExpr1];
 
 		$oTimeExpr = Expression::FromOQL('FCI.speed');
-		$oSumExpr = new FunctionExpression('SUM', array($oTimeExpr));
-		$oAvgExpr = new FunctionExpression('AVG', array($oTimeExpr));
-		$oMinExpr = new FunctionExpression('MIN', array($oTimeExpr));
-		$oMaxExpr = new FunctionExpression('MAX', array($oTimeExpr));
+		$oSumExpr = new FunctionExpression('SUM', [$oTimeExpr]);
+		$oAvgExpr = new FunctionExpression('AVG', [$oTimeExpr]);
+		$oMinExpr = new FunctionExpression('MIN', [$oTimeExpr]);
+		$oMaxExpr = new FunctionExpression('MAX', [$oTimeExpr]);
 		// Alias => Expression
-		$aFunctions = array(
+		$aFunctions = [
 			'_itop_sum_' => $oSumExpr,
 			'_itop_avg_' => $oAvgExpr,
 			'group1' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
-		);
-		$aArgs = array();
+		];
+		$aArgs = [];
 
 		// Alias => Order
-		$aOrderBy = array(
+		$aOrderBy = [
 			'group1' => true,
 			'_itop_sum_' => true,
 			'_itop_avg_' => true,
 			'_itop_min_' => true,
-			'_itop_max_' => true);
+			'_itop_max_' => true];
 
 		$this->expectException("CoreException");
 		$oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy);
@@ -308,34 +300,34 @@ class DBSearchTest extends ItopDataTestCase
 
 		// Alias => Expression (first select reference)
 		$oExpr1 = Expression::FromOQL('FCI.name');
-		$aGroupBy = array('group1' => $oExpr1);
+		$aGroupBy = ['group1' => $oExpr1];
 
 		$oTimeExpr = Expression::FromOQL('FCI.speed');
-		$oSumExpr = new FunctionExpression('SUM', array($oTimeExpr));
-		$oAvgExpr = new FunctionExpression('AVG', array($oTimeExpr));
-		$oMinExpr = new FunctionExpression('MIN', array($oTimeExpr));
-		$oMaxExpr = new FunctionExpression('MAX', array($oTimeExpr));
+		$oSumExpr = new FunctionExpression('SUM', [$oTimeExpr]);
+		$oAvgExpr = new FunctionExpression('AVG', [$oTimeExpr]);
+		$oMinExpr = new FunctionExpression('MIN', [$oTimeExpr]);
+		$oMaxExpr = new FunctionExpression('MAX', [$oTimeExpr]);
 		// Alias => Expression
-		$aFunctions = array(
+		$aFunctions = [
 			'_itop_sum_' => $oSumExpr,
 			'_itop_avg_' => $oAvgExpr,
 			'_itop_min_' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
-		);
-		$aArgs = array();
+		];
+		$aArgs = [];
 
 		// Alias => Order
-		$aOrderBy = array(
+		$aOrderBy = [
 			'group1' => true,
 			'_itop_sum_' => true,
 			'_itop_avg_' => true,
 			'_itop_min_' => true,
-			'_itop_max_' => true);
+			'_itop_max_' => true];
 
 		$sSQL = $oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy);
 		self::assertNotEmpty($sSQL);
 
-		$aGroupBy = array('group1' => 'FCI.name');
+		$aGroupBy = ['group1' => 'FCI.name'];
 		$this->expectException("CoreException");
 		$oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy);
 
@@ -352,39 +344,39 @@ class DBSearchTest extends ItopDataTestCase
 
 		// Alias => Expression (first select reference)
 		$oExpr1 = Expression::FromOQL('FCI.name');
-		$aGroupBy = array('group1' => $oExpr1);
+		$aGroupBy = ['group1' => $oExpr1];
 
 		$oTimeExpr = Expression::FromOQL('FCI.speed');
-		$oSumExpr = new FunctionExpression('SUM', array($oTimeExpr));
-		$oAvgExpr = new FunctionExpression('AVG', array($oTimeExpr));
-		$oMinExpr = new FunctionExpression('MIN', array($oTimeExpr));
-		$oMaxExpr = new FunctionExpression('MAX', array($oTimeExpr));
+		$oSumExpr = new FunctionExpression('SUM', [$oTimeExpr]);
+		$oAvgExpr = new FunctionExpression('AVG', [$oTimeExpr]);
+		$oMinExpr = new FunctionExpression('MIN', [$oTimeExpr]);
+		$oMaxExpr = new FunctionExpression('MAX', [$oTimeExpr]);
 		// Alias => Expression
-		$aFunctions = array(
+		$aFunctions = [
 			'_itop_sum_' => $oSumExpr,
 			'_itop_avg_' => $oAvgExpr,
 			'_itop_min_' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
-		);
-		$aArgs = array();
+		];
+		$aArgs = [];
 
 		// Alias => Order
-		$aOrderBy = array(
+		$aOrderBy = [
 			'group1' => true,
 			'_itop_sum_' => true,
 			'_itop_avg_' => true,
 			'_itop_min_' => true,
-			'_itop_max_' => true);
+			'_itop_max_' => true];
 
 		$sSQL = $oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy);
 		self::assertNotEmpty($sSQL);
 
-		$aFunctions = array(
+		$aFunctions = [
 			'_itop_sum_' => 'SumExpr',
 			'_itop_avg_' => $oAvgExpr,
 			'_itop_min_' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
-		);
+		];
 
 		$this->expectException("CoreException");
 		$oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy);
@@ -402,39 +394,39 @@ class DBSearchTest extends ItopDataTestCase
 
 		// Alias => Expression (first select reference)
 		$oExpr1 = Expression::FromOQL('FCI.name');
-		$aGroupBy = array('group1' => $oExpr1);
+		$aGroupBy = ['group1' => $oExpr1];
 
 		$oTimeExpr = Expression::FromOQL('FCI.speed');
-		$oSumExpr = new FunctionExpression('SUM', array($oTimeExpr));
-		$oAvgExpr = new FunctionExpression('AVG', array($oTimeExpr));
-		$oMinExpr = new FunctionExpression('MIN', array($oTimeExpr));
-		$oMaxExpr = new FunctionExpression('MAX', array($oTimeExpr));
+		$oSumExpr = new FunctionExpression('SUM', [$oTimeExpr]);
+		$oAvgExpr = new FunctionExpression('AVG', [$oTimeExpr]);
+		$oMinExpr = new FunctionExpression('MIN', [$oTimeExpr]);
+		$oMaxExpr = new FunctionExpression('MAX', [$oTimeExpr]);
 		// Alias => Expression
-		$aFunctions = array(
+		$aFunctions = [
 			'_itop_sum_' => $oSumExpr,
 			'_itop_avg_' => $oAvgExpr,
 			'_itop_min_' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
-		);
-		$aArgs = array();
+		];
+		$aArgs = [];
 
 		// Alias => Order
-		$aOrderBy = array(
+		$aOrderBy = [
 			'group1' => true,
 			'_itop_sum_' => true,
 			'_itop_avg_' => true,
 			'_itop_min_' => true,
-			'_itop_max_' => true);
+			'_itop_max_' => true];
 
 		$sSQL = $oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy);
 		self::assertNotEmpty($sSQL);
 
-		$aOrderBy = array(
+		$aOrderBy = [
 			'group1' => true,
 			'_itop_sum_' => true,
 			'_itop_avg_' => 'ASC',
 			'_itop_min_' => true,
-			'_itop_max_' => true);
+			'_itop_max_' => true];
 
 		$this->expectException("CoreException");
 		$oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy);
@@ -452,34 +444,34 @@ class DBSearchTest extends ItopDataTestCase
 
 		// Alias => Expression (first select reference)
 		$oExpr1 = Expression::FromOQL('FCI.name');
-		$aGroupBy = array('group1' => $oExpr1);
+		$aGroupBy = ['group1' => $oExpr1];
 
 		$oTimeExpr = Expression::FromOQL('FCI.speed');
-		$oSumExpr = new FunctionExpression('SUM', array($oTimeExpr));
-		$oAvgExpr = new FunctionExpression('AVG', array($oTimeExpr));
-		$oMinExpr = new FunctionExpression('MIN', array($oTimeExpr));
-		$oMaxExpr = new FunctionExpression('MAX', array($oTimeExpr));
+		$oSumExpr = new FunctionExpression('SUM', [$oTimeExpr]);
+		$oAvgExpr = new FunctionExpression('AVG', [$oTimeExpr]);
+		$oMinExpr = new FunctionExpression('MIN', [$oTimeExpr]);
+		$oMaxExpr = new FunctionExpression('MAX', [$oTimeExpr]);
 		// Alias => Expression
-		$aFunctions = array(
+		$aFunctions = [
 			'_itop_sum_' => $oSumExpr,
 			'_itop_avg_' => $oAvgExpr,
 			'_itop_min_' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
-		);
-		$aArgs = array();
+		];
+		$aArgs = [];
 
 		// Alias => Order
-		$aOrderBy = array(
+		$aOrderBy = [
 			'group1' => true,
 			'_itop_sum_' => true,
 			'_itop_avg_' => true,
 			'_itop_min_' => true,
-			'_itop_max_' => true);
+			'_itop_max_' => true];
 		$sSQL = $oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy);
 		self::assertNotEmpty($sSQL);
 
 		// Alias => Order
-		$aOrderBy = array('nothing_good' => true);
+		$aOrderBy = ['nothing_good' => true];
 		$this->expectException("CoreException");
 		$oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy);
 
@@ -493,29 +485,28 @@ class DBSearchTest extends ItopDataTestCase
 	 */
 	public function testNoGroupBy()
 	{
-		$aReq = array(array(1, 0, 0), array(1, 1, 3), array(1, 1, 1), array(1, 1, 1), array(1, 0, 0), array(1, 1, 1));
+		$aReq = [[1, 0, 0], [1, 1, 3], [1, 1, 1], [1, 1, 1], [1, 0, 0], [1, 1, 1]];
 		$sOrgs = $this->init_db(2, 4, $aReq);
 
 		$oSearch = DBSearch::FromOQL("SELECT UserRequest WHERE org_id IN ($sOrgs)");
 		self::assertNotNull($oSearch);
 
-
 		$oTimeExpr = Expression::FromOQL('UserRequest.time_spent');
-		$oSumExpr = new FunctionExpression('SUM', array($oTimeExpr));
-		$oAvgExpr = new FunctionExpression('AVG', array($oTimeExpr));
-		$oMinExpr = new FunctionExpression('MIN', array($oTimeExpr));
-		$oMaxExpr = new FunctionExpression('MAX', array($oTimeExpr));
+		$oSumExpr = new FunctionExpression('SUM', [$oTimeExpr]);
+		$oAvgExpr = new FunctionExpression('AVG', [$oTimeExpr]);
+		$oMinExpr = new FunctionExpression('MIN', [$oTimeExpr]);
+		$oMaxExpr = new FunctionExpression('MAX', [$oTimeExpr]);
 		// Alias => Expression
-		$aFunctions = array(
+		$aFunctions = [
 			'_itop_sum_' => $oSumExpr,
 			'_itop_avg_' => $oAvgExpr,
 			'_itop_min_' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
-		);
+		];
 
-		$aGroupBy = array();
-		$aOrderBy = array();
-		$aArgs = array();
+		$aGroupBy = [];
+		$aOrderBy = [];
+		$aArgs = [];
 
 		$sSQL = $oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy, 0);
 		$this->debug($sSQL);
@@ -546,18 +537,14 @@ class DBSearchTest extends ItopDataTestCase
 		$oSearch = DBSearch::FromOQL($sOql);
 
 		$bHasThrownException = false;
-		try
-		{
+		try {
 			$oFirstResult = $oSearch->GetFirstResult($bMustHaveOneResultMax);
-		}
-		catch (CoreOqlMultipleResultsForbiddenException $e)
-		{
+		} catch (CoreOqlMultipleResultsForbiddenException $e) {
 			$oFirstResult = null;
 			$bHasThrownException = true;
 		}
 
-		switch ($sReturn)
-		{
+		switch ($sReturn) {
 			case 'exception':
 				self::assertEquals(true, $bHasThrownException, 'Exception raised');
 				break;
@@ -572,33 +559,33 @@ class DBSearchTest extends ItopDataTestCase
 
 	public function GetFirstResultProvider()
 	{
-		return array(
-			'One result' => array(
+		return [
+			'One result' => [
 				'SELECT Person WHERE id = 1',
 				false,
 				'object',
-			),
-			'Multiple results, no exception' => array(
+			],
+			'Multiple results, no exception' => [
 				'SELECT Person',
 				false,
 				'object',
-			),
-			'Multiple results, with exception' => array(
+			],
+			'Multiple results, with exception' => [
 				'SELECT Person',
 				true,
 				'exception',
-			),
-			'Multiple results with "WHERE 1", with exception' => array(
+			],
+			'Multiple results with "WHERE 1", with exception' => [
 				'SELECT Person WHERE 1',
 				true,
 				'exception',
-			),
-			'No result' => array(
+			],
+			'No result' => [
 				'SELECT Person WHERE id = -1',
 				true,
 				'null',
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -610,14 +597,11 @@ class DBSearchTest extends ItopDataTestCase
 		$oSearch = DBSearch::FromOQL("SELECT FiberChannelInterface AS FCI");
 		self::assertNotNull($oSearch);
 
-		try
-		{
+		try {
 			$oExpr1 = Expression::FromOQL('AVC(FCI.name)');
 			//$aGroupBy = array('group1' => $oExpr1);
 			//$oSearch->MakeGroupByQuery(array(), $aGroupBy, false, array(), array());
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$sExceptionClass = get_class($e);
 		}
 
@@ -627,13 +611,10 @@ class DBSearchTest extends ItopDataTestCase
 	public function testSanity_GroupFunction_In_GroupByPart()
 	{
 		$sExceptionClass = '';
-		try
-		{
+		try {
 			$oSearch = DBSearch::FromOQL("SELECT FiberChannelInterface AS FCI WHERE COUNT(FCI.name) = AVC(FCI.name)");
 			//$oSearch->MakeGroupByQuery(array(), array(), false, array(), array());
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$sExceptionClass = get_class($e);
 		}
 
@@ -643,19 +624,16 @@ class DBSearchTest extends ItopDataTestCase
 	public function testSanity_UnknownGroupFunction_In_SelectPart()
 	{
 		$sExceptionClass = '';
-		try
-		{
+		try {
 			$oTimeExpr = Expression::FromOQL('FCI.speed');
-			$oWrongExpr = new FunctionExpression('GABUZOMEU', array($oTimeExpr));
+			$oWrongExpr = new FunctionExpression('GABUZOMEU', [$oTimeExpr]);
 			// Alias => Expression
-			$aFunctions = array(
+			$aFunctions = [
 				'_itop_wrong_' => $oWrongExpr,
-			);
+			];
 			$oSearch = DBSearch::FromOQL("SELECT FiberChannelInterface AS FCI");
-			$oSearch->MakeGroupByQuery(array(), array(), false, $aFunctions, array());
-		}
-		catch (Exception $e)
-		{
+			$oSearch->MakeGroupByQuery([], [], false, $aFunctions, []);
+		} catch (Exception $e) {
 			$sExceptionClass = get_class($e);
 		}
 
@@ -673,14 +651,14 @@ class DBSearchTest extends ItopDataTestCase
 	 */
 	public function testSelectInWithVariableExpressions()
 	{
-		$aReq = array(array(1, 0, 0), array(1, 1, 3), array(1, 2, 1), array(1, 0, 1), array(1, 1, 0), array(1, 2, 1));
+		$aReq = [[1, 0, 0], [1, 1, 3], [1, 2, 1], [1, 0, 1], [1, 1, 0], [1, 2, 1]];
 		$sOrgs = $this->init_db(3, 4, $aReq);
 		$allOrgIds = explode(",", $sOrgs);
 
-		$TwoOrgIdsOnly = array($allOrgIds[0], $allOrgIds[1]);
+		$TwoOrgIdsOnly = [$allOrgIds[0], $allOrgIds[1]];
 		$oSearch = DBSearch::FromOQL("SELECT UserRequest WHERE org_id IN (:org_ids)");
 		self::assertNotNull($oSearch);
-		$oSet = new \CMDBObjectSet($oSearch, array(), array('org_ids' => $TwoOrgIdsOnly));
+		$oSet = new \CMDBObjectSet($oSearch, [], ['org_ids' => $TwoOrgIdsOnly]);
 		static::assertEquals(4, $oSet->Count());
 
 		// Content now generated with ajax call
@@ -703,7 +681,8 @@ class DBSearchTest extends ItopDataTestCase
 	/**
 	 * @since 2.7.2 3.0.0 N°3324
 	 */
-	public function testAllowAllData() {
+	public function testAllowAllData()
+	{
 		$oSimpleSearch = \DBObjectSearch::FromOQL('SELECT FunctionalCI');
 		$oSimpleSearch->AllowAllData(false);
 		self::assertFalse($oSimpleSearch->IsAllDataAllowed(), 'DBSearch AllowData value');
@@ -715,7 +694,8 @@ class DBSearchTest extends ItopDataTestCase
 		$this->CheckNestedSearch($sNestedQuery, false);
 	}
 
-	private function CheckNestedSearch($sQuery, $bAllowAllData) {
+	private function CheckNestedSearch($sQuery, $bAllowAllData)
+	{
 		$oNestedQuerySearch = \DBObjectSearch::FromOQL($sQuery);
 		$oNestedQuerySearch->AllowAllData($bAllowAllData);
 		self::assertEquals($bAllowAllData, $oNestedQuerySearch->IsAllDataAllowed(), 'root DBSearch AllowData value');
@@ -746,110 +726,111 @@ class DBSearchTest extends ItopDataTestCase
 		$oSearch->MakeSelectQuery();
 		self::assertTrue(true);
 	}
-    /**
-     * @dataProvider QueriesProvider
-     * @param $sOQL
-     *
-     * @return void
-     */
-    public function testQueries($sOQL)
-    {
-        $oSearch = DBSearch::FromOQL($sOQL);
-        $oSet = new DBObjectSet($oSearch);
-        if ($oSet->Count() > 0) {
-            $aSelectedAliases = array_keys($oSearch->GetSelectedClasses());
-            $aFirstRow = $oSet->FetchAssoc();
-            $aAliases = array_keys($aFirstRow);
-            $this->assertEquals($aSelectedAliases, $aAliases);
-        }
-    }
+	/**
+	 * @dataProvider QueriesProvider
+	 * @param $sOQL
+	 *
+	 * @return void
+	 */
+	public function testQueries($sOQL)
+	{
+		$oSearch = DBSearch::FromOQL($sOQL);
+		$oSet = new DBObjectSet($oSearch);
+		if ($oSet->Count() > 0) {
+			$aSelectedAliases = array_keys($oSearch->GetSelectedClasses());
+			$aFirstRow = $oSet->FetchAssoc();
+			$aAliases = array_keys($aFirstRow);
+			$this->assertEquals($aSelectedAliases, $aAliases);
+		}
+	}
 
-    public function QueriesProvider()
-    {
-        return [
-                ['SELECT L,P FROM Person AS P JOIN Location AS L ON P.location_id=L.id'],
-                ['SELECT P,L FROM Person AS P JOIN Location AS L ON P.location_id=L.id'],
-        ];
-    }
-    public function SelectAttributeToArrayProvider()
-    {
-        return array(
-                'select id from FunctionalCI' => array(
-                        'SELECT FunctionalCI',
-                        'id',
-                ),
-                'select name from FunctionalCI' => array(
-                        'SELECT FunctionalCI',
-                        'name',
-                ),
-                'select org_id from FunctionalCI' => array(
-                        'SELECT FunctionalCI',
-                        'org_id',
-                ),
-                'select organization_name from FunctionalCI' => array(
-	                'SELECT FunctionalCI',
-	                'organization_name',
-                ),
-                'select business_criticity from FunctionalCI' => array(
-	                'SELECT FunctionalCI',
-	                'business_criticity',
-                ),
-                'select org_id from FunctionalCI' => array(
-	                'SELECT FunctionalCI',
-	                'org_id',
-                ),
-                'select email from Person' => array(
-                        'SELECT Person',
-                        'email',
-                ),
-                'select phone from Person' => array(
-	                'SELECT Person',
-	                'phone',
-                ),
-                'select picture from Person' => array(
-                        'SELECT Person',
-                        'picture',
-                ),
-                'select description from Ticket' => array(
-	                'SELECT Ticket',
-	                'description',
-                ),
-                'select start_date from Ticket' => array(
-	                'SELECT Ticket',
-	                'start_date',
-                ),
-                'select private_log from Ticket' => array(
-	                'SELECT Ticket',
-	                'private_log',
-                ),
-        );
-    }
+	public function QueriesProvider()
+	{
+		return [
+				['SELECT L,P FROM Person AS P JOIN Location AS L ON P.location_id=L.id'],
+				['SELECT P,L FROM Person AS P JOIN Location AS L ON P.location_id=L.id'],
+		];
+	}
+	public function SelectAttributeToArrayProvider()
+	{
+		return [
+				'select id from FunctionalCI' => [
+						'SELECT FunctionalCI',
+						'id',
+				],
+				'select name from FunctionalCI' => [
+						'SELECT FunctionalCI',
+						'name',
+				],
+				'select org_id from FunctionalCI' => [
+						'SELECT FunctionalCI',
+						'org_id',
+				],
+				'select organization_name from FunctionalCI' => [
+					'SELECT FunctionalCI',
+					'organization_name',
+				],
+				'select business_criticity from FunctionalCI' => [
+					'SELECT FunctionalCI',
+					'business_criticity',
+				],
+				'select org_id from FunctionalCI' => [
+					'SELECT FunctionalCI',
+					'org_id',
+				],
+				'select email from Person' => [
+						'SELECT Person',
+						'email',
+				],
+				'select phone from Person' => [
+					'SELECT Person',
+					'phone',
+				],
+				'select picture from Person' => [
+						'SELECT Person',
+						'picture',
+				],
+				'select description from Ticket' => [
+					'SELECT Ticket',
+					'description',
+				],
+				'select start_date from Ticket' => [
+					'SELECT Ticket',
+					'start_date',
+				],
+				'select private_log from Ticket' => [
+					'SELECT Ticket',
+					'private_log',
+				],
+		];
+	}
 
-    /**
-     * @dataProvider SelectAttributeToArrayProvider
-     *
-     * @return void
-     * @throws \ConfigException
-     * @throws \CoreException
-     * @throws \MissingQueryArgument
-     * @throws \MySQLException
-     * @throws \MySQLHasGoneAwayException
-     * @throws \OQLException
-     */
-    public function testSelectAttributeToArray($sQuery, $sField){
+	/**
+	 * @dataProvider SelectAttributeToArrayProvider
+	 *
+	 * @return void
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function testSelectAttributeToArray($sQuery, $sField)
+	{
 
 		$oSearch = \DBObjectSearch::FromOQL($sQuery);
-        $aResToDataArray=[];
-        $oSet = new \DBObjectSet($oSearch);
-        while ($oRecord = $oSet->Fetch()) {
-            $aMappedRow[$sField]  =$oRecord->Get($sField);
-            $aResToDataArray[] =   $aMappedRow;
-        }
-	    array_multisort (array_column($aResToDataArray, $sField), SORT_DESC, $aResToDataArray);
+		$aResToDataArray = [];
+		$oSet = new \DBObjectSet($oSearch);
+		while ($oRecord = $oSet->Fetch()) {
+			$aMappedRow[$sField]  = $oRecord->Get($sField);
+			$aResToDataArray[] =   $aMappedRow;
+		}
+		array_multisort(array_column($aResToDataArray, $sField), SORT_DESC, $aResToDataArray);
 
 		$aResSelectColumnToArray = $oSearch->SelectAttributeToArray($sField);
-	    array_multisort (array_column($aResSelectColumnToArray, $sField), SORT_DESC, $aResSelectColumnToArray);
+		array_multisort(array_column($aResSelectColumnToArray, $sField), SORT_DESC, $aResSelectColumnToArray);
 
-		self::assertEquals( $aResToDataArray, $aResSelectColumnToArray, 'The array constructed using the OQL query and the result of testSelectAttributeToArray must be the same');
-    }
+		self::assertEquals($aResToDataArray, $aResSelectColumnToArray, 'The array constructed using the OQL query and the result of testSelectAttributeToArray must be the same');
+	}
 }

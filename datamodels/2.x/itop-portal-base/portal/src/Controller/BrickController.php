@@ -29,5 +29,4 @@ namespace Combodo\iTop\Portal\Controller;
  */
 abstract class BrickController extends AbstractController
 {
-
 }

@@ -5,9 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Application\WelcomePopup;
-
 
 use iWelcomePopupExtension;
 
@@ -18,7 +16,8 @@ use iWelcomePopupExtension;
  * @package Combodo\iTop\Application\WelcomePopup
  * @api
  */
-class MessageFactory {
+class MessageFactory
+{
 	/**
 	 * @param string $sId Unique ID of the message within its provider
 	 * @param string $sTitle Title of the message in plain text

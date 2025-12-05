@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spanish Localized data
  *
@@ -7,6 +8,6 @@
  * @author Miguel Turrubiates <miguel_tf@yahoo.com>
  * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'theme:fullmoon-protanopia-deuteranopia' => 'Luna Llena (Protanopia & Deuteranopia)'
-));
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'theme:fullmoon-protanopia-deuteranopia' => 'Luna Llena (Protanopia & Deuteranopia)',
+]);

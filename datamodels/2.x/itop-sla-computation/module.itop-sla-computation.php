@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -19,7 +20,7 @@
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'itop-sla-computation/3.3.0',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'SLA Computation',
@@ -27,36 +28,36 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
-			
-		),
+		'dependencies' => [
+
+		],
 		'mandatory' => true,
 		'visible' => false,
 
 		// Components
 		//
-		'datamodel' => array(
+		'datamodel' => [
 			'main.itop-sla-computation.php',
-		),
-		'webservice' => array(
-			
-		),
-		'data.struct' => array(
+		],
+		'webservice' => [
+
+		],
+		'data.struct' => [
 			// add your 'structure' definition XML files here,
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			// add your sample data XML files here,
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '', // hyperlink to manual setup documentation, if any
-		'doc.more_information' => '', // hyperlink to more information, if any 
+		'doc.more_information' => '', // hyperlink to more information, if any
 
 		// Default settings
 		//
-		'settings' => array(
+		'settings' => [
 			// Module specific settings go here, if any
-		),
-	)
+		],
+	]
 );

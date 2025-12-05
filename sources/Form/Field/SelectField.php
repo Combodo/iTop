@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -32,12 +32,12 @@ class SelectField extends MultipleChoicesField
 {
 	// Overloaded constants
 	/** @inheritDoc  */
-	const DEFAULT_MULTIPLE_VALUES_ENABLED = false;
+	public const DEFAULT_MULTIPLE_VALUES_ENABLED = false;
 
 	/** @var string DEFAULT_NULL_CHOICE_LABEL */
-	const DEFAULT_NULL_CHOICE_LABEL = 'UI:SelectOne';
+	public const DEFAULT_NULL_CHOICE_LABEL = 'UI:SelectOne';
 	/** @var bool DEFAULT_STARTS_WITH_NULL_CHOICE */
-	const DEFAULT_STARTS_WITH_NULL_CHOICE = true;
+	public const DEFAULT_STARTS_WITH_NULL_CHOICE = true;
 
 	/** @var bool $bStartsWithNullChoice */
 	protected $bStartsWithNullChoice;
@@ -62,11 +62,11 @@ class SelectField extends MultipleChoicesField
 		return $this->bStartsWithNullChoice;
 	}
 
-    /**
-     * @param bool $bStartsWithNullChoice
-     *
-     * @return $this
-     */
+	/**
+	 * @param bool $bStartsWithNullChoice
+	 *
+	 * @return $this
+	 */
 	public function SetStartsWithNullChoice(bool $bStartsWithNullChoice)
 	{
 		$this->bStartsWithNullChoice = $bStartsWithNullChoice;
@@ -82,9 +82,8 @@ class SelectField extends MultipleChoicesField
 	public function GetChoices()
 	{
 		$aChoices = parent::GetChoices();
-		if ($this->bStartsWithNullChoice && !array_key_exists(null, $aChoices))
-		{
-			$aChoices = array(null => Dict::S(static::DEFAULT_NULL_CHOICE_LABEL)) + $aChoices;
+		if ($this->bStartsWithNullChoice && !array_key_exists(null, $aChoices)) {
+			$aChoices = [null => Dict::S(static::DEFAULT_NULL_CHOICE_LABEL)] + $aChoices;
 		}
 
 		return $aChoices;

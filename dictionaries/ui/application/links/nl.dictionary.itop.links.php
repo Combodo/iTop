@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Links:Object:New:Modal:Title' => 'Create an object~~',
 	'UI:Links:Create:Button' => 'Create~~',
 	'UI:Links:Create:Button+' => 'Create a %4$s~~',
@@ -41,4 +42,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Links:Bulk:LinkExistForOneObject' => 'One object is linked~~',
 	'UI:Links:Bulk:LinkExistForXObjects' => '{count} objects are linked~~',
 	'UI:Links:NewItem' => 'New item~~',
-));
+]);

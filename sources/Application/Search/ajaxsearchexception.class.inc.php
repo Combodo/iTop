@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -28,8 +29,6 @@
 
 namespace Combodo\iTop\Application\Search;
 
-
 class AjaxSearchException extends \Exception
 {
-
 }

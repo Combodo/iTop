@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -30,7 +31,7 @@
 //
 // Class: lnkFunctionalCIToTicket
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkFunctionalCIToTicket' => '关联 功能配置项/工单',
 	'Class:lnkFunctionalCIToTicket+' => '',
 	'Class:lnkFunctionalCIToTicket/Name' => '%1$s / %2$s',
@@ -50,12 +51,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => '手动添加',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => '自动添加',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => '不通知',
-));
+]);
 
 //
 // Class: FunctionalCI
 //
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:FunctionalCI/Attribute:tickets_list' => '工单',
 	'Class:FunctionalCI/Attribute:tickets_list+' => '此配置项包含的所有工单',
-));
+]);

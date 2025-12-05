@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -72,7 +73,7 @@ EOF
 // Class: OAuthClientAzure
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:OAuthClientAzure' => 'OAuth Mail Access for Microsoft Azure',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientAzure/Attribute:scope' => 'Scope',
@@ -95,13 +96,13 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'No',
 	'Class:OAuthClientAzure/Attribute:tenant' => 'Tenant',
 	'Class:OAuthClientAzure/Attribute:tenant+' => 'Tenant ID of the configured application. For multi-tenant application, use "common".',
-));
+]);
 
 //
 // Class: OAuthClientGoogle
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:OAuthClientGoogle' => 'OAuth Mail Access for Google',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
 	'Class:OAuthClientGoogle/Attribute:scope' => 'Scope',
@@ -122,4 +123,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => 'At least one OAuth client must have this flag to “Yes”, if you want iTop to use it for sending mails.',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => 'Yes',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => 'No',
-));
+]);

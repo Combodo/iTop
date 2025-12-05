@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -27,8 +28,8 @@ use utils;
  */
 abstract class AttributeSet extends AttributeDBFieldVoid
 {
-	const SEARCH_WIDGET_TYPE       = self::SEARCH_WIDGET_TYPE_RAW;
-	const EDITABLE_INPUT_ID_SUFFIX = '-setwidget-values'; // used client side, see js/jquery.itop-set-widget.js
+	public const SEARCH_WIDGET_TYPE       = self::SEARCH_WIDGET_TYPE_RAW;
+	public const EDITABLE_INPUT_ID_SUFFIX = '-setwidget-values'; // used client side, see js/jquery.itop-set-widget.js
 	protected $bDisplayLink; // Display search link in readonly mode
 
 	public function __construct($sCode, array $aParams)
@@ -48,7 +49,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('is_null_allowed', 'max_items'));
+		return array_merge(parent::ListExpectedParams(), ['is_null_allowed', 'max_items']);
 	}
 
 	/**
@@ -61,7 +62,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public function GetPossibleValues($aArgs = array(), $sContains = '')
+	public function GetPossibleValues($aArgs = [], $sContains = '')
 	{
 		return $this->GetAllowedValues($aArgs, $sContains);
 	}
@@ -75,13 +76,13 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public function GetJsonForWidget($oValue, $aArgs = array())
+	public function GetJsonForWidget($oValue, $aArgs = [])
 	{
-		$aJson = array();
+		$aJson = [];
 
 		// possible_values
 		$aAllowedValues = $this->GetPossibleValues($aArgs);
-		$aSetKeyValData = array();
+		$aSetKeyValData = [];
 		foreach ($aAllowedValues as $sCode => $sLabel) {
 			$aSetKeyValData[] = [
 				'code'  => $sCode,
@@ -89,10 +90,10 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			];
 		}
 		$aJson['possible_values'] = $aSetKeyValData;
-		$aRemoved = array();
+		$aRemoved = [];
 		if (is_null($oValue)) {
-			$aJson['partial_values'] = array();
-			$aJson['orig_value'] = array();
+			$aJson['partial_values'] = [];
+			$aJson['orig_value'] = [];
 		} else {
 			$aPartialValues = $oValue->GetModified();
 			foreach ($aPartialValues as $key => $value) {
@@ -111,7 +112,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			}
 			$aJson['orig_value'] = array_values($aOrigValues);
 		}
-		$aJson['added'] = array();
+		$aJson['added'] = [];
 		$aJson['removed'] = $aRemoved;
 
 		$iMaxTags = $this->GetMaxItems();
@@ -176,7 +177,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 
 	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
 	{
-		$aValues = array();
+		$aValues = [];
 		if (!empty($proposedValue)) {
 			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 			// convert also , separated strings
@@ -466,7 +467,8 @@ HTML;
 	{
 		/** @var \ormSet $original */
 		/** @var \ormSet $value */
-		parent::RecordAttChange($oObject,
+		parent::RecordAttChange(
+			$oObject,
 			implode(' ', $original->GetValues()),
 			implode(' ', $value->GetValues())
 		);

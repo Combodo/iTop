@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -17,11 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'UI:Modal:Confirmation:DefaultTitle' => 'Confirmation',
 	'UI:Modal:Informative:Title' => 'Informative Modal',
 	'UI:Modal:InformativeError:Title' => 'Error',
 	'UI:Modal:InformativeWarning:Title' => 'Warning',
 	'UI:Modal:InformativeInformation:Title' => 'Information',
 	'UI:Modal:InformativeSuccess:Title' => 'Success',
-));
+]);

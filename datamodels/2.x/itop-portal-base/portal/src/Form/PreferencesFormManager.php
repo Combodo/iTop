@@ -39,7 +39,7 @@ use UserRights;
 class PreferencesFormManager extends FormManager
 {
 	/** @var string FORM_TYPE */
-	const FORM_TYPE = 'preferences';
+	public const FORM_TYPE = 'preferences';
 
 	/**
 	 * @throws \Exception
@@ -63,9 +63,8 @@ class PreferencesFormManager extends FormManager
 			->SetCurrentValue(Dict::GetUserLanguage())
 			->SetStartsWithNullChoice(false);
 		// - Preparing choices
-		$aChoices = array();
-		foreach (Dict::GetLanguages() as $sCode => $aLanguage)
-		{
+		$aChoices = [];
+		foreach (Dict::GetLanguages() as $sCode => $aLanguage) {
 			$aChoices[$sCode] = $aLanguage['description'].' ('.$aLanguage['localized_description'].')';
 		}
 		asort($aChoices);
@@ -109,11 +108,9 @@ class PreferencesFormManager extends FormManager
 		$this->OnUpdate($aArgs);
 
 		// Check if form valid
-		if ($this->oForm->Validate())
-		{
+		if ($this->oForm->Validate()) {
 			// The try catch is essentially to start a MySQL transaction
-			try
-			{
+			try {
 				// Starting transaction
 				CMDBSource::Query('START TRANSACTION');
 				$iFieldChanged = 0;
@@ -123,34 +120,28 @@ class PreferencesFormManager extends FormManager
 				$oCurUser = UserRights::GetUserObject();
 				// - Language
 				$sLanguage = $this->oForm->GetField('language')->GetCurrentValue();
-				if (($sLanguage !== null) && ($oCurUser->Get('language') !== $sLanguage))
-				{
+				if (($sLanguage !== null) && ($oCurUser->Get('language') !== $sLanguage)) {
 					$oCurUser->Set('language', $sLanguage);
 					$iFieldChanged++;
 				}
 
 				// Updating only if preferences changed
-				if ($iFieldChanged > 0)
-				{
+				if ($iFieldChanged > 0) {
 					$oCurUser->AllowWrite(true);
 					$oCurUser->DBUpdate();
-					$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
+					$aData['messages']['success'] += ['_main' => [Dict::S('Brick:Portal:Object:Form:Message:Saved')]];
 				}
 
 				// Ending transaction with a commit as everything was fine
 				CMDBSource::Query('COMMIT');
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				// End transaction with a rollback as something failed
 				CMDBSource::Query('ROLLBACK');
 				$aData['valid'] = false;
-				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
+				$aData['messages']['error'] += ['_main' => [$e->getMessage()]];
 				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Rollback during submit ('.$e->getMessage().')');
 			}
-		}
-		else
-		{
+		} else {
 			// Handle errors
 			$aData['valid'] = false;
 			$aData['messages']['error'] += $this->oForm->GetErrorMessages();
@@ -171,12 +162,9 @@ class PreferencesFormManager extends FormManager
 		$this->Build();
 
 		// Then we update it with new values
-		if (is_array($aArgs))
-		{
-			if (isset($aArgs['currentValues']))
-			{
-				foreach ($aArgs['currentValues'] as $sPreferenceName => $value)
-				{
+		if (is_array($aArgs)) {
+			if (isset($aArgs['currentValues'])) {
+				foreach ($aArgs['currentValues'] as $sPreferenceName => $value) {
 					$this->oForm->GetField($sPreferenceName)->SetCurrentValue($value);
 				}
 			}

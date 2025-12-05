@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -17,7 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Attachments:TabTitle_Count' => 'Attachments (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Attachments',
 	'Attachments:FieldsetTitle' => 'Attachments',
@@ -38,13 +39,13 @@ or ask your '.ITOP_APPLICATION_SHORT.' administrator if the '.ITOP_APPLICATION_S
 	'Attachments:Render:Icons' => 'Display as icons',
 	'Attachments:Render:Table' => 'Display as list',
 	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area',
-));
+]);
 
 //
 // Class: Attachment
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Attachment' => 'Attachment',
 	'Class:Attachment+' => '',
 	'Class:Attachment/Attribute:expire' => 'Expire',
@@ -59,10 +60,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => 'Contents',
 	'Class:Attachment/Attribute:contents+' => '',
-));
+]);
 
-
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Attachments:File:Thumbnail' => 'Icon',
 	'Attachments:File:Name' => 'File name',
 	'Attachments:File:Date' => 'Upload date',
@@ -70,25 +70,25 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Attachments:File:Size' => 'Size',
 	'Attachments:File:MimeType' => 'Type',
 	'Attachments:File:DownloadsCount' => 'Downloads',
-));
+]);
 //
 // Class: Attachment
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Attachment/Attribute:creation_date' => 'Creation date',
 	'Class:Attachment/Attribute:creation_date+' => '',
 	'Class:Attachment/Attribute:user_id' => 'User id',
 	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Contact id',
 	'Class:Attachment/Attribute:contact_id+' => '',
-));
+]);
 
 //
 // Class: TriggerOnAttachmentDownload
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnAttachmentDownload'                       => 'Trigger (on object\'s attachment download)',
 	'Class:TriggerOnAttachmentDownload+'                      => 'Trigger on object\'s attachment download of [a child class of] the given class',
 	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)',
@@ -97,5 +97,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:TriggerOnAttachmentDelete+'                        => 'Trigger on object\'s attachment delete',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email' => 'Add file in email',
 	'Class:TriggerOnAttachmentCreate/Attribute:file_in_email+' => 'If checked, the file will be automatically attached to the email when an email action is triggered',
-    'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger',
-));
+	'Class:TriggerOnObject:TriggerClassAttachment/ReadOnlyMessage' => 'Trigger on object is not allowed on class Attachment. Please use specific trigger',
+]);

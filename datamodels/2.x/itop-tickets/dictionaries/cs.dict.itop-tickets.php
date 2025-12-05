@@ -1,17 +1,18 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author Daniel Rokos <daniel.rokos@itopportal.cz>
  *
  */
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Ticket' => 'Tiket',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'ID',
@@ -63,14 +64,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Uzavřený',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
 	'Ticket:ImpactAnalysis' => 'Analýza dopadů',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:lnkContactToTicket' => 'Spojení (Kontakt / Tiket)',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
@@ -90,13 +90,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Přidán manuálně',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Automaticky',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Neupozorňovat',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:WorkOrder' => 'Pracovní příkaz',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => 'Název',
@@ -129,11 +129,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Uzavřít',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Ticket:baseinfo' => 'Obecné informace',
 	'Ticket:date' => 'Data',
 	'Ticket:contact' => 'Kontakty',
@@ -223,14 +222,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Cíl úrovně služeb typu TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Čas pro vyřešení (TTR)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Cíl úrovně služeb typu TTR',
-));
-
+]);
 
 //
 // Class: Ticket
 //
 
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
-));
+]);

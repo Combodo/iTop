@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -17,11 +18,11 @@ use ValueSetEnumClasses;
  */
 class AttributeClass extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('class_category', 'more_values'));
+		return array_merge(parent::ListExpectedParams(), ['class_category', 'more_values']);
 	}
 
 	public function __construct($sCode, $aParams)
@@ -53,7 +54,7 @@ class AttributeClass extends AttributeString
 	 * @return array|null
 	 * @throws \CoreException
 	 */
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		$oValSetDef = $this->GetValuesDef();
 		if (!$oValSetDef) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -54,7 +55,7 @@ class UpdateController extends Controller
 		$bConfigParamSetupLaunchButtonEnabled = $oConfig->Get('setup.launch_button.enabled');
 		if (is_null($bConfigParamSetupLaunchButtonEnabled)) {
 			$bIsSetupLaunchButtonEnabled = utils::IsDevelopmentEnvironment();
-		} else if (false === $bConfigParamSetupLaunchButtonEnabled) {
+		} elseif (false === $bConfigParamSetupLaunchButtonEnabled) {
 			$bIsSetupLaunchButtonEnabled = false;
 		} else {
 			$bIsSetupLaunchButtonEnabled = $bConfigParamSetupLaunchButtonEnabled || utils::IsDevelopmentEnvironment();
@@ -108,8 +109,7 @@ class UpdateController extends Controller
 			} else {
 				throw new Exception(Dict::S('iTopUpdate:Error:NoFile'));
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$iError = UPLOAD_ERR_NO_FILE;
 			$sError = $e->getMessage();
 		}
@@ -163,19 +163,19 @@ class UpdateController extends Controller
 		$this->DisplaySetupPage($aParams);
 	}
 
-    public function OperationRunSetup()
-    {
-	    SetupUtils::CheckSetupToken(true);
-	    $sConfigFile = APPCONF.'production/'.ITOP_CONFIG_FILE;
-	    @chmod($sConfigFile, 0770);
-	    $sRedirectURL = utils::GetAbsoluteUrlAppRoot().'setup/index.php';
-	    header("Location: $sRedirectURL");
-    }
+	public function OperationRunSetup()
+	{
+		SetupUtils::CheckSetupToken(true);
+		$sConfigFile = APPCONF.'production/'.ITOP_CONFIG_FILE;
+		@chmod($sConfigFile, 0770);
+		$sRedirectURL = utils::GetAbsoluteUrlAppRoot().'setup/index.php';
+		header("Location: $sRedirectURL");
+	}
 
-    private function GetPreviousInstallations()
-    {
-        return DBToolsUtils::GetPreviousInstallations();
-    }
+	private function GetPreviousInstallations()
+	{
+		return DBToolsUtils::GetPreviousInstallations();
+	}
 
 	// Returns a file size limit in bytes based on the PHP upload_max_filesize
 	// and post_max_size

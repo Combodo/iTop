@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -58,7 +59,7 @@ class AttributeText extends AttributeString
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->Get('sql')] = $this->GetSQLCol($bFullSpec);
 		if ($this->GetOptional('format', null) != null) {
 			// Add the extra column only if the property 'format' is specified for the attribute
@@ -76,7 +77,7 @@ class AttributeText extends AttributeString
 		if ($sPrefix == '') {
 			$sPrefix = $this->Get('sql');
 		}
-		$aColumns = array();
+		$aColumns = [];
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $sPrefix;
 		if ($this->GetOptional('format', null) != null) {
@@ -98,8 +99,12 @@ class AttributeText extends AttributeString
 	{
 		if (!$bWikiOnly) {
 			$sPattern = '/'.str_replace('/', '\/', utils::GetConfig()->Get('url_validation_pattern')).'/i';
-			if (preg_match_all($sPattern, $sText, $aAllMatches,
-				PREG_SET_ORDER /* important !*/ | PREG_OFFSET_CAPTURE /* important ! */)) {
+			if (preg_match_all(
+				$sPattern,
+				$sText,
+				$aAllMatches,
+				PREG_SET_ORDER /* important !*/ | PREG_OFFSET_CAPTURE /* important ! */
+			)) {
 				$i = count($aAllMatches);
 				// Replace the URLs by an actual hyperlink <a href="...">...</a>
 				// Let's do it backwards so that the initial positions are not modified by the replacement
@@ -153,7 +158,7 @@ class AttributeText extends AttributeString
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		$aStyles = array();
+		$aStyles = [];
 		if ($this->GetWidth() != '') {
 			$aStyles[] = 'width:'.$this->GetWidth();
 		}
@@ -356,7 +361,7 @@ class AttributeText extends AttributeString
 
 	public function GetSQLValues($value)
 	{
-		$aValues = array();
+		$aValues = [];
 		$aValues[$this->Get("sql")] = $this->ScalarToSQL($value);
 		if ($this->GetOptional('format', null) != null) {
 			// Add the extra column only if the property 'format' is specified for the attribute
@@ -367,17 +372,20 @@ class AttributeText extends AttributeString
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		switch ($this->GetFormat()) {
 			case 'html':
 				if ($bConvertToPlainText) {
 					$sValue = utils::HtmlToText((string)$sValue);
 				}
-				$sFrom = array("\r\n", $sTextQualifier);
-				$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+				$sFrom = ["\r\n", $sTextQualifier];
+				$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 				$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 
 				return $sTextQualifier.$sEscaped.$sTextQualifier;
@@ -385,8 +393,14 @@ class AttributeText extends AttributeString
 
 			case 'text':
 			default:
-				return parent::GetAsCSV($sValue, $sSeparator, $sTextQualifier, $oHostObject, $bLocalize,
-					$bConvertToPlainText);
+				return parent::GetAsCSV(
+					$sValue,
+					$sSeparator,
+					$sTextQualifier,
+					$oHostObject,
+					$bLocalize,
+					$bConvertToPlainText
+				);
 		}
 	}
 

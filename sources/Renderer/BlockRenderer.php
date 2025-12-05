@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -119,8 +120,7 @@ class BlockRenderer
 	public function RenderHtml()
 	{
 		$sOutput = '';
-		if(!empty($this->oBlock->GetHtmlTemplateRelPath()))
-		{
+		if (!empty($this->oBlock->GetHtmlTemplateRelPath())) {
 			$sOutput = TwigHelper::RenderTemplate(
 				static::$oTwigEnv,
 				$this->GetTemplateParameters(),
@@ -147,8 +147,7 @@ class BlockRenderer
 	public function RenderJsInline(string $sType)
 	{
 		$sOutput = '';
-		if(!empty($this->oBlock->GetJsTemplatesRelPath($sType)))
-		{
+		if (!empty($this->oBlock->GetJsTemplatesRelPath($sType))) {
 			$sOutput = TwigHelper::RenderTemplate(
 				static::$oTwigEnv,
 				$this->GetTemplateParameters(),
@@ -162,8 +161,7 @@ class BlockRenderer
 	public function RenderJsInlineRecursively(UIBlock $oBlock, string $sType)
 	{
 		$sOutput = '';
-		if(!empty($oBlock->GetJsTemplatesRelPath($sType)))
-		{
+		if (!empty($oBlock->GetJsTemplatesRelPath($sType))) {
 			$sOutput = trim(TwigHelper::RenderTemplate(
 				static::$oTwigEnv,
 				array_merge(['oUIBlock' => $oBlock], $this->aContextParams, $oBlock->GetParameters()),
@@ -171,8 +169,8 @@ class BlockRenderer
 				$sType
 			));
 		}
-		foreach ($oBlock->GetSubBlocks() as $oSubBlock){
-			$sOutput = $sOutput . $this->RenderJsInlineRecursively($oSubBlock,  $sType);
+		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
+			$sOutput = $sOutput.$this->RenderJsInlineRecursively($oSubBlock, $sType);
 		}
 
 		return trim($sOutput);
@@ -187,8 +185,7 @@ class BlockRenderer
 	public function RenderCssInline()
 	{
 		$sOutput = '';
-		if(!empty($this->oBlock->GetCssTemplateRelPath()))
-		{
+		if (!empty($this->oBlock->GetCssTemplateRelPath())) {
 			$sOutput = TwigHelper::RenderTemplate(
 				static::$oTwigEnv,
 				$this->GetTemplateParameters(),

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -23,7 +24,7 @@ use Str;
  */
 class AttributeStopWatch extends AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -45,8 +46,10 @@ class AttributeStopWatch extends AttributeDefinition
 	public static function ListExpectedParams()
 	{
 		// The list of thresholds must be an array of iPercent => array of 'option' => value
-		return array_merge(parent::ListExpectedParams(),
-			array("states", "goal_computing", "working_time_computing", "thresholds"));
+		return array_merge(
+			parent::ListExpectedParams(),
+			["states", "goal_computing", "working_time_computing", "thresholds"]
+		);
 	}
 
 	public function GetEditClass()
@@ -124,7 +127,7 @@ class AttributeStopWatch extends AttributeDefinition
 		if ($sPrefix == '') {
 			$sPrefix = $this->GetCode(); // Warning: a stopwatch does not have any 'sql' property, so its SQL column is equal to its attribute code !!
 		}
-		$aColumns = array();
+		$aColumns = [];
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $sPrefix.'_timespent';
 		$aColumns['_started'] = $sPrefix.'_started';
@@ -163,7 +166,7 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		$aExpectedCols = array($sPrefix, $sPrefix.'_started', $sPrefix.'_laststart', $sPrefix.'_stopped');
+		$aExpectedCols = [$sPrefix, $sPrefix.'_started', $sPrefix.'_laststart', $sPrefix.'_stopped'];
 		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 			$sThPrefix = '_'.$iThreshold;
 			$aExpectedCols[] = $sPrefix.$sThPrefix.'_deadline';
@@ -203,7 +206,7 @@ class AttributeStopWatch extends AttributeDefinition
 	public function GetSQLValues($value)
 	{
 		if ($value instanceof ormStopWatch) {
-			$aValues = array();
+			$aValues = [];
 			$aValues[$this->GetCode().'_timespent'] = $value->GetTimeSpent();
 			$aValues[$this->GetCode().'_started'] = self::SecondsToDate($value->GetStartDate());
 			$aValues[$this->GetCode().'_laststart'] = self::SecondsToDate($value->GetLastStartDate());
@@ -217,7 +220,7 @@ class AttributeStopWatch extends AttributeDefinition
 				$aValues[$sPrefix.'_overrun'] = $value->GetOverrun($iThreshold);
 			}
 		} else {
-			$aValues = array();
+			$aValues = [];
 			$aValues[$this->GetCode().'_timespent'] = '';
 			$aValues[$this->GetCode().'_started'] = '';
 			$aValues[$this->GetCode().'_laststart'] = '';
@@ -229,7 +232,7 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode().'_timespent'] = 'INT(11) UNSIGNED';
 		$aColumns[$this->GetCode().'_started'] = 'DATETIME';
 		$aColumns[$this->GetCode().'_laststart'] = 'DATETIME';
@@ -265,7 +268,7 @@ class AttributeStopWatch extends AttributeDefinition
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -305,10 +308,13 @@ class AttributeStopWatch extends AttributeDefinition
 	 * @return string
 	 */
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		return $value->GetTimeSpent();
 	}
 
@@ -353,13 +359,13 @@ class AttributeStopWatch extends AttributeDefinition
 		$sPrefix = $this->GetCode();
 		switch ($sItemCode) {
 			case 'timespent':
-				return array('' => $sPrefix.'_timespent');
+				return ['' => $sPrefix.'_timespent'];
 			case 'started':
-				return array('' => $sPrefix.'_started');
+				return ['' => $sPrefix.'_started'];
 			case 'laststart':
-				return array('' => $sPrefix.'_laststart');
+				return ['' => $sPrefix.'_laststart'];
 			case 'stopped':
-				return array('' => $sPrefix.'_stopped');
+				return ['' => $sPrefix.'_stopped'];
 		}
 
 		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
@@ -369,13 +375,13 @@ class AttributeStopWatch extends AttributeDefinition
 				$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
 				switch ($sThresholdCode) {
 					case 'deadline':
-						return array('' => $sPrefix.'_'.$iThreshold.'_deadline');
+						return ['' => $sPrefix.'_'.$iThreshold.'_deadline'];
 					case 'passed':
-						return array('' => $sPrefix.'_'.$iThreshold.'_passed');
+						return ['' => $sPrefix.'_'.$iThreshold.'_passed'];
 					case 'triggered':
-						return array('' => $sPrefix.'_'.$iThreshold.'_triggered');
+						return ['' => $sPrefix.'_'.$iThreshold.'_triggered'];
 					case 'overrun':
-						return array('' => $sPrefix.'_'.$iThreshold.'_overrun');
+						return ['' => $sPrefix.'_'.$iThreshold.'_overrun'];
 				}
 			}
 		}
@@ -425,7 +431,6 @@ class AttributeStopWatch extends AttributeDefinition
 		throw new CoreException("Unknown item code '$sItemCode' for attribute ".$this->GetHostClass().'::'.$this->GetCode());
 	}
 
-
 	public function GetSubItemSearchType($sItemCode)
 	{
 		switch ($sItemCode) {
@@ -457,7 +462,7 @@ class AttributeStopWatch extends AttributeDefinition
 		return static::SEARCH_WIDGET_TYPE_RAW;
 	}
 
-	public function GetSubItemAllowedValues($sItemCode, $aArgs = array(), $sContains = '')
+	public function GetSubItemAllowedValues($sItemCode, $aArgs = [], $sContains = '')
 	{
 		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 			$sThPrefix = $iThreshold.'_';
@@ -467,10 +472,10 @@ class AttributeStopWatch extends AttributeDefinition
 				switch ($sThresholdCode) {
 					case 'passed':
 					case 'triggered':
-						return array(
+						return [
 							0 => $this->GetBooleanLabel(0),
 							1 => $this->GetBooleanLabel(1),
-						);
+						];
 				}
 			}
 		}
@@ -524,8 +529,10 @@ class AttributeStopWatch extends AttributeDefinition
 						$sThresholdCode = substr($sItemCode, strlen($sThPrefix));
 						switch ($sThresholdCode) {
 							case 'deadline':
-								$sHtml = (int)$sValue ? date((string)AttributeDateTime::GetFormat(),
-									(int)$sValue) : null;
+								$sHtml = (int)$sValue ? date(
+									(string)AttributeDateTime::GetFormat(),
+									(int)$sValue
+								) : null;
 								break;
 							case 'passed':
 							case 'triggered':
@@ -648,11 +655,14 @@ class AttributeStopWatch extends AttributeDefinition
 	}
 
 	public function GetSubItemAsCSV(
-		$sItemCode, $value, $sSeparator = ',', $sTextQualifier = '"', $bConvertToPlainText = false
-	)
-	{
-		$sFrom = array("\r\n", $sTextQualifier);
-		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sItemCode,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$bConvertToPlainText = false
+	) {
+		$sFrom = ["\r\n", $sTextQualifier];
+		$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 		$sEscaped = str_replace($sFrom, $sTo, (string)$value);
 		$sRet = $sTextQualifier.$sEscaped.$sTextQualifier;
 

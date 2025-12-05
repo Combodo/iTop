@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'UI:NotificationsCenter:Page:Title' => 'Notifications',
 	'UI:NotificationsCenter:Panel:Title' => 'Notifications',
 	'UI:NotificationsCenter:Panel:SubTitle' => 'Gérer les Notifications dont vous êtes destinataire : désabonnez-vous des news, des méls ou des deux',
@@ -21,4 +22,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:NotificationsCenter:Subscribe:Error' => 'Une erreur c\'est produite, lors de votre ré-inscription.',
 	'UI:NotificationsCenter:Channel:OutOf:Text' => '%1$s sur %2$s',
 	'UI:NotificationsCenter:Advanced:Input:Label' => '%1$s: %2$s',
-));
+]);

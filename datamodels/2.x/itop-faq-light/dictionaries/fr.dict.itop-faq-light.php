@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Question fréquement posée',
 	'Class:FAQ/Attribute:title' => 'Titre',
@@ -27,13 +28,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FAQ/Attribute:key_words' => 'Mots clés',
 	'Class:FAQ/Attribute:key_words+' => '',
 	'Class:FAQ/Attribute:domains' => 'Domaines',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:FAQCategory' => 'Catégorie de FAQ',
 	'Class:FAQCategory+' => 'Catégorie de FAQ',
 	'Class:FAQCategory/Attribute:name' => 'Nom',
@@ -45,9 +46,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FAQCategory/Attribute:faq_list/UI:Links:Delete:Button+' => 'Supprimer cette %4$s',
 	'Class:FAQCategory/Attribute:faq_list/UI:Links:Delete:Modal:Title' => 'Supprimer une %4$s',
 	'Class:FAQCategory/Attribute:faq_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
-	'Class:FAQCategory/Attribute:faq_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s'
-));
-Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:FAQCategory/Attribute:faq_list/UI:Links:Remove:Modal:Title' => 'Retirer cette %4$s de sa %1$s',
+]);
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:ProblemManagement' => 'Gestion des problèmes',
 	'Menu:ProblemManagement+' => 'Gestion des problèmes',
 	'Menu:Problem:Shortcuts' => 'Raccourcis',
@@ -58,4 +59,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Foire Aux Questions',
 	'Brick:Portal:FAQ:Title+' => '<p>Vous êtes pressé&nbsp;?</p><p>Consultez la liste des questions les plus fréquentes et vous trouverez (peut-être) immédiatement la réponse à votre besoin.</p>',
-));
+]);

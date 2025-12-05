@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -39,51 +40,52 @@ class Lists extends AbstractConfiguration
 	public function Process(Container $oContainer)
 	{
 		$iDefaultItemRank = 0;
-		$aClassesLists = array();
+		$aClassesLists = [];
 
 		// Parsing XML file
 		// - Each classes
 		/** @var \MFElement $oClassNode */
-		foreach ($this->GetModuleDesign()->GetNodes('/module_design/classes/class') as $oClassNode)
-		{
-			$aClassLists = array();
+		foreach ($this->GetModuleDesign()->GetNodes('/module_design/classes/class') as $oClassNode) {
+			$aClassLists = [];
 			$sClassId = $oClassNode->getAttribute('id');
-			if ($sClassId === null)
-			{
+			if ($sClassId === null) {
 				throw new DOMFormatException('Class tag must have an id attribute', 0, null, $oClassNode);
 			}
 
 			// - Each lists
 			/** @var \MFElement $oListNode */
-			foreach ($oClassNode->GetNodes('./lists/list') as $oListNode)
-			{
-				$aListItems = array();
+			foreach ($oClassNode->GetNodes('./lists/list') as $oListNode) {
+				$aListItems = [];
 				$sListId = $oListNode->getAttribute('id');
-				if ($sListId === null)
-				{
-					throw new DOMFormatException('List tag of "'.$sClassId.'" class must have an id attribute', null,
-						null, $oListNode);
+				if ($sListId === null) {
+					throw new DOMFormatException(
+						'List tag of "'.$sClassId.'" class must have an id attribute',
+						null,
+						null,
+						$oListNode
+					);
 				}
 
 				// - Each items
 				/** @var \MFElement $oItemNode */
-				foreach ($oListNode->GetNodes('./items/item') as $oItemNode)
-				{
+				foreach ($oListNode->GetNodes('./items/item') as $oItemNode) {
 					$sItemId = $oItemNode->getAttribute('id');
-					if ($sItemId === null)
-					{
-						throw new DOMFormatException('Item tag of "'.$sItemId.'" list must have an id attribute', null,
-							null, $oItemNode);
+					if ($sItemId === null) {
+						throw new DOMFormatException(
+							'Item tag of "'.$sItemId.'" list must have an id attribute',
+							null,
+							null,
+							$oItemNode
+						);
 					}
 
-					$aItem = array(
+					$aItem = [
 						'att_code' => $sItemId,
 						'rank' => $iDefaultItemRank,
-					);
+					];
 
 					$oRankNode = $oItemNode->GetOptionalElement('rank');
-					if ($oRankNode !== null)
-					{
+					if ($oRankNode !== null) {
 						$aItem['rank'] = $oRankNode->GetText($iDefaultItemRank);
 					}
 
@@ -100,8 +102,7 @@ class Lists extends AbstractConfiguration
 			}
 
 			// - Adding class only if it has at least one list
-			if (!empty($aClassLists))
-			{
+			if (!empty($aClassLists)) {
 				$aClassesLists[$sClassId] = $aClassLists;
 			}
 		}

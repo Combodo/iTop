@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -52,7 +53,7 @@ class AttributeSubItem extends AttributeDefinition
 		return $oParent->GetSubItemSearchType($this->Get('item_code'));
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		/** @var AttributeStopWatch $oParent */
 		$oParent = $this->GetTargetAttDef();
@@ -72,7 +73,7 @@ class AttributeSubItem extends AttributeDefinition
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('target_attcode', 'item_code'));
+		return array_merge(parent::ListExpectedParams(), ['target_attcode', 'item_code']);
 	}
 
 	public function GetParentAttCode()
@@ -121,7 +122,7 @@ class AttributeSubItem extends AttributeDefinition
 		return null;
 	}
 
-//	public function IsNullAllowed() {return false;}
+	//	public function IsNullAllowed() {return false;}
 
 	public static function LoadInObject()
 	{
@@ -147,7 +148,7 @@ class AttributeSubItem extends AttributeDefinition
 	}
 
 	//
-//	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
+	//	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
@@ -155,12 +156,12 @@ class AttributeSubItem extends AttributeDefinition
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -214,13 +215,21 @@ class AttributeSubItem extends AttributeDefinition
 	}
 
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		$oParent = $this->GetTargetAttDef();
-		$res = $oParent->GetSubItemAsCSV($this->Get('item_code'), $value, $sSeparator, $sTextQualifier,
-			$bConvertToPlainText);
+		$res = $oParent->GetSubItemAsCSV(
+			$this->Get('item_code'),
+			$value,
+			$sSeparator,
+			$sTextQualifier,
+			$bConvertToPlainText
+		);
 
 		return $res;
 	}

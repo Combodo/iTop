@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,7 +22,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:IncidentManagement' => 'Incident Management',
 	'Menu:IncidentManagement+' => '',
 	'Menu:Incident:Overview' => 'Overview',
@@ -43,8 +44,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Open incidents by status',
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Open incidents by agent',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Open incidents by customer',
-));
-
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -60,7 +60,7 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 // Class: Incident
 //
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Incident' => 'Incident',
 	'Class:Incident+' => '',
 	'Class:Incident/Attribute:status' => 'Status',
@@ -151,6 +151,10 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Incident/Attribute:tto+' => 'Time To Own',
 	'Class:Incident/Attribute:ttr' => 'TTR',
 	'Class:Incident/Attribute:ttr+' => 'Time To Resolve',
+	'Class:Incident/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:Incident/Attribute:tto_time_spent+' => '~~',
+	'Class:Incident/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:Incident/Attribute:ttr_time_spent+' => '~~',
 	'Class:Incident/Attribute:tto_escalation_deadline' => 'TTO Deadline',
 	'Class:Incident/Attribute:tto_escalation_deadline+' => '',
 	'Class:Incident/Attribute:sla_tto_passed' => 'SLA tto passed',
@@ -240,4 +244,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info.',
 	'Tickets:Related:OpenIncidents' => 'Open incidents',
-));
+]);

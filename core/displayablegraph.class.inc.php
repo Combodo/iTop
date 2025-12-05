@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -79,9 +80,8 @@ class DisplayableNode extends GraphNode
 		$dx = $this->x - $oNode->x;
 		$dy = $this->y - $oNode->y;
 
-		$d2 = $dx*$dx + $dy*$dy - $this->GetHeight()*$this->GetHeight();
-		if ($d2 < 40)
-		{
+		$d2 = $dx * $dx + $dy * $dy - $this->GetHeight() * $this->GetHeight();
+		if ($d2 < 40) {
 			$d2 = 40;
 		}
 		return $d2;
@@ -94,7 +94,7 @@ class DisplayableNode extends GraphNode
 
 	public function GetForRaphael($aContextDefs)
 	{
-		$aNode = array();
+		$aNode = [];
 		$aNode['shape'] = 'icon';
 		$aNode['icon_url'] = $this->GetIconURL();
 		$aNode['width'] = 32;
@@ -103,19 +103,17 @@ class DisplayableNode extends GraphNode
 		$aNode['obj_key'] = $this->GetProperty('object')->GetKey();
 		$aNode['sink'] = ($this->GetProperty('sink') == true);
 		$aNode['x'] = $this->x;
-		$aNode['y']= $this->y;
+		$aNode['y'] = $this->y;
 		$aNode['label'] = $this->GetLabel();
 		$aNode['id'] = $this->GetId();
 		$fOpacity = ($this->GetProperty('is_reached') ? 1 : 0.4);
-		$aNode['icon_attr'] = array('opacity' => $fOpacity);
-		$aNode['text_attr'] = array('opacity' => $fOpacity);
+		$aNode['icon_attr'] = ['opacity' => $fOpacity];
+		$aNode['text_attr'] = ['opacity' => $fOpacity];
 		$aNode['tooltip'] = $this->GetTooltip($aContextDefs);
-		$aNode['context_icons'] = array();
+		$aNode['context_icons'] = [];
 		$aContextRootCauses = $this->GetProperty('context_root_causes');
-		if (!is_null($aContextRootCauses))
-		{
-			foreach($aContextRootCauses as $key => $aObjects)
-			{
+		if (!is_null($aContextRootCauses)) {
+			foreach ($aContextRootCauses as $key => $aObjects) {
 				$aNode['context_icons'][] = utils::GetAbsoluteUrlModulesRoot().$aContextDefs[$key]['icon'];
 			}
 		}
@@ -132,10 +130,10 @@ class DisplayableNode extends GraphNode
 		$sIconPath = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
 
 		if ($this->GetProperty('source')) {
-			$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(204, 51, 51)));
+			$oPdf->SetLineStyle(['width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => [204, 51, 51]]);
 			$oPdf->Circle($this->x * $fScale, $this->y * $fScale, 16 * 1.25 * $fScale, 0, 360, 'D');
-		} else if ($this->GetProperty('sink')) {
-			$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(51, 51, 204)));
+		} elseif ($this->GetProperty('sink')) {
+			$oPdf->SetLineStyle(['width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => [51, 51, 204]]);
 			$oPdf->Circle($this->x * $fScale, $this->y * $fScale, 16 * 1.25 * $fScale, 0, 360, 'D');
 		}
 
@@ -172,10 +170,10 @@ class DisplayableNode extends GraphNode
 		$oPdf->setAlpha(0.6 * $Alpha);
 		$oPdf->SetFillColor(255, 255, 255);
 		$oPdf->SetDrawColor(255, 255, 255);
-		$oPdf->Rect($this->x*$fScale - $width/2, ($this->y + 18)*$fScale, $width, $height, 'DF');
+		$oPdf->Rect($this->x * $fScale - $width / 2, ($this->y + 18) * $fScale, $width, $height, 'DF');
 		$oPdf->setAlpha($Alpha);
 		$oPdf->SetTextColor(0, 0, 0);
-		$oPdf->Text($this->x*$fScale - $width/2, ($this->y + 18)*$fScale, $this->GetProperty('label'));
+		$oPdf->Text($this->x * $fScale - $width / 2, ($this->y + 18) * $fScale, $this->GetProperty('label'));
 	}
 
 	/**
@@ -188,26 +186,22 @@ class DisplayableNode extends GraphNode
 		$aInfo = getimagesize($sIconFile);
 
 		$im = null;
-		switch($aInfo['mime'])
-		{
+		switch ($aInfo['mime']) {
 			case 'image/png':
-				if (function_exists('imagecreatefrompng'))
-				{
+				if (function_exists('imagecreatefrompng')) {
 					$im = imagecreatefrompng($sIconFile);
 				}
 				break;
 
 			case 'image/gif':
-				if (function_exists('imagecreatefromgif'))
-				{
+				if (function_exists('imagecreatefromgif')) {
 					$im = imagecreatefromgif($sIconFile);
 				}
 				break;
 
 			case 'image/jpeg':
 			case 'image/jpg':
-				if (function_exists('imagecreatefromjpeg'))
-				{
+				if (function_exists('imagecreatefromjpeg')) {
 					$im = imagecreatefromjpeg($sIconFile);
 				}
 				break;
@@ -216,16 +210,13 @@ class DisplayableNode extends GraphNode
 				return null;
 
 		}
-		if($im && imagefilter($im, IMG_FILTER_COLORIZE, 255, 255, 255))
-		{
+		if ($im && imagefilter($im, IMG_FILTER_COLORIZE, 255, 255, 255)) {
 			$sTempImageName = $oGraph->GetTempImageName();
 			imagesavealpha($im, true);
 			imagepng($im, $sTempImageName);
 			imagedestroy($im);
 			return $sTempImageName;
-		}
-		else
-		{
+		} else {
 			return null;
 		}
 	}
@@ -243,24 +234,22 @@ class DisplayableNode extends GraphNode
 	protected function AddToStats($oNode, &$aNodesPerClass)
 	{
 		$sClass = $oNode->GetObjectClass();
-		if (!array_key_exists($sClass, $aNodesPerClass))
-		{
-			$aNodesPerClass[$sClass] = array(
-				'reached' => array(
+		if (!array_key_exists($sClass, $aNodesPerClass)) {
+			$aNodesPerClass[$sClass] = [
+				'reached' => [
 					'count' => 0,
-					'nodes' => array(),
+					'nodes' => [],
 					'icon_url' => $oNode->GetProperty('icon_url'),
-				),
-				'not_reached' => array(
+				],
+				'not_reached' => [
 					'count' => 0,
-					'nodes' => array(),
+					'nodes' => [],
 					'icon_url' => $oNode->GetProperty('icon_url'),
-				)
-			);
+				],
+			];
 		}
 		$sKey = $oNode->GetProperty('is_reached') ? 'reached' : 'not_reached';
-		if (!array_key_exists($oNode->GetId(), $aNodesPerClass[$sClass][$sKey]['nodes']))
-		{
+		if (!array_key_exists($oNode->GetId(), $aNodesPerClass[$sClass][$sKey]['nodes'])) {
 			$aNodesPerClass[$sClass][$sKey]['nodes'][$oNode->GetId()] = $oNode;
 			$aNodesPerClass[$sClass][$sKey]['count'] += $oNode->GetObjectCount();
 		}
@@ -273,18 +262,13 @@ class DisplayableNode extends GraphNode
 	 */
 	protected function GetNextNodes($bDirectionDown = true)
 	{
-		$aNextNodes = array();
-		if ($bDirectionDown)
-		{
-			foreach($this->GetOutgoingEdges() as $oEdge)
-			{
+		$aNextNodes = [];
+		if ($bDirectionDown) {
+			foreach ($this->GetOutgoingEdges() as $oEdge) {
 				$aNextNodes[] = $oEdge->GetSinkNode();
 			}
-		}
-		else
-		{
-			foreach($this->GetIncomingEdges() as $oEdge)
-			{
+		} else {
+			foreach ($this->GetIncomingEdges() as $oEdge) {
 				$aNextNodes[] = $oEdge->GetSourceNode();
 			}
 		}
@@ -302,76 +286,50 @@ class DisplayableNode extends GraphNode
 	protected function ReplaceNextNodeBy(DisplayableGraph $oGraph, DisplayableNode $oNextNode, DisplayableGroupNode $oNewNode, $bDirectionDown = true)
 	{
 		$sClass = $oNewNode->GetProperty('class');
-		if ($bDirectionDown)
-		{
-			foreach($oNextNode->GetIncomingEdges() as $oEdge)
-			{
-				if ($oEdge->GetSourceNode()->GetId() !== $this->GetId())
-				{
-					try
-					{
+		if ($bDirectionDown) {
+			foreach ($oNextNode->GetIncomingEdges() as $oEdge) {
+				if ($oEdge->GetSourceNode()->GetId() !== $this->GetId()) {
+					try {
 						$oNewEdge = new DisplayableEdge($oGraph, $oEdge->GetId().'::'.$sClass, $oEdge->GetSourceNode(), $oNewNode);
-					}
-					catch(Exception $e)
-					{
+					} catch (Exception $e) {
 						// ignore this edge
 					}
 				}
 			}
-			foreach($oNextNode->GetOutgoingEdges() as $oEdge)
-			{
-				try
-				{
+			foreach ($oNextNode->GetOutgoingEdges() as $oEdge) {
+				try {
 					$oNewEdge = new DisplayableEdge($oGraph, $oEdge->GetId().'::'.$sClass, $oNewNode, $oEdge->GetSinkNode());
-				}
-				catch(Exception $e)
-				{
+				} catch (Exception $e) {
 					// ignore this edge
 				}
 			}
-		}
-		else
-		{
-			foreach($oNextNode->GetOutgoingEdges() as $oEdge)
-			{
-				if ($oEdge->GetSinkNode()->GetId() !== $this->GetId())
-				{
-					try
-					{
+		} else {
+			foreach ($oNextNode->GetOutgoingEdges() as $oEdge) {
+				if ($oEdge->GetSinkNode()->GetId() !== $this->GetId()) {
+					try {
 						$oNewEdge = new DisplayableEdge($oGraph, $oEdge->GetId().'::'.$sClass, $oNewNode, $oEdge->GetSinkNode());
-					}
-					catch(Exception $e)
-					{
+					} catch (Exception $e) {
 						// ignore this edge
 					}
 				}
 			}
-			foreach($oNextNode->GetIncomingEdges() as $oEdge)
-			{
-				try
-				{
+			foreach ($oNextNode->GetIncomingEdges() as $oEdge) {
+				try {
 					$oNewEdge = new DisplayableEdge($oGraph, $oEdge->GetId().'::'.$sClass, $oEdge->GetSourceNode(), $oNewNode);
-				}
-				catch(Exception $e)
-				{
+				} catch (Exception $e) {
 					// ignore this edge
 				}
 			}
 		}
 
-		if ($oGraph->GetNode($oNextNode->GetId()))
-		{
+		if ($oGraph->GetNode($oNextNode->GetId())) {
 			$oGraph->_RemoveNode($oNextNode);
-			if ($oNextNode instanceof DisplayableGroupNode)
-			{
+			if ($oNextNode instanceof DisplayableGroupNode) {
 				// Copy all the objects of the previous group into the new group
-				foreach($oNextNode->GetObjects() as $oObj)
-				{
+				foreach ($oNextNode->GetObjects() as $oObj) {
 					$oNewNode->AddObject($oObj);
 				}
-			}
-			else
-			{
+			} else {
 				$oNewNode->AddObject($oNextNode->GetProperty('object'));
 			}
 		}
@@ -386,32 +344,26 @@ class DisplayableNode extends GraphNode
 	 */
 	public function GroupSimilarNeighbours(DisplayableGraph $oGraph, $iThresholdCount, $bDirectionUp = false, $bDirectionDown = true)
 	{
-		if ($this->GetProperty('grouped') === true) return;
+		if ($this->GetProperty('grouped') === true) {
+			return;
+		}
 		$this->SetProperty('grouped', true);
 
-		$aNodesPerClass = array();
-		foreach($this->GetNextNodes($bDirectionDown) as $oNode)
-		{
+		$aNodesPerClass = [];
+		foreach ($this->GetNextNodes($bDirectionDown) as $oNode) {
 			$sClass = $oNode->GetObjectClass();
-			if ($sClass !== null)
-			{
+			if ($sClass !== null) {
 				$this->AddToStats($oNode, $aNodesPerClass);
-			}
-			else
-			{
+			} else {
 				$oNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 			}
 		}
-		foreach($aNodesPerClass as $sClass => $aDefs)
-		{
-			foreach($aDefs as $sStatus => $aGroupProps)
-			{
-				if (count($aGroupProps['nodes']) >= $iThresholdCount)
-				{
-					$sNewId = $this->GetId().'::'.$sClass.'/'.(($sStatus == 'reached') ? '_reached': '');
+		foreach ($aNodesPerClass as $sClass => $aDefs) {
+			foreach ($aDefs as $sStatus => $aGroupProps) {
+				if (count($aGroupProps['nodes']) >= $iThresholdCount) {
+					$sNewId = $this->GetId().'::'.$sClass.'/'.(($sStatus == 'reached') ? '_reached' : '');
 					$oNewNode = $oGraph->GetNode($sNewId);
-					if ($oNewNode == null)
-					{
+					if ($oNewNode == null) {
 						$oNewNode = new DisplayableGroupNode($oGraph, $sNewId);
 						$oNewNode->SetProperty('label', 'x'.$aGroupProps['count']);
 						$oNewNode->SetProperty('icon_url', MetaModel::GetClassIcon($sClass, false));
@@ -420,32 +372,22 @@ class DisplayableNode extends GraphNode
 						$oNewNode->SetProperty('count', $aGroupProps['count']);
 					}
 
-					try
-					{
-						if ($bDirectionDown)
-						{
+					try {
+						if ($bDirectionDown) {
 							$oIncomingEdge = new DisplayableEdge($oGraph, $this->GetId().'-'.$oNewNode->GetId(), $this, $oNewNode);
-						}
-						else
-						{
+						} else {
 							$oOutgoingEdge = new DisplayableEdge($oGraph, $this->GetId().'-'.$oNewNode->GetId(), $oNewNode, $this);
 						}
-					}
-					catch(Exception $e)
-					{
+					} catch (Exception $e) {
 						// Ignore this redundant egde
 					}
 
-					foreach($aGroupProps['nodes'] as $oNextNode)
-					{
+					foreach ($aGroupProps['nodes'] as $oNextNode) {
 						$this->ReplaceNextNodeBy($oGraph, $oNextNode, $oNewNode, $bDirectionDown);
 					}
 					$oNewNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
-				}
-				else
-				{
-					foreach($aGroupProps['nodes'] as $oNode)
-					{
+				} else {
+					foreach ($aGroupProps['nodes'] as $oNode) {
 						$oNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 					}
 				}
@@ -460,12 +402,10 @@ class DisplayableNode extends GraphNode
 		$sSubClass = get_class($oCurrObj);
 		$sHtml .= $oCurrObj->GetHyperlink()."<hr/>";
 		$aContextRootCauses = $this->GetProperty('context_root_causes');
-		if (!is_null($aContextRootCauses))
-		{
-			foreach($aContextRootCauses as $key => $aObjects)
-			{
+		if (!is_null($aContextRootCauses)) {
+			foreach ($aContextRootCauses as $key => $aObjects) {
 				$aContext = $aContextDefs[$key];
-				$aRootCauses = array();
+				$aRootCauses = [];
 				foreach ($aObjects as $oRootCause) {
 					$aRootCauses[] = $oRootCause->GetHyperlink();
 				}
@@ -474,8 +414,7 @@ class DisplayableNode extends GraphNode
 			$sHtml .= '<hr/>';
 		}
 		$sHtml .= '<table><tbody>';
-		foreach(MetaModel::GetZListItems($sSubClass, 'list') as $sAttCode)
-		{
+		foreach (MetaModel::GetZListItems($sSubClass, 'list') as $sAttCode) {
 			$oAttDef = MetaModel::GetAttributeDef($sSubClass, $sAttCode);
 			$sHtml .= '<tr><td>'.$oAttDef->GetLabel().':&nbsp;</td><td>'.$oCurrObj->GetAsHtml($sAttCode).'</td></tr>';
 		}
@@ -492,14 +431,11 @@ class DisplayableNode extends GraphNode
 	public function GetDotAttributes($bNoLabel = false)
 	{
 		$sDot = '';
-		if ($bNoLabel)
-		{
+		if ($bNoLabel) {
 			// simulate a fake label with the approximate same size as the true label
 			$sLabel = str_repeat('x', mb_strlen($this->GetProperty('label', $this->GetId())));
 			$sDot = 'label="'.$sLabel.'"';
-		}
-		else
-		{
+		} else {
 			// actual label
 			$sLabel = addslashes($this->GetProperty('label', $this->GetId()));
 			$sDot = 'label="'.$sLabel.'"';
@@ -517,20 +453,20 @@ class DisplayableRedundancyNode extends DisplayableNode
 
 	public function GetForRaphael($aContextDefs)
 	{
-		$aNode = array();
+		$aNode = [];
 		$aNode['shape'] = 'disc';
 		$aNode['icon_url'] = $this->GetIconURL();
 		$aNode['source'] = ($this->GetProperty('source') == true);
 		$aNode['width'] = $this->GetWidth();
 		$aNode['x'] = $this->x;
-		$aNode['y']= $this->y;
+		$aNode['y'] = $this->y;
 		$aNode['label'] = $this->GetLabel();
 		$aNode['id'] = $this->GetId();
 		$fDiscOpacity = ($this->GetProperty('is_reached') ? 1 : 0.2);
 		$sColor = ($this->GetProperty('is_reached_count') > $this->GetProperty('threshold')) ? '#c33' : '#999';
-		$aNode['disc_attr'] = array('stroke-width' => 2, 'stroke' => '#000', 'fill' => $sColor, 'opacity' => $fDiscOpacity);
+		$aNode['disc_attr'] = ['stroke-width' => 2, 'stroke' => '#000', 'fill' => $sColor, 'opacity' => $fDiscOpacity];
 		$fTextOpacity = ($this->GetProperty('is_reached') ? 1 : 0.4);
-		$aNode['text_attr'] = array('fill' => '#fff', 'opacity' => $fTextOpacity);
+		$aNode['text_attr'] = ['fill' => '#fff', 'opacity' => $fTextOpacity];
 		$aNode['tooltip'] = $this->GetTooltip($aContextDefs);
 		return $aNode;
 	}
@@ -538,28 +474,25 @@ class DisplayableRedundancyNode extends DisplayableNode
 	public function RenderAsPDF(iTopPDF $oPdf, DisplayableGraph $oGraph, $fScale, $aContextDefs)
 	{
 		$oPdf->SetAlpha(1);
-		if($this->GetProperty('is_reached_count') > $this->GetProperty('threshold'))
-		{
+		if ($this->GetProperty('is_reached_count') > $this->GetProperty('threshold')) {
 			$oPdf->SetFillColor(200, 0, 0);
-		}
-		else
-		{
+		} else {
 			$oPdf->SetFillColor(144, 144, 144);
 		}
 		$oPdf->SetDrawColor(0, 0, 0);
-		$oPdf->Circle($this->x*$fScale, $this->y*$fScale, 16*$fScale, 0, 360, 'DF');
+		$oPdf->Circle($this->x * $fScale, $this->y * $fScale, 16 * $fScale, 0, 360, 'DF');
 
 		$oPdf->SetTextColor(255, 255, 255);
 		$oPdf->SetFontParams('', 28 * $fScale, '', true);
 		$sLabel  = (string)$this->GetProperty('label');
 		$width = $oPdf->GetStringWidth($sLabel, iTopPDF::GetPdfFont(), 'B', 24 * $fScale);
 		$height = $oPdf->GetStringHeight(1000, $sLabel);
-		$xPos = (float)$this->x*$fScale - $width/2;
-		$yPos = (float)$this->y*$fScale - $height/2;
+		$xPos = (float)$this->x * $fScale - $width / 2;
+		$yPos = (float)$this->y * $fScale - $height / 2;
 
-		$oPdf->SetXY(($this->x - 16)*$fScale, ($this->y - 16)*$fScale);
+		$oPdf->SetXY(($this->x - 16) * $fScale, ($this->y - 16) * $fScale);
 
-		$oPdf->Cell(32*$fScale, 32*$fScale, $sLabel, 0, 0, 'C', 0, '', 0, false, 'T', 'C');
+		$oPdf->Cell(32 * $fScale, 32 * $fScale, $sLabel, 0, 0, 'C', 0, '', 0, false, 'T', 'C');
 	}
 
 	/**
@@ -569,28 +502,20 @@ class DisplayableRedundancyNode extends DisplayableNode
 	{
 		parent::GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 
-		if ($bDirectionUp)
-		{
-			$aNodesPerClass = array();
-			foreach($this->GetIncomingEdges() as $oEdge)
-			{
+		if ($bDirectionUp) {
+			$aNodesPerClass = [];
+			foreach ($this->GetIncomingEdges() as $oEdge) {
 				$oNode = $oEdge->GetSourceNode();
 
-				if (($oNode->GetObjectClass() !== null) && (!$oNode->GetProperty('is_reached')))
-				{
+				if (($oNode->GetObjectClass() !== null) && (!$oNode->GetProperty('is_reached'))) {
 					$this->AddToStats($oNode, $aNodesPerClass);
-				}
-				else
-				{
+				} else {
 					//$oNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 				}
 			}
-			foreach($aNodesPerClass as $sClass => $aDefs)
-			{
-				foreach($aDefs as $sStatus => $aGroupProps)
-				{
-					if (count($aGroupProps['nodes']) >= $iThresholdCount)
-					{
+			foreach ($aNodesPerClass as $sClass => $aDefs) {
+				foreach ($aDefs as $sStatus => $aGroupProps) {
+					if (count($aGroupProps['nodes']) >= $iThresholdCount) {
 						$oNewNode = new DisplayableGroupNode($oGraph, '-'.$this->GetId().'::'.$sClass.'/'.$sStatus);
 						$oNewNode->SetProperty('label', 'x'.count($aGroupProps['nodes']));
 						$oNewNode->SetProperty('icon_url', MetaModel::GetClassIcon($sClass, false));
@@ -598,11 +523,9 @@ class DisplayableRedundancyNode extends DisplayableNode
 						$oNewNode->SetProperty('class', $sClass);
 						$oNewNode->SetProperty('count', count($aGroupProps['nodes']));
 
-
-						$sNewId = $this->GetId().'::'.$sClass.'/'.(($sStatus == 'reached') ? '_reached': '');
+						$sNewId = $this->GetId().'::'.$sClass.'/'.(($sStatus == 'reached') ? '_reached' : '');
 						$oNewNode = $oGraph->GetNode($sNewId);
-						if ($oNewNode == null)
-						{
+						if ($oNewNode == null) {
 							$oNewNode = new DisplayableGroupNode($oGraph, $sNewId);
 							$oNewNode->SetProperty('label', 'x'.$aGroupProps['count']);
 							$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
@@ -611,25 +534,18 @@ class DisplayableRedundancyNode extends DisplayableNode
 							$oNewNode->SetProperty('count', $aGroupProps['count']);
 						}
 
-						try
-						{
+						try {
 							$oOutgoingEdge = new DisplayableEdge($oGraph, '-'.$this->GetId().'-'.$oNewNode->GetId().'/'.$sStatus, $oNewNode, $this);
-						}
-						catch(Exception $e)
-						{
+						} catch (Exception $e) {
 							// Ignore this redundant egde
 						}
 
-						foreach($aGroupProps['nodes'] as $oNextNode)
-						{
+						foreach ($aGroupProps['nodes'] as $oNextNode) {
 							$this->ReplaceNextNodeBy($oGraph, $oNextNode, $oNewNode, !$bDirectionUp);
 						}
 						//$oNewNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
-					}
-					else
-					{
-						foreach($aGroupProps['nodes'] as $oNode)
-						{
+					} else {
+						foreach ($aGroupProps['nodes'] as $oNode) {
 							//$oNode->GroupSimilarNeighbours($oGraph, $iThresholdCount, $bDirectionUp, $bDirectionDown);
 						}
 					}
@@ -643,12 +559,11 @@ class DisplayableRedundancyNode extends DisplayableNode
 		$sHtml = '';
 		$sHtml .= Dict::S('UI:RelationTooltip:Redundancy')."<hr>";
 		$sHtml .= '<table><tbody>';
-		$sHtml .= "<tr><td>".Dict::Format('UI:RelationTooltip:ImpactedItems_N_of_M' , $this->GetProperty('is_reached_count'), $this->GetProperty('min_up') + $this->GetProperty('threshold'))."</td></tr>";
-		$sHtml .= "<tr><td>".Dict::Format('UI:RelationTooltip:CriticalThreshold_N_of_M' , $this->GetProperty('threshold'), $this->GetProperty('min_up') + $this->GetProperty('threshold'))."</td></tr>";
+		$sHtml .= "<tr><td>".Dict::Format('UI:RelationTooltip:ImpactedItems_N_of_M', $this->GetProperty('is_reached_count'), $this->GetProperty('min_up') + $this->GetProperty('threshold'))."</td></tr>";
+		$sHtml .= "<tr><td>".Dict::Format('UI:RelationTooltip:CriticalThreshold_N_of_M', $this->GetProperty('threshold'), $this->GetProperty('min_up') + $this->GetProperty('threshold'))."</td></tr>";
 		$sHtml .= '</tbody></table>';
 		return $sHtml;
 	}
-
 
 	public function GetObjectCount()
 	{
@@ -666,16 +581,14 @@ class DisplayableEdge extends GraphEdge
 	public function RenderAsPDF(TCPDF $oPdf, DisplayableGraph $oGraph, $fScale, $aContextDefs)
 	{
 		$oSourceNode = $this->GetSourceNode();
-		if (($oSourceNode->x == null) || ($oSourceNode->y == null))
-		{
+		if (($oSourceNode->x == null) || ($oSourceNode->y == null)) {
 			return;
 		}
 		$xStart = $oSourceNode->x * $fScale;
 		$yStart = $oSourceNode->y * $fScale;
 
 		$oSinkNode = $this->GetSinkNode();
-		if (($oSinkNode->x == null) || ($oSinkNode->y == null))
-		{
+		if (($oSinkNode->x == null) || ($oSinkNode->y == null)) {
 			return;
 		}
 		$xEnd = $oSinkNode->x * $fScale;
@@ -684,32 +597,28 @@ class DisplayableEdge extends GraphEdge
 		$bReached = ($this->GetSourceNode()->GetProperty('is_reached') && $this->GetSinkNode()->GetProperty('is_reached'));
 
 		$oPdf->setAlpha(1);
-		if ($bReached)
-		{
-			$aColor = array(100, 100, 100);
+		if ($bReached) {
+			$aColor = [100, 100, 100];
+		} else {
+			$aColor = [200, 200, 200];
 		}
-		else
-		{
-			$aColor = array(200, 200, 200);
-		}
-		$oPdf->SetLineStyle(array('width' => 2*$fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => $aColor));
+		$oPdf->SetLineStyle(['width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => $aColor]);
 		$oPdf->Line($xStart, $yStart, $xEnd, $yEnd);
-
 
 		$vx = $xEnd - $xStart;
 		$vy = $yEnd - $yStart;
-		$l = sqrt($vx*$vx + $vy*$vy);
+		$l = sqrt($vx * $vx + $vy * $vy);
 		$vx = $vx / $l;
 		$vy = $vy / $l;
 		$ux = -$vy;
 		$uy = $vx;
-		$lPos = max($l/2, $l - 40*$fScale);
-		$iArrowSize = 5*$fScale;
+		$lPos = max($l / 2, $l - 40 * $fScale);
+		$iArrowSize = 5 * $fScale;
 
 		$x = $xStart  + $lPos * $vx;
 		$y = $yStart + $lPos * $vy;
-		$oPdf->Line($x, $y, $x + $iArrowSize * ($ux-$vx), $y + $iArrowSize * ($uy-$vy));
-		$oPdf->Line($x, $y, $x - $iArrowSize * ($ux+$vx), $y - $iArrowSize * ($uy+$vy));
+		$oPdf->Line($x, $y, $x + $iArrowSize * ($ux - $vx), $y + $iArrowSize * ($uy - $vy));
+		$oPdf->Line($x, $y, $x - $iArrowSize * ($ux + $vx), $y - $iArrowSize * ($uy + $vy));
 	}
 }
 
@@ -720,16 +629,14 @@ class DisplayableGroupNode extends DisplayableNode
 	public function __construct(SimpleGraph $oGraph, $sId, $x = 0, $y = 0)
 	{
 		parent::__construct($oGraph, $sId, $x, $y);
-		$this->aObjects = array();
+		$this->aObjects = [];
 	}
 
 	public function AddObject(DBObject $oObj = null)
 	{
-		if (is_object($oObj))
-		{
+		if (is_object($oObj)) {
 			$sPrevClass = $this->GetObjectClass();
-			if (($sPrevClass !== null) && (get_class($oObj) !== $sPrevClass))
-			{
+			if (($sPrevClass !== null) && (get_class($oObj) !== $sPrevClass)) {
 				throw new Exception("Error: adding an object of class '".get_class($oObj)."' to a group of '$sPrevClass' objects.");
 			}
 			$this->aObjects[$oObj->GetKey()] = $oObj;
@@ -748,21 +655,21 @@ class DisplayableGroupNode extends DisplayableNode
 
 	public function GetForRaphael($aContextDefs)
 	{
-		$aNode = array();
+		$aNode = [];
 		$aNode['shape'] = 'group';
 		$aNode['icon_url'] = $this->GetIconURL();
 		$aNode['source'] = ($this->GetProperty('source') == true);
 		$aNode['width'] = $this->GetWidth();
 		$aNode['x'] = $this->x;
-		$aNode['y']= $this->y;
+		$aNode['y'] = $this->y;
 		$aNode['label'] = $this->GetLabel();
 		$aNode['id'] = $this->GetId();
 		$aNode['group_index'] = $this->GetProperty('group_index'); // if supplied
 		$fDiscOpacity = ($this->GetProperty('is_reached') ? 1 : 0.2);
 		$fTextOpacity = ($this->GetProperty('is_reached') ? 1 : 0.4);
-		$aNode['icon_attr'] = array('opacity' => $fTextOpacity);
-		$aNode['disc_attr'] = array('stroke-width' => 2, 'stroke' => '#000', 'fill' => '#fff', 'opacity' => $fDiscOpacity);
-		$aNode['text_attr'] = array('fill' => '#000', 'opacity' => $fTextOpacity);
+		$aNode['icon_attr'] = ['opacity' => $fTextOpacity];
+		$aNode['disc_attr'] = ['stroke-width' => 2, 'stroke' => '#000', 'fill' => '#fff', 'opacity' => $fDiscOpacity];
+		$aNode['text_attr'] = ['fill' => '#000', 'opacity' => $fTextOpacity];
 		$aNode['tooltip'] = $this->GetTooltip($aContextDefs);
 		return $aNode;
 	}
@@ -772,11 +679,11 @@ class DisplayableGroupNode extends DisplayableNode
 		$bReached = $this->GetProperty('is_reached');
 		$oPdf->SetFillColor(255, 255, 255);
 		if ($bReached) {
-			$aBorderColor = array(100, 100, 100);
+			$aBorderColor = [100, 100, 100];
 		} else {
-			$aBorderColor = array(200, 200, 200);
+			$aBorderColor = [200, 200, 200];
 		}
-		$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => $aBorderColor));
+		$oPdf->SetLineStyle(['width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => $aBorderColor]);
 
 		$sIconUrl = $this->GetProperty('icon_url');
 		$sIconPath = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
@@ -800,7 +707,7 @@ class DisplayableGroupNode extends DisplayableNode
 	public function GetTooltip($aContextDefs)
 	{
 		$iGroupIdx = $this->GetProperty('group_index');
-		$sHtml = '<a href="#" id="a_'.$iGroupIdx.'" onclick="$(this).closest(\'.tippy-box\').parent().hide();$(\'.itop-simple-graph\').simple_graph(\'show_group\', \'relation_group_'.$iGroupIdx.'\');return false;">'.Dict::Format('UI:RelationGroupNumber_N', (1+$iGroupIdx))."</a>";
+		$sHtml = '<a href="#" id="a_'.$iGroupIdx.'" onclick="$(this).closest(\'.tippy-box\').parent().hide();$(\'.itop-simple-graph\').simple_graph(\'show_group\', \'relation_group_'.$iGroupIdx.'\');return false;">'.Dict::Format('UI:RelationGroupNumber_N', (1 + $iGroupIdx))."</a>";
 		$sHtml .= '<hr/>';
 		$sHtml .= '<table><tbody><tr>';
 		$sHtml .= '<td style="vertical-align:top;padding-right: 0.5em;"><img class="ibo-class-icon ibo-is-small" src="'.$this->GetProperty('icon_url').'"></td><td style="vertical-align:top">'.MetaModel::GetName($this->GetObjectClass()).'<br/>';
@@ -833,9 +740,9 @@ class DisplayableGraph extends SimpleGraph
 	public function __construct()
 	{
 		parent::__construct();
-		$this->aTempImages = array();
-		$this->aSourceObjects = array();
-		$this->aSinkObjects = array();
+		$this->aTempImages = [];
+		$this->aSourceObjects = [];
+		$this->aSinkObjects = [];
 	}
 
 	public function GetTempImageName()
@@ -847,8 +754,7 @@ class DisplayableGraph extends SimpleGraph
 
 	public function __destruct()
 	{
-		foreach($this->aTempImages as $sTempFile)
-		{
+		foreach ($this->aTempImages as $sTempFile) {
 			@unlink($sTempFile);
 		}
 	}
@@ -880,14 +786,14 @@ class DisplayableGraph extends SimpleGraph
 					$sClass = get_class($oObj);
 					if ($oNode->GetProperty('source')) {
 						if (!array_key_exists($sClass, $oNewGraph->aSourceObjects)) {
-							$oNewGraph->aSourceObjects[$sClass] = array();
+							$oNewGraph->aSourceObjects[$sClass] = [];
 						}
 						$oNewGraph->aSourceObjects[$sClass][] = $oObj->GetKey();
 						$oNewNode->SetProperty('source', true);
 					}
 					if ($oNode->GetProperty('sink')) {
 						if (!array_key_exists($sClass, $oNewGraph->aSinkObjects)) {
-							$oNewGraph->aSinkObjects[$sClass] = array();
+							$oNewGraph->aSinkObjects[$sClass] = [];
 						}
 						$oNewGraph->aSinkObjects[$sClass][] = $oObj->GetKey();
 						$oNewNode->SetProperty('sink', true);
@@ -917,8 +823,7 @@ class DisplayableGraph extends SimpleGraph
 			}
 		}
 		$oEdgesIter = new RelationTypeIterator($oGraph, 'Edge');
-		foreach($oEdgesIter as $oEdge)
-		{
+		foreach ($oEdgesIter as $oEdge) {
 			set_time_limit(intval($iLoopTimeLimit));
 			$oSourceNode = $oNewGraph->GetNode($oEdge->GetSourceNode()->GetId());
 			$oSinkNode = $oNewGraph->GetNode($oEdge->GetSinkNode()->GetId());
@@ -927,60 +832,44 @@ class DisplayableGraph extends SimpleGraph
 
 		// Remove duplicate edges between two nodes
 		$oEdgesIter = new RelationTypeIterator($oNewGraph, 'Edge');
-		$aEdgeKeys = array();
-		foreach($oEdgesIter as $oEdge)
-		{
+		$aEdgeKeys = [];
+		foreach ($oEdgesIter as $oEdge) {
 			set_time_limit(intval($iLoopTimeLimit));
 			$sSourceId =  $oEdge->GetSourceNode()->GetId();
 			$sSinkId = $oEdge->GetSinkNode()->GetId();
-			if ($sSourceId == $sSinkId)
-			{
+			if ($sSourceId == $sSinkId) {
 				// Remove self referring edges
 				$oNewGraph->_RemoveEdge($oEdge);
-			}
-			else
-			{
+			} else {
 				$sKey = $sSourceId.'//'.$sSinkId;
-				if (array_key_exists($sKey, $aEdgeKeys))
-				{
+				if (array_key_exists($sKey, $aEdgeKeys)) {
 					// Remove duplicate edges
 					$oNewGraph->_RemoveEdge($oEdge);
-				}
-				else
-				{
+				} else {
 					$aEdgeKeys[$sKey] = true;
 				}
 			}
 		}
 
 		$oNodesIter = new RelationTypeIterator($oNewGraph, 'Node');
-		foreach($oNodesIter as $oNode)
-		{
+		foreach ($oNodesIter as $oNode) {
 			set_time_limit(intval($iLoopTimeLimit));
-			if ($bDirectionDown && $oNode->GetProperty('source'))
-			{
+			if ($bDirectionDown && $oNode->GetProperty('source')) {
 				$oNode->GroupSimilarNeighbours($oNewGraph, $iGroupingThreshold, true, $bDirectionDown);
-			}
-			else if (!$bDirectionDown && $oNode->GetProperty('sink'))
-			{
+			} elseif (!$bDirectionDown && $oNode->GetProperty('sink')) {
 				$oNode->GroupSimilarNeighbours($oNewGraph, $iGroupingThreshold, true, $bDirectionDown);
 			}
 		}
 		// Groups numbering
 		$oIterator = new RelationTypeIterator($oNewGraph, 'Node');
 		$iGroupIdx = 0;
-		foreach($oIterator as $oNode)
-		{
+		foreach ($oIterator as $oNode) {
 			set_time_limit(intval($iLoopTimeLimit));
-			if ($oNode instanceof DisplayableGroupNode)
-			{
-				if ($oNode->GetObjectCount() == 0)
-				{
+			if ($oNode instanceof DisplayableGroupNode) {
+				if ($oNode->GetObjectCount() == 0) {
 					// Remove empty groups
 					$oNewGraph->_RemoveNode($oNode);
-				}
-				else
-				{
+				} else {
 					$aGroups[] = $oNode->GetObjects();
 					$oNode->SetProperty('group_index', $iGroupIdx);
 					$iGroupIdx++;
@@ -990,27 +879,20 @@ class DisplayableGraph extends SimpleGraph
 
 		// Remove duplicate edges between two nodes
 		$oEdgesIter = new RelationTypeIterator($oNewGraph, 'Edge');
-		$aEdgeKeys = array();
-		foreach($oEdgesIter as $oEdge)
-		{
+		$aEdgeKeys = [];
+		foreach ($oEdgesIter as $oEdge) {
 			set_time_limit(intval($iLoopTimeLimit));
 			$sSourceId =  $oEdge->GetSourceNode()->GetId();
 			$sSinkId = $oEdge->GetSinkNode()->GetId();
-			if ($sSourceId == $sSinkId)
-			{
+			if ($sSourceId == $sSinkId) {
 				// Remove self referring edges
 				$oNewGraph->_RemoveEdge($oEdge);
-			}
-			else
-			{
+			} else {
 				$sKey = $sSourceId.'//'.$sSinkId;
-				if (array_key_exists($sKey, $aEdgeKeys))
-				{
+				if (array_key_exists($sKey, $aEdgeKeys)) {
 					// Remove duplicate edges
 					$oNewGraph->_RemoveEdge($oEdge);
-				}
-				else
-				{
+				} else {
 					$aEdgeKeys[$sKey] = true;
 				}
 			}
@@ -1028,28 +910,22 @@ class DisplayableGraph extends SimpleGraph
 	public function InitFromGraphviz()
 	{
 		$sDot = $this->DumpAsXDot();
-		if (strpos($sDot, 'digraph') === false)
-		{
+		if (strpos($sDot, 'digraph') === false) {
 			throw new Exception($sDot);
 		}
 
 		$aChunks = explode(";", $sDot);
-		foreach($aChunks as $sChunk)
-		{
-			if(preg_match('/"([^"]+)".+pos="([0-9\\.]+),([0-9\\.]+)"/ms', $sChunk, $aMatches))
-			{
+		foreach ($aChunks as $sChunk) {
+			if (preg_match('/"([^"]+)".+pos="([0-9\\.]+),([0-9\\.]+)"/ms', $sChunk, $aMatches)) {
 				$sId = $aMatches[1];
 				$xPos = $aMatches[2];
 				$yPos = $aMatches[3];
 
 				$oNode = $this->GetNode($sId);
-				if ($oNode !== null)
-				{
+				if ($oNode !== null) {
 					$oNode->x = (float)$xPos;
 					$oNode->y = (float)$yPos;
-				}
-				else
-				{
+				} else {
 					IssueLog::Warning("??? Position of the non-existing node '$sId', x=$xPos, y=$yPos");
 				}
 			}
@@ -1063,17 +939,13 @@ class DisplayableGraph extends SimpleGraph
 		$yMin = null;
 		$yMax = null;
 		$oIterator = new RelationTypeIterator($this, 'Node');
-		foreach($oIterator as $sId => $oNode)
-		{
-			if ($xMin === null) // First element in the loop
-			{
+		foreach ($oIterator as $sId => $oNode) {
+			if ($xMin === null) { // First element in the loop
 				$xMin = $oNode->x - $oNode->GetWidth();
 				$xMax = $oNode->x + $oNode->GetWidth();
 				$yMin = $oNode->y - $oNode->GetHeight();
 				$yMax = $oNode->y + $oNode->GetHeight();
-			}
-			else
-			{
+			} else {
 				$xMin = min($xMin, $oNode->x - $oNode->GetWidth() / 2);
 				$xMax = max($xMax, $oNode->x + $oNode->GetWidth() / 2);
 				$yMin = min($yMin, $oNode->y - $oNode->GetHeight() / 2);
@@ -1081,14 +953,13 @@ class DisplayableGraph extends SimpleGraph
 			}
 		}
 
-		return array('xmin' => $xMin, 'xmax' => $xMax, 'ymin' => $yMin, 'ymax' => $yMax);
+		return ['xmin' => $xMin, 'xmax' => $xMax, 'ymin' => $yMin, 'ymax' => $yMax];
 	}
 
-	function Translate($dx, $dy)
+	public function Translate($dx, $dy)
 	{
 		$oIterator = new RelationTypeIterator($this, 'Node');
-		foreach($oIterator as $sId => $oNode)
-		{
+		foreach ($oIterator as $sId => $oNode) {
 			$oNode->x += $dx;
 			$oNode->y += $dy;
 		}
@@ -1096,11 +967,9 @@ class DisplayableGraph extends SimpleGraph
 
 	public function UpdatePositions($aPositions)
 	{
-		foreach($aPositions as $sNodeId => $aPos)
-		{
+		foreach ($aPositions as $sNodeId => $aPos) {
 			$oNode = $this->GetNode($sNodeId);
-			if ($oNode != null)
-			{
+			if ($oNode != null) {
 				$oNode->x = $aPos['x'];
 				$oNode->y = $aPos['y'];
 			}
@@ -1110,17 +979,15 @@ class DisplayableGraph extends SimpleGraph
 	/**
 	 * Renders as JSON string suitable for loading into the simple_graph widget
 	 */
-	function GetAsJSON($sContextKey)
+	public function GetAsJSON($sContextKey)
 	{
 		$aContextDefs = static::GetContextDefinitions($sContextKey, false);
 
-		$aData = array('nodes' => array(), 'edges' => array(), 'groups' => array(), 'lists' => array());
+		$aData = ['nodes' => [], 'edges' => [], 'groups' => [], 'lists' => []];
 		$iGroupIdx = 0;
 		$oIterator = new RelationTypeIterator($this, 'Node');
-		foreach($oIterator as $sId => $oNode)
-		{
-			if ($oNode instanceof DisplayableGroupNode)
-			{
+		foreach ($oIterator as $sId => $oNode) {
+			if ($oNode instanceof DisplayableGroupNode) {
 				// The contents of the "Groups" tab will be rendered
 				// using a separate ajax call, since the content of
 				// the page is made of a mix of HTML / CSS / JS which
@@ -1128,53 +995,45 @@ class DisplayableGraph extends SimpleGraph
 				// So we just pass a list of groups, each being defined by a class and a list of keys
 				// in order to avoid redoing the impact computation which is expensive
 				$aObjects = $oNode->GetObjects();
-				$aKeys = array();
-				foreach($aObjects as $oObj)
-				{
+				$aKeys = [];
+				foreach ($aObjects as $oObj) {
 					$sClass = get_class($oObj);
 					$aKeys[] = $oObj->GetKey();
 				}
-				$aData['groups'][$iGroupIdx] = array('class' => $sClass, 'keys' => $aKeys);
+				$aData['groups'][$iGroupIdx] = ['class' => $sClass, 'keys' => $aKeys];
 				$oNode->SetProperty('group_index', $iGroupIdx);
 				$iGroupIdx++;
 
-				if ($oNode->GetProperty('is_reached'))
-				{
+				if ($oNode->GetProperty('is_reached')) {
 					// Also add the objects from this group into the 'list' tab
-					if (!array_key_exists($sClass, $aData['lists']))
-					{
+					if (!array_key_exists($sClass, $aData['lists'])) {
 						$aData['lists'][$sClass] = $aKeys;
-					}
-					else
-					{
+					} else {
 						$aData['lists'][$sClass] = array_merge($aData['lists'][$sClass], $aKeys);
 					}
 
 				}
 			}
-			if (($oNode instanceof DisplayableNode) && $oNode->GetProperty('is_reached') && is_object($oNode->GetProperty('object')))
-			{
+			if (($oNode instanceof DisplayableNode) && $oNode->GetProperty('is_reached') && is_object($oNode->GetProperty('object'))) {
 				$sObjClass = get_class($oNode->GetProperty('object'));
-				if (!array_key_exists($sObjClass, $aData['lists']))
-				{
-					$aData['lists'][$sObjClass] = array();
+				if (!array_key_exists($sObjClass, $aData['lists'])) {
+					$aData['lists'][$sObjClass] = [];
 				}
 				$aData['lists'][$sObjClass][] = $oNode->GetProperty('object')->GetKey();
 			}
 			$aData['nodes'][] = $oNode->GetForRaphael($aContextDefs);
 		}
 
-		uksort($aData['lists'], array(get_class($this), 'SortOnClassLabel')); // sort on the localized names of the classes to provide a consistent and stable order
+		uksort($aData['lists'], [get_class($this), 'SortOnClassLabel']); // sort on the localized names of the classes to provide a consistent and stable order
 
 		$oIterator = new RelationTypeIterator($this, 'Edge');
-		foreach($oIterator as $sId => $oEdge)
-		{
-			$aEdge = array();
+		foreach ($oIterator as $sId => $oEdge) {
+			$aEdge = [];
 			$aEdge['id'] = $oEdge->GetId();
 			$aEdge['source_node_id'] = $oEdge->GetSourceNode()->GetId();
 			$aEdge['sink_node_id'] = $oEdge->GetSinkNode()->GetId();
 			$fOpacity = ($oEdge->GetSinkNode()->GetProperty('is_reached') && $oEdge->GetSourceNode()->GetProperty('is_reached') ? 1 : 0.2);
-			$aEdge['attr'] = array('opacity' => $fOpacity, 'stroke' => '#000');
+			$aEdge['attr'] = ['opacity' => $fOpacity, 'stroke' => '#000'];
 			$aData['edges'][] = $aEdge;
 		}
 
@@ -1204,7 +1063,7 @@ class DisplayableGraph extends SimpleGraph
 	 *
 	 * @since 2.7.7 3.0.2 3.1.0 N°4985 $sComments param is no longer optional
 	 */
-	function RenderAsPDF(PDFPage $oPage, $sComments, $sContextKey, $xMin = -1, $xMax = -1, $yMin = -1, $yMax = -1)
+	public function RenderAsPDF(PDFPage $oPage, $sComments, $sContextKey, $xMin = -1, $xMax = -1, $yMin = -1, $yMax = -1)
 	{
 		$aContextDefs = static::GetContextDefinitions($sContextKey, false); // No need to develop the parameters
 		$oPdf = $oPage->get_tcpdf();
@@ -1214,20 +1073,16 @@ class DisplayableGraph extends SimpleGraph
 
 		$aMargins = $oPdf->getMargins();
 
-		if ($xMin == -1)
-		{
+		if ($xMin == -1) {
 			$xMin = $aMargins['left'];
 		}
-		if ($xMax == -1)
-		{
+		if ($xMax == -1) {
 			$xMax =  $oPdf->getPageWidth() - $aMargins['right'];
 		}
-		if ($yMin == -1)
-		{
+		if ($yMin == -1) {
 			$yMin = $aMargins['top'];
 		}
-		if ($yMax == -1)
-		{
+		if ($yMax == -1) {
 			$yMax = $oPdf->getPageHeight() - $aMargins['bottom'];
 		}
 
@@ -1251,19 +1106,17 @@ class DisplayableGraph extends SimpleGraph
 		$dx = ($fPageW - $fScale * $w) / 2;
 		$dy = ($fPageH - $fScale * $h) / 2;
 
-		$this->Translate(($xMin + $dx)/$fScale, ($yMin + $dy)/$fScale);
+		$this->Translate(($xMin + $dx) / $fScale, ($yMin + $dy) / $fScale);
 
 		$oIterator = new RelationTypeIterator($this, 'Edge');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		foreach($oIterator as $sId => $oEdge)
-		{
+		foreach ($oIterator as $sId => $oEdge) {
 			set_time_limit(intval($iLoopTimeLimit));
 			$oEdge->RenderAsPDF($oPdf, $this, $fScale, $aContextDefs);
 		}
 
 		$oIterator = new RelationTypeIterator($this, 'Node');
-		foreach($oIterator as $sId => $oNode)
-		{
+		foreach ($oIterator as $sId => $oNode) {
 			set_time_limit(intval($iLoopTimeLimit));
 			$oNode->RenderAsPDF($oPdf, $this, $fScale, $aContextDefs);
 		}
@@ -1292,17 +1145,14 @@ class DisplayableGraph extends SimpleGraph
 		$fPadding = 1;	// in mm
 		$oIterator = new RelationTypeIterator($this, 'Node');
 		$fMaxWidth = max($oPdf->GetStringWidth(Dict::S('UI:Relation:Key')) - $fIconSize, $oPdf->GetStringWidth(Dict::S('UI:Relation:Comments')) - $fIconSize);
-		$aClasses = array();
-		$aIcons = array();
-		$aContexts = array();
-		$aContextIcons = array();
+		$aClasses = [];
+		$aIcons = [];
+		$aContexts = [];
+		$aContextIcons = [];
 		$oPdf->SetFontParams('', $fFontSize, '', true);
-		foreach($oIterator as $sId => $oNode)
-		{
-			if ($sClass = $oNode->GetObjectClass())
-			{
-				if (!array_key_exists($sClass, $aClasses))
-				{
+		foreach ($oIterator as $sId => $oNode) {
+			if ($sClass = $oNode->GetObjectClass()) {
+				if (!array_key_exists($sClass, $aClasses)) {
 					$sClassLabel = MetaModel::GetName($sClass);
 					$width = $oPdf->GetStringWidth($sClassLabel);
 					$fMaxWidth = max($width, $fMaxWidth);
@@ -1313,10 +1163,8 @@ class DisplayableGraph extends SimpleGraph
 				}
 			}
 			$aContextRootCauses = $oNode->GetProperty('context_root_causes');
-			if (!is_null($aContextRootCauses))
-			{
-				foreach($aContextRootCauses as $key => $aObjects)
-				{
+			if (!is_null($aContextRootCauses)) {
+				foreach ($aContextRootCauses as $key => $aObjects) {
 					$aContexts[$key] = Dict::S($aContextDefs[$key]['dict']);
 					$aContextIcons[$key] = APPROOT.'env-'.utils::GetCurrentEnvironment().'/'.$aContextDefs[$key]['icon'];
 				}
@@ -1339,7 +1187,7 @@ class DisplayableGraph extends SimpleGraph
 			$oPdf->AddImage($aContextIcons[$key], $xMin + 1 + $fIconSize * 0.125, $yPos + $fIconSize * 0.125, $fIconSize * 0.75, $fIconSize * 0.75);
 			$yPos += $fIconSize + 2 * $fPadding;
 		}
-		$oPdf->Rect($xMin, $yMin, $fMaxWidth + $fIconSize + 3*$fPadding, $yMax - $yMin, 'D');
+		$oPdf->Rect($xMin, $yMin, $fMaxWidth + $fIconSize + 3 * $fPadding, $yMax - $yMin, 'D');
 
 		if ($sComments != '') {
 			// Draw the comment text (surrounded by a rectangle)
@@ -1355,7 +1203,7 @@ class DisplayableGraph extends SimpleGraph
 			$yMax = $yPos - $fPadding;
 		}
 
-		return array('xmin' => $xMin + $fMaxWidth + $fIconSize + 4*$fPadding, 'xmax' => $xMax, 'ymin' => $yMin, 'ymax' => $yMax);
+		return ['xmin' => $xMin + $fMaxWidth + $fIconSize + 4 * $fPadding, 'xmax' => $xMax, 'ymin' => $yMin, 'ymax' => $yMax];
 	}
 
 	/**
@@ -1368,45 +1216,33 @@ class DisplayableGraph extends SimpleGraph
 	 * @param array $aContextParams Arguments for the queries (via ToArgs()) if $bDevelopParams == true
 	 * @return multitype:multitype:string
 	 */
-	public static function GetContextDefinitions($sContextKey, $bDevelopParams = true, $aContextParams = array())
+	public static function GetContextDefinitions($sContextKey, $bDevelopParams = true, $aContextParams = [])
 	{
-		$aContextDefs = array();
+		$aContextDefs = [];
 		$aLevels = explode('/', $sContextKey);
-		if (count($aLevels) < 5)
-		{
+		if (count($aLevels) < 5) {
 			IssueLog::Warning("GetContextDefinitions: invalid 'sContextKey' = '$sContextKey'. 5 levels of / are expected !");
-		}
-		else
-		{
+		} else {
 			$sLeafClass = $aLevels[2];
 
-			if (!MetaModel::IsValidClass($sLeafClass))
-			{
+			if (!MetaModel::IsValidClass($sLeafClass)) {
 				IssueLog::Warning("GetContextDefinitions: invalid 'sLeafClass' = '$sLeafClass'. A valid class name is expected in 3rd position inside '$sContextKey' !");
-			}
-			else
-			{
-				$aRelationContext = MetaModel::GetConfig()->GetModuleSetting($aLevels[0], $aLevels[1], array());
-				foreach(MetaModel::EnumParentClasses($sLeafClass, ENUM_PARENT_CLASSES_ALL) as $sClass)
-				{
-					if (isset($aRelationContext[$sClass][$aLevels[3]][$aLevels[4]]['items']))
-					{
+			} else {
+				$aRelationContext = MetaModel::GetConfig()->GetModuleSetting($aLevels[0], $aLevels[1], []);
+				foreach (MetaModel::EnumParentClasses($sLeafClass, ENUM_PARENT_CLASSES_ALL) as $sClass) {
+					if (isset($aRelationContext[$sClass][$aLevels[3]][$aLevels[4]]['items'])) {
 						$aContextDefs = array_merge($aContextDefs, $aRelationContext[$sClass][$aLevels[3]][$aLevels[4]]['items']);
 					}
 				}
 
 				// Check if the queries are valid
-				foreach($aContextDefs as $sKey => $sDefs)
-				{
+				foreach ($aContextDefs as $sKey => $sDefs) {
 					$sOQL = $aContextDefs[$sKey]['oql'];
-					try
-					{
+					try {
 						// Expand the parameters. If anything goes wrong, then the query is considered as invalid and removed from the list
 						$oSearch = DBObjectSearch::FromOQL($sOQL);
 						$aContextDefs[$sKey]['oql'] = $oSearch->ToOQL($bDevelopParams, $aContextParams);
-					}
-					catch(Exception $e)
-					{
+					} catch (Exception $e) {
 						IssueLog::Warning('Invalid OQL query: '.$sOQL.' in the parameter '.$sContextKey);
 						unset($aContextDefs[$sKey]);
 					}
@@ -1434,7 +1270,7 @@ class DisplayableGraph extends SimpleGraph
 	 *
 	 * @since 3.1.1 3.2.0 N°3767
 	 */
-	function DisplayGraph(WebPage $oP, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), bool $bLazyLoading = false): void
+	public function DisplayGraph(WebPage $oP, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = [], bool $bLazyLoading = false): void
 	{
 		list($aExcludedByClass, $aAdditionalContexts) = $this->GetFilteringData($sContextKey, $aContextParams, $aExcludedObjects);
 
@@ -1464,16 +1300,16 @@ class DisplayableGraph extends SimpleGraph
 				$oP->add_ready_script("$('.simple-graph').width(18/2.54*96).resizable({ stop: function() { $(window).trigger('resized'); }});"); // Default width about 18 cm, since most browsers assume 96 dpi
 			}
 			$oP->add('<div id="'.$sId.'" class="simple-graph" style="'.$sStyle.'"></div>');
-			$aParams = array(
+			$aParams = [
 				'source_url'           => $sLoadFromURL,
 				'sources'              => ($this->bDirectionDown ? $this->aSourceObjects : $this->aSinkObjects),
 				'excluded'             => $aExcludedByClass,
 				'grouping_threshold'   => $iGroupingThreshold,
-				'export_as_pdf'        => array('url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')),
+				'export_as_pdf'        => ['url' => $sExportAsPdfURL, 'label' => Dict::S('UI:Relation:ExportAsPDF')],
 				'transaction_id'        => utils::GetNewTransactionId(),
-				'export_as_attachment' => array('url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsAttachment'), 'obj_class' => $sObjClass, 'obj_key' => $iObjKey),
-				'drill_down'           => array('url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')),
-				'labels'               => array(
+				'export_as_attachment' => ['url' => $sExportAsDocumentURL, 'label' => Dict::S('UI:Relation:ExportAsAttachment'), 'obj_class' => $sObjClass, 'obj_key' => $iObjKey],
+				'drill_down'           => ['url' => $sDrillDownURL, 'label' => Dict::S('UI:Relation:DrillDown')],
+				'labels'               => [
 					'export_pdf_title'           => Dict::S('UI:Relation:PDFExportOptions'),
 					'export_as_attachment_title' => $sAttachmentExportTitle,
 					'export'                     => Dict::S('UI:Button:Export'),
@@ -1491,25 +1327,25 @@ class DisplayableGraph extends SimpleGraph
 					'additional_context_info'    => Dict::S('UI:Relation:AdditionalContextInfo'),
 					'zoom'                       => Dict::S('UI:Relation:Zoom'),
 					'loading'                    => Dict::S('UI:Loading'),
-				),
-				'page_format'          => array(
+				],
+				'page_format'          => [
 					'label'  => Dict::S('UI:Relation:PDFExportPageFormat'),
-					'values' => array(
+					'values' => [
 						'A3'     => Dict::S('UI:PageFormat_A3'),
 						'A4'     => Dict::S('UI:PageFormat_A4'),
 						'Letter' => Dict::S('UI:PageFormat_Letter'),
-					),
-				),
-				'page_orientation'     => array(
+					],
+				],
+				'page_orientation'     => [
 					'label'  => Dict::S('UI:Relation:PDFExportPageOrientation'),
-					'values' => array(
+					'values' => [
 						'P' => Dict::S('UI:PageOrientation_Portrait'),
 						'L' => Dict::S('UI:PageOrientation_Landscape'),
-					),
-				),
+					],
+				],
 				'additional_contexts'  => $aAdditionalContexts,
 				'context_key'          => $sContextKey,
-			);
+			];
 			if (!extension_loaded('gd')) {
 				// PDF export requires GD
 				unset($aParams['export_as_pdf']);
@@ -1524,8 +1360,7 @@ class DisplayableGraph extends SimpleGraph
 				$oP->add_script("function Load(){var aExcluded = [];	$('input[name^=excluded]').each( function() {if (!$(this).prop('checked'))	{	aExcluded.push($(this).val());		}} ); var params= $.extend(".json_encode($aParams).",  {excluded_classes: aExcluded}); $('#$sId').simple_graph(params);}");
 				$oP->add_ready_script("$('#graph').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_objects_lists').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_groups').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');");
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$oP->add('<div>'.$e->getMessage().'</div>');
 		}
 		$oP->add_script(
@@ -1599,7 +1434,7 @@ EOF
 		} else {
 			$oP->add_ready_script("$('#dh_flash').addClass('closed');");
 		}
-		$aSortedElements = array();
+		$aSortedElements = [];
 		foreach ($aResults as $sClassIdx => $aObjects) {
 			foreach ($aObjects as $oCurrObj) {
 				$sSubClass = get_class($oCurrObj);
@@ -1636,19 +1471,19 @@ EOF
 	public function GetFilteringData(string $sContextKey, array $aContextParams, array $aExcludedObjects): array
 	{
 		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
-		$aExcludedByClass = array();
+		$aExcludedByClass = [];
 		foreach ($aExcludedObjects as $oObj) {
 			if (!array_key_exists(get_class($oObj), $aExcludedByClass)) {
-				$aExcludedByClass[get_class($oObj)] = array();
+				$aExcludedByClass[get_class($oObj)] = [];
 			}
 			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
 		}
-		$aAdditionalContexts = array();
+		$aAdditionalContexts = [];
 		foreach ($aContextDefs as $sKey => $aDefinition) {
-			$aAdditionalContexts[] = array('key' => $sKey, 'label' => Dict::S($aDefinition['dict']), 'oql' => $aDefinition['oql'], 'default' => (array_key_exists('default', $aDefinition) && ($aDefinition['default'] == 'yes')));
+			$aAdditionalContexts[] = ['key' => $sKey, 'label' => Dict::S($aDefinition['dict']), 'oql' => $aDefinition['oql'], 'default' => (array_key_exists('default', $aDefinition) && ($aDefinition['default'] == 'yes'))];
 		}
 
-		return array($aExcludedByClass, $aAdditionalContexts);
+		return [$aExcludedByClass, $aAdditionalContexts];
 	}
 
 }

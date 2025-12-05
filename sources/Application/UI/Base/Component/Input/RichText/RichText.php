@@ -1,9 +1,12 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 namespace Combodo\iTop\Application\UI\Base\Component\Input\RichText;
+
 use Combodo\iTop\Application\Helper\CKEditorHelper;
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\UIBlock;
@@ -83,7 +86,7 @@ class RichText extends UIBlock
 	public function SetValue(?string $sValue)
 	{
 		$this->sValue = $sValue;
-		if(is_array($this->aConfig)) {
+		if (is_array($this->aConfig)) {
 			$this->aConfig['detectChanges'] = ['initialValue' => $sValue];
 		}
 

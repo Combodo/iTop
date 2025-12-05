@@ -35,77 +35,76 @@ use DOMFormatException;
 class BrowseBrick extends PortalBrick
 {
 	/**
-	 * @var string DEFAULT_PAGE_TEMPLATE_PATH 
+	 * @var string DEFAULT_PAGE_TEMPLATE_PATH
 	 * @deprecated 3.2.1
 	 */
-	const DEFAULT_MODE_LIST_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_list.html.twig';
+	public const DEFAULT_MODE_LIST_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_list.html.twig';
 	/**
 	 * @var string  DEFAULT_MODE_MOSAIC_TEMPLATE_PATH
 	 * @deprecated 3.2.1
 	 */
-	const DEFAULT_MODE_MOSAIC_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_mosaic.html.twig';
+	public const DEFAULT_MODE_MOSAIC_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_mosaic.html.twig';
 	/**
 	 * @var string DEFAULT_MODE_TREE_TEMPLATE_PATH
 	 * @deprecated 3.2.1
 	 */
-	const DEFAULT_MODE_TREE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_tree.html.twig';
-
+	public const DEFAULT_MODE_TREE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/browse/mode_tree.html.twig';
 
 	/** @var string ENUM_BROWSE_MODE_LIST */
-	const ENUM_BROWSE_MODE_LIST = 'list';
+	public const ENUM_BROWSE_MODE_LIST = 'list';
 	/** @var string ENUM_BROWSE_MODE_TREE */
-	const ENUM_BROWSE_MODE_TREE = 'tree';
+	public const ENUM_BROWSE_MODE_TREE = 'tree';
 	/** @var string ENUM_BROWSE_MODE_MOSAIC */
-	const ENUM_BROWSE_MODE_MOSAIC = 'mosaic';
+	public const ENUM_BROWSE_MODE_MOSAIC = 'mosaic';
 
 	/** @var string ENUM_ACTION_VIEW */
-	const ENUM_ACTION_VIEW = 'view';
+	public const ENUM_ACTION_VIEW = 'view';
 	/** @var string ENUM_ACTION_EDIT */
-	const ENUM_ACTION_EDIT = 'edit';
+	public const ENUM_ACTION_EDIT = 'edit';
 	/** @var string ENUM_ACTION_DRILLDOWN */
-	const ENUM_ACTION_DRILLDOWN = 'drilldown';
+	public const ENUM_ACTION_DRILLDOWN = 'drilldown';
 	/** @var string ENUM_ACTION_CREATE_FROM_THIS */
-	const ENUM_ACTION_CREATE_FROM_THIS = 'create_from_this';
+	public const ENUM_ACTION_CREATE_FROM_THIS = 'create_from_this';
 
 	/** @var string ENUM_ACTION_ICON_CLASS_VIEW */
-	const ENUM_ACTION_ICON_CLASS_VIEW = 'glyphicon glyphicon-list-alt';
+	public const ENUM_ACTION_ICON_CLASS_VIEW = 'glyphicon glyphicon-list-alt';
 	/** @var string ENUM_ACTION_ICON_CLASS_EDIT */
-	const ENUM_ACTION_ICON_CLASS_EDIT = 'glyphicon glyphicon-pencil';
+	public const ENUM_ACTION_ICON_CLASS_EDIT = 'glyphicon glyphicon-pencil';
 	/** @var string ENUM_ACTION_ICON_CLASS_DRILLDOWN */
-	const ENUM_ACTION_ICON_CLASS_DRILLDOWN = 'glyphicon glyphicon-menu-down';
+	public const ENUM_ACTION_ICON_CLASS_DRILLDOWN = 'glyphicon glyphicon-menu-down';
 	/** @var string ENUM_ACTION_ICON_CLASS_CREATE_FROM_THIS */
-	const ENUM_ACTION_ICON_CLASS_CREATE_FROM_THIS = 'glyphicon glyphicon-edit';
+	public const ENUM_ACTION_ICON_CLASS_CREATE_FROM_THIS = 'glyphicon glyphicon-edit';
 
 	/** @var string ENUM_FACTORY_TYPE_METHOD */
-	const ENUM_FACTORY_TYPE_METHOD = 'method';
+	public const ENUM_FACTORY_TYPE_METHOD = 'method';
 	/** @var string ENUM_FACTORY_TYPE_CLASS */
-	const ENUM_FACTORY_TYPE_CLASS = 'class';
+	public const ENUM_FACTORY_TYPE_CLASS = 'class';
 
 	// Overloaded constants
-	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-map';
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-map fa-2x';
-	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_FULL;
+	public const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-map';
+	public const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-map fa-2x';
+	public const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_FULL;
 
 	/** @var string DEFAULT_LEVEL_NAME_ATT */
-	const DEFAULT_LEVEL_NAME_ATT = 'name';
+	public const DEFAULT_LEVEL_NAME_ATT = 'name';
 	/** @var string DEFAULT_BROWSE_MODE */
-	const DEFAULT_BROWSE_MODE = self::ENUM_BROWSE_MODE_LIST;
+	public const DEFAULT_BROWSE_MODE = self::ENUM_BROWSE_MODE_LIST;
 	/** @var string DEFAULT_ACTION */
-	const DEFAULT_ACTION = self::ENUM_ACTION_DRILLDOWN;
+	public const DEFAULT_ACTION = self::ENUM_ACTION_DRILLDOWN;
 	/** @var string DEFAULT_ACTION_OPENING_TARGET */
-	const DEFAULT_ACTION_OPENING_TARGET = self::ENUM_OPENING_TARGET_MODAL;
+	public const DEFAULT_ACTION_OPENING_TARGET = self::ENUM_OPENING_TARGET_MODAL;
 	/** @var int DEFAULT_LIST_LENGTH */
-	const DEFAULT_LIST_LENGTH = 20;
+	public const DEFAULT_LIST_LENGTH = 20;
 
 	// Overloaded variables
 	public static $sRouteName = 'p_browse_brick';
 
 	/** @var array $aBrowseModes */
-	public static $aBrowseModes = array(
+	public static $aBrowseModes = [
 		self::ENUM_BROWSE_MODE_LIST,
 		self::ENUM_BROWSE_MODE_TREE,
 		self::ENUM_BROWSE_MODE_MOSAIC,
-	);
+	];
 
 	/** @var array $aLevels */
 	protected $aLevels;
@@ -120,11 +119,12 @@ class BrowseBrick extends PortalBrick
 	public static function RegisterTemplates(TemplatesRegister $oTemplatesRegister): void
 	{
 		parent::RegisterTemplates($oTemplatesRegister);
-		$oTemplatesRegister->RegisterTemplates(self::class,
-			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH . 'browse/layout.html.twig'),
-			TemplateDefinitionDto::Create('page_list', static::TEMPLATES_BASE_PATH . 'browse/mode_list.html.twig'),
-			TemplateDefinitionDto::Create('page_tree', static::TEMPLATES_BASE_PATH . 'browse/mode_tree.html.twig'),
-			TemplateDefinitionDto::Create('page_mosaic', static::TEMPLATES_BASE_PATH . 'browse/mode_mosaic.html.twig'),
+		$oTemplatesRegister->RegisterTemplates(
+			self::class,
+			TemplateDefinitionDto::Create('page', static::TEMPLATES_BASE_PATH.'browse/layout.html.twig'),
+			TemplateDefinitionDto::Create('page_list', static::TEMPLATES_BASE_PATH.'browse/mode_list.html.twig'),
+			TemplateDefinitionDto::Create('page_tree', static::TEMPLATES_BASE_PATH.'browse/mode_tree.html.twig'),
+			TemplateDefinitionDto::Create('page_mosaic', static::TEMPLATES_BASE_PATH.'browse/mode_mosaic.html.twig'),
 		);
 	}
 
@@ -135,15 +135,15 @@ class BrowseBrick extends PortalBrick
 	{
 		parent::__construct();
 
-		$this->aLevels = array();
-		$this->aAvailablesBrowseModes = array();
+		$this->aLevels = [];
+		$this->aAvailablesBrowseModes = [];
 		$this->sDefaultBrowseMode = static::DEFAULT_BROWSE_MODE;
 		$this->iDefaultListLength = static::DEFAULT_LIST_LENGTH;
 	}
 
 	/**
 	 *  Compare function to sort actions by their rank attribute
-	 * 
+	 *
 	 * @param array $aAction1
 	 * @param array $aAction2
 	 *
@@ -154,13 +154,10 @@ class BrowseBrick extends PortalBrick
 		$bIsAction1RankSet = array_key_exists('rank', $aAction1);
 		$bIsAction2RankSet = array_key_exists('rank', $aAction2);
 
-		if($bIsAction1RankSet && $bIsAction2RankSet)
-		{
-			//If a1 == a2 return 0, if a1 > a2 return 1 else return -1 
+		if ($bIsAction1RankSet && $bIsAction2RankSet) {
+			//If a1 == a2 return 0, if a1 > a2 return 1 else return -1
 			return ($aAction1['rank'] === $aAction2['rank'] ? $aAction1['default_rank'] - $aAction2['default_rank'] : $aAction1['rank'] - $aAction2['rank']);
-		}
-		else
-		{
+		} else {
 			//If a1 == a2 == null return 0, if a2 is null and not a1 return 1 else return -1
 			return ($bIsAction1RankSet === $bIsAction2RankSet ? $aAction1['default_rank'] - $aAction2['default_rank'] : ($bIsAction1RankSet ? 1 : -1));
 		}
@@ -255,7 +252,8 @@ class BrowseBrick extends PortalBrick
 	 *
 	 * @return $this
 	 */
-	public function SetDefaultListLength($iDefaultListLength) {
+	public function SetDefaultListLength($iDefaultListLength)
+	{
 		$this->iDefaultListLength = $iDefaultListLength;
 		return $this;
 	}
@@ -293,8 +291,7 @@ class BrowseBrick extends PortalBrick
 	 */
 	public function RemoveLevels($sLevel)
 	{
-		if (isset($this->aLevels[$sLevel]))
-		{
+		if (isset($this->aLevels[$sLevel])) {
 			unset($this->aLevels[$sLevel]);
 		}
 
@@ -309,7 +306,7 @@ class BrowseBrick extends PortalBrick
 	 *
 	 * @return \Combodo\iTop\Portal\Brick\BrowseBrick
 	 */
-	public function AddAvailableBrowseMode($sModeId, $aData = array())
+	public function AddAvailableBrowseMode($sModeId, $aData = [])
 	{
 		$this->aAvailablesBrowseModes[$sModeId] = $aData;
 
@@ -325,8 +322,7 @@ class BrowseBrick extends PortalBrick
 	 */
 	public function RemoveAvailableBrowseMode($sModeId)
 	{
-		if (isset($this->aAvailablesBrowseModes[$sModeId]))
-		{
+		if (isset($this->aAvailablesBrowseModes[$sModeId])) {
 			unset($this->aAvailablesBrowseModes[$sModeId]);
 		}
 
@@ -349,43 +345,38 @@ class BrowseBrick extends PortalBrick
 
 		// Checking specific elements
 		/** @var \Combodo\iTop\DesignElement $oBrickSubNode */
-		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
-		{
-			switch ($oBrickSubNode->nodeName)
-			{
+		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode) {
+			switch ($oBrickSubNode->nodeName) {
 				case 'levels':
 					/** @var \Combodo\iTop\DesignElement $oLevelNode */
-					foreach ($oBrickSubNode->GetNodes('*') as $oLevelNode)
-					{
-						if ($oLevelNode->nodeName === 'level')
-						{
+					foreach ($oBrickSubNode->GetNodes('*') as $oLevelNode) {
+						if ($oLevelNode->nodeName === 'level') {
 							$this->AddLevel($this->LoadLevelFromXml($oLevelNode));
 						}
 					}
 					break;
 				case 'browse_modes':
 					/** @var \Combodo\iTop\DesignElement $oBrowseModeNode */
-					foreach ($oBrickSubNode->GetNodes('*') as $oBrowseModeNode)
-					{
-						switch ($oBrowseModeNode->nodeName)
-						{
+					foreach ($oBrickSubNode->GetNodes('*') as $oBrowseModeNode) {
+						switch ($oBrowseModeNode->nodeName) {
 							case 'availables':
 								/** @var \Combodo\iTop\DesignElement $oModeNode */
-								foreach ($oBrowseModeNode->GetNodes('*') as $oModeNode)
-								{
-									if (!$oModeNode->hasAttribute('id'))
-									{
-										throw new DOMFormatException('BrowseBrick: Browse mode must have a unique ID attribute', 0,
-											null, $oModeNode);
+								foreach ($oBrowseModeNode->GetNodes('*') as $oModeNode) {
+									if (!$oModeNode->hasAttribute('id')) {
+										throw new DOMFormatException(
+											'BrowseBrick: Browse mode must have a unique ID attribute',
+											0,
+											null,
+											$oModeNode
+										);
 									}
 
 									$sModeId = $oModeNode->getAttribute('id');
-									$aModeData = array();
+									$aModeData = [];
 
 									// Checking if the browse mode has a specific template
 									$oTemplateNode = $oModeNode->GetOptionalElement('template');
-									if (($oTemplateNode !== null) && ($oTemplateNode->GetText() !== null))
-									{
+									if (($oTemplateNode !== null) && ($oTemplateNode->GetText() !== null)) {
 										$this->SetTemplatePath('page_'.$sModeId, $oTemplateNode->GetText());
 									}
 
@@ -400,12 +391,12 @@ class BrowseBrick extends PortalBrick
 					break;
 				case 'default_list_length':
 					$iNodeDefaultListLength = (int)$oBrickSubNode->GetText(static::DEFAULT_LIST_LENGTH);
-					if(!in_array($iNodeDefaultListLength, array(10, 20, 50, -1),true))
-					{
+					if (!in_array($iNodeDefaultListLength, [10, 20, 50, -1], true)) {
 						throw new DOMFormatException(
 							'BrowseBrick: Default list length must be contained in list length options. Expected -1/10/20/50, '.$iNodeDefaultListLength.' given.',
 							null,
-							null, $oBrickSubNode
+							null,
+							$oBrickSubNode
 						);
 					}
 					$this->SetDefaultListLength($iNodeDefaultListLength);
@@ -414,19 +405,18 @@ class BrowseBrick extends PortalBrick
 		}
 
 		// Checking that the brick has at least a browse mode
-		if (count($this->GetAvailablesBrowseModes()) === 0)
-		{
+		if (count($this->GetAvailablesBrowseModes()) === 0) {
 			throw new DOMFormatException('BrowseBrick : Must have at least one browse mode', 0, null, $oMDElement);
 		}
 		// Checking that default browse mode in among the available
-		if (!in_array($this->sDefaultBrowseMode, array_keys($this->aAvailablesBrowseModes)))
-		{
-			throw new DOMFormatException('BrowseBrick : Default browse mode "'.$this->sDefaultBrowseMode.'" must be one of the available browse modes ('.implode(', ',
-					$this->aAvailablesBrowseModes).')', null, null, $oMDElement);
+		if (!in_array($this->sDefaultBrowseMode, array_keys($this->aAvailablesBrowseModes))) {
+			throw new DOMFormatException('BrowseBrick : Default browse mode "'.$this->sDefaultBrowseMode.'" must be one of the available browse modes ('.implode(
+				', ',
+				$this->aAvailablesBrowseModes
+			).')', null, null, $oMDElement);
 		}
 		// Checking that the brick has at least a level
-		if (count($this->GetLevels()) === 0)
-		{
+		if (count($this->GetLevels()) === 0) {
 			throw new DOMFormatException('BrowseBrick : Must have at least one level', 0, null, $oMDElement);
 		}
 
@@ -444,39 +434,41 @@ class BrowseBrick extends PortalBrick
 	 */
 	protected function LoadLevelFromXml(DesignElement $oMDElement)
 	{
-		$aLevel = array(
+		$aLevel = [
 			'parent_att' => null,
 			'tooltip_att' => null,
 			'description_att' => null,
 			'image_att' => null,
 			'title' => null,
 			'name_att' => static::DEFAULT_LEVEL_NAME_ATT,
-			'fields' => array(),
-			'actions' => array('default' => array('type' => static::DEFAULT_ACTION, 'rules' => array())),
-		);
+			'fields' => [],
+			'actions' => ['default' => ['type' => static::DEFAULT_ACTION, 'rules' => []]],
+		];
 
 		// Getting level ID
-		if ($oMDElement->hasAttribute('id') && $oMDElement->getAttribute('id') !== '')
-		{
+		if ($oMDElement->hasAttribute('id') && $oMDElement->getAttribute('id') !== '') {
 			$aLevel['id'] = $oMDElement->getAttribute('id');
-		}
-		else
-		{
-			throw new DOMFormatException('BrowseBrick : level tag without "id" attribute. It must have one and it must not be empty', null,
-				null, $oMDElement);
+		} else {
+			throw new DOMFormatException(
+				'BrowseBrick : level tag without "id" attribute. It must have one and it must not be empty',
+				null,
+				null,
+				$oMDElement
+			);
 		}
 		// Getting level properties
 		/** @var \Combodo\iTop\DesignElement $oLevelPropertyNode */
-		foreach ($oMDElement->GetNodes('*') as $oLevelPropertyNode)
-		{
-			switch ($oLevelPropertyNode->nodeName)
-			{
+		foreach ($oMDElement->GetNodes('*') as $oLevelPropertyNode) {
+			switch ($oLevelPropertyNode->nodeName) {
 				case 'class':
 					$sClass = $oLevelPropertyNode->GetText();
-					if ($sClass === '')
-					{
-						throw new DOMFormatException('BrowseBrick : class tag is empty. Must contain Classname', null, null,
-							$oLevelPropertyNode);
+					if ($sClass === '') {
+						throw new DOMFormatException(
+							'BrowseBrick : class tag is empty. Must contain Classname',
+							null,
+							null,
+							$oLevelPropertyNode
+						);
 					}
 
 					$aLevel['oql'] = 'SELECT '.$sClass;
@@ -484,10 +476,13 @@ class BrowseBrick extends PortalBrick
 
 				case 'oql':
 					$sOql = $oLevelPropertyNode->GetText();
-					if ($sOql === '')
-					{
-						throw new DOMFormatException('BrowseBrick : oql tag is empty. Must contain OQL statement', null, null,
-							$oLevelPropertyNode);
+					if ($sOql === '') {
+						throw new DOMFormatException(
+							'BrowseBrick : oql tag is empty. Must contain OQL statement',
+							null,
+							null,
+							$oLevelPropertyNode
+						);
 					}
 
 					$aLevel['oql'] = $sOql;
@@ -508,25 +503,23 @@ class BrowseBrick extends PortalBrick
 				case 'fields':
 					$sTagName = $oLevelPropertyNode->nodeName;
 
-					if ($oLevelPropertyNode->hasChildNodes())
-					{
-						$aLevel[$sTagName] = array();
+					if ($oLevelPropertyNode->hasChildNodes()) {
+						$aLevel[$sTagName] = [];
 						/** @var \Combodo\iTop\DesignElement $oFieldNode */
-						foreach ($oLevelPropertyNode->GetNodes('*') as $oFieldNode)
-						{
-							if ($oFieldNode->hasAttribute('id') && $oFieldNode->getAttribute('id') !== '')
-							{
-								$aLevel[$sTagName][$oFieldNode->getAttribute('id')] = array('hidden' => false);
-							}
-							else
-							{
-								throw new DOMFormatException('BrowseBrick :  '.$sTagName.'/* tag must have an "id" attribute and it must not be empty',
-									null, null, $oFieldNode);
+						foreach ($oLevelPropertyNode->GetNodes('*') as $oFieldNode) {
+							if ($oFieldNode->hasAttribute('id') && $oFieldNode->getAttribute('id') !== '') {
+								$aLevel[$sTagName][$oFieldNode->getAttribute('id')] = ['hidden' => false];
+							} else {
+								throw new DOMFormatException(
+									'BrowseBrick :  '.$sTagName.'/* tag must have an "id" attribute and it must not be empty',
+									null,
+									null,
+									$oFieldNode
+								);
 							}
 
 							$oFieldSubNode = $oFieldNode->GetOptionalElement('hidden');
-							if ($oFieldSubNode !== null)
-							{
+							if ($oFieldSubNode !== null) {
 								$aLevel[$sTagName][$oFieldNode->getAttribute('id')]['hidden'] = ($oFieldSubNode->GetText() === 'true') ? true : false;
 							}
 						}
@@ -536,94 +529,84 @@ class BrowseBrick extends PortalBrick
 				case 'actions':
 					$sTagName = $oLevelPropertyNode->nodeName;
 
-					if ($oLevelPropertyNode->hasChildNodes())
-					{
-						$aLevel[$sTagName] = array();
+					if ($oLevelPropertyNode->hasChildNodes()) {
+						$aLevel[$sTagName] = [];
 						$iActionDefaultRank = 0;
 						/** @var \Combodo\iTop\DesignElement $oActionNode */
-						foreach ($oLevelPropertyNode->GetNodes('*') as $oActionNode)
-						{
-							if ($oActionNode->hasAttribute('id') && $oActionNode->getAttribute('id') !== '')
-							{
-								$aTmpAction = array(
+						foreach ($oLevelPropertyNode->GetNodes('*') as $oActionNode) {
+							if ($oActionNode->hasAttribute('id') && $oActionNode->getAttribute('id') !== '') {
+								$aTmpAction = [
 									'type' => null,
-									'rules' => array(),
-								);
+									'rules' => [],
+								];
 
 								// Action type
 								$aTmpAction['type'] = ($oActionNode->hasAttribute('xsi:type') && $oActionNode->getAttribute('xsi:type') !== '') ? $oActionNode->getAttribute('xsi:type') : static::DEFAULT_ACTION;
 								// Action destination class
-								if ($aTmpAction['type'] === static::ENUM_ACTION_CREATE_FROM_THIS)
-								{
-									if ($oActionNode->GetOptionalElement('factory_method') !== null)
-									{
-										$aTmpAction['factory'] = array(
+								if ($aTmpAction['type'] === static::ENUM_ACTION_CREATE_FROM_THIS) {
+									if ($oActionNode->GetOptionalElement('factory_method') !== null) {
+										$aTmpAction['factory'] = [
 											'type' => static::ENUM_FACTORY_TYPE_METHOD,
 											'value' => $oActionNode->GetOptionalElement('factory_method')->GetText(),
-										);
-									}
-									else
-									{
-										$aTmpAction['factory'] = array(
+										];
+									} else {
+										$aTmpAction['factory'] = [
 											'type' => static::ENUM_FACTORY_TYPE_CLASS,
 											'value' => $oActionNode->GetUniqueElement('class')->GetText(),
-										);
+										];
 									}
 								}
 								// Action title
 								$oActionTitleNode = $oActionNode->GetOptionalElement('title');
-								if ($oActionTitleNode !== null)
-								{
+								if ($oActionTitleNode !== null) {
 									$aTmpAction['title'] = $oActionTitleNode->GetText();
 								}
 								// Action icon class
 								$oActionIconClassNode = $oActionNode->GetOptionalElement('icon_class');
-								if ($oActionIconClassNode !== null)
-								{
+								if ($oActionIconClassNode !== null) {
 									$aTmpAction['icon_class'] = $oActionIconClassNode->GetText();
 								}
 								// Action opening target
 								$oActionOpeningTargetNode = $oActionNode->GetOptionalElement('opening_target');
-								if ($oActionOpeningTargetNode !== null)
-								{
+								if ($oActionOpeningTargetNode !== null) {
 									$aTmpAction['opening_target'] = $oActionOpeningTargetNode->GetText(static::DEFAULT_ACTION_OPENING_TARGET);
-								}
-								else
-								{
+								} else {
 									$aTmpAction['opening_target'] = static::DEFAULT_ACTION_OPENING_TARGET;
 								}
 								// - Checking that opening target is among authorized modes
-								if (!in_array($aTmpAction['opening_target'], static::$aOpeningTargets))
-								{
-									throw new DOMFormatException('BrowseBrick :  '.$sTagName.'/action/opening_target has a wrong value. "'.$aTmpAction['opening_target'].'" given, '.implode('|',
-											static::$aOpeningTargets).' expected.', null, null, $oActionOpeningTargetNode);
+								if (!in_array($aTmpAction['opening_target'], static::$aOpeningTargets)) {
+									throw new DOMFormatException('BrowseBrick :  '.$sTagName.'/action/opening_target has a wrong value. "'.$aTmpAction['opening_target'].'" given, '.implode(
+										'|',
+										static::$aOpeningTargets
+									).' expected.', null, null, $oActionOpeningTargetNode);
 								}
 								$oActionRankNode = $oActionNode->GetOptionalElement('rank');
-								if ($oActionRankNode !== null)
-								{
+								if ($oActionRankNode !== null) {
 									$aTmpAction['rank'] = (int)$oActionRankNode->GetText();
 								}
 								// Action rules
 								/** @var \Combodo\iTop\DesignElement $oRuleNode */
-								foreach ($oActionNode->GetNodes('./rules/rule') as $oRuleNode)
-								{
-									if ($oRuleNode->hasAttribute('id') && $oRuleNode->getAttribute('id') !== '')
-									{
+								foreach ($oActionNode->GetNodes('./rules/rule') as $oRuleNode) {
+									if ($oRuleNode->hasAttribute('id') && $oRuleNode->getAttribute('id') !== '') {
 										$aTmpAction['rules'][] = $oRuleNode->getAttribute('id');
-									}
-									else
-									{
-										throw new DOMFormatException('BrowseBrick :  '.$sTagName.'/rules/rule tag must have an "id" attribute and it must not be empty',
-											null, null, $oRuleNode);
+									} else {
+										throw new DOMFormatException(
+											'BrowseBrick :  '.$sTagName.'/rules/rule tag must have an "id" attribute and it must not be empty',
+											null,
+											null,
+											$oRuleNode
+										);
 									}
 								}
 								$aTmpAction['default_rank'] = $iActionDefaultRank++;
 								$aLevel[$sTagName][$oActionNode->getAttribute('id')] = $aTmpAction;
-							}
-							else
-							{
-								throw new DOMFormatException('BrowseBrick :  '.$sTagName.'/* tag must have an "id" attribute and it must not be empty',
-									null, null, $oActionNode);
+							} else {
+								throw new DOMFormatException(
+									'BrowseBrick :  '.$sTagName.'/* tag must have an "id" attribute and it must not be empty',
+									null,
+									null,
+									$oActionNode
+								);
 							}
 						}
 						uasort($aLevel[$sTagName], [$this, 'CompareActionsByRank']);
@@ -631,10 +614,8 @@ class BrowseBrick extends PortalBrick
 					break;
 
 				case 'levels':
-					foreach ($oLevelPropertyNode->GetNodes('*') as $oSubLevelNode)
-					{
-						if ($oSubLevelNode->nodeName === 'level')
-						{
+					foreach ($oLevelPropertyNode->GetNodes('*') as $oSubLevelNode) {
+						if ($oSubLevelNode->nodeName === 'level') {
 							$aLevel['levels'][] = $this->LoadLevelFromXml($oSubLevelNode);
 						}
 					}
@@ -644,8 +625,7 @@ class BrowseBrick extends PortalBrick
 		}
 
 		// Checking if level has an oql
-		if (!isset($aLevel['oql']) || $aLevel['oql'] === '')
-		{
+		if (!isset($aLevel['oql']) || $aLevel['oql'] === '') {
 			throw new DOMFormatException('BrowseBrick : must have a valid <class|oql> tag', null, null, $oMDElement);
 		}
 

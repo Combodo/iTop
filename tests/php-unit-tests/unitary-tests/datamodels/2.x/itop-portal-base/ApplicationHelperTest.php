@@ -1,6 +1,7 @@
 <?php
 
 namespace Combodo\iTop\Test\UnitTest\Module\iTopPortalBase;
+
 /**
  * Copyright (C) 2010-2024 Combodo SAS
  *
@@ -30,7 +31,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
  */
 class ApplicationHelperTest extends ItopDataTestCase
 {
-	const PASSWORD = "aBCDEFG@123456789";
+	public const PASSWORD = "aBCDEFG@123456789";
 
 	protected function LoadRequiredItopFiles(): void
 	{
@@ -64,7 +65,7 @@ class ApplicationHelperTest extends ItopDataTestCase
 			->willReturn("Administrator");
 
 		$_SESSION = [];
-		$oUser = $this->CreateContactlessUser("$sAssociatedProfileName-" . uniqid(), self::$aURP_Profiles[$sAssociatedProfileName], self::PASSWORD);
+		$oUser = $this->CreateContactlessUser("$sAssociatedProfileName-".uniqid(), self::$aURP_Profiles[$sAssociatedProfileName], self::PASSWORD);
 		\UserRights::Login($oUser->Get('login'));
 
 		$this->InvokeNonPublicStaticMethod(ApplicationHelper::class, 'LoadBrickSecurity', [$oBrick]);
@@ -85,11 +86,10 @@ class ApplicationHelperTest extends ItopDataTestCase
 			->willReturn("Administrator");
 
 		$_SESSION = [];
-		$oUser = $this->CreateContactlessUser("$sAssociatedProfileName-" . uniqid(), self::$aURP_Profiles[$sAssociatedProfileName], self::PASSWORD);
+		$oUser = $this->CreateContactlessUser("$sAssociatedProfileName-".uniqid(), self::$aURP_Profiles[$sAssociatedProfileName], self::PASSWORD);
 		\UserRights::Login($oUser->Get('login'));
 
 		$this->InvokeNonPublicStaticMethod(ApplicationHelper::class, 'LoadBrickSecurity', [$oBrick]);
 	}
-
 
 }

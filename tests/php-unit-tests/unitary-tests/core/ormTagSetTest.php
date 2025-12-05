@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2010-2024 Combodo SAS
  *
@@ -41,7 +42,7 @@ define('MAX_TAGS', 12);
  */
 class ormTagSetTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = true;
+	public const CREATE_TEST_ORG = true;
 
 	/**
 	 * @throws Exception
@@ -65,13 +66,13 @@ class ormTagSetTest extends ItopDataTestCase
 	public function testGetValue()
 	{
 		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		static::assertEquals($oTagSet->GetValues(), array());
+		static::assertEquals($oTagSet->GetValues(), []);
 
 		$oTagSet->Add('tag1');
-		static::assertEquals($oTagSet->GetValues(), array('tag1'));
+		static::assertEquals($oTagSet->GetValues(), ['tag1']);
 
 		$oTagSet->Add('tag2');
-		static::assertEquals($oTagSet->GetValues(), array('tag1', 'tag2'));
+		static::assertEquals($oTagSet->GetValues(), ['tag1', 'tag2']);
 	}
 
 	public function testAddTag()
@@ -79,18 +80,17 @@ class ormTagSetTest extends ItopDataTestCase
 		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 
 		$oTagSet->Add('tag1');
-		static::assertEquals($oTagSet->GetValues(), array('tag1'));
+		static::assertEquals($oTagSet->GetValues(), ['tag1']);
 
-		$oTagSet->SetValues(array('tag1', 'tag2'));
-		static::assertEquals($oTagSet->GetValues(), array('tag1', 'tag2'));
+		$oTagSet->SetValues(['tag1', 'tag2']);
+		static::assertEquals($oTagSet->GetValues(), ['tag1', 'tag2']);
 
 		$oTagSet->Remove('tag1');
-		static::assertEquals($oTagSet->GetValues(), array('tag2'));
+		static::assertEquals($oTagSet->GetValues(), ['tag2']);
 
 		$oTagSet->Add('tag1');
-		static::assertEquals($oTagSet->GetValues(), array('tag1', 'tag2'));
+		static::assertEquals($oTagSet->GetValues(), ['tag1', 'tag2']);
 	}
-
 
 	/**
 	 */
@@ -98,16 +98,13 @@ class ormTagSetTest extends ItopDataTestCase
 	{
 		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, 3);
 
-		$oTagSet->SetValues(array('tag1', 'tag2', 'tag3'));
+		$oTagSet->SetValues(['tag1', 'tag2', 'tag3']);
 
-		static::assertEquals($oTagSet->GetValues(), array('tag1', 'tag2', 'tag3'));
+		static::assertEquals($oTagSet->GetValues(), ['tag1', 'tag2', 'tag3']);
 
-		try
-		{
-			$oTagSet->SetValues(array('tag1', 'tag2', 'tag3', 'tag4'));
-		}
-		catch (CoreException $e)
-		{
+		try {
+			$oTagSet->SetValues(['tag1', 'tag2', 'tag3', 'tag4']);
+		} catch (CoreException $e) {
 			static::assertEquals('Maximum number of tags (3) reached for FAQ:domains', $e->getMessage());
 			return;
 		}
@@ -121,7 +118,7 @@ class ormTagSetTest extends ItopDataTestCase
 		static::assertTrue($oTagSet1->Equals($oTagSet1));
 
 		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet2->SetValues(array('tag1'));
+		$oTagSet2->SetValues(['tag1']);
 
 		static::assertTrue($oTagSet1->Equals($oTagSet2));
 
@@ -133,11 +130,11 @@ class ormTagSetTest extends ItopDataTestCase
 	{
 		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 
-		$oTagSet->SetValues(array('tag1'));
-		static::assertEquals($oTagSet->GetValues(), array('tag1'));
+		$oTagSet->SetValues(['tag1']);
+		static::assertEquals($oTagSet->GetValues(), ['tag1']);
 
-		$oTagSet->SetValues(array('tag1', 'tag2'));
-		static::assertEquals($oTagSet->GetValues(), array('tag1', 'tag2'));
+		$oTagSet->SetValues(['tag1', 'tag2']);
+		static::assertEquals($oTagSet->GetValues(), ['tag1', 'tag2']);
 
 	}
 
@@ -145,36 +142,36 @@ class ormTagSetTest extends ItopDataTestCase
 	{
 		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		$oTagSet->Remove('tag_unknown');
-		static::assertEquals($oTagSet->GetValues(), array());
+		static::assertEquals($oTagSet->GetValues(), []);
 
-		$oTagSet->SetValues(array('tag1'));
+		$oTagSet->SetValues(['tag1']);
 		$oTagSet->Remove('tag_unknown');
-		static::assertEquals($oTagSet->GetValues(), array('tag1'));
+		static::assertEquals($oTagSet->GetValues(), ['tag1']);
 
-		$oTagSet->SetValues(array('tag1', 'tag2'));
+		$oTagSet->SetValues(['tag1', 'tag2']);
 		$oTagSet->Remove('tag1');
-		static::assertEquals($oTagSet->GetValues(), array('tag2'));
+		static::assertEquals($oTagSet->GetValues(), ['tag2']);
 
 		$oTagSet->Add('tag1');
-		static::assertEquals($oTagSet->GetValues(), array('tag1', 'tag2'));
+		static::assertEquals($oTagSet->GetValues(), ['tag1', 'tag2']);
 
 		$oTagSet->Remove('tag1');
-		static::assertEquals($oTagSet->GetValues(), array('tag2'));
+		static::assertEquals($oTagSet->GetValues(), ['tag2']);
 
 		$oTagSet->Remove('tag1');
-		static::assertEquals($oTagSet->GetValues(), array('tag2'));
+		static::assertEquals($oTagSet->GetValues(), ['tag2']);
 
 		$oTagSet->Remove('tag2');
-		static::assertEquals($oTagSet->GetValues(), array());
+		static::assertEquals($oTagSet->GetValues(), []);
 	}
 
 	public function testGetDelta()
 	{
 		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet1->SetValues(array('tag1', 'tag2'));
+		$oTagSet1->SetValues(['tag1', 'tag2']);
 
 		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet2->SetValues(array('tag1', 'tag3', 'tag4'));
+		$oTagSet2->SetValues(['tag1', 'tag3', 'tag4']);
 
 		$aDelta = $oTagSet1->GetDelta($oTagSet2);
 		static::assertCount(2, $aDelta);
@@ -185,10 +182,10 @@ class ormTagSetTest extends ItopDataTestCase
 	public function testApplyDelta()
 	{
 		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet1->SetValues(array('tag1', 'tag2'));
+		$oTagSet1->SetValues(['tag1', 'tag2']);
 
 		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet2->SetValues(array('tag1', 'tag3', 'tag4'));
+		$oTagSet2->SetValues(['tag1', 'tag3', 'tag4']);
 
 		$aDelta = $oTagSet1->GetDelta($oTagSet2);
 
@@ -211,8 +208,7 @@ class ormTagSetTest extends ItopDataTestCase
 		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		$oTagSet1->SetValues($aInitialTags);
 
-		foreach($aDiffAndExpectedTags as $aTestItem)
-		{
+		foreach ($aDiffAndExpectedTags as $aTestItem) {
 			$oTagSet1->GenerateDiffFromArray($aTestItem['diff']);
 			static::assertEquals($aTestItem['modified'], $oTagSet1->GetModified());
 		}
@@ -220,32 +216,32 @@ class ormTagSetTest extends ItopDataTestCase
 
 	public function GetModifiedProvider()
 	{
-		return array(
-			array(
-				array('tag2'),
-				array(
-					array('diff' => array('tag1', 'tag2'), 'modified' => array('tag1')),
-					array('diff' => array('tag2'), 'modified' => array('tag1')),
-					array('diff' => array(), 'modified' => array('tag1', 'tag2')),
-				)
-			),
-			array(
-				array('tag1', 'tag2'),
-				array(
-					array('diff' => array('tag1', 'tag3'), 'modified' => array('tag2', 'tag3')),
-					array('diff' => array('tag1', 'tag2'), 'modified' => array('tag2', 'tag3')),
-					array('diff' => array('tag1', 'tag2', 'tag3', 'tag4'), 'modified' => array('tag2', 'tag3', 'tag4')),
-				)
-			),
-			array(
-				array(),
-				array(
-					array('diff' => array('tag2'), 'modified' => array('tag2')),
-					array('diff' => array('tag1', 'tag2'), 'modified' => array('tag1', 'tag2')),
-					array('diff' => array('tag2'), 'modified' => array('tag1', 'tag2')),
-				)
-			),
-		);
+		return [
+			[
+				['tag2'],
+				[
+					['diff' => ['tag1', 'tag2'], 'modified' => ['tag1']],
+					['diff' => ['tag2'], 'modified' => ['tag1']],
+					['diff' => [], 'modified' => ['tag1', 'tag2']],
+				],
+			],
+			[
+				['tag1', 'tag2'],
+				[
+					['diff' => ['tag1', 'tag3'], 'modified' => ['tag2', 'tag3']],
+					['diff' => ['tag1', 'tag2'], 'modified' => ['tag2', 'tag3']],
+					['diff' => ['tag1', 'tag2', 'tag3', 'tag4'], 'modified' => ['tag2', 'tag3', 'tag4']],
+				],
+			],
+			[
+				[],
+				[
+					['diff' => ['tag2'], 'modified' => ['tag2']],
+					['diff' => ['tag1', 'tag2'], 'modified' => ['tag1', 'tag2']],
+					['diff' => ['tag2'], 'modified' => ['tag1', 'tag2']],
+				],
+			],
+		];
 	}
 
 	/**
@@ -270,32 +266,32 @@ class ormTagSetTest extends ItopDataTestCase
 
 	public function BulkModifyProvider()
 	{
-		return array(
-			'Add one tag' => array(
-				array('tag1', 'tag2'),
-				array('added' => array('tag3')),
-				array('tag1', 'tag2', 'tag3')
-			),
-			'Remove one tag' => array(
-				array('tag1', 'tag2'),
-				array('removed' => array('tag2')),
-				array('tag1')
-			),
-			'Remove unexisting tag' => array(
-				array('tag1', 'tag2'),
-				array('removed' => array('tag3')),
-				array('tag1', 'tag2')
-			),
-			'Add one and remove one tag' => array(
-				array('tag1', 'tag2'),
-				array('added' => array('tag3'), 'removed' => array('tag2')),
-				array('tag1', 'tag3')
-			),
-			'Remove first tag' => array(
-				array('tag1', 'tag2'),
-				array('removed' => array('tag1')),
-				array('tag2')
-			),
-		);
+		return [
+			'Add one tag' => [
+				['tag1', 'tag2'],
+				['added' => ['tag3']],
+				['tag1', 'tag2', 'tag3'],
+			],
+			'Remove one tag' => [
+				['tag1', 'tag2'],
+				['removed' => ['tag2']],
+				['tag1'],
+			],
+			'Remove unexisting tag' => [
+				['tag1', 'tag2'],
+				['removed' => ['tag3']],
+				['tag1', 'tag2'],
+			],
+			'Add one and remove one tag' => [
+				['tag1', 'tag2'],
+				['added' => ['tag3'], 'removed' => ['tag2']],
+				['tag1', 'tag3'],
+			],
+			'Remove first tag' => [
+				['tag1', 'tag2'],
+				['removed' => ['tag1']],
+				['tag2'],
+			],
+		];
 	}
 }

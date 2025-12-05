@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'UI:Datatables:Language:Processing' => 'Пожалуйста, подождите...',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ объектов на страницу',
 	'UI:Datatables:Language:ZeroRecords' => 'Нет объектов для отображения',
@@ -24,4 +25,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Datatables:Column:RowActions:Description' => '~~',
 	'UI:Datatables:RowActions:ConfirmationDialog' => 'Action Confirmation~~',
 	'UI:Datatables:RowActions:ConfirmationMessage' => 'Do you confirm action ?~~',
-));
+]);

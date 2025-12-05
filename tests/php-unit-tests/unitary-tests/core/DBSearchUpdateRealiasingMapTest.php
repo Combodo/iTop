@@ -5,7 +5,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
 
-
 /**
  * Class DBSearchUpdateRealiasingMapTest
  *
@@ -13,7 +12,7 @@ use DBObjectSearch;
  */
 class DBSearchUpdateRealiasingMapTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = false;
+	public const USE_TRANSACTION = false;
 
 	protected function setUp(): void
 	{
@@ -41,37 +40,37 @@ class DBSearchUpdateRealiasingMapTest extends ItopDataTestCase
 			'empty' => [
 				'OriginalMap' => null,
 				'AliasTranslation' => [],
-				'ExpectedMap' => null
+				'ExpectedMap' => null,
 			],
 			'Add 1 alias' => [
 				'OriginalMap' => [],
 				'AliasTranslation' => ['a' => ['*' => 'b']],
-				'ExpectedMap' => ['a' => ['b']]
+				'ExpectedMap' => ['a' => ['b']],
 			],
 			'Add 2 aliases' => [
 				'OriginalMap' => [],
 				'AliasTranslation' => ['a' => ['*' => 'b'], 'c' => ['*' => 'd']],
-				'ExpectedMap' => ['a' => ['b'], 'c' => ['d']]
+				'ExpectedMap' => ['a' => ['b'], 'c' => ['d']],
 			],
 			'Append 1 alias' => [
 				'OriginalMap' => ['a' => ['b']],
 				'AliasTranslation' => ['c' => ['*' => 'd']],
-				'ExpectedMap' => ['a' => ['b'], 'c' => ['d']]
+				'ExpectedMap' => ['a' => ['b'], 'c' => ['d']],
 			],
 			'Merge 1 alias' => [
 				'OriginalMap' => ['a' => ['b']],
 				'AliasTranslation' => ['a' => ['*' => 'd']],
-				'ExpectedMap' => ['a' => ['b', 'd']]
+				'ExpectedMap' => ['a' => ['b', 'd']],
 			],
 			'Merge same alias' => [
 				'OriginalMap' => ['a' => ['b']],
 				'AliasTranslation' => ['a' => ['*' => 'b']],
-				'ExpectedMap' => ['a' => ['b']]
+				'ExpectedMap' => ['a' => ['b']],
 			],
 			'Transitivity a->b + b->f = a->f' => [
 				'OriginalMap' => ['a' => ['b', 'd'], 'c' => ['e']],
 				'AliasTranslation' => ['b' => ['*' => 'f']],
-				'ExpectedMap' => ['a' => ['f', 'd'], 'c' => ['e']]
+				'ExpectedMap' => ['a' => ['f', 'd'], 'c' => ['e']],
 			],
 		];
 	}

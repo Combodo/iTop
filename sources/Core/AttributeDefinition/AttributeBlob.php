@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -22,7 +23,7 @@ use utils;
  */
 class AttributeBlob extends AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -43,7 +44,7 @@ class AttributeBlob extends AttributeDefinition
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("depends_on"));
+		return array_merge(parent::ListExpectedParams(), ["depends_on"]);
 	}
 
 	public function GetEditClass()
@@ -101,8 +102,7 @@ class AttributeBlob extends AttributeDefinition
 			try {
 				// Read the file from iTop, an URL (or the local file system - for admins only)
 				$proposedValue = utils::FileGetContentsAndMIMEType($proposedValue);
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				IssueLog::Warning(get_class($this)."::MakeRealValue - ".$e->getMessage());
 				// Not a real document !! store is as text !!! (This was the default behavior before)
 				$proposedValue = new ormDocument($e->getMessage()." \n".$proposedValue, 'text/plain');
@@ -117,7 +117,7 @@ class AttributeBlob extends AttributeDefinition
 		if ($sPrefix == '') {
 			$sPrefix = $this->GetCode();
 		}
-		$aColumns = array();
+		$aColumns = [];
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
 		$aColumns[''] = $sPrefix.'_mimetype';
 		$aColumns['_data'] = $sPrefix.'_data';
@@ -167,7 +167,7 @@ class AttributeBlob extends AttributeDefinition
 		//	 We will have to remove the blobs from the list of attributes when doing the select
 		//	 then the use of Get() should finalize the load
 		if ($value instanceof ormDocument) {
-			$aValues = array();
+			$aValues = [];
 			if (!$value->IsEmpty()) {
 				$aValues[$this->GetCode().'_data'] = $value->GetData();
 			} else {
@@ -177,7 +177,7 @@ class AttributeBlob extends AttributeDefinition
 			$aValues[$this->GetCode().'_filename'] = $value->GetFileName();
 			$aValues[$this->GetCode().'_downloads_count'] = $value->GetDownloadsCount();
 		} else {
-			$aValues = array();
+			$aValues = [];
 			$aValues[$this->GetCode().'_data'] = '';
 			$aValues[$this->GetCode().'_mimetype'] = '';
 			$aValues[$this->GetCode().'_filename'] = '';
@@ -189,7 +189,7 @@ class AttributeBlob extends AttributeDefinition
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
-		$aColumns = array();
+		$aColumns = [];
 		$aColumns[$this->GetCode().'_data'] = 'LONGBLOB'; // 2^32 (4 Gb)
 		$aColumns[$this->GetCode().'_mimetype'] = 'VARCHAR(255)'.CMDBSource::GetSqlStringColumnDefinition();
 		$aColumns[$this->GetCode().'_filename'] = 'VARCHAR(255)'.CMDBSource::GetSqlStringColumnDefinition();
@@ -200,7 +200,7 @@ class AttributeBlob extends AttributeDefinition
 
 	public function GetBasicFilterOperators()
 	{
-		return array();
+		return [];
 	}
 
 	public function GetBasicFilterLooseOperator()
@@ -233,10 +233,13 @@ class AttributeBlob extends AttributeDefinition
 	 * @return string
 	 */
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		$sAttCode = $this->GetCode();
 		if ($sValue instanceof ormDocument && !$sValue->IsEmpty()) {
 			return $sValue->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $sAttCode);
@@ -271,7 +274,7 @@ class AttributeBlob extends AttributeDefinition
 	public function GetForJSON($value)
 	{
 		if ($value instanceof ormDocument) {
-			$aValues = array();
+			$aValues = [];
 			$aValues['data'] = base64_encode($value->GetData());
 			$aValues['mimetype'] = $value->GetMimeType();
 			$aValues['filename'] = $value->GetFileName();

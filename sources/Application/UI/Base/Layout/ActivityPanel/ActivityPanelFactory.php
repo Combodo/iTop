@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
-
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
@@ -73,8 +73,7 @@ class ActivityPanelFactory
 
 		// Prepare caselogs
 		$aCaseLogTabs = $oActivityPanel->GetCaseLogTabs();
-		foreach($aCaseLogTabs as $sCaseLogAttCode => $aCaseLogData)
-		{
+		foreach ($aCaseLogTabs as $sCaseLogAttCode => $aCaseLogData) {
 			/** @var \ormCaseLog $oCaseLog */
 			$oCaseLog = $oObject->Get($sCaseLogAttCode);
 
@@ -160,8 +159,7 @@ class ActivityPanelFactory
 					while ($oNotifEvent = $oNotifEventsSet->Fetch()) {
 						try {
 							$oEntry = ActivityEntryFactory::MakeFromEventNotification($oNotifEvent);
-						}
-						catch (Exception $oException) {
+						} catch (Exception $oException) {
 							IssueLog::Debug(static::class.': Could not create entry from EventNotification #'.$oNotifEvent->GetKey().' related to trigger "'.$oNotifEvent->Get('trigger_id_friendlyname').'" / action "'.$oNotifEvent->Get('action_id_friendlyname').'" / object #'.$oNotifEvent->Get('object_id').': '.$oException->getMessage());
 							continue;
 						}

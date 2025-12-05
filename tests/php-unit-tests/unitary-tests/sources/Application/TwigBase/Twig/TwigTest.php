@@ -29,13 +29,11 @@ class TwigTest extends ItopDataTestCase
 		// Manually registering filters and functions as we didn't find how to do it automatically
 		$oAppExtension = new AppExtension();
 		$aFilters = $oAppExtension->getFilters();
-		foreach ($aFilters as $oFilter)
-		{
+		foreach ($aFilters as $oFilter) {
 			$oTwig->addFilter($oFilter);
 		}
 		$aFunctions = $oAppExtension->getFunctions();
-		foreach ($aFunctions as $oFunction)
-		{
+		foreach ($aFunctions as $oFunction) {
 			$oTwig->addFunction($oFunction);
 		}
 
@@ -46,7 +44,7 @@ class TwigTest extends ItopDataTestCase
 
 	public static function TemplateProvider()
 	{
-		$aReturn = array();
+		$aReturn = [];
 		$aReturn['filter_system'] = [
 				'sFileName' => 'test.html',
 				'expected' => file_get_contents(__DIR__.'/test.html'),

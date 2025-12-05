@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -227,13 +228,12 @@ class appUserPreferences extends DBObject
 			// No prefs (yet) for this user, create the object
 			$oObj = new appUserPreferences();
 			$oObj->Set('userid', $sUserId);
-			$oObj->Set('preferences', array()); // Default preferences: an empty array
+			$oObj->Set('preferences', []); // Default preferences: an empty array
 			try {
 				utils::PushArchiveMode(false);
 				$oObj->DBInsert();
 				utils::PopArchiveMode();
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				// Ignore errors
 			}
 		}
@@ -245,25 +245,25 @@ class appUserPreferences extends DBObject
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category" => "gui",
 			"key_type" => "autoincrement",
 			"name_attcode" => "login",
 			"state_attcode" => "",
-			"reconc_keys" => array("userid","login"),
+			"reconc_keys" => ["userid","login"],
 			"db_table" => "priv_app_preferences",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-		);
-		
+		];
+
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", array("targetclass"=>"User", "allowed_values"=>null, "sql"=>"userid", "is_null_allowed"=>false, "on_target_delete"=>DEL_AUTO, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributePropertySet("preferences", array("allowed_values"=>null, "sql"=>"preferences", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("org_id", array("allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "org_id")));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("login", array("allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "login")));
-		MetaModel::Init_SetZListItems('list', array('org_id','preferences'));
-		MetaModel::Init_SetZListItems('default_search', array('userid','login','org_id'));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("userid", ["targetclass" => "User", "allowed_values" => null, "sql" => "userid", "is_null_allowed" => false, "on_target_delete" => DEL_AUTO, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributePropertySet("preferences", ["allowed_values" => null, "sql" => "preferences", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("org_id", ["allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "org_id"]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("login", ["allowed_values" => null, "extkey_attcode" => 'userid', "target_attcode" => "login"]));
+		MetaModel::Init_SetZListItems('list', ['org_id','preferences']);
+		MetaModel::Init_SetZListItems('default_search', ['userid','login','org_id']);
 	}
 
 	/**

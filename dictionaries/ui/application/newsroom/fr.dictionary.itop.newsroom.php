@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Newsroom:iTopNotification:Label' => ITOP_APPLICATION_SHORT,
 	'UI:Newsroom:iTopNotification:ViewAllPage:Title' => 'Vos news '.ITOP_APPLICATION_SHORT,
 	'UI:Newsroom:iTopNotification:ViewAllPage:SubTitle' => 'Gérer vos news, les marquer comme lues ou non lues, les supprimer, etc.',
@@ -42,4 +43,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:NoEvent:Message' => 'Aucune news à supprimer',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:Delete:Success:Message' => 'La news a été supprimée',
 	'UI:Newsroom:iTopNotification:ViewAllPage:Action:DeleteMultiple:Success:Message' => '%1$s news ont été supprimées',
-));
+]);

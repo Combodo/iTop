@@ -91,11 +91,10 @@ editor.commands.addCommand({
     name: 'save',
     bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
     exec: function(editor) {
-        var editorForm = EditorUtils.getEditorForm(editor);
-        var submitButton = document.getElementById('submit_button');
+        let submitButton = document.getElementById('submit_button');
 
-        if (submitButton.is(":enabled")) {
-           editorForm.trigger('submit');
+        if (!submitButton.disabled) {
+                submitButton.click();
         }
     }
 });

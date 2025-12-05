@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Benjamin Planque <benjamin.planque@combodo.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'portal:itop-portal' => 'Пользовательский портал',
 	'Page:DefaultTitle' => '%1$s - Пользовательский портал',
 	'Brick:Portal:UserProfile:Title' => 'Мой профиль',
@@ -26,4 +27,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:ListAllRequests:Tab' => 'On-going and closed~~',
 	'Brick:Portal:SearchInAllRequests:Title' => 'Search in all requests~~',
 	'Brick:Portal:SearchInAllRequests:Title+' => '<p>Regardless of their status.</p>~~',
-));
+]);

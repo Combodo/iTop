@@ -39,7 +39,7 @@ use UserRights;
 class PasswordFormManager extends FormManager
 {
 	/** @var string FORM_TYPE */
-	const FORM_TYPE = 'change_password';
+	public const FORM_TYPE = 'change_password';
 
 	/**
 	 * @throws \Exception
@@ -106,87 +106,66 @@ class PasswordFormManager extends FormManager
 		$this->OnUpdate($aArgs);
 
 		// Check if form valid
-		if ($this->oForm->Validate())
-		{
+		if ($this->oForm->Validate()) {
 			// The try catch is essentially to start a MySQL transaction
-			try
-			{
+			try {
 				// Updating password
 				$sAuthUser = Session::Get('auth_user');
 				$sOldPassword = $this->oForm->GetField('old_password')->GetCurrentValue();
 				$sNewPassword = $this->oForm->GetField('new_password')->GetCurrentValue();
 				$sConfirmPassword = $this->oForm->GetField('confirm_password')->GetCurrentValue();
 
-				if ($sOldPassword !== '' && $sNewPassword !== '' && $sConfirmPassword !== '')
-				{
-					if (!UserRights::CanChangePassword())
-					{
+				if ($sOldPassword !== '' && $sNewPassword !== '' && $sConfirmPassword !== '') {
+					if (!UserRights::CanChangePassword()) {
 						$aData['valid'] = false;
-						$aData['messages']['error'] += array(
-							'_main' => array(
+						$aData['messages']['error'] += [
+							'_main' => [
 								Dict::Format('Brick:Portal:UserProfile:Password:CantChangeContactAdministrator', ITOP_APPLICATION_SHORT),
-							),
-						);
-					}
-					else
-					{
-						if (!UserRights::CheckCredentials($sAuthUser, $sOldPassword))
-						{
+							],
+						];
+					} else {
+						if (!UserRights::CheckCredentials($sAuthUser, $sOldPassword)) {
 							$aData['valid'] = false;
-							$aData['messages']['error'] += array('old_password' => array(Dict::S('UI:Login:IncorrectOldPassword')));
-						}
-						else
-						{
-							if ($sNewPassword !== $sConfirmPassword)
-							{
+							$aData['messages']['error'] += ['old_password' => [Dict::S('UI:Login:IncorrectOldPassword')]];
+						} else {
+							if ($sNewPassword !== $sConfirmPassword) {
 								$aData['valid'] = false;
-								$aData['messages']['error'] += array('confirm_password' => array(Dict::S('UI:Login:RetypePwdDoesNotMatch')));
-							}
-							elseif ($sNewPassword === $sOldPassword)
-							{
+								$aData['messages']['error'] += ['confirm_password' => [Dict::S('UI:Login:RetypePwdDoesNotMatch')]];
+							} elseif ($sNewPassword === $sOldPassword) {
 								$aData['valid'] = false;
-								$aData['messages']['error'] += array('new_password' => array(Dict::S('UI:Login:PasswordNotChanged')));
-							}
-							else
-							{
+								$aData['messages']['error'] += ['new_password' => [Dict::S('UI:Login:PasswordNotChanged')]];
+							} else {
 								try {
-									if (!UserRights::ChangePassword($sOldPassword, $sNewPassword))
-									{
+									if (!UserRights::ChangePassword($sOldPassword, $sNewPassword)) {
 										$aData['valid'] = false;
-										$aData['messages']['error'] += array(
-											'confirm_password' => array(
-												Dict::Format('Brick:Portal:UserProfile:Password:CantChangeForUnknownReason',
-													ITOP_APPLICATION_SHORT),
-											),
-										);
+										$aData['messages']['error'] += [
+											'confirm_password' => [
+												Dict::Format(
+													'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason',
+													ITOP_APPLICATION_SHORT
+												),
+											],
+										];
+									} else {
+										$aData['messages']['success'] += ['_main' => [Dict::S('Brick:Portal:Object:Form:Message:Saved')]];
 									}
-									else
-									{
-										$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
-									}
-								}
-								catch (\CoreCannotSaveObjectException $e)
-								{
+								} catch (\CoreCannotSaveObjectException $e) {
 									$aData['valid'] = false;
-									$aData['messages']['error'] += array(
+									$aData['messages']['error'] += [
 										'new_password' => $e->getIssues(),
-										'confirm_password' => array(),
-									);
+										'confirm_password' => [],
+									];
 								}
 							}
 						}
 					}
 				}
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				$aData['valid'] = false;
-				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
+				$aData['messages']['error'] += ['_main' => [$e->getMessage()]];
 				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Exception during submit ('.$e->getMessage().')');
 			}
-		}
-		else
-		{
+		} else {
 			// Handle errors
 			$aData['valid'] = false;
 			$aData['messages']['error'] += $this->oForm->GetErrorMessages();
@@ -207,12 +186,9 @@ class PasswordFormManager extends FormManager
 		$this->Build();
 
 		// Then we update it with new values
-		if (is_array($aArgs))
-		{
-			if (isset($aArgs['currentValues']))
-			{
-				foreach ($aArgs['currentValues'] as $sPreferenceName => $value)
-				{
+		if (is_array($aArgs)) {
+			if (isset($aArgs['currentValues'])) {
+				foreach ($aArgs['currentValues'] as $sPreferenceName => $value) {
 					$this->oForm->GetField($sPreferenceName)->SetCurrentValue($value);
 				}
 			}

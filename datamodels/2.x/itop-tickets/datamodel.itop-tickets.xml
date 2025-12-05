@@ -920,15 +920,6 @@
           <count_max>0</count_max>
         </field>
       </fields>
-      <presentation>
-        <details>
-          <items>
-            <item id="tickets_list" _delta="define">
-              <rank>90</rank>
-            </item>
-          </items>
-        </details>
-      </presentation>
     </class>
   </classes>
   <meta>
@@ -1415,6 +1406,7 @@
             </div>
             <div>
               <div class="form_field" data-field-id="contacts_list"/>
+              <div class="form_field" data-field-id="attachments_plugin" data-field-plugin="AttachmentPlugIn" data-field-opened="false"/>
               <div class="form_field" data-field-id="public_log"/>
             </div>
           </twig>

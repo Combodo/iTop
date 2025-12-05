@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -16,7 +17,7 @@ use ValueSetEnum;
  */
 class AttributeApplicationLanguage extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	public static function ListExpectedParams()
 	{
@@ -27,7 +28,7 @@ class AttributeApplicationLanguage extends AttributeString
 	{
 		$this->m_sCode = $sCode;
 		$aAvailableLanguages = Dict::GetLanguages();
-		$aLanguageCodes = array();
+		$aLanguageCodes = [];
 		foreach ($aAvailableLanguages as $sLangCode => $aInfo) {
 			$aLanguageCodes[$sLangCode] = $aInfo['description'].' ('.$aInfo['localized_description'].')';
 		}

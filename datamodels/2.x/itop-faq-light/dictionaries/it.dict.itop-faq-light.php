@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Domande frequenti',
 	'Class:FAQ/Attribute:title' => 'Titolo',
@@ -27,21 +28,21 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:FAQ/Attribute:key_words' => 'Parola Chiave',
 	'Class:FAQ/Attribute:key_words+' => '~~',
 	'Class:FAQ/Attribute:domains' => 'Dominio',
-));
+]);
 
 //
 // Class: FAQCategory
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:FAQCategory' => 'Categoria FAQ',
 	'Class:FAQCategory+' => 'Categoria per FAQ',
 	'Class:FAQCategory/Attribute:name' => 'Nome',
 	'Class:FAQCategory/Attribute:name+' => '~~',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Tutte le faq legate a questa categoria',
-));
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+]);
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ProblemManagement' => 'Gestione dei problemi',
 	'Menu:ProblemManagement+' => 'Gestione dei problemi',
 	'Menu:Problem:Shortcuts' => 'Scorciatoia',
@@ -52,4 +53,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Domande frequenti',
 	'Brick:Portal:FAQ:Title+' => '<p>Sei di fretta?</p><p>Verifica nella lista delle FAQ se trovi la risposta al tuo problema.</p>',
-));
+]);

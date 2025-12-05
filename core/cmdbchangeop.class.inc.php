@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,7 +17,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Persistent classes (internal) : cmdbChangeOp and derived
  *
@@ -24,9 +24,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 /**
- * Various atomic change operations, to be tracked 
+ * Various atomic change operations, to be tracked
  *
  * @package     iTopORM
  */
@@ -50,31 +49,31 @@ class CMDBChangeOp extends DBObject implements iCMDBChangeOp
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "autoincrement",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "optype",
-			'indexes'             => array(
-				array('objclass', 'objkey'),
-			),
-		);
+			'indexes'             => [
+				['objclass', 'objkey'],
+			],
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeExternalKey("change", array("allowed_values"=>null, "sql"=>"changeid", "targetclass"=>"CMDBChange", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("date", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"date")));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("userinfo", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"userinfo")));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("user_id", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"user_id")));
-		MetaModel::Init_AddAttribute(new AttributeString("objclass", array("allowed_values"=>null, "sql"=>"objclass", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeObjectKey("objkey", array("allowed_values"=>null, "class_attcode"=>"objclass", "sql"=>"objkey", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("change", ["allowed_values" => null, "sql" => "changeid", "targetclass" => "CMDBChange", "is_null_allowed" => false, "on_target_delete" => DEL_MANUAL, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("date", ["allowed_values" => null, "extkey_attcode" => "change", "target_attcode" => "date"]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("userinfo", ["allowed_values" => null, "extkey_attcode" => "change", "target_attcode" => "userinfo"]));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("user_id", ["allowed_values" => null, "extkey_attcode" => "change", "target_attcode" => "user_id"]));
+		MetaModel::Init_AddAttribute(new AttributeString("objclass", ["allowed_values" => null, "sql" => "objclass", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeObjectKey("objkey", ["allowed_values" => null, "class_attcode" => "objclass", "sql" => "objkey", "is_null_allowed" => false, "depends_on" => []]));
 
-		MetaModel::Init_SetZListItems('details', array('change', 'date', 'userinfo')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('change', 'date', 'userinfo')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', ['change', 'date', 'userinfo']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['change', 'date', 'userinfo']); // Attributes to be displayed for the complete details
 	}
 
 	/**
@@ -108,7 +107,7 @@ class CMDBChangeOp extends DBObject implements iCMDBChangeOp
 }
 
 /**
- * Record the creation of an object  
+ * Record the creation of an object
  *
  * @package     iTopORM
  */
@@ -119,24 +118,24 @@ class CMDBChangeOpCreate extends CMDBChangeOp
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_create",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 	}
-	
+
 	/**
 	 * @inheritDoc
-	 */	 
+	 */
 	public function GetDescription()
 	{
 		return Dict::S('Change:ObjectCreated');
@@ -144,7 +143,7 @@ class CMDBChangeOpCreate extends CMDBChangeOp
 }
 
 /**
- * Record the deletion of an object 
+ * Record the deletion of an object
  *
  * @package     iTopORM
  */
@@ -155,24 +154,24 @@ class CMDBChangeOpDelete extends CMDBChangeOp
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_delete",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
 		// Final class of the object (objclass must be set to the root class for efficiency purposes)
-		MetaModel::Init_AddAttribute(new AttributeString("fclass", array("allowed_values"=>null, "sql"=>"fclass", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("fclass", ["allowed_values" => null, "sql" => "fclass", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
 		// Last friendly name of the object
-		MetaModel::Init_AddAttribute(new AttributeString("fname", array("allowed_values"=>null, "sql"=>"fname", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("fname", ["allowed_values" => null, "sql" => "fname", "default_value" => "", "is_null_allowed" => true, "depends_on" => []]));
 	}
 
 	/**
@@ -196,29 +195,29 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_setatt",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("attcode", array("allowed_values"=>null, "sql"=>"attcode", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
-		
+		MetaModel::Init_AddAttribute(new AttributeString("attcode", ["allowed_values" => null, "sql" => "attcode", "default_value" => "", "is_null_allowed" => false, "depends_on" => []]));
+
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for a list
 	}
 }
 
 /**
- * Record the modification of a scalar attribute 
+ * Record the modification of a scalar attribute
  *
  * @package     iTopORM
  */
@@ -229,25 +228,25 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_setatt_scalar",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("oldvalue", array("allowed_values"=>null, "sql"=>"oldvalue", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeString("newvalue", array("allowed_values"=>null, "sql"=>"newvalue", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-		
+		MetaModel::Init_AddAttribute(new AttributeString("oldvalue", ["allowed_values" => null, "sql" => "oldvalue", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeString("newvalue", ["allowed_values" => null, "sql" => "newvalue", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode', 'oldvalue', 'newvalue']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'attcode', 'oldvalue', 'newvalue']); // Attributes to be displayed for a list
 	}
 
 	/**
@@ -262,9 +261,10 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-		{
-			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) return ''; // Protects against renamed attributes...
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
+			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
+				return '';
+			} // Protects against renamed attributes...
 
 			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 			$sAttName = $oAttDef->GetLabel();
@@ -287,57 +287,58 @@ class CMDBChangeOpSetAttributeTagSet extends CMDBChangeOpSetAttribute
 	 * @inheritDoc
 	 */
 	public static function Init()
-    {
-        $aParams = array
-        (
-	        "category"            => "core/cmdb, grant_by_profile",
-	        "key_type"            => "",
-	        "name_attcode"        => "change",
-	        "state_attcode"       => "",
-	        "reconc_keys"         => array(),
-	        "db_table"            => "priv_changeop_setatt_tagset",
-	        "db_key_field"        => "id",
-	        "db_finalclass_field" => "",
-        );
-        MetaModel::Init_Params($aParams);
-        MetaModel::Init_InheritAttributes();
-        MetaModel::Init_AddAttribute(new AttributeText("oldvalue", array("allowed_values"=>null, "sql"=>"oldvalue", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
-        MetaModel::Init_AddAttribute(new AttributeText("newvalue", array("allowed_values"=>null, "sql"=>"newvalue", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+	{
+		$aParams =
+		[
+			"category"            => "core/cmdb, grant_by_profile",
+			"key_type"            => "",
+			"name_attcode"        => "change",
+			"state_attcode"       => "",
+			"reconc_keys"         => [],
+			"db_table"            => "priv_changeop_setatt_tagset",
+			"db_key_field"        => "id",
+			"db_finalclass_field" => "",
+		];
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeText("oldvalue", ["allowed_values" => null, "sql" => "oldvalue", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("newvalue", ["allowed_values" => null, "sql" => "newvalue", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
 
-        // Display lists
-        MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for the complete details
-        MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for a list
-    }
+		// Display lists
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode', 'oldvalue', 'newvalue']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'attcode', 'oldvalue', 'newvalue']); // Attributes to be displayed for a list
+	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function GetDescription()
-    {
-        $sResult = '';
-        $sTargetObjectClass = $this->Get('objclass');
-        $oTargetObjectKey = $this->Get('objkey');
-        $sAttCode = $this->Get('attcode');
-        $oTargetSearch = new DBObjectSearch($sTargetObjectClass);
-        $oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
+	{
+		$sResult = '';
+		$sTargetObjectClass = $this->Get('objclass');
+		$oTargetObjectKey = $this->Get('objkey');
+		$sAttCode = $this->Get('attcode');
+		$oTargetSearch = new DBObjectSearch($sTargetObjectClass);
+		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
-        $oMonoObjectSet = new DBObjectSet($oTargetSearch);
-        if (UserRights::IsActionAllowedOnAttribute($sTargetObjectClass, $sAttCode, UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-        {
-            if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) return ''; // Protects against renamed attributes...
+		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
+		if (UserRights::IsActionAllowedOnAttribute($sTargetObjectClass, $sAttCode, UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
+			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
+				return '';
+			} // Protects against renamed attributes...
 
-            $oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
-            $sAttName = $oAttDef->GetLabel();
-            $sNewValue = $this->Get('newvalue');
-            $sOldValue = $this->Get('oldvalue');
-            $sResult = $oAttDef->DescribeChangeAsHTML($sOldValue, $sNewValue);
-        }
-        return $sResult;
-    }
+			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
+			$sAttName = $oAttDef->GetLabel();
+			$sNewValue = $this->Get('newvalue');
+			$sOldValue = $this->Get('oldvalue');
+			$sResult = $oAttDef->DescribeChangeAsHTML($sOldValue, $sNewValue);
+		}
+		return $sResult;
+	}
 }
 
 /**
- * Record the modification of an URL 
+ * Record the modification of an URL
  *
  * @package     iTopORM
  */
@@ -348,17 +349,17 @@ class CMDBChangeOpSetAttributeURL extends CMDBChangeOpSetAttribute
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_setatt_url",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
@@ -371,12 +372,12 @@ class CMDBChangeOpSetAttributeURL extends CMDBChangeOpSetAttribute
 		// 2. from the iTop config
 		// 3. config parameter default value
 		// see \AttributeURL::GetValidationPattern
-		MetaModel::Init_AddAttribute(new AttributeURL("oldvalue", array("allowed_values" => null, "sql" => "oldvalue", "target" => '_blank', "default_value" => null, "is_null_allowed" => true, "depends_on" => array(), "validation_pattern" => '.*')));
-		MetaModel::Init_AddAttribute(new AttributeURL("newvalue", array("allowed_values" => null, "sql" => "newvalue", "target" => '_blank', "default_value" => null, "is_null_allowed" => true, "depends_on" => array(), "validation_pattern" => '.*')));
+		MetaModel::Init_AddAttribute(new AttributeURL("oldvalue", ["allowed_values" => null, "sql" => "oldvalue", "target" => '_blank', "default_value" => null, "is_null_allowed" => true, "depends_on" => [], "validation_pattern" => '.*']));
+		MetaModel::Init_AddAttribute(new AttributeURL("newvalue", ["allowed_values" => null, "sql" => "newvalue", "target" => '_blank', "default_value" => null, "is_null_allowed" => true, "depends_on" => [], "validation_pattern" => '.*']));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode', 'oldvalue', 'newvalue']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'attcode', 'oldvalue', 'newvalue']); // Attributes to be displayed for a list
 	}
 
 	/**
@@ -391,9 +392,10 @@ class CMDBChangeOpSetAttributeURL extends CMDBChangeOpSetAttribute
 		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-		{
-			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) return ''; // Protects against renamed attributes...
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
+			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
+				return '';
+			} // Protects against renamed attributes...
 
 			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 			$sAttName = $oAttDef->GetLabel();
@@ -417,24 +419,24 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_setatt_data",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeBlob("prevdata", array("depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeBlob("prevdata", ["depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for a list
 	}
 
 	/**
@@ -444,7 +446,7 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
 		$bIsHtml = true;
-		
+
 		$sResult = '';
 		$oTargetObjectClass = $this->Get('objclass');
 		$oTargetObjectKey = $this->Get('objkey');
@@ -452,8 +454,7 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-		{
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
 			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
@@ -496,24 +497,24 @@ class CMDBChangeOpSetAttributeOneWayPassword extends CMDBChangeOpSetAttribute
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_setatt_pwd",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("prev_pwd", array("sql" => 'data', "default_value" => '', "is_null_allowed"=> true, "allowed_values" => null, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("prev_pwd", ["sql" => 'data', "default_value" => '', "is_null_allowed" => true, "allowed_values" => null, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for a list
 	}
 
 	/**
@@ -523,7 +524,7 @@ class CMDBChangeOpSetAttributeOneWayPassword extends CMDBChangeOpSetAttribute
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
 		$bIsHtml = true;
-		
+
 		$sResult = '';
 		$oTargetObjectClass = $this->Get('objclass');
 		$oTargetObjectKey = $this->Get('objkey');
@@ -531,15 +532,11 @@ class CMDBChangeOpSetAttributeOneWayPassword extends CMDBChangeOpSetAttribute
 		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-		{
-			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
-			{
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
-			}
-			else
-			{
+			} else {
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
@@ -559,24 +556,24 @@ class CMDBChangeOpSetAttributeEncrypted extends CMDBChangeOpSetAttribute
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_setatt_encrypted",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeEncryptedString("prevstring", array("sql" => 'data', "default_value" => '', "is_null_allowed"=> true, "allowed_values" => null, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEncryptedString("prevstring", ["sql" => 'data', "default_value" => '', "is_null_allowed" => true, "allowed_values" => null, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for a list
 	}
 
 	/**
@@ -586,7 +583,7 @@ class CMDBChangeOpSetAttributeEncrypted extends CMDBChangeOpSetAttribute
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
 		$bIsHtml = true;
-		
+
 		$sResult = '';
 		$oTargetObjectClass = $this->Get('objclass');
 		$oTargetObjectKey = $this->Get('objkey');
@@ -594,15 +591,11 @@ class CMDBChangeOpSetAttributeEncrypted extends CMDBChangeOpSetAttribute
 		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-		{
-			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
-			{
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
-			}
-			else
-			{
+			} else {
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
@@ -625,24 +618,24 @@ class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_setatt_text",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeText("prevdata", array("allowed_values"=>null, "sql"=>"prevdata", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeText("prevdata", ["allowed_values" => null, "sql" => "prevdata", "default_value" => "", "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for a list
 	}
 
 	/**
@@ -652,7 +645,7 @@ class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
 		$bIsHtml = true;
-		
+
 		$sResult = '';
 		$oTargetObjectClass = $this->Get('objclass');
 		$oTargetObjectKey = $this->Get('objkey');
@@ -660,15 +653,11 @@ class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-		{
-			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
-			{
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
-			}
-			else
-			{
+			} else {
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
@@ -693,24 +682,24 @@ class CMDBChangeOpSetAttributeLongText extends CMDBChangeOpSetAttribute
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_setatt_longtext",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeLongText("prevdata", array("allowed_values"=>null, "sql"=>"prevdata", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLongText("prevdata", ["allowed_values" => null, "sql" => "prevdata", "default_value" => "", "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for a list
 	}
 
 	/**
@@ -725,15 +714,11 @@ class CMDBChangeOpSetAttributeLongText extends CMDBChangeOpSetAttribute
 		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-		{
-			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
-			{
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
-			}
-			else
-			{
+			} else {
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
@@ -758,23 +743,23 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_setatt_html",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		
+
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for a list
 	}
 
 	/**
@@ -787,10 +772,9 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 		$oTargetObjectKey = $this->Get('objkey');
 		$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
 		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
-	
+
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-		{
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
 			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
@@ -804,7 +788,7 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sTextView);
 		}
 		return $sResult;
-	}	
+	}
 }
 
 /**
@@ -822,24 +806,24 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_setatt_log",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeInteger("lastentry", array("allowed_values"=>null, "sql"=>"lastentry", "default_value"=>0, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("lastentry", ["allowed_values" => null, "sql" => "lastentry", "default_value" => 0, "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for a list
 	}
 
 	/**
@@ -849,7 +833,7 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
 		$bIsHtml = true;
-		
+
 		$sResult = '';
 		$oTargetObjectClass = $this->Get('objclass');
 		$oTargetObjectKey = $this->Get('objkey');
@@ -857,15 +841,11 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-		{
-			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
-			{
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
-			}
-			else
-			{
+			} else {
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
@@ -885,12 +865,12 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 	 */
 	protected function ToHtml($sRawText)
 	{
-		return str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sRawText));
+		return str_replace(["\r\n", "\n", "\r"], "<br/>", utils::EscapeHtml($sRawText));
 	}
 }
 
 /**
- * Record an action made by a plug-in  
+ * Record an action made by a plug-in
  *
  * @package     iTopORM
  */
@@ -901,19 +881,19 @@ class CMDBChangeOpPlugin extends CMDBChangeOp
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_plugin",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
-		MetaModel::Init_AddAttribute(new AttributeString("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("description", ["allowed_values" => null, "sql" => "description", "default_value" => '', "is_null_allowed" => false, "depends_on" => []]));
 		/* May be used later when implementing an extension mechanism that will allow the plug-ins to store some extra information and still degrades gracefully when the plug-in is desinstalled
 		MetaModel::Init_AddAttribute(new AttributeString("extension_class", array("allowed_values"=>null, "sql"=>"extension_class", "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeInteger("extension_id", array("allowed_values"=>null, "sql"=>"extension_id", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
@@ -931,7 +911,7 @@ class CMDBChangeOpPlugin extends CMDBChangeOp
 }
 
 /**
- * Record added/removed objects from within a link set 
+ * Record added/removed objects from within a link set
  *
  * @package     iTopORM
  */
@@ -942,29 +922,29 @@ abstract class CMDBChangeOpSetAttributeLinks extends CMDBChangeOpSetAttribute
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_links",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
 		// Note: item class/id points to the link class itself in case of a direct link set (e.g. Server::interface_list => Interface)
 		//       item class/id points to the remote class in case of a indirect link set (e.g. Server::contract_list => Contract)
-		MetaModel::Init_AddAttribute(new AttributeString("item_class", array("allowed_values"=>null, "sql"=>"item_class", "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeInteger("item_id", array("allowed_values"=>null, "sql"=>"item_id", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeString("item_class", ["allowed_values" => null, "sql" => "item_class", "default_value" => '', "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeInteger("item_id", ["allowed_values" => null, "sql" => "item_id", "default_value" => 0, "is_null_allowed" => false, "depends_on" => []]));
 	}
 }
 
 /**
- * Record added/removed objects from within a link set 
+ * Record added/removed objects from within a link set
  *
  * @package     iTopORM
  */
@@ -975,21 +955,21 @@ class CMDBChangeOpSetAttributeLinksAddRemove extends CMDBChangeOpSetAttributeLin
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_links_addremove",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeEnum("type", array("allowed_values"=>new ValueSetEnum('added,removed'), "sql"=>"type", "default_value"=>"added", "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("type", ["allowed_values" => new ValueSetEnum('added,removed'), "sql" => "type", "default_value" => "added", "is_null_allowed" => false, "depends_on" => []]));
 	}
 
 	/**
@@ -1004,9 +984,10 @@ class CMDBChangeOpSetAttributeLinksAddRemove extends CMDBChangeOpSetAttributeLin
 		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-		{
-			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) return ''; // Protects against renamed attributes...
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
+			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
+				return '';
+			} // Protects against renamed attributes...
 
 			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 			$sAttName = $oAttDef->GetLabel();
@@ -1014,15 +995,14 @@ class CMDBChangeOpSetAttributeLinksAddRemove extends CMDBChangeOpSetAttributeLin
 			$sItemDesc = MetaModel::GetHyperLink($this->Get('item_class'), $this->Get('item_id'));
 
 			$sResult = $sAttName.' - ';
-			switch ($this->Get('type'))
-			{
-			case 'added':
-				$sResult .= Dict::Format('Change:LinkSet:Added', $sItemDesc);
-				break;
+			switch ($this->Get('type')) {
+				case 'added':
+					$sResult .= Dict::Format('Change:LinkSet:Added', $sItemDesc);
+					break;
 
-			case 'removed':
-				$sResult .= Dict::Format('Change:LinkSet:Removed', $sItemDesc);
-				break;
+				case 'removed':
+					$sResult .= Dict::Format('Change:LinkSet:Removed', $sItemDesc);
+					break;
 			}
 		}
 		return $sResult;
@@ -1031,7 +1011,7 @@ class CMDBChangeOpSetAttributeLinksAddRemove extends CMDBChangeOpSetAttributeLin
 
 /**
  * Record attribute changes from within a link set
- * A single record redirects to the modifications made within the same change  
+ * A single record redirects to the modifications made within the same change
  *
  * @package     iTopORM
  */
@@ -1042,21 +1022,21 @@ class CMDBChangeOpSetAttributeLinksTune extends CMDBChangeOpSetAttributeLinks
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_links_tune",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeInteger("link_id", array("allowed_values"=>null, "sql"=>"link_id", "default_value"=>0, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeInteger("link_id", ["allowed_values" => null, "sql" => "link_id", "default_value" => 0, "is_null_allowed" => false, "depends_on" => []]));
 	}
 
 	/**
@@ -1071,9 +1051,10 @@ class CMDBChangeOpSetAttributeLinksTune extends CMDBChangeOpSetAttributeLinks
 		$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-		{
-			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) return ''; // Protects against renamed attributes...
+		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
+			if (!MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
+				return '';
+			} // Protects against renamed attributes...
 
 			$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 			$sAttName = $oAttDef->GetLabel();
@@ -1086,27 +1067,22 @@ class CMDBChangeOpSetAttributeLinksTune extends CMDBChangeOpSetAttributeLinks
 			$oSearch = new DBObjectSearch('CMDBChangeOpSetAttribute');
 			$oSearch->AddCondition('change', $this->Get('change'), '=');
 			$oSearch->AddCondition('objkey', $this->Get('link_id'), '=');
-			if (count($aLinkClasses) == 1)
-			{
+			if (count($aLinkClasses) == 1) {
 				// Faster than the whole building of the expression below for just one value ??
 				$oSearch->AddCondition('objclass', $sLinkClass, '=');
-			}
-			else
-			{
-				$oField = new FieldExpression('objclass',  $oSearch->GetClassAlias());
+			} else {
+				$oField = new FieldExpression('objclass', $oSearch->GetClassAlias());
 				$sListExpr = '('.implode(', ', CMDBSource::Quote($aLinkClasses)).')';
 				$sOQLCondition = $oField->RenderExpression()." IN $sListExpr";
 				$oNewCondition = Expression::FromOQL($sOQLCondition);
 				$oSearch->AddConditionExpression($oNewCondition);
 			}
 			$oSet = new DBObjectSet($oSearch);
-			$aChanges = array();
-			while ($oChangeOp = $oSet->Fetch())
-			{
+			$aChanges = [];
+			while ($oChangeOp = $oSet->Fetch()) {
 				$aChanges[] = $oChangeOp->GetDescription();
 			}
-			if (count($aChanges) == 0)
-			{
+			if (count($aChanges) == 0) {
 				return '';
 			}
 
@@ -1132,24 +1108,24 @@ class CMDBChangeOpSetAttributeCustomFields extends CMDBChangeOpSetAttribute
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			"category"            => "core/cmdb, grant_by_profile",
 			"key_type"            => "",
 			"name_attcode"        => "change",
 			"state_attcode"       => "",
-			"reconc_keys"         => array(),
+			"reconc_keys"         => [],
 			"db_table"            => "priv_changeop_setatt_custfields",
 			"db_key_field"        => "id",
 			"db_finalclass_field" => "",
-		);
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeLongText("prevdata", array("allowed_values"=>null, "sql"=>"prevdata", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeLongText("prevdata", ["allowed_values" => null, "sql" => "prevdata", "default_value" => "", "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', ['date', 'userinfo', 'attcode']); // Attributes to be displayed for a list
 	}
 
 	/**
@@ -1158,26 +1134,22 @@ class CMDBChangeOpSetAttributeCustomFields extends CMDBChangeOpSetAttribute
 	public function GetDescription()
 	{
 		$sResult = '';
-		if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
-		{
+		if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 			$oTargetObjectClass = $this->Get('objclass');
 			$oTargetObjectKey = $this->Get('objkey');
 			$oTargetSearch = new DBObjectSearch($oTargetObjectClass);
 			$oTargetSearch->AddCondition('id', $oTargetObjectKey, '=');
 
 			$oMonoObjectSet = new DBObjectSet($oTargetSearch);
-			if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
-			{
+			if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES) {
 				$aValues = json_decode($this->Get('prevdata'), true);
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
 
-				try
-				{
+				try {
 					$oHandler = $oAttDef->GetHandler($aValues);
 					$sValueDesc = $oHandler->GetAsHTML($aValues);
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					$sValueDesc = 'Custom field error: '.utils::EscapeHtml($e->getMessage());
 				}
 				$sTextView = '<div>'.$sValueDesc.'</div>';

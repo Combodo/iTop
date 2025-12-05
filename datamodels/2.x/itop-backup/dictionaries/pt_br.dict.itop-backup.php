@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'bkp-backup-running' => 'Um backup está sendo executado. Por favor, espere...',
 	'bkp-restore-running' => 'Uma restauração está sendo executada. Por favor, espere...',
 	'Menu:BackupStatus' => 'Backups agendados',
@@ -44,4 +45,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'bkp-wait-backup' => 'Por favor, aguarde a conclusão do backup...',
 	'bkp-wait-restore' => 'Por favor, aguarde a conclusão da restauração...',
 	'bkp-success-restore' => 'Restauração concluída com sucesso',
-));
+]);

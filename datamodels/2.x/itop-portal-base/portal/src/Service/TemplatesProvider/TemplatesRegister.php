@@ -29,7 +29,6 @@ namespace Combodo\iTop\Portal\Service\TemplatesProvider;
  */
 class TemplatesRegister
 {
-
 	/** @var array Templates definitions (possibly altered by portal configuration) */
 	private array $aTemplatesDefinitions = [];
 
@@ -127,7 +126,7 @@ class TemplatesRegister
 	 */
 	public function GetProviderTemplatesIds(string $sProviderId): array
 	{
-		return array_map(fn($oTemplateDefinition) => $oTemplateDefinition->GetId(), $this->aTemplatesDefinitions[$sProviderId] ?? ['tile', 'page']);
+		return array_map(fn ($oTemplateDefinition) => $oTemplateDefinition->GetId(), $this->aTemplatesDefinitions[$sProviderId] ?? ['tile', 'page']);
 	}
 
 	/**

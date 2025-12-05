@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,7 @@
  */
 
 // Navigation menu
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'UI:Preferences:Title'                                             => 'Preferences',
 	'UI:Preferences:UserInterface:Title'                               => 'User interface',
 	'UI:Preferences:General:Title'                                     => 'General',
@@ -54,5 +55,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Preferences:ChooseAPlaceholder:Success:Message'                => 'Your placeholder image has been successfully updated',
 	'UI:Preferences:Notifications' 								       => 'Notifications',
 	'UI:Preferences:Notifications+' 								   => 'Configure the notifications you want to receive <a href="%1$s">on this page</a>.',
-	
-));
+
+]);

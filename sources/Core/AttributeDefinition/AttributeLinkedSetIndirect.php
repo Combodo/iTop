@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -36,7 +37,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("ext_key_to_remote"));
+		return array_merge(parent::ListExpectedParams(), ["ext_key_to_remote"]);
 	}
 
 	public function IsIndirect()
@@ -61,8 +62,10 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 
 	public function GetTrackingLevel()
 	{
-		return $this->GetOptional('tracking_level',
-			MetaModel::GetConfig()->Get('tracking_level_linked_set_indirect_default'));
+		return $this->GetOptional(
+			'tracking_level',
+			MetaModel::GetConfig()->Get('tracking_level_linked_set_indirect_default')
+		);
 	}
 
 	/**

@@ -26,7 +26,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  */
 class iTopComposerTest extends ItopTestCase
 {
-
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -90,8 +89,10 @@ class iTopComposerTest extends ItopTestCase
 			}
 		}
 
-		$this->assertEmpty($aDeniedDirWrongFormat,
-			'There are elements in \Combodo\iTop\Dependencies\Composer\iTopComposer::ListDeniedFoldersRelPaths that are not test dirs :'.var_export($aDeniedDirWrongFormat, true));
+		$this->assertEmpty(
+			$aDeniedDirWrongFormat,
+			'There are elements in \Combodo\iTop\Dependencies\Composer\iTopComposer::ListDeniedFoldersRelPaths that are not test dirs :'.var_export($aDeniedDirWrongFormat, true)
+		);
 	}
 
 	public function testListAllowedFoldersAbsPaths()
@@ -116,7 +117,6 @@ class iTopComposerTest extends ItopTestCase
 			'The iTop instance running this test must not contain any denied test directory, found: '.var_export($aDeniedButStillPresent, true)
 		);
 	}
-
 
 	/**
 	 * This is NOT a unit test, this test the iTop instance running the test ...

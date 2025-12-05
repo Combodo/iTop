@@ -13,7 +13,6 @@ use UserInternal;
 use UserLocal;
 use UserRightsProfile;
 
-
 /**
  * @group getSelectFilterTest
  * @group sampleDataNeeded
@@ -33,20 +32,20 @@ class GetSelectFilterTest extends ItopDataTestCase
 		parent::setUp();
 		require_once(APPROOT.'application/startup.inc.php');
 
-		$oRestProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'REST Services User'), true);
-		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => 'Administrator'), true);
+		$oRestProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'REST Services User'], true);
+		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'Administrator'], true);
 
-		$this->sLogin = "getselectfilter-user-" . date('dmYHis');
+		$this->sLogin = "getselectfilter-user-".date('dmYHis');
 
 		// Ensure that we have at least one administrator account
-		if (is_object($oRestProfile) && is_object($oAdminProfile))
-		{
+		if (is_object($oRestProfile) && is_object($oAdminProfile)) {
 			$this->oUser = $this->CreateUser($this->sLogin, $oRestProfile->GetKey(), $this->sPassword);
 			$this->AddProfileToUser($this->oUser, $oAdminProfile->GetKey());
 		}
 	}
 
-	public function testGetSelectFilter() {
+	public function testGetSelectFilter()
+	{
 		$oUserRights = new UserRightsProfile();
 		$aClasses = get_declared_classes();
 		$aUserClasses = [User::class];
@@ -71,35 +70,28 @@ class GetSelectFilterTest extends ItopDataTestCase
 		$oConfig->Set('security.hide_administrators', false);
 
 		$oFilterProfiles = $oUserRights->GetSelectFilter($this->oUser, URP_Profiles::class);
-		if ($oFilterProfiles === true)
-		{
+		if ($oFilterProfiles === true) {
 			$oFilterProfiles = new DBObjectSearch(URP_Profiles::class);
 		}
 		$oSet = new DBObjectSet($oFilterProfiles);
 		$bAdminProfileFound = false;
-		while($oProfile = $oSet->Fetch())
-		{
-			if ($oProfile->GetKey() == 1)
-			{
+		while ($oProfile = $oSet->Fetch()) {
+			if ($oProfile->GetKey() == 1) {
 				$bAdminProfileFound = true;
 				break;
 			}
 		}
 		$this->assertEquals($bAdminProfileFound, true);
 
-		foreach($aUserLocalAncestors as $sUserClass)
-		{
+		foreach ($aUserLocalAncestors as $sUserClass) {
 			$bAdminUserFound = false;
-			$oFilterUser = $oUserRights->GetSelectFilter($this->oUser,$sUserClass);
-			if ($oFilterUser === true)
-			{
+			$oFilterUser = $oUserRights->GetSelectFilter($this->oUser, $sUserClass);
+			if ($oFilterUser === true) {
 				$oFilterUser = new DBObjectSearch($sUserClass);
 			}
 			$oSet = new DBObjectSet($oFilterUser);
-			while($oUser = $oSet->Fetch())
-			{
-				if($oUser->GetKey() == $this->oUser->GetKey())
-				{
+			while ($oUser = $oSet->Fetch()) {
+				if ($oUser->GetKey() == $this->oUser->GetKey()) {
 					$bAdminUserFound = true;
 					break;
 				}
@@ -108,28 +100,23 @@ class GetSelectFilterTest extends ItopDataTestCase
 		}
 
 		$oFilterLnkProfiles = $oUserRights->GetSelectFilter($this->oUser, URP_UserProfile::class);
-		if ($oFilterLnkProfiles === true)
-		{
+		if ($oFilterLnkProfiles === true) {
 			$oFilterLnkProfiles = new DBObjectSearch(URP_UserProfile::class);
 		}
 		$oSet = new DBObjectSet($oFilterLnkProfiles);
 		// There should some lnk referencing either our administrator account or the Administrator profile
 		$bUserFound = false;
 		$bProfileFound = false;
-		while($oLnk = $oSet->Fetch())
-		{
-			if($oLnk->Get('userid') == $this->oUser->GetKey())
-			{
+		while ($oLnk = $oSet->Fetch()) {
+			if ($oLnk->Get('userid') == $this->oUser->GetKey()) {
 				$bUserFound = true;
 			}
-			if($oLnk->Get('profileid') == 1)
-			{
+			if ($oLnk->Get('profileid') == 1) {
 				$bProfileFound = true;
 			}
 		}
 		$this->assertEquals($bUserFound, true);
 		$this->assertEquals($bProfileFound, true);
-
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Administrator account, Administrator profile and URP_UserProfile related to administrators are now hidden
@@ -139,17 +126,14 @@ class GetSelectFilterTest extends ItopDataTestCase
 		$oFilterProfiles = $oUserRights->GetSelectFilter($this->oUser, URP_Profiles::class);
 		$this->assertNotEquals($oFilterProfiles, true); // This class must be filtered
 		$oSet = new DBObjectSet($oFilterProfiles);
-		while($oProfile = $oSet->Fetch())
-		{
+		while ($oProfile = $oSet->Fetch()) {
 			$this->assertNotEquals($oProfile->GetKey(), 1); // No profile should have id = 1 (Administrator)
 		}
-		foreach($aUserClasses as $sUserClass)
-		{
+		foreach ($aUserClasses as $sUserClass) {
 			$oFilterUser = $oUserRights->GetSelectFilter($this->oUser, $sUserClass);
-			$this->assertNotEquals($oFilterUser,true); // This class must be filtered
+			$this->assertNotEquals($oFilterUser, true); // This class must be filtered
 			$oSet = new DBObjectSet($oFilterUser);
-			while($oUser = $oSet->Fetch())
-			{
+			while ($oUser = $oSet->Fetch()) {
 				$this->assertNotEquals($oUser->GetKey(), $this->oUser->GetKey()); // Our administrator account should not be visible
 			}
 		}
@@ -158,8 +142,7 @@ class GetSelectFilterTest extends ItopDataTestCase
 		$this->assertNotEquals($oFilterLnkProfiles, true); // This class must be filtered
 		$oSet = new DBObjectSet($oFilterLnkProfiles);
 		// There should be no lnk referencing either our administrator account or the profile Administrator
-		while($oLnk = $oSet->Fetch())
-		{
+		while ($oLnk = $oSet->Fetch()) {
 			$this->assertNotEquals($oLnk->Get('userid'), $this->oUser->GetKey());
 			$this->assertNotEquals($oLnk->Get('profileid'), 1);
 		}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry;
-
 
 use AttributeDateTime;
 use Combodo\iTop\Application\UI\Base\UIBlock;
@@ -335,7 +335,7 @@ class ActivityEntry extends UIBlock
 		$sDecorationClasses = null;
 
 		// Note: We put fa-fw on all cases instead of just in the template as one of the cases could (in the future) not use FA icons. This will ensure that any use of the FA icons are always the same width.
-		switch($this->GetOrigin()) {
+		switch ($this->GetOrigin()) {
 			case CMDBChangeOrigin::CSV_INTERACTIVE:
 			case CMDBChangeOrigin::CSV_IMPORT:
 				$sDecorationClasses = 'fas fa-fw fa-file-import';

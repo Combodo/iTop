@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -25,9 +26,9 @@ define('INLINEIMAGE_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_i
 class InlineImage extends DBObject
 {
 	/** @var string attribute to be added to IMG tags to contain ID */
-	const DOM_ATTR_ID = 'data-img-id';
+	public const DOM_ATTR_ID = 'data-img-id';
 	/** @var string attribute to be added to IMG tags to contain secret */
-	const DOM_ATTR_SECRET = 'data-img-secret';
+	public const DOM_ATTR_SECRET = 'data-img-secret';
 
 	/**
 	 *
@@ -36,38 +37,36 @@ class InlineImage extends DBObject
 	 */
 	public static function Init()
 	{
-		$aParams = array
-		(
+		$aParams =
+		[
 			'category' => 'addon',
 			'key_type' => 'autoincrement',
-			'name_attcode' => array('item_class', 'temp_id'),
+			'name_attcode' => ['item_class', 'temp_id'],
 			'state_attcode' => '',
-			'reconc_keys' => array(''),
+			'reconc_keys' => [''],
 			'db_table' => 'inline_image',
 			'db_key_field' => 'id',
 			'db_finalclass_field' => '',
-			'indexes' => array(
-				array('temp_id'),
-				array('item_class', 'item_id'),
-				array('item_org_id'),
-			),
-		);
+			'indexes' => [
+				['temp_id'],
+				['item_class', 'item_id'],
+				['item_org_id'],
+			],
+		];
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeDateTime("expire", array("allowed_values" => null, "sql" => 'expire', "default_value" => 'DATE_ADD(NOW(), INTERVAL 1 DAY)', "is_null_allowed" => false, "depends_on" => array(), "always_load_in_tables" => false)));
-		MetaModel::Init_AddAttribute(new AttributeString("temp_id", array("allowed_values"=>null, "sql"=>'temp_id', "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
-		MetaModel::Init_AddAttribute(new AttributeString("item_class", array("allowed_values"=>null, "sql"=>'item_class', "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
-		MetaModel::Init_AddAttribute(new AttributeObjectKey("item_id", array("class_attcode"=>'item_class', "allowed_values"=>null, "sql"=>'item_id', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
-		MetaModel::Init_AddAttribute(new AttributeInteger("item_org_id", array("allowed_values"=>null, "sql"=>'item_org_id', "default_value"=>'0', "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
-		MetaModel::Init_AddAttribute(new AttributeBlob("contents", array("is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
-		MetaModel::Init_AddAttribute(new AttributeString("secret", array("allowed_values"=>null, "sql" => "secret", "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
+		MetaModel::Init_AddAttribute(new AttributeDateTime("expire", ["allowed_values" => null, "sql" => 'expire', "default_value" => 'DATE_ADD(NOW(), INTERVAL 1 DAY)', "is_null_allowed" => false, "depends_on" => [], "always_load_in_tables" => false]));
+		MetaModel::Init_AddAttribute(new AttributeString("temp_id", ["allowed_values" => null, "sql" => 'temp_id', "default_value" => '', "is_null_allowed" => true, "depends_on" => [], "always_load_in_tables" => false]));
+		MetaModel::Init_AddAttribute(new AttributeString("item_class", ["allowed_values" => null, "sql" => 'item_class', "default_value" => '', "is_null_allowed" => false, "depends_on" => [], "always_load_in_tables" => false]));
+		MetaModel::Init_AddAttribute(new AttributeObjectKey("item_id", ["class_attcode" => 'item_class', "allowed_values" => null, "sql" => 'item_id', "is_null_allowed" => true, "depends_on" => [], "always_load_in_tables" => false]));
+		MetaModel::Init_AddAttribute(new AttributeInteger("item_org_id", ["allowed_values" => null, "sql" => 'item_org_id', "default_value" => '0', "is_null_allowed" => true, "depends_on" => [], "always_load_in_tables" => false]));
+		MetaModel::Init_AddAttribute(new AttributeBlob("contents", ["is_null_allowed" => false, "depends_on" => [], "always_load_in_tables" => false]));
+		MetaModel::Init_AddAttribute(new AttributeString("secret", ["allowed_values" => null, "sql" => "secret", "default_value" => '', "is_null_allowed" => false, "depends_on" => [], "always_load_in_tables" => false]));
 
-
-		MetaModel::Init_SetZListItems('details', array('temp_id', 'item_class', 'item_id', 'item_org_id'));
-		MetaModel::Init_SetZListItems('standard_search', array('temp_id', 'item_class', 'item_id'));
-		MetaModel::Init_SetZListItems('list', array('temp_id', 'item_class', 'item_id' ));
+		MetaModel::Init_SetZListItems('details', ['temp_id', 'item_class', 'item_id', 'item_org_id']);
+		MetaModel::Init_SetZListItems('standard_search', ['temp_id', 'item_class', 'item_id']);
+		MetaModel::Init_SetZListItems('list', ['temp_id', 'item_class', 'item_id' ]);
 	}
-
 
 	/**
 	 * Maps the given context parameter name to the appropriate filter/search code for this class
@@ -77,12 +76,9 @@ class InlineImage extends DBObject
 	 */
 	public static function MapContextParam($sContextParam)
 	{
-		if ($sContextParam == 'org_id')
-		{
+		if ($sContextParam == 'org_id') {
 			return 'item_org_id';
-		}
-		else
-		{
+		} else {
 			return null;
 		}
 	}
@@ -104,23 +100,18 @@ class InlineImage extends DBObject
 		$sClass = get_class($oItem);
 		$iItemId = $oItem->GetKey();
 
- 		$this->Set('item_class', $sClass);
- 		$this->Set('item_id', $iItemId);
+		$this->Set('item_class', $sClass);
+		$this->Set('item_id', $iItemId);
 
-		$aCallSpec = array($sClass, 'MapContextParam');
-		if (is_callable($aCallSpec))
-		{
+		$aCallSpec = [$sClass, 'MapContextParam'];
+		if (is_callable($aCallSpec)) {
 			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
-			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
+			if (MetaModel::IsValidAttCode($sClass, $sAttCode)) {
 				$iOrgId = $oItem->Get($sAttCode);
-				if ($iOrgId > 0)
-				{
-					if ($iOrgId != $this->Get('item_org_id'))
-					{
+				if ($iOrgId > 0) {
+					if ($iOrgId != $this->Get('item_org_id')) {
 						$this->Set('item_org_id', $iOrgId);
-						if ($bUpdateOnChange)
-						{
+						if ($bUpdateOnChange) {
 							$this->DBUpdate();
 						}
 					}
@@ -143,29 +134,23 @@ class InlineImage extends DBObject
 		// First check that the organization CAN be fetched from the target class
 		//
 		$sClass = $this->Get('item_class');
-		$aCallSpec = array($sClass, 'MapContextParam');
-		if (is_callable($aCallSpec))
-		{
+		$aCallSpec = [$sClass, 'MapContextParam'];
+		if (is_callable($aCallSpec)) {
 			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
-			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
-			{
+			if (MetaModel::IsValidAttCode($sClass, $sAttCode)) {
 				// Second: check that the organization CAN be fetched from the current user
 				//
-				if (MetaModel::IsValidClass('Person'))
-				{
-					$aCallSpec = array($sClass, 'MapContextParam');
-					if (is_callable($aCallSpec))
-					{
+				if (MetaModel::IsValidClass('Person')) {
+					$aCallSpec = [$sClass, 'MapContextParam'];
+					if (is_callable($aCallSpec)) {
 						$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
-						if (MetaModel::IsValidAttCode($sClass, $sAttCode))
-						{
+						if (MetaModel::IsValidAttCode($sClass, $sAttCode)) {
 							// OK - try it
 							//
 							$oCurrentPerson = MetaModel::GetObject('Person', UserRights::GetContactId(), false);
-							if ($oCurrentPerson)
-							{
-						 		$this->Set('item_org_id', $oCurrentPerson->Get($sAttCode));
-						 	}
+							if ($oCurrentPerson) {
+								$this->Set('item_org_id', $oCurrentPerson->Get($sAttCode));
+							}
 						}
 					}
 				}
@@ -189,39 +174,37 @@ class InlineImage extends DBObject
 	public static function FinalizeInlineImages(DBObject $oObject)
 	{
 		$iTransactionId = utils::ReadParam('transaction_id', null, false, 'transaction_id');
-		if (!is_null($iTransactionId))
-		{
+		if (!is_null($iTransactionId)) {
 			// Attach new (temporary) inline images
 
 			$sTempId = utils::GetUploadTempId($iTransactionId);
 			// The object is being created from a form, check if there are pending inline images for this object
 			$sOQL = 'SELECT InlineImage WHERE temp_id = :temp_id';
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
-			$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
-			$aInlineImagesId = array();
+			$oSet = new DBObjectSet($oSearch, [], ['temp_id' => $sTempId]);
+			$aInlineImagesId = [];
 			while ($oInlineImage = $oSet->Fetch()) {
 				$aInlineImagesId[] = $oInlineImage->GetKey();
 				$oInlineImage->SetItem($oObject);
 				$oInlineImage->Set('temp_id', '');
 				$oInlineImage->DBUpdate();
 			}
-			IssueLog::Trace('FinalizeInlineImages (see $aInlineImagesId for the id list)', LogChannels::INLINE_IMAGE, array(
+			IssueLog::Trace('FinalizeInlineImages (see $aInlineImagesId for the id list)', LogChannels::INLINE_IMAGE, [
 				'$sObjectClass' => get_class($oObject),
 				'$sTransactionId' => $iTransactionId,
 				'$sTempId' => $sTempId,
 				'$aInlineImagesId' => $aInlineImagesId,
 				'$sUser' => UserRights::GetUser(),
 				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-			));
+			]);
+		} else {
+			IssueLog::Trace('FinalizeInlineImages "error" $iTransactionId is null', LogChannels::INLINE_IMAGE, [
+				'$sObjectClass' => get_class($oObject),
+				'$sTransactionId' => $iTransactionId,
+				'$sUser' => UserRights::GetUser(),
+				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+			]);
 		}
-        else {
-	        IssueLog::Trace('FinalizeInlineImages "error" $iTransactionId is null', LogChannels::INLINE_IMAGE, array(
-		        '$sObjectClass' => get_class($oObject),
-		        '$sTransactionId' => $iTransactionId,
-		        '$sUser' => UserRights::GetUser(),
-		        'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-	        ));
-        }
 	}
 
 	/**
@@ -243,11 +226,11 @@ class InlineImage extends DBObject
 	{
 		// Protection against unfortunate massive delete of inline images when a null temp ID is passed
 		if (utils::IsNullOrEmptyString($sTempId)) {
-			IssueLog::Trace('OnFormCancel "error" $sTempId is null or empty', LogChannels::INLINE_IMAGE, array(
+			IssueLog::Trace('OnFormCancel "error" $sTempId is null or empty', LogChannels::INLINE_IMAGE, [
 				'$sTempId' => $sTempId,
 				'$sUser' => UserRights::GetUser(),
 				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-			));
+			]);
 
 			return false;
 		}
@@ -255,19 +238,18 @@ class InlineImage extends DBObject
 		// Delete all "pending" InlineImages for this form
 		$sOQL = 'SELECT InlineImage WHERE temp_id = :temp_id';
 		$oSearch = DBObjectSearch::FromOQL($sOQL);
-		$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
-        $aInlineImagesId = array();
-		while($oInlineImage = $oSet->Fetch())
-		{
-            $aInlineImagesId[] = $oInlineImage->GetKey();
+		$oSet = new DBObjectSet($oSearch, [], ['temp_id' => $sTempId]);
+		$aInlineImagesId = [];
+		while ($oInlineImage = $oSet->Fetch()) {
+			$aInlineImagesId[] = $oInlineImage->GetKey();
 			$oInlineImage->DBDelete();
 		}
-		IssueLog::Trace('OnFormCancel', LogChannels::INLINE_IMAGE, array(
+		IssueLog::Trace('OnFormCancel', LogChannels::INLINE_IMAGE, [
 			'$sTempId' => $sTempId,
 			'$aInlineImagesId' => $aInlineImagesId,
 			'$sUser' => UserRights::GetUser(),
 			'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-		));
+		]);
 
 		return true;
 	}
@@ -284,15 +266,17 @@ class InlineImage extends DBObject
 	 */
 	public static function FixUrls($sHtml)
 	{
-		$aNeedles = array();
-		$aReplacements = array();
+		$aNeedles = [];
+		$aReplacements = [];
 		// Find img tags with an attribute data-img-id
-		if (preg_match_all('/<img ([^>]*)'.self::DOM_ATTR_ID.'="([0-9]+)"([^>]*)>/i',
-			$sHtml, $aMatches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE))
-		{
+		if (preg_match_all(
+			'/<img ([^>]*)'.self::DOM_ATTR_ID.'="([0-9]+)"([^>]*)>/i',
+			$sHtml,
+			$aMatches,
+			PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+		)) {
 			$sUrl = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL;
-			foreach($aMatches as $aImgInfo)
-			{
+			foreach ($aMatches as $aImgInfo) {
 				$sImgTag = $aImgInfo[0][0];
 				$sSecret = '';
 				if (preg_match('/data-img-secret="([0-9a-f]+)"/', $sImgTag, $aSecretMatches)) {
@@ -321,11 +305,10 @@ class InlineImage extends DBObject
 	public static function ProcessImageTag(DOMElement $oElement)
 	{
 		$sSrc = $oElement->getAttribute('src');
-		$sDownloadUrl = str_replace(array('.', '?'), array('\.', '\?'), INLINEIMAGE_DOWNLOAD_URL); // Escape . and ?
+		$sDownloadUrl = str_replace(['.', '?'], ['\.', '\?'], INLINEIMAGE_DOWNLOAD_URL); // Escape . and ?
 		$sUrlPattern = '|'.$sDownloadUrl.'([0-9]+)&s=([0-9a-f]+)|';
 		$bIsInlineImage = preg_match($sUrlPattern, $sSrc, $aMatches);
-		if (!$bIsInlineImage)
-		{
+		if (!$bIsInlineImage) {
 			return;
 		}
 		$iInlineImageId = $aMatches[1];
@@ -334,8 +317,7 @@ class InlineImage extends DBObject
 		$sAppRoot = utils::GetAbsoluteUrlAppRoot();
 		$sAppRootPattern = '/^'.preg_quote($sAppRoot, '/').'/';
 		$bIsSameItop = preg_match($sAppRootPattern, $sSrc);
-		if (!$bIsSameItop)
-		{
+		if (!$bIsSameItop) {
 			// @see N°1921
 			// image from another iTop should be treated as external images
 			$oElement->removeAttribute(self::DOM_ATTR_ID);
@@ -357,8 +339,7 @@ class InlineImage extends DBObject
 	{
 		$iMaxWidth = (int)MetaModel::GetConfig()->Get('inline_image_max_display_width', 0);
 		$sJS = '';
-		if ($iMaxWidth != 0)
-		{
+		if ($iMaxWidth != 0) {
 			$sJS =
 <<<JS
 CombodoInlineImage.SetMaxWidth('{$iMaxWidth}');
@@ -381,12 +362,13 @@ JS
 	 */
 	public static function IsImage($sMimeType)
 	{
-		if (!function_exists('gd_info')) return false; // no image processing capability on this system
+		if (!function_exists('gd_info')) {
+			return false;
+		} // no image processing capability on this system
 
 		$bRet = false;
 		$aInfo = gd_info(); // What are the capabilities
-		switch($sMimeType)
-		{
+		switch ($sMimeType) {
 			case 'image/gif':
 				return $aInfo['GIF Read Support'];
 				break;
@@ -422,24 +404,16 @@ JS
 	public static function GetMaxUpload()
 	{
 		$iMaxUpload = ini_get('upload_max_filesize');
-		if (!$iMaxUpload)
-		{
+		if (!$iMaxUpload) {
 			$sRet = Dict::S('Attachments:UploadNotAllowedOnThisSystem');
-		}
-		else
-		{
+		} else {
 			$iMaxUpload = utils::ConvertToBytes($iMaxUpload);
-			if ($iMaxUpload > 1024*1024*1024)
-			{
-				$sRet = Dict::Format('Attachment:Max_Go', sprintf('%0.2f', $iMaxUpload/(1024*1024*1024)));
-			}
-			else if ($iMaxUpload > 1024*1024)
-			{
-				$sRet = Dict::Format('Attachment:Max_Mo', sprintf('%0.2f', $iMaxUpload/(1024*1024)));
-			}
-			else
-			{
-				$sRet = Dict::Format('Attachment:Max_Ko', sprintf('%0.2f', $iMaxUpload/(1024)));
+			if ($iMaxUpload > 1024 * 1024 * 1024) {
+				$sRet = Dict::Format('Attachment:Max_Go', sprintf('%0.2f', $iMaxUpload / (1024 * 1024 * 1024)));
+			} elseif ($iMaxUpload > 1024 * 1024) {
+				$sRet = Dict::Format('Attachment:Max_Mo', sprintf('%0.2f', $iMaxUpload / (1024 * 1024)));
+			} else {
+				$sRet = Dict::Format('Attachment:Max_Ko', sprintf('%0.2f', $iMaxUpload / (1024)));
 			}
 		}
 		return $sRet;
@@ -469,72 +443,70 @@ JS
 JS;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	protected function AfterInsert()
+	{
+		IssueLog::Trace(__METHOD__, LogChannels::INLINE_IMAGE, [
+			'id' => $this->GetKey(),
+			'expire' => $this->Get('expire'),
+			'temp_id' => $this->Get('temp_id'),
+			'item_class' => $this->Get('item_class'),
+			'item_id' => $this->Get('item_id'),
+			'item_org_id' => $this->Get('item_org_id'),
+			'secret' => $this->Get('secret'),
+			'user' => $sUser = UserRights::GetUser(),
+			'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+			'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+		]);
+
+		parent::AfterInsert();
+	}
 
 	/**
 	 * @inheritDoc
 	 */
-    protected function AfterInsert()
-    {
-	    IssueLog::Trace(__METHOD__, LogChannels::INLINE_IMAGE, array(
-		    'id' => $this->GetKey(),
-		    'expire' => $this->Get('expire'),
-		    'temp_id' => $this->Get('temp_id'),
-		    'item_class' => $this->Get('item_class'),
-		    'item_id' => $this->Get('item_id'),
-		    'item_org_id' => $this->Get('item_org_id'),
-		    'secret' => $this->Get('secret'),
-		    'user' => $sUser = UserRights::GetUser(),
-		    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-		    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-        ));
+	protected function AfterUpdate()
+	{
+		IssueLog::Trace(__METHOD__, LogChannels::INLINE_IMAGE, [
+			'id' => $this->GetKey(),
+			'expire' => $this->Get('expire'),
+			'temp_id' => $this->Get('temp_id'),
+			'item_class' => $this->Get('item_class'),
+			'item_id' => $this->Get('item_id'),
+			'item_org_id' => $this->Get('item_org_id'),
+			'secret' => $this->Get('secret'),
+			'user' => $sUser = UserRights::GetUser(),
+			'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+			'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+		]);
 
-	    parent::AfterInsert();
-    }
-
-	/**
-	 * @inheritDoc
-	 */
-    protected function AfterUpdate()
-    {
-	    IssueLog::Trace(__METHOD__, LogChannels::INLINE_IMAGE, array(
-		    'id' => $this->GetKey(),
-		    'expire' => $this->Get('expire'),
-		    'temp_id' => $this->Get('temp_id'),
-		    'item_class' => $this->Get('item_class'),
-		    'item_id' => $this->Get('item_id'),
-		    'item_org_id' => $this->Get('item_org_id'),
-		    'secret' => $this->Get('secret'),
-		    'user' => $sUser = UserRights::GetUser(),
-		    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-		    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-        ));
-
-	    parent::AfterUpdate();
-    }
+		parent::AfterUpdate();
+	}
 
 	/**
 	 * @inheritDoc
 	 */
 	protected function AfterDelete()
-    {
-	    IssueLog::Trace(__METHOD__, LogChannels::INLINE_IMAGE, array(
-		    'id' => $this->GetKey(),
-		    'expire' => $this->Get('expire'),
-		    'temp_id' => $this->Get('temp_id'),
-		    'item_class' => $this->Get('item_class'),
-		    'item_id' => $this->Get('item_id'),
-		    'item_org_id' => $this->Get('item_org_id'),
-		    'secret' => $this->Get('secret'),
-		    'user' => $sUser = UserRights::GetUser(),
-		    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-		    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-        ));
+	{
+		IssueLog::Trace(__METHOD__, LogChannels::INLINE_IMAGE, [
+			'id' => $this->GetKey(),
+			'expire' => $this->Get('expire'),
+			'temp_id' => $this->Get('temp_id'),
+			'item_class' => $this->Get('item_class'),
+			'item_id' => $this->Get('item_id'),
+			'item_org_id' => $this->Get('item_org_id'),
+			'secret' => $this->Get('secret'),
+			'user' => $sUser = UserRights::GetUser(),
+			'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+			'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+		]);
 
-	    parent::AfterDelete();
-    }
+		parent::AfterDelete();
+	}
 
 }
-
 
 /**
  * Garbage collector for cleaning "old" temporary InlineImages (and Attachments).
@@ -545,9 +517,9 @@ class InlineImageGC implements iBackgroundProcess
 	 * @inheritDoc
 	 */
 	public function GetPeriodicity()
-    {
-        return 1;
-    }
+	{
+		return 1;
+	}
 
 	/**
 	 * @inheritDoc
@@ -556,13 +528,11 @@ class InlineImageGC implements iBackgroundProcess
 	{
 		$sDateLimit = date(AttributeDateTime::GetSQLFormat(), time()); // Every temporary InlineImage/Attachment expired will be deleted
 
-		$aResults = array();
-		$aClasses = array('InlineImage', 'Attachment');
-		foreach($aClasses as $sClass)
-		{
+		$aResults = [];
+		$aClasses = ['InlineImage', 'Attachment'];
+		foreach ($aClasses as $sClass) {
 			$iProcessed = 0;
-			if(class_exists($sClass))
-			{
+			if (class_exists($sClass)) {
 				$iProcessed = $this->DeleteExpiredDocuments($sClass, $iTimeLimit, $sDateLimit);
 			}
 			$aResults[] = "$iProcessed old temporary $sClass(s)";
@@ -591,11 +561,15 @@ class InlineImageGC implements iBackgroundProcess
 		$iProcessed = 0;
 		$sOQL = "SELECT $sClass WHERE (item_id = 0) AND (expire < '$sDateLimit')";
 		// Next one ?
-		$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array('expire' => true) /* order by*/, array(), null,
-			1 /* limit count */);
-		$oSet->OptimizeColumnLoad(array());
-		while ((time() < $iTimeLimit) && ($oResult = $oSet->Fetch()))
-		{
+		$oSet = new CMDBObjectSet(
+			DBObjectSearch::FromOQL($sOQL),
+			['expire' => true] /* order by*/,
+			[],
+			null,
+			1 /* limit count */
+		);
+		$oSet->OptimizeColumnLoad([]);
+		while ((time() < $iTimeLimit) && ($oResult = $oSet->Fetch())) {
 			/** @var \ormDocument $oDocument */
 			$oDocument = $oResult->Get('contents');
 			IssueLog::Info($sClass.' GC: Removed temp. file '.$oDocument->GetFileName().' on "'.$oResult->Get('item_class').'" #'.$oResult->Get('item_id').' as it has expired.');

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -20,7 +21,7 @@ use Combodo\iTop\Service\Events\iEventServiceSetup;
 class ApplicationEvents implements iEventServiceSetup
 {
 	// Startup events
-	const APPLICATION_EVENT_METAMODEL_STARTED = 'APPLICATION_EVENT_METAMODEL_STARTED';
+	public const APPLICATION_EVENT_METAMODEL_STARTED = 'APPLICATION_EVENT_METAMODEL_STARTED';
 
 	/**
 	 * @inheritDoc
@@ -33,6 +34,7 @@ class ApplicationEvents implements iEventServiceSetup
 			'The MetaModel is fully started',
 			'',
 			[],
-			'application'));
+			'application'
+		));
 	}
 }

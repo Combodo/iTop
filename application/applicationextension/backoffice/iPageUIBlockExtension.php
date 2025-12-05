@@ -21,27 +21,27 @@
  */
 interface iPageUIBlockExtension
 {
-    /**
-     * Add content to the "admin banner"
-     *
-     * @api
-     * @return \Combodo\iTop\Application\UI\Base\iUIBlock|null The Block to add into the page
-     */
-    public function GetBannerBlock();
+	/**
+	 * Add content to the "admin banner"
+	 *
+	 * @api
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock|null The Block to add into the page
+	 */
+	public function GetBannerBlock();
 
-    /**
-     * Add content to the header of the page
-     *
-     * @api
-     * @return \Combodo\iTop\Application\UI\Base\iUIBlock|null The Block to add into the page
-     */
-    public function GetHeaderBlock();
+	/**
+	 * Add content to the header of the page
+	 *
+	 * @api
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock|null The Block to add into the page
+	 */
+	public function GetHeaderBlock();
 
-    /**
-     * Add content to the footer of the page
-     *
-     * @api
-     * @return \Combodo\iTop\Application\UI\Base\iUIBlock|null The Block to add into the page
-     */
-    public function GetFooterBlock();
+	/**
+	 * Add content to the footer of the page
+	 *
+	 * @api
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock|null The Block to add into the page
+	 */
+	public function GetFooterBlock();
 }

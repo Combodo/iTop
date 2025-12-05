@@ -10,10 +10,10 @@
  */
 interface iBackofficeReadyScriptExtension
 {
-    /**
-     * @return string
-     * @see \iTopWebPage::$a_ready_scripts
-     * @api
-     */
-    public function GetReadyScript(): string;
+	/**
+	 * @return string
+	 * @see \iTopWebPage::$a_ready_scripts
+	 * @api
+	 */
+	public function GetReadyScript(): string;
 }

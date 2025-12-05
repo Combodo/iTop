@@ -1,9 +1,10 @@
 <?php
+
 // Copyright (C) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,7 +17,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
 /**
  * Authent External
  * Module definition file for the "External Authentication" module
@@ -28,7 +28,7 @@
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'authent-external/3.3.0',
-	array(
+	[
 		// Identification
 		//
 		'label' => 'External user authentication',
@@ -36,23 +36,23 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
-		),
+		'dependencies' => [
+		],
 		'mandatory' => false,
 		'visible' => true,
 
 		// Components
 		//
-		'datamodel' => array(
+		'datamodel' => [
 			'model.authent-external.php',
-		),
-		'data.struct' => array(
+		],
+		'data.struct' => [
 			//'data.struct.authent-ldap.xml',
-		),
-		'data.sample' => array(
+		],
+		'data.sample' => [
 			//'data.sample.authent-ldap.xml',
-		),
-		
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
@@ -60,6 +60,6 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(),
-	)
+		'settings' => [],
+	]
 );

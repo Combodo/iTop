@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -16,7 +17,7 @@ use utils;
  */
 class AttributeClassState extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	/**
 	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
@@ -37,17 +38,17 @@ class AttributeClassState extends AttributeString
 
 	public static function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('class_field'));
+		return array_merge(parent::ListExpectedParams(), ['class_field']);
 	}
 
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetAllowedValues($aArgs = [], $sContains = '')
 	{
 		if (isset($aArgs['this'])) {
 			$oHostObj = $aArgs['this'];
 			$sTargetClass = $this->Get('class_field');
 			$sClass = $oHostObj->Get($sTargetClass);
 
-			$aAllowedStates = array();
+			$aAllowedStates = [];
 			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
 				$aValues = MetaModel::EnumStates($sChildClass);
 				foreach (array_keys($aValues) as $sState) {

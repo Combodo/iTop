@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -14,8 +15,8 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class TemporaryObjectManagerTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = true;
-	const CREATE_TEST_ORG = false;
+	public const USE_TRANSACTION = true;
+	public const CREATE_TEST_ORG = false;
 
 	private TemporaryObjectConfig $oConfig;
 	private $oManager;
@@ -36,12 +37,12 @@ class TemporaryObjectManagerTest extends ItopDataTestCase
 
 		$oDescriptor = $this->oManager->CreateTemporaryObject($sTempId, 'FakedClass', -1, TemporaryObjectHelper::OPERATION_CREATE);
 
-		$this->assertNull( $oDescriptor);
+		$this->assertNull($oDescriptor);
 
 		$oOrg = $this->CreateTestOrganization();
 		$oDescriptor = $this->CreateTemporaryObject($sTempId, $oOrg, 3000, TemporaryObjectHelper::OPERATION_CREATE);
 
-		$this->assertNotNull( $oDescriptor);
+		$this->assertNotNull($oDescriptor);
 	}
 
 	public function testCancelAllTemporaryObjects()
@@ -155,7 +156,6 @@ class TemporaryObjectManagerTest extends ItopDataTestCase
 		$oDeletedObject = \MetaModel::GetObject(get_class($oOrgTemp), $oOrgTemp->Get('id'), false);
 		$this->assertNull($oDeletedObject);
 	}
-
 
 	private function CreateTemporaryObject($sTempId, $oDBObject, int $iLifetime, string $sOperation)
 	{

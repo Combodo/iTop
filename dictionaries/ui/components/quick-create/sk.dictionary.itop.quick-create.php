@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object~~',
 	'UI:Component:QuickCreate:Input:Placeholder' => 'Select object type...~~',
 	'UI:Component:QuickCreate:Recents:Title' => 'Recents~~',
@@ -17,4 +18,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Component:QuickCreate:HistoryDisabled' => 'History is disabled~~',
 	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open quick create~~',
 	'UI:Component:QuickCreate:MostPopular:Title' => 'Most popular~~',
-));
+]);

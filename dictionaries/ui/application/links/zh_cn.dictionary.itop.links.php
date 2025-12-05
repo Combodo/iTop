@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -16,7 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+Dict::Add('ZH CN', 'Chinese', '简体中文', [
 
 	// Placeholders
  // $%1s : host object class name
@@ -71,4 +72,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	// New item
 	'UI:Links:NewItem' => '新建条目',
-));
+]);

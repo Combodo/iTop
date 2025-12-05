@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author ITOMIG GmbH <martin.raenker@itomig.de>
  *
  */
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Referenz',
@@ -62,14 +63,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Geschlossen',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => 'Geschlossen',
 	'Ticket:ImpactAnalysis' => 'Auswirkungsanalyse',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:lnkContactToTicket' => 'Verknüpfung Kontakt/Ticket',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
@@ -89,13 +89,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Manuell hinzugefügt',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Berechnet',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Nicht ändern',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:WorkOrder' => 'Arbeitsauftrag',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => 'Name',
@@ -128,11 +128,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Schließen',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Ticket:baseinfo' => 'Allgemeine Informationen',
 	'Ticket:date' => 'Daten',
 	'Ticket:contact' => 'Kontakte',
@@ -222,14 +221,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Zielvorgabe (SLT) vom Typ TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve (Erstlösungszeit)',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Zielvorgabe (SLT) vom Typ TTR',
-));
-
+]);
 
 //
 // Class: Ticket
 //
 
-Dict::Add('DE DE', 'German', 'Deutsch', array(
+Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
-));
+]);

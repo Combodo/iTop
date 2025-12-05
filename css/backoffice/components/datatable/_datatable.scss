@@ -127,7 +127,8 @@ $ibo-datatable--selected-result-count--padding-left: 0.1em !default;
     }
     /* N°6543 - We need the rule to keep text inside the column when width is defined */
     > [data-attribute-type="AttributeHTML"],
-    > [data-attribute-type="AttributeText"] {
+    > [data-attribute-type="AttributeText"],
+    > [data-attribute-type="AttributeLongText"] {
           max-width: 100%;
           overflow: auto;
     }

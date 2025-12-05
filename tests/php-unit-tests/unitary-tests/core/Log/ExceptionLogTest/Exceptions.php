@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (C) 2013-2024 Combodo SAS
  * This file is part of iTop.
@@ -14,10 +15,16 @@
  */
 
 namespace {
-	class ChildException extends Exception {};
-	class GrandChildException extends ChildException {};
+	class ChildException extends Exception
+	{
+	};
+	class GrandChildException extends ChildException
+	{
+	};
 }
 
 namespace Namespaced\Exception {
-	class ExceptionInNamespace extends \ChildException {}
+	class ExceptionInNamespace extends \ChildException
+	{
+	}
 }

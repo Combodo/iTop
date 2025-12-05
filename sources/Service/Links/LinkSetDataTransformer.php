@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -48,7 +49,7 @@ class LinkSetDataTransformer
 	 *
 	 * @return array
 	 */
-	static public function Decode(iDBObjectSetIterator $oDbObjectSet, string $sTargetClass, string $sTargetField = null): array
+	public static function Decode(iDBObjectSetIterator $oDbObjectSet, string $sTargetClass, string $sTargetField = null): array
 	{
 		try {
 			// Prepare result
@@ -74,8 +75,7 @@ class LinkSetDataTransformer
 			}
 
 			return $aResult;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 
 			ExceptionLog::LogException($e);
 
@@ -96,7 +96,7 @@ class LinkSetDataTransformer
 	 *
 	 * @return array{to_be_created: array, to_be_deleted: array, to_be_added: array, to_be_removed: array}
 	 */
-	static public function Encode(array $aElements, string $sLinkClass, string $sExtKeyToRemote = null): array
+	public static function Encode(array $aElements, string $sLinkClass, string $sExtKeyToRemote = null): array
 	{
 		// Result arrays
 		$aToBeCreate = [];
@@ -125,7 +125,7 @@ class LinkSetDataTransformer
 					}
 					break;
 
-				// OPERATION REMOVE
+					// OPERATION REMOVE
 				case 'remove':
 					if ($sExtKeyToRemote === null) {
 						// Direct link detach
@@ -156,7 +156,7 @@ class LinkSetDataTransformer
 	 * @param \ormLinkSet $oOrmLinkSet
 	 *
 	 */
-	static public function StringToOrmLinkSet(string $sValue, ormLinkSet $oOrmLinkSet)
+	public static function StringToOrmLinkSet(string $sValue, ormLinkSet $oOrmLinkSet)
 	{
 		try {
 			$aItems = explode(" ", $sValue);
@@ -169,8 +169,7 @@ class LinkSetDataTransformer
 					$oOrmLinkSet->AddItem($oItem);
 				}
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			ExceptionLog::LogException($e);
 		}
 	}

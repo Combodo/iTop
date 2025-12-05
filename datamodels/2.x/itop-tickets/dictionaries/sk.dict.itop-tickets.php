@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => '~~',
 	'Class:Ticket/Attribute:ref' => 'Referencia',
@@ -61,14 +62,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Closed~~',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '~~',
 	'Ticket:ImpactAnalysis' => 'Impact Analysis~~',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContactToTicket' => 'väzba - Kontakt / Ticket',
 	'Class:lnkContactToTicket+' => '~~',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
@@ -88,13 +88,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Added manually~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Computed~~',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Do not notify~~',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:WorkOrder' => 'Pracovný príkaz',
 	'Class:WorkOrder+' => '~~',
 	'Class:WorkOrder/Attribute:name' => 'Názov',
@@ -127,11 +127,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:WorkOrder/Attribute:log+' => '~~',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Zatvoriť',
 	'Class:WorkOrder/Stimulus:ev_close+' => '~~',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Ticket:baseinfo' => 'Všeobecné informácia',
 	'Ticket:date' => 'Dátumy',
 	'Ticket:contact' => 'Kontakt',
@@ -221,14 +220,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
-));
-
+]);
 
 //
 // Class: Ticket
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
-));
+]);

@@ -1,12 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 namespace Combodo\iTop\Application\UI\Base\Layout;
-
 
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
@@ -31,7 +30,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/** @var array */
 	protected $aSubBlocks;
 	/** @var array */
-	protected $aDeferredBlocks;	
+	protected $aDeferredBlocks;
 	/** @var bool If set to true, the content block will have a surrounding <div> no matter its options / CSS classes / ... */
 	protected $bHasForcedDiv;
 

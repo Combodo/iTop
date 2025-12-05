@@ -5,7 +5,8 @@
      data-object-id="{{ oUIBlock.GetObjectId() }}"
      data-object-mode="{{ oUIBlock.GetObjectMode() }}">
     <div class="ibo-activity-panel--header" data-role="ibo-activity-panel--header">
-        <div class="ibo-activity-panel--tabs-togglers" data-role="ibo-activity-panel--tabs-togglers">
+        <div class="ibo-activity-panel--togglers" data-role="ibo-activity-panel--togglers">
+            <div class="ibo-activity-panel--tabs-togglers" data-role="ibo-activity-panel--tabs-togglers">
             {% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
                 {% set sExtraCSSClass = (loop.index == 1) ? 'ibo-is-active' : '' %}
                 <div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-caselog ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} {{ sExtraCSSClass }}"
@@ -34,7 +35,8 @@
                     <span class="ibo-activity-panel--tab-title-text" title="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}">{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}</span>
                 </a>
             </div>
-            <div class="ibo-activity-panel--togglers" data-role="ibo-activity-panel--togglers">
+        </div>
+            <div class="ibo-activity-panel--actions" data-role="ibo-activity-panel--actions">
                 <a href="#" class="ibo-activity-panel--expand-icon"
                    data-role="ibo-activity-panel--expand-icon"
                    data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}"

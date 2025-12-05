@@ -197,13 +197,13 @@ class MetaModelMagicPlaceholderTest extends ItopDataTestCase
 		$this->assertEqualsShallow(
 			[
 				'gabu' => 'zomeu',
-			    'current_contact_id' => '',
+				'current_contact_id' => '',
 				'current_user->object()' => '(current_user->object() : cannot be resolved)',
-			    'current_user->not_existing_attribute' => '(current_user->not_existing_attribute : cannot be resolved)',
+				'current_user->not_existing_attribute' => '(current_user->not_existing_attribute : cannot be resolved)',
 				'current_user->login' => '(current_user->login : cannot be resolved)',
-			    'current_contact->object()' => '(current_contact->object() : cannot be resolved)',
+				'current_contact->object()' => '(current_contact->object() : cannot be resolved)',
 				'current_contact->org_id' => '(current_contact->org_id : cannot be resolved)',
-			    'current_contact->not_existing_attribute' => '(current_contact->not_existing_attribute : cannot be resolved)',
+				'current_contact->not_existing_attribute' => '(current_contact->not_existing_attribute : cannot be resolved)',
 			],
 			$aPlaceholders,
 			'AddMagicPlaceholders should add expected arguments and render them with an explicit error when the information could not be known'

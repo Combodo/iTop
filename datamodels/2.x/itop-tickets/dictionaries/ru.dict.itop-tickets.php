@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  * @author Vladimir Kunin <v.b.kunin@gmail.com>
  *
  */
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Ticket' => 'Тикет',
 	'Class:Ticket+' => '',
 	'Class:Ticket/Attribute:ref' => 'Номер',
@@ -62,14 +63,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Закрыт',
 	'Class:Ticket/Attribute:operational_status/Value:closed+' => '',
 	'Ticket:ImpactAnalysis' => 'Анализ влияния',
-));
-
+]);
 
 //
 // Class: lnkContactToTicket
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContactToTicket' => 'Связь Контакт/Тикет',
 	'Class:lnkContactToTicket+' => '',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s~~',
@@ -89,13 +89,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Добавлено вручную',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Вычислено',
 	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'Не уведомлять',
-));
+]);
 
 //
 // Class: WorkOrder
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:WorkOrder' => 'Наряд на работу',
 	'Class:WorkOrder+' => '',
 	'Class:WorkOrder/Attribute:name' => 'Название',
@@ -128,11 +128,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:WorkOrder/Attribute:log+' => '',
 	'Class:WorkOrder/Stimulus:ev_close' => 'Закрыть',
 	'Class:WorkOrder/Stimulus:ev_close+' => '',
-));
-
+]);
 
 // Fieldset translation
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Ticket:baseinfo' => 'Общая информация',
 	'Ticket:date' => 'Даты',
 	'Ticket:contact' => 'Контакты',
@@ -222,14 +221,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
-));
-
+]);
 
 //
 // Class: Ticket
 //
 
-Dict::Add('RU RU', 'Russian', 'Русский', array(
+Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Ticket/Attribute:team_email' => 'Team email~~',
 	'Class:Ticket/Attribute:team_email+' => '~~',
-));
+]);

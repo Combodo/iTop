@@ -1,17 +1,26 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'iTopUpdate:UI:PageTitle' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'itop-core-update:UI:SelectUpdateFile' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'itop-core-update:UI:ConfirmUpdate' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'itop-core-update:UI:UpdateCoreFiles' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'iTopUpdate:UI:MaintenanceModeActive' => 'O '.ITOP_APPLICATION_SHORT.' encontra-se em manutenção, nenhum usuário pode acessar a aplicação. Você precisa rodar o Setup ou restaurar os arquivos da aplicação para voltar ao modo normal',
-	'itop-core-update:UI:UpdateDone' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'itop-core-update/Operation:SelectUpdateFile/Title' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'itop-core-update/Operation:ConfirmUpdate/Title' => 'Confirmar Atualização do '.ITOP_APPLICATION_SHORT, 'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Aplicação em Atualização',
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'iTopUpdate:UI:PageTitle' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+	'itop-core-update:UI:SelectUpdateFile' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+	'itop-core-update:UI:ConfirmUpdate' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+	'itop-core-update:UI:UpdateCoreFiles' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+	'iTopUpdate:UI:MaintenanceModeActive' => 'O '.ITOP_APPLICATION_SHORT.' encontra-se em manutenção, nenhum usuário pode acessar a aplicação. Você precisa rodar o Setup ou restaurar os arquivos da aplicação para voltar ao modo normal',
+	'itop-core-update:UI:UpdateDone' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+
+	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Confirmar Atualização do '.ITOP_APPLICATION_SHORT,
+	'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Aplicação em Atualização',
 	'itop-core-update/Operation:UpdateDone/Title' => 'Atualização do '.ITOP_APPLICATION_SHORT.' finalizada',
 	'iTopUpdate:UI:SelectUpdateFile' => 'Escolha o arquivo de atualização para enviar',
 	'iTopUpdate:UI:CheckUpdate' => 'Verificando arquivo de atualização',
@@ -23,7 +32,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopUpdate:UI:Cancel' => 'Cancelar',
 	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>Alguns módulos novos foram detectados</b>, uma atualização parcial não pode ser executada.</br>Siga o <a target="_blank" href="%2$s"> procedimento</a> para atualizar manualmente seu iTop. Você deve usar o <a href="%1$s">Setup</a> para atualizar a aplicação.',
 	'iTopUpdate:UI:Continue' => 'Continuar',
-	'iTopUpdate:UI:RunSetup' => 'Rodar Setup',
+	'iTopUpdate:UI:RunSetup' => 'Executar Setup',
 	'iTopUpdate:UI:WithDBBackup' => 'Backup do banco de dados',
 	'iTopUpdate:UI:WithFilesBackup' => 'Backup dos arquivos da aplicação',
 	'iTopUpdate:UI:WithoutBackup' => 'Backup não planejado',
@@ -40,7 +49,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopUpdate:UI:DoBackup:Label' => 'Backup de arquivos e banco de dados',
 	'iTopUpdate:UI:DoBackup:Warning' => 'Backup não recomendado devido ao espaço em disco limitado',
 	'iTopUpdate:UI:DiskFreeSpace' => 'Espaço em disco disponível',
-	'iTopUpdate:UI:ItopDiskSpace' => 'Espaço em disco do '.ITOP_APPLICATION_SHORT, 'iTopUpdate:UI:DBDiskSpace' => 'Espaço em disco do banco de dados',
+	'iTopUpdate:UI:ItopDiskSpace' => 'Espaço em disco do '.ITOP_APPLICATION_SHORT,
+	'iTopUpdate:UI:DBDiskSpace' => 'Espaço em disco do banco de dados',
 	'iTopUpdate:UI:FileUploadMaxSize' => 'Tamanho máximo de envio de arquivos',
 	'iTopUpdate:UI:PostMaxSize' => 'PHP ini post_max_size: %1$s',
 	'iTopUpdate:UI:UploadMaxFileSize' => 'PHP ini upload_max_filesize: %1$s',
@@ -81,10 +91,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopUpdate:UI:RestoreArchive' => 'Você pode restaurar sua aplicação com o arquivo \'%1$s\'',
 	'iTopUpdate:UI:RestoreBackup' => 'Você pode restaurar seu banco de dados com \'%1$s\'',
 	'iTopUpdate:UI:UpdateDone' => 'Atualizado com sucesso',
-	'Menu:iTopUpdate' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'Menu:iTopUpdate+' => 'Atualização do '.ITOP_APPLICATION_SHORT, 'Class:ModuleInstallation/Attribute:installed' => 'Instalado em',
+	'Menu:iTopUpdate' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+	'Menu:iTopUpdate+' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+	'Class:ModuleInstallation/Attribute:installed' => 'Instalado em',
 	'Class:ModuleInstallation/Attribute:name' => 'Nome',
 	'Class:ModuleInstallation/Attribute:version' => 'Versão',
-	'Class:ModuleInstallation/Attribute:comment' => 'Comentário'
-));
-
-
+	'Class:ModuleInstallation/Attribute:comment' => 'Comentário',
+]);

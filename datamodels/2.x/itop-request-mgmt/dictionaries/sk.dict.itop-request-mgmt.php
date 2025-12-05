@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => '~~',
 	'Menu:RequestManagementProvider' => 'Poskytovateľ Helpdesku',
@@ -45,7 +46,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:UserRequest:MyWorkOrders+' => 'All work orders assigned to me~~',
 	'Class:Problem:KnownProblemList' => 'Známe problémy',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -61,7 +62,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 // Class: UserRequest
 //
 
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:UserRequest' => 'Požiadavka užívateľa',
 	'Class:UserRequest+' => '~~',
 	'Class:UserRequest/Attribute:status' => 'Stav',
@@ -166,6 +167,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:UserRequest/Attribute:tto+' => 'Time To Own~~',
 	'Class:UserRequest/Attribute:ttr' => 'TTR',
 	'Class:UserRequest/Attribute:ttr+' => 'Time To Resolve~~',
+	'Class:UserRequest/Attribute:tto_time_spent' => 'TTO time spent~~',
+	'Class:UserRequest/Attribute:tto_time_spent+' => '~~',
+	'Class:UserRequest/Attribute:ttr_time_spent' => 'TTR time spent~~',
+	'Class:UserRequest/Attribute:ttr_time_spent+' => '~~',
 	'Class:UserRequest/Attribute:tto_escalation_deadline' => 'Dátum eskalácie TTO',
 	'Class:UserRequest/Attribute:tto_escalation_deadline+' => '~~',
 	'Class:UserRequest/Attribute:sla_tto_passed' => 'SLA TTO dodržané',
@@ -255,10 +260,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Počkať na schválenie',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '~~',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
-));
+]);
 
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Portal:TitleDetailsFor_Request' => 'Detaily pre požiadavky',
 	'Portal:ButtonUpdate' => 'Aktualizácia',
 	'Portal:ButtonClose' => 'Zatvoriť',
@@ -283,11 +287,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Vyberte si svoj obľúbený jazyk',
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
-));
+]);
 
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
 	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
 	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
-));
+]);

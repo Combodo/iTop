@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -125,13 +126,12 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	private function Init()
 	{
 		$this->sTargetClass = $this->GetTargetClass();
-		
+
 		// User rights
 		$this->bIsAllowCreate = $this->bIsAttEditable && UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_CREATE) == UR_ALLOWED_YES;
 		$this->bIsAllowModify = $this->bIsAttEditable && UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_MODIFY) == UR_ALLOWED_YES;
 		$this->bIsAllowDelete = $this->bIsAttEditable && UserRights::IsActionAllowed($this->oAttDef->GetLinkedClass(), UR_ACTION_DELETE) == UR_ALLOWED_YES;
 	}
-
 
 	/**
 	 * @param string $sKey
@@ -143,12 +143,16 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 */
 	public function GetDictionaryEntry(string $sKey, DBObject $oDBObject = null)
 	{
-		return $this->oAttDef->SearchSpecificLabel($sKey, '', true,
+		return $this->oAttDef->SearchSpecificLabel(
+			$sKey,
+			'',
+			true,
 			MetaModel::GetName($this->sObjectClass),
 			$this->oDbObject->Get('friendlyname'),
 			$this->oAttDef->GetLabel(),
 			MetaModel::GetName($this->sTargetClass),
-			$oDBObject !== null ? $oDBObject->Get('friendlyname') : '{item}');
+			$oDBObject !== null ? $oDBObject->Get('friendlyname') : '{item}'
+		);
 	}
 
 	/**
@@ -205,9 +209,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 		$oBlock = new DisplayBlock($oLinkSet->GetFilter(), DisplayBlock::ENUM_STYLE_LIST_IN_OBJECT, false);
 		$this->AddSubBlock($oBlock->GetRenderContent($oPage, $aExtraParams, $this->sTableId));
 	}
-	
-	
-	
+
 	/**
 	 * GetTableId.
 	 *
@@ -239,7 +241,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 * @throws ArchivedObjectException
 	 * @throws CoreException
 	 */
-	abstract function GetExtraParam(): array;
+	abstract public function GetExtraParam(): array;
 
 	/**
 	 * Return row actions.
@@ -250,7 +252,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 *
 	 * @return string[][]
 	 */
-	abstract function GetRowActions(): array;
+	abstract public function GetRowActions(): array;
 
 	/**
 	 * GetTargetClass.
@@ -260,8 +262,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 * @return string
 	 * @throws Exception
 	 */
-	abstract function GetTargetClass(): string;
-
+	abstract public function GetTargetClass(): string;
 
 	/**
 	 * GetAttCode.

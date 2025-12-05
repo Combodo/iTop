@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -20,15 +21,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	// Dictionary entries go here
-));
+]);
 
 //
 // Class: LogicalInterface
 //
 
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:LogicalInterface/Attribute:org_id' => 'Org id~~',
 	'Class:LogicalInterface/Attribute:org_id+' => '~~',
-));
+]);

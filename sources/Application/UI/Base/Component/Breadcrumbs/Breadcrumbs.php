@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2024 Combodo SAS
  *
@@ -18,7 +19,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base\Component\Breadcrumbs;
-
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use MetaModel;
@@ -90,8 +90,7 @@ class Breadcrumbs extends UIBlock
 		$aJsWidgetOptions = [];
 
 		$iBreadCrumbMaxCount = utils::GetConfig()->Get('breadcrumb.max_count');
-		if ($iBreadCrumbMaxCount > 1)
-		{
+		if ($iBreadCrumbMaxCount > 1) {
 			$oConfig = MetaModel::GetConfig();
 			$siTopInstanceId = $oConfig->GetItopInstanceid();
 

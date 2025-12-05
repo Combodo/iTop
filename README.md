@@ -99,6 +99,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Goethals, Stefan
 - Giuva, Vincenzo Katriel (a.k.a [@DarkNight97boss](https://github.com/DarkNight97boss))
 - Gumble, David
+- Håkon, Harnes (a.k.a [@hakonharnes](https://github.com/hakonharnes))
 - Heloir, Arthur 
 - Janssens, Jelle (a.k.a [@janssensjelle](https://github.com/janssensjelle))
 - Ji, Leeb (冀利斌) (a.k.a [@chileeb](https://github.com/chileeb))

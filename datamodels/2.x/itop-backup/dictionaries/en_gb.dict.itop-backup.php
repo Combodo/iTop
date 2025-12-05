@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -21,7 +22,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
-Dict::Add('EN GB', 'British English', 'British English', array(
+Dict::Add('EN GB', 'British English', 'British English', [
 
 	'bkp-backup-running' => 'A backup is running. Please wait...',
 	'bkp-restore-running' => 'A restore is running. Please wait...',
@@ -58,4 +59,4 @@ Dict::Add('EN GB', 'British English', 'British English', array(
 	'bkp-wait-backup' => 'Please wait for the backup to complete...',
 	'bkp-wait-restore' => 'Please wait for the restore to complete...',
 	'bkp-success-restore' => 'Restore successfully completed.',
-));
+]);

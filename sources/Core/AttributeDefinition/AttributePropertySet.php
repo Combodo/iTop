@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -38,7 +39,7 @@ class AttributePropertySet extends AttributeTable
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (!is_array($proposedValue)) {
-			return array('?' => (string)$proposedValue);
+			return ['?' => (string)$proposedValue];
 		}
 
 		return $proposedValue;
@@ -47,7 +48,7 @@ class AttributePropertySet extends AttributeTable
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if (!is_array($value)) {
-			throw new CoreException('Expecting an array', array('found' => get_class($value)));
+			throw new CoreException('Expecting an array', ['found' => get_class($value)]);
 		}
 		if (count($value) == 0) {
 			return "";
@@ -71,27 +72,30 @@ class AttributePropertySet extends AttributeTable
 	}
 
 	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$value,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
+	) {
 		if (!is_array($value) || count($value) == 0) {
 			return "";
 		}
 
-		$aRes = array();
+		$aRes = [];
 		foreach ($value as $sProperty => $sValue) {
 			if ($sProperty == 'auth_pwd') {
 				$sValue = '*****';
 			}
-			$sFrom = array(',', '=');
-			$sTo = array('\,', '\=');
+			$sFrom = [',', '='];
+			$sTo = ['\,', '\='];
 			$aRes[] = $sProperty.'='.str_replace($sFrom, $sTo, (string)$sValue);
 		}
 		$sRaw = implode(',', $aRes);
 
-		$sFrom = array("\r\n", $sTextQualifier);
-		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+		$sFrom = ["\r\n", $sTextQualifier];
+		$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 		$sEscaped = str_replace($sFrom, $sTo, $sRaw);
 
 		return $sTextQualifier.$sEscaped.$sTextQualifier;

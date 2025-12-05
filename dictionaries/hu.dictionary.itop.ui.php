@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:AuditCategory' => 'Audit kategória',
 	'Class:AuditCategory+' => '',
 	'Class:AuditCategory/Attribute:name' => 'Kategórianév',
@@ -26,19 +27,21 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:AuditCategory/Attribute:warning_error_tolerance+' => 'Percentage of invalid objects below which the result is in error (red)~~',
 	'Class:AuditCategory/Attribute:domains_list' => 'Domains~~',
 	'Class:AuditCategory/Attribute:domains_list+' => 'Domains which include this category~~',
-));
+]);
 
 //
 // Class: AuditRule
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:AuditRule' => 'Auditszabály',
 	'Class:AuditRule+' => '',
 	'Class:AuditRule/Attribute:name' => 'Szabály név',
 	'Class:AuditRule/Attribute:name+' => '',
 	'Class:AuditRule/Attribute:description' => 'Leírás',
 	'Class:AuditRule/Attribute:description+' => '',
+	'Class:AuditRule/Attribute:process' => 'Correction process~~',
+	'Class:AuditRule/Attribute:process+' => 'How should it be fixed? Who should do it? ...~~',
 	'Class:AuditRule/Attribute:query' => 'Lekérdezés',
 	'Class:AuditRule/Attribute:query+' => '',
 	'Class:AuditRule/Attribute:valid_flag' => 'Érvényes objektum?',
@@ -51,13 +54,15 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:AuditRule/Attribute:category_id+' => '',
 	'Class:AuditRule/Attribute:category_name' => 'Kategórianév',
 	'Class:AuditRule/Attribute:category_name+' => '',
-));
+	'Class:AuditRule/Attribute:contact_id' => 'Owner~~',
+	'Class:AuditRule/Attribute:contact_id+' => 'Team or person in charge of fixing the errors detected by this rule~~',
+]);
 
 //
 // Class: AuditDomain
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:AuditDomain' => 'Audit Domain~~',
 	'Class:AuditDomain+' => 'Audit domains allow to group the audit categories.
 Domain usually correspond to who is responsible for checking and fixing errors~~',
@@ -69,13 +74,13 @@ Domain usually correspond to who is responsible for checking and fixing errors~~
 	'Class:AuditDomain/Attribute:icon+' => '~~',
 	'Class:AuditDomain/Attribute:categories_list' => 'Categories~~',
 	'Class:AuditDomain/Attribute:categories_list+' => 'Related audit categories. When running the audit on a domain, all related audit categories are checked and only those.~~',
-));
+]);
 
 //
 // Class: lnkAuditCategoryToAuditDomain
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:lnkAuditCategoryToAuditDomain' => 'Link AuditCategory / AuditDomain~~',
 	'Class:lnkAuditCategoryToAuditDomain+' => '~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:category_id' => 'Category~~',
@@ -86,13 +91,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_id+' => 'Audit domain~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name' => 'Domain name~~',
 	'Class:lnkAuditCategoryToAuditDomain/Attribute:domain_name+' => 'Audit domain name~~',
-));
+]);
 
 //
 // Class: QueryOQL
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Query' => 'Lekérdezés',
 	'Class:Query+' => 'A query is a data set defined in a dynamic way~~',
 	'Class:Query/Attribute:name' => 'Név',
@@ -119,7 +124,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:QueryOQL+' => 'A query based on the Object Query Language~~',
 	'Class:QueryOQL/Attribute:oql' => 'Kifejezés',
 	'Class:QueryOQL/Attribute:oql+' => 'OQL kifejezés',
-));
+]);
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'addon/userrights'
@@ -130,7 +135,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 // Class: User
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:User' => 'Felhasználó',
 	'Class:User+' => '',
 	'Class:User/Attribute:finalclass' => 'Felhasználó típus',
@@ -163,9 +168,11 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:User/Attribute:status/Value:disabled' => 'Letiltott',
 	'Class:User/Error:LoginMustBeUnique' => 'A felhasználónévnek egyedinek kell lennie - "%1s" már létezik.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Legalább egy profilt a felhasználóhoz kell rendelni.',
+	'Class:User/Error:PrivilegedUserMustHaveAccessToBackOffice' => 'Profile "%1$s" cannot be given to privileged Users (Administrators, SuperUsers and REST Services Users)~~',
 	'Class:User/Error:ProfileNotAllowed' => 'A "%1$s" profil nem adható hozzá, le lesz tiltva',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'A saját felhasználó státuszának cseréje nem engedélyezett',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Az engedélyezett szervezeteknek tartalmazniuk kell a felhasználói szervezetet',
+	'Class:User/Error:AdminProfileCannotBeRemovedBySelf' => 'You cannot remove your own Administrator profile. Ask another Administrator to do it for you~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'A profilok jelenlegi listája nem ad elegendő hozzáférési jogot (a felhasználók már nem módosíthatók)',
 	'Class:User/Error:PortalPowerUserHasInsufficientRights' => 'The Portal power user profile does not give sufficient access rights (another profile must be added)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'A felhasználóhoz legalább egy szervezeti egységet hozzá kell rendelni',
@@ -176,13 +183,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:User/Warning:NoContactHasImpact' => 'Cautious: there is no Person defined on this User, this prevents access to portals, news notifications and other side effects in back-office~~',
 	'Class:UserInternal' => 'Belső felhasználó',
 	'Class:UserInternal+' => ITOP_APPLICATION_SHORT.'-n belül létrehozott felhasználó',
-));
+]);
 
 //
 // Class: URP_Profiles
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_Profiles' => 'Profil',
 	'Class:URP_Profiles+' => '',
 	'Class:URP_Profiles/Attribute:name' => 'Profilnév',
@@ -191,13 +198,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_Profiles/Attribute:description+' => '',
 	'Class:URP_Profiles/Attribute:user_list' => 'Felhasználók',
 	'Class:URP_Profiles/Attribute:user_list+' => '',
-));
+]);
 
 //
 // Class: URP_Dimensions
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_Dimensions' => 'Dimenzió',
 	'Class:URP_Dimensions+' => '',
 	'Class:URP_Dimensions/Attribute:name' => 'Dimenziónév',
@@ -206,13 +213,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_Dimensions/Attribute:description+' => '',
 	'Class:URP_Dimensions/Attribute:type' => 'Típus',
 	'Class:URP_Dimensions/Attribute:type+' => '',
-));
+]);
 
 //
 // Class: URP_UserProfile
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_UserProfile' => 'Profilhoz rendelt felhasználók',
 	'Class:URP_UserProfile+' => '',
 	'Class:URP_UserProfile/Name' => 'Kapcsolat %1$s és %2$s között',
@@ -226,14 +233,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_UserProfile/Attribute:profile+' => '',
 	'Class:URP_UserProfile/Attribute:reason' => 'Indoklás',
 	'Class:URP_UserProfile/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: URP_UserOrg
 //
 
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_UserOrg' => 'Felhasználó szervezeti tagsága',
 	'Class:URP_UserOrg+' => '',
 	'Class:URP_UserOrg/Name' => 'Kapcsolat %1$s és %2$s között',
@@ -247,13 +253,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
 	'Class:URP_UserOrg/Attribute:reason' => 'Indoklás',
 	'Class:URP_UserOrg/Attribute:reason+' => '',
-));
+]);
 
 //
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => '',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimenzió',
@@ -268,13 +274,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => '',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribútum',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => '',
-));
+]);
 
 //
 // Class: URP_ClassProjection
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => '',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimenzió',
@@ -287,13 +293,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_ClassProjection/Attribute:value+' => '',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribútum',
 	'Class:URP_ClassProjection/Attribute:attribute+' => '',
-));
+]);
 
 //
 // Class: URP_ActionGrant
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_ActionGrant' => 'action_permission',
 	'Class:URP_ActionGrant+' => '',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profil',
@@ -310,13 +316,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => '',
 	'Class:URP_ActionGrant/Attribute:action' => 'Művelet',
 	'Class:URP_ActionGrant/Attribute:action+' => '',
-));
+]);
 
 //
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_StimulusGrant' => 'stimulus_permission',
 	'Class:URP_StimulusGrant+' => '',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profil',
@@ -333,25 +339,25 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => '',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => '',
-));
+]);
 
 //
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:URP_AttributeGrant' => 'attribute_permission',
 	'Class:URP_AttributeGrant+' => '',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Művelet engedély',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => '',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribútum',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => '',
-));
+]);
 
 //
 // Class: UserDashboard
 //
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:UserDashboard' => 'Felhasználói műszerfal',
 	'Class:UserDashboard+' => '~~',
 	'Class:UserDashboard/Attribute:user_id' => 'Felhasználó',
@@ -360,12 +366,12 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:UserDashboard/Attribute:menu_code+' => '~~',
 	'Class:UserDashboard/Attribute:contents' => 'Tartalom',
 	'Class:UserDashboard/Attribute:contents+' => '~~',
-));
+]);
 
 //
 // Duplicated into itop-welcome-itil ( will be removed from here...)
 //
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:WelcomeMenu' => 'Kezdőoldal',
 	'Menu:WelcomeMenu+' => '',
 	'Menu:WelcomeMenuPage' => 'Áttekintő',
@@ -384,14 +390,14 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:MyShortcuts' => 'Saját gyorsgombok',
 	'Menu:Notifications:Title' => 'Audit kategóriák',
 	'Menu:DataAdministration' => 'Adat adminisztráció',
-	'Menu:DataAdministration+' => ''
-));
+	'Menu:DataAdministration+' => '',
+]);
 
 //
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'BooleanLabel:yes' => 'Igen',
 	'BooleanLabel:no' => 'Nem',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' bejelentkezés',
@@ -1540,13 +1546,13 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'A kijelölt objektumok gyermekei is szerepelnek.',
 	'UI:Search:Criteria:Raw:Filtered' => 'Szűrt',
 	'UI:Search:Criteria:Raw:FilteredOn' => '%1$s által szűrve',
-	'UI:StateChanged' => 'Megváltozott állapot'
-));
+	'UI:StateChanged' => 'Megváltozott állapot',
+]);
 
 //
 // Expression to Natural language
 //
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Expression:Operator:AND' => ' ÉS ',
 	'Expression:Operator:OR' => ' VAGY ',
 	'Expression:Operator:=' => ': ',
@@ -1559,12 +1565,12 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Expression:Unit:Long:MINUTE' => 'perc',
 	'Expression:Verb:NOW' => 'most',
 	'Expression:Verb:ISNULL' => ': meghatározatlan',
-));
+]);
 
 //
 // iTop Newsroom menu
 //
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI:Newsroom:NoNewMessage' => 'Nincs új üzenet',
 	'UI:Newsroom:XNewMessage' => '%1$s új üzenet',
 	'UI:Newsroom:MarkAllAsRead' => 'Üzenetek jelölése olvasottként',
@@ -1579,10 +1585,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Newsroom:Priority:2:Tooltip' => 'Urgent~~',
 	'UI:Newsroom:Priority:3:Tooltip' => 'Important~~',
 	'UI:Newsroom:Priority:4:Tooltip' => 'Normal~~',
-));
+]);
 
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:DataSources' => 'Szinkronizációs adatforrások',
 	'Menu:DataSources+' => '',
 	'Menu:AuditCategories' => 'Audit kategóriák',
@@ -1610,4 +1615,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:Integrations' => 'Integrációk',
 	'Menu:Integrations+' => '~~',
 
-));
+]);

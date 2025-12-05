@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -15,8 +16,8 @@ use DBObject;
 
 class TemporaryObjectRepositoryTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = true;
-	const CREATE_TEST_ORG = false;
+	public const USE_TRANSACTION = true;
+	public const CREATE_TEST_ORG = false;
 
 	private TemporaryObjectConfig $oTemporaryObjectConfig;
 

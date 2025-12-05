@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -22,9 +23,8 @@ use Combodo\iTop\Service\Events\iEventServiceSetup;
  */
 class TemporaryObjectsEvents implements iEventServiceSetup
 {
-
 	// Startup events
-	const TEMPORARY_OBJECT_EVENT_CONFIRM_CREATE = 'TEMPORARY_OBJECT_EVENT_CONFIRM_CREATE';
+	public const TEMPORARY_OBJECT_EVENT_CONFIRM_CREATE = 'TEMPORARY_OBJECT_EVENT_CONFIRM_CREATE';
 
 	/**
 	 * @inheritDoc
@@ -50,7 +50,8 @@ class TemporaryObjectsEvents implements iEventServiceSetup
 					'string',
 				),
 			],
-			'application'));
+			'application'
+		));
 	}
 
 }

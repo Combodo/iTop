@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (c) 2010-2024 Combodo SAS
 //
 //   This file is part of iTop.
@@ -21,7 +22,6 @@
  * Date: 06/10/2017
  */
 
-
 require_once('../../../approot.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 
@@ -34,7 +34,7 @@ $oTestHandle = @fopen($sTestFile, "w");
 
 @fwrite($oTestHandle, "<?php\n\n");
 
-$aFoundOQLs = array();
+$aFoundOQLs = [];
 $iCount = 0;
 $iRead = 0;
 
@@ -47,7 +47,9 @@ if ($oOQLHandle) {
 		$sOQL = $aRecord['oql'];
 
 		$sChecksum = md5($sBuffer);
-		if (isset($aFoundOQLs[$sChecksum])) { continue; }
+		if (isset($aFoundOQLs[$sChecksum])) {
+			continue;
+		}
 		$aFoundOQLs[$sChecksum] = true;
 
 		$iCount++;
@@ -72,9 +74,7 @@ if ($oOQLHandle) {
 
 echo "File '$sTestFile' generated with $iCount entries (from $iRead captured OQL).\n";
 
-
 /// Group by
-
 
 $sOQLFile = APPROOT.'log/oql_group_by_records.txt';
 $sTestFile = APPROOT.'tests/core/oql_group_by_records.php';
@@ -83,7 +83,7 @@ $oTestHandle = @fopen($sTestFile, "w");
 
 @fwrite($oTestHandle, "<?php\n\n");
 
-$aFoundOQLs = array();
+$aFoundOQLs = [];
 $iCount = 1000;
 $iRead = 0;
 
@@ -96,19 +96,18 @@ if ($oOQLHandle) {
 		$sOQL = $aRecord['oql'];
 
 		$sChecksum = md5($sBuffer);
-		if (isset($aFoundOQLs[$sChecksum])) { continue; }
+		if (isset($aFoundOQLs[$sChecksum])) {
+			continue;
+		}
 		$aFoundOQLs[$sChecksum] = true;
 
 		$iCount++;
 		$sOrderBy = ConvertArray($aRecord['order_by']);
 		$sGroupByExpr = ConvertArray($aRecord['group_by_expr']);
 		$sSelectExpr = ConvertArray($aRecord['select_expr']);
-		if ($aRecord['exclude_null_values'])
-		{
+		if ($aRecord['exclude_null_values']) {
 			$bExcludeNullValues = 'true';
-		}
-		else
-		{
+		} else {
 			$bExcludeNullValues = 'false';
 		}
 		$iLimitCount = $aRecord['limit_count'];
@@ -128,19 +127,17 @@ if ($oOQLHandle) {
 
 @fclose($oTestHandle);
 
-echo "<br>File '$sTestFile' generated with ".($iCount-1000)." entries (from $iRead captured OQL).\n";
+echo "<br>File '$sTestFile' generated with ".($iCount - 1000)." entries (from $iRead captured OQL).\n";
 
 function ConvertArray($aArray)
 {
-	if (is_null($aArray))
-	{
+	if (is_null($aArray)) {
 		return 'null';
 	}
 
-	if (empty($aArray))
-	{
+	if (empty($aArray)) {
 		return 'array()';
 	}
 
-	return 'unserialize(\''.str_replace("'", "\\'",serialize($aArray)).'\')';
+	return 'unserialize(\''.str_replace("'", "\\'", serialize($aArray)).'\')';
 }

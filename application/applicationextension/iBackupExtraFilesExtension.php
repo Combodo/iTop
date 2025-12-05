@@ -8,9 +8,9 @@
  */
 interface iBackupExtraFilesExtension
 {
-    /**
-     * @return string[] Array of relative paths (from app root) for files and directories to be included in the backup
-     * @api
-     */
-    public function GetExtraFilesRelPaths(): array;
+	/**
+	 * @return string[] Array of relative paths (from app root) for files and directories to be included in the backup
+	 * @api
+	 */
+	public function GetExtraFilesRelPaths(): array;
 }

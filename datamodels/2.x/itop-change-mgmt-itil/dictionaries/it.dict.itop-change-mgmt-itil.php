@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ChangeManagement' => 'Gestione dei cambi',
 	'Menu:Change:Overview' => 'Panoramica',
 	'Menu:Change:Overview+' => '',
@@ -33,7 +34,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Cambiamenti per stato negli ultimi 7 giorni',
 	'Tickets:Related:OpenChanges' => 'Cambiamenti aperti',
 	'Tickets:Related:RecentChanges' => 'Cambiamenti recenti (72h)',
-));
+]);
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -45,12 +46,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
-
 //
 // Class: Change
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:Change' => 'Cambio',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Stato',
@@ -147,13 +147,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Fine',
 	'Class:Change/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: RoutineChange
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:RoutineChange' => 'Routine di cambi',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Convalida',
@@ -178,13 +178,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
 	'Class:RoutineChange/Stimulus:ev_finish' => 'Fine',
 	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: ApprovedChange
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ApprovedChange' => 'Cambi approvati',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Data di approvazione',
@@ -213,13 +213,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Fine',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: NormalChange
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:NormalChange' => 'Cambi normali',
 	'Class:NormalChange+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Data di approvazione',
@@ -248,13 +248,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:NormalChange/Stimulus:ev_monitor+' => '',
 	'Class:NormalChange/Stimulus:ev_finish' => 'Fine',
 	'Class:NormalChange/Stimulus:ev_finish+' => '',
-));
+]);
 
 //
 // Class: EmergencyChange
 //
 
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:EmergencyChange' => 'Cambi di emergenza',
 	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Convalida',
@@ -279,4 +279,4 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Fine',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-));
+]);

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -23,9 +24,9 @@ use TypeError;
  */
 class EventTest extends ItopDataTestCase
 {
-	const USE_TRANSACTION = false;
-	const CREATE_TEST_ORG = false;
-	const DEBUG_UNIT_TEST = true;
+	public const USE_TRANSACTION = false;
+	public const CREATE_TEST_ORG = false;
+	public const DEBUG_UNIT_TEST = true;
 
 	private static int $iEventCalls;
 
@@ -99,18 +100,18 @@ class EventTest extends ItopDataTestCase
 	{
 		$oReceiver = new TestEventReceiver();
 
-		return array(
-			'method'  => array(array($oReceiver, 'OnEvent1')),
-			'static'  => array('Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver::OnStaticEvent1'),
-			'static2' => array(array('Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver', 'OnStaticEvent1')),
-		);
+		return [
+			'method'  => [[$oReceiver, 'OnEvent1']],
+			'static'  => ['Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver::OnStaticEvent1'],
+			'static2' => [['Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver', 'OnStaticEvent1']],
+		];
 	}
 
 	public function testBrokenCallback()
 	{
 		EventService::RegisterEvent(new EventDescription('event_a', [], 'test', '', [], ''));
 		$oReceiver = new TestEventReceiver();
-		$this->EventService_RegisterListener('event_a', array($oReceiver, 'BrokenCallback'));
+		$this->EventService_RegisterListener('event_a', [$oReceiver, 'BrokenCallback']);
 
 		$this->expectException(TypeError::class);
 		EventService::FireEvent(new EventData('event_a'));
@@ -120,7 +121,7 @@ class EventTest extends ItopDataTestCase
 	{
 		EventService::RegisterEvent(new EventDescription('event_a', [], 'test', '', [], ''));
 		$oReceiver = new TestEventReceiver();
-		$this->EventService_RegisterListener('event_a', array($oReceiver, 'OnEvent1'));
+		$this->EventService_RegisterListener('event_a', [$oReceiver, 'OnEvent1']);
 
 		self::$iEventCalls = 0;
 		EventService::FireEvent(new EventData('event_a'));
@@ -140,14 +141,14 @@ class EventTest extends ItopDataTestCase
 		EventService::RegisterEvent(new EventDescription('event_a', [], 'test', '', [], ''));
 		EventService::RegisterEvent(new EventDescription('event_b', [], 'test', '', [], ''));
 		$oReceiver = new TestEventReceiver();
-		$this->EventService_RegisterListener('event_a', array($oReceiver, 'OnEvent1'));
-		$this->EventService_RegisterListener('event_a', array($oReceiver, 'OnEvent2'));
-		$this->EventService_RegisterListener('event_a', array('Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver', 'OnStaticEvent1'));
+		$this->EventService_RegisterListener('event_a', [$oReceiver, 'OnEvent1']);
+		$this->EventService_RegisterListener('event_a', [$oReceiver, 'OnEvent2']);
+		$this->EventService_RegisterListener('event_a', ['Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver', 'OnStaticEvent1']);
 		$this->EventService_RegisterListener('event_a', 'Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver::OnStaticEvent2');
 
-		$this->EventService_RegisterListener('event_b', array($oReceiver, 'OnEvent1'));
-		$this->EventService_RegisterListener('event_b', array($oReceiver, 'OnEvent2'));
-		$this->EventService_RegisterListener('event_b', array('Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver', 'OnStaticEvent1'));
+		$this->EventService_RegisterListener('event_b', [$oReceiver, 'OnEvent1']);
+		$this->EventService_RegisterListener('event_b', [$oReceiver, 'OnEvent2']);
+		$this->EventService_RegisterListener('event_b', ['Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver', 'OnStaticEvent1']);
 		$this->EventService_RegisterListener('event_b', 'Combodo\iTop\Test\UnitTest\Service\Events\TestEventReceiver::OnStaticEvent2');
 
 		self::$iEventCalls = 0;
@@ -163,13 +164,13 @@ class EventTest extends ItopDataTestCase
 	{
 		EventService::RegisterEvent(new EventDescription('event1', [], 'test', '', [], ''));
 		$oReceiver = new TestEventReceiver();
-		$sId = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
-		$sId = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
-		$sId = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
-		$sId = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
 
 		self::$iEventCalls = 0;
@@ -268,19 +269,18 @@ class EventTest extends ItopDataTestCase
 
 	}
 
-
 	public function testUnRegisterEventListener()
 	{
 		EventService::RegisterEvent(new EventDescription('event1', [], 'test', '', [], ''));
 		EventService::RegisterEvent(new EventDescription('event2', [], 'test', '', [], ''));
 		$oReceiver = new TestEventReceiver();
-		$sId = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
-		$sId = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
-		$sId = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
-		$sId = $this->EventService_RegisterListener('event2', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event2', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
 
 		self::$iEventCalls = 0;
@@ -307,13 +307,13 @@ class EventTest extends ItopDataTestCase
 		EventService::RegisterEvent(new EventDescription('event1', [], 'test', '', [], ''));
 		EventService::RegisterEvent(new EventDescription('event2', [], 'test', '', [], ''));
 		$oReceiver = new TestEventReceiver();
-		$sId = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
-		$sId = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
-		$sId = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
-		$sId = $this->EventService_RegisterListener('event2', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event2', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
 
 		self::$iEventCalls = 0;
@@ -335,13 +335,13 @@ class EventTest extends ItopDataTestCase
 		EventService::RegisterEvent(new EventDescription('event1', [], 'test', '', [], ''));
 		EventService::RegisterEvent(new EventDescription('event2', [], 'test', '', [], ''));
 		$oReceiver = new TestEventReceiver();
-		$sIdToRemove = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sIdToRemove = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sIdToRemove");
-		$sId = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
-		$sId = $this->EventService_RegisterListener('event1', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event1', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
-		$sId = $this->EventService_RegisterListener('event2', array($oReceiver, 'OnEvent1'));
+		$sId = $this->EventService_RegisterListener('event2', [$oReceiver, 'OnEvent1']);
 		$this->debug("Registered $sId");
 
 		self::$iEventCalls = 0;
@@ -408,7 +408,6 @@ class TestClassesWithDebug
 
 class TestEventReceiver extends TestClassesWithDebug
 {
-
 	// Event callbacks
 	public function OnEvent1(EventData $oData)
 	{
@@ -458,4 +457,3 @@ class TestEventReceiver extends TestClassesWithDebug
 		EventTest::IncrementCallCount();
 	}
 }
-

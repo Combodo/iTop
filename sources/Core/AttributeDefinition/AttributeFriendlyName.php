@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2024 Combodo SAS
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -19,13 +20,13 @@ use Str;
  */
 class AttributeFriendlyName extends AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	public const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 	public $m_sValue;
 
 	public function __construct($sCode)
 	{
 		$this->m_sCode = $sCode;
-		$aParams = array();
+		$aParams = [];
 		$aParams["default_value"] = '';
 		parent::__construct($sCode, $aParams);
 
@@ -45,7 +46,7 @@ class AttributeFriendlyName extends AttributeDefinition
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
 		// Code duplicated with AttributeObsolescenceFlag
-		$aAttributes = $this->GetOptional("depends_on", array());
+		$aAttributes = $this->GetOptional("depends_on", []);
 		$oExpression = $this->GetOQLExpression();
 		foreach ($oExpression->ListRequiredFields() as $sAttCode) {
 			if (!in_array($sAttCode, $aAttributes)) {
@@ -72,7 +73,7 @@ class AttributeFriendlyName extends AttributeDefinition
 			$sPrefix = $this->GetCode(); // Warning AttributeComputedFieldVoid does not have any sql property
 		}
 
-		return array('' => $sPrefix);
+		return ['' => $sPrefix];
 	}
 
 	public static function IsBasedOnOQLExpression()
@@ -143,18 +144,21 @@ class AttributeFriendlyName extends AttributeDefinition
 	}
 
 	public function GetAsCSV(
-		$sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$sValue,
+		$sSeparator = ',',
+		$sTextQualifier = '"',
+		$oHostObject = null,
+		$bLocalize = true,
 		$bConvertToPlainText = false
-	)
-	{
-		$sFrom = array("\r\n", $sTextQualifier);
-		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
+	) {
+		$sFrom = ["\r\n", $sTextQualifier];
+		$sTo = ["\n", $sTextQualifier.$sTextQualifier];
 		$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 
 		return $sTextQualifier.$sEscaped.$sTextQualifier;
 	}
 
-	static function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\StringField';
 	}
@@ -179,7 +183,7 @@ class AttributeFriendlyName extends AttributeDefinition
 
 	public function GetBasicFilterOperators()
 	{
-		return array("=" => "equals", "!=" => "differs from");
+		return ["=" => "equals", "!=" => "differs from"];
 	}
 
 	public function GetBasicFilterLooseOperator()

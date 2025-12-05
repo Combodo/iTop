@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Localized data
  *
  * @copyright Copyright (C) 2010-2024 Combodo SAS
  * @license    https://opensource.org/licenses/AGPL-3.0
- * 
+ *
  */
 /**
  *
  */
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:DBToolsMenu' => 'Database integrity~~',
 	'DBTools:Class' => 'Class~~',
 	'DBTools:Title' => 'Database integrity check~~',
@@ -43,17 +44,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted~~',
 	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value as `%3$s`.`%1$s`~~',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contain a valid class~~',
-));
+]);
 
 // Database Info
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'DBTools:DatabaseInfo' => 'Database Information~~',
 	'DBTools:Base' => 'Base~~',
 	'DBTools:Size' => 'Size~~',
-));
+]);
 
 // Lost attachments
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'DBTools:LostAttachments' => 'Lost attachments~~',
 	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, it does not retrieve deleted data.~~',
 	'DBTools:LostAttachments:Button:Analyze' => 'Analyze~~',
@@ -70,5 +71,5 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'DBTools:LostAttachments:Step:RestoreResults' => 'Restore results:~~',
 	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d attachments were restored.~~',
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Stored as inline image~~',
-	'DBTools:LostAttachments:History' => 'Attachment "%1$s" restored with DB tools~~'
-));
+	'DBTools:LostAttachments:History' => 'Attachment "%1$s" restored with DB tools~~',
+]);

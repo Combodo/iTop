@@ -54,7 +54,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
 		$oSearch->AllowAllData();
 		$sObjectClass = get_class($this->oField->GetObject());
-		$this->oAttachmentsSet = new DBObjectSet($oSearch, array(), array('class' => $sObjectClass, 'item_id' => $this->oField->GetObject()->GetKey()));
+		$this->oAttachmentsSet = new DBObjectSet($oSearch, [], ['class' => $sObjectClass, 'item_id' => $this->oField->GetObject()->GetKey()]);
 	}
 
 	/**
@@ -76,8 +76,8 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		$sCollapseTogglerIconVisibleClass = 'glyphicon-menu-down';
 		$sCollapseTogglerIconHiddenClass = 'glyphicon-menu-down collapsed';
 		$sCollapseTogglerClass = 'form_linkedset_toggler';
-		$sCollapseTogglerId = $sCollapseTogglerClass . '_' . $this->oField->GetGlobalId();
-		$sFieldWrapperId = 'form_upload_wrapper_' . $this->oField->GetGlobalId();
+		$sCollapseTogglerId = $sCollapseTogglerClass.'_'.$this->oField->GetGlobalId();
+		$sFieldWrapperId = 'form_upload_wrapper_'.$this->oField->GetGlobalId();
 		$sFieldDescriptionForHTMLTag = ($this->oField->HasDescription()) ? 'data-tooltip-content="'.utils::HtmlEntities($this->oField->GetDescription()).'"' : '';
 
 		// Preparing collapsed state
@@ -94,15 +94,14 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 
 		// Label
 		$oOutput->AddHtml('<div class="form_field_label">');
-		if ($this->oField->GetLabel() !== '')
-		{
+		if ($this->oField->GetLabel() !== '') {
 			$iAttachmentsCount = $this->oAttachmentsSet->Count();
 			$oOutput
 				->AddHtml('<label for="'.$this->oField->GetGlobalId().'" class="control-label" '.$sFieldDescriptionForHTMLTag.'>')
-				->AddHtml('<a id="' . $sCollapseTogglerId . '" class="' . $sCollapseTogglerClass . '" data-toggle="collapse" href="#' . $sFieldWrapperId . '" aria-expanded="' . $sCollapseTogglerExpanded . '" aria-controls="' . $sFieldWrapperId . '">')
-				->AddHtml($this->oField->GetLabel(),true)
+				->AddHtml('<a id="'.$sCollapseTogglerId.'" class="'.$sCollapseTogglerClass.'" data-toggle="collapse" href="#'.$sFieldWrapperId.'" aria-expanded="'.$sCollapseTogglerExpanded.'" aria-controls="'.$sFieldWrapperId.'">')
+				->AddHtml($this->oField->GetLabel(), true)
 				->AddHtml(' (<span class="attachments-count">'.$iAttachmentsCount.'</span>)')
-				->AddHtml('<span class="glyphicon ' . $sCollapseTogglerIconClass . '">')
+				->AddHtml('<span class="glyphicon '.$sCollapseTogglerIconClass.'">')
 				->AddHtml('</a>')
 				->AddHtml('</label>');
 		}
@@ -168,8 +167,7 @@ JS
 
 		// Removing upload input if in read only
 		// TODO : Add max upload size when itop attachment has been refactored
-		if (!$this->oField->GetReadOnly())
-		{
+		if (!$this->oField->GetReadOnly()) {
 			$oOutput->AddHtml('<div class="upload_container">'.Dict::S('Attachments:AddAttachment').'<input type="file" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" /><span class="loader glyphicon glyphicon-refresh"></span>'.InlineImage::GetMaxUpload().'</div>');
 		}
 		// Ending files container
@@ -190,7 +188,7 @@ JS
 			'{{sLineStyle}}',
 			'{{sDocDownloadUrl}}',
 			'{{sDocDisplayUrl}}',
-		     true,
+			true,
 			'{{sAttachmentThumbUrl}}',
 			'{{sFileName}}',
 			'{{sAttachmentMeta}}',
@@ -383,14 +381,12 @@ JS
 		$sDeleteBtn = Dict::S('Portal:Button:Delete');
 
 		// If in read only and no attachments, we display a short message
-		if ($this->oField->GetReadOnly() && ($this->oAttachmentsSet->Count() === 0))
-		{
+		if ($this->oField->GetReadOnly() && ($this->oAttachmentsSet->Count() === 0)) {
 			$oOutput->AddHtml(Dict::S('Attachments:NoAttachment'));
-		}
-		else
-		{
+		} else {
 			$sTableHead = self::GetAttachmentTableHeader($bIsDeleteAllowed);
-			$oOutput->Addhtml(<<<HTML
+			$oOutput->Addhtml(
+				<<<HTML
 <table id="$sAttachmentTableId" class="attachments-list table table-striped table-bordered responsive" cellspacing="0" width="100%">
 	$sTableHead
 <tbody>
@@ -398,8 +394,7 @@ HTML
 			);
 
 			/** @var \Attachment $oAttachment */
-			while ($oAttachment = $this->oAttachmentsSet->Fetch())
-			{
+			while ($oAttachment = $this->oAttachmentsSet->Fetch()) {
 				$iAttId = $oAttachment->GetKey();
 
 				$sLineStyle = '';
@@ -418,8 +413,7 @@ HTML
 				if ($oDoc->IsPreviewAvailable()) {
 					$bHasPreview = true;
 					$iMaxSizeForPreview = MetaModel::GetModuleSetting('itop-attachments', 'icon_preview_max_size', AbstractAttachmentsRenderer::DEFAULT_MAX_SIZE_FOR_PREVIEW);
-					if ($oDoc->GetSize() <= $iMaxSizeForPreview)
-					{
+					if ($oDoc->GetSize() <= $iMaxSizeForPreview) {
 						$sAttachmentThumbUrl = $sDocDownloadUrl;
 					}
 				}
@@ -431,8 +425,7 @@ HTML
 				$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
 				$sAttachmentDate = '';
 				$iAttachmentDateRaw = '';
-				if (!$bIsTempAttachment)
-				{
+				if (!$bIsTempAttachment) {
 					$sAttachmentDate = $oAttachment->Get('creation_date');
 					$iAttachmentDateRaw = AttributeDateTime::GetAsUnixSeconds($sAttachmentDate);
 				}
@@ -455,7 +448,8 @@ HTML
 				));
 			}
 
-			$oOutput->Addhtml(<<<HTML
+			$oOutput->Addhtml(
+				<<<HTML
 	</tbody>
 </table>
 HTML
@@ -511,18 +505,29 @@ HTML;
 	 * @since 2.7.0
 	 */
 	protected static function GetAttachmentTableRow(
-		$iAttId, $sLineStyle, $sDocDownloadUrl, $sDocDisplayUrl, $bHasPreview, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
-		$iFileSizeRaw, $iFileDownloadsCount, $sAttachmentDate, $iAttachmentDateRaw, $bIsDeleteAllowed
+		$iAttId,
+		$sLineStyle,
+		$sDocDownloadUrl,
+		$sDocDisplayUrl,
+		$bHasPreview,
+		$sAttachmentThumbUrl,
+		$sFileName,
+		$sAttachmentMeta,
+		$sFileSize,
+		$iFileSizeRaw,
+		$iFileDownloadsCount,
+		$sAttachmentDate,
+		$iAttachmentDateRaw,
+		$bIsDeleteAllowed
 	) {
 		$sDeleteCell = '';
-		if ($bIsDeleteAllowed)
-		{
+		if ($bIsDeleteAllowed) {
 			$sDeleteBtnLabel = Dict::S('Portal:Button:Delete');
 			$sDeleteCell = '<td role="delete"><input id="btn_remove_'.$iAttId.'" type="button" class="btn btn-xs btn-primary" value="'.$sDeleteBtnLabel.'"></td>';
 		}
 		$sHtml =  "<tr id=\"display_attachment_{$iAttId}\" class=\"attachment\" $sLineStyle>";
 
-		if($bHasPreview) {
+		if ($bHasPreview) {
 			$sHtml .= "<td role=\"icon\"><a href=\"$sDocDisplayUrl\" target=\"_blank\" data-tooltip-content=\"<img class='attachment-tooltip' src='{$sDocDownloadUrl}'>\" data-tooltip-html-enabled=true><img src=\"$sAttachmentThumbUrl\" ></a></td>";
 		} else {
 			$sHtml .= "<td role=\"icon\"><a href=\"$sDocDisplayUrl\" target=\"_blank\"><img src=\"$sAttachmentThumbUrl\" ></a></td>";
