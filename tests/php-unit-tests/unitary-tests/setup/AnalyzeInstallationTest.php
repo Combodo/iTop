@@ -77,7 +77,7 @@ class AnalyzeInstallationTest extends ItopTestCase
 				'aInstalledModules' => json_decode(file_get_contents(__DIR__.'/ressources/priv_modules_simpleusecase.json'), true),
 				'expected' => [
 					'_Root_' => [
-						'installed_version' => 'ITOP_VERSION_FULL',
+						'installed_version' => '3.3.0-dev-svn',
 						'available_version' => 'ITOP_VERSION_FULL',
 						'name_code' => 'ITOP_APPLICATION',
 					],
@@ -127,7 +127,7 @@ class AnalyzeInstallationTest extends ItopTestCase
 				'aInstalledModules' => json_decode(file_get_contents(__DIR__.'/ressources/priv_modules2.json'), true),
 				'expected' => [
 					'_Root_' => [
-						'installed_version' => 'ITOP_VERSION_FULL',
+						'installed_version' => '3.3.0-dev-svn',
 						'available_version' => 'ITOP_VERSION_FULL',
 						'name_code' => 'ITOP_APPLICATION',
 					],

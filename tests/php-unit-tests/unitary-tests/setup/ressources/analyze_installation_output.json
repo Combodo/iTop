@@ -1,7 +1,7 @@
 {
     "_Root_": {
         "installed_version": "3.3.0-dev-svn",
-        "available_version": "3.3.0-dev-svn",
+        "available_version": "ITOP_VERSION_FULL",
         "name_code": "iTop"
     },
     "authent-cas": {
