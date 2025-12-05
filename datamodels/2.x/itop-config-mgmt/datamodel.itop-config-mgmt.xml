@@ -4564,10 +4564,10 @@
             <item id="logo">
               <rank>20</rank>
             </item>
-            <item id="physicaldevices_list">
+            <item id="models_list">
               <rank>30</rank>
             </item>
-            <item id="models_list">
+            <item id="physicaldevices_list">
               <rank>40</rank>
             </item>
             <item id="iosversions_list">
