@@ -7,23 +7,10 @@
  * PSR-4 Exception with directory sources/Application/WebPage configured in \symfony\config\services.yaml
  */
 
-use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryFormFactory;
-use Combodo\iTop\PropertyTree\CollectionOfTrees;
-use Combodo\iTop\PropertyTree\CollectionOfValues;
-use Combodo\iTop\PropertyTree\Property;
-use Combodo\iTop\PropertyTree\PropertyTree;
-use Combodo\iTop\PropertyTree\ValueType\ValueTypeChoice;
-use Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttribute;
-use Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttributeGroupBy;
-use Combodo\iTop\PropertyTree\ValueType\ValueTypeInteger;
-use Combodo\iTop\PropertyTree\ValueType\ValueTypeLabel;
-use Combodo\iTop\PropertyTree\ValueType\ValueTypeOQL;
-
 class_alias(\Combodo\iTop\Application\UI\Hook\iKeyboardShortcut::class, 'iKeyboardShortcut');
 class_alias(\Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableConfig\DataTableConfig::class, 'DataTableConfig');
-class_alias(SelectUIBlockFactory::class, 'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\SelectUIBlockFactory');
-class_alias(CaseLogEntryFormFactory::class, 'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\CaseLogEntryFormFactory\\CaseLogEntryFormFactory');
+class_alias(\Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory::class, 'Combodo\\iTop\\Application\\UI\\Base\\Component\\Input\\SelectUIBlockFactory');
+class_alias(\Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryFormFactory::class, 'Combodo\\iTop\\Application\\UI\\Base\\Layout\\ActivityPanel\\CaseLogEntryFormFactory\\CaseLogEntryFormFactory');
 class_alias(\Combodo\iTop\Core\Email\EMailSymfony::class, 'EMailSymfony');
 class_alias(\Combodo\iTop\Core\Email\Transport\SymfonyFileTransport::class, 'SymfonyFileTransport');
 class_alias(\Combodo\iTop\Core\Email\Transport\SymfonyOAuthTransport::class, 'SymfonyOAuthTransport');
@@ -110,14 +97,14 @@ class_alias(\Combodo\iTop\Core\AttributeDefinition\AttributeURL::class, 'Attribu
 class_alias(\Combodo\iTop\Core\AttributeDefinition\iAttributeNoGroupBy::class, 'iAttributeNoGroupBy');
 class_alias(\Combodo\iTop\Core\AttributeDefinition\MissingColumnException::class, 'MissingColumnException');
 
-class_alias(PropertyTree::class, 'Combodo-PropertyTree');
-class_alias(Property::class, 'Combodo-Property');
-class_alias(CollectionOfValues::class, 'Combodo-CollectionOfValues');
-class_alias(CollectionOfTrees::class, 'Combodo-CollectionOfTrees');
+class_alias(\Combodo\iTop\PropertyTree\PropertyTree::class, 'Combodo-PropertyTree');
+class_alias(\Combodo\iTop\PropertyTree\Property::class, 'Combodo-Property');
+class_alias(\Combodo\iTop\PropertyTree\CollectionOfValues::class, 'Combodo-CollectionOfValues');
+class_alias(\Combodo\iTop\PropertyTree\CollectionOfTrees::class, 'Combodo-CollectionOfTrees');
 
-class_alias(ValueTypeLabel::class, 'Combodo-ValueTypeLabel');
-class_alias(ValueTypeOQL::class, 'Combodo-ValueTypeOQL');
-class_alias(ValueTypeClassAttributeGroupBy::class, 'Combodo-ValueTypeClassAttributeGroupBy');
-class_alias(ValueTypeChoice::class, 'Combodo-ValueTypeChoice');
-class_alias(ValueTypeClassAttribute::class, 'Combodo-ValueTypeClassAttribute');
-class_alias(ValueTypeInteger::class, 'Combodo-ValueTypeInteger');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeLabel::class, 'Combodo-ValueTypeLabel');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeOQL::class, 'Combodo-ValueTypeOQL');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttributeGroupBy::class, 'Combodo-ValueTypeClassAttributeGroupBy');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeChoice::class, 'Combodo-ValueTypeChoice');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttribute::class, 'Combodo-ValueTypeClassAttribute');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeInteger::class, 'Combodo-ValueTypeInteger');
