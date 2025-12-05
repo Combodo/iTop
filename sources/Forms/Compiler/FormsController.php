@@ -9,7 +9,6 @@ namespace Combodo\iTop\Forms\Compiler;
 
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Forms\Block\FormBlockService;
-use Combodo\iTop\Forms\FormType\FormTypeHelper;
 use Combodo\iTop\ItopSdkFormDemonstrator\Helper\ItopSdkFormDemonstratorLog;
 use Exception;
 use IssueLog;
@@ -49,16 +48,16 @@ class FormsController extends Controller
 				return;
 			}
 
-			$this->DisplayPage([
-				'form' => $oForm->createView(),
-				'sAction' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php?route=forms.dashlet_configuration&dashlet_code='.urlencode($sDashletId),
-			], 'itop_form');
+			//			$this->DisplayPage([
+			//				'form' => $oForm->createView(),
+			//				'sAction' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php?route=forms.dashlet_configuration&dashlet_code='.urlencode($sDashletId),
+			//			], 'itop_form');
 
 		} catch (Exception $e) {
 			ItopSdkFormDemonstratorLog::Exception($e->getMessage(), $e);
 			$this->DisplayPage([
-				'sError' => $e->getMessage(),
-			], 'itop_error');
+				'sControllerError' => $e->getMessage(),
+			], 'itop_error_update', Controller::ENUM_PAGE_TYPE_TURBO_FORM_AJAX);
 
 			return;
 		}

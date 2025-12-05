@@ -112,6 +112,7 @@ abstract class Controller extends AbstractController
 	private ?string $sContentType = null;
 	private ?string $sPageType = null;
 	private bool $bDebugAllowed = true;
+	protected bool $bDebugForced;
 
 	/**
 	 * Controller constructor.
@@ -181,6 +182,7 @@ abstract class Controller extends AbstractController
 
 		// PHP Request object representation from PHP request globals
 		$this->oRequest = Request::createFromGlobals();
+		$this->bDebugForced = $this->oRequest->query->has('debug');
 
 		// Initialize the CSRF token manager
 		$this->oCsrfTokenManager = new CsrfTokenManager();
@@ -1021,13 +1023,14 @@ abstract class Controller extends AbstractController
 		if (!in_array($sPageType, [self::ENUM_PAGE_TYPE_HTML, self::ENUM_PAGE_TYPE_AJAX, self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX])) {
 			return;
 		}
-		if (!$this->bDebugAllowed) {
+		if (!$this->bDebugAllowed && !$this->bDebugForced) {
 			return;
 		}
 		$aProfilesInfo = [];
 		foreach (InterfaceDiscovery::GetInstance()->FindItopClasses(iProfilerExtension::class) as $sExtension) {
 			/** @var \Combodo\iTop\Application\TwigBase\Controller\iProfilerExtension $oExtensionInstance */
 			$oExtensionInstance = $sExtension::GetInstance();
+			$oExtensionInstance->SetDebugForced($this->bDebugForced);
 			if ($oExtensionInstance->IsEnabled()) {
 				$sDebugTemplate = $oExtensionInstance->GetDebugTemplate();
 				$aDebugParams = $oExtensionInstance->GetDebugParams($aParams);
@@ -1084,7 +1087,9 @@ abstract class Controller extends AbstractController
 		}
 
 		if ($this->sPageType === self::ENUM_PAGE_TYPE_TURBO_FORM_AJAX) {
-			$this->AddToPage($this->oTwig->render('application/forms/itop_error_update.html.twig', ['sControllerError' => $sErrorMsg]));
+			if (utils::IsNotNullOrEmptyString($sErrorMsg)) {
+				$this->AddToPage($this->oTwig->render('application/forms/itop_error_update.html.twig', ['sControllerError' => $sErrorMsg]));
+			}
 
 			return;
 		}
