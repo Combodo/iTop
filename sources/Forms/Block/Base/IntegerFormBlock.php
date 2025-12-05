@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Forms\Block\Base;
 
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
+use Combodo\iTop\Forms\IO\Format\IntegerIOFormat;
 use Combodo\iTop\Forms\IO\Format\NumberIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
