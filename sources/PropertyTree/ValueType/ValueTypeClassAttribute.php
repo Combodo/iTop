@@ -14,7 +14,7 @@ use Combodo\iTop\Forms\Block\DataModel\AttributeChoiceFormBlock;
  */
 class ValueTypeClassAttribute extends AbstractValueType
 {
-	public function getFormBlockClass(): string
+	public function GetFormBlockClass(): string
 	{
 		return AttributeChoiceFormBlock::class;
 	}

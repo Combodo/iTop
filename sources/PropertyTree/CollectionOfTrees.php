@@ -12,4 +12,8 @@ namespace Combodo\iTop\PropertyTree;
  */
 class CollectionOfTrees extends AbstractProperty
 {
+	public function ToPHP(&$aPHPFragments = []): string
+	{
+		return '';
+	}
 }

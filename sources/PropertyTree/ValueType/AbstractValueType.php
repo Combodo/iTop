@@ -7,10 +7,17 @@
 
 namespace Combodo\iTop\PropertyTree\ValueType;
 
+use Combodo\iTop\DesignElement;
+
 /**
  * @since 3.3.0
  */
 abstract class AbstractValueType
 {
-	abstract public function getFormBlockClass(): string;
+	abstract public function GetFormBlockClass(): string;
+
+	public function InitFromDomNode(DesignElement $oDomNode): void
+	{
+
+	}
 }

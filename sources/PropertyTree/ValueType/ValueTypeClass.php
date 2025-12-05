@@ -7,15 +7,13 @@
 
 namespace Combodo\iTop\PropertyTree\ValueType;
 
-use Combodo\iTop\Forms\Block\DataModel\OqlFormBlock;
+use Combodo\iTop\Forms\Block\Base\TextFormBlock;
+use Combodo\iTop\PropertyTree\ValueType\AbstractValueType;
 
-/**
- * @since 3.3.0
- */
-class ValueTypeOQL extends AbstractValueType
+class ValueTypeClass extends AbstractValueType
 {
 	public function GetFormBlockClass(): string
 	{
-		return OqlFormBlock::class;
+		return TextFormBlock::class;
 	}
 }

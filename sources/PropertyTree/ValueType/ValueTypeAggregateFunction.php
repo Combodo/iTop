@@ -14,7 +14,7 @@ use Combodo\iTop\Forms\Block\DataModel\Dashlet\AggregateFunctionFormBlock;
  */
 class ValueTypeAggregateFunction extends AbstractValueType
 {
-	public function getFormBlockClass(): string
+	public function GetFormBlockClass(): string
 	{
 		return AggregateFunctionFormBlock::class;
 	}

@@ -14,7 +14,7 @@ use Combodo\iTop\Forms\Block\DataModel\LabelFormBlock;
  */
 class ValueTypeLabel extends AbstractValueType
 {
-	public function getFormBlockClass(): string
+	public function GetFormBlockClass(): string
 	{
 		return LabelFormBlock::class;
 	}

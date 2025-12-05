@@ -7,12 +7,11 @@
 
 namespace Combodo\iTop\Forms\Compiler;
 
+use Combodo\iTop\DesignDocument;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
-use Combodo\iTop\ItopSdkFormDemonstrator\Helper\ItopSdkFormDemonstratorHelper;
+use Combodo\iTop\PropertyTree\PropertyTreeFactory;
 use Combodo\iTop\Service\Cache\DataModelDependantCache;
-use Combodo\iTop\Service\DependencyInjection\DIService;
-use ModelReflection;
-use ModelReflectionRuntime;
+use DOMFormatException;
 
 class FormsCompiler
 {
@@ -34,9 +33,29 @@ class FormsCompiler
 		return static::$oInstance;
 	}
 
-	public function CompileFormFromFile(string $filePath): ?FormBlock
+	/**
+	 * Compile XML property tree into PHP to create the configuration form
+	 *
+	 * @param string $sXMLContent property tree structure in xml
+	 *
+	 * @return string
+	 * @throws \Combodo\iTop\Forms\Compiler\FormsCompilerException
+	 */
+	public function CompileFormFromXML(string $sXMLContent): string
 	{
-		return null;
+		$oDoc = new DesignDocument();
+		libxml_clear_errors();
+		$oDoc->loadXML($sXMLContent);
+		$aErrors = libxml_get_errors();
+		if (count($aErrors) > 0) {
+			throw new FormsCompilerException('Dashlet properties definition not correctly formatted!');
+		}
+
+		/** @var \Combodo\iTop\DesignElement $oRoot */
+		$oRoot = $oDoc->firstChild;
+		$oPropertyTree = PropertyTreeFactory::GetInstance()->CreateNodeFromDom($oRoot);
+		$sPHP = $oPropertyTree->ToPHP();
+		return $sPHP;
 	}
 
 	public function StoreFormFromContent(string $sId, string $sPHPContent): void

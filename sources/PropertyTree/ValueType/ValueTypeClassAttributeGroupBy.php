@@ -14,7 +14,7 @@ use Combodo\iTop\Forms\Block\DataModel\Dashlet\ClassAttributeGroupByFormBlock;
  */
 class ValueTypeClassAttributeGroupBy extends AbstractValueType
 {
-	public function getFormBlockClass(): string
+	public function GetFormBlockClass(): string
 	{
 		return ClassAttributeGroupByFormBlock::class;
 	}

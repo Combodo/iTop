@@ -108,3 +108,4 @@ class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttributeGroupBy:
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeChoice::class, 'Combodo-ValueTypeChoice');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttribute::class, 'Combodo-ValueTypeClassAttribute');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeInteger::class, 'Combodo-ValueTypeInteger');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClass::class, 'Combodo-ValueTypeClass');

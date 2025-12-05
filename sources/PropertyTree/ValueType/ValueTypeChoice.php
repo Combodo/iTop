@@ -15,7 +15,7 @@ use Combodo\iTop\Forms\Block\Base\FormBlock;
  */
 class ValueTypeChoice extends AbstractValueType
 {
-	public function getFormBlockClass(): string
+	public function GetFormBlockClass(): string
 	{
 		return ChoiceFormBlock::class;
 	}

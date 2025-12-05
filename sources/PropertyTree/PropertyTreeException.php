@@ -7,13 +7,6 @@
 
 namespace Combodo\iTop\PropertyTree;
 
-/**
- * @since 3.3.0
- */
-class CollectionOfValues extends AbstractProperty
+class PropertyTreeException extends \Exception
 {
-	public function ToPHP(&$aPHPFragments = []): string
-	{
-		return '';
-	}
 }

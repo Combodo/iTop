@@ -12,7 +12,7 @@ namespace Combodo\iTop\PropertyTree\ValueType;
  */
 class ValueTypeProfileName extends AbstractValueType
 {
-	public function getFormBlockClass(): string
+	public function GetFormBlockClass(): string
 	{
 		return '';
 	}

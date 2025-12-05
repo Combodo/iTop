@@ -14,7 +14,7 @@ use Combodo\iTop\Forms\Block\Base\IntegerFormBlock;
  */
 class ValueTypeInteger extends AbstractValueType
 {
-	public function getFormBlockClass(): string
+	public function GetFormBlockClass(): string
 	{
 		return IntegerFormBlock::class;
 	}
