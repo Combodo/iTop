@@ -762,12 +762,7 @@ abstract class DBObject implements iDisplay
 	 */
 	public function CopyIfNull($sDestAttCode, $sSourceAttCode)
 	{
-		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sDestAttCode);
-		$oCurrentValue = $this->Get($sDestAttCode);
-		if ($oAttDef->IsNull($oCurrentValue))
-		{
-			return $this->Copy($sDestAttCode, $sSourceAttCode);
-		}
+		$this->SetIfNull($sDestAttCode, $this->Get($sSourceAttCode));
 		return true;
 	}
 
