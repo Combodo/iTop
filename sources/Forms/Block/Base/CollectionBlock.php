@@ -34,6 +34,14 @@ class CollectionBlock extends AbstractTypeFormBlock
 		return CollectionFormType::class;
 	}
 
+	/**
+	 * @return AbstractFormBlock
+	 */
+	public function GetPrototypeBlock(): AbstractFormBlock
+	{
+		return $this->oPrototypeBlock;
+	}
+
 	public function EntryDependsOnParent(string $sInputName, string $sParentInputName): AbstractFormBlock
 	{
 		$this->oPrototypeBlock->InputDependsOnParent($sInputName, $sParentInputName);

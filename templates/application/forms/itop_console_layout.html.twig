@@ -88,20 +88,20 @@
 
     <collection-element {{ block('widget_container_attributes') }}>
 
-        {% for child in form %}
-            <collection-entry-element>
-                {{ form_widget(child) }}
-                {% if allow_delete %}
-                    <button type="button" class="remove_item_link ibo-button ibo-is-regular ibo-is-danger">Supprimer</button>
-                {% endif %}
-            </collection-entry-element>
-        {% endfor %}
-
         {% if allow_add %}
-            <div style="margin-top: 20px;">
-                <button type="button" class="add_item_link ibo-button ibo-button ibo-is-regular " data-collection-holder-class="{{ name }}">{{ button_label|dict_s }}</button>
-            </div>
+            <button type="button" class="add_item_link ibo-button ibo-button ibo-is-regular " data-collection-holder-class="{{ name }}">{{ button_label|dict_s }}</button>
         {% endif %}
+
+        <div role="list">
+            {% for child in form %}
+                <collection-entry-element>
+                    {{ form_widget(child) }}
+                    {% if allow_delete %}
+                        <button type="button" class="remove_item_link ibo-button ibo-is-regular ibo-is-danger">Supprimer</button>
+                    {% endif %}
+                </collection-entry-element>
+            {% endfor %}
+        </div>
 
     </collection-element>
 

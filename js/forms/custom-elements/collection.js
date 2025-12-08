@@ -11,6 +11,8 @@ class CollectionElement extends HTMLElement {
 		const collectionHolder = document.querySelector('.'+e.currentTarget.dataset.collectionHolderClass);
 		const item = document.createElement('div');
 
+		const collectionHolderList = collectionHolder.querySelector('[role="list"]');
+
 		item.innerHTML = collectionHolder
 			.dataset
 			.prototype
@@ -19,7 +21,7 @@ class CollectionElement extends HTMLElement {
 				collectionHolder.dataset.index
 			);
 
-		collectionHolder.appendChild(item);
+		collectionHolderList.appendChild(item);
 		collectionHolder.dataset.index++;
 	}
 
