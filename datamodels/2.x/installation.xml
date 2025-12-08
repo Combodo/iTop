@@ -11,6 +11,7 @@
 					<title>Configuration Management Core</title>
 					<description>All the base objects that are mandatory in the iTop CMDB: Organizations, Locations, Teams, Persons, etc.</description>
 					<modules type="array">
+            <module>combodo-data-feature-removal</module>
 						<module>itop-structure</module>
 						<module>itop-config-mgmt</module>
 						<module>itop-attachments</module>
