@@ -76,6 +76,9 @@
             <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition><![CDATA[status='obsolete']]></condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="name" xsi:type="AttributeString">
@@ -1148,6 +1151,9 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="organization_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition><![CDATA[status='obsolete']]></condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="name" xsi:type="AttributeString">
@@ -1567,6 +1573,9 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="service_name"/>
           </attributes>
         </reconciliation>
+        <obsolescence>
+          <condition><![CDATA[status='obsolete']]></condition>
+        </obsolescence>
       </properties>
       <fields>
         <field id="name" xsi:type="AttributeString">
