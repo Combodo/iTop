@@ -333,8 +333,8 @@
               <code>implementation</code>
               <rank>20</rank>
               <style>
-                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
@@ -6927,8 +6927,8 @@
               <code>implementation</code>
               <rank>10</rank>
               <style>
-                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
