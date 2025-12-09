@@ -1404,13 +1404,12 @@ class WizStepModulesChoice extends WizardStep
 				foreach ($this->oExtensionsMap->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
 					/* @var \iTopExtension $oExtension */
 					$bSelected = in_array($oExtension->sCode, $aExtensions);
-					if($oExtension->bInstalled && !$bSelected){
+					if ($oExtension->bInstalled && !$bSelected) {
 						$aExtensionsRemoved[$oExtension->sCode] = $oExtension->sLabel;
-					}
-					else if(!$oExtension->bInstalled && $bSelected) {
+					} elseif (!$oExtension->bInstalled && $bSelected) {
 						$aExtensionsAdded[$oExtension->sCode] = $oExtension->sLabel;
 					}
-					if(!$oExtension->CanBeUninstalled()){
+					if (!$oExtension->CanBeUninstalled()) {
 						$aExtensionsNotUninstallable[$oExtension->sCode] = true;
 					}
 				}
