@@ -915,7 +915,7 @@ class RunTimeEnvironment
 	 * @param bool $bSampleData Wether or not to load sample data
 	 *  @param null|string[] $aSelectedModules List of selected modules
 	 */
-	public function LoadData($aAvailableModules, $bSampleData, $aSelectedModules=null)
+	public function LoadData($aAvailableModules, $bSampleData, $aSelectedModules = null)
 	{
 		$oDataLoader = new XMLDataLoader();
 

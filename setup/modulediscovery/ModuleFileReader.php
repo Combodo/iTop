@@ -175,15 +175,21 @@ class ModuleFileReader
 		}
 
 		$sModuleInstallerClass = $aModuleInfo['installer'];
+		if (strlen($sModuleInstallerClass) === 0) {
+			return null;
+		}
+
 		if (!class_exists($sModuleInstallerClass)) {
 			$sModuleFilePath = $aModuleInfo['module_file_path'];
 			$this->ReadModuleFileInformationUnsafe($sModuleFilePath);
 		}
 
 		if (!class_exists($sModuleInstallerClass)) {
+			\IssueLog::Error(__METHOD__, null, $aModuleInfo);
 			throw new CoreException("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
 		}
 		if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI')) {
+			\IssueLog::Error(__METHOD__, null, $aModuleInfo);
 			throw new CoreException("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
 		}
 
