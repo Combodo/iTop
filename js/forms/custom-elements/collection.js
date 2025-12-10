@@ -7,7 +7,7 @@ class CollectionElement extends HTMLElement {
 		customElements.define('collection-element', CollectionElement);
 	}
 
-	static addFormToCollection(e) {
+	addFormToCollection(e) {
 		const collectionHolder = document.querySelector('.'+e.currentTarget.dataset.collectionHolderClass);
 		const item = document.createElement('div');
 
@@ -21,17 +21,19 @@ class CollectionElement extends HTMLElement {
 				collectionHolder.dataset.index
 			);
 
-		collectionHolderList.appendChild(item);
+		collectionHolderList.appendChild(item.firstChild);
 		collectionHolder.dataset.index++;
+
+		this.querySelectorAll('collection-entry-element').forEach((entry) => {
+			console.log('test');
+			entry.updateButtonStates();
+		});
 	}
 
 	/** connectedCallback **/
 	connectedCallback() {
 		this.#eBtnAdd = this.querySelector('.add_item_link');
-		this.#eBtnAdd.addEventListener('click', CollectionElement.addFormToCollection);
+		this.#eBtnAdd.addEventListener('click', this.addFormToCollection.bind(this));
 	}
 
-	#removeCollectionItem() {
-
-	}
 }

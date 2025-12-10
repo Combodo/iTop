@@ -15,7 +15,7 @@ function triggerTurbo(el) {
 		el.form.setAttribute('novalidate', true);
 		el.form.requestSubmit();
 		el.form.querySelector(`[name="${sFormName}[_turbo_trigger]"]`).value = null;
-		el.form.setAttribute('novalidate', false);
+		el.form.removeAttribute('novalidate');
 		$aFormBlockDataTransmittedData[name] = el.value;
 	}
 

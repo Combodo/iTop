@@ -81,24 +81,18 @@
 {%- block collection_widget -%}
 
     {% if prototype is defined and not prototype.rendered %}
-        {% set deleteBtn = '<button type="button" class="remove_item_link ibo-button ibo-is-regular ibo-is-danger">Supprimer</button>' %}
-        {%- set prototype_html = '<collection-entry-element>' ~ form_widget(prototype) ~ ' ' ~ deleteBtn ~'</collection-entry-element>' -%}
+        {%- set prototype_html = '<collection-entry-element data-allow-delete="' ~ allow_delete ~ '" data-allow-ordering="' ~ allow_ordering ~'" data-new="true">' ~ form_widget(prototype) ~'</collection-entry-element>' -%}
         {%- set attr = attr|merge({'data-prototype': prototype_html, 'class': name, 'data-index': form|length > 0 ? form|last.vars.name + 1 : 0 }) -%}
     {% endif %}
 
     <collection-element {{ block('widget_container_attributes') }}>
-
         {% if allow_add %}
             <button type="button" class="add_item_link ibo-button ibo-button ibo-is-regular " data-collection-holder-class="{{ name }}">{{ button_label|dict_s }}</button>
         {% endif %}
-
         <div role="list">
             {% for child in form %}
-                <collection-entry-element>
+                <collection-entry-element data-allow-delete="{{ allow_delete }}" data-allow-ordering="{{ allow_ordering }}">
                     {{ form_widget(child) }}
-                    {% if allow_delete %}
-                        <button type="button" class="remove_item_link ibo-button ibo-is-regular ibo-is-danger">Supprimer</button>
-                    {% endif %}
                 </collection-entry-element>
             {% endfor %}
         </div>

@@ -34,6 +34,7 @@ class CollectionFormType extends AbstractType
 
 		$resolver->setDefaults([
 			'button_label' => 'Add an item',
+			'allow_ordering' => false,
 		]);
 	}
 
@@ -43,6 +44,7 @@ class CollectionFormType extends AbstractType
 		parent::buildView($view, $form, $options);
 
 		$view->vars['button_label'] = $options['button_label'];
+		$view->vars['allow_ordering'] = $options['allow_ordering'];
 	}
 
 }

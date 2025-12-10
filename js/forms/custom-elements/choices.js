@@ -2,6 +2,10 @@ class ChoicesElement extends HTMLSelectElement {
 	plugins = [];
 	connectedCallback() {
 
+		if (this.tomselect) {
+			return;
+		}
+
 		if (this.getAttribute('multiple')) {
 			this.plugins.push('remove_button');
 		}
