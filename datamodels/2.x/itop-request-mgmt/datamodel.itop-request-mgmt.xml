@@ -309,7 +309,6 @@
           <filter><![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id AND status != 'obsolete']]></filter>
           <dependencies>
             <attribute id="service_id"/>
-            <attribute id="request_type"/>
           </dependencies>
           <sql>servicesubcategory_id</sql>
           <target_class>ServiceSubcategory</target_class>
