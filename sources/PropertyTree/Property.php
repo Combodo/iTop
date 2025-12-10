@@ -34,7 +34,11 @@ class Property extends AbstractProperty
 
 		$sInputs = '';
 		foreach ($this->oValueType->GetInputs() as $sInput => $sValue) {
-			$sInputs .= "\n			->SetInputValue('$sInput', '$sValue')";
+			if (preg_match("/^{{(?<node>\w+)\.(?<output>\w+)}}$/", $sValue, $aMatches) === 1) {
+				$sInputs .= "\n			->InputDependsOn('$sInput', '{$aMatches['node']}', '{$aMatches['output']}')";
+			} else {
+				$sInputs .= "\n			->SetInputValue('$sInput', '$sValue')";
+			}
 		}
 
 		return <<<PHP
