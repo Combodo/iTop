@@ -293,28 +293,19 @@ try {
 
 				$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation($oConfig, $oRuntimeEnv->GetBuildDir(), true);
 
-				$aSelectedModules = [];
-				foreach ($aAvailableModules as $sModuleId => $aModule) {
-					if (($sModuleId == ROOT_MODULE) || ($sModuleId == DATAMODEL_MODULE)) {
-						continue;
-					} else {
-						$aSelectedModules[] = $sModuleId;
-					}
-				}
-
-				$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'BeforeDatabaseCreation');
+				$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'BeforeDatabaseCreation');
 
 				$oRuntimeEnv->CreateDatabaseStructure($oConfig, 'upgrade');
 
-				$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseCreation');
+				$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseCreation');
 
 				$oRuntimeEnv->UpdatePredefinedObjects();
 
-				$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseSetup');
+				$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseSetup');
 
-				$oRuntimeEnv->LoadData($aAvailableModules, $aSelectedModules, false /* no sample data*/);
+				$oRuntimeEnv->LoadData($aAvailableModules, false /* no sample data*/);
 
-				$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDataLoad');
+				$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'AfterDataLoad');
 
 				// Record the installation so that the "about box" knows about the installed modules
 				$sDataModelVersion = $oRuntimeEnv->GetCurrentDataModelVersion();
@@ -334,7 +325,7 @@ try {
 					$aSelectedExtensionCodes[] = $oExtension->sCode;
 				}
 				$aSelectedExtensions = $oExtensionsMap->GetChoices();
-				$oRuntimeEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModules, $aSelectedExtensionCodes, 'Done by the iTop Hub Connector');
+				$oRuntimeEnv->RecordInstallation($oConfig, $sDataModelVersion, $aAvailableModules, $aSelectedExtensionCodes, 'Done by the iTop Hub Connector');
 
 				// Report the success in a way that will be detected by the ajax caller
 				SetupLog::Info('Deployment successfully completed.');
