@@ -9,6 +9,7 @@ namespace Combodo\iTop\PropertyTree;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\PropertyTree\ValueType\AbstractValueType;
+use utils;
 
 /**
  * @since 3.3.0
@@ -19,16 +20,32 @@ abstract class AbstractProperty
 	protected ?string $sLabel;
 
 	/** @var array<AbstractProperty> */
-	protected array $aChildren;
+	protected array $aChildren = [];
 	protected ?AbstractValueType $oValueType;
+	protected ?string $sParentId;
 
-	public function InitFromDomNode(DesignElement $oDomNode)
+	/**
+	 * Init property tree node from xml dom node
+	 *
+	 * @param \Combodo\iTop\DesignElement $oDomNode
+	 * @param string $sParentId
+	 *
+	 * @return void
+	 * @throws \DOMFormatException
+	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
+	 */
+	public function InitFromDomNode(DesignElement $oDomNode, string $sParentId = ''): void
 	{
-		$this->sId = $oDomNode->getAttribute('id');
+		if (utils::IsNotNullOrEmptyString($sParentId)) {
+			$this->sId = $sParentId.'__';
+		} else {
+			$this->sId = '';
+		}
+		$this->sId .= $oDomNode->getAttribute('id');
 		$this->sLabel = $oDomNode->GetChildText('label');
 	}
 
-	abstract public function ToPHP(&$aPHPFragments = []): string;
+	abstract public function ToPHPFormBlock(&$aPHPFragments = []): string;
 
 	public function GetValueType(): ?AbstractValueType
 	{

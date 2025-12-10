@@ -16,13 +16,9 @@ use Combodo\iTop\PropertyTree\ValueType\ValueTypeFactory;
 class Property extends AbstractProperty
 {
 	/**
-	 * @param \Combodo\iTop\DesignElement $oDomNode
-	 *
-	 * @return void
-	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
-	 * @throws \DOMFormatException
+	 * @inheritDoc
 	 */
-	public function InitFromDomNode(DesignElement $oDomNode): void
+	public function InitFromDomNode(DesignElement $oDomNode, string $sParentId = ''): void
 	{
 		parent::InitFromDomNode($oDomNode);
 
@@ -32,7 +28,7 @@ class Property extends AbstractProperty
 		}
 	}
 
-	public function ToPHP(&$aPHPFragments = []): string
+	public function ToPHPFormBlock(&$aPHPFragments = []): string
 	{
 		$sFormBlockClass = $this->oValueType->GetFormBlockClass();
 		return <<<PHP

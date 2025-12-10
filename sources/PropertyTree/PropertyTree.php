@@ -15,37 +15,33 @@ use Combodo\iTop\DesignElement;
 class PropertyTree extends AbstractProperty
 {
 	/**
-	 * @param \Combodo\iTop\DesignElement $oDomNode
-	 *
-	 * @return void
-	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
-	 * @throws \DOMFormatException
+	 * @inheritdoc
 	 */
-	public function InitFromDomNode(DesignElement $oDomNode): void
+	public function InitFromDomNode(DesignElement $oDomNode, string $sParentId = ''): void
 	{
-		parent::InitFromDomNode($oDomNode);
-		$oPropertyTreeService = PropertyTreeFactory::GetInstance();
+		parent::InitFromDomNode($oDomNode, $sParentId);
+		$oPropertyTreeFactory = PropertyTreeFactory::GetInstance();
 
 		// read child properties
 		foreach ($oDomNode->GetUniqueElement('nodes')->childNodes as $oNode) {
 			if ($oNode instanceof DesignElement) {
-				$this->AddChild($oPropertyTreeService->CreateNodeFromDom($oNode));
+				$this->AddChild($oPropertyTreeFactory->CreateNodeFromDom($oNode, $this->sId));
 			}
 		}
 	}
 
-	public function ToPHP(&$aPHPFragments = []): string
+	public function ToPHPFormBlock(&$aPHPFragments = []): string
 	{
 		$bIsRoot = (count($aPHPFragments) === 0);
 		$sLocalPHP = <<<PHP
-class FormFor$this->sId extends Combodo\iTop\Forms\Block\Base\FormBlock
+class FormFor__$this->sId extends Combodo\iTop\Forms\Block\Base\FormBlock
 {
 	protected function BuildForm(): void
 	{
 PHP;
 
 		foreach ($this->aChildren as $oProperty) {
-			$sLocalPHP .= "\n".$oProperty->ToPHP($aPHPFragments);
+			$sLocalPHP .= "\n".$oProperty->ToPHPFormBlock($aPHPFragments);
 		}
 
 		$sLocalPHP .= <<<PHP

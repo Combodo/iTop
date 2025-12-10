@@ -12,7 +12,7 @@ namespace Combodo\iTop\PropertyTree;
  */
 class CollectionOfValues extends AbstractProperty
 {
-	public function ToPHP(&$aPHPFragments = []): string
+	public function ToPHPFormBlock(&$aPHPFragments = []): string
 	{
 		return '';
 	}
