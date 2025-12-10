@@ -268,6 +268,35 @@ PHP,
 				'sMessage' => '',
 			],
 
+			'Input static' => [
+				'sXMLContent' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="input_static_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+    <nodes>
+		<node id="class_attribute_property" xsi:type="Combodo-Property">
+			<label>UI:ClassAttribute</label>
+			<value-type xsi:type="Combodo-ValueTypeClassAttribute">
+				<class>Contact</class>
+			</value-type>
+        </node>
+	</nodes>
+</node>
+XML,
+				'sExpectedPHP' => <<<PHP
+class FormFor__input_static_test extends Combodo\iTop\Forms\Block\Base\FormBlock
+{
+	protected function BuildForm(): void
+	{
+		\$this->Add('class_attribute_property', 'Combodo\iTop\Forms\Block\DataModel\AttributeChoiceFormBlock', [
+			'label' => 'UI:ClassAttribute',
+		])
+			->SetInputValue('class', 'Contact');
+	}
+}
+PHP,
+				'sMessage' => '',
+			],
+
 			'test' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>

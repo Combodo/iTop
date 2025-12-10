@@ -7,7 +7,9 @@
 
 namespace Combodo\iTop\PropertyTree\ValueType;
 
+use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\DataModel\AttributeChoiceFormBlock;
+use utils;
 
 /**
  * @since 3.3.0

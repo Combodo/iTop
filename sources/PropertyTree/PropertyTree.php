@@ -52,6 +52,11 @@ PHP;
 		$aPHPFragments[] = $sLocalPHP;
 
 		if ($bIsRoot) {
+			//			$sOutputPHP = <<<PHP
+			//namesapace Combodo\iTop\Forms\Block\Generated;
+			//
+			//PHP;
+
 			return implode("\n", $aPHPFragments);
 		}
 

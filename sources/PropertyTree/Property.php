@@ -31,10 +31,16 @@ class Property extends AbstractProperty
 	public function ToPHPFormBlock(&$aPHPFragments = []): string
 	{
 		$sFormBlockClass = $this->oValueType->GetFormBlockClass();
+
+		$sInputs = '';
+		foreach ($this->oValueType->GetInputs() as $sInput => $sValue) {
+			$sInputs .= "\n			->SetInputValue('$sInput', '$sValue')";
+		}
+
 		return <<<PHP
 		\$this->Add('$this->sId', '$sFormBlockClass', [
 			'label' => '$this->sLabel',
-		]);
+		]){$sInputs};
 
 PHP;
 	}

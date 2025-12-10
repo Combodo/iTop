@@ -29,6 +29,12 @@ class ValueTypeFactory
 		return static::$oInstance;
 	}
 
+	/**
+	 * @param \Combodo\iTop\DesignElement $oDomNode
+	 *
+	 * @return \Combodo\iTop\PropertyTree\ValueType\AbstractValueType
+	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
+	 */
 	public function CreateValueTypeFromDomNode(DesignElement $oDomNode): AbstractValueType
 	{
 		$sNodeType = $oDomNode->getAttribute('xsi:type');
