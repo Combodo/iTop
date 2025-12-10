@@ -577,7 +577,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 //
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:WebServer' => 'Web server',
+	'Class:WebServer' => 'Web Server',
 	'Class:WebServer+' => '~~',
 	'Class:WebServer/Attribute:webapp_list' => 'Webové aplikácie',
 	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server~~',

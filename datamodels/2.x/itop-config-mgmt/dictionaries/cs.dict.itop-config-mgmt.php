@@ -579,7 +579,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 //
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
-	'Class:WebServer' => 'Web server',
+	'Class:WebServer' => 'Web Server',
 	'Class:WebServer+' => '',
 	'Class:WebServer/Attribute:webapp_list' => 'Web aplikace',
 	'Class:WebServer/Attribute:webapp_list+' => 'Všechny webové aplikace dostupné na tomto web serveru',

@@ -577,7 +577,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'Class:WebServer' => 'Web server',
+	'Class:WebServer' => 'Web Server',
 	'Class:WebServer+' => '~~',
 	'Class:WebServer/Attribute:webapp_list' => 'Applicazioni web',
 	'Class:WebServer/Attribute:webapp_list+' => 'Tutte le applicazioni web disponibili su questo server web',

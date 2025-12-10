@@ -103,7 +103,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:FunctionalCI' => 'Functional CI',
-	'Class:FunctionalCI+' => '',
+	'Class:FunctionalCI+' => 'Abstract class grouping multiple types of Configuration Items',
 	'Class:FunctionalCI/Attribute:name' => 'Name',
 	'Class:FunctionalCI/Attribute:name+' => '',
 	'Class:FunctionalCI/Attribute:description' => 'Description',
@@ -142,7 +142,9 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PhysicalDevice' => 'Physical Device',
-	'Class:PhysicalDevice+' => '',
+	'Class:PhysicalDevice+' => 'Abstract class, grouping physical types of Configuration Items.
+A physical Device can be located.
+It has usually a brand and model.',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Serial number',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
@@ -302,7 +304,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:NetworkDevice' => 'Network Device',
-	'Class:NetworkDevice+' => '',
+	'Class:NetworkDevice+' => 'Any type of network device: router, switch, hub, load balancer, firewall…',
 	'Class:NetworkDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Network type',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '',
@@ -324,7 +326,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Server' => 'Server',
-	'Class:Server+' => '',
+	'Class:Server+' => 'Physical Device, a computer running an operating system and designed to execute Software Instances',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s',
 	'Class:Server/Attribute:osfamily_id' => 'OS family',
 	'Class:Server/Attribute:osfamily_id+' => '',
@@ -388,7 +390,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:NAS' => 'NAS',
-	'Class:NAS+' => '',
+	'Class:NAS+' => 'Network-attached storage (NAS) is an high-capacity storage device connected to a network',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Filesystems',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'All the file systems in this NAS',
@@ -400,7 +402,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PC' => 'PC',
-	'Class:PC+' => '',
+	'Class:PC+' => 'Personal Computer, Desktop or Laptop',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s',
 	'Class:PC/Attribute:osfamily_id' => 'OS family',
 	'Class:PC/Attribute:osfamily_id+' => '',
@@ -506,7 +508,9 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:ApplicationSolution' => 'Application Solution',
-	'Class:ApplicationSolution+' => '',
+	'Class:ApplicationSolution+' => 'Application Solutions describe complex applications that are made of (or depend on) several basic components.
+They are a specialized type of “Group” for documenting large applications. 
+The main information conveyed by an Application Solution is its list of relationships.',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'All the configuration items that compose this application solution',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Business processes',
@@ -529,7 +533,9 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:BusinessProcess' => 'Business Process',
-	'Class:BusinessProcess+' => '',
+	'Class:BusinessProcess+' => 'A Business Process is used to document a high-level process or an important application for the operations.
+It is quite similar to an Application Solution but for describing higher level applications or whole processes in the organization.
+The main information conveyed by a Business Process is its list of relationships with Application Solutions and Contacts.',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Application solutions',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'All the application solutions that impact this business process',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
@@ -586,7 +592,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DBServer' => 'DB Server',
-	'Class:DBServer+' => '',
+	'Class:DBServer+' => 'An instance of a database server software (like MySQL, Oracle, SQL Server, DB2…) running on a particular system (PC, Server or Virtual Machine).',
 	'Class:DBServer/Attribute:dbschema_list' => 'DB schemas',
 	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server',
 ]);
@@ -596,8 +602,8 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:WebServer' => 'Web server',
-	'Class:WebServer+' => '',
+	'Class:WebServer' => 'Web Server',
+	'Class:WebServer+' => 'An instance of a web server software running on a specific system (PC, Server or Virtual Machine).',
 	'Class:WebServer/Attribute:webapp_list' => 'Web applications',
 	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server',
 ]);
@@ -608,7 +614,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PCSoftware' => 'PC Software',
-	'Class:PCSoftware+' => '',
+	'Class:PCSoftware+' => 'An instance of a software application installed on a PC.
+For example: an instance of MS Office, Corel Draw, Adobe Photoshop or Filezilla.',
 ]);
 
 //
@@ -617,7 +624,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:OtherSoftware' => 'Other Software',
-	'Class:OtherSoftware+' => '',
+	'Class:OtherSoftware+' => 'Any type of software that do not fit in the other categories: PC Software, Middleware, DB server or Web Server.',
 ]);
 
 //
@@ -626,7 +633,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:MiddlewareInstance' => 'Middleware Instance',
-	'Class:MiddlewareInstance+' => '',
+	'Class:MiddlewareInstance+' => 'An instance of a middleware software (software offering services to other software, or enterprise integration software) installed on a particular system (PC, Server or Virtual Machine).
+For example: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino can be put under this category.',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
@@ -640,7 +648,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DatabaseSchema' => 'Database Schema',
-	'Class:DatabaseSchema+' => '',
+	'Class:DatabaseSchema+' => 'An instance of dabatase running of a specific DB server.',
 	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DB server',
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
@@ -654,7 +662,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:WebApplication' => 'Web Application',
-	'Class:WebApplication+' => '',
+	'Class:WebApplication+' => 'An instance of an application accessible using a web browser and that runs on a given Web Server instance.',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
 	'Class:WebApplication/Attribute:webserver_id' => 'Web server',
 	'Class:WebApplication/Attribute:webserver_id+' => '',
