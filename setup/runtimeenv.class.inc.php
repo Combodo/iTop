@@ -548,10 +548,15 @@ class RunTimeEnvironment
 		// Record installed modules and extensions
 		//
 		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
-		foreach ($aSelectedModuleCodes as $sModuleId) {
+		foreach ($aSelectedModuleCodes as $sModuleId => $aData) {
+			if (($sModuleId == ROOT_MODULE) || ($sModuleId == DATAMODEL_MODULE)) {
+				continue;
+			}
+
 			if (!array_key_exists($sModuleId, $aAvailableModules)) {
 				continue;
 			}
+
 			$aModuleData = $aAvailableModules[$sModuleId];
 			$sName = $sModuleId;
 			$sVersion = $aModuleData['available_version'];
@@ -851,14 +856,18 @@ class RunTimeEnvironment
 	/**
 	 * Call the given handler method for all selected modules having an installation handler
 	 * @param array[] $aAvailableModules
-	 * @param string[] $aSelectedModules
 	 * @param string $sHandlerName
+	 *  @param string[]|null $aSelectedModules
 	 * @throws CoreException
 	 */
-	public function CallInstallerHandlers($aAvailableModules, $aSelectedModules, $sHandlerName)
+	public function CallInstallerHandlers($aAvailableModules, $sHandlerName, $aSelectedModules = null)
 	{
 		foreach ($aAvailableModules as $sModuleId => $aModule) {
-			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules)) {
+			if (($sModuleId == ROOT_MODULE) || ($sModuleId == DATAMODEL_MODULE)) {
+				continue;
+			}
+
+			if (is_null($aSelectedModules) || in_array($sModuleId, $aSelectedModules)) {
 				$aArgs = [MetaModel::GetConfig(), $aModule['installed_version'], $aModule['available_version']];
 				RunTimeEnvironment::CallInstallerHandler($aAvailableModules[$sModuleId], $sHandlerName, $aArgs);
 			}
@@ -903,10 +912,10 @@ class RunTimeEnvironment
 	/**
 	 * Load data from XML files for the selected modules (structural data and/or sample data)
 	 * @param array[] $aAvailableModules All available modules and their definition
-	 * @param string[] $aSelectedModules List of selected modules
 	 * @param bool $bSampleData Wether or not to load sample data
+	 *  @param null|string[] $aSelectedModules List of selected modules
 	 */
-	public function LoadData($aAvailableModules, $aSelectedModules, $bSampleData)
+	public function LoadData($aAvailableModules, $bSampleData, $aSelectedModules=null)
 	{
 		$oDataLoader = new XMLDataLoader();
 
@@ -919,30 +928,33 @@ class RunTimeEnvironment
 		$aFiles = [];
 		$aPreviouslyLoadedFiles = [];
 		foreach ($aAvailableModules as $sModuleId => $aModule) {
-			if (($sModuleId != ROOT_MODULE)) {
-				$sRelativePath = 'env-'.$this->sTargetEnv.'/'.basename($aModule['root_dir']);
-				// Load data only for selected AND newly installed modules
-				if (in_array($sModuleId, $aSelectedModules)) {
-					if ($aModule['installed_version'] != '') {
-						// Simulate the load of the previously loaded XML files to get the mapping of the keys
-						if ($bSampleData) {
-							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
-							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
-						} else {
-							// Load only structural data
-							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
-						}
+			if (($sModuleId == ROOT_MODULE) || ($sModuleId == DATAMODEL_MODULE)) {
+				continue;
+			}
+
+			$sRelativePath = 'env-'.$this->sTargetEnv.'/'.basename($aModule['root_dir']);
+			// Load data only for selected AND newly installed modules
+			if (is_null($aSelectedModules) || in_array($sModuleId, $aSelectedModules)) {
+				if ($aModule['installed_version'] != '') {
+					// Simulate the load of the previously loaded XML files to get the mapping of the keys
+					if ($bSampleData) {
+						$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+						$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
 					} else {
-						if ($bSampleData) {
-							$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
-							$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
-						} else {
-							// Load only structural data
-							$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
-						}
+						// Load only structural data
+						$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+					}
+				} else {
+					if ($bSampleData) {
+						$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+						$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
+					} else {
+						// Load only structural data
+						$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
 					}
 				}
 			}
+
 		}
 
 		// Simulate the load of the previously loaded files, in order to initialize

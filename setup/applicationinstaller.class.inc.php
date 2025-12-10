@@ -743,7 +743,7 @@ class ApplicationInstaller
 		// Module specific actions (migrate the data)
 		//
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'BeforeDatabaseCreation');
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'BeforeDatabaseCreation', $aSelectedModules);
 
 		if (!$oProductionEnv->CreateDatabaseStructure(MetaModel::GetConfig(), $sMode)) {
 			throw new Exception("Failed to create/upgrade the database structure for environment '$sTargetEnvironment'");
@@ -873,7 +873,7 @@ class ApplicationInstaller
 		// Perform here additional DB setup... profiles, etc...
 		//
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseCreation');
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseCreation', $aSelectedModules);
 
 		$oProductionEnv->UpdatePredefinedObjects();
 
@@ -887,7 +887,7 @@ class ApplicationInstaller
 
 		// Perform final setup tasks here
 		//
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseSetup');
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseSetup', $aSelectedModules);
 	}
 
 	/**
@@ -937,11 +937,11 @@ class ApplicationInstaller
 		}
 
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, APPROOT.$sModulesDir);
-		$oProductionEnv->LoadData($aAvailableModules, $aSelectedModules, $bSampleData);
+		$oProductionEnv->LoadData($aAvailableModules, $bSampleData, $aSelectedModules);
 
 		// Perform after dbload setup tasks here
 		//
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDataLoad');
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'AfterDataLoad', $aSelectedModules);
 	}
 
 	/**
