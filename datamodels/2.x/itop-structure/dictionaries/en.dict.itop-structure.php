@@ -154,7 +154,10 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Person' => 'Person',
-	'Class:Person+' => 'A type of Contact',
+	'Class:Person+' => 'A type of Contact used to describe physical persons.
+Persons can be grouped into Teams.
+Persons can be linked to other configuration items (eg. to describe who to contact in case of problem with an application).
+Other usage: the caller of a User request is a Person as well as the agent assigned to resolve it.',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Last Name',
 	'Class:Person/Attribute:name+' => '',
@@ -195,7 +198,9 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Team' => 'Team',
-	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only.',
+	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only.
+Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.
+A Team can be linked to configuration items for different purpose such as auto-dispatch of incident, notification,...',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Members',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team',
@@ -252,7 +257,9 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentFile' => 'Document File',
-	'Class:DocumentFile+' => 'Any type of file stored as is. Its content is usually not accessible to search.',
+	'Class:DocumentFile+' => 'A Document File is used to upload documentation that can be shared across multiple objects.
+Once a document (in any format: Word, PDF, Spreadsheet, etc.) has been uploaded into '.ITOP_APPLICATION_SHORT.', it can be linked to different configuration items so it is easy and quick to retrieve from all the places where it is pertinent.
+This is useful for processing instructions, technical documentation... that need to be visible from several places.',
 	'Class:DocumentFile/Attribute:file' => 'File',
 	'Class:DocumentFile/Attribute:file+' => '',
 ]);
@@ -263,7 +270,9 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentNote' => 'Document Note',
-	'Class:DocumentNote+' => 'Simple text. Search can be performed on its content.',
+	'Class:DocumentNote+' => 'It is used to store a text document.
+HTML formatting is supported using the WYSIWYG editor.
+Search can be performed on its content.',
 	'Class:DocumentNote/Attribute:text' => 'Text',
 	'Class:DocumentNote/Attribute:text+' => '',
 ]);
@@ -274,7 +283,9 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentWeb' => 'Document Web',
-	'Class:DocumentWeb+' => 'Simple URL to a remote document. Its content is not accessible to search.',
+	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents.
+Think to them as “pointers” to external documents.
+You cannot search in their content from '.ITOP_APPLICATION_SHORT,
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
 ]);

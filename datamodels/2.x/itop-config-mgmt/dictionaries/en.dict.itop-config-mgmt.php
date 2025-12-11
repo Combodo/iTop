@@ -184,7 +184,7 @@ It has usually a brand and model.',
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Rack' => 'Rack',
-	'Class:Rack+' => '',
+	'Class:Rack+' => 'A physical container for Datacenter Devices and Enclosures',
 	'Class:Rack/ComplementaryName' => '%1$s - %2$s',
 	'Class:Rack/Attribute:nb_u' => 'Rack units',
 	'Class:Rack/Attribute:nb_u+' => '',
@@ -200,7 +200,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:TelephonyCI' => 'Telephony CI',
-	'Class:TelephonyCI+' => '',
+	'Class:TelephonyCI+' => 'Abstract class, grouping telephony devices',
 	'Class:TelephonyCI/Attribute:phonenumber' => 'Phone number',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '',
 ]);
@@ -211,7 +211,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Phone' => 'Phone',
-	'Class:Phone+' => '',
+	'Class:Phone+' => 'End User device, a plain old wired phone',
 ]);
 
 //
@@ -220,7 +220,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:MobilePhone' => 'Mobile Phone',
-	'Class:MobilePhone+' => '',
+	'Class:MobilePhone+' => 'End User wireless phone device',
 	'Class:MobilePhone/Attribute:imei' => 'IMEI',
 	'Class:MobilePhone/Attribute:imei+' => '',
 	'Class:MobilePhone/Attribute:hw_pin' => 'Hardware PIN',
@@ -233,7 +233,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:IPPhone' => 'IP Phone',
-	'Class:IPPhone+' => '',
+	'Class:IPPhone+' => 'Physical device dedicated to phone calls, connected over internet',
 ]);
 
 //
@@ -242,7 +242,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Tablet' => 'Tablet',
-	'Class:Tablet+' => '',
+	'Class:Tablet+' => 'End user device.
+For example iPad, Galaxy Note/Tab Nexus, Kindle,...',
 ]);
 
 //
@@ -251,7 +252,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:ConnectableCI' => 'Connectable CI',
-	'Class:ConnectableCI+' => 'Physical CI',
+	'Class:ConnectableCI+' => 'Physical Device which can be connected to a network',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Network devices',
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'All network devices connected to this device',
@@ -265,7 +266,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DatacenterDevice' => 'Datacenter Device',
-	'Class:DatacenterDevice+' => '',
+	'Class:DatacenterDevice+' => 'A Connectable CI which can be racked in a datacenter',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '',
@@ -354,7 +355,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:StorageSystem' => 'Storage System',
-	'Class:StorageSystem+' => '',
+	'Class:StorageSystem+' => 'A Storage System is used in iTop to describe any storage system that can be attached either to a SAN or to an Ethernet network.
+The logical unit of storage managed by a Storage System is a Logical Volume.',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logical volumes',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'All the logical volumes in this storage system',
@@ -366,7 +368,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:SANSwitch' => 'SAN Switch',
-	'Class:SANSwitch+' => '',
+	'Class:SANSwitch+' => 'A SAN Switch is a network switch compatible with the Fibre Channel protocol used by storage networks.',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Devices',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'All the devices connected to this SAN switch',
@@ -378,7 +380,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:TapeLibrary' => 'Tape Library',
-	'Class:TapeLibrary+' => '',
+	'Class:TapeLibrary+' => 'A magnetic tape (or cartridge) hosted inside a Tape Library.',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Tapes',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'All the tapes in the tape library',
@@ -390,7 +392,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:NAS' => 'NAS',
-	'Class:NAS+' => 'Network-attached storage (NAS) is an high-capacity storage device connected to a network',
+	'Class:NAS+' => 'Network-attached storage (NAS) is an high-capacity storage device connected to a network.
+In '.ITOP_APPLICATION_SHORT.' a NAS is linked to NAS File Systems',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Filesystems',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'All the file systems in this NAS',
@@ -402,7 +405,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PC' => 'PC',
-	'Class:PC+' => 'Personal Computer, Desktop or Laptop',
+	'Class:PC+' => 'Personal Computer, Desktop or Laptop, running an operating system and designed to execute Software Instances',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s',
 	'Class:PC/Attribute:osfamily_id' => 'OS family',
 	'Class:PC/Attribute:osfamily_id+' => '',
@@ -430,7 +433,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Printer' => 'Printer',
-	'Class:Printer+' => '',
+	'Class:Printer+' => 'Physical Device connected either to the network or to a PC',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s',
 ]);
 
@@ -440,7 +443,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PowerConnection' => 'Power Connection',
-	'Class:PowerConnection+' => '',
+	'Class:PowerConnection+' => 'Abstract class, grouping physical devices used for electrical power supply',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s',
 ]);
 
@@ -450,7 +453,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PowerSource' => 'Power Source',
-	'Class:PowerSource+' => '',
+	'Class:PowerSource+' => 'Physical Power Connection, used in datacenter, can document any kind of power source (main power inlet, breaker…) that is not a PDU ',
 	'Class:PowerSource/ComplementaryName' => '%1$s - %2$s',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
 	'Class:PowerSource/Attribute:pdus_list+' => 'All the PDUs using this power source',
@@ -462,7 +465,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PDU' => 'PDU',
-	'Class:PDU+' => '',
+	'Class:PDU+' => 'Physical Power Connection.
+A PDU (Power Distribution Unit) is a device fitted with multiple outputs designed to distribute electric power, especially to racks of computers and networking equipment located within the data center.',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s',
 	'Class:PDU/Attribute:rack_id' => 'Rack',
 	'Class:PDU/Attribute:rack_id+' => '',
@@ -480,7 +484,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Peripheral' => 'Peripheral',
-	'Class:Peripheral+' => '',
+	'Class:Peripheral+' => 'Physical device, used to document any kind of computer peripheral.
+For example: external hard drives, scanners, input devices (trackballs, bar code scanners), etc…',
 	'Class:Peripheral/ComplementaryName' => '%1$s - %2$s',
 ]);
 
@@ -490,7 +495,10 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Enclosure' => 'Enclosure',
-	'Class:Enclosure+' => '',
+	'Class:Enclosure+' => 'Datacenter Device.
+It is a cabinet generally fitted with doors and side panels.
+Enclosures may contain baffles, fans, and other features.
+Then can be mounted inside a Rack or directly fitted on the wall.',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
 	'Class:Enclosure/Attribute:rack_id+' => '',
@@ -547,12 +555,54 @@ The main information conveyed by a Business Process is its list of relationships
 ]);
 
 //
+// Class: Software
+//
+
+Dict::Add('EN US', 'English', 'English', [
+	'Class:Software' => 'Software',
+	'Class:Software+' => 'A generic item of a software in the software catalog.
+A Software deployed on a device (Server, PC, Virtual Machine) is documented as a Software Instance.
+Software has a category which correspond to the 5 type of Software Instance: DB Server, Middleware, PC Software, Web Server and Other Software.',
+
+
+	'Class:Software/ComplementaryName' => '%1$s - %2$s',
+	'Class:Software/Attribute:name' => 'Name',
+	'Class:Software/Attribute:name+' => '',
+	'Class:Software/Attribute:vendor' => 'Vendor',
+	'Class:Software/Attribute:vendor+' => '',
+	'Class:Software/Attribute:version' => 'Version',
+	'Class:Software/Attribute:version+' => '',
+	'Class:Software/Attribute:documents_list' => 'Documents',
+	'Class:Software/Attribute:documents_list+' => 'All the documents linked to this software',
+	'Class:Software/Attribute:type' => 'Type',
+	'Class:Software/Attribute:type+' => '',
+	'Class:Software/Attribute:type/Value:DBServer' => 'DB Server',
+	'Class:Software/Attribute:type/Value:DBServer+' => 'DB Server',
+	'Class:Software/Attribute:type/Value:Middleware' => 'Middleware',
+	'Class:Software/Attribute:type/Value:Middleware+' => 'Middleware',
+	'Class:Software/Attribute:type/Value:OtherSoftware' => 'Other Software',
+	'Class:Software/Attribute:type/Value:OtherSoftware+' => 'Other Software',
+	'Class:Software/Attribute:type/Value:PCSoftware' => 'PC Software',
+	'Class:Software/Attribute:type/Value:PCSoftware+' => 'PC Software',
+	'Class:Software/Attribute:type/Value:WebServer' => 'Web Server',
+	'Class:Software/Attribute:type/Value:WebServer+' => 'Web Server',
+	'Class:Software/Attribute:softwareinstance_list' => 'Software Instances',
+	'Class:Software/Attribute:softwareinstance_list+' => 'All the software instances for this software',
+	'Class:Software/Attribute:softwarepatch_list' => 'Software Patches',
+	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software',
+	'Class:Software/Attribute:softwarelicence_list' => 'Software Licenses',
+	'Class:Software/Attribute:softwarelicence_list+' => 'All the licenses for this software',
+]);
+
+//
 // Class: SoftwareInstance
 //
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:SoftwareInstance' => 'Software Instance',
-	'Class:SoftwareInstance+' => '',
+	'Class:SoftwareInstance+' => 'Abstract class. 
+Represent the deployment of a Software on a device (Server, PC, VirtualMachine).
+Different types of Software Instance exist: DB Server, Middleware, PC Software, Web Server and Other Software.',
 	'Class:SoftwareInstance/Attribute:system_id' => 'System',
 	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...',
 	'Class:SoftwareInstance/Attribute:system_name' => 'System name',
@@ -581,7 +631,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => '',
+	'Class:Middleware+' => 'An instance of a middleware software (software offering services to other software, or enterprise integration software) installed on a particular system (PC, Server or Virtual Machine).
+For example: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino can be put under this category.',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware instances',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware',
 ]);
@@ -592,7 +643,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DBServer' => 'DB Server',
-	'Class:DBServer+' => 'An instance of a database server software (like MySQL, Oracle, SQL Server, DB2…) running on a particular system (PC, Server or Virtual Machine).',
+	'Class:DBServer+' => 'An instance of a database server software (like MariaDB 10.6, MySQL 8.0, Oracle x.x, SQL Server, DB2…) running on a particular system (PC, Server or Virtual Machine).',
 	'Class:DBServer/Attribute:dbschema_list' => 'DB schemas',
 	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server',
 ]);
@@ -710,7 +761,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Hypervisor' => 'Hypervisor',
-	'Class:Hypervisor+' => '',
+	'Class:Hypervisor+' => 'An hypervisor is a virtualization software (MS Hyper-V, VMWare ESX, Xen, etc.), running on a physical Server and supporting the creation of Virtual Machines.',
 	'Class:Hypervisor/Attribute:farm_id' => 'Farm',
 	'Class:Hypervisor/Attribute:farm_id+' => '',
 	'Class:Hypervisor/Attribute:farm_name' => 'Farm name',
@@ -727,7 +778,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Farm' => 'Farm',
-	'Class:Farm+' => '',
+	'Class:Farm+' => 'A Farm (or cluster) is a group of Hypervisors pooled together and sharing storage resources to provide an overall fault tolerant system for hosting Virtual Machines.',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
 	'Class:Farm/Attribute:hypervisor_list+' => 'All the hypervisors that compose this farm',
 	'Class:Farm/Attribute:redundancy' => 'High availability',
@@ -742,7 +793,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:VirtualMachine' => 'Virtual Machine',
-	'Class:VirtualMachine+' => '',
+	'Class:VirtualMachine+' => 'A Virtual Machine is the virtual equivalent to a Server, it is hosted either on an Hypervisor or on a Farm.',
 	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
 	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Virtual host',
 	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
@@ -776,7 +827,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:LogicalVolume' => 'Logical Volume',
-	'Class:LogicalVolume+' => '',
+	'Class:LogicalVolume+' => 'The unit of storage managed inside a Storage System.',
 	'Class:LogicalVolume/Attribute:name' => 'Name',
 	'Class:LogicalVolume/Attribute:name+' => '',
 	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
@@ -865,7 +916,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Tape' => 'Tape',
-	'Class:Tape+' => '',
+	'Class:Tape+' => 'A Tape Library is a storage device which contains one or more tape drives, a number of slots to hold tape cartridges and an automated method for loading tapes. Tape Libraries are used for data backup or archiving.',
 	'Class:Tape/Attribute:name' => 'Name',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Description',
@@ -884,7 +935,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:NASFileSystem' => 'NAS File System',
-	'Class:NASFileSystem+' => '',
+	'Class:NASFileSystem+' => 'A NAS File System is the object that represents a shared file system hosted inside a given NAS.',
 	'Class:NASFileSystem/Attribute:name' => 'Name',
 	'Class:NASFileSystem/Attribute:name+' => '',
 	'Class:NASFileSystem/Attribute:description' => 'Description',
@@ -900,48 +951,13 @@ Dict::Add('EN US', 'English', 'English', [
 ]);
 
 //
-// Class: Software
-//
-
-Dict::Add('EN US', 'English', 'English', [
-	'Class:Software' => 'Software',
-	'Class:Software+' => '',
-	'Class:Software/ComplementaryName' => '%1$s - %2$s',
-	'Class:Software/Attribute:name' => 'Name',
-	'Class:Software/Attribute:name+' => '',
-	'Class:Software/Attribute:vendor' => 'Vendor',
-	'Class:Software/Attribute:vendor+' => '',
-	'Class:Software/Attribute:version' => 'Version',
-	'Class:Software/Attribute:version+' => '',
-	'Class:Software/Attribute:documents_list' => 'Documents',
-	'Class:Software/Attribute:documents_list+' => 'All the documents linked to this software',
-	'Class:Software/Attribute:type' => 'Type',
-	'Class:Software/Attribute:type+' => '',
-	'Class:Software/Attribute:type/Value:DBServer' => 'DB Server',
-	'Class:Software/Attribute:type/Value:DBServer+' => 'DB Server',
-	'Class:Software/Attribute:type/Value:Middleware' => 'Middleware',
-	'Class:Software/Attribute:type/Value:Middleware+' => 'Middleware',
-	'Class:Software/Attribute:type/Value:OtherSoftware' => 'Other Software',
-	'Class:Software/Attribute:type/Value:OtherSoftware+' => 'Other Software',
-	'Class:Software/Attribute:type/Value:PCSoftware' => 'PC Software',
-	'Class:Software/Attribute:type/Value:PCSoftware+' => 'PC Software',
-	'Class:Software/Attribute:type/Value:WebServer' => 'Web Server',
-	'Class:Software/Attribute:type/Value:WebServer+' => 'Web Server',
-	'Class:Software/Attribute:softwareinstance_list' => 'Software Instances',
-	'Class:Software/Attribute:softwareinstance_list+' => 'All the software instances for this software',
-	'Class:Software/Attribute:softwarepatch_list' => 'Software Patches',
-	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software',
-	'Class:Software/Attribute:softwarelicence_list' => 'Software Licenses',
-	'Class:Software/Attribute:softwarelicence_list+' => 'All the licenses for this software',
-]);
-
-//
 // Class: Patch
 //
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Patch' => 'Patch',
-	'Class:Patch+' => '',
+	'Class:Patch+' => 'Abstract class.
+A patch, hotfix, security fix or service pack for an OS or a Software.',
 	'Class:Patch/Attribute:name' => 'Name',
 	'Class:Patch/Attribute:name+' => '',
 	'Class:Patch/Attribute:documents_list' => 'Documents',
@@ -958,7 +974,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:OSPatch' => 'OS Patch',
-	'Class:OSPatch+' => '',
+	'Class:OSPatch+' => 'A patch, hotfix, security fix or service pack for a given operating system.',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Devices',
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'All the systems where this patch is installed',
 	'Class:OSPatch/Attribute:osversion_id' => 'OS version',
@@ -973,7 +989,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:SoftwarePatch' => 'Software Patch',
-	'Class:SoftwarePatch+' => '',
+	'Class:SoftwarePatch+' => 'A patch, hotfix, security fix or service pack for a given software.',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Software',
 	'Class:SoftwarePatch/Attribute:software_id+' => '',
 	'Class:SoftwarePatch/Attribute:software_name' => 'Software name',
@@ -988,8 +1004,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Licence' => 'License',
-	'Class:Licence+' => '',
-
+	'Class:Licence+' => 'Abstract class.
+A license contract for a particular OS version or Software',
 	'Class:Licence/Attribute:name' => 'Name',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => 'Documents',
@@ -1024,7 +1040,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:OSLicence' => 'OS License',
-	'Class:OSLicence+' => '',
+	'Class:OSLicence+' => 'A license contract for a particular operating system.
+The license is related to one operating system (for example Windows 2008 R2) and can be associated with several servers or virtual machines.',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS version',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
@@ -1042,7 +1059,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:SoftwareLicence' => 'Software License',
-	'Class:SoftwareLicence+' => '',
+	'Class:SoftwareLicence+' => 'A license contract for a particular software.
+The license is related to one software (for example MS Office 2010) and can be associated with several instances of this software.',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
 	'Class:SoftwareLicence/Attribute:software_id+' => '',
@@ -1076,7 +1094,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:OSVersion' => 'OS Version',
-	'Class:OSVersion+' => '',
+	'Class:OSVersion+' => 'Typology. List of the possible values for the "OS Version" of a computer (Server or .
+The OS Versions are organized per OS Family.',
 	'Class:OSVersion/Attribute:osfamily_id' => 'OS family',
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS family name',
@@ -1089,7 +1108,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:OSFamily' => 'OS Family',
-	'Class:OSFamily+' => '',
+	'Class:OSFamily+' => 'Typology. List of the possible values for the "OS Family" attribute of Servers, Virtual Machines and PCs.',
 ]);
 
 //
@@ -1098,7 +1117,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Brand' => 'Brand',
-	'Class:Brand+' => '',
+	'Class:Brand+' => 'Typology. List of the possible values for the "Brand" attribute of Physical Device.',
 	'Class:Brand/Attribute:logo' => 'Logo',
 	'Class:Brand/Attribute:logo+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Physical devices',
@@ -1113,7 +1132,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Model' => 'Device Model',
-	'Class:Model+' => '',
+	'Class:Model+' => 'Typology. List the possible values for the "Model" attribute of a Physical Device.
+The Models are defined for a type of Physical Devices, within a Brand.',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s',
 	'Class:Model/Attribute:brand_id' => 'Brand',
 	'Class:Model/Attribute:brand_id+' => '',
@@ -1171,7 +1191,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:NetworkDeviceType' => 'Network Device Type',
-	'Class:NetworkDeviceType+' => '',
+	'Class:NetworkDeviceType+' => 'Typology. The possible values for the "Type" of a Network Device (e.g. Router, Switch, Firewall, etc.).',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Network devices',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type',
 ]);
@@ -1182,7 +1202,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:IOSVersion' => 'IOS Version',
-	'Class:IOSVersion+' => '',
+	'Class:IOSVersion+' => 'Typology. Possible values for the types of operating system for network devices (from Cisco\'s Internetwork Operating System).',
 	'Class:IOSVersion/Attribute:brand_id' => 'Brand',
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Brand name',
@@ -1292,7 +1312,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:VLAN' => 'VLAN',
-	'Class:VLAN+' => '',
+	'Class:VLAN+' => 'A Virtual LAN is used to group together in a logical way networks Subnets and Physical Interfaces that participate in the same VLAN.',
 	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:VLAN/Attribute:vlan_tag+' => '',
 	'Class:VLAN/Attribute:description' => 'Description',
@@ -1406,7 +1426,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:LogicalInterface' => 'Logical Interface',
-	'Class:LogicalInterface+' => '',
+	'Class:LogicalInterface+' => 'A network interface for a Virtual Machine.',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Virtual machine',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Virtual machine name',
@@ -1419,7 +1439,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:FiberChannelInterface' => 'Fiber Channel Interface',
-	'Class:FiberChannelInterface+' => '',
+	'Class:FiberChannelInterface+' => 'A Fibre Channel Interface, is a network interface to a high-speed network technology primarily used for connecting shared storage devices (Storage Systems in iTop).',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Speed',
 	'Class:FiberChannelInterface/Attribute:speed+' => '',
 	'Class:FiberChannelInterface/Attribute:topology' => 'Topology',
@@ -1502,7 +1522,9 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Group' => 'Group',
-	'Class:Group+' => '',
+	'Class:Group+' => 'Group is designed to define explicit sets of configurations items for any project purpose. 
+In contrast to Application Solution, a Group is not impacted by any of its component and does not impact them.
+For example when doing an OS migration, Group can be convenient to gather “Servers to be migrated”. Migrated servers being removed from the group as the migration progresses.',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s',
 	'Class:Group/Attribute:name' => 'Name',
 	'Class:Group/Attribute:name+' => '',
