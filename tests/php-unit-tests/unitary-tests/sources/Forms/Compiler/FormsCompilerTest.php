@@ -8,7 +8,7 @@
 use Combodo\iTop\Forms\Compiler\FormsCompiler;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
-class TestFormsCompiler extends ItopDataTestCase
+class FormsCompilerTest extends ItopDataTestCase
 {
 	/**
 	 * @dataProvider CompileFormFromXMLProvider
