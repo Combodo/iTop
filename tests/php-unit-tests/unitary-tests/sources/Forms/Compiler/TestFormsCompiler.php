@@ -520,6 +520,44 @@ XML,
 				'sExpectedClass' => 'Combodo\iTop\PropertyTree\PropertyTreeException',
 				'sExpectedMessage' => 'Node: dependant_property, invalid output in relevance condition: source_property.text_output',
 			],
+
+			'Missing output or source in relevance condition' => [
+				'sXMLContent' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+    <nodes>
+		<node id="source_property" xsi:type="Combodo-Property">
+			<label>UI:Source</label>
+            <value-type xsi:type="Combodo-ValueTypeString">
+            </value-type>
+        </node>
+		<node id="dependant_property" xsi:type="Combodo-Property">
+			<label>UI:Dependant</label>
+			<relevance-condition>source_property != 'count'</relevance-condition>
+            <value-type xsi:type="Combodo-ValueTypeString">
+            </value-type>
+        </node>
+	</nodes>
+</node>
+XML,
+				'sExpectedClass' => 'Combodo\iTop\PropertyTree\PropertyTreeException',
+				'sExpectedMessage' => 'Node: dependant_property, missing output or source in relevance condition: source_property',
+			],
+
+			'Missing value-type in node specification' => [
+				'sXMLContent' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+    <nodes>
+		<node id="source_property" xsi:type="Combodo-Property">
+			<label>UI:Source</label>
+        </node>
+	</nodes>
+</node>
+XML,
+				'sExpectedClass' => 'Combodo\iTop\PropertyTree\PropertyTreeException',
+				'sExpectedMessage' => 'Node: source_property, missing value-type in node specification',
+			],
 		];
 	}
 }

@@ -30,6 +30,8 @@ class Property extends AbstractProperty
 		$oValueTypeNode = $oDomNode->GetOptionalElement('value-type');
 		if ($oValueTypeNode) {
 			$this->oValueType = ValueTypeFactory::GetInstance()->CreateValueTypeFromDomNode($oValueTypeNode);
+		} else {
+			throw new PropertyTreeException("Node: {$this->sId}, missing value-type in node specification");
 		}
 
 		$this->sRelevanceCondition = $oDomNode->GetChildText('relevance-condition');
@@ -68,7 +70,7 @@ class Property extends AbstractProperty
 					}
 					$sBinding .= "\n			->AddInputDependsOn('{$sNode}.$sOutput', '$sNode', '$sOutput')";
 				} else {
-					// TODO Erreur field sans alias
+					throw new PropertyTreeException("Node: {$this->sId}, missing output or source in relevance condition: $sFieldToResolve");
 				}
 			}
 
