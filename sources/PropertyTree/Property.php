@@ -9,6 +9,7 @@ namespace Combodo\iTop\PropertyTree;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\PropertyTree\ValueType\ValueTypeFactory;
+use Exception;
 use Expression;
 use utils;
 
@@ -22,9 +23,9 @@ class Property extends AbstractProperty
 	/**
 	 * @inheritDoc
 	 */
-	public function InitFromDomNode(DesignElement $oDomNode, string $sParentId = ''): void
+	public function InitFromDomNode(DesignElement $oDomNode, ?AbstractProperty $oParent = null): void
 	{
-		parent::InitFromDomNode($oDomNode);
+		parent::InitFromDomNode($oDomNode, $oParent);
 
 		$oValueTypeNode = $oDomNode->GetOptionalElement('value-type');
 		if ($oValueTypeNode) {
@@ -34,6 +35,12 @@ class Property extends AbstractProperty
 		$this->sRelevanceCondition = $oDomNode->GetChildText('relevance-condition');
 	}
 
+	/**
+	 * @param $aPHPFragments
+	 *
+	 * @return string
+	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
+	 */
 	public function ToPHPFormBlock(&$aPHPFragments = []): string
 	{
 		$sFormBlockClass = $this->oValueType->GetFormBlockClass();
@@ -42,12 +49,23 @@ class Property extends AbstractProperty
 		$sRelevanceCondition = '';
 		$sBinding = null;
 		if (!is_null($this->sRelevanceCondition)) {
-			$oExpression = Expression::FromOQL($this->sRelevanceCondition);
-			$aFieldsToResolve = $oExpression->ListRequiredFields();
+			try {
+				$oExpression = Expression::FromOQL($this->sRelevanceCondition);
+			} catch (Exception $e) {
+				throw new PropertyTreeException("Node: {$this->sId}, invalid syntax in relevance condition: ".$e->getMessage());
+			}
+			$aFieldsToResolve = array_unique($oExpression->ListRequiredFields());
 			foreach ($aFieldsToResolve as $sFieldToResolve) {
 				if (preg_match('/(?<node>\w+)\.(?<output>\w+)/', $sFieldToResolve, $aMatches) === 1) {
 					$sNode = $aMatches['node'];
+					$oSibling = $this->GetSibling($sNode);
+					if (is_null($oSibling)) {
+						throw new PropertyTreeException("Node: {$this->sId}, invalid source in relevance condition: $sNode");
+					}
 					$sOutput = $aMatches['output'];
+					if (!in_array($sOutput, $oSibling->oValueType->GetOutputs())) {
+						throw new PropertyTreeException("Node: {$this->sId}, invalid output in relevance condition: $sFieldToResolve");
+					}
 					$sBinding .= "\n			->AddInputDependsOn('{$sNode}.$sOutput', '$sNode', '$sOutput')";
 				} else {
 					// TODO Erreur field sans alias

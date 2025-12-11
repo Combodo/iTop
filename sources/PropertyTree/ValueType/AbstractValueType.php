@@ -18,6 +18,7 @@ abstract class AbstractValueType
 	abstract public function GetFormBlockClass(): string;
 
 	protected array $aInputs = [];
+	protected array $aOutputs = [];
 
 	public function InitFromDomNode(DesignElement $oDomNode): void
 	{
@@ -30,10 +31,18 @@ abstract class AbstractValueType
 				$this->aInputs[$sInputName] = $sInputValue;
 			}
 		}
+		foreach ($oBlockNode->GetOutputs() as $oOutput) {
+			$this->aOutputs[] = $oOutput->GetName();
+		}
 	}
 
 	public function GetInputs(): array
 	{
 		return $this->aInputs;
+	}
+
+	public function GetOutputs(): array
+	{
+		return $this->aOutputs;
 	}
 }

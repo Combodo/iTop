@@ -20,9 +20,9 @@ class CollectionOfTrees extends AbstractProperty
 	/**
 	 * @inheritDoc
 	 */
-	public function InitFromDomNode(DesignElement $oDomNode, string $sParentId = ''): void
+	public function InitFromDomNode(DesignElement $oDomNode, ?AbstractProperty $oParent = null): void
 	{
-		parent::InitFromDomNode($oDomNode, $sParentId);
+		parent::InitFromDomNode($oDomNode, $oParent);
 		$oPropertyTreeFactory = PropertyTreeFactory::GetInstance();
 
 		$this->sButtonLabel = $oDomNode->GetChildText('button-label');
@@ -30,7 +30,7 @@ class CollectionOfTrees extends AbstractProperty
 		// read child properties
 		foreach ($oDomNode->GetUniqueElement('prototype')->childNodes as $oNode) {
 			if ($oNode instanceof DesignElement) {
-				$this->AddChild($oPropertyTreeFactory->CreateNodeFromDom($oNode, $this->sId));
+				$this->AddChild($oPropertyTreeFactory->CreateNodeFromDom($oNode, $this));
 			}
 		}
 	}
@@ -39,7 +39,7 @@ class CollectionOfTrees extends AbstractProperty
 	{
 		$sFormBlockClass = CollectionBlock::class;
 
-		$sSubTreeClass = 'SubFormFor__'.$this->sId;
+		$sSubTreeClass = 'SubFormFor__'.$this->sIdWithPath;
 
 		// Create the collection node
 		$sLocalPHP = <<<PHP
@@ -52,7 +52,7 @@ class CollectionOfTrees extends AbstractProperty
 PHP;
 
 		$sSubClassPHP = <<<PHP
-		class SubFormFor__$this->sId extends Combodo\iTop\Forms\Block\Base\FormBlock
+		class $sSubTreeClass extends Combodo\iTop\Forms\Block\Base\FormBlock
 		{
 			protected function BuildForm(): void
 			{

@@ -17,15 +17,15 @@ class PropertyTree extends AbstractProperty
 	/**
 	 * @inheritdoc
 	 */
-	public function InitFromDomNode(DesignElement $oDomNode, string $sParentId = ''): void
+	public function InitFromDomNode(DesignElement $oDomNode, ?AbstractProperty $oParent = null): void
 	{
-		parent::InitFromDomNode($oDomNode, $sParentId);
+		parent::InitFromDomNode($oDomNode, $oParent);
 		$oPropertyTreeFactory = PropertyTreeFactory::GetInstance();
 
 		// read child properties
 		foreach ($oDomNode->GetUniqueElement('nodes')->childNodes as $oNode) {
 			if ($oNode instanceof DesignElement) {
-				$this->AddChild($oPropertyTreeFactory->CreateNodeFromDom($oNode, $this->sId));
+				$this->AddChild($oPropertyTreeFactory->CreateNodeFromDom($oNode, $this));
 			}
 		}
 	}

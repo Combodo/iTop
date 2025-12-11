@@ -5,8 +5,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
-use Combodo\iTop\Forms\Block\Expression\BooleanExpressionFormBlock;
 use Combodo\iTop\Forms\Compiler\FormsCompiler;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
@@ -42,7 +40,7 @@ class TestFormsCompiler extends ItopDataTestCase
 <node id="basic_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
         <node id="title_property" xsi:type="Combodo-Property">
-            <label>UI:BasicTest:Prop-Title2</label>
+            <label>UI:BasicTest:Prop-Title</label>
             <value-type xsi:type="Combodo-ValueTypeLabel">
             </value-type>
         </node>
@@ -255,7 +253,7 @@ class FormFor__collection_of_trees_test extends Combodo\iTop\Forms\Block\Base\Fo
 {
 	protected function BuildForm(): void
 	{
-		\$this->Add('collection_of_trees_test__sub_tree_collection', 'Combodo\iTop\Forms\Block\Base\CollectionBlock', [
+		\$this->Add('sub_tree_collection', 'Combodo\iTop\Forms\Block\Base\CollectionBlock', [
 			'label' => 'UI:SubTree',
 			'button_label' => 'UI:AddSubTree',
 			'block_entry_type' => 'SubFormFor__collection_of_trees_test__sub_tree_collection',
@@ -265,7 +263,7 @@ class FormFor__collection_of_trees_test extends Combodo\iTop\Forms\Block\Base\Fo
 PHP,
 			],
 
-			'Input static' => [
+			'Static inputs should be bound and invalid input should be ignored' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="input_static_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
@@ -294,7 +292,7 @@ class FormFor__input_static_test extends Combodo\iTop\Forms\Block\Base\FormBlock
 PHP,
 			],
 
-			'Input binding' => [
+			'Dynamic input should be bound' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="input_binding_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
@@ -331,7 +329,7 @@ class FormFor__input_binding_test extends Combodo\iTop\Forms\Block\Base\FormBloc
 PHP,
 			],
 
-			'Relevance condition' => [
+			'Relevance condition should generate a boolean block expression' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
@@ -373,6 +371,57 @@ class FormFor__RelevanceCondition extends Combodo\iTop\Forms\Block\Base\FormBloc
 PHP,
 			],
 
+			'Complex Relevance condition should generate a boolean block expression' => [
+				'sXMLContent' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="ComplexRelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+    <nodes>
+		<node id="source_a_property" xsi:type="Combodo-Property">
+			<label>UI:Source</label>
+            <value-type xsi:type="Combodo-ValueTypeString">
+            </value-type>
+        </node>
+		<node id="source_b_property" xsi:type="Combodo-Property">
+			<label>UI:Source</label>
+            <value-type xsi:type="Combodo-ValueTypeString">
+            </value-type>
+        </node>
+		<node id="dependant_property" xsi:type="Combodo-Property">
+			<label>UI:Dependant</label>
+			<relevance-condition>IF(source_a_property.text != '', source_a_property.text, source_b_property.text)</relevance-condition>
+            <value-type xsi:type="Combodo-ValueTypeString">
+            </value-type>
+        </node>
+	</nodes>
+</node>
+XML,
+				'sExpectedPHP' => <<<PHP
+class FormFor__ComplexRelevanceCondition extends Combodo\iTop\Forms\Block\Base\FormBlock
+{
+	protected function BuildForm(): void
+	{
+		\$this->Add('source_a_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
+			'label' => 'UI:Source',
+		]);
+
+		\$this->Add('source_b_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
+			'label' => 'UI:Source',
+		]);
+
+		\$this->Add('dependant_property_relevance_condition', 'Combodo\iTop\Forms\Block\Expression\BooleanExpressionFormBlock', [
+			'expression' => "IF(source_a_property.text != '', source_a_property.text, source_b_property.text)",
+		])
+			->AddInputDependsOn('source_a_property.text', 'source_a_property', 'text')
+			->AddInputDependsOn('source_b_property.text', 'source_b_property', 'text');
+
+		\$this->Add('dependant_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
+			'label' => 'UI:Dependant',
+		])
+			->InputDependsOn('visible', 'dependant_property_relevance_condition', 'result');
+	}
+}
+PHP,
+			],
 			'test' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -388,6 +437,88 @@ class FormFor__Test extends Combodo\iTop\Forms\Block\Base\FormBlock
 	{	}
 }
 PHP,
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider CompileFormFromInvalidXMLProvider
+	 * @param string $sXMLContent
+	 * @param string $sExpectedClass
+	 * @param string $sExpectedMessage
+	 *
+	 * @return void
+	 * @throws \Combodo\iTop\Forms\Compiler\FormsCompilerException
+	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
+	 * @throws \DOMFormatException
+	 */
+	public function testCompileFormFromInvalidXML(string $sXMLContent, string $sExpectedClass, string $sExpectedMessage)
+	{
+		$this->expectException($sExpectedClass);
+		$this->expectExceptionMessage($sExpectedMessage);
+		FormsCompiler::GetInstance()->CompileFormFromXML($sXMLContent);
+	}
+
+	public function CompileFormFromInvalidXMLProvider()
+	{
+		return [
+			'Invalid OQL expression in condition' => [
+				'sXMLContent' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+    <nodes>
+		<node id="dependant_property" xsi:type="Combodo-Property">
+			<label>UI:Dependant</label>
+			<relevance-condition>source_property.text == 'count'</relevance-condition>
+            <value-type xsi:type="Combodo-ValueTypeString">
+            </value-type>
+        </node>
+	</nodes>
+</node>
+XML,
+				'sExpectedClass' => 'Combodo\iTop\PropertyTree\PropertyTreeException',
+				'sExpectedMessage' => 'Node: dependant_property, invalid syntax in relevance condition: Unexpected token EQ - found \'=\' at 22 in \'source_property.text == \'count\'\'',
+			],
+
+			'Unknown source in relevance condition' => [
+				'sXMLContent' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+    <nodes>
+		<node id="dependant_property" xsi:type="Combodo-Property">
+			<label>UI:Dependant</label>
+			<relevance-condition>source_property.text = 'count'</relevance-condition>
+            <value-type xsi:type="Combodo-ValueTypeString">
+            </value-type>
+        </node>
+	</nodes>
+</node>
+XML,
+				'sExpectedClass' => 'Combodo\iTop\PropertyTree\PropertyTreeException',
+				'sExpectedMessage' => 'Node: dependant_property, invalid source in relevance condition: source_property',
+			],
+
+			'Unknown output in relevance condition' => [
+				'sXMLContent' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+    <nodes>
+		<node id="source_property" xsi:type="Combodo-Property">
+			<label>UI:Source</label>
+            <value-type xsi:type="Combodo-ValueTypeString">
+            </value-type>
+        </node>
+		<node id="dependant_property" xsi:type="Combodo-Property">
+			<label>UI:Dependant</label>
+			<relevance-condition>source_property.text_output != 'count'</relevance-condition>
+            <value-type xsi:type="Combodo-ValueTypeString">
+            </value-type>
+        </node>
+	</nodes>
+</node>
+XML,
+				'sExpectedClass' => 'Combodo\iTop\PropertyTree\PropertyTreeException',
+				'sExpectedMessage' => 'Node: dependant_property, invalid output in relevance condition: source_property.text_output',
 			],
 		];
 	}

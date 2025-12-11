@@ -24,5 +24,4 @@ class FormsException extends Exception
 		parent::__construct($sMessage, $iCode, $oPrevious);
 		IssueLog::Exception(get_class($this).' occurs: '.$sMessage, $this, null, $aContext);
 	}
-
 }

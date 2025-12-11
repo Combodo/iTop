@@ -38,14 +38,14 @@ class PropertyTreeFactory
 	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
 	 * @throws \DOMFormatException
 	 */
-	public function CreateNodeFromDom(DesignElement $oDomNode, string $sParentId = ''): AbstractProperty
+	public function CreateNodeFromDom(DesignElement $oDomNode, ?AbstractProperty $oParent = null): AbstractProperty
 	{
 		$sNodeType = $oDomNode->getAttribute('xsi:type');
 
 		// The class of the property tree node is given by the xsi:type attribute
 		if (is_a($sNodeType, AbstractProperty::class, true)) {
 			$oNode = new $sNodeType();
-			$oNode->InitFromDomNode($oDomNode, $sParentId);
+			$oNode->InitFromDomNode($oDomNode, $oParent);
 
 			return $oNode;
 		}

@@ -16,13 +16,14 @@ use utils;
  */
 abstract class AbstractProperty
 {
+	protected ?AbstractProperty $oParent;
 	protected string $sId;
 	protected ?string $sLabel;
 
 	/** @var array<AbstractProperty> */
 	protected array $aChildren = [];
 	protected ?AbstractValueType $oValueType;
-	protected ?string $sParentId;
+	protected ?string $sIdWithPath;
 
 	/**
 	 * Init property tree node from xml dom node
@@ -34,14 +35,15 @@ abstract class AbstractProperty
 	 * @throws \DOMFormatException
 	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
 	 */
-	public function InitFromDomNode(DesignElement $oDomNode, string $sParentId = ''): void
+	public function InitFromDomNode(DesignElement $oDomNode, ?AbstractProperty $oParent = null): void
 	{
-		if (utils::IsNotNullOrEmptyString($sParentId)) {
-			$this->sId = $sParentId.'__';
+		$this->oParent = $oParent;
+		$this->sId = $oDomNode->getAttribute('id');
+		if (is_null($oParent)) {
+			$this->sIdWithPath = $this->sId;
 		} else {
-			$this->sId = '';
+			$this->sIdWithPath = $oParent->sIdWithPath.'__'.$this->sId;
 		}
-		$this->sId .= $oDomNode->getAttribute('id');
 		$this->sLabel = $oDomNode->GetChildText('label');
 	}
 
@@ -60,5 +62,20 @@ abstract class AbstractProperty
 	public function GetChildren(): array
 	{
 		return $this->aChildren;
+	}
+
+	public function GetSibling(string $sId): ?AbstractProperty
+	{
+		if (is_null($this->oParent)) {
+			return null;
+		}
+
+		foreach ($this->oParent->GetChildren() as $oSibling) {
+			if ($oSibling->sId == $sId) {
+				return $oSibling;
+			}
+		}
+
+		return null;
 	}
 }
