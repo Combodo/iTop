@@ -9,6 +9,7 @@ namespace Combodo\iTop\PropertyTree;
 
 use Combodo\iTop\DesignDocument;
 use Combodo\iTop\DesignElement;
+use utils;
 
 class PropertyTreeFactory
 {
@@ -31,17 +32,20 @@ class PropertyTreeFactory
 	 * Create a property node from a design element
 	 *
 	 * @param \Combodo\iTop\DesignElement $oDomNode
+	 * @param string $sParentId
 	 *
 	 * @return \Combodo\iTop\PropertyTree\AbstractProperty
 	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
+	 * @throws \DOMFormatException
 	 */
-	public function CreateNodeFromDom(DesignElement $oDomNode): AbstractProperty
+	public function CreateNodeFromDom(DesignElement $oDomNode, string $sParentId = ''): AbstractProperty
 	{
 		$sNodeType = $oDomNode->getAttribute('xsi:type');
 
+		// The class of the property tree node is given by the xsi:type attribute
 		if (is_a($sNodeType, AbstractProperty::class, true)) {
 			$oNode = new $sNodeType();
-			$oNode->InitFromDomNode($oDomNode);
+			$oNode->InitFromDomNode($oDomNode, $sParentId);
 
 			return $oNode;
 		}

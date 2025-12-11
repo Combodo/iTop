@@ -954,6 +954,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeLabel' => __DIR__ . '/../..' . '/sources/PropertyTree/ValueType/ValueTypeLabel.php',
         'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeOQL' => __DIR__ . '/../..' . '/sources/PropertyTree/ValueType/ValueTypeOQL.php',
         'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeProfileName' => __DIR__ . '/../..' . '/sources/PropertyTree/ValueType/ValueTypeProfileName.php',
+        'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeString' => __DIR__ . '/../..' . '/sources/PropertyTree/ValueType/ValueTypeString.php',
         'Combodo\\iTop\\Renderer\\BlockRenderer' => __DIR__ . '/../..' . '/sources/Renderer/BlockRenderer.php',
         'Combodo\\iTop\\Renderer\\Bootstrap\\BsFieldRendererMappings' => __DIR__ . '/../..' . '/sources/Renderer/Bootstrap/BsFieldRendererMappings.php',
         'Combodo\\iTop\\Renderer\\Bootstrap\\BsFormRenderer' => __DIR__ . '/../..' . '/sources/Renderer/Bootstrap/BsFormRenderer.php',

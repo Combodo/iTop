@@ -40,6 +40,8 @@ class FormsCompiler
 	 *
 	 * @return string
 	 * @throws \Combodo\iTop\Forms\Compiler\FormsCompilerException
+	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
+	 * @throws \DOMFormatException
 	 */
 	public function CompileFormFromXML(string $sXMLContent): string
 	{
@@ -54,8 +56,8 @@ class FormsCompiler
 		/** @var \Combodo\iTop\DesignElement $oRoot */
 		$oRoot = $oDoc->firstChild;
 		$oPropertyTree = PropertyTreeFactory::GetInstance()->CreateNodeFromDom($oRoot);
-		$sPHP = $oPropertyTree->ToPHP();
-		return $sPHP;
+
+		return $oPropertyTree->ToPHPFormBlock();
 	}
 
 	public function StoreFormFromContent(string $sId, string $sPHPContent): void

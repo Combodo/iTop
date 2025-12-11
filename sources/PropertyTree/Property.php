@@ -16,13 +16,9 @@ use Combodo\iTop\PropertyTree\ValueType\ValueTypeFactory;
 class Property extends AbstractProperty
 {
 	/**
-	 * @param \Combodo\iTop\DesignElement $oDomNode
-	 *
-	 * @return void
-	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
-	 * @throws \DOMFormatException
+	 * @inheritDoc
 	 */
-	public function InitFromDomNode(DesignElement $oDomNode): void
+	public function InitFromDomNode(DesignElement $oDomNode, string $sParentId = ''): void
 	{
 		parent::InitFromDomNode($oDomNode);
 
@@ -32,13 +28,23 @@ class Property extends AbstractProperty
 		}
 	}
 
-	public function ToPHP(&$aPHPFragments = []): string
+	public function ToPHPFormBlock(&$aPHPFragments = []): string
 	{
 		$sFormBlockClass = $this->oValueType->GetFormBlockClass();
+
+		$sInputs = '';
+		foreach ($this->oValueType->GetInputs() as $sInput => $sValue) {
+			if (preg_match("/^{{(?<node>\w+)\.(?<output>\w+)}}$/", $sValue, $aMatches) === 1) {
+				$sInputs .= "\n			->InputDependsOn('$sInput', '{$aMatches['node']}', '{$aMatches['output']}')";
+			} else {
+				$sInputs .= "\n			->SetInputValue('$sInput', '$sValue')";
+			}
+		}
+
 		return <<<PHP
 		\$this->Add('$this->sId', '$sFormBlockClass', [
 			'label' => '$this->sLabel',
-		]);
+		]){$sInputs};
 
 PHP;
 	}

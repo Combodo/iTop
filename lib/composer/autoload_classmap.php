@@ -568,6 +568,7 @@ return array(
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeLabel' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeLabel.php',
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeOQL' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeOQL.php',
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeProfileName' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeProfileName.php',
+    'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeString' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeString.php',
     'Combodo\\iTop\\Renderer\\BlockRenderer' => $baseDir . '/sources/Renderer/BlockRenderer.php',
     'Combodo\\iTop\\Renderer\\Bootstrap\\BsFieldRendererMappings' => $baseDir . '/sources/Renderer/Bootstrap/BsFieldRendererMappings.php',
     'Combodo\\iTop\\Renderer\\Bootstrap\\BsFormRenderer' => $baseDir . '/sources/Renderer/Bootstrap/BsFormRenderer.php',
