@@ -292,6 +292,41 @@ class FormFor__input_static_test extends Combodo\iTop\Forms\Block\Base\FormBlock
 PHP,
 			],
 
+			'Quotes should be handled gracefully' => [
+				'sXMLContent' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="input_quotes_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+    <nodes>
+		<node id="class_attribute_property" xsi:type="Combodo-Property">
+			<label>'Class' and "Attribute"</label>
+			<value-type xsi:type="Combodo-ValueTypeClassAttribute">
+				<class>{{CONCAT("'", '"')}}</class>
+				<category>'Class' and "Attribute"</category>
+				<invalid-input>Test</invalid-input>
+			</value-type>
+        </node>
+	</nodes>
+</node>
+XML,
+				'sExpectedPHP' => <<<PHP
+class FormFor__input_quotes_test extends Combodo\iTop\Forms\Block\Base\FormBlock
+{
+	protected function BuildForm(): void
+	{
+		\$this->Add('class_attribute_property_class_expression', 'Combodo\iTop\Forms\Block\Expression\StringExpressionFormBlock', [
+			'expression' => 'CONCAT("\'", \'"\')',
+		]);
+
+		\$this->Add('class_attribute_property', 'Combodo\iTop\Forms\Block\DataModel\AttributeChoiceFormBlock', [
+			'label' => '\'Class\' and "Attribute"',
+		])
+			->InputDependsOn('class', 'class_attribute_property_class_expression', 'result')
+			->SetInputValue('category', '\'Class\' and "Attribute"');
+	}
+}
+PHP,
+			],
+
 			'Dynamic input should be bound' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -329,6 +364,48 @@ class FormFor__input_binding_test extends Combodo\iTop\Forms\Block\Base\FormBloc
 PHP,
 			],
 
+			'Dynamic input can be an expression' => [
+				'sXMLContent' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="input_binding_expression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+    <nodes>
+		<node id="class_property" xsi:type="Combodo-Property">
+			<label>UI:Class</label>
+            <value-type xsi:type="Combodo-ValueTypeClass">
+            </value-type>
+        </node>
+		<node id="class_attribute_property" xsi:type="Combodo-Property">
+			<label>UI:ClassAttribute</label>
+			<value-type xsi:type="Combodo-ValueTypeClassAttribute">
+				<class>{{IF(class_property.text = '', 'Person', class_property.text)}}</class>
+			</value-type>
+        </node>
+	</nodes>
+</node>
+XML,
+				'sExpectedPHP' => <<<PHP
+class FormFor__input_binding_expression extends Combodo\iTop\Forms\Block\Base\FormBlock
+{
+	protected function BuildForm(): void
+	{
+		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
+			'label' => 'UI:Class',
+		]);
+
+		\$this->Add('class_attribute_property_class_expression', 'Combodo\iTop\Forms\Block\Expression\StringExpressionFormBlock', [
+			'expression' => 'IF(class_property.text = \'\', \'Person\', class_property.text)',
+		])
+			->AddInputDependsOn('class_property.text', 'class_property', 'text');
+
+		\$this->Add('class_attribute_property', 'Combodo\iTop\Forms\Block\DataModel\AttributeChoiceFormBlock', [
+			'label' => 'UI:ClassAttribute',
+		])
+			->InputDependsOn('class', 'class_attribute_property_class_expression', 'result');
+	}
+}
+PHP,
+			],
+
 			'Relevance condition should generate a boolean block expression' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -341,7 +418,7 @@ PHP,
         </node>
 		<node id="dependant_property" xsi:type="Combodo-Property">
 			<label>UI:Dependant</label>
-			<relevance-condition>source_property.text != 'count'</relevance-condition>
+			<relevance-condition>{{source_property.text != 'count'}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueTypeString">
             </value-type>
         </node>
@@ -357,15 +434,15 @@ class FormFor__RelevanceCondition extends Combodo\iTop\Forms\Block\Base\FormBloc
 			'label' => 'UI:Source',
 		]);
 
-		\$this->Add('dependant_property_relevance_condition', 'Combodo\iTop\Forms\Block\Expression\BooleanExpressionFormBlock', [
-			'expression' => "source_property.text != 'count'",
+		\$this->Add('dependant_property_visible_expression', 'Combodo\iTop\Forms\Block\Expression\BooleanExpressionFormBlock', [
+			'expression' => 'source_property.text != \'count\'',
 		])
 			->AddInputDependsOn('source_property.text', 'source_property', 'text');
 
 		\$this->Add('dependant_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
 			'label' => 'UI:Dependant',
 		])
-			->InputDependsOn('visible', 'dependant_property_relevance_condition', 'result');
+			->InputDependsOn('visible', 'dependant_property_visible_expression', 'result');
 	}
 }
 PHP,
@@ -388,7 +465,7 @@ PHP,
         </node>
 		<node id="dependant_property" xsi:type="Combodo-Property">
 			<label>UI:Dependant</label>
-			<relevance-condition>IF(source_a_property.text != '', source_a_property.text, source_b_property.text)</relevance-condition>
+			<relevance-condition>{{IF(source_a_property.text != '', source_a_property.text, source_b_property.text)}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueTypeString">
             </value-type>
         </node>
@@ -408,8 +485,8 @@ class FormFor__ComplexRelevanceCondition extends Combodo\iTop\Forms\Block\Base\F
 			'label' => 'UI:Source',
 		]);
 
-		\$this->Add('dependant_property_relevance_condition', 'Combodo\iTop\Forms\Block\Expression\BooleanExpressionFormBlock', [
-			'expression' => "IF(source_a_property.text != '', source_a_property.text, source_b_property.text)",
+		\$this->Add('dependant_property_visible_expression', 'Combodo\iTop\Forms\Block\Expression\BooleanExpressionFormBlock', [
+			'expression' => 'IF(source_a_property.text != \'\', source_a_property.text, source_b_property.text)',
 		])
 			->AddInputDependsOn('source_a_property.text', 'source_a_property', 'text')
 			->AddInputDependsOn('source_b_property.text', 'source_b_property', 'text');
@@ -417,7 +494,7 @@ class FormFor__ComplexRelevanceCondition extends Combodo\iTop\Forms\Block\Base\F
 		\$this->Add('dependant_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
 			'label' => 'UI:Dependant',
 		])
-			->InputDependsOn('visible', 'dependant_property_relevance_condition', 'result');
+			->InputDependsOn('visible', 'dependant_property_visible_expression', 'result');
 	}
 }
 PHP,
@@ -469,7 +546,7 @@ PHP,
     <nodes>
 		<node id="dependant_property" xsi:type="Combodo-Property">
 			<label>UI:Dependant</label>
-			<relevance-condition>source_property.text == 'count'</relevance-condition>
+			<relevance-condition>{{source_property.text == 'count'}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueTypeString">
             </value-type>
         </node>
@@ -477,7 +554,7 @@ PHP,
 </node>
 XML,
 				'sExpectedClass' => 'Combodo\iTop\PropertyTree\PropertyTreeException',
-				'sExpectedMessage' => 'Node: dependant_property, invalid syntax in relevance condition: Unexpected token EQ - found \'=\' at 22 in \'source_property.text == \'count\'\'',
+				'sExpectedMessage' => 'Node: dependant_property, invalid syntax in condition: Unexpected token EQ - found \'=\' at 22 in \'source_property.text == \'count\'\'',
 			],
 
 			'Unknown source in relevance condition' => [
@@ -487,7 +564,7 @@ XML,
     <nodes>
 		<node id="dependant_property" xsi:type="Combodo-Property">
 			<label>UI:Dependant</label>
-			<relevance-condition>source_property.text = 'count'</relevance-condition>
+			<relevance-condition>{{source_property.text = 'count'}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueTypeString">
             </value-type>
         </node>
@@ -495,7 +572,7 @@ XML,
 </node>
 XML,
 				'sExpectedClass' => 'Combodo\iTop\PropertyTree\PropertyTreeException',
-				'sExpectedMessage' => 'Node: dependant_property, invalid source in relevance condition: source_property',
+				'sExpectedMessage' => 'Node: dependant_property, invalid source in condition: source_property',
 			],
 
 			'Unknown output in relevance condition' => [
@@ -510,7 +587,7 @@ XML,
         </node>
 		<node id="dependant_property" xsi:type="Combodo-Property">
 			<label>UI:Dependant</label>
-			<relevance-condition>source_property.text_output != 'count'</relevance-condition>
+			<relevance-condition>{{source_property.text_output != 'count'}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueTypeString">
             </value-type>
         </node>
@@ -518,7 +595,7 @@ XML,
 </node>
 XML,
 				'sExpectedClass' => 'Combodo\iTop\PropertyTree\PropertyTreeException',
-				'sExpectedMessage' => 'Node: dependant_property, invalid output in relevance condition: source_property.text_output',
+				'sExpectedMessage' => 'Node: dependant_property, invalid output in condition: source_property.text_output',
 			],
 
 			'Missing output or source in relevance condition' => [
@@ -533,7 +610,7 @@ XML,
         </node>
 		<node id="dependant_property" xsi:type="Combodo-Property">
 			<label>UI:Dependant</label>
-			<relevance-condition>source_property != 'count'</relevance-condition>
+			<relevance-condition>{{source_property != 'count'}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueTypeString">
             </value-type>
         </node>
@@ -541,7 +618,7 @@ XML,
 </node>
 XML,
 				'sExpectedClass' => 'Combodo\iTop\PropertyTree\PropertyTreeException',
-				'sExpectedMessage' => 'Node: dependant_property, missing output or source in relevance condition: source_property',
+				'sExpectedMessage' => 'Node: dependant_property, missing output or source in condition: source_property',
 			],
 
 			'Missing value-type in node specification' => [

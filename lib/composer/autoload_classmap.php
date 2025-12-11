@@ -502,6 +502,7 @@ return array(
     'Combodo\\iTop\\Forms\\Block\\Expression\\AbstractExpressionFormBlock' => $baseDir . '/sources/Forms/Block/Expression/AbstractExpressionFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Expression\\BooleanExpressionFormBlock' => $baseDir . '/sources/Forms/Block/Expression/BooleanExpressionFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Expression\\NumberExpressionFormBlock' => $baseDir . '/sources/Forms/Block/Expression/NumberExpressionFormBlock.php',
+    'Combodo\\iTop\\Forms\\Block\\Expression\\StringExpressionFormBlock' => $baseDir . '/sources/Forms/Block/Expression/StringExpressionFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\FormBlockException' => $baseDir . '/sources/Forms/Block/FormBlockException.php',
     'Combodo\\iTop\\Forms\\Block\\FormBlockHelper' => $baseDir . '/sources/Forms/Block/FormBlockHelper.php',
     'Combodo\\iTop\\Forms\\Block\\FormBlockService' => $baseDir . '/sources/Forms/Block/FormBlockService.php',

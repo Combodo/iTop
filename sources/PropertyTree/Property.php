@@ -8,6 +8,13 @@
 namespace Combodo\iTop\PropertyTree;
 
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Forms\Block\Expression\BooleanExpressionFormBlock;
+use Combodo\iTop\Forms\Block\Expression\NumberExpressionFormBlock;
+use Combodo\iTop\Forms\Block\Expression\StringExpressionFormBlock;
+use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;
+use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\IO\Format\NumberIOFormat;
+use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 use Combodo\iTop\PropertyTree\ValueType\ValueTypeFactory;
 use Exception;
 use Expression;
@@ -48,13 +55,34 @@ class Property extends AbstractProperty
 		$sFormBlockClass = $this->oValueType->GetFormBlockClass();
 
 		$sInputs = '';
-		$sRelevanceCondition = '';
-		$sBinding = null;
+		$sPrerequisiteExpressions = '';
 		if (!is_null($this->sRelevanceCondition)) {
+			$this->GenerateInputs('visible', $this->sRelevanceCondition, $sPrerequisiteExpressions, $sInputs);
+		}
+
+		foreach ($this->oValueType->GetInputValues() as $sInputName => $sValue) {
+			$this->GenerateInputs($sInputName, $sValue, $sPrerequisiteExpressions, $sInputs);
+		}
+		$sLabel = $this->QuoteForPHP($this->sLabel);
+		return <<<PHP
+		{$sPrerequisiteExpressions}\$this->Add('$this->sId', '$sFormBlockClass', [
+			'label' => $sLabel,
+		]){$sInputs};
+
+PHP;
+	}
+
+	private function GenerateInputs(string $sInputName, string $sValue, string &$sPrerequisiteExpressions, string &$sInputs): void
+	{
+		if (preg_match('/^{{(?<node>\w+)\.(?<output>\w+)}}$/', $sValue, $aMatches) === 1) {
+			$sInputs .= "\n			->InputDependsOn('$sInputName', '{$aMatches['node']}', '{$aMatches['output']}')";
+		} elseif (preg_match('/^{{(?<expression>.*)}}$/', $sValue, $aMatches) === 1) {
+			$sExpression = $aMatches['expression'];
+			$sBindings = '';
 			try {
-				$oExpression = Expression::FromOQL($this->sRelevanceCondition);
+				$oExpression = Expression::FromOQL($sExpression);
 			} catch (Exception $e) {
-				throw new PropertyTreeException("Node: {$this->sId}, invalid syntax in relevance condition: ".$e->getMessage());
+				throw new PropertyTreeException("Node: {$this->sId}, invalid syntax in condition: ".$e->getMessage());
 			}
 			$aFieldsToResolve = array_unique($oExpression->ListRequiredFields());
 			foreach ($aFieldsToResolve as $sFieldToResolve) {
@@ -62,42 +90,37 @@ class Property extends AbstractProperty
 					$sNode = $aMatches['node'];
 					$oSibling = $this->GetSibling($sNode);
 					if (is_null($oSibling)) {
-						throw new PropertyTreeException("Node: {$this->sId}, invalid source in relevance condition: $sNode");
+						throw new PropertyTreeException("Node: {$this->sId}, invalid source in condition: $sNode");
 					}
 					$sOutput = $aMatches['output'];
 					if (!in_array($sOutput, $oSibling->oValueType->GetOutputs())) {
-						throw new PropertyTreeException("Node: {$this->sId}, invalid output in relevance condition: $sFieldToResolve");
+						throw new PropertyTreeException("Node: {$this->sId}, invalid output in condition: $sFieldToResolve");
 					}
-					$sBinding .= "\n			->AddInputDependsOn('{$sNode}.$sOutput', '$sNode', '$sOutput')";
+					$sBindings .= "\n			->AddInputDependsOn('{$sNode}.$sOutput', '$sNode', '$sOutput')";
 				} else {
-					throw new PropertyTreeException("Node: {$this->sId}, missing output or source in relevance condition: $sFieldToResolve");
+					throw new PropertyTreeException("Node: {$this->sId}, missing output or source in condition: $sFieldToResolve");
 				}
 			}
 
-			$sRelevanceCondition = <<<PHP
-\$this->Add('{$this->sId}_relevance_condition', 'Combodo\iTop\Forms\Block\Expression\BooleanExpressionFormBlock', [
-			'expression' => "{$this->sRelevanceCondition}",
-		]){$sBinding};
+			$sExpressionClass = match ($this->oValueType->GetInputType($sInputName)) {
+				BooleanIOFormat::class => BooleanExpressionFormBlock::class,
+				StringIOFormat::class, ClassIOFormat::class => StringExpressionFormBlock::class,
+				NumberIOFormat::class => NumberExpressionFormBlock::class,
+				default => throw new PropertyTreeException("Node: {$this->sId}, unsupported expression for input type: $sInputName"),
+			};
+
+			$sExpression = $this->QuoteForPHP($sExpression);
+			$sPrerequisiteExpressions = <<<PHP
+\$this->Add('{$this->sId}_{$sInputName}_expression', '$sExpressionClass', [
+			'expression' => $sExpression,
+		]){$sBindings};
 
 		
 PHP;
 
-			$sInputs .= "\n			->InputDependsOn('visible', '{$this->sId}_relevance_condition', 'result')";
+			$sInputs .= "\n			->InputDependsOn('$sInputName', '{$this->sId}_{$sInputName}_expression', 'result')";
+		} else {
+			$sInputs .= "\n			->SetInputValue('$sInputName', ".$this->QuoteForPHP($sValue).")";
 		}
-
-		foreach ($this->oValueType->GetInputs() as $sInput => $sValue) {
-			if (preg_match("/^{{(?<node>\w+)\.(?<output>\w+)}}$/", $sValue, $aMatches) === 1) {
-				$sInputs .= "\n			->InputDependsOn('$sInput', '{$aMatches['node']}', '{$aMatches['output']}')";
-			} else {
-				$sInputs .= "\n			->SetInputValue('$sInput', '$sValue')";
-			}
-		}
-
-		return <<<PHP
-		{$sRelevanceCondition}\$this->Add('$this->sId', '$sFormBlockClass', [
-			'label' => '$this->sLabel',
-		]){$sInputs};
-
-PHP;
 	}
 }

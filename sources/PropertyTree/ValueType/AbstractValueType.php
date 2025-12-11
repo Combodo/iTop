@@ -8,6 +8,7 @@
 namespace Combodo\iTop\PropertyTree\ValueType;
 
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Forms\IO\FormInput;
 use utils;
 
 /**
@@ -17,8 +18,10 @@ abstract class AbstractValueType
 {
 	abstract public function GetFormBlockClass(): string;
 
+	/** @var FormInput[] */
 	protected array $aInputs = [];
 	protected array $aOutputs = [];
+	protected array $aInputValues = [];
 
 	public function InitFromDomNode(DesignElement $oDomNode): void
 	{
@@ -26,9 +29,10 @@ abstract class AbstractValueType
 		$oBlockNode = new $sBlockNodeClass('foo');
 		foreach ($oBlockNode->GetInputs() as $oInput) {
 			$sInputName = $oInput->GetName();
+			$this->aInputs[$sInputName] = $oInput;
 			$sInputValue = $oDomNode->GetChildText($sInputName);
 			if (utils::IsNotNullOrEmptyString($sInputValue)) {
-				$this->aInputs[$sInputName] = $sInputValue;
+				$this->aInputValues[$sInputName] = $sInputValue;
 			}
 		}
 		foreach ($oBlockNode->GetOutputs() as $oOutput) {
@@ -36,9 +40,14 @@ abstract class AbstractValueType
 		}
 	}
 
-	public function GetInputs(): array
+	public function GetInputValues(): array
 	{
-		return $this->aInputs;
+		return $this->aInputValues;
+	}
+
+	public function GetInputType(string $sInputName): string
+	{
+		return $this->aInputs[$sInputName]->GetDataType();
 	}
 
 	public function GetOutputs(): array

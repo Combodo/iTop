@@ -888,6 +888,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Forms\\Block\\Expression\\AbstractExpressionFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Expression/AbstractExpressionFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Expression\\BooleanExpressionFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Expression/BooleanExpressionFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\Expression\\NumberExpressionFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Expression/NumberExpressionFormBlock.php',
+        'Combodo\\iTop\\Forms\\Block\\Expression\\StringExpressionFormBlock' => __DIR__ . '/../..' . '/sources/Forms/Block/Expression/StringExpressionFormBlock.php',
         'Combodo\\iTop\\Forms\\Block\\FormBlockException' => __DIR__ . '/../..' . '/sources/Forms/Block/FormBlockException.php',
         'Combodo\\iTop\\Forms\\Block\\FormBlockHelper' => __DIR__ . '/../..' . '/sources/Forms/Block/FormBlockHelper.php',
         'Combodo\\iTop\\Forms\\Block\\FormBlockService' => __DIR__ . '/../..' . '/sources/Forms/Block/FormBlockService.php',

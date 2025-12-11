@@ -7,27 +7,19 @@
 
 namespace Combodo\iTop\Forms\Block\Expression;
 
-use Combodo\iTop\Forms\Block\FormBlockException;
-use Combodo\iTop\Forms\IO\Format\NumberIOFormat;
+use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 
-/**
- * A block to manage an number expression.
- * This block expose a number output: the result of the expression.
- *
- * @package Combodo\iTop\Forms\Block\Expression
- * @since 3.3.0
- */
-class NumberExpressionFormBlock extends AbstractExpressionFormBlock
+class StringExpressionFormBlock extends AbstractExpressionFormBlock
 {
 	// Outputs
-	public const OUTPUT_RESULT = "result";
+	public const OUTPUT_RESULT = 'result';
 
 	/** @inheritdoc */
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
 		parent::RegisterIO($oIORegister);
-		$oIORegister->AddOutput(self::OUTPUT_RESULT, NumberIOFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_RESULT, StringIOFormat::class);
 	}
 
 	/**
@@ -44,9 +36,8 @@ class NumberExpressionFormBlock extends AbstractExpressionFormBlock
 		$oResult = parent::ComputeExpression($sEventType);
 
 		// Update output
-		$this->GetOutput(self::OUTPUT_RESULT)->SetValue($sEventType, new NumberIOFormat($oResult));
+		$this->GetOutput(self::OUTPUT_RESULT)->SetValue($sEventType, new StringIOFormat($oResult));
 
 		return $oResult;
 	}
-
 }
