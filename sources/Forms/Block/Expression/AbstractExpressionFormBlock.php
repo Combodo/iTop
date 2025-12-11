@@ -48,11 +48,6 @@ abstract class AbstractExpressionFormBlock extends AbstractFormBlock
 		$sExpression = $this->GetOption('expression');
 		try {
 			$oExpression = Expression::FromOQL($sExpression);
-			$aParamsToResolve = $oExpression->GetParameters();
-			$aResolvedParams = [];
-			foreach ($aParamsToResolve as $sParamToResolve) {
-				$aResolvedParams[$sParamToResolve] = strval($this->GetInputValue($sParamToResolve));
-			}
 			$aFieldsToResolve = $oExpression->ListRequiredFields();
 			foreach ($aFieldsToResolve as $sFieldToResolve) {
 				$aResolvedParams[$sFieldToResolve] = strval($this->GetInputValue($sFieldToResolve));

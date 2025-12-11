@@ -5,42 +5,44 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Forms\Block\Base\CollectionBlock;
+use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
+use Combodo\iTop\Forms\Block\Expression\BooleanExpressionFormBlock;
 use Combodo\iTop\Forms\Compiler\FormsCompiler;
-use Combodo\iTop\ItopSdkFormDemonstrator\Form\Block\Person\PersonFormBlock;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class TestFormsCompiler extends ItopDataTestCase
 {
 	/**
 	 * @dataProvider CompileFormFromXMLProvider
+	 *
 	 * @param string $sXMLContent
 	 * @param string $sExpectedPHP
+	 * @param string $sMessage
 	 *
 	 * @return void
 	 * @throws \Combodo\iTop\Forms\Compiler\FormsCompilerException
 	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
+	 * @throws \DOMFormatException
 	 */
-	public function testCompileFormFromXML(string $sXMLContent, string $sExpectedPHP, string $sMessage = '')
+	public function testCompileFormFromXML(string $sXMLContent, string $sExpectedPHP)
 	{
 		$sProducedPHP = FormsCompiler::GetInstance()->CompileFormFromXML($sXMLContent);
 
 		$this->AssertPHPCodeIsValid($sProducedPHP);
-
+		$sMessage = $this->dataName();
 		$this->assertEquals($sExpectedPHP, $sProducedPHP, $sMessage);
 	}
 
 	public function CompileFormFromXMLProvider()
 	{
 		return [
-
-			'Basic properties' => [
+			'Basic scalar properties should generate PHP' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="basic_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
         <node id="title_property" xsi:type="Combodo-Property">
-            <label>UI:BasicTest:Prop-Title</label>
+            <label>UI:BasicTest:Prop-Title2</label>
             <value-type xsi:type="Combodo-ValueTypeLabel">
             </value-type>
         </node>
@@ -67,10 +69,9 @@ class FormFor__basic_test extends Combodo\iTop\Forms\Block\Base\FormBlock
 	}
 }
 PHP,
-				'sMessage' => 'Basic scalar properties should generate PHP',
 			],
 
-			'Empty property tree' => [
+			'Empty property tree should generate minimal PHP' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="EmptyTest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
@@ -85,10 +86,9 @@ class FormFor__EmptyTest extends Combodo\iTop\Forms\Block\Base\FormBlock
 	{	}
 }
 PHP,
-				'sMessage' => 'Empty property tree should generate minimal PHP',
 			],
 
-			'Empty property tree lower case' => [
+			'Empty property tree lower case should generate lower case class name' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="empty_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
@@ -103,7 +103,6 @@ class FormFor__empty_test extends Combodo\iTop\Forms\Block\Base\FormBlock
 	{	}
 }
 PHP,
-				'sMessage' => 'Empty property tree should generate minimal PHP',
 			],
 
 			'Properties with all value-types' => [
@@ -211,7 +210,6 @@ class FormFor__AllValueTypesTest extends Combodo\iTop\Forms\Block\Base\FormBlock
 	}
 }
 PHP,
-				'sMessage' => '',
 			],
 
 			'Collection of trees' => [
@@ -265,7 +263,6 @@ class FormFor__collection_of_trees_test extends Combodo\iTop\Forms\Block\Base\Fo
 	}
 }
 PHP,
-				'sMessage' => '',
 			],
 
 			'Input static' => [
@@ -295,7 +292,6 @@ class FormFor__input_static_test extends Combodo\iTop\Forms\Block\Base\FormBlock
 	}
 }
 PHP,
-				'sMessage' => '',
 			],
 
 			'Input binding' => [
@@ -333,8 +329,50 @@ class FormFor__input_binding_test extends Combodo\iTop\Forms\Block\Base\FormBloc
 	}
 }
 PHP,
-				'sMessage' => '',
 			],
+
+			'Relevance condition' => [
+				'sXMLContent' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+    <nodes>
+		<node id="source_property" xsi:type="Combodo-Property">
+			<label>UI:Source</label>
+            <value-type xsi:type="Combodo-ValueTypeString">
+            </value-type>
+        </node>
+		<node id="dependant_property" xsi:type="Combodo-Property">
+			<label>UI:Dependant</label>
+			<relevance-condition>source_property.text != 'count'</relevance-condition>
+            <value-type xsi:type="Combodo-ValueTypeString">
+            </value-type>
+        </node>
+	</nodes>
+</node>
+XML,
+				'sExpectedPHP' => <<<PHP
+class FormFor__RelevanceCondition extends Combodo\iTop\Forms\Block\Base\FormBlock
+{
+	protected function BuildForm(): void
+	{
+		\$this->Add('source_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
+			'label' => 'UI:Source',
+		]);
+
+		\$this->Add('dependant_property_relevance_condition', 'Combodo\iTop\Forms\Block\Expression\BooleanExpressionFormBlock', [
+			'expression' => "source_property.text != 'count'",
+		])
+			->AddInputDependsOn('source_property.text', 'source_property', 'text');
+
+		\$this->Add('dependant_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
+			'label' => 'UI:Dependant',
+		])
+			->InputDependsOn('visible', 'dependant_property_relevance_condition', 'result');
+	}
+}
+PHP,
+			],
+
 			'test' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -350,7 +388,6 @@ class FormFor__Test extends Combodo\iTop\Forms\Block\Base\FormBlock
 	{	}
 }
 PHP,
-				'sMessage' => '',
 			],
 		];
 	}
