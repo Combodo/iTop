@@ -8,10 +8,8 @@
 namespace Combodo\iTop\Forms\Register;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
-use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\Block\FormBlockHelper;
-use Combodo\iTop\Forms\FormType\FormTypeHelper;
 use Combodo\iTop\Forms\IO\Converter\AbstractConverter;
 use Combodo\iTop\Forms\IO\FormBlockIOException;
 use Combodo\iTop\Forms\IO\FormInput;
@@ -41,13 +39,16 @@ class IORegister
 	/**
 	 * @param string $sName
 	 * @param string $sType
+	 * @param bool $bIsArray
 	 *
 	 * @return $this
 	 * @throws FormBlockIOException
+	 * @throws RegisterException
 	 */
-	public function AddInput(string $sName, string $sType): self
+	public function AddInput(string $sName, string $sType, bool $bIsArray = false): self
 	{
-		$oFormInput = new FormInput($sName, $sType, $this->oFormBlock);
+		$oFormInput = new FormInput($sName, $sType, $bIsArray);
+		$oFormInput->SetOwnerBlock($this->oFormBlock);
 		if (array_key_exists($oFormInput->GetName(), $this->aInputs)) {
 			throw new RegisterException('Input already exists '.json_encode($oFormInput->GetName()).' for '.json_encode($this->oFormBlock->GetName()));
 		}
@@ -73,7 +74,7 @@ class IORegister
 		$oOutputBlock = $this->oFormBlock->GetParent()->Get($sOutputBlockName);
 		$oBlockOutput = $oOutputBlock->GetOutput($sOutputName);
 
-		$this->AddInput($sName, $oBlockOutput->GetDataType());
+		$this->AddInput($sName, $oBlockOutput->GetDataType(), $oBlockOutput->IsArray());
 		$this->InputDependsOn($sName, $sOutputBlockName, $sOutputName);
 
 		return $this;
@@ -111,7 +112,6 @@ class IORegister
 	 * @param string $sParentOutputName parent output name
 	 *
 	 * @return $this
-	 * @throws FormBlockException
 	 * @throws FormBlockIOException
 	 * @throws RegisterException
 	 */
@@ -127,14 +127,17 @@ class IORegister
 	/**
 	 * @param string $sName
 	 * @param string $sType
+	 * @param bool $bIsArray
 	 * @param AbstractConverter|null $oConverter
 	 *
 	 * @return void
+	 * @throws FormBlockIOException
 	 * @throws RegisterException
 	 */
-	public function AddOutput(string $sName, string $sType, AbstractConverter $oConverter = null): void
+	public function AddOutput(string $sName, string $sType, bool $bIsArray = false, AbstractConverter $oConverter = null): void
 	{
-		$oFormOutput = new FormOutput($sName, $sType, $this->oFormBlock, $oConverter);
+		$oFormOutput = new FormOutput($sName, $sType, $bIsArray, $oConverter);
+		$oFormOutput->SetOwnerBlock($this->oFormBlock);
 		if (array_key_exists($oFormOutput->GetName(), $this->aOutputs)) {
 			throw new RegisterException('Output already exists '.json_encode($oFormOutput->GetName()).' for '.json_encode($this->oFormBlock->GetName()).' in block '.FormBlockHelper::GetFormId($this->oFormBlock).' of class '.get_class($this->oFormBlock));
 		}

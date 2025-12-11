@@ -43,7 +43,7 @@ class OqlFormBlock extends TextAreaFormBlock
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
 		parent::RegisterIO($oIORegister);
-		$oIORegister->AddOutput(self::OUTPUT_SELECTED_CLASS, ClassIOFormat::class, new OqlToClassConverter());
+		$oIORegister->AddOutput(self::OUTPUT_SELECTED_CLASS, ClassIOFormat::class, false, new OqlToClassConverter());
 	}
 
 }

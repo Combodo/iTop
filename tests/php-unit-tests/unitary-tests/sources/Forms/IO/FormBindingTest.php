@@ -5,7 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Test\UnitTest\Forms\IO;
+namespace Combodo\iTop\Test\UnitTest\Sources\Forms\IO;
 
 use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
 use Combodo\iTop\Forms\IO\Format\BooleanIOFormat;

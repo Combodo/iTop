@@ -10,6 +10,7 @@ namespace Combodo\iTop\Test\UnitTest\sources\Forms;
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\IO\Format\StringIOFormat;
+use Combodo\iTop\Forms\IO\FormBlockIOException;
 use Combodo\iTop\Forms\IO\FormInput;
 use Combodo\iTop\Forms\IO\FormOutput;
 use Combodo\iTop\Forms\Register\IORegister;
@@ -23,18 +24,30 @@ use ReflectionClass;
 
 abstract class AbstractFormsTest extends ItopDataTestCase
 {
+	/**
+	 * @throws FormBlockIOException
+	 */
 	public function GivenInput(string $sName, string $sType = StringIOFormat::class): FormInput
 	{
 		$oBlock = $this->GivenFormBlock($sName);
 
-		return new FormInput($sName, $sType, $oBlock);
+		$oInput = new FormInput($sName, $sType);
+		$oInput->SetOwnerBlock($oBlock);
+
+		return $oInput;
 	}
 
+	/**
+	 * @throws FormBlockIOException
+	 */
 	public function GivenOutput(string $sName, string $sType = StringIOFormat::class): FormOutput
 	{
 		$oBlock = $this->GivenFormBlock($sName);
 
-		return new FormOutput($sName, $sType, $oBlock);
+		$oOutput = new FormOutput($sName, $sType);
+		$oOutput->SetOwnerBlock($oBlock);
+
+		return $oOutput;
 	}
 
 	public function GivenFormBlock(string $sName): FormBlock

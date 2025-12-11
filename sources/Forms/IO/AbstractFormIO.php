@@ -32,6 +32,9 @@ class AbstractFormIO
 	/** @var string Type of the IO data */
 	private string $sType;
 
+	/** @var bool array */
+	private bool $bIsArray;
+
 	/** @var array Stored values */
 	private array $aValues = [];
 
@@ -46,17 +49,23 @@ class AbstractFormIO
 	 *
 	 * @param string $sName name of the IO
 	 * @param string $sType type of the IO
+	 * @param bool $bIsArray indicates if the IO is an array
 	 *
 	 * @throws FormBlockIOException
 	 */
-	public function __construct(string $sName, string $sType, AbstractFormBlock $oOwnerBlock)
+	public function __construct(string $sName, string $sType, bool $bIsArray = false)
 	{
 		if (!is_a($sType, AbstractIOFormat::class, true)) {
 			throw new FormBlockIOException('invalid form format type '.json_encode($sType).' given');
 		}
 		$this->sType = $sType;
-		$this->oOwnerBlock = $oOwnerBlock;
+		$this->bIsArray = $bIsArray;
 		$this->SetName($sName);
+	}
+
+	public function SetOwnerBlock(AbstractFormBlock $oOwnerBlock): void
+	{
+		$this->oOwnerBlock = $oOwnerBlock;
 	}
 
 	/**
@@ -95,13 +104,13 @@ class AbstractFormIO
 			if ($sParsedName !== $sName) {
 				$sName = json_encode($sName);
 				$sParsedName = json_encode($sParsedName);
-				$sBlockName = json_encode($this->GetOwnerBlock()->GetName());
-				throw new FormBlockIOException("Input $sName does not match $sParsedName for block $sBlockName.");
+				//				$sBlockName = json_encode($this->GetOwnerBlock()->GetName());
+				throw new FormBlockIOException("Input $sName does not match $sParsedName for block.");
 			}
 		} else {
 			$sName = json_encode($sName);
-			$sBlockName = json_encode($this->GetOwnerBlock()->GetName());
-			throw new FormBlockIOException("Input $sName is not valid for block $sBlockName.");
+			//			$sBlockName = json_encode($this->GetOwnerBlock()->GetName());
+			throw new FormBlockIOException("Input $sName is not valid for block.");
 		}
 
 		// Name is valid
@@ -118,6 +127,16 @@ class AbstractFormIO
 	public function GetDataType(): string
 	{
 		return $this->sType;
+	}
+
+	/**
+	 * Return true if is array.
+	 *
+	 * @return bool
+	 */
+	public function IsArray(): bool
+	{
+		return $this->bIsArray;
 	}
 
 	/**

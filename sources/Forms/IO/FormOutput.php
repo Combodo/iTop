@@ -7,8 +7,8 @@
 
 namespace Combodo\iTop\Forms\IO;
 
-use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\IO\Converter\AbstractConverter;
+use IssueLog;
 
 /**
  * Form output IO.
@@ -29,14 +29,14 @@ class FormOutput extends AbstractFormIO
 	 *
 	 * @param string $sName
 	 * @param string $sType
-	 * @param AbstractFormBlock $oOwnerBlock
+	 * @param bool $bIsArray
 	 * @param AbstractConverter|null $oConverter
 	 *
 	 * @throws FormBlockIOException
 	 */
-	public function __construct(string $sName, string $sType, AbstractFormBlock $oOwnerBlock, AbstractConverter $oConverter = null)
+	public function __construct(string $sName, string $sType, bool $bIsArray = false, AbstractConverter $oConverter = null)
 	{
-		parent::__construct($sName, $sType, $oOwnerBlock);
+		parent::__construct($sName, $sType, $bIsArray);
 		$this->oConverter = $oConverter;
 	}
 
@@ -48,6 +48,23 @@ class FormOutput extends AbstractFormIO
 	 * @return mixed
 	 */
 	public function ConvertValue(mixed $oData): mixed
+	{
+		IssueLog::Error($this->GetName().'  array:'.$this->IsArray());
+		if ($this->IsArray()) {
+			return $this->ConvertArrayValue($oData);
+		} else {
+			return $this->ConvertSingleValue($oData);
+		}
+	}
+
+	private function ConvertArrayValue(array $aData): array
+	{
+		return array_map(function ($v) {
+			return $this->ConvertSingleValue($v);
+		}, $aData);
+	}
+
+	private function ConvertSingleValue(mixed $oData): mixed
 	{
 		if (is_null($this->oConverter)) {
 			$sType = $this->GetDataType();

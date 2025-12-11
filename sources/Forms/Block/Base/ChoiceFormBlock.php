@@ -12,6 +12,7 @@ use Combodo\iTop\Forms\FormType\Base\ChoiceFormType;
 use Combodo\iTop\Forms\IO\Converter\ChoiceValueToLabelConverter;
 use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
+use Combodo\iTop\Forms\Register\OptionsRegister;
 
 /**
  * A block to manage a list of choices.
@@ -32,11 +33,21 @@ class ChoiceFormBlock extends AbstractTypeFormBlock
 		return ChoiceFormType::class;
 	}
 
+	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
+	{
+		parent::RegisterOptions($oOptionsRegister);
+
+		$oOptionsRegister->SetOption('multiple', false);
+	}
+
 	/** @inheritdoc */
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
 		parent::RegisterIO($oIORegister);
-		$oIORegister->AddOutput(self::OUTPUT_LABEL, StringIOFormat::class, new ChoiceValueToLabelConverter($this));
-		$oIORegister->AddOutput(self::OUTPUT_VALUE, StringIOFormat::class);
+
+		$bMultiple = $this->GetOption('multiple');
+
+		$oIORegister->AddOutput(self::OUTPUT_LABEL, StringIOFormat::class, $bMultiple, new ChoiceValueToLabelConverter($this));
+		$oIORegister->AddOutput(self::OUTPUT_VALUE, StringIOFormat::class, $bMultiple);
 	}
 }

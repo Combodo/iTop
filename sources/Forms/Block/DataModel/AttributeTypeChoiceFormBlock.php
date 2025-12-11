@@ -7,13 +7,8 @@
 
 namespace Combodo\iTop\Forms\Block\DataModel;
 
-use AttributeClass;
-use Combodo\iTop\Core\AttributeDefinition\AttributeBoolean;
-use Combodo\iTop\Core\AttributeDefinition\AttributeDate;
-use Combodo\iTop\Core\AttributeDefinition\AttributeEnum;
-use Combodo\iTop\Core\AttributeDefinition\AttributeString;
-use Combodo\iTop\Forms\IO\Format\AttributeTypeIOFormat;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
+use Combodo\iTop\Forms\IO\Format\AttributeTypeIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
 
@@ -34,11 +29,10 @@ class AttributeTypeChoiceFormBlock extends ChoiceFormBlock
 		parent::RegisterOptions($oOptionsRegister);
 		$oOptionsRegister->SetOption('placeholder', 'Select a type...');
 		$oOptionsRegister->SetOption('choices', [
-			'enum'    => AttributeEnum::class,
-			'string'  => AttributeString::class,
-			'date'    => AttributeDate::class,
-			'boolean' => AttributeBoolean::class,
-			'class'   => AttributeClass::class,
+			'numeric'  => 'numeric',
+			'group_by' => 'group_by',
+			'date'     => 'date',
+			'enum'     => 'enum',
 		]);
 
 	}

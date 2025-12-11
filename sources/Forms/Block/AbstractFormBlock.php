@@ -7,6 +7,7 @@
 
 namespace Combodo\iTop\Forms\Block;
 
+use Combodo\iTop\Forms\Block\Base\CollectionBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\IO\AbstractFormIO;
 use Combodo\iTop\Forms\IO\Converter\AbstractConverter;
@@ -16,7 +17,6 @@ use Combodo\iTop\Forms\IO\FormOutput;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
 use Combodo\iTop\Forms\Register\RegisterException;
-use Combodo\iTop\Forms\Block\Base\CollectionBlock;
 
 /**
  * Abstract form block.
@@ -41,7 +41,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param string $sName
 	 * @param array $aOptions
 	 *
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws RegisterException
 	 */
 	public function __construct(private readonly string $sName, array $aOptions = [])
 	{
@@ -184,13 +184,15 @@ abstract class AbstractFormBlock implements IFormBlock
 	 *
 	 * @param string $sName the input name
 	 * @param string $sType the type of the input
+	 * @param bool $bIsArray whether the input is an array
 	 *
 	 * @return AbstractFormBlock
 	 * @throws FormBlockIOException
+	 * @throws RegisterException
 	 */
-	public function AddInput(string $sName, string $sType): AbstractFormBlock
+	public function AddInput(string $sName, string $sType, bool $bIsArray = false): AbstractFormBlock
 	{
-		$this->oIORegister->AddInput($sName, $sType);
+		$this->oIORegister->AddInput($sName, $sType, $bIsArray);
 		return $this;
 	}
 
@@ -202,9 +204,9 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param string $sOutputName
 	 *
 	 * @return AbstractFormBlock
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws FormBlockException
+	 * @throws FormBlockIOException
+	 * @throws RegisterException
 	 */
 	public function AddInputDependsOn(string $sName, string $sOutputBlockName, string $sOutputName): AbstractFormBlock
 	{
@@ -218,7 +220,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param string $sName
 	 *
 	 * @return FormInput
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws RegisterException
 	 */
 	public function GetInput(string $sName): FormInput
 	{
@@ -231,7 +233,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param string $sName
 	 *
 	 * @return mixed
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws RegisterException
 	 */
 	public function GetInputValue(string $sName): mixed
 	{
@@ -243,14 +245,16 @@ abstract class AbstractFormBlock implements IFormBlock
 	 *
 	 * @param string $sName
 	 * @param string $sType
+	 * @param bool $bIsArray
 	 * @param AbstractConverter|null $oConverter
 	 *
 	 * @return AbstractFormBlock
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws FormBlockIOException
+	 * @throws RegisterException
 	 */
-	public function AddOutput(string $sName, string $sType, AbstractConverter $oConverter = null): AbstractFormBlock
+	public function AddOutput(string $sName, string $sType, bool $bIsArray = false, AbstractConverter $oConverter = null): AbstractFormBlock
 	{
-		$this->oIORegister->AddOutput($sName, $sType, $oConverter);
+		$this->oIORegister->AddOutput($sName, $sType, $bIsArray, $oConverter);
 		return $this;
 	}
 
@@ -259,8 +263,8 @@ abstract class AbstractFormBlock implements IFormBlock
 	 *
 	 * @param string $sName output name
 	 *
-	 * @return \Combodo\iTop\Forms\IO\FormOutput
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @return FormOutput
+	 * @throws RegisterException
 	 */
 	public function GetOutput(string $sName): FormOutput
 	{
@@ -311,9 +315,9 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param string $sOutputName the dependency output name
 	 *
 	 * @return $this
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws FormBlockException
+	 * @throws FormBlockIOException
+	 * @throws RegisterException
 	 */
 	public function InputDependsOn(string $sInputName, string $sOutputBlockName, string $sOutputName): AbstractFormBlock
 	{
@@ -344,9 +348,9 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param string $sParentInputName parent input name
 	 *
 	 * @return $this
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws FormBlockException
+	 * @throws FormBlockIOException
+	 * @throws RegisterException
 	 */
 	public function InputDependsOnParent(string $sInputName, string $sParentInputName): AbstractFormBlock
 	{
@@ -361,9 +365,9 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param string $sParentOutputName parent output name
 	 *
 	 * @return $this
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
-	 * @throws \Combodo\iTop\Forms\IO\FormBlockIOException
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws FormBlockException
+	 * @throws FormBlockIOException
+	 * @throws RegisterException
 	 */
 	public function OutputImpactParent(string $sOutputName, string $sParentOutputName): AbstractFormBlock
 	{

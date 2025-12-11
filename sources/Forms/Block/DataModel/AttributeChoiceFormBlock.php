@@ -7,17 +7,16 @@
 
 namespace Combodo\iTop\Forms\Block\DataModel;
 
-use Combodo\iTop\Forms\Block\FormBlockException;
-use Combodo\iTop\Forms\IO\Format\StringIOFormat;
-use Combodo\iTop\Forms\Register\RegisterException;
-use Combodo\iTop\Service\DependencyInjection\DIException;
-use Combodo\iTop\Service\DependencyInjection\DIService;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
+use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\IO\Format\AttributeIOFormat;
+use Combodo\iTop\Forms\IO\Format\AttributeTypeIOFormat;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
-use ModelReflection;
+use Combodo\iTop\Forms\Register\RegisterException;
+use Combodo\iTop\Service\DependencyInjection\DIException;
+use Combodo\iTop\Service\DependencyInjection\DIService;
 use utils;
 
 /**
@@ -40,19 +39,23 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	{
 		parent::RegisterOptions($oOptionsRegister);
 		$oOptionsRegister->SetOption('placeholder', 'Select an attribute...');
+		$oOptionsRegister->SetOption('choices', []);
 	}
 
 	/** @inheritdoc
-	 * @throws \Combodo\iTop\Forms\Register\RegisterException
+	 * @throws RegisterException
 	 */
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
 		parent::RegisterIO($oIORegister);
+
+		$bMultiple = $this->GetOption('multiple');
+
 		$oIORegister->AddInput(self::INPUT_CLASS_NAME, ClassIOFormat::class);
-		$oIORegister->AddInput(self::INPUT_CATEGORY, StringIOFormat::class);
+		$oIORegister->AddInput(self::INPUT_CATEGORY, AttributeTypeIOFormat::class);
 		// Default value
 		$this->SetInputValue(self::INPUT_CATEGORY, '');
-		$oIORegister->AddOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_ATTRIBUTE, AttributeIOFormat::class, $bMultiple);
 	}
 
 	/**

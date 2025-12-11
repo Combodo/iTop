@@ -5,7 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Forms\Register;
+namespace Combodo\iTop\Test\UnitTest\Sources\Forms\Register;
 
 use Combodo\iTop\Forms\Register\OptionsRegister;
 use Combodo\iTop\Forms\Register\RegisterException;

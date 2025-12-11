@@ -81,6 +81,7 @@ class CollectionEntryElement extends HTMLElement {
 		const prev = this.previousElementSibling;
 		if (prev) {
 			this.parentNode.insertBefore(this, prev);
+			this.updateButtonStates();
 			prev.updateButtonStates();
 		}
 	}
@@ -93,6 +94,7 @@ class CollectionEntryElement extends HTMLElement {
 		const next = this.nextElementSibling;
 		if (next) {
 			this.parentNode.insertBefore(next, this);
+			this.updateButtonStates();
 			next.updateButtonStates();
 		}
 	}
