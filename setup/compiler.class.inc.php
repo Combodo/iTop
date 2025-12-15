@@ -23,6 +23,7 @@ use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\Page;
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\DesignDocument;
+use Combodo\iTop\PropertyTree\PropertyTreeDesign;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/modelfactory.class.inc.php');
@@ -698,6 +699,10 @@ PHP;
 		// Create module design XML files
 		$oModuleDesignsNode = $this->oFactory->GetNodes('/itop_design/module_designs')->item(0);
 		$this->CompileModuleDesigns($oModuleDesignsNode, $sTempTargetDir, $sFinalTargetDir);
+
+		// Create property trees XML files
+		$oPropertyTreesNode = $this->oFactory->GetNodes('/itop_design/meta/property_trees')->item(0);
+		$this->CompilePropertyTrees($oPropertyTreesNode, $sTempTargetDir, $sFinalTargetDir);
 
 		// Compile the XML parameters
 		/** @var \MFElement $oParametersNode */
@@ -3568,6 +3573,21 @@ EOF;
 				$oClone = $oDoc->importNode($oDesign->cloneNode(true), true);
 				$oDoc->appendChild($oClone);
 				$oDoc->save($sTempTargetDir.'/core/module_designs/'.$oDesign->getAttribute('id').'.xml');
+			}
+		}
+	}
+
+	protected function CompilePropertyTrees(?DOMNode $oPropertyTrees, string $sTempTargetDir, string $sFinalTargetDir): void
+	{
+		if ($oPropertyTrees) {
+			foreach ($oPropertyTrees->GetNodes('property_tree') as $oPropertyTree) {
+				$oDoc = new PropertyTreeDesign();
+				$oClone = $oDoc->importNode($oPropertyTree->cloneNode(true), true);
+				$oDoc->appendChild($oClone);
+				/** @var DesignElement $oPropertyTree */
+				$sExtends = $oPropertyTree->GetChildText('extends', 'Default');
+				SetupUtils::builddir($sTempTargetDir.'/core/property_trees/'.$sExtends);
+				$oDoc->save($sTempTargetDir.'/core/property_trees/'.$sExtends.'/'.$oPropertyTree->getAttribute('id').'.xml');
 			}
 		}
 	}

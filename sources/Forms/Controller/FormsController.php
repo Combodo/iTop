@@ -5,14 +5,13 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\Forms\Compiler;
+namespace Combodo\iTop\Forms\Controller;
 
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Forms\Block\FormBlockService;
 use Combodo\iTop\ItopSdkFormDemonstrator\Helper\ItopSdkFormDemonstratorLog;
 use Exception;
 use IssueLog;
-use utils;
 
 class FormsController extends Controller
 {
@@ -32,7 +31,7 @@ class FormsController extends Controller
 			$sDashletId = $oRequest->query->get('dashlet_code');
 
 			// Get the form block from the service (and the compiler)
-			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById($sDashletId);
+			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById($sDashletId, 'Dashlet');
 			$oBuilder = $this->GetFormBuilder($oFormBlock, []);
 			$oForm = $oBuilder->getForm();
 			$oForm->handleRequest($oRequest);

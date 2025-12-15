@@ -9,8 +9,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\TurboForm;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Forms\Block\FormBlockService;
-use Combodo\iTop\Forms\Compiler\FormsCompiler;
-use Combodo\iTop\Forms\Compiler\FormsController;
+use Combodo\iTop\Forms\Controller\FormsController;
 use Symfony\Component\Form\FormView;
 use utils;
 
@@ -60,7 +59,7 @@ class TurboFormUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForDashletConfiguration(string $sDashletId, array $aData = [], string $sId = null): TurboForm
 	{
-		$oBlockForm = FormBlockService::GetInstance()->GetFormBlockById($sDashletId);
+		$oBlockForm = FormBlockService::GetInstance()->GetFormBlockById($sDashletId, 'Dashlet');
 		$oController = new FormsController();
 		$oBuilder = $oController->GetFormBuilder($oBlockForm, $aData);
 		$oForm = $oBuilder->getForm();

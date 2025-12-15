@@ -9,15 +9,22 @@ namespace Combodo\iTop\Forms\Compiler;
 
 use Combodo\iTop\DesignDocument;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
+use Combodo\iTop\Forms\Block\FormBlockService;
 use Combodo\iTop\PropertyTree\PropertyTreeFactory;
 use Combodo\iTop\Service\Cache\DataModelDependantCache;
 use DOMFormatException;
+use utils;
 
+/**
+ * XML to PHP Forms compiler.
+ *
+ * @package Combodo\iTop\Forms\Compiler
+ * @since 3.3.0
+ */
 class FormsCompiler
 {
 	private static FormsCompiler $oInstance;
 	private DataModelDependantCache $oCacheService;
-	public const CACHE_POOL = 'Forms';
 
 	protected function __construct()
 	{
@@ -38,7 +45,7 @@ class FormsCompiler
 	 *
 	 * @param string $sXMLContent property tree structure in xml
 	 *
-	 * @return string
+	 * @return string Generated PHP
 	 * @throws \Combodo\iTop\Forms\Compiler\FormsCompilerException
 	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
 	 * @throws \DOMFormatException
@@ -60,8 +67,24 @@ class FormsCompiler
 		return $oPropertyTree->ToPHPFormBlock();
 	}
 
-	public function StoreFormFromContent(string $sId, string $sPHPContent): void
+	/**
+	 * @param string $sId
+	 * @param string $sType
+	 *
+	 * @return string Generated PHP
+	 * @throws \Combodo\iTop\Forms\Compiler\FormsCompilerException
+	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
+	 * @throws \DOMFormatException
+	 */
+	public function CompileForm(string $sId, string $sType): string
 	{
-		$this->oCacheService->StorePhpContent(self::CACHE_POOL, $sId, $sPHPContent);
+		$sPath = utils::GetAbsoluteModulePath('core')."property_trees/$sType/$sId.xml";
+		if (!file_exists($sPath)) {
+			throw new FormsCompilerException("Properties definition $sType/$sId not present");
+		}
+
+		$sXMLContent = file_get_contents($sPath);
+
+		return $this->CompileFormFromXML($sXMLContent);
 	}
 }

@@ -13,9 +13,11 @@ use Combodo\iTop\Service\Cache\DataModelDependantCache;
 use Combodo\iTop\Service\DependencyInjection\DIService;
 use ModelReflection;
 use ModelReflectionRuntime;
+use utils;
 
 class FormBlockService
 {
+	public const CACHE_POOL = 'Forms';
 	private static FormBlockService $oInstance;
 	private DataModelDependantCache $oCacheService;
 
@@ -36,22 +38,29 @@ class FormBlockService
 
 	/**
 	 * @param string $sId name of the form to retrieve
+	 * @param string $sType
 	 *
 	 * @return \Combodo\iTop\Forms\Block\Base\FormBlock
 	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 * @throws \Combodo\iTop\Forms\Compiler\FormsCompilerException
+	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
+	 * @throws \DOMFormatException
 	 */
-	public function GetFormBlockById(string $sId): FormBlock
+	public function GetFormBlockById(string $sId, string $sType): FormBlock
 	{
 		$sFilteredId = preg_replace('/[^0-9a-zA-Z_]/', '', $sId);
 		if (strlen($sFilteredId) === 0) {
 			throw new FormBlockException('Malformed name for block: '.json_encode($sId));
 		}
-		if (!$this->oCacheService->HasEntry(FormsCompiler::CACHE_POOL, $sFilteredId)) {
-			throw new FormBlockException('No block found for: '.json_encode($sFilteredId).' original value asked: '.json_encode($sId));
+		if (!$this->oCacheService->HasEntry(self::CACHE_POOL, $sFilteredId) || utils::IsDevelopmentEnvironment()) {
+			// Cache not found, compile the form
+			$sPHPContent = FormsCompiler::GetInstance()->CompileForm($sFilteredId, $sType);
+			$this->oCacheService->StorePhpContent(FormBlockService::CACHE_POOL, $sId, "<?php\n\n$sPHPContent");
 		}
-		$this->oCacheService->Fetch(FormsCompiler::CACHE_POOL, $sFilteredId);
+		$this->oCacheService->Fetch(self::CACHE_POOL, $sFilteredId);
+		$sFormBlockClass = 'FormFor__'.$sFilteredId;
 
-		return new $sFilteredId($sFilteredId);
+		return new $sFormBlockClass($sFilteredId);
 	}
 
 }
