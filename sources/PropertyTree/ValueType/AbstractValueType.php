@@ -22,6 +22,7 @@ abstract class AbstractValueType
 	protected array $aInputs = [];
 	protected array $aOutputs = [];
 	protected array $aInputValues = [];
+	protected array $aFormBlockOptionsForPHP = [];
 
 	public function InitFromDomNode(DesignElement $oDomNode): void
 	{
@@ -38,6 +39,11 @@ abstract class AbstractValueType
 		foreach ($oBlockNode->GetOutputs() as $oOutput) {
 			$this->aOutputs[] = $oOutput->GetName();
 		}
+	}
+
+	public function GetFormBlockOptions(): array
+	{
+		return $this->aFormBlockOptionsForPHP;
 	}
 
 	public function GetInputValues(): array

@@ -15,6 +15,7 @@ use ParseError;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use ReflectionMethod;
 use SetupUtils;
+use Symfony\Component\ErrorHandler\Error\FatalError;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use const DEBUG_BACKTRACE_IGNORE_ARGS;

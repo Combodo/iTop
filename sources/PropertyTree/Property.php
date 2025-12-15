@@ -63,11 +63,19 @@ class Property extends AbstractProperty
 		foreach ($this->oValueType->GetInputValues() as $sInputName => $sValue) {
 			$this->GenerateInputs($sInputName, $sValue, $sPrerequisiteExpressions, $sInputs);
 		}
-		$sLabel = $this->QuoteForPHP($this->sLabel);
+
+		$sLabel = utils::QuoteForPHP($this->sLabel);
+		$aOptions = [
+			'label' => $sLabel,
+		];
+		$aOptions += $this->oValueType->GetFormBlockOptions();
+		$sOptions = '';
+		foreach ($aOptions as $sOption => $sValue) {
+			$sOptions .= "\t\t\t".utils::QuoteForPHP($sOption)." => $sValue,\n";
+		}
 		return <<<PHP
 		{$sPrerequisiteExpressions}\$this->Add('$this->sId', '$sFormBlockClass', [
-			'label' => $sLabel,
-		]){$sInputs};
+$sOptions\t\t]){$sInputs};
 
 PHP;
 	}
@@ -109,7 +117,7 @@ PHP;
 				default => throw new PropertyTreeException("Node: {$this->sId}, unsupported expression for input type: $sInputName"),
 			};
 
-			$sExpression = $this->QuoteForPHP($sExpression);
+			$sExpression = utils::QuoteForPHP($sExpression);
 			$sPrerequisiteExpressions = <<<PHP
 \$this->Add('{$this->sId}_{$sInputName}_expression', '$sExpressionClass', [
 			'expression' => $sExpression,
@@ -120,7 +128,7 @@ PHP;
 
 			$sInputs .= "\n			->InputDependsOn('$sInputName', '{$this->sId}_{$sInputName}_expression', 'result')";
 		} else {
-			$sInputs .= "\n			->SetInputValue('$sInputName', ".$this->QuoteForPHP($sValue).")";
+			$sInputs .= "\n			->SetInputValue('$sInputName', ".utils::QuoteForPHP($sValue).")";
 		}
 	}
 }

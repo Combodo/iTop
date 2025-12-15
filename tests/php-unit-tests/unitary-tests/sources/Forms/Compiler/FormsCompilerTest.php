@@ -116,6 +116,14 @@ PHP,
 		<node id="choice_property" xsi:type="Combodo-Property">
 			<label>UI:Choice</label>
             <value-type xsi:type="Combodo-ValueTypeChoice">
+              <values>
+                <value id="value_a">
+                  <label>Label A</label>
+                </value>
+                <value id="value_b">
+                  <label>Label B</label>
+                </value>
+              </values>
             </value-type>
         </node>
 		<node id="class_property" xsi:type="Combodo-Property">
@@ -172,6 +180,10 @@ class FormFor__AllValueTypesTest extends Combodo\iTop\Forms\Block\Base\FormBlock
 
 		\$this->Add('choice_property', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
 			'label' => 'UI:Choice',
+			'choices' => [
+				\Dict::S('Label A') => 'value_a',
+				\Dict::S('Label B') => 'value_b',
+			],
 		]);
 
 		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [

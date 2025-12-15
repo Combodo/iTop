@@ -78,10 +78,4 @@ abstract class AbstractProperty
 
 		return null;
 	}
-
-	public function QuoteForPHP(string $sValue): string
-	{
-		$sEscaped = str_replace(['\\', "'"], ['\\\\', "\\'"], $sValue);
-		return "'$sEscaped'";
-	}
 }

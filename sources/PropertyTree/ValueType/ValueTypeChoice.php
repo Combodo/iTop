@@ -7,8 +7,9 @@
 
 namespace Combodo\iTop\PropertyTree\ValueType;
 
+use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
-use Combodo\iTop\Forms\Block\Base\FormBlock;
+use utils;
 
 /**
  * @since 3.3.0
@@ -18,5 +19,24 @@ class ValueTypeChoice extends AbstractValueType
 	public function GetFormBlockClass(): string
 	{
 		return ChoiceFormBlock::class;
+	}
+
+	public function InitFromDomNode(DesignElement $oDomNode): void
+	{
+		parent::InitFromDomNode($oDomNode);
+
+		$sChoices = "[\n";
+		foreach ($oDomNode->GetNodes('values/value') as $oValueNode) {
+			/** @var DesignElement $oValueNode */
+			$sValue = utils::QuoteForPHP($oValueNode->GetAttribute('id'));
+			$sLabel = utils::QuoteForPHP($oValueNode->GetChildText('label'));
+			$sChoices .= <<<PHP
+				\Dict::S($sLabel) => $sValue,
+
+PHP;
+		}
+		$sChoices .= "\t\t\t]";
+
+		$this->aFormBlockOptionsForPHP['choices'] = $sChoices;
 	}
 }
