@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+  <constants>
+  </constants>
+  <classes>
+    <class id="Flow" _delta="define_if_not_exists">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>flow</db_table>
+        <style>
+           <icon>images/icons8-sorting-arrows-horizontal.svg</icon>
+        </style>
+        <naming>
+          <attributes>
+            <attribute id="flowtype_name"/>
+            <attribute id="source_name"/>
+            <attribute id="destination_name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="destination_id"/>
+			<attribute id="org_id"/>
+            <attribute id="source_id"/>
+            <attribute id="flowtype_id"/>
+          </attributes>
+        </reconciliation>
+        <obsolescence>
+          <condition>status='inactive'</condition>
+        </obsolescence>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+      </properties>
+      <fields>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>Organization</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>	  
+        <field id="source_id" xsi:type="AttributeExternalKey">
+          <sql>source_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>FunctionalCI</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="source_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>source_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="destination_id" xsi:type="AttributeExternalKey">
+          <sql>destination_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>FunctionalCI</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="destination_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>destination_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="flowtype_id" xsi:type="AttributeExternalKey">
+          <sql>flowtype_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>FlowType</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="flowtype_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>flowtype_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <sql>status</sql>
+          <values>
+            <value id="active">
+              <code>active</code>
+              <rank>10</rank>
+              <style>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+              <rank>20</rank>
+              <style>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+          </values>
+          <sort_type>label</sort_type>
+          <default_value>active</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="source_id">
+              <rank>10</rank>
+            </item>
+            <item id="destination_id">
+              <rank>20</rank>
+            </item>
+            <item id="flowtype_id">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="source_id">
+              <rank>20</rank>
+            </item>
+            <item id="destination_id">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col1">
+              <items>
+                <item id="org_id">
+                  <rank>10</rank>
+                </item>
+                <item id="source_id">
+                  <rank>20</rank>
+                </item>
+                <item id="destination_id">
+                  <rank>30</rank>
+                </item>
+                <item id="status">
+                  <rank>40</rank>
+                </item>
+                <item id="flowtype_id">
+                  <rank>50</rank>
+                </item>
+                <item id="description">
+                  <rank>60</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="source_id">
+              <rank>20</rank>
+            </item>
+            <item id="destination_id">
+              <rank>30</rank>
+            </item>
+            <item id="flowtype_id">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
+      </presentation>
+      <relations>
+        <relation id="flow">
+          <neighbours>
+            <neighbour id="destination">
+              <attribute>destination_id</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
+    <class id="FlowType" _delta="define">
+      <parent>Typology</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>flowtype</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields/>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="FunctionalCI" _delta="must_exist">
+      <relations>
+        <relation id="flow" _delta="define_if_not_exists">
+          <neighbours>
+            <neighbour id="flow">
+              <query_down><![CDATA[SELECT Flow WHERE source_id = :this->id]]></query_down>
+              <query_up><![CDATA[SELECT FunctionalCI  WHERE id = :this->source_id]]></query_up>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+	</class>
+  </classes>
+  <menus>
+      <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="3" delta="must_exist">
+            <dashlets>
+              <dashlet id="Flow" xsi:type="DashletBadge" _delta="define_if_not_exists">
+                <rank>12</rank>
+                <class>Flow</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+  </menus>
+  <user_rights>
+    <groups>
+      <group id="Configuration">
+        <classes>
+          <class id="Flow" _delta="define_if_not_exists"/>
+        </classes>
+      </group>
+    </groups>
+    <profiles>
+    </profiles>
+  </user_rights>
+</itop_design>
