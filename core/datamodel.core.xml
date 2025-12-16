@@ -1296,6 +1296,58 @@
           </node>
         </nodes>
       </property_tree>
+      <property_tree id="DashletHeaderDynamic" xsi:type="Combodo-PropertyTree">
+        <extends>Dashlet</extends>
+        <nodes>
+          <node id="title" xsi:type="Combodo-Property">
+            <label>UI:DashletHeaderDynamic:Prop-Title</label>
+            <value-type xsi:type="Combodo-ValueTypeLabel">
+              <not-blank/>
+            </value-type>
+          </node>
+          <node id="icon" xsi:type="Combodo-Property">
+            <label>UI:DashletHeaderDynamic:Prop-Icon</label>
+            <value-type xsi:type="Combodo-ValueTypeChoice">
+              <values>
+                <value id="todo">
+                  <label>ToDo</label>
+                </value>
+              </values>
+            </value-type>
+          </node>
+          <node id="subtitle" xsi:type="Combodo-Property">
+            <label>UI:DashletHeaderDynamic:Prop-Subtitle</label>
+            <value-type xsi:type="Combodo-ValueTypeLabel"/>
+          </node>
+          <node id="query" xsi:type="Combodo-Property">
+            <label>UI:DashletHeaderDynamic:Prop-Query</label>
+            <data-transform>
+              <xml-node-empty-not-allowed/>
+            </data-transform>
+            <value-type xsi:type="Combodo-ValueTypeOQL"/>
+          </node>
+          <node id="group_by" xsi:type="Combodo-Property">
+            <label>UI:DashletHeaderDynamic:Prop-GroupBy</label>
+            <data-transform>
+              <xml-node-empty-not-allowed/>
+            </data-transform>
+            <value-type xsi:type="Combodo-ValueTypeClassAttribute">
+              <class>{{query.selected_class}}</class>
+              <category>enum</category>
+            </value-type>
+          </node>
+          <node id="values" xsi:type="Combodo-CollectionOfValues">
+            <label>UI:DashletHeaderDynamic:Prop-Values</label>
+            <data-transform>
+              <xml-format xsi:type="xml-format-csv"/>
+            </data-transform>
+            <value-type xsi:type="Combodo-ValueTypeClassAttributeValue">
+              <class>{{query.selected_class}}</class>
+              <attribute>{{group_by.value}}</attribute>
+            </value-type>
+          </node>
+        </nodes>
+      </property_tree>
     </property_trees>
   </meta>
 </itop_design>
