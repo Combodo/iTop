@@ -104,6 +104,7 @@ class_alias(\Combodo\iTop\PropertyTree\CollectionOfTrees::class, 'Combodo-Collec
 
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeAggregateFunction::class, 'Combodo-ValueTypeAggregateFunction');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeChoice::class, 'Combodo-ValueTypeChoice');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeChoiceFromInput::class, 'Combodo-ValueTypeChoiceFromInput');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClass::class, 'Combodo-ValueTypeClass');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttribute::class, 'Combodo-ValueTypeClassAttribute');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttributeGroupBy::class, 'Combodo-ValueTypeClassAttributeGroupBy');

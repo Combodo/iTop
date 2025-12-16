@@ -5,8 +5,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Forms\Block\Base\ChoiceFromInputsBlock;
 use Combodo\iTop\Forms\Compiler\FormsCompiler;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class FormsCompilerTest extends ItopDataTestCase
 {
@@ -166,6 +168,19 @@ PHP,
             <value-type xsi:type="Combodo-ValueTypeString">
             </value-type>
         </node>
+        <node id="choice_from_input" xsi:type="Combodo-Property">
+            <label>UI:ChoiceFromInput</label>
+            <value-type xsi:type="Combodo-ValueTypeChoiceFromInput">
+              <values>
+                <value id="value_a">
+                  <label>{{class_attribute_property.label}}</label>
+                </value>
+                <value id="value_b">
+                  <label>{{class_attribute_group_by_property.label}}</label>
+                </value>
+              </values>
+            </value-type>
+        </node>
 	</nodes>
 </node>
 XML,
@@ -217,6 +232,12 @@ class FormFor__AllValueTypesTest extends Combodo\iTop\Forms\Block\Base\FormBlock
 		\$this->Add('string_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
 			'label' => 'UI:String',
 		]);
+
+		\$this->Add('choice_from_input', 'Combodo\iTop\Forms\Block\Base\ChoiceFromInputsBlock', [
+			'label' => 'UI:ChoiceFromInput',
+		])
+			->AddInputDependsOn('value_a', 'class_attribute_property', 'label')
+			->AddInputDependsOn('value_b', 'class_attribute_group_by_property', 'label');
 	}
 }
 PHP,

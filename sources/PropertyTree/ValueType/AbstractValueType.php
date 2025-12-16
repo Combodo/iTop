@@ -22,6 +22,7 @@ abstract class AbstractValueType
 	protected array $aInputs = [];
 	protected array $aOutputs = [];
 	protected array $aInputValues = [];
+	protected array $aDynamicInputValues = [];
 	protected array $aFormBlockOptionsForPHP = [];
 
 	public function InitFromDomNode(DesignElement $oDomNode): void
@@ -54,6 +55,11 @@ abstract class AbstractValueType
 	public function GetInputType(string $sInputName): string
 	{
 		return $this->aInputs[$sInputName]->GetDataType();
+	}
+
+	public function GetDynamicInputValues(): array
+	{
+		return $this->aDynamicInputValues;
 	}
 
 	public function GetOutputs(): array

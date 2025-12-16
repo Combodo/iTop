@@ -561,6 +561,7 @@ return array(
     'Combodo\\iTop\\PropertyTree\\ValueType\\AbstractValueType' => $baseDir . '/sources/PropertyTree/ValueType/AbstractValueType.php',
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeAggregateFunction' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeAggregateFunction.php',
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeChoice' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeChoice.php',
+    'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeChoiceFromInput' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeChoiceFromInput.php',
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeClass' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeClass.php',
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeClassAttribute' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeClassAttribute.php',
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeClassAttributeGroupBy' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeClassAttributeGroupBy.php',

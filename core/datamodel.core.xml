@@ -1250,7 +1250,7 @@
           </node>
           <node id="order_by" xsi:type="Combodo-Property">
             <label>UI:DashletGroupBy:Prop-OrderField</label>
-            <value-type xsi:type="Combodo-ValueTypeChoice">
+            <value-type xsi:type="Combodo-ValueTypeChoiceFromInput">
               <values>
                 <value id="attribute">
                   <label>{{aggregation_attribute.label}}</label>

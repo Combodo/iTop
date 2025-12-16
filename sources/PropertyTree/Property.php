@@ -64,6 +64,10 @@ class Property extends AbstractProperty
 			$this->GenerateInputs($sInputName, $sValue, $sPrerequisiteExpressions, $sInputs);
 		}
 
+		foreach ($this->oValueType->GetDynamicInputValues() as $sInputName => $sValue) {
+			$this->GenerateInputs($sInputName, $sValue, $sPrerequisiteExpressions, $sInputs, true);
+		}
+
 		$sLabel = utils::QuoteForPHP($this->sLabel);
 		$aOptions = [
 			'label' => $sLabel,
@@ -80,10 +84,11 @@ $sOptions\t\t]){$sInputs};
 PHP;
 	}
 
-	private function GenerateInputs(string $sInputName, string $sValue, string &$sPrerequisiteExpressions, string &$sInputs): void
+	private function GenerateInputs(string $sInputName, string $sValue, string &$sPrerequisiteExpressions, string &$sInputs, bool $bIsDynamic = false): void
 	{
 		if (preg_match('/^{{(?<node>\w+)\.(?<output>\w+)}}$/', $sValue, $aMatches) === 1) {
-			$sInputs .= "\n			->InputDependsOn('$sInputName', '{$aMatches['node']}', '{$aMatches['output']}')";
+			$sVerb = $bIsDynamic ? 'AddInputDependsOn' : 'InputDependsOn';
+			$sInputs .= "\n			->$sVerb('$sInputName', '{$aMatches['node']}', '{$aMatches['output']}')";
 		} elseif (preg_match('/^{{(?<expression>.*)}}$/', $sValue, $aMatches) === 1) {
 			$sExpression = $aMatches['expression'];
 			$sBindings = '';
@@ -125,8 +130,8 @@ PHP;
 
 		
 PHP;
-
-			$sInputs .= "\n			->InputDependsOn('$sInputName', '{$this->sId}_{$sInputName}_expression', 'result')";
+			$sVerb = $bIsDynamic ? 'AddInputDependsOn' : 'InputDependsOn';
+			$sInputs .= "\n			->$sVerb('$sInputName', '{$this->sId}_{$sInputName}_expression', 'result')";
 		} else {
 			$sInputs .= "\n			->SetInputValue('$sInputName', ".utils::QuoteForPHP($sValue).")";
 		}
