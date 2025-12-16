@@ -5,10 +5,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Forms\Block\Base\ChoiceFromInputsBlock;
 use Combodo\iTop\Forms\Compiler\FormsCompiler;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use Symfony\Component\Validator\Constraints\NotNull;
 
 class FormsCompilerTest extends ItopDataTestCase
 {
@@ -17,7 +15,6 @@ class FormsCompilerTest extends ItopDataTestCase
 	 *
 	 * @param string $sXMLContent
 	 * @param string $sExpectedPHP
-	 * @param string $sMessage
 	 *
 	 * @return void
 	 * @throws \Combodo\iTop\Forms\Compiler\FormsCompilerException

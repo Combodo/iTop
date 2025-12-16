@@ -49,13 +49,13 @@ class FormBlockService
 	public function GetFormBlockById(string $sId, string $sType): FormBlock
 	{
 		$sFilteredId = preg_replace('/[^0-9a-zA-Z_]/', '', $sId);
-		if (strlen($sFilteredId) === 0) {
+		if (strlen($sFilteredId) === 0 || $sFilteredId !== $sId) {
 			throw new FormBlockException('Malformed name for block: '.json_encode($sId));
 		}
 		if (!$this->oCacheService->HasEntry(self::CACHE_POOL, $sFilteredId) || utils::IsDevelopmentEnvironment()) {
 			// Cache not found, compile the form
 			$sPHPContent = FormsCompiler::GetInstance()->CompileForm($sFilteredId, $sType);
-			$this->oCacheService->StorePhpContent(FormBlockService::CACHE_POOL, $sId, "<?php\n\n$sPHPContent");
+			$this->oCacheService->StorePhpContent(FormBlockService::CACHE_POOL, $sFilteredId, "<?php\n\n$sPHPContent");
 		}
 		$this->oCacheService->Fetch(self::CACHE_POOL, $sFilteredId);
 		$sFormBlockClass = 'FormFor__'.$sFilteredId;
