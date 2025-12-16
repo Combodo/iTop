@@ -56,6 +56,11 @@ abstract class ModelReflection
 	abstract public function IsValidFilterCode($sClass, $sFilterCode);
 
 	/**
+	 * @since 3.3.0
+	 */
+	abstract public function IsAbstract($sClass): bool;
+
+	/**
 	 * @param string $sOQL
 	 *
 	 * @return \DBObjectSearch
@@ -228,6 +233,11 @@ class ModelReflectionRuntime extends ModelReflection
 	public function IsValidFilterCode($sClass, $sFilterCode)
 	{
 		return MetaModel::IsValidFilterCode($sClass, $sFilterCode);
+	}
+
+	public function IsAbstract($sClass): bool
+	{
+		return MetaModel::IsAbstract($sClass);
 	}
 
 	public function GetQuery($sOQL)

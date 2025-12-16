@@ -1285,6 +1285,17 @@
           </node>
         </nodes>
       </property_tree>
+      <property_tree id="DashletBadge" xsi:type="Combodo-PropertyTree">
+        <extends>Dashlet</extends>
+        <nodes>
+          <node id="class" xsi:type="Combodo-Property">
+            <label>UI:DashletBadge:Prop-Class</label>
+            <value-type xsi:type="Combodo-ValueTypeClass">
+              <categories-csv>bizmodel</categories-csv>
+            </value-type>
+          </node>
+        </nodes>
+      </property_tree>
     </property_trees>
   </meta>
 </itop_design>

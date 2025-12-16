@@ -6,6 +6,7 @@
  */
 
 use Combodo\iTop\Forms\Compiler\FormsCompiler;
+use Combodo\iTop\Service\DependencyInjection\DIService;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class FormsCompilerTest extends ItopDataTestCase
@@ -23,6 +24,8 @@ class FormsCompilerTest extends ItopDataTestCase
 	 */
 	public function testCompileFormFromXML(string $sXMLContent, string $sExpectedPHP)
 	{
+		DIService::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
+
 		$sProducedPHP = FormsCompiler::GetInstance()->CompileFormFromXML($sXMLContent);
 
 		$this->AssertPHPCodeIsValid($sProducedPHP);
@@ -46,6 +49,7 @@ class FormsCompilerTest extends ItopDataTestCase
         <node id="class_property" xsi:type="Combodo-Property">
             <label>UI:BasicTest:Prop-Class</label>
             <value-type xsi:type="Combodo-ValueTypeClass">
+              <categories-csv>test</categories-csv>
             </value-type>
         </node>
     </nodes>
@@ -60,8 +64,10 @@ class FormFor__basic_test extends Combodo\iTop\Forms\Block\Base\FormBlock
 			'label' => 'UI:BasicTest:Prop-Title',
 		]);
 
-		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
+		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
 			'label' => 'UI:BasicTest:Prop-Class',
+			'choices' => [
+			],
 		]);
 	}
 }
@@ -128,6 +134,7 @@ PHP,
 		<node id="class_property" xsi:type="Combodo-Property">
 			<label>UI:Class</label>
             <value-type xsi:type="Combodo-ValueTypeClass">
+              <categories-csv>test</categories-csv>
             </value-type>
         </node>
 		<node id="class_attribute_property" xsi:type="Combodo-Property">
@@ -198,8 +205,10 @@ class FormFor__AllValueTypesTest extends Combodo\iTop\Forms\Block\Base\FormBlock
 			],
 		]);
 
-		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
+		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
 			'label' => 'UI:Class',
+			'choices' => [
+			],
 		]);
 
 		\$this->Add('class_attribute_property', 'Combodo\iTop\Forms\Block\DataModel\AttributeChoiceFormBlock', [
@@ -365,6 +374,7 @@ PHP,
 		<node id="class_property" xsi:type="Combodo-Property">
 			<label>UI:Class</label>
             <value-type xsi:type="Combodo-ValueTypeClass">
+              <categories-csv>test</categories-csv>
             </value-type>
         </node>
 		<node id="class_attribute_property" xsi:type="Combodo-Property">
@@ -381,8 +391,10 @@ class FormFor__input_binding_test extends Combodo\iTop\Forms\Block\Base\FormBloc
 {
 	protected function BuildForm(): void
 	{
-		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
+		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
 			'label' => 'UI:Class',
+			'choices' => [
+			],
 		]);
 
 		\$this->Add('class_attribute_property', 'Combodo\iTop\Forms\Block\DataModel\AttributeChoiceFormBlock', [
@@ -402,12 +414,13 @@ PHP,
 		<node id="class_property" xsi:type="Combodo-Property">
 			<label>UI:Class</label>
             <value-type xsi:type="Combodo-ValueTypeClass">
+              <categories-csv>test</categories-csv>
             </value-type>
         </node>
 		<node id="class_attribute_property" xsi:type="Combodo-Property">
 			<label>UI:ClassAttribute</label>
 			<value-type xsi:type="Combodo-ValueTypeClassAttribute">
-				<class>{{IF(class_property.text = '', 'Person', class_property.text)}}</class>
+				<class>{{IF(class_property.value = '', 'Person', class_property.value)}}</class>
 			</value-type>
         </node>
 	</nodes>
@@ -418,14 +431,16 @@ class FormFor__input_binding_expression extends Combodo\iTop\Forms\Block\Base\Fo
 {
 	protected function BuildForm(): void
 	{
-		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\TextFormBlock', [
+		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
 			'label' => 'UI:Class',
+			'choices' => [
+			],
 		]);
 
 		\$this->Add('class_attribute_property_class_expression', 'Combodo\iTop\Forms\Block\Expression\StringExpressionFormBlock', [
-			'expression' => 'IF(class_property.text = \'\', \'Person\', class_property.text)',
+			'expression' => 'IF(class_property.value = \'\', \'Person\', class_property.value)',
 		])
-			->AddInputDependsOn('class_property.text', 'class_property', 'text');
+			->AddInputDependsOn('class_property.value', 'class_property', 'value');
 
 		\$this->Add('class_attribute_property', 'Combodo\iTop\Forms\Block\DataModel\AttributeChoiceFormBlock', [
 			'label' => 'UI:ClassAttribute',
@@ -525,6 +540,65 @@ class FormFor__ComplexRelevanceCondition extends Combodo\iTop\Forms\Block\Base\F
 			'label' => 'UI:Dependant',
 		])
 			->InputDependsOn('visible', 'dependant_property_visible_expression', 'result');
+	}
+}
+PHP,
+			],
+			'Class category for value type class' => [
+				'sXMLContent' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<node id="ClassCategory" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+    <nodes>
+    	<node id="class_property" xsi:type="Combodo-Property">
+			<label>UI:Class</label>
+            <value-type xsi:type="Combodo-ValueTypeClass">
+              <categories-csv>addon/authentication,grant_by_profile,silo</categories-csv>
+            </value-type>
+        </node>
+	</nodes>
+</node>
+XML,
+				'sExpectedPHP' => <<<PHP
+class FormFor__ClassCategory extends Combodo\iTop\Forms\Block\Base\FormBlock
+{
+	protected function BuildForm(): void
+	{
+		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
+			'label' => 'UI:Class',
+			'choices' => [
+				\Dict::S('Class:UserExternal') => 'UserExternal',
+				\Dict::S('Class:UserLDAP') => 'UserLDAP',
+				\Dict::S('Class:UserLocal') => 'UserLocal',
+				\Dict::S('Class:AuditRule') => 'AuditRule',
+				\Dict::S('Class:AuditCategory') => 'AuditCategory',
+				\Dict::S('Class:AuditDomain') => 'AuditDomain',
+				\Dict::S('Class:QueryOQL') => 'QueryOQL',
+				\Dict::S('Class:ActionEmail') => 'ActionEmail',
+				\Dict::S('Class:TriggerOnPortalUpdate') => 'TriggerOnPortalUpdate',
+				\Dict::S('Class:TriggerOnStateEnter') => 'TriggerOnStateEnter',
+				\Dict::S('Class:TriggerOnStateLeave') => 'TriggerOnStateLeave',
+				\Dict::S('Class:TriggerOnObjectCreate') => 'TriggerOnObjectCreate',
+				\Dict::S('Class:TriggerOnObjectDelete') => 'TriggerOnObjectDelete',
+				\Dict::S('Class:TriggerOnObjectUpdate') => 'TriggerOnObjectUpdate',
+				\Dict::S('Class:TriggerOnObjectMention') => 'TriggerOnObjectMention',
+				\Dict::S('Class:TriggerOnAttributeBlobDownload') => 'TriggerOnAttributeBlobDownload',
+				\Dict::S('Class:TriggerOnThresholdReached') => 'TriggerOnThresholdReached',
+				\Dict::S('Class:SynchroDataSource') => 'SynchroDataSource',
+				\Dict::S('Class:SynchroAttribute') => 'SynchroAttribute',
+				\Dict::S('Class:SynchroAttExtKey') => 'SynchroAttExtKey',
+				\Dict::S('Class:SynchroAttLinkSet') => 'SynchroAttLinkSet',
+				\Dict::S('Class:SynchroLog') => 'SynchroLog',
+				\Dict::S('Class:SynchroReplica') => 'SynchroReplica',
+				\Dict::S('Class:ActionNewsroom') => 'ActionNewsroom',
+				\Dict::S('Class:TriggerOnAttachmentCreate') => 'TriggerOnAttachmentCreate',
+				\Dict::S('Class:TriggerOnAttachmentDelete') => 'TriggerOnAttachmentDelete',
+				\Dict::S('Class:TriggerOnAttachmentDownload') => 'TriggerOnAttachmentDownload',
+				\Dict::S('Class:OAuthClientAzure') => 'OAuthClientAzure',
+				\Dict::S('Class:OAuthClientGoogle') => 'OAuthClientGoogle',
+				\Dict::S('Class:URP_Profiles') => 'URP_Profiles',
+				\Dict::S('Class:URP_UserOrg') => 'URP_UserOrg',
+			],
+		]);
 	}
 }
 PHP,
