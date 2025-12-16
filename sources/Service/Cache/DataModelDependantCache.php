@@ -90,9 +90,25 @@ class DataModelDependantCache
 		if (!is_file($sCacheFileName)) {
 			return null;
 		}
-		return include_once $sCacheFileName;
+		return include $sCacheFileName;
 	}
 
+	/**
+	 * Includes the cached PHP code for a given key, in the current pool.
+	 * Nothing is done when the key is not found.
+	 *
+	 * @param string $sPool
+	 * @param string $sKey
+	 */
+	public function FetchPHP(string $sPool, string $sKey): void
+	{
+		$sCacheFileName = $this->MakeCacheFileName($sPool, $sKey);
+		if (!is_file($sCacheFileName)) {
+			return;
+		}
+
+		include_once $sCacheFileName;
+	}
 	/**
 	 * @param string $sPool
 	 * @param string $sKey
@@ -155,7 +171,7 @@ class DataModelDependantCache
 	private function MakeCacheFileName(string $sPool, string $sKey): string
 	{
 		// Replace all characters that are not alphanumeric by '_'
-		$sKey = preg_replace('/[^a-zA-Z0-9]/', '_', $sKey);
+		$sKey = preg_replace('/[^a-zA-Z0-9\/]/', '_', $sKey);
 
 		return $this->MakePoolDirPath($sPool).$sKey.'.php';
 	}

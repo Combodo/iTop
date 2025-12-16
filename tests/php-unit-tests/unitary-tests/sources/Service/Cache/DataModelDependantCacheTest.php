@@ -156,10 +156,26 @@ class DataModelDependantCacheTest extends ItopTestCase
 		$this->assertEquals($iRefTime, $this->oCacheService->GetEntryModificationTime('pool-A', 'key'), 'GetEntryModificationTime should return the modification time of the cache file');
 		$this->assertEquals(null, $this->oCacheService->GetEntryModificationTime('pool-A', 'non-existing-key'), 'GetEntryModificationTime should return null for an invalid key');
 	}
+
 	public function testKeyUndesiredCharactersShouldBeTransformedToUnderscore()
 	{
-		$sUglyKey = 'key with ugly characters:\{&"#@ç^²/,;[(|🤔';
+		$sUglyKey = 'key with ugly characters:\{&"#@ç^²,;[(|🤔';
 		$sFilePath = $this->InvokeNonPublicMethod(DataModelDependantCache::class, 'MakeCacheFileName', $this->oCacheService, ['pool-A', $sUglyKey]);
-		$this->assertEquals('key_with_ugly_characters______________________.php', basename($sFilePath));
+		$this->assertEquals('key_with_ugly_characters_____________________.php', basename($sFilePath));
+	}
+
+	public function testKeyCanBeADirectoryTree()
+	{
+		$sBaseKey = 'test';
+		$sBaseFilePath = $this->InvokeNonPublicMethod(DataModelDependantCache::class, 'MakeCacheFileName', $this->oCacheService, ['pool-A', $sBaseKey]);
+
+		$sKey = 'Path/To/KeyCanBePath';
+		$sFilePath = $this->InvokeNonPublicMethod(DataModelDependantCache::class, 'MakeCacheFileName', $this->oCacheService, ['pool-A', $sKey]);
+
+		$this->assertEquals(dirname($sBaseFilePath).'/Path/To', dirname($sFilePath));
+
+		$this->oCacheService->Store('pool-A', $sKey, 'some data...');
+		$this->assertTrue($this->oCacheService->HasEntry('pool-A', $sKey), 'The data should have been stored');
+		$this->assertFileExists($sFilePath, 'A file should have been created in the corresponding directory');
 	}
 }

@@ -52,12 +52,13 @@ class FormBlockService
 		if (strlen($sFilteredId) === 0 || $sFilteredId !== $sId) {
 			throw new FormBlockException('Malformed name for block: '.json_encode($sId));
 		}
-		if (!$this->oCacheService->HasEntry(self::CACHE_POOL, $sFilteredId) || utils::IsDevelopmentEnvironment()) {
+		$sCacheKey = $sType.'/'.$sFilteredId;
+		if (!$this->oCacheService->HasEntry(self::CACHE_POOL, $sCacheKey) || utils::IsDevelopmentEnvironment()) {
 			// Cache not found, compile the form
 			$sPHPContent = FormsCompiler::GetInstance()->CompileForm($sFilteredId, $sType);
-			$this->oCacheService->StorePhpContent(FormBlockService::CACHE_POOL, $sFilteredId, "<?php\n\n$sPHPContent");
+			$this->oCacheService->StorePhpContent(FormBlockService::CACHE_POOL, $sCacheKey, "<?php\n\n$sPHPContent");
 		}
-		$this->oCacheService->Fetch(self::CACHE_POOL, $sFilteredId);
+		$this->oCacheService->FetchPHP(self::CACHE_POOL, $sCacheKey);
 		$sFormBlockClass = 'FormFor__'.$sFilteredId;
 
 		return new $sFormBlockClass($sFilteredId);
