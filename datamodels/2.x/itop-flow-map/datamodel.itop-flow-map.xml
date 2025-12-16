@@ -3,7 +3,7 @@
   <constants>
   </constants>
   <classes>
-    <class id="Flow" _delta="define_if_not_exists">
+    <class id="Flow" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -14,7 +14,7 @@
         </style>
         <naming>
           <attributes>
-            <attribute id="flowtype_name"/>
+            <attribute id="flowtype_id_friendlyname"/>
             <attribute id="source_name"/>
             <attribute id="destination_name"/>
           </attributes>
@@ -22,7 +22,7 @@
         <reconciliation>
           <attributes>
             <attribute id="destination_id"/>
-			<attribute id="org_id"/>
+            <attribute id="org_id"/>
             <attribute id="source_id"/>
             <attribute id="flowtype_id"/>
           </attributes>
@@ -78,10 +78,6 @@
           <target_class>FlowType</target_class>
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
-        </field>
-        <field id="flowtype_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>flowtype_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
