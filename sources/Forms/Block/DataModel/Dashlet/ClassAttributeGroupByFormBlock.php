@@ -45,8 +45,8 @@ class ClassAttributeGroupByFormBlock extends AttributeChoiceFormBlock
 					$sExtKeyAttCode = $oModelReflection->GetAttributeProperty($sTargetClass, $sExtFieldAttCode, 'extkey_attcode');
 					$sTargetAttCode = $oModelReflection->GetAttributeProperty($sTargetClass, $sExtFieldAttCode, 'target_attcode');
 					$sTargetClass = $oModelReflection->GetAttributeProperty($sTargetClass, $sExtKeyAttCode, 'targetclass');
-					$aTargetAttCodes = AttributeChoiceFormBlock::ListAttributeCodesByCategory($sTargetClass, 'group_by');
-					$sAttType = $aTargetAttCodes[$sTargetAttCode];
+					//					$aTargetAttCodes = AttributeChoiceFormBlock::ListAttributeCodesByCategory($sTargetClass, 'group_by');
+					$sAttType = $sTargetAttCode;
 					$sExtFieldAttCode = $sTargetAttCode;
 				}
 

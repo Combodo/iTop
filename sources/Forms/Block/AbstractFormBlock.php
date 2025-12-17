@@ -108,6 +108,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
 		$oOptionsRegister->SetOption('form_block', $this);
+		$oOptionsRegister->SetOption('form_block_class', get_class($this));
 	}
 
 	/**

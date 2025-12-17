@@ -36,6 +36,7 @@ class FormTypeExtension extends AbstractTypeExtension
 	{
 		$resolver->setDefined([
 			'form_block',
+			'form_block_class',
 			'builder_listener',
 			'prevent_form_build',
 		]);
@@ -55,6 +56,7 @@ class FormTypeExtension extends AbstractTypeExtension
 	{
 		if (array_key_exists('form_block', $options)) {
 			$view->vars['form_block'] = $options['form_block'];
+			$view->vars['form_block_class'] = $options['form_block_class'];
 
 			$oFormBlock = $options['form_block'];
 			$view->vars['trigger_form_submit_on_modify'] = $oFormBlock->ImpactDependentsBlocks();

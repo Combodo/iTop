@@ -16,5 +16,6 @@
 {% if current_form %}
     {% UITurboStream Replace { sTarget: current_form.vars.id} %}
     {{ form_widget(current_form) }}
+    <turbo-stream-event id="{{ current_form.vars.id }}-turbo-stream-event" data-form-block-class="{{ current_form.vars.form_block_class }}" data-view-data="{{ current_form.vars.value|json_encode }}" data-valid="{{ current_form.vars.valid }}"/>
     {% EndUITurboStream %}
 {% endif %}

@@ -1120,6 +1120,7 @@ abstract class Controller extends AbstractController
 
 		} else {
 
+			// Display turbo response
 			$this->DisplayTurboAjaxPage(['current_form' => $oForm->createView()]);
 
 		}

@@ -14,6 +14,7 @@ class ChoicesElement extends HTMLSelectElement {
 			plugins: this.plugins,
 			wrapperClass: 'ts-wrapper ibo-input-wrapper ibo-input-select-wrapper--with-buttons ibo-input-select-autocomplete-wrapper',
 			controlClass: 'ts-control ibo-input ibo-input-select ibo-input-select-autocomplete',
+			dropdownParent: 'body',
 			render: {
 				dropdown: function (data, escape) {
 					return `<div class="selectize-dropdown"></div>`;

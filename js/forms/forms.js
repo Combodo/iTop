@@ -25,4 +25,3 @@ function isCheckbox (element) {
 	return element instanceof HTMLInputElement
 		&& element.getAttribute('type') === 'checkbox'
 }
-

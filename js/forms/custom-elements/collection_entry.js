@@ -41,19 +41,22 @@ class CollectionEntryElement extends HTMLElement {
 	 */
 	updateButtonStates() {
 
-		if(this.previousElementSibling === null) {
-			this.#eBtnMoveUp.setAttribute('disabled', 'disabled');
-		}
-		else{
-			this.#eBtnMoveUp.removeAttribute('disabled');
+		if (this.dataset.allowOrdering) {
+
+			if (this.previousElementSibling === null) {
+				this.#eBtnMoveUp.setAttribute('disabled', 'disabled');
+			} else {
+				this.#eBtnMoveUp.removeAttribute('disabled');
+			}
+
+			if (this.nextElementSibling === null) {
+				this.#eBtnMoveDown.setAttribute('disabled', 'disabled');
+			} else {
+				this.#eBtnMoveDown.removeAttribute('disabled');
+			}
+
 		}
 
-		if(this.nextElementSibling === null) {
-			this.#eBtnMoveDown.setAttribute('disabled', 'disabled');
-		}
-		else{
-			this.#eBtnMoveDown.removeAttribute('disabled');
-		}
 	}
 
 	/**
