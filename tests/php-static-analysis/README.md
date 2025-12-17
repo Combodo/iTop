@@ -49,7 +49,7 @@ _Do this if you only want to analyse one or more modules within this iTop but no
 - Run the following command
   ```
   tests/php-static-analysis/vendor/bin/phpstan analyse \
-    --configuration ./tests/php-static-analysis/config/for-package.dist.neon \
+    --configuration ./tests/php-static-analysis/config/for-module.dist.neon \
     --error-format raw \
     env-production/<MODULE_CODE_1> [env-production/<MODULE_CODE_2> ...]
   ```
