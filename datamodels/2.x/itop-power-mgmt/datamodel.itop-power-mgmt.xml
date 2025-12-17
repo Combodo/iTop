@@ -1,0 +1,1768 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
+  <constants>
+  </constants>
+  <classes>
+    <class id="PowerConnection" _created_in="itop-datacenter-mgmt" _delta="must_exist">
+      <fields>
+        <field id="rack_id" xsi:type="AttributeExternalKey">
+          <sql>rack_id</sql>
+          <filter>SELECT Rack WHERE location_id= :this-&gt;location_id</filter>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Rack</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="nb_u" xsi:type="AttributeInteger">
+          <sql>nb_u</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="position" xsi:type="AttributeString">
+          <sql>position</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="powerconnection_id" xsi:type="AttributeExternalKey">
+          <sql>powerconnection_id</sql>
+          <filter>SELECT PowerConnection WHERE location_id = :this-&gt;location_id AND id != :this-&gt;id AND :this->finalclass != 'PowerSource'</filter>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>PowerConnection</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="supply_type" xsi:type="AttributeExternalField">
+          <extkey_attcode>powerconnection_id</extkey_attcode>
+          <target_attcode>power_type</target_attcode>
+        </field>
+        <field id="charge_capacity" xsi:type="AttributeDecimal" _delta="define">
+          <sql>charge_capacity</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+          <digits>10</digits>
+          <decimals>1</decimals>
+        </field>
+        <field id="power_capacity" xsi:type="AttributeDecimal" _delta="define">
+          <sql>power_capacity</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+          <digits>10</digits>
+          <decimals>1</decimals>
+        </field>
+        <field id="power_type" xsi:type="AttributeEnum" _delta="define">
+          <sql>power_type</sql>
+          <values>
+            <value id="single"><code>single</code></value>
+            <value id="three"><code>three</code></value>
+            <value id="continuous"><code>continuous</code></value>
+          </values>
+          <default_value>single</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="voltage" xsi:type="AttributeDecimal" _delta="define">
+          <sql>voltage</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <digits>10</digits>
+          <decimals>1</decimals>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="power_phase" xsi:type="AttributeString" _delta="define">
+          <sql>power_phase</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="management_url" xsi:type="AttributeURL" _delta="define">
+          <sql>management_url</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <target/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="managementip" xsi:type="AttributeIPAddress" _delta="define">
+          <sql>managementip</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+<!-- Mettre un Attribut Dashbord ou juste un sous équipment de premier rang -->
+        <field id="powerconnections_list" xsi:type="AttributeLinkedSet">
+          <linked_class>PowerConnection</linked_class>
+          <ext_key_to_me>powerconnection_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode>add_remove</edit_mode>
+        </field>
+        <field id="pdus_list" xsi:type="AttributeLinkedSet">
+          <linked_class>PDU</linked_class>
+          <ext_key_to_me>powerconnection_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode>add_remove</edit_mode>
+        </field>
+        <field id="inverters_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>Inverter</linked_class>
+          <ext_key_to_me>powerconnection_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode>add_remove</edit_mode>
+        </field>
+        <field id="powerstarts_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>PowerStart</linked_class>
+          <ext_key_to_me>powerconnection_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode>add_remove</edit_mode>
+        </field>
+        <field id="stss_list_a" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>STS</linked_class>
+          <ext_key_to_me>powerconnection_source1_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode>add_remove</edit_mode>
+        </field>
+        <field id="stss_list_b" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>STS</linked_class>
+          <ext_key_to_me>powerconnection_source2_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode>add_remove</edit_mode>
+        </field>
+      </fields>
+      <presentation>
+        <default_search _delta="define">
+          <items>
+            <item id="charge_capacity">
+              <rank>10</rank>
+            </item>
+            <item id="power_capacity">
+              <rank>20</rank>
+            </item>
+            <item id="power_type">
+              <rank>30</rank>
+            </item>
+            <item id="power_phase">
+              <rank>60</rank>
+            </item>
+            <item id="managementip">
+              <rank>70</rank>
+            </item>
+            <item id="voltage">
+              <rank>80</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <relations>
+        <relation id="impacts" _delta="must_exist">
+          <neighbours>
+            <neighbour id="pdu" _delta="must_exist">
+              <query_down _delta="redefine">SELECT PDU WHERE powerconnection_id= :this-&gt;id</query_down>
+              <query_up _delta="redefine">SELECT PowerConnection WHERE id = :this-&gt;powerconnection_id</query_up>
+            </neighbour>
+            <neighbour id="sts" _delta="define">
+              <query_down>SELECT STS WHERE powerconnection_source1_id =:this-&gt;id OR powerconnection_source2_id =:this-&gt;id</query_down>
+              <query_up>SELECT PowerConnection WHERE id = :this-&gt;powerconnection_source1_id OR id = :this-&gt;powerconnection_source2_id </query_up>
+              <direction>both</direction>
+            </neighbour>
+            <neighbour id="powerstart" _delta="define">
+              <query_down>SELECT PowerStart WHERE powerconnection_id = :this-&gt;id</query_down>
+              <query_up>SELECT PowerConnection WHERE id = :this-&gt;powerconnection_id</query_up>
+              <direction>both</direction>
+            </neighbour>
+            <neighbour id="inverter" _delta="define">
+              <query_down>SELECT Inverter WHERE powerconnection_id = :this-&gt;id</query_down>
+              <query_up>SELECT PowerConnection WHERE id = :this-&gt;powerconnection_id</query_up>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
+    <class id="PowerSource" _created_in="itop-datacenter-mgmt" _delta="must_exist">
+      <fields/>
+      <presentation>
+        <details _delta="redefine">
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:PowerSource:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:PowerSource:moreinfo">
+                  <items>
+                    <item id="brand_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>30</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>40</rank>
+                    </item>
+                    <item id="managementip">
+                      <rank>50</rank>
+                    </item>
+                    <item id="management_url">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:PowerSource:technicalinfo">
+                  <items>
+                    <item id="power_type">
+                      <rank>10</rank>
+                    </item>
+                    <item id="voltage">
+                      <rank>20</rank>
+                    </item>
+                    <item id="charge_capacity">
+                      <rank>30</rank>
+                    </item>
+                    <item id="charge_current">
+                      <rank>40</rank>
+                    </item>
+                    <item id="power_capacity">
+                      <rank>50</rank>
+                    </item>
+                    <item id="power_current">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:PowerSource:Date">
+                  <items>
+                    <item id="move2production">
+                      <rank>10</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:PowerSource:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>30</rank>
+            </item>
+            <item id="powerstarts_list">
+              <rank>40</rank>
+            </item>
+            <item id="inverters_list">
+              <rank>50</rank>
+            </item>
+            <item id="stss_list_a">
+              <rank>60</rank>
+            </item>
+            <item id="stss_list_b">
+              <rank>70</rank>
+            </item>
+            <item id="pdus_list">
+              <rank>80</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>90</rank>
+            </item>
+            <item id="documents_list">
+              <rank>100</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>110</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <relations _delta="define">
+        <relation id="impacts">
+          <neighbours/>
+        </relation>
+      </relations>
+    </class>
+    <class id="PDU" _created_in="itop-datacenter-mgmt" _delta="must_exist">
+      <fields>
+        <field id="output_number" xsi:type="AttributeInteger" _delta="define">
+          <sql>output_number</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="protection" xsi:type="AttributeEnum" _delta="define">
+          <sql>protection</sql>
+          <values>
+            <value id="no"><code>no</code></value>
+            <value id="sts"><code>sts</code></value>
+            <value id="inverter"><code>inverter</code></value>
+          </values>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <presentation>
+        <details _delta="redefine">
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:PDU:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="rack_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="position">
+                      <rank>70</rank>
+                    </item>
+                    <item id="nb_u">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:PDU:moreinfo">
+                  <items>
+                    <item id="brand_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>30</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>40</rank>
+                    </item>
+                    <item id="managementip">
+                      <rank>50</rank>
+                    </item>
+                    <item id="management_url">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:PDU:technicalinfo">
+                  <items>
+                    <item id="powerconnection_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="power_type">
+                      <rank>20</rank>
+                    </item>
+                    <item id="voltage">
+                      <rank>30</rank>
+                    </item>
+                    <item id="power_phase">
+                      <rank>40</rank>
+                    </item>
+                    <item id="protection">
+                      <rank>50</rank>
+                    </item>
+                    <item id="output_number">
+                      <rank>60</rank>
+                    </item>
+                    <item id="charge_capacity">
+                      <rank>70</rank>
+                    </item>
+                    <item id="charge_current">
+                      <rank>80</rank>
+                    </item>
+                    <item id="power_capacity">
+                      <rank>90</rank>
+                    </item>
+                    <item id="power_current">
+                      <rank>100</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:PDU:Date">
+                  <items>
+                    <item id="move2production">
+                      <rank>10</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:PDU:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>30</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>40</rank>
+            </item>
+            <item id="documents_list">
+              <rank>50</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>60</rank>
+            </item>
+          </items>
+        </details>
+        <search _delta="redefine">
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="powerconnection_id">
+              <rank>60</rank>
+            </item>
+            <item id="brand_id">
+              <rank>70</rank>
+            </item>
+            <item id="model_id">
+              <rank>80</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>90</rank>
+            </item>
+            <item id="asset_number">
+              <rank>100</rank>
+            </item>
+            <item id="move2production">
+              <rank>110</rank>
+            </item>
+            <item id="purchase_date">
+              <rank>120</rank>
+            </item>
+            <item id="end_of_warranty">
+              <rank>130</rank>
+            </item>
+            <item id="nb_u">
+              <rank>140</rank>
+            </item>
+            <item id="position">
+              <rank>150</rank>
+            </item>
+          </items>
+        </search>
+        <list _delta="redefine">
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="location_id">
+              <rank>40</rank>
+            </item>
+            <item id="rack_id">
+              <rank>50</rank>
+            </item>
+            <item id="position">
+              <rank>60</rank>
+            </item>
+            <item id="brand_id">
+              <rank>70</rank>
+            </item>
+            <item id="model_id">
+              <rank>80</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>90</rank>
+            </item>
+            <item id="output_number">
+              <rank>100</rank>
+            </item>
+            <item id="powerconnection_id">
+              <rank>110</rank>
+            </item>
+            <item id="power_type">
+              <rank>120</rank>
+            </item>
+            <item id="protection">
+              <rank>130</rank>
+            </item>
+            <item id="power_phase">
+              <rank>140</rank>
+            </item>
+            <item id="charge_capacity">
+              <rank>150</rank>
+            </item>
+            <item id="charge_current">
+              <rank>160</rank>
+            </item>
+            <item id="power_capacity">
+              <rank>170</rank>
+            </item>
+            <item id="power_current">
+              <rank>180</rank>
+            </item>
+            <item id="management_url">
+              <rank>190</rank>
+            </item>
+            <item id="managementip">
+              <rank>200</rank>
+            </item>
+            <item id="voltage">
+              <rank>210</rank>
+            </item>
+          </items>
+        </list>
+        <default_search _delta="define">
+          <items>
+            <item id="output_number">
+              <rank>10</rank>
+            </item>
+            <item id="charge_capacity">
+              <rank>20</rank>
+            </item>
+            <item id="power_capacity">
+              <rank>30</rank>
+            </item>
+            <item id="power_type">
+              <rank>40</rank>
+            </item>
+            <item id="protection">
+              <rank>50</rank>
+            </item>
+            <item id="charge_current">
+              <rank>60</rank>
+            </item>
+            <item id="power_current">
+              <rank>70</rank>
+            </item>
+            <item id="power_phase">
+              <rank>80</rank>
+            </item>
+            <item id="managementip">
+              <rank>90</rank>
+            </item>
+            <item id="voltage">
+              <rank>100</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+    </class>
+    <class id="STS" _created_in="itop-datacenter-mgmt" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>sts</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+        <icon>
+          <fileref ref="sts_ef8fd8c18a43fc82370041f128a2983e"/>
+        </icon>
+      </properties>
+      <fields>
+        <field id="powerconnection_source1_id" xsi:type="AttributeExternalKey">
+          <sql>powerconnection_source1_id</sql>
+          <filter>SELECT PowerConnection WHERE location_id = :this-&gt;location_id AND PowerConnection .id != :this-&gt;id</filter>
+          <dependencies>
+            <attribute id="location_id"/>
+          </dependencies>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>PowerConnection</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+          <label>Source A</label>
+        </field>
+        <field id="powerconnection_source2_id" xsi:type="AttributeExternalKey">
+          <sql>powerconnection_source2_id</sql>
+          <filter>SELECT PowerConnection WHERE location_id = :this-&gt;location_id AND PowerConnection .id != :this-&gt;id</filter>
+          <dependencies>
+            <attribute id="location_id"/>
+          </dependencies>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>PowerConnection</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="nominal_source" xsi:type="AttributeEnum">
+          <sql>nominal_source</sql>
+          <values>
+            <value id="source1"><code>source1</code></value>
+            <value id="source2"><code>source2</code></value>
+          </values>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="redundancy" xsi:type="AttributeRedundancySettings">
+          <sql>redundancy</sql>
+          <relation_code>impacts</relation_code>
+          <from_class>PowerConnection</from_class>
+          <neighbour_id>sts</neighbour_id>
+          <enabled>true</enabled>
+          <min_up>1</min_up>
+          <min_up_type>count</min_up_type>
+          <min_up_mode>user</min_up_mode>
+          <enabled_mode>user</enabled_mode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="rack">
+              <rank>60</rank>
+            </item>
+            <item id="position">
+              <rank>70</rank>
+            </item>
+            <item id="brand_id">
+              <rank>80</rank>
+            </item>
+            <item id="model_id">
+              <rank>90</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>100</rank>
+            </item>
+            <item id="nominal_source">
+              <rank>110</rank>
+            </item>
+            <item id="power_type">
+              <rank>120</rank>
+            </item>
+            <item id="charge_capacity">
+              <rank>130</rank>
+            </item>
+            <item id="charge_current">
+              <rank>140</rank>
+            </item>
+            <item id="power_capacity">
+              <rank>150</rank>
+            </item>
+            <item id="power_current">
+              <rank>160</rank>
+            </item>
+            <item id="management_url">
+              <rank>170</rank>
+            </item>
+            <item id="managementip">
+              <rank>180</rank>
+            </item>
+            <item id="voltage">
+              <rank>190</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="brand_id">
+              <rank>60</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>80</rank>
+            </item>
+            <item id="asset_number">
+              <rank>90</rank>
+            </item>
+            <item id="move2production">
+              <rank>100</rank>
+            </item>
+            <item id="purchase_date">
+              <rank>110</rank>
+            </item>
+            <item id="end_of_warranty">
+              <rank>120</rank>
+            </item>
+            <item id="nb_u">
+              <rank>130</rank>
+            </item>
+            <item id="position">
+              <rank>140</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:STS:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="rack">
+                      <rank>60</rank>
+                    </item>
+                    <item id="position">
+                      <rank>70</rank>
+                    </item>
+                    <item id="nb_u">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:STS:moreinfo">
+                  <items>
+                    <item id="brand_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>30</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>40</rank>
+                    </item>
+                    <item id="managementip">
+                      <rank>50</rank>
+                    </item>
+                    <item id="management_url">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:STS:technicalinfo">
+                  <items>
+                    <item id="powerconnection_source1_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="powerconnection_source2_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="nominal_source">
+                      <rank>30</rank>
+                    </item>
+                    <item id="power_type">
+                      <rank>40</rank>
+                    </item>
+                    <item id="voltage">
+                      <rank>50</rank>
+                    </item>
+                    <item id="charge_capacity">
+                      <rank>60</rank>
+                    </item>
+                    <item id="charge_current">
+                      <rank>70</rank>
+                    </item>
+                    <item id="power_capacity">
+                      <rank>80</rank>
+                    </item>
+                    <item id="power_current">
+                      <rank>90</rank>
+                    </item>
+                    <item id="redundancy">
+                      <rank>100</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:STS:Date">
+                  <items>
+                    <item id="purchase_date">
+                      <rank>10</rank>
+                    </item>
+                    <item id="move2production">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:STS:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>30</rank>
+            </item>
+            <item id="pdus_list">
+              <rank>40</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>50</rank>
+            </item>
+            <item id="documents_list">
+              <rank>60</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>70</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="charge_capacity">
+              <rank>10</rank>
+            </item>
+            <item id="power_capacity">
+              <rank>20</rank>
+            </item>
+            <item id="power_type">
+              <rank>30</rank>
+            </item>
+            <item id="rack">
+              <rank>40</rank>
+            </item>
+            <item id="charge_current">
+              <rank>50</rank>
+            </item>
+            <item id="power_current">
+              <rank>60</rank>
+            </item>
+            <item id="power_phase">
+              <rank>70</rank>
+            </item>
+            <item id="managementip">
+              <rank>80</rank>
+            </item>
+            <item id="voltage">
+              <rank>90</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>PowerConnection</parent>
+      <relations>
+        <relation id="impacts">
+          <neighbours/>
+        </relation>
+      </relations>
+    </class>
+    <class id="Inverter" _created_in="itop-datacenter-mgmt" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>inverter</db_table>
+        <icon>
+          <fileref ref="onduleur_90c6da5c746d8c8f41bd2f5066c6a34b"/>
+        </icon>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="autonomy" xsi:type="AttributeInteger">
+          <sql>autonomy</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="power" xsi:type="AttributeDecimal">
+          <sql>power</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+          <digits>10</digits>
+          <decimals>1</decimals>
+        </field>
+        <field id="maintenance_date" xsi:type="AttributeDate">
+          <sql>maintenance_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="battery_date" xsi:type="AttributeDate">
+          <sql>battery_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="rack_id">
+              <rank>60</rank>
+            </item>
+            <item id="position">
+              <rank>70</rank>
+            </item>
+            <item id="brand_id">
+              <rank>80</rank>
+            </item>
+            <item id="model_id">
+              <rank>90</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>100</rank>
+            </item>
+            <item id="powerconnection_id">
+              <rank>110</rank>
+            </item>
+            <item id="supply_type">
+              <rank>120</rank>
+            </item>
+            <item id="power_type">
+              <rank>130</rank>
+            </item>
+            <item id="power_phase">
+              <rank>140</rank>
+            </item>
+            <item id="charge_capacity">
+              <rank>150</rank>
+            </item>
+            <item id="charge_current">
+              <rank>160</rank>
+            </item>
+            <item id="power_capacity">
+              <rank>170</rank>
+            </item>
+            <item id="power_current">
+              <rank>180</rank>
+            </item>
+            <item id="power">
+              <rank>190</rank>
+            </item>
+            <item id="autonomy">
+              <rank>200</rank>
+            </item>
+            <item id="maintenance_date">
+              <rank>210</rank>
+            </item>
+            <item id="battery_date">
+              <rank>220</rank>
+            </item>
+            <item id="management_url">
+              <rank>230</rank>
+            </item>
+            <item id="managementip">
+              <rank>240</rank>
+            </item>
+            <item id="voltage">
+              <rank>250</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="brand_id">
+              <rank>60</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>80</rank>
+            </item>
+            <item id="asset_number">
+              <rank>90</rank>
+            </item>
+            <item id="move2production">
+              <rank>100</rank>
+            </item>
+            <item id="purchase_date">
+              <rank>110</rank>
+            </item>
+            <item id="end_of_warranty">
+              <rank>120</rank>
+            </item>
+            <item id="nb_u">
+              <rank>130</rank>
+            </item>
+            <item id="position">
+              <rank>140</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:Inverter:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="rack_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="position">
+                      <rank>70</rank>
+                    </item>
+                    <item id="nb_u">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Inverter:moreinfo">
+                  <items>
+                    <item id="brand_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>30</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>40</rank>
+                    </item>
+                    <item id="managementip">
+                      <rank>50</rank>
+                    </item>
+                    <item id="management_url">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:Inverter:technicalinfo">
+                  <items>
+                    <item id="powerconnection_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="supply_type">
+                      <rank>20</rank>
+                    </item>
+                    <item id="power_type">
+                      <rank>30</rank>
+                    </item>
+                    <item id="voltage">
+                      <rank>40</rank>
+                    </item>
+                    <item id="power_phase">
+                      <rank>50</rank>
+                    </item>
+                    <item id="charge_capacity">
+                      <rank>60</rank>
+                    </item>
+                    <item id="charge_current">
+                      <rank>70</rank>
+                    </item>
+                    <item id="power_capacity">
+                      <rank>80</rank>
+                    </item>
+                    <item id="power_current">
+                      <rank>90</rank>
+                    </item>
+                    <item id="power">
+                      <rank>100</rank>
+                    </item>
+                    <item id="autonomy">
+                      <rank>110</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Inverter:Date">
+                  <items>
+                    <item id="move2production">
+                      <rank>10</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="maintenance_date">
+                      <rank>30</rank>
+                    </item>
+                    <item id="battery_date">
+                      <rank>40</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Inverter:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>30</rank>
+            </item>
+            <item id="powerstarts_list">
+              <rank>40</rank>
+            </item>
+            <item id="stss_list_a">
+              <rank>50</rank>
+            </item>
+            <item id="stss_list_b">
+              <rank>60</rank>
+            </item>
+            <item id="pdus_list">
+              <rank>70</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>80</rank>
+            </item>
+            <item id="documents_list">
+              <rank>90</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>100</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="rack_id">
+              <rank>10</rank>
+            </item>
+            <item id="power">
+              <rank>20</rank>
+            </item>
+            <item id="maintenance_date">
+              <rank>30</rank>
+            </item>
+            <item id="battery_date">
+              <rank>40</rank>
+            </item>
+            <item id="powerconnection_id">
+              <rank>50</rank>
+            </item>
+            <item id="supply_type">
+              <rank>60</rank>
+            </item>
+            <item id="charge_current">
+              <rank>70</rank>
+            </item>
+            <item id="power_current">
+              <rank>80</rank>
+            </item>
+            <item id="power_phase">
+              <rank>90</rank>
+            </item>
+            <item id="managementip">
+              <rank>100</rank>
+            </item>
+            <item id="voltage">
+              <rank>110</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>PowerConnection</parent>
+      <relations>
+        <relation id="impacts">
+          <neighbours/>
+        </relation>
+      </relations>
+    </class>
+    <class id="CircuitBreaker" _created_in="itop-datacenter-mgmt" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>circuitbreaker</db_table>
+        <icon>
+          <fileref ref="powerstart_dbe2fecf9278cf9ddb1063dee84321b0"/>
+        </icon>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="location_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields/>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="brand_id">
+              <rank>60</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>80</rank>
+            </item>
+            <item id="powerconnection_id">
+              <rank>90</rank>
+            </item>
+            <item id="power_type">
+              <rank>100</rank>
+            </item>
+            <item id="power_phase">
+              <rank>110</rank>
+            </item>
+            <item id="charge_capacity">
+              <rank>120</rank>
+            </item>
+            <item id="charge_current">
+              <rank>130</rank>
+            </item>
+            <item id="power_capacity">
+              <rank>140</rank>
+            </item>
+            <item id="power_current">
+              <rank>150</rank>
+            </item>
+            <item id="management_url">
+              <rank>160</rank>
+            </item>
+            <item id="managementip">
+              <rank>170</rank>
+            </item>
+            <item id="voltage">
+              <rank>180</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="brand_id">
+              <rank>60</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>80</rank>
+            </item>
+            <item id="asset_number">
+              <rank>90</rank>
+            </item>
+            <item id="move2production">
+              <rank>100</rank>
+            </item>
+            <item id="purchase_date">
+              <rank>110</rank>
+            </item>
+            <item id="end_of_warranty">
+              <rank>120</rank>
+            </item>
+            <item id="management_url">
+              <rank>130</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:PowerStart:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="status">
+                      <rank>20</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:PowerStart:moreinfo">
+                  <items>
+                    <item id="brand_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>30</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>40</rank>
+                    </item>
+                    <item id="managementip">
+                      <rank>50</rank>
+                    </item>
+                    <item id="management_url">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:PowerStart:technicalinfo">
+                  <items>
+                    <item id="powerconnection_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="supply_type">
+                      <rank>20</rank>
+                    </item>
+                    <item id="power_type">
+                      <rank>30</rank>
+                    </item>
+                    <item id="voltage">
+                      <rank>40</rank>
+                    </item>
+                    <item id="power_phase">
+                      <rank>50</rank>
+                    </item>
+                    <item id="power_capacity">
+                      <rank>60</rank>
+                    </item>
+                    <item id="power_current">
+                      <rank>70</rank>
+                    </item>
+                    <item id="charge_capacity">
+                      <rank>80</rank>
+                    </item>
+                    <item id="charge_current">
+                      <rank>90</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:PowerStart:Date">
+                  <items>
+                    <item id="move2production">
+                      <rank>10</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:PowerStart:moreinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>30</rank>
+            </item>
+            <item id="powerstarts_list">
+              <rank>40</rank>
+            </item>
+            <item id="inverters_list">
+              <rank>50</rank>
+            </item>
+            <item id="stss_list_a">
+              <rank>60</rank>
+            </item>
+            <item id="stss_list_b">
+              <rank>70</rank>
+            </item>
+            <item id="pdus_list">
+              <rank>80</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>90</rank>
+            </item>
+            <item id="documents_list">
+              <rank>100</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>110</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="charge_current">
+              <rank>10</rank>
+            </item>
+            <item id="power_current">
+              <rank>20</rank>
+            </item>
+            <item id="power_phase">
+              <rank>30</rank>
+            </item>
+            <item id="powerconnection_id">
+              <rank>40</rank>
+            </item>
+            <item id="managementip">
+              <rank>50</rank>
+            </item>
+            <item id="voltage">
+              <rank>60</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>PowerConnection</parent>
+    </class>
+    <class id="Model" _created_in="itop-config-mgmt" _delta="must_exist">
+      <fields>
+        <field id="type" xsi:type="AttributeEnum" _delta="must_exist">
+          <values>
+            <value id="PowerSource"  _delta="define"><code>PowerSource</code></value>
+            <value id="CircuitBreaker" _delta="define"><code>CircuitBreaker</code></value>
+            <value id="Inverter" _delta="define"><code>Inverter</code></value>
+            <value id="STS" _delta="define"><code>STS</code></value>
+          </values>
+        </field>
+      </fields>
+       </class>
+  </classes>
+  <menus>
+    <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _created_in="itop-config-mgmt" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="0" _delta="must_exist">
+            <rank _delta="redefine">0.5</rank>
+            <dashlets>
+              <!-- Delete Dashlet PowerConnection now which is abstract -->
+              <dashlet id="23" xsi:type="DashletBadge" _delta="delete"/>
+            </dashlets>
+          </cell>
+          <cell id="power-management-000" _delta="define">
+           <rank>0.1</rank>
+            <dashlets>
+              <dashlet id="power-management-001" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>Menu:ConfigManagement:PowerSupply</title>
+                <icon>
+                  <fileref ref="power-connection_053d38b03af406bc2fbd82d7f8146162"/>
+                </icon>
+              </dashlet>
+              <dashlet id="power-management-011" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>PowerSource</class>
+              </dashlet>
+              <dashlet id="power-management-012" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>PowerStart</class>
+              </dashlet>
+              <dashlet id="power-management-013" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>Inverter</class>
+              </dashlet>
+              <dashlet id="power-management-014" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>STS</class>
+              </dashlet>
+              <dashlet id="power-management-015" xsi:type="DashletBadge">
+                <rank>5</rank>
+                <class>PDU</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+  </menus>
+  <files>
+    <file id="power-connection_053d38b03af406bc2fbd82d7f8146162" xsi:type="File" _delta="define_if_not_exists">
+      <name>images/power-connection.png</name>
+      <mime_type>image/png</mime_type>
+      <width>48</width>
+      <height>49</height>
+      <data>iVBORw0KGgoAAAANSUhEUgAAADAAAAAxCAYAAACcXioiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2RpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowMjA2MDY3Nzc2MUJFMjExQkYwQjlERkQ1QUMwNzExNyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpGQzE4MENDMjQyM0UxMUUyQkY1RkUwMzgwMzlGQjk1QiIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpGQzE4MENDMTQyM0UxMUUyQkY1RkUwMzgwMzlGQjk1QiIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IFdpbmRvd3MiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDowN0RCMzczOTM0NDJFMjExQTFFMkZBNDdDNDIzRUVDRiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDowMjA2MDY3Nzc2MUJFMjExQkYwQjlERkQ1QUMwNzExNyIvPiA8L3JkZjpEZXNjcmlwdGlv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</data>
+    </file>
+    <file id="onduleur_90c6da5c746d8c8f41bd2f5066c6a34b" xsi:type="File" _delta="define_if_not_exists">
+      <name>onduleur.png</name>
+      <mime_type>image/png</mime_type>
+      <width>60</width>
+      <height>60</height>
+      <data>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</data>
+    </file>
+    <file id="sts_ef8fd8c18a43fc82370041f128a2983e" xsi:type="File" _delta="define_if_not_exists">
+      <name>sts.png</name>
+      <mime_type>image/png</mime_type>
+      <width>60</width>
+      <height>60</height>
+      <data>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</data>
+    </file>
+    <file id="powerstart_dbe2fecf9278cf9ddb1063dee84321b0" xsi:type="File" _delta="define_if_not_exists">
+      <name>powerstart.png</name>
+      <mime_type>image/png</mime_type>
+      <width>60</width>
+      <height>60</height>
+      <data>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</data>
+    </file>
+  </files>
+  <user_rights>
+    <groups>
+    </groups>
+    <profiles>
+    </profiles>
+  </user_rights>
+</itop_design>
