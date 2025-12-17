@@ -14,4 +14,3 @@
 // This file remains in the module's template only for the cases where there is:
 // - either no new class or menu defined in the XML file
 // - or no XML file at all supplied by the module
-

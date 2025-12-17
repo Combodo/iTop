@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Module combodo-flow-map
  *
@@ -6,15 +7,15 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('EN US', 'English', 'English', array(
- 
-    'Relation:flow/Description'                               => 'Flow maps',
-    'Relation:flow/DownStream'                                => 'Impacts flow...',
-    'Relation:flow/UpStream'                                  => 'Depends flow...',
+Dict::Add('EN US', 'English', 'English', [
+
+	'Relation:flow/Description'                               => 'Flow maps',
+	'Relation:flow/DownStream'                                => 'Impacts flow...',
+	'Relation:flow/UpStream'                                  => 'Depends flow...',
 
 	'Class:Flow'                                              => 'Flow',
 	'Class:Flow+'                                             => 'For application flow for example',
-	'Class:Flow/Name'                                         =>'%1$s %2$s %3$s',
+	'Class:Flow/Name'                                         => '%1$s %2$s %3$s',
 	'Class:Flow/Attribute:source_id'                          => 'Source',
 	'Class:Flow/Attribute:source_id+'                         => 'Source Ci of the flow',
 	'Class:Flow/Attribute:source_name'                        => 'Source name',
@@ -38,12 +39,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Flow/Attribute:destination_id_finalclass_recall'   => 'destination_id->CI sub-class',
 	'Class:Flow/Attribute:destination_id_finalclass_recall+'  => 'Name of the final class',
 	'Class:Flow/Attribute:destination_id_obsolescence_flag'   => 'destination_id->Obsolete',
-	'Class:Flow/Attribute:destination_id_obsolescence_flag+'  => 'Computed dynamically on other attributes', 
-    'Class:Flow/Attribute:status'                             => 'Status',
-    'Class:Flow/Attribute:status+'                            => '',
-    'Class:Flow/Attribute:status/Value:active'                => 'Active',
-    'Class:Flow/Attribute:status/Value:inactive'              => 'Inactive',
-    'Class:Flow/Attribute:org_id'                             => 'Organization',
-    'Class:Flow/Attribute:org_id+'                            => '',	
-));
-?>
+	'Class:Flow/Attribute:destination_id_obsolescence_flag+'  => 'Computed dynamically on other attributes',
+	'Class:Flow/Attribute:status'                             => 'Status',
+	'Class:Flow/Attribute:status+'                            => '',
+	'Class:Flow/Attribute:status/Value:active'                => 'Active',
+	'Class:Flow/Attribute:status/Value:inactive'              => 'Inactive',
+	'Class:Flow/Attribute:org_id'                             => 'Organization',
+	'Class:Flow/Attribute:org_id+'                            => '',
+]);

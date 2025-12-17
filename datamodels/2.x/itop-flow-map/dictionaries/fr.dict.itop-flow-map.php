@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Module combodo-flow-map
  *
@@ -6,15 +7,15 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('FR FR', 'French', 'Français', array(
- 
-    'Relation:flow/Description'                              => 'Carte des fluxs',
-    'Relation:flow/DownStream'                               => 'Impacte flux...',
-    'Relation:flow/UpStream'                                 => 'Dépend de flux...',
+Dict::Add('FR FR', 'French', 'Français', [
+
+	'Relation:flow/Description'                              => 'Carte des fluxs',
+	'Relation:flow/DownStream'                               => 'Impacte flux...',
+	'Relation:flow/UpStream'                                 => 'Dépend de flux...',
 
 	'Class:Flow'                                             => 'Flux',
 	'Class:Flow+'                                            => 'Pour les fluxs applicatifs par exemple',
-	'Class:Flow/Name'                                        =>'%1$s %2$s %3$s',
+	'Class:Flow/Name'                                        => '%1$s %2$s %3$s',
 	'Class:Flow/Attribute:source_id'                         => 'Source',
 	'Class:Flow/Attribute:source_id+'                        => 'Ci source du flux',
 	'Class:Flow/Attribute:source_name'                       => 'Nom de la source ',
@@ -39,12 +40,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Flow/Attribute:destination_id_finalclass_recall+' => 'Classe finale',
 	'Class:Flow/Attribute:destination_id_obsolescence_flag'  => 'destination_id->Obsolete',
 	'Class:Flow/Attribute:destination_id_obsolescence_flag+' => 'Computed dynamically on other attributes',
-    'Class:Flow/Attribute:status'                            => 'Etat',
-    'Class:Flow/Attribute:status+'                           => '',
-    'Class:Flow/Attribute:status/Value:active'               => 'Actif',
-    'Class:Flow/Attribute:status/Value:inactive'             => 'Inactif',
-    'Class:Flow/Attribute:org_id'                            => 'Organisation',
-    'Class:Flow/Attribute:org_id+'                           => '',		
-	
-));
-?>
+	'Class:Flow/Attribute:status'                            => 'Etat',
+	'Class:Flow/Attribute:status+'                           => '',
+	'Class:Flow/Attribute:status/Value:active'               => 'Actif',
+	'Class:Flow/Attribute:status/Value:inactive'             => 'Inactif',
+	'Class:Flow/Attribute:org_id'                            => 'Organisation',
+	'Class:Flow/Attribute:org_id+'                           => '',
+
+]);
