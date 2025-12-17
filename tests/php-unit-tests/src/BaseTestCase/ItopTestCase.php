@@ -10,11 +10,10 @@ namespace Combodo\iTop\Test\UnitTest;
 use CMDBSource;
 use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use ReflectionMethod;
 use SetupUtils;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
-
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 /**
@@ -149,7 +148,6 @@ abstract class ItopTestCase extends KernelTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		\IssueLog::Error($this->getName());
 
 		// Hack - Required the first time the Portal kernel is booted on a newly installed iTop
 		$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] = __DIR__.'/../../../../../env-production/itop-portal-base/portal/public/';
