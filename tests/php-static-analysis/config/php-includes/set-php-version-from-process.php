@@ -1,10 +1,11 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 /**
  * This file is only here to allow setting a specific PHP version to run the analysis for without

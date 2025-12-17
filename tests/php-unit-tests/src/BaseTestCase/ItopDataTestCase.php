@@ -124,7 +124,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 		parent::setUp();
 
 		\IssueLog::Error($this->getName());
-		
+
 		$this->PrepareEnvironment();
 
 		if (static::USE_TRANSACTION) {
