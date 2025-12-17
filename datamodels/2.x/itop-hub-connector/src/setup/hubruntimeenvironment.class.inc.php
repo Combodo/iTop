@@ -1,9 +1,17 @@
 <?php
 
+namespace Combodo\iTop\HubConnector\setup;
+
+use Config;
+use Exception;
+use RunTimeEnvironment;
+use SetupUtils;
+
 class HubRunTimeEnvironment extends RunTimeEnvironment
 {
 	/**
 	 * Constructor
+	 *
 	 * @param string $sEnvironment
 	 * @param string $bAutoCommit
 	 */
@@ -24,6 +32,7 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 
 	/**
 	 * Update the includes for the target environment
+	 *
 	 * @param Config $oConfig
 	 */
 	public function UpdateIncludes(Config $oConfig)
@@ -33,7 +42,9 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 
 	/**
 	 * Move an extension (path to folder of this extension) to the target environment
+	 *
 	 * @param string $sExtensionDirectory The folder of the extension
+	 *
 	 * @throws Exception
 	 */
 	public function MoveExtension($sExtensionDirectory)
@@ -57,8 +68,10 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 
 	/**
 	 * Move the selected extensions located in the given directory in data/<target-env>-modules
+	 *
 	 * @param string $sDownloadedExtensionsDir The directory to scan
 	 * @param string[] $aSelectedExtensionDirs The list of folders to move
+	 *
 	 * @throws Exception
 	 */
 	public function MoveSelectedExtensions($sDownloadedExtensionsDir, $aSelectedExtensionDirs)
