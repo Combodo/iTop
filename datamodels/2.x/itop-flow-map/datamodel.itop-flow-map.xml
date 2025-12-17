@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
   <constants>
   </constants>
   <classes>
@@ -14,13 +14,14 @@
         </style>
         <naming>
           <attributes>
-            <attribute id="flowtype_id_friendlyname"/>
+            <attribute id="name"/>
             <attribute id="source_name"/>
             <attribute id="destination_name"/>
           </attributes>
         </naming>
         <reconciliation>
           <attributes>
+            <attribute id="name"/>
             <attribute id="destination_id"/>
             <attribute id="org_id"/>
             <attribute id="source_id"/>
@@ -35,6 +36,11 @@
         </fields_semantic>
       </properties>
       <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
         <field id="org_id" xsi:type="AttributeExternalKey">
           <sql>org_id</sql>
           <filter/>
@@ -74,7 +80,7 @@
           <sql>flowtype_id</sql>
           <filter/>
           <dependencies/>
-          <is_null_allowed>false</is_null_allowed>
+          <is_null_allowed>true</is_null_allowed>
           <target_class>FlowType</target_class>
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
@@ -113,22 +119,54 @@
           <display_style>list</display_style>
           <tracking_level>all</tracking_level>
         </field>
+        <field id="business_criticity" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
+          <values>
+            <value id="high">
+              <code>high</code>
+              <rank>10</rank>
+            </value>
+            <value id="medium">
+              <code>medium</code>
+              <rank>20</rank>
+            </value>
+            <value id="low">
+              <code>low</code>
+              <rank>30</rank>
+            </value>
+          </values>
+          <sql>business_criticity</sql>
+          <default_value>low</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkDocumentToFunctionalCI</linked_class>
+          <ext_key_to_me>functionalci_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>document_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
       </fields>
       <methods/>
       <presentation>
         <list>
           <items>
-            <item id="source_id">
+            <item id="name">
               <rank>10</rank>
             </item>
-            <item id="destination_id">
+            <item id="source_id">
               <rank>20</rank>
             </item>
-            <item id="flowtype_id">
+            <item id="destination_id">
               <rank>30</rank>
             </item>
-            <item id="description">
+            <item id="flowtype_id">
               <rank>40</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>50</rank>
             </item>
           </items>
         </list>
@@ -152,7 +190,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="org_id">
+                <item id="name">
                   <rank>10</rank>
                 </item>
                 <item id="source_id">
@@ -161,17 +199,31 @@
                 <item id="destination_id">
                   <rank>30</rank>
                 </item>
-                <item id="status">
+                <item id="org_id">
                   <rank>40</rank>
                 </item>
-                <item id="flowtype_id">
+                <item id="status">
                   <rank>50</rank>
                 </item>
-                <item id="description">
+                <item id="flowtype_id">
                   <rank>60</rank>
+                </item>
+                <item id="business_criticity">
+                  <rank>70</rank>
                 </item>
               </items>
               <rank>10</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="description">
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+            <item id="documents_list">
+              <rank>80</rank>
             </item>
           </items>
         </details>
@@ -215,6 +267,91 @@
           </neighbours>
         </relation>
       </relations>
+    </class>
+    <class id="lnkDocumentToFlow" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkDocumentToFlow</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="document_id_friendlyname"/>
+            <attribute id="flow_id_friendlyname"/>
+          </attributes>
+        </naming>
+        <style>
+          <icon/>
+        </style>
+        <reconciliation>
+          <attributes>
+            <attribute id="flow_id"/>
+            <attribute id="document_id"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="document_id"/>
+              <attribute id="flow_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="flow_id" xsi:type="AttributeExternalKey">
+          <sql>flow_id</sql>
+          <target_class>Flow</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="document_id" xsi:type="AttributeExternalKey">
+          <sql>document_id</sql>
+          <target_class>Document</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="document_id">
+              <rank>10</rank>
+            </item>
+            <item id="functionalci_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
     </class>
     <class id="FlowType" _delta="define">
       <parent>Typology</parent>
