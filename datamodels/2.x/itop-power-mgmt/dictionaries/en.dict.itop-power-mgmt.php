@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -10,15 +11,15 @@
 // Menu : ConfigManagement : PowerSupply
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Menu:ConfigManagement:PowerSupply' => 'Power supplies',
-));
+]);
 
 //
 // Class: Inverter
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Inverter' => 'Inverter',
 	'Class:Inverter+' => '',
 	'Class:Inverter/Attribute:rack_id' => 'Rack',
@@ -47,7 +48,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Inverter/Attribute:stss_list_a+' => 'Downstream ATS/STS (source A)',
 	'Class:Inverter/Attribute:stss_list_b' => 'ATS/STS - source B',
 	'Class:Inverter/Attribute:stss_list_b+' => 'Downstream ATS/STS (source B)',
-	
+
 	'Class:Inverter/Attribute:obsolescence_flag' => 'Obsolete',
 	'Class:Inverter/Attribute:obsolescence_flag+' => 'Computed dynamically on other attributes',
 	'Class:Inverter/Attribute:rack_id_friendlyname' => 'Rack',
@@ -60,18 +61,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Inverter/Attribute:powerconnection_id_finalclass_recall+' => 'Name of the final class',
 	'Class:Inverter/Attribute:powerconnection_id_obsolescence_flag' => 'Power supply->Obsolete',
 	'Class:Inverter/Attribute:powerconnection_id_obsolescence_flag+' => 'Computed dynamically on other attributes',
-        'Inverter:baseinfo' => 'General informations',
-        'Inverter:moreinfo' => 'Additional informations',
-        'Inverter:technicalinfo' => 'Technical informations',
-        'Inverter:Date' => 'Dates',
-        'Inverter:otherinfo' => 'Other informations',
-));
+		'Inverter:baseinfo' => 'General informations',
+		'Inverter:moreinfo' => 'Additional informations',
+		'Inverter:technicalinfo' => 'Technical informations',
+		'Inverter:Date' => 'Dates',
+		'Inverter:otherinfo' => 'Other informations',
+]);
 
 //
 // Class: PDU
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => 'Power distribution unit. A type of Power Connection.',
 	'Class:PDU/Attribute:rack_id' => 'Rack',
@@ -109,18 +110,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:PDU/Attribute:powerconnection_id_finalclass_recall+' => 'Name of the final class',
 	'Class:PDU/Attribute:powerconnection_id_obsolescence_flag' => 'Electric supply->Obsolete',
 	'Class:PDU/Attribute:powerconnection_id_obsolescence_flag+' => 'Computed dynamically on other attributes',
-        'PDU:baseinfo' => 'General informations',
-        'PDU:moreinfo' => 'Additional informations',
-        'PDU:technicalinfo' => 'Technical informations',
-        'PDU:Date' => 'Dates',
-        'PDU:otherinfo' => 'Other informations',
-));
+		'PDU:baseinfo' => 'General informations',
+		'PDU:moreinfo' => 'Additional informations',
+		'PDU:technicalinfo' => 'Technical informations',
+		'PDU:Date' => 'Dates',
+		'PDU:otherinfo' => 'Other informations',
+]);
 
 //
 // Class: PowerConnection
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:PowerConnection' => 'Power Connection',
 	'Class:PowerConnection+' => 'Abstract class, grouping all power devices',
 	'Class:PowerConnection/Attribute:charge_capacity' => 'Maximum load (A)',
@@ -149,13 +150,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:PowerConnection/Attribute:voltage+' => '',
 	'Class:PowerConnection/Attribute:obsolescence_flag' => 'Obsolete',
 	'Class:PowerConnection/Attribute:obsolescence_flag+' => 'Computed dynamically on other attributes',
-));
+]);
 
 //
 // Class: PowerSource
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:PowerSource' => 'Power Source',
 	'Class:PowerSource+' => 'First Power Connection documented in a power circuit, 
 It has no electrical source documented as an object in the CMDB.',
@@ -171,19 +172,19 @@ It has no electrical source documented as an object in the CMDB.',
 	'Class:PowerSource/Attribute:stss_list_b+' => 'Downstream ATS (source B)',
 	'Class:PowerSource/Attribute:obsolescence_flag' => 'Obsolete',
 	'Class:PowerSource/Attribute:obsolescence_flag+' => 'Computed dynamically on other attributes',
-        'PowerSource:baseinfo' => 'General informations',
-        'PowerSource:moreinfo' => 'Additional informations',
-        'PowerSource:technicalinfo' => 'Technical informations',
-        'PowerSource:Date' => 'Dates',
-        'PowerSource:otherinfo' => 'Other informations',
-        
-));
+		'PowerSource:baseinfo' => 'General informations',
+		'PowerSource:moreinfo' => 'Additional informations',
+		'PowerSource:technicalinfo' => 'Technical informations',
+		'PowerSource:Date' => 'Dates',
+		'PowerSource:otherinfo' => 'Other informations',
+
+]);
 
 //
 // Class: PowerStart
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:PowerStart' => 'Power Start',
 	'Class:PowerStart+' => '',
 	'Class:PowerStart/Attribute:powerconnection_id' => 'Source',
@@ -208,18 +209,18 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:PowerStart/Attribute:powerconnection_id_finalclass_recall+' => 'Name of the final class',
 	'Class:PowerStart/Attribute:powerconnection_id_obsolescence_flag' => 'Source->Obsolete',
 	'Class:PowerStart/Attribute:powerconnection_id_obsolescence_flag+' => 'Computed dynamically on other attributes',
-        'PowerStart:baseinfo' => 'General informations',
-        'PowerStart:moreinfo' => 'Additional informations',
-        'PowerStart:technicalinfo' => 'Technical informations',
-        'PowerStart:Date' => 'Dates',
-        'PowerStart:otherinfo' => 'Other informations',
-));
+		'PowerStart:baseinfo' => 'General informations',
+		'PowerStart:moreinfo' => 'Additional informations',
+		'PowerStart:technicalinfo' => 'Technical informations',
+		'PowerStart:Date' => 'Dates',
+		'PowerStart:otherinfo' => 'Other informations',
+]);
 
 //
 // Class: STS
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:STS' => 'ATS / STS',
 	'Class:STS+' => 'Automatic Transfer Switch / Static Transfer Switch
 Redondant power supply for devices with a single electrical input.
@@ -264,20 +265,20 @@ They are themselves supplied with two different Power Source, through Power Conn
 	'Class:STS/Attribute:rack_friendlyname+' => 'Full name',
 	'Class:STS/Attribute:rack_obsolescence_flag' => 'Rack->Obsolete',
 	'Class:STS/Attribute:rack_obsolescence_flag+' => 'Computed dynamically on other attributes',
-        'STS:baseinfo' => 'General informations',
-        'STS:moreinfo' => 'Additional informations',
-        'STS:technicalinfo' => 'Technical informations',
-        'STS:Date' => 'Dates',
-        'STS:otherinfo' => 'Other informations',
-));
+		'STS:baseinfo' => 'General informations',
+		'STS:moreinfo' => 'Additional informations',
+		'STS:technicalinfo' => 'Technical informations',
+		'STS:Date' => 'Dates',
+		'STS:otherinfo' => 'Other informations',
+]);
 
 //
 // Class: Model
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	'Class:Model/Attribute:type/Value:PDU+' => 'Power Distribution Unit',
-        'Class:Model/Attribute:type/Value:PowerStart' => 'Power Start',
-        'Class:Model/Attribute:type/Value:STS' => 'ATS/STS',
-        'Class:Model/Attribute:type/Value:Inverter' => 'Inverter',
-));
+		'Class:Model/Attribute:type/Value:PowerStart' => 'Power Start',
+		'Class:Model/Attribute:type/Value:STS' => 'ATS/STS',
+		'Class:Model/Attribute:type/Value:Inverter' => 'Inverter',
+]);

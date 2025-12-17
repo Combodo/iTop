@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -6,21 +7,19 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
 //
 // Menu : ConfigManagement : PowerSupply
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:ConfigManagement:PowerSupply' => 'Alimentations électriques',
-));
-
+]);
 
 //
 // Class: Inverter
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Inverter' => 'Onduleur',
 	'Class:Inverter+' => '',
 	'Class:Inverter/Attribute:rack_id' => 'Rack',
@@ -62,18 +61,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Inverter/Attribute:powerconnection_id_finalclass_recall+' => 'Nom de la classe instanciable',
 	'Class:Inverter/Attribute:powerconnection_id_obsolescence_flag' => 'Arrivée électrique->Obsolète',
 	'Class:Inverter/Attribute:powerconnection_id_obsolescence_flag+' => 'Calculé dynamiquement en fonction d\'autres attributs de l\'objet',
-        'Inverter:baseinfo' => 'Informations générales',
-        'Inverter:moreinfo' => 'Informations complémentaires',
-        'Inverter:Date' => 'Dates',
-        'Inverter:otherinfo' => 'Autres informations',
-        'Inverter:technicalinfo' => 'Données techniques',
-));
+		'Inverter:baseinfo' => 'Informations générales',
+		'Inverter:moreinfo' => 'Informations complémentaires',
+		'Inverter:Date' => 'Dates',
+		'Inverter:otherinfo' => 'Autres informations',
+		'Inverter:technicalinfo' => 'Données techniques',
+]);
 
 //
 // Class: PDU
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PDU' => 'PDU',
 	'Class:PDU+' => 'Unité de distribution d\'alimentation',
 	'Class:PDU/Attribute:rack_id' => 'Rack',
@@ -111,18 +110,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PDU/Attribute:powerconnection_id_finalclass_recall+' => 'Nom de la classe instanciable',
 	'Class:PDU/Attribute:powerconnection_id_obsolescence_flag' => 'Arrivée électrique->Obsolète',
 	'Class:PDU/Attribute:powerconnection_id_obsolescence_flag+' => 'Calculé dynamiquement en fonction d\'autres attributs de l\'objet',
-    	'PDU:baseinfo' => 'Informations générales',
-        'PDU:moreinfo' => 'Informations complémentaires',
-        'PDU:Date' => 'Dates',
-        'PDU:otherinfo' => 'Autres informations',
-        'PDU:technicalinfo' => 'Données techniques',
-));
+		'PDU:baseinfo' => 'Informations générales',
+		'PDU:moreinfo' => 'Informations complémentaires',
+		'PDU:Date' => 'Dates',
+		'PDU:otherinfo' => 'Autres informations',
+		'PDU:technicalinfo' => 'Données techniques',
+]);
 
 //
 // Class: PowerConnection
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PowerConnection' => 'Connection électrique',
 	'Class:PowerConnection+' => '',
 	'Class:PowerConnection/Attribute:charge_capacity' => 'Charge maximale (A)',
@@ -147,13 +146,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PowerConnection/Attribute:voltage+' => '',
 	'Class:PowerConnection/Attribute:obsolescence_flag' => 'Obsolète',
 	'Class:PowerConnection/Attribute:obsolescence_flag+' => 'Calculé dynamiquement en fonction d\'autres attributs de l\'objet',
-));
+]);
 
 //
 // Class: PowerSource
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PowerSource' => 'Arrivée électrique',
 	'Class:PowerSource+' => '',
 	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
@@ -168,18 +167,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PowerSource/Attribute:stss_list_b+' => 'ATS/STS en aval (source B)',
 	'Class:PowerSource/Attribute:obsolescence_flag' => 'Obsolète',
 	'Class:PowerSource/Attribute:obsolescence_flag+' => 'Calculé dynamiquement en fonction d\'autres attributs de l\'objet',
-        'PowerSource:baseinfo' => 'Informations générales',
-        'PowerSource:moreinfo' => 'Informations complémentaires',
-        'PowerSource:Date' => 'Dates',
-        'PowerSource:otherinfo' => 'Autres informations',
-        'PowerSource:technicalinfo' => 'Données techniques',
-));
+		'PowerSource:baseinfo' => 'Informations générales',
+		'PowerSource:moreinfo' => 'Informations complémentaires',
+		'PowerSource:Date' => 'Dates',
+		'PowerSource:otherinfo' => 'Autres informations',
+		'PowerSource:technicalinfo' => 'Données techniques',
+]);
 
 //
 // Class: PowerStart
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PowerStart' => 'Départ électrique',
 	'Class:PowerStart+' => '',
 	'Class:PowerStart/Attribute:powerconnection_id' => 'Source',
@@ -204,18 +203,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PowerStart/Attribute:powerconnection_id_finalclass_recall+' => 'Nom de la classe instanciable',
 	'Class:PowerStart/Attribute:powerconnection_id_obsolescence_flag' => 'Source->Obsolète',
 	'Class:PowerStart/Attribute:powerconnection_id_obsolescence_flag+' => 'Calculé dynamiquement en fonction d\'autres attributs de l\'objet',
-        'PowerStart:baseinfo' => 'Informations générales',
-        'PowerStart:moreinfo' => 'Informations complémentaires',
-        'PowerStart:Date' => 'Dates',
-        'PowerStart:otherinfo' => 'Autres informations',
-        'PowerStart:technicalinfo' => 'Données techniques',
-));
+		'PowerStart:baseinfo' => 'Informations générales',
+		'PowerStart:moreinfo' => 'Informations complémentaires',
+		'PowerStart:Date' => 'Dates',
+		'PowerStart:otherinfo' => 'Autres informations',
+		'PowerStart:technicalinfo' => 'Données techniques',
+]);
 
 //
 // Class: STS
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:STS' => 'ATS / STS',
 	'Class:STS+' => 'Système de Transfert Automatique de Source',
 	'Class:STS/Attribute:powerconnection_source1_id' => 'Source A',
@@ -256,20 +255,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:STS/Attribute:rack_friendlyname+' => 'Nom complet',
 	'Class:STS/Attribute:rack_obsolescence_flag' => 'Rack->Obsolète',
 	'Class:STS/Attribute:rack_obsolescence_flag+' => 'Calculé dynamiquement en fonction d\'autres attributs de l\'objet',
-        'STS:baseinfo' => 'Informations générales',
-        'STS:moreinfo' => 'Informations complémentaires',
-        'STS:Date' => 'Dates',
-        'STS:otherinfo' => 'Autres informations',
-        'STS:technicalinfo' => 'Données techniques',
-));
+		'STS:baseinfo' => 'Informations générales',
+		'STS:moreinfo' => 'Informations complémentaires',
+		'STS:Date' => 'Dates',
+		'STS:otherinfo' => 'Autres informations',
+		'STS:technicalinfo' => 'Données techniques',
+]);
 
 //
 // Class: Model
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Model/Attribute:type/Value:PDU+' => 'Unité de Distribution d\'Alimentation',
-        'Class:Model/Attribute:type/Value:PowerStart' => 'Départ Electrique',
-        'Class:Model/Attribute:type/Value:STS' => 'ATS/STS',
-        'Class:Model/Attribute:type/Value:Inverter' => 'Onduleur',
-));
+		'Class:Model/Attribute:type/Value:PowerStart' => 'Départ Electrique',
+		'Class:Model/Attribute:type/Value:STS' => 'ATS/STS',
+		'Class:Model/Attribute:type/Value:Inverter' => 'Onduleur',
+]);
