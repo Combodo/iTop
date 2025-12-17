@@ -37,7 +37,7 @@ abstract class ItopTestCase extends KernelTestCase
 	public const DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER = true;
 	public static $DEBUG_UNIT_TEST = false;
 	protected static $aBackupStaticProperties = [];
-	public ?array $aLastCurlGetInfo=null;
+	public ?array $aLastCurlGetInfo = null;
 	/**
 	 * @link https://docs.phpunit.de/en/9.6/annotations.html#preserveglobalstate PHPUnit `preserveGlobalState` annotation documentation
 	 *
@@ -675,7 +675,7 @@ abstract class ItopTestCase extends KernelTestCase
 		//\IssueLog::Info("$sUrl error code:", null, ['error' => curl_error($ch)]);
 
 		$info = curl_getinfo($ch);
-		$this->aLastCurlGetInfo=$info;
+		$this->aLastCurlGetInfo = $info;
 		$sErrorMsg = curl_error($ch);
 		$iErrorCode = curl_errno($ch);
 		curl_close($ch);
