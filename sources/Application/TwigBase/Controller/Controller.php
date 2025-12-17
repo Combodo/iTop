@@ -119,11 +119,13 @@ abstract class Controller extends AbstractController
 	 *
 	 * @param string $sViewPath Path of the twig files
 	 * @param string $sModuleName name of the module (or 'core' if not a module)
-	 * @param array $aAdditionalPaths
+	 * @param array $aAdditionalPaths for twig templates
+	 * @param array $aThemes for default form templates
 	 *
 	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
 	 */
-	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
+	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [], array $aThemes = ['application/forms/itop_console_layout.html.twig'])
 	{
 		$this->aLinkedScripts = [];
 		$this->aLinkedStylesheets = [];
@@ -134,7 +136,7 @@ abstract class Controller extends AbstractController
 		$this->SetModuleName($sModuleName);
 
 		// Initialize Symfony components
-		$this->InitSymfonyComponents($sViewPath, $sModuleName, $aAdditionalPaths);
+		$this->InitSymfonyComponents($sViewPath, $sModuleName, $aAdditionalPaths, $aThemes);
 		$this->InitDebugExtensions();
 	}
 
@@ -144,11 +146,13 @@ abstract class Controller extends AbstractController
 	 * @param string $sViewPath
 	 * @param string $sModuleName
 	 * @param array $aAdditionalPaths
+	 * @param array $aThemes
 	 *
 	 * @return void
 	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
 	 */
-	private function InitSymfonyComponents(string $sViewPath, string $sModuleName, array $aAdditionalPaths): void
+	private function InitSymfonyComponents(string $sViewPath, string $sModuleName, array $aAdditionalPaths, array $aThemes): void
 	{
 		// Twig environment
 		$aAdditionalPaths[] = APPROOT.'lib/symfony/twig-bridge/Resources/views/Form';
@@ -170,7 +174,7 @@ abstract class Controller extends AbstractController
 			}
 		}
 		if (strlen($sViewPath) > 0) {
-			$this->SetViewPath($sViewPath, $aAdditionalPaths);
+			$this->SetViewPath($sViewPath, $aAdditionalPaths, $aThemes);
 			if ($sModuleName != 'core') {
 				try {
 					$this->aDefaultParams = ['sIndexURL'   => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
@@ -216,11 +220,11 @@ abstract class Controller extends AbstractController
 	 *
 	 * @throws \Twig\Error\LoaderError
 	 */
-	public function SetViewPath($sViewPath, $aAdditionalPaths = []): void
+	public function SetViewPath($sViewPath, $aAdditionalPaths = [], array $aThemes = ['application/forms/itop_console_layout.html.twig']): void
 	{
 		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath, $aAdditionalPaths);
 		/** @link https://github.com/symfony/twig-bridge/blob/6.4/CHANGELOG.md#320 */
-		$formEngine = new TwigRendererEngine(['application/forms/itop_console_layout.html.twig'], $oTwig);
+		$formEngine = new TwigRendererEngine($aThemes, $oTwig);
 		$oTwig->addRuntimeLoader(new FactoryRuntimeLoader([
 			FormRenderer::class => function () use ($formEngine): FormRenderer {
 				return new FormRenderer($formEngine, $this->oCsrfTokenManager);
