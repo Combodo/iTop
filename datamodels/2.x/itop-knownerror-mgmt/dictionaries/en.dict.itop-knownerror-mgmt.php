@@ -53,7 +53,7 @@
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:KnownError' => 'Known Error',
-	'Class:KnownError+' => 'Error documented for a known issue',
+	'Class:KnownError+' => 'Error which occurred multiple times, so we document it to avoid loosing energy in troubleshooting the next time it will be reported',
 	'Class:KnownError/Attribute:name' => 'Name',
 	'Class:KnownError/Attribute:name+' => 'This is expected to be a unique identifier within the Known Errors of this organization',
 	'Class:KnownError/Attribute:org_id' => 'Organization',

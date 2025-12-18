@@ -77,7 +77,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Problem' => 'Problem',
-	'Class:Problem+' => '',
+	'Class:Problem+' => 'An incident becomes a Problem when it is not resolved in a timely manner or when it recurs frequently',
 	'Class:Problem/Attribute:status' => 'Status',
 	'Class:Problem/Attribute:status+' => '',
 	'Class:Problem/Attribute:status/Value:new' => 'New',

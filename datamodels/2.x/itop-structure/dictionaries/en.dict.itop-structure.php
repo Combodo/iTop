@@ -48,9 +48,7 @@
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Organization' => 'Organization',
-	'Class:Organization+' => 'It can be a customer, a provider, your company or departments within your company.
-Organizations can be organized in hierarchy. 
-Users can be limited to objects belonging to some organizations only.',
+	'Class:Organization+' => 'It can be a customer, a provider, your company or departments within your company. Organizations can be organized in hierarchy. Users can be limited to objects belonging to some organizations only.',
 	'Class:Organization/Attribute:name' => 'Name',
 	'Class:Organization/Attribute:name+' => 'Common name',
 	'Class:Organization/Attribute:code' => 'Code',
@@ -116,7 +114,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Contact' => 'Contact',
-	'Class:Contact+' => 'An abstract class',
+	'Class:Contact+' => 'An abstract class. A Contact can be linked to Tickets and FunctionalCIs for different purpose such as dispatch of incident, notification,...',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => 'Name',
 	'Class:Contact/Attribute:name+' => '',
@@ -154,9 +152,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Person' => 'Person',
-	'Class:Person+' => 'A type of Contact used to describe physical persons.
-Persons can be grouped into Teams.
-Persons can be linked to other configuration items (eg. to describe who to contact in case of problem with an application).
+	'Class:Person+' => 'A type of Contact used to describe physical persons. Persons can be grouped into Teams. Persons can be linked to other configuration items (eg. to describe who to contact in case of incident with an application).
 Other usage: the caller of a User request is a Person as well as the agent assigned to resolve it.',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Last Name',
@@ -198,9 +194,7 @@ Other usage: the caller of a User request is a Person as well as the agent assig
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Team' => 'Team',
-	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only.
-Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.
-A Team can be linked to configuration items for different purpose such as auto-dispatch of incident, notification,...',
+	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only. Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Members',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team',
@@ -221,7 +215,7 @@ A Team can be linked to configuration items for different purpose such as auto-d
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Document' => 'Document',
-	'Class:Document+' => 'A document that can be shared across multiple objects',
+	'Class:Document+' => 'A document that can be shared across multiple objects so it is easy and quick to retrieve it from all the places where it is pertinent',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Name',
 	'Class:Document/Attribute:name+' => '',
@@ -257,9 +251,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentFile' => 'Document File',
-	'Class:DocumentFile+' => 'A Document File is used to upload documentation that can be shared across multiple objects.
-Once a document (in any format: Word, PDF, Spreadsheet, etc.) has been uploaded into '.ITOP_APPLICATION_SHORT.', it can be linked to different configuration items so it is easy and quick to retrieve from all the places where it is pertinent.
-This is useful for processing instructions, technical documentation... that need to be visible from several places.',
+	'Class:DocumentFile+' => 'It\'s a type of Document which includes an '.ITOP_APPLICATION_SHORT.' uploaded file (in any format: Word, PDF, Spreadsheet, etc.). It can be used for all sorts of purpose: contract, sales order, datacenter maps, processing instructions, technical documentation.',
 	'Class:DocumentFile/Attribute:file' => 'File',
 	'Class:DocumentFile/Attribute:file+' => '',
 ]);
@@ -270,9 +262,7 @@ This is useful for processing instructions, technical documentation... that need
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentNote' => 'Document Note',
-	'Class:DocumentNote+' => 'It is used to store a text document.
-HTML formatting is supported using the WYSIWYG editor.
-Search can be performed on its content.',
+	'Class:DocumentNote+' => 'It is used to store a text document. HTML formatting is supported using the WYSIWYG editor. Search can be performed on its content.',
 	'Class:DocumentNote/Attribute:text' => 'Text',
 	'Class:DocumentNote/Attribute:text+' => '',
 ]);
@@ -283,9 +273,7 @@ Search can be performed on its content.',
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentWeb' => 'Document Web',
-	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents.
-Think to them as “pointers” to external documents.
-You cannot search in their content from '.ITOP_APPLICATION_SHORT,
+	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents. Think to them as “pointers” to external documents. You cannot search in their content from '.ITOP_APPLICATION_SHORT,
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
 ]);
@@ -296,8 +284,7 @@ You cannot search in their content from '.ITOP_APPLICATION_SHORT,
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Typology' => 'Typology',
-	'Class:Typology+' => 'An abstract class. 
-ExternalKeyAttribute to a Typology subclass are used in place of an EnumAttribute, to have more dynamic values',
+	'Class:Typology+' => 'An abstract class. ExternalKeyAttribute to a Typology subclass are used in place of an EnumAttribute, to have more dynamic values',
 	'Class:Typology/Attribute:name' => 'Name',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Typology sub-class',

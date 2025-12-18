@@ -142,9 +142,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PhysicalDevice' => 'Physical Device',
-	'Class:PhysicalDevice+' => 'Abstract class, grouping physical types of Configuration Items.
-A physical Device can be located.
-It has usually a brand and model.',
+	'Class:PhysicalDevice+' => 'Abstract class, grouping physical types of Configuration Items. A Physical Device can be located. It has usually a Brand and Model.',
 	'Class:PhysicalDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:PhysicalDevice/Attribute:serialnumber' => 'Serial number',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '',
@@ -242,8 +240,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Tablet' => 'Tablet',
-	'Class:Tablet+' => 'End user device.
-For example iPad, Galaxy Note/Tab Nexus, Kindle,...',
+	'Class:Tablet+' => 'End user device. For example iPad, Galaxy Note/Tab Nexus, Kindle,...',
 ]);
 
 //
@@ -327,7 +324,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Server' => 'Server',
-	'Class:Server+' => 'Physical Device, a computer running an operating system and designed to execute Software Instances',
+	'Class:Server+' => 'A Datacenter Device, with an OS Version executing Software Instances',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s',
 	'Class:Server/Attribute:osfamily_id' => 'OS family',
 	'Class:Server/Attribute:osfamily_id+' => '',
@@ -355,8 +352,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:StorageSystem' => 'Storage System',
-	'Class:StorageSystem+' => 'A Storage System is used in iTop to describe any storage system that can be attached either to a SAN or to an Ethernet network.
-The logical unit of storage managed by a Storage System is a Logical Volume.',
+	'Class:StorageSystem+' => 'A Storage System is a type of Datacenter Device. It contains multiple Logical Volumes and can be attached either to a SAN or to an Ethernet network.',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logical volumes',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'All the logical volumes in this storage system',
@@ -368,7 +364,7 @@ The logical unit of storage managed by a Storage System is a Logical Volume.',
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:SANSwitch' => 'SAN Switch',
-	'Class:SANSwitch+' => 'A SAN Switch is a network switch compatible with the Fibre Channel protocol used by storage networks.',
+	'Class:SANSwitch+' => 'A SAN Switch is a network switch compatible with the Fibre Channel protocol used by storage networks. It is a Datacenter Device.',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Devices',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'All the devices connected to this SAN switch',
@@ -380,7 +376,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:TapeLibrary' => 'Tape Library',
-	'Class:TapeLibrary+' => 'A magnetic tape (or cartridge) hosted inside a Tape Library.',
+	'Class:TapeLibrary+' => 'A Tape Library is a Datacenter Device which hosts multiple magnetic Tapes (or cartridge).',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Tapes',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'All the tapes in the tape library',
@@ -392,8 +388,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:NAS' => 'NAS',
-	'Class:NAS+' => 'Network-attached storage (NAS) is an high-capacity storage device connected to a network.
-In '.ITOP_APPLICATION_SHORT.' a NAS is linked to NAS File Systems',
+	'Class:NAS+' => 'Network-attached storage (NAS) is an high-capacity storage device connected to a network. In '.ITOP_APPLICATION_SHORT.' a NAS is linked to NAS File Systems. It is a Datacenter Device.',
 	'Class:NAS/ComplementaryName' => '%1$s - %2$s',
 	'Class:NAS/Attribute:nasfilesystem_list' => 'Filesystems',
 	'Class:NAS/Attribute:nasfilesystem_list+' => 'All the file systems in this NAS',
@@ -405,7 +400,7 @@ In '.ITOP_APPLICATION_SHORT.' a NAS is linked to NAS File Systems',
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PC' => 'PC',
-	'Class:PC+' => 'Personal Computer, Desktop or Laptop, running an operating system and designed to execute Software Instances',
+	'Class:PC+' => 'Personal Computer, is a Physical Device, Desktop or Laptop, running an operating system and designed to execute Software Instances.',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s',
 	'Class:PC/Attribute:osfamily_id' => 'OS family',
 	'Class:PC/Attribute:osfamily_id+' => '',
@@ -443,7 +438,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PowerConnection' => 'Power Connection',
-	'Class:PowerConnection+' => 'Abstract class, grouping physical devices used for electrical power supply',
+	'Class:PowerConnection+' => 'Abstract class, grouping physical devices used for electrical power supply.',
 	'Class:PowerConnection/ComplementaryName' => '%1$s - %2$s',
 ]);
 
@@ -465,8 +460,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PDU' => 'PDU',
-	'Class:PDU+' => 'Physical Power Connection.
-A PDU (Power Distribution Unit) is a device fitted with multiple outputs designed to distribute electric power, especially to racks of computers and networking equipment located within the data center.',
+	'Class:PDU+' => 'A type of Power Connection, the PDU (Power Distribution Unit) is a device fitted with multiple outputs designed to distribute electric power, especially to racks of computers and networking equipment located within a datacenter.',
 	'Class:PDU/ComplementaryName' => '%1$s - %2$s - %3$s - %4$s',
 	'Class:PDU/Attribute:rack_id' => 'Rack',
 	'Class:PDU/Attribute:rack_id+' => '',
@@ -495,10 +489,7 @@ For example: external hard drives, scanners, input devices (trackballs, bar code
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Enclosure' => 'Enclosure',
-	'Class:Enclosure+' => 'Datacenter Device.
-It is a cabinet generally fitted with doors and side panels.
-Enclosures may contain baffles, fans, and other features.
-Then can be mounted inside a Rack or directly fitted on the wall.',
+	'Class:Enclosure+' => 'This Datacenter Device is a cabinet containing baffles, fans... which can be mounted inside a Rack or directly fitted on the wall.',
 	'Class:Enclosure/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Enclosure/Attribute:rack_id' => 'Rack',
 	'Class:Enclosure/Attribute:rack_id+' => '',
@@ -516,9 +507,7 @@ Then can be mounted inside a Rack or directly fitted on the wall.',
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:ApplicationSolution' => 'Application Solution',
-	'Class:ApplicationSolution+' => 'Application Solutions describe complex applications that are made of (or depend on) several basic components.
-They are a specialized type of “Group” for documenting large applications. 
-The main information conveyed by an Application Solution is its list of relationships.',
+	'Class:ApplicationSolution+' => 'Application Solutions describe complex applications that are made of (or depend on) several basic components. The main information conveyed by an Application Solution is its list of relationships.',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'All the configuration items that compose this application solution',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Business processes',
@@ -541,9 +530,7 @@ The main information conveyed by an Application Solution is its list of relation
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:BusinessProcess' => 'Business Process',
-	'Class:BusinessProcess+' => 'A Business Process is used to document a high-level process or an important application for the operations.
-It is quite similar to an Application Solution but for describing higher level applications or whole processes in the organization.
-The main information conveyed by a Business Process is its list of relationships with Application Solutions and Contacts.',
+	'Class:BusinessProcess+' => 'A Business Process is used to document a high-level process or an important application for the operations. It is quite similar to an Application Solution but for describing higher level applications or whole processes in the organization.',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Application solutions',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'All the application solutions that impact this business process',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
@@ -560,11 +547,7 @@ The main information conveyed by a Business Process is its list of relationships
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Software' => 'Software',
-	'Class:Software+' => 'A generic item of a software in the software catalog.
-A Software deployed on a device (Server, PC, Virtual Machine) is documented as a Software Instance.
-Software has a category which correspond to the 5 type of Software Instance: DB Server, Middleware, PC Software, Web Server and Other Software.',
-
-
+	'Class:Software+' => 'Software is a generic item in the software catalog. It has a particular version. In '.ITOP_APPLICATION_SHORT.' a Software has a category amongst: DB Server, Middleware, PC Software, Web Server and Other Software.',
 	'Class:Software/ComplementaryName' => '%1$s - %2$s',
 	'Class:Software/Attribute:name' => 'Name',
 	'Class:Software/Attribute:name+' => '',
@@ -600,9 +583,7 @@ Software has a category which correspond to the 5 type of Software Instance: DB 
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:SoftwareInstance' => 'Software Instance',
-	'Class:SoftwareInstance+' => 'Abstract class. 
-Represent the deployment of a Software on a device (Server, PC, VirtualMachine).
-Different types of Software Instance exist: DB Server, Middleware, PC Software, Web Server and Other Software.',
+	'Class:SoftwareInstance+' => 'Abstract class. Represent the deployment of a Software on a device (Server, PC, VirtualMachine). In '.ITOP_APPLICATION_SHORT.' we have different types of Software Instance: DB Server, Middleware, PC Software, Web Server and Other Software.',
 	'Class:SoftwareInstance/Attribute:system_id' => 'System',
 	'Class:SoftwareInstance/Attribute:system_id+' => 'The system can be a Server, a Virtual Machine, a PC, ...',
 	'Class:SoftwareInstance/Attribute:system_name' => 'System name',
@@ -631,8 +612,7 @@ Different types of Software Instance exist: DB Server, Middleware, PC Software, 
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Middleware' => 'Middleware',
-	'Class:Middleware+' => 'An instance of a middleware software (software offering services to other software, or enterprise integration software) installed on a particular system (PC, Server or Virtual Machine).
-For example: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino can be put under this category.',
+	'Class:Middleware+' => 'It is a Software Instance, offering services to other software (like: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino) installed on a particular system (PC, Server or Virtual Machine).',
 	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware instances',
 	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware',
 ]);
@@ -643,7 +623,7 @@ For example: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Do
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DBServer' => 'DB Server',
-	'Class:DBServer+' => 'An instance of a database server software (like MariaDB 10.6, MySQL 8.0, Oracle x.x, SQL Server, DB2…) running on a particular system (PC, Server or Virtual Machine).',
+	'Class:DBServer+' => 'It is a Software Instance, offering database services (like MariaDB 10.6, MySQL 8.0, Oracle x.x, SQL Server, DB2…) installed on a particular system (PC, Server or Virtual Machine).',
 	'Class:DBServer/Attribute:dbschema_list' => 'DB schemas',
 	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server',
 ]);
@@ -654,7 +634,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:WebServer' => 'Web Server',
-	'Class:WebServer+' => 'An instance of a web server software running on a specific system (PC, Server or Virtual Machine).',
+	'Class:WebServer+' => 'It is a Software Instance, offering Web services (like Apache 2.4, Nginx 1.29.4, IIS 7.0) installed on a specific system (PC, Server or Virtual Machine).',
 	'Class:WebServer/Attribute:webapp_list' => 'Web applications',
 	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server',
 ]);
@@ -665,8 +645,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PCSoftware' => 'PC Software',
-	'Class:PCSoftware+' => 'An instance of a software application installed on a PC.
-For example: an instance of MS Office, Corel Draw, Adobe Photoshop or Filezilla.',
+	'Class:PCSoftware+' => 'It is a Software Instance for PC (like MS Office, Adobe Photoshop or Filezilla) installed on a PC.',
 ]);
 
 //
@@ -675,7 +654,7 @@ For example: an instance of MS Office, Corel Draw, Adobe Photoshop or Filezilla.
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:OtherSoftware' => 'Other Software',
-	'Class:OtherSoftware+' => 'Any type of software that do not fit in the other categories: PC Software, Middleware, DB server or Web Server.',
+	'Class:OtherSoftware+' => 'Any type of Software Instance that do not fit in the other categories: PC Software, Middleware, DB server or Web Server.',
 ]);
 
 //
@@ -684,8 +663,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:MiddlewareInstance' => 'Middleware Instance',
-	'Class:MiddlewareInstance+' => 'An instance of a middleware software (software offering services to other software, or enterprise integration software) installed on a particular system (PC, Server or Virtual Machine).
-For example: Tomcat, JBoss, Talend, Microsoft BizTalk, IBM Websphere or Lotus Domino can be put under this category.',
+	'Class:MiddlewareInstance+' => 'Just a piece of one Middleware. A Middleware being in '.ITOP_APPLICATION_SHORT.' a Software Instance offering services to other software.',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
