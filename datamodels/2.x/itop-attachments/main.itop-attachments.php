@@ -5,10 +5,12 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
 use Combodo\iTop\Service\Events\iEventServiceSetup;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 
 class AttachmentPlugIn implements iApplicationUIExtension, iEventServiceSetup
 {
@@ -236,10 +238,14 @@ class AttachmentPlugIn implements iApplicationUIExtension, iEventServiceSetup
 		}
 		$oAttachmentsRenderer = AttachmentsRendererFactory::GetInstance($oPage, $sObjClass, $iObjKey, $sTransactionId);
 
+		$iCount = $oAttachmentsRenderer->GetAttachmentsSet()->Count() + $oAttachmentsRenderer->GetTempAttachmentsSet()->Count();
+		$sTitle = ($iCount > 0) ? Dict::Format('Attachments:TabTitle_Count', $iCount) : Dict::S('Attachments:EmptyTabTitle');
 		if ($this->GetAttachmentsPosition() === 'relations') {
-			$iCount = $oAttachmentsRenderer->GetAttachmentsSet()->Count() + $oAttachmentsRenderer->GetTempAttachmentsSet()->Count();
-			$sTitle = ($iCount > 0) ? Dict::Format('Attachments:TabTitle_Count', $iCount) : Dict::S('Attachments:EmptyTabTitle');
 			$oPage->SetCurrentTab('Attachments:Tab', $sTitle);
+		} else {
+			$oBlock = FieldSetUIBlockFactory::MakeStandard($sTitle);
+			$oBlock->AddSubBlock(new Html(''));
+			$oPage->AddUiBlock($oBlock);
 		}
 
 		$bIsReadOnlyState = self::IsReadonlyState($oObject, $oObject->GetState(), AttachmentPlugIn::ENUM_GUI_BACKOFFICE);

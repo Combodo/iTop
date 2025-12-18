@@ -7,7 +7,6 @@ use MetaModel;
 
 class LoginTest extends ItopDataTestCase
 {
-	protected $sConfigTmpBackupFile;
 	protected $sConfigPath;
 	protected $sLoginMode;
 

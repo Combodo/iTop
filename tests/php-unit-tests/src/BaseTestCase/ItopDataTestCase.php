@@ -18,6 +18,7 @@ use ArchivedObjectException;
 use CMDBObject;
 use CMDBSource;
 use Combodo\iTop\Service\Events\EventService;
+use Config;
 use Contact;
 use CoreException;
 use CoreUnexpectedValue;
@@ -69,6 +70,9 @@ abstract class ItopDataTestCase extends ItopTestCase
 	// For cleanup
 	private $aCreatedObjects = [];
 	private $aEventListeners = [];
+
+	protected ?string $sConfigTmpBackupFile = null;
+	protected ?Config $oiTopConfig = null;
 
 	/**
 	 * @var bool When testing with silo, there are some cache we need to update on tearDown. Doing it all the time will cost too much, so it's opt-in !
@@ -123,6 +127,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
+
+		\IssueLog::Error($this->getName());
 
 		$this->PrepareEnvironment();
 
@@ -189,6 +195,8 @@ abstract class ItopDataTestCase extends ItopTestCase
 		}
 
 		CMDBObject::SetCurrentChange(null);
+
+		$this->RestoreConfiguration();
 
 		parent::tearDown();
 	}
@@ -1517,4 +1525,35 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$oObject->Set($sStopwatchAttCode, $oStopwatch);
 	}
 
+	protected function BackupConfiguration(): void
+	{
+		$sConfigPath = MetaModel::GetConfig()->GetLoadedFile();
+		clearstatcache();
+		echo sprintf("rights via ls on %s:\n %s \n", $sConfigPath, exec("ls -al $sConfigPath"));
+		$sFilePermOutput = substr(sprintf('%o', fileperms('/etc/passwd')), -4);
+		echo sprintf("rights via fileperms on %s:\n %s \n", $sConfigPath, $sFilePermOutput);
+
+		$this->sConfigTmpBackupFile = tempnam(sys_get_temp_dir(), "config_");
+		MetaModel::GetConfig()->WriteToFile($this->sConfigTmpBackupFile);
+		$this->oiTopConfig = new Config($sConfigPath);
+	}
+
+	protected function RestoreConfiguration(): void
+	{
+		if (is_null($this->sConfigTmpBackupFile) || ! is_file($this->sConfigTmpBackupFile)) {
+			return;
+		}
+
+		if (is_null($this->oiTopConfig)) {
+			return;
+		}
+
+		//put config back
+		$sConfigPath = $this->oiTopConfig->GetLoadedFile();
+		@chmod($sConfigPath, 0770);
+		$oConfig = new Config($this->sConfigTmpBackupFile);
+		$oConfig->WriteToFile($sConfigPath);
+		@chmod($sConfigPath, 0440);
+		@unlink($this->sConfigTmpBackupFile);
+	}
 }
