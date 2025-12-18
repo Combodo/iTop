@@ -9,6 +9,10 @@ namespace Combodo\iTop\PropertyTree;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\CollectionBlock;
+use Combodo\iTop\PropertyTree\CollectionType\AbstractCollectionType;
+use Combodo\iTop\PropertyTree\CollectionType\CollectionTypeFactory;
+use Combodo\iTop\PropertyTree\ValueType\AbstractValueType;
+use Combodo\iTop\PropertyTree\ValueType\ValueTypeFactory;
 
 /**
  * @since 3.3.0
@@ -16,6 +20,7 @@ use Combodo\iTop\Forms\Block\Base\CollectionBlock;
 class CollectionOfTrees extends AbstractProperty
 {
 	protected ?string $sButtonLabel;
+	protected ?AbstractCollectionType $oCollectionType;
 
 	/**
 	 * @inheritDoc
@@ -26,6 +31,13 @@ class CollectionOfTrees extends AbstractProperty
 		$oPropertyTreeFactory = PropertyTreeFactory::GetInstance();
 
 		$this->sButtonLabel = $oDomNode->GetChildText('button-label');
+
+		$oCollectionTypeNode = $oDomNode->GetOptionalElement('collection-type');
+		if ($oCollectionTypeNode) {
+			$this->oCollectionType = CollectionTypeFactory::GetInstance()->CreateCollectionTypeFromDomNode($oCollectionTypeNode);
+		} else {
+			throw new PropertyTreeException("Node: {$this->sId}, missing collection-type in node specification");
+		}
 
 		// read child properties
 		foreach ($oDomNode->GetUniqueElement('prototype')->childNodes as $oNode) {

@@ -9,7 +9,6 @@ namespace Combodo\iTop\PropertyTree;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\PropertyTree\ValueType\AbstractValueType;
-use utils;
 
 /**
  * @since 3.3.0

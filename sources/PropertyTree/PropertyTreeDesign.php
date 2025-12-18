@@ -9,6 +9,7 @@ namespace Combodo\iTop\PropertyTree;
 
 use Combodo\iTop\DesignDocument;
 use Exception;
+use ReturnTypeWillChange;
 use utils;
 
 class PropertyTreeDesign extends DesignDocument
@@ -70,7 +71,7 @@ class PropertyTreeDesign extends DesignDocument
 	 * @return int
 	 */
 	// Return type union is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
-	#[\ReturnTypeWillChange]
+	#[ReturnTypeWillChange]
 	public function save($filename, $options = null)
 	{
 		$this->documentElement->setAttribute('xsi:noNamespaceSchemaLocation', 'https://www.combodo.com/itop-schema/'.ITOP_DESIGN_LATEST_VERSION);

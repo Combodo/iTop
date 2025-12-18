@@ -7,6 +7,8 @@
 
 namespace Combodo\iTop\PropertyTree;
 
-class PropertyTreeException extends \Exception
+use Exception;
+
+class PropertyTreeException extends Exception
 {
 }
