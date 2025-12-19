@@ -691,7 +691,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:WebApplication' => 'Web Application',
-	'Class:WebApplication+' => 'An instance of an application accessible using a web browser and that runs on a given Web Server instance.',
+	'Class:WebApplication+' => 'An instance of an application accessible using a web browser and that runs on a given Web Server instance. For eg. this iTop that you\'re looking at.',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
 	'Class:WebApplication/Attribute:webserver_id' => 'Web server',
 	'Class:WebApplication/Attribute:webserver_id+' => '',
@@ -707,7 +707,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:VirtualDevice' => 'Virtual Device',
-	'Class:VirtualDevice+' => '',
+	'Class:VirtualDevice+' => 'Abstract class. It\'s a type of Functional CI.',
 	'Class:VirtualDevice/Attribute:status' => 'Status',
 	'Class:VirtualDevice/Attribute:status+' => '',
 	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'implementation',
@@ -728,7 +728,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:VirtualHost' => 'Virtual Host',
-	'Class:VirtualHost+' => '',
+	'Class:VirtualHost+' => 'Abstract class. It\'s a type of Virtual Device designed for hosting Virtual Machines',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtual machines',
 	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'All the virtual machines hosted by this host',
 ]);
@@ -739,7 +739,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Hypervisor' => 'Hypervisor',
-	'Class:Hypervisor+' => 'An hypervisor is a virtualization software (MS Hyper-V, VMWare ESX, Xen, etc.), running on a physical Server and supporting the creation of Virtual Machines.',
+	'Class:Hypervisor+' => 'An hypervisor is a virtualization software (MS Hyper-V, VMWare ESX, Xen, etc.), running on a physical Server and supporting the creation of Virtual Machines. It is a type of Virtual Host',
 	'Class:Hypervisor/Attribute:farm_id' => 'Farm',
 	'Class:Hypervisor/Attribute:farm_id+' => '',
 	'Class:Hypervisor/Attribute:farm_name' => 'Farm name',
@@ -756,7 +756,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Farm' => 'Farm',
-	'Class:Farm+' => 'A Farm (or cluster) is a group of Hypervisors pooled together and sharing storage resources to provide an overall fault tolerant system for hosting Virtual Machines.',
+	'Class:Farm+' => 'A Farm (or cluster) is a group of Hypervisors pooled together and sharing storage resources to provide an overall fault tolerant system for hosting Virtual Machines. It is a type of Virtual Host',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
 	'Class:Farm/Attribute:hypervisor_list+' => 'All the hypervisors that compose this farm',
 	'Class:Farm/Attribute:redundancy' => 'High availability',
@@ -913,7 +913,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:NASFileSystem' => 'NAS File System',
-	'Class:NASFileSystem+' => 'A NAS File System is the object that represents a shared file system hosted inside a given NAS.',
+	'Class:NASFileSystem+' => 'A NAS File System is the object that represents a shared file system hosted inside a given NAS (Network Attached Storage).',
 	'Class:NASFileSystem/Attribute:name' => 'Name',
 	'Class:NASFileSystem/Attribute:name+' => '',
 	'Class:NASFileSystem/Attribute:description' => 'Description',
@@ -934,8 +934,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Patch' => 'Patch',
-	'Class:Patch+' => 'Abstract class.
-A patch, hotfix, security fix or service pack for an OS or a Software.',
+	'Class:Patch+' => 'Abstract class. A patch, hotfix, security fix or service pack for an OS or a Software.',
 	'Class:Patch/Attribute:name' => 'Name',
 	'Class:Patch/Attribute:name+' => '',
 	'Class:Patch/Attribute:documents_list' => 'Documents',
@@ -982,8 +981,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Licence' => 'License',
-	'Class:Licence+' => 'Abstract class.
-A license contract for a particular OS version or Software',
+	'Class:Licence+' => 'Abstract class. A license contract for a particular OS version or Software',
 	'Class:Licence/Attribute:name' => 'Name',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => 'Documents',
@@ -1018,8 +1016,7 @@ A license contract for a particular OS version or Software',
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:OSLicence' => 'OS License',
-	'Class:OSLicence+' => 'A license contract for a particular operating system.
-The license is related to one operating system (for example Windows 2008 R2) and can be associated with several servers or virtual machines.',
+	'Class:OSLicence+' => 'A license contract for a particular operating system. The license is related to one operating system (for example Windows 2008 R2) and can be associated with several servers or virtual machines.',
 	'Class:OSLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS version',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
@@ -1037,8 +1034,7 @@ The license is related to one operating system (for example Windows 2008 R2) and
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:SoftwareLicence' => 'Software License',
-	'Class:SoftwareLicence+' => 'A license contract for a particular software.
-The license is related to one software (for example MS Office 2010) and can be associated with several instances of this software.',
+	'Class:SoftwareLicence+' => 'A license contract for a particular software. The license is related to one software (for example MS Office 2010) and can be associated with several instances of this software.',
 	'Class:SoftwareLicence/ComplementaryName' => '%1$s - %2$s',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
 	'Class:SoftwareLicence/Attribute:software_id+' => '',
@@ -1072,8 +1068,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:OSVersion' => 'OS Version',
-	'Class:OSVersion+' => 'Typology. List of the possible values for the "OS Version" of a computer (Server or .
-The OS Versions are organized per OS Family.',
+	'Class:OSVersion+' => 'Typology. List of the possible values for the "OS Version" of a computer (Server, Virtual Machine or PC). The OS Versions are organized per OS Family.',
 	'Class:OSVersion/Attribute:osfamily_id' => 'OS family',
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS family name',
@@ -1110,8 +1105,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Model' => 'Device Model',
-	'Class:Model+' => 'Typology. List the possible values for the "Model" attribute of a Physical Device.
-The Models are defined for a type of Physical Devices, within a Brand.',
+	'Class:Model+' => 'Typology. List the possible values for the "Model" attribute of a Physical Device. Each Model belongs to a single Brand, and usually applies to a single type of Physical Devices.',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s',
 	'Class:Model/Attribute:brand_id' => 'Brand',
 	'Class:Model/Attribute:brand_id+' => '',
@@ -1180,7 +1174,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:IOSVersion' => 'IOS Version',
-	'Class:IOSVersion+' => 'Typology. Possible values for the types of operating system for network devices (from Cisco\'s Internetwork Operating System).',
+	'Class:IOSVersion+' => 'Typology. Possible values for the types of operating system for network devices (IOS from Cisco\'s Internetwork Operating System).',
 	'Class:IOSVersion/Attribute:brand_id' => 'Brand',
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Brand name',
@@ -1265,7 +1259,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Subnet' => 'Subnet',
-	'Class:Subnet+' => '',
+	'Class:Subnet+' => 'A subnet is a segment of an IP network, defined by an address and a mask',
 	'Class:Subnet/Name' => '%1$s/%2$s',
 	'Class:Subnet/ComplementaryName' => '%1$s - %2$s',
 	'Class:Subnet/Attribute:description' => 'Description',
@@ -1331,7 +1325,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:NetworkInterface' => 'Network Interface',
-	'Class:NetworkInterface+' => '',
+	'Class:NetworkInterface+' => 'Abstract class',
 	'Class:NetworkInterface/Attribute:name' => 'Name',
 	'Class:NetworkInterface/Attribute:name+' => '',
 	'Class:NetworkInterface/Attribute:finalclass' => 'NetworkInterface sub-class',
@@ -1344,7 +1338,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:IPInterface' => 'IP Interface',
-	'Class:IPInterface+' => '',
+	'Class:IPInterface+' => 'Abstract class. A type of Network Interface with an IP address',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP address',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
 
@@ -1366,12 +1360,16 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:PhysicalInterface' => 'Physical Interface',
-	'Class:PhysicalInterface+' => '',
+	'Class:PhysicalInterface+' => 'A type of IP Interface that represents a physical network interface (e.g. an Ethernet card).',
 	'Class:PhysicalInterface/Name' => '%2$s %1$s',
 	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Device',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Device name',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Org id',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location id',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
 ]);
@@ -1404,7 +1402,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:LogicalInterface' => 'Logical Interface',
-	'Class:LogicalInterface+' => 'A network interface for a Virtual Machine.',
+	'Class:LogicalInterface+' => 'A type of IP Interface which is not associated permanently with a particular physical port, the association is dynamic. It can be used for Virtual Machine.',
 	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Virtual machine',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
 	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Virtual machine name',
@@ -1417,7 +1415,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:FiberChannelInterface' => 'Fiber Channel Interface',
-	'Class:FiberChannelInterface+' => 'A Fibre Channel Interface, is a network interface to a high-speed network technology primarily used for connecting shared storage devices (Storage Systems in iTop).',
+	'Class:FiberChannelInterface+' => 'A Fibre Channel Interface, is a Network Interface to a high-speed network technology primarily used for connecting shared storage devices (Storage Systems in '.ITOP_APPLICATION_SHORT.').',
 	'Class:FiberChannelInterface/Attribute:speed' => 'Speed',
 	'Class:FiberChannelInterface/Attribute:speed+' => '',
 	'Class:FiberChannelInterface/Attribute:topology' => 'Topology',
@@ -1500,9 +1498,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Group' => 'Group',
-	'Class:Group+' => 'Group is designed to define explicit sets of configurations items for any project purpose. 
-In contrast to Application Solution, a Group is not impacted by any of its component and does not impact them.
-For example when doing an OS migration, Group can be convenient to gather “Servers to be migrated”. Migrated servers being removed from the group as the migration progresses.',
+	'Class:Group+' => 'Group is designed to define explicit sets of configurations items for any project purpose. In contrast to Application Solution, a Group is not impacted by any of its component and does not impact them. For example when doing an OS migration, Group can be convenient to gather “Servers to be migrated”. Migrated servers being removed from the group as the migration progresses.',
 	'Class:Group/ComplementaryName' => '%1$s - %2$s',
 	'Class:Group/Attribute:name' => 'Name',
 	'Class:Group/Attribute:name+' => '',
@@ -1523,7 +1519,6 @@ For example when doing an OS migration, Group can be convenient to gather “Ser
 	'Class:Group/Attribute:type' => 'Type',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Parent Group',
-
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Name',
 	'Class:Group/Attribute:parent_name+' => '',
@@ -1637,15 +1632,4 @@ Dict::Add('EN US', 'English', 'English', [
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Software catalog',
 	'Menu:Software+' => 'Software catalog',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('EN US', 'English', 'English', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id',
-	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id',
-	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);
