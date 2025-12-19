@@ -147,7 +147,8 @@ class QueryTest extends ItopDataTestCase
 			CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
 			CURLOPT_USERPWD => self::USER.':'.self::PASSWORD,
 		];
-		return $this->CallItopUrl($url, [], $aCurlOptions);
+
+		return $this->CallUrl($url, [], $aCurlOptions);
 	}
 
 	/** @inheritDoc */

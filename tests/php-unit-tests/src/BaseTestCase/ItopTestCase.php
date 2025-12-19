@@ -8,7 +8,6 @@
 namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
-use DateTime;
 use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
 use ReflectionMethod;
@@ -649,7 +648,7 @@ abstract class ItopTestCase extends KernelTestCase
 	* @param $bXDebugEnabled
 	* @return string
 	 */
-	protected function CallItopUrl($sUrl, ?array $aPostFields = [], ?array $aCurlOptions = [], $bXDebugEnabled = false): string
+	protected function CallUrl($sUrl, ?array $aPostFields = [], ?array $aCurlOptions = [], $bXDebugEnabled = false): string
 	{
 		$ch = curl_init();
 		if ($bXDebugEnabled) {
@@ -658,20 +657,14 @@ abstract class ItopTestCase extends KernelTestCase
 
 		curl_setopt($ch, CURLOPT_URL, $sUrl);
 		curl_setopt($ch, CURLOPT_POST, 1);// set post data to true
-		if (!is_array($aPostFields)) {
-			var_dump($aPostFields);
-		}
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		// Force disable of certificate check as most of dev / test env have a self-signed certificate
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-
-		var_dump($aCurlOptions);
 		curl_setopt_array($ch, $aCurlOptions);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
 
 		$sOutput = curl_exec($ch);
-		//\IssueLog::Info("$sUrl error code:", null, ['error' => curl_error($ch)]);
 
 		$info = curl_getinfo($ch);
 		$this->aLastCurlGetInfo = $info;
@@ -687,6 +680,7 @@ abstract class ItopTestCase extends KernelTestCase
 	protected function CallItopUri(string $sUri, ?array $aPostFields = [], ?array $aCurlOptions = [], $bXDebugEnabled = false): string
 	{
 		$sUrl = \MetaModel::GetConfig()->Get('app_root_url')."/$sUri";
-		return $this->CallItopUrl($sUrl, $aPostFields, $aCurlOptions, $bXDebugEnabled);
+
+		return $this->CallUrl($sUrl, $aPostFields, $aCurlOptions, $bXDebugEnabled);
 	}
 }
