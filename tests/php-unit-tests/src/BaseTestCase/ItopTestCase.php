@@ -14,7 +14,6 @@ use ReflectionMethod;
 use SetupUtils;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
-
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 /**
@@ -662,7 +661,7 @@ abstract class ItopTestCase extends KernelTestCase
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 		curl_setopt_array($ch, $aCurlOptions);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($aPostFields));
 
 		$sOutput = curl_exec($ch);
 
