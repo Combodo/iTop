@@ -2418,6 +2418,7 @@ class Config
 	public function SetAllowedLoginTypes($aAllowedLoginTypes)
 	{
 		$this->m_sAllowedLoginTypes = implode('|', $aAllowedLoginTypes);
+		$this->Set('allowed_login_types', implode('|', $aAllowedLoginTypes));
 	}
 
 	/**

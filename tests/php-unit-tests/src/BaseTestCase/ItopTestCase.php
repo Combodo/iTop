@@ -14,6 +14,7 @@ use ReflectionMethod;
 use SetupUtils;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
+
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 /**
@@ -661,7 +662,11 @@ abstract class ItopTestCase extends KernelTestCase
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 		curl_setopt_array($ch, $aCurlOptions);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($aPostFields));
+		if ($this->IsArrayOfArray($aPostFields)) {
+			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($aPostFields));
+		} else {
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
+		}
 
 		$sOutput = curl_exec($ch);
 
@@ -674,6 +679,17 @@ abstract class ItopTestCase extends KernelTestCase
 		\IssueLog::Info(__METHOD__, null, ['url' => $sUrl, 'error' => $sErrorMsg, 'error_code' => $iErrorCode, 'post_fields' => $aPostFields, 'info' => $info]);
 
 		return $sOutput;
+	}
+
+	private function IsArrayOfArray(array $aStruct): bool
+	{
+		foreach ($aStruct as $k => $v) {
+			if (is_array($v)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	protected function CallItopUri(string $sUri, ?array $aPostFields = [], ?array $aCurlOptions = [], $bXDebugEnabled = false): string

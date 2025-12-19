@@ -94,7 +94,6 @@ class RestTest extends ItopDataTestCase
 
 	public function testPostJSONDataAsCurlFile()
 	{
-		$sCallbackName = 'fooCallback';
 		$sJsonData = '{"operation": "list_operations"}';
 
 		// Test regular JSON result
