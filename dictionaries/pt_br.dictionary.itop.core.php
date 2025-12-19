@@ -702,6 +702,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:TriggerOnObjectUpdate' => 'Gatilho (na atualização do objeto)',
 	'Class:TriggerOnObjectUpdate+' => 'Gatilho na atualização de objeto de [uma classe filha] de uma determinada classe',
+	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Campos de destino',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ]);

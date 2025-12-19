@@ -1526,10 +1526,16 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 // Add translation for Fieldsets
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Általános információ',
 	'Server:Date' => 'Dátumok',
 	'Server:moreinfo' => 'További információ',
-	'Server:otherinfo' => 'Other information~~',
+	'Server:otherinfo' => 'Description~~',
 	'Server:power' => 'Áramforrás',
 	'Class:Subnet/Tab:IPUsage' => 'IP felhasználás',
 	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',

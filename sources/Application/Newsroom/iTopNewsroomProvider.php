@@ -18,7 +18,7 @@ use User;
  */
 class iTopNewsroomProvider extends NewsroomProviderBase
 {
-	public function IsApplicable(User $oUser = null)
+	public function IsApplicable(?User $oUser = null)
 	{
 		return true;
 	}

@@ -57,7 +57,7 @@ class Field extends UIContentBlock
 	/** @var string */
 	protected $sComments;
 
-	public function __construct(string $sLabel, UIBlock $oValue = null, ?string $sId = null)
+	public function __construct(string $sLabel, ?UIBlock $oValue = null, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->sLabel = $sLabel;

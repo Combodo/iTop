@@ -221,15 +221,15 @@ class LoginWebPage extends NiceWebPage
 
 			if ($oUser != null) {
 				if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token')) {
-					throw new Exception(Dict::S('UI:ResetPwd-Error-NotPossible'));
+					throw new ForgotPasswordUserInputException('External accounts do not allow password reset');
 				}
 				if (!$oUser->CanChangePassword()) {
-					throw new Exception(Dict::S('UI:ResetPwd-Error-FixedPwd'));
+					throw new ForgotPasswordUserInputException('The account does not allow password reset');
 				}
 
 				$sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
 				if ($sTo == '') {
-					throw new Exception(Dict::S('UI:ResetPwd-Error-NoEmail'));
+					throw new ForgotPasswordUserInputException('Missing email address for this account');
 				}
 
 				// This token allows the user to change the password without knowing the previous one
@@ -255,17 +255,21 @@ class LoginWebPage extends NiceWebPage
 
 					case EMAIL_SEND_ERROR:
 					default:
-						IssueLog::Error('Failed to send the email with the NEW password for '.$oUser->Get('friendlyname').': '.implode(', ', $aIssues));
-						throw new Exception(Dict::S('UI:ResetPwd-Error-Send'));
+						throw new ForgotPasswordApplicationException('Failed to send the password reset email for '.$oUser->Get('friendlyname').': '.implode(', ', $aIssues));
 				}
 			}
 
-			$oTwigContext = new LoginTwigRenderer();
-			$aVars = $oTwigContext->GetDefaultVars();
-			$oTwigContext->Render($this, 'forgotpwdsent.html.twig', $aVars);
-		} catch (Exception $e) {
-			$this->DisplayForgotPwdForm(true, $e->getMessage());
+		} catch (ForgotPasswordApplicationException $e) {
+			IssueLog::Error('Failed to process the forgot password request for user "'.$sAuthUser.'" [reason='.get_class($e).']: '.$e->getMessage());
+		} catch (ForgotPasswordUserInputException $e) {
+			IssueLog::Info('Failed to process the forgot password request for user "'.$sAuthUser.'" [reason='.get_class($e).']: '.$e->getMessage());
+		} catch (\Throwable $e) {
+			IssueLog::Error('Unexpected error while processing the forgot password request for user "'.$sAuthUser.'": '.$e->getMessage());
 		}
+
+		$oTwigContext = new LoginTwigRenderer();
+		$aVars = $oTwigContext->GetDefaultVars();
+		$oTwigContext->Render($this, 'forgotpwdsent.html.twig', $aVars);
 	}
 
 	public function DisplayResetPwdForm($sErrorMessage = null)

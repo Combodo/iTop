@@ -5,6 +5,7 @@ namespace Combodo\iTop\PhpParser\Evaluation;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileParser;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 use PhpParser\ConstExprEvaluator;
+use PhpParser\ExprEvaluator;
 use PhpParser\Node\Expr;
 use PhpParser\ParserFactory;
 
@@ -18,7 +19,7 @@ class PhpExpressionEvaluator
 
 	public function __construct(array $functionsWhiteList = [], array $staticCallsWhitelist = [])
 	{
-		$this->oConstExprEvaluator = new ConstExprEvaluator();
+		$this->oConstExprEvaluator = new ExprEvaluator();
 		$this->oConstExprEvaluator->setStaticcallsWhitelist($staticCallsWhitelist);
 		$this->oConstExprEvaluator->setFunctionsWhitelist($functionsWhiteList);
 	}

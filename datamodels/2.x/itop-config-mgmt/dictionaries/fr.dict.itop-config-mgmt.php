@@ -37,23 +37,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 // Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -1203,6 +1186,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nom Famille OS',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/Attribute:ospatches_list' => 'Patchs OS',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'Tous les patchs de cette version OS',
 ]);
 
 //
@@ -1212,6 +1197,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSFamily' => 'Famille OS',
 	'Class:OSFamily+' => '',
+	'Class:OSFamily/Attribute:osversions_list' => 'Versions OS',
+	'Class:OSFamily/Attribute:osversions_list+' => 'Toutes les versions OS pour cette famille',
 ]);
 
 //
@@ -1221,8 +1208,12 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Brand' => 'Marque',
 	'Class:Brand+' => '',
+	'Class:Brand/Attribute:iosversions_list' => 'Versions IOS',
+	'Class:Brand/Attribute:iosversions_list+' => 'Toutes les versions IOS pour cette marque',
 	'Class:Brand/Attribute:logo' => 'Logo',
 	'Class:Brand/Attribute:logo+' => '',
+	'Class:Brand/Attribute:models_list' => 'Modèles',
+	'Class:Brand/Attribute:models_list+' => 'Tous les modèles pour cette marque',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Matériels',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Tous les matériels correspondant à cette marque',
 	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Create:Button+' => 'Créer un %4$s',
@@ -1240,7 +1231,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:Model' => 'Modèle',
+	'Class:Model' => 'Modèle de matériel',
 	'Class:Model+' => '',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s',
 	'Class:Model/Attribute:brand_id' => 'Marque',
@@ -1327,6 +1318,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nom Marque',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Equipements réseaux',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'Tous les équipements réseaux utilisant cette version IOS',
 ]);
 
 //
@@ -1676,6 +1669,17 @@ Dict::Add('FR FR', 'French', 'Français', [
 ]);
 
 //
+// Class: PhysicalInterface
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Site',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
+]);
+
+//
 // Class: lnkGroupToCI
 //
 
@@ -1695,23 +1699,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ]);
 
-// Add translation for Fieldsets
-
-Dict::Add('FR FR', 'French', 'Français', [
-	'Server:baseinfo' => 'Informations générales',
-	'Server:Date' => 'Dates',
-	'Server:moreinfo' => 'Informations complémentaires',
-	'Server:otherinfo' => 'Autres informations',
-	'Server:power' => 'Alimentation électrique',
-	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
-	'Class:Subnet/Tab:IPUsage+' => 'Utilisation des IPs de ce subnet',
-	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
-	'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
-	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
-	'Class:Document:PreviewTab' => 'Aperçu',
-]);
-
 //
 // Class: lnkDocumentToFunctionalCI
 //
@@ -1728,6 +1715,29 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nom Document',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
+]);
+
+// Add translation for Fieldsets
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'ConfigMgmt:baseinfo' => 'Informations générales',
+	'Server:baseinfo' => 'Informations générales',
+	'ConfigMgmt:moreinfo' => 'Item spécifique',
+	'Server:moreinfo' => 'Matériel spécifique',
+	'Storage:moreinfo' => 'Stockage spécifique',
+	'Software:moreinfo' => 'Logiciel spécifique',
+	'Phone:moreinfo' => 'Téléphone spécifique',
+	'ConfigMgmt:otherinfo' => 'Dates et description',
+	'Server:Date' => 'Dates',
+	'Server:otherinfo' => 'Description',
+	'Server:power' => 'Alimentation électrique',
+	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
+	'Class:Subnet/Tab:IPUsage+' => 'Utilisation des IPs de ce subnet',
+	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
+	'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
+	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
+	'Class:Document:PreviewTab' => 'Aperçu',
 ]);
 
 //
@@ -1779,15 +1789,4 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Catalogue des logiciels de références',
 	'Menu:Software+' => 'Catalogue des logiciels de références',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
-	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Site',
-	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);

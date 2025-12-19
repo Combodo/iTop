@@ -220,7 +220,7 @@ class UserLocalTest extends ItopDataTestCase
 
 				],
 				'expectedCheckStatus' => false,
-				'expectedCheckIssues' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.',
+				'expectedCheckIssues' => 'Password must be at least 12 characters and include uppercase, lowercase, numeric and special characters.',
 				'userLanguage' => 'EN US',
 			],
 			'notValidPattern custom message string not array' => [

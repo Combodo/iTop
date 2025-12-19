@@ -415,12 +415,7 @@ abstract class User extends cmdbAbstractObject
 							$this->m_aCheckIssues[] = Dict::S('Class:User/Error:CurrentProfilesHaveInsufficientRights');
 						}
 						$oAddon->ResetCache();
-
-						if (is_null($aCurrentProfiles)) {
-							Session::IsSet('profile_list');
-						} else {
-							Session::Set('profile_list', $aCurrentProfiles);
-						}
+						Session::Set('profile_list', $aCurrentProfiles);
 					}
 					// Prevent an administrator to remove their own admin profile
 					if (UserRights::IsAdministrator($this)) {

@@ -106,10 +106,6 @@ if ($oFilter != null) {
 	$sPageId = "ui-search-".$oFilter->GetClass();
 	$sLabel = MetaModel::GetName($oFilter->GetClass());
 	$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-
-	// Menu node
-	$sFilter = $oFilter->ToOQL();
-	$oP->add("\n<!-- $sFilter -->\n");
 }
 $oP->add("</div>\n");
 $oP->output();

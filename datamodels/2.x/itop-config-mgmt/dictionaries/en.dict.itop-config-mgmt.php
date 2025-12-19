@@ -57,26 +57,7 @@ Dict::Add('EN US', 'English', 'English', [
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
-//
 
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
 //
 
 //
@@ -1073,6 +1054,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS family name',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/Attribute:ospatches_list' => 'OS patches',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'All the OS patches for this OS version',
 ]);
 
 //
@@ -1082,6 +1065,8 @@ Dict::Add('EN US', 'English', 'English', [
 Dict::Add('EN US', 'English', 'English', [
 	'Class:OSFamily' => 'OS Family',
 	'Class:OSFamily+' => '',
+	'Class:OSFamily/Attribute:osversions_list' => 'OS versions',
+	'Class:OSFamily/Attribute:osversions_list+' => 'All the OS versions for this OS family',
 ]);
 
 //
@@ -1091,8 +1076,12 @@ Dict::Add('EN US', 'English', 'English', [
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Brand' => 'Brand',
 	'Class:Brand+' => '',
+	'Class:Brand/Attribute:iosversions_list' => 'IOS versions',
+	'Class:Brand/Attribute:iosversions_list+' => 'All the IOS versions from this brand',
 	'Class:Brand/Attribute:logo' => 'Logo',
 	'Class:Brand/Attribute:logo+' => '',
+	'Class:Brand/Attribute:models_list' => 'Models',
+	'Class:Brand/Attribute:models_list+' => 'All models for this brand',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Physical devices',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand',
 	'Class:Brand/UniquenessRule:name+' => 'The name must be unique',
@@ -1104,7 +1093,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:Model' => 'Model',
+	'Class:Model' => 'Device Model',
 	'Class:Model+' => '',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s',
 	'Class:Model/Attribute:brand_id' => 'Brand',
@@ -1179,6 +1168,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Brand name',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Network devices',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'All the network devices running this IOS version',
 ]);
 
 //
@@ -1526,6 +1517,17 @@ Dict::Add('EN US', 'English', 'English', [
 ]);
 
 //
+// Class: PhysicalInterface
+//
+
+Dict::Add('EN US', 'English', 'English', [
+	'Class:PhysicalInterface/Attribute:org_id' => 'Org id',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location id',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
+]);
+
+//
 // Class: lnkGroupToCI
 //
 
@@ -1545,23 +1547,6 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ]);
 
-// Add translation for Fieldsets
-
-Dict::Add('EN US', 'English', 'English', [
-	'Server:baseinfo' => 'General information',
-	'Server:Date' => 'Dates',
-	'Server:moreinfo' => 'More information',
-	'Server:otherinfo' => 'Other information',
-	'Server:power' => 'Power supply',
-	'Class:Subnet/Tab:IPUsage' => 'IP Usage',
-	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not',
-	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
-	'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
-	'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
-	'Class:Document:PreviewTab' => 'Preview',
-]);
-
 //
 // Class: lnkDocumentToFunctionalCI
 //
@@ -1578,6 +1563,29 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Document name',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
+]);
+
+// Add translation for Fieldsets
+
+Dict::Add('EN US', 'English', 'English', [
+	'ConfigMgmt:baseinfo' => 'General',
+	'ConfigMgmt:moreinfo' => 'CI specifics',
+	'ConfigMgmt:otherinfo' => 'Dates and description',
+	'Storage:moreinfo' => 'Storage specifics',
+	'Software:moreinfo' => 'Software specifics',
+	'Phone:moreinfo' => 'Phone specifics',
+	'Server:baseinfo' => 'General',
+	'Server:moreinfo' => 'Device specifics',
+	'Server:Date' => 'Dates',
+	'Server:otherinfo' => 'Description',
+	'Server:power' => 'Power supply',
+	'Class:Subnet/Tab:IPUsage' => 'IP Usage',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not',
+	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
+	'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
+	'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
+	'Class:Document:PreviewTab' => 'Preview',
 ]);
 
 //
@@ -1629,15 +1637,4 @@ Dict::Add('EN US', 'English', 'English', [
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Software catalog',
 	'Menu:Software+' => 'Software catalog',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('EN US', 'English', 'English', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id',
-	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id',
-	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);

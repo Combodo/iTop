@@ -704,6 +704,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (bei Objektanpassung)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger bei Objektanpassung einer gegebenen Klasse oder Kindklasse',
+	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Ziel-Felder',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ]);

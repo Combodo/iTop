@@ -30,7 +30,7 @@ class ToolbarUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar
 	 */
-	public static function MakeForAction(string $sId = null)
+	public static function MakeForAction(?string $sId = null)
 	{
 		return new Toolbar($sId, ['ibo-toolbar--action']);
 	}
@@ -42,7 +42,7 @@ class ToolbarUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar
 	 */
-	public static function MakeStandard(string $sId = null, array $aContainerClasses = [])
+	public static function MakeStandard(?string $sId = null, array $aContainerClasses = [])
 	{
 		return new Toolbar($sId, $aContainerClasses);
 	}
@@ -54,7 +54,7 @@ class ToolbarUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar
 	 */
-	public static function MakeForButton(string $sId = null, array $aContainerClasses = [])
+	public static function MakeForButton(?string $sId = null, array $aContainerClasses = [])
 	{
 		return new Toolbar($sId, array_merge($aContainerClasses, ['ibo-toolbar--button']));
 	}

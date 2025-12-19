@@ -9,6 +9,8 @@ namespace Combodo\iTop\Application\TwigBase\Controller;
 
 abstract class AbstractProfilerExtension implements iProfilerExtension
 {
+	protected bool $bDebugForced;
+
 	public function Init()
 	{
 	}
@@ -34,5 +36,10 @@ abstract class AbstractProfilerExtension implements iProfilerExtension
 	public function GetSaas(): null|array
 	{
 		return null;
+	}
+
+	public function SetDebugForced(bool $bDebugForced): void
+	{
+		$this->bDebugForced = $bDebugForced;
 	}
 }

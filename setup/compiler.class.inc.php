@@ -23,6 +23,7 @@ use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\Page;
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\DesignDocument;
+use Combodo\iTop\PropertyType\PropertyTypeDesign;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/modelfactory.class.inc.php');
@@ -39,7 +40,7 @@ class DOMFormatException extends Exception
 	 * @param $previous
 	 * @param DesignElement|null $node DOMNode causing the DOMFormatException
 	 */
-	public function __construct($message, $code = 0, $previous = null, DesignElement $node = null)
+	public function __construct($message, $code = 0, $previous = null, ?DesignElement $node = null)
 	{
 		if ($node !== null) {
 			$message .= ' ('.MFDocument::GetItopNodePath($node).' at line '.$node->getLineNo().')';
@@ -699,6 +700,10 @@ PHP;
 		$oModuleDesignsNode = $this->oFactory->GetNodes('/itop_design/module_designs')->item(0);
 		$this->CompileModuleDesigns($oModuleDesignsNode, $sTempTargetDir, $sFinalTargetDir);
 
+		// Create property types XML files
+		$oPropertyTypesNode = $this->oFactory->GetNodes('/itop_design/meta/property_types')->item(0);
+		$this->CompilePropertyTypes($oPropertyTypesNode, $sTempTargetDir, $sFinalTargetDir);
+
 		// Compile the XML parameters
 		/** @var \MFElement $oParametersNode */
 		$oParametersNode = $this->oFactory->GetNodes('/itop_design/module_parameters')->item(0);
@@ -931,7 +936,7 @@ EOF
 	 *
 	 * @since 3.0.0 Add param. $bAddQuotes to be equivalent to {@see self::GetMandatoryPropString} and allow retrieving property without surrounding single quotes
 	 */
-	protected function GetPropString($oNode, string $sTag, string $sDefault = null, bool $bAddQuotes = true)
+	protected function GetPropString($oNode, string $sTag, ?string $sDefault = null, bool $bAddQuotes = true)
 	{
 		$val = $oNode->GetChildText($sTag);
 		if (is_null($val)) {
@@ -3570,6 +3575,21 @@ EOF;
 				$oClone = $oDoc->importNode($oDesign->cloneNode(true), true);
 				$oDoc->appendChild($oClone);
 				$oDoc->save($sTempTargetDir.'/core/module_designs/'.$oDesign->getAttribute('id').'.xml');
+			}
+		}
+	}
+
+	protected function CompilePropertyTypes(?DOMNode $oPropertyTypes, string $sTempTargetDir, string $sFinalTargetDir): void
+	{
+		if ($oPropertyTypes) {
+			foreach ($oPropertyTypes->GetNodes('property_type') as $oPropertyType) {
+				$oDoc = new PropertyTypeDesign();
+				$oClone = $oDoc->importNode($oPropertyType->cloneNode(true), true);
+				$oDoc->appendChild($oClone);
+				/** @var DesignElement $oPropertyType */
+				$sExtends = $oPropertyType->GetChildText('extends', 'Default');
+				SetupUtils::builddir($sTempTargetDir.'/core/property_types/'.$sExtends);
+				$oDoc->save($sTempTargetDir.'/core/property_types/'.$sExtends.'/'.$oPropertyType->getAttribute('id').'.xml');
 			}
 		}
 	}

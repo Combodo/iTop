@@ -704,6 +704,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:TriggerOnObjectUpdate' => 'Trigger (bij het aanpassen van een object)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger bij het aanpassen van een object van de opgegeven klasse (of subklasse ervan)',
+	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Doelvelden',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ]);

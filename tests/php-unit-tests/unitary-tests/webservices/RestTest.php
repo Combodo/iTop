@@ -94,7 +94,6 @@ class RestTest extends ItopDataTestCase
 
 	public function testPostJSONDataAsCurlFile()
 	{
-		$sCallbackName = 'fooCallback';
 		$sJsonData = '{"operation": "list_operations"}';
 
 		// Test regular JSON result
@@ -269,7 +268,7 @@ JSON;
 	 *
 	 * @return bool|string
 	 */
-	private function CallRestApi_HTTP(string $sJsonDataContent = null, string $sCallbackName = null, bool $bJSONDataAsFile = false)
+	private function CallRestApi_HTTP(?string $sJsonDataContent = null, ?string $sCallbackName = null, bool $bJSONDataAsFile = false)
 	{
 		$ch = curl_init();
 		$aPostFields = [

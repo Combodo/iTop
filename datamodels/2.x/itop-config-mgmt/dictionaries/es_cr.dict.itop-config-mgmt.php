@@ -1524,6 +1524,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 // Add translation for Fieldsets
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Información General',
 	'Server:Date' => 'Fecha',
 	'Server:moreinfo' => 'Más Información',

@@ -238,6 +238,11 @@
               <action id="action:bulk delete">allow</action>
             </actions>
           </group>
+          <group id="Ticketing">
+            <actions>
+              <action id="stimulus:ev_close">allow</action>
+            </actions>
+          </group>
           <group id="UserRequest">
             <actions>
               <action id="stimulus:ev_approve">allow</action>

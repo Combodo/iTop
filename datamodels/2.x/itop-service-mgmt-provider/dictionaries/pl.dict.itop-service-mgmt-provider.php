@@ -26,8 +26,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:ServiceSubcategory+' => 'Podkategorie usług',
 	'Menu:Service' => 'Usługi',
 	'Menu:Service+' => 'Usługi',
-	'Menu:ServiceElement' => 'Elementy usługi',
-	'Menu:ServiceElement+' => 'Elementy usługi',
 	'Menu:SLA' => 'Umowy SLA',
 	'Menu:SLA+' => 'Umowy gwarantowanych poziomów usług',
 	'Menu:SLT' => 'Poziomy usług SLT',
@@ -36,19 +34,21 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:DeliveryModel+' => 'Modele obsługi',
 	'Menu:ServiceFamily' => 'Rodziny usług',
 	'Menu:ServiceFamily+' => 'Rodziny usług',
+	'Menu:ServiceCatalog' => 'Service catalog~~',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
+
 	'Contract:baseinfo' => 'Informacje ogólne',
 	'Contract:moreinfo' => 'Informacje o umowach',
 	'Contract:cost' => 'Informacje o kosztach',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization
@@ -241,7 +241,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Service/Attribute:description' => 'Opis',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Rodzina usług',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Nazwa rodziny usług',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => 'Dokumenty',

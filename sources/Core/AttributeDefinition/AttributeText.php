@@ -21,6 +21,7 @@ use InlineImage;
 use MetaModel;
 use ormCaseLog;
 use Str;
+use UserRights;
 use utils;
 
 /**
@@ -95,8 +96,23 @@ class AttributeText extends AttributeString
 		return 65535;
 	}
 
-	public static function RenderWikiHtml($sText, $bWikiOnly = false)
+	/**
+	 * @param string|null $sText
+	 * @param bool $bWikiOnly
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.3.0 N°8681 Add type hint for parameters and return value
+	 */
+	public static function RenderWikiHtml(string|null $sText, bool $bWikiOnly = false): string
 	{
+		// N°8681 - Ensure to have a string value
+		$sText = $sText ?? '';
+
 		if (!$bWikiOnly) {
 			$sPattern = '/'.str_replace('/', '\/', utils::GetConfig()->Get('url_validation_pattern')).'/i';
 			if (preg_match_all(
@@ -179,7 +195,9 @@ class AttributeText extends AttributeString
 		} else {
 			$sValue = self::RenderWikiHtml($sValue, true /* wiki only */);
 
-			return "<div class=\"HTML ibo-is-html-content\" $sStyle>".InlineImage::FixUrls($sValue).'</div>';
+			$sImageHtml = UserRights::IsLoggedIn() ? InlineImage::FixUrls($sValue) : InlineImage::ReplaceInlineImagesWithBase64Representation($sValue);
+
+			return "<div class=\"HTML ibo-is-html-content\" $sStyle>".$sImageHtml.'</div>';
 		}
 
 	}

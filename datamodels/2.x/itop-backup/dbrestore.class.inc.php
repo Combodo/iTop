@@ -24,7 +24,7 @@ class DBRestore extends DBBackup
 	/** @var string */
 	private $sDBUser;
 
-	public function __construct(\Config $oConfig = null)
+	public function __construct(?\Config $oConfig = null)
 	{
 		parent::__construct($oConfig);
 

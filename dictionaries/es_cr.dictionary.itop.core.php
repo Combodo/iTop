@@ -695,6 +695,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:TriggerOnObjectUpdate' => 'Disparador (actualizando un objecto)',
 	'Class:TriggerOnObjectUpdate+' => 'Disparador al actualizar un objeto de la clase dada [o una clase hija]',
+	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Campos objetivo',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => 'Campos que serán monitorizados',
 ]);

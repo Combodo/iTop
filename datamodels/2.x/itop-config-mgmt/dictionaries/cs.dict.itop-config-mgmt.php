@@ -1528,6 +1528,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 // Add translation for Fieldsets
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Obecné informace',
 	'Server:Date' => 'Data',
 	'Server:moreinfo' => 'Více informací',

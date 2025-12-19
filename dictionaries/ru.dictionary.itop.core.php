@@ -707,6 +707,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:TriggerOnObjectUpdate' => 'Триггер на обновление объекта',
 	'Class:TriggerOnObjectUpdate+' => 'Триггер на обновление объекта данного или дочернего класса',
+	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Отслеживаемые поля',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => 'Поля объекта, при обновлении которых сработает триггер',
 ]);

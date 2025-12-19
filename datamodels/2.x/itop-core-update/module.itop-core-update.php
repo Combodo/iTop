@@ -30,7 +30,7 @@ SetupWebPage::AddModule(
 		// Identification
 		//
 		'label' => 'iTop Core Update',
-		'category' => 'business',
+		'category' => 'Application management',
 
 		// Setup
 		//

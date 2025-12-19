@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+    <ContainerType alias="ContainerType" id="1">
+        <name>AWS - Elastic Container Service</name>
+    </ContainerType>
+    <ContainerType alias="ContainerType" id="2">
+        <name>AWS - Elastic Kubernetes Service</name>
+    </ContainerType>
+    <ContainerType alias="ContainerType" id="3">
+        <name>Azure Kubernetes Service</name>
+    </ContainerType>
+    <ContainerType alias="ContainerType" id="4">
+        <name>Docker Swarm</name>
+    </ContainerType>
+    <ContainerType alias="ContainerType" id="5">
+        <name>Google Kubernetes Engine</name>
+    </ContainerType>
+    <ContainerType alias="ContainerType" id="6">
+        <name>Kubernetes</name>
+    </ContainerType>
+    <ContainerType alias="ContainerType" id="7">
+        <name>Nomad</name>
+    </ContainerType>
+  <ContainerType alias="ContainerType" id="8">
+    <name>OpenShift</name>
+  </ContainerType>
+</Set>

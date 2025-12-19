@@ -51,13 +51,17 @@ class ErrorPage extends NiceWebPage
 		$this->log_warning($sText);
 	}
 
-	public function error($sText)
+	public function error($sText, \Throwable $oException = null)
 	{
 		$this->add("<div class=\"message message-error\">$sText</div>");
 		if (utils::IsEasterEggAllowed()) {
 			$this->add('<div class="message message-valid">'.Dict::S('UI:ErrorPage:UnstableVersion').'</div>');
 			$this->add('<img src="'.utils::GetAbsoluteUrlAppRoot().'images/alpha-fatal-error.gif">');
 			$this->add('<div class="message message-valid">'.nl2br(Dict::S('UI:ErrorPage:KittyDisclaimer')).'</div>');
+		}
+		if (!is_null($oException)) {
+			$this->log_exception($oException->getMessage(), $oException);
+			return;
 		}
 		$this->log_error($sText);
 	}
@@ -77,6 +81,10 @@ class ErrorPage extends NiceWebPage
 		$this->oContentLayout = $oSetupPage;
 
 		return parent::output();
+	}
+	public static function log_exception($sText, \Throwable $oException)
+	{
+		IssueLog::Exception($sText, $oException);
 	}
 
 	public static function log_error($sText)

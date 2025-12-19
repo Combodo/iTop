@@ -1527,6 +1527,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 // Add translation for Fieldsets
 
 Dict::Add('DA DA', 'Danish', 'Dansk', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Almindelig Informationen',
 	'Server:Date' => 'Dato',
 	'Server:moreinfo' => 'Yderligere Information',

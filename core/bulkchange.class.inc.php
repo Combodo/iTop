@@ -199,7 +199,7 @@ class CellStatus_SearchIssue extends CellStatus_Issue
 	 * @param null $sAllowedValues : used for additional message that provides allowed values $sAllowedValues for current class
 	 * @param string|null $sAllowedValuesSearch : used to search all allowed values
 	 */
-	public function __construct($sSerializedSearch, $sReason, $sClass = null, $sAllowedValues = null, string $sAllowedValuesSearch = null)
+	public function __construct($sSerializedSearch, $sReason, $sClass = null, $sAllowedValues = null, ?string $sAllowedValuesSearch = null)
 	{
 		parent::__construct(null, null, $sReason);
 		$this->sSerializedSearch = $sSerializedSearch;
@@ -876,7 +876,7 @@ class BulkChange
 		return $aResults;
 	}
 
-	protected function CreateObject(&$aResult, $iRow, $aRowData, CMDBChange $oChange = null)
+	protected function CreateObject(&$aResult, $iRow, $aRowData, ?CMDBChange $oChange = null)
 	{
 		$oTargetObj = MetaModel::NewObject($this->m_sClass);
 
@@ -965,7 +965,7 @@ class BulkChange
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	protected function UpdateObject(&$aResult, $iRow, $oTargetObj, $aRowData, CMDBChange $oChange = null)
+	protected function UpdateObject(&$aResult, $iRow, $oTargetObj, $aRowData, ?CMDBChange $oChange = null)
 	{
 		$aResult[$iRow] = $this->PrepareObject($oTargetObj, $aRowData, $aErrors);
 
@@ -1008,7 +1008,7 @@ class BulkChange
 	 *
 	 * @throws \BulkChangeException
 	 */
-	protected function UpdateMissingObject(&$aResult, $iRow, $oTargetObj, CMDBChange $oChange = null)
+	protected function UpdateMissingObject(&$aResult, $iRow, $oTargetObj, ?CMDBChange $oChange = null)
 	{
 		$aResult[$iRow] = $this->PrepareMissingObject($oTargetObj, $aErrors);
 
@@ -1043,7 +1043,7 @@ class BulkChange
 		}
 	}
 
-	public function Process(CMDBChange $oChange = null)
+	public function Process(?CMDBChange $oChange = null)
 	{
 		if ($oChange) {
 			CMDBObject::SetCurrentChange($oChange);

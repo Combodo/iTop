@@ -26,29 +26,29 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ServiceSubcategory+' => 'Hizmet alt kategorileri',
 	'Menu:Service' => 'Hizmetler',
 	'Menu:Service+' => 'Hizmetler',
-	'Menu:ServiceElement' => 'Sevice elements~~',
-	'Menu:ServiceElement+' => 'Sevice elements~~',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Hizmet Seviyesi Anlaşmaları',
 	'Menu:SLT' => 'SLTs',
 	'Menu:SLT+' => 'Hizmet Seviyesi Taahütleri',
 	'Menu:DeliveryModel' => 'Delivery models~~',
-	'Menu:DeliveryModel+' => 'Delivery models~~',
+	'Menu:DeliveryModel+' => 'Teams handling tickets~~',
 	'Menu:ServiceFamily' => 'Service families~~',
-	'Menu:ServiceFamily+' => 'Service families~~',
+	'Menu:ServiceFamily+' => 'Top level in service hierarchy~~',
+	'Menu:ServiceCatalog' => 'Service catalog~~',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
+
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization
@@ -241,7 +241,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Service/Attribute:description' => 'Tanımlama',
 	'Class:Service/Attribute:description+' => '~~',
 	'Class:Service/Attribute:servicefamily_id' => 'Service Family~~',
-	'Class:Service/Attribute:servicefamily_id+' => '~~',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Service Family Name~~',
 	'Class:Service/Attribute:servicefamily_name+' => '~~',
 	'Class:Service/Attribute:documents_list' => 'Documents~~',
@@ -499,7 +499,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:DeliveryModel/Attribute:description' => 'Description~~',
 	'Class:DeliveryModel/Attribute:description+' => '~~',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contacts~~',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Persons) for this delivery model~~',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'There must be at least one team to enable Ticket assignment~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Customers~~',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
 ]);

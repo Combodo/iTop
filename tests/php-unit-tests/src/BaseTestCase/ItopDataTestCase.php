@@ -128,7 +128,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 	{
 		parent::setUp();
 
-		\IssueLog::Error($this->getName());
+		\IssueLog::Info("Running phpunit test: ".$this->getName());
 
 		$this->PrepareEnvironment();
 
@@ -1529,9 +1529,6 @@ abstract class ItopDataTestCase extends ItopTestCase
 	{
 		$sConfigPath = MetaModel::GetConfig()->GetLoadedFile();
 		clearstatcache();
-		echo sprintf("rights via ls on %s:\n %s \n", $sConfigPath, exec("ls -al $sConfigPath"));
-		$sFilePermOutput = substr(sprintf('%o', fileperms('/etc/passwd')), -4);
-		echo sprintf("rights via fileperms on %s:\n %s \n", $sConfigPath, $sFilePermOutput);
 
 		$this->sConfigTmpBackupFile = tempnam(sys_get_temp_dir(), "config_");
 		MetaModel::GetConfig()->WriteToFile($this->sConfigTmpBackupFile);

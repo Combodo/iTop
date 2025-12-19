@@ -27,7 +27,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'La password non può essere cambiata dall\'utente.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Rinnovo della password',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Quando è stata cambiata l\'ultima volta la password',
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'La password deve essere di almeno 8 caratteri e includere lettere maiuscole, minuscole, numeri e caratteri speciali.',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'La password deve essere di almeno 12 caratteri e includere lettere maiuscole, minuscole, numeri e caratteri speciali.',
 	'UserLocal:password:expiration' => 'I campi sottostanti richiedono un\'estensione',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Impostare la scadenza della password su "Password monouso" non è consentito per il proprio utente',
 ]);

@@ -44,14 +44,14 @@ SetupWebPage::AddModule(
 		],
 		'data.sample' => [
 			// add your sample data XML files here,
-			'data.sample.farm.xml',
-			'data.sample.hypervisor.xml',
-			'data.sample.vm.xml',
-			'data.sample.dbserver.xml',
-			'data.sample.dbschema.xml',
-			'data.sample.webserver.xml',
-			'data.sample.webapp.xml',
-			'data.sample.applicationsolutionci.xml',
+			'data/data.sample.farm.xml',
+			'data/data.sample.hypervisor.xml',
+			'data/data.sample.vm.xml',
+			'data/data.sample.dbserver.xml',
+			'data/data.sample.dbschema.xml',
+			'data/data.sample.webserver.xml',
+			'data/data.sample.webapp.xml',
+			'data/data.sample.applicationsolutionci.xml',
 		],
 
 		// Documentation

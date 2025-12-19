@@ -37,6 +37,7 @@ trait RedisTrait
 {
     private static array $defaultConnectionOptions = [
         'class' => null,
+        'auth' => null,
         'persistent' => 0,
         'persistent_id' => null,
         'timeout' => 30,
@@ -95,10 +96,11 @@ trait RedisTrait
             throw new InvalidArgumentException('Invalid Redis DSN: it does not start with "redis[s]:".');
         }
 
-        if (!\extension_loaded('redis') && !class_exists(\Predis\Client::class)) {
-            throw new CacheException('Cannot find the "redis" extension nor the "predis/predis" package.');
+        if (!\extension_loaded('redis') && !\extension_loaded('relay') && !class_exists(\Predis\Client::class)) {
+            throw new CacheException('Cannot find the "redis" extension nor the "relay" extension nor the "predis/predis" package.');
         }
 
+        $auth = null;
         $params = preg_replace_callback('#^'.$scheme.':(//)?(?:(?:(?<user>[^:@]*+):)?(?<password>[^@]*+)@)?#', function ($m) use (&$auth) {
             if (isset($m['password'])) {
                 if (\in_array($m['user'], ['', 'default'], true)) {
@@ -174,7 +176,25 @@ trait RedisTrait
 
         $params += $query + $options + self::$defaultConnectionOptions;
 
-        if (isset($params['redis_sentinel']) && !class_exists(\Predis\Client::class) && !class_exists(\RedisSentinel::class) && !class_exists(Sentinel::class)) {
+        $booleanStreamOptions = [
+            'allow_self_signed',
+            'capture_peer_cert',
+            'capture_peer_cert_chain',
+            'disable_compression',
+            'SNI_enabled',
+            'verify_peer',
+            'verify_peer_name',
+        ];
+
+        foreach ($params['ssl'] ?? [] as $streamOption => $value) {
+            if (\in_array($streamOption, $booleanStreamOptions, true) && \is_string($value)) {
+                $params['ssl'][$streamOption] = filter_var($value, \FILTER_VALIDATE_BOOL);
+            }
+        }
+
+        if (!isset($params['redis_sentinel'])) {
+            $params['auth'] ??= $auth;
+        } elseif (!class_exists(\Predis\Client::class) && !class_exists(\RedisSentinel::class) && !class_exists(Sentinel::class)) {
             throw new CacheException('Redis Sentinel support requires one of: "predis/predis", "ext-redis >= 5.2", "ext-relay".');
         }
 
@@ -217,7 +237,7 @@ trait RedisTrait
                 do {
                     $host = $hosts[$hostIndex]['host'] ?? $hosts[$hostIndex]['path'];
                     $port = $hosts[$hostIndex]['port'] ?? 0;
-                    $passAuth = isset($params['auth']) && (!$isRedisExt || \defined('Redis::OPT_NULL_MULTIBULK_AS_NULL'));
+                    $passAuth = null !== $params['auth'] && (!$isRedisExt || \defined('Redis::OPT_NULL_MULTIBULK_AS_NULL'));
                     $address = false;
 
                     if (isset($hosts[$hostIndex]['host']) && $tls) {
@@ -229,7 +249,7 @@ trait RedisTrait
                     }
 
                     try {
-                        if (version_compare(phpversion('redis'), '6.0.0', '>=') && $isRedisExt) {
+                        if ($isRedisExt && version_compare(phpversion('redis'), '6.0.0', '>=')) {
                             $options = [
                                 'host' => $host,
                                 'port' => $port,
@@ -241,6 +261,10 @@ trait RedisTrait
 
                             if ($passAuth) {
                                 $options['auth'] = $params['auth'];
+                            }
+
+                            if (null !== $params['ssl'] && version_compare(phpversion('redis'), '6.2.0', '>=')) {
+                                $options['ssl'] = $params['ssl'];
                             }
 
                             $sentinel = new \RedisSentinel($options);
@@ -265,23 +289,8 @@ trait RedisTrait
                     $extra = [
                         'stream' => $params['ssl'] ?? null,
                     ];
-                    $booleanStreamOptions = [
-                        'allow_self_signed',
-                        'capture_peer_cert',
-                        'capture_peer_cert_chain',
-                        'disable_compression',
-                        'SNI_enabled',
-                        'verify_peer',
-                        'verify_peer_name',
-                    ];
 
-                    foreach ($extra['stream'] ?? [] as $streamOption => $value) {
-                        if (\in_array($streamOption, $booleanStreamOptions, true) && \is_string($value)) {
-                            $extra['stream'][$streamOption] = filter_var($value, \FILTER_VALIDATE_BOOL);
-                        }
-                    }
-
-                    if (isset($params['auth'])) {
+                    if (null !== $params['auth']) {
                         $extra['auth'] = $params['auth'];
                     }
                     @$redis->{$connect}($host, $port, (float) $params['timeout'], (string) $params['persistent_id'], $params['retry_interval'], $params['read_timeout'], ...\defined('Redis::SCAN_PREFIX') || !$isRedisExt ? [$extra] : []);
@@ -297,19 +306,15 @@ trait RedisTrait
                         throw new InvalidArgumentException('Redis connection failed: '.$error.'.');
                     }
 
-                    if ((null !== $auth && !$redis->auth($auth))
-                        // Due to a bug in phpredis we must always select the dbindex if persistent pooling is enabled
-                        // @see https://github.com/phpredis/phpredis/issues/1920
-                        // @see https://github.com/symfony/symfony/issues/51578
-                        || (($params['dbindex'] || ('pconnect' === $connect && '0' !== \ini_get('redis.pconnect.pooling_enabled'))) && !$redis->select($params['dbindex']))
-                    ) {
+                    if (0 < $params['tcp_keepalive'] && (!$isRedisExt || \defined('Redis::OPT_TCP_KEEPALIVE'))) {
+                        $redis->setOption($isRedisExt ? \Redis::OPT_TCP_KEEPALIVE : Relay::OPT_TCP_KEEPALIVE, $params['tcp_keepalive']);
+                    }
+
+                    if ((!\defined('Redis::SCAN_PREFIX') && null !== $auth && $isRedisExt && !$redis->auth($auth)) || !$redis->select($params['dbindex'])) {
                         $e = preg_replace('/^ERR /', '', $redis->getLastError());
                         throw new InvalidArgumentException('Redis connection failed: '.$e.'.');
                     }
 
-                    if (0 < $params['tcp_keepalive'] && (!$isRedisExt || \defined('Redis::OPT_TCP_KEEPALIVE'))) {
-                        $redis->setOption($isRedisExt ? \Redis::OPT_TCP_KEEPALIVE : Relay::OPT_TCP_KEEPALIVE, $params['tcp_keepalive']);
-                    }
                 } catch (\RedisException|\Relay\Exception $e) {
                     throw new InvalidArgumentException('Redis connection failed: '.$e->getMessage());
                 }
@@ -389,14 +394,12 @@ trait RedisTrait
             if ($params['dbindex']) {
                 $params['parameters']['database'] = $params['dbindex'];
             }
-            if (null !== $auth) {
-                if (\is_array($auth)) {
-                    // ACL
-                    $params['parameters']['username'] = $auth[0];
-                    $params['parameters']['password'] = $auth[1];
-                } else {
-                    $params['parameters']['password'] = $auth;
-                }
+            if (\is_array($auth)) {
+                // ACL
+                $params['parameters']['username'] = $auth[0];
+                $params['parameters']['password'] = $auth[1];
+            } elseif (null !== $auth) {
+                $params['parameters']['password'] = $auth;
             }
 
             if (isset($params['ssl'])) {

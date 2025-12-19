@@ -27,8 +27,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:ServiceSubcategory+' => 'Подкатегории услуг',
 	'Menu:Service' => 'Услуги',
 	'Menu:Service+' => 'Услуги',
-	'Menu:ServiceElement' => 'Элементы услуг',
-	'Menu:ServiceElement+' => 'Элементы услуг',
 	'Menu:SLA' => 'SLA',
 	'Menu:SLA+' => 'Соглашения об уровне услуг',
 	'Menu:SLT' => 'SLT',
@@ -37,19 +35,21 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:DeliveryModel+' => 'Модели предоставления услуг (Delivery Models)',
 	'Menu:ServiceFamily' => 'Пакеты услуг',
 	'Menu:ServiceFamily+' => 'Пакеты услуг',
+	'Menu:ServiceCatalog' => 'Service catalog~~',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
+
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization
@@ -242,7 +242,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Service/Attribute:description' => 'Описание',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Пакет услуг',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Пакет услуг',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => 'Документы',

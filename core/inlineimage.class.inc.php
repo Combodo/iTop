@@ -259,13 +259,18 @@ class InlineImage extends DBObject
 	 * that refer to an InlineImage (detected via the attribute data-img-id="") so that
 	 * the URL is consistent with the current URL of the application.
 	 *
-	 * @param string $sHtml The HTML fragment to process
+N°8681	 * @param string|null $sHtml The HTML fragment to process
 	 *
 	 * @return string The modified HTML
 	 * @throws \Exception
+	 *
+	 * @since 3.3.0 N°8681 Add type hint for parameters and return value
 	 */
-	public static function FixUrls($sHtml)
+	public static function FixUrls(string|null $sHtml): string
 	{
+		// N°8681 - Ensure to have a string value
+		$sHtml = $sHtml ?? '';
+
 		$aNeedles = [];
 		$aReplacements = [];
 		// Find img tags with an attribute data-img-id
@@ -291,6 +296,46 @@ class InlineImage extends DBObject
 			$sHtml = str_replace($aNeedles, $aReplacements, $sHtml);
 		}
 		return $sHtml;
+	}
+
+	/**
+	 * Replace <img> tags with a data-img-id attribute by the actual image in base64 representation
+	 * so that the image can be displayed even if the download URL is not accessible (e.g. in unauthenticated approval templates)
+	 *
+	 * @param string $sHtml The HTML fragment to process
+	 *
+	 * @return String The modified HTML
+	 * @since 3.2.3
+	 */
+	public static function ReplaceInlineImagesWithBase64Representation(string $sHtml): String
+	{
+		return preg_replace_callback(
+			'/<img\s+[^>]*'.static::DOM_ATTR_ID.'="(\d+)"[^>]*>/i',
+			function ($matches) {
+
+				// Extract inline image ID from the tag
+				$id = $matches[1];
+
+				try {
+					// Retrieve inline image
+					$oInline = MetaModel::GetObject(InlineImage::class, $id, true, true);
+					$oOrmDocument = $oInline->Get('contents');
+
+					// Replace src image by the base64 representation
+					$sInlineImageAsBase64 = base64_encode($oOrmDocument->GetData());
+					$sDataUri = 'data:'.$oOrmDocument->GetMimeType().';base64,'.$sInlineImageAsBase64;
+					$sImage = preg_replace('/src=["\'][^"\']+["\']/', 'src="'.$sDataUri.'"', $matches[0]);
+
+					// Remove sensitive information (the image ID and secret) from the tag
+					$sImage = preg_replace('/'.static::DOM_ATTR_ID.'="\d+"\s+'.static::DOM_ATTR_SECRET.'="\w+"/', '', $sImage);
+				} catch (Exception $e) {
+					$sImage = '<img src="" alt="'.Dict::S('UI:MissingInlineImage').'">';
+				}
+
+				return $sImage;
+			},
+			$sHtml
+		);
 	}
 
 	/**
@@ -389,7 +434,7 @@ JS
 	 * Resize an image so that it fits the maximum width/height defined in the config file
 	 * @param ormDocument $oImage The original image stored as an array (content / mimetype / filename)
 	 * @return ormDocument The resampled image (or the original one if it already fit)
-	 * @deprecated Replaced by ormDocument::ResizeImageToFit
+	 * @deprecated since 3.3.0 Replaced by ormDocument::ResizeImageToFit
 	 */
 	public static function ResizeImageToFit(ormDocument $oImage, &$aDimensions = null)
 	{

@@ -44,6 +44,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
+	'Class:FiberChannelInterface/Name' => '%2$s %1$s',
 	'Class:FiberChannelInterface/Attribute:org_id' => 'Org id',
 	'Class:FiberChannelInterface/Attribute:org_id+' => '',
 	'Class:FiberChannelInterface/Attribute:location_id' => 'Location id',

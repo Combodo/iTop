@@ -1526,6 +1526,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 // Add translation for Fieldsets
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Všeobecné informácie',
 	'Server:Date' => 'Dátum',
 	'Server:moreinfo' => 'Viac informácií',

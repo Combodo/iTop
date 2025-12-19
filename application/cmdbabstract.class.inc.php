@@ -5632,7 +5632,7 @@ JS
 	 * @return void
 	 * @since 3.1.0
 	 */
-	final public function AddAttributeFlags(string $sAttCode, int $iFlags, string $sTargetState = '', string $sReason = null): void
+	final public function AddAttributeFlags(string $sAttCode, int $iFlags, string $sTargetState = '', ?string $sReason = null): void
 	{
 		if (!isset($this->aAttributesFlags[$sTargetState])) {
 			$this->aAttributesFlags[$sTargetState] = [];
@@ -5655,7 +5655,7 @@ JS
 	 * @return void
 	 * @since 3.1.0
 	 */
-	final public function ForceAttributeFlags(string $sAttCode, int $iFlags, string $sTargetState = '', string $sReason = null): void
+	final public function ForceAttributeFlags(string $sAttCode, int $iFlags, string $sTargetState = '', ?string $sReason = null): void
 	{
 		if (!isset($this->aAttributesFlags[$sTargetState])) {
 			$this->aAttributesFlags[$sTargetState] = [];
@@ -5696,7 +5696,7 @@ JS
 	 * @return void
 	 * @since 3.1.0
 	 */
-	final public function AddInitialAttributeFlags(string $sAttCode, int $iFlags, string $sReason = null)
+	final public function AddInitialAttributeFlags(string $sAttCode, int $iFlags, ?string $sReason = null)
 	{
 		if (!isset($this->aInitialAttributesFlags)) {
 			$this->aInitialAttributesFlags = [];
@@ -5718,7 +5718,7 @@ JS
 	 * @return void
 	 * @since 3.1.0
 	 */
-	final public function ForceInitialAttributeFlags(string $sAttCode, int $iFlags, string $sReason = null)
+	final public function ForceInitialAttributeFlags(string $sAttCode, int $iFlags, ?string $sReason = null)
 	{
 		if (!isset($this->aInitialAttributesFlags)) {
 			$this->aInitialAttributesFlags = [];

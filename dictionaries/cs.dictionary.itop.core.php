@@ -708,6 +708,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:TriggerOnObjectUpdate' => 'Triger \'aktualizace objektu\'',
 	'Class:TriggerOnObjectUpdate+' => 'Spustit při aktualizaci objektu [podřízené třídy] dané třídy',
+	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Cílová pole',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ]);

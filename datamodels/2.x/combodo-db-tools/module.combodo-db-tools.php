@@ -30,7 +30,7 @@ SetupWebPage::AddModule(
 		// Identification
 		//
 		'label' => 'Database maintenance tools',
-		'category' => 'business',
+		'category' => 'Application management',
 
 		// Setup
 		//
@@ -43,6 +43,7 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => [
+			'vendor/autoload.php',
 			'src/Service/DBToolsUtils.php',
 			'src/Service/DBAnalyzerUtils.php',
 		],

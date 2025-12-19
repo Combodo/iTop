@@ -1528,6 +1528,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 // Add translation for Fieldsets
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Globale informatie',
 	'Server:Date' => 'Datum',
 	'Server:moreinfo' => 'Meer informatie',

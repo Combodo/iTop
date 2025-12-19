@@ -62,7 +62,7 @@ class CaseLogEntryForm extends UIContentBlock
 	 * @param \DBObject $oObject
 	 * @param string|null $sId
 	 */
-	public function __construct(DBObject $oObject, string $sAttCode, string $sId = null)
+	public function __construct(DBObject $oObject, string $sAttCode, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->oObject = $oObject;

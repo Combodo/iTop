@@ -1375,7 +1375,7 @@ try {
 		$oErrorPage->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
 	}
 	$sErrorDetails = ($e instanceof CoreException) ? $e->getHtmlDesc() : $e->getMessage();
-	$oErrorPage->error(Dict::Format('UI:Error_Details', utils::EscapeHtml($sErrorDetails)));
+	$oErrorPage->error(Dict::Format('UI:Error_Details', utils::EscapeHtml($sErrorDetails)), $e);
 	$oErrorPage->output();
 
 	$sErrorStackTrace = ($e instanceof CoreException) ? $e->getFullStackTraceAsString() : $e->getTraceAsString();
@@ -1394,7 +1394,7 @@ try {
 				$oLog->Set('data', $aData);
 				$oLog->DBInsertNoReload();
 			} catch (Exception $e) {
-				IssueLog::Error("Failed to log issue into the DB");
+				IssueLog::Exception("Failed to log issue into the DB", $e);
 			}
 		}
 	}

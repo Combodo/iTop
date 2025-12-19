@@ -27,7 +27,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => '',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Mot de passe changé le',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Dernière date à laquelle le mot de passe a été changé',
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Le mot de passe doit contenir au moins 8 caractères, avec minuscule, majuscule, nombre et caractère spécial.',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Le mot de passe doit contenir au moins 12 caractères, avec minuscule, majuscule, nombre et caractère spécial.',
 	'UserLocal:password:expiration' => 'Les champs ci-dessous nécessitent une extension',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Impossible de mettre "Usage unique" comme validité du mot de passe pour son propre utilisateur.',
 ]);

@@ -1,0 +1,400 @@
+<?xml version="1.0"?>
+<xsd:schema
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+>
+  <xsd:include schemaLocation="itop-delta.xsd"/>
+
+  <xsd:complexType name="Combodo-AbstractAbstractPropertyType" abstract="true">
+    <xsd:attribute name="id" type="xsd:string" use="required"/>
+    <xsd:attribute name="_delta" type="itop-delta-flag"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="Combodo-AbstractPropertyType"> <!-- not abstract! -->
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-AbstractAbstractPropertyType">
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="Combodo-PropertyType">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-AbstractAbstractPropertyType">
+        <xsd:sequence>
+          <xsd:element name="extends" type="xsd:string"/>
+          <xsd:element name="definition" type="Combodo-ValueType-Abstract"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <!--============================= Internal types ===============================-->
+  <xsd:simpleType name="itop-tag" id="itop-tag">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Za-z][A-Za-z_0-9]*"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:attributeGroup name="attribute-itop-tag-as-id">
+    <xsd:attribute name="id" type="itop-tag" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Name of the tag in the target XML delta. Should be lower case, separated by underscores</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+
+  <xsd:simpleType name="dictentry-or-string">
+    <xsd:annotation>
+      <xsd:documentation>Dictionary entry or string</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+
+  <xsd:complexType name="class-name-or-ref">
+    <xsd:annotation>
+      <xsd:appinfo>Example: "{{query1.class}}"</xsd:appinfo>
+      <xsd:documentation>Reference to the class to</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string"/>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="label-and-value">
+    <xsd:sequence>
+      <xsd:element name="label" type="dictentry-or-string"/>
+      <xsd:element name="value" type="xsd:string"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!--============================= Scalar Value types ===============================-->
+
+  <xsd:complexType name="Combodo-ValueType-Abstract">
+    <xsd:sequence>
+      <xsd:element name="label" minOccurs="0" type="xsd:string"/>
+      <xsd:element name="usage" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>When to use this tag (always, never, optional...)</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:NMTOKEN">
+            <xsd:enumeration value="optional"/>
+            <xsd:enumeration value="required"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="relevance-condition" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>OQL Expression, with each sibling value as a parameter like in "{{query.selected_class = 'Ticket'}}"</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="itop-tag"/> <!-- Sometimes mandatory, sometimes optional... could not manage to handle both cases, thus I've left it as a lazy validation -->
+  </xsd:complexType>
+
+  <xsd:complexType name="Combodo-ValueType-Leaf">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Abstract">
+        <xsd:sequence>
+          <xsd:element name="xml-format" minOccurs="0" type="Combodo-XMLFormat-Abstract">
+            <xsd:annotation>
+              <xsd:documentation>Format of the property in the source XML</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="Combodo-ValueType-Label">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+          <xsd:element name="min-length" minOccurs="0" type="xsd:positiveInteger"/>
+          <xsd:element name="max-length" minOccurs="0" type="xsd:positiveInteger"/>
+          <xsd:element name="not-blank" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-String">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+          <xsd:element name="min-length" minOccurs="0" type="xsd:positiveInteger"/>
+          <xsd:element name="max-length" minOccurs="0" type="xsd:positiveInteger"/>
+          <xsd:element name="not-blank" minOccurs="0"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-Text">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-String">
+        <xsd:sequence>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-Choice">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+          <xsd:element name="values" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" maxOccurs="unbounded">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="label" type="dictentry-or-string"/>
+                    </xsd:sequence>
+                    <xsd:attribute name="id" type="xsd:string" use="required"/>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-ChoiceFromInput">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+          <xsd:element name="values" minOccurs="0">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" maxOccurs="unbounded">
+                  <xsd:complexType>
+                    <xsd:sequence>
+                      <xsd:element name="label" type="dictentry-or-string"/>
+                    </xsd:sequence>
+                    <xsd:attribute name="id" type="xsd:string" use="required"/>
+                  </xsd:complexType>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-Integer">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-Boolean">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+          <xsd:element name="on" type="label-and-value">
+            <xsd:annotation>
+              <xsd:documentation>Value representing "true"</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="off" type="label-and-value">
+            <xsd:annotation>
+              <xsd:documentation>Value representing "false"</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-OQL">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-Class">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+          <xsd:element name="categories-csv" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+              <xsd:appinfo>Example: "bizmodel,structure"</xsd:appinfo>
+              <xsd:documentation>Categories of classes to propose (union)</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-ClassAttribute">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+          <xsd:element name="class" type="class-name-or-ref"/>
+          <xsd:element name="category" maxOccurs="unbounded">
+            <xsd:annotation>
+              <xsd:appinfo>Example: "groupable"</xsd:appinfo>
+              <xsd:documentation>Category of attributes to propose</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:NMTOKEN">
+                <xsd:enumeration value="groupable"/>
+                <xsd:enumeration value="displayable"/>
+                <xsd:enumeration value="numeric"/>
+                <xsd:enumeration value="enum"/>
+                <xsd:enumeration value="date"/>
+                <xsd:enumeration value="link"/>
+                <xsd:enumeration value="string"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-ClassAttributeGroupBy">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+          <xsd:element name="class" type="class-name-or-ref"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-AggregateFunction">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+          <xsd:element name="class" type="class-name-or-ref"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-ClassAttributeValue">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+          <xsd:element name="class" type="class-name-or-ref"/>
+          <xsd:element name="attribute"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-ProfileName">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-Icon">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Leaf">
+        <xsd:sequence>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <!--============================= Complex value types ===============================-->
+  <xsd:complexType name="Combodo-ValueType-PropertyTree">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Abstract">
+        <xsd:sequence>
+          <xsd:element name="nodes">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                  <xsd:element name="node" type="Combodo-ValueType-Abstract">
+                  </xsd:element>
+                </xsd:choice>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-Collection">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Abstract">
+        <xsd:sequence>
+          <xsd:element name="xml-format" minOccurs="0" type="Combodo-XMLFormat-Abstract">
+            <xsd:annotation>
+              <xsd:documentation>Format of the property in the source XML</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="prototype">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:choice minOccurs="0" maxOccurs="unbounded">
+                  <xsd:element name="node" type="Combodo-ValueType-Abstract"/>
+                </xsd:choice>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-CollectionOfValues">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Abstract">
+        <xsd:sequence>
+          <xsd:element name="xml-format" minOccurs="0" type="Combodo-XMLFormat-Abstract">
+            <xsd:annotation>
+              <xsd:documentation>Format of the property in the source XML</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="value-type" type="Combodo-ValueType-Leaf"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <!--============================= XML Formats ===============================-->
+  <xsd:complexType name="Combodo-XMLFormat-Abstract">
+    <xsd:sequence>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="Combodo-XMLFormat-CSV">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-XMLFormat-Abstract">
+        <xsd:sequence>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-XMLFormat-ValueAsId">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-XMLFormat-Abstract">
+        <xsd:sequence>
+          <xsd:element name="tag-name" type="xsd:NCName"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-XMLFormat-FlatArray">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-XMLFormat-Abstract">
+        <xsd:sequence>
+          <xsd:element name="count-tag" type="xsd:NCName">
+            <xsd:annotation>
+              <xsd:documentation>Tag to hold the number of items in the collection</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="tag-format" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>Template to generate tag name for the sub-nodes. Available placeholders: $id$ and $rank$</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+</xsd:schema>
