@@ -188,7 +188,9 @@
       </relations>
     </class>
     <class id="PowerSource" _created_in="itop-datacenter-mgmt" _delta="must_exist">
-      <fields/>
+      <fields>
+        <field id="pdus_list" _delta="delete"/>
+      </fields>
       <presentation>
         <details _delta="redefine">
           <items>
@@ -1673,7 +1675,6 @@
       <fields>
         <field id="type" xsi:type="AttributeEnum" _delta="must_exist">
           <values>
-            <value id="PowerSource"  _delta="define"><code>PowerSource</code></value>
             <value id="CircuitBreaker" _delta="define"><code>CircuitBreaker</code></value>
             <value id="Inverter" _delta="define"><code>Inverter</code></value>
             <value id="STS" _delta="define"><code>STS</code></value>
