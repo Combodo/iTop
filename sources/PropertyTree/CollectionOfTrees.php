@@ -49,7 +49,7 @@ class CollectionOfTrees extends AbstractProperty
 
 	public function ToPHPFormBlock(&$aPHPFragments = []): string
 	{
-		$sFormBlockClass = CollectionBlock::class;
+		$sFormBlockClass = $this->oCollectionType->GetFormBlockClass();
 
 		$sSubTreeClass = 'SubFormFor__'.$this->sIdWithPath;
 
