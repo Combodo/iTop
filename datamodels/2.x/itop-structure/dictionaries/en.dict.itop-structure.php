@@ -215,7 +215,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Document' => 'Document',
-	'Class:Document+' => 'A document that can be shared across multiple objects so it is easy and quick to retrieve it from all the places where it is pertinent',
+	'Class:Document+' => 'Abstract class. A document can be shared across multiple objects so it is easy and quick to retrieve from all the places where it is pertinent',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Name',
 	'Class:Document/Attribute:name+' => '',

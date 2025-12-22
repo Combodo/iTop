@@ -376,7 +376,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:TapeLibrary' => 'Tape Library',
-	'Class:TapeLibrary+' => 'A Tape Library is a Datacenter Device which hosts multiple magnetic Tapes (or cartridge).',
+	'Class:TapeLibrary+' => 'A Tape Library is a Datacenter Device which hosts multiple magnetic Tapes (or cartridge). Tape Libraries are used for data backup or archiving.',
 	'Class:TapeLibrary/ComplementaryName' => '%1$s - %2$s',
 	'Class:TapeLibrary/Attribute:tapes_list' => 'Tapes',
 	'Class:TapeLibrary/Attribute:tapes_list+' => 'All the tapes in the tape library',
@@ -894,7 +894,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Tape' => 'Tape',
-	'Class:Tape+' => 'A Tape Library is a storage device which contains one or more tape drives, a number of slots to hold tape cartridges and an automated method for loading tapes. Tape Libraries are used for data backup or archiving.',
+	'Class:Tape+' => 'A Tape (or cartridge) within '.ITOP_APPLICATION_SHORT.' is removable piece of storage part of a Tape Library. ',
 	'Class:Tape/Attribute:name' => 'Name',
 	'Class:Tape/Attribute:name+' => '',
 	'Class:Tape/Attribute:description' => 'Description',
