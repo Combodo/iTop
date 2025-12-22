@@ -32,7 +32,9 @@ class ValueTypeClass extends AbstractValueType
 		$oModelReflection = DIService::GetInstance()->GetService('ModelReflection');
 
 		$sChoices = "[\n";
-		foreach ($oModelReflection->GetClasses($sCategories, true) as $sClass) {
+		$aClasses = $oModelReflection->GetClasses($sCategories, true);
+		sort($aClasses);
+		foreach ($aClasses as $sClass) {
 			if ($oModelReflection->IsAbstract($sClass)) {
 				continue;
 			}

@@ -104,7 +104,7 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 				}
 				break;
 
-			case 'group_by':
+			case 'groupable':
 				$aForbiddenAttType = [
 					'AttributeLinkedSet',
 					'AttributeFriendlyName',

@@ -9,7 +9,6 @@ namespace Combodo\iTop\PropertyTree;
 
 use Combodo\iTop\DesignDocument;
 use Combodo\iTop\DesignElement;
-use utils;
 
 class PropertyTreeFactory
 {

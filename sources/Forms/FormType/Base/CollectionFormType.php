@@ -7,6 +7,7 @@
 
 namespace Combodo\iTop\Forms\FormType\Base;
 
+use Dict;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormInterface;
@@ -33,7 +34,7 @@ class CollectionFormType extends AbstractType
 		parent::configureOptions($resolver);
 
 		$resolver->setDefaults([
-			'button_label' => 'Add an item',
+			'button_label' => Dict::S('UI:Links:Add:Button'),
 			'allow_ordering' => false,
 		]);
 	}
@@ -42,8 +43,11 @@ class CollectionFormType extends AbstractType
 	public function buildView(FormView $view, FormInterface $form, array $options): void
 	{
 		parent::buildView($view, $form, $options);
-
-		$view->vars['button_label'] = $options['button_label'];
+		if (\utils::IsNotNullOrEmptyString($options['button_label'])) {
+			$view->vars['button_label'] = $options['button_label'];
+		} else {
+			$view->vars['button_label'] = Dict::S('UI:Links:Add:Button');
+		}
 		$view->vars['allow_ordering'] = $options['allow_ordering'];
 	}
 

@@ -43,12 +43,12 @@ class FormsCompilerTest extends ItopDataTestCase
     <nodes>
         <node id="title_property" xsi:type="Combodo-Property">
             <label>UI:BasicTest:Prop-Title</label>
-            <value-type xsi:type="Combodo-ValueTypeLabel">
+            <value-type xsi:type="Combodo-ValueType-Label">
             </value-type>
         </node>
         <node id="class_property" xsi:type="Combodo-Property">
             <label>UI:BasicTest:Prop-Class</label>
-            <value-type xsi:type="Combodo-ValueTypeClass">
+            <value-type xsi:type="Combodo-ValueType-Class">
               <categories-csv>test</categories-csv>
             </value-type>
         </node>
@@ -115,12 +115,12 @@ PHP,
     <nodes>
 		<node id="aggregate_function_property" xsi:type="Combodo-Property">
 			<label>UI:AggregateFunction</label>
-            <value-type xsi:type="Combodo-ValueTypeAggregateFunction">
+            <value-type xsi:type="Combodo-ValueType-AggregateFunction">
             </value-type>
         </node>
 		<node id="choice_property" xsi:type="Combodo-Property">
 			<label>UI:Choice</label>
-            <value-type xsi:type="Combodo-ValueTypeChoice">
+            <value-type xsi:type="Combodo-ValueType-Choice">
               <values>
                 <value id="value_a">
                   <label>Label A</label>
@@ -133,48 +133,48 @@ PHP,
         </node>
 		<node id="class_property" xsi:type="Combodo-Property">
 			<label>UI:Class</label>
-            <value-type xsi:type="Combodo-ValueTypeClass">
+            <value-type xsi:type="Combodo-ValueType-Class">
               <categories-csv>test</categories-csv>
             </value-type>
         </node>
 		<node id="class_attribute_property" xsi:type="Combodo-Property">
 			<label>UI:ClassAttribute</label>
-            <value-type xsi:type="Combodo-ValueTypeClassAttribute">
+            <value-type xsi:type="Combodo-ValueType-ClassAttribute">
             </value-type>
         </node>
 		<node id="class_attribute_group_by_property" xsi:type="Combodo-Property">
 			<label>UI:ClassAttributeGroupBy</label>
-            <value-type xsi:type="Combodo-ValueTypeClassAttributeGroupBy">
+            <value-type xsi:type="Combodo-ValueType-ClassAttributeGroupBy">
             </value-type>
         </node>
 		<node id="class_attribute_value_property" xsi:type="Combodo-Property">
 			<label>UI:ClassAttributeValue</label>
-            <value-type xsi:type="Combodo-ValueTypeClassAttributeValue">
+            <value-type xsi:type="Combodo-ValueType-ClassAttributeValue">
             </value-type>
         </node>
 		<node id="integer_property" xsi:type="Combodo-Property">
 			<label>UI:Integer</label>
-            <value-type xsi:type="Combodo-ValueTypeInteger">
+            <value-type xsi:type="Combodo-ValueType-Integer">
             </value-type>
         </node>
 		<node id="label_property" xsi:type="Combodo-Property">
 			<label>UI:Label</label>
-            <value-type xsi:type="Combodo-ValueTypeLabel">
+            <value-type xsi:type="Combodo-ValueType-Label">
             </value-type>
         </node>
 		<node id="oql_property" xsi:type="Combodo-Property">
 			<label>UI:OQL</label>
-            <value-type xsi:type="Combodo-ValueTypeOQL">
+            <value-type xsi:type="Combodo-ValueType-OQL">
             </value-type>
         </node>
 		<node id="string_property" xsi:type="Combodo-Property">
 			<label>UI:String</label>
-            <value-type xsi:type="Combodo-ValueTypeString">
+            <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
         <node id="choice_from_input" xsi:type="Combodo-Property">
             <label>UI:ChoiceFromInput</label>
-            <value-type xsi:type="Combodo-ValueTypeChoiceFromInput">
+            <value-type xsi:type="Combodo-ValueType-ChoiceFromInput">
               <values>
                 <value id="value_a">
                   <label>{{class_attribute_property.label}}</label>
@@ -257,15 +257,16 @@ PHP,
 	    <node id="sub_tree_collection" xsi:type="Combodo-CollectionOfTrees">
 	      <label>UI:SubTree</label>
 	      <button-label>UI:AddSubTree</button-label>
+	      <collection-type xsi:type="Combodo-CollectionType-Collection"/>
 	      <prototype>
 	        <node id="string_property" xsi:type="Combodo-Property">
 	          <label>UI:String</label>
-	          <value-type xsi:type="Combodo-ValueTypeString">
+	          <value-type xsi:type="Combodo-ValueType-String">
 	          </value-type>
 	        </node>
 			<node id="integer_property" xsi:type="Combodo-Property">
 				<label>UI:Integer</label>
-	            <value-type xsi:type="Combodo-ValueTypeInteger">
+	            <value-type xsi:type="Combodo-ValueType-Integer">
 	            </value-type>
 	        </node>
 	      </prototype>
@@ -309,7 +310,7 @@ PHP,
     <nodes>
 		<node id="class_attribute_property" xsi:type="Combodo-Property">
 			<label>UI:ClassAttribute</label>
-			<value-type xsi:type="Combodo-ValueTypeClassAttribute">
+			<value-type xsi:type="Combodo-ValueType-ClassAttribute">
 				<class>Contact</class>
 				<invalid-input>Test</invalid-input>
 			</value-type>
@@ -338,7 +339,7 @@ PHP,
     <nodes>
 		<node id="class_attribute_property" xsi:type="Combodo-Property">
 			<label>'Class' and "Attribute"</label>
-			<value-type xsi:type="Combodo-ValueTypeClassAttribute">
+			<value-type xsi:type="Combodo-ValueType-ClassAttribute">
 				<class>{{CONCAT("'", '"')}}</class>
 				<category>'Class' and "Attribute"</category>
 				<invalid-input>Test</invalid-input>
@@ -373,13 +374,13 @@ PHP,
     <nodes>
 		<node id="class_property" xsi:type="Combodo-Property">
 			<label>UI:Class</label>
-            <value-type xsi:type="Combodo-ValueTypeClass">
+            <value-type xsi:type="Combodo-ValueType-Class">
               <categories-csv>test</categories-csv>
             </value-type>
         </node>
 		<node id="class_attribute_property" xsi:type="Combodo-Property">
 			<label>UI:ClassAttribute</label>
-			<value-type xsi:type="Combodo-ValueTypeClassAttribute">
+			<value-type xsi:type="Combodo-ValueType-ClassAttribute">
 				<class>{{class_property.text}}</class>
 			</value-type>
         </node>
@@ -413,13 +414,13 @@ PHP,
     <nodes>
 		<node id="class_property" xsi:type="Combodo-Property">
 			<label>UI:Class</label>
-            <value-type xsi:type="Combodo-ValueTypeClass">
+            <value-type xsi:type="Combodo-ValueType-Class">
               <categories-csv>test</categories-csv>
             </value-type>
         </node>
 		<node id="class_attribute_property" xsi:type="Combodo-Property">
 			<label>UI:ClassAttribute</label>
-			<value-type xsi:type="Combodo-ValueTypeClassAttribute">
+			<value-type xsi:type="Combodo-ValueType-ClassAttribute">
 				<class>{{IF(class_property.value = '', 'Person', class_property.value)}}</class>
 			</value-type>
         </node>
@@ -458,13 +459,13 @@ PHP,
     <nodes>
 		<node id="source_property" xsi:type="Combodo-Property">
 			<label>UI:Source</label>
-            <value-type xsi:type="Combodo-ValueTypeString">
+            <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
 		<node id="dependant_property" xsi:type="Combodo-Property">
 			<label>UI:Dependant</label>
 			<relevance-condition>{{source_property.text != 'count'}}</relevance-condition>
-            <value-type xsi:type="Combodo-ValueTypeString">
+            <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
 	</nodes>
@@ -500,18 +501,18 @@ PHP,
     <nodes>
 		<node id="source_a_property" xsi:type="Combodo-Property">
 			<label>UI:Source</label>
-            <value-type xsi:type="Combodo-ValueTypeString">
+            <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
 		<node id="source_b_property" xsi:type="Combodo-Property">
 			<label>UI:Source</label>
-            <value-type xsi:type="Combodo-ValueTypeString">
+            <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
 		<node id="dependant_property" xsi:type="Combodo-Property">
 			<label>UI:Dependant</label>
 			<relevance-condition>{{IF(source_a_property.text != '', source_a_property.text, source_b_property.text)}}</relevance-condition>
-            <value-type xsi:type="Combodo-ValueTypeString">
+            <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
 	</nodes>
@@ -551,7 +552,7 @@ PHP,
     <nodes>
     	<node id="class_property" xsi:type="Combodo-Property">
 			<label>UI:Class</label>
-            <value-type xsi:type="Combodo-ValueTypeClass">
+            <value-type xsi:type="Combodo-ValueType-Class">
               <categories-csv>addon/authentication,grant_by_profile,silo</categories-csv>
             </value-type>
         </node>
@@ -566,37 +567,37 @@ class FormFor__ClassCategory extends Combodo\iTop\Forms\Block\Base\FormBlock
 		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
 			'label' => 'UI:Class',
 			'choices' => [
-				\Dict::S('Class:UserExternal') => 'UserExternal',
-				\Dict::S('Class:UserLDAP') => 'UserLDAP',
-				\Dict::S('Class:UserLocal') => 'UserLocal',
-				\Dict::S('Class:AuditRule') => 'AuditRule',
+				\Dict::S('Class:ActionEmail') => 'ActionEmail',
+				\Dict::S('Class:ActionNewsroom') => 'ActionNewsroom',
 				\Dict::S('Class:AuditCategory') => 'AuditCategory',
 				\Dict::S('Class:AuditDomain') => 'AuditDomain',
+				\Dict::S('Class:AuditRule') => 'AuditRule',
+				\Dict::S('Class:OAuthClientAzure') => 'OAuthClientAzure',
+				\Dict::S('Class:OAuthClientGoogle') => 'OAuthClientGoogle',
 				\Dict::S('Class:QueryOQL') => 'QueryOQL',
-				\Dict::S('Class:ActionEmail') => 'ActionEmail',
-				\Dict::S('Class:TriggerOnPortalUpdate') => 'TriggerOnPortalUpdate',
-				\Dict::S('Class:TriggerOnStateEnter') => 'TriggerOnStateEnter',
-				\Dict::S('Class:TriggerOnStateLeave') => 'TriggerOnStateLeave',
-				\Dict::S('Class:TriggerOnObjectCreate') => 'TriggerOnObjectCreate',
-				\Dict::S('Class:TriggerOnObjectDelete') => 'TriggerOnObjectDelete',
-				\Dict::S('Class:TriggerOnObjectUpdate') => 'TriggerOnObjectUpdate',
-				\Dict::S('Class:TriggerOnObjectMention') => 'TriggerOnObjectMention',
-				\Dict::S('Class:TriggerOnAttributeBlobDownload') => 'TriggerOnAttributeBlobDownload',
-				\Dict::S('Class:TriggerOnThresholdReached') => 'TriggerOnThresholdReached',
-				\Dict::S('Class:SynchroDataSource') => 'SynchroDataSource',
-				\Dict::S('Class:SynchroAttribute') => 'SynchroAttribute',
 				\Dict::S('Class:SynchroAttExtKey') => 'SynchroAttExtKey',
 				\Dict::S('Class:SynchroAttLinkSet') => 'SynchroAttLinkSet',
+				\Dict::S('Class:SynchroAttribute') => 'SynchroAttribute',
+				\Dict::S('Class:SynchroDataSource') => 'SynchroDataSource',
 				\Dict::S('Class:SynchroLog') => 'SynchroLog',
 				\Dict::S('Class:SynchroReplica') => 'SynchroReplica',
-				\Dict::S('Class:ActionNewsroom') => 'ActionNewsroom',
 				\Dict::S('Class:TriggerOnAttachmentCreate') => 'TriggerOnAttachmentCreate',
 				\Dict::S('Class:TriggerOnAttachmentDelete') => 'TriggerOnAttachmentDelete',
 				\Dict::S('Class:TriggerOnAttachmentDownload') => 'TriggerOnAttachmentDownload',
-				\Dict::S('Class:OAuthClientAzure') => 'OAuthClientAzure',
-				\Dict::S('Class:OAuthClientGoogle') => 'OAuthClientGoogle',
+				\Dict::S('Class:TriggerOnAttributeBlobDownload') => 'TriggerOnAttributeBlobDownload',
+				\Dict::S('Class:TriggerOnObjectCreate') => 'TriggerOnObjectCreate',
+				\Dict::S('Class:TriggerOnObjectDelete') => 'TriggerOnObjectDelete',
+				\Dict::S('Class:TriggerOnObjectMention') => 'TriggerOnObjectMention',
+				\Dict::S('Class:TriggerOnObjectUpdate') => 'TriggerOnObjectUpdate',
+				\Dict::S('Class:TriggerOnPortalUpdate') => 'TriggerOnPortalUpdate',
+				\Dict::S('Class:TriggerOnStateEnter') => 'TriggerOnStateEnter',
+				\Dict::S('Class:TriggerOnStateLeave') => 'TriggerOnStateLeave',
+				\Dict::S('Class:TriggerOnThresholdReached') => 'TriggerOnThresholdReached',
 				\Dict::S('Class:URP_Profiles') => 'URP_Profiles',
 				\Dict::S('Class:URP_UserOrg') => 'URP_UserOrg',
+				\Dict::S('Class:UserExternal') => 'UserExternal',
+				\Dict::S('Class:UserLDAP') => 'UserLDAP',
+				\Dict::S('Class:UserLocal') => 'UserLocal',
 			],
 		]);
 	}
@@ -651,7 +652,7 @@ PHP,
 		<node id="dependant_property" xsi:type="Combodo-Property">
 			<label>UI:Dependant</label>
 			<relevance-condition>{{source_property.text == 'count'}}</relevance-condition>
-            <value-type xsi:type="Combodo-ValueTypeString">
+            <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
 	</nodes>
@@ -669,7 +670,7 @@ XML,
 		<node id="dependant_property" xsi:type="Combodo-Property">
 			<label>UI:Dependant</label>
 			<relevance-condition>{{source_property.text = 'count'}}</relevance-condition>
-            <value-type xsi:type="Combodo-ValueTypeString">
+            <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
 	</nodes>
@@ -686,13 +687,13 @@ XML,
     <nodes>
 		<node id="source_property" xsi:type="Combodo-Property">
 			<label>UI:Source</label>
-            <value-type xsi:type="Combodo-ValueTypeString">
+            <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
 		<node id="dependant_property" xsi:type="Combodo-Property">
 			<label>UI:Dependant</label>
 			<relevance-condition>{{source_property.text_output != 'count'}}</relevance-condition>
-            <value-type xsi:type="Combodo-ValueTypeString">
+            <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
 	</nodes>
@@ -709,13 +710,13 @@ XML,
     <nodes>
 		<node id="source_property" xsi:type="Combodo-Property">
 			<label>UI:Source</label>
-            <value-type xsi:type="Combodo-ValueTypeString">
+            <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
 		<node id="dependant_property" xsi:type="Combodo-Property">
 			<label>UI:Dependant</label>
 			<relevance-condition>{{source_property != 'count'}}</relevance-condition>
-            <value-type xsi:type="Combodo-ValueTypeString">
+            <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
 	</nodes>

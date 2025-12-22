@@ -14,7 +14,7 @@ class CollectionEntryElement extends HTMLElement {
 	connectedCallback() {
 
 		if ((this.dataset.new || this.dataset.allowDelete) && this.#eBtnDelete === undefined) {
-			this.#eBtnDelete = this.#createButton('Delete', 'ibo-button ibo-is-regular ibo-is-danger');
+			this.#eBtnDelete = this.#createButton('Remove', 'ibo-button ibo-is-regular ibo-is-danger');
 			this.#eBtnDelete.addEventListener('click', this.#removeCollectionItem.bind(this));
 			this.appendChild(this.#eBtnDelete);
 		}
