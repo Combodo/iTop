@@ -231,7 +231,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:IPPhone' => 'IP Phone',
-	'Class:IPPhone+' => 'Physical device dedicated to phone calls, connected over internet',
+	'Class:IPPhone+' => 'Physical device dedicated to phone calls, connected to a network',
 ]);
 
 //
