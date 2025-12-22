@@ -72,7 +72,7 @@ class BlockRenderer
 			$aAdditionalPaths[] = APPROOT.'lib/symfony/twig-bridge/Resources/views/Form';
 			$oTwig = TwigHelper::GetTwigEnvironment(static::TWIG_BASE_PATH, $aAdditionalPaths);
 			/** @link https://github.com/symfony/twig-bridge/blob/6.4/CHANGELOG.md#320 */
-			$formEngine = new TwigRendererEngine(['application/forms/itop_console_layout.html.twig'], $oTwig);
+			$formEngine = new TwigRendererEngine(['application/forms/itop_console_layout.html.twig', 'application/forms/wip_form_demonstrator.html.twig'], $oTwig);
 			$oTwig->addRuntimeLoader(new FactoryRuntimeLoader([
 				FormRenderer::class => function () use ($formEngine): FormRenderer {
 					return new FormRenderer($formEngine, new CsrfTokenManager());
