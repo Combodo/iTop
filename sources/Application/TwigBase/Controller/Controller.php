@@ -125,7 +125,7 @@ abstract class Controller extends AbstractController
 	 * @throws \ReflectionException
 	 * @throws \Twig\Error\LoaderError
 	 */
-	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [], array $aThemes = ['application/forms/itop_console_layout.html.twig'])
+	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [], array $aThemes = ['application/forms/itop_console_layout.html.twig', 'application/forms/wip_form_demonstrator.html.twig'])
 	{
 		$this->aLinkedScripts = [];
 		$this->aLinkedStylesheets = [];
@@ -220,7 +220,7 @@ abstract class Controller extends AbstractController
 	 *
 	 * @throws \Twig\Error\LoaderError
 	 */
-	public function SetViewPath($sViewPath, $aAdditionalPaths = [], array $aThemes = ['application/forms/itop_console_layout.html.twig']): void
+	public function SetViewPath($sViewPath, $aAdditionalPaths = [], array $aThemes = ['application/forms/itop_console_layout.html.twig', 'application/forms/wip_form_demonstrator.html.twig']): void
 	{
 		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath, $aAdditionalPaths);
 		/** @link https://github.com/symfony/twig-bridge/blob/6.4/CHANGELOG.md#320 */
