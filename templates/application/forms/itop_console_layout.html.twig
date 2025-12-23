@@ -1,13 +1,39 @@
 {% use "application/forms/itop_base_layout.html.twig" %}
 
-{# Widgets #}
+{%- block form_start -%}
+    {%- do form.setMethodRendered() -%}
+    {% set method = method|upper %}
+    {%- if method in ["GET", "POST"] -%}
+        {% set form_method = method %}
+    {%- else -%}
+        {% set form_method = "POST" %}
+    {%- endif -%}
+<form is="itop-form-element" {% if name != '' %} name="{{ name }}"{% endif %} method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{{ block('attributes') }}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+    {%- if form_method != method -%}
+        <input type="hidden" name="_method" value="{{ method }}" />
+    {%- endif -%}
+{%- endblock form_start -%}
+
+{%- block form_end -%}
+    {%- if not render_rest is defined or render_rest -%}
+        {{ form_rest(form) }}
+    {%- endif -%}
+</form>
+{%- endblock form_end -%}
 
 {%- block widget_attributes -%}
     {{- parent() -}}
     {%  if trigger_form_submit_on_modify %}
-        onChange="triggerTurbo(this);"
+        onChange="this.form.TriggerTurbo(this);"
     {% endif %}
 {%- endblock widget_attributes -%}
+
+{%- block attributes -%}
+    {{- parent() -}}
+    {%  if impacted_by is not empty  %}
+        data-impacted-by="{{ impacted_by|join(',') }}"
+    {% endif %}
+{%- endblock attributes -%}
 
 {%- block form_widget_simple -%}
     {%  if type == 'text' %}{% set ibo_class='ibo-input-string' %}{% else %}{% set ibo_class='ibo-input-' ~ type %}{% endif %}

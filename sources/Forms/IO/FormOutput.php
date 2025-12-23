@@ -49,7 +49,6 @@ class FormOutput extends AbstractFormIO
 	 */
 	public function ConvertValue(mixed $oData): mixed
 	{
-		IssueLog::Error($this->GetName().'  array:'.$this->IsArray());
 		if ($this->IsArray()) {
 			return $this->ConvertArrayValue($oData);
 		} else {

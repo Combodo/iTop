@@ -261,7 +261,7 @@ class IORegister
 	 *
 	 * @return bool
 	 */
-	public function ImpactDependentsBlocks(): bool
+	public function IsImpactingBlocks(): bool
 	{
 		/** @var FormOutput $oFormOutput */
 		foreach ($this->aOutputs as $oFormOutput) {
@@ -271,6 +271,27 @@ class IORegister
 		}
 
 		return false;
+	}
+
+	/**
+	 * Return the dependencies blocks.
+	 *
+	 * @return array
+	 */
+	public function GetImpactedBlocks(): array
+	{
+		$aBlocks = [];
+
+		/** @var FormInput $oFormInput */
+		foreach ($this->aInputs as $oFormInput) {
+			if ($oFormInput->IsBound()) {
+				$oBlock = $oFormInput->GetBinding()->oSourceIO->GetOwnerBlock();
+				$sId = FormBlockHelper::GetFormId($oBlock);
+				$aBlocks[$sId] = $oBlock;
+			}
+		}
+
+		return $aBlocks;
 	}
 
 	/**

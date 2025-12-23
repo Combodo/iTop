@@ -1,4 +1,10 @@
 class ChoicesElement extends HTMLSelectElement {
+
+	// register the custom element
+	static {
+		customElements.define('choices-element', ChoicesElement, {extends: 'select'});
+	}
+
 	plugins = [];
 	connectedCallback() {
 
@@ -36,4 +42,4 @@ class ChoicesElement extends HTMLSelectElement {
 	}
 }
 
-customElements.define('choices-element', ChoicesElement, {extends: 'select'});
+

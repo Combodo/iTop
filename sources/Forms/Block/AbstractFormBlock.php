@@ -391,9 +391,19 @@ abstract class AbstractFormBlock implements IFormBlock
 	 *
 	 * @return bool
 	 */
-	public function ImpactDependentsBlocks(): bool
+	public function IsImpactingBlocks(): bool
 	{
-		return $this->oIORegister->ImpactDependentsBlocks();
+		return $this->oIORegister->IsImpactingBlocks();
+	}
+
+	/**
+	 * Return the dependencies blocks.
+	 *
+	 * @return array
+	 */
+	public function GetImpactedBlocks(): array
+	{
+		return $this->oIORegister->GetImpactedBlocks();
 	}
 
 	/**

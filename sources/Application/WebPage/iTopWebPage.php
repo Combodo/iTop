@@ -165,8 +165,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	{
 		parent::InitializeLinkedScripts();
 
-		$this->LinkScriptFromAppRoot('js/forms/forms.js');
-
 		// Used by forms
 		$this->LinkScriptFromAppRoot('js/leave_handler.js');
 
@@ -182,6 +180,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->LinkScriptFromAppRoot('node_modules/selectize-plugin-a11y/selectize-plugin-a11y.js');
 		$this->LinkScriptFromAppRoot('js/jquery.multiselect.js');
 		$this->LinkScriptFromAppRoot('node_modules/tom-select/dist/js/tom-select.complete.min.js');
+		$this->LinkScriptFromAppRoot('js/forms/custom-elements/form.js');
 		$this->LinkScriptFromAppRoot('js/forms/custom-elements/choices.js');
 		$this->LinkScriptFromAppRoot('js/forms/custom-elements/oql.js');
 		$this->LinkScriptFromAppRoot('js/forms/custom-elements/collection.js');

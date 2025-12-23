@@ -59,7 +59,8 @@ class FormTypeExtension extends AbstractTypeExtension
 			$view->vars['form_block_class'] = $options['form_block_class'];
 
 			$oFormBlock = $options['form_block'];
-			$view->vars['trigger_form_submit_on_modify'] = $oFormBlock->ImpactDependentsBlocks();
+			$view->vars['trigger_form_submit_on_modify'] = $oFormBlock->IsImpactingBlocks();
+			$view->vars['impacted_by'] = array_keys( $oFormBlock->GetImpactedBlocks());
 		}
 	}
 }
