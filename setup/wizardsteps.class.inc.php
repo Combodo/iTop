@@ -1562,7 +1562,7 @@ EOF
 			}
 		}
 
-		$aAlternatives = isset($aInfo['alternatives']) ? $aInfo['alternatives'] : [];
+		$aAlternatives = $aInfo['alternatives'] ?? [];
 		$sChoiceName = null;
 		foreach ($aAlternatives as $index => $aChoice) {
 			$sChoiceId = $sParentId.self::$SEP.$index;
@@ -1953,10 +1953,47 @@ EOF
 		return '<i class="setup-extension--icon '.$sDecorationClass.'" data-tooltip-content="'.$sResult.'"></i>';
 	}
 
+	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck, bool $bUpgradeMode)
+	{
+		$oITopExtension = $this->oExtensionsMap->GetFromExtensionCode($aChoice['extension_code']);
+		$bCanBeUninstalled = isset($aChoice['uninstallable']) ? $aChoice['uninstallable'] === true || $aChoice['uninstallable'] === 'yes' : $oITopExtension->CanBeUninstalled();
+		$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId);
+		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $bUpgradeMode && $oITopExtension->bInstalled && !$bCanBeUninstalled && !$bDisableUninstallCheck;
+
+		$bMissingFromDisk = isset($aChoice['missing']) && $aChoice['missing'] === true;
+		$bInstalled = $bMissingFromDisk || $oITopExtension->bInstalled;
+		$bDisabled = $bMandatory || $bAllDisabled || $bMissingFromDisk;
+		$bChecked = $bMandatory || $bSelected;
+
+		if (isset($aChoice['sub_options'])) {
+			$aOptions = $aChoice['sub_options']['options'] ?? [];
+			foreach ($aOptions as $index => $aSubChoice) {
+				$sSubChoiceId = $sChoiceId.self::$SEP.$index;
+				$aSubFlags = $this->ComputeChoiceFlags($aSubChoice, $sSubChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $bUpgradeMode);
+				if ($aSubFlags['checked']) {
+					$bChecked = true;
+					if ($aSubFlags['disabled']) {
+						//If some sub options are enabled and cannot be disabled, this choice should also cannot be disabled since it would disable all its sub options
+						$bDisabled = true;
+					}
+				}
+
+			}
+		}
+
+		return [
+			'uninstallable' => $bCanBeUninstalled,
+			'missing' => $bMissingFromDisk,
+			'installed' => $bInstalled,
+			'disabled' => $bDisabled,
+			'checked' => $bChecked,
+		];
+	}
+
 	protected function DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults, $sParentId = '', $bAllDisabled = false)
 	{
-		$aOptions = isset($aStepInfo['options']) ? $aStepInfo['options'] : [];
-		$aAlternatives = isset($aStepInfo['alternatives']) ? $aStepInfo['alternatives'] : [];
+		$aOptions = $aStepInfo['options'] ?? [];
+		$aAlternatives = $aStepInfo['alternatives'] ?? [];
 
 		$bDisableUninstallCheck = (bool)$this->oWizard->GetParameter('force-uninstall', false);
 
@@ -1964,43 +2001,33 @@ EOF
 			$sChoiceId = $sParentId.self::$SEP.$index;
 			$sDataId = 'data-id="'.utils::EscapeHtml($aChoice['extension_code']).'"';
 			$sId = utils::EscapeHtml($aChoice['extension_code']);
-			$bIsDefault = array_key_exists($sChoiceId, $aDefaults);
-
-			$oITopExtension = $this->oExtensionsMap->GetFromExtensionCode($aChoice['extension_code']);
-			$bCanBeUninstalled = isset($aChoice['uninstallable']) ? $aChoice['uninstallable'] : $oITopExtension->CanBeUninstalled();
-			$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId);
-			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $this->bUpgrade && $bIsDefault && !$bCanBeUninstalled && !$bDisableUninstallCheck;
-			;
-			$bMissingFromDisk = isset($aChoice['missing']) && $aChoice['missing'] === true;
-			$bInstalled = $bMissingFromDisk || $oITopExtension->bInstalled;
-			$bDisabled = $bMandatory || $bAllDisabled || $bMissingFromDisk;
-			$bChecked = $bMandatory || $bSelected;
+			$aFlags = static::ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $this->bUpgrade);
 
 			$sTooltip = '';
 			$sUnremovable = '';
-			if ($bMissingFromDisk) {
+			if ($aFlags['missing']) {
 				$sTooltip .= '<span class="setup-extension-tag removed">source removed</span>';
 			}
-			if ($bInstalled) {
+			if ($aFlags['installed']) {
 				$sTooltip .= '<span class="setup-extension-tag checked installed">installed</span>';
 				$sTooltip .= '<span class="setup-extension-tag unchecked tobeuninstalled">to be uninstalled</span>';
 			} else {
 				$sTooltip .= '<span class="setup-extension-tag checked tobeinstalled">to be installed</span>';
 				$sTooltip .= '<span class="setup-extension-tag unchecked notinstalled">not installed</span>';
 			}
-			if (!$bCanBeUninstalled) {
+			if (!$aFlags['uninstallable']) {
 				$sTooltip .= '<span class="setup-extension-tag notuninstallable">cannot be uninstalled</span>';
 			}
-			if ($bDisabled && !$bChecked && !$bCanBeUninstalled && !$bDisableUninstallCheck) {
+			if ($aFlags['disabled'] && !$aFlags['checked'] && !$aFlags['uninstallable'] && !$bDisableUninstallCheck) {
 				$this->bCanMoveForward = false;//Disable "Next"
 			}
-			$sChecked = $bChecked ? ' checked ' : '';
-			$sDisabled = $bDisabled ? ' disabled data-disabled="disabled" ' : '';
-			$sMissingModule = $bMissingFromDisk ? 'setup-extension--missing' : '';
+			$sChecked = $aFlags['checked'] ? ' checked ' : '';
+			$sDisabled = $aFlags['disabled'] ? ' disabled data-disabled="disabled" ' : '';
+			$sMissingModule = $aFlags['missing'] ? 'setup-extension--missing' : '';
 
-			$sHiddenInput = $bDisabled && $bChecked ? '<input type="hidden" name="choice['.$sChoiceId.']" value="'.$sChoiceId.'"/>' : '';
+			$sHiddenInput = $aFlags['disabled'] && $aFlags['checked'] ? '<input type="hidden" name="choice['.$sChoiceId.']" value="'.$sChoiceId.'"/>' : '';
 			$oPage->add('<div class="choice '.$sMissingModule.'" '.$sDataId.'><input class="wiz-choice '.$sUnremovable.'" id="'.$sId.'" name="choice['.$sChoiceId.']" type="checkbox" value="'.$sChoiceId.'" '.$sDisabled.$sChecked.'/>'.$sHiddenInput.'&nbsp;');
-			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled, $sTooltip);
+			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $aFlags['disabled'], $sTooltip);
 			$oPage->add('</div>');
 		}
 		$sChoiceName = null;
@@ -2035,7 +2062,6 @@ EOF
 			$sChoiceId = $sParentId.self::$SEP.$index;
 			$sDataId = 'data-id="'.utils::EscapeHtml($aChoice['extension_code']).'"';
 			$sId = utils::EscapeHtml($aChoice['extension_code']);
-
 			if ($sChoiceName == null) {
 				$sChoiceName = $sChoiceId; // All radios share the same name
 			}
