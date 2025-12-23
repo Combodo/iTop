@@ -170,8 +170,12 @@ class WebPage implements Page
 	 * @var array Scripts to be executed when the DOM is ready, with a slight delay, after the "init scripts"
 	 */
 	protected $a_ready_scripts;
-	/** @var array Scripts linked (externals) to the page through URIs */
+	/** @var array Scripts linked to the page through URIs */
 	protected $a_linked_scripts;
+
+	/** @var array Modules that comes from script */
+	public $a_linked_modules_config;
+
 	/** @var array Specific dictionary entries to be used client side */
 	protected $a_dict_entries;
 	/** @var array Sub-sets of dictionary entries (based on the given prefix) for the client side */
@@ -233,6 +237,7 @@ class WebPage implements Page
 		$this->InitializeInitScripts();
 		$this->InitializeReadyScripts();
 		$this->InitializeLinkedScripts();
+		$this->InitializeLinkedModulesScript();
 		$this->InitializeDictEntries();
 		$this->InitializeStyles();
 		$this->InitializeLinkedStylesheets();
@@ -873,6 +878,19 @@ class WebPage implements Page
 	}
 
 	/**
+	 * Empty all base linked modules for the page
+	 *
+	 * @return void
+	 * @uses WebPage::$a_a_linked_modules
+	 * @since 3.0.0
+	 */
+	protected function EmptyLinkedModulesScript(): void
+	{
+		$this->a_linked_modules_config = [];
+	}
+
+
+	/**
 	 * Initialize base linked scripts for the page
 	 *
 	 * @uses WebPage::$a_linked_scripts
@@ -882,6 +900,18 @@ class WebPage implements Page
 	protected function InitializeLinkedScripts(): void
 	{
 		$this->EmptyLinkedScripts();
+	}
+
+	/**
+	 * Initialize base linked scripts for the page
+	 *
+	 * @uses WebPage::$a_linked_a_linked_modules
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeLinkedModulesScript(): void
+	{
+		$this->EmptyLinkedModulesScript();
 	}
 
 	/**
@@ -902,6 +932,28 @@ class WebPage implements Page
 	 */
 	public function LinkScriptFromAppRoot(string $sFileRelPath): void
 	{
+		$this->LinkResourceFromAppRoot($sFileRelPath, static::ENUM_RESOURCE_TYPE_JS);
+	}
+
+	/**
+	 * Use to include JS modules (and configuration) from the iTop package (e.g. `<ITOP>/js/*`)
+	 *
+	 * The provided JS code will be executed at step 2 of the JS execution chain:
+	 * early script ==> [linked script] ==> script ==> init script ==> ready script
+	 *
+	 * @api-advanced
+	 * @see static::add_early_script, static::add_script, static::add_init_script, static::add_ready_script
+	 * @see static::LinkScriptFromURI, static::LinkScriptFromModule
+	 *
+	 * @param string $sFileRelPath Rel. path from iTop app. root of the JS file to link (e.g. `js/utils.js`)
+	 *
+	 * @return void
+	 * @throws \Exception
+	 * @since 3.2.0 N°7315
+	 */
+	public function LinkModuleFromAppRoot(string $sFileRelPath): void
+	{
+		// TODO adapt with array method
 		$this->LinkResourceFromAppRoot($sFileRelPath, static::ENUM_RESOURCE_TYPE_JS);
 	}
 
@@ -1563,6 +1615,7 @@ JS;
 			'aCssInline'          => $this->a_styles,
 			'aJsInlineEarly'      => $this->a_early_scripts,
 			'aJsFiles'            => $this->a_linked_scripts,
+			'aJsModulesFiles'     => $this->a_linked_modules_config,
 			'aJsInlineLive'       => $this->a_scripts,
 			'aJsInlineOnDomReady' => $this->GetReadyScripts(),
 			'aJsInlineOnInit'     => $this->a_init_scripts,

@@ -85,6 +85,12 @@ class ConsoleBlockRenderer extends BlockRenderer
 		foreach ($oBlock->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
 			$oPage->LinkScriptFromURI($sFileAbsUrl);
 		}
+
+		// JS modules configurations
+		foreach ($oBlock->GetJsModulesRecursively(true) as $sJsModuleConfig) {
+			$oPage->a_linked_modules_config [] = $sJsModuleConfig;
+		}
+
 		static::AddCssJsTemplatesToPageRecursively($oPage, $oBlock, $aContextParams);
 	}
 

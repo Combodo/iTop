@@ -215,6 +215,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 			'aCssFiles'           => $this->a_linked_stylesheets,
 			'aCssInline'          => $this->a_styles,
 			'aJsFiles'            => $this->a_linked_scripts,
+			'aJsFilesModules' => $this->a_linked_modules_config,
 			'aJsInlineLive'       => $this->a_scripts,
 			'aJsInlineOnDomReady' => $this->GetReadyScripts(),
 			'aJsInlineOnInit'     => $this->a_init_scripts,

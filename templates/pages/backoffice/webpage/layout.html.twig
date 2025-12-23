@@ -144,6 +144,21 @@ const aLoadedJsFilesResolveCallbacks = new Map();
     {% endblock %}
 {% endblock %}
 
+{% block iboPageJsModuleScripts %}
+
+    {% if aPage.aJsFilesModules is not empty %}
+        <script>
+            console.log("aPage:", {{ aPage|raw }});
+        </script>
+        {% for aJsModule in aPage.aJsFilesModules %}
+        <script type="module">
+            import { {{ aJsModule.sModuleName }} } from "{{ aJsModule.sJsModuleSrc }}";
+            {{ aJsModule.sModuleConfigJs|raw }}
+        </script>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
 {% block iboCapturedOutput %}
     {{ aPage.sCapturedOutput|raw }}
 {% endblock %}

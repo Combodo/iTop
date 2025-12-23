@@ -66,6 +66,11 @@ abstract class UIBlock implements iUIBlock
 		'js/ui-block.js',
 	];
 	/**
+	 * @var array
+	 * @see static::$aJsModulesConfig
+	 */
+	public const DEFAULT_JS_MODULES_CONFIG = [];
+	/**
 	 * @var string|null Relative path (from <ITOP>/templates/) to the "on init" JS template
 	 * @see static::$aJsTemplatesRelPath
 	 * @see iUIBlock::ENUM_JS_TYPE_ON_INIT
@@ -139,6 +144,11 @@ abstract class UIBlock implements iUIBlock
 	 */
 	protected $aJsFilesRelPath = [];
 	/**
+	 * @var array Relative paths (from <ITOP>/) to the external JS module files to include in the page.
+	 * @description Used to include JS file that contains modules + the JS code assocciated to these modules. Even if you use only a few modules, the whole JS file will be loaded.
+	 */
+	protected $aJsModulesConfig = [];
+	/**
 	 * @var array
 	 * @see iUIBlock::GetCssFilesRelPaths()
 	 */
@@ -181,6 +191,9 @@ abstract class UIBlock implements iUIBlock
 		) {
 			$this->AddMultipleJsFilesRelPaths(static::DEFAULT_JS_FILES_REL_PATH);
 		}
+
+		$this->AddMultipleJsModulesFilesRelPaths(static::DEFAULT_JS_MODULES_CONFIG);
+
 
 		// Add external CSS files
 		// 1) From ancestors if they are required
@@ -256,6 +269,15 @@ abstract class UIBlock implements iUIBlock
 	/**
 	 * @inheritDoc
 	 */
+	public function GetJsModuleConfigs(): array
+	{
+		return $this->aJsModulesConfig;
+	}
+
+
+	/**
+	 * @inheritDoc
+	 */
 	public function GetCssTemplateRelPath(): ?string
 	{
 		return $this->sCssTemplateRelPath;
@@ -320,6 +342,31 @@ abstract class UIBlock implements iUIBlock
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
+	public function GetJsModulesRecursively(bool $bAbsoluteUrl = false): array
+	{
+		$aJsModulesConfigs = [];
+
+		// Files from the block itself
+		foreach ($this->GetJsModuleConfigs() as $sJsCurrentModuleBlockConfig) {
+			$aJsModulesConfigs[] = $sJsCurrentModuleBlockConfig;
+		}
+
+		// Files from its sub blocks
+		foreach ($this->GetSubBlocks() as $sSubBlockName => $oSubBlock) {
+			/** @noinspection SlowArrayOperationsInLoopInspection */
+			$aJsModulesConfigs = array_merge(
+				$aJsModulesConfigs,
+				$oSubBlock->GetJsModulesRecursively($bAbsoluteUrl)
+			);
+		}
+
+		return $aJsModulesConfigs;
+	}
+
+	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
 	public function GetCssFilesUrlRecursively(bool $bAbsoluteUrl = false): array
 	{
 		return $this->GetFilesUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_CSS, $bAbsoluteUrl);
@@ -357,10 +404,32 @@ abstract class UIBlock implements iUIBlock
 	/**
 	 * @inheritDoc
 	 */
+	public function AddJsModuleConfigs(array $aModuleConfig)
+	{
+		$this->aJsModulesConfig[] = $aModuleConfig;
+
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function AddMultipleJsFilesRelPaths(array $aPaths)
 	{
 		foreach ($aPaths as $sPath) {
 			$this->AddJsFileRelPath($sPath);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function AddMultipleJsModulesFilesRelPaths(array $aModulesConfig)
+	{
+		foreach ($aModulesConfig as $aModuleConfig) {
+			$this->AddJsModuleConfigs($aModuleConfig);
 		}
 
 		return $this;

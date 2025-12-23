@@ -164,6 +164,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	protected function InitializeLinkedScripts(): void
 	{
 		parent::InitializeLinkedScripts();
+		parent::InitializeLinkedModulesScript();
 
 		// Used by forms
 		$this->LinkScriptFromAppRoot('js/leave_handler.js');
@@ -926,6 +927,7 @@ HTML;
 				'aCssInline' => $this->a_styles,
 				'aJsInlineEarly' => $this->a_early_scripts,
 				'aJsFiles' => $this->a_linked_scripts,
+				'aJsFilesModules' => $this->a_linked_modules_config,
 				'aJsInlineOnInit' => $this->a_init_scripts,
 				'aJsInlineOnDomReady' => $this->GetReadyScripts(),
 				'aJsInlineLive' => $this->a_scripts,

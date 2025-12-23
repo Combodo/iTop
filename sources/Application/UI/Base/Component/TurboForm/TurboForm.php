@@ -15,6 +15,15 @@ class TurboForm extends UIContentBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-form';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/turbo-form/layout';
+	public const DEFAULT_JS_MODULES_CONFIG = [
+		[
+		'sModuleName' => 'session',
+		'sJsModuleSrc' => '/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js',
+		'sModuleConfigJs' => <<<JS
+session.drive = false;
+JS
+	],
+		];
 
 	/** @var string|null */
 	protected ?string $sOnSubmitJsCode;

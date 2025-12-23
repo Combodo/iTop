@@ -141,6 +141,7 @@ JS
 	protected function InitializeLinkedScripts(): void
 	{
 		parent::InitializeLinkedScripts();
+		parent::InitializeLinkedModulesScript();
 
 		// Used throughout the app.
 		$this->LinkScriptFromAppRoot('node_modules/jquery/dist/jquery.min.js');

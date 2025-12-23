@@ -136,6 +136,15 @@ interface iUIBlock
 	public function AddJsFileRelPath(string $sPath);
 
 	/**
+	 * Add a JS module file (whole files inclusion + module configuration) to a block
+	 *
+	 * @param array $aModuleConfig relative path of a JS file to add
+	 *
+	 * @return $this
+	 */
+	public function AddJsModuleConfigs(array $aModuleConfig);
+
+	/**
 	 * Add several JS files to a block.
 	 * Duplicates will not be added.
 	 *
@@ -144,6 +153,15 @@ interface iUIBlock
 	 * @return mixed
 	 */
 	public function AddMultipleJsFilesRelPaths(array $aPaths);
+
+	/**
+	 * Add several JS modules files to a block.
+	 *
+	 * @param string[] $aModulesConfig
+	 *
+	 * @return mixed
+	 */
+	public function AddMultipleJsModulesFilesRelPaths(array $aModulesConfig);
 
 	/**
 	 * Add a CSS file to a block (if not already present)
