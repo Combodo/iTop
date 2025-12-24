@@ -37,6 +37,7 @@ class OqlFormBlock extends TextAreaFormBlock
 	{
 		parent::RegisterOptions($oOptionsRegister);
 		$oOptionsRegister->SetOption('with_ai_button', false);
+		$oOptionsRegister->SetOptionArrayValue('attr', 'placeholder', 'SELECT Contact');
 	}
 
 	/** @inheritdoc */

@@ -461,8 +461,8 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function BindingReceivedEvent(AbstractFormIO $oBlockIO): void
 	{
+		$this->UpdateOptions($this->oOptionsRegister);
 		if ($this->IsInputsDataReady()) {
-			$this->UpdateOptions($this->oOptionsRegister);
 			$this->AllInputsReadyEvent();
 		}
 	}

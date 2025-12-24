@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Forms\Register;
 
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
+use Combodo\iTop\Forms\Block\Expression\AbstractExpressionFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\Block\FormBlockHelper;
 use Combodo\iTop\Forms\IO\Converter\AbstractConverter;
@@ -286,6 +287,15 @@ class IORegister
 		foreach ($this->aInputs as $oFormInput) {
 			if ($oFormInput->IsBound()) {
 				$oBlock = $oFormInput->GetBinding()->oSourceIO->GetOwnerBlock();
+
+				if($oBlock instanceof AbstractExpressionFormBlock){
+					foreach ($oBlock->GetBoundInputs() as $oExpressionFormInput) {
+						$oBlock = $oExpressionFormInput->GetBinding()->oSourceIO->GetOwnerBlock();
+						$sId = FormBlockHelper::GetFormId($oBlock);
+						$aBlocks[$sId] = $oBlock;
+					}
+				}
+
 				$sId = FormBlockHelper::GetFormId($oBlock);
 				$aBlocks[$sId] = $oBlock;
 			}

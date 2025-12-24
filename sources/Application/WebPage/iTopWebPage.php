@@ -180,12 +180,12 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->LinkScriptFromAppRoot('node_modules/selectize-plugin-a11y/selectize-plugin-a11y.js');
 		$this->LinkScriptFromAppRoot('js/jquery.multiselect.js');
 		$this->LinkScriptFromAppRoot('node_modules/tom-select/dist/js/tom-select.complete.min.js');
-		$this->LinkScriptFromAppRoot('js/forms/custom-elements/form.js');
-		$this->LinkScriptFromAppRoot('js/forms/custom-elements/choices.js');
-		$this->LinkScriptFromAppRoot('js/forms/custom-elements/oql.js');
-		$this->LinkScriptFromAppRoot('js/forms/custom-elements/collection.js');
-		$this->LinkScriptFromAppRoot('js/forms/custom-elements/collection_entry.js');
-		$this->LinkScriptFromAppRoot('js/forms/custom-elements/turbo_stream_event.js');
+		$this->LinkScriptFromAppRoot('js/forms/form_element.js');
+		$this->LinkScriptFromAppRoot('js/forms/choices_element.js');
+		$this->LinkScriptFromAppRoot('js/forms/oql_element.js');
+		$this->LinkScriptFromAppRoot('js/forms/collection_element.js');
+		$this->LinkScriptFromAppRoot('js/forms/collection_entry_element.js');
+		$this->LinkScriptFromAppRoot('js/forms/turbo_stream_event_element.js');
 
 		// Used by inline image, CKEditor and other places
 		$this->LinkScriptFromAppRoot('node_modules/magnific-popup/dist/jquery.magnific-popup.min.js');

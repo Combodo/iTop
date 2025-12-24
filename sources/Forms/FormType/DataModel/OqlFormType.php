@@ -30,24 +30,6 @@ class OqlFormType extends AbstractType
 	/** @inheritdoc  */
 	public function configureOptions(OptionsResolver $resolver): void
 	{
-		$resolver->setDefault('help', 'An OQL query expression');
-
-		$resolver->setDefault('attr', [
-			'placeholder' => 'SELECT Contact',
-		]);
-
-		$resolver->setDefault('outputs', [
-			'selected_class' => function ($oData) {
-				if ($oData === null) {
-					return null;
-				}
-				// extract selected class
-				preg_match('/SELECT\s+(\w+)/', $oData, $aMatches);
-
-				return $aMatches[1] ?? null;
-			},
-		]);
-
 		$resolver->setDefined('with_ai_button');
 	}
 

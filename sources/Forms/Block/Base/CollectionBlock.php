@@ -10,9 +10,8 @@ namespace Combodo\iTop\Forms\Block\Base;
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\AbstractTypeFormBlock;
 use Combodo\iTop\Forms\FormType\Base\CollectionFormType;
-use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
+use Combodo\iTop\Forms\IO\Converter\CollectionToCountConverter;
 use Combodo\iTop\Forms\IO\Format\IntegerIOFormat;
-use Combodo\iTop\Forms\IO\Format\NumberIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
 use Combodo\iTop\Forms\Register\RegisterException;
@@ -25,6 +24,7 @@ use Combodo\iTop\Forms\Register\RegisterException;
  */
 class CollectionBlock extends AbstractTypeFormBlock
 {
+	/** @var AbstractTypeFormBlock Prototype block */
 	private AbstractTypeFormBlock $oPrototypeBlock;
 	public const OUTPUT_COUNT = 'count';
 
@@ -53,7 +53,7 @@ class CollectionBlock extends AbstractTypeFormBlock
 	protected function RegisterIO(IORegister $oIORegister): void
 	{
 		parent::RegisterIO($oIORegister);
-		$oIORegister->AddOutput(self::OUTPUT_COUNT, IntegerIOFormat::class);
+		$oIORegister->AddOutput(self::OUTPUT_COUNT, IntegerIOFormat::class, false, new CollectionToCountConverter());
 	}
 
 	/** @inheritdoc */

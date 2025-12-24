@@ -2,9 +2,12 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 {% for sBlockIdentifier, oBlockToRedraw in blocks_to_redraw %}
-    {% UITurboStream Update { sTarget: "turbo_" ~ sBlockIdentifier} %}
+    {% UITurboStream Replace { sTarget: "turbo_" ~ sBlockIdentifier} %}
     {% if oBlockToRedraw is not null %}
-        {{ form_row(oBlockToRedraw) }}
+        {% set row_attr = {id: 'turbo_' ~ sBlockIdentifier } %}
+        {{ form_row(oBlockToRedraw, {row_attr: row_attr}) }}
+    {% else %}
+        <div id="turbo_{{ sBlockIdentifier }}" class="ibo-field ibo-content-block ibo-block ibo-field-small"></div>
     {% endif %}
     {% EndUITurboStream %}
 {% endfor %}

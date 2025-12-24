@@ -914,6 +914,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Forms\\IO\\AbstractFormIO' => __DIR__ . '/../..' . '/sources/Forms/IO/AbstractFormIO.php',
         'Combodo\\iTop\\Forms\\IO\\Converter\\AbstractConverter' => __DIR__ . '/../..' . '/sources/Forms/IO/Converter/AbstractConverter.php',
         'Combodo\\iTop\\Forms\\IO\\Converter\\ChoiceValueToLabelConverter' => __DIR__ . '/../..' . '/sources/Forms/IO/Converter/ChoiceValueToLabelConverter.php',
+        'Combodo\\iTop\\Forms\\IO\\Converter\\CollectionToCountConverter' => __DIR__ . '/../..' . '/sources/Forms/IO/Converter/CollectionToCountConverter.php',
         'Combodo\\iTop\\Forms\\IO\\Converter\\OqlToClassConverter' => __DIR__ . '/../..' . '/sources/Forms/IO/Converter/OqlToClassConverter.php',
         'Combodo\\iTop\\Forms\\IO\\FormBinding' => __DIR__ . '/../..' . '/sources/Forms/IO/FormBinding.php',
         'Combodo\\iTop\\Forms\\IO\\FormBlockIOException' => __DIR__ . '/../..' . '/sources/Forms/IO/FormBlockIOException.php',

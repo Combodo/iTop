@@ -528,6 +528,7 @@ return array(
     'Combodo\\iTop\\Forms\\IO\\AbstractFormIO' => $baseDir . '/sources/Forms/IO/AbstractFormIO.php',
     'Combodo\\iTop\\Forms\\IO\\Converter\\AbstractConverter' => $baseDir . '/sources/Forms/IO/Converter/AbstractConverter.php',
     'Combodo\\iTop\\Forms\\IO\\Converter\\ChoiceValueToLabelConverter' => $baseDir . '/sources/Forms/IO/Converter/ChoiceValueToLabelConverter.php',
+    'Combodo\\iTop\\Forms\\IO\\Converter\\CollectionToCountConverter' => $baseDir . '/sources/Forms/IO/Converter/CollectionToCountConverter.php',
     'Combodo\\iTop\\Forms\\IO\\Converter\\OqlToClassConverter' => $baseDir . '/sources/Forms/IO/Converter/OqlToClassConverter.php',
     'Combodo\\iTop\\Forms\\IO\\FormBinding' => $baseDir . '/sources/Forms/IO/FormBinding.php',
     'Combodo\\iTop\\Forms\\IO\\FormBlockIOException' => $baseDir . '/sources/Forms/IO/FormBlockIOException.php',

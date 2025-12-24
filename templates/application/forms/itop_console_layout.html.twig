@@ -95,14 +95,20 @@
 {%- block form_rows -%}
 
     {% for block in blocks %}
-        <div id="turbo_{{ block.id }}" class="ibo-field ibo-content-block ibo-block  ibo-field-small">
-            {% if block.added == 1 %}
-                {{ form_row(form[block.name]) }}
-            {% endif %}
-        </div>
+        {% if block.added == 1 %}
+            {% set row_attr = row_attr|merge({id: 'turbo_' ~ block.id }) %}
+            {{ form_row(form[block.name], {row_attr: row_attr}) }}
+        {% else %}
+            <div id="turbo_{{ block.id }}" class="ibo-field ibo-content-block ibo-block ibo-field-small"></div>
+        {% endif %}
     {% endfor %}
 
 {%- endblock form_rows -%}
+
+{%- block form_row -%}
+    {% set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' ibo-field ibo-content-block ibo-block  ibo-field-small')|trim}) %}
+    {{- parent() -}}
+{%- endblock form_row -%}
 
 {%- block collection_widget -%}
 
@@ -134,11 +140,6 @@
     </div>
 {%-endblock form_label_content  -%}
 
-{%- block form_row -%}
-    {% set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' ibo-field ibo-content-block ibo-block  ibo-field-small')|trim}) %}
-    {{- parent() -}}
-{%- endblock form_row -%}
-
 {%- block form_errors -%}
     <div id="turbo_error_{{ form.vars.id }}" class="form-error">
         {{- parent() -}}
@@ -146,22 +147,23 @@
 {%- endblock form_errors -%}
 
 {%- block oql_form_widget -%}
-    <textarea is="oql-element" {{ block('widget_attributes') }}>{{ value }}</textarea>
+    <textarea is="oql-element" {{ block('widget_attributes') }} data-modal-title-text="{{ 'UI:Edit:SearchQuery'|trans }}" data-empty-text="{{ 'Use the search form above to search for objects to be added'|trans }}" data-valid-query-text="{{ 'OQL is valid'|trans }}" data-invalid-query-text="{{ 'OQL is invalid'|trans }}">{{ value }}</textarea>
+    <div>
+        {% if with_ai_button is defined and with_ai_button %}
+            <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" type="button" name="AI" value="" aria-label="AI">
+                <span class="ibo-button--icon fas fa-magic"></span>
+                {{ 'UI:Edit:AI'|trans }}
+            </button>
+        {% endif %}
+        <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-success" data-role="ibo-button" data-action="run" type="button" name="Run Query" value="" aria-label="Run Query">
+            <span class="ibo-button--icon fas fa-play"></span>
+            {{ 'UI:Edit:TestQuery'|trans }}
+        </button>
+        <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" data-action="book" type="button" name="Open Book" value="" aria-label="Open Query Phrases Book">
+            <span class="ibo-button--icon fas fa-book"></span>
+            {{ 'UI:Edit:SearchQuery'|trans }}
+        </button>
+    </div>
 {%- endblock oql_form_widget -%}
 
-{%- block oql_form_row -%}
-    {{- form_row(form) -}}
-    <div style="text-align: right">
-    {% if with_ai_button is defined and with_ai_button %}
-        <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" type="button" name="AI" value="" aria-label="AI">
-            <span class="ibo-button--icon fas fa-magic"></span>
-            Use AI assistant
-        </button>
-    {% endif %}
-        <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" type="button" name="Book" value="" aria-label="AI">
-        <span class="ibo-button--icon fas fa-book"></span>
-        Open query phrase book
-    </button>
-    </div>
-{%- endblock oql_form_row -%}
 

@@ -43,8 +43,13 @@ class FormElement extends HTMLFormElement
 	 */
 	#StartRefreshingUI(sId)
 	{
-		Array.from(this.querySelectorAll(`.ibo-content-block[data-impacted-by*="${sId}"]`)).forEach(block => {
-			block.classList.add(FormElement.#TURBO_REFRESHING_CLASS);
+		Array.from(this.querySelectorAll(`.ibo-content-block`)).forEach(block => {
+			if(block.dataset.impactedBy !== undefined){
+				const aImpactedBy = block.dataset.impactedBy.split(',');
+				if(aImpactedBy.includes(sId)){
+					block.classList.add(FormElement.#TURBO_REFRESHING_CLASS);
+				}
+			}
 		});
 	}
 

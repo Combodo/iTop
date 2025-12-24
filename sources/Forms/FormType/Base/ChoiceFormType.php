@@ -26,6 +26,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ChoiceFormType extends AbstractType
 {
+	private bool $bErrorAdded = false;
+
 	/** @inheritdoc */
 	public function getParent(): string
 	{
@@ -60,6 +62,15 @@ class ChoiceFormType extends AbstractType
 		// on preset data
 		$builder->addEventListener(FormEvents::PRE_SET_DATA, function (PreSetDataEvent $oEvent) use ($options) {
 			$this->InitializeValue($oEvent, $options);
+
+			// reset value if not in available choices
+			if (!empty($oEvent->getData()) && !$this->CheckValue($oEvent->getData(), $options)) {
+				if(!$this->bErrorAdded){
+					$oEvent->getForm()->addError(new FormError("The value has been reset because it is not part of the available choices anymore."));
+				}
+				$oEvent->setData(null);
+				$this->bErrorAdded = true;
+			}
 		});
 
 		// on pre submit (prior)
