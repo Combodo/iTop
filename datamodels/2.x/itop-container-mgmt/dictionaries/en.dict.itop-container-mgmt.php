@@ -9,18 +9,26 @@
 Dict::Add('EN US', 'English', 'English', array(
 
     // Class Container Image
-    'Class:ContainerImage/Name' => '%1$s',
-    'Class:ContainerImage/ComplementaryName' => '%1$s',
+    'Class:ContainerImage/Name' => '%1$s %2$s',
+    'Class:ContainerImage/ComplementaryName' => '%1$s - %2$s',
     'Class:ContainerImage' => 'Container Image',
     'Class:ContainerImage+' => 'Image of a piece of software ready to be launched as a container',
+    'Class:ContainerImage/Attribute:name' => 'Name',
+    'Class:ContainerImage/Attribute:name+' => '',
+    'Class:ContainerImage/Attribute:version' => 'Version',
+    'Class:ContainerImage/Attribute:version+' => '',
+    'Class:ContainerImage/Attribute:description' => 'Description',
+    'Class:ContainerImage/Attribute:description+' => '',
+    'Class:ContainerImage/Attribute:publisher' => 'Publisher',
+    'Class:ContainerImage/Attribute:publisher+' => 'Publisher of the image. Eg. php, nginx, ...',
+    'Class:ContainerImage/Attribute:image' => 'Image',
+    'Class:ContainerImage/Attribute:image+' => 'Detailed information to retrieve the image on the appropriate hosting platform',
+    'Class:ContainerImage/Attribute:type_id' => 'Type',
+    'Class:ContainerImage/Attribute:type_id+' => 'Type d\image',
     'Class:ContainerImage/Attribute:software_id' => 'Software',
     'Class:ContainerImage/Attribute:software_id+' => '',
-    'Class:ContainerImage/Attribute:image_url' => 'Image URL',
-    'Class:ContainerImage/Attribute:image_url+' => '',
-    'Class:ContainerImage/Attribute:containerapplication_id' => 'Containerized Application',
-    'Class:ContainerImage/Attribute:containerapplication_id+' => 'Application to which this image contributes',
-    'Class:ContainerImage/Attribute:containervirtualhost_id' => 'Container Host',
-    'Class:ContainerImage/Attribute:containervirtualhost_id+' => 'Platform on which the application is deployed',
+    'Class:ContainerImage/Attribute:containerapplications_list' => 'Containerized Applications',
+    'Class:ContainerImage/Attribute:containerapplications_list+' => 'Applications to which this image contributes',
     'ContainerImage:baseinfo' => 'General information',
     'ContainerImage:moreinfo' => 'Container specifics',
 
@@ -29,8 +37,8 @@ Dict::Add('EN US', 'English', 'English', array(
     'Class:ContainerApplication/ComplementaryName' => '%1$s',
     'Class:ContainerApplication' => 'Containerized Application',
     'Class:ContainerApplication+' => 'Application deployed on a container environment',
-    'Class:ContainerApplication/Attribute:status' => 'Status',
-    'Class:ContainerApplication/Attribute:status+' => 'Status of the application',
+    'Class:ContainerApplication/Attribute:descriptor' => 'Deployment file',
+    'Class:ContainerApplication/Attribute:descriptor+' => 'File describing how to deploy the application on the container platform (e.g., Docker Compose, Helm Chart, etc.)',
     'Class:ContainerApplication/Attribute:containervirtualhost_id' => 'Container Host',
     'Class:ContainerApplication/Attribute:containervirtualhost_id+' => 'Container Platform on which the application is running',
     'Class:ContainerApplication/Attribute:containertype_id' => 'Container type',
@@ -39,6 +47,17 @@ Dict::Add('EN US', 'English', 'English', array(
     'Class:ContainerApplication/Attribute:containerimages_list+' => 'Software images used to build the containerized application',
     'ContainerApplication:baseinfo' => 'General information',
     'ContainerApplication:moreinfo' => 'Container specifics',
+
+    // Class: lnkContainerApplicationToImage
+    'Class:lnkContainerApplicationToImage' => 'Link Container Application / Image',
+    'Class:lnkContainerApplicationToImage+' => '',
+    'Class:lnkContainerApplicationToImage/Name' => '%1$s / %2$s',
+    'Class:lnkContainerApplicationToImage/Name+' => '',
+    'Class:lnkContainerApplicationToImage/Attribute:containerapplication_id' => 'Containerized Application',
+    'Class:lnkContainerApplicationToImage/Attribute:containerapplication_id+' => 'Application which uses this image',
+    'Class:lnkContainerApplicationToImage/Attribute:containerimage_id' => 'Container Image',
+    'Class:lnkContainerApplicationToImage/Attribute:containerimage_id+' => 'Software image used to build the containerized application',
+
 
     // Class Container Virtual Host
     'Class:ContainerVirtualHost/Name' => '%1$s',
@@ -86,6 +105,12 @@ Dict::Add('EN US', 'English', 'English', array(
     'Class:ContainerType/ComplementaryName' => '',
     'Class:ContainerType' => 'Container Type',
     'Class:ContainerType+' => 'Technology used to deliver containerization',
+
+    // Class Container Type
+    'Class:ContainerImageType/Name' => '%1$s',
+    'Class:ContainerImageType/ComplementaryName' => '',
+    'Class:ContainerImageType' => 'Container Image Type',
+    'Class:ContainerImageType+' => 'Typology of container images',
 
     // Class Cloud
     'Class:Cloud/Name' => '%1$s',

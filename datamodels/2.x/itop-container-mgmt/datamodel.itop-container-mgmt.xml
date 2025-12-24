@@ -13,16 +13,16 @@
             <attribute id="version"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="vendor"/>
-            <attribute id="type"/>
+            <attribute id="publisher"/>
+            <attribute id="image"/>
           </complementary_attributes>
         </naming>
         <reconciliation>
           <attributes>
-            <attribute id="image_url"/>
+            <attribute id="image"/>
             <attribute id="name"/>
             <attribute id="version"/>
-            <attribute id="vendor"/>
+            <attribute id="publisher"/>
           </attributes>
         </reconciliation>
         <style>
@@ -31,7 +31,8 @@
         <uniqueness_rules>
           <rule id="no_duplicate">
             <attributes>
-              <attribute id="image_url"/>
+              <attribute id="publisher"/>
+              <attribute id="image"/>
             </attributes>
             <filter><![CDATA[]]></filter>
             <disabled>false</disabled>
@@ -45,8 +46,8 @@
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
-        <field id="vendor" xsi:type="AttributeString">
-          <sql>vendor</sql>
+        <field id="publisher" xsi:type="AttributeString">
+          <sql>publisher</sql>
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
@@ -54,6 +55,11 @@
           <sql>version</sql>
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="type_id" xsi:type="AttributeExternalKey">
           <sql>containerimagetype_id</sql>
@@ -70,10 +76,10 @@
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
         </field>
-        <field id="image_url" xsi:type="AttributeURL">
-          <sql>image_url</sql>
+        <field id="image" xsi:type="AttributeString">
+          <sql>image</sql>
           <default_value/>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
           <target/>
           <tracking_level>all</tracking_level>
         </field>
@@ -96,8 +102,11 @@
             <item id="version">
               <rank>20</rank>
             </item>
-            <item id="vendor">
+            <item id="publisher">
               <rank>30</rank>
+            </item>
+            <item id="image">
+              <rank>40</rank>
             </item>
           </items>
         </list>
@@ -106,14 +115,17 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="version">
               <rank>20</rank>
             </item>
-            <item id="business_criticity">
+            <item id="publisher">
               <rank>30</rank>
             </item>
-            <item id="move2production">
+            <item id="image">
               <rank>40</rank>
+            </item>
+            <item id="type_id">
+              <rank>50</rank>
             </item>
           </items>
         </search>
@@ -126,17 +138,11 @@
                     <item id="name">
                       <rank>10</rank>
                     </item>
-                    <item id="org_id">
+                    <item id="version">
                       <rank>20</rank>
                     </item>
-                    <item id="business_criticity">
-                      <rank>30</rank>
-                    </item>
-                    <item id="move2production">
-                      <rank>40</rank>
-                    </item>
                     <item id="description">
-                      <rank>50</rank>
+                      <rank>30</rank>
                     </item>
                   </items>
                   <rank>10</rank>
@@ -148,16 +154,16 @@
               <items>
                 <item id="fieldset:ContainerImage:moreinfo">
                   <items>
-                    <item id="image_url">
+                    <item id="publisher">
                       <rank>10</rank>
                     </item>
-                    <item id="software_id">
+                    <item id="image">
                       <rank>20</rank>
                     </item>
-                    <item id="containerapplication_id">
+                    <item id="type_id">
                       <rank>30</rank>
                     </item>
-                    <item id="containervirtualhost_id">
+                    <item id="software_id">
                       <rank>40</rank>
                     </item>
                   </items>
@@ -166,27 +172,21 @@
               </items>
               <rank>20</rank>
             </item>
-            <item id="contacts_list">
-              <rank>30</rank>
-            </item>
-            <item id="documents_list">
-              <rank>40</rank>
-            </item>
-            <item id="applicationsolution_list">
+            <item id="containerapplications_list">
               <rank>50</rank>
             </item>
           </items>
         </details>
         <default_search>
           <items>
-            <item id="friendlyname">
-              <rank>10</rank>
-            </item>
-            <item id="org_id">
-              <rank>20</rank>
-            </item>
-            <item id="containerapplication_id">
+            <item id="publisher">
               <rank>30</rank>
+            </item>
+            <item id="image">
+              <rank>40</rank>
+            </item>
+            <item id="type_id">
+              <rank>50</rank>
             </item>
           </items>
         </default_search>
@@ -195,15 +195,22 @@
         <relation id="impacts">
           <neighbours>
             <neighbour id="containerapplication">
-              <attribute>containerapplication_id</attribute>
+              <attribute>containerapplications_list</attribute>
               <direction>both</direction>
             </neighbour>
           </neighbours>
         </relation>
       </relations>
     </class>
+    <class id="SoftwareInstance" _delta="must_exist">
+      <fields>
+        <field id="system_id" _delta="must_exist" xsi:type="AttributeExternalKey">
+          <filter _delta="redefine">SELECT FunctionalCI WHERE finalclass IN ('Server','VirtualMachine','PC', 'ContainerVirtualHost')</filter>
+        </field>
+      </fields>
+    </class>
     <class id="ContainerApplication" _delta="define">
-      <parent>FunctionalCI</parent>
+      <parent>SoftwareInstance</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
@@ -220,8 +227,7 @@
           <attributes>
             <attribute id="name"/>
             <attribute id="org_id"/>
-            <attribute id="organization_name"/>
-            <attribute id="finalclass"/>
+             <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
         <fields_semantic>
@@ -230,11 +236,12 @@
         <style>
           <icon>images/icons8-application-container.svg</icon>
         </style>
-        <obsolescence>
-          <condition>status='obsolete'</condition>
-        </obsolescence>
       </properties>
       <fields>
+        <field id="descriptor" xsi:type="AttributeBlob">
+          <sql>descriptor</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="containervirtualhost_id" xsi:type="AttributeExternalKey">
           <sql>containervirtualhost_id</sql>
           <filter/>
@@ -251,46 +258,25 @@
           <ext_key_to_remote>containerimage_id</ext_key_to_remote>
           <duplicates/>
         </field>
-        <field id="status" xsi:type="AttributeEnum">
-          <sql>status</sql>
-          <values>
-            <value id="implementation">
-              <code>implementation</code>
-              <rank>10</rank>
-              <style>
-                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
-                <decoration_classes/>
-              </style>
-            </value>
-            <value id="production">
-              <code>production</code>
-              <rank>20</rank>
-              <style>
-                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
-                <decoration_classes/>
-              </style>
-            </value>
-            <value id="obsolete">
-              <code>obsolete</code>
-              <rank>30</rank>
-              <style>
-                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
-                <decoration_classes/>
-              </style>
-            </value>
-          </values>
-          <sort_type/>
-          <default_value>implementation</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style/>
-          <dependencies/>
-          <tracking_level>all</tracking_level>
-        </field>
       </fields>
-      <methods/>
+      <methods>
+        <method id="EvtComputeSystemId">
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[	public function EvtComputeSystemId(?Combodo\iTop\Service\Events\EventData $oEventData = null)
+	{
+			$this->Set('system_id', $this->Get('containervirtualhost_id'));
+	}]]></code>
+        </method>
+      </methods>
+      <event_listeners>
+        <event_listener id="EVENT_DB_BEFORE_WRITE">
+          <event>EVENT_DB_BEFORE_WRITE</event>
+          <callback>EvtComputeSystemId</callback>
+          <rank>0</rank>
+        </event_listener>
+      </event_listeners>
       <presentation>
         <list>
           <items>
@@ -361,28 +347,31 @@
                     <item id="containervirtualhost_id">
                       <rank>10</rank>
                     </item>
+                    <item id="descriptor">
+                      <rank>10</rank>
+                    </item>
                   </items>
                   <rank>10</rank>
                 </item>
               </items>
               <rank>20</rank>
             </item>
-            <item id="contacts_list">
+            <item id="containerimages_list">
               <rank>30</rank>
             </item>
-            <item id="documents_list">
+            <item id="contacts_list">
               <rank>40</rank>
             </item>
-            <item id="applicationsolution_list">
+            <item id="documents_list">
               <rank>50</rank>
             </item>
-            <item id="providercontracts_list">
+            <item id="applicationsolution_list">
               <rank>60</rank>
             </item>
-            <item id="services_list">
+            <item id="providercontracts_list">
               <rank>70</rank>
             </item>
-            <item id="containerimages_list">
+            <item id="services_list">
               <rank>80</rank>
             </item>
           </items>
@@ -1078,7 +1067,7 @@
       </presentation>
     </class>
     <class id="Cloud" _delta="define">
-      <parent>VirtualHost</parent>
+      <parent>VirtualDevice</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
@@ -1222,9 +1211,6 @@
             </item>
             <item id="providercontracts_list">
               <rank>50</rank>
-            </item>
-            <item id="virtualmachine_list">
-              <rank>60</rank>
             </item>
             <item id="containerhosts_list">
               <rank>70</rank>

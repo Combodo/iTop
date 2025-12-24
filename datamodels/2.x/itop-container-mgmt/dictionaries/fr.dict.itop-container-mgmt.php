@@ -9,18 +9,26 @@
 Dict::Add('FR FR', 'French', 'Français', array(
 
     // Class Container Image
-    'Class:ContainerImage/Name' => '%1$s',
-    'Class:ContainerImage/ComplementaryName' => '%1$s',
+    'Class:ContainerImage/Name' => '%1$s %2$s',
+    'Class:ContainerImage/ComplementaryName' => '%1$s - %2$s',
     'Class:ContainerImage' => 'Image pour conteneur',
     'Class:ContainerImage+' => 'Image d\'un logiciel, constituant d\'une application conteneurisée',
+    'Class:ContainerImage/Attribute:name' => 'Nom',
+    'Class:ContainerImage/Attribute:name+' => '',
+    'Class:ContainerImage/Attribute:version' => 'Version',
+    'Class:ContainerImage/Attribute:version+' => '',
+    'Class:ContainerImage/Attribute:description' => 'Description',
+    'Class:ContainerImage/Attribute:description+' => '',
+    'Class:ContainerImage/Attribute:publisher' => 'Editeur',
+    'Class:ContainerImage/Attribute:publisher+' => 'Fournisseur de l\image',
+    'Class:ContainerImage/Attribute:image' => 'Image',
+    'Class:ContainerImage/Attribute:image+' => 'Détail permettant de récupérer l\'image sur la plateforme d\'hébergement appropriée',
+    'Class:ContainerImage/Attribute:type_id' => 'Type',
+    'Class:ContainerImage/Attribute:type_id+' => 'Type d\image',
     'Class:ContainerImage/Attribute:software_id' => 'Logiciel',
     'Class:ContainerImage/Attribute:software_id+' => '',
-    'Class:ContainerImage/Attribute:image_url' => 'URL de l\'image',
-    'Class:ContainerImage/Attribute:image_url+' => '',
-    'Class:ContainerImage/Attribute:containerapplication_id' => 'Application conteneurisée',
-    'Class:ContainerImage/Attribute:containerapplication_id+' => 'L\'application à laquelle cette image contribue',
-    'Class:ContainerImage/Attribute:containervirtualhost_id' => 'Plateforme de l\'application',
-    'Class:ContainerImage/Attribute:containervirtualhost_id+' => 'Plateforme où cette image est déployée en conteneur',
+    'Class:ContainerImage/Attribute:containerapplications_list' => 'Applications conteneurisées',
+    'Class:ContainerImage/Attribute:containerapplications_list+' => 'Les applications qui utilisent cette image',
     'ContainerImage:baseinfo' => 'Informations générales',
     'ContainerImage:moreinfo' => 'Spécificités de la conteneurisation',
 
@@ -29,16 +37,26 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'Class:ContainerApplication/ComplementaryName' => '%1$s',
     'Class:ContainerApplication' => 'Application conteneurisée',
     'Class:ContainerApplication+' => 'Application déployée sur une plateforme de conteneurisation',
-    'Class:ContainerApplication/Attribute:status' => 'État',
-    'Class:ContainerApplication/Attribute:status+' => 'État de l\'application',
+    'Class:ContainerApplication/Attribute:descriptor' => 'Fichier de déploiement',
+    'Class:ContainerApplication/Attribute:descriptor+' => 'Fichier décrivant la manière de déployer l\'application sur la plateforme de conteneurisation (par exemple, Docker Compose, Helm Chart, etc.)',
     'Class:ContainerApplication/Attribute:containervirtualhost_id' => 'Hôte',
     'Class:ContainerApplication/Attribute:containervirtualhost_id+' => 'Plateforme de conteneurisation sur laquelle cette application est déployée',
     'Class:ContainerApplication/Attribute:containertype_id' => 'Type de conteneur',
-    'Class:ContainerApplication/Attribute:containertype_id+' => '',
+    'Class:ContainerApplication/Attribute:containertype_id+' => 'Typologie de plateforme de conteneurisation',
     'Class:ContainerApplication/Attribute:containerimages_list' => 'Images',
     'Class:ContainerApplication/Attribute:containerimages_list+' => 'Images des conteneurs constitutifs de cette application',
     'ContainerApplication:baseinfo' => 'Informations générales',
     'ContainerApplication:moreinfo' => 'Spécificités de la conteneurisation',
+
+	// Class: lnkContainerApplicationToImage
+	'Class:lnkContainerApplicationToImage' => 'Lien Application / Image pour conteneur',
+	'Class:lnkContainerApplicationToImage+' => '',
+	'Class:lnkContainerApplicationToImage/Name' => '%1$s / %2$s',
+	'Class:lnkContainerApplicationToImage/Name+' => '',
+	'Class:lnkContainerApplicationToImage/Attribute:containerapplication_id' => 'Application conteneurisée',
+	'Class:lnkContainerApplicationToImage/Attribute:containerapplication_id+' => 'Application qui utilise cette image',
+	'Class:lnkContainerApplicationToImage/Attribute:containerimage_id' => 'Image pour conteneur',
+	'Class:lnkContainerApplicationToImage/Attribute:containerimage_id+' => 'Une image qui contribue à l\'application',
 
     // Class Container Virtual Host
     'Class:ContainerVirtualHost/Name' => '%1$s',
@@ -86,6 +104,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'Class:ContainerType/ComplementaryName' => '',
     'Class:ContainerType' => 'Type de conteneurisation',
     'Class:ContainerType+' => 'Technologie de conteneurisation',
+
+    // Class Container Image Type
+    'Class:ContainerImageType/Name' => '%1$s',
+    'Class:ContainerImageType/ComplementaryName' => '',
+    'Class:ContainerImageType' => 'Type d\'image',
+    'Class:ContainerImageType+' => 'Typologie d\'images pour container',
 
     // Class Cloud
     'Class:Cloud/Name' => '%1$s',
