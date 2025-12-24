@@ -8,7 +8,8 @@
     {%- else -%}
         {% set form_method = "POST" %}
     {%- endif -%}
-<form is="itop-form-element" {% if name != '' %} name="{{ name }}"{% endif %} method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{{ block('attributes') }}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-form')}) -%}
+    <form is="itop-form-element" {% if name != '' %} name="{{ name }}"{% endif %} method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{{ block('attributes') }}{% if multipart %} enctype="multipart/form-data"{% endif %}>
     {%- if form_method != method -%}
         <input type="hidden" name="_method" value="{{ method }}" />
     {%- endif -%}
@@ -148,7 +149,7 @@
 
 {%- block oql_form_widget -%}
     <textarea is="oql-element" {{ block('widget_attributes') }} data-modal-title-text="{{ 'UI:Edit:SearchQuery'|trans }}" data-empty-text="{{ 'Use the search form above to search for objects to be added'|trans }}" data-valid-query-text="{{ 'OQL is valid'|trans }}" data-invalid-query-text="{{ 'OQL is invalid'|trans }}">{{ value }}</textarea>
-    <div>
+    <div class="ibo-form-actions">
         {% if with_ai_button is defined and with_ai_button %}
             <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" type="button" name="AI" value="" aria-label="AI">
                 <span class="ibo-button--icon fas fa-magic"></span>

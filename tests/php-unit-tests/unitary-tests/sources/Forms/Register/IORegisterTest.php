@@ -186,8 +186,8 @@ class IORegisterTest extends AbstractFormsTest
 		$oSubForm->AddInput('input_from_A', StringIOFormat::class);
 
 		$this->GivenIORegister($oSubForm)->InputDependsOn('input_from_A', 'SubFormA', TextFormBlock::OUTPUT_TEXT);
-		$this->assertFalse($this->GivenIORegister($oSubForm)->ImpactDependentsBlocks());
+		$this->assertFalse($this->GivenIORegister($oSubForm)->IsImpactingBlocks());
 
-		$this->assertTrue($this->GivenIORegister($oSubFormA)->ImpactDependentsBlocks());
+		$this->assertTrue($this->GivenIORegister($oSubFormA)->IsImpactingBlocks());
 	}
 }
