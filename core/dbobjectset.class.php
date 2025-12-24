@@ -1063,7 +1063,12 @@ class DBObjectSet implements iDBObjectSetIterator
 			$this->Load();
 		}
 
-		$this->m_iCurrRow = min($iRow, $this->Count());
+		if ($iRow > 0) {
+			$this->m_iCurrRow = min($iRow, $this->Count());
+		} else {
+			$this->m_iCurrRow = $iRow;
+		}
+
 		if ($this->m_iCurrRow < $this->m_iNumLoadedDBRows) {
 			$this->m_oSQLResult->data_seek($this->m_iCurrRow);
 		}
