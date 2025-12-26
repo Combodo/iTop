@@ -3,20 +3,20 @@
   <constants>
   </constants>
   <classes>
-    <class id="Flow" _delta="define">
+    <class id="DataFlow" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
-        <db_table>flow</db_table>
+        <db_table>dataflow</db_table>
         <style>
            <icon>images/icons8-sorting-arrows-horizontal.svg</icon>
         </style>
         <naming>
           <attributes>
             <attribute id="name"/>
-            <attribute id="source_name"/>
-            <attribute id="destination_name"/>
+            <attribute id="source_id_friendlyname"/>
+            <attribute id="destination_id_friendlyname"/>
           </attributes>
         </naming>
         <reconciliation>
@@ -55,26 +55,18 @@
           <filter/>
           <dependencies/>
           <is_null_allowed>false</is_null_allowed>
-          <target_class>FunctionalCI</target_class>
+          <target_class>SoftwareInstance</target_class>
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
-        </field>
-        <field id="source_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>source_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
         </field>
         <field id="destination_id" xsi:type="AttributeExternalKey">
           <sql>destination_id</sql>
           <filter/>
           <dependencies/>
           <is_null_allowed>false</is_null_allowed>
-          <target_class>FunctionalCI</target_class>
+          <target_class>SoftwareInstance</target_class>
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
-        </field>
-        <field id="destination_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>destination_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
         </field>
         <field id="flowtype_id" xsi:type="AttributeExternalKey">
           <sql>flowtype_id</sql>
@@ -137,6 +129,39 @@
           </values>
           <sql>business_criticity</sql>
           <default_value>low</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="execution_frequency" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
+          <values>
+            <value id="real_time">
+              <code>real_time</code>
+              <rank>10</rank>
+            </value>
+            <value id="hourly">
+              <code>hourly</code>
+              <rank>20</rank>
+            </value>
+            <value id="daily">
+              <code>daily</code>
+              <rank>30</rank>
+            </value>
+            <value id="weekly">
+              <code>weekly</code>
+              <rank>40</rank>
+            </value>
+            <value id="monthly">
+              <code>monthly</code>
+              <rank>50</rank>
+            </value>
+            <value id="yearly">
+              <code>yearly</code>
+              <rank>60</rank>
+            </value>
+          </values>
+          <sql>execution_frequency</sql>
+          <default_value>daily</default_value>
           <is_null_allowed>false</is_null_allowed>
           <display_style>list</display_style>
         </field>
@@ -208,8 +233,11 @@
                 <item id="flowtype_id">
                   <rank>60</rank>
                 </item>
-                <item id="business_criticity">
+                <item id="execution_frequency">
                   <rank>70</rank>
+                </item>
+                <item id="business_criticity">
+                  <rank>80</rank>
                 </item>
               </items>
               <rank>10</rank>
@@ -268,20 +296,20 @@
         </relation>
       </relations>
     </class>
-    <class id="lnkDocumentToFlow" _delta="define">
+    <class id="lnkDocumentToDataFlow" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
-        <db_table>lnkDocumentToFlow</db_table>
+        <db_table>lnkdocumenttodataflow</db_table>
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
           <attributes>
             <attribute id="document_id_friendlyname"/>
-            <attribute id="flow_id_friendlyname"/>
+            <attribute id="dataflow_id_friendlyname"/>
           </attributes>
         </naming>
         <style>
@@ -289,7 +317,7 @@
         </style>
         <reconciliation>
           <attributes>
-            <attribute id="flow_id"/>
+            <attribute id="dataflow_id"/>
             <attribute id="document_id"/>
           </attributes>
         </reconciliation>
@@ -297,7 +325,7 @@
           <rule id="no_duplicate">
             <attributes>
               <attribute id="document_id"/>
-              <attribute id="flow_id"/>
+              <attribute id="dataflow_id"/>
             </attributes>
             <filter><![CDATA[]]></filter>
             <disabled>false</disabled>
@@ -306,9 +334,9 @@
         </uniqueness_rules>
       </properties>
       <fields>
-        <field id="flow_id" xsi:type="AttributeExternalKey">
-          <sql>flow_id</sql>
-          <target_class>Flow</target_class>
+        <field id="dataflow_id" xsi:type="AttributeExternalKey">
+          <sql>dataflow_id</sql>
+          <target_class>DataFlow</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
@@ -326,14 +354,14 @@
             <item id="document_id">
               <rank>10</rank>
             </item>
-            <item id="functionalci_id">
+            <item id="dataflow_id">
               <rank>20</rank>
             </item>
           </items>
         </details>
         <search>
           <items>
-            <item id="functionalci_id">
+            <item id="dataflow_id">
               <rank>10</rank>
             </item>
             <item id="document_id">
@@ -343,7 +371,7 @@
         </search>
         <list>
           <items>
-            <item id="functionalci_id">
+            <item id="dataflow_id">
               <rank>10</rank>
             </item>
             <item id="document_id">
@@ -353,12 +381,12 @@
         </list>
       </presentation>
     </class>
-    <class id="FlowType" _delta="define">
+    <class id="DataFlowType" _delta="define">
       <parent>Typology</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
-        <db_table>flowtype</db_table>
+        <db_table>dataflowtype</db_table>
         <naming>
           <attributes>
             <attribute id="name"/>
@@ -397,19 +425,32 @@
         </details>
       </presentation>
     </class>
-    <class id="FunctionalCI" _delta="must_exist">
+    <class id="SoftwareInstance" _delta="must_exist">
       <relations>
-        <relation id="flow" _delta="define_if_not_exists">
+        <relation id="flow" _delta="define">
           <neighbours>
             <neighbour id="flow">
-              <query_down><![CDATA[SELECT Flow WHERE source_id = :this->id]]></query_down>
-              <query_up><![CDATA[SELECT FunctionalCI  WHERE id = :this->source_id]]></query_up>
+              <query_down><![CDATA[SELECT DataFlow WHERE source_id = :this->id]]></query_down>
+              <query_up><![CDATA[SELECT SoftwareInstance WHERE id = :this->source_id]]></query_up>
               <direction>both</direction>
             </neighbour>
           </neighbours>
         </relation>
       </relations>
-	</class>
+	  </class>
+    <class id="Group" _delta="must_exist">
+      <relations>
+        <relation id="flow" _delta="define">
+          <neighbours>
+            <neighbour id="flow">
+              <query_down><![CDATA[SELECT DataFlow AS F JOIN SoftwareInstance AS SI ON F.source_id = SI.id JOIN lnkFunctionalCIToGroup AS G ON G.functionalci_id = SI.id WHERE G.group_id=:this->id ]]></query_down>
+              <query_up></query_up>
+              <direction>down</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
   </classes>
   <menus>
       <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
@@ -417,9 +458,9 @@
         <cells>
           <cell id="3" delta="must_exist">
             <dashlets>
-              <dashlet id="Flow" xsi:type="DashletBadge" _delta="define_if_not_exists">
-                <rank>12</rank>
-                <class>Flow</class>
+              <dashlet id="DataFlow_20" xsi:type="DashletBadge" _delta="define">
+                <rank>20</rank>
+                <class>DataFlow</class>
               </dashlet>
             </dashlets>
           </cell>
@@ -431,7 +472,8 @@
     <groups>
       <group id="Configuration">
         <classes>
-          <class id="Flow" _delta="define_if_not_exists"/>
+          <class id="DataFlow" _delta="define"/>
+          <class id="DataFlowType" _delta="define"/>
         </classes>
       </group>
     </groups>

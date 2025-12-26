@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-    <FlowType alias="FlowType" id="1">
+    <DataFlowType alias="DataFlowType" id="1">
         <name>http</name>
-    </FlowType>
-    <FlowType alias="FlowType" id="2">
+    </DataFlowType>
+    <DataFlowType alias="DataFlowType" id="2">
         <name>https</name>
-    </FlowType>
-    <FlowType alias="FlowType" id="3">
+    </DataFlowType>
+    <DataFlowType alias="DataFlowType" id="3">
         <name>ftp</name>
-    </FlowType>
-    <FlowType alias="FlowType" id="4">
+    </DataFlowType>
+    <DataFlowType alias="DataFlowType" id="4">
         <name>sftp</name>
-    </FlowType>
-    <FlowType alias="FlowType" id="5">
+    </DataFlowType>
+    <DataFlowType alias="DataFlowType" id="5">
         <name>AS2</name>
-    </FlowType>
-    <FlowType alias="FlowType" id="6">
+    </DataFlowType>
+    <DataFlowType alias="DataFlowType" id="6">
         <name>X.400</name>
-    </FlowType>
+    </DataFlowType>
 </Set>

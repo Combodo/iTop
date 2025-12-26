@@ -10,7 +10,7 @@ SetupWebPage::AddModule(
 	[
 		// Identification
 		//
-		'label' => 'Add flow map in iTop',
+		'label' => 'Map applications data flows',
 		'category' => 'business',
 
 		// Setup
