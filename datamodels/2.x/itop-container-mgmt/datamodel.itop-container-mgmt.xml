@@ -1067,7 +1067,7 @@
       </presentation>
     </class>
     <class id="Cloud" _delta="define">
-      <parent>VirtualDevice</parent>
+      <parent>VirtualHost</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
@@ -1203,20 +1203,20 @@
               </items>
               <rank>20</rank>
             </item>
-            <item id="contacts_list">
+            <item id="virtualmachine_list">
               <rank>30</rank>
             </item>
-            <item id="documents_list">
+            <item id="containerhosts_list">
               <rank>40</rank>
             </item>
-            <item id="providercontracts_list">
+            <item id="contacts_list">
               <rank>50</rank>
             </item>
-            <item id="containerhosts_list">
-              <rank>70</rank>
+            <item id="documents_list">
+              <rank>60</rank>
             </item>
-            <item id="logicalvolumes_list">
-              <rank>80</rank>
+            <item id="providercontracts_list">
+              <rank>60</rank>
             </item>
           </items>
         </details>
@@ -1378,9 +1378,13 @@
           <cell id="0">
             <rank>0</rank>
             <dashlets>
-              <dashlet id="container_11" xsi:type="DashletBadge" _delta="define">
-                <rank>11</rank>
+              <dashlet id="container_21" xsi:type="DashletBadge" _delta="define">
+                <rank>21</rank>
                 <class>ContainerType</class>
+              </dashlet>
+              <dashlet id="container_22" xsi:type="DashletBadge" _delta="define">
+                <rank>22</rank>
+                <class>ContainerImageType</class>
               </dashlet>
             </dashlets>
           </cell>

@@ -71,7 +71,7 @@ if (!class_exists('ContainerTypeInstaller'))
 				CMDBObject::SetTrackInfo("Initialization ContainerTypeInstaller");
 				$oMyChange = CMDBObject::GetCurrentChange();
 				$sFileName = dirname(__FILE__)."/data/en_us.data.itop-container-type.xml";
-				SetupLog::Info("Uploading ContainerType objects from file: $sFileName");
+				SetupLog::Info("Uploading Typology values for Containers from file: $sFileName");
 				$oDataLoader->StartSession($oMyChange);
 				$oDataLoader->LoadFile($sFileName, false, true);
 				$oDataLoader->EndSession();

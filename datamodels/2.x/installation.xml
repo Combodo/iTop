@@ -71,6 +71,19 @@
 						<module>itop-virtualization-mgmt</module>
 					</modules>
 					<default>true</default>
+          <sub_options>
+            <options type="array">
+              <choice>
+                <extension_code>itop-container-mgmt</extension_code>
+                <title>Containerization</title>
+                <description><![CDATA[Manage Container Images, Applications and Hosts]]></description>
+                <modules type="array">
+                  <module>itop-container-mgmt</module>
+                </modules>
+                <default>false</default>
+              </choice>
+            </options>
+          </sub_options>
 				</choice>
 			</options>
 		</step>
