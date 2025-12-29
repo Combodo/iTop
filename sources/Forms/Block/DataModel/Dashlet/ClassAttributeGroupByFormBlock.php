@@ -37,33 +37,35 @@ class ClassAttributeGroupByFormBlock extends AttributeChoiceFormBlock
 		$aGroupBy = [];
 		try {
 			$sClass = strval($this->GetInputValue(self::INPUT_CLASS_NAME));
-			foreach ($oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
-				// For external fields, find the real type of the target
-				$sExtFieldAttCode = $sAttCode;
-				$sTargetClass = $sClass;
-				while (is_a($sAttType, 'AttributeExternalField', true)) {
-					$sExtKeyAttCode = $oModelReflection->GetAttributeProperty($sTargetClass, $sExtFieldAttCode, 'extkey_attcode');
-					$sTargetAttCode = $oModelReflection->GetAttributeProperty($sTargetClass, $sExtFieldAttCode, 'target_attcode');
-					$sTargetClass = $oModelReflection->GetAttributeProperty($sTargetClass, $sExtKeyAttCode, 'targetclass');
-					//					$aTargetAttCodes = AttributeChoiceFormBlock::ListAttributeCodesByCategory($sTargetClass, 'group_by');
-					$sAttType = $sTargetAttCode;
-					$sExtFieldAttCode = $sTargetAttCode;
-				}
+			if ($oModelReflection->IsValidClass($sClass)) {
+				foreach ($oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType) {
+					// For external fields, find the real type of the target
+					$sExtFieldAttCode = $sAttCode;
+					$sTargetClass = $sClass;
+					while (is_a($sAttType, 'AttributeExternalField', true)) {
+						$sExtKeyAttCode = $oModelReflection->GetAttributeProperty($sTargetClass, $sExtFieldAttCode, 'extkey_attcode');
+						$sTargetAttCode = $oModelReflection->GetAttributeProperty($sTargetClass, $sExtFieldAttCode, 'target_attcode');
+						$sTargetClass = $oModelReflection->GetAttributeProperty($sTargetClass, $sExtKeyAttCode, 'targetclass');
+						//					$aTargetAttCodes = AttributeChoiceFormBlock::ListAttributeCodesByCategory($sTargetClass, 'group_by');
+						$sAttType = $sTargetAttCode;
+						$sExtFieldAttCode = $sTargetAttCode;
+					}
 
-				$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
-				if (!in_array($sLabel, $aGroupBy)) {
-					$aGroupBy[$sLabel] = $sAttCode;
+					$sLabel = $oModelReflection->GetLabel($sClass, $sAttCode);
+					if (!in_array($sLabel, $aGroupBy)) {
+						$aGroupBy[$sLabel] = $sAttCode;
 
-					if (is_a($sAttType, 'AttributeDateTime', true)) {
-						$aGroupBy[Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel)] = $sAttCode.':hour';
-						$aGroupBy[Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month', $sLabel)] = $sAttCode.':month';
-						$aGroupBy[Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Year', $sLabel)] = $sAttCode.':year';
-						$aGroupBy[Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek', $sLabel)] = $sAttCode.':day_of_week';
-						$aGroupBy[Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth', $sLabel)] = $sAttCode.':day_of_month';
+						if (is_a($sAttType, 'AttributeDateTime', true)) {
+							$aGroupBy[Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel)] = $sAttCode.':hour';
+							$aGroupBy[Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month', $sLabel)] = $sAttCode.':month';
+							$aGroupBy[Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Year', $sLabel)] = $sAttCode.':year';
+							$aGroupBy[Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek', $sLabel)] = $sAttCode.':day_of_week';
+							$aGroupBy[Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth', $sLabel)] = $sAttCode.':day_of_month';
+						}
 					}
 				}
+				ksort($aGroupBy);
 			}
-			ksort($aGroupBy);
 		} catch (Exception $e) {
 			throw new FormBlockException(__METHOD__.': block issue', 0, $e);
 		}
