@@ -571,6 +571,7 @@ return array(
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeClassAttribute' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeClassAttribute.php',
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeClassAttributeGroupBy' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeClassAttributeGroupBy.php',
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeClassAttributeValue' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeClassAttributeValue.php',
+    'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeCollection' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeCollection.php',
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeFactory' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeFactory.php',
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeIcon' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeIcon.php',
     'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeInteger' => $baseDir . '/sources/PropertyTree/ValueType/ValueTypeInteger.php',

@@ -31,7 +31,25 @@ class PropertyTreeFactory
 	 * Create a property node from a design element
 	 *
 	 * @param \Combodo\iTop\DesignElement $oDomNode
-	 * @param string $sParentId
+	 * @param \Combodo\iTop\PropertyTree\AbstractProperty|null $oParent
+	 *
+	 * @return \Combodo\iTop\PropertyTree\AbstractProperty
+	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
+	 * @throws \DOMFormatException
+	 */
+	public function CreateTreeFromDom(DesignElement $oDomNode, ?AbstractProperty $oParent = null): AbstractProperty
+	{
+		$oNode = new PropertyTree();
+		$oNode->InitFromDomNode($oDomNode, $oParent);
+
+		return $oNode;
+	}
+
+	/**
+	 * Create a property node from a design element
+	 *
+	 * @param \Combodo\iTop\DesignElement $oDomNode
+	 * @param \Combodo\iTop\PropertyTree\AbstractProperty|null $oParent
 	 *
 	 * @return \Combodo\iTop\PropertyTree\AbstractProperty
 	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
@@ -39,16 +57,10 @@ class PropertyTreeFactory
 	 */
 	public function CreateNodeFromDom(DesignElement $oDomNode, ?AbstractProperty $oParent = null): AbstractProperty
 	{
-		$sNodeType = $oDomNode->getAttribute('xsi:type');
-
 		// The class of the property tree node is given by the xsi:type attribute
-		if (is_a($sNodeType, AbstractProperty::class, true)) {
-			$oNode = new $sNodeType();
-			$oNode->InitFromDomNode($oDomNode, $oParent);
+		$oNode = new Property();
+		$oNode->InitFromDomNode($oDomNode, $oParent);
 
-			return $oNode;
-		}
-
-		throw new PropertyTreeException('Unknown property node class: '.json_encode($sNodeType).' from xpath: '.DesignDocument::GetItopNodePath($oDomNode));
+		return $oNode;
 	}
 }

@@ -957,6 +957,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeClassAttribute' => __DIR__ . '/../..' . '/sources/PropertyTree/ValueType/ValueTypeClassAttribute.php',
         'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeClassAttributeGroupBy' => __DIR__ . '/../..' . '/sources/PropertyTree/ValueType/ValueTypeClassAttributeGroupBy.php',
         'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeClassAttributeValue' => __DIR__ . '/../..' . '/sources/PropertyTree/ValueType/ValueTypeClassAttributeValue.php',
+        'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeCollection' => __DIR__ . '/../..' . '/sources/PropertyTree/ValueType/ValueTypeCollection.php',
         'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeFactory' => __DIR__ . '/../..' . '/sources/PropertyTree/ValueType/ValueTypeFactory.php',
         'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeIcon' => __DIR__ . '/../..' . '/sources/PropertyTree/ValueType/ValueTypeIcon.php',
         'Combodo\\iTop\\PropertyTree\\ValueType\\ValueTypeInteger' => __DIR__ . '/../..' . '/sources/PropertyTree/ValueType/ValueTypeInteger.php',

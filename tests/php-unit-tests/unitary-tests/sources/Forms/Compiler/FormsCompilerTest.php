@@ -39,21 +39,21 @@ class FormsCompilerTest extends ItopDataTestCase
 			'Basic scalar properties should generate PHP' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-<node id="basic_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+<property_tree id="basic_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-        <node id="title_property" xsi:type="Combodo-Property">
+        <node id="title_property">
             <label>UI:BasicTest:Prop-Title</label>
             <value-type xsi:type="Combodo-ValueType-Label">
             </value-type>
         </node>
-        <node id="class_property" xsi:type="Combodo-Property">
+        <node id="class_property">
             <label>UI:BasicTest:Prop-Class</label>
             <value-type xsi:type="Combodo-ValueType-Class">
               <categories-csv>test</categories-csv>
             </value-type>
         </node>
     </nodes>
-</node>
+</property_tree>
 XML,
 				'sExpectedPHP' => <<<PHP
 class FormFor__basic_test extends Combodo\iTop\Forms\Block\Base\FormBlock
@@ -77,10 +77,10 @@ PHP,
 			'Empty property tree should generate minimal PHP' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-<node id="EmptyTest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+<property_tree id="EmptyTest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
 	</nodes>
-</node>
+</property_tree>
 XML,
 				'sExpectedPHP' => <<<PHP
 class FormFor__EmptyTest extends Combodo\iTop\Forms\Block\Base\FormBlock
@@ -94,10 +94,10 @@ PHP,
 			'Empty property tree lower case should generate lower case class name' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-<node id="empty_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+<property_tree id="empty_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
 	</nodes>
-</node>
+</property_tree>
 XML,
 				'sExpectedPHP' => <<<PHP
 class FormFor__empty_test extends Combodo\iTop\Forms\Block\Base\FormBlock
@@ -111,14 +111,14 @@ PHP,
 			'Properties with all value-types' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-<node id="AllValueTypesTest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+<property_tree id="AllValueTypesTest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-		<node id="aggregate_function_property" xsi:type="Combodo-Property">
+		<node id="aggregate_function_property">
 			<label>UI:AggregateFunction</label>
             <value-type xsi:type="Combodo-ValueType-AggregateFunction">
             </value-type>
         </node>
-		<node id="choice_property" xsi:type="Combodo-Property">
+		<node id="choice_property">
 			<label>UI:Choice</label>
             <value-type xsi:type="Combodo-ValueType-Choice">
               <values>
@@ -131,48 +131,48 @@ PHP,
               </values>
             </value-type>
         </node>
-		<node id="class_property" xsi:type="Combodo-Property">
+		<node id="class_property">
 			<label>UI:Class</label>
             <value-type xsi:type="Combodo-ValueType-Class">
               <categories-csv>test</categories-csv>
             </value-type>
         </node>
-		<node id="class_attribute_property" xsi:type="Combodo-Property">
+		<node id="class_attribute_property">
 			<label>UI:ClassAttribute</label>
             <value-type xsi:type="Combodo-ValueType-ClassAttribute">
             </value-type>
         </node>
-		<node id="class_attribute_group_by_property" xsi:type="Combodo-Property">
+		<node id="class_attribute_group_by_property">
 			<label>UI:ClassAttributeGroupBy</label>
             <value-type xsi:type="Combodo-ValueType-ClassAttributeGroupBy">
             </value-type>
         </node>
-		<node id="class_attribute_value_property" xsi:type="Combodo-Property">
+		<node id="class_attribute_value_property">
 			<label>UI:ClassAttributeValue</label>
             <value-type xsi:type="Combodo-ValueType-ClassAttributeValue">
             </value-type>
         </node>
-		<node id="integer_property" xsi:type="Combodo-Property">
+		<node id="integer_property">
 			<label>UI:Integer</label>
             <value-type xsi:type="Combodo-ValueType-Integer">
             </value-type>
         </node>
-		<node id="label_property" xsi:type="Combodo-Property">
+		<node id="label_property">
 			<label>UI:Label</label>
             <value-type xsi:type="Combodo-ValueType-Label">
             </value-type>
         </node>
-		<node id="oql_property" xsi:type="Combodo-Property">
+		<node id="oql_property">
 			<label>UI:OQL</label>
             <value-type xsi:type="Combodo-ValueType-OQL">
             </value-type>
         </node>
-		<node id="string_property" xsi:type="Combodo-Property">
+		<node id="string_property">
 			<label>UI:String</label>
             <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
-        <node id="choice_from_input" xsi:type="Combodo-Property">
+        <node id="choice_from_input">
             <label>UI:ChoiceFromInput</label>
             <value-type xsi:type="Combodo-ValueType-ChoiceFromInput">
               <values>
@@ -186,7 +186,7 @@ PHP,
             </value-type>
         </node>
 	</nodes>
-</node>
+</property_tree>
 XML,
 				'sExpectedPHP' => <<<PHP
 class FormFor__AllValueTypesTest extends Combodo\iTop\Forms\Block\Base\FormBlock
@@ -252,27 +252,27 @@ PHP,
 			'Collection of trees' => [
 				'sXMLContent' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-<node id="collection_of_trees_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+<property_tree id="collection_of_trees_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-	    <node id="sub_tree_collection" xsi:type="Combodo-CollectionOfTrees">
+	    <node id="sub_tree_collection">
 	      <label>UI:SubTree</label>
-	      <button-label>UI:AddSubTree</button-label>
-	      <collection-type xsi:type="Combodo-CollectionType-Collection"/>
-	      <prototype>
-	        <node id="string_property" xsi:type="Combodo-Property">
-	          <label>UI:String</label>
-	          <value-type xsi:type="Combodo-ValueType-String">
-	          </value-type>
-	        </node>
-			<node id="integer_property" xsi:type="Combodo-Property">
-				<label>UI:Integer</label>
-	            <value-type xsi:type="Combodo-ValueType-Integer">
-	            </value-type>
-	        </node>
-	      </prototype>
+	      <value-type xsi:type="Combodo-ValueType-Collection">
+		      <prototype>
+		        <node id="string_property">
+		          <label>UI:String</label>
+		          <value-type xsi:type="Combodo-ValueType-String">
+		          </value-type>
+		        </node>
+				<node id="integer_property">
+					<label>UI:Integer</label>
+		            <value-type xsi:type="Combodo-ValueType-Integer">
+		            </value-type>
+		        </node>
+		      </prototype>
+	      </value-type>
 	    </node>
 	</nodes>
-</node>
+</property_tree>
 XML,
 				'sExpectedPHP' => <<<PHP
 class SubFormFor__collection_of_trees_test__sub_tree_collection extends Combodo\iTop\Forms\Block\Base\FormBlock
@@ -308,7 +308,7 @@ PHP,
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="input_static_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-		<node id="class_attribute_property" xsi:type="Combodo-Property">
+		<node id="class_attribute_property">
 			<label>UI:ClassAttribute</label>
 			<value-type xsi:type="Combodo-ValueType-ClassAttribute">
 				<class>Contact</class>
@@ -337,12 +337,11 @@ PHP,
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="input_quotes_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-		<node id="class_attribute_property" xsi:type="Combodo-Property">
+		<node id="class_attribute_property">
 			<label>'Class' and "Attribute"</label>
 			<value-type xsi:type="Combodo-ValueType-ClassAttribute">
 				<class>{{CONCAT("'", '"')}}</class>
 				<category>'Class' and "Attribute"</category>
-				<invalid-input>Test</invalid-input>
 			</value-type>
         </node>
 	</nodes>
@@ -372,13 +371,13 @@ PHP,
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="input_binding_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-		<node id="class_property" xsi:type="Combodo-Property">
+		<node id="class_property">
 			<label>UI:Class</label>
             <value-type xsi:type="Combodo-ValueType-Class">
               <categories-csv>test</categories-csv>
             </value-type>
         </node>
-		<node id="class_attribute_property" xsi:type="Combodo-Property">
+		<node id="class_attribute_property">
 			<label>UI:ClassAttribute</label>
 			<value-type xsi:type="Combodo-ValueType-ClassAttribute">
 				<class>{{class_property.text}}</class>
@@ -412,13 +411,13 @@ PHP,
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="input_binding_expression" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-		<node id="class_property" xsi:type="Combodo-Property">
+		<node id="class_property">
 			<label>UI:Class</label>
             <value-type xsi:type="Combodo-ValueType-Class">
               <categories-csv>test</categories-csv>
             </value-type>
         </node>
-		<node id="class_attribute_property" xsi:type="Combodo-Property">
+		<node id="class_attribute_property">
 			<label>UI:ClassAttribute</label>
 			<value-type xsi:type="Combodo-ValueType-ClassAttribute">
 				<class>{{IF(class_property.value = '', 'Person', class_property.value)}}</class>
@@ -457,12 +456,12 @@ PHP,
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-		<node id="source_property" xsi:type="Combodo-Property">
+		<node id="source_property">
 			<label>UI:Source</label>
             <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
-		<node id="dependant_property" xsi:type="Combodo-Property">
+		<node id="dependant_property">
 			<label>UI:Dependant</label>
 			<relevance-condition>{{source_property.text != 'count'}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueType-String">
@@ -499,17 +498,17 @@ PHP,
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="ComplexRelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-		<node id="source_a_property" xsi:type="Combodo-Property">
+		<node id="source_a_property">
 			<label>UI:Source</label>
             <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
-		<node id="source_b_property" xsi:type="Combodo-Property">
+		<node id="source_b_property">
 			<label>UI:Source</label>
             <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
-		<node id="dependant_property" xsi:type="Combodo-Property">
+		<node id="dependant_property">
 			<label>UI:Dependant</label>
 			<relevance-condition>{{IF(source_a_property.text != '', source_a_property.text, source_b_property.text)}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueType-String">
@@ -550,7 +549,7 @@ PHP,
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="ClassCategory" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-    	<node id="class_property" xsi:type="Combodo-Property">
+    	<node id="class_property">
 			<label>UI:Class</label>
             <value-type xsi:type="Combodo-ValueType-Class">
               <categories-csv>addon/authentication,grant_by_profile,silo</categories-csv>
@@ -649,7 +648,7 @@ PHP,
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-		<node id="dependant_property" xsi:type="Combodo-Property">
+		<node id="dependant_property">
 			<label>UI:Dependant</label>
 			<relevance-condition>{{source_property.text == 'count'}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueType-String">
@@ -667,7 +666,7 @@ XML,
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-		<node id="dependant_property" xsi:type="Combodo-Property">
+		<node id="dependant_property">
 			<label>UI:Dependant</label>
 			<relevance-condition>{{source_property.text = 'count'}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueType-String">
@@ -685,12 +684,12 @@ XML,
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-		<node id="source_property" xsi:type="Combodo-Property">
+		<node id="source_property">
 			<label>UI:Source</label>
             <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
-		<node id="dependant_property" xsi:type="Combodo-Property">
+		<node id="dependant_property">
 			<label>UI:Dependant</label>
 			<relevance-condition>{{source_property.text_output != 'count'}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueType-String">
@@ -708,12 +707,12 @@ XML,
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-		<node id="source_property" xsi:type="Combodo-Property">
+		<node id="source_property">
 			<label>UI:Source</label>
             <value-type xsi:type="Combodo-ValueType-String">
             </value-type>
         </node>
-		<node id="dependant_property" xsi:type="Combodo-Property">
+		<node id="dependant_property">
 			<label>UI:Dependant</label>
 			<relevance-condition>{{source_property != 'count'}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueType-String">
@@ -731,7 +730,7 @@ XML,
 <?xml version="1.0" encoding="UTF-8"?>
 <node id="RelevanceCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyTree" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
     <nodes>
-		<node id="source_property" xsi:type="Combodo-Property">
+		<node id="source_property">
 			<label>UI:Source</label>
         </node>
 	</nodes>

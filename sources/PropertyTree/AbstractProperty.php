@@ -46,7 +46,7 @@ abstract class AbstractProperty
 		$this->sLabel = $oDomNode->GetChildText('label');
 	}
 
-	abstract public function ToPHPFormBlock(&$aPHPFragments = []): string;
+	abstract public function ToPHPFormBlock(array &$aPHPFragments = []): string;
 
 	public function GetValueType(): ?AbstractValueType
 	{
@@ -77,4 +77,10 @@ abstract class AbstractProperty
 
 		return null;
 	}
+
+	public function GetIdWithPath(): ?string
+	{
+		return $this->sIdWithPath;
+	}
+
 }

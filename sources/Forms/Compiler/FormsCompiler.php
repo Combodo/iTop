@@ -62,7 +62,7 @@ class FormsCompiler
 
 		/** @var \Combodo\iTop\DesignElement $oRoot */
 		$oRoot = $oDoc->firstChild;
-		$oPropertyTree = PropertyTreeFactory::GetInstance()->CreateNodeFromDom($oRoot);
+		$oPropertyTree = PropertyTreeFactory::GetInstance()->CreateTreeFromDom($oRoot);
 
 		return $oPropertyTree->ToPHPFormBlock();
 	}

@@ -30,8 +30,6 @@ class CollectionOfTrees extends AbstractProperty
 		parent::InitFromDomNode($oDomNode, $oParent);
 		$oPropertyTreeFactory = PropertyTreeFactory::GetInstance();
 
-		$this->sButtonLabel = $oDomNode->GetChildText('button-label');
-
 		$oCollectionTypeNode = $oDomNode->GetOptionalElement('collection-type');
 		if ($oCollectionTypeNode) {
 			$this->oCollectionType = CollectionTypeFactory::GetInstance()->CreateCollectionTypeFromDomNode($oCollectionTypeNode);

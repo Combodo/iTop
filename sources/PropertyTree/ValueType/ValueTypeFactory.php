@@ -31,17 +31,19 @@ class ValueTypeFactory
 
 	/**
 	 * @param \Combodo\iTop\DesignElement $oDomNode
+	 * @param \Combodo\iTop\PropertyTree\AbstractProperty $oParent
 	 *
 	 * @return \Combodo\iTop\PropertyTree\ValueType\AbstractValueType
 	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
+	 * @throws \DOMFormatException
 	 */
-	public function CreateValueTypeFromDomNode(DesignElement $oDomNode): AbstractValueType
+	public function CreateValueTypeFromDomNode(DesignElement $oDomNode, AbstractProperty $oParent): AbstractValueType
 	{
 		$sNodeType = $oDomNode->getAttribute('xsi:type');
 
 		if (is_a($sNodeType, AbstractValueType::class, true)) {
 			$oNode = new $sNodeType();
-			$oNode->InitFromDomNode($oDomNode);
+			$oNode->InitFromDomNode($oDomNode, $oParent);
 
 			return $oNode;
 		}

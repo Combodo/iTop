@@ -110,11 +110,10 @@ class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClass::class, 'Combodo
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttribute::class, 'Combodo-ValueType-ClassAttribute');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttributeGroupBy::class, 'Combodo-ValueType-ClassAttributeGroupBy');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeClassAttributeValue::class, 'Combodo-ValueType-ClassAttributeValue');
+class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeCollection::class, 'Combodo-ValueType-Collection');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeIcon::class, 'Combodo-ValueType-Icon');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeInteger::class, 'Combodo-ValueType-Integer');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeLabel::class, 'Combodo-ValueType-Label');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeOQL::class, 'Combodo-ValueType-OQL');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeString::class, 'Combodo-ValueType-String');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeText::class, 'Combodo-ValueType-Text');
-
-class_alias(\Combodo\iTop\PropertyTree\CollectionType\CollectionTypeCollection::class, 'Combodo-CollectionType-Collection');

@@ -36,7 +36,7 @@ class Property extends AbstractProperty
 
 		$oValueTypeNode = $oDomNode->GetOptionalElement('value-type');
 		if ($oValueTypeNode) {
-			$this->oValueType = ValueTypeFactory::GetInstance()->CreateValueTypeFromDomNode($oValueTypeNode);
+			$this->oValueType = ValueTypeFactory::GetInstance()->CreateValueTypeFromDomNode($oValueTypeNode, $this);
 		} else {
 			throw new PropertyTreeException("Node: {$this->sId}, missing value-type in node specification");
 		}
@@ -50,7 +50,7 @@ class Property extends AbstractProperty
 	 * @return string
 	 * @throws \Combodo\iTop\PropertyTree\PropertyTreeException
 	 */
-	public function ToPHPFormBlock(&$aPHPFragments = []): string
+	public function ToPHPFormBlock(array &$aPHPFragments = []): string
 	{
 		$sFormBlockClass = $this->oValueType->GetFormBlockClass();
 
@@ -77,6 +77,7 @@ class Property extends AbstractProperty
 		foreach ($aOptions as $sOption => $sValue) {
 			$sOptions .= "\t\t\t".utils::QuoteForPHP($sOption)." => $sValue,\n";
 		}
+		$this->oValueType->UpdatePHPFragmentsList($aPHPFragments);
 		return <<<PHP
 		{$sPrerequisiteExpressions}\$this->Add('$this->sId', '$sFormBlockClass', [
 $sOptions\t\t]){$sInputs};

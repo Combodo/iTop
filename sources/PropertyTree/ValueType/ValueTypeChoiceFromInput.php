@@ -9,6 +9,7 @@ namespace Combodo\iTop\PropertyTree\ValueType;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\ChoiceFromInputsBlock;
+use Combodo\iTop\PropertyTree\AbstractProperty;
 use Combodo\iTop\PropertyTree\ValueType\AbstractValueType;
 use utils;
 
@@ -19,9 +20,9 @@ class ValueTypeChoiceFromInput extends AbstractValueType
 		return ChoiceFromInputsBlock::class;
 	}
 
-	public function InitFromDomNode(DesignElement $oDomNode): void
+	public function InitFromDomNode(DesignElement $oDomNode, AbstractProperty $oParent): void
 	{
-		parent::InitFromDomNode($oDomNode);
+		parent::InitFromDomNode($oDomNode, $oParent);
 
 		foreach ($oDomNode->GetNodes('values/value') as $oValueNode) {
 			/** @var DesignElement $oValueNode */

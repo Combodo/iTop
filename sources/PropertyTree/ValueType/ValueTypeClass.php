@@ -10,6 +10,7 @@ namespace Combodo\iTop\PropertyTree\ValueType;
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\Base\TextFormBlock;
+use Combodo\iTop\PropertyTree\AbstractProperty;
 use Combodo\iTop\PropertyTree\ValueType\AbstractValueType;
 use Combodo\iTop\Service\DependencyInjection\DIService;
 use utils;
@@ -23,9 +24,9 @@ class ValueTypeClass extends AbstractValueType
 		return ChoiceFormBlock::class;
 	}
 
-	public function InitFromDomNode(DesignElement $oDomNode): void
+	public function InitFromDomNode(DesignElement $oDomNode, AbstractProperty $oParent): void
 	{
-		parent::InitFromDomNode($oDomNode);
+		parent::InitFromDomNode($oDomNode, $oParent);
 
 		$sCategories = $oDomNode->GetChildText('categories-csv');
 		/** @var \ModelReflection $oModelReflection */

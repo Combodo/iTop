@@ -9,6 +9,7 @@ namespace Combodo\iTop\PropertyTree\ValueType;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\IO\FormInput;
+use Combodo\iTop\PropertyTree\AbstractProperty;
 use utils;
 
 /**
@@ -25,7 +26,14 @@ abstract class AbstractValueType
 	protected array $aDynamicInputValues = [];
 	protected array $aFormBlockOptionsForPHP = [];
 
-	public function InitFromDomNode(DesignElement $oDomNode): void
+	/**
+	 * @param \Combodo\iTop\DesignElement $oDomNode
+	 * @param \Combodo\iTop\PropertyTree\AbstractProperty $oParent Parent node (used for trees)
+	 *
+	 * @return void
+	 * @throws \DOMFormatException
+	 */
+	public function InitFromDomNode(DesignElement $oDomNode, AbstractProperty $oParent): void
 	{
 		$sBlockNodeClass = $this->GetFormBlockClass();
 		$oBlockNode = new $sBlockNodeClass('foo');
@@ -65,5 +73,9 @@ abstract class AbstractValueType
 	public function GetOutputs(): array
 	{
 		return $this->aOutputs;
+	}
+
+	public function UpdatePHPFragmentsList(array &$aPHPFragments): void
+	{
 	}
 }

@@ -853,32 +853,33 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
       <property_tree id="DashletGroupBy" xsi:type="Combodo-PropertyTree">
         <extends>Dashlet</extends>
         <nodes>
-          <node id="title" xsi:type="Combodo-Property">
+          <node id="title">
             <label>UI:DashletGroupBy:Prop-Title</label>
             <value-type xsi:type="Combodo-ValueType-Label"/><!-- LabelFormBlock -->
           </node>
-          <node id="query" xsi:type="Combodo-Property">
+          <node id="query">
             <label>UI:DashletGroupBy:Prop-Query</label>
-            <data-transform>
-              <xml-node-empty-not-allowed/> <!-- mandatory quoi ! -->
-            </data-transform>
-            <value-type xsi:type="Combodo-ValueType-OQL"/><!-- OqlFormBlock -->
-          </node>
-          <node id="group_by" xsi:type="Combodo-Property">
-            <label>UI:DashletGroupBy:Prop-GroupBy</label>
-            <data-transform>
-              <xml-node-empty-not-allowed/>
-            </data-transform>
-            <value-type xsi:type="Combodo-ValueType-ClassAttributeGroupBy"> <!-- par défaut, il proposera le state attribute de la classe -->
-              <class>{{query.selected_class}}</class>
+            <value-type xsi:type="Combodo-ValueType-OQL">
+              <data-transform>
+                <xml-node-empty-not-allowed/> <!-- mandatory quoi ! -->
+              </data-transform>
             </value-type>
           </node>
-          <node id="style" xsi:type="Combodo-Property"> <!-- possible de le cacher, etc.... celui-ci nous met dedans -->
+          <node id="group_by">
+            <label>UI:DashletGroupBy:Prop-GroupBy</label>
+            <value-type xsi:type="Combodo-ValueType-ClassAttributeGroupBy"> <!-- par défaut, il proposera le state attribute de la classe -->
+              <class>{{query.selected_class}}</class>
+              <data-transform>
+                <xml-node-empty-not-allowed/>
+              </data-transform>
+            </value-type>
+          </node>
+          <node id="style"> <!-- possible de le cacher, etc.... celui-ci nous met dedans -->
             <label>UI:DashletGroupBy:Prop-Style</label>
-            <data-transform>
-              <xml-node-empty-defaults-to>bars</xml-node-empty-defaults-to>
-            </data-transform>
             <value-type xsi:type="Combodo-ValueType-Choice">
+              <data-transform>
+                <xml-node-empty-defaults-to>bars</xml-node-empty-defaults-to>
+              </data-transform>
               <values>
                 <value id="bars">
                   <label>UI:DashletGroupByBars:Label</label>
@@ -892,27 +893,27 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
               </values>
             </value-type>
           </node>
-          <node id="aggregation_function" xsi:type="Combodo-Property">
+          <node id="aggregation_function">
             <label>UI:DashletGroupBy:Prop-Function</label>
-            <data-transform>
-              <xml-node-empty-not-allowed/> <!-- mandatory quoi ! -->
-            </data-transform>
             <value-type xsi:type="Combodo-ValueType-AggregateFunction"> <!-- par défaut : count -->
+              <data-transform>
+                <xml-node-empty-not-allowed/> <!-- mandatory quoi ! -->
+              </data-transform>
               <class>{{query.selected_class}}</class> <!-- pour savoir si il y a des attributs additionnables -->
             </value-type>
           </node>
-          <node id="aggregation_attribute" xsi:type="Combodo-Property">
+          <node id="aggregation_attribute">
             <label>UI:DashletGroupBy:Prop-FunctionAttribute</label>
             <relevance-condition>{{aggregation_function.value != 'count'}}</relevance-condition>
-            <data-transform>
-              <xml-node-empty-not-allowed/> <!-- mandatory quoi ! -->
-            </data-transform>
             <value-type xsi:type="Combodo-ValueType-ClassAttribute">
+              <data-transform>
+                <xml-node-empty-not-allowed/> <!-- mandatory quoi ! -->
+              </data-transform>
               <class>{{query.selected_class}}</class>
               <category>numeric</category>
             </value-type>
           </node>
-          <node id="order_by" xsi:type="Combodo-Property">
+          <node id="order_by">
             <label>UI:DashletGroupBy:Prop-OrderField</label>
             <value-type xsi:type="Combodo-ValueType-ChoiceFromInput">
               <values>
@@ -925,17 +926,17 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
               </values>
             </value-type>
           </node>
-          <node id="limit" xsi:type="Combodo-Property">
+          <node id="limit">
             <label>UI:DashletGroupBy:Prop-Limit</label>
             <relevance-condition>{{order_by.value = 'function'}}</relevance-condition>
             <value-type xsi:type="Combodo-ValueType-Integer"/>
           </node>
-          <node id="order_direction" xsi:type="Combodo-Property">
+          <node id="order_direction">
             <label>UI:DashletGroupBy:Prop-OrderDirection</label>
-            <data-transform>
-              <xml-node-empty-not-allowed/>
-            </data-transform>
             <value-type xsi:type="Combodo-ValueType-Choice">
+              <data-transform>
+                <xml-node-empty-not-allowed/>
+              </data-transform>
               <values>
                 <value id="asc">
                   <label>UI:DashletGroupBy:Order:asc</label>
@@ -952,7 +953,7 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
       <property_tree id="DashletBadge" xsi:type="Combodo-PropertyTree">
         <extends>Dashlet</extends>
         <nodes>
-          <node id="class" xsi:type="Combodo-Property">
+          <node id="class">
             <label>UI:DashletBadge:Prop-Class</label>
             <value-type xsi:type="Combodo-ValueType-Class">
               <categories-csv>bizmodel</categories-csv>
@@ -963,51 +964,49 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
       <property_tree id="DashletHeaderDynamic" xsi:type="Combodo-PropertyTree">
         <extends>Dashlet</extends>
         <nodes>
-          <node id="title" xsi:type="Combodo-Property">
+          <node id="title">
             <label>UI:DashletHeaderDynamic:Prop-Title</label>
             <value-type xsi:type="Combodo-ValueType-Label">
               <not-blank/>
             </value-type>
           </node>
-          <node id="icon" xsi:type="Combodo-Property">
+          <node id="icon">
             <label>UI:DashletHeaderDynamic:Prop-Icon</label>
-            <value-type xsi:type="Combodo-ValueType-Choice">
-              <values>
-                <value id="todo">
-                  <label>ToDo</label>
-                </value>
-              </values>
+            <value-type xsi:type="Combodo-ValueType-Icon">
             </value-type>
           </node>
-          <node id="subtitle" xsi:type="Combodo-Property">
+          <node id="subtitle">
             <label>UI:DashletHeaderDynamic:Prop-Subtitle</label>
             <value-type xsi:type="Combodo-ValueType-Label"/>
           </node>
-          <node id="query" xsi:type="Combodo-Property">
+          <node id="query">
             <label>UI:DashletHeaderDynamic:Prop-Query</label>
-            <data-transform>
-              <xml-node-empty-not-allowed/>
-            </data-transform>
-            <value-type xsi:type="Combodo-ValueType-OQL"/>
+            <value-type xsi:type="Combodo-ValueType-OQL">
+              <data-transform>
+                <xml-node-empty-not-allowed/>
+              </data-transform>
+            </value-type>
           </node>
-          <node id="group_by" xsi:type="Combodo-Property">
+          <node id="group_by">
             <label>UI:DashletHeaderDynamic:Prop-GroupBy</label>
-            <data-transform>
-              <xml-node-empty-not-allowed/>
-            </data-transform>
             <value-type xsi:type="Combodo-ValueType-ClassAttribute">
+              <data-transform>
+                <xml-node-empty-not-allowed/>
+              </data-transform>
               <class>{{query.selected_class}}</class>
               <category>enum</category>
             </value-type>
           </node>
-          <node id="values" xsi:type="Combodo-CollectionOfValues">
+          <node id="values">
             <label>UI:DashletHeaderDynamic:Prop-Values</label>
-            <data-transform>
-              <xml-format xsi:type="xml-format-csv"/>
-            </data-transform>
-            <value-type xsi:type="Combodo-ValueType-ClassAttributeValue">
-              <class>{{query.selected_class}}</class>
-              <attribute>{{group_by.value}}</attribute>
+            <value-type xsi:type="Combodo-ValueType-CollectionOfValues">
+              <data-transform>
+                <xml-format xsi:type="xml-format-csv"/>
+              </data-transform>
+              <value-type xsi:type="Combodo-ValueType-ClassAttributeValue">
+                <class>{{query.selected_class}}</class>
+                <attribute>{{group_by.value}}</attribute>
+              </value-type>
             </value-type>
           </node>
         </nodes>
@@ -1015,11 +1014,11 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
       <property_tree id="DashletHeaderStatic" xsi:type="Combodo-PropertyTree">
         <extends>Dashlet</extends>
         <nodes>
-          <node id="title" xsi:type="Combodo-Property">
+          <node id="title">
             <label>UI:DashletHeaderStatic:Prop-Title</label>
             <value-type xsi:type="Combodo-ValueType-Label"/>
           </node>
-          <node id="icon" xsi:type="Combodo-Property">
+          <node id="icon">
             <label>UI:DashletHeaderStatic:Prop-Icon</label>
             <value-type xsi:type="Combodo-ValueType-Icon"/>
           </node>
@@ -1028,16 +1027,16 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
       <property_tree id="DashletObjectList" xsi:type="Combodo-PropertyTree">
         <extends>Dashlet</extends>
         <nodes>
-          <node id="title" xsi:type="Combodo-Property">
+          <node id="title">
             <label>UI:DashletObjectList:Prop-Title</label>
             <value-type xsi:type="Combodo-ValueType-Label">
             </value-type>
           </node>
-          <node id="query" xsi:type="Combodo-Property">
+          <node id="query">
             <label>UI:DashletObjectList:Prop-Query</label>
             <value-type xsi:type="Combodo-ValueType-OQL"/>
           </node>
-          <node id="menu" xsi:type="Combodo-Property">
+          <node id="menu">
             <label>UI:DashletObjectList:Prop-Menu</label>
             <value-type xsi:type="Combodo-ValueType-Boolean">
               <on>
@@ -1056,7 +1055,7 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
       <property_tree id="DashletPlainText" xsi:type="Combodo-PropertyTree">
         <extends>Dashlet</extends>
         <nodes>
-          <node id="text" xsi:type="Combodo-Property">
+          <node id="text">
             <label>UI:DashletPlainText:Prop-Text</label>
             <constraints>
               <not_blank/>

@@ -9,6 +9,7 @@ namespace Combodo\iTop\PropertyTree\ValueType;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
+use Combodo\iTop\PropertyTree\AbstractProperty;
 use utils;
 
 /**
@@ -21,9 +22,9 @@ class ValueTypeChoice extends AbstractValueType
 		return ChoiceFormBlock::class;
 	}
 
-	public function InitFromDomNode(DesignElement $oDomNode): void
+	public function InitFromDomNode(DesignElement $oDomNode, AbstractProperty $oParent): void
 	{
-		parent::InitFromDomNode($oDomNode);
+		parent::InitFromDomNode($oDomNode, $oParent);
 
 		$sChoices = "[\n";
 		foreach ($oDomNode->GetNodes('values/value') as $oValueNode) {

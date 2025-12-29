@@ -30,7 +30,7 @@ class PropertyTree extends AbstractProperty
 		}
 	}
 
-	public function ToPHPFormBlock(&$aPHPFragments = []): string
+	public function ToPHPFormBlock(array &$aPHPFragments = []): string
 	{
 		$bIsRoot = (count($aPHPFragments) === 0);
 		$sLocalPHP = <<<PHP
@@ -53,7 +53,7 @@ PHP;
 
 		if ($bIsRoot) {
 			//			$sOutputPHP = <<<PHP
-			//namesapace Combodo\iTop\Forms\Block\Generated;
+			//namespace Combodo\iTop\Forms\Block\Generated;
 			//
 			//PHP;
 
