@@ -1545,7 +1545,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Les descendants des objets sélectionnés seront inclus.',
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtré',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtré sur %1$s',
-	'UI:StateChanged' => 'Etat modifié',
+	'UI:StateChanged' => 'État modifié',
 	'UI:AddSubTree' => 'Ajouter une entrée',
 ]);
 
