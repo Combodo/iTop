@@ -100,7 +100,7 @@ class FormBuilder implements FormBuilderInterface, IteratorAggregate
 			$this->builder->add('_turbo_trigger', HiddenType::class, [
 				'prevent_form_build' => true,
 				'mapped'             => false,
-				'priority' => 1
+				'priority' => 1,
 			]);
 		}
 	}
