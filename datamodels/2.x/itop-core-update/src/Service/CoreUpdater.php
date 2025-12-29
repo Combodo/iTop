@@ -155,7 +155,6 @@ final class CoreUpdater
 				APPROOT.'extensions',
 			];
 			$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation($oConfig, $aDirsToScanForModules);
-			$aSelectedModules = [];
 			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'BeforeDatabaseCreation');
 			$oRuntimeEnv->CreateDatabaseStructure($oConfig, 'upgrade');
 			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseCreation');
@@ -180,7 +179,7 @@ final class CoreUpdater
 			$oRuntimeEnv->RecordInstallation(
 				$oConfig,
 				$sDataModelVersion,
-				$aSelectedModules,
+				array_keys($aAvailableModules),
 				$aSelectedExtensionCodes,
 				'Done by the iTop Core Updater'
 			);
