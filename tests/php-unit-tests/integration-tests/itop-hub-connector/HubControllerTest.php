@@ -33,22 +33,16 @@ class HubControllerTest extends ItopDataTestCase
 
 		$this->CopyProductionModulesIntoHubExtensionDir();
 
-		touch(MFCompiler::USE_SYMBOLIC_LINKS_FILE_PATH);
 		HubController::GetInstance()->SetOutputHeaders(false);
 
-		try {
-			HubController::GetInstance()->LaunchCompile();
-		} catch (DOMFormatException $e) {
-			SetupLog::Error(__METHOD__, null, [ 'production.delta.xml' =>  @file_get_contents(APPROOT.'data/production.delta.xml')]);
-			throw $e;
-		}
+		HubController::GetInstance()->LaunchCompile();
 
 		$this->CheckReport('{"code":0,"message":"Ok","fields":[]}');
 	}
 
 	public function testLaunchDeploy(): void
 	{
-		$this->PrepareCompileAuthent();
+		$this->testLaunchCompile();
 		HubController::GetInstance()->LaunchDeploy();
 		$this->CheckReport('{"code":0,"message":"Compilation successful.","fields":[]}');
 	}
@@ -78,6 +72,7 @@ class HubControllerTest extends ItopDataTestCase
 		$this->aFileToClean[] = $sExtensionDir;
 
 		SetupUtils::rrmdir($sExtensionDir);
+		@mkdir($sExtensionDir);
 		SetupUtils::copydir($sExtensionDir, $sProdModules);
 	}
 }

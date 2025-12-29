@@ -209,7 +209,7 @@ class HubController
 				$aSelectedExtensionCodes[] = $oExtension->sCode;
 			}
 			$aSelectedExtensions = $oExtensionsMap->GetChoices();
-			$oRuntimeEnv->RecordInstallation($oConfig, $sDataModelVersion, $aAvailableModules, $aSelectedExtensionCodes, 'Done by the iTop Hub Connector');
+			$oRuntimeEnv->RecordInstallation($oConfig, $sDataModelVersion, array_keys($aAvailableModules), $aSelectedExtensionCodes, 'Done by the iTop Hub Connector');
 
 			// Report the success in a way that will be detected by the ajax caller
 			SetupLog::Info('Deployment successfully completed.');

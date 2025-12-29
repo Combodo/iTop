@@ -548,7 +548,7 @@ class RunTimeEnvironment
 		// Record installed modules and extensions
 		//
 		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
-		foreach ($aSelectedModuleCodes as $sModuleId => $aData) {
+		foreach ($aSelectedModuleCodes as $sModuleId) {
 			if (($sModuleId == ROOT_MODULE) || ($sModuleId == DATAMODEL_MODULE)) {
 				continue;
 			}
@@ -869,7 +869,7 @@ class RunTimeEnvironment
 
 			if (is_null($aSelectedModules) || in_array($sModuleId, $aSelectedModules)) {
 				$aArgs = [MetaModel::GetConfig(), $aModule['installed_version'], $aModule['available_version']];
-				RunTimeEnvironment::CallInstallerHandler($aAvailableModules[$sModuleId], $sHandlerName, $aArgs);
+				RunTimeEnvironment::CallInstallerHandler($aModule, $sHandlerName, $aArgs);
 			}
 		}
 	}
@@ -896,6 +896,7 @@ class RunTimeEnvironment
 			try {
 				call_user_func_array($aCallSpec, $aArgs);
 			} catch (Exception $e) {
+				$sModuleId = isset($sModuleId) ? $sModuleId : "";
 				$sErrorMessage = "Module $sModuleId : error when calling module installer class $sModuleInstallerClass for $sHandlerName handler";
 				$aExceptionContextData = [
 					'ModulelId' => $sModuleId,
