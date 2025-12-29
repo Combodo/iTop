@@ -64,7 +64,7 @@ class AttributeValueChoiceFormBlock extends ChoiceFormBlock
 
 			$oOptionsRegister->SetOption('choices', array_flip($aValues ?? []));
 		} catch (Exception $e) {
-//			throw new FormBlockException('Update option failed for '.json_encode($this->GetName()), 0, $e);
+			//			throw new FormBlockException('Update option failed for '.json_encode($this->GetName()), 0, $e);
 		}
 	}
 

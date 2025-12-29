@@ -39,7 +39,7 @@ class BlockTest extends AbstractFormsTest
 		foreach ($aFormBlocks as $sFormBlock) {
 			$oChoiceBlock = new ($sFormBlock)($sFormBlock);
 			if ($oChoiceBlock instanceof AbstractTypeFormBlock) {
-				if(!$oChoiceBlock instanceof GenericDashlet){
+				if (!$oChoiceBlock instanceof GenericDashlet) {
 					$oClass = new \ReflectionClass($oChoiceBlock->GetFormType());
 					$this->assertTrue($oClass->isSubclassOf(AbstractType::class));
 				}

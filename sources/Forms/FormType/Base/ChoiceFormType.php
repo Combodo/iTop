@@ -65,7 +65,7 @@ class ChoiceFormType extends AbstractType
 
 			// reset value if not in available choices
 			if (!empty($oEvent->getData()) && !$this->CheckValue($oEvent->getData(), $options)) {
-				if(!$this->bErrorAdded){
+				if (!$this->bErrorAdded) {
 					$oEvent->getForm()->addError(new FormError("The value has been reset because it is not part of the available choices anymore."));
 				}
 				$oEvent->setData(null);

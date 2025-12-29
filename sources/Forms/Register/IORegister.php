@@ -288,7 +288,7 @@ class IORegister
 			if ($oFormInput->IsBound()) {
 				$oBlock = $oFormInput->GetBinding()->oSourceIO->GetOwnerBlock();
 
-				if($oBlock instanceof AbstractExpressionFormBlock){
+				if ($oBlock instanceof AbstractExpressionFormBlock) {
 					foreach ($oBlock->GetBoundInputs() as $oExpressionFormInput) {
 						$oBlock = $oExpressionFormInput->GetBinding()->oSourceIO->GetOwnerBlock();
 						$sId = FormBlockHelper::GetFormId($oBlock);
