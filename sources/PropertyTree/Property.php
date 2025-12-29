@@ -104,7 +104,22 @@ PHP;
 					$sNode = $aMatches['node'];
 					$oSibling = $this->GetSibling($sNode);
 					if (is_null($oSibling)) {
-						throw new PropertyTreeException("Node: {$this->sId}, invalid source in condition: $sNode");
+						// Search in collection
+						if (is_a($this->oParent?->oValueType ?? null, 'Combodo-ValueType-Collection')) {
+							$bSourceNodeFound = false;
+							$aSiblings = $this->oParent->oValueType->GetChildren();
+							foreach ($aSiblings as $oSibling) {
+								if ($oSibling->sId == $sNode) {
+									$bSourceNodeFound = true;
+									break;
+								}
+							}
+							if (!$bSourceNodeFound) {
+								throw new PropertyTreeException("node: {$this->sId}, source: $sNode not found in collection: {$this->oParent->sId}");
+							}
+						} else {
+							throw new PropertyTreeException("Node: {$this->sId}, invalid source in condition: $sNode");
+						}
 					}
 					$sOutput = $aMatches['output'];
 					if (!in_array($sOutput, $oSibling->oValueType->GetOutputs())) {

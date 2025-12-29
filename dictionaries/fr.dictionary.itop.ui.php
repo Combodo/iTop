@@ -1546,6 +1546,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtré',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtré sur %1$s',
 	'UI:StateChanged' => 'Etat modifié',
+	'UI:AddSubTree' => 'Ajouter une entrée',
 ]);
 
 //

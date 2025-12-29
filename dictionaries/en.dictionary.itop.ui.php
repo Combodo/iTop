@@ -1654,6 +1654,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s',
 
 	'UI:StateChanged' => 'State changed',
+
+	'UI:AddSubTree' => 'Add entry',
 ]);
 
 //

@@ -265,6 +265,7 @@ PHP,
 		        </node>
 				<node id="integer_property">
 					<label>UI:Integer</label>
+					<relevance-condition>{{string_property.text != 'no-display'}}</relevance-condition>
 		            <value-type xsi:type="Combodo-ValueType-Integer">
 		            </value-type>
 		        </node>
@@ -283,9 +284,15 @@ class SubFormFor__collection_of_trees_test__sub_tree_collection extends Combodo\
 			'label' => 'UI:String',
 		]);
 
+		\$this->Add('integer_property_visible_expression', 'Combodo\iTop\Forms\Block\Expression\BooleanExpressionFormBlock', [
+			'expression' => 'string_property.text != \'no-display\'',
+		])
+			->AddInputDependsOn('string_property.text', 'string_property', 'text');
+
 		\$this->Add('integer_property', 'Combodo\iTop\Forms\Block\Base\IntegerFormBlock', [
 			'label' => 'UI:Integer',
-		]);
+		])
+			->InputDependsOn('visible', 'integer_property_visible_expression', 'result');
 	}
 }
 
