@@ -99,8 +99,6 @@ class_alias(\Combodo\iTop\Core\AttributeDefinition\MissingColumnException::class
 
 class_alias(\Combodo\iTop\PropertyTree\PropertyTree::class, 'Combodo-PropertyTree');
 class_alias(\Combodo\iTop\PropertyTree\Property::class, 'Combodo-Property');
-class_alias(\Combodo\iTop\PropertyTree\CollectionOfValues::class, 'Combodo-CollectionOfValues');
-class_alias(\Combodo\iTop\PropertyTree\CollectionOfTrees::class, 'Combodo-CollectionOfTrees');
 
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeAggregateFunction::class, 'Combodo-ValueType-AggregateFunction');
 class_alias(\Combodo\iTop\PropertyTree\ValueType\ValueTypeBoolean::class, 'Combodo-ValueType-Boolean');
