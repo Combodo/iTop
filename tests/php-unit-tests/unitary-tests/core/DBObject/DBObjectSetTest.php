@@ -73,7 +73,6 @@ class DBObjectSetTest extends ItopDataTestCase
 		$oDBObjectSetComparator = new DBObjectSetComparator($DBObjectSet1, $DBObjectSet3);
 		$this->assertTrue($oDBObjectSetComparator->SetsAreEquivalent());
 
-
 		$oDBObjectSetComparator = new DBObjectSetComparator($DBObjectSet1, new DBObjectSet($oSearch));
 		$this->expectExceptionMessage($sMsg, "should call DB again this time");
 		$this->assertTrue($oDBObjectSetComparator->SetsAreEquivalent());
