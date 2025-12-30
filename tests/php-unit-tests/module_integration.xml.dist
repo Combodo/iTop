@@ -31,6 +31,7 @@
       <testsuite name="ModuleIntegration">
         <file>integration-tests/DictionariesConsistencyAfterSetupTest.php</file>
         <file>integration-tests/DictionariesConsistencyTest.php</file>
+        <file>integration-tests/iTopModulesDependencyValidationServiceTest.php</file>
       </testsuite>
   </testsuites>
 

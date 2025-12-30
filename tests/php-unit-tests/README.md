@@ -2,9 +2,6 @@
 
 Documentation on creating and maintaining tests in iTop.
 
-
-
-
 ## Prerequisites
 
 ### PHPUnit configuration file
@@ -78,7 +75,8 @@ Example :
 		$oTagData->DBDelete();
 ```
 
-Warning : when the condition is met the test is finished and following code will be ignored !
+> [!WARNING]
+> When the condition is met the test is finished and following code will be ignored !
 
 Another way to do is using try/catch blocks, for example :
 ```php

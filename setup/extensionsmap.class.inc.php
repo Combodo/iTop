@@ -60,6 +60,11 @@ class iTopExtension
 	 * @var bool
 	 */
 	public $bMarkedAsChosen;
+	/**
+	 * If null, check if at least one module cannot be uninstalled
+	 * @var bool|null
+	 */
+	public ?bool $bCanBeUninstalled = null;
 
 	/**
 	 * @var bool
@@ -91,6 +96,14 @@ class iTopExtension
 	 * @var string[]
 	 */
 	public $aMissingDependencies;
+	/**
+	 * @var bool
+	 */
+	public bool $bInstalled = false;
+	/**
+	 * @var bool
+	 */
+	public bool $bRemovedFromDisk = false;
 
 	public function __construct()
 	{
@@ -115,13 +128,14 @@ class iTopExtension
 	 * @since 3.3.0
 	 * @return bool
 	 */
-	public function CanBeUninstalled()
+	public function CanBeUninstalled(): bool
 	{
+		if (!is_null($this->bCanBeUninstalled)) {
+			return $this->bCanBeUninstalled;
+		}
 		foreach ($this->aModuleInfo as $sModuleCode => $aModuleInfo) {
-			$bUninstallable = $aModuleInfo['uninstallable'] === 'yes';
-			if (!$bUninstallable) {
-				return false;
-			}
+			$this->bCanBeUninstalled = $aModuleInfo['uninstallable'] === 'yes';
+			return $this->bCanBeUninstalled;
 		}
 		return true;
 	}
@@ -139,6 +153,11 @@ class iTopExtensionsMap
 	 * @return void
 	 */
 	protected $aExtensions;
+	/**
+	 * The list of all currently installed extensions
+	 * @var array|null
+	 */
+	protected ?array $aInstalledExtensions = null;
 
 	/**
 	 * The list of directories browsed using the ReadDir method when building the map
@@ -146,7 +165,7 @@ class iTopExtensionsMap
 	 */
 	protected $aScannedDirs;
 
-	public function __construct($sFromEnvironment = 'production', $bNormalizeOldExtensions = true, $aExtraDirs = [])
+	public function __construct($sFromEnvironment = 'production', $aExtraDirs = [])
 	{
 		$this->aExtensions = [];
 		$this->aScannedDirs = [];
@@ -155,9 +174,6 @@ class iTopExtensionsMap
 			$this->ReadDir($sDir, iTopExtension::SOURCE_REMOTE);
 		}
 		$this->CheckDependencies($sFromEnvironment);
-		if ($bNormalizeOldExtensions) {
-			$this->NormalizeOldExtensions();
-		}
 	}
 
 	/**
@@ -213,6 +229,7 @@ class iTopExtensionsMap
 				$oExtension = new iTopExtension();
 				$oExtension->sCode = $aChoiceInfo['extension_code'];
 				$oExtension->sLabel = $aChoiceInfo['title'];
+				$oExtension->sDescription = $aChoiceInfo['description'];
 				if (array_key_exists('modules', $aChoiceInfo)) {
 					// Some wizard choices are not associated with any module
 					$oExtension->aModules = $aChoiceInfo['modules'];
@@ -261,7 +278,7 @@ class iTopExtensionsMap
 	 *
 	 * @return \iTopExtension|null
 	 */
-	public function Get(string $sExtensionCode): ?iTopExtension
+	public function GetFromExtensionCode(string $sExtensionCode): ?iTopExtension
 	{
 		foreach ($this->aExtensions as $oExtension) {
 			if ($oExtension->sCode === $sExtensionCode) {
@@ -341,7 +358,7 @@ class iTopExtensionsMap
 							$this->aExtensions[$sParentExtensionId]->aModuleVersion[$sModuleName] = $sModuleVersion;
 							$this->aExtensions[$sParentExtensionId]->aModuleInfo[$sModuleName] = $aModuleInfo[ModuleFileReader::MODULE_INFO_CONFIG];
 						} else {
-							// Not already inside an folder containing an 'extension.xml' file
+							// Not already inside a folder containing an 'extension.xml' file
 
 							// Ignore non-visible modules and auto-select ones, since these are never prompted
 							// as a choice to the end-user
@@ -433,9 +450,18 @@ class iTopExtensionsMap
 	}
 
 	/**
+	 * @return array All available extensions and extensions currently installed but not available due to files removal
+	 */
+	public function GetAllExtensionsWithPreviouslyInstalled(): array
+	{
+		//Mind the order, local extensions data must overwrite installed extensions data since installed extensions does not have the associated modules.
+		return array_merge($this->aInstalledExtensions ?? [], $this->aExtensions);
+	}
+
+	/**
 	 * Mark the given extension as chosen
-	 * @param string $sExtensionCode The code of the extension (code without verison number)
-	 * @param bool $bMark The value to set for the bmarkAschosen flag
+	 * @param string $sExtensionCode The code of the extension (code without version number)
+	 * @param bool $bMark The value to set for the bMarkAsChosen flag
 	 * @return void
 	 */
 	public function MarkAsChosen($sExtensionCode, $bMark = true)
@@ -501,123 +527,54 @@ class iTopExtensionsMap
 	 */
 	public function LoadChoicesFromDatabase(Config $oConfig)
 	{
-		try {
-			$aInstalledExtensions = [];
-			if (CMDBSource::DBName() === null) {
-				CMDBSource::InitFromConfig($oConfig);
-			}
-			$sLatestInstallationDate = CMDBSource::QueryToScalar("SELECT max(installed) FROM ".$oConfig->Get('db_subname')."priv_extension_install");
-			$aInstalledExtensions = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_extension_install WHERE installed = '".$sLatestInstallationDate."'");
-		} catch (MySQLException $e) {
-			// No database or erroneous information
-			return false;
-		}
-
-		foreach ($aInstalledExtensions as $aDBInfo) {
-			$this->MarkAsChosen($aDBInfo['code']);
-			$this->SetInstalledVersion($aDBInfo['code'], $aDBInfo['version']);
+		foreach ($this->LoadInstalledExtensionsFromDatabase($oConfig) as $oExtension) {
+			$this->MarkAsChosen($oExtension->sCode);
+			$this->SetInstalledVersion($oExtension->sCode, $oExtension->sVersion);
 		}
 		return true;
 	}
 
-	/**
-	 * Find is a single-module extension is contained within another extension
-	 * @param iTopExtension $oExtension
-	 * @return NULL|iTopExtension
-	 */
-	public function IsExtensionObsoletedByAnother(iTopExtension $oExtension)
+	protected function LoadInstalledExtensionsFromDatabase(Config $oConfig): array|false
 	{
-		// Complex extensions (more than 1 module) are never considered as obsolete
-		if (count($oExtension->aModules) != 1) {
-			return null;
-		}
-
-		foreach ($this->GetAllExtensions() as $oOtherExtension) {
-			if (($oOtherExtension->sSourceDir != $oExtension->sSourceDir) && ($oOtherExtension->sSource != iTopExtension::SOURCE_WIZARD)) {
-				if (array_key_exists($oExtension->sCode, $oOtherExtension->aModuleVersion) &&
-					(version_compare($oOtherExtension->aModuleVersion[$oExtension->sCode], $oExtension->sVersion, '>='))) {
-					// Found another extension containing a more recent version of the extension/module
-					return $oOtherExtension;
-				}
+		try {
+			if (CMDBSource::DBName() === null) {
+				CMDBSource::InitFromConfig($oConfig);
 			}
-		}
+			$sLatestInstallationDate = CMDBSource::QueryToScalar("SELECT max(installed) FROM ".$oConfig->Get('db_subname')."priv_extension_install");
+			$aDBInfo = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_extension_install WHERE installed = '".$sLatestInstallationDate."'");
 
-		// No match at all
-		return null;
-
-	}
-
-	/**
-	 * Search for multi-module extensions that are NOT deployed as an extension (i.e. shipped with an extension.xml file)
-	 * but as a bunch of un-related modules based on the signature of some well-known extensions. If such an extension is found,
-	 * replace the stand-alone modules by an "extension" with the appropriate label/description/version containing the same modules.
-	 * @param string $sInSourceOnly The source directory to scan (datamodel|extensions|data)
-	 */
-	public function NormalizeOldExtensions($sInSourceOnly = iTopExtension::SOURCE_MANUAL)
-	{
-		$aSignatures = $this->GetOldExtensionsSignatures();
-		foreach ($aSignatures as $sExtensionCode => $aExtensionSignatures) {
-			$bFound = false;
-			foreach ($aExtensionSignatures['versions'] as $sVersion => $aModules) {
-				$bInstalled = true;
-				foreach ($aModules as $sModuleId) {
-					if (!$this->ModuleIsPresent($sModuleId, $sInSourceOnly)) {
-						$bFound = false;
-						break; // One missing module is enough to determine that the extension/version is not present
-					} else {
-						$bInstalled = $bInstalled && $this->ModuleIsInstalled($sModuleId, $sInSourceOnly);
-						$bFound = true;
-					}
-				}
-				if ($bFound) {
-					break;
-				} // The current version matches the signature
-			}
-
-			if ($bFound) {
+			$this->aInstalledExtensions = [];
+			foreach ($aDBInfo as $aExtensionInfo) {
 				$oExtension = new iTopExtension();
-				$oExtension->sCode = $sExtensionCode;
-				$oExtension->sLabel = $aExtensionSignatures['label'];
-				$oExtension->sSource = $sInSourceOnly;
-				$oExtension->sDescription = $aExtensionSignatures['description'];
-				$oExtension->sVersion = $sVersion;
+				$oExtension->sCode = $aExtensionInfo['code'];
+				$oExtension->sLabel = $aExtensionInfo['label'];
+				$oExtension->sDescription = $aExtensionInfo['description'] ?? '';
+				$oExtension->sVersion = $aExtensionInfo['version'];
+				$oExtension->sSource = $aExtensionInfo['source'];
+				$oExtension->bMandatory = false;
+				$oExtension->sMoreInfoUrl = '';
 				$oExtension->aModules = [];
-				if ($bInstalled) {
-					$oExtension->sInstalledVersion = $sVersion;
-					$oExtension->bMarkedAsChosen = true;
+				$oExtension->aModuleVersion = [];
+				$oExtension->aModuleInfo = [];
+				$oExtension->sSourceDir = '';
+				$oExtension->bVisible = true;
+				$oExtension->bInstalled = true;
+				$oExtension->bCanBeUninstalled = !isset($aExtensionInfo['uninstallable']) || $aExtensionInfo['uninstallable'] === 'yes';
+				$oChoice = $this->GetFromExtensionCode($oExtension->sCode);
+				if ($oChoice) {
+					$oChoice->bInstalled = true;
+				} else {
+					$oExtension->bRemovedFromDisk = true;
 				}
-				foreach ($aModules as $sModuleId) {
-					list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-					$oExtension->aModules[] = $sModuleName;
-					$oExtension->aModuleInfo[$sModuleName] = $this->aExtensions[$sModuleId]->aModuleInfo[$sModuleName];
-				}
-				$this->ReplaceModulesByNormalizedExtension($aExtensionSignatures['versions'][$sVersion], $oExtension);
+
+				$this->aInstalledExtensions[$oExtension->sCode.'/'.$oExtension->sVersion] = $oExtension;
 			}
+
+			return $this->aInstalledExtensions;
+		} catch (MySQLException $e) {
+			// No database or erroneous information
+			return false;
 		}
-	}
-
-	/**
-	 * Check if the given module-code/version is present on the disk
-	 * @param string $sModuleIdToFind The module ID (code/version) to search for
-	 * @param string $sInSourceOnly The origin (=source) to search in (datamodel|extensions|data)
-	 * @return boolean
-	 */
-	protected function ModuleIsPresent($sModuleIdToFind, $sInSourceOnly)
-	{
-		return (array_key_exists($sModuleIdToFind, $this->aExtensions) && ($this->aExtensions[$sModuleIdToFind]->sSource == $sInSourceOnly));
-	}
-
-	/**
-	 * Check if the given module-code/version is currently installed
-	 * @param string $sModuleIdToFind The module ID (code/version) to search for
-	 * @param string $sInSourceOnly The origin (=source) to search in (datamodel|extensions|data)
-	 * @return boolean
-	 */
-	protected function ModuleIsInstalled($sModuleIdToFind, $sInSourceOnly)
-	{
-		return (array_key_exists($sModuleIdToFind, $this->aExtensions) &&
-			($this->aExtensions[$sModuleIdToFind]->sSource == $sInSourceOnly) &&
-			($this->aExtensions[$sModuleIdToFind]->sInstalledVersion !== ''));
 	}
 
 	/**
@@ -640,657 +597,4 @@ class iTopExtensionsMap
 		return false;
 	}
 
-	/**
-	 * Replace a given set of stand-alone modules by one single "extension"
-	 * @param string[] $aModules
-	 * @param iTopExtension $oNewExtension
-	 */
-	protected function ReplaceModulesByNormalizedExtension($aModules, iTopExtension $oNewExtension)
-	{
-		foreach ($aModules as $sModuleId) {
-			unset($this->aExtensions[$sModuleId]);
-		}
-		$this->AddExtension($oNewExtension);
-	}
-
-	/**
-	 * Get the list of signatures of some well-known multi-module extensions without extension.xml file (should not exist anymore)
-	 *
-	 * @return string[][]|string[][][][]
-	 */
-	protected function GetOldExtensionsSignatures()
-	{
-		// Generated by the Factory using the page export_component_versions_for_normalisation.php
-		return  [
-			'combodo-approval-process-light' =>
-				 [
-					'label' => 'Approval process light',
-					'description' => 'Approve a request via a simple email',
-					'versions' =>
-						 [
-							'1.0.1' =>
-								 [
-									0 => 'approval-base/2.1.0',
-									1 => 'combodo-approval-light/1.0.1',
-								],
-							'1.0.2' =>
-								 [
-									0 => 'approval-base/2.1.1',
-									1 => 'combodo-approval-light/1.0.2',
-								],
-							'1.0.3' =>
-								 [
-									0 => 'approval-base/2.1.2',
-									1 => 'combodo-approval-light/1.0.2',
-								],
-							'1.1.0' =>
-								 [
-									0 => 'approval-base/2.2.2',
-									1 => 'combodo-approval-light/1.0.2',
-								],
-							'1.1.1' =>
-								 [
-									0 => 'approval-base/2.2.3',
-									1 => 'combodo-approval-light/1.0.2',
-								],
-							'1.1.2' =>
-								 [
-									0 => 'approval-base/2.2.6',
-									1 => 'combodo-approval-light/1.0.2',
-								],
-							'1.1.3' =>
-								 [
-									0 => 'approval-base/2.2.6',
-									1 => 'combodo-approval-light/1.0.3',
-								],
-							'1.2.0' =>
-								 [
-									0 => 'approval-base/2.3.0',
-									1 => 'combodo-approval-light/1.0.3',
-								],
-							'1.2.1' =>
-								 [
-									0 => 'approval-base/2.4.0',
-									1 => 'combodo-approval-light/1.0.4',
-								],
-							'1.3.0' =>
-								 [
-									0 => 'approval-base/2.4.2',
-									1 => 'combodo-approval-light/1.1.1',
-								],
-							'1.3.1' =>
-								 [
-									0 => 'approval-base/2.5.0',
-									1 => 'combodo-approval-light/1.1.1',
-								],
-							'1.3.2' =>
-								 [
-									0 => 'approval-base/2.5.0',
-									1 => 'combodo-approval-light/1.1.2',
-								],
-							'1.2.2' =>
-								 [
-									0 => 'approval-base/2.4.2',
-									1 => 'combodo-approval-light/1.0.5',
-								],
-							'1.3.3' =>
-								 [
-									0 => 'approval-base/2.5.1',
-									1 => 'combodo-approval-light/1.1.2',
-								],
-							'1.3.4' =>
-								 [
-									0 => 'approval-base/2.5.2',
-									1 => 'combodo-approval-light/1.1.2',
-								],
-							'1.3.5' =>
-								 [
-									0 => 'approval-base/2.5.3',
-									1 => 'combodo-approval-light/1.1.2',
-								],
-							'1.4.0' =>
-								 [
-									0 => 'approval-base/2.5.3',
-									1 => 'combodo-approval-light/1.1.2',
-									2 => 'itop-approval-portal/1.0.0',
-								],
-						],
-				],
-			'combodo-approval-process-automation' =>
-				 [
-					'label' => 'Approval process automation',
-					'description' => 'Control your approval process with predefined rules based on service catalog',
-					'versions' =>
-						 [
-							'1.0.1' =>
-								 [
-									0 => 'approval-base/2.1.0',
-									1 => 'combodo-approval-extended/1.0.2',
-								],
-							'1.0.2' =>
-								 [
-									0 => 'approval-base/2.1.1',
-									1 => 'combodo-approval-extended/1.0.4',
-								],
-							'1.0.3' =>
-								 [
-									0 => 'approval-base/2.1.2',
-									1 => 'combodo-approval-extended/1.0.4',
-								],
-							'1.1.0' =>
-								 [
-									0 => 'approval-base/2.2.2',
-									1 => 'combodo-approval-extended/1.0.4',
-								],
-							'1.1.1' =>
-								 [
-									0 => 'approval-base/2.2.3',
-									1 => 'combodo-approval-extended/1.0.4',
-								],
-							'1.1.2' =>
-								 [
-									0 => 'approval-base/2.2.6',
-									1 => 'combodo-approval-extended/1.0.5',
-								],
-							'1.1.3' =>
-								 [
-									0 => 'approval-base/2.2.6',
-									1 => 'combodo-approval-extended/1.0.6',
-								],
-							'1.2.0' =>
-								 [
-									0 => 'approval-base/2.3.0',
-									1 => 'combodo-approval-extended/1.0.7',
-								],
-							'1.2.1' =>
-								 [
-									0 => 'approval-base/2.4.0',
-									1 => 'combodo-approval-extended/1.0.8',
-								],
-							'1.3.0' =>
-								 [
-									0 => 'approval-base/2.4.2',
-									1 => 'combodo-approval-extended/1.2.1',
-								],
-							'1.3.1' =>
-								 [
-									0 => 'approval-base/2.5.0',
-									1 => 'combodo-approval-extended/1.2.1',
-								],
-							'1.3.2' =>
-								 [
-									0 => 'approval-base/2.5.0',
-									1 => 'combodo-approval-extended/1.2.2',
-								],
-							'1.2.2' =>
-								 [
-									0 => 'approval-base/2.4.2',
-									1 => 'combodo-approval-extended/1.0.9',
-								],
-							'1.3.3' =>
-								 [
-									0 => 'approval-base/2.5.1',
-									1 => 'combodo-approval-extended/1.2.3',
-								],
-							'1.3.4' =>
-								 [
-									0 => 'approval-base/2.5.2',
-									1 => 'combodo-approval-extended/1.2.3',
-								],
-							'1.3.5' =>
-								 [
-									0 => 'approval-base/2.5.3',
-									1 => 'combodo-approval-extended/1.2.3',
-								],
-							'1.4.0' =>
-								 [
-									0 => 'approval-base/2.5.3',
-									1 => 'combodo-approval-extended/1.2.3',
-									3 => 'itop-approval-portal/1.0.0',
-								],
-						],
-				],
-			'combodo-predefined-response-models' =>
-				 [
-					'label' => 'Predefined response models',
-					'description' => 'Pick common answers from a list of predefined replies grouped by categories to update tickets log',
-					'versions' =>
-						 [
-							'1.0.0' =>
-								 [
-									0 => 'precanned-replies/1.0.0',
-									1 => 'precanned-replies-pro/1.0.0',
-								],
-							'1.0.1' =>
-								 [
-									0 => 'precanned-replies/1.0.1',
-									1 => 'precanned-replies-pro/1.0.1',
-								],
-							'1.0.2' =>
-								 [
-									0 => 'precanned-replies/1.0.2',
-									1 => 'precanned-replies-pro/1.0.1',
-								],
-							'1.0.3' =>
-								 [
-									0 => 'precanned-replies/1.0.3',
-									1 => 'precanned-replies-pro/1.0.1',
-								],
-							'1.0.4' =>
-								 [
-									0 => 'precanned-replies/1.0.3',
-									1 => 'precanned-replies-pro/1.0.2',
-								],
-							'1.0.5' =>
-								 [
-									0 => 'precanned-replies/1.0.4',
-									1 => 'precanned-replies-pro/1.0.2',
-								],
-							'1.1.0' =>
-								 [
-									0 => 'precanned-replies/1.1.0',
-									1 => 'precanned-replies-pro/1.0.2',
-								],
-							'1.1.1' =>
-								 [
-									0 => 'precanned-replies/1.1.1',
-									1 => 'precanned-replies-pro/1.0.2',
-								],
-						],
-				],
-			'combodo-customized-request-forms' =>
-				 [
-					'label' => 'Customized request forms',
-					'description' => 'Define personalized request forms based on the service catalog. Add extra fields for a given type of request.',
-					'versions' =>
-						 [
-							'1.0.1' =>
-								 [
-									0 => 'templates-base/2.1.1',
-									1 => 'itop-request-template/1.0.0',
-								],
-							'1.0.2' =>
-								 [
-									0 => 'templates-base/2.1.2',
-									1 => 'itop-request-template/1.0.0',
-								],
-							'1.0.3' =>
-								 [
-									0 => 'templates-base/2.1.2',
-									1 => 'itop-request-template/1.0.1',
-								],
-							'1.0.4' =>
-								 [
-									0 => 'templates-base/2.1.3',
-									1 => 'itop-request-template/1.0.1',
-								],
-							'1.0.5' =>
-								 [
-									0 => 'templates-base/2.1.4',
-									1 => 'itop-request-template/1.0.1',
-								],
-							'2.0.0' =>
-								 [
-									0 => 'templates-base/3.0.0',
-									1 => 'itop-request-template/2.0.0',
-									2 => 'itop-request-template-portal/1.0.0',
-								],
-							'2.0.1' =>
-								 [
-									0 => 'templates-base/3.0.1',
-									1 => 'itop-request-template/2.0.0',
-									2 => 'itop-request-template-portal/1.0.0',
-								],
-							'2.0.2' =>
-								 [
-									0 => 'templates-base/3.0.2',
-									1 => 'itop-request-template/2.0.0',
-									2 => 'itop-request-template-portal/1.0.0',
-								],
-							'2.0.3' =>
-								 [
-									0 => 'templates-base/3.0.4',
-									1 => 'itop-request-template/2.0.0',
-									2 => 'itop-request-template-portal/1.0.0',
-								],
-							'2.0.4' =>
-								 [
-									0 => 'templates-base/3.0.5',
-									1 => 'itop-request-template/2.0.0',
-									2 => 'itop-request-template-portal/1.0.0',
-								],
-							'2.0.5' =>
-								 [
-									0 => 'templates-base/3.0.6',
-									1 => 'itop-request-template/2.0.0',
-									2 => 'itop-request-template-portal/1.0.0',
-								],
-							'2.0.6' =>
-								 [
-									0 => 'templates-base/3.0.8',
-									1 => 'itop-request-template/2.0.0',
-									2 => 'itop-request-template-portal/1.0.0',
-								],
-							'2.0.7' =>
-								 [
-									0 => 'templates-base/3.0.9',
-									1 => 'itop-request-template/2.0.0',
-									2 => 'itop-request-template-portal/1.0.0',
-								],
-							'2.0.8' =>
-								 [
-									0 => 'templates-base/3.0.12',
-									1 => 'itop-request-template/2.0.0',
-									2 => 'itop-request-template-portal/1.0.0',
-								],
-						],
-				],
-			'combodo-sla-considering-business-hours' =>
-				 [
-					'label' => 'SLA considering business hours',
-					'description' => 'Compute SLAs taking into account service coverage window and holidays',
-					'versions' =>
-						 [
-							'2.0.1' =>
-								 [
-									0 => 'combodo-sla-computation/2.0.1',
-									1 => 'combodo-coverage-windows-computation/2.0.0',
-								],
-							'2.1.0' =>
-								 [
-									0 => 'combodo-sla-computation/2.1.0',
-									1 => 'combodo-coverage-windows-computation/2.0.0',
-								],
-							'2.1.1' =>
-								 [
-									0 => 'combodo-sla-computation/2.1.1',
-									1 => 'combodo-coverage-windows-computation/2.0.0',
-								],
-							'2.1.2' =>
-								 [
-									0 => 'combodo-sla-computation/2.1.2',
-									1 => 'combodo-coverage-windows-computation/2.0.0',
-								],
-							'2.1.3' =>
-								 [
-									0 => 'combodo-sla-computation/2.1.2',
-									1 => 'combodo-coverage-windows-computation/2.0.1',
-								],
-							'2.0.2' =>
-								 [
-									0 => 'combodo-sla-computation/2.0.1',
-									1 => 'combodo-coverage-windows-computation/2.0.1',
-								],
-							'2.1.4' =>
-								 [
-									0 => 'combodo-sla-computation/2.1.3',
-									1 => 'combodo-coverage-windows-computation/2.0.1',
-								],
-							'2.1.5' =>
-								 [
-									0 => 'combodo-sla-computation/2.1.5',
-									1 => 'combodo-coverage-windows-computation/2.0.1',
-								],
-							'2.1.6' =>
-								 [
-									0 => 'combodo-sla-computation/2.1.5',
-									1 => 'combodo-coverage-windows-computation/2.0.2',
-								],
-							'2.1.7' =>
-								 [
-									0 => 'combodo-sla-computation/2.1.6',
-									1 => 'combodo-coverage-windows-computation/2.0.2',
-								],
-							'2.1.8' =>
-								 [
-									0 => 'combodo-sla-computation/2.1.7',
-									1 => 'combodo-coverage-windows-computation/2.0.2',
-								],
-							'2.1.9' =>
-								 [
-									0 => 'combodo-sla-computation/2.1.8',
-									1 => 'combodo-coverage-windows-computation/2.0.2',
-								],
-						],
-				],
-			'combodo-mail-to-ticket-automation' =>
-				 [
-					'label' => 'Mail to ticket automation',
-					'description' => 'Scan several mailboxes to create or update tickets.',
-					'versions' =>
-						 [
-							'2.6.0' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.0',
-									1 => 'itop-standard-email-synchro/2.6.0',
-								],
-							'2.6.1' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.1',
-									1 => 'itop-standard-email-synchro/2.6.0',
-								],
-							'2.6.2' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.2',
-									1 => 'itop-standard-email-synchro/2.6.0',
-								],
-							'2.6.3' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.2',
-									1 => 'itop-standard-email-synchro/2.6.1',
-								],
-							'2.6.4' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.3',
-									1 => 'itop-standard-email-synchro/2.6.2',
-								],
-							'2.6.5' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.4',
-									1 => 'itop-standard-email-synchro/2.6.2',
-								],
-							'2.6.6' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.5',
-									1 => 'itop-standard-email-synchro/2.6.3',
-								],
-							'2.6.7' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.6',
-									1 => 'itop-standard-email-synchro/2.6.4',
-								],
-							'2.6.8' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.7',
-									1 => 'itop-standard-email-synchro/2.6.4',
-								],
-							'2.6.9' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.8',
-									1 => 'itop-standard-email-synchro/2.6.5',
-								],
-							'2.6.10' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.9',
-									1 => 'itop-standard-email-synchro/2.6.6',
-								],
-							'2.6.11' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.10',
-									1 => 'itop-standard-email-synchro/2.6.6',
-								],
-							'2.6.12' =>
-								 [
-									0 => 'combodo-email-synchro/2.6.11',
-									1 => 'itop-standard-email-synchro/2.6.6',
-								],
-							'3.0.0' =>
-								 [
-									0 => 'combodo-email-synchro/3.0.0',
-									1 => 'itop-standard-email-synchro/3.0.0',
-								],
-							'3.0.1' =>
-								 [
-									0 => 'combodo-email-synchro/3.0.1',
-									1 => 'itop-standard-email-synchro/3.0.1',
-								],
-							'3.0.2' =>
-								 [
-									0 => 'combodo-email-synchro/3.0.2',
-									1 => 'itop-standard-email-synchro/3.0.1',
-								],
-							'3.0.3' =>
-								 [
-									0 => 'combodo-email-synchro/3.0.3',
-									1 => 'itop-standard-email-synchro/3.0.3',
-								],
-							'3.0.4' =>
-								 [
-									0 => 'combodo-email-synchro/3.0.3',
-									1 => 'itop-standard-email-synchro/3.0.4',
-								],
-							'3.0.5' =>
-								 [
-									0 => 'combodo-email-synchro/3.0.4',
-									1 => 'itop-standard-email-synchro/3.0.4',
-								],
-							'3.0.6' =>
-								 [
-									0 => 'combodo-email-synchro/3.0.5',
-									1 => 'itop-standard-email-synchro/3.0.4',
-								],
-							'3.0.7' =>
-								 [
-									0 => 'combodo-email-synchro/3.0.5',
-									1 => 'itop-standard-email-synchro/3.0.5',
-								],
-						],
-				],
-			'combodo-configurator-for-automatic-object-creation' =>
-				 [
-					'label' => 'Configurator for automatic object creation',
-					'description' => 'Templating based on existing objects.',
-					'versions' =>
-						 [
-							'1.0.13' =>
-								 [
-									1 => 'itop-stencils/1.0.6',
-								],
-						],
-				],
-			'combodo-user-actions-configurator' =>
-				 [
-					'label' => 'User actions configurator',
-					'description' => 'Configure user actions to simplify and automate processes (e.g. create an incident from a CI).',
-					'versions' =>
-						 [
-							'1.0.0' =>
-								 [
-									0 => 'itop-object-copier/1.0.0',
-								],
-							'1.0.1' =>
-								 [
-									0 => 'itop-object-copier/1.0.1',
-								],
-							'1.0.2' =>
-								 [
-									0 => 'itop-object-copier/1.0.2',
-								],
-							'1.0.3' =>
-								 [
-									0 => 'itop-object-copier/1.0.3',
-								],
-							'1.1.0' =>
-								 [
-									0 => 'itop-object-copier/1.1.0',
-								],
-							'1.1.1' =>
-								 [
-									0 => 'itop-object-copier/1.1.1',
-								],
-							'1.1.2' =>
-								 [
-									0 => 'itop-object-copier/1.1.2',
-								],
-							'1.1.3' =>
-								 [
-									0 => 'itop-object-copier/1.1.3',
-								],
-							'1.1.4' =>
-								 [
-									0 => 'itop-object-copier/1.1.4',
-								],
-							'1.1.5' =>
-								 [
-									0 => 'itop-object-copier/1.1.5',
-								],
-							'1.1.6' =>
-								 [
-									0 => 'itop-object-copier/1.1.6',
-								],
-							'1.1.7' =>
-								 [
-									0 => 'itop-object-copier/1.1.7',
-								],
-							'1.1.8' =>
-								 [
-									0 => 'itop-object-copier/1.1.8',
-								],
-						],
-				],
-			'combodo-send-updates-by-email' =>
-				 [
-					'label' => 'Send updates by email',
-					'description' => 'Send an email to pre-configured contacts when a ticket log is updated.',
-					'versions' =>
-						 [
-							'1.0.1' =>
-								 [
-									0 => 'email-reply/1.0.1',
-								],
-							'1.0.3' =>
-								 [
-									0 => 'email-reply/1.0.3',
-								],
-							'1.1.1' =>
-								 [
-									0 => 'email-reply/1.1.1',
-								],
-							'1.1.2' =>
-								 [
-									0 => 'email-reply/1.1.2',
-								],
-							'1.1.3' =>
-								 [
-									0 => 'email-reply/1.1.3',
-								],
-							'1.1.4' =>
-								 [
-									0 => 'email-reply/1.1.4',
-								],
-							'1.1.5' =>
-								 [
-									0 => 'email-reply/1.1.5',
-								],
-							'1.1.6' =>
-								 [
-									0 => 'email-reply/1.1.6',
-								],
-							'1.1.7' =>
-								 [
-									0 => 'email-reply/1.1.7',
-								],
-							// 1.1.8 was never released
-							'1.1.9' =>
-								 [
-									0 => 'email-reply/1.1.9',
-								],
-							'1.1.10' =>
-								 [
-									0 => 'email-reply/1.1.10',
-								],
-						],
-				],
-		];
-	}
 }

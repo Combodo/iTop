@@ -210,12 +210,12 @@ HTML;
 			}
 		}
 		$oPage->LinkScriptFromAppRoot('setup/setup.js');
-		$oPage->add_script("function CanMoveForward()\n{\n".$oStep->JSCanMoveForward()."\n}\n");
-		$oPage->add_script("function CanMoveBackward()\n{\n".$oStep->JSCanMoveBackward()."\n}\n");
 		$oPage->add('<form id="wiz_form" class="ibo-setup--wizard" method="post">');
 		$oPage->add('<div class="ibo-setup--wizard--content">');
 		$oStep->Display($oPage);
 		$oPage->add('</div>');
+		$oPage->add_script("function CanMoveForward()\n{\n".$oStep->JSCanMoveForward()."\n}\n");
+		$oPage->add_script("function CanMoveBackward()\n{\n".$oStep->JSCanMoveBackward()."\n}\n");
 
 		// Add the back / next buttons and the hidden form
 		// to store the parameters

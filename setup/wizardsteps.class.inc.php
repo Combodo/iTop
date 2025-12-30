@@ -1310,14 +1310,16 @@ EOF
  */
 class WizStepModulesChoice extends WizardStep
 {
-	protected static $SEP = '_';
-	protected $bUpgrade = false;
+	protected static string $SEP = '_';
+	protected bool $bUpgrade = false;
+	protected bool $bCanMoveForward = true;
+	protected ?Config $oConfig = null;
 
 	/**
 	 *
 	 * @var iTopExtensionsMap
 	 */
-	protected $oExtensionsMap;
+	protected iTopExtensionsMap $oExtensionsMap;
 
 	protected PhpExpressionEvaluator $oPhpExpressionEvaluator;
 
@@ -1325,7 +1327,7 @@ class WizStepModulesChoice extends WizardStep
 	 * Whether we were able to load the choices from the database or not
 	 * @var bool
 	 */
-	protected $bChoicesFromDatabase;
+	protected bool $bChoicesFromDatabase;
 
 	public function __construct(WizardController $oWizard, $sCurrentState)
 	{
@@ -1343,12 +1345,13 @@ class WizStepModulesChoice extends WizardStep
 		// only called if the config file exists : we are updating a previous installation !
 		// WARNING : we can't load this config directly, as it might be from another directory with a different approot_url (N°2684)
 		if ($sConfigPath !== null) {
-			$oConfig = new Config($sConfigPath);
+			$this->oConfig = new Config($sConfigPath);
 
 			$aParamValues = $oWizard->GetParamForConfigArray();
-			$oConfig->UpdateFromParams($aParamValues);
+			$this->oConfig->UpdateFromParams($aParamValues);
 
-			$this->bChoicesFromDatabase = $this->oExtensionsMap->LoadChoicesFromDatabase($oConfig);
+			$this->oExtensionsMap->LoadChoicesFromDatabase($this->oConfig);
+			$this->bChoicesFromDatabase = true;
 		}
 	}
 
@@ -1452,7 +1455,7 @@ class WizStepModulesChoice extends WizardStep
 			}
 			$oPage->add('<img src="'.$sBannerUrl.'"/>');
 		}
-		$sDescription = isset($aStepInfo['description']) ? $aStepInfo['description'] : '';
+		$sDescription = $aStepInfo['description'] ?? '';
 		$oPage->add('<span>'.$sDescription.'</span>');
 		$oPage->add('</div>');
 
@@ -1846,6 +1849,7 @@ EOF
 		}
 		return $index;
 	}
+
 	protected function GetStepInfo($idx = null)
 	{
 		$aStepInfo = null;
@@ -1866,12 +1870,12 @@ EOF
 			// Additional step for the "extensions"
 			$aStepDefinition = [
 				'title' => 'Extensions',
-				'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions, but you cannot remove already installed extensions.</h2>',
+				'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
 				'banner' => '/images/icons/icons8-puzzle.svg',
 				'options' => [],
 			];
 
-			foreach ($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
+			foreach ($this->oExtensionsMap->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
 				if (($oExtension->sSource !== iTopExtension::SOURCE_WIZARD) && ($oExtension->bVisible) && (count($oExtension->aMissingDependencies) == 0)) {
 					$aStepDefinition['options'][] = [
 						'extension_code' => $oExtension->sCode,
@@ -1882,16 +1886,19 @@ EOF
 						'modules' => $oExtension->aModules,
 						'mandatory' => $oExtension->bMandatory || ($oExtension->sSource === iTopExtension::SOURCE_REMOTE),
 						'source_label' => $this->GetExtensionSourceLabel($oExtension->sSource),
+						'uninstallable' => $oExtension->CanBeUninstalled(),
+						'missing' => $oExtension->bRemovedFromDisk,
 					];
 				}
 			}
+
 			// Display this step of the wizard only if there is something to display
 			if (count($aStepDefinition['options']) !== 0) {
 				$aSteps[] = $aStepDefinition;
 				$this->oWizard->SetParameter('additional_extensions_modules', json_encode($aStepDefinition['options']));
 			}
 		} else {
-			// No wizard configuration provided, build a standard one with just one big list
+			// No wizard configuration provided, build a standard one with just one big list. All items are mandatory, only works when there are no conflicted modules.
 			$aStepDefinition = [
 				'title' => 'Modules Selection',
 				'description' => '<h2>Select the modules to install. You can launch the installation again to install new modules, but you cannot remove already installed modules.</h2>',
@@ -1958,18 +1965,41 @@ EOF
 			$sId = utils::EscapeHtml($aChoice['extension_code']);
 			$bIsDefault = array_key_exists($sChoiceId, $aDefaults);
 
-			$bCanBeUninstalled = $this->oExtensionsMap->Get($aChoice['extension_code'])->CanBeUninstalled();
+			$oITopExtension = $this->oExtensionsMap->GetFromExtensionCode($aChoice['extension_code']);
+			$bCanBeUninstalled = isset($aChoice['uninstallable']) ? $aChoice['uninstallable'] : $oITopExtension->CanBeUninstalled();
 			$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId);
 			$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $this->bUpgrade && $bIsDefault && !$bCanBeUninstalled && !$bDisableUninstallCheck;
 			;
-			$bDisabled = $bMandatory || $bAllDisabled;
+			$bMissingFromDisk = isset($aChoice['missing']) && $aChoice['missing'] === true;
+			$bInstalled = $bMissingFromDisk || $oITopExtension->bInstalled;
+			$bDisabled = $bMandatory || $bAllDisabled || $bMissingFromDisk;
 			$bChecked = $bMandatory || $bSelected;
+
+			$sTooltip = '';
+			$sUnremovable = '';
+			if ($bMissingFromDisk) {
+				$sTooltip .= '<span class="setup-extension-tag removed">source removed</span>';
+			}
+			if ($bInstalled) {
+				$sTooltip .= '<span class="setup-extension-tag checked installed">installed</span>';
+				$sTooltip .= '<span class="setup-extension-tag unchecked tobeuninstalled">to be uninstalled</span>';
+			} else {
+				$sTooltip .= '<span class="setup-extension-tag checked tobeinstalled">to be installed</span>';
+				$sTooltip .= '<span class="setup-extension-tag unchecked notinstalled">not installed</span>';
+			}
+			if (!$bCanBeUninstalled) {
+				$sTooltip .= '<span class="setup-extension-tag notuninstallable">cannot be uninstalled</span>';
+			}
+			if ($bDisabled && !$bChecked && !$bCanBeUninstalled && !$bDisableUninstallCheck) {
+				$this->bCanMoveForward = false;//Disable "Next"
+			}
 			$sChecked = $bChecked ? ' checked ' : '';
 			$sDisabled = $bDisabled ? ' disabled data-disabled="disabled" ' : '';
-			$sUnremovable = !$bCanBeUninstalled ? ' unremovable ' : '';
+			$sMissingModule = $bMissingFromDisk ? 'setup-extension--missing' : '';
+
 			$sHiddenInput = $bDisabled && $bChecked ? '<input type="hidden" name="choice['.$sChoiceId.']" value="'.$sChoiceId.'"/>' : '';
-			$oPage->add('<div class="choice" '.$sDataId.'><input class="wiz-choice '.$sUnremovable.'" id="'.$sId.'" name="choice['.$sChoiceId.']" type="checkbox" value="'.$sChoiceId.'" '.$sDisabled.$sChecked.'/>'.$sHiddenInput.'&nbsp;');
-			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled, $bCanBeUninstalled);
+			$oPage->add('<div class="choice '.$sMissingModule.'" '.$sDataId.'><input class="wiz-choice '.$sUnremovable.'" id="'.$sId.'" name="choice['.$sChoiceId.']" type="checkbox" value="'.$sChoiceId.'" '.$sDisabled.$sChecked.'/>'.$sHiddenInput.'&nbsp;');
+			$this->DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled, $sTooltip);
 			$oPage->add('</div>');
 		}
 		$sChoiceName = null;
@@ -2030,14 +2060,13 @@ EOF
 		}
 	}
 
-	protected function DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled = false, $bUninstallable = true)
+	protected function DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled = false, $sTooltip = '')
 	{
 		$sMoreInfo = (isset($aChoice['more_info']) && ($aChoice['more_info'] != '')) ? '<a class="setup--wizard-choice--more-info" target="_blank" href="'.$aChoice['more_info'].'">More information</a>' : '';
-		$sSourceLabel = isset($aChoice['source_label']) ? $aChoice['source_label'] : '';
+		$sSourceLabel = $aChoice['source_label'] ?? '';
 		$sId = utils::EscapeHtml($aChoice['extension_code']);
-		$sUninstallationWarning = $bUninstallable ? '' : '<span style="color:orangered" title="Once this extension has been installed, it cannot be removed">(!)</span>';
 
-		$oPage->add('<label class="setup--wizard-choice--label" for="'.$sId.'">'.$sSourceLabel.'<b>'.utils::EscapeHtml($aChoice['title']).'</b>'.'</label>&nbsp;'.$sUninstallationWarning.' '.$sMoreInfo.'');
+		$oPage->add('<label class="setup--wizard-choice--label" for="'.$sId.'">'.$sSourceLabel.'<b>'.utils::EscapeHtml($aChoice['title']).'</b>'.'&nbsp;'.$sTooltip.'</label> '.$sMoreInfo.'');
 		$sDescription = isset($aChoice['description']) ? utils::EscapeHtml($aChoice['description']) : '';
 		$oPage->add('<div class="setup--wizard-choice--description description">'.$sDescription.'<span id="sub_choices'.$sId.'">');
 		if (isset($aChoice['sub_options'])) {
@@ -2050,6 +2079,22 @@ EOF
 	{
 		$sSourceDir = $this->oWizard->GetParameter('source_dir');
 		return $sSourceDir.'/installation.xml';
+	}
+
+	public function CanMoveForward()
+	{
+		return true;
+	}
+
+	public function JSCanMoveForward()
+	{
+
+		return $this->bCanMoveForward ? 'return true;' : 'return false;';
+	}
+
+	public function GetNextButtonLabel()
+	{
+		return $this->bCanMoveForward ? 'Next' : 'Non-uninstallable extension missing';
 	}
 
 }

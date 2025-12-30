@@ -89,6 +89,7 @@ class ExtensionInstallation extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("source", ["allowed_values" => null, "sql" => "source", "default_value" => null, "is_null_allowed" => false, "depends_on" => []]));
 		MetaModel::Init_AddAttribute(new AttributeEnum("uninstallable", ["allowed_values" => new ValueSetEnum('yes,no,maybe'), "sql" => "uninstallable", "default_value" => 'yes', "is_null_allowed" => false, "depends_on" => []]));
 		MetaModel::Init_AddAttribute(new AttributeDateTime("installed", ["allowed_values" => null, "sql" => "installed", "default_value" => 'NOW()', "is_null_allowed" => false, "depends_on" => []]));
+		MetaModel::Init_AddAttribute(new AttributeText("description", ["allowed_values" => null, "sql" => "description", "default_value" => null, "is_null_allowed" => true, "depends_on" => []]));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', ['code', 'label', 'version', 'installed', 'source']); // Attributes to be displayed for the complete details

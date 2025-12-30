@@ -8,7 +8,6 @@
 namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
-use DateTime;
 use DeprecatedCallsLog;
 use MySQLTransactionNotClosedException;
 use ParseError;
@@ -31,6 +30,7 @@ use const DEBUG_BACKTRACE_IGNORE_ARGS;
 abstract class ItopTestCase extends KernelTestCase
 {
 	public const TEST_LOG_DIR = 'test';
+	protected array $aFileToClean = [];
 
 	/**
 	 * @var bool
@@ -39,7 +39,7 @@ abstract class ItopTestCase extends KernelTestCase
 	public const DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER = true;
 	public static $DEBUG_UNIT_TEST = false;
 	protected static $aBackupStaticProperties = [];
-
+	public ?array $aLastCurlGetInfo = null;
 	/**
 	 * @link https://docs.phpunit.de/en/9.6/annotations.html#preserveglobalstate PHPUnit `preserveGlobalState` annotation documentation
 	 *
@@ -176,6 +176,15 @@ abstract class ItopTestCase extends KernelTestCase
 				CMDBSource::Query('ROLLBACK');
 			}
 			throw new MySQLTransactionNotClosedException('Some DB transactions were opened but not closed ! Fix the code by adding ROLLBACK or COMMIT statements !', []);
+		}
+
+		foreach ($this->aFileToClean as $sPath) {
+			if (is_file($sPath)) {
+				@unlink($sPath);
+				continue;
+			}
+
+			SetupUtils::tidydir($sPath);
 		}
 	}
 
@@ -649,5 +658,63 @@ abstract class ItopTestCase extends KernelTestCase
 		}
 		fclose($handle);
 		return array_reverse($aLines);
+	}
+
+	/**
+	* @param $sUrl
+	* @param array|null $aPostFields
+	* @param array|null $aCurlOptions
+	* @param $bXDebugEnabled
+	* @return string
+	 */
+	protected function CallUrl($sUrl, ?array $aPostFields = [], ?array $aCurlOptions = [], $bXDebugEnabled = false): string
+	{
+		$ch = curl_init();
+		if ($bXDebugEnabled) {
+			curl_setopt($ch, CURLOPT_COOKIE, "XDEBUG_SESSION=phpstorm");
+		}
+
+		curl_setopt($ch, CURLOPT_URL, $sUrl);
+		curl_setopt($ch, CURLOPT_POST, 1);// set post data to true
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		// Force disable of certificate check as most of dev / test env have a self-signed certificate
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt_array($ch, $aCurlOptions);
+		if ($this->IsArrayOfArray($aPostFields)) {
+			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($aPostFields));
+		} else {
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
+		}
+
+		$sOutput = curl_exec($ch);
+
+		$info = curl_getinfo($ch);
+		$this->aLastCurlGetInfo = $info;
+		$sErrorMsg = curl_error($ch);
+		$iErrorCode = curl_errno($ch);
+		curl_close($ch);
+
+		\IssueLog::Info(__METHOD__, null, ['url' => $sUrl, 'error' => $sErrorMsg, 'error_code' => $iErrorCode, 'post_fields' => $aPostFields, 'info' => $info]);
+
+		return $sOutput;
+	}
+
+	private function IsArrayOfArray(array $aStruct): bool
+	{
+		foreach ($aStruct as $k => $v) {
+			if (is_array($v)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	protected function CallItopUri(string $sUri, ?array $aPostFields = [], ?array $aCurlOptions = [], $bXDebugEnabled = false): string
+	{
+		$sUrl = \MetaModel::GetConfig()->Get('app_root_url')."/$sUri";
+
+		return $this->CallUrl($sUrl, $aPostFields, $aCurlOptions, $bXDebugEnabled);
 	}
 }

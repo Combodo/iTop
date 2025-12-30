@@ -67,15 +67,17 @@ class EventListener implements iEventServiceSetup
 		/** @var \DBObject $oAttachment */
 		$oAttachment = $oEventData->Get('object');
 		$oHostObj = MetaModel::GetObject($oAttachment->Get('item_class'), $oAttachment->Get('item_id'), false /* false to avoid exception during trigger */, true);
-		/** @var \ormDocument $oDocument */
-		$oDocument = $oEventData->Get('document');
+		if ($oHostObj != null) {
+			/** @var \ormDocument $oDocument */
+			$oDocument = $oEventData->Get('document');
 
-		$this->OnAttachmentActivateTriggers(
-			$oHostObj,
-			$oAttachment,
-			$oDocument,
-			TriggerOnAttachmentDownload::class
-		);
+			$this->OnAttachmentActivateTriggers(
+				$oHostObj,
+				$oAttachment,
+				$oDocument,
+				TriggerOnAttachmentDownload::class
+			);
+		}
 	}
 
 	/**

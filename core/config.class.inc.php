@@ -211,6 +211,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
+		'allowed_login_types'                       => [
+			'type'                => 'string',
+			'description'         => 'List of login types allowed (separated by | ): form, external, basic, token',
+			'default'             => DEFAULT_ALLOWED_LOGIN_TYPES,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => true,
+		],
 		'app_icon_url'                       => [
 			'type'                => 'string',
 			'description'         => 'Hyperlink to redirect the user when clicking on the application icon (in the main window, or login/logoff pages)',
@@ -2410,6 +2418,7 @@ class Config
 	public function SetAllowedLoginTypes($aAllowedLoginTypes)
 	{
 		$this->m_sAllowedLoginTypes = implode('|', $aAllowedLoginTypes);
+		$this->Set('allowed_login_types', implode('|', $aAllowedLoginTypes));
 	}
 
 	/**

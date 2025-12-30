@@ -20,7 +20,7 @@ function DisplayStatus(WebPage $oPage)
 	if (is_dir($sPath)) {
 		$aExtraDirs[] = $sPath; // Also read the extra downloaded-modules directory
 	}
-	$oExtensionsMap = new iTopExtensionsMap('production', true, $aExtraDirs);
+	$oExtensionsMap = new iTopExtensionsMap('production', $aExtraDirs);
 	$oExtensionsMap->LoadChoicesFromDatabase(MetaModel::GetConfig());
 
 	foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {
@@ -154,7 +154,7 @@ function DoInstall(WebPage $oPage)
 	if (is_dir($sPath)) {
 		$aExtraDirs[] = $sPath; // Also read the extra downloaded-modules directory
 	}
-	$oExtensionsMap = new iTopExtensionsMap('production', true, $aExtraDirs);
+	$oExtensionsMap = new iTopExtensionsMap('production', $aExtraDirs);
 	$oExtensionsMap->LoadChoicesFromDatabase(MetaModel::GetConfig());
 
 	foreach ($oExtensionsMap->GetAllExtensions() as $oExtension) {

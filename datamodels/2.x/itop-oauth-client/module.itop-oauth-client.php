@@ -17,6 +17,7 @@ SetupWebPage::AddModule(
 		//
 		'dependencies' => [
 			'itop-welcome-itil/3.1.0,',
+			'itop-profiles-itil/3.1.0', //SuperUser id 117
 		],
 		'mandatory' => false,
 		'visible' => true,

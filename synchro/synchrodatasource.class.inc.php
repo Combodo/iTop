@@ -2747,7 +2747,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			$aRows = [];
 			foreach ($aData as $sKey => $value) {
 				if (strpos(CMDBSource::GetFieldType($sSQLTable, $sKey), 'blob') !== false) {
-					$aRows[] = ['attcode' => $sKey, 'data' => sprintf('<i>%s (%s)</i>', Dict::S('Core:AttributeBlob'), utils::BytesToFriendlyFormat(strlen($value)))];
+					$aRows[] = ['attcode' => $sKey, 'data' => sprintf('<i>%s (%s)</i>', Dict::S('Core:AttributeBlob'), utils::BytesToFriendlyFormat(utils::StrLen($value)))];
 				} else {
 					$aRows[] = ['attcode' => $sKey, 'data' => utils::EscapeHtml($value)];
 				}
