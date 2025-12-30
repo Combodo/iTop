@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\HubConnector;
 
+use Combodo\iTop\DBTools\Service\DBToolsUtils;
 use Combodo\iTop\HubConnector\Controller\HubController;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DOMFormatException;
@@ -45,6 +46,7 @@ class HubControllerTest extends ItopDataTestCase
 		$this->testLaunchCompile();
 		HubController::GetInstance()->LaunchDeploy();
 		$this->CheckReport('{"code":0,"message":"Compilation successful.","fields":[]}');
+		$this->CompareCurrentAndPreviousModuleInstallations();
 	}
 
 	private function CheckReport($sExpected)

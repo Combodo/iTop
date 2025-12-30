@@ -17,6 +17,7 @@ namespace Combodo\iTop\Test\UnitTest;
 use ArchivedObjectException;
 use CMDBObject;
 use CMDBSource;
+use Combodo\iTop\DBTools\Service\DBToolsUtils;
 use Combodo\iTop\Service\Events\EventService;
 use Config;
 use Contact;
@@ -1552,5 +1553,33 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$oConfig->WriteToFile($sConfigPath);
 		@chmod($sConfigPath, 0440);
 		@unlink($this->sConfigTmpBackupFile);
+	}
+
+	public function CompareCurrentAndPreviousModuleInstallations()
+	{
+		$this->RequireOnceItopFile('env-production/combodo-db-tools/src/Service/DBToolsUtils.php');
+		$aPreviousInstallations = DBToolsUtils::GetPreviousModuleInstallationsByOffset(1);
+		$aInstallations = DBToolsUtils::GetPreviousModuleInstallationsByOffset();
+		$this->assertEquals($this->KeepModuleInstallationComparableFields($aPreviousInstallations), $this->KeepModuleInstallationComparableFields($aInstallations));
+	}
+
+	public function KeepModuleInstallationComparableFields($aInstallations): array
+	{
+		$aRes = [];
+		$aIgnoredFields = ['id', 'parent_id', 'installed', 'comment'];
+		foreach ($aInstallations as $aData) {
+			$aNewData = [];
+			foreach ($aData as $sKey => $val) {
+				if (in_array($sKey, $aIgnoredFields)) {
+					continue;
+				}
+				$aNewData[$sKey] = $val;
+			}
+			$sName = $aNewData['name'];
+			$aRes[$sName] = $aNewData;
+		}
+
+		asort($aRes);
+		return $aRes;
 	}
 }
