@@ -537,6 +537,12 @@ class CMDBSource
 	 */
 	public static function Query($sSQLQuery)
 	{
+		if (self::$sRaisesExceptionMsgWhenSqlQuery) {
+			$e = new \Exception(self::$sRaisesExceptionMsgWhenSqlQuery);
+			\IssueLog::Error(__METHOD__, null, [$e->getTraceAsString()]);
+			throw $e;
+		}
+
 		if (preg_match('/^START TRANSACTION;?$/i', $sSQLQuery)) {
 			self::StartTransaction();
 
@@ -554,6 +560,13 @@ class CMDBSource
 		}
 
 		return self::DBQuery($sSQLQuery);
+	}
+
+	public static ?string $sRaisesExceptionMsgWhenSqlQuery = null;
+
+	public static function TriggerExceptionWhenSqlQuery(?string $sMsg)
+	{
+		self::$sRaisesExceptionMsgWhenSqlQuery = $sMsg;
 	}
 
 	/**

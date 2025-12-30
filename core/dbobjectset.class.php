@@ -871,23 +871,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	 */
 	public function CountExceeds($iLimit)
 	{
-		if (is_null($this->m_iNumTotalDBRows)) {
-			$oKPI = new ExecutionKPI();
-			$sSQL = $this->m_oFilter->MakeSelectQuery([], $this->m_aArgs, null, null, $iLimit + 2, 0, true);
-			$resQuery = CMDBSource::Query($sSQL);
-			$sOQL = $this->GetPseudoOQL($this->m_oFilter, [], $iLimit + 2, 0, true);
-			$oKPI->ComputeStats('OQL Query Exec', $sOQL);
-			if ($resQuery) {
-				$aRow = CMDBSource::FetchArray($resQuery);
-				$iCount = intval($aRow['COUNT']);
-				CMDBSource::FreeResult($resQuery);
-			} else {
-				$iCount = 0;
-			}
-		} else {
-			$iCount = $this->m_iNumTotalDBRows;
-		}
-
+		$iCount = $this->CountWithLimit($iLimit);
 		return ($iCount > $iLimit);
 	}
 
@@ -913,8 +897,8 @@ class DBObjectSet implements iDBObjectSetIterator
 			$oKPI->ComputeStats('OQL Query Exec', $sOQL);
 			if ($resQuery) {
 				$aRow = CMDBSource::FetchArray($resQuery);
-				CMDBSource::FreeResult($resQuery);
 				$iCount = intval($aRow['COUNT']);
+				CMDBSource::FreeResult($resQuery);
 			} else {
 				$iCount = 0;
 			}
@@ -1063,12 +1047,7 @@ class DBObjectSet implements iDBObjectSetIterator
 			$this->Load();
 		}
 
-		if ($iRow > 0) {
-			$this->m_iCurrRow = min($iRow, $this->Count());
-		} else {
-			$this->m_iCurrRow = $iRow;
-		}
-
+		$this->m_iCurrRow = min($iRow, $this->Count());
 		if ($this->m_iCurrRow < $this->m_iNumLoadedDBRows) {
 			$this->m_oSQLResult->data_seek($this->m_iCurrRow);
 		}
