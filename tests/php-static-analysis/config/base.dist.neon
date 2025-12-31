@@ -15,16 +15,21 @@ parameters:
         # Files necessary as they contain some declarations (constants, classes, functions, ...)
         - ../../../approot.inc.php
         - ../../../bootstrap.inc.php
+
     excludePaths:
         analyse:
             # For third-party libs we should analyse them in a dedicated configuration as we can't improve / clean them which would
             # prevent us from raising the rules level as we improve / clean our codebase
             - ../../../lib              # Irrelevant as we only want to analyze our codebase
             - ../../../node_modules     # Irrelevant as we only want to analyze our codebase
+
         analyseAndScan:
             # This file generates "unignorable errors" for the baseline due to its format, so we don't have any other choice than to exclude it.
             # But mind that it will prevent PHPStan from warning us about PHP syntax errors in this file.
             - ../../../core/oql/build/PHP/Lempar.php
+            - ../../../tests/php-unit-tests/unittestautoload.php
+
+
 
             #- ../../../data                        # Left and commented on purpose to show that we want to analyse the generated cache files
 
@@ -36,5 +41,5 @@ parameters:
             - ../../../env-php-unit-tests (?)       # Irrelevant as it will either already be in `env-production` or might be desynchronized from `env-production`
             - ../../../env-toolkit (?)              # Irrelevent as it will either already be in `env-production` or might be desynchronized from `env-production` (for local run only, not useful in the CI)
 
-            - ../../../tests (?)                    # Exclude tests for now
+            #- ../../../tests (?)                    # Exclude tests for now
             - ../../../toolkit (?)                  # Exlclude toolkit for now
