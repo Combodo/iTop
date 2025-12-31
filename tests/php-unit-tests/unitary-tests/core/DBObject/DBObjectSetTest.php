@@ -66,6 +66,15 @@ class DBObjectSetTest extends ItopDataTestCase
 		$DBObjectSet3 = new DBObjectSet($oSearch);
 		$oDBObjectSetComparator = new DBObjectSetComparator($DBObjectSet1, $DBObjectSet3);
 		$this->assertTrue($oDBObjectSetComparator->SetsAreEquivalent());
+	}
+
+	public function testDBObjectSetComparator_CheckCache()
+	{
+		$oSearch = DBObjectSearch::FromOQL_AllData("SELECT UserRequest");
+		$DBObjectSet1 = new DBObjectSet($oSearch);
+		$DBObjectSet3 = new DBObjectSet($oSearch);
+		$oDBObjectSetComparator = new DBObjectSetComparator($DBObjectSet1, $DBObjectSet3);
+		$this->assertTrue($oDBObjectSetComparator->SetsAreEquivalent());
 
 		$sMsg = __METHOD__.' :'.__LINE__;
 		//no DB SQL query: exception will be raised after here
@@ -76,5 +85,54 @@ class DBObjectSetTest extends ItopDataTestCase
 		$oDBObjectSetComparator = new DBObjectSetComparator($DBObjectSet1, new DBObjectSet($oSearch));
 		$this->expectExceptionMessage($sMsg, "should call DB again this time");
 		$this->assertTrue($oDBObjectSetComparator->SetsAreEquivalent());
+	}
+
+	public static function JeffreyProvider()
+	{
+		return [
+			'basic'     => [false],
+			'opt trick' => [true],
+		];
+	}
+
+	/**
+	 * @dataProvider JeffreyProvider
+	 */
+	public function testJeffrey(bool $bTrick)
+	{
+		echo '<p>-------</p>';
+
+		$this->doesNotPerformAssertions();
+		$iMax = 100;
+
+
+		$oFilter = DBObjectSearch::FromOQL_AllData('SELECT UserRequest');
+		$oSet = new DBObjectSet($oFilter);
+		$oSet->OptimizeColumnLoad([
+			'UserRequest' => ['ref', 'status', 'title'],
+		]);
+
+		if ($bTrick) {
+			$oNewSet = DBObjectSet::FromScratch($oSet->GetClass());
+			while ($oObj = $oSet->Fetch()) {
+				$oNewSet->AddObject($oObj);
+			}
+			$oSet = $oNewSet;
+		}
+
+		echo '<p>Start: '.date('Y-m-d H:i:s').'</p>';
+		$i = 0;
+		while ($i < $iMax) {
+			$oSet->Rewind();
+			while ($oObj = $oSet->Fetch()) {
+				// Do nothing
+				$s = $oObj->Get('title');
+			}
+
+			$i += 1;
+		}
+
+		$peak = memory_get_peak_usage(true) / 1000000;
+		echo '<p>End: '.date('Y-m-d H:i:s').'</p><p>Peak memory: '.$peak.'</p> \n';
 	}
 }

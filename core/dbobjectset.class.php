@@ -122,9 +122,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	 */
 	public function __destruct()
 	{
-		if (is_object($this->m_oSQLResult)) {
-			$this->m_oSQLResult->free();
-		}
+		$this->Free();
 	}
 
 	/**
@@ -711,11 +709,8 @@ class DBObjectSet implements iDBObjectSetIterator
 
 		$sSQL = $this->_makeSelectQuery($this->m_aAttToLoad);
 
-		if (is_object($this->m_oSQLResult)) {
-			// Free previous resultset if any
-			$this->m_oSQLResult->free();
-			$this->m_oSQLResult = null;
-		}
+		// Free previous resultset if any
+		$this->Free();
 
 		try {
 			$oKPI = new ExecutionKPI();
@@ -919,6 +914,14 @@ class DBObjectSet implements iDBObjectSetIterator
 		return $this->m_iNumLoadedDBRows + count($this->m_aAddedObjects);
 	}
 
+	private function Free()
+	{
+		if (is_object($this->m_oSQLResult)) {
+			CMDBSource::FreeResult($this->m_oSQLResult);
+			$this->m_oSQLResult = null;
+		}
+	}
+
 	/**
 	 * Fetch an object (with the given class alias) at the current position in the set and move the cursor to the next position.
 	 *
@@ -939,6 +942,7 @@ class DBObjectSet implements iDBObjectSetIterator
 		}
 
 		if ($this->m_iCurrRow >= $this->CountLoaded()) {
+			$this->Free();
 			return null;
 		}
 
@@ -946,7 +950,9 @@ class DBObjectSet implements iDBObjectSetIterator
 			$sRequestedClassAlias = $this->m_oFilter->GetClassAlias();
 		}
 
-		if ($this->m_iCurrRow < $this->m_iNumLoadedDBRows) {
+		if ($this->m_iCurrRow < count($this->m_aCacheObj)) {
+			$oRetObj = $this->m_aCacheObj[$this->m_iCurrRow][$sRequestedClassAlias];
+		} else if ($this->m_iCurrRow < $this->m_iNumLoadedDBRows) {
 			// Pick the row from the database
 			$aRow = CMDBSource::FetchArray($this->m_oSQLResult);
 			foreach ($this->m_oFilter->GetSelectedClasses() as $sClassAlias => $sClass) {
@@ -956,6 +962,7 @@ class DBObjectSet implements iDBObjectSetIterator
 					} else {
 						try {
 							$oRetObj = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
+							$this->m_aCacheObj[$this->m_iCurrRow] = [$sRequestedClassAlias => $oRetObj];
 						} catch (CoreException $e) {
 							$this->m_iCurrRow++;
 							$oRetObj = $this->Fetch($sRequestedClassAlias);
@@ -971,6 +978,8 @@ class DBObjectSet implements iDBObjectSetIterator
 		$this->m_iCurrRow++;
 		return $oRetObj;
 	}
+
+	private $m_aCacheObj = [];
 
 	/**
 	 * Fetch the whole row of objects (if several classes have been specified in the query) and move the cursor to the next position
@@ -990,21 +999,29 @@ class DBObjectSet implements iDBObjectSetIterator
 		}
 
 		if ($this->m_iCurrRow >= $this->CountLoaded()) {
+			$this->Free();
 			return null;
 		}
 
-		if ($this->m_iCurrRow < $this->m_iNumLoadedDBRows) {
+		if ($this->m_iCurrRow < count($this->m_aCacheObj)) {
+			$aRetObjects = $this->m_aCacheObj[$this->m_iCurrRow];
+		} else if ($this->m_iCurrRow < $this->m_iNumLoadedDBRows) {
 			// Pick the row from the database
 			$aRow = CMDBSource::FetchArray($this->m_oSQLResult);
 			$aRetObjects = [];
 			foreach ($this->m_oFilter->GetSelectedClasses() as $sClassAlias => $sClass) {
-				if (is_null($aRow[$sClassAlias.'id'])) {
-					$oObj = null;
-				} else {
-					$oObj = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
+				$oObj = null;
+				if (!is_null($aRow[$sClassAlias.'id'])) {
+					try {
+						$oObj = MetaModel::GetObjectByRow($sClass, $aRow, $sClassAlias, $this->m_aAttToLoad, $this->m_aExtendedDataSpec);
+					}
+					catch (CoreException $e) {
+					}
 				}
 				$aRetObjects[$sClassAlias] = $oObj;
 			}
+
+			$this->m_aCacheObj[$this->m_iCurrRow] = $aRetObjects;
 		} else {
 			// Pick the row from the objects added *in memory*
 			$aRetObjects = [];
@@ -1045,6 +1062,10 @@ class DBObjectSet implements iDBObjectSetIterator
 	{
 		if (!$this->m_bLoaded) {
 			$this->Load();
+		}
+
+		if (is_null($this->m_oSQLResult)) {
+			return;
 		}
 
 		$this->m_iCurrRow = min($iRow, $this->Count());
@@ -1220,7 +1241,7 @@ class DBObjectSet implements iDBObjectSetIterator
 	 *
 	 * @throws \CoreException
 	 */
-	public function HasSameContents(DBObjectSet $oObjectSet, $aExcludeColumns = [])
+	public function HasSameContents(DBObjectSet $oObjectSet, $aExcludeColumns = []): bool
 	{
 		$oComparator = new DBObjectSetComparator($this, $oObjectSet, $aExcludeColumns);
 		return $oComparator->SetsAreEquivalent();
