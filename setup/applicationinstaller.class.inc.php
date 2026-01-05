@@ -217,7 +217,7 @@ class ApplicationInstaller
 					$aPreinstall = $this->oParams->Get('preinstall');
 					$aCopies = $aPreinstall['copies'] ?? [];
 
-					self::DoCopy($aCopies);
+					$this->DoCopy($aCopies);
 					$sReport = "Copying...";
 
 					$aResult = [
@@ -268,13 +268,11 @@ class ApplicationInstaller
 						}
 					}
 
-					$aParamValues = $this->oParams->GetParamForConfigArray();
 					$this->DoCompile(
 						$aSelectedModules,
 						$sSourceDir,
 						$sExtensionDir,
-						$bUseSymbolicLinks,
-						$aParamValues
+						$bUseSymbolicLinks
 					);
 
 					$aResult = [
@@ -309,7 +307,6 @@ class ApplicationInstaller
 					break;
 
 				case 'after-db-create':
-					$aParamValues = $this->oParams->GetParamForConfigArray();
 					$aAdminParams = $this->oParams->Get('admin_account');
 					$sAdminUser = $aAdminParams['user'];
 					$sAdminPwd = $aAdminParams['pwd'];
@@ -317,7 +314,6 @@ class ApplicationInstaller
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
 
 					$this->AfterDBCreate(
-						$aParamValues,
 						$sAdminUser,
 						$sAdminPwd,
 						$sAdminLanguage,
@@ -335,12 +331,10 @@ class ApplicationInstaller
 
 				case 'load-data':
 					$aSelectedModules = $this->oParams->Get('selected_modules');
-					$aParamValues = $this->oParams->GetParamForConfigArray();
 					$bSampleData = ($this->oParams->Get('sample_data', 0) == 1);
 
 					$this->DoLoadFiles(
 						$aSelectedModules,
-						$aParamValues,
 						$bSampleData
 					);
 
@@ -358,14 +352,12 @@ class ApplicationInstaller
 					$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
 					$aSelectedModuleCodes = $this->oParams->Get('selected_modules', []);
 					$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', []);
-					$aParamValues = $this->oParams->GetParamForConfigArray();
 
 					$this->DoCreateConfig(
 						$sPreviousConfigFile,
 						$sDataModelVersion,
 						$aSelectedModuleCodes,
 						$aSelectedExtensionCodes,
-						$aParamValues,
 						$sInstallComment
 					);
 
@@ -446,7 +438,7 @@ class ApplicationInstaller
 		SetupUtils::ExitReadOnlyMode();
 	}
 
-	protected static function DoCopy($aCopies)
+	protected function DoCopy($aCopies)
 	{
 		$aReports = [];
 		foreach ($aCopies as $aCopy) {
@@ -492,10 +484,7 @@ class ApplicationInstaller
 	 * @param array $aSelectedModules
 	 * @param string $sSourceDir
 	 * @param string $sExtensionDir
-	 * @param string $sTargetDir
-	 * @param string $sEnvironment
 	 * @param boolean $bUseSymbolicLinks
-	 * @param array $aParamValues
 	 *
 	 * @return void
 	 * @throws \ConfigException
@@ -503,7 +492,7 @@ class ApplicationInstaller
 	 *
 	 * @since 3.1.0 N°2013 added the aParamValues param
 	 */
-	protected function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $bUseSymbolicLinks = null, $aParamValues = [])
+	protected function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $bUseSymbolicLinks = null)
 	{
 		SetupLog::Info("Compiling data model.");
 
@@ -511,6 +500,7 @@ class ApplicationInstaller
 		require_once(APPROOT.'setup/modelfactory.class.inc.php');
 		require_once(APPROOT.'setup/compiler.class.inc.php');
 
+		$aParamValues = $this->oParams->GetParamForConfigArray();
 		$sEnvironment = $this->GetTargetEnv();
 		$sTargetDir = $this->GetTargetDir();
 
@@ -807,12 +797,12 @@ class ApplicationInstaller
 	}
 
 	protected function AfterDBCreate(
-		$aParamValues,
 		$sAdminUser,
 		$sAdminPwd,
 		$sAdminLanguage,
 		$aSelectedModules
 	) {
+		$aParamValues = $this->oParams->GetParamForConfigArray();
 		$sTargetEnvironment = $this->GetTargetEnv();
 		$sModulesDir = $this->GetTargetDir();
 
@@ -869,9 +859,9 @@ class ApplicationInstaller
 
 	protected function DoLoadFiles(
 		$aSelectedModules,
-		$aParamValues,
 		$bSampleData = false
 	) {
+		$aParamValues = $this->oParams->GetParamForConfigArray();
 		$sTargetEnvironment = $this->GetTargetEnv();
 		$sModulesDir = $this->GetTargetDir();
 
@@ -919,9 +909,9 @@ class ApplicationInstaller
 		$sDataModelVersion,
 		$aSelectedModuleCodes,
 		$aSelectedExtensionCodes,
-		$aParamValues,
 		$sInstallComment = null
 	) {
+		$aParamValues = $this->oParams->GetParamForConfigArray();
 		$sTargetEnvironment = $this->GetTargetEnv();
 		$sModulesDir = $this->GetTargetDir();
 
