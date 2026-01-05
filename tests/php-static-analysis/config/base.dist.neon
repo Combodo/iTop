@@ -26,10 +26,13 @@ parameters:
         analyseAndScan:
             # This file generates "unignorable errors" for the baseline due to its format, so we don't have any other choice than to exclude it.
             # But mind that it will prevent PHPStan from warning us about PHP syntax errors in this file.
-            - ../../../core/oql/build/PHP/Lempar.php
-            - ../../../tests/php-unit-tests/unittestautoload.php
+            
+            ## ignore lexer code present on iTop clones (not in packages)
+            - ../../../core/oql/build/PHP/Lempar.php (?) 
 
-
+            ## add phpunit APIs to spare errors like unknown assertEquals
+            ## usefull to scan extension installed in env-production/myextension
+            - ../../../tests/php-unit-tests/unittestautoload.php  (?)
 
             #- ../../../data                        # Left and commented on purpose to show that we want to analyse the generated cache files
 
@@ -42,4 +45,4 @@ parameters:
             - ../../../env-toolkit (?)              # Irrelevent as it will either already be in `env-production` or might be desynchronized from `env-production` (for local run only, not useful in the CI)
 
             #- ../../../tests (?)                    # Exclude tests for now
-            - ../../../toolkit (?)                  # Exlclude toolkit for now
+            - ../../../toolkit (?)                  # Exclude toolkit for now
