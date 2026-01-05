@@ -1368,6 +1368,52 @@ class WizStepModulesChoice extends WizardStep
 		return ['WizStepModulesChoice', 'WizStepSummary'];
 	}
 
+	public function GetAddedAndRemovedExtensions($aSelectedExtensions)
+	{
+		$aExtensionsAdded = [];
+		$aExtensionsRemoved = [];
+		$aExtensionsNotUninstallable = [];
+		foreach ($this->oExtensionsMap->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
+			/* @var \iTopExtension $oExtension */
+			$bSelected = in_array($oExtension->sCode, $aSelectedExtensions);
+			if ($oExtension->bInstalled && !$bSelected) {
+				$aExtensionsRemoved[$oExtension->sCode] = $oExtension->sLabel;
+				if (!$oExtension->CanBeUninstalled()) {
+					$aExtensionsNotUninstallable[$oExtension->sCode] = true;
+				}
+			} elseif (!$oExtension->bInstalled && $bSelected) {
+				$aExtensionsAdded[$oExtension->sCode] = $oExtension->sLabel;
+			}
+		}
+
+		$sExtensionsAdded = '';
+		if (count($aExtensionsAdded) > 0) {
+			$sExtensionsAdded = '<ul>';
+			foreach ($aExtensionsAdded as $sExtensionCode) {
+				$sExtensionsAdded .= '<li>'.$sExtensionCode.'</li>';
+			}
+			$sExtensionsAdded .= '</ul>';
+		} else {
+			$sExtensionsAdded = '<ul><li>No extension added.</li></ul>';
+		}
+
+		$sExtensionsRemoved = '';
+		if (count($aExtensionsRemoved) > 0) {
+			$sExtensionsRemoved = '<ul>';
+			foreach ($aExtensionsRemoved as $sCode => $sExtensionCode) {
+				$sForcedUninstall = '';
+				if (isset($aExtensionsNotUninstallable[$sCode])) {
+					$sForcedUninstall = ' (forced uninstallation)';
+				}
+				$sExtensionsRemoved .= '<li>'.$sExtensionCode.$sForcedUninstall.'</li>';
+			}
+			$sExtensionsRemoved .= '</ul>';
+		} else {
+			$sExtensionsRemoved = '<ul><li>No extension removed.</li></ul>';
+		}
+		return [$sExtensionsAdded, $sExtensionsRemoved];
+	}
+
 	public function ProcessParams($bMoveForward = true)
 	{
 		// Accumulates the selected modules:
@@ -1398,43 +1444,7 @@ class WizStepModulesChoice extends WizardStep
 					$this->oWizard->SetParameter('old_addon', true);
 				}
 
-				$aExtensionsAdded = [];
-				$aExtensionsRemoved = [];
-				$aExtensionsNotUninstallable = [];
-				foreach ($this->oExtensionsMap->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
-					/* @var \iTopExtension $oExtension */
-					$bSelected = in_array($oExtension->sCode, $aExtensions);
-					if ($oExtension->bInstalled && !$bSelected) {
-						$aExtensionsRemoved[$oExtension->sCode] = $oExtension->sLabel;
-					} elseif (!$oExtension->bInstalled && $bSelected) {
-						$aExtensionsAdded[$oExtension->sCode] = $oExtension->sLabel;
-					}
-					if (!$oExtension->CanBeUninstalled()) {
-						$aExtensionsNotUninstallable[$oExtension->sCode] = true;
-					}
-				}
-
-				$sExtensionsAdded = '<ul><li>No extension added.</li></ul>';
-				if (count($aExtensionsAdded) > 0) {
-					$sExtensionsAdded = '<ul>';
-					foreach ($aExtensionsAdded as $sExtensionCode) {
-						$sExtensionsAdded .= '<li>'.$sExtensionCode.'</li>';
-					}
-					$sExtensionsAdded .= '</ul>';
-				}
-
-				$sExtensionsRemoved = '<ul><li>No extension removed.</li></ul>';
-				if (count($aExtensionsRemoved) > 0) {
-					$sExtensionsRemoved = '<ul>';
-					foreach ($aExtensionsRemoved as $sCode => $sExtensionCode) {
-						$sForcedUninstall = '';
-						if (isset($aExtensionsNotUninstallable[$sCode])) {
-							$sForcedUninstall = ' (forced uninstallation)';
-						}
-						$sExtensionsRemoved .= '<li>'.$sExtensionCode.$sForcedUninstall.'</li>';
-					}
-					$sExtensionsRemoved .= '</ul>';
-				}
+				[$sExtensionsAdded, $sExtensionsRemoved] = $this->GetAddedAndRemovedExtensions($aExtensions);
 
 				$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($aModules)));
 				$this->oWizard->SetParameter('selected_extensions', json_encode($aExtensions));
