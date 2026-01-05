@@ -2683,14 +2683,13 @@ class Config
 	 *
 	 * @param array $aParamValues
 	 * @param ?string $sModulesDir
-	 * @param bool $bPreserveModuleSettings
 	 *
 	 * @return void The current object is modified directly
 	 *
 	 * @throws \Exception
 	 * @throws \CoreException
 	 */
-	public function UpdateFromParams($aParamValues, $sModulesDir = null, $bPreserveModuleSettings = false)
+	public function UpdateFromParams($aParamValues, $sModulesDir = null)
 	{
 		if (isset($aParamValues['application_path'])) {
 			$this->Set('app_root_url', $aParamValues['application_path']);
@@ -2738,7 +2737,10 @@ class Config
 		} else {
 			$aSelectedModules = null;
 		}
-		$this->UpdateIncludes($sModulesDir, $aSelectedModules);
+
+		if (! is_null($sModulesDir)) {
+			$this->UpdateIncludes($sModulesDir, $aSelectedModules);
+		}
 
 		if (isset($aParamValues['source_dir'])) {
 			$this->Set('source_dir', $aParamValues['source_dir']);
@@ -2756,12 +2758,8 @@ class Config
 	 *
 	 * @throws Exception
 	 */
-	public function UpdateIncludes($sModulesDir, $aSelectedModules = null)
+	public function UpdateIncludes(string $sModulesDir, $aSelectedModules = null)
 	{
-		if ($sModulesDir === null) {
-			return;
-		}
-
 		// Initialize the arrays below with default values for the application...
 		$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
 		$aAddOns = $oEmptyConfig->GetAddOns();

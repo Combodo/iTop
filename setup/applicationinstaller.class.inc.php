@@ -46,6 +46,8 @@ class ApplicationInstaller
 	protected $oParams;
 	protected static $bMetaModelStarted = false;
 
+	protected Config $oConfig;
+
 	/**
 	 * @param \Parameters $oParams
 	 *
@@ -57,9 +59,9 @@ class ApplicationInstaller
 		$this->oParams = $oParams;
 
 		$aParamValues = $oParams->GetParamForConfigArray();
-		$oConfig = new Config();
-		$oConfig->UpdateFromParams($aParamValues, null);
-		utils::SetConfig($oConfig);
+		$this->oConfig = new Config();
+		$this->oConfig->UpdateFromParams($aParamValues);
+		utils::SetConfig($this->oConfig);
 	}
 
 	/**
@@ -238,11 +240,8 @@ class ApplicationInstaller
 					// __DB__-%Y-%m-%d
 					$sDestination = $aPreinstall['backup']['destination'];
 					$sSourceConfigFile = $aPreinstall['backup']['configuration_file'];
-					$aDBParams = $this->oParams->GetParamForConfigArray();
-					$oTempConfig = new Config();
-					$oTempConfig->UpdateFromParams($aDBParams);
 					$sMySQLBinDir = $this->oParams->Get('mysql_bindir', null);
-					self::DoBackup($oTempConfig, $sDestination, $sSourceConfigFile, $sMySQLBinDir);
+					self::DoBackup($this->oConfig, $sDestination, $sSourceConfigFile, $sMySQLBinDir);
 
 					$aResult = [
 						'status' => self::OK,
@@ -565,15 +564,9 @@ class ApplicationInstaller
 			$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
 			if (is_file($sConfigFilePath)) {
 				$oConfig = new Config($sConfigFilePath);
-			} else {
-				$oConfig = null;
-			}
-
-			if (false === is_null($oConfig)) {
 				$oConfig->UpdateFromParams($aParamValues);
+				SetupUtils::EnterMaintenanceMode($oConfig);
 			}
-
-			SetupUtils::EnterMaintenanceMode($oConfig);
 		}
 
 		if (!is_dir($sTargetPath)) {
@@ -681,11 +674,6 @@ class ApplicationInstaller
 
 		$oConfig = new Config();
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
-
-		if ($bOldAddon) {
-			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons([]);
-		}
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
@@ -860,11 +848,6 @@ class ApplicationInstaller
 		$oConfig = new Config();
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
 
-		if ($bOldAddon) {
-			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons([]);
-		}
-
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
@@ -922,11 +905,6 @@ class ApplicationInstaller
 		$oConfig = new Config();
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
 
-		if ($bOldAddon) {
-			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons([]);
-		}
-
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 
 		//Load the MetaModel if needed (asynchronous mode)
@@ -980,12 +958,10 @@ class ApplicationInstaller
 		$aParamValues['selected_modules'] = implode(',', $aSelectedModuleCodes);
 		$sMode = $aParamValues['mode'];
 
-		$bPreserveModuleSettings = false;
 		if ($sMode == 'upgrade') {
 			try {
 				$oOldConfig = new Config($sPreviousConfigFile);
 				$oConfig = clone($oOldConfig);
-				$bPreserveModuleSettings = true;
 			} catch (Exception $e) {
 				// In case the previous configuration is corrupted... start with a blank new one
 				$oConfig = new Config();
@@ -999,11 +975,7 @@ class ApplicationInstaller
 
 		$oConfig->Set('access_mode', ACCESS_FULL);
 		// Final config update: add the modules
-		$oConfig->UpdateFromParams($aParamValues, $sModulesDir, $bPreserveModuleSettings);
-		if ($bOldAddon) {
-			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons([]);
-		}
+		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
 
 		// Record which modules are installed...
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
