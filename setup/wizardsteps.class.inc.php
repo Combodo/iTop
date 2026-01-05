@@ -672,9 +672,13 @@ class WizStepLicense extends WizardStep
 	private function NeedsGdprConsent()
 	{
 		$sMode = $this->oWizard->GetParameter('install_mode');
-		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
 
-		return (($sMode === 'install') && SetupUtils::IsConnectableToITopHub($aModules));
+		if ($sMode !== 'install') {
+			return false;
+		}
+
+		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
+		return SetupUtils::IsConnectableToITopHub($aModules);
 	}
 
 	/**

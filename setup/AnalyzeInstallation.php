@@ -58,6 +58,7 @@ class AnalyzeInstallation
 	 * )
 	 * @throws \Exception
 	 */
+
 	public function AnalyzeInstallation(?Config $oConfig, mixed $modulesPath, bool $bAbortOnMissingDependency = false, ?array $aModulesToLoad = null)
 	{
 		$aRes = [
