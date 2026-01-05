@@ -1555,7 +1555,7 @@ JS
 		return $sHtml;
 	}
 
-	public static function GetConfig($oWizard)
+	public static function GetConfig(WizardController $oWizard)
 	{
 		$oConfig = new Config();
 		$sSourceDir = $oWizard->GetParameter('source_dir', '');
