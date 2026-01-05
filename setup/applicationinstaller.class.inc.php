@@ -698,7 +698,6 @@ class ApplicationInstaller
 		}
 
 		// Module specific actions (migrate the data)
-		//
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
 		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'BeforeDatabaseCreation', $aSelectedModules);
 
