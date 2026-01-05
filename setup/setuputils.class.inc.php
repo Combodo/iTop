@@ -1570,7 +1570,7 @@ JS
 
 		$aParamValues = $oWizard->GetParamForConfigArray();
 		$aParamValues['source_dir'] = $sRelativeSourceDir;
-		$oConfig->UpdateFromParams($aParamValues, null);
+		$oConfig->UpdateFromParams($aParamValues);
 
 		return $oConfig;
 	}
@@ -1627,7 +1627,7 @@ JS
 
 		$aParamValues = $oWizard->GetParamForConfigArray();
 		$aParamValues['source_dir'] = '';
-		$oConfig->UpdateFromParams($aParamValues, null);
+		$oConfig->UpdateFromParams($aParamValues);
 
 		$oProductionEnv = new RunTimeEnvironment();
 		return $oProductionEnv->GetApplicationVersion($oConfig);
