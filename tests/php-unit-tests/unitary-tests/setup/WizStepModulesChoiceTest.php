@@ -257,4 +257,99 @@ class WizStepModulesChoiceTest extends ItopTestCase
 		$this->assertEquals($aExpectedFlags, $aFlags);
 	}
 
+	public function ProviderGetAddedAndRemovedExtensions()
+	{
+		return [
+			'no extensions' => [
+				'aExtensions' => [],
+
+				'aSelected' => [],
+				'sExpectedAddedList' => '<ul><li>No extension added.</li></ul>',
+				'sExpectedRemovedList' => '<ul><li>No extension removed.</li></ul>',
+			],
+			'no extensions selected' => [
+				'aExtensions' => [
+					'itop-ext1' => [
+						'installed' => false,
+					],
+				],
+				'aSelected' => [],
+				'sExpectedAddedList' => '<ul><li>No extension added.</li></ul>',
+				'sExpectedRemovedList' => '<ul><li>No extension removed.</li></ul>',
+			],
+			'no extensions removed' => [
+				'aExtensions' => [
+					'itop-ext1' => [
+						'installed' => true,
+					],
+				],
+				'aSelected' => ['itop-ext1'],
+				'sExpectedAddedList' => '<ul><li>No extension added.</li></ul>',
+				'sExpectedRemovedList' => '<ul><li>No extension removed.</li></ul>',
+			],
+			'One added extension' => [
+				'aExtensions' => [
+					'itop-ext1' => [
+						'installed' => false,
+					],
+				],
+				'aSelected' => ['itop-ext1'],
+				'sExpectedAddedList' => '<ul><li>itop-ext1</li></ul>',
+				'sExpectedRemovedList' => '<ul><li>No extension removed.</li></ul>',
+			],
+			'One removed extension' => [
+				'aExtensions' => [
+					'itop-ext1' => [
+						'installed' => true,
+					],
+				],
+				'aSelected' => [],
+				'sExpectedAddedList' => '<ul><li>No extension added.</li></ul>',
+				'sExpectedRemovedList' => '<ul><li>itop-ext1</li></ul>',
+			],
+			'Forced removed extension' => [
+				'aExtensions' => [
+					'itop-ext1' => [
+						'installed' => true,
+						'uninstallable' => false,
+					],
+				],
+				'aSelected' => [],
+				'sExpectedAddedList' => '<ul><li>No extension added.</li></ul>',
+				'sExpectedRemovedList' => '<ul><li>itop-ext1 (forced uninstallation)</li></ul>',
+			],
+			'added and removed extensions' => [
+				'aExtensions' => [
+					'itop-ext-added1' => [
+						'installed' => false,
+					],
+					'itop-ext-added2' => [
+						'installed' => false,
+					],
+					'itop-ext-removed1' => [
+						'installed' => true,
+					],
+					'itop-ext-removed2' => [
+						'installed' => true,
+					],
+				],
+				'aSelected' => ['itop-ext-added1', 'itop-ext-added2'],
+				'sExpectedAddedList' => '<ul><li>itop-ext-added1</li><li>itop-ext-added2</li></ul>',
+				'sExpectedRemovedList' => '<ul><li>itop-ext-removed1</li><li>itop-ext-removed2</li></ul>',
+			],
+
+		];
+	}
+
+	/**
+	 * @dataProvider ProviderGetAddedAndRemovedExtensions
+	 */
+	public function testGetAddedAndRemovedExtensions($aExtensions, $aSelectedExtensions, $sExpectedAddedList, $sExpectedRemovedList)
+	{
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensions));
+		[$sAddedList, $sRemovedList] = $this->oStep->GetAddedAndRemovedExtensions($aSelectedExtensions);
+		$this->assertEquals($sExpectedAddedList, $sAddedList);
+		$this->assertEquals($sExpectedRemovedList, $sRemovedList);
+	}
+
 }
