@@ -272,28 +272,18 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'aExtensionsOnDiskOrDb' => [],
 
 				'aSelected' => [],
-				'sExpectedAddedList' => '<ul><li>No extension added.</li></ul>',
-				'sExpectedRemovedList' => '<ul><li>No extension removed.</li></ul>',
+				'aExpectedAddedList' => [],
+				'aExpectedRemovedList' => [],
 			],
-			'no extensions selected' => [
+			'no extensions added nor removed' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => false,
 					],
 				],
 				'aSelected' => [],
-				'sExpectedAddedList' => '<ul><li>No extension added.</li></ul>',
-				'sExpectedRemovedList' => '<ul><li>No extension removed.</li></ul>',
-			],
-			'no extensions removed' => [
-				'aExtensionsOnDiskOrDb' => [
-					'itop-ext1' => [
-						'installed' => true,
-					],
-				],
-				'aSelected' => ['itop-ext1'],
-				'sExpectedAddedList' => '<ul><li>No extension added.</li></ul>',
-				'sExpectedRemovedList' => '<ul><li>No extension removed.</li></ul>',
+				'aExpectedAddedList' => [],
+				'aExpectedRemovedList' => [],
 			],
 			'One added extension' => [
 				'aExtensionsOnDiskOrDb' => [
@@ -302,8 +292,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					],
 				],
 				'aSelected' => ['itop-ext1'],
-				'sExpectedAddedList' => '<ul><li>itop-ext1</li></ul>',
-				'sExpectedRemovedList' => '<ul><li>No extension removed.</li></ul>',
+				'aExpectedAddedList' => ['itop-ext1' => 'itop-ext1'],
+				'aExpectedRemovedList' => [],
 			],
 			'One removed extension' => [
 				'aExtensionsOnDiskOrDb' => [
@@ -312,8 +302,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					],
 				],
 				'aSelected' => [],
-				'sExpectedAddedList' => '<ul><li>No extension added.</li></ul>',
-				'sExpectedRemovedList' => '<ul><li>itop-ext1</li></ul>',
+				'aExpectedAddedList' => [],
+				'aExpectedRemovedList' => ['itop-ext1' => 'itop-ext1'],
 			],
 			'Forced removed extension' => [
 				'aExtensionsOnDiskOrDb' => [
@@ -323,8 +313,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					],
 				],
 				'aSelected' => [],
-				'sExpectedAddedList' => '<ul><li>No extension added.</li></ul>',
-				'sExpectedRemovedList' => '<ul><li>itop-ext1 (forced uninstallation)</li></ul>',
+				'aExpectedAddedList' => [],
+				'aExpectedRemovedList' => ['itop-ext1' => 'itop-ext1'],
 			],
 			'added and removed extensions' => [
 				'aExtensionsOnDiskOrDb' => [
@@ -342,8 +332,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					],
 				],
 				'aSelected' => ['itop-ext-added1', 'itop-ext-added2'],
-				'sExpectedAddedList' => '<ul><li>itop-ext-added1</li><li>itop-ext-added2</li></ul>',
-				'sExpectedRemovedList' => '<ul><li>itop-ext-removed1</li><li>itop-ext-removed2</li></ul>',
+				'aExpectedAddedList' => ['itop-ext-added1' => 'itop-ext-added1', 'itop-ext-added2' => 'itop-ext-added2'],
+				'aExpectedRemovedList' => ['itop-ext-removed1' => 'itop-ext-removed1', 'itop-ext-removed2' => 'itop-ext-removed2'],
 			],
 
 		];
@@ -352,12 +342,12 @@ class WizStepModulesChoiceTest extends ItopTestCase
 	/**
 	 * @dataProvider ProviderGetAddedAndRemovedExtensions
 	 */
-	public function testGetAddedAndRemovedExtensions($aExtensionsOnDiskOrDb, $aSelectedExtensions, $sExpectedAddedList, $sExpectedRemovedList)
+	public function testGetAddedAndRemovedExtensions($aExtensionsOnDiskOrDb, $aSelectedExtensions, $aExpectedAddedList, $aExpectedRemovedList)
 	{
 		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
-		[$sAddedList, $sRemovedList] = $this->oStep->GetAddedAndRemovedExtensions($aSelectedExtensions);
-		$this->assertEquals($sExpectedAddedList, $sAddedList);
-		$this->assertEquals($sExpectedRemovedList, $sRemovedList);
+		[$aAddedList, $aRemovedList, $aNotUninstallableList] = $this->oStep->GetAddedAndRemovedExtensions($aSelectedExtensions);
+		$this->assertEquals($aExpectedAddedList, $aAddedList);
+		$this->assertEquals($aExpectedRemovedList, $aRemovedList);
 	}
 
 }
