@@ -1386,32 +1386,7 @@ class WizStepModulesChoice extends WizardStep
 			}
 		}
 
-		$sExtensionsAdded = '';
-		if (count($aExtensionsAdded) > 0) {
-			$sExtensionsAdded = '<ul>';
-			foreach ($aExtensionsAdded as $sExtensionCode) {
-				$sExtensionsAdded .= '<li>'.$sExtensionCode.'</li>';
-			}
-			$sExtensionsAdded .= '</ul>';
-		} else {
-			$sExtensionsAdded = '<ul><li>No extension added.</li></ul>';
-		}
-
-		$sExtensionsRemoved = '';
-		if (count($aExtensionsRemoved) > 0) {
-			$sExtensionsRemoved = '<ul>';
-			foreach ($aExtensionsRemoved as $sCode => $sExtensionCode) {
-				$sForcedUninstall = '';
-				if (isset($aExtensionsNotUninstallable[$sCode])) {
-					$sForcedUninstall = ' (forced uninstallation)';
-				}
-				$sExtensionsRemoved .= '<li>'.$sExtensionCode.$sForcedUninstall.'</li>';
-			}
-			$sExtensionsRemoved .= '</ul>';
-		} else {
-			$sExtensionsRemoved = '<ul><li>No extension removed.</li></ul>';
-		}
-		return [$sExtensionsAdded, $sExtensionsRemoved];
+		return [$aExtensionsAdded, $aExtensionsRemoved, $aExtensionsNotUninstallable];
 	}
 
 	public function ProcessParams($bMoveForward = true)
@@ -1444,13 +1419,13 @@ class WizStepModulesChoice extends WizardStep
 					$this->oWizard->SetParameter('old_addon', true);
 				}
 
-				[$sExtensionsAdded, $sExtensionsRemoved] = $this->GetAddedAndRemovedExtensions($aExtensions);
-
+				[$aExtensionsAdded, $aExtensionsRemoved, $aExtensionsNotUninstallable] = $this->GetAddedAndRemovedExtensions($aExtensions);
 				$this->oWizard->SetParameter('selected_modules', json_encode(array_keys($aModules)));
 				$this->oWizard->SetParameter('selected_extensions', json_encode($aExtensions));
 				$this->oWizard->SetParameter('display_choices', $sDisplayChoices);
-				$this->oWizard->SetParameter('extensions_added', $sExtensionsAdded);
-				$this->oWizard->SetParameter('extensions_removed', $sExtensionsRemoved);
+				$this->oWizard->SetParameter('extensions_added', json_encode($aExtensionsAdded));
+				$this->oWizard->SetParameter('extensions_removed', json_encode($aExtensionsRemoved));
+				$this->oWizard->SetParameter('extensions_not_uninstallable', json_encode(array_keys($aExtensionsNotUninstallable)));
 				return ['class' => 'WizStepSummary', 'state' => ''];
 			}
 
@@ -2270,10 +2245,39 @@ class WizStepSummary extends WizardStep
 		$oPage->add('<div id="params_summary">');
 
 		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Extensions to be installed</span>');
-		$oPage->add($this->oWizard->GetParameter('extensions_added'));
+		$aExtensionsAdded = json_decode($this->oWizard->GetParameter('extensions_added'), true);
+
+		$sExtensionsAdded = '';
+		if (count($aExtensionsAdded)) {
+			$sExtensionsAdded = '<ul>';
+			foreach ($aExtensionsAdded as $sExtensionCode => $sLabel) {
+				$sExtensionsAdded .= '<li>'.$sLabel.'</li>';
+			}
+			$sExtensionsAdded .= '</ul>';
+		} else {
+			$sExtensionsAdded = '<ul><li>No extension added.</li></ul>';
+		}
+		$oPage->add($sExtensionsAdded);
 		$oPage->add('</div>');
 		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Extensions to be uninstalled</span>');
-		$oPage->add($this->oWizard->GetParameter('extensions_removed'));
+
+		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('extensions_removed'), true);
+		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'));
+		$sExtensionsRemoved = '';
+		if (count($aExtensionsRemoved) > 0) {
+			$sExtensionsRemoved = '<ul>';
+			foreach ($aExtensionsRemoved as $sExtensionCode => $sLabel) {
+				$sForcedUninstall = '';
+				if (in_array($sExtensionCode, $aExtensionsNotUninstallable)) {
+					$sForcedUninstall = ' (forced uninstallation)';
+				}
+				$sExtensionsRemoved .= '<li>'.$sLabel.$sForcedUninstall.'</li>';
+			}
+			$sExtensionsRemoved .= '</ul>';
+		} else {
+			$sExtensionsRemoved = '<ul><li>No extension removed.</li></ul>';
+		}
+		$oPage->add($sExtensionsRemoved);
 		$oPage->add('</div>');
 
 		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Database Parameters</span><ul>');
