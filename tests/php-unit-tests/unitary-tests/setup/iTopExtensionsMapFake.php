@@ -12,9 +12,11 @@ class iTopExtensionsMapFake extends iTopExtensionsMap
 	public static function createFromArray($aExtensions)
 	{
 		$oMap = new static();
+
 		foreach ($aExtensions as $sCode => $aExtension) {
 			$oExtension = new iTopExtension();
 			$oExtension->sCode = $sCode;
+			$oExtension->sLabel = $sCode;
 			$oExtension->bInstalled = $aExtension['installed'];
 			$oExtension->aModules = $aExtension['modules'] ?? [];
 			$oExtension->bCanBeUninstalled = $aExtension['uninstallable'] ?? null;
