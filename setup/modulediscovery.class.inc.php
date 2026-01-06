@@ -27,6 +27,7 @@ use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 require_once(APPROOT.'setup/modulediscovery/ModuleFileReader.php');
 require_once(__DIR__.'/moduledependency/moduledependencysort.class.inc.php');
+require_once(__DIR__.'/itopextension.class.inc.php');
 
 use Combodo\iTop\Setup\ModuleDependency\ModuleDependencySort;
 
@@ -95,6 +96,9 @@ class ModuleDiscovery
 	protected static $m_aModules = [];
 	protected static $m_aModuleVersionByName = [];
 
+	/** @var array<\iTopExtension $m_aRemovedExtensions  */
+	protected static $m_aRemovedExtensions = [];
+
 	// All the entries below are list of file paths relative to the module directory
 	protected static $m_aFilesList = ['datamodel', 'webservice', 'dictionary', 'data.struct', 'data.sample'];
 
@@ -130,6 +134,10 @@ class ModuleDiscovery
 		$aArgs['module_file'] = $sFilePath;
 
 		list($sModuleName, $sModuleVersion) = static::GetModuleName($sId);
+
+		if (self::IsModulePartOfRemovedExtension($sModuleName, $sModuleVersion, $aArgs)) {
+			return;
+		}
 
 		if (array_key_exists($sModuleName, self::$m_aModuleVersionByName)) {
 			if (version_compare($sModuleVersion, self::$m_aModuleVersionByName[$sModuleName]['version'], '>')) {
@@ -214,20 +222,70 @@ class ModuleDiscovery
 	*/
 	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
-		if (is_null($aModulesToLoad)) {
+		if (is_null($aModulesToLoad) && count(self::$m_aRemovedExtensions) === 0) {
 			$aFilteredModules = $aModules;
 		} else {
 			$aFilteredModules = [];
-			foreach ($aModules as $sModuleId => $aModule) {
+			foreach ($aModules as $sModuleId => $aModuleInfo) {
 				$oModule = new Module($sModuleId);
 				$sModuleName = $oModule->GetModuleName();
-				if (in_array($sModuleName, $aModulesToLoad)) {
-					$aFilteredModules[$sModuleId] = $aModule;
+
+				if (self::IsModulePartOfRemovedExtension($sModuleName, $oModule->GetVersion(), $aModuleInfo)) {
+					continue;
+				}
+
+				if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad)) {
+					$aFilteredModules[$sModuleId] = $aModuleInfo;
 				}
 			}
 		}
 
 		return ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aFilteredModules, $bAbortOnMissingDependency);
+	}
+
+	/**
+	* @param array<\iTopExtension> $aRemovedExtension
+	* @return void
+	 */
+	public static function DeclareRemovedExtensions(array $aRemovedExtension)
+	{
+		if (self::$m_aRemovedExtensions != $aRemovedExtension) {
+			self::ResetCache();
+		}
+		SetupLog::Info(__METHOD__, null, ['count' => count($aRemovedExtension)]);
+		self::$m_aRemovedExtensions = $aRemovedExtension;
+	}
+
+	private static function IsModulePartOfRemovedExtension(string $sModuleName, string $sModuleVersion, array $aModuleInfo): bool
+	{
+		if (count(self::$m_aRemovedExtensions) === 0) {
+			return false;
+		}
+
+		/** @var \iTopExtension $oExtension */
+		foreach (self::$m_aRemovedExtensions as $oExtension) {
+			$sCurrentVersion = $oExtension->aModuleVersion[$sModuleName] ?? null;
+			if (is_null($sCurrentVersion)) {
+				continue;
+			}
+
+			if ($sModuleVersion !== $sCurrentVersion) {
+				continue;
+			}
+
+			$aCurrentModuleInfo = $oExtension->aModuleInfo[$sModuleName] ?? null;
+
+			$sCurrentModuleFilePath = $aCurrentModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
+			$sPath = $aModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
+			if (realpath($sPath) !== realpath($sCurrentModuleFilePath)) {
+				continue;
+			}
+
+			SetupLog::Info("Module considered as removed", null, ['extension_code' => $oExtension->sCode, 'module_name' => $sModuleName, 'module_version' => $sModuleVersion, ]);
+			return true;
+		}
+
+		return false;
 	}
 
 	private static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator

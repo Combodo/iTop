@@ -1439,7 +1439,7 @@ class WizStepModulesChoice extends WizardStep
 				$this->oWizard->SetParameter('selected_extensions', json_encode($aExtensions));
 				$this->oWizard->SetParameter('display_choices', $sDisplayChoices);
 				$this->oWizard->SetParameter('extensions_added', json_encode($aExtensionsAdded));
-				$this->oWizard->SetParameter('extensions_removed', json_encode($aExtensionsRemoved));
+				$this->oWizard->SetParameter('removed_extensions', json_encode($aExtensionsRemoved));
 				$this->oWizard->SetParameter('extensions_not_uninstallable', json_encode(array_keys($aExtensionsNotUninstallable)));
 				return ['class' => 'WizStepSummary', 'state' => ''];
 			}
@@ -2272,7 +2272,7 @@ class WizStepSummary extends WizardStep
 		$oPage->add('</div>');
 		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Extensions to be uninstalled</span>');
 
-		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('extensions_removed'), true);
+		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true);
 		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'));
 		$sExtensionsRemoved = '';
 		if (count($aExtensionsRemoved) > 0) {
