@@ -24,21 +24,38 @@ class WizStepModulesChoiceTest extends ItopTestCase
 	public function ProviderComputeChoiceFlags()
 	{
 		return [
-			'selected but not installed extension' => [
-				'aExtensions' => [
+			'A not selected, not installed extension should not be checked and be enabled' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => false,
 					],
 				],
-				'bUpgrade' => false,
-				'bDisableUninstallCheck' => false,
-				'sChoiceId' => '_0',
-				'aStepInfo' => [
+				'aWizardStepDefinition' => [
 					'extension_code' => 'itop-ext1',
 					'mandatory' => false,
 					'uninstallable' => true,
 				],
-				'aSelected' => ['_0' => '_0'],
+				'bCurrentSelected' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => false,
+					'disabled' => false,
+					'checked' => false,
+				],
+			],
+			'A selected but not installed extension should be checked and enabled' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => false,
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => false,
+					'uninstallable' => true,
+				],
+				'bCurrentSelected' => true,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
@@ -47,44 +64,18 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'checked' => true,
 				],
 			],
-			'not selected, not installed extension' => [
-				'aExtensions' => [
-					'itop-ext1' => [
-						'installed' => false,
-					],
-				],
-				'bUpgrade' => true,
-				'bDisableUninstallCheck' => false,
-				'sChoiceId' => '_0',
-				'aStepInfo' => [
-					'extension_code' => 'itop-ext1',
-					'mandatory' => false,
-					'uninstallable' => true,
-				],
-				'aSelected' => [],
-				'aExpectedFlags' => [
-					'uninstallable' => true,
-					'missing' => false,
-					'installed' => false,
-					'disabled' => false,
-					'checked' => false,
-				],
-			],
-			'installed extension' => [
-				'aExtensions' => [
+			'An installed but not selected extension should not be checked and be enabled' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => true,
 					],
 				],
-				'bUpgrade' => true,
-				'bDisableUninstallCheck' => false,
-				'sChoiceId' => '_0',
-				'aStepInfo' => [
+				'aWizardStepDefinition' => [
 					'extension_code' => 'itop-ext1',
 					'mandatory' => false,
 					'uninstallable' => true,
 				],
-				'aSelected' => [],
+				'bCurrentSelected' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
@@ -93,21 +84,18 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'checked' => false,
 				],
 			],
-			'installed non uninstallable extension' => [
-				'aExtensions' => [
+			'An installed non uninstallable extension should be checked and disabled' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => true,
 					],
 				],
-				'bUpgrade' => true,
-				'bDisableUninstallCheck' => false,
-				'sChoiceId' => '_0',
-				'aStepInfo' => [
+				'aWizardStepDefinition' => [
 					'extension_code' => 'itop-ext1',
 					'mandatory' => false,
 					'uninstallable' => false,
 				],
-				'aSelected' => [],
+				'bCurrentSelected' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => false,
 					'missing' => false,
@@ -116,21 +104,18 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'checked' => true,
 				],
 			],
-			'mandatory extension' => [
-				'aExtensions' => [
+			'A mandatory extension should be checked and disabled' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => false,
 					],
 				],
-				'bUpgrade' => true,
-				'bDisableUninstallCheck' => false,
-				'sChoiceId' => '_0',
-				'aStepInfo' => [
+				'aWizardStepDefinition' => [
 					'extension_code' => 'itop-ext1',
 					'mandatory' => true,
 					'uninstallable' => true,
 				],
-				'aSelected' => [],
+				'bCurrentSelected' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
@@ -139,8 +124,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'checked' => true,
 				],
 			],
-			'optional sub extension' => [
-				'aExtensions' => [
+			'An optional sub extension should not force its parent flags' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => false,
 					],
@@ -148,10 +133,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 						'installed' => false,
 					],
 				],
-				'bUpgrade' => true,
-				'bDisableUninstallCheck' => false,
-				'sChoiceId' => '_0',
-				'aStepInfo' => [
+				'aWizardStepDefinition' => [
 					'extension_code' => 'itop-ext1',
 					'mandatory' => false,
 					'uninstallable' => true,
@@ -165,7 +147,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 						],
 					],
 				],
-				'aSelected' => [],
+				'bCurrentSelected' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
@@ -174,8 +156,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'checked' => false,
 				],
 			],
-			'mandatory sub extension' => [
-				'aExtensions' => [
+			'A mandatory sub extension should force its parent to be checked and disabled' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => false,
 					],
@@ -183,10 +165,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 						'installed' => false,
 					],
 				],
-				'bUpgrade' => true,
-				'bDisableUninstallCheck' => false,
-				'sChoiceId' => '_0',
-				'aStepInfo' => [
+				'aWizardStepDefinition' => [
 					'extension_code' => 'itop-ext1',
 					'mandatory' => false,
 					'uninstallable' => true,
@@ -200,7 +179,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 						],
 					],
 				],
-				'aSelected' => [],
+				'bCurrentSelected' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
@@ -209,8 +188,8 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'checked' => true,
 				],
 			],
-			'non uninstallable sub extension' => [
-				'aExtensions' => [
+			'An installed non uninstallable sub extension should force its parent to be checked and disabled' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => true,
 					],
@@ -218,10 +197,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 						'installed' => true,
 					],
 				],
-				'bUpgrade' => true,
-				'bDisableUninstallCheck' => false,
-				'sChoiceId' => '_0',
-				'aStepInfo' => [
+				'aWizardStepDefinition' => [
 					'extension_code' => 'itop-ext1',
 					'mandatory' => false,
 					'uninstallable' => true,
@@ -235,7 +211,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 						],
 					],
 				],
-				'aSelected' => [],
+				'bCurrentSelected' => false,
 				'aExpectedFlags' => [
 					'uninstallable' => true,
 					'missing' => false,
@@ -244,16 +220,48 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'checked' => true,
 				],
 			],
+			'A non installed non uninstallable sub extension should not force its parent flags' => [
+				'aExtensionsOnDiskOrDb' => [
+					'itop-ext1' => [
+						'installed' => true,
+					],
+					'itop-ext1-1' => [
+						'installed' => false,
+					],
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => false,
+					'uninstallable' => true,
+					'sub_options' => [
+						'options' => [
+							[
+								'extension_code' => 'itop-ext1-1',
+								'mandatory' => false,
+								'uninstallable' => false,
+							],
+						],
+					],
+				],
+				'bCurrentSelected' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => false,
+					'installed' => true,
+					'disabled' => false,
+					'checked' => false,
+				],
+			],
 		];
 	}
 
 	/**
 	 * @dataProvider ProviderComputeChoiceFlags
 	 */
-	public function testComputeChoiceFlags($aExtensions, $bUpgrade, $bDisableUninstallCheck, $sChoiceId, $aStepInfo, $aSelected, $aExpectedFlags)
+	public function testComputeChoiceFlags($aExtensionsOnDiskOrDb, $aWizardStepDefinition, $bIsCurrentSelected, $aExpectedFlags)
 	{
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensions));
-		$aFlags = $this->oStep->ComputeChoiceFlags($aStepInfo, $sChoiceId, $aSelected, false, $bDisableUninstallCheck, $bUpgrade);
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
+		$aFlags = $this->oStep->ComputeChoiceFlags($aWizardStepDefinition, '_0', $bIsCurrentSelected ? ['_0' => '_0'] : [], false, false, true);
 		$this->assertEquals($aExpectedFlags, $aFlags);
 	}
 
@@ -261,14 +269,14 @@ class WizStepModulesChoiceTest extends ItopTestCase
 	{
 		return [
 			'no extensions' => [
-				'aExtensions' => [],
+				'aExtensionsOnDiskOrDb' => [],
 
 				'aSelected' => [],
 				'sExpectedAddedList' => '<ul><li>No extension added.</li></ul>',
 				'sExpectedRemovedList' => '<ul><li>No extension removed.</li></ul>',
 			],
 			'no extensions selected' => [
-				'aExtensions' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => false,
 					],
@@ -278,7 +286,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'sExpectedRemovedList' => '<ul><li>No extension removed.</li></ul>',
 			],
 			'no extensions removed' => [
-				'aExtensions' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => true,
 					],
@@ -288,7 +296,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'sExpectedRemovedList' => '<ul><li>No extension removed.</li></ul>',
 			],
 			'One added extension' => [
-				'aExtensions' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => false,
 					],
@@ -298,7 +306,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'sExpectedRemovedList' => '<ul><li>No extension removed.</li></ul>',
 			],
 			'One removed extension' => [
-				'aExtensions' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => true,
 					],
@@ -308,7 +316,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'sExpectedRemovedList' => '<ul><li>itop-ext1</li></ul>',
 			],
 			'Forced removed extension' => [
-				'aExtensions' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
 						'installed' => true,
 						'uninstallable' => false,
@@ -319,7 +327,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'sExpectedRemovedList' => '<ul><li>itop-ext1 (forced uninstallation)</li></ul>',
 			],
 			'added and removed extensions' => [
-				'aExtensions' => [
+				'aExtensionsOnDiskOrDb' => [
 					'itop-ext-added1' => [
 						'installed' => false,
 					],
@@ -344,9 +352,9 @@ class WizStepModulesChoiceTest extends ItopTestCase
 	/**
 	 * @dataProvider ProviderGetAddedAndRemovedExtensions
 	 */
-	public function testGetAddedAndRemovedExtensions($aExtensions, $aSelectedExtensions, $sExpectedAddedList, $sExpectedRemovedList)
+	public function testGetAddedAndRemovedExtensions($aExtensionsOnDiskOrDb, $aSelectedExtensions, $sExpectedAddedList, $sExpectedRemovedList)
 	{
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensions));
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
 		[$sAddedList, $sRemovedList] = $this->oStep->GetAddedAndRemovedExtensions($aSelectedExtensions);
 		$this->assertEquals($sExpectedAddedList, $sAddedList);
 		$this->assertEquals($sExpectedRemovedList, $sRemovedList);
