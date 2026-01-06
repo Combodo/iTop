@@ -257,6 +257,10 @@ class ApplicationInstaller
 					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 					$aMiscOptions = $this->oParams->Get('options', []);
+					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', null);
+					if (! is_array($aRemovedExtensionCodes)) {
+						$aRemovedExtensionCodes = [];
+					}
 
 					$bUseSymbolicLinks = null;
 					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])) {
@@ -269,6 +273,7 @@ class ApplicationInstaller
 					}
 
 					$this->DoCompile(
+						$aRemovedExtensionCodes,
 						$aSelectedModules,
 						$sSourceDir,
 						$sExtensionDir,
@@ -481,6 +486,7 @@ class ApplicationInstaller
 	}
 
 	/**
+	 * @param array $aRemovedExtensionCodes
 	 * @param array $aSelectedModules
 	 * @param string $sSourceDir
 	 * @param string $sExtensionDir
@@ -492,7 +498,7 @@ class ApplicationInstaller
 	 *
 	 * @since 3.1.0 N°2013 added the aParamValues param
 	 */
-	protected function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $bUseSymbolicLinks = null)
+	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $bUseSymbolicLinks = null)
 	{
 		SetupLog::Info("Compiling data model.");
 
@@ -547,6 +553,9 @@ class ApplicationInstaller
 			// If the directory is under the root folder - as expected - let's clean-it before compiling
 			SetupUtils::tidydir($sTargetPath);
 		}
+
+		$oExtensionsMap = new iTopExtensionsMap('production', $aDirsToScan);
+		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
 		$oFactory = new ModelFactory($aDirsToScan);
 

@@ -3,143 +3,11 @@
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
+require_once(APPROOT.'/setup/itopextension.class.inc.php');
 require_once(APPROOT.'/setup/parameters.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once(APPROOT.'/setup/modulediscovery.class.inc.php');
 require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
-/**
- * Basic helper class to describe an extension, with some characteristics and a list of modules
- */
-class iTopExtension
-{
-	public const SOURCE_WIZARD = 'datamodels';
-	public const SOURCE_MANUAL = 'extensions';
-	public const SOURCE_REMOTE = 'data';
-
-	/**
-	 * @var string
-	 */
-	public $sCode;
-
-	/**
-	 * @var string
-	 */
-	public $sVersion;
-
-	/**
-	 * @var string
-	 */
-	public $sInstalledVersion;
-
-	/**
-	 * @var string
-	 */
-	public $sLabel;
-
-	/**
-	 * @var string
-	 */
-	public $sDescription;
-
-	/**
-	 * @var string
-	 */
-	public $sSource;
-
-	/**
-	 * @var bool
-	 */
-	public $bMandatory;
-
-	/**
-	 * @var string
-	 */
-	public $sMoreInfoUrl;
-
-	/**
-	 * @var bool
-	 */
-	public $bMarkedAsChosen;
-	/**
-	 * If null, check if at least one module cannot be uninstalled
-	 * @var bool|null
-	 */
-	public ?bool $bCanBeUninstalled = null;
-
-	/**
-	 * @var bool
-	 */
-	public $bVisible;
-
-	/**
-	 * @var string[]
-	 */
-	public $aModules;
-
-	/**
-	 * @var string[]
-	 */
-	public $aModuleVersion;
-
-	/**
-	 * @var string[]
-	 */
-	public $aModuleInfo;
-
-	/**
-	 * @var string
-	 */
-	public $sSourceDir;
-
-	/**
-	 *
-	 * @var string[]
-	 */
-	public $aMissingDependencies;
-	/**
-	 * @var bool
-	 */
-	public bool $bInstalled = false;
-	/**
-	 * @var bool
-	 */
-	public bool $bRemovedFromDisk = false;
-
-	public function __construct()
-	{
-		$this->sCode = '';
-		$this->sLabel = '';
-		$this->sDescription = '';
-		$this->sSource = self::SOURCE_WIZARD;
-		$this->bMandatory = false;
-		$this->sMoreInfoUrl = '';
-		$this->bMarkedAsChosen = false;
-		$this->sVersion = ITOP_VERSION;
-		$this->sInstalledVersion = '';
-		$this->aModules = [];
-		$this->aModuleVersion = [];
-		$this->aModuleInfo = [];
-		$this->sSourceDir = '';
-		$this->bVisible = true;
-		$this->aMissingDependencies = [];
-	}
-
-	/**
-	 * @since 3.3.0
-	 * @return bool
-	 */
-	public function CanBeUninstalled(): bool
-	{
-		if (!is_null($this->bCanBeUninstalled)) {
-			return $this->bCanBeUninstalled;
-		}
-		foreach ($this->aModuleInfo as $sModuleCode => $aModuleInfo) {
-			$this->bCanBeUninstalled = $aModuleInfo['uninstallable'] === 'yes';
-			return $this->bCanBeUninstalled;
-		}
-		return true;
-	}
-}
 
 /**
  * Helper class to discover all available extensions on a given iTop system
@@ -308,28 +176,31 @@ class iTopExtensionsMap
 		return $this->aExtensionsByCode[$sExtensionCode] ?? null;
 	}
 
-	/*public function GetMissingExtensions(array $aSelectedExtensions)
+	/**
+	* @param array<string> $aExtensionCodes
+	* @return void
+	*/
+	public function DeclareExtensionAsRemoved(array $aExtensionCodes): void
 	{
-		\SetupLog::Info(__METHOD__, null, ['selected' => $aSelectedExtensions]);
-		$aExtensionsFromDb = array_keys($this->aExtensionsByCode);
-		sort($aExtensionsFromDb);
-		\SetupLog::Info(__METHOD__, null, ['found' => $aExtensionsFromDb]);
+		if (count($aExtensionCodes) === 0) {
+			\ModuleDiscovery::DeclareRemovedExtensions([]);
+			return;
+		}
 
-		$aRes = [];
-		foreach (array_diff($aExtensionsFromDb, $aSelectedExtensions) as $sExtensionCode) {
-			$oExtension = $this->GetFromExtensionCode($sExtensionCode);
-			if (!is_null($oExtension) && $oExtension->bVisible && $oExtension->sSource != iTopExtension::SOURCE_WIZARD) {
-
-				\SetupLog::Info(__METHOD__."$sExtensionCode", null, ['visible' => $oExtension->bVisible, 'mandatory' => $oExtension->bMandatory]);
-				$aRes [] = $sExtensionCode;
+		$aRemovedExtension = [];
+		foreach ($aExtensionCodes as $sCode) {
+			/** @var \iTopExtension $oExtension */
+			$oExtension = $this->GetFromExtensionCode($sCode);
+			if (!is_null($oExtension)) {
+				$aRemovedExtension [] = $oExtension;
+				\IssueLog::Info(__METHOD__.": remove extension locally", null, ['extension_code' => $oExtension->sCode]);
 			} else {
-				\SetupLog::Info(__METHOD__." MISSING $sExtensionCode");
+				\IssueLog::Warning(__METHOD__." cannot find extensions", null, ['code' => $sCode]);
 			}
 		}
-		\SetupLog::Info(__METHOD__, null, $aRes);
 
-		return $aRes;
-	}*/
+		\ModuleDiscovery::DeclareRemovedExtensions($aRemovedExtension);
+	}
 
 	/**
 	 * Read (recursively) a directory to find if it contains extensions (or modules)

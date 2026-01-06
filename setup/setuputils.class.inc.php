@@ -1602,6 +1602,13 @@ JS
 			$aDirsToScan[] = $sExtraDir;
 		}
 		$oProductionEnv = new RunTimeEnvironment();
+		$aRemovedExtensionCodes = $oWizard->GetParameter('removed_extensions', null);
+		if (! is_array($aRemovedExtensionCodes)) {
+			$aRemovedExtensionCodes = [];
+		}
+		$oExtensionsMap = new iTopExtensionsMap('production', $aDirsToScan);
+		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
+
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan, $bAbortOnMissingDependency, $aModulesToLoad);
 
 		foreach ($aAvailableModules as $key => $aModule) {
