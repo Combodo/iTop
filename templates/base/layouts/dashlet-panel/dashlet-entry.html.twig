@@ -1,0 +1,13 @@
+<button class="ibo-dashlet-entry"
+        data-dashlet-class="{{ oUIBlock.GetDashletClass() }}"
+        data-min-width="{{ oUIBlock.GetDashletMinWidth() }}"
+        data-min-height="{{ oUIBlock.GetDashletMinHeight() }}"
+        data-preferred-width="{{ oUIBlock.GetDashletPreferredWidth() }}"
+        data-preferred-height="{{ oUIBlock.GetDashletPreferredHeight() }}"
+>
+    <div class="ibo-dashlet-entry--icon"><img src="{{ oUIBlock.GetDashletIcon() }}" alt="{{ oUIBlock.GetDashletLabel() }} icon"/></div>
+    <div class="ibo-dashlet-entry--content">
+        <div class="ibo-dashlet-entry--title">{{ oUIBlock.GetDashletLabel() }}</div>
+        <div class="ibo-dashlet-entry--description">{{ oUIBlock.GetDashletDescription() }}</div>
+    </div>
+</button>

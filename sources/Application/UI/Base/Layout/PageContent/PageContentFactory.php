@@ -22,6 +22,8 @@ namespace Combodo\iTop\Application\UI\Base\Layout\PageContent;
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelFactory;
+use Combodo\iTop\Application\UI\Base\Layout\DashletPanel\DashletPanel;
+use Combodo\iTop\Application\UI\Base\Layout\DashletPanel\DashletPanelFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use DBObject;
 
@@ -68,6 +70,16 @@ class PageContentFactory
 		// Add object activity layout
 		$oActivityPanel = ActivityPanelFactory::MakeForObjectDetails($oObject, $sMode);
 		$oLayout->AddSideBlock($oActivityPanel);
+
+		return $oLayout;
+	}
+
+	public static function MakeForDashboard() {
+		$oLayout = new PageContentWithSideContent();
+
+		// TODO 3.3 Add dashboard specific blocks
+		$oDashletPanel = DashletPanelFactory::MakeForDashboardEditor();
+		$oLayout->AddSideBlock($oDashletPanel);
 
 		return $oLayout;
 	}

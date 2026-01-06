@@ -212,9 +212,11 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->LinkScriptFromAppRoot('js/pages/backoffice/toolbox.js');
 		$this->LinkScriptFromAppRoot('js/pages/backoffice/on-ready.js');
 
+		// TODO 3.3 Check if we can put this in the UIBlock
 		// Used by dashboard editor
 		$this->LinkScriptFromAppRoot('js/property_field.js');
 		$this->LinkScriptFromAppRoot('js/icon_select.js');
+		$this->LinkScriptFromAppRoot('node_modules/gridstack/dist/gridstack-all.js');
 	}
 
 	/**
@@ -274,6 +276,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->LinkStylesheetFromAppRoot('css/selectize.default.css');
 		$this->LinkStylesheetFromAppRoot('node_modules/tom-select/dist/css/tom-select.bootstrap5.css');
 
+		$this->LinkStylesheetFromAppRoot('node_modules/gridstack/dist/gridstack.min.css');
 	}
 
 	/**

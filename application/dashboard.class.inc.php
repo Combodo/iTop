@@ -1077,6 +1077,7 @@ JS
 		$sId = utils::Sanitize($this->GetId(), '', 'element_identifier');
 
 		$sMenuTogglerId = "ibo-dashboard-menu-toggler-{$sId}";
+		$sActionEditId = "ibo-dashboard-menu-edit-{$sId}";
 		$sPopoverMenuId = "ibo-dashboard-menu-popover-{$sId}";
 		$sName = 'UI:Dashboard:Actions';
 
@@ -1090,6 +1091,20 @@ JS
 		} else {
 			$oToolbar = $oDashboard->GetToolbar();
 		}
+
+		// TODO 3.3 Check if we need different action for custom dashboard creation / edition
+		$oActionEditButton = ButtonUIBlockFactory::MakeIconAction('fas fa-pen',
+			$this->HasCustomDashboard() ? Dict::S('UI:Dashboard:EditCustom') : Dict::S('UI:Dashboard:CreateCustom'),
+			$sActionEditId,
+			'',
+			false,
+			$sActionEditId
+		)
+			->AddCSSClass('ibo-top-bar--toolbar-dashboard-edit-button')
+			->AddCSSClass('ibo-action-button');
+
+		$oToolbar->AddSubBlock($oActionEditButton);
+
 		$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S($sName), $sName, '', false, $sMenuTogglerId)
 			->AddCSSClass('ibo-top-bar--toolbar-dashboard-menu-toggler')
 			->AddCSSClass('ibo-action-button');
@@ -1099,8 +1114,8 @@ JS
 		$sFile = addslashes(utils::LocalPath($this->sDefinitionFile));
 		$sJSExtraParams = json_encode($aExtraParams);
 		if ($this->HasCustomDashboard()) {
-			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:EditCustom'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
-			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
+//			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:EditCustom'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
+//			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
 			$oRevert = new JSPopupMenuItem(
 				'UI:Dashboard:RevertConfirm',
 				Dict::S('UI:Dashboard:DeleteCustom'),
@@ -1108,8 +1123,8 @@ JS
 			);
 			$aActions[$oRevert->GetUID()] = $oRevert->GetMenuItem();
 		} else {
-			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:CreateCustom'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
-			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
+//			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:CreateCustom'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
+//			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
 		}
 
 		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);

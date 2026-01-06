@@ -8,9 +8,20 @@
             {{ render_block(oUIBlock.GetToolbar(), {aPage: aPage}) }}
         </div>
     {% endif %}
-    <div class="ibo-dashboard--grid" data-role="ibo-dashboard--grid">
-        {% for oSubBlock in oUIBlock.GetDashboardRows() %}
-            {{ render_block(oSubBlock, {aPage: aPage}) }}
-        {% endfor %}
-    </div>
+    <ibo-dashboard id="{{ oUIBlock.GetId() }}" class="ibo-dashboard" data-role="ibo-dashboard" data-edit-mode="view">
+        <div class="ibo-dashboard--form">
+            <div class="ibo-dashboard--form--inputs">
+                 Editing{{ render_block(oUIBlock.GetTitleInput(), {aPage: aPage}) }}{{ render_block(oUIBlock.GetRefreshInput(), {aPage: aPage}) }}
+            </div>
+            <div class="ibo-dashboard--form--actions">
+                {{ render_block(oUIBlock.GetButtonsToolbar(), {aPage: aPage}) }}
+            </div>
+        </div>
+
+        {{ render_block(oUIBlock.GetGrid(), {aPage: aPage}) }}
+
+        <button id="saveBtn">Save layout</button>
+        <button id="loadBtn">Load layout</button>
+    </ibo-dashboard>
+
 {% endapply %}

@@ -992,6 +992,10 @@ HTML;
 			'label' => Dict::S('UI:DashletObjectList:Label'),
 			'icon' => 'images/dashlets/icons8-list-48.png',
 			'description' => Dict::S('UI:DashletObjectList:Description'),
+			'min_height' => 1,
+			'min_width' => 2,
+			'preferred_width' => 4,
+			'preferred_height' => 3
 		];
 	}
 
@@ -1603,6 +1607,10 @@ class DashletGroupByPie extends DashletGroupBy
 			'label' => Dict::S('UI:DashletGroupByPie:Label'),
 			'icon' => 'images/dashlets/icons8-pie-chart-48.png',
 			'description' => Dict::S('UI:DashletGroupByPie:Description'),
+			'min_height' => 2,
+			'min_width' => 2,
+			'preferred_width' => 3,
+			'preferred_height' => 3
 		];
 	}
 
@@ -1699,6 +1707,10 @@ class DashletGroupByBars extends DashletGroupBy
 			'label' => Dict::S('UI:DashletGroupByBars:Label'),
 			'icon' => 'images/dashlets/icons8-bar-chart-48.png',
 			'description' => Dict::S('UI:DashletGroupByBars:Description'),
+			'min_height' => 2,
+			'min_width' => 2,
+			'preferred_width' => 3,
+			'preferred_height' => 3
 		];
 	}
 
@@ -1799,6 +1811,10 @@ class DashletGroupByTable extends DashletGroupBy
 			'label' => Dict::S('UI:DashletGroupByTable:Label'),
 			'description' => Dict::S('UI:DashletGroupByTable:Description'),
 			'icon' => 'images/dashlets/icons8-transaction-list-48.png',
+			'min_height' => 2,
+			'min_width' => 2,
+			'preferred_width' => 3,
+			'preferred_height' => 3
 		];
 	}
 
@@ -1925,6 +1941,10 @@ class DashletHeaderStatic extends Dashlet
 			'label' => Dict::S('UI:DashletHeaderStatic:Label'),
 			'icon' => 'images/dashlets/icons8-header-48.png',
 			'description' => Dict::S('UI:DashletHeaderStatic:Description'),
+			'min_height' => 1,
+			'min_width' => 3,
+			'preferred_width' => 3,
+			'preferred_height' => 1
 		];
 	}
 }
@@ -2223,6 +2243,10 @@ class DashletHeaderDynamic extends Dashlet
 			'label' => Dict::S('UI:DashletHeaderDynamic:Label'),
 			'icon' => 'images/dashlets/icons8-header-altered-48.png',
 			'description' => Dict::S('UI:DashletHeaderDynamic:Description'),
+			'min_height' => 1,
+			'min_width' => 2,
+			'preferred_width' => 4,
+			'preferred_height' => 3
 		];
 	}
 }
@@ -2332,6 +2356,10 @@ HTML;
 			'label' => Dict::S('UI:DashletBadge:Label'),
 			'icon' => 'images/dashlets/icons8-badge-48.png',
 			'description' => Dict::S('UI:DashletBadge:Description'),
+			'min_height' => 1,
+			'min_width' => 2,
+			'preferred_width' => 2,
+			'preferred_height' => 2
 		];
 	}
 }

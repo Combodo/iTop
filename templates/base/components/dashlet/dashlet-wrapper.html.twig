@@ -1,0 +1,23 @@
+<ibo-dashlet class="grid-stack-item-content aa" data-dashlet-type="{{ oUIBlock.GetDashletClass() }}" data-dashlet-id="{{ oUIBlock.GetDashletId() }}">
+    <div class="ibo-dashlet--actions">
+        <button class="ibo-dashlet--action ibo-dashlet--action--edit ibo-button ibo-is-alternative ibo-is-neutral"
+                title="Edit dashlet"
+                data-role="ibo-dashlet-edit"
+        >
+            <i class="fa fa-pen" aria-hidden="true"></i>
+        </button>
+        <button class="ibo-dashlet--action ibo-dashlet--action--clone ibo-button ibo-is-alternative ibo-is-neutral"
+                title="Clone dashlet"
+                data-role="ibo-dashlet-clone"
+        >
+            <i class="fa fa-clone" aria-hidden="true"></i>
+        </button>
+        <button class="ibo-dashlet--action ibo-dashlet--action--remove ibo-button ibo-is-alternative ibo-is-danger"
+                title="Remove dashlet"
+                data-role="ibo-dashlet-remove"
+        >
+            <i class="fa fa-trash" aria-hidden="true"></i>
+        </button>
+    </div>
+    {{ render_block(oUIBlock.GetDashlet(), {aPage: aPage}) }}
+</ibo-dashlet>

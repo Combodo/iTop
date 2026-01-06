@@ -19,7 +19,10 @@ $ibo-dashlet-blocker--height: 100% !default;
 .ibo-dashlet {
   position: relative;
   width: calc(#{$ibo-dashlet--width} - #{$ibo-dashlet--elements-spacing-x});
-  margin: calc(#{$ibo-dashlet--elements-spacing-y} / 2) calc(#{$ibo-dashlet--elements-spacing-x} / 2);
+  //margin: calc(#{$ibo-dashlet--elements-spacing-y} / 2) calc(#{$ibo-dashlet--elements-spacing-x} / 2);
+
+  height: 100% !important;
+  width: 100% !important;
 
   &.dashlet-selected {
     position: relative;
@@ -38,4 +41,21 @@ $ibo-dashlet-blocker--height: 100% !default;
   width: $ibo-dashlet-blocker--width;
   height: $ibo-dashlet-blocker--height;
   cursor: not-allowed;
+}
+
+.ibo-dashlet--actions {
+  position: absolute;
+  z-index: 1000;
+  top: 0px;
+  right: 0px;
+  display: none;
+  padding: 4px;
+  border-radius: 4px;
+
+  background-color: $ibo-color-white-100;
+  @extend %ibo-elevation-100;
+}
+
+ibo-dashlet[data-edit-mode="edit"] {
+  z-index: 3;
 }

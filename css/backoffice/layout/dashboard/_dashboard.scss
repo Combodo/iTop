@@ -175,3 +175,70 @@ input:checked + .ibo-dashboard--slider:before {
 input:checked + .ibo-dashboard--slider:after {
   content: $ibo-dashboard--slider--before--content;
 }
+
+// TODO 3.3 Cleanup variables
+// TODO 3.3 Move to vendor what's from gridstack
+
+
+.grid-stack {
+  display: block;
+}
+
+.ibo-dashboard[data-edit-mode="edit"] .grid-stack{
+  background-size: calc(100% / 12) var(--gs-cell-height);
+  background-color: $ibo-color-white-100;
+  background-image: linear-gradient(to right, $ibo-color-white-200 8px, transparent 8px), linear-gradient(to bottom, $ibo-color-white-200 8px, transparent 8px);
+  --gs-item-margin-top: 8px;
+  --gs-item-margin-bottom: 0;
+  --gs-item-margin-right: 0;
+  --gs-item-margin-left: 8px;
+}
+
+ibo-dashboard[data-edit-mode="view"] {
+  .ibo-dashboard--form {
+    display: none;
+  }
+}
+
+.ibo-dashboard--form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 55px;
+  background-color: $ibo-color-blue-200;
+  margin: -16px -36px 24px -36px;
+  padding: 0 36px;
+}
+
+.ibo-dashboard--form--inputs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+
+  @extend %common-font-ral-med-250;
+}
+
+.ibo-dashboard[data-edit-mode="edit"] ibo-dashlet:not([data-edit-mode="edit"]):hover .ibo-dashlet--actions {
+  display: block;
+}
+
+.ibo-dashboard[data-edit-mode="error"] .grid-stack{
+  background-image: url($approot-relative + '/images/alpha-fatal-error.gif');
+}
+
+// Our edit mode dashboard already has its own header, so we hide the standard one
+#ibo-page-header:has(+ ibo-dashboard[data-edit-mode="edit"]) {
+  display: none;
+}
+
+.ibo-dashboard[data-edit-mode="edit"] .ibo-dashboard--grid:has(ibo-dashboard-grid-slot > ibo-dashlet[data-edit-mode="edit"]) .ibo-dashboard--grid--backdrop {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: $ibo-color-grey-900;
+  z-index: 2;
+  opacity: 50%;
+}

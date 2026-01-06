@@ -1,0 +1,9 @@
+<ibo-dashboard-grid-slot
+        gs-x="{{ random(10) }}"
+        gs-y="{{ random(6) }}"
+        gs-w="{{ random(5) }}"
+        gs-h="{{ random(5) }}"
+        id=""
+        class="grid-stack-item">
+    {{ render_block(oUIBlock.GetDashlet(), {aPage: aPage}) }}
+</ibo-dashboard-grid-slot>

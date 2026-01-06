@@ -6,6 +6,7 @@
  */
 
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
@@ -1279,13 +1280,14 @@ class DashboardMenuNode extends MenuNode
 		if ($oDashboard != null) {
 			WebResourcesHelper::EnableC3JSToWebPage($oPage);
 
+			// TODO 3.3 this works for dashboard menu, what about other places ?
+			$oPageLayout = PageContentFactory::MakeForDashboard();
+			$oPage->SetContentLayout($oPageLayout, $oPage);
 			$sDivId = utils::Sanitize($this->sMenuId, '', 'element_identifier');
-			$oPage->add('<div id="'.$sDivId.'" class="ibo-dashboard" data-role="ibo-dashboard">');
 			$aExtraParams['dashboard_div_id'] = $sDivId;
 			$aExtraParams['from_dashboard_page'] = true;
 			$oDashboard->SetReloadURL($this->GetHyperlink($aExtraParams));
 			$oDashboard->Render($oPage, false, $aExtraParams);
-			$oPage->add('</div>');
 
 			$bEdit = utils::ReadParam('edit', false);
 			if ($bEdit) {

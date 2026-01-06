@@ -1,0 +1,5 @@
+<ibo-dashboard-grid class="ibo-dashboard--grid grid-stack">
+    {% for oSubBlock in oUIBlock.GetSlots() %}
+        {{ render_block(oSubBlock, {aPage: aPage}) }}
+    {% endfor %}
+</ibo-dashboard-grid>

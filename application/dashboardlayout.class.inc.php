@@ -109,7 +109,8 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		// Trim the list of cells to remove the invisible/empty ones at the end of the array
 		$aCells = $this->TrimCellsArray($aCells);
 
-		$oDashboardLayout = new DashboardLayoutUIBlock();
+		// TODO 3.3 Handle dashboard new format, convert old format if needed
+		$oDashboardLayout = new DashboardLayoutUIBlock($aExtraParams['dashboard_div_id']);
 		//$oPage->AddUiBlock($oDashboardLayout);
 
 		$iCellIdx = 0;
@@ -117,15 +118,16 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 
 		//Js given by each dashlet to reload
 		$sJSReload = "";
-
+		$oDashboardGrid = new \Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardGrid();
+		$oDashboardLayout->SetGrid($oDashboardGrid);
 		for ($iRows = 0; $iRows < $iNbRows; $iRows++) {
 			$oDashboardRow = new DashboardRow();
-			$oDashboardLayout->AddDashboardRow($oDashboardRow);
+			//$oDashboardLayout->AddDashboardRow($oDashboardRow);
 
 			for ($iCols = 0; $iCols < $this->iNbCols; $iCols++) {
 				$oDashboardColumn = new DashboardColumn($bEditMode);
 				$oDashboardColumn->SetCellIndex($iCellIdx);
-				$oDashboardRow->AddDashboardColumn($oDashboardColumn);
+				//$oDashboardRow->AddDashboardColumn($oDashboardColumn);
 
 				if (array_key_exists($iCellIdx, $aCells)) {
 					$aDashlets = $aCells[$iCellIdx];
@@ -133,7 +135,8 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 						/** @var \Dashlet $oDashlet */
 						foreach ($aDashlets as $oDashlet) {
 							if ($oDashlet::IsVisible()) {
-								$oDashboardColumn->AddUIBlock($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams));
+								$oDashboardGrid->AddDashlet($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams), $oDashlet->GetID(), get_class($oDashlet));
+								//$oDashboardColumn->AddUIBlock($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams));
 							}
 						}
 					} else {
@@ -147,6 +150,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 			$sJSReload .= $oDashboardRow->GetJSRefreshCallback()." ";
 		}
 
+		// TODO 3.3 We can probably do better with the new dashboard
 		$oPage->add_script("function updateDashboard".$aExtraParams['dashboard_div_id']."(){".$sJSReload."}");
 
 		if ($bEditMode) { // Add one row for extensibility

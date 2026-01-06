@@ -1,0 +1,51 @@
+// TODO 3.3 Cleanup variables
+
+.ibo-dashlet-entry {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+
+
+  border: 1px solid $ibo-color-grey-300;
+  border-radius: 5px;
+  padding: 12px;
+  background-color: $ibo-color-grey-100;
+
+  cursor: pointer;
+  text-align: left;
+
+  &:hover {
+    background-color: $ibo-color-grey-200;
+    border-color: $ibo-color-grey-400;
+  }
+  &:active {
+    background-color: $ibo-color-grey-50;
+    border-color: $ibo-color-grey-500;
+  }
+}
+
+.ibo-dashlet-entry--icon {
+  flex-shrink: 0;
+  height: 36px;
+  width: 36px;
+}
+
+.ibo-dashlet-entry--content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-x: hidden;
+  gap: 4px;
+}
+
+.ibo-dashlet-entry--title {
+  font-size: 14px;
+  font-weight: 600;
+  color: $ibo-color-grey-900;
+}
+
+.ibo-dashlet-entry--description {
+  font-size: 12px;
+  color: $ibo-color-grey-700;
+
+}

@@ -1,0 +1,11 @@
+<div id={{ oUIBlock.GetId() }} class="ibo-dashlet-panel">
+    <div class ="ibo-dashlet-panel--title">
+        Add a dashlet
+    </div>
+    <div class="ibo-dashlet-panel--entries">
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
+        {% endfor %}
+    </div>
+    <div class="ibo-dashlet-panel--form-container ibo-is-hidden"></div>
+</div>
