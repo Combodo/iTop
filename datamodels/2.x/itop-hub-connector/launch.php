@@ -186,7 +186,7 @@ function collect_configuration()
 
 	// iTop modules
 	$oConfig = MetaModel::GetConfig();
-	$aInstalledModules = ModuleInstallationService::GetInstance()->ReadFromDB($oConfig);
+	$aInstalledModules = ModuleInstallationRepository::GetInstance()->ReadFromDB($oConfig);
 
 	foreach ($aInstalledModules as $aDBInfo) {
 		$aConfiguration['itop_modules'][$aDBInfo['name']] = $aDBInfo['version'];

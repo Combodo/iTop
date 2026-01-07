@@ -46,7 +46,7 @@ class HubControllerTest extends ItopDataTestCase
 		$this->testLaunchCompile();
 		HubController::GetInstance()->LaunchDeploy();
 		$this->CheckReport('{"code":0,"message":"Compilation successful.","fields":[]}');
-		$this->CompareCurrentAndPreviousModuleInstallations();
+		$this->AssertPreviousAndCurrentInstallationAreEquivalent();
 	}
 
 	private function CheckReport($sExpected)

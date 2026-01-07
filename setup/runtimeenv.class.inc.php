@@ -630,7 +630,7 @@ class RunTimeEnvironment
 	public function GetApplicationVersion(Config $oConfig)
 	{
 		try {
-			$aSelectInstall = ModuleInstallationService::GetInstance()->ReadFromDB($oConfig);
+			$aSelectInstall = ModuleInstallationRepository::GetInstance()->ReadFromDB($oConfig);
 		} catch (MySQLException $e) {
 			// No database or erroneous information
 			$this->log_error('Can not connect to the database: host: '.$oConfig->Get('db_host').', user:'.$oConfig->Get('db_user').', pwd:'.$oConfig->Get('db_pwd').', db name:'.$oConfig->Get('db_name'));
