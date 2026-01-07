@@ -35,6 +35,7 @@ use lnkContactToTicket;
 use lnkFunctionalCIToTicket;
 use MetaModel;
 use MissingQueryArgument;
+use ModuleInstallationRepository;
 use MySQLException;
 use MySQLHasGoneAwayException;
 use Person;
@@ -1558,15 +1559,14 @@ abstract class ItopDataTestCase extends ItopTestCase
 		@unlink($this->sConfigTmpBackupFile);
 	}
 
-	public function CompareCurrentAndPreviousModuleInstallations()
+	public function AssertPreviousAndCurrentInstallationAreEquivalent()
 	{
-		$this->RequireOnceItopFile('env-production/combodo-db-tools/src/Service/DBToolsUtils.php');
-		$aPreviousInstallations = DBToolsUtils::GetPreviousModuleInstallationsByOffset(1);
-		$aInstallations = DBToolsUtils::GetPreviousModuleInstallationsByOffset();
-		$this->assertEquals($this->KeepModuleInstallationComparableFields($aPreviousInstallations), $this->KeepModuleInstallationComparableFields($aInstallations));
+		$aPreviousInstallations = ModuleInstallationRepository::GetInstance()->GetPreviousModuleInstallationsByOffset(1);
+		$aInstallations = ModuleInstallationRepository::GetInstance()->GetPreviousModuleInstallationsByOffset();
+		$this->assertEquals($this->GetCanonicalComparableModuleInstallationArray($aPreviousInstallations), $this->GetCanonicalComparableModuleInstallationArray($aInstallations));
 	}
 
-	public function KeepModuleInstallationComparableFields($aInstallations): array
+	protected function GetCanonicalComparableModuleInstallationArray($aInstallations): array
 	{
 		$aRes = [];
 		$aIgnoredFields = ['id', 'parent_id', 'installed', 'comment'];
