@@ -92,7 +92,7 @@ final class CoreUpdater
 			$sFinalEnv = 'production';
 			$oRuntimeEnv = new RunTimeEnvironmentCoreUpdater($sFinalEnv, false);
 			$oRuntimeEnv->CheckDirectories($sFinalEnv);
-			$oRuntimeEnv->CompileFrom('production');
+			$oRuntimeEnv->CompileFrom($sFinalEnv);
 
 			$oRuntimeEnv->Rollback();
 
@@ -155,21 +155,13 @@ final class CoreUpdater
 				APPROOT.'extensions',
 			];
 			$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation($oConfig, $aDirsToScanForModules);
-			$aSelectedModules = [];
-			foreach ($aAvailableModules as $sModuleId => $aModule) {
-				if (($sModuleId == ROOT_MODULE) || ($sModuleId == DATAMODEL_MODULE)) {
-					continue;
-				} else {
-					$aSelectedModules[] = $sModuleId;
-				}
-			}
-			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'BeforeDatabaseCreation');
+			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'BeforeDatabaseCreation');
 			$oRuntimeEnv->CreateDatabaseStructure($oConfig, 'upgrade');
-			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseCreation');
+			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseCreation');
 			$oRuntimeEnv->UpdatePredefinedObjects();
-			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseSetup');
-			$oRuntimeEnv->LoadData($aAvailableModules, $aSelectedModules, false /* no sample data*/);
-			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDataLoad');
+			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseSetup');
+			$oRuntimeEnv->LoadData($aAvailableModules, false /* no sample data*/);
+			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, 'AfterDataLoad');
 			$sDataModelVersion = $oRuntimeEnv->GetCurrentDataModelVersion();
 			$oExtensionsMap = new iTopExtensionsMap();
 			// Default choices = as before
@@ -187,7 +179,7 @@ final class CoreUpdater
 			$oRuntimeEnv->RecordInstallation(
 				$oConfig,
 				$sDataModelVersion,
-				$aSelectedModules,
+				array_keys($aAvailableModules),
 				$aSelectedExtensionCodes,
 				'Done by the iTop Core Updater'
 			);

@@ -672,9 +672,13 @@ class WizStepLicense extends WizardStep
 	private function NeedsGdprConsent()
 	{
 		$sMode = $this->oWizard->GetParameter('install_mode');
-		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
 
-		return (($sMode === 'install') && SetupUtils::IsConnectableToITopHub($aModules));
+		if ($sMode !== 'install') {
+			return false;
+		}
+
+		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
+		return SetupUtils::IsConnectableToITopHub($aModules);
 	}
 
 	/**
@@ -1330,6 +1334,9 @@ class WizStepModulesChoice extends WizardStep
 	 */
 	protected bool $bChoicesFromDatabase;
 
+	private array $aAnalyzeInstallationModules;
+	private ?MissingDependencyException $oMissingDependencyException = null;
+
 	public function __construct(WizardController $oWizard, $sCurrentState)
 	{
 		parent::__construct($oWizard, $sCurrentState);
@@ -1353,6 +1360,14 @@ class WizStepModulesChoice extends WizardStep
 
 			$this->oExtensionsMap->LoadChoicesFromDatabase($this->oConfig);
 			$this->bChoicesFromDatabase = true;
+		}
+
+		// Sanity check (not stopper, to let developers go further...)
+		try {
+			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard, true);
+		} catch (MissingDependencyException $e) {
+			$this->oMissingDependencyException = $e;
+			$this->aAnalyzeInstallationModules = SetupUtils::AnalyzeInstallation($this->oWizard);
 		}
 	}
 
@@ -1424,7 +1439,7 @@ class WizStepModulesChoice extends WizardStep
 				$this->oWizard->SetParameter('selected_extensions', json_encode($aExtensions));
 				$this->oWizard->SetParameter('display_choices', $sDisplayChoices);
 				$this->oWizard->SetParameter('extensions_added', json_encode($aExtensionsAdded));
-				$this->oWizard->SetParameter('extensions_removed', json_encode($aExtensionsRemoved));
+				$this->oWizard->SetParameter('removed_extensions', json_encode($aExtensionsRemoved));
 				$this->oWizard->SetParameter('extensions_not_uninstallable', json_encode(array_keys($aExtensionsNotUninstallable)));
 				return ['class' => 'WizStepSummary', 'state' => ''];
 			}
@@ -1445,10 +1460,8 @@ class WizStepModulesChoice extends WizardStep
 	protected function DisplayStep($oPage)
 	{
 		// Sanity check (not stopper, to let developers go further...)
-		try {
-			SetupUtils::AnalyzeInstallation($this->oWizard, true);
-		} catch (MissingDependencyException $e) {
-			$oPage->warning($e->getHtmlDesc(), $e->getMessage());
+		if (! is_null($this->oMissingDependencyException)) {
+			$oPage->warning($this->oMissingDependencyException->getHtmlDesc(), $this->oMissingDependencyException->getMessage());
 		}
 
 		$this->bUpgrade = ($this->oWizard->GetParameter('install_mode') != 'install');
@@ -1459,9 +1472,8 @@ class WizStepModulesChoice extends WizardStep
 		$oPage->add_style(".choice-disabled { color: #999; }");
 		$oPage->add_style("input.unremovable { accent-color: orangered;}");
 
-		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
 		$sManualInstallError = SetupUtils::CheckManualInstallDirEmpty(
-			$aModules,
+			$this->aAnalyzeInstallationModules,
 			$this->oWizard->GetParameter('extensions_dir', 'extensions')
 		);
 		if ($sManualInstallError !== '') {
@@ -1487,7 +1499,7 @@ class WizStepModulesChoice extends WizardStep
 		$oPage->add('</div>');
 
 		// Build the default choices
-		$aDefaults = $this->GetDefaults($aStepInfo, $aModules);
+		$aDefaults = $this->GetDefaults($aStepInfo, $this->aAnalyzeInstallationModules);
 		$index = $this->GetStepIndex();
 
 		// retrieve the saved selection
@@ -1747,7 +1759,7 @@ EOF
 	{
 		if ($sParentId == '') {
 			// Check once (before recursing) that the hidden modules are selected
-			foreach (SetupUtils::AnalyzeInstallation($this->oWizard) as $sModuleId => $aModule) {
+			foreach ($this->aAnalyzeInstallationModules as $sModuleId => $aModule) {
 				if (($sModuleId != ROOT_MODULE) && !isset($aModules[$sModuleId])) {
 					if (($aModule['category'] == 'authentication') || (!$aModule['visible'] && !isset($aModule['auto_select']))) {
 						$aModules[$sModuleId] = true;
@@ -1837,11 +1849,10 @@ EOF
 		if ($sParentId == '') {
 			// Last pass (after all the user's choices are turned into "selected" modules):
 			// Process 'auto_select' modules for modules that are not already selected
-			$aAvailableModules = SetupUtils::AnalyzeInstallation($this->oWizard);
 			do {
 				// Loop while new modules are added...
 				$bModuleAdded = false;
-				foreach ($aAvailableModules as $sModuleId => $aModule) {
+				foreach ($this->aAnalyzeInstallationModules as $sModuleId => $aModule) {
 					if (($sModuleId != ROOT_MODULE) && !array_key_exists($sModuleId, $aModules) && isset($aModule['auto_select'])) {
 						try {
 							SetupInfo::SetSelectedModules($aModules);
@@ -2261,7 +2272,7 @@ class WizStepSummary extends WizardStep
 		$oPage->add('</div>');
 		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Extensions to be uninstalled</span>');
 
-		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('extensions_removed'), true);
+		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true);
 		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'));
 		$sExtensionsRemoved = '';
 		if (count($aExtensionsRemoved) > 0) {

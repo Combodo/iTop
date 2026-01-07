@@ -46,6 +46,8 @@ class ApplicationInstaller
 	protected $oParams;
 	protected static $bMetaModelStarted = false;
 
+	protected Config $oConfig;
+
 	/**
 	 * @param \Parameters $oParams
 	 *
@@ -57,9 +59,9 @@ class ApplicationInstaller
 		$this->oParams = $oParams;
 
 		$aParamValues = $oParams->GetParamForConfigArray();
-		$oConfig = new Config();
-		$oConfig->UpdateFromParams($aParamValues, null);
-		utils::SetConfig($oConfig);
+		$this->oConfig = new Config();
+		$this->oConfig->UpdateFromParams($aParamValues);
+		utils::SetConfig($this->oConfig);
 	}
 
 	/**
@@ -215,7 +217,7 @@ class ApplicationInstaller
 					$aPreinstall = $this->oParams->Get('preinstall');
 					$aCopies = $aPreinstall['copies'] ?? [];
 
-					self::DoCopy($aCopies);
+					$this->DoCopy($aCopies);
 					$sReport = "Copying...";
 
 					$aResult = [
@@ -238,11 +240,8 @@ class ApplicationInstaller
 					// __DB__-%Y-%m-%d
 					$sDestination = $aPreinstall['backup']['destination'];
 					$sSourceConfigFile = $aPreinstall['backup']['configuration_file'];
-					$aDBParams = $this->oParams->GetParamForConfigArray();
-					$oTempConfig = new Config();
-					$oTempConfig->UpdateFromParams($aDBParams);
 					$sMySQLBinDir = $this->oParams->Get('mysql_bindir', null);
-					self::DoBackup($oTempConfig, $sDestination, $sSourceConfigFile, $sMySQLBinDir);
+					$this->DoBackup($sDestination, $sSourceConfigFile, $sMySQLBinDir);
 
 					$aResult = [
 						'status' => self::OK,
@@ -257,9 +256,8 @@ class ApplicationInstaller
 					$aSelectedModules = $this->oParams->Get('selected_modules');
 					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
-					$sTargetEnvironment = $this->GetTargetEnv();
-					$sTargetDir = $this->GetTargetDir();
 					$aMiscOptions = $this->oParams->Get('options', []);
+					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
 
 					$bUseSymbolicLinks = null;
 					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])) {
@@ -271,15 +269,12 @@ class ApplicationInstaller
 						}
 					}
 
-					$aParamValues = $this->oParams->GetParamForConfigArray();
-					self::DoCompile(
+					$this->DoCompile(
+						$aRemovedExtensionCodes,
 						$aSelectedModules,
 						$sSourceDir,
 						$sExtensionDir,
-						$sTargetDir,
-						$sTargetEnvironment,
-						$bUseSymbolicLinks,
-						$aParamValues
+						$bUseSymbolicLinks
 					);
 
 					$aResult = [
@@ -293,17 +288,13 @@ class ApplicationInstaller
 
 				case 'db-schema':
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
-					$sTargetEnvironment = $this->GetTargetEnv();
-					$sTargetDir = $this->GetTargetDir();
 					$aParamValues = $this->oParams->GetParamForConfigArray();
 					$bOldAddon = $this->oParams->Get('old_addon', false);
 					$sUrl = $this->oParams->Get('url', '');
 
-					self::DoUpdateDBSchema(
+					$this->DoUpdateDBSchema(
 						$aSelectedModules,
-						$sTargetDir,
 						$aParamValues,
-						$sTargetEnvironment,
 						$bOldAddon,
 						$sUrl
 					);
@@ -318,25 +309,17 @@ class ApplicationInstaller
 					break;
 
 				case 'after-db-create':
-					$sTargetEnvironment = $this->GetTargetEnv();
-					$sTargetDir = $this->GetTargetDir();
-					$aParamValues = $this->oParams->GetParamForConfigArray();
 					$aAdminParams = $this->oParams->Get('admin_account');
 					$sAdminUser = $aAdminParams['user'];
 					$sAdminPwd = $aAdminParams['pwd'];
 					$sAdminLanguage = $aAdminParams['language'];
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
-					$bOldAddon = $this->oParams->Get('old_addon', false);
 
-					self::AfterDBCreate(
-						$sTargetDir,
-						$aParamValues,
+					$this->AfterDBCreate(
 						$sAdminUser,
 						$sAdminPwd,
 						$sAdminLanguage,
-						$aSelectedModules,
-						$sTargetEnvironment,
-						$bOldAddon
+						$aSelectedModules
 					);
 
 					$aResult = [
@@ -350,18 +333,10 @@ class ApplicationInstaller
 
 				case 'load-data':
 					$aSelectedModules = $this->oParams->Get('selected_modules');
-					$sTargetEnvironment = $this->GetTargetEnv();
-					$sTargetDir = $this->GetTargetDir();
-					$aParamValues = $this->oParams->GetParamForConfigArray();
-					$bOldAddon = $this->oParams->Get('old_addon', false);
 					$bSampleData = ($this->oParams->Get('sample_data', 0) == 1);
 
-					self::DoLoadFiles(
+					$this->DoLoadFiles(
 						$aSelectedModules,
-						$sTargetDir,
-						$aParamValues,
-						$sTargetEnvironment,
-						$bOldAddon,
 						$bSampleData
 					);
 
@@ -375,24 +350,16 @@ class ApplicationInstaller
 					break;
 
 				case 'create-config':
-					$sTargetEnvironment = $this->GetTargetEnv();
-					$sTargetDir = $this->GetTargetDir();
 					$sPreviousConfigFile = $this->oParams->Get('previous_configuration_file', '');
 					$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
-					$bOldAddon = $this->oParams->Get('old_addon', false);
 					$aSelectedModuleCodes = $this->oParams->Get('selected_modules', []);
 					$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', []);
-					$aParamValues = $this->oParams->GetParamForConfigArray();
 
-					self::DoCreateConfig(
-						$sTargetDir,
+					$this->DoCreateConfig(
 						$sPreviousConfigFile,
-						$sTargetEnvironment,
 						$sDataModelVersion,
-						$bOldAddon,
 						$aSelectedModuleCodes,
 						$aSelectedExtensionCodes,
-						$aParamValues,
 						$sInstallComment
 					);
 
@@ -473,7 +440,7 @@ class ApplicationInstaller
 		SetupUtils::ExitReadOnlyMode();
 	}
 
-	protected static function DoCopy($aCopies)
+	protected function DoCopy($aCopies)
 	{
 		$aReports = [];
 		foreach ($aCopies as $aCopy) {
@@ -494,7 +461,6 @@ class ApplicationInstaller
 	}
 
 	/**
-	 * @param Config $oConfig
 	 * @param string $sBackupFileFormat
 	 * @param string $sSourceConfigFile
 	 * @param string $sMySQLBinDir
@@ -504,26 +470,24 @@ class ApplicationInstaller
 	 * @throws \MySQLException
 	 * @since 2.5.0 uses a {@link Config} object to store DB parameters
 	 */
-	protected static function DoBackup($oConfig, $sBackupFileFormat, $sSourceConfigFile, $sMySQLBinDir = null)
+	protected function DoBackup($sBackupFileFormat, $sSourceConfigFile, $sMySQLBinDir = null)
 	{
-		$oBackup = new SetupDBBackup($oConfig);
+		$oBackup = new SetupDBBackup($this->oConfig);
 		$sTargetFile = $oBackup->MakeName($sBackupFileFormat);
 		if (!empty($sMySQLBinDir)) {
 			$oBackup->SetMySQLBinDir($sMySQLBinDir);
 		}
 
-		CMDBSource::InitFromConfig($oConfig);
+		CMDBSource::InitFromConfig($this->oConfig);
 		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
 	}
 
 	/**
+	 * @param array $aRemovedExtensionCodes
 	 * @param array $aSelectedModules
 	 * @param string $sSourceDir
 	 * @param string $sExtensionDir
-	 * @param string $sTargetDir
-	 * @param string $sEnvironment
 	 * @param boolean $bUseSymbolicLinks
-	 * @param array $aParamValues
 	 *
 	 * @return void
 	 * @throws \ConfigException
@@ -531,13 +495,17 @@ class ApplicationInstaller
 	 *
 	 * @since 3.1.0 N°2013 added the aParamValues param
 	 */
-	protected static function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sEnvironment, $bUseSymbolicLinks = null, $aParamValues = [])
+	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $bUseSymbolicLinks = null)
 	{
 		SetupLog::Info("Compiling data model.");
 
 		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 		require_once(APPROOT.'setup/modelfactory.class.inc.php');
 		require_once(APPROOT.'setup/compiler.class.inc.php');
+
+		$aParamValues = $this->oParams->GetParamForConfigArray();
+		$sEnvironment = $this->GetTargetEnv();
+		$sTargetDir = $this->GetTargetDir();
 
 		if (empty($sSourceDir) || empty($sTargetDir)) {
 			throw new Exception("missing parameter source_dir and/or target_dir");
@@ -565,15 +533,9 @@ class ApplicationInstaller
 			$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
 			if (is_file($sConfigFilePath)) {
 				$oConfig = new Config($sConfigFilePath);
-			} else {
-				$oConfig = null;
-			}
-
-			if (false === is_null($oConfig)) {
 				$oConfig->UpdateFromParams($aParamValues);
+				SetupUtils::EnterMaintenanceMode($oConfig);
 			}
-
-			SetupUtils::EnterMaintenanceMode($oConfig);
 		}
 
 		if (!is_dir($sTargetPath)) {
@@ -588,6 +550,9 @@ class ApplicationInstaller
 			// If the directory is under the root folder - as expected - let's clean-it before compiling
 			SetupUtils::tidydir($sTargetPath);
 		}
+
+		$oExtensionsMap = new iTopExtensionsMap('production', $aDirsToScan);
+		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
 		$oFactory = new ModelFactory($aDirsToScan);
 
@@ -667,8 +632,11 @@ class ApplicationInstaller
 	 * @throws \CoreException
 	 * @throws \MySQLException
 	 */
-	protected static function DoUpdateDBSchema($aSelectedModules, $sModulesDir, $aParamValues, $sTargetEnvironment = '', $bOldAddon = false, $sAppRootUrl = '')
+	protected function DoUpdateDBSchema($aSelectedModules, $aParamValues, $bOldAddon = false, $sAppRootUrl = '')
 	{
+		$sTargetEnvironment = $this->GetTargetEnv();
+		$sModulesDir = $this->GetTargetDir();
+
 		/**
 		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
 		 * @noinspection PhpUnusedLocalVariableInspection
@@ -681,11 +649,6 @@ class ApplicationInstaller
 
 		$oConfig = new Config();
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
-
-		if ($bOldAddon) {
-			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons([]);
-		}
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
@@ -741,9 +704,8 @@ class ApplicationInstaller
 		}
 
 		// Module specific actions (migrate the data)
-		//
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'BeforeDatabaseCreation');
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'BeforeDatabaseCreation', $aSelectedModules);
 
 		if (!$oProductionEnv->CreateDatabaseStructure(MetaModel::GetConfig(), $sMode)) {
 			throw new Exception("Failed to create/upgrade the database structure for environment '$sTargetEnvironment'");
@@ -839,16 +801,16 @@ class ApplicationInstaller
 		ModuleInstallerAPI::MoveColumnInDB($sDBPrefix.'priv_query', 'fields', $sDBPrefix.'priv_query_oql', 'fields');
 	}
 
-	protected static function AfterDBCreate(
-		$sModulesDir,
-		$aParamValues,
+	protected function AfterDBCreate(
 		$sAdminUser,
 		$sAdminPwd,
 		$sAdminLanguage,
-		$aSelectedModules,
-		$sTargetEnvironment,
-		$bOldAddon
+		$aSelectedModules
 	) {
+		$aParamValues = $this->oParams->GetParamForConfigArray();
+		$sTargetEnvironment = $this->GetTargetEnv();
+		$sModulesDir = $this->GetTargetDir();
+
 		/**
 		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
 		 * @noinspection PhpUnusedLocalVariableInspection
@@ -860,11 +822,6 @@ class ApplicationInstaller
 		$oConfig = new Config();
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
 
-		if ($bOldAddon) {
-			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons([]);
-		}
-
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
@@ -873,7 +830,7 @@ class ApplicationInstaller
 		// Perform here additional DB setup... profiles, etc...
 		//
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseCreation');
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseCreation', $aSelectedModules);
 
 		$oProductionEnv->UpdatePredefinedObjects();
 
@@ -887,7 +844,7 @@ class ApplicationInstaller
 
 		// Perform final setup tasks here
 		//
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseSetup');
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'AfterDatabaseSetup', $aSelectedModules);
 	}
 
 	/**
@@ -905,14 +862,14 @@ class ApplicationInstaller
 		}
 	}
 
-	protected static function DoLoadFiles(
+	protected function DoLoadFiles(
 		$aSelectedModules,
-		$sModulesDir,
-		$aParamValues,
-		$sTargetEnvironment = 'production',
-		$bOldAddon = false,
 		$bSampleData = false
 	) {
+		$aParamValues = $this->oParams->GetParamForConfigArray();
+		$sTargetEnvironment = $this->GetTargetEnv();
+		$sModulesDir = $this->GetTargetDir();
+
 		/**
 		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
 		 * @noinspection PhpUnusedLocalVariableInspection
@@ -921,11 +878,6 @@ class ApplicationInstaller
 
 		$oConfig = new Config();
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
-
-		if ($bOldAddon) {
-			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons([]);
-		}
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 
@@ -937,19 +889,16 @@ class ApplicationInstaller
 		}
 
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, APPROOT.$sModulesDir);
-		$oProductionEnv->LoadData($aAvailableModules, $aSelectedModules, $bSampleData);
+		$oProductionEnv->LoadData($aAvailableModules, $bSampleData, $aSelectedModules);
 
 		// Perform after dbload setup tasks here
 		//
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDataLoad');
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, 'AfterDataLoad', $aSelectedModules);
 	}
 
 	/**
-	 * @param string $sModulesDir
 	 * @param string $sPreviousConfigFile
-	 * @param string $sTargetEnvironment
 	 * @param string $sDataModelVersion
-	 * @param boolean $bOldAddon
 	 * @param array $aSelectedModuleCodes
 	 * @param array $aSelectedExtensionCodes
 	 * @param array $aParamValues parameters array used to create config file using {@see Config::UpdateFromParams}
@@ -960,17 +909,17 @@ class ApplicationInstaller
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	protected static function DoCreateConfig(
-		$sModulesDir,
+	protected function DoCreateConfig(
 		$sPreviousConfigFile,
-		$sTargetEnvironment,
 		$sDataModelVersion,
-		$bOldAddon,
 		$aSelectedModuleCodes,
 		$aSelectedExtensionCodes,
-		$aParamValues,
 		$sInstallComment = null
 	) {
+		$aParamValues = $this->oParams->GetParamForConfigArray();
+		$sTargetEnvironment = $this->GetTargetEnv();
+		$sModulesDir = $this->GetTargetDir();
+
 		/**
 		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
 		 * @noinspection PhpUnusedLocalVariableInspection
@@ -980,12 +929,10 @@ class ApplicationInstaller
 		$aParamValues['selected_modules'] = implode(',', $aSelectedModuleCodes);
 		$sMode = $aParamValues['mode'];
 
-		$bPreserveModuleSettings = false;
 		if ($sMode == 'upgrade') {
 			try {
 				$oOldConfig = new Config($sPreviousConfigFile);
 				$oConfig = clone($oOldConfig);
-				$bPreserveModuleSettings = true;
 			} catch (Exception $e) {
 				// In case the previous configuration is corrupted... start with a blank new one
 				$oConfig = new Config();
@@ -999,11 +946,7 @@ class ApplicationInstaller
 
 		$oConfig->Set('access_mode', ACCESS_FULL);
 		// Final config update: add the modules
-		$oConfig->UpdateFromParams($aParamValues, $sModulesDir, $bPreserveModuleSettings);
-		if ($bOldAddon) {
-			// Old version of the add-on for backward compatibility with pre-2.0 data models
-			$oConfig->SetAddons([]);
-		}
+		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
 
 		// Record which modules are installed...
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
