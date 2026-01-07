@@ -257,10 +257,7 @@ class ApplicationInstaller
 					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 					$aMiscOptions = $this->oParams->Get('options', []);
-					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', null);
-					if (! is_array($aRemovedExtensionCodes)) {
-						$aRemovedExtensionCodes = [];
-					}
+					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
 
 					$bUseSymbolicLinks = null;
 					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])) {

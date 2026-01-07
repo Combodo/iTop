@@ -252,7 +252,6 @@ class ModuleDiscovery
 		if (self::$m_aRemovedExtensions != $aRemovedExtension) {
 			self::ResetCache();
 		}
-		SetupLog::Info(__METHOD__, null, ['count' => count($aRemovedExtension)]);
 		self::$m_aRemovedExtensions = $aRemovedExtension;
 	}
 
@@ -261,6 +260,9 @@ class ModuleDiscovery
 		if (count(self::$m_aRemovedExtensions) === 0) {
 			return false;
 		}
+
+		$aNonMatchingPaths = [];
+		$sModuleFilePath = $aModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
 
 		/** @var \iTopExtension $oExtension */
 		foreach (self::$m_aRemovedExtensions as $oExtension) {
@@ -274,17 +276,27 @@ class ModuleDiscovery
 			}
 
 			$aCurrentModuleInfo = $oExtension->aModuleInfo[$sModuleName] ?? null;
-
-			$sCurrentModuleFilePath = $aCurrentModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
-			$sPath = $aModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
-			if (realpath($sPath) !== realpath($sCurrentModuleFilePath)) {
+			if (is_null($aCurrentModuleInfo)) {
+				SetupLog::Warning("Missing $sModuleName in ".$oExtension->sLabel.". it should not happen");
 				continue;
 			}
 
-			SetupLog::Info("Module considered as removed", null, ['extension_code' => $oExtension->sCode, 'module_name' => $sModuleName, 'module_version' => $sModuleVersion, ]);
+			// use case: same module coming from 2 different extensions
+			// we remove only the one coming from removed extensions
+			$sCurrentModuleFilePath = $aCurrentModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
+			if (realpath($sModuleFilePath) !== realpath($sCurrentModuleFilePath)) {
+				$aNonMatchingPaths[] = $sCurrentModuleFilePath;
+				continue;
+			}
+
+			SetupLog::Info("Module considered as removed", null, ['extension_code' => $oExtension->sCode, 'module_name' => $sModuleName, 'module_version' => $sModuleVersion, ModuleFileReader::MODULE_FILE_PATH => $sCurrentModuleFilePath]);
 			return true;
 		}
 
+		if (count($aNonMatchingPaths) > 0) {
+			//add log for support
+			SetupLog::Info("Module kept as it came from non removed extensions", null, ['module_name' => $sModuleName, 'module_version' => $sModuleVersion, ModuleFileReader::MODULE_FILE_PATH => $sModuleFilePath, 'non_matching_paths' => $aNonMatchingPaths]);
+		}
 		return false;
 	}
 

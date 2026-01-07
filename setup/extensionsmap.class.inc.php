@@ -182,11 +182,6 @@ class iTopExtensionsMap
 	*/
 	public function DeclareExtensionAsRemoved(array $aExtensionCodes): void
 	{
-		if (count($aExtensionCodes) === 0) {
-			\ModuleDiscovery::DeclareRemovedExtensions([]);
-			return;
-		}
-
 		$aRemovedExtension = [];
 		foreach ($aExtensionCodes as $sCode) {
 			/** @var \iTopExtension $oExtension */
