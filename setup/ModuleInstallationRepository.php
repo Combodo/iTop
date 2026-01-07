@@ -1,23 +1,23 @@
 <?php
 
-class ModuleInstallationService
+class ModuleInstallationRepository
 {
-	private static ModuleInstallationService $oInstance;
+	private static ModuleInstallationRepository $oInstance;
 
 	protected function __construct()
 	{
 	}
 
-	final public static function GetInstance(): ModuleInstallationService
+	final public static function GetInstance(): ModuleInstallationRepository
 	{
 		if (!isset(self::$oInstance)) {
-			self::$oInstance = new ModuleInstallationService();
+			self::$oInstance = new ModuleInstallationRepository();
 		}
 
 		return self::$oInstance;
 	}
 
-	final public static function SetInstance(?ModuleInstallationService $oInstance): void
+	final public static function SetInstance(?ModuleInstallationRepository $oInstance): void
 	{
 		static::$oInstance = $oInstance;
 	}
@@ -180,5 +180,48 @@ SQL;
 		}
 
 		return $aInstallByModule;
+	}
+
+	/**
+	 * Return previous module installation. offset is applied on parent_id.
+	 * @param $iOffset: by default (offset=0) returns current installation
+	 * @return array
+	 */
+	public static function GetPreviousModuleInstallationsByOffset(int $iOffset = 0): array
+	{
+		$oFilter = DBObjectSearch::FromOQL('SELECT ModuleInstallation AS mi WHERE mi.parent_id=0 AND mi.name!="datamodel"');
+		$oSet = new DBObjectSet($oFilter, ['installed' => false]); // Most recent first
+		$oSet->SetLimit($iOffset + 1);
+
+		$iParentId = 0;
+		/** @var \DBObject $oModuleInstallation */
+		while ($oModuleInstallation = $oSet->Fetch()) {
+			if ($iOffset == 0) {
+				$iParentId = $oModuleInstallation->Get('id');
+				break;
+			}
+			$iOffset--;
+		}
+
+		if ($iParentId === 0) {
+			IssueLog::Error("no ITOP_APPLICATION ModuleInstallation found", null, ['offset' => $iOffset]);
+			throw new \Exception("no ITOP_APPLICATION ModuleInstallation found");
+		}
+
+		$oFilter = DBObjectSearch::FromOQL("SELECT ModuleInstallation AS mi WHERE mi.id=$iParentId OR mi.parent_id=$iParentId");
+		$oSet = new DBObjectSet($oFilter); // Most recent first
+		$aRawValues = $oSet->ToArrayOfValues();
+		$aValues = [];
+		foreach ($aRawValues as $aRawValue) {
+			$aValue = [];
+			foreach ($aRawValue as $sAliasAttCode => $sValue) {
+				// remove 'mi.' from AttCode
+				$sAttCode = substr($sAliasAttCode, 3);
+				$aValue[$sAttCode] = $sValue;
+			}
+
+			$aValues[] = $aValue;
+		}
+		return $aValues;
 	}
 }

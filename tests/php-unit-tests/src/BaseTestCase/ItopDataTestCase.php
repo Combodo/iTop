@@ -17,6 +17,7 @@ namespace Combodo\iTop\Test\UnitTest;
 use ArchivedObjectException;
 use CMDBObject;
 use CMDBSource;
+use Combodo\iTop\DBTools\Service\DBToolsUtils;
 use Combodo\iTop\Service\Events\EventService;
 use Config;
 use Contact;
@@ -34,6 +35,7 @@ use lnkContactToTicket;
 use lnkFunctionalCIToTicket;
 use MetaModel;
 use MissingQueryArgument;
+use ModuleInstallationRepository;
 use MySQLException;
 use MySQLHasGoneAwayException;
 use Person;
@@ -1555,5 +1557,32 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$oConfig->WriteToFile($sConfigPath);
 		@chmod($sConfigPath, 0440);
 		@unlink($this->sConfigTmpBackupFile);
+	}
+
+	public function AssertPreviousAndCurrentInstallationAreEquivalent()
+	{
+		$aPreviousInstallations = ModuleInstallationRepository::GetInstance()->GetPreviousModuleInstallationsByOffset(1);
+		$aInstallations = ModuleInstallationRepository::GetInstance()->GetPreviousModuleInstallationsByOffset();
+		$this->assertEquals($this->GetCanonicalComparableModuleInstallationArray($aPreviousInstallations), $this->GetCanonicalComparableModuleInstallationArray($aInstallations));
+	}
+
+	protected function GetCanonicalComparableModuleInstallationArray($aInstallations): array
+	{
+		$aRes = [];
+		$aIgnoredFields = ['id', 'parent_id', 'installed', 'comment'];
+		foreach ($aInstallations as $aData) {
+			$aNewData = [];
+			foreach ($aData as $sKey => $val) {
+				if (in_array($sKey, $aIgnoredFields)) {
+					continue;
+				}
+				$aNewData[$sKey] = $val;
+			}
+			$sName = $aNewData['name'];
+			$aRes[$sName] = $aNewData;
+		}
+
+		asort($aRes);
+		return $aRes;
 	}
 }

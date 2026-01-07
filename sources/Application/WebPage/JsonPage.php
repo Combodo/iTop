@@ -25,6 +25,7 @@ class JsonPage extends WebPage
 	 * This can be useful when feeding response to a third party lib that doesn't understand the structured format.
 	 */
 	protected $bOutputDataOnly = false;
+	protected $bOutputHeaders = true;
 
 	/**
 	 * JsonPage constructor.
@@ -83,6 +84,19 @@ class JsonPage extends WebPage
 	}
 
 	/**
+	 * @see static::$bOutputHeaders
+	 * @param bool $bFlag
+	 *
+	 * @return $this
+	 */
+	public function SetOutputHeaders(bool $bFlag)
+	{
+		$this->bOutputHeaders = $bFlag;
+
+		return $this;
+	}
+
+	/**
 	 * Output the headers
 	 *
 	 * @return void
@@ -119,7 +133,10 @@ class JsonPage extends WebPage
 	public function output()
 	{
 		$oKpi = new ExecutionKPI();
-		$this->OutputHeaders();
+		if ($this->bOutputHeaders) {
+			$this->OutputHeaders();
+		}
+
 		$sContent = $this->ComputeContent();
 		$oKpi->ComputeAndReport(get_class($this).' output');
 

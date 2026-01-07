@@ -8,11 +8,13 @@
 namespace Combodo\iTop\Test\UnitTest\Service;
 
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
+use DOMFormatException;
 use MFCoreModule;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
 use RunTimeEnvironment;
+use SetupLog;
 use SetupUtils;
 use utils;
 
@@ -64,7 +66,13 @@ class UnitTestRunTimeEnvironment extends RunTimeEnvironment
 			}
 		}
 
-		parent::CompileFrom($sSourceEnv, $bUseSymLinks);
+		try {
+			parent::CompileFrom($sSourceEnv, $bUseSymLinks);
+		} catch (DOMFormatException $e) {
+			$sFileName = $sSourceEnv.'.delta.xml';
+			SetupLog::Error(__METHOD__, null, [$sFileName => @file_get_contents(APPROOT.'data/'.$sFileName)]);
+			throw $e;
+		}
 	}
 
 	public function IsUpToDate()

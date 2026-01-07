@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/ModuleInstallationService.php';
+require_once __DIR__.'/ModuleInstallationRepository.php';
 
 class AnalyzeInstallation
 {
@@ -58,6 +58,7 @@ class AnalyzeInstallation
 	 * )
 	 * @throws \Exception
 	 */
+
 	public function AnalyzeInstallation(?Config $oConfig, mixed $modulesPath, bool $bAbortOnMissingDependency = false, ?array $aModulesToLoad = null)
 	{
 		$aRes = [
@@ -96,7 +97,7 @@ class AnalyzeInstallation
 			$aRes[$sModuleName] = $aModuleInfo;
 		}
 
-		$aCurrentlyInstalledModules = ModuleInstallationService::GetInstance()->ReadComputeInstalledModules($oConfig);
+		$aCurrentlyInstalledModules = ModuleInstallationRepository::GetInstance()->ReadComputeInstalledModules($oConfig);
 
 		// Adjust the list of proposed modules
 		foreach ($aCurrentlyInstalledModules as $sModuleName => $aModuleDB) {

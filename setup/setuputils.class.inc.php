@@ -1555,7 +1555,7 @@ JS
 		return $sHtml;
 	}
 
-	public static function GetConfig($oWizard)
+	public static function GetConfig(WizardController $oWizard)
 	{
 		$oConfig = new Config();
 		$sSourceDir = $oWizard->GetParameter('source_dir', '');
@@ -1570,7 +1570,7 @@ JS
 
 		$aParamValues = $oWizard->GetParamForConfigArray();
 		$aParamValues['source_dir'] = $sRelativeSourceDir;
-		$oConfig->UpdateFromParams($aParamValues, null);
+		$oConfig->UpdateFromParams($aParamValues);
 
 		return $oConfig;
 	}
@@ -1602,6 +1602,10 @@ JS
 			$aDirsToScan[] = $sExtraDir;
 		}
 		$oProductionEnv = new RunTimeEnvironment();
+		$aRemovedExtensionCodes = $oWizard->GetParameter('removed_extensions', []);
+		$oExtensionsMap = new iTopExtensionsMap('production', $aDirsToScan);
+		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
+
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, $aDirsToScan, $bAbortOnMissingDependency, $aModulesToLoad);
 
 		foreach ($aAvailableModules as $key => $aModule) {
@@ -1627,7 +1631,7 @@ JS
 
 		$aParamValues = $oWizard->GetParamForConfigArray();
 		$aParamValues['source_dir'] = '';
-		$oConfig->UpdateFromParams($aParamValues, null);
+		$oConfig->UpdateFromParams($aParamValues);
 
 		$oProductionEnv = new RunTimeEnvironment();
 		return $oProductionEnv->GetApplicationVersion($oConfig);

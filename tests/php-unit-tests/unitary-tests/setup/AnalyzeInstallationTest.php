@@ -4,7 +4,7 @@ namespace Combodo\iTop\Test\UnitTest\Setup;
 
 use AnalyzeInstallation;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use ModuleInstallationService;
+use ModuleInstallationRepository;
 
 class AnalyzeInstallationTest extends ItopTestCase
 {
@@ -12,7 +12,7 @@ class AnalyzeInstallationTest extends ItopTestCase
 	{
 		parent::setUp();
 		$this->RequireOnceItopFile('setup/AnalyzeInstallation.php');
-		$this->RequireOnceItopFile('setup/ModuleInstallationService.php');
+		$this->RequireOnceItopFile('setup/ModuleInstallationRepository.php');
 		$this->RequireOnceItopFile('setup/modulediscovery.class.inc.php');
 		$this->RequireOnceItopFile('setup/runtimeenv.class.inc.php');
 	}
@@ -151,7 +151,7 @@ class AnalyzeInstallationTest extends ItopTestCase
 
 		$this->SetNonPublicProperty(AnalyzeInstallation::GetInstance(), "aAvailableModules", $aAvailableModules);
 		//$aModules = json_decode(file_get_contents(__DIR__.'/ressources/priv_modules2.json'), true);
-		$this->SetNonPublicProperty(ModuleInstallationService::GetInstance(), "aSelectInstall", $aInstalledModules);
+		$this->SetNonPublicProperty(ModuleInstallationRepository::GetInstance(), "aSelectInstall", $aInstalledModules);
 
 		$oConfig =  $this->createMock(\Config::class);
 

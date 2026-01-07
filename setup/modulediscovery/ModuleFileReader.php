@@ -36,6 +36,7 @@ class ModuleFileReader
 	public const MODULE_INFO_PATH = 0;
 	public const MODULE_INFO_ID = 1;
 	public const MODULE_INFO_CONFIG = 2;
+	public const MODULE_FILE_PATH = "module_file_path";
 
 	public const STATIC_CALLWHITELIST = [
 		"utils::GetItopVersionWikiSyntax",
@@ -164,7 +165,7 @@ class ModuleFileReader
 	private function CompleteModuleInfoWithFilePath(array &$aModuleInfo)
 	{
 		if (count($aModuleInfo) == 3) {
-			$aModuleInfo[static::MODULE_INFO_CONFIG]['module_file_path'] = $aModuleInfo[static::MODULE_INFO_PATH];
+			$aModuleInfo[static::MODULE_INFO_CONFIG][self::MODULE_FILE_PATH] = $aModuleInfo[static::MODULE_INFO_PATH];
 		}
 	}
 
@@ -175,15 +176,21 @@ class ModuleFileReader
 		}
 
 		$sModuleInstallerClass = $aModuleInfo['installer'];
+		if (strlen($sModuleInstallerClass) === 0) {
+			return null;
+		}
+
 		if (!class_exists($sModuleInstallerClass)) {
-			$sModuleFilePath = $aModuleInfo['module_file_path'];
+			$sModuleFilePath = $aModuleInfo[self::MODULE_FILE_PATH];
 			$this->ReadModuleFileInformationUnsafe($sModuleFilePath);
 		}
 
 		if (!class_exists($sModuleInstallerClass)) {
+			\IssueLog::Error(__METHOD__, null, $aModuleInfo);
 			throw new CoreException("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
 		}
 		if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI')) {
+			\IssueLog::Error(__METHOD__, null, $aModuleInfo);
 			throw new CoreException("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
 		}
 
