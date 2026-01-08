@@ -12,9 +12,14 @@ use Combodo\iTop\PropertyType\ValueType\AbstractValueType;
 
 class XMLFormatCSV extends AbstractXMLFormat
 {
-	public function EncodeToDOMNode(mixed $value, DesignElement $oDOMNode, AbstractValueType $oValueType): void
+	public function Normalize($value, AbstractValueType $oValueType): mixed
 	{
-		$oTextNode = $oDOMNode->ownerDocument->createTextNode($value);
+		return implode(',', $value);
+	}
+
+	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode, AbstractValueType $oValueType): void
+	{
+		$oTextNode = $oDOMNode->ownerDocument->createTextNode($normalizedValue);
 		$oDOMNode->appendChild($oTextNode);
 	}
 
@@ -23,13 +28,12 @@ class XMLFormatCSV extends AbstractXMLFormat
 		return $oDOMNode->GetText('');
 	}
 
-	public function Normalize($value, AbstractValueType $oValueType): mixed
-	{
-		return implode(',', $value);
-	}
-
 	public function Denormalize($normalizedValue, AbstractValueType $oValueType): mixed
 	{
-		return explode(',', $normalizedValue);
+		if (is_string($normalizedValue)) {
+			return explode(',', $normalizedValue);
+		}
+
+		return $normalizedValue;
 	}
 }
