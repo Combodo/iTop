@@ -2272,7 +2272,7 @@ class WizStepSummary extends WizardStep
 		$oPage->add('</div>');
 		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Extensions to be uninstalled</span>');
 
-		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true);
+		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true) ?? [];
 		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'));
 		$sExtensionsRemoved = '';
 		if (count($aExtensionsRemoved) > 0) {
