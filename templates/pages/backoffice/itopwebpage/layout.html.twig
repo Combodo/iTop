@@ -2,6 +2,13 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% extends "pages/backoffice/nicewebpage/layout.html.twig" %}
 {% block iboPageBodyHtml %}
+
+    {# TODO 3.3 voir comment injecter propremrent #}
+    <script type="module">
+        import {session} from "{{ aPage.sAbsoluteUrlAppRoot }}/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js";
+        session.drive = false;
+    </script>
+
 		{{ render_block(aLayouts.oNavigationMenu, {aPage: aPage}) }}
 		<div id="ibo-page-container" class="ibo-page-container" data-role="ibo-page-container">
 			<div id="ibo-top-container" class="ibo-top-container" data-role="ibo-top-container">

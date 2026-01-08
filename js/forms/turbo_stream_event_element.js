@@ -20,6 +20,8 @@ class TurboStreamEvent extends HTMLElement {
 			},
 		});
 
+		console.log(event);
+
 		document.dispatchEvent(event);
 	}
 

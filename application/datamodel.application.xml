@@ -853,7 +853,143 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
     </classes>
     <property_types _delta="define">
       <property_type id="Dashlet" xsi:type="Combodo-AbstractPropertyType"/>
-      <property_type id="DashletGroupBy" xsi:type="Combodo-PropertyType">
+      <property_type id="DashletGroupByTable" xsi:type="Combodo-PropertyType">
+        <extends>Dashlet</extends>
+        <definition xsi:type="Combodo-ValueType-PropertyTree">
+          <label>UI:DashletGroupBy:Title</label>
+          <nodes>
+            <node id="title" xsi:type="Combodo-ValueType-Label">
+              <label>UI:DashletGroupBy:Prop-Title</label>
+            </node>
+            <node id="query" xsi:type="Combodo-ValueType-OQL">
+              <label>UI:DashletGroupBy:Prop-Query</label>
+            </node>
+            <node id="group_by" xsi:type="Combodo-ValueType-ClassAttributeGroupBy">
+              <label>UI:DashletGroupBy:Prop-GroupBy</label>
+              <class>{{query.selected_class}}</class>
+            </node>
+            <node id="style" xsi:type="Combodo-ValueType-Choice"> <!-- Possible de le cacher, etc celui-ci nous met dedans -->
+              <label>UI:DashletGroupBy:Prop-Style</label>
+              <values>
+                <value id="bars">
+                  <label>UI:DashletGroupByBars:Label</label>
+                </value>
+                <value id="pie">
+                  <label>UI:DashletGroupByPie:Label</label>
+                </value>
+                <value id="table">
+                  <label>UI:DashletGroupByTable:Label</label>
+                </value>
+              </values>
+            </node>
+            <node id="aggregation_function" xsi:type="Combodo-ValueType-AggregateFunction">
+              <label>UI:DashletGroupBy:Prop-Function</label>
+              <class>{{query.selected_class}}</class> <!-- pour savoir si il y a des attributs additionnables -->
+            </node>
+            <node id="aggregation_attribute" xsi:type="Combodo-ValueType-ClassAttribute">
+              <label>UI:DashletGroupBy:Prop-FunctionAttribute</label>
+              <relevance-condition>{{aggregation_function.value != 'count'}}</relevance-condition>
+              <class>{{query.selected_class}}</class>
+              <category>numeric</category>
+            </node>
+            <node id="order_by" xsi:type="Combodo-ValueType-ChoiceFromInput">
+              <label>UI:DashletGroupBy:Prop-OrderField</label>
+              <values>
+                <value id="attribute">
+                  <label>{{aggregation_attribute.label}}</label>
+                </value>
+                <value id="function">
+                  <label>{{aggregation_function.label}}</label>
+                </value>
+              </values>
+            </node>
+            <node id="limit" xsi:type="Combodo-ValueType-Integer">
+              <label>UI:DashletGroupBy:Prop-Limit</label>
+              <relevance-condition>{{order_by.value = 'function'}}</relevance-condition>
+            </node>
+            <node id="order_direction" xsi:type="Combodo-ValueType-Choice">
+              <label>UI:DashletGroupBy:Prop-OrderDirection</label>
+              <values>
+                <value id="asc">
+                  <label>UI:DashletGroupBy:Order:asc</label>
+                </value>
+                <value id="desc">
+                  <label>UI:DashletGroupBy:Order:desc</label>
+                </value>
+              </values>
+            </node>
+          </nodes>
+        </definition>
+      </property_type>
+      <property_type id="DashletGroupByBars" xsi:type="Combodo-PropertyType">
+        <extends>Dashlet</extends>
+        <definition xsi:type="Combodo-ValueType-PropertyTree">
+          <label>UI:DashletGroupBy:Title</label>
+          <nodes>
+            <node id="title" xsi:type="Combodo-ValueType-Label">
+              <label>UI:DashletGroupBy:Prop-Title</label>
+            </node>
+            <node id="query" xsi:type="Combodo-ValueType-OQL">
+              <label>UI:DashletGroupBy:Prop-Query</label>
+            </node>
+            <node id="group_by" xsi:type="Combodo-ValueType-ClassAttributeGroupBy">
+              <label>UI:DashletGroupBy:Prop-GroupBy</label>
+              <class>{{query.selected_class}}</class>
+            </node>
+            <node id="style" xsi:type="Combodo-ValueType-Choice"> <!-- Possible de le cacher, etc celui-ci nous met dedans -->
+              <label>UI:DashletGroupBy:Prop-Style</label>
+              <values>
+                <value id="bars">
+                  <label>UI:DashletGroupByBars:Label</label>
+                </value>
+                <value id="pie">
+                  <label>UI:DashletGroupByPie:Label</label>
+                </value>
+                <value id="table">
+                  <label>UI:DashletGroupByTable:Label</label>
+                </value>
+              </values>
+            </node>
+            <node id="aggregation_function" xsi:type="Combodo-ValueType-AggregateFunction">
+              <label>UI:DashletGroupBy:Prop-Function</label>
+              <class>{{query.selected_class}}</class> <!-- pour savoir si il y a des attributs additionnables -->
+            </node>
+            <node id="aggregation_attribute" xsi:type="Combodo-ValueType-ClassAttribute">
+              <label>UI:DashletGroupBy:Prop-FunctionAttribute</label>
+              <relevance-condition>{{aggregation_function.value != 'count'}}</relevance-condition>
+              <class>{{query.selected_class}}</class>
+              <category>numeric</category>
+            </node>
+            <node id="order_by" xsi:type="Combodo-ValueType-ChoiceFromInput">
+              <label>UI:DashletGroupBy:Prop-OrderField</label>
+              <values>
+                <value id="attribute">
+                  <label>{{aggregation_attribute.label}}</label>
+                </value>
+                <value id="function">
+                  <label>{{aggregation_function.label}}</label>
+                </value>
+              </values>
+            </node>
+            <node id="limit" xsi:type="Combodo-ValueType-Integer">
+              <label>UI:DashletGroupBy:Prop-Limit</label>
+              <relevance-condition>{{order_by.value = 'function'}}</relevance-condition>
+            </node>
+            <node id="order_direction" xsi:type="Combodo-ValueType-Choice">
+              <label>UI:DashletGroupBy:Prop-OrderDirection</label>
+              <values>
+                <value id="asc">
+                  <label>UI:DashletGroupBy:Order:asc</label>
+                </value>
+                <value id="desc">
+                  <label>UI:DashletGroupBy:Order:desc</label>
+                </value>
+              </values>
+            </node>
+          </nodes>
+        </definition>
+      </property_type>
+      <property_type id="DashletGroupByPie" xsi:type="Combodo-PropertyType">
         <extends>Dashlet</extends>
         <definition xsi:type="Combodo-ValueType-PropertyTree">
           <label>UI:DashletGroupBy:Title</label>
