@@ -45,15 +45,15 @@ class XMLSerializer
 
 	public function SerializeForPropertyType(mixed $value, DesignElement $oParentNode, string $sPropertyTypeXML): void
 	{
-		$oPropertyType = PropertyTypeCompiler::GetInstance()->CompilePropertyTypeFromXML($sPropertyTypeXML);
+		$normalizedValue = XMLNormalizer::GetInstance()->NormalizeForPropertyType($value, $sPropertyTypeXML);
 
-		$oPropertyType->SerializeToDOMNode($value, $oParentNode);
+		XMLEncoder::GetInstance()->EncodeForPropertyType($normalizedValue, $oParentNode, $sPropertyTypeXML);
 	}
 
 	public function UnserializeForPropertyType(DesignElement $oParentNode, string $sPropertyTypeXML): mixed
 	{
-		$oPropertyType = PropertyTypeCompiler::GetInstance()->CompilePropertyTypeFromXML($sPropertyTypeXML);
+		$normalizedValue = XMLEncoder::GetInstance()->DecodeForPropertyType($oParentNode, $sPropertyTypeXML);
 
-		return $oPropertyType->UnserializeFromDOMNode($oParentNode);
+		return XMLNormalizer::GetInstance()->DenormalizeForPropertyType($normalizedValue, $sPropertyTypeXML);
 	}
 }

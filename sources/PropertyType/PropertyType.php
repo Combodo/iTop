@@ -79,4 +79,25 @@ PHP;
 	{
 		return $this->oValueType->UnserializeFromDOMNode($oDOMNode);
 	}
+
+	public function Normalize(mixed $value): mixed
+	{
+		return $this->oValueType->Normalize($value);
+	}
+
+	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode): void
+	{
+		$this->oValueType->EncodeToDOMNode($normalizedValue, $oDOMNode);
+	}
+
+	public function DecodeFromDomNode(DesignElement $oDOMNode): mixed
+	{
+		return $this->oValueType->DecodeFromDomNode($oDOMNode);
+	}
+
+	public function Denormalize(mixed $normalizedValue): mixed
+	{
+		return $this->oValueType->Denormalize($normalizedValue);
+	}
+
 }

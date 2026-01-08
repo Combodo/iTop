@@ -102,4 +102,60 @@ PHP;
 
 		return $aResults;
 	}
+
+	public function Normalize(mixed $value): mixed
+	{
+		$aNormalizedValues = [];
+
+		foreach ($this->aChildren as $oChild) {
+			$sId = $oChild->sId;
+			if (isset($value[$sId])) {
+				$aNormalizedValues[$sId] = $oChild->Normalize($value[$sId]);
+			}
+		}
+
+		return $aNormalizedValues;
+	}
+
+	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode): void
+	{
+		foreach ($this->aChildren as $oChild) {
+			$sId = $oChild->sId;
+			if (isset($normalizedValue[$sId])) {
+				/** @var DesignElement $oChildNode */
+				$oChildNode = $oDOMNode->ownerDocument->createElement($sId);
+				$oDOMNode->appendChild($oChildNode);
+				$oChild->EncodeToDOMNode($normalizedValue[$sId], $oChildNode);
+			}
+		}
+	}
+
+	public function DecodeFromDomNode(DesignElement $oDOMNode): mixed
+	{
+		$aNormalizedValue = [];
+
+		foreach ($this->aChildren as $oChild) {
+			$sId = $oChild->sId;
+			$oChildNode = $oDOMNode->GetOptionalElement($sId);
+			if ($oChildNode) {
+				$aNormalizedValue[$sId] = $oChild->DecodeFromDomNode($oChildNode);
+			}
+		}
+
+		return $aNormalizedValue;
+	}
+
+	public function Denormalize(mixed $normalizedValue): mixed
+	{
+		$aValues = [];
+
+		foreach ($this->aChildren as $oChild) {
+			$sId = $oChild->sId;
+			if (isset($normalizedValue[$sId])) {
+				$aValues[$sId] = $oChild->Denormalize($normalizedValue[$sId]);
+			}
+		}
+
+		return $aValues;
+	}
 }

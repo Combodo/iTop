@@ -233,20 +233,24 @@ PHP;
 		return $this->oParent->GetChild($sId);
 	}
 
-	public function SerializeToDOMNode(mixed $value, DesignElement $oDOMNode): void
+	public function Normalize(mixed $value): mixed
 	{
-		$sXmlValue = $value;
-		$oTextNode = $oDOMNode->ownerDocument->createTextNode($sXmlValue);
+		return $value;
+	}
+
+	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode): void
+	{
+		$oTextNode = $oDOMNode->ownerDocument->createTextNode($normalizedValue);
 		$oDOMNode->appendChild($oTextNode);
 	}
 
-	/**
-	 * @param $oDOMNode
-	 *
-	 * @return mixed
-	 */
-	public function UnserializeFromDOMNode(DesignElement $oDOMNode): mixed
+	public function DecodeFromDomNode(DesignElement $oDOMNode): mixed
 	{
 		return $oDOMNode->GetText();
+	}
+
+	public function Denormalize(mixed $normalizedValue): mixed
+	{
+		return $normalizedValue;
 	}
 }

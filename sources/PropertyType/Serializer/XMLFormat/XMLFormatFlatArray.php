@@ -33,27 +33,6 @@ class XMLFormatFlatArray extends AbstractXMLFormat
 		$this->sCountTag = $sCountTag;
 	}
 
-	public function SerializeToDOMNode($value, $oDOMNode, AbstractValueType $oValueType): void
-	{
-		if (!$oValueType instanceof ValueTypeCollection) {
-			throw new SerializerException('XMLFormatFlatArray is allowed only in ValueTypeCollection nodes');
-		}
-
-		$oCountNode = $oDOMNode->ownerDocument->createElement($this->sCountTag, count($value));
-		$oDOMNode->appendChild($oCountNode);
-		foreach ($value as $iRank => $aValues) {
-			foreach ($oValueType->GetChildren() as $oChild) {
-				$sId = $oChild->GetId();
-				if (isset($aValues[$sId])) {
-					$sTagName = \MetaModel::ApplyParams($this->sTagFormat, ['rank' => $iRank, 'id' => $sId]);
-					$oChildNode = $oDOMNode->ownerDocument->createElement($sTagName);
-					$oDOMNode->appendChild($oChildNode);
-					$oChild->SerializeToDOMNode($aValues[$sId], $oChildNode);
-				}
-			}
-		}
-	}
-
 	public function UnserializeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed
 	{
 		$aResults = [];
@@ -75,5 +54,86 @@ class XMLFormatFlatArray extends AbstractXMLFormat
 		}
 
 		return $aResults;
+	}
+
+	public function Normalize($value, AbstractValueType $oValueType): mixed
+	{
+		if (!$oValueType instanceof ValueTypeCollection) {
+			throw new SerializerException('XMLFormatFlatArray is allowed only in ValueTypeCollection nodes');
+		}
+
+		$aNormalizedValues = [];
+		$aNormalizedValues[$this->sCountTag] = count($value);
+
+		foreach ($value as $iRank => $aValues) {
+			foreach ($oValueType->GetChildren() as $oChild) {
+				$sId = $oChild->GetId();
+				if (isset($aValues[$sId])) {
+					$sTagName = \MetaModel::ApplyParams($this->sTagFormat, ['rank' => $iRank, 'id' => $sId]);
+					$aNormalizedValues[$sTagName] = $oChild->Normalize($aValues[$sId]);
+				}
+			}
+		}
+
+		return $aNormalizedValues;
+	}
+
+	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode, AbstractValueType $oValueType): void
+	{
+		if (!$oValueType instanceof ValueTypeCollection) {
+			throw new SerializerException('XMLFormatFlatArray is allowed only in ValueTypeCollection nodes');
+		}
+
+		foreach ($normalizedValue as $sTag => $value) {
+			$oNode = $oDOMNode->ownerDocument->createElement($sTag, $value);
+			$oDOMNode->appendChild($oNode);
+		}
+	}
+
+	public function DecodeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed
+	{
+		if (!$oValueType instanceof ValueTypeCollection) {
+			throw new SerializerException('XMLFormatFlatArray is allowed only in ValueTypeCollection nodes');
+		}
+
+		$aNormalizedValues = [];
+
+		$iCount = $oDOMNode->GetUniqueElement($this->sCountTag)->GetText(0);
+		$aNormalizedValues[$this->sCountTag] = $iCount;
+
+		for ($iRank = 0; $iRank < $iCount; $iRank++) {
+			foreach ($oValueType->GetChildren() as $oChild) {
+				$sId = $oChild->GetId();
+				$sTagName = \MetaModel::ApplyParams($this->sTagFormat, ['rank' => $iRank, 'id' => $sId]);
+				$oChildNode = $oDOMNode->GetOptionalElement($sTagName);
+				if ($oChildNode) {
+					$aNormalizedValues[$sTagName] = $oChildNode->GetText('');
+				}
+			}
+		}
+
+		return $aNormalizedValues;
+	}
+
+	public function Denormalize($normalizedValue, AbstractValueType $oValueType): mixed
+	{
+		if (!$oValueType instanceof ValueTypeCollection) {
+			throw new SerializerException('XMLFormatFlatArray is allowed only in ValueTypeCollection nodes');
+		}
+
+		$aValues = [];
+
+		$iCount = $normalizedValue[$this->sCountTag];
+		for ($iRank = 0; $iRank < $iCount; $iRank++) {
+			foreach ($oValueType->GetChildren() as $oChild) {
+				$sId = $oChild->GetId();
+				$sTagName = \MetaModel::ApplyParams($this->sTagFormat, ['rank' => $iRank, 'id' => $sId]);
+				if (isset($normalizedValue[$sTagName])) {
+					$aValues[$iRank][$sId] = $normalizedValue[$sTagName];
+				}
+			}
+		}
+
+		return $aValues;
 	}
 }

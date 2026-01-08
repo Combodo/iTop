@@ -45,4 +45,35 @@ class XMLFormatValueAsId extends AbstractXMLFormat
 
 		return $aResult;
 	}
+
+	public function Normalize($value, AbstractValueType $oValueType): mixed
+	{
+		return $value;
+	}
+
+	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode, AbstractValueType $oValueType): void
+	{
+		foreach ($normalizedValue as $item) {
+			$oChildNode = $oDOMNode->ownerDocument->createElement($this->sTagName);
+			$oChildNode->setAttribute('id', "$item");
+			$oDOMNode->appendChild($oChildNode);
+		}
+	}
+
+	public function DecodeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed
+	{
+		$aResult = [];
+
+		foreach ($oDOMNode->getElementsByTagName($this->sTagName) as $oNode) {
+			$sValue = $oNode->getAttribute('id');
+			$aResult[] = $sValue;
+		}
+
+		return $aResult;
+	}
+
+	public function Denormalize($normalizedValue, AbstractValueType $oValueType): mixed
+	{
+		return $normalizedValue;
+	}
 }
