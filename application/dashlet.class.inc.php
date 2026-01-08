@@ -26,6 +26,7 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\PropertyType\Serializer\XMLNormalizer;
 use Combodo\iTop\PropertyType\Serializer\XMLSerializer;
 
 require_once(APPROOT.'application/forms.class.inc.php');
@@ -124,15 +125,13 @@ abstract class Dashlet
 	 */
 	public function FromDOMNode(DesignElement $oDOMNode)
 	{
-		/* @var DesignElement $oDOMNode */
-		$this->aNormalizedProperties = XMLSerializer::GetInstance()->Unserialize($oDOMNode, get_class($this), 'Dashlet');
-
 		foreach ($this->aProperties as $sProperty => $value) {
 			$oPropNode = $oDOMNode->getElementsByTagName($sProperty)->item(0);
 			if ($oPropNode != null) {
 				$this->aProperties[$sProperty] = $this->PropertyFromDOMNode($oPropNode, $sProperty);
 			}
 		}
+		$this->aNormalizedProperties = XMLNormalizer::GetInstance()->Denormalize($this->aProperties, get_class($this), 'Dashlet');
 		$this->OnUpdate();
 	}
 
@@ -254,20 +253,17 @@ abstract class Dashlet
 				$oBlock = $this->RenderNoData($oPage, $bEditMode, $aExtraParams);
 			}
 			$oDashletContainer->AddSubBlock($oBlock);
-		}
-		catch (UnknownClassOqlException $e) {
+		} catch (UnknownClassOqlException $e) {
 			// Maybe the class is part of a non-installed module, fail silently
 			// Except in Edit mode
 			if ($bEditMode) {
 				$oDashletContainer->AddCSSClass("dashlet-content");
 				$oDashletContainer->AddHtml('<h2>'.$e->GetUserFriendlyDescription().'</h2>');
 			}
-		}
-		catch (OqlException $e) {
+		} catch (OqlException $e) {
 			$oDashletContainer->AddCSSClass("dashlet-content");
 			$oDashletContainer->AddHtml('<p>'.utils::HtmlEntities($e->GetUserFriendlyDescription()).'</p>');
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$oDashletContainer->AddCSSClass("dashlet-content");
 			$oDashletContainer->AddHtml('<p>'.$e->getMessage().'</p>');
 		}
@@ -489,8 +485,7 @@ EOF
 				}
 			}
 			asort($aGroupBy);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			// Fallback in case of OQL problem
 		}
 
@@ -512,7 +507,7 @@ EOF
 	{
 		$this->sDashletType = $sDashletType;
 	}
-	
+
 	public function GetNormalizedProperties(): ?array
 	{
 		return $this->aNormalizedProperties;
@@ -1111,8 +1106,7 @@ abstract class DashletGroupBy extends Dashlet
 			$oQuery = $this->oModelReflection->GetQuery($sQuery);
 			$this->sClass = $oQuery->GetClass();
 			$sClassAlias = $oQuery->GetClassAlias();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			// Invalid query, let the user edit the dashlet/dashboard anyhow
 			$this->sClass = null;
 			$sClassAlias = '';
@@ -1371,8 +1365,7 @@ abstract class DashletGroupBy extends Dashlet
 			$oField = new DesignerComboField('group_by', Dict::S('UI:DashletGroupBy:Prop-GroupBy'), $this->aProperties['group_by']);
 			$oField->SetMandatory();
 			$oField->SetAllowedValues($aGroupBy);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$oField = new DesignerTextField('group_by', Dict::S('UI:DashletGroupBy:Prop-GroupBy'), $this->aProperties['group_by']);
 			$oField->SetReadOnly();
 			$aGroupBy = [];
@@ -1502,8 +1495,7 @@ abstract class DashletGroupBy extends Dashlet
 						break;
 				}
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			// In case the OQL is bad
 		}
 
@@ -1530,8 +1522,7 @@ abstract class DashletGroupBy extends Dashlet
 					// wrong but not necessary - unset($aUpdatedFields['group_by']);
 					$this->aProperties['group_by'] = '';
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$this->bFormRedrawNeeded = true;
 			}
 		}
@@ -2117,8 +2108,7 @@ class DashletHeaderDynamic extends Dashlet
 			foreach ($aValues as $sValue) {
 				$aValueLabels[] = $this->oModelReflection->GetValueLabel($sClass, $sGroupBy, $sValue);
 			}
-		}
-		catch (UnknownClassOqlException $e) {
+		} catch (UnknownClassOqlException $e) {
 			$aValueLabels[] = $e->GetUserFriendlyDescription();
 			$aValues[] = 1;
 		}
@@ -2195,8 +2185,7 @@ class DashletHeaderDynamic extends Dashlet
 			$oField = new DesignerComboField('group_by', Dict::S('UI:DashletHeaderDynamic:Prop-GroupBy'), $this->aProperties['group_by']);
 			$oField->SetMandatory();
 			$oField->SetAllowedValues($aGroupBy);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$oField = new DesignerTextField('group_by', Dict::S('UI:DashletHeaderDynamic:Prop-GroupBy'), $this->aProperties['group_by']);
 			$oField->SetReadOnly();
 		}
@@ -2234,8 +2223,7 @@ class DashletHeaderDynamic extends Dashlet
 					$this->aProperties['group_by'] = '';
 					$this->aProperties['values'] = [];
 				}
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$this->bFormRedrawNeeded = true;
 			}
 		}
