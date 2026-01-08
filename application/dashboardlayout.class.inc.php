@@ -43,8 +43,8 @@ abstract class DashboardLayout
 	public static function GetInfo()
 	{
 		return [
-			'label' => '',
-			'icon' => '',
+			'label'       => '',
+			'icon'        => '',
 			'description' => '',
 		];
 	}
@@ -74,6 +74,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 			}
 			$idx++;
 		}
+
 		return $aDashlets;
 	}
 
@@ -94,6 +95,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 			}
 			$idx++;
 		}
+
 		return $aCells;
 
 	}
@@ -135,7 +137,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 						/** @var \Dashlet $oDashlet */
 						foreach ($aDashlets as $oDashlet) {
 							if ($oDashlet::IsVisible()) {
-								$oDashboardGrid->AddDashlet($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams), $oDashlet->GetID(), get_class($oDashlet));
+								$oDashboardGrid->AddDashlet($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams), $oDashlet->GetID(), get_class($oDashlet), $oDashlet->GetNormalizedProperties());
 								//$oDashboardColumn->AddUIBlock($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams));
 							}
 						}
@@ -172,8 +174,8 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 	 */
 	public function GetDashletCoordinates($iCellIdx)
 	{
-		$iColNumber = (int) $iCellIdx % $this->iNbCols;
-		$iRowNumber = (int) floor($iCellIdx / $this->iNbCols);
+		$iColNumber = (int)$iCellIdx % $this->iNbCols;
+		$iRowNumber = (int)floor($iCellIdx / $this->iNbCols);
 
 		return [$iColNumber, $iRowNumber];
 	}
@@ -186,11 +188,12 @@ class DashboardLayoutOneCol extends DashboardLayoutMultiCol
 		parent::__construct();
 		$this->iNbCols = 1;
 	}
+
 	public static function GetInfo()
 	{
 		return [
-			'label' => 'One Column',
-			'icon' => 'images/layout_1col.png',
+			'label'       => 'One Column',
+			'icon'        => 'images/layout_1col.png',
 			'description' => '',
 		];
 	}
@@ -203,11 +206,12 @@ class DashboardLayoutTwoCols extends DashboardLayoutMultiCol
 		parent::__construct();
 		$this->iNbCols = 2;
 	}
+
 	public static function GetInfo()
 	{
 		return [
-			'label' => 'Two Columns',
-			'icon' =>  'images/layout_2col.png',
+			'label'       => 'Two Columns',
+			'icon'        => 'images/layout_2col.png',
 			'description' => '',
 		];
 	}
@@ -220,11 +224,12 @@ class DashboardLayoutThreeCols extends DashboardLayoutMultiCol
 		parent::__construct();
 		$this->iNbCols = 3;
 	}
+
 	public static function GetInfo()
 	{
 		return [
-			'label' => 'Two Columns',
-			'icon' =>  'images/layout_3col.png',
+			'label'       => 'Two Columns',
+			'icon'        => 'images/layout_3col.png',
 			'description' => '',
 		];
 	}

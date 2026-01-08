@@ -25,6 +25,8 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\DesignElement;
+use Combodo\iTop\PropertyType\Serializer\XMLSerializer;
 
 require_once(APPROOT.'application/forms.class.inc.php');
 
@@ -46,6 +48,7 @@ abstract class Dashlet
 	protected $aProperties; // array of {property => value}
 	protected $aCSSClasses;
 	protected $sDashletType;
+	private $aNormalizedProperties = null; // array of properties from serialized form
 
 	/**
 	 * Dashlet constructor.
@@ -90,6 +93,7 @@ abstract class Dashlet
 			$ret = $sValue;
 			settype($ret, $sRefType);
 		}
+
 		return $ret;
 	}
 
@@ -106,8 +110,9 @@ abstract class Dashlet
 		} elseif ($sType == 'array') {
 			$sRet = implode(',', $value);
 		} else {
-			$sRet = (string) $value;
+			$sRet = (string)$value;
 		}
+
 		return $sRet;
 	}
 
@@ -116,10 +121,12 @@ abstract class Dashlet
 	}
 
 	/**
-	 * @param \DOMElement $oDOMNode
 	 */
-	public function FromDOMNode($oDOMNode)
+	public function FromDOMNode(DesignElement $oDOMNode)
 	{
+		/* @var DesignElement $oDOMNode */
+		$this->aNormalizedProperties = XMLSerializer::GetInstance()->Unserialize($oDOMNode, get_class($this), 'Dashlet');
+
 		foreach ($this->aProperties as $sProperty => $value) {
 			$oPropNode = $oDOMNode->getElementsByTagName($sProperty)->item(0);
 			if ($oPropNode != null) {
@@ -150,6 +157,7 @@ abstract class Dashlet
 	protected function PropertyFromDOMNode($oDOMNode, $sProperty)
 	{
 		$res = $this->Str2Prop($sProperty, $oDOMNode->textContent);
+
 		return $res;
 	}
 
@@ -246,17 +254,20 @@ abstract class Dashlet
 				$oBlock = $this->RenderNoData($oPage, $bEditMode, $aExtraParams);
 			}
 			$oDashletContainer->AddSubBlock($oBlock);
-		} catch (UnknownClassOqlException $e) {
+		}
+		catch (UnknownClassOqlException $e) {
 			// Maybe the class is part of a non-installed module, fail silently
 			// Except in Edit mode
 			if ($bEditMode) {
 				$oDashletContainer->AddCSSClass("dashlet-content");
 				$oDashletContainer->AddHtml('<h2>'.$e->GetUserFriendlyDescription().'</h2>');
 			}
-		} catch (OqlException $e) {
+		}
+		catch (OqlException $e) {
 			$oDashletContainer->AddCSSClass("dashlet-content");
 			$oDashletContainer->AddHtml('<p>'.utils::HtmlEntities($e->GetUserFriendlyDescription()).'</p>');
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			$oDashletContainer->AddCSSClass("dashlet-content");
 			$oDashletContainer->AddHtml('<p>'.$e->getMessage().'</p>');
 		}
@@ -342,6 +353,7 @@ EOF
 			}
 		}
 		$this->OnUpdate();
+
 		return $this;
 	}
 
@@ -367,8 +379,8 @@ EOF
 	public static function GetInfo()
 	{
 		return [
-			'label' => '',
-			'icon' => '',
+			'label'       => '',
+			'icon'        => '',
 			'description' => '',
 		];
 	}
@@ -477,9 +489,11 @@ EOF
 				}
 			}
 			asort($aGroupBy);
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			// Fallback in case of OQL problem
 		}
+
 		return $aGroupBy;
 	}
 
@@ -497,6 +511,11 @@ EOF
 	public function SetDashletType($sDashletType)
 	{
 		$this->sDashletType = $sDashletType;
+	}
+	
+	public function GetNormalizedProperties(): ?array
+	{
+		return $this->aNormalizedProperties;
 	}
 }
 
@@ -635,6 +654,7 @@ class DashletUnknown extends Dashlet
 		if (isset($aInfo['configuration']) && empty($this->sOriginalDashletXML)) {
 			$this->sOriginalDashletXML = $aInfo['configuration'];
 		}
+
 		return parent::GetForm($aInfo);
 	}
 
@@ -663,6 +683,7 @@ class DashletUnknown extends Dashlet
 		if ($bHasSubProperties) {
 			$sTmp = $oDOMNode->ownerDocument->saveXML($oDOMNode, LIBXML_NOENT);
 			$sTmp = trim(preg_replace("/(<".$oDOMNode->tagName."[^>]*>|<\/".$oDOMNode->tagName.">)/", "", $sTmp));
+
 			return $sTmp;
 		} else {
 			return parent::PropertyFromDOMNode($oDOMNode, $sProperty);
@@ -693,6 +714,7 @@ class DashletUnknown extends Dashlet
 	public function Update($aValues, $aUpdatedFields)
 	{
 		$this->FromParams($aValues);
+
 		// OnUpdate() already done in FromParams()
 		return $this;
 	}
@@ -703,8 +725,8 @@ class DashletUnknown extends Dashlet
 	public static function GetInfo()
 	{
 		return [
-			'label' => Dict::S('UI:DashletUnknown:Label'),
-			'icon' => 'images/dashlet-unknown.png',
+			'label'       => Dict::S('UI:DashletUnknown:Label'),
+			'icon'        => 'images/dashlet-unknown.png',
 			'description' => Dict::S('UI:DashletUnknown:Description'),
 		];
 	}
@@ -735,6 +757,7 @@ class DashletProxy extends DashletUnknown
 		// This should never be called.
 		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 		$oDashletContainer->AddHtml('<div>This dashlet is not supposed to be rendered as it is just a proxy for third-party widgets.</div>');
+
 		return $oDashletContainer;
 	}
 
@@ -757,6 +780,7 @@ class DashletProxy extends DashletUnknown
 		$sHtml .= '<div class="dashlet-pxy-text">'.$sExplainText.'</div>';
 
 		$oDashletContainer->AddHtml($sHtml);
+
 		return $oDashletContainer;
 	}
 
@@ -766,8 +790,8 @@ class DashletProxy extends DashletUnknown
 	public static function GetInfo()
 	{
 		return [
-			'label' => Dict::S('UI:DashletProxy:Label'),
-			'icon' => 'images/dashlet-proxy.png',
+			'label'       => Dict::S('UI:DashletProxy:Label'),
+			'icon'        => 'images/dashlet-proxy.png',
 			'description' => Dict::S('UI:DashletProxy:Description'),
 		];
 	}
@@ -804,8 +828,8 @@ class DashletEmptyCell extends Dashlet
 	public static function GetInfo()
 	{
 		return [
-			'label' => 'Empty Cell',
-			'icon' => 'images/dashlet-text.png',
+			'label'       => 'Empty Cell',
+			'icon'        => 'images/dashlet-text.png',
 			'description' => 'Empty Cell Dashlet Placeholder',
 		];
 	}
@@ -860,8 +884,8 @@ class DashletPlainText extends Dashlet
 	public static function GetInfo()
 	{
 		return [
-			'label' => Dict::S('UI:DashletPlainText:Label'),
-			'icon' => 'images/dashlets/icons8-text-box-48.png',
+			'label'       => Dict::S('UI:DashletPlainText:Label'),
+			'icon'        => 'images/dashlets/icons8-text-box-48.png',
 			'description' => Dict::S('UI:DashletPlainText:Description'),
 		];
 	}
@@ -898,12 +922,12 @@ class DashletObjectList extends Dashlet
 
 		$oBlock = new DisplayBlock($oFilter, 'list');
 		$aParams = [
-			'menu' => $sShowMenu,
-			'table_id' => self::APPUSERPREFERENCES_PREFIX.$this->sId,
+			'menu'                => $sShowMenu,
+			'table_id'            => self::APPUSERPREFERENCES_PREFIX.$this->sId,
 			'surround_with_panel' => true,
-			'max_height' => '500px',
-			"panel_title" => Dict::S($sTitle),
-			"panel_class" => $sClass,
+			'max_height'          => '500px',
+			"panel_title"         => Dict::S($sTitle),
+			"panel_class"         => $sClass,
 		];
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
 		//$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
@@ -989,13 +1013,13 @@ HTML;
 	public static function GetInfo()
 	{
 		return [
-			'label' => Dict::S('UI:DashletObjectList:Label'),
-			'icon' => 'images/dashlets/icons8-list-48.png',
-			'description' => Dict::S('UI:DashletObjectList:Description'),
-			'min_height' => 1,
-			'min_width' => 2,
-			'preferred_width' => 4,
-			'preferred_height' => 3
+			'label'            => Dict::S('UI:DashletObjectList:Label'),
+			'icon'             => 'images/dashlets/icons8-list-48.png',
+			'description'      => Dict::S('UI:DashletObjectList:Description'),
+			'min_height'       => 1,
+			'min_width'        => 2,
+			'preferred_width'  => 4,
+			'preferred_height' => 3,
 		];
 	}
 
@@ -1087,7 +1111,8 @@ abstract class DashletGroupBy extends Dashlet
 			$oQuery = $this->oModelReflection->GetQuery($sQuery);
 			$this->sClass = $oQuery->GetClass();
 			$sClassAlias = $oQuery->GetClassAlias();
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			// Invalid query, let the user edit the dashlet/dashboard anyhow
 			$this->sClass = null;
 			$sClassAlias = '';
@@ -1186,15 +1211,15 @@ abstract class DashletGroupBy extends Dashlet
 			case 'bars':
 				$sType = 'chart';
 				$aParams = [
-					'chart_type' => 'bars',
-					'chart_title' => $sTitle,
-					'group_by' => $this->sGroupByExpr,
-					'group_by_label' => $this->sGroupByLabel,
-					'aggregation_function' => $this->sAggregationFunction,
+					'chart_type'            => 'bars',
+					'chart_title'           => $sTitle,
+					'group_by'              => $this->sGroupByExpr,
+					'group_by_label'        => $this->sGroupByLabel,
+					'aggregation_function'  => $this->sAggregationFunction,
 					'aggregation_attribute' => $this->sAggregationAttribute,
-					'limit' => $this->sLimit,
-					'order_direction' => $this->sOrderDirection,
-					'order_by' => $this->sOrderBy,
+					'limit'                 => $this->sLimit,
+					'order_direction'       => $this->sOrderDirection,
+					'order_by'              => $this->sOrderBy,
 				];
 				$sHtmlTitle = ''; // done in the itop block
 				break;
@@ -1202,15 +1227,15 @@ abstract class DashletGroupBy extends Dashlet
 			case 'pie':
 				$sType = 'chart';
 				$aParams = [
-					'chart_type' => 'pie',
-					'chart_title' => $sTitle,
-					'group_by' => $this->sGroupByExpr,
-					'group_by_label' => $this->sGroupByLabel,
-					'aggregation_function' => $this->sAggregationFunction,
+					'chart_type'            => 'pie',
+					'chart_title'           => $sTitle,
+					'group_by'              => $this->sGroupByExpr,
+					'group_by_label'        => $this->sGroupByLabel,
+					'aggregation_function'  => $this->sAggregationFunction,
 					'aggregation_attribute' => $this->sAggregationAttribute,
-					'limit' => $this->sLimit,
-					'order_direction' => $this->sOrderDirection,
-					'order_by' => $this->sOrderBy,
+					'limit'                 => $this->sLimit,
+					'order_direction'       => $this->sOrderDirection,
+					'order_by'              => $this->sOrderBy,
 				];
 				$sHtmlTitle = ''; // done in the itop block
 				break;
@@ -1220,13 +1245,13 @@ abstract class DashletGroupBy extends Dashlet
 				$sHtmlTitle = utils::HtmlEntities(Dict::S($sTitle)); // done in the itop block
 				$sType = 'count';
 				$aParams = [
-					'group_by' => $this->sGroupByExpr,
-					'group_by_label' => $this->sGroupByLabel,
-					'aggregation_function' => $this->sAggregationFunction,
+					'group_by'              => $this->sGroupByExpr,
+					'group_by_label'        => $this->sGroupByLabel,
+					'aggregation_function'  => $this->sAggregationFunction,
 					'aggregation_attribute' => $this->sAggregationAttribute,
-					'limit' => $this->sLimit,
-					'order_direction' => $this->sOrderDirection,
-					'order_by' => $this->sOrderBy,
+					'limit'                 => $this->sLimit,
+					'order_direction'       => $this->sOrderDirection,
+					'order_by'              => $this->sOrderBy,
 				];
 				break;
 		}
@@ -1297,7 +1322,7 @@ abstract class DashletGroupBy extends Dashlet
 				$aAllowed = $this->oModelReflection->GetAllowedValues_att($sClass, $this->sGroupByAttCode);
 				if ($aAllowed) { // null for non enums
 					foreach ($aAllowed as $sValue => $sValueLabel) {
-						$iCount = (int) rand(2, 100);
+						$iCount = (int)rand(2, 100);
 						$aDisplayValues[] = [
 							'label' => $sValueLabel,
 							'value' => $iCount,
@@ -1310,6 +1335,7 @@ abstract class DashletGroupBy extends Dashlet
 				$aDisplayValues[] = ['label' => 'c', 'value' => 456];
 			}
 		}
+
 		return $aDisplayValues;
 	}
 
@@ -1320,6 +1346,7 @@ abstract class DashletGroupBy extends Dashlet
 	{
 		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 		$oDashletContainer->AddHtml('error!');
+
 		return $oDashletContainer;
 	}
 
@@ -1344,7 +1371,8 @@ abstract class DashletGroupBy extends Dashlet
 			$oField = new DesignerComboField('group_by', Dict::S('UI:DashletGroupBy:Prop-GroupBy'), $this->aProperties['group_by']);
 			$oField->SetMandatory();
 			$oField->SetAllowedValues($aGroupBy);
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			$oField = new DesignerTextField('group_by', Dict::S('UI:DashletGroupBy:Prop-GroupBy'), $this->aProperties['group_by']);
 			$oField->SetReadOnly();
 			$aGroupBy = [];
@@ -1352,8 +1380,8 @@ abstract class DashletGroupBy extends Dashlet
 		$oForm->AddField($oField);
 
 		$aStyles = [
-			'pie' => Dict::S('UI:DashletGroupByPie:Label'),
-			'bars' => Dict::S('UI:DashletGroupByBars:Label'),
+			'pie'   => Dict::S('UI:DashletGroupByPie:Label'),
+			'bars'  => Dict::S('UI:DashletGroupByBars:Label'),
 			'table' => Dict::S('UI:DashletGroupByTable:Label'),
 		];
 
@@ -1403,9 +1431,9 @@ abstract class DashletGroupBy extends Dashlet
 		}
 
 		$aOrderDirections = [
-			'asc' => Dict::S('UI:DashletGroupBy:Order:asc'),
+			'asc'  => Dict::S('UI:DashletGroupBy:Order:asc'),
 			'desc' => Dict::S('UI:DashletGroupBy:Order:desc'),
-			];
+		];
 		$sOrderDirection = empty($this->aProperties['order_direction']) ? $this->sOrderDirection : $this->aProperties['order_direction'];
 		$oField = new DesignerComboField('order_direction', Dict::S('UI:DashletGroupBy:Prop-OrderDirection'), $sOrderDirection);
 		$oField->SetMandatory();
@@ -1422,9 +1450,11 @@ abstract class DashletGroupBy extends Dashlet
 		if (is_null($this->sClass)) {
 			return [];
 		}
+
 		return [
-			$this->aProperties['group_by'] => $this->oModelReflection->GetLabel($this->sClass, $this->aProperties['group_by']),
-			'_itop_'.$this->aProperties['aggregation_function'].'_' => Dict::S('UI:GroupBy:'.$this->aProperties['aggregation_function'])];
+			$this->aProperties['group_by']                          => $this->oModelReflection->GetLabel($this->sClass, $this->aProperties['group_by']),
+			'_itop_'.$this->aProperties['aggregation_function'].'_' => Dict::S('UI:GroupBy:'.$this->aProperties['aggregation_function']),
+		];
 	}
 
 	/**
@@ -1472,7 +1502,8 @@ abstract class DashletGroupBy extends Dashlet
 						break;
 				}
 			}
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			// In case the OQL is bad
 		}
 
@@ -1499,7 +1530,8 @@ abstract class DashletGroupBy extends Dashlet
 					// wrong but not necessary - unset($aUpdatedFields['group_by']);
 					$this->aProperties['group_by'] = '';
 				}
-			} catch (Exception $e) {
+			}
+			catch (Exception $e) {
 				$this->bFormRedrawNeeded = true;
 			}
 		}
@@ -1531,6 +1563,7 @@ abstract class DashletGroupBy extends Dashlet
 			$oDashlet->bRedrawNeeded = true;
 			$oDashlet->bFormRedrawNeeded = true;
 		}
+
 		return $oDashlet;
 	}
 
@@ -1541,8 +1574,8 @@ abstract class DashletGroupBy extends Dashlet
 	{
 		// Note: no need to translate, should never be visible to the end-user!
 		return [
-			'label' => 'Objects grouped by...',
-			'icon' => 'images/dashlets/icons8-transaction-list-48.png',
+			'label'       => 'Objects grouped by...',
+			'icon'        => 'images/dashlets/icons8-transaction-list-48.png',
 			'description' => 'Grouped objects dashlet (abstract)',
 		];
 	}
@@ -1604,13 +1637,13 @@ class DashletGroupByPie extends DashletGroupBy
 	public static function GetInfo()
 	{
 		return [
-			'label' => Dict::S('UI:DashletGroupByPie:Label'),
-			'icon' => 'images/dashlets/icons8-pie-chart-48.png',
-			'description' => Dict::S('UI:DashletGroupByPie:Description'),
-			'min_height' => 2,
-			'min_width' => 2,
-			'preferred_width' => 3,
-			'preferred_height' => 3
+			'label'            => Dict::S('UI:DashletGroupByPie:Label'),
+			'icon'             => 'images/dashlets/icons8-pie-chart-48.png',
+			'description'      => Dict::S('UI:DashletGroupByPie:Description'),
+			'min_height'       => 2,
+			'min_width'        => 2,
+			'preferred_width'  => 3,
+			'preferred_height' => 3,
 		];
 	}
 
@@ -1704,13 +1737,13 @@ class DashletGroupByBars extends DashletGroupBy
 	public static function GetInfo()
 	{
 		return [
-			'label' => Dict::S('UI:DashletGroupByBars:Label'),
-			'icon' => 'images/dashlets/icons8-bar-chart-48.png',
-			'description' => Dict::S('UI:DashletGroupByBars:Description'),
-			'min_height' => 2,
-			'min_width' => 2,
-			'preferred_width' => 3,
-			'preferred_height' => 3
+			'label'            => Dict::S('UI:DashletGroupByBars:Label'),
+			'icon'             => 'images/dashlets/icons8-bar-chart-48.png',
+			'description'      => Dict::S('UI:DashletGroupByBars:Description'),
+			'min_height'       => 2,
+			'min_width'        => 2,
+			'preferred_width'  => 3,
+			'preferred_height' => 3,
 		];
 	}
 
@@ -1808,13 +1841,13 @@ class DashletGroupByTable extends DashletGroupBy
 	public static function GetInfo()
 	{
 		return [
-			'label' => Dict::S('UI:DashletGroupByTable:Label'),
-			'description' => Dict::S('UI:DashletGroupByTable:Description'),
-			'icon' => 'images/dashlets/icons8-transaction-list-48.png',
-			'min_height' => 2,
-			'min_width' => 2,
-			'preferred_width' => 3,
-			'preferred_height' => 3
+			'label'            => Dict::S('UI:DashletGroupByTable:Label'),
+			'description'      => Dict::S('UI:DashletGroupByTable:Description'),
+			'icon'             => 'images/dashlets/icons8-transaction-list-48.png',
+			'min_height'       => 2,
+			'min_width'        => 2,
+			'preferred_width'  => 3,
+			'preferred_height' => 3,
 		];
 	}
 
@@ -1913,6 +1946,7 @@ class DashletHeaderStatic extends Dashlet
 	{
 		if ($sProperty == 'icon') {
 			$oIconField = $this->oModelReflection->GetIconSelectionField('icon');
+
 			return $oIconField->ValueFromDOMNode($oDOMNode);
 		} else {
 			return parent::PropertyFromDOMNode($oDOMNode, $sProperty);
@@ -1938,13 +1972,13 @@ class DashletHeaderStatic extends Dashlet
 	public static function GetInfo()
 	{
 		return [
-			'label' => Dict::S('UI:DashletHeaderStatic:Label'),
-			'icon' => 'images/dashlets/icons8-header-48.png',
-			'description' => Dict::S('UI:DashletHeaderStatic:Description'),
-			'min_height' => 1,
-			'min_width' => 3,
-			'preferred_width' => 3,
-			'preferred_height' => 1
+			'label'            => Dict::S('UI:DashletHeaderStatic:Label'),
+			'icon'             => 'images/dashlets/icons8-header-48.png',
+			'description'      => Dict::S('UI:DashletHeaderStatic:Description'),
+			'min_height'       => 1,
+			'min_width'        => 3,
+			'preferred_width'  => 3,
+			'preferred_height' => 1,
 		];
 	}
 }
@@ -1990,6 +2024,7 @@ class DashletHeaderDynamic extends Dashlet
 				}
 			}
 		}
+
 		return $aValues;
 	}
 
@@ -2018,17 +2053,17 @@ class DashletHeaderDynamic extends Dashlet
 			// Stats grouped by <group_by>
 			$sCSV = implode(',', $aValues);
 			$aParams = [
-				'title[block]' => $sTitle,
-				'label[block]' => $sSubtitle,
-				'status[block]' => $sGroupBy,
+				'title[block]'        => $sTitle,
+				'label[block]'        => $sSubtitle,
+				'status[block]'       => $sGroupBy,
 				'status_codes[block]' => $sCSV,
-				'context_filter' => 1,
+				'context_filter'      => 1,
 			];
 		} else {
 			// Simple stats
 			$aParams = [
-				'title[block]' => $sTitle,
-				'label[block]' => $sSubtitle,
+				'title[block]'   => $sTitle,
+				'label[block]'   => $sSubtitle,
 				'context_filter' => 1,
 			];
 		}
@@ -2082,7 +2117,8 @@ class DashletHeaderDynamic extends Dashlet
 			foreach ($aValues as $sValue) {
 				$aValueLabels[] = $this->oModelReflection->GetValueLabel($sClass, $sGroupBy, $sValue);
 			}
-		} catch (UnknownClassOqlException $e) {
+		}
+		catch (UnknownClassOqlException $e) {
 			$aValueLabels[] = $e->GetUserFriendlyDescription();
 			$aValues[] = 1;
 		}
@@ -2159,7 +2195,8 @@ class DashletHeaderDynamic extends Dashlet
 			$oField = new DesignerComboField('group_by', Dict::S('UI:DashletHeaderDynamic:Prop-GroupBy'), $this->aProperties['group_by']);
 			$oField->SetMandatory();
 			$oField->SetAllowedValues($aGroupBy);
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			$oField = new DesignerTextField('group_by', Dict::S('UI:DashletHeaderDynamic:Prop-GroupBy'), $this->aProperties['group_by']);
 			$oField->SetReadOnly();
 		}
@@ -2197,7 +2234,8 @@ class DashletHeaderDynamic extends Dashlet
 					$this->aProperties['group_by'] = '';
 					$this->aProperties['values'] = [];
 				}
-			} catch (Exception $e) {
+			}
+			catch (Exception $e) {
 				$this->bFormRedrawNeeded = true;
 			}
 		}
@@ -2205,6 +2243,7 @@ class DashletHeaderDynamic extends Dashlet
 			$this->bFormRedrawNeeded = true;
 			$this->aProperties['values'] = [];
 		}
+
 		return parent::Update($aValues, $aUpdatedFields);
 	}
 
@@ -2215,6 +2254,7 @@ class DashletHeaderDynamic extends Dashlet
 	{
 		if ($sProperty == 'icon') {
 			$oIconField = $this->oModelReflection->GetIconSelectionField('icon');
+
 			return $oIconField->ValueFromDOMNode($oDOMNode);
 		} else {
 			return parent::PropertyFromDOMNode($oDOMNode, $sProperty);
@@ -2240,13 +2280,13 @@ class DashletHeaderDynamic extends Dashlet
 	public static function GetInfo()
 	{
 		return [
-			'label' => Dict::S('UI:DashletHeaderDynamic:Label'),
-			'icon' => 'images/dashlets/icons8-header-altered-48.png',
-			'description' => Dict::S('UI:DashletHeaderDynamic:Description'),
-			'min_height' => 1,
-			'min_width' => 2,
-			'preferred_width' => 4,
-			'preferred_height' => 3
+			'label'            => Dict::S('UI:DashletHeaderDynamic:Label'),
+			'icon'             => 'images/dashlets/icons8-header-altered-48.png',
+			'description'      => Dict::S('UI:DashletHeaderDynamic:Description'),
+			'min_height'       => 1,
+			'min_width'        => 2,
+			'preferred_width'  => 4,
+			'preferred_height' => 3,
 		];
 	}
 }
@@ -2353,13 +2393,13 @@ HTML;
 	public static function GetInfo()
 	{
 		return [
-			'label' => Dict::S('UI:DashletBadge:Label'),
-			'icon' => 'images/dashlets/icons8-badge-48.png',
-			'description' => Dict::S('UI:DashletBadge:Description'),
-			'min_height' => 1,
-			'min_width' => 2,
-			'preferred_width' => 2,
-			'preferred_height' => 2
+			'label'            => Dict::S('UI:DashletBadge:Label'),
+			'icon'             => 'images/dashlets/icons8-badge-48.png',
+			'description'      => Dict::S('UI:DashletBadge:Description'),
+			'min_height'       => 1,
+			'min_width'        => 2,
+			'preferred_width'  => 2,
+			'preferred_height' => 2,
 		];
 	}
 }

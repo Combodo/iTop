@@ -87,6 +87,7 @@ class IboDashboard extends HTMLElement {
 		const sNewDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.new_dashlet&dashlet_class='+encodeURIComponent(sDashletClass);
 		fetch(sNewDashletUrl)
 			.then(async data => {
+
 				const sDashletId = this.oGrid.AddDashlet(await data.text(), aDashletOptions);
 
 				// TODO 3.3 Either open the dashlet form right away, or just enter edit mode

@@ -38,7 +38,9 @@ class XMLSerializer
 
 	public function Unserialize(DesignElement $oDOMNode, string $sId, string $sType): mixed
 	{
-		return null;
+		$sPropertyTypeXML = PropertyTypeCompiler::GetInstance()->GetXMLContent($sId, $sType);
+
+		return $this->UnserializeForPropertyType($oDOMNode, $sPropertyTypeXML);
 	}
 
 	public function SerializeForPropertyType(mixed $value, DesignElement $oParentNode, string $sPropertyTypeXML): void

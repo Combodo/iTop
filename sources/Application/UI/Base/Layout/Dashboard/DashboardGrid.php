@@ -18,7 +18,7 @@ class DashboardGrid extends UIBlock
 	public const BLOCK_CODE                     = 'ibo-dashboard-grid';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/dashboard/grid/layout';
 
-	public const DEFAULT_JS_FILES_REL_PATH      = [
+	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/layouts/dashboard/dashboard-grid.js',
 	];
 
@@ -53,8 +53,9 @@ class DashboardGrid extends UIBlock
 		return $this;
 	}
 
-	public function AddDashlet(UIBlock $oDashlet, ?string $sDashletId = null, ?string $sDashletClass = null): DashboardGrid {
-		$oWrapper = new DashletWrapper($oDashlet, $sDashletId, $sDashletClass);
+	public function AddDashlet(UIBlock $oDashlet, string $sDashletId, string $sDashletClass, array $aFormViewData): DashboardGrid
+	{
+		$oWrapper = new DashletWrapper($oDashlet, $sDashletClass, $sDashletId, $aFormViewData);
 		$oSlot = new DashboardGridSlot(null, $oWrapper);
 		$this->AddSlot($oSlot);
 

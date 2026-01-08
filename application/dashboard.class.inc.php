@@ -12,6 +12,8 @@ use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\PropertyType\PropertyTypeDesign;
+use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
@@ -24,7 +26,7 @@ require_once(APPROOT.'core/modelreflection.class.inc.php');
  */
 abstract class Dashboard
 {
-	/** @var string $sTitle*/
+	/** @var string $sTitle */
 	protected $sTitle;
 	/** @var bool $bAutoReload */
 	protected $bAutoReload;
@@ -68,7 +70,7 @@ abstract class Dashboard
 	{
 		$this->aCells = []; // reset the content of the dashboard
 		set_error_handler(['Dashboard', 'ErrorHandler']);
-		$oDoc = new DOMDocument();
+		$oDoc = new PropertyTypeDesign();
 		$oDoc->loadXML($sXml);
 		restore_error_handler();
 		$this->FromDOMDocument($oDoc);
@@ -121,7 +123,7 @@ abstract class Dashboard
 					$aDashletOrder = [];
 					/** @var \DOMElement $oDomNode */
 					foreach ($oDashletList as $oDomNode) {
-						$oRank =  $oDomNode->getElementsByTagName('rank')->item(0);
+						$oRank = $oDomNode->getElementsByTagName('rank')->item(0);
 						if ($oRank) {
 							$iRank = (float)$oRank->textContent;
 						}
@@ -215,6 +217,7 @@ abstract class Dashboard
 		$this->ToDOMNode($oMainNode);
 
 		$sXml = $oDoc->saveXML();
+
 		return $sXml;
 	}
 
@@ -279,7 +282,7 @@ abstract class Dashboard
 		}
 		$this->sTitle = $aParams['title'];
 		$this->bAutoReload = $aParams['auto_reload'] == 'true';
-		$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int) $aParams['auto_reload_sec']);
+		$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int)$aParams['auto_reload_sec']);
 
 		foreach ($aParams['cells'] as $aCell) {
 			$aCellDashlets = [];
@@ -640,6 +643,7 @@ JS
 				$iNewId = max($iNewId, (int)$oDashlet->GetID());
 			}
 		}
+
 		return $iNewId + 1;
 	}
 
@@ -674,6 +678,7 @@ JS
 		if (is_subclass_of($sType, 'Dashlet')) {
 			return $sType;
 		}
+
 		return 'DashletUnknown';
 	}
 
@@ -726,6 +731,7 @@ class RuntimeDashboard extends Dashboard
 	{
 		parent::__construct($sId);
 		$this->oMetaModel = new ModelReflectionRuntime();
+		ServiceLocator::GetInstance()->RegisterService('ModelReflection', $this->oMetaModel);
 		$this->bCustomized = false;
 	}
 
@@ -740,6 +746,7 @@ class RuntimeDashboard extends Dashboard
 
 	/**
 	 * @param bool $bCustomized
+	 *
 	 * @since 2.7.0
 	 */
 	public function SetCustomFlag($bCustomized)
@@ -784,6 +791,7 @@ class RuntimeDashboard extends Dashboard
 		utils::PushArchiveMode(false);
 		$oUserDashboard->DBWrite();
 		utils::PopArchiveMode();
+
 		return $bIsNew;
 	}
 
@@ -1059,7 +1067,8 @@ JS
 			$oUDSet = new DBObjectSet($oUDSearch);
 
 			return ($oUDSet->Count() > 0);
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			return false;
 		}
 	}
@@ -1238,7 +1247,7 @@ EOF
 		$sId = json_encode($this->sId);
 		$sLayoutClass = json_encode($this->sLayoutClass);
 		$sAutoReload = $this->bAutoReload ? 'true' : 'false';
-		$sAutoReloadSec = (string) $this->iAutoReloadSec;
+		$sAutoReloadSec = (string)$this->iAutoReloadSec;
 		$sTitle = json_encode($this->sTitle);
 		$sFile = json_encode($this->GetDefinitionFile());
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
@@ -1586,7 +1595,7 @@ JS
 	 */
 	private function UpdateDashletUserPrefs(Dashlet $oDashlet, $sDashletIdOrig, array $aExtraParams)
 	{
-		$bIsDashletWithListPref = ($oDashlet instanceof  DashletObjectList);
+		$bIsDashletWithListPref = ($oDashlet instanceof DashletObjectList);
 		if (!$bIsDashletWithListPref) {
 			return;
 		}
@@ -1630,10 +1639,12 @@ JS
 		try {
 			$oFilter = $oDashlet->GetDBSearch($aExtraParams);
 			$aClassAliases = $oFilter->GetSelectedClasses();
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			//on error, return default value
 			return null;
 		}
+
 		return DataTableSettings::GetAppUserPreferenceKey($aClassAliases, $sDataTableId);
 	}
 }

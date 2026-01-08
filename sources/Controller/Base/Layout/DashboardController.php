@@ -32,7 +32,7 @@ class DashboardController extends AbstractController
 
 			if ($oDashletBlock instanceof iUIBlock) {
 				// Wrap the dashlet
-				$oDashletWrapper = new DashletWrapper($oDashletBlock, $oDashlet->GetID(), $sDashletClass);
+				$oDashletWrapper = new DashletWrapper($oDashletBlock, $sDashletClass, $oDashlet->GetID());
 				$oPage->AddUiBlock($oDashletWrapper);
 			}
 		}
