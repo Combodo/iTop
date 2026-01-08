@@ -194,6 +194,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	public function AddInput(string $sName, string $sType, bool $bIsArray = false): AbstractFormBlock
 	{
 		$this->oIORegister->AddInput($sName, $sType, $bIsArray);
+
 		return $this;
 	}
 
@@ -212,6 +213,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	public function AddInputDependsOn(string $sName, string $sOutputBlockName, string $sOutputName): AbstractFormBlock
 	{
 		$this->oIORegister->AddInputDependsOn($sName, $sOutputBlockName, $sOutputName);
+
 		return $this;
 	}
 
@@ -256,6 +258,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	public function AddOutput(string $sName, string $sType, bool $bIsArray = false, AbstractConverter $oConverter = null): AbstractFormBlock
 	{
 		$this->oIORegister->AddOutput($sName, $sType, $bIsArray, $oConverter);
+
 		return $this;
 	}
 
@@ -339,6 +342,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	public function SetInputValue(string $sInputName, mixed $oValue): AbstractFormBlock
 	{
 		$this->oIORegister->GetInput($sInputName)->SetValue(AbstractFormIO::EVENT_FORM_STATIC, $oValue);
+
 		return $this;
 	}
 
@@ -356,6 +360,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	public function InputDependsOnParent(string $sInputName, string $sParentInputName): AbstractFormBlock
 	{
 		$this->oIORegister->InputDependsOnParent($sInputName, $sParentInputName);
+
 		return $this;
 	}
 
@@ -373,6 +378,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	public function OutputImpactParent(string $sOutputName, string $sParentOutputName): AbstractFormBlock
 	{
 		$this->oIORegister->OutputImpactParent($sOutputName, $sParentOutputName);
+
 		return $this;
 	}
 
@@ -461,8 +467,8 @@ abstract class AbstractFormBlock implements IFormBlock
 	 */
 	public function BindingReceivedEvent(AbstractFormIO $oBlockIO): void
 	{
-		$this->UpdateOptions($this->oOptionsRegister);
 		if ($this->IsInputsDataReady()) {
+			$this->UpdateOptions($this->oOptionsRegister);
 			$this->AllInputsReadyEvent();
 		}
 	}
