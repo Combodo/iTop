@@ -6,7 +6,7 @@
     <class id="AbstractResource" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
-        <comment>/* Resource access control abstraction. Can be herited by abstract resource access control classes. Generally controlled using UR_ACTION_MODIFY access right. */</comment>
+        <comment>/* Resource access control abstraction. Can be inherited by abstract resource access control classes. Generally controlled using UR_ACTION_MODIFY access right. */</comment>
         <abstract>true</abstract>
       </properties>
       <presentation/>
