@@ -1602,7 +1602,7 @@ JS
 			$aDirsToScan[] = $sExtraDir;
 		}
 		$oProductionEnv = new RunTimeEnvironment();
-		$aRemovedExtensionCodes = $oWizard->GetParameter('removed_extensions', []);
+		$aRemovedExtensionCodes = json_decode($oWizard->GetParameter('removed_extensions'), true) ?? [];
 		$oExtensionsMap = new iTopExtensionsMap('production', $aDirsToScan);
 		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
