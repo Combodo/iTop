@@ -49,7 +49,6 @@ abstract class Dashlet
 	protected $aProperties; // array of {property => value}
 	protected $aCSSClasses;
 	protected $sDashletType;
-	private $aNormalizedProperties = null; // array of properties from serialized form
 
 	/**
 	 * Dashlet constructor.
@@ -131,7 +130,6 @@ abstract class Dashlet
 				$this->aProperties[$sProperty] = $this->PropertyFromDOMNode($oPropNode, $sProperty);
 			}
 		}
-		$this->aNormalizedProperties = XMLNormalizer::GetInstance()->Denormalize($this->aProperties, get_class($this), 'Dashlet');
 		$this->OnUpdate();
 	}
 
@@ -510,7 +508,7 @@ EOF
 
 	public function GetNormalizedProperties(): ?array
 	{
-		return $this->aNormalizedProperties;
+		return XMLNormalizer::GetInstance()->Denormalize($this->aProperties, get_class($this), 'Dashlet');
 	}
 }
 
