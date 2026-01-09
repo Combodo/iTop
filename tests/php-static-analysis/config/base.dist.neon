@@ -5,6 +5,7 @@ includes:
 
 parameters:
     level: 0
+    reportUnmatchedIgnoredErrors: false #to ignore baseline lines linked to unknown/removed/moved files
     #phpVersion: null                                           # Explicitly commented as we rather use the detected version from the above include (`php-includes/target-php-version.php`)
     editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'    # Open in PHPStorm as it's Combodo's default IDE
     bootstrapFiles:
