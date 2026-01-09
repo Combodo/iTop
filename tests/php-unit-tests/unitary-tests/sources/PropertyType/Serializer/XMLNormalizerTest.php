@@ -10,19 +10,19 @@ use Combodo\iTop\PropertyType\PropertyTypeDesign;
 use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
-class XMLSerializerTest extends ItopDataTestCase
+class XMLNormalizerTest extends ItopDataTestCase
 {
 	/**
-	 * @dataProvider XMLSerializerProvider
+	 * @dataProvider XMLNormalizerProvider
 	 *
-	 * @param $normalizedValue
+	 * @param $denormalizedValue
 	 * @param string $sPropertyTypeXML
-	 * @param string $sXMLContent
+	 * @param string $normalizedValue
 	 *
 	 * @return void
 	 * @throws \DOMException
 	 */
-	public function testSerializeXML($normalizedValue, string $sPropertyTypeXML, string $sXMLContent)
+	public function testNormalizeXML($denormalizedValue, string $sPropertyTypeXML, $normalizedValue)
 	{
 		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
 
@@ -34,18 +34,16 @@ class XMLSerializerTest extends ItopDataTestCase
 		$oRootNode = $oDOMDocument->createElement('root');
 		$oDOMDocument->appendChild($oRootNode);
 
-		Combodo\iTop\PropertyType\Serializer\XMLSerializer::GetInstance()->SerializeForPropertyType($normalizedValue, $oRootNode, $sPropertyTypeXML);
+		$actualValue = Combodo\iTop\PropertyType\Serializer\XMLNormalizer::GetInstance()->NormalizeForPropertyType($denormalizedValue, $sPropertyTypeXML);
 
-		$sActualXML = $oDOMDocument->saveXML();
-
-		$this->AssertEqualiTopXML($sXMLContent, $sActualXML);
+		$this->assertEquals($normalizedValue, $actualValue);
 	}
 
-	public function XMLSerializerProvider()
+	public function XMLNormalizerProvider()
 	{
 		return [
 			'Basic test should serialize to XML' => [
-				'normalizedValue' => 'text',
+				'denormalizedValue' => 'text',
 				'sPropertyTypeXML' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <property_type id="basic_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
@@ -54,13 +52,10 @@ class XMLSerializerTest extends ItopDataTestCase
     </definition>
 </property_type>
 XML,
-				'sXMLContent' => <<<XML
-<?xml version="1.0"?>
-<root>text</root>
-XML,
+				'normalizedValue' => 'text',
 			],
 			'Collection of values as CSV' => [
-				'normalizedValue' => ['Contact', 'Organization'],
+				'denormalizedValue' => ['Contact', 'Organization'],
 				'sPropertyTypeXML' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <property_type id="basic_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
@@ -72,13 +67,10 @@ XML,
     </definition>
 </property_type>
 XML,
-				'sXMLContent' => <<<XML
-<?xml version="1.0"?>
-<root>Contact,Organization</root>
-XML,
+				'normalizedValue' => ['Contact', 'Organization'],
 			],
 			'Collection of values as id attribute' => [
-				'normalizedValue' => ['Contact', 'Organization'],
+				'denormalizedValue' => ['Contact', 'Organization'],
 				'sPropertyTypeXML' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <property_type id="class_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
@@ -92,16 +84,10 @@ XML,
     </definition>
 </property_type>
 XML,
-				'sXMLContent' => <<<XML
-<?xml version="1.0"?>
-<root>
-	<item id="Contact"/>
-	<item id="Organization"/>
-</root>
-XML,
+				'normalizedValue' => ['Contact', 'Organization'],
 			],
 			'Collection of tree as flat array' => [
-				'normalizedValue' => [
+				'denormalizedValue' => [
 					[
 						'title_property' => 'title_a',
 						'class_property' => 'class_a',
@@ -132,19 +118,16 @@ XML,
     </definition>
 </property_type>
 XML,
-				'sXMLContent' => <<<XML
-<?xml version="1.0"?>
-<root>
-	<item_count>2</item_count>
-	<item_0_title_property>title_a</item_0_title_property>
-	<item_0_class_property>class_a</item_0_class_property>
-	<item_1_title_property>title_b</item_1_title_property>
-	<item_1_class_property>class_b</item_1_class_property>
-</root>
-XML,
+				'normalizedValue' => [
+					'item_count' => 2,
+					'item_0_title_property' => 'title_a',
+					'item_0_class_property' => 'class_a',
+					'item_1_title_property' => 'title_b',
+					'item_1_class_property' => 'class_b',
+				],
 			],
 			'Property tree' => [
-				'normalizedValue' => ['title_property' => 'title', 'class_property' => 'class'],
+				'denormalizedValue' => ['title_property' => 'title', 'class_property' => 'class'],
 				'sPropertyTypeXML' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <property_type id="property_tree_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
@@ -162,19 +145,13 @@ XML,
     </definition>
 </property_type>
 XML,
-				'sXMLContent' => <<<XML
-<?xml version="1.0"?>
-<root>
-	<title_property>title</title_property>
-	<class_property>class</class_property>
-</root>
-XML,
+				'normalizedValue' => ['title_property' => 'title', 'class_property' => 'class'],
 			],
 		];
 	}
 
 	/**
-	 * @dataProvider XMLSerializerProvider
+	 * @dataProvider XMLNormalizerProvider
 	 *
 	 * @param $sInputXMLContent
 	 * @param string $sPropertyTypeXML
@@ -182,17 +159,12 @@ XML,
 	 *
 	 * @return void
 	 */
-	public function testUnserializeXML($normalizedValue, string $sPropertyTypeXML, string $sXMLContent)
+	public function testDenormalizeXML($denormalizedValue, string $sPropertyTypeXML, $normalizedValue)
 	{
 		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
 
-		$oDoc = new PropertyTypeDesign();
-		$oDoc->loadXML($sXMLContent);
-		/** @var \Combodo\iTop\DesignElement $oRoot */
-		$oRoot = $oDoc->firstChild;
+		$aActualValue = Combodo\iTop\PropertyType\Serializer\XMLNormalizer::GetInstance()->DenormalizeForPropertyType($normalizedValue, $sPropertyTypeXML);
 
-		$aActualValue = Combodo\iTop\PropertyType\Serializer\XMLSerializer::GetInstance()->DeserializeForPropertyType($oRoot, $sPropertyTypeXML);
-
-		$this->assertEquals($normalizedValue, $aActualValue);
+		$this->assertEquals($denormalizedValue, $aActualValue);
 	}
 }

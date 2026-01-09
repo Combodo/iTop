@@ -137,7 +137,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 						/** @var \Dashlet $oDashlet */
 						foreach ($aDashlets as $oDashlet) {
 							if ($oDashlet::IsVisible()) {
-								$oDashboardGrid->AddDashlet($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams), $oDashlet->GetID(), get_class($oDashlet), $oDashlet->GetNormalizedProperties());
+								$oDashboardGrid->AddDashlet($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams), $oDashlet->GetID(), get_class($oDashlet), $oDashlet->GetDenormalizedProperties());
 								//$oDashboardColumn->AddUIBlock($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams));
 							}
 						}

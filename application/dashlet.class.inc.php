@@ -506,7 +506,7 @@ EOF
 		$this->sDashletType = $sDashletType;
 	}
 
-	public function GetNormalizedProperties(): ?array
+	public function GetDenormalizedProperties(): ?array
 	{
 		return XMLNormalizer::GetInstance()->Denormalize($this->aProperties, get_class($this), 'Dashlet');
 	}

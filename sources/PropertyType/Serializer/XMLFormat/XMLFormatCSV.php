@@ -14,18 +14,22 @@ class XMLFormatCSV extends AbstractXMLFormat
 {
 	public function Normalize($value, AbstractValueType $oValueType): mixed
 	{
-		return implode(',', $value);
+		return $value;
 	}
 
 	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode, AbstractValueType $oValueType): void
 	{
+		if (is_array($normalizedValue)) {
+			$normalizedValue = implode(',', $normalizedValue);
+		}
 		$oTextNode = $oDOMNode->ownerDocument->createTextNode($normalizedValue);
 		$oDOMNode->appendChild($oTextNode);
 	}
 
 	public function DecodeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed
 	{
-		return $oDOMNode->GetText('');
+		$value = $oDOMNode->GetText('');
+		return explode(',', $value);
 	}
 
 	public function Denormalize($normalizedValue, AbstractValueType $oValueType): mixed
