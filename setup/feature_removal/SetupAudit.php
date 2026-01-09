@@ -16,21 +16,34 @@ class SetupAudit
 	private string $sEnvBeforeExtensionRemoval;
 	private string $sEnvAfterExtensionRemoval;
 
-	private array $aClassesBeforeRemoval;
-	private array $aClassesAfterRemoval;
-	private array $aRemovedClasses;
-	private array $aFinalClassesRemoved;
+	private bool $bClassesInitialized = false;
+	private array $aClassesBeforeRemoval = [];
+	private array $aClassesAfterRemoval = [];
+	private array $aRemovedClasses = [];
+	private array $aFinalClassesRemoved = [];
 
 	public function __construct(string $sEnvBeforeExtensionRemoval, string $sEnvAfterExtensionRemoval = DryRemovalRuntimeEnvironment::DRY_REMOVAL_AUDIT_ENV)
 	{
 		$this->sEnvBeforeExtensionRemoval = $sEnvBeforeExtensionRemoval;
 		$this->sEnvAfterExtensionRemoval = $sEnvAfterExtensionRemoval;
+	}
+
+	public function ComputeClasses(array $aClassesBeforeRemoval = null)
+	{
+		if ($this->bClassesInitialized) {
+			return;
+		}
 
 		$sCurrentEnvt = MetaModel::GetEnvironment();
-		if ($sCurrentEnvt === $this->sEnvBeforeExtensionRemoval) {
-			$this->aClassesBeforeRemoval = MetaModel::GetClasses();
+
+		if (is_null($aClassesBeforeRemoval)) {
+			if ($sCurrentEnvt === $this->sEnvBeforeExtensionRemoval) {
+				$this->aClassesBeforeRemoval = MetaModel::GetClasses();
+			} else {
+				$this->aClassesBeforeRemoval = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvBeforeExtensionRemoval);
+			}
 		} else {
-			$this->aClassesBeforeRemoval = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvBeforeExtensionRemoval);
+			$this->aClassesBeforeRemoval = $aClassesBeforeRemoval;
 		}
 
 		if ($sCurrentEnvt === $this->sEnvAfterExtensionRemoval) {
@@ -39,8 +52,7 @@ class SetupAudit
 			$this->aClassesAfterRemoval = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvAfterExtensionRemoval);
 		}
 
-		$this->aRemovedClasses = [];
-		$this->aFinalClassesRemoved = [];
+		$this->bClassesInitialized = true;
 	}
 
 	/*public function SetSelectedExtensions(Config $oConfig, array $aSelectedExtensions)
@@ -56,6 +68,8 @@ class SetupAudit
 
 	public function GetRemovedClasses(): array
 	{
+		$this->ComputeClasses();
+
 		if (count($this->aRemovedClasses) == 0) {
 			if (count($this->aClassesBeforeRemoval) == 0) {
 				return $this->aRemovedClasses;
