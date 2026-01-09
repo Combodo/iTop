@@ -7,9 +7,9 @@ class IboDashlet extends HTMLElement {
 		/** @type {string} */
 		this.sDashletId = this.GetDashletId();
 		/** @type {string} */
-		this.type = this.GetDashletType();
+		this.sType = this.GetDashletType();
 		/** @type {Object} */
-		this.formData = {};
+		this.formData = this.GetFormData();
 		/** @type {Object} unused yet */
 		this.meta = {};
 
@@ -38,6 +38,10 @@ class IboDashlet extends HTMLElement {
 		return this.getAttribute("data-dashlet-type") || "";
 	}
 
+	GetFormData() {
+		return this.getAttribute("data-form-view-data") || "";
+	}
+
 	static MakeNew(sDashlet) {
 		const oDashlet = document.createElement('ibo-dashlet');
 		oDashlet.innerHTML = sDashlet;
@@ -48,7 +52,7 @@ class IboDashlet extends HTMLElement {
 	Serialize() {
 		const aDashletData = {
 			id: this.sDashletId,
-			type: this.type,
+			type: this.sType,
 			formData: this.formData,
 		};
 

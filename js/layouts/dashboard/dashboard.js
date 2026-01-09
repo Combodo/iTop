@@ -84,7 +84,7 @@ class IboDashboard extends HTMLElement {
 	}
 
 	AddNewDashlet(sDashletClass, aDashletOptions = {}) {
-		const sNewDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.new_dashlet&dashlet_class='+encodeURIComponent(sDashletClass);
+		const sNewDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet&dashlet_class='+encodeURIComponent(sDashletClass);
 		fetch(sNewDashletUrl)
 			.then(async data => {
 
@@ -92,22 +92,34 @@ class IboDashboard extends HTMLElement {
 
 				// TODO 3.3 Either open the dashlet form right away, or just enter edit mode
 				this.EditDashlet(sDashletId);
-
-				const sGetashletFormUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet_form&dashlet_class='+encodeURIComponent(sDashletClass);
-				fetch(sGetashletFormUrl)
-					.then(async formData => {
-						const sFormData = await formData.text();
-
-						this.HideDashletTogglers();
-						this.SetDashletForm(sFormData);
-					});
 			})
 
+	}
+
+	RefreshDashlet(sDashletId) {
+		const oDashletElem = this.oGrid.GetDashletElement(sDashletId);
+
+		let sGetDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet&dashlet_class=' + encodeURIComponent(oDashletElem.sType)
+			+'&dashlet_id=' + encodeURIComponent(oDashletElem.sDashletId);
+		if(oDashletElem.formData.length > 0) {
+			sGetDashletUrl += '&values=' + encodeURIComponent(oDashletElem.formData);
+		}
+
+		return fetch(sGetDashletUrl)
+			.then(async data => {
+
+				const sDashletId = this.oGrid.RefreshDashlet(await data.text());
+		});
 	}
 
 	HideDashletTogglers() {
 		const aTogglers = document.querySelector('.ibo-dashlet-panel--entries');
 		aTogglers.classList.add('ibo-is-hidden');
+	}
+
+	ShowDashletTogglers() {
+		const aTogglers = document.querySelector('.ibo-dashlet-panel--entries');
+		aTogglers.classList.remove('ibo-is-hidden');
 	}
 
 	SetDashletForm(sFormData) {
@@ -116,7 +128,16 @@ class IboDashboard extends HTMLElement {
 		oFormContainer.classList.remove('ibo-is-hidden');
 	}
 
+	ClearDashletForm() {
+		const oFormContainer = document.querySelector('.ibo-dashlet-panel--form-container');
+		oFormContainer.innerHTML = '';
+		oFormContainer.classList.add('ibo-is-hidden');
+	}
+
 	EditDashlet(sDashletId) {
+		console.log(this.oGrid);
+		const oDashlet = this.oGrid.GetDashletElement(sDashletId);
+		const me = this;
 		// TODO 3.3: Implement dashlet editing when forms are ready
 		console.log("Edit dashlet: "+sDashletId);
 
@@ -130,6 +151,52 @@ class IboDashboard extends HTMLElement {
 		this.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'edit');
 
 		// Disable dashboard buttons so we need to finish this edition first
+
+		// Fetch dashlet form from server
+		let sGetashletFormUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet_form&dashlet_class='+encodeURIComponent(oDashlet.sType);
+
+		if(oDashlet.formData.length > 0) {
+			sGetashletFormUrl += '&values=' + encodeURIComponent(oDashlet.formData);
+		}
+
+		fetch(sGetashletFormUrl)
+			.then(async formData => {
+				const sFormData = await formData.text();
+
+				this.HideDashletTogglers();
+				this.SetDashletForm(sFormData);
+				// Listen to form submission event to display
+				document.addEventListener('itop:TurboStreamEvent', function (event) {
+					console.log(event);
+					if(event.detail.id === oDashlet.sType + '-turbo-stream-event' && event.detail.valid === "1") {
+						// Notify it all went well
+						CombodoToast.OpenToast('Dashlet created/updated');
+
+						// Clean edit mode
+						me.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'view');
+						me.ShowDashletTogglers();
+						me.ClearDashletForm();
+
+						// Update local dashlet and refresh it
+						oDashlet.formData = event.detail.view_data;
+						me.RefreshDashlet(oDashlet.sDashletId);
+
+						// TODO 3.3 Remove both event listener by making this code a dedicated function and call removeEventListener on it
+					}
+				});
+
+				document.querySelector('.ibo-dashlet-panel--form-container button[name="dashboard_cancel"]').addEventListener('click', function (event) {
+					// TODO 3.3 Remove both event listener by making this code a dedicated function and call removeEventListener on it
+
+					// Clean edit mode
+					me.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'view');
+					me.ShowDashletTogglers();
+					me.ClearDashletForm();
+
+					// TODO 3.3 If this is an addition, remove the previewed dashlet
+					// TODO 3.3 If this is an edition, revert the dashlet to its initial state
+				})
+			});
 	}
 
 	CloneDashlet(sDashletId) {

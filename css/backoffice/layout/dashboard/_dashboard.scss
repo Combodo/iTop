@@ -235,10 +235,13 @@ ibo-dashboard[data-edit-mode="view"] {
 }
 
 .ibo-dashboard[data-edit-mode="edit"] .ibo-dashboard--grid:has(ibo-dashboard-grid-slot > ibo-dashlet[data-edit-mode="edit"]) .ibo-dashboard--grid--backdrop {
+
   position: absolute;
-  height: 100%;
-  width: 100%;
-  background-color: $ibo-color-grey-900;
+  height: calc(100% + 24px);
+  // 36px is $ibo-page-container--elements-padding-x, handle variable resolution
+  width: calc(100% + 36px + 36px);
+  margin: -24px -#{36px} 0 -#{36px};
+  background-color: $ibo-color-grey-400;
   z-index: 2;
-  opacity: 50%;
+  opacity: 60%;
 }

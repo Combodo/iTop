@@ -15,10 +15,14 @@ class DashboardController extends AbstractController
 {
 	public const ROUTE_NAMESPACE = 'dashboard';
 
-	public function OperationNewDashlet()
+	public function OperationGetDashlet()
 	{
 		$sDashletClass = utils::ReadParam('dashlet_class', '', false, utils::ENUM_SANITIZATION_FILTER_PHP_CLASS);
 		$sDashletId = utils::ReadParam('dashlet_id', '', false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
+		// TODO 3.3 Check if raw data is the right call
+		$sValues = utils::ReadParam('values', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$aValues = !empty($sValues) ? json_decode($sValues, true) : [];
+
 		$oPage = new AjaxPage('');
 
 		if (is_subclass_of($sDashletClass, 'Dashlet')) {
@@ -26,13 +30,16 @@ class DashboardController extends AbstractController
 			$sDashletId = !empty($sDashletId) ? $sDashletId : uniqid();
 
 			$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
-			//$offset = $oPage->start_capture();
+
+			// TODO 3.3 I'd like to update dashlet from frontend's normalized data
+			// $oDashlet->FromNormalizedParams($aValues);
+
 			$oDashletBlock = $oDashlet->DoRender($oPage, true /* bEditMode */, false /* bEnclosingDiv */);
-			//$sHtml = addslashes($oPage->end_capture($offset));
 
 			if ($oDashletBlock instanceof iUIBlock) {
 				// Wrap the dashlet
-				$oDashletWrapper = new DashletWrapper($oDashletBlock, $sDashletClass, $oDashlet->GetID());
+				// TODO 3.3 Re-normalize Dashlet's values instead of using user input
+				$oDashletWrapper = new DashletWrapper($oDashletBlock, $sDashletClass, $oDashlet->GetID(), $aValues);
 				$oPage->AddUiBlock($oDashletWrapper);
 			}
 		}
@@ -43,6 +50,10 @@ class DashboardController extends AbstractController
 	public function OperationGetDashletForm()
 	{
 		$sDashletClass = utils::ReadParam('dashlet_class', '', false, utils::ENUM_SANITIZATION_FILTER_PHP_CLASS);
+		// TODO 3.3 Do we want to use a readparam here or SF internal mechanism ?
+		$sValues = utils::ReadParam('values', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$aValues = !empty($sValues) ? json_decode($sValues, true) : [];
+
 		$oPage = new AjaxPage('');
 
 		$oUIBlock = TurboFormUIBlockFactory::MakeForDashletConfiguration($sDashletClass);
