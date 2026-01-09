@@ -549,9 +549,7 @@ class ApplicationInstaller
 		}
 
 		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
-		if ($sDisableDataAudit !== "checked") {
-			//audit required
-			SetupLog::Info(__METHOD__, null, ['disable-data-audit' => $sDisableDataAudit]);
+		if ($this->IsSetupDataAuditEnabled($sDisableDataAudit, $aParamValues)) {
 			if ($bIsAlreadyInMaintenanceMode) {
 				//required to read DM before calling SaveModelInfo
 				SetupUtils::ExitMaintenanceMode();
@@ -685,13 +683,7 @@ class ApplicationInstaller
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 		$aParamValues = $this->oParams->GetParamForConfigArray();
-		$sMode = $aParamValues['mode'];
-		if ($sMode !== "upgrade") {
-			return;
-		}
-
-		if ($sDisableDataAudit === "checked") {
-			SetupLog::Info("Setup data audit disabled (force-uninstall)");
+		if (! $this->IsSetupDataAuditEnabled($sDisableDataAudit, $aParamValues)) {
 			return;
 		}
 
@@ -707,6 +699,22 @@ class ApplicationInstaller
 			$iCount = $oSetupAudit->GetLastComputedFinalClassesRemovedCount();
 			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice prior to upgrading iTop");
 		}
+	}
+
+	private function IsSetupDataAuditEnabled($sDisableDataAudit, array $aParamValues): bool
+	{
+		$sMode = $aParamValues['mode'];
+		if ($sMode !== "upgrade") {
+			//first install
+			return false;
+		}
+
+		if ($sDisableDataAudit === "checked") {
+			SetupLog::Info("Setup data audit disabled", null, ['disable-data-audit' => $sDisableDataAudit]);
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
