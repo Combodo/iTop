@@ -239,7 +239,6 @@ class ModuleDiscovery
 				}
 			}
 		}
-
 		return ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aFilteredModules, $bAbortOnMissingDependency);
 	}
 
@@ -260,7 +259,6 @@ class ModuleDiscovery
 		if (count(self::$m_aRemovedExtensions) === 0) {
 			return false;
 		}
-
 		$aNonMatchingPaths = [];
 		$sModuleFilePath = $aModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
 
