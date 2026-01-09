@@ -5,7 +5,8 @@ namespace Combodo\iTop\Application\UI\Base\Layout\DashletPanel;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Dashlet;
 
-class DashletPanel extends UIBlock {
+class DashletPanel extends UIBlock
+{
 	public const BLOCK_CODE = 'ibo-dashlet-panel';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/dashlet-panel/layout';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/dashlet-panel/layout';
@@ -19,17 +20,20 @@ class DashletPanel extends UIBlock {
 		$this->AddDataAttribute('role', static::BLOCK_CODE);
 	}
 
-	public function AddDashletEntry(DashletEntry $oDashletEntry) {
+	public function AddDashletEntry(DashletEntry $oDashletEntry)
+	{
 		$this->aDashletsEntries[] = $oDashletEntry;
 
 		return $this;
 	}
 
-	public function GetDashletEntries() : array {
+	public function GetDashletEntries(): array
+	{
 		return $this->aDashletsEntries;
 	}
 
-	public function SetDashletEntries(array $aDashletEntries) {
+	public function SetDashletEntries(array $aDashletEntries)
+	{
 		$this->aDashletsEntries = $aDashletEntries;
 
 		return $this;

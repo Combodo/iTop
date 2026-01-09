@@ -5,7 +5,8 @@ namespace Combodo\iTop\Application\UI\Base\Layout\DashletPanel;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use utils;
 
-class DashletEntry extends UIBlock {
+class DashletEntry extends UIBlock
+{
 	public const BLOCK_CODE = 'ibo-dashlet-entry';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/dashlet-panel/dashlet-entry';
 
@@ -17,7 +18,6 @@ class DashletEntry extends UIBlock {
 	protected $sDashletMinHeight;
 	protected $sDashletPreferredWidth;
 	protected $sDashletPreferredHeight;
-
 
 	public function __construct(string $sDashletClass, string $sDashletLabel, string $sDashletDescription, string $sDashletIconRelUrl, ?string $sId = null)
 	{
@@ -158,6 +158,5 @@ class DashletEntry extends UIBlock {
 
 		return $this;
 	}
-
 
 }

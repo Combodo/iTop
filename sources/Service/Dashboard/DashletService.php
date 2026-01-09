@@ -4,8 +4,10 @@ namespace Combodo\iTop\Service\Dashboard;
 
 use ReflectionClass;
 
-class DashletService {
-	public static function GetAvailableDashlets(): array {
+class DashletService
+{
+	public static function GetAvailableDashlets(): array
+	{
 		$aDashlets = [];
 
 		foreach (get_declared_classes() as $sDashletClass) {

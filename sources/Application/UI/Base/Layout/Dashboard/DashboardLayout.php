@@ -13,6 +13,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Dict;
+
 use function Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 
 // TODO 3.3 Remove old dashboard methods, make dict entries for elements, etc
@@ -54,7 +55,8 @@ class DashboardLayout extends UIBlock
 		$this->oButtonsToolbar = $this->MakeButtonsToolbar();
 	}
 
-	public function MakeTitleInput() {
+	public function MakeTitleInput()
+	{
 		$oTitleInput = new \Combodo\iTop\Application\UI\Base\Component\Input\Input();
 		$oTitleInput->SetName('dashboard_title');
 		$oTitleInput->SetType('text');
@@ -63,7 +65,8 @@ class DashboardLayout extends UIBlock
 		return $oTitleInput;
 	}
 
-	public function MakeRefreshInput() {
+	public function MakeRefreshInput()
+	{
 		$oRefreshInput = \Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory::MakeForSelect('refresh_interval');
 		$aRefreshRateOptions = [
 			['value' => '0', 'label' => 'No auto-refresh'],
@@ -82,7 +85,8 @@ class DashboardLayout extends UIBlock
 
 		return $oRefreshInput;
 	}
-	public function MakeButtonsToolbar() {
+	public function MakeButtonsToolbar()
+	{
 		$oContainer = new UIContentBlock(null, ['ibo-dashboard--buttons-toolbar']);
 		$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
 		$oSaveButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Save'), 'save', 'save');
@@ -162,13 +166,15 @@ class DashboardLayout extends UIBlock
 		return $this->aDashboardRows;
 	}
 
-	public function SetGrid(DashboardGrid $oDashboardGrid) {
+	public function SetGrid(DashboardGrid $oDashboardGrid)
+	{
 		$this->oDashboardGrid = $oDashboardGrid;
 
 		return $this;
 	}
 
-	public function GetGrid() {
+	public function GetGrid()
+	{
 		return $this->oDashboardGrid;
 	}
 
@@ -177,11 +183,13 @@ class DashboardLayout extends UIBlock
 		return $this->oTitleInput;
 	}
 
-	public function GetRefreshInput() {
+	public function GetRefreshInput()
+	{
 		return $this->oRefreshInput;
 	}
 
-	public function GetButtonsToolbar() {
+	public function GetButtonsToolbar()
+	{
 		return $this->oButtonsToolbar;
 	}
 }

@@ -36,7 +36,6 @@ class DashboardGridSlot extends UIBlock
 		$this->iHeight = random_int(1, 4) || $iHeight;
 	}
 
-
 	public function GetSubBlocks(): array
 	{
 		return [$this->oUIBlock];

@@ -74,7 +74,8 @@ class PageContentFactory
 		return $oLayout;
 	}
 
-	public static function MakeForDashboard() {
+	public static function MakeForDashboard()
+	{
 		$oLayout = new PageContentWithSideContent();
 
 		// TODO 3.3 Add dashboard specific blocks
