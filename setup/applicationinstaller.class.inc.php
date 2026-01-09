@@ -262,7 +262,7 @@ class ApplicationInstaller
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 					$aMiscOptions = $this->oParams->Get('options', []);
 					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
-					$sForceUninstall = $this->oParams->Get('force-uninstall', '');
+					$sDisableDataAudit = $this->oParams->Get('disable-data-audit', '');
 
 					$bUseSymbolicLinks = null;
 					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])) {
@@ -279,7 +279,7 @@ class ApplicationInstaller
 						$aSelectedModules,
 						$sSourceDir,
 						$sExtensionDir,
-						$sForceUninstall,
+						$sDisableDataAudit,
 						$bUseSymbolicLinks
 					);
 
@@ -293,8 +293,8 @@ class ApplicationInstaller
 					break;
 
 				case 'setup-audit':
-					$sForceUninstall = $this->oParams->Get('force-uninstall', '');
-					$this->DoSetupAudit($sForceUninstall);
+					$sDisableDataAudit = $this->oParams->Get('disable-data-audit', '');
+					$this->DoSetupAudit($sDisableDataAudit);
 					$aResult = [
 						'status' => self::OK,
 						'message' => '',
@@ -499,7 +499,7 @@ class ApplicationInstaller
 	 * @param array $aSelectedModules
 	 * @param string $sSourceDir
 	 * @param string $sExtensionDir
-	 * @param string $sForceUninstall
+	 * @param string $sDisableDataAudit
 	 * @param boolean $bUseSymbolicLinks
 	 *
 	 * @return void
@@ -508,7 +508,7 @@ class ApplicationInstaller
 	 *
 	 * @since 3.1.0 N°2013 added the aParamValues param
 	 */
-	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $sForceUninstall, $bUseSymbolicLinks = null)
+	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $sDisableDataAudit, $bUseSymbolicLinks = null)
 	{
 		/**
 	 * @since 3.2.0 move the ContextTag init at the very beginning of the method
@@ -549,9 +549,9 @@ class ApplicationInstaller
 		}
 
 		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
-		if ($sForceUninstall === "checked") {
+		if ($sDisableDataAudit !== "checked") {
 			//audit required
-			SetupLog::Info(__METHOD__, null, ['force-uninstall' => $sForceUninstall]);
+			SetupLog::Info(__METHOD__, null, ['disable-data-audit' => $sDisableDataAudit]);
 			if ($bIsAlreadyInMaintenanceMode) {
 				//required to read DM before calling SaveModelInfo
 				SetupUtils::ExitMaintenanceMode();
@@ -670,13 +670,13 @@ class ApplicationInstaller
 		$aModelInfo = json_decode($sContent, true);
 
 		if (false === $aModelInfo) {
-			throw new \Exception("Could not read (before compilation) previous model to audit data");
+			throw new Exception("Could not read (before compilation) previous model to audit data");
 		}
 
 		return $aModelInfo;
 	}
 
-	protected function DoSetupAudit(string $sForceUninstall)
+	protected function DoSetupAudit(string $sDisableDataAudit)
 	{
 		/**
 		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
@@ -690,11 +690,9 @@ class ApplicationInstaller
 			return;
 		}
 
-		if ($sForceUninstall !== "checked") {
+		if ($sDisableDataAudit === "checked") {
 			SetupLog::Info("Setup data audit disabled (force-uninstall)");
 			return;
-		} else {
-			SetupLog::Info(__METHOD__, null, ['force-uninstall' => $sForceUninstall]);
 		}
 
 		$sTargetEnvironment = $this->GetTargetEnv();
@@ -702,6 +700,13 @@ class ApplicationInstaller
 
 		$oSetupAudit = new SetupAudit($sTargetEnvironment, $sTargetEnvironment);
 		$oSetupAudit->ComputeClasses($aPreviousCompilationModelInfo);
+
+		try {
+			$oSetupAudit->GetIssues(true);
+		} catch (Exception $e) {
+			$iCount = $oSetupAudit->GetLastComputedFinalClassesRemovedCount();
+			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice prior to upgrading iTop");
+		}
 	}
 
 	/**
