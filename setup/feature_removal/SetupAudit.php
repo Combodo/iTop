@@ -2,9 +2,12 @@
 
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
+use ContextTag;
 use DBObjectSearch;
 use DBObjectSet;
+use IssueLog;
 use MetaModel;
+use SetupLog;
 
 require_once APPROOT.'setup/feature_removal/ModelReflectionSerializer.php';
 
@@ -121,12 +124,23 @@ class SetupAudit
 				$this->aFinalClassesRemoved[$sClass] = $iCount;
 				if ($bThrowExceptionAtFirstIssue && $iCount > 0) {
 					//setup envt: should raise issue ASAP
+					$this->LogInfoWithProperLogger("Setup audit found data to cleanup", null, $this->aFinalClassesRemoved);
 					throw new \Exception($sClass);
 				}
 			}
 		}
 
+		$this->LogInfoWithProperLogger("Setup audit found data to cleanup", null, $this->aFinalClassesRemoved);
 		return $this->aFinalClassesRemoved;
+	}
+
+	public function GetLastComputedFinalClassesRemovedCount(): int
+	{
+		$res = 0;
+		foreach ($this->aFinalClassesRemoved as $sClass => $iCount) {
+			$res += $iCount;
+		}
+		return $res;
 	}
 
 	private function Count($sClass): int
@@ -136,5 +150,15 @@ class SetupAudit
 		$oSet = new DBObjectSet($oSearch);
 
 		return $oSet->Count();
+	}
+
+	//could be shared with others in log APIs ?
+	private function LogInfoWithProperLogger($sMessage, $sChannel = null, $aContext = []): void
+	{
+		if (ContextTag::Check(ContextTag::TAG_SETUP)) {
+			SetupLog::Info($sMessage, $sChannel, $aContext);
+		} else {
+			IssueLog::Info($sMessage, $sChannel, $aContext);
+		}
 	}
 }
