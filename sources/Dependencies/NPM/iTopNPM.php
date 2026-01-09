@@ -280,6 +280,9 @@ class iTopNPM extends AbstractFolderAnalyzer
 			'jquery-migrate/src',
 			'jquery-migrate/test',
 
+			// gristack files for angular are not used
+			'gridstack/dist/angular',
+
 			// `jquery-ui` package is just there for vulnerability scans, so we don't want to version its files (only `jquery-ui-dist` is used within the code base)
 			'jquery-ui/.github',
 			'jquery-ui/build',
