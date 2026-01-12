@@ -28,10 +28,10 @@ class FormsController extends Controller
 	{
 		try {
 			$oRequest = $this->getRequest();
-			$sDashletId = $oRequest->query->get('dashlet_code');
+			$sDashletClass = $oRequest->query->get('dashlet_class');
 
 			// Get the form block from the service (and the compiler)
-			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById($sDashletId, 'Dashlet');
+			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById($sDashletClass, 'Dashlet');
 			$oBuilder = $this->GetFormBuilder($oFormBlock, []);
 			$oForm = $oBuilder->getForm();
 			$oForm->handleRequest($oRequest);
