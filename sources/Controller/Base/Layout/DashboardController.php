@@ -56,7 +56,7 @@ class DashboardController extends AbstractController
 
 		$oPage = new AjaxPage('');
 
-		$oUIBlock = TurboFormUIBlockFactory::MakeForDashletConfiguration($sDashletClass);
+		$oUIBlock = TurboFormUIBlockFactory::MakeForDashletConfiguration($sDashletClass, $aValues);
 		$oUIBlock->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction('Confirm', 'dashboard_submit', 'dashboard_submit', true));
 		$oUIBlock->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction('Cancel', 'dashboard_cancel'));
 		$oPage->AddUiBlock($oUIBlock);
