@@ -17,13 +17,13 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Combodo\iTop\Setup\FeatureRemoval\InplaceSetupAudit;
 use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
-use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 
 require_once(APPROOT.'setup/parameters.class.inc.php');
 require_once(APPROOT.'setup/xmldataloader.class.inc.php');
 require_once(APPROOT.'setup/backup.class.inc.php');
-require_once APPROOT.'setup/feature_removal/SetupAudit.php';
+require_once APPROOT.'setup/feature_removal/InplaceSetupAudit.php';
 
 /**
  * The base class for the installation process.
@@ -262,7 +262,7 @@ class ApplicationInstaller
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 					$aMiscOptions = $this->oParams->Get('options', []);
 					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
-					$sDisableDataAudit = $this->oParams->Get('disable-data-audit', '');
+					$sSkipDataAudit = $this->oParams->Get('skip-data-audit', '');
 
 					$bUseSymbolicLinks = null;
 					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])) {
@@ -274,27 +274,36 @@ class ApplicationInstaller
 						}
 					}
 
+					$aParamValues = $this->oParams->GetParamForConfigArray();
+					$bIsSetupDataAuditEnabled = $this->IsSetupDataAuditEnabled($sSkipDataAudit, $aParamValues);
 					$this->DoCompile(
 						$aRemovedExtensionCodes,
 						$aSelectedModules,
 						$sSourceDir,
 						$sExtensionDir,
-						$sDisableDataAudit,
+						$bIsSetupDataAuditEnabled,
 						$bUseSymbolicLinks
 					);
+
+					if ($bIsSetupDataAuditEnabled) {
+						$sNextStep = 'setup-audit';
+						$sNextStepLabel = 'Checking data consistency with the new data model';
+					} else {
+						$sNextStep = 'db-schema';
+						$sNextStepLabel = 'Updating database schema';
+					}
 
 					$aResult = [
 						'status' => self::OK,
 						'message' => '',
-						'next-step' => 'setup-audit',
-						'next-step-label' => 'Checking data consistency with the new data model',
+						'next-step' => $sNextStep,
+						'next-step-label' => $sNextStepLabel,
 						'percentage-completed' => 40,
 					];
 					break;
 
 				case 'setup-audit':
-					$sDisableDataAudit = $this->oParams->Get('disable-data-audit', '');
-					$this->DoSetupAudit($sDisableDataAudit);
+					$this->DoSetupAudit();
 					$aResult = [
 						'status' => self::OK,
 						'message' => '',
@@ -499,7 +508,7 @@ class ApplicationInstaller
 	 * @param array $aSelectedModules
 	 * @param string $sSourceDir
 	 * @param string $sExtensionDir
-	 * @param string $sDisableDataAudit
+	 * @param bool $bIsSetupDataAuditEnabled
 	 * @param boolean $bUseSymbolicLinks
 	 *
 	 * @return void
@@ -508,7 +517,7 @@ class ApplicationInstaller
 	 *
 	 * @since 3.1.0 N°2013 added the aParamValues param
 	 */
-	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $sDisableDataAudit, $bUseSymbolicLinks = null)
+	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $bIsSetupDataAuditEnabled, $bUseSymbolicLinks = null)
 	{
 		/**
 	 * @since 3.2.0 move the ContextTag init at the very beginning of the method
@@ -549,7 +558,7 @@ class ApplicationInstaller
 		}
 
 		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
-		if ($this->IsSetupDataAuditEnabled($sDisableDataAudit, $aParamValues)) {
+		if ($bIsSetupDataAuditEnabled) {
 			if ($bIsAlreadyInMaintenanceMode) {
 				//required to read DM before calling SaveModelInfo
 				SetupUtils::ExitMaintenanceMode();
@@ -650,21 +659,21 @@ class ApplicationInstaller
 		}
 	}
 
-	private function GetModelInfoPath(): string
+	private function GetModelInfoPath(string $sEnv): string
 	{
-		return APPROOT.'data/beforecompilation_modelinfo.json';
+		return APPROOT."data/beforecompilation_".$sEnv."_modelinfo.json";
 	}
 
 	private function SaveModelInfo(string $sEnvironment): void
 	{
 		$aModelInfo = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($sEnvironment);
-		$sModelInfoPath = $this->GetModelInfoPath();
+		$sModelInfoPath = $this->GetModelInfoPath($sEnvironment);
 		file_put_contents($sModelInfoPath, json_encode($aModelInfo));
 	}
 
 	private function GetPreviousModelInfo(string $sEnvironment): array
 	{
-		$sContent = file_get_contents($this->GetModelInfoPath());
+		$sContent = file_get_contents($this->GetModelInfoPath($sEnvironment));
 		$aModelInfo = json_decode($sContent, true);
 
 		if (false === $aModelInfo) {
@@ -674,7 +683,7 @@ class ApplicationInstaller
 		return $aModelInfo;
 	}
 
-	protected function DoSetupAudit(string $sDisableDataAudit)
+	protected function DoSetupAudit()
 	{
 		/**
 		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
@@ -682,35 +691,29 @@ class ApplicationInstaller
 		 */
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
-		$aParamValues = $this->oParams->GetParamForConfigArray();
-		if (! $this->IsSetupDataAuditEnabled($sDisableDataAudit, $aParamValues)) {
-			return;
-		}
-
 		$sTargetEnvironment = $this->GetTargetEnv();
 		$aPreviousCompilationModelInfo = $this->GetPreviousModelInfo($sTargetEnvironment);
 
-		$oSetupAudit = new SetupAudit($sTargetEnvironment, $sTargetEnvironment);
-		$oSetupAudit->ComputeClasses($aPreviousCompilationModelInfo);
+		$oSetupAudit = new InplaceSetupAudit($aPreviousCompilationModelInfo, $sTargetEnvironment);
 
-		try {
-			$oSetupAudit->GetIssues(true);
-		} catch (Exception $e) {
-			$iCount = $oSetupAudit->GetLastComputedFinalClassesRemovedCount();
+		$oSetupAudit->GetIssues(true);
+		$iCount = $oSetupAudit->GetDataToCleanupCount();
+
+		if ($iCount > 0) {
 			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice prior to upgrading iTop");
 		}
 	}
 
-	private function IsSetupDataAuditEnabled($sDisableDataAudit, array $aParamValues): bool
+	private function IsSetupDataAuditEnabled($sSkipDataAudit, array $aParamValues): bool
 	{
-		$sMode = $aParamValues['mode'];
-		if ($sMode !== "upgrade") {
-			//first install
+		if ($sSkipDataAudit === "checked") {
+			SetupLog::Info("Setup data audit disabled", null, ['skip-data-audit' => $sSkipDataAudit]);
 			return false;
 		}
 
-		if ($sDisableDataAudit === "checked") {
-			SetupLog::Info("Setup data audit disabled", null, ['disable-data-audit' => $sDisableDataAudit]);
+		$sMode = $aParamValues['mode'];
+		if ($sMode !== "upgrade") {
+			//first install
 			return false;
 		}
 
