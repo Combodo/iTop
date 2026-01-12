@@ -90,10 +90,8 @@ TXT;
 	{
 		$aChoices = ['id1', 'id2'];
 
-		$sModuleFilePath = tempnam(sys_get_temp_dir(), 'discovery_test');
-		$this->aFileToClean[] = $sModuleFilePath;
-		$sModuleFilePath2 = tempnam(sys_get_temp_dir(), 'discovery_test');
-		$this->aFileToClean[] = $sModuleFilePath2;
+		$sModuleFilePath = $this->GetTemporaryFilePath('modulediscoverytest_modulefilepath');
+		$sModuleFilePath2 = $this->GetTemporaryFilePath('modulediscoverytest_modulefilepath');
 
 		$aModules = [
 			"id1/1" => [
@@ -163,38 +161,35 @@ TXT;
 
 	public function testIsModulePartOfRemovedExtension_ModuleWithAnotherVersionIncludedInRemoveExtension()
 	{
-		$sModuleFilePath = tempnam(sys_get_temp_dir(), 'discovery_test');
-		$this->ValidateIsModulePartOfRemovedExtension('module_name', '123', $sModuleFilePath, $sModuleFilePath, false);
+		$sModuleFilePath = $this->GetTemporaryFilePath('modulediscoverytest_modulefilepath');
+		$this->AssertModuleIsPartOfRemovedExtension('module_name', '123', $sModuleFilePath, $sModuleFilePath, false);
 	}
 
 	public function testIsModulePartOfRemovedExtension_AnotherModuleWithSameVersionIncludedInRemoveExtension()
 	{
-		$sModuleFilePath = tempnam(sys_get_temp_dir(), 'discovery_test');
-		$this->ValidateIsModulePartOfRemovedExtension('another_module_name', '456', $sModuleFilePath, $sModuleFilePath, false);
+		$sModuleFilePath = $this->GetTemporaryFilePath('modulediscoverytest_modulefilepath');
+		$this->AssertModuleIsPartOfRemovedExtension('another_module_name', '456', $sModuleFilePath, $sModuleFilePath, false);
 	}
 
 	public function testIsModulePartOfRemovedExtension_SameExtensionComingFromAnotherLocation()
 	{
-		$sModuleFilePath = tempnam(sys_get_temp_dir(), 'discovery_test');
-		$sModuleFilePath2 = tempnam(sys_get_temp_dir(), 'discovery_test');
-		$this->ValidateIsModulePartOfRemovedExtension('module_name', '456', $sModuleFilePath, $sModuleFilePath2, false);
+		$sModuleFilePath = $this->GetTemporaryFilePath('modulediscoverytest_modulefilepath');
+		$sModuleFilePath2 = $this->GetTemporaryFilePath('modulediscoverytest_modulefilepath');
+		$this->AssertModuleIsPartOfRemovedExtension('module_name', '456', $sModuleFilePath, $sModuleFilePath2, false);
 	}
 
 	public function testIsModulePartOfRemovedExtension_ModuleShouldBeExcluded()
 	{
 		$sModuleFilePath = tempnam(sys_get_temp_dir(), 'discovery_test');
-		$this->ValidateIsModulePartOfRemovedExtension('module_name', '456', $sModuleFilePath, $sModuleFilePath, true);
+		$this->AssertModuleIsPartOfRemovedExtension('module_name', '456', $sModuleFilePath, $sModuleFilePath, true);
 	}
 
-	public function ValidateIsModulePartOfRemovedExtension($sModuleName, $sModuleVersion, $sModuleFilePath1, $sModuleFilePath2, $bExpected)
+	public function AssertModuleIsPartOfRemovedExtension($sModuleName, $sModuleVersion, $sModuleFilePath, $sModuleFilePathIncludedInRemovedExtension, $bExpected)
 	{
-		$this->aFileToClean[] = $sModuleFilePath1;
-		$this->aFileToClean[] = $sModuleFilePath2;
-
-		$oExtension = $this->CreateExtensionWithModule('module_name', '456', $sModuleFilePath2);
+		$oExtension = $this->CreateExtensionWithModule('module_name', '456', $sModuleFilePathIncludedInRemovedExtension);
 		ModuleDiscovery::DeclareRemovedExtensions([$oExtension]);
 		$aCurrentModuleInfo = [
-			ModuleFileReader::MODULE_FILE_PATH => $sModuleFilePath1,
+			ModuleFileReader::MODULE_FILE_PATH => $sModuleFilePath,
 		];
 		$this->assertEquals(
 			$bExpected,
