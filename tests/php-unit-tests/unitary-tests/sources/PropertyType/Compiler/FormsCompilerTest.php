@@ -849,4 +849,75 @@ XML,
 			],
 		];
 	}
+
+	public function testCompileFormForIconSelection()
+	{
+		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
+
+		$sXMLContent = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<property_type id="basic_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+	<extends>Dashlet</extends>
+    <definition xsi:type="Combodo-ValueType-PropertyTree">
+	    <nodes>
+	        <node id="icon-selection" xsi:type="Combodo-ValueType-Icon">
+	            <label>Icon</label>
+	        </node>
+	    </nodes>
+    </definition>
+</property_type>
+XML;
+
+		$sExpectedStart = <<<PHP
+class FormFor__basic_test extends Combodo\iTop\Forms\Block\Base\FormBlock
+{
+	protected function BuildForm(): void
+	{
+		\$this->Add('icon-selection', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
+			'label' => 'Icon',
+			'choices' => [
+
+PHP;
+
+		$sProducedPHP = PropertyTypeCompiler::GetInstance()->CompileFormFromXML($sXMLContent);
+
+		$this->AssertPHPCodeIsValid($sProducedPHP);
+		$this->assertStringStartsWith($sExpectedStart, $sProducedPHP);
+	}
+
+	public function testCompileFormForClassSelection()
+	{
+		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
+
+		$sXMLContent = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<property_type id="basic_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+	<extends>Dashlet</extends>
+    <definition xsi:type="Combodo-ValueType-PropertyTree">
+	    <nodes>
+	        <node id="class-selection" xsi:type="Combodo-ValueType-Class">
+	            <label>Class</label>
+	        </node>
+	    </nodes>
+    </definition>
+</property_type>
+XML;
+
+		$sExpectedStart = <<<PHP
+class FormFor__basic_test extends Combodo\iTop\Forms\Block\Base\FormBlock
+{
+	protected function BuildForm(): void
+	{
+		\$this->Add('class-selection', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
+			'label' => 'Class',
+			'choices' => [
+
+PHP;
+
+		$sProducedPHP = PropertyTypeCompiler::GetInstance()->CompileFormFromXML($sXMLContent);
+
+		$this->AssertPHPCodeIsValid($sProducedPHP);
+		$this->assertStringStartsWith($sExpectedStart, $sProducedPHP);
+	}
+
 }

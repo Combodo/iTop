@@ -89,8 +89,16 @@ abstract class ModelReflection
 	 * @param string $defaultValue
 	 *
 	 * @return \RunTimeIconSelectionField
+	 * @deprecated since 3.3.0 replaced by GetAvailableIcons
 	 */
 	abstract public function GetIconSelectionField($sCode, $sLabel = '', $defaultValue = '');
+
+	/**
+	 * Find available icons for the current context
+	 *
+	 * @return array of ['value', 'label', 'icon'] where 'value' is the relative path on disk, 'label' the name to display and 'icon' is the URL to get the image
+	 */
+	abstract public function GetAvailableIcons(): array;
 
 	abstract public function GetRootClass($sClass);
 	abstract public function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP);
@@ -109,6 +117,8 @@ abstract class QueryReflection
 
 class ModelReflectionRuntime extends ModelReflection
 {
+	private static array $aAllIcons = [];
+
 	public function __construct()
 	{
 	}
@@ -253,6 +263,52 @@ class ModelReflectionRuntime extends ModelReflection
 	public function GetIconSelectionField($sCode, $sLabel = '', $defaultValue = '')
 	{
 		return new RunTimeIconSelectionField($sCode, $sLabel, $defaultValue);
+	}
+
+	public function GetAvailableIcons(): array
+	{
+		$aFolderList = [
+			APPROOT.'env-'.utils::GetCurrentEnvironment() => utils::GetAbsoluteUrlModulesRoot(),
+			APPROOT.'images/icons' => utils::GetAbsoluteUrlAppRoot().'images/icons',
+		];
+		if (count(self::$aAllIcons) == 0) {
+			foreach ($aFolderList as $sFolderPath => $sUrlPrefix) {
+				$aIcons = self::FindIconsOnDisk($sFolderPath);
+				ksort($aIcons);
+
+				foreach ($aIcons as $sFilePath) {
+					self::$aAllIcons[] = ['value' => $sFilePath, 'label' => basename($sFilePath), 'icon' => $sUrlPrefix.$sFilePath];
+				}
+			}
+		}
+
+		return self::$aAllIcons;
+	}
+
+	private static function FindIconsOnDisk(string $sBaseDir, string $sDir = '', array &$aFilesSpecs = []): array
+	{
+		$aResult = [];
+		// Populate automatically the list of icon files
+		if ($hDir = @opendir($sBaseDir.'/'.$sDir)) {
+			while (($sFile = readdir($hDir)) !== false) {
+				$aMatches = [];
+				if (($sFile != '.') && ($sFile != '..') && ($sFile != 'lifecycle') && is_dir($sBaseDir.'/'.$sDir.'/'.$sFile)) {
+					$sDirSubPath = ($sDir == '') ? $sFile : $sDir.'/'.$sFile;
+					$aResult = array_merge($aResult, self::FindIconsOnDisk($sBaseDir, $sDirSubPath, $aFilesSpecs));
+				}
+				$sSize = filesize($sBaseDir.'/'.$sDir.'/'.$sFile);
+				if (isset($aFilesSpecs[$sFile]) && $aFilesSpecs[$sFile] == $sSize) {
+					continue;
+				}
+				if (preg_match('/\.(png|jpg|jpeg|gif|svg)$/i', $sFile, $aMatches)) { // png, jp(e)g, gif and svg are considered valid
+					$aResult[$sFile.'_'.$sDir] = $sDir.'/'.$sFile;
+					$aFilesSpecs[$sFile] = $sSize;
+				}
+			}
+			closedir($hDir);
+		}
+
+		return $aResult;
 	}
 
 	public function GetRootClass($sClass)

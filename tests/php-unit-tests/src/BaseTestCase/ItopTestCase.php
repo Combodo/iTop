@@ -593,6 +593,7 @@ abstract class ItopTestCase extends KernelTestCase
 	{
 		try {
 			eval($sPHPCode);
+			self::AssertTrue(true);
 		} catch (ParseError $e) {
 			$aLines = explode("\n", $sPHPCode);
 			foreach ($aLines as $iLine => $sLine) {
