@@ -3,11 +3,14 @@
     $('#{{ oUIBlock.GetId() }} .ibo-dashlet-entry').on('click', (event) => {
         const sDashletClass = event.currentTarget.getAttribute('data-dashlet-class');
         const oDashboard = document.querySelector('ibo-dashboard');
-        oDashboard.AddNewDashlet(sDashletClass, {
-            'minW': event.currentTarget.getAttribute('data-min-width'),
-            'minH': event.currentTarget.getAttribute('data-min-height'),
-            'w': event.currentTarget.getAttribute('data-preferred-width'),
-            'h': event.currentTarget.getAttribute('data-preferred-height')
-        });
+        oDashboard.AddNewDashlet(sDashletClass,
+                {},
+                {
+                    'minW': event.currentTarget.getAttribute('data-min-width'),
+                    'minH': event.currentTarget.getAttribute('data-min-height'),
+                    'w': event.currentTarget.getAttribute('data-preferred-width'),
+                    'h': event.currentTarget.getAttribute('data-preferred-height')
+                }
+        );
     });
 })();

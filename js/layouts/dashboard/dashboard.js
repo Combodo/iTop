@@ -83,7 +83,7 @@ class IboDashboard extends HTMLElement {
 		}
 	}
 
-	AddNewDashlet(sDashletClass, aDashletOptions = {}) {
+	AddNewDashlet(sDashletClass, sDashletValues, aDashletOptions = {}) {
 		const sNewDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet&dashlet_class='+encodeURIComponent(sDashletClass);
 		fetch(sNewDashletUrl)
 			.then(async data => {

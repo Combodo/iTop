@@ -89,7 +89,7 @@ class IboGrid extends HTMLElement {
 		const oParser = new DOMParser();
 		const oDocument = oParser.parseFromString(sDashlet, 'text/html');
 		const oNewDashlet = oDocument.body.firstChild;
-		debugger;
+
 		// Can't use oNewDashet.sDashletId as it's not in the DOM yet and connectedCallback hasn't been called yet
 		const oExistingDashlet = this.GetDashletElement(oNewDashlet.getAttribute('data-dashlet-id') );
 		oExistingDashlet.replaceWith(oNewDashlet);
@@ -103,11 +103,9 @@ class IboGrid extends HTMLElement {
 				const sWidth = oSlot.iWidth;
 				const sHeight = oSlot.iHeight;
 
-				// TODO 3.3: Should ask a rendered dashlet for its content to avoid duplicating IDs
-				// Still we'll position it automatically and take care of height/width
-
-				const sDashletContent = oSlot.oDashlet.innerHTML;
-				this.AddDashlet(sDashletContent, {
+				// Ask a new rendered dashlet to avoid duplicating IDs
+				// Still we'll copy width and height
+				this.closest('ibo-dashboard')?.AddNewDashlet(oSlot.oDashlet.sType, oSlot.oDashlet.formData, {
 					'w': sWidth,
 					'h': sHeight
 				});
