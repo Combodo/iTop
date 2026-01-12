@@ -2391,7 +2391,7 @@ HTML;
 			'min_height'       => 1,
 			'min_width'        => 2,
 			'preferred_width'  => 2,
-			'preferred_height' => 2,
+			'preferred_height' => 1,
 		];
 	}
 }
