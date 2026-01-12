@@ -190,7 +190,7 @@ class InterfaceDiscovery
 			}
 			if (count($aAutoloaderErrors) > 0) {
 				IssueLog::Debug(
-					__METHOD__." cannot load some of the autoloader files",
+					__METHOD__." cannot load some of the autoloader files: missing or corrupted",
 					LogChannels::CORE,
 					['autoloader_errors' => $aAutoloaderErrors]
 				);
