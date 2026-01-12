@@ -8,7 +8,7 @@
     {%- else -%}
         {% set form_method = "POST" %}
     {%- endif -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-form')}) -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-form ibo-form-' ~ display)}) -%}
     <form is="itop-form-element" {% if name != '' %} name="{{ name }}"{% endif %} method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{{ block('attributes') }}{% if multipart %} enctype="multipart/form-data"{% endif %}>
     {%- if form_method != method -%}
         <input type="hidden" name="_method" value="{{ method }}" />
@@ -150,20 +150,24 @@
 {%- block oql_form_widget -%}
     <textarea is="oql-element" {{ block('widget_attributes') }} data-modal-title-text="{{ 'UI:Edit:SearchQuery'|trans }}" data-empty-text="{{ 'Use the search form above to search for objects to be added'|trans }}" data-valid-query-text="{{ 'OQL is valid'|trans }}" data-invalid-query-text="{{ 'OQL is invalid'|trans }}">{{ value }}</textarea>
     <div class="ibo-form-actions">
-        {% if with_ai_button is defined and with_ai_button %}
+        {% if with_ai_button %}
             <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" type="button" name="AI" value="" aria-label="AI">
                 <span class="ibo-button--icon fas fa-magic"></span>
                 {{ 'UI:Edit:AI'|trans }}
             </button>
         {% endif %}
+        {% if with_run_button %}
         <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-success" data-role="ibo-button" data-action="run" type="button" name="Run Query" value="" aria-label="Run Query">
             <span class="ibo-button--icon fas fa-play"></span>
             {{ 'UI:Edit:TestQuery'|trans }}
         </button>
+        {% endif %}
+        {% if with_book_button %}
         <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" data-action="book" type="button" name="Open Book" value="" aria-label="Open Query Phrases Book">
             <span class="ibo-button--icon fas fa-book"></span>
             {{ 'UI:Edit:SearchQuery'|trans }}
         </button>
+        {% endif %}
     </div>
 {%- endblock oql_form_widget -%}
 

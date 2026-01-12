@@ -13,6 +13,7 @@ use Combodo\iTop\Forms\FormType\FormTypeHelper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Form type.
@@ -28,14 +29,30 @@ class FormType extends AbstractType
 		return \Symfony\Component\Form\Extension\Core\Type\FormType::class;
 	}
 
+	public function configureOptions(OptionsResolver $resolver): void
+	{
+		parent::configureOptions($resolver);
+
+		$resolver->setDefault('display', 'cosy');
+	}
+
 	/** @inheritdoc */
-	public function buildView(FormView $view, FormInterface $form, array $options)
+	public function buildView(FormView $view, FormInterface $form, array $options): void
 	{
 		parent::buildView($view, $form, $options);
 
-		/** @var FormBlock $oBlock */
-		$oBlock = $options['form_block'];
+		$view->vars['blocks'] = $this->GetChildrenBlocks($options['form_block'], $form);
+		$view->vars['display'] = $options['display'];
+	}
 
+	/**
+	 * @param FormBlock $oBlock
+	 * @param FormInterface $form
+	 *
+	 * @return array
+	 */
+	private function GetChildrenBlocks(FormBlock $oBlock, FormInterface $form): array
+	{
 		$aData = [];
 		foreach ($oBlock->GetChildren() as $oChild) {
 			if (!$oChild instanceof AbstractTypeFormBlock) {
@@ -44,20 +61,21 @@ class FormType extends AbstractType
 
 			if ($oChild->IsAdded()) {
 				$aData[] = [
-					'name' => $oChild->GetName(),
+					'name'  => $oChild->GetName(),
 					'added' => $oChild->IsAdded(),
-					'id' => FormTypeHelper::GetFormId($form).'_'.$oChild->GetName(),
+					'id'    => FormTypeHelper::GetFormId($form).'_'.$oChild->GetName(),
 				];
 			} else {
 				$aData[] = [
-					'name' => $oChild->GetName(),
+					'name'  => $oChild->GetName(),
 					'added' => $oChild->IsAdded(),
-					'id' => FormTypeHelper::GetFormId($form).'_'.$oChild->GetName(),
+					'id'    => FormTypeHelper::GetFormId($form).'_'.$oChild->GetName(),
 				];
 			}
 
 		}
-		$view->vars['blocks'] = $aData;
+
+		return $aData;
 	}
 
 }

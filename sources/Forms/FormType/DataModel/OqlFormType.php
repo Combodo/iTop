@@ -21,23 +21,27 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class OqlFormType extends AbstractType
 {
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function getParent(): string
 	{
 		return TextareaType::class;
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function configureOptions(OptionsResolver $resolver): void
 	{
 		$resolver->setDefined('with_ai_button');
+		$resolver->setDefined('with_book_button');
+		$resolver->setDefined('with_run_button');
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function buildView(FormView $view, FormInterface $form, array $options): void
 	{
 		parent::buildView($view, $form, $options);
 
 		$view->vars['with_ai_button'] = $options['with_ai_button'];
+		$view->vars['with_book_button'] = $options['with_book_button'];
+		$view->vars['with_run_button'] = $options['with_run_button'];
 	}
 }

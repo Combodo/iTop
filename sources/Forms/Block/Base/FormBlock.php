@@ -63,6 +63,7 @@ class FormBlock extends AbstractTypeFormBlock
 	{
 		parent::RegisterOptions($oOptionsRegister);
 		$oOptionsRegister->SetOption('compound', true);
+		$oOptionsRegister->SetOption('display', 'cosy');
 		$oOptionsRegister->SetOptionArrayValue('attr', 'class', 'form');
 	}
 

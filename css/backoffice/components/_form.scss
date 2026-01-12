@@ -75,3 +75,18 @@ collection-entry-element {
   resize: vertical;
 }
 
+.ibo-form-compact{
+
+  .ibo-content-block{
+
+    display: flex;
+    flex-direction: column;
+
+    label{
+      width: 100%;
+    }
+
+  }
+
+}
+
