@@ -722,4 +722,16 @@ abstract class ItopTestCase extends KernelTestCase
 
 		return $this->CallUrl($sUrl, $aPostFields, $aCurlOptions, $bXDebugEnabled);
 	}
+
+	/**
+	 * @since 3.2.4 3.3.0
+	 * @return string Temporary file path, that will be cleaned up by tearDown()
+	 */
+	public function GetTemporaryFilePath(string $sPrefix = "test"): string
+	{
+
+		$sPath = tempnam(sys_get_temp_dir(), $sPrefix);
+		$this->aFileToClean[] = $sPath;
+		return $sPath;
+	}
 }
