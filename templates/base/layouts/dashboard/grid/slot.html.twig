@@ -1,8 +1,17 @@
 <ibo-dashboard-grid-slot
-        gs-x="{{ random(10) }}"
-        gs-y="{{ random(6) }}"
-        gs-w="{{ random(5) }}"
-        gs-h="{{ random(5) }}"
+        {% if oUIBlock.HasPositionX() is true %}
+            gs-x="{{ oUIBlock.GetPositionX() }}"
+        {% endif %}
+        {% if oUIBlock.HasPositionY() is true %}
+            gs-y="{{ oUIBlock.GetPositionY() }}"
+        {% endif %}
+        {% if oUIBlock.HasWidth() is true %}
+            gs-w="{{ oUIBlock.GetWidth() }}"
+        {% endif %}
+        {% if oUIBlock.HasHeight() is true %}
+            gs-h="{{ oUIBlock.GetHeight() }}"
+        {% endif %}
+{# TODO 3.3  Handle min width / height  #}
         id=""
         class="grid-stack-item">
     {{ render_block(oUIBlock.GetDashlet(), {aPage: aPage}) }}

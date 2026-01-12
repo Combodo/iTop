@@ -53,10 +53,10 @@ class DashboardGrid extends UIBlock
 		return $this;
 	}
 
-	public function AddDashlet(UIBlock $oDashlet, string $sDashletId, string $sDashletClass, array $aFormViewData): DashboardGrid
+	public function AddDashlet(UIBlock $oDashlet, string $sDashletId, string $sDashletClass, array $aFormViewData, ?int $iPositionX = null, ?int $iPositionY = null, ?int $iWidth = null, ?int $iHeight = null): DashboardGrid
 	{
 		$oWrapper = new DashletWrapper($oDashlet, $sDashletClass, $sDashletId, $aFormViewData);
-		$oSlot = new DashboardGridSlot(null, $oWrapper);
+		$oSlot = new DashboardGridSlot(null, $oWrapper, $iPositionX, $iPositionY, $iWidth, $iHeight);
 		$this->AddSlot($oSlot);
 
 		return $this;

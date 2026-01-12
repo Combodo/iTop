@@ -137,7 +137,18 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 						/** @var \Dashlet $oDashlet */
 						foreach ($aDashlets as $oDashlet) {
 							if ($oDashlet::IsVisible()) {
-								$oDashboardGrid->AddDashlet($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams), $oDashlet->GetID(), get_class($oDashlet), $oDashlet->GetDenormalizedProperties());
+								$sDashletId = $oDashlet->GetID();
+								$sDashletClass = get_class($oDashlet);
+								$aDashletDenormalizedProperties = $oDashlet->GetDenormalizedProperties();
+								$aDashletsInfo = $sDashletClass::GetInfo();
+
+								// TODO 3.3 Gather real position and height/width if any.
+								// Also set minimal height/width
+								$iPositionX = null;
+								$iPositionY = null;
+								$iWidth = array_key_exists('preferred_width', $aDashletsInfo) ? $aDashletsInfo['preferred_width'] : 1;
+								$iHeight = array_key_exists('preferred_height', $aDashletsInfo) ? $aDashletsInfo['preferred_height'] : 1;
+								$oDashboardGrid->AddDashlet($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams), $sDashletId, $sDashletClass, $aDashletDenormalizedProperties, $iPositionX, $iPositionY, $iWidth, $iHeight);
 								//$oDashboardColumn->AddUIBlock($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams));
 							}
 						}

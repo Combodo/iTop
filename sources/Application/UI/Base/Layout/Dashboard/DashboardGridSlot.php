@@ -30,10 +30,10 @@ class DashboardGridSlot extends UIBlock
 		parent::__construct($sId);
 		$this->oDashlet = $oDashlet;
 
-		$this->iPositionX = random_int(0, 10) || $iPositionX;
-		$this->iPositionY = random_int(0, 8) || $iPositionY;
-		$this->iWidth = random_int(1, 5) || $iWidth;
-		$this->iHeight = random_int(1, 4) || $iHeight;
+		$this->iPositionX = $iPositionX;
+		$this->iPositionY = $iPositionY;
+		$this->iWidth = $iWidth;
+		$this->iHeight = $iHeight;
 	}
 
 	public function GetSubBlocks(): array
@@ -41,6 +41,10 @@ class DashboardGridSlot extends UIBlock
 		return [$this->oUIBlock];
 	}
 
+	public function HasPositionX(): bool
+	{
+		return !is_null($this->iPositionX);
+	}
 	public function GetPositionX(): ?int
 	{
 		return $this->iPositionX;
@@ -53,6 +57,10 @@ class DashboardGridSlot extends UIBlock
 		return $this;
 	}
 
+	public function HasPositionY(): bool
+	{
+		return !is_null($this->iPositionX);
+	}
 	public function GetPositionY(): ?int
 	{
 		return $this->iPositionY;
@@ -65,6 +73,10 @@ class DashboardGridSlot extends UIBlock
 		return $this;
 	}
 
+	public function HasWidth(): bool
+	{
+		return !is_null($this->iWidth);
+	}
 	public function GetWidth(): ?int
 	{
 		return $this->iWidth;
@@ -77,6 +89,10 @@ class DashboardGridSlot extends UIBlock
 		return $this;
 	}
 
+	public function HasHeight(): bool
+	{
+		return !is_null($this->iHeight);
+	}
 	public function GetHeight(): ?int
 	{
 		return $this->iHeight;
