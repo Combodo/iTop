@@ -602,7 +602,9 @@ class FormFor__CollectionOfValuesTest extends Combodo\iTop\Forms\Block\Base\Form
 		\$this->Add('coll', 'Combodo\iTop\Forms\Block\DataModel\AttributeValueChoiceFormBlock', [
 			'label' => 'UI:ClassAttributeValue',
 			'multiple' => true,
-		]);
+		])
+			->SetInputValue('class', 'Contact')
+			->SetInputValue('attribute', 'status');
 	}
 }
 PHP,
@@ -883,6 +885,8 @@ PHP;
 
 		$this->AssertPHPCodeIsValid($sProducedPHP);
 		$this->assertStringStartsWith($sExpectedStart, $sProducedPHP);
+
+		echo $sProducedPHP;
 	}
 
 	public function testCompileFormForClassSelection()

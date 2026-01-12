@@ -37,7 +37,7 @@ class ValueTypeIcon extends AbstractLeafValueType
 			$sValue = utils::QuoteForPHP($aIcon['label']);
 			$sCode = utils::QuoteForPHP($aIcon['value']);
 			$sChoices .= <<<PHP
-\t\t\t\t$sCode => $sValue,\n
+\t\t\t\t$sValue => $sCode,\n
 PHP;
 		}
 		$sChoices .= "\t\t\t]";
