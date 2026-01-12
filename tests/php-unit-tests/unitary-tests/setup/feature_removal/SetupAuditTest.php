@@ -5,6 +5,7 @@ namespace Combodo\iTop\Test\UnitTest\Setup\FeatureRemoval;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
+use Combodo\iTop\Setup\FeatureRemoval\InplaceSetupAudit;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use Combodo\iTop\Test\UnitTest\Service\UnitTestRunTimeEnvironment;
 use Exception;
@@ -40,6 +41,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		parent::setUp();
 
 		$this->RequireOnceItopFile('/setup/feature_removal/SetupAudit.php');
+		$this->RequireOnceItopFile('/setup/feature_removal/InplaceSetupAudit.php');
 		$this->RequireOnceItopFile('/setup/feature_removal/DryRemovalRuntimeEnvironment.php');
 	}
 
@@ -54,7 +56,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$oDryRemovalRuntimeEnvt->Prepare($this->GetTestEnvironment(), ['nominal_ext1', 'finalclass_ext2']);
 		$oDryRemovalRuntimeEnvt->CompileFrom($this->GetTestEnvironment());
 
-		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment());
+		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment(), DryRemovalRuntimeEnvironment::DRY_REMOVAL_AUDIT_ENV);
 
 		$expected = [
 			"Feature1Module1MyClass",
@@ -73,11 +75,11 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 	{
 		$sEnv = MetaModel::GetEnvironment();
 
-		$aClassesAfterRemoval = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($sEnv);
-		$aClassesAfterRemoval[] = "GabuZomeu";
+		$aClassesBeforeRemoval = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($sEnv);
+		$aClassesBeforeRemoval[] = "GabuZomeu";
 
-		$oSetupAudit = new SetupAudit($sEnv, $sEnv);
-		$oSetupAudit->ComputeClasses($aClassesAfterRemoval);
+		$oSetupAudit = new InplaceSetupAudit($aClassesBeforeRemoval, $sEnv);
+		$oSetupAudit->ComputeClasses($aClassesBeforeRemoval);
 		$this->assertEquals(["GabuZomeu"], $oSetupAudit->GetRemovedClasses());
 	}
 
@@ -87,7 +89,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$oOrg = $this->CreateOrganization($sUID);
 		$this->createObject('FinalClassFeature1Module1MyFinalClassFromLocation', ['org_id' => $oOrg->GetKey(), 'name' => $sUID, 'name2' => uniqid()]);
 
-		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment());
+		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment(), DryRemovalRuntimeEnvironment::DRY_REMOVAL_AUDIT_ENV);
 		$aRemovedClasses = [
 			"Feature1Module1MyClass",
 			"FinalClassFeature1Module1MyClass",
@@ -113,7 +115,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$this->createObject('FinalClassFeature1Module1MyFinalClassFromLocation', ['org_id' => $oOrg->GetKey(), 'name' => $sUID, 'name2' => uniqid()]);
 		$this->createObject('FinalClassFeature2Module1MyFinalClassFromLocation', ['org_id' => $oOrg->GetKey(), 'name' => $sUID, 'name2' => uniqid()]);
 
-		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment());
+		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment(), DryRemovalRuntimeEnvironment::DRY_REMOVAL_AUDIT_ENV);
 		$aRemovedClasses = [
 			"Feature1Module1MyClass",
 			"FinalClassFeature1Module1MyClass",
@@ -125,8 +127,9 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		//avoid setup dry computation
 		$this->SetNonPublicProperty($oSetupAudit, 'aRemovedClasses', $aRemovedClasses);
 
-		$this->expectException(Exception::class);
-		$this->expectExceptionMessage('FinalClassFeature1Module1MyFinalClassFromLocation');
-		$oSetupAudit->GetIssues(true);
+		$expected = [
+			"FinalClassFeature1Module1MyFinalClassFromLocation" => 1,
+		];
+		$this->assertEqualsCanonicalizing($expected, $oSetupAudit->GetIssues(true));
 	}
 }
