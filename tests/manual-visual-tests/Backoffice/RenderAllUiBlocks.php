@@ -23,6 +23,8 @@
 namespace Combodo\iTop\Test\VisualTest\Backoffice;
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Badge\Badge;
+use Combodo\iTop\Application\UI\Base\Component\Badge\BadgeUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroup;
@@ -39,6 +41,7 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Pill\PillFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\Extension\ExtensionDetails;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
@@ -578,5 +581,14 @@ $oPage->AddUiBlock($oSimpleSetBlockOql);
 
 $oSimpleSetBlockOql2 = SetUIBlockFactory::MakeForOQL('SetOql2', 'Location', 'SELECT Location', null, [], null, 'OqlSet2');
 $oPage->AddUiBlock($oSimpleSetBlockOql2);
+
+$oSampleBadge = new Badge('badge red',Badge::ENUM_COLOR_SCHEME_RED,'Tooltip');
+$oPage->AddUiBlock($oSampleBadge);
+
+$oSampleBadgeNeutral = BadgeUIBlockFactory::MakeNeutral('badge neutral','Tooltip');
+$oPage->AddUiBlock($oSampleBadgeNeutral);
+
+$oExtensionDetail = new ExtensionDetails('itop-sample', 'My extension', 'This is for test only');
+$oPage->AddUiBlock($oExtensionDetail);
 
 $oPage->output();

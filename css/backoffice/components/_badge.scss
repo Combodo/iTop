@@ -1,0 +1,39 @@
+$ibo-badge--padding-x : $ibo-spacing-200 !default;
+$ibo-badge--padding-y : $ibo-spacing-100 !default;
+$ibo-badge--border-radius : $ibo-border-radius-400 !default;
+
+$ibo-badge-colors: (
+		'primary': ($ibo-color-primary-100, $ibo-color-primary-900),
+		'secondary': ($ibo-color-secondary-100, $ibo-color-secondary-900),
+		'neutral': ($ibo-color-secondary-100, $ibo-color-secondary-900),
+		'information': ($ibo-color-information-100, $ibo-color-information-900),
+		'success': ($ibo-color-success-100, $ibo-color-success-900),
+		'failure': ($ibo-color-danger-100, $ibo-color-danger-900),
+		'warning': ($ibo-color-warning-100,$ibo-color-warning-900),
+		'danger': ($ibo-color-danger-100,$ibo-color-danger-900),
+		'grey' : ($ibo-color-grey-100, $ibo-color-grey-900),
+		'blue-grey': ($ibo-color-blue-grey-100, $ibo-color-blue-grey-900),
+		'blue': ($ibo-color-blue-100, $ibo-color-blue-900),
+		'cyan': ($ibo-color-cyan-100, $ibo-color-cyan-900),
+		'green': ($ibo-color-green-100, $ibo-color-green-900),
+		'orange' : ($ibo-color-orange-100, $ibo-color-orange-900),
+		'red': ($ibo-color-red-100, $ibo-color-red-900),
+		'pink': ($ibo-color-pink-100, $ibo-color-pink-900),
+) !default;
+
+
+
+.ibo-badge {
+	padding : $ibo-badge--padding-y $ibo-badge--padding-x;
+	border-radius : $ibo-badge--border-radius;
+	@extend %ibo-font-ral-med-50;
+
+	@each $sColor, $aColorValues in $ibo-badge-colors {
+		$bg-color: nth($aColorValues, 1);
+		$text-color: nth($aColorValues, 2);
+		&.ibo-is-#{$sColor} {
+			background-color: $bg-color;
+			color: $text-color;
+		}
+	}
+}
