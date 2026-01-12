@@ -8,6 +8,7 @@ use Combodo\iTop\Application\UI\Base\Component\TurboForm\TurboFormUIBlockFactory
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Controller\AbstractController;
+use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use ModelReflectionRuntime;
 use utils;
 
@@ -17,6 +18,7 @@ class DashboardController extends AbstractController
 
 	public function OperationGetDashlet()
 	{
+		// TODO 3.3 Do we want to use a readparam here or SF internal mechanism ?
 		$sDashletClass = utils::ReadParam('dashlet_class', '', false, utils::ENUM_SANITIZATION_FILTER_PHP_CLASS);
 		$sDashletId = utils::ReadParam('dashlet_id', '', false, utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 		// TODO 3.3 Check if raw data is the right call
@@ -31,8 +33,14 @@ class DashboardController extends AbstractController
 
 			$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
 
-			// TODO 3.3 I'd like to update dashlet from frontend's normalized data
-			// $oDashlet->FromNormalizedParams($aValues);
+			// TODO 3.3 This is not the place to register this service, do better please
+			ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
+			if(!empty($aValues)) {
+				$oDashlet->FromDenormalizedParams($aValues);
+			}
+			else {
+				$aValues = $oDashlet->GetDenormalizedProperties();
+			}
 
 			$oDashletBlock = $oDashlet->DoRender($oPage, true /* bEditMode */, false /* bEnclosingDiv */);
 
@@ -49,8 +57,8 @@ class DashboardController extends AbstractController
 
 	public function OperationGetDashletForm()
 	{
-		$sDashletClass = utils::ReadParam('dashlet_class', '', false, utils::ENUM_SANITIZATION_FILTER_PHP_CLASS);
 		// TODO 3.3 Do we want to use a readparam here or SF internal mechanism ?
+		$sDashletClass = utils::ReadParam('dashlet_class', '', false, utils::ENUM_SANITIZATION_FILTER_PHP_CLASS);
 		$sValues = utils::ReadParam('values', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 		$aValues = !empty($sValues) ? json_decode($sValues, true) : [];
 

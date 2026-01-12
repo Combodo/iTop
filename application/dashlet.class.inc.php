@@ -201,6 +201,12 @@ abstract class Dashlet
 		$this->OnUpdate();
 	}
 
+	public function FromDenormalizedParams(array $aDenormalizedParams)
+	{
+		$this->aProperties = XMLNormalizer::GetInstance()->Normalize($aDenormalizedParams, get_class($this), 'Dashlet');
+		$this->OnUpdate();
+	}
+
 	/**
 	 * @return array Rel. path to the app. root of the JS files required by the dashlet
 	 * @since 3.0.0
