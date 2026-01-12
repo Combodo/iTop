@@ -1203,6 +1203,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nom Famille OS',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Le nom doit être unique au sein de cette famille d\'OS',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'cette version d\'OS existe déjà dans cette famille',
 ]);
 
 //
@@ -1212,6 +1214,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSFamily' => 'Famille OS',
 	'Class:OSFamily+' => '',
+	'Class:OSFamily/UniquenessRule:name+' => 'Le nom doit être unique',
+	'Class:OSFamily/UniquenessRule:name' => 'cette famille d\'OS existe déjà',
 ]);
 
 //
@@ -1327,6 +1331,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nom Marque',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Le nom doit être unique pour cette marque',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'cette version d\'IOS existe déja sur cette marque',
 ]);
 
 //

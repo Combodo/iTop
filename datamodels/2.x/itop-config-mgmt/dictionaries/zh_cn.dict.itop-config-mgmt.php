@@ -1070,6 +1070,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => '名称',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
 ]);
 
 //
@@ -1079,6 +1081,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:OSFamily' => '操作系统家族',
 	'Class:OSFamily+' => '',
+	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
+	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
 ]);
 
 //
@@ -1176,6 +1180,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => '名称',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
 ]);
 
 //

@@ -1053,6 +1053,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Názov kategórie OS',
 	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily+' => 'Name must be unique in the OS family~~',
+	'Class:OSVersion/UniquenessRule:name_osfamily' => 'this OS version already exists within the OS family~~',
 ]);
 
 //
@@ -1062,6 +1064,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:OSFamily' => 'Kategória OS',
 	'Class:OSFamily+' => '~~',
+	'Class:OSFamily/UniquenessRule:name+' => 'Name must be unique~~',
+	'Class:OSFamily/UniquenessRule:name' => 'this OS family already exists~~',
 ]);
 
 //
@@ -1159,6 +1163,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:IOSVersion/Attribute:brand_id+' => '~~',
 	'Class:IOSVersion/Attribute:brand_name' => 'Názov značky',
 	'Class:IOSVersion/Attribute:brand_name+' => '~~',
+	'Class:IOSVersion/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
+	'Class:IOSVersion/UniquenessRule:name_brand' => 'this IOS version already exists for this brand~~',
 ]);
 
 //
