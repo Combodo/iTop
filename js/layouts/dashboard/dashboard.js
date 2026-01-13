@@ -52,6 +52,10 @@ class IboDashboard extends HTMLElement {
 			// TODO 3.3: Implement cancel functionality (reload last saved state)
 			this.SetEditMode(false)
 		});
+
+		// Bind IboDashboard object to these listener so we can access current instance
+		this._ListenToDashletFormSubmission = this._ListenToDashletFormSubmission.bind(this);
+		this._ListenToDashletFormCancellation = this._ListenToDashletFormCancellation.bind(this);
 	}
 	SetupGrid() {
 		if(this.oGrid !== null){
@@ -96,19 +100,17 @@ class IboDashboard extends HTMLElement {
 
 	}
 
-	RefreshDashlet(sDashletId) {
-		const oDashletElem = this.oGrid.GetDashletElement(sDashletId);
-
-		let sGetDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet&dashlet_class=' + encodeURIComponent(oDashletElem.sType)
-			+'&dashlet_id=' + encodeURIComponent(oDashletElem.sDashletId);
-		if(oDashletElem.formData.length > 0) {
-			sGetDashletUrl += '&values=' + encodeURIComponent(oDashletElem.formData);
+	RefreshDashlet(oDashlet) {
+		let sGetDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet&dashlet_class=' + encodeURIComponent(oDashlet.sType)
+			+'&dashlet_id=' + encodeURIComponent(oDashlet.sDashletId);
+		if(oDashlet.formData.length > 0) {
+			sGetDashletUrl += '&values=' + encodeURIComponent(oDashlet.formData);
 		}
 
 		return fetch(sGetDashletUrl)
 			.then(async data => {
 
-				const sDashletId = this.oGrid.RefreshDashlet(await data.text());
+				this.oGrid.RefreshDashlet(await data.text());
 		});
 	}
 
@@ -135,11 +137,9 @@ class IboDashboard extends HTMLElement {
 	}
 
 	EditDashlet(sDashletId) {
-		console.log(this.oGrid);
 		const oDashlet = this.oGrid.GetDashletElement(sDashletId);
 		const me = this;
 		// TODO 3.3: Implement dashlet editing when forms are ready
-		console.log("Edit dashlet: "+sDashletId);
 
 		// Create backdrop to block interactions with other dashlets
 		if(this.oGrid.querySelector('.ibo-dashboard--grid--backdrop') === null) {
@@ -165,38 +165,50 @@ class IboDashboard extends HTMLElement {
 
 				this.HideDashletTogglers();
 				this.SetDashletForm(sFormData);
-				// Listen to form submission event to display
-				document.addEventListener('itop:TurboStreamEvent', function (event) {
-					console.log(event);
-					if(event.detail.id === oDashlet.sType + '-turbo-stream-event' && event.detail.valid === "1") {
-						// Notify it all went well
-						CombodoToast.OpenToast('Dashlet created/updated');
 
-						// Clean edit mode
-						me.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'view');
-						me.ShowDashletTogglers();
-						me.ClearDashletForm();
-
-						// Update local dashlet and refresh it
-						oDashlet.formData = event.detail.view_data;
-						me.RefreshDashlet(oDashlet.sDashletId);
-
-						// TODO 3.3 Remove both event listener by making this code a dedicated function and call removeEventListener on it
-					}
-				});
-
-				document.querySelector('.ibo-dashlet-panel--form-container button[name="dashboard_cancel"]').addEventListener('click', function (event) {
-					// TODO 3.3 Remove both event listener by making this code a dedicated function and call removeEventListener on it
-
-					// Clean edit mode
-					me.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'view');
-					me.ShowDashletTogglers();
-					me.ClearDashletForm();
-
-					// TODO 3.3 If this is an addition, remove the previewed dashlet
-					// TODO 3.3 If this is an edition, revert the dashlet to its initial state
-				})
+				// Listen to form submission event and cancellation
+				document.addEventListener('itop:TurboStreamEvent', me._ListenToDashletFormSubmission);
+				document.querySelector('.ibo-dashlet-panel--form-container button[name="dashboard_cancel"]').addEventListener('click', me._ListenToDashletFormCancellation);
 			});
+	}
+
+	_ListenToDashletFormSubmission(event) {
+		const oDashlet = this.querySelector('ibo-dashlet[data-edit-mode="edit"]');
+		const sDashletId = oDashlet.GetDashletId();
+
+		if(event.detail.id === oDashlet.sType + '-turbo-stream-event' && event.detail.valid === "1") {
+			// Remove events
+			document.addEventListener('itop:TurboStreamEvent', this._ListenToDashletFormSubmission);
+			document.querySelector('.ibo-dashlet-panel--form-container button[name="dashboard_cancel"]').removeEventListener('click', this._ListenToDashletFormCancellation);
+
+			// Notify it all went well
+			CombodoToast.OpenToast('Dashlet created/updated', 'success');
+
+			// Clean edit mode
+			this.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'view');
+			this.ShowDashletTogglers();
+			this.ClearDashletForm();
+
+			// Update local dashlet and refresh it
+			oDashlet.formData = event.detail.view_data;
+			this.RefreshDashlet(oDashlet);
+		}
+	}
+
+	_ListenToDashletFormCancellation(event) {
+		const oDashlet = this.querySelector('ibo-dashlet[data-edit-mode="edit"]');
+		const sDashletId = oDashlet.GetDashletId();
+		// Remove events
+		document.addEventListener('itop:TurboStreamEvent', this._ListenToDashletFormSubmission);
+		document.querySelector('.ibo-dashlet-panel--form-container button[name="dashboard_cancel"]').removeEventListener('click', this._ListenToDashletFormCancellation);
+
+		// Clean edit mode
+		this.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'view');
+		this.ShowDashletTogglers();
+		this.ClearDashletForm();
+
+		// TODO 3.3 If this is an addition, remove the previewed dashlet
+		// TODO 3.3 If this is an edition, revert the dashlet to its initial state
 	}
 
 	CloneDashlet(sDashletId) {
@@ -226,7 +238,6 @@ class IboDashboard extends HTMLElement {
 		const aPayload = this.Serialize();
 		// TODO 3.3: Implement saving dashboard state to server when backend is ready
 		// May try to save as serialized PHP if XML format is not yet decided
-		console.log(aPayload);
 		// Fetch dashlet form from server
 		let sSaveUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.save&values='+encodeURIComponent(JSON.stringify(aPayload));
 		fetch(sSaveUrl)

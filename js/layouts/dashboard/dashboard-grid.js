@@ -88,11 +88,32 @@ class IboGrid extends HTMLElement {
 	RefreshDashlet (sDashlet, aOptions = {}) {
 		const oParser = new DOMParser();
 		const oDocument = oParser.parseFromString(sDashlet, 'text/html');
-		const oNewDashlet = oDocument.body.firstChild;
+		const oNewDashlet = oDocument.body.firstElementChild;
 
 		// Can't use oNewDashet.sDashletId as it's not in the DOM yet and connectedCallback hasn't been called yet
 		const oExistingDashlet = this.GetDashletElement(oNewDashlet.getAttribute('data-dashlet-id') );
-		oExistingDashlet.replaceWith(oNewDashlet);
+
+		// Copy attributes
+		for (const sAttr of oNewDashlet.attributes) {
+			oExistingDashlet.setAttribute(sAttr.name, sAttr.value);
+		}
+
+		// If we refresh a dashlet, its parent slot remains the same, we just need to update its content
+		let oSlotForExistingDashlet = null;
+		const aSlots = this.getSlots();
+		for (let oSlot of aSlots) {
+			if (oSlot.oDashlet && oSlot.oDashlet.sDashletId === oNewDashlet.getAttribute('data-dashlet-id')) {
+				oSlotForExistingDashlet = oSlot;
+				break;
+			}
+		}
+
+		// There must be a slot for the existing dashlet
+		if(oSlotForExistingDashlet !== null) {
+			this.oGrid.removeWidget(oSlotForExistingDashlet);
+			oSlotForExistingDashlet.innerHTML = oNewDashlet.outerHTML;
+			this.oGrid.makeWidget(oSlotForExistingDashlet);
+		}
 	}
 
 	CloneDashlet(sDashletId) {
