@@ -12,14 +12,14 @@ class SetupAudit extends AbstractSetupAudit
 	//file used when present to trigger audit exception when testing specific setups
 	public const GETISSUE_ERROR_MSG_FILE_FORTESTONLY = '.setup_audit_error_msg.txt';
 
-	private string $sEnvBeforeExtensionRemoval;
-	private string $sEnvAfterExtensionRemoval;
+	private string $sEnvBefore;
+	private string $sEnvAfter;
 
-	public function __construct(string $sEnvBeforeExtensionRemoval, string $sEnvAfterExtensionRemoval)
+	public function __construct(string $sEnvBefore, string $sEnvAfter)
 	{
 		parent::__construct();
-		$this->sEnvBeforeExtensionRemoval = $sEnvBeforeExtensionRemoval;
-		$this->sEnvAfterExtensionRemoval = $sEnvAfterExtensionRemoval;
+		$this->sEnvBefore = $sEnvBefore;
+		$this->sEnvAfter = $sEnvAfter;
 	}
 
 	public function ComputeClasses(): void
@@ -29,16 +29,16 @@ class SetupAudit extends AbstractSetupAudit
 		}
 
 		$sCurrentEnvt = MetaModel::GetEnvironment();
-		if ($sCurrentEnvt === $this->sEnvBeforeExtensionRemoval) {
-			$this->aClassesBeforeRemoval = MetaModel::GetClasses();
+		if ($sCurrentEnvt === $this->sEnvBefore) {
+			$this->aClassesBefore = MetaModel::GetClasses();
 		} else {
-			$this->aClassesBeforeRemoval = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvBeforeExtensionRemoval);
+			$this->aClassesBefore = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvBefore);
 		}
 
-		if ($sCurrentEnvt === $this->sEnvAfterExtensionRemoval) {
-			$this->aClassesAfterRemoval = MetaModel::GetClasses();
+		if ($sCurrentEnvt === $this->sEnvAfter) {
+			$this->aClassesAfter = MetaModel::GetClasses();
 		} else {
-			$this->aClassesAfterRemoval = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvAfterExtensionRemoval);
+			$this->aClassesAfter = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvAfter);
 		}
 
 		$this->bClassesInitialized = true;
@@ -60,15 +60,15 @@ class SetupAudit extends AbstractSetupAudit
 		$this->ComputeClasses();
 
 		if (count($this->aRemovedClasses) == 0) {
-			if (count($this->aClassesBeforeRemoval) == 0) {
+			if (count($this->aClassesBefore) == 0) {
 				return $this->aRemovedClasses;
 			}
 
-			if (count($this->aClassesAfterRemoval) == 0) {
+			if (count($this->aClassesAfter) == 0) {
 				return $this->aRemovedClasses;
 			}
 
-			$aExtensionsNames = array_diff($this->aClassesBeforeRemoval, $this->aClassesAfterRemoval);
+			$aExtensionsNames = array_diff($this->aClassesBefore, $this->aClassesAfter);
 			$this->aRemovedClasses = [];
 			$aClasses = array_values($aExtensionsNames);
 			sort($aClasses);

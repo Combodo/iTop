@@ -22,14 +22,13 @@
 
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use Combodo\iTop\Setup\ModuleDependency\Module;
+use Combodo\iTop\Setup\ModuleDependency\ModuleDependencySort;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 require_once(APPROOT.'setup/modulediscovery/ModuleFileReader.php');
 require_once(__DIR__.'/moduledependency/moduledependencysort.class.inc.php');
 require_once(__DIR__.'/itopextension.class.inc.php');
-
-use Combodo\iTop\Setup\ModuleDependency\ModuleDependencySort;
 
 class MissingDependencyException extends CoreException
 {
@@ -135,7 +134,7 @@ class ModuleDiscovery
 
 		list($sModuleName, $sModuleVersion) = static::GetModuleName($sId);
 
-		if (self::IsModulePartOfRemovedExtension($sModuleName, $sModuleVersion, $aArgs)) {
+		if (self::IsModuleInExtensionList(self::$m_aRemovedExtensions, $sModuleName, $sModuleVersion, $aArgs)) {
 			return;
 		}
 
@@ -230,7 +229,7 @@ class ModuleDiscovery
 				$oModule = new Module($sModuleId);
 				$sModuleName = $oModule->GetModuleName();
 
-				if (self::IsModulePartOfRemovedExtension($sModuleName, $oModule->GetVersion(), $aModuleInfo)) {
+				if (self::IsModuleInExtensionList(self::$m_aRemovedExtensions, $sModuleName, $oModule->GetVersion(), $aModuleInfo)) {
 					continue;
 				}
 
@@ -254,16 +253,24 @@ class ModuleDiscovery
 		self::$m_aRemovedExtensions = $aRemovedExtension;
 	}
 
-	private static function IsModulePartOfRemovedExtension(string $sModuleName, string $sModuleVersion, array $aModuleInfo): bool
+	/**
+	 * @param array<\iTopExtension> $aExtensions
+	 * @param string $sModuleName
+	 * @param string $sModuleVersion
+	 * @param array $aModuleInfo
+	 *
+	 * @return bool
+	 */
+	private static function IsModuleInExtensionList(array $aExtensions, string $sModuleName, string $sModuleVersion, array $aModuleInfo): bool
 	{
-		if (count(self::$m_aRemovedExtensions) === 0) {
+		if (count($aExtensions) === 0) {
 			return false;
 		}
 		$aNonMatchingPaths = [];
 		$sModuleFilePath = $aModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
 
 		/** @var \iTopExtension $oExtension */
-		foreach (self::$m_aRemovedExtensions as $oExtension) {
+		foreach ($aExtensions as $oExtension) {
 			$sCurrentVersion = $oExtension->aModuleVersion[$sModuleName] ?? null;
 			if (is_null($sCurrentVersion)) {
 				continue;

@@ -12,13 +12,13 @@ class InplaceSetupAudit extends AbstractSetupAudit
 	//file used when present to trigger audit exception when testing specific setups
 	public const GETISSUE_ERROR_MSG_FILE_FORTESTONLY = '.setup_audit_error_msg.txt';
 
-	private string $sEnvAfterExtensionRemoval;
+	private string $sEnvAfter;
 
-	public function __construct(array $aClassesBeforeRemoval, string $sEnvAfterExtensionRemoval)
+	public function __construct(array $aClassesBefore, string $sEnvAfter)
 	{
 		parent::__construct();
-		$this->aClassesBeforeRemoval = $aClassesBeforeRemoval;
-		$this->sEnvAfterExtensionRemoval = $sEnvAfterExtensionRemoval;
+		$this->aClassesBefore = $aClassesBefore;
+		$this->sEnvAfter = $sEnvAfter;
 	}
 
 	public function ComputeClasses(): void
@@ -29,10 +29,10 @@ class InplaceSetupAudit extends AbstractSetupAudit
 
 		$sCurrentEnvt = MetaModel::GetEnvironment();
 
-		if ($sCurrentEnvt === $this->sEnvAfterExtensionRemoval) {
-			$this->aClassesAfterRemoval = MetaModel::GetClasses();
+		if ($sCurrentEnvt === $this->sEnvAfter) {
+			$this->aClassesAfter = MetaModel::GetClasses();
 		} else {
-			$this->aClassesAfterRemoval = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvAfterExtensionRemoval);
+			$this->aClassesAfter = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvAfter);
 		}
 
 		$this->bClassesInitialized = true;
