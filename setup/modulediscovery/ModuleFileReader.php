@@ -7,15 +7,15 @@ use CoreException;
 use Exception;
 use ParseError;
 use PhpParser\Error;
+use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Scalar\String_;
+use PhpParser\Node\Stmt\ElseIf_;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\If_;
 use PhpParser\ParserFactory;
-use PhpParser\Node\Expr\Assign;
-use PhpParser\Node\Stmt\ElseIf_;
-use PhpParser\Node\Expr\Array_;
-use PhpParser\Node\Scalar\String_;
-use PhpParser\Node\Arg;
 
 require_once __DIR__.'/ModuleFileReaderException.php';
 require_once APPROOT.'sources/PhpParser/Evaluation/PhpExpressionEvaluator.php';
@@ -49,11 +49,11 @@ class ModuleFileReader
 
 	final public static function GetInstance(): ModuleFileReader
 	{
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new static();
+		if (!isset(self::$oInstance)) {
+			self::$oInstance = new ModuleFileReader();
 		}
 
-		return static::$oInstance;
+		return self::$oInstance;
 	}
 
 	final public static function SetInstance(?ModuleFileReader $oInstance): void

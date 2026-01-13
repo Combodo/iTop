@@ -7,7 +7,7 @@ use CoreException;
 use Exception;
 use IssueLog;
 use SetupLog;
-use Utils;
+use utils;
 
 class ModelReflectionSerializer
 {
@@ -34,7 +34,7 @@ class ModelReflectionSerializer
 	public function GetModelFromEnvironment(string $sEnv): array
 	{
 		IssueLog::Info(__METHOD__, null, ['env' => $sEnv]);
-		$sPHPExec = trim(Utils::GetConfig()->Get('php_path'));
+		$sPHPExec = trim(utils::GetConfig()->Get('php_path'));
 		$sOutput = "";
 		$iRes = 0;
 

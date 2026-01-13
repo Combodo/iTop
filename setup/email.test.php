@@ -34,7 +34,7 @@ require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
 
-$sOperation = Utils::ReadParam('operation', 'step1');
+$sOperation = utils::ReadParam('operation', 'step1');
 $oP = new SetupPage('iTop email test utility');
 
 // Although this page doesn't expose sensitive info, with it we can send multiple emails
@@ -208,7 +208,7 @@ function DisplayStep2(SetupPage $oP, $sFrom, $sTo)
 	$oP->add("<p>Sending an email to '".htmlentities($sTo, ENT_QUOTES, 'utf-8')."'... (From: '".htmlentities($sFrom, ENT_QUOTES, 'utf-8')."')</p>\n");
 	$oP->add("<form method=\"post\">\n");
 
-	$oEmail = new Email();
+	$oEmail = new EMail();
 	$oEmail->SetRecipientTO($sTo);
 	$oEmail->SetRecipientFrom($sFrom);
 	$oEmail->SetSubject("Test iTop");
@@ -256,8 +256,8 @@ try {
 
 		case 'step2':
 			$oP->no_cache();
-			$sTo = Utils::ReadParam('to', '', false, 'raw_data');
-			$sFrom = Utils::ReadParam('from', '', false, 'raw_data');
+			$sTo = utils::ReadParam('to', '', false, 'raw_data');
+			$sFrom = utils::ReadParam('from', '', false, 'raw_data');
 			DisplayStep2($oP, $sFrom, $sTo);
 			break;
 

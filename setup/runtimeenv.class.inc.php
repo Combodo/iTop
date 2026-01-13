@@ -126,9 +126,8 @@ class RunTimeEnvironment
 	 * from the given file
 	 * @param $oConfig object The configuration (volatile, not necessarily already on disk)
 	 * @param $bModelOnly boolean Whether or not to allow loading a data model with no corresponding DB
-	 * @return none
 	 */
-	public function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false)
+	public function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false): void
 	{
 		require_once APPROOT.'/setup/moduleinstallation.class.inc.php';
 
@@ -896,7 +895,7 @@ class RunTimeEnvironment
 			try {
 				call_user_func_array($aCallSpec, $aArgs);
 			} catch (Exception $e) {
-				$sModuleId = isset($sModuleId) ? $sModuleId : "";
+				$sModuleId = $aModuleInfo[ModuleFileReader::MODULE_INFO_ID] ?? "";
 				$sErrorMessage = "Module $sModuleId : error when calling module installer class $sModuleInstallerClass for $sHandlerName handler";
 				$aExceptionContextData = [
 					'ModulelId' => $sModuleId,

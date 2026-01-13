@@ -5,7 +5,7 @@ namespace Combodo\iTop\Setup\ModuleDependency;
 require_once(APPROOT.'/setup/runtimeenv.class.inc.php');
 
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
-use ModuleFileReaderException;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 use RunTimeEnvironment;
 
 /**
