@@ -353,6 +353,7 @@ class XMLDataLoader
 			foreach ($oObjList as $oTargetObj) {
 				$bChanged = false;
 				$sClass = get_class($oTargetObj);
+				$iExtKey = -1;
 				foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 					if (($oAttDef->IsExternalKey()) && ($oTargetObj->Get($sAttCode) < 0)) { // Convention unresolved key = negative
 						$sTargetClass = $oAttDef->GetTargetClass();

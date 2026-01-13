@@ -254,32 +254,23 @@ class SetupUtils
 
 		if (!utils::IsModeCLI()) {
 			$sUploadTmpDir = self::GetUploadTmpDir();
-			if (empty($sUploadTmpDir)) {
-				$sUploadTmpDir = '/tmp';
-				$aResult[] = new CheckResult(
-					CheckResult::WARNING,
-					"Temporary directory for files upload is not defined (upload_tmp_dir), assuming that $sUploadTmpDir is used."
-				);
-			}
 			// check that the upload directory is indeed writable from PHP
-			if (!empty($sUploadTmpDir)) {
-				if (!file_exists($sUploadTmpDir)) {
+			if (!file_exists($sUploadTmpDir)) {
+				$aResult[] = new CheckResult(
+					CheckResult::ERROR,
+					"Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP."
+				);
+			} else {
+				if (!is_writable($sUploadTmpDir)) {
 					$aResult[] = new CheckResult(
 						CheckResult::ERROR,
-						"Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP."
+						"Temporary directory for files upload ($sUploadTmpDir) is not writable."
 					);
 				} else {
-					if (!is_writable($sUploadTmpDir)) {
-						$aResult[] = new CheckResult(
-							CheckResult::ERROR,
-							"Temporary directory for files upload ($sUploadTmpDir) is not writable."
-						);
-					} else {
-						$aResult[] = new CheckResult(
-							CheckResult::TRACE,
-							"Info - Temporary directory for files upload ($sUploadTmpDir) is writable."
-						);
-					}
+					$aResult[] = new CheckResult(
+						CheckResult::TRACE,
+						"Info - Temporary directory for files upload ($sUploadTmpDir) is writable."
+					);
 				}
 			}
 		}
