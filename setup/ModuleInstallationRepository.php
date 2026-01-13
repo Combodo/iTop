@@ -19,7 +19,7 @@ class ModuleInstallationRepository
 
 	final public static function SetInstance(?ModuleInstallationRepository $oInstance): void
 	{
-		static::$oInstance = $oInstance;
+		self::$oInstance = $oInstance;
 	}
 
 	private ?array $aSelectInstall = null;
@@ -205,8 +205,8 @@ SQL;
 		$oSet->SetLimit($iOffset + 1);
 
 		$iParentId = 0;
-		/** @var \DBObject $oModuleInstallation */
-		while ($oModuleInstallation = $oSet->Fetch()) {
+		while (!is_null($oModuleInstallation = $oSet->Fetch())) {
+			/** @var \DBObject $oModuleInstallation */
 			if ($iOffset == 0) {
 				$iParentId = $oModuleInstallation->Get('id');
 				break;

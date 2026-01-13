@@ -168,7 +168,7 @@ class ModuleDependencySort
 			foreach ($aCountDepsByModuleId as $sModuleId => $iInDegreeCounter) {
 				$oModule = $aUnresolvedDependencyModules[$sModuleId];
 
-				if ($bOneLoopAtLeast && $iInDegreeCounter > 0) {
+				if ($bOneLoopAtLeast && ($iInDegreeCounter > 0)) {
 					break;
 				}
 

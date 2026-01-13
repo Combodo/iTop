@@ -95,7 +95,7 @@ class ModuleDiscovery
 	protected static $m_aModules = [];
 	protected static $m_aModuleVersionByName = [];
 
-	/** @var array<\iTopExtension $m_aRemovedExtensions  */
+	/** @var array<\iTopExtension> $m_aRemovedExtensions */
 	protected static $m_aRemovedExtensions = [];
 
 	// All the entries below are list of file paths relative to the module directory
@@ -307,11 +307,11 @@ class ModuleDiscovery
 
 	private static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
 	{
-		if (!isset(static::$oPhpExpressionEvaluator)) {
-			static::$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+		if (!isset(self::$oPhpExpressionEvaluator)) {
+			self::$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
 		}
 
-		return static::$oPhpExpressionEvaluator;
+		return self::$oPhpExpressionEvaluator;
 	}
 
 	/**
@@ -360,10 +360,12 @@ class ModuleDiscovery
 
 	/**
 	 * Helper function to interpret the name of a module
+	 *
 	 * @param $sModuleId string Identifier of the module, in the form 'name/version'
-	 * @return array(name, version)
+	 *
+	 * @return array of 2 elements (name, version)
 	 */
-	public static function GetModuleName($sModuleId)
+	public static function GetModuleName($sModuleId): array
 	{
 		$aMatches = [];
 		if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches)) {
