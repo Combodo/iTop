@@ -599,7 +599,7 @@ class SetupUtils
 		// create and test destination location
 		//
 		$sDestDir = dirname($sDBBackupPath);
-		setuputils::builddir($sDestDir);
+		SetupUtils::builddir($sDestDir);
 		if (!is_dir($sDestDir)) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, "$sDestDir does not exist and could not be created.");
 		}

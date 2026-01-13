@@ -95,8 +95,17 @@ SQL;
 			$aSelectInstall = CMDBSource::QueryToArray($sSQLQuery);
 		} catch (MySQLException $e) {
 			// No database or erroneous information
-			$this->log_error('Can not connect to the database: host: '.$oConfig->Get('db_host').', user:'.$oConfig->Get('db_user').', pwd:'.$oConfig->Get('db_pwd').', db name:'.$oConfig->Get('db_name'));
-			$this->log_error('Exception '.$e->getMessage());
+			SetupLog::Error(
+				'Can not connect to the database',
+				null,
+				[
+					'host'    => $oConfig->Get('db_host'),
+					'user'    => $oConfig->Get('db_user'),
+					'pwd:'    => $oConfig->Get('db_pwd'),
+					'db name' => $oConfig->Get('db_name'),
+					'msg'     => $e->getMessage(),
+				]
+			);
 			return false;
 		}
 
@@ -129,7 +138,8 @@ SQL;
 			// so assume that the datamodel version is equal to the application version
 			$aResult['datamodel_version'] = $aResult['product_version'];
 		}
-		$this->log_info("GetApplicationVersion returns: product_name: ".$aResult['product_name'].', product_version: '.$aResult['product_version']);
+
+		SetupLog::Info(__METHOD__, null, ["product_name" => $aResult['product_name'], "product_version" => $aResult['product_version']]);
 		return empty($aResult) ? false : $aResult;
 	}
 
