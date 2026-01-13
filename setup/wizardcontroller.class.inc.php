@@ -16,7 +16,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\WebPage\WebPage;
 
 /**
@@ -402,18 +401,6 @@ abstract class WizardStep
 	 * @return void
 	 */
 	abstract public function Display(WebPage $oPage);
-	/**
-	 * Displays the wizard page for the current class/state
-	 * return UIBlock
-	 * The name of the input fields (and their id if one is supplied) MUST NOT start with "_"
-	 * (this is reserved for the wizard's own parameters)
-	 * @return \Combodo\iTop\Application\UI\Base\UIBlock
-	 * @since 3.0.0
-	 */
-	public function DisplayBlock(WebPage $oPage)
-	{
-		return new Html($this->Display($oPage));
-	}
 
 	/**
 	 * Processes the page's parameters and (if moving forward) returns the next step/state to be displayed

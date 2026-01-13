@@ -19,16 +19,16 @@ class ModuleDependencySort
 
 	final public static function GetInstance(): ModuleDependencySort
 	{
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new static();
+		if (!isset(self::$oInstance)) {
+			self::$oInstance = new ModuleDependencySort();
 		}
 
-		return static::$oInstance;
+		return self::$oInstance;
 	}
 
 	final public static function SetInstance(?ModuleDependencySort $oInstance): void
 	{
-		static::$oInstance = $oInstance;
+		self::$oInstance = $oInstance;
 	}
 
 	/**
@@ -168,7 +168,7 @@ class ModuleDependencySort
 			foreach ($aCountDepsByModuleId as $sModuleId => $iInDegreeCounter) {
 				$oModule = $aUnresolvedDependencyModules[$sModuleId];
 
-				if ($bOneLoopAtLeast && $iInDegreeCounter > 0) {
+				if ($bOneLoopAtLeast && ($iInDegreeCounter > 0)) {
 					break;
 				}
 

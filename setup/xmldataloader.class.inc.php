@@ -230,6 +230,7 @@ class XMLDataLoader
 						} else {
 							$iDstObj = (int)($oSubNode);
 							// Attempt to find the object in the list of loaded objects
+							/** @var \Combodo\iTop\Core\AttributeDefinition\AttributeExternalKey $oAttDef */
 							$iExtKey = $this->GetObjectKey($oAttDef->GetTargetClass(), $iDstObj);
 							if ($iExtKey == 0) {
 								$iExtKey = -$iDstObj; // Convention: Unresolved keys are stored as negative !
@@ -353,8 +354,10 @@ class XMLDataLoader
 			foreach ($oObjList as $oTargetObj) {
 				$bChanged = false;
 				$sClass = get_class($oTargetObj);
+				$iExtKey = -1;
 				foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
 					if (($oAttDef->IsExternalKey()) && ($oTargetObj->Get($sAttCode) < 0)) { // Convention unresolved key = negative
+						/** @var \Combodo\iTop\Core\AttributeDefinition\AttributeExternalKey $oAttDef */
 						$sTargetClass = $oAttDef->GetTargetClass();
 						$iTempKey = $oTargetObj->Get($sAttCode);
 

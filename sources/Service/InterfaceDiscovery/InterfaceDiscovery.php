@@ -178,12 +178,19 @@ class InterfaceDiscovery
 					continue;
 				}
 				$aTmpClassMap = include $sAutoloadFile;
+				if (! is_array($aTmpClassMap)) {
+					//can happen when setup compilation broken in the middle
+					//ex: $sAutoloadFile could be empty and $aTmpClassMap is a int
+					$aAutoloaderErrors[] = $sAutoloadFile;
+					continue;
+				}
+
 				/** @noinspection SlowArrayOperationsInLoopInspection we are getting an associative array so the documented workarounds cannot be used */
 				$aClassMap = array_merge($aClassMap, $aTmpClassMap);
 			}
 			if (count($aAutoloaderErrors) > 0) {
 				IssueLog::Debug(
-					__METHOD__." cannot load some of the autoloader files",
+					__METHOD__." cannot load some of the autoloader files: missing or corrupted",
 					LogChannels::CORE,
 					['autoloader_errors' => $aAutoloaderErrors]
 				);

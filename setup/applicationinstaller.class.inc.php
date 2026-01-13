@@ -17,9 +17,13 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Combodo\iTop\Setup\FeatureRemoval\InplaceSetupAudit;
+use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
+
 require_once(APPROOT.'setup/parameters.class.inc.php');
 require_once(APPROOT.'setup/xmldataloader.class.inc.php');
 require_once(APPROOT.'setup/backup.class.inc.php');
+require_once APPROOT.'setup/feature_removal/InplaceSetupAudit.php';
 
 /**
  * The base class for the installation process.
@@ -258,6 +262,7 @@ class ApplicationInstaller
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 					$aMiscOptions = $this->oParams->Get('options', []);
 					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
+					$sSkipDataAudit = $this->oParams->Get('skip-data-audit', '');
 
 					$bUseSymbolicLinks = null;
 					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])) {
@@ -269,34 +274,50 @@ class ApplicationInstaller
 						}
 					}
 
+					$aParamValues = $this->oParams->GetParamForConfigArray();
+					$bIsSetupDataAuditEnabled = $this->IsSetupDataAuditEnabled($sSkipDataAudit, $aParamValues);
 					$this->DoCompile(
 						$aRemovedExtensionCodes,
 						$aSelectedModules,
 						$sSourceDir,
 						$sExtensionDir,
+						$bIsSetupDataAuditEnabled,
 						$bUseSymbolicLinks
 					);
 
+					if ($bIsSetupDataAuditEnabled) {
+						$sNextStep = 'setup-audit';
+						$sNextStepLabel = 'Checking data consistency with the new data model';
+					} else {
+						$sNextStep = 'db-schema';
+						$sNextStepLabel = 'Updating database schema';
+					}
+
+					$aResult = [
+						'status' => self::OK,
+						'message' => '',
+						'next-step' => $sNextStep,
+						'next-step-label' => $sNextStepLabel,
+						'percentage-completed' => 40,
+					];
+					break;
+
+				case 'setup-audit':
+					$this->DoSetupAudit();
 					$aResult = [
 						'status' => self::OK,
 						'message' => '',
 						'next-step' => 'db-schema',
 						'next-step-label' => 'Updating database schema',
-						'percentage-completed' => 40,
+						'percentage-completed' => 50,
 					];
 					break;
 
 				case 'db-schema':
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
-					$aParamValues = $this->oParams->GetParamForConfigArray();
-					$bOldAddon = $this->oParams->Get('old_addon', false);
-					$sUrl = $this->oParams->Get('url', '');
 
 					$this->DoUpdateDBSchema(
-						$aSelectedModules,
-						$aParamValues,
-						$bOldAddon,
-						$sUrl
+						$aSelectedModules
 					);
 
 					$aResult = [
@@ -487,6 +508,7 @@ class ApplicationInstaller
 	 * @param array $aSelectedModules
 	 * @param string $sSourceDir
 	 * @param string $sExtensionDir
+	 * @param bool $bIsSetupDataAuditEnabled
 	 * @param boolean $bUseSymbolicLinks
 	 *
 	 * @return void
@@ -495,8 +517,14 @@ class ApplicationInstaller
 	 *
 	 * @since 3.1.0 N°2013 added the aParamValues param
 	 */
-	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $bUseSymbolicLinks = null)
+	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $bIsSetupDataAuditEnabled, $bUseSymbolicLinks = null)
 	{
+		/**
+	 * @since 3.2.0 move the ContextTag init at the very beginning of the method
+	 * @noinspection PhpUnusedLocalVariableInspection
+	 */
+		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
+
 		SetupLog::Info("Compiling data model.");
 
 		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
@@ -528,7 +556,18 @@ class ApplicationInstaller
 		if (!is_dir($sSourcePath)) {
 			throw new Exception("Failed to find the source directory '$sSourcePath', please check the rights of the web server");
 		}
+
 		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
+		if ($bIsSetupDataAuditEnabled) {
+			if ($bIsAlreadyInMaintenanceMode) {
+				//required to read DM before calling SaveModelInfo
+				SetupUtils::ExitMaintenanceMode();
+				$bIsAlreadyInMaintenanceMode = false;
+			}
+
+			$this->SaveModelInfo($sEnvironment);
+		}
+
 		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
 			$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
 			if (is_file($sConfigFilePath)) {
@@ -620,23 +659,79 @@ class ApplicationInstaller
 		}
 	}
 
+	private function GetModelInfoPath(string $sEnv): string
+	{
+		return APPROOT."data/beforecompilation_".$sEnv."_modelinfo.json";
+	}
+
+	private function SaveModelInfo(string $sEnvironment): void
+	{
+		$aModelInfo = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($sEnvironment);
+		$sModelInfoPath = $this->GetModelInfoPath($sEnvironment);
+		file_put_contents($sModelInfoPath, json_encode($aModelInfo));
+	}
+
+	private function GetPreviousModelInfo(string $sEnvironment): array
+	{
+		$sContent = file_get_contents($this->GetModelInfoPath($sEnvironment));
+		$aModelInfo = json_decode($sContent, true);
+
+		if (false === $aModelInfo) {
+			throw new Exception("Could not read (before compilation) previous model to audit data");
+		}
+
+		return $aModelInfo;
+	}
+
+	protected function DoSetupAudit()
+	{
+		/**
+		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
+		 * @noinspection PhpUnusedLocalVariableInspection
+		 */
+		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
+
+		$sTargetEnvironment = $this->GetTargetEnv();
+		$aPreviousCompilationModelInfo = $this->GetPreviousModelInfo($sTargetEnvironment);
+
+		$oSetupAudit = new InplaceSetupAudit($aPreviousCompilationModelInfo, $sTargetEnvironment);
+
+		$oSetupAudit->GetIssues(true);
+		$iCount = $oSetupAudit->GetDataToCleanupCount();
+
+		if ($iCount > 0) {
+			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice prior to upgrading iTop");
+		}
+	}
+
+	private function IsSetupDataAuditEnabled($sSkipDataAudit, array $aParamValues): bool
+	{
+		if ($sSkipDataAudit === "checked") {
+			SetupLog::Info("Setup data audit disabled", null, ['skip-data-audit' => $sSkipDataAudit]);
+			return false;
+		}
+
+		$sMode = $aParamValues['mode'];
+		if ($sMode !== "upgrade") {
+			//first install
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * @param $aSelectedModules
-	 * @param $sModulesDir
-	 * @param $aParamValues
-	 * @param string $sTargetEnvironment
-	 * @param bool $bOldAddon
-	 * @param string $sAppRootUrl
 	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 * @throws \MySQLException
 	 */
-	protected function DoUpdateDBSchema($aSelectedModules, $aParamValues, $bOldAddon = false, $sAppRootUrl = '')
+	protected function DoUpdateDBSchema($aSelectedModules)
 	{
 		$sTargetEnvironment = $this->GetTargetEnv();
 		$sModulesDir = $this->GetTargetDir();
-
+		$aParamValues = $this->oParams->GetParamForConfigArray();
 		/**
 		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
 		 * @noinspection PhpUnusedLocalVariableInspection

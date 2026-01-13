@@ -126,9 +126,8 @@ class RunTimeEnvironment
 	 * from the given file
 	 * @param $oConfig object The configuration (volatile, not necessarily already on disk)
 	 * @param $bModelOnly boolean Whether or not to allow loading a data model with no corresponding DB
-	 * @return none
 	 */
-	public function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false)
+	public function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false): void
 	{
 		require_once APPROOT.'/setup/moduleinstallation.class.inc.php';
 
@@ -348,6 +347,7 @@ class RunTimeEnvironment
 		//
 		$oFactory = new ModelFactory($sSourceDirFull);
 		$aModulesToCompile = $this->GetMFModulesToCompile($sSourceEnv, $sSourceDir);
+		$oModule = null;
 		foreach ($aModulesToCompile as $oModule) {
 			if ($oModule instanceof MFDeltaModule) {
 				// Just before loading the delta, let's save an image of the datamodel
@@ -357,7 +357,7 @@ class RunTimeEnvironment
 			$oFactory->LoadModule($oModule);
 		}
 
-		if ($oModule instanceof MFDeltaModule) {
+		if (!is_null($oModule) && ($oModule instanceof MFDeltaModule)) {
 			// A delta was loaded, let's save a second copy of the datamodel
 			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$this->sTargetEnv.'-with-delta.xml');
 		} else {
@@ -668,7 +668,8 @@ class RunTimeEnvironment
 			$aResult['datamodel_version'] = $aResult['product_version'];
 		}
 		$this->log_info("GetApplicationVersion returns: product_name: ".$aResult['product_name'].', product_version: '.$aResult['product_version']);
-		return empty($aResult) ? false : $aResult;
+
+		return count($aResult) == 0 ? false : $aResult;
 	}
 
 	public static function MakeDirSafe($sDir)
@@ -896,7 +897,7 @@ class RunTimeEnvironment
 			try {
 				call_user_func_array($aCallSpec, $aArgs);
 			} catch (Exception $e) {
-				$sModuleId = isset($sModuleId) ? $sModuleId : "";
+				$sModuleId = $aModuleInfo[ModuleFileReader::MODULE_INFO_ID] ?? "";
 				$sErrorMessage = "Module $sModuleId : error when calling module installer class $sModuleInstallerClass for $sHandlerName handler";
 				$aExceptionContextData = [
 					'ModulelId' => $sModuleId,
@@ -964,7 +965,7 @@ class RunTimeEnvironment
 		foreach ($aPreviouslyLoadedFiles as $sFileRelativePath) {
 			$sFileName = APPROOT.$sFileRelativePath;
 			SetupLog::Info("Loading file: $sFileName (just to get the keys mapping)");
-			if (empty($sFileName) || !file_exists($sFileName)) {
+			if (!file_exists($sFileName)) {
 				throw(new Exception("File $sFileName does not exist"));
 			}
 
@@ -976,7 +977,7 @@ class RunTimeEnvironment
 		foreach ($aFiles as $sFileRelativePath) {
 			$sFileName = APPROOT.$sFileRelativePath;
 			SetupLog::Info("Loading file: $sFileName");
-			if (empty($sFileName) || !file_exists($sFileName)) {
+			if (!file_exists($sFileName)) {
 				throw(new Exception("File $sFileName does not exist"));
 			}
 
