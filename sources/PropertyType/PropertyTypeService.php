@@ -11,6 +11,7 @@ use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\Block\FormBlockService;
 use Combodo\iTop\PropertyType\Compiler\PropertyTypeCompiler;
+use Combodo\iTop\PropertyType\Compiler\PropertyTypeCompilerException;
 use Combodo\iTop\Service\Cache\DataModelDependantCache;
 use utils;
 
@@ -40,10 +41,10 @@ class PropertyTypeService
 	 * @param string $sId name of the form to retrieve
 	 * @param string $sType
 	 *
-	 * @return \Combodo\iTop\Forms\Block\Base\FormBlock
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
-	 * @throws \Combodo\iTop\PropertyType\Compiler\PropertyTypeCompilerException
-	 * @throws \Combodo\iTop\PropertyType\PropertyTypeException
+	 * @return FormBlock
+	 * @throws FormBlockException
+	 * @throws PropertyTypeCompilerException
+	 * @throws PropertyTypeException
 	 * @throws \DOMFormatException
 	 */
 	public function GetFormBlockById(string $sId, string $sType): FormBlock
@@ -63,10 +64,23 @@ class PropertyTypeService
 	}
 
 	/**
+	 * List all property types for a given type.
+	 *
+	 * @param string $sType
+	 *
+	 * @return array
+	 * @throws PropertyTypeCompilerException
+	 */
+	public function ListPropertyTypesByType(string $sType): array
+	{
+		return PropertyTypeCompiler::GetInstance()->ListPropertyTypesByType($sType);
+	}
+
+	/**
 	 * @param string $sId
 	 *
 	 * @return string
-	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
+	 * @throws FormBlockException
 	 */
 	private function SanitizeId(string $sId): string
 	{

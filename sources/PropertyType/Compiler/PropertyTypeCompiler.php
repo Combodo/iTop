@@ -76,6 +76,24 @@ class PropertyTypeCompiler
 		return file_get_contents($sPath);
 	}
 
+	public function ListPropertyTypesByType(string $sType)
+	{
+		$sPath = utils::GetAbsoluteModulePath('core')."property_types/$sType";
+		if (!is_dir($sPath)) {
+			throw new PropertyTypeCompilerException("Properties types folder $sType not present");
+		}
+
+		$aFiles = scandir($sPath);
+		$aPropertyTypes = [];
+		foreach ($aFiles as $sFile) {
+			if (is_file("$sPath/$sFile") && pathinfo($sFile, PATHINFO_EXTENSION) === 'xml') {
+				$aPropertyTypes[] = basename($sFile, ".xml");
+			}
+		}
+
+		return $aPropertyTypes;
+	}
+
 	/**
 	 * Compile XML property tree into PHP to create the configuration form
 	 *
@@ -108,4 +126,6 @@ class PropertyTypeCompiler
 
 		return $this->CompileFormFromXML($sXMLContent);
 	}
+
+
 }

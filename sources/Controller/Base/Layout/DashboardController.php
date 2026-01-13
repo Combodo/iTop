@@ -2,17 +2,17 @@
 
 namespace Combodo\iTop\Controller\Base\Layout;
 
+use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletWrapper;
 use Combodo\iTop\Application\UI\Base\Component\TurboForm\TurboFormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\WebPage\AjaxPage;
-use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use ModelReflectionRuntime;
 use utils;
 
-class DashboardController extends AbstractController
+class DashboardController extends Controller
 {
 	public const ROUTE_NAMESPACE = 'dashboard';
 
@@ -35,10 +35,9 @@ class DashboardController extends AbstractController
 
 			// TODO 3.3 This is not the place to register this service, do better please
 			ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
-			if(!empty($aValues)) {
+			if (!empty($aValues)) {
 				$oDashlet->FromDenormalizedParams($aValues);
-			}
-			else {
+			} else {
 				$aValues = $oDashlet->GetDenormalizedProperties();
 			}
 
