@@ -58,12 +58,14 @@ class ModuleFileReader
 
 	final public static function SetInstance(?ModuleFileReader $oInstance): void
 	{
-		static::$oInstance = $oInstance;
+		self::$oInstance = $oInstance;
 	}
 
 	/**
 	 * Read the information from a module file (module.xxx.php)
-	 * @param string $sModuleFile
+	 *
+	 * @param string $sModuleFilePath
+	 *
 	 * @return array
 	 * @throws ModuleFileReaderException
 	 */
@@ -109,7 +111,9 @@ class ModuleFileReader
 	 * Read the information from a module file (module.xxx.php)
 	 * Warning: this method is using eval() function to load the ModuleInstallerAPI classes.
 	 * Current method is never called at design/runtime. It is acceptable to use it during setup only.
-	 * @param string $sModuleFile
+	 *
+	 * @param string $sModuleFilePath
+	 *
 	 * @return array
 	 * @throws ModuleFileReaderException
 	 */
@@ -199,7 +203,7 @@ class ModuleFileReader
 
 	/**
 	 * @param string $sModuleFilePath
-	 * @param \PhpParser\Node\Expr\Assign $oAssignation
+	 * @param \PhpParser\Node\Stmt\Expression $oExpression
 	 *
 	 * @return array|null
 	 * @throws ModuleFileReaderException

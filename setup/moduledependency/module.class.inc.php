@@ -114,7 +114,7 @@ class Module
 	}
 
 	/**
-	 * @return array: list of unique module names
+	 * @return array<string> list of unique module names
 	 */
 	public function GetUnresolvedDependencyModuleNames(): array
 	{

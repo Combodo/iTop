@@ -71,12 +71,12 @@ class InstallationFileService
 		return $this->aAfterComputationSelectedExtensions;
 	}
 
-	public function SetItopExtensionsMap(ItopExtensionsMap $oItopExtensionsMap): void
+	public function SetItopExtensionsMap(iTopExtensionsMap $oItopExtensionsMap): void
 	{
 		$this->oItopExtensionsMap = $oItopExtensionsMap;
 	}
 
-	public function GetItopExtensionsMap(): ItopExtensionsMap
+	public function GetItopExtensionsMap(): iTopExtensionsMap
 	{
 		if (is_null($this->oItopExtensionsMap)) {
 			$this->oItopExtensionsMap = new iTopExtensionsMap($this->sTargetEnvironment);
