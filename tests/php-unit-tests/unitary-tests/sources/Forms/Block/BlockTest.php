@@ -14,7 +14,7 @@ use Combodo\iTop\Forms\Block\Base\TextFormBlock;
 use Combodo\iTop\Forms\Block\FormBlockException;
 use Combodo\iTop\Forms\Block\IFormBlock;
 use Combodo\iTop\Forms\Forms;
-use Combodo\iTop\ItopSdkFormDemonstrator\Form\Block\Dashboard\GenericDashlet;
+use Combodo\iTop\ItopSdkFormDemonstrator\Form\Block\Dashboard\DashletPropertiesFormBlock;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\Test\UnitTest\sources\Forms\AbstractFormsTest;
 use OutOfBoundsException;
@@ -39,7 +39,7 @@ class BlockTest extends AbstractFormsTest
 		foreach ($aFormBlocks as $sFormBlock) {
 			$oChoiceBlock = new ($sFormBlock)($sFormBlock);
 			if ($oChoiceBlock instanceof AbstractTypeFormBlock) {
-				if (!$oChoiceBlock instanceof GenericDashlet) {
+				if (!$oChoiceBlock instanceof DashletPropertiesFormBlock) {
 					$oClass = new \ReflectionClass($oChoiceBlock->GetFormType());
 					$this->assertTrue($oClass->isSubclassOf(AbstractType::class));
 				}
