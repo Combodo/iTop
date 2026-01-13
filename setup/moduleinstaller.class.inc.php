@@ -130,6 +130,7 @@ abstract class ModuleInstallerAPI
 					if (in_array($sTo, $aNewValues)) {
 						$sEnumCol = $oAttDef->Get("sql");
 						$aFields = CMDBSource::QueryToArray("SHOW COLUMNS FROM `$sTableName` WHERE Field = '$sEnumCol'");
+						$aCurrentValues = [];
 						if (isset($aFields[0]['Type'])) {
 							$sColType = $aFields[0]['Type'];
 							// Note: the parsing should rely on str_getcsv (requires PHP 5.3) to cope with escaped string

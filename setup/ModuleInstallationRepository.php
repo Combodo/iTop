@@ -140,7 +140,8 @@ SQL;
 		}
 
 		SetupLog::Info(__METHOD__, null, ["product_name" => $aResult['product_name'], "product_version" => $aResult['product_version']]);
-		return empty($aResult) ? false : $aResult;
+
+		return count($aResult) == 0 ? false : $aResult;
 	}
 
 	private function ComputeInstalledModules(array $aSelectInstall): array
