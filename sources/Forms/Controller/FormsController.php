@@ -46,12 +46,6 @@ class FormsController extends Controller
 
 				return;
 			}
-
-			//			$this->DisplayPage([
-			//				'form' => $oForm->createView(),
-			//				'sAction' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php?route=forms.dashlet_configuration&dashlet_code='.urlencode($sDashletId),
-			//			], 'itop_form');
-
 		} catch (Exception $e) {
 			ItopSdkFormDemonstratorLog::Exception($e->getMessage(), $e);
 			$this->DisplayPage([

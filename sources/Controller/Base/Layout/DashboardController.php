@@ -10,7 +10,10 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\Controller\AbstractController;
+use Combodo\iTop\Forms\Block\FormBlockService;
+use Combodo\iTop\ItopSdkFormDemonstrator\Helper\ItopSdkFormDemonstratorLog;
 use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use Exception;
 use ModelReflectionRuntime;
 use utils;
 
@@ -78,7 +81,30 @@ class DashboardController extends Controller
 		$sValues = utils::ReadParam('values', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 		$aValues = !empty($sValues) ? json_decode($sValues, true, 20) : [];
 
-		// TODO 3.3 Consume the values and persist them
+		try {
+			// Get the form block from the service (and the compiler)
+			$oRequest = $this->getRequest();
+			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById('dashboard_type', 'Dashboard');
+			$oBuilder = $this->GetFormBuilder($oFormBlock, []);
+			$oForm = $oBuilder->getForm();
+			$oForm->handleRequest($oRequest);
+
+			if ($oForm->isSubmitted()) {
+				if ($oForm->isValid()) {
+					// Save XML
+
+				}
+
+				// Compute blocks to redraw
+				$this->HandleFormSubmitted($oFormBlock, $oForm);
+			}
+		} catch (Exception $e) {
+			ItopSdkFormDemonstratorLog::Exception($e->getMessage(), $e);
+			$this->DisplayPage([
+				'sControllerError' => $e->getMessage(),
+			], 'itop_error_update', Controller::ENUM_PAGE_TYPE_TURBO_FORM_AJAX);
+			return null;
+		}
 
 		$oPage = new JsonPage();
 		$oPage->SetData($aValues);

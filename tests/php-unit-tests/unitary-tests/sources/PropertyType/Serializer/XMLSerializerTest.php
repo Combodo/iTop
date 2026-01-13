@@ -32,6 +32,8 @@ class XMLSerializerTest extends ItopDataTestCase
 
 		/** @var \Combodo\iTop\DesignElement $oRootNode */
 		$oRootNode = $oDOMDocument->createElement('root');
+		$oRootNode->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+
 		$oDOMDocument->appendChild($oRootNode);
 
 		Combodo\iTop\PropertyType\Serializer\XMLSerializer::GetInstance()->SerializeForPropertyType($normalizedValue, $oRootNode, $sPropertyTypeXML);
@@ -56,7 +58,7 @@ class XMLSerializerTest extends ItopDataTestCase
 XML,
 				'sXMLContent' => <<<XML
 <?xml version="1.0"?>
-<root>text</root>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">text</root>
 XML,
 			],
 			'Collection of values as CSV' => [
@@ -74,7 +76,7 @@ XML,
 XML,
 				'sXMLContent' => <<<XML
 <?xml version="1.0"?>
-<root>Contact,Organization</root>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Contact,Organization</root>
 XML,
 			],
 			'Collection of values as id attribute' => [
@@ -94,7 +96,7 @@ XML,
 XML,
 				'sXMLContent' => <<<XML
 <?xml version="1.0"?>
-<root>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<item id="Contact"/>
 	<item id="Organization"/>
 </root>
@@ -134,7 +136,7 @@ XML,
 XML,
 				'sXMLContent' => <<<XML
 <?xml version="1.0"?>
-<root>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<item_count>2</item_count>
 	<item_0_title_property>title_a</item_0_title_property>
 	<item_0_class_property>class_a</item_0_class_property>
@@ -164,9 +166,82 @@ XML,
 XML,
 				'sXMLContent' => <<<XML
 <?xml version="1.0"?>
-<root>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<title_property>title</title_property>
 	<class_property>class</class_property>
+</root>
+XML,
+			],
+			'Polymorphic tree' => [
+				'normalizedValue' => [
+					'type' => 'DashletHeaderStatic',
+					'properties' => [
+						'title' => 'Menu:ConfigManagementCI',
+						'icon'  => '../images/icons/icons8-database.svg',
+					],
+				],
+				'sPropertyTypeXML' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<property_type id="property_tree_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+	<extends>Dashlet</extends>
+    <definition xsi:type="Combodo-ValueType-Polymorphic">
+        <label>Dashlet</label>
+        <allowed-types>
+          <allowed-type>Dashlet</allowed-type>
+        </allowed-types>
+    </definition>
+</property_type>
+XML,
+				'sXMLContent' => <<<XML
+<?xml version="1.0"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="DashletHeaderStatic">
+	<title>Menu:ConfigManagementCI</title>
+	<icon>../images/icons/icons8-database.svg</icon>
+</root>
+XML,
+			],
+			'Collection of tree with id' => [
+				'normalizedValue' => [
+					'a' => [
+						'title_property' => 'title_a',
+						'class_property' => 'class_a',
+					],
+					'b' => [
+						'title_property' => 'title_b',
+						'class_property' => 'class_b',
+					],
+				],
+				'sPropertyTypeXML' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<property_type id="collection_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+	<extends>Dashlet</extends>
+    <definition xsi:type="Combodo-ValueType-Collection">
+      <xml-format xsi:type="Combodo-XMLFormat-CollectionWithId">
+        <tag-name>item</tag-name>
+      </xml-format>
+	  <prototype>
+        <node id="title_property" xsi:type="Combodo-ValueType-Label">
+            <label>UI:BasicTest:Prop-Title</label>
+        </node>
+        <node id="class_property" xsi:type="Combodo-ValueType-Class">
+            <label>UI:BasicTest:Prop-Class</label>
+            <categories-csv>test</categories-csv>
+        </node>
+	  </prototype>
+    </definition>
+</property_type>
+XML,
+				'sXMLContent' => <<<XML
+<?xml version="1.0"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<item id="a">
+		<title_property>title_a</title_property>
+		<class_property>class_a</class_property>
+	</item>
+	<item id="b">
+		<title_property>title_b</title_property>
+		<class_property>class_b</class_property>
+	</item>
 </root>
 XML,
 			],

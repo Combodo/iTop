@@ -101,6 +101,7 @@ class_alias(\Combodo\iTop\PropertyType\PropertyType::class, 'Combodo-PropertyTyp
 
 class_alias(\Combodo\iTop\PropertyType\ValueType\Branch\ValueTypeCollection::class, 'Combodo-ValueType-Collection');
 class_alias(\Combodo\iTop\PropertyType\ValueType\Branch\ValueTypePropertyTree::class, 'Combodo-ValueType-PropertyTree');
+class_alias(\Combodo\iTop\PropertyType\ValueType\Branch\ValueTypePolymorphic::class, 'Combodo-ValueType-Polymorphic');
 
 class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeAggregateFunction::class, 'Combodo-ValueType-AggregateFunction');
 class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeBoolean::class, 'Combodo-ValueType-Boolean');
@@ -121,3 +122,4 @@ class_alias(\Combodo\iTop\PropertyType\ValueType\Leaf\ValueTypeText::class, 'Com
 class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatCSV::class, 'Combodo-XMLFormat-CSV');
 class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatValueAsId::class, 'Combodo-XMLFormat-ValueAsId');
 class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatFlatArray::class, 'Combodo-XMLFormat-FlatArray');
+class_alias(\Combodo\iTop\PropertyType\Serializer\XMLFormat\XMLFormatCollectionWithId::class, 'Combodo-XMLFormat-CollectionWithId');

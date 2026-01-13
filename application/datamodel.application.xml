@@ -852,6 +852,70 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
       </class>
     </classes>
     <property_types _delta="define">
+      <property_type id="Dashboard" xsi:type="Combodo-AbstractPropertyType"/>
+      <property_type id="Combodo-Dashboard-Grid" xsi:type="Combodo-PropertyType">
+        <extends>Dashboard</extends>
+        <definition xsi:type="Combodo-ValueType-PropertyTree">
+          <label>Dashboard</label>
+          <nodes>
+            <node id="title" xsi:type="Combodo-ValueType-String">
+              <label>UI:DashboardEdit:DashboardTitle</label>
+            </node>
+            <node id="refresh" xsi:type="Combodo-ValueType-Choice"> <!-- Possible de le cacher, etc celui-ci nous met dedans -->
+              <label>UI:DashboardEdit:AutoReload</label>
+              <values>
+                <value id="0">
+                  <label>No auto-refresh</label>
+                </value>
+                <value id="30">
+                  <label>Every 30 seconds</label>
+                </value>
+                <value id="60">
+                  <label>Every 1 minute</label>
+                </value>
+                <value id="300">
+                  <label>Every 5 minutes</label>
+                </value>
+                <value id="600">
+                  <label>Every 10 minutes</label>
+                </value>
+                <value id="1800">
+                  <label>Every 30 minutes</label>
+                </value>
+                <value id="3600">
+                  <label>Every 1 hour</label>
+                </value>
+              </values>
+            </node>
+            <node id="pos_dashlets" xsi:type="Combodo-ValueType-Collection">
+              <label>Dashlet List</label>
+              <xml-format xsi:type="Combodo-XMLFormat-CollectionWithId">
+                <tag-name>pos_dashlet</tag-name>
+              </xml-format>
+              <prototype>
+                <node id="position_x" xsi:type="Combodo-ValueType-Integer">
+                  <label>X</label>
+                </node>
+                <node id="position_y" xsi:type="Combodo-ValueType-Integer">
+                  <label>Y</label>
+                </node>
+                <node id="width" xsi:type="Combodo-ValueType-Integer">
+                  <label>W</label>
+                </node>
+                <node id="height" xsi:type="Combodo-ValueType-Integer">
+                  <label>H</label>
+                </node>
+                <node id="dashlet" xsi:type="Combodo-ValueType-Polymorphic">
+                  <label>Dashlet</label>
+                  <allowed-types>
+                    <allowed-type>Dashlet</allowed-type>
+                  </allowed-types>
+                </node>
+              </prototype>
+            </node>
+          </nodes>
+        </definition>
+      </property_type>
       <property_type id="Dashlet" xsi:type="Combodo-AbstractPropertyType"/>
       <property_type id="DashletGroupByTable" xsi:type="Combodo-PropertyType">
         <extends>Dashlet</extends>

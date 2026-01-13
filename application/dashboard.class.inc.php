@@ -308,7 +308,11 @@ abstract class Dashboard
 
 	public function Save()
 	{
+	}
 
+	public function PersistDashboard(string $sXml): bool
+	{
+		return true;
 	}
 
 	/**
@@ -771,6 +775,26 @@ class RuntimeDashboard extends Dashboard
 	public function Save()
 	{
 		$sXml = $this->ToXml();
+
+		return $this->PersistDashboard($sXml);
+	}
+
+	/**
+	 * @param string $sXml
+	 *
+	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function PersistDashboard(string $sXml): bool
+	{
 		$oUDSearch = new DBObjectSearch('UserDashboard');
 		$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
 		$oUDSearch->AddCondition('menu_code', $this->sId, '=');

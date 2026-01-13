@@ -76,6 +76,13 @@ class PropertyTypeService
 		return PropertyTypeCompiler::GetInstance()->ListPropertyTypesByType($sType);
 	}
 
+	public function GetPropertyType(string $sId, string $sType = 'Dashlet'): PropertyType
+	{
+		$sXML = PropertyTypeCompiler::GetInstance()->GetXMLContent($sId, $sType);
+
+		return PropertyTypeCompiler::GetInstance()->CompilePropertyTypeFromXML($sXML);
+	}
+
 	/**
 	 * @param string $sId
 	 *

@@ -354,6 +354,26 @@
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
+  <xsd:complexType name="Combodo-ValueType-Polymorphic">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-ValueType-Abstract">
+        <xsd:sequence>
+          <xsd:element name="xml-format" minOccurs="0" type="Combodo-XMLFormat-Abstract">
+            <xsd:annotation>
+              <xsd:documentation>Format of the property in the source XML</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element name="allowed-types">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="allowed-type" type="xsd:string" maxOccurs="unbounded"/>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
 
   <!--============================= XML Formats ===============================-->
   <xsd:complexType name="Combodo-XMLFormat-Abstract">
@@ -391,6 +411,16 @@
             <xsd:annotation>
               <xsd:documentation>Template to generate tag name for the sub-nodes. Available placeholders: $id$ and $rank$</xsd:documentation>
             </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Combodo-XMLFormat-CollectionWithId">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-XMLFormat-Abstract">
+        <xsd:sequence>
+          <xsd:element name="tag-name" type="xsd:NCName">
           </xsd:element>
         </xsd:sequence>
       </xsd:extension>
