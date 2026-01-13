@@ -21,8 +21,8 @@
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\Page;
-use Combodo\iTop\DesignElement;
 use Combodo\iTop\DesignDocument;
+use Combodo\iTop\DesignElement;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/modelfactory.class.inc.php');
@@ -3359,6 +3359,8 @@ EOF;
 
 		$bDataXmlPrecompiledFileExists = false;
 		clearstatcache();
+
+		$iDataXmlFileLastModified = 0;
 		if (!empty($sPrecompiledFileUri)) {
 			$sDataXmlProvidedPrecompiledFile = $sTempTargetDir.DIRECTORY_SEPARATOR.$sPrecompiledFileUri;
 			$bDataXmlPrecompiledFileExists = file_exists($sDataXmlProvidedPrecompiledFile) ;

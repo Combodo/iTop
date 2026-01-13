@@ -107,7 +107,9 @@ class PHPParameters extends Parameters
 	{
 		if ($this->aData == null) {
 			require_once($sParametersFile);
-			$this->aData = $ITOP_PARAMS; // Defined in the file loaded just above
+			if (isset($ITOP_PARAMS)) {
+				$this->aData = $ITOP_PARAMS; // Defined in the file loaded just above
+			}
 		}
 	}
 }

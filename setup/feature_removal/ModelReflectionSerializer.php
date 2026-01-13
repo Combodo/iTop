@@ -2,8 +2,12 @@
 
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
+use ContextTag;
 use CoreException;
 use Exception;
+use IssueLog;
+use SetupLog;
+use utils;
 
 class ModelReflectionSerializer
 {
@@ -29,27 +33,38 @@ class ModelReflectionSerializer
 
 	public function GetModelFromEnvironment(string $sEnv): array
 	{
-		\IssueLog::Info(__METHOD__, null, ['env' => $sEnv]);
-		$sPHPExec = trim(\MetaModel::GetConfig()->Get('php_path'));
+		IssueLog::Info(__METHOD__, null, ['env' => $sEnv]);
+		$sPHPExec = trim(utils::GetConfig()->Get('php_path'));
 		$sOutput = "";
 		$iRes = 0;
+
 		exec(sprintf("$sPHPExec %s/get_model_reflection.php --env='%s'", __DIR__, $sEnv), $sOutput, $iRes);
 		if ($iRes != 0) {
-			\IssueLog::Error("Cannot get classes", null, ['env' => $sEnv, 'code' => $iRes, "output" => $sOutput]);
+			$this->LogErrorWithProperLogger("Cannot get classes", null, ['env' => $sEnv, 'code' => $iRes, "output" => $sOutput]);
 			throw new CoreException("Cannot get classes");
 		}
 
 		$aClasses = json_decode($sOutput[0] ?? null, true);
 		if (false === $aClasses) {
-			\IssueLog::Error("Invalid JSON", null, ["output" => $sOutput]);
+			$this->LogErrorWithProperLogger("Invalid JSON", null, ['env' => $sEnv, "output" => $sOutput]);
 			throw new Exception("cannot get classes");
 		}
 
 		if (!is_array($aClasses)) {
-			\IssueLog::Error("not an array", null, ["classes" => $aClasses]);
-			throw new Exception("cannot get classes");
+			$this->LogErrorWithProperLogger("not an array", null, ['env' => $sEnv, "classes" => $aClasses, "output" => $sOutput]);
+			throw new Exception("cannot get classes from $sEnv");
 		}
 
 		return $aClasses;
+	}
+
+	//could be shared with others in log APIs ?
+	private function LogErrorWithProperLogger($sMessage, $sChannel = null, $aContext = []): void
+	{
+		if (ContextTag::Check(ContextTag::TAG_SETUP)) {
+			SetupLog::Error($sMessage, $sChannel, $aContext);
+		} else {
+			IssueLog::Error($sMessage, $sChannel, $aContext);
+		}
 	}
 }

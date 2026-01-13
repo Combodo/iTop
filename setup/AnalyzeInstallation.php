@@ -6,7 +6,6 @@ class AnalyzeInstallation
 {
 	private static AnalyzeInstallation $oInstance;
 	private ?array $aAvailableModules = null;
-	private ?array $aSelectInstall = null;
 
 	protected function __construct()
 	{
@@ -23,7 +22,7 @@ class AnalyzeInstallation
 
 	final public static function SetInstance(?AnalyzeInstallation $oInstance): void
 	{
-		static::$oInstance = $oInstance;
+		self::$oInstance = $oInstance;
 	}
 
 	/**

@@ -22,14 +22,13 @@
 
 use Combodo\iTop\PhpParser\Evaluation\PhpExpressionEvaluator;
 use Combodo\iTop\Setup\ModuleDependency\Module;
+use Combodo\iTop\Setup\ModuleDependency\ModuleDependencySort;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 require_once(APPROOT.'setup/modulediscovery/ModuleFileReader.php');
 require_once(__DIR__.'/moduledependency/moduledependencysort.class.inc.php');
 require_once(__DIR__.'/itopextension.class.inc.php');
-
-use Combodo\iTop\Setup\ModuleDependency\ModuleDependencySort;
 
 class MissingDependencyException extends CoreException
 {
@@ -96,7 +95,7 @@ class ModuleDiscovery
 	protected static $m_aModules = [];
 	protected static $m_aModuleVersionByName = [];
 
-	/** @var array<\iTopExtension $m_aRemovedExtensions  */
+	/** @var array<\iTopExtension> $m_aRemovedExtensions */
 	protected static $m_aRemovedExtensions = [];
 
 	// All the entries below are list of file paths relative to the module directory
@@ -135,7 +134,7 @@ class ModuleDiscovery
 
 		list($sModuleName, $sModuleVersion) = static::GetModuleName($sId);
 
-		if (self::IsModulePartOfRemovedExtension($sModuleName, $sModuleVersion, $aArgs)) {
+		if (self::IsModuleInExtensionList(self::$m_aRemovedExtensions, $sModuleName, $sModuleVersion, $aArgs)) {
 			return;
 		}
 
@@ -230,7 +229,7 @@ class ModuleDiscovery
 				$oModule = new Module($sModuleId);
 				$sModuleName = $oModule->GetModuleName();
 
-				if (self::IsModulePartOfRemovedExtension($sModuleName, $oModule->GetVersion(), $aModuleInfo)) {
+				if (self::IsModuleInExtensionList(self::$m_aRemovedExtensions, $sModuleName, $oModule->GetVersion(), $aModuleInfo)) {
 					continue;
 				}
 
@@ -239,7 +238,6 @@ class ModuleDiscovery
 				}
 			}
 		}
-
 		return ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aFilteredModules, $bAbortOnMissingDependency);
 	}
 
@@ -255,17 +253,24 @@ class ModuleDiscovery
 		self::$m_aRemovedExtensions = $aRemovedExtension;
 	}
 
-	private static function IsModulePartOfRemovedExtension(string $sModuleName, string $sModuleVersion, array $aModuleInfo): bool
+	/**
+	 * @param array<\iTopExtension> $aExtensions
+	 * @param string $sModuleName
+	 * @param string $sModuleVersion
+	 * @param array $aModuleInfo
+	 *
+	 * @return bool
+	 */
+	private static function IsModuleInExtensionList(array $aExtensions, string $sModuleName, string $sModuleVersion, array $aModuleInfo): bool
 	{
-		if (count(self::$m_aRemovedExtensions) === 0) {
+		if (count($aExtensions) === 0) {
 			return false;
 		}
-
 		$aNonMatchingPaths = [];
 		$sModuleFilePath = $aModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
 
 		/** @var \iTopExtension $oExtension */
-		foreach (self::$m_aRemovedExtensions as $oExtension) {
+		foreach ($aExtensions as $oExtension) {
 			$sCurrentVersion = $oExtension->aModuleVersion[$sModuleName] ?? null;
 			if (is_null($sCurrentVersion)) {
 				continue;
@@ -302,11 +307,11 @@ class ModuleDiscovery
 
 	private static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
 	{
-		if (!isset(static::$oPhpExpressionEvaluator)) {
-			static::$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
+		if (!isset(self::$oPhpExpressionEvaluator)) {
+			self::$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
 		}
 
-		return static::$oPhpExpressionEvaluator;
+		return self::$oPhpExpressionEvaluator;
 	}
 
 	/**
@@ -355,10 +360,12 @@ class ModuleDiscovery
 
 	/**
 	 * Helper function to interpret the name of a module
+	 *
 	 * @param $sModuleId string Identifier of the module, in the form 'name/version'
-	 * @return array(name, version)
+	 *
+	 * @return array of 2 elements (name, version)
 	 */
-	public static function GetModuleName($sModuleId)
+	public static function GetModuleName($sModuleId): array
 	{
 		$aMatches = [];
 		if (preg_match('!^(.*)/(.*)$!', $sModuleId, $aMatches)) {

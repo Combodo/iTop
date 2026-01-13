@@ -7,15 +7,15 @@ use CoreException;
 use Exception;
 use ParseError;
 use PhpParser\Error;
+use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Scalar\String_;
+use PhpParser\Node\Stmt\ElseIf_;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\If_;
 use PhpParser\ParserFactory;
-use PhpParser\Node\Expr\Assign;
-use PhpParser\Node\Stmt\ElseIf_;
-use PhpParser\Node\Expr\Array_;
-use PhpParser\Node\Scalar\String_;
-use PhpParser\Node\Arg;
 
 require_once __DIR__.'/ModuleFileReaderException.php';
 require_once APPROOT.'sources/PhpParser/Evaluation/PhpExpressionEvaluator.php';
@@ -49,21 +49,23 @@ class ModuleFileReader
 
 	final public static function GetInstance(): ModuleFileReader
 	{
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new static();
+		if (!isset(self::$oInstance)) {
+			self::$oInstance = new ModuleFileReader();
 		}
 
-		return static::$oInstance;
+		return self::$oInstance;
 	}
 
 	final public static function SetInstance(?ModuleFileReader $oInstance): void
 	{
-		static::$oInstance = $oInstance;
+		self::$oInstance = $oInstance;
 	}
 
 	/**
 	 * Read the information from a module file (module.xxx.php)
-	 * @param string $sModuleFile
+	 *
+	 * @param string $sModuleFilePath
+	 *
 	 * @return array
 	 * @throws ModuleFileReaderException
 	 */
@@ -109,7 +111,9 @@ class ModuleFileReader
 	 * Read the information from a module file (module.xxx.php)
 	 * Warning: this method is using eval() function to load the ModuleInstallerAPI classes.
 	 * Current method is never called at design/runtime. It is acceptable to use it during setup only.
-	 * @param string $sModuleFile
+	 *
+	 * @param string $sModuleFilePath
+	 *
 	 * @return array
 	 * @throws ModuleFileReaderException
 	 */
@@ -199,7 +203,7 @@ class ModuleFileReader
 
 	/**
 	 * @param string $sModuleFilePath
-	 * @param \PhpParser\Node\Expr\Assign $oAssignation
+	 * @param \PhpParser\Node\Stmt\Expression $oExpression
 	 *
 	 * @return array|null
 	 * @throws ModuleFileReaderException

@@ -50,7 +50,6 @@ require_once(APPROOT.'setup/applicationinstaller.class.inc.php');
 require_once(APPROOT.'setup/parameters.class.inc.php');
 require_once(APPROOT.'core/mutex.class.inc.php');
 require_once(APPROOT.'setup/extensionsmap.class.inc.php');
-require_once APPROOT.'setup/feature_removal/SetupAudit.php';
 
 /**
  * First step of the iTop Installation Wizard: Welcome screen, requirements
@@ -2178,18 +2177,6 @@ class WizStepSummary extends WizardStep
 			$this->bDependencyCheck = true;
 			try {
 				SetupUtils::AnalyzeInstallation($this->oWizard, true, $aSelectedModules);
-
-				/*$sInstallMode = utils::ReadParam('install_mode');
-				\SetupLog::Info(__METHOD__, null, ['$sInstallMode' => $sInstallMode]);
-				//if ($sInstallMode === "upgrade") {
-				$aExtensions = json_decode($this->oWizard->GetParameter('selected_extensions'), true);
-				$oSetupAudit = new SetupAudit([]);
-
-				$oConfig = SetupUtils::GetConfig($this->oWizard);
-				$oSetupAudit->SetSelectedExtensions($oConfig, $aExtensions);
-				//$oSetupAudit->AuditExtensionsCleanupRules(true);
-				//}
-				*/
 			} catch (MissingDependencyException $e) {
 				$this->bDependencyCheck = false;
 				$this->sDependencyIssue = $e->getHtmlDesc();
