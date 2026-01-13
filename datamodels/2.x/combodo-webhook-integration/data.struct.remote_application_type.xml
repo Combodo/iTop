@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <RemoteApplicationType alias="RemoteApplicationType" id="1">
+    <name>iTop</name>
+  </RemoteApplicationType>
+  <RemoteApplicationType alias="RemoteApplicationType" id="2">
+    <name>Slack</name>
+  </RemoteApplicationType>
+  <RemoteApplicationType alias="RemoteApplicationType" id="3">
+    <name>Rocket.Chat</name>
+  </RemoteApplicationType>
+  <RemoteApplicationType alias="RemoteApplicationType" id="4">
+    <name>Google Chat</name>
+  </RemoteApplicationType>
+  <RemoteApplicationType alias="RemoteApplicationType" id="5">
+    <name>Microsoft Teams</name>
+  </RemoteApplicationType>
+  <RemoteApplicationType alias="RemoteApplicationType" id="6">
+    <name>Other / Generic</name>
+  </RemoteApplicationType>
+</Set>

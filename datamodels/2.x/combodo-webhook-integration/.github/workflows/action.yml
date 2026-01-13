@@ -1,0 +1,43 @@
+name: Add PRs to Combodo PRs Dashboard
+
+on:
+  pull_request_target:
+    types:
+      - opened
+
+jobs:
+  add-to-project:
+    name: Add PR to Combodo Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if author is a member of the organization
+        id: check-membership
+        run: |
+          ORG="Combodo"
+          AUTHOR=$(jq -r .pull_request.user.login "$GITHUB_EVENT_PATH")
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: token ${{ secrets.PR_AUTOMATICALLY_ADD_TO_PROJECT }}" \
+            "https://api.github.com/orgs/$ORG/members/$AUTHOR")
+          if [ "$RESPONSE" == "404" ]; then
+            echo "project_url=https://github.com/orgs/Combodo/projects/5" >> $GITHUB_ENV
+            echo "is_member=false" >> $GITHUB_ENV
+          else
+            echo "project_url=https://github.com/orgs/Combodo/projects/4" >> $GITHUB_ENV
+            echo "is_member=true" >> $GITHUB_ENV
+
+          fi
+
+      - name: Add internal tag if member
+        if: env.is_member == 'true'
+        run: |
+          curl -X POST -H "Authorization: token ${{ secrets.PR_AUTOMATICALLY_ADD_TO_PROJECT }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/Combodo/combodo-webhook-integration/issues/${{ github.event.pull_request.number }}/labels \
+            -d '{"labels":["internal"]}'
+        env:
+          is_member: ${{ env.is_member }}
+
+      - name: Add PR to the appropriate project
+        uses: actions/add-to-project@v1.0.2
+        with:
+          project-url: ${{ env.project_url }}
+          github-token: ${{ secrets.PR_AUTOMATICALLY_ADD_TO_PROJECT }}

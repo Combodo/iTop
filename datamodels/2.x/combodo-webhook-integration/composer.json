@@ -1,0 +1,11 @@
+{
+  "license": "AGPL-3.0-only",
+  "autoload": {
+    "psr-4": {
+      "Combodo\\iTop\\": "src/"
+    }
+  },
+  "require": {
+    "composer-runtime-api": "^2.0"
+  }
+}
