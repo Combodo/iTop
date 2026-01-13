@@ -216,8 +216,9 @@ class IboDashboard extends HTMLElement {
 			schema_version: this.schemaVersion,
 			id: this.sId,
 			title: sDashboardTitle,
-			refresh_rate: sDashboardRefreshRate,
-			dashlets: aSerializedGrid
+			refresh: sDashboardRefreshRate,
+			dashlets_list: aSerializedGrid,
+			_token: ":)"
 		};
 	}
 
@@ -226,6 +227,12 @@ class IboDashboard extends HTMLElement {
 		// TODO 3.3: Implement saving dashboard state to server when backend is ready
 		// May try to save as serialized PHP if XML format is not yet decided
 		console.log(aPayload);
+		// Fetch dashlet form from server
+		let sSaveUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.save&values='+encodeURIComponent(JSON.stringify(aPayload));
+		fetch(sSaveUrl)
+			.then(async data => {
+				// TODO 3.3 What's returned ?
+			})
 
 		this.SetEditMode(false);
 		this.aLastSavedState = aPayload;

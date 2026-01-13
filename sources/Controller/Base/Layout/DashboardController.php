@@ -8,6 +8,8 @@ use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletWrapper;
 use Combodo\iTop\Application\UI\Base\Component\TurboForm\TurboFormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\JsonPage;
+use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use ModelReflectionRuntime;
 use utils;
@@ -68,6 +70,19 @@ class DashboardController extends Controller
 		$oUIBlock->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction('Cancel', 'dashboard_cancel'));
 		$oPage->AddUiBlock($oUIBlock);
 
+		return $oPage;
+	}
+
+	public function OperationSave()
+	{
+		$sValues = utils::ReadParam('values', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$aValues = !empty($sValues) ? json_decode($sValues, true, 20) : [];
+
+		// TODO 3.3 Consume the values and persist them
+
+		$oPage = new JsonPage();
+		$oPage->SetData($aValues);
+		$oPage->SetOutputDataOnly(true);
 		return $oPage;
 	}
 }

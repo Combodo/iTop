@@ -43,10 +43,10 @@ class IboGridSlot extends HTMLElement {
 		const oDashlet = this.oDashlet;
 
 		const aSlotData = {
-			x: this.iPosX,
-			y: this.iPostY,
-			w: this.iWidth,
-			h: this.iHeight
+			position_x: this.iPosX,
+			position_y: this.iPostY,
+			width: this.iWidth,
+			height: this.iHeight
 		};
 
 		const aDashletData = oDashlet ? oDashlet.Serialize() : {};

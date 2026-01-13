@@ -50,10 +50,11 @@ class IboDashlet extends HTMLElement {
 	}
 
 	Serialize() {
+	// TODO 3.3 Should we use getters ?
 		const aDashletData = {
 			id: this.sDashletId,
-			type: this.sType,
-			formData: this.formData,
+			class: this.sType,
+			dashlet: JSON.parse(this.formData),
 		};
 
 		return aDashletData;
