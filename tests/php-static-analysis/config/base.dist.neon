@@ -5,31 +5,28 @@ includes:
 
 parameters:
     level: 0
-    reportUnmatchedIgnoredErrors: false #to ignore baseline lines linked to unknown/removed/moved files
     #phpVersion: null                                           # Explicitly commented as we rather use the detected version from the above include (`php-includes/target-php-version.php`)
     editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'    # Open in PHPStorm as it's Combodo's default IDE
     bootstrapFiles:
         - ../../../approot.inc.php
         - ../../../bootstrap.inc.php
+        - ../../../tests/php-unit-tests/vendor/autoload.php (?)          # usefull to scan tests from extensions in env-production
 
     scanFiles:
         # Files necessary as they contain some declarations (constants, classes, functions, ...)
         - ../../../approot.inc.php
         - ../../../bootstrap.inc.php
-
     excludePaths:
         analyse:
             # For third-party libs we should analyse them in a dedicated configuration as we can't improve / clean them which would
             # prevent us from raising the rules level as we improve / clean our codebase
             - ../../../lib              # Irrelevant as we only want to analyze our codebase
             - ../../../node_modules     # Irrelevant as we only want to analyze our codebase
-
         analyseAndScan:
             # This file generates "unignorable errors" for the baseline due to its format, so we don't have any other choice than to exclude it.
             # But mind that it will prevent PHPStan from warning us about PHP syntax errors in this file.
-            
             ## ignore lexer when present in clones (not in packages)
-            - ../../../core/oql/build/PHP/Lempar.php (?) 
+            - ../../../core/oql/build/PHP/Lempar.php (?)
 
             #- ../../../data                        # Left and commented on purpose to show that we want to analyse the generated cache files
 
@@ -42,8 +39,6 @@ parameters:
             - ../../../env-toolkit (?)              # Irrelevent as it will either already be in `env-production` or might be desynchronized from `env-production` (for local run only, not useful in the CI)
 
             - ../../../tests (?)                    # Exclude tests for now
-            - ../../../toolkit (?)                  # Exclude toolkit for now
-
-            ## add phpunit APIs to spare errors like unknown assertEquals
-            ## usefull to scan extension installed in env-production/myextension
-            - ../../../tests/php-unit-tests/unittestautoload.php  (?)
+            - ../../../tests/php-unit-tests/vendor  (?)
+            - ../../../tests/php-code-style  (?)    # Exclude code style
+            - ../../../toolkit (?)                  # Exlclude toolkit for now
