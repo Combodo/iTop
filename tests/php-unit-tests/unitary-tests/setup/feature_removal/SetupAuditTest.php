@@ -3,12 +3,11 @@
 namespace Combodo\iTop\Test\UnitTest\Setup\FeatureRemoval;
 
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
+use Combodo\iTop\Setup\FeatureRemoval\InplaceSetupAudit;
 use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
-use Combodo\iTop\Setup\FeatureRemoval\InplaceSetupAudit;
 use Combodo\iTop\Test\UnitTest\ItopCustomDatamodelTestCase;
 use Combodo\iTop\Test\UnitTest\Service\UnitTestRunTimeEnvironment;
-use Exception;
 use MetaModel;
 
 class SetupAuditTest extends ItopCustomDatamodelTestCase
@@ -79,7 +78,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$aClassesBeforeRemoval[] = "GabuZomeu";
 
 		$oSetupAudit = new InplaceSetupAudit($aClassesBeforeRemoval, $sEnv);
-		$oSetupAudit->ComputeClasses($aClassesBeforeRemoval);
+		$oSetupAudit->ComputeClasses();
 		$this->assertEquals(["GabuZomeu"], $oSetupAudit->GetRemovedClasses());
 	}
 

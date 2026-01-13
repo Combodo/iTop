@@ -13,12 +13,9 @@ require_once APPROOT.'setup/feature_removal/ModelReflectionSerializer.php';
 
 abstract class AbstractSetupAudit
 {
-	//file used when present to trigger audit exception when testing specific setups
-	public const GETISSUE_ERROR_MSG_FILE_FORTESTONLY = '.setup_audit_error_msg.txt';
-
 	protected bool $bClassesInitialized = false;
-	protected array $aClassesBeforeRemoval = [];
-	protected array $aClassesAfterRemoval = [];
+	protected array $aClassesBefore = [];
+	protected array $aClassesAfter = [];
 	protected array $aRemovedClasses = [];
 	protected array $aFinalClassesToCleanup = [];
 
@@ -33,15 +30,15 @@ abstract class AbstractSetupAudit
 		$this->ComputeClasses();
 
 		if (count($this->aRemovedClasses) == 0) {
-			if (count($this->aClassesBeforeRemoval) == 0) {
+			if (count($this->aClassesBefore) == 0) {
 				return $this->aRemovedClasses;
 			}
 
-			if (count($this->aClassesAfterRemoval) == 0) {
+			if (count($this->aClassesAfter) == 0) {
 				return $this->aRemovedClasses;
 			}
 
-			$aExtensionsNames = array_diff($this->aClassesBeforeRemoval, $this->aClassesAfterRemoval);
+			$aExtensionsNames = array_diff($this->aClassesBefore, $this->aClassesAfter);
 			$this->aRemovedClasses = [];
 			$aClasses = array_values($aExtensionsNames);
 			sort($aClasses);
@@ -54,23 +51,8 @@ abstract class AbstractSetupAudit
 		return $this->aRemovedClasses;
 	}
 
-	/** test only: return file path that force audit error being raised
-	 *
-	 * @return string
-	 */
-	public static function GetErrorMessageFilePathForTestOnly(): string
-	{
-		return APPROOT."/data/".self::GETISSUE_ERROR_MSG_FILE_FORTESTONLY;
-	}
-
 	public function GetIssues(bool $bStopDataCheckAtFirstIssue = false): array
 	{
-		$sErrorMessageFilePath = self::GetErrorMessageFilePathForTestOnly();
-		if ($bStopDataCheckAtFirstIssue && is_file($sErrorMessageFilePath)) {
-			$sMsg = file_get_contents($sErrorMessageFilePath);
-			throw new \Exception($sMsg);
-		}
-
 		$this->aFinalClassesToCleanup = [];
 
 		foreach ($this->GetRemovedClasses() as $sClass) {
