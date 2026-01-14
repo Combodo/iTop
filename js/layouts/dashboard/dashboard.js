@@ -88,7 +88,12 @@ class IboDashboard extends HTMLElement {
 	}
 
 	AddNewDashlet(sDashletClass, sDashletValues, aDashletOptions = {}) {
-		const sNewDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet&dashlet_class='+encodeURIComponent(sDashletClass);
+		let sNewDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet&dashlet_class='+encodeURIComponent(sDashletClass);
+
+		if(sDashletValues.length > 0) {
+			sNewDashletUrl += '&values=' + encodeURIComponent(sDashletValues);
+		}
+
 		fetch(sNewDashletUrl)
 			.then(async data => {
 
@@ -103,6 +108,7 @@ class IboDashboard extends HTMLElement {
 	RefreshDashlet(oDashlet) {
 		let sGetDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet&dashlet_class=' + encodeURIComponent(oDashlet.sType)
 			+'&dashlet_id=' + encodeURIComponent(oDashlet.sDashletId);
+
 		if(oDashlet.formData.length > 0) {
 			sGetDashletUrl += '&values=' + encodeURIComponent(oDashlet.formData);
 		}
@@ -136,10 +142,23 @@ class IboDashboard extends HTMLElement {
 		oFormContainer.classList.add('ibo-is-hidden');
 	}
 
+	DisableFormButtons() {
+		const aButtons = this.querySelectorAll('.ibo-dashboard--form--actions button');
+		aButtons.forEach( (oButton) => {
+			oButton.setAttribute('disabled', 'disabled');
+		});
+	}
+
+	EnableFormButtons() {
+		const aButtons = this.querySelectorAll('.ibo-dashboard--form--actions button');
+		aButtons.forEach( (oButton) => {
+			oButton.removeAttribute('disabled');
+		});
+	}
+
 	EditDashlet(sDashletId) {
 		const oDashlet = this.oGrid.GetDashletElement(sDashletId);
 		const me = this;
-		// TODO 3.3: Implement dashlet editing when forms are ready
 
 		// Create backdrop to block interactions with other dashlets
 		if(this.oGrid.querySelector('.ibo-dashboard--grid--backdrop') === null) {
@@ -151,6 +170,7 @@ class IboDashboard extends HTMLElement {
 		this.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'edit');
 
 		// Disable dashboard buttons so we need to finish this edition first
+		this.DisableFormButtons();
 
 		// Fetch dashlet form from server
 		let sGetashletFormUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet_form&dashlet_class='+encodeURIComponent(oDashlet.sType);
@@ -192,6 +212,9 @@ class IboDashboard extends HTMLElement {
 			// Update local dashlet and refresh it
 			oDashlet.formData = event.detail.view_data;
 			this.RefreshDashlet(oDashlet);
+
+			// Re-enable dashboard buttons
+			this.EnableFormButtons();
 		}
 	}
 
@@ -206,6 +229,9 @@ class IboDashboard extends HTMLElement {
 		this.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'view');
 		this.ShowDashletTogglers();
 		this.ClearDashletForm();
+
+		// Re-enable dashboard buttons
+		this.EnableFormButtons();
 
 		// TODO 3.3 If this is an addition, remove the previewed dashlet
 		// TODO 3.3 If this is an edition, revert the dashlet to its initial state
