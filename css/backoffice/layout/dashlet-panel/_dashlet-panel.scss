@@ -45,6 +45,10 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  > .form {
+    overflow: auto;
+    margin-bottom: 16px;
+  }
 }
 
 .ibo-dashlet-panel--form-container--buttons {
@@ -55,7 +59,7 @@
 
   margin: 0 -16px -16px -16px;
   padding: 0 16px;
-  height: 60px;
+  min-height: 60px;
 
   background-color: $ibo-color-grey-50;
   border-top: solid 1px $ibo-color-grey-400;
