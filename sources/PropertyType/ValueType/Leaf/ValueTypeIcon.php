@@ -9,6 +9,7 @@ namespace Combodo\iTop\PropertyType\ValueType\Leaf;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
+use Combodo\iTop\Forms\Block\Base\ChoiceImageFormBlock;
 use Combodo\iTop\PropertyType\ValueType\Branch\AbstractBranchValueType;
 use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use utils;
@@ -20,7 +21,7 @@ class ValueTypeIcon extends AbstractLeafValueType
 {
 	public function GetFormBlockClass(): string
 	{
-		return ChoiceFormBlock::class;
+		return ChoiceImageFormBlock::class;
 	}
 
 	public function InitFromDomNode(DesignElement $oDomNode, ?AbstractBranchValueType $oParent = null): void

@@ -43,6 +43,7 @@ class ChoiceFormType extends AbstractType
 		$resolver->setDefault('inline_display', true);
 		$resolver->setDefault('max_items_selected', '');
 		$resolver->setDefault('disable_auto_complete', true);
+		$resolver->setDefined('plugins');
 	}
 
 	/** @inheritdoc */
@@ -54,9 +55,10 @@ class ChoiceFormType extends AbstractType
 		$view->vars['inline_display'] = $options['inline_display'];
 		$view->vars['max_items_selected'] = $options['max_items_selected'];
 		$view->vars['disable_auto_complete'] = $options['disable_auto_complete'];
+		$view->vars['plugins'] = $options['plugins'];
 	}
 
-	/** @inheritdoc  */
+	/** @inheritdoc */
 	public function buildForm(FormBuilderInterface $builder, array $options): void
 	{
 		// on preset data

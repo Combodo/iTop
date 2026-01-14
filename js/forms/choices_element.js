@@ -1,3 +1,19 @@
+/**
+ * Image renderer plugin for TomSelect
+ */
+TomSelect.define('image_renderer', function(options) {
+	this.settings.render.option = function(data, escape) {
+		return `<div class="ibo-input-select-icon--menu--item">
+<img src="${options['images_resource_path']+escape(data.value)}" alt="${data.text}" />${escape(data.text)}
+</div>`;
+	};
+	this.settings.render.item = function(data, escape) {
+		return `<div class="ibo-input-select-icon--menu--item">
+<img src="${options['images_resource_path']+escape(data.value)}" alt="${data.text}"/>${escape(data.text)}
+</div>`;
+	};
+});
+
 class ChoicesElement extends HTMLSelectElement {
 
 	// register the custom element
@@ -14,6 +30,14 @@ class ChoicesElement extends HTMLSelectElement {
 
 		if (this.getAttribute('multiple')) {
 			this.plugins.push('remove_button');
+		}
+
+		// plugins
+		if(this.hasAttribute('data-plugins')){
+			const aPlugins = JSON.parse(this.getAttribute('data-plugins'));
+			Array.from(aPlugins).values().forEach(plugin => {
+				this.plugins.push(plugin);
+			});
 		}
 
 		const options = {
@@ -41,5 +65,6 @@ class ChoicesElement extends HTMLSelectElement {
 		new TomSelect(this, options);
 	}
 }
+
 
 

@@ -54,3 +54,31 @@ $ibo-input-select-icon--menu--icon--margin-right: 10px !default;
 		}
 	}
 }
+
+.ts-control > .ibo-input-select-icon--menu--item{
+
+  display: flex;
+  column-gap: 5px;
+  align-items: center;
+  padding: 5px 0;
+
+  > img{
+    width: 24px;
+  }
+
+  &:hover{
+    background: transparent;
+  }
+
+}
+
+.ts-dropdown > .ts-dropdown-content > .ibo-input-select-icon--menu--item{
+
+  display: flex;
+  column-gap: 5px;
+
+  > img{
+    width: 32px;
+  }
+
+}

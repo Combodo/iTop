@@ -45,9 +45,11 @@ class FormBlock extends AbstractTypeFormBlock
 		try {
 			// Build the form
 			$this->BuildForm();
-		} catch (FormsException $e) {
+		}
+		catch (FormsException $e) {
 			throw $e;
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			throw new FormBlockException('Unable to construct form', 0, $e);
 		}
 	}
@@ -63,7 +65,7 @@ class FormBlock extends AbstractTypeFormBlock
 	{
 		parent::RegisterOptions($oOptionsRegister);
 		$oOptionsRegister->SetOption('compound', true);
-		$oOptionsRegister->SetOption('display', 'cosy');
+		$oOptionsRegister->SetOption('display', 'compact');
 		$oOptionsRegister->SetOptionArrayValue('attr', 'class', 'form');
 	}
 
@@ -141,6 +143,7 @@ class FormBlock extends AbstractTypeFormBlock
 		if (!array_key_exists($sName, $this->aChildrenBlocks)) {
 			throw new FormBlockException('Block does not exist '.json_encode($sName));
 		}
+
 		return $this->aChildrenBlocks[$sName];
 	}
 

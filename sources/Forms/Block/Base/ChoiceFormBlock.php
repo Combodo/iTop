@@ -38,6 +38,7 @@ class ChoiceFormBlock extends AbstractTypeFormBlock
 		parent::RegisterOptions($oOptionsRegister);
 
 		$oOptionsRegister->SetOption('multiple', false);
+		$oOptionsRegister->SetOption('plugins');
 	}
 
 	/** @inheritdoc */

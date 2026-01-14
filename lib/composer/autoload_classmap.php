@@ -493,6 +493,7 @@ return array(
     'Combodo\\iTop\\Forms\\Block\\Base\\CheckboxFormBlock' => $baseDir . '/sources/Forms/Block/Base/CheckboxFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\ChoiceFormBlock' => $baseDir . '/sources/Forms/Block/Base/ChoiceFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\ChoiceFromInputsBlock' => $baseDir . '/sources/Forms/Block/Base/ChoiceFromInputsBlock.php',
+    'Combodo\\iTop\\Forms\\Block\\Base\\ChoiceImageFormBlock' => $baseDir . '/sources/Forms/Block/Base/ChoiceImageFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\CollectionBlock' => $baseDir . '/sources/Forms/Block/Base/CollectionBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\DateFormBlock' => $baseDir . '/sources/Forms/Block/Base/DateFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\DateTimeFormBlock' => $baseDir . '/sources/Forms/Block/Base/DateTimeFormBlock.php',

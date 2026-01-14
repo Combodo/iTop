@@ -53,6 +53,7 @@
     <select is="choices-element" class="field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete ui-autocomplete-input"
         {{ block('widget_attributes') }}
         {% if multiple %} multiple="multiple" {% endif %}
+            {% if plugins is not empty %} data-plugins="{{ plugins|json_encode }}" {% endif %}
             {% if max_items_selected is defined %} data-tom-select-max-items-selected="{{ max_items_selected }}" {% endif %}
             {% if disable_auto_complete %} data-tom-select-disable-auto-complete=true {% endif %}
             {% if placeholder is not none %} hidePlaceholder=false {% endif %}
