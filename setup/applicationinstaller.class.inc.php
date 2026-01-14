@@ -717,6 +717,13 @@ class ApplicationInstaller
 			return false;
 		}
 
+		$sPath = APPROOT.$this->GetTargetDir();
+		if (!is_dir($sPath)) {
+			SetupLog::Info("Reinstallation of an iTop from a backup (No ".$this->GetTargetDir()." found). Setup data audit disabled", null, ['skip-data-audit' => $sSkipDataAudit]);
+
+			return false;
+		}
+
 		return true;
 	}
 
@@ -996,7 +1003,7 @@ class ApplicationInstaller
 	 * @param string $sDataModelVersion
 	 * @param array $aSelectedModuleCodes
 	 * @param array $aSelectedExtensionCodes
-	 * @param array $aParamValues parameters array used to create config file using {@see Config::UpdateFromParams}
+	 * @param string|null $sInstallComment
 	 *
 	 * @param null $sInstallComment
 	 *
