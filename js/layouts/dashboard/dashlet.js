@@ -53,8 +53,8 @@ class IboDashlet extends HTMLElement {
 	// TODO 3.3 Should we use getters ?
 		const aDashletData = {
 			id: this.sDashletId,
-			class: this.sType,
-			dashlet: JSON.parse(this.formData),
+			type: this.sType,
+			properties: JSON.parse(this.formData),
 		};
 
 		return aDashletData;

@@ -255,7 +255,7 @@ class IboDashboard extends HTMLElement {
 			id: this.sId,
 			title: sDashboardTitle,
 			refresh: sDashboardRefreshRate,
-			dashlets_list: aSerializedGrid,
+			pos_dashlets: aSerializedGrid,
 			_token: ":)"
 		};
 	}

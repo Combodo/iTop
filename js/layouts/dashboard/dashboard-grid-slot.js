@@ -51,7 +51,10 @@ class IboGridSlot extends HTMLElement {
 
 		const aDashletData = oDashlet ? oDashlet.Serialize() : {};
 
-		return {...aSlotData, ...aDashletData};
+		return {
+			...aSlotData,
+			dashlet: {...aDashletData}
+		};
 	}
 
 	static observedAttributes = ['gs-x', 'gs-y', 'gs-w', 'gs-h'];

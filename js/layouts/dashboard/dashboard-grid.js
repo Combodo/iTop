@@ -146,7 +146,10 @@ class IboGrid extends HTMLElement {
 	Serialize() {
 		const aSlots = this.getSlots();
 		return aSlots.map(oSlot => {
-			return oSlot.Serialize();
+			const sDashletId = oSlot.oDashlet.sDashletId;
+			return {
+				[sDashletId]: oSlot.Serialize(),
+			};
 		});
 	}
 }
