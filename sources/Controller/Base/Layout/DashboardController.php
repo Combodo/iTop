@@ -13,9 +13,14 @@ use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Forms\Block\FormBlockService;
 use Combodo\iTop\ItopSdkFormDemonstrator\Helper\ItopSdkFormDemonstratorLog;
+use Combodo\iTop\PropertyType\PropertyType;
+use Combodo\iTop\PropertyType\Serializer\XMLSerializer;
 use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use Dashboard;
 use Exception;
+use IssueLog;
 use ModelReflectionRuntime;
+use RuntimeDashboard;
 use utils;
 
 class DashboardController extends Controller
@@ -87,25 +92,23 @@ class DashboardController extends Controller
 		try {
 			// Get the form block from the service (and the compiler)
 			$oRequest = $this->getRequest();
-			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById('dashboard_type', 'Dashboard');
-			$oBuilder = $this->GetFormBuilder($oFormBlock, []);
+			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById('DashboardGrid', 'Dashboard');
+			$oBuilder = $this->GetFormBuilder($oFormBlock, $aValues);
 			$oForm = $oBuilder->getForm();
 			$oForm->handleRequest($oRequest);
 
-			if ($oForm->isSubmitted()) {
-				if ($oForm->isValid()) {
-					// Save XML
+			//			if ($oForm->isSubmitted()) {
+			//				if ($oForm->isValid()) {
 
-				}
-
-				// Compute blocks to redraw
-				$this->HandleFormSubmitted($oFormBlock, $oForm);
-			}
+			// Save XML
+			$oDashboard = new RuntimeDashboard($aValues['id']);
+			$oDomNode = $oDashboard->CreateEmptyDashboard();
+			XMLSerializer::GetInstance()->Serialize($aValues, $oDomNode, 'DashboardGrid', 'Dashboard');
+			$oDashboard->PersistDashboard($oDomNode->ownerDocument->saveXML());
+			//				}
+			//			}
 		} catch (Exception $e) {
-			ItopSdkFormDemonstratorLog::Exception($e->getMessage(), $e);
-			$this->DisplayPage([
-				'sControllerError' => $e->getMessage(),
-			], 'itop_error_update', Controller::ENUM_PAGE_TYPE_TURBO_FORM_AJAX);
+			IssueLog::Exception($e->getMessage(), $e);
 			return null;
 		}
 

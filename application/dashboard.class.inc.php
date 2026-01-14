@@ -12,6 +12,8 @@ use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\DesignDocument;
+use Combodo\iTop\DesignElement;
 use Combodo\iTop\PropertyType\PropertyTypeDesign;
 use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 
@@ -206,19 +208,31 @@ abstract class Dashboard
 	 */
 	public function ToXml()
 	{
-		$oDoc = new DOMDocument();
-		$oDoc->formatOutput = true; // indent (must be loaded with option LIBXML_NOBLANKS)
-		$oDoc->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
-
-		$oMainNode = $oDoc->createElement('dashboard');
-		$oMainNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
-		$oDoc->appendChild($oMainNode);
+		$oMainNode = $this->CreateEmptyDashboard();
 
 		$this->ToDOMNode($oMainNode);
 
-		$sXml = $oDoc->saveXML();
+		$sXml = $oMainNode->ownerDocument->saveXML();
 
 		return $sXml;
+	}
+
+	/**
+	 * @return DesignElement
+	 * @throws \DOMException
+	 */
+	public function CreateEmptyDashboard(): DesignElement
+	{
+		$oDoc = new DesignDocument();
+		$oDoc->formatOutput = true; // indent (must be loaded with option LIBXML_NOBLANKS)
+		$oDoc->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
+
+		/** @var DesignElement $oMainNode */
+		$oMainNode = $oDoc->createElement('dashboard');
+		$oMainNode->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
+		$oDoc->appendChild($oMainNode);
+
+		return $oMainNode;
 	}
 
 	/**

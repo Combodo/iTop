@@ -91,7 +91,7 @@ class PropertyTypeService
 	 */
 	private function SanitizeId(string $sId): string
 	{
-		$sFilteredId = preg_replace('/[^0-9a-zA-Z_]/', '', $sId);
+		$sFilteredId = preg_replace('/[^0-9a-zA-Z_\-]/', '', $sId);
 		if (strlen($sFilteredId) === 0 || $sFilteredId !== $sId) {
 			throw new FormBlockException('Malformed name for block: '.json_encode($sId));
 		}

@@ -853,7 +853,7 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
     </classes>
     <property_types _delta="define">
       <property_type id="Dashboard" xsi:type="Combodo-AbstractPropertyType"/>
-      <property_type id="Combodo-Dashboard-Grid" xsi:type="Combodo-PropertyType">
+      <property_type id="DashboardGrid" xsi:type="Combodo-PropertyType">
         <extends>Dashboard</extends>
         <definition xsi:type="Combodo-ValueType-PropertyTree">
           <label>Dashboard</label>
