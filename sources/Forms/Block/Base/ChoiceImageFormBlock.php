@@ -23,6 +23,8 @@ class ChoiceImageFormBlock extends ChoiceFormBlock
 	{
 		parent::RegisterOptions($oOptionsRegister);
 
+		$oOptionsRegister->SetOption('disable_auto_complete', true);
+
 		$oOptionsRegister->SetOption('plugins', [
 			[
 				'name'    => 'image_renderer',

@@ -137,7 +137,7 @@
 
 {%- block form_label_content -%}
     {{- parent() -}}
-    <div style="float: right;display: flex;flex-direction: column;align-items: center;row-gap: 3px;margin-top: 5px;">
+    <div style="float: right;display: flex;flex-direction: column;align-items: center;row-gap: 3px;">
         <span role="marquee" class="ibo-button--icon fas" style="padding:6px;"></span>
     </div>
 {%-endblock form_label_content  -%}
@@ -166,7 +166,7 @@
         {% if with_book_button %}
         <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" data-action="book" type="button" name="Open Book" value="" aria-label="Open Query Phrases Book">
             <span class="ibo-button--icon fas fa-book"></span>
-            {{ 'UI:Edit:SearchQuery'|trans }}
+            {{ 'UI:Edit:QueryBook'|trans }}
         </button>
         {% endif %}
     </div>

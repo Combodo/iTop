@@ -53,7 +53,7 @@ class ChoicesElement extends HTMLSelectElement {
 		};
 
 		if (this.getAttribute('data-tom-select-disable-auto-complete')) {
-			// options.controlInput = null;
+			options.controlInput = null;
 		}
 		if (this.getAttribute('data-tom-select-max-items-selected') && this.getAttribute('data-tom-select-max-items-selected') !== '') {
 			options.maxItems = parseInt(this.getAttribute('data-tom-select-max-items-selected'));
