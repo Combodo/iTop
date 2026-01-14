@@ -145,12 +145,11 @@ class IboGrid extends HTMLElement {
 	}
 	Serialize() {
 		const aSlots = this.getSlots();
-		return aSlots.map(oSlot => {
-			const sDashletId = oSlot.oDashlet.sDashletId;
-			return {
-				[sDashletId]: oSlot.Serialize(),
-			};
-		});
+
+		return aSlots.reduce((aAccumulator, oSlot) => {
+			aAccumulator[oSlot.oDashlet.sDashletId] = oSlot.Serialize();
+			return aAccumulator;
+		}, {});
 	}
 }
 
