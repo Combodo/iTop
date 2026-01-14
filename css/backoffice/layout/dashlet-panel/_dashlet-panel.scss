@@ -36,3 +36,27 @@
 .ibo-center-container:has(ibo-dashboard[data-edit-mode="view"]) .ibo-dashlet-panel{
   display: none;
 }
+
+.ibo-dashlet-panel--form-container turbo-frame {
+ height: 100%;
+}
+.ibo-dashlet-panel--form-container .ibo-form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ibo-dashlet-panel--form-container--buttons {
+  display: flex;
+  flex-direction: row !important;
+  justify-content: end;
+  align-items: center;
+
+  margin: 0 -16px -16px -16px;
+  padding: 0 16px;
+  height: 60px;
+
+  background-color: $ibo-color-grey-50;
+  border-top: solid 1px $ibo-color-grey-400;
+}

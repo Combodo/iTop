@@ -7,6 +7,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletWrapper;
 use Combodo\iTop\Application\UI\Base\Component\TurboForm\TurboFormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\Controller\AbstractController;
@@ -68,10 +69,12 @@ class DashboardController extends Controller
 
 		$oPage = new AjaxPage('');
 
-		$oUIBlock = TurboFormUIBlockFactory::MakeForDashletConfiguration($sDashletClass, $aValues);
-		$oUIBlock->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction('Confirm', 'dashboard_submit', 'dashboard_submit', true));
-		$oUIBlock->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction('Cancel', 'dashboard_cancel'));
-		$oPage->AddUiBlock($oUIBlock);
+		$oForm = TurboFormUIBlockFactory::MakeForDashletConfiguration($sDashletClass, $aValues);
+		$oButtonContainer = UIContentBlockUIBlockFactory::MakeStandard(null, ['ibo-dashlet-panel--form-container--buttons']);
+		$oButtonContainer->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction('Cancel', 'dashboard_cancel'));
+		$oButtonContainer->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction('Confirm', 'dashboard_submit', 'dashboard_submit', true));
+		$oForm->AddSubBlock($oButtonContainer);
+		$oPage->AddUiBlock($oForm);
 
 		return $oPage;
 	}
