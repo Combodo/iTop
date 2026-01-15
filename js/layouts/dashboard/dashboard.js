@@ -53,6 +53,9 @@ class IboDashboard extends HTMLElement {
 			this.SetEditMode(false)
 		});
 
+		// TODO 3.3 Add event listener to dashboard toggler to get custom/default dashboard switching
+		// TODO 3.3 require load method that's not finished yet
+
 		// Bind IboDashboard object to these listener so we can access current instance
 		this._ListenToDashletFormSubmission = this._ListenToDashletFormSubmission.bind(this);
 		this._ListenToDashletFormCancellation = this._ListenToDashletFormCancellation.bind(this);
@@ -79,6 +82,8 @@ class IboDashboard extends HTMLElement {
 
 		this.oGrid.SetEditable(this.bEditMode);
 		if(this.bEditMode){
+			// TODO 3.3 If we are in default dashboard display, change to custom to allow editing
+			// TODO 3.3 Get the custom dashboard and load it, show a tooltip on the dashboard toggler to explain that we switched to custom mode
 			this.aLastSavedState = this.Serialize();
 			this.setAttribute("data-edit-mode", "edit");
 		}
