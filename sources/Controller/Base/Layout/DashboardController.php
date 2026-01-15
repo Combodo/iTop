@@ -7,6 +7,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletWrapper;
 use Combodo\iTop\Application\UI\Base\Component\TurboForm\TurboFormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardGrid;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
@@ -98,20 +99,26 @@ class DashboardController extends Controller
 			$oBuilder = $this->GetFormBuilder($oFormBlock, $aValues);
 			$oForm = $oBuilder->getForm();
 			$oForm->handleRequest($oRequest);
+			// We are in the submit action, so we submit the form with the provided values
+			$oForm->submit($aValues);
 
-			//			if ($oForm->isSubmitted()) {
-			//				if ($oForm->isValid()) {
-
-			// Save XML
-			$oDashboard = new RuntimeDashboard($aValues['id']);
-			$oDomNode = $oDashboard->CreateEmptyDashboard();
-			XMLSerializer::GetInstance()->Serialize($aValues, $oDomNode, 'DashboardGrid', 'Dashboard');
-			$sXml = $oDomNode->ownerDocument->saveXML();
-			$oDashboard->PersistDashboard($sXml);
-			$sStatus = 'ok';
-			$sMessage = 'Dashboard saved';
-			//				}
-			//			}
+			// TODO 3.3 Validate the form, it requires CSRF + stripping extra fields
+			// See $oForm->getErrors(true) to get all errors
+			if ($oForm->isSubmitted() && (true || $oForm->isValid())) {
+				// Save XML
+				$oDashboard = new RuntimeDashboard($aValues['id']);
+				$oDomNode = $oDashboard->CreateEmptyDashboard();
+				XMLSerializer::GetInstance()->Serialize($aValues, $oDomNode, 'DashboardGrid', 'Dashboard');
+				$sXml = $oDomNode->ownerDocument->saveXML();
+				$oDashboard->PersistDashboard($sXml);
+				$sStatus = 'ok';
+				$sMessage = 'Dashboard saved';
+			}
+			else {
+				$sStatus = 'error';
+				$aFormErrors = $oForm->getErrors(true, true);
+				$sMessage = $aFormErrors->__toString();
+			}
 		} catch (Exception $e) {
 			IssueLog::Exception($e->getMessage(), $e);
 			$sStatus = 'error';
