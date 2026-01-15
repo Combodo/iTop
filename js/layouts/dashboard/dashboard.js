@@ -266,10 +266,9 @@ class IboDashboard extends HTMLElement {
 	}
 
 	Save() {
+		// This payload shape is expected by the server
 		const aPayload = this.Serialize();
-		// TODO 3.3: Implement saving dashboard state to server when backend is ready
-		// May try to save as serialized PHP if XML format is not yet decided
-		// Fetch dashlet form from server
+
 		let sSaveUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.save&values='+encodeURIComponent(JSON.stringify(aPayload));
 		fetch(sSaveUrl)
 			.then(async data => {
