@@ -104,7 +104,8 @@ class DashboardController extends Controller
 			$oDashboard = new RuntimeDashboard($aValues['id']);
 			$oDomNode = $oDashboard->CreateEmptyDashboard();
 			XMLSerializer::GetInstance()->Serialize($aValues, $oDomNode, 'DashboardGrid', 'Dashboard');
-			$oDashboard->PersistDashboard($oDomNode->ownerDocument->saveXML());
+			$sXml = $oDomNode->ownerDocument->saveXML();
+			$oDashboard->PersistDashboard($sXml);
 			//				}
 			//			}
 		} catch (Exception $e) {

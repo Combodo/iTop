@@ -519,6 +519,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\Dashboard\\FormBlock\\DashboardFormBlock' => __DIR__ . '/../..' . '/sources/Application/Dashboard/FormBlock/DashboardFormBlock.php',
         'Combodo\\iTop\\Application\\Dashboard\\FormBlock\\DashletFormBlock' => __DIR__ . '/../..' . '/sources/Application/Dashboard/FormBlock/DashletFormBlock.php',
         'Combodo\\iTop\\Application\\Dashboard\\FormBlock\\DashletPropertiesFormBlock' => __DIR__ . '/../..' . '/sources/Application/Dashboard/FormBlock/DashletPropertiesFormBlock.php',
+        'Combodo\\iTop\\Application\\Dashboard\\Layout\\DashboardLayoutGrid' => __DIR__ . '/../..' . '/sources/Application/Dashboard/Layout/DashboardLayoutGrid.php',
         'Combodo\\iTop\\Application\\EventRegister\\ApplicationEvents' => __DIR__ . '/../..' . '/sources/Application/EventRegister/ApplicationEvents.php',
         'Combodo\\iTop\\Application\\Helper\\CKEditorHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/CKEditorHelper.php',
         'Combodo\\iTop\\Application\\Helper\\ExportHelper' => __DIR__ . '/../..' . '/sources/Application/Helper/ExportHelper.php',

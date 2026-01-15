@@ -5,6 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Dashboard\Layout\DashboardLayoutGrid;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
@@ -38,7 +39,7 @@ abstract class Dashboard
 	protected $sLayoutClass;
 	/** @var array $aWidgetsData */
 	protected $aWidgetsData;
-	/** @var \DOMNode|null $oDOMNode */
+	/** @var DesignElement|null $oDOMNode */
 	protected $oDOMNode;
 	/** @var string $sId */
 	protected $sId;
@@ -46,6 +47,9 @@ abstract class Dashboard
 	protected $aCells;
 	/** @var \ModelReflection $oMetaModel */
 	protected $oMetaModel;
+
+	/** @var array Array of dashlets with position */
+	protected array $aGridDashlets = [];
 
 	/**
 	 * Dashboard constructor.
@@ -81,9 +85,14 @@ abstract class Dashboard
 	/**
 	 * @param \DOMDocument $oDoc
 	 */
-	public function FromDOMDocument(DOMDocument $oDoc)
+	public function FromDOMDocument(DesignDocument $oDoc)
 	{
 		$this->oDOMNode = $oDoc->getElementsByTagName('dashboard')->item(0);
+
+		if ($this->oDOMNode->getElementsByTagName('cells')->count() === 0) {
+			$this->FromDOMDocumentV2($oDoc);
+			return;
+		}
 
 		if ($oLayoutNode = $this->oDOMNode->getElementsByTagName('layout')->item(0)) {
 			$this->sLayoutClass = $oLayoutNode->textContent;
@@ -147,6 +156,36 @@ abstract class Dashboard
 			}
 		} else {
 			$this->aCells = [];
+		}
+	}
+
+	/**
+	 * @param \DOMDocument $oDoc
+	 */
+	public function FromDOMDocumentV2(DesignDocument $oDoc)
+	{
+		$this->oDOMNode = $oDoc->getElementsByTagName('dashboard')->item(0);
+
+		$this->sLayoutClass = DashboardLayoutGrid::class;
+		$this->sTitle = $this->oDOMNode->GetChildText('title', '');
+
+		$iRefresh = intval($this->oDOMNode->GetChildText('refresh', '0'));
+
+		$this->bAutoReload = $iRefresh > 0;
+		$this->iAutoReloadSec = $iRefresh;
+
+		$oDashletsNode = $this->oDOMNode->GetUniqueElement('pos_dashlets');
+		$oDashletList = $oDashletsNode->getElementsByTagName('pos_dashlet');
+		foreach ($oDashletList as $oPosDashletNode) {
+			$aGridDashlet = [];
+			$aGridDashlet['position_x'] = intval($oPosDashletNode->GetChildText('position_x', '0'));
+			$aGridDashlet['position_y'] = intval($oPosDashletNode->GetChildText('position_y', '0'));
+			$aGridDashlet['width'] = intval($oPosDashletNode->GetChildText('width', '2'));
+			$aGridDashlet['height'] = intval($oPosDashletNode->GetChildText('height', '1'));
+			$oDashletNode = $oPosDashletNode->GetUniqueElement('dashlet');
+			$aGridDashlet['dashlet'] = $this->InitDashletFromDOMNode($oDashletNode);
+			$sId = $oPosDashletNode->getAttribute('id');
+			$this->aGridDashlets[$sId] = $aGridDashlet;
 		}
 	}
 
@@ -524,7 +563,7 @@ EOF
 	{
 		$aExtraParams['dashboard_div_id'] = utils::Sanitize($aExtraParams['dashboard_div_id'] ?? null, $this->GetId(), utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 
-		/** @var \DashboardLayoutMultiCol $oLayout */
+		/** @var \DashboardLayout $oLayout */
 		$oLayout = new $this->sLayoutClass();
 
 		foreach ($this->aCells as $iCellIdx => $aDashlets) {
@@ -534,7 +573,13 @@ EOF
 			}
 		}
 
-		$oDashboard = $oLayout->Render($oPage, $this->aCells, $bEditMode, $aExtraParams);
+		if (count($this->aCells) > 0) {
+			$aDashlets = $this->aCells;
+		} else {
+			$aDashlets = $this->aGridDashlets;
+		}
+
+		$oDashboard = $oLayout->Render($oPage, $aDashlets, $bEditMode, $aExtraParams);
 		$oPage->AddUiBlock($oDashboard);
 
 		$bFromDasboardPage = isset($aExtraParams['from_dashboard_page']) ? isset($aExtraParams['from_dashboard_page']) : false;

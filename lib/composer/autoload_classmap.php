@@ -133,6 +133,7 @@ return array(
     'Combodo\\iTop\\Application\\Dashboard\\FormBlock\\DashboardFormBlock' => $baseDir . '/sources/Application/Dashboard/FormBlock/DashboardFormBlock.php',
     'Combodo\\iTop\\Application\\Dashboard\\FormBlock\\DashletFormBlock' => $baseDir . '/sources/Application/Dashboard/FormBlock/DashletFormBlock.php',
     'Combodo\\iTop\\Application\\Dashboard\\FormBlock\\DashletPropertiesFormBlock' => $baseDir . '/sources/Application/Dashboard/FormBlock/DashletPropertiesFormBlock.php',
+    'Combodo\\iTop\\Application\\Dashboard\\Layout\\DashboardLayoutGrid' => $baseDir . '/sources/Application/Dashboard/Layout/DashboardLayoutGrid.php',
     'Combodo\\iTop\\Application\\EventRegister\\ApplicationEvents' => $baseDir . '/sources/Application/EventRegister/ApplicationEvents.php',
     'Combodo\\iTop\\Application\\Helper\\CKEditorHelper' => $baseDir . '/sources/Application/Helper/CKEditorHelper.php',
     'Combodo\\iTop\\Application\\Helper\\ExportHelper' => $baseDir . '/sources/Application/Helper/ExportHelper.php',

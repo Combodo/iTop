@@ -30,7 +30,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
  */
 abstract class DashboardLayout
 {
-	abstract public function Render($oPage, $aDashlets, $bEditMode = false);
+	abstract public function Render($oPage, $aDashlets, $bEditMode = false, array $aExtraParams = []);
 
 	/**
 	 * @param int $iCellIdx
