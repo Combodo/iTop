@@ -49,8 +49,10 @@ class IboDashboard extends HTMLElement {
 
 		this.querySelector('[data-role="ibo-button"][name="cancel"]')?.addEventListener('click', (e) => {
 			e.preventDefault();
-			// TODO 3.3: Implement cancel functionality (reload last saved state)
-			this.SetEditMode(false)
+			if (this.aLastSavedState) {
+				this.Load(this.aLastSavedState);
+			}
+			this.SetEditMode(false);
 		});
 
 		// TODO 3.3 Add event listener to dashboard toggler to get custom/default dashboard switching
@@ -84,7 +86,7 @@ class IboDashboard extends HTMLElement {
 		if(this.bEditMode){
 			// TODO 3.3 If we are in default dashboard display, change to custom to allow editing
 			// TODO 3.3 Get the custom dashboard and load it, show a tooltip on the dashboard toggler to explain that we switched to custom mode
-			this.aLastSavedState = this.Serialize();
+			this.aLastSavedState = this.Serialize(true);
 			this.setAttribute("data-edit-mode", "edit");
 		}
 		else{
@@ -250,11 +252,21 @@ class IboDashboard extends HTMLElement {
 		this.oGrid.RemoveDashlet(sDashletId);
 	}
 
-	Serialize() {
+	RefreshFromBackend(bCustomDashboard = false) {
+		const sLoadDashboardUrl = GetAbsoluteUrlAppRoot() + `/pages/UI.php?route=dashboard.load&id=${this.sId}&custom=${bCustomDashboard ? 'true' : 'false'}`;
+		fetch(sLoadDashboardUrl)
+			.then(async oResponse => {
+				const oDashletData = await oResponse.json();
+				this.Load(oDashletData);
+			}
+		)
+	}
+
+	Serialize(bIncludeHtml = false) {
 		const sDashboardTitle = this.querySelector('.ibo-dashboard--form--inputs input[name="dashboard_title"]').value;
 		const sDashboardRefreshRate = this.querySelector('.ibo-dashboard--form--inputs select[name="refresh_interval"]').value;
 
-		const aSerializedGrid = this.oGrid.Serialize();
+		const aSerializedGrid = this.oGrid.Serialize(bIncludeHtml);
 		return {
 			schema_version: this.schemaVersion,
 			id: this.sId,
@@ -275,8 +287,8 @@ class IboDashboard extends HTMLElement {
 				const res = await data.json();
 				if(res.status === 'ok') {
 					CombodoToast.OpenToast(res.message, 'success');
+					this.aLastSavedState = this.Serialize(true);
 					this.SetEditMode(false);
-					this.aLastSavedState = aPayload;
 				} else {
 					CombodoToast.OpenToast(res.message, 'error');
 				}
@@ -284,105 +296,70 @@ class IboDashboard extends HTMLElement {
 	}
 
 
-	async Load(aSaveState) {
-		// TODO 3.3: Implement loading dashboard state either from server or local payload
-		// aSaveState expected shape (example):
-		// { schema_version: 1, id: "...", title: "...", refresh_rate: "...", dashlets: [ { x, y, w, h, id, type, formData, content? }, ... ] }
+	Load(aSaveState) {
+		try {
+			// Validate schema version
+			if (aSaveState.schema_version !== this.schemaVersion) {
+				CombodoToast.OpenToast('Somehow, we got an incompatible dashboard schema version.', 'error');
+				return false;
+			}
 
-		if (!aSaveState || typeof aSaveState !== 'object') {
-			this.DisplayError('Invalid dashboard save state payload');
-			return;
-		}
-
-		if (aSaveState.schema_version !== this.schemaVersion) {
-			this.DisplayError('Load schema version mismatch');
-		}
-
-		// set basic props
-		if (aSaveState.id) {
+			// Update dashboard data
 			this.sId = aSaveState.id;
-			// keep element id attribute in sync
-			this.setAttribute('id', this.sId);
-		}
-		if (typeof aSaveState.title !== 'undefined') {
-			this.sTitle = aSaveState.title;
-			const titleInput = this.querySelector('.ibo-dashboard--form--inputs input[name="dashboard_title"]');
-			if (titleInput) titleInput.value = this.sTitle;
-		}
-		if (typeof aSaveState.refresh_rate !== 'undefined') {
-			this.iRefreshRate = Number(aSaveState.refresh_rate) || 0;
-			const sel = this.querySelector('.ibo-dashboard--form--inputs select[name="refresh_interval"]');
-			if (sel) sel.value = aSaveState.refresh_rate;
-		}
+			this.sTitle = aSaveState.title || "";
+			this.iRefreshRate = parseInt(aSaveState.refresh, 10) || 0;
 
-		// -- clear existing grid --
-		this.SetupGrid();
-		if (this.oGrid) {
-			this.oGrid.Clear();
-		}
-
-		// -- iterate dashlets and re-create them --
-		const aDashlets = Array.isArray(aSaveState.dashlets) ? aSaveState.dashlets : [];
-		for (const slotPayload of aDashlets) {
-			// ensure minimal shape
-			const x = Number(slotPayload.x) || undefined;
-			const y = Number(slotPayload.y) || undefined;
-			const w = Number(slotPayload.w) || undefined;
-			const h = Number(slotPayload.h) || undefined;
-
-			// If the payload includes the full HTML markup for the dashlet, use it.
-			// Otherwise, attempt to fetch markup from server based on dashlet type.
-			let sDashletHtml = null;
-			if (slotPayload.content) {
-				sDashletHtml = slotPayload.content;
-			} else if (slotPayload.type) {
-				try {
-					// Use the same endpoint you use for new dashlet creation as a fallback.
-					// Your server may provide an endpoint that accepts type and returns pre-rendered HTML.
-					const sUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.new_dashlet&dashlet_class=' + encodeURIComponent(slotPayload.type);
-					const res = await fetch(sUrl);
-					if (res.ok) {
-						sDashletHtml = await res.text();
-					} else {
-						console.warn('Failed to fetch dashlet HTML for type', slotPayload.type, res.status);
-					}
-				} catch (e) {
-					console.warn('Error fetching dashlet HTML for type', slotPayload.type, e);
-				}
+			// Update form inputs if they exist
+			const oTitleInput = this.querySelector('.ibo-dashboard--form--inputs input[name="dashboard_title"]');
+			if (oTitleInput) {
+				oTitleInput.value = this.sTitle;
 			}
 
-			// if still missing markup, use a placeholder
-			if (!sDashletHtml) {
-				sDashletHtml = `<div class="ibo-dashlet--placeholder">Missing dashlet content for type: ${slotPayload.type || 'unknown'}</div>`;
+			const oRefreshSelect = this.querySelector('.ibo-dashboard--form--inputs select[name="refresh_interval"]');
+			if (oRefreshSelect) {
+				oRefreshSelect.value = aSaveState.refresh;
 			}
 
-			// Add dashlet at requested position/size
-			const aOptions = {};
-			if (typeof x !== 'undefined') aOptions.x = x;
-			if (typeof y !== 'undefined') aOptions.y = y;
-			if (typeof w !== 'undefined') aOptions.w = w;
-			if (typeof h !== 'undefined') aOptions.h = h;
+			// Clear existing grid
+			this.ClearGrid();
 
-			const oSlot = this.oGrid.AddDashlet(sDashletHtml, aOptions);
+			// Load dashlets
+			const aDashletSlots = aSaveState.pos_dashlets || {};
 
-			// If payload contains dashlet metadata (id/type/formData) — apply it
-			if (slotPayload.id || slotPayload.type) {
-				const dashletElem = oSlot.oDashlet || oSlot.querySelector('ibo-dashlet');
-				if (dashletElem) {
-					if (slotPayload.id) dashletElem.sDashletId = slotPayload.id;
-					if (slotPayload.type) dashletElem.type = slotPayload.type;
-					if (slotPayload.formData) {
-						dashletElem.ApplyFormData(slotPayload.formData);
-					}
-				}
+			for (const [sDashletId, aDashletData] of Object.entries(aDashletSlots)) {
+				const iPosX = aDashletData.position_x;
+				const iPosY = aDashletData.position_y;
+				const iWidth = aDashletData.width;
+				const iHeight = aDashletData.height;
+				const aDashlet = aDashletData.dashlet;
+
+				// We store the dashlet component in the HTML, not only the rendered dashlet
+				const sDashetHtml = aDashlet.html;
+
+				// Add dashlet to grid with its position and size
+				this.oGrid.AddDashlet(sDashetHtml, {
+					x: iPosX,
+					y: iPosY,
+					w: iWidth,
+					h: iHeight,
+					autoPosition: false
+				});
 			}
+
+			// Update last saved state
+			this.aLastSavedState = aSaveState;
+
+			return true;
+
+		} catch (error) {
+			console.error('Error loading dashboard state:', error);
+			CombodoToast.OpenToast('Error loading dashboard state', 'error');
+			return false;
 		}
+	}
 
-		// Save loaded state as last saved so cancel can restore it
-		this.aLastSavedState = aSaveState;
-
-		// Exit edit-mode: loading a previous state implies not being in edit mode by default
-		this.SetEditMode(false);
+	ClearGrid() {
+		this.oGrid.ClearGrid();
 	}
 
 	DisplayError(sMessage, sSeverity = 'error') {

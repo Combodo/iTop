@@ -39,7 +39,7 @@ class IboGridSlot extends HTMLElement {
 		return oSlot;
 	}
 
-	Serialize() {
+	Serialize(bIncludeHtml = false) {
 		const oDashlet = this.oDashlet;
 
 		const aSlotData = {
@@ -49,7 +49,7 @@ class IboGridSlot extends HTMLElement {
 			height: this.iHeight
 		};
 
-		const aDashletData = oDashlet ? oDashlet.Serialize() : {};
+		const aDashletData = oDashlet ? oDashlet.Serialize(bIncludeHtml) : {};
 
 		return {
 			...aSlotData,
