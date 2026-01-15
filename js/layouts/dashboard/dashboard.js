@@ -273,11 +273,15 @@ class IboDashboard extends HTMLElement {
 		let sSaveUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.save&values='+encodeURIComponent(JSON.stringify(aPayload));
 		fetch(sSaveUrl)
 			.then(async data => {
-				// TODO 3.3 What's returned ?
+				const res = await data.json();
+				if(res.status === 'ok') {
+					CombodoToast.OpenToast(res.message, 'success');
+					this.SetEditMode(false);
+					this.aLastSavedState = aPayload;
+				} else {
+					CombodoToast.OpenToast(res.message, 'error');
+				}
 			})
-
-		this.SetEditMode(false);
-		this.aLastSavedState = aPayload;
 	}
 
 

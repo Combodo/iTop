@@ -88,6 +88,8 @@ class DashboardController extends Controller
 	{
 		$sValues = utils::ReadParam('values', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 		$aValues = !empty($sValues) ? json_decode($sValues, true, 20) : [];
+		$sStatus = 'error';
+		$sMessage = 'Unknown error';
 
 		try {
 			// Get the form block from the service (and the compiler)
@@ -106,15 +108,21 @@ class DashboardController extends Controller
 			XMLSerializer::GetInstance()->Serialize($aValues, $oDomNode, 'DashboardGrid', 'Dashboard');
 			$sXml = $oDomNode->ownerDocument->saveXML();
 			$oDashboard->PersistDashboard($sXml);
+			$sStatus = 'ok';
+			$sMessage = 'Dashboard saved';
 			//				}
 			//			}
 		} catch (Exception $e) {
 			IssueLog::Exception($e->getMessage(), $e);
-			return null;
+			$sStatus = 'error';
+			$sMessage = $e->getMessage();
 		}
 
 		$oPage = new JsonPage();
-		$oPage->SetData($aValues);
+		$oPage->SetData([
+			'status' => $sStatus,
+			'message' => $sMessage
+		]);
 		$oPage->SetOutputDataOnly(true);
 		return $oPage;
 	}
