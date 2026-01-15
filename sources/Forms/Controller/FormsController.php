@@ -38,7 +38,8 @@ class FormsController extends Controller
 
 			if ($oForm->isSubmitted()) {
 				if ($oForm->isValid()) {
-					IssueLog::Info('form is valid');
+					$sDashletName = json_encode($sDashletClass);
+					IssueLog::Debug("form for $sDashletName is valid");
 				}
 
 				// Compute blocks to redraw

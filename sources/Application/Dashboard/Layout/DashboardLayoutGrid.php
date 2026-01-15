@@ -18,11 +18,11 @@ class DashboardLayoutGrid extends \DashboardLayout
 
 		$oDashboardGrid = new DashboardGrid();
 		$oDashboardLayout->SetGrid($oDashboardGrid);
-		foreach ($aDashlets as $sDashletId => $aPosDashlet) {
+		foreach ($aDashlets as $aPosDashlet) {
 			/** @var \Dashlet $oDashlet */
 			$oDashlet = $aPosDashlet['dashlet'];
 			if ($oDashlet::IsVisible()) {
-				$oDashlet->SetID($sDashletId);
+				$sDashletId = $oDashlet->GetID();
 				$sDashletClass = get_class($oDashlet);
 				$aDashletDenormalizedProperties = $oDashlet->GetDenormalizedProperties();
 				$aDashletsInfo = $sDashletClass::GetInfo();

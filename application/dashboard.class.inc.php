@@ -183,9 +183,11 @@ abstract class Dashboard
 			$aGridDashlet['width'] = intval($oPosDashletNode->GetChildText('width', '2'));
 			$aGridDashlet['height'] = intval($oPosDashletNode->GetChildText('height', '1'));
 			$oDashletNode = $oPosDashletNode->GetUniqueElement('dashlet');
-			$aGridDashlet['dashlet'] = $this->InitDashletFromDOMNode($oDashletNode);
 			$sId = $oPosDashletNode->getAttribute('id');
-			$this->aGridDashlets[$sId] = $aGridDashlet;
+			$oDashlet = $this->InitDashletFromDOMNode($oDashletNode);
+			$oDashlet->SetID($sId);
+			$aGridDashlet['dashlet'] = $oDashlet;
+			$this->aGridDashlets[] = $aGridDashlet;
 		}
 	}
 

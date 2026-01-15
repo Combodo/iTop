@@ -1093,10 +1093,10 @@ abstract class DashletGroupBy extends Dashlet
 		$sGroupBy = $this->aProperties['group_by'];
 
 		$this->sAggregationFunction = $this->aProperties['aggregation_function'];
-		$this->sAggregationAttribute = $this->aProperties['aggregation_attribute'];
+		$this->sAggregationAttribute = $this->aProperties['aggregation_attribute'] ?? '';
 
-		$this->sLimit = $this->aProperties['limit'];
-		$this->sOrderBy = $this->aProperties['order_by'];
+		$this->sLimit = $this->aProperties['limit'] ?? 0;
+		$this->sOrderBy = $this->aProperties['order_by'] ?? null;
 		if (empty($this->sOrderBy)) {
 			if ($this->aProperties['style'] == 'pie') {
 				$this->sOrderBy = 'function';
