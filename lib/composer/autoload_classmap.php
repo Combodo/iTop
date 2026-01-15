@@ -271,6 +271,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Layout\\Dashboard\\DashboardLayout' => $baseDir . '/sources/Application/UI/Base/Layout/Dashboard/DashboardLayout.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Layout\\Dashboard\\DashboardRow' => $baseDir . '/sources/Application/UI/Base/Layout/Dashboard/DashboardRow.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Layout\\Extension\\ExtensionDetails' => $baseDir . '/sources/Application/UI/Base/Layout/Extension/ExtensionDetails.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Layout\\Extension\\ExtensionDetailsFactory' => $baseDir . '/sources/Application/UI/Base/Layout/Extension/ExtensionDetailsFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Layout\\MultiColumn\\Column\\Column' => $baseDir . '/sources/Application/UI/Base/Layout/MultiColumn/Column/Column.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Layout\\MultiColumn\\Column\\ColumnUIBlockFactory' => $baseDir . '/sources/Application/UI/Base/Layout/MultiColumn/Column/ColumnUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Layout\\MultiColumn\\MultiColumn' => $baseDir . '/sources/Application/UI/Base/Layout/MultiColumn/MultiColumn.php',

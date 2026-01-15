@@ -652,6 +652,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\Application\\UI\\Base\\Layout\\Dashboard\\DashboardLayout' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Layout/Dashboard/DashboardLayout.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Layout\\Dashboard\\DashboardRow' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Layout/Dashboard/DashboardRow.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Layout\\Extension\\ExtensionDetails' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Layout/Extension/ExtensionDetails.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Layout\\Extension\\ExtensionDetailsFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Layout/Extension/ExtensionDetailsFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Layout\\MultiColumn\\Column\\Column' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Layout/MultiColumn/Column/Column.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Layout\\MultiColumn\\Column\\ColumnUIBlockFactory' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Layout/MultiColumn/Column/ColumnUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Layout\\MultiColumn\\MultiColumn' => __DIR__ . '/../..' . '/sources/Application/UI/Base/Layout/MultiColumn/MultiColumn.php',

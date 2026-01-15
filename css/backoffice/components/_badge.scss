@@ -24,6 +24,8 @@ $ibo-badge-colors: (
 
 
 .ibo-badge {
+	display: inline-block;
+	white-space: nowrap;
 	padding : $ibo-badge--padding-y $ibo-badge--padding-x;
 	border-radius : $ibo-badge--border-radius;
 	@extend %ibo-font-ral-med-50;
