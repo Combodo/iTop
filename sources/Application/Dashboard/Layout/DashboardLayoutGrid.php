@@ -7,6 +7,7 @@
 
 namespace Combodo\iTop\Application\Dashboard\Layout;
 
+use Combodo\iTop\Application\Dashlet\Service\DashletService;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardGrid;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
 
@@ -23,9 +24,9 @@ class DashboardLayoutGrid extends \DashboardLayout
 			$oDashlet = $aPosDashlet['dashlet'];
 			if ($oDashlet::IsVisible()) {
 				$sDashletId = $oDashlet->GetID();
-				$sDashletClass = get_class($oDashlet);
+				$sDashletClass = $oDashlet->GetDashletType();
 				$aDashletDenormalizedProperties = $oDashlet->GetDenormalizedProperties();
-				$aDashletsInfo = $sDashletClass::GetInfo();
+				$aDashletsInfo = DashletService::GetInstance()->GetDashletDefinition($sDashletClass);
 
 				// Also set minimal height/width
 				$iPositionX = $aPosDashlet['position_x'];

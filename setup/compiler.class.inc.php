@@ -704,6 +704,9 @@ PHP;
 		$oPropertyTypesNode = $this->oFactory->GetNodes('/itop_design/meta/property_types')->item(0);
 		$this->CompilePropertyTypes($oPropertyTypesNode, $sTempTargetDir, $sFinalTargetDir);
 
+		$oDashletNode = $this->oFactory->GetNodes('/itop_design/meta/dashlets')->item(0);
+		$this->CompileDashlets($oDashletNode, $sTempTargetDir, $sFinalTargetDir);
+
 		// Compile the XML parameters
 		/** @var \MFElement $oParametersNode */
 		$oParametersNode = $this->oFactory->GetNodes('/itop_design/module_parameters')->item(0);
@@ -3589,6 +3592,16 @@ EOF;
 				SetupUtils::builddir($sTempTargetDir.'/core/property_types/'.$sExtends);
 				$oDoc->save($sTempTargetDir.'/core/property_types/'.$sExtends.'/'.$oPropertyType->getAttribute('id').'.xml');
 			}
+		}
+	}
+
+	protected function CompileDashlets(?DOMNode $oDashlets, string $sTempTargetDir, string $sFinalTargetDir): void
+	{
+		if ($oDashlets) {
+			$oDoc = new DesignDocument();
+			$oClone = $oDoc->importNode($oDashlets->cloneNode(true), true);
+			$oDoc->appendChild($oClone);
+			$oDoc->save($sTempTargetDir.'/core/dashlets.xml');
 		}
 	}
 
