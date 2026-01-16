@@ -851,6 +851,56 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         </methods>
       </class>
     </classes>
+    <dashlets>
+      <dashlet id="DashletGroupByTable" _delta="define">
+        <label>UI:DashletGroupByTable:Label</label>
+        <icon>images/dashlets/icons8-transaction-list-48.png</icon>
+        <description>UI:DashletGroupByTable:Description</description>
+        <configuration/>
+      </dashlet>
+      <dashlet id="DashletGroupByBars" _delta="define">
+        <label>UI:DashletGroupByBars:Label</label>
+        <icon>images/dashlets/icons8-bar-chart-48.png</icon>
+        <description>UI:DashletGroupByBars:Description</description>
+        <configuration/>
+      </dashlet>
+      <dashlet id="DashletGroupByPie" _delta="define">
+        <label>UI:DashletGroupByPie:Label</label>
+        <icon>images/dashlets/icons8-pie-chart-48.png</icon>
+        <description>UI:DashletGroupByPie:Description</description>
+        <configuration/>
+      </dashlet>
+      <dashlet id="DashletBadge" _delta="define">
+        <label>UI:DashletBadge:Label</label>
+        <icon>images/dashlets/icons8-badge-48.png</icon>
+        <description>UI:DashletBadge:Description</description>
+        <configuration/>
+      </dashlet>
+      <dashlet id="DashletHeaderDynamic" _delta="define">
+        <label>UI:DashletHeaderDynamic:Label</label>
+        <icon>images/dashlets/icons8-header-altered-48.png</icon>
+        <description>UI:DashletHeaderDynamic:Description</description>
+        <configuration/>
+      </dashlet>
+      <dashlet id="DashletHeaderStatic" _delta="define">
+        <label>UI:DashletHeaderStatic:Label</label>
+        <icon>images/dashlets/icons8-header-48.png</icon>
+        <description>UI:DashletHeaderStatic:Description</description>
+        <configuration/>
+      </dashlet>
+      <dashlet id="DashletObjectList" _delta="define">
+        <label>UI:DashletObjectList:Label</label>
+        <icon>images/dashlets/icons8-list-48.png</icon>
+        <description>UI:DashletObjectList:Description</description>
+        <configuration/>
+      </dashlet>
+      <dashlet id="DashletPlainText" _delta="define">
+        <label>UI:DashletPlainText:Label</label>
+        <icon>images/dashlets/icons8-text-box-48.png</icon>
+        <description>UI:DashletPlainText:Description</description>
+        <configuration/>
+      </dashlet>
+    </dashlets>
     <property_types _delta="define">
       <property_type id="Dashboard" xsi:type="Combodo-AbstractPropertyType"/>
       <property_type id="DashboardGrid" xsi:type="Combodo-PropertyType">
