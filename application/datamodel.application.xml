@@ -856,48 +856,84 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         <label>UI:DashletGroupByTable:Label</label>
         <icon>images/dashlets/icons8-transaction-list-48.png</icon>
         <description>UI:DashletGroupByTable:Description</description>
+        <min_width>2</min_width>
+        <min_height>2</min_height>
+        <preferred_width>3</preferred_width>
+        <preferred_height>3</preferred_height>
+        <can_create_by_oql>true</can_create_by_oql>
         <configuration/>
       </dashlet>
       <dashlet id="DashletGroupByBars" _delta="define">
         <label>UI:DashletGroupByBars:Label</label>
         <icon>images/dashlets/icons8-bar-chart-48.png</icon>
         <description>UI:DashletGroupByBars:Description</description>
+        <min_width>2</min_width>
+        <min_height>2</min_height>
+        <preferred_width>3</preferred_width>
+        <preferred_height>3</preferred_height>
+        <can_create_by_oql>true</can_create_by_oql>
         <configuration/>
       </dashlet>
       <dashlet id="DashletGroupByPie" _delta="define">
         <label>UI:DashletGroupByPie:Label</label>
         <icon>images/dashlets/icons8-pie-chart-48.png</icon>
         <description>UI:DashletGroupByPie:Description</description>
+        <min_width>2</min_width>
+        <min_height>2</min_height>
+        <preferred_width>3</preferred_width>
+        <preferred_height>3</preferred_height>
+        <can_create_by_oql>true</can_create_by_oql>
         <configuration/>
       </dashlet>
       <dashlet id="DashletBadge" _delta="define">
         <label>UI:DashletBadge:Label</label>
         <icon>images/dashlets/icons8-badge-48.png</icon>
         <description>UI:DashletBadge:Description</description>
+        <min_width>2</min_width>
+        <min_height>1</min_height>
+        <preferred_width>2</preferred_width>
+        <preferred_height>1</preferred_height>
         <configuration/>
       </dashlet>
       <dashlet id="DashletHeaderDynamic" _delta="define">
         <label>UI:DashletHeaderDynamic:Label</label>
         <icon>images/dashlets/icons8-header-altered-48.png</icon>
         <description>UI:DashletHeaderDynamic:Description</description>
+        <min_width>2</min_width>
+        <min_height>1</min_height>
+        <preferred_width>4</preferred_width>
+        <preferred_height>3</preferred_height>
         <configuration/>
       </dashlet>
       <dashlet id="DashletHeaderStatic" _delta="define">
         <label>UI:DashletHeaderStatic:Label</label>
         <icon>images/dashlets/icons8-header-48.png</icon>
         <description>UI:DashletHeaderStatic:Description</description>
+        <min_width>4</min_width>
+        <min_height>1</min_height>
+        <preferred_width>4</preferred_width>
+        <preferred_height>1</preferred_height>
         <configuration/>
       </dashlet>
       <dashlet id="DashletObjectList" _delta="define">
         <label>UI:DashletObjectList:Label</label>
         <icon>images/dashlets/icons8-list-48.png</icon>
         <description>UI:DashletObjectList:Description</description>
+        <min_width>2</min_width>
+        <min_height>1</min_height>
+        <preferred_width>4</preferred_width>
+        <preferred_height>3</preferred_height>
+        <can_create_by_oql>true</can_create_by_oql>
         <configuration/>
       </dashlet>
       <dashlet id="DashletPlainText" _delta="define">
         <label>UI:DashletPlainText:Label</label>
         <icon>images/dashlets/icons8-text-box-48.png</icon>
         <description>UI:DashletPlainText:Description</description>
+        <min_width>2</min_width>
+        <min_height>1</min_height>
+        <preferred_width>2</preferred_width>
+        <preferred_height>1</preferred_height>
         <configuration/>
       </dashlet>
     </dashlets>

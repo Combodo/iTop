@@ -15,8 +15,19 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Application\WebPage\WebPage;
+use Combodo\iTop\DesignDocument;
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\PropertyType\Serializer\XMLNormalizer;
+use DesignerForm;
+use DesignerHiddenField;
+use Dict;
+use DOMException;
+use DOMNode;
+use Exception;
+use ModelReflection;
+use OQLException;
+use UnknownClassOqlException;
+use utils;
 
 require_once(APPROOT.'application/forms.class.inc.php');
 
@@ -38,12 +49,14 @@ abstract class Dashlet
 	protected $aProperties; // array of {property => value}
 	protected $aCSSClasses;
 	protected $sDashletType;
+	protected array $aDefinition;
 
 	/**
 	 * Dashlet constructor.
 	 *
 	 * @param \ModelReflection $oModelReflection
 	 * @param string $sId
+	 * @param string|null $sDashletType
 	 */
 	public function __construct(ModelReflection $oModelReflection, $sId)
 	{
@@ -166,7 +179,7 @@ abstract class Dashlet
 	 */
 	public function FromXml($sXml)
 	{
-		$oDomDoc = new DOMDocument('1.0', 'UTF-8');
+		$oDomDoc = new DesignDocument('1.0', 'UTF-8');
 		libxml_clear_errors();
 		$oDomDoc->loadXml($sXml);
 		$aErrors = libxml_get_errors();
@@ -174,7 +187,9 @@ abstract class Dashlet
 			throw new DOMException("Malformed XML");
 		}
 
-		$this->FromDOMNode($oDomDoc->firstChild);
+		/** @var DesignElement $oDOMNode */
+		$oDOMNode = $oDomDoc->firstChild;
+		$this->FromDOMNode($oDOMNode);
 	}
 
 	/**
@@ -192,7 +207,7 @@ abstract class Dashlet
 
 	public function FromDenormalizedParams(array $aDenormalizedParams)
 	{
-		$this->aProperties = XMLNormalizer::GetInstance()->Normalize($aDenormalizedParams, get_class($this), 'Dashlet');
+		$this->aProperties = XMLNormalizer::GetInstance()->Normalize($aDenormalizedParams, $this->sDashletType, 'Dashlet');
 		$this->OnUpdate();
 	}
 
@@ -262,7 +277,7 @@ abstract class Dashlet
 		}
 
 		if ($bEditMode) {
-			$sClass = get_class($this);
+			$sClass = $this->sDashletType;
 			$sType = $this->sDashletType;
 			$oPage->add_ready_script(
 				<<<EOF
@@ -332,7 +347,7 @@ EOF
 	 * @param array $aValues
 	 * @param array $aUpdatedFields
 	 *
-	 * @return \Dashlet
+	 * @return Dashlet
 	 */
 	public function Update($aValues, $aUpdatedFields)
 	{
@@ -503,6 +518,6 @@ EOF
 
 	public function GetDenormalizedProperties(): ?array
 	{
-		return XMLNormalizer::GetInstance()->Denormalize($this->aProperties, get_class($this), 'Dashlet');
+		return XMLNormalizer::GetInstance()->Denormalize($this->aProperties, $this->sDashletType, 'Dashlet');
 	}
 }

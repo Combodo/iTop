@@ -1,23 +1,24 @@
 <?php
 
-namespace Combodo\iTop\Controller\Base\Layout;
+/*
+ * @copyright   Copyright (C) 2010-2026 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
+namespace Combodo\iTop\Application\Dashboard\Controller;
+
+use Combodo\iTop\Application\Dashlet\DashletFactory;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletWrapper;
 use Combodo\iTop\Application\UI\Base\Component\TurboForm\TurboFormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
-use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardGrid;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
-use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Forms\Block\FormBlockService;
-use Combodo\iTop\ItopSdkFormDemonstrator\Helper\ItopSdkFormDemonstratorLog;
-use Combodo\iTop\PropertyType\PropertyType;
 use Combodo\iTop\PropertyType\Serializer\XMLSerializer;
 use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
-use Dashboard;
 use Exception;
 use IssueLog;
 use ModelReflectionRuntime;
@@ -39,11 +40,11 @@ class DashboardController extends Controller
 
 		$oPage = new AjaxPage('');
 
-		if (is_subclass_of($sDashletClass, 'Dashlet')) {
+		if (is_a($sDashletClass, 'Dashlet', true)) {
 			// TODO 3.3 Make a real unique id if none is provided
 			$sDashletId = !empty($sDashletId) ? $sDashletId : uniqid();
 
-			$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
+			$oDashlet = DashletFactory::GetInstance()->CreateDashlet($sDashletClass, $sDashletId);
 
 			// TODO 3.3 This is not the place to register this service, do better please
 			ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
@@ -113,8 +114,7 @@ class DashboardController extends Controller
 				$oDashboard->PersistDashboard($sXml);
 				$sStatus = 'ok';
 				$sMessage = 'Dashboard saved';
-			}
-			else {
+			} else {
 				$sStatus = 'error';
 				$aFormErrors = $oForm->getErrors(true, true);
 				$sMessage = $aFormErrors->__toString();
@@ -128,7 +128,7 @@ class DashboardController extends Controller
 		$oPage = new JsonPage();
 		$oPage->SetData([
 			'status' => $sStatus,
-			'message' => $sMessage
+			'message' => $sMessage,
 		]);
 		$oPage->SetOutputDataOnly(true);
 		return $oPage;

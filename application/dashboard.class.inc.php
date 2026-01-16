@@ -6,6 +6,8 @@
  */
 
 use Combodo\iTop\Application\Dashboard\Layout\DashboardLayoutGrid;
+use Combodo\iTop\Application\Dashlet\DashletFactory;
+use Combodo\iTop\Application\Dashlet\Service\DashletService;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
@@ -19,7 +21,6 @@ use Combodo\iTop\PropertyType\PropertyTypeDesign;
 use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
-require_once(APPROOT.'application/dashlet.class.inc.php');
 require_once(APPROOT.'core/modelreflection.class.inc.php');
 
 /**
@@ -51,6 +52,8 @@ abstract class Dashboard
 	/** @var array Array of dashlets with position */
 	protected array $aGridDashlets = [];
 
+	protected $oDashletFactory;
+
 	/**
 	 * Dashboard constructor.
 	 *
@@ -65,6 +68,7 @@ abstract class Dashboard
 		$this->aCells = [];
 		$this->oDOMNode = null;
 		$this->sId = $sId;
+		$this->oDashletFactory = DashletFactory::GetInstance();
 	}
 
 	/**
@@ -192,7 +196,7 @@ abstract class Dashboard
 	}
 
 	/**
-	 * @param \DOMElement $oDomNode
+	 * @param DesignElement $oDomNode
 	 *
 	 * @return mixed
 	 */
@@ -205,7 +209,7 @@ abstract class Dashboard
 		// Test if dashlet can be instantiated, otherwise (uninstalled, broken, ...) we display a placeholder
 		$sClass = static::GetDashletClassFromType($sDashletType);
 		/** @var \Dashlet $oNewDashlet */
-		$oNewDashlet = new $sClass($this->oMetaModel, $sId);
+		$oNewDashlet = $this->oDashletFactory->CreateDashlet($sClass, $sId);
 		$oNewDashlet->SetDashletType($sDashletType);
 		$oNewDashlet->FromDOMNode($oDomNode);
 
@@ -345,7 +349,7 @@ abstract class Dashboard
 				$sDashletClass = $aDashletParams['dashlet_class'];
 				$sId = $aDashletParams['dashlet_id'];
 				/** @var \Dashlet $oNewDashlet */
-				$oNewDashlet = new $sDashletClass($this->oMetaModel, $sId);
+				$oNewDashlet = $this->oDashletFactory->CreateDashlet($sDashletClass, $sId);
 				if (isset($aDashletParams['dashlet_type'])) {
 					$oNewDashlet->SetDashletType($aDashletParams['dashlet_type']);
 				}
@@ -671,29 +675,12 @@ JS
 	 * Return an array of dashlets available for selection.
 	 *
 	 * @return array
-	 * @throws \ReflectionException
+	 * @throws \Combodo\iTop\Application\Dashlet\DashletException
+	 * @throws \DOMFormatException
 	 */
-	protected function GetAvailableDashlets()
+	protected function GetAvailableDashlets(): array
 	{
-		$aDashlets = [];
-
-		foreach (get_declared_classes() as $sDashletClass) {
-			// DashletUnknown is not among the selection as it is just a fallback for dashlets that can't instantiated.
-			if (is_subclass_of($sDashletClass, 'Dashlet') && !in_array($sDashletClass, ['DashletUnknown', 'DashletProxy'])) {
-				$oReflection = new ReflectionClass($sDashletClass);
-				if (!$oReflection->isAbstract()) {
-					$aCallSpec = [$sDashletClass, 'IsVisible'];
-					$bVisible = call_user_func($aCallSpec);
-					if ($bVisible) {
-						$aCallSpec = [$sDashletClass, 'GetInfo'];
-						$aInfo = call_user_func($aCallSpec);
-						$aDashlets[$sDashletClass] = $aInfo;
-					}
-				}
-			}
-		}
-
-		return $aDashlets;
+		return DashletService::GetInstance()->GetAvailableDashlets();
 	}
 
 	/**
@@ -796,6 +783,7 @@ class RuntimeDashboard extends Dashboard
 	{
 		parent::__construct($sId);
 		$this->oMetaModel = new ModelReflectionRuntime();
+		$this->oDashletFactory->SetModelReflectionRuntime($this->oMetaModel);
 		ServiceLocator::GetInstance()->RegisterService('ModelReflection', $this->oMetaModel);
 		$this->bCustomized = false;
 	}
@@ -1504,19 +1492,11 @@ JS
 
 		// Get the list of possible dashlets that support a creation from
 		// an OQL
+		$aAllDashlets = DashletService::GetInstance()->GetAvailableDashlets();
 		$aDashlets = [];
-		foreach (get_declared_classes() as $sDashletClass) {
-			if (is_subclass_of($sDashletClass, 'Dashlet')) {
-				$oReflection = new ReflectionClass($sDashletClass);
-				if (!$oReflection->isAbstract()) {
-					$aCallSpec = [$sDashletClass, 'CanCreateFromOQL'];
-					$bShorcutMode = call_user_func($aCallSpec);
-					if ($bShorcutMode) {
-						$aCallSpec = [$sDashletClass, 'GetInfo'];
-						$aInfo = call_user_func($aCallSpec);
-						$aDashlets[$sDashletClass] = ['label' => $aInfo['label'], 'class' => $sDashletClass, 'icon' => $aInfo['icon']];
-					}
-				}
+		foreach ($aAllDashlets as $sDashletClass => $aInfo) {
+			if ($aInfo['can_create_by_oql']) {
+				$aDashlets[$sDashletClass] = ['label' => $aInfo['label'], 'class' => $sDashletClass, 'icon' => $aInfo['icon']];
 			}
 		}
 
@@ -1526,7 +1506,7 @@ JS
 			$oSubForm = new DesignerForm();
 			$oMetaModel = new ModelReflectionRuntime();
 			/** @var \Dashlet $oDashlet */
-			$oDashlet = new $sDashletClass($oMetaModel, 0);
+			$oDashlet = DashletFactory::GetInstance()->CreateDashlet($sDashletClass, 0);
 			$oDashlet->GetPropertiesFieldsFromOQL($oSubForm, $sOQL);
 
 			$oSelectorField->AddSubForm($oSubForm, $aDashletInfo['label'], $aDashletInfo['class']);

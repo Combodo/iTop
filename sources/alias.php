@@ -98,6 +98,17 @@ class_alias(\Combodo\iTop\Core\AttributeDefinition\iAttributeNoGroupBy::class, '
 class_alias(\Combodo\iTop\Core\AttributeDefinition\MissingColumnException::class, 'MissingColumnException');
 
 class_alias(\Combodo\iTop\Application\Dashlet\Dashlet::class, 'Dashlet');
+class_alias(\Combodo\iTop\Application\Dashlet\Core\DashletBadge::class, 'DashletBadge');
+class_alias(\Combodo\iTop\Application\Dashlet\Core\DashletGroupBy::class, 'DashletGroupBy');
+class_alias(\Combodo\iTop\Application\Dashlet\Core\DashletGroupByBars::class, 'DashletGroupByBars');
+class_alias(\Combodo\iTop\Application\Dashlet\Core\DashletGroupByPie::class, 'DashletGroupByPie');
+class_alias(\Combodo\iTop\Application\Dashlet\Core\DashletGroupByTable::class, 'DashletGroupByTable');
+class_alias(\Combodo\iTop\Application\Dashlet\Core\DashletHeaderDynamic::class, 'DashletHeaderDynamic');
+class_alias(\Combodo\iTop\Application\Dashlet\Core\DashletHeaderStatic::class, 'DashletHeaderStatic');
+class_alias(\Combodo\iTop\Application\Dashlet\Core\DashletObjectList::class, 'DashletObjectList');
+class_alias(\Combodo\iTop\Application\Dashlet\Core\DashletPlainText::class, 'DashletPlainText');
+class_alias(\Combodo\iTop\Application\Dashlet\Core\DashletProxy::class, 'DashletProxy');
+class_alias(\Combodo\iTop\Application\Dashlet\Core\DashletUnknown::class, 'DashletUnknown');
 
 class_alias(\Combodo\iTop\PropertyType\PropertyType::class, 'Combodo-PropertyType');
 

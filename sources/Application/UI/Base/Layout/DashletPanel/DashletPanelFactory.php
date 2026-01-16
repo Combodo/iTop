@@ -2,7 +2,7 @@
 
 namespace Combodo\iTop\Application\UI\Base\Layout\DashletPanel;
 
-use Combodo\iTop\Service\Dashboard\DashletService;
+use Combodo\iTop\Application\Dashlet\Service\DashletService;
 
 class DashletPanelFactory
 {
@@ -10,7 +10,7 @@ class DashletPanelFactory
 	{
 		$oDashletPanel = new DashletPanel($sId);
 
-		$aAvailableDashlets = DashletService::GetAvailableDashlets();
+		$aAvailableDashlets = DashletService::GetInstance()->GetAvailableDashlets();
 
 		foreach ($aAvailableDashlets as $sDashletClass => $aDashletInformation) {
 			$oDashletEntry = new DashletEntry($sDashletClass, $aDashletInformation['label'], $aDashletInformation['description'], $aDashletInformation['icon']);
