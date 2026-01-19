@@ -1,8 +1,8 @@
 <span  id="{{ oUIBlock.GetId() }}"
 	class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-is-{{ oUIBlock.GetColor() }}"
 	{% if oUIBlock.GetTooltip() is not empty %}
-        data-tooltip-content="{{ oUIBlock.GetTooltip() }}"
-    {% endif %}
+		data-tooltip-content="{{ oUIBlock.GetTooltip() }}"
+	{% endif %}
 >
 	{{ oUIBlock.GetLabel() }}
 </span>
