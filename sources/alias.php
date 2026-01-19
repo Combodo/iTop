@@ -97,7 +97,8 @@ class_alias(\Combodo\iTop\Core\AttributeDefinition\AttributeURL::class, 'Attribu
 class_alias(\Combodo\iTop\Core\AttributeDefinition\iAttributeNoGroupBy::class, 'iAttributeNoGroupBy');
 class_alias(\Combodo\iTop\Core\AttributeDefinition\MissingColumnException::class, 'MissingColumnException');
 
-// Dashlets
+// Dashboards/Dashlets
+class_alias(\Combodo\iTop\Application\Dashboard\Dashboard::class, 'Dashboard');
 class_alias(\Combodo\iTop\Application\Dashlet\Dashlet::class, 'Dashlet');
 class_alias(\Combodo\iTop\Application\Dashlet\Base\DashletBadge::class, 'DashletBadge');
 class_alias(\Combodo\iTop\Application\Dashlet\Base\DashletGroupBy::class, 'DashletGroupBy');

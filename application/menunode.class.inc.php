@@ -1219,7 +1219,6 @@ class NewObjectMenuNode extends MenuNode
 	}
 }
 
-require_once(APPROOT.'application/dashboard.class.inc.php');
 /**
  * This class defines a menu item which content is based on XML dashboard.
  */
