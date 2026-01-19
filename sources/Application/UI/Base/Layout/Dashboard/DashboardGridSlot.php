@@ -36,7 +36,6 @@ class DashboardGridSlot extends UIBlock
 		$this->iHeight = $iHeight;
 	}
 
-
 	public function HasPositionX(): bool
 	{
 		return !is_null($this->iPositionX);
