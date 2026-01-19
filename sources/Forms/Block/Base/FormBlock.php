@@ -45,11 +45,9 @@ class FormBlock extends AbstractTypeFormBlock
 		try {
 			// Build the form
 			$this->BuildForm();
-		}
-		catch (FormsException $e) {
+		} catch (FormsException $e) {
 			throw $e;
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			throw new FormBlockException('Unable to construct form', 0, $e);
 		}
 	}

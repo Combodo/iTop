@@ -127,5 +127,4 @@ class PropertyTypeCompiler
 		return $this->CompileFormFromXML($sXMLContent);
 	}
 
-
 }
