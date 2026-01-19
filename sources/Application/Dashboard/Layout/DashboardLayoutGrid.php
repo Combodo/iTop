@@ -29,8 +29,8 @@ class DashboardLayoutGrid extends \DashboardLayout
 				$aDashletsInfo = DashletService::GetInstance()->GetDashletDefinition($sDashletClass);
 
 				// Also set minimal height/width
-				$iPositionX = $aPosDashlet['position_x'];
-				$iPositionY = $aPosDashlet['position_y'];
+				$iPositionX = $aPosDashlet['position_x'] ?? 0;
+				$iPositionY = $aPosDashlet['position_y'] ?? 0;
 				$iWidth = max($aPosDashlet['width'], array_key_exists('min_width', $aDashletsInfo) ? $aDashletsInfo['min_width'] : 1);
 				$iHeight = max($aPosDashlet['height'], array_key_exists('min_height', $aDashletsInfo) ? $aDashletsInfo['min_height'] : 1);
 				$oDashboardGrid->AddDashlet($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams), $sDashletId, $sDashletClass, $aDashletDenormalizedProperties, $iPositionX, $iPositionY, $iWidth, $iHeight);
