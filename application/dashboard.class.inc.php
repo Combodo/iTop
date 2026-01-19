@@ -210,7 +210,6 @@ abstract class Dashboard
 		$sClass = static::GetDashletClassFromType($sDashletType);
 		/** @var \Dashlet $oNewDashlet */
 		$oNewDashlet = $this->oDashletFactory->CreateDashlet($sClass, $sId);
-		$oNewDashlet->SetDashletType($sDashletType);
 		$oNewDashlet->FromDOMNode($oDomNode);
 
 		return $oNewDashlet;
@@ -1492,13 +1491,7 @@ JS
 
 		// Get the list of possible dashlets that support a creation from
 		// an OQL
-		$aAllDashlets = DashletService::GetInstance()->GetAvailableDashlets();
-		$aDashlets = [];
-		foreach ($aAllDashlets as $sDashletClass => $aInfo) {
-			if ($aInfo['can_create_by_oql']) {
-				$aDashlets[$sDashletClass] = ['label' => $aInfo['label'], 'class' => $sDashletClass, 'icon' => $aInfo['icon']];
-			}
-		}
+		$aDashlets = DashletService::GetInstance()->GetAvailableDashlets('can_create_by_oql');
 
 		$oSelectorField = new DesignerFormSelectorField('dashlet_class', Dict::S('UI:DashletCreation:DashletType'), '');
 		$oForm->AddField($oSelectorField);

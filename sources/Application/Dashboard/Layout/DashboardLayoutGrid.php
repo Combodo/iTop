@@ -21,8 +21,11 @@ class DashboardLayoutGrid extends \DashboardLayout
 		$oDashboardLayout->SetGrid($oDashboardGrid);
 		foreach ($aDashlets as $aPosDashlet) {
 			/** @var \Dashlet $oDashlet */
+			if (!array_key_exists('dashlet', $aPosDashlet)) {
+				continue;
+			}
 			$oDashlet = $aPosDashlet['dashlet'];
-			if ($oDashlet::IsVisible()) {
+			if ($oDashlet) {
 				$sDashletId = $oDashlet->GetID();
 				$sDashletClass = $oDashlet->GetDashletType();
 				$aDashletDenormalizedProperties = $oDashlet->GetDenormalizedProperties();

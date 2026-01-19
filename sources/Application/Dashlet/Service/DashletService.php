@@ -36,11 +36,34 @@ class DashletService
 	 * @throws \Combodo\iTop\Application\Dashlet\DashletException
 	 * @throws \DOMFormatException
 	 */
-	public function GetAvailableDashlets(): array
+	public function GetAvailableDashlets(string $sCategory = ''): array
 	{
 		$this->InitDashletDefinitions();
+		$aFilteredDashlets = [];
 
-		return $this->aDashlets;
+		switch ($sCategory) {
+			case 'can_be_created':
+				foreach ($this->aDashlets as $aDashlet) {
+					if ($aDashlet['can_be_created']) {
+						$aFilteredDashlets[] = $aDashlet;
+					}
+				}
+				break;
+
+			case 'can_create_by_oql':
+				foreach ($this->aDashlets as $aDashlet) {
+					if ($aDashlet['can_create_by_oql']) {
+						$aFilteredDashlets[] = $aDashlet;
+					}
+				}
+				break;
+
+			default:
+				$aFilteredDashlets = $this->aDashlets;
+				break;
+		}
+
+		return $aFilteredDashlets;
 	}
 
 	/**
@@ -131,6 +154,7 @@ class DashletService
 					'preferred_width'   => intval($oDashletNode->GetChildText('preferred_width', '2')),
 					'preferred_height'  => intval($oDashletNode->GetChildText('preferred_height', '1')),
 					'can_create_by_oql' => boolval($oDashletNode->GetChildText('can_create_by_oql', 'false')),
+					'can_be_created'    => boolval($oDashletNode->GetChildText('can_be_created', 'true')),
 				];
 				$this->aDashlets[$sType] = $aInfo;
 			}

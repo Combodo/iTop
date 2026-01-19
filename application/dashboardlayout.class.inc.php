@@ -16,6 +16,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Dashlet\Service\DashletService;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
@@ -138,18 +139,16 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 						foreach ($aDashlets as $oDashlet) {
 							if ($oDashlet::IsVisible()) {
 								$sDashletId = $oDashlet->GetID();
-								$sDashletClass = get_class($oDashlet);
+								$sDashletClass = $oDashlet->GetDashletType();
 								$aDashletDenormalizedProperties = $oDashlet->GetDenormalizedProperties();
-								//								$aDashletsInfo = $sDashletClass::GetInfo();
-								//
-								//								// TODO 3.3 Gather real position and height/width if any.
-								//								// Also set minimal height/width
-								//								$iPositionX = null;
-								//								$iPositionY = null;
-								//								$iWidth = array_key_exists('preferred_width', $aDashletsInfo) ? $aDashletsInfo['preferred_width'] : 1;
-								//								$iHeight = array_key_exists('preferred_height', $aDashletsInfo) ? $aDashletsInfo['preferred_height'] : 1;
-								//								$oDashboardGrid->AddDashlet($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams), $sDashletId, $sDashletClass, $aDashletDenormalizedProperties, $iPositionX, $iPositionY, $iWidth, $iHeight);
-								$oDashboardColumn->AddUIBlock($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams));
+								$aDashletsInfo = DashletService::GetInstance()->GetDashletDefinition($sDashletClass);
+
+								// Also set minimal height/width
+								$iPositionX = $aPosDashlet['position_x'] ?? 0;
+								$iPositionY = $aPosDashlet['position_y'] ?? 0;
+								$iWidth = max($aPosDashlet['width'], array_key_exists('min_width', $aDashletsInfo) ? $aDashletsInfo['min_width'] : 1);
+								$iHeight = max($aPosDashlet['height'], array_key_exists('min_height', $aDashletsInfo) ? $aDashletsInfo['min_height'] : 1);
+								$oDashboardGrid->AddDashlet($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams), $sDashletId, $sDashletClass, $aDashletDenormalizedProperties, $iPositionX, $iPositionY, $iWidth, $iHeight);
 							}
 						}
 					} else {

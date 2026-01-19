@@ -37,7 +37,8 @@ class DashletFactory
 	public function CreateDashlet(string $sClass, string $sId): Dashlet
 	{
 		if (!DashletService::GetInstance()->IsDashletAvailable($sClass)) {
-			throw new DashletException("Dashlet ".json_encode($sClass)." is not available");
+			$sClass = 'DashletUnknown';
+			//throw new DashletException("Dashlet ".json_encode($sClass)." is not available");
 		}
 
 		/** @var Dashlet $oDashlet */

@@ -15,3 +15,5 @@ git commit -a        # Trivially resolved like this
 git mv copy foo
 git commit
 ```
+
+DO NOT SQUASH the branch NEVER !

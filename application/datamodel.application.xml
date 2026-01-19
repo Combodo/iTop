@@ -936,6 +936,13 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         <preferred_height>1</preferred_height>
         <configuration/>
       </dashlet>
+      <dashlet id="DashletUnknown" _delta="define">
+        <label>UI:DashletUnknown:Label</label>
+        <icon>images/dashlet-unknown.png</icon>
+        <description>UI:DashletUnknown:Description</description>
+        <can_be_created>false</can_be_created>
+        <configuration/>
+      </dashlet>
     </dashlets>
     <property_types _delta="define">
       <property_type id="Dashboard" xsi:type="Combodo-AbstractPropertyType"/>

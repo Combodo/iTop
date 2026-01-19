@@ -29,8 +29,6 @@ use OQLException;
 use UnknownClassOqlException;
 use utils;
 
-require_once(APPROOT.'application/forms.class.inc.php');
-
 /**
  * Base class for all 'dashlets' (i.e. widgets to be inserted into a dashboard)
  *

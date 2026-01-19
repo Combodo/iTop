@@ -1323,7 +1323,7 @@ class DashboardMenuNode extends MenuNode
 	{
 		$oDashboard = $this->GetDashboard();
 		if ($oDashboard != null) {
-			$oDashboard->RenderEditor($oPage);
+			//$oDashboard->RenderEditor($oPage);
 		} else {
 			$oPage->p("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
 		}

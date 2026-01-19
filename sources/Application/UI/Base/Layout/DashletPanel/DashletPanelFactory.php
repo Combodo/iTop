@@ -10,7 +10,7 @@ class DashletPanelFactory
 	{
 		$oDashletPanel = new DashletPanel($sId);
 
-		$aAvailableDashlets = DashletService::GetInstance()->GetAvailableDashlets();
+		$aAvailableDashlets = DashletService::GetInstance()->GetAvailableDashlets('can_be_created');
 
 		foreach ($aAvailableDashlets as $sDashletClass => $aDashletInformation) {
 			$oDashletEntry = new DashletEntry($sDashletClass, $aDashletInformation['label'], $aDashletInformation['description'], $aDashletInformation['icon']);
