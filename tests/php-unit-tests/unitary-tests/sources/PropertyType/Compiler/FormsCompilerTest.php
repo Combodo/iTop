@@ -858,7 +858,7 @@ XML,
 
 		$sXMLContent = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-<property_type id="basic_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+<property_type id="basic_test_for_icon" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
 	<extends>Dashlet</extends>
     <definition xsi:type="Combodo-ValueType-PropertyTree">
 	    <nodes>
@@ -871,11 +871,11 @@ XML,
 XML;
 
 		$sExpectedStart = <<<PHP
-class FormFor__basic_test extends Combodo\iTop\Forms\Block\Base\FormBlock
+class FormFor__basic_test_for_icon extends Combodo\iTop\Forms\Block\Base\FormBlock
 {
 	protected function BuildForm(): void
 	{
-		\$this->Add('icon-selection', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
+		\$this->Add('icon-selection', 'Combodo\iTop\Forms\Block\Base\ChoiceImageFormBlock', [
 			'label' => 'Icon',
 			'choices' => [
 
@@ -895,7 +895,7 @@ PHP;
 
 		$sXMLContent = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-<property_type id="basic_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+<property_type id="basic_test_for_class" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
 	<extends>Dashlet</extends>
     <definition xsi:type="Combodo-ValueType-PropertyTree">
 	    <nodes>
@@ -908,7 +908,7 @@ PHP;
 XML;
 
 		$sExpectedStart = <<<PHP
-class FormFor__basic_test extends Combodo\iTop\Forms\Block\Base\FormBlock
+class FormFor__basic_test_for_class extends Combodo\iTop\Forms\Block\Base\FormBlock
 {
 	protected function BuildForm(): void
 	{
