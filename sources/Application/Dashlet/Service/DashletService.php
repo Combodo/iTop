@@ -43,17 +43,17 @@ class DashletService
 
 		switch ($sCategory) {
 			case 'can_be_created':
-				foreach ($this->aDashlets as $aDashlet) {
+				foreach ($this->aDashlets as $sType => $aDashlet) {
 					if ($aDashlet['can_be_created']) {
-						$aFilteredDashlets[] = $aDashlet;
+						$aFilteredDashlets[$sType] = $aDashlet;
 					}
 				}
 				break;
 
 			case 'can_create_by_oql':
-				foreach ($this->aDashlets as $aDashlet) {
+				foreach ($this->aDashlets as $sType => $aDashlet) {
 					if ($aDashlet['can_create_by_oql']) {
-						$aFilteredDashlets[] = $aDashlet;
+						$aFilteredDashlets[$sType] = $aDashlet;
 					}
 				}
 				break;
@@ -153,8 +153,8 @@ class DashletService
 					'min_height'        => intval($oDashletNode->GetChildText('min_height', '1')),
 					'preferred_width'   => intval($oDashletNode->GetChildText('preferred_width', '2')),
 					'preferred_height'  => intval($oDashletNode->GetChildText('preferred_height', '1')),
-					'can_create_by_oql' => boolval($oDashletNode->GetChildText('can_create_by_oql', 'false')),
-					'can_be_created'    => boolval($oDashletNode->GetChildText('can_be_created', 'true')),
+					'can_create_by_oql' => utils::IsTrue($oDashletNode->GetChildText('can_create_by_oql', 'false')),
+					'can_be_created'    => utils::IsTrue($oDashletNode->GetChildText('can_be_created', 'true')),
 				];
 				$this->aDashlets[$sType] = $aInfo;
 			}
