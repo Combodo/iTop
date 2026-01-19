@@ -36,11 +36,14 @@ class DashboardSerializerTest extends ItopDataTestCase
 
 		/** @var \Combodo\iTop\DesignElement $oRootNode */
 		$oRootNode = $oDOMDocument->createElement('root');
+		$oRootNode->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
 		$oDOMDocument->appendChild($oRootNode);
 
-		Combodo\iTop\PropertyType\Serializer\XMLSerializer::GetInstance()->Serialize($normalizedValue, $oRootNode, 'DashboardDefinition', 'Dashboard');
+		Combodo\iTop\PropertyType\Serializer\XMLSerializer::GetInstance()->Serialize($normalizedValue, $oRootNode, 'DashboardGrid', 'Dashboard');
 
 		$sActualXML = $oDOMDocument->saveXML();
+
+		var_export($sActualXML);
 
 		$this->AssertEqualiTopXML($sXMLContent, $sActualXML);
 	}
@@ -72,7 +75,7 @@ class DashboardSerializerTest extends ItopDataTestCase
 				],
 				'sXMLContent' => <<<XML
 <?xml version="1.0"?>
-<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-Dashboard-Grid">
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<title>Bienvenido al Panel de Control Panel</title>
 	<refresh>60</refresh>
 	<pos_dashlets>

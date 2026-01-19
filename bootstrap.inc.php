@@ -42,6 +42,19 @@ define('ITOP_DEFAULT_ENV', 'production');
 define('MAINTENANCE_MODE_FILE', APPROOT.'data/.maintenance');
 define('READONLY_MODE_FILE', APPROOT.'data/.readonly');
 
+/**
+ * Exclude the parent class from the list
+ *
+ * @package     iTopORM
+ */
+define('ENUM_CHILD_CLASSES_EXCLUDETOP', 1);
+/**
+ * Include the parent class in the list
+ *
+ * @package     iTopORM
+ */
+define('ENUM_CHILD_CLASSES_ALL', 2);
+
 $fItopStarted = microtime(true);
 $iItopInitialMemory = memory_get_usage(true);
 

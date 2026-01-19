@@ -30,8 +30,6 @@ use MetaModel;
 use ReflectionClass;
 use utils;
 
-require_once(APPROOT.'core/modelreflection.class.inc.php');
-
 /**
  *
  * A user editable dashboard page

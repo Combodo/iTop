@@ -24,19 +24,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-/**
- * Exclude the parent class from the list
- *
- * @package     iTopORM
- */
-define('ENUM_CHILD_CLASSES_EXCLUDETOP', 1);
-/**
- * Include the parent class in the list
- *
- * @package     iTopORM
-*/
-define('ENUM_CHILD_CLASSES_ALL', 2);
-
 abstract class ModelReflection
 {
 	abstract public function GetClassIcon($sClass, $bImgTag = true);
