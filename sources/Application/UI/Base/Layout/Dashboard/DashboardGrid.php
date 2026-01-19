@@ -61,4 +61,9 @@ class DashboardGrid extends UIBlock
 
 		return $this;
 	}
+
+	public function GetSubBlocks(): array
+	{
+		return $this->aSlots;
+	}
 }

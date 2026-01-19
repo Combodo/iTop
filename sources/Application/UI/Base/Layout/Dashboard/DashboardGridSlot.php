@@ -36,10 +36,6 @@ class DashboardGridSlot extends UIBlock
 		$this->iHeight = $iHeight;
 	}
 
-	public function GetSubBlocks(): array
-	{
-		return [$this->oUIBlock];
-	}
 
 	public function HasPositionX(): bool
 	{
@@ -115,5 +111,10 @@ class DashboardGridSlot extends UIBlock
 		$this->oDashlet = $oDashlet;
 
 		return $this;
+	}
+
+	public function GetSubBlocks(): array
+	{
+		return [$this->oDashlet];
 	}
 }

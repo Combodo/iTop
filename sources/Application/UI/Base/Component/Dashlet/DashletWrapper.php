@@ -58,4 +58,9 @@ class DashletWrapper extends UIBlock
 	{
 		return $this->aFormViewData;
 	}
+
+	public function GetSubBlocks(): array
+	{
+		return [$this->oDashletContainer];
+	}
 }

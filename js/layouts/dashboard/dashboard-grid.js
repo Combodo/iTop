@@ -88,7 +88,8 @@ class IboGrid extends HTMLElement {
 	RefreshDashlet (sDashlet, aOptions = {}) {
 		const oParser = new DOMParser();
 		const oDocument = oParser.parseFromString(sDashlet, 'text/html');
-		const oNewDashlet = oDocument.body.firstElementChild;
+		const oNewDashlet = oDocument.body.querySelector('ibo-dashlet');
+		const oNewScript = oDocument.body.querySelectorAll('script');
 
 		// Can't use oNewDashet.sDashletId as it's not in the DOM yet and connectedCallback hasn't been called yet
 		const oExistingDashlet = this.GetDashletElement(oNewDashlet.getAttribute('data-dashlet-id') );
@@ -114,6 +115,21 @@ class IboGrid extends HTMLElement {
 			oSlotForExistingDashlet.innerHTML = oNewDashlet.outerHTML;
 			this.oGrid.makeWidget(oSlotForExistingDashlet);
 		}
+
+		// Append scripts to body so they are executed
+		oNewScript.forEach( oScript => {
+			if (oScript) {
+				const oNewScriptElement = document.createElement('script');
+
+				// copy attributes
+				[...oScript.attributes].forEach(attr =>
+					oNewScriptElement.setAttribute(attr.name, attr.value)
+				);
+
+				oNewScriptElement.text = oScript.textContent;
+				document.body.appendChild(oNewScriptElement);
+			}
+		});
 	}
 
 	CloneDashlet(sDashletId) {
