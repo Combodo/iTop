@@ -89,6 +89,21 @@ abstract class AbstractFormBlock implements IFormBlock
 	}
 
 	/**
+	 * Get the root form.
+	 *
+	 * @return FormBlock|CollectionBlock|null
+	 */
+	public function GetRoot(): FormBlock|CollectionBlock|null
+	{
+		$oBlock = $this;
+		while (!$oBlock->IsRootBlock()) {
+			$oBlock = $oBlock->GetParent();
+		}
+
+		return $oBlock;
+	}
+
+	/**
 	 * Return true if this block is root.
 	 *
 	 * @return bool

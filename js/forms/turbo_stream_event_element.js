@@ -10,7 +10,7 @@ class TurboStreamEvent extends HTMLElement {
 
 		this.style.display = 'none';
 
-		const event = new CustomEvent("itop:TurboStreamEvent", {
+		const event = new CustomEvent(`itop:TurboStreamEvent:${this.dataset.type}`, {
 			detail: {
 				id: this.getAttribute('id'),
 				form_id: this.dataset.formId,

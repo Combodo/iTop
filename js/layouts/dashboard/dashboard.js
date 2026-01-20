@@ -194,7 +194,7 @@ class IboDashboard extends HTMLElement {
 				this.SetDashletForm(sFormData);
 
 				// Listen to form submission event and cancellation
-				document.addEventListener('itop:TurboStreamEvent', me._ListenToDashletFormSubmission);
+				document.addEventListener('itop:TurboStreamEvent:Complete', me._ListenToDashletFormSubmission);
 				document.querySelector('.ibo-dashlet-panel--form-container button[name="dashboard_cancel"]').addEventListener('click', me._ListenToDashletFormCancellation);
 			});
 	}
@@ -205,7 +205,7 @@ class IboDashboard extends HTMLElement {
 
 		if(event.detail.id === oDashlet.sType + '-turbo-stream-event' && event.detail.valid === "1") {
 			// Remove events
-			document.addEventListener('itop:TurboStreamEvent', this._ListenToDashletFormSubmission);
+			document.addEventListener('itop:TurboStreamEvent:Complete', this._ListenToDashletFormSubmission);
 			document.querySelector('.ibo-dashlet-panel--form-container button[name="dashboard_cancel"]').removeEventListener('click', this._ListenToDashletFormCancellation);
 
 			// Notify it all went well
@@ -229,7 +229,7 @@ class IboDashboard extends HTMLElement {
 		const oDashlet = this.querySelector('ibo-dashlet[data-edit-mode="edit"]');
 		const sDashletId = oDashlet.GetDashletId();
 		// Remove events
-		document.addEventListener('itop:TurboStreamEvent', this._ListenToDashletFormSubmission);
+		document.addEventListener('itop:TurboStreamEvent:Complete', this._ListenToDashletFormSubmission);
 		document.querySelector('.ibo-dashlet-panel--form-container button[name="dashboard_cancel"]').removeEventListener('click', this._ListenToDashletFormCancellation);
 
 		// Clean edit mode

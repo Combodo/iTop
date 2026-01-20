@@ -30,6 +30,7 @@ class FormTypeHelper
 		if (is_null($oForm->getParent())) {
 			return $oForm->getName();
 		}
+
 		return self::GetFormId($oForm->getParent()).'_'.$oForm->getName();
 	}
 
@@ -52,7 +53,7 @@ class FormTypeHelper
 
 		// Get the parent form
 		$oParent = $oFormTurboTrigger->getParent();
-		$sParentName =  self::GetFormId($oParent);
+		$sParentName = self::GetFormId($oParent);
 
 		// Get the block corresponding to the turbo trigger form
 		$oBlockTurboTrigger = $oFormTurboTrigger->getConfig()->getOption('form_block');
@@ -72,7 +73,8 @@ class FormTypeHelper
 
 		return [
 			'blocks_to_redraw' => $aBlocksToRedraw,
-			'current_block'   => $oFormTurboTrigger->createView(),
+			'current_block'    => $oFormTurboTrigger->createView(),
+			'root_form'        => $oFormTurboTrigger->GetRoot()->createView(),
 		];
 	}
 
