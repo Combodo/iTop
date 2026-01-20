@@ -300,7 +300,7 @@ class ModuleDiscovery
 
 		if (count($aNonMatchingPaths) > 0) {
 			//add log for support
-			SetupLog::Info("Module kept as it came from non removed extensions", null, ['module_name' => $sModuleName, 'module_version' => $sModuleVersion, ModuleFileReader::MODULE_FILE_PATH => $sModuleFilePath, 'non_matching_paths' => $aNonMatchingPaths]);
+			SetupLog::Debug("Module kept as it came from non removed extensions", null, ['module_name' => $sModuleName, 'module_version' => $sModuleVersion, ModuleFileReader::MODULE_FILE_PATH => $sModuleFilePath, 'non_matching_paths' => $aNonMatchingPaths]);
 		}
 		return false;
 	}
