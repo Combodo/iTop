@@ -370,6 +370,77 @@ class iTopExtensionsMap
 	}
 
 	/**
+	 * @param bool $bKeepMissingDependencyExtensions
+	 *
+	 * @return array<\iTopExtension>>
+	 */
+
+	public function GetAllExtensionsToDisplayInSetup(bool $bKeepMissingDependencyExtensions = false): array
+	{
+		$aRes = [];
+		foreach ($this->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
+			\IssueLog::Error($oExtension->sCode.' '.__METHOD__.__LINE__);
+			/** @var \iTopExtension $oExtension */
+			if (($oExtension->sSource !== iTopExtension::SOURCE_WIZARD) && ($oExtension->bVisible)) {
+				if ($bKeepMissingDependencyExtensions || (count($oExtension->aMissingDependencies) == 0)) {
+
+					if (!$oExtension->bMandatory) {
+						$oExtension->bMandatory = ($oExtension->sSource === iTopExtension::SOURCE_REMOTE);
+					}
+					$aRes[$oExtension->sCode] = $oExtension;
+				}
+			}
+		}
+
+		return $aRes;
+	}
+
+	public function GetAllExtensionsOptionInfo(): array
+	{
+		$aRes = [];
+		foreach ($this->GetAllExtensionsToDisplayInSetup() as $sCode => $oExtension) {
+			$aRes[] = [
+				'extension_code' => $oExtension->sCode,
+				'title'          => $oExtension->sLabel,
+				'description'    => $oExtension->sDescription,
+				'more_info'      => $oExtension->sMoreInfoUrl,
+				'default'        => true, // by default offer to install all modules
+				'modules'        => $oExtension->aModules,
+				'mandatory'      => $oExtension->bMandatory,
+				'source_label'   => $this->GetExtensionSourceLabel($oExtension->sSource),
+				'uninstallable'  => $oExtension->CanBeUninstalled(),
+				'missing'        => $oExtension->bRemovedFromDisk,
+			];
+		}
+
+		return $aRes;
+	}
+
+	protected function GetExtensionSourceLabel($sSource)
+	{
+		$sDecorationClass = '';
+		switch ($sSource) {
+			case iTopExtension::SOURCE_MANUAL:
+				$sResult = 'Local extensions folder';
+				$sDecorationClass = 'fas fa-folder';
+				break;
+
+			case iTopExtension::SOURCE_REMOTE:
+				$sResult = (ITOP_APPLICATION == 'iTop') ? 'iTop Hub' : 'ITSM Designer';
+				$sDecorationClass = (ITOP_APPLICATION == 'iTop') ? 'fc fc-chameleon-icon' : 'fa pencil-ruler';
+				break;
+
+			default:
+				$sResult = '';
+		}
+		if ($sResult == '') {
+			return '';
+		}
+
+		return '<i class="setup-extension--icon '.$sDecorationClass.'" data-tooltip-content="'.$sResult.'"></i>';
+	}
+
+	/**
 	 * Mark the given extension as chosen
 	 * @param string $sExtensionCode The code of the extension (code without version number)
 	 * @param bool $bMark The value to set for the bMarkAsChosen flag
@@ -454,7 +525,7 @@ class iTopExtensionsMap
 		return true;
 	}
 
-	protected function LoadInstalledExtensionsFromDatabase(Config $oConfig): array|false
+	public function LoadInstalledExtensionsFromDatabase(Config $oConfig): array|false
 	{
 		try {
 			if (CMDBSource::DBName() === null) {
