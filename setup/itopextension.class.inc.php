@@ -135,8 +135,9 @@ class iTopExtension
 			return $this->bCanBeUninstalled;
 		}
 		foreach ($this->aModuleInfo as $sModuleCode => $aModuleInfo) {
-			$this->bCanBeUninstalled = $aModuleInfo['uninstallable'] === 'yes';
-			return $this->bCanBeUninstalled;
+			if ($aModuleInfo['uninstallable'] !== 'yes') {
+				return false;
+			}
 		}
 		return true;
 	}
