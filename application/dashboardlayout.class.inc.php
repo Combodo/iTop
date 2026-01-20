@@ -112,12 +112,15 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		// Trim the list of cells to remove the invisible/empty ones at the end of the array
 		$aCells = $this->TrimCellsArray($aCells);
 
-		// TODO 3.3 Handle dashboard new format, convert old format if needed
 		$oDashboardLayout = new DashboardLayoutUIBlock($aExtraParams['dashboard_div_id']);
-		//$oPage->AddUiBlock($oDashboardLayout);
 
 		$iCellIdx = 0;
 		$iNbRows = ceil(count($aCells) / $this->iNbCols);
+
+		// GRID LAYOUT: Global positioning
+		$iGridCurrentX = 0;
+		$iGridCurrentY = 0;
+		$iGridColWidth = (int)(12 / $this->iNbCols);
 
 		//Js given by each dashlet to reload
 		$sJSReload = "";
@@ -125,12 +128,15 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		$oDashboardLayout->SetGrid($oDashboardGrid);
 		for ($iRows = 0; $iRows < $iNbRows; $iRows++) {
 			$oDashboardRow = new DashboardRow();
-			//$oDashboardLayout->AddDashboardRow($oDashboardRow);
 
 			for ($iCols = 0; $iCols < $this->iNbCols; $iCols++) {
 				$oDashboardColumn = new DashboardColumn($bEditMode);
 				$oDashboardColumn->SetCellIndex($iCellIdx);
-				//$oDashboardRow->AddDashboardColumn($oDashboardColumn);
+
+				// GRID LAYOUT: Column positioning
+				$iGridCurrentColX = 0;
+				$iGridCurrentColY = 0;
+				$iGridMaxHeightDashlet = -1;
 
 				if (array_key_exists($iCellIdx, $aCells)) {
 					$aDashlets = $aCells[$iCellIdx];
@@ -143,12 +149,36 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 								$aDashletDenormalizedProperties = $oDashlet->GetDenormalizedProperties();
 								$aDashletsInfo = DashletService::GetInstance()->GetDashletDefinition($sDashletClass);
 
-								// Also set minimal height/width
-								$iPositionX = $aPosDashlet['position_x'] ?? 0;
-								$iPositionY = $aPosDashlet['position_y'] ?? 0;
-								$iWidth = max($aPosDashlet['width'], array_key_exists('min_width', $aDashletsInfo) ? $aDashletsInfo['min_width'] : 1);
-								$iHeight = max($aPosDashlet['height'], array_key_exists('min_height', $aDashletsInfo) ? $aDashletsInfo['min_height'] : 1);
+								// GRID LAYOUT: Set position relative to grid
+								$iPositionX = $iGridCurrentX + $iGridCurrentColX;
+								$iPositionY = $iGridCurrentY + $iGridCurrentColY;
+								$iWidth = array_key_exists('preferred_width', $aDashletsInfo) ? $aDashletsInfo['preferred_width'] : 1;
+								// GRID LAYOUT: Limit dashlet width to fit column width
+								if ($iWidth > $iGridColWidth) {
+									$iWidth = $iGridColWidth;
+								}
+								$iHeight = array_key_exists('preferred_height', $aDashletsInfo) ? $aDashletsInfo['preferred_height'] : 1;
+								// GRID LAYOUT: Store max height of dashlets in this current row
+								if ($iHeight > $iGridMaxHeightDashlet) {
+									$iGridMaxHeightDashlet = $iHeight;
+								}
+								// GRID LAYOUT: Ensure that dashlet fits in the current row of the column
+								if ($iGridCurrentColX + $iWidth > $iGridColWidth) {
+									$iPositionX = $iGridCurrentX;
+									$iPositionY++;
+								}
+
 								$oDashboardGrid->AddDashlet($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams), $sDashletId, $sDashletClass, $aDashletDenormalizedProperties, $iPositionX, $iPositionY, $iWidth, $iHeight);
+
+								// GRID LAYOUT: Update column cursor
+								$iGridCurrentColX += $iWidth;
+								if ($iGridCurrentColX >= $iGridColWidth) {
+									$iGridCurrentColX = 0;
+									$iGridCurrentColY += $iGridMaxHeightDashlet;
+									$iGridMaxHeightDashlet = -1;
+								}
+
+								//$oDashboardColumn->AddUIBlock($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams));
 							}
 						}
 					} else {
@@ -158,7 +188,16 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 					$oDashboardColumn->AddUIBlock(new Html('&nbsp;'));
 				}
 				$iCellIdx++;
+
+				// GRID LAYOUT: Next column
+				$iGridCurrentX += $iGridColWidth;
+
 			}
+
+			// GRID LAYOUT: Next Row
+			$iGridCurrentY++;
+			$iGridCurrentX = 0;
+
 			$sJSReload .= $oDashboardRow->GetJSRefreshCallback()." ";
 		}
 

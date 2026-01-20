@@ -21,3 +21,155 @@ $ibo-dashlet-within-dashboard--dashlet-header-static--margin-top--is-not-first-d
     }
   }
 }
+
+// TODO 3.3: This css is for dashboard editor demo purpose and needs to be updated
+
+ibo-dashboard[data-edit-mode="edit"]{
+  ibo-dashlet .ibo-dashlet{
+    pointer-events: none;
+  }
+}
+
+ibo-dashlet{
+  // do not apply to this dashlets
+  &:not([data-dashlet-type="DashletBadge"]):not([data-dashlet-type="DashletHeaderStatic"]){
+    border: 1px solid #ccd4db;
+    border-radius: 5px;
+    background-color: white;
+    padding: 16px;
+  }
+  // Make the dashlet body take all the available height to allow scrollbars when needed
+  .ibo-dashlet > .ibo-content-block{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    row-gap: 10px;
+    .ibo-panel--header{
+      align-items: flex-start;
+    }
+    > .ibo-panel--body{
+      flex-grow: 1;
+      overflow: auto;
+    }
+  }
+}
+
+
+ibo-dashlet[data-dashlet-type="DashletBadge"] {
+  .ibo-dashlet-badge{
+    max-width: unset;
+  }
+  .ibo-dashlet-badge--body{
+    height: 100%;
+    display: flex;
+  }
+}
+
+ibo-dashlet[data-dashlet-type="DashletHeaderStatic"]{
+  background-color: #f2f2f2;
+  > .ibo-content-block{
+    display: flex;
+    align-items: center;
+    > .ibo-dashlet-header-static{
+      padding: 0;
+      width: 100%;
+    }
+  }
+}
+
+ibo-dashlet[data-dashlet-type="DashletHeaderDynamic"] {
+  > .ibo-content-block > .ibo-content-block{
+    .ibo-panel--body{
+      border: none;
+      padding: 0;
+      &:before{
+        display: none;
+      }
+      .ibo-panel-boy{
+        flex-grow: 1;
+        overflow-y: scroll;
+      }
+    }
+  }
+}
+
+ibo-dashlet[data-dashlet-type="DashletObjectList"] {
+  overflow-y: hidden!important;
+
+  > .ibo-dashlet > .ibo-content-block >  .ibo-content-block{
+    display: flex;
+    max-height: 100%;
+    flex-direction: column;
+
+    .dataTables_wrapper{
+      height: 100%;
+
+      .dataTables_scroll{
+        max-height: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .dataTables_scrollHead{
+          overflow: hidden;
+          position: relative;
+          border: 0px;
+          width: 100%;
+          flex-shrink: 0;
+        }
+
+        .dataTables_scrollBody{
+          max-height: unset!important;
+        }
+      }
+    }
+  }
+
+  .ibo-panel--body{
+    margin: 0 -16px;
+    border: none;
+    padding: 0;
+    &:before{
+      display: none;
+    }
+    .ibo-datatable{
+      margin-top: 10px;
+    }
+  }
+}
+
+ibo-dashlet[data-dashlet-type="DashletGroupByTable"] {
+  .ibo-panel--body{
+    margin: 0 -16px;
+    border: none;
+    padding: 0;
+    &:before{
+      display: none;
+    }
+    .ibo-datatable{
+      margin-top: 10px;
+    }
+  }
+}
+
+
+ibo-dashlet[data-dashlet-type="DashletGroupByPie"] {
+  .ibo-panel--body {
+    border: none;
+    padding: 0;
+    &:before {
+      display: none;
+    }
+  }
+}
+
+ibo-dashlet[data-dashlet-type="DashletGroupByBars"] {
+  .ibo-panel--body {
+    border: none;
+    padding: 0;
+    &:before {
+      display: none;
+    }
+  }
+}
+

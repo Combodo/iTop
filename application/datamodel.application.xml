@@ -856,9 +856,9 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         <label>UI:DashletGroupByTable:Label</label>
         <icon>images/dashlets/icons8-transaction-list-48.png</icon>
         <description>UI:DashletGroupByTable:Description</description>
-        <min_width>2</min_width>
+        <min_width>3</min_width>
         <min_height>2</min_height>
-        <preferred_width>3</preferred_width>
+        <preferred_width>6</preferred_width>
         <preferred_height>3</preferred_height>
         <can_create_by_oql>true</can_create_by_oql>
         <configuration/>
@@ -869,7 +869,7 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         <description>UI:DashletGroupByBars:Description</description>
         <min_width>2</min_width>
         <min_height>2</min_height>
-        <preferred_width>3</preferred_width>
+        <preferred_width>6</preferred_width>
         <preferred_height>3</preferred_height>
         <can_create_by_oql>true</can_create_by_oql>
         <configuration/>
@@ -880,7 +880,7 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         <description>UI:DashletGroupByPie:Description</description>
         <min_width>2</min_width>
         <min_height>2</min_height>
-        <preferred_width>3</preferred_width>
+        <preferred_width>6</preferred_width>
         <preferred_height>3</preferred_height>
         <can_create_by_oql>true</can_create_by_oql>
         <configuration/>
@@ -891,7 +891,7 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         <description>UI:DashletBadge:Description</description>
         <min_width>2</min_width>
         <min_height>1</min_height>
-        <preferred_width>2</preferred_width>
+        <preferred_width>3</preferred_width>
         <preferred_height>1</preferred_height>
         <configuration/>
       </dashlet>
@@ -901,8 +901,8 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         <description>UI:DashletHeaderDynamic:Description</description>
         <min_width>2</min_width>
         <min_height>1</min_height>
-        <preferred_width>4</preferred_width>
-        <preferred_height>3</preferred_height>
+        <preferred_width>12</preferred_width>
+        <preferred_height>2</preferred_height>
         <configuration/>
       </dashlet>
       <dashlet id="DashletHeaderStatic" _delta="define">
@@ -911,7 +911,7 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         <description>UI:DashletHeaderStatic:Description</description>
         <min_width>4</min_width>
         <min_height>1</min_height>
-        <preferred_width>4</preferred_width>
+        <preferred_width>12</preferred_width>
         <preferred_height>1</preferred_height>
         <configuration/>
       </dashlet>
@@ -921,7 +921,7 @@ Call $this->AddInitialAttributeFlags($sAttCode, $iFlags) for all the initial att
         <description>UI:DashletObjectList:Description</description>
         <min_width>2</min_width>
         <min_height>1</min_height>
-        <preferred_width>4</preferred_width>
+        <preferred_width>12</preferred_width>
         <preferred_height>3</preferred_height>
         <can_create_by_oql>true</can_create_by_oql>
         <configuration/>
