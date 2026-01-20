@@ -2196,11 +2196,10 @@ class WizStepSummary extends WizardStep
 		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Extensions to be installed</span>');
 		$aExtensionsAdded = json_decode($this->oWizard->GetParameter('extensions_added'), true);
 
-		$sExtensionsAdded = '';
-		if (count($aExtensionsAdded)) {
+		if (count($aExtensionsAdded) > 0) {
 			$sExtensionsAdded = '<ul>';
 			foreach ($aExtensionsAdded as $sExtensionCode => $sLabel) {
-				$sExtensionsAdded .= '<li>'.$sLabel.'</li>';
+				$sExtensionsAdded .= "<li>$sLabel</li>'";
 			}
 			$sExtensionsAdded .= '</ul>';
 		} else {
@@ -2212,15 +2211,14 @@ class WizStepSummary extends WizardStep
 
 		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true) ?? [];
 		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'));
-		$sExtensionsRemoved = '';
 		if (count($aExtensionsRemoved) > 0) {
 			$sExtensionsRemoved = '<ul>';
 			foreach ($aExtensionsRemoved as $sExtensionCode => $sLabel) {
-				$sForcedUninstall = '';
 				if (in_array($sExtensionCode, $aExtensionsNotUninstallable)) {
-					$sForcedUninstall = ' (forced uninstallation)';
+					$sExtensionsRemoved .= "<li>$sLabel (forced uninstallation)</li>";
+				} else {
+					$sExtensionsRemoved .= "<li>$sLabel</li>";
 				}
-				$sExtensionsRemoved .= '<li>'.$sLabel.$sForcedUninstall.'</li>';
 			}
 			$sExtensionsRemoved .= '</ul>';
 		} else {
