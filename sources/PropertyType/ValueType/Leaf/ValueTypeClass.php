@@ -38,9 +38,6 @@ class ValueTypeClass extends AbstractLeafValueType
 		$aClasses = $oModelReflection->GetClasses($sCategories, true);
 		sort($aClasses);
 		foreach ($aClasses as $sClass) {
-			if ($oModelReflection->IsAbstract($sClass)) {
-				continue;
-			}
 			$sValue = utils::QuoteForPHP($sClass);
 			$sChoices .= <<<PHP
 				\Dict::S('Class:$sClass') => $sValue,
