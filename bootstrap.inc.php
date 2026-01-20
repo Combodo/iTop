@@ -42,6 +42,7 @@ define('ITOP_DEFAULT_ENV', 'production');
 define('MAINTENANCE_MODE_FILE', APPROOT.'data/.maintenance');
 define('READONLY_MODE_FILE', APPROOT.'data/.readonly');
 
+// TODO 3.3 To deprecate
 /**
  * Exclude the parent class from the list
  *

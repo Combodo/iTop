@@ -863,6 +863,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:LinksWidget:Autocomplete+' => 'Tapez les 3 premiers caractères...',
 	'UI:Edit:SearchQuery' => 'Sélectionner une requête prédéfinie',
 	'UI:Edit:TestQuery' => 'Tester la requête',
+	'UI:Edit:QueryBook' => 'Predefined query',
 	'UI:Combo:SelectValue' => '--- choisissez une valeur ---',
 	'UI:Label:SelectedObjects' => 'Objets sélectionnés: ',
 	'UI:Label:AvailableObjects' => 'Objets disponibles: ',

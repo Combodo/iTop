@@ -9,6 +9,7 @@ namespace Combodo\iTop\PropertyType;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\PropertyType\ValueType\AbstractValueType;
+use Combodo\iTop\PropertyType\ValueType\ValueTypeFactory;
 
 /**
  * A property type is a definition of properties (organized in tree)
@@ -35,12 +36,11 @@ class PropertyType
 
 		$oDefinitionNode = $oDomNode->GetUniqueElement('definition');
 		$sDefinitionNodeType = $oDefinitionNode->getAttribute('xsi:type');
-
-		if (!is_a($sDefinitionNodeType, AbstractValueType::class, true)) {
+		$this->oValueType = ValueTypeFactory::GetInstance()->CreateValueType($sDefinitionNodeType);
+		if (is_null($this->oValueType)) {
 			throw new PropertyTypeException('Unsupported xsi:type '.json_encode($sDefinitionNodeType), $oDomNode);
 		}
 
-		$this->oValueType = new $sDefinitionNodeType();
 		$this->oValueType->SetRootId($this->sId);
 		$this->oValueType->InitFromDomNode($oDefinitionNode);
 	}

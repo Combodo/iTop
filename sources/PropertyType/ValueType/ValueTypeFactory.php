@@ -32,6 +32,15 @@ class ValueTypeFactory
 		return static::$oInstance;
 	}
 
+	public function CreateValueType(string $sClass): ?AbstractValueType
+	{
+		if (!is_a($sClass, AbstractValueType::class, true)) {
+			return null;
+		}
+
+		return new $sClass();
+	}
+
 	/**
 	 * @param \Combodo\iTop\DesignElement $oDomNode
 	 * @param \Combodo\iTop\PropertyType\ValueType\AbstractValueType|null $oParent
