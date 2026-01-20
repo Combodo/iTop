@@ -1903,6 +1903,7 @@ EOF
 		$aSteps = [];
 		$this->oWizard->SetParameter('additional_extensions_modules', json_encode([])); // Default value, no additional extensions
 
+		$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo();
 		if (@file_exists($this->GetSourceFilePath())) {
 			// Found an "installation.xml" file, let's use this definition for the wizard
 			$aParams = new XMLParameters($this->GetSourceFilePath());
@@ -1913,29 +1914,11 @@ EOF
 				'title' => 'Extensions',
 				'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
 				'banner' => '/images/icons/icons8-puzzle.svg',
-				'options' => [],
+				'options' => $aOptions,
 			];
-
-			foreach ($this->oExtensionsMap->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
-				if (($oExtension->sSource !== iTopExtension::SOURCE_WIZARD) && ($oExtension->bVisible) && (count($oExtension->aMissingDependencies) == 0)) {
-					$aStepDefinition['options'][] = [
-						'extension_code' => $oExtension->sCode,
-						'title' => $oExtension->sLabel,
-						'description' => $oExtension->sDescription,
-						'more_info' => $oExtension->sMoreInfoUrl,
-						'default' => true, // by default offer to install all modules
-						'modules' => $oExtension->aModules,
-						'mandatory' => $oExtension->bMandatory || ($oExtension->sSource === iTopExtension::SOURCE_REMOTE),
-						'source_label' => $this->GetExtensionSourceLabel($oExtension->sSource),
-						'uninstallable' => $oExtension->CanBeUninstalled(),
-						'missing' => $oExtension->bRemovedFromDisk,
-					];
-				}
-			}
 
 			// Display this step of the wizard only if there is something to display
 			if (count($aStepDefinition['options']) !== 0) {
-				$aSteps[] = $aStepDefinition;
 				$this->oWizard->SetParameter('additional_extensions_modules', json_encode($aStepDefinition['options']));
 			}
 		} else {
@@ -1944,53 +1927,17 @@ EOF
 				'title' => 'Modules Selection',
 				'description' => '<h2>Select the modules to install. You can launch the installation again to install new modules, but you cannot remove already installed modules.</h2>',
 				'banner' => '/images/icons/icons8-apps-tab.svg',
-				'options' => [],
+				'options' => $aOptions,
 			];
-			foreach ($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
-				if (($oExtension->bVisible) && (count($oExtension->aMissingDependencies) == 0)) {
-					$aStepDefinition['options'][] = [
-						'extension_code' => $oExtension->sCode,
-						'title' => $oExtension->sLabel,
-						'description' => $oExtension->sDescription,
-						'more_info' => $oExtension->sMoreInfoUrl,
-						'default' => true, // by default offer to install all modules
-						'modules' => $oExtension->aModules,
-						'mandatory' => $oExtension->bMandatory ||  ($oExtension->sSource !== iTopExtension::SOURCE_REMOTE),
-						'source_label' => $this->GetExtensionSourceLabel($oExtension->sSource),
-					];
-				}
-			}
-			$aSteps[] = $aStepDefinition;
 		}
+
+		$aSteps[] = $aStepDefinition;
 
 		if (array_key_exists($index, $aSteps)) {
 			$aStepInfo = $aSteps[$index];
 		}
 
 		return $aStepInfo;
-	}
-
-	protected function GetExtensionSourceLabel($sSource)
-	{
-		$sDecorationClass = '';
-		switch ($sSource) {
-			case iTopExtension::SOURCE_MANUAL:
-				$sResult = 'Local extensions folder';
-				$sDecorationClass = 'fas fa-folder';
-				break;
-
-			case iTopExtension::SOURCE_REMOTE:
-				$sResult = (ITOP_APPLICATION == 'iTop') ? 'iTop Hub' : 'ITSM Designer';
-				$sDecorationClass = (ITOP_APPLICATION == 'iTop') ? 'fc fc-chameleon-icon' : 'fa pencil-ruler';
-				break;
-
-			default:
-				$sResult = '';
-		}
-		if ($sResult == '') {
-			return '';
-		}
-		return '<i class="setup-extension--icon '.$sDecorationClass.'" data-tooltip-content="'.$sResult.'"></i>';
 	}
 
 	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck, bool $bUpgradeMode)
@@ -2334,8 +2281,6 @@ class WizStepSummary extends WizardStep
 			$oPage->add('</ul></div>');
 
 		}
-
-		$aSelectedModules = $aInstallParams['selected_modules'];
 
 		if (isset($aMiscOptions['generate_config'])) {
 			$oDoc = new DOMDocument('1.0', 'UTF-8');
