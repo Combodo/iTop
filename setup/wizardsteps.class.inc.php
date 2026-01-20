@@ -1372,9 +1372,13 @@ class WizStepModulesChoice extends WizardStep
 
 	public function GetTitle()
 	{
-		$aStepInfo = $this->GetStepInfo();
-		$sTitle = isset($aStepInfo['title']) ? $aStepInfo['title'] : 'Modules selection';
-		return $sTitle;
+		if (@file_exists($this->GetSourceFilePath())) {
+			// Found an "installation.xml" file, let's use this definition for the wizard
+			return 'Extensions';
+		}
+
+		// No wizard configuration provided, build a standard one with just one big list. All items are mandatory, only works when there are no conflicted modules.
+		return 'Modules Selection';
 	}
 
 	public function GetPossibleSteps()
