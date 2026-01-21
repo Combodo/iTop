@@ -11,7 +11,8 @@ parameters:
     bootstrapFiles:
         - ../../../approot.inc.php
         - ../../../bootstrap.inc.php
-        - ../../../tests/php-unit-tests/vendor/autoload.php (?)          # usefull to scan tests from extensions in env-production
+        - ../../../tests/php-unit-tests/vendor/autoload.php       
+        # usefull to scan tests from extensions in env-production
 
     scanFiles:
         # Files necessary as they contain some declarations (constants, classes, functions, ...)
