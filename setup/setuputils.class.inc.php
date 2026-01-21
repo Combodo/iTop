@@ -509,7 +509,7 @@ class SetupUtils
 		}
 		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 		try {
-			ModuleDiscovery::GetAvailableModules($aDirsToScan, true, $aSelectedModules);
+			ModuleDiscovery::GetModulesOrderedByDependencies($aDirsToScan, true, $aSelectedModules);
 		} catch (Exception $e) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, $e->getMessage());
 		}

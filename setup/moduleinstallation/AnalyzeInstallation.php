@@ -73,7 +73,7 @@ class AnalyzeInstallation
 			//test only
 			$aAvailableModules = $this->aAvailableModules;
 		} else {
-			$aAvailableModules = ModuleDiscovery::GetAvailableModules($aDirs, $bAbortOnMissingDependency, $aModulesToLoad);
+			$aAvailableModules = ModuleDiscovery::GetModulesOrderedByDependencies($aDirs, $bAbortOnMissingDependency, $aModulesToLoad);
 		}
 
 		foreach ($aAvailableModules as $sModuleId => $aModuleInfo) {

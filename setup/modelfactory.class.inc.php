@@ -1801,7 +1801,7 @@ EOF
 	 */
 	public function FindModules()
 	{
-		$aAvailableModules = ModuleDiscovery::GetAvailableModules($this->aRootDirs);
+		$aAvailableModules = ModuleDiscovery::GetModulesOrderedByDependencies($this->aRootDirs);
 		$aResult = [];
 		foreach ($aAvailableModules as $sId => $aModule) {
 			$oModule = new MFModule($sId, $aModule['root_dir'], $aModule['label'], isset($aModule['auto_select']));

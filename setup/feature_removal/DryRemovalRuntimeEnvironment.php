@@ -2,10 +2,15 @@
 
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
+use Combodo\iTop\Setup\ModuleDependency\Module;
+use Config;
+use InstallationChoicesToModuleConverter;
 use iTopExtensionsMap;
 use MetaModel;
+use ModuleDiscovery;
 use RunTimeEnvironment;
 use SetupUtils;
+use utils;
 
 class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 {
@@ -37,20 +42,49 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 
 		$sEnv = $this->sFinalEnv;
 		$this->aExtensionsByCode = $aExtensionCodesToRemove;
-		//SetupUtils::rrmdir(APPROOT."/data/$sEnv-modules");
+
 		$this->Cleanup();
 		SetupUtils::copydir(APPROOT."/data/$sSourceEnv-modules", APPROOT."/data/$sEnv-modules");
 
 		$this->DeclareExtensionAsRemoved($aExtensionCodesToRemove);
+
 		$oDryRemovalConfig = clone(MetaModel::GetConfig());
 		$oDryRemovalConfig->ChangeModulesPath($sSourceEnv, $this->sFinalEnv);
 		$this->WriteConfigFileSafe($oDryRemovalConfig);
+
+		$sSourceDir = $oDryRemovalConfig->Get('source_dir');
+		$aSearchDirs = $this->GetExtraDirsToCompile($sSourceDir);
+
+		$aModulesToLoad = $this->GetModulesToLoad($sSourceEnv, $aSearchDirs);
+
+		ModuleDiscovery::GetModulesOrderedByDependencies($aSearchDirs, true, $aModulesToLoad);
 	}
 
 	private function DeclareExtensionAsRemoved(array $aExtensionCodes): void
 	{
 		$oExtensionsMap = new iTopExtensionsMap($this->sFinalEnv);
 		$oExtensionsMap->DeclareExtensionAsRemoved($aExtensionCodes);
+	}
+
+	private function GetModulesToLoad(string $sSourceEnv, $aSearchDirs): array
+	{
+		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
+		$aChoices = iTopExtensionsMap::GetChoicesFromDatabase($oSourceConfig);
+		$sSourceDir = $oSourceConfig->Get('source_dir');
+
+		$sInstallFilePath = APPROOT.$sSourceDir.'/installation.xml';
+		if (! is_file($sInstallFilePath)) {
+			$sInstallFilePath = null;
+		}
+
+		$aModuleIdsToLoad = InstallationChoicesToModuleConverter::GetInstance()->GetModules($aChoices, $aSearchDirs, $sInstallFilePath);
+		$aModulesToLoad = [];
+		foreach ($aModuleIdsToLoad as $sModuleId) {
+			$oModule = new Module($sModuleId);
+			$sModuleName = $oModule->GetModuleName();
+			$aModulesToLoad[] = $sModuleName;
+		}
+		return $aModulesToLoad;
 	}
 
 	public function Cleanup()
