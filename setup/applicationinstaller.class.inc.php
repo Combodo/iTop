@@ -669,7 +669,7 @@ class ApplicationInstaller
 		$sModelInfoPath = $this->GetModelInfoPath($sEnvironment);
 		try {
 			$aModelInfo = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($sEnvironment);
-		} catch (Exception $e){
+		} catch (Exception $e) {
 			//logged already
 			return is_file($sModelInfoPath);
 		}
