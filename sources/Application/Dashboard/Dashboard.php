@@ -17,6 +17,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\DesignDocument;
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\PropertyType\PropertyTypeDesign;
+use Combodo\iTop\PropertyType\Serializer\XMLSerializer;
 use DashboardLayout;
 use DesignerBooleanField;
 use DesignerForm;
@@ -101,7 +102,7 @@ abstract class Dashboard
 		$this->oDOMNode = $oDoc->getElementsByTagName('dashboard')->item(0);
 
 		if ($this->oDOMNode->getElementsByTagName('cells')->count() === 0) {
-			$this->FromDOMDocumentV2($oDoc);
+			$this->FromDOMDocumentV2($this->oDOMNode);
 			return;
 		}
 
@@ -171,35 +172,12 @@ abstract class Dashboard
 	}
 
 	/**
-	 * @param \DOMDocument $oDoc
+	 * @param \DOMDocument $oDOMNode
 	 */
-	public function FromDOMDocumentV2(DesignDocument $oDoc)
+	public function FromDOMDocumentV2(DesignElement $oDOMNode)
 	{
-		$this->oDOMNode = $oDoc->getElementsByTagName('dashboard')->item(0);
-
-		$this->sLayoutClass = DashboardLayoutGrid::class;
-		$this->sTitle = $this->oDOMNode->GetChildText('title', '');
-
-		$iRefresh = intval($this->oDOMNode->GetChildText('refresh', '0'));
-
-		$this->bAutoReload = $iRefresh > 0;
-		$this->iAutoReloadSec = $iRefresh;
-
-		$oDashletsNode = $this->oDOMNode->GetUniqueElement('pos_dashlets');
-		$oDashletList = $oDashletsNode->getElementsByTagName('pos_dashlet');
-		foreach ($oDashletList as $oPosDashletNode) {
-			$aGridDashlet = [];
-			$aGridDashlet['position_x'] = intval($oPosDashletNode->GetChildText('position_x', '0'));
-			$aGridDashlet['position_y'] = intval($oPosDashletNode->GetChildText('position_y', '0'));
-			$aGridDashlet['width'] = intval($oPosDashletNode->GetChildText('width', '2'));
-			$aGridDashlet['height'] = intval($oPosDashletNode->GetChildText('height', '1'));
-			$oDashletNode = $oPosDashletNode->GetUniqueElement('dashlet');
-			$sId = $oPosDashletNode->getAttribute('id');
-			$oDashlet = $this->InitDashletFromDOMNode($oDashletNode);
-			$oDashlet->SetID($sId);
-			$aGridDashlet['dashlet'] = $oDashlet;
-			$this->aGridDashlets[] = $aGridDashlet;
-		}
+		$aDashboardValues = XMLSerializer::GetInstance()->Deserialize($oDOMNode, 'DashboardGrid', 'Dashboard');
+		$this->FromModelData($aDashboardValues);
 	}
 
 	/**
@@ -767,5 +745,28 @@ JS
 		}
 
 		return $sDashletId;
+	}
+
+	public function FromModelData(mixed $aDashboardValues)
+	{
+		$this->sLayoutClass = DashboardLayoutGrid::class;
+		$this->sTitle = $aDashboardValues['title'];
+		$iRefresh = $aDashboardValues['refresh'];
+		$this->bAutoReload = $iRefresh > 0;
+		$this->iAutoReloadSec = $iRefresh;
+
+		foreach ($aDashboardValues['pos_dashlets'] as $sId => $aPosDashlet) {
+			$aGridDashlet = [];
+			$aGridDashlet['position_x'] = $aPosDashlet['position_x'] ?? 0;
+			$aGridDashlet['position_y'] = $aPosDashlet['position_y'] ?? 0;
+			$aGridDashlet['width'] = $aPosDashlet['width'] ?? 2;
+			$aGridDashlet['height'] = $aPosDashlet['height'] ?? 1;
+			$aDashlet = $aPosDashlet['dashlet'];
+			$sType = $aDashlet['type'];
+			$oDashlet = DashletFactory::GetInstance()->CreateDashlet($sType, $sId);
+			$oDashlet->FromModelData($aDashlet['properties']);
+			$aGridDashlet['dashlet'] = $oDashlet;
+			$this->aGridDashlets[] = $aGridDashlet;
+		}
 	}
 }
