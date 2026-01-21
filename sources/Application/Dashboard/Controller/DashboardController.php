@@ -54,7 +54,8 @@ class DashboardController extends Controller
 				$aValues = $oDashlet->GetDenormalizedProperties();
 			}
 
-			$oDashletBlock = $oDashlet->DoRender($oPage, true /* bEditMode */, false /* bEnclosingDiv */);
+			// TODO 3.3 Removing bEditMode for dashlet rendering fixes id having an "_edit" issues, but is it the right solution ?
+			$oDashletBlock = $oDashlet->DoRender($oPage, false /* bEditMode */, false /* bEnclosingDiv */);
 
 			if ($oDashletBlock instanceof iUIBlock) {
 				// Wrap the dashlet
