@@ -453,7 +453,7 @@
   // 
   // Method: jQuery.deparam
   // 
-  // Deserialize a params string into an object, optionally coercing numbers,
+  // DeserializeFromDOMNode a params string into an object, optionally coercing numbers,
   // booleans, null and undefined values; this method is the counterpart to the
   // internal jQuery.param method.
   // 

@@ -146,7 +146,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 							if ($oDashlet::IsVisible()) {
 								$sDashletId = $oDashlet->GetID();
 								$sDashletClass = $oDashlet->GetDashletType();
-								$aDashletDenormalizedProperties = $oDashlet->GetDenormalizedProperties();
+								$aDashletDenormalizedProperties = $oDashlet->GetModelData();
 								$aDashletsInfo = DashletService::GetInstance()->GetDashletDefinition($sDashletClass);
 
 								// GRID LAYOUT: Set position relative to grid

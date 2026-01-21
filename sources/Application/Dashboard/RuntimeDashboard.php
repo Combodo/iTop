@@ -944,7 +944,7 @@ JS
 	 */
 	private function GetDashletObjectListAppUserPreferencesPrefix(DashletObjectList $oDashlet, $aExtraParams, $sDashletId)
 	{
-		$sDataTableId = Dashlet::APPUSERPREFERENCES_PREFIX.$sDashletId;
+		$sDataTableId = Dashlet::APP_USER_PREFERENCES_PREFIX.$sDashletId;
 		$aClassAliases = [];
 		try {
 			$oFilter = $oDashlet->GetDBSearch($aExtraParams);

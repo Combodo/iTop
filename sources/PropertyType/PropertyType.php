@@ -72,32 +72,11 @@ PHP;
 
 	public function SerializeToDOMNode(mixed $value, DesignElement$oDOMNode): void
 	{
-		$this->oValueType->SerializeToDOMNode($value, $oDOMNode);
+		$this->oValueType->SerializeToDOMNode(null, $value, $oDOMNode);
 	}
 
-	public function UnserializeFromDOMNode(DesignElement $oDOMNode): mixed
+	public function DeserializeFromDOMNode(DesignElement $oDOMNode): mixed
 	{
-		return $this->oValueType->UnserializeFromDOMNode($oDOMNode);
+		return $this->oValueType->DeserializeFromDOMNode($oDOMNode);
 	}
-
-	public function Normalize(mixed $value): mixed
-	{
-		return $this->oValueType->Normalize($value);
-	}
-
-	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode): void
-	{
-		$this->oValueType->EncodeToDOMNode($normalizedValue, $oDOMNode);
-	}
-
-	public function DecodeFromDomNode(DesignElement $oDOMNode): mixed
-	{
-		return $this->oValueType->DecodeFromDomNode($oDOMNode);
-	}
-
-	public function Denormalize(mixed $normalizedValue): mixed
-	{
-		return $this->oValueType->Denormalize($normalizedValue);
-	}
-
 }

@@ -17291,7 +17291,7 @@ class TCPDF {
 	}
 
 	/**
-	 * Serialize data to be used with TCPDF tag in HTML code.
+	 * SerializeToDOMNode data to be used with TCPDF tag in HTML code.
 	 * @param string $method TCPDF method name
 	 * @param array $params Method parameters
 	 * @return string Serialized data

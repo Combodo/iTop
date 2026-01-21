@@ -973,14 +973,12 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'Combodo\\iTop\\PropertyType\\PropertyTypeFactory' => __DIR__ . '/../..' . '/sources/PropertyType/PropertyTypeFactory.php',
         'Combodo\\iTop\\PropertyType\\PropertyTypeService' => __DIR__ . '/../..' . '/sources/PropertyType/PropertyTypeService.php',
         'Combodo\\iTop\\PropertyType\\Serializer\\SerializerException' => __DIR__ . '/../..' . '/sources/PropertyType/Serializer/SerializerException.php',
-        'Combodo\\iTop\\PropertyType\\Serializer\\XMLEncoder' => __DIR__ . '/../..' . '/sources/PropertyType/Serializer/XMLEncoder.php',
         'Combodo\\iTop\\PropertyType\\Serializer\\XMLFormat\\AbstractXMLFormat' => __DIR__ . '/../..' . '/sources/PropertyType/Serializer/XMLFormat/AbstractXMLFormat.php',
         'Combodo\\iTop\\PropertyType\\Serializer\\XMLFormat\\XMLFormatCSV' => __DIR__ . '/../..' . '/sources/PropertyType/Serializer/XMLFormat/XMLFormatCSV.php',
         'Combodo\\iTop\\PropertyType\\Serializer\\XMLFormat\\XMLFormatCollectionWithId' => __DIR__ . '/../..' . '/sources/PropertyType/Serializer/XMLFormat/XMLFormatCollectionWithId.php',
         'Combodo\\iTop\\PropertyType\\Serializer\\XMLFormat\\XMLFormatFactory' => __DIR__ . '/../..' . '/sources/PropertyType/Serializer/XMLFormat/XMLFormatFactory.php',
         'Combodo\\iTop\\PropertyType\\Serializer\\XMLFormat\\XMLFormatFlatArray' => __DIR__ . '/../..' . '/sources/PropertyType/Serializer/XMLFormat/XMLFormatFlatArray.php',
         'Combodo\\iTop\\PropertyType\\Serializer\\XMLFormat\\XMLFormatValueAsId' => __DIR__ . '/../..' . '/sources/PropertyType/Serializer/XMLFormat/XMLFormatValueAsId.php',
-        'Combodo\\iTop\\PropertyType\\Serializer\\XMLNormalizer' => __DIR__ . '/../..' . '/sources/PropertyType/Serializer/XMLNormalizer.php',
         'Combodo\\iTop\\PropertyType\\Serializer\\XMLSerializer' => __DIR__ . '/../..' . '/sources/PropertyType/Serializer/XMLSerializer.php',
         'Combodo\\iTop\\PropertyType\\ValueType\\AbstractValueType' => __DIR__ . '/../..' . '/sources/PropertyType/ValueType/AbstractValueType.php',
         'Combodo\\iTop\\PropertyType\\ValueType\\Branch\\AbstractBranchValueType' => __DIR__ . '/../..' . '/sources/PropertyType/ValueType/Branch/AbstractBranchValueType.php',
@@ -4348,7 +4346,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'privUITransactionFile' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'privUITransactionSession' => __DIR__ . '/../..' . '/application/transaction.class.inc.php',
         'utils' => __DIR__ . '/../..' . '/application/utils.inc.php',
-        '©' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
+        'ï¿½' => __DIR__ . '/..' . '/symfony/cache/Traits/ValueWrapper.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

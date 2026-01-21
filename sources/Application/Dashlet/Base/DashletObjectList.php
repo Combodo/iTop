@@ -64,7 +64,7 @@ class DashletObjectList extends Dashlet
 		$oBlock = new DisplayBlock($oFilter, 'list');
 		$aParams = [
 			'menu'                => $sShowMenu,
-			'table_id'            => self::APPUSERPREFERENCES_PREFIX.$this->sId,
+			'table_id'            => self::APP_USER_PREFERENCES_PREFIX.$this->sId,
 			'surround_with_panel' => true,
 			'max_height'          => '500px',
 			"panel_title"         => Dict::S($sTitle),

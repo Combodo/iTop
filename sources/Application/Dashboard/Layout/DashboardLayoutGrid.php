@@ -28,7 +28,7 @@ class DashboardLayoutGrid extends \DashboardLayout
 			if ($oDashlet) {
 				$sDashletId = $oDashlet->GetID();
 				$sDashletClass = $oDashlet->GetDashletType();
-				$aDashletDenormalizedProperties = $oDashlet->GetDenormalizedProperties();
+				$aDashletDenormalizedProperties = $oDashlet->GetModelData();
 				$aDashletsInfo = DashletService::GetInstance()->GetDashletDefinition($sDashletClass);
 
 				// Also set minimal height/width

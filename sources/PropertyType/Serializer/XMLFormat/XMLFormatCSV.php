@@ -12,32 +12,20 @@ use Combodo\iTop\PropertyType\ValueType\AbstractValueType;
 
 class XMLFormatCSV extends AbstractXMLFormat
 {
-	public function Normalize($value, AbstractValueType $oValueType): mixed
+	public function SerializeToDOMNode(?string $sPropertyName, mixed $value, DesignElement $oDOMNode, AbstractValueType $oValueType): void
 	{
-		return $value;
-	}
-
-	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode, AbstractValueType $oValueType): void
-	{
-		if (is_array($normalizedValue)) {
-			$normalizedValue = implode(',', $normalizedValue);
+		if (is_null($sPropertyName)) {
+			$oTextNode = $oDOMNode->ownerDocument->createTextNode(implode(',', $value));
+			$oDOMNode->appendChild($oTextNode);
+		} else {
+			$oPropertyNode = $oDOMNode->ownerDocument->createElement($sPropertyName, implode(',', $value));
+			$oDOMNode->appendChild($oPropertyNode);
 		}
-		$oTextNode = $oDOMNode->ownerDocument->createTextNode($normalizedValue);
-		$oDOMNode->appendChild($oTextNode);
 	}
 
-	public function DecodeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed
+	public function DeserializeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed
 	{
 		$value = $oDOMNode->GetText('');
 		return explode(',', $value);
-	}
-
-	public function Denormalize($normalizedValue, AbstractValueType $oValueType): mixed
-	{
-		if (is_string($normalizedValue)) {
-			return explode(',', $normalizedValue);
-		}
-
-		return $normalizedValue;
 	}
 }

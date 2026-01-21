@@ -22,35 +22,34 @@ class XMLFormatCollectionWithId extends AbstractXMLFormat
 		$this->sTagName = $oDomNode->GetChildText('tag-name');
 	}
 
-	public function Normalize($value, AbstractValueType $oValueType): mixed
-	{
-		return $value;
-	}
-
-	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode, AbstractValueType $oValueType): void
+	public function SerializeToDOMNode(?string $sPropertyName, mixed $value, DesignElement $oDOMNode, AbstractValueType $oValueType): void
 	{
 		if (!$oValueType instanceof ValueTypeCollection) {
 			throw new SerializerException('XMLFormatFlatArray is allowed only in ValueTypeCollection nodes');
 		}
 
-		foreach ($normalizedValue as $sItemId => $aValues) {
-			/** @var DesignElement $oNode */
-			$oNode = $oDOMNode->ownerDocument->createElement($this->sTagName);
-			$oNode->setAttribute('id', $sItemId);
-			$oDOMNode->appendChild($oNode);
+		if (!is_null($sPropertyName)) {
+			$oPropertyNode = $oDOMNode->ownerDocument->createElement($sPropertyName);
+			$oDOMNode->appendChild($oPropertyNode);
+		} else {
+			$oPropertyNode = $oDOMNode;
+		}
+
+		foreach ($value as $sItemId => $aValues) {
+			/** @var DesignElement $oItemNode */
+			$oItemNode = $oPropertyNode->ownerDocument->createElement($this->sTagName);
+			$oItemNode->setAttribute('id', $sItemId);
+			$oPropertyNode->appendChild($oItemNode);
 			foreach ($oValueType->GetChildren() as $oChild) {
 				$sPropertyId = $oChild->GetId();
 				if (isset($aValues[$sPropertyId])) {
-					/** @var DesignElement $oSubNode */
-					$oSubNode = $oDOMNode->ownerDocument->createElement($sPropertyId);
-					$oNode->appendChild($oSubNode);
-					$oChild->EncodeToDOMNode($aValues[$sPropertyId], $oSubNode);
+					$oChild->SerializeToDOMNode($sPropertyId, $aValues[$sPropertyId], $oItemNode);
 				}
 			}
 		}
 	}
 
-	public function DecodeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed
+	public function DeserializeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed
 	{
 		if (!$oValueType instanceof ValueTypeCollection) {
 			throw new SerializerException('XMLFormatFlatArray is allowed only in ValueTypeCollection nodes');
@@ -63,16 +62,11 @@ class XMLFormatCollectionWithId extends AbstractXMLFormat
 			$sItemId = $oNode->getAttribute('id');
 			$aSubArray = [];
 			foreach ($oValueType->GetChildren() as $oChild) {
-				$aSubArray[$oChild->GetId()] = $oChild->DecodeFromDomNode($oNode->GetUniqueElement($oChild->GetId()));
+				$aSubArray[$oChild->GetId()] = $oChild->DeserializeFromDOMNode($oNode->GetUniqueElement($oChild->GetId()));
 			}
 			$aNormalizedValues[$sItemId] = $aSubArray;
 		}
 
 		return $aNormalizedValues;
-	}
-
-	public function Denormalize($normalizedValue, AbstractValueType $oValueType): mixed
-	{
-		return $normalizedValue;
 	}
 }

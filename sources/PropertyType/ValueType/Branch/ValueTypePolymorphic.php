@@ -29,25 +29,32 @@ class ValueTypePolymorphic extends AbstractBranchValueType
 		return "// ValueTypePolymorphic Block\n";
 	}
 
-	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode): void
+	public function SerializeToDOMNode(?string $sPropertyName, mixed $value, DesignElement $oDOMNode): void
 	{
-		$sType = $normalizedValue['type'];
-		$oDOMNode->setAttribute('xsi:type', $sType);
+		if (!is_null($sPropertyName)) {
+			$oPropertyNode = $oDOMNode->ownerDocument->createElement($sPropertyName);
+			$oDOMNode->appendChild($oPropertyNode);
+		} else {
+			$oPropertyNode = $oDOMNode;
+		}
+
+		$sType = $value['type'];
+		$oPropertyNode->setAttribute('xsi:type', $sType);
 
 		$oPropertyType = PropertyTypeService::GetInstance()->GetPropertyType($sType);
 
-		$aProperties =  $normalizedValue['properties'];
-		$oPropertyType->EncodeToDOMNode($aProperties, $oDOMNode);
+		$aProperties = $value['properties'];
+		$oPropertyType->SerializeToDOMNode($aProperties, $oPropertyNode);
 	}
 
-	public function DecodeFromDomNode(DesignElement $oDOMNode): mixed
+	public function DeserializeFromDOMNode(DesignElement $oDOMNode): mixed
 	{
 		$sType = $oDOMNode->getAttribute('xsi:type');
 		$oPropertyType = PropertyTypeService::GetInstance()->GetPropertyType($sType);
 
 		return [
 			'type' => $sType,
-			'properties' => $oPropertyType->DecodeFromDOMNode($oDOMNode),
+			'properties' => $oPropertyType->DeserializeFromDOMNode($oDOMNode),
 		];
 	}
 }

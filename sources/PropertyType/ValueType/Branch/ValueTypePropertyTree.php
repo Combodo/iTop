@@ -75,20 +75,23 @@ PHP;
 		return $this->GetLocalPHPForValueType($this->sSubTreeClass);
 	}
 
-	public function SerializeToDOMNode(mixed $value, DesignElement $oDOMNode): void
+	public function SerializeToDOMNode(?string $sPropertyName, mixed $value, DesignElement $oDOMNode): void
 	{
+		if (!is_null($sPropertyName)) {
+			$oPropertyNode = $oDOMNode->ownerDocument->createElement($sPropertyName);
+			$oDOMNode->appendChild($oPropertyNode);
+		} else {
+			$oPropertyNode = $oDOMNode;
+		}
 		foreach ($this->aChildren as $oChild) {
 			$sId = $oChild->sId;
 			if (isset($value[$sId])) {
-				/** @var DesignElement $oChildNode */
-				$oChildNode = $oDOMNode->ownerDocument->createElement($sId);
-				$oDOMNode->appendChild($oChildNode);
-				$oChild->SerializeToDOMNode($value[$sId], $oChildNode);
+				$oChild->SerializeToDOMNode($sId, $value[$sId], $oPropertyNode);
 			}
 		}
 	}
 
-	public function UnserializeFromDOMNode(DesignElement $oDOMNode): mixed
+	public function DeserializeFromDOMNode(DesignElement $oDOMNode): mixed
 	{
 		$aResults = [];
 
@@ -96,66 +99,13 @@ PHP;
 			$sId = $oChild->sId;
 			$oChildNode = $oDOMNode->GetOptionalElement($sId);
 			if ($oChildNode) {
-				$aResults[$sId] = $oChild->UnserializeFromDOMNode($oChildNode);
+				$aResults[$sId] = $oChild->DeserializeFromDOMNode($oChildNode);
+			} else {
+				// For flat arrays, no node with $sId is present
+				$aResults[$sId] = $oChild->DeserializeFromDOMNode($oDOMNode);
 			}
 		}
 
 		return $aResults;
-	}
-
-	public function Normalize(mixed $value): mixed
-	{
-		$aNormalizedValues = [];
-
-		foreach ($this->aChildren as $oChild) {
-			$sId = $oChild->sId;
-			if (isset($value[$sId])) {
-				$aNormalizedValues[$sId] = $oChild->Normalize($value[$sId]);
-			}
-		}
-
-		return $aNormalizedValues;
-	}
-
-	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode): void
-	{
-		foreach ($this->aChildren as $oChild) {
-			$sId = $oChild->sId;
-			if (isset($normalizedValue[$sId])) {
-				/** @var DesignElement $oChildNode */
-				$oChildNode = $oDOMNode->ownerDocument->createElement($sId);
-				$oDOMNode->appendChild($oChildNode);
-				$oChild->EncodeToDOMNode($normalizedValue[$sId], $oChildNode);
-			}
-		}
-	}
-
-	public function DecodeFromDomNode(DesignElement $oDOMNode): mixed
-	{
-		$aNormalizedValue = [];
-
-		foreach ($this->aChildren as $oChild) {
-			$sId = $oChild->sId;
-			$oChildNode = $oDOMNode->GetOptionalElement($sId);
-			if ($oChildNode) {
-				$aNormalizedValue[$sId] = $oChild->DecodeFromDomNode($oChildNode);
-			}
-		}
-
-		return $aNormalizedValue;
-	}
-
-	public function Denormalize(mixed $normalizedValue): mixed
-	{
-		$aValues = [];
-
-		foreach ($this->aChildren as $oChild) {
-			$sId = $oChild->sId;
-			if (isset($normalizedValue[$sId])) {
-				$aValues[$sId] = $oChild->Denormalize($normalizedValue[$sId]);
-			}
-		}
-
-		return $aValues;
 	}
 }

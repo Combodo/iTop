@@ -49,9 +49,9 @@ class DashboardController extends Controller
 			// TODO 3.3 This is not the place to register this service, do better please
 			ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
 			if (!empty($aValues)) {
-				$oDashlet->FromDenormalizedParams($aValues);
+				$oDashlet->FromModelData($aValues);
 			} else {
-				$aValues = $oDashlet->GetDenormalizedProperties();
+				$aValues = $oDashlet->GetModelData();
 			}
 
 			// TODO 3.3 Removing bEditMode for dashlet rendering fixes id having an "_edit" issues, but is it the right solution ?
@@ -89,28 +89,27 @@ class DashboardController extends Controller
 
 	public function OperationSave()
 	{
-		$sValues = utils::ReadParam('values', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
-		$aValues = !empty($sValues) ? json_decode($sValues, true, 20) : [];
-		$sStatus = 'error';
-		$sMessage = 'Unknown error';
+		$sViewData = utils::ReadParam('values', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$aViewData = !empty($sViewData) ? json_decode($sViewData, true, 20) : [];
 
 		try {
 			// Get the form block from the service (and the compiler)
 			$oRequest = $this->getRequest();
 			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById('DashboardGrid', 'Dashboard');
-			$oBuilder = $this->GetFormBuilder($oFormBlock, $aValues);
+			$oBuilder = $this->GetFormBuilder($oFormBlock, $aViewData);
 			$oForm = $oBuilder->getForm();
 			$oForm->handleRequest($oRequest);
 			// We are in the submit action, so we submit the form with the provided values
-			$oForm->submit($aValues);
+			$oForm->submit($aViewData);
 
 			// TODO 3.3 Validate the form, it requires CSRF + stripping extra fields
 			// See $oForm->getErrors(true) to get all errors
 			if ($oForm->isSubmitted() && (true || $oForm->isValid())) {
 				// Save XML
-				$oDashboard = new RuntimeDashboard($aValues['id']);
+				$aModelData = $oForm->getData();
+				$oDashboard = new RuntimeDashboard($aModelData['id']);
 				$oDomNode = $oDashboard->CreateEmptyDashboard();
-				XMLSerializer::GetInstance()->Serialize($aValues, $oDomNode, 'DashboardGrid', 'Dashboard');
+				XMLSerializer::GetInstance()->Serialize($aModelData, $oDomNode, 'DashboardGrid', 'Dashboard');
 				$sXml = $oDomNode->ownerDocument->saveXML();
 				$oDashboard->PersistDashboard($sXml);
 				$sStatus = 'ok';

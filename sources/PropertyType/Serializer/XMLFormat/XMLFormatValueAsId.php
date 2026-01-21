@@ -25,55 +25,36 @@ class XMLFormatValueAsId extends AbstractXMLFormat
 		$this->sTagName = $sTagName;
 	}
 
-	public function SerializeToDOMNode($value, $oDOMNode, AbstractValueType $oValueType): void
+	public function SerializeToDOMNode(?string $sPropertyName, $value, $oDOMNode, AbstractValueType $oValueType): void
 	{
+		if (!is_null($sPropertyName)) {
+			$oPropertyNode = $oDOMNode->ownerDocument->createElement($sPropertyName);
+			$oDOMNode->appendChild($oPropertyNode);
+		} else {
+			$oPropertyNode = $oDOMNode;
+		}
 		foreach ($value as $item) {
 			$oChildNode = $oDOMNode->ownerDocument->createElement($this->sTagName);
 			$oChildNode->setAttribute('id', "$item");
-			$oDOMNode->appendChild($oChildNode);
+			$oPropertyNode->appendChild($oChildNode);
 		}
 	}
 
-	public function UnserializeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed
+	public function DeserializeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed
 	{
 		$aResult = [];
 
-		foreach ($oDOMNode->getElementsByTagName($this->sTagName) as $oNode) {
+		foreach ($oDOMNode->childNodes as $oNode) {
+			if (!$oNode instanceof DesignElement) {
+				continue;
+			}
+			if ($oNode->tagName !== $this->sTagName) {
+				continue;
+			}
 			$sValue = $oNode->getAttribute('id');
 			$aResult[] = $sValue;
 		}
 
 		return $aResult;
-	}
-
-	public function Normalize($value, AbstractValueType $oValueType): mixed
-	{
-		return $value;
-	}
-
-	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode, AbstractValueType $oValueType): void
-	{
-		foreach ($normalizedValue as $item) {
-			$oChildNode = $oDOMNode->ownerDocument->createElement($this->sTagName);
-			$oChildNode->setAttribute('id', "$item");
-			$oDOMNode->appendChild($oChildNode);
-		}
-	}
-
-	public function DecodeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed
-	{
-		$aResult = [];
-
-		foreach ($oDOMNode->getElementsByTagName($this->sTagName) as $oNode) {
-			$sValue = $oNode->getAttribute('id');
-			$aResult[] = $sValue;
-		}
-
-		return $aResult;
-	}
-
-	public function Denormalize($normalizedValue, AbstractValueType $oValueType): mixed
-	{
-		return $normalizedValue;
 	}
 }

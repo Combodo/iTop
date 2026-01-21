@@ -16,11 +16,8 @@ abstract class AbstractXMLFormat
 	{
 	}
 
-	abstract public function Normalize($value, AbstractValueType $oValueType): mixed;
+	abstract public function SerializeToDOMNode(?string $sPropertyName, mixed $value, DesignElement $oDOMNode, AbstractValueType $oValueType): void;
 
-	abstract public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode, AbstractValueType $oValueType): void;
+	abstract public function DeserializeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed;
 
-	abstract public function DecodeFromDOMNode(DesignElement $oDOMNode, AbstractValueType $oValueType): mixed;
-
-	abstract public function Denormalize($normalizedValue, AbstractValueType $oValueType): mixed;
 }

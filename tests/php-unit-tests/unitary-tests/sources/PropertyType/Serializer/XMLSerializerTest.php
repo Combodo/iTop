@@ -145,21 +145,40 @@ XML,
 </root>
 XML,
 			],
-			'Property tree' => [
-				'normalizedValue' => ['title_property' => 'title', 'class_property' => 'class'],
+			'Collection of tree as flat array in a property tree' => [
+				'normalizedValue' => [
+					'collection' => [
+						[
+							'title_property' => 'title_a',
+							'class_property' => 'class_a',
+						],
+						[
+							'title_property' => 'title_b',
+							'class_property' => 'class_b',
+						],
+					],
+				],
 				'sPropertyTypeXML' => <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
-<property_type id="property_tree_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+<property_type id="collection_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
 	<extends>Dashlet</extends>
-    <definition xsi:type="Combodo-ValueType-PropertyTree">
-    	<nodes>
-	        <node id="title_property" xsi:type="Combodo-ValueType-Label">
-	            <label>UI:BasicTest:Prop-Title</label>
-	        </node>
-	        <node id="class_property" xsi:type="Combodo-ValueType-Class">
-	            <label>UI:BasicTest:Prop-Class</label>
-	            <categories-csv>test</categories-csv>
-	        </node>
+	<definition xsi:type="Combodo-ValueType-PropertyTree">
+		<nodes>
+		    <node id="collection" xsi:type="Combodo-ValueType-Collection">
+		      <xml-format xsi:type="Combodo-XMLFormat-FlatArray">
+		        <count-tag>item_count</count-tag>
+		        <tag-format>item_\$rank\$_\$id\$</tag-format>
+			  </xml-format>
+			  <prototype>
+		        <node id="title_property" xsi:type="Combodo-ValueType-Label">
+		            <label>UI:BasicTest:Prop-Title</label>
+		        </node>
+		        <node id="class_property" xsi:type="Combodo-ValueType-Class">
+		            <label>UI:BasicTest:Prop-Class</label>
+		            <categories-csv>test</categories-csv>
+		        </node>
+			  </prototype>
+		    </node>
 	    </nodes>
     </definition>
 </property_type>
@@ -167,8 +186,11 @@ XML,
 				'sXMLContent' => <<<XML
 <?xml version="1.0"?>
 <root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<title_property>title</title_property>
-	<class_property>class</class_property>
+	<item_count>2</item_count>
+	<item_0_title_property>title_a</item_0_title_property>
+	<item_0_class_property>class_a</item_0_class_property>
+	<item_1_title_property>title_b</item_1_title_property>
+	<item_1_class_property>class_b</item_1_class_property>
 </root>
 XML,
 			],
@@ -242,6 +264,79 @@ XML,
 		<title_property>title_b</title_property>
 		<class_property>class_b</class_property>
 	</item>
+</root>
+XML,
+			],
+			'Property tree' => [
+				'normalizedValue' => [
+					'title_property' => 'title',
+					'sub_tree' => [
+						'sub_tree_property' => 'my_class',
+					],
+					'items' => [
+						'a' => [
+							'title_property' => 'title_a',
+							'class_property' => 'class_a',
+						],
+						'b' => [
+							'title_property' => 'title_b',
+							'class_property' => 'class_b',
+						],
+					],
+				],
+				'sPropertyTypeXML' => <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<property_type id="property_tree_test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
+	<extends>Dashlet</extends>
+	<definition xsi:type="Combodo-ValueType-PropertyTree">
+		<nodes>
+			<node id="title_property" xsi:type="Combodo-ValueType-Label">
+			<label>UI:BasicTest:Prop-Title</label>
+			</node>
+			<node id="sub_tree" xsi:type="Combodo-ValueType-PropertyTree">
+				<label>My sub tree</label>
+				<nodes>
+					<node id="sub_tree_property" xsi:type="Combodo-ValueType-Class">
+						<label>UI:BasicTest:Prop-Class</label>
+						<categories-csv>test</categories-csv>
+					</node>
+				</nodes>
+			</node>
+			<node id="items" xsi:type="Combodo-ValueType-Collection">
+				<xml-format xsi:type="Combodo-XMLFormat-CollectionWithId">
+					<tag-name>item</tag-name>
+				</xml-format>
+				<prototype>
+					<node id="title_property" xsi:type="Combodo-ValueType-Label">
+						<label>UI:BasicTest:Prop-Title</label>
+					</node>
+					<node id="class_property" xsi:type="Combodo-ValueType-Class">
+						<label>UI:BasicTest:Prop-Class</label>
+						<categories-csv>test</categories-csv>
+					</node>
+				</prototype>
+			</node>
+		</nodes>
+	</definition>
+</property_type>
+XML,
+				'sXMLContent' => <<<XML
+<?xml version="1.0"?>
+<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<title_property>title</title_property>
+	<sub_tree>
+      <sub_tree_property>my_class</sub_tree_property>
+	</sub_tree>
+	<items>
+		<item id="a">
+			<title_property>title_a</title_property>
+			<class_property>class_a</class_property>
+		</item>
+		<item id="b">
+			<title_property>title_b</title_property>
+			<class_property>class_b</class_property>
+		</item>
+	</items>
 </root>
 XML,
 			],

@@ -82,23 +82,13 @@ class ValueTypeCollection extends ValueTypePropertyTree
 		return $this->GetLocalPHPForValueType();
 	}
 
-	public function Normalize(mixed $value): mixed
+	public function SerializeToDOMNode(?string $sPropertyName, mixed $value, DesignElement$oDOMNode): void
 	{
-		return $this->oXMLFormat->Normalize($value, $this);
+		$this->oXMLFormat->SerializeToDOMNode($sPropertyName, $value, $oDOMNode, $this);
 	}
 
-	public function EncodeToDOMNode(mixed $normalizedValue, DesignElement $oDOMNode): void
+	public function DeserializeFromDOMNode(DesignElement $oDOMNode): mixed
 	{
-		$this->oXMLFormat->EncodeToDOMNode($normalizedValue, $oDOMNode, $this);
-	}
-
-	public function DecodeFromDomNode(DesignElement $oDOMNode): mixed
-	{
-		return $this->oXMLFormat->DecodeFromDOMNode($oDOMNode, $this);
-	}
-
-	public function Denormalize(mixed $normalizedValue): mixed
-	{
-		return $this->oXMLFormat->Denormalize($normalizedValue, $this);
+		return $this->oXMLFormat->DeserializeFromDOMNode($oDOMNode, $this);
 	}
 }

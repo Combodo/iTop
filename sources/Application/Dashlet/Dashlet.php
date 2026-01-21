@@ -7,11 +7,7 @@
 
 namespace Combodo\iTop\Application\Dashlet;
 
-use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletContainer;
-use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
-use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Application\WebPage\WebPage;
@@ -38,7 +34,7 @@ use utils;
 abstract class Dashlet
 {
 	/** @var string */
-	public const APPUSERPREFERENCES_PREFIX = 'Dashlet';
+	public const APP_USER_PREFERENCES_PREFIX = 'Dashlet';
 
 	protected $oModelReflection;
 	protected $sId;
@@ -203,9 +199,10 @@ abstract class Dashlet
 		$this->OnUpdate();
 	}
 
-	public function FromDenormalizedParams(array $aDenormalizedParams)
+	public function FromModelData(array $aModelData)
 	{
-		$this->aProperties = XMLNormalizer::GetInstance()->Normalize($aDenormalizedParams, $this->sDashletType, 'Dashlet');
+		$this->aProperties = $aModelData;
+		//		$this->aProperties = XMLNormalizer::GetInstance()->Normalize($aModelData, $this->sDashletType, 'Dashlet');
 		$this->OnUpdate();
 	}
 
@@ -331,7 +328,10 @@ EOF
 	 *
 	 * @return mixed
 	 */
-	abstract public function GetPropertiesFields(\DesignerForm $oForm);
+	public function GetPropertiesFields(\DesignerForm $oForm)
+	{
+		return null;
+	}
 
 	/**
 	 * @param \DOMNode $oContainerNode
@@ -514,8 +514,9 @@ EOF
 		$this->sDashletType = $sDashletType;
 	}
 
-	public function GetDenormalizedProperties(): ?array
+	public function GetModelData(): ?array
 	{
-		return XMLNormalizer::GetInstance()->Denormalize($this->aProperties, $this->sDashletType, 'Dashlet');
+		return $this->aProperties;
+		//return XMLNormalizer::GetInstance()->Denormalize($this->aProperties, $this->sDashletType, 'Dashlet');
 	}
 }
