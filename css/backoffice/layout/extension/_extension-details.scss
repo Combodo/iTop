@@ -1,39 +1,49 @@
-.ibo-extension-details{
-	display:inline-flex;
-	flex-direction : row;
+$ibo-extension-details--information--metadata--padding : $ibo-spacing-200 !default;
+$ibo-extension-details--information--metadata--delimiter : "-" !default;
+
+.ibo-extension-details {
+	display: inline-flex;
+	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	
-	width:450px;
+
+	width: 450px;
 }
-.ibo-extension-details--information{
-	flex-grow:1;
-	display:flex;
-	flex-direction : column;
+
+.ibo-extension-details--information {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
 }
-.ibo-extension-details--actions{
-	display:flex;
+
+.ibo-extension-details--actions {
+	display: flex;
 }
-.ibo-extension-details--information--label{
+
+.ibo-extension-details--information--label {
 	@extend %ibo-font-ral-med-150;
 }
-.ibo-extension-details--information--metadata{
+
+.ibo-extension-details--information--metadata {
 	@extend %ibo-font-ral-med-100;
-	color:$ibo-color-grey-700;
+	color: $ibo-color-grey-700;
 }
-.ibo-extension-details--information--description{
+
+.ibo-extension-details--information--description {
 	@extend %ibo-font-ral-med-100;
 }
 
-.ibo-extension-details--information--metadata span + span:before{
-	content: " - ";
+.ibo-extension-details--information--metadata span + span:before {
+	content: $ibo-extension-details--information--metadata--delimiter;
+	padding-left: $ibo-extension-details--information--metadata--padding;
+	padding-right: $ibo-extension-details--information--metadata--padding;
 }
 
-.ibo-extension-details:has(input:checked) .ibo-badge.unchecked, .ibo-extension-details:has(input:not(:checked)) .ibo-badge.checked{
-	display:none;
+.ibo-extension-details:has(input:checked) .ibo-badge.unchecked, .ibo-extension-details:has(input:not(:checked)) .ibo-badge.checked {
+	display: none;
 }
 
-.ibo-extension-details--actions > button{
-	position:relative;
-	top:-3px;
+.ibo-extension-details--actions > button {
+	position: relative;
+	top: -3px;
 }
