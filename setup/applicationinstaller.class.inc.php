@@ -517,7 +517,7 @@ class ApplicationInstaller
 	 *
 	 * @since 3.1.0 N°2013 added the aParamValues param
 	 */
-	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $bIsSetupDataAuditEnabled, $bUseSymbolicLinks = null)
+	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, bool &$bIsSetupDataAuditEnabled, $bUseSymbolicLinks = null)
 	{
 		/**
 	 * @since 3.2.0 move the ContextTag init at the very beginning of the method
@@ -565,7 +565,7 @@ class ApplicationInstaller
 				$bIsAlreadyInMaintenanceMode = false;
 			}
 
-			$this->SaveModelInfo($sEnvironment);
+			$bIsSetupDataAuditEnabled = $this->SaveModelInfo($sEnvironment);
 		}
 
 		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
@@ -664,11 +664,17 @@ class ApplicationInstaller
 		return APPROOT."data/beforecompilation_".$sEnv."_modelinfo.json";
 	}
 
-	private function SaveModelInfo(string $sEnvironment): void
+	private function SaveModelInfo(string $sEnvironment): bool
 	{
-		$aModelInfo = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($sEnvironment);
 		$sModelInfoPath = $this->GetModelInfoPath($sEnvironment);
-		file_put_contents($sModelInfoPath, json_encode($aModelInfo));
+		try {
+			$aModelInfo = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($sEnvironment);
+		} catch (Exception $e){
+			//logged already
+			return is_file($sModelInfoPath);
+		}
+
+		return (bool) file_put_contents($sModelInfoPath, json_encode($aModelInfo));
 	}
 
 	private function GetPreviousModelInfo(string $sEnvironment): array
