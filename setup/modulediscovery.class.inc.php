@@ -96,7 +96,7 @@ class ModuleDiscovery
 	protected static $m_aModuleVersionByName = [];
 
 	/** @var array<\iTopExtension> $m_aRemovedExtensions */
-	protected static $m_aRemovedExtensions = [];
+	protected static array $m_aRemovedExtensions = [];
 
 	// All the entries below are list of file paths relative to the module directory
 	protected static $m_aFilesList = ['datamodel', 'webservice', 'dictionary', 'data.struct', 'data.sample'];
@@ -197,21 +197,6 @@ class ModuleDiscovery
 	}
 
 	/**
-	 * Get the list of "discovered" modules, ordered based on their (inter) dependencies
-	 *
-	 * @param bool $bAbortOnMissingDependency ...
-	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
-	 *
-	 * @return array
-	 * @throws \MissingDependencyException
-	 */
-	protected static function GetModules($bAbortOnMissingDependency = false, $aModulesToLoad = null)
-	{
-		// Order the modules to take into account their inter-dependencies
-		return self::OrderModulesByDependencies(self::$m_aModules, $bAbortOnMissingDependency, $aModulesToLoad);
-	}
-
-	/**
 	 * Arrange an list of modules, based on their (inter) dependencies
 	 * @param array $aModules The list of modules to process: 'id' => $aModuleInfo
 	 * @param bool $bAbortOnMissingDependency ...
@@ -238,6 +223,7 @@ class ModuleDiscovery
 				}
 			}
 		}
+
 		return ModuleDependencySort::GetInstance()->GetModulesOrderedForInstallation($aFilteredModules, $bAbortOnMissingDependency);
 	}
 
@@ -245,7 +231,7 @@ class ModuleDiscovery
 	* @param array<\iTopExtension> $aRemovedExtension
 	* @return void
 	 */
-	public static function DeclareRemovedExtensions(array $aRemovedExtension)
+	public static function DeclareRemovedExtensions(array $aRemovedExtension): void
 	{
 		if (self::$m_aRemovedExtensions != $aRemovedExtension) {
 			self::ResetCache();
@@ -253,79 +239,7 @@ class ModuleDiscovery
 		self::$m_aRemovedExtensions = $aRemovedExtension;
 	}
 
-	/**
-	 * @param array<\iTopExtension> $aExtensions
-	 * @param string $sModuleName
-	 * @param string $sModuleVersion
-	 * @param array $aModuleInfo
-	 *
-	 * @return bool
-	 */
-	private static function IsModuleInExtensionList(array $aExtensions, string $sModuleName, string $sModuleVersion, array $aModuleInfo): bool
-	{
-		if (count($aExtensions) === 0) {
-			return false;
-		}
-		$aNonMatchingPaths = [];
-		$sModuleFilePath = $aModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
-
-		/** @var \iTopExtension $oExtension */
-		foreach ($aExtensions as $oExtension) {
-			$sCurrentVersion = $oExtension->aModuleVersion[$sModuleName] ?? null;
-			if (is_null($sCurrentVersion)) {
-				continue;
-			}
-
-			if ($sModuleVersion !== $sCurrentVersion) {
-				continue;
-			}
-
-			$aCurrentModuleInfo = $oExtension->aModuleInfo[$sModuleName] ?? null;
-			if (is_null($aCurrentModuleInfo)) {
-				SetupLog::Warning("Missing $sModuleName in ".$oExtension->sLabel.". it should not happen");
-				continue;
-			}
-
-			// use case: same module coming from 2 different extensions
-			// we remove only the one coming from removed extensions
-			$sCurrentModuleFilePath = $aCurrentModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
-			if (realpath($sModuleFilePath) !== realpath($sCurrentModuleFilePath)) {
-				$aNonMatchingPaths[] = $sCurrentModuleFilePath;
-				continue;
-			}
-
-			SetupLog::Info("Module considered as removed", null, ['extension_code' => $oExtension->sCode, 'module_name' => $sModuleName, 'module_version' => $sModuleVersion, ModuleFileReader::MODULE_FILE_PATH => $sCurrentModuleFilePath]);
-			return true;
-		}
-
-		if (count($aNonMatchingPaths) > 0) {
-			//add log for support
-			SetupLog::Debug("Module kept as it came from non removed extensions", null, ['module_name' => $sModuleName, 'module_version' => $sModuleVersion, ModuleFileReader::MODULE_FILE_PATH => $sModuleFilePath, 'non_matching_paths' => $aNonMatchingPaths]);
-		}
-		return false;
-	}
-
-	private static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
-	{
-		if (!isset(self::$oPhpExpressionEvaluator)) {
-			self::$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);
-		}
-
-		return self::$oPhpExpressionEvaluator;
-	}
-
-	/**
-	 * Search (on the disk) for all defined iTop modules, load them and returns the list (as an array)
-	 * of the possible iTop modules to install
-	 *
-	 * @param $aSearchDirs array of directories to search (absolute paths)
-	 * @param bool $bAbortOnMissingDependency ...
-	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
-	 *
-	 * @return array A big array moduleID => ModuleData
-	 * @throws \Exception
-	 */
-	public static function GetAvailableModules($aSearchDirs, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
+	private static function Init($aSearchDirs): void
 	{
 		if (self::$m_aSearchDirs != $aSearchDirs) {
 			self::ResetCache();
@@ -344,11 +258,58 @@ class ModuleDiscovery
 				clearstatcache();
 				self::ListModuleFiles(basename($sSearchDir), dirname($sSearchDir));
 			}
-			return self::GetModules($bAbortOnMissingDependency, $aModulesToLoad);
-		} else {
-			// Reuse the previous results
-			return self::GetModules($bAbortOnMissingDependency, $aModulesToLoad);
 		}
+	}
+
+	/**
+	 * Return all modules found on disk ordered by dependencies. Skipping modules coming from extensions declared as removed (@see ModuleDiscovery::DeclareRemovedExtensions)
+	 * @param $aSearchDirs array of directories to search (absolute paths)
+	 * @param bool $bAbortOnMissingDependency ...
+	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
+	 *
+	 * @return array A big array moduleID => ModuleData
+	 * @throws \Exception
+	 */
+	public static function GetModulesOrderedByDependencies($aSearchDirs, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
+	{
+		self::Init($aSearchDirs);
+
+		return self::OrderModulesByDependencies(self::$m_aModules, $bAbortOnMissingDependency, $aModulesToLoad);
+	}
+
+	/**
+	 * @deprecated use \ModuleDiscovery::GetModulesOrderedByDependencies instead
+	 */
+	public static function GetAvailableModules($aSearchDirs, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
+	{
+		return ModuleDiscovery::GetModulesOrderedByDependencies($aSearchDirs, $bAbortOnMissingDependency, $aModulesToLoad);
+	}
+
+	/**
+	 * Return all modules found on disk (without any dependency consideration). Skipping modules coming from extensions declared as removed (@see ModuleDiscovery::DeclareRemovedExtensions)
+	 *
+	 * @param $aSearchDirs array of directories to search (absolute paths)
+	 *
+	 * @return array A big array moduleID => ModuleData
+	 * @throws \Exception
+	 */
+	public static function GetAllModules($aSearchDirs)
+	{
+		self::Init($aSearchDirs);
+
+		$aNonRemovedModules = [];
+		foreach (self::$m_aModules as $sModuleId => $aModuleInfo) {
+			$oModule = new Module($sModuleId);
+			$sModuleName = $oModule->GetModuleName();
+
+			if (self::IsModuleInExtensionList(self::$m_aRemovedExtensions, $sModuleName, $oModule->GetVersion(), $aModuleInfo)) {
+				continue;
+			}
+
+			$aNonRemovedModules[$sModuleId] = $aModuleInfo;
+		}
+
+		return $aNonRemovedModules;
 	}
 
 	public static function ResetCache()
@@ -419,6 +380,59 @@ class ModuleDiscovery
 			throw new Exception("Data directory (".$sDirectory.") not found or not readable.");
 		}
 	}
+
+	/**
+	 * @param array<\iTopExtension> $aExtensions
+	 * @param string $sModuleName
+	 * @param string $sModuleVersion
+	 * @param array $aModuleInfo
+	 *
+	 * @return bool
+	 */
+	private static function IsModuleInExtensionList(array $aExtensions, string $sModuleName, string $sModuleVersion, array $aModuleInfo): bool
+	{
+		if (count($aExtensions) === 0) {
+			return false;
+		}
+		$aNonMatchingPaths = [];
+		$sModuleFilePath = $aModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
+
+		/** @var \iTopExtension $oExtension */
+		foreach ($aExtensions as $oExtension) {
+			$sCurrentVersion = $oExtension->aModuleVersion[$sModuleName] ?? null;
+			if (is_null($sCurrentVersion)) {
+				continue;
+			}
+
+			if ($sModuleVersion !== $sCurrentVersion) {
+				continue;
+			}
+
+			$aCurrentModuleInfo = $oExtension->aModuleInfo[$sModuleName] ?? null;
+			if (is_null($aCurrentModuleInfo)) {
+				SetupLog::Warning("Missing $sModuleName in ".$oExtension->sLabel.". it should not happen");
+				continue;
+			}
+
+			// use case: same module coming from 2 different extensions
+			// we remove only the one coming from removed extensions
+			$sCurrentModuleFilePath = $aCurrentModuleInfo[ModuleFileReader::MODULE_FILE_PATH];
+			if (realpath($sModuleFilePath) !== realpath($sCurrentModuleFilePath)) {
+				$aNonMatchingPaths[] = $sCurrentModuleFilePath;
+				continue;
+			}
+
+			SetupLog::Info("Module considered as removed", null, ['extension_code' => $oExtension->sCode, 'module_name' => $sModuleName, 'module_version' => $sModuleVersion, ModuleFileReader::MODULE_FILE_PATH => $sCurrentModuleFilePath]);
+			return true;
+		}
+
+		if (count($aNonMatchingPaths) > 0) {
+			//add log for support
+			SetupLog::Debug("Module kept as it came from non removed extensions", null, ['module_name' => $sModuleName, 'module_version' => $sModuleVersion, ModuleFileReader::MODULE_FILE_PATH => $sModuleFilePath, 'non_matching_paths' => $aNonMatchingPaths]);
+		}
+		return false;
+	}
+
 } // End of class
 
 /** Alias for backward compatibility with old module files in which

@@ -498,6 +498,34 @@ class MetaModelTest extends ItopDataTestCase
 			'Purge 10 items with a max_chunk_size of 1000 (default value) should be perfomed in 1 step' => [1000, 3],
 		];
 	}
+
+	public function testGetCreatedIn_UnknownClass()
+	{
+		$this->expectExceptionMessage("Cannot find class module");
+		$this->expectException(CoreException::class);
+
+		MetaModel::GetModuleName('GABUZOMEU');
+	}
+
+	public function testGetCreatedIn_ClassComingFromCorePhpFile()
+	{
+		$this->assertEquals('core', MetaModel::GetModuleName('BackgroundTask'));
+	}
+
+	public function testGetCreatedIn_ClassComingFromCorePhpFile2()
+	{
+		$this->assertEquals('core', MetaModel::GetModuleName('lnkActionNotificationToContact'));
+	}
+
+	public function testGetCreatedIn_ClassComingFromModulePhpFile()
+	{
+		$this->assertEquals('itop-attachments', MetaModel::GetModuleName('CMDBChangeOpAttachmentAdded'));
+	}
+
+	public function testGetCreatedIn_ClassComingFromXmlDataModelFile()
+	{
+		$this->assertEquals('authent-ldap', MetaModel::GetModuleName('UserLDAP'));
+	}
 }
 
 abstract class Wizzard

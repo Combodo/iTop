@@ -194,7 +194,7 @@ class iTopExtensionsMap
 			}
 		}
 
-		\ModuleDiscovery::DeclareRemovedExtensions($aRemovedExtension);
+		ModuleDiscovery::DeclareRemovedExtensions($aRemovedExtension);
 	}
 
 	/**
@@ -329,7 +329,7 @@ class iTopExtensionsMap
 		$aSearchDirs = array_merge($aSearchDirs, $this->aScannedDirs);
 
 		try {
-			ModuleDiscovery::GetAvailableModules($aSearchDirs, true);
+			ModuleDiscovery::GetModulesOrderedByDependencies($aSearchDirs, true);
 		} catch (MissingDependencyException $e) {
 			// Some modules have missing dependencies
 			// Let's check what is the impact at the "extensions" level
@@ -560,6 +560,27 @@ class iTopExtensionsMap
 			}
 
 			return $this->aInstalledExtensions;
+		} catch (MySQLException $e) {
+			// No database or erroneous information
+			return false;
+		}
+	}
+
+	public static function GetChoicesFromDatabase(Config $oConfig): array|false
+	{
+		try {
+			if (CMDBSource::DBName() === null) {
+				CMDBSource::InitFromConfig($oConfig);
+			}
+			$sLatestInstallationDate = CMDBSource::QueryToScalar("SELECT max(installed) FROM ".$oConfig->Get('db_subname')."priv_extension_install");
+			$aDBInfo = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_extension_install WHERE installed = '".$sLatestInstallationDate."'");
+
+			$aChoices = [];
+			foreach ($aDBInfo as $aExtensionInfo) {
+				$aChoices[] = $aExtensionInfo['label'];
+			}
+
+			return $aChoices;
 		} catch (MySQLException $e) {
 			// No database or erroneous information
 			return false;

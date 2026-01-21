@@ -32,7 +32,8 @@ require_once APPROOT."setup/modulediscovery.class.inc.php";
 require_once APPROOT.'setup/modelfactory.class.inc.php';
 require_once APPROOT.'setup/compiler.class.inc.php';
 require_once APPROOT.'setup/extensionsmap.class.inc.php';
-require_once APPROOT.'setup/AnalyzeInstallation.php';
+require_once APPROOT.'setup/moduleinstallation/AnalyzeInstallation.php';
+require_once APPROOT . '/setup/moduleinstallation/InstallationChoicesToModuleConverter.php';
 
 define('MODULE_ACTION_OPTIONAL', 1);
 define('MODULE_ACTION_MANDATORY', 2);
@@ -129,7 +130,7 @@ class RunTimeEnvironment
 	 */
 	public function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false): void
 	{
-		require_once APPROOT.'/setup/moduleinstallation.class.inc.php';
+		require_once APPROOT.'/setup/moduleinstallation/moduleinstallation.class.inc.php';
 
 		$sConfigFile = $oConfig->GetLoadedFile();
 		if (strlen($sConfigFile) > 0) {
@@ -225,12 +226,29 @@ class RunTimeEnvironment
 		return ($oExtension->sSource == iTopExtension::SOURCE_REMOTE);
 	}
 
+	public function GetExtraDirsToCompile(string $sSourceDir) : array {
+		$sSourceDirFull = APPROOT.$sSourceDir;
+		if (!is_dir($sSourceDirFull)) {
+			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
+		}
+		$aDirsToCompile = [$sSourceDirFull];
+
+		if (is_dir(APPROOT.'extensions')) {
+			$aDirsToCompile[] = APPROOT.'extensions';
+		}
+		$sExtraDir = utils::GetDataPath().$this->sTargetEnv.'-modules/';
+		if (is_dir($sExtraDir)) {
+			$aDirsToCompile[] = $sExtraDir;
+		}
+
+		return $aDirsToCompile;
+	}
+
 	/**
 	 * Get the installed modules (only the installed ones)
 	 */
 	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
 	{
-		\SetupLog::Info(__METHOD__);
 		$sSourceDirFull = APPROOT.$sSourceDir;
 		if (!is_dir($sSourceDirFull)) {
 			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");

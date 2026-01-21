@@ -2764,7 +2764,7 @@ class Config
 		$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
 		$aAddOns = $oEmptyConfig->GetAddOns();
 
-		$aModules = ModuleDiscovery::GetAvailableModules([APPROOT.$sModulesDir]);
+		$aModules = ModuleDiscovery::GetModulesOrderedByDependencies([APPROOT.$sModulesDir]);
 		foreach ($aModules as $sModuleId => $aModuleInfo) {
 			list($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
 			if (is_null($aSelectedModules) || in_array($sModuleName, $aSelectedModules)) {

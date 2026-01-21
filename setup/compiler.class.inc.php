@@ -477,7 +477,7 @@ class MFCompiler
 					$sClass = $oClass->getAttribute("id");
 					$aAllClasses[] = $sClass;
 					try {
-						$sCompiledCode .= $this->CompileClass($oClass, $sModuleName, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
+						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
 					} catch (DOMFormatException $e) {
 						$sMessage = "Failed to process class '$sClass', ";
 						if (!empty($sModuleRootDir)) {
@@ -1193,7 +1193,6 @@ EOF
 
 	/**
 	 * @param \MFElement $oClass
-	 * @param string $sModuleName
 	 * @param string $sTempTargetDir
 	 * @param string $sFinalTargetDir
 	 * @param string $sModuleRelativeDir
@@ -1201,7 +1200,7 @@ EOF
 	 * @return string
 	 * @throws \DOMFormatException
 	 */
-	protected function CompileClass($oClass, $sModuleName, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir)
+	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir)
 	{
 		$sClass = $oClass->getAttribute('id');
 		$oProperties = $oClass->GetUniqueElement('properties');
@@ -1214,7 +1213,6 @@ EOF
 		$aClassParams = [];
 		$aClassParams['category'] = $this->GetPropString($oProperties, 'category', '');
 		$aClassParams['key_type'] = "'autoincrement'";
-		$aClassParams['created_in'] = "'$sModuleName'";
 		if ((bool)$this->GetPropNumber($oProperties, 'is_link', 0)) {
 			$aClassParams['is_link'] = 'true';
 		}
