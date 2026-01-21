@@ -97,7 +97,7 @@
 {%- block form_rows -%}
 
     {% for block in blocks %}
-        {% if block.added == 1 %}
+        {% if block.added == 1 and form[block.name] != null %}
             {% set row_attr = row_attr|merge({id: 'turbo_' ~ block.id }) %}
             {{ form_row(form[block.name], {row_attr: row_attr}) }}
         {% else %}
