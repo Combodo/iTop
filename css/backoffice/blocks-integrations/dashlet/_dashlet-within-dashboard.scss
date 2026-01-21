@@ -30,14 +30,29 @@ ibo-dashboard[data-edit-mode="edit"]{
   }
 }
 
+
 ibo-dashlet{
   // do not apply to this dashlets
+  container-type: inline-size;
+  
   &:not([data-dashlet-type="DashletBadge"]):not([data-dashlet-type="DashletHeaderStatic"]){
     border: 1px solid #ccd4db;
     border-radius: 5px;
     background-color: white;
     padding: 16px;
+    &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        background-color: $ibo-color-blue-800;
+        content: "";
+        width: 100%;
+        height: 8px;
+        padding-bottom: 8px;
+    }
   }
+
   // Make the dashlet body take all the available height to allow scrollbars when needed
   .ibo-dashlet > .ibo-content-block{
     display: flex;
@@ -63,10 +78,18 @@ ibo-dashlet[data-dashlet-type="DashletBadge"] {
     height: 100%;
     display: flex;
   }
+  
+  @container (width < 175px) {
+    .ibo-dashlet-badge--action-list-label, .ibo-dashlet-badge--action-create-label {
+      display: none;
+    }
+  }
 }
 
-ibo-dashlet[data-dashlet-type="DashletHeaderStatic"]{
-  background-color: #f2f2f2;
+ibo-dashboard[data-edit-mode="edit"] ibo-dashlet[data-dashlet-type="DashletHeaderStatic"]{
+  border: 1px solid #ccd4db;
+  background-color: $ibo-color-grey-100;
+  border-radius: 3px;
   > .ibo-content-block{
     display: flex;
     align-items: center;
@@ -129,6 +152,7 @@ ibo-dashlet[data-dashlet-type="DashletObjectList"] {
     margin: 0 -16px;
     border: none;
     padding: 0;
+    padding-top: 16px;
     &:before{
       display: none;
     }
@@ -143,6 +167,7 @@ ibo-dashlet[data-dashlet-type="DashletGroupByTable"] {
     margin: 0 -16px;
     border: none;
     padding: 0;
+    padding-top: 16px;
     &:before{
       display: none;
     }
