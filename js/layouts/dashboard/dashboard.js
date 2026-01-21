@@ -106,8 +106,8 @@ class IboDashboard extends HTMLElement {
 
 				const sDashletId = this.oGrid.AddDashlet(await data.text(), aDashletOptions);
 
-				// TODO 3.3 Either open the dashlet form right away, or just enter edit mode
-				this.EditDashlet(sDashletId);
+				// Specify that this dashlet is new
+				this.EditDashlet(sDashletId, true);
 			})
 
 	}
@@ -163,7 +163,7 @@ class IboDashboard extends HTMLElement {
 		});
 	}
 
-	EditDashlet(sDashletId) {
+	EditDashlet(sDashletId, bIsNew = false) {
 		const oDashlet = this.oGrid.GetDashletElement(sDashletId);
 		const me = this;
 
@@ -175,6 +175,18 @@ class IboDashboard extends HTMLElement {
 		}
 
 		this.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'edit');
+
+		const oPanelElement = document.querySelector('.ibo-dashlet-panel');
+		// Choose what we'll write as title
+		// Also store this information in a data attribute to be able to differentiate between addition and edition on form submission/cancellation
+		if(bIsNew) {
+			this.SetDashletPanelTitle('Add a dashlet ' + oDashlet.sType);
+			oPanelElement.setAttribute('data-dashlet-form-mode', 'add');
+		}
+		else {
+			this.SetDashletPanelTitle('Edit dashlet ' + oDashlet.sType);
+			oPanelElement.setAttribute('data-dashlet-form-mode', 'edit');
+		}
 
 		// Disable dashboard buttons so we need to finish this edition first
 		this.DisableFormButtons();
@@ -213,8 +225,10 @@ class IboDashboard extends HTMLElement {
 
 			// Clean edit mode
 			this.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'view');
+			document.querySelector('.ibo-dashlet-panel').removeAttribute('data-dashlet-form-mode');
 			this.ShowDashletTogglers();
 			this.ClearDashletForm();
+			this.SetDashletPanelTitle();
 
 			// Update local dashlet and refresh it
 			oDashlet.formData = event.detail.view_data;
@@ -228,20 +242,43 @@ class IboDashboard extends HTMLElement {
 	_ListenToDashletFormCancellation(event) {
 		const oDashlet = this.querySelector('ibo-dashlet[data-edit-mode="edit"]');
 		const sDashletId = oDashlet.GetDashletId();
+
+		// If we are cancelling an addition, remove the dashlet from the grid
+		const oPanelElement = document.querySelector('.ibo-dashlet-panel');
+		const sDashletFormMode = oPanelElement.getAttribute('data-dashlet-form-mode');
+
+		if(sDashletFormMode === 'add') {
+			this.oGrid.RemoveDashlet(sDashletId);
+		}
+		else if(sDashletFormMode === 'edit') {
+			// Just exit edit mode
+			this.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'view');
+
+			// TODO 3.3 If we refresh dashlet view in edit mode, we should restore previous form data + rendering
+		}
+
 		// Remove events
 		document.addEventListener('itop:TurboStreamEvent:Complete', this._ListenToDashletFormSubmission);
 		document.querySelector('.ibo-dashlet-panel--form-container button[name="dashboard_cancel"]').removeEventListener('click', this._ListenToDashletFormCancellation);
 
 		// Clean edit mode
-		this.querySelector('ibo-dashlet[data-dashlet-id="'+sDashletId+'"]').setAttribute('data-edit-mode', 'view');
 		this.ShowDashletTogglers();
 		this.ClearDashletForm();
+		this.SetDashletPanelTitle();
 
 		// Re-enable dashboard buttons
 		this.EnableFormButtons();
+	}
 
-		// TODO 3.3 If this is an addition, remove the previewed dashlet
-		// TODO 3.3 If this is an edition, revert the dashlet to its initial state
+	SetDashletPanelTitle(sTitle = '') {
+		const oTitleElement = document.querySelector('.ibo-dashlet-panel .ibo-dashlet-panel--title');
+
+		if (sTitle === '') {
+			sTitle = 'Add a dashlet';
+		}
+		if (oTitleElement) {
+			oTitleElement.innerText = sTitle;
+		}
 	}
 
 	CloneDashlet(sDashletId) {
