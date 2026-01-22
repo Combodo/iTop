@@ -199,6 +199,14 @@ abstract class Dashlet
 		$this->OnUpdate();
 	}
 
+	/**
+	 * Load a dashboard using Model Data
+	 *
+	 * @param array $aModelData
+	 *
+	 * @return void
+	 * @since 3.3.0
+	 */
 	public function FromModelData(array $aModelData)
 	{
 		$this->aProperties = $aModelData;
@@ -514,9 +522,13 @@ EOF
 		$this->sDashletType = $sDashletType;
 	}
 
+	/**
+	 *
+	 * @return array|null
+	 * @since 3.3.0
+	 */
 	public function GetModelData(): ?array
 	{
 		return $this->aProperties;
-		//return XMLNormalizer::GetInstance()->Denormalize($this->aProperties, $this->sDashletType, 'Dashlet');
 	}
 }
