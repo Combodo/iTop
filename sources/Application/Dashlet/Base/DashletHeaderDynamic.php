@@ -45,8 +45,8 @@ class DashletHeaderDynamic extends Dashlet
 	{
 		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['title'] = Dict::S('UI:DashletHeaderDynamic:Prop-Title:Default');
-		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
-		$this->aProperties['icon'] = $oIconSelect->GetDefaultValue('Contact');
+		// TODO 3.3 default icon
+		$this->aProperties['icon'] = null;
 		$this->aProperties['subtitle'] = Dict::S('UI:DashletHeaderDynamic:Prop-Subtitle:Default');
 		$this->aProperties['query'] = 'SELECT Contact';
 		$this->aProperties['group_by'] = 'status';
@@ -170,7 +170,8 @@ class DashletHeaderDynamic extends Dashlet
 			foreach ($aValues as $sValue) {
 				$aValueLabels[] = $this->oModelReflection->GetValueLabel($sClass, $sGroupBy, $sValue);
 			}
-		} catch (UnknownClassOqlException $e) {
+		}
+		catch (UnknownClassOqlException $e) {
 			$aValueLabels[] = $e->GetUserFriendlyDescription();
 			$aValues[] = 1;
 		}
@@ -247,7 +248,8 @@ class DashletHeaderDynamic extends Dashlet
 			$oField = new DesignerComboField('group_by', Dict::S('UI:DashletHeaderDynamic:Prop-GroupBy'), $this->aProperties['group_by']);
 			$oField->SetMandatory();
 			$oField->SetAllowedValues($aGroupBy);
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			$oField = new DesignerTextField('group_by', Dict::S('UI:DashletHeaderDynamic:Prop-GroupBy'), $this->aProperties['group_by']);
 			$oField->SetReadOnly();
 		}
@@ -285,7 +287,8 @@ class DashletHeaderDynamic extends Dashlet
 					$this->aProperties['group_by'] = '';
 					$this->aProperties['values'] = [];
 				}
-			} catch (Exception $e) {
+			}
+			catch (Exception $e) {
 				$this->bFormRedrawNeeded = true;
 			}
 		}

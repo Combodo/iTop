@@ -35,8 +35,8 @@ class DashletHeaderStatic extends Dashlet
 	{
 		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['title'] = Dict::S('UI:DashletHeaderStatic:Prop-Title:Default');
-		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
-		$this->aProperties['icon'] = $oIconSelect->GetDefaultValue('Contact');
+		// TODO 3.3 default icon
+		$this->aProperties['icon'] = null;
 	}
 
 	/**
