@@ -984,7 +984,7 @@ JS
 			$aFunctions = [$sFctVar => $oFctExpr];
 		}
 
-		if (!empty($sAggregationAttr)) {
+		if (!empty(trim($sAggregationAttr))) {
 			$sClass = $this->m_oFilter->GetClass();
 			$sAggregationAttr = MetaModel::GetLabel($sClass, $sAggregationAttr);
 		}
@@ -1608,10 +1608,9 @@ JS
 			$iTotalCount = 0;
 			$aURLs = [];
 
-			foreach ($aRes as $iRow => $aRow) {
+			foreach ($aRes as $aRow) {
 				$sValue = $aRow['grouped_by_1'];
 				$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
-				$iTotalCount += $aRow['_itop_count_'];
 				$aValues[] = [
 					'label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'),
 					'label_html' => $sHtmlValue,

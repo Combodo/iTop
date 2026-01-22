@@ -246,6 +246,6 @@ PHP;
 
 	public function DeserializeFromDOMNode(DesignElement $oDOMNode): mixed
 	{
-		return $oDOMNode->GetText();
+		return trim($oDOMNode->GetText());
 	}
 }
