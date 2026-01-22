@@ -283,7 +283,8 @@ XML,
 							'class_property' => 'class_b',
 						],
 					],
-					'boolean_property' => true,
+					'boolean_true' => true,
+					'boolean_false' => false,
 					'integer_property' => 3,
 				],
 				'sPropertyTypeXML' => <<<XML
@@ -318,7 +319,10 @@ XML,
 					</node>
 				</prototype>
 			</node>
-			<node id="boolean_property" xsi:type="Combodo-ValueType-Boolean">
+			<node id="boolean_true" xsi:type="Combodo-ValueType-Boolean">
+				<label>Boolean</label>
+			</node>
+			<node id="boolean_false" xsi:type="Combodo-ValueType-Boolean">
 				<label>Boolean</label>
 			</node>
 			<node id="integer_property" xsi:type="Combodo-ValueType-Integer">
@@ -345,7 +349,8 @@ XML,
 			<class_property>class_b</class_property>
 		</item>
 	</items>
-	<boolean_property>true</boolean_property>
+	<boolean_true>true</boolean_true>
+	<boolean_false>false</boolean_false>
 	<integer_property>3</integer_property>
 </root>
 XML,
