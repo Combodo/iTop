@@ -379,11 +379,9 @@ class iTopExtensionsMap
 	{
 		$aRes = [];
 		foreach ($this->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
-			\IssueLog::Error($oExtension->sCode.' '.__METHOD__.__LINE__);
 			/** @var \iTopExtension $oExtension */
 			if (($oExtension->sSource !== iTopExtension::SOURCE_WIZARD) && ($oExtension->bVisible)) {
 				if ($bKeepMissingDependencyExtensions || (count($oExtension->aMissingDependencies) == 0)) {
-
 					if (!$oExtension->bMandatory) {
 						$oExtension->bMandatory = ($oExtension->sSource === iTopExtension::SOURCE_REMOTE);
 					}
