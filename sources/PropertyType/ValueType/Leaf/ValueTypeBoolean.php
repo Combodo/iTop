@@ -7,7 +7,9 @@
 
 namespace Combodo\iTop\PropertyType\ValueType\Leaf;
 
+use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\CheckboxFormBlock;
+use utils;
 
 /**
  * @since 3.3.0
@@ -17,5 +19,17 @@ class ValueTypeBoolean extends AbstractLeafValueType
 	public function GetFormBlockClass(): string
 	{
 		return CheckboxFormBlock::class;
+	}
+
+	public function DeserializeFromDOMNode(DesignElement $oDOMNode): mixed
+	{
+		$value = parent::DeserializeFromDOMNode($oDOMNode);
+
+		return utils::IsTrue($value);
+	}
+
+	public function SerializeToDOMNode(?string $sPropertyName, mixed $value, DesignElement $oDOMNode): void
+	{
+		parent::SerializeToDOMNode($sPropertyName, $value ? 'true' : 'false', $oDOMNode);
 	}
 }

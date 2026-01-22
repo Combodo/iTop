@@ -7,6 +7,7 @@
 
 namespace Combodo\iTop\PropertyType\ValueType\Leaf;
 
+use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\IntegerFormBlock;
 
 /**
@@ -17,5 +18,17 @@ class ValueTypeInteger extends AbstractLeafValueType
 	public function GetFormBlockClass(): string
 	{
 		return IntegerFormBlock::class;
+	}
+
+	public function DeserializeFromDOMNode(DesignElement $oDOMNode): mixed
+	{
+		$value = parent::DeserializeFromDOMNode($oDOMNode);
+
+		return intval($value);
+	}
+
+	public function SerializeToDOMNode(?string $sPropertyName, mixed $value, DesignElement $oDOMNode): void
+	{
+		parent::SerializeToDOMNode($sPropertyName, "$value", $oDOMNode);
 	}
 }
