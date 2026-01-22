@@ -63,9 +63,11 @@ class FormFor__basic_test extends Combodo\iTop\Forms\Block\Base\FormBlock
 			'label' => 'UI:BasicTest:Prop-Title',
 		]);
 
-		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
+		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceImageFormBlock', [
 			'label' => 'UI:BasicTest:Prop-Class',
 			'choices' => [
+			],
+			'choice_attr' => [
 			],
 		]);
 	}
@@ -191,9 +193,11 @@ class FormFor__AllValueTypesTest extends Combodo\iTop\Forms\Block\Base\FormBlock
 			],
 		]);
 
-		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
+		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceImageFormBlock', [
 			'label' => 'UI:Class',
 			'choices' => [
+			],
+			'choice_attr' => [
 			],
 		]);
 
@@ -386,9 +390,11 @@ class FormFor__input_binding_test extends Combodo\iTop\Forms\Block\Base\FormBloc
 {
 	protected function BuildForm(): void
 	{
-		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
+		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceImageFormBlock', [
 			'label' => 'UI:Class',
 			'choices' => [
+			],
+			'choice_attr' => [
 			],
 		]);
 
@@ -425,9 +431,11 @@ class FormFor__input_binding_expression extends Combodo\iTop\Forms\Block\Base\Fo
 {
 	protected function BuildForm(): void
 	{
-		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
+		\$this->Add('class_property', 'Combodo\iTop\Forms\Block\Base\ChoiceImageFormBlock', [
 			'label' => 'UI:Class',
 			'choices' => [
+			],
+			'choice_attr' => [
 			],
 		]);
 
@@ -912,7 +920,7 @@ class FormFor__basic_test_for_class extends Combodo\iTop\Forms\Block\Base\FormBl
 {
 	protected function BuildForm(): void
 	{
-		\$this->Add('class-selection', 'Combodo\iTop\Forms\Block\Base\ChoiceFormBlock', [
+		\$this->Add('class-selection', 'Combodo\iTop\Forms\Block\Base\ChoiceImageFormBlock', [
 			'label' => 'Class',
 			'choices' => [
 
