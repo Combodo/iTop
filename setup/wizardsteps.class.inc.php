@@ -1325,6 +1325,8 @@ class WizStepModulesChoice extends WizardStep
 	 */
 	protected iTopExtensionsMap $oExtensionsMap;
 
+	private ?array $aSteps = null;
+
 	protected PhpExpressionEvaluator $oPhpExpressionEvaluator;
 
 	/**
@@ -1370,15 +1372,11 @@ class WizStepModulesChoice extends WizardStep
 		}
 	}
 
-	public function GetTitle()
+	public function GetTitle(): string
 	{
-		if (@file_exists($this->GetSourceFilePath())) {
-			// Found an "installation.xml" file, let's use this definition for the wizard
-			return 'Extensions';
-		}
+		$aStepInfo = $this->GetStepInfo();
 
-		// No wizard configuration provided, build a standard one with just one big list. All items are mandatory, only works when there are no conflicted modules.
-		return 'Modules Selection';
+		return $aStepInfo['title'] ?? 'Modules selection';
 	}
 
 	public function GetPossibleSteps()
@@ -1893,51 +1891,44 @@ EOF
 
 	protected function GetStepInfo($idx = null)
 	{
-		$aStepInfo = null;
-		if ($idx === null) {
-			$index = $this->GetStepIndex();
-		} else {
-			$index = $idx;
-		}
+		$index = $idx ?? $this->GetStepIndex();
 
-		$aSteps = [];
-		$this->oWizard->SetParameter('additional_extensions_modules', json_encode([])); // Default value, no additional extensions
+		if (is_null($this->aSteps)) {
+			$this->aSteps = [];
+			$this->oWizard->SetParameter('additional_extensions_modules', json_encode([])); // Default value, no additional extensions
 
-		$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo();
-		if (@file_exists($this->GetSourceFilePath())) {
-			// Found an "installation.xml" file, let's use this definition for the wizard
-			$aParams = new XMLParameters($this->GetSourceFilePath());
-			$aSteps = $aParams->Get('steps', []);
+			$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo();
+			if (@file_exists($this->GetSourceFilePath())) {
+				// Found an "installation.xml" file, let's use this definition for the wizard
+				$aParams = new XMLParameters($this->GetSourceFilePath());
+				$this->aSteps = $aParams->Get('steps', []);
 
-			// Additional step for the "extensions"
-			$aStepDefinition = [
-				'title' => 'Extensions',
-				'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
-				'banner' => '/images/icons/icons8-puzzle.svg',
-				'options' => $aOptions,
-			];
+				// Additional step for the "extensions"
+				$aStepDefinition = [
+					'title'       => 'Extensions',
+					'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
+					'banner'      => '/images/icons/icons8-puzzle.svg',
+					'options'     => $aOptions,
+				];
 
-			// Display this step of the wizard only if there is something to display
-			if (count($aStepDefinition['options']) !== 0) {
-				$this->oWizard->SetParameter('additional_extensions_modules', json_encode($aStepDefinition['options']));
+				// Display this step of the wizard only if there is something to display
+				if (count($aOptions) > 0) {
+					$this->oWizard->SetParameter('additional_extensions_modules', json_encode($aOptions));
+				}
+			} else {
+				// No wizard configuration provided, build a standard one with just one big list. All items are mandatory, only works when there are no conflicted modules.
+				$aStepDefinition = [
+					'title'       => 'Modules Selection',
+					'description' => '<h2>Select the modules to install. You can launch the installation again to install new modules, but you cannot remove already installed modules.</h2>',
+					'banner'      => '/images/icons/icons8-apps-tab.svg',
+					'options'     => $aOptions,
+				];
 			}
-		} else {
-			// No wizard configuration provided, build a standard one with just one big list. All items are mandatory, only works when there are no conflicted modules.
-			$aStepDefinition = [
-				'title' => 'Modules Selection',
-				'description' => '<h2>Select the modules to install. You can launch the installation again to install new modules, but you cannot remove already installed modules.</h2>',
-				'banner' => '/images/icons/icons8-apps-tab.svg',
-				'options' => $aOptions,
-			];
+
+			$this->aSteps[] = $aStepDefinition;
 		}
 
-		$aSteps[] = $aStepDefinition;
-
-		if (array_key_exists($index, $aSteps)) {
-			$aStepInfo = $aSteps[$index];
-		}
-
-		return $aStepInfo;
+		return $this->aSteps[$index] ?? null;
 	}
 
 	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck, bool $bUpgradeMode)
