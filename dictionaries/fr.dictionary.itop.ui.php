@@ -466,6 +466,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:UserPref:DoNotShowAgain' => 'Ne plus afficher ce message',
 	'UI:InputFile:NoFileSelected' => 'Aucun fichier sélectionné',
 	'UI:InputFile:SelectFile' => 'Sélectionner un fichier',
+	'UI:InputFile:SelectImage'       => 'Sélectionner une image',
 	'UI:SearchToggle' => 'Recherche',
 	'UI:ClickToCreateNew' => 'Créer un(e) %1$s',
 	'UI:SearchFor_Class' => 'Rechercher des objets de type %1$s',
