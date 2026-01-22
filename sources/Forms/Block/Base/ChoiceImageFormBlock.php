@@ -29,10 +29,12 @@ class ChoiceImageFormBlock extends ChoiceFormBlock
 			[
 				'name'    => 'image_renderer',
 				'options' => [
-					'images_resource_path' => utils::GetAbsoluteUrlAppRoot().'/env-production/',
 				],
 			],
 		]);
+
+		$oOptionsRegister->SetOption('choice_attr');
+		$oOptionsRegister->SetOption('placeholder', 'UI:InputFile:SelectImage');
 	}
 
 }

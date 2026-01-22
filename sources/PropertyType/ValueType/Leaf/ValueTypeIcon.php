@@ -33,16 +33,26 @@ class ValueTypeIcon extends AbstractLeafValueType
 		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
 
 		$sChoices = "[\n";
+		$sChoicesAttImages = "[\n";
 		$aIcons = $oModelReflection->GetAvailableIcons();
 		foreach ($aIcons as $aIcon) {
-			$sValue = utils::QuoteForPHP($aIcon['label']);
+			$sLabel = utils::QuoteForPHP($aIcon['label']);
+			$sIcon = utils::QuoteForPHP($aIcon['icon']);
 			$sCode = utils::QuoteForPHP($aIcon['value']);
 			$sChoices .= <<<PHP
-\t\t\t\t$sValue => $sCode,\n
+$sLabel => $sCode,\n
+PHP;
+			$sChoicesAttImages .= <<<PHP
+$sLabel => ["data-image" => $sIcon],
 PHP;
 		}
 		$sChoices .= "\t\t\t]";
+		$sChoicesAttImages .= "\t\t\t]";
 
 		$this->aFormBlockOptionsForPHP['choices'] = $sChoices;
+
+		$this->aFormBlockOptionsForPHP['choice_attr'] = $sChoicesAttImages;
+
+		$this->aFormBlockOptionsForPHP['required'] = 'false';
 	}
 }

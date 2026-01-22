@@ -8,9 +8,8 @@
 namespace Combodo\iTop\PropertyType\ValueType\Leaf;
 
 use Combodo\iTop\DesignElement;
-use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
+use Combodo\iTop\Forms\Block\Base\ChoiceImageFormBlock;
 use Combodo\iTop\PropertyType\ValueType\Branch\AbstractBranchValueType;
-use Combodo\iTop\PropertyType\ValueType\Branch\ValueTypePropertyTree;
 use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use utils;
 
@@ -23,7 +22,7 @@ class ValueTypeClass extends AbstractLeafValueType
 
 	public function GetFormBlockClass(): string
 	{
-		return ChoiceFormBlock::class;
+		return ChoiceImageFormBlock::class;
 	}
 
 	public function InitFromDomNode(DesignElement $oDomNode, ?AbstractBranchValueType $oParent = null): void
@@ -35,18 +34,25 @@ class ValueTypeClass extends AbstractLeafValueType
 		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
 
 		$sChoices = "[\n";
+		$sChoicesAttImages = "[\n";
 		$aClasses = $oModelReflection->GetClasses($sCategories, true);
 		sort($aClasses);
 		foreach ($aClasses as $sClass) {
 			$sValue = utils::QuoteForPHP($sClass);
+			$sClassIcon = utils::QuoteForPHP($oModelReflection->GetClassIcon($sClass, false));
 			$sChoices .= <<<PHP
 				\Dict::S('Class:$sClass') => $sValue,
-
+PHP;
+			$sChoicesAttImages .= <<<PHP
+				\Dict::S('Class:$sClass') => ["data-image" => $sClassIcon],
 PHP;
 		}
 		$sChoices .= "\t\t\t]";
+		$sChoicesAttImages .= "\t\t\t]";
 
 		$this->aFormBlockOptionsForPHP['choices'] = $sChoices;
+
+		$this->aFormBlockOptionsForPHP['choice_attr'] = $sChoicesAttImages;
 	}
 
 }

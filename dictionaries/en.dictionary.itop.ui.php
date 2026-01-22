@@ -469,6 +469,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI:UserPref:DoNotShowAgain'     => 'Do not show again',
 	'UI:InputFile:NoFileSelected'    => 'No File Selected',
 	'UI:InputFile:SelectFile'        => 'Select a file',
+	'UI:InputFile:SelectImage'       => 'Select an image',
 
 	'UI:SearchToggle'                                    => 'Search',
 	'UI:ClickToCreateNew'                                => 'Create a %1$s',

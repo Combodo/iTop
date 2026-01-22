@@ -3,13 +3,21 @@
  */
 TomSelect.define('image_renderer', function(options) {
 	this.settings.render.option = function(data, escape) {
-		return `<div class="ibo-input-select-icon--menu--item">
-<img src="${options['images_resource_path']+escape(data.value)}" alt="${data.text}" />${escape(data.text)}
+		const image = data['$option'].dataset['image'];
+		if(image === ''){
+			return `<div style="padding-left: 46px;">${escape(data.text)}</div>`;
+		}
+		else return `<div class="ibo-input-select-icon--menu--item">
+	<img src="${image}" alt="${escape(data.text)}" />${escape(data.text)}
 </div>`;
 	};
 	this.settings.render.item = function(data, escape) {
-		return `<div class="ibo-input-select-icon--menu--item">
-<img src="${options['images_resource_path']+escape(data.value)}" alt="${data.text}"/>${escape(data.text)}
+		const image = data['$option'].dataset['image'];
+		if(image === ''){
+			return `<div>${escape(data.text)}</div>`;
+		}
+		else return `<div class="ibo-input-select-icon--menu--item">
+	<img src="${image}" alt="${escape(data.text)}"/>${escape(data.text)}
 </div>`;
 	};
 });
@@ -53,7 +61,7 @@ class ChoicesElement extends HTMLSelectElement {
 		};
 
 		if (this.getAttribute('data-tom-select-disable-auto-complete')) {
-			options.controlInput = null;
+			// options.controlInput = null;
 		}
 		if (this.getAttribute('data-tom-select-max-items-selected') && this.getAttribute('data-tom-select-max-items-selected') !== '') {
 			options.maxItems = parseInt(this.getAttribute('data-tom-select-max-items-selected'));
