@@ -219,6 +219,11 @@ ibo-dashboard[data-edit-mode="view"] {
   gap: 12px;
 
   @extend %common-font-ral-med-250;
+
+  > [name="dashboard_title"] {
+    width: 300px;
+  }
+
 }
 
 .ibo-dashboard[data-edit-mode="edit"] ibo-dashlet:not([data-edit-mode="edit"]):hover .ibo-dashlet--actions {
