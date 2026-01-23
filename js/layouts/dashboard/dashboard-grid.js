@@ -82,6 +82,8 @@ class IboGrid extends HTMLElement {
 		}
 		this.oGrid.makeWidget(oSlot, Object.assign(aDefaultOptions, aOptions));
 
+		oSlot.scrollIntoView({ behavior: "smooth"});
+
 		return oDashlet.sDashletId;
 	}
 
