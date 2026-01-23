@@ -1894,7 +1894,6 @@ EOF
 		$index = $idx ?? $this->GetStepIndex();
 
 		if (is_null($this->aSteps)) {
-			$this->aSteps = [];
 			$this->oWizard->SetParameter('additional_extensions_modules', json_encode([])); // Default value, no additional extensions
 
 			$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo();
@@ -1903,29 +1902,27 @@ EOF
 				$aParams = new XMLParameters($this->GetSourceFilePath());
 				$this->aSteps = $aParams->Get('steps', []);
 
-				// Additional step for the "extensions"
-				$aStepDefinition = [
-					'title'       => 'Extensions',
-					'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
-					'banner'      => '/images/icons/icons8-puzzle.svg',
-					'options'     => $aOptions,
-				];
-
 				// Display this step of the wizard only if there is something to display
 				if (count($aOptions) > 0) {
+					$this->aSteps[] = [
+						'title'       => 'Extensions',
+						'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
+						'banner'      => '/images/icons/icons8-puzzle.svg',
+						'options'     => $aOptions,
+					];
 					$this->oWizard->SetParameter('additional_extensions_modules', json_encode($aOptions));
 				}
 			} else {
 				// No wizard configuration provided, build a standard one with just one big list. All items are mandatory, only works when there are no conflicted modules.
-				$aStepDefinition = [
+				$this->aSteps = [
+					[
 					'title'       => 'Modules Selection',
 					'description' => '<h2>Select the modules to install. You can launch the installation again to install new modules, but you cannot remove already installed modules.</h2>',
 					'banner'      => '/images/icons/icons8-apps-tab.svg',
 					'options'     => $aOptions,
+					],
 				];
 			}
-
-			$this->aSteps[] = $aStepDefinition;
 		}
 
 		return $this->aSteps[$index] ?? null;
