@@ -867,37 +867,6 @@ try {
 				$oObj->DisplayDashboard($oPage, $sAttCode);
 				break;
 
-			case 'import_dashboard':
-				$oPage = new JsonPage();
-				$oPage->SetOutputDataOnly(true);
-
-				$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
-				if (!utils::IsTransactionValid($sTransactionId, true)) {
-					throw new SecurityException('ajax.render.php import_dashboard : invalid transaction_id');
-				}
-				$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
-				$sDashboardFileRelative = utils::ReadParam('file', '', false, 'raw_data');
-
-				$sDashboardFile = RuntimeDashboard::GetDashboardFileFromRelativePath($sDashboardFileRelative);
-
-				$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
-				$aResult = ['error' => ''];
-				if (!is_null($oDashboard)) {
-					try {
-						$oDoc = utils::ReadPostedDocument('dashboard_upload_file');
-						$oDashboard->FromXml($oDoc->GetData());
-						$oDashboard->Save();
-					} catch (DOMException $e) {
-						$aResult = ['error' => Dict::S('UI:Error:InvalidDashboardFile')];
-					} catch (Exception $e) {
-						$aResult = ['error' => $e->getMessage()];
-					}
-				} else {
-					$aResult['error'] = 'Dashboard id="'.$sDashboardId.'" not found.';
-				}
-				$oPage->SetData($aResult);
-				break;
-
 			case 'toggle_dashboard':
 				$oPage->SetContentType('text/html');
 				$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');

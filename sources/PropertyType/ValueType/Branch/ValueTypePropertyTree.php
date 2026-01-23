@@ -100,9 +100,11 @@ PHP;
 			$oChildNode = $oDOMNode->GetOptionalElement($sId);
 			if ($oChildNode) {
 				$aResults[$sId] = $oChild->DeserializeFromDOMNode($oChildNode);
-			} else {
+			} elseif (is_a($oChild, 'Combodo-ValueType-Collection')) {
 				// For flat arrays, no node with $sId is present
 				$aResults[$sId] = $oChild->DeserializeFromDOMNode($oDOMNode);
+			} else {
+				$aResults[$sId] = '';
 			}
 		}
 

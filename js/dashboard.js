@@ -387,7 +387,7 @@ $(function()
 			text: 'Select a dashboard file to import',
 			title: 'Dahsboard Import',
 			close_btn: 'Close',
-			submit_to: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=import_dashboard'
+			submit_to: GetAbsoluteUrlAppRoot()+'pages/UI.php?route=dashboard.import'
 		},
 	
 		// the constructor

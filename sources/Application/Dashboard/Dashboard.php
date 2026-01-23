@@ -750,8 +750,8 @@ JS
 	public function FromModelData(mixed $aDashboardValues)
 	{
 		$this->sLayoutClass = DashboardLayoutGrid::class;
-		$this->sTitle = $aDashboardValues['title'];
-		$iRefresh = $aDashboardValues['refresh'];
+		$this->sTitle = $aDashboardValues['title'] ?? '';
+		$iRefresh = $aDashboardValues['refresh'] ?? 0;
 		$this->bAutoReload = $iRefresh > 0;
 		$this->iAutoReloadSec = $iRefresh;
 
