@@ -769,4 +769,27 @@ JS
 			$this->aGridDashlets[] = $aGridDashlet;
 		}
 	}
+
+	public function ToModelData(): mixed
+	{
+		$this->sLayoutClass = DashboardLayoutGrid::class;
+		$this->sTitle = $aDashboardValues['title'];
+		$iRefresh = $aDashboardValues['refresh'];
+		$this->bAutoReload = $iRefresh > 0;
+		$this->iAutoReloadSec = $iRefresh;
+
+		foreach ($aDashboardValues['pos_dashlets'] as $sId => $aPosDashlet) {
+			$aGridDashlet = [];
+			$aGridDashlet['position_x'] = $aPosDashlet['position_x'] ?? 0;
+			$aGridDashlet['position_y'] = $aPosDashlet['position_y'] ?? 0;
+			$aGridDashlet['width'] = $aPosDashlet['width'] ?? 2;
+			$aGridDashlet['height'] = $aPosDashlet['height'] ?? 1;
+			$aDashlet = $aPosDashlet['dashlet'];
+			$sType = $aDashlet['type'];
+			$oDashlet = DashletFactory::GetInstance()->CreateDashlet($sType, $sId);
+			$oDashlet->FromModelData($aDashlet['properties']);
+			$aGridDashlet['dashlet'] = $oDashlet;
+			$this->aGridDashlets[] = $aGridDashlet;
+		}
+	}
 }

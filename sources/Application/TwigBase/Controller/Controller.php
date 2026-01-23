@@ -23,6 +23,7 @@ namespace Combodo\iTop\Application\TwigBase\Controller;
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\DownloadPage;
 use Combodo\iTop\Application\WebPage\ErrorPage;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
@@ -63,6 +64,7 @@ abstract class Controller extends AbstractController
 	public const ENUM_PAGE_TYPE_AJAX            = 'ajax';
 	public const ENUM_PAGE_TYPE_TURBO_FORM_AJAX = 'turbo_ajax';
 	public const ENUM_PAGE_TYPE_SETUP           = 'setup';
+	public const ENUM_PAGE_TYPE_DOWNLOAD        = 'download';
 
 	public const TWIG_ERROR   = 'error';
 	public const TWIG_WARNING = 'warning';
@@ -475,6 +477,21 @@ abstract class Controller extends AbstractController
 	public function DisplayAjaxPage($aParams = [], $sTemplateName = null): void
 	{
 		$this->DisplayPage($aParams, $sTemplateName, 'ajax');
+	}
+
+	/**
+	 * Display an AJAX (html) page (AjaxPage)
+	 *
+	 * @api
+	 *
+	 * @param array $aParams Params used by the twig template
+	 * @param string|null $sTemplateName Name of the twig template, ie MyTemplate for MyTemplate.html.twig
+	 *
+	 * @throws \Exception
+	 */
+	public function DisplayDownloadPage(array $aParams = [], string $sTemplateName = null): void
+	{
+		$this->DisplayPage($aParams, $sTemplateName, self::ENUM_PAGE_TYPE_DOWNLOAD);
 	}
 
 	/**
@@ -906,6 +923,10 @@ abstract class Controller extends AbstractController
 
 			case self::ENUM_PAGE_TYPE_SETUP:
 				$this->oPage = new SetupPage($this->GetOperationTitle());
+				break;
+
+			case self::ENUM_PAGE_TYPE_DOWNLOAD:
+				$this->oPage = new DownloadPage($this->GetOperationTitle());
 				break;
 		}
 		$this->oTwig->addGlobal('UIBlockParent', [$this->oPage]);

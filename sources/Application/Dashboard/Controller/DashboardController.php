@@ -7,6 +7,7 @@
 
 namespace Combodo\iTop\Application\Dashboard\Controller;
 
+use appUserPreferences;
 use Combodo\iTop\Application\Dashlet\DashletFactory;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
@@ -15,14 +16,19 @@ use Combodo\iTop\Application\UI\Base\Component\TurboForm\TurboFormUIBlockFactory
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\WebPage\AjaxPage;
+use Combodo\iTop\Application\WebPage\DownloadPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\Forms\Block\FormBlockService;
 use Combodo\iTop\PropertyType\Serializer\XMLSerializer;
 use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use DBObjectSearch;
+use DBObjectSet;
 use Exception;
 use IssueLog;
 use ModelReflectionRuntime;
 use RuntimeDashboard;
+use SecurityException;
+use UserRights;
 use utils;
 
 class DashboardController extends Controller
@@ -131,6 +137,46 @@ class DashboardController extends Controller
 			'message' => $sMessage,
 		]);
 		$oPage->SetOutputDataOnly(true);
+		return $oPage;
+	}
+
+	public function OperationExport()
+	{
+		$oPage = new DownloadPage('');
+		$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
+		$sDashboardFile = APPROOT.utils::ReadParam('file', '', false, 'raw_data');
+
+		$sDashboardFileSanitized = utils::RealPath($sDashboardFile, APPROOT);
+		if (false === $sDashboardFileSanitized) {
+			throw new SecurityException('Invalid dashboard file !');
+		}
+
+		if (!appUserPreferences::GetPref('display_original_dashboard_'.$sDashboardId, false)) {
+			// Search for an eventual user defined dashboard
+			$oUDSearch = new DBObjectSearch('UserDashboard');
+			$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+			$oUDSearch->AddCondition('menu_code', $sDashboardId, '=');
+			$oUDSet = new DBObjectSet($oUDSearch);
+			if ($oUDSet->Count() > 0) {
+				// Assuming there is at most one couple {user, menu}!
+				$oUserDashboard = $oUDSet->Fetch();
+				$sDashboardDefinition = $oUserDashboard->Get('contents');
+			} else {
+				$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
+			}
+		} else {
+			$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
+		}
+
+		$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
+		if (!is_null($oDashboard)) {
+			$oPage->TrashUnexpectedOutput();
+			$oPage->SetContentType('text/xml');
+			$oPage->SetContentDisposition('attachment', 'dashboard_'.$oDashboard->GetTitle().'.xml');
+
+			$oPage->add($sDashboardDefinition);
+		}
+
 		return $oPage;
 	}
 }
