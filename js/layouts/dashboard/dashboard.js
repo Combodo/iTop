@@ -86,7 +86,7 @@ class IboDashboard extends HTMLElement {
 		if(this.bEditMode){
 			// TODO 3.3 If we are in default dashboard display, change to custom to allow editing
 			// TODO 3.3 Get the custom dashboard and load it, show a tooltip on the dashboard toggler to explain that we switched to custom mode
-			this.aLastSavedState = this.Serialize(true);
+			this.aLastSavedState = this.Serialize();
 			this.setAttribute("data-edit-mode", "edit");
 		}
 		else{
@@ -95,14 +95,9 @@ class IboDashboard extends HTMLElement {
 	}
 
 	AddNewDashlet(sDashletClass, sDashletValues, aDashletOptions = {}) {
-		let sNewDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet&dashlet_class='+encodeURIComponent(sDashletClass);
+		let oGetDashletPromise = this.GetDashlet(sDashletClass, '', sDashletValues);
 
-		if(sDashletValues.length > 0) {
-			sNewDashletUrl += '&values=' + encodeURIComponent(sDashletValues);
-		}
-
-		fetch(sNewDashletUrl)
-			.then(async data => {
+		oGetDashletPromise.then(async data => {
 
 				const sDashletId = this.oGrid.AddDashlet(await data.text(), aDashletOptions);
 
@@ -112,16 +107,24 @@ class IboDashboard extends HTMLElement {
 
 	}
 
-	RefreshDashlet(oDashlet) {
-		let sGetDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet&dashlet_class=' + encodeURIComponent(oDashlet.sType)
-			+'&dashlet_id=' + encodeURIComponent(oDashlet.sDashletId);
+	GetDashlet(sDashletClass, sDashletId = '', sDashletValues = '') {
+		let sGetDashletUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.get_dashlet&dashlet_class='+encodeURIComponent(sDashletClass);
 
-		if(oDashlet.formData.length > 0) {
-			sGetDashletUrl += '&values=' + encodeURIComponent(oDashlet.formData);
+		if(sDashletId.length > 0) {
+			sGetDashletUrl += '&dashlet_id=' + encodeURIComponent(sDashletId);
 		}
 
-		return fetch(sGetDashletUrl)
-			.then(async data => {
+		if(sDashletValues.length > 0) {
+			sGetDashletUrl += '&values=' + encodeURIComponent(sDashletValues);
+		}
+
+		return fetch(sGetDashletUrl);
+	}
+	RefreshDashlet(oDashlet) {
+		let oGetDashletPromise = this.GetDashlet(oDashlet.sType, oDashlet.sDashletId, oDashlet.formData);
+
+
+		return oGetDashletPromise.then(async data => {
 
 				this.oGrid.RefreshDashlet(await data.text());
 		});
@@ -299,11 +302,11 @@ class IboDashboard extends HTMLElement {
 		)
 	}
 
-	Serialize(bIncludeHtml = false) {
+	Serialize() {
 		const sDashboardTitle = this.querySelector('.ibo-dashboard--form--inputs input[name="dashboard_title"]').value;
 		const sDashboardRefreshRate = this.querySelector('.ibo-dashboard--form--inputs select[name="refresh_interval"]').value;
 
-		const aSerializedGrid = this.oGrid.Serialize(bIncludeHtml);
+		const aSerializedGrid = this.oGrid.Serialize();
 		return {
 			schema_version: this.schemaVersion,
 			id: this.sId,
@@ -324,7 +327,7 @@ class IboDashboard extends HTMLElement {
 				const res = await data.json();
 				if(res.status === 'ok') {
 					CombodoToast.OpenToast(res.message, 'success');
-					this.aLastSavedState = this.Serialize(true);
+					this.aLastSavedState = this.Serialize();
 					this.SetEditMode(false);
 				} else {
 					CombodoToast.OpenToast(res.message, 'error');
@@ -370,16 +373,20 @@ class IboDashboard extends HTMLElement {
 				const iHeight = aDashletData.height;
 				const aDashlet = aDashletData.dashlet;
 
-				// We store the dashlet component in the HTML, not only the rendered dashlet
-				const sDashetHtml = aDashlet.html;
+				// We need to fetch dashlet HTML from server as scripts need to be executed again
+				let oGetDashletPromise = this.GetDashlet(aDashlet.type, aDashlet.id, JSON.stringify(aDashlet.properties));
 
-				// Add dashlet to grid with its position and size
-				this.oGrid.AddDashlet(sDashetHtml, {
-					x: iPosX,
-					y: iPosY,
-					w: iWidth,
-					h: iHeight,
-					autoPosition: false
+
+				oGetDashletPromise.then(async data => {
+					let sDashletHtml = await data.text();
+					// Add dashlet to grid with its position and size
+					this.oGrid.AddDashlet(sDashletHtml, {
+						x: iPosX,
+						y: iPosY,
+						w: iWidth,
+						h: iHeight,
+						autoPosition: false
+					});
 				});
 			}
 

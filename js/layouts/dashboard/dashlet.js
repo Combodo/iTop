@@ -49,17 +49,13 @@ class IboDashlet extends HTMLElement {
 		return oDashlet;
 	}
 
-	Serialize(bIncludeHtml = false) {
+	Serialize() {
 	// TODO 3.3 Should we use getters ?
 		let aDashletData = {
 			id: this.sDashletId,
 			type: this.sType,
 			properties: JSON.parse(this.formData),
 		};
-
-		if(bIncludeHtml) {
-			aDashletData.html = this.outerHTML;
-		}
 
 		return aDashletData;
 	}

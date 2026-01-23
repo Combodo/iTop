@@ -71,7 +71,8 @@ class IboGrid extends HTMLElement {
 		// Get the dashlet as an object
 		const oParser = new DOMParser();
 		const oDocument = oParser.parseFromString(sDashlet, 'text/html');
-		const oDashlet = oDocument.body.firstChild;
+		const oDashlet = oDocument.body.querySelector('ibo-dashlet');
+		const aScripts = oDocument.body.querySelectorAll('script');
 
 		const oSlot = IboGridSlot.MakeNew(oDashlet);
 
@@ -84,6 +85,20 @@ class IboGrid extends HTMLElement {
 
 		oSlot.scrollIntoView({ behavior: "smooth"});
 
+		aScripts.forEach( oScript => {
+			if (oScript) {
+				const oNewScriptElement = document.createElement('script');
+
+				// copy attributes
+				[...oScript.attributes].forEach(attr =>
+					oNewScriptElement.setAttribute(attr.name, attr.value)
+				);
+
+				oNewScriptElement.text = oScript.textContent;
+				oSlot.querySelector('ibo-dashlet').after(oNewScriptElement);
+			}
+		});
+
 		return oDashlet.sDashletId;
 	}
 
@@ -91,7 +106,7 @@ class IboGrid extends HTMLElement {
 		const oParser = new DOMParser();
 		const oDocument = oParser.parseFromString(sDashlet, 'text/html');
 		const oNewDashlet = oDocument.body.querySelector('ibo-dashlet');
-		const oNewScript = oDocument.body.querySelectorAll('script');
+		const aNewScripts = oDocument.body.querySelectorAll('script');
 
 		// Can't use oNewDashet.sDashletId as it's not in the DOM yet and connectedCallback hasn't been called yet
 		const oExistingDashlet = this.GetDashletElement(oNewDashlet.getAttribute('data-dashlet-id') );
@@ -119,7 +134,7 @@ class IboGrid extends HTMLElement {
 		}
 
 		// Append scripts to body so they are executed
-		oNewScript.forEach( oScript => {
+		aNewScripts.forEach( oScript => {
 			if (oScript) {
 				const oNewScriptElement = document.createElement('script');
 
@@ -129,7 +144,7 @@ class IboGrid extends HTMLElement {
 				);
 
 				oNewScriptElement.text = oScript.textContent;
-				document.body.appendChild(oNewScriptElement);
+				oSlotForExistingDashlet.querySelector('ibo-dashlet').after(oNewScriptElement);
 			}
 		});
 	}
@@ -166,11 +181,11 @@ class IboGrid extends HTMLElement {
 		this.oGrid.removeAll();
 	}
 
-	Serialize(bIncludeHtml = false) {
+	Serialize() {
 		const aSlots = this.getSlots();
 
 		return aSlots.reduce((aAccumulator, oSlot) => {
-			aAccumulator[oSlot.oDashlet.sDashletId] = oSlot.Serialize(bIncludeHtml);
+			aAccumulator[oSlot.oDashlet.sDashletId] = oSlot.Serialize();
 			return aAccumulator;
 		}, {});
 	}
