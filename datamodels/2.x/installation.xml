@@ -223,6 +223,7 @@
 					<modules type="array">
 						<module>itop-problem-mgmt</module>
 					</modules>
+					<uninstallable>no</uninstallable>
 				</choice>
 			</options>
 		</step>

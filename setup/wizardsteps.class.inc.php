@@ -1381,7 +1381,7 @@ class WizStepModulesChoice extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepModulesChoice', 'WizStepSummary'];
+		return ['WizStepModulesChoice', 'WizStepAudit'];
 	}
 
 	public function GetAddedAndRemovedExtensions($aSelectedExtensions)
@@ -1442,7 +1442,14 @@ class WizStepModulesChoice extends WizardStep
 				$this->oWizard->SetParameter('extensions_added', json_encode($aExtensionsAdded));
 				$this->oWizard->SetParameter('removed_extensions', json_encode($aExtensionsRemoved));
 				$this->oWizard->SetParameter('extensions_not_uninstallable', json_encode(array_keys($aExtensionsNotUninstallable)));
-				return ['class' => 'WizStepSummary', 'state' => ''];
+				$sMode = $this->oWizard->GetParameter('mode', 'install');
+				if ($sMode == 'install') {
+					return ['class' => 'WizStepAudit', 'state' => ''];
+				}
+				else {
+					return ['class' => 'WizStepAudit', 'state' => ''];
+				}
+
 			}
 
 		}
@@ -1930,7 +1937,7 @@ EOF
 				];
 			}
 		}
-
+var_dump($this->aSteps[$index]);
 		return $this->aSteps[$index] ?? null;
 	}
 
@@ -2107,6 +2114,107 @@ EOF
 
 }
 
+class WizStepAudit extends WizardStep
+{
+	public function GetTitle()
+	{
+		return 'Checking upgrade';
+
+	}
+
+	public function GetPossibleSteps()
+	{
+		return ['WizStepSummary'];
+	}
+
+	public function GetNextButtonLabel()
+	{
+		return 'Next';
+	}
+
+	public function CanMoveForward()
+	{
+		return true;
+
+	}
+
+	public function ProcessParams($bMoveForward = true)
+	{
+		return ['class' => 'WizStepSummary', 'state' => ''];
+	}
+
+	public function Display(WebPage $oPage)
+	{
+		$oPage->add('<h2>Progress bar</h2>');
+	}
+
+	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
+	{
+		$oParameters = new PHPParameters();
+		$sStep = $aParameters['installer_step'];
+		$sJSONParameters = $aParameters['installer_config'];
+		$oParameters->LoadFromHash(json_decode($sJSONParameters, true /* bAssoc */));
+		$oInstaller = new ApplicationInstaller($oParameters);
+		$aRes = $oInstaller->ExecuteStep($sStep);
+		if (($aRes['status'] != ApplicationInstaller::ERROR) && ($aRes['next-step'] != '')) {
+			// Tell the web page to move the progress bar and to launch the next step
+			$sMessage = addslashes(utils::EscapeHtml($aRes['next-step-label']));
+			$oPage->add_ready_script(
+				<<<EOF
+	$("#wiz_form").data("installation_status", "running");
+	WizardUpdateButtons();
+	$('#setup_msg').html('$sMessage');
+	$('#progress').progression( {Current:{$aRes['percentage-completed']}, Maximum: 100} );
+	
+	//$("#percentage").html('{$aRes['percentage-completed']} % completed<br/>{$aRes['next-step-label']}');
+	ExecuteStep('{$aRes['next-step']}');
+EOF
+			);
+		} elseif ($aRes['status'] != ApplicationInstaller::ERROR) {
+			// Installation complete, move to the next step of the wizard
+			$oPage->add_ready_script(
+				<<<EOF
+	$("#wiz_form").data("installation_status", "completed");
+	$('#progress').progression( {Current:100, Maximum: 100} );
+	WizardUpdateButtons();
+	$("#btn_next").off("click.install");
+	$("#btn_next").trigger('click');
+EOF
+			);
+		} else {
+			$sMessage = addslashes(utils::EscapeHtml($aRes['message']));
+			$sMessage = str_replace("\n", '<br>', $sMessage);
+			$oPage->add_ready_script(
+				<<<EOF
+	$("#wiz_form").data("installation_status", "error");
+	WizardUpdateButtons();
+	$('#setup_msg').html('$sMessage');
+EOF
+			);
+		}
+	}
+
+	/**
+	 * Tells whether the "Next" button should be enabled interactively
+	 * @return string A piece of javascript code returning either true or false
+	 */
+	public function JSCanMoveForward()
+	{
+		return 'return true;';
+		return 'return (($("#wiz_form").data("installation_status") === "not started") || ($("#wiz_form").data("installation_status") === "completed"));';
+	}
+
+	/**
+	 * Tells whether the "Next" button should be enabled interactively
+	 * @return string A piece of javascript code returning either true or false
+	 */
+	public function JSCanMoveBackward()
+	{
+		return 'return true;';
+		return 'var sStatus = $("#wiz_form").data("installation_status"); return ((sStatus === "not started") || (sStatus === "error"));';
+	}
+}
+
 /**
  * Summary of the installation tasks
  */
@@ -2143,7 +2251,7 @@ class WizStepSummary extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepDone'];
+		return ['WizStepBuild'];
 	}
 
 	/**
@@ -2166,7 +2274,7 @@ class WizStepSummary extends WizardStep
 
 	public function ProcessParams($bMoveForward = true)
 	{
-		return ['class' => 'WizStepDone', 'state' => ''];
+		return ['class' => 'WizStepBuild', 'state' => ''];
 	}
 
 	public function Display(WebPage $oPage)
@@ -2290,6 +2398,234 @@ class WizStepSummary extends WizardStep
 		$oPage->add('</div>'); // params_summary
 		$oPage->add('</fieldset>');
 
+		if (!$this->CheckDependencies()) {
+			$oPage->error($this->sDependencyIssue);
+		}
+
+		$oPage->add_ready_script(
+			<<<JS
+	$("#params_summary div").addClass('closed');
+	$("#params_summary .title").on('click', function() { $(this).parent().toggleClass('closed'); } );
+JS
+		);
+	}
+
+	/**
+	 * Prepare the parameters to execute the installation asynchronously
+	 * @return array A big hash array that can be converted to XML or JSON with all the needed parameters
+	 */
+	protected function BuildConfig()
+	{
+		$sMode = $this->oWizard->GetParameter('install_mode', 'install');
+		$aSelectedModules = json_decode($this->oWizard->GetParameter('selected_modules'), true);
+		$aSelectedExtensions = json_decode($this->oWizard->GetParameter('selected_extensions'), true);
+		$sBackupDestination = '';
+		$sPreviousConfigurationFile = '';
+		$sDBName = $this->oWizard->GetParameter('db_name');
+		if ($sMode == 'upgrade') {
+			$sPreviousVersionDir = $this->oWizard->GetParameter('previous_version_dir', '');
+			if (!empty($sPreviousVersionDir)) {
+				$aPreviousInstance = SetupUtils::GetPreviousInstance($sPreviousVersionDir);
+				if ($aPreviousInstance['found']) {
+					$sPreviousConfigurationFile = $aPreviousInstance['configuration_file'];
+				}
+			}
+
+			if ($this->oWizard->GetParameter('db_backup', false)) {
+				$sBackupDestination = $this->oWizard->GetParameter('db_backup_path', '');
+			}
+		} else {
+
+			$sDBNewName = $this->oWizard->GetParameter('db_new_name', '');
+			if ($sDBNewName != '') {
+				$sDBName = $sDBNewName; // Database will be created
+			}
+		}
+
+		$sSourceDir = $this->oWizard->GetParameter('source_dir');
+		$aCopies = [];
+		if (($sMode == 'upgrade') && ($this->oWizard->GetParameter('upgrade_type') == 'keep-previous')) {
+			$sPreviousVersionDir = $this->oWizard->GetParameter('previous_version_dir');
+			$aCopies[] = ['source' => $sSourceDir, 'destination' => 'modules']; // Source is an absolute path, destination is relative to APPROOT
+			$aCopies[] = ['source' => $sPreviousVersionDir.'/portal', 'destination' => 'portal']; // Source is an absolute path, destination is relative to APPROOT
+			$sSourceDir = APPROOT.'modules';
+		}
+
+		$aInstallParams =  [
+			'mode' => $sMode,
+			'preinstall' =>  [
+				'copies' => $aCopies,
+				// 'backup' => see below
+			],
+			'source_dir' => str_replace(APPROOT, '', $sSourceDir),
+			'datamodel_version' => $this->oWizard->GetParameter('datamodel_version'), //TODO: let the installer compute this automatically...
+			'previous_configuration_file' => $sPreviousConfigurationFile,
+			'extensions_dir' => 'extensions',
+			'target_env' => 'production',
+			'workspace_dir' => '',
+			'database' =>  [
+				'server' => $this->oWizard->GetParameter('db_server'),
+				'user' => $this->oWizard->GetParameter('db_user'),
+				'pwd' => $this->oWizard->GetParameter('db_pwd'),
+				'name' => $sDBName,
+				'db_tls_enabled' => $this->oWizard->GetParameter('db_tls_enabled'),
+				'db_tls_ca' => $this->oWizard->GetParameter('db_tls_ca'),
+				'prefix' => $this->oWizard->GetParameter('db_prefix'),
+			],
+			'url' => $this->oWizard->GetParameter('application_url'),
+			'graphviz_path' => $this->oWizard->GetParameter('graphviz_path'),
+			'admin_account' =>  [
+				'user' => $this->oWizard->GetParameter('admin_user'),
+				'pwd' => $this->oWizard->GetParameter('admin_pwd'),
+				'language' => $this->oWizard->GetParameter('admin_language'),
+			],
+			'language' => $this->oWizard->GetParameter('default_language'),
+			'selected_modules' =>  $aSelectedModules,
+			'selected_extensions' =>  $aSelectedExtensions,
+			'sample_data' => ($this->oWizard->GetParameter('sample_data', '') == 'yes') ? true : false ,
+			'old_addon' => $this->oWizard->GetParameter('old_addon', false), // whether or not to use the "old" userrights profile addon
+			'options' => json_decode($this->oWizard->GetParameter('misc_options', '[]'), true),
+			'mysql_bindir' => $this->oWizard->GetParameter('mysql_bindir'),
+		];
+
+		if ($sBackupDestination != '') {
+			$aInstallParams['preinstall']['backup'] =  [
+				'destination' => $sBackupDestination,
+				'configuration_file' => $sPreviousConfigurationFile,
+			];
+		}
+
+		return $aInstallParams;
+	}
+
+	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
+	{
+		$oParameters = new PHPParameters();
+		$sStep = $aParameters['installer_step'];
+		$sJSONParameters = $aParameters['installer_config'];
+		$oParameters->LoadFromHash(json_decode($sJSONParameters, true /* bAssoc */));
+		$oInstaller = new ApplicationInstaller($oParameters);
+		$aRes = $oInstaller->ExecuteStep($sStep);
+		if (($aRes['status'] != ApplicationInstaller::ERROR) && ($aRes['next-step'] != '')) {
+			// Tell the web page to move the progress bar and to launch the next step
+			$sMessage = addslashes(utils::EscapeHtml($aRes['next-step-label']));
+			$oPage->add_ready_script(
+				<<<EOF
+	$("#wiz_form").data("installation_status", "running");
+	WizardUpdateButtons();
+	$('#setup_msg').html('$sMessage');
+	$('#progress').progression( {Current:{$aRes['percentage-completed']}, Maximum: 100} );
+	
+	//$("#percentage").html('{$aRes['percentage-completed']} % completed<br/>{$aRes['next-step-label']}');
+	ExecuteStep('{$aRes['next-step']}');
+EOF
+			);
+		} elseif ($aRes['status'] != ApplicationInstaller::ERROR) {
+			// Installation complete, move to the next step of the wizard
+			$oPage->add_ready_script(
+				<<<EOF
+	$("#wiz_form").data("installation_status", "completed");
+	$('#progress').progression( {Current:100, Maximum: 100} );
+	WizardUpdateButtons();
+	$("#btn_next").off("click.install");
+	$("#btn_next").trigger('click');
+EOF
+			);
+		} else {
+			$sMessage = addslashes(utils::EscapeHtml($aRes['message']));
+			$sMessage = str_replace("\n", '<br>', $sMessage);
+			$oPage->add_ready_script(
+				<<<EOF
+	$("#wiz_form").data("installation_status", "error");
+	WizardUpdateButtons();
+	$('#setup_msg').html('$sMessage');
+EOF
+			);
+		}
+	}
+
+	/**
+	 * Tells whether the "Next" button should be enabled interactively
+	 * @return string A piece of javascript code returning either true or false
+	 */
+	public function JSCanMoveForward()
+	{
+		return 'return true;';
+		return 'return (($("#wiz_form").data("installation_status") === "not started") || ($("#wiz_form").data("installation_status") === "completed"));';
+	}
+
+	/**
+	 * Tells whether the "Next" button should be enabled interactively
+	 * @return string A piece of javascript code returning either true or false
+	 */
+	public function JSCanMoveBackward()
+	{
+		return 'return true;';
+		return 'var sStatus = $("#wiz_form").data("installation_status"); return ((sStatus === "not started") || (sStatus === "error"));';
+	}
+
+}
+
+
+
+class WizStepBuild extends WizardStep
+{
+	protected $bDependencyCheck = null;
+	protected $sDependencyIssue = null;
+
+	protected function CheckDependencies()
+	{
+		if (is_null($this->bDependencyCheck)) {
+			$aSelectedModules = json_decode($this->oWizard->GetParameter('selected_modules'), true);
+			$this->bDependencyCheck = true;
+			try {
+				SetupUtils::AnalyzeInstallation($this->oWizard, true, $aSelectedModules);
+			} catch (MissingDependencyException $e) {
+				$this->bDependencyCheck = false;
+				$this->sDependencyIssue = $e->getHtmlDesc();
+			}
+		}
+		return $this->bDependencyCheck;
+	}
+
+	public function GetTitle()
+	{
+		return 'Building iTop';
+	}
+
+	public function GetPossibleSteps()
+	{
+		return ['WizStepDone'];
+	}
+
+	/**
+	 * Returns the label for the " Next >> " button
+	 * @return string The label for the button
+	 */
+	public function GetNextButtonLabel()
+	{
+		return 'Install';
+	}
+
+	public function CanMoveForward()
+	{
+		if ($this->CheckDependencies()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function ProcessParams($bMoveForward = true)
+	{
+		return ['class' => 'WizStepDone', 'state' => ''];
+	}
+
+	public function Display(WebPage $oPage)
+	{
+
+		$aInstallParams = $this->BuildConfig();
+
 		$oPage->add('<fieldset id="installation_progress"><legend>Progress of the installation</legend>');
 		$oPage->add('<div id="progress_content">');
 		$oPage->LinkScriptFromAppRoot('setup/jquery.progression.js');
@@ -2312,9 +2648,11 @@ class WizStepSummary extends WizardStep
 	$("#params_summary div").addClass('closed');
 	$("#params_summary .title").on('click', function() { $(this).parent().toggleClass('closed'); } );
 	$("#btn_next").on("click.install", function(event) {
-			$('#summary').hide();
-			$('#installation_progress').show();
-			$(this).prop('disabled', true);	 event.preventDefault(); ExecuteStep("");
+		$('#summary').hide();
+		$('#installation_progress').show();
+		$(this).prop('disabled', true);	 
+		event.preventDefault(); 
+		ExecuteStep("");
 	});
 	$("#wiz_form").data("installation_status", "not started")
 JS
@@ -2323,7 +2661,7 @@ JS
 
 	/**
 	 * Prepare the parameters to execute the installation asynchronously
-	 * @return Hash A big hash array that can be converted to XML or JSON with all the needed parameters
+	 * @return array A big hash array that can be converted to XML or JSON with all the needed parameters
 	 */
 	protected function BuildConfig()
 	{
