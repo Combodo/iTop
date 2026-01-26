@@ -97,7 +97,7 @@ class DashboardController extends Controller
 
 	public function OperationSave()
 	{
-		$sViewData = utils::ReadParam('values', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$sViewData = utils::ReadPostedParam('values', '', utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 		$aViewData = !empty($sViewData) ? json_decode($sViewData, true, 20) : [];
 
 		try {
@@ -127,7 +127,8 @@ class DashboardController extends Controller
 				$aFormErrors = $oForm->getErrors(true, true);
 				$sMessage = $aFormErrors->__toString();
 			}
-		} catch (Exception $e) {
+		}
+		catch (Exception $e) {
 			IssueLog::Exception($e->getMessage(), $e);
 			$sStatus = 'error';
 			$sMessage = $e->getMessage();
@@ -135,10 +136,11 @@ class DashboardController extends Controller
 
 		$oPage = new JsonPage();
 		$oPage->SetData([
-			'status' => $sStatus,
+			'status'  => $sStatus,
 			'message' => $sMessage,
 		]);
 		$oPage->SetOutputDataOnly(true);
+
 		return $oPage;
 	}
 
@@ -203,9 +205,11 @@ class DashboardController extends Controller
 				$oDoc = utils::ReadPostedDocument('dashboard_upload_file');
 				$oDashboard->FromXml($oDoc->GetData());
 				$oDashboard->PersistDashboard($oDoc->GetData());
-			} catch (DOMException $e) {
+			}
+			catch (DOMException $e) {
 				$aResult = ['error' => Dict::S('UI:Error:InvalidDashboardFile')];
-			} catch (Exception $e) {
+			}
+			catch (Exception $e) {
 				$aResult = ['error' => $e->getMessage()];
 			}
 		} else {

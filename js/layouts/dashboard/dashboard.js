@@ -321,8 +321,12 @@ class IboDashboard extends HTMLElement {
 		// This payload shape is expected by the server
 		const aPayload = this.Serialize();
 
-		let sSaveUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.save&values='+encodeURIComponent(JSON.stringify(aPayload));
-		fetch(sSaveUrl)
+		let sSaveUrl = GetAbsoluteUrlAppRoot() + '/pages/UI.php?route=dashboard.save';
+
+		fetch(sSaveUrl, {
+			method: "POST",
+			body: new URLSearchParams({ values: JSON.stringify(aPayload) }),
+		})
 			.then(async data => {
 				const res = await data.json();
 				if(res.status === 'ok') {
