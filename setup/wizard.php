@@ -32,7 +32,6 @@ require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/core/config.class.inc.php');
 require_once(APPROOT.'/setup/setuppage.class.inc.php');
 require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
-require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
 
 Session::Start();
 clearstatcache(); // Make sure we know what we are doing !
