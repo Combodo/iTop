@@ -14,7 +14,8 @@ use utils;
  * A block to manage a list of images.
  * This block expose two outputs: the label and the value of the selected choice.
  *
- * @package Combodo\iTop\Forms\Block\Base
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class ChoiceImageFormBlock extends ChoiceFormBlock

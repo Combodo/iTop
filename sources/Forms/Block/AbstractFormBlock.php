@@ -23,6 +23,7 @@ use Combodo\iTop\Forms\Register\RegisterException;
  *
  * @package Combodo\iTop\Forms\Block
  * @since 3.3.0
+ * @api
  */
 abstract class AbstractFormBlock implements IFormBlock
 {
@@ -119,6 +120,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param OptionsRegister $oOptionsRegister
 	 *
 	 * @throws RegisterException
+	 * @api
 	 */
 	protected function RegisterOptions(OptionsRegister $oOptionsRegister): void
 	{
@@ -130,6 +132,7 @@ abstract class AbstractFormBlock implements IFormBlock
 	 * @param array $aOptions
 	 *
 	 * @return void
+	 * @throws \Combodo\iTop\Forms\Register\RegisterException
 	 */
 	private function SetOptions(array $aOptions): void
 	{

@@ -17,11 +17,16 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
  * A block to manage an integer
  * This block exposes a single output: the integer value.
  *
- * @package Combodo\iTop\Forms\Block\Base
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class IntegerFormBlock extends AbstractTypeFormBlock
 {
+	/**
+	 * Integer output giving the value entered
+	 * @api
+	 */
 	public const OUTPUT_INTEGER = 'integer';
 
 	public function GetFormType(): string

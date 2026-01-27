@@ -14,7 +14,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 /**
  * A block to manage a date field.
  *
- * @package Combodo\iTop\Forms\Block\Base
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class DateFormBlock extends AbstractTypeFormBlock

@@ -21,7 +21,8 @@ use ReflectionException;
 /**
  * A block to manage a form with children.
  *
- * @package Combodo\iTop\Forms\Block\Base
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class FormBlock extends AbstractTypeFormBlock
@@ -77,6 +78,7 @@ class FormBlock extends AbstractTypeFormBlock
 	 * @return $this
 	 * @throws ReflectionException
 	 * @throws FormBlockException
+	 * @api
 	 */
 	public function Add(string $sName, string $sBlockClass, array $aOptions = []): AbstractFormBlock
 	{
@@ -148,6 +150,7 @@ class FormBlock extends AbstractTypeFormBlock
 	/**
 	 * Build the form.
 	 *
+	 * @api
 	 * @return void
 	 */
 	protected function BuildForm(): void

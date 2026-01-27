@@ -20,7 +20,7 @@ class FormBlockService
 {
 	private PropertyTypeService $oPropertyTypeService;
 
-	public function __construct(ModelReflection $oModelReflection = null)
+	public function __construct()
 	{
 		$this->oPropertyTypeService = \MetaModel::GetService('PropertyTypeService');
 	}

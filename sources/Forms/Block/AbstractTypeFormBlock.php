@@ -18,11 +18,23 @@ use Combodo\iTop\Forms\Register\RegisterException;
  *
  * @package Combodo\iTop\Forms\Block
  * @since 3.3.0
+ * @api
  */
 abstract class AbstractTypeFormBlock extends AbstractFormBlock
 {
 	// Inputs
+	/**
+	 * Boolean input to display or not the block
+	 * (visible by default)
+	 * @api
+	 */
 	public const INPUT_VISIBLE = 'visible';
+
+	/**
+	 * Boolean input to enable/disable the block
+	 * (enabled by default)
+	 * @api
+	 */
 	public const INPUT_ENABLE = 'enable';
 
 	/** @var bool flag indicating the form insertion */

@@ -22,16 +22,29 @@ use utils;
 /**
  * A block to choose an attribute from a given class.
  *
- * @package Combodo\iTop\Forms\Block\DataModel
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class AttributeChoiceFormBlock extends ChoiceFormBlock
 {
 	// inputs
+	/**
+	 * Class input reflecting the selected class
+	 * @api
+	 */
 	public const INPUT_CLASS_NAME = 'class';
+	/**
+	 * String input for the category of attributes to select from
+	 * @api
+	 */
 	public const INPUT_CATEGORY = 'category';
 
 	// outputs
+	/**
+	 * String output of the selected attribute
+	 * @api
+	 */
 	public const OUTPUT_ATTRIBUTE = 'attribute';
 
 	/** @inheritdoc */
@@ -61,7 +74,7 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	/**
 	 * @inheritdoc
 	 *
-	 * @throws ServiceLocationException
+	 * @throws ServiceLocatorException
 	 * @throws FormBlockException
 	 * @throws RegisterException
 	 */

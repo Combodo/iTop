@@ -15,13 +15,23 @@ use Combodo\iTop\Forms\Register\IORegister;
  * An abstract block to manage an expression.
  * This block expose two boolean outputs: the result of the expression and its negation.
  *
- * @package Combodo\iTop\Forms\Block\Expression
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class BooleanExpressionFormBlock extends AbstractExpressionFormBlock
 {
 	// Outputs
+	/**
+	 * Boolean output of the result of the expression
+	 * @api
+	 */
 	public const OUTPUT_RESULT = "result";
+
+	/**
+	 * Boolean output of the negation of the result of the expression
+	 * @api
+	 */
 	public const OUTPUT_NOT_RESULT = "not_result";
 
 	/** @inheritdoc */

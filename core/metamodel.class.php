@@ -7033,9 +7033,11 @@ abstract class MetaModel
 	/**
 	 * (Re)Init the global service locator with a configuration file
 	 *
-	 * @param string|null $sRelativeConfigFileName default to the runtime config file
+	 * @param string|null $sRelativeConfigFileName default to the runtime config file when null
 	 *
 	 * @return void
+	 * @api
+	 * @since 3.3.0
 	 */
 	public static function InitServiceLocator(string $sRelativeConfigFileName = null): void
 	{
@@ -7048,16 +7050,16 @@ abstract class MetaModel
 	}
 
 	/**
-	 * Get configured service
-	 *
-	 * @see conf/production/ServiceLocatorRuntimeConfig.php
+	 * Get configured service using a service locator
 	 *
 	 * Example: $oModelReflection = \MetaModel::GetService('ModelReflexion');
 	 *
-	 * @param string $sServiceName
+	 * @param string $sServiceName Name of the service to get
 	 *
-	 * @return mixed
+	 * @return mixed The service object instance corresponding to the service name
 	 * @throws \Combodo\iTop\Service\ServiceLocator\ServiceLocatorException
+	 * @api
+	 * @since 3.3.0
 	 */
 	public static function GetService(string $sServiceName): mixed
 	{

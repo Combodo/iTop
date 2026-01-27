@@ -10,9 +10,22 @@ namespace Combodo\iTop\Forms\Block\Expression;
 use Combodo\iTop\Forms\IO\Format\StringIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 
+/**
+ *  A block to manage a string expression.
+ *  This block expose a string output: the result of the expression.
+ *
+ * @api
+ * @package FormBlock
+ * @since 3.3.0
+ */
 class StringExpressionFormBlock extends AbstractExpressionFormBlock
 {
 	// Outputs
+
+	/**
+	 * String output of the result of the expression
+	 * @api
+	 */
 	public const OUTPUT_RESULT = 'result';
 
 	/** @inheritdoc */

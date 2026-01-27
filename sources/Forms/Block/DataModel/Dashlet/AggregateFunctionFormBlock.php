@@ -17,11 +17,16 @@ use Dict;
 /**
  * A block to manage an aggregation function list
  *
- * @package Combodo\iTop\Forms\Block\DataModel\Dashlet
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class AggregateFunctionFormBlock extends ChoiceFormBlock
 {
+	/**
+	 * Class input reflecting the selected class
+	 * @api
+	 */
 	public const INPUT_CLASS_NAME = 'class';
 
 	/** @inheritdoc */

@@ -20,6 +20,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManager;
  * Factory form builder (from Symfony form component @link https://symfony.com/doc/current/components/form.html)
  *
  * @since 3.3.0
+ * @api
  */
 class FormFactoryBuilderService
 {

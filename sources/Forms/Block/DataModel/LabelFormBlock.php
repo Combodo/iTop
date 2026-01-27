@@ -9,6 +9,13 @@ namespace Combodo\iTop\Forms\Block\DataModel;
 
 use Combodo\iTop\Forms\Block\Base\TextFormBlock;
 
+/**
+ * A block to input text matching dictionary entry
+ *
+ * @api
+ * @package FormBlock
+ * @since 3.3.0
+ */
 class LabelFormBlock extends TextFormBlock
 {
 }

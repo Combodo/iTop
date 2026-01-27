@@ -13,7 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 /**
  * A block to manage a hidden field
  *
- * @package Combodo\iTop\Forms\Block\Base
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class HiddenFormBlock extends AbstractTypeFormBlock

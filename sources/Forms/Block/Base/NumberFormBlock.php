@@ -16,12 +16,17 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
  * A block to manage a number input.
  * This block exposes a single output: the number value.
  *
- * @package Combodo\iTop\Forms\Block\Base
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class NumberFormBlock extends AbstractTypeFormBlock
 {
 	// Outputs
+	/**
+	 * Number output giving the value entered
+	 * @api
+	 */
 	public const OUTPUT_NUMBER = "number";
 
 	/** @inheritdoc */

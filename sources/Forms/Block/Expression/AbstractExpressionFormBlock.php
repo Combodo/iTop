@@ -18,7 +18,8 @@ use Symfony\Component\Form\FormEvents;
 /**
  * An abstract block to manage an expression.
  *
- * @package Combodo\iTop\Forms\Block\Expression
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 abstract class AbstractExpressionFormBlock extends AbstractFormBlock

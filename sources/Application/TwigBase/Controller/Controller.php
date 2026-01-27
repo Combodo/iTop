@@ -151,6 +151,7 @@ abstract class Controller extends AbstractController
 	 * @param array $aThemes
 	 *
 	 * @return void
+	 * @throws \Combodo\iTop\Service\ServiceLocator\ServiceLocatorException
 	 * @throws \ReflectionException
 	 * @throws \Twig\Error\LoaderError
 	 */

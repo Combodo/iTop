@@ -16,12 +16,17 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  * A block to manage a text input.
  * This block exposes a single text output.
  *
- * @package Combodo\iTop\Forms\Block\Base
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class TextFormBlock extends AbstractTypeFormBlock
 {
 	// Outputs
+	/**
+	 * String output giving the value entered
+	 * @api
+	 */
 	public const OUTPUT_TEXT = "text";
 
 	/** @inheritdoc */

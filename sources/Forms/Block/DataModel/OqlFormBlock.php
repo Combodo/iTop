@@ -18,12 +18,17 @@ use Combodo\iTop\Forms\Register\OptionsRegister;
  * A block to manage OQL expression input.
  * This block exposes an output providing the selected class from the OQL.
  *
- * @package Combodo\iTop\Forms\Block\DataModel
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class OqlFormBlock extends TextAreaFormBlock
 {
 	// outputs
+	/**
+	 * Class output reflecting the selected class
+	 * @api
+	 */
 	public const OUTPUT_SELECTED_CLASS = 'selected_class';
 
 	/** @inheritdoc */

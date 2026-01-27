@@ -15,12 +15,17 @@ use Combodo\iTop\Forms\Register\OptionsRegister;
 /**
  * A block to choose an attribute type.
  *
- * @package Combodo\iTop\Forms\Block\DataModel
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class AttributeTypeChoiceFormBlock extends ChoiceFormBlock
 {
 	// outputs
+	/**
+	 * String output of the selected attribute type
+	 * @api
+	 */
 	public const OUTPUT_ATTRIBUTE_TYPE = 'output_type';
 
 	/** @inheritdoc */
@@ -29,10 +34,13 @@ class AttributeTypeChoiceFormBlock extends ChoiceFormBlock
 		parent::RegisterOptions($oOptionsRegister);
 		$oOptionsRegister->SetOption('placeholder', 'Select a type...');
 		$oOptionsRegister->SetOption('choices', [
-			'numeric'  => 'numeric',
-			'group_by' => 'group_by',
-			'date'     => 'date',
-			'enum'     => 'enum',
+			'numeric'   => 'numeric',
+			'groupable' => 'groupable',
+			'date'      => 'date',
+			'enum'      => 'enum',
+			'link'      => 'link',
+			'string'    => 'string',
+			'all'       => 'all',
 		]);
 
 	}

@@ -18,14 +18,23 @@ use Combodo\iTop\Forms\Register\OptionsRegister;
  * A block to manage a list of choices.
  * This block expose two outputs: the label and the value of the selected choice.
  *
- * @package Combodo\iTop\Forms\Block\Base
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class ChoiceFormBlock extends AbstractTypeFormBlock
 {
 	// Outputs
+	/**
+	 * String output of the label of the selected choice
+	 * @api
+	 */
 	public const OUTPUT_LABEL = 'label';
-	public const OUTPUT_VALUE = 'value';
+
+	/**
+	 * String output of the value of the selected choice
+	 * @api
+	 */	public const OUTPUT_VALUE = 'value';
 
 	/** @inheritdoc */
 	public function GetFormType(): string

@@ -19,13 +19,19 @@ use Combodo\iTop\Forms\Register\RegisterException;
 /**
  * A block to manage collections of form blocks.
  *
- * @package Combodo\iTop\Forms\Block\Base
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class CollectionBlock extends AbstractTypeFormBlock
 {
 	/** @var AbstractTypeFormBlock Prototype block */
 	private AbstractTypeFormBlock $oPrototypeBlock;
+
+	/**
+	 * Integer output value giving the number of entries in the collection
+	 * @api
+	 */
 	public const OUTPUT_COUNT = 'count';
 
 	/** @inheritdoc */

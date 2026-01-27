@@ -17,12 +17,17 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
  * A block to manage a checkbox.
  * This block expose one output: whether the checkbox is checked or not.
  *
- * @package Combodo\iTop\Forms\Block\Base
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class CheckboxFormBlock extends AbstractTypeFormBlock
 {
-	// outputs
+	// Outputs
+	/**
+	 * Boolean output whether the checkbox is checked or not
+	 * @api
+	 */
 	public const OUTPUT_CHECKED = 'checked';
 
 	/** @inheritdoc */

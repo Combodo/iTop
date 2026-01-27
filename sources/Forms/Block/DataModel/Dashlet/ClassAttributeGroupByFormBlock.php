@@ -17,7 +17,8 @@ use Exception;
 /**
  * A block to manage an attribute of a data model class for grouping purpose
  *
- * @package Combodo\iTop\Forms\Block\DataModel\Dashlet
+ * @api
+ * @package FormBlock
  * @since 3.3.0
  */
 class ClassAttributeGroupByFormBlock extends AttributeChoiceFormBlock
