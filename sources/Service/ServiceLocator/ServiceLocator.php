@@ -46,7 +46,7 @@ class ServiceLocator implements ContainerInterface
 	 */
 	public function get(string $id): mixed
 	{
-		if (!isset($this->aServices[$id])) {
+		if (!$this->has($id)) {
 			throw new NotFoundException("Service ".json_encode($id)." not found");
 		}
 
