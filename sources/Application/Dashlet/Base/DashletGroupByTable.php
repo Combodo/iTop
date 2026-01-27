@@ -32,48 +32,4 @@ class DashletGroupByTable extends DashletGroupBy
 		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['style'] = 'table';
 	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = [])
-	{
-		$oDashletContainer = new DashletContainer();
-
-		$aDisplayValues = $this->MakeSimulatedData();
-		$iTotal = 0;
-		foreach ($aDisplayValues as $iRow => $aDisplayData) {
-			$iTotal += $aDisplayData['value'];
-		}
-
-		$sBlockId = 'block_fake_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
-
-		$sHtml = '';
-		$sHtml .= '<div id="'.$sBlockId.'" class="display_block">';
-		$sHtml .= '<div class="dashlet-content">';
-		$sHtml .= '<p>'.Dict::Format('UI:Pagination:HeaderNoSelection', $iTotal).'</p>';
-		$sHtml .= '<table class="listResults">';
-		$sHtml .= '<thead>';
-		$sHtml .= '<tr>';
-		$sHtml .= '<th class="header" title="">'.$this->sGroupByLabel.'</th>';
-		$sHtml .= '<th class="header" title="'.Dict::S('UI:GroupBy:Count+').'">'.Dict::S('UI:GroupBy:Count').'</th>';
-		$sHtml .= '</tr>';
-		$sHtml .= '</thead>';
-		$sHtml .= '<tbody>';
-		foreach ($aDisplayValues as $aDisplayData) {
-			$sHtml .= '<tr class="even">';
-			$sHtml .= '<td class=""><span title="Active">'.$aDisplayData['label'].'</span></td>';
-			$sHtml .= '<td class=""><a>'.$aDisplayData['value'].'</a></td>';
-			$sHtml .= '</tr>';
-		}
-		$sHtml .= '</tbody>';
-		$sHtml .= '</table>';
-		$sHtml .= '</div>';
-
-		$sHtml .= '</div>';
-
-		$oDashletContainer->AddHtml($sHtml);
-
-		return $oDashletContainer;
-	}
 }

@@ -67,18 +67,6 @@ class RuntimeDashboard extends Dashboard
 	}
 
 	/**
-	 * @inheritDoc
-	 * @return bool $bIsNew
-	 * @throws \Exception
-	 */
-	public function Save()
-	{
-		$sXml = $this->ToXml();
-
-		return $this->PersistDashboard($sXml);
-	}
-
-	/**
 	 * @param string $sXml
 	 *
 	 * @return bool
@@ -531,152 +519,6 @@ EOF
 	}
 
 	/**
-	 * @param WebPage $oPage
-	 *
-	 * @param array $aExtraParams
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \ReflectionException
-	 * @throws \Exception
-	 */
-	public function RenderEditor($oPage, $aExtraParams = [])
-	{
-		if (isset($aExtraParams['this->class'])) {
-			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
-			$aRenderParams = ['query_params' => $oObj->ToArgsForQuery()];
-		} else {
-			$aRenderParams = $aExtraParams;
-		}
-		$aRenderParams['dashboard_div_id'] = $aExtraParams['dashboard_div_id'];
-		$sJSExtraParams = json_encode($aExtraParams);
-		$oPage->add('<div id="dashboard_editor" class="ibo-dashboard-editor" data-role="ibo-dashboard-editor">');
-		$oPage->add('<div class="ui-layout-center">');
-		$this->SetCustomFlag(true);
-		$this->Render($oPage, true, $aRenderParams);
-		$oPage->add('</div>');
-		$oPage->add('<div class="ui-layout-east ibo-dashboard-editor--pane" data-role="ibo-dashboard-editor--pane">');
-		$this->RenderProperties($oPage, $aExtraParams);
-		$this->RenderDashletsSelection($oPage);
-		$this->RenderDashletsProperties($oPage, $aExtraParams);
-		$oPage->add('</div>');
-		$oPage->add('<div id="event_bus"/>'); // For exchanging messages between the panes, same as in the designer
-		$oPage->add('</div>');
-
-		$sDialogTitle = Dict::S('UI:DashboardEdit:Title');
-		$sOkButtonLabel = Dict::S('UI:Button:Save');
-		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
-
-		$sId = json_encode($this->sId);
-		$sLayoutClass = json_encode($this->sLayoutClass);
-		$sAutoReload = $this->bAutoReload ? 'true' : 'false';
-		$sAutoReloadSec = (string)$this->iAutoReloadSec;
-		$sTitle = json_encode($this->sTitle);
-		$sFile = json_encode($this->GetDefinitionFile());
-		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
-		$sReloadURL = json_encode($this->GetReloadURL());
-
-		$sExitConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
-		$sCancelConfirmationMessage = addslashes(Dict::S('UI:CancelConfirmationMessage'));
-		$sAutoApplyConfirmationMessage = addslashes(Dict::S('UI:AutoApplyConfirmationMessage'));
-
-		$oPage->add_ready_script(
-			<<<JS
-window.bLeavingOnUserAction = false;
-
-$('#dashboard_editor').dialog({
-	height: $('body').height() - 50,
-	width: $('body').width() - 50,
-	modal: true,
-	title: '$sDialogTitle',
-	buttons: [
-	{ text: "$sCancelButtonLabel",
-	 class: "ibo-is-alternative",
-	 click: function() {
-		var oDashboard = $('.itop-dashboard').data('itopRuntimedashboard');
-		if (oDashboard.is_modified())
-		{
-			if (!confirm('$sCancelConfirmationMessage'))
-			{
-				return;
-			}
-		}
-		window.bLeavingOnUserAction = true;
-		$(this).dialog( "close" );
-		$(this).remove();
-	} },
-	{ text: "$sOkButtonLabel",
-	 class: "ibo-is-primary",
-	 click: function() {
-		var oDashboard = $('.itop-dashboard').data('itopRuntimedashboard');
-		if (oDashboard.is_dirty())
-		{
-			if (!confirm('$sAutoApplyConfirmationMessage'))
-			{
-				return;
-			}
-			else
-			{
-				oDashboard.apply_changes();
-			}
-		}
-		window.bLeavingOnUserAction = true;
-		oDashboard.save($(this));
-	} },
-	],
-	close: function() { $(this).remove(); }
-});
-
-$('#dashboard_editor .ui-layout-center').runtimedashboard({
-	dashboard_id: $sId, 
-	layout_class: $sLayoutClass, 
-	title: $sTitle,
-	auto_reload: $sAutoReload, 
-	auto_reload_sec: $sAutoReloadSec,
-	submit_to: '$sUrl', 
-	submit_parameters: {operation: 'save_dashboard', file: $sFile, extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
-	render_to: '$sUrl', 
-	render_parameters: {operation: 'render_dashboard', file: $sFile, extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
-	new_dashlet_parameters: {operation: 'new_dashlet'}
-});
-
-var dashboard_prop_size = GetUserPreference('dashboard_prop_size', 400);
-$('#dashboard_editor > .itop-dashboard').width($('#dashboard_editor').width() - dashboard_prop_size);
-
-// We check when we finish click on the pane with the resize slider
-// if the pane size changed (% 5px), if it's the case we save the value in userpref
-$('#dashboard_editor > .itop-dashboard').on('mouseup',function (){
-	var iWidthDiff = $(this).width() - ($('#dashboard_editor').width()  - dashboard_prop_size);
-	if( Math.abs(iWidthDiff) > 5){
-		dashboard_prop_size = iWidthDiff;
-		SetUserPreference('dashboard_prop_size', $('#dashboard_editor').width() - $(this).width(), true);
-	}
-});
-
-window.onbeforeunload = function() {
-	if (!window.bLeavingOnUserAction)
-	{
-		var oDashboard = $('.itop-dashboard').data('itopRuntimedashboard');
-		if (oDashboard)
-		{
-			if (oDashboard.is_dirty())
-			{
-				return '$sExitConfirmationMessage';
-			}	
-			if (oDashboard.is_modified())
-			{
-				return '$sExitConfirmationMessage';
-			}
-		}	
-	}
-	// return nothing ! safer for IE
-};
-JS
-		);
-		$oPage->add_ready_script("");
-	}
-
-	/**
 	 * @param string|null $sOQL
 	 *
 	 * @return \DesignerForm
@@ -902,6 +744,10 @@ JS
 	 *
 	 * @param array $aExtraParams
 	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 * @since 2.7.0 N°2735
 	 */
 	private function UpdateDashletUserPrefs(Dashlet $oDashlet, $sDashletIdOrig, array $aExtraParams)

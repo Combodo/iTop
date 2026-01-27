@@ -50,14 +50,4 @@ class DashletPlainText extends Dashlet
 
 		return DashletFactory::MakeForDashletPlainText($sText, $sId);
 	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function GetPropertiesFields(DesignerForm $oForm)
-	{
-		$oField = new DesignerLongTextField('text', Dict::S('UI:DashletPlainText:Prop-Text'), $this->aProperties['text']);
-		$oField->SetMandatory();
-		$oForm->AddField($oField);
-	}
 }

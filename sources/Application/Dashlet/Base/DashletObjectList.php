@@ -77,44 +77,6 @@ class DashletObjectList extends Dashlet
 
 		return $oPanel;
 	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = [])
-	{
-		$oDashletContainer = new DashletContainer($this->sId, ['dashlet-content']);
-		$sTitle = $this->aProperties['title'];
-		$sQuery = $this->aProperties['query'];
-		$bShowMenu = $this->aProperties['menu'];
-		$sHtmlTitle = utils::HtmlEntities($this->oModelReflection->DictString($sTitle));
-		if ($sHtmlTitle != '') {
-			$sHtmlTitle = '<h1>'.$sHtmlTitle.'</h1>';
-		}
-		$oQuery = $this->oModelReflection->GetQuery($sQuery);
-		$sClass = $oQuery->GetClass();
-		$sId = $this->sId;
-		$sMessage = Dict::S('UI:NoObjectToDisplay');
-		$sMenu = '';
-		if ($bShowMenu) {
-			$sMenu = '<p><a>'.Dict::Format('UI:ClickToCreateNew', $this->oModelReflection->GetName($sClass)).'</a></p>';
-		}
-
-		$sHtml = <<<HTML
-<div class="dashlet-content">
-<h1>$sHtmlTitle</h1>
-<div id="block_fake_$sId" class="display_block">
-<p>$sMessage</p>
-$sMenu
-</div>
-</div>
-HTML;
-
-		$oDashletContainer->AddHtml($sHtml);
-
-		return $oDashletContainer;
-	}
-
 	public function GetDBSearch($aExtraParams = [])
 	{
 		$sQuery = $this->aProperties['query'];
@@ -133,44 +95,8 @@ HTML;
 	/**
 	 * @inheritdoc
 	 */
-	public function GetPropertiesFields(DesignerForm $oForm)
-	{
-		$oField = new DesignerTextField('title', Dict::S('UI:DashletObjectList:Prop-Title'), $this->aProperties['title']);
-		$oForm->AddField($oField);
-
-		$oField = new DesignerLongTextField('query', Dict::S('UI:DashletObjectList:Prop-Query'), $this->aProperties['query']);
-		$oField->SetMandatory();
-		$oField->AddCSSClass("ibo-query-oql");
-		$oField->AddCSSClass("ibo-is-code");
-		$oForm->AddField($oField);
-
-		$oField = new DesignerBooleanField('menu', Dict::S('UI:DashletObjectList:Prop-Menu'), $this->aProperties['menu']);
-		$oForm->AddField($oField);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	public static function CanCreateFromOQL()
 	{
 		return true;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL = null)
-	{
-		$oField = new DesignerTextField('title', Dict::S('UI:DashletObjectList:Prop-Title'), '');
-		$oForm->AddField($oField);
-
-		$oField = new DesignerHiddenField('query', Dict::S('UI:DashletObjectList:Prop-Query'), $sOQL);
-		$oField->SetMandatory();
-		$oField->AddCSSClass("ibo-query-oql");
-		$oField->AddCSSClass("ibo-is-code");
-		$oForm->AddField($oField);
-
-		$oField = new DesignerBooleanField('menu', Dict::S('UI:DashletObjectList:Prop-Menu'), $this->aProperties['menu']);
-		$oForm->AddField($oField);
 	}
 }

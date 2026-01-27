@@ -55,44 +55,4 @@ class DashletHeaderStatic extends Dashlet
 
 		return DashletFactory::MakeForDashletHeaderStatic($this->oModelReflection->DictString($sTitle), $sIconPath);
 	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function GetPropertiesFields(DesignerForm $oForm)
-	{
-		$oField = new DesignerTextField('title', Dict::S('UI:DashletHeaderStatic:Prop-Title'), $this->aProperties['title']);
-		$oForm->AddField($oField);
-
-		$oField = $this->oModelReflection->GetIconSelectionField('icon', Dict::S('UI:DashletHeaderStatic:Prop-Icon'), $this->aProperties['icon']);
-		$oField->AddAllowedValue(['value' => '', 'label' => Dict::S('UI:DashletIcon:None'), 'icon' => '']);
-		$oForm->AddField($oField);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected function PropertyFromDOMNode($oDOMNode, $sProperty)
-	{
-		if ($sProperty == 'icon') {
-			$oIconField = $this->oModelReflection->GetIconSelectionField('icon');
-
-			return $oIconField->ValueFromDOMNode($oDOMNode);
-		} else {
-			return parent::PropertyFromDOMNode($oDOMNode, $sProperty);
-		}
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected function PropertyToDOMNode($oDOMNode, $sProperty, $value)
-	{
-		if ($sProperty == 'icon') {
-			$oIconField = $this->oModelReflection->GetIconSelectionField('icon');
-			$oIconField->ValueToDOMNode($oDOMNode, $value);
-		} else {
-			parent::PropertyToDOMNode($oDOMNode, $sProperty, $value);
-		}
-	}
 }

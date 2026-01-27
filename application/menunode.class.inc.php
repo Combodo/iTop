@@ -1312,37 +1312,6 @@ class DashboardMenuNode extends MenuNode
 			$oPage->p("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
 		}
 	}
-
-	/**
-	 * @param WebPage $oPage
-	 * @throws CoreException
-	 * @throws Exception
-	 */
-	public function RenderEditor(WebPage $oPage)
-	{
-		$oDashboard = $this->GetDashboard();
-		if ($oDashboard != null) {
-			//$oDashboard->RenderEditor($oPage);
-		} else {
-			$oPage->p("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
-		}
-	}
-
-	/**
-	 * @param $oDashlet
-	 * @throws Exception
-	 */
-	public function AddDashlet($oDashlet)
-	{
-		$oDashboard = $this->GetDashboard();
-		if ($oDashboard != null) {
-			$oDashboard->AddDashlet($oDashlet);
-			$oDashboard->Save();
-		} else {
-			throw new Exception("Error: failed to load dashboard file: '{$this->sDashboardFile}'");
-		}
-	}
-
 }
 
 /**
