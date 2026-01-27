@@ -30,6 +30,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\Forms\Block\AbstractFormBlock;
 use Combodo\iTop\Forms\Block\Base\FormBlock;
+use Combodo\iTop\Forms\FormBuilder\FormFactoryBuilderService;
 use Combodo\iTop\Forms\Forms;
 use Combodo\iTop\Forms\FormType\FormTypeHelper;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
@@ -106,8 +107,7 @@ abstract class Controller extends AbstractController
 	/** @var Request Request (from Symfony http_foundation component @link https://symfony.com/doc/current/components/http_foundation.html) */
 	private Request $oRequest;
 
-	/** @var FormFactoryBuilderInterface Factory form builder (from Symfony form component @link https://symfony.com/doc/current/components/form.html) */
-	private FormFactoryBuilderInterface $oFormFactoryBuilder;
+	protected FormFactoryBuilderService $oFormFactoryBuilderService;
 
 	/** @var CsrfTokenManager Csrf manager (from Symfony form component @link https://symfony.com/doc/current/security/csrf.html) */
 	private CsrfTokenManager $oCsrfTokenManager;
@@ -191,12 +191,10 @@ abstract class Controller extends AbstractController
 		$this->bDebugForced = $this->oRequest->query->has('debug');
 
 		// Initialize the CSRF token manager
-		$this->oCsrfTokenManager = new CsrfTokenManager();
+		$this->oCsrfTokenManager = MetaModel::GetService('CsrfTokenManager');
 
 		// Initialize the form factory builder to handle Request objects
-		$this->oFormFactoryBuilder = Forms::createFormFactoryBuilder()
-			->addExtension(new HttpFoundationExtension())
-			->addExtension(new CsrfExtension($this->oCsrfTokenManager));
+		$this->oFormFactoryBuilderService = MetaModel::GetService('FormFactoryBuilderService');
 	}
 
 	/**
@@ -824,23 +822,6 @@ abstract class Controller extends AbstractController
 	public function GetRequest(): Request
 	{
 		return $this->oRequest;
-	}
-
-	/**
-	 * Get a form builder.
-	 * This form builder can be used to create a form or to add fields to an existing form.
-	 *
-	 * @api
-	 *
-	 * @param \Combodo\iTop\Forms\Block\AbstractFormBlock $oFormBlock
-	 * @param mixed|null $data
-	 *
-	 * @return \Symfony\Component\Form\FormBuilderInterface
-	 * @since 3.3.0
-	 */
-	public function GetFormBuilder(AbstractFormBlock $oFormBlock, mixed $data = null): FormBuilderInterface
-	{
-		return $this->oFormFactoryBuilder->getFormFactory()->createNamedBuilder($oFormBlock->GetName(), $oFormBlock->GetFormType(), $data, $oFormBlock->GetOptions());
 	}
 
 	/**

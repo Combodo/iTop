@@ -36,7 +36,7 @@ class FormsController extends Controller
 
 			// Get the form block from the service (and the compiler)
 			$oFormBlock = $this->oFormBlockService->GetFormBlockById($sDashletClass, 'Dashlet');
-			$oBuilder = $this->GetFormBuilder($oFormBlock, []);
+			$oBuilder = $this->oFormFactoryBuilderService->GetFormBuilder($oFormBlock, []);
 			$oForm = $oBuilder->getForm();
 			$oForm->handleRequest($oRequest);
 

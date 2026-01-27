@@ -111,7 +111,7 @@ class DashboardController extends Controller
 			// Get the form block from the service (and the compiler)
 			$oRequest = $this->getRequest();
 			$oFormBlock = $this->oFormBlockService->GetFormBlockById('DashboardGrid', 'Dashboard');
-			$oBuilder = $this->GetFormBuilder($oFormBlock, $aViewData);
+			$oBuilder = $this->oFormFactoryBuilderService->GetFormBuilder($oFormBlock, $aViewData);
 			$oForm = $oBuilder->getForm();
 			$oForm->handleRequest($oRequest);
 			// We are in the submit action, so we submit the form with the provided values

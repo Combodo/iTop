@@ -79,7 +79,7 @@ class ServiceLocator implements ContainerInterface
 	final public function Init(string $sRelativeConfigFileName = null): void
 	{
 		if (is_null($sRelativeConfigFileName)) {
-			$sConfigFile = APPROOT."sources/Service/ServiceLocator/service-locator-runtime-config.php";
+			$sConfigFile = APPROOT."sources/Service/ServiceLocator/service-locator-runtime.php";
 		} else {
 			$sConfigFile = APPROOT.$sRelativeConfigFileName;
 		}

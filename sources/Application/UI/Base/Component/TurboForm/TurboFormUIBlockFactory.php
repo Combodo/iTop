@@ -62,8 +62,8 @@ class TurboFormUIBlockFactory extends AbstractUIBlockFactory
 	{
 		$oFormBlockService = MetaModel::GetService('FormBlockService');
 		$oBlockForm = $oFormBlockService->GetFormBlockById($sDashletClass, 'Dashlet');
-		$oController = new FormsController();
-		$oBuilder = $oController->GetFormBuilder($oBlockForm, $aData);
+		$oFormFactoryBuilderService = MetaModel::GetService('FormFactoryBuilderService');
+		$oBuilder = $oFormFactoryBuilderService->GetFormBuilder($oBlockForm, $aData);
 		$oForm = $oBuilder->getForm();
 
 		$oTurboForm = new TurboForm($oForm->createView(), $sId);
