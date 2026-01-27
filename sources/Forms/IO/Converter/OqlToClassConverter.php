@@ -7,8 +7,8 @@
 
 namespace Combodo\iTop\Forms\IO\Converter;
 
-use Combodo\iTop\Service\DependencyInjection\DIException;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use Combodo\iTop\Service\ServiceLocator\ServiceLocatorException;
+use Combodo\iTop\Service\ServiceLocator\ServiceLocator;
 use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\IO\FormBlockIOException;
 use Exception;
@@ -23,7 +23,7 @@ use ModelReflection;
 class OqlToClassConverter extends AbstractConverter
 {
 	/** @inheritdoc
-	 * @throws DIException
+	 * @throws ServiceLocationException
 	 * @throws FormBlockIOException
 	 */
 	public function Convert(mixed $oData): ?ClassIOFormat
@@ -33,7 +33,7 @@ class OqlToClassConverter extends AbstractConverter
 		}
 
 		/** @var ModelReflection $oModelReflection */
-		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
+		$oModelReflection = \MetaModel::GetService('ModelReflection');
 		try {
 			$oQuery = $oModelReflection->GetQuery($oData);
 		} catch (Exception $e) {

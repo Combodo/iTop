@@ -17,7 +17,7 @@ class DataModelDependantCacheTest extends ItopTestCase
 
 		$this->sCacheRootDir = self::CreateTmpdir();
 
-		$this->oCacheService = DataModelDependantCache::GetInstance();
+		$this->oCacheService = static::GetService('DataModelDependantCache');
 		$this->oCacheService->SetStorageRootDir($this->sCacheRootDir);
 	}
 

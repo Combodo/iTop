@@ -13,7 +13,7 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\WebPage;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use Combodo\iTop\Service\ServiceLocator\ServiceLocator;
 
 /**
  * Class RuntimeDashboard
@@ -35,7 +35,6 @@ class RuntimeDashboard extends Dashboard
 		parent::__construct($sId);
 		$this->oMetaModel = new ModelReflectionRuntime();
 		$this->oDashletFactory->SetModelReflectionRuntime($this->oMetaModel);
-		ServiceLocator::GetInstance()->RegisterService('ModelReflection', $this->oMetaModel);
 		$this->bCustomized = false;
 	}
 
@@ -686,6 +685,8 @@ JS
 	 */
 	public static function GetDashletCreationForm($sOQL = null)
 	{
+		/** @var DashletService $oDashletService */
+		$oDashletService = MetaModel::GetService('DashletService');
 		$oAppContext = new ApplicationContext();
 		$sContextMenuId = $oAppContext->GetCurrentValue('menu', null);
 
@@ -743,7 +744,7 @@ JS
 
 		// Get the list of possible dashlets that support a creation from
 		// an OQL
-		$aDashlets = DashletService::GetInstance()->GetAvailableDashlets('can_create_by_oql');
+		$aDashlets = $oDashletService->GetAvailableDashlets('can_create_by_oql');
 
 		$oSelectorField = new DesignerFormSelectorField('dashlet_class', Dict::S('UI:DashletCreation:DashletType'), '');
 		$oForm->AddField($oSelectorField);

@@ -12,15 +12,19 @@ use Combodo\iTop\Forms\Block\FormBlockService;
 use Combodo\iTop\ItopSdkFormDemonstrator\Helper\ItopSdkFormDemonstratorLog;
 use Exception;
 use IssueLog;
+use MetaModel;
 
 class FormsController extends Controller
 {
 	public const ROUTE_NAMESPACE = 'forms';
 
+	private FormBlockService $oFormBlockService;
+
 	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [])
 	{
 		$sModuleName = 'core';
 		$sViewPath = APPROOT.'templates/application/forms';
+		$this->oFormBlockService = MetaModel::GetService('FormBlockService');
 		parent::__construct($sViewPath, $sModuleName, $aAdditionalPaths);
 	}
 
@@ -31,7 +35,7 @@ class FormsController extends Controller
 			$sDashletClass = $oRequest->query->get('dashlet_class');
 
 			// Get the form block from the service (and the compiler)
-			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById($sDashletClass, 'Dashlet');
+			$oFormBlock = $this->oFormBlockService->GetFormBlockById($sDashletClass, 'Dashlet');
 			$oBuilder = $this->GetFormBuilder($oFormBlock, []);
 			$oForm = $oBuilder->getForm();
 			$oForm->handleRequest($oRequest);

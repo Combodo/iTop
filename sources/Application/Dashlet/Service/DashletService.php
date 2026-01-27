@@ -15,23 +15,15 @@ use utils;
 
 class DashletService
 {
-	private static DashletService $oInstance;
 	private array $aDashlets = [];
 
-	protected function __construct()
+	public function __construct()
 	{
-	}
-
-	final public static function GetInstance(): DashletService
-	{
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new DashletService();
-		}
-
-		return static::$oInstance;
 	}
 
 	/**
+	 * @param string $sCategory
+	 *
 	 * @return array
 	 * @throws \Combodo\iTop\Application\Dashlet\DashletException
 	 * @throws \DOMFormatException
@@ -109,7 +101,7 @@ class DashletService
 	 * @throws \Combodo\iTop\Application\Dashlet\DashletException
 	 * @throws \DOMFormatException
 	 */
-	public function IsDashletAvailable(string $sClass)
+	public function IsDashletAvailable(string $sClass): bool
 	{
 		$this->InitDashletDefinitions();
 
@@ -121,6 +113,7 @@ class DashletService
 	 *
 	 * @return array
 	 * @throws \Combodo\iTop\Application\Dashlet\DashletException
+	 * @throws \DOMFormatException
 	 */
 	public function GetDashletDefinition(string $sClass): array
 	{

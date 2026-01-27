@@ -15,8 +15,8 @@ use Combodo\iTop\Forms\IO\Format\ClassIOFormat;
 use Combodo\iTop\Forms\Register\IORegister;
 use Combodo\iTop\Forms\Register\OptionsRegister;
 use Combodo\iTop\Forms\Register\RegisterException;
-use Combodo\iTop\Service\DependencyInjection\DIException;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use Combodo\iTop\Service\ServiceLocator\ServiceLocatorException;
+use Combodo\iTop\Service\ServiceLocator\ServiceLocator;
 use utils;
 
 /**
@@ -61,7 +61,7 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	/**
 	 * @inheritdoc
 	 *
-	 * @throws DIException
+	 * @throws ServiceLocationException
 	 * @throws FormBlockException
 	 * @throws RegisterException
 	 */
@@ -89,11 +89,12 @@ class AttributeChoiceFormBlock extends ChoiceFormBlock
 	 * @param string|null $sCategory
 	 *
 	 * @return array
-	 * @throws \Combodo\iTop\Service\DependencyInjection\DIException
+	 * @throws \Combodo\iTop\Service\ServiceLocator\ServiceLocatorException
 	 */
 	public static function ListAttributeCodesByCategory(string $sClass, string $sCategory = ''): array
 	{
-		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
+		/** @var \ModelReflection $oModelReflection */
+		$oModelReflection = \MetaModel::GetService('ModelReflection');
 		$aNonGroupableAttributes = [
 			'AttributeLinkedSet',
 			'AttributeFriendlyName',

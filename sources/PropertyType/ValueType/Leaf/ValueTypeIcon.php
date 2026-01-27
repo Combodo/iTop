@@ -11,7 +11,7 @@ use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\ChoiceFormBlock;
 use Combodo\iTop\Forms\Block\Base\ChoiceImageFormBlock;
 use Combodo\iTop\PropertyType\ValueType\Branch\AbstractBranchValueType;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use Combodo\iTop\Service\ServiceLocator\ServiceLocator;
 use utils;
 
 /**
@@ -30,7 +30,7 @@ class ValueTypeIcon extends AbstractLeafValueType
 
 		// Search icons in iTop and extensions
 		/** @var \ModelReflection $oModelReflection */
-		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
+		$oModelReflection = \MetaModel::GetService('ModelReflection');
 
 		$sChoices = "[\n";
 		$sChoicesAttImages = "[\n";

@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Application\Dashlet;
 
 use Combodo\iTop\Application\Dashlet\Service\DashletService;
+use MetaModel;
 use ModelReflectionRuntime;
 
 class DashletFactory
@@ -36,7 +37,9 @@ class DashletFactory
 
 	public function CreateDashlet(string $sClass, string $sId): Dashlet
 	{
-		if (!DashletService::GetInstance()->IsDashletAvailable($sClass)) {
+		/** @var DashletService $oDashletService */
+		$oDashletService = MetaModel::GetService('DashletService');
+		if (!$oDashletService->IsDashletAvailable($sClass)) {
 			$sClass = 'DashletUnknown';
 			//throw new DashletException("Dashlet ".json_encode($sClass)." is not available");
 		}

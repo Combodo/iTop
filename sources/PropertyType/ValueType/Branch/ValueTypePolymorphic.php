@@ -11,9 +11,17 @@ use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\Base\PolymorphicFormBlock;
 use Combodo\iTop\PropertyType\PropertyTypeService;
 use Combodo\iTop\PropertyType\ValueType\ValueTypeFactory;
+use MetaModel;
 
 class ValueTypePolymorphic extends AbstractBranchValueType
 {
+	private PropertyTypeService $oPropertyTypeService;
+
+	public function __construct()
+	{
+		$this->oPropertyTypeService = MetaModel::GetService('PropertyTypeService');
+	}
+
 	public function GetFormBlockClass(): string
 	{
 		return PolymorphicFormBlock::class;
@@ -41,7 +49,7 @@ class ValueTypePolymorphic extends AbstractBranchValueType
 		$sType = $value['type'];
 		$oPropertyNode->setAttribute('xsi:type', $sType);
 
-		$oPropertyType = PropertyTypeService::GetInstance()->GetPropertyType($sType);
+		$oPropertyType = $this->oPropertyTypeService->GetPropertyType($sType);
 
 		$aProperties = $value['properties'];
 		$oPropertyType->SerializeToDOMNode($aProperties, $oPropertyNode);
@@ -50,7 +58,7 @@ class ValueTypePolymorphic extends AbstractBranchValueType
 	public function DeserializeFromDOMNode(DesignElement $oDOMNode): mixed
 	{
 		$sType = $oDOMNode->getAttribute('xsi:type');
-		$oPropertyType = PropertyTypeService::GetInstance()->GetPropertyType($sType);
+		$oPropertyType = $this->oPropertyTypeService->GetPropertyType($sType);
 
 		return [
 			'type' => $sType,

@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
+use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
 use DeprecatedCallsLog;
 use DOMDocument;
 use MySQLTransactionNotClosedException;
@@ -31,6 +32,8 @@ use const DEBUG_BACKTRACE_IGNORE_ARGS;
 abstract class ItopTestCase extends KernelTestCase
 {
 	public const TEST_LOG_DIR = 'test';
+	/** @var \Combodo\iTop\Service\DependencyInjection\ServiceLocator */
+	protected static ServiceLocator $oServiceLocator;
 	protected array $aFileToClean = [];
 
 	/**
@@ -81,6 +84,11 @@ abstract class ItopTestCase extends KernelTestCase
 
 		// Required to boot the portal symfony Kernel
 		$_ENV['PORTAL_ID'] = 'itop-portal';
+
+		// Default Service Locator
+		// Read the runtime service locator configuration
+		self::$oServiceLocator = new ServiceLocator();
+		self::$oServiceLocator->Init();
 	}
 
 	/**
@@ -748,5 +756,19 @@ abstract class ItopTestCase extends KernelTestCase
 		// Note: assertEquals reports the differences in a diff which is easier to interpret (in PHPStorm)
 		// as compared to the report given by assertEqualXMLStructure
 		static::assertEquals($this->CanonicalizeXML($sExpected), $this->CanonicalizeXML($sActual), $sMessage);
+	}
+
+	/**
+	 * Get configured service
+	 *
+	 * @see conf/production/ServiceLocatorRuntimeConfig.php
+	 *
+	 * Example: $oModelReflection = \MetaModel::GetService('ModelReflexion');
+	 *
+	 * @throws \Combodo\iTop\Service\DependencyInjection\ServiceLocationException
+	 */
+	protected static function GetService(string $sServiceName): mixed
+	{
+		return self::$oServiceLocator->get($sServiceName);
 	}
 }

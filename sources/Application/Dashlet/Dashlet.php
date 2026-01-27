@@ -13,7 +13,6 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\DesignDocument;
 use Combodo\iTop\DesignElement;
-use Combodo\iTop\PropertyType\Serializer\XMLNormalizer;
 use DesignerForm;
 use DesignerHiddenField;
 use Dict;

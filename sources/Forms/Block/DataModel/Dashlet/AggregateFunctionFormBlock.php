@@ -36,7 +36,6 @@ class AggregateFunctionFormBlock extends ChoiceFormBlock
 	 *
 	 * @throws \Combodo\iTop\Forms\Block\FormBlockException
 	 * @throws \Combodo\iTop\Forms\Register\RegisterException
-	 * @throws \Combodo\iTop\Service\DependencyInjection\DIException
 	 */
 	public function UpdateOptions(OptionsRegister $oOptionsRegister): void
 	{

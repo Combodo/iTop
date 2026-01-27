@@ -109,6 +109,8 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 	 */
 	public function Render($oPage, $aCells, $bEditMode = false, $aExtraParams = [])
 	{
+		/** @var DashletService $oDashletService */
+		$oDashletService = MetaModel::GetService('DashletService');
 		// Trim the list of cells to remove the invisible/empty ones at the end of the array
 		$aCells = $this->TrimCellsArray($aCells);
 
@@ -147,7 +149,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 								$sDashletId = $oDashlet->GetID();
 								$sDashletClass = $oDashlet->GetDashletType();
 								$aDashletDenormalizedProperties = $oDashlet->GetModelData();
-								$aDashletsInfo = DashletService::GetInstance()->GetDashletDefinition($sDashletClass);
+								$aDashletsInfo = $oDashletService->GetDashletDefinition($sDashletClass);
 
 								// GRID LAYOUT: Set position relative to grid
 								$iPositionX = $iGridCurrentX + $iGridCurrentColX;

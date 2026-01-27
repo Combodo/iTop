@@ -13,6 +13,7 @@ use Combodo\iTop\Forms\Block\FormBlockService;
 use Combodo\iTop\PropertyType\Compiler\PropertyTypeCompiler;
 use Combodo\iTop\PropertyType\Compiler\PropertyTypeCompilerException;
 use Combodo\iTop\Service\Cache\DataModelDependantCache;
+use MetaModel;
 use utils;
 
 class PropertyTypeService
@@ -21,20 +22,9 @@ class PropertyTypeService
 
 	private DataModelDependantCache $oCacheService;
 
-	private static PropertyTypeService $oInstance;
-
-	protected function __construct()
+	public function __construct()
 	{
-		$this->oCacheService = DataModelDependantCache::GetInstance();
-	}
-
-	final public static function GetInstance(): PropertyTypeService
-	{
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new PropertyTypeService();
-		}
-
-		return static::$oInstance;
+		$this->oCacheService = MetaModel::GetService('DataModelDependantCache');
 	}
 
 	/**

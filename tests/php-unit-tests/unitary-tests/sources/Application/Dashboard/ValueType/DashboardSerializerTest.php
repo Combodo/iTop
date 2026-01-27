@@ -28,8 +28,6 @@ class DashboardSerializerTest extends ItopDataTestCase
 	 */
 	public function testSerializeXML($normalizedValue, string $sXMLContent)
 	{
-		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
-
 		$oDOMDocument = new PropertyTypeDesign();
 		$oDOMDocument->preserveWhiteSpace = false;
 		$oDOMDocument->formatOutput = true;

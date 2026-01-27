@@ -8,7 +8,7 @@
 namespace Combodo\iTop\Forms\Validator;
 
 use Combodo\iTop\Forms\IO\Converter\OqlToClassConverter;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use Combodo\iTop\Service\ServiceLocator\ServiceLocator;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Validator\Constraint;
@@ -41,8 +41,8 @@ class AttributeExistValidator extends ConstraintValidator
 
 		$sClass = "UserRequest";
 
-		/** List attributes @var ModelReflection $oModelReflection */
-		$oModelReflection = ServiceLocator::GetInstance()->get('ModelReflection');
+		/** @var \ModelReflection $oModelReflection */
+		$oModelReflection = \MetaModel::GetService('ModelReflection');
 		$aAttributeCodes = array_keys($oModelReflection->ListAttributes($sClass));
 
 		if (!in_array($value, $aAttributeCodes, true)) {

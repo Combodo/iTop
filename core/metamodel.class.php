@@ -22,6 +22,7 @@ use Combodo\iTop\Application\EventRegister\ApplicationEvents;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use Combodo\iTop\Service\Events\EventData;
 use Combodo\iTop\Service\Events\EventService;
+use Combodo\iTop\Service\ServiceLocator\ServiceLocator;
 
 require_once APPROOT.'core/modulehandler.class.inc.php';
 require_once APPROOT.'core/querymodifier.class.inc.php';
@@ -141,6 +142,8 @@ abstract class MetaModel
 	 * [class][key] -> object
 	 */
 	protected static array $m_aReentranceProtection = [];
+
+	private static ServiceLocator $oServiceLocator;
 
 	/**
 	 * MetaModel constructor.
@@ -7025,6 +7028,44 @@ abstract class MetaModel
 				}
 			}
 		}
+	}
+
+	/**
+	 * (Re)Init the global service locator with a configuration file
+	 *
+	 * @param string|null $sRelativeConfigFileName default to the runtime config file
+	 *
+	 * @return void
+	 */
+	public static function InitServiceLocator(string $sRelativeConfigFileName = null): void
+	{
+		if (!isset(self::$oServiceLocator)) {
+			self::$oServiceLocator = new ServiceLocator();
+		}
+
+		// Read the runtime service locator configuration
+		self::$oServiceLocator->Init($sRelativeConfigFileName);
+	}
+
+	/**
+	 * Get configured service
+	 *
+	 * @see conf/production/ServiceLocatorRuntimeConfig.php
+	 *
+	 * Example: $oModelReflection = \MetaModel::GetService('ModelReflexion');
+	 *
+	 * @param string $sServiceName
+	 *
+	 * @return mixed
+	 * @throws \Combodo\iTop\Service\ServiceLocator\ServiceLocatorException
+	 */
+	public static function GetService(string $sServiceName): mixed
+	{
+		if (!isset(self::$oServiceLocator)) {
+			// Read the runtime service locator configuration
+			self::InitServiceLocator();
+		}
+		return self::$oServiceLocator->get($sServiceName);
 	}
 }
 

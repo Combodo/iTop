@@ -19,7 +19,7 @@ class InterfaceDiscoveryTest extends ItopDataTestCase
 		parent::setUp();
 		$this->oInterfaceDiscovery = InterfaceDiscovery::GetInstance();
 		$this->sCacheRootDir = self::CreateTmpdir();
-		$this->oCacheService = DataModelDependantCache::GetInstance();
+		$this->oCacheService = static::GetService('DataModelDependantCache');
 		$this->oCacheService->SetStorageRootDir($this->sCacheRootDir);
 		$this->oInterfaceDiscovery->SetCacheService($this->oCacheService);
 	}
@@ -103,7 +103,7 @@ class InterfaceDiscoveryTest extends ItopDataTestCase
 
 	public function testShouldNotProduceCacheForDevelopers()
 	{
-		DataModelDependantCache::GetInstance()->Clear('InterfaceDiscovery');
+		$this->oCacheService->Clear('InterfaceDiscovery');
 
 		MetaModel::GetConfig()->Set('developer_mode.enabled', true);
 		MetaModel::GetConfig()->Set('developer_mode.interface_cache.enabled', false);
@@ -114,7 +114,7 @@ class InterfaceDiscoveryTest extends ItopDataTestCase
 
 	public function testShouldProduceDynamicCacheForDevelopersWillingTo()
 	{
-		DataModelDependantCache::GetInstance()->Clear('InterfaceDiscovery');
+		$this->oCacheService->Clear('InterfaceDiscovery');
 
 		MetaModel::GetConfig()->Set('developer_mode.enabled', true);
 		MetaModel::GetConfig()->Set('developer_mode.interface_cache.enabled', true);
@@ -131,7 +131,7 @@ class InterfaceDiscoveryTest extends ItopDataTestCase
 
 	public function testShouldProduceStaticCacheForProduction()
 	{
-		DataModelDependantCache::GetInstance()->Clear('InterfaceDiscovery');
+		$this->oCacheService->Clear('InterfaceDiscovery');
 
 		MetaModel::GetConfig()->Set('developer_mode.enabled', false);
 

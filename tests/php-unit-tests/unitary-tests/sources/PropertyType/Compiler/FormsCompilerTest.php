@@ -24,8 +24,6 @@ class FormsCompilerTest extends ItopDataTestCase
 	 */
 	public function testCompileFormFromXML(string $sXMLContent, string $sExpectedPHP)
 	{
-		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
-
 		$sProducedPHP = PropertyTypeCompiler::GetInstance()->CompileFormFromXML($sXMLContent);
 
 		$this->AssertPHPCodeIsValid($sProducedPHP);
@@ -862,8 +860,6 @@ XML,
 
 	public function testCompileFormForIconSelection()
 	{
-		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
-
 		$sXMLContent = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <property_type id="basic_test_for_icon" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">
@@ -899,8 +895,6 @@ PHP;
 
 	public function testCompileFormForClassSelection()
 	{
-		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
-
 		$sXMLContent = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <property_type id="basic_test_for_class" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Combodo-PropertyType" xsi:noNamespaceSchemaLocation = "https://www.combodo.com/itop-schema/3.3">

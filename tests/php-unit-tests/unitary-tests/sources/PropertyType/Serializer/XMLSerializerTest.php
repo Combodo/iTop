@@ -24,8 +24,6 @@ class XMLSerializerTest extends ItopDataTestCase
 	 */
 	public function testSerializeXML($normalizedValue, string $sPropertyTypeXML, string $sXMLContent)
 	{
-		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
-
 		$oDOMDocument = new PropertyTypeDesign();
 		$oDOMDocument->preserveWhiteSpace = false;
 		$oDOMDocument->formatOutput = true;
@@ -369,8 +367,6 @@ XML,
 	 */
 	public function testUnserializeXML($normalizedValue, string $sPropertyTypeXML, string $sXMLContent)
 	{
-		ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
-
 		$oDoc = new PropertyTypeDesign();
 		$oDoc->loadXML($sXMLContent);
 		/** @var \Combodo\iTop\DesignElement $oRoot */

@@ -11,27 +11,18 @@ use Combodo\iTop\Forms\Block\Base\FormBlock;
 use Combodo\iTop\PropertyType\Compiler\PropertyTypeCompiler;
 use Combodo\iTop\PropertyType\PropertyTypeService;
 use Combodo\iTop\Service\Cache\DataModelDependantCache;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use Combodo\iTop\Service\ServiceLocator\ServiceLocator;
 use ModelReflection;
 use ModelReflectionRuntime;
 use utils;
 
 class FormBlockService
 {
-	private static FormBlockService $oInstance;
+	private PropertyTypeService $oPropertyTypeService;
 
-	protected function __construct(ModelReflection $oModelReflection = null)
+	public function __construct(ModelReflection $oModelReflection = null)
 	{
-		ServiceLocator::GetInstance()->RegisterService('ModelReflection', $oModelReflection ?? new ModelReflectionRuntime());
-	}
-
-	final public static function GetInstance(ModelReflection $oModelReflection = null): FormBlockService
-	{
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new FormBlockService($oModelReflection);
-		}
-
-		return static::$oInstance;
+		$this->oPropertyTypeService = \MetaModel::GetService('PropertyTypeService');
 	}
 
 	/**
@@ -46,7 +37,7 @@ class FormBlockService
 	 */
 	public function GetFormBlockById(string $sId, string $sType): FormBlock
 	{
-		return PropertyTypeService::GetInstance()->GetFormBlockById($sId, $sType);
+		return $this->oPropertyTypeService->GetFormBlockById($sId, $sType);
 	}
 
 }

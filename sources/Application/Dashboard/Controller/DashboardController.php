@@ -20,13 +20,14 @@ use Combodo\iTop\Application\WebPage\DownloadPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\Forms\Block\FormBlockService;
 use Combodo\iTop\PropertyType\Serializer\XMLSerializer;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use Combodo\iTop\Service\ServiceLocator\ServiceLocator;
 use DBObjectSearch;
 use DBObjectSet;
 use Dict;
 use DOMException;
 use Exception;
 use IssueLog;
+use MetaModel;
 use ModelReflectionRuntime;
 use RuntimeDashboard;
 use SecurityException;
@@ -36,6 +37,14 @@ use utils;
 class DashboardController extends Controller
 {
 	public const ROUTE_NAMESPACE = 'dashboard';
+
+	private FormBlockService $oFormBlockService;
+
+	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [], array $aThemes = ['application/forms/itop_console_layout.html.twig', 'application/forms/wip_form_demonstrator.html.twig'])
+	{
+		parent::__construct($sViewPath, $sModuleName, $aAdditionalPaths, $aThemes);
+		$this->oFormBlockService = MetaModel::GetService('FormBlockService');
+	}
 
 	public function OperationGetDashlet()
 	{
@@ -54,8 +63,6 @@ class DashboardController extends Controller
 
 			$oDashlet = DashletFactory::GetInstance()->CreateDashlet($sDashletClass, $sDashletId);
 
-			// TODO 3.3 This is not the place to register this service, do better please
-			ServiceLocator::GetInstance()->RegisterService('ModelReflection', new ModelReflectionRuntime());
 			if (!empty($aValues)) {
 				$oDashlet->FromModelData($aValues);
 			} else {
@@ -103,7 +110,7 @@ class DashboardController extends Controller
 		try {
 			// Get the form block from the service (and the compiler)
 			$oRequest = $this->getRequest();
-			$oFormBlock = FormBlockService::GetInstance()->GetFormBlockById('DashboardGrid', 'Dashboard');
+			$oFormBlock = $this->oFormBlockService->GetFormBlockById('DashboardGrid', 'Dashboard');
 			$oBuilder = $this->GetFormBuilder($oFormBlock, $aViewData);
 			$oForm = $oBuilder->getForm();
 			$oForm->handleRequest($oRequest);
@@ -127,8 +134,7 @@ class DashboardController extends Controller
 				$aFormErrors = $oForm->getErrors(true, true);
 				$sMessage = $aFormErrors->__toString();
 			}
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			IssueLog::Exception($e->getMessage(), $e);
 			$sStatus = 'error';
 			$sMessage = $e->getMessage();
@@ -205,11 +211,9 @@ class DashboardController extends Controller
 				$oDoc = utils::ReadPostedDocument('dashboard_upload_file');
 				$oDashboard->FromXml($oDoc->GetData());
 				$oDashboard->PersistDashboard($oDoc->GetData());
-			}
-			catch (DOMException $e) {
+			} catch (DOMException $e) {
 				$aResult = ['error' => Dict::S('UI:Error:InvalidDashboardFile')];
-			}
-			catch (Exception $e) {
+			} catch (Exception $e) {
 				$aResult = ['error' => $e->getMessage()];
 			}
 		} else {

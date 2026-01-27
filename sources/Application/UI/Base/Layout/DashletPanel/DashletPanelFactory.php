@@ -3,14 +3,17 @@
 namespace Combodo\iTop\Application\UI\Base\Layout\DashletPanel;
 
 use Combodo\iTop\Application\Dashlet\Service\DashletService;
+use MetaModel;
 
 class DashletPanelFactory
 {
 	public static function MakeForDashboardEditor(string $sId = null): DashletPanel
 	{
+		/** @var DashletService $oDashletService */
+		$oDashletService = MetaModel::GetService('DashletService');
 		$oDashletPanel = new DashletPanel($sId);
 
-		$aAvailableDashlets = DashletService::GetInstance()->GetAvailableDashlets('can_be_created');
+		$aAvailableDashlets = $oDashletService->GetAvailableDashlets('can_be_created');
 
 		foreach ($aAvailableDashlets as $sDashletClass => $aDashletInformation) {
 			$oDashletEntry = new DashletEntry($sDashletClass, $aDashletInformation['label'], $aDashletInformation['description'], $aDashletInformation['icon']);

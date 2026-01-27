@@ -30,7 +30,7 @@ class InterfaceDiscovery
 
 	private function __construct()
 	{
-		$this->oCacheService = DataModelDependantCache::GetInstance();
+		$this->oCacheService = MetaModel::GetService('DataModelDependantCache');
 	}
 
 	public static function GetInstance(): InterfaceDiscovery

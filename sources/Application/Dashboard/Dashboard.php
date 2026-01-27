@@ -664,7 +664,9 @@ JS
 	 */
 	protected function GetAvailableDashlets(): array
 	{
-		return DashletService::GetInstance()->GetAvailableDashlets();
+		/** @var DashletService $oDashletService */
+		$oDashletService = MetaModel::GetService('DashletService');
+		return $oDashletService->GetAvailableDashlets();
 	}
 
 	/**

@@ -17,19 +17,9 @@ use utils;
  */
 class DataModelDependantCache
 {
-	private static DataModelDependantCache $oInstance;
-
-	public static function GetInstance(): DataModelDependantCache
-	{
-		if (!isset(self::$oInstance)) {
-			self::$oInstance = new DataModelDependantCache();
-		}
-		return self::$oInstance;
-	}
-
 	private ?string $sStorageRootDir; // Nullable for test purposes
 
-	private function __construct()
+	public function __construct()
 	{
 		$this->sStorageRootDir = null;
 	}

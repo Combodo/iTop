@@ -10,11 +10,14 @@ namespace Combodo\iTop\Application\Dashboard\Layout;
 use Combodo\iTop\Application\Dashlet\Service\DashletService;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardGrid;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
+use MetaModel;
 
 class DashboardLayoutGrid extends \DashboardLayout
 {
 	public function Render($oPage, $aDashlets, $bEditMode = false, array $aExtraParams = [])
 	{
+		/** @var DashletService $oDashletService */
+		$oDashletService = MetaModel::GetService('DashletService');
 		$oDashboardLayout = new DashboardLayoutUIBlock($aExtraParams['dashboard_div_id']);
 
 		$oDashboardGrid = new DashboardGrid();
@@ -29,7 +32,7 @@ class DashboardLayoutGrid extends \DashboardLayout
 				$sDashletId = $oDashlet->GetID();
 				$sDashletClass = $oDashlet->GetDashletType();
 				$aDashletDenormalizedProperties = $oDashlet->GetModelData();
-				$aDashletsInfo = DashletService::GetInstance()->GetDashletDefinition($sDashletClass);
+				$aDashletsInfo = $oDashletService->GetDashletDefinition($sDashletClass);
 
 				// Also set minimal height/width
 				$iPositionX = $aPosDashlet['position_x'] ?? 0;
