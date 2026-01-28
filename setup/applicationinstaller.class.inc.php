@@ -21,6 +21,7 @@ use Combodo\iTop\Setup\FeatureRemoval\InplaceSetupAudit;
 use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
 
 require_once(APPROOT.'setup/parameters.class.inc.php');
+require_once(APPROOT.'setup/StepSequencer.php');
 require_once(APPROOT.'setup/xmldataloader.class.inc.php');
 require_once(APPROOT.'setup/backup.class.inc.php');
 require_once APPROOT.'setup/feature_removal/InplaceSetupAudit.php';
@@ -39,12 +40,8 @@ require_once APPROOT.'setup/feature_removal/InplaceSetupAudit.php';
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class ApplicationInstaller
+class ApplicationBuildSequencer extends StepSequencer
 {
-	public const OK = 1;
-	public const ERROR = 2;
-	public const WARNING = 3;
-	public const INFO = 4;
 
 	/** @var \Parameters */
 	protected $oParams;
@@ -90,71 +87,7 @@ class ApplicationInstaller
 		return 'env-'.$sTargetEnv;
 	}
 
-	/**
-	 * Runs all the installation steps in one go and directly outputs
-	 * some information about the progress and the success of the various
-	 * sequential steps.
-	 *
-	 * @param bool $bVerbose
-	 * @param string|null $sMessage
-	 * @param string|null $sInstallComment
-	 *
-	 * @return boolean True if the installation was successful, false otherwise
-	 */
-	public function ExecuteAllSteps($bVerbose = true, &$sMessage = null, $sInstallComment = null)
-	{
-		$sStep = '';
-		$sStepLabel = '';
-		$iOverallStatus = self::OK;
-		do {
-			if ($bVerbose) {
-				if ($sStep != '') {
-					echo "$sStepLabel\n";
-					echo "Executing '$sStep'\n";
-				} else {
-					echo "Starting the installation...\n";
-				}
-			}
-			$aRes = $this->ExecuteStep($sStep, $sInstallComment);
-			$sStep = $aRes['next-step'];
-			$sStepLabel = $aRes['next-step-label'];
-			$sMessage = $aRes['message'];
-			if ($bVerbose) {
-				switch ($aRes['status']) {
-					case self::OK:
-						echo "Ok. ".$aRes['percentage-completed']." % done.\n";
-						break;
 
-					case self::ERROR:
-						$iOverallStatus = self::ERROR;
-						echo "Error: ".$aRes['message']."\n";
-						break;
-
-					case self::WARNING:
-						$iOverallStatus = self::WARNING;
-						echo "Warning: ".$aRes['message']."\n";
-						echo $aRes['percentage-completed']." % done.\n";
-						break;
-
-					case self::INFO:
-						echo "Info: ".$aRes['message']."\n";
-						echo $aRes['percentage-completed']." % done.\n";
-						break;
-				}
-			} else {
-				switch ($aRes['status']) {
-					case self::ERROR:
-						$iOverallStatus = self::ERROR;
-						break;
-					case self::WARNING:
-						$iOverallStatus = self::WARNING;
-						break;
-				}
-			}
-		} while (($aRes['status'] != self::ERROR) && ($aRes['next-step'] != ''));
-
-		return ($iOverallStatus == self::OK);
-	}
 
 	private function GetConfig()
 	{
@@ -1100,3 +1033,8 @@ class SetupDBBackup extends DBBackup
 		SetupLog::Ok('Error - '.$sMsg);
 	}
 }
+
+/**
+ * For compatibility with older scripts
+ */
+class_alias('ApplicationBuildSequencer', 'ApplicationInstaller');

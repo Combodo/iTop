@@ -54,7 +54,7 @@ class WizStepBuild extends AbstractWizStepBuild
 	 */
 	public function GetNextButtonLabel()
 	{
-		return 'Install';
+		return 'Continue';
 	}
 
 	public function CanMoveForward()
@@ -95,16 +95,8 @@ class WizStepBuild extends AbstractWizStepBuild
 
 		$oPage->add_ready_script(
 			<<<JS
-	$("#params_summary div").addClass('closed');
-	$("#params_summary .title").on('click', function() { $(this).parent().toggleClass('closed'); } );
-	$("#btn_next").on("click.install", function(event) {
-		$('#summary').hide();
-		$('#installation_progress').show();
-		$(this).prop('disabled', true);	 
-		event.preventDefault(); 
-		ExecuteStep("");
-	});
-	$("#wiz_form").data("installation_status", "not started")
+	$("#wiz_form").data("installation_status", "not started");
+	ExecuteStep("");
 JS
 		);
 	}
@@ -116,9 +108,9 @@ JS
 		$sStep = $aParameters['installer_step'];
 		$sJSONParameters = $aParameters['installer_config'];
 		$oParameters->LoadFromHash(json_decode($sJSONParameters, true /* bAssoc */));
-		$oInstaller = new ApplicationInstaller($oParameters);
+		$oInstaller = new ApplicationBuildSequencer($oParameters);
 		$aRes = $oInstaller->ExecuteStep($sStep);
-		if (($aRes['status'] != ApplicationInstaller::ERROR) && ($aRes['next-step'] != '')) {
+		if (($aRes['status'] != ApplicationBuildSequencer::ERROR) && ($aRes['next-step'] != '')) {
 			// Tell the web page to move the progress bar and to launch the next step
 			$sMessage = addslashes(utils::EscapeHtml($aRes['next-step-label']));
 			$oPage->add_ready_script(
@@ -132,7 +124,7 @@ JS
 	ExecuteStep('{$aRes['next-step']}');
 EOF
 			);
-		} elseif ($aRes['status'] != ApplicationInstaller::ERROR) {
+		} elseif ($aRes['status'] != ApplicationBuildSequencer::ERROR) {
 			// Installation complete, move to the next step of the wizard
 			$oPage->add_ready_script(
 				<<<EOF
@@ -162,7 +154,7 @@ EOF
 	 */
 	public function JSCanMoveForward()
 	{
-		return 'return (($("#wiz_form").data("installation_status") === "not started") || ($("#wiz_form").data("installation_status") === "completed"));';
+		return 'return  $("#wiz_form").data("installation_status") === "completed";';
 	}
 
 	/**

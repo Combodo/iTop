@@ -18,6 +18,9 @@
  */
 use Combodo\iTop\Application\WebPage\WebPage;
 
+/**
+ * @since 3.3.0
+ */
 class WizStepAudit extends AbstractWizStepBuild
 {
 	public function GetTitle()
@@ -58,9 +61,9 @@ class WizStepAudit extends AbstractWizStepBuild
 		$sStep = $aParameters['installer_step'];
 		$sJSONParameters = $aParameters['installer_config'];
 		$oParameters->LoadFromHash(json_decode($sJSONParameters, true /* bAssoc */));
-		$oInstaller = new ApplicationInstaller($oParameters);
+		$oInstaller = new ApplicationBuildSequencer($oParameters);
 		$aRes = $oInstaller->ExecuteStep($sStep);
-		if (($aRes['status'] != ApplicationInstaller::ERROR) && ($aRes['next-step'] != '')) {
+		if (($aRes['status'] != ApplicationBuildSequencer::ERROR) && ($aRes['next-step'] != '')) {
 			// Tell the web page to move the progress bar and to launch the next step
 			$sMessage = addslashes(utils::EscapeHtml($aRes['next-step-label']));
 			$oPage->add_ready_script(
@@ -74,7 +77,7 @@ class WizStepAudit extends AbstractWizStepBuild
 	ExecuteStep('{$aRes['next-step']}');
 EOF
 			);
-		} elseif ($aRes['status'] != ApplicationInstaller::ERROR) {
+		} elseif ($aRes['status'] != ApplicationBuildSequencer::ERROR) {
 			// Installation complete, move to the next step of the wizard
 			$oPage->add_ready_script(
 				<<<EOF
