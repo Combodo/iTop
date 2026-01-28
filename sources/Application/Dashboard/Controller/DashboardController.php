@@ -39,11 +39,13 @@ class DashboardController extends Controller
 	public const ROUTE_NAMESPACE = 'dashboard';
 
 	private FormBlockService $oFormBlockService;
+	private XMLSerializer $oXMLSerializer;
 
 	public function __construct($sViewPath = '', $sModuleName = 'core', $aAdditionalPaths = [], array $aThemes = ['application/forms/itop_console_layout.html.twig', 'application/forms/wip_form_demonstrator.html.twig'])
 	{
 		parent::__construct($sViewPath, $sModuleName, $aAdditionalPaths, $aThemes);
 		$this->oFormBlockService = MetaModel::GetService('FormBlockService');
+		$this->oXMLSerializer = MetaModel::GetService('XMLSerializer');
 	}
 
 	public function OperationGetDashlet()
@@ -124,7 +126,7 @@ class DashboardController extends Controller
 				$aModelData = $oForm->getData();
 				$oDashboard = new RuntimeDashboard($aModelData['id']);
 				$oDomNode = $oDashboard->CreateEmptyDashboard();
-				XMLSerializer::GetInstance()->Serialize($aModelData, $oDomNode, 'DashboardGrid', 'Dashboard');
+				$this->oXMLSerializer->Serialize($aModelData, $oDomNode, 'DashboardGrid', 'Dashboard');
 				$sXml = $oDomNode->ownerDocument->saveXML();
 				$oDashboard->PersistDashboard($sXml);
 				$sStatus = 'ok';

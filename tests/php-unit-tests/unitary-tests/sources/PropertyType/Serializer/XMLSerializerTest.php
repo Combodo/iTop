@@ -34,7 +34,8 @@ class XMLSerializerTest extends ItopDataTestCase
 
 		$oDOMDocument->appendChild($oRootNode);
 
-		Combodo\iTop\PropertyType\Serializer\XMLSerializer::GetInstance()->SerializeForPropertyType($normalizedValue, $oRootNode, $sPropertyTypeXML);
+		$oXMLSerializer = MetaModel::GetService('XMLSerializer');
+		$oXMLSerializer->SerializeForPropertyType($normalizedValue, $oRootNode, $sPropertyTypeXML);
 
 		$sActualXML = $oDOMDocument->saveXML();
 
@@ -372,7 +373,8 @@ XML,
 		/** @var \Combodo\iTop\DesignElement $oRoot */
 		$oRoot = $oDoc->firstChild;
 
-		$aActualValue = Combodo\iTop\PropertyType\Serializer\XMLSerializer::GetInstance()->DeserializeForPropertyType($oRoot, $sPropertyTypeXML);
+		$oXMLSerializer = MetaModel::GetService('XMLSerializer');
+		$aActualValue = $oXMLSerializer->DeserializeForPropertyType($oRoot, $sPropertyTypeXML);
 
 		$this->assertEquals($normalizedValue, $aActualValue);
 	}

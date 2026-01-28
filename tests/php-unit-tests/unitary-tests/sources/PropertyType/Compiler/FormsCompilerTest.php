@@ -24,7 +24,8 @@ class FormsCompilerTest extends ItopDataTestCase
 	 */
 	public function testCompileFormFromXML(string $sXMLContent, string $sExpectedPHP)
 	{
-		$sProducedPHP = PropertyTypeCompiler::GetInstance()->CompileFormFromXML($sXMLContent);
+		$oCompiler = MetaModel::GetService('PropertyTypeCompiler');
+		$sProducedPHP = $oCompiler->CompileFormFromXML($sXMLContent);
 
 		$this->AssertPHPCodeIsValid($sProducedPHP);
 		$sMessage = $this->dataName();
@@ -669,7 +670,8 @@ PHP,
 	{
 		$this->expectException($sExpectedClass);
 		$this->expectExceptionMessage($sExpectedMessage);
-		PropertyTypeCompiler::GetInstance()->CompileFormFromXML($sXMLContent);
+		$oCompiler = MetaModel::GetService('PropertyTypeCompiler');
+		$oCompiler->CompileFormFromXML($sXMLContent);
 	}
 
 	public function CompileFormFromInvalidXMLProvider()
@@ -885,7 +887,8 @@ class FormFor__basic_test_for_icon extends Combodo\iTop\Forms\Block\Base\FormBlo
 
 PHP;
 
-		$sProducedPHP = PropertyTypeCompiler::GetInstance()->CompileFormFromXML($sXMLContent);
+		$oCompiler = MetaModel::GetService('PropertyTypeCompiler');
+		$sProducedPHP = $oCompiler->CompileFormFromXML($sXMLContent);
 
 		$this->AssertPHPCodeIsValid($sProducedPHP);
 		$this->assertStringStartsWith($sExpectedStart, $sProducedPHP);
@@ -920,7 +923,8 @@ class FormFor__basic_test_for_class extends Combodo\iTop\Forms\Block\Base\FormBl
 
 PHP;
 
-		$sProducedPHP = PropertyTypeCompiler::GetInstance()->CompileFormFromXML($sXMLContent);
+		$oCompiler = MetaModel::GetService('PropertyTypeCompiler');
+		$sProducedPHP = $oCompiler->CompileFormFromXML($sXMLContent);
 
 		$this->AssertPHPCodeIsValid($sProducedPHP);
 		$this->assertStringStartsWith($sExpectedStart, $sProducedPHP);

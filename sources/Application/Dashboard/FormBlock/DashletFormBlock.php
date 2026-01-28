@@ -14,8 +14,8 @@ class DashletFormBlock extends FormBlock
 
 	public function __construct(string $sName, array $aOptions = [])
 	{
-		parent::__construct($sName, $aOptions);
 		$this->oPropertyTypeService = MetaModel::GetService('PropertyTypeService');
+		parent::__construct($sName, $aOptions);
 	}
 
 	protected function BuildForm(): void

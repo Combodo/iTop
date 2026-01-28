@@ -21,10 +21,12 @@ class PropertyTypeService
 	public const FORM_CACHE_POOL = 'Forms';
 
 	private DataModelDependantCache $oCacheService;
+	private PropertyTypeCompiler  $oCompiler;
 
 	public function __construct()
 	{
 		$this->oCacheService = MetaModel::GetService('DataModelDependantCache');
+		$this->oCompiler = MetaModel::GetService('PropertyTypeCompiler');
 	}
 
 	/**
@@ -44,7 +46,7 @@ class PropertyTypeService
 
 		if (!$this->oCacheService->HasEntry(self::FORM_CACHE_POOL, $sCacheKey) || utils::IsDevelopmentEnvironment()) {
 			// Cache not found, compile the form
-			$sPHPContent = PropertyTypeCompiler::GetInstance()->CompileForm($sFilteredId, $sType);
+			$sPHPContent = $this->oCompiler->CompileForm($sFilteredId, $sType);
 			$this->oCacheService->StorePhpContent(self::FORM_CACHE_POOL, $sCacheKey, "<?php\n\n$sPHPContent");
 		}
 		$this->oCacheService->FetchPHP(self::FORM_CACHE_POOL, $sCacheKey);
@@ -63,14 +65,14 @@ class PropertyTypeService
 	 */
 	public function ListPropertyTypesByType(string $sType): array
 	{
-		return PropertyTypeCompiler::GetInstance()->ListPropertyTypesByType($sType);
+		return $this->oCompiler->ListPropertyTypesByType($sType);
 	}
 
 	public function GetPropertyType(string $sId, string $sType = 'Dashlet'): PropertyType
 	{
-		$sXML = PropertyTypeCompiler::GetInstance()->GetXMLContent($sId, $sType);
+		$sXML = $this->oCompiler->GetXMLContent($sId, $sType);
 
-		return PropertyTypeCompiler::GetInstance()->CompilePropertyTypeFromXML($sXML);
+		return $this->oCompiler->CompilePropertyTypeFromXML($sXML);
 	}
 
 	/**

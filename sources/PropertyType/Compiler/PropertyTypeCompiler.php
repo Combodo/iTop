@@ -20,19 +20,8 @@ use utils;
  */
 class PropertyTypeCompiler
 {
-	private static PropertyTypeCompiler $oInstance;
-
-	protected function __construct()
+	public function __construct()
 	{
-	}
-
-	final public static function GetInstance(): PropertyTypeCompiler
-	{
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new PropertyTypeCompiler();
-		}
-
-		return static::$oInstance;
 	}
 
 	/**

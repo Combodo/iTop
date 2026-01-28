@@ -56,6 +56,8 @@ abstract class Dashboard
 
 	protected $oDashletFactory;
 
+	private XMLSerializer $oXMLSerializer;
+
 	/**
 	 * Dashboard constructor.
 	 *
@@ -71,6 +73,7 @@ abstract class Dashboard
 		$this->oDOMNode = null;
 		$this->sId = $sId;
 		$this->oDashletFactory = DashletFactory::GetInstance();
+		$this->oXMLSerializer  = MetaModel::GetService('XMLSerializer');
 	}
 
 	/**
@@ -170,7 +173,7 @@ abstract class Dashboard
 	 */
 	public function FromDOMDocumentV2(DesignElement $oDOMNode)
 	{
-		$aDashboardValues = XMLSerializer::GetInstance()->Deserialize($oDOMNode, 'DashboardGrid', 'Dashboard');
+		$aDashboardValues = $this->oXMLSerializer->Deserialize($oDOMNode, 'DashboardGrid', 'Dashboard');
 		$this->FromModelData($aDashboardValues);
 	}
 

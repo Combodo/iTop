@@ -515,6 +515,7 @@ return array(
     'Combodo\\iTop\\Forms\\Block\\Base\\CollectionBlock' => $baseDir . '/sources/Forms/Block/Base/CollectionBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\DateFormBlock' => $baseDir . '/sources/Forms/Block/Base/DateFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\DateTimeFormBlock' => $baseDir . '/sources/Forms/Block/Base/DateTimeFormBlock.php',
+    'Combodo\\iTop\\Forms\\Block\\Base\\FileFormBlock' => $baseDir . '/sources/Forms/Block/Base/FileFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\FormBlock' => $baseDir . '/sources/Forms/Block/Base/FormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\HiddenFormBlock' => $baseDir . '/sources/Forms/Block/Base/HiddenFormBlock.php',
     'Combodo\\iTop\\Forms\\Block\\Base\\IntegerFormBlock' => $baseDir . '/sources/Forms/Block/Base/IntegerFormBlock.php',

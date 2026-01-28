@@ -37,7 +37,8 @@ class DashboardSerializerTest extends ItopDataTestCase
 		$oRootNode->setAttribute('xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
 		$oDOMDocument->appendChild($oRootNode);
 
-		Combodo\iTop\PropertyType\Serializer\XMLSerializer::GetInstance()->Serialize($normalizedValue, $oRootNode, 'DashboardGrid', 'Dashboard');
+		$oXMLSerializer = MetaModel::GetService('XMLSerializer');
+		$oXMLSerializer->Serialize($normalizedValue, $oRootNode, 'DashboardGrid', 'Dashboard');
 
 		$sActualXML = $oDOMDocument->saveXML();
 

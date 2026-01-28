@@ -14,45 +14,37 @@ use Combodo\iTop\PropertyType\ValueType\AbstractValueType;
 
 class XMLSerializer
 {
-	private static XMLSerializer $oInstance;
+	private PropertyTypeCompiler  $oCompiler;
 
-	protected function __construct()
+	public function __construct()
 	{
-	}
-
-	final public static function GetInstance(): XMLSerializer
-	{
-		if (!isset(static::$oInstance)) {
-			static::$oInstance = new XMLSerializer();
-		}
-
-		return static::$oInstance;
+		$this->oCompiler = \MetaModel::GetService('PropertyTypeCompiler');
 	}
 
 	public function Serialize(mixed $value, DesignElement $oParentNode, string $sId, string $sType): void
 	{
-		$sPropertyTypeXML = PropertyTypeCompiler::GetInstance()->GetXMLContent($sId, $sType);
+		$sPropertyTypeXML = $this->oCompiler->GetXMLContent($sId, $sType);
 
 		$this->SerializeForPropertyType($value, $oParentNode, $sPropertyTypeXML);
 	}
 
 	public function Deserialize(DesignElement $oDOMNode, string $sId, string $sType): mixed
 	{
-		$sPropertyTypeXML = PropertyTypeCompiler::GetInstance()->GetXMLContent($sId, $sType);
+		$sPropertyTypeXML = $this->oCompiler->GetXMLContent($sId, $sType);
 
 		return $this->DeserializeForPropertyType($oDOMNode, $sPropertyTypeXML);
 	}
 
 	public function SerializeForPropertyType(mixed $value, DesignElement $oParentNode, string $sPropertyTypeXML): void
 	{
-		$oPropertyType = PropertyTypeCompiler::GetInstance()->CompilePropertyTypeFromXML($sPropertyTypeXML);
+		$oPropertyType = $this->oCompiler->CompilePropertyTypeFromXML($sPropertyTypeXML);
 
 		$oPropertyType->SerializeToDOMNode($value, $oParentNode);
 	}
 
 	public function DeserializeForPropertyType(DesignElement $oParentNode, string $sPropertyTypeXML): mixed
 	{
-		$oPropertyType = PropertyTypeCompiler::GetInstance()->CompilePropertyTypeFromXML($sPropertyTypeXML);
+		$oPropertyType = $this->oCompiler->CompilePropertyTypeFromXML($sPropertyTypeXML);
 
 		return $oPropertyType->DeserializeFromDOMNode($oParentNode);
 	}

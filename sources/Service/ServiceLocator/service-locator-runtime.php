@@ -8,14 +8,18 @@
 use Combodo\iTop\Application\Dashlet\Service\DashletService;
 use Combodo\iTop\Forms\Block\FormBlockService;
 use Combodo\iTop\Forms\FormBuilder\FormFactoryBuilderService;
+use Combodo\iTop\PropertyType\Compiler\PropertyTypeCompiler;
 use Combodo\iTop\PropertyType\PropertyTypeService;
+use Combodo\iTop\PropertyType\Serializer\XMLSerializer;
 use Combodo\iTop\Service\Cache\DataModelDependantCache;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
 return [
 	'ModelReflection' => ModelReflectionRuntime::class,
 	'DashletService' => DashletService::class,
+	'PropertyTypeCompiler' => PropertyTypeCompiler::class,
 	'PropertyTypeService' => PropertyTypeService::class,
+	'XMLSerializer' => XMLSerializer::class,
 	'DataModelDependantCache' => DataModelDependantCache::class,
 	'FormBlockService' => FormBlockService::class,
 	'CsrfTokenManager' => CsrfTokenManager::class,
