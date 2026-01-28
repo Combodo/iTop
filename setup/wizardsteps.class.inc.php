@@ -1896,23 +1896,29 @@ EOF
 		if (is_null($this->aSteps)) {
 			$this->oWizard->SetParameter('additional_extensions_modules', json_encode([])); // Default value, no additional extensions
 
-			$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo();
 			if (@file_exists($this->GetSourceFilePath())) {
 				// Found an "installation.xml" file, let's use this definition for the wizard
 				$aParams = new XMLParameters($this->GetSourceFilePath());
 				$this->aSteps = $aParams->Get('steps', []);
 
-				// Display this step of the wizard only if there is something to display
-				if (count($aOptions) > 0) {
-					$this->aSteps[] = [
-						'title'       => 'Extensions',
-						'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
-						'banner'      => '/images/icons/icons8-puzzle.svg',
-						'options'     => $aOptions,
-					];
-					$this->oWizard->SetParameter('additional_extensions_modules', json_encode($aOptions));
+				if ($index + 1 >= count($this->aSteps)) {
+					//make sure we also cache next step as well
+					$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo();
+
+					// Display this step of the wizard only if there is something to display
+					if (count($aOptions) > 0) {
+						$this->aSteps[] = [
+							'title'       => 'Extensions',
+							'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
+							'banner'      => '/images/icons/icons8-puzzle.svg',
+							'options'     => $aOptions,
+						];
+						$this->oWizard->SetParameter('additional_extensions_modules', json_encode($aOptions));
+					}
 				}
 			} else {
+				$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo();
+
 				// No wizard configuration provided, build a standard one with just one big list. All items are mandatory, only works when there are no conflicted modules.
 				$this->aSteps = [
 					[

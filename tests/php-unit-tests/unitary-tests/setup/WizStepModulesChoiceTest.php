@@ -355,16 +355,9 @@ class WizStepModulesChoiceTest extends ItopTestCase
 
 	public function testGetStepInfo_PackageWithoutInstallationXML()
 	{
-		$aExtensionsOnDiskOrDb = [
-			'itop-ext-added1' => [
-				'installed' => false,
-			],
-			'itop-ext-added2' => [
-				'installed' => false,
-			],
-		];
 
-		$oWizStepModulesChoice = $this->GivenWizStepModulesChoice($aExtensionsOnDiskOrDb);
+		$aExtensionsOnDiskOrDb = self::GivenExtensionsOnDisk();
+		$oWizStepModulesChoice = $this->GivenWizStepModulesChoiceWithoutXmlInstallation($aExtensionsOnDiskOrDb);
 
 		$expected = [
 			'title'       => 'Modules Selection',
@@ -373,65 +366,47 @@ class WizStepModulesChoiceTest extends ItopTestCase
 			'options'     => $aExtensionsOnDiskOrDb,
 		];
 
-		$this->CallAndCheckTwice($oWizStepModulesChoice, [], $expected);
-		$this->CallAndCheckTwice($oWizStepModulesChoice, [1], null);
+		$this->CallAndCheckTwice($oWizStepModulesChoice, null, $expected);
+		$this->CallAndCheckTwice($oWizStepModulesChoice, 1, null);
+	}
+
+	private function GivenWizStepModulesChoiceWithoutXmlInstallation(array $aExtensionsOnDiskOrDb): WizStepModulesChoiceFake
+	{
+		$oExtensionsMap = $this->createMock(iTopExtensionsMap::class);
+		$oExtensionsMap->expects($this->once())
+			->method('GetAllExtensionsOptionInfo')
+			->willReturn($aExtensionsOnDiskOrDb);
+
+		$oWizard = new WizardController('', '');
+		$oWizStepModulesChoice = new WizStepModulesChoiceFake($oWizard, '');
+		$oWizStepModulesChoice->setExtensionMap($oExtensionsMap);
+
+		return $oWizStepModulesChoice;
 	}
 
 	public static function PackageWithInstallationXMLProvider()
 	{
-
 		require_once __DIR__.'/../../../../approot.inc.php';
 		require_once APPROOT.'setup/parameters.class.inc.php';
 
-		$aExtensionsOnDiskOrDb = [
-			'itop-ext-added1' => [
-				'installed' => false,
-			],
-			'itop-ext-added2' => [
-				'installed' => false,
-			],
-		];
-
 		$aUsecases = [];
 
-		$expected = self::GetStep(0);
 		$aUsecases["[no step] with extensions"] = [
-			'aExtensionsOnDiskOrDb' => $aExtensionsOnDiskOrDb,
-			'aArgs'                 => [],
-			'expected'              => $expected,
+			'iGetStepInfoIdxArg'                 => null,
+			'expected'              => self::GetStep(0),
 		];
 
-		for ($i = 0; $i < 5; $i++) {
-			$expected = self::GetStep($i);
+		for ($i = 0; $i < 4; $i++) {
 			$aUsecases["[step $i] with extensions"] = [
-				'aExtensionsOnDiskOrDb' => $aExtensionsOnDiskOrDb,
-				'aArgs'                 => [$i],
-				'expected'              => $expected,
+				'iGetStepInfoIdxArg'                 => $i,
+				'expected'              => self::GetStep($i),
 			];
 		}
 
-		$expected = [
-			'title'       => 'Extensions',
-			'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
-			'banner'      => '/images/icons/icons8-puzzle.svg',
-			'options'     => $aExtensionsOnDiskOrDb,
-		];
-		$aUsecases["[step 5] with extensions => EXTENSION STEP"] = [
-			'aExtensionsOnDiskOrDb' => $aExtensionsOnDiskOrDb,
-			'aArgs'                 => [5],
-			'expected'              => $expected,
-		];
-
 		$aUsecases["[step 6] with extensions => NO STEP ANYMORE"] = [
-			'aExtensionsOnDiskOrDb' => $aExtensionsOnDiskOrDb,
-			'aArgs'                 => [6],
+			'iGetStepInfoIdxArg'                 => 6,
 			'expected'              => null,
-		];
-
-		$aUsecases["[step 5] without extensions => NO STEP ANYMORE"] = [
-			'aExtensionsOnDiskOrDb' => [],
-			'aArgs'                 => [5],
-			'expected'              => null,
+			'iGetAllExtensionsOptionInfoCallCount' => 1,
 		];
 
 		return $aUsecases;
@@ -440,38 +415,87 @@ class WizStepModulesChoiceTest extends ItopTestCase
 	/**
 	 * @dataProvider PackageWithInstallationXMLProvider
 	 */
-	public function testGetStepInfo_PackageWithInstallationXML($aExtensionsOnDiskOrDb, $aArgs, $expected)
+	public function testGetStepInfo_PackageWithInstallationXMLWithExtensions($iGetStepInfoIdxArg, $expected, $iGetAllExtensionsOptionInfoCallCount = 0)
 	{
-		$oWizStepModulesChoice = $this->GivenWizStepModulesChoice($aExtensionsOnDiskOrDb, true);
+		$aExtensionsOnDiskOrDb = self::GivenExtensionsOnDisk();
+		$oWizStepModulesChoice = $this->GivenWizStepModulesChoiceWithXmlInstallation($aExtensionsOnDiskOrDb, $iGetAllExtensionsOptionInfoCallCount);
 
-		$this->CallAndCheckTwice($oWizStepModulesChoice, $aArgs, $expected);
+		$this->CallAndCheckTwice($oWizStepModulesChoice, $iGetStepInfoIdxArg, $expected);
 	}
 
-	private function GivenWizStepModulesChoice(array $aExtensionsOnDiskOrDb, $bInstallationXmlProvided = false): WizStepModulesChoiceFake
+	public function testGetStepInfo_PackageWithInstallationXML_AfterLastStepWithExtensions()
+	{
+		$expected = [
+			'title'       => 'Extensions',
+			'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
+			'banner'      => '/images/icons/icons8-puzzle.svg',
+			'options'     => self::GivenExtensionsOnDisk(),
+		];
+
+		$aExtensionsOnDiskOrDb = self::GivenExtensionsOnDisk();
+		$oWizStepModulesChoice = $this->GivenWizStepModulesChoiceWithXmlInstallation($aExtensionsOnDiskOrDb, 1);
+
+		$this->CallAndCheckTwice($oWizStepModulesChoice, 5, $expected);
+	}
+
+	public function testGetStepInfo_PackageWithInstallationXMLAfterLastStepWithoutExtensions()
+	{
+		$oWizStepModulesChoice = $this->GivenWizStepModulesChoiceWithXmlInstallation([], 1);
+
+		$this->CallAndCheckTwice($oWizStepModulesChoice, 5, null);
+	}
+
+	public function testGetStepInfo_PackageWithInstallationXML_MakeSureNextStepIsAlsoCached()
+	{
+		$aExtensionsOnDiskOrDb = self::GivenExtensionsOnDisk();
+		$oWizStepModulesChoice = $this->GivenWizStepModulesChoiceWithXmlInstallation($aExtensionsOnDiskOrDb, 1);
+
+		$this->CallAndCheckTwice($oWizStepModulesChoice, 4, self::GetStep(4));
+
+		$expected = [
+			'title'       => 'Extensions',
+			'description' => '<h2>Select additional extensions to install. You can launch the installation again to install new extensions or remove installed ones.</h2>',
+			'banner'      => '/images/icons/icons8-puzzle.svg',
+			'options'     => $aExtensionsOnDiskOrDb,
+		];
+		$this->CallAndCheckTwice($oWizStepModulesChoice, 5, $expected);
+	}
+
+	private static function GivenExtensionsOnDisk(): array
+	{
+		return [
+			'itop-ext-added1' => [
+				'installed' => false,
+			],
+			'itop-ext-added2' => [
+				'installed' => false,
+			],
+		];
+	}
+
+	private function GivenWizStepModulesChoiceWithXmlInstallation(array $aExtensionsOnDiskOrDb, $iGetAllExtensionsOptionInfoCallCount): WizStepModulesChoiceFake
 	{
 		$oExtensionsMap = $this->createMock(iTopExtensionsMap::class);
-		$oExtensionsMap->expects($this->once())
+		$oExtensionsMap->expects($this->exactly($iGetAllExtensionsOptionInfoCallCount))
 			->method('GetAllExtensionsOptionInfo')
 			->willReturn($aExtensionsOnDiskOrDb);
 
 		$oWizard = new WizardController('', '');
-		if ($bInstallationXmlProvided) {
-			//needed to find installation.xml
-			$oWizard->SetParameter('source_dir', __DIR__.'/ressources');
-		}
+		//needed to find installation.xml
+		$oWizard->SetParameter('source_dir', __DIR__.'/ressources');
 		$oWizStepModulesChoice = new WizStepModulesChoiceFake($oWizard, '');
 		$oWizStepModulesChoice->setExtensionMap($oExtensionsMap);
 
 		return $oWizStepModulesChoice;
 	}
 
-	private function CallAndCheckTwice($oStep, $aArgs, $expected)
+	private function CallAndCheckTwice($oStep, $iGetStepInfoIdxArg, $expected)
 	{
-		$aRes = $this->InvokeNonPublicMethod(WizStepModulesChoiceFake::class, 'GetStepInfo', $oStep, $aArgs);
-		$this->assertEquals($expected, $aRes, "step:".var_export($aArgs, true));
+		$aRes = $this->InvokeNonPublicMethod(WizStepModulesChoiceFake::class, 'GetStepInfo', $oStep, [$iGetStepInfoIdxArg]);
+		$this->assertEquals($expected, $aRes, "step:".$iGetStepInfoIdxArg);
 
-		$aRes = $this->InvokeNonPublicMethod(WizStepModulesChoiceFake::class, 'GetStepInfo', $oStep, $aArgs);
-		$this->assertEquals($expected, $aRes, "(2nd call) step:".var_export($aArgs, true));
+		$aRes = $this->InvokeNonPublicMethod(WizStepModulesChoiceFake::class, 'GetStepInfo', $oStep, [$iGetStepInfoIdxArg]);
+		$this->assertEquals($expected, $aRes, "(2nd call) step:".$iGetStepInfoIdxArg);
 	}
 
 	private static function GetStep($index)
@@ -481,5 +505,4 @@ class WizStepModulesChoiceTest extends ItopTestCase
 
 		return $aSteps[$index] ?? null;
 	}
-
 }
