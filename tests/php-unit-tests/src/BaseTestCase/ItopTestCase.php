@@ -8,7 +8,7 @@
 namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
-use Combodo\iTop\Service\DependencyInjection\ServiceLocator;
+use Combodo\iTop\Service\ServiceLocator\ServiceLocator;
 use DeprecatedCallsLog;
 use DOMDocument;
 use MySQLTransactionNotClosedException;
@@ -16,7 +16,6 @@ use ParseError;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use ReflectionMethod;
 use SetupUtils;
-use Symfony\Component\ErrorHandler\Error\FatalError;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
