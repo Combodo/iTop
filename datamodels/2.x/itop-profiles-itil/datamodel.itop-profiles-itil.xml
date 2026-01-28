@@ -186,6 +186,7 @@
       <group id="AdminSysReadOnly" _delta="define">
         <classes>
           <class id="ItopFenceLogin"/>
+          <class id="ModuleInstallation"/>
         </classes>
       </group>
       <group id="AdminSys" _delta="define">
