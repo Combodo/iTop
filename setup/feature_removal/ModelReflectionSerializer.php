@@ -41,7 +41,7 @@ class ModelReflectionSerializer
 		exec(sprintf("$sPHPExec %s/get_model_reflection.php --env='%s'", __DIR__, $sEnv), $sOutput, $iRes);
 		if ($iRes != 0) {
 			$this->LogErrorWithProperLogger("Cannot get classes1", null, ['env' => $sEnv, 'code' => $iRes, "output" => $sOutput]);
-			throw new CoreException("Cannot get classes2");
+			throw new CoreException("Cannot get classes from env ".$sEnv);
 		}
 
 		$aClasses = json_decode($sOutput[0] ?? null, true);

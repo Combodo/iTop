@@ -156,7 +156,7 @@ EOF
 				$sChecked = ($this->oWizard->GetParameter('upgrade_type') == 'keep-previous') ? ' checked ' : '';
 				$sDisabled = (count($aErrors) > 0) ? ' disabled ' : '';
 
-				$oPage->p('<input id="radio_upgrade_keep" type="radio" name="upgrade_type" value="keep-previous" '.$sChecked.$sDisabled.'/><label for="radio_upgrade_keep">&nbsp;Preserve the modifications of the installed version (the dasboards inside '.ITOP_APPLICATION.' may not be editable).</label>');
+				$oPage->p('<input id="radio_upgrade_keep" type="radio" name="upgrade_type" value="keep-previous" '.$sChecked.$sDisabled.'/><label for="radio_upgrade_keep">&nbsp;Preserve the modifications of the installed version (the dashboards inside '.ITOP_APPLICATION.' may not be editable).</label>');
 				$oPage->add('<input type="hidden" name="datamodel_previous_version" value="'.utils::EscapeHtml($sInstalledDataModelVersion).'">');
 
 				$oPage->add('<input type="hidden" name="relative_source_dir" value="'.utils::EscapeHtml($sPreviousSourceDir).'">');

@@ -62,6 +62,24 @@ abstract class WizardStep
 	 */
 	protected $sCurrentState;
 
+	protected $bDependencyCheck = null;
+	protected $sDependencyIssue = null;
+
+	protected function CheckDependencies()
+	{
+		if (is_null($this->bDependencyCheck)) {
+			$aSelectedModules = json_decode($this->oWizard->GetParameter('selected_modules'), true);
+			$this->bDependencyCheck = true;
+			try {
+				SetupUtils::AnalyzeInstallation($this->oWizard, true, $aSelectedModules);
+			} catch (MissingDependencyException $e) {
+				$this->bDependencyCheck = false;
+				$this->sDependencyIssue = $e->getHtmlDesc();
+			}
+		}
+		return $this->bDependencyCheck;
+	}
+
 	public function __construct(WizardController $oWizard, $sCurrentState)
 	{
 		$this->oWizard = $oWizard;

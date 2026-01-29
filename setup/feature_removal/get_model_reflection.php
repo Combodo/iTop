@@ -5,7 +5,7 @@ require_once(APPROOT.'application/application.inc.php');
 $sEnv = null;
 if (isset($argv)) {
 	foreach ($argv as $iArg => $sArg) {
-		if (preg_match('/^--env=(.*)$/', $sArg, $aMatches)) {
+		if (preg_match('/^--env=\'(.*)\'$/', $sArg, $aMatches)) {
 			$sEnv = $aMatches[1];
 		}
 	}

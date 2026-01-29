@@ -17,14 +17,18 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\InplaceSetupAudit;
 use Combodo\iTop\Setup\FeatureRemoval\ModelReflectionSerializer;
+use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 
 require_once(APPROOT.'setup/parameters.class.inc.php');
 require_once(APPROOT.'setup/StepSequencer.php');
 require_once(APPROOT.'setup/xmldataloader.class.inc.php');
 require_once(APPROOT.'setup/backup.class.inc.php');
+require_once APPROOT.'setup/feature_removal/SetupAudit.php';
 require_once APPROOT.'setup/feature_removal/InplaceSetupAudit.php';
+require_once APPROOT.'setup/feature_removal/DryRemovalRuntimeEnvironment.php';
 
 /**
  * The base class for the installation process.
@@ -40,7 +44,7 @@ require_once APPROOT.'setup/feature_removal/InplaceSetupAudit.php';
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class ApplicationBuildSequencer extends StepSequencer
+class ApplicationInstallSequencer extends StepSequencer
 {
 
 	/** @var \Parameters */
@@ -68,7 +72,7 @@ class ApplicationBuildSequencer extends StepSequencer
 	/**
 	 * @return string
 	 */
-	private function GetTargetEnv()
+	protected function GetTargetEnv()
 	{
 		$sTargetEnvironment = $this->oParams->Get('target_env', '');
 		if ($sTargetEnvironment !== '') {
@@ -81,7 +85,7 @@ class ApplicationBuildSequencer extends StepSequencer
 	/**
 	 * @return string
 	 */
-	private function GetTargetDir()
+	protected function GetTargetDir()
 	{
 		$sTargetEnv = $this->GetTargetEnv();
 		return 'env-'.$sTargetEnv;
@@ -89,7 +93,7 @@ class ApplicationBuildSequencer extends StepSequencer
 
 
 
-	private function GetConfig()
+	protected function GetConfig()
 	{
 		$sTargetEnvironment = $this->GetTargetEnv();
 		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
@@ -195,7 +199,6 @@ class ApplicationBuildSequencer extends StepSequencer
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 					$aMiscOptions = $this->oParams->Get('options', []);
 					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
-					$sSkipDataAudit = $this->oParams->Get('skip-data-audit', '');
 
 					$bUseSymbolicLinks = null;
 					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])) {
@@ -207,24 +210,18 @@ class ApplicationBuildSequencer extends StepSequencer
 						}
 					}
 
-					$aParamValues = $this->oParams->GetParamForConfigArray();
-					$bIsSetupDataAuditEnabled = $this->IsSetupDataAuditEnabled($sSkipDataAudit, $aParamValues);
 					$this->DoCompile(
 						$aRemovedExtensionCodes,
 						$aSelectedModules,
 						$sSourceDir,
 						$sExtensionDir,
-						$bIsSetupDataAuditEnabled,
 						$bUseSymbolicLinks
 					);
 
-					if ($bIsSetupDataAuditEnabled) {
-						$sNextStep = 'setup-audit';
-						$sNextStepLabel = 'Checking data consistency with the new data model';
-					} else {
-						$sNextStep = 'db-schema';
-						$sNextStepLabel = 'Updating database schema';
-					}
+
+					$sNextStep = 'db-schema';
+					$sNextStepLabel = 'Updating database schema';
+
 
 					$aResult = [
 						'status' => self::OK,
@@ -232,17 +229,6 @@ class ApplicationBuildSequencer extends StepSequencer
 						'next-step' => $sNextStep,
 						'next-step-label' => $sNextStepLabel,
 						'percentage-completed' => 40,
-					];
-					break;
-
-				case 'setup-audit':
-					$this->DoSetupAudit();
-					$aResult = [
-						'status' => self::OK,
-						'message' => '',
-						'next-step' => 'db-schema',
-						'next-step-label' => 'Updating database schema',
-						'percentage-completed' => 50,
 					];
 					break;
 
@@ -368,7 +354,7 @@ class ApplicationBuildSequencer extends StepSequencer
 		return $aResult;
 	}
 
-	private function EnterReadOnlyMode()
+	protected function EnterReadOnlyMode()
 	{
 		if ($this->GetTargetEnv() != 'production') {
 			return;
@@ -381,7 +367,7 @@ class ApplicationBuildSequencer extends StepSequencer
 		SetupUtils::EnterReadOnlyMode($this->GetConfig());
 	}
 
-	private function ExitReadOnlyMode()
+	protected function ExitReadOnlyMode()
 	{
 		if ($this->GetTargetEnv() != 'production') {
 			return;
@@ -441,7 +427,6 @@ class ApplicationBuildSequencer extends StepSequencer
 	 * @param array $aSelectedModules
 	 * @param string $sSourceDir
 	 * @param string $sExtensionDir
-	 * @param bool $bIsSetupDataAuditEnabled
 	 * @param boolean $bUseSymbolicLinks
 	 *
 	 * @return void
@@ -450,7 +435,7 @@ class ApplicationBuildSequencer extends StepSequencer
 	 *
 	 * @since 3.1.0 N°2013 added the aParamValues param
 	 */
-	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, bool &$bIsSetupDataAuditEnabled, $bUseSymbolicLinks = null)
+	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $bUseSymbolicLinks = null)
 	{
 		/**
 	 * @since 3.2.0 move the ContextTag init at the very beginning of the method
@@ -491,15 +476,7 @@ class ApplicationBuildSequencer extends StepSequencer
 		}
 
 		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
-		if ($bIsSetupDataAuditEnabled) {
-			if ($bIsAlreadyInMaintenanceMode) {
-				//required to read DM before calling SaveModelInfo
-				SetupUtils::ExitMaintenanceMode();
-				$bIsAlreadyInMaintenanceMode = false;
-			}
 
-			$bIsSetupDataAuditEnabled = $this->SaveModelInfo($sEnvironment);
-		}
 
 		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
 			$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
@@ -592,12 +569,12 @@ class ApplicationBuildSequencer extends StepSequencer
 		}
 	}
 
-	private function GetModelInfoPath(string $sEnv): string
+	protected function GetModelInfoPath(string $sEnv): string
 	{
 		return APPROOT."data/beforecompilation_".$sEnv."_modelinfo.json";
 	}
 
-	private function SaveModelInfo(string $sEnvironment): bool
+	protected function SaveModelInfo(string $sEnvironment): bool
 	{
 		$sModelInfoPath = $this->GetModelInfoPath($sEnvironment);
 		try {
@@ -610,7 +587,7 @@ class ApplicationBuildSequencer extends StepSequencer
 		return (bool) file_put_contents($sModelInfoPath, json_encode($aModelInfo));
 	}
 
-	private function GetPreviousModelInfo(string $sEnvironment): array
+	protected function GetPreviousModelInfo(string $sEnvironment): array
 	{
 		$sContent = file_get_contents($this->GetModelInfoPath($sEnvironment));
 		$aModelInfo = json_decode($sContent, true);
@@ -631,9 +608,9 @@ class ApplicationBuildSequencer extends StepSequencer
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 		$sTargetEnvironment = $this->GetTargetEnv();
-		$aPreviousCompilationModelInfo = $this->GetPreviousModelInfo($sTargetEnvironment);
+		$sPreviousEnvironment = 'production';
 
-		$oSetupAudit = new InplaceSetupAudit($aPreviousCompilationModelInfo, $sTargetEnvironment);
+		$oSetupAudit = new SetupAudit($sPreviousEnvironment, $sTargetEnvironment);
 
 		$oSetupAudit->GetIssues(true);
 		$iCount = $oSetupAudit->GetDataToCleanupCount();
@@ -643,7 +620,8 @@ class ApplicationBuildSequencer extends StepSequencer
 		}
 	}
 
-	private function IsSetupDataAuditEnabled($sSkipDataAudit, array $aParamValues): bool
+
+	protected function IsSetupDataAuditEnabled($sSkipDataAudit, array $aParamValues): bool
 	{
 		if ($sSkipDataAudit === "checked") {
 			SetupLog::Info("Setup data audit disabled", null, ['skip-data-audit' => $sSkipDataAudit]);
@@ -1034,7 +1012,155 @@ class SetupDBBackup extends DBBackup
 	}
 }
 
+class DataAuditSequencer extends ApplicationInstallSequencer
+{
+
+
+	/**
+	 * @return string
+	 */
+	protected function GetTargetDir()
+	{
+		$sTargetEnv = $this->GetTargetEnv();
+		return 'env-dry-'.$sTargetEnv;
+	}
+
+	/**
+	 * Executes the next step of the installation and reports about the progress
+	 * and the next step to perform
+	 *
+	 * @param string $sStep The identifier of the step to execute
+	 * @param string|null $sInstallComment
+	 *
+	 * @return array (status => , message => , percentage-completed => , next-step => , next-step-label => )
+	 */
+	public function ExecuteStep($sStep = '', $sInstallComment = null)
+	{
+		try {
+			$fStart = microtime(true);
+			SetupLog::Info("##### STEP {$sStep} start");
+			$this->EnterReadOnlyMode();
+			switch ($sStep) {
+				case '':
+					$aResult = [
+						'status' => self::OK,
+						'message' => '',
+						'percentage-completed' => 20,
+						'next-step' => 'compile',
+						'next-step-label' => 'Compiling the data model',
+					];
+
+					// Log the parameters...
+					$oDoc = new DOMDocument('1.0', 'UTF-8');
+					$oDoc->preserveWhiteSpace = false;
+					$oDoc->formatOutput = true;
+					$this->oParams->ToXML($oDoc, null, 'installation');
+					$sXML = $oDoc->saveXML();
+					$sSafeXml = preg_replace("|<pwd>([^<]*)</pwd>|", "<pwd>**removed**</pwd>", $sXML);
+					SetupLog::Info("======= Data Audit starts =======\nParameters:\n$sSafeXml\n");
+
+					// Save the response file as a stand-alone file as well
+					$sFileName = 'data-audit-'.date('Y-m-d');
+					$index = 0;
+					while (file_exists(APPROOT.'log/'.$sFileName.'.xml')) {
+						$index++;
+						$sFileName = 'data-audit-'.date('Y-m-d').'-'.$index;
+					}
+					file_put_contents(APPROOT.'log/'.$sFileName.'.xml', $sSafeXml);
+
+					break;
+
+
+				case 'compile':
+					$aSelectedModules = $this->oParams->Get('selected_modules');
+					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
+					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
+					$aRemovedExtensionCodes = $this->oParams->Get('removed_extensions', []);
+
+					$this->DoCompile(
+						$aRemovedExtensionCodes,
+						$aSelectedModules,
+						$sSourceDir,
+						$sExtensionDir,
+						false
+					);
+
+					$aResult = [
+						'status' => self::OK,
+						'message' => '',
+						'next-step' => 'setup-audit',
+						'next-step-label' => 'Checking data consistency with the new data model',
+						'percentage-completed' => 60,
+					];
+					break;
+
+				case 'setup-audit':
+					$this->DoSetupAudit();
+					$aResult = [
+						'status' => self::OK,
+						'message' => '',
+						'next-step' => 'cleanup',
+						'next-step-label' => 'Temporary folders cleanup',
+						'percentage-completed' => 80,
+					];
+					break;
+				case 'cleanup' ;
+					$this->DoCleanup();
+					$aResult = [
+						'status' => self::OK,
+						'message' => '',
+						'next-step' => '',
+						'next-step-label' => 'Completed',
+						'percentage-completed' => 100,
+					];
+					break;
+				default:
+					$aResult = [
+						'status' => self::ERROR,
+						'message' => '',
+						'next-step' => '',
+						'next-step-label' => "Unknown setup step '$sStep'.",
+						'percentage-completed' => 100,
+					];
+					break;
+			}
+		} catch (Exception $e) {
+			$aResult = [
+				'status' => self::ERROR,
+				'message' => $e->getMessage(),
+				'next-step' => '',
+				'next-step-label' => '',
+				'percentage-completed' => 100,
+			];
+
+			SetupLog::Error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
+			$idx = 0;
+			// Log the call stack, but not the parameters since they may contain passwords or other sensitive data
+			SetupLog::Ok("Call stack:");
+			foreach ($e->getTrace() as $aTrace) {
+				$sLine = empty($aTrace['line']) ? "" : $aTrace['line'];
+				$sFile = empty($aTrace['file']) ? "" : $aTrace['file'];
+				$sClass = empty($aTrace['class']) ? "" : $aTrace['class'];
+				$sType = empty($aTrace['type']) ? "" : $aTrace['type'];
+				$sFunction = empty($aTrace['function']) ? "" : $aTrace['function'];
+				$sVerb = empty($sClass) ? $sFunction : "$sClass{$sType}$sFunction";
+				SetupLog::Ok("#$idx $sFile($sLine): $sVerb(...)");
+				$idx++;
+			}
+		} finally {
+			$fDuration = round(microtime(true) - $fStart, 2);
+			SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");
+		}
+
+		return $aResult;
+	}
+
+	protected function DoCleanup(){
+		SetupUtils::tidydir($this->GetTargetDir());
+	}
+}
+
 /**
  * For compatibility with older scripts
  */
-class_alias('ApplicationBuildSequencer', 'ApplicationInstaller');
+class_alias('ApplicationInstallSequencer', 'ApplicationInstaller');

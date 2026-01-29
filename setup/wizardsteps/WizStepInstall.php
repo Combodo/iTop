@@ -18,52 +18,91 @@
  */
 use Combodo\iTop\Application\WebPage\WebPage;
 
-/**
- * @since 3.3.0
- */
-class WizStepAudit extends AbstractWizStepBuild
+class WizStepInstall extends AbstractWizStepInstall
 {
+	const SequencerClass = ApplicationInstallSequencer::class;
+
 	public function GetTitle()
 	{
-		return 'Checking upgrade';
-
+		return 'Building iTop';
 	}
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepSummary'];
+		return ['WizStepDone'];
 	}
 
+	/**
+	 * Returns the label for the " Next >> " button
+	 * @return string The label for the button
+	 */
 	public function GetNextButtonLabel()
 	{
-		return 'Next';
+		return 'Continue';
 	}
 
 	public function CanMoveForward()
 	{
-		return true;
-
+		if ($this->CheckDependencies()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public function ProcessParams($bMoveForward = true)
 	{
-		return ['class' => 'WizStepSummary', 'state' => ''];
+		return ['class' => 'WizStepDone', 'state' => ''];
+	}
+
+	protected function AddProgressBar(WebPage $oPage)
+	{
+		$oPage->add('<fieldset id="installation_progress"><legend>Progress of the installation</legend>');
+		$oPage->add('<div id="progress_content">');
+		$oPage->LinkScriptFromAppRoot('setup/jquery.progression.js');
+		$oPage->add('<p class="center"><span id="setup_msg">Ready to start...</span></p><div style="display:block;margin-left: auto; margin-right:auto;" id="progress">0%</div>');
+		$oPage->add('</div>'); // progress_content
+		$oPage->add('</fieldset>');
+
 	}
 
 	public function Display(WebPage $oPage)
 	{
-		$oPage->add('<h2>Progress bar</h2>');
+
+		$aInstallParams = $this->BuildConfig();
+		$this->AddProgressBar($oPage);
+
+		$sJSONData = json_encode($aInstallParams);
+		$oPage->add('<input type="hidden" id="installer_parameters" value="'.utils::EscapeHtml($sJSONData).'"/>');
+
+		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
+		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
+
+		if (!$this->CheckDependencies()) {
+			$oPage->error($this->sDependencyIssue);
+		}
+
+		$oPage->add_ready_script(
+			<<<JS
+	$("#wiz_form").data("installation_status", "not started");
+	ExecuteStep("");
+JS
+		);
 	}
 
+
+	/**
+	 * @throws \Exception
+	 */
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
 	{
 		$oParameters = new PHPParameters();
 		$sStep = $aParameters['installer_step'];
 		$sJSONParameters = $aParameters['installer_config'];
 		$oParameters->LoadFromHash(json_decode($sJSONParameters, true /* bAssoc */));
-		$oInstaller = new ApplicationBuildSequencer($oParameters);
+		$oInstaller = new (static::SequencerClass)($oParameters);
 		$aRes = $oInstaller->ExecuteStep($sStep);
-		if (($aRes['status'] != ApplicationBuildSequencer::ERROR) && ($aRes['next-step'] != '')) {
+		if (($aRes['status'] != $oInstaller::ERROR) && ($aRes['next-step'] != '')) {
 			// Tell the web page to move the progress bar and to launch the next step
 			$sMessage = addslashes(utils::EscapeHtml($aRes['next-step-label']));
 			$oPage->add_ready_script(
@@ -77,7 +116,7 @@ class WizStepAudit extends AbstractWizStepBuild
 	ExecuteStep('{$aRes['next-step']}');
 EOF
 			);
-		} elseif ($aRes['status'] != ApplicationBuildSequencer::ERROR) {
+		} elseif ($aRes['status'] != $oInstaller::ERROR) {
 			// Installation complete, move to the next step of the wizard
 			$oPage->add_ready_script(
 				<<<EOF
@@ -107,8 +146,7 @@ EOF
 	 */
 	public function JSCanMoveForward()
 	{
-		return 'return true;';
-		return 'return (($("#wiz_form").data("installation_status") === "not started") || ($("#wiz_form").data("installation_status") === "completed"));';
+		return 'return  $("#wiz_form").data("installation_status") === "completed";';
 	}
 
 	/**
@@ -117,7 +155,7 @@ EOF
 	 */
 	public function JSCanMoveBackward()
 	{
-		return 'return true;';
 		return 'var sStatus = $("#wiz_form").data("installation_status"); return ((sStatus === "not started") || (sStatus === "error"));';
 	}
+
 }

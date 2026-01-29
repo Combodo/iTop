@@ -1,6 +1,6 @@
 <?php
 
-abstract class AbstractWizStepBuild extends WizardStep {
+abstract class AbstractWizStepInstall extends WizardStep {
 	/**
 	 * Prepare the parameters to execute the installation asynchronously
 	 * @return array A big hash array that can be converted to XML or JSON with all the needed parameters

@@ -21,25 +21,9 @@ use Combodo\iTop\Application\WebPage\WebPage;
 /**
  * Summary of the installation tasks
  */
-class WizStepSummary extends AbstractWizStepBuild
+class WizStepSummary extends AbstractWizStepInstall
 {
-	protected $bDependencyCheck = null;
-	protected $sDependencyIssue = null;
 
-	protected function CheckDependencies()
-	{
-		if (is_null($this->bDependencyCheck)) {
-			$aSelectedModules = json_decode($this->oWizard->GetParameter('selected_modules'), true);
-			$this->bDependencyCheck = true;
-			try {
-				SetupUtils::AnalyzeInstallation($this->oWizard, true, $aSelectedModules);
-			} catch (MissingDependencyException $e) {
-				$this->bDependencyCheck = false;
-				$this->sDependencyIssue = $e->getHtmlDesc();
-			}
-		}
-		return $this->bDependencyCheck;
-	}
 
 	public function GetTitle()
 	{
@@ -54,7 +38,7 @@ class WizStepSummary extends AbstractWizStepBuild
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepBuild'];
+		return ['WizStepInstall'];
 	}
 
 	/**
@@ -77,7 +61,7 @@ class WizStepSummary extends AbstractWizStepBuild
 
 	public function ProcessParams($bMoveForward = true)
 	{
-		return ['class' => 'WizStepBuild', 'state' => ''];
+		return ['class' => 'WizStepInstall', 'state' => ''];
 	}
 
 	public function Display(WebPage $oPage)

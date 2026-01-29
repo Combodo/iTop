@@ -272,7 +272,7 @@ $bFoundIssues = false;
 $bInstall = utils::ReadParam('install', true, true /* CLI allowed */);
 if ($bInstall) {
 	echo "Starting the unattended installation...\n";
-	$oWizard = new ApplicationBuildSequencer($oParams);
+	$oWizard = new ApplicationInstallSequencer($oParams);
 	$bRes = $oWizard->ExecuteAllSteps();
 	if (!$bRes) {
 		echo "\nencountered installation issues!";

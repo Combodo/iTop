@@ -93,7 +93,7 @@ class WizStepModulesChoice extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepModulesChoice', 'WizStepAudit'];
+		return ['WizStepModulesChoice', 'WizStepDataAudit'];
 	}
 
 	public function GetAddedAndRemovedExtensions($aSelectedExtensions)
@@ -156,10 +156,10 @@ class WizStepModulesChoice extends WizardStep
 				$this->oWizard->SetParameter('extensions_not_uninstallable', json_encode(array_keys($aExtensionsNotUninstallable)));
 				$sMode = $this->oWizard->GetParameter('mode', 'install');
 				if ($sMode == 'install') {
-					return ['class' => 'WizStepAudit', 'state' => ''];
+					return ['class' => 'WizStepSummary', 'state' => ''];
 				}
 				else {
-					return ['class' => 'WizStepAudit', 'state' => ''];
+					return ['class' => 'WizStepDataAudit', 'state' => ''];
 				}
 
 			}
