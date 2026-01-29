@@ -133,7 +133,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ContainerImage:baseinfo">
+                <item id="fieldset:Container:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -141,18 +141,10 @@
                     <item id="version">
                       <rank>20</rank>
                     </item>
-                    <item id="description">
-                      <rank>30</rank>
-                    </item>
                   </items>
                   <rank>10</rank>
                 </item>
-              </items>
-              <rank>10</rank>
-            </item>
-            <item id="col:col2">
-              <items>
-                <item id="fieldset:ContainerImage:moreinfo">
+                <item id="fieldset:Container:moreinfo">
                   <items>
                     <item id="publisher">
                       <rank>10</rank>
@@ -165,6 +157,19 @@
                     </item>
                     <item id="software_id">
                       <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Container:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>60</rank>
                     </item>
                   </items>
                   <rank>10</rank>
@@ -205,7 +210,7 @@
     <class id="SoftwareInstance" _delta="must_exist">
       <fields>
         <field id="system_id" _delta="must_exist" xsi:type="AttributeExternalKey">
-          <filter _delta="redefine">SELECT FunctionalCI WHERE finalclass IN ('Server','VirtualMachine','PC', 'ContainerVirtualHost')</filter>
+          <filter _delta="redefine">SELECT FunctionalCI WHERE finalclass IN ('Server','VirtualMachine','PC') UNION SELECT 'ContainerVirtualHost' WHERE :this->finalclass = 'ContainerApplication'</filter>
         </field>
       </fields>
     </class>
@@ -314,7 +319,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ContainerApplication:baseinfo">
+                <item id="fieldset:Container:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -328,27 +333,32 @@
                     <item id="business_criticity">
                       <rank>40</rank>
                     </item>
-                    <item id="move2production">
-                      <rank>50</rank>
-                    </item>
-                    <item id="description">
-                      <rank>60</rank>
-                    </item>
                   </items>
                   <rank>10</rank>
                 </item>
-              </items>
-              <rank>10</rank>
-            </item>
-            <item id="col:col2">
-              <items>
-                <item id="fieldset:ContainerApplication:moreinfo">
+                <item id="fieldset:Container:moreinfo">
                   <items>
                     <item id="containervirtualhost_id">
                       <rank>10</rank>
                     </item>
                     <item id="descriptor">
                       <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Container:otherinfo">
+                  <items>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
                     </item>
                   </items>
                   <rank>10</rank>
@@ -604,44 +614,66 @@
         </search>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:Container:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Container:moreinfo">
+                  <items>
+                    <item id="system_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="containertype_id">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Container:otherinfo">
+                  <items>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
             </item>
-            <item id="business_criticity">
+            <item id="contacts_list">
               <rank>30</rank>
             </item>
-            <item id="move2production">
+            <item id="documents_list">
               <rank>40</rank>
             </item>
-            <item id="description">
+            <item id="providercontracts_list">
               <rank>50</rank>
             </item>
-            <item id="contacts_list">
-              <rank>60</rank>
-            </item>
-            <item id="documents_list">
-              <rank>70</rank>
-            </item>
-            <item id="applicationsolution_list">
-              <rank>80</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>90</rank>
-            </item>
-            <item id="services_list">
-              <rank>100</rank>
-            </item>
             <item id="containerapplications_list">
-              <rank>110</rank>
-            </item>
-            <item id="status">
-              <rank>120</rank>
-            </item>
-            <item id="containertype_id">
-              <rank>130</rank>
+              <rank>60</rank>
             </item>
           </items>
         </details>
@@ -806,7 +838,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ContainerVirtualHost:baseinfo">
+                <item id="fieldset:Container:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -820,21 +852,10 @@
                     <item id="business_criticity">
                       <rank>40</rank>
                     </item>
-                    <item id="move2production">
-                      <rank>50</rank>
-                    </item>
-                    <item id="description">
-                      <rank>60</rank>
-                    </item>
                   </items>
                   <rank>10</rank>
                 </item>
-              </items>
-              <rank>10</rank>
-            </item>
-            <item id="col:col2">
-              <items>
-                <item id="fieldset:ContainerVirtualHost:moreinfo">
+                <item id="fieldset:Container:moreinfo">
                   <items>
                     <item id="system_id">
                       <rank>10</rank>
@@ -847,6 +868,22 @@
                     </item>
                     <item id="role">
                       <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Container:otherinfo">
+                  <items>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
                     </item>
                   </items>
                   <rank>10</rank>
@@ -992,7 +1029,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ContainerVirtualHost:baseinfo">
+                <item id="fieldset:Container:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -1006,24 +1043,29 @@
                     <item id="business_criticity">
                       <rank>40</rank>
                     </item>
-                    <item id="move2production">
-                      <rank>50</rank>
-                    </item>
-                    <item id="description">
-                      <rank>60</rank>
-                    </item>
                   </items>
                   <rank>10</rank>
+                </item>
+                <item id="fieldset:Container:moreinfo">
+                  <items>
+                    <item id="containertype_id">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>10</rank>
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ContainerVirtualHost:moreinfo">
+                <item id="fieldset:Container:otherinfo">
                   <items>
-                    <item id="containertype_id">
-                      <rank>10</rank>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
                     </item>
                   </items>
                   <rank>10</rank>
@@ -1161,7 +1203,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:Cloud:baseinfo">
+                <item id="fieldset:Container:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -1175,27 +1217,32 @@
                     <item id="business_criticity">
                       <rank>40</rank>
                     </item>
-                    <item id="move2production">
+                    <item id="location_id">
                       <rank>50</rank>
-                    </item>
-                    <item id="description">
-                      <rank>60</rank>
                     </item>
                   </items>
                   <rank>10</rank>
+                </item>
+                <item id="fieldset:Container:moreinfo">
+                  <items>
+                    <item id="provider_id">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>10</rank>
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:Cloud:moreinfo">
+                <item id="fieldset:Container:otherinfo">
                   <items>
-                    <item id="provider_id">
-                      <rank>10</rank>
+                    <item id="move2production">
+                      <rank>50</rank>
                     </item>
-                    <item id="location_id">
-                      <rank>20</rank>
+                    <item id="description">
+                      <rank>60</rank>
                     </item>
                   </items>
                   <rank>10</rank>
