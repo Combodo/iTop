@@ -34,6 +34,9 @@ class PropertyTypeCompiler
 	 */
 	public function CompilePropertyTypeFromXML(string $sXMLContent): PropertyType
 	{
+		if (!utils::StartsWith($sXMLContent, '<?xml version="1.0" encoding="UTF-8"?>')) {
+			throw new PropertyTypeCompilerException('Property types definition should be XML file');
+		}
 		$oDoc = new DesignDocument();
 		libxml_clear_errors();
 		$oDoc->loadXML($sXMLContent);
@@ -44,6 +47,10 @@ class PropertyTypeCompiler
 
 		/** @var \Combodo\iTop\DesignElement $oRoot */
 		$oRoot = $oDoc->firstChild;
+
+		if (!$oRoot) {
+			throw new PropertyTypeCompilerException('Property types definition not correctly formatted!');
+		}
 
 		return PropertyTypeFactory::GetInstance()->CreatePropertyTypeFromDom($oRoot);
 	}
