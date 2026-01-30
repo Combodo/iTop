@@ -599,26 +599,7 @@ class ApplicationInstallSequencer extends StepSequencer
 		return $aModelInfo;
 	}
 
-	protected function DoSetupAudit()
-	{
-		/**
-		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
-		 * @noinspection PhpUnusedLocalVariableInspection
-		 */
-		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
-		$sTargetEnvironment = $this->GetTargetEnv();
-		$sPreviousEnvironment = 'production';
-
-		$oSetupAudit = new SetupAudit($sPreviousEnvironment, $sTargetEnvironment);
-
-		$oSetupAudit->GetIssues(true);
-		$iCount = $oSetupAudit->GetDataToCleanupCount();
-
-		if ($iCount > 0) {
-			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice prior to upgrading iTop");
-		}
-	}
 
 
 	protected function IsSetupDataAuditEnabled($sSkipDataAudit, array $aParamValues): bool
@@ -1016,13 +997,16 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 {
 
 
-	/**
-	 * @return string
-	 */
-	protected function GetTargetDir()
+	protected function GetTempEnv()
 	{
 		$sTargetEnv = $this->GetTargetEnv();
-		return 'env-dry-'.$sTargetEnv;
+		return 'dry-'.$sTargetEnv;
+	}
+
+	protected function GetTargetDir()
+	{
+		$sTargetEnv = $this->GetTempEnv();
+		return 'env-'.$sTargetEnv;
 	}
 
 	/**
@@ -1088,12 +1072,21 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 					$aResult = [
 						'status' => self::OK,
 						'message' => '',
-						'next-step' => 'setup-audit',
-						'next-step-label' => 'Checking data consistency with the new data model',
+						'next-step' => 'write-config',
+						'next-step-label' => 'Writing audit config',
 						'percentage-completed' => 60,
 					];
 					break;
-
+				case 'write-config':
+					$this->DoWriteConfig();
+					$aResult = [
+						'status' => self::OK,
+						'message' => '',
+						'next-step' => 'setup-audit',
+						'next-step-label' => 'Checking data consistency with the new data model',
+						'percentage-completed' => 70,
+					];
+					break;
 				case 'setup-audit':
 					$this->DoSetupAudit();
 					$aResult = [
@@ -1155,8 +1148,48 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 		return $aResult;
 	}
 
+
+	protected function DoWriteConfig(){
+		$sConfigFilePath = utils::GetConfigFilePath($this->GetTargetEnv());
+		if (is_file($sConfigFilePath)) {
+			$oConfig = new Config($sConfigFilePath);
+
+			$sTempConfigFileName = utils::GetConfigFilePath($this->GetTempEnv());
+			$sConfigDir = dirname($sTempConfigFileName);
+			@mkdir($sConfigDir);
+			@chmod($sConfigDir, 0770); // RWX for owner and group, nothing for others
+
+			return $oConfig->WriteToFile($sTempConfigFileName);
+		}
+		return false;
+	}
+
+	protected function DoSetupAudit()
+	{
+		/**
+		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
+		 * @noinspection PhpUnusedLocalVariableInspection
+		 */
+		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
+
+		$sTargetEnvironment = $this->GetTempEnv();
+		$sPreviousEnvironment = $this->GetTargetEnv();
+file_put_contents('C:/tmp/uninstall.log', "prev env=".$sPreviousEnvironment."\n", FILE_APPEND);
+file_put_contents('C:/tmp/uninstall.log', "target env=".$sTargetEnvironment."\n", FILE_APPEND);
+		$oSetupAudit = new SetupAudit($sPreviousEnvironment, $sTargetEnvironment);
+
+		$oSetupAudit->GetIssues(true);
+		$iCount = $oSetupAudit->GetDataToCleanupCount();
+
+		if ($iCount > 0) {
+			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice prior to upgrading iTop");
+		}
+	}
+
 	protected function DoCleanup(){
-		SetupUtils::tidydir($this->GetTargetDir());
+		$sDestination = APPROOT.$this->GetTargetDir();
+		SetupUtils::tidydir($sDestination);
+		SetupUtils::rmdir_safe($sDestination);
 	}
 }
 
