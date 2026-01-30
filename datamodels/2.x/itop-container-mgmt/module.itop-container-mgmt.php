@@ -31,6 +31,8 @@ SetupWebPage::AddModule(
 		),
 		'data.struct' => array(
 			// add your 'structure' definition XML files here,
+			'data/en_us.data.itop-container-type.xml',
+			'data/en_us.data.itop-container-image-type.xml',
 		),
 		'data.sample' => array(
 			// add your sample data XML files here,
@@ -48,36 +50,5 @@ SetupWebPage::AddModule(
 		),
 	)
 );
-
-if (!class_exists('ContainerTypeInstaller'))
-{
-	// Module installation handler
-	//
-	class ContainerTypeInstaller extends ModuleInstallerAPI
-	{
-		/**
-		 * Handler called after the creation/update of the database schema
-		 *
-		 * @param $oConfiguration Config The new configuration of the application
-		 * @param $sPreviousVersion string Previous version number of the module (empty string in case of first install)
-		 * @param $sCurrentVersion string Current version number of the module
-		 *
-		 * @throws \Exception
-		 */
-		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
-		{
-			if ($sPreviousVersion == '') { // First installation
-				$oDataLoader = new XMLDataLoader();
-				CMDBObject::SetTrackInfo("Initialization ContainerTypeInstaller");
-				$oMyChange = CMDBObject::GetCurrentChange();
-				$sFileName = dirname(__FILE__)."/data/en_us.data.itop-container-type.xml";
-				SetupLog::Info("Uploading Typology values for Containers from file: $sFileName");
-				$oDataLoader->StartSession($oMyChange);
-				$oDataLoader->LoadFile($sFileName, false, true);
-				$oDataLoader->EndSession();
-			}
-		}
-	}
-}
 
 ?>
