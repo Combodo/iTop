@@ -78,23 +78,24 @@ collection-entry-element {
 .ibo-form-compact{
 
   .ibo-field{
-
     display: flex;
     flex-direction: column;
     gap: 4px;
 
-    label{
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-
-      width: 100%;
+    .ibo-field--label{
+      min-width: 100px;
       max-width: unset;
-      padding-right: 0;
+      width: unset;
     }
 
-  }
+    .ibo-input-type-checkbox{
+      align-self: flex-start;
+    }
+
+    .ibo-input-type-date{
+      display: block;
+    }
+}
 
 }
 

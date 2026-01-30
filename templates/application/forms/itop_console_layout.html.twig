@@ -1,5 +1,7 @@
 {% use "application/forms/itop_base_layout.html.twig" %}
 
+{# FORM #}
+
 {%- block form_start -%}
     {%- do form.setMethodRendered() -%}
     {% set method = method|upper %}
@@ -22,12 +24,27 @@
 </form>
 {%- endblock form_end -%}
 
-{%- block widget_attributes -%}
+{# ROWS #}
+
+{%- block form_rows -%}
+
+    {% for block in blocks %}
+        {% if block.added == 1 and form[block.name] != null %}
+            {% set row_attr = row_attr|merge({id: 'turbo_' ~ block.id }) %}
+            {{ form_row(form[block.name], {row_attr: row_attr}) }}
+        {% else %}
+            <div id="turbo_{{ block.id }}" class="ibo-field ibo-content-block ibo-block ibo-field-small"></div>
+        {% endif %}
+    {% endfor %}
+
+{%- endblock form_rows -%}
+
+{%- block form_row -%}
+    {% set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' ibo-field ibo-content-block ibo-block  ibo-field-small')|trim}) %}
     {{- parent() -}}
-    {%  if trigger_form_submit_on_modify %}
-        onChange="this.form.TriggerTurbo(this);"
-    {% endif %}
-{%- endblock widget_attributes -%}
+{%- endblock form_row -%}
+
+{# WIDGETS #}
 
 {%- block attributes -%}
     {{- parent() -}}
@@ -36,17 +53,33 @@
     {% endif %}
 {%- endblock attributes -%}
 
+{%- block widget_attributes -%}
+    {{- parent() -}}
+    {%  if trigger_form_submit_on_modify %}
+        onChange="this.form.TriggerTurbo(this);"
+    {% endif %}
+{%- endblock widget_attributes -%}
+
 {%- block form_widget_simple -%}
-    {%  if type == 'text' %}{% set ibo_class='ibo-input-string' %}{% else %}{% set ibo_class='ibo-input-' ~ type %}{% endif %}
+    {% set ibo_class='ibo-input-type-' ~ type|default('text') %}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input ' ~ ibo_class)|trim}) %}
     {{- parent() -}}
 {%- endblock form_widget_simple -%}
 
 {%- block textarea_widget -%}
-    {%  if type == 'text' %}{% set ibo_class='ibo-input-string' %}{% else %}{% set ibo_class='ibo-input-' ~ type %}{% endif %}
-    {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input ' ~ ibo_class)|trim}) %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input-textarea')|trim}) %}
     {{- parent() -}}
 {%- endblock textarea_widget -%}
+
+{%- block checkbox_widget -%}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input-type-checkbox ')|trim}) %}
+    {{- parent() -}}
+{%- endblock checkbox_widget -%}
+
+{%- block radio_widget -%}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input-type-radio ')|trim}) %}
+    {{- parent() -}}
+{%- endblock radio_widget -%}
 
 {%- block choice_widget_collapsed -%}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input')|trim}) %}
@@ -78,8 +111,10 @@
 {%- block choice_widget_expanded -%}
     <div {{ block('widget_container_attributes') }}>
         {%- for child in form %}
+            <div class="ibo-choice-widget-expanded--item">
             {{- form_widget(child) -}}
             {{- form_label(child, null, {translation_domain: choice_translation_domain, no_label_class: true}) -}}
+            </div>
         {% endfor -%}
     </div>
 {%- endblock choice_widget_expanded -%}
@@ -94,23 +129,13 @@
     {{- parent() -}}
 {%- endblock form_label -%}
 
-{%- block form_rows -%}
-
-    {% for block in blocks %}
-        {% if block.added == 1 and form[block.name] != null %}
-            {% set row_attr = row_attr|merge({id: 'turbo_' ~ block.id }) %}
-            {{ form_row(form[block.name], {row_attr: row_attr}) }}
-        {% else %}
-            <div id="turbo_{{ block.id }}" class="ibo-field ibo-content-block ibo-block ibo-field-small"></div>
-        {% endif %}
-    {% endfor %}
-
-{%- endblock form_rows -%}
-
-{%- block form_row -%}
-    {% set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' ibo-field ibo-content-block ibo-block  ibo-field-small')|trim}) %}
+{%- block form_label_content -%}
     {{- parent() -}}
-{%- endblock form_row -%}
+    <div style="float: right;display: flex;flex-direction: column;align-items: center;row-gap: 3px;">
+        <span role="marquee" class="ibo-button--icon fas" style="padding:6px;"></span>
+    </div>
+{%-endblock form_label_content  -%}
+
 
 {%- block collection_widget -%}
 
@@ -134,13 +159,6 @@
     </collection-element>
 
 {%- endblock collection_widget -%}
-
-{%- block form_label_content -%}
-    {{- parent() -}}
-    <div style="float: right;display: flex;flex-direction: column;align-items: center;row-gap: 3px;">
-        <span role="marquee" class="ibo-button--icon fas" style="padding:6px;"></span>
-    </div>
-{%-endblock form_label_content  -%}
 
 {%- block form_errors -%}
     <div id="turbo_error_{{ form.vars.id }}" class="form-error">

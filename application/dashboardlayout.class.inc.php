@@ -131,6 +131,9 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		for ($iRows = 0; $iRows < $iNbRows; $iRows++) {
 			$oDashboardRow = new DashboardRow();
 
+			// GRID LAYOUT: Store the maximum column Y in this row
+			$iGridMaxColY = -1;
+
 			for ($iCols = 0; $iCols < $this->iNbCols; $iCols++) {
 				$oDashboardColumn = new DashboardColumn($bEditMode);
 				$oDashboardColumn->SetCellIndex($iCellIdx);
@@ -160,7 +163,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 									$iWidth = $iGridColWidth;
 								}
 								$iHeight = array_key_exists('preferred_height', $aDashletsInfo) ? $aDashletsInfo['preferred_height'] : 1;
-								// GRID LAYOUT: Store max height of dashlets in this current row
+								// GRID LAYOUT: Store max height of dashlets in this current column
 								if ($iHeight > $iGridMaxHeightDashlet) {
 									$iGridMaxHeightDashlet = $iHeight;
 								}
@@ -191,13 +194,18 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 				}
 				$iCellIdx++;
 
+				// GRID LAYOUT: Store max y in this current row
+				if ($iGridCurrentColY > $iGridMaxColY) {
+					$iGridMaxColY = $iGridCurrentColY;
+				}
+
 				// GRID LAYOUT: Next column
 				$iGridCurrentX += $iGridColWidth;
 
 			}
 
 			// GRID LAYOUT: Next Row
-			$iGridCurrentY++;
+			$iGridCurrentY += ($iGridMaxColY + 1);
 			$iGridCurrentX = 0;
 
 			$sJSReload .= $oDashboardRow->GetJSRefreshCallback()." ";
