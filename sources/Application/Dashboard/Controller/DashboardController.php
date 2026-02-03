@@ -166,24 +166,11 @@ class DashboardController extends Controller
 			throw new SecurityException('Invalid dashboard file !');
 		}
 
-		if (!filter_var(appUserPreferences::GetPref('display_original_dashboard_'.$sDashboardId, false), FILTER_VALIDATE_BOOLEAN)) {
-			// Search for an eventual user defined dashboard
-			$oUDSearch = new DBObjectSearch('UserDashboard');
-			$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
-			$oUDSearch->AddCondition('menu_code', $sDashboardId, '=');
-			$oUDSet = new DBObjectSet($oUDSearch);
-			if ($oUDSet->Count() > 0) {
-				// Assuming there is at most one couple {user, menu}!
-				$oUserDashboard = $oUDSet->Fetch();
-				$sDashboardDefinition = $oUserDashboard->Get('contents');
-			} else {
-				$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
-			}
-		} else {
-			$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
-		}
-
+		/** @var \Combodo\iTop\Application\Dashboard\Dashboard $oDashboard */
 		$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
+
+		$sDashboardDefinition = $oDashboard->ToXML();
+
 		if (!is_null($oDashboard)) {
 			$oPage->TrashUnexpectedOutput();
 			$oPage->SetContentType('text/xml');

@@ -214,6 +214,19 @@ abstract class Dashlet
 	}
 
 	/**
+	 * Load a dashboard using Model Data
+	 *
+	 * @param array $aModelData
+	 *
+	 * @return void
+	 * @since 3.3.0
+	 */
+	public function ToModelData(): array
+	{
+		return $this->aProperties;
+	}
+
+	/**
 	 * @return array Rel. path to the app. root of the JS files required by the dashlet
 	 * @since 3.0.0
 	 */

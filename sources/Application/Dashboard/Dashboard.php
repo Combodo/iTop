@@ -92,6 +92,20 @@ abstract class Dashboard
 	}
 
 	/**
+	 * @param string $sXml
+	 *
+	 * @throws \Exception
+	 */
+	public function ToXML(): string
+	{
+		$oDomNode = $this->CreateEmptyDashboard();
+		$aModelData = $this->ToModelData();
+		$this->oXMLSerializer->Serialize($aModelData, $oDomNode, 'DashboardGrid', 'Dashboard');
+
+		return $oDomNode->ownerDocument->saveXML();
+	}
+
+	/**
 	 * @param \DOMDocument $oDoc
 	 */
 	public function FromDOMDocument(DesignDocument $oDoc)
@@ -483,5 +497,34 @@ JS
 			$aGridDashlet['dashlet'] = $oDashlet;
 			$this->aGridDashlets[] = $aGridDashlet;
 		}
+	}
+
+	public function ToModelData(): array
+	{
+		$aModelData = [];
+		$aModelData['id'] = $this->sId;
+		$aModelData['layout'] = $this->sLayoutClass;
+		$aModelData['title'] = $this->sTitle;
+		$aModelData['refresh'] = $this->bAutoReload ? $this->iAutoReloadSec : 0;
+
+		foreach ($this->aGridDashlets as $aGridDashlet) {
+			$aPosDashlet = [];
+			$aPosDashlet['position_x'] = $aGridDashlet['position_x'] ?? 0;
+			$aPosDashlet['position_y'] = $aGridDashlet['position_y'] ?? 0;
+			$aPosDashlet['width'] = $aGridDashlet['width'] ?? 2;
+			$aPosDashlet['height'] = $aGridDashlet['height'] ?? 1;
+			/** @var Dashlet $oDashlet */
+			$oDashlet = $aGridDashlet['dashlet'];
+			$aDashlet = [];
+			$aDashlet['type'] = $oDashlet->GetDashletType();
+			$sId = $oDashlet->GetID();
+			$aDashlet['id'] = $sId;
+			$aDashlet['properties'] = $oDashlet->ToModelData();
+			$aPosDashlet['dashlet'] = $aDashlet;
+
+			$aModelData['pos_dashlets'][$sId] = $aPosDashlet;
+		}
+
+		return $aModelData;
 	}
 }
