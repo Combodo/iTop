@@ -245,7 +245,7 @@ class RuntimeDashboard extends Dashboard
 
 		$oDashboard = parent::Render($oPage, $bEditMode, $aRenderParams);
 
-		if($this->HasCustomDashboard() && !filter_var(appUserPreferences::GetPref('display_original_dashboard_'.$this->GetId(), false), FILTER_VALIDATE_BOOLEAN)) {
+		if ($this->HasCustomDashboard() && !filter_var(appUserPreferences::GetPref('display_original_dashboard_'.$this->GetId(), false), FILTER_VALIDATE_BOOLEAN)) {
 			$oDashboard->SetIsCustom(true);
 		}
 

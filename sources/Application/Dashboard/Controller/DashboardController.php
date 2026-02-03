@@ -224,13 +224,11 @@ class DashboardController extends Controller
 				} else {
 					$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
 				}
-			}
-			else {
+			} else {
 				$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
 			}
 
 			// TODO 3.3 If the dashboard definition is previous schema, we need to convert it to the new one
-
 
 			$oDoc = new PropertyTypeDesign();
 			$oDoc->loadXML($sDashboardDefinition);
@@ -241,20 +239,19 @@ class DashboardController extends Controller
 
 			// TODO 3.3 Re-render every dashlet to have their latest representation
 			// Let's render every dashlet to prevent frontend from having to do it for each in individual ajax call
-//			if (array_key_exists('pos_dashlets', $aData)) {
-//				foreach ($aData['pos_dashlets'] as $sDashletId => $sPosValues) {
-//					if(array_key_exists('dashlet', $sPosValues)) {
-//						$sDashletClass = $sPosValues['dashlet']['type'];
-//						$aValues = $sPosValues['dashlet']['properties'];
-//
-//						$oDashlet = DashletFactory::GetInstance()->CreateDashlet($sDashletClass, $sDashletId);
-//						$oDashlet->FromModelData($aValues);
-//
-//
-//				   }
-//				}
-//			}
-
+			//			if (array_key_exists('pos_dashlets', $aData)) {
+			//				foreach ($aData['pos_dashlets'] as $sDashletId => $sPosValues) {
+			//					if(array_key_exists('dashlet', $sPosValues)) {
+			//						$sDashletClass = $sPosValues['dashlet']['type'];
+			//						$aValues = $sPosValues['dashlet']['properties'];
+			//
+			//						$oDashlet = DashletFactory::GetInstance()->CreateDashlet($sDashletClass, $sDashletId);
+			//						$oDashlet->FromModelData($aValues);
+			//
+			//
+			//				   }
+			//				}
+			//			}
 
 			$sStatus = 'ok';
 			$sMessage = 'Dashboard loaded';
@@ -268,7 +265,7 @@ class DashboardController extends Controller
 		$oPage->SetData([
 			'status' => $sStatus,
 			'message' => $sMessage,
-			'data' => $aData
+			'data' => $aData,
 		]);
 		$oPage->SetOutputDataOnly(true);
 		return $oPage;
