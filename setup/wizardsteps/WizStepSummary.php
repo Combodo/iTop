@@ -61,6 +61,8 @@ class WizStepSummary extends AbstractWizStepInstall
 
 	public function ProcessParams($bMoveForward = true)
 	{
+		$this->oWizard->SaveParameter('db_backup', false);
+		$this->oWizard->SaveParameter('db_backup_path', '');
 		return ['class' => 'WizStepInstall', 'state' => ''];
 	}
 
@@ -189,8 +191,54 @@ class WizStepSummary extends AbstractWizStepInstall
 			$oPage->error($this->sDependencyIssue);
 		}
 
+		$bDBBackup = $this->oWizard->GetParameter('db_backup', false);
+		$sDBBackupPath = $this->oWizard->GetParameter('db_backup_path', '');
+		$sMySQLBinDir = $this->oWizard->GetParameter('mysql_bindir', null);
+		if ($sMode != 'install') {
+			$sDBBackupPath = utils::GetDataPath().'backups/manual/setup-'.date('Y-m-d_H_i');
+			$aPreviousInstance = SetupUtils::GetPreviousInstance(APPROOT);
+			if ($aPreviousInstance['found']) {
+				$sMySQLBinDir = $aPreviousInstance['mysql_bindir'];
+				$this->oWizard->SaveParameter('mysql_bindir', $aPreviousInstance['mysql_bindir']);
+			}
+		}
+
+
+		$aBackupChecks = SetupUtils::CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir);
+		$bCanBackup = true;
+		$sMySQLDumpMessage = '';
+		foreach ($aBackupChecks as $oCheck) {
+			switch ($oCheck->iSeverity) {
+				case CheckResult::ERROR:
+					$bCanBackup = false;
+					$sMySQLDumpMessage .= '<div class="message message-error"><span class="message-title">Error:</span>'.$oCheck->sLabel.'</div>';
+					break;
+				case CheckResult::TRACE:
+					SetupLog::Ok($oCheck->sLabel);
+					break;
+				default:
+					$sMySQLDumpMessage .= '<div class="message message-valid"><span class="message-title">Success:</span>'.$oCheck->sLabel.'</div>';
+					break;
+			}
+		}
+		$sChecked = ($bCanBackup && $bDBBackup) ? ' checked ' : '';
+		$sDisabled = $bCanBackup ? '' : ' disabled ';
+		$oPage->add('<br/>');
+		$oPage->add('<input id="db_backup" type="checkbox" name="db_backup" '.$sChecked.$sDisabled.' value="1"/><label for="db_backup">Backup the '.ITOP_APPLICATION.' database before upgrading</label>');
+		$oPage->add('<div class="setup-backup--input--container">Save the backup to:<input id="db_backup_path" class="ibo-input" type="text" name="db_backup_path" '.$sDisabled.'value="'.utils::EscapeHtml($sDBBackupPath).'"/></div>');
+		$fFreeSpace = SetupUtils::CheckDiskSpace($sDBBackupPath);
+		$sMessage = '';
+		if ($fFreeSpace !== false) {
+			$sMessage .= SetupUtils::HumanReadableSize($fFreeSpace).' free in '.dirname($sDBBackupPath);
+		}
+		$oPage->add($sMySQLDumpMessage.'<span id="backup_info" style="font-size:small;color:#696969;">'.$sMessage.'</span>');
+		$oPage->add('</div>');
+		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
+		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
+
 		$oPage->add_ready_script(
 			<<<JS
+	$("#db_backup_path").on('change keyup', function() { WizardAsyncAction('check_backup', { db_backup_path: $('#db_backup_path').val() }); });
 	$("#params_summary div").addClass('closed');
 	$("#params_summary .title").on('click', function() { $(this).parent().toggleClass('closed'); } );
 JS

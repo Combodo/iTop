@@ -44,8 +44,6 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$this->oWizard->SaveParameter('db_pwd', '');
 		$this->oWizard->SaveParameter('db_name', '');
 		$this->oWizard->SaveParameter('db_prefix', '');
-		$this->oWizard->SaveParameter('db_backup', false);
-		$this->oWizard->SaveParameter('db_backup_path', '');
 		$this->oWizard->SaveParameter('db_tls_enabled', false);
 		$this->oWizard->SaveParameter('db_tls_ca', '');
 
@@ -71,15 +69,10 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$sDBPwd = $this->oWizard->GetParameter('db_pwd', '');
 		$sDBName = $this->oWizard->GetParameter('db_name', '');
 		$sDBPrefix = $this->oWizard->GetParameter('db_prefix', '');
-		$bDBBackup = $this->oWizard->GetParameter('db_backup', false);
-		$sDBBackupPath = $this->oWizard->GetParameter('db_backup_path', '');
 		$sTlsEnabled = $this->oWizard->GetParameter('db_tls_enabled', false);
 		$sTlsCA = $this->oWizard->GetParameter('db_tls_ca', '');
-		$sMySQLBinDir = $this->oWizard->GetParameter('mysql_bindir', null);
 		$sPreviousVersionDir = '';
 		if ($sInstallMode == '') {
-			$sDBBackupPath = utils::GetDataPath().'backups/manual/setup-'.date('Y-m-d_H_i');
-			$bDBBackup = true;
 			$aPreviousInstance = SetupUtils::GetPreviousInstance(APPROOT);
 			if ($aPreviousInstance['found']) {
 				$sInstallMode = 'upgrade';
@@ -91,8 +84,6 @@ class WizStepInstallOrUpgrade extends WizardStep
 				$sTlsEnabled = $aPreviousInstance['db_tls_enabled'];
 				$sTlsCA = $aPreviousInstance['db_tls_ca'];
 				$this->oWizard->SaveParameter('graphviz_path', $aPreviousInstance['graphviz_path']);
-				$sMySQLBinDir = $aPreviousInstance['mysql_bindir'];
-				$this->oWizard->SaveParameter('mysql_bindir', $aPreviousInstance['mysql_bindir']);
 				$sPreviousVersionDir = APPROOT;
 			} else {
 				$sInstallMode = 'install';
@@ -133,34 +124,6 @@ HTML
 			null
 		);
 
-		$aBackupChecks = SetupUtils::CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir);
-		$bCanBackup = true;
-		$sMySQLDumpMessage = '';
-		foreach ($aBackupChecks as $oCheck) {
-			switch ($oCheck->iSeverity) {
-				case CheckResult::ERROR:
-					$bCanBackup = false;
-					$sMySQLDumpMessage .= '<div class="message message-error"><span class="message-title">Error:</span>'.$oCheck->sLabel.'</div>';
-					break;
-				case CheckResult::TRACE:
-					SetupLog::Ok($oCheck->sLabel);
-					break;
-				default:
-					$sMySQLDumpMessage .= '<div class="message message-valid"><span class="message-title">Success:</span>'.$oCheck->sLabel.'</div>';
-					break;
-			}
-		}
-		$sChecked = ($bCanBackup && $bDBBackup) ? ' checked ' : '';
-		$sDisabled = $bCanBackup ? '' : ' disabled ';
-		$oPage->add('<input id="db_backup" type="checkbox" name="db_backup" '.$sChecked.$sDisabled.' value="1"/><label for="db_backup">Backup the '.ITOP_APPLICATION.' database before upgrading</label>');
-		$oPage->add('<div class="setup-backup--input--container">Save the backup to:<input id="db_backup_path" class="ibo-input" type="text" name="db_backup_path" '.$sDisabled.'value="'.utils::EscapeHtml($sDBBackupPath).'"/></div>');
-		$fFreeSpace = SetupUtils::CheckDiskSpace($sDBBackupPath);
-		$sMessage = '';
-		if ($fFreeSpace !== false) {
-			$sMessage .= SetupUtils::HumanReadableSize($fFreeSpace).' free in '.dirname($sDBBackupPath);
-		}
-		$oPage->add($sMySQLDumpMessage.'<span id="backup_info" style="font-size:small;color:#696969;">'.$sMessage.'</span>');
-		$oPage->add('</div>');
 		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		//$oPage->add('</fieldset>');
@@ -168,7 +131,6 @@ HTML
 			<<<JS
 	$("#radio_update").on('change', function() { if (this.checked ) { $('#upgrade_info').show(); WizardUpdateButtons(); } else { $('#upgrade_info').hide(); } });
 	$("#radio_install").on('change', function() { if (this.checked ) { $('#upgrade_info').hide(); WizardUpdateButtons(); } else { $('#upgrade_info').show(); } });
-	$("#db_backup_path").on('change keyup', function() { WizardAsyncAction('check_backup', { db_backup_path: $('#db_backup_path').val() }); });
 JS
 		);
 	}
