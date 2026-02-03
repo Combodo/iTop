@@ -57,6 +57,7 @@ abstract class Dashboard
 	protected $oDashletFactory;
 
 	private XMLSerializer $oXMLSerializer;
+	private DashletService $oDashletService;
 
 	/**
 	 * Dashboard constructor.
@@ -74,6 +75,7 @@ abstract class Dashboard
 		$this->sId = $sId;
 		$this->oDashletFactory = DashletFactory::GetInstance();
 		$this->oXMLSerializer  = MetaModel::GetService('XMLSerializer');
+		$this->oDashletService = MetaModel::GetService('DashletService');
 	}
 
 	/**
@@ -180,6 +182,103 @@ abstract class Dashboard
 		} else {
 			$this->aCells = [];
 		}
+
+		switch ($this->sLayoutClass) {
+			case 'DashboardLayoutTwoCols':
+				$iNbCols = 2;
+				break;
+			case 'DashboardLayoutThreeCols':
+				$iNbCols = 3;
+				break;
+			case 'DashboardLayoutOneCol':
+			default:
+				$iNbCols = 1;
+				break;
+		}
+
+		$iCellIdx = 0;
+		$iNbRows = ceil(count($this->aCells) / $iNbCols);
+
+		// GRID LAYOUT: Global positioning
+		$iGridCurrentX = 0;
+		$iGridCurrentY = 0;
+		$iGridColWidth = (int)(12 / $iNbCols);
+
+		for ($iRows = 0; $iRows < $iNbRows; $iRows++) {
+			// GRID LAYOUT: Store the maximum column Y in this row
+			$iGridMaxColY = -1;
+
+			for ($iCols = 0; $iCols < $iNbCols; $iCols++) {
+
+				// GRID LAYOUT: Column positioning
+				$iGridCurrentColX = 0;
+				$iGridCurrentColY = 0;
+				$iGridMaxHeightDashlet = -1;
+
+				if (array_key_exists($iCellIdx, $this->aCells)) {
+					$aDashlets = $this->aCells[$iCellIdx];
+					if (count($aDashlets) > 0) {
+						/** @var \Dashlet $oDashlet */
+						foreach ($aDashlets as $oDashlet) {
+							if ($oDashlet::IsVisible()) {
+								$sDashletClass = $oDashlet->GetDashletType();
+								$aDashletsInfo = $this->oDashletService->GetDashletDefinition($sDashletClass);
+
+								// GRID LAYOUT: Set position relative to grid
+								$iPositionX = $iGridCurrentX + $iGridCurrentColX;
+								$iPositionY = $iGridCurrentY + $iGridCurrentColY;
+								$iWidth = array_key_exists('preferred_width', $aDashletsInfo) ? $aDashletsInfo['preferred_width'] : 1;
+								// GRID LAYOUT: Limit dashlet width to fit column width
+								if ($iWidth > $iGridColWidth) {
+									$iWidth = $iGridColWidth;
+								}
+								$iHeight = array_key_exists('preferred_height', $aDashletsInfo) ? $aDashletsInfo['preferred_height'] : 1;
+								// GRID LAYOUT: Store max height of dashlets in this current column
+								if ($iHeight > $iGridMaxHeightDashlet) {
+									$iGridMaxHeightDashlet = $iHeight;
+								}
+								// GRID LAYOUT: Ensure that dashlet fits in the current row of the column
+								if ($iGridCurrentColX + $iWidth > $iGridColWidth) {
+									$iPositionX = $iGridCurrentX;
+									$iPositionY++;
+								}
+								$aPosDashlet = [];
+								$aPosDashlet['dashlet'] = $oDashlet;
+								$aPosDashlet['position_x'] = $iPositionX;
+								$aPosDashlet['position_y'] = $iPositionY;
+								$aPosDashlet['width'] = $iWidth;
+								$aPosDashlet['height'] = $iHeight;
+								$this->aGridDashlets[] = $aPosDashlet;
+
+								// GRID LAYOUT: Update column cursor
+								$iGridCurrentColX += $iWidth;
+								if ($iGridCurrentColX >= $iGridColWidth) {
+									$iGridCurrentColX = 0;
+									$iGridCurrentColY += $iGridMaxHeightDashlet;
+									$iGridMaxHeightDashlet = -1;
+								}
+							}
+						}
+					}
+				}
+				$iCellIdx++;
+
+				// GRID LAYOUT: Store max y in this current row
+				if ($iGridCurrentColY > $iGridMaxColY) {
+					$iGridMaxColY = $iGridCurrentColY;
+				}
+
+				// GRID LAYOUT: Next column
+				$iGridCurrentX += $iGridColWidth;
+			}
+
+			// GRID LAYOUT: Next Row
+			$iGridCurrentY += ($iGridMaxColY + 1);
+			$iGridCurrentX = 0;
+		}
+
+		$this->aCells = [];
+		$this->sLayoutClass = DashboardLayoutGrid::class;
 	}
 
 	/**

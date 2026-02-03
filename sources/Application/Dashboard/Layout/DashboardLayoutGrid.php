@@ -47,13 +47,15 @@ class DashboardLayoutGrid extends \DashboardLayout
 	}
 
 	/**
+	 *
+	 *
 	 * @inheritDoc
 	 */
 	public function GetDashletCoordinates($iCellIdx)
 	{
-		$iColNumber = $iCellIdx % 12;
-		$iRowNumber = (int)floor($iCellIdx / 12);
+		$iRowNumber = $iCellIdx % 12;
+		$iColumnNumber = (int)floor($iCellIdx / 12);
 
-		return [$iColNumber, $iRowNumber];
+		return [$iColumnNumber, $iRowNumber];
 	}
 }
