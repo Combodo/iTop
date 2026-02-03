@@ -8,10 +8,16 @@
             {{ render_block(oUIBlock.GetToolbar(), {aPage: aPage}) }}
         </div>
     {% endif %}
-    <ibo-dashboard id="{{ oUIBlock.GetId() }}" class="ibo-dashboard" data-role="ibo-dashboard" data-edit-mode="view">
+    <ibo-dashboard id="{{ oUIBlock.GetId() }}"
+                   class="ibo-dashboard"
+                   data-role="ibo-dashboard"
+                   data-edit-mode="view"
+                   data-file="{{ oUIBlock.GetFile() }}"
+                   data-is-custom="{{ oUIBlock.IsCustom() ? 'true' : 'false' }}"
+    >
         <div class="ibo-dashboard--form">
             <div class="ibo-dashboard--form--inputs">
-                 Editing{{ render_block(oUIBlock.GetTitleInput(), {aPage: aPage}) }}{{ render_block(oUIBlock.GetRefreshInput(), {aPage: aPage}) }}
+                 Editing {{ render_block(oUIBlock.GetTitleInput(), {aPage: aPage}) }}{{ render_block(oUIBlock.GetRefreshInput(), {aPage: aPage}) }}
             </div>
             <div class="ibo-dashboard--form--actions">
                 {{ render_block(oUIBlock.GetButtonsToolbar(), {aPage: aPage}) }}

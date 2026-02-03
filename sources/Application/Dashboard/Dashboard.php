@@ -364,6 +364,8 @@ abstract class Dashboard
 		}
 
 		$oDashboard = $oLayout->Render($oPage, $aDashlets, $bEditMode, $aExtraParams);
+		$oDashboard->SetFile(utils::LocalPath($this->GetDefinitionFile()));
+
 		$oPage->AddUiBlock($oDashboard);
 
 		$bFromDashboardPage = isset($aExtraParams['from_dashboard_page']) ? isset($aExtraParams['from_dashboard_page']) : false;

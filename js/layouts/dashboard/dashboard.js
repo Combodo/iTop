@@ -22,6 +22,11 @@ class IboDashboard extends HTMLElement {
 		this.csrfToken = null;
 		/** @type {number} Payload schema version */
 		this.schemaVersion = 2;
+		/** @type {boolean} Define is the current is dashboard is custom or not */
+		this.bIsCustomDashboard = false;
+		// TODO 3.3 Do not use file that come from frontend
+		/** @type {string} File for the default dashboard */
+		this.sFile = '';
 
 		/** @type {object|null} Last saved state for cancel functionality, unused yet */
 		this.aLastSavedState = null;
@@ -29,7 +34,10 @@ class IboDashboard extends HTMLElement {
 
 	connectedCallback() {
 		this.sId = this.getAttribute("id");
-		this.bEditMode = (this.getAttribute("data-edit-mode") === "edit");
+		this.bEditMode = (this.getAttribute("data-edit-mode") === "edit")
+		this.bIsCustomDashboard = this.getAttribute("data-is-custom") === "true";
+		this.sFile = this.getAttribute("data-file") || '';
+
 		this.SetupGrid();
 
 		this.BindEvents();
@@ -55,6 +63,10 @@ class IboDashboard extends HTMLElement {
 			this.SetEditMode(false);
 		});
 
+		document.querySelector('.ibo-dashboard--selector[data-dashboard-id="'+this.sId+'"] input[type="checkbox"]')?.addEventListener('change', (e) => {
+			const bIsCustomDashboard = e.target.checked;
+			this.SetIsCustomDashboard(bIsCustomDashboard);
+		});
 		// TODO 3.3 Add event listener to dashboard toggler to get custom/default dashboard switching
 		// TODO 3.3 require load method that's not finished yet
 
@@ -69,27 +81,37 @@ class IboDashboard extends HTMLElement {
 
 		this.oGrid = this.querySelector('ibo-dashboard-grid');
 	}
-
+	async SetIsCustomDashboard(bIsCustom) {
+		this.bIsCustomDashboard = bIsCustom;
+		this.setAttribute("data-custom-dashboard", bIsCustom ? "true" : "false");
+		SetUserPreference(`display_original_dashboard_${this.sId}`, !bIsCustom, true);
+		console.log(document.querySelector('.ibo-dashboard--selector[data-dashboard-id="'+this.sId+'"] input[type="checkbox"]'));
+		document.querySelector('.ibo-dashboard--selector[data-dashboard-id="'+this.sId+'"] input[type="checkbox"]').checked = bIsCustom;
+		return this.ReloadFromBackend(bIsCustom);
+	}
 
 	GetEditMode() {
 		return this.bEditMode;
 	}
 
 	ToggleEditMode(){
-		this.SetEditMode(!this.bEditMode);
+		return this.SetEditMode(!this.bEditMode);
 	}
 
-	SetEditMode(bEditMode) {
+	async SetEditMode(bEditMode) {
+		if (this.bIsCustomDashboard === false && bEditMode === true) {
+			await this.SetIsCustomDashboard(true);
+		}
+
 		this.bEditMode = bEditMode;
 
 		this.oGrid.SetEditable(this.bEditMode);
-		if(this.bEditMode){
+		if (this.bEditMode) {
 			// TODO 3.3 If we are in default dashboard display, change to custom to allow editing
 			// TODO 3.3 Get the custom dashboard and load it, show a tooltip on the dashboard toggler to explain that we switched to custom mode
 			this.aLastSavedState = this.Serialize();
 			this.setAttribute("data-edit-mode", "edit");
-		}
-		else{
+		} else {
 			this.setAttribute("data-edit-mode", "view");
 		}
 	}
@@ -292,12 +314,16 @@ class IboDashboard extends HTMLElement {
 		this.oGrid.RemoveDashlet(sDashletId);
 	}
 
-	RefreshFromBackend(bCustomDashboard = false) {
-		const sLoadDashboardUrl = GetAbsoluteUrlAppRoot() + `/pages/UI.php?route=dashboard.load&id=${this.sId}&custom=${bCustomDashboard ? 'true' : 'false'}`;
+	ReloadFromBackend(bCustomDashboard = false) {
+		let sLoadDashboardUrl = GetAbsoluteUrlAppRoot() + `/pages/UI.php?route=dashboard.load&id=${this.sId}&is_custom=${bCustomDashboard ? 'true' : 'false'}`;
+		if(!bCustomDashboard && this.sFile.length > 0) {
+			sLoadDashboardUrl += `&file=${encodeURIComponent(this.sFile)}`;
+		}
+
 		fetch(sLoadDashboardUrl)
 			.then(async oResponse => {
 				const oDashletData = await oResponse.json();
-				this.Load(oDashletData);
+				this.Load(oDashletData.data);
 			}
 		)
 	}
@@ -332,7 +358,7 @@ class IboDashboard extends HTMLElement {
 				if(res.status === 'ok') {
 					CombodoToast.OpenToast(res.message, 'success');
 					this.aLastSavedState = this.Serialize();
-					this.SetEditMode(false);
+					await this.SetEditMode(false);
 				} else {
 					CombodoToast.OpenToast(res.message, 'error');
 				}
@@ -342,14 +368,14 @@ class IboDashboard extends HTMLElement {
 
 	Load(aSaveState) {
 		try {
+			// TODO 3.3 Maybe we won't need to validate schema version right now as we control both sides
 			// Validate schema version
-			if (aSaveState.schema_version !== this.schemaVersion) {
+			if (false && aSaveState.schema_version !== this.schemaVersion) {
 				CombodoToast.OpenToast('Somehow, we got an incompatible dashboard schema version.', 'error');
 				return false;
 			}
 
 			// Update dashboard data
-			this.sId = aSaveState.id;
 			this.sTitle = aSaveState.title || "";
 			this.iRefreshRate = parseInt(aSaveState.refresh, 10) || 0;
 
@@ -376,14 +402,12 @@ class IboDashboard extends HTMLElement {
 				const iWidth = aDashletData.width;
 				const iHeight = aDashletData.height;
 				const aDashlet = aDashletData.dashlet;
+				let sDashletHtml = '';
+				// Check if the dashlet state has HTML content
 
-				// We need to fetch dashlet HTML from server as scripts need to be executed again
-				let oGetDashletPromise = this.GetDashlet(aDashlet.type, aDashlet.id, JSON.stringify(aDashlet.properties));
-
-
-				oGetDashletPromise.then(async data => {
-					let sDashletHtml = await data.text();
-					// Add dashlet to grid with its position and size
+				// TODO 3.3 Is there a way to avoid duplicating AddDashlet call but keep the promise to avoid waiting for fetch result in this loop ?
+				if(aDashletData.html && aDashletData.html.length > 0) {
+					sDashletHtml = aDashletData.html;
 					this.oGrid.AddDashlet(sDashletHtml, {
 						x: iPosX,
 						y: iPosY,
@@ -391,7 +415,22 @@ class IboDashboard extends HTMLElement {
 						h: iHeight,
 						autoPosition: false
 					});
-				});
+				} else {
+					// We need to fetch dashlet HTML from server as scripts need to be executed again
+					let oGetDashletPromise = this.GetDashlet(aDashlet.type, aDashlet.id, JSON.stringify(aDashlet.properties));
+
+					oGetDashletPromise.then(async data => {
+						let sDashletHtml = await data.text();
+						// Add dashlet to grid with its position and size
+						this.oGrid.AddDashlet(sDashletHtml, {
+							x: iPosX,
+							y: iPosY,
+							w: iWidth,
+							h: iHeight,
+							autoPosition: false
+						});
+					});
+				}
 			}
 
 			// Update last saved state

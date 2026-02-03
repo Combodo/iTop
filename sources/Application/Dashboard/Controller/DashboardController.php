@@ -18,7 +18,10 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\WebPage\AjaxPage;
 use Combodo\iTop\Application\WebPage\DownloadPage;
 use Combodo\iTop\Application\WebPage\JsonPage;
+use Combodo\iTop\DesignDocument;
+use Combodo\iTop\DesignElement;
 use Combodo\iTop\Forms\Block\FormBlockService;
+use Combodo\iTop\PropertyType\PropertyTypeDesign;
 use Combodo\iTop\PropertyType\Serializer\XMLSerializer;
 use Combodo\iTop\Service\ServiceLocator\ServiceLocator;
 use DBObjectSearch;
@@ -163,7 +166,7 @@ class DashboardController extends Controller
 			throw new SecurityException('Invalid dashboard file !');
 		}
 
-		if (!appUserPreferences::GetPref('display_original_dashboard_'.$sDashboardId, false)) {
+		if (!filter_var(appUserPreferences::GetPref('display_original_dashboard_'.$sDashboardId, false), FILTER_VALIDATE_BOOLEAN)) {
 			// Search for an eventual user defined dashboard
 			$oUDSearch = new DBObjectSearch('UserDashboard');
 			$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
@@ -189,6 +192,85 @@ class DashboardController extends Controller
 			$oPage->add($sDashboardDefinition);
 		}
 
+		return $oPage;
+	}
+
+	public function OperationLoad()
+	{
+		$sDashboardId = utils::ReadParam('id', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$bIsCustom = utils::ReadParam('is_custom', 'false', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA) === 'true';
+		$sDashboardFile = APPROOT.utils::ReadParam('file', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+
+		$sDashboardFileSanitized = utils::RealPath($sDashboardFile, APPROOT);
+		if (false === $sDashboardFileSanitized) {
+			throw new SecurityException('Invalid dashboard file !');
+		}
+
+		$sStatus = 'error';
+		$sMessage = 'Unknown error';
+		$aData = [];
+
+		try {
+			if ($bIsCustom) {
+				// Search for an eventual user defined dashboard
+				$oUDSearch = new DBObjectSearch('UserDashboard');
+				$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+				$oUDSearch->AddCondition('menu_code', $sDashboardId, '=');
+				$oUDSet = new DBObjectSet($oUDSearch);
+				if ($oUDSet->Count() > 0) {
+					// Assuming there is at most one couple {user, menu}!
+					$oUserDashboard = $oUDSet->Fetch();
+					$sDashboardDefinition = $oUserDashboard->Get('contents');
+				} else {
+					$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
+				}
+			}
+			else {
+				$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
+			}
+
+			// TODO 3.3 If the dashboard definition is previous schema, we need to convert it to the new one
+
+
+			$oDoc = new PropertyTypeDesign();
+			$oDoc->loadXML($sDashboardDefinition);
+
+			$oMainNode = $oDoc->getElementsByTagName('dashboard')->item(0);
+
+			$aData = $this->oXMLSerializer->Deserialize($oMainNode, 'DashboardGrid', 'Dashboard');
+
+			// TODO 3.3 Re-render every dashlet to have their latest representation
+			// Let's render every dashlet to prevent frontend from having to do it for each in individual ajax call
+//			if (array_key_exists('pos_dashlets', $aData)) {
+//				foreach ($aData['pos_dashlets'] as $sDashletId => $sPosValues) {
+//					if(array_key_exists('dashlet', $sPosValues)) {
+//						$sDashletClass = $sPosValues['dashlet']['type'];
+//						$aValues = $sPosValues['dashlet']['properties'];
+//
+//						$oDashlet = DashletFactory::GetInstance()->CreateDashlet($sDashletClass, $sDashletId);
+//						$oDashlet->FromModelData($aValues);
+//
+//
+//				   }
+//				}
+//			}
+
+
+			$sStatus = 'ok';
+			$sMessage = 'Dashboard loaded';
+		} catch (Exception $e) {
+			IssueLog::Exception($e->getMessage(), $e);
+			$sStatus = 'error';
+			$sMessage = $e->getMessage();
+		}
+
+		$oPage = new JsonPage();
+		$oPage->SetData([
+			'status' => $sStatus,
+			'message' => $sMessage,
+			'data' => $aData
+		]);
+		$oPage->SetOutputDataOnly(true);
 		return $oPage;
 	}
 

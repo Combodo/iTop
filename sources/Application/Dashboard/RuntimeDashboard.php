@@ -245,6 +245,10 @@ class RuntimeDashboard extends Dashboard
 
 		$oDashboard = parent::Render($oPage, $bEditMode, $aRenderParams);
 
+		if($this->HasCustomDashboard() && !filter_var(appUserPreferences::GetPref('display_original_dashboard_'.$this->GetId(), false), FILTER_VALIDATE_BOOLEAN)) {
+			$oDashboard->SetIsCustom(true);
+		}
+
 		if (isset($aExtraParams['query_params']['this->object()'])) {
 			/** @var \DBObject $oObj */
 			$oObj = $aExtraParams['query_params']['this->object()'];
@@ -321,14 +325,11 @@ EOF
 
 		$sSwitchToStandard = Dict::S('UI:Toggle:SwitchToStandardDashboard');
 		$sSwitchToCustom = Dict::S('UI:Toggle:SwitchToCustomDashboard');
-		$bStandardSelected = appUserPreferences::GetPref('display_original_dashboard_'.$sId, false);
+		$bStandardSelected = filter_var(appUserPreferences::GetPref('display_original_dashboard_'.$sId, false), FILTER_VALIDATE_BOOLEAN);
 
-		$sSelectorHtml = '<div id="ibo-dashboard-selector'.$sDivId.'" class="ibo-dashboard--selector" data-tooltip-content="'.($bStandardSelected ? $sSwitchToCustom : $sSwitchToStandard).'">';
-		$sSelectorHtml .= '<label class="ibo-dashboard--switch"><input type="checkbox" onchange="ToggleDashboardSelector'.$sDivId.'();" '.($bStandardSelected ? '' : 'checked').'><span class="ibo-dashboard--slider"></span></label></input></label>';
+		$sSelectorHtml = '<div class="ibo-dashboard--selector" data-dashboard-id="'.$sDivId.'" data-tooltip-content="'.($bStandardSelected ? $sSwitchToCustom : $sSwitchToStandard).'">';
+		$sSelectorHtml .= '<label class="ibo-dashboard--switch"><input type="checkbox" '.($bStandardSelected ? '' : 'checked').'><span class="ibo-dashboard--slider"></span></label></input></label>';
 		$sSelectorHtml .= '</div>';
-
-		$sFile = addslashes($this->GetDefinitionFile());
-		$sReloadURL = json_encode($this->GetReloadURL());
 
 		$bFromDashboardPage = isset($aAjaxParams['from_dashboard_page']) ? isset($aAjaxParams['from_dashboard_page']) : false;
 		if ($bFromDashboardPage) {
@@ -340,29 +341,6 @@ EOF
 			$oToolbar = $oDashboard->GetToolbar();
 			$oToolbar->AddHtml($sSelectorHtml);
 		}
-
-		$oPage->add_script(
-			<<<JS
-			function ToggleDashboardSelector$sDivId()
-			{
-			    var dashboard = $('.ibo-dashboard#$sDivId')
-				dashboard.block();
-				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-				   { operation: 'toggle_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, reload_url: '$sReloadURL' },
-				   function(data) {
-					 dashboard.html(data);
-					 dashboard.unblock();
-					 if ($('#ibo-dashboard-selector$sDivId input').prop("checked")) {
-					 	$('#ibo-dashboard-selector$sDivId').attr('data-tooltip-content', '$sSwitchToStandard');
-					 } else {
-					    $('#ibo-dashboard-selector$sDivId').attr('data-tooltip-content', '$sSwitchToCustom');
-					 }
-					 CombodoTooltip.InitAllNonInstantiatedTooltips($('#ibo-dashboard-selector$sDivId').parent(), true);
-					}
-				 );
-			}
-JS
-		);
 	}
 
 	/**
@@ -370,6 +348,7 @@ JS
 	 */
 	protected function HasCustomDashboard()
 	{
+		// TODO 3.3 Make it more efficient by caching the result
 		try {
 			// Search for an eventual user defined dashboard
 			$oUDSearch = new DBObjectSearch('UserDashboard');

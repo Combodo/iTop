@@ -43,6 +43,10 @@ class DashboardLayout extends UIBlock
 	protected $oRefreshInput;
 	protected $oButtonsToolbar;
 
+	protected $sFile;
+
+	protected $bIsCustom = false;
+
 	public function __construct(?string $sId = null)
 	{
 		parent::__construct($sId);
@@ -53,6 +57,7 @@ class DashboardLayout extends UIBlock
 		$this->oTitleInput = $this->MakeTitleInput();
 		$this->oRefreshInput = $this->MakeRefreshInput();
 		$this->oButtonsToolbar = $this->MakeButtonsToolbar();
+		$this->sFile = '';
 	}
 
 	public function MakeTitleInput()
@@ -191,5 +196,29 @@ class DashboardLayout extends UIBlock
 	public function GetButtonsToolbar()
 	{
 		return $this->oButtonsToolbar;
+	}
+
+	public function SetFile(string $sFile)
+	{
+		$this->sFile = $sFile;
+
+		return $this;
+	}
+
+	public function GetFile()
+	{
+		return $this->sFile;
+	}
+
+	public function IsCustom(): bool
+	{
+		return $this->bIsCustom;
+	}
+
+	public function SetIsCustom(bool $bIsCustom)
+	{
+		$this->bIsCustom = $bIsCustom;
+
+		return $this;
 	}
 }
