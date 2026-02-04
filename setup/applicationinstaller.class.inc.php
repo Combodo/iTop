@@ -486,66 +486,73 @@ class ApplicationInstallSequencer extends StepSequencer
 				SetupUtils::EnterMaintenanceMode($oConfig);
 			}
 		}
-
-		if (!is_dir($sTargetPath)) {
-			if (!mkdir($sTargetPath)) {
-				throw new Exception("Failed to create directory '$sTargetPath', please check the rights of the web server");
-			} else {
-				// adjust the rights if and only if the directory was just created
-				// owner:rwx user/group:rx
-				chmod($sTargetPath, 0755);
+		try{
+			if (!is_dir($sTargetPath)) {
+				if (!mkdir($sTargetPath)) {
+					throw new Exception("Failed to create directory '$sTargetPath', please check the rights of the web server");
+				} else {
+					// adjust the rights if and only if the directory was just created
+					// owner:rwx user/group:rx
+					chmod($sTargetPath, 0755);
+				}
+			} elseif (substr($sTargetPath, 0, strlen(APPROOT)) == APPROOT) {
+				// If the directory is under the root folder - as expected - let's clean-it before compiling
+				SetupUtils::tidydir($sTargetPath);
 			}
-		} elseif (substr($sTargetPath, 0, strlen(APPROOT)) == APPROOT) {
-			// If the directory is under the root folder - as expected - let's clean-it before compiling
-			SetupUtils::tidydir($sTargetPath);
-		}
 
-		$oExtensionsMap = new iTopExtensionsMap('production', $aDirsToScan);
-		$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
+			$oExtensionsMap = new iTopExtensionsMap('production', $aDirsToScan);
+			$oExtensionsMap->DeclareExtensionAsRemoved($aRemovedExtensionCodes);
 
-		$oFactory = new ModelFactory($aDirsToScan);
+			$oFactory = new ModelFactory($aDirsToScan);
 
-		$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
-		$oFactory->LoadModule($oDictModule);
+			$oDictModule = new MFDictModule('dictionaries', 'iTop Dictionaries', APPROOT.'dictionaries');
+			$oFactory->LoadModule($oDictModule);
 
-		$sDeltaFile = APPROOT.'core/datamodel.core.xml';
-		if (file_exists($sDeltaFile)) {
-			$oCoreModule = new MFCoreModule('core', 'Core Module', $sDeltaFile);
-			$oFactory->LoadModule($oCoreModule);
-		}
-		$sDeltaFile = APPROOT.'application/datamodel.application.xml';
-		if (file_exists($sDeltaFile)) {
-			$oApplicationModule = new MFCoreModule('application', 'Application Module', $sDeltaFile);
-			$oFactory->LoadModule($oApplicationModule);
-		}
-
-		$aModules = $oFactory->FindModules();
-
-		foreach ($aModules as $oModule) {
-			$sModule = $oModule->GetName();
-			if (in_array($sModule, $aSelectedModules)) {
-				$oFactory->LoadModule($oModule);
+			$sDeltaFile = APPROOT.'core/datamodel.core.xml';
+			if (file_exists($sDeltaFile)) {
+				$oCoreModule = new MFCoreModule('core', 'Core Module', $sDeltaFile);
+				$oFactory->LoadModule($oCoreModule);
 			}
+			$sDeltaFile = APPROOT.'application/datamodel.application.xml';
+			if (file_exists($sDeltaFile)) {
+				$oApplicationModule = new MFCoreModule('application', 'Application Module', $sDeltaFile);
+				$oFactory->LoadModule($oApplicationModule);
+			}
+
+			$aModules = $oFactory->FindModules();
+
+			foreach ($aModules as $oModule) {
+				$sModule = $oModule->GetName();
+				if (in_array($sModule, $aSelectedModules)) {
+					$oFactory->LoadModule($oModule);
+				}
+			}
+			// Dump the "reference" model, just before loading any actual delta
+			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$sEnvironment.'.xml');
+
+			$sDeltaFile = utils::GetDataPath().$sEnvironment.'.delta.xml';
+			if (file_exists($sDeltaFile)) {
+				$oDelta = new MFDeltaModule($sDeltaFile);
+				$oFactory->LoadModule($oDelta);
+				$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$sEnvironment.'-with-delta.xml');
+			}
+
+			$oMFCompiler = new MFCompiler($oFactory, $sEnvironment);
+			$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks);
+			//$aCompilerLog = $oMFCompiler->GetLog();
+			//SetupLog::Info(implode("\n", $aCompilerLog));
+			SetupLog::Info("Data model successfully compiled to '$sTargetPath'.");
+
+			$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
+			SetupUtils::builddir($sCacheDir);
+			SetupUtils::tidydir($sCacheDir);
 		}
-		// Dump the "reference" model, just before loading any actual delta
-		$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$sEnvironment.'.xml');
-
-		$sDeltaFile = utils::GetDataPath().$sEnvironment.'.delta.xml';
-		if (file_exists($sDeltaFile)) {
-			$oDelta = new MFDeltaModule($sDeltaFile);
-			$oFactory->LoadModule($oDelta);
-			$oFactory->SaveToFile(utils::GetDataPath().'datamodel-'.$sEnvironment.'-with-delta.xml');
+		catch(Exception $e){
+			if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
+				SetupUtils::ExitMaintenanceMode();
+			}
+			throw $e;
 		}
-
-		$oMFCompiler = new MFCompiler($oFactory, $sEnvironment);
-		$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks);
-		//$aCompilerLog = $oMFCompiler->GetLog();
-		//SetupLog::Info(implode("\n", $aCompilerLog));
-		SetupLog::Info("Data model successfully compiled to '$sTargetPath'.");
-
-		$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
-		SetupUtils::builddir($sCacheDir);
-		SetupUtils::tidydir($sCacheDir);
 
 		// Special case to patch a ugly patch in itop-config-mgmt
 		$sFileToPatch = $sTargetPath.'/itop-config-mgmt-1.0.0/model.itop-config-mgmt.php';

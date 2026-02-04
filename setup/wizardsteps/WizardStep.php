@@ -138,6 +138,15 @@ abstract class WizardStep
 	}
 
 	/**
+	 * Tells whether the user will come back to this step/state if he click on "Back"
+	 * @return boolean True if the 'Back' button should display this step
+	 */
+	public function CanComeBack()
+	{
+		return true;
+	}
+
+	/**
 	 * Tells whether the "Next" button should be enabled interactively
 	 * @return string A piece of javascript code returning either true or false
 	 */

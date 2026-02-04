@@ -78,7 +78,7 @@ class WizardController
 
 	/**
 	 * Pushes information about the current step onto the stack
-	 * @param hash $aStepInfo Array('class' => , 'state' => )
+	 * @param array $aStepInfo Array('class' => , 'state' => )
 	 */
 	protected function PushStep($aStepInfo)
 	{
@@ -172,7 +172,9 @@ class WizardController
 		/** @var \WizardStep $oStep */
 		$oStep = new $sCurrentStepClass($this, $sCurrentState);
 		if ($oStep->ValidateParams()) {
-			$this->PushStep(['class' => $sCurrentStepClass, 'state' => $sCurrentState]);
+			if($oStep->CanComeBack()) {
+				$this->PushStep(['class' => $sCurrentStepClass, 'state' => $sCurrentState]);
+			}
 			$aPossibleSteps = $oStep->GetPossibleSteps();
 			$aNextStepInfo = $oStep->ProcessParams(true); // true => moving forward
 			if (in_array($aNextStepInfo['class'], $aPossibleSteps)) {

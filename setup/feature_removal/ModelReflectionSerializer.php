@@ -46,6 +46,7 @@ class ModelReflectionSerializer
 		}
 
 		$aClasses = json_decode($sOutput[0] ?? null, true);
+file_put_contents('C:/tmp/uninstall.log', "\n\n".var_export($sOutput, true), FILE_APPEND);
 		if (false === $aClasses) {
 			$this->LogErrorWithProperLogger("Invalid JSON", null, ['env' => $sEnv, "output" => $sOutput]);
 			throw new Exception("cannot get classes");

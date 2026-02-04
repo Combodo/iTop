@@ -27,7 +27,7 @@ class WizStepDataAudit extends WizStepInstall
 
 	public function GetTitle()
 	{
-		return 'Checking upgrade';
+		return 'Checking compatibility';
 
 	}
 
@@ -54,6 +54,11 @@ class WizStepDataAudit extends WizStepInstall
 	public function ProcessParams($bMoveForward = true)
 	{
 		return ['class' => 'WizStepSummary', 'state' => ''];
+	}
+
+	public function CanComeBack()
+	{
+		return false;
 	}
 
 	public function Display(WebPage $oPage)

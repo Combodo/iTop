@@ -814,7 +814,15 @@ EOF
 
 	public function GetNextButtonLabel()
 	{
-		return $this->bCanMoveForward ? 'Next' : 'Non-uninstallable extension missing';
+		if (!$this->bCanMoveForward) {
+			return 'Non-uninstallable extension missing';
+		}
+
+		if ($this->GetStepInfo(1 + $this->GetStepIndex()) === null) {
+			return 'Check compatibility';
+		}
+
+		return 'Next';
 	}
 
 }
