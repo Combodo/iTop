@@ -215,6 +215,9 @@ class DashboardController extends Controller
 				$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
 			}
 
+			$oDashboard = new RuntimeDashboard($sDashboardId);
+			$oDashboard->FromXML($sDashboardDefinition);
+
 			// TODO 3.3 If the dashboard definition is previous schema, we need to convert it to the new one
 
 			$oDoc = new PropertyTypeDesign();
@@ -222,7 +225,7 @@ class DashboardController extends Controller
 
 			$oMainNode = $oDoc->getElementsByTagName('dashboard')->item(0);
 
-			$aData = $this->oXMLSerializer->Deserialize($oMainNode, 'DashboardGrid', 'Dashboard');
+			$aData = $oDashboard->ToModelData();
 
 			// TODO 3.3 Re-render every dashlet to have their latest representation
 			// Let's render every dashlet to prevent frontend from having to do it for each in individual ajax call
