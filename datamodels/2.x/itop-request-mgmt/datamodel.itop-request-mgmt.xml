@@ -307,7 +307,9 @@
         </field>
         <field id="servicesubcategory_id" xsi:type="AttributeExternalKey">
           <filter><![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id AND status != 'obsolete']]></filter>
-          <dependencies/>
+          <dependencies>
+            <attribute id="service_id"/>
+          </dependencies>
           <sql>servicesubcategory_id</sql>
           <target_class>ServiceSubcategory</target_class>
           <is_null_allowed>true</is_null_allowed>

@@ -215,7 +215,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:Service/Attribute:organization_name' => 'Meno poskytovateľa',
 	'Class:Service/Attribute:organization_name+' => '~~',
 	'Class:Service/Attribute:servicefamily_id' => 'Kategória služieb',
-	'Class:Service/Attribute:servicefamily_id+' => '~~',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Názov rodiny služieb',
 	'Class:Service/Attribute:servicefamily_name+' => '~~',
 	'Class:Service/Attribute:description' => 'Popis',
@@ -461,7 +461,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:DeliveryModel/Attribute:description' => 'Popis',
 	'Class:DeliveryModel/Attribute:description+' => '~~',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Kontakty',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Persons) for this delivery model~~',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'There must be at least one team to enable Ticket assignment~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Zákazníci',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
 ]);

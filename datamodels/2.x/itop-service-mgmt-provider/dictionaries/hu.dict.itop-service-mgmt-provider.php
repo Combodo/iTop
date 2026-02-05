@@ -241,7 +241,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Service/Attribute:description' => 'Leírás',
 	'Class:Service/Attribute:description+' => '~~',
 	'Class:Service/Attribute:servicefamily_id' => 'Szolgáltatáscsalád',
-	'Class:Service/Attribute:servicefamily_id+' => '~~',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Szolgáltatáscsalád név',
 	'Class:Service/Attribute:servicefamily_name+' => '~~',
 	'Class:Service/Attribute:documents_list' => 'Dokumentumok',

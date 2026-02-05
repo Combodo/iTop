@@ -241,7 +241,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:Service/Attribute:description' => 'Opis',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Rodzina usług',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Nazwa rodziny usług',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => 'Dokumenty',

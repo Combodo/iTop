@@ -1104,7 +1104,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:Model' => 'Model',
+	'Class:Model' => 'Device Model',
 	'Class:Model+' => '',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s',
 	'Class:Model/Attribute:brand_id' => 'Brand',

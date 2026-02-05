@@ -4461,6 +4461,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <style>
           <icon/>
         </style>
@@ -4470,13 +4473,24 @@
           </attributes>
         </reconciliation>
       </properties>
-      <fields/>
+      <fields>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
       <methods/>
       <presentation>
         <details>
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="logo">
+              <rank>20</rank>
             </item>
           </items>
         </details>
@@ -4491,6 +4505,9 @@
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="logo">
+              <rank>20</rank>
             </item>
           </items>
         </list>
@@ -4573,6 +4590,9 @@
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="logo">
+              <rank>20</rank>
             </item>
           </items>
         </list>
