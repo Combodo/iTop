@@ -1367,6 +1367,12 @@ try {
 	DisplayWelcomePopup($oP);
 	$oKPI->ComputeAndReport('Compute page');
 	$oP->output();
+	if (Session::$fLastStartTime !== 0.0) {
+		IssueLog::Warning('Session left open for: '.(microtime(true) - Session::$fLastStartTime));
+	}
+	if (\PHP_SESSION_NONE !== session_status()) {
+		IssueLog::Warning('Session left open by a lib');
+	}
 } catch (Exception $e) {
 	$oErrorPage = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	if ($e instanceof SecurityException) {

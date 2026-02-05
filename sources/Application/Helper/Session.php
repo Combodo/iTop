@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Application\Helper;
 
 use Combodo\iTop\SessionTracker\SessionHandler;
+use IssueLog;
 use utils;
 
 /**
@@ -24,9 +25,9 @@ class Session
 	/** @var bool */
 	protected static $bIsInitialized = false;
 	/** @var bool */
-	protected static $bSessionStarted = false;
-	/** @var bool */
 	public static $bAllowCLI = false;
+
+	public static float $fLastStartTime;
 
 	public static function Start()
 	{
@@ -34,19 +35,21 @@ class Session
 			return;
 		}
 
+		static::$fLastStartTime = microtime(true);
+
 		if (!self::$bIsInitialized) {
 			SessionHandler::session_set_save_handler();
 			session_name('itop-'.md5(APPROOT));
 		}
 
 		self::$bIsInitialized = true;
-		if (!self::$bSessionStarted) {
+		if (\PHP_SESSION_NONE === session_status()) {
 			if (!is_null(self::$iSessionId)) {
 				if (session_id(self::$iSessionId) === false) {
 					session_regenerate_id(true);
 				}
 			}
-			self::$bSessionStarted = session_start();
+			session_start();
 			self::$iSessionId = session_id();
 		}
 	}
@@ -58,10 +61,10 @@ class Session
 		}
 
 		session_regenerate_id($bDeleteOldSession);
-		if (self::$bSessionStarted) {
+		if (\PHP_SESSION_NONE !== session_status()) {
 			self::WriteClose();
 		}
-		self::$bSessionStarted = session_start();
+		session_start();
 		self::$iSessionId = session_id();
 	}
 
@@ -71,10 +74,12 @@ class Session
 			return;
 		}
 
-		if (self::$bSessionStarted) {
+		if (\PHP_SESSION_NONE !== session_status()) {
 			session_write_close();
-			self::$bSessionStarted = false;
 		}
+
+		IssueLog::Trace('Session close elapsed: '.(microtime(true) - static::$fLastStartTime), 'Session');
+		static::$fLastStartTime = 0;
 	}
 
 	/**
@@ -96,7 +101,7 @@ class Session
 			$sSessionVar = &$sSessionVar[$key];
 		}
 		$sSessionVar = $value;
-		if (!self::$bSessionStarted) {
+		if (\PHP_SESSION_NONE === session_status()) {
 			self::Start();
 			$_SESSION = $aSession;
 			self::WriteClose();
@@ -124,7 +129,7 @@ class Session
 					$sPrevKey = $sKey;
 				}
 			}
-			if (!self::$bSessionStarted) {
+			if (\PHP_SESSION_NONE === session_status()) {
 				self::Start();
 				unset($sSessionVar[$sKey]);
 				$_SESSION = $aSession;
