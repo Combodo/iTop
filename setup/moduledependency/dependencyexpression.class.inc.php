@@ -61,7 +61,7 @@ class DependencyExpression
 		}
 	}
 
-	private static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
+	public static function GetPhpExpressionEvaluator(): PhpExpressionEvaluator
 	{
 		if (!isset(self::$oPhpExpressionEvaluator)) {
 			self::$oPhpExpressionEvaluator = new PhpExpressionEvaluator([], RunTimeEnvironment::STATIC_CALL_AUTOSELECT_WHITELIST);

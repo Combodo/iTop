@@ -11,8 +11,6 @@ class AnalyzeInstallationTest extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		$this->RequireOnceItopFile('setup/AnalyzeInstallation.php');
-		$this->RequireOnceItopFile('setup/ModuleInstallationRepository.php');
 		$this->RequireOnceItopFile('setup/modulediscovery.class.inc.php');
 		$this->RequireOnceItopFile('setup/runtimeenv.class.inc.php');
 	}
