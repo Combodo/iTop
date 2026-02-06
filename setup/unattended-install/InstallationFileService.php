@@ -259,7 +259,7 @@ class InstallationFileService
 	{
 		$sProductionModuleDir = APPROOT.'data/'.$this->sTargetEnvironment.'-modules/';
 
-		$aAvailableModules = $this->GetProductionEnv()->AnalyzeInstallation(MetaModel::GetConfig(), $this->GetExtraDirs(), false, null);
+		$aAvailableModules = $this->GetProductionEnv()->AnalyzeInstallation(MetaModel::GetConfig(), $this->GetExtraDirs());
 
 		$this->aAutoSelectModules = [];
 		foreach ($aAvailableModules as $sModuleId => $aModule) {

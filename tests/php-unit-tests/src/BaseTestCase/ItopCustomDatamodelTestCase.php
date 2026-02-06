@@ -188,6 +188,9 @@ abstract class ItopCustomDatamodelTestCase extends ItopDataTestCase
 			CMDBSource::DropTable("priv_module_install");
 			CMDBSource::Query("CREATE TABLE $sNewDB.priv_module_install SELECT * FROM $sPreviousDB.priv_module_install");
 
+			CMDBSource::DropTable("priv_extension_install");
+			CMDBSource::Query("CREATE TABLE $sNewDB.priv_extension_install SELECT * FROM $sPreviousDB.priv_extension_install");
+
 			$this->debug("Custom environment '$sTestEnv' is ready!");
 		} else {
 			$this->debug("Custom environment '$sTestEnv' READY BUILT:");
