@@ -86,7 +86,10 @@ class IboDashboard extends HTMLElement {
 		this.setAttribute("data-custom-dashboard", bIsCustom ? "true" : "false");
 		SetUserPreference(`display_original_dashboard_${this.sId}`, !bIsCustom, true);
 		console.log(document.querySelector('.ibo-dashboard--selector[data-dashboard-id="'+this.sId+'"] input[type="checkbox"]'));
-		document.querySelector('.ibo-dashboard--selector[data-dashboard-id="'+this.sId+'"] input[type="checkbox"]').checked = bIsCustom;
+		let checkbox = document.querySelector('.ibo-dashboard--selector[data-dashboard-id="'+this.sId+'"] input[type="checkbox"]');
+		if (checkbox) {
+			checkbox.checked = bIsCustom;
+		}
 		return this.ReloadFromBackend(bIsCustom);
 	}
 
