@@ -1002,6 +1002,7 @@ class SetupDBBackup extends DBBackup
 
 class DataAuditSequencer extends ApplicationInstallSequencer
 {
+	public const DATA_AUDIT_FAILED = 100;
 
 
 	protected function GetTempEnv()
@@ -1081,7 +1082,7 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 						'message' => '',
 						'next-step' => 'write-config',
 						'next-step-label' => 'Writing audit config',
-						'percentage-completed' => 60,
+						'percentage-completed' => 40,
 					];
 					break;
 				case 'write-config':
@@ -1091,7 +1092,7 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 						'message' => '',
 						'next-step' => 'setup-audit',
 						'next-step-label' => 'Checking data consistency with the new data model',
-						'percentage-completed' => 70,
+						'percentage-completed' => 60,
 					];
 					break;
 				case 'setup-audit':
@@ -1131,6 +1132,7 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 				'next-step' => '',
 				'next-step-label' => '',
 				'percentage-completed' => 100,
+				'error_code' => $e->getCode(),
 			];
 
 			SetupLog::Error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
@@ -1181,15 +1183,13 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 
 		$sTargetEnvironment = $this->GetTempEnv();
 		$sPreviousEnvironment = $this->GetTargetEnv();
-file_put_contents('C:/tmp/uninstall.log', "prev env=".$sPreviousEnvironment."\n", FILE_APPEND);
-file_put_contents('C:/tmp/uninstall.log', "target env=".$sTargetEnvironment."\n", FILE_APPEND);
 		$oSetupAudit = new SetupAudit($sPreviousEnvironment, $sTargetEnvironment);
 
 		$oSetupAudit->GetIssues(true);
 		$iCount = $oSetupAudit->GetDataToCleanupCount();
 
 		if ($iCount > 0) {
-			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice prior to upgrading iTop");
+			throw new Exception("$iCount elements require data adjustments or cleanup in the backoffice prior to upgrading iTop", static::DATA_AUDIT_FAILED);
 		}
 	}
 

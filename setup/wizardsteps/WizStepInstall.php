@@ -63,6 +63,7 @@ class WizStepInstall extends AbstractWizStepInstall
 		$oPage->add('<p class="center"><span id="setup_msg">Ready to start...</span></p><div style="display:block;margin-left: auto; margin-right:auto;" id="progress">0%</div>');
 		$oPage->add('</div>'); // progress_content
 		$oPage->add('</fieldset>');
+		$oPage->add("<div class=\"message message-error ibo-is-html-content\" style=\"display:none;\" id=\"setup_error\"></div>");
 
 	}
 
@@ -77,7 +78,6 @@ class WizStepInstall extends AbstractWizStepInstall
 
 		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
-
 		if (!$this->CheckDependencies()) {
 			$oPage->error($this->sDependencyIssue);
 		}
@@ -128,16 +128,22 @@ EOF
 EOF
 			);
 		} else {
+			//Error case
 			$sMessage = addslashes(utils::EscapeHtml($aRes['message']));
 			$sMessage = str_replace("\n", '<br>', $sMessage);
 			$oPage->add_ready_script(
 				<<<EOF
 	$("#wiz_form").data("installation_status", "error");
 	WizardUpdateButtons();
-	$('#setup_msg').html('$sMessage');
+	$('#setup_error').html('$sMessage').show();
 EOF
 			);
+			$this->AddProgressErrorScript($oPage, $aRes);
 		}
+	}
+
+	protected function AddProgressErrorScript($oPage, $aRes){
+
 	}
 
 	/**

@@ -73,6 +73,8 @@ class WizStepDataAudit extends WizStepInstall
 
 		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
+		$sApplicationUrl = $this->oWizard->GetParameter('application_url').'pages/UI.php';
+		$oPage->add('<input type="hidden" id="application_url" value="'.$sApplicationUrl.'"/>');
 
 		if (!$this->CheckDependencies()) {
 			$oPage->error($this->sDependencyIssue);
@@ -84,5 +86,32 @@ class WizStepDataAudit extends WizStepInstall
 	ExecuteStep("");
 JS
 		);
+	}
+
+	protected function AddProgressErrorScript($oPage, $aRes){
+		if(isset($aRes['error_code']) && $aRes['error_code'] === DataAuditSequencer::DATA_AUDIT_FAILED){
+
+			$oPage->add_ready_script(
+				<<<EOF
+	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').before('<td style="text-align:center;"><button class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="next"><span class="ibo-button--label">Ignore and continue</span></button></td>');
+	
+	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').after('<td style="text-align:center;"><a href="'+$('#application_url').val()+'"><button class="default ibo-button ibo-is-regular ibo-is-primary" type="button"><span class="ibo-button--label">Go to backoffice</span></button></a></td>');
+
+	$("#wiz_form").data("installation_status", "cleanup_needed");
+	$('#btn_next').hide();
+EOF
+			);
+		}
+
+	}
+
+	public function JSCanMoveForward()
+	{
+		return 'return  ["completed", "cleanup_needed"].indexOf($("#wiz_form").data("installation_status")) !== -1;';
+	}
+
+	public function JSCanMoveBackward()
+	{
+		return 'return  ["not started", "error", "cleanup_needed"].indexOf($("#wiz_form").data("installation_status")) !== -1;';
 	}
 }

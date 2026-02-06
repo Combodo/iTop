@@ -3,6 +3,7 @@
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
 use MetaModel;
+use utils;
 
 require_once __DIR__.'/AbstractSetupAudit.php';
 require_once APPROOT.'setup/feature_removal/ModelReflectionSerializer.php';
@@ -28,14 +29,17 @@ class SetupAudit extends AbstractSetupAudit
 			return;
 		}
 
-		$sCurrentEnvt = MetaModel::GetEnvironment();
-		if ($sCurrentEnvt === $this->sEnvBefore) {
+		$sCurrentEnv = MetaModel::GetEnvironment();
+
+		$sConfFile = utils::GetConfigFilePath($sCurrentEnv);
+		MetaModel::Startup($sConfFile, false /* $bModelOnly */, false /* $bAllowCache */, false /* $bTraceSourceFiles */, $sCurrentEnv);
+		if ($sCurrentEnv === $this->sEnvBefore) {
 			$this->aClassesBefore = MetaModel::GetClasses();
 		} else {
 			$this->aClassesBefore = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvBefore);
 		}
 
-		if ($sCurrentEnvt === $this->sEnvAfter) {
+		if ($sCurrentEnv === $this->sEnvAfter) {
 			$this->aClassesAfter = MetaModel::GetClasses();
 		} else {
 			$this->aClassesAfter = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvAfter);

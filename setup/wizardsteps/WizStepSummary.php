@@ -90,7 +90,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		if (count($aExtensionsAdded) > 0) {
 			$sExtensionsAdded = '<ul>';
 			foreach ($aExtensionsAdded as $sExtensionCode => $sLabel) {
-				$sExtensionsAdded .= "<li>$sLabel</li>'";
+				$sExtensionsAdded .= '<li>'.$sLabel.'</li>';
 			}
 			$sExtensionsAdded .= '</ul>';
 		} else {
@@ -106,9 +106,9 @@ class WizStepSummary extends AbstractWizStepInstall
 			$sExtensionsRemoved = '<ul>';
 			foreach ($aExtensionsRemoved as $sExtensionCode => $sLabel) {
 				if (in_array($sExtensionCode, $aExtensionsNotUninstallable)) {
-					$sExtensionsRemoved .= "<li>$sLabel (forced uninstallation)</li>";
+					$sExtensionsRemoved .= '<li>'.$sLabel.' (forced uninstallation)</li>';
 				} else {
-					$sExtensionsRemoved .= "<li>$sLabel</li>";
+					$sExtensionsRemoved .= '<li>'.$sLabel.'</li>';
 				}
 			}
 			$sExtensionsRemoved .= '</ul>';
