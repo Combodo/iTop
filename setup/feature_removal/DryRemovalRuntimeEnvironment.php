@@ -57,7 +57,12 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 
 		$aModulesToLoad = $this->GetModulesToLoad($sSourceEnv, $aSearchDirs);
 
-		ModuleDiscovery::GetModulesOrderedByDependencies($aSearchDirs, true, $aModulesToLoad);
+		try {
+			ModuleDiscovery::GetModulesOrderedByDependencies($aSearchDirs, true, $aModulesToLoad);
+		} catch (\MissingDependencyException $e) {
+			\IssueLog::Error("Cannot prepare setup due to dependency issue", null, ['msg' => $e->getMessage(), 'modules_to_load' => $aModulesToLoad]);
+			throw $e;
+		}
 	}
 
 	private function DeclareExtensionAsRemoved(array $aExtensionCodes): void
