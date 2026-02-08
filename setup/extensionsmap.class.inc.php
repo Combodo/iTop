@@ -577,7 +577,7 @@ class iTopExtensionsMap
 
 			$aChoices = [];
 			foreach ($aDBInfo as $aExtensionInfo) {
-				$aChoices[] = $aExtensionInfo['label'];
+				$aChoices[] = $aExtensionInfo['code'];
 			}
 
 			return $aChoices;
