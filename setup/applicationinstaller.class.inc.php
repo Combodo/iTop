@@ -1149,6 +1149,7 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 				SetupLog::Ok("#$idx $sFile($sLine): $sVerb(...)");
 				$idx++;
 			}
+			$this->ExitReadOnlyMode();
 		} finally {
 			$fDuration = round(microtime(true) - $fStart, 2);
 			SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");
