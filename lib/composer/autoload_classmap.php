@@ -3169,6 +3169,7 @@ return array(
     'iRestServiceProvider' => $baseDir . '/application/applicationextension/rest/iRestServiceProvider.php',
     'iScheduledProcess' => $baseDir . '/core/backgroundprocess.inc.php',
     'iSelfRegister' => $baseDir . '/core/userrights.class.inc.php',
+    'iTokenLoginUIExtension' => $baseDir . '/application/applicationextension/login/iTokenLoginUIExtension.php',
     'iTopConfigParser' => $baseDir . '/core/iTopConfigParser.php',
     'iTopMutex' => $baseDir . '/core/mutex.class.inc.php',
     'iTopOwnershipLock' => $baseDir . '/core/ownershiplock.class.inc.php',

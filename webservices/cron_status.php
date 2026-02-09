@@ -9,21 +9,12 @@ const RUNNING = "running";
 const STOPPED = "stopped";
 const ERROR = "error";
 
-$sAuthUser = ReadParam("auth_user");
-$sAuthPwd = ReadParam("auth_pwd");
-
 try {
-	$sAuthUser = ReadParam("auth_user");
-	$sAuthPwd = ReadParam("auth_pwd");
-
-	if (is_null($sAuthUser) || is_null($sAuthPwd)) {
-		throw new \Exception("Missing credentials");
-	}
-
-	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
-		UserRights::Login($sAuthUser); // Login & set the user's language
-	} else {
-		throw new \Exception("Invalid credentials");
+	$oCtx = new ContextTag(ContextTag::TAG_CRON);
+	LoginWebPage::ResetSession(true);
+	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
+	if ($iRet != LoginWebPage::EXIT_CODE_OK){
+		throw new Exception("Unknown authentication error (retCode=$iRet)", RestResult::UNAUTHORIZED);
 	}
 
 	$sLogFilename = ReadParam("cron_log_file", "cron.log");

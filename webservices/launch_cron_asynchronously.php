@@ -1,21 +1,28 @@
 <?php
 
+use Hybridauth\Storage\Session;
+
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
 try {
-	$sAuthUser = ReadParam("auth_user");
-	$sAuthPwd = ReadParam("auth_pwd");
-
-	if (is_null($sAuthUser) || is_null($sAuthPwd)) {
-		throw new \Exception("Missing credentials");
+	$oCtx = new ContextTag(ContextTag::TAG_CRON);
+	LoginWebPage::ResetSession(true);
+	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
+	if ($iRet != LoginWebPage::EXIT_CODE_OK){
+		throw new Exception("Unknown authentication error (retCode=$iRet)", RestResult::UNAUTHORIZED);
 	}
 
-	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
-		UserRights::Login($sAuthUser); // Login & set the user's language
+	$sCurrentLoginMode = \Combodo\iTop\Application\Helper\Session::Get('login_mode', '');
+	$oLoginFSMExtensionInstance = LoginWebPage::GetCurrentLoginPlugin($sCurrentLoginMode);
+
+	if ($oLoginFSMExtensionInstance instanceof iTokenLoginUIExtension){
+		/** @var iTokenLoginUIExtension $oLoginFSMExtensionInstance */
+		$aTokenInfo = $oLoginFSMExtensionInstance->GetTokenInfo();
+		$sTokenInfo = base64_encode(json_encode($aTokenInfo));
 	} else {
-		throw new \Exception("Invalid credentials");
+		throw new \Exception("cannot call cron asynchronously via current login mode $sCurrentLoginMode");
 	}
 
 	$sLogFilename = ReadParam("cron_log_file", "cron.log");
@@ -30,13 +37,8 @@ try {
 	} else {
 		$sCliParams = trim(base64_decode($sCliParams, true));
 
-		if (false === strpos($sCliParams, '--auth_user=')) {
-			$sCliParams = "--auth_user=$sAuthUser ".$sCliParams;
-		}
-
-		if (false === strpos($sCliParams, '--auth_pwd=')) {
-			$sCliParams = "--auth_pwd=$sAuthPwd ".$sCliParams;
-		}
+		$sCliParams = "--auth_token_info=$sTokenInfo ".$sCliParams;
+		$sCliParams = "--login_mode=$sCurrentLoginMode ".$sCliParams;
 
 		if (false !== strpos($sCliParams, '--status_only=1')) {
 			$bAsynchronous = false;
@@ -51,8 +53,6 @@ try {
 		file_put_contents($sLogFile, $sCli);
 		$process = popen($sCli, 'r');
 	} else {
-
-
 		$sCli = sprintf("\n $sPHPExec %s/cron.php $sCliParams", __DIR__);
 		$fp = fopen($sLogFile, 'a+');
 		fwrite($fp, $sCli);

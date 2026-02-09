@@ -9,7 +9,7 @@ use Combodo\iTop\Application\Helper\Session;
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class LoginBasic extends AbstractLoginFSMExtension
+class LoginBasic extends AbstractLoginFSMExtension implements iTokenLoginUIExtension
 {
 	/**
 	 * Return the list of supported login modes for this plugin
@@ -142,5 +142,22 @@ class LoginBasic extends AbstractLoginFSMExtension
 			}
 		}
 		return array($sAuthUser, $sAuthPwd);
+	}
+
+	public function GetTokenInfo(): array
+	{
+		return $this->GetAuthUserAndPassword();
+	}
+
+	public function GetUserLogin(array $aTokenInfo): string
+	{
+		$sLogin = $aTokenInfo[0];
+		$sLoginMode = 'basic';
+		if (UserRights::CheckCredentials($sLogin, $aTokenInfo[1], $sLoginMode, 'internal'))
+		{
+			return $sLogin;
+		}
+
+		throw new Exception("Cannot CheckCredentials user login ($sLogin) with ($sLoginMode) mode");
 	}
 }
