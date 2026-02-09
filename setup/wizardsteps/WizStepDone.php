@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2026 Combodo SAS
  *

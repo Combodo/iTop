@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2026 Combodo SAS
  *
@@ -23,7 +24,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
  */
 class WizStepDataAudit extends WizStepInstall
 {
-	const SequencerClass = DataAuditSequencer::class;
+	public const SequencerClass = DataAuditSequencer::class;
 
 	public function GetTitle()
 	{
@@ -88,8 +89,9 @@ JS
 		);
 	}
 
-	protected function AddProgressErrorScript($oPage, $aRes){
-		if(isset($aRes['error_code']) && $aRes['error_code'] === DataAuditSequencer::DATA_AUDIT_FAILED){
+	protected function AddProgressErrorScript($oPage, $aRes)
+	{
+		if (isset($aRes['error_code']) && $aRes['error_code'] === DataAuditSequencer::DATA_AUDIT_FAILED) {
 
 			$oPage->add_ready_script(
 				<<<EOF

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2026 Combodo SAS
  *
@@ -157,8 +158,7 @@ class WizStepModulesChoice extends WizardStep
 				$sMode = $this->oWizard->GetParameter('mode', 'install');
 				if ($sMode == 'install') {
 					return ['class' => 'WizStepSummary', 'state' => ''];
-				}
-				else {
+				} else {
 					return ['class' => 'WizStepDataAudit', 'state' => ''];
 				}
 

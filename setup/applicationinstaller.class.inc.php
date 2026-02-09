@@ -46,7 +46,6 @@ require_once APPROOT.'setup/feature_removal/DryRemovalRuntimeEnvironment.php';
 
 class ApplicationInstallSequencer extends StepSequencer
 {
-
 	/** @var \Parameters */
 	protected $oParams;
 	protected static $bMetaModelStarted = false;
@@ -90,8 +89,6 @@ class ApplicationInstallSequencer extends StepSequencer
 		$sTargetEnv = $this->GetTargetEnv();
 		return 'env-'.$sTargetEnv;
 	}
-
-
 
 	protected function GetConfig()
 	{
@@ -218,10 +215,8 @@ class ApplicationInstallSequencer extends StepSequencer
 						$bUseSymbolicLinks
 					);
 
-
 					$sNextStep = 'db-schema';
 					$sNextStepLabel = 'Updating database schema';
-
 
 					$aResult = [
 						'status' => self::OK,
@@ -477,7 +472,6 @@ class ApplicationInstallSequencer extends StepSequencer
 
 		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
 
-
 		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
 			$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
 			if (is_file($sConfigFilePath)) {
@@ -486,7 +480,7 @@ class ApplicationInstallSequencer extends StepSequencer
 				SetupUtils::EnterMaintenanceMode($oConfig);
 			}
 		}
-		try{
+		try {
 			if (!is_dir($sTargetPath)) {
 				if (!mkdir($sTargetPath)) {
 					throw new Exception("Failed to create directory '$sTargetPath', please check the rights of the web server");
@@ -546,8 +540,7 @@ class ApplicationInstallSequencer extends StepSequencer
 			$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
 			SetupUtils::builddir($sCacheDir);
 			SetupUtils::tidydir($sCacheDir);
-		}
-		catch(Exception $e){
+		} catch (Exception $e) {
 			if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
 				SetupUtils::ExitMaintenanceMode();
 			}
@@ -605,9 +598,6 @@ class ApplicationInstallSequencer extends StepSequencer
 
 		return $aModelInfo;
 	}
-
-
-
 
 	protected function IsSetupDataAuditEnabled($sSkipDataAudit, array $aParamValues): bool
 	{
@@ -1004,7 +994,6 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 {
 	public const DATA_AUDIT_FAILED = 100;
 
-
 	protected function GetTempEnv()
 	{
 		$sTargetEnv = $this->GetTargetEnv();
@@ -1062,7 +1051,6 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 
 					break;
 
-
 				case 'compile':
 					$aSelectedModules = $this->oParams->Get('selected_modules');
 					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
@@ -1105,7 +1093,7 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 						'percentage-completed' => 80,
 					];
 					break;
-				case 'cleanup' ;
+				case 'cleanup' :
 					$this->DoCleanup();
 					$aResult = [
 						'status' => self::OK,
@@ -1158,8 +1146,8 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 		return $aResult;
 	}
 
-
-	protected function DoWriteConfig(){
+	protected function DoWriteConfig()
+	{
 		$sConfigFilePath = utils::GetConfigFilePath($this->GetTargetEnv());
 		if (is_file($sConfigFilePath)) {
 			$oConfig = new Config($sConfigFilePath);
@@ -1194,7 +1182,8 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 		}
 	}
 
-	protected function DoCleanup(){
+	protected function DoCleanup()
+	{
 		$sDestination = APPROOT.$this->GetTargetDir();
 		SetupUtils::tidydir($sDestination);
 		SetupUtils::rmdir_safe($sDestination);

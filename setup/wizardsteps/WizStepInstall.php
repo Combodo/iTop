@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2026 Combodo SAS
  *
@@ -20,7 +21,7 @@ use Combodo\iTop\Application\WebPage\WebPage;
 
 class WizStepInstall extends AbstractWizStepInstall
 {
-	const SequencerClass = ApplicationInstallSequencer::class;
+	public const SequencerClass = ApplicationInstallSequencer::class;
 
 	public function GetTitle()
 	{
@@ -90,7 +91,6 @@ JS
 		);
 	}
 
-
 	/**
 	 * @throws \Exception
 	 */
@@ -142,7 +142,8 @@ EOF
 		}
 	}
 
-	protected function AddProgressErrorScript($oPage, $aRes){
+	protected function AddProgressErrorScript($oPage, $aRes)
+	{
 
 	}
 

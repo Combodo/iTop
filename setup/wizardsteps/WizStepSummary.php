@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2026 Combodo SAS
  *
@@ -23,8 +24,6 @@ use Combodo\iTop\Application\WebPage\WebPage;
  */
 class WizStepSummary extends AbstractWizStepInstall
 {
-
-
 	public function GetTitle()
 	{
 		$sMode = $this->oWizard->GetParameter('mode', 'install');
@@ -203,7 +202,6 @@ class WizStepSummary extends AbstractWizStepInstall
 			}
 		}
 
-
 		$aBackupChecks = SetupUtils::CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir);
 		$bCanBackup = true;
 		$sMySQLDumpMessage = '';
@@ -243,8 +241,6 @@ class WizStepSummary extends AbstractWizStepInstall
 JS
 		);
 	}
-
-
 
 	/**
 	 * Tells whether the "Next" button should be enabled interactively

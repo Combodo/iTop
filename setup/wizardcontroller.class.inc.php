@@ -172,7 +172,7 @@ class WizardController
 		/** @var \WizardStep $oStep */
 		$oStep = new $sCurrentStepClass($this, $sCurrentState);
 		if ($oStep->ValidateParams()) {
-			if($oStep->CanComeBack()) {
+			if ($oStep->CanComeBack()) {
 				$this->PushStep(['class' => $sCurrentStepClass, 'state' => $sCurrentState]);
 			}
 			$aPossibleSteps = $oStep->GetPossibleSteps();
@@ -386,4 +386,3 @@ on the page's parameters
 		return $sOutput;
 	}
 }
-

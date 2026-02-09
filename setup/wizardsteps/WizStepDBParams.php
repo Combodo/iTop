@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2026 Combodo SAS
  *
@@ -21,7 +22,6 @@
  * Database Connection parameters screen
  */
 use Combodo\iTop\Application\WebPage\WebPage;
-
 
 class WizStepDBParams extends WizardStep
 {

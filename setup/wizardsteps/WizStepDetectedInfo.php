@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2013-2026 Combodo SAS
  *
@@ -17,7 +18,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 use Combodo\iTop\Application\WebPage\WebPage;
-
 
 /**
  * Upgrade information

@@ -1,6 +1,7 @@
 <?php
 
-abstract class StepSequencer {
+abstract class StepSequencer
+{
 	public const OK = 1;
 	public const ERROR = 2;
 	public const WARNING = 3;
