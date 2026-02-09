@@ -705,17 +705,17 @@ EOF
 			$sTooltip = '';
 			$sUnremovable = '';
 			if ($aFlags['missing']) {
-				$sTooltip .= '<span class="setup-extension-tag removed">source removed</span>';
+				$sTooltip .= '<div class="setup-extension-tag removed">source removed</div>';
 			}
 			if ($aFlags['installed']) {
-				$sTooltip .= '<span class="setup-extension-tag checked installed">installed</span>';
-				$sTooltip .= '<span class="setup-extension-tag unchecked tobeuninstalled">to be uninstalled</span>';
+				$sTooltip .= '<div class="setup-extension-tag checked installed">installed</div>';
+				$sTooltip .= '<div class="setup-extension-tag unchecked tobeuninstalled">to be uninstalled</div>';
 			} else {
-				$sTooltip .= '<span class="setup-extension-tag checked tobeinstalled">to be installed</span>';
-				$sTooltip .= '<span class="setup-extension-tag unchecked notinstalled">not installed</span>';
+				$sTooltip .= '<div class="setup-extension-tag checked tobeinstalled">to be installed</div>';
+				$sTooltip .= '<div class="setup-extension-tag unchecked notinstalled">not installed</div>';
 			}
 			if (!$aFlags['uninstallable']) {
-				$sTooltip .= '<span class="setup-extension-tag notuninstallable">cannot be uninstalled</span>';
+				$sTooltip .= '<div class="setup-extension-tag notuninstallable">cannot be uninstalled</div>';
 			}
 			if ($aFlags['disabled'] && !$aFlags['checked'] && !$aFlags['uninstallable'] && !$bDisableUninstallCheck) {
 				$this->bCanMoveForward = false;//Disable "Next"
