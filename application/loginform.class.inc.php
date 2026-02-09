@@ -12,7 +12,7 @@ use Combodo\iTop\Application\Helper\Session;
  *
  * @since 2.7.0
  */
-class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
+class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension, iTokenLoginUIExtension
 {
 	private $bForceFormOnError = false;
 
@@ -32,10 +32,11 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	protected function OnReadCredentials(&$iErrorCode)
 	{
 		if (!Session::IsSet('login_mode') || Session::Get('login_mode') == 'form') {
-			$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
-			$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
-			if ($this->bForceFormOnError || empty($sAuthUser) || empty($sAuthPwd)) {
-				if (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER)) {
+			list($sAuthUser, $sAuthPwd) = $this->GetTokenInfo();
+			if ($this->bForceFormOnError || empty($sAuthUser) || empty($sAuthPwd))
+			{
+				if (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER))
+				{
 					// X-Combodo-Ajax is a special header automatically added to all ajax requests
 					// Let's reply that we're currently logged-out
 					header('HTTP/1.0 401 Unauthorized');
@@ -64,10 +65,11 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'form') {
-			$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
-			$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
-			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal')) {
+		if (Session::Get('login_mode') == 'form')
+		{
+			list($sAuthUser, $sAuthPwd) = $this->GetTokenInfo();
+			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
+			{
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
@@ -144,5 +146,24 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 		$oLoginContext->AddBlockExtension('login_links', new LoginBlockExtension('extensionblock/loginformlinks.html.twig', $aData));
 
 		return $oLoginContext;
+	}
+
+	public function GetTokenInfo(): array
+	{
+		$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
+		$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
+		return [$sAuthUser, $sAuthPwd];
+	}
+
+	public function GetUserLogin(array $aTokenInfo): string
+	{
+		$sLogin = $aTokenInfo[0];
+		$sLoginMode = 'form';
+		if (UserRights::CheckCredentials($sLogin, $aTokenInfo[1], $sLoginMode, 'internal'))
+		{
+			return $sLogin;
+		}
+
+		throw new Exception("Cannot CheckCredentials user login ($sLogin) with ($sLoginMode) mode");
 	}
 }

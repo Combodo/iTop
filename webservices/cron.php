@@ -466,14 +466,33 @@ try {
 		// Next steps:
 		//   specific arguments: 'csv file'
 		//
-		$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
-		$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
-		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
-			UserRights::Login($sAuthUser); // Login & set the user's language
-		} else {
-			$oP->p("Access wrong credentials ('$sAuthUser')");
-			$oP->output();
-			exit(EXIT_CODE_ERROR);
+		$sTokenInfo = utils::ReadParam('auth_token_info', null, true, 'raw_data');
+		$sLoginMode = utils::ReadParam('login_mode', null, true, 'raw_data');
+		if (is_null($sLoginMode) || is_null($sTokenInfo)) {
+			$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
+			$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
+			if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd)) {
+				UserRights::Login($sAuthUser); // Login & set the user's language
+			} else {
+				$oP->p("Access wrong credentials ('$sAuthUser')");
+				$oP->output();
+				exit(EXIT_CODE_ERROR);
+			}
+		} else
+		{
+			$oLoginFSMExtensionInstance = LoginWebPage::GetCurrentLoginPlugin($sLoginMode);
+
+			if ($oLoginFSMExtensionInstance instanceof iTokenLoginUIExtension){
+				$aTokenInfo = json_decode(base64_decode($sTokenInfo), true);
+
+				/** @var iTokenLoginUIExtension $oLoginFSMExtensionInstance */
+				$sAuthUser = $oLoginFSMExtensionInstance->GetUserLogin($aTokenInfo);
+				UserRights::Login($sAuthUser); // Login & set the user's language
+			} else {
+				$oP->p("cannot call cron asynchronously via current login mode $sLoginMode");
+				$oP->output();
+				exit(EXIT_CODE_ERROR);
+			}
 		}
 	} else {
 		require_once(APPROOT.'/application/loginwebpage.class.inc.php');

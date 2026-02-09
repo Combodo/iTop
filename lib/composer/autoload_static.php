@@ -314,8 +314,8 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         ),
         'League\\OAuth2\\Client\\' =>
         array (
-            0 => __DIR__ . '/..' . '/league/oauth2-google/src',
-            1 => __DIR__ . '/..' . '/league/oauth2-client/src',
+            0 => __DIR__ . '/..' . '/league/oauth2-client/src',
+            1 => __DIR__ . '/..' . '/league/oauth2-google/src',
         ),
         'GuzzleHttp\\Psr7\\' =>
         array (
@@ -3509,6 +3509,7 @@ class ComposerStaticInit7f81b4a2a468a061c306af5e447a9a9f
         'iRestServiceProvider' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iScheduledProcess' => __DIR__ . '/../..' . '/core/backgroundprocess.inc.php',
         'iSelfRegister' => __DIR__ . '/../..' . '/core/userrights.class.inc.php',
+        'iTokenLoginUIExtension' => __DIR__ . '/../..' . '/application/applicationextension/login/iTokenLoginUIExtension.php',
         'iTopConfigParser' => __DIR__ . '/../..' . '/core/iTopConfigParser.php',
         'iTopMutex' => __DIR__ . '/../..' . '/core/mutex.class.inc.php',
         'iTopOwnershipLock' => __DIR__ . '/../..' . '/core/ownershiplock.class.inc.php',

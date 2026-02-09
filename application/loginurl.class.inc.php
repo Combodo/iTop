@@ -9,7 +9,7 @@ use Combodo\iTop\Application\Helper\Session;
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class LoginURL extends AbstractLoginFSMExtension
+class LoginURL extends AbstractLoginFSMExtension implements iTokenLoginUIExtension
 {
 	/**
 	 * @var bool
@@ -28,10 +28,10 @@ class LoginURL extends AbstractLoginFSMExtension
 
 	protected function OnModeDetection(&$iErrorCode)
 	{
-		if (!Session::IsSet('login_mode') && !$this->bErrorOccurred) {
-			$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
-			$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
-			if (!empty($sAuthUser) && !empty($sAuthPwd)) {
+		if (!Session::IsSet('login_mode') && !$this->bErrorOccurred)
+		{
+			list($sAuthUser, $sAuthPwd) = $this->GetTokenInfo();
+			{
 				Session::Set('login_mode', 'url');
 			}
 		}
@@ -48,10 +48,11 @@ class LoginURL extends AbstractLoginFSMExtension
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'url') {
-			$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
-			$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
-			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal')) {
+		if (Session::Get('login_mode') == 'url')
+		{
+			list($sAuthUser, $sAuthPwd) = $this->GetTokenInfo();
+			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
+			{
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
@@ -83,5 +84,24 @@ class LoginURL extends AbstractLoginFSMExtension
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
+	}
+
+	public function GetTokenInfo(): array
+	{
+		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
+		$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
+		return [$sAuthUser, $sAuthPwd];
+	}
+
+	public function GetUserLogin(array $aTokenInfo): string
+	{
+		$sLogin = $aTokenInfo[0];
+		$sLoginMode = 'url';
+		if (UserRights::CheckCredentials($sLogin, $aTokenInfo[1], $sLoginMode, 'internal'))
+		{
+			return $sLogin;
+		}
+
+		throw new Exception("Cannot CheckCredentials user login ($sLogin) with ($sLoginMode) mode");
 	}
 }
