@@ -118,7 +118,8 @@ class WizStepModulesChoice extends WizardStep
 		return [$aExtensionsAdded, $aExtensionsRemoved, $aExtensionsNotUninstallable];
 	}
 
-	public function IsDataAuditEnabled(): bool {
+	public function IsDataAuditEnabled(): bool
+	{
 		$sPath = APPROOT.'env-production';
 		if (!is_dir($sPath)) {
 			SetupLog::Info("Reinstallation of an iTop from a backup (No env-production found). Setup data audit disabled");
