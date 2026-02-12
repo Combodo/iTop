@@ -19,6 +19,8 @@
  */
 use Combodo\iTop\Application\WebPage\WebPage;
 
+require_once(APPROOT.'setup/sequencers/DataAuditSequencer.php');
+
 /**
  * @since 3.3.0
  */
@@ -74,7 +76,7 @@ class WizStepDataAudit extends WizStepInstall
 
 		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
-		$sApplicationUrl = $this->oWizard->GetParameter('application_url').'pages/UI.php';
+		$sApplicationUrl = $this->oWizard->GetParameter('application_url').'pages/exec.php?exec_module=combodo-data-feature-removal&exec_page=index.php';
 		$oPage->add('<input type="hidden" id="application_url" value="'.$sApplicationUrl.'"/>');
 
 		if (!$this->CheckDependencies()) {

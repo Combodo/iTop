@@ -19,6 +19,8 @@
  */
 use Combodo\iTop\Application\WebPage\WebPage;
 
+require_once(APPROOT.'setup/sequencers/ApplicationInstallSequencer.php');
+
 class WizStepInstall extends AbstractWizStepInstall
 {
 	public const SequencerClass = ApplicationInstallSequencer::class;
