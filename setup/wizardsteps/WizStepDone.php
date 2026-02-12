@@ -34,7 +34,7 @@ class WizStepDone extends WizardStep
 		return [];
 	}
 
-	public function ProcessParams($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		return ['class' => '', 'state' => ''];
 	}

@@ -176,7 +176,7 @@ class WizardController
 				$this->PushStep(['class' => $sCurrentStepClass, 'state' => $sCurrentState]);
 			}
 			$aPossibleSteps = $oStep->GetPossibleSteps();
-			$aNextStepInfo = $oStep->ProcessParams(true); // true => moving forward
+			$aNextStepInfo = $oStep->UpdateWizardStateAndGetNextStep(true); // true => moving forward
 			if (in_array($aNextStepInfo['class'], $aPossibleSteps)) {
 				$oNextStep = new $aNextStepInfo['class']($this, $aNextStepInfo['state']);
 				$this->DisplayStep($oNextStep);

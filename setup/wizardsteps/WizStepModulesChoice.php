@@ -118,7 +118,17 @@ class WizStepModulesChoice extends WizardStep
 		return [$aExtensionsAdded, $aExtensionsRemoved, $aExtensionsNotUninstallable];
 	}
 
-	public function ProcessParams($bMoveForward = true)
+	public function IsDataAuditEnabled(): bool {
+		$sPath = APPROOT.'env-production';
+		if (!is_dir($sPath)) {
+			SetupLog::Info("Reinstallation of an iTop from a backup (No env-production found). Setup data audit disabled");
+
+			return false;
+		}
+		return true;
+	}
+
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		// Accumulates the selected modules:
 		$index = $this->GetStepIndex();
@@ -156,7 +166,7 @@ class WizStepModulesChoice extends WizardStep
 				$this->oWizard->SetParameter('removed_extensions', json_encode($aExtensionsRemoved));
 				$this->oWizard->SetParameter('extensions_not_uninstallable', json_encode(array_keys($aExtensionsNotUninstallable)));
 				$sMode = $this->oWizard->GetParameter('mode', 'install');
-				if ($sMode == 'install') {
+				if ($sMode == 'install' || !$this->IsDataAuditEnabled()) {
 					return ['class' => 'WizStepSummary', 'state' => ''];
 				} else {
 					return ['class' => 'WizStepDataAudit', 'state' => ''];
@@ -824,7 +834,7 @@ EOF
 			return 'Non-uninstallable extension missing';
 		}
 
-		if ($this->GetStepInfo(1 + $this->GetStepIndex()) === null) {
+		if ($this->GetStepInfo(1 + $this->GetStepIndex()) === null && $this->IsDataAuditEnabled()) {
 			return 'Check compatibility';
 		}
 

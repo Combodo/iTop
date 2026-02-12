@@ -34,7 +34,7 @@ class WizStepAdminAccount extends WizardStep
 		return [WizStepInstallMiscParams::class];
 	}
 
-	public function ProcessParams($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		$this->oWizard->SaveParameter('admin_user', '');
 		$this->oWizard->SaveParameter('admin_pwd', '');

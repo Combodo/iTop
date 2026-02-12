@@ -58,7 +58,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		}
 	}
 
-	public function ProcessParams($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		$this->oWizard->SaveParameter('db_backup', false);
 		$this->oWizard->SaveParameter('db_backup_path', '');

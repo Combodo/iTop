@@ -106,7 +106,7 @@ abstract class WizardStep
 	 * @param bool $bMoveForward True if the wizard is moving forward 'Next >>' button pressed, false otherwise
 	 * @return hash array('class' => $sNextClass, 'state' => $sNextState)
 	 */
-	abstract public function ProcessParams($bMoveForward = true);
+	abstract public function UpdateWizardStateAndGetNextStep($bMoveForward = true);
 
 	/**
 	 * Returns the list of possible steps from this step forward

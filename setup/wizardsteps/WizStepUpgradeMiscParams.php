@@ -34,7 +34,7 @@ class WizStepUpgradeMiscParams extends AbstractWizStepMiscParams
 		return ['WizStepModulesChoice'];
 	}
 
-	public function ProcessParams($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		$this->oWizard->SaveParameter('application_url', '');
 		$this->oWizard->SaveParameter('graphviz_path', '');

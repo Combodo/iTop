@@ -36,7 +36,7 @@ class WizStepDetectedInfo extends WizardStep
 		return ['WizStepUpgradeMiscParams', 'WizStepLicense2'];
 	}
 
-	public function ProcessParams($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		$sUpgradeType = utils::ReadParam('upgrade_type');
 

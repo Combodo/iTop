@@ -29,21 +29,8 @@ class SetupAudit extends AbstractSetupAudit
 			return;
 		}
 
-		$sCurrentEnv = MetaModel::GetEnvironment();
-
-		$sConfFile = utils::GetConfigFilePath($sCurrentEnv);
-		MetaModel::Startup($sConfFile, false /* $bModelOnly */, false /* $bAllowCache */, false /* $bTraceSourceFiles */, $sCurrentEnv);
-		if ($sCurrentEnv === $this->sEnvBefore) {
-			$this->aClassesBefore = MetaModel::GetClasses();
-		} else {
-			$this->aClassesBefore = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvBefore);
-		}
-
-		if ($sCurrentEnv === $this->sEnvAfter) {
-			$this->aClassesAfter = MetaModel::GetClasses();
-		} else {
-			$this->aClassesAfter = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvAfter);
-		}
+		$this->aClassesBefore = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvBefore);
+		$this->aClassesAfter = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvAfter);
 
 		$this->bClassesInitialized = true;
 	}

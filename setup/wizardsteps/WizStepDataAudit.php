@@ -52,7 +52,7 @@ class WizStepDataAudit extends WizStepInstall
 
 	}
 
-	public function ProcessParams($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		return ['class' => 'WizStepSummary', 'state' => ''];
 	}

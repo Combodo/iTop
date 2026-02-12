@@ -28,7 +28,7 @@ class WizStepLicense2 extends WizStepLicense
 		return ['WizStepUpgradeMiscParams'];
 	}
 
-	public function ProcessParams($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		return ['class' => 'WizStepUpgradeMiscParams', 'state' => ''];
 	}

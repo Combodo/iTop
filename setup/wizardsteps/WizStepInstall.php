@@ -51,7 +51,7 @@ class WizStepInstall extends AbstractWizStepInstall
 		}
 	}
 
-	public function ProcessParams($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		return ['class' => 'WizStepDone', 'state' => ''];
 	}

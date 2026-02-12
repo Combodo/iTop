@@ -46,7 +46,7 @@ class WizStepWelcome extends WizardStep
 		return ['WizStepInstallOrUpgrade'];
 	}
 
-	public function ProcessParams($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		$sUID = SetupUtils::CreateSetupToken();
 		$this->oWizard->SetParameter('authent', $sUID);

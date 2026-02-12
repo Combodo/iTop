@@ -35,7 +35,7 @@ class WizStepDBParams extends WizardStep
 		return ['WizStepAdminAccount'];
 	}
 
-	public function ProcessParams($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		$this->oWizard->SaveParameter('db_server', '');
 		$this->oWizard->SaveParameter('db_user', '');

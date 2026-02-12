@@ -35,7 +35,7 @@ class WizStepInstallMiscParams extends AbstractWizStepMiscParams
 		return ['WizStepModulesChoice'];
 	}
 
-	public function ProcessParams($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		$this->oWizard->SaveParameter('default_language', '');
 		$this->oWizard->SaveParameter('application_url', '');
