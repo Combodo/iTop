@@ -94,7 +94,7 @@ class WizStepModulesChoice extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepModulesChoice', 'WizStepDataAudit'];
+		return ['WizStepModulesChoice', 'WizStepDataAudit', 'WizStepSummary'];
 	}
 
 	public function GetAddedAndRemovedExtensions($aSelectedExtensions)
