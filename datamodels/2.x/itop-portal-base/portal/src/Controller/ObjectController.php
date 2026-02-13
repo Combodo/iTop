@@ -1394,8 +1394,12 @@ class ObjectController extends BrickController
 					$sValue = $oFieldOutput->GetHtml();
 				}
 				$aObjectData['attributes']['lnk__'.$sAttCode] = [
-					'att_code'   => $sAttCode,
-					'value'      => $sValue,
+					'object_class'   => $sLinkClass,
+					'object_id'      => $oNewLink->GetKey(),
+					'prefix'         => 'lnk__',
+					'attribute_code' => $sAttCode,
+					'attribute_type' => get_class($oAttDef),
+					'value_html'     => $sValue,
 					'css_inline' => $oFieldOutput->GetCss(),
 					'js_inline'  => $oFieldOutput->GetJs(),
 				];
