@@ -32,7 +32,7 @@ class WizStepInstallMiscParams extends AbstractWizStepMiscParams
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepModulesChoice'];
+		return [WizStepModulesChoice::class];
 	}
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
@@ -41,7 +41,7 @@ class WizStepInstallMiscParams extends AbstractWizStepMiscParams
 		$this->oWizard->SaveParameter('application_url', '');
 		$this->oWizard->SaveParameter('graphviz_path', '');
 		$this->oWizard->SaveParameter('sample_data', 'yes');
-		return ['class' => 'WizStepModulesChoice', 'state' => 'start_install'];
+		return ['class' => WizStepModulesChoice::class, 'state' => 'start_install'];
 	}
 
 	public function Display(WebPage $oPage)

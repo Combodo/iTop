@@ -25,11 +25,11 @@ class WizStepLicense2 extends WizStepLicense
 {
 	public function GetPossibleSteps()
 	{
-		return ['WizStepUpgradeMiscParams'];
+		return [WizStepUpgradeMiscParams::class];
 	}
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
-		return ['class' => 'WizStepUpgradeMiscParams', 'state' => ''];
+		return ['class' => WizStepUpgradeMiscParams::class, 'state' => ''];
 	}
 }

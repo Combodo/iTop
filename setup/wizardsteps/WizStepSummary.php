@@ -37,7 +37,7 @@ class WizStepSummary extends AbstractWizStepInstall
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepInstall'];
+		return [WizStepInstall::class];
 	}
 
 	/**
@@ -62,7 +62,7 @@ class WizStepSummary extends AbstractWizStepInstall
 	{
 		$this->oWizard->SaveParameter('db_backup', false);
 		$this->oWizard->SaveParameter('db_backup_path', '');
-		return ['class' => 'WizStepInstall', 'state' => ''];
+		return ['class' => WizStepInstall::class, 'state' => ''];
 	}
 
 	public function Display(WebPage $oPage)
@@ -153,7 +153,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		$oPage->add('</ul></div>');
 
 		if ($sMode == 'install') {
-			$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Admininistrator Account</span><ul>');
+			$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Administrator Account</span><ul>');
 			$oPage->add('<li>Login: '.$aInstallParams['admin_account']['user'].'</li>');
 			$oPage->add('<li>Password: '.$aInstallParams['admin_account']['pwd'].'</li>');
 			$oPage->add('<li>Language: '.$aInstallParams['admin_account']['language'].'</li>');

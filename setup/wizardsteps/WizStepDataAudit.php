@@ -36,7 +36,7 @@ class WizStepDataAudit extends WizStepInstall
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepSummary'];
+		return [WizStepSummary::class];
 	}
 
 	public function GetNextButtonLabel()
@@ -56,7 +56,7 @@ class WizStepDataAudit extends WizStepInstall
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
-		return ['class' => 'WizStepSummary', 'state' => ''];
+		return ['class' => WizStepSummary::class, 'state' => ''];
 	}
 
 	public function CanComeBack()

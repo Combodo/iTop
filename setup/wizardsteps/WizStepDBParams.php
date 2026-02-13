@@ -32,7 +32,7 @@ class WizStepDBParams extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepAdminAccount'];
+		return [WizStepAdminAccount::class];
 	}
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
@@ -48,7 +48,7 @@ class WizStepDBParams extends WizardStep
 		$this->oWizard->SaveParameter('db_tls_enabled', false);
 		$this->oWizard->SaveParameter('db_tls_ca', '');
 
-		return ['class' => 'WizStepAdminAccount', 'state' => ''];
+		return ['class' => WizStepAdminAccount::class, 'state' => ''];
 	}
 
 	public function Display(WebPage $oPage)

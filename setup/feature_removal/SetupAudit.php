@@ -2,8 +2,6 @@
 
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
-use MetaModel;
-use utils;
 
 require_once __DIR__.'/AbstractSetupAudit.php';
 require_once APPROOT.'setup/feature_removal/ModelReflectionSerializer.php';
@@ -34,17 +32,6 @@ class SetupAudit extends AbstractSetupAudit
 
 		$this->bClassesInitialized = true;
 	}
-
-	/*public function SetSelectedExtensions(Config $oConfig, array $aSelectedExtensions)
-	{
-		$oExtensionsMap = new \iTopExtensionsMap();
-		$oExtensionsMap->LoadChoicesFromDatabase($oConfig);
-
-		sort($aSelectedExtensions);
-		$this->aExtensionToRemove = $oExtensionsMap->GetMissingExtensions($aSelectedExtensions);
-		sort($this->aExtensionToRemove);
-		\SetupLog::Info(__METHOD__, null, ['aExtensionToRemove' => $this->aExtensionToRemove]);
-	}*/
 
 	public function GetRemovedClasses(): array
 	{

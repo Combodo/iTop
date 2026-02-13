@@ -221,7 +221,7 @@ class Step1 extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return array('Step2', 'Step2bis');
+		return array(Step2::class, Step2bis::class);
 	}
 
 	public function ProcessParams($bMoveForward = true)
@@ -231,12 +231,12 @@ class Step1 extends WizardStep
 		if ($sInstallMode == 'install')
 		{
 			$this->oWizard->SetParameter('install_mode', 'install');
-			$sNextStep = 'Step2';
+			$sNextStep = Step2::class;
 		}
 		else
 		{
 			$this->oWizard->SetParameter('install_mode', 'upgrade');
-			$sNextStep = 'Step2bis';
+			$sNextStep = Step2bis::class;
 
 		}
 		return array('class' => $sNextStep, 'state' => '');
@@ -262,12 +262,12 @@ class Step2 extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return array('Step3');
+		return array(Step3::class);
 	}
 
 	public function ProcessParams($bMoveForward = true)
 	{
-		return array('class' => 'Step3', 'state' => '');
+		return array('class' => Step3::class, 'state' => '');
 	}
 
 	public function Display(WebPage $oPage)
@@ -285,7 +285,7 @@ class Step2bis extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return array('Step2ter');
+		return array(Step2ter::class);
 	}
 
 	public function ProcessParams($bMoveForward = true)
@@ -294,7 +294,7 @@ class Step2bis extends WizardStep
 		$this->oWizard->SetParameter('upgrade_info', $sUpgradeInfo);
 		$sAdditionalUpgradeInfo = utils::ReadParam('additional_upgrade_info');
 		$this->oWizard->SetParameter('additional_upgrade_info', $sAdditionalUpgradeInfo);
-		return array('class' => 'Step2ter', 'state' => '');
+		return array('class' => Step2ter::class, 'state' => '');
 	}
 
 	public function Display(WebPage $oPage)
@@ -334,12 +334,12 @@ class Step2ter extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return array('Step3');
+		return array(Step3::class);
 	}
 
 	public function ProcessParams($bMoveForward = true)
 	{
-		return array('class' => 'Step3', 'state' => '');
+		return array('class' => Step3::class, 'state' => '');
 	}
 
 	public function Display(WebPage $oPage)

@@ -32,13 +32,13 @@ class WizStepLicense extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepDBParams'];
+		return [WizStepDBParams::class];
 	}
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
 		$this->oWizard->SaveParameter('accept_license', 'no');
-		return ['class' => 'WizStepDBParams', 'state' => ''];
+		return ['class' => WizStepDBParams::class, 'state' => ''];
 	}
 
 	/**

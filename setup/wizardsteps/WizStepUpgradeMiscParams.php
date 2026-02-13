@@ -31,7 +31,7 @@ class WizStepUpgradeMiscParams extends AbstractWizStepMiscParams
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepModulesChoice'];
+		return [WizStepModulesChoice::class];
 	}
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
@@ -39,7 +39,7 @@ class WizStepUpgradeMiscParams extends AbstractWizStepMiscParams
 		$this->oWizard->SaveParameter('application_url', '');
 		$this->oWizard->SaveParameter('graphviz_path', '');
 		$this->oWizard->SaveParameter('force-uninstall', false);
-		return ['class' => 'WizStepModulesChoice', 'state' => 'start_upgrade'];
+		return ['class' => WizStepModulesChoice::class, 'state' => 'start_upgrade'];
 	}
 
 	public function Display(WebPage $oPage)

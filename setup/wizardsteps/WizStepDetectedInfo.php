@@ -33,7 +33,7 @@ class WizStepDetectedInfo extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepUpgradeMiscParams', 'WizStepLicense2'];
+		return [WizStepUpgradeMiscParams::class, WizStepLicense2::class];
 	}
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
@@ -61,9 +61,9 @@ class WizStepDetectedInfo extends WizardStep
 				// Do nothing, maybe the user pressed the Back button
 		}
 		if ($bDisplayLicense) {
-			$aRet = ['class' => 'WizStepLicense2', 'state' => ''];
+			$aRet = ['class' => WizStepLicense2::class, 'state' => ''];
 		} else {
-			$aRet = ['class' => 'WizStepUpgradeMiscParams', 'state' => ''];
+			$aRet = ['class' => WizStepUpgradeMiscParams::class, 'state' => ''];
 		}
 		return $aRet;
 	}
@@ -131,7 +131,7 @@ EOF
 			// Reinstalling the same version let's skip the license agreement...
 			$bDisplayLicense = false;
 		}
-		$this->oWizard->SetParameter('license', $bDisplayLicense); // Remember for later
+		$this->oWizard->SetParameter('display_license', $bDisplayLicense); // Remember for later
 
 		$sCompatibleDMDir = SetupUtils::GetLatestDataModelDir();
 		if ($sCompatibleDMDir === false) {

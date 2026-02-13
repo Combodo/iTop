@@ -21,7 +21,6 @@ use Combodo\iTop\Application\WebPage\WebPage;
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/parameters.class.inc.php');
 require_once(APPROOT.'setup/applicationinstaller.class.inc.php');
-require_once(APPROOT.'setup/parameters.class.inc.php');
 require_once(APPROOT.'core/mutex.class.inc.php');
 require_once(APPROOT.'setup/extensionsmap.class.inc.php');
 

@@ -32,7 +32,7 @@ class WizStepInstall extends AbstractWizStepInstall
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepDone'];
+		return [WizStepDone::class];
 	}
 
 	/**
@@ -55,7 +55,7 @@ class WizStepInstall extends AbstractWizStepInstall
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
 	{
-		return ['class' => 'WizStepDone', 'state' => ''];
+		return ['class' => WizStepDone::class, 'state' => ''];
 	}
 
 	protected function AddProgressBar(WebPage $oPage)

@@ -94,7 +94,7 @@ class WizStepModulesChoice extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepModulesChoice', 'WizStepDataAudit', 'WizStepSummary'];
+		return [WizStepModulesChoice::class, WizStepDataAudit::class, WizStepSummary::class];
 	}
 
 	public function GetAddedAndRemovedExtensions($aSelectedExtensions)
@@ -144,7 +144,7 @@ class WizStepModulesChoice extends WizardStep
 			throw new Exception('Internal error: invalid step "'.$index.'" for the choice of modules.');
 		} elseif ($bMoveForward) {
 			if ($this->GetStepInfo(1 + $index) != null) {
-				return ['class' => 'WizStepModulesChoice', 'state' => (1 + $index)];
+				return ['class' => WizStepModulesChoice::class, 'state' => (1 + $index)];
 			} else {
 				// Exiting this step of the wizard, let's convert the selection into a list of modules
 				$aModules = [];
@@ -168,9 +168,9 @@ class WizStepModulesChoice extends WizardStep
 				$this->oWizard->SetParameter('extensions_not_uninstallable', json_encode(array_keys($aExtensionsNotUninstallable)));
 				$sMode = $this->oWizard->GetParameter('mode', 'install');
 				if ($sMode == 'install' || !$this->IsDataAuditEnabled()) {
-					return ['class' => 'WizStepSummary', 'state' => ''];
+					return ['class' => WizStepSummary::class, 'state' => ''];
 				} else {
-					return ['class' => 'WizStepDataAudit', 'state' => ''];
+					return ['class' => WizStepDataAudit::class, 'state' => ''];
 				}
 
 			}
@@ -711,7 +711,7 @@ EOF
 			$sChoiceId = $sParentId.self::$SEP.$index;
 			$sDataId = 'data-id="'.utils::EscapeHtml($aChoice['extension_code']).'"';
 			$sId = utils::EscapeHtml($aChoice['extension_code']);
-			$aFlags = static::ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $this->bUpgrade);
+			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $this->bUpgrade);
 
 			$sTooltip = '';
 			$sUnremovable = '';

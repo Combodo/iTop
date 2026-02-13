@@ -31,7 +31,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return ['WizStepDetectedInfo', 'WizStepLicense'];
+		return [WizStepDetectedInfo::class, WizStepLicense::class];
 	}
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
@@ -53,10 +53,10 @@ class WizStepInstallOrUpgrade extends WizardStep
 			$sFullSourceDir = SetupUtils::GetLatestDataModelDir();
 			$this->oWizard->SetParameter('source_dir', $sFullSourceDir);
 			$this->oWizard->SetParameter('datamodel_version', SetupUtils::GetDataModelVersion($sFullSourceDir));
-			$sNextStep = 'WizStepLicense';
+			$sNextStep = WizStepLicense::class;
 		} else {
 			$this->oWizard->SetParameter('install_mode', 'upgrade');
-			$sNextStep = 'WizStepDetectedInfo';
+			$sNextStep = WizStepDetectedInfo::class;
 
 		}
 		return ['class' => $sNextStep, 'state' => ''];
