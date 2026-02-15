@@ -25,9 +25,9 @@ class AttributeTextTest extends ItopDataTestCase
     public function testRenderWikiHtml_nonWikiUrlVariants()
     {
         // String value
-        $input = 'This hyperlink https://combodo.com should be in an anchor tag.';
-        $expected = 'This hyperlink <a href="https://combodo.com">https://combodo.com</a> should be in an anchor tag.';
-        $this->assertEquals($expected, AttributeText::RenderWikiHtml($input));
+        $sInput = 'This hyperlink https://combodo.com should be in an anchor tag.';
+        $sExpected = 'This hyperlink <a href="https://combodo.com">https://combodo.com</a> should be in an anchor tag.';
+        $this->assertEquals($sExpected, AttributeText::RenderWikiHtml($sInput));
 
         // Empty string value
         $this->assertEquals('', AttributeText::RenderWikiHtml(''));
@@ -41,17 +41,17 @@ class AttributeTextTest extends ItopDataTestCase
      */
     public function testRenderWikiHtml_bWikiOnlyAbsentOrFalse_shouldTransformBothRegularAndWikiHyperlinks()
     {
-        $input = 'A regular hyperlink https://combodo.com and a wiki hyperlink to an existing object [[Organization:'.$this->oTestOrganizationForAttributeText->GetKey().']]';
+        $sInput = 'A regular hyperlink https://combodo.com and a wiki hyperlink to an existing object [[Organization:'.$this->oTestOrganizationForAttributeText->GetKey().']]';
 
 		// bWikiOnly default value
-        $result = AttributeText::RenderWikiHtml($input);
-        $this->assertStringContainsString('<a href="https://combodo.com">', $result);
-        $this->assertStringContainsString('class="object-ref-link"', $result);
+        $sResult = AttributeText::RenderWikiHtml($sInput);
+        $this->assertStringContainsString('<a href="https://combodo.com">', $sResult);
+        $this->assertStringContainsString('class="object-ref-link"', $sResult);
 
 		// bWikiOnly = false
-        $result = AttributeText::RenderWikiHtml($input, false);
-        $this->assertStringContainsString('<a href="https://combodo.com">', $result);
-        $this->assertStringContainsString('class="object-ref-link"', $result);
+        $sResult = AttributeText::RenderWikiHtml($sInput, false);
+        $this->assertStringContainsString('<a href="https://combodo.com">', $sResult);
+        $this->assertStringContainsString('class="object-ref-link"', $sResult);
     }
 
     /**
@@ -59,10 +59,10 @@ class AttributeTextTest extends ItopDataTestCase
      */
     public function testRenderWikiHtml_bWikiOnlyToTrue_shouldNotTransformRegularHyperlinkButTransformWikiHyperlink()
     {
-        $input = 'A regular hyperlink https://combodo.com and a wiki hyperlink to an existing object [[Organization:'.$this->oTestOrganizationForAttributeText->GetKey().']]';
-        $result = AttributeText::RenderWikiHtml($input, true);
-        $this->assertStringNotContainsString('<a href="https://combodo.com">', $result);
-        $this->assertStringContainsString('class="object-ref-link"', $result);
+        $sInput = 'A regular hyperlink https://combodo.com and a wiki hyperlink to an existing object [[Organization:'.$this->oTestOrganizationForAttributeText->GetKey().']]';
+        $sResult = AttributeText::RenderWikiHtml($sInput, true);
+        $this->assertStringNotContainsString('<a href="https://combodo.com">', $sResult);
+        $this->assertStringContainsString('class="object-ref-link"', $sResult);
     }
 
     /**
@@ -70,9 +70,9 @@ class AttributeTextTest extends ItopDataTestCase
      */
     public function testRenderWikiHtml_shouldTransformWikiHyperlinkForExistingObjectsOnly()
     {
-        $input = 'A wiki hyperlink to a non existing object [[Organization:123456789]]  and a wiki hyperlink to an existing object [[Organization:'.$this->oTestOrganizationForAttributeText->GetKey().']]';
-        $result = AttributeText::RenderWikiHtml($input);
-        $this->assertStringContainsString('wiki_broken_link', $result);
-        $this->assertStringContainsString('class="object-ref-link"', $result);
+        $sInput = 'A wiki hyperlink to a non existing object [[Organization:123456789]]  and a wiki hyperlink to an existing object [[Organization:'.$this->oTestOrganizationForAttributeText->GetKey().']]';
+        $sResult = AttributeText::RenderWikiHtml($sInput);
+        $this->assertStringContainsString('wiki_broken_link', $sResult);
+        $this->assertStringContainsString('class="object-ref-link"', $sResult);
     }
 }
