@@ -266,6 +266,9 @@ class InlineImage extends DBObject
 	 */
 	public static function FixUrls($sHtml)
 	{
+		// N°8681 - Ensure to have a string value
+		$sHtml = $sHtml ?? '';
+
 		$aNeedles = [];
 		$aReplacements = [];
 		// Find img tags with an attribute data-img-id

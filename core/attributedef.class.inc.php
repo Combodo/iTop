@@ -4259,6 +4259,9 @@ class AttributeText extends AttributeString
 
 	public static function RenderWikiHtml($sText, $bWikiOnly = false)
 	{
+		// N°8681 - Ensure to have a string value
+		$sText = $sText ?? '';
+
 		if (!$bWikiOnly) {
 			$sPattern = '/'.str_replace('/', '\/', utils::GetConfig()->Get('url_validation_pattern')).'/i';
 			if (preg_match_all(
