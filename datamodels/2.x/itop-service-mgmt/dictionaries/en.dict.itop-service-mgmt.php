@@ -60,6 +60,16 @@ Dict::Add('EN US', 'English', 'English', [
 	'Menu:DeliveryModel+' => 'Delivery models',
 	'Menu:ServiceFamily' => 'Service families',
 	'Menu:ServiceFamily+' => 'Service families',
+	'Menu:ServiceCatalog' => 'Service catalog',
+	'Menu:ServiceCatalog+' => 'Service catalog',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog',
+	'UI-ServiceCatalogMenu-RecentRequestByService' => 'Recent requests by service',
+	'Menu:RulesAndWorkflow' => 'Rules and workflow',
+	'Menu:RulesAndWorkflow+' => 'Automation rules and workflow',
+	'UI-RulesAndWorkflow-Title' => 'Rules and workflow',
+	'UI-RulesAndWorkflow-Description' => 'Multiple iTop extensions brings notification rules and workflow automation. 
+They are included in iTop Products, but not in iTop Community. You may get them on iTop Hub.',
+
 	'Menu:Procedure' => 'Procedures catalog',
 	'Menu:Procedure+' => 'All procedures catalog',
 

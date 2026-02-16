@@ -62,20 +62,20 @@ Dict::Add('EN US', 'English', 'English', [
 	'Menu:DeliveryModel+' => 'Delivery models',
 	'Menu:ServiceFamily' => 'Service families',
 	'Menu:ServiceFamily+' => 'Service families',
+	'Menu:ServiceCatalog' => 'Service catalog',
+	'Menu:ServiceCatalog+' => 'Service catalog',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog',
+	'UI-ServiceCatalogMenu-RecentRequestByService' => 'Recent requests by service',
+	'Menu:RulesAndWorkflow' => 'Rules and workflow',
+	'Menu:RulesAndWorkflow+' => 'Automation rules and workflow',
+	'UI-RulesAndWorkflow-Title' => 'Rules and workflow',
+	'UI-RulesAndWorkflow-Description' => 'Multiple iTop extensions brings notification rules and workflow automation. 
+They are included in iTop Products, but not in iTop Community. You may get them on iTop Hub.',
 
 	'Contract:baseinfo' => 'General information',
 	'Contract:moreinfo' => 'Contractual information',
 	'Contract:cost'     => 'Cost information',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization

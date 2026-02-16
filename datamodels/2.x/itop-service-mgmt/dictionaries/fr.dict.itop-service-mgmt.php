@@ -36,6 +36,16 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:DeliveryModel+' => 'Modèles de support',
 	'Menu:ServiceFamily' => 'Familles de service',
 	'Menu:ServiceFamily+' => 'Familles de service',
+	'Menu:ServiceCatalog' => 'Catalogue de services',
+	'Menu:ServiceCatalog+' => '',
+	'UI-ServiceCatalogMenu-Title' => 'Catalogue de services',
+	'UI-ServiceCatalogMenu-RecentRequestByService' => 'Demandes récentes groupées par service',
+	'Menu:RulesAndWorkflow' => 'Règles d\'automatisation',
+	'Menu:RulesAndWorkflow+' => '',
+	'UI-RulesAndWorkflow-Title' => 'Règles d\'automatisation',
+	'UI-RulesAndWorkflow-Description' => 'De nombreuses extensions apportent des règles de notification et d\'automatisation du cycle de vie des tickets. 
+Elles sont incluses dans les produits Professionels, mais pas dans la version communautaire. Vous pouvez les obtenir sur iTop Hub.',
+
 	'Menu:Procedure' => 'Catalogue des procédures',
 	'Menu:Procedure+' => 'Catalogue des procédures',
 	'Contract:baseinfo' => 'Information générale',

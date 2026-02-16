@@ -2759,51 +2759,130 @@ public function PrefillSearchForm(&$aContextParam)
     </menu>
     <menu id="CustomerContract" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>
-      <parent>ServiceManagement</parent>
+      <parent>Service:Overview</parent>
       <oql>SELECT CustomerContract</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="ProviderContract" xsi:type="OQLMenuNode" _delta="define">
       <rank>2</rank>
-      <parent>ServiceManagement</parent>
+      <parent>Service:Overview</parent>
       <oql>SELECT ProviderContract</oql>
       <do_search>1</do_search>
     </menu>
+    <menu id="ServiceCatalog" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>10</rank>
+      <parent>ServiceManagement</parent>
+      <definition>
+        <title>UI-ServiceCatalogMenu-Title</title>
+        <layout>DashboardLayoutTwoCols</layout>
+        <cells>
+          <cell id="1">
+            <rank>1</rank>
+            <dashlets>
+              <dashlet id="ServiceCatalog_RecentRequestByService" xsi:type="DashletGroupByTable">
+                <rank>0</rank>
+                <title>UI-ServiceCatalogMenu-RecentRequestByService</title>
+                <query><![CDATA[SELECT UserRequest AS u WHERE u.start_date < DATE_ADD(NOW(), INTERVAL 90 DAY)]]></query>
+                <group_by>service_id</group_by>
+                <style>table</style>
+                <aggregation_function>count</aggregation_function>
+                <aggregation_attribute/>
+                <limit/>
+                <order_by>attribute</order_by>
+                <order_direction>desc</order_direction>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="2">
+            <rank>2</rank>
+            <dashlets>
+              <dashlet id="0" xsi:type="DashletEmptyCell">
+                <rank>0</rank>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+
     <menu id="ServiceFamily" xsi:type="OQLMenuNode" _delta="define">
       <rank>2.5</rank>
-      <parent>ServiceManagement</parent>
+      <parent>ServiceCatalog</parent>
       <oql>SELECT ServiceFamily</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="Service" xsi:type="OQLMenuNode" _delta="define">
       <rank>3</rank>
-      <parent>ServiceManagement</parent>
+      <parent>ServiceCatalog</parent>
       <oql>SELECT Service</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="ServiceSubcategory" xsi:type="OQLMenuNode" _delta="define">
       <rank>4</rank>
-      <parent>ServiceManagement</parent>
+      <parent>ServiceCatalog</parent>
       <oql>SELECT ServiceSubcategory</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="SLA" xsi:type="OQLMenuNode" _delta="define">
       <rank>5</rank>
-      <parent>ServiceManagement</parent>
+      <parent>ServiceCatalog</parent>
       <oql>SELECT SLA</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="SLT" xsi:type="OQLMenuNode" _delta="define">
       <rank>6</rank>
-      <parent>ServiceManagement</parent>
+      <parent>ServiceCatalog</parent>
       <oql>SELECT SLT</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="DeliveryModel" xsi:type="OQLMenuNode" _delta="define">
       <rank>7</rank>
-      <parent>ServiceManagement</parent>
+      <parent>ServiceCatalog</parent>
       <oql>SELECT DeliveryModel</oql>
       <do_search>1</do_search>
+    </menu>
+    <menu id="RulesAndWorkflow" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>20</rank>
+      <parent>ServiceManagement</parent>
+      <definition>
+        <title>UI-RulesAndWorkflow-Title</title>
+        <layout>DashboardLayoutTwoCols</layout>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="RulesAndWorkflow_PlainText" xsi:type="DashletPlainText">
+                <rank>0</rank>
+                <text>UI-RulesAndWorkflow-Description</text>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="1">
+            <rank>1</rank>
+            <dashlets>
+              <dashlet id="0" xsi:type="DashletEmptyCell">
+                <rank>0</rank>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="2">
+            <rank>2</rank>
+            <dashlets>
+              <dashlet id="0" xsi:type="DashletEmptyCell">
+                <rank>0</rank>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="3">
+            <rank>3</rank>
+            <dashlets>
+              <dashlet id="0" xsi:type="DashletEmptyCell">
+                <rank>0</rank>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
     </menu>
     <menu id="Typology" xsi:type="DashboardMenuNode">
       <definition>
