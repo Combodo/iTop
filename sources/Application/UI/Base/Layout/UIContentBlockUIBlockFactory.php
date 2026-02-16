@@ -34,7 +34,7 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
-	public static function MakeStandard(string $sId = null, array $aContainerClasses = [])
+	public static function MakeStandard(?string $sId = null, array $aContainerClasses = [])
 	{
 		return new UIContentBlock($sId, $aContainerClasses);
 	}
@@ -49,7 +49,7 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
-	public static function MakeForCode(string $sCode, string $sId = null)
+	public static function MakeForCode(string $sCode, ?string $sId = null)
 	{
 		$sCode = str_replace("\n", '<br>', \utils::HtmlEntities($sCode));
 
@@ -65,7 +65,7 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
-	public static function MakeForPreformatted(string $sCode, string $sId = null)
+	public static function MakeForPreformatted(string $sCode, ?string $sId = null)
 	{
 		$sCode = '<pre>'.\utils::HtmlEntities($sCode).'</pre>';
 

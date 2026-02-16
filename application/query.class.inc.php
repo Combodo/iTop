@@ -151,7 +151,7 @@ abstract class Query extends cmdbAbstractObject
 	 * @return string|null
 	 * @since 3.1.0
 	 */
-	abstract public function GetExportUrl(array $aValues = null): ?string;
+	abstract public function GetExportUrl(?array $aValues = null): ?string;
 
 	/**
 	 * Update last export information.
@@ -227,7 +227,7 @@ class QueryOQL extends Query
 	}
 
 	/** @inheritdoc */
-	public function GetExportUrl(array $aValues = null): ?string
+	public function GetExportUrl(?array $aValues = null): ?string
 	{
 		try {
 			// retrieve attributes

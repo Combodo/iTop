@@ -2569,7 +2569,7 @@ abstract class DBObject implements iDisplay
 	 *
 	 * @see \RestUtils::FindObjectFromKey for the same check in the REST endpoint
 	 */
-	final public function CheckChangedExtKeysValues(callable $oIsObjectLoadableCallback = null)
+	final public function CheckChangedExtKeysValues(?callable $oIsObjectLoadableCallback = null)
 	{
 		if (is_null($oIsObjectLoadableCallback)) {
 			$oIsObjectLoadableCallback = function ($sClass, $sId) {
@@ -3729,7 +3729,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	private function ActivateOnObjectUpdateTriggers(?DBObject $oObject, array $aAttributes = null): void
+	private function ActivateOnObjectUpdateTriggers(?DBObject $oObject, ?array $aAttributes = null): void
 	{
 		if (is_null($oObject)) {
 			return;

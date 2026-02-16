@@ -1024,7 +1024,7 @@ HTML;
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function AddTabContainer($sTabContainer, $sPrefix = '', iUIContentBlock $oParentBlock = null)
+	public function AddTabContainer($sTabContainer, $sPrefix = '', ?iUIContentBlock $oParentBlock = null)
 	{
 		if (is_null($oParentBlock)) {
 			$oParentBlock = PanelUIBlockFactory::MakeNeutral('');

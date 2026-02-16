@@ -912,7 +912,7 @@ abstract class AttributeDefinition
 		return call_user_func($sComputeFunc);
 	}
 
-	abstract public function GetDefaultValue(DBObject $oHostObject = null);
+	abstract public function GetDefaultValue(?DBObject $oHostObject = null);
 
 	//
 	// To be overloaded in subclasses
@@ -1476,7 +1476,7 @@ class AttributeDashboard extends AttributeDefinition
 		return "";
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return null;
 	}
@@ -1622,7 +1622,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	 * @throws \CoreException
 	 * @throws \CoreWarning
 	 */
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		if ($oHostObject === null) {
 			return null;
@@ -2639,7 +2639,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		return $this->Get("sql");
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return $this->MakeRealValue("", $oHostObject);
 	}
@@ -2728,7 +2728,7 @@ class AttributeDBField extends AttributeDBFieldVoid
 		return array_merge(parent::ListExpectedParams(), ["default_value", "is_null_allowed"]);
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return $this->MakeRealValue($this->Get("default_value"), $oHostObject);
 	}
@@ -2917,7 +2917,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 		return "INT(11)".($bFullSpec ? " DEFAULT 0" : "");
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return 0;
 	}
@@ -3649,7 +3649,7 @@ class AttributeClass extends AttributeString
 		parent::__construct($sCode, $aParams);
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		$sDefault = parent::GetDefaultValue($oHostObject);
 		if (!$this->IsNullAllowed() && $this->IsNull($sDefault)) {
@@ -3843,7 +3843,7 @@ class AttributeFinalClass extends AttributeString
 		$this->m_sValue = $sValue;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return $this->m_sValue;
 	}
@@ -4730,7 +4730,7 @@ class AttributeCaseLog extends AttributeLongText
 		}
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return new ormCaseLog();
 	}
@@ -6128,7 +6128,7 @@ class AttributeDateTime extends AttributeDBField
 		return $iUnixSeconds;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		$sDefaultValue = $this->Get('default_value');
 		if (utils::IsNotNullOrEmptyString($sDefaultValue)) {
@@ -6812,7 +6812,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $this->GetOptional('display_style', 'select');
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return 0;
 	}
@@ -7547,7 +7547,7 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->GetSQLExpr();
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
 
@@ -7910,12 +7910,12 @@ class AttributeBlob extends AttributeDefinition
 		return true;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return new ormDocument('', '', '');
 	}
 
-	public function IsNullAllowed(DBObject $oHostObject = null)
+	public function IsNullAllowed(?DBObject $oHostObject = null)
 	{
 		return $this->GetOptional("is_null_allowed", false);
 	}
@@ -8295,7 +8295,7 @@ class AttributeImage extends AttributeBlob
 		return $oDoc;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return new ormDocument('', '', '');
 	}
@@ -8481,7 +8481,7 @@ class AttributeStopWatch extends AttributeDefinition
 		return true;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return $this->NewStopWatch();
 	}
@@ -9348,7 +9348,7 @@ class AttributeSubItem extends AttributeDefinition
 		return false;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return null;
 	}
@@ -9566,7 +9566,7 @@ class AttributeOneWayPassword extends AttributeDefinition implements iAttributeN
 		return true;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return "";
 	}
@@ -10146,7 +10146,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		return true;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return null;
 	}
@@ -11359,7 +11359,7 @@ class AttributeTagSet extends AttributeSet
 		return new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		$oTagSet =  new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
 		$oTagSet->SetValues([]);
@@ -11867,7 +11867,7 @@ class AttributeFriendlyName extends AttributeDefinition
 		$this->m_sValue = $sValue;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return $this->m_sValue;
 	}
@@ -12030,7 +12030,7 @@ class AttributeRedundancySettings extends AttributeDBField
 		return 20;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		$sRet = 'disabled';
 		if ($this->Get('enabled')) {
@@ -12466,7 +12466,7 @@ class AttributeCustomFields extends AttributeDefinition
 		return false;
 	} // See ReadValue...
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return new ormCustomFieldsValue($oHostObject, $this->GetCode());
 	}
@@ -13053,7 +13053,7 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 		return null;
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return $this->MakeRealValue(false, $oHostObject);
 	}

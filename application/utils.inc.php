@@ -1284,7 +1284,7 @@ class utils
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public static function ExecITopScript(string $sScriptName, array $aArguments, string $sAuthUser = null, string $sAuthPwd = null)
+	public static function ExecITopScript(string $sScriptName, array $aArguments, ?string $sAuthUser = null, ?string $sAuthPwd = null)
 	{
 		$aDisabled = explode(', ', ini_get('disable_functions'));
 		if (in_array('exec', $aDisabled)) {
@@ -1374,7 +1374,7 @@ class utils
 	 * @return string A path to a folder into which any module can store cache data
 	 * The corresponding folder is created or cleaned upon code compilation
 	 */
-	public static function GetCachePath(string $sEnvironment = null): string
+	public static function GetCachePath(?string $sEnvironment = null): string
 	{
 		if (is_null($sEnvironment)) {
 			$sEnvironment = MetaModel::GetEnvironment();

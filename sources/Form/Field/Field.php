@@ -89,7 +89,7 @@ abstract class Field
 	 * @param string        $sId
 	 * @param \Closure|null $onFinalizeCallback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
 	 */
-	public function __construct(string $sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, ?Closure $onFinalizeCallback = null)
 	{
 		$this->sId = $sId;
 		// No space in such an id, that could be used as a DOM node id

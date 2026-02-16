@@ -51,7 +51,7 @@ class LinkSetUIBlockFactory extends SetUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Set\Set
 	 */
-	public static function MakeForLinkSet(string $sId, AttributeLinkedSet $oAttDef, iDBObjectSetIterator $oDbObjectSet, string $sWizardHelperJsVarName, DBObject $oHostDbObject = null): Set
+	public static function MakeForLinkSet(string $sId, AttributeLinkedSet $oAttDef, iDBObjectSetIterator $oDbObjectSet, string $sWizardHelperJsVarName, ?DBObject $oHostDbObject = null): Set
 	{
 		$sTargetClass = LinkSetModel::GetTargetClass($oAttDef);
 		$sTargetField = LinkSetModel::GetTargetField($oAttDef);

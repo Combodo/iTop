@@ -41,7 +41,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	 * @param string|null $sId
 	 * @param array       $aContainerClasses Array of additional CSS classes
 	 */
-	public function __construct(string $sId = null, array $aContainerClasses = [])
+	public function __construct(?string $sId = null, array $aContainerClasses = [])
 	{
 		parent::__construct($sId);
 

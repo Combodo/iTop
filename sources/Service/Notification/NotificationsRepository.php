@@ -188,7 +188,7 @@ class NotificationsRepository
 	 *
 	 * @return DBObjectSet The set of subscriptions matching the given trigger, contact, and action.
 	 */
-	public function SearchUnsubscribedSubscriptionsByTriggerContactAndAction(int $iTriggerId, int $iActionId, int $iContactId = null): DBObjectSet
+	public function SearchUnsubscribedSubscriptionsByTriggerContactAndAction(int $iTriggerId, int $iActionId, ?int $iContactId = null): DBObjectSet
 	{
 		$oSearch = $this->PrepareSearchForSubscriptionsByTriggerContactAndAction($iTriggerId, $iActionId, $iContactId);
 		$oSearch->AddCondition("subscribed", "0");

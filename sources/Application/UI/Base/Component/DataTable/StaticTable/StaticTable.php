@@ -67,7 +67,7 @@ class StaticTable extends UIContentBlock
 	 */
 	private $aOptions;
 
-	public function __construct(string $sId = null, array $aContainerCSSClasses = [], array $aExtraParams = [])
+	public function __construct(?string $sId = null, array $aContainerCSSClasses = [], array $aExtraParams = [])
 	{
 		parent::__construct($sId, $aContainerCSSClasses);
 		$this->aColumns = [];

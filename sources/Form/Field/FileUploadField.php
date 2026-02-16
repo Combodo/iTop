@@ -60,7 +60,7 @@ class FileUploadField extends AbstractSimpleField
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct(string $sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, ?Closure $onFinalizeCallback = null)
 	{
 		$this->sTransactionId = null;
 		$this->oObject = null;

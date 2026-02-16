@@ -16,7 +16,7 @@ class Status
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \MySQLException
 	 */
-	public function __construct(Config $oConfig = null)
+	public function __construct(?Config $oConfig = null)
 	{
 		$this->StatusStartup($oConfig);
 	}
@@ -74,7 +74,7 @@ class Status
 	 * @throws \DictExceptionUnknownLanguage
 	 * @throws \MySQLException
 	 */
-	private function StatusStartup(Config $oConfig = null)
+	private function StatusStartup(?Config $oConfig = null)
 	{
 		$this->StatusCheckConfigFile();
 
