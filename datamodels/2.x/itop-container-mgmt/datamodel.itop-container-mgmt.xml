@@ -210,7 +210,7 @@
     <class id="SoftwareInstance" _delta="must_exist">
       <fields>
         <field id="system_id" _delta="must_exist" xsi:type="AttributeExternalKey">
-          <filter _delta="redefine">SELECT FunctionalCI WHERE finalclass IN ('Server','VirtualMachine','PC') UNION SELECT 'ContainerVirtualHost' WHERE :this->finalclass = 'ContainerApplication'</filter>
+          <filter _delta="redefine">SELECT FunctionalCI WHERE IF(:this->finalclass = 'ContainerApplication', finalclass = 'ContainerVirtualHost', finalclass IN ('Server','VirtualMachine','PC'))</filter>
         </field>
       </fields>
     </class>
