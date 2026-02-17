@@ -156,21 +156,5 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:ContainerImageType+' => 'Typology of container images',
 ]);
 
-//
-// Class Cloud
-//
-
-Dict::Add('EN US', 'English', 'English', [
-	'Class:Cloud/Name' => '%1$s',
-	'Class:Cloud/ComplementaryName' => '%1$s-%2$s',
-	'Class:Cloud' => 'Cloud',
-	'Class:Cloud+' => 'A Virtual Host operated by a Cloud provider. It can host Virtual Machines and Container Hosts',
-	'Class:Cloud/Attribute:provider_id' => 'Provider',
-	'Class:Cloud/Attribute:provider_id+' => '',
-	'Class:Cloud/Attribute:location_id' => 'Location id',
-	'Class:Cloud/Attribute:location_id+' => '',
-	'Class:Cloud/Attribute:containerhosts_list' => 'Container Hosts',
-	'Class:Cloud/Attribute:containerhosts_list+' => '',
-]);
 
 ?>

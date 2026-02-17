@@ -21,8 +21,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
+//
+// Class Cloud
+//
+
 Dict::Add('FR FR', 'French', 'Français', [
-	// Dictionary entries go here
+	'Class:Cloud/Name' => '%1$s',
+	'Class:Cloud/ComplementaryName' => '%1$s-%2$s',
+	'Class:Cloud' => 'Nuage',
+	'Class:Cloud+' => 'Hôte virtuel, opéré par un fournisseur de services Cloud, il peut héberger des Machines Virtuelles, des Hôtes pour Conteneurs, etc.',
+	'Class:Cloud/Attribute:provider_id' => 'Fournisseur',
+	'Class:Cloud/Attribute:provider_id+' => 'Organisation fournissant le nuage',
+	'Class:Cloud/Attribute:location_id' => 'Site',
+	'Class:Cloud/Attribute:location_id+' => 'Site du fournisseur, hébergeant le nuage',
+	'Class:Cloud/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
+	'Class:Cloud/Attribute:containerhosts_list+' => 'Liste des hôtes hébergés dans ce nuage',
 ]);
 
 //
