@@ -214,40 +214,6 @@ class RestResultWithObjects extends RestResult
 	/** @var array "DBObject_class:DBObject_key" as key, {@see \ObjectResult} as value */
 	public $objects;
 
-	public function PrepareObject($iCode, $sMessage, $oObject, $aFieldSpec = null, $bExtendedOutput = false)
-	{
-		$sClass = get_class($oObject);
-		$oObjRes = new ObjectResult($sClass, $oObject->GetKey());
-		$oObjRes->code = $iCode;
-		$oObjRes->message = $sMessage;
-
-		$aFields = null;
-		if (!is_null($aFieldSpec))
-		{
-			// Enum all classes in the hierarchy, starting with the current one
-			foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sRefClass)
-			{
-				if (array_key_exists($sRefClass, $aFieldSpec))
-				{
-					$aFields = $aFieldSpec[$sRefClass];
-					break;
-				}
-			}
-		}
-		if (is_null($aFields))
-		{
-			// No fieldspec given, or not found...
-			$aFields = array('id', 'friendlyname');
-		}
-
-		foreach ($aFields as $sAttCode)
-		{
-			$oObjRes->AddField($oObject, $sAttCode, $bExtendedOutput);
-		}
-
-		return $oObjRes;
-	}
-
 	/**
 	 * Report the given object
 	 *
@@ -266,7 +232,8 @@ class RestResultWithObjects extends RestResult
 	 */
 	public function AddObject($iCode, $sMessage, $oObject, $aFieldSpec = null, $bExtendedOutput = false)
 	{
-		$oObjRes = $this->PrepareObject($iCode, $sMessage, $oObject, $aFieldSpec, $bExtendedOutput);
+		$oObjRes = ObjectResult::FromDBObject($oObject, $aFieldSpec, $bExtendedOutput, $iCode, $sMessage);
+
 		$sObjKey = get_class($oObject).'::'.$oObject->GetKey();
 		$this->objects[$sObjKey] = $oObjRes;
 	}
@@ -315,7 +282,7 @@ class RestResultWithObjectSets extends RestResultWithObjects
 	 */
 	public function AppendSubObject($sObjectAlias, $iCode, $sMessage, $oObject, $aFieldSpec = null, $bExtendedOutput = false)
 	{
-		$oObjRes = $this->PrepareObject($iCode, $sMessage, $oObject, $aFieldSpec, $bExtendedOutput);
+		$oObjRes = ObjectResult::FromDBObject($oObject, $aFieldSpec, $bExtendedOutput, $iCode, $sMessage);
 		$this->current_object[$sObjectAlias] = $oObjRes;
 	}
 }
@@ -587,7 +554,7 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 			}
 
 			$oObjectSet = RestUtils::GetObjectSetFromKey($sClassParam, $key, $iLimit, self::getOffsetFromLimitAndPage($iLimit, $iPage));
-				$sTargetClass = $oObjectSet->GetFilter()->GetClass();
+			$sTargetClass = $oObjectSet->GetFilter()->GetClass();
 
 				if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ) != UR_ALLOWED_YES) {
 					$oResult->code = RestResult::UNAUTHORIZED;
@@ -598,68 +565,66 @@ class CoreServices implements iRestServiceProvider, iRestInputSanitizer
 				} elseif ($iPage < 1) {
 					$oResult->code = RestResult::INVALID_PAGE;
 					$oResult->message = "The request page number is not valid. It must be an integer greater than 0";
-            }
-			elseif (count($oObjectSet->GetSelectedClasses()) > 1)
-			{
-				$oResult = new RestResultWithObjectSets();
-				$aCache = [];
-				$aShowFields = [];
-				foreach ($oObjectSet->GetSelectedClasses() as $sSelectedClass) {
-					$aShowFields = array_merge( $aShowFields, RestUtils::GetFieldList($sSelectedClass, $aParams, 'output_fields', false));
-				}
-
-				while ($oObjects = $oObjectSet->FetchAssoc()) {
-					$oResult->MakeNewObjectSet();
-
-					foreach ($oObjects as $sAlias => $oObject) {
-						if (!$oObject) {
-							continue;
-						}
-
-						if (!array_key_exists($sAlias, $aCache)) {
-							$sClass = get_class($oObject);
-							$bExtendedOutput = RestUtils::HasRequestedExtendedOutput($sShowFields);
-
-							if (!RestUtils::HasRequestedAllOutputFields($sShowFields)) {
-								$aFields = $aShowFields[$sClass];
-								//Id is not a valid attribute to optimize
-								if ($aFields && in_array('id', $aFields)) {
-									unset($aFields[array_search('id', $aFields)]);
-								}
-								$aAttToLoad = [$sAlias => $aFields];
-								$oObjectSet->OptimizeColumnLoad($aAttToLoad);
-							}
-							$aCache[$sAlias] = [
-								'aShowFields' => $aShowFields,
-								'bExtendedOutput' => $bExtendedOutput,
-							];
-						} else {
-							$aShowFields = $aCache[$sAlias]['aShowFields'];
-							$bExtendedOutput = $aCache[$sAlias]['bExtendedOutput'];
-						}
-
-						$oResult->AppendSubObject($sAlias, 0, '', $oObject, $aShowFields, $bExtendedOutput);
+	            } elseif (count($oObjectSet->GetSelectedClasses()) > 1) {
+					$oResult = new RestResultWithObjectSets();
+					$aCache = [];
+					$aShowFields = [];
+					foreach ($oObjectSet->GetSelectedClasses() as $sSelectedClass) {
+						$aShowFields = array_merge( $aShowFields, RestUtils::GetFieldList($sSelectedClass, $aParams, 'output_fields', false));
 					}
-				}
-				$oResult->message = "Found: ".$oObjectSet->Count();
-			} else {
-				$aShowFields =[];
-				foreach ($aClass  as $sSelectedClass) {
-					$sSelectedClass = trim($sSelectedClass);
-					$aShowFields = array_merge($aShowFields, RestUtils::GetFieldList($sSelectedClass, $aParams, 'output_fields', false));
-				}
 
-                if (!RestUtils::HasRequestedAllOutputFields($sShowFields) && count($aShowFields) == 1) {
-	                $aFields = $aShowFields[$sClass];
-	                //Id is not a valid attribute to optimize
-	                if (in_array('id', $aFields)) {
-	                    unset($aFields[array_search('id', $aFields)]);
-	                }
+					while ($oObjects = $oObjectSet->FetchAssoc()) {
+						$oResult->MakeNewObjectSet();
+
+						foreach ($oObjects as $sAlias => $oObject) {
+							if (!$oObject) {
+								continue;
+							}
+
+							if (!array_key_exists($sAlias, $aCache)) {
+								$sClass = get_class($oObject);
+								$bExtendedOutput = RestUtils::HasRequestedExtendedOutput($sShowFields);
+
+								if (!RestUtils::HasRequestedAllOutputFields($sShowFields)) {
+									$aFields = $aShowFields[$sClass];
+									//Id is not a valid attribute to optimize
+									if ($aFields && in_array('id', $aFields)) {
+										unset($aFields[array_search('id', $aFields)]);
+									}
+									$aAttToLoad = [$sAlias => $aFields];
+									$oObjectSet->OptimizeColumnLoad($aAttToLoad);
+								}
+								$aCache[$sAlias] = [
+									'aShowFields' => $aShowFields,
+									'bExtendedOutput' => $bExtendedOutput,
+								];
+							} else {
+								$aShowFields = $aCache[$sAlias]['aShowFields'];
+								$bExtendedOutput = $aCache[$sAlias]['bExtendedOutput'];
+							}
+
+							$oResult->AppendSubObject($sAlias, 0, '', $oObject, $aShowFields, $bExtendedOutput);
+						}
+					}
+					$oResult->message = "Found: ".$oObjectSet->Count();
+				} else {
+					$aShowFields =[];
+					foreach ($aClass  as $sSelectedClass) {
+						$sSelectedClass = trim($sSelectedClass);
+						$aShowFields = array_merge($aShowFields, RestUtils::GetFieldList($sSelectedClass, $aParams, 'output_fields', false));
+					}
+
+	                if (!RestUtils::HasRequestedAllOutputFields($sShowFields) && count($aShowFields) == 1) {
+		                $aFields = $aShowFields[$sClass];
+		                //Id is not a valid attribute to optimize
+		                if (in_array('id', $aFields)) {
+		                    unset($aFields[array_search('id', $aFields)]);
+		                }
 						$aAttToLoad = [$oObjectSet->GetClassAlias() => $aFields];
-	                $oObjectSet->OptimizeColumnLoad($aAttToLoad);
-                }
+		                $oObjectSet->OptimizeColumnLoad($aAttToLoad);
+	                }
 
-				while ($oObject = $oObjectSet->Fetch()) {
+					while ($oObject = $oObjectSet->Fetch()) {
 						$oResult->AddObject(0, '', $oObject, $aShowFields, RestUtils::HasRequestedExtendedOutput($sShowFields));
 					}
 					$oResult->message = "Found: ".$oObjectSet->Count();

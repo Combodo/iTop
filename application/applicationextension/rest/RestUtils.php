@@ -97,33 +97,77 @@ class RestUtils
 	 * @throws Exception
 	 * @api
 	 */
-	public static function GetFieldList($sClass, $oData, $sParamName)
+	public static function GetFieldList($sClass, $oData, $sParamName, $bFailIfNotFound = true)
 	{
 		$sFields = self::GetOptionalParam($oData, $sParamName, '*');
-		$aShowFields = [];
-		if ($sFields == '*') {
-			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
-				$aShowFields[$sClass][] = $sAttCode;
-			}
-		} elseif ($sFields == '*+') {
-			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sRefClass) {
-				foreach (MetaModel::ListAttributeDefs($sRefClass) as $sAttCode => $oAttDef) {
-					$aShowFields[$sRefClass][] = $sAttCode;
-				}
-			}
-		} else {
-			foreach (explode(',', $sFields) as $sAttCode) {
-				$sAttCode = trim($sAttCode);
-				if (($sAttCode != 'id') && (!MetaModel::IsValidAttCode($sClass, $sAttCode))) {
-					throw new Exception("$sParamName: invalid attribute code '$sAttCode'");
-				}
-				$aShowFields[$sClass][] = $sAttCode;
-			}
-		}
-
-		return $aShowFields;
+		return match($sFields) {
+			'*' => self::GetFieldListForClass($sClass),
+			'*+' => self::GetFieldListForParentClass($sClass),
+			default => self::GetLimitedFieldListForClass($sClass, $sFields, $sParamName, $bFailIfNotFound),
+		};
 	}
 
+	public static function HasRequestedExtendedOutput(string $sFields): bool
+	{
+		return match($sFields) {
+			'*' => false,
+			'*+' => true,
+			default => substr_count($sFields, ':') > 1,
+		};
+	}
+
+	public static function HasRequestedAllOutputFields(string $sFields): bool
+	{
+		return match($sFields) {
+			'*', '*+' => true,
+			default => false,
+		};
+	}
+
+	protected static function GetFieldListForClass(string $sClass): array
+	{
+		return [$sClass => array_keys(MetaModel::ListAttributeDefs($sClass))];
+	}
+
+	protected static function GetFieldListForParentClass(string $sClass): array
+	{
+		$aFieldList = array();
+		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sRefClass) {
+			$aFieldList = array_merge($aFieldList, self::GetFieldListForClass($sRefClass));
+		}
+		return $aFieldList;
+	}
+
+	protected static function GetLimitedFieldListForSingleClass(string $sClass, string $sFields, string $sParamName, bool $bFailIfNotFound = true): array
+	{
+		$aFieldList = [$sClass => []];
+		foreach (explode(',', $sFields) as $sAttCode) {
+			$sAttCode = trim($sAttCode);
+			if (($sAttCode == 'id') || (MetaModel::IsValidAttCode($sClass, $sAttCode))) {
+				$aFieldList[$sClass][] = $sAttCode;
+			} else {
+				if ($bFailIfNotFound) {
+					throw new Exception("$sParamName: invalid attribute code '$sAttCode' for class '$sClass'");
+				}
+			}
+		}
+		return $aFieldList;
+	}
+
+	protected static function GetLimitedFieldListForClass(string $sClass, string $sFields, string $sParamName, bool $bFailIfNotFound = true): array
+	{
+		if (!str_contains($sFields, ':')) {
+			return self::GetLimitedFieldListForSingleClass($sClass, $sFields, $sParamName, $bFailIfNotFound);
+		}
+
+		$aFieldList = [];
+		$aFieldListParts = explode(';', $sFields);
+		foreach ($aFieldListParts as $sClassFields) {
+			list($sSubClass, $sSubClassFields) = explode(':', $sClassFields);
+			$aFieldList = array_merge($aFieldList, self::GetLimitedFieldListForSingleClass(trim($sSubClass), trim($sSubClassFields), $sParamName, $bFailIfNotFound));
+		}
+		return $aFieldList;
+	}
 	/**
 	 * Read and interpret object search criteria from a Rest/Json structure
 	 *
