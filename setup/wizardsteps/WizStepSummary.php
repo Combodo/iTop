@@ -144,7 +144,7 @@ class WizStepSummary extends AbstractWizStepInstall
 
 		$oPage->add('<li>URL to access the application: '.$aInstallParams['url'].'</li>');
 		$oPage->add('<li>Graphviz\' dot path: '.$aInstallParams['graphviz_path'].'</li>');
-		if ($aInstallParams['sample_data'] == 'yes') {
+		if ($aInstallParams['sample_data']) {
 			$oPage->add('<li>Sample data will be loaded into the database.</li>');
 		}
 		if ($aInstallParams['old_addon']) {

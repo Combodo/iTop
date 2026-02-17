@@ -92,7 +92,7 @@ abstract class AbstractWizStepInstall extends WizardStep
 			'language' => $this->oWizard->GetParameter('default_language'),
 			'selected_modules' =>  $aSelectedModules,
 			'selected_extensions' =>  $aSelectedExtensions,
-			'sample_data' => ($this->oWizard->GetParameter('sample_data', '') == 'yes') ? true : false ,
+			'sample_data' => $this->oWizard->GetParameter('sample_data', '') === 'yes',
 			'old_addon' => $this->oWizard->GetParameter('old_addon', false), // whether or not to use the "old" userrights profile addon
 			'options' => json_decode($this->oWizard->GetParameter('misc_options', '[]'), true),
 			'mysql_bindir' => $this->oWizard->GetParameter('mysql_bindir'),
