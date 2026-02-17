@@ -1186,6 +1186,10 @@
                 <rank>3</rank>
                 <class>VirtualMachine</class>
               </dashlet>
+              <dashlet id="42" xsi:type="DashletBadge" _delta="define">
+                <rank>4</rank>
+                <class>Cloud</class>
+              </dashlet>
             </dashlets>
           </cell>
         </cells>

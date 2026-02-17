@@ -1204,10 +1204,6 @@
           <cell id="1" _delta="must_exist">
             <rank>1</rank>
             <dashlets>
-              <dashlet id="container_42" xsi:type="DashletBadge" _delta="define">
-                <rank>4</rank>
-                <class>Cloud</class>
-              </dashlet>
               <dashlet id="container_43" xsi:type="DashletBadge" _delta="define">
                 <rank>5</rank>
                 <class>ContainerApplication</class>
