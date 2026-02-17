@@ -38,7 +38,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 // Class: LogicalInterface
 //
 
-Dict::Add('EN US', 'English', 'English', [
+Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:LogicalInterface/Attribute:org_id' => 'Organization',
 	'Class:LogicalInterface/Attribute:org_id+' => '',
 ]);
