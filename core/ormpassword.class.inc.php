@@ -98,9 +98,9 @@ class ormPassword
 		$bResult = false;
 		$aInfo = password_get_info($this->m_sHashed);
 		if (is_null($aInfo["algo"]) || $aInfo["algo"] === 0) {
-			//unknown, assume it's a legacy password
+			// - Unknown algorithm, assume it's a legacy password
 			$sHashedPwd = $this->ComputeHash($sClearTextPassword);
-			$bResult = ($this->m_sHashed == $sHashedPwd);
+			$bResult = hash_equals($this->m_sHashed, $sHashedPwd);
 		} else {
 			$bResult = password_verify($sClearTextPassword, $this->m_sHashed);
 		}
