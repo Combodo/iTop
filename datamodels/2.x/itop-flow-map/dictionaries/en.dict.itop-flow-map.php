@@ -9,6 +9,10 @@
 
 Dict::Add('EN US', 'English', 'English', [
 
+	'DataFlow:baseinfo' => 'General information',
+	'DataFlow:otherinfo' => 'Other information',
+	'DataFlow:moreinfo' => 'Flow specifics',
+
 	'Relation:flow/Description' => 'Flow maps',
 	'Relation:flow/DownStream' => 'Sent flow...',
 	'Relation:flow/UpStream' => 'Received flow...',

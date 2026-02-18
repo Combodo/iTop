@@ -77,7 +77,7 @@
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
         </field>
-        <field id="description" xsi:type="AttributeText">
+        <field id="description" xsi:type="AttributeHTML">
           <sql>description</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
@@ -215,36 +215,51 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="name">
+                <item id="fieldset:DataFlow:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
                   <rank>10</rank>
                 </item>
-                <item id="source_id">
+                <item id="fieldset:DataFlow:moreinfo">
+                  <items>
+                     <item id="source_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="destination_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="flowtype_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="execution_frequency">
+                      <rank>40</rank>
+                    </item>
+                  </items>
                   <rank>20</rank>
-                </item>
-                <item id="destination_id">
-                  <rank>30</rank>
-                </item>
-                <item id="org_id">
-                  <rank>40</rank>
-                </item>
-                <item id="status">
-                  <rank>50</rank>
-                </item>
-                <item id="flowtype_id">
-                  <rank>60</rank>
-                </item>
-                <item id="execution_frequency">
-                  <rank>70</rank>
-                </item>
-                <item id="business_criticity">
-                  <rank>80</rank>
                 </item>
               </items>
               <rank>10</rank>
             </item>
             <item id="col:col2">
               <items>
-                <item id="description">
+                <item id="fieldset:DataFlow:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
                   <rank>10</rank>
                 </item>
               </items>

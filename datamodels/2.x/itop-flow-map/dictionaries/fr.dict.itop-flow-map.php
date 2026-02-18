@@ -9,6 +9,10 @@
 
 Dict::Add('FR FR', 'French', 'Français', [
 
+	'DataFlow:baseinfo' => 'Informations générales',
+	'DataFlow:otherinfo' => 'Autres informations',
+	'DataFlow:moreinfo' => 'Spécificités du flux',
+
 	'Relation:flow/Description'                              => 'Carte des flux de données',
 	'Relation:flow/DownStream'                               => 'Flux sortants...',
 	'Relation:flow/UpStream'                                 => 'Flux reçus...',
