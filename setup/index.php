@@ -26,7 +26,20 @@
  * @since 3.0.0 N°3253
  */
 
+use Combodo\iTop\Application\Helper\Session;
+
 require_once('../lib/autoload.php');
+
+// Hack for setup, we need these constants in the session
+define('APPROOT', dirname(__DIR__).'/');
+define('APPCONF', APPROOT.'conf/');
+define('ITOP_DEFAULT_ENV', 'production');
+
+Session::Start();
+if (!Session::Get('bBypassMaintenance', false)) {
+	// Allow setup in maintenance mode
+	Session::Set('bBypassMaintenance', true);
+}
 
 echo <<<HTML
 <!DOCTYPE html>

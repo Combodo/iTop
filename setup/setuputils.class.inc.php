@@ -1940,6 +1940,7 @@ JS
 	{
 		$bPreviousMode = self::IsInMaintenanceMode();
 		@touch(MAINTENANCE_MODE_FILE);
+		Session::Set('bBypassMaintenance', true);
 		SetupLog::Info("----> Entering maintenance mode");
 		self::WaitCronTermination($oConfig, "maintenance");
 		return $bPreviousMode;
@@ -1948,6 +1949,7 @@ JS
 	public static function ExitMaintenanceMode($bLog = true)
 	{
 		@unlink(MAINTENANCE_MODE_FILE);
+		Session::Set('bBypassMaintenance', false);
 		if ($bLog) {
 			SetupLog::Info("<---- Exiting maintenance mode");
 		}

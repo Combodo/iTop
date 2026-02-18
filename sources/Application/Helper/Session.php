@@ -35,7 +35,10 @@ class Session
 		}
 
 		if (!self::$bIsInitialized) {
-			SessionHandler::session_set_save_handler();
+			if (defined('MAINTENANCE_MODE_FILE')) {
+				// Hack for setup, SessionHandler cannot work under setup
+				SessionHandler::session_set_save_handler();
+			}
 			session_name('itop-'.md5(APPROOT));
 		}
 

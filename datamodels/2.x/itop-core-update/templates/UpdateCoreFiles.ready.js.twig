@@ -15,8 +15,7 @@ var oGetCurrentVersion = {
     method: "POST",
     url: "{{ sAjaxURL|raw }}",
     data: {
-        route: "core_update_ajax.get_current_version",
-        maintenance: true
+        route: "core_update_ajax.get_current_version"
     },
     dataType: "json",
     success: function(data)
@@ -36,8 +35,7 @@ function GetAjaxRequest(sOperation)
         url: "{{ sAjaxURL|raw }}",
         data: {
             route: sOperation,
-            authent: "{{ sSetupToken }}",
-            maintenance: true
+            authent: "{{ sSetupToken }}"
         },
         dataType: "json"
     };

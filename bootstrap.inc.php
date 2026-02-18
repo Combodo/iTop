@@ -30,6 +30,9 @@
  *
  * @since 3.0.0 N°2214
  */
+
+use Combodo\iTop\Application\Helper\Session;
+
 $bIsValidPhpVersion = false;
 if (PHP_MAJOR_VERSION >= 7) {
 	$bIsValidPhpVersion = true;
@@ -47,17 +50,17 @@ $iItopInitialMemory = memory_get_usage(true);
 
 if (!isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false) {
 	require_once APPROOT.'/lib/autoload.php';
+	$oKPI = new ExecutionKPI();
+	Session::Start();
+	$oKPI->ComputeAndReport('Session Start');
+
+	// Now bBypassMaintenance mode is set in the session rather than the request params
+	$bBypassMaintenance = Session::Get('bBypassMaintenance', false);
 }
 
 //
 // Maintenance mode
 //
-
-// Use 'maintenance' parameter to bypass maintenance mode
-if (!isset($bBypassMaintenance)) {
-	$bBypassMaintenance = isset($_REQUEST['maintenance']) ? boolval($_REQUEST['maintenance']) : false;
-}
-
 if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance) {
 	$sTitle = 'Maintenance';
 	$sMessage = 'This application is currently under maintenance.';
