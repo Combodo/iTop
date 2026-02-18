@@ -27,7 +27,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Hasło nie może być zmienione przez użytkownika.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Odnowienie hasła',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Kiedy ostatnio zmieniano hasło',
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Hasło musi mieć co najmniej 8 znaków i zawierać duże, małe litery, cyfry i znaki specjalne.',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Hasło musi mieć co najmniej 12 znaków i zawierać duże, małe litery, cyfry i znaki specjalne.',
 	'UserLocal:password:expiration' => 'Poniższe pola wymagają rozszerzenia',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Ustawienie wygaśnięcia hasła "Hasło jednorazowe" nie jest dozwolone dla własnego użytkownika',
 ]);

@@ -28,7 +28,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Password cannot be changed by the user.~~',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Дата изменения пароля',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Когда пароль был изменен в последний раз',
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Пароль должен содержать не менее 8 символов и включать прописные, строчные, числовые и специальные символы.',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Пароль должен содержать не менее 12 символов и включать прописные, строчные, числовые и специальные символы.',
 	'UserLocal:password:expiration' => 'Поля требуют наличия доп. расширения',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
 ]);
