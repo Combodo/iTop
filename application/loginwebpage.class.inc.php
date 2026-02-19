@@ -260,9 +260,9 @@ class LoginWebPage extends NiceWebPage
 			}
 
         } catch (ForgotPasswordApplicationException $e) {
-            IssueLog::Error('Failed to process the forgot password request for user "' . $sAuthUser . '": ' . $e->getMessage());
+            IssueLog::Error('Failed to process the forgot password request for user "' . $sAuthUser . '" [reason=' . get_class($e) . ']: ' . $e->getMessage());
         } catch (ForgotPasswordUserInputException $e) {
-            IssueLog::Info('Failed to process the forgot password request for user "' . $sAuthUser . '": ' . $e->getMessage());
+            IssueLog::Info('Failed to process the forgot password request for user "' . $sAuthUser . '" [reason=' . get_class($e) . ']: ' . $e->getMessage());
         } catch (\Throwable $e) {
             IssueLog::Error('Unexpected error while processing the forgot password request for user "' . $sAuthUser . '": ' . $e->getMessage());
 		}
