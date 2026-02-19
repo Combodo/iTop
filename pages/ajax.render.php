@@ -2194,7 +2194,7 @@ EOF
 						$oAttachment->Set('item_class', $sObjClass);
 						$oAttachment->SetDefaultOrgId();
 						$oAttachment->Set('contents', $oDoc);
-						$oAttachment->Set('secret', sprintf('%06x', mt_rand(0, 0xFFFFFF))); // something not easy to guess
+                        $oAttachment->Set('secret', bin2hex(random_bytes(16))); // 128 bits of entropy, cryptographically secure
 						$iAttId = $oAttachment->DBInsert();
 
 						IssueLog::Trace('InlineImage created', LogChannels::INLINE_IMAGE, [
