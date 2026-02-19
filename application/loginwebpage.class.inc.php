@@ -255,7 +255,7 @@ class LoginWebPage extends NiceWebPage
 
 					case EMAIL_SEND_ERROR:
 					default:
-                    throw new ForgotPasswordApplicationException('Failed to send the email with the NEW password for ' . $oUser->Get('friendlyname') . ': ' . implode(', ', $aIssues));
+                    throw new ForgotPasswordApplicationException('Failed to send the password reset email for ' . $oUser->Get('friendlyname') . ': ' . implode(', ', $aIssues));
 				}
 			}
 
