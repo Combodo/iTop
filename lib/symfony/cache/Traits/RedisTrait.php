@@ -149,10 +149,10 @@ trait RedisTrait
         if (isset($params['host']) || isset($params['path'])) {
             if (!isset($params['dbindex']) && isset($params['path'])) {
                 if (preg_match('#/(\d+)?$#', $params['path'], $m)) {
-                    $params['dbindex'] = $m[1] ?? '0';
+                    $params['dbindex'] = $m[1] ?? $query['dbindex'] ?? '0';
                     $params['path'] = substr($params['path'], 0, -\strlen($m[0]));
                 } elseif (isset($params['host'])) {
-                    throw new InvalidArgumentException('Invalid Redis DSN: query parameter "dbindex" must be a number.');
+                    throw new InvalidArgumentException('Invalid Redis DSN: parameter "dbindex" must be a number.');
                 }
             }
 
@@ -165,6 +165,10 @@ trait RedisTrait
 
         if (!$hosts) {
             throw new InvalidArgumentException('Invalid Redis DSN: missing host.');
+        }
+
+        if (isset($params['dbindex'], $query['dbindex']) && $params['dbindex'] !== $query['dbindex']) {
+            throw new InvalidArgumentException('Invalid Redis DSN: path and query "dbindex" parameters mismatch.');
         }
 
         $params += $query + $options + self::$defaultConnectionOptions;
@@ -228,10 +232,10 @@ trait RedisTrait
                             $options = [
                                 'host' => $host,
                                 'port' => $port,
-                                'connectTimeout' => $params['timeout'],
+                                'connectTimeout' => (float) $params['timeout'],
                                 'persistent' => $params['persistent_id'],
-                                'retryInterval' => $params['retry_interval'],
-                                'readTimeout' => $params['read_timeout'],
+                                'retryInterval' => (int) $params['retry_interval'],
+                                'readTimeout' => (float) $params['read_timeout'],
                             ];
 
                             if ($passAuth) {
@@ -260,6 +264,22 @@ trait RedisTrait
                     $extra = [
                         'stream' => $params['ssl'] ?? null,
                     ];
+                    $booleanStreamOptions = [
+                        'allow_self_signed',
+                        'capture_peer_cert',
+                        'capture_peer_cert_chain',
+                        'disable_compression',
+                        'SNI_enabled',
+                        'verify_peer',
+                        'verify_peer_name',
+                    ];
+
+                    foreach ($extra['stream'] ?? [] as $streamOption => $value) {
+                        if (\in_array($streamOption, $booleanStreamOptions, true) && \is_string($value)) {
+                            $extra['stream'][$streamOption] = filter_var($value, \FILTER_VALIDATE_BOOL);
+                        }
+                    }
+
                     if (isset($params['auth'])) {
                         $extra['auth'] = $params['auth'];
                     }
@@ -277,7 +297,10 @@ trait RedisTrait
                     }
 
                     if ((null !== $auth && !$redis->auth($auth))
-                        || ($params['dbindex'] && !$redis->select($params['dbindex']))
+                        // Due to a bug in phpredis we must always select the dbindex if persistent pooling is enabled
+                        // @see https://github.com/phpredis/phpredis/issues/1920
+                        // @see https://github.com/symfony/symfony/issues/51578
+                        || (($params['dbindex'] || ('pconnect' === $connect && '0' !== \ini_get('redis.pconnect.pooling_enabled'))) && !$redis->select($params['dbindex']))
                     ) {
                         $e = preg_replace('/^ERR /', '', $redis->getLastError());
                         throw new InvalidArgumentException('Redis connection failed: '.$e.'.');
@@ -498,7 +521,7 @@ trait RedisTrait
                     }
                     $this->doDelete($keys);
                 }
-            } while ($cursor = (int) $cursor);
+            } while ($cursor);
         }
 
         return $cleared;
@@ -563,7 +586,7 @@ trait RedisTrait
         return $failed;
     }
 
-    private function pipeline(\Closure $generator, object $redis = null): \Generator
+    private function pipeline(\Closure $generator, ?object $redis = null): \Generator
     {
         $ids = [];
         $redis ??= $this->redis;
