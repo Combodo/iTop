@@ -980,11 +980,13 @@ try {
 JS
 					);
 				} else {
+					$sDashboardIdEncoded = json_encode($sDashboardId);
+					$sReloadURLEncoded = json_encode($sReloadURL);
 					$oPage->add_script(
 						<<<JS
 			$('.ibo-dashboard#{$sDashboardDivId}').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			   { operation: 'reload_dashboard', dashboard_id: '{$sDashboardId}', file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: '{$sReloadURL}'},
+			   { operation: 'reload_dashboard', dashboard_id: '{$sDashboardIdEncoded}', file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: '{$sReloadURLEncoded}'},
 			   function(data){
 				 $('.ibo-dashboard#{$sDashboardDivId}').html(data);
 				 $('.ibo-dashboard#{$sDashboardDivId}').unblock();
