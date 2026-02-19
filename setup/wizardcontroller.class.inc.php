@@ -139,7 +139,7 @@ class WizardController
 	public function Start()
 	{
 		$sCurrentStepClass = $this->sInitialStepClass;
-		$oStep = $this->NewStep($sCurrentStepClass, $this->sInitialState);
+		$oStep = $this->GetWizardStep($sCurrentStepClass, $this->sInitialState);
 		$this->DisplayStep($oStep);
 	}
 	/**
@@ -151,23 +151,24 @@ class WizardController
 		$sCurrentStepClass = utils::ReadParam('_class', $this->sInitialStepClass);
 		$sCurrentState = utils::ReadParam('_state', $this->sInitialState);
 		/** @var \WizardStep $oStep */
-		$oStep = $oStep = $this->NewStep($sCurrentStepClass, $sCurrentState);
+		$oStep = $oStep = $this->GetWizardStep($sCurrentStepClass, $sCurrentState);
 		if ($oStep->ValidateParams()) {
 			if ($oStep->CanComeBack()) {
 				$this->PushStep(['class' => $sCurrentStepClass, 'state' => $sCurrentState]);
 			}
 			$aPossibleSteps = $oStep->GetPossibleSteps();
-			$aNextStepInfo = $oStep->UpdateWizardStateAndGetNextStep(true); // true => moving forward
-			if (in_array($aNextStepInfo->GetNextStep(), $aPossibleSteps)) {
-				$oNextStep = $this->NewStep($aNextStepInfo->GetNextStep(), $aNextStepInfo->GetState());
+			$oWizardState = $oStep->UpdateWizardStateAndGetNextStep(true); // true => moving forward
+			if (in_array($oWizardState->GetNextStep(), $aPossibleSteps)) {
+				$oNextStep = $this->GetWizardStep($oWizardState->GetNextStep(), $oWizardState->GetState());
 				$this->DisplayStep($oNextStep);
 			} else {
-				throw new Exception("Internal error: Unexpected next step '{$aNextStepInfo['class']}'. The possible next steps are: ".implode(', ', $aPossibleSteps));
+				throw new Exception("Internal error: Unexpected next step '{$oWizardState->GetNextStep()}'. The possible next steps are: ".implode(', ', $aPossibleSteps));
 			}
 		} else {
 			$this->DisplayStep($oStep);
 		}
 	}
+	
 	/**
 	 * Move one step back
 	 */
@@ -176,12 +177,12 @@ class WizardController
 		// let the current step save its parameters
 		$sCurrentStepClass = utils::ReadParam('_class', $this->sInitialStepClass);
 		$sCurrentState = utils::ReadParam('_state', $this->sInitialState);
-		$oStep = $this->NewStep($sCurrentStepClass, $sCurrentState);
-		$aNextStepInfo = $oStep->UpdateWizardStateAndGetNextStep(false); // false => Moving backwards
+		$oStep = $this->GetWizardStep($sCurrentStepClass, $sCurrentState);
+		$oWizardState = $oStep->UpdateWizardStateAndGetNextStep(false); // false => Moving backwards
 
 		// Display the previous step
 		$aCurrentStepInfo = $this->PopStep();
-		$oStep = $this->NewStep($aCurrentStepInfo['class'], $aCurrentStepInfo['state']);
+		$oStep = $this->GetWizardStep($aCurrentStepInfo['class'], $aCurrentStepInfo['state']);
 		$this->DisplayStep($oStep);
 	}
 
@@ -323,7 +324,7 @@ on the page's parameters
 			$sStep = $this->sInitialStepClass;
 		}
 
-		$oStep = $this->NewStep($sStep);
+		$oStep = $this->GetWizardStep($sStep);
 		$aAllSteps[$sStep] = $oStep->GetPossibleSteps();
 		foreach ($aAllSteps[$sStep] as $sNextStep) {
 			if (!array_key_exists($sNextStep, $aAllSteps)) {
@@ -355,7 +356,7 @@ on the page's parameters
 		$sOutput .= "\tnode [shape = doublecircle]; ".implode(' ', $aDeadEnds).";\n";
 		$sOutput .= "\tnode [shape = box];\n";
 		foreach ($aAllSteps as $sStep => $aNextSteps) {
-			$oStep = $this->NewStep($sStep);
+			$oStep = $this->GetWizardStep($sStep);
 			$sOutput .= "\t$sStep [ label = \"".$oStep->GetTitle()."\"];\n";
 			if (count($aNextSteps) > 0) {
 				foreach ($aNextSteps as $sNextStep) {
@@ -368,13 +369,13 @@ on the page's parameters
 	}
 
 	/**
-	 * @param $sCurrentStepClass
-	 * @param $sCurrentState
+	 * @param string $sCurrentStepClass
+	 * @param string $sCurrentState
 	 *
 	 * @return \WizardStep
 	 * @throws \Exception
 	 */
-	private function NewStep($sCurrentStepClass, $sCurrentState = '')
+	private function GetWizardStep(string $sCurrentStepClass, string $sCurrentState = ''): WizardStep
 	{
 		if (!is_subclass_of($sCurrentStepClass, WizardStep::class)) {
 			throw new Exception('Unknown step '.$sCurrentStepClass);
