@@ -48,7 +48,7 @@ class WizStepModulesChoice extends WizardStep
 	 */
 	protected bool $bChoicesFromDatabase;
 
-	private array $aAnalyzeInstallationModules;
+	private array $aAnalyzeInstallationModules = [];
 	private ?MissingDependencyException $oMissingDependencyException = null;
 
 	public function __construct(WizardController $oWizard, $sCurrentState)
@@ -486,7 +486,7 @@ EOF
 	 *
 	 * @return string A text representation of what will be installed
 	 */
-	protected function GetSelectedModules($aInfo, $aSelectedChoices, &$aModules, $sParentId = '', $sDisplayChoices = '', &$aSelectedExtensions = null)
+	public function GetSelectedModules($aInfo, $aSelectedChoices, &$aModules, $sParentId = '', $sDisplayChoices = '', &$aSelectedExtensions = null)
 	{
 		if ($sParentId == '') {
 			// Check once (before recursing) that the hidden modules are selected
@@ -514,6 +514,9 @@ EOF
 				(isset($aSelectedChoices[$sChoiceId]) && ($aSelectedChoices[$sChoiceId] == $sChoiceId))) {
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
 				if (isset($aChoice['modules'])) {
+					if (count($aChoice['modules']) === 0) {
+						throw new Exception('Setup option does not have any module associated');
+					}
 					foreach ($aChoice['modules'] as $sModuleId) {
 						$bSelected = true;
 						if (isset($aModuleInfo[$sModuleId])) {
