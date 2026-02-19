@@ -666,14 +666,26 @@ EOF
 	public function ComputeChoiceFlags(array $aChoice, string $sChoiceId, array $aSelectedComponents, bool $bAllDisabled, bool $bDisableUninstallCheck, bool $bUpgradeMode)
 	{
 		$oITopExtension = $this->oExtensionsMap->GetFromExtensionCode($aChoice['extension_code']);
+		//If the extension is missing from disk, it won't exist in the ExtensionsMap, thus returning null
 		$bCanBeUninstalled = isset($aChoice['uninstallable']) ? $aChoice['uninstallable'] === true || $aChoice['uninstallable'] === 'yes' : $oITopExtension->CanBeUninstalled();
 		$bSelected = isset($aSelectedComponents[$sChoiceId]) && ($aSelectedComponents[$sChoiceId] == $sChoiceId);
-		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']) || $bUpgradeMode && $oITopExtension->bInstalled && !$bCanBeUninstalled && !$bDisableUninstallCheck;
-
 		$bMissingFromDisk = isset($aChoice['missing']) && $aChoice['missing'] === true;
+		$bMandatory = (isset($aChoice['mandatory']) && $aChoice['mandatory']);
 		$bInstalled = $bMissingFromDisk || $oITopExtension->bInstalled;
-		$bDisabled = $bMandatory || $bAllDisabled || $bMissingFromDisk;
-		$bChecked = $bMandatory || $bSelected;
+
+		$bChecked = $bSelected;
+		$bDisabled = false;
+		if ($bMissingFromDisk) {
+			$bDisabled = true;
+			$bChecked = false;
+		}
+		elseif($bMandatory || $bInstalled && !$bCanBeUninstalled){
+			$bDisabled = true;
+			$bChecked = true;
+		}
+		if($bAllDisabled){
+			$bDisabled = true;
+		}
 
 		if (isset($aChoice['sub_options'])) {
 			$aOptions = $aChoice['sub_options']['options'] ?? [];
