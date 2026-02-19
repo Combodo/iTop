@@ -47,9 +47,10 @@ define('READONLY_MODE_FILE', APPROOT.'data/.readonly');
 
 $fItopStarted = microtime(true);
 $iItopInitialMemory = memory_get_usage(true);
-
+$bBypassMaintenance = false;
 if (!isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false) {
 	require_once APPROOT.'/lib/autoload.php';
+	// Start the session here to read the "bBypassMaintenance" param
 	$oKPI = new ExecutionKPI();
 	Session::Start();
 	$oKPI->ComputeAndReport('Session Start');
