@@ -33,6 +33,10 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	protected $aDeferredBlocks;
 	/** @var bool If set to true, the content block will have a surrounding <div> no matter its options / CSS classes / ... */
 	protected $bHasForcedDiv;
+	/** @var bool if set to true, the icon will be lazy loaded
+	 * @since 3.2.3
+	 */
+	protected bool $bHasLazyLoadIcon;
 
 	/**
 	 * UIContentBlock constructor.
@@ -48,6 +52,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 		$this->aSubBlocks = [];
 		$this->aDeferredBlocks = [];
 		$this->bHasForcedDiv = false;
+		$this->bHasLazyLoadIcon = false;
 		$this->SetCSSClasses($aContainerClasses);
 	}
 
@@ -218,6 +223,26 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	public function SetHasForcedDiv(bool $bHasForcedDiv)
 	{
 		$this->bHasForcedDiv = $bHasForcedDiv;
+		return $this;
+	}
+
+	/**
+	 * @see static::bHasLazyLoadIcon
+	 * @return bool
+	 */
+	public function HasLazyLoadIcon(): bool
+	{
+		return $this->bHasLazyLoadIcon;
+	}
+
+	/**
+	 * @see static::$bLazyLoadIcon
+	 * @param bool $bLazyLoadIcon
+	 * @return $this
+	 */
+	public function SetHasLazyLoadIcon(bool $bLazyLoadIcon)
+	{
+		$this->bHasLazyLoadIcon = $bLazyLoadIcon;
 		return $this;
 	}
 }
