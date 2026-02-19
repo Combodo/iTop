@@ -221,15 +221,15 @@ class LoginWebPage extends NiceWebPage
 
 			if ($oUser != null) {
 				if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token')) {
-					throw new Exception(Dict::S('UI:ResetPwd-Error-NotPossible'));
+                    throw new ForgotPasswordUserInputException(Dict::S('UI:ResetPwd-Error-NotPossible'));
 				}
 				if (!$oUser->CanChangePassword()) {
-					throw new Exception(Dict::S('UI:ResetPwd-Error-FixedPwd'));
+                    throw new ForgotPasswordUserInputException(Dict::S('UI:ResetPwd-Error-FixedPwd'));
 				}
 
 				$sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
 				if ($sTo == '') {
-					throw new Exception(Dict::S('UI:ResetPwd-Error-NoEmail'));
+                    throw new ForgotPasswordUserInputException(Dict::S('UI:ResetPwd-Error-NoEmail'));
 				}
 
 				// This token allows the user to change the password without knowing the previous one
@@ -255,13 +255,14 @@ class LoginWebPage extends NiceWebPage
 
 					case EMAIL_SEND_ERROR:
 					default:
-						IssueLog::Error('Failed to send the email with the NEW password for '.$oUser->Get('friendlyname').': '.implode(', ', $aIssues));
-						throw new Exception(Dict::S('UI:ResetPwd-Error-Send'));
+                    throw new ForgotPasswordApplicationException('Failed to send the email with the NEW password for ' . $oUser->Get('friendlyname') . ': ' . implode(', ', $aIssues));
 				}
 			}
 
-		} catch (Exception $e) {
-			IssueLog::Info('Failed to process the forgot password request for user "'.$sAuthUser.'": '.$e->getMessage());
+        } catch (ForgotPasswordApplicationException $e) {
+            IssueLog::Error('Failed to process the forgot password request for user "' . $sAuthUser . '": ' . $e->getMessage());
+        } catch (ForgotPasswordUserInputException $e) {
+            IssueLog::Info('Failed to process the forgot password request for user "' . $sAuthUser . '": ' . $e->getMessage());
 		}
 
 		$oTwigContext = new LoginTwigRenderer();

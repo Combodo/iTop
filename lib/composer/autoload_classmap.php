@@ -745,6 +745,8 @@ return array(
     'Firebase\\JWT\\JWTExceptionWithPayloadInterface' => $vendorDir . '/firebase/php-jwt/src/JWTExceptionWithPayloadInterface.php',
     'Firebase\\JWT\\Key' => $vendorDir . '/firebase/php-jwt/src/Key.php',
     'Firebase\\JWT\\SignatureInvalidException' => $vendorDir . '/firebase/php-jwt/src/SignatureInvalidException.php',
+    'ForgotPasswordApplicationException' => $baseDir . '/application/exceptions/ForgotPasswordApplicationException.php',
+    'ForgotPasswordUserInputException' => $baseDir . '/application/exceptions/ForgotPasswordUserInputException.php',
     'FunctionExpression' => $baseDir . '/core/oql/expression.class.inc.php',
     'FunctionOqlExpression' => $baseDir . '/core/oql/oqlquery.class.inc.php',
     'GraphEdge' => $baseDir . '/core/simplegraph.class.inc.php',
