@@ -18,6 +18,12 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\WebPage\WebPage;
 
+require_once(APPROOT.'setup/setuputils.class.inc.php');
+require_once(APPROOT.'setup/parameters.class.inc.php');
+require_once(APPROOT.'setup/applicationinstaller.class.inc.php');
+require_once(APPROOT.'core/mutex.class.inc.php');
+require_once(APPROOT.'setup/extensionsmap.class.inc.php');
+
 /**
  * Engine for displaying the various pages of a "wizard"
  * Each "step" of the wizard must be implemented as
@@ -53,7 +59,7 @@ class WizardController
 
 	/**
 	 * Pushes information about the current step onto the stack
-	 * @param hash $aStepInfo Array('class' => , 'state' => )
+	 * @param array $aStepInfo Array('class' => , 'state' => )
 	 */
 	protected function PushStep($aStepInfo)
 	{
@@ -133,7 +139,7 @@ class WizardController
 	public function Start()
 	{
 		$sCurrentStepClass = $this->sInitialStepClass;
-		$oStep = new $sCurrentStepClass($this, $this->sInitialState);
+		$oStep = $this->GetWizardStep($sCurrentStepClass, $this->sInitialState);
 		$this->DisplayStep($oStep);
 	}
 	/**
@@ -145,21 +151,24 @@ class WizardController
 		$sCurrentStepClass = utils::ReadParam('_class', $this->sInitialStepClass);
 		$sCurrentState = utils::ReadParam('_state', $this->sInitialState);
 		/** @var \WizardStep $oStep */
-		$oStep = new $sCurrentStepClass($this, $sCurrentState);
+		$oStep = $oStep = $this->GetWizardStep($sCurrentStepClass, $sCurrentState);
 		if ($oStep->ValidateParams()) {
-			$this->PushStep(['class' => $sCurrentStepClass, 'state' => $sCurrentState]);
+			if ($oStep->CanComeBack()) {
+				$this->PushStep(['class' => $sCurrentStepClass, 'state' => $sCurrentState]);
+			}
 			$aPossibleSteps = $oStep->GetPossibleSteps();
-			$aNextStepInfo = $oStep->ProcessParams(true); // true => moving forward
-			if (in_array($aNextStepInfo['class'], $aPossibleSteps)) {
-				$oNextStep = new $aNextStepInfo['class']($this, $aNextStepInfo['state']);
+			$oWizardState = $oStep->UpdateWizardStateAndGetNextStep(true); // true => moving forward
+			if (in_array($oWizardState->GetNextStep(), $aPossibleSteps)) {
+				$oNextStep = $this->GetWizardStep($oWizardState->GetNextStep(), $oWizardState->GetState());
 				$this->DisplayStep($oNextStep);
 			} else {
-				throw new Exception("Internal error: Unexpected next step '{$aNextStepInfo['class']}'. The possible next steps are: ".implode(', ', $aPossibleSteps));
+				throw new Exception("Internal error: Unexpected next step '{$oWizardState->GetNextStep()}'. The possible next steps are: ".implode(', ', $aPossibleSteps));
 			}
 		} else {
 			$this->DisplayStep($oStep);
 		}
 	}
+
 	/**
 	 * Move one step back
 	 */
@@ -168,12 +177,12 @@ class WizardController
 		// let the current step save its parameters
 		$sCurrentStepClass = utils::ReadParam('_class', $this->sInitialStepClass);
 		$sCurrentState = utils::ReadParam('_state', $this->sInitialState);
-		$oStep = new $sCurrentStepClass($this, $sCurrentState);
-		$aNextStepInfo = $oStep->ProcessParams(false); // false => Moving backwards
+		$oStep = $this->GetWizardStep($sCurrentStepClass, $sCurrentState);
+		$oWizardState = $oStep->UpdateWizardStateAndGetNextStep(false); // false => Moving backwards
 
 		// Display the previous step
 		$aCurrentStepInfo = $this->PopStep();
-		$oStep = new $aCurrentStepInfo['class']($this, $aCurrentStepInfo['state']);
+		$oStep = $this->GetWizardStep($aCurrentStepInfo['class'], $aCurrentStepInfo['state']);
 		$this->DisplayStep($oStep);
 	}
 
@@ -315,7 +324,7 @@ on the page's parameters
 			$sStep = $this->sInitialStepClass;
 		}
 
-		$oStep = new $sStep($this, '');
+		$oStep = $this->GetWizardStep($sStep);
 		$aAllSteps[$sStep] = $oStep->GetPossibleSteps();
 		foreach ($aAllSteps[$sStep] as $sNextStep) {
 			if (!array_key_exists($sNextStep, $aAllSteps)) {
@@ -347,7 +356,7 @@ on the page's parameters
 		$sOutput .= "\tnode [shape = doublecircle]; ".implode(' ', $aDeadEnds).";\n";
 		$sOutput .= "\tnode [shape = box];\n";
 		foreach ($aAllSteps as $sStep => $aNextSteps) {
-			$oStep = new $sStep($this, '');
+			$oStep = $this->GetWizardStep($sStep);
 			$sOutput .= "\t$sStep [ label = \"".$oStep->GetTitle()."\"];\n";
 			if (count($aNextSteps) > 0) {
 				foreach ($aNextSteps as $sNextStep) {
@@ -358,314 +367,19 @@ on the page's parameters
 		$sOutput .= "}\n";
 		return $sOutput;
 	}
-}
 
-/**
- * Abstract class to build "steps" for the wizard controller
- * If a step needs to maintain an internal "state" (for complex steps)
- * then it's up to the derived class to implement the behavior based on
- * the internal 'sCurrentState' variable.
- * @copyright   Copyright (C) 2010-2024 Combodo SAS
- * @license     http://opensource.org/licenses/AGPL-3.0
- */
-
-abstract class WizardStep
-{
 	/**
-	 * A reference to the WizardController
-	 * @var WizardController
+	 * @param string $sCurrentStepClass
+	 * @param string $sCurrentState
+	 *
+	 * @return \WizardStep
+	 * @throws \Exception
 	 */
-	protected $oWizard;
-	/**
-	 * Current 'state' of the wizard step. Simple 'steps' can ignore it
-	 * @var string
-	 */
-	protected $sCurrentState;
-
-	public function __construct(WizardController $oWizard, $sCurrentState)
+	private function GetWizardStep(string $sCurrentStepClass, string $sCurrentState = ''): WizardStep
 	{
-		$this->oWizard = $oWizard;
-		$this->sCurrentState = $sCurrentState;
-	}
-
-	public function GetState()
-	{
-		return $this->sCurrentState;
-	}
-
-	/**
-	 * Displays the wizard page for the current class/state
-	 * The page can contain any number of "<input/>" fields, but no "<form>...</form>" tag
-	 * The name of the input fields (and their id if one is supplied) MUST NOT start with "_"
-	 * (this is reserved for the wizard's own parameters)
-	 * @return void
-	 */
-	abstract public function Display(WebPage $oPage);
-
-	/**
-	 * Processes the page's parameters and (if moving forward) returns the next step/state to be displayed
-	 * @param bool $bMoveForward True if the wizard is moving forward 'Next >>' button pressed, false otherwise
-	 * @return hash array('class' => $sNextClass, 'state' => $sNextState)
-	 */
-	abstract public function ProcessParams($bMoveForward = true);
-
-	/**
-	 * Returns the list of possible steps from this step forward
-	 * @return array Array of strings (step classes)
-	 */
-	abstract public function GetPossibleSteps();
-
-	/**
-	 * Returns title of the current step
-	 * @return string The title of the wizard page for the current step
-	 */
-	abstract public function GetTitle();
-
-	/**
-	 * Tells whether the parameters are Ok to move forward
-	 * @return boolean True to move forward, false to stey on the same step
-	 */
-	public function ValidateParams()
-	{
-		return true;
-	}
-
-	/**
-	 * Tells whether this step/state is the last one of the wizard (dead-end)
-	 * @return boolean True if the 'Next >>' button should be displayed
-	 */
-	public function CanMoveForward()
-	{
-		return true;
-	}
-
-	/**
-	 * Tells whether the "Next" button should be enabled interactively
-	 * @return string A piece of javascript code returning either true or false
-	 */
-	public function JSCanMoveForward()
-	{
-		return 'return true;';
-	}
-
-	/**
-	 * Returns the label for the " Next >> " button
-	 * @return string The label for the button
-	 */
-	public function GetNextButtonLabel()
-	{
-		return 'Next';
-	}
-
-	/**
-	 * Tells whether this step/state allows to go back or not
-	 * @return boolean True if the '<< Back' button should be displayed
-	 */
-	public function CanMoveBackward()
-	{
-		return true;
-	}
-
-	/**
-	 * Tells whether the "Back" button should be enabled interactively
-	 * @return string A piece of javascript code returning either true or false
-	 */
-	public function JSCanMoveBackward()
-	{
-		return 'return true;';
-	}
-
-	/**
-	 * Tells whether this step of the wizard requires that the configuration file be writable
-	 * @return bool True if the wizard will possibly need to modify the configuration at some point
-	 */
-	public function RequiresWritableConfig()
-	{
-		return true;
-	}
-
-	/**
-	 * Overload this function to implement asynchronous action(s) (AJAX)
-	 * @param string $sCode The code of the action (if several actions need to be distinguished)
-	 * @param hash $aParameters The action's parameters name => value
-	 */
-	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
-	{
-	}
-}
-
-/*
- * Example of a simple Setup Wizard with some parameters to store
- * the installation mode (install | upgrade) and a simple asynchronous
- * (AJAX) action.
- *
- * The setup wizard is executed by the following code:
- *
- * $oWizard = new WizardController('Step1');
- * $oWizard->Run();
- *
-class Step1 extends WizardStep
-{
-	public function GetTitle()
-	{
-		return 'Welcome';
-	}
-
-	public function GetPossibleSteps()
-	{
-		return array('Step2', 'Step2bis');
-	}
-
-	public function ProcessParams($bMoveForward = true)
-	{
-		$sNextStep = '';
-		$sInstallMode = utils::ReadParam('install_mode');
-		if ($sInstallMode == 'install')
-		{
-			$this->oWizard->SetParameter('install_mode', 'install');
-			$sNextStep = 'Step2';
+		if (!is_subclass_of($sCurrentStepClass, WizardStep::class)) {
+			throw new Exception('Unknown step '.$sCurrentStepClass);
 		}
-		else
-		{
-			$this->oWizard->SetParameter('install_mode', 'upgrade');
-			$sNextStep = 'Step2bis';
-
-		}
-		return array('class' => $sNextStep, 'state' => '');
-	}
-
-	public function Display(WebPage $oPage)
-	{
-		$oPage->p('This is Step 1!');
-		$sInstallMode = $this->oWizard->GetParameter('install_mode', 'install');
-		$sChecked = ($sInstallMode == 'install') ? ' checked ' : '';
-		$oPage->p('<input type="radio" name="install_mode" value="install"'.$sChecked.'/> Install');
-		$sChecked = ($sInstallMode == 'upgrade') ? ' checked ' : '';
-		$oPage->p('<input type="radio" name="install_mode" value="upgrade"'.$sChecked.'/> Upgrade');
+		return new $sCurrentStepClass($this, $sCurrentState);
 	}
 }
-
-class Step2 extends WizardStep
-{
-	public function GetTitle()
-	{
-		return 'Installation Parameters';
-	}
-
-	public function GetPossibleSteps()
-	{
-		return array('Step3');
-	}
-
-	public function ProcessParams($bMoveForward = true)
-	{
-		return array('class' => 'Step3', 'state' => '');
-	}
-
-	public function Display(WebPage $oPage)
-	{
-		$oPage->p('This is Step 2! (Installation)');
-	}
-}
-
-class Step2bis extends WizardStep
-{
-	public function GetTitle()
-	{
-		return 'Upgrade Parameters';
-	}
-
-	public function GetPossibleSteps()
-	{
-		return array('Step2ter');
-	}
-
-	public function ProcessParams($bMoveForward = true)
-	{
-		$sUpgradeInfo = utils::ReadParam('upgrade_info');
-		$this->oWizard->SetParameter('upgrade_info', $sUpgradeInfo);
-		$sAdditionalUpgradeInfo = utils::ReadParam('additional_upgrade_info');
-		$this->oWizard->SetParameter('additional_upgrade_info', $sAdditionalUpgradeInfo);
-		return array('class' => 'Step2ter', 'state' => '');
-	}
-
-	public function Display(WebPage $oPage)
-	{
-		$oPage->p('This is Step 2bis! (Upgrade)');
-		$sUpgradeInfo = $this->oWizard->GetParameter('upgrade_info', '');
-		$oPage->p('Type your name here: <input type="text" id="upgrade_info" name="upgrade_info" value="'.$sUpgradeInfo.'" size="20"/><span id="v_upgrade_info"></span>');
-		$sAdditionalUpgradeInfo = $this->oWizard->GetParameter('additional_upgrade_info', '');
-		$oPage->p('The installer replies: <input type="text" name="additional_upgrade_info" value="'.$sAdditionalUpgradeInfo.'" size="20"/>');
-
-		$oPage->add_ready_script("$('#upgrade_info').change(function() {
-			$('#v_upgrade_info').html('<img src=\"../images/indicator.gif\"/>');
-			WizardAsyncAction('', { upgrade_info: $('#upgrade_info').val() }); });");
-	}
-
-	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
-	{
-		usleep(300000); // 300 ms
-		$sName = $aParameters['upgrade_info'];
-		$sReply = addslashes("Hello ".$sName);
-
-		$oPage->add_ready_script(
-<<<EOF
-	$("#v_upgrade_info").html('');
-	$("input[name=additional_upgrade_info]").val("$sReply");
-EOF
-		);
-	}
-}
-
-class Step2ter extends WizardStep
-{
-	public function GetTitle()
-	{
-		return 'Additional Upgrade Info';
-	}
-
-	public function GetPossibleSteps()
-	{
-		return array('Step3');
-	}
-
-	public function ProcessParams($bMoveForward = true)
-	{
-		return array('class' => 'Step3', 'state' => '');
-	}
-
-	public function Display(WebPage $oPage)
-	{
-		$oPage->p('This is Step 2ter! (Upgrade)');
-	}
-}
-
-class Step3 extends WizardStep
-{
-	public function GetTitle()
-	{
-		return 'Installation Complete';
-	}
-
-	public function GetPossibleSteps()
-	{
-		return array();
-	}
-
-	public function ProcessParams($bMoveForward = true)
-	{
-		return array('class' => '', 'state' => '');
-	}
-
-	public function Display(WebPage $oPage)
-	{
-		$oPage->p('This is the FINAL Step');
-	}
-
-	public function CanMoveForward()
-	{
-		return  false;
-	}
-}
-
-End of the example */

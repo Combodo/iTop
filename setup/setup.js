@@ -25,21 +25,17 @@ function WizardAsyncAction(sActionCode, oParams, OnErrorFunction)
 
 function WizardUpdateButtons()
 {
-	if (CanMoveForward())
-	{
+	if (CanMoveForward()) {
 		$("#btn_next").prop('disabled', false);
 	}
-	else
-	{
+	else {
 		$("#btn_next").prop('disabled', true);
 	}
 
-	if (CanMoveBackward())
-	{
+	if (CanMoveBackward()) {
 		$("#btn_back").prop('disabled', false);
 	}
-	else
-	{
+	else {
 		$("#btn_back").prop('disabled', true);
 	}
 }
