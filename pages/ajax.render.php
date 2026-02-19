@@ -2136,7 +2136,7 @@ EOF
 							$oAttachment->Set('item_class', $sObjClass);
 							$oAttachment->SetDefaultOrgId();
 							$oAttachment->Set('contents', $oDoc);
-                            $oAttachment->Set('secret', bin2hex(random_bytes(16))); // 128 bits of entropy, cryptographically secure
+							$oAttachment->Set('secret', bin2hex(random_bytes(16))); // 128 bits of entropy, cryptographically secure
 							$iAttId = $oAttachment->DBInsert();
 
 							$aResult['uploaded'] = 1;
