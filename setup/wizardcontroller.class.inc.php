@@ -168,7 +168,7 @@ class WizardController
 			$this->DisplayStep($oStep);
 		}
 	}
-	
+
 	/**
 	 * Move one step back
 	 */
