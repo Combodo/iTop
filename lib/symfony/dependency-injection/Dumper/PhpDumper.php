@@ -458,7 +458,7 @@ EOF;
         foreach ($edges as $edge) {
             $node = $edge->getDestNode();
             $id = $node->getId();
-            if ($sourceId === $id || !$node->getValue() instanceof Definition || $edge->isWeak()) {
+            if (($sourceId === $id && !$edge->isLazy()) || !$node->getValue() instanceof Definition || $edge->isWeak()) {
                 continue;
             }
 
@@ -699,7 +699,6 @@ EOF;
 
         $asGhostObject = false;
         $isProxyCandidate = $this->isProxyCandidate($definition, $asGhostObject, $id);
-        $instantiation = '';
 
         $lastWitherIndex = null;
         foreach ($definition->getMethodCalls() as $k => $call) {
@@ -708,20 +707,26 @@ EOF;
             }
         }
 
-        if (!$isProxyCandidate && $definition->isShared() && !isset($this->singleUsePrivateIds[$id]) && null === $lastWitherIndex) {
-            $instantiation = \sprintf('$container->%s[%s] = %s', $this->container->getDefinition($id)->isPublic() ? 'services' : 'privates', $this->doExport($id), $isSimpleInstance ? '' : '$instance');
-        } elseif (!$isSimpleInstance) {
-            $instantiation = '$instance';
+        $shouldShareInline = !$isProxyCandidate && $definition->isShared() && !isset($this->singleUsePrivateIds[$id]) && null === $lastWitherIndex;
+        $serviceAccessor = \sprintf('$container->%s[%s]', $this->container->getDefinition($id)->isPublic() ? 'services' : 'privates', $this->doExport($id));
+        $return = match (true) {
+            $shouldShareInline && !isset($this->circularReferences[$id]) && $isSimpleInstance => 'return '.$serviceAccessor.' = ',
+            $shouldShareInline && !isset($this->circularReferences[$id]) => $serviceAccessor.' = $instance = ',
+            $shouldShareInline || !$isSimpleInstance => '$instance = ',
+            default => 'return ',
+        };
+
+        $code = $this->addNewInstance($definition, '        '.$return, $id, $asGhostObject);
+
+        if ($shouldShareInline && isset($this->circularReferences[$id])) {
+            $code .= \sprintf(
+                "\n        if (isset(%s)) {\n            return %1\$s;\n        }\n\n        %s%1\$s = \$instance;\n",
+                $serviceAccessor,
+                $isSimpleInstance ? 'return ' : ''
+            );
         }
 
-        $return = '';
-        if ($isSimpleInstance) {
-            $return = 'return ';
-        } else {
-            $instantiation .= ' = ';
-        }
-
-        return $this->addNewInstance($definition, '        '.$return.$instantiation, $id, $asGhostObject);
+        return $code;
     }
 
     private function isTrivialInstance(Definition $definition): bool
@@ -1055,7 +1060,7 @@ EOTXT
         $code = '';
 
         if ($isSimpleInstance = $isRootInstance = null === $inlineDef) {
-            foreach ($this->serviceCalls as $targetId => [$callCount, $behavior, $byConstructor]) {
+            foreach ($this->serviceCalls as $targetId => [, , $byConstructor]) {
                 if ($byConstructor && isset($this->circularReferences[$id][$targetId]) && !$this->circularReferences[$id][$targetId] && !($this->hasProxyDumper && $definition->isLazy())) {
                     $code .= $this->addInlineReference($id, $definition, $targetId, $forConstructor);
                 }
@@ -1208,6 +1213,7 @@ EOTXT
                 || ($callable[0] instanceof Definition && !$this->definitionVariables->offsetExists($callable[0]))
             ))) {
                 $initializer = 'fn () => '.$this->dumpValue($callable[0]);
+                $this->preload[LazyClosure::class] = LazyClosure::class;
 
                 return $return.LazyClosure::getCode($initializer, $callable, $class, $this->container, $id).$tail;
             }
@@ -1610,15 +1616,16 @@ EOF;
             trigger_deprecation(...self::DEPRECATED_PARAMETERS[$name]);
         }
 
-        if (isset($this->buildParameters[$name])) {
+        if (\array_key_exists($name, $this->buildParameters)) {
             return $this->buildParameters[$name];
         }
 
-        if (!(isset($this->parameters[$name]) || isset($this->loadedDynamicParameters[$name]) || \array_key_exists($name, $this->parameters))) {
-            throw new ParameterNotFoundException($name);
-        }
         if (isset($this->loadedDynamicParameters[$name])) {
             return $this->loadedDynamicParameters[$name] ? $this->dynamicParameters[$name] : $this->getDynamicParameter($name);
+        }
+
+        if (!\array_key_exists($name, $this->parameters) || '.' === ($name[0] ?? '')) {
+            throw new ParameterNotFoundException($name);
         }
 
         return $this->parameters[$name];
@@ -1626,11 +1633,11 @@ EOF;
 
     public function hasParameter(string $name): bool
     {
-        if (isset($this->buildParameters[$name])) {
+        if (\array_key_exists($name, $this->buildParameters)) {
             return true;
         }
 
-        return isset($this->parameters[$name]) || isset($this->loadedDynamicParameters[$name]) || \array_key_exists($name, $this->parameters);
+        return \array_key_exists($name, $this->parameters) || isset($this->loadedDynamicParameters[$name]);
     }
 
     public function setParameter(string $name, $value): void
@@ -1843,7 +1850,15 @@ EOF;
 
                     $returnedType = '';
                     if ($value instanceof TypedReference) {
-                        $returnedType = \sprintf(': %s\%s', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE >= $value->getInvalidBehavior() ? '' : '?', str_replace(['|', '&'], ['|\\', '&\\'], $value->getType()));
+                        $type = $value->getType();
+                        $nullable = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE >= $value->getInvalidBehavior() ? '' : '?';
+
+                        if ('?' === ($type[0] ?? '')) {
+                            $type = substr($type, 1);
+                            $nullable = '?';
+                        }
+
+                        $returnedType = \sprintf(': %s\%s', $nullable, str_replace(['|', '&'], ['|\\', '&\\'], $type));
                     }
 
                     $attribute = '';
@@ -2180,7 +2195,7 @@ EOF;
             if (!$value = $edge->getSourceNode()->getValue()) {
                 continue;
             }
-            if ($edge->isLazy() || !$value instanceof Definition || !$value->isShared()) {
+            if ($edge->isLazy() || !$value instanceof Definition || !$value->isShared() || $edge->isFromMultiUseArgument()) {
                 return false;
             }
 

@@ -222,7 +222,12 @@ EOF;
         foreach ($staticRoutes as $url => $routes) {
             $compiledRoutes[$url] = [];
             foreach ($routes as $name => [$route, $hasTrailingSlash]) {
-                $compiledRoutes[$url][] = $this->compileRoute($route, $name, (!$route->compile()->getHostVariables() ? $route->getHost() : $route->compile()->getHostRegex()) ?: null, $hasTrailingSlash, false, $conditions);
+                if ($route->compile()->getHostVariables()) {
+                    $host = $route->compile()->getHostRegex();
+                } elseif ($host = $route->getHost()) {
+                    $host = strtolower($host);
+                }
+                $compiledRoutes[$url][] = $this->compileRoute($route, $name, $host ?: null, $hasTrailingSlash, false, $conditions);
             }
         }
 

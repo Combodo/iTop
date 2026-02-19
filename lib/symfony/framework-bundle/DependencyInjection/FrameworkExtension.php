@@ -163,6 +163,7 @@ use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\Mapping\Loader\XmlFileLoader;
 use Symfony\Component\Serializer\Mapping\Loader\YamlFileLoader;
+use Symfony\Component\Serializer\Normalizer\CacheableSupportsMethodInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -920,11 +921,11 @@ class FrameworkExtension extends Extension
         $container->getDefinition('profiler_listener')
             ->addArgument($config['collect_parameter']);
 
-        if (!$container->getParameter('kernel.debug') || !class_exists(CliRequest::class) || !$container->has('debug.stopwatch')) {
+        if (!$container->getParameter('kernel.debug') || !$this->hasConsole() || !$container->has('debug.stopwatch') || !class_exists(CliRequest::class)) {
             $container->removeDefinition('console_profiler_listener');
         }
 
-        if (!class_exists(CommandDataCollector::class)) {
+        if (!$this->hasConsole() || !class_exists(CommandDataCollector::class)) {
             $container->removeDefinition('.data_collector.command');
         }
     }
@@ -972,16 +973,16 @@ class FrameworkExtension extends Extension
             $transitionCounter = 0;
             foreach ($workflow['transitions'] as $transition) {
                 if ('workflow' === $type) {
-                    $transitionDefinition = new Definition(Workflow\Transition::class, [$transition['name'], $transition['from'], $transition['to']]);
                     $transitionId = \sprintf('.%s.transition.%s', $workflowId, $transitionCounter++);
-                    $container->setDefinition($transitionId, $transitionDefinition);
+                    $container->register($transitionId, Workflow\Transition::class)
+                        ->setArguments([$transition['name'], $transition['from'], $transition['to']]);
                     $transitions[] = new Reference($transitionId);
                     if (isset($transition['guard'])) {
-                        $configuration = new Definition(Workflow\EventListener\GuardExpression::class);
-                        $configuration->addArgument(new Reference($transitionId));
-                        $configuration->addArgument($transition['guard']);
                         $eventName = \sprintf('workflow.%s.guard.%s', $name, $transition['name']);
-                        $guardsConfiguration[$eventName][] = $configuration;
+                        $guardsConfiguration[$eventName][] = new Definition(
+                            Workflow\EventListener\GuardExpression::class,
+                            [new Reference($transitionId), $transition['guard']]
+                        );
                     }
                     if ($transition['metadata']) {
                         $transitionsMetadataDefinition->addMethodCall('offsetSet', [
@@ -992,16 +993,16 @@ class FrameworkExtension extends Extension
                 } elseif ('state_machine' === $type) {
                     foreach ($transition['from'] as $from) {
                         foreach ($transition['to'] as $to) {
-                            $transitionDefinition = new Definition(Workflow\Transition::class, [$transition['name'], $from, $to]);
                             $transitionId = \sprintf('.%s.transition.%s', $workflowId, $transitionCounter++);
-                            $container->setDefinition($transitionId, $transitionDefinition);
+                            $container->register($transitionId, Workflow\Transition::class)
+                                ->setArguments([$transition['name'], $from, $to]);
                             $transitions[] = new Reference($transitionId);
                             if (isset($transition['guard'])) {
-                                $configuration = new Definition(Workflow\EventListener\GuardExpression::class);
-                                $configuration->addArgument(new Reference($transitionId));
-                                $configuration->addArgument($transition['guard']);
                                 $eventName = \sprintf('workflow.%s.guard.%s', $name, $transition['name']);
-                                $guardsConfiguration[$eventName][] = $configuration;
+                                $guardsConfiguration[$eventName][] = new Definition(
+                                    Workflow\EventListener\GuardExpression::class,
+                                    [new Reference($transitionId), $transition['guard']]
+                                );
                             }
                             if ($transition['metadata']) {
                                 $transitionsMetadataDefinition->addMethodCall('offsetSet', [
@@ -1622,11 +1623,11 @@ class FrameworkExtension extends Extension
 
         foreach ($config['providers'] as $provider) {
             if ($provider['locales']) {
-                $locales += $provider['locales'];
+                $locales = array_merge($locales, $provider['locales']);
             }
         }
 
-        $locales = array_unique($locales);
+        $locales = array_values(array_unique($locales));
 
         $container->getDefinition('console.command.translation_pull')
             ->replaceArgument(4, array_merge($transPaths, [$config['default_path']]))
@@ -1954,7 +1955,7 @@ class FrameworkExtension extends Extension
         if (isset($config['enable_attributes']) && $config['enable_attributes']) {
             $annotationLoader = new Definition(
                 AttributeLoader::class,
-                [new Reference('annotation_reader', ContainerInterface::NULL_ON_INVALID_REFERENCE)]
+                interface_exists(CacheableSupportsMethodInterface::class) ? [new Reference('annotation_reader', ContainerInterface::NULL_ON_INVALID_REFERENCE)] : [],
             );
 
             $serializerLoaders[] = $annotationLoader;
