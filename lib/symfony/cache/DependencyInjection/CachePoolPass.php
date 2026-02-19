@@ -58,11 +58,9 @@ class CachePoolPass implements CompilerPassInterface
                 continue;
             }
             $class = $adapter->getClass();
-            $providers = $adapter->getArguments();
             while ($adapter instanceof ChildDefinition) {
                 $adapter = $container->findDefinition($adapter->getParent());
                 $class = $class ?: $adapter->getClass();
-                $providers += $adapter->getArguments();
                 if ($t = $adapter->getTag('cache.pool')) {
                     $tags[0] += $t[0];
                 }
@@ -92,7 +90,7 @@ class CachePoolPass implements CompilerPassInterface
 
             if (ChainAdapter::class === $class) {
                 $adapters = [];
-                foreach ($providers['index_0'] ?? $providers[0] as $provider => $adapter) {
+                foreach ($adapter->getArgument(0) as $provider => $adapter) {
                     if ($adapter instanceof ChildDefinition) {
                         $chainedPool = $adapter;
                     } else {
@@ -111,7 +109,7 @@ class CachePoolPass implements CompilerPassInterface
                     }
 
                     if (ChainAdapter::class === $chainedClass) {
-                        throw new InvalidArgumentException(\sprintf('Invalid service "%s": chain of adapters cannot reference another chain, found "%s".', $id, $chainedPool->getParent()));
+                        throw new InvalidArgumentException(sprintf('Invalid service "%s": chain of adapters cannot reference another chain, found "%s".', $id, $chainedPool->getParent()));
                     }
 
                     $i = 0;
@@ -169,7 +167,7 @@ class CachePoolPass implements CompilerPassInterface
                 unset($tags[0][$attr]);
             }
             if (!empty($tags[0])) {
-                throw new InvalidArgumentException(\sprintf('Invalid "cache.pool" tag for service "%s": accepted attributes are "clearer", "provider", "name", "namespace", "default_lifetime", "early_expiration_message_bus" and "reset", found "%s".', $id, implode('", "', array_keys($tags[0]))));
+                throw new InvalidArgumentException(sprintf('Invalid "cache.pool" tag for service "%s": accepted attributes are "clearer", "provider", "name", "namespace", "default_lifetime", "early_expiration_message_bus" and "reset", found "%s".', $id, implode('", "', array_keys($tags[0]))));
             }
 
             if (null !== $clearer) {
@@ -199,6 +197,10 @@ class CachePoolPass implements CompilerPassInterface
                 $clearer->setArgument(0, $pools);
             }
             $clearer->addTag('cache.pool.clearer');
+
+            if ('cache.system_clearer' === $id) {
+                $clearer->addTag('kernel.cache_clearer');
+            }
         }
 
         $allPoolsKeys = array_keys($allPools);

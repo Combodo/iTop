@@ -59,4 +59,43 @@ class InlineImageTest extends ItopDataTestCase
 			],
 		];
 	}
+
+	/**
+	 * @covers InlineImage::FixUrls
+	 */
+	public function testFixUrls_shouldReturnAnEmptyStringIfNullOrEmptyStringPassed()
+	{
+		$sResult = InlineImage::FixUrls(null);
+		$this->assertEquals('', $sResult);
+
+		$sResult = InlineImage::FixUrls('');
+		$this->assertEquals('', $sResult);
+	}
+
+	/**
+	 * @covers InlineImage::FixUrls
+	 */
+	public function testFixUrls_shouldReturnUnchangedValueIfValueContainsNoImage()
+	{
+		$sHtml = '<div><p>Texte sans image</p></div>';
+		$sResult = InlineImage::FixUrls($sHtml);
+		$this->assertEquals($sHtml, $sResult);
+	}
+
+	/**
+	 * @covers InlineImage::FixUrls
+	 */
+	public function testFixUrls_shouldReplaceImagesSrcWithCurrentAppRootUrlAndSecret()
+	{
+		$sHtml = <<<HTML
+<div>
+	<img src="/images/test1.png" data-img-id="123" data-img-secret="abc" />
+	<img src="/images/test2.png" data-img-id="456" data-img-secret="def" />
+</div>
+HTML;
+		$sResult = InlineImage::FixUrls($sHtml);
+		$this->assertStringContainsString('<img', $sResult);
+		$this->assertStringContainsString(\utils::EscapeHtml(\utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL.'123&s=abc'), $sResult);
+		$this->assertStringContainsString(\utils::EscapeHtml(\utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL.'456&s=def'), $sResult);
+	}
 }

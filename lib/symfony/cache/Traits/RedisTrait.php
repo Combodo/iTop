@@ -17,7 +17,6 @@ use Predis\Connection\Aggregate\RedisCluster;
 use Predis\Connection\Aggregate\ReplicationInterface;
 use Predis\Connection\Cluster\ClusterInterface as Predis2ClusterInterface;
 use Predis\Connection\Cluster\RedisCluster as Predis2RedisCluster;
-use Predis\Connection\Replication\ReplicationInterface as Predis2ReplicationInterface;
 use Predis\Response\ErrorInterface;
 use Predis\Response\Status;
 use Relay\Relay;
@@ -58,7 +57,7 @@ trait RedisTrait
         parent::__construct($namespace, $defaultLifetime);
 
         if (preg_match('#[^-+_.A-Za-z0-9]#', $namespace, $match)) {
-            throw new InvalidArgumentException(\sprintf('RedisAdapter namespace contains "%s" but only characters in [-+_.A-Za-z0-9] are allowed.', $match[0]));
+            throw new InvalidArgumentException(sprintf('RedisAdapter namespace contains "%s" but only characters in [-+_.A-Za-z0-9] are allowed.', $match[0]));
         }
 
         if ($redis instanceof \Predis\ClientInterface && $redis->getOptions()->exceptions) {
@@ -201,7 +200,7 @@ trait RedisTrait
         };
 
         if (isset($params['redis_sentinel']) && !is_a($class, \Predis\Client::class, true) && !class_exists(\RedisSentinel::class) && !class_exists(Sentinel::class)) {
-            throw new CacheException(\sprintf('Cannot use Redis Sentinel: class "%s" does not extend "Predis\Client" and neither ext-redis >= 5.2 nor ext-relay have been found.', $class));
+            throw new CacheException(sprintf('Cannot use Redis Sentinel: class "%s" does not extend "Predis\Client" and neither ext-redis >= 5.2 nor ext-relay have been found.', $class));
         }
 
         $isRedisExt = is_a($class, \Redis::class, true);
@@ -247,10 +246,10 @@ trait RedisTrait
                         } else {
                             $extra = $passAuth ? [$params['auth']] : [];
 
-                            $sentinel = @new $sentinelClass($host, $port, $params['timeout'], (string) $params['persistent_id'], $params['retry_interval'], $params['read_timeout'], ...$extra);
+                            $sentinel = new $sentinelClass($host, $port, $params['timeout'], (string) $params['persistent_id'], $params['retry_interval'], $params['read_timeout'], ...$extra);
                         }
 
-                        if ($address = @$sentinel->getMasterAddrByName($params['redis_sentinel'])) {
+                        if ($address = $sentinel->getMasterAddrByName($params['redis_sentinel'])) {
                             [$host, $port] = $address;
                         }
                     } catch (\RedisException|\Relay\Exception $redisException) {
@@ -258,7 +257,7 @@ trait RedisTrait
                 } while (++$hostIndex < \count($hosts) && !$address);
 
                 if (isset($params['redis_sentinel']) && !$address) {
-                    throw new InvalidArgumentException(\sprintf('Failed to retrieve master information from sentinel "%s".', $params['redis_sentinel']), previous: $redisException ?? null);
+                    throw new InvalidArgumentException(sprintf('Failed to retrieve master information from sentinel "%s".', $params['redis_sentinel']), previous: $redisException ?? null);
                 }
 
                 try {
@@ -293,7 +292,7 @@ trait RedisTrait
                         restore_error_handler();
                     }
                     if (!$isConnected) {
-                        $error = preg_match('/^Redis::p?connect\(\): (.*)/', $error ?? $redis->getLastError() ?? '', $error) ? \sprintf(' (%s)', $error[1]) : '';
+                        $error = preg_match('/^Redis::p?connect\(\): (.*)/', $error ?? $redis->getLastError() ?? '', $error) ? sprintf(' (%s)', $error[1]) : '';
                         throw new InvalidArgumentException('Redis connection failed: '.$error.'.');
                     }
 
@@ -418,9 +417,9 @@ trait RedisTrait
                 $redis->getConnection()->setSentinelTimeout($params['timeout']);
             }
         } elseif (class_exists($class, false)) {
-            throw new InvalidArgumentException(\sprintf('"%s" is not a subclass of "Redis", "RedisArray", "RedisCluster", "Relay\Relay" nor "Predis\ClientInterface".', $class));
+            throw new InvalidArgumentException(sprintf('"%s" is not a subclass of "Redis", "RedisArray", "RedisCluster", "Relay\Relay" nor "Predis\ClientInterface".', $class));
         } else {
-            throw new InvalidArgumentException(\sprintf('Class "%s" does not exist.', $class));
+            throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
         return $redis;
@@ -434,7 +433,7 @@ trait RedisTrait
 
         $result = [];
 
-        if (($this->redis instanceof \Predis\ClientInterface && ($this->redis->getConnection() instanceof ClusterInterface || $this->redis->getConnection() instanceof Predis2ClusterInterface)) || $this->redis instanceof RelayCluster) {
+        if ($this->redis instanceof \Predis\ClientInterface && ($this->redis->getConnection() instanceof ClusterInterface || $this->redis->getConnection() instanceof Predis2ClusterInterface)) {
             $values = $this->pipeline(function () use ($ids) {
                 foreach ($ids as $id) {
                     yield 'get' => [$id];
@@ -474,16 +473,9 @@ trait RedisTrait
         $cleared = true;
         $hosts = $this->getHosts();
         $host = reset($hosts);
-        if ($host instanceof \Predis\Client) {
-            $connection = $host->getConnection();
-
-            if ($connection instanceof ReplicationInterface) {
-                $hosts = [$host->getClientFor('master')];
-            } elseif ($connection instanceof Predis2ReplicationInterface) {
-                $connection->switchToMaster();
-
-                $hosts = [$host];
-            }
+        if ($host instanceof \Predis\Client && $host->getConnection() instanceof ReplicationInterface) {
+            // Predis supports info command only on the master in replication environments
+            $hosts = [$host->getClientFor('master')];
         }
 
         foreach ($hosts as $host) {
@@ -516,7 +508,7 @@ trait RedisTrait
 
             $cursor = null;
             do {
-                $keys = $host instanceof \Predis\ClientInterface ? $host->scan($cursor ?? 0, 'MATCH', $pattern, 'COUNT', 1000) : $host->scan($cursor, $pattern, 1000);
+                $keys = $host instanceof \Predis\ClientInterface ? $host->scan($cursor, 'MATCH', $pattern, 'COUNT', 1000) : $host->scan($cursor, $pattern, 1000);
                 if (isset($keys[1]) && \is_array($keys[1])) {
                     $cursor = $keys[0];
                     $keys = $keys[1];

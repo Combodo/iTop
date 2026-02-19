@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+  <ContainerImageType alias="ContainerImageType" id="1">
+  <name>Docker Hardened Image</name>
+  </ContainerImageType>
+  <ContainerImageType alias="ContainerImageType" id="2">
+  <name>Docker Official Image</name>
+  </ContainerImageType>
+  <ContainerImageType alias="ContainerImageType" id="3">
+  <name>Verified Publisher</name>
+  </ContainerImageType>
+</Set>
