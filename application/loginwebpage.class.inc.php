@@ -263,6 +263,8 @@ class LoginWebPage extends NiceWebPage
             IssueLog::Error('Failed to process the forgot password request for user "' . $sAuthUser . '": ' . $e->getMessage());
         } catch (ForgotPasswordUserInputException $e) {
             IssueLog::Info('Failed to process the forgot password request for user "' . $sAuthUser . '": ' . $e->getMessage());
+        } catch (\Throwable $e) {
+            IssueLog::Error('Unexpected error while processing the forgot password request for user "' . $sAuthUser . '": ' . $e->getMessage());
 		}
 
 		$oTwigContext = new LoginTwigRenderer();
