@@ -5,7 +5,7 @@ use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReaderException;
 
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/setup/setuppage.class.inc.php');
-require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
+require_once(APPROOT.'/setup/wizardsteps_autoload.php');
 
 class InstallationFileService
 {

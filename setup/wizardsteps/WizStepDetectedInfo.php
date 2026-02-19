@@ -36,7 +36,7 @@ class WizStepDetectedInfo extends WizardStep
 		return [WizStepUpgradeMiscParams::class, WizStepLicense2::class];
 	}
 
-	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		$sUpgradeType = utils::ReadParam('upgrade_type');
 
@@ -61,9 +61,9 @@ class WizStepDetectedInfo extends WizardStep
 				// Do nothing, maybe the user pressed the Back button
 		}
 		if ($bDisplayLicense) {
-			$aRet = ['class' => WizStepLicense2::class, 'state' => ''];
+			$aRet = new WizardState(WizStepLicense2::class);
 		} else {
-			$aRet = ['class' => WizStepUpgradeMiscParams::class, 'state' => ''];
+			$aRet = new WizardState(WizStepUpgradeMiscParams::class);
 		}
 		return $aRet;
 	}

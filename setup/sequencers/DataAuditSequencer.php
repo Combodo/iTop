@@ -60,6 +60,8 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 			$this->EnterReadOnlyMode();
 			switch ($sStep) {
 				case '':
+					$this->DoLogParameters('data-audit-', 'Data Audit');
+
 					$aResult = [
 						'status' => self::OK,
 						'message' => '',
@@ -67,24 +69,6 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 						'next-step' => 'compile',
 						'next-step-label' => 'Compiling the data model',
 					];
-
-					// Log the parameters...
-					$oDoc = new DOMDocument('1.0', 'UTF-8');
-					$oDoc->preserveWhiteSpace = false;
-					$oDoc->formatOutput = true;
-					$this->oParams->ToXML($oDoc, null, 'installation');
-					$sXML = $oDoc->saveXML();
-					$sSafeXml = preg_replace("|<pwd>([^<]*)</pwd>|", "<pwd>**removed**</pwd>", $sXML);
-					SetupLog::Info("======= Data Audit starts =======\nParameters:\n$sSafeXml\n");
-
-					// Save the response file as a stand-alone file as well
-					$sFileName = 'data-audit-'.date('Y-m-d');
-					$index = 0;
-					while (file_exists(APPROOT.'log/'.$sFileName.'.xml')) {
-						$index++;
-						$sFileName = 'data-audit-'.date('Y-m-d').'-'.$index;
-					}
-					file_put_contents(APPROOT.'log/'.$sFileName.'.xml', $sSafeXml);
 
 					break;
 
@@ -160,20 +144,7 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 				'error_code' => $e->getCode(),
 			];
 
-			SetupLog::Error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
-			$idx = 0;
-			// Log the call stack, but not the parameters since they may contain passwords or other sensitive data
-			SetupLog::Ok("Call stack:");
-			foreach ($e->getTrace() as $aTrace) {
-				$sLine = empty($aTrace['line']) ? "" : $aTrace['line'];
-				$sFile = empty($aTrace['file']) ? "" : $aTrace['file'];
-				$sClass = empty($aTrace['class']) ? "" : $aTrace['class'];
-				$sType = empty($aTrace['type']) ? "" : $aTrace['type'];
-				$sFunction = empty($aTrace['function']) ? "" : $aTrace['function'];
-				$sVerb = empty($sClass) ? $sFunction : "$sClass{$sType}$sFunction";
-				SetupLog::Ok("#$idx $sFile($sLine): $sVerb(...)");
-				$idx++;
-			}
+			$this->ReportException($e);
 			$this->ExitReadOnlyMode();
 		} finally {
 			$fDuration = round(microtime(true) - $fStart, 2);

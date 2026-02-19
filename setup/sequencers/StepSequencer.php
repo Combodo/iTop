@@ -23,6 +23,16 @@ abstract class StepSequencer
 	public const ERROR = 2;
 	public const WARNING = 3;
 	public const INFO = 4;
+	protected array $aStepsHistory = [];
+
+	public function LogStep($sStep, $aResult)
+	{
+		$this->aStepsHistory[] = ['step' => $sStep, 'result' => $aResult];
+	}
+	public function GetHistory()
+	{
+		return $this->aStepsHistory;
+	}
 
 	/**
 	 * Runs all the installation steps in one go and directly outputs
@@ -35,12 +45,13 @@ abstract class StepSequencer
 	 *
 	 * @return boolean True if the installation was successful, false otherwise
 	 */
-	public function ExecuteAllSteps($bVerbose = true, &$sMessage = null, $sComment = null)
+	public function ExecuteAllSteps(bool $bVerbose = true, ?string &$sMessage = null, ?string $sComment = null)
 	{
 		$sStep = '';
 		$sStepLabel = '';
 		$iOverallStatus = self::OK;
 		do {
+
 			if ($bVerbose) {
 				if ($sStep != '') {
 					echo "$sStepLabel\n";
@@ -50,6 +61,7 @@ abstract class StepSequencer
 				}
 			}
 			$aRes = $this->ExecuteStep($sStep, $sComment);
+			$this->LogStep($sStep, $aRes);
 			$sStep = $aRes['next-step'];
 			$sStepLabel = $aRes['next-step-label'];
 			$sMessage = $aRes['message'];

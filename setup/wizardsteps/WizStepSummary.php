@@ -58,11 +58,11 @@ class WizStepSummary extends AbstractWizStepInstall
 		}
 	}
 
-	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		$this->oWizard->SaveParameter('db_backup', false);
 		$this->oWizard->SaveParameter('db_backup_path', '');
-		return ['class' => WizStepInstall::class, 'state' => ''];
+		return new WizardState(WizStepInstall::class);
 	}
 
 	public function Display(WebPage $oPage)

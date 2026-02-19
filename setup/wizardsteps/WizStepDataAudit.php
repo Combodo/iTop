@@ -54,9 +54,9 @@ class WizStepDataAudit extends WizStepInstall
 
 	}
 
-	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
-		return ['class' => WizStepSummary::class, 'state' => ''];
+		return new WizardState(WizStepSummary::class);
 	}
 
 	public function CanComeBack()

@@ -34,9 +34,9 @@ class WizStepDone extends WizardStep
 		return [];
 	}
 
-	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
-		return ['class' => '', 'state' => ''];
+		return new WizardState('');
 	}
 
 	public function Display(WebPage $oPage)

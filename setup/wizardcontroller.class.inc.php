@@ -24,24 +24,6 @@ require_once(APPROOT.'setup/applicationinstaller.class.inc.php');
 require_once(APPROOT.'core/mutex.class.inc.php');
 require_once(APPROOT.'setup/extensionsmap.class.inc.php');
 
-require_once(APPROOT.'setup/wizardsteps/WizardStep.php');
-require_once(APPROOT.'setup/wizardsteps/AbstractWizStepInstall.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepWelcome.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepInstallOrUpgrade.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepDetectedInfo.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepLicense.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepLicense2.php');
-require_once(APPROOT.'setup/wizardsteps/AbstractWizStepMiscParams.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepAdminAccount.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepInstall.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepDataAudit.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepDBParams.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepDone.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepInstallMiscParams.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepModulesChoice.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepSummary.php');
-require_once(APPROOT.'setup/wizardsteps/WizStepUpgradeMiscParams.php');
-
 /**
  * Engine for displaying the various pages of a "wizard"
  * Each "step" of the wizard must be implemented as
@@ -176,8 +158,8 @@ class WizardController
 			}
 			$aPossibleSteps = $oStep->GetPossibleSteps();
 			$aNextStepInfo = $oStep->UpdateWizardStateAndGetNextStep(true); // true => moving forward
-			if (in_array($aNextStepInfo['class'], $aPossibleSteps)) {
-				$oNextStep = $this->NewStep($aNextStepInfo['class'], $aNextStepInfo['state']);
+			if (in_array($aNextStepInfo->GetNextStep(), $aPossibleSteps)) {
+				$oNextStep = $this->NewStep($aNextStepInfo->GetNextStep(), $aNextStepInfo->GetState());
 				$this->DisplayStep($oNextStep);
 			} else {
 				throw new Exception("Internal error: Unexpected next step '{$aNextStepInfo['class']}'. The possible next steps are: ".implode(', ', $aPossibleSteps));

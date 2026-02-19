@@ -35,13 +35,13 @@ class WizStepInstallMiscParams extends AbstractWizStepMiscParams
 		return [WizStepModulesChoice::class];
 	}
 
-	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		$this->oWizard->SaveParameter('default_language', '');
 		$this->oWizard->SaveParameter('application_url', '');
 		$this->oWizard->SaveParameter('graphviz_path', '');
 		$this->oWizard->SaveParameter('sample_data', 'yes');
-		return ['class' => WizStepModulesChoice::class, 'state' => 'start_install'];
+		return new WizardState(WizStepModulesChoice::class, 'start_install');
 	}
 
 	public function Display(WebPage $oPage)

@@ -46,11 +46,11 @@ class WizStepWelcome extends WizardStep
 		return [WizStepInstallOrUpgrade::class];
 	}
 
-	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		$sUID = SetupUtils::CreateSetupToken();
 		$this->oWizard->SetParameter('authent', $sUID);
-		return ['class' => WizStepInstallOrUpgrade::class, 'state' => ''];
+		return new WizardState(WizStepInstallOrUpgrade::class);
 	}
 
 	public function Display(WebPage $oPage)

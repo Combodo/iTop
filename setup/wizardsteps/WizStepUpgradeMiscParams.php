@@ -34,12 +34,12 @@ class WizStepUpgradeMiscParams extends AbstractWizStepMiscParams
 		return [WizStepModulesChoice::class];
 	}
 
-	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		$this->oWizard->SaveParameter('application_url', '');
 		$this->oWizard->SaveParameter('graphviz_path', '');
 		$this->oWizard->SaveParameter('force-uninstall', false);
-		return ['class' => WizStepModulesChoice::class, 'state' => 'start_upgrade'];
+		return new WizardState(WizStepModulesChoice::class, 'start_upgrade');
 	}
 
 	public function Display(WebPage $oPage)

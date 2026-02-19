@@ -129,7 +129,7 @@ class WizStepModulesChoice extends WizardStep
 		return true;
 	}
 
-	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		// Accumulates the selected modules:
 		$index = $this->GetStepIndex();
@@ -144,7 +144,7 @@ class WizStepModulesChoice extends WizardStep
 			throw new Exception('Internal error: invalid step "'.$index.'" for the choice of modules.');
 		} elseif ($bMoveForward) {
 			if ($this->GetStepInfo(1 + $index) != null) {
-				return ['class' => WizStepModulesChoice::class, 'state' => (1 + $index)];
+				return new WizardState(WizStepModulesChoice::class, (1 + $index));
 			} else {
 				// Exiting this step of the wizard, let's convert the selection into a list of modules
 				$aModules = [];
@@ -168,9 +168,9 @@ class WizStepModulesChoice extends WizardStep
 				$this->oWizard->SetParameter('extensions_not_uninstallable', json_encode(array_keys($aExtensionsNotUninstallable)));
 				$sMode = $this->oWizard->GetParameter('mode', 'install');
 				if ($sMode == 'install' || !$this->IsDataAuditEnabled()) {
-					return ['class' => WizStepSummary::class, 'state' => ''];
+					return new WizardState(WizStepSummary::class);
 				} else {
-					return ['class' => WizStepDataAudit::class, 'state' => ''];
+					return new WizardState(WizStepDataAudit::class);
 				}
 
 			}

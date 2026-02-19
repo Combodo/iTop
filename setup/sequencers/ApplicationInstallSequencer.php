@@ -40,9 +40,8 @@ require_once(APPROOT.'setup/SetupDBBackup.php');
  */
 class ApplicationInstallSequencer extends StepSequencer
 {
-	/** @var \Parameters */
-	protected $oParams;
-	protected static $bMetaModelStarted = false;
+	protected Parameters $oParams;
+	protected static bool $bMetaModelStarted = false;
 
 	protected Config $oConfig;
 
@@ -52,7 +51,7 @@ class ApplicationInstallSequencer extends StepSequencer
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	public function __construct($oParams)
+	public function __construct(Parameters $oParams)
 	{
 		$this->oParams = $oParams;
 
@@ -100,6 +99,27 @@ class ApplicationInstallSequencer extends StepSequencer
 		return $oConfig;
 	}
 
+	protected function DoLogParameters($sPrefix = 'install-', $sOperation = 'Installation')
+	{
+		// Log the parameters...
+		$oDoc = new DOMDocument('1.0', 'UTF-8');
+		$oDoc->preserveWhiteSpace = false;
+		$oDoc->formatOutput = true;
+		$this->oParams->ToXML($oDoc, null, 'installation');
+		$sXML = $oDoc->saveXML();
+		$sSafeXml = preg_replace("|<pwd>([^<]*)</pwd>|", "<pwd>**removed**</pwd>", $sXML);
+		SetupLog::Info("======= ".$sOperation." starts =======\nParameters:\n$sSafeXml\n");
+
+		// Save the response file as a stand-alone file as well
+		$sFileName = $sPrefix.date('Y-m-d');
+		$index = 0;
+		while (file_exists(APPROOT.'log/'.$sFileName.'.xml')) {
+			$index++;
+			$sFileName = $sPrefix.date('Y-m-d').'-'.$index;
+		}
+		file_put_contents(APPROOT.'log/'.$sFileName.'.xml', $sSafeXml);
+	}
+
 	/**
 	 * Executes the next step of the installation and reports about the progress
 	 * and the next step to perform
@@ -117,6 +137,9 @@ class ApplicationInstallSequencer extends StepSequencer
 			$this->EnterReadOnlyMode();
 			switch ($sStep) {
 				case '':
+
+					$this->DoLogParameters();
+
 					$aResult = [
 						'status' => self::OK,
 						'message' => '',
@@ -124,25 +147,6 @@ class ApplicationInstallSequencer extends StepSequencer
 						'next-step' => 'copy',
 						'next-step-label' => 'Copying data model files',
 					];
-
-					// Log the parameters...
-					$oDoc = new DOMDocument('1.0', 'UTF-8');
-					$oDoc->preserveWhiteSpace = false;
-					$oDoc->formatOutput = true;
-					$this->oParams->ToXML($oDoc, null, 'installation');
-					$sXML = $oDoc->saveXML();
-					$sSafeXml = preg_replace("|<pwd>([^<]*)</pwd>|", "<pwd>**removed**</pwd>", $sXML);
-					SetupLog::Info("======= Installation starts =======\nParameters:\n$sSafeXml\n");
-
-					// Save the response file as a stand-alone file as well
-					$sFileName = 'install-'.date('Y-m-d');
-					$index = 0;
-					while (file_exists(APPROOT.'log/'.$sFileName.'.xml')) {
-						$index++;
-						$sFileName = 'install-'.date('Y-m-d').'-'.$index;
-					}
-					file_put_contents(APPROOT.'log/'.$sFileName.'.xml', $sSafeXml);
-
 					break;
 
 				case 'copy':
@@ -239,15 +243,10 @@ class ApplicationInstallSequencer extends StepSequencer
 
 				case 'after-db-create':
 					$aAdminParams = $this->oParams->Get('admin_account');
-					$sAdminUser = $aAdminParams['user'];
-					$sAdminPwd = $aAdminParams['pwd'];
-					$sAdminLanguage = $aAdminParams['language'];
 					$aSelectedModules = $this->oParams->Get('selected_modules', []);
 
 					$this->AfterDBCreate(
-						$sAdminUser,
-						$sAdminPwd,
-						$sAdminLanguage,
+						$aAdminParams,
 						$aSelectedModules
 					);
 
@@ -261,7 +260,7 @@ class ApplicationInstallSequencer extends StepSequencer
 					break;
 
 				case 'load-data':
-					$aSelectedModules = $this->oParams->Get('selected_modules');
+					$aSelectedModules = $this->oParams->Get('selected_modules', []);
 					$bSampleData = ($this->oParams->Get('sample_data', 0) == 1);
 
 					$this->DoLoadFiles(
@@ -299,7 +298,6 @@ class ApplicationInstallSequencer extends StepSequencer
 						'next-step-label' => 'Completed',
 						'percentage-completed' => 100,
 					];
-					$this->ExitReadOnlyMode();
 					break;
 
 				default:
@@ -312,6 +310,7 @@ class ApplicationInstallSequencer extends StepSequencer
 					];
 					break;
 			}
+			$this->ExitReadOnlyMode();
 		} catch (Exception $e) {
 			$aResult = [
 				'status' => self::ERROR,
@@ -319,28 +318,34 @@ class ApplicationInstallSequencer extends StepSequencer
 				'next-step' => '',
 				'next-step-label' => '',
 				'percentage-completed' => 100,
+				'error_code' => $e->getCode(),
 			];
 
-			SetupLog::Error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
-			$idx = 0;
-			// Log the call stack, but not the parameters since they may contain passwords or other sensitive data
-			SetupLog::Ok("Call stack:");
-			foreach ($e->getTrace() as $aTrace) {
-				$sLine = empty($aTrace['line']) ? "" : $aTrace['line'];
-				$sFile = empty($aTrace['file']) ? "" : $aTrace['file'];
-				$sClass = empty($aTrace['class']) ? "" : $aTrace['class'];
-				$sType = empty($aTrace['type']) ? "" : $aTrace['type'];
-				$sFunction = empty($aTrace['function']) ? "" : $aTrace['function'];
-				$sVerb = empty($sClass) ? $sFunction : "$sClass{$sType}$sFunction";
-				SetupLog::Ok("#$idx $sFile($sLine): $sVerb(...)");
-				$idx++;
-			}
+			$this->ReportException($e);
 		} finally {
 			$fDuration = round(microtime(true) - $fStart, 2);
 			SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
 
 		return $aResult;
+	}
+
+	protected function ReportException(Exception $e)
+	{
+		SetupLog::Error('An exception occurred: '.$e->getMessage().' at line '.$e->getLine().' in file '.$e->getFile());
+		$idx = 0;
+		// Log the call stack, but not the parameters since they may contain passwords or other sensitive data
+		SetupLog::Ok("Call stack:");
+		foreach ($e->getTrace() as $aTrace) {
+			$sLine = empty($aTrace['line']) ? "" : $aTrace['line'];
+			$sFile = empty($aTrace['file']) ? "" : $aTrace['file'];
+			$sClass = empty($aTrace['class']) ? "" : $aTrace['class'];
+			$sType = empty($aTrace['type']) ? "" : $aTrace['type'];
+			$sFunction = empty($aTrace['function']) ? "" : $aTrace['function'];
+			$sVerb = empty($sClass) ? $sFunction : "$sClass{$sType}$sFunction";
+			SetupLog::Ok("#$idx $sFile($sLine): $sVerb(...)");
+			$idx++;
+		}
 	}
 
 	protected function EnterReadOnlyMode()
@@ -793,11 +798,14 @@ class ApplicationInstallSequencer extends StepSequencer
 	}
 
 	protected function AfterDBCreate(
-		$sAdminUser,
-		$sAdminPwd,
-		$sAdminLanguage,
+		$aAdminParams,
 		$aSelectedModules
 	) {
+
+		$sAdminUser = $aAdminParams['user'];
+		$sAdminPwd = $aAdminParams['pwd'];
+		$sAdminLanguage = $aAdminParams['language'];
+
 		$aParamValues = $this->oParams->GetParamForConfigArray();
 		$sTargetEnvironment = $this->GetTargetEnv();
 		$sModulesDir = $this->GetTargetDir();

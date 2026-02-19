@@ -35,10 +35,10 @@ class WizStepLicense extends WizardStep
 		return [WizStepDBParams::class];
 	}
 
-	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		$this->oWizard->SaveParameter('accept_license', 'no');
-		return ['class' => WizStepDBParams::class, 'state' => ''];
+		return new WizardState(WizStepDBParams::class);
 	}
 
 	/**

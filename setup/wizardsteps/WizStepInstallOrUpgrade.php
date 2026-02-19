@@ -34,7 +34,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 		return [WizStepDetectedInfo::class, WizStepLicense::class];
 	}
 
-	public function UpdateWizardStateAndGetNextStep($bMoveForward = true)
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
 	{
 		$sNextStep = '';
 		$sInstallMode = utils::ReadParam('install_mode');
@@ -59,7 +59,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 			$sNextStep = WizStepDetectedInfo::class;
 
 		}
-		return ['class' => $sNextStep, 'state' => ''];
+		return new WizardState($sNextStep);
 	}
 
 	public function Display(WebPage $oPage)
