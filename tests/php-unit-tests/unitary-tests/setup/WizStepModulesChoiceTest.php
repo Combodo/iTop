@@ -67,6 +67,60 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'checked' => true,
 				],
 			],
+			'A missing extension should be disabled and unchecked' => [
+				'aExtensionsOnDiskOrDb' => [
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => false,
+					'missing' => true,
+					'uninstallable' => true,
+				],
+				'bCurrentSelected' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => true,
+					'installed' => true,
+					'disabled' => true,
+					'checked' => false,
+				],
+			],
+			'A missing extension should always be disabled and unchecked, even when mandatory' => [
+				'aExtensionsOnDiskOrDb' => [
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => true,
+					'missing' => true,
+					'uninstallable' => true,
+				],
+				'bCurrentSelected' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => true,
+					'missing' => true,
+					'installed' => true,
+					'disabled' => true,
+					'checked' => false,
+				],
+			],
+			'A missing extension should always be disabled and unchecked, even when non-uninstallable' => [
+				'aExtensionsOnDiskOrDb' => [
+				],
+				'aWizardStepDefinition' => [
+					'extension_code' => 'itop-ext1',
+					'mandatory' => true,
+					'missing' => true,
+					'uninstallable' => false,
+				],
+				'bCurrentSelected' => false,
+				'aExpectedFlags' => [
+					'uninstallable' => false,
+					'missing' => true,
+					'installed' => true,
+					'disabled' => true,
+					'checked' => false,
+				],
+			],
 			'An installed but not selected extension should not be checked and be enabled' => [
 				'aExtensionsOnDiskOrDb' => [
 					'itop-ext1' => [
