@@ -260,12 +260,13 @@ class LoginWebPage extends NiceWebPage
 				}
 			}
 
-			$oTwigContext = new LoginTwigRenderer();
-			$aVars = $oTwigContext->GetDefaultVars();
-			$oTwigContext->Render($this, 'forgotpwdsent.html.twig', $aVars);
 		} catch (Exception $e) {
-			$this->DisplayForgotPwdForm(true, $e->getMessage());
+			IssueLog::Info('Failed to process the forgot password request for user "'.$sAuthUser.'": '.$e->getMessage());
 		}
+
+		$oTwigContext = new LoginTwigRenderer();
+		$aVars = $oTwigContext->GetDefaultVars();
+		$oTwigContext->Render($this, 'forgotpwdsent.html.twig', $aVars);
 	}
 
 	public function DisplayResetPwdForm($sErrorMessage = null)
