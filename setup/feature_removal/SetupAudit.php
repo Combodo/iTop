@@ -2,8 +2,6 @@
 
 namespace Combodo\iTop\Setup\FeatureRemoval;
 
-use MetaModel;
-
 require_once __DIR__.'/AbstractSetupAudit.php';
 require_once APPROOT.'setup/feature_removal/ModelReflectionSerializer.php';
 
@@ -28,32 +26,11 @@ class SetupAudit extends AbstractSetupAudit
 			return;
 		}
 
-		$sCurrentEnvt = MetaModel::GetEnvironment();
-		if ($sCurrentEnvt === $this->sEnvBefore) {
-			$this->aClassesBefore = MetaModel::GetClasses();
-		} else {
-			$this->aClassesBefore = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvBefore);
-		}
-
-		if ($sCurrentEnvt === $this->sEnvAfter) {
-			$this->aClassesAfter = MetaModel::GetClasses();
-		} else {
-			$this->aClassesAfter = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvAfter);
-		}
+		$this->aClassesBefore = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvBefore);
+		$this->aClassesAfter = ModelReflectionSerializer::GetInstance()->GetModelFromEnvironment($this->sEnvAfter);
 
 		$this->bClassesInitialized = true;
 	}
-
-	/*public function SetSelectedExtensions(Config $oConfig, array $aSelectedExtensions)
-	{
-		$oExtensionsMap = new \iTopExtensionsMap();
-		$oExtensionsMap->LoadChoicesFromDatabase($oConfig);
-
-		sort($aSelectedExtensions);
-		$this->aExtensionToRemove = $oExtensionsMap->GetMissingExtensions($aSelectedExtensions);
-		sort($this->aExtensionToRemove);
-		\SetupLog::Info(__METHOD__, null, ['aExtensionToRemove' => $this->aExtensionToRemove]);
-	}*/
 
 	public function GetRemovedClasses(): array
 	{

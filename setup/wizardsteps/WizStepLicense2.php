@@ -18,9 +18,18 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-require_once(APPROOT.'setup/sequencers/ApplicationInstallSequencer.php');
-
 /**
- * For compatibility with older scripts
+ * License acceptation screen (when upgrading)
  */
-class_alias('ApplicationInstallSequencer', 'ApplicationInstaller');
+class WizStepLicense2 extends WizStepLicense
+{
+	public function GetPossibleSteps()
+	{
+		return [WizStepUpgradeMiscParams::class];
+	}
+
+	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
+	{
+		return new WizardState(WizStepUpgradeMiscParams::class);
+	}
+}

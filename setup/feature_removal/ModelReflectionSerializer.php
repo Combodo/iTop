@@ -6,6 +6,7 @@ use ContextTag;
 use CoreException;
 use Exception;
 use IssueLog;
+use MetaModel;
 use SetupLog;
 use utils;
 
@@ -34,14 +35,29 @@ class ModelReflectionSerializer
 	public function GetModelFromEnvironment(string $sEnv): array
 	{
 		IssueLog::Info(__METHOD__, null, ['env' => $sEnv]);
+
+		$sCurrentEnvt = MetaModel::GetEnvironment();
+		if ($sCurrentEnvt === $sEnv) {
+			$aClasses = MetaModel::GetClasses();
+			if (count($aClasses) === 0) {
+				//MetaModel not started yet
+				$sConfFile = utils::GetConfigFilePath($sEnv);
+
+				MetaModel::Startup($sConfFile, false /* $bModelOnly */, false /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
+				$aClasses = MetaModel::GetClasses();
+			}
+			return $aClasses;
+		}
+
 		$sPHPExec = trim(utils::GetConfig()->Get('php_path'));
 		$sOutput = "";
 		$iRes = 0;
 
-		exec(sprintf("$sPHPExec %s/get_model_reflection.php --env='%s'", __DIR__, $sEnv), $sOutput, $iRes);
+		$sCommandLine = sprintf("$sPHPExec %s/get_model_reflection.php --env=%s", __DIR__, escapeshellarg($sEnv));
+		exec($sCommandLine, $sOutput, $iRes);
 		if ($iRes != 0) {
 			$this->LogErrorWithProperLogger("Cannot get classes", null, ['env' => $sEnv, 'code' => $iRes, "output" => $sOutput]);
-			throw new CoreException("Cannot get classes");
+			throw new CoreException("Cannot get classes from env ".$sEnv);
 		}
 
 		$aClasses = json_decode($sOutput[0] ?? null, true);

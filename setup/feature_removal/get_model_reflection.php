@@ -19,7 +19,7 @@ if (is_null($sEnv)) {
 $sConfFile = utils::GetConfigFilePath($sEnv);
 
 try {
-	MetaModel::Startup($sConfFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
+	MetaModel::Startup($sConfFile, false /* $bModelOnly */, false /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
 } catch (\Throwable $e) {
 	echo $e->getMessage();
 	echo $e->getTraceAsString();

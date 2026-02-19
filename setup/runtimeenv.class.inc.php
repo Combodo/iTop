@@ -33,7 +33,7 @@ require_once APPROOT.'setup/modelfactory.class.inc.php';
 require_once APPROOT.'setup/compiler.class.inc.php';
 require_once APPROOT.'setup/extensionsmap.class.inc.php';
 require_once APPROOT.'setup/moduleinstallation/AnalyzeInstallation.php';
-require_once APPROOT . '/setup/moduleinstallation/InstallationChoicesToModuleConverter.php';
+require_once APPROOT.'/setup/moduleinstallation/InstallationChoicesToModuleConverter.php';
 
 define('MODULE_ACTION_OPTIONAL', 1);
 define('MODULE_ACTION_MANDATORY', 2);
@@ -226,7 +226,8 @@ class RunTimeEnvironment
 		return ($oExtension->sSource == iTopExtension::SOURCE_REMOTE);
 	}
 
-	public function GetExtraDirsToCompile(string $sSourceDir) : array {
+	public function GetExtraDirsToCompile(string $sSourceDir): array
+	{
 		$sSourceDirFull = APPROOT.$sSourceDir;
 		if (!is_dir($sSourceDirFull)) {
 			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");

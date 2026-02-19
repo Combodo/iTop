@@ -138,8 +138,7 @@ try {
 			ini_set('display_errors', true);
 			ini_set('display_startup_errors', true);
 
-			require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
-			require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
+			require_once(APPROOT.'/setup/wizardsteps_autoload.php');
 
 			$sClass = utils::ReadParam('step_class', '');
 			$sState = utils::ReadParam('step_state', '');
