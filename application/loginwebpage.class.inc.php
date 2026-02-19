@@ -221,16 +221,16 @@ class LoginWebPage extends NiceWebPage
 
 			if ($oUser != null) {
 				if (!MetaModel::IsValidAttCode(get_class($oUser), 'reset_pwd_token')) {
-                    throw new ForgotPasswordUserInputException(Dict::S('UI:ResetPwd-Error-NotPossible'));
-				}
-				if (!$oUser->CanChangePassword()) {
-                    throw new ForgotPasswordUserInputException(Dict::S('UI:ResetPwd-Error-FixedPwd'));
-				}
+                    throw new ForgotPasswordUserInputException('External accounts do not allow password reset');
+                }
+                if (!$oUser->CanChangePassword()) {
+                    throw new ForgotPasswordUserInputException('The account does not allow password reset');
+                }
 
-				$sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
-				if ($sTo == '') {
-                    throw new ForgotPasswordUserInputException(Dict::S('UI:ResetPwd-Error-NoEmail'));
-				}
+                $sTo = $oUser->GetResetPasswordEmail(); // throws Exceptions if not allowed
+                if ($sTo == '') {
+                    throw new ForgotPasswordUserInputException('Missing email address for this account');
+                }
 
 				// This token allows the user to change the password without knowing the previous one
 				$sToken = bin2hex(random_bytes(32));
