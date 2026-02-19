@@ -996,4 +996,31 @@ HTML,
 			],
 		];
 	}
+
+	public function testLoadParamFile()
+	{
+		$sTmpFileOutsideItop = tempnam(sys_get_temp_dir(), 'utils');
+		$sParamName = 'param_test_p1';
+		$sParamValue = 'My own value';
+		$sParams = <<<INI
+# comment
+$sParamName = $sParamValue
+INI;
+
+		file_put_contents($sTmpFileOutsideItop, $sParams);
+
+		self::assertNull(utils::ReadParam($sParamName, null));
+		self::expectException(\Exception::class);
+		self::expectExceptionMessage('Could not find the parameter file: \'\'');
+		self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileOutsideItop]);
+
+		self::assertNotEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() has loaded the file: $sTmpFileOutsideItop");
+
+		unlink($sTmpFileOutsideItop);
+
+		$sTmpFileInsideItop = tempnam(utils::GetCachePath(), 'utils-test');
+		file_put_contents($sTmpFileInsideItop, $sParams);
+		self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileInsideItop]);
+		self::assertEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() has not loaded the file: $sTmpFileOutsideItop");
+	}
 }
