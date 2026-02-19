@@ -678,12 +678,11 @@ EOF
 		if ($bMissingFromDisk) {
 			$bDisabled = true;
 			$bChecked = false;
-		}
-		elseif($bMandatory || $bInstalled && !$bCanBeUninstalled){
+		} elseif ($bMandatory || $bInstalled && !$bCanBeUninstalled) {
 			$bDisabled = true;
 			$bChecked = true;
 		}
-		if($bAllDisabled){
+		if ($bAllDisabled) {
 			$bDisabled = true;
 		}
 
