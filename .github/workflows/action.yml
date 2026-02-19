@@ -26,13 +26,23 @@ jobs:
 
           fi
 
-      - name: Add internal tag if member
+      - name: Add internal tag if member of the organization
         if: env.is_member == 'true'
         run: |
           curl -X POST -H "Authorization: token ${{ secrets.PR_AUTOMATICALLY_ADD_TO_PROJECT }}" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/Combodo/iTop/issues/${{ github.event.pull_request.number }}/labels \
             -d '{"labels":["internal"]}'
+
+      - name: Set PR author as assignee if member of the organization
+        if: env.is_member == 'true'
+        run: |
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.PR_AUTOMATICALLY_ADD_TO_PROJECT }}" \
+            https://api.github.com/repos/Combodo/iTop/issues/${{ github.event.pull_request.number }}/assignees \
+            -d '{"assignees":["${{ github.event.pull_request.user.login }}"]}'
         env:
           is_member: ${{ env.is_member }}
 

@@ -29,7 +29,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Heslo nemůže uživatel změnit.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Heslo bylo obnoveno',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Termín, kdy bylo heslo změneno',
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Heslo musí obsahovat minimálně 8 znaků a musí obsahovat minimálně jedno velké písmeno, jedno malé písmeno, jedno číslo a speciální znak.',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Heslo musí obsahovat minimálně 12 znaků a musí obsahovat minimálně jedno velké písmeno, jedno malé písmeno, jedno číslo a speciální znak.',
 	'UserLocal:password:expiration' => 'Níže uvedená pole vyžadují rozšíření',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Nastavení exspirace "Jednorázového hesla" nelze u vlastního účtu uživatele.',
 ]);

@@ -54,7 +54,7 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
      * @throws InvalidArgumentException When PDO error mode is not PDO::ERRMODE_EXCEPTION
      * @throws InvalidArgumentException When namespace contains invalid characters
      */
-    public function __construct(#[\SensitiveParameter] \PDO|string $connOrDsn, string $namespace = '', int $defaultLifetime = 0, array $options = [], MarshallerInterface $marshaller = null)
+    public function __construct(#[\SensitiveParameter] \PDO|string $connOrDsn, string $namespace = '', int $defaultLifetime = 0, array $options = [], ?MarshallerInterface $marshaller = null)
     {
         if (\is_string($connOrDsn) && str_contains($connOrDsn, '://')) {
             throw new InvalidArgumentException(sprintf('Usage of Doctrine DBAL URL with "%s" is not supported. Use a PDO DSN or "%s" instead.', __CLASS__, DoctrineDbalAdapter::class));
@@ -374,10 +374,10 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
     private function isTableMissing(\PDOException $exception): bool
     {
         $driver = $this->getDriver();
-        $code = $exception->getCode();
+        [$sqlState, $code] = $exception->errorInfo ?? [null, $exception->getCode()];
 
         return match ($driver) {
-            'pgsql' => '42P01' === $code,
+            'pgsql' => '42P01' === $sqlState,
             'sqlite' => str_contains($exception->getMessage(), 'no such table:'),
             'oci' => 942 === $code,
             'sqlsrv' => 208 === $code,

@@ -28,7 +28,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => '',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Letzte Passworterneuerung',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Letztes Änderungsdatum',
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Das Passwort entspricht nicht dem in den Konfigurationsregeln hinterlegten RegEx-Ausdruck',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Das Passwort muss mindestens 12 Zeichen lang sein und Großbuchstaben, Kleinbuchstaben, Zahlen und Sonderzeichen enthalten.',
 	'UserLocal:password:expiration' => 'Die folgenden Felder benötigen eine '.ITOP_APPLICATION_SHORT.' Erweiterung',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Das setzen des Passwortablaufs auf "Einmalpasswort" ist für den eigenen Benutzer nicht erlaubt.',
 ]);
