@@ -573,6 +573,11 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'aExpectedModules' => ['combodo-sample-module' => true],
 				'aExpectedExtensions' => ['combodo-sample'],
 			],
+			'More extensions selected' => [
+				'aSelected' => ['_0' => '_0', '_1' => '_1'],
+				'aExpectedModules' => ['combodo-sample-module' => true, 'combodo-test-moduleA' => true, 'combodo-test-moduleB' => true],
+				'aExpectedExtensions' => ['combodo-sample', 'combodo-test'],
+			],
 		];
 	}
 
@@ -585,10 +590,12 @@ class WizStepModulesChoiceTest extends ItopTestCase
 			'combodo-sample' => [
 				'installed' => false,
 			],
+			'combodo-test' => [
+				'installed' => false,
+			],
 		];
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData, ));
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData ));
 
-		//GetSelectedModules
 		$aStepInfo = [
 			'title' => 'Extensions',
 			'description' => '',
@@ -608,8 +615,183 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'uninstallable' => true,
 					'missing' => false,
 				],
+				[
+					'extension_code' => 'combodo-test',
+					'title' => 'Test extension',
+					'description' => '',
+					'more_info' => '',
+					'default' => true,
+					'modules' => [
+						'combodo-test-moduleA',
+						'combodo-test-moduleB',
+					],
+					'mandatory' => false,
+					'source_label' => '',
+					'uninstallable' => true,
+					'missing' => false,
+				],
 			],
 		];
+
+		$aModules = [];
+		$aExtensions = [];
+		$this->oStep->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
+		$this->assertEquals($aExpectedModules, $aModules);
+		$this->assertEquals($aExpectedExtensions, $aExtensions);
+	}
+
+	public function testGetSelectedModulesShouldAlwaysSelectMandatoryExtension()
+	{
+
+		$aSelectedExtensions = ['_0' => '_0'];
+
+		$aExtensionsMapData = [
+			'combodo-sample' => [
+				'installed' => true,
+			],
+		];
+
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData ));
+
+		$aStepInfo = [
+			'title' => 'Extensions',
+			'description' => '',
+			'banner' => '',
+			'options' => [
+				[
+					'extension_code' => 'combodo-sample',
+					'title' => 'Sample extension',
+					'description' => '',
+					'more_info' => '',
+					'default' => true,
+					'modules' => [
+						'combodo-sample-module',
+					],
+					'mandatory' => false,
+					'source_label' => '',
+					'uninstallable' => true,
+					'missing' => true,
+				],
+			],
+		];
+
+		$aExpectedModules = ['combodo-sample-module' => true];
+		$aExpectedExtensions = ['combodo-sample'];
+
+
+		$aModules = [];
+		$aExtensions = [];
+		$this->oStep->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
+		$this->assertEquals($aExpectedModules, $aModules);
+		$this->assertEquals($aExpectedExtensions, $aExtensions);
+	}
+
+	public function testGetSelectedModulesShouldShouldParseAutoSelectCondition()
+	{
+		//the 'auto_select' parameter, contrary to its name, deselect the module if its result is false
+
+		$aSelectedExtensions = ['_0' => '_0'];
+
+		$aExtensionsMapData = [
+			'combodo-sample' => [
+				'installed' => true,
+				'module_info' => [
+					'combodo-sample-module' => [
+						'auto_select' => 'true && false',
+					],
+				]
+			],
+		];
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData ));
+
+		$aStepInfo = [
+			'title' => 'Extensions',
+			'description' => '',
+			'banner' => '',
+			'options' => [
+				[
+					'extension_code' => 'combodo-sample',
+					'title' => 'Sample extension',
+					'description' => '',
+					'more_info' => '',
+					'default' => true,
+					'modules' => [
+						'combodo-sample-module',
+					],
+					'mandatory' => false,
+					'source_label' => '',
+					'uninstallable' => true,
+					'missing' => true,
+				],
+			],
+		];
+
+		$aExpectedModules = [];
+		$aExpectedExtensions = ['combodo-sample'];
+
+
+		$aModules = [];
+		$aExtensions = [];
+		$this->oStep->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
+		$this->assertEquals($aExpectedModules, $aModules);
+		$this->assertEquals($aExpectedExtensions, $aExtensions);
+	}
+
+	public function testGetSelectedModulesWithSubOptions()
+	{
+
+		$aSelectedExtensions = ['_0' => '_0', '_0_0' => '_0_0'];
+
+		$aExtensionsMapData = [
+			'combodo-sample' => [
+				'installed' => false,
+			],
+			'combodo-sub-sample' => [
+				'installed' => false,
+			],
+		];
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData ));
+
+		$aStepInfo = [
+			'options' => [
+				[
+					'extension_code' => 'combodo-sample',
+					'title' => 'Sample extension',
+					'description' => '',
+					'more_info' => '',
+					'default' => true,
+					'modules' => [
+						'combodo-sample-module',
+					],
+					'mandatory' => false,
+					'source_label' => '',
+					'uninstallable' => true,
+					'missing' => false,
+					'sub_options' => [
+						'options' => [
+							[
+								'extension_code' => 'combodo-sub-sample',
+								'title' => 'Sample sub extension',
+								'description' => '',
+								'more_info' => '',
+								'default' => true,
+								'modules' => [
+									'combodo-sub-sample-module',
+								],
+								'mandatory' => false,
+								'source_label' => '',
+								'uninstallable' => true,
+								'missing' => false,
+							],
+						],
+					],
+				],
+			],
+		];
+
+		$aExpectedModules = ['combodo-sample-module' => true, 'combodo-sub-sample-module' => true];
+		$aExpectedExtensions = ['combodo-sample', 'combodo-sub-sample'];
+
 
 		$aModules = [];
 		$aExtensions = [];
@@ -625,7 +807,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'installed' => false,
 			],
 		];
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData, ));
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData ));
 
 		//GetSelectedModules
 		$aStepInfo = [
@@ -651,6 +833,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 		$aModules = [];
 		$aExtensions = [];
 		$this->expectException('Exception');
+		$this->expectExceptionMessage('Extension combodo-sample does not have any module associated');
 		$this->oStep->GetSelectedModules($aStepInfo, ['_0' => '_0'], $aModules, '', '', $aExtensions);
 	}
 

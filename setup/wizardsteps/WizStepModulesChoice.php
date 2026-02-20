@@ -499,7 +499,7 @@ EOF
 				}
 			}
 		}
-		$aOptions = isset($aInfo['options']) ? $aInfo['options'] : [];
+		$aOptions = $aInfo['options'] ?? [];
 		foreach ($aOptions as $index => $aChoice) {
 			$sChoiceId = $sParentId.self::$SEP.$index;
 			$aModuleInfo = [];
@@ -515,18 +515,18 @@ EOF
 				$sDisplayChoices .= '<li>'.$aChoice['title'].'</li>';
 				if (isset($aChoice['modules'])) {
 					if (count($aChoice['modules']) === 0) {
-						throw new Exception('Setup option does not have any module associated');
+						throw new Exception('Extension '.$aChoice['extension_code'].' does not have any module associated');
 					}
 					foreach ($aChoice['modules'] as $sModuleId) {
 						$bSelected = true;
 						if (isset($aModuleInfo[$sModuleId])) {
 							// Test if module has 'auto_select'
-							$aInfo = $aModuleInfo[$sModuleId];
-							if (isset($aInfo['auto_select'])) {
+							$aCurrentModuleInfo = $aModuleInfo[$sModuleId];
+							if (isset($aCurrentModuleInfo['auto_select'])) {
 								// Check the module selection
 								try {
 									SetupInfo::SetSelectedModules($aModules);
-									$bSelected = $this->GetPhpExpressionEvaluator()->ParseAndEvaluateBooleanExpression($aInfo['auto_select']);
+									$bSelected = $this->GetPhpExpressionEvaluator()->ParseAndEvaluateBooleanExpression($aCurrentModuleInfo['auto_select']);
 								} catch (ModuleFileReaderException $e) {
 									//logged already
 									$bSelected = false;
@@ -539,7 +539,6 @@ EOF
 						}
 					}
 				}
-				$sChoiceType = isset($aChoice['type']) ? $aChoice['type'] : 'wizard_option';
 				if ($aSelectedExtensions !== null) {
 					$aSelectedExtensions[] = $aChoice['extension_code'];
 				}
@@ -553,7 +552,7 @@ EOF
 			}
 		}
 
-		$aAlternatives = isset($aInfo['alternatives']) ? $aInfo['alternatives'] : [];
+		$aAlternatives = $aInfo['alternatives'] ?? [];
 		$sChoiceName = null;
 		foreach ($aAlternatives as $index => $aChoice) {
 			$sChoiceId = $sParentId.self::$SEP.$index;
