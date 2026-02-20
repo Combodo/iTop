@@ -14,9 +14,9 @@ $ibo-title--icon--size-3: 70px !default;
 $ibo-title--icon-img--size--must-contain: contain !default;
 $ibo-title--icon-img--size--must-cover: cover !default;
 $ibo-title--icon-img--size--must-zoomout: 66.67% !default;
-$ibo-title--icon-background--size--must-contain: $ibo-title--icon-img--size--must-contain; // deprecated, to be removed in favor of $ibo-panel--icon-img--size--must-contain
-$ibo-title--icon-background--size--must-cover: $ibo-title--icon-img--size--must-cover; // deprecated, to be removed in favor of $ibo-panel--icon-img--size--must-cover
-$ibo-title--icon-background--size--must-zoomout: $ibo-title--icon-img--size--must-zoomout; // deprecated, to be removed in favor of $ibo-panel--icon-img--size--must-zoomout
+$ibo-title--icon-background--size--must-contain: $ibo-title--icon-img--size--must-contain; // deprecated, to be removed in favor of $ibo-title--icon-img--size--must-contain
+$ibo-title--icon-background--size--must-cover: $ibo-title--icon-img--size--must-cover; // deprecated, to be removed in favor of $ibo-title--icon-img--size--must-cover
+$ibo-title--icon-background--size--must-zoomout: $ibo-title--icon-img--size--must-zoomout; // deprecated, to be removed in favor of $ibo-title--icon-img--size--must-zoomout
 
 
 .ibo-title {
