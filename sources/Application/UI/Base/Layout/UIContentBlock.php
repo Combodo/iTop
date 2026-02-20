@@ -227,7 +227,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	}
 
 	/**
-	 * @see static::bHasLazyLoadIcon
+	 * @see static::$bHasLazyLoadIcon
 	 * @return bool
 	 */
 	public function HasLazyLoadIcon(): bool
@@ -236,7 +236,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	}
 
 	/**
-	 * @see static::$bLazyLoadIcon
+	 * @see static::$bHasLazyLoadIcon
 	 * @param bool $bLazyLoadIcon
 	 * @return $this
 	 */
