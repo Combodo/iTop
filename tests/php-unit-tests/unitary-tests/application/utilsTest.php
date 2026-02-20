@@ -999,28 +999,20 @@ HTML,
 
 	public function testLoadParamFile()
 	{
-		$sTmpFileOutsideItop = tempnam(sys_get_temp_dir(), 'utils');
-		$sParamName = 'param_test_p1';
-		$sParamValue = 'My own value';
+		$sTmpFileInsideItop = APPROOT.'env-production/itop-backup/backup.params.distrib';
+		$sParamName = 'auth_user';
+		$sParamValue = 'admin';
+
+		$sTmpFileOutsideItop = tempnam(sys_get_temp_dir(), 'utils-test');
 		$sParams = <<<INI
 # comment
 $sParamName = $sParamValue
 INI;
 
 		file_put_contents($sTmpFileOutsideItop, $sParams);
-
-		self::assertNull(utils::ReadParam($sParamName, null));
-		self::expectException(\Exception::class);
-		self::expectExceptionMessage('Could not find the parameter file: \'\'');
 		self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileOutsideItop]);
-
-		self::assertNotEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() has loaded the file: $sTmpFileOutsideItop");
+		self::assertEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() should have loaded the file: $sTmpFileInsideItop");
 
 		unlink($sTmpFileOutsideItop);
-
-		$sTmpFileInsideItop = tempnam(utils::GetCachePath(), 'utils-test');
-		file_put_contents($sTmpFileInsideItop, $sParams);
-		self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileInsideItop]);
-		self::assertEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() has not loaded the file: $sTmpFileOutsideItop");
 	}
 }

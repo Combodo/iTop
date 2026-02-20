@@ -181,7 +181,6 @@ class utils
 
 	protected static function LoadParamFile($sParamFile)
 	{
-		$sParamFile = self::AbsolutePath($sParamFile);
 		if (!file_exists($sParamFile)) {
 			throw new Exception("Could not find the parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
