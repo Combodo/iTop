@@ -594,7 +594,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'installed' => false,
 			],
 		];
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData ));
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
 
 		$aStepInfo = [
 			'title' => 'Extensions',
@@ -651,7 +651,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 			],
 		];
 
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData ));
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
 
 		$aStepInfo = [
 			'title' => 'Extensions',
@@ -678,7 +678,6 @@ class WizStepModulesChoiceTest extends ItopTestCase
 		$aExpectedModules = ['combodo-sample-module' => true];
 		$aExpectedExtensions = ['combodo-sample'];
 
-
 		$aModules = [];
 		$aExtensions = [];
 		$this->oStep->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
@@ -699,10 +698,10 @@ class WizStepModulesChoiceTest extends ItopTestCase
 					'combodo-sample-module' => [
 						'auto_select' => 'true && false',
 					],
-				]
+				],
 			],
 		];
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData ));
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
 
 		$aStepInfo = [
 			'title' => 'Extensions',
@@ -729,7 +728,6 @@ class WizStepModulesChoiceTest extends ItopTestCase
 		$aExpectedModules = [];
 		$aExpectedExtensions = ['combodo-sample'];
 
-
 		$aModules = [];
 		$aExtensions = [];
 		$this->oStep->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
@@ -750,7 +748,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'installed' => false,
 			],
 		];
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData ));
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
 
 		$aStepInfo = [
 			'options' => [
@@ -792,7 +790,6 @@ class WizStepModulesChoiceTest extends ItopTestCase
 		$aExpectedModules = ['combodo-sample-module' => true, 'combodo-sub-sample-module' => true];
 		$aExpectedExtensions = ['combodo-sample', 'combodo-sub-sample'];
 
-
 		$aModules = [];
 		$aExtensions = [];
 		$this->oStep->GetSelectedModules($aStepInfo, $aSelectedExtensions, $aModules, '', '', $aExtensions);
@@ -807,7 +804,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 				'installed' => false,
 			],
 		];
-		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData ));
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsMapData));
 
 		//GetSelectedModules
 		$aStepInfo = [
