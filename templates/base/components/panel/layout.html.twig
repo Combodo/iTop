@@ -21,7 +21,7 @@
                                     <img class="ibo-panel--icon-background ibo-panel--icon-img--must-{{ oUIBlock.GetIconCoverMethod() }}
                                     ibo-panel--icon-background--must-{{ oUIBlock.GetIconCoverMethod() }}"
                                             {% if oUIBlock.HasLazyLoadIcon %} loading="lazy" {% endif %}
-                                         data-role="ibo-panel--icon-img" src="{{ oUIBlock.GetIconUrl()|raw }}">
+                                         data-role="ibo-panel--icon-img" src="{{ oUIBlock.GetIconUrl()|raw }}" alt="" aria-hidden="true">
                                 {% endblock %}
                             </div>
                         {% endif %}
