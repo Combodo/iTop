@@ -58,9 +58,9 @@ class WizStepInstall extends AbstractWizStepInstall
 		return new WizardState(WizStepDone::class);
 	}
 
-	protected function AddProgressBar(WebPage $oPage)
+	protected function AddProgressBar(WebPage $oPage, string $sTitle = 'Progress of the operations')
 	{
-		$oPage->add('<fieldset id="installation_progress"><legend>Progress of the installation</legend>');
+		$oPage->add('<fieldset id="installation_progress"><legend>'.$sTitle.'</legend>');
 		$oPage->add('<div id="progress_content">');
 		$oPage->LinkScriptFromAppRoot('setup/jquery.progression.js');
 		$oPage->add('<p class="center"><span id="setup_msg">Ready to start...</span></p><div style="display:block;margin-left: auto; margin-right:auto;" id="progress">0%</div>');
@@ -74,7 +74,7 @@ class WizStepInstall extends AbstractWizStepInstall
 	{
 
 		$aInstallParams = $this->BuildConfig();
-		$this->AddProgressBar($oPage);
+		$this->AddProgressBar($oPage, 'Progress of the installation');
 
 		$sJSONData = json_encode($aInstallParams);
 		$oPage->add('<input type="hidden" id="installer_parameters" value="'.utils::EscapeHtml($sJSONData).'"/>');
@@ -136,6 +136,7 @@ EOF
 			$oPage->add_ready_script(
 				<<<EOF
 	$("#wiz_form").data("installation_status", "error");
+	$("#progress .progress").addClass('progress-error');
 	WizardUpdateButtons();
 	$('#setup_error').html('$sMessage').show();
 EOF
