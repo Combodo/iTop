@@ -176,6 +176,8 @@ class WizStepModulesChoice extends WizardStep
 			}
 
 		}
+		//Unused when going backward
+		return new WizardState(WizStepModulesChoice::class, ($index - 1));
 	}
 
 	public function Display(WebPage $oPage)
