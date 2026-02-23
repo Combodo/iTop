@@ -34,11 +34,9 @@ use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use ContextTag;
 use DateTimeFormat;
 use DBSearch;
-use DeprecatedCallsLog;
 use Dict;
 use ExecutionKPI;
 use InlineImage;
-use iPageUIBlockExtension;
 use MetaModel;
 use UserRights;
 use utils;
@@ -181,6 +179,13 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->LinkScriptFromAppRoot('js/selectize.min.js');
 		$this->LinkScriptFromAppRoot('node_modules/selectize-plugin-a11y/selectize-plugin-a11y.js');
 		$this->LinkScriptFromAppRoot('js/jquery.multiselect.js');
+		$this->LinkScriptFromAppRoot('node_modules/tom-select/dist/js/tom-select.complete.min.js');
+		$this->LinkScriptFromAppRoot('js/forms/form_element.js');
+		$this->LinkScriptFromAppRoot('js/forms/choices_element.js');
+		$this->LinkScriptFromAppRoot('js/forms/oql_element.js');
+		$this->LinkScriptFromAppRoot('js/forms/collection_element.js');
+		$this->LinkScriptFromAppRoot('js/forms/collection_entry_element.js');
+		$this->LinkScriptFromAppRoot('js/forms/turbo_stream_event_element.js');
 
 		// Used by inline image, CKEditor and other places
 		$this->LinkScriptFromAppRoot('node_modules/magnific-popup/dist/jquery.magnific-popup.min.js');
@@ -267,6 +272,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 		// Used by external keys and other drop down lists
 		$this->LinkStylesheetFromAppRoot('css/selectize.default.css');
+		$this->LinkStylesheetFromAppRoot('node_modules/tom-select/dist/css/tom-select.bootstrap5.css');
+
 	}
 
 	/**
@@ -747,7 +754,7 @@ HTML;
 			}
 		}
 
-		// Render HTKL content
+		// Render HTML content
 		$sHtml = $this->RenderContent();
 
 		// Echo global HTML

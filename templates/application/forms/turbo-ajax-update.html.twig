@@ -1,0 +1,24 @@
+{# @copyright   Copyright (C) 2010-2025 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% for sBlockIdentifier, oBlockToRedraw in blocks_to_redraw %}
+    {% UITurboStream Replace { sTarget: "turbo_" ~ sBlockIdentifier} %}
+    {% if oBlockToRedraw is not null %}
+        {% set row_attr = {id: 'turbo_' ~ sBlockIdentifier } %}
+        {{ form_row(oBlockToRedraw, {row_attr: row_attr}) }}
+    {% else %}
+        <div id="turbo_{{ sBlockIdentifier }}" class="ibo-field ibo-content-block ibo-block ibo-field-small"></div>
+    {% endif %}
+    {% EndUITurboStream %}
+{% endfor %}
+{% if current_block %}
+    {% UITurboStream Replace { sTarget: "turbo_error_" ~ current_block.vars.id} %}
+        {{ form_errors(current_block) }}
+    {% EndUITurboStream %}
+{% endif %}
+{% if current_form %}
+    {% UITurboStream Replace { sTarget: current_form.vars.id} %}
+    {{ form_widget(current_form) }}
+    <turbo-stream-event id="{{ current_form.vars.id }}-turbo-stream-event" data-form-id="{{ current_form.vars.id }}" data-form-block-class="{{ current_form.vars.form_block_class }}" data-view-data="{{ current_form.vars.value|json_encode }}" data-valid="{{ current_form.vars.valid }}"/>
+    {% EndUITurboStream %}
+{% endif %}

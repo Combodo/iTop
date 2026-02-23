@@ -13,11 +13,10 @@ $config = new PhpCsFixer\Config();
 return $config->setRiskyAllowed(true)
 	->setRules([
 		'@PSR12'       => true,
-		'indentation_type' => true,
-		'no_extra_blank_lines' => true,
-		'array_syntax' => ['syntax' => 'short'],
-		'concat_space' => true,
-		'trailing_comma_in_multiline' => true,
+		'no_extra_blank_lines' => true, // default value ['tokens' => ['extra']]
+		'array_syntax' => true, // default value ['syntax' => 'short']
+		'concat_space' => true, // default value ['spacing' => 'none']
+		'trailing_comma_in_multiline' => true, // default value ['after_heredoc' => false, 'elements' => ['arrays']]
 	])
 	->setIndent("\t")
 	->setLineEnding("\n")

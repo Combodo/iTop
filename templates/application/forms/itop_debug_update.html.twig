@@ -1,0 +1,13 @@
+{# @copyright   Copyright (C) 2010-2025 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% UITurboStream Update { sTarget: "turbo_itop_profiler"} %}
+    {% if aProfilesInfo is not empty %}
+        {% UIPanel Neutral { sTitle:'Debug' } %}
+            {% for aProfileInfo in aProfilesInfo %}
+                {% set aProfileData = aProfileInfo.aProfileData %}
+                {{ include(aProfileInfo.sTemplate) }}
+            {% endfor %}
+        {% EndUIPanel %}
+    {% endif %}
+{% EndUITurboStream %}

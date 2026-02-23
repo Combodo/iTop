@@ -214,7 +214,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:Service/Attribute:organization_name' => 'Proveedor',
 	'Class:Service/Attribute:organization_name+' => 'Proveedor',
 	'Class:Service/Attribute:servicefamily_id' => 'Familia de Servicios',
-	'Class:Service/Attribute:servicefamily_id+' => 'Familia de Servicios',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Familia de Servicios',
 	'Class:Service/Attribute:servicefamily_name+' => 'Familia de Servicios',
 	'Class:Service/Attribute:description' => 'Descripción',

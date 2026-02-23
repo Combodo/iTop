@@ -259,13 +259,18 @@ class InlineImage extends DBObject
 	 * that refer to an InlineImage (detected via the attribute data-img-id="") so that
 	 * the URL is consistent with the current URL of the application.
 	 *
-	 * @param string $sHtml The HTML fragment to process
+N°8681	 * @param string|null $sHtml The HTML fragment to process
 	 *
 	 * @return string The modified HTML
 	 * @throws \Exception
+	 *
+	 * @since 3.3.0 N°8681 Add type hint for parameters and return value
 	 */
-	public static function FixUrls($sHtml)
+	public static function FixUrls(string|null $sHtml): string
 	{
+		// N°8681 - Ensure to have a string value
+		$sHtml = $sHtml ?? '';
+
 		$aNeedles = [];
 		$aReplacements = [];
 		// Find img tags with an attribute data-img-id
@@ -389,7 +394,7 @@ JS
 	 * Resize an image so that it fits the maximum width/height defined in the config file
 	 * @param ormDocument $oImage The original image stored as an array (content / mimetype / filename)
 	 * @return ormDocument The resampled image (or the original one if it already fit)
-	 * @deprecated Replaced by ormDocument::ResizeImageToFit
+	 * @deprecated since 3.3.0 Replaced by ormDocument::ResizeImageToFit
 	 */
 	public static function ResizeImageToFit(ormDocument $oImage, &$aDimensions = null)
 	{

@@ -323,18 +323,38 @@
             <value id="production">
               <code>production</code>
               <rank>30</rank>
+              <style>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="implementation">
               <code>implementation</code>
               <rank>20</rank>
+              <style>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="stock">
               <code>stock</code>
               <rank>10</rank>
+              <style>
+                <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
               <rank>40</rank>
+              <style>
+                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
           </values>
           <sql>status</sql>
@@ -4449,6 +4469,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <style>
           <icon/>
         </style>
@@ -4459,6 +4482,13 @@
         </reconciliation>
       </properties>
       <fields>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="osversions_list" xsi:type="AttributeLinkedSet">
           <linked_class>OSVersion</linked_class>
           <ext_key_to_me>osfamily_id</ext_key_to_me>
@@ -4472,8 +4502,11 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="osversions_list">
+            <item id="logo">
               <rank>20</rank>
+            </item>
+            <item id="osversions_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -4488,6 +4521,9 @@
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="logo">
+              <rank>20</rank>
             </item>
           </items>
         </list>
@@ -4586,6 +4622,9 @@
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="logo">
+              <rank>20</rank>
             </item>
           </items>
         </list>
@@ -6938,14 +6977,29 @@
             <value id="production">
               <code>production</code>
               <rank>20</rank>
+              <style>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="implementation">
               <code>implementation</code>
               <rank>10</rank>
+              <style>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
               <rank>30</rank>
+              <style>
+                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
           </values>
           <sql>status</sql>

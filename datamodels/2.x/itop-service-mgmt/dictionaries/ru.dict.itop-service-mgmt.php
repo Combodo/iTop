@@ -216,7 +216,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Service/Attribute:organization_name' => 'Поставщик',
 	'Class:Service/Attribute:organization_name+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Пакет услуг',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Пакет услуг',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:description' => 'Описание',

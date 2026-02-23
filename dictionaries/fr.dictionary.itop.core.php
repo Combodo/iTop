@@ -746,6 +746,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:TriggerOnObjectUpdate' => 'Déclencheur sur la modification d\'un objet',
 	'Class:TriggerOnObjectUpdate+' => '',
+	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'Ce filtre est appliqué après la sauvegarde en base de l\'objet modifié. Il restreint les objets qui vont déclencher les actions.',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Attributs cible',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ]);

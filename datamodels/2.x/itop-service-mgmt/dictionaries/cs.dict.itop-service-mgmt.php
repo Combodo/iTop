@@ -218,7 +218,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Class:Service/Attribute:organization_name' => 'Název poskytovatele',
 	'Class:Service/Attribute:organization_name+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Balíček služeb',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Název rodiny služeb',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:description' => 'Popis',

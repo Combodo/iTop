@@ -72,9 +72,15 @@ class OQLException extends CoreException
 		}
 		else
 		{
-			$sExpectations = '{'.implode(', ', $this->m_aExpecting).'}';
+			$sMessage = "$sIssue - found '{$this->m_sUnexpected}' at $iCol in '$sInput'";
+			if (count($this->m_aExpecting) < 30) {
+				$sExpectations = '{'.implode(', ', $this->m_aExpecting).'}';
+				$sMessage .= ', expecting '.json_encode($sExpectations);
+			}
 			$sSuggest = self::FindClosestString($this->m_sUnexpected, $this->m_aExpecting);
-			$sMessage = "$sIssue - found '{$this->m_sUnexpected}' at $iCol in '$sInput', expecting $sExpectations, I would suggest to use '$sSuggest'";
+			if (strlen($sSuggest) > 0) {
+				$sMessage .= ", I would suggest to use ".json_encode($sSuggest);
+			}
 		}
 		
 		// make sure everything is assigned properly
@@ -155,5 +161,3 @@ class OQLException extends CoreException
 		return $sRet;
 	}
 }
-
-?>

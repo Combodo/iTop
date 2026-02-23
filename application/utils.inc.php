@@ -1900,6 +1900,12 @@ SQL;
 		return $response;
 	}
 
+	public static function QuoteForPHP(string $sValue): string
+	{
+		$sEscaped = str_replace(['\\', "'"], ['\\\\', "\\'"], $sValue);
+		return "'$sEscaped'";
+	}
+
 	/**
 	 * Get a standard list of character sets
 	 *

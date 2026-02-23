@@ -1,0 +1,26 @@
+{# @copyright   Copyright (C) 2010-2025 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+<script type="module">
+    import {session} from "{{ aPage.sAbsoluteUrlAppRoot }}/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js";
+
+    session.drive = false;
+</script>
+
+<turbo-frame id="{{ oUIBlock.GetId() }}">
+    {% if oUIBlock.GetAction() %}
+        {{ form_start(oUIBlock.GetFormView(), {action: oUIBlock.GetAction()}) }}
+    {% else %}
+        {{ form_start(oUIBlock.GetFormView()) }}
+    {% endif %}
+    {{ form_widget(oUIBlock.GetFormView()) }}
+
+    {%- block iboContentBlockContainer -%}
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
+        {% endfor %}
+    {%- endblock -%}
+
+
+    {{ form_end(oUIBlock.GetFormView()) }}
+</turbo-frame>

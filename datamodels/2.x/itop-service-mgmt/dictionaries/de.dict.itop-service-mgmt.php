@@ -217,7 +217,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Service/Attribute:organization_name' => 'Provider-Name',
 	'Class:Service/Attribute:organization_name+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Service-Familie',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Service-Familien-Name',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:description' => 'Beschreibung',

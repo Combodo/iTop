@@ -57,15 +57,15 @@ class OqlName
 	{
 		return $this->m_iPos;
 	}
-	
+
 	public function __toString()
 	{
 		return $this->m_sValue;
-	} 
+	}
 }
 
 /**
- * 
+ *
  * Store hexadecimal values as strings so that we can support 64-bit values
  *
  */
@@ -77,12 +77,12 @@ class OqlHexValue
 	{
 		$this->m_sValue = $sValue;
 	}
-	
+
 	public function __toString()
 	{
 		return $this->m_sValue;
 	}
-	
+
 }
 
 class OqlJoinSpec
@@ -109,6 +109,7 @@ class OqlJoinSpec
 	{
 		return $this->m_oClass->GetValue();
 	}
+
 	public function GetClassAlias()
 	{
 		return $this->m_oClassAlias->GetValue();
@@ -118,6 +119,7 @@ class OqlJoinSpec
 	{
 		return $this->m_oClass;
 	}
+
 	public function GetClassAliasDetails()
 	{
 		return $this->m_oClassAlias;
@@ -127,10 +129,12 @@ class OqlJoinSpec
 	{
 		return $this->m_oLeftField;
 	}
+
 	public function GetRightField()
 	{
 		return $this->m_oRightField;
 	}
+
 	public function GetOperator()
 	{
 		return $this->m_sOperator;
@@ -146,8 +150,9 @@ interface CheckableExpression
 	 * @param ModelReflection $oModelReflection MetaModel to consider
 	 * @param array $aAliases Aliases to class names (for the current query)
 	 * @param string $sSourceQuery For the reporting
+	 *
 	 * @throws OqlNormalizeException
-	 */	 	
+	 */
 	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery);
 }
 
@@ -168,13 +173,11 @@ class MatchOqlExpression extends MatchExpression implements CheckableExpression
 		$this->m_oRightExpr->Check($oModelReflection, $aAliases, $sSourceQuery);
 
 		// Only field MATCHES scalar is allowed
-		if (!$this->m_oLeftExpr instanceof FieldExpression)
-		{
+		if (!$this->m_oLeftExpr instanceof FieldExpression) {
 			throw new OqlNormalizeException('Only "field MATCHES string" syntax is allowed', $sSourceQuery, new OqlName($this->m_oLeftExpr->RenderExpression(true), 0));
 		}
 		// Only field MATCHES scalar is allowed
-		if (!$this->m_oRightExpr instanceof ScalarExpression && !$this->m_oRightExpr instanceof VariableOqlExpression)
-		{
+		if (!$this->m_oRightExpr instanceof ScalarExpression && !$this->m_oRightExpr instanceof VariableOqlExpression) {
 			throw new OqlNormalizeException('Only "field MATCHES string" syntax is allowed', $sSourceQuery, new OqlName($this->m_oRightExpr->RenderExpression(true), 0));
 		}
 	}
@@ -198,7 +201,7 @@ class NestedQueryOqlExpression extends NestedQueryExpression implements Checkabl
 	 *
 	 * @param OQLObjectQuery $oOQLObjectQuery
 	 */
-	public function __construct($oOQLObjectQuery )
+	public function __construct($oOQLObjectQuery)
 	{
 		parent::__construct($oOQLObjectQuery->ToDBSearch(""));
 		$this->m_oOQLObjectQuery = $oOQLObjectQuery;
@@ -232,8 +235,7 @@ class FieldOqlExpression extends FieldExpression implements CheckableExpression
 
 	public function __construct($oName, $oParent = null)
 	{
-		if (is_null($oParent))
-		{
+		if (is_null($oParent)) {
 			$oParent = new OqlName('', 0);
 		}
 		$this->m_oParent = $oParent;
@@ -256,37 +258,28 @@ class FieldOqlExpression extends FieldExpression implements CheckableExpression
 	{
 		$sClassAlias = $this->GetParent();
 		$sFltCode = $this->GetName();
-		if (empty($sClassAlias))
-		{
+		if (empty($sClassAlias)) {
 			// Try to find an alias
 			// Build an array of field => array of aliases
 			$aFieldClasses = array();
-			foreach($aAliases as $sAlias => $sReal)
-			{
-				foreach($oModelReflection->GetFiltersList($sReal) as $sAnFltCode)
-				{
+			foreach ($aAliases as $sAlias => $sReal) {
+				foreach ($oModelReflection->GetFiltersList($sReal) as $sAnFltCode) {
 					$aFieldClasses[$sAnFltCode][] = $sAlias;
 				}
 			}
-			if (!array_key_exists($sFltCode, $aFieldClasses))
-			{
+			if (!array_key_exists($sFltCode, $aFieldClasses)) {
 				throw new OqlNormalizeException('Unknown filter code', $sSourceQuery, $this->GetNameDetails(), array_keys($aFieldClasses));
 			}
-			if (count($aFieldClasses[$sFltCode]) > 1)
-			{
+			if (count($aFieldClasses[$sFltCode]) > 1) {
 				throw new OqlNormalizeException('Ambiguous filter code', $sSourceQuery, $this->GetNameDetails());
 			}
 			$sClassAlias = $aFieldClasses[$sFltCode][0];
-		}
-		else
-		{
-			if (!array_key_exists($sClassAlias, $aAliases))
-			{
+		} else {
+			if (!array_key_exists($sClassAlias, $aAliases)) {
 				throw new OqlNormalizeException('Unknown class [alias]', $sSourceQuery, $this->GetParentDetails(), array_keys($aAliases));
 			}
 			$sClass = $aAliases[$sClassAlias];
-			if (!$oModelReflection->IsValidFilterCode($sClass, $sFltCode))
-			{
+			if (!$oModelReflection->IsValidFilterCode($sClass, $sFltCode)) {
 				throw new OqlNormalizeException('Unknown filter code', $sSourceQuery, $this->GetNameDetails(), $oModelReflection->GetFiltersList($sClass));
 			}
 		}
@@ -305,8 +298,7 @@ class ListOqlExpression extends ListExpression implements CheckableExpression
 {
 	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
 	{
-		foreach ($this->GetItems() as $oItemExpression)
-		{
+		foreach ($this->GetItems() as $oItemExpression) {
 			$oItemExpression->Check($oModelReflection, $aAliases, $sSourceQuery);
 		}
 	}
@@ -316,8 +308,7 @@ class FunctionOqlExpression extends FunctionExpression implements CheckableExpre
 {
 	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
 	{
-		foreach ($this->GetArgs() as $oArgExpression)
-		{
+		foreach ($this->GetArgs() as $oArgExpression) {
 			$oArgExpression->Check($oModelReflection, $aAliases, $sSourceQuery);
 		}
 	}
@@ -350,6 +341,7 @@ abstract class OqlQuery
 	 * Determine the class
 	 *
 	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 *
 	 * @return string
 	 * @throws Exception
 	 */
@@ -392,6 +384,7 @@ class OqlObjectQuery extends OqlQuery
 	 * Determine the class
 	 *
 	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 *
 	 * @return string
 	 * @throws Exception
 	 */
@@ -415,6 +408,7 @@ class OqlObjectQuery extends OqlQuery
 	{
 		return $this->m_oClass;
 	}
+
 	public function GetClassAliasDetails()
 	{
 		return $this->m_oClassAlias;
@@ -424,6 +418,7 @@ class OqlObjectQuery extends OqlQuery
 	{
 		return $this->m_aJoins;
 	}
+
 	public function GetCondition()
 	{
 		return $this->m_oCondition;
@@ -432,44 +427,37 @@ class OqlObjectQuery extends OqlQuery
 	/**
 	 * Recursively check the validity of the expression with regard to the data model
 	 * and the query in which it is used
-	 * 	 	 
-	 * @param ModelReflection $oModelReflection MetaModel to consider	 	
+	 *
+	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 *
 	 * @throws OqlNormalizeException
-	 */	 	
+	 */
 	public function Check(ModelReflection $oModelReflection, $sSourceQuery, $aParentAliases = array())
 	{
 		$sClass = $this->GetClass($oModelReflection);
 		$sClassAlias = $this->GetClassAlias();
 
-		if (!$oModelReflection->IsValidClass($sClass))
-		{
+		if (!$oModelReflection->IsValidClass($sClass)) {
 			throw new UnknownClassOqlException($sSourceQuery, $this->GetClassDetails(), $oModelReflection->GetClasses());
 		}
 
-		$aAliases = array_merge(array($sClassAlias => $sClass),$aParentAliases);
+		$aAliases = array_merge(array($sClassAlias => $sClass), $aParentAliases);
 
 		$aJoinSpecs = $this->GetJoins();
-		if (is_array($aJoinSpecs))
-		{
-			foreach ($aJoinSpecs as $oJoinSpec)
-			{
+		if (is_array($aJoinSpecs)) {
+			foreach ($aJoinSpecs as $oJoinSpec) {
 				$sJoinClass = $oJoinSpec->GetClass();
 				$sJoinClassAlias = $oJoinSpec->GetClassAlias();
-				if (!$oModelReflection->IsValidClass($sJoinClass))
-				{
+				if (!$oModelReflection->IsValidClass($sJoinClass)) {
 					throw new UnknownClassOqlException($sSourceQuery, $oJoinSpec->GetClassDetails(), $oModelReflection->GetClasses());
 				}
-				if (array_key_exists($sJoinClassAlias, $aAliases))
-				{
-					if ($sJoinClassAlias != $sJoinClass)
-					{
+				if (array_key_exists($sJoinClassAlias, $aAliases)) {
+					if ($sJoinClassAlias != $sJoinClass) {
 						throw new OqlNormalizeException('Duplicate class alias', $sSourceQuery, $oJoinSpec->GetClassAliasDetails());
-					}
-					else
-					{
+					} else {
 						throw new OqlNormalizeException('Duplicate class name', $sSourceQuery, $oJoinSpec->GetClassDetails());
 					}
-				} 
+				}
 
 				// Assumption: ext key on the left only !!!
 				// normalization should take care of this
@@ -480,85 +468,74 @@ class OqlObjectQuery extends OqlQuery
 				$oRightField = $oJoinSpec->GetRightField();
 				$sToClass = $oRightField->GetParent();
 				$sPKeyDescriptor = $oRightField->GetName();
-				if ($sPKeyDescriptor != 'id')
-				{
+				if ($sPKeyDescriptor != 'id') {
 					throw new OqlNormalizeException('Wrong format for Join clause (right hand), expecting an id', $sSourceQuery, $oRightField->GetNameDetails(), array('id'));
 				}
 
 				$aAliases[$sJoinClassAlias] = $sJoinClass;
 
-				if (!array_key_exists($sFromClass, $aAliases))
-				{
+				if (!array_key_exists($sFromClass, $aAliases)) {
 					throw new OqlNormalizeException('Unknown class in join condition (left expression)', $sSourceQuery, $oLeftField->GetParentDetails(), array_keys($aAliases));
 				}
-				if (!array_key_exists($sToClass, $aAliases))
-				{
+				if (!array_key_exists($sToClass, $aAliases)) {
 					throw new OqlNormalizeException('Unknown class in join condition (right expression)', $sSourceQuery, $oRightField->GetParentDetails(), array_keys($aAliases));
 				}
 				$aExtKeys = $oModelReflection->ListAttributes($aAliases[$sFromClass], \Combodo\iTop\Core\AttributeDefinition\AttributeExternalKey::class);
 				$aObjKeys = $oModelReflection->ListAttributes($aAliases[$sFromClass], \Combodo\iTop\Core\AttributeDefinition\AttributeObjectKey::class);
 				$aAllKeys = array_merge($aExtKeys, $aObjKeys);
-				if (!array_key_exists($sExtKeyAttCode, $aAllKeys))
-				{
+				if (!array_key_exists($sExtKeyAttCode, $aAllKeys)) {
 					throw new OqlNormalizeException('Unknown key in join condition (left expression)', $sSourceQuery, $oLeftField->GetNameDetails(), array_keys($aAllKeys));
 				}
 
-				if ($sFromClass == $sJoinClassAlias)
-				{
+				if ($sFromClass == $sJoinClassAlias) {
 					if (array_key_exists($sExtKeyAttCode, $aExtKeys)) // Skip that check for object keys
 					{
 						$sTargetClass = $oModelReflection->GetAttributeProperty($aAliases[$sFromClass], $sExtKeyAttCode, 'targetclass');
-						if(!$oModelReflection->IsSameFamilyBranch($aAliases[$sToClass], $sTargetClass))
-						{
+						if (!$oModelReflection->IsSameFamilyBranch($aAliases[$sToClass], $sTargetClass)) {
 							throw new OqlNormalizeException("The joined class ($aAliases[$sFromClass]) is not compatible with the external key, which is pointing to $sTargetClass", $sSourceQuery, $oLeftField->GetNameDetails());
 						}
 					}
-				}
-				else
-				{
+				} else {
 					$sOperator = $oJoinSpec->GetOperator();
-					switch($sOperator)
-					{
+					switch ($sOperator) {
 						case '=':
-						$iOperatorCode = TREE_OPERATOR_EQUALS;
-						break;
+							$iOperatorCode = TREE_OPERATOR_EQUALS;
+							break;
 						case 'BELOW':
-						$iOperatorCode = TREE_OPERATOR_BELOW;
-						break;
+							$iOperatorCode = TREE_OPERATOR_BELOW;
+							break;
 						case 'BELOW_STRICT':
-						$iOperatorCode = TREE_OPERATOR_BELOW_STRICT;
-						break;
+							$iOperatorCode = TREE_OPERATOR_BELOW_STRICT;
+							break;
 						case 'NOT_BELOW':
-						$iOperatorCode = TREE_OPERATOR_NOT_BELOW;
-						break;
+							$iOperatorCode = TREE_OPERATOR_NOT_BELOW;
+							break;
 						case 'NOT_BELOW_STRICT':
-						$iOperatorCode = TREE_OPERATOR_NOT_BELOW_STRICT;
-						break;
+							$iOperatorCode = TREE_OPERATOR_NOT_BELOW_STRICT;
+							break;
 						case 'ABOVE':
-						$iOperatorCode = TREE_OPERATOR_ABOVE;
-						break;
+							$iOperatorCode = TREE_OPERATOR_ABOVE;
+							break;
 						case 'ABOVE_STRICT':
-						$iOperatorCode = TREE_OPERATOR_ABOVE_STRICT;
-						break;
+							$iOperatorCode = TREE_OPERATOR_ABOVE_STRICT;
+							break;
 						case 'NOT_ABOVE':
-						$iOperatorCode = TREE_OPERATOR_NOT_ABOVE;
-						break;
+							$iOperatorCode = TREE_OPERATOR_NOT_ABOVE;
+							break;
 						case 'NOT_ABOVE_STRICT':
-						$iOperatorCode = TREE_OPERATOR_NOT_ABOVE_STRICT;
-						break;
+							$iOperatorCode = TREE_OPERATOR_NOT_ABOVE_STRICT;
+							break;
 					}
 					if (array_key_exists($sExtKeyAttCode, $aExtKeys)) // Skip that check for object keys
 					{
 						$sTargetClass = $oModelReflection->GetAttributeProperty($aAliases[$sFromClass], $sExtKeyAttCode, 'targetclass');
-						if(!$oModelReflection->IsSameFamilyBranch($aAliases[$sToClass], $sTargetClass))
-						{
+						if (!$oModelReflection->IsSameFamilyBranch($aAliases[$sToClass], $sTargetClass)) {
 							throw new OqlNormalizeException("The joined class ($aAliases[$sToClass]) is not compatible with the external key, which is pointing to $sTargetClass", $sSourceQuery, $oLeftField->GetNameDetails());
 						}
 					}
 					$aAttList = $oModelReflection->ListAttributes($aAliases[$sFromClass]);
 					$sAttType = $aAttList[$sExtKeyAttCode];
-					if(($iOperatorCode != TREE_OPERATOR_EQUALS) && !is_subclass_of($sAttType, \Combodo\iTop\Core\AttributeDefinition\AttributeHierarchicalKey::class) && ($sAttType != \Combodo\iTop\Core\AttributeDefinition\AttributeHierarchicalKey::class))
-					{
+					if (($iOperatorCode != TREE_OPERATOR_EQUALS) && !is_a($sAttType, \Combodo\iTop\Core\AttributeDefinition\AttributeHierarchicalKey::class, true)) {
 						throw new OqlNormalizeException("The specified tree operator $sOperator is not applicable to the key", $sSourceQuery, $oLeftField->GetNameDetails());
 					}
 				}
@@ -567,26 +544,23 @@ class OqlObjectQuery extends OqlQuery
 
 		// Check the select information
 		//
-		foreach ($this->GetSelectedClasses() as $oClassDetails)
-		{
+		foreach ($this->GetSelectedClasses() as $oClassDetails) {
 			$sClassToSelect = $oClassDetails->GetValue();
-			if (!array_key_exists($sClassToSelect, $aAliases))
-			{
+			if (!array_key_exists($sClassToSelect, $aAliases)) {
 				throw new OqlNormalizeException('Unknown class [alias]', $sSourceQuery, $oClassDetails, array_keys($aAliases));
 			}
 		}
 
 		// Check the condition tree
 		//
-		if ($this->m_oCondition instanceof Expression)
-		{
+		if ($this->m_oCondition instanceof Expression) {
 			$this->m_oCondition->Check($oModelReflection, $aAliases, $sSourceQuery);
 		}
 	}
 
 	/**
 	 * Make the relevant DBSearch instance (FromOQL)
-	 */	 	
+	 */
 	public function ToDBSearch($sQuery)
 	{
 		$sClass = $this->GetClass(new ModelReflectionRuntime());
@@ -594,6 +568,7 @@ class OqlObjectQuery extends OqlQuery
 
 		$oSearch = new DBObjectSearch($sClass, $sClassAlias);
 		$oSearch->InitFromOqlQuery($this, $sQuery);
+
 		return $oSearch;
 	}
 }
@@ -606,19 +581,15 @@ class OqlUnionQuery extends OqlQuery
 	{
 		parent::__construct();
 		$this->aQueries[] = $oLeftQuery;
-		if ($oRightQueryOrUnion instanceof OqlUnionQuery)
-		{
-			foreach ($oRightQueryOrUnion->GetQueries() as $oSingleQuery)
-			{
+		if ($oRightQueryOrUnion instanceof OqlUnionQuery) {
+			foreach ($oRightQueryOrUnion->GetQueries() as $oSingleQuery) {
 				$this->aQueries[] = $oSingleQuery;
 			}
-		}
-		else
-		{
+		} else {
 			$this->aQueries[] = $oRightQueryOrUnion;
 		}
 	}
-	
+
 	public function GetQueries()
 	{
 		return $this->aQueries;
@@ -627,66 +598,54 @@ class OqlUnionQuery extends OqlQuery
 	/**
 	 * Check the validity of the expression with regard to the data model
 	 * and the query in which it is used
-	 * 	 	 
-	 * @param ModelReflection $oModelReflection MetaModel to consider	 	
+	 *
+	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 *
 	 * @throws OqlNormalizeException
-	 */	 	
+	 */
 	public function Check(ModelReflection $oModelReflection, $sSourceQuery)
 	{
 		$aColumnToClasses = array();
-		foreach ($this->aQueries as $iQuery => $oQuery)
-		{
+		foreach ($this->aQueries as $iQuery => $oQuery) {
 			$oQuery->Check($oModelReflection, $sSourceQuery);
 
 			$aAliasToClass = array($oQuery->GetClassAlias() => $oQuery->GetClass($oModelReflection));
 			$aJoinSpecs = $oQuery->GetJoins();
-			if (is_array($aJoinSpecs))
-			{
-				foreach ($aJoinSpecs as $oJoinSpec)
-				{
+			if (is_array($aJoinSpecs)) {
+				foreach ($aJoinSpecs as $oJoinSpec) {
 					$aAliasToClass[$oJoinSpec->GetClassAlias()] = $oJoinSpec->GetClass();
 				}
 			}
 
 			$aSelectedClasses = $oQuery->GetSelectedClasses();
-			if ($iQuery != 0)
-			{
-				if (count($aSelectedClasses) < count($aColumnToClasses))
-				{
+			if ($iQuery != 0) {
+				if (count($aSelectedClasses) < count($aColumnToClasses)) {
 					$oLastClass = end($aSelectedClasses);
 					throw new OqlNormalizeException('Too few selected classes in the subquery', $sSourceQuery, $oLastClass);
 				}
-				if (count($aSelectedClasses) > count($aColumnToClasses))
-				{
+				if (count($aSelectedClasses) > count($aColumnToClasses)) {
 					$oLastClass = end($aSelectedClasses);
 					throw new OqlNormalizeException('Too many selected classes in the subquery', $sSourceQuery, $oLastClass);
 				}
 			}
-			foreach ($aSelectedClasses as $iColumn => $oClassDetails)
-			{
+			foreach ($aSelectedClasses as $iColumn => $oClassDetails) {
 				$sAlias = $oClassDetails->GetValue();
 				$sClass = $aAliasToClass[$sAlias];
 				$aColumnToClasses[$iColumn][] = array(
-					'alias' => $sAlias,
-					'class' => $sClass,
+					'alias'      => $sAlias,
+					'class'      => $sClass,
 					'class_name' => $oClassDetails,
 				);
 			}
 		}
-		foreach ($aColumnToClasses as $iColumn => $aClasses)
-		{
+		foreach ($aColumnToClasses as $iColumn => $aClasses) {
 			$sRootClass = null;
-			foreach ($aClasses as $iQuery => $aData)
-			{
-				if ($iQuery == 0)
-				{
+			foreach ($aClasses as $iQuery => $aData) {
+				if ($iQuery == 0) {
 					// Establish the reference
 					$sRootClass = $oModelReflection->GetRootClass($aData['class']);
-				}
-				else
-				{
-					if ($oModelReflection->GetRootClass($aData['class']) != $sRootClass)
-					{
+				} else {
+					if ($oModelReflection->GetRootClass($aData['class']) != $sRootClass) {
 						$aSubclasses = $oModelReflection->EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL);
 						throw new OqlNormalizeException('Incompatible classes: could not find a common ancestor', $sSourceQuery, $aData['class_name'], $aSubclasses);
 					}
@@ -699,21 +658,21 @@ class OqlUnionQuery extends OqlQuery
 	 * Determine the class
 	 *
 	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 *
 	 * @return string
 	 * @throws Exception
 	 */
 	public function GetClass(ModelReflection $oModelReflection)
 	{
 		$aFirstColClasses = array();
-		foreach ($this->aQueries as $iQuery => $oQuery)
-		{
+		foreach ($this->aQueries as $iQuery => $oQuery) {
 			$aFirstColClasses[] = $oQuery->GetClass($oModelReflection);
 		}
 		$sClass = self::GetLowestCommonAncestor($oModelReflection, $aFirstColClasses);
-		if (is_null($sClass))
-		{
+		if (is_null($sClass)) {
 			throw new Exception('Could not determine the class of the union query. This issue should have been detected earlier by calling OqlQuery::Check()');
 		}
+
 		return $sClass;
 	}
 
@@ -726,6 +685,7 @@ class OqlUnionQuery extends OqlQuery
 	public function GetClassAlias()
 	{
 		$sAlias = $this->aQueries[0]->GetClassAlias();
+
 		return $sAlias;
 	}
 
@@ -735,29 +695,25 @@ class OqlUnionQuery extends OqlQuery
 	 *
 	 * @param ModelReflection $oModelReflection MetaModel to consider
 	 * @param array $aClasses Flat list of classes
+	 *
 	 * @return string the lowest common ancestor amongst classes, null if none has been found
 	 * @throws Exception
 	 */
 	public static function GetLowestCommonAncestor(ModelReflection $oModelReflection, $aClasses)
 	{
 		$sAncestor = null;
-		foreach($aClasses as $sClass)
-		{
-			if (is_null($sAncestor))
-			{
+		foreach ($aClasses as $sClass) {
+			if (is_null($sAncestor)) {
 				// first loop
 				$sAncestor = $sClass;
-			}
-			elseif ($oModelReflection->GetRootClass($sClass) != $oModelReflection->GetRootClass($sAncestor))
-			{
+			} elseif ($oModelReflection->GetRootClass($sClass) != $oModelReflection->GetRootClass($sAncestor)) {
 				$sAncestor = null;
 				break;
-			}
-			else
-			{
+			} else {
 				$sAncestor = self::LowestCommonAncestor($oModelReflection, $sAncestor, $sClass);
 			}
 		}
+
 		return $sAncestor;
 	}
 
@@ -766,37 +722,32 @@ class OqlUnionQuery extends OqlQuery
 	 */
 	protected static function LowestCommonAncestor(ModelReflection $oModelReflection, $sClassA, $sClassB)
 	{
-		if ($sClassA == $sClassB)
-		{
+		if ($sClassA == $sClassB) {
 			$sRet = $sClassA;
-		}
-		elseif (in_array($sClassA, $oModelReflection->EnumChildClasses($sClassB)))
-		{
+		} elseif (in_array($sClassA, $oModelReflection->EnumChildClasses($sClassB))) {
 			$sRet = $sClassB;
-		}
-		elseif (in_array($sClassB, $oModelReflection->EnumChildClasses($sClassA)))
-		{
+		} elseif (in_array($sClassB, $oModelReflection->EnumChildClasses($sClassA))) {
 			$sRet = $sClassA;
-		}
-		else
-		{
+		} else {
 			// Recurse
 			$sRet = self::LowestCommonAncestor($oModelReflection, $sClassA, $oModelReflection->GetParentClass($sClassB));
 		}
+
 		return $sRet;
 	}
+
 	/**
 	 * Make the relevant DBSearch instance (FromOQL)
-	 */	 	
+	 */
 	public function ToDBSearch($sQuery)
 	{
 		$aSearches = array();
-		foreach ($this->aQueries as $oQuery)
-		{
+		foreach ($this->aQueries as $oQuery) {
 			$aSearches[] = $oQuery->ToDBSearch($sQuery);
 		}
 
 		$oSearch = new DBUnionSearch($aSearches);
+
 		return $oSearch;
 	}
 }

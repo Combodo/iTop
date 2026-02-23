@@ -702,6 +702,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:TriggerOnObjectUpdate' => 'Eseményindító (objektum frissítéskor)',
 	'Class:TriggerOnObjectUpdate+' => 'Az adott osztály [egy gyermekosztálya] objektumának frissítésekor elinduló eseményindító',
+	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Célmezők',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ]);

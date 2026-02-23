@@ -1,23 +1,170 @@
 {% use "application/forms/itop_base_layout.html.twig" %}
 
-{# Widgets #}
+{%- block form_start -%}
+    {%- do form.setMethodRendered() -%}
+    {% set method = method|upper %}
+    {%- if method in ["GET", "POST"] -%}
+        {% set form_method = method %}
+    {%- else -%}
+        {% set form_method = "POST" %}
+    {%- endif -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-form')}) -%}
+    <form is="itop-form-element" {% if name != '' %} name="{{ name }}"{% endif %} method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{{ block('attributes') }}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+    {%- if form_method != method -%}
+        <input type="hidden" name="_method" value="{{ method }}" />
+    {%- endif -%}
+{%- endblock form_start -%}
+
+{%- block form_end -%}
+    {%- if not render_rest is defined or render_rest -%}
+        {{ form_rest(form) }}
+    {%- endif -%}
+</form>
+{%- endblock form_end -%}
 
 {%- block widget_attributes -%}
+    {{- parent() -}}
+    {%  if trigger_form_submit_on_modify %}
+        onChange="this.form.TriggerTurbo(this);"
+    {% endif %}
+{%- endblock widget_attributes -%}
+
+{%- block attributes -%}
+    {{- parent() -}}
+    {%  if impacted_by is not empty  %}
+        data-impacted-by="{{ impacted_by|join(',') }}"
+    {% endif %}
+{%- endblock attributes -%}
+
+{%- block form_widget_simple -%}
     {%  if type == 'text' %}{% set ibo_class='ibo-input-string' %}{% else %}{% set ibo_class='ibo-input-' ~ type %}{% endif %}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input ' ~ ibo_class)|trim}) %}
     {{- parent() -}}
-{%- endblock widget_attributes -%}
+{%- endblock form_widget_simple -%}
+
+{%- block textarea_widget -%}
+    {%  if type == 'text' %}{% set ibo_class='ibo-input-string' %}{% else %}{% set ibo_class='ibo-input-' ~ type %}{% endif %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input ' ~ ibo_class)|trim}) %}
+    {{- parent() -}}
+{%- endblock textarea_widget -%}
+
+{%- block choice_widget_collapsed -%}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' ibo-input')|trim}) %}
+    <select is="choices-element" class="field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete ui-autocomplete-input"
+        {{ block('widget_attributes') }}
+        {% if multiple %} multiple="multiple" {% endif %}
+            {% if max_items_selected is defined %} data-tom-select-max-items-selected="{{ max_items_selected }}" {% endif %}
+            {% if disable_auto_complete %} data-tom-select-disable-auto-complete=true {% endif %}
+            {% if placeholder is not none %} hidePlaceholder=false {% endif %}
+    >
+        {%- if placeholder is not none -%}
+            <option value=""{% if placeholder_attr|default({}) %}{% with { attr: placeholder_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
+        {%- endif -%}
+        {%- if preferred_choices|length > 0 -%}
+            {% set options = preferred_choices %}
+            {% set render_preferred_choices = true %}
+            {{- block('choice_widget_options') -}}
+            {%- if choices|length > 0 and separator is not none -%}
+                <option disabled="disabled">{{ separator }}</option>
+            {%- endif -%}
+        {%- endif -%}
+        {%- set options = choices -%}
+        {%- set render_preferred_choices = false -%}
+        {{- block('choice_widget_options') -}}
+    </select>
+{%- endblock choice_widget_collapsed -%}
+
+{%- block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- for child in form %}
+            {{- form_widget(child) -}}
+            {{- form_label(child, null, {translation_domain: choice_translation_domain, no_label_class: true}) -}}
+        {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded -%}
 
 {%- block form_label -%}
-    {%- if compound is defined and compound -%}
+    {%- set no_legend_element = inline_display is defined and inline_display  -%}
+    {%- if compound is defined and compound and not no_legend_element -%}
         {%- set element = 'legend' -%}
-    {%- else -%}
+    {%- elseif no_label_class is not defined or not no_label_class -%}
         {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ibo-field--label')|trim}) %}
     {%- endif -%}
     {{- parent() -}}
 {%- endblock form_label -%}
 
+{%- block form_rows -%}
+
+    {% for block in blocks %}
+        {% if block.added == 1 %}
+            {% set row_attr = row_attr|merge({id: 'turbo_' ~ block.id }) %}
+            {{ form_row(form[block.name], {row_attr: row_attr}) }}
+        {% else %}
+            <div id="turbo_{{ block.id }}" class="ibo-field ibo-content-block ibo-block ibo-field-small"></div>
+        {% endif %}
+    {% endfor %}
+
+{%- endblock form_rows -%}
+
 {%- block form_row -%}
     {% set row_attr = row_attr|merge({class: (row_attr.class|default('') ~ ' ibo-field ibo-content-block ibo-block  ibo-field-small')|trim}) %}
     {{- parent() -}}
 {%- endblock form_row -%}
+
+{%- block collection_widget -%}
+
+    {% if prototype is defined and not prototype.rendered %}
+        {%- set prototype_html = '<collection-entry-element data-allow-delete="' ~ allow_delete ~ '" data-allow-ordering="' ~ allow_ordering ~'" data-new="true">' ~ form_widget(prototype) ~'</collection-entry-element>' -%}
+        {%- set attr = attr|merge({'data-prototype': prototype_html, 'class': name, 'data-index': form|length > 0 ? form|last.vars.name + 1 : 0 }) -%}
+    {% endif %}
+
+    <collection-element {{ block('widget_container_attributes') }}>
+        {% if allow_add %}
+            <button type="button" class="add_item_link ibo-button ibo-button ibo-is-regular " data-collection-holder-class="{{ name }}">{{ button_label|dict_s }}</button>
+        {% endif %}
+        <div role="list">
+            {% for child in form %}
+                <collection-entry-element data-allow-delete="{{ allow_delete }}" data-allow-ordering="{{ allow_ordering }}">
+                    {{ form_widget(child) }}
+                </collection-entry-element>
+            {% endfor %}
+        </div>
+
+    </collection-element>
+
+{%- endblock collection_widget -%}
+
+{%- block form_label_content -%}
+    {{- parent() -}}
+    <div style="float: right;display: flex;flex-direction: column;align-items: center;row-gap: 3px;margin-top: 5px;">
+        <span role="marquee" class="ibo-button--icon fas" style="padding:6px;"></span>
+    </div>
+{%-endblock form_label_content  -%}
+
+{%- block form_errors -%}
+    <div id="turbo_error_{{ form.vars.id }}" class="form-error">
+        {{- parent() -}}
+    </div>
+{%- endblock form_errors -%}
+
+{%- block oql_form_widget -%}
+    <textarea is="oql-element" {{ block('widget_attributes') }} data-modal-title-text="{{ 'UI:Edit:SearchQuery'|trans }}" data-empty-text="{{ 'Use the search form above to search for objects to be added'|trans }}" data-valid-query-text="{{ 'OQL is valid'|trans }}" data-invalid-query-text="{{ 'OQL is invalid'|trans }}">{{ value }}</textarea>
+    <div class="ibo-form-actions">
+        {% if with_ai_button is defined and with_ai_button %}
+            <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" type="button" name="AI" value="" aria-label="AI">
+                <span class="ibo-button--icon fas fa-magic"></span>
+                {{ 'UI:Edit:AI'|trans }}
+            </button>
+        {% endif %}
+        <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-success" data-role="ibo-button" data-action="run" type="button" name="Run Query" value="" aria-label="Run Query">
+            <span class="ibo-button--icon fas fa-play"></span>
+            {{ 'UI:Edit:TestQuery'|trans }}
+        </button>
+        <button class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" data-action="book" type="button" name="Open Book" value="" aria-label="Open Query Phrases Book">
+            <span class="ibo-button--icon fas fa-book"></span>
+            {{ 'UI:Edit:SearchQuery'|trans }}
+        </button>
+    </div>
+{%- endblock oql_form_widget -%}
+
+

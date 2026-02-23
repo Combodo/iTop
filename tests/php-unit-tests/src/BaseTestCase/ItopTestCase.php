@@ -8,12 +8,14 @@
 namespace Combodo\iTop\Test\UnitTest;
 
 use CMDBSource;
-use DateTime;
 use DeprecatedCallsLog;
+use DOMDocument;
 use MySQLTransactionNotClosedException;
+use ParseError;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use ReflectionMethod;
 use SetupUtils;
+use Symfony\Component\ErrorHandler\Error\FatalError;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
@@ -29,6 +31,7 @@ use const DEBUG_BACKTRACE_IGNORE_ARGS;
 abstract class ItopTestCase extends KernelTestCase
 {
 	public const TEST_LOG_DIR = 'test';
+	protected array $aFileToClean = [];
 
 	/**
 	 * @var bool
@@ -37,7 +40,7 @@ abstract class ItopTestCase extends KernelTestCase
 	public const DISABLE_DEPRECATEDCALLSLOG_ERRORHANDLER = true;
 	public static $DEBUG_UNIT_TEST = false;
 	protected static $aBackupStaticProperties = [];
-
+	public ?array $aLastCurlGetInfo = null;
 	/**
 	 * @link https://docs.phpunit.de/en/9.6/annotations.html#preserveglobalstate PHPUnit `preserveGlobalState` annotation documentation
 	 *
@@ -150,6 +153,17 @@ abstract class ItopTestCase extends KernelTestCase
 	{
 		parent::setUp();
 
+		// Check globals
+		global $fItopStarted;
+		if (is_null($fItopStarted)) {
+			$fItopStarted = microtime(true);
+		}
+
+		global $iItopInitialMemory;
+		if (is_null($iItopInitialMemory)) {
+			$iItopInitialMemory = memory_get_usage(true);
+		}
+
 		// Hack - Required the first time the Portal kernel is booted on a newly installed iTop
 		$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] = __DIR__.'/../../../../../env-production/itop-portal-base/portal/public/';
 
@@ -174,6 +188,15 @@ abstract class ItopTestCase extends KernelTestCase
 				CMDBSource::Query('ROLLBACK');
 			}
 			throw new MySQLTransactionNotClosedException('Some DB transactions were opened but not closed ! Fix the code by adding ROLLBACK or COMMIT statements !', []);
+		}
+
+		foreach ($this->aFileToClean as $sPath) {
+			if (is_file($sPath)) {
+				@unlink($sPath);
+				continue;
+			}
+
+			SetupUtils::tidydir($sPath);
 		}
 	}
 
@@ -575,6 +598,23 @@ abstract class ItopTestCase extends KernelTestCase
 	}
 
 	/**
+	 * @since 3.3.0
+	 */
+	protected static function AssertPHPCodeIsValid(string $sPHPCode, $sMessage = ''): void
+	{
+		try {
+			eval($sPHPCode);
+		} catch (ParseError $e) {
+			$aLines = explode("\n", $sPHPCode);
+			foreach ($aLines as $iLine => $sLine) {
+				echo sprintf("%02d: %s\n", $iLine + 1, $sLine);
+			}
+			echo 'Parse Error: '.$e->getMessage().' at line: '.$e->getLine()."\n";
+			self::fail($sMessage);
+		}
+	}
+
+	/**
 	 * Control which Kernel will be loaded when invoking the bootKernel method
 	 *
 	 * @see static::bootKernel(), static::getContainer()
@@ -630,5 +670,93 @@ abstract class ItopTestCase extends KernelTestCase
 		}
 		fclose($handle);
 		return array_reverse($aLines);
+	}
+
+	/**
+	* @param $sUrl
+	* @param array|null $aPostFields
+	* @param array|null $aCurlOptions
+	* @param $bXDebugEnabled
+	* @return string
+	 */
+	protected function CallUrl($sUrl, ?array $aPostFields = [], ?array $aCurlOptions = [], $bXDebugEnabled = false): string
+	{
+		$ch = curl_init();
+		if ($bXDebugEnabled) {
+			curl_setopt($ch, CURLOPT_COOKIE, "XDEBUG_SESSION=phpstorm");
+		}
+
+		curl_setopt($ch, CURLOPT_URL, $sUrl);
+		curl_setopt($ch, CURLOPT_POST, 1);// set post data to true
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		// Force disable of certificate check as most of dev / test env have a self-signed certificate
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt_array($ch, $aCurlOptions);
+		if ($this->IsArrayOfArray($aPostFields)) {
+			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($aPostFields));
+		} else {
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
+		}
+
+		$sOutput = curl_exec($ch);
+
+		$info = curl_getinfo($ch);
+		$this->aLastCurlGetInfo = $info;
+		$sErrorMsg = curl_error($ch);
+		$iErrorCode = curl_errno($ch);
+		curl_close($ch);
+
+		\IssueLog::Info(__METHOD__, null, ['url' => $sUrl, 'error' => $sErrorMsg, 'error_code' => $iErrorCode, 'post_fields' => $aPostFields, 'info' => $info]);
+
+		return $sOutput;
+	}
+
+	private function IsArrayOfArray(array $aStruct): bool
+	{
+		foreach ($aStruct as $k => $v) {
+			if (is_array($v)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	protected function CallItopUri(string $sUri, ?array $aPostFields = [], ?array $aCurlOptions = [], $bXDebugEnabled = false): string
+	{
+		$sUrl = \MetaModel::GetConfig()->Get('app_root_url')."/$sUri";
+
+		return $this->CallUrl($sUrl, $aPostFields, $aCurlOptions, $bXDebugEnabled);
+	}
+
+	/**
+	 * @param $sXML
+	 *
+	 * @return false|string
+	 */
+	protected function CanonicalizeXML($sXML)
+	{
+		// Canonicalize the expected XML (to cope with indentation)
+		$oExpectedDocument = new DOMDocument();
+		$oExpectedDocument->preserveWhiteSpace = false;
+		$oExpectedDocument->formatOutput = true;
+		$oExpectedDocument->loadXML($sXML);
+
+		$sSavedXML = $oExpectedDocument->SaveXML();
+
+		return str_replace(' encoding="UTF-8"', '', $sSavedXML);
+	}
+
+	/**
+	 * @param $sExpected
+	 * @param $sActual
+	 * @param string $sMessage
+	 */
+	protected function AssertEqualiTopXML($sExpected, $sActual, string $sMessage = '')
+	{
+		// Note: assertEquals reports the differences in a diff which is easier to interpret (in PHPStorm)
+		// as compared to the report given by assertEqualXMLStructure
+		static::assertEquals($this->CanonicalizeXML($sExpected), $this->CanonicalizeXML($sActual), $sMessage);
 	}
 }

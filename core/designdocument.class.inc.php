@@ -41,7 +41,7 @@ use utils;
 /**
  * Class \Combodo\iTop\DesignDocument
  *
- * A design document is the DOM tree that modelize behaviors. One of its
+ * A design document is the DOM tree that models behaviors. One of its
  * characteristics is that it can be altered by the mean of the same kind of document.
  *
  */

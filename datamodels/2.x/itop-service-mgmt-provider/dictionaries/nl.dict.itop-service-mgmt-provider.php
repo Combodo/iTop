@@ -243,7 +243,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Service/Attribute:description' => 'Omschrijving',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Servicecategorie',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Naam servicecategorie',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => 'Documenten',

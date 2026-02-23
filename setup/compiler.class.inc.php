@@ -23,6 +23,7 @@ use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\Page;
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\DesignDocument;
+use Combodo\iTop\PropertyType\PropertyTypeDesign;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/modelfactory.class.inc.php');
@@ -698,6 +699,10 @@ PHP;
 		// Create module design XML files
 		$oModuleDesignsNode = $this->oFactory->GetNodes('/itop_design/module_designs')->item(0);
 		$this->CompileModuleDesigns($oModuleDesignsNode, $sTempTargetDir, $sFinalTargetDir);
+
+		// Create property types XML files
+		$oPropertyTypesNode = $this->oFactory->GetNodes('/itop_design/meta/property_types')->item(0);
+		$this->CompilePropertyTypes($oPropertyTypesNode, $sTempTargetDir, $sFinalTargetDir);
 
 		// Compile the XML parameters
 		/** @var \MFElement $oParametersNode */
@@ -3568,6 +3573,21 @@ EOF;
 				$oClone = $oDoc->importNode($oDesign->cloneNode(true), true);
 				$oDoc->appendChild($oClone);
 				$oDoc->save($sTempTargetDir.'/core/module_designs/'.$oDesign->getAttribute('id').'.xml');
+			}
+		}
+	}
+
+	protected function CompilePropertyTypes(?DOMNode $oPropertyTypes, string $sTempTargetDir, string $sFinalTargetDir): void
+	{
+		if ($oPropertyTypes) {
+			foreach ($oPropertyTypes->GetNodes('property_type') as $oPropertyType) {
+				$oDoc = new PropertyTypeDesign();
+				$oClone = $oDoc->importNode($oPropertyType->cloneNode(true), true);
+				$oDoc->appendChild($oClone);
+				/** @var DesignElement $oPropertyType */
+				$sExtends = $oPropertyType->GetChildText('extends', 'Default');
+				SetupUtils::builddir($sTempTargetDir.'/core/property_types/'.$sExtends);
+				$oDoc->save($sTempTargetDir.'/core/property_types/'.$sExtends.'/'.$oPropertyType->getAttribute('id').'.xml');
 			}
 		}
 	}

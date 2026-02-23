@@ -1,0 +1,12 @@
+{# @copyright   Copyright (C) 2010-2025 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+<turbo-stream action="{{ oUIBlock.GetAction() }}" target="{{ oUIBlock.GetTarget() }}">
+    <template>
+        {%- block iboContentBlockContainer -%}
+            {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+                {{ render_block(oSubBlock, {aPage: aPage}) }}
+            {% endfor %}
+        {%- endblock -%}
+    </template>
+</turbo-stream>

@@ -101,6 +101,7 @@ class iTopComposer extends AbstractFolderAnalyzer
 			'symfony/var-dumper/Test',
 			'symfony/var-dumper/Tests/Test',
 			'symfony/var-dumper/Tests',
+			'symfony/validator/Test',
 			'symfony/web-profiler-bundle/Tests',
 			'symfony/yaml/Tests',
 
