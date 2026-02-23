@@ -183,4 +183,14 @@ class DBUnionSearchTest extends ItopDataTestCase
 			],
 		];
 	}
+
+	public function testAllowAllDataOnUnions()
+	{
+		$oSearch = \DBObjectSearch::FromOQL('SELECT Server UNION SELECT VirtualMachine');
+		$oSearch->AllowAllData(false);
+		self::assertFalse($oSearch->IsAllDataAllowed(), 'DBUnionSearch AllowData value');
+		$oSearch->AllowAllData(true);
+		self::assertTrue($oSearch->IsAllDataAllowed(), 'DBUnionSearch AllowData value');
+	}
+
 }

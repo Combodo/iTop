@@ -694,15 +694,6 @@ class DBSearchTest extends ItopDataTestCase
 		$this->CheckNestedSearch($sNestedQuery, false);
 	}
 
-	public function testAllowAllDataOnUnions()
-	{
-		$oSearch = \DBObjectSearch::FromOQL('SELECT Server UNION SELECT VirtualMachine');
-		$oSearch->AllowAllData(false);
-		self::assertFalse($oSearch->IsAllDataAllowed(), 'DBUnionSearch AllowData value');
-		$oSearch->AllowAllData(true);
-		self::assertTrue($oSearch->IsAllDataAllowed(), 'DBUnionSearch AllowData value');
-	}
-
 	private function CheckNestedSearch($sQuery, $bAllowAllData)
 	{
 		$oNestedQuerySearch = \DBObjectSearch::FromOQL($sQuery);
