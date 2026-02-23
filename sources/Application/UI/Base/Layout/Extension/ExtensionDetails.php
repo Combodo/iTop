@@ -15,7 +15,6 @@ class ExtensionDetails extends UIContentBlock
 	public const BLOCK_CODE = 'ibo-extension-details';
 
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/extension/extension-details/layout';
-	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/layouts/extension/extension-details/layout';
 
 	protected string $sCode;
 	protected string $sLabel;
