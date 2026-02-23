@@ -126,6 +126,7 @@ HTML
 		);
 
 		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
+		$oPage->add('</div>');
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		//$oPage->add('</fieldset>');
 		$oPage->add_ready_script(

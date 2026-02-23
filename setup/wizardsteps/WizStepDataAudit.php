@@ -69,7 +69,7 @@ class WizStepDataAudit extends WizStepInstall
 
 		$aInstallParams = $this->BuildConfig();
 
-		$this->AddProgressBar($oPage);
+		$this->AddProgressBar($oPage, 'Progress of the verification');
 
 		$sJSONData = json_encode($aInstallParams);
 		$oPage->add('<input type="hidden" id="installer_parameters" value="'.utils::EscapeHtml($sJSONData).'"/>');
@@ -78,17 +78,19 @@ class WizStepDataAudit extends WizStepInstall
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		$sApplicationUrl = $this->oWizard->GetParameter('application_url').'pages/exec.php?exec_module=combodo-data-feature-removal&exec_page=index.php';
 		$oPage->add('<input type="hidden" id="application_url" value="'.$sApplicationUrl.'"/>');
-
 		if (!$this->CheckDependencies()) {
 			$oPage->error($this->sDependencyIssue);
-		}
-
-		$oPage->add_ready_script(
-			<<<JS
+			$oPage->add_ready_script(<<<JS
+	$("#wiz_form").data("installation_status", "error");
+	document.getElementById("setup_msg").innerText = "Unmet dependencies";
+JS);
+		} else {
+			$oPage->add_ready_script(<<<JS
 	$("#wiz_form").data("installation_status", "not started");
 	ExecuteStep("");
-JS
-		);
+JS);
+		}
+
 	}
 
 	protected function AddProgressErrorScript($oPage, $aRes)
