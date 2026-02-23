@@ -13,7 +13,7 @@ $ibo-title--icon--size-3: 70px !default;
 
 $ibo-title--icon-background--size--must-contain: contain !default; // deprecated, to be removed in favor of $ibo-panel--icon-img--size--must-contain
 $ibo-title--icon-background--size--must-cover: cover !default; // deprecated, to be removed in favor of $ibo-panel--icon-img--size--must-cover
-$ibo-title--icon-background--size--must-zoomout: 66.67% !default; // deprecated, to be removed in favor of $ibo-panel--icon-img--size--must-zoomout
+$ibo-title--icon-background--size--must-zoomout: 66.67% !default; // deprecated, to be removed in favor of $ibo-title--icon-img--size--must-zoomout
 $ibo-title--icon-img--size--must-contain: $ibo-title--icon-background--size--must-contain !default; // TODO remove when dealing with N°9317
 $ibo-title--icon-img--size--must-cover: $ibo-title--icon-background--size--must-cover !default; // TODO remove when dealing with N°9317
 $ibo-title--icon-img--size--must-zoomout: $ibo-title--icon-background--size--must-zoomout !default; // TODO remove when dealing with N°9317
