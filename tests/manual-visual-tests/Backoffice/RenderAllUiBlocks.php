@@ -44,7 +44,7 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Extension\ExtensionDetails;
-use Combodo\iTop\Application\UI\Base\Layout\Extension\ExtensionDetailsFactory;
+use Combodo\iTop\Application\UI\Base\Layout\Extension\ExtensionDetailsUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
@@ -75,7 +75,7 @@ $oMainTitle = new Html('<h1>All UI blocks examples</h1>');
 $oPage->AddUiBlock($oMainTitle);
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
-
+$oPage->add('<a href="#page_bottom">Go to bottom of the page</a>');
 /////////
 // Alerts
 /////////
@@ -625,10 +625,11 @@ $oPage->AddUiBlock($oSampleBadgeRed);
 
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Extensions details layout', 3));
 
-$oExtensionDetailInstalledFromFactory = ExtensionDetailsFactory::MakeInstalled('itop-sample', 'My extension v2', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false,'missing' => true]);
+$oExtensionDetailInstalledFromFactory = ExtensionDetailsUIBlockFactory::MakeInstalled('itop-sample', 'My extension v2', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false,'missing' => true]);
 $oPage->AddUiBlock($oExtensionDetailInstalledFromFactory);
 
-$oExtensionDetailInstalledWithLongTitle = ExtensionDetailsFactory::MakeNotInstalled('itop-sample', 'My extension with a very long title', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false]);
+$oExtensionDetailInstalledWithLongTitle = ExtensionDetailsUIBlockFactory::MakeNotInstalled('itop-sample', 'My extension with a very long title', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false]);
 $oPage->AddUiBlock($oExtensionDetailInstalledWithLongTitle);
+$oPage->add('<hr id="page_bottom"/>');
 
 $oPage->output();

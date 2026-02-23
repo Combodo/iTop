@@ -1,5 +1,8 @@
 $ibo-extension-details--information--metadata--padding : $ibo-spacing-200 !default;
 $ibo-extension-details--information--metadata--delimiter : "-" !default;
+$ibo-extension-details--information--metadata--color : $ibo-color-grey-700 !default;
+$ibo-extension-details--actions--button--padding-y : 3px !default;
+$ibo-extension-details--actions--button--padding-x : $ibo-button--padding-x !default;
 
 .ibo-extension-details {
 	display: inline-flex;
@@ -26,7 +29,7 @@ $ibo-extension-details--information--metadata--delimiter : "-" !default;
 
 .ibo-extension-details--information--metadata {
 	@extend %ibo-font-ral-med-100;
-	color: $ibo-color-grey-700;
+	color: $ibo-extension-details--information--metadata--color;
 }
 
 .ibo-extension-details--information--description {
@@ -44,6 +47,5 @@ $ibo-extension-details--information--metadata--delimiter : "-" !default;
 }
 
 .ibo-extension-details--actions > button {
-	position: relative;
-	top: -3px;
+	padding: $ibo-extension-details--actions--button--padding-y $ibo-extension-details--actions--button--padding-x;
 }
