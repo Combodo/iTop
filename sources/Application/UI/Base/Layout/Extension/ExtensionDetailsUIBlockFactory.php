@@ -5,7 +5,6 @@ namespace Combodo\iTop\Application\UI\Base\Layout\Extension;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Badge\BadgeUIBlockFactory;
 use Dict;
-use utils;
 
 class ExtensionDetailsUIBlockFactory extends AbstractUIBlockFactory
 {
