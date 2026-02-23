@@ -497,6 +497,34 @@ table .group-actions a.glyphicon-menu-hamburger{
 	display: block;
 }
 
+/*********/
+/* Mosaïc Filter Management */
+/*********/
+/*
+* Css to fix nthchild (4n) item which has 0 margin by default in iTop.
+* Since we change order with filtering it messes up wrap up display.
+*/
+.mosaic-group-item {
+    margin-right: 1%!important;
+}
+
+.filter-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 15vw;
+}
+
+@media (min-width: 992px) {
+    #brick_content_toolbar > div label input{
+        width: 15vw;
+        height: 30px;
+    }
+    #brick-content-table_filter label input{
+        width: 15vw;
+    }
+}
+
 
 /****************/
 /* - List mode  */
