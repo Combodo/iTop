@@ -90,8 +90,7 @@ if (utils::IsModeCLI()) {
 	SetupUtils::CheckPhpAndExtensionsForCli($oP);
 	try {
 		utils::UseParamFile();
-	}
-	catch (Exception $e) {
+	} catch (Exception $e) {
 		ExitError($oP, $e->GetMessage());
 	}
 } else {

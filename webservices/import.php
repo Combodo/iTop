@@ -211,8 +211,7 @@ if (utils::IsModeCLI()) {
 
 	try {
 		utils::UseParamFile();
-	}
-	catch (Exception $e) {
+	} catch (Exception $e) {
 		$oP->p('Error: '.$e->GetMessage());
 		$oP->output();
 		exit(-2);

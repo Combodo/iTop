@@ -199,8 +199,6 @@ function RaiseAlarm($sMessage)
 //////////
 // Main
 
-
-
 if (utils::IsModeCLI()) {
 	try {
 		utils::UseParamFile();
