@@ -999,9 +999,27 @@ HTML,
 
 	public function testLoadParamFile()
 	{
-		$sTmpFileInsideItop = APPROOT.'env-production/itop-backup/backup.params.distrib';
-		$sParamName = 'auth_user';
-		$sParamValue = 'admin';
+		$sTmpFileInsideItop = APPROOT.'data/test/testLoadParamFile.params';
+		$sDir = dirname($sTmpFileInsideItop);
+		if (!is_dir($sDir)) {
+			mkdir($sDir, 0777, true);
+		}
+		$sParamName = 'IP1';
+		$sParamValue = 'IV1';
+		$sParams = <<<INI
+# comment
+$sParamName = $sParamValue
+INI;
+		file_put_contents($sTmpFileInsideItop, $sParams);
+
+		$this->expectException(\Exception::class);
+		$this->expectExceptionMessage("File '$sTmpFileInsideItop' should be outside iTop");
+		self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileInsideItop]);
+		self::assertNotEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() should NOT have loaded the file: $sTmpFileInsideItop");
+
+
+		$sParamName = 'OP2';
+		$sParamValue = 'OV2';
 
 		$sTmpFileOutsideItop = tempnam(sys_get_temp_dir(), 'utils-test');
 		$sParams = <<<INI

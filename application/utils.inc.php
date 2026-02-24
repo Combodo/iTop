@@ -181,6 +181,9 @@ class utils
 
 	protected static function LoadParamFile($sParamFile)
 	{
+		if (utils::RealPath($sParamFile, APPROOT) !== false) {
+			throw new Exception("File '".utils::HtmlEntities($sParamFile)."' should be outside iTop");
+		}
 		if (!file_exists($sParamFile)) {
 			throw new Exception("Could not find the parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
