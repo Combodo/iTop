@@ -1,0 +1,17 @@
+{
+  "config": {
+    "classmap-authoritative": true
+  },
+  "autoload": {
+    "psr-4": {
+      "Combodo\\iTop\\DataFeatureRemoval\\": "src",
+      "": "src/NoNamespace"
+    }
+  },
+  "name": "combodo/combodo-data-feature-removal",
+  "type": "itop-extension",
+  "description": "iTop Data Feature Removal",
+  "require": {
+    "composer-runtime-api": "^2.0"
+  }
+}
