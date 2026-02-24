@@ -1,0 +1,18 @@
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+
+{% UIForm Standard {} %}
+    {% UIInput ForHidden {sName:'operation', sValue:'Analyze'} %}
+    {% UIInput ForHidden {sName:'transaction_id', sValue:sTransactionId} %}
+
+    {% UIFieldSet Standard {sLegend:'DataFeatureRemoval:Features:Title'|dict_s} %}
+        {% UIDataTable ForForm { sRef:'aExtensions', aColumns:aExtensions.Columns, aData:aExtensions.Data} %}{% EndUIDataTable %}
+    {% EndUIFieldSet %}
+
+
+    {% UIToolbar ForButton {} %}
+        {% UIButton ForPrimaryAction {sLabel:'UI:Button:Analyze'|dict_s, sName:'btn_apply', sId:'btn_apply', bIsSubmit:true} %}
+    {% EndUIToolbar %}
+
+{% EndUIForm %}

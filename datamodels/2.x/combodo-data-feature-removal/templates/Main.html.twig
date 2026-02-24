@@ -1,0 +1,28 @@
+{# @copyright   Copyright (C) 2010-2025 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{#  Usable variables: #}
+{#     * sTitle => page title #}
+{#     * sMessage => success message #}
+{#     * sError => error message #}
+
+{# DataFeatureRemoval #}
+
+{% UIPanel Neutral { sTitle:'DataFeatureRemoval:Main:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:Main:SubTitle'|dict_s } %}
+
+    {% UIAlert ForInformation { sTitle:'DataFeatureRemoval:Helper:Title'|dict_s } %}
+        {{ 'DataFeatureRemoval:Helper:Desc1'|dict_s }}<BR>
+        {{ 'DataFeatureRemoval:Helper:Desc2'|dict_s }}
+    {% EndUIAlert %}
+
+
+{% if null != DataFeatureRemovalErrorMessage %}
+    <div id="feature_removal_error_msg_div" style="display:block">
+        {% UIAlert ForFailure { sTitle:'DataFeatureRemoval:Failure:Title'|dict_s, sId: 'feature_removal_error_msg', sContent:DataFeatureRemovalErrorMessage } %}
+        {% EndUIAlert %}
+    </div>
+{% endif %}
+
+    {% include 'FeaturesTab.html.twig' %}
+    {% include 'ExtensionRemovalDataTab.html.twig' %}
+{% EndUIPanel %}
