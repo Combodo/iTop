@@ -522,7 +522,7 @@ try
 		// Next steps:
 		//   specific arguments: 'csv file'
 		//
-		$sTokenInfo = utils::ReadParam('auth_token_info', null, true, 'raw_data');
+		$sTokenInfo = utils::ReadParam('auth_info', null, true, 'raw_data');
 		$sLoginMode = utils::ReadParam('login_mode', null, true, 'raw_data');
 		if (is_null($sLoginMode) || is_null($sTokenInfo)) {
 			$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
@@ -537,7 +537,6 @@ try
 		} else
 		{
 			$oLoginFSMExtensionInstance = LoginWebPage::GetCurrentLoginPlugin($sLoginMode);
-
 			if ($oLoginFSMExtensionInstance instanceof iTokenLoginUIExtension){
 				$aTokenInfo = json_decode(base64_decode($sTokenInfo), true);
 
