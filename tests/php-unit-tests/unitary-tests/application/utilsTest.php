@@ -1017,7 +1017,6 @@ INI;
 		self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileInsideItop]);
 		self::assertNotEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() should NOT have loaded the file: $sTmpFileInsideItop");
 
-
 		$sParamName = 'OP2';
 		$sParamValue = 'OV2';
 
