@@ -1,0 +1,9 @@
+{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+$(document).on('click', '#checkAllExtensions', function() {
+	var bChecked = this.checked;
+	$('.extension_check').each( function() { this.checked = bChecked });
+});
+
+
