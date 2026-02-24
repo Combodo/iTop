@@ -17,42 +17,37 @@ try {
 	$sCurrentLoginMode = \Combodo\iTop\Application\Helper\Session::Get('login_mode', '');
 	$oLoginFSMExtensionInstance = LoginWebPage::GetCurrentLoginPlugin($sCurrentLoginMode);
 
-	if ($oLoginFSMExtensionInstance instanceof iTokenLoginUIExtension){
-		/** @var iTokenLoginUIExtension $oLoginFSMExtensionInstance */
-		$aTokenInfo = $oLoginFSMExtensionInstance->GetTokenInfo();
-		$sTokenInfo = base64_encode(json_encode($aTokenInfo));
-	} else {
+	if (! $oLoginFSMExtensionInstance instanceof iTokenLoginUIExtension){
 		throw new \Exception("cannot call cron asynchronously via current login mode $sCurrentLoginMode");
 	}
+
+	$aCronValues = [];
+	foreach ([ 'status_only', 'verbose', 'debug'] as $sParam){
+		$value =  ReadParam($sParam, false);
+		$aCronValues[] = "--$sParam=".escapeshellarg($value);
+	}
+
+	/** @var iTokenLoginUIExtension $oLoginFSMExtensionInstance */
+	$aTokenInfo = $oLoginFSMExtensionInstance->GetTokenInfo();
+	$sTokenInfo = base64_encode(json_encode($aTokenInfo));
+	$aCronValues[] = "--auth_info=".escapeshellarg($sTokenInfo);
+	$aCronValues[] = "--login_mode=".escapeshellarg($sCurrentLoginMode);
+
+	$sCliParams=implode(" ", $aCronValues);
 
 	$sLogFilename = ReadParam("cron_log_file", "cron.log");
 	$sLogFile = APPROOT."log/$sLogFilename";
 
-	$sCliParams = ReadParam("cron_cli_parameters");
-
-	$bAsynchronous = true;
-	if (is_null($sCliParams)) {
-		$sCliParams = "--help";
-		$bAsynchronous = false;
-	} else {
-		$sCliParams = trim(base64_decode($sCliParams, true));
-
-		$sCliParams = "--auth_token_info=$sTokenInfo ".$sCliParams;
-		$sCliParams = "--login_mode=$sCurrentLoginMode ".$sCliParams;
-
-		if (false !== strpos($sCliParams, '--status_only=1')) {
-			$bAsynchronous = false;
-		}
-	}
-
 	touch($sLogFile);
 	$sPHPExec = trim(\MetaModel::GetConfig()->Get('php_path'));
 
-	if ($bAsynchronous) {
+	if ($aCronValues['status_only']) {
+		//still synchronous
 		$sCli = sprintf("$sPHPExec %s/cron.php $sCliParams 2>&1 >>$sLogFile &", __DIR__);
 		file_put_contents($sLogFile, $sCli);
 		$process = popen($sCli, 'r');
 	} else {
+		//asynchronous
 		$sCli = sprintf("\n $sPHPExec %s/cron.php $sCliParams", __DIR__);
 		$fp = fopen($sLogFile, 'a+');
 		fwrite($fp, $sCli);
