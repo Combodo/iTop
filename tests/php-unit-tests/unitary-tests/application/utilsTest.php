@@ -1034,7 +1034,7 @@ INI;
 
 		file_put_contents($sTmpFileOutsideItop, $sParams);
 		self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileOutsideItop]);
-		self::assertEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() should have loaded the file: $sTmpFileInsideItop");
+		self::assertEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() should have loaded the file: $sTmpFileOutsideItop");
 
 		unlink($sTmpFileOutsideItop);
 	}
