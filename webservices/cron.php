@@ -457,12 +457,12 @@ if ($bIsModeCLI) {
 }
 
 try {
-	utils::UseParamFile();
-
 	$bVerbose = utils::ReadParam('verbose', false, true /* Allow CLI */);
 	$bDebug = utils::ReadParam('debug', false, true /* Allow CLI */);
 
 	if ($bIsModeCLI) {
+		utils::UseParamFile();
+
 		// Next steps:
 		//   specific arguments: 'csv file'
 		//
@@ -478,17 +478,16 @@ try {
 				$oP->output();
 				exit(EXIT_CODE_ERROR);
 			}
-		} else
-		{
+		} else {
 			$oLoginFSMExtensionInstance = LoginWebPage::GetCurrentLoginPlugin($sLoginMode);
-			if ($oLoginFSMExtensionInstance instanceof iTokenLoginUIExtension){
+			if ($oLoginFSMExtensionInstance instanceof iTokenLoginUIExtension) {
 				$aTokenInfo = json_decode(base64_decode($sTokenInfo), true);
 
 				/** @var iTokenLoginUIExtension $oLoginFSMExtensionInstance */
 				$sAuthUser = $oLoginFSMExtensionInstance->GetUserLogin($aTokenInfo);
 				UserRights::Login($sAuthUser); // Login & set the user's language
 			} else {
-				$oP->p("cannot call cron asynchronously via current login mode $sLoginMode");
+				$oP->p("Access wrong credentials via current login mode $sLoginMode");
 				$oP->output();
 				exit(EXIT_CODE_ERROR);
 			}

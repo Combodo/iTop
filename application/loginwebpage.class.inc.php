@@ -530,18 +530,15 @@ class LoginWebPage extends NiceWebPage
 		return $aPlugins;
 	}
 
-	public static function GetCurrentLoginPlugin(string $sCurrentLoginMode) : iLoginExtension
+	public static function GetCurrentLoginPlugin(string $sCurrentLoginMode): iLoginExtension
 	{
 		/** @var iLoginExtension $oLoginExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iLoginFSMExtension') as $oLoginExtensionInstance)
-		{
+		foreach (MetaModel::EnumPlugins('iLoginFSMExtension') as $oLoginExtensionInstance) {
 			$aLoginModes = $oLoginExtensionInstance->ListSupportedLoginModes();
-			$aLoginModes = (is_array($aLoginModes) ? $aLoginModes : array());
-			foreach ($aLoginModes as $sLoginMode)
-			{
+			$aLoginModes = (is_array($aLoginModes) ? $aLoginModes : []);
+			foreach ($aLoginModes as $sLoginMode) {
 				// Keep only the plugins for the current login mode + before + after
-				if ($sLoginMode == $sCurrentLoginMode)
-				{
+				if ($sLoginMode == $sCurrentLoginMode) {
 					return $oLoginExtensionInstance;
 				}
 			}

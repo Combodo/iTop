@@ -15,6 +15,8 @@ use SetupUtils;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+use Utils;
+
 use const DEBUG_BACKTRACE_IGNORE_ARGS;
 
 /**
@@ -89,7 +91,7 @@ abstract class ItopTestCase extends KernelTestCase
 
 		if (method_exists('utils', 'GetConfig')) {
 			// Reset the config by forcing the load from disk
-			$oConfig = \utils::GetConfig(true);
+			$oConfig = utils::GetConfig(true);
 			if (method_exists('MetaModel', 'SetConfig')) {
 				\MetaModel::SetConfig($oConfig);
 			}
@@ -625,32 +627,7 @@ abstract class ItopTestCase extends KernelTestCase
 	 */
 	protected static function ReadTail($sFilename, $iLines = 1)
 	{
-		$handle = fopen($sFilename, "r");
-		$iLineCounter = $iLines;
-		$iPos = -2;
-		$bBeginning = false;
-		$aLines = [];
-		while ($iLineCounter > 0) {
-			$sChar = " ";
-			while ($sChar != "\n") {
-				if (fseek($handle, $iPos, SEEK_END) == -1) {
-					$bBeginning = true;
-					break;
-				}
-				$sChar = fgetc($handle);
-				$iPos--;
-			}
-			$iLineCounter--;
-			if ($bBeginning) {
-				rewind($handle);
-			}
-			$aLines[$iLines - $iLineCounter - 1] = fgets($handle);
-			if ($bBeginning) {
-				break;
-			}
-		}
-		fclose($handle);
-		return array_reverse($aLines);
+		return Utils::ReadTail($sFilename, $iLines);
 	}
 
 	/**

@@ -33,10 +33,8 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension, 
 	{
 		if (!Session::IsSet('login_mode') || Session::Get('login_mode') == 'form') {
 			list($sAuthUser, $sAuthPwd) = $this->GetTokenInfo();
-			if ($this->bForceFormOnError || empty($sAuthUser) || empty($sAuthPwd))
-			{
-				if (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER))
-				{
+			if ($this->bForceFormOnError || empty($sAuthUser) || empty($sAuthPwd)) {
+				if (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER)) {
 					// X-Combodo-Ajax is a special header automatically added to all ajax requests
 					// Let's reply that we're currently logged-out
 					header('HTTP/1.0 401 Unauthorized');
@@ -65,11 +63,9 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension, 
 	 */
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'form')
-		{
+		if (Session::Get('login_mode') == 'form') {
 			list($sAuthUser, $sAuthPwd) = $this->GetTokenInfo();
-			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
-			{
+			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal')) {
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
@@ -159,8 +155,8 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension, 
 	{
 		$sLogin = $aTokenInfo[0];
 		$sLoginMode = 'form';
-		if (UserRights::CheckCredentials($sLogin, $aTokenInfo[1], $sLoginMode, 'internal'))
-		{
+
+		if (UserRights::CheckCredentials($sLogin, $aTokenInfo[1], $sLoginMode, 'internal')) {
 			return $sLogin;
 		}
 

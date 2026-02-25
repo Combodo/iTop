@@ -3226,4 +3226,43 @@ TXT
 
 		return $aTrace;
 	}
+
+	/**
+	 * @author Ain Tohvri <https://mstdn.social/@tekkie>
+	 *
+	 * @since ???
+	 */
+	public static function ReadTail($sFilename, $iLines = 1): array
+	{
+		$handle = fopen($sFilename, "r");
+		if (false === $handle) {
+			throw new \Exception("Cannot read file $sFilename");
+		}
+
+		$iLineCounter = $iLines;
+		$iPos = -2;
+		$bBeginning = false;
+		$aLines = [];
+		while ($iLineCounter > 0) {
+			$sChar = " ";
+			while ($sChar != "\n") {
+				if (fseek($handle, $iPos, SEEK_END) == -1) {
+					$bBeginning = true;
+					break;
+				}
+				$sChar = fgetc($handle);
+				$iPos--;
+			}
+			$iLineCounter--;
+			if ($bBeginning) {
+				rewind($handle);
+			}
+			$aLines[$iLines - $iLineCounter - 1] = fgets($handle);
+			if ($bBeginning) {
+				break;
+			}
+		}
+		fclose($handle);
+		return array_reverse($aLines);
+	}
 }

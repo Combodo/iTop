@@ -9,15 +9,15 @@
  */
 interface iTokenLoginUIExtension
 {
-    /**
-     * @return array
-     * @api
-     */
-    public function GetTokenInfo() : array;
+	/**
+	 * @return array
+	 * @api
+	 */
+	public function GetTokenInfo(): array;
 
 	/**
 	 * @return array
 	 * @api
 	 */
-	public function GetUserLogin(array $aTokenInfo) : string;
+	public function GetUserLogin(array $aTokenInfo): string;
 }

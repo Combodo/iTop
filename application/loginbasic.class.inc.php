@@ -130,8 +130,7 @@ class LoginBasic extends AbstractLoginFSMExtension implements iTokenLoginUIExten
 	{
 		$sLogin = $aTokenInfo[0];
 		$sLoginMode = 'basic';
-		if (UserRights::CheckCredentials($sLogin, $aTokenInfo[1], $sLoginMode, 'internal'))
-		{
+		if (UserRights::CheckCredentials($sLogin, $aTokenInfo[1], $sLoginMode, 'internal')) {
 			return $sLogin;
 		}
 

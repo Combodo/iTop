@@ -28,8 +28,7 @@ class LoginURL extends AbstractLoginFSMExtension implements iTokenLoginUIExtensi
 
 	protected function OnModeDetection(&$iErrorCode)
 	{
-		if (!Session::IsSet('login_mode') && !$this->bErrorOccurred)
-		{
+		if (!Session::IsSet('login_mode') && !$this->bErrorOccurred) {
 			list($sAuthUser, $sAuthPwd) = $this->GetTokenInfo();
 			{
 				Session::Set('login_mode', 'url');
@@ -48,11 +47,9 @@ class LoginURL extends AbstractLoginFSMExtension implements iTokenLoginUIExtensi
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'url')
-		{
+		if (Session::Get('login_mode') == 'url') {
 			list($sAuthUser, $sAuthPwd) = $this->GetTokenInfo();
-			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
-			{
+			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal')) {
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
@@ -97,8 +94,7 @@ class LoginURL extends AbstractLoginFSMExtension implements iTokenLoginUIExtensi
 	{
 		$sLogin = $aTokenInfo[0];
 		$sLoginMode = 'url';
-		if (UserRights::CheckCredentials($sLogin, $aTokenInfo[1], $sLoginMode, 'internal'))
-		{
+		if (UserRights::CheckCredentials($sLogin, $aTokenInfo[1], $sLoginMode, 'internal')) {
 			return $sLogin;
 		}
 

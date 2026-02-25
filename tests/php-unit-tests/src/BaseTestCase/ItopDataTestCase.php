@@ -976,7 +976,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 
 	protected function AssertLastErrorLogEntryContains(string $sNeedle, string $sMessage = ''): void
 	{
-		$aLastLines = self::ReadTail(APPROOT.'/log/error.log');
+		$aLastLines = Utils::ReadTail(APPROOT.'/log/error.log');
 		$this->assertStringContainsString($sNeedle, $aLastLines[0], $sMessage);
 	}
 
@@ -1469,5 +1469,22 @@ abstract class ItopDataTestCase extends ItopTestCase
 		$oConfig->WriteToFile($sConfigPath);
 		@chmod($sConfigPath, 0440);
 		@unlink($this->sConfigTmpBackupFile);
+	}
+
+	protected function AddLoginModeAndSaveConfiguration($sLoginMode)
+	{
+		$aAllowedLoginTypes = $this->oiTopConfig->GetAllowedLoginTypes();
+		if (!in_array($sLoginMode, $aAllowedLoginTypes)) {
+			$aAllowedLoginTypes[] = $sLoginMode;
+			$this->oiTopConfig->SetAllowedLoginTypes($aAllowedLoginTypes);
+			$this->SaveItopConfFile();
+		}
+	}
+
+	private function SaveItopConfFile()
+	{
+		@chmod($this->oiTopConfig->GetLoadedFile(), 0770);
+		$this->oiTopConfig->WriteToFile();
+		@chmod($this->oiTopConfig->GetLoadedFile(), 0440);
 	}
 }
