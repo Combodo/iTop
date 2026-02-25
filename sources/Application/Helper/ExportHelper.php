@@ -70,7 +70,7 @@ class ExportHelper
 			return $bHasFormulaCandidate;
 		}
 
-		// Additionally, check if the first three character could be a formula character url encodeded
+		// Additionally, check if the first three character could be a formula character url encoded
 		$sFirstThreeChars = mb_strtoupper(mb_substr($sValue, 0, 3));
 
 		$aUrlEncodedFormulaCharacters = array_map('urlencode', static::EXCEL_FORMULA_CHARACTERS);
