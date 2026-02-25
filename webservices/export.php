@@ -44,7 +44,7 @@ const EXIT_CODE_FATAL = -2;
 
 try {
 	if (utils::IsModeCLI()) {
-		// Do this before loging, in order to allow setting user credentials from within the file
+		// Do this before logging, in order to allow setting user credentials from within the file
 		utils::UseParamFile();
 	}
 } catch (Exception $e) {
