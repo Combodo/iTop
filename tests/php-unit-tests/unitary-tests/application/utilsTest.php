@@ -1012,10 +1012,16 @@ $sParamName = $sParamValue
 INI;
 		file_put_contents($sTmpFileInsideItop, $sParams);
 
-		$this->expectException(\Exception::class);
-		$this->expectExceptionMessage("File '$sTmpFileInsideItop' should be outside iTop");
-		self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileInsideItop]);
-		self::assertNotEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() should NOT have loaded the file: $sTmpFileInsideItop");
+		try {
+			$this->expectException(\Exception::class);
+			$this->expectExceptionMessage("File '$sTmpFileInsideItop' should be outside iTop");
+			self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileInsideItop]);
+			self::assertNotEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() should NOT have loaded the file: $sTmpFileInsideItop");
+		} finally {
+			if (file_exists($sTmpFileInsideItop)) {
+				unlink($sTmpFileInsideItop);
+			}
+		}
 
 		$sParamName = 'OP2';
 		$sParamValue = 'OV2';
