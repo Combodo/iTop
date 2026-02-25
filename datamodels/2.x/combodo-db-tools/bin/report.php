@@ -9,7 +9,15 @@ use Combodo\iTop\DBTools\Enum\BinExitCode;
 use Combodo\iTop\DBTools\Exception\AuthenticationException;
 use Combodo\iTop\DBTools\Service\DBAnalyzerUtils;
 
-require_once '../../../approot.inc.php';
+// env-xxx folders
+if (file_exists(__DIR__.'/../../../approot.inc.php')) {
+	require_once __DIR__.'/../../../approot.inc.php';
+}
+// datamodel/2.x and data/xxx-modules folders
+elseif (file_exists(__DIR__.'/../../../../approot.inc.php')) {
+	require_once __DIR__.'/../../../../approot.inc.php';
+}
+
 require_once APPROOT.'application/startup.inc.php';
 require_once APPROOT.'application/loginwebpage.class.inc.php';
 
