@@ -313,7 +313,7 @@ EOF;
 					"'-org3",
 					"'@org4",
 					"'\t=org5",
-					"\rorg6",
+					"'\rorg6",
 					"'\r\t\r =org7",
 					"'＝org8",
 					"'＋org9",
