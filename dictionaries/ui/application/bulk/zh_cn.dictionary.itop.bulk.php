@@ -23,4 +23,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:Bulk:modify:IncompatibleAttribute' => '此属性无法在批量操作中编辑',
 	'UI:Bulk:Export:MaliciousInjection:Alert:Title' => 'Excel 安全警告',
 	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => '在 Microsoft Excel 中打开不信任的文件可能导致公式注入. 请确保 Excel 设置能够安全的处理该文件. <a href="%1$s">进入我们的文档了解更多.</a>',
+	'UI:Bulk:Export:MaliciousInjection:Input:Label' => 'Sanitize potentially dangerous values~~',
+	'UI:Bulk:Export:MaliciousInjection:Input:Tooltip' => 'When enabled, potentially dangerous values will be sanitized during export. This will prevent Microsoft Excel from interpreting them as formulas. Note that this may alter the original data by prefixing it with a single quote (\') to ensure it is treated as text.~~',
+	'Core:BulkExport:Security' => 'Security~~',
 ]);
