@@ -20,7 +20,7 @@ use utils;
  */
 class ExportHelper
 {
-	public const EXCEL_FORMULA_CHARACTERS = ['=', '＝', '+', '＋', '-', '－', '@', '＠', '|', ' ', "\t", "\n", "\r"];
+	public const EXCEL_FORMULA_CHARACTERS = ['=', '＝', '+', '＋', '-', '－', '@', '＠', '|', "\t", "\n", "\r"];
 
 	public static function GetAlertForExcelMaliciousInjection()
 	{
