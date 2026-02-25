@@ -50,11 +50,13 @@ try {
 		throw new AuthenticationException("Access restricted to administrators");
 	}
 } catch (AuthenticationException $oException) {
-	$oP->p($oException->getMessage());
+	$sExceptionMessage = $oP instanceof WebPage ? utils::EscapeHtml($oException->getMessage()) : $oException->getMessage();
+	$oP->p($sExceptionMessage);
 	$oP->output();
 	exit(BinExitCode::ERROR->value);
 } catch (Exception $oException) {
-	$oP->p("Error: ".$oException->GetMessage());
+	$sExceptionMessage = $oP instanceof WebPage ? utils::EscapeHtml($oException->getMessage()) : $oException->getMessage();
+	$oP->p("Error: ".$sExceptionMessage);
 	$oP->output();
 	exit(BinExitCode::FATAL->value);
 }
@@ -75,11 +77,13 @@ try {
 	$oP->p("Report generated: {$sReportFile}.log");
 	$oP->output();
 } catch (AuthenticationException $oException) {
-	$oP->p($oException->getMessage());
+	$sExceptionMessage = $oP instanceof WebPage ? utils::EscapeHtml($oException->getMessage()) : $oException->getMessage();
+	$oP->p($sExceptionMessage);
 	$oP->output();
 	exit(BinExitCode::ERROR->value);
 } catch (Exception $oException) {
-	$oP->p("Error: ".$oException->GetMessage());
+	$sExceptionMessage = $oP instanceof WebPage ? utils::EscapeHtml($oException->getMessage()) : $oException->getMessage();
+	$oP->p("Error: ".$sExceptionMessage);
 	$oP->output();
 	exit(BinExitCode::FATAL->value);
 }
