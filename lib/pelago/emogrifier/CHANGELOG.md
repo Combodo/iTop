@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+Please also have a look at our
+[API and deprecation policy](docs/API-and-deprecation-policy.md).
+
 ## x.y.z
 
 ### Added
@@ -15,84 +18,123 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+## 7.3.0: Add support for PHP 8.4 and CSS custom properties
+
+### Added
+
+- Add support for PHP 8.4 (#1278)
+- Support CSS custom properties (variables) (#1336)
+- Support `:root` pseudo-class (#1306)
+- Add CSS selectors exclusion feature (#1236)
+
+### Changed
+
+- Require `sabberworm/php-css-parser:^8.7.0` (#1355)
+
+### Fixed
+
+- Preserve case of CSS custom property (variable) names (#1332)
+
+### Documentation
+
+- Add an API and deprecation policy (#1323)
+
 ## 7.2.0: Add support for Symfony 7
 
 ### Added
+
 - Add support for Symfony 7 (#1243)
 
 ## 7.1.0: Add support for PHP 8.3
 
 ### Added
+
 - Add support for PHP 8.3 (#1218)
 
 ### Changed
+
 - Disable HTML formatting by default (#1214)
 
 ## 7.0.0
 
 ### Added
+
 - Add support for PHP 8.2 (#1155)
 
 ### Changed
+
 - Throw exception with invalid CSS in debug mode (#1142)
 - Only support up to 69 atomic expressions in a selector (#1113)
 - Require `sabberworm/php-css-parser:^8.4.0` (#1134)
 - Upgrade to PHPUnit 9 (#1112)
 
 ### Deprecated
+
 - Support for PHP 7.3 will be removed in Emogrifier 8.0.
 
 ### Removed
+
 - Drop support for Symfony 3.x and 5.3 (#1120, #1162)
 - Drop support for PHP 7.2 (#1111)
 
 ### Fixed
+
 - Bump the minimum Symfony 4.4 version to avoid PHP deprecation warnings (#1187)
 
 ## 6.0.0
 
 ### Added
+
 - Test with Symfony 6-dev (#1109)
 - Add support for PHP 8.1 (#1103)
 - Add a dedicated class for caching (#1097)
 - Allow installation together with Symfony 6 (#1065)
 - Support more file types in the `.editorconfig` (#1035)
-- Set `align` attribute of `<th>` elements with `CssToAttributeConverter` (#1008)
+- Set `align` attribute of `<th>` elements with `CssToAttributeConverter`
+  (#1008)
 
 ### Changed
+
 - Use `sabberworm/php-css-parser` to parse the CSS (#1015)
 - Also check the unit test code with Psalm (#1003)
 
 ### Deprecated
+
 - Support for PHP 7.2 will be removed in Emogrifier 7.0.
 
 ### Removed
+
 - Remove a redundant CSS data cache (#1018)
 - Drop support for Symfony 5.1 and 5.2 (#972, #1104)
 - Drop support for PHP 7.1 (#967)
 
 ### Fixed
+
 - Allow `@import` after ignored invalid `@charset` (@1081)
 - Allow line feeds within `<html>` tag (#987)
 
 ## 5.0.1
 
 ### Changed
+
 - Switch the default branch from `master` to `main` (#951)
 
 ### Fixed
+
 - Ignore `http-equiv` `Content-Type` in `<body>` (#961)
 - Allow "Content-Type" in content (#959)
 
 ## 5.0.0
 
 ### Added
+
 - Add an `.editorconfig` file (#940)
 - Support PHP 8.0 (#926)
 - Run the CI build once a week (#933)
 - Move more development tools to PHIVE (#894, #907)
 
 ### Changed
+
 - Automatically add a backslash for global functions (#909)
 - Update the development tools (#898, #895)
 - Upgrade to PHPUnit 7.5 (#888)
@@ -101,14 +143,17 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 - Make use of PHP 7.1 language features (#883)
 
 ### Deprecated
+
 - Support for PHP 7.1 will be removed in Emogrifier 6.0.
 
 ### Removed
+
 - Drop support for Symfony 4.3 and 5.0 (#936)
 - Stop checking `tests/` with Psalm (#885)
 - Drop support for PHP 7.0 (#880)
 
 ### Fixed
+
 - Fix a nonsensical code example in the README (#920, #935)
 - Remove `!important` from `style` attributes also when uppercase, mixed case or
   having whitespace after `!` (#911)
@@ -122,35 +167,43 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ## 4.0.0
 
 ### Added
+
 - Extract and inject `@font-face` rules into head (#870)
 - Test tag omission in conformant supplied HTML (#868)
 - Check for missing return type hint annotations in the code sniffs (#860)
 - Support `:only-of-type` (with a type) (#849, #856)
-- Configuration setting methods now all return `$this` to allow chaining (#824, #854)
+- Configuration setting methods now all return `$this` to allow chaining
+  (#824, #854)
 - Disable php-cs-fixer Yoda conditions (#791, #794)
 - Check the code with psalm (#537, #779)
 - Composer script to run tests with `--stop-on-failure` (#782)
 - Test universal selector with combinators (#776)
 
 ### Changed
-- Normalize DOCTYPE declaration according to polyglot markup recommendation (#866)
+
+- Normalize DOCTYPE declaration according to polyglot markup recommendation
+  (#866)
 - Upgrade to V2 of the PHP setup GitHub action (#861)
 - Move the development tools to PHIVE (#850, #851)
 - Switch the parallel linting to a maintained fork (#842)
-- Move continuous integration from Travis CI to GitHub actions (#832, #834, #838, #839, #840, #841, #843, #846, #849)
+- Move continuous integration from Travis CI to GitHub actions
+  (#832, #834, #838, #839, #840, #841, #843, #846, #849)
 - Clean up the folder structure and autoloading configuration (#529, #785)
 - Use `self` as the return type for `fromHtml` (#784)
 - Make use of PHP 7.0 language features (#777)
 
 ### Deprecated
+
 - Support for PHP 7.0 will be removed in Emogrifier 5.0.
 
 ### Removed
+
 - Drop support for Symfony versions that have reached their end of life (#847)
 - Drop the `Emogrifier` class (#774)
 - Drop support for PHP 5.6 (#773)
 
 ### Fixed
+
 - Allow `:last-of-type` etc. without type, without causing exception (#875)
 - Make sure to use the Composer-installed development tools (#862, #865)
 - Add missing `<head>` element when there's a `<header>` element (#844, #853)
@@ -161,22 +214,28 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ## 3.1.0
 
 ### Added
+
 - Add support for PHP 7.4 (#821, #829)
 
 ### Changed
+
 - Upgrade to Symfony 5.0 (#820)
 
 ## 3.0.0
 
 ### Added
-- Test and document excluding entire subtree with `addExcludedSelector()` (#347, #768)
+
+- Test and document excluding entire subtree with `addExcludedSelector()`
+  (#347, #768)
 - Test that rules with `:optional` or `:required` are copied to the `<style>`
   element (#748, #765)
-- Test that rules with `:only-of-type` are copied to the `<style>` element (#748, #760)
+- Test that rules with `:only-of-type` are copied to the `<style>` element
+  (#748, #760)
 - Support `:last-of-type` (#748, #758)
 - Support `:first-of-type` (#748, #757)
 - Support `:empty` (#748, #756)
-- Test that rules with `:any-link` are copied to the `<style>` element (#748, #755)
+- Test that rules with `:any-link` are copied to the `<style>` element
+  (#748, #755)
 - Support and test `:only-child` (#747, #754)
 - Support and test `:nth-last-of-type` (#747, #751)
 - Support and test `:nth-last-child` (#747, #750)
@@ -195,6 +254,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 - Add tests for `:nth-child` and `:nth-of-type` (#71, #698)
 
 ### Changed
+
 - Relax the dependency on `symfony/css-selector` (#762)
 - Rename `HtmlPruner::removeInvisibleNodes` to
   `HtmlPruner::removeElementsWithDisplayNone` (#717, #718)
@@ -204,14 +264,17 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 - Update the development dependencies (#691)
 
 ### Deprecated
+
 - Support for PHP 5.6 will be removed in Emogrifier 4.0.
 - Deprecate the `Emogrifier` class (#701)
 
 ### Removed
+
 - Drop `enableCssToHtmlMapping` and `disableInvisibleNodeRemoval` (#692)
 - Drop support for PHP 5.5 (#690)
 
 ### Fixed
+
 - Fix PhpStorm code inspection warnings (#729, #770)
 - Uppercase type combined with class or ID in selector (#590, #769)
 - Dynamic pseudo-class combined with static one (rules copied to `<style>`
@@ -226,22 +289,27 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ## 2.2.0
 
 ### Added
+
 - Add a `HtmlPruner` class (#679)
 - Add `AbstractHtmlProcessor::fromDomDocument` (#676)
 - Add `AbstractHtmlProcessor::fromHtml` (#675)
 
 ### Changed
+
 - Make the closures static (#674)
 - Keep `<wbr>` elements by default with `CssInliner` (#665)
 - Make the `CssInliner` inherit `AbstractHtmlProcessor` (#660)
 - Separate `CssInliner::inlineCss` and the rendering (#654)
 
 ### Removed
+
 - Drop the removal of unprocessable tags from `CssInliner` (#685)
 - Drop the removal of invisible nodes from `CssInliner` (#684)
 
 ### Fixed
-- Remove opening `<body>` tag from `body` content when element has attribute(s) (#677, #683)
+
+- Remove opening `<body>` tag from `body` content when element has attribute(s)
+  (#677, #683)
 - Keep development files out of the Composer packages (#678)
 - Call all static methods statically in `CssConcatenator` (#670)
 - Support all HTML5 self-closing tags, including `<embed>`, `<source>`,
@@ -252,17 +320,20 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ## 2.1.1
 
 ### Changed
+
 - Add a test that a missing document type gets added (#641)
 
 ### Fixed
+
 - Keep the `style` element the `head` (#642)
 
 ## 2.1.0
 
 ### Added
+
 - PHP 7.3 support (#638)
-  - Allow PHP 7.3 in `composer.json`
-  - Test in Travis for PHP 7.3
+    - Allow PHP 7.3 in `composer.json`
+    - Test in Travis for PHP 7.3
 - Add a `renderBodyContent()` method (#633)
 - Add a `getDomDocument()` method (#630)
 - Add a Composer script for PHP CS Fixer (#607)
@@ -276,17 +347,20 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 - Validate the composer.json on Travis (#476)
 
 ### Changed
+
 - Mark the work-in-progress classes as `@internal` (#640)
 - Remove the unprocessable tags from the DOM, not from the raw HTML (#627)
 - Reject empty HTML in `setHtml()` (#622)
 - Stop passing the DOM document around (#618)
-- Improve performance by using explicit namespaces for PHP functions (#573, #576)
+- Improve performance by using explicit namespaces for PHP functions
+  (#573, #576)
 - Add type hint checking to the code sniffs (#566)
 - Check the code with PHPMD (#561)
 - Add the cyclomatic complexity to the checked code sniffs (#558)
 - Use the Symfony CSS selector component (#540)
 
 ### Deprecated
+
 - Support for PHP 5.5 will be removed in Emogrifier 3.0.
 - Support for PHP 5.6 will be removed in Emogrifier 4.0.
 - The removal of invisible nodes will be removed in Emogrifier 3.0. (#473)
@@ -300,16 +374,19 @@ This project adheres to [Semantic Versioning](https://semver.org/).
   version 3.0 and removed for version 4.0.
 
 ### Removed
+
 - Drop the `@version` PHPDoc annotations (#637)
 - Drop the destructors (#619)
 
 ### Fixed
+
 - Add required XML PHP extension to `composer.json` (#614)
 - Add required DOM PHP extension to `composer.json` (#595)
 - Escape hyphens in regular expressions (#588)
 - Fix Travis for PHP 5.x (#589)
 - Allow CSS between empty `@media` rule and another `@media` rule (#534)
-- Allow additional whitespace in media-query-list of disallowed `@media` rules (#532)
+- Allow additional whitespace in media-query-list of disallowed `@media` rules (
+  #532)
 - Allow multiple minified `@import` rules in the CSS without error (note:
   `@import`s are currently ignored, #527)
 - Style property ordering when multiple mixed individual and shorthand
@@ -325,28 +402,34 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ## 2.0.0
 
 ### Added
+
 - Support for CSS :not() selector (#431)
-- Automatically remove !important annotations from final inline style declarations (#420)
+- Automatically remove !important annotations from final inline style
+  declarations (#420)
 - Automatically move `<style>` block from `<head>` to `<body>` (#396)
 - PHP 7.2 support (#398)
-  - Allow PHP 7.2 in `composer.json`, cleaner PHP version constraint
-  - Test in Travis for PHP 7.2
+    - Allow PHP 7.2 in `composer.json`, cleaner PHP version constraint
+    - Test in Travis for PHP 7.2
 - Debug mode. Throw debug exceptions only if debug is active. (#392)
 
 ### Changed
+
 - Test with latest and oldest dependencies on Travis (#463)
 - Always enable the debug mode in the tests (#448)
 - Optimize the string operations (#430)
 
 ### Deprecated
+
 - Support for PHP 5.5 will be removed in Emogrifier 3.0.
 - Support for PHP 5.6 will be removed in Emogrifier 4.0.
 
 ### Removed
+
 - Drop support for PHP 5.4 (#422)
 - Drop support for HHVM (#386)
 
 ### Fixed
+
 - Handle invalid/unrecognized selectors in media query blocks (#442)
 - Throw (the correct) exception for invalid excluded selectors (#437)
 - emogrifyBody must not encode umlaut entities (#414)
@@ -359,19 +442,23 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ## 1.2.0 (2017-03-02)
 
 ### Added
+
 - Handling invalid xPath expression warnings (#361)
 
 ### Deprecated
+
 - Support for PHP 5.5 will be removed in Emogrifier 3.0.
 - Support for PHP 5.4 will be removed in Emogrifier 2.0.
 
 ### Fixed
+
 - Allow colon (`:`) and semi-colon (`;`) when using the `*=` selector (#371)
 - Ignore "auto" width and height (#365)
 
 ## 1.1.0 (2016-09-18)
 
 ### Added
+
 - Add support for PHP 7.1 (#342)
 - Support the attr|=value selector (#337)
 - Support the attr*=value selector (#330)
@@ -381,13 +468,17 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 - Add CSS to HTML attribute mapper (#288)
 
 ### Changed
-- Remove composer dependency from PHP mbstring extension (Actual code dependency were removed a lot of time ago) (#295)
+
+- Remove composer dependency from PHP mbstring extension (Actual code dependency
+  were removed a lot of time ago) (#295)
 
 ### Deprecated
+
 - Support for PHP 5.5 will be removed in Emogrifier 3.0.
 - Support for PHP 5.4 will be removed in Emogrifier 2.0.
 
 ### Fixed
+
 - Method emogrifyBodyContent() doesn't keeps utf8 umlauts (#349)
 - Ignore value with words more than one in the attribute selector (#327)
 - Ignore spaces around the > in the direct child selector (#322)
@@ -399,6 +490,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ## 1.0.0 (2015-10-15)
 
 ### Added
+
 - Add branch alias (#231)
 - Remove media queries which do not impact the document (#217)
 - Allow elements to be excluded from emogrification (#215)
@@ -415,19 +507,23 @@ This project adheres to [Semantic Versioning](https://semver.org/).
   and nth-of-type)
 
 ### Changed
+
 - Make HTML5 the default document type (#245)
 - Make copyCssWithMediaToStyleNode private (#218)
 - Stop encoding umlauts and dollar signs (#170)
 - Convert the classes to namespaces (#41)
 
 ### Deprecated
+
 - Support for PHP 5.4 will be removed in Emogrifier 2.0.
 
 ### Removed
+
 - Drop support for PHP 5.3 (#114)
 - Support for character sets other than UTF-8 was removed.
 
 ### Fixed
+
 - Fix failing tests on Windows due to line endings (#263)
 - Parsing CSS declaration blocks (#261)
 - Fix first-child and last-child selectors (#257)

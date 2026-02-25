@@ -37,7 +37,7 @@ final class TranslationExtension extends AbstractExtension
     private ?TranslatorInterface $translator;
     private ?TranslationNodeVisitor $translationNodeVisitor;
 
-    public function __construct(TranslatorInterface $translator = null, TranslationNodeVisitor $translationNodeVisitor = null)
+    public function __construct(?TranslatorInterface $translator = null, ?TranslationNodeVisitor $translationNodeVisitor = null)
     {
         $this->translator = $translator;
         $this->translationNodeVisitor = $translationNodeVisitor;
@@ -47,10 +47,10 @@ final class TranslationExtension extends AbstractExtension
     {
         if (null === $this->translator) {
             if (!interface_exists(TranslatorInterface::class)) {
-                throw new \LogicException(sprintf('You cannot use the "%s" if the Translation Contracts are not available. Try running "composer require symfony/translation".', __CLASS__));
+                throw new \LogicException(\sprintf('You cannot use the "%s" if the Translation Contracts are not available. Try running "composer require symfony/translation".', __CLASS__));
             }
 
-            $this->translator = new class() implements TranslatorInterface {
+            $this->translator = new class implements TranslatorInterface {
                 use TranslatorTrait;
             };
         }
@@ -96,11 +96,11 @@ final class TranslationExtension extends AbstractExtension
     /**
      * @param array|string $arguments Can be the locale as a string when $message is a TranslatableInterface
      */
-    public function trans(string|\Stringable|TranslatableInterface|null $message, array|string $arguments = [], string $domain = null, string $locale = null, int $count = null): string
+    public function trans(string|\Stringable|TranslatableInterface|null $message, array|string $arguments = [], ?string $domain = null, ?string $locale = null, ?int $count = null): string
     {
         if ($message instanceof TranslatableInterface) {
             if ([] !== $arguments && !\is_string($arguments)) {
-                throw new \TypeError(sprintf('Argument 2 passed to "%s()" must be a locale passed as a string when the message is a "%s", "%s" given.', __METHOD__, TranslatableInterface::class, get_debug_type($arguments)));
+                throw new \TypeError(\sprintf('Argument 2 passed to "%s()" must be a locale passed as a string when the message is a "%s", "%s" given.', __METHOD__, TranslatableInterface::class, get_debug_type($arguments)));
             }
 
             if ($message instanceof TranslatableMessage && '' === $message->getMessage()) {
@@ -111,7 +111,7 @@ final class TranslationExtension extends AbstractExtension
         }
 
         if (!\is_array($arguments)) {
-            throw new \TypeError(sprintf('Unless the message is a "%s", argument 2 passed to "%s()" must be an array of parameters, "%s" given.', TranslatableInterface::class, __METHOD__, get_debug_type($arguments)));
+            throw new \TypeError(\sprintf('Unless the message is a "%s", argument 2 passed to "%s()" must be an array of parameters, "%s" given.', TranslatableInterface::class, __METHOD__, get_debug_type($arguments)));
         }
 
         if ('' === $message = (string) $message) {
@@ -125,10 +125,10 @@ final class TranslationExtension extends AbstractExtension
         return $this->getTranslator()->trans($message, $arguments, $domain, $locale);
     }
 
-    public function createTranslatable(string $message, array $parameters = [], string $domain = null): TranslatableMessage
+    public function createTranslatable(string $message, array $parameters = [], ?string $domain = null): TranslatableMessage
     {
         if (!class_exists(TranslatableMessage::class)) {
-            throw new \LogicException(sprintf('You cannot use the "%s" as the Translation Component is not installed. Try running "composer require symfony/translation".', __CLASS__));
+            throw new \LogicException(\sprintf('You cannot use the "%s" as the Translation Component is not installed. Try running "composer require symfony/translation".', __CLASS__));
         }
 
         return new TranslatableMessage($message, $parameters, $domain);

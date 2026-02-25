@@ -35,7 +35,7 @@ class Route implements \Serializable
      * Available options:
      *
      *  * compiler_class: A class name able to compile this route instance (RouteCompiler by default)
-     *  * utf8:           Whether UTF-8 matching is enforced ot not
+     *  * utf8:           Whether UTF-8 matching is enforced or not
      *
      * @param string                    $path         The path pattern to match
      * @param array                     $defaults     An array of default parameter values
@@ -445,7 +445,7 @@ class Route implements \Serializable
         }
 
         if ('' === $regex) {
-            throw new \InvalidArgumentException(sprintf('Routing requirement for "%s" cannot be empty.', $key));
+            throw new \InvalidArgumentException(\sprintf('Routing requirement for "%s" cannot be empty.', $key));
         }
 
         return $regex;

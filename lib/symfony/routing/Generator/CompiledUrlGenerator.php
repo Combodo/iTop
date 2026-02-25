@@ -23,7 +23,7 @@ class CompiledUrlGenerator extends UrlGenerator
     private array $compiledRoutes = [];
     private ?string $defaultLocale;
 
-    public function __construct(array $compiledRoutes, RequestContext $context, LoggerInterface $logger = null, string $defaultLocale = null)
+    public function __construct(array $compiledRoutes, RequestContext $context, ?LoggerInterface $logger = null, ?string $defaultLocale = null)
     {
         $this->compiledRoutes = $compiledRoutes;
         $this->context = $context;
@@ -47,7 +47,7 @@ class CompiledUrlGenerator extends UrlGenerator
         }
 
         if (!isset($this->compiledRoutes[$name])) {
-            throw new RouteNotFoundException(sprintf('Unable to generate a URL for the named route "%s" as such route does not exist.', $name));
+            throw new RouteNotFoundException(\sprintf('Unable to generate a URL for the named route "%s" as such route does not exist.', $name));
         }
 
         [$variables, $defaults, $requirements, $tokens, $hostTokens, $requiredSchemes, $deprecations] = $this->compiledRoutes[$name] + [6 => []];

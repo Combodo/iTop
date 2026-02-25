@@ -75,7 +75,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
     protected function getParameter(string $name): array|bool|string|int|float|\UnitEnum|null
     {
         if (!$this->container->has('parameter_bag')) {
-            throw new ServiceNotFoundException('parameter_bag.', null, null, [], sprintf('The "%s::getParameter()" method is missing a parameter bag to work properly. Did you forget to register your controller as a service subscriber? This can be fixed either by using autoconfiguration or by manually wiring a "parameter_bag" in the service locator passed to the controller.', static::class));
+            throw new ServiceNotFoundException('parameter_bag.', null, null, [], \sprintf('The "%s::getParameter()" method is missing a parameter bag to work properly. Did you forget to register your controller as a service subscriber? This can be fixed either by using autoconfiguration or by manually wiring a "parameter_bag" in the service locator passed to the controller.', static::class));
         }
 
         return $this->container->get('parameter_bag')->get($name);
@@ -157,13 +157,17 @@ abstract class AbstractController implements ServiceSubscriberInterface
             return new JsonResponse($json, $status, $headers, true);
         }
 
+        if (null === $data) {
+            return new JsonResponse('null', $status, $headers, true);
+        }
+
         return new JsonResponse($data, $status, $headers);
     }
 
     /**
      * Returns a BinaryFileResponse object with original or customized file name and disposition header.
      */
-    protected function file(\SplFileInfo|string $file, string $fileName = null, string $disposition = ResponseHeaderBag::DISPOSITION_ATTACHMENT): BinaryFileResponse
+    protected function file(\SplFileInfo|string $file, ?string $fileName = null, string $disposition = ResponseHeaderBag::DISPOSITION_ATTACHMENT): BinaryFileResponse
     {
         $response = new BinaryFileResponse($file);
         $response->setContentDisposition($disposition, $fileName ?? $response->getFile()->getFilename());
@@ -248,7 +252,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
      * If an invalid form is found in the list of parameters, a 422 status code is returned.
      * Forms found in parameters are auto-cast to form views.
      */
-    protected function render(string $view, array $parameters = [], Response $response = null): Response
+    protected function render(string $view, array $parameters = [], ?Response $response = null): Response
     {
         return $this->doRender($view, null, $parameters, $response, __FUNCTION__);
     }
@@ -259,7 +263,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
      * If an invalid form is found in the list of parameters, a 422 status code is returned.
      * Forms found in parameters are auto-cast to form views.
      */
-    protected function renderBlock(string $view, string $block, array $parameters = [], Response $response = null): Response
+    protected function renderBlock(string $view, string $block, array $parameters = [], ?Response $response = null): Response
     {
         return $this->doRender($view, $block, $parameters, $response, __FUNCTION__);
     }
@@ -271,7 +275,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
      *
      * @deprecated since Symfony 6.2, use render() instead
      */
-    protected function renderForm(string $view, array $parameters = [], Response $response = null): Response
+    protected function renderForm(string $view, array $parameters = [], ?Response $response = null): Response
     {
         trigger_deprecation('symfony/framework-bundle', '6.2', 'The "%s::renderForm()" method is deprecated, use "render()" instead.', get_debug_type($this));
 
@@ -281,7 +285,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
     /**
      * Streams a view.
      */
-    protected function stream(string $view, array $parameters = [], StreamedResponse $response = null): StreamedResponse
+    protected function stream(string $view, array $parameters = [], ?StreamedResponse $response = null): StreamedResponse
     {
         if (!$this->container->has('twig')) {
             throw new \LogicException('You cannot use the "stream" method if the Twig Bundle is not available. Try running "composer require symfony/twig-bundle".');
@@ -309,7 +313,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
      *
      *     throw $this->createNotFoundException('Page not found!');
      */
-    protected function createNotFoundException(string $message = 'Not Found', \Throwable $previous = null): NotFoundHttpException
+    protected function createNotFoundException(string $message = 'Not Found', ?\Throwable $previous = null): NotFoundHttpException
     {
         return new NotFoundHttpException($message, $previous);
     }
@@ -323,7 +327,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
      *
      * @throws \LogicException If the Security component is not available
      */
-    protected function createAccessDeniedException(string $message = 'Access Denied.', \Throwable $previous = null): AccessDeniedException
+    protected function createAccessDeniedException(string $message = 'Access Denied.', ?\Throwable $previous = null): AccessDeniedException
     {
         if (!class_exists(AccessDeniedException::class)) {
             throw new \LogicException('You cannot use the "createAccessDeniedException" method if the Security component is not available. Try running "composer require symfony/security-bundle".');
@@ -406,7 +410,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
     /**
      * @param LinkInterface[] $links
      */
-    protected function sendEarlyHints(iterable $links = [], Response $response = null): Response
+    protected function sendEarlyHints(iterable $links = [], ?Response $response = null): Response
     {
         if (!$this->container->has('web_link.http_header_serializer')) {
             throw new \LogicException('You cannot use the "sendEarlyHints" method if the WebLink component is not available. Try running "composer require symfony/web-link".');
@@ -432,7 +436,7 @@ abstract class AbstractController implements ServiceSubscriberInterface
     private function doRenderView(string $view, ?string $block, array $parameters, string $method): string
     {
         if (!$this->container->has('twig')) {
-            throw new \LogicException(sprintf('You cannot use the "%s" method if the Twig Bundle is not available. Try running "composer require symfony/twig-bundle".', $method));
+            throw new \LogicException(\sprintf('You cannot use the "%s" method if the Twig Bundle is not available. Try running "composer require symfony/twig-bundle".', $method));
         }
 
         foreach ($parameters as $k => $v) {

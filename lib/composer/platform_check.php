@@ -11,6 +11,7 @@ if (!(PHP_VERSION_ID >= 80100)) {
 $missingExtensions = array();
 extension_loaded('curl') || $missingExtensions[] = 'curl';
 extension_loaded('dom') || $missingExtensions[] = 'dom';
+extension_loaded('filter') || $missingExtensions[] = 'filter';
 extension_loaded('gd') || $missingExtensions[] = 'gd';
 extension_loaded('iconv') || $missingExtensions[] = 'iconv';
 extension_loaded('json') || $missingExtensions[] = 'json';

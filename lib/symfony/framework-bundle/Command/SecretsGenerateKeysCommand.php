@@ -33,7 +33,7 @@ final class SecretsGenerateKeysCommand extends Command
     private AbstractVault $vault;
     private ?AbstractVault $localVault;
 
-    public function __construct(AbstractVault $vault, AbstractVault $localVault = null)
+    public function __construct(AbstractVault $vault, ?AbstractVault $localVault = null)
     {
         $this->vault = $vault;
         $this->localVault = $localVault;
@@ -67,7 +67,7 @@ EOF
         $vault = $input->getOption('local') ? $this->localVault : $this->vault;
 
         if (null === $vault) {
-            $io->success('The local vault is disabled.');
+            $io->error('The local vault is disabled.');
 
             return 1;
         }

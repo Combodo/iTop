@@ -157,7 +157,7 @@ class Configuration implements ConfigurationInterface
                     ->normalizeKeys(false)
                     ->useAttributeAsKey('paths')
                     ->beforeNormalization()
-                        ->always()
+                        ->ifArray()
                         ->then(function ($paths) {
                             $normalized = [];
                             foreach ($paths as $path => $namespace) {
@@ -221,7 +221,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('mailer')
                     ->children()
                         ->scalarNode('html_to_text_converter')
-                            ->info(sprintf('A service implementing the "%s"', HtmlToTextConverterInterface::class))
+                            ->info(\sprintf('A service implementing the "%s"', HtmlToTextConverterInterface::class))
                             ->defaultNull()
                         ->end()
                     ->end()

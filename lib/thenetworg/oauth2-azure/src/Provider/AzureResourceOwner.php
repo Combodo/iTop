@@ -54,6 +54,16 @@ class AzureResourceOwner implements ResourceOwnerInterface
     }
 
     /**
+     * Retrieves preferred username of resource owner.
+     *
+     * @return string|null
+     */
+    public function getPreferredUsername()
+    {
+        return $this->claim('preferred_username');
+    }
+
+    /**
      * Retrieves user principal name of resource owner.
      *
      * @return string|null
@@ -61,6 +71,16 @@ class AzureResourceOwner implements ResourceOwnerInterface
     public function getUpn()
     {
         return $this->claim('upn');
+    }
+
+    /**
+     * Retrieves email of resource owner.
+     *
+     * @return string|null
+     */
+    public function getEmail()
+    {
+        return $this->claim('email');
     }
 
     /**

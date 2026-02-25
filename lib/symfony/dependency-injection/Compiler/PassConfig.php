@@ -97,7 +97,8 @@ class PassConfig
                 new AliasDeprecatedPublicServicesPass(),
             ],
             // Let build parameters be available as late as possible
-            -2048 => [new RemoveBuildParametersPass()],
+            // Don't remove array parameters since ResolveParameterPlaceHoldersPass doesn't resolve them
+            -2048 => [new RemoveBuildParametersPass(true)],
         ];
     }
 
@@ -129,7 +130,7 @@ class PassConfig
     {
         $property = $type.'Passes';
         if (!isset($this->$property)) {
-            throw new InvalidArgumentException(sprintf('Invalid type "%s".', $type));
+            throw new InvalidArgumentException(\sprintf('Invalid type "%s".', $type));
         }
 
         $passes = &$this->$property;

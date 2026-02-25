@@ -40,29 +40,37 @@ class Stub
     public $position = 0;
     public $attr = [];
 
-    private static array $defaultProperties = [];
-
     /**
      * @internal
      */
-    public function __sleep(): array
+    protected static array $propertyDefaults = [];
+
+    public function __serialize(): array
     {
-        $properties = [];
+        static $noDefault = new \stdClass();
 
-        if (!isset(self::$defaultProperties[$c = static::class])) {
-            self::$defaultProperties[$c] = get_class_vars($c);
-
-            foreach ((new \ReflectionClass($c))->getStaticProperties() as $k => $v) {
-                unset(self::$defaultProperties[$c][$k]);
+        if (self::class === static::class) {
+            $data = [];
+            foreach ($this as $k => $v) {
+                $default = self::$propertyDefaults[$this::class][$k] ??= ($p = new \ReflectionProperty($this, $k))->hasDefaultValue() ? $p->getDefaultValue() : ($p->hasType() ? $noDefault : null);
+                if ($noDefault === $default || $default !== $v) {
+                    $data[$k] = $v;
+                }
             }
+
+            return $data;
         }
 
-        foreach (self::$defaultProperties[$c] as $k => $v) {
-            if ($this->$k !== $v) {
-                $properties[] = $k;
+        return \Closure::bind(function () use ($noDefault) {
+            $data = [];
+            foreach ($this as $k => $v) {
+                $default = self::$propertyDefaults[$this::class][$k] ??= ($p = new \ReflectionProperty($this, $k))->hasDefaultValue() ? $p->getDefaultValue() : ($p->hasType() ? $noDefault : null);
+                if ($noDefault === $default || $default !== $v) {
+                    $data[$k] = $v;
+                }
             }
-        }
 
-        return $properties;
+            return $data;
+        }, $this, $this::class)();
     }
 }
