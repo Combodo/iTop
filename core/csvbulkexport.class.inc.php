@@ -271,12 +271,13 @@ EOF
 				$sRet = trim($oObj->GetAsCSV($sAttCode), '"');
 		}
 
-		// If the option to ignore Excel sanitization is set, return the raw value without sanitization
-		if (array_key_exists('ignore_excel_sanitization', $this->aStatusInfo) && $this->aStatusInfo['ignore_excel_sanitization'] === true) {
-			return $sRet;
+		// If the option to ignore Excel sanitization is not set or explicitly set to false, apply sanitization
+		if (!(array_key_exists('ignore_excel_sanitization', $this->aStatusInfo)) || $this->aStatusInfo['ignore_excel_sanitization'] === false) {
+			return ExportHelper::SanitizeField($sRet, $this->aStatusInfo['text_qualifier'] ?? '');
 		}
 
-		return ExportHelper::SanitizeField($sRet, $this->aStatusInfo['text_qualifier'] ?? '');
+		// The option to ignore Excel sanitization is explicitly set to true: return the raw value without sanitization
+		return $sRet;
 	}
 
 	public function GetHeader()
