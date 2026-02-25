@@ -16,5 +16,5 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Bulk:Export:MaliciousInjection:Alert:Message' => 'L\'ouverture d\'un fichier contenant des données non fiables dans Microsoft Excel peut entraîner l\'injection de formules. Assurez-vous que vos paramètres Excel sont configurés pour traiter les fichiers en toute sécurité. <a href="%1$s">Pour en savoir plus, consultez notre documentation.</a>',
 	'UI:Bulk:Export:MaliciousInjection:Input:Label' => 'Sanitiser les valeurs potentiellement dangereuses',
 	'UI:Bulk:Export:MaliciousInjection:Input:Tooltip' => 'Lorsqu\'elle est activée, les valeurs potentiellement dangereuses seront sanitizées lors de l\'exportation. Cela empêchera Microsoft Excel de les interpréter comme des formules. Notez que cela peut altérer les données originales en les préfixant avec une simple quote (\') pour s\'assurer qu\'elles soient traitées comme du texte.',
-	'Core:BulkExport:Security' => 'Securité',
+	'Core:BulkExport:Security' => 'Sécurité',
 ]);
