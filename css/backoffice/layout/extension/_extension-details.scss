@@ -9,8 +9,7 @@ $ibo-extension-details--actions--button--padding-x: $ibo-button--padding-x !defa
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-
-	width: 450px;
+	width: 100%;
 }
 
 .ibo-extension-details--information {
@@ -48,4 +47,8 @@ $ibo-extension-details--actions--button--padding-x: $ibo-button--padding-x !defa
 
 .ibo-extension-details--actions > button {
 	padding: $ibo-extension-details--actions--button--padding-y $ibo-extension-details--actions--button--padding-x;
+}
+
+.ibo-extension-details--actions:has(.toggler-install:not(:disabled)) .ibo-popover-menu--section a[data-resource-id="force_uninstall"] {
+	display: none;
 }

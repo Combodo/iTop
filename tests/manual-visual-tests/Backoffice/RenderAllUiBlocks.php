@@ -45,6 +45,8 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\Popov
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Extension\ExtensionDetails;
 use Combodo\iTop\Application\UI\Base\Layout\Extension\ExtensionDetailsUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
@@ -625,11 +627,18 @@ $oPage->AddUiBlock($oSampleBadgeRed);
 
 $oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Extensions details layout', 3));
 
+$oMultiCol = new MultiColumn();
+$oColumnLeft = new Column();
+$oColumnRight = new Column();
+$oMultiCol->AddColumn($oColumnLeft);
+$oMultiCol->AddColumn($oColumnRight);
+$oPage->AddUiBlock($oMultiCol);
+
 $oExtensionDetailInstalledFromFactory = ExtensionDetailsUIBlockFactory::MakeInstalled('itop-sample', 'My extension v2', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false,'missing' => true]);
-$oPage->AddUiBlock($oExtensionDetailInstalledFromFactory);
+$oColumnLeft->AddSubBlock($oExtensionDetailInstalledFromFactory);
 
 $oExtensionDetailInstalledWithLongTitle = ExtensionDetailsUIBlockFactory::MakeNotInstalled('itop-sample', 'My extension with a very long title', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false]);
-$oPage->AddUiBlock($oExtensionDetailInstalledWithLongTitle);
+$oColumnRight->AddSubBlock($oExtensionDetailInstalledWithLongTitle);
 $oPage->add('<hr id="page_bottom"/>');
 
 $oPage->output();

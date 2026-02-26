@@ -173,6 +173,7 @@ class ExtensionDetails extends UIContentBlock
 	{
 		$this->oToggler = new Toggler();
 		$this->oToggler->SetName('ExtensionToggler');
+		$this->oToggler->AddCSSClass('toggler-install');
 	}
 
 	protected function InitializePopoverMenu()
@@ -204,7 +205,6 @@ JS,
 			'force_uninstall',
 			'Force uninstall',
 			<<<JS
-	this.style.display = 'none';
 	this.closest('.ibo-extension-details').querySelector('input[type=checkbox]').disabled = false
 JS,
 		);
