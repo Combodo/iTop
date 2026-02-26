@@ -12,44 +12,57 @@
 
 namespace ScssPhp\ScssPhp;
 
-final class CompilationResult
+class CompilationResult
 {
-    private string $css;
-
-    private ?string $sourceMap;
+    /**
+     * @var string
+     */
+    private $css;
 
     /**
-     * @var list<string>
+     * @var string|null
      */
-    private array $includedFiles;
+    private $sourceMap;
 
     /**
-     * @param list<string> $includedFiles
+     * @var string[]
      */
-    public function __construct(string $css, ?string $sourceMap, array $includedFiles)
+    private $includedFiles;
+
+    /**
+     * @param string $css
+     * @param string|null $sourceMap
+     * @param string[] $includedFiles
+     */
+    public function __construct($css, $sourceMap, array $includedFiles)
     {
         $this->css = $css;
         $this->sourceMap = $sourceMap;
         $this->includedFiles = $includedFiles;
     }
 
-    public function getCss(): string
+    /**
+     * @return string
+     */
+    public function getCss()
     {
         return $this->css;
     }
 
     /**
-     * @return list<string>
+     * @return string[]
      */
-    public function getIncludedFiles(): array
+    public function getIncludedFiles()
     {
         return $this->includedFiles;
     }
 
     /**
      * The sourceMap content, if it was generated
+     *
+     * @return null|string
      */
-    public function getSourceMap(): ?string
+    public function getSourceMap()
     {
         return $this->sourceMap;
     }

@@ -12,37 +12,51 @@
 
 namespace ScssPhp\ScssPhp;
 
-enum OutputStyle: string
+final class OutputStyle
 {
-    case EXPANDED = 'expanded';
-    case COMPRESSED = 'compressed';
+    const EXPANDED = 'expanded';
+    const COMPRESSED = 'compressed';
 
     /**
      * Converts a string to an output style.
      *
      * Using this method allows to write code which will support both
-     * versions 1.12+ and 2.0 of Scssphp. In 1.x, OutputStyle was using
-     * string constants.
+     * versions 1.12+ and 2.0 of Scssphp. In 2.0, OutputStyle will be
+     * an enum instead of using string constants.
+     *
+     * @param string $string
+     *
+     * @return self::*
      */
-    public static function fromString(string $string): OutputStyle
+    public static function fromString($string)
     {
-        return match ($string) {
-            'expanded' => self::EXPANDED,
-            'compressed' => self::COMPRESSED,
-            default => throw new \InvalidArgumentException('Invalid output style'),
-        };
+        switch ($string) {
+            case 'expanded':
+                return self::EXPANDED;
+
+            case 'compressed':
+                return self::COMPRESSED;
+
+            default:
+                throw new \InvalidArgumentException('Invalid output style');
+        }
     }
 
     /**
      * Converts an output style to a string supported by {@see OutputStyle::fromString()}.
      *
      * Using this method allows to write code which will support both
-     * versions 1.12+ and 2.0 of Scssphp.
+     * versions 1.12+ and 2.0 of Scssphp. In 2.0, OutputStyle will be
+     * an enum instead of using string constants.
      * The returned string representation is guaranteed to be compatible
      * between 1.12 and 2.0.
+     *
+     * @param self::* $outputStyle
+     *
+     * @return string
      */
-    public static function toString(OutputStyle $outputStyle): string
+    public static function toString($outputStyle)
     {
-        return $outputStyle->value;
+        return $outputStyle;
     }
 }

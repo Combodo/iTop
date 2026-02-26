@@ -12,29 +12,21 @@
 
 namespace ScssPhp\ScssPhp\Logger;
 
-use ScssPhp\ScssPhp\Deprecation;
-use ScssPhp\ScssPhp\StackTrace\Trace;
-use ScssPhp\ScssPhp\Util;
-use ScssPhp\ScssPhp\Util\Path;
-use SourceSpan\FileSpan;
-use SourceSpan\SourceSpan;
-
 /**
  * A logger that prints to a PHP stream (for instance stderr)
+ *
+ * @final
  */
-final class StreamLogger implements LoggerInterface
+class StreamLogger implements LoggerInterface
 {
-    /**
-     * @var resource
-     */
     private $stream;
-    private bool $closeOnDestruct;
+    private $closeOnDestruct;
 
     /**
      * @param resource $stream          A stream resource
      * @param bool     $closeOnDestruct If true, takes ownership of the stream and close it on destruct to avoid leaks.
      */
-    public function __construct($stream, bool $closeOnDestruct = false)
+    public function __construct($stream, $closeOnDestruct = false)
     {
         $this->stream = $stream;
         $this->closeOnDestruct = $closeOnDestruct;
@@ -50,33 +42,21 @@ final class StreamLogger implements LoggerInterface
         }
     }
 
-    public function warn(string $message, ?Deprecation $deprecation = null, ?FileSpan $span = null, ?Trace $trace = null): void
+    /**
+     * @inheritDoc
+     */
+    public function warn($message, $deprecation = false)
     {
-        $prefix = ($deprecation !== null ? 'DEPRECATION ' : '') . 'WARNING';
+        $prefix = ($deprecation ? 'DEPRECATION ' : '') . 'WARNING: ';
 
-        if ($span === null) {
-            $formattedMessage = ': ' . $message;
-        } elseif ($trace !== null) {
-            // If there's a span and a trace, the span's location information is
-            // probably duplicated in the trace, so we just use it for highlighting.
-            $formattedMessage = ': ' . $message . "\n\n" . $span->highlight();
-        } else {
-            $formattedMessage = ' on ' . $span->message("\n" . $message);
-        }
-
-        if ($trace !== null) {
-            $formattedMessage .= "\n" . Util::indent(rtrim($trace->getFormattedTrace()), 4);
-        }
-
-        fwrite($this->stream, $prefix . $formattedMessage . "\n\n");
+        fwrite($this->stream, $prefix . $message . "\n\n");
     }
 
-    public function debug(string $message, SourceSpan $span): void
+    /**
+     * @inheritDoc
+     */
+    public function debug($message)
     {
-        $url = $span->getStart()->getSourceUrl() === null ? '-' : Path::prettyUri($span->getStart()->getSourceUrl());
-        $line = $span->getStart()->getLine() + 1;
-        $location = "$url:$line ";
-
-        fwrite($this->stream, \sprintf("%sDEBUG: %s", $location, $message) . "\n");
+        fwrite($this->stream, $message . "\n");
     }
 }

@@ -12,8 +12,6 @@
 
 namespace ScssPhp\ScssPhp;
 
-use ScssPhp\ScssPhp\Value\SassColor;
-
 /**
  * CSS Colors
  *
@@ -21,7 +19,7 @@ use ScssPhp\ScssPhp\Value\SassColor;
  *
  * @internal
  */
-final class Colors
+class Colors
 {
     /**
      * CSS Colors
@@ -30,7 +28,7 @@ final class Colors
      *
      * @var array<string, string>
      */
-    private const CSS_COLORS = [
+    protected static $cssColors = [
         'aliceblue' => '240,248,255',
         'antiquewhite' => '250,235,215',
         'aqua' => '0,255,255',
@@ -182,17 +180,6 @@ final class Colors
         'transparent' => '0,0,0,0',
     ];
 
-    public static function colorNameToColor(string $colorName): ?SassColor
-    {
-        $rgba = self::colorNameToRGBa($colorName);
-
-        if ($rgba === null) {
-            return null;
-        }
-
-        return SassColor::rgb($rgba[0], $rgba[1], $rgba[2], $rgba[3] ?? 1.0);
-    }
-
     /**
      * Convert named color in a [r,g,b[,a]] array
      *
@@ -200,24 +187,37 @@ final class Colors
      *
      * @return int[]|null
      */
-    private static function colorNameToRGBa(string $colorName): ?array
+    public static function colorNameToRGBa($colorName)
     {
-        if (isset(self::CSS_COLORS[$colorName])) {
-            $rgba = explode(',', self::CSS_COLORS[$colorName]);
+        if (\is_string($colorName) && isset(static::$cssColors[$colorName])) {
+            $rgba = explode(',', static::$cssColors[$colorName]);
 
             // only case with opacity is transparent, with opacity=0, so we can intval on opacity also
-            return array_map('intval', $rgba);
+            $rgba = array_map('intval', $rgba);
+
+            return $rgba;
         }
 
         return null;
     }
 
     /**
-     * Reverse conversion: from RGBA to a color name if possible
+     * Reverse conversion : from RGBA to a color name if possible
+     *
+     * @param int       $r
+     * @param int       $g
+     * @param int       $b
+     * @param int|float $a
+     *
+     * @return string|null
      */
-    public static function RGBaToColorName(int $r, int $g, int $b, float $a): ?string
+    public static function RGBaToColorName($r, $g, $b, $a = 1)
     {
         static $reverseColorTable = null;
+
+        if (! is_numeric($r) || ! is_numeric($g) || ! is_numeric($b) || ! is_numeric($a)) {
+            return null;
+        }
 
         if ($a < 1) {
             return null;
@@ -226,11 +226,11 @@ final class Colors
         if (\is_null($reverseColorTable)) {
             $reverseColorTable = [];
 
-            foreach (self::CSS_COLORS as $name => $rgb_str) {
+            foreach (static::$cssColors as $name => $rgb_str) {
                 $rgb_str = explode(',', $rgb_str);
 
                 if (
-                    \count($rgb_str) === 3 &&
+                    \count($rgb_str) == 3 &&
                     ! isset($reverseColorTable[\intval($rgb_str[0])][\intval($rgb_str[1])][\intval($rgb_str[2])])
                 ) {
                     $reverseColorTable[\intval($rgb_str[0])][\intval($rgb_str[1])][\intval($rgb_str[2])] = $name;
@@ -238,8 +238,8 @@ final class Colors
             }
         }
 
-        if (isset($reverseColorTable[$r][$g][$b])) {
-            return $reverseColorTable[$r][$g][$b];
+        if (isset($reverseColorTable[\intval($r)][\intval($g)][\intval($b)])) {
+            return $reverseColorTable[\intval($r)][\intval($g)][\intval($b)];
         }
 
         return null;
