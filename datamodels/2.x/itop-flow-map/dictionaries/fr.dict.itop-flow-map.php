@@ -9,6 +9,14 @@
 
 Dict::Add('FR FR', 'French', 'Français', [
 
+	'Class:FunctionalCI/Attribute:dataflows' => 'Flux de données',
+	'Class:FunctionalCI/Attribute:dataflows+' => 'Flux de données dont cet objet est la source ou la destination',
+	'FunctionalCI:DataFlow:Title' => 'Flux de données',
+	'FunctionalCI:DataFlow:Inbound' => 'Flux entrants',
+	'FunctionalCI:DataFlow:Outbound' => 'Flux sortants',
+	'FunctionalCI:DataFlow:Source' => 'CI sources',
+	'FunctionalCI:DataFlow:Destination' => 'CI destinataires',
+
 	'DataFlow:baseinfo' => 'Informations générales',
 	'DataFlow:otherinfo' => 'Autres informations',
 	'DataFlow:moreinfo' => 'Spécificités du flux',
@@ -19,7 +27,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 	'Class:DataFlow'                                             => 'Flux de Données',
 	'Class:DataFlow+'                                            => 'Modélise les données transférées entre instances d\'application',
-	'Class:DataFlow/Name'                                        => '%1$s de %2$s à %3$s',
+	'Class:DataFlow/Name'                                        => '%1$s',
 	'Class:DataFlow/Attribute:name'                              => 'Nom',
 	'Class:DataFlow/Attribute:name_id+'                          => 'Type de données transferées',
 	'Class:DataFlow/Attribute:source_id'                         => 'Source',

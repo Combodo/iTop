@@ -9,6 +9,14 @@
 
 Dict::Add('EN US', 'English', 'English', [
 
+	'Class:FunctionalCI/Attribute:dataflows' => 'Data flows',
+	'Class:FunctionalCI/Attribute:dataflows+' => 'Data flows for which this object is the source or the destination',
+	'FunctionalCI:DataFlow:Title' => 'Data flows',
+	'FunctionalCI:DataFlow:Inbound' => 'Inbound flows',
+	'FunctionalCI:DataFlow:Outbound' => 'Outbound flows',
+	'FunctionalCI:DataFlow:Source' => 'Source CIs',
+	'FunctionalCI:DataFlow:Destination' => 'Destination CIs',
+
 	'DataFlow:baseinfo' => 'General information',
 	'DataFlow:otherinfo' => 'Other information',
 	'DataFlow:moreinfo' => 'Flow specifics',
@@ -19,7 +27,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 	'Class:DataFlow' => 'Flow',
 	'Class:DataFlow+' => 'For application flow for example',
-	'Class:DataFlow/Name' => '%1$s from %2$s to %3$s',
+	'Class:DataFlow/Name' => '%1$s',
 	'Class:DataFlow/Attribute:name' => 'Name',
 	'Class:DataFlow/Attribute:name_id+' => 'Data that are transferred',
 	'Class:DataFlow/Attribute:source_id' => 'Source',

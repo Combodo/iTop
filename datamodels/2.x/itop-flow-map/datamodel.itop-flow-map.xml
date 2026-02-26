@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
-  <constants>
-  </constants>
   <classes>
     <class id="DataFlow" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -15,8 +13,6 @@
         <naming>
           <attributes>
             <attribute id="name"/>
-            <attribute id="source_id_friendlyname"/>
-            <attribute id="destination_id_friendlyname"/>
           </attributes>
         </naming>
         <reconciliation>
@@ -55,7 +51,7 @@
           <filter/>
           <dependencies/>
           <is_null_allowed>false</is_null_allowed>
-          <target_class>SoftwareInstance</target_class>
+          <target_class>FunctionalCI</target_class>
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
         </field>
@@ -64,7 +60,7 @@
           <filter/>
           <dependencies/>
           <is_null_allowed>false</is_null_allowed>
-          <target_class>SoftwareInstance</target_class>
+          <target_class>FunctionalCI</target_class>
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
         </field>
@@ -309,6 +305,14 @@
             </neighbour>
           </neighbours>
         </relation>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="destination">
+              <attribute>destination_id</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
       </relations>
     </class>
     <class id="lnkDocumentToDataFlow" _delta="define">
@@ -440,7 +444,66 @@
         </details>
       </presentation>
     </class>
-    <class id="SoftwareInstance" _delta="must_exist">
+    <class id="FunctionalCI" _delta="must_exist">
+      <fields>
+        <field id="dataflows" xsi:type="AttributeDashboard" _delta="define">
+         <is_user_editable>true</is_user_editable>
+          <definition>
+            <layout>DashboardLayoutTwoCols</layout>
+            <title>FunctionalCI:DataFlow:Title</title>
+            <auto_reload>
+              <enabled>false</enabled>
+              <interval>300</interval>
+            </auto_reload>
+            <cells>
+              <cell id="0">
+                <rank>0</rank>
+                <dashlets>
+                  <dashlet id="DataFlow_Inbound" xsi:type="DashletObjectList">
+                    <rank>0</rank>
+                    <title>FunctionalCI:DataFlow:Inbound</title>
+                    <query>SELECT DataFlow WHERE destination_id=:this->id</query>
+                    <menu>true</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="1">
+                <rank>1</rank>
+                <dashlets>
+                  <dashlet id="DataFlow_Outbound" xsi:type="DashletObjectList">
+                    <rank>0</rank>
+                    <title>FunctionalCI:DataFlow:Outbound</title>
+                    <query>SELECT DataFlow WHERE source_id=:this->id</query>
+                    <menu>true</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="2">
+                <rank>2</rank>
+                <dashlets>
+                  <dashlet id="DataFlow_Source" xsi:type="DashletObjectList">
+                    <rank>0</rank>
+                    <title>FunctionalCI:DataFlow:Source</title>
+                    <query>SELECT FunctionalCI AS ci JOIN DataFlow AS df ON df.source_id = ci.id WHERE df.destination_id=:this->id</query>
+                    <menu>true</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="3">
+                <rank>3</rank>
+                <dashlets>
+                  <dashlet id="DataFlow_Destination" xsi:type="DashletObjectList">
+                    <rank>0</rank>
+                    <title>FunctionalCI:DataFlow:Destination</title>
+                    <query>SELECT FunctionalCI AS ci JOIN DataFlow AS df ON df.destination_id = ci.id WHERE df.source_id=:this->id</query>
+                    <menu>true</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+            </cells>
+          </definition>
+        </field>
+      </fields>
       <relations>
         <relation id="flow" _delta="define">
           <neighbours>
@@ -451,20 +514,104 @@
             </neighbour>
           </neighbours>
         </relation>
-      </relations>
-	  </class>
-    <class id="Group" _delta="must_exist">
-      <relations>
-        <relation id="flow" _delta="define">
+        <relation id="impacts">
           <neighbours>
-            <neighbour id="flow">
-              <query_down><![CDATA[SELECT DataFlow AS F JOIN SoftwareInstance AS SI ON F.source_id = SI.id JOIN lnkFunctionalCIToGroup AS G ON G.functionalci_id = SI.id WHERE G.group_id=:this->id ]]></query_down>
-              <query_up></query_up>
-              <direction>down</direction>
+            <neighbour id="flow" _delta="define">
+              <query_down><![CDATA[SELECT DataFlow WHERE source_id = :this->id]]></query_down>
+              <query_up><![CDATA[SELECT FunctionalCI WHERE id = :this->source_id]]></query_up>
+              <direction>both</direction>
             </neighbour>
           </neighbours>
         </relation>
       </relations>
+	  </class>
+    <class id="ApplicationSolution" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DatabaseSchema" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="DBServer" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Middleware" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="MiddlewareInstance" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="WebApplication" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="WebServer" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="OtherSoftware" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="dataflows" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
     </class>
   </classes>
   <menus>
