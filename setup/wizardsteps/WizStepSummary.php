@@ -231,7 +231,6 @@ class WizStepSummary extends AbstractWizStepInstall
 
 		}
 
-
 		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 
