@@ -523,7 +523,12 @@ body {
 }
 
 .ibo-setup-summary-title {
-  font-size: $ibo-font-size-150;
+	font-size: $ibo-font-size-150;
+	color: black;
+}
+
+.ibo-setup-summary-title:visited {
+	color: black;
 }
 
 #ibo-setup-licenses--components-list {
