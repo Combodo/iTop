@@ -66,17 +66,16 @@ try {
 
 	$sPHPExec = trim(\MetaModel::GetConfig()->Get('php_path'));
 	$sCliForLogs = GetCliCommand($sPHPExec, $sLogFile, $aCronValues).PHP_EOL;
-	file_put_contents("$sLogFile", $sCliForLogs);
-	if (! is_file($sLogFile)) {
-		throw new \Exception("Cannot write in $sLogFile");
-	}
+	IssueLog::Info("launch cron asynchronously/remotely", null, ['cli' => $sCliForLogs]);
 
 	$aCronValues[] = "--auth_info=".escapeshellarg($sTokenInfo);
 	$sCli = GetCliCommand($sPHPExec, $sLogFile, $aCronValues);
 	$process = popen($sCli, 'r');
+	if (false === $process){
+		throw new \Exception("CLI execution issue");
+	}
 
-	$i = 0;
-	while ($aLines = Utils::ReadTail($sLogFile)) {
+	while ($aLines = utils::ReadTail($sLogFile)) {
 		$sLastLine = array_shift($aLines);
 		if (IsErrorLine($sLastLine) || IsCronStartingLine($sLastLine)) {
 			//return answer once we are sure cron is starting or did not pass authentication

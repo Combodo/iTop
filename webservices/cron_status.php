@@ -23,7 +23,7 @@ try {
 	$sMsg = "";
 	$sLogFile = APPROOT."log/$sLogFilename";
 
-	$aLines = Utils::ReadTail($sLogFile, 2);
+	$aLines = utils::ReadTail($sLogFile, 2);
 	$sLastLine = $aLines[1] ?? '';
 	if (0 === strpos($sLastLine, 'Exiting: ')) {
 		$sContent = $aLines[0];
