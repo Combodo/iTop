@@ -46,7 +46,7 @@ abstract class FileLoader extends BaseFileLoader
     protected $aliases = [];
     protected $autoRegisterAliasesForSinglyImplementedInterfaces = true;
 
-    public function __construct(ContainerBuilder $container, FileLocatorInterface $locator, string $env = null)
+    public function __construct(ContainerBuilder $container, FileLocatorInterface $locator, ?string $env = null)
     {
         $this->container = $container;
 
@@ -56,14 +56,14 @@ abstract class FileLoader extends BaseFileLoader
     /**
      * @param bool|string $ignoreErrors Whether errors should be ignored; pass "not_found" to ignore only when the loaded resource is not found
      */
-    public function import(mixed $resource, string $type = null, bool|string $ignoreErrors = false, string $sourceResource = null, $exclude = null): mixed
+    public function import(mixed $resource, ?string $type = null, bool|string $ignoreErrors = false, ?string $sourceResource = null, $exclude = null): mixed
     {
         $args = \func_get_args();
 
         if ($ignoreNotFound = 'not_found' === $ignoreErrors) {
             $args[2] = false;
         } elseif (!\is_bool($ignoreErrors)) {
-            throw new \TypeError(sprintf('Invalid argument $ignoreErrors provided to "%s::import()": boolean or "not_found" expected, "%s" given.', static::class, get_debug_type($ignoreErrors)));
+            throw new \TypeError(\sprintf('Invalid argument $ignoreErrors provided to "%s::import()": boolean or "not_found" expected, "%s" given.', static::class, get_debug_type($ignoreErrors)));
         }
 
         try {
@@ -98,13 +98,13 @@ abstract class FileLoader extends BaseFileLoader
      *
      * @return void
      */
-    public function registerClasses(Definition $prototype, string $namespace, string $resource, string|array $exclude = null/* , string $source = null */)
+    public function registerClasses(Definition $prototype, string $namespace, string $resource, string|array|null $exclude = null/* , string $source = null */)
     {
         if (!str_ends_with($namespace, '\\')) {
-            throw new InvalidArgumentException(sprintf('Namespace prefix must end with a "\\": "%s".', $namespace));
+            throw new InvalidArgumentException(\sprintf('Namespace prefix must end with a "\\": "%s".', $namespace));
         }
         if (!preg_match('/^(?:[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*+\\\\)++$/', $namespace)) {
-            throw new InvalidArgumentException(sprintf('Namespace is not a valid PSR-4 prefix: "%s".', $namespace));
+            throw new InvalidArgumentException(\sprintf('Namespace is not a valid PSR-4 prefix: "%s".', $namespace));
         }
         // This can happen with YAML files
         if (\is_array($exclude) && \in_array(null, $exclude, true)) {
@@ -166,12 +166,12 @@ abstract class FileLoader extends BaseFileLoader
                 $this->interfaces[] = $class;
             } else {
                 $this->setDefinition($class, $definition = $getPrototype());
+                $definition->setClass($class);
                 if (null !== $errorMessage) {
                     $definition->addError($errorMessage);
 
                     continue;
                 }
-                $definition->setClass($class);
 
                 $interfaces = [];
                 foreach (class_implements($class, false) as $interface) {
@@ -190,10 +190,10 @@ abstract class FileLoader extends BaseFileLoader
                     $alias = $attribute->id ?? $defaultAlias;
                     $public = $attribute->public;
                     if (null === $alias) {
-                        throw new LogicException(sprintf('Alias cannot be automatically determined for class "%s". If you have used the #[AsAlias] attribute with a class implementing multiple interfaces, add the interface you want to alias to the first parameter of #[AsAlias].', $class));
+                        throw new LogicException(\sprintf('Alias cannot be automatically determined for class "%s". If you have used the #[AsAlias] attribute with a class implementing multiple interfaces, add the interface you want to alias to the first parameter of #[AsAlias].', $class));
                     }
                     if (isset($this->aliases[$alias])) {
-                        throw new LogicException(sprintf('The "%s" alias has already been defined with the #[AsAlias] attribute in "%s".', $alias, $this->aliases[$alias]));
+                        throw new LogicException(\sprintf('The "%s" alias has already been defined with the #[AsAlias] attribute in "%s".', $alias, $this->aliases[$alias]));
                     }
                     $this->aliases[$alias] = new Alias($class, $public);
                 }
@@ -240,7 +240,7 @@ abstract class FileLoader extends BaseFileLoader
 
         if ($this->isLoadingInstanceof) {
             if (!$definition instanceof ChildDefinition) {
-                throw new InvalidArgumentException(sprintf('Invalid type definition "%s": ChildDefinition expected, "%s" given.', $id, get_debug_type($definition)));
+                throw new InvalidArgumentException(\sprintf('Invalid type definition "%s": ChildDefinition expected, "%s" given.', $id, get_debug_type($definition)));
             }
             $this->instanceof[$id] = $definition;
         } else {
@@ -272,7 +272,7 @@ abstract class FileLoader extends BaseFileLoader
                 $prefixLen = \strlen($resource->getPrefix());
 
                 if ($excludePrefix && !str_starts_with($excludePrefix, $resource->getPrefix())) {
-                    throw new InvalidArgumentException(sprintf('Invalid "exclude" pattern when importing classes for "%s": make sure your "exclude" pattern (%s) is a subset of the "resource" pattern (%s).', $namespace, $excludePattern, $pattern));
+                    throw new InvalidArgumentException(\sprintf('Invalid "exclude" pattern when importing classes for "%s": make sure your "exclude" pattern (%s) is a subset of the "resource" pattern (%s).', $namespace, $excludePattern, $pattern));
                 }
             }
 
@@ -297,7 +297,7 @@ abstract class FileLoader extends BaseFileLoader
             }
             // check to make sure the expected class exists
             if (!$r) {
-                throw new InvalidArgumentException(sprintf('Expected to find class "%s" in file "%s" while importing services from resource "%s", but it was not found! Check the namespace prefix used with the resource.', $class, $path, $pattern));
+                throw new InvalidArgumentException(\sprintf('Expected to find class "%s" in file "%s" while importing services from resource "%s", but it was not found! Check the namespace prefix used with the resource.', $class, $path, $pattern));
             }
 
             if ($r->isInstantiable() || $r->isInterface()) {
@@ -337,7 +337,7 @@ abstract class FileLoader extends BaseFileLoader
         static $attributes = [];
 
         if (null !== $source && !isset($attributes[$source])) {
-            $attributes[$source] = ['source' => sprintf('in "%s/%s"', basename(\dirname($source)), basename($source))];
+            $attributes[$source] = ['source' => \sprintf('in "%s/%s"', basename(\dirname($source)), basename($source))];
         }
 
         $this->container->register($class, $class)

@@ -57,16 +57,16 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
     public function __construct(#[\SensitiveParameter] \PDO|string $connOrDsn, string $namespace = '', int $defaultLifetime = 0, array $options = [], ?MarshallerInterface $marshaller = null)
     {
         if (\is_string($connOrDsn) && str_contains($connOrDsn, '://')) {
-            throw new InvalidArgumentException(sprintf('Usage of Doctrine DBAL URL with "%s" is not supported. Use a PDO DSN or "%s" instead.', __CLASS__, DoctrineDbalAdapter::class));
+            throw new InvalidArgumentException(\sprintf('Usage of Doctrine DBAL URL with "%s" is not supported. Use a PDO DSN or "%s" instead.', __CLASS__, DoctrineDbalAdapter::class));
         }
 
         if (isset($namespace[0]) && preg_match('#[^-+.A-Za-z0-9]#', $namespace, $match)) {
-            throw new InvalidArgumentException(sprintf('Namespace contains "%s" but only characters in [-+.A-Za-z0-9] are allowed.', $match[0]));
+            throw new InvalidArgumentException(\sprintf('Namespace contains "%s" but only characters in [-+.A-Za-z0-9] are allowed.', $match[0]));
         }
 
         if ($connOrDsn instanceof \PDO) {
             if (\PDO::ERRMODE_EXCEPTION !== $connOrDsn->getAttribute(\PDO::ATTR_ERRMODE)) {
-                throw new InvalidArgumentException(sprintf('"%s" requires PDO error mode attribute be set to throw Exceptions (i.e. $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION)).', __CLASS__));
+                throw new InvalidArgumentException(\sprintf('"%s" requires PDO error mode attribute be set to throw Exceptions (i.e. $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION)).', __CLASS__));
             }
 
             $this->conn = $connOrDsn;
@@ -108,12 +108,12 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
             // - trailing space removal
             // - case-insensitivity
             // - language processing like é == e
-            'mysql' => "CREATE TABLE $this->table ($this->idCol VARBINARY(255) NOT NULL PRIMARY KEY, $this->dataCol MEDIUMBLOB NOT NULL, $this->lifetimeCol INTEGER UNSIGNED, $this->timeCol INTEGER UNSIGNED NOT NULL) COLLATE utf8mb4_bin, ENGINE = InnoDB",
+            'mysql' => "CREATE TABLE $this->table ($this->idCol VARBINARY(255) NOT NULL PRIMARY KEY, $this->dataCol MEDIUMBLOB NOT NULL, $this->lifetimeCol INTEGER UNSIGNED, $this->timeCol INTEGER UNSIGNED NOT NULL), ENGINE = InnoDB",
             'sqlite' => "CREATE TABLE $this->table ($this->idCol TEXT NOT NULL PRIMARY KEY, $this->dataCol BLOB NOT NULL, $this->lifetimeCol INTEGER, $this->timeCol INTEGER NOT NULL)",
             'pgsql' => "CREATE TABLE $this->table ($this->idCol VARCHAR(255) NOT NULL PRIMARY KEY, $this->dataCol BYTEA NOT NULL, $this->lifetimeCol INTEGER, $this->timeCol INTEGER NOT NULL)",
             'oci' => "CREATE TABLE $this->table ($this->idCol VARCHAR2(255) NOT NULL PRIMARY KEY, $this->dataCol BLOB NOT NULL, $this->lifetimeCol INTEGER, $this->timeCol INTEGER NOT NULL)",
             'sqlsrv' => "CREATE TABLE $this->table ($this->idCol VARCHAR(255) NOT NULL PRIMARY KEY, $this->dataCol VARBINARY(MAX) NOT NULL, $this->lifetimeCol INTEGER, $this->timeCol INTEGER NOT NULL)",
-            default => throw new \DomainException(sprintf('Creating the cache table is currently not implemented for PDO driver "%s".', $driver)),
+            default => throw new \DomainException(\sprintf('Creating the cache table is currently not implemented for PDO driver "%s".', $driver)),
         };
 
         $this->getConnection()->exec($sql);
@@ -137,7 +137,7 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
         $delete->bindValue(':time', time(), \PDO::PARAM_INT);
 
         if ('' !== $this->namespace) {
-            $delete->bindValue(':namespace', sprintf('%s%%', $this->namespace), \PDO::PARAM_STR);
+            $delete->bindValue(':namespace', \sprintf('%s%%', $this->namespace), \PDO::PARAM_STR);
         }
         try {
             return $delete->execute();
@@ -314,7 +314,17 @@ class PdoAdapter extends AbstractAdapter implements PruneableInterface
             $insertStmt->bindValue(':time', $now, \PDO::PARAM_INT);
         }
 
+        if ('sqlsrv' === $driver) {
+            $dataStream = fopen('php://memory', 'r+');
+        }
         foreach ($values as $id => $data) {
+            if ('sqlsrv' === $driver) {
+                rewind($dataStream);
+                fwrite($dataStream, $data);
+                ftruncate($dataStream, \strlen($data));
+                rewind($dataStream);
+                $data = $dataStream;
+            }
             try {
                 $stmt->execute();
             } catch (\PDOException $e) {

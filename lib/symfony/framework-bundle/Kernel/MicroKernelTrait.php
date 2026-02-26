@@ -178,7 +178,7 @@ trait MicroKernelTrait
             }
 
             $file = (new \ReflectionObject($this))->getFileName();
-            /* @var ContainerPhpFileLoader $kernelLoader */
+            /** @var ContainerPhpFileLoader $kernelLoader */
             $kernelLoader = $loader->getResolver()->resolve($file);
             $kernelLoader->setCurrentDir(\dirname($file));
             $instanceof = &\Closure::bind(fn &() => $this->instanceof, $kernelLoader, $kernelLoader)();
@@ -204,7 +204,7 @@ trait MicroKernelTrait
     public function loadRoutes(LoaderInterface $loader): RouteCollection
     {
         $file = (new \ReflectionObject($this))->getFileName();
-        /* @var RoutingPhpFileLoader $kernelLoader */
+        /** @var RoutingPhpFileLoader $kernelLoader */
         $kernelLoader = $loader->getResolver()->resolve($file, 'php');
         $kernelLoader->setCurrentDir(\dirname($file));
         $collection = new RouteCollection();
@@ -217,7 +217,7 @@ trait MicroKernelTrait
 
             if (\is_array($controller) && [0, 1] === array_keys($controller) && $this === $controller[0]) {
                 $route->setDefault('_controller', ['kernel', $controller[1]]);
-            } elseif ($controller instanceof \Closure && $this === ($r = new \ReflectionFunction($controller))->getClosureThis() && !str_contains($r->name, '{closure}')) {
+            } elseif ($controller instanceof \Closure && $this === ($r = new \ReflectionFunction($controller))->getClosureThis() && !str_contains($r->name, '{closure')) {
                 $route->setDefault('_controller', ['kernel', $r->name]);
             }
         }

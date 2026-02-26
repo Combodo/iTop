@@ -31,7 +31,7 @@ class InputArgument
 
     private string $name;
     private int $mode;
-    private string|int|bool|array|null|float $default;
+    private string|int|bool|array|float|null $default;
     private array|\Closure $suggestedValues;
     private string $description;
 
@@ -44,12 +44,12 @@ class InputArgument
      *
      * @throws InvalidArgumentException When argument mode is not valid
      */
-    public function __construct(string $name, int $mode = null, string $description = '', string|bool|int|float|array $default = null, \Closure|array $suggestedValues = [])
+    public function __construct(string $name, ?int $mode = null, string $description = '', string|bool|int|float|array|null $default = null, \Closure|array $suggestedValues = [])
     {
         if (null === $mode) {
             $mode = self::OPTIONAL;
         } elseif ($mode > 7 || $mode < 1) {
-            throw new InvalidArgumentException(sprintf('Argument mode "%s" is not valid.', $mode));
+            throw new InvalidArgumentException(\sprintf('Argument mode "%s" is not valid.', $mode));
         }
 
         $this->name = $name;
@@ -95,7 +95,7 @@ class InputArgument
      *
      * @throws LogicException When incorrect default value is given
      */
-    public function setDefault(string|bool|int|float|array $default = null)
+    public function setDefault(string|bool|int|float|array|null $default = null)
     {
         if (1 > \func_num_args()) {
             trigger_deprecation('symfony/console', '6.2', 'Calling "%s()" without any arguments is deprecated, pass null explicitly instead.', __METHOD__);
@@ -137,7 +137,7 @@ class InputArgument
     {
         $values = $this->suggestedValues;
         if ($values instanceof \Closure && !\is_array($values = $values($input))) {
-            throw new LogicException(sprintf('Closure for argument "%s" must return an array. Got "%s".', $this->name, get_debug_type($values)));
+            throw new LogicException(\sprintf('Closure for argument "%s" must return an array. Got "%s".', $this->name, get_debug_type($values)));
         }
         if ($values) {
             $suggestions->suggestValues($values);

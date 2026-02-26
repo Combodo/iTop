@@ -68,7 +68,7 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
      */
     private array $transliterators = [];
 
-    public function __construct(string $defaultLocale = null, array|\Closure $symbolsMap = null)
+    public function __construct(?string $defaultLocale = null, array|\Closure|null $symbolsMap = null)
     {
         $this->defaultLocale = $defaultLocale;
         $this->symbolsMap = $symbolsMap ?? $this->symbolsMap;
@@ -95,7 +95,7 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
     public function withEmoji(bool|string $emoji = true): static
     {
         if (false !== $emoji && !class_exists(EmojiTransliterator::class)) {
-            throw new \LogicException(sprintf('You cannot use the "%s()" method as the "symfony/intl" package is not installed. Try running "composer require symfony/intl".', __METHOD__));
+            throw new \LogicException(\sprintf('You cannot use the "%s()" method as the "symfony/intl" package is not installed. Try running "composer require symfony/intl".', __METHOD__));
         }
 
         $new = clone $this;
@@ -104,7 +104,7 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
         return $new;
     }
 
-    public function slug(string $string, string $separator = '-', string $locale = null): AbstractUnicodeString
+    public function slug(string $string, string $separator = '-', ?string $locale = null): AbstractUnicodeString
     {
         $locale ??= $this->defaultLocale;
 
@@ -131,8 +131,8 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
 
         if (\is_array($this->symbolsMap)) {
             $map = null;
-            if (isset($this->symbolsMap[$locale])) {
-                $map = $this->symbolsMap[$locale];
+            if (isset($this->symbolsMap[$locale ?? ''])) {
+                $map = $this->symbolsMap[$locale ?? ''];
             } else {
                 $parent = self::getParentLocale($locale);
                 if ($parent && isset($this->symbolsMap[$parent])) {

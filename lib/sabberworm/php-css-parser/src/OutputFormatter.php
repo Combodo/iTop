@@ -2,8 +2,12 @@
 
 namespace Sabberworm\CSS;
 
+use Sabberworm\CSS\Comment\Commentable;
 use Sabberworm\CSS\Parsing\OutputException;
 
+/**
+ * @internal since 8.8.0
+ */
 class OutputFormatter
 {
     /**
@@ -116,6 +120,11 @@ class OutputFormatter
      */
     public function spaceBeforeListArgumentSeparator($sSeparator)
     {
+        $spaceForSeparator = $this->oFormat->getSpaceBeforeListArgumentSeparators();
+        if (isset($spaceForSeparator[$sSeparator])) {
+            return $spaceForSeparator[$sSeparator];
+        }
+
         return $this->space('BeforeListArgumentSeparator', $sSeparator);
     }
 
@@ -126,6 +135,11 @@ class OutputFormatter
      */
     public function spaceAfterListArgumentSeparator($sSeparator)
     {
+        $spaceForSeparator = $this->oFormat->getSpaceAfterListArgumentSeparators();
+        if (isset($spaceForSeparator[$sSeparator])) {
+            return $spaceForSeparator[$sSeparator];
+        }
+
         return $this->space('AfterListArgumentSeparator', $sSeparator);
     }
 
@@ -212,6 +226,29 @@ class OutputFormatter
     }
 
     /**
+     *
+     * @param array<Commentable> $aComments
+     *
+     * @return string
+     */
+    public function comments(Commentable $oCommentable)
+    {
+        if (!$this->oFormat->bRenderComments) {
+            return '';
+        }
+
+        $sResult = '';
+        $aComments = $oCommentable->getComments();
+        $iLastCommentIndex = count($aComments) - 1;
+
+        foreach ($aComments as $i => $oComment) {
+            $sResult .= $oComment->render($this->oFormat);
+            $sResult .= $i === $iLastCommentIndex ? $this->spaceAfterBlocks() : $this->spaceBetweenBlocks();
+        }
+        return $sResult;
+    }
+
+    /**
      * @param string $sSpaceString
      *
      * @return string
@@ -226,6 +263,6 @@ class OutputFormatter
      */
     private function indent()
     {
-        return str_repeat($this->oFormat->sIndentation, $this->oFormat->level());
+        return str_repeat($this->oFormat->sIndentation, $this->oFormat->getIndentationLevel());
     }
 }

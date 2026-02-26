@@ -44,7 +44,7 @@ class ErrorListener implements EventSubscriberInterface
     /**
      * @param array<class-string, array{log_level: string|null, status_code: int<100,599>|null}> $exceptionsMapping
      */
-    public function __construct(string|object|array|null $controller, LoggerInterface $logger = null, bool $debug = false, array $exceptionsMapping = [])
+    public function __construct(string|object|array|null $controller, ?LoggerInterface $logger = null, bool $debug = false, array $exceptionsMapping = [])
     {
         $this->controller = $controller;
         $this->logger = $logger;
@@ -90,7 +90,7 @@ class ErrorListener implements EventSubscriberInterface
 
         $e = FlattenException::createFromThrowable($throwable);
 
-        $this->logException($throwable, sprintf('Uncaught PHP Exception %s: "%s" at %s line %s', $e->getClass(), $e->getMessage(), basename($e->getFile()), $e->getLine()), $logLevel);
+        $this->logException($throwable, \sprintf('Uncaught PHP Exception %s: "%s" at %s line %s', $e->getClass(), $e->getMessage(), basename($e->getFile()), $e->getLine()), $logLevel);
     }
 
     /**
@@ -104,11 +104,11 @@ class ErrorListener implements EventSubscriberInterface
 
         $throwable = $event->getThrowable();
 
-        if ($exceptionHandler = set_exception_handler(var_dump(...))) {
-            restore_exception_handler();
-            if (\is_array($exceptionHandler) && $exceptionHandler[0] instanceof ErrorHandler) {
-                $throwable = $exceptionHandler[0]->enhanceError($event->getThrowable());
-            }
+        $exceptionHandler = set_exception_handler('var_dump');
+        restore_exception_handler();
+
+        if (\is_array($exceptionHandler) && $exceptionHandler[0] instanceof ErrorHandler) {
+            $throwable = $exceptionHandler[0]->enhanceError($event->getThrowable());
         }
 
         $request = $this->duplicateRequest($throwable, $event->getRequest());
@@ -118,7 +118,7 @@ class ErrorListener implements EventSubscriberInterface
         } catch (\Exception $e) {
             $f = FlattenException::createFromThrowable($e);
 
-            $this->logException($e, sprintf('Exception thrown when handling an exception (%s: %s at %s line %s)', $f->getClass(), $f->getMessage(), basename($e->getFile()), $e->getLine()));
+            $this->logException($e, \sprintf('Exception thrown when handling an exception (%s: %s at %s line %s)', $f->getClass(), $f->getMessage(), basename($e->getFile()), $e->getLine()));
 
             $prev = $e;
             do {
@@ -183,7 +183,7 @@ class ErrorListener implements EventSubscriberInterface
     /**
      * Logs an exception.
      */
-    protected function logException(\Throwable $exception, string $message, string $logLevel = null): void
+    protected function logException(\Throwable $exception, string $message, ?string $logLevel = null): void
     {
         if (null === $this->logger) {
             return;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pelago\Emogrifier\Css;
 
+use Pelago\Emogrifier\Utilities\Preg;
 use Sabberworm\CSS\CSSList\AtRuleBlockList as CssAtRuleBlockList;
 use Sabberworm\CSS\CSSList\Document as SabberwormCssDocument;
 use Sabberworm\CSS\Parser as CssParser;
@@ -21,7 +22,7 @@ use Sabberworm\CSS\Settings as ParserSettings;
  *
  * @internal
  */
-class CssDocument
+final class CssDocument
 {
     /**
      * @var SabberwormCssDocument
@@ -61,7 +62,8 @@ class CssDocument
      */
     private function hasNestedAtRule(string $css): bool
     {
-        return \preg_match('/@(?:media|supports|(?:-webkit-|-moz-|-ms-|-o-)?+(keyframes|document))\\b/', $css) === 1;
+        return (new Preg())
+            ->match('/@(?:media|supports|(?:-webkit-|-moz-|-ms-|-o-)?+(keyframes|document))\\b/', $css) !== 0;
     }
 
     /**
@@ -140,7 +142,8 @@ class CssDocument
                     $allowedMediaTypes
                 );
                 $mediaTypesMatcher = \implode('|', $escapedAllowedMediaTypes);
-                $isAllowed = \preg_match('/^\\s*+(?:only\\s++)?+(?:' . $mediaTypesMatcher . ')/i', $mediaType) > 0;
+                $isAllowed
+                    = (new Preg())->match('/^\\s*+(?:only\\s++)?+(?:' . $mediaTypesMatcher . ')/i', $mediaType) !== 0;
             } else {
                 $isAllowed = true;
             }

@@ -83,7 +83,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
         '%7C' => '|',
     ];
 
-    public function __construct(RouteCollection $routes, RequestContext $context, LoggerInterface $logger = null, string $defaultLocale = null)
+    public function __construct(RouteCollection $routes, RequestContext $context, ?LoggerInterface $logger = null, ?string $defaultLocale = null)
     {
         $this->routes = $routes;
         $this->context = $context;
@@ -131,7 +131,7 @@ class UrlGenerator implements UrlGeneratorInterface, ConfigurableRequirementsInt
         }
 
         if (null === $route ??= $this->routes->get($name)) {
-            throw new RouteNotFoundException(sprintf('Unable to generate a URL for the named route "%s" as such route does not exist.', $name));
+            throw new RouteNotFoundException(\sprintf('Unable to generate a URL for the named route "%s" as such route does not exist.', $name));
         }
 
         // the Route has a cache of its own and is not recompiled as long as it does not get modified

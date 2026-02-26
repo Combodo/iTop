@@ -52,7 +52,7 @@ class ContainerDebugCommand extends Command
                 new InputOption('types', null, InputOption::VALUE_NONE, 'Display types (classes/interfaces) available in the container'),
                 new InputOption('env-var', null, InputOption::VALUE_REQUIRED, 'Display a specific environment variable used in the container'),
                 new InputOption('env-vars', null, InputOption::VALUE_NONE, 'Display environment variables used in the container'),
-                new InputOption('format', null, InputOption::VALUE_REQUIRED, sprintf('The output format ("%s")', implode('", "', $this->getAvailableFormatOptions())), 'txt'),
+                new InputOption('format', null, InputOption::VALUE_REQUIRED, \sprintf('The output format ("%s")', implode('", "', $this->getAvailableFormatOptions())), 'txt'),
                 new InputOption('raw', null, InputOption::VALUE_NONE, 'To output raw description'),
                 new InputOption('deprecations', null, InputOption::VALUE_NONE, 'Display deprecations generated when compiling and warming up the container'),
             ])
@@ -171,19 +171,19 @@ EOF
                 if ($object->hasDefinition($options['id'])) {
                     $definition = $object->getDefinition($options['id']);
                     if ($definition->isDeprecated()) {
-                        $errorIo->warning($definition->getDeprecation($options['id'])['message'] ?? sprintf('The "%s" service is deprecated.', $options['id']));
+                        $errorIo->warning($definition->getDeprecation($options['id'])['message'] ?? \sprintf('The "%s" service is deprecated.', $options['id']));
                     }
                 }
                 if ($object->hasAlias($options['id'])) {
                     $alias = $object->getAlias($options['id']);
                     if ($alias->isDeprecated()) {
-                        $errorIo->warning($alias->getDeprecation($options['id'])['message'] ?? sprintf('The "%s" alias is deprecated.', $options['id']));
+                        $errorIo->warning($alias->getDeprecation($options['id'])['message'] ?? \sprintf('The "%s" alias is deprecated.', $options['id']));
                     }
                 }
             }
 
             if (isset($options['id']) && isset($kernel->getContainer()->getRemovedIds()[$options['id']])) {
-                $errorIo->note(sprintf('The "%s" service or alias has been removed or inlined when the container was compiled.', $options['id']));
+                $errorIo->note(\sprintf('The "%s" service or alias has been removed or inlined when the container was compiled.', $options['id']));
             }
         } catch (ServiceNotFoundException $e) {
             if ('' !== $e->getId() && '@' === $e->getId()[0]) {
@@ -277,14 +277,16 @@ EOF
 
         $matchingServices = $this->findServiceIdsContaining($container, $name, $showHidden);
         if (!$matchingServices) {
-            throw new InvalidArgumentException(sprintf('No services found that match "%s".', $name));
+            throw new InvalidArgumentException(\sprintf('No services found that match "%s".', $name));
         }
 
         if (1 === \count($matchingServices)) {
             return $matchingServices[0];
         }
 
-        return $io->choice('Select one of the following services to display its information', $matchingServices);
+        natsort($matchingServices);
+
+        return $io->choice('Select one of the following services to display its information', array_values($matchingServices));
     }
 
     private function findProperTagName(InputInterface $input, SymfonyStyle $io, ContainerBuilder $container, string $tagName): string
@@ -295,14 +297,16 @@ EOF
 
         $matchingTags = $this->findTagsContaining($container, $tagName);
         if (!$matchingTags) {
-            throw new InvalidArgumentException(sprintf('No tags found that match "%s".', $tagName));
+            throw new InvalidArgumentException(\sprintf('No tags found that match "%s".', $tagName));
         }
 
         if (1 === \count($matchingTags)) {
             return $matchingTags[0];
         }
 
-        return $io->choice('Select one of the following tags to display its information', $matchingTags);
+        natsort($matchingTags);
+
+        return $io->choice('Select one of the following tags to display its information', array_values($matchingTags));
     }
 
     private function findServiceIdsContaining(ContainerBuilder $container, string $name, bool $showHidden): array

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Pelago\Emogrifier\HtmlProcessor;
 
+use Pelago\Emogrifier\Utilities\Preg;
+
 /**
  * Base class for HTML processor that e.g., can remove, add or modify nodes or attributes.
  *
  * The "vanilla" subclass is the HtmlNormalizer.
- *
- * @psalm-consistent-constructor
  */
 abstract class AbstractHtmlProcessor
 {
@@ -71,9 +71,7 @@ abstract class AbstractHtmlProcessor
      *
      * Please use `::fromHtml` or `::fromDomDocument` instead.
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Builds a new instance from the given HTML.
@@ -184,7 +182,7 @@ abstract class AbstractHtmlProcessor
         $htmlWithPossibleErroneousClosingTags = $this->getDomDocument()->saveHTML($this->getBodyElement());
         $bodyNodeHtml = $this->removeSelfClosingTagsClosingTags($htmlWithPossibleErroneousClosingTags);
 
-        return \preg_replace('%</?+body(?:\\s[^>]*+)?+>%', '', $bodyNodeHtml);
+        return (new Preg())->replace('%</?+body(?:\\s[^>]*+)?+>%', '', $bodyNodeHtml);
     }
 
     /**
@@ -196,7 +194,24 @@ abstract class AbstractHtmlProcessor
      */
     private function removeSelfClosingTagsClosingTags(string $html): string
     {
-        return \preg_replace('%</' . self::PHP_UNRECOGNIZED_VOID_TAGNAME_MATCHER . '>%', '', $html);
+        return (new Preg())->replace('%</' . self::PHP_UNRECOGNIZED_VOID_TAGNAME_MATCHER . '>%', '', $html);
+    }
+
+    /**
+     * Returns the HTML element.
+     *
+     * This method assumes that there always is an HTML element, throwing an exception otherwise.
+     *
+     * @throws \UnexpectedValueException
+     */
+    protected function getHtmlElement(): \DOMElement
+    {
+        $htmlElement = $this->getDomDocument()->getElementsByTagName('html')->item(0);
+        if (!$htmlElement instanceof \DOMElement) {
+            throw new \UnexpectedValueException('There is no HTML element although there should be one.', 1569930853);
+        }
+
+        return $htmlElement;
     }
 
     /**
@@ -292,7 +307,7 @@ abstract class AbstractHtmlProcessor
     private function normalizeDocumentType(string $html): string
     {
         // Limit to replacing the first occurrence: as an optimization; and in case an example exists as unescaped text.
-        return \preg_replace(
+        return (new Preg())->replace(
             '/<!DOCTYPE\\s++html(?=[\\s>])/i',
             '<!DOCTYPE html',
             $html,
@@ -317,17 +332,17 @@ abstract class AbstractHtmlProcessor
 
         // We are trying to insert the meta tag to the right spot in the DOM.
         // If we just prepended it to the HTML, we would lose attributes set to the HTML tag.
-        $hasHeadTag = \preg_match('/<head[\\s>]/i', $html);
+        $hasHeadTag = (new Preg())->match('/<head[\\s>]/i', $html) !== 0;
         $hasHtmlTag = \stripos($html, '<html') !== false;
 
         if ($hasHeadTag) {
-            $reworkedHtml = \preg_replace(
+            $reworkedHtml = (new Preg())->replace(
                 '/<head(?=[\\s>])([^>]*+)>/i',
                 '<head$1>' . self::CONTENT_TYPE_META_TAG,
                 $html
             );
         } elseif ($hasHtmlTag) {
-            $reworkedHtml = \preg_replace(
+            $reworkedHtml = (new Preg())->replace(
                 '/<html(.*?)>/is',
                 '<html$1><head>' . self::CONTENT_TYPE_META_TAG . '</head>',
                 $html
@@ -350,7 +365,11 @@ abstract class AbstractHtmlProcessor
      */
     private function hasContentTypeMetaTagInHead(string $html): bool
     {
-        \preg_match('%^.*?(?=<meta(?=\\s)[^>]*\\shttp-equiv=(["\']?+)Content-Type\\g{-1}[\\s/>])%is', $html, $matches);
+        (new Preg())->match(
+            '%^.*?(?=<meta(?=\\s)[^>]*\\shttp-equiv=(["\']?+)Content-Type\\g{-1}[\\s/>])%is',
+            $html,
+            $matches
+        );
         if (isset($matches[0])) {
             $htmlBefore = $matches[0];
             try {
@@ -380,9 +399,10 @@ abstract class AbstractHtmlProcessor
      */
     private function hasEndOfHeadElement(string $html): bool
     {
-        $headEndTagMatchCount
-            = \preg_match('%<(?!' . self::TAGNAME_ALLOWED_BEFORE_BODY_MATCHER . '[\\s/>])\\w|</head>%i', $html);
-        if (\is_int($headEndTagMatchCount) && $headEndTagMatchCount > 0) {
+        if (
+            (new Preg())->match('%<(?!' . self::TAGNAME_ALLOWED_BEFORE_BODY_MATCHER . '[\\s/>])\\w|</head>%i', $html)
+            !== 0
+        ) {
             // An exception to the implicit end of the `<head>` is any content within a `<template>` element, as well in
             // comments.  As an optimization, this is only checked for if a potential `<head>` end tag is found.
             $htmlWithoutCommentsOrTemplates = $this->removeHtmlTemplateElements($this->removeHtmlComments($html));
@@ -407,12 +427,7 @@ abstract class AbstractHtmlProcessor
      */
     private function removeHtmlComments(string $html): string
     {
-        $result = \preg_replace(self::HTML_COMMENT_PATTERN, '', $html);
-        if (!\is_string($result)) {
-            throw new \RuntimeException('Internal PCRE error', 1616521475);
-        }
-
-        return $result;
+        return (new Preg())->throwExceptions(true)->replace(self::HTML_COMMENT_PATTERN, '', $html);
     }
 
     /**
@@ -427,12 +442,7 @@ abstract class AbstractHtmlProcessor
      */
     private function removeHtmlTemplateElements(string $html): string
     {
-        $result = \preg_replace(self::HTML_TEMPLATE_ELEMENT_PATTERN, '', $html);
-        if (!\is_string($result)) {
-            throw new \RuntimeException('Internal PCRE error', 1616519652);
-        }
-
-        return $result;
+        return (new Preg())->throwExceptions(true)->replace(self::HTML_TEMPLATE_ELEMENT_PATTERN, '', $html);
     }
 
     /**
@@ -445,7 +455,7 @@ abstract class AbstractHtmlProcessor
      */
     private function ensurePhpUnrecognizedSelfClosingTagsAreXml(string $html): string
     {
-        return \preg_replace(
+        return (new Preg())->replace(
             '%<' . self::PHP_UNRECOGNIZED_VOID_TAGNAME_MATCHER . '\\b[^>]*+(?<!/)(?=>)%',
             '$0/',
             $html
@@ -463,10 +473,6 @@ abstract class AbstractHtmlProcessor
             return;
         }
 
-        $htmlElement = $this->getDomDocument()->getElementsByTagName('html')->item(0);
-        if (!$htmlElement instanceof \DOMElement) {
-            throw new \UnexpectedValueException('There is no HTML element although there should be one.', 1569930853);
-        }
-        $htmlElement->appendChild($this->getDomDocument()->createElement('body'));
+        $this->getHtmlElement()->appendChild($this->getDomDocument()->createElement('body'));
     }
 }

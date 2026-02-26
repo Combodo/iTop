@@ -266,6 +266,7 @@
             <xsd:element name="static-method" type="xsd:string" />
             <xsd:element name="mapping" type="file_mapping" />
             <xsd:element name="auto-mapping" type="auto_mapping" />
+            <xsd:element name="not-compromised-password" type="not-compromised-password" />
         </xsd:choice>
 
         <xsd:attribute name="enabled" type="xsd:boolean" />
@@ -294,10 +295,16 @@
     <xsd:simpleType name="email-validation-mode">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="html5" />
+            <xsd:enumeration value="html5-allow-no-tld" />
             <xsd:enumeration value="loose" />
             <xsd:enumeration value="strict" />
         </xsd:restriction>
     </xsd:simpleType>
+
+    <xsd:complexType name="not-compromised-password">
+        <xsd:attribute name="enabled" type="xsd:boolean" />
+        <xsd:attribute name="endpoint" type="xsd:string" />
+    </xsd:complexType>
 
     <xsd:complexType name="annotations">
         <xsd:attribute name="cache" type="xsd:string" />
@@ -464,7 +471,8 @@
             <xsd:element name="metadata" type="metadata" minOccurs="0" maxOccurs="unbounded" />
             <xsd:element name="guard" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
         </xsd:sequence>
-        <xsd:attribute name="name" type="xsd:string" use="required" />
+        <xsd:attribute name="name" type="xsd:string" />
+        <xsd:attribute name="key" type="xsd:string" />
     </xsd:complexType>
 
     <xsd:complexType name="place" mixed="true">
@@ -551,7 +559,7 @@
 
     <xsd:complexType name="lock">
         <xsd:sequence>
-            <xsd:element name="resource" type="lock_resource" minOccurs="1" maxOccurs="unbounded" />
+            <xsd:element name="resource" type="lock_resource" minOccurs="0" maxOccurs="unbounded" />
         </xsd:sequence>
         <xsd:attribute name="enabled" type="xsd:boolean" />
     </xsd:complexType>
@@ -781,7 +789,7 @@
     <xsd:complexType name="mailer_envelope">
         <xsd:sequence>
             <xsd:element name="sender" type="xsd:string" minOccurs="0" maxOccurs="1" />
-            <xsd:element name="recipients" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:element name="recipient" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
         </xsd:sequence>
     </xsd:complexType>
 

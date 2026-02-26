@@ -79,7 +79,7 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
 
     protected function processValue(mixed $value, bool $isRoot = false): mixed
     {
-        if (isset($this->skippedIds[$this->currentId])) {
+        if (isset($this->skippedIds[$this->currentId ?? ''])) {
             return $value;
         }
 
@@ -129,7 +129,7 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
         $numberOfRequiredParameters = $reflectionFunction->getNumberOfRequiredParameters();
 
         if (\count($values) < $numberOfRequiredParameters) {
-            throw new InvalidArgumentException(sprintf('Invalid definition for service "%s": "%s::%s()" requires %d arguments, %d passed.', $this->currentId, $reflectionFunction->class, $reflectionFunction->name, $numberOfRequiredParameters, \count($values)));
+            throw new InvalidArgumentException(\sprintf('Invalid definition for service "%s": "%s::%s()" requires %d arguments, %d passed.', $this->currentId, $reflectionFunction->class, $reflectionFunction->name, $numberOfRequiredParameters, \count($values)));
         }
 
         $reflectionParameters = $reflectionFunction->getParameters();
@@ -142,13 +142,14 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
             if (!$p->hasType() || $p->isVariadic()) {
                 continue;
             }
+            $key = $i;
             if (\array_key_exists($p->name, $values)) {
-                $i = $p->name;
+                $key = $p->name;
             } elseif (!\array_key_exists($i, $values)) {
                 continue;
             }
 
-            $this->checkType($checkedDefinition, $values[$i], $p, $envPlaceholderUniquePrefix);
+            $this->checkType($checkedDefinition, $values[$key], $p, $envPlaceholderUniquePrefix);
         }
 
         if ($reflectionFunction->isVariadic() && ($lastParameter = end($reflectionParameters))->hasType()) {
@@ -163,7 +164,7 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
     /**
      * @throws InvalidParameterTypeException When a parameter is not compatible with the declared type
      */
-    private function checkType(Definition $checkedDefinition, mixed $value, \ReflectionParameter $parameter, ?string $envPlaceholderUniquePrefix, \ReflectionType $reflectionType = null): void
+    private function checkType(Definition $checkedDefinition, mixed $value, \ReflectionParameter $parameter, ?string $envPlaceholderUniquePrefix, ?\ReflectionType $reflectionType = null): void
     {
         $reflectionType ??= $parameter->getType();
 
@@ -318,7 +319,7 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
                 return;
             }
         } elseif ($reflectionType->isBuiltin()) {
-            $checkFunction = sprintf('is_%s', $type);
+            $checkFunction = \sprintf('is_%s', $type);
             if ($checkFunction($value)) {
                 return;
             }

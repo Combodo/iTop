@@ -37,7 +37,7 @@ namespace Pelago\Emogrifier\Utilities;
  *
  * @internal
  */
-class CssConcatenator
+final class CssConcatenator
 {
     /**
      * Array of media rules in order.  Each element is an object with the following properties:
@@ -89,7 +89,7 @@ class CssConcatenator
                 $lastDeclarationsBlockWithoutSemicolon = \rtrim(\rtrim($lastRuleBlock->declarationsBlock), ';');
                 $lastRuleBlock->declarationsBlock = $lastDeclarationsBlockWithoutSemicolon . ';' . $declarationsBlock;
             } else {
-                $mediaRule->ruleBlocks[] = (object)\compact('selectorsAsKeys', 'declarationsBlock');
+                $mediaRule->ruleBlocks[] = (object) \compact('selectorsAsKeys', 'declarationsBlock');
             }
         }
     }
@@ -121,7 +121,7 @@ class CssConcatenator
             return $lastMediaRule;
         }
 
-        $newMediaRule = (object)[
+        $newMediaRule = (object) [
             'media' => $media,
             'ruleBlocks' => [],
         ];
