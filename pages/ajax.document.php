@@ -63,6 +63,7 @@ try {
 			break;
 
 		case 'download_inlineimage':
+			LoginWebPage::DoLoginEx();
 			// No login is required because the "secret" protects us
 			// Benefit: the inline image can be inserted into any HTML (templating = $this->html(public_log)$)
 			$id = utils::ReadParam('id', '');
