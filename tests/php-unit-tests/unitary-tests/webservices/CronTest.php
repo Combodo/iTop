@@ -22,33 +22,6 @@ class CronTest extends ItopDataTestCase
 	public static $sPassword = "Iuytrez9876543ç_è-(";
 
 	/**
-	 * This method is called before the first test of this test class is run (in the current process).
-	 */
-	public static function setUpBeforeClass(): void
-	{
-		parent::setUpBeforeClass();
-	}
-
-	/**
-	 * This method is called after the last test of this test class is run (in the current process).
-	 */
-	public static function tearDownAfterClass(): void
-	{
-		parent::tearDownAfterClass();
-	}
-
-	public function ModeProvider()
-	{
-		$aModes = ['form', 'url', 'basic'];
-		$aUsecases = [];
-		foreach ($aModes as $sMode) {
-			$aUsecases[$sMode] = [$sMode];
-		}
-
-		return $aUsecases;
-	}
-
-	/**
 	 * @throws Exception
 	 */
 	protected function setUp(): void
@@ -59,16 +32,6 @@ class CronTest extends ItopDataTestCase
 		static::$sLogin = "rest-user-";//.date('dmYHis');
 
 		$this->CreateTestOrganization();
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	protected function tearDown(): void
-	{
-		parent::tearDown();
-		$this->ReleaseCronIfBusy();
-
 	}
 
 	public function testRestWithFormMode()
@@ -127,8 +90,6 @@ class CronTest extends ItopDataTestCase
 
 	public function testLaunchCronWithFormModeFailWhenNotAdmin()
 	{
-		$this->ForceCronBusyError();
-
 		$this->AddLoginModeAndSaveConfiguration('form');
 		$this->CreateUserWithProfiles([self::$aURP_Profiles['REST Services User']]);
 
@@ -151,8 +112,6 @@ class CronTest extends ItopDataTestCase
 
 	public function testLaunchCronWithBasicModeFailWhenNotAdmin()
 	{
-		$this->ForceCronBusyError();
-
 		$this->AddLoginModeAndSaveConfiguration('basic');
 		$this->CreateUserWithProfiles([self::$aURP_Profiles['REST Services User']]);
 
@@ -178,8 +137,6 @@ class CronTest extends ItopDataTestCase
 
 	public function testLaunchCronWithUrlModeFailWhenNotAdmin()
 	{
-		$this->ForceCronBusyError();
-
 		$this->AddLoginModeAndSaveConfiguration('url');
 		$this->CreateUserWithProfiles([self::$aURP_Profiles['REST Services User']]);
 
@@ -204,39 +161,25 @@ class CronTest extends ItopDataTestCase
 		;
 	}
 
+	public function ModeProvider()
+	{
+		return [
+			'form' => [ 'LoginForm' ],
+			'basic' => [ 'LoginBasic'],
+			'url' => [ 'LoginURL'],
+		];
+	}
+
 	/**
 	 * @dataProvider ModeProvider
 	 */
-	public function testGetUserLoginWithFormMode($sMode)
+	public function testGetUserLoginWithFormMode($sLoginModeClass)
 	{
-		$this->AddLoginModeAndSaveConfiguration($sMode);
 		$this->CreateUserWithProfiles([self::$aURP_Profiles['Administrator']]);
 
-		$oLoginMode = new \LoginForm();
+		$oLoginMode = new $sLoginModeClass;
 		$sUserLogin = $oLoginMode->GetUserLogin([static::$sLogin, static::$sPassword]);
 		$this->assertEquals(static::$sLogin, $sUserLogin);
-	}
-
-	private ?iTopMutex $oMutex = null;
-	private function ForceCronBusyError(): void
-	{
-		try {
-			$oMutex = new iTopMutex('cron');
-			if ($oMutex->TryLock()) {
-				$this->oMutex = $oMutex;
-			}
-		} catch (Exception $e) {
-		}
-	}
-
-	private function ReleaseCronIfBusy(): void
-	{
-		try {
-			if (! is_null($this->oMutex)) {
-				$this->oMutex->Unlock();
-			}
-		} catch (Exception $e) {
-		}
 	}
 
 	private function CreateUserWithProfiles(array $aProfileIds): ?string
