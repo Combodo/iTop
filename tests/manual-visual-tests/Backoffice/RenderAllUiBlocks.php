@@ -23,6 +23,8 @@
 namespace Combodo\iTop\Test\VisualTest\Backoffice;
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Badge\Badge;
+use Combodo\iTop\Application\UI\Base\Component\Badge\BadgeUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroup;
@@ -34,16 +36,23 @@ use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Set\SetUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Toggler;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Pill\PillFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\Extension\ExtensionDetails;
+use Combodo\iTop\Application\UI\Base\Layout\Extension\ExtensionDetailsUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockWithJSRefreshCallback;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
+use JSButtonItem;
 use LoginWebPage;
 use MetaModel;
 
@@ -68,7 +77,7 @@ $oMainTitle = new Html('<h1>All UI blocks examples</h1>');
 $oPage->AddUiBlock($oMainTitle);
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
-
+$oPage->add('<a href="#page_bottom">Go to bottom of the page</a>');
 /////////
 // Alerts
 /////////
@@ -578,5 +587,58 @@ $oPage->AddUiBlock($oSimpleSetBlockOql);
 
 $oSimpleSetBlockOql2 = SetUIBlockFactory::MakeForOQL('SetOql2', 'Location', 'SELECT Location', null, [], null, 'OqlSet2');
 $oPage->AddUiBlock($oSimpleSetBlockOql2);
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Toggler', 3));
+
+$oToggler = new Toggler();
+$oToggler->SetName('SampleToggler');
+$oPage->AddUiBlock($oToggler);
+
+$oTogglerActivated = new Toggler();
+$oTogglerActivated->SetName('SampleTogglerActivated');
+$oTogglerActivated->SetIsToggled(true);
+$oPage->AddUiBlock($oTogglerActivated);
+
+$oTogglerDisabled = new Toggler();
+$oTogglerDisabled->SetName('SampleTogglerDisabled');
+$oTogglerDisabled->SetIsDisabled(true);
+$oPage->AddUiBlock($oTogglerDisabled);
+
+$oTogglerActivatedDisabled = new Toggler();
+$oTogglerActivatedDisabled->SetName('SampleTogglerDisabled');
+$oTogglerActivatedDisabled->SetIsToggled(true);
+$oTogglerActivatedDisabled->SetIsDisabled(true);
+$oPage->AddUiBlock($oTogglerActivatedDisabled);
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Badges', 3));
+
+$oSampleBadgeNeutral = BadgeUIBlockFactory::MakeNeutral('badge neutral', 'Tooltip');
+$oPage->AddUiBlock($oSampleBadgeNeutral);
+$oSampleBadgeCyan = BadgeUIBlockFactory::MakeCyan('badge cyan', 'Tooltip');
+$oPage->AddUiBlock($oSampleBadgeCyan);
+$oSampleBadgeGreen = BadgeUIBlockFactory::MakeGreen('badge green', 'Tooltip');
+$oPage->AddUiBlock($oSampleBadgeGreen);
+$oSampleBadgeGrey = BadgeUIBlockFactory::MakeGrey('badge grey', 'Tooltip');
+$oPage->AddUiBlock($oSampleBadgeGrey);
+$oSampleBadgeOrange = BadgeUIBlockFactory::MakeOrange('badge orange', 'Tooltip');
+$oPage->AddUiBlock($oSampleBadgeOrange);
+$oSampleBadgeRed = BadgeUIBlockFactory::MakeRed('badge red', 'Tooltip');
+$oPage->AddUiBlock($oSampleBadgeRed);
+
+$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral('Extensions details layout', 3));
+
+$oMultiCol = new MultiColumn();
+$oColumnLeft = new Column();
+$oColumnRight = new Column();
+$oMultiCol->AddColumn($oColumnLeft);
+$oMultiCol->AddColumn($oColumnRight);
+$oPage->AddUiBlock($oMultiCol);
+
+$oExtensionDetailInstalledFromFactory = ExtensionDetailsUIBlockFactory::MakeInstalled('itop-sample', 'My extension v2', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false,'missing' => true]);
+$oColumnLeft->AddSubBlock($oExtensionDetailInstalledFromFactory);
+
+$oExtensionDetailInstalledWithLongTitle = ExtensionDetailsUIBlockFactory::MakeNotInstalled('itop-sample', 'My extension with a very long title', 'This is for test only', ['v1.1.1', 'Designer', '12/12/2012'], ['uninstallable' => false]);
+$oColumnRight->AddSubBlock($oExtensionDetailInstalledWithLongTitle);
+$oPage->add('<hr id="page_bottom"/>');
 
 $oPage->output();
