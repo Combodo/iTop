@@ -211,7 +211,7 @@ JS,
 	{
 		$oForceUninstallButton = new JSButtonItem(
 			'force_uninstall',
-			'Force uninstall',
+			Dict::S('UI:Layout:ExtensionsDetails:MenuForce'),
 			<<<JS
 	this.closest('.ibo-extension-details').querySelector('input[type=checkbox]').disabled = false
 JS,

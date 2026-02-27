@@ -19,4 +19,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Layout:ExtensionsDetails:BadgeMissingFromDisk' => 'missing from disk~~',
 	'UI:Layout:ExtensionsDetails:MenuAboutTitle' => 'About %1$s~~',
 	'UI:Layout:ExtensionsDetails:MenuAbout' => 'More informations~~',
+	'UI:Layout:ExtensionsDetails:MenuForce' => 'Force uninstall~~',
 ]);
