@@ -28,8 +28,11 @@ class CronTest extends ItopDataTestCase
 	{
 		parent::setUp();
 		$this->BackupConfiguration();
+		$this->oiTopConfig->Set('log_level_min', 'Error');
+		$this->oiTopConfig->Set('login_debug', true);
+		$this->BackupConfiguration();
 
-		static::$sLogin = "rest-user-";//.date('dmYHis');
+		static::$sLogin = "rest-user-".date('dmYHis').uniqid();
 
 		$this->CreateTestOrganization();
 	}

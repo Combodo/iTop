@@ -4,6 +4,7 @@ use Hybridauth\Storage\Session;
 
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
 function GetCliCommand(string $sPHPExec, string $sLogFile, array $aCronValues): string
@@ -31,9 +32,10 @@ function IsCronStartingLine(string $sLine): bool
 	return preg_match('/^Starting: /', $sLine);
 }
 
-IssueLog::Enable(APPROOT.'log/error.log');
+$oCtx = new ContextTag(ContextTag::TAG_CRON);
+\IssueLog::Enable(APPROOT.'log/error.log');
+
 try {
-	$oCtx = new ContextTag(ContextTag::TAG_CRON);
 	LoginWebPage::ResetSession();
 	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
 	if ($iRet != LoginWebPage::EXIT_CODE_OK) {
@@ -68,7 +70,7 @@ try {
 	$sPHPExec = trim(\MetaModel::GetConfig()->Get('php_path'));
 	$aCronValues[] = "--auth_info=".escapeshellarg('XXXX');
 	$sCliForLogs = GetCliCommand($sPHPExec, $sLogFile, $aCronValues).PHP_EOL;
-	IssueLog::Info("launch cron asynchronously/remotely", null, ['cli' => $sCliForLogs]);
+	\IssueLog::Info("launch cron asynchronously/remotely", null, ['cli' => $sCliForLogs]);
 
 	$aCronValues[] = "--auth_info=".escapeshellarg($sTokenInfo);
 	$sCli = GetCliCommand($sPHPExec, $sLogFile, $aCronValues);
@@ -94,14 +96,11 @@ try {
 	$oP->Output();
 } catch (Exception $e) {
 	\IssueLog::Error('Cannot run cron', null, ['msg' => $e->getMessage(), 'stack' => $e->getTraceAsString()]);
-	\IssueLog::Error('Cannot run cron $_SERVER', null, $_SERVER);
-	\IssueLog::Error('Cannot run cron $_REQUEST', null, $_REQUEST);
-	\IssueLog::Error('Cannot run cron $_SESSION', null, $_SESSION);
 
 	http_response_code(500);
 	$oP = new JsonPage();
 	$oP->add_header('Access-Control-Allow-Origin: *');
-	$oP->SetData(["message" => $e->getMessage()]);
+	$oP->SetData(["message" => $e->getMessage(), 'cli' => $sCli ?? '', 'msg' => $e->getMessage(), 'stack' => $e->getTraceAsString()]);
 	$oP->SetOutputDataOnly(true);
 	$oP->Output();
 }
