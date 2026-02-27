@@ -375,14 +375,14 @@ class iTopExtensionsMap
 	 * @return array<\iTopExtension>>
 	 */
 
-	public function GetAllExtensionsToDisplayInSetup(bool $bKeepMissingDependencyExtensions = false): array
+	public function GetAllExtensionsToDisplayInSetup(bool $bKeepMissingDependencyExtensions = false, bool $bMandatoryRemoteExtension = true): array
 	{
 		$aRes = [];
 		foreach ($this->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
 			/** @var \iTopExtension $oExtension */
-			if (($oExtension->sSource !== iTopExtension::SOURCE_WIZARD) && ($oExtension->bVisible)) {
-				if ($bKeepMissingDependencyExtensions || (count($oExtension->aMissingDependencies) == 0)) {
-					if (!$oExtension->bMandatory) {
+			if ($oExtension->sSource !== iTopExtension::SOURCE_WIZARD && $oExtension->bVisible) {
+				if ($bKeepMissingDependencyExtensions || count($oExtension->aMissingDependencies) == 0) {
+					if (!$oExtension->bMandatory && $bMandatoryRemoteExtension) {
 						$oExtension->bMandatory = ($oExtension->sSource === iTopExtension::SOURCE_REMOTE);
 					}
 					$aRes[$oExtension->sCode] = $oExtension;
@@ -393,10 +393,10 @@ class iTopExtensionsMap
 		return $aRes;
 	}
 
-	public function GetAllExtensionsOptionInfo(): array
+	public function GetAllExtensionsOptionInfo(bool $bMandatoryRemoteExtension = true): array
 	{
 		$aRes = [];
-		foreach ($this->GetAllExtensionsToDisplayInSetup() as $sCode => $oExtension) {
+		foreach ($this->GetAllExtensionsToDisplayInSetup(false, $bMandatoryRemoteExtension) as $sCode => $oExtension) {
 			$aRes[] = [
 				'extension_code' => $oExtension->sCode,
 				'title'          => $oExtension->sLabel,
