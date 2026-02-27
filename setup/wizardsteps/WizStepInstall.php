@@ -83,14 +83,30 @@ class WizStepInstall extends AbstractWizStepInstall
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		if (!$this->CheckDependencies()) {
 			$oPage->error($this->sDependencyIssue);
+			$oPage->add_ready_script(<<<JS
+	$("#wiz_form").data("installation_status", "error");
+	document.getElementById("setup_msg").innerText = "Unmet dependencies";
+JS);
+			return;
 		}
 
-		$oPage->add_ready_script(
-			<<<JS
+		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true) ?? [];
+		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'));
+		$aExtensionsForceUninstalled = [];
+		foreach ($aExtensionsRemoved as $sExtensionCode => $sLabel) {
+			if (in_array($sExtensionCode, $aExtensionsNotUninstallable)) {
+				$aExtensionsForceUninstalled[] = $sExtensionCode;
+			}
+		}
+		if (count($aExtensionsForceUninstalled)) {
+			SetupLog::Info("Extensions uninstalled forcefully : ".implode(',', $aExtensionsForceUninstalled));
+		}
+
+		$oPage->add_ready_script(<<<JS
 	$("#wiz_form").data("installation_status", "not started");
 	ExecuteStep("");
-JS
-		);
+JS);
+
 	}
 
 	/**
