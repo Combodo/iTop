@@ -90,6 +90,9 @@ JS);
 			return;
 		}
 
+		if ($this->oWizard->GetParameter('force-uninstall', false)) {
+			SetupLog::Warning("User disabled uninstallation checks");
+		}
 		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true) ?? [];
 		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'));
 		$aExtensionsForceUninstalled = [];
@@ -99,7 +102,7 @@ JS);
 			}
 		}
 		if (count($aExtensionsForceUninstalled)) {
-			SetupLog::Info("Extensions uninstalled forcefully : ".implode(',', $aExtensionsForceUninstalled));
+			SetupLog::Warning("Extensions uninstalled forcefully : ".implode(',', $aExtensionsForceUninstalled));
 		}
 
 		$oPage->add_ready_script(<<<JS
