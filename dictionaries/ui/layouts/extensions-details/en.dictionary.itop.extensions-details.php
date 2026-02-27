@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -14,4 +15,5 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI:Layout:ExtensionsDetails:BadgeToBeUninstalled' => 'to be uninstalled',
 	'UI:Layout:ExtensionsDetails:BadgeNotUninstallable' => 'cannot be uninstalled',
 	'UI:Layout:ExtensionsDetails:BadgeMissingFromDisk' => 'missing from disk',
+	'UI:Layout:ExtensionsDetails:MenuAbout' => 'About %1$s',
 ]);
