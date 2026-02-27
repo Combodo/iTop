@@ -41,7 +41,14 @@ class ExtensionDetails extends UIContentBlock
 
 	public function GetSubBlocks(): array
 	{
-		return [$this->oToggler->GetId() => $this->oToggler, $this->oMoreActions->GetId() => $this->oMoreActions];
+		$aSubBlocks = [
+			$this->oToggler->GetId() => $this->oToggler,
+			$this->oMoreActions->GetId() => $this->oMoreActions,
+		];
+		foreach ($this->aBadges as $oBadge) {
+			$aSubBlocks[$oBadge->GetId()] = $oBadge;
+		}
+		return $aSubBlocks;
 	}
 
 	/**
