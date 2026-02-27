@@ -17,5 +17,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'UI:Layout:ExtensionsDetails:BadgeToBeUninstalled' => 'to be uninstalled~~',
 	'UI:Layout:ExtensionsDetails:BadgeNotUninstallable' => 'cannot be uninstalled~~',
 	'UI:Layout:ExtensionsDetails:BadgeMissingFromDisk' => 'missing from disk~~',
-	'UI:Layout:ExtensionsDetails:MenuAbout' => 'About %1$s~~',
+	'UI:Layout:ExtensionsDetails:MenuAboutTitle' => 'About %1$s~~',
+	'UI:Layout:ExtensionsDetails:MenuAbout' => 'More informations~~',
 ]);

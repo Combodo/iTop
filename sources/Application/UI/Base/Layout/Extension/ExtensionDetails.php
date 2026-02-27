@@ -8,6 +8,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Toggler;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Dict;
 use JSButtonItem;
 
 class ExtensionDetails extends UIContentBlock
@@ -185,11 +186,11 @@ class ExtensionDetails extends UIContentBlock
 
 	protected function InitializePopoverMenu()
 	{
-		$sModalLabel = 'About '.$this->sLabel;
+		$sModalLabel = Dict::Format('UI:Layout:ExtensionsDetails:MenuAboutTitle', $this->sLabel);
 		$sModalText = $this->sAbout;
 		$oModifyButton = new JSButtonItem(
 			'extension_details',
-			'More informations',
+			Dict::S('UI:Layout:ExtensionsDetails:MenuAbout'),
 			<<<JS
 	CombodoModal.OpenModal({
 		title: '$sModalLabel',
