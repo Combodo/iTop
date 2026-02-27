@@ -28,8 +28,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ServiceSubcategory+' => 'Subcategorieën services',
 	'Menu:Service' => 'Services',
 	'Menu:Service+' => 'Second level in service hierarchy~~',
-	'Menu:ServiceElement' => 'Service-elementen',
-	'Menu:ServiceElement+' => 'Service-elementen',
 	'Menu:SLA' => 'SLA\'s',
 	'Menu:SLA+' => 'Service Level Agreements',
 	'Menu:SLT' => 'SLT\'s',

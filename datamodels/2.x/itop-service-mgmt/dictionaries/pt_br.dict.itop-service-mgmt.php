@@ -26,8 +26,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:ServiceSubcategory+' => 'Lista de subcategorias de serviços',
 	'Menu:Service' => 'Serviços',
 	'Menu:Service+' => 'Lista de serviços',
-	'Menu:ServiceElement' => 'Elementos de serviços',
-	'Menu:ServiceElement+' => 'Lista de elementos de serviços',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Lista de Acordos de Nível de Serviço (ANS)',
 	'Menu:SLT' => 'SLTs',

@@ -26,8 +26,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy~~',
 	'Menu:Service' => 'Szolgáltatások',
 	'Menu:Service+' => 'Second level in service hierarchy~~',
-	'Menu:ServiceElement' => 'Szolgáltatáselemek',
-	'Menu:ServiceElement+' => 'A szolgáltatás összetevői',
 	'Menu:SLA' => 'SLA-k',
 	'Menu:SLA+' => 'Szolgáltatásszint megállapodások',
 	'Menu:SLT' => 'SLT-k',

@@ -24,8 +24,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Menu:ServiceSubcategory+' => 'Subcategorías de servicio',
 	'Menu:Service' => 'Servicios',
 	'Menu:Service+' => 'Servicios',
-	'Menu:ServiceElement' => 'Elementos del servicio',
-	'Menu:ServiceElement+' => 'Elementos del servicio',
 	'Menu:SLA' => 'SLAs - Acuerdos de Nivel de Servicio',
 	'Menu:SLA+' => 'Acuerdos de Nivel de Servicio',
 	'Menu:SLT' => 'SLTs - Objetivos de Nivel de Servicio',

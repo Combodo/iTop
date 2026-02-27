@@ -26,8 +26,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy~~',
 	'Menu:Service' => 'サービス',
 	'Menu:Service+' => 'Second level in service hierarchy~~',
-	'Menu:ServiceElement' => 'サービス要素',
-	'Menu:ServiceElement+' => '',
 	'Menu:SLA' => 'SLA',
 	'Menu:SLA+' => '',
 	'Menu:SLT' => 'SLT',

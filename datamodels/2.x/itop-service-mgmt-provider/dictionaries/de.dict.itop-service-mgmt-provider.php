@@ -27,8 +27,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ServiceSubcategory+' => 'Service-Unterkategorien',
 	'Menu:Service' => 'Services',
 	'Menu:Service+' => 'Second level in service hierarchy~~',
-	'Menu:ServiceElement' => 'Service-Elemente',
-	'Menu:ServiceElement+' => 'Service-Elemente',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Service Level Agreements (SLAs)',
 	'Menu:SLT' => 'SLTs',

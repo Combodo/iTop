@@ -49,8 +49,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ServiceSubcategory+' => '子服务',
 	'Menu:Service' => '服务',
 	'Menu:Service+' => '服务',
-	'Menu:ServiceElement' => '服务元素',
-	'Menu:ServiceElement+' => '服务元素',
 	'Menu:SLA' => 'SLA',
 	'Menu:SLA+' => '服务等级协议',
 	'Menu:SLT' => 'SLT',

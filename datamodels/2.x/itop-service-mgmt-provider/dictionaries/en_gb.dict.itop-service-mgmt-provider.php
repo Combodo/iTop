@@ -52,8 +52,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy',
 	'Menu:Service' => 'Services',
 	'Menu:Service+' => 'Second level in service hierarchy~~',
-	'Menu:ServiceElement' => 'Sevice elements',
-	'Menu:ServiceElement+' => 'Sevice elements',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Service Level Agreements',
 	'Menu:SLT' => 'SLTs',

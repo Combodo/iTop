@@ -27,8 +27,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Menu:ServiceSubcategory+' => 'Hizmet alt kategorileri',
 	'Menu:Service' => 'Hizmetler',
 	'Menu:Service+' => 'Hizmetler',
-	'Menu:ServiceElement' => 'Servis elemanları',
-	'Menu:ServiceElement+' => 'Servis elemanları',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Hizmet Seviyesi Anlaşmaları',
 	'Menu:SLT' => 'SLTs',

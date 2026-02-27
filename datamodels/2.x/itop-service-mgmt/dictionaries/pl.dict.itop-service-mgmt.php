@@ -26,8 +26,6 @@ Dict::Add('PL PL', 'Polish', 'Polski', [
 	'Menu:ServiceSubcategory+' => 'Podkategorie usług',
 	'Menu:Service' => 'Usługi',
 	'Menu:Service+' => 'Usługi',
-	'Menu:ServiceElement' => 'Elementy usługi',
-	'Menu:ServiceElement+' => 'Elementy usługi',
 	'Menu:SLA' => 'Umowy SLA',
 	'Menu:SLA+' => 'Umowy gwarantowanych poziomów usług',
 	'Menu:SLT' => 'SLTs',

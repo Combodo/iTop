@@ -27,8 +27,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy~~',
 	'Menu:Service' => 'Ydelser',
 	'Menu:Service+' => 'Second level in service hierarchy~~',
-	'Menu:ServiceElement' => 'Ydelses elementer',
-	'Menu:ServiceElement+' => '',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => '',
 	'Menu:SLT' => 'SLTs',

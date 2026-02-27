@@ -26,8 +26,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Menu:ServiceSubcategory+' => 'Sottocategorie di servizio',
 	'Menu:Service' => 'Servizi',
 	'Menu:Service+' => 'Servizi',
-	'Menu:ServiceElement' => 'Elementi del Servizio',
-	'Menu:ServiceElement+' => 'Elementi del Servizio',
 	'Menu:SLA' => 'SLA',
 	'Menu:SLA+' => 'Accordi di Livello di Servizio',
 	'Menu:SLT' => 'SLT',

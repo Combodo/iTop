@@ -26,8 +26,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy~~',
 	'Menu:Service' => 'Služby',
 	'Menu:Service+' => 'Second level in service hierarchy~~',
-	'Menu:ServiceElement' => 'Prvky služby',
-	'Menu:ServiceElement+' => 'Sevice elements~~',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Service Level Agreements~~',
 	'Menu:SLT' => 'SLTs',

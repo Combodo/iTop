@@ -26,8 +26,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy~~',
 	'Menu:Service' => 'Serviços',
 	'Menu:Service+' => 'Second level in service hierarchy~~',
-	'Menu:ServiceElement' => 'Elementos de seviços',
-	'Menu:ServiceElement+' => '',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Lista de Acordos de Nível de Serviço (ANSs)',
 	'Menu:SLT' => 'SLTs',

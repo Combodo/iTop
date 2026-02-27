@@ -26,8 +26,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Menu:ServiceSubcategory+' => 'サービスサブカテゴリ',
 	'Menu:Service' => 'サービス',
 	'Menu:Service+' => 'サービス',
-	'Menu:ServiceElement' => 'サービス要素',
-	'Menu:ServiceElement+' => 'サービス要素',
 	'Menu:SLA' => 'SLA',
 	'Menu:SLA+' => 'サービスレベルアグリーメント',
 	'Menu:SLT' => 'SLT',

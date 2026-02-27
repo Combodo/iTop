@@ -27,8 +27,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Menu:ServiceSubcategory+' => 'Подкатегории услуг',
 	'Menu:Service' => 'Услуги',
 	'Menu:Service+' => 'Услуги',
-	'Menu:ServiceElement' => 'Элементы услуг',
-	'Menu:ServiceElement+' => 'Элементы услуг',
 	'Menu:SLA' => 'SLA',
 	'Menu:SLA+' => 'Соглашения об уровне услуг',
 	'Menu:SLT' => 'SLT',
