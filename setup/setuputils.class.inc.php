@@ -564,7 +564,7 @@ class SetupUtils
 			$sMySQLBinDir = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', '');
 		}
 		try {
-			$sMySQLDump = DBBackup::MakeSafeMySQLCommand($sMySQLBinDir, 'mysqldump');
+			$sMySQLDump = DBBackup::MakeSafeMySQLCommand($sMySQLBinDir, DBBackup::GetDumpFunction());
 		} catch (Exception $e) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, $e->getMessage());
 			return $aResult;

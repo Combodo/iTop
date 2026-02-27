@@ -96,7 +96,7 @@ try {
 	//
 	$sMySQLBinDir = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', '');
 	$sMySQLBinDir = utils::ReadParam('mysql_bindir', $sMySQLBinDir, true);
-	$sMySQLDump = DBBackup::MakeSafeMySQLCommand($sMySQLBinDir, 'mysqldump');
+	$sMySQLDump = DBBackup::MakeSafeMySQLCommand($sMySQLBinDir, DBBackup::GetDumpFunction());
 	$sCommand = "$sMySQLDump -V 2>&1";
 
 	$aOutput = [];
