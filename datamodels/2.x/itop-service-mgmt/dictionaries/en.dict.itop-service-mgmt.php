@@ -32,8 +32,9 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
+//
 // Menu, fieldsets, UI, messages translations
-
+//
 Dict::Add('EN US', 'English', 'English', [
 	'Menu:ServiceManagement' => 'Service management',
 	'Menu:ServiceManagement+' => 'Service management overview',
@@ -42,28 +43,33 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracts by service level',
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracts by status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less than 30 days',
+
 	'Menu:ProviderContract' => 'Provider contracts',
-	'Menu:ProviderContract+' => 'Provider contracts',
+	'Menu:ProviderContract+' => 'What your company buys',
 	'Menu:CustomerContract' => 'Customer contracts',
-	'Menu:CustomerContract+' => 'Customer contracts',
+	'Menu:CustomerContract+' => 'Services subscriptions',
 	'Menu:ServiceSubcategory' => 'Service subcategories',
-	'Menu:ServiceSubcategory+' => 'Service subcategories',
+	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy',
 	'Menu:Service' => 'Services',
-	'Menu:Service+' => 'Services',
-	'Menu:ServiceElement' => 'Sevice elements',
-	'Menu:ServiceElement+' => 'Sevice elements',
+	'Menu:Service+' => 'Second level in service hierarchy',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Service Level Agreements',
 	'Menu:SLT' => 'SLTs',
 	'Menu:SLT+' => 'Service Level Targets',
 	'Menu:DeliveryModel' => 'Delivery models',
-	'Menu:DeliveryModel+' => 'Delivery models',
+	'Menu:DeliveryModel+' => 'Teams handling tickets',
 	'Menu:ServiceFamily' => 'Service families',
-	'Menu:ServiceFamily+' => 'Service families',
+	'Menu:ServiceFamily+' => 'Top level in service hierarchy',
 	'Menu:ServiceCatalog' => 'Service catalog',
-	'Menu:ServiceCatalog+' => 'Service catalog',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering',
 	'UI-ServiceCatalogMenu-Title' => 'Service catalog',
-	'UI-ServiceCatalogMenu-RecentRequestByService' => 'Recent requests by service',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal',
+	'UI-ServiceCatalogMenu-ObsoleteNotInPortal' => 'Obsolete are hidden in User Portal',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA',
 	'Menu:RulesAndWorkflow' => 'Rules and workflow',
 	'Menu:RulesAndWorkflow+' => 'Automation rules and workflow',
 	'UI-RulesAndWorkflow-Title' => 'Rules and workflow',
