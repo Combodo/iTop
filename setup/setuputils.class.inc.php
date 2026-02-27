@@ -559,11 +559,14 @@ class SetupUtils
 			$aResult[] = new CheckResult(CheckResult::ERROR, "The PHP exec() function has been disabled on this server");
 		}
 
+		MetaModel::LoadConfig(utils::GetConfig());
 		// availability of mysqldump
 		if (empty($sMySQLBinDir) && null != MetaModel::GetConfig()) {
 			$sMySQLBinDir = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', '');
 		}
 		try {
+			$oConfig = MetaModel::GetConfig();
+			CMDBSource::InitFromConfig($oConfig);
 			$sMySQLDump = DBBackup::MakeSafeMySQLCommand($sMySQLBinDir, DBBackup::GetDumpFunction());
 		} catch (Exception $e) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, $e->getMessage());
