@@ -1481,7 +1481,7 @@ abstract class ItopDataTestCase extends ItopTestCase
 		}
 	}
 
-	private function SaveItopConfFile()
+	protected function SaveItopConfFile()
 	{
 		@chmod($this->oiTopConfig->GetLoadedFile(), 0770);
 		$this->oiTopConfig->WriteToFile();
