@@ -36,6 +36,8 @@ if (file_exists(READONLY_MODE_FILE)) {
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/core/background.inc.php');
 
+IssueLog::Enable(APPROOT.'log/error.log');
+
 $sConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
 if (!file_exists($sConfigFile)) {
 	echo "iTop is not yet installed. Exiting...\n";

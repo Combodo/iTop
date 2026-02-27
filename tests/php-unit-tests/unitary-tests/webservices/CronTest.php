@@ -93,7 +93,7 @@ class CronTest extends ItopDataTestCase
 		$this->AddLoginModeAndSaveConfiguration('form');
 		$this->CreateUserWithProfiles([self::$aURP_Profiles['REST Services User']]);
 
-		$sLogFileName = "crontest_".uniqid();
+		$sLogFileName = "crontest_".uniqid().'.log';
 		$aPostFields = [
 			'version' => '1.3',
 			'auth_user' => static::$sLogin,
@@ -115,7 +115,7 @@ class CronTest extends ItopDataTestCase
 		$this->AddLoginModeAndSaveConfiguration('basic');
 		$this->CreateUserWithProfiles([self::$aURP_Profiles['REST Services User']]);
 
-		$sLogFileName = "crontest_".uniqid();
+		$sLogFileName = "crontest_".uniqid().'.log';
 		$aPostFields = [
 			'version' => '1.3',
 			'verbose' => 1,
@@ -140,7 +140,7 @@ class CronTest extends ItopDataTestCase
 		$this->AddLoginModeAndSaveConfiguration('url');
 		$this->CreateUserWithProfiles([self::$aURP_Profiles['REST Services User']]);
 
-		$sLogFileName = "crontest_".uniqid();
+		$sLogFileName = "crontest_".uniqid().'.log';
 		$aPostFields = [
 			'version' => '1.3',
 			'verbose' => 1,
@@ -177,7 +177,7 @@ class CronTest extends ItopDataTestCase
 	{
 		$this->CreateUserWithProfiles([self::$aURP_Profiles['Administrator']]);
 
-		$oLoginMode = new $sLoginModeClass;
+		$oLoginMode = new $sLoginModeClass();
 		$sUserLogin = $oLoginMode->GetUserLogin([static::$sLogin, static::$sPassword]);
 		$this->assertEquals(static::$sLogin, $sUserLogin);
 	}

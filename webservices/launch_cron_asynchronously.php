@@ -31,6 +31,7 @@ function IsCronStartingLine(string $sLine): bool
 	return preg_match('/^Starting: /', $sLine);
 }
 
+IssueLog::Enable(APPROOT.'log/error.log');
 try {
 	$oCtx = new ContextTag(ContextTag::TAG_CRON);
 	LoginWebPage::ResetSession();
@@ -65,6 +66,7 @@ try {
 	}
 
 	$sPHPExec = trim(\MetaModel::GetConfig()->Get('php_path'));
+	$aCronValues[] = "--auth_info=".escapeshellarg('XXXX');
 	$sCliForLogs = GetCliCommand($sPHPExec, $sLogFile, $aCronValues).PHP_EOL;
 	IssueLog::Info("launch cron asynchronously/remotely", null, ['cli' => $sCliForLogs]);
 
@@ -91,7 +93,11 @@ try {
 	$oP->SetOutputDataOnly(true);
 	$oP->Output();
 } catch (Exception $e) {
-	\IssueLog::Error("Cannot run cron", null, ['msg' => $e->getMessage(), 'stack' => $e->getTraceAsString()]);
+	\IssueLog::Error('Cannot run cron', null, ['msg' => $e->getMessage(), 'stack' => $e->getTraceAsString()]);
+	\IssueLog::Error('Cannot run cron $_SERVER', null, $_SERVER);
+	\IssueLog::Error('Cannot run cron $_REQUEST', null, $_REQUEST);
+	\IssueLog::Error('Cannot run cron $_SESSION', null, $_SESSION);
+
 	http_response_code(500);
 	$oP = new JsonPage();
 	$oP->add_header('Access-Control-Allow-Origin: *');
