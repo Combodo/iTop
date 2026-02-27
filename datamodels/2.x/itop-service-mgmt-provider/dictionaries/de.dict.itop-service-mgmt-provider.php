@@ -26,7 +26,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Menu:ServiceSubcategory' => 'Service-Unterkategorien',
 	'Menu:ServiceSubcategory+' => 'Service-Unterkategorien',
 	'Menu:Service' => 'Services',
-	'Menu:Service+' => 'Services',
+	'Menu:Service+' => 'Second level in service hierarchy~~',
 	'Menu:ServiceElement' => 'Service-Elemente',
 	'Menu:ServiceElement+' => 'Service-Elemente',
 	'Menu:SLA' => 'SLAs',

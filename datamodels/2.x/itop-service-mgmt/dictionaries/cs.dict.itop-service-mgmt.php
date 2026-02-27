@@ -28,8 +28,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'Menu:ServiceSubcategory+' => 'Podkategorie služeb',
 	'Menu:Service' => 'Služby',
 	'Menu:Service+' => 'Služby',
-	'Menu:ServiceElement' => 'Prvky služby',
-	'Menu:ServiceElement+' => 'Prvky služby',
 	'Menu:SLA' => 'SLA - dohody o úrovních služeb',
 	'Menu:SLA+' => 'Dohody o úrovních služeb',
 	'Menu:SLT' => 'SLT - cíle úrovní služeb',

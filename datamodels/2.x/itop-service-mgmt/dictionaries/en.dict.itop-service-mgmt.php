@@ -45,7 +45,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less than 30 days',
 
 	'Menu:ProviderContract' => 'Provider contracts',
-	'Menu:ProviderContract+' => 'What your company buys',
+	'Menu:ProviderContract+' => 'What is bought to external companies',
 	'Menu:CustomerContract' => 'Customer contracts',
 	'Menu:CustomerContract+' => 'Services subscriptions',
 	'Menu:ServiceSubcategory' => 'Service subcategories',
