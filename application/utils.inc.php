@@ -2084,7 +2084,9 @@ SQL;
 			}
 
 			// Remove any remaining nulls (for positions that weren't referenced)
-			$aReplacements = array_filter($aReplacements, static function ($val) { return $val !== null; });
+			$aReplacements = array_filter($aReplacements, static function ($val) {
+				return $val !== null;
+			});
 		} else {
 			// For non-positional, we need to map each position
 			$aReplacements = [];
