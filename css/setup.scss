@@ -522,9 +522,11 @@ body {
   }
 }
 
-.ibo-setup-summary-title {
-  font-size: $ibo-font-size-150;
+.ibo-setup-summary-title, .ibo-setup-summary-title:visited, .ibo-setup-summary-title:hover {
+	font-size: $ibo-font-size-150;
+	color: inherit;
 }
+
 
 #ibo-setup-licenses--components-list {
   background-color: $ibo-color-white-200;
