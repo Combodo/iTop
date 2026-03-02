@@ -606,8 +606,8 @@ EOF;
 
 	public static function GetDumpFunction(): string
 	{
-		$version = CMDBSource::QueryToScalar('SELECT VERSION()');
-		if (is_string($version) && stripos($version, 'MariaDB') !== false) {
+		$sVersion = CMDBSource::GetDBVersion();
+		if (stripos($sVersion, 'MariaDB') !== false) {
 			return 'mariadb-dump';
 		}
 
