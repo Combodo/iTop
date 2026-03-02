@@ -6,4 +6,4 @@ You can find the configuration and instructions to run it [here](../tests/php-co
 
 ## PHP Static Analysis
 We use `PHPStan` to ensure code quality and to detect potential bugs in our PHP codebase.
-You can find the configuration and instructions to run it [here](../tests/php-code-style/README.md).
+You can find the configuration and instructions to run it [here](../tests/php-static-analysis/README.md).
