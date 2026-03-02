@@ -626,7 +626,7 @@ EOF
 	protected function GetStepInfo($idx = null)
 	{
 		$index = $idx ?? $this->GetStepIndex();
-		$bMandatoryRemoteExtension = !$this->oWizard->GetParameter('force-uninstall', false);
+		$bRemoteExtensionsShouldBeMandatory = !$this->oWizard->GetParameter('force-uninstall', false);
 		if (is_null($this->aSteps)) {
 			$this->oWizard->SetParameter('additional_extensions_modules', json_encode([])); // Default value, no additional extensions
 
@@ -637,7 +637,7 @@ EOF
 
 				if ($index + 1 >= count($this->aSteps)) {
 					//make sure we also cache next step as well
-					$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo($bMandatoryRemoteExtension);
+					$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo($bRemoteExtensionsShouldBeMandatory);
 
 					// Display this step of the wizard only if there is something to display
 					if (count($aOptions) > 0) {
@@ -651,7 +651,7 @@ EOF
 					}
 				}
 			} else {
-				$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo($bMandatoryRemoteExtension);
+				$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo($bRemoteExtensionsShouldBeMandatory);
 
 				// No wizard configuration provided, build a standard one with just one big list. All items are mandatory, only works when there are no conflicted modules.
 				$this->aSteps = [
