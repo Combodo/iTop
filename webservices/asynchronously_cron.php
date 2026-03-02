@@ -27,19 +27,29 @@ function IsErrorLine(string $sLine): bool
 
 }
 
+function ReadParam($sParam, $sDefaultValue = null, $sSanitizationFilter = utils::ENUM_SANITIZATION_FILTER_RAW_DATA)
+{
+	$sValue = utils::ReadParam($sParam, null, true, $sSanitizationFilter);
+	if (is_null($sValue)) {
+		$sValue = utils::ReadPostedParam($sParam, $sDefaultValue, $sSanitizationFilter);
+	}
+
+	return trim($sValue);
+}
+
 function IsCronStartingLine(string $sLine): bool
 {
 	return preg_match('/^Starting: /', $sLine);
 }
 
-$oCtx = new ContextTag(ContextTag::TAG_CRON);
-\IssueLog::Enable(APPROOT.'log/error.log');
-
 try {
+	$oCtx = new ContextTag(ContextTag::TAG_CRON);
+	\IssueLog::Enable(APPROOT.'log/error.log');
+
 	LoginWebPage::ResetSession();
 	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN);
 	if ($iRet != LoginWebPage::EXIT_CODE_OK) {
-		throw new Exception("Unknown authentication error (retCode=$iRet)", RestResult::UNAUTHORIZED);
+		throw new \Exception("Unknown authentication error (retCode=$iRet)", RestResult::UNAUTHORIZED);
 	}
 
 	$sCurrentLoginMode = \Combodo\iTop\Application\Helper\Session::Get('login_mode', '');
@@ -75,9 +85,16 @@ try {
 	$aCronValues[] = "--auth_info=".escapeshellarg($sTokenInfo);
 	$sCli = GetCliCommand($sPHPExec, $sLogFile, $aCronValues);
 	$process = popen($sCli, 'r');
-	if (false === $process){
+	//	$process = proc_open($sCli, 'r');
+	if (false === $process) {
 		throw new \Exception("CLI execution issue");
 	}
+
+	/*$aStatus = proc_get_status($process);
+	if ($aStatus['running']) {
+		var_dump($aStatus);
+		throw new \Exception(var_export($aStatus));
+	}*/
 
 	while ($aLines = utils::ReadTail($sLogFile)) {
 		$sLastLine = array_shift($aLines);
@@ -94,7 +111,7 @@ try {
 	$oP->SetData(["message" => "OK"]);
 	$oP->SetOutputDataOnly(true);
 	$oP->Output();
-} catch (Exception $e) {
+} catch (\Exception $e) {
 	\IssueLog::Error('Cannot run cron', null, ['msg' => $e->getMessage(), 'stack' => $e->getTraceAsString()]);
 
 	http_response_code(500);
@@ -103,14 +120,4 @@ try {
 	$oP->SetData(["message" => $e->getMessage(), 'cli' => $sCli ?? '', 'msg' => $e->getMessage(), 'stack' => $e->getTraceAsString()]);
 	$oP->SetOutputDataOnly(true);
 	$oP->Output();
-}
-
-function ReadParam($sParam, $sDefaultValue = null, $sSanitizationFilter = utils::ENUM_SANITIZATION_FILTER_RAW_DATA)
-{
-	$sValue = utils::ReadParam($sParam, null, true, $sSanitizationFilter);
-	if (is_null($sValue)) {
-		$sValue = utils::ReadPostedParam($sParam, $sDefaultValue, $sSanitizationFilter);
-	}
-
-	return trim($sValue);
 }

@@ -106,7 +106,7 @@ class CronTest extends ItopDataTestCase
 			'cron_log_file' => $sLogFileName,
 		];
 
-		$sJSONResult = $this->CallItopUri("/webservices/launch_cron_asynchronously.php", $aPostFields);
+		$sJSONResult = $this->CallItopUri("/webservices/asynchronously_cron.php", $aPostFields);
 
 		$this->assertEquals($this->GetExpectedCronResponse(), $sJSONResult);
 		$sLogFile = $this->CheckLogFileIsGeneratedAndGetFullPath($sLogFileName);
@@ -131,7 +131,7 @@ class CronTest extends ItopDataTestCase
 			CURLOPT_HTTPHEADER => ["Authorization: Basic $sToken"],
 		];
 
-		$sJSONResult = $this->CallItopUri("/webservices/launch_cron_asynchronously.php", $aPostFields, $aCurlOptions);
+		$sJSONResult = $this->CallItopUri("/webservices/asynchronously_cron.php", $aPostFields, $aCurlOptions);
 
 		$this->assertEquals($this->GetExpectedCronResponse(), $sJSONResult);
 		$sLogFile = $this->CheckLogFileIsGeneratedAndGetFullPath($sLogFileName);
@@ -156,12 +156,11 @@ class CronTest extends ItopDataTestCase
 			'auth_pwd' => static::$sPassword,
 		];
 
-		$sJSONResult = $this->CallItopUri("/webservices/launch_cron_asynchronously.php?".http_build_query($aGetFields), $aPostFields);
+		$sJSONResult = $this->CallItopUri("/webservices/asynchronously_cron.php?".http_build_query($aGetFields), $aPostFields);
 
 		$this->assertEquals($this->GetExpectedCronResponse(), $sJSONResult);
 		$sLogFile = $this->CheckLogFileIsGeneratedAndGetFullPath($sLogFileName);
 		$this->CheckAdminAccessIssueWithCron($sLogFile);
-		;
 	}
 
 	public function ModeProvider()
