@@ -21,7 +21,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Menu:ProviderContract' => 'Poskytovateľské zmluvy',
 	'Menu:ProviderContract+' => 'What is bought to external companies~~',
 	'Menu:CustomerContract' => 'Zákaznícke zmluvy',
-	'Menu:CustomerContract+' => 'Services subscriptions~~',
+	'Menu:CustomerContract+' => 'Who is buying the services~~',
 	'Menu:ServiceSubcategory' => 'Subkategórie služieb',
 	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy~~',
 	'Menu:Service' => 'Služby',

@@ -47,7 +47,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'Menu:ProviderContract' => 'Provider contracts',
 	'Menu:ProviderContract+' => 'What is bought to external companies',
 	'Menu:CustomerContract' => 'Customer contracts',
-	'Menu:CustomerContract+' => 'Services subscriptions',
+	'Menu:CustomerContract+' => 'Who is buying the services',
 	'Menu:ServiceSubcategory' => 'Service subcategories',
 	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy',
 	'Menu:Service' => 'Services',
