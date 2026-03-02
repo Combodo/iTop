@@ -114,4 +114,8 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 
 		return (int)$proposedValue;
 	}
+	public function GetTargetClass($iType = EXTKEY_RELATIVE)
+	{
+		return '';
+	}
 }
