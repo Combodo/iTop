@@ -40,7 +40,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI-ServiceCatalogMenu-ObsoleteNotInPortal' => 'Les obsolètes sont invisibles dans le portail utilisateur',
 	'UI-ServiceCatalogMenu-UnusedService' => 'Services en production sans contrat client',
 	'UI-ServiceCatalogMenu-NotInPortal' => 'Non affichés dans le portail utilisateur',
-	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Les services sans famille de service sont invisibles dans le portail utilisateur',
 	'UI-ServiceCatalogMenu-SLTBySLA' => 'Nombre de SLTs par SLA',
 	'UI-ServiceCatalogMenu-ContractByService' => 'Nombre de contrats clients utilisant ce service',
 	'UI-ServiceCatalogMenu-ContractBySLA' => 'Nombre de contrats clients utilisant ce SLA',
