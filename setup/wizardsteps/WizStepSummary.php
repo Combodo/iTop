@@ -83,7 +83,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		$oPage->add('<fieldset id="summary"><legend>Installation Parameters</legend>');
 		$oPage->add('<div id="params_summary">');
 
-		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" aria-label="Extensions to be installed">Extensions to be installed</a>');
+		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Extensions to be installed">Extensions to be installed</a>');
 		$aExtensionsAdded = json_decode($this->oWizard->GetParameter('extensions_added'), true);
 
 		if (count($aExtensionsAdded) > 0) {
@@ -97,7 +97,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		}
 		$oPage->add($sExtensionsAdded);
 		$oPage->add('</div>');
-		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" aria-label="Extensions to be uninstalled">Extensions to be uninstalled</a>');
+		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Extensions to be uninstalled">Extensions to be uninstalled</a>');
 
 		$aExtensionsRemoved = json_decode($this->oWizard->GetParameter('removed_extensions'), true) ?? [];
 		$aExtensionsNotUninstallable = json_decode($this->oWizard->GetParameter('extensions_not_uninstallable'));
@@ -117,7 +117,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		$oPage->add($sExtensionsRemoved);
 		$oPage->add('</div>');
 
-		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" aria-label="Database Parameters">Database Parameters</a><ul>');
+		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Database Parameters">Database Parameters</a><ul>');
 		$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
 		$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
 		$oPage->add('<li>DB user password: ***</li>');
@@ -133,11 +133,11 @@ class WizStepSummary extends AbstractWizStepInstall
 		}
 		$oPage->add('</ul></div>');
 
-		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" aria-label="Data Model Configuration">Data Model Configuration</a>');
+		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Data Model Configuration">Data Model Configuration</a>');
 		$oPage->add($this->oWizard->GetParameter('display_choices'));
 		$oPage->add('</div>');
 
-		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" aria-label="Other Parameters">Other Parameters</a><ul>');
+		$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Other Parameters">Other Parameters</a><ul>');
 		if ($sMode == 'install') {
 			$oPage->add('<li>Default language: '.$aInstallParams['language'].'</li>');
 		}
@@ -153,7 +153,7 @@ class WizStepSummary extends AbstractWizStepInstall
 		$oPage->add('</ul></div>');
 
 		if ($sMode == 'install') {
-			$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" aria-label="Administrator Account">Administrator Account</a><ul>');
+			$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" aria-label="Administrator Account">Administrator Account</a><ul>');
 			$oPage->add('<li>Login: '.$aInstallParams['admin_account']['user'].'</li>');
 			$oPage->add('<li>Password: '.$aInstallParams['admin_account']['pwd'].'</li>');
 			$oPage->add('<li>Language: '.$aInstallParams['admin_account']['language'].'</li>');
@@ -162,7 +162,7 @@ class WizStepSummary extends AbstractWizStepInstall
 
 		$aMiscOptions = $aInstallParams['options'];
 		if (count($aMiscOptions) > 0) {
-			$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title">Miscellaneous Options</a><ul>');
+			$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" >Miscellaneous Options</a><ul>');
 			foreach ($aMiscOptions as $sKey => $sValue) {
 				$oPage->add('<li>'.$sKey.': '.$sValue.'</li>');
 			}
@@ -178,7 +178,7 @@ class WizStepSummary extends AbstractWizStepInstall
 			$oParams->LoadFromHash($aInstallParams);
 			$oParams->ToXML($oDoc, null, 'installation');
 			$sXML = $oDoc->saveXML();
-			$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title">XML Config file</a><ul><pre>');
+			$oPage->add('<div class="closed"><a class="title ibo-setup-summary-title" href="#" >XML Config file</a><ul><pre>');
 			$oPage->add(utils::EscapeHtml($sXML));
 			$oPage->add('</pre></ul></div>');
 		}
