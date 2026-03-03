@@ -41,9 +41,14 @@ $ibo-extension-details--actions--button--padding-x: $ibo-button--padding-x !defa
 	padding-right: $ibo-extension-details--information--metadata--padding;
 }
 
-.ibo-extension-details:has(input:checked) .ibo-badge.unchecked, .ibo-extension-details:has(input:not(:checked)) .ibo-badge.checked {
+.ibo-extension-details:has(>.ibo-extension-details--actions input:is([type="checkbox"], [type="radio"]):checked)>.ibo-extension-details--information>.ibo-extension-details--information--label .ibo-badge.unchecked,
+//Merging the two lines below with :is([type="checkbox"], [type="radio"]) will generate a warning in scss compiler
+.ibo-extension-details:has(>.ibo-extension-details--actions input[type="checkbox"]:not(:checked))>.ibo-extension-details--information>.ibo-extension-details--information--label .ibo-badge.checked,
+.ibo-extension-details:has(>.ibo-extension-details--actions input[type="radio"]:not(:checked))>.ibo-extension-details--information>.ibo-extension-details--information--label .ibo-badge.checked {
 	display: none;
 }
+
+
 
 .ibo-extension-details--actions > button {
 	padding: $ibo-extension-details--actions--button--padding-y $ibo-extension-details--actions--button--padding-x;

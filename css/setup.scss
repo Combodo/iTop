@@ -328,10 +328,10 @@ fieldset {
 				}
 			}
 		}
-		&:not(:checked) ~ label .setup-extension-tag.checked{
+		&:not(:checked) ~ label .checked{
 			display:none;
 		}
-		&:checked ~ label .setup-extension-tag.unchecked{
+		&:checked ~ label .unchecked{
 			display:none;
 		}
 	}
@@ -631,6 +631,21 @@ body {
 	&.removed{
 		background-color: #969594
 	}
+}
+
+.ibo-extension-details {
+	align-items: flex-start;
+}
+.ibo-extension-details--actions input{
+	margin:0.2em 0.5em;
+	width: 12px;
+}
+:not(.ibo-badge) ~ .ibo-badge{
+	margin-left:0.5em;
+}
+.ibo-extension-details--information--label i{
+	font-size : 0.9em;
+	margin-left:0.3em;
 }
 
 .setup--wizard-choice--label + .setup--wizard-choice--more-info {
