@@ -6,6 +6,7 @@ use AttributeDate;
 use AttributeDateTime;
 use Change;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use DateTime;
 use MetaModel;
 use UserRequest;
 
@@ -340,20 +341,68 @@ PHP
 		return $oAttribute;
 	}
 
-    public function testDisplayStopwatch()
+	public function DisplayThresholdInNotificationProvider(): array
+	{
+		$iTime = time();
+		$oDateTime = new DateTime();
+		$oDateTime->setTimestamp($iTime - 200);
+		$sDate = $oDateTime->format("Y-m-d H:i:s");
+
+		// Note: This is test is not great as we are datamodel dependent and don't have a class with all the attribute types
+		return [
+			'GetHtml'  => [
+				'ttr_escalation_deadline',
+				'html', // no default value on this field
+				$iTime,
+				'Missed by 3 min',
+			],
+			'GetLabel' => [
+				'ttr_escalation_deadline',
+				'label', // no default value on this field
+				$iTime,
+				$sDate,
+			],
+			'GetText'  => [
+				'ttr_escalation_deadline',
+				'text', // no default value on this field
+				$iTime,
+				'Missed by 3 min',
+			],
+			'Get'      => [
+				'ttr_escalation_deadline',
+				'', // no default value on this field
+				$iTime,
+				$iTime - 200,
+			],
+
+		];
+	}
+
+	/**
+	 * @dataProvider DisplayThresholdInNotificationProvider
+	 *
+	 * @param string $sAttCode
+	 * @param string $sVerb
+	 * @param string $sExpectedValue
+	 *
+	 * @return void
+	 */
+	public function testDisplayThresholdInNotification($sAttCode, $sVerb, $iTime, $sExpectedValue)
     {
         $aUserRequestCustomParams = [
             'title' => "Test DisplayStopwatch",
         ];
         $oUserRequest = $this->CreateUserRequest(456, $aUserRequestCustomParams);
-        $oAttDef = MetaModel::GetAttributeDef(get_class($oUserRequest), 'ttr_escalation_deadline');
-        $iStartDate = time() - 200;
+	    $oAttDef = MetaModel::GetAttributeDef(get_class($oUserRequest), $sAttCode);
+	    $iStartDate = $iTime - 200;
 
-        $oStopwatch = $oUserRequest->Get('ttr');
+
+	    $oStopwatch = $oUserRequest->Get('ttr');
         $oStopwatch->DefineThreshold(100, $iStartDate);
         $oUserRequest->Set('ttr', $oStopwatch);
         $value = $oUserRequest->Get('ttr_escalation_deadline');
-        $sRet = $oAttDef->GetAsPlainText($value, $oUserRequest);
-        self::assertEquals('Missed by 3 min', $sRet);
+	    //$sRet = $oAttDef->GetAsPlainText($value, $oUserRequest);
+	    $sRet = $oAttDef->GetForTemplate($oUserRequest->Get($sAttCode), $sVerb, $oUserRequest);
+	    self::assertEquals($sExpectedValue, $sRet);
     }
 }
