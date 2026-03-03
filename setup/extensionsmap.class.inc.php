@@ -390,7 +390,7 @@ class iTopExtensionsMap
 	 * @param string $sModuleFile
 	 * @return array
 	 */
-	protected function GetModuleInfo($sModuleFile)
+	public function GetModuleInfo($sModuleFile)
 	{
 		static $iDummyClassIndex = 0;
 
