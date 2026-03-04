@@ -509,7 +509,7 @@
           <neighbours>
             <neighbour id="flow">
               <query_down><![CDATA[SELECT DataFlow WHERE source_id = :this->id]]></query_down>
-              <query_up><![CDATA[SELECT SoftwareInstance WHERE id = :this->source_id]]></query_up>
+              <query_up><![CDATA[SELECT FunctionalCI WHERE id = :this->source_id]]></query_up>
               <direction>both</direction>
             </neighbour>
           </neighbours>
