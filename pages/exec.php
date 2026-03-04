@@ -106,7 +106,9 @@ $aModuleDelegatedExecutionPolicy = GetModuleDelegatedExecutionPolicy($sModule);
 if (is_null($aModuleDelegatedExecutionPolicy) || !in_array($sPage, $aModuleDelegatedExecutionPolicy)) {
 	$bForceLoginWhenNoExecutionPolicy = MetaModel::GetConfig()->Get('security.force_login_when_no_execution_policy');
 	// TODO in N°9343 : remove the conf and this 'if' condition to perform login by default when no execution policy is defined
-	LoginWebPage::DoLoginEx();
+	if ($bForceLoginWhenNoExecutionPolicy) {
+		LoginWebPage::DoLoginEx();
+	}
 }
 if (is_array($aModuleDelegatedExecutionPolicy) && !in_array($sPage, $aModuleDelegatedExecutionPolicy)) {
 	// if module defined a delegated execution policy but not for the current page, we consider that the page is not allowed to be executed without login

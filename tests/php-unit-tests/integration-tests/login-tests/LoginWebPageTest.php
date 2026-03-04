@@ -95,10 +95,64 @@ class LoginWebPageTest extends ItopDataTestCase
 	public function testNotInExecutionPolicyFileWithoutForceLoginConf()
 	{
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/AnotherFile.php",
+			"pages/exec.php?exec_module=extension-without-execution-policy&exec_page=src/Controller/AnotherFile.php",
+			[],
+			[],
+			true
 		);
 
 		$this->assertStringNotContainsString('<title>iTop login</title>', $sPageContent); // by default (until N°9343) if no execution policy is defined, login is not forced
 	}
 
+	public function testNotInExecutionPolicyFileWithoutForceLoginConfButWithExecutionPolicy()
+	{
+		$sPageContent = $this->CallItopUri(
+			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/AnotherFile.php",
+			[],
+			[],
+			true
+		);
+
+		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent); // Since an execution policy is defined and AnotherFile.php isn't in it, login should be proposed
+	}
+
+	/**
+	 * @dataProvider InExecutionPolicyFileWithAdminRequiredProvider
+	 *
+	 * @throws \Exception
+	 */
+	public function testInExecutionPolicyFileWithAdminRequired($iProfileId, $ForbiddenPageShouldBeDisplayed)
+	{
+		// generate random login
+		$sUserLogin = 'user-'.date('YmdHis');
+		$this->CreateUser($sUserLogin, $iProfileId, self::PASSWORD);
+		$this->GivenConfigFileAllowedLoginTypes(explode('|', 'form'));
+
+		$sPageContent = $this->CallItopUri(
+			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/CheckAnythingButAdminRequired.php",
+			[
+				'auth_user' => $sUserLogin,
+				'auth_pwd' => self::PASSWORD,
+			],
+			[],
+			true
+		);
+		$ForbiddenPageShouldBeDisplayed ?
+			$this->assertStringContainsString('Yo !', $sPageContent) :
+			$this->assertStringNotContainsString('<title>Access restricted to people having administrator privileges</title>', $sPageContent); // in execution policy file (in the module), login should not be proposed, file handle its own policy
+	}
+
+	public function InExecutionPolicyFileWithAdminRequiredProvider()
+	{
+		return [
+			'Administrator profile' => [
+				self::$aURP_Profiles['Administrator'],
+				true,
+			],
+			'ReadOnly profile' => [
+				self::$aURP_Profiles['Service Desk Agent'],
+				false,
+			],
+		];
+	}
 }
