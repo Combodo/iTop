@@ -63,13 +63,25 @@ class LoginWebPageTest extends ItopDataTestCase
 	 */
 	public function testInExecutionPolicyFile()
 	{
+		$sPageContent = $this->CallItopUri(
+			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/FileInExecutionPolicy.php",
+			[],
+			[],
+			true
+		);
+
+		$this->assertStringNotContainsString('<title>iTop login</title>', $sPageContent, 'File listed in execution policy file (in the module), login should not be requested by exec, file handle its own policy');
+	}
+
+	public function testUserCanAccessAnyFile()
+	{
 		// generate random login
 		$sUserLogin = 'user-'.date('YmdHis');
-		$this->CreateUser($sUserLogin, self::$aURP_Profiles['Administrator'], self::PASSWORD);
+		$this->CreateUser($sUserLogin, self::$aURP_Profiles['Service Desk Agent'], self::PASSWORD);
 		$this->GivenConfigFileAllowedLoginTypes(explode('|', 'form'));
 
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/CheckAnything.php",
+			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/FileNotInExecutionPolicy.php",
 			[
 				'auth_user' => $sUserLogin,
 				'auth_pwd' => self::PASSWORD,
@@ -78,42 +90,42 @@ class LoginWebPageTest extends ItopDataTestCase
 			true
 		);
 
-		$this->assertStringNotContainsString('<title>iTop login</title>', $sPageContent); // in execution policy file (in the module), login should not be proposed, file handle its own policy
+		$this->assertStringContainsString('Yo', $sPageContent, 'Logged in user should access any file via exec.php even if the page isn\'t listed in execution policy');
 	}
 
-	public function testNotInExecutionPolicyFileWithForceLoginConf()
+	public function testNoPolicyFileWithForceLoginConf()
 	{
 		MetaModel::GetConfig()->Set('security.force_login_when_no_execution_policy', true);
 
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/AnotherFile.php",
+			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/FileNotInExecutionPolicy.php",
 		);
 
-		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent); // if itop is configured to force login when no execution policy, then login should be proposed since file is not in execution policy file
+		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent, 'if itop is configured to force login when no execution policy, then login should be required even if there is no policy file');
 	}
 
-	public function testNotInExecutionPolicyFileWithoutForceLoginConf()
+	public function testNoPolicyFileWithDefaultConfiguration()
 	{
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-without-execution-policy&exec_page=src/Controller/AnotherFile.php",
+			"pages/exec.php?exec_module=extension-without-execution-policy&exec_page=src/Controller/File.php",
 			[],
 			[],
 			true
 		);
 
-		$this->assertStringNotContainsString('<title>iTop login</title>', $sPageContent); // by default (until N°9343) if no execution policy is defined, login is not forced
+		$this->assertStringContainsString('Yo', $sPageContent, 'by default (until N°9343) if no execution policy is defined, not logged in persons should access pages');
 	}
 
-	public function testNotInExecutionPolicyFileWithoutForceLoginConfButWithExecutionPolicy()
+	public function testNotInExecutionPolicy()
 	{
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/AnotherFile.php",
+			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/FileNotInExecutionPolicy.php",
 			[],
 			[],
 			true
 		);
 
-		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent); // Since an execution policy is defined and AnotherFile.php isn't in it, login should be proposed
+		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent, 'Since an execution policy is defined and file isn\'t listed in it, login should be required');
 	}
 
 	/**
@@ -121,7 +133,7 @@ class LoginWebPageTest extends ItopDataTestCase
 	 *
 	 * @throws \Exception
 	 */
-	public function testInExecutionPolicyFileWithAdminRequired($iProfileId, $ForbiddenPageShouldBeDisplayed)
+	public function testInExecutionPolicyFileWithAdminRequired($iProfileId, $bShouldSeeForbiddenAdminPage)
 	{
 		// generate random login
 		$sUserLogin = 'user-'.date('YmdHis');
@@ -129,7 +141,7 @@ class LoginWebPageTest extends ItopDataTestCase
 		$this->GivenConfigFileAllowedLoginTypes(explode('|', 'form'));
 
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/CheckAnythingButAdminRequired.php",
+			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/FileInExecutionPolicyAndAdminRequired.php",
 			[
 				'auth_user' => $sUserLogin,
 				'auth_pwd' => self::PASSWORD,
@@ -137,9 +149,10 @@ class LoginWebPageTest extends ItopDataTestCase
 			[],
 			true
 		);
-		$ForbiddenPageShouldBeDisplayed ?
-			$this->assertStringContainsString('Yo !', $sPageContent) :
-			$this->assertStringNotContainsString('<title>Access restricted to people having administrator privileges</title>', $sPageContent); // in execution policy file (in the module), login should not be proposed, file handle its own policy
+		$bShouldSeeForbiddenAdminPage ?
+			$this->assertStringNotContainsString('<title>Access restricted to people having administrator privileges</title>', $sPageContent, 'Should prevent non admin user to access this page') : // in execution policy file (in the module), login should not be required, file handle its own policy
+			$this->assertStringContainsString('Yo !', $sPageContent, 'Should execute the file and see its content since user has admin profile');
+
 	}
 
 	public function InExecutionPolicyFileWithAdminRequiredProvider()
@@ -147,11 +160,11 @@ class LoginWebPageTest extends ItopDataTestCase
 		return [
 			'Administrator profile' => [
 				self::$aURP_Profiles['Administrator'],
-				true,
+				'Should see forbidden admin page' => false,
 			],
 			'ReadOnly profile' => [
 				self::$aURP_Profiles['Service Desk Agent'],
-				false,
+				'Should see forbidden admin page' => true,
 			],
 		];
 	}

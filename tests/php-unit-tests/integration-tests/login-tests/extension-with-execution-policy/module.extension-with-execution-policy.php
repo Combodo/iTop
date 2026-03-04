@@ -18,7 +18,7 @@ SetupWebPage::AddModule(
 
 		// Security
 		'execution_policy' => [
-			'src/Controller/CheckAnything.php',
+			'src/Controller/FileInExecutionPolicy.php',
 			'src/Controller/CheckAnythingButAdminRequired.php',
 		],
 

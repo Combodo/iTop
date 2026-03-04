@@ -119,7 +119,7 @@ require_once($sTargetPage);
 
 function GetModuleDelegatedExecutionPolicy(string $sModuleName): ?array
 {
-	$sModuleFile =  APPROOT.'/env-'.utils::GetCurrentEnvironment().'/'.$sModuleName.'/module.'.$sModuleName.'.php';
+	$sModuleFile =  utils::GetAbsoluteModulePath($sModuleName).'/module.'.$sModuleName.'.php';
 
 	$oExtensionMap = new iTopExtensionsMap();
 	$aModuleParam = $oExtensionMap->GetModuleInfo($sModuleFile)[2];
