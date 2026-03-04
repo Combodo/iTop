@@ -1,0 +1,12 @@
+..
+..
+..
+..
+..
+..
+php /var/www/html/iTop/webservices/cron.php
+ERROR: Missing argument 'auth_user'
+
+USAGE:
+
+php cron.php --auth_user=<login> --auth_pwd=<password> [--param_file=<file>] [--verbose=1] [--debug=1] [--status_only=1]

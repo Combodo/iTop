@@ -184,6 +184,92 @@ class CronTest extends ItopDataTestCase
 		$this->assertEquals(static::$sLogin, $sUserLogin);
 	}
 
+	public function testGetCronStatus_FailWhenNotAdmin()
+	{
+		$this->AddLoginModeAndSaveConfiguration('url');
+		$this->CreateUserWithProfiles([self::$aURP_Profiles['REST Services User']]);
+
+		$sLogFileName = "crontest_".uniqid().'.log';
+		$aPostFields = [
+			'version' => '1.3',
+			'verbose' => 1,
+			'debug' => 1,
+		];
+
+		$aGetFields = [
+			'auth_user' => static::$sLogin,
+			'auth_pwd' => static::$sPassword,
+		];
+
+		$sJSONResult = $this->CallItopUri("/webservices/get_cron_status.php?".http_build_query($aGetFields), $aPostFields);
+
+		$this->assertEquals('{"message":"Access restricted to administrators"}', $sJSONResult);
+	}
+
+	public function testGetCronStatus_FailWhenLogFileDoesNotExist()
+	{
+		$this->AddLoginModeAndSaveConfiguration('url');
+		$this->CreateUserWithProfiles([self::$aURP_Profiles['Administrator']]);
+
+		$aPostFields = [
+			'version' => '1.3',
+			'verbose' => 1,
+			'debug' => 1,
+			'cron_log_file' => 'gabuzomeu.log',
+		];
+
+		$aGetFields = [
+			'auth_user' => static::$sLogin,
+			'auth_pwd' => static::$sPassword,
+		];
+
+		$sJSONResult = $this->CallItopUri("/webservices/get_cron_status.php?".http_build_query($aGetFields), $aPostFields);
+
+		$this->assertEquals('{"message":"Cannot read log file"}', $sJSONResult);
+	}
+
+	public static function GetCronStatusProvider()
+	{
+		return [
+			["cron_alreadyrunning.log", 'Already running...', "error"],
+			["cron_dummyerror.log", 'Already running...', "error"],
+			['cron_maintenance.log', 'A maintenance is ongoing', "error"],
+			['cron_missingcreds_error.log', 'A maintenance is ongoing', "error"],
+			['cron_notanadmin.log', 'Access restricted to administrators', "error"],
+			['cron_starting.log', '', "running"],
+			['cron_stopped.log', '', "stopped"],
+		];
+	}
+
+	/**
+	 * @dataProvider GetCronStatusProvider
+	 */
+	public function testGetCronStatus($sLogFilename, $expectedMsg, $expectedStatus)
+	{
+		$sLogFile = APPROOT."log/$sLogFilename";
+		file_put_contents($sLogFile, file_get_contents(__DIR__.'/resources/'.$sLogFilename));
+		$this->aFileToClean[] = $sLogFile;
+
+		$this->AddLoginModeAndSaveConfiguration('url');
+		$this->CreateUserWithProfiles([self::$aURP_Profiles['Administrator']]);
+
+		$aPostFields = [
+			'version' => '1.3',
+			'verbose' => 1,
+			'debug' => 1,
+			'cron_log_file' => $sLogFile,
+		];
+
+		$aGetFields = [
+			'auth_user' => static::$sLogin,
+			'auth_pwd' => static::$sPassword,
+		];
+
+		$sJSONResult = $this->CallItopUri("/webservices/get_cron_status.php?".http_build_query($aGetFields), $aPostFields);
+
+		$this->assertEquals('{"message":"Cannot read log file"}', $sJSONResult);
+	}
+
 	private function CreateUserWithProfiles(array $aProfileIds): ?string
 	{
 		if (count($aProfileIds) > 0) {

@@ -3,8 +3,8 @@
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
+require_once(__DIR__.'/CronService.php');
 
-const ERROR_ALREADY_RUNNING = "error_already_running";
 const RUNNING = "running";
 const STOPPED = "stopped";
 const ERROR = "error";
@@ -17,25 +17,28 @@ try {
 		throw new Exception("Unknown authentication error (retCode=$iRet)", RestResult::UNAUTHORIZED);
 	}
 
+	if (!UserRights::IsAdministrator()) {
+		throw new Exception("Access restricted to administrators");
+	}
+
 	$sLogFilename = ReadParam("cron_log_file", "cron.log");
-
-	$sStatus = RUNNING;
-	$sMsg = "";
 	$sLogFile = APPROOT."log/$sLogFilename";
+	if (! is_file($sLogFile)) {
+		throw new \Exception("Cannot read log file");
+	}
 
-	$aLines = utils::ReadTail($sLogFile, 2);
-	$sLastLine = $aLines[1] ?? '';
-	if (0 === strpos($sLastLine, 'Exiting: ')) {
-		$sContent = $aLines[0];
-		if (false !== strpos($sContent, 'Already running')) {
-			$sStatus = ERROR_ALREADY_RUNNING;
-		} elseif (preg_match('/ERROR: (.*)\\n/', $sContent, $aMatches)) {
-			$sMsg = $aMatches[1];
-			$sStatus = ERROR;
+	$sMsg = "";
+	if (CronService::GetInstance()->IsStopped($sLogFile)) {
+		$sStatus = STOPPED;
+	} else {
+		$sErrorMsg = CronService::GetInstance()->GetErrorMessage($sLogFile);
+		if (is_null($sErrorMsg)) {
+			$sStatus = RUNNING;
 		} else {
-			$sMsg = "$sContent";
-			$sStatus = STOPPED;
+			$sMsg = $sErrorMsg;
+			$sStatus = ERROR;
 		}
+		$sStatus = is_null($sMsg) ? RUNNING : ERROR;
 	}
 
 	http_response_code(200);

@@ -24,9 +24,11 @@ use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 
 require_once(__DIR__.'/../approot.inc.php');
+require_once(__DIR__.'/CronService.php');
 
 const EXIT_CODE_ERROR = -1;
 const EXIT_CODE_FATAL = -2;
+
 // early exit
 if (file_exists(READONLY_MODE_FILE)) {
 	echo "iTop is read-only. Exiting...\n";
@@ -37,7 +39,6 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/core/background.inc.php');
 
 IssueLog::Enable(APPROOT.'log/error.log');
-
 $sConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
 if (!file_exists($sConfigFile)) {
 	echo "iTop is not yet installed. Exiting...\n";
@@ -65,7 +66,7 @@ function UsageAndExit($oP)
 
 	if ($bModeCLI) {
 		$oP->p("USAGE:\n");
-		$oP->p("php cron.php --auth_user=<login> --auth_pwd=<password> [--param_file=<file>] [--verbose=1] [--debug=1] [--status_only=1]\n");
+		$oP->p(\CronService::HELP_MESSAGE."\n");
 	} else {
 		$oP->p("Optional parameters: verbose, param_file, status_only\n");
 	}
@@ -461,7 +462,6 @@ if ($bIsModeCLI) {
 try {
 	$bVerbose = utils::ReadParam('verbose', false, true /* Allow CLI */);
 	$bDebug = utils::ReadParam('debug', false, true /* Allow CLI */);
-
 	if ($bIsModeCLI) {
 		utils::UseParamFile();
 
@@ -485,6 +485,7 @@ try {
 			if ($oLoginFSMExtensionInstance instanceof iTokenLoginUIExtension) {
 				$aTokenInfo = json_decode(base64_decode($sTokenInfo), true);
 
+				IssueLog::Error("TTTTTTT $sLoginMode TTTTTTTTTTTTTt");
 				/** @var iTokenLoginUIExtension $oLoginFSMExtensionInstance */
 				$sAuthUser = $oLoginFSMExtensionInstance->GetUserLogin($aTokenInfo);
 				UserRights::Login($sAuthUser); // Login & set the user's language
@@ -539,7 +540,9 @@ try {
 	}
 } finally {
 	try {
-		$oMutex->Unlock();
+		if (isset($oMutex)) {
+			$oMutex->Unlock();
+		}
 	} catch (Exception $e) {
 		$oP->p("ERROR: '".$e->getMessage()."'");
 		if ($bDebug) {
