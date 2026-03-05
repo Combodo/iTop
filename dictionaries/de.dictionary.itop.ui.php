@@ -1394,6 +1394,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:SelectInlineImageToUpload' => 'Wähle das Bild für den Upload aus',
 	'UI:AvailableInlineImagesLegend' => 'Verfügbare Bilder',
 	'UI:NoInlineImage' => 'Es sind keine Bilder auf dem Server verfügbar. Nutze den "Durchsuchen" Button oben, um ein Bild vom Computer hochzuladen.',
+	'UI:MissingInlineImage' => 'Bild fehlt',
 	'UI:ToggleFullScreen' => 'Maximieren / Minimieren',
 	'UI:Button:ResetImage' => 'Vorheriges Bild wiederherstellen',
 	'UI:Button:RemoveImage' => 'Bild löschen',

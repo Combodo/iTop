@@ -1398,6 +1398,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'UI:SelectInlineImageToUpload' => '选择要上传的图片',
 	'UI:AvailableInlineImagesLegend' => '可用的图片',
 	'UI:NoInlineImage' => '服务器上没有图片. 使用上面的 "浏览" 按钮, 从您的电脑上选择并上传到服务器.',
+	'UI:MissingInlineImage' => '缺少图片',
 	'UI:ToggleFullScreen' => '切换最大化/最小化',
 	'UI:Button:ResetImage' => '恢复之前的图片',
 	'UI:Button:RemoveImage' => '移除图片',
