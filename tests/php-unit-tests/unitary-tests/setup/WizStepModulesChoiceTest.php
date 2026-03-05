@@ -3,6 +3,7 @@
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use iTopExtension;
 use iTopExtensionsMap;
 use iTopExtensionsMapFake;
 use ModuleDiscovery;
@@ -374,6 +375,44 @@ class WizStepModulesChoiceTest extends ItopTestCase
 		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
 		$aFlags = $this->oStep->ComputeChoiceFlags($aWizardStepDefinition, '_0', $bIsCurrentSelected ? ['_0' => '_0'] : [], false, $bDisableUninstallChecks, true);
 		$this->assertEquals($aExpectedFlags, $aFlags);
+	}
+
+	public function ProviderGetAllExtensionsToDisplayInSetupMandatoryFlag()
+	{
+		return [
+			'A manually added extension should not be mandatory by default' => [
+				'bExtensionSource' =>  'extensions',//iTopExtension::SOURCE_MANUAL
+				'bDisableUninstallChecks' => false,
+				'bExpectedMandatory' => false,
+			],
+			'A remotely added extension should be mandatory by default' => [
+				'bExtensionSource' =>  'data',//iTopExtension::SOURCE_REMOTE
+				'bDisableUninstallChecks' => false,
+				'bExpectedMandatory' => true,
+			],
+			'A remotely added extension should not be mandatory by default if uninstall checks has been disabled' => [
+				'bExtensionSource' =>  'data',//iTopExtension::SOURCE_REMOTE
+				'bDisableUninstallChecks' => true,
+				'bExpectedMandatory' => false,
+			],
+
+		];
+	}
+
+	/**
+	 * @dataProvider ProviderGetAllExtensionsToDisplayInSetupMandatoryFlag
+	 */
+	public function testGetAllExtensionsToDisplayInSetupMandatoryFlag($bExtensionSource, $bDisableUninstallChecks, $bExpectedMandatory)
+	{
+		$aExtensionsOnDiskOrDb = [
+			'itop-ext1' => [
+				'installed' => true,
+				'source' => $bExtensionSource,
+			],
+		];
+		$oMap = iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb);
+		$aExtensions = $oMap->GetAllExtensionsToDisplayInSetup(false, !$bDisableUninstallChecks);
+		$this->assertEquals($bExpectedMandatory, $aExtensions['itop-ext1']->bMandatory);
 	}
 
 	public function ProviderGetAddedAndRemovedExtensions()
