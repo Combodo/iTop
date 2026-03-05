@@ -4344,7 +4344,9 @@ class AttributeText extends AttributeString
 		} else {
 			$sValue = self::RenderWikiHtml($sValue, true /* wiki only */);
 
-			return "<div class=\"HTML ibo-is-html-content\" $sStyle>".InlineImage::FixUrls($sValue).'</div>';
+			$sImageHtml = UserRights::IsLoggedIn() ? InlineImage::FixUrls($sValue) : InlineImage::ReplaceInlineImagesWithBase64Representation($sValue);
+
+			return "<div class=\"HTML ibo-is-html-content\" $sStyle>".$sImageHtml.'</div>';
 		}
 
 	}
