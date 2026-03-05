@@ -320,7 +320,7 @@ class MFCompiler
 				// Cleanup the temporary directory
 				SetupUtils::rrmdir($sTempTargetDir);
 			}
-			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
+			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 				SetupUtils::ExitMaintenanceMode();
 			}
 			throw $e;
@@ -330,7 +330,7 @@ class MFCompiler
 			// Move the results to the target directory
 			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
 		}
-		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
+		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 			SetupUtils::ExitMaintenanceMode();
 		}
 

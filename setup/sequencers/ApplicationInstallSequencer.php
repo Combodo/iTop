@@ -471,12 +471,14 @@ class ApplicationInstallSequencer extends StepSequencer
 
 		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
 
-		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
+		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
 			$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
 			if (is_file($sConfigFilePath)) {
 				$oConfig = new Config($sConfigFilePath);
 				$oConfig->UpdateFromParams($aParamValues);
-				SetupUtils::EnterMaintenanceMode($oConfig);
+				if ($bEnterMaintenanceMode) {
+					SetupUtils::EnterMaintenanceMode($oConfig);
+				}
 			}
 		}
 		try {
@@ -563,7 +565,7 @@ class ApplicationInstallSequencer extends StepSequencer
 			$sIntanceUUID = utils::CreateUUID('filesystem');
 			file_put_contents($sInstanceUUIDFile, $sIntanceUUID);
 		}
-		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
+		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 			SetupUtils::ExitMaintenanceMode();
 		}
 	}
