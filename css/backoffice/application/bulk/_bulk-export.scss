@@ -1,0 +1,10 @@
+/*
+ * @copyright   Copyright (C) 2010-2026 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+#form_part_csv_options:has(#ibo-sanitize-excel-export--input:checked), #form_part_xlsx_options:has(#ibo-sanitize-excel-export--input:checked){
+  #ibo-sanitize-excel-export--alert {
+    display: none;
+  }
+}
