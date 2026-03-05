@@ -998,7 +998,7 @@ JS
 				break;
 
 			case 'revert_dashboard':
-				$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+				$sDashboardId = utils::ReadParam('dashboard_id', '', false, utils::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM);
 				$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 				appUserPreferences::UnsetPref('display_original_dashboard_'.$sDashboardId);
 				$oDashboard = new RuntimeDashboard($sDashboardId);
