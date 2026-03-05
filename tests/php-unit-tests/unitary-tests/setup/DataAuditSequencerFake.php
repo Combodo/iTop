@@ -15,7 +15,7 @@ class DataAuditSequencerFake extends DataAuditSequencer
 	{
 
 	}
-	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $bUseSymbolicLinks = null)
+	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $bUseSymbolicLinks = null, $bEnterMaintenanceMode = true)
 	{
 
 	}
