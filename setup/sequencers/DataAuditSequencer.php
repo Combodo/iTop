@@ -57,7 +57,6 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 		try {
 			$fStart = microtime(true);
 			SetupLog::Info("##### STEP {$sStep} start");
-			$this->EnterReadOnlyMode();
 			switch ($sStep) {
 				case '':
 					$this->DoLogParameters('data-audit-', 'Data Audit');
@@ -83,6 +82,7 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 						$aSelectedModules,
 						$sSourceDir,
 						$sExtensionDir,
+						false,
 						false
 					);
 
@@ -145,7 +145,6 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 			];
 
 			$this->ReportException($e);
-			$this->ExitReadOnlyMode();
 		} finally {
 			$fDuration = round(microtime(true) - $fStart, 2);
 			SetupLog::Info("##### STEP {$sStep} duration: {$fDuration}s");

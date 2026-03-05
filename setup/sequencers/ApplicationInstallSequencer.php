@@ -429,12 +429,12 @@ class ApplicationInstallSequencer extends StepSequencer
 	 *
 	 * @since 3.1.0 N°2013 added the aParamValues param
 	 */
-	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $bUseSymbolicLinks = null)
+	protected function DoCompile($aRemovedExtensionCodes, $aSelectedModules, $sSourceDir, $sExtensionDir, $bUseSymbolicLinks = null, $bEnterMaintenanceMode = true)
 	{
 		/**
-	 * @since 3.2.0 move the ContextTag init at the very beginning of the method
-	 * @noinspection PhpUnusedLocalVariableInspection
-	 */
+		 * @since 3.2.0 move the ContextTag init at the very beginning of the method
+		 * @noinspection PhpUnusedLocalVariableInspection
+		 */
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
 		SetupLog::Info("Compiling data model.");
@@ -476,7 +476,9 @@ class ApplicationInstallSequencer extends StepSequencer
 			if (is_file($sConfigFilePath)) {
 				$oConfig = new Config($sConfigFilePath);
 				$oConfig->UpdateFromParams($aParamValues);
-				SetupUtils::EnterMaintenanceMode($oConfig);
+				if ($bEnterMaintenanceMode) {
+					SetupUtils::EnterMaintenanceMode($oConfig);
+				}
 			}
 		}
 		try {
@@ -531,7 +533,7 @@ class ApplicationInstallSequencer extends StepSequencer
 			}
 
 			$oMFCompiler = new MFCompiler($oFactory, $sEnvironment);
-			$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks);
+			$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks, false, $bEnterMaintenanceMode);
 			//$aCompilerLog = $oMFCompiler->GetLog();
 			//SetupLog::Info(implode("\n", $aCompilerLog));
 			SetupLog::Info("Data model successfully compiled to '$sTargetPath'.");
@@ -563,7 +565,7 @@ class ApplicationInstallSequencer extends StepSequencer
 			$sIntanceUUID = utils::CreateUUID('filesystem');
 			file_put_contents($sInstanceUUIDFile, $sIntanceUUID);
 		}
-		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
+		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 			SetupUtils::ExitMaintenanceMode();
 		}
 	}
