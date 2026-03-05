@@ -107,7 +107,7 @@ class WizStepModulesChoice extends WizardStep
 			$bSelected = in_array($oExtension->sCode, $aSelectedExtensions);
 			if ($oExtension->bInstalled && !$bSelected) {
 				$aExtensionsRemoved[$oExtension->sCode] = $oExtension->sLabel;
-				if (!$oExtension->CanBeUninstalled()) {
+				if (!$oExtension->CanBeUninstalled() || $oExtension->sSource === iTopExtension::SOURCE_REMOTE) {
 					$aExtensionsNotUninstallable[$oExtension->sCode] = true;
 				}
 			} elseif (!$oExtension->bInstalled && $bSelected) {

@@ -90,6 +90,7 @@ JS);
 			return;
 		}
 
+		//When the setup reach this step, it already checked whether extensions were uninstallable (during WizStepModulesChoice). We only need to log what has been done.
 		if ($this->oWizard->GetParameter('force-uninstall', false)) {
 			SetupLog::Warning("User disabled uninstallation checks");
 		}
