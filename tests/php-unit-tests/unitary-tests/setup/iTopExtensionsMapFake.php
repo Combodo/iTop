@@ -21,6 +21,7 @@ class iTopExtensionsMapFake extends iTopExtensionsMap
 			$oExtension->aModules = $aExtension['modules'] ?? [];
 			$oExtension->bCanBeUninstalled = $aExtension['uninstallable'] ?? null;
 			$oExtension->sVersion = $aExtension['version'] ?? '1.0.0';
+			$oExtension->sSource = $aExtension['source'] ?? iTopExtension::SOURCE_MANUAL;
 			$oExtension->aModuleInfo = $aExtension['module_info'] ?? [];
 			$oMap->AddExtension($oExtension);
 		}
