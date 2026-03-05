@@ -104,18 +104,18 @@ require_once(APPROOT.'/application/startup.inc.php');
 
 $aModuleDelegatedExecutionPolicy = GetModuleDelegatedExecutionPolicy($sModule);
 if (is_null($aModuleDelegatedExecutionPolicy) || !in_array($sPage, $aModuleDelegatedExecutionPolicy)) {
-	// TODO in N°9343 : remove the conf 'security.allow_execution_without_login' to perform login by default when no execution policy is defined
-	$bForceLoginWhenNoExecutionPolicy = MetaModel::GetConfig()->Get('security.force_login_when_no_execution_policy');
+	// TODO in N°9343 : remove the conf 'security.force_login_when_no_authentication_policy' to perform login by default when no execution policy is defined
+	$bForceLoginWhenNoExecutionPolicy = MetaModel::GetConfig()->Get('security.force_login_when_no_authentication_policy');
 	// TODO in N°9343 : remove the conf and this 'if' condition to perform login by default when no execution policy is defined
 	if ($bForceLoginWhenNoExecutionPolicy) {
 		LoginWebPage::DoLoginEx();
 	}
 }
-if (is_null($aModuleDelegatedExecutionPolicy) && !MetaModel::GetConfig()->Get('security.allow_execution_without_login')) {
+if (is_null($aModuleDelegatedExecutionPolicy) && !MetaModel::GetConfig()->Get('security.force_login_when_no_authentication_policy')) {
 	// TODO in N°9343 : remove this if statement and its content
 	// check if user is not logged in, if not log a warning in the log file as the page is executed without login, which is not recommended for security reason
 	if (is_null(UserRights::GetUserId())) {
-		IssueLog::Warning("The page '$sPage' is called be executed without login. In the future, this call will be blocked, and will likely cause unwanted behavior in the module $sModule.
+		IssueLog::Warning("The page '$sPage' is called be executed without login. In the future, this call will be blocked, and will likely cause unwanted behavior in the module '$sModule'.
 		Please define an execution policy for the module as described in https://www.itophub.io/wiki/page?id=3_2_0:customization:new_extension#security.");
 	}
 }
