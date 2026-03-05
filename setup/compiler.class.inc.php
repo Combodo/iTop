@@ -278,7 +278,7 @@ class MFCompiler
 	 * @return void
 	 * @throws Exception
 	 */
-	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = null, $bSkipTempDir = false)
+	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = null, $bSkipTempDir = false, $bEnterMaintenanceMode = true)
 	{
 		if (is_null($bUseSymbolicLinks)) {
 			$bUseSymbolicLinks = false;
@@ -297,8 +297,7 @@ class MFCompiler
 		} else {
 			$oConfig = null;
 		}
-		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
-
+		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 			SetupUtils::EnterMaintenanceMode($oConfig);
 		}
 		if ($bUseSymbolicLinks || $bSkipTempDir) {
@@ -321,7 +320,7 @@ class MFCompiler
 				// Cleanup the temporary directory
 				SetupUtils::rrmdir($sTempTargetDir);
 			}
-			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
+			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 				SetupUtils::ExitMaintenanceMode();
 			}
 			throw $e;
@@ -331,7 +330,7 @@ class MFCompiler
 			// Move the results to the target directory
 			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
 		}
-		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode) {
+		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode && $bEnterMaintenanceMode) {
 			SetupUtils::ExitMaintenanceMode();
 		}
 
