@@ -1,8 +1,0 @@
-{# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
-{# @license     http://opensource.org/licenses/AGPL-3.0 #}
-
-{% UIForm Standard {} %}
-    {% UIPanel Neutral { sTitle:'DataFeatureRemoval:Analysis:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:Analysis:SubTitle'|dict_format(rule_count) } %}
-        {% UIDataTable ForForm { sRef:'aCheckRules', aColumns:aCheckRules.Columns, aData:aCheckRules.Data} %}{% EndUIDataTable %}
-    {% EndUIPanel %}
-{% EndUIForm %}

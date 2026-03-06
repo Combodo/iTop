@@ -12,6 +12,7 @@ require_once APPROOT.'setup/feature_removal/DryRemovalRuntimeEnvironment.php';
 
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\AuthentToken\Helper\TokenAuthLog;
+use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
 use Combodo\iTop\DataFeatureRemoval\Model\DataFeatureRemoverAuditRuleService;
 use Combodo\iTop\DataFeatureRemoval\Model\DataFeatureRemoverExtensionService;
@@ -19,6 +20,7 @@ use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Dict;
 use Exception;
+use IssueLog;
 use MetaModel;
 use utils;
 
@@ -51,8 +53,10 @@ class DataFeatureRemovalController extends Controller
 		$iTotalCount = 0;
 		$aData = [];
 		$aColumns = [];
+		$aClasses = [];
 		foreach (DataFeatureRemoverAuditRuleService::GetInstance()->ReadCheckRules() as $oRule) {
 			$sContent = $oRule->Get('class_name');
+			$aClasses[]=$sContent;
 			$sModuleName = MetaModel::GetModuleName($sContent);
 			$aExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetIncludingExtensions($sModuleName);
 			$sExtensions = implode(' ', $aExtensions);
@@ -79,10 +83,12 @@ HTML,
 
 		$aParams['aCheckRules'] =  $this->GetTableData('Analysis', $aColumns, $aData);
 		$aParams['rule_count'] = $iTotalCount;
+		$aParams['aClasses'] = $aClasses;
 	}
 
 	public function OperationAnalyze()
 	{
+		$this->ValidateTransactionId();
 		$aSelectedExtensionsFromUI = utils::ReadPostedParam('aExtensions', []);
 		$this->aSelectedExtensionsForCheck = [];
 		foreach ($aSelectedExtensionsFromUI as $sCode => $aData) {
@@ -98,7 +104,7 @@ HTML,
 			$this->Analyze();
 			$this->OperationMain();
 		} catch (Exception $e) {
-			\IssueLog::Error(__METHOD__, null, ['stack' => $e->getTraceAsString(), 'exception' => $e->getMessage()]);
+			IssueLog::Error(__METHOD__, null, ['stack' => $e->getTraceAsString(), 'exception' => $e->getMessage()]);
 			$this->OperationMain($e->getMessage());
 		}
 	}
@@ -182,8 +188,34 @@ HTML,
 
 	private function Save(array $aGetRemovedClasses)
 	{
-		\IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
+		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
 
 		DataFeatureRemoverAuditRuleService::GetInstance()->SaveChecks($aGetRemovedClasses);
+	}
+
+	public function OperationDeletionPlan() {
+		$aParams = [];
+		$this->ValidateTransactionId();
+
+		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
+		$aParams ['sClasses']= var_export($aClasses, true);
+		$this->DisplayPage($aParams);
+	}
+
+	/**
+	 * @return void
+	 * @throws \Combodo\iTop\MFABase\Helper\MFABaseException
+	 */
+	public function ValidateTransactionId(): void
+	{
+		if (empty($_POST)) {
+			return;
+		}
+
+		$sTransactionId = utils::ReadPostedParam('transaction_id', null, utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID);
+		IssueLog::Debug(__FUNCTION__.": Transaction [$sTransactionId]");
+		if (empty($sTransactionId) || !utils::IsTransactionValid($sTransactionId, false)) {
+			throw new DataFeatureRemovalException(Dict::S("iTopUpdate:Error:InvalidToken"));
+		}
 	}
 }
