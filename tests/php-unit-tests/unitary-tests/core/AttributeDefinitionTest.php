@@ -6,7 +6,6 @@ use AttributeDate;
 use AttributeDateTime;
 use Change;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use DateTime;
 use MetaModel;
 use UserRequest;
 
@@ -340,4 +339,5 @@ PHP
 		$oAttribute->SetHostClass($sHostClass);
 		return $oAttribute;
 	}
+
 }
