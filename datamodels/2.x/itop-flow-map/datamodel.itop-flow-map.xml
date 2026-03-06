@@ -354,9 +354,9 @@
       <relations>
         <relation id="impacts">
           <neighbours>
-            <neighbour id="destination">
-              <query_down><![CDATA[SELECT DataFlow WHERE destination_id = :this->id AND destination_impact = 'yes']]></query_down>
-              <query_up><![CDATA[SELECT FunctionalCI WHERE :this->destination_impact = 'yes' AND id = :this->destination_id]]></query_up>
+            <neighbour id="functionalci ">
+              <query_down><![CDATA[SELECT FunctionalCI WHERE :this->destination_impact = 'yes' AND id = :this->destination_id]]></query_down>
+              <query_up><![CDATA[SELECT DataFlow AS f JOIN FunctionalCI AS ci ON f.destination_id = ci.id WHERE f.destination_impact = 'yes' AND ci.id=:this->id]]></query_up>
               <direction>both</direction>
             </neighbour>
           </neighbours>
@@ -620,7 +620,7 @@
           <neighbours>
             <neighbour id="flow" _delta="define">
               <query_down><![CDATA[SELECT DataFlow WHERE source_id = :this->id AND source_impact = 'yes']]></query_down>
-              <query_up><![CDATA[SELECT FunctionalCI WHERE  :this->source_impact = 'yes' AND id = :this->source_id]]></query_up>
+              <query_up><![CDATA[SELECT FunctionalCI AS ci JOIN DataFlow AS f ON f.source_id = ci.id WHERE f.source_impact = 'yes' AND f.id = :this->id]]></query_up>
               <direction>both</direction>
             </neighbour>
           </neighbours>
