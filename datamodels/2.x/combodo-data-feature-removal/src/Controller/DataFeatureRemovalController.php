@@ -16,6 +16,7 @@ use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
 use Combodo\iTop\DataFeatureRemoval\Model\DataFeatureRemoverAuditRuleService;
 use Combodo\iTop\DataFeatureRemoval\Model\DataFeatureRemoverExtensionService;
+use Combodo\iTop\DataFeatureRemoval\Service\DeletionPlanService;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 use Dict;
@@ -156,7 +157,7 @@ HTML,
 			return [
 				'Type' => 'Table',
 				'Columns' => [['label' => '']],
-				'Data' => [[ Dict::S('DbCleaner:Table:Empty')]],
+				'Data' => [[ Dict::S('DataFeatureRemoval:Table:Empty')]],
 			];
 		}
 
@@ -199,6 +200,19 @@ HTML,
 
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$aParams ['sClasses']= var_export($aClasses, true);
+
+		$oDeletionPlanSummaryEntities = DeletionPlanService::GetInstance()->GetDeletionPlanSummary($aClasses);
+		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'Issue'];
+		$aRows = [];
+		foreach ($oDeletionPlanSummaryEntities as $oDeletionPlanSummaryEntity){
+			$aRows[]= [
+				$oDeletionPlanSummaryEntity->sClass,
+				$oDeletionPlanSummaryEntity->iDeleteCount,
+				$oDeletionPlanSummaryEntity->iUpdateCount,
+				$oDeletionPlanSummaryEntity->sIssue
+			];
+		}
+		$aParams['aDeletionPlanSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
 		$this->DisplayPage($aParams);
 	}
 

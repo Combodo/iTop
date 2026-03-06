@@ -1,4 +1,6 @@
 {# @copyright   Copyright (C) 2010-2026 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-{{ sClasses}}
+{% UIPanel ForInformation { sTitle:'DataFeatureRemoval:DeletionPlan:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:DeletionPlan:SubTitle'|dict_s } %}
+    {% UIDataTable ForForm { sRef:'aDeletionPlanSummary', aColumns:aDeletionPlanSummary.Columns, aData:aDeletionPlanSummary.Data} %}{% EndUIDataTable %}
+{% EndUIPanel %}
