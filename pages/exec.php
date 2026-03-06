@@ -104,19 +104,16 @@ require_once(APPROOT.'/application/startup.inc.php');
 
 $aModuleDelegatedExecutionPolicy = GetModuleDelegatedExecutionPolicy($sModule);
 if (is_null($aModuleDelegatedExecutionPolicy) || !in_array($sPage, $aModuleDelegatedExecutionPolicy)) {
-	// TODO in N°9343 : remove the conf 'security.force_login_when_no_authentication_policy' to perform login by default when no execution policy is defined
-	$bForceLoginWhenNoExecutionPolicy = MetaModel::GetConfig()->Get('security.force_login_when_no_authentication_policy');
-	// TODO in N°9343 : remove the conf and this 'if' condition to perform login by default when no execution policy is defined
+	$bForceLoginWhenNoExecutionPolicy = MetaModel::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list');
 	if ($bForceLoginWhenNoExecutionPolicy) {
 		LoginWebPage::DoLoginEx();
 	}
 }
-if (is_null($aModuleDelegatedExecutionPolicy) && !MetaModel::GetConfig()->Get('security.force_login_when_no_authentication_policy')) {
-	// TODO in N°9343 : remove this if statement and its content
+if (is_null($aModuleDelegatedExecutionPolicy) && !MetaModel::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list')) {
 	// check if user is not logged in, if not log a warning in the log file as the page is executed without login, which is not recommended for security reason
 	if (is_null(UserRights::GetUserId())) {
 		IssueLog::Warning("The page '$sPage' is called be executed without login. In the future, this call will be blocked, and will likely cause unwanted behavior in the module '$sModule'.
-		Please define an execution policy for the module as described in https://www.itophub.io/wiki/page?id=3_2_0:customization:new_extension#security.");
+		Please define an execution policy for the module as described in https://www.itophub.io/wiki/page?id=latest:customization:new_extension#security.");
 	}
 }
 if (is_array($aModuleDelegatedExecutionPolicy) && !in_array($sPage, $aModuleDelegatedExecutionPolicy)) {

@@ -95,7 +95,7 @@ class LoginWebPageTest extends ItopDataTestCase
 
 	public function testNoPolicyFileWithForceLoginConf()
 	{
-		MetaModel::GetConfig()->Set('security.force_login_when_no_authentication_policy', true);
+		MetaModel::GetConfig()->Set('security.force_login_when_no_delegated_authentication_endpoints_list', true);
 
 		$sPageContent = $this->CallItopUri(
 			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/FileNotInExecutionPolicy.php",

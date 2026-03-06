@@ -1738,7 +1738,7 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
-		'security.force_login_when_no_authentication_policy' => [
+		'security.force_login_when_no_delegated_authentication_endpoints_list' => [
 			'type'                => 'bool',
 			'description'         => 'If true, when no execution policy is defined, the user will be forced to log in (instead of being automatically logged in with the default profile)',
 			'default'             => false,
