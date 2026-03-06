@@ -815,9 +815,10 @@ EOF
 		if (isset($aChoice['version']) && isset($aChoice['source_label'])) {
 			$sMetadata = '<span>v'.$aChoice['version'].'</span><span>'.$aChoice['source_label'].'</span>';
 		}
+		$sChoiceDisabled = $aFlags['disabled'] && !$aFlags['checked'] ? 'choice-disabled' : '';
 
 		$oPage->add('
-			<div class="ibo-extension-details ibo-content-block ibo-block" '.$sDataId.'>
+			<div class="ibo-extension-details ibo-content-block ibo-block '.$sChoiceDisabled.'" '.$sDataId.'>
 				<div class="ibo-extension-details--actions">
 					<input class="wiz-choice" id="'.$sId.'" name="choice['.$sChoiceName.']" type="'.$sInputType.'" value="'.$sChoiceId.'" '.$sDisabled.$sChecked.'/>
 					'.$sHiddenInput.'
