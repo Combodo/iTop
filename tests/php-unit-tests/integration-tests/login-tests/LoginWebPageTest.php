@@ -18,30 +18,30 @@ class LoginWebPageTest extends ItopDataTestCase
 	{
 		parent::setUp();
 		$this->BackupConfiguration();
-		$sFolderPath = APPROOT.'env-production/extension-with-execution-policy';
+		$sFolderPath = APPROOT.'env-production/extension-with-delegated-authentication-endpoints-list';
 		if (file_exists($sFolderPath)) {
 			throw new Exception("Folder $sFolderPath already exists, please remove it before running the test");
 		}
 		mkdir($sFolderPath);
-		$this->RecurseCopy(__DIR__.'/extension-with-execution-policy', $sFolderPath);
+		$this->RecurseCopy(__DIR__.'/extension-with-delegated-authentication-endpoints-list', $sFolderPath);
 
-		$sFolderPath = APPROOT.'env-production/extension-without-execution-policy';
+		$sFolderPath = APPROOT.'env-production/extension-without-delegated-authentication-endpoints-list';
 		if (file_exists($sFolderPath)) {
 			throw new Exception("Folder $sFolderPath already exists, please remove it before running the test");
 		}
 		mkdir($sFolderPath);
-		$this->RecurseCopy(__DIR__.'/extension-without-execution-policy', $sFolderPath);
+		$this->RecurseCopy(__DIR__.'/extension-without-delegated-authentication-endpoints-list', $sFolderPath);
 	}
 	public function tearDown(): void
 	{
 		parent::tearDown();
-		$sFolderPath = APPROOT.'env-production/extension-with-execution-policy';
+		$sFolderPath = APPROOT.'env-production/extension-with-delegated-authentication-endpoints-list';
 		if (file_exists($sFolderPath)) {
 			$this->RecurseRmdir($sFolderPath);
 		} else {
 			throw new Exception("Folder $sFolderPath does not exist, it should have been created in setUp");
 		}
-		$sFolderPath = APPROOT.'env-production/extension-without-execution-policy';
+		$sFolderPath = APPROOT.'env-production/extension-without-delegated-authentication-endpoints-list';
 		if (file_exists($sFolderPath)) {
 			$this->RecurseRmdir($sFolderPath);
 		} else {
@@ -61,16 +61,16 @@ class LoginWebPageTest extends ItopDataTestCase
 	 *
 	 * @throws \Exception
 	 */
-	public function testInExecutionPolicyFile()
+	public function testInDelegatedAuthenticationEndpoints()
 	{
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/FileInExecutionPolicy.php",
+			"pages/exec.php?exec_module=extension-with-delegated-authentication-endpoints-list&exec_page=src/Controller/FileInDelegatedAuthenticationEndpointsList.php",
 			[],
 			[],
 			true
 		);
 
-		$this->assertStringNotContainsString('<title>iTop login</title>', $sPageContent, 'File listed in execution policy file (in the module), login should not be requested by exec, file handle its own policy');
+		$this->assertStringNotContainsString('<title>iTop login</title>', $sPageContent, 'File listed in delegated authentication endpoints list (in the module), login should not be requested by exec.');
 	}
 
 	public function testUserCanAccessAnyFile()
@@ -81,7 +81,7 @@ class LoginWebPageTest extends ItopDataTestCase
 		$this->GivenConfigFileAllowedLoginTypes(explode('|', 'form'));
 
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/FileNotInExecutionPolicy.php",
+			"pages/exec.php?exec_module=extension-with-delegated-authentication-endpoints-list&exec_page=src/Controller/FileNotInDelegatedAuthenticationEndpointsList.php",
 			[
 				'auth_user' => $sUserLogin,
 				'auth_pwd' => self::PASSWORD,
@@ -90,50 +90,50 @@ class LoginWebPageTest extends ItopDataTestCase
 			true
 		);
 
-		$this->assertStringContainsString('Yo', $sPageContent, 'Logged in user should access any file via exec.php even if the page isn\'t listed in execution policy');
+		$this->assertStringContainsString('Yo', $sPageContent, 'Logged in user should access any file via exec.php even if the page isn\'t listed in delegated authentication endpoints list');
 	}
 
-	public function testNoPolicyFileWithForceLoginConf()
+	public function testNotInDelegatedAuthenticationEndpointsListWithForceLoginConf()
 	{
 		MetaModel::GetConfig()->Set('security.force_login_when_no_delegated_authentication_endpoints_list', true);
 
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/FileNotInExecutionPolicy.php",
+			"pages/exec.php?exec_module=extension-with-delegated-authentication-endpoints-list&exec_page=src/Controller/FileNotInDelegatedAuthenticationEndpointsList.php",
 		);
 
-		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent, 'if itop is configured to force login when no execution policy, then login should be required even if there is no policy file');
+		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent, 'if itop is configured to force login when no there is no delegated authentication endpoints list, then login should be required.');
 	}
 
-	public function testNoPolicyFileWithDefaultConfiguration()
+	public function testNoDelegatedAuthenticationEndpointsListWithDefaultConfiguration()
 	{
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-without-execution-policy&exec_page=src/Controller/File.php",
+			"pages/exec.php?exec_module=extension-without-delegated-authentication-endpoints-list&exec_page=src/Controller/File.php",
 			[],
 			[],
 			true
 		);
 
-		$this->assertStringContainsString('Yo', $sPageContent, 'by default (until N°9343) if no execution policy is defined, not logged in persons should access pages');
+		$this->assertStringContainsString('Yo', $sPageContent, 'by default (until N°9343) if no delegated authentication endpoints list is defined, not logged in persons should access pages');
 	}
 
-	public function testNotInExecutionPolicy()
+	public function testNotInDelegatedAuthenticationEndpointsList()
 	{
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/FileNotInExecutionPolicy.php",
+			"pages/exec.php?exec_module=extension-with-delegated-authentication-endpoints-list&exec_page=src/Controller/FileNotInDelegatedAuthenticationEndpointsList.php",
 			[],
 			[],
 			true
 		);
 
-		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent, 'Since an execution policy is defined and file isn\'t listed in it, login should be required');
+		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent, 'Since an delegated authentication endpoints list is defined and file isn\'t listed in it, login should be required');
 	}
 
 	/**
-	 * @dataProvider InExecutionPolicyFileWithAdminRequiredProvider
+	 * @dataProvider InDelegatedAuthenticationEndpointsWithAdminRequiredProvider
 	 *
 	 * @throws \Exception
 	 */
-	public function testInExecutionPolicyFileWithAdminRequired($iProfileId, $bShouldSeeForbiddenAdminPage)
+	public function testInDelegatedAuthenticationEndpointsWithAdminRequired($iProfileId, $bShouldSeeForbiddenAdminPage)
 	{
 		// generate random login
 		$sUserLogin = 'user-'.date('YmdHis');
@@ -141,7 +141,7 @@ class LoginWebPageTest extends ItopDataTestCase
 		$this->GivenConfigFileAllowedLoginTypes(explode('|', 'form'));
 
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-with-execution-policy&exec_page=src/Controller/FileInExecutionPolicyAndAdminRequired.php",
+			"pages/exec.php?exec_module=extension-with-delegated-authentication-endpoints-list&exec_page=src/Controller/FileInDelegatedAuthenticationEndpointsListAndAdminRequired.php",
 			[
 				'auth_user' => $sUserLogin,
 				'auth_pwd' => self::PASSWORD,
@@ -150,12 +150,12 @@ class LoginWebPageTest extends ItopDataTestCase
 			true
 		);
 		$bShouldSeeForbiddenAdminPage ?
-			$this->assertStringNotContainsString('<title>Access restricted to people having administrator privileges</title>', $sPageContent, 'Should prevent non admin user to access this page') : // in execution policy file (in the module), login should not be required, file handle its own policy
+			$this->assertStringNotContainsString('<title>Access restricted to people having administrator privileges</title>', $sPageContent, 'Should prevent non admin user to access this page') : // in delegated authentication endpoints list (in the module), login should not be required
 			$this->assertStringContainsString('Yo !', $sPageContent, 'Should execute the file and see its content since user has admin profile');
 
 	}
 
-	public function InExecutionPolicyFileWithAdminRequiredProvider()
+	public function InDelegatedAuthenticationEndpointsWithAdminRequiredProvider()
 	{
 		return [
 			'Administrator profile' => [

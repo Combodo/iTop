@@ -17,9 +17,9 @@ SetupWebPage::AddModule(
 		'installer'            => 'TemplatesBaseInstaller',
 
 		// Security
-		'execution_policy' => [
-			'src/Controller/FileInExecutionPolicy.php',
-			'src/Controller/CheckAnythingButAdminRequired.php',
+		'delegated_authentication_endpoints' => [
+			'src/Controller/FileInDelegatedAuthenticationEndpointsList.php',
+			'src/Controller/FileInDelegatedAuthenticationEndpointsAndAdminRequiredList.php',
 		],
 
 		// Components

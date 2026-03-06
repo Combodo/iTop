@@ -102,32 +102,32 @@ if ($sTargetPage === false) {
 // force login if needed
 require_once(APPROOT.'/application/startup.inc.php');
 
-$aModuleDelegatedExecutionPolicy = GetModuleDelegatedExecutionPolicy($sModule);
-if (is_null($aModuleDelegatedExecutionPolicy) || !in_array($sPage, $aModuleDelegatedExecutionPolicy)) {
-	$bForceLoginWhenNoExecutionPolicy = MetaModel::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list');
-	if ($bForceLoginWhenNoExecutionPolicy) {
+$aModuleDelegatedAuthenticationEndpoints = GetModuleDelegatedAuthenticationEndpoints($sModule);
+if (is_null($aModuleDelegatedAuthenticationEndpoints) || !in_array($sPage, $aModuleDelegatedAuthenticationEndpoints)) {
+	$bForceLoginWhenNoDelegatedAuthenticationEndpoints = MetaModel::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list');
+	if ($bForceLoginWhenNoDelegatedAuthenticationEndpoints) {
 		LoginWebPage::DoLoginEx();
 	}
 }
-if (is_null($aModuleDelegatedExecutionPolicy) && !MetaModel::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list')) {
+if (is_null($aModuleDelegatedAuthenticationEndpoints) && !MetaModel::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list')) {
 	// check if user is not logged in, if not log a warning in the log file as the page is executed without login, which is not recommended for security reason
 	if (is_null(UserRights::GetUserId())) {
 		IssueLog::Warning("The page '$sPage' is called be executed without login. In the future, this call will be blocked, and will likely cause unwanted behavior in the module '$sModule'.
-		Please define an execution policy for the module as described in https://www.itophub.io/wiki/page?id=latest:customization:new_extension#security.");
+		Please define a delegated authentication endpoints for the module as described in https://www.itophub.io/wiki/page?id=latest:customization:new_extension#security.");
 	}
 }
-if (is_array($aModuleDelegatedExecutionPolicy) && !in_array($sPage, $aModuleDelegatedExecutionPolicy)) {
-	// if module defined a delegated execution policy but not for the current page, we consider that the page is not allowed to be executed without login
+if (is_array($aModuleDelegatedAuthenticationEndpoints) && !in_array($sPage, $aModuleDelegatedAuthenticationEndpoints)) {
+	// if module defined a delegated authentication endpoints but not for the current page, we consider that the page is not allowed to be executed without login
 	LoginWebPage::DoLoginEx();
 }
 
 require_once($sTargetPage);
 
-function GetModuleDelegatedExecutionPolicy(string $sModuleName): ?array
+function GetModuleDelegatedAuthenticationEndpoints(string $sModuleName): ?array
 {
 	$sModuleFile =  utils::GetAbsoluteModulePath($sModuleName).'/module.'.$sModuleName.'.php';
 
 	$oExtensionMap = new iTopExtensionsMap();
 	$aModuleParam = $oExtensionMap->GetModuleInfo($sModuleFile)[2];
-	return $aModuleParam['execution_policy'] ?? null;
+	return $aModuleParam['delegated_authentication_endpoints'] ?? null;
 }
