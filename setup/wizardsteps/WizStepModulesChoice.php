@@ -773,7 +773,6 @@ EOF
 				$bSelected = ($sChoiceId === $sChoiceIdNone);
 			}
 
-
 			$aFlags = $this->ComputeChoiceFlags($aChoice, $sChoiceId, $aSelectedComponents, $bAllDisabled, $bDisableUninstallCheck, $this->bUpgrade);
 			//ComputeChoiceFlags does not completely compute alternative flags
 			$aFlags['disabled'] = $bDisabled;

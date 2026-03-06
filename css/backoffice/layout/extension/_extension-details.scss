@@ -43,13 +43,19 @@ $ibo-extension-details--padding-top: 5px !default;
 	padding-right: $ibo-extension-details--information--metadata--padding;
 }
 
-.ibo-extension-details:has(>.ibo-extension-details--actions input:is([type="checkbox"], [type="radio"]):checked)>.ibo-extension-details--information>.ibo-extension-details--information--label .ibo-badge.unchecked,
-//Merging the two lines below with :is([type="checkbox"], [type="radio"]) will generate a warning in scss compiler
-.ibo-extension-details:has(>.ibo-extension-details--actions input[type="checkbox"]:not(:checked))>.ibo-extension-details--information>.ibo-extension-details--information--label .ibo-badge.checked,
-.ibo-extension-details:has(>.ibo-extension-details--actions input[type="radio"]:not(:checked))>.ibo-extension-details--information>.ibo-extension-details--information--label .ibo-badge.checked {
-	display: none;
+//ibo-extension-details can have other ibo-extension-details inside its ibo-extension-details--information--description in the setup. We need to only affect direct children
+.ibo-extension-details:has(>.ibo-extension-details--actions  input:is([type="checkbox"], [type="radio"]):checked){
+	&>.ibo-extension-details--information>.ibo-extension-details--information--label .ibo-badge.unchecked {
+		display: none;
+	}
 }
-
+//Merging the two lines below with :is([type="checkbox"], [type="radio"]) will generate a warning in scss compiler
+.ibo-extension-details:has(>.ibo-extension-details--actions input[type="checkbox"]:not(:checked)),
+.ibo-extension-details:has(>.ibo-extension-details--actions input[type="radio"]:not(:checked)) {
+	&>.ibo-extension-details--information>.ibo-extension-details--information--label .ibo-badge.checked {
+		display: none;
+	}
+}
 
 
 .ibo-extension-details--actions > button {
