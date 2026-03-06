@@ -81,7 +81,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Location' => 'Location',
-	'Class:Location+' => 'Any type of location: Region, Country, City, Site, Building, Floor, Room, Rack,...',
+	'Class:Location+' => 'Any type of location: Region, Country, City, Site, Building, Floor, Room,...',
 	'Class:Location/Attribute:name' => 'Name',
 	'Class:Location/Attribute:name+' => '',
 	'Class:Location/Attribute:status' => 'Status',
@@ -215,7 +215,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Document' => 'Document',
-	'Class:Document+' => 'Abstract class. -	A document that can be shared across multiple objects, making it easy and quick to retrieve from all relevant locations.',
+	'Class:Document+' => 'Abstract class. A document that can be shared across multiple objects, making it easy and quick to retrieve from all relevant locations.',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Name',
 	'Class:Document/Attribute:name+' => '',
@@ -297,7 +297,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentType' => 'Document Type',
-	'Class:DocumentType+' => 'Typology.	A classification system used to organize and logically group documents',
+	'Class:DocumentType+' => 'Typology. A classification system used to organize and logically group documents',
 ]);
 
 //

@@ -103,7 +103,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:FunctionalCI' => 'Functional CI',
-	'Class:FunctionalCI+' => 'Abstract class grouping multiple types of Configuration Items.',
+	'Class:FunctionalCI+' => 'Abstract class grouping most Configuration Items types used for CMDB.',
 	'Class:FunctionalCI/Attribute:name' => 'Name',
 	'Class:FunctionalCI/Attribute:name+' => '',
 	'Class:FunctionalCI/Attribute:description' => 'Description',
@@ -263,7 +263,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DatacenterDevice' => 'Datacenter Device',
-	'Class:DatacenterDevice+' => 'Connectable CI which can be racked in a datacenter',
+	'Class:DatacenterDevice+' => 'A physical equipment, connected to the network and installed in a data center, usually in a Rack or an Enclosure. This can include Servers, Network Devices, Storage Systems, SAN Switches, Tape Libraries, NAS Devices, etc.',
 	'Class:DatacenterDevice/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '',
@@ -352,7 +352,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:StorageSystem' => 'Storage System',
-	'Class:StorageSystem+' => 'Datacenter Device. Network switch compatible with the Fibre Channel protocol used by storage networks.',
+	'Class:StorageSystem+' => 'Storage system that can be attached either to a SAN or to an Ethernet network. The logical unit of storage managed by a Storage System is a Logical Volume.',
 	'Class:StorageSystem/ComplementaryName' => '%1$s - %2$s',
 	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logical volumes',
 	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'All the logical volumes in this storage system',
@@ -623,7 +623,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DBServer' => 'DB Server',
-	'Class:DBServer+' => 'Software Instance offering Web services (like Apache 2.4, Nginx 1.29.4, IIS 7.0) installed on a specific system (PC, Server or Virtual Machine).',
+	'Class:DBServer+' => 'Software Instance offering database services (MySQL 8.0, Oracle, SQL Server, DB2…) installed on a specific system (PC, Server or Virtual Machine).',
 	'Class:DBServer/Attribute:dbschema_list' => 'DB schemas',
 	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server',
 ]);
@@ -663,7 +663,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:MiddlewareInstance' => 'Middleware Instance',
-	'Class:MiddlewareInstance+' => 'Functional CI representing a piece of one Middleware. A Middleware being in '.ITOP_APPLICATION_SHORT.' is a Software Instance offering services to other software.',
+	'Class:MiddlewareInstance+' => 'Functional CI representing a service delivered by a Middleware.',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
@@ -677,7 +677,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DatabaseSchema' => 'Database Schema',
-	'Class:DatabaseSchema+' => 'Functional CI. Dabatase instance running of a specific DB server.',
+	'Class:DatabaseSchema+' => 'Dabatase instance running of a specific DB server.',
 	'Class:DatabaseSchema/ComplementaryName' => '%1$s - %2$s',
 	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DB server',
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '',
@@ -691,7 +691,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:WebApplication' => 'Web Application',
-	'Class:WebApplication+' => 'Functional CI. Instance of an application accessible using a web browser and that runs on a given Web Server instance. For eg. this iTop that you\'re looking at.',
+	'Class:WebApplication+' => 'Instance of an application accessible using a web browser and that runs on a given Web Server instance. For eg. this iTop that you\'re looking at.',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
 	'Class:WebApplication/Attribute:webserver_id' => 'Web server',
 	'Class:WebApplication/Attribute:webserver_id+' => '',
@@ -707,7 +707,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:VirtualDevice' => 'Virtual Device',
-	'Class:VirtualDevice+' => 'Functional CI. Abstract class used for server virtualization.',
+	'Class:VirtualDevice+' => 'Abstract class used for server virtualization (Virtual Host and Virtual Machine).',
 	'Class:VirtualDevice/Attribute:status' => 'Status',
 	'Class:VirtualDevice/Attribute:status+' => '',
 	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'implementation',
@@ -728,7 +728,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:VirtualHost' => 'Virtual Host',
-	'Class:VirtualHost+' => 'Virtual Device. Abstract class used for devices hosting Virtual Machines.',
+	'Class:VirtualHost+' => 'Abstract class used for Virtual Devices (Hypervisor, Farm,...) hosting Virtual Machines.',
 	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtual machines',
 	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'All the virtual machines hosted by this host',
 ]);
@@ -771,7 +771,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:VirtualMachine' => 'Virtual Machine',
-	'Class:VirtualMachine+' => 'Virtual Device. Virtual equivalent to a Server, it is hosted either on an Hypervisor or on a Farm.',
+	'Class:VirtualMachine+' => 'Virtual Device equivalent to a Server, it is hosted either on an Hypervisor or on a Farm.',
 	'Class:VirtualMachine/ComplementaryName' => '%1$s - %2$s',
 	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Virtual host',
 	'Class:VirtualMachine/Attribute:virtualhost_id+' => '',
@@ -805,7 +805,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:LogicalVolume' => 'Logical Volume',
-	'Class:LogicalVolume+' => 'The unit of storage managed inside a Storage System.',
+	'Class:LogicalVolume+' => 'The unit of storage managed inside a Storage System. It can be accessed by multiple Servers and Virtual Devices.',
 	'Class:LogicalVolume/Attribute:name' => 'Name',
 	'Class:LogicalVolume/Attribute:name+' => '',
 	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
@@ -851,7 +851,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkVirtualDeviceToVolume' => 'Link Virtual Device / Volume',
+	'Class:lnkVirtualDeviceToVolume' => 'Link Virtual Device / Logical Volume',
 	'Class:lnkVirtualDeviceToVolume+' => '',
 	'Class:lnkVirtualDeviceToVolume/Name' => '%1$s / %2$s',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume',
@@ -871,7 +871,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkSanToDatacenterDevice' => 'Link SAN / Datacenter Device',
+	'Class:lnkSanToDatacenterDevice' => 'Link SAN Switch / Datacenter Device',
 	'Class:lnkSanToDatacenterDevice+' => '',
 	'Class:lnkSanToDatacenterDevice/Name' => '%1$s / %2$s',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN switch',
@@ -1105,7 +1105,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Model' => 'Device Model',
-	'Class:Model+' => 'Typology. List the possible values for the "Model" attribute of a Physical Device. Each Model belongs to a single Brand, and usually applies to a single type of Physical Devices.',
+	'Class:Model+' => 'Typology. List the possible values for the Model attribute of a Physical Device. Each Model belongs to a single Brand, and usually applies to a single type of Physical Device.',
 	'Class:Model/ComplementaryName' => '%1$s - %2$s',
 	'Class:Model/Attribute:brand_id' => 'Brand',
 	'Class:Model/Attribute:brand_id+' => '',
@@ -1174,7 +1174,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:IOSVersion' => 'IOS Version',
-	'Class:IOSVersion+' => 'Typology. Possible values for the types of operating system for network devices (IOS from Cisco\'s Internetwork Operating System).',
+	'Class:IOSVersion+' => 'Typology. Possible values for the versions of operating system for network devices (IOS from Cisco\'s Internetwork Operating System).',
 	'Class:IOSVersion/Attribute:brand_id' => 'Brand',
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Brand name',

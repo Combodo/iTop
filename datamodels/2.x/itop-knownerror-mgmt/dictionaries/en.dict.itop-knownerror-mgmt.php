@@ -53,7 +53,7 @@
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:KnownError' => 'Known Error',
-	'Class:KnownError+' => 'Error with multiple occurrences, documented to ease troubleshooting.',
+	'Class:KnownError+' => 'Error with multiple occurrences, documented during a Problem management, to ease troubleshooting.',
 	'Class:KnownError/Attribute:name' => 'Name',
 	'Class:KnownError/Attribute:name+' => 'This is expected to be a unique identifier within the Known Errors of this organization',
 	'Class:KnownError/Attribute:org_id' => 'Organization',
@@ -61,7 +61,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:KnownError/Attribute:cust_name' => 'Organization Name',
 	'Class:KnownError/Attribute:cust_name+' => '',
 	'Class:KnownError/Attribute:problem_id' => 'Related Problem',
-	'Class:KnownError/Attribute:problem_id+' => 'The problem which could\'nt be solved immediately and has led to the creation of this known error',
+	'Class:KnownError/Attribute:problem_id+' => 'The problem which couldn\'t be solved immediately and has led to the creation of this known error',
 	'Class:KnownError/Attribute:problem_ref' => 'Related Problem Ref',
 	'Class:KnownError/Attribute:problem_ref+' => '',
 	'Class:KnownError/Attribute:symptom' => 'Symptom',
@@ -121,8 +121,8 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkDocumentToError' => 'Link Documents / Errors',
-	'Class:lnkDocumentToError+' => 'A link between a document and a known error',
+	'Class:lnkDocumentToError' => 'Link Document / Known Error',
+	'Class:lnkDocumentToError+' => 'Used when a Document is pertinent for a Known Error',
 	'Class:lnkDocumentToError/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',

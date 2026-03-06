@@ -64,7 +64,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:UserRequest' => 'Demande Utilisateur',
-	'Class:UserRequest+' => '',
+	'Class:UserRequest+' => 'Type de Ticket qui couvre les incidents et les demandes de service.',
 	'Class:UserRequest/Attribute:status' => 'Etat',
 	'Class:UserRequest/Attribute:status+' => '',
 	'Class:UserRequest/Attribute:status/Value:new' => 'Nouveau',

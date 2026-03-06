@@ -36,7 +36,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:FAQCategory' => 'Catégorie de FAQ',
-	'Class:FAQCategory+' => 'Catégorie de FAQ',
+	'Class:FAQCategory+' => 'Typologie. Segmentation des Questions fréquement posées (FAQ)',
 	'Class:FAQCategory/Attribute:name' => 'Nom',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',

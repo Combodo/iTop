@@ -50,7 +50,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Incident' => 'Incident',
-	'Class:Incident+' => '',
+	'Class:Incident+' => 'Type de Ticket pour gérer les dysfonctionnements d\'un service ou d\'éléments de configuration',
 	'Class:Incident/Attribute:status' => 'Etat',
 	'Class:Incident/Attribute:status+' => '',
 	'Class:Incident/Attribute:status/Value:new' => 'Nouveau',

@@ -13,7 +13,7 @@
  */
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Organization' => 'Organisation',
-	'Class:Organization+' => '',
+	'Class:Organization+' => 'Un client, un fournisseur, votre entreprise ou des départements de votre entreprise. Les organisations peuvent être structurées hiérarchiquement. Les utilisateurs peuvent être limités aux objets appartenant à certaines organisations.',
 	'Class:Organization/Attribute:name' => 'Nom organisation',
 	'Class:Organization/Attribute:name+' => 'Nom commun',
 	'Class:Organization/Attribute:code' => 'Code',
@@ -46,7 +46,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Location' => 'Lieu',
-	'Class:Location+' => 'Tout type de lieu: Région, Pays, Ville, Site, batiment, Bureau,...',
+	'Class:Location+' => 'Tout type de lieu: Région, Pays, Ville, Site, Bâtiment, Étage, Bureau,...',
 	'Class:Location/Attribute:name' => 'Nom',
 	'Class:Location/Attribute:name+' => '',
 	'Class:Location/Attribute:status' => 'Etat',
@@ -85,7 +85,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Contact' => 'Contact',
-	'Class:Contact+' => '',
+	'Class:Contact+' => 'Classe abstraite. Un contact peut être lié à des Tickets et des CI fonctionnels pour divers usages, par exemple l\'affectation des Tickets ou les notifications.',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => 'Nom',
 	'Class:Contact/Attribute:name+' => '',
@@ -123,7 +123,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Person' => 'Personne',
-	'Class:Person+' => '',
+	'Class:Person+' => 'Type de contact utilisé pour décrire des personnes physiques. Les personnes peuvent être regroupées en équipes. Elles peuvent être liées à d\'autres éléments de configuration (p. ex. pour décrire qui contacter en cas d\'incident sur une application).
+Autre usage : l\'appelant d\'une demande utilisateur est une personne, tout comme l\'agent assigné pour la résoudre.',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Nom',
 	'Class:Person/Attribute:name+' => '',
@@ -174,8 +175,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:Team' => 'Equipe',
-	'Class:Team+' => '',
+	'Class:Team' => 'Équipe',
+	'Class:Team+' => 'Type de contact. Souvent utilisé pour regrouper des personnes, mais pas seulement. Les équipes sont censées suivre les tickets qui leur sont affectés et les assigner à un agent, généralement membre de cette équipe.',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Membres',
 	'Class:Team/Attribute:persons_list+' => 'Toutes les personnes appartenant à cette équipe',
@@ -200,7 +201,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Document' => 'Document',
-	'Class:Document+' => '',
+	'Class:Document+' => 'Classe abstraite. Document pouvant être partagé entre plusieurs objets, ce qui le rend facile et rapide à retrouver depuis différents points de vue.',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Nom',
 	'Class:Document/Attribute:name+' => '',
@@ -236,7 +237,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DocumentFile' => 'Document Fichier',
-	'Class:DocumentFile+' => '',
+	'Class:DocumentFile+' => 'Type de document qui inclut un fichier téléchargé (tout format : Word, PDF, tableur, etc.).',
 	'Class:DocumentFile/Attribute:file' => 'Fichier',
 	'Class:DocumentFile/Attribute:file+' => '',
 ]);
@@ -247,7 +248,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DocumentNote' => 'Document Note',
-	'Class:DocumentNote+' => '',
+	'Class:DocumentNote+' => 'Utilisé pour stocker un document texte. Le formatage HTML est pris en charge via l\'éditeur WYSIWYG. Une recherche peut être effectuer sur son contenu.',
 	'Class:DocumentNote/Attribute:text' => 'Texte',
 	'Class:DocumentNote/Attribute:text+' => '',
 ]);
@@ -269,7 +270,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Typology' => 'Typologie',
-	'Class:Typology+' => '',
+	'Class:Typology+' => 'Classe abstraite. Les attributs ExternalKey vers une sous-classe de Typology sont utilisés à la place d\'un EnumAttribute pour disposer de valeurs plus dynamiques.',
 	'Class:Typology/Attribute:name' => 'Nom',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Sous-classe de Typologie',
@@ -282,7 +283,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:DocumentType' => 'Type de document',
-	'Class:DocumentType+' => '',
+	'Class:DocumentType+' => 'Typologie. Système de classification utilisé pour organiser et typer logiquement les documents.',
 ]);
 
 //
@@ -291,7 +292,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContactType' => 'Type de contact',
-	'Class:ContactType+' => '',
+	'Class:ContactType+' => 'Typologie pour organiser vos contacts et les regrouper logiquement.',
 ]);
 
 //
@@ -299,8 +300,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkPersonToTeam' => 'Lien Personne / Equipe',
-	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam' => 'Lien Personne / Équipe',
+	'Class:lnkPersonToTeam+' => 'Ce lien indique lorsqu\'une Personne est membre d\'une Équipe.',
 	'Class:lnkPersonToTeam/Name' => '%1$s / %2$s',
 	'Class:lnkPersonToTeam/Name+' => '',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Equipe',
