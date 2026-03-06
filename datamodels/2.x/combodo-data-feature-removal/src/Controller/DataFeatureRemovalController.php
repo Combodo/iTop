@@ -57,7 +57,7 @@ class DataFeatureRemovalController extends Controller
 		$aClasses = [];
 		foreach (DataFeatureRemoverAuditRuleService::GetInstance()->ReadCheckRules() as $oRule) {
 			$sContent = $oRule->Get('class_name');
-			$aClasses[]=$sContent;
+			$aClasses[] = $sContent;
 			$sModuleName = MetaModel::GetModuleName($sContent);
 			$aExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetIncludingExtensions($sModuleName);
 			$sExtensions = implode(' ', $aExtensions);
@@ -194,22 +194,23 @@ HTML,
 		DataFeatureRemoverAuditRuleService::GetInstance()->SaveChecks($aGetRemovedClasses);
 	}
 
-	public function OperationDeletionPlan() {
+	public function OperationDeletionPlan()
+	{
 		$aParams = [];
 		$this->ValidateTransactionId();
 
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
-		$aParams ['sClasses']= var_export($aClasses, true);
+		$aParams ['sClasses'] = var_export($aClasses, true);
 
 		$oDeletionPlanSummaryEntities = DeletionPlanService::GetInstance()->GetDeletionPlanSummary($aClasses);
 		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'Issue'];
 		$aRows = [];
-		foreach ($oDeletionPlanSummaryEntities as $oDeletionPlanSummaryEntity){
-			$aRows[]= [
+		foreach ($oDeletionPlanSummaryEntities as $oDeletionPlanSummaryEntity) {
+			$aRows[] = [
 				$oDeletionPlanSummaryEntity->sClass,
 				$oDeletionPlanSummaryEntity->iDeleteCount,
 				$oDeletionPlanSummaryEntity->iUpdateCount,
-				$oDeletionPlanSummaryEntity->sIssue
+				$oDeletionPlanSummaryEntity->sIssue,
 			];
 		}
 		$aParams['aDeletionPlanSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);

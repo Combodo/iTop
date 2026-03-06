@@ -43,13 +43,13 @@ class DeletionPlanService
 			}
 		}
 
-		foreach ($oDeletionPlan->ListUpdates() as $sClass => $aUpdates){
+		foreach ($oDeletionPlan->ListUpdates() as $sClass => $aUpdates) {
 			$oDeletionPlanSummaryEntity = new DeletionPlanSummaryEntity($sClass);
 			$oDeletionPlanSummaryEntity->iUpdateCount = count($aUpdates);
 			$aSummary[$sClass] = $oDeletionPlanSummaryEntity;
 		}
 
-		foreach ($oDeletionPlan->ListDeletes() as $sClass => $aDeletes){
+		foreach ($oDeletionPlan->ListDeletes() as $sClass => $aDeletes) {
 			$oDeletionPlanSummaryEntity = $aSummary[$sClass] ?? new DeletionPlanSummaryEntity($sClass);
 			$oDeletionPlanSummaryEntity->iDeleteCount = count($aDeletes);
 
