@@ -200,20 +200,46 @@ HTML,
 		$this->ValidateTransactionId();
 
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
-		$aParams ['sClasses'] = var_export($aClasses, true);
 
-		$oDeletionPlanSummaryEntities = DeletionPlanService::GetInstance()->GetDeletionPlanSummary($aClasses);
+		$aDeletionPlanSummaryEntities = DeletionPlanService::GetInstance()->GetDeletionPlanSummary($aClasses);
 		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'Issue'];
 		$aRows = [];
-		foreach ($oDeletionPlanSummaryEntities as $oDeletionPlanSummaryEntity) {
+		foreach ($aDeletionPlanSummaryEntities as $oDeletionPlanSummaryEntity) {
 			$aRows[] = [
 				$oDeletionPlanSummaryEntity->sClass,
 				$oDeletionPlanSummaryEntity->iDeleteCount,
 				$oDeletionPlanSummaryEntity->iUpdateCount,
-				$oDeletionPlanSummaryEntity->sIssue,
+				$oDeletionPlanSummaryEntity->sIssue ?? '',
 			];
 		}
+
+		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['aDeletionPlanSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
+		$aParams['aClasses'] = $aClasses;
+
+		$this->DisplayPage($aParams);
+	}
+
+	public function OperationDoDeletion()
+	{
+		$aParams = [];
+		$this->ValidateTransactionId();
+
+		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
+
+		$aDeletionExecutionSummary = DeletionPlanService::GetInstance()->ExecuteDeletionPlan($aClasses);
+		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount'];
+		$aRows = [];
+		foreach ($aDeletionExecutionSummary as $oDeletionExecutionSummaryEntity) {
+			$aRows[] = [
+				$oDeletionExecutionSummaryEntity->sClass,
+				$oDeletionExecutionSummaryEntity->iDeleteCount,
+				$oDeletionExecutionSummaryEntity->iUpdateCount,
+			];
+		}
+
+		$aParams['sTransactionId'] = utils::GetNewTransactionId();
+		$aParams['aDeletionExecutionSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
 		$this->DisplayPage($aParams);
 	}
 

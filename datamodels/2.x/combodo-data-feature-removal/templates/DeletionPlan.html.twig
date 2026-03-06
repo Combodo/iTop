@@ -4,3 +4,23 @@
 {% UIPanel ForInformation { sTitle:'DataFeatureRemoval:DeletionPlan:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:DeletionPlan:SubTitle'|dict_s } %}
     {% UIDataTable ForForm { sRef:'aDeletionPlanSummary', aColumns:aDeletionPlanSummary.Columns, aData:aDeletionPlanSummary.Data} %}{% EndUIDataTable %}
 {% EndUIPanel %}
+
+
+{% UIForm Standard {} %}
+    {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
+    {% UIInput ForHidden { sName:'operation', sValue:'DoDeletion'} %}
+    {% for sKey, sClass in aClasses %}
+        {% UIInput ForHidden { sName:"classes[" ~ sKey ~ "]", sValue:sClass } %}
+    {% endfor %}
+ {% UIToolbar ForButton {} %}
+        {% UIButton ForPrimaryAction {sLabel:'UI:Button:DoDeletion'|dict_s, sName:'btn_deletion', sId:'btn_deletion', bIsSubmit:true} %}
+    {% EndUIToolbar %}
+{% EndUIForm %}
+
+{% UIForm Standard {} %}
+    {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
+    {% UIInput ForHidden { sName:'operation', sValue:'Main'} %}
+ {% UIToolbar ForButton {} %}
+        {% UIButton ForPrimaryAction {sLabel:'UI:Button:BackToMain'|dict_s, sName:'btn_deletion', sId:'btn_deletion', bIsSubmit:true} %}
+    {% EndUIToolbar %}
+{% EndUIForm %}
