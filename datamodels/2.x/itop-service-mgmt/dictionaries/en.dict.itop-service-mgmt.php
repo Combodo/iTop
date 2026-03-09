@@ -138,11 +138,11 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:Contract/Attribute:cost_unit' => 'Cost unit',
 	'Class:Contract/Attribute:cost_unit+' => '',
 	'Class:Contract/Attribute:provider_id' => 'Provider',
-	'Class:Contract/Attribute:provider_id+' => '',
+	'Class:Contract/Attribute:provider_id+' => 'Provider organization for this contract. Can be different from the provider of the associated services.',
 	'Class:Contract/Attribute:provider_name' => 'Provider Name',
 	'Class:Contract/Attribute:provider_name+' => 'Common name',
 	'Class:Contract/Attribute:status' => 'Status',
-	'Class:Contract/Attribute:status+' => '',
+	'Class:Contract/Attribute:status+' => 'The status is not computed based on start and end dates. It must be set manually.',
 	'Class:Contract/Attribute:status/Value:implementation' => 'implementation',
 	'Class:Contract/Attribute:status/Value:implementation+' => 'implementation',
 	'Class:Contract/Attribute:status/Value:obsolete' => 'obsolete',
@@ -175,7 +175,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => 'Service Level Agreement',
 	'Class:ProviderContract/Attribute:coverage' => 'Service hours',
-	'Class:ProviderContract/Attribute:coverage+' => '',
+	'Class:ProviderContract/Attribute:coverage+' => 'Temporal coverage of the contract, e.g. 24x7, 9x5, etc.',
 	'Class:ProviderContract/Attribute:contracttype_id' => 'Contract type',
 	'Class:ProviderContract/Attribute:contracttype_id+' => '',
 	'Class:ProviderContract/Attribute:contracttype_name' => 'Contract type name',
@@ -260,7 +260,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:Service/Attribute:contacts_list' => 'Contacts',
 	'Class:Service/Attribute:contacts_list+' => 'All the contacts for this service',
 	'Class:Service/Attribute:status' => 'Status',
-	'Class:Service/Attribute:status+' => '',
+	'Class:Service/Attribute:status+' => 'Service without status or obsolete are not visible on User Portal',
 	'Class:Service/Attribute:status/Value:implementation' => 'implementation',
 	'Class:Service/Attribute:status/Value:implementation+' => 'implementation',
 	'Class:Service/Attribute:status/Value:obsolete' => 'obsolete',
@@ -338,7 +338,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'service request',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'service request',
 	'Class:ServiceSubcategory/Attribute:status' => 'Status',
-	'Class:ServiceSubcategory/Attribute:status+' => '',
+	'Class:ServiceSubcategory/Attribute:status+' => 'Service subcategory without status or obsolete are not visible on User Portal',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => 'implementation',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => 'implementation',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => 'obsolete',
@@ -379,7 +379,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:SLT/Attribute:name' => 'Name',
 	'Class:SLT/Attribute:name+' => '',
 	'Class:SLT/Attribute:priority' => 'Priority',
-	'Class:SLT/Attribute:priority+' => '',
+	'Class:SLT/Attribute:priority+' => 'Ticket priority to which this SLT applies. Only tickets with this priority must comply with this SLT.',
 	'Class:SLT/Attribute:priority/Value:1' => 'critical',
 	'Class:SLT/Attribute:priority/Value:1+' => 'critical',
 	'Class:SLT/Attribute:priority/Value:2' => 'high',
@@ -389,21 +389,21 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:SLT/Attribute:priority/Value:4' => 'low',
 	'Class:SLT/Attribute:priority/Value:4+' => 'low',
 	'Class:SLT/Attribute:request_type' => 'Request type',
-	'Class:SLT/Attribute:request_type+' => '',
+	'Class:SLT/Attribute:request_type+' => 'Request type to which this SLT applies. Only tickets with this request type must comply with this SLT.',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'incident',
 	'Class:SLT/Attribute:request_type/Value:incident+' => 'incident',
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'service request',
 	'Class:SLT/Attribute:request_type/Value:service_request+' => 'service request',
 	'Class:SLT/Attribute:metric' => 'Metric',
-	'Class:SLT/Attribute:metric+' => '',
+	'Class:SLT/Attribute:metric+' => 'Delay type to which this SLT applies. TTO (Time To Own) or TTR (Time To Resolve).',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO',
 	'Class:SLT/Attribute:metric/Value:tto+' => 'TTO',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR',
 	'Class:SLT/Attribute:metric/Value:ttr+' => 'TTR',
 	'Class:SLT/Attribute:value' => 'Value',
-	'Class:SLT/Attribute:value+' => '',
+	'Class:SLT/Attribute:value+' => 'Delay value which must not be exceeded to be compliant with the target. The unit is defined in the "unit" attribute.',
 	'Class:SLT/Attribute:unit' => 'Unit',
-	'Class:SLT/Attribute:unit+' => '',
+	'Class:SLT/Attribute:unit+' => 'Unit for the delay value.',
 	'Class:SLT/Attribute:unit/Value:hours' => 'hours',
 	'Class:SLT/Attribute:unit/Value:hours+' => 'hours',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minutes',
@@ -453,13 +453,15 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Customer contract Name',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '',
 	'Class:lnkCustomerContractToService/Attribute:service_id' => 'Service',
-	'Class:lnkCustomerContractToService/Attribute:service_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_id+' => 'All service subcategories linked to this service are also included by the contract.',
 	'Class:lnkCustomerContractToService/Attribute:service_name' => 'Service Name',
 	'Class:lnkCustomerContractToService/Attribute:service_name+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_id' => 'SLA',
-	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'Service Level Agreement applicable to this service for this customer contract.',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA Name',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
 ]);
 
 //
@@ -478,6 +480,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name' => 'Provider contract Name',
 	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
+	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Provider id',
+	'Class:lnkProviderContractToService/Attribute:provider_id+' => '',
 ]);
 
 //
@@ -544,22 +548,4 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
-]);
-
-//
-// Class: lnkProviderContractToService
-//
-
-Dict::Add('EN US', 'English', 'English', [
-	'Class:lnkProviderContractToService/Attribute:provider_id' => 'Provider id',
-	'Class:lnkProviderContractToService/Attribute:provider_id+' => '',
 ]);

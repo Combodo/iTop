@@ -110,11 +110,11 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Contract/Attribute:cost_unit' => 'Unité de coût',
 	'Class:Contract/Attribute:cost_unit+' => '',
 	'Class:Contract/Attribute:provider_id' => 'Fournisseur',
-	'Class:Contract/Attribute:provider_id+' => '',
+	'Class:Contract/Attribute:provider_id+' => 'Fournisseur du contrat. Parfois différent du fournisseur des services liés à ce contrat',
 	'Class:Contract/Attribute:provider_name' => 'Nom Fournisseur',
 	'Class:Contract/Attribute:provider_name+' => '',
 	'Class:Contract/Attribute:status' => 'Etat',
-	'Class:Contract/Attribute:status+' => '',
+	'Class:Contract/Attribute:status+' => 'L\'état du contrat n\'est pas calculé en fonction des dates de début et de fin. Il doit être mis à jour indépendamment.',
 	'Class:Contract/Attribute:status/Value:implementation' => 'Implémentation',
 	'Class:Contract/Attribute:status/Value:implementation+' => '',
 	'Class:Contract/Attribute:status/Value:obsolete' => 'Obsolète',
@@ -152,7 +152,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ProviderContract/Attribute:sla' => 'Niveau de service',
 	'Class:ProviderContract/Attribute:sla+' => 'Accord de niveau de service (SLA)',
 	'Class:ProviderContract/Attribute:coverage' => 'Couverture',
-	'Class:ProviderContract/Attribute:coverage+' => '',
+	'Class:ProviderContract/Attribute:coverage+' => 'Fenêtre de couverture temporelle pour ce contrat fournisseur',
 ]);
 
 //
@@ -255,7 +255,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Service/Attribute:contacts_list' => 'Contacts',
 	'Class:Service/Attribute:contacts_list+' => 'Tous les contacts pour ce service',
 	'Class:Service/Attribute:status' => 'Etat',
-	'Class:Service/Attribute:status+' => '',
+	'Class:Service/Attribute:status+' => 'Les services sans état et ceux obsolètes ne sont pas visibles dans le portail utilisateur.',
 	'Class:Service/Attribute:status/Value:implementation' => 'Implémentation',
 	'Class:Service/Attribute:status/Value:implementation+' => '',
 	'Class:Service/Attribute:status/Value:obsolete' => 'Obsolète',
@@ -329,7 +329,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Nom Service',
 	'Class:ServiceSubcategory/Attribute:service_name+' => '',
 	'Class:ServiceSubcategory/Attribute:status' => 'Etat',
-	'Class:ServiceSubcategory/Attribute:status+' => '',
+	'Class:ServiceSubcategory/Attribute:status+' => 'Les sous-catégories de service sans état et celles obsolètes ne sont pas visibles dans le portail utilisateur.',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => 'Implémentation',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => '',
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => 'Obsolète',
@@ -378,35 +378,35 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SLT/Attribute:name' => 'Nom',
 	'Class:SLT/Attribute:name+' => '',
 	'Class:SLT/Attribute:priority' => 'Priorité',
-	'Class:SLT/Attribute:priority+' => '',
+	'Class:SLT/Attribute:priority+' => 'Priorité du ticket pour laquelle cet objectif est applicable',
 	'Class:SLT/Attribute:priority/Value:1' => 'critique',
-	'Class:SLT/Attribute:priority/Value:1+' => 'critique',
+	'Class:SLT/Attribute:priority/Value:1+' => '',
 	'Class:SLT/Attribute:priority/Value:2' => 'haute',
-	'Class:SLT/Attribute:priority/Value:2+' => 'haute',
+	'Class:SLT/Attribute:priority/Value:2+' => '',
 	'Class:SLT/Attribute:priority/Value:3' => 'moyenne',
-	'Class:SLT/Attribute:priority/Value:3+' => 'moyenne',
+	'Class:SLT/Attribute:priority/Value:3+' => '',
 	'Class:SLT/Attribute:priority/Value:4' => 'basse',
-	'Class:SLT/Attribute:priority/Value:4+' => 'basse',
+	'Class:SLT/Attribute:priority/Value:4+' => '',
 	'Class:SLT/Attribute:request_type' => 'Type de requête',
-	'Class:SLT/Attribute:request_type+' => '',
+	'Class:SLT/Attribute:request_type+' => 'Type de requête pour laquelle cet objectif est applicable',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'incident',
-	'Class:SLT/Attribute:request_type/Value:incident+' => 'incident',
+	'Class:SLT/Attribute:request_type/Value:incident+' => '',
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'demande de service',
-	'Class:SLT/Attribute:request_type/Value:service_request+' => 'demande de service',
+	'Class:SLT/Attribute:request_type/Value:service_request+' => '',
 	'Class:SLT/Attribute:metric' => 'Métrique',
-	'Class:SLT/Attribute:metric+' => '',
+	'Class:SLT/Attribute:metric+' => 'Délai controlé par cet objectif (temps de prise en charge ou temps de résolution)',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO',
-	'Class:SLT/Attribute:metric/Value:tto+' => 'TTO',
+	'Class:SLT/Attribute:metric/Value:tto+' => 'Délai de prise en charge',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR',
-	'Class:SLT/Attribute:metric/Value:ttr+' => 'TTR',
+	'Class:SLT/Attribute:metric/Value:ttr+' => 'Délai de résolution',
 	'Class:SLT/Attribute:value' => 'Valeur',
-	'Class:SLT/Attribute:value+' => '',
+	'Class:SLT/Attribute:value+' => 'Valeur à ne pas dépasser pour la métrique et le type de requête définis dans cet objectif',
 	'Class:SLT/Attribute:unit' => 'Unité',
-	'Class:SLT/Attribute:unit+' => '',
+	'Class:SLT/Attribute:unit+' => 'Unité à appliquer à la valeur',
 	'Class:SLT/Attribute:unit/Value:hours' => 'heures',
-	'Class:SLT/Attribute:unit/Value:hours+' => 'heures',
+	'Class:SLT/Attribute:unit/Value:hours+' => '',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minutes',
-	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes',
+	'Class:SLT/Attribute:unit/Value:minutes+' => '',
 ]);
 
 //
@@ -450,13 +450,15 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Nom contrat client',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '',
 	'Class:lnkCustomerContractToService/Attribute:service_id' => 'Service',
-	'Class:lnkCustomerContractToService/Attribute:service_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:service_id+' => 'Toutes les sous catégories de service liées à ce service sont aussi incluses dans ce contrat client',
 	'Class:lnkCustomerContractToService/Attribute:service_name' => 'Nom service',
 	'Class:lnkCustomerContractToService/Attribute:service_name+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_id' => 'SLA',
-	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
+	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'Niveau d\'engagement pour ce service dans le cadre de ce contrat client',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'Nom SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Fournisseur',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
 ]);
 
 //
@@ -565,13 +567,4 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Fournisseur',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Fournisseur',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
 ]);
