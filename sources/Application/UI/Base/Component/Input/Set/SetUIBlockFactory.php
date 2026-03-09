@@ -138,7 +138,7 @@ class SetUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Set\Set
 	 */
-	public static function MakeForOQL(string $sId, string $sObjectClass, string $sOql, string $sWizardHelperJsVarName = null, array $aFieldsToLoad = [], ?string $sGroupField = null, string $sName = ''): Set
+	public static function MakeForOQL(string $sId, string $sObjectClass, string $sOql, ?string $sWizardHelperJsVarName = null, array $aFieldsToLoad = [], ?string $sGroupField = null, string $sName = ''): Set
 	{
 		// Create set ui block
 		$oSetUIBlock = new Set($sId);

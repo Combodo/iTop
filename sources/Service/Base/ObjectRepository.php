@@ -84,7 +84,7 @@ class ObjectRepository
 	 * @return array|null
 	 * @since 3.2.0 Add $iLimit parameter
 	 */
-	public static function SearchFromOql(string $sObjectClass, array $aFieldsToLoad, string $sOql, string $sSearch, DBObject $oThisObject = null, int $iLimit = 0): ?array
+	public static function SearchFromOql(string $sObjectClass, array $aFieldsToLoad, string $sOql, string $sSearch, ?DBObject $oThisObject = null, int $iLimit = 0): ?array
 	{
 		try {
 
@@ -280,7 +280,7 @@ class ObjectRepository
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public static function ConvertObjectToArray(DBObject $oObject, string $sObjectClass, array $aFieldsToLoad = null, array $aComplementAttributeSpec = null, string $sObjectImageAttCode = null): array
+	public static function ConvertObjectToArray(DBObject $oObject, string $sObjectClass, ?array $aFieldsToLoad = null, ?array $aComplementAttributeSpec = null, ?string $sObjectImageAttCode = null): array
 	{
 		// Retrieve friendly name complementary specification
 		if ($aComplementAttributeSpec === null) {

@@ -1084,7 +1084,7 @@ static public $yy_action = array(
     function yy_find_shift_action($iLookAhead)
     {
         $stateno = $this->yystack[$this->yyidx]->stateno;
-     
+
         /* if ($this->yyidx < 0) return self::YY_NO_ACTION;  */
         if (!isset(self::$yy_shift_ofst[$stateno])) {
             // no shift actions
@@ -1767,7 +1767,7 @@ throw new OQLParserParseFailureException($this->m_sSourceQuery, $this->m_iLine, 
     function yy_syntax_error($yymajor, $TOKEN)
     {
 #line 25 "..\oql-parser.y"
- 
+
 throw new OQLParserSyntaxErrorException($this->m_sSourceQuery, $this->m_iLine, $this->m_iCol, $this->tokenName($yymajor), $TOKEN);
 #line 1779 "..\oql-parser.php"
     }
@@ -1806,7 +1806,7 @@ throw new OQLParserSyntaxErrorException($this->m_sSourceQuery, $this->m_iLine, $
 //        $yyact;            /* The parser action. */
 //        $yyendofinput;     /* True if we are at the end of input */
         $yyerrorhit = 0;   /* True if yymajor has invoked an error */
-        
+
         /* (re)initialize the parser, if necessary */
         if ($this->yyidx === null || $this->yyidx < 0) {
             /* if ($yymajor == 0) return; // not sure why this was here... */
@@ -1819,7 +1819,7 @@ throw new OQLParserSyntaxErrorException($this->m_sSourceQuery, $this->m_iLine, $
             array_push($this->yystack, $x);
         }
         $yyendofinput = ($yymajor==0);
-        
+
         if (self::$yyTraceFILE) {
             fprintf(
                 self::$yyTraceFILE,
@@ -1828,7 +1828,7 @@ throw new OQLParserSyntaxErrorException($this->m_sSourceQuery, $this->m_iLine, $
                 self::$yyTokenName[$yymajor]
             );
         }
-        
+
         do {
             $yyact = $this->yy_find_shift_action($yymajor);
             if ($yymajor < self::YYERRORSYMBOL
@@ -2002,7 +2002,7 @@ class OQLParser extends OQLParserRaw
 		$this->m_sSourceQuery = $sQuery;
 		// no constructor - parent::__construct();
 	}
-	
+
 	public function doParse($token, $value, $iCurrPosition = 0)
 	{
 		$this->m_iColPrev = $this->m_iCol;
@@ -2016,7 +2016,7 @@ class OQLParser extends OQLParserRaw
 		$this->doParse(0, 0);
 		return $this->my_result;
 	}
-	
+
 	public function __destruct()
 	{
 		// Bug in the original destructor, causing an infinite loop !

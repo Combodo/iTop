@@ -45,7 +45,7 @@ class SelectField extends MultipleChoicesField
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct(string $sId, Closure $onFinalizeCallback = null)
+	public function __construct(string $sId, ?Closure $onFinalizeCallback = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
 		$this->bStartsWithNullChoice = static::DEFAULT_STARTS_WITH_NULL_CHOICE;

@@ -31,7 +31,7 @@ class FileSelectUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelect A styled file input selector
 	 */
-	public static function MakeStandard(string $sName, string $sId = null)
+	public static function MakeStandard(string $sName, ?string $sId = null)
 	{
 		return new FileSelect($sName, $sId);
 	}

@@ -55,7 +55,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
 	 */
-	public static function MakeNeutral(string $sLabel, string $sName = null, ?string $sId = null)
+	public static function MakeNeutral(string $sLabel, ?string $sName = null, ?string $sId = null)
 	{
 		$oButton = new ButtonJS($sLabel, $sId);
 		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_REGULAR)
@@ -81,8 +81,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForPrimaryAction(
 		string $sLabel,
-		string $sName = null,
-		string $sValue = null,
+		?string $sName = null,
+		?string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
@@ -102,8 +102,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForSecondaryAction(
 		string $sLabel,
-		string $sName = null,
-		string $sValue = null,
+		?string $sName = null,
+		?string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
@@ -123,8 +123,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForPositiveAction(
 		string $sLabel,
-		string $sName = null,
-		string $sValue = null,
+		?string $sName = null,
+		?string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
@@ -145,8 +145,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForDestructiveAction(
 		string $sLabel,
-		string $sName = null,
-		string $sValue = null,
+		?string $sName = null,
+		?string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
@@ -178,8 +178,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeAlternativeNeutral(
 		string $sLabel,
-		string $sName = null,
-		string $sValue = null,
+		?string $sName = null,
+		?string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
@@ -208,8 +208,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForAlternativePrimaryAction(
 		string $sLabel,
-		string $sName = null,
-		string $sValue = null,
+		?string $sName = null,
+		?string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
@@ -237,8 +237,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForAlternativeSecondaryAction(
 		string $sLabel,
-		string $sName = null,
-		string $sValue = null,
+		?string $sName = null,
+		?string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
@@ -266,8 +266,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForAlternativeValidationAction(
 		string $sLabel,
-		string $sName = null,
-		string $sValue = null,
+		?string $sName = null,
+		?string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
@@ -295,8 +295,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForAlternativeDestructiveAction(
 		string $sLabel,
-		string $sName = null,
-		string $sValue = null,
+		?string $sName = null,
+		?string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
@@ -323,9 +323,9 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
 	 */
 	public static function MakeForCancel(
-		string $sLabel = null,
-		string $sName = null,
-		string $sValue = null,
+		?string $sLabel = null,
+		?string $sName = null,
+		?string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
@@ -356,8 +356,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeIconAction(
 		string $sIconClasses,
 		string $sTooltipText = '',
-		string $sName = null,
-		string $sValue = null,
+		?string $sName = null,
+		?string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
@@ -483,8 +483,8 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sLabel,
 		string $sColor,
 		string $sActionType,
-		string $sValue = null,
-		string $sName = null,
+		?string $sValue = null,
+		?string $sName = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
@@ -528,7 +528,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sURL,
 		string $sColor,
 		string $sActionType,
-		string $sTarget = null,
+		?string $sTarget = null,
 		?string $sId = null
 	) {
 		$oButton = new ButtonURL($sLabel, $sURL, $sId, $sTarget);

@@ -208,16 +208,16 @@ $oCtx = new ContextTag(ContextTag::TAG_IMPORT);
 if (utils::IsModeCLI()) {
 	$oP = new CLIPage("iTop - Bulk import");
 	SetupUtils::CheckPhpAndExtensionsForCli($oP, -2);
+
+	try {
+		utils::UseParamFile();
+	} catch (Exception $e) {
+		$oP->p('Error: '.$e->GetMessage());
+		$oP->output();
+		exit(-2);
+	}
 } else {
 	$oP = new CSVPage("iTop - Bulk import");
-}
-
-try {
-	utils::UseParamFile();
-} catch (Exception $e) {
-	$oP->p("Error: ".$e->GetMessage());
-	$oP->output();
-	exit(-2);
 }
 
 if (utils::IsModeCLI()) {

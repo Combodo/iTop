@@ -58,6 +58,9 @@ tests/*/vendor/*
 /tests/php-unit-tests/phpunit.xml
 /tests/php-unit-tests/postbuild_integration.xml
 
+# PHP CS Fixer: Cache file
+/.php-cs-fixer.cache
+
 
 # Jetbrains
 /.idea/**

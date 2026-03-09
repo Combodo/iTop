@@ -29,7 +29,7 @@ class DashletPlainText extends DashletContainer
 	 *
 	 * @param string $sText
 	 */
-	public function __construct(string $sText, string $sId = null)
+	public function __construct(string $sText, ?string $sId = null)
 	{
 		parent::__construct($sId);
 

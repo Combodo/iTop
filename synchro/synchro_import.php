@@ -224,16 +224,16 @@ function ChangeDateFormat($sProposedDate, $sFormat, $bDateOnly)
 if (utils::IsModeCLI()) {
 	$oP = new CLIPage(Dict::S('TitleSynchroExecution'));
 	SetupUtils::CheckPhpAndExtensionsForCli($oP, -2);
+
+	try {
+		utils::UseParamFile();
+	} catch (Exception $e) {
+		$oP->p('Error: '.$e->GetMessage());
+		$oP->output();
+		exit - 2;
+	}
 } else {
 	$oP = new CLILikeWebPage(Dict::S('TitleSynchroExecution'));
-}
-
-try {
-	utils::UseParamFile();
-} catch (Exception $e) {
-	$oP->p("Error: ".$e->GetMessage());
-	$oP->output();
-	exit -2;
 }
 
 if (utils::IsModeCLI()) {

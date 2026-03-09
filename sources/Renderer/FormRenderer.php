@@ -48,7 +48,7 @@ abstract class FormRenderer
 	 *
 	 * @param \Combodo\iTop\Form\Form $oForm
 	 */
-	public function __construct(Form $oForm = null)
+	public function __construct(?Form $oForm = null)
 	{
 		if ($oForm !== null) {
 			$this->oForm = $oForm;

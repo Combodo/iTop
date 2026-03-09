@@ -1203,6 +1203,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nom Famille OS',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/Attribute:ospatches_list' => 'Patchs OS',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'Tous les patchs de cette version OS',
 ]);
 
 //
@@ -1212,6 +1214,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSFamily' => 'Famille OS',
 	'Class:OSFamily+' => '',
+	'Class:OSFamily/Attribute:osversions_list' => 'Versions OS',
+	'Class:OSFamily/Attribute:osversions_list+' => 'Toutes les versions OS pour cette famille',
 ]);
 
 //
@@ -1221,8 +1225,12 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Brand' => 'Marque',
 	'Class:Brand+' => '',
+	'Class:Brand/Attribute:iosversions_list' => 'Versions IOS',
+	'Class:Brand/Attribute:iosversions_list+' => 'Toutes les versions IOS pour cette marque',
 	'Class:Brand/Attribute:logo' => 'Logo',
 	'Class:Brand/Attribute:logo+' => '',
+	'Class:Brand/Attribute:models_list' => 'Modèles',
+	'Class:Brand/Attribute:models_list+' => 'Tous les modèles pour cette marque',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Matériels',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Tous les matériels correspondant à cette marque',
 	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Create:Button+' => 'Créer un %4$s',
@@ -1327,6 +1335,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nom Marque',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Equipements réseaux',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'Tous les équipements réseaux utilisant cette version IOS',
 ]);
 
 //

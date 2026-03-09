@@ -72,9 +72,12 @@ $ibo-panel--icon--spacing--as-medallion--is-sticking: $ibo-panel--icon--spacing-
 $ibo-panel--icon--bottom--as-medallion--is-sticking: -12px !default;
 $ibo-panel--icon--border--as-medallion--is-sticking: 1px $ibo-panel--base-border-style $ibo-panel--base-border-color !default;
 
-$ibo-panel--icon-background--size--must-contain: contain !default;
-$ibo-panel--icon-background--size--must-cover: cover !default;
-$ibo-panel--icon-background--size--must-zoomout: 66.67% !default;
+$ibo-panel--icon-background--size--must-contain: contain !default; // deprecated, to be removed in favor of $ibo-panel--icon-img--size--must-contain
+$ibo-panel--icon-background--size--must-cover: cover !default; // deprecated, to be removed in favor of $ibo-panel--icon-img--size--must-cover
+$ibo-panel--icon-background--size--must-zoomout: 66.67% !default; // deprecated, to be removed in favor of $ibo-panel--icon-img--size--must-zoomout
+$ibo-panel--icon-img--size--must-contain: $ibo-panel--icon-background--size--must-contain !default; // TODO remove when dealing with N°9317
+$ibo-panel--icon-img--size--must-cover: $ibo-panel--icon-background--size--must-cover !default; // TODO remove when dealing with N°9317
+$ibo-panel--icon-img--size--must-zoomout: $ibo-panel--icon-background--size--must-zoomout !default; // TODO remove when dealing with N°9317
 
 $ibo-panel--title--font-size--is-sticking: $ibo-font-size-150 !default;
 $ibo-panel--title--color: $ibo-color-grey-900 !default;
@@ -179,24 +182,25 @@ $ibo-panel--is-selectable--body--after--font-size: $ibo-font-size-700 !default;
   min-height: $ibo-panel--icon--size;
 }
 
-.ibo-panel--icon-background {
+.ibo-panel--icon-img, .ibo-panel--icon-background { // second class is deprecated, remove it when dealing with N°9317
   width: 100%;
   height: 100%;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: $ibo-panel--icon-background--size--must-contain;
+  background-size: $ibo-panel--icon-img--size--must-contain;
 }
 
-.ibo-panel--icon-background--must-contain {
-  background-size: $ibo-panel--icon-background--size--must-contain;
+.ibo-panel--icon-img--must-contain, .ibo-panel--icon-background--must-contain { // second class is deprecated, remove it when dealing with N°9317
+  background-size: $ibo-panel--icon-img--size--must-contain;
 }
 
-.ibo-panel--icon-background--must-cover {
-  background-size: $ibo-panel--icon-background--size--must-cover;
+.ibo-panel--icon-img--must-cover, .ibo-panel--icon-background--must-cover { // second class is deprecated, remove it when dealing with N°9317
+  background-size: $ibo-panel--icon-img--size--must-cover;
 }
 
-.ibo-panel--icon-background--must-zoomout {
-  background-size: $ibo-panel--icon-background--size--must-zoomout;
+.ibo-panel--icon-img--must-zoomout, .ibo-panel--icon-background--must-zoomout { // second class is deprecated, remove it when dealing with N°9317
+  width: $ibo-panel--icon-img--size--must-zoomout;
+  height: $ibo-panel--icon-img--size--must-zoomout;
 }
 
 .ibo-panel--title {

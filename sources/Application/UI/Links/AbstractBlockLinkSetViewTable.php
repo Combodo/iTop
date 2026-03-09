@@ -141,7 +141,7 @@ abstract class AbstractBlockLinkSetViewTable extends UIContentBlock
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetDictionaryEntry(string $sKey, DBObject $oDBObject = null)
+	public function GetDictionaryEntry(string $sKey, ?DBObject $oDBObject = null)
 	{
 		return $this->oAttDef->SearchSpecificLabel(
 			$sKey,

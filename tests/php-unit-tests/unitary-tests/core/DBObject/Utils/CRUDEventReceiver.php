@@ -77,7 +77,7 @@ class CRUDEventReceiver
 		}
 	}
 
-	public function RegisterCRUDEventListeners(string $sEvent = null, $mEventSource = null)
+	public function RegisterCRUDEventListeners(?string $sEvent = null, $mEventSource = null)
 	{
 		$this->Debug('Registering Test event listeners');
 		if (is_null($sEvent)) {

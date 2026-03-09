@@ -1073,6 +1073,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS family name',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/Attribute:ospatches_list' => 'OS patches',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'All the OS patches for this OS version',
 ]);
 
 //
@@ -1082,6 +1084,8 @@ Dict::Add('EN US', 'English', 'English', [
 Dict::Add('EN US', 'English', 'English', [
 	'Class:OSFamily' => 'OS Family',
 	'Class:OSFamily+' => '',
+	'Class:OSFamily/Attribute:osversions_list' => 'OS versions',
+	'Class:OSFamily/Attribute:osversions_list+' => 'All the OS versions for this OS family',
 ]);
 
 //
@@ -1091,8 +1095,12 @@ Dict::Add('EN US', 'English', 'English', [
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Brand' => 'Brand',
 	'Class:Brand+' => '',
+	'Class:Brand/Attribute:iosversions_list' => 'IOS versions',
+	'Class:Brand/Attribute:iosversions_list+' => 'All the IOS versions from this brand',
 	'Class:Brand/Attribute:logo' => 'Logo',
 	'Class:Brand/Attribute:logo+' => '',
+	'Class:Brand/Attribute:models_list' => 'Models',
+	'Class:Brand/Attribute:models_list+' => 'All models for this brand',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Physical devices',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand',
 	'Class:Brand/UniquenessRule:name+' => 'The name must be unique',
@@ -1179,6 +1187,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Brand name',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Network devices',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'All the network devices running this IOS version',
 ]);
 
 //

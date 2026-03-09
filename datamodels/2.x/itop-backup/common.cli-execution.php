@@ -88,14 +88,13 @@ if (utils::IsModeCLI()) {
 	$oP = new CLIPage(GetOperationName());
 
 	SetupUtils::CheckPhpAndExtensionsForCli($oP);
+	try {
+		utils::UseParamFile();
+	} catch (Exception $e) {
+		ExitError($oP, $e->GetMessage());
+	}
 } else {
 	$oP = new WebPage(GetOperationName());
-}
-
-try {
-	utils::UseParamFile();
-} catch (Exception $e) {
-	ExitError($oP, $e->GetMessage());
 }
 
 ExecuteMainOperation($oP);

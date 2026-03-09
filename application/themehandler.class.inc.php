@@ -967,7 +967,9 @@ CSS;
 				}
 			}
 		}
-		array_map(function ($sVariableValue) { return ltrim($sVariableValue); }, $aVariablesResults);
+		array_map(function ($sVariableValue) {
+			return ltrim($sVariableValue);
+		}, $aVariablesResults);
 		return $aVariablesResults;
 	}
 
