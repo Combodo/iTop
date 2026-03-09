@@ -150,7 +150,7 @@ class LoginWebPageTest extends ItopDataTestCase
 			true
 		);
 		$bShouldSeeForbiddenAdminPage ?
-			$this->assertStringNotContainsString('<title>Access restricted to people having administrator privileges</title>', $sPageContent, 'Should prevent non admin user to access this page') : // in delegated authentication endpoints list (in the module), login should not be required
+			$this->assertStringContainsString('Access restricted to people having administrator privileges', $sPageContent, 'Should prevent non admin user to access this page') : // in delegated authentication endpoints list (in the module), login should not be required
 			$this->assertStringContainsString('Yo !', $sPageContent, 'Should execute the file and see its content since user has admin profile');
 
 	}

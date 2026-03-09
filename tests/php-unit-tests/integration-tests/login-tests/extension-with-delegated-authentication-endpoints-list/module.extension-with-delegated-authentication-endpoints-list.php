@@ -2,7 +2,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'extension-with-execution-policy/0.0.1',
+	'extension-without-delegated-authentication-endpoints-list/0.0.1',
 	[
 		// Identification
 		//
@@ -19,7 +19,7 @@ SetupWebPage::AddModule(
 		// Security
 		'delegated_authentication_endpoints' => [
 			'src/Controller/FileInDelegatedAuthenticationEndpointsList.php',
-			'src/Controller/FileInDelegatedAuthenticationEndpointsAndAdminRequiredList.php',
+			'src/Controller/FileInDelegatedAuthenticationEndpointsListAndAdminRequired.php',
 		],
 
 		// Components

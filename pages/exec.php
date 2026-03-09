@@ -112,8 +112,7 @@ if (is_null($aModuleDelegatedAuthenticationEndpoints) || !in_array($sPage, $aMod
 if (is_null($aModuleDelegatedAuthenticationEndpoints) && !MetaModel::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list')) {
 	// check if user is not logged in, if not log a warning in the log file as the page is executed without login, which is not recommended for security reason
 	if (is_null(UserRights::GetUserId())) {
-		IssueLog::Warning("The page '$sPage' is called be executed without login. In the future, this call will be blocked, and will likely cause unwanted behavior in the module '$sModule'.
-		Please define a delegated authentication endpoints for the module as described in https://www.itophub.io/wiki/page?id=latest:customization:new_extension#security.");
+		IssueLog::Warning("The page '$sPage' is executed without login. In the future, this call will be blocked, and will likely cause unwanted behavior in the module '$sModule'. \n Please define a delegated authentication endpoints for the module as described in https://www.itophub.io/wiki/page?id=latest:customization:new_extension#security.");
 	}
 }
 if (is_array($aModuleDelegatedAuthenticationEndpoints) && !in_array($sPage, $aModuleDelegatedAuthenticationEndpoints)) {
