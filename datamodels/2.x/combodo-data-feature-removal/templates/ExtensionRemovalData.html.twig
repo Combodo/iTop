@@ -1,17 +1,19 @@
 {# @copyright   Copyright (C) 2010-2024 Combodo SAS #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-{% UIPanel Neutral { sTitle:'DataFeatureRemoval:Analysis:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:Analysis:SubTitle'|dict_format(rule_count) } %}
-    {% UIDataTable ForForm { sRef:'aCheckRules', aColumns:aCheckRules.Columns, aData:aCheckRules.Data} %}{% EndUIDataTable %}
-{% EndUIPanel %}
+{% if bHasData %}
+    {% UIPanel Neutral { sTitle:'DataFeatureRemoval:Analysis:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:Analysis:SubTitle'|dict_format(rule_count) } %}
+        {% UIDataTable ForForm { sRef:'aCheckRules', aColumns:aCheckRules.Columns, aData:aCheckRules.Data} %}{% EndUIDataTable %}
+    {% EndUIPanel %}
 
-{% UIForm Standard {} %}
-    {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
-    {% UIInput ForHidden { sName:'operation', sValue:'DeletionPlan'} %}
-    {% for sKey, sClass in aClasses %}
-        {% UIInput ForHidden { sName:"classes[" ~ sKey ~ "]", sValue:sClass } %}
-    {% endfor %}
- {% UIToolbar ForButton {} %}
-        {% UIButton ForPrimaryAction {sLabel:'UI:Button:PlanDeletion'|dict_s, sName:'btn_plandeletion', sId:'btn_plandeletion', bIsSubmit:true} %}
-    {% EndUIToolbar %}
-{% EndUIForm %}
+    {% UIForm Standard {} %}
+        {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
+        {% UIInput ForHidden { sName:'operation', sValue:'DeletionPlan'} %}
+        {% for sKey, sClass in aClasses %}
+            {% UIInput ForHidden { sName:"classes[" ~ sKey ~ "]", sValue:sClass } %}
+        {% endfor %}
+        {% UIToolbar ForButton {} %}
+            {% UIButton ForPrimaryAction {sLabel:'UI:Button:PlanDeletion'|dict_s, sName:'btn_plandeletion', sId:'btn_plandeletion', bIsSubmit:true} %}
+        {% EndUIToolbar %}
+    {% EndUIForm %}
+{% endif %}

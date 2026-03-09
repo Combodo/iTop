@@ -30,7 +30,20 @@ class DataFeatureRemoverAuditRuleService
 		self::$oInstance = $oInstance;
 	}
 
-	public function SaveChecks(array $aGetRemovedClasses)
+	/**
+	 * @param array $aGetRemovedClasses
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function SaveChecks(array $aGetRemovedClasses): void
 	{
 		$oSearch = DBObjectSearch::FromOQL('SELECT DataFeatureRemoverAuditRule', []);
 		$oSearch->AllowAllData();
@@ -50,6 +63,10 @@ class DataFeatureRemoverAuditRuleService
 		}
 	}
 
+	/**
+	 * @return array
+	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
+	 */
 	public function ReadCheckRules(): array
 	{
 		try {

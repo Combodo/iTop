@@ -29,7 +29,7 @@ class DataFeatureRemovalController extends Controller
 {
 	private array $aSelectedExtensionsForCheck = [];
 
-	public function OperationMain($sErrorMessage = null)
+	public function OperationMain($sErrorMessage = null): void
 	{
 		$aParams = [];
 
@@ -40,16 +40,17 @@ class DataFeatureRemovalController extends Controller
 		$this->AddFeatureParams($aParams);
 		$this->AddAnalyzeParams($aParams);
 		$aParams['DataFeatureRemovalErrorMessage'] = $sErrorMessage;
+		$aParams['bHasData'] = count($aParams['aClasses']) > 0;
 		$this->DisplayPage($aParams);
 	}
 
-	public function AddFeatureParams(array &$aParams)
+	public function AddFeatureParams(array &$aParams): void
 	{
 		$aParams['aExtensions'] = $this->GetExtensionsTable();
 		$aParams['sModule'] = DataFeatureRemovalHelper::MODULE_NAME;
 	}
 
-	public function AddAnalyzeParams(array &$aParams)
+	public function AddAnalyzeParams(array &$aParams): void
 	{
 		$iTotalCount = 0;
 		$aData = [];
@@ -65,7 +66,7 @@ class DataFeatureRemovalController extends Controller
 			$sTypeDesc = \Dict::S("DataFeatureRemoval:Table:Analysis:RemovalType:$sTypeName");
 			$iCount = $oRule->Get('count');
 			$iTotalCount += $iCount;
-			$aColumns = ['ClassName', 'RemovalType','FeatureName','Occurence'];
+			$aColumns = ['ClassName', 'RemovalType','FeatureName','Occurrence'];
 			$aData[] = [
 				<<<HTML
 <label>$sContent</label>
@@ -87,7 +88,7 @@ HTML,
 		$aParams['aClasses'] = $aClasses;
 	}
 
-	public function OperationAnalyze()
+	public function OperationAnalyze(): void
 	{
 		$this->ValidateTransactionId();
 		$aSelectedExtensionsFromUI = utils::ReadPostedParam('aExtensions', []);
@@ -174,7 +175,7 @@ HTML,
 		];
 	}
 
-	private function Analyze()
+	private function Analyze(): void
 	{
 		DataFeatureRemoverExtensionService::GetInstance()->SaveExtensions($this->aSelectedExtensionsForCheck);
 
@@ -187,14 +188,14 @@ HTML,
 		$this->Save($oSetupAudit->GetIssues());
 	}
 
-	private function Save(array $aGetRemovedClasses)
+	private function Save(array $aGetRemovedClasses): void
 	{
 		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
 
 		DataFeatureRemoverAuditRuleService::GetInstance()->SaveChecks($aGetRemovedClasses);
 	}
 
-	public function OperationDeletionPlan()
+	public function OperationDeletionPlan(): void
 	{
 		$aParams = [];
 		$this->ValidateTransactionId();
@@ -220,7 +221,7 @@ HTML,
 		$this->DisplayPage($aParams);
 	}
 
-	public function OperationDoDeletion()
+	public function OperationDoDeletion(): void
 	{
 		$aParams = [];
 		$this->ValidateTransactionId();
@@ -245,7 +246,7 @@ HTML,
 
 	/**
 	 * @return void
-	 * @throws \Combodo\iTop\MFABase\Helper\MFABaseException
+	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
 	 */
 	public function ValidateTransactionId(): void
 	{

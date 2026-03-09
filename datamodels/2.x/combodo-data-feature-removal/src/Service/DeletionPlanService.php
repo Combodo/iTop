@@ -5,7 +5,6 @@ namespace Combodo\iTop\DataFeatureRemoval\Service;
 use Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use DeletionPlan;
-use Hoa\Math\Test\Unit\Issue;
 
 class DeletionPlanService
 {
@@ -30,13 +29,17 @@ class DeletionPlanService
 	}
 
 	/**
-	 * @param array $sClasses
+	 * @param array $aClasses
 	 *
 	 * @return array<\Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity>
+	 * @throws \CoreException
 	 */
-	public function GetDeletionPlanSummary(array $aClasses): array
+	public function GetDeletionPlanSummary(?array $aClasses): array
 	{
 		$aSummary = [];
+		if (is_null($aClasses)) {
+			return $aSummary;
+		}
 
 		$oDeletionPlan = new DeletionPlan();
 		foreach ($aClasses as $sClass) {
@@ -67,7 +70,13 @@ class DeletionPlanService
 	}
 
 	/**
+	 * @param string $sClass
+	 *
 	 * @return \DBObject[]
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \Exception
 	 */
 	private function GetAllObjects(string $sClass): array
 	{
@@ -78,11 +87,15 @@ class DeletionPlanService
 	}
 
 	/**
-	 * @param array $sClasses
+	 * @param array $aClasses
 	 *
 	 * @return array<\Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity>
+	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
-	public function ExecuteDeletionPlan(array $aClasses)
+	public function ExecuteDeletionPlan(array $aClasses): array
 	{
 		$oDeletionPlan = new DeletionPlan();
 		foreach ($aClasses as $sClass) {
@@ -100,8 +113,15 @@ class DeletionPlanService
 	 * @param DeletionPlan $oDeletionPlan
 	 *
 	 * @return array<\Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity>
+	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
-	private function DoDelete(DeletionPlan $oDeletionPlan)
+	private function DoDelete(DeletionPlan $oDeletionPlan): array
 	{
 		if (count($oDeletionPlan->GetIssues()) > 0) {
 			throw new DataFeatureRemovalException("Deletion Plan cannot be executed due to issues");
@@ -129,10 +149,12 @@ class DeletionPlanService
 			$oDeletionPlanSummaryEntity = $aSummary[$sClass] ?? new DeletionPlanSummaryEntity($sClass);
 
 			foreach ($aDeletes as $sId => $aDelete) {
-				$oFilter = \DBObjectSearch::FromOQL_AllData("SELECT $sClass WHERE id=:id");
-				$sQuery = $oFilter->MakeDeleteQuery(['id' => $sId]);
-				\CMDBSource::DeleteFrom($sQuery);
-				\IssueLog::Info(__METHOD__, null, [$sQuery]);
+				foreach (\MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
+					$oFilter = \DBObjectSearch::FromOQL_AllData("SELECT $sParentClass WHERE id=:id");
+					$sQuery = $oFilter->MakeDeleteQuery(['id' => $sId]);
+					\CMDBSource::DeleteFrom($sQuery);
+					\IssueLog::Info($sQuery);
+				}
 
 				$oDeletionPlanSummaryEntity->iDeleteCount++;
 			}

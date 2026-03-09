@@ -8,7 +8,7 @@
 {% UIForm Standard {} %}
     {% UIInput ForHidden { sName:'transaction_id', sValue:sTransactionId} %}
     {% UIInput ForHidden { sName:'operation', sValue:'Main'} %}
- {% UIToolbar ForButton {} %}
+    {% UIToolbar ForButton {} %}
         {% UIButton ForPrimaryAction {sLabel:'UI:Button:BackToMain'|dict_s, sName:'btn_deletion', sId:'btn_deletion', bIsSubmit:true} %}
     {% EndUIToolbar %}
 {% EndUIForm %}

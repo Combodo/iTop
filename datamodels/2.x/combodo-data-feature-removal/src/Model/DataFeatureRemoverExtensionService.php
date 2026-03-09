@@ -33,7 +33,20 @@ class DataFeatureRemoverExtensionService
 		self::$oInstance = $oInstance;
 	}
 
-	public function SaveExtensions(array $aSelectedExtensionsForCheck)
+	/**
+	 * @param array $aSelectedExtensionsForCheck
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function SaveExtensions(array $aSelectedExtensionsForCheck): void
 	{
 		$this->ReadItopExtensions();
 
@@ -60,6 +73,11 @@ class DataFeatureRemoverExtensionService
 	private array $aSelectedExtensions = [];
 	private array $aItopExtensions = [];
 	private array $aIncludingExtensionsByModuleName = [];
+
+	/**
+	 * @return array
+	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
+	 */
 	public function ReadAuditedExtensions(): array
 	{
 		if (count($this->aSelectedExtensions) == 0) {
@@ -96,6 +114,12 @@ class DataFeatureRemoverExtensionService
 		return $this->aSelectedExtensions;
 	}
 
+	/**
+	 * @param string $sModuleName
+	 *
+	 * @return array
+	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
+	 */
 	public function GetIncludingExtensions(string $sModuleName): array
 	{
 		$this->ReadAuditedExtensions();
