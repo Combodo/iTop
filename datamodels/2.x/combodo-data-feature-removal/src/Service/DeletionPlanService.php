@@ -4,7 +4,9 @@ namespace Combodo\iTop\DataFeatureRemoval\Service;
 
 use Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
+use DBObjectSearch;
 use DeletionPlan;
+use MetaModel;
 
 class DeletionPlanService
 {
@@ -80,7 +82,7 @@ class DeletionPlanService
 	 */
 	private function GetAllObjects(string $sClass): array
 	{
-		$oFilter = new \DBObjectSearch($sClass);
+		$oFilter = new DBObjectSearch($sClass);
 		$oFilter->AllowAllData();
 		$oSet = new \DBObjectSet($oFilter);
 		return $oSet->ToArray();
@@ -149,11 +151,17 @@ class DeletionPlanService
 			$oDeletionPlanSummaryEntity = $aSummary[$sClass] ?? new DeletionPlanSummaryEntity($sClass);
 
 			foreach ($aDeletes as $sId => $aDelete) {
+				// Delete any existing change tracking about the current object
+				$oFilter = new DBObjectSearch('CMDBChangeOp');
+				$oFilter->AddCondition('objclass', $sClass, '=');
+				$oFilter->AddCondition('objkey', $sId, '=');
+				MetaModel::PurgeData($oFilter);
+
+				// Delete the entry
 				foreach (\MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
 					$oFilter = \DBObjectSearch::FromOQL_AllData("SELECT $sParentClass WHERE id=:id");
 					$sQuery = $oFilter->MakeDeleteQuery(['id' => $sId]);
 					\CMDBSource::DeleteFrom($sQuery);
-					\IssueLog::Info($sQuery);
 				}
 
 				$oDeletionPlanSummaryEntity->iDeleteCount++;
