@@ -1087,7 +1087,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'Class:Licence' => 'License',
+	'Class:Licence' => 'Licence',
 	'Class:Licence+' => 'Classe abstraite. Contrat de licence pour une version d\'OS ou un logiciel particulier.',
 	'Class:Licence/Attribute:name' => 'Nom',
 	'Class:Licence/Attribute:name+' => '',
@@ -1119,7 +1119,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'non',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'oui',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'oui',
-	'Class:Licence/Attribute:finalclass' => 'Sous-classe de License',
+	'Class:Licence/Attribute:finalclass' => 'Sous-classe de Licence',
 	'Class:Licence/Attribute:finalclass+' => 'Nom de la classe instanciable',
 ]);
 
@@ -1181,7 +1181,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToLicence' => 'Lien Document / Licence',
-	'Class:lnkDocumentToLicence+' => 'Lien utilisé lorsqu\'un Document est applicable à une License.',
+	'Class:lnkDocumentToLicence+' => 'Lien utilisé lorsqu\'un Document est applicable à une Licence.',
 	'Class:lnkDocumentToLicence/Name' => '%1$s / %2$s',
 	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
