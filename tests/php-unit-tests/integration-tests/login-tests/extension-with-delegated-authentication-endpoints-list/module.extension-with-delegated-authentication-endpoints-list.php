@@ -19,7 +19,7 @@ SetupWebPage::AddModule(
 		// Security
 		'delegated_authentication_endpoints' => [
 			'src/Controller/FileInDelegatedAuthenticationEndpointsList.php',
-			'src/Controller/FileInDelegatedAuthenticationEndpointsAndAdminRequiredList.php',
+			'src/Controller/FileInDelegatedAuthenticationEndpointsListAndAdminRequired.php',
 		],
 
 		// Components
