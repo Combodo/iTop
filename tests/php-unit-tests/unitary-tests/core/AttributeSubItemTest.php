@@ -35,12 +35,7 @@ class AttributeSubItemTest extends ItopDataTestCase
 
 		$sValue = $oUserRequest->Get('ttr_escalation_deadline');
 	    $oAttDef = MetaModel::GetAttributeDef(get_class($oUserRequest), 'ttr_escalation_deadline');
-
-	 /*   self::assertEquals('Missed by 3 min', MetaModel::ApplyParams('$this->title$', ['this' => $oUserRequest]));
-	    self::assertEquals('Missed by 3 min', MetaModel::ApplyParams('$this->ttr_escalation_deadline$', ['this' => $oUserRequest]));
-	    self::assertEquals('Missed by 3 min', MetaModel::ApplyParams('$this->html(ttr_escalation_deadline)$', ['this' => $oUserRequest]));*/
-
-
+		
 	    self::assertEquals('Missed by 3 min', $oAttDef->GetForTemplate($sValue, 'html', $oUserRequest));
 	    $oDateTime = new DateTime();
 	    $oDateTime->setTimestamp($iStartDate);
