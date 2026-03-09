@@ -45,7 +45,7 @@ class AttributeSubItemTest extends ItopDataTestCase
 	    $oDateTime = new DateTime();
 	    $oDateTime->setTimestamp($iStartDate);
 	    $sDate = $oDateTime->format(AttributeDateTime::GetFormat());
-	    self::assertEquals($sDate, $oAttDef->GetForTemplate($sValue, 'label', $oUserRequest));
+	    self::assertEquals($sDate, $oAttDef->GetForTemplate($sValue, 'label', $oUserRequest), 'label() should render the date in the format specified in the configuration file, in parameter "date_and_time_format"');
 	    self::assertEquals('Missed by 3 min', $oAttDef->GetForTemplate($sValue, 'text', $oUserRequest));
 	    self::assertEquals($iStartDate, $oAttDef->GetForTemplate($sValue, '', $oUserRequest));
     }
