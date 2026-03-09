@@ -24,6 +24,11 @@ Dict::Add('EN US', 'English', 'English', [
 	'DataFeatureRemoval:Analysis:Title' => 'Analysis result',
 	'DataFeatureRemoval:Analysis:SubTitle' => '%1$s element(s) to clean before continuing',
 
+	'DataFeatureRemoval:DeletionPlan:Title' => 'Deletion plan',
+	'DataFeatureRemoval:DeletionPlan:SubTitle' => 'Database tables to clean before continuing',
+	'DataFeatureRemoval:DoDeletion:Title' => 'Do deletion',
+	'DataFeatureRemoval:DoDeletion:SubTitle' => 'Remove all the entries from the database',
+
 	'DataFeatureRemoval:Table:Analysis:ClassName' => 'Element to remove',
 	'DataFeatureRemoval:Table:Analysis:RemovalType' => 'Type of element',
 	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Feature name',
@@ -41,4 +46,12 @@ Dict::Add('EN US', 'English', 'English', [
 
 	'DataFeatureRemoval:Table:Analysis:RemovalType:FINAL_CLASS' => 'Final class',
 	'DataFeatureRemoval:Table:Empty' => 'No data to remove',
+
+	'DataFeatureRemoval:Column:Class' => 'Class',
+	'DataFeatureRemoval:Column:DeleteCount' => 'Delete count',
+	'DataFeatureRemoval:Column:UpdateCount' => 'Update count',
+	'DataFeatureRemoval:Column:Issue' => 'Issue',
+
+	'DataFeatureRemoval:Column:DeletedCount' => 'Deleted entries',
+	'DataFeatureRemoval:Column:UpdatedCount' => 'Updated entries',
 	]);

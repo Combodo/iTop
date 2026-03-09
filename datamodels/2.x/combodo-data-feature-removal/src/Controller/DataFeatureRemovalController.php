@@ -164,7 +164,7 @@ HTML,
 
 		$aNewColumns = [];
 		foreach ($aColumns as $sColumn) {
-			$aNewColumns[] = ['label' => Dict::S("DataFeatureRemoval:Table:$sTableName:$sColumn", $sColumn)];
+			$aNewColumns[] = ['label' => Dict::S("DataFeatureRemoval:Table:$sTableName:$sColumn", Dict::S("DataFeatureRemoval:Column:$sColumn", $sColumn))];
 		}
 		$aColumns = $aNewColumns;
 
@@ -229,7 +229,7 @@ HTML,
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 
 		$aDeletionExecutionSummary = DeletionPlanService::GetInstance()->ExecuteDeletionPlan($aClasses);
-		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount'];
+		$aColumns = ['Class', 'DeletedCount' , 'UpdatedCount'];
 		$aRows = [];
 		foreach ($aDeletionExecutionSummary as $oDeletionExecutionSummaryEntity) {
 			$aRows[] = [
