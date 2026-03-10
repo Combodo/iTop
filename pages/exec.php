@@ -103,7 +103,7 @@ if ($sTargetPage === false) {
 require_once(APPROOT.'/application/startup.inc.php');
 
 $aModuleDelegatedAuthenticationEndpoints = GetModuleDelegatedAuthenticationEndpoints($sModule);
-if (is_null($aModuleDelegatedAuthenticationEndpoints) || !in_array($sPage, $aModuleDelegatedAuthenticationEndpoints)) {
+if (is_null($aModuleDelegatedAuthenticationEndpoints)) {
 	$bForceLoginWhenNoDelegatedAuthenticationEndpoints = MetaModel::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list');
 	if ($bForceLoginWhenNoDelegatedAuthenticationEndpoints) {
 		LoginWebPage::DoLoginEx();
