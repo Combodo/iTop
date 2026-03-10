@@ -409,6 +409,7 @@ class iTopExtensionsMap
 				'source_label'   => $this->GetExtensionSourceLabel($oExtension->sSource),
 				'uninstallable'  => $oExtension->CanBeUninstalled(),
 				'missing'        => $oExtension->bRemovedFromDisk,
+				'version'        => $oExtension->sVersion,
 			];
 		}
 
@@ -417,26 +418,18 @@ class iTopExtensionsMap
 
 	protected function GetExtensionSourceLabel($sSource)
 	{
-		$sDecorationClass = '';
+		$sResult = '';
 		switch ($sSource) {
 			case iTopExtension::SOURCE_MANUAL:
 				$sResult = 'Local extensions folder';
-				$sDecorationClass = 'fas fa-folder';
 				break;
 
 			case iTopExtension::SOURCE_REMOTE:
 				$sResult = (ITOP_APPLICATION == 'iTop') ? 'iTop Hub' : 'ITSM Designer';
-				$sDecorationClass = (ITOP_APPLICATION == 'iTop') ? 'fc fc-chameleon-icon' : 'fa pencil-ruler';
 				break;
 
-			default:
-				$sResult = '';
 		}
-		if ($sResult == '') {
-			return '';
-		}
-
-		return '<i class="setup-extension--icon '.$sDecorationClass.'" data-tooltip-content="'.$sResult.'"></i>';
+		return $sResult;
 	}
 
 	/**
