@@ -2931,49 +2931,6 @@ public function PrefillSearchForm(&$aContextParam)
       <oql>SELECT DeliveryModel</oql>
       <do_search>1</do_search>
     </menu>
-    <menu id="RulesAndWorkflow" xsi:type="DashboardMenuNode" _delta="define">
-      <rank>20</rank>
-      <parent>ServiceManagement</parent>
-      <definition>
-        <title>UI-RulesAndWorkflow-Title</title>
-        <layout>DashboardLayoutOneCol</layout>
-        <cells>
-          <cell id="0">
-            <rank>0</rank>
-            <dashlets>
-              <dashlet id="RulesAndWorkflow_PlainText" xsi:type="DashletPlainText">
-                <rank>0</rank>
-                <text>UI-RulesAndWorkflow-Description</text>
-              </dashlet>
-            </dashlets>
-          </cell>
-          <cell id="1">
-            <rank>1</rank>
-            <dashlets>
-              <dashlet id="0" xsi:type="DashletEmptyCell">
-                <rank>0</rank>
-              </dashlet>
-            </dashlets>
-          </cell>
-          <cell id="2">
-            <rank>2</rank>
-            <dashlets>
-              <dashlet id="0" xsi:type="DashletEmptyCell">
-                <rank>0</rank>
-              </dashlet>
-            </dashlets>
-          </cell>
-          <cell id="3">
-            <rank>3</rank>
-            <dashlets>
-              <dashlet id="0" xsi:type="DashletEmptyCell">
-                <rank>0</rank>
-              </dashlet>
-            </dashlets>
-          </cell>
-        </cells>
-      </definition>
-    </menu>
     <menu id="Typology" xsi:type="DashboardMenuNode">
       <definition>
         <cells>
