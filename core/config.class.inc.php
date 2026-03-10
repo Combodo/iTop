@@ -1744,7 +1744,7 @@ class Config
 			'default'             => false,
 			'value'               => false,
 			'source_of_value'     => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		],
 		'behind_reverse_proxy' => [
 			'type' => 'bool',
