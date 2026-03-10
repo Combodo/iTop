@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
+use Combodo\iTop\Application\WebPage\WebPage;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use iTopExtension;
 use iTopExtensionsMap;
@@ -9,6 +10,7 @@ use iTopExtensionsMapFake;
 use ModuleDiscovery;
 use WizardController;
 use WizStepModulesChoiceFake;
+use WepPageFake;
 use XMLParameters;
 
 class WizStepModulesChoiceTest extends ItopTestCase
@@ -18,6 +20,7 @@ class WizStepModulesChoiceTest extends ItopTestCase
 	{
 		parent::setUp();
 		$this->RequireOnceItopFile('/setup/unattended-install/InstallationFileService.php');
+		require_once __DIR__.'/WebPageFake.php';
 		require_once __DIR__.'/iTopExtensionsMapFake.php';
 		require_once __DIR__.'/WizStepModulesChoiceFake.php';
 
@@ -927,4 +930,433 @@ class WizStepModulesChoiceTest extends ItopTestCase
 		$this->oStep->GetSelectedModules($aStepInfo, ['_0' => '_0'], $aModules, '', '', $aExtensions);
 	}
 
+	public function ProviderDisplayOptions()
+	{
+		return [
+			'no choices' => [
+				'aStepOptions' => [],
+				'aStepAlternatives' => [],
+
+				'aSelectedComponents' => [],
+				'aDefaults' => [],
+				'aExpectedHTML' => '',
+			],
+			'one not installed extension' => [
+				'aStepOptions' => [
+					[
+						'extension_code' => 'itop-ext-not-installed',
+						'title' => 'My extension',
+						'description' => 'Do something',
+						'more_info' => '',
+						'modules' => [],
+						'mandatory' => false,
+						'source_label' => 'Local extensions folder',
+						'uninstallable' => true,
+						'missing' => false,
+						'version' => '1.2.3',
+					],
+				],
+				'aStepAlternatives' => [],
+
+				'aSelectedComponents' => [],
+				'aDefaults' => [],
+				'aExpectedHTML' => <<<HTML
+
+			<div class="ibo-extension-details ibo-content-block ibo-block " data-id="itop-ext-not-installed">
+				<div class="ibo-extension-details--actions">
+					<input class="wiz-choice" id="itop-ext-not-installed" name="choice[_0]" type="checkbox" value="_0" />
+					
+				</div>
+				<div class="ibo-extension-details--information">
+					<div class="ibo-extension-details--information--label">
+						<label for="itop-ext-not-installed"><b>My extension</b></label>
+						
+						<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span><span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>
+					</div>
+					<div class="ibo-extension-details--information--metadata">
+						<span>v1.2.3</span><span>Local extensions folder</span>
+					</div>
+					<div class="ibo-extension-details--information--description">
+						Do something
+		
+					</div>
+				</div>
+			</div>
+		
+HTML,
+			],
+			'one installed extension' => [
+				'aStepOptions' => [
+					[
+						'extension_code' => 'itop-ext-installed',
+						'title' => 'My extension',
+						'description' => 'Do something',
+						'more_info' => '',
+						'modules' => [],
+						'mandatory' => false,
+						'source_label' => 'Local extensions folder',
+						'uninstallable' => true,
+						'missing' => false,
+						'version' => '1.2.3',
+					],
+				],
+				'aStepAlternatives' => [],
+
+				'aSelectedComponents' => [],
+				'aDefaults' => [],
+				'aExpectedHTML' => <<<HTML
+
+			<div class="ibo-extension-details ibo-content-block ibo-block " data-id="itop-ext-installed">
+				<div class="ibo-extension-details--actions">
+					<input class="wiz-choice" id="itop-ext-installed" name="choice[_0]" type="checkbox" value="_0" />
+					
+				</div>
+				<div class="ibo-extension-details--information">
+					<div class="ibo-extension-details--information--label">
+						<label for="itop-ext-installed"><b>My extension</b></label>
+						
+						<span class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</span><span class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</span>
+					</div>
+					<div class="ibo-extension-details--information--metadata">
+						<span>v1.2.3</span><span>Local extensions folder</span>
+					</div>
+					<div class="ibo-extension-details--information--description">
+						Do something
+		
+					</div>
+				</div>
+			</div>
+		
+HTML,
+			],
+
+			'one installed extension that cannot be uninstalled' => [
+				'aStepOptions' => [
+					[
+						'extension_code' => 'itop-ext-installed',
+						'title' => 'My extension',
+						'description' => 'Do something',
+						'more_info' => '',
+						'modules' => [],
+						'mandatory' => false,
+						'source_label' => 'Local extensions folder',
+						'uninstallable' => false,
+						'missing' => false,
+						'version' => '1.2.3',
+					],
+				],
+				'aStepAlternatives' => [],
+
+				'aSelectedComponents' => [],
+				'aDefaults' => [],
+				'aExpectedHTML' => <<<HTML
+
+			<div class="ibo-extension-details ibo-content-block ibo-block " data-id="itop-ext-installed">
+				<div class="ibo-extension-details--actions">
+					<input class="wiz-choice" id="itop-ext-installed" name="choice[_0]" type="checkbox" value="_0"  disabled data-disabled="disabled" checked />
+					<input type="hidden" name="choice[_0]" value="_0"/>
+				</div>
+				<div class="ibo-extension-details--information">
+					<div class="ibo-extension-details--information--label">
+						<label for="itop-ext-installed"><b>My extension</b></label>
+						
+						<span class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</span><span class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</span><span class="ibo-badge ibo-block ibo-is-orange" title="Once this extension has been installed, it should not be uninstalled." >cannot be uninstalled</span>
+					</div>
+					<div class="ibo-extension-details--information--metadata">
+						<span>v1.2.3</span><span>Local extensions folder</span>
+					</div>
+					<div class="ibo-extension-details--information--description">
+						Do something
+		
+					</div>
+				</div>
+			</div>
+		
+HTML,
+			],
+			'one mandatory extension' => [
+				'aStepOptions' => [
+					[
+						'extension_code' => 'itop-ext-not-installed',
+						'title' => 'My extension',
+						'description' => 'Do something',
+						'more_info' => '',
+						'modules' => [],
+						'mandatory' => true,
+						'source_label' => 'Local extensions folder',
+						'uninstallable' => true,
+						'missing' => false,
+						'version' => '1.2.3',
+					],
+				],
+				'aStepAlternatives' => [],
+
+				'aSelectedComponents' => [],
+				'aDefaults' => [],
+				'aExpectedHTML' => <<<HTML
+
+			<div class="ibo-extension-details ibo-content-block ibo-block " data-id="itop-ext-not-installed">
+				<div class="ibo-extension-details--actions">
+					<input class="wiz-choice" id="itop-ext-not-installed" name="choice[_0]" type="checkbox" value="_0"  disabled data-disabled="disabled" checked />
+					<input type="hidden" name="choice[_0]" value="_0"/>
+				</div>
+				<div class="ibo-extension-details--information">
+					<div class="ibo-extension-details--information--label">
+						<label for="itop-ext-not-installed"><b>My extension</b></label>
+						
+						<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span><span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>
+					</div>
+					<div class="ibo-extension-details--information--metadata">
+						<span>v1.2.3</span><span>Local extensions folder</span>
+					</div>
+					<div class="ibo-extension-details--information--description">
+						Do something
+		
+					</div>
+				</div>
+			</div>
+		
+HTML,
+			],
+			'one choice alternative' => [
+				'aStepOptions' => [],
+				'aStepAlternatives' => [
+					[
+						'extension_code' => 'itop-alt-nothing',
+						'title' => 'No Change',
+						'description' => 'Do nothing',
+						'modules' =>  [],
+					],
+				],
+
+				'aSelectedComponents' => [],
+				'aDefaults' => [],
+				'aExpectedHTML' => <<<HTML
+
+			<div class="ibo-extension-details ibo-content-block ibo-block " data-id="itop-alt-nothing">
+				<div class="ibo-extension-details--actions">
+					<input class="wiz-choice" id="itop-alt-nothing" name="choice[_0]" type="radio" value="_0"  checked />
+					
+				</div>
+				<div class="ibo-extension-details--information">
+					<div class="ibo-extension-details--information--label">
+						<label for="itop-alt-nothing"><b>No Change</b></label>
+						
+						<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span><span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>
+					</div>
+					<div class="ibo-extension-details--information--metadata">
+						
+					</div>
+					<div class="ibo-extension-details--information--description">
+						Do nothing
+		
+					</div>
+				</div>
+			</div>
+		
+HTML,
+			],
+			'two choices alternative with non-empty installed' => [
+				'aStepOptions' => [],
+				'aStepAlternatives' => [
+					[
+						'extension_code' => 'itop-alt-something',
+						'title' => 'Change',
+						'description' => 'I am something',
+						'modules' =>  [
+							'itop-alt-module',
+						],
+					],
+					[
+						'extension_code' => 'itop-alt-nothing',
+						'title' => 'No Change',
+						'description' => 'Do nothing',
+						'modules' =>  [],
+					],
+				],
+
+				'aSelectedComponents' => [],
+				'aDefaults' => [],
+				'aExpectedHTML' => <<<HTML
+
+			<div class="ibo-extension-details ibo-content-block ibo-block " data-id="itop-alt-something">
+				<div class="ibo-extension-details--actions">
+					<input class="wiz-choice" id="itop-alt-something" name="choice[_0]" type="radio" value="_0" />
+					
+				</div>
+				<div class="ibo-extension-details--information">
+					<div class="ibo-extension-details--information--label">
+						<label for="itop-alt-something"><b>Change</b></label>
+						
+						<span class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</span><span class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</span>
+					</div>
+					<div class="ibo-extension-details--information--metadata">
+						
+					</div>
+					<div class="ibo-extension-details--information--description">
+						I am something
+		
+					</div>
+				</div>
+			</div>
+		
+			<div class="ibo-extension-details ibo-content-block ibo-block " data-id="itop-alt-nothing">
+				<div class="ibo-extension-details--actions">
+					<input class="wiz-choice" id="itop-alt-nothing" name="choice[_0]" type="radio" value="_1"  checked />
+					
+				</div>
+				<div class="ibo-extension-details--information">
+					<div class="ibo-extension-details--information--label">
+						<label for="itop-alt-nothing"><b>No Change</b></label>
+						
+						<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span><span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>
+					</div>
+					<div class="ibo-extension-details--information--metadata">
+						
+					</div>
+					<div class="ibo-extension-details--information--description">
+						Do nothing
+		
+					</div>
+				</div>
+			</div>
+		
+HTML,
+			],
+			'two choices with sub options' => [
+				'aStepOptions' => [],
+				'aStepAlternatives' => [
+					[
+						'extension_code' => 'itop-alt-something',
+						'title' => 'Change',
+						'description' => 'I am something',
+						'modules' =>  [],
+						'sub_options' => [
+							'options' => [
+								[
+									'extension_code' => 'itop-ext-not-installed',
+									'title' => 'My extension',
+									'description' => 'Do something',
+									'more_info' => '',
+									'modules' => [],
+									'mandatory' => false,
+									//'source_label' => '',
+									'uninstallable' => true,
+									'missing' => false,
+									//'version' => '1.2.3',
+								],
+							],
+						],
+					],
+					[
+						'extension_code' => 'itop-alt-nothing',
+						'title' => 'No Change',
+						'description' => 'Do nothing',
+						'modules' =>  [],
+					],
+				],
+
+				'aSelectedComponents' => [],
+				'aDefaults' => [],
+				'aExpectedHTML' => <<<HTML
+
+			<div class="ibo-extension-details ibo-content-block ibo-block " data-id="itop-alt-something">
+				<div class="ibo-extension-details--actions">
+					<input class="wiz-choice" id="itop-alt-something" name="choice[_0]" type="radio" value="_0" />
+					
+				</div>
+				<div class="ibo-extension-details--information">
+					<div class="ibo-extension-details--information--label">
+						<label for="itop-alt-something"><b>Change</b></label>
+						
+						<span class="ibo-badge ibo-block checked ibo-is-green" title="This extension is part of the current installation." >installed</span><span class="ibo-badge ibo-block unchecked ibo-is-red" title="This extension will be uninstalled during the setup." >to be uninstalled</span>
+					</div>
+					<div class="ibo-extension-details--information--metadata">
+						
+					</div>
+					<div class="ibo-extension-details--information--description">
+						I am something
+		<div id="sub_choicesitop-alt-something">
+			<div class="ibo-extension-details ibo-content-block ibo-block " data-id="itop-ext-not-installed">
+				<div class="ibo-extension-details--actions">
+					<input class="wiz-choice" id="itop-ext-not-installed" name="choice[_0_0]" type="checkbox" value="_0_0" />
+					
+				</div>
+				<div class="ibo-extension-details--information">
+					<div class="ibo-extension-details--information--label">
+						<label for="itop-ext-not-installed"><b>My extension</b></label>
+						
+						<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span><span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>
+					</div>
+					<div class="ibo-extension-details--information--metadata">
+						
+					</div>
+					<div class="ibo-extension-details--information--description">
+						Do something
+		
+					</div>
+				</div>
+			</div>
+		</div>
+					</div>
+				</div>
+			</div>
+		
+			<div class="ibo-extension-details ibo-content-block ibo-block " data-id="itop-alt-nothing">
+				<div class="ibo-extension-details--actions">
+					<input class="wiz-choice" id="itop-alt-nothing" name="choice[_0]" type="radio" value="_1"  checked />
+					
+				</div>
+				<div class="ibo-extension-details--information">
+					<div class="ibo-extension-details--information--label">
+						<label for="itop-alt-nothing"><b>No Change</b></label>
+						
+						<span class="ibo-badge ibo-block checked ibo-is-cyan" title="This extension will be installed during the setup." >to be installed</span><span class="ibo-badge ibo-block unchecked ibo-is-blue-grey" title="This extension is not part of the current installation." >not installed</span>
+					</div>
+					<div class="ibo-extension-details--information--metadata">
+						
+					</div>
+					<div class="ibo-extension-details--information--description">
+						Do nothing
+		
+					</div>
+				</div>
+			</div>
+		
+HTML,
+			],
+
+		];
+	}
+
+	/**
+	 * @dataProvider ProviderDisplayOptions
+	 */
+	public function testDisplayOptions($aStepOptions, $aStepAlternatives, $aSelectedComponents, $aDefaults, $sExpectedHTML)
+	{
+		$aExtensionsOnDiskOrDb = [
+			'itop-ext-not-installed' => [
+				'installed' => false,
+			],
+			'itop-ext-installed' => [
+				'installed' => true,
+			],
+			'itop-alt-nothing' => [
+				'installed' => false,
+			],
+			'itop-alt-something' => [
+				'installed' => true,
+			],
+		];
+		$this->oStep->setExtensionMap(iTopExtensionsMapFake::createFromArray($aExtensionsOnDiskOrDb));
+		$aStepInfo = [
+			'options' => $aStepOptions,
+			'alternatives' => $aStepAlternatives,
+		];
+		$oPage = new \WebPageFake();
+
+		$this->oStep->DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults);
+
+		$this->assertEquals($sExpectedHTML, $oPage->sContent);
+	}
 }

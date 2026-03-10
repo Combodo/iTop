@@ -1,0 +1,11 @@
+/*
+ * @copyright   Copyright (C) 2010-2026 Combodo SAS
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-extension-details--margin-top: $ibo-spacing-300 !default;
+
+.ibo-extension-details + .ibo-extension-details,
+.ibo-extension-details--information--description .ibo-extension-details {
+	margin-top: $ibo-extension-details--margin-top;
+}

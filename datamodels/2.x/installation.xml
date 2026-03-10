@@ -219,7 +219,7 @@
 				<choice>
 					<extension_code>itop-problem-mgmt</extension_code>
 					<title>Problem Management</title>
-					<description>Select this option track "Problems" in iTop.</description>
+					<description>Select this option to track "Problems" in iTop.</description>
 					<modules type="array">
 						<module>itop-problem-mgmt</module>
 					</modules>
