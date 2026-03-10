@@ -231,7 +231,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:ConnectableCI' => 'Pripojiteľné zariadenie',
-	'Class:ConnectableCI+' => 'Physical CI~~',
+	'Class:ConnectableCI+' => 'Physical Device which can be connected to a network.~~',
 	'Class:ConnectableCI/ComplementaryName' => '%1$s - %2$s~~',
 	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Sieťové zariadenia',
 	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'All network devices connected to this device~~',

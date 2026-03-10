@@ -90,7 +90,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:TriggerOnAttachmentDownload'                       => 'Trigger (on object\'s attachment download)',
-	'Class:TriggerOnAttachmentDownload+'                      => 'Trigger on object\'s attachment download of [a child class of] the given class.',
+	'Class:TriggerOnAttachmentDownload+'                      => 'Trigger on object\'s attachment download of [a child class of] the given class',
 	'Class:TriggerOnAttachmentCreate'                         => 'Trigger (on object\'s attachment create)',
 	'Class:TriggerOnAttachmentCreate+'                        => 'Trigger on object\'s attachment create',
 	'Class:TriggerOnAttachmentDelete'                         => 'Trigger (on object\'s attachment delete)',
