@@ -83,6 +83,13 @@ HTML,
 			}
 		}
 
+		// Add source removed to check
+		foreach (DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions() as $sCode => $oExtension) {
+			if ($oExtension->bRemovedFromDisk) {
+				$this->aSelectedExtensionsForCheck[] = $sCode;
+			}
+		}
+
 		$this->m_sOperation = 'Main';
 
 		try {
@@ -175,6 +182,7 @@ HTML,
 			$sDisabledHtml = '';
 			if ($oExtension->bRemovedFromDisk) {
 				$sDisabledHtml = 'disabled=""';
+				$sChecked = 'checked';
 			} elseif (in_array($sCode, $this->aSelectedExtensionsForCheck)) {
 				$sChecked = 'checked';
 			}
