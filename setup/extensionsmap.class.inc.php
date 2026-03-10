@@ -104,6 +104,7 @@ class iTopExtensionsMap
 			if (array_key_exists('extension_code', $aChoiceInfo)) {
 				$oExtension = new iTopExtension();
 				$oExtension->sCode = $aChoiceInfo['extension_code'];
+				$oExtension->bCanBeUninstalled = !isset($aChoiceInfo['uninstallable']) || $aChoiceInfo['uninstallable'] === 'yes';
 				$oExtension->sLabel = $aChoiceInfo['title'];
 				$oExtension->sDescription = $aChoiceInfo['description'];
 				if (array_key_exists('modules', $aChoiceInfo)) {
