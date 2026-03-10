@@ -928,7 +928,7 @@ class Config
 			'type' => 'string',
 			'description' => 'Actions that are available as direct buttons next to the "Actions" menu',
 			// examples... not used
-			'default' => 'UI:Menu:Modify,UI:Menu:New',
+			'default' => 'UI:Menu:Modify,UI:Menu:New,UI:Menu:impacts_down,UI:Menu:impacts_up',
 			'value' => 'UI:Menu:Modify',
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
