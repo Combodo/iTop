@@ -100,24 +100,23 @@ if ($sTargetPage === false) {
 // check module white list
 // check conf param
 // force login if needed
-require_once(APPROOT.'/application/startup.inc.php');
 
-$aModuleDelegatedAuthenticationEndpoints = GetModuleDelegatedAuthenticationEndpoints($sModule);
-if (is_null($aModuleDelegatedAuthenticationEndpoints)) {
-	$bForceLoginWhenNoDelegatedAuthenticationEndpoints = MetaModel::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list');
+$aModuleDelegatedAuthenticationEndpointsList = GetModuleDelegatedAuthenticationEndpoints($sModule);
+if (is_null($aModuleDelegatedAuthenticationEndpointsList)) {
+	$bForceLoginWhenNoDelegatedAuthenticationEndpoints = utils::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list');
 	if ($bForceLoginWhenNoDelegatedAuthenticationEndpoints) {
+		require_once(APPROOT.'/application/startup.inc.php');
 		LoginWebPage::DoLoginEx();
 	}
 }
-if (is_null($aModuleDelegatedAuthenticationEndpoints) && !MetaModel::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list')) {
-	// check if user is not logged in, if not log a warning in the log file as the page is executed without login, which is not recommended for security reason
-	if (is_null(UserRights::GetUserId())) {
-		IssueLog::Warning("The page '$sPage' is executed without login. In the future, this call will be blocked, and will likely cause unwanted behavior in the module '$sModule'. \n Please define a delegated authentication endpoints for the module as described in https://www.itophub.io/wiki/page?id=latest:customization:new_extension#security.");
-	}
-}
-if (is_array($aModuleDelegatedAuthenticationEndpoints) && !in_array($sPage, $aModuleDelegatedAuthenticationEndpoints)) {
+if (is_array($aModuleDelegatedAuthenticationEndpointsList) && !in_array($sPage, $aModuleDelegatedAuthenticationEndpointsList)) {
 	// if module defined a delegated authentication endpoints but not for the current page, we consider that the page is not allowed to be executed without login
+	require_once(APPROOT.'/application/startup.inc.php');
 	LoginWebPage::DoLoginEx();
+}
+if (is_null($aModuleDelegatedAuthenticationEndpointsList) && !UserRights::IsLoggedIn()) {
+	// check if user is not logged in, if not log a warning in the log file as the page is executed without login, which is not recommended for security reason
+	IssueLog::Warning("The page '$sPage' is executed without login. In the future, this call will be blocked, and will likely cause unwanted behavior in the module '$sModule'. \n Please define a delegated authentication endpoints for the module as described in https://www.itophub.io/wiki/page?id=latest:customization:new_extension#security.");
 }
 
 require_once($sTargetPage);
@@ -125,7 +124,7 @@ require_once($sTargetPage);
 function GetModuleDelegatedAuthenticationEndpoints(string $sModuleName): ?array
 {
 	$sModuleFile =  utils::GetAbsoluteModulePath($sModuleName).'/module.'.$sModuleName.'.php';
-
+	require_once APPROOT.'setup/extensionsmap.class.inc.php';
 	$oExtensionMap = new iTopExtensionsMap();
 	$aModuleParam = $oExtensionMap->GetModuleInfo($sModuleFile)[2];
 	return $aModuleParam['delegated_authentication_endpoints'] ?? null;
