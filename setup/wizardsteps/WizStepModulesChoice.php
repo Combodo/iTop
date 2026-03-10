@@ -202,7 +202,6 @@ class WizStepModulesChoice extends WizardStep
 		$oPage->add_style("div.choice { margin: 0.5em;}");
 		$oPage->add_style("div.choice a { text-decoration:none; font-weight: bold; color: #1C94C4 }");
 		$oPage->add_style("div.description { margin-left: 2em; }");
-		$oPage->add_style(".choice-disabled { color: #999; }");
 		$oPage->add_style("input.unremovable { accent-color: orangered;}");
 
 		$sManualInstallError = SetupUtils::CheckManualInstallDirEmpty(
@@ -718,7 +717,7 @@ EOF
 		];
 	}
 
-	protected function DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults, $sParentId = '', $bAllDisabled = false)
+	public function DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults, $sParentId = '', $bAllDisabled = false)
 	{
 		$aOptions = $aStepInfo['options'] ?? [];
 		$aAlternatives = $aStepInfo['alternatives'] ?? [];
@@ -833,15 +832,14 @@ EOF
 					</div>
 					<div class="ibo-extension-details--information--description">
 						'.$sDescription.'
-						<div id="sub_choices'.$sId.'">
-				
 		');
 		$bSubOptionsDisabled = $aFlags['disabled'] && (!$aFlags['installed'] || $sInputType === 'checkbox');
 		if (isset($aChoice['sub_options'])) {
+			$oPage->add('<div id="sub_choices'.$sId.'">');
 			$this->DisplayOptions($oPage, $aChoice['sub_options'], $aSelectedComponents, $aDefaults, $sChoiceId, $bSubOptionsDisabled);
+			$oPage->add('</div>');
 		}
 		$oPage->add('
-						</div>
 					</div>
 				</div>
 			</div>

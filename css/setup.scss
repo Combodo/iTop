@@ -337,7 +337,13 @@ fieldset {
 	}
 }
 
+.ibo-extension-details--information--metadata{
+	color: $ibo-color-grey-800;
+}
 
+.choice-disabled {
+	color: $ibo-color-grey-700;
+}
 
 body {
   font-size: 1.17rem;

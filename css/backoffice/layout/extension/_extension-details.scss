@@ -3,14 +3,12 @@ $ibo-extension-details--information--metadata--delimiter: "-" !default;
 $ibo-extension-details--information--metadata--color: $ibo-color-grey-700 !default;
 $ibo-extension-details--actions--button--padding-y: 3px !default;
 $ibo-extension-details--actions--button--padding-x: $ibo-button--padding-x !default;
-$ibo-extension-details--padding-top: 5px !default;
 
 .ibo-extension-details {
 	display: inline-flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	padding-top: $ibo-extension-details--padding-top;
 	width: 100%;
 }
 
