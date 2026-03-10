@@ -32,10 +32,12 @@ class DeletionPlanService
 	}
 
 	/**
-	 * @param array $aClasses
+	 * @param array|null $aClasses
 	 *
 	 * @return array<\Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity>
 	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function GetDeletionPlanSummary(?array $aClasses): array
 	{
@@ -44,13 +46,7 @@ class DeletionPlanService
 			return $aSummary;
 		}
 
-		$oDeletionPlan = new DeletionPlan();
-		foreach ($aClasses as $sClass) {
-			$aObjects = $this->GetAllObjects($sClass);
-			foreach ($aObjects as $oObject) {
-				$oObject->CheckToDelete($oDeletionPlan);
-			}
-		}
+		$oDeletionPlan = $this->GetDeletionPlan($aClasses);
 
 		foreach ($oDeletionPlan->ListUpdates() as $sClass => $aUpdates) {
 			$oDeletionPlanSummaryEntity = new DeletionPlanSummaryEntity($sClass);
@@ -100,32 +96,8 @@ class DeletionPlanService
 	 */
 	public function ExecuteDeletionPlan(array $aClasses): array
 	{
-		$oDeletionPlan = new DeletionPlan();
-		foreach ($aClasses as $sClass) {
-			$aObjects = $this->GetAllObjects($sClass);
-			foreach ($aObjects as $oObject) {
-				$oObject->CheckToDelete($oDeletionPlan);
-			}
-		}
+		$oDeletionPlan = $this->GetDeletionPlan($aClasses);
 
-		return $this->DoDelete($oDeletionPlan);
-
-	}
-
-	/**
-	 * @param DeletionPlan $oDeletionPlan
-	 *
-	 * @return array<\Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity>
-	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 */
-	private function DoDelete(DeletionPlan $oDeletionPlan): array
-	{
 		if (count($oDeletionPlan->GetIssues()) > 0) {
 			throw new DataFeatureRemovalException("Deletion Plan cannot be executed due to issues");
 		}
@@ -172,5 +144,26 @@ class DeletionPlanService
 		}
 
 		return $aSummary;
+	}
+
+	/**
+	 * @param array $aClasses
+	 *
+	 * @return \DeletionPlan
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	public function GetDeletionPlan(array $aClasses): DeletionPlan
+	{
+		$oDeletionPlan = new DeletionPlan();
+		foreach ($aClasses as $sClass) {
+			$aObjects = $this->GetAllObjects($sClass);
+			foreach ($aObjects as $oObject) {
+				$oObject->CheckToDelete($oDeletionPlan);
+			}
+		}
+
+		return $oDeletionPlan;
 	}
 }
