@@ -95,10 +95,12 @@ class LoginWebPageTest extends ItopDataTestCase
 
 	public function testNotInDelegatedAuthenticationEndpointsListWithForceLoginConf()
 	{
+		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0770);
 		MetaModel::GetConfig()->Set('security.force_login_when_no_delegated_authentication_endpoints_list', true);
-
+		MetaModel::GetConfig()->WriteToFile();
+		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0444);
 		$sPageContent = $this->CallItopUri(
-			"pages/exec.php?exec_module=extension-with-delegated-authentication-endpoints-list&exec_page=src/Controller/FileNotInDelegatedAuthenticationEndpointsList.php",
+			"pages/exec.php?exec_module=extension-without-delegated-authentication-endpoints-list&exec_page=src/Controller/File.php",
 		);
 
 		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent, 'if itop is configured to force login when no there is no delegated authentication endpoints list, then login should be required.');
