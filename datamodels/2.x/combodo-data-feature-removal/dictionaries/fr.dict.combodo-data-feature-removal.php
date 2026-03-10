@@ -30,7 +30,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'DataFeatureRemoval:DoDeletion:SubTitle' => 'Remove all the entries from the database',
 
 	'DataFeatureRemoval:Table:Analysis:ClassName' => 'Element to remove',
-	'DataFeatureRemoval:Table:Analysis:RemovalType' => 'Type of element',
 	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Feature name',
 	'DataFeatureRemoval:Table:Analysis:Occurrence' => 'Occurrence',
 
@@ -44,7 +43,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Action:ForceUninstall' => 'Force uninstall',
 	'UI:Action:MoreInfo' => 'More information',
 
-	'DataFeatureRemoval:Table:Analysis:RemovalType:FINAL_CLASS' => 'Final class',
 	'DataFeatureRemoval:Table:Empty' => 'No data to remove',
 
 	'DataFeatureRemoval:Column:Class' => 'Class',

@@ -30,7 +30,6 @@ Dict::Add('EN US', 'English', 'English', [
 	'DataFeatureRemoval:DoDeletion:SubTitle' => 'Remove all the entries from the database',
 
 	'DataFeatureRemoval:Table:Analysis:ClassName' => 'Element to remove',
-	'DataFeatureRemoval:Table:Analysis:RemovalType' => 'Type of element',
 	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Feature name',
 	'DataFeatureRemoval:Table:Analysis:Occurrence' => 'Occurrence',
 
@@ -44,12 +43,11 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI:Action:ForceUninstall' => 'Force uninstall',
 	'UI:Action:MoreInfo' => 'More information',
 
-	'DataFeatureRemoval:Table:Analysis:RemovalType:FINAL_CLASS' => 'Final class',
 	'DataFeatureRemoval:Table:Empty' => 'No data to remove',
 
 	'DataFeatureRemoval:Column:Class' => 'Class',
-	'DataFeatureRemoval:Column:DeleteCount' => 'Delete count',
-	'DataFeatureRemoval:Column:UpdateCount' => 'Update count',
+	'DataFeatureRemoval:Column:DeleteCount' => 'Entries to delete',
+	'DataFeatureRemoval:Column:UpdateCount' => 'Entries to update',
 	'DataFeatureRemoval:Column:Issue' => 'Issue',
 
 	'DataFeatureRemoval:Column:DeletedCount' => 'Deleted entries',

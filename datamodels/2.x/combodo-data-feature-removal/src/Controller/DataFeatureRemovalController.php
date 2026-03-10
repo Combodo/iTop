@@ -11,11 +11,9 @@ require_once APPROOT.'setup/feature_removal/SetupAudit.php';
 require_once APPROOT.'setup/feature_removal/DryRemovalRuntimeEnvironment.php';
 
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
-use Combodo\iTop\AuthentToken\Helper\TokenAuthLog;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
-use Combodo\iTop\DataFeatureRemoval\Model\DataFeatureRemoverAuditRuleService;
-use Combodo\iTop\DataFeatureRemoval\Model\DataFeatureRemoverExtensionService;
+use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\DataFeatureRemoval\Service\DeletionPlanService;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
@@ -28,51 +26,38 @@ use utils;
 class DataFeatureRemovalController extends Controller
 {
 	private array $aSelectedExtensionsForCheck = [];
+	private array $aCountClassesToCleanup = [];
+	private array $aAnalysisDataTable = [];
 
 	public function OperationMain($sErrorMessage = null): void
 	{
 		$aParams = [];
 
-		$this->AddLinkedStylesheet(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/css/DataFeatureRemoval.css');
-		$this->AddLinkedScript(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/js/DataFeatureRemoval.js');
-
+		$this->AddAnalyzeParams();
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
-		$this->AddFeatureParams($aParams);
-		$this->AddAnalyzeParams($aParams);
+		$aParams['aExtensions'] = $this->GetExtensionsTable();
+		$aParams['aAnalysisDataTable'] = $this->aAnalysisDataTable;
+		$aParams['aClasses'] = array_keys($this->aCountClassesToCleanup);
 		$aParams['DataFeatureRemovalErrorMessage'] = $sErrorMessage;
 		$aParams['bHasData'] = count($aParams['aClasses']) > 0;
+
+		$this->AddLinkedStylesheet(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/css/DataFeatureRemoval.css');
+		$this->AddLinkedScript(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/js/DataFeatureRemoval.js');
 		$this->DisplayPage($aParams);
 	}
 
-	public function AddFeatureParams(array &$aParams): void
+	public function AddAnalyzeParams(): void
 	{
-		$aParams['aExtensions'] = $this->GetExtensionsTable();
-		$aParams['sModule'] = DataFeatureRemovalHelper::MODULE_NAME;
-	}
-
-	public function AddAnalyzeParams(array &$aParams): void
-	{
-		$iTotalCount = 0;
 		$aData = [];
 		$aColumns = [];
-		$aClasses = [];
-		foreach (DataFeatureRemoverAuditRuleService::GetInstance()->ReadCheckRules() as $oRule) {
-			$sContent = $oRule->Get('class_name');
-			$aClasses[] = $sContent;
-			$sModuleName = MetaModel::GetModuleName($sContent);
+		foreach ($this->aCountClassesToCleanup as $sClass => $iCount) {
+			$sModuleName = MetaModel::GetModuleName($sClass);
 			$aExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetIncludingExtensions($sModuleName);
 			$sExtensions = implode(' ', $aExtensions);
-			$sTypeName = $oRule->Get('rule_name');
-			$sTypeDesc = \Dict::S("DataFeatureRemoval:Table:Analysis:RemovalType:$sTypeName");
-			$iCount = $oRule->Get('count');
-			$iTotalCount += $iCount;
-			$aColumns = ['ClassName', 'RemovalType','FeatureName','Occurrence'];
+			$aColumns = ['ClassName','FeatureName','Occurrence'];
 			$aData[] = [
 				<<<HTML
-<label>$sContent</label>
-HTML,
-				<<<HTML
-<label>$sTypeDesc</label>
+<label>$sClass</label>
 HTML,
 				<<<HTML
 <label title="$sModuleName">$sExtensions</label>
@@ -83,9 +68,7 @@ HTML,
 			];
 		}
 
-		$aParams['aCheckRules'] =  $this->GetTableData('Analysis', $aColumns, $aData);
-		$aParams['rule_count'] = $iTotalCount;
-		$aParams['aClasses'] = $aClasses;
+		$this->aAnalysisDataTable =  $this->GetTableData('Analysis', $aColumns, $aData);
 	}
 
 	public function OperationAnalyze(): void
@@ -103,7 +86,9 @@ HTML,
 		$this->m_sOperation = 'Main';
 
 		try {
-			$this->Analyze();
+			if (count($this->aSelectedExtensionsForCheck) > 0) {
+				$this->Analyze();
+			}
 			$this->OperationMain();
 		} catch (Exception $e) {
 			IssueLog::Error(__METHOD__, null, ['stack' => $e->getTraceAsString(), 'exception' => $e->getMessage()]);
@@ -111,88 +96,17 @@ HTML,
 		}
 	}
 
-	private function GetExtensionsTable(): array
-	{
-		$aExtensions = [];
-		$aColumns = ['', 'Version', 'Name', 'Code'];
-		$this->aSelectedExtensionsForCheck = DataFeatureRemoverExtensionService::GetInstance()->ReadAuditedExtensions();
-
-		foreach (DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions() as $sCode => $oExtension) {
-			/** @var \iTopExtension $oExtension */
-
-			$sChecked = "checked";
-			$sDisabledHtml = '';
-			if ($oExtension->bRemovedFromDisk) {
-				$sDisabledHtml = 'disabled=""';
-			} elseif (! array_key_exists($sCode, $this->aSelectedExtensionsForCheck)) {
-				$sChecked = "";
-			}
-
-			$sLabel = $oExtension->sLabel;
-			$sVersion = $oExtension->sVersion;
-			$sIdEnable = "aExtensions[$sCode][enable]";
-
-			$aExtensions[] = [
-				<<<HTML
-<input type="checkbox" $sDisabledHtml class="extension_check" $sChecked id="$sIdEnable" name="$sIdEnable"/>
-HTML,
-				<<<HTML
-<label>$sVersion</label>
-HTML,
-				<<<HTML
-<label for="$sIdEnable">$sLabel</label>
-HTML,
-				<<<HTML
-<label for="$sIdEnable">$sCode</label>
-HTML,
-			];
-		}
-
-		return $this->GetTableData('Extensions', $aColumns, $aExtensions);
-
-	}
-
-	public function GetTableData(string $sTableName, array $aColumns, array $aData): array
-	{
-		if (empty($aData)) {
-			return [
-				'Type' => 'Table',
-				'Columns' => [['label' => '']],
-				'Data' => [[ Dict::S('DataFeatureRemoval:Table:Empty')]],
-			];
-		}
-
-		$aNewColumns = [];
-		foreach ($aColumns as $sColumn) {
-			$aNewColumns[] = ['label' => Dict::S("DataFeatureRemoval:Table:$sTableName:$sColumn", Dict::S("DataFeatureRemoval:Column:$sColumn", $sColumn))];
-		}
-		$aColumns = $aNewColumns;
-
-		return [
-			'Type' => 'Table',
-			'Columns' => $aColumns,
-			'Data' => $aData,
-		];
-	}
-
 	private function Analyze(): void
 	{
-		DataFeatureRemoverExtensionService::GetInstance()->SaveExtensions($this->aSelectedExtensionsForCheck);
-
-		$sSourceEnvt = \MetaModel::GetEnvironment();
+		$sSourceEnv = MetaModel::GetEnvironment();
 		$oDryRemovalRuntimeEnvironment = new DryRemovalRuntimeEnvironment();
-		$oDryRemovalRuntimeEnvironment->Prepare($sSourceEnvt, $this->aSelectedExtensionsForCheck);
-		$oDryRemovalRuntimeEnvironment->CompileFrom($sSourceEnvt);
+		$oDryRemovalRuntimeEnvironment->Prepare($sSourceEnv, $this->aSelectedExtensionsForCheck);
+		$oDryRemovalRuntimeEnvironment->CompileFrom($sSourceEnv);
 
-		$oSetupAudit = new SetupAudit($sSourceEnvt, DryRemovalRuntimeEnvironment::DRY_REMOVAL_AUDIT_ENV);
-		$this->Save($oSetupAudit->GetIssues());
-	}
-
-	private function Save(array $aGetRemovedClasses): void
-	{
+		$oSetupAudit = new SetupAudit($sSourceEnv, DryRemovalRuntimeEnvironment::DRY_REMOVAL_AUDIT_ENV);
+		$aGetRemovedClasses = $oSetupAudit->GetIssues();
 		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
-
-		DataFeatureRemoverAuditRuleService::GetInstance()->SaveChecks($aGetRemovedClasses);
+		$this->aCountClassesToCleanup = $aGetRemovedClasses;
 	}
 
 	public function OperationDeletionPlan(): void
@@ -245,10 +159,77 @@ HTML,
 	}
 
 	/**
+	 * Get installed extensions from disk
+	 *
+	 * @return array structure for twig datatable
+	 */
+	private function GetExtensionsTable(): array
+	{
+		$aExtensions = [];
+		$aColumns = ['', 'Version', 'Name', 'Code'];
+
+		foreach (DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions() as $sCode => $oExtension) {
+			/** @var \iTopExtension $oExtension */
+
+			$sChecked = '';
+			$sDisabledHtml = '';
+			if ($oExtension->bRemovedFromDisk) {
+				$sDisabledHtml = 'disabled=""';
+			} elseif (in_array($sCode, $this->aSelectedExtensionsForCheck)) {
+				$sChecked = 'checked';
+			}
+
+			$sLabel = $oExtension->sLabel;
+			$sVersion = $oExtension->sVersion;
+			$sIdEnable = "aExtensions[$sCode][enable]";
+
+			$aExtensions[] = [
+				<<<HTML
+<input type="checkbox" $sDisabledHtml class="extension_check" $sChecked id="$sIdEnable" name="$sIdEnable"/>
+HTML,
+				<<<HTML
+<label>$sVersion</label>
+HTML,
+				<<<HTML
+<label for="$sIdEnable">$sLabel</label>
+HTML,
+				<<<HTML
+<label for="$sIdEnable">$sCode</label>
+HTML,
+			];
+		}
+
+		return $this->GetTableData('Extensions', $aColumns, $aExtensions);
+	}
+
+	private function GetTableData(string $sTableName, array $aColumns, array $aData): array
+	{
+		if (empty($aData)) {
+			return [
+				'Type' => 'Table',
+				'Columns' => [['label' => '']],
+				'Data' => [[ Dict::S('DataFeatureRemoval:Table:Empty')]],
+			];
+		}
+
+		$aNewColumns = [];
+		foreach ($aColumns as $sColumn) {
+			$aNewColumns[] = ['label' => Dict::S("DataFeatureRemoval:Table:$sTableName:$sColumn", Dict::S("DataFeatureRemoval:Column:$sColumn", $sColumn))];
+		}
+		$aColumns = $aNewColumns;
+
+		return [
+			'Type' => 'Table',
+			'Columns' => $aColumns,
+			'Data' => $aData,
+		];
+	}
+
+	/**
 	 * @return void
 	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
 	 */
-	public function ValidateTransactionId(): void
+	private function ValidateTransactionId(): void
 	{
 		if (empty($_POST)) {
 			return;

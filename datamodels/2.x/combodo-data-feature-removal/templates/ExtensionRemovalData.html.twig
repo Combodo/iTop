@@ -3,7 +3,7 @@
 
 {% if bHasData %}
     {% UIPanel Neutral { sTitle:'DataFeatureRemoval:Analysis:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:Analysis:SubTitle'|dict_format(rule_count) } %}
-        {% UIDataTable ForForm { sRef:'aCheckRules', aColumns:aCheckRules.Columns, aData:aCheckRules.Data} %}{% EndUIDataTable %}
+        {% UIDataTable ForForm { sRef:'aAnalysisDataTable', aColumns:aAnalysisDataTable.Columns, aData:aAnalysisDataTable.Data} %}{% EndUIDataTable %}
     {% EndUIPanel %}
 
     {% UIForm Standard {} %}
