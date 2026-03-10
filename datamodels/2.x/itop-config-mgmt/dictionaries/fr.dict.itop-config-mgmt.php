@@ -339,7 +339,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Server' => 'Serveur',
-	'Class:Server+' => 'Matériel connecté et rackable qui fournit des ressources de calcul, de stockage ou de connectivité. Il tourne sous une Version d\'OS et héberge des Applications Logicielles.',
+	'Class:Server+' => 'Matériel de Datacenter qui fournit des ressources de calcul, de stockage ou de connectivité. Il tourne sous une Version d\'OS et héberge des Applications Logicielles.',
 	'Class:Server/ComplementaryName' => '%1$s - %2$s',
 	'Class:Server/Attribute:osfamily_id' => 'Famille OS',
 	'Class:Server/Attribute:osfamily_id+' => '',
@@ -385,7 +385,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SANSwitch' => 'Switch SAN',
-	'Class:SANSwitch+' => 'Matériel connecté et rackable. C\'est un switch utilisé par les réseaux de stockage (Storage Area Network). Il support le protocole Fibre Channel.',
+	'Class:SANSwitch+' => 'Matériel de Datacenter. C\'est un switch utilisé par les réseaux de stockage (Storage Area Network). Il support le protocole Fibre Channel.',
 	'Class:SANSwitch/ComplementaryName' => '%1$s - %2$s',
 	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Matériels connectés',
 	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Tous les matériels connectés à ce switch SAN',
@@ -433,7 +433,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PC' => 'PC',
-	'Class:PC+' => 'CI connectable. Un ordinateur personnel (PC) est un matériel physique, de bureau ou portable, tournant avec une version d\'OS et conçu pour exécuter des instances logicielles.',
+	'Class:PC+' => 'Elément de configuration (CI), un ordinateur personnel (PC) est un matériel physique, de bureau ou portable, tournant avec une version d\'OS et conçu pour exécuter des instances logicielles.',
 	'Class:PC/ComplementaryName' => '%1$s - %2$s',
 	'Class:PC/Attribute:osfamily_id' => 'Famille OS',
 	'Class:PC/Attribute:osfamily_id+' => '',
@@ -461,7 +461,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Printer' => 'Imprimante',
-	'Class:Printer+' => 'Connectable CI. Physical Device connected either to the network or to a PC.',
+	'Class:Printer+' => 'Elément de configuration (CI) connectable. Matériel physique connecté au réseau ou à un PC.',
 	'Class:Printer/ComplementaryName' => '%1$s - %2$s',
 ]);
 
@@ -722,7 +722,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:WebApplication' => 'Application Web',
-	'Class:WebApplication+' => 'Instance d’une application accessible via un navigateur web et s’exécutant sur un serveur web donné.',
+	'Class:WebApplication+' => 'Instance d’une application accessible via un navigateur web et s’exécutant sur un serveur web donné. Par exemple cet iTop.',
 	'Class:WebApplication/ComplementaryName' => '%1$s - %2$s',
 	'Class:WebApplication/Attribute:webserver_id' => 'Serveur Web',
 	'Class:WebApplication/Attribute:webserver_id+' => '',
@@ -1054,7 +1054,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSPatch' => 'Patch OS',
-	'Class:OSPatch+' => 'Patch, hotfix, correctif de sécurité ou service pack pour un système d\'exploitation donné.',
+	'Class:OSPatch+' => 'Patch, hotfix, correctif de sécurité ou pack de services pour un système d\'exploitation donné.',
 	'Class:OSPatch/Attribute:functionalcis_list' => 'Systèmes',
 	'Class:OSPatch/Attribute:functionalcis_list+' => 'Tous les systèmes où ce patch est installé',
 	'Class:OSPatch/Attribute:osversion_id' => 'Version OS',
@@ -1069,7 +1069,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SoftwarePatch' => 'Patch logiciel',
-	'Class:SoftwarePatch+' => 'Patch, hotfix, correctif de sécurité ou service pack pour un logiciel donné.',
+	'Class:SoftwarePatch+' => 'Patch, hotfix, correctif de sécurité ou pack de services pour un logiciel donné.',
 	'Class:SoftwarePatch/Attribute:software_id' => 'Logiciel',
 	'Class:SoftwarePatch/Attribute:software_id+' => '',
 	'Class:SoftwarePatch/Attribute:software_name' => 'Nom logiciel',

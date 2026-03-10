@@ -123,7 +123,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Person' => 'Personne',
-	'Class:Person+' => 'Type de contact utilisé pour décrire des personnes physiques. Les personnes peuvent être regroupées en équipes. Elles peuvent être liées à d\'autres éléments de configuration (p. ex. pour décrire qui contacter en cas d\'incident sur une application).
+	'Class:Person+' => 'Type de contact utilisé pour décrire des personnes physiques. Les personnes peuvent être regroupées en équipes. Elles peuvent être liées à d\'autres éléments de configuration (par ex. pour décrire qui contacter en cas d\'incident sur une application).
 Autre usage : l\'appelant d\'une demande utilisateur est une personne, tout comme l\'agent assigné pour la résoudre.',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Nom',

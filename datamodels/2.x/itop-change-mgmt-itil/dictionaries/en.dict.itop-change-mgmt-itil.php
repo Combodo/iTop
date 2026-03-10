@@ -233,7 +233,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:NormalChange' => 'Normal Change',
-	'Class:NormalChange+' => '',
+	'Class:NormalChange+' => 'Type of Change',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Acceptance date',
 	'Class:NormalChange/Attribute:acceptance_date+' => '',
 	'Class:NormalChange/Attribute:acceptance_comment' => 'Acceptance comment',

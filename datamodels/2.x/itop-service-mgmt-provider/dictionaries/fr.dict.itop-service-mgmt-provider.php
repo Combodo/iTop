@@ -318,7 +318,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ServiceSubcategory' => 'Sous catégorie de service',
-	'Class:ServiceSubcategory+' => 'Dernier niveau dans la hiérarchie des Services. Chaque Demande utilisateur se réfère à une Sous catégorie de service.',
+	'Class:ServiceSubcategory+' => 'Dernier niveau dans la hiérarchie des Services. Chaque Demande utilisateur se réfère à une Sous-catégorie de service.',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Nom',
 	'Class:ServiceSubcategory/Attribute:name+' => '',

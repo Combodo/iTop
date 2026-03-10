@@ -122,7 +122,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:WorkOrder' => 'Work Order',
-	'Class:WorkOrder+' => 'A task necessary for the resolution of a Ticket, assigned to a Team or even an agent.',
+	'Class:WorkOrder+' => 'A task required for the resolution of a Ticket, assigned to a Team or even an agent.',
 	'Class:WorkOrder/Attribute:name' => 'Name',
 	'Class:WorkOrder/Attribute:name+' => '',
 	'Class:WorkOrder/Attribute:status' => 'Status',
