@@ -116,7 +116,7 @@ if (is_array($aModuleDelegatedAuthenticationEndpointsList) && !in_array($sPage, 
 }
 if (is_null($aModuleDelegatedAuthenticationEndpointsList) && !UserRights::IsLoggedIn()) {
 	// check if user is not logged in, if not log a warning in the log file as the page is executed without login, which is not recommended for security reason
-	IssueLog::Warning("The page '$sPage' is executed without login. In the future, this call will be blocked, and will likely cause unwanted behavior in the module '$sModule'. \n Please define a delegated authentication endpoints for the module as described in https://www.itophub.io/wiki/page?id=latest:customization:new_extension#security.");
+	IssueLog::Warning("The '$sPage' page is executed without logging in. This call will be blocked in the future and will likely cause unwanted behaviour in the '$sModule' module. Please define a delegated authentication endpoint for the module, as described at https://www.itophub.io/wiki/page?id=latest:customization:new_extension#security.");
 }
 
 require_once($sTargetPage);
