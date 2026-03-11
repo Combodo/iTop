@@ -127,8 +127,12 @@ HTML
 				<<<EOF
 	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').before('<td style="text-align:center;"><button class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="next"><span class="ibo-button--label">Ignore and continue</span></button></td>');
 	
-	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').after('<td style="text-align:center;"><button id="goto-data-feature-removal" class="default ibo-button ibo-is-regular ibo-is-primary" type="button"><span class="ibo-button--label">Go to backoffice</span></button></td>');
-	$('#goto-data-feature-removal').on("click", function() { $('#data-feature-removal').submit();})
+	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').after('<td style="text-align:center;"><span id="submit-wait" class="ibo-spinner ibo-is-inline ibo-is-hidden ibo-spinner ibo-block" data-role="ibo-spinner"><i class="ibo-spinner--icon fas fa-sync-alt fa-spin" aria-hidden="true"></i></span>&nbsp;<button id="goto-data-feature-removal" class="default ibo-button ibo-is-regular ibo-is-primary" type="button"><span class="ibo-button--label">Go to backoffice</span></button></td>');
+	$('#goto-data-feature-removal').on("click", function() {
+		$('#goto-data-feature-removal').prop('disabled', true);
+		$('#submit-wait').removeClass("ibo-is-hidden");
+		$('#data-feature-removal').submit();
+	})
 	
 	$("#wiz_form").data("installation_status", "cleanup_needed");
 	$('#btn_next').hide();
