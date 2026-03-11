@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Combodo\iTop\Test\UnitTest\Application;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Config;
 use Exception;
 use MetaModel;
 
@@ -17,6 +18,9 @@ class LoginWebPageTest extends ItopDataTestCase
 	public function setUp(): void
 	{
 		parent::setUp();
+		$sConfigPath = MetaModel::GetConfig()->GetLoadedFile();
+		$this->oConfig = new Config($sConfigPath);
+
 		$this->BackupConfiguration();
 		$sFolderPath = APPROOT.'env-production/extension-with-delegated-authentication-endpoints-list';
 		if (file_exists($sFolderPath)) {
@@ -51,10 +55,10 @@ class LoginWebPageTest extends ItopDataTestCase
 
 	protected function GivenConfigFileAllowedLoginTypes($aAllowedLoginTypes): void
 	{
-		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0770);
-		MetaModel::GetConfig()->SetAllowedLoginTypes($aAllowedLoginTypes);
-		MetaModel::GetConfig()->WriteToFile();
-		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0444);
+		@chmod($this->oConfig->GetLoadedFile(), 0770);
+		$this->oConfig->SetAllowedLoginTypes($aAllowedLoginTypes);
+		$this->oConfig->WriteToFile($this->oConfig->GetLoadedFile());
+		@chmod($this->oConfig->GetLoadedFile(), 0444);
 	}
 
 	/**
@@ -95,10 +99,10 @@ class LoginWebPageTest extends ItopDataTestCase
 
 	public function testWithoutDelegatedAuthenticationEndpointsListWithForceLoginConf()
 	{
-		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0770);
-		MetaModel::GetConfig()->Set('security.force_login_when_no_delegated_authentication_endpoints_list', true);
-		MetaModel::GetConfig()->WriteToFile();
-		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0444);
+		@chmod($this->oConfig->GetLoadedFile(), 0770);
+		$this->oConfig->Set('security.force_login_when_no_delegated_authentication_endpoints_list', true);
+		$this->oConfig->WriteToFile();
+		@chmod($this->oConfig->GetLoadedFile(), 0444);
 		$sPageContent = $this->CallItopUri(
 			"pages/exec.php?exec_module=extension-without-delegated-authentication-endpoints-list&exec_page=src/Controller/File.php",
 		);
