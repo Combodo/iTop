@@ -325,7 +325,7 @@ class InlineImage extends DBObject
 					$sImage = preg_replace('/src=["\'][^"\']+["\']/', 'src="'.$sDataUri.'"', $matches[0]);
 
 					// Remove sensitive information (the image ID and secret) from the tag
-					$sImage = preg_replace('/data-img-id="\d+"\s+data-img-secret="\w+"/', '', $sImage);
+					$sImage = preg_replace('/'.static::DOM_ATTR_ID.'="\d+"\s+'.static::DOM_ATTR_SECRET.'="\w+"/', '', $sImage);
 				} catch (Exception $e) {
 					$sImage = '<img src="" alt="'.Dict::S('UI:MissingInlineImage').'">';
 				}
