@@ -1528,6 +1528,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'ConfigMgnt:moreinfo' => 'CI specifics~~',
 	'Storage:moreinfo' => 'Storage specifics~~',
 	'ConfigMgnt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Información General',
 	'Server:Date' => 'Fecha',
 	'Server:moreinfo' => 'Más Información',

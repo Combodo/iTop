@@ -1530,6 +1530,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'ConfigMgnt:moreinfo' => 'CI specifics~~',
 	'Storage:moreinfo' => 'Storage specifics~~',
 	'ConfigMgnt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Általános információ',
 	'Server:Date' => 'Dátumok',
 	'Server:moreinfo' => 'További információ',

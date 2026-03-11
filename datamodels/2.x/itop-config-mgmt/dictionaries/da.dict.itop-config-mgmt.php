@@ -1531,6 +1531,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'ConfigMgnt:moreinfo' => 'CI specifics~~',
 	'Storage:moreinfo' => 'Storage specifics~~',
 	'ConfigMgnt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Almindelig Informationen',
 	'Server:Date' => 'Dato',
 	'Server:moreinfo' => 'Yderligere Information',

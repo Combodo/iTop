@@ -1725,6 +1725,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'ConfigMgnt:moreinfo' => 'Item spécifique',
 	'Server:moreinfo' => 'Matériel spécifique',
 	'Storage:moreinfo' => 'Stockage spécifique',
+	'Software:moreinfo' => 'Logiciel spécifique',
+	'Phone:moreinfo' => 'Téléphone spécifique',
 	'ConfigMgnt:otherinfo' => 'Dates et description',
 	'Server:Date' => 'Dates',
 	'Server:otherinfo' => 'Description',

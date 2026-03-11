@@ -1530,6 +1530,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'ConfigMgnt:moreinfo' => 'CI specifics~~',
 	'Storage:moreinfo' => 'Storage specifics~~',
 	'ConfigMgnt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Všeobecné informácie',
 	'Server:Date' => 'Dátum',
 	'Server:moreinfo' => 'Viac informácií',

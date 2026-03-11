@@ -1532,6 +1532,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'ConfigMgnt:moreinfo' => 'CI specifics~~',
 	'Storage:moreinfo' => 'Storage specifics~~',
 	'ConfigMgnt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Globale informatie',
 	'Server:Date' => 'Datum',
 	'Server:moreinfo' => 'Meer informatie',

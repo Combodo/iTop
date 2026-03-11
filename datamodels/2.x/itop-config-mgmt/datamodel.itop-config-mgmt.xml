@@ -2253,7 +2253,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:Software:moreinfo">
                   <items>
                     <item id="system_id">
                       <rank>50</rank>
@@ -2275,16 +2275,21 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:Server:Date">
                   <items>
                     <item id="move2production">
-              <rank>90</rank>
+                      <rank>90</rank>
                     </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <items>
                     <item id="description">
                       <rank>100</rank>
                     </item>
                   </items>
-                  <rank>10</rank>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -2432,7 +2437,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:Software:moreinfo">
                   <items>
                     <item id="system_id">
                       <rank>50</rank>
@@ -2454,16 +2459,21 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:Server:Date">
                   <items>
                     <item id="move2production">
-              <rank>90</rank>
+                      <rank>90</rank>
                     </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <items>
                     <item id="description">
                       <rank>100</rank>
                     </item>
                   </items>
-                  <rank>10</rank>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -2611,7 +2621,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:Software:moreinfo">
                   <items>
                     <item id="system_id">
                       <rank>50</rank>
@@ -2633,16 +2643,21 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:Server:Date">
                   <items>
                     <item id="move2production">
-              <rank>90</rank>
+                      <rank>90</rank>
                     </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <items>
                     <item id="description">
                       <rank>100</rank>
                     </item>
                   </items>
-                  <rank>10</rank>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -2782,7 +2797,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:Software:moreinfo">
                   <items>
                     <item id="system_id">
                       <rank>50</rank>
@@ -2804,16 +2819,21 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:Server:Date">
                   <items>
                     <item id="move2production">
-              <rank>90</rank>
+                      <rank>90</rank>
                     </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <items>
                     <item id="description">
                       <rank>100</rank>
                     </item>
                   </items>
-                  <rank>10</rank>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>
@@ -2940,7 +2960,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:Software:moreinfo">
                   <items>
                     <item id="system_id">
                       <rank>50</rank>
@@ -2962,16 +2982,21 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:Server:Date">
                   <items>
                     <item id="move2production">
-              <rank>90</rank>
+                      <rank>90</rank>
                     </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <items>
                     <item id="description">
                       <rank>100</rank>
                     </item>
                   </items>
-                  <rank>10</rank>
+                  <rank>20</rank>
                 </item>
               </items>
               <rank>20</rank>

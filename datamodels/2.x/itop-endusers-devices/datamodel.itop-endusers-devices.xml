@@ -216,7 +216,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:moreinfo">
+                <item id="fieldset:Phone:moreinfo">
                   <rank>20</rank>
                   <items>
                     <item id="brand_id">
@@ -427,7 +427,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:moreinfo">
+                <item id="fieldset:Phone:moreinfo">
                   <rank>20</rank>
                   <items>
                     <item id="brand_id">
@@ -636,7 +636,7 @@
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Server:moreinfo">
+                <item id="fieldset:Phone:moreinfo">
                   <rank>20</rank>
                   <items>
                     <item id="brand_id">

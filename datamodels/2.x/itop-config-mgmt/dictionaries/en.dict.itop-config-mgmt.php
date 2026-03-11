@@ -1572,6 +1572,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'ConfigMgnt:moreinfo' => 'CI specifics',
 	'ConfigMgnt:otherinfo' => 'Dates and description',
 	'Storage:moreinfo' => 'Storage specifics',
+	'Software:moreinfo' => 'Software specifics',
+	'Phone:moreinfo' => 'Phone specifics',
 	'Server:baseinfo' => 'General',
 	'Server:moreinfo' => 'Device specifics',
 	'Server:Date' => 'Dates',

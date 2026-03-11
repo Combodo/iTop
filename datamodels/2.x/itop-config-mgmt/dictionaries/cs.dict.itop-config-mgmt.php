@@ -1532,6 +1532,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'ConfigMgnt:moreinfo' => 'CI specifics~~',
 	'Storage:moreinfo' => 'Storage specifics~~',
 	'ConfigMgnt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Obecné informace',
 	'Server:Date' => 'Data',
 	'Server:moreinfo' => 'Více informací',
