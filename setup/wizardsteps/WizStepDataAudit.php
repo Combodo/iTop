@@ -17,6 +17,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
 use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'setup/sequencers/DataAuditSequencer.php');
@@ -51,7 +52,6 @@ class WizStepDataAudit extends WizStepInstall
 		} else {
 			return false;
 		}
-
 	}
 
 	public function UpdateWizardStateAndGetNextStep($bMoveForward = true): WizardState
@@ -76,8 +76,6 @@ class WizStepDataAudit extends WizStepInstall
 
 		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
 		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
-		$sApplicationUrl = $this->oWizard->GetParameter('application_url').'pages/exec.php?exec_module=combodo-data-feature-removal&exec_page=index.php';
-		$oPage->add('<input type="hidden" id="application_url" value="'.$sApplicationUrl.'"/>');
 		if (!$this->CheckDependencies()) {
 			$oPage->error($this->sDependencyIssue);
 			$oPage->add_ready_script(<<<JS
@@ -90,7 +88,35 @@ JS);
 	ExecuteStep("");
 JS);
 		}
+	}
 
+	/**
+	 * Add extra form to go to the feature removal backend page
+	 * @param \SetupPage $oPage
+	 *
+	 * @return void
+	 */
+	public function PostFormDisplay(SetupPage $oPage)
+	{
+		$sApplicationUrl = utils::GetAbsoluteUrlModulePage('combodo-data-feature-removal', 'index.php');
+
+		$aRemovedExtensions = json_decode($this->oWizard->GetParameter('removed_extensions', "[]"), true);
+		$aHiddenRemovedExtensionInputs = "";
+		$i = 0;
+		foreach ($aRemovedExtensions as $sExtCode => $sExtLabel) {
+			$aHiddenRemovedExtensionInputs .= <<<INPUT
+	<input type="hidden" name="aExtensions[$sExtCode][enable]" value="on"/>
+INPUT;
+		}
+
+		$oPage->add(
+			<<<HTML
+<form id="data-feature-removal" class="ibo-setup--wizard ibo-is-hidden" method="post" action="$sApplicationUrl">
+	<input type="hidden" name="operation" value="Analyze"/>
+	$aHiddenRemovedExtensionInputs
+</form>
+HTML
+		);
 	}
 
 	protected function AddProgressErrorScript($oPage, $aRes)
@@ -101,8 +127,9 @@ JS);
 				<<<EOF
 	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').before('<td style="text-align:center;"><button class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="next"><span class="ibo-button--label">Ignore and continue</span></button></td>');
 	
-	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').after('<td style="text-align:center;"><a href="'+$('#application_url').val()+'"><button class="default ibo-button ibo-is-regular ibo-is-primary" type="button"><span class="ibo-button--label">Go to backoffice</span></button></a></td>');
-
+	$('.ibo-setup--wizard--buttons-container tr td:nth-child(2)').after('<td style="text-align:center;"><button id="goto-data-feature-removal" class="default ibo-button ibo-is-regular ibo-is-primary" type="button"><span class="ibo-button--label">Go to backoffice</span></button></td>');
+	$('#goto-data-feature-removal').on("click", function() { $('#data-feature-removal').submit();})
+	
 	$("#wiz_form").data("installation_status", "cleanup_needed");
 	$('#btn_next').hide();
 EOF

@@ -33,6 +33,7 @@ class DataFeatureRemovalController extends Controller
 	{
 		$aParams = [];
 
+		$this->ReadRemovedExtensions();
 		$this->AddAnalyzeParams();
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['aExtensions'] = $this->GetExtensionsTable();
@@ -40,6 +41,7 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aClasses'] = array_keys($this->aCountClassesToCleanup);
 		$aParams['DataFeatureRemovalErrorMessage'] = $sErrorMessage;
 		$aParams['bHasData'] = count($aParams['aClasses']) > 0;
+		$aParams['sSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup';
 
 		$this->AddLinkedStylesheet(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/css/DataFeatureRemoval.css');
 		$this->AddLinkedScript(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/js/DataFeatureRemoval.js');
@@ -73,22 +75,7 @@ HTML,
 
 	public function OperationAnalyze(): void
 	{
-		$this->ValidateTransactionId();
-		$aSelectedExtensionsFromUI = utils::ReadPostedParam('aExtensions', []);
-		$this->aSelectedExtensionsForCheck = [];
-		foreach ($aSelectedExtensionsFromUI as $sCode => $aData) {
-			$sValue = $aData['enable'] ?? 'off';
-			if (($sValue) === 'on') {
-				$this->aSelectedExtensionsForCheck[] = $sCode;
-			}
-		}
-
-		// Add source removed to check
-		foreach (DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions() as $sCode => $oExtension) {
-			if ($oExtension->bRemovedFromDisk) {
-				$this->aSelectedExtensionsForCheck[] = $sCode;
-			}
-		}
+		$this->ReadRemovedExtensions();
 
 		$this->m_sOperation = 'Main';
 
@@ -247,6 +234,32 @@ HTML,
 		IssueLog::Debug(__FUNCTION__.": Transaction [$sTransactionId]");
 		if (empty($sTransactionId) || !utils::IsTransactionValid($sTransactionId, false)) {
 			throw new DataFeatureRemovalException(Dict::S("iTopUpdate:Error:InvalidToken"));
+		}
+	}
+
+	/**
+	 * @return void
+	 */
+	public function ReadRemovedExtensions(): void
+	{
+		if (count($this->aSelectedExtensionsForCheck) > 0) {
+			return;
+		}
+
+		$aSelectedExtensionsFromUI = utils::ReadPostedParam('aExtensions', []);
+		IssueLog::Error(__METHOD__, null, $aSelectedExtensionsFromUI);
+		foreach ($aSelectedExtensionsFromUI as $sCode => $aData) {
+			$sValue = $aData['enable'] ?? 'off';
+			if (($sValue) === 'on') {
+				$this->aSelectedExtensionsForCheck[] = $sCode;
+			}
+		}
+
+		// Add source removed to check
+		foreach (DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions() as $sCode => $oExtension) {
+			if ($oExtension->bRemovedFromDisk) {
+				$this->aSelectedExtensionsForCheck[] = $sCode;
+			}
 		}
 	}
 }

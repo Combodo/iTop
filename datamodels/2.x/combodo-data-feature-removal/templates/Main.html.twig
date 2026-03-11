@@ -24,4 +24,12 @@
 
     {% include 'Features.html.twig' %}
     {% include 'ExtensionRemovalData.html.twig' %}
+
+    {% if not bHasData %}
+        {% UIToolbar ForButton {} %}
+            <a href="{{ sSetupUrl }}">
+            {% UIButton ForPrimaryAction {sLabel:'UI:Button:Setup'|dict_s, sName:'btn_setup', sId:'btn_setup', bIsSubmit:false} %}
+            </a>
+        {% EndUIToolbar %}
+    {% endif %}
 {% EndUIPanel %}

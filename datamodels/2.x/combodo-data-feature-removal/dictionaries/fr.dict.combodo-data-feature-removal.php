@@ -39,6 +39,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Button:PlanDeletion' => 'Prepare deletion plan',
 	'UI:Button:DoDeletion' => 'Delete data',
 	'UI:Button:BackToMain' => 'Back to Feature Removal',
+	'UI:Button:Setup' => 'Back to setup',
 
 	'UI:Action:ForceUninstall' => 'Force uninstall',
 	'UI:Action:MoreInfo' => 'More information',
@@ -46,8 +47,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'DataFeatureRemoval:Table:Empty' => 'No data to remove',
 
 	'DataFeatureRemoval:Column:Class' => 'Class',
-	'DataFeatureRemoval:Column:DeleteCount' => 'Delete count',
-	'DataFeatureRemoval:Column:UpdateCount' => 'Update count',
+	'DataFeatureRemoval:Column:DeleteCount' => 'Entries to delete',
+	'DataFeatureRemoval:Column:UpdateCount' => 'Entries to update',
 	'DataFeatureRemoval:Column:Issue' => 'Issue',
 
 	'DataFeatureRemoval:Column:DeletedCount' => 'Deleted entries',

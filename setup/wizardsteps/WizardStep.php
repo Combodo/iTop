@@ -66,6 +66,16 @@ abstract class WizardStep
 	protected $bDependencyCheck = null;
 	protected $sDependencyIssue = null;
 
+	/**
+	 * Add post display stuff to the setup screen
+	 * @param \SetupPage $oPage
+	 *
+	 * @return void
+	 */
+	public function PostFormDisplay(SetupPage $oPage)
+	{
+	}
+
 	protected function CheckDependencies()
 	{
 		if (is_null($this->bDependencyCheck)) {
