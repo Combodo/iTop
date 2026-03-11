@@ -87,7 +87,7 @@ if (is_link($sPageEnvFullPath)) {
 }
 $sTargetPage = CheckPageExists($sPageEnvFullPath, $aPossibleBasePaths);
 
-if ($sTargetPage === false) {
+if ($sTargetPage === false || $sModule === 'core' || $sModule === 'dictionaries') {
 	// Do not recall the page parameters (security takes precedence)
 	echo "Wrong module, page name or environment...";
 	exit;
