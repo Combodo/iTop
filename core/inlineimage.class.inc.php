@@ -308,7 +308,7 @@ class InlineImage extends DBObject
 	public static function ReplaceInlineImagesWithBase64Representation(string $sHtml): String
 	{
 		return preg_replace_callback(
-			'/<img\s+[^>]*data-img-id="(\d+)"[^>]*>/i',
+			'/<img\s+[^>]*'.static::DOM_ATTR_ID.'="(\d+)"[^>]*>/i',
 			function ($matches) {
 
 				// Extract inline image ID from the tag
