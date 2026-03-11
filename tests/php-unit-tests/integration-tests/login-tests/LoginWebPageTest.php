@@ -93,7 +93,7 @@ class LoginWebPageTest extends ItopDataTestCase
 		$this->assertStringContainsString('Yo', $sPageContent, 'Logged in user should access any file via exec.php even if the page isn\'t listed in delegated authentication endpoints list');
 	}
 
-	public function testNotInDelegatedAuthenticationEndpointsListWithForceLoginConf()
+	public function testWithoutDelegatedAuthenticationEndpointsListWithForceLoginConf()
 	{
 		@chmod(MetaModel::GetConfig()->GetLoadedFile(), 0770);
 		MetaModel::GetConfig()->Set('security.force_login_when_no_delegated_authentication_endpoints_list', true);
@@ -106,7 +106,7 @@ class LoginWebPageTest extends ItopDataTestCase
 		$this->assertStringContainsString('<title>iTop login</title>', $sPageContent, 'if itop is configured to force login when no there is no delegated authentication endpoints list, then login should be required.');
 	}
 
-	public function testNoDelegatedAuthenticationEndpointsListWithDefaultConfiguration()
+	public function testWithoutDelegatedAuthenticationEndpointsListWithDefaultConfiguration()
 	{
 		$sPageContent = $this->CallItopUri(
 			"pages/exec.php?exec_module=extension-without-delegated-authentication-endpoints-list&exec_page=src/Controller/File.php",
