@@ -217,7 +217,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:Service/Attribute:organization_name' => 'Leverandør navn',
 	'Class:Service/Attribute:organization_name+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Service familie',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Ydelses familie navn',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:description' => 'Beskrivelse',
@@ -463,7 +463,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', [
 	'Class:DeliveryModel/Attribute:description' => 'Beskrivelse',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Kontakt',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Persons) for this delivery model~~',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'There must be at least one team to enable Ticket assignment~~',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Kunde',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model~~',
 ]);

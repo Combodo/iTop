@@ -126,7 +126,7 @@ class CKEditorHelper
 	 *
 	 * @return string|null
 	 */
-	public static function PrepareCKEditorValueTextEncodingForTextarea(string $sValue = null): ?string
+	public static function PrepareCKEditorValueTextEncodingForTextarea(?string $sValue = null): ?string
 	{
 		if ($sValue === null) {
 			return null;
@@ -145,7 +145,7 @@ class CKEditorHelper
 	 *
 	 * @return void
 	 */
-	public static function ConfigureCKEditorElementForWebPage(WebPage $oPage, string $sInputElementId, string $sInitialValue = null, bool $bWithMentions = false, array $aOverloadConfiguration = []): void
+	public static function ConfigureCKEditorElementForWebPage(WebPage $oPage, string $sInputElementId, ?string $sInitialValue = null, bool $bWithMentions = false, array $aOverloadConfiguration = []): void
 	{
 		// link CKEditor JS files
 		foreach (static::GetJSFilesRelPathsForCKEditor() as $sFile) {
@@ -187,7 +187,7 @@ class CKEditorHelper
 	 *
 	 * @return void
 	 */
-	public static function ConfigureCKEditorElementForRenderingOutput(RenderingOutput $oOutput, string $sInputElementId, string $sInitialValue = null, bool $bWithMentions = false, bool $bAddJSFiles = true, array $aOverloadConfiguration = []): void
+	public static function ConfigureCKEditorElementForRenderingOutput(RenderingOutput $oOutput, string $sInputElementId, ?string $sInitialValue = null, bool $bWithMentions = false, bool $bAddJSFiles = true, array $aOverloadConfiguration = []): void
 	{
 		// link CKEditor JS files
 		if ($bAddJSFiles) {
@@ -282,7 +282,7 @@ HTML;
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
-	public static function GetDOMSanitizerForCKEditor(DOMSanitizer $oSanitizer = null): array
+	public static function GetDOMSanitizerForCKEditor(?DOMSanitizer $oSanitizer = null): array
 	{
 		if ($oSanitizer === null) {
 			/* @var $oSanitizer DOMSanitizer */

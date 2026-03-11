@@ -12,10 +12,8 @@ class CliResetSessionTest extends ItopDataTestCase
 	public const USE_TRANSACTION = false;
 
 	private $sCookieFile = "";
-	private $sUrl;
 	private $sLogin;
 	private $sPassword = "Iuytrez9876543ç_è-(";
-	protected $sConfigTmpBackupFile;
 
 	/**
 	 * @throws Exception
@@ -24,15 +22,12 @@ class CliResetSessionTest extends ItopDataTestCase
 	{
 		parent::setUp();
 
-		$this->sConfigTmpBackupFile = tempnam(sys_get_temp_dir(), "config_");
-		MetaModel::GetConfig()->WriteToFile($this->sConfigTmpBackupFile);
+		$this->BackupConfiguration();
 
 		$this->sLogin = "rest-user-".date('dmYHis');
 		$this->CreateTestOrganization();
 
 		$this->sCookieFile = tempnam(sys_get_temp_dir(), 'jsondata_');
-
-		$this->sUrl = \MetaModel::GetConfig()->Get('app_root_url');
 
 		$oRestProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'REST Services User'], true);
 		$oAdminProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", ['name' => 'Administrator'], true);
@@ -46,16 +41,6 @@ class CliResetSessionTest extends ItopDataTestCase
 	protected function tearDown(): void
 	{
 		parent::tearDown();
-
-		if (! is_null($this->sConfigTmpBackupFile) && is_file($this->sConfigTmpBackupFile)) {
-			//put config back
-			$sConfigPath = MetaModel::GetConfig()->GetLoadedFile();
-			@chmod($sConfigPath, 0770);
-			$oConfig = new Config($this->sConfigTmpBackupFile);
-			$oConfig->WriteToFile($sConfigPath);
-			@chmod($sConfigPath, 0444);
-			unlink($this->sConfigTmpBackupFile);
-		}
 
 		if (!empty($this->sCookieFile)) {
 			unlink($this->sCookieFile);
@@ -150,26 +135,18 @@ class CliResetSessionTest extends ItopDataTestCase
 	 */
 	private function SendHTTPRequestWithCookies($sUri, $aPostFields, $sForcedLoginMode = null): string
 	{
-		$ch = curl_init();
-
-		curl_setopt($ch, CURLOPT_COOKIEJAR, $this->sCookieFile);
-		curl_setopt($ch, CURLOPT_COOKIEFILE, $this->sCookieFile);
-
-		$sUrl = "$this->sUrl/$sUri";
 		if (!is_null($sForcedLoginMode)) {
-			$sUrl .= "?login_mode=$sForcedLoginMode";
+			$sUri .= "?login_mode=$sForcedLoginMode";
 		}
-		curl_setopt($ch, CURLOPT_URL, $sUrl);
-		curl_setopt($ch, CURLOPT_POST, 1);// set post data to true
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $aPostFields);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_HEADER, 1);
-		// Force disable of certificate check as most of dev / test env have a self-signed certificate
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
-		$sResponse = curl_exec($ch);
+		$aCurlOptions = [
+			CURLOPT_COOKIEJAR => $this->sCookieFile,
+			CURLOPT_COOKIEFILE => $this->sCookieFile,
+			CURLOPT_HEADER => 1,
+		];
+
+		$sResponse = $this->CallItopUri($sUri, $aPostFields, $aCurlOptions);
+		var_dump($this->aLastCurlGetInfo);
 		/** $sResponse example
 		 *  "HTTP/1.1 200 OK
 		Date: Wed, 07 Jun 2023 05:00:40 GMT
@@ -177,16 +154,15 @@ class CliResetSessionTest extends ItopDataTestCase
 		Set-Cookie: itop-2e83d2e9b00e354fdc528621cac532ac=q7ldcjq0rvbn33ccr9q8u8e953; path=/
 		 */
 		//var_dump($sResponse);
-		$iHeaderSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		$iHeaderSize = $this->aLastCurlGetInfo['header_size'] ?? 0;
 		$sBody = substr($sResponse, $iHeaderSize);
 
 		//$iHttpCode = intval(curl_getinfo($ch, CURLINFO_HTTP_CODE));
 		if (preg_match('/HTTP.* (\d*) /', $sResponse, $aMatches)) {
 			$sHttpCode = $aMatches[1];
 		} else {
-			$sHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			$sHttpCode = $this->aLastCurlGetInfo['http_code'] ?? -1;
 		}
-		curl_close($ch);
 
 		$this->assertEquals(200, $sHttpCode, "The test logic assumes that the HTTP request is correctly handled");
 		return $sBody;

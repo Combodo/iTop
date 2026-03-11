@@ -28,7 +28,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'De gebruiker kan dit wachtwoord niet veranderen.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Wachtwoord laatst aangepast',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Tijdstip waarop het wachtwoord het laatst aangepast werd.',
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Het wachtwoord bestaat uit minstens 8 tekens en bestaat uit een mix van minstens 1 hoofdletter, kleine letter, cijfer en speciaal teken.',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Het wachtwoord bestaat uit minstens 12 tekens en bestaat uit een mix van minstens 1 hoofdletter, kleine letter, cijfer en speciaal teken.',
 	'UserLocal:password:expiration' => 'De velden hieronder vereisen een extensie.',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Je kan geen eenmalig wachtwoord instellen voor je eigen gebruiker.',
 ]);

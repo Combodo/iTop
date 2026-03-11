@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+  ~ @copyright   Copyright (C) 2010-2026 Combodo SAS
+  ~ @license     http://opensource.org/licenses/AGPL-3.0
+  -->
+
+<xsd:schema
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+>
+  <!-- ===================== Lazy validation in the first place ===================== -->
+  <xsd:complexType name="Combodo-Anything">
+    <xsd:sequence>
+      <xsd:any minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+    </xsd:sequence>
+    <xsd:attribute name="version" type="xsd:string"/>
+    <xsd:attribute name="id" type="xsd:string"/>
+    <xsd:attribute name="_delta" type="itop-delta-flag"/>
+  </xsd:complexType>
+
+  <!-- ============================= Reusable components =============================== -->
+  <xsd:simpleType name="itop-delta-flag" final="restriction" >
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="merge" />
+      <xsd:enumeration value="if_exists" />
+      <xsd:enumeration value="must_exist" />
+      <xsd:enumeration value="define" />
+      <xsd:enumeration value="define_if_not_exists" />
+      <xsd:enumeration value="redefine" />
+      <xsd:enumeration value="force" />
+      <xsd:enumeration value="delete" />
+      <xsd:enumeration value="delete_if_exists" />
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

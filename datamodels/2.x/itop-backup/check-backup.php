@@ -199,15 +199,15 @@ function RaiseAlarm($sMessage)
 //////////
 // Main
 
-try {
-	utils::UseParamFile();
-} catch (Exception $e) {
-	echo "Error: ".$e->GetMessage()."\n";
-	exit;
-}
-
 if (utils::IsModeCLI()) {
-	SetupUtils::CheckPhpAndExtensionsForCli(new CLIPage('Check backup utility'));
+	try {
+		utils::UseParamFile();
+	} catch (Exception $e) {
+		echo 'Error: '.$e->GetMessage()."\n";
+		exit;
+	}
+	$oP = new CLIPage('Check backup utility');
+	SetupUtils::CheckPhpAndExtensionsForCli($oP);
 
 	echo date('Y-m-d H:i:s')." - running check-backup utility\n";
 	try {

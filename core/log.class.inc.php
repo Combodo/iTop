@@ -691,6 +691,28 @@ abstract class LogAPI
 		static::$m_oMockMetaModelConfig = $oMetaModelConfig;
 	}
 
+	public static function Exception(string $sMessage, throwable $oException, string $sChannel = null, array $aContext = []): void
+	{
+		$aErrorLogs = [];
+		$aErrorLogs[] = static::PrepareErrorLog($sMessage, $oException, $aContext);
+		$oException = $oException->getPrevious();
+		while ($oException !== null) {
+			$aErrorLogs[] = static::PrepareErrorLog($oException->getMessage(), $oException, $aContext, true);
+			$oException = $oException->getPrevious();
+		}
+		$aErrorLogs = array_reverse($aErrorLogs);
+		foreach ($aErrorLogs as $aErrorLog) {
+			static::Error($aErrorLog['message'], $sChannel, $aErrorLog['context']);
+		}
+	}
+
+	private static function PrepareErrorLog(string $sMessage, throwable $oException, array $aContext, bool $isPrevious = false): array
+	{
+		$aContext['Error Message'] = $oException->getMessage();
+		$aContext['Stack Trace'] = $oException->getTraceAsString();
+		return ['message' => ($isPrevious ? "Previous " : '')."Exception: $sMessage", 'context' => $aContext];
+	}
+
 	public static function Error($sMessage, $sChannel = null, $aContext = [])
 	{
 		static::Log(self::LEVEL_ERROR, $sMessage, $sChannel, $aContext);

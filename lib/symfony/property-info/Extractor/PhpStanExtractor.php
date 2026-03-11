@@ -154,7 +154,7 @@ final class PhpStanExtractor implements PropertyTypeExtractorInterface, Construc
     public function getTypesFromConstructor(string $class, string $property): ?array
     {
         if (null === $tagDocNode = $this->getDocBlockFromConstructor($class, $property)) {
-            return null;
+            return $this->getTypes($class, $property);
         }
 
         $types = [];
@@ -278,19 +278,24 @@ final class PhpStanExtractor implements PropertyTypeExtractorInterface, Construc
     {
         $prefixes = self::ACCESSOR === $type ? $this->accessorPrefixes : $this->mutatorPrefixes;
         $prefix = null;
+        $method = null;
 
         foreach ($prefixes as $prefix) {
             $methodName = $prefix.$ucFirstProperty;
 
             try {
-                $reflectionMethod = new \ReflectionMethod($class, $methodName);
-                if ($reflectionMethod->isStatic()) {
+                $method = new \ReflectionMethod($class, $methodName);
+                if ($method->isStatic()) {
+                    continue;
+                }
+
+                if (self::ACCESSOR === $type && \in_array((string) $method->getReturnType(), ['void', 'never'], true)) {
                     continue;
                 }
 
                 if (
-                    (self::ACCESSOR === $type && 0 === $reflectionMethod->getNumberOfRequiredParameters())
-                    || (self::MUTATOR === $type && $reflectionMethod->getNumberOfParameters() >= 1)
+                    (self::ACCESSOR === $type && !$method->getNumberOfRequiredParameters())
+                    || (self::MUTATOR === $type && $method->getNumberOfParameters() >= 1)
                 ) {
                     break;
                 }
@@ -299,17 +304,17 @@ final class PhpStanExtractor implements PropertyTypeExtractorInterface, Construc
             }
         }
 
-        if (!isset($reflectionMethod)) {
+        if (!$method) {
             return null;
         }
 
-        if (null === $rawDocNode = $reflectionMethod->getDocComment() ?: null) {
+        if (null === $rawDocNode = $method->getDocComment() ?: null) {
             return null;
         }
 
         $phpDocNode = $this->getPhpDocNode($rawDocNode);
 
-        return [$phpDocNode, $prefix, $reflectionMethod->class];
+        return [$phpDocNode, $prefix, $method->class];
     }
 
     private function getPhpDocNode(string $rawDocNode): PhpDocNode

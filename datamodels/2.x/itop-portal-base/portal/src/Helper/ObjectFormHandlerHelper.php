@@ -129,7 +129,7 @@ class ObjectFormHandlerHelper
 	 * @throws \OQLException
 	 * @throws \Exception
 	 */
-	public function HandleForm(Request $oRequest, $sMode, $sObjectClass, $sObjectId = null, array $aFormProperties = null)
+	public function HandleForm(Request $oRequest, $sMode, $sObjectClass, $sObjectId = null, ?array $aFormProperties = null)
 	{
 		$aFormData = [];
 		$sOperation = $this->oRequestManipulator->ReadParam('operation', '');

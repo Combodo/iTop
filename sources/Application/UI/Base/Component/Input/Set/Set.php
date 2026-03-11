@@ -107,7 +107,7 @@ class Set extends AbstractInput
 	 *
 	 * @param string|null $sId Block identifier
 	 */
-	public function __construct(string $sId = null)
+	public function __construct(?string $sId = null)
 	{
 		parent::__construct($sId);
 

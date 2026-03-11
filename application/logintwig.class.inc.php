@@ -243,15 +243,12 @@ class LoginTwigRenderer
 
 	public function GetDefaultVars()
 	{
-		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
 		$sDisplayIcon = Branding::GetLoginLogoAbsoluteUrl();
 
 		$aVars = [
 			'sAppRootUrl' => utils::GetAbsoluteUrlAppRoot(),
 			'aPluginFormData' => $this->GetPluginFormData(),
-			'sItopVersion' => ITOP_VERSION,
-			'sVersionShort' => $sVersionShort,
 			'sIconUrl' => $sIconUrl,
 			'sDisplayIcon' => $sDisplayIcon,
 		];

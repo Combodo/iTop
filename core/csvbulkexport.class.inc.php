@@ -5,6 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\ExportHelper;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
@@ -13,7 +14,6 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
-use Combodo\iTop\Application\Helper\ExportHelper;
 use Combodo\iTop\Application\WebPage\Page;
 use Combodo\iTop\Application\WebPage\WebPage;
 
@@ -54,6 +54,8 @@ class CSVBulkExport extends TabularBulkExport
 
 		$this->aStatusInfo['charset'] = strtoupper(utils::ReadParam('charset', 'UTF-8', true, 'raw_data'));
 		$this->aStatusInfo['formatted_text'] = (bool)utils::ReadParam('formatted_text', 0, true);
+
+		$this->aStatusInfo['ignore_excel_sanitization'] = (bool)utils::ReadParam('ignore_excel_sanitization', 0, true, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 
 		$sDateFormatRadio = utils::ReadParam('csv_date_format_radio', '');
 		switch ($sDateFormatRadio) {
@@ -223,6 +225,10 @@ class CSVBulkExport extends TabularBulkExport
 				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioCustom);
 
+				$oFieldSetSecurity = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:Security'));
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetSecurity));
+				$oFieldSetSecurity->AddSubBlock(ExportHelper::GetInputForSanitizeExcelExport());
+
 				$oP->add_ready_script(
 					<<<EOF
 $('#form_part_csv_options').on('preview_updated', function() { FormatDatesInPreview('csv', 'csv'); });
@@ -264,6 +270,13 @@ EOF
 			default:
 				$sRet = trim($oObj->GetAsCSV($sAttCode), '"');
 		}
+
+		// If the option to ignore Excel sanitization is not set or explicitly set to false, apply sanitization
+		if (!(array_key_exists('ignore_excel_sanitization', $this->aStatusInfo)) || $this->aStatusInfo['ignore_excel_sanitization'] === false) {
+			return ExportHelper::SanitizeField($sRet, $this->aStatusInfo['text_qualifier'] ?? '');
+		}
+
+		// The option to ignore Excel sanitization is explicitly set to true: return the raw value without sanitization
 		return $sRet;
 	}
 
@@ -337,6 +350,12 @@ EOF
 							$sField = $oObj->GetAsCSV($sAttCode, $this->aStatusInfo['separator'], $this->aStatusInfo['text_qualifier'], $this->bLocalizeOutput, !$this->aStatusInfo['formatted_text']);
 					}
 				}
+
+				// If the option to ignore Excel sanitization is not set or absent, sanitize the field
+				if (!(array_key_exists('ignore_excel_sanitization', $this->aStatusInfo)) || $this->aStatusInfo['ignore_excel_sanitization'] === false) {
+					$sField = ExportHelper::SanitizeField($sField, $this->aStatusInfo['text_qualifier']);
+				}
+
 				if ($this->aStatusInfo['charset'] != 'UTF-8') {
 					// Note: due to bugs in the glibc library it's safer to call iconv on the smallest possible string
 					// and thus to convert field by field and not the whole row or file at once (see ticket N°991)

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<xsd:schema
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+>
+  <xsd:include schemaLocation="itop-delta.xsd"/>
+  <xsd:include schemaLocation="property_types.xsd"/>
+
+  <!-- ===================== Lazy validation in the first place ===================== -->
+  <xsd:element name="itop_design" type="Combodo-Anything"/>
+
+  <!-- ===================== Get rid of errors for still unhandled types ===================== -->
+  <xsd:complexType name="AttributeString">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-Anything"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="AttributeExternalKey">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-Anything"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="AttributeDateTime">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-Anything"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MenuGroup">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-Anything"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="DashboardMenuNode">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-Anything"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="ShortcutContainerMenuNode">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-Anything"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TemplateMenuNode">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-Anything"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="OQLMenuNode">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-Anything"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="WebPageMenuNode">
+    <xsd:complexContent>
+      <xsd:extension base="Combodo-Anything"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+</xsd:schema>

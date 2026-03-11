@@ -28,6 +28,7 @@ class ConfigEditorController extends Controller
 	public function __construct()
 	{
 		parent::__construct(MODULESROOT.static::MODULE_NAME.'/templates', static::MODULE_NAME);
+		$this->SetDebugAllowed(false);
 	}
 
 	public function OperationEdit(): void

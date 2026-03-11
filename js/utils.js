@@ -402,6 +402,12 @@ function ExportStartExport() {
 		oParams.expression = $('#export-form :input[name=expression]').val();
 		oParams.query = $('#export-form :input[name=query]').val();
 	}
+
+    // Read the "sanitize_excel_export" checkbox if it exists, and set the corresponding "ignore_excel_sanitization" parameter
+    if($(':input[name=sanitize_excel_export]').length > 0) {
+        oParams.ignore_excel_sanitization = $(':input[name=sanitize_excel_export]').is(':checked') ? 0 : 1;
+    }
+
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function (data) {
 			if (data == null) {
 				ExportError('Export failed (no data provided), please contact your administrator');

@@ -18,4 +18,5 @@ interface iProfilerExtension
 	public function GetLinkedScripts(): null|array;
 	public function GetLinkedStylesheets(): null|array;
 	public function GetSaas(): null|array;
+	public function SetDebugForced(bool $bDebugForced): void;
 }

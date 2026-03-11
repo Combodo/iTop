@@ -27,7 +27,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Password cannot be changed by the user.~~',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Password renewed on~~',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'When the password was last changed~~',
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.~~',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 12 characters and include uppercase, lowercase, numeric and special characters.~~',
 	'UserLocal:password:expiration' => 'The fields below require an extension~~',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
 ]);

@@ -1279,6 +1279,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => 'Jour du mois pour %1$s',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (heure)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (mois)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Year' => '%1$s (année)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (jour de la semaine)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (jour du mois)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Veuillez sélectionner le champ sur lequel les objets seront groupés',
@@ -1544,7 +1545,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Les descendants des objets sélectionnés seront inclus.',
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtré',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtré sur %1$s',
-	'UI:StateChanged' => 'Etat modifié',
+	'UI:StateChanged' => 'État modifié',
+	'UI:AddSubTree' => 'Ajouter une entrée',
 ]);
 
 //

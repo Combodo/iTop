@@ -36,7 +36,7 @@ class DoNotShowAgainOptionBlock extends UIContentBlock
 	 *
 	 * @param string|null $sId
 	 */
-	public function __construct(string $sId = null)
+	public function __construct(?string $sId = null)
 	{
 		parent::__construct($sId, ['ibo-modal-option--do-not-show-again']);
 

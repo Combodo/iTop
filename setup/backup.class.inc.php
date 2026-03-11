@@ -152,7 +152,7 @@ class DBBackup
 	 * @return string Name of the backup file WITHOUT the file extension (eg. `.tar.gz`)
 	 * @since 3.1.0 N°5279 Add $oDateTime parameter
 	 */
-	public function MakeName(string $sNameSpec = "__DB__-%Y-%m-%d", DateTime $oDateTime = null)
+	public function MakeName(string $sNameSpec = "__DB__-%Y-%m-%d", ?DateTime $oDateTime = null)
 	{
 		if ($oDateTime === null) {
 			$oDateTime = new DateTime();

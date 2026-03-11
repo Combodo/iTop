@@ -632,7 +632,7 @@ class DisplayableGroupNode extends DisplayableNode
 		$this->aObjects = [];
 	}
 
-	public function AddObject(DBObject $oObj = null)
+	public function AddObject(?DBObject $oObj = null)
 	{
 		if (is_object($oObj)) {
 			$sPrevClass = $this->GetObjectClass();

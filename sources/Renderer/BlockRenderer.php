@@ -23,7 +23,12 @@ namespace Combodo\iTop\Renderer;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Symfony\Bridge\Twig\Extension\FormExtension;
+use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Form\FormRenderer;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Twig\Environment;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use utils;
 
 /**
@@ -63,7 +68,19 @@ class BlockRenderer
 		}
 
 		if (null === static::$oTwigEnv) {
-			static::$oTwigEnv = TwigHelper::GetTwigEnvironment(static::TWIG_BASE_PATH, $aAdditionalPaths);
+			// Symfony forms
+			$aAdditionalPaths[] = APPROOT.'lib/symfony/twig-bridge/Resources/views/Form';
+			$oTwig = TwigHelper::GetTwigEnvironment(static::TWIG_BASE_PATH, $aAdditionalPaths);
+			/** @link https://github.com/symfony/twig-bridge/blob/6.4/CHANGELOG.md#320 */
+			$formEngine = new TwigRendererEngine(['application/forms/itop_console_layout.html.twig', 'application/forms/wip_form_demonstrator.html.twig'], $oTwig);
+			$oTwig->addRuntimeLoader(new FactoryRuntimeLoader([
+				FormRenderer::class => function () use ($formEngine): FormRenderer {
+					return new FormRenderer($formEngine, new CsrfTokenManager());
+				},
+			]));
+			$oTwig->addExtension(new FormExtension());
+			static::$oTwigEnv = $oTwig;
+			//static::$oTwigEnv = TwigHelper::GetTwigEnvironment(static::TWIG_BASE_PATH, $aAdditionalPaths);
 		}
 
 		$this->oBlock = $oBlock;

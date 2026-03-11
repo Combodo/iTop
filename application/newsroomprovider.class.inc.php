@@ -34,7 +34,7 @@ interface iNewsroomProvider
 	 * @param User $oUser The user for who to check if the provider is applicable.
 	 * return bool
 	 */
-	public function IsApplicable(User $oUser = null);
+	public function IsApplicable(?User $oUser = null);
 
 	/**
 	 * The human readable (localized) label for this provider
@@ -139,7 +139,7 @@ abstract class NewsroomProviderBase implements iNewsroomProvider
 	 */
 	abstract public function GetViewAllURL();
 
-	public function IsApplicable(User $oUser = null)
+	public function IsApplicable(?User $oUser = null)
 	{
 		return false;
 	}

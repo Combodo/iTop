@@ -158,4 +158,173 @@ EOF;
 		$this->assertEquals($sExpectedValue, $data);
 	}
 
+	/**
+	 * @dataProvider OrganizationsForExportSanitizeExcelExportProvider
+	 *
+	 * @param $aListOrg
+	 * @param $aExpectedValues
+	 * @return void
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 */
+	public function testExportWithSanitizeExcelExport(
+		$aListOrg,
+		$aExpectedValues,
+	) {
+		// Create tests organizations to have enough data
+		$iFirstOrg = 0;
+		foreach ($aListOrg as $aOrg) {
+			$oObj = $this->CreateOrganization($aOrg[0]);
+			if ($aOrg[1] === false) {
+				$oObj->Set('status', 'inactive');
+				$oObj->DBUpdate();
+			}
+			if ($iFirstOrg === 0) {
+				$iFirstOrg = $oObj->GetKey();
+			}
+		}
+
+		$aStatusInfo = [
+			"fields" => [
+				[
+					"sFieldSpec" => "name",
+					"sAlias" => "Organization",
+					"sClass" => "Organization",
+					"sAttCode" => "name",
+					"sLabel" => "Name",
+					"sColLabel" => "Name",
+				],
+			],
+			"text_qualifier" => "\"",
+			"charset" => "UTF-8",
+			"separator" => ",",
+			"date_format" => "Y-m-d H:i:s",
+			"formatted_text" => false,
+			"show_obsolete_data" => false,
+			'ignore_excel_sanitization' => false,
+		];
+		$sStatus = [];
+		$oSearch = DBObjectSearch::FromOQL('SELECT Organization');
+		$oExporter = BulkExport::FindExporter('csv', $oSearch);
+		$oExporter->SetStatusInfo($aStatusInfo);
+		$oExporter->SetObjectList($oSearch);
+		$oExporter->SetChunkSize(EXPORTER_DEFAULT_CHUNK_SIZE);
+
+		$data = $oExporter->GetHeader();
+		$data .= $oExporter->GetNextChunk($sStatus);
+
+		// Check that the value is sanitized as expected (with a ' prefix)
+		foreach ($aExpectedValues as $sExpectedValue) {
+			$this->assertStringContainsString($sExpectedValue, $data, "The value $sExpectedValue is expected to be found in the export result");
+		}
+	}
+
+	/**
+	 * @dataProvider OrganizationsForExportSanitizeExcelExportProvider
+	 *
+	 * @param $aListOrg
+	 * @param $aExpectedValues
+	 * @return void
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 */
+	public function testExportWithoutSanitizeExcelExport(
+		$aListOrg,
+		$aExpectedValues,
+	) {
+		// Create tests organizations to have enough data
+		$iFirstOrg = 0;
+		foreach ($aListOrg as $aOrg) {
+			$oObj = $this->CreateOrganization($aOrg[0]);
+			if ($aOrg[1] === false) {
+				$oObj->Set('status', 'inactive');
+				$oObj->DBUpdate();
+			}
+			if ($iFirstOrg === 0) {
+				$iFirstOrg = $oObj->GetKey();
+			}
+		}
+
+		$aStatusInfo = [
+			"fields" => [
+				[
+					"sFieldSpec" => "name",
+					"sAlias" => "Organization",
+					"sClass" => "Organization",
+					"sAttCode" => "name",
+					"sLabel" => "Name",
+					"sColLabel" => "Name",
+				],
+			],
+			"text_qualifier" => "\"",
+			"charset" => "UTF-8",
+			"separator" => ",",
+			"date_format" => "Y-m-d H:i:s",
+			"formatted_text" => false,
+			"show_obsolete_data" => false,
+			'ignore_excel_sanitization' => true,
+		];
+		$sStatus = [];
+		$oSearch = DBObjectSearch::FromOQL('SELECT Organization');
+		$oExporter = BulkExport::FindExporter('csv', $oSearch);
+		$oExporter->SetStatusInfo($aStatusInfo);
+		$oExporter->SetObjectList($oSearch);
+		$oExporter->SetChunkSize(EXPORTER_DEFAULT_CHUNK_SIZE);
+
+		$data = $oExporter->GetHeader();
+		$data .= $oExporter->GetNextChunk($sStatus);
+
+		// Check that the value is not sanitized
+		foreach ($aListOrg as $sExpectedValue) {
+			$this->assertStringContainsString($sExpectedValue[0], $data, "The value $sExpectedValue[0] is expected to be found in the export result");
+		}
+	}
+
+	public function OrganizationsForExportSanitizeExcelExportProvider()
+	{
+		return [
+			'Page1' => [
+				'list_org' => [
+					['=org1', true],
+					['+org2', true],
+					['-org3', true],
+					['@org4', true],
+					["\t=org5", true],
+					["\rorg6", true],
+					["\r\t\r =org7", true],
+					['＝org8', true],
+					['＋org9', true],
+					['－org10', true],
+					['＠org11', true],
+					['|org12', true],
+					['%3Dorg13', true],
+					['%3dorg14', true],
+					['org15', true],
+				],
+				'export_org' => [
+					"'=org1",
+					"'+org2",
+					"'-org3",
+					"'@org4",
+					"'\t=org5",
+					"'\rorg6",
+					"'\r\t\r =org7",
+					"'＝org8",
+					"'＋org9",
+					"'－org10",
+					"'＠org11",
+					"'|org12",
+					"'%3Dorg13",
+					"'%3dorg14",
+					"org15",
+				],
+			],
+		];
+	}
 }

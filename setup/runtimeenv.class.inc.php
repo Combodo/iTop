@@ -997,7 +997,7 @@ class RunTimeEnvironment
 			return;
 		}
 
-		SetupLog::Info("Calling Module Handler: $sModuleInstallerClass::$sHandlerName", null, $aArgs);
+		SetupLog::Debug("Calling Module Handler: $sModuleInstallerClass::$sHandlerName");
 		$aCallSpec = [$sModuleInstallerClass, $sHandlerName];
 		if (is_callable($aCallSpec)) {
 			try {

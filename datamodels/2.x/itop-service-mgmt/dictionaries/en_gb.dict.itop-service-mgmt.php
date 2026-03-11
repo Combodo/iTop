@@ -240,7 +240,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:Service/Attribute:organization_name' => 'Provider Name',
 	'Class:Service/Attribute:organization_name+' => '',
 	'Class:Service/Attribute:servicefamily_id' => 'Service Family',
-	'Class:Service/Attribute:servicefamily_id+' => '',
+	'Class:Service/Attribute:servicefamily_id+' => 'Required for this service to be visible on User Portal~~',
 	'Class:Service/Attribute:servicefamily_name' => 'Service Family Name',
 	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:description' => 'Description',
@@ -486,7 +486,7 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:DeliveryModel/Attribute:description' => 'Description',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => 'Contacts',
-	'Class:DeliveryModel/Attribute:contacts_list+' => 'All the contacts (Teams and Person) for this delivery model',
+	'Class:DeliveryModel/Attribute:contacts_list+' => 'There must be at least one team to enable Ticket assignment',
 	'Class:DeliveryModel/Attribute:customers_list' => 'Customers',
 	'Class:DeliveryModel/Attribute:customers_list+' => 'All the customers having this delivering model',
 ]);

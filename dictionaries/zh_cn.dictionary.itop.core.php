@@ -739,6 +739,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:TriggerOnObjectUpdate' => '触发器 (对象更新时)',
 	'Class:TriggerOnObjectUpdate+' => '指定类型或子类型对象更新时的触发器',
+	'Class:TriggerOnObjectUpdate/Attribute:filter+' => 'This filter is computed after the object update in database. It restricts the objects which can trigger the actions~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => '目标字段',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ]);

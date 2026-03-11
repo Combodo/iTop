@@ -301,6 +301,7 @@ class iTopNPM extends AbstractFolderAnalyzer
 			'selectize-plugin-a11y/examples',
 			'tiny-emitter/test',
 			'toastify-js/example',
+			'tom-select/src',
 		];
 	}
 }

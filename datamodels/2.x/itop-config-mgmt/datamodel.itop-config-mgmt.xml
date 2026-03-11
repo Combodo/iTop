@@ -323,18 +323,38 @@
             <value id="production">
               <code>production</code>
               <rank>30</rank>
+              <style>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="implementation">
               <code>implementation</code>
               <rank>20</rank>
+              <style>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="stock">
               <code>stock</code>
               <rank>10</rank>
+              <style>
+                <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
               <rank>40</rank>
+              <style>
+                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
           </values>
           <sql>status</sql>
@@ -4395,6 +4415,11 @@
           <extkey_attcode>osfamily_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="ospatches_list" xsi:type="AttributeLinkedSet">
+          <linked_class>OSPatch</linked_class>
+          <ext_key_to_me>osversion_id</ext_key_to_me>
+          <edit_mode>in_place</edit_mode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -4405,6 +4430,9 @@
             </item>
             <item id="osfamily_id">
               <rank>20</rank>
+            </item>
+            <item id="ospatches_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -4441,6 +4469,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <style>
           <icon/>
         </style>
@@ -4450,13 +4481,32 @@
           </attributes>
         </reconciliation>
       </properties>
-      <fields/>
+      <fields>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="osversions_list" xsi:type="AttributeLinkedSet">
+          <linked_class>OSVersion</linked_class>
+          <ext_key_to_me>osfamily_id</ext_key_to_me>
+          <edit_mode>in_place</edit_mode>
+        </field>
+      </fields>
       <methods/>
       <presentation>
         <details>
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="logo">
+              <rank>20</rank>
+            </item>
+            <item id="osversions_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -4471,6 +4521,9 @@
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="logo">
+              <rank>20</rank>
             </item>
           </items>
         </list>
@@ -4526,6 +4579,16 @@
           <count_max>0</count_max>
           <duplicates/>
         </field>
+        <field id="models_list" xsi:type="AttributeLinkedSet">
+          <linked_class>Model</linked_class>
+          <ext_key_to_me>brand_id</ext_key_to_me>
+          <edit_mode>in_place</edit_mode>
+        </field>
+        <field id="iosversions_list" xsi:type="AttributeLinkedSet">
+          <linked_class>IOSVersion</linked_class>
+          <ext_key_to_me>brand_id</ext_key_to_me>
+          <edit_mode>in_place</edit_mode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -4537,8 +4600,14 @@
             <item id="logo">
               <rank>20</rank>
             </item>
-            <item id="physicaldevices_list">
+            <item id="models_list">
               <rank>30</rank>
+            </item>
+            <item id="physicaldevices_list">
+              <rank>40</rank>
+            </item>
+            <item id="iosversions_list">
+              <rank>50</rank>
             </item>
           </items>
         </details>
@@ -4553,6 +4622,9 @@
           <items>
             <item id="name">
               <rank>10</rank>
+            </item>
+            <item id="logo">
+              <rank>20</rank>
             </item>
           </items>
         </list>
@@ -4854,6 +4926,11 @@
           <extkey_attcode>brand_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="networkdevices_list" xsi:type="AttributeLinkedSet">
+          <linked_class>NetworkDevice</linked_class>
+          <ext_key_to_me>iosversion_id</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -4864,6 +4941,9 @@
             </item>
             <item id="brand_id">
               <rank>20</rank>
+            </item>
+            <item id="networkdevices_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -6897,14 +6977,29 @@
             <value id="production">
               <code>production</code>
               <rank>20</rank>
+              <style>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="implementation">
               <code>implementation</code>
               <rank>10</rank>
+              <style>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
               <rank>30</rank>
+              <style>
+                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
           </values>
           <sql>status</sql>

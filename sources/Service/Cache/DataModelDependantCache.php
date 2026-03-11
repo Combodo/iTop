@@ -56,8 +56,24 @@ class DataModelDependantCache
 		foreach ($aMoreInfo as $sKey => $sValue) {
 			$sMoreInfo .= "\n// $sKey: $sValue";
 		}
-		$sCacheContent = "<?php $sMoreInfo\nreturn ".var_export($value, true).";";
+		$sCacheContent = "<?php $sMoreInfo\nreturn ".var_export($value, true).';';
 		file_put_contents($sCacheFileName, $sCacheContent, LOCK_EX);
+	}
+
+	/**
+	 *
+	 * @param string $sPool
+	 * @param string $sKey
+	 * @param string $sPHPContent must include '<?php'
+	 *
+	 * @return void
+	 */
+	public function StorePhpContent(string $sPool, string $sKey, string $sPHPContent): void
+	{
+		$sCacheFileName = $this->MakeCacheFileName($sPool, $sKey);
+		SetupUtils::builddir(dirname($sCacheFileName));
+
+		file_put_contents($sCacheFileName, $sPHPContent, LOCK_EX);
 	}
 
 	/**
@@ -77,6 +93,22 @@ class DataModelDependantCache
 		return include $sCacheFileName;
 	}
 
+	/**
+	 * Includes the cached PHP code for a given key, in the current pool.
+	 * Nothing is done when the key is not found.
+	 *
+	 * @param string $sPool
+	 * @param string $sKey
+	 */
+	public function FetchPHP(string $sPool, string $sKey): void
+	{
+		$sCacheFileName = $this->MakeCacheFileName($sPool, $sKey);
+		if (!is_file($sCacheFileName)) {
+			return;
+		}
+
+		include_once $sCacheFileName;
+	}
 	/**
 	 * @param string $sPool
 	 * @param string $sKey
@@ -139,7 +171,7 @@ class DataModelDependantCache
 	private function MakeCacheFileName(string $sPool, string $sKey): string
 	{
 		// Replace all characters that are not alphanumeric by '_'
-		$sKey = preg_replace('/[^a-zA-Z0-9]/', '_', $sKey);
+		$sKey = preg_replace('/[^a-zA-Z0-9\/]/', '_', $sKey);
 
 		return $this->MakePoolDirPath($sPool).$sKey.'.php';
 	}
