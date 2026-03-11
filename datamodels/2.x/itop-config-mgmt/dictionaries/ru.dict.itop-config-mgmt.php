@@ -1527,6 +1527,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 // Add translation for Fieldsets
 
 Dict::Add('RU RU', 'Russian', 'Русский', [
+	'ConfigMgnt:baseinfo' => 'General~~',
+	'ConfigMgnt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgnt:otherinfo' => 'Dates and description~~',
 	'Server:baseinfo' => 'Основное',
 	'Server:Date' => 'Даты',
 	'Server:moreinfo' => 'Спецификация',

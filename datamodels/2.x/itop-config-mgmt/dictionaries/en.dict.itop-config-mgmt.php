@@ -57,26 +57,7 @@ Dict::Add('EN US', 'English', 'English', [
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
-//
 
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
 //
 
 //
@@ -1536,6 +1517,17 @@ Dict::Add('EN US', 'English', 'English', [
 ]);
 
 //
+// Class: PhysicalInterface
+//
+
+Dict::Add('EN US', 'English', 'English', [
+	'Class:PhysicalInterface/Attribute:org_id' => 'Org id',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location id',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
+]);
+
+//
 // Class: lnkGroupToCI
 //
 
@@ -1555,23 +1547,6 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ]);
 
-// Add translation for Fieldsets
-
-Dict::Add('EN US', 'English', 'English', [
-	'Server:baseinfo' => 'General information',
-	'Server:Date' => 'Dates',
-	'Server:moreinfo' => 'More information',
-	'Server:otherinfo' => 'Other information',
-	'Server:power' => 'Power supply',
-	'Class:Subnet/Tab:IPUsage' => 'IP Usage',
-	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not',
-	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
-	'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
-	'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
-	'Class:Document:PreviewTab' => 'Preview',
-]);
-
 //
 // Class: lnkDocumentToFunctionalCI
 //
@@ -1588,6 +1563,27 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Document name',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
+]);
+
+// Add translation for Fieldsets
+
+Dict::Add('EN US', 'English', 'English', [
+	'ConfigMgnt:baseinfo' => 'General',
+	'ConfigMgnt:moreinfo' => 'CI specifics',
+	'ConfigMgnt:otherinfo' => 'Dates and description',
+	'Storage:moreinfo' => 'Storage specifics',
+	'Server:baseinfo' => 'General',
+	'Server:moreinfo' => 'Device specifics',
+	'Server:Date' => 'Dates',
+	'Server:otherinfo' => 'Description',
+	'Server:power' => 'Power supply',
+	'Class:Subnet/Tab:IPUsage' => 'IP Usage',
+	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not',
+	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
+	'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
+	'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
+	'Class:Document:PreviewTab' => 'Preview',
 ]);
 
 //
@@ -1639,15 +1635,4 @@ Dict::Add('EN US', 'English', 'English', [
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Software catalog',
 	'Menu:Software+' => 'Software catalog',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('EN US', 'English', 'English', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id',
-	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id',
-	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);

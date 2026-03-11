@@ -37,23 +37,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 // Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -1686,6 +1669,17 @@ Dict::Add('FR FR', 'French', 'Français', [
 ]);
 
 //
+// Class: PhysicalInterface
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Site',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
+]);
+
+//
 // Class: lnkGroupToCI
 //
 
@@ -1705,23 +1699,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ]);
 
-// Add translation for Fieldsets
-
-Dict::Add('FR FR', 'French', 'Français', [
-	'Server:baseinfo' => 'Informations générales',
-	'Server:Date' => 'Dates',
-	'Server:moreinfo' => 'Informations complémentaires',
-	'Server:otherinfo' => 'Autres informations',
-	'Server:power' => 'Alimentation électrique',
-	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
-	'Class:Subnet/Tab:IPUsage+' => 'Utilisation des IPs de ce subnet',
-	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
-	'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
-	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
-	'Class:Document:PreviewTab' => 'Aperçu',
-]);
-
 //
 // Class: lnkDocumentToFunctionalCI
 //
@@ -1738,6 +1715,27 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nom Document',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
+]);
+
+// Add translation for Fieldsets
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'ConfigMgnt:baseinfo' => 'Informations générales',
+	'Server:baseinfo' => 'Informations générales',
+	'ConfigMgnt:moreinfo' => 'Item spécifique',
+	'Server:moreinfo' => 'Matériel spécifique',
+	'Storage:moreinfo' => 'Stockage spécifique',
+	'ConfigMgnt:otherinfo' => 'Dates et description',
+	'Server:Date' => 'Dates',
+	'Server:otherinfo' => 'Description',
+	'Server:power' => 'Alimentation électrique',
+	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
+	'Class:Subnet/Tab:IPUsage+' => 'Utilisation des IPs de ce subnet',
+	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
+	'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
+	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
+	'Class:Document:PreviewTab' => 'Aperçu',
 ]);
 
 //
@@ -1789,15 +1787,4 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Catalogue des logiciels de références',
 	'Menu:Software+' => 'Catalogue des logiciels de références',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
-	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Site',
-	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);

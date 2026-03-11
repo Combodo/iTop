@@ -1526,6 +1526,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 // Add translation for Fieldsets
 
 Dict::Add('JA JP', 'Japanese', '日本語', [
+	'ConfigMgnt:baseinfo' => 'General~~',
+	'ConfigMgnt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgnt:otherinfo' => 'Dates and description~~',
 	'Server:baseinfo' => '基本情報',
 	'Server:Date' => '日付',
 	'Server:moreinfo' => '追加情報',
