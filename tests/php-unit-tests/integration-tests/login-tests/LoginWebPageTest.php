@@ -100,7 +100,7 @@ class LoginWebPageTest extends ItopDataTestCase
 	public function testWithoutDelegatedAuthenticationEndpointsListWithForceLoginConf()
 	{
 		@chmod($this->oConfig->GetLoadedFile(), 0770);
-		$this->oConfig->Set('security.force_login_when_no_delegated_authentication_endpoints_list', true);
+		$this->oConfig->Set('security.force_login_when_no_delegated_authentication_endpoints_list', true, 'AnythingButEmptyOrUnknownValue'); // 3rd param to write file even if show_in_conf_sample is false
 		$this->oConfig->WriteToFile();
 		@chmod($this->oConfig->GetLoadedFile(), 0444);
 		$sPageContent = $this->CallItopUri(
