@@ -15,7 +15,6 @@ class DataFeatureRemoverExtensionService
 {
 	private static DataFeatureRemoverExtensionService $oInstance;
 
-	private array $aSelectedExtensions = [];
 	private array $aItopExtensions = [];
 	private array $aIncludingExtensionsByModuleName = [];
 
@@ -46,7 +45,7 @@ class DataFeatureRemoverExtensionService
 	public function GetIncludingExtensions(string $sModuleName): array
 	{
 		if (count($this->aIncludingExtensionsByModuleName) === 0) {
-			foreach ($this->ReadiTopExtensions() as $oExtension) {
+			foreach ($this->ReadItopExtensions() as $oExtension) {
 				$aModuleNames = $oExtension->aModules;
 				if (is_array($aModuleNames) && count($aModuleNames) > 0) {
 					foreach ($aModuleNames as $sModule) {

@@ -102,10 +102,14 @@ JS);
 
 		$aRemovedExtensions = json_decode($this->oWizard->GetParameter('removed_extensions', "[]"), true);
 		$aHiddenRemovedExtensionInputs = "";
-		$i = 0;
+		if (!is_array($aRemovedExtensions)) {
+			IssueLog::Warning('Posted removed_extensions is not an array');
+			$aRemovedExtensions = [];
+		}
 		foreach ($aRemovedExtensions as $sExtCode => $sExtLabel) {
+			$sSafeExtCode = utils::HtmlEntities($sExtCode);
 			$aHiddenRemovedExtensionInputs .= <<<INPUT
-	<input type="hidden" name="aExtensions[$sExtCode][enable]" value="on"/>
+	<input type="hidden" name="aExtensions[$sSafeExtCode][enable]" value="on"/>
 INPUT;
 		}
 

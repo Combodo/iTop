@@ -110,10 +110,10 @@ class DeletionPlanService
 				$oToUpdate = $aData['to_reset'];
 				/** @var \DBObject $oToUpdate */
 				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef) {
-					$oToUpdate->Set($sRemoteExtKey, 0);
-					$oToUpdate->DBUpdate();
-					$oDeletionPlanSummaryEntity->iUpdateCount++;
+					$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
 				}
+				$oToUpdate->DBUpdate();
+				$oDeletionPlanSummaryEntity->iUpdateCount++;
 			}
 
 			$aSummary[$sClass] = $oDeletionPlanSummaryEntity;
@@ -130,7 +130,7 @@ class DeletionPlanService
 				MetaModel::PurgeData($oFilter);
 
 				// Delete the entry
-				$aClassesToRemove = array_merge(MetaModel::EnumChildClasses($sClass, ENUM_PARENT_CLASSES_ALL), MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_EXCLUDELEAF, false));
+				$aClassesToRemove = array_merge(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL), MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_EXCLUDELEAF, false));
 				foreach ($aClassesToRemove as $sParentClass) {
 					$oFilter = DBObjectSearch::FromOQL_AllData("SELECT $sParentClass WHERE id=:id");
 					$sQuery = $oFilter->MakeDeleteQuery(['id' => $sId]);
