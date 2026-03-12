@@ -176,15 +176,9 @@ class DataFeatureRemovalController extends Controller
 				<<<HTML
 <input type="checkbox" $sDisabledHtml class="extension_check" $sChecked id="$sIdEnable" name="$sIdEnable"/>
 HTML,
-				<<<HTML
-<label>$sVersion</label>
-HTML,
-				<<<HTML
-<label for="$sIdEnable">$sLabel</label>
-HTML,
-				<<<HTML
-<label for="$sIdEnable">$sCode</label>
-HTML,
+				$sVersion,
+				$sLabel,
+				$sCode,
 			];
 		}
 
