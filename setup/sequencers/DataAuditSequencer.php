@@ -25,6 +25,7 @@ require_once APPROOT.'setup/feature_removal/SetupAudit.php';
 require_once(APPROOT.'setup/sequencers/StepSequencer.php');
 require_once(APPROOT.'setup/sequencers/ApplicationInstallSequencer.php');
 
+use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
 use Combodo\iTop\Setup\FeatureRemoval\SetupAudit;
 
 class DataAuditSequencer extends ApplicationInstallSequencer
@@ -34,7 +35,7 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 	protected function GetTempEnv()
 	{
 		$sTargetEnv = $this->GetTargetEnv();
-		return 'dry-'.$sTargetEnv;
+		return $sTargetEnv.'-build';
 	}
 
 	protected function GetTargetDir()
@@ -177,7 +178,6 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 		 */
 		$oContextTag = new ContextTag(ContextTag::TAG_SETUP);
 
-		$sTargetEnvironment = $this->GetTempEnv();
 		$sPreviousEnvironment = $this->GetTargetEnv();
 
 		$oSetupAudit = new SetupAudit($sPreviousEnvironment);
@@ -195,8 +195,29 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 
 	protected function DoCleanup()
 	{
-		$sDestination = APPROOT.$this->GetTargetDir();
-		SetupUtils::tidydir($sDestination);
-		SetupUtils::rmdir_safe($sDestination);
+		$sEnv = $this->GetTempEnv();
+
+		//keep this folder empty
+		SetupUtils::tidydir(APPROOT."/env-$sEnv");
+
+		$aFolders=[
+			APPROOT."/data/$sEnv-modules",
+			APPROOT."/data/cache-$sEnv",
+			APPROOT."/conf/$sEnv",
+		];
+		foreach ($aFolders as $sFolder) {
+			SetupUtils::tidydir($sFolder);
+			SetupUtils::rmdir_safe($sFolder);
+		}
+
+		$sFiles = [
+			APPROOT."/data/datamodel-$sEnv.xml",
+			APPROOT."/data/$sEnv.delta.prev.xml",
+		];
+		foreach ($sFiles as $sFile) {
+			if (is_file($sFile)) {
+				@unlink($sFile);
+			}
+		}
 	}
 }

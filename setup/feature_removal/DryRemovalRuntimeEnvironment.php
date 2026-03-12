@@ -86,13 +86,31 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 		return $aModulesToLoad;
 	}
 
-	public function Cleanup()
+	public function Cleanup() : void
 	{
 		$sEnv = $this->sTargetEnv;
-		SetupUtils::rrmdir(APPROOT."/data/$sEnv-modules");
-		SetupUtils::rrmdir(APPROOT."/data/cache-$sEnv");
-		SetupUtils::rrmdir(APPROOT."/env-$sEnv");
-		SetupUtils::rrmdir(APPROOT."/conf/$sEnv");
-		@unlink(APPROOT."/data/datamodel-$sEnv.xml");
+
+		//keep this folder empty
+		SetupUtils::tidydir(APPROOT."/env-$sEnv");
+
+		$aFolders=[
+			APPROOT."/data/$sEnv-modules",
+			APPROOT."/data/cache-$sEnv",
+			APPROOT."/conf/$sEnv",
+		];
+		foreach ($aFolders as $sFolder) {
+			SetupUtils::tidydir($sFolder);
+			SetupUtils::rmdir_safe($sFolder);
+		}
+
+		$sFiles = [
+			APPROOT."/data/datamodel-$sEnv.xml",
+			APPROOT."/data/$sEnv.delta.prev.xml",
+		];
+		foreach ($sFiles as $sFile) {
+			if (is_file($sFile)) {
+				@unlink($sFile);
+			}
+		}
 	}
 }
