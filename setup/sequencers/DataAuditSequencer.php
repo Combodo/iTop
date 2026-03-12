@@ -200,7 +200,7 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 		//keep this folder empty
 		SetupUtils::tidydir(APPROOT."/env-$sEnv");
 
-		$aFolders=[
+		$aFolders = [
 			APPROOT."/data/$sEnv-modules",
 			APPROOT."/data/cache-$sEnv",
 			APPROOT."/conf/$sEnv",
