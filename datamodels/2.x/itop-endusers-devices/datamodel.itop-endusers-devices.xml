@@ -1280,7 +1280,7 @@
         <details>
           <items>
             <item id="col:col1">
-              <rank>80</rank>
+              <rank>10</rank>
               <items>
                 <item id="fieldset:Server:baseinfo">
                   <rank>10</rank>
@@ -1322,7 +1322,7 @@
               </items>
             </item>
             <item id="col:col2">
-              <rank>90</rank>
+              <rank>20</rank>
               <items>
                 <item id="fieldset:Server:Date">
                   <rank>10</rank>

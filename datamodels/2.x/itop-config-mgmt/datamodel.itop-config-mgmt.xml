@@ -1129,7 +1129,7 @@
               </items>
             </item>
             <item id="col:col2">
-              <rank>90</rank>
+              <rank>20</rank>
               <items>
                 <item id="fieldset:Server:Date">
                   <rank>10</rank>
@@ -1182,7 +1182,7 @@
               <rank>100</rank>
             </item>
             <item id="connectablecis_list">
-              <rank>50</rank>
+              <rank>110</rank>
             </item>
           </items>
         </details>
@@ -4218,6 +4218,12 @@
             <item id="licence_key">
               <rank>30</rank>
             </item>
+            <item id="start_date">
+              <rank>40</rank>
+            </item>
+            <item id="end_date">
+              <rank>50</rank>
+            </item>
           </items>
         </default_search>
         <search>
@@ -4388,7 +4394,7 @@
             </item>
           </items>
         </details>
-        <default_search>
+        <search>
           <items>
             <item id="name">
               <rank>10</rank>
@@ -4406,26 +4412,7 @@
               <rank>40</rank>
             </item>
           </items>
-        </default_search>
-        <search>
-        <items>
-          <item id="name">
-            <rank>10</rank>
-          </item>
-          <item id="perpetual">
-            <rank>15</rank>
-          </item>
-          <item id="start_date">
-            <rank>20</rank>
-          </item>
-          <item id="end_date">
-            <rank>30</rank>
-          </item>
-          <item id="licence_key">
-            <rank>40</rank>
-          </item>
-        </items>
-      </search>
+        </search>
         <list>
           <items>
             <item id="osversion_id">
