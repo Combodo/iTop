@@ -2,7 +2,7 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 {% if bHasData %}
-    {% UIPanel Neutral { sTitle:'DataFeatureRemoval:Analysis:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:Analysis:SubTitle'|dict_format(rule_count) } %}
+    {% UIPanel Neutral { sTitle:'DataFeatureRemoval:Analysis:Title'|dict_s, sSubTitle: 'DataFeatureRemoval:Analysis:SubTitle'|dict_format(iCount) } %}
         {% UIDataTable ForForm { sRef:'aAnalysisDataTable', aColumns:aAnalysisDataTable.Columns, aData:aAnalysisDataTable.Data} %}{% EndUIDataTable %}
     {% EndUIPanel %}
 

@@ -42,6 +42,7 @@ class DataFeatureRemovalController extends Controller
 		$aParams['DataFeatureRemovalErrorMessage'] = $sErrorMessage;
 		$aParams['bHasData'] = count($aParams['aClasses']) > 0;
 		$aParams['sSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup';
+		$aParams['iCount'] = count($aParams['aClasses']);
 
 		$this->AddLinkedStylesheet(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/css/DataFeatureRemoval.css');
 		$this->AddLinkedScript(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/js/DataFeatureRemoval.js');
@@ -247,7 +248,6 @@ HTML,
 		}
 
 		$aSelectedExtensionsFromUI = utils::ReadPostedParam('aExtensions', []);
-		IssueLog::Error(__METHOD__, null, $aSelectedExtensionsFromUI);
 		foreach ($aSelectedExtensionsFromUI as $sCode => $aData) {
 			$sValue = $aData['enable'] ?? 'off';
 			if (($sValue) === 'on') {
