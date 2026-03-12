@@ -31,6 +31,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 	'DataFeatureRemoval:Table:Analysis:ClassName' => 'Element to remove',
 	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Feature name',
+	'DataFeatureRemoval:Table:Analysis:Module' => 'Module name',
 	'DataFeatureRemoval:Table:Analysis:Occurrence' => 'Occurrence',
 
 	'UI:Button:Analyze' => 'Analyze',

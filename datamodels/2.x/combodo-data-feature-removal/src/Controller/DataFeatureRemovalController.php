@@ -28,6 +28,7 @@ class DataFeatureRemovalController extends Controller
 	private array $aSelectedExtensionsForCheck = [];
 	private array $aCountClassesToCleanup = [];
 	private array $aAnalysisDataTable = [];
+	private int $iCount = 0;
 
 	public function OperationMain($sErrorMessage = null): void
 	{
@@ -40,9 +41,9 @@ class DataFeatureRemovalController extends Controller
 		$aParams['aAnalysisDataTable'] = $this->aAnalysisDataTable;
 		$aParams['aClasses'] = array_keys($this->aCountClassesToCleanup);
 		$aParams['DataFeatureRemovalErrorMessage'] = $sErrorMessage;
-		$aParams['bHasData'] = count($aParams['aClasses']) > 0;
+		$aParams['bHasData'] = $this->iCount > 0;
 		$aParams['sSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup';
-		$aParams['iCount'] = count($aParams['aClasses']);
+		$aParams['iCount'] = $this->iCount;
 
 		$this->AddLinkedStylesheet(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/css/DataFeatureRemoval.css');
 		$this->AddLinkedScript(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/js/DataFeatureRemoval.js');
@@ -53,22 +54,14 @@ class DataFeatureRemovalController extends Controller
 	{
 		$aData = [];
 		$aColumns = [];
+		$this->iCount = 0;
 		foreach ($this->aCountClassesToCleanup as $sClass => $iCount) {
 			$sModuleName = MetaModel::GetModuleName($sClass);
 			$aExtensions = DataFeatureRemoverExtensionService::GetInstance()->GetIncludingExtensions($sModuleName);
 			$sExtensions = implode(' ', $aExtensions);
-			$aColumns = ['ClassName','FeatureName','Occurrence'];
-			$aData[] = [
-				<<<HTML
-<label>$sClass</label>
-HTML,
-				<<<HTML
-<label title="$sModuleName">$sExtensions</label>
-HTML,
-				<<<HTML
-<label>$iCount</label>
-HTML,
-			];
+			$aColumns = ['ClassName','FeatureName','Module','Occurrence'];
+			$aData[] = [$sClass,$sExtensions,$sModuleName,$iCount];
+			$this->iCount += $iCount;
 		}
 
 		$this->aAnalysisDataTable =  $this->GetTableData('Analysis', $aColumns, $aData);

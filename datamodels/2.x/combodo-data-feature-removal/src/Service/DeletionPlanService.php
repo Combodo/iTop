@@ -32,6 +32,9 @@ class DeletionPlanService
 	}
 
 	/**
+	 * Get a summary of the deletion plan computed for the classes.
+	 * The result is used for display
+	 *
 	 * @param array|null $aClasses
 	 *
 	 * @return array<\Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity>
@@ -147,7 +150,9 @@ class DeletionPlanService
 	}
 
 	/**
-	 * @param array $aClasses
+	 * Get a deletion plan for all the objects of the classes
+	 *
+	 * @param array $aClasses array of class names to clean
 	 *
 	 * @return \DeletionPlan
 	 * @throws \CoreException
