@@ -91,7 +91,7 @@ class DataFeatureRemovalController extends Controller
 		$oDryRemovalRuntimeEnvironment->Prepare($sSourceEnv, $this->aSelectedExtensionsForCheck);
 		$oDryRemovalRuntimeEnvironment->CompileFrom($sSourceEnv);
 
-		$oSetupAudit = new SetupAudit($sSourceEnv, DryRemovalRuntimeEnvironment::DRY_REMOVAL_AUDIT_ENV);
+		$oSetupAudit = new SetupAudit($sSourceEnv);
 		$aGetRemovedClasses = $oSetupAudit->GetIssues();
 		IssueLog::Debug(__METHOD__, null, ['aGetRemovedClasses' => $aGetRemovedClasses]);
 		$this->aCountClassesToCleanup = $aGetRemovedClasses;

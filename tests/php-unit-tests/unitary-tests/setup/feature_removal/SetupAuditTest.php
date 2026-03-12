@@ -51,11 +51,11 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 
 	public function testComputeDryRemoval()
 	{
-		$oDryRemovalRuntimeEnvt = new DryRemovalRuntimeEnvironment();
+		$oDryRemovalRuntimeEnvt = new DryRemovalRuntimeEnvironment($this->GetTestEnvironment());
 		$oDryRemovalRuntimeEnvt->Prepare($this->GetTestEnvironment(), ['nominal_ext1', 'finalclass_ext2']);
 		$oDryRemovalRuntimeEnvt->CompileFrom($this->GetTestEnvironment());
 
-		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment(), DryRemovalRuntimeEnvironment::DRY_REMOVAL_AUDIT_ENV);
+		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment());
 
 		$expected = [
 			"Feature1Module1MyClass",
@@ -88,7 +88,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$oOrg = $this->CreateOrganization($sUID);
 		$this->createObject('FinalClassFeature1Module1MyFinalClassFromLocation', ['org_id' => $oOrg->GetKey(), 'name' => $sUID, 'name2' => uniqid()]);
 
-		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment(), DryRemovalRuntimeEnvironment::DRY_REMOVAL_AUDIT_ENV);
+		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment());
 		$aRemovedClasses = [
 			"Feature1Module1MyClass",
 			"FinalClassFeature1Module1MyClass",
@@ -114,7 +114,7 @@ class SetupAuditTest extends ItopCustomDatamodelTestCase
 		$this->createObject('FinalClassFeature1Module1MyFinalClassFromLocation', ['org_id' => $oOrg->GetKey(), 'name' => $sUID, 'name2' => uniqid()]);
 		$this->createObject('FinalClassFeature2Module1MyFinalClassFromLocation', ['org_id' => $oOrg->GetKey(), 'name' => $sUID, 'name2' => uniqid()]);
 
-		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment(), DryRemovalRuntimeEnvironment::DRY_REMOVAL_AUDIT_ENV);
+		$oSetupAudit = new SetupAudit(MetaModel::GetEnvironment());
 		$aRemovedClasses = [
 			"Feature1Module1MyClass",
 			"FinalClassFeature1Module1MyClass",

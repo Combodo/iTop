@@ -180,7 +180,7 @@ class DataAuditSequencer extends ApplicationInstallSequencer
 		$sTargetEnvironment = $this->GetTempEnv();
 		$sPreviousEnvironment = $this->GetTargetEnv();
 
-		$oSetupAudit = new SetupAudit($sPreviousEnvironment, $sTargetEnvironment);
+		$oSetupAudit = new SetupAudit($sPreviousEnvironment);
 
 		//Make sure the MetaModel is started before analysing for issues
 		$sConfFile = utils::GetConfigFilePath($sPreviousEnvironment);
