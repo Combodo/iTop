@@ -14,19 +14,16 @@ use utils;
 
 class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 {
-	public const DRY_REMOVAL_AUDIT_ENV = "extension-removal";
-
 	protected array $aExtensionsByCode;
 
 	/**
 	 * Toolset for building a run-time environment
 	 *
-	 * @param string $sEnvironment (e.g. 'test')
-	 * @param bool $bAutoCommit (make the target environment directly, or build a temporary one)
+	 * @param string $sEnvironment
 	 */
-	public function __construct($sEnvironment = self::DRY_REMOVAL_AUDIT_ENV, $bAutoCommit = true)
+	public function __construct($sEnvironment = 'production')
 	{
-		parent::__construct($sEnvironment, $bAutoCommit);
+		parent::__construct($sEnvironment, false);
 		$this->aExtensionsByCode = [];
 	}
 
@@ -39,8 +36,7 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 	 */
 	public function Prepare(string $sSourceEnv, array $aExtensionCodesToRemove)
 	{
-
-		$sEnv = $this->sFinalEnv;
+		$sEnv = $this->sTargetEnv;
 		$this->aExtensionsByCode = $aExtensionCodesToRemove;
 
 		$this->Cleanup();
@@ -48,11 +44,9 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 
 		$this->DeclareExtensionAsRemoved($aExtensionCodesToRemove);
 
-		$oDryRemovalConfig = clone(MetaModel::GetConfig());
-		$oDryRemovalConfig->ChangeModulesPath($sSourceEnv, $this->sFinalEnv);
-		$this->WriteConfigFileSafe($oDryRemovalConfig);
+		SetupUtils::copydir(APPROOT."/conf/$sSourceEnv", APPROOT."/conf/$sEnv");
 
-		$sSourceDir = $oDryRemovalConfig->Get('source_dir');
+		$sSourceDir = MetaModel::GetConfig()->Get('source_dir');
 		$aSearchDirs = $this->GetExtraDirsToCompile($sSourceDir);
 
 		$aModulesToLoad = $this->GetModulesToLoad($sSourceEnv, $aSearchDirs);
@@ -67,7 +61,7 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 
 	private function DeclareExtensionAsRemoved(array $aExtensionCodes): void
 	{
-		$oExtensionsMap = new iTopExtensionsMap($this->sFinalEnv);
+		$oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv);
 		$oExtensionsMap->DeclareExtensionAsRemoved($aExtensionCodes);
 	}
 
@@ -94,7 +88,7 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 
 	public function Cleanup()
 	{
-		$sEnv = $this->sFinalEnv;
+		$sEnv = $this->sTargetEnv;
 		SetupUtils::rrmdir(APPROOT."/data/$sEnv-modules");
 		SetupUtils::rrmdir(APPROOT."/data/cache-$sEnv");
 		SetupUtils::rrmdir(APPROOT."/env-$sEnv");

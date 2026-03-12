@@ -7,17 +7,14 @@ require_once APPROOT.'setup/feature_removal/ModelReflectionSerializer.php';
 
 class SetupAudit extends AbstractSetupAudit
 {
-	//file used when present to trigger audit exception when testing specific setups
-	public const GETISSUE_ERROR_MSG_FILE_FORTESTONLY = '.setup_audit_error_msg.txt';
-
 	private string $sEnvBefore;
 	private string $sEnvAfter;
 
-	public function __construct(string $sEnvBefore, string $sEnvAfter)
+	public function __construct(string $sEnvBefore)
 	{
 		parent::__construct();
 		$this->sEnvBefore = $sEnvBefore;
-		$this->sEnvAfter = $sEnvAfter;
+		$this->sEnvAfter = "$sEnvBefore-build";
 	}
 
 	public function ComputeClasses(): void
