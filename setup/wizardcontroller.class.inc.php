@@ -16,7 +16,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-use Combodo\iTop\Application\WebPage\WebPage;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/parameters.class.inc.php');
@@ -243,6 +242,7 @@ HTML;
 		}
 		$oPage->add('</tr></table>');
 		$oPage->add("</form>");
+		$oStep->PostFormDisplay($oPage);
 		$oPage->add('<div id="async_action" style="display:none;overflow:auto;max-height:100px;color:#F00;font-size:small;"></div>'); // The div may become visible in case of error
 
 		// Hack to have the "Next >>" button, be the default button, since the first submit button in the form is the default one

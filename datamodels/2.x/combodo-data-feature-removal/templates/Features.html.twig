@@ -10,9 +10,7 @@
         {% UIDataTable ForForm { sRef:'aExtensions', aColumns:aExtensions.Columns, aData:aExtensions.Data} %}{% EndUIDataTable %}
     {% EndUIFieldSet %}
 
-
     {% UIToolbar ForButton {} %}
         {% UIButton ForPrimaryAction {sLabel:'UI:Button:Analyze'|dict_s, sName:'btn_apply', sId:'btn_apply', bIsSubmit:true} %}
     {% EndUIToolbar %}
-
 {% EndUIForm %}
