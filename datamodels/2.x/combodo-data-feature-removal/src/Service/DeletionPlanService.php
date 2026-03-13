@@ -13,6 +13,8 @@ class DeletionPlanService
 {
 	private static DeletionPlanService $oInstance;
 
+	public int $iExecutionCount = 0;
+
 	protected function __construct()
 	{
 	}
@@ -92,6 +94,7 @@ class DeletionPlanService
 	 * @since 3.3.0
 	 * @param array $aClasses
 	 * @param int $iUnixTimeLimit : max execution time in seconds since Epoch before stopping deletion. by default: no limit (ie remove all without stop)
+	 * @param int $iMaxExecutionCount : max execution count before stopping deletion. by default: no limit (ie remove all without stop)
 	 *
 	 * @return array<\Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity>
 	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
@@ -99,7 +102,7 @@ class DeletionPlanService
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function ExecuteDeletionPlan(array $aClasses, int $iUnixTimeLimit = 0): array
+	public function ExecuteDeletionPlan(array $aClasses, int $iUnixTimeLimit = 0, int $iMaxExecutionCount=0): array
 	{
 		$oDeletionPlan = $this->GetDeletionPlan($aClasses);
 
@@ -107,12 +110,14 @@ class DeletionPlanService
 			throw new DataFeatureRemovalException("Deletion Plan cannot be executed due to issues");
 		}
 
+		$this->iExecutionCount=0;
+
 		$aSummary = [];
 		foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate) {
 			$oDeletionPlanSummaryEntity = $aSummary[$sClass] ?? new DeletionPlanSummaryEntity($sClass);
 
 			foreach ($aToUpdate as $aData) {
-				if ($this->IsTimeLimitExceeded($iUnixTimeLimit)) {
+				if ($this->IsTimeLimitExceeded($iUnixTimeLimit, $iMaxExecutionCount)) {
 					$aSummary[$sClass] = $oDeletionPlanSummaryEntity;
 					return $aSummary;
 				}
@@ -133,7 +138,7 @@ class DeletionPlanService
 			$oDeletionPlanSummaryEntity = $aSummary[$sClass] ?? new DeletionPlanSummaryEntity($sClass);
 
 			foreach ($aDeletes as $sId => $aDelete) {
-				if ($this->IsTimeLimitExceeded($iUnixTimeLimit)) {
+				if ($this->IsTimeLimitExceeded($iUnixTimeLimit, $iMaxExecutionCount)) {
 					$aSummary[$sClass] = $oDeletionPlanSummaryEntity;
 					return $aSummary;
 				}
@@ -192,8 +197,15 @@ class DeletionPlanService
 		return $oDeletionPlan;
 	}
 
-	public function IsTimeLimitExceeded(int $iUnixTimeLimit): bool
+	public function IsTimeLimitExceeded(int $iUnixTimeLimit, int $iMaxExecutionCount): bool
 	{
+		throw new \Exception("");
+		$this->iExecutionCount++;
+		echo json_encode([$this->iExecutionCount, $iMaxExecutionCount]);
+		if ($iMaxExecutionCount === $this->iExecutionCount){
+			return false;
+		}
+
 		if ($iUnixTimeLimit === 0) {
 			return false;
 		}

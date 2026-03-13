@@ -62,8 +62,8 @@
           <dependencies/>
           <tracking_level>all</tracking_level>
         </field>
-        <field id="dfrtoremove_id" xsi:type="AttributeExternalKey">
-          <sql>dfrtoremove_id</sql>
+        <field id="extkey_id" xsi:type="AttributeExternalKey">
+          <sql>extkey_id</sql>
           <filter/>
           <dependencies/>
           <is_null_allowed>true</is_null_allowed>
@@ -85,7 +85,7 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="dfrtoremove_id">
+            <item id="extkey_id">
               <rank>20</rank>
             </item>
           </items>
@@ -114,8 +114,8 @@
           <dependencies/>
           <tracking_level>all</tracking_level>
         </field>
-        <field id="dfrtoremove_id" xsi:type="AttributeExternalKey">
-          <sql>dfrtoremove_id</sql>
+        <field id="extkey_id" xsi:type="AttributeExternalKey">
+          <sql>extkey_id</sql>
           <filter/>
           <dependencies/>
           <is_null_allowed>false</is_null_allowed>
@@ -137,7 +137,7 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="dfrtoremove_id">
+            <item id="extkey_id">
               <rank>20</rank>
             </item>
           </items>
@@ -209,8 +209,8 @@
           <dependencies/>
           <tracking_level>all</tracking_level>
         </field>
-        <field id="dfrremovedcollateral_id" xsi:type="AttributeExternalKey">
-          <sql>dfrremovedcollateral_id</sql>
+        <field id="extkey_id" xsi:type="AttributeExternalKey">
+          <sql>extkey_id</sql>
           <filter/>
           <dependencies/>
           <is_null_allowed>false</is_null_allowed>
@@ -232,7 +232,7 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="dfrremovedcollateral_id">
+            <item id="extkey_id">
               <rank>20</rank>
             </item>
           </items>
@@ -261,8 +261,8 @@
           <dependencies/>
           <tracking_level>all</tracking_level>
         </field>
-        <field id="dfrtoremove_id" xsi:type="AttributeExternalKey">
-          <sql>dfrtoremove_id</sql>
+        <field id="extkey_id" xsi:type="AttributeExternalKey">
+          <sql>extkey_id</sql>
           <filter/>
           <dependencies/>
           <is_null_allowed>false</is_null_allowed>
@@ -284,7 +284,7 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="dfrtoremove_id">
+            <item id="extkey_id">
               <rank>20</rank>
             </item>
           </items>
@@ -308,16 +308,16 @@
         <entry id="Class:DFRToUpdate+" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRToUpdate/Attribute:name" _delta="define"><![CDATA[Name]]></entry>
         <entry id="Class:DFRToUpdate/Attribute:name+" _delta="define"><![CDATA[]]></entry>
-        <entry id="Class:DFRToUpdate/Attribute:dfrtoremove_id" _delta="define"><![CDATA[Dfrtoremove id]]></entry>
-        <entry id="Class:DFRToUpdate/Attribute:dfrtoremove_id+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToUpdate/Attribute:extkey_id" _delta="define"><![CDATA[Dfrtoremove id]]></entry>
+        <entry id="Class:DFRToUpdate/Attribute:extkey_id+" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRRemovedCollateral/Name" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRRemovedCollateral/ComplementaryName" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRRemovedCollateral" _delta="define"><![CDATA[DFRRemovedCollateral]]></entry>
         <entry id="Class:DFRRemovedCollateral+" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRRemovedCollateral/Attribute:name" _delta="define"><![CDATA[Name]]></entry>
         <entry id="Class:DFRRemovedCollateral/Attribute:name+" _delta="define"><![CDATA[]]></entry>
-        <entry id="Class:DFRRemovedCollateral/Attribute:dfrtoremove_id" _delta="define"><![CDATA[Dfrtoremove id]]></entry>
-        <entry id="Class:DFRRemovedCollateral/Attribute:dfrtoremove_id+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRRemovedCollateral/Attribute:extkey_id" _delta="define"><![CDATA[Dfrtoremove id]]></entry>
+        <entry id="Class:DFRRemovedCollateral/Attribute:extkey_id+" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRToRemoveLeaf/Name" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRToRemoveLeaf/ComplementaryName" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRToRemoveLeaf" _delta="define"><![CDATA[DFRToRemoveLeaf]]></entry>
@@ -330,16 +330,16 @@
         <entry id="Class:DFRRemovedCollateralCascade+" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRRemovedCollateralCascade/Attribute:name" _delta="define"><![CDATA[Name]]></entry>
         <entry id="Class:DFRRemovedCollateralCascade/Attribute:name+" _delta="define"><![CDATA[]]></entry>
-        <entry id="Class:DFRRemovedCollateralCascade/Attribute:dfrremovedcollateral_id" _delta="define"><![CDATA[Dfrremovedcollateral id]]></entry>
-        <entry id="Class:DFRRemovedCollateralCascade/Attribute:dfrremovedcollateral_id+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRRemovedCollateralCascade/Attribute:extkey_id" _delta="define"><![CDATA[Dfrremovedcollateral id]]></entry>
+        <entry id="Class:DFRRemovedCollateralCascade/Attribute:extkey_id+" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRManual/Name" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRManual/ComplementaryName" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRManual" _delta="define"><![CDATA[DFRManual]]></entry>
         <entry id="Class:DFRManual+" _delta="define"><![CDATA[]]></entry>
         <entry id="Class:DFRManual/Attribute:name" _delta="define"><![CDATA[Name]]></entry>
         <entry id="Class:DFRManual/Attribute:name+" _delta="define"><![CDATA[]]></entry>
-        <entry id="Class:DFRManual/Attribute:dfrtoremove_id" _delta="define"><![CDATA[Dfrtoremove id]]></entry>
-        <entry id="Class:DFRManual/Attribute:dfrtoremove_id+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRManual/Attribute:extkey_id" _delta="define"><![CDATA[Dfrtoremove id]]></entry>
+        <entry id="Class:DFRManual/Attribute:extkey_id+" _delta="define"><![CDATA[]]></entry>
       </entries>
     </dictionary>
   </dictionaries>
