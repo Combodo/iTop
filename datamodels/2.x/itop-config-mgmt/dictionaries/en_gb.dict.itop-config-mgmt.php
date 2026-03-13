@@ -59,26 +59,6 @@ Dict::Add('EN GB', 'British English', 'British English', [
 //////////////////////////////////////////////////////////////////////
 //
 
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
-// Note: The classes have been grouped by categories: bizmodel
-//////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
 //
 // Class: lnkContactToFunctionalCI
 //
@@ -1548,10 +1528,16 @@ Dict::Add('EN GB', 'British English', 'British English', [
 // Add translation for Fieldsets
 
 Dict::Add('EN GB', 'British English', 'British English', [
-	'Server:baseinfo' => 'General information',
+	'ConfigMgnt:baseinfo' => 'General',
+	'ConfigMgnt:moreinfo' => 'CI specifics',
+	'ConfigMgnt:otherinfo' => 'Dates and description',
+	'Storage:moreinfo' => 'Storage specifics',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
+	'Server:baseinfo' => 'General',
+	'Server:moreinfo' => 'Device specifics',
 	'Server:Date' => 'Dates',
-	'Server:moreinfo' => 'More information',
-	'Server:otherinfo' => 'Other information',
+	'Server:otherinfo' => 'Description',
 	'Server:power' => 'Power supply',
 	'Class:Subnet/Tab:IPUsage' => 'IP Usage',
 	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not',

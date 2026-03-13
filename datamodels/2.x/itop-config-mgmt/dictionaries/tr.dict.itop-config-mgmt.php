@@ -1527,6 +1527,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 // Add translation for Fieldsets
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'ConfigMgnt:baseinfo' => 'General~~',
+	'ConfigMgnt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgnt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Genel Bilgi',
 	'Server:Date' => 'Tarihler',
 	'Server:moreinfo' => 'Daha fazla bilgi',

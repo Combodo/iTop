@@ -1526,6 +1526,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 // Add translation for Fieldsets
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
+	'ConfigMgnt:baseinfo' => 'General~~',
+	'ConfigMgnt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgnt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Informações gerais',
 	'Server:Date' => 'Data',
 	'Server:moreinfo' => 'Mais informações',
