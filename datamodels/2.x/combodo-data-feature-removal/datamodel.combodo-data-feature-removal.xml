@@ -1,122 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.3">
+  <classes>
+    <class id="DataFeatureRemovalBackgroundOperation" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>datafeatureremovalbackgroundoperation</db_table>
+        <style>
+          <icon>
+            <fileref ref="icons8-electricity_643cf7fd7a024968679dc0c35a710a03"/>
+          </icon>
+          <main_color>#0000ff</main_color>
+        </style>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="list_of_classes">
+            <attributes>
+              <attribute id="classes"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="creation_date" xsi:type="AttributeDateTime">
+          <sql>creation_date</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="features_code" xsi:type="AttributeText">
+          <sql>features_code</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <width/>
+          <height/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="classes" xsi:type="AttributeText">
+          <sql>classes</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+          <width/>
+          <height/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="creation_date">
+              <rank>10</rank>
+            </item>
+            <item id="features_code">
+              <rank>20</rank>
+            </item>
+            <item id="classes">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="creation_date">
+              <rank>10</rank>
+            </item>
+            <item id="features_code">
+              <rank>20</rank>
+            </item>
+            <item id="classes">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+  <dictionaries>
+    <dictionary id="EN US">
+      <entries>
+        <entry id="Class:DataFeatureRemovalBackgroundOperation/Name" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DataFeatureRemovalBackgroundOperation/ComplementaryName" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DataFeatureRemovalBackgroundOperation" _delta="define"><![CDATA[DataFeatureRemovalBackgroundOperation]]></entry>
+        <entry id="Class:DataFeatureRemovalBackgroundOperation+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DataFeatureRemovalBackgroundOperation/Attribute:creation_date" _delta="define"><![CDATA[Creation date]]></entry>
+        <entry id="Class:DataFeatureRemovalBackgroundOperation/Attribute:creation_date+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DataFeatureRemovalBackgroundOperation/Attribute:features_code" _delta="define"><![CDATA[Features code]]></entry>
+        <entry id="Class:DataFeatureRemovalBackgroundOperation/Attribute:features_code+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DataFeatureRemovalBackgroundOperation/Attribute:classes" _delta="define"><![CDATA[Classes]]></entry>
+        <entry id="Class:DataFeatureRemovalBackgroundOperation/Attribute:classes+" _delta="define"><![CDATA[]]></entry>
+      </entries>
+    </dictionary>
+  </dictionaries>
+  <files>
+    <file id="icons8-electricity_643cf7fd7a024968679dc0c35a710a03" xsi:type="File" _delta="define_if_not_exists">
+      <name>images/icons/icons8-electricity.svg</name>
+      <mime_type>image/svg+xml</mime_type>
+      <data>PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB2aWV3Qm94PSIwIDAgNDggNDgiIHdpZHRoPSIyNDBweCIgaGVpZ2h0PSIyNDBweCI+PHBhdGggZmlsbD0iIzM3YzZkMCIgZD0iTTI2LjQ1MTIsMzdsNy43NzY0Ni0xNS41NTI5MWExLDEsMCwwLDAtLjg5NDM1LTEuNDQ3MjJMMjIuOTUxMiwxOS45OTkyNWw2LjMzNi0xMy41NzYzNUExLDEsMCwwLDAsMjguMzgxLDVIMjIuNTk2MzlhMSwxLDAsMCwwLS45MTExMS41ODc4M2wtOC41OTUyNCwxOUExLDEsMCwwLDAsMTQuMDAxMTUsMjZoMTAuNDVsLTUuNSwxMVoiLz48cGF0aCBmaWxsPSIjMzdjNmQwIiBkPSJNMTYuMjIyODYsMzdIMjkuODY0NzFhLjU1NzM1LjU1NzM1LDAsMCwxLC4zNTgxNSwxTDE5Ljk2LDQ0LjM2N2ExLjAzMzY0LDEuMDMzNjQsMCwwLDEtMS40OTEyMS0uNDI1ODZMMTUuNzIyODYsMzcuNzVBLjUwNDUuNTA0NSwwLDAsMSwxNi4yMjI4NiwzN1oiLz48L3N2Zz4=</data>
+    </file>
+  </files>
   <menus>
-    <classes>
-      <class id="DataFeatureRemovalBackgroundOperation" _delta="define">
-        <properties>
-          <category>bizmodel,searchable</category>
-          <abstract>false</abstract>
-          <db_table>datafeatureremovalbackgroundoperation</db_table>
-          <style>
-            <icon>
-              <fileref ref="icons8-electricity_643cf7fd7a024968679dc0c35a710a03"/>
-            </icon>
-            <main_color>#0000ff</main_color>
-          </style>
-          <naming>
-            <attributes/>
-          </naming>
-          <reconciliation>
-            <attributes/>
-          </reconciliation>
-          <uniqueness_rules>
-            <rule id="list_of_classes">
-              <attributes>
-                <attribute id="classes"/>
-              </attributes>
-              <filter><![CDATA[]]></filter>
-              <disabled>false</disabled>
-              <is_blocking>true</is_blocking>
-            </rule>
-          </uniqueness_rules>
-        </properties>
-        <fields>
-          <field id="creation_date" xsi:type="AttributeDateTime">
-            <sql>creation_date</sql>
-            <default_value/>
-            <is_null_allowed>false</is_null_allowed>
-            <dependencies/>
-            <tracking_level>all</tracking_level>
-          </field>
-          <field id="features_code" xsi:type="AttributeText">
-            <sql>features_code</sql>
-            <default_value/>
-            <is_null_allowed>false</is_null_allowed>
-            <validation_pattern/>
-            <width/>
-            <height/>
-            <dependencies/>
-            <tracking_level>all</tracking_level>
-          </field>
-          <field id="classes" xsi:type="AttributeText">
-            <sql>classes</sql>
-            <default_value/>
-            <is_null_allowed>false</is_null_allowed>
-            <validation_pattern/>
-            <width/>
-            <height/>
-            <dependencies/>
-            <tracking_level>all</tracking_level>
-          </field>
-        </fields>
-        <methods/>
-        <presentation>
-          <list>
-            <items>
-              <item id="creation_date">
-                <rank>10</rank>
-              </item>
-              <item id="features_code">
-                <rank>20</rank>
-              </item>
-              <item id="classes">
-                <rank>30</rank>
-              </item>
-            </items>
-          </list>
-          <search>
-            <items/>
-          </search>
-          <details>
-            <items>
-              <item id="creation_date">
-                <rank>10</rank>
-              </item>
-              <item id="features_code">
-                <rank>20</rank>
-              </item>
-              <item id="classes">
-                <rank>30</rank>
-              </item>
-            </items>
-          </details>
-        </presentation>
-        <parent>cmdbAbstractObject</parent>
-      </class>
-    </classes>
-    <dictionaries>
-      <dictionary id="EN US">
-        <entries>
-          <entry id="Class:DataFeatureRemovalBackgroundOperation/Name" _delta="define"><![CDATA[]]></entry>
-          <entry id="Class:DataFeatureRemovalBackgroundOperation/ComplementaryName" _delta="define"><![CDATA[]]></entry>
-          <entry id="Class:DataFeatureRemovalBackgroundOperation" _delta="define"><![CDATA[DataFeatureRemovalBackgroundOperation]]></entry>
-          <entry id="Class:DataFeatureRemovalBackgroundOperation+" _delta="define"><![CDATA[]]></entry>
-          <entry id="Class:DataFeatureRemovalBackgroundOperation/Attribute:creation_date" _delta="define"><![CDATA[Creation date]]></entry>
-          <entry id="Class:DataFeatureRemovalBackgroundOperation/Attribute:creation_date+" _delta="define"><![CDATA[]]></entry>
-          <entry id="Class:DataFeatureRemovalBackgroundOperation/Attribute:features_code" _delta="define"><![CDATA[Features code]]></entry>
-          <entry id="Class:DataFeatureRemovalBackgroundOperation/Attribute:features_code+" _delta="define"><![CDATA[]]></entry>
-          <entry id="Class:DataFeatureRemovalBackgroundOperation/Attribute:classes" _delta="define"><![CDATA[Classes]]></entry>
-          <entry id="Class:DataFeatureRemovalBackgroundOperation/Attribute:classes+" _delta="define"><![CDATA[]]></entry>
-        </entries>
-      </dictionary>
-    </dictionaries>
-    <files>
-      <file id="icons8-electricity_643cf7fd7a024968679dc0c35a710a03" xsi:type="File" _delta="define_if_not_exists">
-        <name>images/icons/icons8-electricity.svg</name>
-        <mime_type>image/svg+xml</mime_type>
-        <data>PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciICB2aWV3Qm94PSIwIDAgNDggNDgiIHdpZHRoPSIyNDBweCIgaGVpZ2h0PSIyNDBweCI+PHBhdGggZmlsbD0iIzM3YzZkMCIgZD0iTTI2LjQ1MTIsMzdsNy43NzY0Ni0xNS41NTI5MWExLDEsMCwwLDAtLjg5NDM1LTEuNDQ3MjJMMjIuOTUxMiwxOS45OTkyNWw2LjMzNi0xMy41NzYzNUExLDEsMCwwLDAsMjguMzgxLDVIMjIuNTk2MzlhMSwxLDAsMCwwLS45MTExMS41ODc4M2wtOC41OTUyNCwxOUExLDEsMCwwLDAsMTQuMDAxMTUsMjZoMTAuNDVsLTUuNSwxMVoiLz48cGF0aCBmaWxsPSIjMzdjNmQwIiBkPSJNMTYuMjIyODYsMzdIMjkuODY0NzFhLjU1NzM1LjU1NzM1LDAsMCwxLC4zNTgxNSwxTDE5Ljk2LDQ0LjM2N2ExLjAzMzY0LDEuMDMzNjQsMCwwLDEtMS40OTEyMS0uNDI1ODZMMTUuNzIyODYsMzcuNzVBLjUwNDUuNTA0NSwwLDAsMSwxNi4yMjI4NiwzN1oiLz48L3N2Zz4=</data>
-      </file>
-    </files>
     <menu id="DataFeatureRemovalMenu" xsi:type="WebPageMenuNode" _delta="define">
       <rank>30</rank>
       <parent>SystemTools</parent>

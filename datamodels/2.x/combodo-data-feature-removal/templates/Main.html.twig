@@ -25,7 +25,9 @@
     {% include 'Features.html.twig' %}
     {% include 'ExtensionRemovalData.html.twig' %}
 
-    {% if not bHasData %}
+    {% if bAnalysisOk %}
+        {{ "DataFeatureRemoval:Analysis:Ok"|dict_s }}
+
         {% UIToolbar ForButton {} %}
             <a href="{{ sSetupUrl }}">
             {% UIButton ForPrimaryAction {sLabel:'UI:Button:Setup'|dict_s, sName:'btn_setup', sId:'btn_setup', bIsSubmit:false} %}

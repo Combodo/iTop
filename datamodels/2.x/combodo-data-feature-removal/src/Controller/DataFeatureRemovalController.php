@@ -14,6 +14,7 @@ use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalConfig;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
+use Combodo\iTop\DataFeatureRemoval\Service\BackgroundOperationService;
 use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
 use Combodo\iTop\DataFeatureRemoval\Service\DeletionPlanService;
 use Combodo\iTop\Setup\FeatureRemoval\DryRemovalRuntimeEnvironment;
@@ -39,15 +40,19 @@ class DataFeatureRemovalController extends Controller
 		$this->AddAnalyzeParams();
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['aExtensions'] = $this->GetExtensionsTable();
+		$aParams['aExtensionsCode'] = $this->aSelectedExtensionsForCheck;
 		$aParams['aAnalysisDataTable'] = $this->aAnalysisDataTable;
 		$aParams['aClasses'] = array_keys($this->aCountClassesToCleanup);
-		$aParams['DataFeatureRemovalErrorMessage'] = $sErrorMessage;
 		$aParams['bHasData'] = $this->iCount > 0;
 		$aParams['sSetupUrl'] = utils::GetAbsoluteUrlAppRoot().'setup';
 		$aParams['iCount'] = $this->iCount;
+		$aParams['DataFeatureRemovalErrorMessage'] = $sErrorMessage;
+		$aParams['bAnalysisOk'] = (count($this->aCountClassesToCleanup) > 0) && ($this->iCount === 0);
 
 		$this->AddLinkedStylesheet(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/css/DataFeatureRemoval.css');
 		$this->AddLinkedScript(utils::GetAbsoluteUrlModulesRoot().DataFeatureRemovalHelper::MODULE_NAME.'/assets/js/DataFeatureRemoval.js');
+
+		$this->m_sOperation = "Main";
 		$this->DisplayPage($aParams);
 	}
 
@@ -122,6 +127,7 @@ class DataFeatureRemovalController extends Controller
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['aDeletionPlanSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
 		$aParams['aClasses'] = $aClasses;
+		$aParams['aExtensionsCode'] = utils::ReadPostedParam('aExtensionsCode', []);
 		$aParams['iQueryCount'] = $iQueryCount;
 		$aParams['bDeletionPossible'] = ($iQueryCount <= DataFeatureRemovalConfig::GetInstance()->Get('max_count_estimation_for_safe_cleanup', 100));
 
@@ -134,6 +140,14 @@ class DataFeatureRemovalController extends Controller
 		$this->ValidateTransactionId();
 
 		$aClasses = utils::ReadPostedParam('classes', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
+		$sDeletionButtonValue = utils::ReadPostedParam('btn_deletion', null);
+		$bAsynchronous = ('async_deletion' === $sDeletionButtonValue);
+
+		if ($bAsynchronous) {
+			BackgroundOperationService::GetInstance()->CreateOperation(utils::ReadPostedParam('aExtensionsCode', []), $aClasses);
+			$this->OperationMain();
+			return;
+		}
 
 		$aDeletionExecutionSummary = DeletionPlanService::GetInstance()->ExecuteDeletionPlan($aClasses);
 		$aColumns = ['Class', 'DeletedCount' , 'UpdatedCount'];
@@ -164,16 +178,24 @@ class DataFeatureRemovalController extends Controller
 		foreach (DataFeatureRemoverExtensionService::GetInstance()->ReadItopExtensions() as $sCode => $oExtension) {
 			/** @var \iTopExtension $oExtension */
 
+			$bCleanupOngoing = BackgroundOperationService::GetInstance()->IsExtensionBeingCleaned($sCode);
 			$sChecked = '';
 			$sDisabledHtml = '';
-			if ($oExtension->bRemovedFromDisk) {
+
+			$sLabel = $oExtension->sLabel;
+			if ($bCleanupOngoing) {
+				$sDisabledHtml = 'disabled=""';
+				$sLabel .= <<<HTML
+&nbsp; <span class="ibo-spinner ibo-is-inline ibo-spinner ibo-block" data-role="ibo-spinner"><i class="ibo-spinner--icon fas fa-sync-alt fa-spin" aria-hidden="true"/></span>
+HTML;
+				;
+			} elseif ($oExtension->bRemovedFromDisk) {
 				$sDisabledHtml = 'disabled=""';
 				$sChecked = 'checked';
 			} elseif (in_array($sCode, $this->aSelectedExtensionsForCheck)) {
 				$sChecked = 'checked';
 			}
 
-			$sLabel = $oExtension->sLabel;
 			$sVersion = $oExtension->sVersion;
 			$sIdEnable = "aExtensions[$sCode][enable]";
 
@@ -231,12 +253,12 @@ HTML,
 	}
 
 	/**
-	 * @return void
+	 * @return array
 	 */
-	public function ReadRemovedExtensions(): void
+	public function ReadRemovedExtensions(): array
 	{
 		if (count($this->aSelectedExtensionsForCheck) > 0) {
-			return;
+			return $this->aSelectedExtensionsForCheck;
 		}
 
 		$aSelectedExtensionsFromUI = utils::ReadPostedParam('aExtensions', []);
@@ -253,5 +275,7 @@ HTML,
 				$this->aSelectedExtensionsForCheck[] = $sCode;
 			}
 		}
+
+		return $this->aSelectedExtensionsForCheck;
 	}
 }

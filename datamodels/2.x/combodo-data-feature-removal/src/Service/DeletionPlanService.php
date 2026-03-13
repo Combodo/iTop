@@ -5,6 +5,7 @@ namespace Combodo\iTop\DataFeatureRemoval\Service;
 use CMDBSource;
 use Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
+use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
 use DBObjectSearch;
 use DeletionPlan;
 use MetaModel;
@@ -122,6 +123,7 @@ class DeletionPlanService
 					return $aSummary;
 				}
 
+				$this->iExecutionCount++;
 				$oToUpdate = $aData['to_reset'];
 				/** @var \DBObject $oToUpdate */
 				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef) {
@@ -142,6 +144,8 @@ class DeletionPlanService
 					$aSummary[$sClass] = $oDeletionPlanSummaryEntity;
 					return $aSummary;
 				}
+
+				$this->iExecutionCount++;
 
 				try {
 					CMDBSource::Query('START TRANSACTION');
@@ -197,18 +201,12 @@ class DeletionPlanService
 		return $oDeletionPlan;
 	}
 
-	public function IsTimeLimitExceeded(int $iUnixTimeLimit, int $iMaxExecutionCount): bool
+	public function IsTimeLimitExceeded(int $iUnixTimeLimit, int $iMaxExecutionCount = -1): bool
 	{
 		if (($iMaxExecutionCount !== -1) && ($iMaxExecutionCount <= $this->iExecutionCount)) {
 			return true;
 		}
 
-		$this->iExecutionCount++;
-
-		if ($iUnixTimeLimit === 0) {
-			return false;
-		}
-
-		return (time() <= $iUnixTimeLimit);
+		return DataFeatureRemovalHelper::IsTimeLimitExceeded($iUnixTimeLimit);
 	}
 }

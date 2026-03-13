@@ -23,6 +23,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'DataFeatureRemoval:Features:Title' => 'Features',
 	'DataFeatureRemoval:Analysis:Title' => 'Analysis result',
 	'DataFeatureRemoval:Analysis:SubTitle' => '%1$s element(s) to clean before continuing',
+	'DataFeatureRemoval:Analysis:Ok' => "No data to cleanup",
 
 	'DataFeatureRemoval:DeletionPlan:Title' => 'Deletion plan',
 	'DataFeatureRemoval:DeletionPlan:SubTitle' => '%1$s rows to clean before continuing',
@@ -40,6 +41,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI:Button:AnalyzeAndSetup' => 'Analyze and go to setup',
 	'UI:Button:PlanDeletion' => 'Prepare deletion plan',
 	'UI:Button:DoDeletion' => 'Delete data',
+	'UI:Button:DoAsyncDeletion' => 'Do asynchronous deletion',
 	'UI:Button:BackToMain' => 'Back to Feature Removal',
 	'UI:Button:Setup' => 'Back to setup',
 

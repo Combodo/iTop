@@ -12,8 +12,13 @@
         {% for sKey, sClass in aClasses %}
             {% UIInput ForHidden { sName:"classes[" ~ sKey ~ "]", sValue:sClass } %}
         {% endfor %}
+
+        {% for sKey, sCode in aExtensionsCode %}
+            {% UIInput ForHidden { sName:"aExtensionsCode[" ~ sKey ~ "]", sValue:sCode } %}
+        {% endfor %}
         {% UIToolbar ForButton {} %}
             {% UIButton ForPrimaryAction {sLabel:'UI:Button:PlanDeletion'|dict_s, sName:'btn_plandeletion', sId:'btn_plandeletion', bIsSubmit:true} %}
         {% EndUIToolbar %}
     {% EndUIForm %}
 {% endif %}
+

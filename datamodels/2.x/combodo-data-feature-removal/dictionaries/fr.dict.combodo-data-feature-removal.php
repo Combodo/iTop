@@ -23,6 +23,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'DataFeatureRemoval:Features:Title' => 'Fonctionnalités',
 	'DataFeatureRemoval:Analysis:Title' => 'Résultat de l’analyse',
 	'DataFeatureRemoval:Analysis:SubTitle' => '%1$s élément(s) à nettoyer avant de poursuivre',
+	'DataFeatureRemoval:Analysis:Ok' => "Aucune donnée à nettoyer",
 
 	'DataFeatureRemoval:DeletionPlan:Title' => 'Plan de suppression',
 	'DataFeatureRemoval:DeletionPlan:SubTitle' => '%1$s ligne(s) à nettoyer avant de poursuivre',
@@ -39,6 +40,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'UI:Button:ModifyChoices' => 'Modifier les choix',
 	'UI:Button:AnalyzeAndSetup' => 'Analyser et ouvrir l’assistant de configuration',
 	'UI:Button:PlanDeletion' => 'Préparer le plan de suppression',
+	'UI:Button:DoAsyncDeletion' => 'Lancer la suppression en tâche de fond',
 	'UI:Button:DoDeletion' => 'Supprimer les données',
 	'UI:Button:BackToMain' => 'Retour à la suppression de fonctionnalités',
 	'UI:Button:Setup' => 'Retour à l’assistant de configuration',

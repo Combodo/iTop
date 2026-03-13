@@ -12,9 +12,15 @@
         {% for sKey, sClass in aClasses %}
             {% UIInput ForHidden { sName:"classes[" ~ sKey ~ "]", sValue:sClass } %}
         {% endfor %}
+
+        {% for sKey, sCode in aExtensionsCode %}
+            {% UIInput ForHidden { sName:"aExtensionsCode[" ~ sKey ~ "]", sValue:sCode } %}
+        {% endfor %}
+
         {% UIToolbar ForButton {} %}
             {% UIButton ForPrimaryAction {sLabel:'UI:Button:DoDeletion'|dict_s, sName:'btn_deletion', sId:'btn_deletion', bIsSubmit:true} %}
-        {% EndUIToolbar %}
+            {% UIButton ForPrimaryAction {sLabel:'UI:Button:DoAsyncDeletion'|dict_s, sName:'btn_deletion', sId:'btn_async_deletion', sValue: 'async_deletion', bIsSubmit:true} %}
+    {% EndUIToolbar %}
     {% EndUIForm %}
 {% else %}
     {{ 'DataFeatureRemoval:DeletionPlan:ToManyOperations'|dict_s }}
