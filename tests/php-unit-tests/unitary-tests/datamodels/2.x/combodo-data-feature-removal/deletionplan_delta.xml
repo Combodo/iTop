@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2">
+  <classes>
+    <class id="DFRToRemove" _created_in="itop-structure" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>true</abstract>
+        <db_table>dfrtoremove</db_table>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items/>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="DFRToUpdate" _created_in="itop-structure" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dfrtoupdate</db_table>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="dfrtoremove_id" xsi:type="AttributeExternalKey">
+          <sql>dfrtoremove_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>DFRToRemove</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items/>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="dfrtoremove_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="DFRRemovedCollateral" _created_in="itop-structure" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dfrremovedcollateral</db_table>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="dfrtoremove_id" xsi:type="AttributeExternalKey">
+          <sql>dfrtoremove_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>DFRToRemove</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items/>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="dfrtoremove_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="DFRToRemoveLeaf" _created_in="itop-structure" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dfrtoremoveleaf</db_table>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="desc" xsi:type="AttributeString">
+          <sql>desc</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items/>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="desc">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>DFRToRemove</parent>
+    </class>
+    <class id="DFRRemovedCollateralCascade" _created_in="itop-structure" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dfrremovedcollateralcascade</db_table>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="dfrremovedcollateral_id" xsi:type="AttributeExternalKey">
+          <sql>dfrremovedcollateral_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>DFRRemovedCollateral</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items/>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="dfrremovedcollateral_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="DFRManual" _created_in="itop-structure" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dfrmanual</db_table>
+        <naming>
+          <attributes/>
+        </naming>
+        <reconciliation>
+          <attributes/>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+          <dependencies/>
+          <tracking_level>all</tracking_level>
+        </field>
+        <field id="dfrtoremove_id" xsi:type="AttributeExternalKey">
+          <sql>dfrtoremove_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>DFRToRemove</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <tracking_level>all</tracking_level>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items/>
+        </list>
+        <search>
+          <items/>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="dfrtoremove_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+  </classes>
+  <dictionaries>
+    <dictionary id="EN US">
+      <entries>
+        <entry id="Class:DFRToRemove/Name" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToRemove/ComplementaryName" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToRemove" _delta="define"><![CDATA[DFRToRemove]]></entry>
+        <entry id="Class:DFRToRemove+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToRemove/Attribute:name" _delta="define"><![CDATA[Name]]></entry>
+        <entry id="Class:DFRToRemove/Attribute:name+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToUpdate/Name" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToUpdate/ComplementaryName" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToUpdate" _delta="define"><![CDATA[DFRToUpdate]]></entry>
+        <entry id="Class:DFRToUpdate+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToUpdate/Attribute:name" _delta="define"><![CDATA[Name]]></entry>
+        <entry id="Class:DFRToUpdate/Attribute:name+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToUpdate/Attribute:dfrtoremove_id" _delta="define"><![CDATA[Dfrtoremove id]]></entry>
+        <entry id="Class:DFRToUpdate/Attribute:dfrtoremove_id+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRRemovedCollateral/Name" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRRemovedCollateral/ComplementaryName" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRRemovedCollateral" _delta="define"><![CDATA[DFRRemovedCollateral]]></entry>
+        <entry id="Class:DFRRemovedCollateral+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRRemovedCollateral/Attribute:name" _delta="define"><![CDATA[Name]]></entry>
+        <entry id="Class:DFRRemovedCollateral/Attribute:name+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRRemovedCollateral/Attribute:dfrtoremove_id" _delta="define"><![CDATA[Dfrtoremove id]]></entry>
+        <entry id="Class:DFRRemovedCollateral/Attribute:dfrtoremove_id+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToRemoveLeaf/Name" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToRemoveLeaf/ComplementaryName" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToRemoveLeaf" _delta="define"><![CDATA[DFRToRemoveLeaf]]></entry>
+        <entry id="Class:DFRToRemoveLeaf+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRToRemoveLeaf/Attribute:desc" _delta="define"><![CDATA[Desc]]></entry>
+        <entry id="Class:DFRToRemoveLeaf/Attribute:desc+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRRemovedCollateralCascade/Name" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRRemovedCollateralCascade/ComplementaryName" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRRemovedCollateralCascade" _delta="define"><![CDATA[DFRRemovedCollateralCascade]]></entry>
+        <entry id="Class:DFRRemovedCollateralCascade+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRRemovedCollateralCascade/Attribute:name" _delta="define"><![CDATA[Name]]></entry>
+        <entry id="Class:DFRRemovedCollateralCascade/Attribute:name+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRRemovedCollateralCascade/Attribute:dfrremovedcollateral_id" _delta="define"><![CDATA[Dfrremovedcollateral id]]></entry>
+        <entry id="Class:DFRRemovedCollateralCascade/Attribute:dfrremovedcollateral_id+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRManual/Name" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRManual/ComplementaryName" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRManual" _delta="define"><![CDATA[DFRManual]]></entry>
+        <entry id="Class:DFRManual+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRManual/Attribute:name" _delta="define"><![CDATA[Name]]></entry>
+        <entry id="Class:DFRManual/Attribute:name+" _delta="define"><![CDATA[]]></entry>
+        <entry id="Class:DFRManual/Attribute:dfrtoremove_id" _delta="define"><![CDATA[Dfrtoremove id]]></entry>
+        <entry id="Class:DFRManual/Attribute:dfrtoremove_id+" _delta="define"><![CDATA[]]></entry>
+      </entries>
+    </dictionary>
+  </dictionaries>
+</itop_design>
