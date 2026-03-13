@@ -87,8 +87,7 @@ class DataFeatureRemovalController extends Controller
 	private function Analyze(): void
 	{
 		$sSourceEnv = MetaModel::GetEnvironment();
-		$oDryRemovalRuntimeEnvironment = new DryRemovalRuntimeEnvironment();
-		$oDryRemovalRuntimeEnvironment->Prepare($sSourceEnv, $this->aSelectedExtensionsForCheck);
+		$oDryRemovalRuntimeEnvironment = new DryRemovalRuntimeEnvironment($sSourceEnv, $this->aSelectedExtensionsForCheck);
 		$oDryRemovalRuntimeEnvironment->CompileFrom($sSourceEnv);
 
 		$oSetupAudit = new SetupAudit($sSourceEnv);

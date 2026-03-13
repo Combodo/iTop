@@ -19,32 +19,28 @@ class DryRemovalRuntimeEnvironment extends RunTimeEnvironment
 	/**
 	 * Toolset for building a run-time environment
 	 *
-	 * @param string $sEnvironment
+	 *  @param string $sSourceEnv: environment from which setup is inspired to simulate extension removal and usee CompileFrom...
 	 */
-	public function __construct($sEnvironment = 'production')
+	public function __construct($sSourceEnv = 'production', array $aExtensionCodesToRemove = [])
 	{
-		parent::__construct($sEnvironment, false);
-		$this->aExtensionsByCode = [];
+		parent::__construct($sSourceEnv, false);
+		$this->aExtensionsByCode = $aExtensionCodesToRemove;
+		$this->Prepare($sSourceEnv, $this->sTargetEnv);
 	}
 
 	/**
-	 * @param string $sSourceEnv
-	 * @param array $aExtensionCodesToRemove
-	 *
-	 * @return void
-	 * @throws \Exception
+	* @param string $sSourceEnv
+	* @param string $sTargetEnv
+	* @return void
+	* @throws \MissingDependencyException
 	 */
-	public function Prepare(string $sSourceEnv, array $aExtensionCodesToRemove)
+	private function Prepare(string $sSourceEnv, string $sTargetEnv)
 	{
-		$sEnv = $this->sTargetEnv;
-		$this->aExtensionsByCode = $aExtensionCodesToRemove;
-
 		$this->Cleanup();
-		SetupUtils::copydir(APPROOT."/data/$sSourceEnv-modules", APPROOT."/data/$sEnv-modules");
+		SetupUtils::copydir(APPROOT."/data/$sSourceEnv-modules", APPROOT."/data/$sTargetEnv-modules");
+		SetupUtils::copydir(APPROOT."/conf/$sSourceEnv", APPROOT."/conf/$sTargetEnv");
 
-		$this->DeclareExtensionAsRemoved($aExtensionCodesToRemove);
-
-		SetupUtils::copydir(APPROOT."/conf/$sSourceEnv", APPROOT."/conf/$sEnv");
+		$this->DeclareExtensionAsRemoved($this->aExtensionsByCode);
 
 		$sSourceDir = MetaModel::GetConfig()->Get('source_dir');
 		$aSearchDirs = $this->GetExtraDirsToCompile($sSourceDir);
