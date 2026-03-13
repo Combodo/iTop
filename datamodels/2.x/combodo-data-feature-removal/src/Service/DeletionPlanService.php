@@ -89,7 +89,9 @@ class DeletionPlanService
 	}
 
 	/**
+	 * @since 3.3.0
 	 * @param array $aClasses
+	 * @param int $iUnixTimeLimit : max execution time in seconds since Epoch before stopping deletion. by default: no limit (ie remove all without stop)
 	 *
 	 * @return array<\Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity>
 	 * @throws \Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException
@@ -97,7 +99,7 @@ class DeletionPlanService
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function ExecuteDeletionPlan(array $aClasses): array
+	public function ExecuteDeletionPlan(array $aClasses, int $iUnixTimeLimit = 0): array
 	{
 		$oDeletionPlan = $this->GetDeletionPlan($aClasses);
 
@@ -110,6 +112,11 @@ class DeletionPlanService
 			$oDeletionPlanSummaryEntity = $aSummary[$sClass] ?? new DeletionPlanSummaryEntity($sClass);
 
 			foreach ($aToUpdate as $aData) {
+				if ($this->IsTimeLimitExceeded($iUnixTimeLimit)) {
+					$aSummary[$sClass] = $oDeletionPlanSummaryEntity;
+					return $aSummary;
+				}
+
 				$oToUpdate = $aData['to_reset'];
 				/** @var \DBObject $oToUpdate */
 				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef) {
@@ -126,6 +133,11 @@ class DeletionPlanService
 			$oDeletionPlanSummaryEntity = $aSummary[$sClass] ?? new DeletionPlanSummaryEntity($sClass);
 
 			foreach ($aDeletes as $sId => $aDelete) {
+				if ($this->IsTimeLimitExceeded($iUnixTimeLimit)) {
+					$aSummary[$sClass] = $oDeletionPlanSummaryEntity;
+					return $aSummary;
+				}
+
 				try {
 					CMDBSource::Query('START TRANSACTION');
 					// Delete any existing change tracking about the current object
@@ -144,7 +156,7 @@ class DeletionPlanService
 
 					CMDBSource::Query('COMMIT');
 				} catch (\Exception $e) {
-					\IssueLog::Exception(__METHOD__.': Cleanup failed', $e);
+					\IssueLog::Exception(__METHOD__.": Cleanup failed", $e);
 					CMDBSource::Query('ROLLBACK');
 					throw $e;
 				}
@@ -178,5 +190,14 @@ class DeletionPlanService
 		}
 
 		return $oDeletionPlan;
+	}
+
+	public function IsTimeLimitExceeded(int $iUnixTimeLimit): bool
+	{
+		if ($iUnixTimeLimit === 0) {
+			return false;
+		}
+
+		return (time() <= $iUnixTimeLimit);
 	}
 }
