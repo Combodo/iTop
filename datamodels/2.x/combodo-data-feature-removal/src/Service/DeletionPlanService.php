@@ -102,7 +102,7 @@ class DeletionPlanService
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function ExecuteDeletionPlan(array $aClasses, int $iUnixTimeLimit = 0, int $iMaxExecutionCount=0): array
+	public function ExecuteDeletionPlan(array $aClasses, int $iUnixTimeLimit = 0, int $iMaxExecutionCount = -1): array
 	{
 		$oDeletionPlan = $this->GetDeletionPlan($aClasses);
 
@@ -110,7 +110,7 @@ class DeletionPlanService
 			throw new DataFeatureRemovalException("Deletion Plan cannot be executed due to issues");
 		}
 
-		$this->iExecutionCount=0;
+		$this->iExecutionCount = 0;
 
 		$aSummary = [];
 		foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate) {
@@ -199,12 +199,11 @@ class DeletionPlanService
 
 	public function IsTimeLimitExceeded(int $iUnixTimeLimit, int $iMaxExecutionCount): bool
 	{
-		throw new \Exception("");
-		$this->iExecutionCount++;
-		echo json_encode([$this->iExecutionCount, $iMaxExecutionCount]);
-		if ($iMaxExecutionCount === $this->iExecutionCount){
-			return false;
+		if (($iMaxExecutionCount !== -1) && ($iMaxExecutionCount <= $this->iExecutionCount)) {
+			return true;
 		}
+
+		$this->iExecutionCount++;
 
 		if ($iUnixTimeLimit === 0) {
 			return false;
