@@ -1223,8 +1223,8 @@ public function PrefillSearchForm(&$aContextParam)
             </value>
           </values>
           <sql>status</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
+          <default_value>implementation</default_value>
+          <is_null_allowed>false</is_null_allowed>
           <display_style>list</display_style>
         </field>
         <field id="icon" xsi:type="AttributeImage">
@@ -1664,8 +1664,8 @@ public function PrefillSearchForm(&$aContextParam)
             </value>
           </values>
           <sql>status</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
+          <default_value>implementation</default_value>
+          <is_null_allowed>false</is_null_allowed>
           <display_style>list</display_style>
         </field>
       </fields>
