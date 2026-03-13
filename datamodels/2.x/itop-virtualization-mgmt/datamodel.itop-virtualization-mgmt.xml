@@ -1006,7 +1006,7 @@
           </attributes>
         </reconciliation>
         <style>
-          <icon>images/icons8-cloud.svg</icon>
+          <icon>../../images/icons/icons8-cloud.svg</icon>
         </style>
       </properties>
       <fields>
