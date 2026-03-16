@@ -1720,14 +1720,14 @@ Dict::Add('FR FR', 'French', 'Français', [
 // Add translation for Fieldsets
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'ConfigMgnt:baseinfo' => 'Informations générales',
+	'ConfigMgmt:baseinfo' => 'Informations générales',
 	'Server:baseinfo' => 'Informations générales',
-	'ConfigMgnt:moreinfo' => 'Item spécifique',
+	'ConfigMgmt:moreinfo' => 'Item spécifique',
 	'Server:moreinfo' => 'Matériel spécifique',
 	'Storage:moreinfo' => 'Stockage spécifique',
 	'Software:moreinfo' => 'Logiciel spécifique',
 	'Phone:moreinfo' => 'Téléphone spécifique',
-	'ConfigMgnt:otherinfo' => 'Dates et description',
+	'ConfigMgmt:otherinfo' => 'Dates et description',
 	'Server:Date' => 'Dates',
 	'Server:otherinfo' => 'Description',
 	'Server:power' => 'Alimentation électrique',

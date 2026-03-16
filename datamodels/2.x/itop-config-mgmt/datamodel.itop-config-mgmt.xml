@@ -1719,7 +1719,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -1741,7 +1741,7 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="move2production">
                       <rank>50</rank>
@@ -1896,7 +1896,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -1918,7 +1918,7 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="move2production">
                       <rank>50</rank>
@@ -2236,7 +2236,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -2420,7 +2420,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -2604,7 +2604,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -2780,7 +2780,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -2943,7 +2943,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -3119,7 +3119,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -3133,7 +3133,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:ConfigMgmt:moreinfo">
                   <items>
                     <item id="middleware_id">
                       <rank>30</rank>
@@ -3146,7 +3146,7 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="move2production">
                       <rank>50</rank>
@@ -3281,7 +3281,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -3295,7 +3295,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:ConfigMgmt:moreinfo">
                   <items>
                     <item id="dbserver_id">
                       <rank>10</rank>
@@ -3308,7 +3308,7 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="move2production">
                       <rank>50</rank>
@@ -3449,7 +3449,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -3463,7 +3463,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:ConfigMgmt:moreinfo">
                   <items>
                     <item id="webserver_id">
                       <rank>30</rank>
@@ -3479,7 +3479,7 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="move2production">
               <rank>60</rank>
@@ -4155,7 +4155,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -4166,7 +4166,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:ConfigMgmt:moreinfo">
                   <items>
                     <item id="usage_limit">
                       <rank>30</rank>
@@ -4185,7 +4185,7 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="start_date">
                       <rank>60</rank>
@@ -4333,7 +4333,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -4344,7 +4344,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:ConfigMgmt:moreinfo">
                   <rank>20</rank>
                   <items>
                     <item id="osversion_id">
@@ -4366,7 +4366,7 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="start_date">
                       <rank>70</rank>
@@ -4509,7 +4509,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -4520,7 +4520,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:ConfigMgmt:moreinfo">
                   <items>
                     <item id="software_id">
                       <rank>30</rank>
@@ -4542,7 +4542,7 @@
             </item>
             <item id="col:col2">
               <items>
-                <item id="fieldset:ConfigMgnt:otherinfo">
+                <item id="fieldset:ConfigMgmt:otherinfo">
                   <items>
                     <item id="start_date">
                       <rank>70</rank>
@@ -6597,7 +6597,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -6608,7 +6608,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:ConfigMgmt:moreinfo">
                   <items>
                     <item id="connectableci_id">
                       <rank>20</rank>
@@ -7425,7 +7425,7 @@
           <items>
             <item id="col:col1">
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <items>
                     <item id="name">
                       <rank>10</rank>
@@ -7439,7 +7439,7 @@
                   </items>
                   <rank>10</rank>
                 </item>
-                <item id="fieldset:ConfigMgnt:moreinfo">
+                <item id="fieldset:ConfigMgmt:moreinfo">
                   <items>
                     <item id="type">
                       <rank>40</rank>

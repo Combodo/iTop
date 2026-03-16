@@ -1543,10 +1543,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 // Add translation for Fieldsets
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'ConfigMgnt:baseinfo' => 'General~~',
-	'ConfigMgnt:moreinfo' => 'CI specifics~~',
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
 	'Storage:moreinfo' => 'Storage specifics~~',
-	'ConfigMgnt:otherinfo' => 'Dates and description~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
 	'Software:moreinfo' => 'Software specifics~~',
 	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => '基本信息',

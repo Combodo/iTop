@@ -1528,9 +1528,9 @@ Dict::Add('EN GB', 'British English', 'British English', [
 // Add translation for Fieldsets
 
 Dict::Add('EN GB', 'British English', 'British English', [
-	'ConfigMgnt:baseinfo' => 'General',
-	'ConfigMgnt:moreinfo' => 'CI specifics',
-	'ConfigMgnt:otherinfo' => 'Dates and description',
+	'ConfigMgmt:baseinfo' => 'General',
+	'ConfigMgmt:moreinfo' => 'CI specifics',
+	'ConfigMgmt:otherinfo' => 'Dates and description',
 	'Storage:moreinfo' => 'Storage specifics',
 	'Software:moreinfo' => 'Software specifics~~',
 	'Phone:moreinfo' => 'Phone specifics~~',

@@ -1527,10 +1527,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 // Add translation for Fieldsets
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'ConfigMgnt:baseinfo' => 'General~~',
-	'ConfigMgnt:moreinfo' => 'CI specifics~~',
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
 	'Storage:moreinfo' => 'Storage specifics~~',
-	'ConfigMgnt:otherinfo' => 'Dates and description~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
 	'Software:moreinfo' => 'Software specifics~~',
 	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Allgemeine Informationen',
