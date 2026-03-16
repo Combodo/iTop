@@ -1401,6 +1401,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:SelectInlineImageToUpload' => 'Select the image to upload~~',
 	'UI:AvailableInlineImagesLegend' => 'Available images~~',
 	'UI:NoInlineImage' => 'There is no image available on the server. Use the "Browse" button above to select an image from your computer and upload it to the server.~~',
+	'UI:MissingInlineImage' => 'Missing image~~',
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',

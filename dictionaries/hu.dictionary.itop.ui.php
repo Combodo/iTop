@@ -1400,6 +1400,7 @@ A művelet eseményindítóhoz rendelésekor kap egy sorszámot , amely meghatá
 	'UI:SelectInlineImageToUpload' => 'Válasszon egy képet',
 	'UI:AvailableInlineImagesLegend' => 'Elérhető képek',
 	'UI:NoInlineImage' => 'A szerveren nincs elérhető kép. Használja a fenti "Tallózás" gombot egy kép kiválasztásához a számítógépéről, és töltse fel a szerverre.',
+	'UI:MissingInlineImage' => 'Hiányzó kép',
 	'UI:ToggleFullScreen' => 'Maximalizálás / Minimalizálás',
 	'UI:Button:ResetImage' => 'Az előző kép visszaállítása',
 	'UI:Button:RemoveImage' => 'Kép eltávolítása',

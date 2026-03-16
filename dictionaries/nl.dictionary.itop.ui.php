@@ -1400,6 +1400,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:SelectInlineImageToUpload' => 'Selecteer een afbeelding om te uploaden',
 	'UI:AvailableInlineImagesLegend' => 'Beschikbare afbeeldingen',
 	'UI:NoInlineImage' => 'Er is geen afbeelding beschikbaar op de server. Gebruik de "Afbeeldingen doorbladeren..." knop hierboven om een afbeelding te kiezen op je toestel.',
+	'UI:MissingInlineImage' => 'Ontbrekende afbeelding',
 	'UI:ToggleFullScreen' => 'Minimaliseren / Maximaliseren',
 	'UI:Button:ResetImage' => 'Vorige afbeelding herstellen',
 	'UI:Button:RemoveImage' => 'Afbeelding verwijderen',
