@@ -2054,6 +2054,9 @@ EOF
 				if (false === $oSet->CountExceeds(0)) {
 					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
 				}
+				if (UserRights::IsActionAllowed($sObjClass, UR_ACTION_MODIFY, $oSet) != UR_ALLOWED_YES) {
+					throw new SecurityException(Dict::S('UI:ActionNotAllowed'));
+				}
 
 				$aResult = iTopOwnershipLock::AcquireLock($sObjClass, $iObjKey);
 				if (false === $aResult['success']) {
