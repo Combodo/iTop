@@ -11,6 +11,7 @@ require_once APPROOT.'setup/feature_removal/SetupAudit.php';
 require_once APPROOT.'setup/feature_removal/DryRemovalRuntimeEnvironment.php';
 
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
+use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalConfig;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalHelper;
 use Combodo\iTop\DataFeatureRemoval\Service\DataFeatureRemoverExtensionService;
@@ -107,6 +108,7 @@ class DataFeatureRemovalController extends Controller
 		$aDeletionPlanSummaryEntities = DeletionPlanService::GetInstance()->GetDeletionPlanSummary($aClasses);
 		$aColumns = ['Class', 'DeleteCount' , 'UpdateCount', 'Issue'];
 		$aRows = [];
+		$iQueryCount = 0;
 		foreach ($aDeletionPlanSummaryEntities as $oDeletionPlanSummaryEntity) {
 			$aRows[] = [
 				$oDeletionPlanSummaryEntity->sClass,
@@ -114,11 +116,15 @@ class DataFeatureRemovalController extends Controller
 				$oDeletionPlanSummaryEntity->iUpdateCount,
 				$oDeletionPlanSummaryEntity->sIssue ?? '',
 			];
+			$iQueryCount += $oDeletionPlanSummaryEntity->iDeleteCount;
+			$iQueryCount += $oDeletionPlanSummaryEntity->iUpdateCount;
 		}
 
 		$aParams['sTransactionId'] = utils::GetNewTransactionId();
 		$aParams['aDeletionPlanSummary'] = $this->GetTableData('Extensions', $aColumns, $aRows);
 		$aParams['aClasses'] = $aClasses;
+		$aParams['iQueryCount'] = $iQueryCount;
+		$aParams['bDeletionPossible'] = ($iQueryCount <= DataFeatureRemovalConfig::GetInstance()->Get('max_count_estimation_for_safe_cleanup', 100));
 
 		$this->DisplayPage($aParams);
 	}

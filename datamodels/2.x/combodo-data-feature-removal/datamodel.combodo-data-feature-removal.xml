@@ -8,4 +8,9 @@
       <enable_admin_only>1</enable_admin_only>
     </menu>
   </menus>
+  <module_parameters>
+    <parameters id="combodo-data-feature-removal">
+      <max_count_estimation_for_safe_cleanup>100</max_count_estimation_for_safe_cleanup>
+    </parameters>
+  </module_parameters>
 </itop_design>

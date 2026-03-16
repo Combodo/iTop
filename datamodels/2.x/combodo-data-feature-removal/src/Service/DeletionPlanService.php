@@ -126,20 +126,28 @@ class DeletionPlanService
 			$oDeletionPlanSummaryEntity = $aSummary[$sClass] ?? new DeletionPlanSummaryEntity($sClass);
 
 			foreach ($aDeletes as $sId => $aDelete) {
-				// Delete any existing change tracking about the current object
-				$oFilter = new DBObjectSearch('CMDBChangeOp');
-				$oFilter->AddCondition('objclass', $sClass, '=');
-				$oFilter->AddCondition('objkey', $sId, '=');
-				MetaModel::PurgeData($oFilter);
+				try {
+					CMDBSource::Query('START TRANSACTION');
+					// Delete any existing change tracking about the current object
+					$oFilter = new DBObjectSearch('CMDBChangeOp');
+					$oFilter->AddCondition('objclass', $sClass, '=');
+					$oFilter->AddCondition('objkey', $sId, '=');
+					MetaModel::PurgeData($oFilter);
 
-				// Delete the entry
-				$aClassesToRemove = array_merge(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL), MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_EXCLUDELEAF, false));
-				foreach ($aClassesToRemove as $sParentClass) {
-					$oFilter = DBObjectSearch::FromOQL_AllData("SELECT $sParentClass WHERE id=:id");
-					$sQuery = $oFilter->MakeDeleteQuery(['id' => $sId]);
-					CMDBSource::DeleteFrom($sQuery);
+					// Delete the entry
+					$aClassesToRemove = array_merge(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL), MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_EXCLUDELEAF, false));
+					foreach ($aClassesToRemove as $sParentClass) {
+						$oFilter = DBObjectSearch::FromOQL_AllData("SELECT $sParentClass WHERE id=:id");
+						$sQuery = $oFilter->MakeDeleteQuery(['id' => $sId]);
+						CMDBSource::DeleteFrom($sQuery);
+					}
+
+					CMDBSource::Query('COMMIT');
+				} catch (\Exception $e) {
+					\IssueLog::Exception(__METHOD__.': Cleanup failed', $e);
+					CMDBSource::Query('ROLLBACK');
+					throw $e;
 				}
-
 				$oDeletionPlanSummaryEntity->iDeleteCount++;
 			}
 

@@ -25,9 +25,10 @@ Dict::Add('EN US', 'English', 'English', [
 	'DataFeatureRemoval:Analysis:SubTitle' => '%1$s element(s) to clean before continuing',
 
 	'DataFeatureRemoval:DeletionPlan:Title' => 'Deletion plan',
-	'DataFeatureRemoval:DeletionPlan:SubTitle' => 'Database tables to clean before continuing',
+	'DataFeatureRemoval:DeletionPlan:SubTitle' => '%1$s rows to clean before continuing',
 	'DataFeatureRemoval:DoDeletion:Title' => 'Do deletion',
 	'DataFeatureRemoval:DoDeletion:SubTitle' => 'Remove all the entries from the database',
+	'DataFeatureRemoval:DeletionPlan:ToManyOperations' => 'Too many entries to clean',
 
 	'DataFeatureRemoval:Table:Analysis:ClassName' => 'Element to remove',
 	'DataFeatureRemoval:Table:Analysis:FeatureName' => 'Feature name',
