@@ -2759,49 +2759,196 @@ public function PrefillSearchForm(&$aContextParam)
     </menu>
     <menu id="CustomerContract" xsi:type="OQLMenuNode" _delta="define">
       <rank>1</rank>
-      <parent>ServiceManagement</parent>
+      <parent>Service:Overview</parent>
       <oql>SELECT CustomerContract</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="ProviderContract" xsi:type="OQLMenuNode" _delta="define">
       <rank>2</rank>
-      <parent>ServiceManagement</parent>
+      <parent>Service:Overview</parent>
       <oql>SELECT ProviderContract</oql>
       <do_search>1</do_search>
     </menu>
+    <menu id="ServiceCatalog" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>10</rank>
+      <parent>ServiceManagement</parent>
+      <definition>
+        <layout>DashboardLayoutTwoCols</layout>
+        <title>UI-ServiceCatalogMenu-Title</title>
+        <auto_reload>
+          <enabled>false</enabled>
+          <interval>300</interval>
+        </auto_reload>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="CatalogBadgesHeader" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>UI-ServiceCatalogMenu-Title</title>
+                <icon></icon>
+              </dashlet>
+              <dashlet id="ServiceFamily" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>ServiceFamily</class>
+              </dashlet>
+              <dashlet id="Service" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>Service</class>
+              </dashlet>
+              <dashlet id="ServiceSubcategory" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>ServiceSubcategory</class>
+              </dashlet>
+              <dashlet id="SLA" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>SLA</class>
+              </dashlet>
+              <dashlet id="SLT" xsi:type="DashletBadge">
+                <rank>5</rank>
+                <class>SLT</class>
+              </dashlet>
+              <dashlet id="DeliveryModel" xsi:type="DashletObjectList">
+                <rank>6</rank>
+                <title>Class:DeliveryModel</title>
+                <query>SELECT DeliveryModel</query>
+                <menu>true</menu>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="1">
+            <rank>1</rank>
+            <dashlets>
+              <dashlet id="NotInPortalHeader" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>UI-ServiceCatalogMenu-NotInPortal</title>
+                <icon></icon>
+              </dashlet>
+              <dashlet id="ServiceByStatus" xsi:type="DashletHeaderDynamic">
+                <rank>1</rank>
+                <title>Class:Service</title>
+                <icon>/icons8-service.svg</icon>
+                <subtitle>UI-ServiceCatalogMenu-ObsoleteNotInPortal</subtitle>
+                <query>SELECT Service</query>
+                <group_by>status</group_by>
+                <values>implementation,obsolete,production</values>
+              </dashlet>
+              <dashlet id="ServiceSubcategoryByStatus" xsi:type="DashletHeaderDynamic">
+                <rank>2</rank>
+                <title>Class:ServiceSubcategory</title>
+                <icon>/icons8-services.svg</icon>
+                <subtitle>UI-ServiceCatalogMenu-ObsoleteNotInPortal</subtitle>
+                <query>SELECT ServiceSubcategory</query>
+                <group_by>status</group_by>
+                <values>implementation,obsolete,production</values>
+              </dashlet>
+              <dashlet id="ServiceWithoutFamily" xsi:type="DashletObjectList">
+                <rank>3</rank>
+                <title>UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal</title>
+                <query>SELECT Service WHERE servicefamily_id=0</query>
+                <menu>false</menu>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="2">
+            <rank>2</rank>
+            <dashlets>
+              <dashlet id="SLTBySLA" xsi:type="DashletGroupByTable">
+                <rank>0</rank>
+                <title>UI-ServiceCatalogMenu-SLTBySLA</title>
+                <query>SELECT lnkSLAToSLT</query>
+                <group_by>sla_id</group_by>
+                <style>table</style>
+                <aggregation_function>count</aggregation_function>
+                <aggregation_attribute></aggregation_attribute>
+                <limit></limit>
+                <order_by>attribute</order_by>
+                <order_direction>desc</order_direction>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="3">
+            <rank>3</rank>
+            <dashlets>
+              <dashlet id="ContractByService" xsi:type="DashletGroupByTable">
+                <rank>0</rank>
+                <title>UI-ServiceCatalogMenu-ContractByService</title>
+                <query>SELECT lnkCustomerContractToService AS lnk JOIN CustomerContract AS cc ON lnk.customercontract_id=cc.id WHERE cc.status != 'obsolete'</query>
+                <group_by>service_id</group_by>
+                <style>table</style>
+                <aggregation_function>count</aggregation_function>
+                <aggregation_attribute></aggregation_attribute>
+                <limit></limit>
+                <order_by>attribute</order_by>
+                <order_direction>desc</order_direction>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="4">
+            <rank>4</rank>
+            <dashlets>
+              <dashlet id="ContractBySLA" xsi:type="DashletGroupByTable">
+                <rank>0</rank>
+                <title>UI-ServiceCatalogMenu-ContractBySLA</title>
+                <query>SELECT lnkCustomerContractToService AS lnk JOIN CustomerContract AS cc ON lnk.customercontract_id=cc.id WHERE cc.status != 'obsolete'</query>
+                <group_by>sla_id</group_by>
+                <style>table</style>
+                <aggregation_function>count</aggregation_function>
+                <aggregation_attribute></aggregation_attribute>
+                <limit></limit>
+                <order_by>attribute</order_by>
+                <order_direction>desc</order_direction>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="5">
+            <rank>5</rank>
+            <dashlets>
+              <dashlet id="UnusedService" xsi:type="DashletObjectList">
+                <rank>0</rank>
+                <title>UI-ServiceCatalogMenu-UnusedService</title>
+                <query>SELECT Service WHERE status='production' AND id NOT IN (SELECT Service AS s JOIN lnkCustomerContractToService AS lnk ON lnk.service_id= s.id JOIN CustomerContract AS cc ON lnk.customercontract_id = cc.id WHERE cc.status != 'obsolete')
+                </query>
+                <menu>false</menu>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
     <menu id="ServiceFamily" xsi:type="OQLMenuNode" _delta="define">
       <rank>2.5</rank>
-      <parent>ServiceManagement</parent>
+      <parent>ServiceCatalog</parent>
       <oql>SELECT ServiceFamily</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="Service" xsi:type="OQLMenuNode" _delta="define">
       <rank>3</rank>
-      <parent>ServiceManagement</parent>
+      <parent>ServiceCatalog</parent>
       <oql>SELECT Service</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="ServiceSubcategory" xsi:type="OQLMenuNode" _delta="define">
       <rank>4</rank>
-      <parent>ServiceManagement</parent>
+      <parent>ServiceCatalog</parent>
       <oql>SELECT ServiceSubcategory</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="SLA" xsi:type="OQLMenuNode" _delta="define">
       <rank>5</rank>
-      <parent>ServiceManagement</parent>
+      <parent>ServiceCatalog</parent>
       <oql>SELECT SLA</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="SLT" xsi:type="OQLMenuNode" _delta="define">
       <rank>6</rank>
-      <parent>ServiceManagement</parent>
+      <parent>ServiceCatalog</parent>
       <oql>SELECT SLT</oql>
       <do_search>1</do_search>
     </menu>
     <menu id="DeliveryModel" xsi:type="OQLMenuNode" _delta="define">
       <rank>7</rank>
-      <parent>ServiceManagement</parent>
+      <parent>ServiceCatalog</parent>
       <oql>SELECT DeliveryModel</oql>
       <do_search>1</do_search>
     </menu>

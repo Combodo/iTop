@@ -45,37 +45,41 @@ Dict::Add('EN US', 'English', 'English', [
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less than 30 days',
 
 	'Menu:ProviderContract' => 'Provider contracts',
-	'Menu:ProviderContract+' => 'Provider contracts',
+	'Menu:ProviderContract+' => 'What is bought to external companies',
 	'Menu:CustomerContract' => 'Customer contracts',
-	'Menu:CustomerContract+' => 'Customer contracts',
+	'Menu:CustomerContract+' => 'Who is buying the services',
 	'Menu:ServiceSubcategory' => 'Service subcategories',
-	'Menu:ServiceSubcategory+' => 'Service subcategories',
+	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy',
 	'Menu:Service' => 'Services',
-	'Menu:Service+' => 'Services',
-	'Menu:ServiceElement' => 'Sevice elements',
-	'Menu:ServiceElement+' => 'Sevice elements',
+	'Menu:Service+' => 'Second level in service hierarchy',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Service Level Agreements',
 	'Menu:SLT' => 'SLTs',
 	'Menu:SLT+' => 'Service Level Targets',
 	'Menu:DeliveryModel' => 'Delivery models',
-	'Menu:DeliveryModel+' => 'Delivery models',
+	'Menu:DeliveryModel+' => 'Teams handling tickets',
 	'Menu:ServiceFamily' => 'Service families',
-	'Menu:ServiceFamily+' => 'Service families',
+	'Menu:ServiceFamily+' => 'Top level in service hierarchy',
+	'Menu:ServiceCatalog' => 'Service catalog',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal',
+	'UI-ServiceCatalogMenu-ObsoleteNotInPortal' => 'Obsolete are hidden in User Portal',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA',
+	'Menu:RulesAndWorkflow' => 'Rules and workflow',
+	'Menu:RulesAndWorkflow+' => 'Automation rules and workflow',
+	'UI-RulesAndWorkflow-Title' => 'Rules and workflow',
+	'UI-RulesAndWorkflow-Description' => 'Multiple iTop extensions brings notification rules and workflow automation. 
+They are included in iTop Products, but not in iTop Community. You may get them on iTop Hub.',
 
 	'Contract:baseinfo' => 'General information',
 	'Contract:moreinfo' => 'Contractual information',
 	'Contract:cost'     => 'Cost information',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization
