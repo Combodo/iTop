@@ -1738,6 +1738,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'security.force_login_when_no_delegated_authentication_endpoints_list' => [
+			'type'                => 'bool',
+			'description'         => 'If true, when no execution policy is defined, the user will be forced to log in (instead of being automatically logged in with the default profile)',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'behind_reverse_proxy' => [
 			'type' => 'bool',
 			'description' => 'If true, then proxies custom header (X-Forwarded-*) are taken into account. Use only if the webserver is not publicly accessible (reachable only by the reverse proxy)',
