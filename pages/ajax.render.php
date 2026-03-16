@@ -2051,11 +2051,11 @@ EOF
 				$oSearch = new DBObjectSearch($sObjClass);
 				$oSearch->AddCondition(MetaModel::DBGetKey($sObjClass), $iObjKey, '=');
 				$oSet = new CMDBObjectSet($oSearch);
-				if (false === $oSet->CountExceeds(0)) {
+				if (
+					false === $oSet->CountExceeds(0) ||
+					UserRights::IsActionAllowed($sObjClass, UR_ACTION_MODIFY, $oSet) !== UR_ALLOWED_YES
+				) {
 					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
-				}
-				if (UserRights::IsActionAllowed($sObjClass, UR_ACTION_MODIFY, $oSet) != UR_ALLOWED_YES) {
-					throw new SecurityException(Dict::S('UI:ActionNotAllowed'));
 				}
 
 				$aResult = iTopOwnershipLock::AcquireLock($sObjClass, $iObjKey);
