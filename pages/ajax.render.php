@@ -2047,6 +2047,17 @@ EOF
 				$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
 				$iObjKey = (int)utils::ReadParam('obj_key', 0, false, 'integer');
 
+				// Check user has access to the object before trying to acquire the lock
+				$oSearch = new DBObjectSearch($sObjClass);
+				$oSearch->AddCondition(MetaModel::DBGetKey($sObjClass), $iObjKey, '=');
+				$oSet = new CMDBObjectSet($oSearch);
+				if (
+					false === $oSet->CountExceeds(0) ||
+					UserRights::IsActionAllowed($sObjClass, UR_ACTION_MODIFY, $oSet) !== UR_ALLOWED_YES
+				) {
+					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
+				}
+
 				$aResult = iTopOwnershipLock::AcquireLock($sObjClass, $iObjKey);
 				if (false === $aResult['success']) {
 					$aLockData = iTopOwnershipLock::IsLocked($sObjClass, $iObjKey);
