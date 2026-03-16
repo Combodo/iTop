@@ -61,30 +61,17 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
 	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
 	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
-	'UI-ServiceCatalogMenu-ObsoleteNotInPortal' => 'Obsolete are hidden in User Portal~~',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
 	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
 	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
 	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
 	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
 	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
-	'Menu:RulesAndWorkflow' => 'Rules and workflow~~',
-	'Menu:RulesAndWorkflow+' => 'Automation rules and workflow~~',
-	'UI-RulesAndWorkflow-Title' => 'Rules and workflow~~',
-	'UI-RulesAndWorkflow-Description' => 'Multiple iTop extensions brings notification rules and workflow automation. 
-They are included in iTop Products, but not in iTop Community. You may get them on iTop Hub.~~',
+
 	'Contract:baseinfo' => '常规信息',
 	'Contract:moreinfo' => '合同信息',
 	'Contract:cost' => '费用信息',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization
