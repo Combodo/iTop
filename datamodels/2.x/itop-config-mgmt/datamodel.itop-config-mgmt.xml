@@ -2239,8 +2239,8 @@
     			 }
     		}
 		 }
-		// Return the default image
-	  return parent::GetIcon($bImgTag);
+		 // Return the default image
+	   return parent::GetIcon($bImgTag);
 	}]]></code>
         </method>
       </methods>

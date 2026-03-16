@@ -57,6 +57,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerApplication/Attribute:descriptor+' => 'Fichier décrivant la manière de déployer l\'application sur la plateforme de conteneurisation (par exemple, Docker Compose, Helm Chart, etc.)',
 	'Class:ContainerApplication/Attribute:containervirtualhost_id' => 'Hôte',
 	'Class:ContainerApplication/Attribute:containervirtualhost_id+' => 'Plateforme de conteneurisation sur laquelle cette application est déployée',
+	'Class:ContainerApplication/Attribute:logo' => 'Logo',
+	'Class:ContainerApplication/Attribute:logo+' => 'Utilisé comme icône de l\'objet dans les graphes d\'analyse d\'impact',
 	'Class:ContainerApplication/Attribute:containertype_id' => 'Type de conteneur',
 	'Class:ContainerApplication/Attribute:containertype_id+' => 'Typologie de plateforme de conteneurisation',
 	'Class:ContainerApplication/Attribute:containerimages_list' => 'Images',

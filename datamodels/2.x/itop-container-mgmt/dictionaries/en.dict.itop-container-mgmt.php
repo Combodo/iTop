@@ -57,6 +57,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:ContainerApplication/Attribute:descriptor+' => 'File describing how to deploy the application on the container platform (e.g., Docker Compose, Helm Chart, etc.)',
 	'Class:ContainerApplication/Attribute:containervirtualhost_id' => 'Container Host',
 	'Class:ContainerApplication/Attribute:containervirtualhost_id+' => 'Container Platform on which the application is running',
+	'Class:ContainerApplication/Attribute:logo' => 'Logo',
+	'Class:ContainerApplication/Attribute:logo+' => 'Used as object icon when this ContainerApplication is displayed within impact analyses graphs',
 	'Class:ContainerApplication/Attribute:containertype_id' => 'Container type',
 	'Class:ContainerApplication/Attribute:containertype_id+' => 'Technology used for containerization',
 	'Class:ContainerApplication/Attribute:containerimages_list' => 'Container images',

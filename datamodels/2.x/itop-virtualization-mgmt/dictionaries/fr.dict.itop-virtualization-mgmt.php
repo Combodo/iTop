@@ -42,6 +42,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Cloud' => 'Nuage',
 	'Class:Cloud+' => 'Hôte virtuel, opéré par un fournisseur de services Cloud, il peut héberger des Machines Virtuelles, des Hôtes pour Conteneurs, etc.',
 	'Class:Cloud/Attribute:provider_id' => 'Fournisseur',
+	'Class:Cloud/Attribute:logo' => 'Logo',
+	'Class:Cloud/Attribute:logo+' => 'Utilisé comme icône de l\'objet dans les graphes d\'analyse d\'impact',
 	'Class:Cloud/Attribute:provider_id+' => 'Organisation fournissant le nuage',
 	'Class:Cloud/Attribute:location_id' => 'Site',
 	'Class:Cloud/Attribute:location_id+' => 'Site du fournisseur, hébergeant le nuage',

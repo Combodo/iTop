@@ -42,6 +42,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:Cloud' => 'Cloud',
 	'Class:Cloud+' => 'A Virtual Host operated by a Cloud provider. It can host Virtual Machines and Container Hosts.',
 	'Class:Cloud/Attribute:provider_id' => 'Provider',
+	'Class:Cloud/Attribute:logo' => 'Logo',
+	'Class:Cloud/Attribute:logo+' => 'Used as object icon when this Cloud is displayed within impact analyses graphs',
 	'Class:Cloud/Attribute:provider_id+' => 'Who provides the cloud',
 	'Class:Cloud/Attribute:location_id' => 'Location',
 	'Class:Cloud/Attribute:location_id+' => 'Where is located the cloud',
