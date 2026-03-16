@@ -37,6 +37,10 @@ SetupWebPage::AddModule(
 			// add your sample data XML files here,
 		],
 
+		'delegated_authentication_endpoints' => [
+			'ajax.php',
+		],
+
 		// Documentation
 		//
 		'doc.manual_setup' => '', // hyperlink to manual setup documentation, if any
