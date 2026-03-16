@@ -58,7 +58,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:ContainerApplication/Attribute:containervirtualhost_id' => 'Container Host',
 	'Class:ContainerApplication/Attribute:containervirtualhost_id+' => 'Container Platform on which the application is running',
 	'Class:ContainerApplication/Attribute:logo' => 'Logo',
-	'Class:ContainerApplication/Attribute:logo+' => 'Used as object icon when this ContainerApplication is displayed within impact analyses graphs',
+	'Class:ContainerApplication/Attribute:logo+' => 'Used as object icon when this ContainerApplication is displayed within impact analysis graphs',
 	'Class:ContainerApplication/Attribute:containertype_id' => 'Container type',
 	'Class:ContainerApplication/Attribute:containertype_id+' => 'Technology used for containerization',
 	'Class:ContainerApplication/Attribute:containerimages_list' => 'Container images',
