@@ -500,7 +500,7 @@ class utils
 				break;
 
 			case static::ENUM_SANITIZATION_FILTER_MODULE_CODE:
-				// Module codes allow latin letters, numbers, dash and dot characters
+				// Module codes allow all alphabets letters, numbers, dash and dot characters
 				$retValue = filter_var(
 					$value,
 					FILTER_VALIDATE_REGEXP,
