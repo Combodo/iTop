@@ -50,8 +50,8 @@ class DeletionPlanServiceTest extends ItopDataTestCase
 		$oService = DeletionPlanService::GetInstance();
 		$aResult = $oService->GetDeletionPlanSummary(null);
 
-		$this->assertIsArray($aResult);
-		$this->assertEmpty($aResult);
+		$this->assertIsArray($aResult, 'Expected result to be an array when input is null.');
+		$this->assertEmpty($aResult, 'Expected result to be empty array when input is null.');
 	}
 
 	/**
@@ -71,8 +71,8 @@ class DeletionPlanServiceTest extends ItopDataTestCase
 
 		$aResult = $oMockService->GetDeletionPlanSummary([]);
 
-		$this->assertIsArray($aResult);
-		$this->assertEmpty($aResult);
+		$this->assertIsArray($aResult, 'Expected result to be an array when input class list is empty.');
+		$this->assertEmpty($aResult, 'Expected result to be empty array when input class list is empty.');
 	}
 
 	/**
@@ -97,12 +97,36 @@ class DeletionPlanServiceTest extends ItopDataTestCase
 		$aResult = $oMockService->GetDeletionPlanSummary(['SomeClass']);
 
 		foreach ($aExpected as $sClass => $aExpectedValues) {
-			$this->assertArrayHasKey($sClass, $aResult);
-			$this->assertInstanceOf(DeletionPlanSummaryEntity::class, $aResult[$sClass]);
-			$this->assertEquals($aExpectedValues['iDeleteCount'], $aResult[$sClass]->iDeleteCount);
-			$this->assertEquals($aExpectedValues['iUpdateCount'], $aResult[$sClass]->iUpdateCount);
-			$this->assertEquals($aExpectedValues['iMode'], $aResult[$sClass]->iMode);
-			$this->assertEquals($aExpectedValues['sIssue'], $aResult[$sClass]->sIssue);
+			$this->assertArrayHasKey(
+				$sClass,
+				$aResult,
+				"Expected key '$sClass' to exist in summary."
+			);
+			$this->assertInstanceOf(
+				DeletionPlanSummaryEntity::class,
+				$aResult[$sClass],
+				"Expected summary for '$sClass' to be instance of DeletionPlanSummaryEntity."
+			);
+			$this->assertEquals(
+				$aExpectedValues['iDeleteCount'],
+				$aResult[$sClass]->iDeleteCount,
+				"Expected iDeleteCount for '$sClass' to be {$aExpectedValues['iDeleteCount']}, got {$aResult[$sClass]->iDeleteCount}."
+			);
+			$this->assertEquals(
+				$aExpectedValues['iUpdateCount'],
+				$aResult[$sClass]->iUpdateCount,
+				"Expected iUpdateCount for '$sClass' to be {$aExpectedValues['iUpdateCount']}, got {$aResult[$sClass]->iUpdateCount}."
+			);
+			$this->assertEquals(
+				$aExpectedValues['iMode'],
+				$aResult[$sClass]->iMode,
+				"Expected iMode for '$sClass' to be {$aExpectedValues['iMode']}, got {$aResult[$sClass]->iMode}."
+			);
+			$this->assertEquals(
+				$aExpectedValues['sIssue'],
+				$aResult[$sClass]->sIssue,
+				"Expected sIssue for '$sClass' to be '{$aExpectedValues['sIssue']}', got '{$aResult[$sClass]->sIssue}'."
+			);
 		}
 	}
 
