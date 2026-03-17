@@ -34,6 +34,8 @@ try {
 	require_once(APPROOT.'/application/startup.inc.php');
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+	LoginWebPage::DoLoginEx();
+
 	IssueLog::Trace('----- Request: '.utils::GetRequestUri(), LogChannels::WEB_REQUEST);
 
 	$oPage = new DownloadPage("");
@@ -43,7 +45,6 @@ try {
 
 	switch ($operation) {
 		case 'download_document':
-			LoginWebPage::DoLoginEx('backoffice', false);
 			$id = utils::ReadParam('id', '');
 			$sField = utils::ReadParam('field', '');
 			if ($sClass == 'Attachment') {
@@ -63,8 +64,6 @@ try {
 			break;
 
 		case 'download_inlineimage':
-			// No login is required because the "secret" protects us
-			// Benefit: the inline image can be inserted into any HTML (templating = $this->html(public_log)$)
 			$id = utils::ReadParam('id', '');
 			$sSecret = utils::ReadParam('s', '');
 			$iCacheSec = 31556926; // One year ahead: an inline image cannot change

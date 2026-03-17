@@ -87,7 +87,7 @@ if (is_link($sPageEnvFullPath)) {
 }
 $sTargetPage = CheckPageExists($sPageEnvFullPath, $aPossibleBasePaths);
 
-if ($sTargetPage === false) {
+if ($sTargetPage === false || $sModule === 'core' || $sModule === 'dictionaries') {
 	// Do not recall the page parameters (security takes precedence)
 	echo "Wrong module, page name or environment...";
 	exit;
@@ -97,4 +97,35 @@ if ($sTargetPage === false) {
 //
 // GO!
 //
+// check module white list
+// check conf param
+// force login if needed
+
+$aModuleDelegatedAuthenticationEndpointsList = GetModuleDelegatedAuthenticationEndpoints($sModule);
+if (is_null($aModuleDelegatedAuthenticationEndpointsList)) {
+	$bForceLoginWhenNoDelegatedAuthenticationEndpoints = utils::GetConfig()->Get('security.force_login_when_no_delegated_authentication_endpoints_list');
+	if ($bForceLoginWhenNoDelegatedAuthenticationEndpoints) {
+		require_once(APPROOT.'/application/startup.inc.php');
+		LoginWebPage::DoLoginEx();
+	}
+}
+if (is_array($aModuleDelegatedAuthenticationEndpointsList) && !in_array($sPage, $aModuleDelegatedAuthenticationEndpointsList)) {
+	// if module defined a delegated authentication endpoints but not for the current page, we consider that the page is not allowed to be executed without login
+	require_once(APPROOT.'/application/startup.inc.php');
+	LoginWebPage::DoLoginEx();
+}
+if (is_null($aModuleDelegatedAuthenticationEndpointsList) && !UserRights::IsLoggedIn()) {
+	// check if user is not logged in, if not log a warning in the log file as the page is executed without login, which is not recommended for security reason
+	IssueLog::Debug("The '$sPage' page is executed without logging in. This call will be blocked in the future and will likely cause unwanted behaviour in the '$sModule' module. Please define a delegated authentication endpoint for the module, as described at https://www.itophub.io/wiki/page?id=latest:customization:new_extension#security.");
+}
+
 require_once($sTargetPage);
+
+function GetModuleDelegatedAuthenticationEndpoints(string $sModuleName): ?array
+{
+	$sModuleFile =  utils::GetAbsoluteModulePath($sModuleName).'/module.'.$sModuleName.'.php';
+	require_once APPROOT.'setup/extensionsmap.class.inc.php';
+	$oExtensionMap = new iTopExtensionsMap();
+	$aModuleParam = $oExtensionMap->GetModuleInfo($sModuleFile)[2];
+	return $aModuleParam['delegated_authentication_endpoints'] ?? null;
+}

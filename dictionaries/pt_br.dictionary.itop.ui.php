@@ -1448,6 +1448,7 @@ Quando associada a um gatilho, cada ação recebe um número de "ordem", especif
 	'UI:SelectInlineImageToUpload' => 'Selecione a imagem para enviar',
 	'UI:AvailableInlineImagesLegend' => 'Imagens disponíveis',
 	'UI:NoInlineImage' => 'Não há imagem disponível no servidor. Use o botão "Escolher arquivo" acima para selecionar uma imagem do seu computador e fazer o upload para o servidor',
+	'UI:MissingInlineImage' => 'Imagem ausente',
 	'UI:ToggleFullScreen' => 'Alternancia Maximizar / Minimizar',
 	'UI:Button:ResetImage' => 'Recupere a imagem anterior',
 	'UI:Button:RemoveImage' => 'Remover a imagem',
