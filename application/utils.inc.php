@@ -123,7 +123,7 @@ class utils
 	 */
 	public const ENUM_SANITIZATION_FILTER_VARIABLE_NAME = 'variable_name';
 	/**
-	 * @var string For module codes (e.g. `itop-portal-base`, `combodo-webhook-integration`, `some-module-code-x.y`, ...))
+	 * @var string For module codes (e.g. `itop-portal-base`, `combodo-webhook-integration`, `some-module-code-x.y`, ...)
 	 * @since 3.2.3 3.3.0 N°8554
 	 */
 	public const ENUM_SANITIZATION_FILTER_MODULE_CODE = 'module_code';
