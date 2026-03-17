@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Test\UnitTest\Module\DataFeatureRemoval\Service;
 
 use Combodo\iTop\DataFeatureRemoval\Entity\DeletionPlanSummaryEntity;
+use Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException;
 use Combodo\iTop\DataFeatureRemoval\Service\DeletionPlanService;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DeletionPlan;
@@ -16,7 +17,6 @@ use DeletionPlan;
  * Unit tests for the DeletionPlanService class in the Combodo Data Feature Removal module.
  *
  * These tests cover:
- * - Singleton behavior: ensuring GetInstance always returns the same instance, and SetInstance can override it.
  * - GetDeletionPlanSummary method: handling null and empty input, and verifying summary output for various delete/update scenarios.
  * - ExecuteDeletionPlan method: confirming that an exception is thrown when issues are detected in the deletion plan.
  *
@@ -231,7 +231,7 @@ class DeletionPlanServiceTest extends ItopDataTestCase
 	 */
 	public function testExecuteDeletionPlanThrowsExceptionWhenIssuesExist(): void
 	{
-		$this->RequireOnceItopFile('datamodels/2.x/combodo-data-feature-removal/src/Helper/DataFeatureRemovalException.php');
+		$this->RequireOnceItopFile('env-production/combodo-data-feature-removal/src/Helper/DataFeatureRemovalException.php');
 
 		$oDeletionPlan = $this->createMock(DeletionPlan::class);
 		$oDeletionPlan->method('GetIssues')->willReturn(['Some issue']);
@@ -245,7 +245,7 @@ class DeletionPlanServiceTest extends ItopDataTestCase
 
 		$oMockService->method('GetDeletionPlan')->willReturn($oDeletionPlan);
 
-		$this->expectException(\Combodo\iTop\DataFeatureRemoval\Helper\DataFeatureRemovalException::class);
+		$this->expectException(DataFeatureRemovalException::class);
 		$this->expectExceptionMessage('Deletion Plan cannot be executed due to issues');
 
 		$oMockService->ExecuteDeletionPlan(['SomeClass']);
