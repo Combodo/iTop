@@ -19,6 +19,7 @@
  */
 
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Setup\ModuleDiscovery\ModuleFileReader;
 
 require_once('../approot.inc.php');
 
@@ -125,7 +126,6 @@ function GetModuleDelegatedAuthenticationEndpoints(string $sModuleName): ?array
 {
 	$sModuleFile =  utils::GetAbsoluteModulePath($sModuleName).'/module.'.$sModuleName.'.php';
 	require_once APPROOT.'setup/extensionsmap.class.inc.php';
-	$oExtensionMap = new iTopExtensionsMap();
-	$aModuleParam = $oExtensionMap->GetModuleInfo($sModuleFile)[2];
+	$aModuleParam = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFile)[2];
 	return $aModuleParam['delegated_authentication_endpoints'] ?? null;
 }
