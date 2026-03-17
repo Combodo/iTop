@@ -233,7 +233,9 @@
 				{
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}':
                         spanElem.addClass('tree-toggle');
-                        nameElem.html('<span class="glyphicon '+sNodeCollapsedClass+'" aria-hidden="true"></span><span class="list-group-item-text">'+nameElem.text()+'</span>');
+                        var iconElem = $('<span></span>').addClass('glyphicon '+sNodeCollapsedClass).attr('aria-hidden', 'true');
+                        var textElem = $('<span></span>').addClass('list-group-item-text').text(nameElem.text());
+                        nameElem.empty().append(iconElem).append(textElem);
                         break;
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
 						url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
