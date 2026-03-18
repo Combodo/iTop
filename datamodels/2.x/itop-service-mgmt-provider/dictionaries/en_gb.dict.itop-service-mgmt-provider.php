@@ -471,6 +471,8 @@ Dict::Add('EN GB', 'British English', 'British English', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA Name',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //

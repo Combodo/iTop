@@ -471,7 +471,7 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'Service Level Agreement applicable to this service for this customer contract.',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA Name',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Fournisseur',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider',
 	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '',
 ]);
 

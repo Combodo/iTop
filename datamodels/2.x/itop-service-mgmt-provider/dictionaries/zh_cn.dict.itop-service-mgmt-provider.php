@@ -468,6 +468,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA名称',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -569,13 +571,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);

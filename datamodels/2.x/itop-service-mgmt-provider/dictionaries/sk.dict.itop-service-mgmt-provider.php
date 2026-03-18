@@ -445,6 +445,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '~~',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA Názov',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -546,13 +548,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);

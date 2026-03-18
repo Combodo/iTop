@@ -443,6 +443,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => 'SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => 'SLA',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -544,13 +546,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);

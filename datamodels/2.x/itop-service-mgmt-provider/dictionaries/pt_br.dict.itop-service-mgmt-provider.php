@@ -445,6 +445,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'Nome do SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -546,13 +548,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);

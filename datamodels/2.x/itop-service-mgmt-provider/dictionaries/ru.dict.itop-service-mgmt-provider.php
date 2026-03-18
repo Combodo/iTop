@@ -446,6 +446,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_name' => 'SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_name+' => '',
+	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider~~',
+	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
 
 //
@@ -547,13 +549,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:lnkContractToDocument/Attribute:customer_id+' => '~~',
 	'Class:lnkContractToDocument/Attribute:provider_id' => 'Provider id~~',
 	'Class:lnkContractToDocument/Attribute:provider_id+' => '~~',
-]);
-
-//
-// Class: lnkCustomerContractToService
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', [
-	'Class:lnkCustomerContractToService/Attribute:provider_id' => 'Provider id~~',
-	'Class:lnkCustomerContractToService/Attribute:provider_id+' => '~~',
 ]);
