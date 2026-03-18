@@ -1531,9 +1531,9 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization',
 	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location',
 	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);
 
