@@ -185,7 +185,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
 //
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', [
-	'Class:ApprovedChange' => 'Approved Changes~~',
+	'Class:ApprovedChange' => 'Change To Approve~~',
 	'Class:ApprovedChange+' => '~~',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Approval Date~~',
 	'Class:ApprovedChange/Attribute:approval_date+' => '~~',

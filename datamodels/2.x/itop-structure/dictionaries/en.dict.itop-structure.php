@@ -48,7 +48,7 @@
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Organization' => 'Organization',
-	'Class:Organization+' => '',
+	'Class:Organization+' => 'It can be a customer, a provider, your company or departments within your company. Organizations can be structured hierarchically. Users can be limited to objects belonging to some organizations only.',
 	'Class:Organization/Attribute:name' => 'Name',
 	'Class:Organization/Attribute:name+' => 'Common name',
 	'Class:Organization/Attribute:code' => 'Code',
@@ -81,7 +81,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Location' => 'Location',
-	'Class:Location+' => 'Any type of location: Region, Country, City, Site, Building, Floor, Room, Rack,...',
+	'Class:Location+' => 'Any type of location: Region, Country, City, Site, Building, Floor, Room,...',
 	'Class:Location/Attribute:name' => 'Name',
 	'Class:Location/Attribute:name+' => '',
 	'Class:Location/Attribute:status' => 'Status',
@@ -114,7 +114,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Contact' => 'Contact',
-	'Class:Contact+' => '',
+	'Class:Contact+' => 'Abstract class. A Contact can be linked to Tickets and FunctionalCIs for different purposes, such as incident dispatching and notifications.',
 	'Class:Contact/ComplementaryName' => '%1$s - %2$s',
 	'Class:Contact/Attribute:name' => 'Name',
 	'Class:Contact/Attribute:name+' => '',
@@ -152,7 +152,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Person' => 'Person',
-	'Class:Person+' => '',
+	'Class:Person+' => 'A type of Contact used to describe physical persons. Persons can be grouped into Teams. Persons can be linked to other configuration items (eg. to describe who to contact in case of incident with an application).
+Other usage: the caller of a User request is a Person as well as the agent assigned to resolve it.',
 	'Class:Person/ComplementaryName' => '%1$s - %2$s',
 	'Class:Person/Attribute:name' => 'Last Name',
 	'Class:Person/Attribute:name+' => '',
@@ -193,7 +194,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Team' => 'Team',
-	'Class:Team+' => '',
+	'Class:Team+' => 'A type of Contact. Often used to group Persons, but not only. Teams are expected to watch Tickets dispatched to them, and assign it to an agent, usually a member of that team.',
 	'Class:Team/ComplementaryName' => '%1$s - %2$s',
 	'Class:Team/Attribute:persons_list' => 'Members',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team',
@@ -214,7 +215,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Document' => 'Document',
-	'Class:Document+' => '',
+	'Class:Document+' => 'Abstract class. A document that can be shared across multiple objects, making it easy and quick to retrieve from all relevant locations.',
 	'Class:Document/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:Document/Attribute:name' => 'Name',
 	'Class:Document/Attribute:name+' => '',
@@ -250,7 +251,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentFile' => 'Document File',
-	'Class:DocumentFile+' => '',
+	'Class:DocumentFile+' => 'It\'s a type of Document which includes an uploaded file (in any format: Word, PDF, Spreadsheet, etc.).',
 	'Class:DocumentFile/Attribute:file' => 'File',
 	'Class:DocumentFile/Attribute:file+' => '',
 ]);
@@ -261,7 +262,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentNote' => 'Document Note',
-	'Class:DocumentNote+' => '',
+	'Class:DocumentNote+' => 'Used to store a text document. HTML formatting is supported using the WYSIWYG editor. Search can be performed on its content.',
 	'Class:DocumentNote/Attribute:text' => 'Text',
 	'Class:DocumentNote/Attribute:text+' => '',
 ]);
@@ -272,7 +273,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentWeb' => 'Document Web',
-	'Class:DocumentWeb+' => '',
+	'Class:DocumentWeb+' => 'Hyperlinks to external applications or documents, acting as pointers to external resources. You cannot search in their content from '.ITOP_APPLICATION_SHORT,
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
 ]);
@@ -283,7 +284,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Typology' => 'Typology',
-	'Class:Typology+' => '',
+	'Class:Typology+' => 'Abstract class. ExternalKeyAttribute to a Typology subclass are used in place of an EnumAttribute, to have more dynamic values.',
 	'Class:Typology/Attribute:name' => 'Name',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => 'Typology sub-class',
@@ -296,7 +297,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DocumentType' => 'Document Type',
-	'Class:DocumentType+' => '',
+	'Class:DocumentType+' => 'Typology. A classification system used to organize and logically group documents',
 ]);
 
 //
@@ -305,7 +306,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:ContactType' => 'Contact Type',
-	'Class:ContactType+' => '',
+	'Class:ContactType+' => 'Typology to organize your Contacts and group them logically for you.',
 ]);
 
 //

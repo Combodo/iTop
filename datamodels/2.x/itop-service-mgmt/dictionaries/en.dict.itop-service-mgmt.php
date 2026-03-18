@@ -95,7 +95,7 @@ The delivery model specifies the teams to which tickets can be assigned.',
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:ContractType' => 'Contract Type',
-	'Class:ContractType+' => '',
+	'Class:ContractType+' => 'Typology for categorizing Customer and Provider Contracts.',
 ]);
 
 //
@@ -104,7 +104,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Contract' => 'Contract',
-	'Class:Contract+' => '',
+	'Class:Contract+' => 'Abstract class to handle fields common to the different contract sub-classes.',
 	'Class:Contract/Attribute:name' => 'Name',
 	'Class:Contract/Attribute:name+' => '',
 	'Class:Contract/Attribute:org_id' => 'Customer',
@@ -158,7 +158,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:CustomerContract' => 'Customer Contract',
-	'Class:CustomerContract+' => '',
+	'Class:CustomerContract+' => 'Agreement between a client and a provider for the delivery of services with an optional level of commitment (SLA, Coverage Window).',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
 	'Class:CustomerContract/Attribute:services_list+' => 'All the services purchased for this contract',
 ]);
@@ -169,7 +169,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:ProviderContract' => 'Provider Contract',
-	'Class:ProviderContract+' => '',
+	'Class:ProviderContract+' => 'Agreement between an external provider and an internal organization.',
 	'Class:ProviderContract/Attribute:functionalcis_list' => 'CIs',
 	'Class:ProviderContract/Attribute:functionalcis_list+' => 'All the configuration items covered by this provider contract',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
@@ -226,7 +226,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:ServiceFamily' => 'Service Family',
-	'Class:ServiceFamily+' => '',
+	'Class:ServiceFamily+' => 'Top level of Service hierarchy. Required for Services to be proposed in User Portal.',
 	'Class:ServiceFamily/Attribute:name' => 'Name',
 	'Class:ServiceFamily/Attribute:name+' => '',
 	'Class:ServiceFamily/Attribute:icon' => 'Icon',
@@ -241,7 +241,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Service' => 'Service',
-	'Class:Service+' => '',
+	'Class:Service+' => 'A Service is delivered by an organization and subscribed to through a Contract Client. It must contain at least one Service Subcategory.',
 	'Class:Service/ComplementaryName' => '%1$s - %2$s',
 	'Class:Service/Attribute:name' => 'Name',
 	'Class:Service/Attribute:name+' => '',
@@ -321,7 +321,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:ServiceSubcategory' => 'Service Subcategory',
-	'Class:ServiceSubcategory+' => '',
+	'Class:ServiceSubcategory+' => 'Lowest level in Service hierarchy. User Request are usually associated to one Service Subcategory.',
 	'Class:ServiceSubcategory/ComplementaryName' => '%1$s - %2$s',
 	'Class:ServiceSubcategory/Attribute:name' => 'Name',
 	'Class:ServiceSubcategory/Attribute:name+' => '',
@@ -353,7 +353,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:SLA' => 'SLA',
-	'Class:SLA+' => '',
+	'Class:SLA+' => 'Service Level Agreement (SLA) applicable to a Service subscribed by a customer and measured using SLTs.',
 	'Class:SLA/Attribute:name' => 'Name',
 	'Class:SLA/Attribute:name+' => '',
 	'Class:SLA/Attribute:description' => 'description',
@@ -375,7 +375,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:SLT' => 'SLT',
-	'Class:SLT+' => '',
+	'Class:SLT+' => 'Service Level Target under a Service Level Agreement (SLA). Defines a maximum time for a metric (TTO or TTR), a request type (Incident or Request) and a priority.',
 	'Class:SLT/Attribute:name' => 'Name',
 	'Class:SLT/Attribute:name+' => '',
 	'Class:SLT/Attribute:priority' => 'Priority',
@@ -486,7 +486,8 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:DeliveryModel' => 'Delivery Model',
-	'Class:DeliveryModel+' => '',
+	'Class:DeliveryModel+' => 'The Delivery Model specifies the Teams that can be assigned to Tickets; it must contain at least one Team in the Contacts tab.
+Each client Organization must have a defined Delivery Model.',
 	'Class:DeliveryModel/Attribute:name' => 'Name',
 	'Class:DeliveryModel/Attribute:name+' => 'Don\'t forget to add teams to this delivery model',
 	'Class:DeliveryModel/Attribute:org_id' => 'Organization',

@@ -77,7 +77,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:FAQCategory' => 'FAQ Category',
-	'Class:FAQCategory+' => 'Category for FAQ',
+	'Class:FAQCategory+' => 'Typology for Frequently Asked Questions (FAQ)',
 	'Class:FAQCategory/Attribute:name' => 'Name',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',

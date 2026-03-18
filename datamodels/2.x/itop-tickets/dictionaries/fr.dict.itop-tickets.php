@@ -12,7 +12,7 @@
  */
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Ticket' => 'Ticket',
-	'Class:Ticket+' => '',
+	'Class:Ticket+' => 'Classe abstraite',
 	'Class:Ticket/Attribute:ref' => 'Référence',
 	'Class:Ticket/Attribute:ref+' => '',
 	'Class:Ticket/Attribute:org_id' => 'Client',
@@ -76,7 +76,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkContactToTicket' => 'Lien Contact / Ticket',
-	'Class:lnkContactToTicket+' => '',
+	'Class:lnkContactToTicket+' => 'Permet de lier plusieurs Contacts afin de les notifier sur l\'avancement des Tickets, en plus du demandeur et de l\'agent.',
 	'Class:lnkContactToTicket/Name' => '%1$s / %2$s',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Ticket',
 	'Class:lnkContactToTicket/Attribute:ticket_id+' => '',
@@ -102,7 +102,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:WorkOrder' => 'Tâche',
-	'Class:WorkOrder+' => '',
+	'Class:WorkOrder+' => 'Tâche nécessaire à la résolution d\'un Ticket, affectée à une Équipe voire à un agent.',
 	'Class:WorkOrder/Attribute:name' => 'Nom',
 	'Class:WorkOrder/Attribute:name+' => '',
 	'Class:WorkOrder/Attribute:status' => 'Etat',

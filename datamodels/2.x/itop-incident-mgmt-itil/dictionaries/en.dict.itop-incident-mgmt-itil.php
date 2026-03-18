@@ -62,7 +62,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Incident' => 'Incident',
-	'Class:Incident+' => '',
+	'Class:Incident+' => 'Ticket type for managing malfunctions of a service or configuration elements',
 	'Class:Incident/Attribute:status' => 'Status',
 	'Class:Incident/Attribute:status+' => '',
 	'Class:Incident/Attribute:status/Value:new' => 'New',

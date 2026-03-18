@@ -13,7 +13,7 @@
  */
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkFunctionalCIToProviderContract' => 'Lien CI / Contrat fournisseur',
-	'Class:lnkFunctionalCIToProviderContract+' => '',
+	'Class:lnkFunctionalCIToProviderContract+' => 'Ce lien modélise les équipments (CI fonctionnel) qui sont supportés par une société externe à travers un Contrat fournisseur.',
 	'Class:lnkFunctionalCIToProviderContract/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contrat fournisseur',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
@@ -31,7 +31,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkFunctionalCIToService' => 'Lien CI / Service',
-	'Class:lnkFunctionalCIToService+' => '',
+	'Class:lnkFunctionalCIToService+' => 'Ce lien modélise les équipments (CI fonctionnel) qui sont nécessaires pour délivrer un Service et dont le dysfonctionnement affecterait la qualité du Service en question.',
 	'Class:lnkFunctionalCIToService/Name' => '%1$s / %2$s',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Service',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',

@@ -38,7 +38,7 @@
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Ticket' => 'Ticket',
-	'Class:Ticket+' => '',
+	'Class:Ticket+' => 'Abstract class',
 	'Class:Ticket/Attribute:ref' => 'Ref',
 	'Class:Ticket/Attribute:ref+' => '',
 	'Class:Ticket/Attribute:org_id' => 'Organization',
@@ -122,7 +122,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:WorkOrder' => 'Work Order',
-	'Class:WorkOrder+' => '',
+	'Class:WorkOrder+' => 'A task required for the resolution of a Ticket, assigned to a Team or even an agent.',
 	'Class:WorkOrder/Attribute:name' => 'Name',
 	'Class:WorkOrder/Attribute:name+' => '',
 	'Class:WorkOrder/Attribute:status' => 'Status',

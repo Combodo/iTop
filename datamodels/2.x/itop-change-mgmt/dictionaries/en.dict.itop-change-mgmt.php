@@ -64,7 +64,7 @@ Dict::Add('EN US', 'English', 'English', [
 
 Dict::Add('EN US', 'English', 'English', [
 	'Class:Change' => 'Change',
-	'Class:Change+' => '',
+	'Class:Change+' => 'A type of Ticket to handle Change which has an effect on delivered Services.',
 	'Class:Change/Attribute:status' => 'Status',
 	'Class:Change/Attribute:status+' => '',
 	'Class:Change/Attribute:status/Value:new' => 'New',
