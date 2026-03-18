@@ -1367,9 +1367,9 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Device name',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization',
 	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location',
 	'Class:PhysicalInterface/Attribute:location_id+' => '',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
@@ -1527,17 +1527,6 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:Group/Attribute:ci_list+' => 'All the configuration items linked to this group',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Parent Group',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('EN US', 'English', 'English', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organization',
-	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location',
-	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);
 
 //

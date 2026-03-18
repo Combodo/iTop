@@ -1521,6 +1521,10 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '',
 	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Nom matériel',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Site',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
 	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '',
 ]);
@@ -1677,17 +1681,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Group/Attribute:ci_list+' => 'Tous les éléments de configuration liés à ce groupe',
 	'Class:Group/Attribute:parent_id_friendlyname' => 'Nom usuel du parent',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
-	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Site',
-	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);
 
 //
