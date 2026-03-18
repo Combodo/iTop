@@ -13,6 +13,8 @@ class LoginWebPageTest extends ItopDataTestCase
 {
 	public const USE_TRANSACTION = false;
 
+	private Config $oConfig;
+
 	public const PASSWORD = 'a209320P!ù;ralùqpi,pàcqi"nr';
 
 	public function setUp(): void

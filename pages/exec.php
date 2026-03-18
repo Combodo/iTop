@@ -125,6 +125,10 @@ require_once($sTargetPage);
 function GetModuleDelegatedAuthenticationEndpoints(string $sModuleName): ?array
 {
 	$sModuleFile =  utils::GetAbsoluteModulePath($sModuleName).'/module.'.$sModuleName.'.php';
+	if (!file_exists($sModuleFile)) {
+		echo 'Wrong module, page name or environment...';
+		exit;
+	}
 	require_once APPROOT.'setup/extensionsmap.class.inc.php';
 	$aModuleParam = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFile)[2];
 	return $aModuleParam['delegated_authentication_endpoints'] ?? null;
