@@ -35,116 +35,65 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 	this.sAttCode = sAttCode;
 	this.oSearchWidgetElmt = oSearchWidgetElmt;
 	this.emptyHtml = ''; // content to be displayed when the search results are empty (when opening the dialog)
-	this.emptyOnClose = true; // Workaround for the JQuery dialog being very slow when opening and closing if the content contains many INPUT tags
-	this.ajax_request = null;
 	// this.bSelectMode = bSelectMode; // true if the edited field is a SELECT, false if it's an autocomplete
 	// this.bSearchMode = bSearchMode; // true if selecting a value in the context of a search form
 	var me = this;
 
 	this.Init = function()
 	{
-		// make sure that the form is clean
-		$('#linkedset_'+this.id+' .selection').each( function() { this.checked = false; });
-		$('#'+this.id+'_btnRemove').prop('disabled', false);
-
-		$('<div id="dlg_'+me.id+'"></div>').appendTo(document.body);
-
-		// me.trace(dialog);
-
-		//TODO : check and remove all unneded code bellow this line!!
-
-		$('#'+this.id+'_linksToRemove').val('');
-
-		$('#linkedset_'+me.id).on('remove', function() {
-			// prevent having the dlg div twice
-			$('#dlg_'+me.id).remove();
-		});
-
-		$('#'+this.iInputId).closest('form').on('submit', function() {
-			return me.OnFormSubmit();
-		});
-	};
-
-	this.StopPendingRequest = function()
-	{
-		if (me.ajax_request)
-		{
-			me.ajax_request.abort();
-			me.ajax_request = null;
-		}
 	};
 
 	this.ShowModalSearchForeignKeys = function()
 	{
-		// // Query the server to get the form to search for target objects
-		// if (me.bSelectMode)
-		// {
-		// 	$('#fstatus_'+me.id).html('<img src="../images/indicator.gif" />');
-		// }
-		// else
-		// {
-		// 	$('#label_'+me.id).addClass('dlg_loading');
-		// }
-		$('#label_'+me.id).addClass('dlg_loading');
-		var theMap = {
-			sAttCode: me.sAttCode,
-			iInputId: me.id,
-			sTitle: me.sTitle,
-			sTargetClass: me.sTargetClass,
-			// bSearchMode: me.bSearchMode,
-			operation: 'ShowModalSearchForeignKeys'
-		};
+        const oModalParams = {
+            content: {
+                endpoint: AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'),
+                data: {
+                    sAttCode: me.sAttCode,
+                    iInputId: me.id,
+                    sTargetClass: me.sTargetClass,
+                    operation: 'ShowModalSearchForeignKeys'
+                },
+            },
+            title: me.sTitle,
+            id: 'dlg_'+me.id,
+            size: 'lg',
+            buttons: [
+                {
+                    text: Dict.S('UI:Button:Cancel'),
+                    callback_on_click: function() {
+                        $(this).dialog("close");
+                        $(this).remove();
+                    },
+                    classes: ['cancel', 'ibo-is-alternative', 'ibo-is-neutral'],
+                },
+                {
+                    text: Dict.S('UI:Button:Add'),
+                    id: "btn_ok_"+me.id,
+                    classes: ['ok', 'ibo-is-regular', 'ibo-is-primary'],
+                    callback_on_click: function() {
+                        me.DoAddObjects();
+                    }
+                }
+            ],
+            callback_on_content_loaded: function(oModalContentElement){
+                // Update initial buttons state
+                me.UpdateButtons();
+            },
 
+            extra_options: {
+                    callback_on_modal_close: function () {
+                        $(this).dialog( "destroy" ); // destroy dialog object
+                    }
+                }
+        }
+        const oModal = CombodoModal.OpenModal(oModalParams);
 
-
-		// Make sure that we cancel any pending request before issuing another
-		// since responses may arrive in arbitrary order
-		me.StopPendingRequest();
-
-		// Run the query and get the result back directly in HTML
-		me.ajax_request = $.post( AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
-			function(data)
-			{
-				// $('#dlg_'+me.id).html(data);
-				$('#dlg_'+me.id).empty().append($(data)); // $(data).filter(':not(script)'));
-				$('#dlg_'+me.id).dialog('open');
-				me.UpdateSizes();
-				me.UpdateButtons();
-				me.ajax_request = null;
-				me.ListResultsSearchForeignKeys();
-			},
-			'html'
-		);
-	};
-
-	this.UpdateSizes = function()
-	{
-		var dlg = $('#dlg_'+me.id);
-		// Adjust the dialog's size to fit into the screen
-		if (dlg.width() > ($(window).width()-40))
-		{
-			dlg.width($(window).width()-40);
-		}
-		if (dlg.height() > ($(window).height()-70))
-		{
-			dlg.height($(window).height()-70);
-		}
-		var searchForm = dlg.find('div.display_block:first'); // Top search form, enclosing display_block
-		var results = $('#SearchResultsToAdd_'+me.id);
-		var oPadding = {};
-		var aKeys = ['top', 'right', 'bottom', 'left'];
-		for(k in aKeys)
-		{
-			oPadding[aKeys[k]] = 0;
-			if (dlg.css('padding-'+aKeys[k]))
-			{
-				oPadding[aKeys[k]] = parseInt(dlg.css('padding-'+aKeys[k]).replace('px', ''));
-			}
-		}
-		//var width = dlg.innerWidth() - oPadding['right'] - oPadding['left'] - 22; // 5 (margin-left) + 5 (padding-left) + 5 (padding-right) + 5 (margin-right) + 2 for rounding !
-		var height = dlg.innerHeight()-oPadding['top']-oPadding['bottom']-22;
-		var form_height = searchForm.outerHeight();
-		results.height(height - form_height - 40); // Leave some space for the buttons
+        // Bind events
+        oModal.on('submit.uilinksWizard', me.SearchObjectsToAdd);
+        oModal.on('change', '#count_'+me.id, function(){
+            me.UpdateButtons();
+        });
 	};
 
 	this.UpdateButtons = function()
@@ -158,63 +107,6 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		{
 			okBtn.prop('disabled', true);
 		}
-	};
-
-	/**
-	 * @return {boolean}
-	 */
-	this.ListResultsSearchForeignKeys = function ()
-	{
-		var theMap = {
-			sTargetClass: me.sTargetClass,
-			iInputId: me.id,
-			sFilter: me.sfilter,
-			// bSearchMode: me.bSearchMode
-		};
-
-		// Gather the parameters from the search form
-		$('#fs_'+me.id+' :input').each( function() {
-			if (this.name !== '')
-			{
-				var val = $(this).val(); // supports multiselect as well
-				if (val !== null)
-				{
-					theMap[this.name] = val;
-				}
-			}
-		});
-
-
-
-		theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
-		theMap.operation = 'ListResultsSearchForeignKeys'; // Override what is defined in the form itself
-		theMap.sAttCode = me.sAttCode;
-		var sSearchAreaId = '#SearchResultsToAdd_'+me.id;
-		//$(sSearchAreaId).html('<div style="text-align:center;width:100%;height:24px;vertical-align:middle;"><img src="../images/indicator.gif" /></div>');
-		$(sSearchAreaId).block();
-		me.UpdateButtons();
-
-		// Make sure that we cancel any pending request before issuing another
-		// since responses may arrive in arbitrary order
-		me.StopPendingRequest();
-
-		// Run the query and display the results
-		me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
-			function(data)
-			{
-				$(sSearchAreaId).html(data);
-				$('#fr_'+me.id+' input:radio').on('click', function() { me.UpdateButtons(); });
-				me.UpdateButtons();
-				me.ajax_request = null;
-				$('#count_'+me.id).on('change', function(){
-					me.UpdateButtons();
-				});
-				me.UpdateSizes();
-			},
-			'html'
-		);
-
-		return false; // Don't submit the form, stay in the current page !
 	};
 
 	/**
@@ -285,57 +177,5 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		$('#dlg_'+me.id).dialog('close');
 
 		return false;
-	};
-
-
-	// Workaround for a ui.jquery limitation: if the content of
-	// the dialog contains many INPUTs, closing and opening the
-	// dialog is very slow. So empty it each time.
-	this.OnClose = function()
-	{
-		me.StopPendingRequest();
-		// called by the dialog, so in the context 'this' points to the jQueryObject
-		if (me.emptyOnClose)
-		{
-			$('#SearchResultsToAdd_'+me.id).html(me.emptyHtml);
-		}
-		$('#label_'+me.id).removeClass('dlg_loading');
-		$('#label_'+me.id).focus();
-		me.ajax_request = null;
-	};
-
-	this.DoSelectObjectClass = function()
-	{
-		// Retrieving selected value
-		var oSelectedClass = $('#ac_create_'+me.id+' select');
-		if(oSelectedClass.length !== 1) return;
-
-		// Setting new target class
-		me.sTargetClass = oSelectedClass.val();
-
-		// Opening real creation form
-		$('#ac_create_'+me.id).dialog('close');
-		me.CreateObject();
-	};
-
-	this.Update = function()
-	{
-		if ($('#'+me.id).prop('disabled'))
-		{
-			$('#v_'+me.id).html('');
-			$('#label_'+me.id).prop('disabled', true);
-			$('#label_'+me.id).css({'background': 'transparent'});
-			$('#mini_add_'+me.id).hide();
-			$('#mini_tree_'+me.id).hide();
-			$('#mini_search_'+me.id).hide();
-		}
-		else
-		{
-			$('#label_'+me.id).prop('disabled', false);
-			$('#label_'+me.id).css({'background': '#fff url(../images/ac-background.gif) no-repeat right'});
-			$('#mini_add_'+me.id).show();
-			$('#mini_tree_'+me.id).show();
-			$('#mini_search_'+me.id).show();
-		}
 	};
 }
