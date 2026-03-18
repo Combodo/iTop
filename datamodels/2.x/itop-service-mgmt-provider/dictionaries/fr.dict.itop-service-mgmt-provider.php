@@ -394,7 +394,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:SLT/Attribute:request_type/Value:service_request' => 'demande de service',
 	'Class:SLT/Attribute:request_type/Value:service_request+' => '',
 	'Class:SLT/Attribute:metric' => 'Métrique',
-	'Class:SLT/Attribute:metric+' => 'Délai controlé par cet objectif (temps de prise en charge ou temps de résolution)',
+	'Class:SLT/Attribute:metric+' => 'Délai contrôlé par cet objectif (temps de prise en charge ou temps de résolution)',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO',
 	'Class:SLT/Attribute:metric/Value:tto+' => 'Délai de prise en charge',
 	'Class:SLT/Attribute:metric/Value:ttr' => 'TTR',
