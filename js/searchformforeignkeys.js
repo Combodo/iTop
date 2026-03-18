@@ -90,7 +90,6 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
         const oModal = CombodoModal.OpenModal(oModalParams);
 
         // Bind events
-        oModal.on('submit.uilinksWizard', me.SearchObjectsToAdd);
         oModal.on('change', '#count_'+me.id, function(){
             me.UpdateButtons();
         });
