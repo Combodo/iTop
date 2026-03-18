@@ -1557,10 +1557,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 // Add translation for Fieldsets
 
 Dict::Add('IT IT', 'Italian', 'Italiano', [
-	'ConfigMgnt:baseinfo' => 'General~~',
-	'ConfigMgnt:moreinfo' => 'CI specifics~~',
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
 	'Storage:moreinfo' => 'Storage specifics~~',
-	'ConfigMgnt:otherinfo' => 'Dates and description~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
 	'Software:moreinfo' => 'Software specifics~~',
 	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Informazioni generali',

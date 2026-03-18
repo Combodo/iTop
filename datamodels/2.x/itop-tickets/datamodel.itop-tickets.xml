@@ -1497,16 +1497,28 @@
         <class id="Service" _delta="define">
           <scopes>
             <scope id="all">
-              <oql_view><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND s.status != 'obsolete']]></oql_view>
+              <oql_view><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND s.status = 'production']]></oql_view>
               <ignore_silos>true</ignore_silos>
+            </scope>
+            <scope id="service-manager">
+              <oql_view><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND s.status = 'implementation']]></oql_view>
+              <allowed_profiles>
+                <allowed_profile id="Service Manager"/>
+              </allowed_profiles>
             </scope>
           </scopes>
         </class>
         <class id="ServiceSubcategory" _delta="define">
           <scopes>
             <scope id="all">
-              <oql_view><![CDATA[SELECT ServiceSubcategory AS ssc JOIN Service AS s ON ssc.service_id=s.id JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND ssc.status != 'obsolete']]></oql_view>
+              <oql_view><![CDATA[SELECT ServiceSubcategory AS ssc JOIN Service AS s ON ssc.service_id=s.id JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND ssc.status = 'production']]></oql_view>
               <ignore_silos>true</ignore_silos>
+            </scope>
+            <scope id="service-manager">
+              <oql_view><![CDATA[SELECT ServiceSubcategory AS ssc JOIN Service AS s ON ssc.service_id=s.id JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND ssc.status = 'implementation']]></oql_view>
+              <allowed_profiles>
+                <allowed_profile id="Service Manager"/>
+              </allowed_profiles>
             </scope>
           </scopes>
         </class>

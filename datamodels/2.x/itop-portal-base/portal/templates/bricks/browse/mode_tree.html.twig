@@ -238,7 +238,9 @@
 				{
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}':
                         spanElem.addClass('tree-toggle');
-                        nameElem.html('<span class="glyphicon '+sNodeCollapsedClass+'" aria-hidden="true"></span><span class="list-group-item-text">'+item.name+'</span>');
+                        var drilldownIconElem = $('<span></span>').addClass('glyphicon '+sNodeCollapsedClass).attr('aria-hidden', 'true');
+                        var drilldownTextElem = $('<span></span>').addClass('list-group-item-text').text(nameElem.text());
+                        nameElem.empty().append(drilldownIconElem).append(drilldownTextElem);
                         break;
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
 						url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
@@ -280,7 +282,7 @@
                 {
                     nameElem.append($('<span class="list-group-item-description">'+item.description+'</span>'));
                 }
-				
+
 				if(levelActionsKeys.length > 1)
 				{
 					// Retrieving secondary action (Now we also display primary action)

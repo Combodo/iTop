@@ -56,6 +56,7 @@ Dict::Add('EN US', 'English', 'English', [
 //
 
 Dict::Add('EN US', 'English', 'English', [
+	'Class:LogicalInterface/Name' => '%2$s %1$s',
 	'Class:LogicalInterface/Attribute:org_id' => 'Organization',
 	'Class:LogicalInterface/Attribute:org_id+' => '',
 ]);

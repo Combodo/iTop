@@ -1402,6 +1402,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', [
 	'UI:SelectInlineImageToUpload' => 'Vyberte obrázek',
 	'UI:AvailableInlineImagesLegend' => 'Dostupné obrázky',
 	'UI:NoInlineImage' => 'Na serveru není dostupný žádný obrázek. Nahrajte nějaký pomocí tlačítka výše.',
+	'UI:MissingInlineImage' => 'Chybějící obrázek',
 	'UI:ToggleFullScreen' => 'Přepnout zobrazení',
 	'UI:Button:ResetImage' => 'Obnovit původní obrázek',
 	'UI:Button:RemoveImage' => 'Odebrat obrázek',

@@ -1564,7 +1564,7 @@
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:ConfigMgnt:baseinfo">
+                <item id="fieldset:ConfigMgmt:baseinfo">
                   <rank>10</rank>
                   <items>
                     <item id="name">

@@ -1415,6 +1415,7 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:SelectInlineImageToUpload' => 'Wybierz obraz do przesłania',
 	'UI:AvailableInlineImagesLegend' => 'Dostępne obrazy',
 	'UI:NoInlineImage' => 'Na serwerze nie ma obrazu. Użyj przycisku "Przeglądaj" powyżej, aby wybrać obraz ze swojego komputera i przesłać go na serwer.',
+	'UI:MissingInlineImage' => 'Brakujący obraz',
 	'UI:ToggleFullScreen' => 'Przełącz Maksymalizuj / Minimalizuj',
 	'UI:Button:ResetImage' => 'Odzyskaj poprzedni obraz',
 	'UI:Button:RemoveImage' => 'Usuń obraz',
