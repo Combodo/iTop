@@ -494,6 +494,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Alle configuratie-items die deze applicatie-oplossing tot stand brengen',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Bedrijfsprocessen',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Alle bedrijfsprocessen die afhankelijk zijn van deze applicatie-oplossing',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Actief',
@@ -515,6 +517,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Applicatie-oplossing',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Alle applicatie-oplossingen die impact hebben op dit bedrijfsproces',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
+	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Actief',
@@ -611,6 +615,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:MiddlewareInstance' => 'Middleware-instantie',
 	'Class:MiddlewareInstance+' => '',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Naam middleware',
@@ -643,6 +649,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Naam webserver',
 	'Class:WebApplication/Attribute:webserver_name+' => '',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:WebApplication/Attribute:url' => 'Link (URL)',
 	'Class:WebApplication/Attribute:url+' => '',
 ]);
@@ -890,6 +898,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Documenten',
 	'Class:Software/Attribute:documents_list+' => 'Alle documenten gelinkt aan deze software',
+	'Class:Software/Attribute:logo' => 'Logo~~',
+	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Type',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'Databaseserver',
@@ -1528,6 +1538,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 // Add translation for Fieldsets
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Globale informatie',
 	'Server:Date' => 'Datum',
 	'Server:moreinfo' => 'Meer informatie',
@@ -1616,8 +1632,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
 	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
 	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 ]);

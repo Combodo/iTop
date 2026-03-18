@@ -43,6 +43,7 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => [
+			'vendor/autoload.php',
 			'src/Service/DBToolsUtils.php',
 			'src/Service/DBAnalyzerUtils.php',
 		],

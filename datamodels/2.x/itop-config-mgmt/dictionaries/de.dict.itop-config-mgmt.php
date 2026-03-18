@@ -493,6 +493,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Alle CIs, aus denen diese Anwendungslösung besteht',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Business-Prozesse',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Alle Geschäftsprozesse, die von dieser Anwendungslösung abhängen',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'aktiv',
@@ -514,6 +516,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Anwendungslösungen',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Alle Anwendungslösungen, die sich auf diesen Geschäftsprozess auswirken',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
+	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Status',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'aktiv',
@@ -610,6 +614,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:MiddlewareInstance' => 'Middleware-Instanz',
 	'Class:MiddlewareInstance+' => '',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware-Name',
@@ -642,6 +648,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Webservername',
 	'Class:WebApplication/Attribute:webserver_name+' => '',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '',
 ]);
@@ -889,6 +897,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Dokumente',
 	'Class:Software/Attribute:documents_list+' => 'Alle mit dieser Software verknüpften Dokumente',
+	'Class:Software/Attribute:logo' => 'Logo~~',
+	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Typ',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'DB-Server',
@@ -1527,6 +1537,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 // Add translation for Fieldsets
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Allgemeine Informationen',
 	'Server:Date' => 'Datum',
 	'Server:moreinfo' => 'Weitere Informationen',
@@ -1615,8 +1631,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', [
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
 	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
 	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 ]);

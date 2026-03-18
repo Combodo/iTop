@@ -492,6 +492,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Konfigurációs elemek, melyek ezt az alkalmazásmegoldást alkotják',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Üzleti folyamatok',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Üzleti folyamatok, melyek ettől az alkalmazásmegoldástól függenek',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Állapot',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Aktív',
@@ -513,6 +515,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:BusinessProcess+' => 'Személyek, szolgáltatások és CI-k értékteremtő kombinációja',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Alkalmazásmegoldások',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Alkalmazásmegoldások melyek hatással vannak erre az üzleti folyamatra',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
+	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Állapot',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Aktív',
@@ -609,6 +613,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:MiddlewareInstance' => 'Middleware Példány',
 	'Class:MiddlewareInstance+' => '~~',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware név',
@@ -641,6 +647,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:WebApplication/Attribute:webserver_id+' => '~~',
 	'Class:WebApplication/Attribute:webserver_name' => 'Webszerver név',
 	'Class:WebApplication/Attribute:webserver_name+' => '~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:WebApplication/Attribute:url' => 'URL~~',
 	'Class:WebApplication/Attribute:url+' => '~~',
 ]);
@@ -888,6 +896,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Class:Software/Attribute:version+' => '~~',
 	'Class:Software/Attribute:documents_list' => 'Dokumentumok',
 	'Class:Software/Attribute:documents_list+' => 'A szoftver dokumentumai',
+	'Class:Software/Attribute:logo' => 'Logo~~',
+	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Típus',
 	'Class:Software/Attribute:type+' => '~~',
 	'Class:Software/Attribute:type/Value:DBServer' => 'DB Szerver',
@@ -1526,10 +1536,16 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 // Add translation for Fieldsets
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Általános információ',
 	'Server:Date' => 'Dátumok',
 	'Server:moreinfo' => 'További információ',
-	'Server:otherinfo' => 'Other information~~',
+	'Server:otherinfo' => 'Description~~',
 	'Server:power' => 'Áramforrás',
 	'Class:Subnet/Tab:IPUsage' => 'IP felhasználás',
 	'Class:Subnet/Tab:IPUsage+' => 'Which IP within this Subnet is used or not~~',
@@ -1614,8 +1630,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 //
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
 	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
 	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 ]);

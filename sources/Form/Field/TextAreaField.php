@@ -53,7 +53,7 @@ class TextAreaField extends TextField
 	 * @param \Closure|null  $onFinalizeCallback
 	 * @param \DBObject|null $oObject
 	 */
-	public function __construct(string $sId, Closure $onFinalizeCallback = null, DBObject $oObject = null)
+	public function __construct(string $sId, ?Closure $onFinalizeCallback = null, ?DBObject $oObject = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
 		$this->sFormat = static::DEFAULT_FORMAT;

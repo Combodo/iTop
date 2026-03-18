@@ -493,6 +493,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Bu uygulama sistemü oluşturan tüm yapılandırma öğeleri',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'İş Süreçleri',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Bu uygulama sistemüne bağlı tüm iş süreçleri',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo~~',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:ApplicationSolution/Attribute:status' => 'Durum',
 	'Class:ApplicationSolution/Attribute:status+' => '~~',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Aktif',
@@ -514,6 +516,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:BusinessProcess+' => '',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Uygulama sistemleri',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Bu iş sürecini etkileyen tüm uygulama çözümleri',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo~~',
+	'Class:BusinessProcess/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:BusinessProcess/Attribute:status' => 'Durum',
 	'Class:BusinessProcess/Attribute:status+' => '~~',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Aktif',
@@ -610,6 +614,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:MiddlewareInstance' => 'Ara katman yazılımı olayı',
 	'Class:MiddlewareInstance+' => '~~',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s~~',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo~~',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Ara katman yazılımı',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Ara katman yazılımı adı',
@@ -642,6 +648,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:WebApplication/Attribute:webserver_id+' => '~~',
 	'Class:WebApplication/Attribute:webserver_name' => 'Web Sunucusu Adı',
 	'Class:WebApplication/Attribute:webserver_name+' => '~~',
+	'Class:WebApplication/Attribute:logo' => 'Logo~~',
+	'Class:WebApplication/Attribute:logo+' => 'Used as object icon when displayed within impact analysis graphs~~',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '~~',
 ]);
@@ -889,6 +897,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:Software/Attribute:version+' => '~~',
 	'Class:Software/Attribute:documents_list' => 'Belgeler',
 	'Class:Software/Attribute:documents_list+' => 'Bu yazılımla bağlantılı tüm belgeler',
+	'Class:Software/Attribute:logo' => 'Logo~~',
+	'Class:Software/Attribute:logo+' => 'Used as icon for all Software Instance objects using this Software, when displayed within impact analysis graphs~~',
 	'Class:Software/Attribute:type' => 'Tip',
 	'Class:Software/Attribute:type+' => '~~',
 	'Class:Software/Attribute:type/Value:DBServer' => 'Veritabanı Sunucusu',
@@ -1527,6 +1537,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 // Add translation for Fieldsets
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
+	'ConfigMgmt:baseinfo' => 'General~~',
+	'ConfigMgmt:moreinfo' => 'CI specifics~~',
+	'Storage:moreinfo' => 'Storage specifics~~',
+	'ConfigMgmt:otherinfo' => 'Dates and description~~',
+	'Software:moreinfo' => 'Software specifics~~',
+	'Phone:moreinfo' => 'Phone specifics~~',
 	'Server:baseinfo' => 'Genel Bilgi',
 	'Server:Date' => 'Tarihler',
 	'Server:moreinfo' => 'Daha fazla bilgi',
@@ -1615,8 +1631,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Org id~~',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization~~',
 	'Class:PhysicalInterface/Attribute:org_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Location id~~',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Location~~',
 	'Class:PhysicalInterface/Attribute:location_id+' => '~~',
 ]);

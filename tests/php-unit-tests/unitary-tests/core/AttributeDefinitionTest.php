@@ -13,13 +13,6 @@ class AttributeDefinitionTest extends ItopDataTestCase
 {
 	public const CREATE_TEST_ORG = true;
 
-	protected function setUp(): void
-	{
-		parent::setUp();
-		require_once(APPROOT.'core/attributedef.class.inc.php');
-
-	}
-
 	public function testGetImportColumns()
 	{
 		$oAttributeDefinition = MetaModel::GetAttributeDef("ApplicationSolution", "status");

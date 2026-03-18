@@ -67,7 +67,7 @@ class ButtonJS extends Button
 	 */
 	public function __construct(
 		string $sLabel,
-		string $sId = null,
+		?string $sId = null,
 		string $sName = '',
 		string $sValue = '',
 		string $sType = self::DEFAULT_TYPE,

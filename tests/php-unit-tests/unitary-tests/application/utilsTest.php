@@ -936,4 +936,46 @@ class utilsTest extends ItopTestCase
 			],
 		];
 	}
+
+	public function testLoadParamFile()
+	{
+		$sTmpFileInsideItop = APPROOT.'data/test/testLoadParamFile.params';
+		$sDir = dirname($sTmpFileInsideItop);
+		if (!is_dir($sDir)) {
+			mkdir($sDir, 0777, true);
+		}
+		$sParamName = 'IP1';
+		$sParamValue = 'IV1';
+		$sParams = <<<INI
+# comment
+$sParamName = $sParamValue
+INI;
+		file_put_contents($sTmpFileInsideItop, $sParams);
+
+		try {
+			$this->expectException(\Exception::class);
+			$this->expectExceptionMessage("File '$sTmpFileInsideItop' should be outside iTop");
+			self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileInsideItop]);
+			self::assertNotEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() should NOT have loaded the file: $sTmpFileInsideItop");
+		} finally {
+			if (file_exists($sTmpFileInsideItop)) {
+				unlink($sTmpFileInsideItop);
+			}
+		}
+
+		$sParamName = 'OP2';
+		$sParamValue = 'OV2';
+
+		$sTmpFileOutsideItop = tempnam(sys_get_temp_dir(), 'utils-test');
+		$sParams = <<<INI
+# comment
+$sParamName = $sParamValue
+INI;
+
+		file_put_contents($sTmpFileOutsideItop, $sParams);
+		self::InvokeNonPublicStaticMethod(utils::class, 'LoadParamFile', [$sTmpFileOutsideItop]);
+		self::assertEquals($sParamValue, utils::ReadParam($sParamName, null), "utils::LoadParamFile() should have loaded the file: $sTmpFileOutsideItop");
+
+		unlink($sTmpFileOutsideItop);
+	}
 }

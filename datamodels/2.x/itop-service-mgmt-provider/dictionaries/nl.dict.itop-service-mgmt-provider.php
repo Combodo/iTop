@@ -27,9 +27,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:ServiceSubcategory' => 'Subcategorieën services',
 	'Menu:ServiceSubcategory+' => 'Subcategorieën services',
 	'Menu:Service' => 'Services',
-	'Menu:Service+' => 'Services',
-	'Menu:ServiceElement' => 'Service-elementen',
-	'Menu:ServiceElement+' => 'Service-elementen',
+	'Menu:Service+' => 'Second level in service hierarchy~~',
 	'Menu:SLA' => 'SLA\'s',
 	'Menu:SLA+' => 'Service Level Agreements',
 	'Menu:SLT' => 'SLT\'s',
@@ -38,19 +36,21 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Menu:DeliveryModel+' => 'Leveringsmodellen',
 	'Menu:ServiceFamily' => 'Servicecategorieën',
 	'Menu:ServiceFamily+' => 'Servicecategorieën',
+	'Menu:ServiceCatalog' => 'Service catalog~~',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
+
 	'Contract:baseinfo' => 'Algemene informatie',
 	'Contract:moreinfo' => 'Contractuele informatie',
 	'Contract:cost' => 'Financiële informatie',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization

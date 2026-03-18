@@ -268,7 +268,7 @@ JSON;
 	 *
 	 * @return bool|string
 	 */
-	private function CallRestApi_HTTP(string $sJsonDataContent = null, string $sCallbackName = null, bool $bJSONDataAsFile = false)
+	private function CallRestApi_HTTP(?string $sJsonDataContent = null, ?string $sCallbackName = null, bool $bJSONDataAsFile = false)
 	{
 		$ch = curl_init();
 		$aPostFields = [

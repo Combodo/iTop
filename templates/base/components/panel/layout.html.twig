@@ -18,7 +18,10 @@
                         {% if oUIBlock.HasIcon() %}
                             <div class="ibo-panel--icon" data-role="ibo-panel--icon">
                                 {% block iboPanelIcon %}
-                                    <div class="ibo-panel--icon-background ibo-panel--icon-background--must-{{ oUIBlock.GetIconCoverMethod() }}" data-role="ibo-panel--icon-background" style="background-image: url('{{ oUIBlock.GetIconUrl()|raw }}');"></div>
+                                    <img class="ibo-panel--icon-background ibo-panel--icon-img--must-{{ oUIBlock.GetIconCoverMethod() }}
+                                    ibo-panel--icon-background--must-{{ oUIBlock.GetIconCoverMethod() }}"
+                                            {% if oUIBlock.HasLazyLoadIcon %} loading="lazy" {% endif %}
+                                         data-role="ibo-panel--icon-img" src="{{ oUIBlock.GetIconUrl()|raw }}" alt="" aria-hidden="true">
                                 {% endblock %}
                             </div>
                         {% endif %}

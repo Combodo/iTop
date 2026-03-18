@@ -19,15 +19,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Szerződések állapotuk szerint',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30 napon belül lejáró szerződések',
 	'Menu:ProviderContract' => 'Szolgáltatói szerződések',
-	'Menu:ProviderContract+' => 'Provider contracts~~',
+	'Menu:ProviderContract+' => 'What is bought to external companies~~',
 	'Menu:CustomerContract' => 'Ügyfélszerződések',
-	'Menu:CustomerContract+' => 'Customer contracts~~',
+	'Menu:CustomerContract+' => 'Who is buying the services~~',
 	'Menu:ServiceSubcategory' => 'Szolgáltatás alkategóriák',
-	'Menu:ServiceSubcategory+' => 'Service subcategories~~',
+	'Menu:ServiceSubcategory+' => 'Lowest level in service hierarchy~~',
 	'Menu:Service' => 'Szolgáltatások',
-	'Menu:Service+' => 'Services~~',
-	'Menu:ServiceElement' => 'Szolgáltatáselemek',
-	'Menu:ServiceElement+' => 'A szolgáltatás összetevői',
+	'Menu:Service+' => 'Second level in service hierarchy~~',
 	'Menu:SLA' => 'SLA-k',
 	'Menu:SLA+' => 'Szolgáltatásszint megállapodások',
 	'Menu:SLT' => 'SLT-k',
@@ -36,19 +34,21 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', [
 	'Menu:DeliveryModel+' => 'Ki kinek szolgáltat',
 	'Menu:ServiceFamily' => 'Szolgáltatáscsaládok',
 	'Menu:ServiceFamily+' => 'Hasonló célú szolgáltatások',
+	'Menu:ServiceCatalog' => 'Service catalog~~',
+	'Menu:ServiceCatalog+' => 'Define the service elements of your offering~~',
+	'UI-ServiceCatalogMenu-Title' => 'Service catalog~~',
+	'UI-ServiceCatalogMenu-NotInPortal' => 'Not displayed in User Portal~~',
+	'UI-ServiceCatalogMenu-OnlyProductionInPortal' => 'Only Service and Subcategory on production are visible in User Portal~~',
+	'UI-ServiceCatalogMenu-UnusedService' => 'Services not used by any Customers~~',
+	'UI-ServiceCatalogMenu-ServiceWithoutFamilyNotInPortal' => 'Services without Service Family are not visible in User Portal~~',
+	'UI-ServiceCatalogMenu-SLTBySLA' => 'Count SLTs on each SLA~~',
+	'UI-ServiceCatalogMenu-ContractByService' => 'Count Contracts using a Service~~',
+	'UI-ServiceCatalogMenu-ContractBySLA' => 'Count Contracts using an SLA~~',
+
 	'Contract:baseinfo' => 'General information~~',
 	'Contract:moreinfo' => 'Contractual information~~',
 	'Contract:cost' => 'Cost information~~',
 ]);
-
-/*
-	'UI:ServiceManagementMenu' => 'Gestion des Services',
-	'UI:ServiceManagementMenu+' => 'Gestion des Services',
-	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
-*/
 
 //
 // Class: Organization

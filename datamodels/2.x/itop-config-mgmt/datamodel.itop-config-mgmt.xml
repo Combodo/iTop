@@ -1065,23 +1065,8 @@
       <presentation>
         <details>
           <items>
-            <item id="contacts_list">
-              <rank>10</rank>
-            </item>
-            <item id="documents_list">
-              <rank>20</rank>
-            </item>
-            <item id="applicationsolution_list">
-              <rank>35</rank>
-            </item>
-            <item id="physicalinterface_list">
-              <rank>40</rank>
-            </item>
-            <item id="connectablecis_list">
-              <rank>50</rank>
-            </item>
             <item id="col:col1">
-              <rank>80</rank>
+              <rank>10</rank>
               <items>
                 <item id="fieldset:Server:baseinfo">
                   <rank>10</rank>
@@ -1144,7 +1129,7 @@
               </items>
             </item>
             <item id="col:col2">
-              <rank>90</rank>
+              <rank>20</rank>
               <items>
                 <item id="fieldset:Server:Date">
                   <rank>10</rank>
@@ -1183,6 +1168,21 @@
                   </items>
                 </item>
               </items>
+            </item>
+            <item id="contacts_list">
+              <rank>70</rank>
+            </item>
+            <item id="documents_list">
+              <rank>80</rank>
+            </item>
+            <item id="applicationsolution_list">
+              <rank>90</rank>
+            </item>
+            <item id="physicalinterface_list">
+              <rank>100</rank>
+            </item>
+            <item id="connectablecis_list">
+              <rank>110</rank>
             </item>
           </items>
         </details>
@@ -1646,6 +1646,7 @@
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
+          <image_attribute>logo</image_attribute>
         </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-application-window.svg</icon>
@@ -1713,27 +1714,57 @@
           <min_up_mode>user</min_up_mode>
           <min_up_type>count</min_up_type>
         </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>60</rank>
+                    </item>
+                    <item id="description">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="move2production">
-              <rank>50</rank>
-            </item>
-            <item id="description">
-              <rank>60</rank>
             </item>
             <item id="contacts_list">
               <rank>70</rank>
@@ -1822,6 +1853,7 @@
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
+          <image_attribute>logo</image_attribute>
         </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-process-improvement.svg</icon>
@@ -1870,27 +1902,57 @@
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>60</rank>
+                    </item>
+                    <item id="description">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="move2production">
-              <rank>50</rank>
-            </item>
-            <item id="description">
-              <rank>60</rank>
             </item>
             <item id="contacts_list">
               <rank>70</rank>
@@ -2148,7 +2210,40 @@
           </items>
         </list>
       </presentation>
-      <methods/>
+      <methods>
+        <method id="GetIcon">
+          <comment>	/**
+            * Overrides the GetIcon method to return the logo of the associated Software if any, otherwise the default icon of the class will be returned
+            *
+            */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <code><![CDATA[	public function GetIcon($bImgTag = true)
+	{
+	   // If there is an image defined on the associated Software, we use it
+	   $sIconClass = 'Software'; // the class storing the image which will be used as icon for the current object
+	   $sExtKeyCode = 'software_id'; // the attribute code pointing to the class having the image to display
+	   $sIconAttCode = 'logo'; // the attribute code of the image to display on the IconClass
+
+		 $iObj = $this->Get($sExtKeyCode);
+		 if ($iObj > 0) {
+		    $oObj = MetaModel::GetObject($sIconClass, $iObj, true, true);
+        $oImage = $oObj->Get($sIconAttCode);
+    		$sIconUrl = $oImage->IsEmpty() ? '' : $oImage->GetDisplayURL($sIconClass, $iObj, $sIconAttCode);
+    		if (strlen($sIconUrl) > 0) {
+    			 if ($bImgTag) {
+    				  return "<img src=\"$sIconUrl\" alt=''/>";
+    			 } else {
+    				  return $sIconUrl;
+    			 }
+    		}
+		 }
+		 // Return the default image
+	   return parent::GetIcon($bImgTag);
+	}]]></code>
+        </method>
+      </methods>
     </class>
     <class id="Middleware" _delta="define">
       <parent>SoftwareInstance</parent>
@@ -2194,35 +2289,65 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Software:moreinfo">
+                  <items>
+                    <item id="system_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="software_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="softwarelicence_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="path">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Server:Date">
+                  <items>
+                    <item id="move2production">
+                      <rank>90</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>100</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="system_id">
-              <rank>50</rank>
-            </item>
-            <item id="software_id">
-              <rank>60</rank>
-            </item>
-            <item id="softwarelicence_id">
-              <rank>70</rank>
-            </item>
-            <item id="path">
-              <rank>80</rank>
-            </item>
-            <item id="move2production">
-              <rank>90</rank>
-            </item>
-            <item id="description">
-              <rank>100</rank>
             </item>
             <item id="contacts_list">
               <rank>110</rank>
@@ -2348,35 +2473,65 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Software:moreinfo">
+                  <items>
+                    <item id="system_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="software_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="softwarelicence_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="path">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Server:Date">
+                  <items>
+                    <item id="move2production">
+                      <rank>90</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>100</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="system_id">
-              <rank>50</rank>
-            </item>
-            <item id="software_id">
-              <rank>60</rank>
-            </item>
-            <item id="softwarelicence_id">
-              <rank>70</rank>
-            </item>
-            <item id="path">
-              <rank>80</rank>
-            </item>
-            <item id="move2production">
-              <rank>90</rank>
-            </item>
-            <item id="description">
-              <rank>100</rank>
             </item>
             <item id="contacts_list">
               <rank>110</rank>
@@ -2502,35 +2657,65 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Software:moreinfo">
+                  <items>
+                    <item id="system_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="software_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="softwarelicence_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="path">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Server:Date">
+                  <items>
+                    <item id="move2production">
+                      <rank>90</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>100</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="system_id">
-              <rank>50</rank>
-            </item>
-            <item id="software_id">
-              <rank>60</rank>
-            </item>
-            <item id="softwarelicence_id">
-              <rank>70</rank>
-            </item>
-            <item id="path">
-              <rank>80</rank>
-            </item>
-            <item id="move2production">
-              <rank>90</rank>
-            </item>
-            <item id="description">
-              <rank>100</rank>
             </item>
             <item id="contacts_list">
               <rank>110</rank>
@@ -2648,35 +2833,65 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Software:moreinfo">
+                  <items>
+                    <item id="system_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="software_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="softwarelicence_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="path">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Server:Date">
+                  <items>
+                    <item id="move2production">
+                      <rank>90</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>100</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="system_id">
-              <rank>50</rank>
-            </item>
-            <item id="software_id">
-              <rank>60</rank>
-            </item>
-            <item id="softwarelicence_id">
-              <rank>70</rank>
-            </item>
-            <item id="path">
-              <rank>80</rank>
-            </item>
-            <item id="move2production">
-              <rank>90</rank>
-            </item>
-            <item id="description">
-              <rank>100</rank>
             </item>
             <item id="contacts_list">
               <rank>110</rank>
@@ -2781,35 +2996,65 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Software:moreinfo">
+                  <items>
+                    <item id="system_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="software_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="softwarelicence_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="path">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Server:Date">
+                  <items>
+                    <item id="move2production">
+                      <rank>90</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <items>
+                    <item id="description">
+                      <rank>100</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="system_id">
-              <rank>50</rank>
-            </item>
-            <item id="software_id">
-              <rank>60</rank>
-            </item>
-            <item id="softwarelicence_id">
-              <rank>70</rank>
-            </item>
-            <item id="path">
-              <rank>80</rank>
-            </item>
-            <item id="move2production">
-              <rank>90</rank>
-            </item>
-            <item id="description">
-              <rank>100</rank>
             </item>
             <item id="contacts_list">
               <rank>110</rank>
@@ -2896,6 +3141,9 @@
             <attribute id="middleware_name"/>
           </complementary_attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-automatic.svg</icon>
         </style>
@@ -2923,27 +3171,62 @@
           <extkey_attcode>middleware_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:moreinfo">
+                  <items>
+                    <item id="middleware_id">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>60</rank>
+                    </item>
+                    <item id="description">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="middleware_id">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="move2production">
-              <rank>50</rank>
-            </item>
-            <item id="description">
-              <rank>60</rank>
             </item>
             <item id="contacts_list">
               <rank>70</rank>
@@ -3064,23 +3347,48 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:moreinfo">
+                  <items>
+                    <item id="dbserver_id">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="dbserver_id">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="move2production">
-              <rank>50</rank>
-            </item>
-            <item id="description">
-              <rank>60</rank>
             </item>
             <item id="contacts_list">
               <rank>70</rank>
@@ -3172,6 +3480,9 @@
             <attribute id="webserver_name"/>
           </complementary_attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-web.svg</icon>
         </style>
@@ -3203,30 +3514,65 @@
           <is_null_allowed>true</is_null_allowed>
           <target>_blank</target>
         </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:moreinfo">
+                  <items>
+                    <item id="webserver_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="url">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="move2production">
+                      <rank>50</rank>
+                    </item>
+                    <item id="logo">
+                      <rank>60</rank>
+                    </item>
+                    <item id="description">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="webserver_id">
-              <rank>30</rank>
-            </item>
-            <item id="url">
-              <rank>40</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>50</rank>
-            </item>
-            <item id="move2production">
-              <rank>60</rank>
-            </item>
-            <item id="description">
-              <rank>70</rank>
             </item>
             <item id="contacts_list">
               <rank>80</rank>
@@ -3328,6 +3674,9 @@
             <attribute id="type"/>
           </complementary_attributes>
         </naming>
+        <fields_semantic>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-software.svg</icon>
         </style>
@@ -3387,6 +3736,13 @@
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
         </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="softwareinstance_list" xsi:type="AttributeLinkedSet">
           <linked_class>SoftwareInstance</linked_class>
           <ext_key_to_me>software_id</ext_key_to_me>
@@ -3425,17 +3781,20 @@
             <item id="type">
               <rank>40</rank>
             </item>
-            <item id="documents_list">
+            <item id="logo">
               <rank>50</rank>
             </item>
-            <item id="softwareinstance_list">
+            <item id="documents_list">
               <rank>60</rank>
             </item>
-            <item id="softwarepatch_list">
+            <item id="softwareinstance_list">
               <rank>70</rank>
             </item>
-            <item id="softwarelicence_list">
+            <item id="softwarepatch_list">
               <rank>80</rank>
+            </item>
+            <item id="softwarelicence_list">
+              <rank>90</rank>
             </item>
           </items>
         </details>
@@ -3888,29 +4247,54 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:moreinfo">
+                  <items>
+                    <item id="usage_limit">
+                      <rank>30</rank>
+                    </item>
+                    <item id="perpetual">
+                      <rank>50</rank>
+                    </item>
+                    <item id="licence_key">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="start_date">
+                      <rank>60</rank>
+                    </item>
+                    <item id="end_date">
+                      <rank>70</rank>
+                    </item>
+                    <item id="description">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="usage_limit">
-              <rank>30</rank>
-            </item>
-            <item id="description">
-              <rank>40</rank>
-            </item>
-            <item id="perpetual">
-              <rank>50</rank>
-            </item>
-            <item id="start_date">
-              <rank>60</rank>
-            </item>
-            <item id="end_date">
-              <rank>70</rank>
-            </item>
-            <item id="licence_key">
-              <rank>80</rank>
             </item>
             <item id="documents_list">
               <rank>90</rank>
@@ -3927,6 +4311,12 @@
             </item>
             <item id="licence_key">
               <rank>30</rank>
+            </item>
+            <item id="start_date">
+              <rank>40</rank>
+            </item>
+            <item id="end_date">
+              <rank>50</rank>
             </item>
           </items>
         </default_search>
@@ -4035,35 +4425,60 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="osversion_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="usage_limit">
+                      <rank>50</rank>
+                    </item>
+                    <item id="perpetual">
+                      <rank>65</rank>
+                    </item>
+                    <item id="licence_key">
+                      <rank>90</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="documents_list">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="start_date">
+                      <rank>70</rank>
+                    </item>
+                    <item id="end_date">
+                      <rank>80</rank>
+                    </item>
+                    <item id="description">
+                      <rank>90</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
             </item>
-            <item id="osversion_id">
-              <rank>30</rank>
-            </item>
-            <item id="org_id">
-              <rank>40</rank>
-            </item>
-            <item id="usage_limit">
-              <rank>50</rank>
-            </item>
-            <item id="description">
-              <rank>60</rank>
-            </item>
-            <item id="perpetual">
-              <rank>65</rank>
-            </item>
-            <item id="start_date">
-              <rank>70</rank>
-            </item>
-            <item id="end_date">
+            <item id="documents_list">
               <rank>80</rank>
-            </item>
-            <item id="licence_key">
-              <rank>90</rank>
             </item>
             <item id="servers_list">
               <rank>100</rank>
@@ -4186,35 +4601,60 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:moreinfo">
+                  <items>
+                    <item id="software_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="usage_limit">
+                      <rank>50</rank>
+                    </item>
+                    <item id="perpetual">
+                      <rank>65</rank>
+                    </item>
+                    <item id="licence_key">
+                      <rank>90</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="documents_list">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:ConfigMgmt:otherinfo">
+                  <items>
+                    <item id="start_date">
+                      <rank>70</rank>
+                    </item>
+                    <item id="end_date">
+                      <rank>80</rank>
+                    </item>
+                    <item id="description">
+                      <rank>90</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
             </item>
-            <item id="software_id">
-              <rank>30</rank>
-            </item>
-            <item id="org_id">
-              <rank>40</rank>
-            </item>
-            <item id="usage_limit">
-              <rank>50</rank>
-            </item>
-            <item id="description">
-              <rank>60</rank>
-            </item>
-            <item id="perpetual">
-              <rank>65</rank>
-            </item>
-            <item id="start_date">
-              <rank>70</rank>
-            </item>
-            <item id="end_date">
+            <item id="documents_list">
               <rank>80</rank>
-            </item>
-            <item id="licence_key">
-              <rank>90</rank>
             </item>
             <item id="softwareinstance_list">
               <rank>100</rank>
@@ -4415,6 +4855,11 @@
           <extkey_attcode>osfamily_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="ospatches_list" xsi:type="AttributeLinkedSet">
+          <linked_class>OSPatch</linked_class>
+          <ext_key_to_me>osversion_id</ext_key_to_me>
+          <edit_mode>in_place</edit_mode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -4425,6 +4870,9 @@
             </item>
             <item id="osfamily_id">
               <rank>20</rank>
+            </item>
+            <item id="ospatches_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -4481,6 +4929,11 @@
           <storage_max_height>128</storage_max_height>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="osversions_list" xsi:type="AttributeLinkedSet">
+          <linked_class>OSVersion</linked_class>
+          <ext_key_to_me>osfamily_id</ext_key_to_me>
+          <edit_mode>in_place</edit_mode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -4491,6 +4944,9 @@
             </item>
             <item id="logo">
               <rank>20</rank>
+            </item>
+            <item id="osversions_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -4563,6 +5019,16 @@
           <count_max>0</count_max>
           <duplicates/>
         </field>
+        <field id="models_list" xsi:type="AttributeLinkedSet">
+          <linked_class>Model</linked_class>
+          <ext_key_to_me>brand_id</ext_key_to_me>
+          <edit_mode>in_place</edit_mode>
+        </field>
+        <field id="iosversions_list" xsi:type="AttributeLinkedSet">
+          <linked_class>IOSVersion</linked_class>
+          <ext_key_to_me>brand_id</ext_key_to_me>
+          <edit_mode>in_place</edit_mode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -4574,8 +5040,14 @@
             <item id="logo">
               <rank>20</rank>
             </item>
-            <item id="physicaldevices_list">
+            <item id="models_list">
               <rank>30</rank>
+            </item>
+            <item id="physicaldevices_list">
+              <rank>40</rank>
+            </item>
+            <item id="iosversions_list">
+              <rank>50</rank>
             </item>
           </items>
         </details>
@@ -4894,6 +5366,11 @@
           <extkey_attcode>brand_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="networkdevices_list" xsi:type="AttributeLinkedSet">
+          <linked_class>NetworkDevice</linked_class>
+          <ext_key_to_me>iosversion_id</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -4904,6 +5381,9 @@
             </item>
             <item id="brand_id">
               <rank>20</rank>
+            </item>
+            <item id="networkdevices_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
@@ -6209,35 +6689,60 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:moreinfo">
+                  <items>
+                    <item id="connectableci_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="ipaddress">
+                      <rank>50</rank>
+                    </item>
+                    <item id="macaddress">
+                      <rank>60</rank>
+                    </item>
+                    <item id="ipgateway">
+                      <rank>80</rank>
+                    </item>
+                    <item id="ipmask">
+                      <rank>90</rank>
+                    </item>
+                    <item id="speed">
+                      <rank>100</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="connectableci_id">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Server:otherinfo">
+                  <items>
+                    <item id="comment">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
               <rank>20</rank>
-            </item>
-            <item id="location_id">
-              <rank>30</rank>
-            </item>
-            <item id="org_id">
-              <rank>40</rank>
-            </item>
-            <item id="ipaddress">
-              <rank>50</rank>
-            </item>
-            <item id="macaddress">
-              <rank>60</rank>
-            </item>
-            <item id="comment">
-              <rank>70</rank>
-            </item>
-            <item id="ipgateway">
-              <rank>80</rank>
-            </item>
-            <item id="ipmask">
-              <rank>90</rank>
-            </item>
-            <item id="speed">
-              <rank>100</rank>
             </item>
             <item id="vlans_list">
               <rank>110</rank>
@@ -7012,23 +7517,48 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:ConfigMgmt:baseinfo">
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:ConfigMgmt:moreinfo">
+                  <items>
+                    <item id="type">
+                      <rank>40</rank>
+                    </item>
+                    <item id="parent_id">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>20</rank>
+                </item>
+              </items>
               <rank>10</rank>
             </item>
-            <item id="status">
-              <rank>20</rank>
-            </item>
-            <item id="org_id">
-              <rank>30</rank>
-            </item>
-            <item id="type">
-              <rank>40</rank>
-            </item>
-            <item id="description">
+            <item id="col:col2">
+              <items>
+                <item id="fieldset:Server:otherinfo">
+                  <items>
+                    <item id="description">
               <rank>50</rank>
-            </item>
-            <item id="parent_id">
-              <rank>60</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
             </item>
             <item id="ci_list">
               <rank>70</rank>
@@ -7045,6 +7575,9 @@
             </item>
             <item id="org_id">
               <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
             </item>
           </items>
         </default_search>

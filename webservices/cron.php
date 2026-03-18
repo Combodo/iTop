@@ -446,18 +446,16 @@ function ReSyncProcesses($oP, $bVerbose, $bDebug)
 //
 
 set_time_limit(0); // Some background actions may really take long to finish (like backup)
-
-$bIsModeCLI = utils::IsModeCLI();
-if ($bIsModeCLI) {
-	$oP = new CLIPage("iTop - cron");
-
-	SetupUtils::CheckPhpAndExtensionsForCli($oP, EXIT_CODE_FATAL);
-} else {
-	$oP = new WebPage("iTop - cron");
-}
-
 try {
-	utils::UseParamFile();
+	$bIsModeCLI = utils::IsModeCLI();
+	if ($bIsModeCLI) {
+		$oP = new CLIPage("iTop - cron");
+
+		SetupUtils::CheckPhpAndExtensionsForCli($oP, EXIT_CODE_FATAL);
+		utils::UseParamFile();
+	} else {
+		$oP = new WebPage("iTop - cron");
+	}
 
 	$bVerbose = utils::ReadParam('verbose', false, true /* Allow CLI */);
 	$bDebug = utils::ReadParam('debug', false, true /* Allow CLI */);

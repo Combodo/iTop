@@ -59,9 +59,9 @@ class TopBar extends UIBlock
 	 */
 	public function __construct(
 		$sId = null,
-		QuickCreate $oQuickCreate = null,
-		GlobalSearch $oGlobalSearch = null,
-		Breadcrumbs $oBreadcrumbs = null
+		?QuickCreate $oQuickCreate = null,
+		?GlobalSearch $oGlobalSearch = null,
+		?Breadcrumbs $oBreadcrumbs = null
 	) {
 		parent::__construct($sId);
 

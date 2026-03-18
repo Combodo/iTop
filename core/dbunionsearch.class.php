@@ -59,7 +59,7 @@ class DBUnionSearch extends DBSearch
 	public function AllowAllData($bAllowAllData = true)
 	{
 		foreach ($this->aSearches as $oSearch) {
-			$oSearch->AllowAllData();
+			$oSearch->AllowAllData($bAllowAllData);
 		}
 	}
 

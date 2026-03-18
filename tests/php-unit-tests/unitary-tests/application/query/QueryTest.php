@@ -73,7 +73,7 @@ class QueryTest extends ItopDataTestCase
 	 * @param string $sOql query oql phrase
 	 * @param string|null $sFields fields to export
 	 */
-	private function CreateQueryOQL(string $sName, string $sDescription, string $sOql, string $sFields = null): QueryOQL
+	private function CreateQueryOQL(string $sName, string $sDescription, string $sOql, ?string $sFields = null): QueryOQL
 	{
 		$oQuery = new QueryOQL();
 		$oQuery->Set('name', $sName);

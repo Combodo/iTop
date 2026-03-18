@@ -358,7 +358,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('workflows')
                     ->canBeEnabled()
                     ->beforeNormalization()
-                        ->always(function ($v) {
+                        ->always(static function ($v) {
                             if (\is_array($v) && true === $v['enabled']) {
                                 $workflows = $v;
                                 unset($workflows['enabled']);
@@ -367,7 +367,7 @@ class Configuration implements ConfigurationInterface
                                     $workflows = [];
                                 }
 
-                                if (1 === \count($workflows) && isset($workflows['workflows']) && !array_is_list($workflows['workflows']) && array_diff(array_keys($workflows['workflows']), ['audit_trail', 'type', 'marking_store', 'supports', 'support_strategy', 'initial_marking', 'places', 'transitions'])) {
+                                if (1 === \count($workflows) && isset($workflows['workflows']) && !array_is_list($workflows['workflows']) && array_diff_key($workflows['workflows'], ['audit_trail' => 1, 'type' => 1, 'marking_store' => 1, 'supports' => 1, 'support_strategy' => 1, 'initial_marking' => 1, 'places' => 1, 'transitions' => 1])) {
                                     $workflows = $workflows['workflows'];
                                 }
 
@@ -473,27 +473,16 @@ class Configuration implements ConfigurationInterface
                                                     throw new InvalidConfigurationException('The "places" option must be an array in workflow configuration.');
                                                 }
 
-                                                // It's an indexed array of shape  ['place1', 'place2']
-                                                if (isset($places[0]) && \is_string($places[0])) {
-                                                    return array_map(function (string $place) {
-                                                        return ['name' => $place];
-                                                    }, $places);
-                                                }
-
-                                                // It's an indexed array, we let the validation occur
-                                                if (isset($places[0]) && \is_array($places[0])) {
-                                                    return $places;
-                                                }
-
-                                                foreach ($places as $name => $place) {
-                                                    if (\is_array($place) && \array_key_exists('name', $place)) {
-                                                        continue;
+                                                $normalizedPlaces = [];
+                                                foreach ($places as $key => $value) {
+                                                    if (!\is_array($value)) {
+                                                        $value = ['name' => $value];
                                                     }
-                                                    $place['name'] = $name;
-                                                    $places[$name] = $place;
+                                                    $value['name'] ??= $key;
+                                                    $normalizedPlaces[] = $value;
                                                 }
 
-                                                return array_values($places);
+                                                return $normalizedPlaces;
                                             })
                                         ->end()
                                         ->isRequired()
@@ -505,6 +494,7 @@ class Configuration implements ConfigurationInterface
                                                     ->cannotBeEmpty()
                                                 ->end()
                                                 ->arrayNode('metadata')
+                                                    ->useAttributeAsKey('key')
                                                     ->normalizeKeys(false)
                                                     ->defaultValue([])
                                                     ->example(['color' => 'blue', 'description' => 'Workflow to manage article.'])
@@ -516,26 +506,26 @@ class Configuration implements ConfigurationInterface
                                     ->end()
                                     ->arrayNode('transitions')
                                         ->beforeNormalization()
-                                            ->always()
-                                            ->then(function ($transitions) {
+                                            ->always(static function ($transitions) {
                                                 if (!\is_array($transitions)) {
                                                     throw new InvalidConfigurationException('The "transitions" option must be an array in workflow configuration.');
                                                 }
 
-                                                // It's an indexed array, we let the validation occur
-                                                if (isset($transitions[0]) && \is_array($transitions[0])) {
-                                                    return $transitions;
-                                                }
-
-                                                foreach ($transitions as $name => $transition) {
-                                                    if (\is_array($transition) && \array_key_exists('name', $transition)) {
-                                                        continue;
+                                                $normalizedTransitions = [];
+                                                foreach ($transitions as $key => $transition) {
+                                                    if (\is_array($transition)) {
+                                                        if (\is_string($key = $transition['key'] ?? $key)) {
+                                                            $transition['name'] ??= $key;
+                                                        }
+                                                        if (!($transition['name'] ?? false)) {
+                                                            throw new InvalidConfigurationException('The "name" option is required for each transition in workflow configuration.');
+                                                        }
+                                                        unset($transition['key']);
                                                     }
-                                                    $transition['name'] = $name;
-                                                    $transitions[$name] = $transition;
+                                                    $normalizedTransitions[$key] = $transition;
                                                 }
 
-                                                return $transitions;
+                                                return $normalizedTransitions;
                                             })
                                         ->end()
                                         ->isRequired()
@@ -552,6 +542,7 @@ class Configuration implements ConfigurationInterface
                                                     ->example('is_fully_authenticated() and is_granted(\'ROLE_JOURNALIST\') and subject.getTitle() == \'My first article\'')
                                                 ->end()
                                                 ->arrayNode('from')
+                                                    ->performNoDeepMerging()
                                                     ->beforeNormalization()
                                                         ->ifString()
                                                         ->then(fn ($v) => [$v])
@@ -562,6 +553,7 @@ class Configuration implements ConfigurationInterface
                                                     ->end()
                                                 ->end()
                                                 ->arrayNode('to')
+                                                    ->performNoDeepMerging()
                                                     ->beforeNormalization()
                                                         ->ifString()
                                                         ->then(fn ($v) => [$v])
@@ -572,6 +564,7 @@ class Configuration implements ConfigurationInterface
                                                     ->end()
                                                 ->end()
                                                 ->arrayNode('metadata')
+                                                    ->useAttributeAsKey('key')
                                                     ->normalizeKeys(false)
                                                     ->defaultValue([])
                                                     ->example(['color' => 'blue', 'description' => 'Workflow to manage article.'])
@@ -582,6 +575,7 @@ class Configuration implements ConfigurationInterface
                                         ->end()
                                     ->end()
                                     ->arrayNode('metadata')
+                                        ->useAttributeAsKey('key')
                                         ->normalizeKeys(false)
                                         ->defaultValue([])
                                         ->example(['color' => 'blue', 'description' => 'Workflow to manage article.'])
@@ -1195,6 +1189,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->arrayNode('default_context')
+                            ->useAttributeAsKey('key')
                             ->normalizeKeys(false)
                             ->validate()
                                 ->ifTrue(fn () => $this->debug && class_exists(JsonParser::class))
@@ -1676,6 +1671,7 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('dsn')->end()
                                     ->scalarNode('serializer')->defaultNull()->info('Service id of a custom serializer to use.')->end()
                                     ->arrayNode('options')
+                                        ->useAttributeAsKey('key')
                                         ->normalizeKeys(false)
                                         ->defaultValue([])
                                         ->prototype('variable')
@@ -1866,6 +1862,7 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                                 ->arrayNode('vars')
                                     ->info('Associative array: the default vars used to expand the templated URI.')
+                                    ->useAttributeAsKey('name')
                                     ->normalizeKeys(false)
                                     ->variablePrototype()->end()
                                 ->end()
@@ -1946,6 +1943,7 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                                 ->arrayNode('extra')
                                     ->info('Extra options for specific HTTP client')
+                                    ->useAttributeAsKey('name')
                                     ->normalizeKeys(false)
                                     ->variablePrototype()->end()
                                 ->end()
@@ -2097,6 +2095,7 @@ class Configuration implements ConfigurationInterface
                                     ->end()
                                     ->arrayNode('extra')
                                         ->info('Extra options for specific HTTP client')
+                                        ->useAttributeAsKey('name')
                                         ->normalizeKeys(false)
                                         ->variablePrototype()->end()
                                     ->end()

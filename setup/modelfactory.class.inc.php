@@ -2376,7 +2376,7 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 */
 	// Return type union is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
 	#[\ReturnTypeWillChange]
-	public function saveXML(DOMNode $node = null, $options = 0)
+	public function saveXML(?DOMNode $node = null, $options = 0)
 	{
 		$oRootNode = $this->firstChild;
 		if (!$oRootNode) {

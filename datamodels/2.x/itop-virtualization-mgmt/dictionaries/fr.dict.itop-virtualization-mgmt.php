@@ -21,8 +21,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
+//
+// Fieldsets for Virtualization classes
+//
+
 Dict::Add('FR FR', 'French', 'Français', [
-	// Dictionary entries go here
+	'Virtualization:baseinfo' => 'Informations générales',
+	'Virtualization:moreinfo' => 'Spécificités de la virtualisation',
+	'Virtualization:otherinfo' => 'Dates et description',
+]);
+
+//
+// Class Cloud
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:Cloud/Name' => '%1$s',
+	'Class:Cloud/ComplementaryName' => '%1$s-%2$s',
+	'Class:Cloud' => 'Nuage',
+	'Class:Cloud+' => 'Hôte virtuel, opéré par un fournisseur de services Cloud, il peut héberger des Machines Virtuelles, des Hôtes pour Conteneurs, etc.',
+	'Class:Cloud/Attribute:provider_id' => 'Fournisseur',
+	'Class:Cloud/Attribute:logo' => 'Logo',
+	'Class:Cloud/Attribute:logo+' => 'Utilisé comme icône de l\'objet dans les graphes d\'analyse d\'impact',
+	'Class:Cloud/Attribute:provider_id+' => 'Organisation fournissant le nuage',
+	'Class:Cloud/Attribute:location_id' => 'Site',
+	'Class:Cloud/Attribute:location_id+' => 'Site du fournisseur, hébergeant le nuage',
+	'Class:Cloud/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
+	'Class:Cloud/Attribute:containerhosts_list+' => 'Liste des hôtes hébergés dans ce nuage',
 ]);
 
 //
@@ -30,6 +56,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 
 Dict::Add('FR FR', 'French', 'Français', [
+	'Class:LogicalInterface/Name' => '%2$s %1$s',
 	'Class:LogicalInterface/Attribute:org_id' => 'Organisation',
 	'Class:LogicalInterface/Attribute:org_id+' => '',
 ]);

@@ -121,10 +121,10 @@ class ResolveBindingsPass extends AbstractRecursivePass
         foreach ($bindings as $key => $binding) {
             [$bindingValue, $bindingId, $used, $bindingType, $file] = $binding->getValues();
             if ($used) {
-                $this->usedBindings[$bindingId] = true;
-                unset($this->unusedBindings[$bindingId]);
-            } elseif (!isset($this->usedBindings[$bindingId])) {
-                $this->unusedBindings[$bindingId] = [$key, $this->currentId, $bindingType, $file];
+                $this->usedBindings[$bindingId ?? ''] = true;
+                unset($this->unusedBindings[$bindingId ?? '']);
+            } elseif (!isset($this->usedBindings[$bindingId ?? ''])) {
+                $this->unusedBindings[$bindingId ?? ''] = [$key, $this->currentId, $bindingType, $file];
             }
 
             if (preg_match('/^(?:(?:array|bool|float|int|string|iterable|([^ $]++)) )\$/', $key, $m)) {
@@ -222,7 +222,7 @@ class ResolveBindingsPass extends AbstractRecursivePass
                     continue;
                 }
 
-                if (isset($bindingNames[$name]) || isset($bindingNames[$parsedName]) || isset($bindingNames[$parameter->name])) {
+                if (null !== $binding = $bindingNames[$name] ?? $bindingNames[$parsedName] ?? $bindingNames[$parameter->name] ?? null) {
                     $bindingKey = array_search($binding, $bindings, true);
                     $argumentType = substr($bindingKey, 0, strpos($bindingKey, ' '));
                     $this->errorMessages[] = \sprintf('Did you forget to add the type "%s" to argument "$%s" of method "%s::%s()"?', $argumentType, $parameter->name, $reflectionMethod->class, $reflectionMethod->name);
@@ -263,8 +263,8 @@ class ResolveBindingsPass extends AbstractRecursivePass
     {
         [$bindingValue, $bindingId] = $binding->getValues();
 
-        $this->usedBindings[$bindingId] = true;
-        unset($this->unusedBindings[$bindingId]);
+        $this->usedBindings[$bindingId ?? ''] = true;
+        unset($this->unusedBindings[$bindingId ?? '']);
 
         return $bindingValue;
     }

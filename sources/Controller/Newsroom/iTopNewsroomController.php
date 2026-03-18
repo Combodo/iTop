@@ -7,14 +7,11 @@ use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Toggler;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
-use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectSummary;
@@ -29,13 +26,10 @@ use CoreException;
 use DBObjectSearch;
 use DBObjectSet;
 use Dict;
-use JSPopupMenuItem;
 use MetaModel;
 use SecurityException;
-use URLPopupMenuItem;
 use UserRights;
 use utils;
-use appUserPreferences;
 
 /**
  *  Class iTopNewsroomController
@@ -379,6 +373,7 @@ JS
 			$sReadColor = $oEvent->Get('read') === 'no' ? 'ibo-notifications--view-all--item--unread' : 'ibo-notifications--view-all--item--read';
 			$sReadLabel = $oEvent->Get('read') === 'no' ? Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Unread:Label') : Dict::S('UI:Newsroom:iTopNotification:ViewAllPage:Read:Label');
 			$oEventBlock = new ObjectSummary($oEvent);
+			$oEventBlock->SetHasLazyLoadIcon(true);
 			$oEventBlock->SetCSSColorClass($sReadColor);
 			$oEventBlock->SetSubTitle($sReadLabel);
 			$oEventBlock->SetClassLabel('');

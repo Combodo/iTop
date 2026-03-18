@@ -18,7 +18,7 @@ interface iTabbedPage
 	 *
 	 * @return mixed
 	 */
-	public function AddTabContainer($sTabContainer, $sPrefix = '', iUIContentBlock $oParentBlock = null);
+	public function AddTabContainer($sTabContainer, $sPrefix = '', ?iUIContentBlock $oParentBlock = null);
 
 	/**
 	 * @param string $sTabContainer

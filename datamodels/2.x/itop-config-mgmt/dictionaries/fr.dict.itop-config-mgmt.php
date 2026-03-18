@@ -37,23 +37,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 // Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
-// Classes in 'bizmodel'
-//////////////////////////////////////////////////////////////////////
-//
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-// Class:<class_name>/UniquenessRule:<rule_code>
-// Class:<class_name>/UniquenessRule:<rule_code>+
-
-//////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -557,6 +540,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Tous les éléments de configuration qui composent cette solution applicative',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Processus métiers',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Tous les processus métiers dépendants de cette solution applicative',
+	'Class:ApplicationSolution/Attribute:logo' => 'Logo',
+	'Class:ApplicationSolution/Attribute:logo+' => 'Utilisé comme icône de l\'objet dans les graphes d\'analyse d\'impact',
 	'Class:ApplicationSolution/Attribute:status' => 'Etat',
 	'Class:ApplicationSolution/Attribute:status+' => '',
 	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Actif',
@@ -582,6 +567,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Add:Modal:Title' => 'Ajouter une %4$s à %2$s',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Remove:Button+' => 'Retirer cette %4$s',
 	'Class:BusinessProcess/Attribute:applicationsolutions_list/UI:Links:Remove:Modal:Title' => 'Retirer une %4$s',
+	'Class:BusinessProcess/Attribute:logo' => 'Logo',
+	'Class:BusinessProcess/Attribute:logo+' => 'Utilisé comme icône de l\'objet dans les graphes d\'analyse d\'impact',
 	'Class:BusinessProcess/Attribute:status' => 'Etat',
 	'Class:BusinessProcess/Attribute:status+' => '',
 	'Class:BusinessProcess/Attribute:status/Value:active' => 'Actif',
@@ -696,6 +683,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:MiddlewareInstance' => 'Instance Middleware',
 	'Class:MiddlewareInstance+' => 'CI fonctionnel représentant un service délivré par un Middleware.',
 	'Class:MiddlewareInstance/ComplementaryName' => '%1$s - %2$s',
+	'Class:MiddlewareInstance/Attribute:logo' => 'Logo',
+	'Class:MiddlewareInstance/Attribute:logo+' => 'Utilisé comme icône de l\'objet dans les graphes d\'analyse d\'impact',
 	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '',
 	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Nom Middleware',
@@ -728,6 +717,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:WebApplication/Attribute:webserver_id+' => '',
 	'Class:WebApplication/Attribute:webserver_name' => 'Nom Serveur Web',
 	'Class:WebApplication/Attribute:webserver_name+' => '',
+	'Class:WebApplication/Attribute:logo' => 'Logo',
+	'Class:WebApplication/Attribute:logo+' => 'Utilisé comme icône de l\'objet dans les graphes d\'analyse d\'impact',
 	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '',
 ]);
@@ -993,6 +984,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Software/Attribute:version+' => '',
 	'Class:Software/Attribute:documents_list' => 'Documents',
 	'Class:Software/Attribute:documents_list+' => 'Tous les documents liés à ce logiciel',
+	'Class:Software/Attribute:logo' => 'Logo',
+	'Class:Software/Attribute:logo+' => 'Utilisé comme icône des Instances qui utilisent ce Logiciel, lors de leur affichage dans les graphes d\'analyse d\'impact',
 	'Class:Software/Attribute:type' => 'Type',
 	'Class:Software/Attribute:type+' => '',
 	'Class:Software/Attribute:type/Value:DBServer' => 'Serveur de base de données',
@@ -1204,6 +1197,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'Nom Famille OS',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
+	'Class:OSVersion/Attribute:ospatches_list' => 'Patchs OS',
+	'Class:OSVersion/Attribute:ospatches_list+' => 'Tous les patchs de cette version OS',
 ]);
 
 //
@@ -1213,6 +1208,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OSFamily' => 'Famille d\'OS',
 	'Class:OSFamily+' => 'Typologie. Liste des valeurs possibles pour l\'attribut "Famille d\'OS" des serveurs, machines virtuelles et PC.',
+	'Class:OSFamily/Attribute:osversions_list' => 'Versions OS',
+	'Class:OSFamily/Attribute:osversions_list+' => 'Toutes les versions OS pour cette famille',
 ]);
 
 //
@@ -1222,8 +1219,12 @@ Dict::Add('FR FR', 'French', 'Français', [
 Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Brand' => 'Marque',
 	'Class:Brand+' => 'Typologie. Liste des valeurs possibles pour l\'attribut « Marque » d\'un matériel physique.',
+	'Class:Brand/Attribute:iosversions_list' => 'Versions IOS',
+	'Class:Brand/Attribute:iosversions_list+' => 'Toutes les versions IOS pour cette marque',
 	'Class:Brand/Attribute:logo' => 'Logo',
 	'Class:Brand/Attribute:logo+' => '',
+	'Class:Brand/Attribute:models_list' => 'Modèles',
+	'Class:Brand/Attribute:models_list+' => 'Tous les modèles pour cette marque',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Matériels',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Tous les matériels correspondant à cette marque',
 	'Class:Brand/Attribute:physicaldevices_list/UI:Links:Create:Button+' => 'Créer un %4$s',
@@ -1328,6 +1329,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:IOSVersion/Attribute:brand_id+' => '',
 	'Class:IOSVersion/Attribute:brand_name' => 'Nom Marque',
 	'Class:IOSVersion/Attribute:brand_name+' => '',
+	'Class:IOSVersion/Attribute:networkdevices_list' => 'Equipements réseaux',
+	'Class:IOSVersion/Attribute:networkdevices_list+' => 'Tous les équipements réseaux utilisant cette version IOS',
 ]);
 
 //
@@ -1677,6 +1680,17 @@ Dict::Add('FR FR', 'French', 'Français', [
 ]);
 
 //
+// Class: PhysicalInterface
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
+	'Class:PhysicalInterface/Attribute:org_id+' => '',
+	'Class:PhysicalInterface/Attribute:location_id' => 'Site',
+	'Class:PhysicalInterface/Attribute:location_id+' => '',
+]);
+
+//
 // Class: lnkGroupToCI
 //
 
@@ -1696,23 +1710,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ]);
 
-// Add translation for Fieldsets
-
-Dict::Add('FR FR', 'French', 'Français', [
-	'Server:baseinfo' => 'Informations générales',
-	'Server:Date' => 'Dates',
-	'Server:moreinfo' => 'Informations complémentaires',
-	'Server:otherinfo' => 'Autres informations',
-	'Server:power' => 'Alimentation électrique',
-	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
-	'Class:Subnet/Tab:IPUsage+' => 'Utilisation des IPs de ce subnet',
-	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
-	'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
-	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
-	'Class:Document:PreviewTab' => 'Aperçu',
-]);
-
 //
 // Class: lnkDocumentToFunctionalCI
 //
@@ -1729,6 +1726,29 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Nom Document',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
+]);
+
+// Add translation for Fieldsets
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'ConfigMgmt:baseinfo' => 'Informations générales',
+	'Server:baseinfo' => 'Informations générales',
+	'ConfigMgmt:moreinfo' => 'Item spécifique',
+	'Server:moreinfo' => 'Matériel spécifique',
+	'Storage:moreinfo' => 'Stockage spécifique',
+	'Software:moreinfo' => 'Logiciel spécifique',
+	'Phone:moreinfo' => 'Téléphone spécifique',
+	'ConfigMgmt:otherinfo' => 'Dates et description',
+	'Server:Date' => 'Dates',
+	'Server:otherinfo' => 'Description',
+	'Server:power' => 'Alimentation électrique',
+	'Class:Subnet/Tab:IPUsage' => 'IP utilisées',
+	'Class:Subnet/Tab:IPUsage+' => 'Utilisation des IPs de ce subnet',
+	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces ayant une IP dans la plage: <em>%1$s</em> à <em>%2$s</em>',
+	'Class:Subnet/Tab:FreeIPs' => 'IP disponibles',
+	'Class:Subnet/Tab:FreeIPs-count' => 'IP disponibles: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Voici un échantillon de dix addresses IP disponibles',
+	'Class:Document:PreviewTab' => 'Aperçu',
 ]);
 
 //
@@ -1780,15 +1800,4 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Catalogue des logiciels de références',
 	'Menu:Software+' => 'Catalogue des logiciels de références',
-]);
-
-//
-// Class: PhysicalInterface
-//
-
-Dict::Add('FR FR', 'French', 'Français', [
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
-	'Class:PhysicalInterface/Attribute:org_id+' => '',
-	'Class:PhysicalInterface/Attribute:location_id' => 'Site',
-	'Class:PhysicalInterface/Attribute:location_id+' => '',
 ]);

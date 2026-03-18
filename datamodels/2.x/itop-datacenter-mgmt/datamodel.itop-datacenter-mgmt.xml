@@ -57,47 +57,77 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
               <rank>10</rank>
+              <items>
+                <item id="fieldset:Server:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="brand_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="nb_u">
+                      <rank>80</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>90</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>100</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="location_id">
-              <rank>50</rank>
-            </item>
-            <item id="brand_id">
-              <rank>60</rank>
-            </item>
-            <item id="model_id">
-              <rank>70</rank>
-            </item>
-            <item id="nb_u">
-              <rank>80</rank>
-            </item>
-            <item id="serialnumber">
-              <rank>90</rank>
-            </item>
-            <item id="asset_number">
-              <rank>100</rank>
-            </item>
-            <item id="move2production">
-              <rank>110</rank>
-            </item>
-            <item id="purchase_date">
-              <rank>120</rank>
-            </item>
-            <item id="end_of_warranty">
-              <rank>130</rank>
-            </item>
-            <item id="description">
-              <rank>140</rank>
+              <items>
+                <item id="fieldset:Server:Date">
+                  <rank>10</rank>
+                  <items>
+                    <item id="move2production">
+                      <rank>110</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>120</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>130</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="description">
+                      <rank>140</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
             <item id="contacts_list">
               <rank>150</rank>
@@ -257,50 +287,80 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
               <rank>10</rank>
+              <items>
+                <item id="fieldset:Server:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="rack_id">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="brand_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>80</rank>
+                    </item>
+                    <item id="nb_u">
+                      <rank>90</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>100</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>110</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="location_id">
-              <rank>50</rank>
-            </item>
-            <item id="rack_id">
-              <rank>60</rank>
-            </item>
-            <item id="brand_id">
-              <rank>70</rank>
-            </item>
-            <item id="model_id">
-              <rank>80</rank>
-            </item>
-            <item id="nb_u">
-              <rank>90</rank>
-            </item>
-            <item id="serialnumber">
-              <rank>100</rank>
-            </item>
-            <item id="asset_number">
-              <rank>110</rank>
-            </item>
-            <item id="move2production">
-              <rank>120</rank>
-            </item>
-            <item id="purchase_date">
-              <rank>130</rank>
-            </item>
-            <item id="end_of_warranty">
-              <rank>140</rank>
-            </item>
-            <item id="description">
-              <rank>150</rank>
+              <items>
+                <item id="fieldset:Server:Date">
+                  <rank>10</rank>
+                  <items>
+                    <item id="move2production">
+                      <rank>120</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>130</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>140</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="description">
+                      <rank>150</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
             <item id="contacts_list">
               <rank>160</rank>
@@ -440,44 +500,74 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
               <rank>10</rank>
+              <items>
+                <item id="fieldset:Server:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="brand_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>80</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>90</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="location_id">
-              <rank>50</rank>
-            </item>
-            <item id="brand_id">
-              <rank>60</rank>
-            </item>
-            <item id="model_id">
-              <rank>70</rank>
-            </item>
-            <item id="serialnumber">
-              <rank>80</rank>
-            </item>
-            <item id="asset_number">
-              <rank>90</rank>
-            </item>
-            <item id="move2production">
-              <rank>100</rank>
-            </item>
-            <item id="purchase_date">
-              <rank>110</rank>
-            </item>
-            <item id="end_of_warranty">
-              <rank>120</rank>
-            </item>
-            <item id="description">
-              <rank>130</rank>
+              <items>
+                <item id="fieldset:Server:Date">
+                  <rank>10</rank>
+                  <items>
+                    <item id="move2production">
+                      <rank>100</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>110</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>120</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="description">
+                      <rank>130</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
             <item id="contacts_list">
               <rank>140</rank>
@@ -613,44 +703,74 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
               <rank>10</rank>
+              <items>
+                <item id="fieldset:Server:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="brand_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>80</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>90</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="location_id">
-              <rank>50</rank>
-            </item>
-            <item id="brand_id">
-              <rank>60</rank>
-            </item>
-            <item id="model_id">
-              <rank>70</rank>
-            </item>
-            <item id="serialnumber">
-              <rank>80</rank>
-            </item>
-            <item id="asset_number">
-              <rank>90</rank>
-            </item>
-            <item id="move2production">
-              <rank>100</rank>
-            </item>
-            <item id="purchase_date">
-              <rank>110</rank>
-            </item>
-            <item id="end_of_warranty">
-              <rank>120</rank>
-            </item>
-            <item id="description">
-              <rank>130</rank>
+              <items>
+                <item id="fieldset:Server:Date">
+                  <rank>10</rank>
+                  <items>
+                    <item id="move2production">
+                      <rank>100</rank>
+                    </item>
+                    <item id="purchase_date">
+                        <rank>110</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                        <rank>120</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="description">
+                      <rank>130</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
             <item id="pdus_list">
               <rank>140</rank>
@@ -806,50 +926,80 @@
       <presentation>
         <details>
           <items>
-            <item id="name">
+            <item id="col:col1">
               <rank>10</rank>
+              <items>
+                <item id="fieldset:Server:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="rack_id">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="powerstart_id">
+                      <rank>70</rank>
+                    </item>
+                    <item id="brand_id">
+                      <rank>80</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>90</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>100</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>110</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
-            <item id="org_id">
+            <item id="col:col2">
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>40</rank>
-            </item>
-            <item id="location_id">
-              <rank>50</rank>
-            </item>
-            <item id="rack_id">
-              <rank>60</rank>
-            </item>
-            <item id="powerstart_id">
-              <rank>70</rank>
-            </item>
-            <item id="brand_id">
-              <rank>80</rank>
-            </item>
-            <item id="model_id">
-              <rank>90</rank>
-            </item>
-            <item id="serialnumber">
-              <rank>100</rank>
-            </item>
-            <item id="asset_number">
-              <rank>110</rank>
-            </item>
-            <item id="move2production">
-              <rank>120</rank>
-            </item>
-            <item id="purchase_date">
-              <rank>130</rank>
-            </item>
-            <item id="end_of_warranty">
-              <rank>140</rank>
-            </item>
-            <item id="description">
-              <rank>150</rank>
+              <items>
+                <item id="fieldset:Server:Date">
+                  <rank>10</rank>
+                  <items>
+                    <item id="move2production">
+                        <rank>120</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>130</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                        <rank>140</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:otherinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="description">
+                      <rank>150</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
             <item id="contacts_list">
               <rank>160</rank>

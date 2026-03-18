@@ -181,6 +181,9 @@ class utils
 
 	protected static function LoadParamFile($sParamFile)
 	{
+		if (utils::RealPath($sParamFile, APPROOT) !== false) {
+			throw new Exception("File '".utils::HtmlEntities($sParamFile)."' should be outside iTop");
+		}
 		if (!file_exists($sParamFile)) {
 			throw new Exception("Could not find the parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
@@ -1284,7 +1287,7 @@ class utils
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public static function ExecITopScript(string $sScriptName, array $aArguments, string $sAuthUser = null, string $sAuthPwd = null)
+	public static function ExecITopScript(string $sScriptName, array $aArguments, ?string $sAuthUser = null, ?string $sAuthPwd = null)
 	{
 		$aDisabled = explode(', ', ini_get('disable_functions'));
 		if (in_array('exec', $aDisabled)) {
@@ -1374,7 +1377,7 @@ class utils
 	 * @return string A path to a folder into which any module can store cache data
 	 * The corresponding folder is created or cleaned upon code compilation
 	 */
-	public static function GetCachePath(string $sEnvironment = null): string
+	public static function GetCachePath(?string $sEnvironment = null): string
 	{
 		if (is_null($sEnvironment)) {
 			$sEnvironment = MetaModel::GetEnvironment();
@@ -2081,7 +2084,9 @@ SQL;
 			}
 
 			// Remove any remaining nulls (for positions that weren't referenced)
-			$aReplacements = array_filter($aReplacements, static function ($val) { return $val !== null; });
+			$aReplacements = array_filter($aReplacements, static function ($val) {
+				return $val !== null;
+			});
 		} else {
 			// For non-positional, we need to map each position
 			$aReplacements = [];

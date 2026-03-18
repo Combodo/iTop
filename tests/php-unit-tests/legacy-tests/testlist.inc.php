@@ -230,7 +230,7 @@ class TestMyBizModel extends TestBizModel
 
 	public function test_error()
 	{
-		trigger_error("Stop requested", E_USER_ERROR);
+		trigger_error("Stop requested", E_USER_WARNING);
 	}
 
 	public function test_changetracking()
