@@ -83,7 +83,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 
             extra_options: {
                     callback_on_modal_close: function () {
-                        $(this).dialog( "destroy" ); // destroy dialog object
+                        $(this).remove(); // destroy then remove dialog object
                     }
                 }
         }
