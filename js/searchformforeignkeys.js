@@ -63,7 +63,6 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
                     text: Dict.S('UI:Button:Cancel'),
                     callback_on_click: function() {
                         $(this).dialog("close");
-                        $(this).remove();
                     },
                     classes: ['cancel', 'ibo-is-alternative', 'ibo-is-neutral'],
                 },
