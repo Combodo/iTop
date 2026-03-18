@@ -328,6 +328,7 @@ CombodoModal._ConvertButtonDefinition = function (aButtonsDefinitions) {
 	Object.keys(aButtonsDefinitions).forEach(key => {
 				const element = aButtonsDefinitions[key];
 				const aButton = {
+                    id: typeof(element.id) !== 'undefined' ? element.id : null,
 					text: element.text,
 					class: typeof(element.classes) !== 'undefined' ? element.classes.join(' ') : '',
 					click: element.callback_on_click
