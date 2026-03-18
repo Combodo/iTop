@@ -228,6 +228,10 @@
             <attribute id="containervirtualhost_id_friendlyname"/>
           </complementary_attributes>
         </naming>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+          <image_attribute>logo</image_attribute>
+        </fields_semantic>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -235,9 +239,6 @@
              <attribute id="finalclass"/>
           </attributes>
         </reconciliation>
-        <fields_semantic>
-          <state_attribute>status</state_attribute>
-        </fields_semantic>
         <style>
           <icon>images/icons8-application-container.svg</icon>
         </style>
@@ -254,6 +255,13 @@
           <target_class>ContainerVirtualHost</target_class>
           <on_target_delete>DEL_AUTO</on_target_delete>
           <tracking_level>all</tracking_level>
+        </field>
+        <field id="logo" xsi:type="AttributeImage">
+          <display_max_width>96</display_max_width>
+          <display_max_height>96</display_max_height>
+          <storage_max_width>128</storage_max_width>
+          <storage_max_height>128</storage_max_height>
+          <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="containerimages_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkContainerApplicationToImage</linked_class>
@@ -357,8 +365,11 @@
                     <item id="move2production">
                       <rank>50</rank>
                     </item>
-                    <item id="description">
+                    <item id="logo">
                       <rank>60</rank>
+                    </item>
+                    <item id="description">
+                      <rank>70</rank>
                     </item>
                   </items>
                   <rank>10</rank>
