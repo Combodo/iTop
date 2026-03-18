@@ -130,6 +130,6 @@ function GetModuleDelegatedAuthenticationEndpoints(string $sModuleName): ?array
 		exit;
 	}
 	require_once APPROOT.'setup/extensionsmap.class.inc.php';
-	$aModuleParam = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFile)[2];
+	$aModuleParam = ModuleFileReader::GetInstance()->ReadModuleFileInformation($sModuleFile)[ModuleFileReader::MODULE_INFO_CONFIG];
 	return $aModuleParam['delegated_authentication_endpoints'] ?? null;
 }
