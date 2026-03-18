@@ -308,18 +308,20 @@ class MFModule
 	{
 		$aDictionaries = [];
 		foreach ([$this->sRootDir, $this->sRootDir.'/dictionaries'] as $sRootDir) {
-			if ($hDir = @opendir($sRootDir)) {
-				while (($sFile = readdir($hDir)) !== false) {
-					$aMatches = [];
-					if (preg_match(
-						"/^[^\\.]+.dict.".$this->sName.'.php$/i',
-						$sFile,
-						$aMatches
-					)) { // Dictionary files are named like <Lang>.dict.<ModuleName>.php
-						$aDictionaries[] = $sRootDir.'/'.$sFile;
+			if (is_dir($sRootDir)) {
+				if ($hDir = @opendir($sRootDir)) {
+					while (($sFile = readdir($hDir)) !== false) {
+						$aMatches = [];
+						if (preg_match(
+							"/^[^\\.]+.dict.".$this->sName.'.php$/i',
+							$sFile,
+							$aMatches
+						)) { // Dictionary files are named like <Lang>.dict.<ModuleName>.php
+							$aDictionaries[] = $sRootDir.'/'.$sFile;
+						}
 					}
+					closedir($hDir);
 				}
-				closedir($hDir);
 			}
 		}
 

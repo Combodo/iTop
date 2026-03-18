@@ -22,6 +22,7 @@ use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\WebPage\iTopWebPage;
 use Combodo\iTop\Application\WebPage\Page;
 use Combodo\iTop\DesignDocument;
+use Combodo\iTop\DesignElement;
 use Combodo\iTop\PropertyType\PropertyTypeDesign;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -2653,6 +2654,9 @@ CSS;
 					foreach ($oDashboardDefinition->childNodes as $oNode) {
 						$oDefNode = $oXMLDoc->importNode($oNode, true); // layout, cells, etc Nodes and below
 						$oRootNode->appendChild($oDefNode);
+					}
+					if (!is_dir($sTempTargetDir.'/'.$sModuleRelativeDir)) {
+						SetupUtils::builddir($sTempTargetDir.'/'.$sModuleRelativeDir);
 					}
 					$oXMLDoc->save($sTempTargetDir.'/'.$sModuleRelativeDir.'/'.$sFileName);
 				}
