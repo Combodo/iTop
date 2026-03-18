@@ -7,7 +7,6 @@
 
 namespace Combodo\iTop\DataFeatureRemoval\Helper;
 
-use Config;
 use MetaModel;
 use utils;
 
@@ -49,23 +48,5 @@ class DataFeatureRemovalConfig
 	{
 		$oConfig = utils::GetConfig();
 		$oConfig->SetModuleSetting(DataFeatureRemovalHelper::MODULE_NAME, $sParamName, $value);
-	}
-
-	/**
-	 * @param \Config|null $oConfig
-	 *
-	 * @return void
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 */
-	public function SaveItopConfiguration(Config $oConfig = null)
-	{
-		if (is_null($oConfig)) {
-			$oConfig = utils::GetConfig();
-		}
-		$sConfigFile = APPROOT.'conf/'.utils::GetCurrentEnvironment().'/config-itop.php';
-		@chmod($sConfigFile, 0770); // Allow overwriting the file
-		$oConfig->WriteToFile($sConfigFile);
-		@chmod($sConfigFile, 0444); // Read-only
 	}
 }
