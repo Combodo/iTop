@@ -173,10 +173,9 @@ try {
 			case 'ShowModalSearchForeignKeys':
 				$oPage->SetContentType('text/html');
 				$iInputId = utils::ReadParam('iInputId', '');
-				$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
 				$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 				$oWidget = new UISearchFormForeignKeys($sTargetClass, $iInputId);
-				$oWidget->ShowModalSearchForeignKeys($oPage, $sTitle);
+				$oWidget->ShowModalSearchForeignKeys($oPage);
 				break;
 
 				// ui.searchformforeignkeys
@@ -185,16 +184,6 @@ try {
 				$oWidget = new UISearchFormForeignKeys($sClass);
 				$oFullSetFilter = new DBObjectSearch($sClass);
 				$oWidget->GetFullListForeignKeysFromSelection($oPage, $oFullSetFilter);
-				break;
-
-				// ui.searchformforeignkeys
-			case 'ListResultsSearchForeignKeys':
-				$oPage->SetContentType('text/html');
-				$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
-				$iInputId = utils::ReadParam('iInputId', '');
-				$sRemoteClass = utils::ReadParam('sRemoteClass', '', false, 'class');
-				$oWidget = new UISearchFormForeignKeys($sTargetClass, $iInputId);
-				$oWidget->ListResultsSearchForeignKeys($oPage, $sRemoteClass);
 				break;
 
 				// ui.linkswidget

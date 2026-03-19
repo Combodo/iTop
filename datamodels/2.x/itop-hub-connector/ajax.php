@@ -242,8 +242,8 @@ try {
 				throw new SecurityException(Dict::S('iTopHub:FailAuthent'));
 			}
 			// First step: prepare the datamodel, if it fails, roll-back
-			$aSelectedExtensionCodes = utils::ReadParam('extension_codes', []);
-			$aSelectedExtensionDirs = utils::ReadParam('extension_dirs', []);
+			$aSelectedExtensionCodes = utils::ReadParam('extension_codes', [], false, utils::ENUM_SANITIZATION_FILTER_MODULE_CODE);
+			$aSelectedExtensionDirs = utils::ReadParam('extension_dirs', [], false, utils::ENUM_SANITIZATION_FILTER_MODULE_CODE);
 
 			$oRuntimeEnv = new HubRunTimeEnvironment('production', false); // use a temp environment: production-build
 			$oRuntimeEnv->MoveSelectedExtensions(APPROOT.'/data/downloaded-extensions/', $aSelectedExtensionDirs);
