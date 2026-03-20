@@ -649,6 +649,7 @@ EOF
 					}
 				}
 			} else {
+				//legacy product (1.x/no installation.xml)
 				$aOptions = $this->oExtensionsMap->GetAllExtensionsOptionInfo($bRemoteExtensionsShouldBeMandatory);
 
 				// No wizard configuration provided, build a standard one with just one big list. All items are mandatory, only works when there are no conflicted modules.

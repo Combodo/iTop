@@ -32,6 +32,9 @@ class iTopExtensionsMap
 	 */
 	protected $aScannedDirs;
 
+	/** @var bool $bHasXmlInstallationFile : false when legacy 1.x package with no installation.xml */
+	protected $bHasXmlInstallationFile = true;
+
 	/**
 	 * The list of all discovered extensions
 	 * @param string $sFromEnvironment The environment to scan
@@ -59,6 +62,7 @@ class iTopExtensionsMap
 	protected function ScanDisk($sEnvironment)
 	{
 		if (!$this->ReadInstallationWizard(APPROOT.'/datamodels/2.x')) {
+			$this->bHasXmlInstallationFile = false;
 			//no installation xml found in 2.x: let's read all extensions in 2.x first
 			if (!$this->ReadDir(APPROOT.'/datamodels/2.x', iTopExtension::SOURCE_WIZARD)) {
 				//nothing found in 2.x : fallback read in 1.x (flat structure)
@@ -371,24 +375,36 @@ class iTopExtensionsMap
 	}
 
 	/**
-	 * @param bool $bKeepMissingDependencyExtensions
-	 *
-	 * @return array<\iTopExtension>>
+	* @param bool $bKeepMissingDependencyExtensions
+	* @param bool $bRemoteExtensionsShouldBeMandatory
+	* @return array<\iTopExtension>>
 	 */
-
-	public function GetAllExtensionsToDisplayInSetup(bool $bKeepMissingDependencyExtensions = false, bool $bRemoteExtensionsShouldBeMandatory = true): array
+	public function GetAllExtensionsToDisplayInSetup(bool $bKeepExtensionsHavingMissingDependencies = false, bool $bRemoteExtensionsShouldBeMandatory = true): array
 	{
+		// all extensions are loaded at first screen when no installation xml: flat display
+		//otherwhile wizard screen displays choice screens along extension tree (cf installation.xml)
 		$aRes = [];
 		foreach ($this->GetAllExtensionsWithPreviouslyInstalled() as $oExtension) {
 			/** @var \iTopExtension $oExtension */
-			if ($oExtension->sSource !== iTopExtension::SOURCE_WIZARD && $oExtension->bVisible) {
-				if ($bKeepMissingDependencyExtensions || count($oExtension->aMissingDependencies) == 0) {
-					if (!$oExtension->bMandatory && $bRemoteExtensionsShouldBeMandatory) {
-						$oExtension->bMandatory = ($oExtension->sSource === iTopExtension::SOURCE_REMOTE);
-					}
-					$aRes[$oExtension->sCode] = $oExtension;
-				}
+			if (! $oExtension->bVisible) {
+				//skip hidden extensions
+				continue;
 			}
+
+			if ($this->bHasXmlInstallationFile && $oExtension->sSource === iTopExtension::SOURCE_WIZARD) {
+				//skip extensions handled in installation previous choice screens (defined in installation.xml)
+				continue;
+			}
+
+			if (! $bKeepExtensionsHavingMissingDependencies && count($oExtension->aMissingDependencies) > 0) {
+				//skip extensions with dependency issues
+				continue;
+			}
+
+			if (!$oExtension->bMandatory && $bRemoteExtensionsShouldBeMandatory) {
+				$oExtension->bMandatory = ($oExtension->sSource === iTopExtension::SOURCE_REMOTE);
+			}
+			$aRes[$oExtension->sCode] = $oExtension;
 		}
 
 		return $aRes;
