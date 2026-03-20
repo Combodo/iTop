@@ -2376,8 +2376,7 @@ EOF
 	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();
 } catch (Exception $e) {
-	// note: transform to cope with XSS attacks
-	echo utils::EscapeHtml($e->GetMessage());
+	echo utils::EscapeHtml(Dict::S('UI:PageTitle:FatalError'));
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
 
