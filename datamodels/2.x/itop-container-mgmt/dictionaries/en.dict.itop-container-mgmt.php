@@ -156,3 +156,16 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:ContainerImageType' => 'Container Image Type',
 	'Class:ContainerImageType+' => 'Typology of container images',
 ]);
+
+//
+// Class Cloud, Server and Virtual Machine
+//
+
+Dict::Add('EN US', 'English', 'English', [
+	'Class:Cloud/Attribute:containerhosts_list' => 'Container Hosts',
+	'Class:Cloud/Attribute:containerhosts_list+' => 'List of container hosts running in this cloud',
+	'Class:Server/Attribute:containerhosts_list' => 'Container Hosts',
+	'Class:Server/Attribute:containerhosts_list+' => 'List of container hosts running on this server',
+	'Class:VirtualMachine/Attribute:containerhosts_list' => 'Container Hosts',
+	'Class:VirtualMachine/Attribute:containerhosts_list+' => 'List of container hosts running on this virtual machine',
+]);

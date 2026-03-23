@@ -35,8 +35,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:Cloud/Attribute:provider_id+' => 'Who provides the cloud~~',
 	'Class:Cloud/Attribute:location_id' => 'Location~~',
 	'Class:Cloud/Attribute:location_id+' => 'Where is located the cloud~~',
-	'Class:Cloud/Attribute:containerhosts_list' => 'Container Hosts~~',
-	'Class:Cloud/Attribute:containerhosts_list+' => 'List of container hosts hosted in this cloud~~',
 ]);
 
 //

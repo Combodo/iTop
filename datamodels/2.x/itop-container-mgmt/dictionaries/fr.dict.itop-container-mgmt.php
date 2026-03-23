@@ -33,11 +33,11 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerImage/Attribute:description' => 'Description',
 	'Class:ContainerImage/Attribute:description+' => '',
 	'Class:ContainerImage/Attribute:publisher' => 'Editeur',
-	'Class:ContainerImage/Attribute:publisher+' => 'Fournisseur de l\image',
+	'Class:ContainerImage/Attribute:publisher+' => 'Fournisseur de l\'image',
 	'Class:ContainerImage/Attribute:image' => 'Image',
 	'Class:ContainerImage/Attribute:image+' => 'Détail permettant de récupérer l\'image sur la plateforme d\'hébergement appropriée',
 	'Class:ContainerImage/Attribute:type_id' => 'Type',
-	'Class:ContainerImage/Attribute:type_id+' => 'Type d\image',
+	'Class:ContainerImage/Attribute:type_id+' => 'Type d\'image',
 	'Class:ContainerImage/Attribute:software_id' => 'Logiciel',
 	'Class:ContainerImage/Attribute:software_id+' => '',
 	'Class:ContainerImage/Attribute:containerapplications_list' => 'Applications conteneurisées',
@@ -127,7 +127,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerCluster/Name' => '%1$s',
 	'Class:ContainerCluster/ComplementaryName' => '',
 	'Class:ContainerCluster' => 'Grappe pour Conteneurs',
-	'Class:ContainerCluster+' => 'Plateforme de Conteneurisation constitué d\'une grappe d\'Hôtes pour Conteneurs',
+	'Class:ContainerCluster+' => 'Plateforme de Conteneurisation constituée d\'une grappe d\'Hôtes pour Conteneurs',
 	'Class:ContainerCluster/Attribute:redundancy' => 'Configuration de la redondance',
 	'Class:ContainerCluster/Attribute:redundancy/disabled' => 'La grappe est opérationnelle si tous les hôtes qui la composent sont opérationnels',
 	'Class:ContainerCluster/Attribute:redundancy/count' => 'Nombre minimal d\'hôtes pour que la grappe soit opérationnelle : %1$s',
@@ -156,4 +156,17 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:ContainerImageType/ComplementaryName' => '',
 	'Class:ContainerImageType' => 'Type d\'image',
 	'Class:ContainerImageType+' => 'Typologie d\'images pour container',
+]);
+
+//
+// Class Cloud, Server and Virtual Machine
+//
+
+Dict::Add('FR FR', 'French', 'Français', [
+	'Class:Cloud/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
+	'Class:Cloud/Attribute:containerhosts_list+' => 'Liste des hôtes hébergés dans ce nuage',
+	'Class:Server/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
+	'Class:Server/Attribute:containerhosts_list+' => 'Liste des hôtes pour conteneurs hébergés sur ce serveur',
+	'Class:VirtualMachine/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
+	'Class:VirtualMachine/Attribute:containerhosts_list+' => 'Liste des hôtes pour conteneurs hébergés sur cette machine virtuelle',
 ]);

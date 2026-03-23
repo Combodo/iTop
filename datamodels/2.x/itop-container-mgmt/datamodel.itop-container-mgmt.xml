@@ -129,6 +129,22 @@
             </item>
           </items>
         </search>
+        <summary>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="version">
+              <rank>20</rank>
+            </item>
+            <item id="publisher">
+              <rank>30</rank>
+            </item>
+            <item id="type_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="col:col1">
@@ -323,6 +339,22 @@
             </item>
           </items>
         </search>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="containervirtualhost_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="col:col1">
@@ -751,6 +783,9 @@
           <target_class>ContainerCluster</target_class>
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <tracking_level>all</tracking_level>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
         </field>
         <field id="role" xsi:type="AttributeEnum">
           <sql>role</sql>
@@ -772,9 +807,6 @@
           <default_value>standalone</default_value>
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
-          <dependencies>
-            <attribute id="containercluster_id"/>
-          </dependencies>
           <tracking_level>all</tracking_level>
         </field>
         <field id="system_id" xsi:type="AttributeExternalKey">
@@ -845,6 +877,28 @@
             </item>
           </items>
         </search>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="system_id">
+              <rank>20</rank>
+            </item>
+            <item id="containertype_id">
+              <rank>30</rank>
+            </item>
+            <item id="containercluster_id">
+              <rank>40</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>50</rank>
+            </item>
+            <item id="description">
+              <rank>60</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="col:col1">
@@ -1036,6 +1090,22 @@
             </item>
           </items>
         </search>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="containertype_id">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
         <details>
           <items>
             <item id="col:col1">
@@ -1224,6 +1294,70 @@
           <items>
             <item id="containerhosts_list" _delta="define">
               <rank>40</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <relations>
+        <relation id="impacts" _delta="merge">
+          <neighbours>
+            <neighbour id="containerhosts" _delta="define">
+              <attribute>containerhosts_list</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
+    <class id="Server" _delta="must_exist">
+      <fields>
+        <field id="containerhosts_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>ContainerHost</linked_class>
+          <ext_key_to_me>system_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode/>
+          <with_php_constraint>false</with_php_constraint>
+          <with_php_computation>false</with_php_computation>
+          <edit_when/>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="containerhosts_list" _delta="define">
+              <rank>140</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <relations>
+        <relation id="impacts" _delta="merge">
+          <neighbours>
+            <neighbour id="containerhosts" _delta="define">
+              <attribute>containerhosts_list</attribute>
+              <direction>both</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
+    <class id="VirtualMachine" _delta="must_exist">
+      <fields>
+        <field id="containerhosts_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>ContainerHost</linked_class>
+          <ext_key_to_me>system_id</ext_key_to_me>
+          <tracking_level>list</tracking_level>
+          <edit_mode/>
+          <with_php_constraint>false</with_php_constraint>
+          <with_php_computation>false</with_php_computation>
+          <edit_when/>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="containerhosts_list" _delta="define">
+              <rank>140</rank>
             </item>
           </items>
         </details>

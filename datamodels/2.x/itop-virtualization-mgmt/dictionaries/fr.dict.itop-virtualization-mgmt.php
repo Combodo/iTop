@@ -47,8 +47,6 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:Cloud/Attribute:provider_id+' => 'Organisation fournissant le nuage',
 	'Class:Cloud/Attribute:location_id' => 'Site',
 	'Class:Cloud/Attribute:location_id+' => 'Site du fournisseur, hébergeant le nuage',
-	'Class:Cloud/Attribute:containerhosts_list' => 'Hôtes pour conteneurs',
-	'Class:Cloud/Attribute:containerhosts_list+' => 'Liste des hôtes hébergés dans ce nuage',
 ]);
 
 //
