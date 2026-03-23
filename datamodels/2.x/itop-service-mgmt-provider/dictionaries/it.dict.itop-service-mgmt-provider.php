@@ -325,7 +325,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Produzione',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'production~~',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Tipo di Richiesta',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '~~',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user choose this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Incidente',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'incident~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Richiesta di Servizio',

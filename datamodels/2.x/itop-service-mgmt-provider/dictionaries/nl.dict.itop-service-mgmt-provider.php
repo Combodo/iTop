@@ -327,7 +327,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Productie',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'Productie',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Soort verzoek',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user choose this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Incident',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'Incident',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Serviceverzoek',

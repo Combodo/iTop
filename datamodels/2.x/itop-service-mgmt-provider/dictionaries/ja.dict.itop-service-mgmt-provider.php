@@ -325,7 +325,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => '稼働',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type' => '要求タイプ',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user choose this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'インシデント',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'サービス要求',

@@ -307,7 +307,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', [
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Hizmet',
 	'Class:ServiceSubcategory/Attribute:service_name+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'İstek türü',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '~~',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user choose this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Olay',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'Olay',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Servis İsteği',

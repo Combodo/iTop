@@ -348,7 +348,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', [
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => '生产',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => '生产',
 	'Class:ServiceSubcategory/Attribute:request_type' => '需求类型',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user choose this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => '事件',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => '事件',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => '服务需求',

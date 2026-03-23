@@ -307,7 +307,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', [
 	'Class:ServiceSubcategory/Attribute:service_name' => 'Услуга',
 	'Class:ServiceSubcategory/Attribute:service_name+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type' => 'Тип запроса',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type+' => 'Define the type of Ticket (Incident or Service Request) that will be created when a Portal user choose this service subcategory.~~',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Инцидент',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'Инцидент',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Запрос на обслуживание',
