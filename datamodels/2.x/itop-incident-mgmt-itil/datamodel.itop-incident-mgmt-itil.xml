@@ -1862,7 +1862,7 @@
         <class id="ServiceSubcategory">
           <scopes>
             <scope id="all">
-              <oql_view _delta="redefine"><![CDATA[SELECT ServiceSubcategory WHERE status != 'obsolete' AND request_type = 'incident']]></oql_view>
+              <oql_view _delta="redefine"><![CDATA[SELECT ServiceSubcategory WHERE status = 'production' AND request_type = 'incident']]></oql_view>
             </scope>
           </scopes>
         </class>
